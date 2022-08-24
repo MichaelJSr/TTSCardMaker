@@ -1,0 +1,4 @@
+Active item. Can only be used (BOT), goes facedown after turn end. Mimics the speed of the protectee, and protects until end of turn. The protectee may attack. Any damage one blockade has carries over to the next.
+1A1A1A
+666666
+666666

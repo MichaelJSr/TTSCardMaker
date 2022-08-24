@@ -1,0 +1,3 @@
+Non-protective minion. Doesn't grant souls. Overkill damage carries over to the next Bloon in the same field. (OPT) (AAT) Negate the negative effects of one lv 2 or lower item on either itself or the protectee.
+006666
+CCFFFF

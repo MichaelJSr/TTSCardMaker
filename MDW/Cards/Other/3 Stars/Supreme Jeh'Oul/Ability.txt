@@ -1,0 +1,3 @@
+(OPT)(OYT) Create a Poison Circle in a random lane on the enemy PF that persists for 3 turns; when this creature falls to 50% HP or below, this ability becomes and stays (TPT).
+FF0000
+CC00FF

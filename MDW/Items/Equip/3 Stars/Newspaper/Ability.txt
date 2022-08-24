@@ -1,0 +1,2 @@
++2 DEF. After being hit once, this item breaks, granting the equipped creature +1 ATK +1 SPD.
+001900

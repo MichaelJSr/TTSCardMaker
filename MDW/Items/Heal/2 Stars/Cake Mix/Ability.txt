@@ -1,0 +1,1 @@
+(OPT) Use or Bake, Baking upgrades effects. Baking uses SP. Bake 0) Heal 2 HP. Bake 1) Heal 6 HP. 2) Heal 10 HP + Peppy. 3) 10 damage + Burdened.

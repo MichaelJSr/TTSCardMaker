@@ -1,0 +1,1 @@
+Non-protective minion. Decreases the DEF of the creature it attacks by 1.

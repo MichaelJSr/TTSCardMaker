@@ -1,0 +1,3 @@
+(BOGT) Gain 3 counters. (AAT) Consume counters equivalent to an items star level to negate the item, or double to steal the item (can steal from the item shop).
+6600A7
+009900

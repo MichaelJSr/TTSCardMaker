@@ -1,0 +1,3 @@
+When summoned and (BOGT), must copy a random creature's base, unmodified stats and type from the field (cannot copy itself). Its HP and Error type persists between stat changes.
+F67FB2
+8F5038

@@ -1,0 +1,3 @@
+Summon a Grodus X for every 3 HP this creature loses. If this creature is not attacked before the end of the global turn, its next attack inflicts Imprisonment.
+6F006F
+02001A

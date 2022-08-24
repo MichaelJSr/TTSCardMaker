@@ -1,0 +1,4 @@
+(OPT)(AAT) Take a stance until the end of the turn:
+Water Stream Fist: Heal this creature by 4 HP. (OPT)(AAT) Redistribute one instance of damage as you wish among your creatures.
+Whirlwind Iron Cutting Fist: Gain +2 ATK until end of turn. (OPT) Sacrifice 5 HP to gain another action.
+Sky Ripping Fist: Gain +3 SPD and become immune to CD until end of turn.

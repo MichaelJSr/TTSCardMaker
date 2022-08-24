@@ -1,0 +1,3 @@
+Active item. (AAT) (OPT) Increase any stat of a friendly creature by 1 bar.
+00A86B
+C0C0C0

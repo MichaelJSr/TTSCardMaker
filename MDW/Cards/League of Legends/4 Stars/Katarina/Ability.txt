@@ -1,0 +1,3 @@
+Gain an extra action (until end of turn) when this creature kills another point-yielding creature.
+0080C1
+660099

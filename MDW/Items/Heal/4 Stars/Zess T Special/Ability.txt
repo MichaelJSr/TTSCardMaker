@@ -1,0 +1,1 @@
+Can heal machines. Heals 8 health, cures tier 3 and below debuffs, and grants the creature +2 DEF +1 ATK and +1 SPD for 2 turns.

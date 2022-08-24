@@ -1,0 +1,1 @@
+Heals 6 HP, this healing can raise their HP above their max.

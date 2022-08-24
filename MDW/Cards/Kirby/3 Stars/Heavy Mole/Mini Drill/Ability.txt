@@ -1,0 +1,3 @@
+Protective minion. This creature takes 2 damage each time it attacks, but decreases the DEF of what they attack by 1.
+FFFF00
+FF0000

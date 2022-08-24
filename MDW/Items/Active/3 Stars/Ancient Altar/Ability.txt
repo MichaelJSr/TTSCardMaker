@@ -1,0 +1,4 @@
+Active item. (OPT)(AAT) Equivalently exchange one non-damaged item for any item of the same SP from item shop.
+660066
+CC9900
+140014

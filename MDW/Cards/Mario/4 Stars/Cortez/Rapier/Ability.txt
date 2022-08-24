@@ -1,0 +1,3 @@
+Non-protective minion. Its attack deals piercing damage.
+F3D817
+C4DDF1

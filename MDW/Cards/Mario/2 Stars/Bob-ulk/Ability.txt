@@ -1,0 +1,3 @@
+Cannot attack, defend, or equip items. (BOGT) Gain +3 ATK. When this dies, deal its ATK as damage to the entire enemy primary field. (OYT) May die.
+800080
+CC66FF

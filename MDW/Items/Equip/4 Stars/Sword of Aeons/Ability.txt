@@ -1,0 +1,1 @@
++2 ATK. If the creature this is equipped onto kills a friendly point-yielding creature, then this item permanently gains and grants Lifesteal.

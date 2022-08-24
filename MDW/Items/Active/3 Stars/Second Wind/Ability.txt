@@ -1,0 +1,1 @@
+Costs SP -1 of the creature this is used on. Inflicts Inspired.

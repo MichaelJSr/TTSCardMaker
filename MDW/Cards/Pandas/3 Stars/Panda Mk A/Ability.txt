@@ -1,0 +1,1 @@
+While (OTF), grants all friendly creatures (including itself) +1 ATK. Attackers are inflicted with Paralyze.

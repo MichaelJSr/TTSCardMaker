@@ -1,0 +1,2 @@
+Non-protective minion. Doesn't grant souls. Grants the protectee +3 DEF until this dies. (OPG) (AAT) May intercept an attack to the protectee. (EOT) Summon a Red Bloon on the same field as this creature.
+0099FF

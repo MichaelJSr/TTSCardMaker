@@ -1,0 +1,3 @@
+(AAT)(OPT) Negate the usage of one item this turn.
+000066
+990000

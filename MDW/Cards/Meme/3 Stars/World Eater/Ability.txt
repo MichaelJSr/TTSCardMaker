@@ -1,0 +1,3 @@
+(OPGT) (AAT) Take your turn. At the end of its turn, all enemy creatures lose 1 DEF.
+660066
+000066

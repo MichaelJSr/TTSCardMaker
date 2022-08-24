@@ -1,0 +1,3 @@
+Total an enemy teams creatures stars. This creature gains +2 ATK and +1 SPD per star above 10. This creature loses -1 ATK and -0.5 SPD per star below 10.
+990000
+FF9966

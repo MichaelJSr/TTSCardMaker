@@ -1,0 +1,3 @@
+Non-protective minion. Doesn't grant souls. Grants the protectee +1 ATK +2 SPD until this dies. (OPG) (AAT) May intercept an attack to the protectee. (OPT) (AAT) Negate negative effects of a lv 1-3 item on itself or protectee.
+003366
+9999FF

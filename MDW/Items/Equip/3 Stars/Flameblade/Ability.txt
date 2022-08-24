@@ -1,0 +1,1 @@
++2 ATK -3 SPD. Attacks inflict Burn.

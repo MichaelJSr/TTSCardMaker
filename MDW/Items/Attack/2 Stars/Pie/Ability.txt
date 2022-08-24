@@ -1,0 +1,1 @@
+Heals 5 HP and inflicts blindness or deal 4 damage and inflict blindness.

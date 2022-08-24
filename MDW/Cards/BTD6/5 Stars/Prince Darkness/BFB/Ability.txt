@@ -1,0 +1,3 @@
+Non-protective minion. Doesn't grant souls. (OPT) (OYT) Heal the protectee by 4 HP. (TPG) (AAT) May intercept an attack to the protectee. (EOT) Summon a Black or White Bloon on the same field as this creature.
+CC0000
+FFFFFF

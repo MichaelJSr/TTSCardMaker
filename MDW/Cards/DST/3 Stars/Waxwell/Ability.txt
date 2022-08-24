@@ -1,0 +1,3 @@
+Get Codex Umbra. This creature gains 1 DEF at the end of its turn, his base DEF is capped at 10. He may sacrifice 3 DEF in order to summon a minion from the Codex Umbra.
+FF033E
+333333

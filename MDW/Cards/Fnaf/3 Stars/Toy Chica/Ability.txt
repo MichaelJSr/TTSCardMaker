@@ -1,0 +1,3 @@
+While this is on the field, all healing is 1.5x as effective for your team.
+E0E000
+C74519

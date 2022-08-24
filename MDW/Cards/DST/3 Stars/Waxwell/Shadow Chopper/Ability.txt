@@ -1,0 +1,1 @@
+Non-protective minion. Heals the creature they are on by 2 HP at the end of that creature's turn.

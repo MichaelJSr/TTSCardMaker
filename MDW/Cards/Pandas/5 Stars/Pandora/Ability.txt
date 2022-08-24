@@ -1,0 +1,1 @@
+Attackers of Pandora take CD equal to their ATK -2. Gains abilities when this kills point-yielding creatures: 1) +1 bars to every stat. 2) Heal 4 HP when Pandora attacks. 3) +1 bars to every stat and immunity to CD. 4) (OPT)(AAT) Intercept an attack. (OPT)(OYT) Imprison a creature that attacked you.

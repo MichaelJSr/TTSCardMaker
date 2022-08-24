@@ -1,0 +1,1 @@
+Reusable (FCO). Grants +1 Atk +1 Spd -2 max Hp. Creatures that use Spice take half their max HP as damage if they don't use it before the end of every global turn.

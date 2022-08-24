@@ -1,0 +1,1 @@
+(BOT) Gain +1 DEF. (AAT) Whenever a friendly creature takes damage, transfer up to 3 of that damage to this creature.

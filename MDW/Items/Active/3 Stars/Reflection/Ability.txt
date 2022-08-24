@@ -1,0 +1,1 @@
+Swap the current and max HP of two of your creatures.

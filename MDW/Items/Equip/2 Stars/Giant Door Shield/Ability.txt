@@ -1,0 +1,1 @@
++6 DEF -2.5 SPD. Each time the creature this item is equipped onto is attacked, this item permanently loses 1 DEF.

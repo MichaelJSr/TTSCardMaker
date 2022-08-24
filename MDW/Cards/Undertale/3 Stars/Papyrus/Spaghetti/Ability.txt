@@ -1,0 +1,1 @@
+Costs 0 SP. Heal for 5 HP or grant 2 SP. If this heals an enemy by at least 3 HP, decrease their SP by 3 OR prevent them from attacking next turn.

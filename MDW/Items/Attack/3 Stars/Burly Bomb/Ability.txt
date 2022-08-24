@@ -1,0 +1,1 @@
+Deals damage equal to (4 + DEF) of the creature this is used on.

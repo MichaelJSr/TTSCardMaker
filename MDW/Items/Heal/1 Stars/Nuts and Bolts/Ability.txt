@@ -1,0 +1,1 @@
+May be used on machines. If used on a machine, heals 1 HP and increases DEF by 1. If used on any other type, Sickens that creature for 1 turn.

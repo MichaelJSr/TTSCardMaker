@@ -1,0 +1,3 @@
+When this kills another creature, gain +4 Max HP. (EOT)(BOGT) gain +1 ATK.
+70004D
+E63276

@@ -1,0 +1,3 @@
+Non-protective minion. Doesn't grant souls. Overkill damage carries over to the next Bloon in the same field. Grants the protectee +1 ATK until this dies.
+785613
+BB7E06

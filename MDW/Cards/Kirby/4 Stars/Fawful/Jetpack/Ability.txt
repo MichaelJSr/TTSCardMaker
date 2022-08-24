@@ -1,0 +1,4 @@
+Non-protective minion. (OPT) (AAT) This creature may either negate the damage of an attack (not towards itself) or negate an ability until the end of the turn.
+00A86B
+89A8A8
+000033

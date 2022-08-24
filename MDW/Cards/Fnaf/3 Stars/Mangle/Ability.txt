@@ -1,0 +1,3 @@
+Stat boosts last until end of global turn. May not boost stats over 11. (AAT) Boost DEF by 4 per point spent. (AAT) Boost ATK by 2 per point spent.
+FF00FF
+FFCCFF

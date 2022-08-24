@@ -1,0 +1,3 @@
+(BOGT)(OPT) Swap this creature's DEF with any other creature's DEF until the end of the global turn.
+0000CC
+333333

@@ -1,0 +1,1 @@
+(FCO) Reduce HP to 1, grants 1 point per 2 HP lost.

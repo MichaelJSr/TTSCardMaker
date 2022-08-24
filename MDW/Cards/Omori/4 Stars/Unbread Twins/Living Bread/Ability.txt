@@ -1,0 +1,3 @@
+Whatever kills this gains +3 HP (can go above MAX HP).
+663300
+6600CC

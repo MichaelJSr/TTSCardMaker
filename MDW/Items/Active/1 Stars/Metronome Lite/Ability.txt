@@ -1,0 +1,1 @@
+Target one creature on the field and negate its type and attribute until the end of the turn. Effects that are used on this creature while its negated stay in effect.

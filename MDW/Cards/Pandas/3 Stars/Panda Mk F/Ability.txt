@@ -1,0 +1,1 @@
+Attacks hit all creatures on the primary field in the lane chosen. (OPT)(OYT) This creatures next attack inflicts Burdened. Attackers are inflicted with Burdened.

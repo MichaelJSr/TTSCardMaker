@@ -1,0 +1,3 @@
+When this attacks, lose ATK equal to half the opponent's DEF for that attack. (EOT) Until the end of its turn, either increase ATK by 2, or decrease ATK by 2 to hit all enemies on the PF.
+660000
+FF9933

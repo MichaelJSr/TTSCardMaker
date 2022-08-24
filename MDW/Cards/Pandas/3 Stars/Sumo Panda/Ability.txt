@@ -1,0 +1,1 @@
+(EOT)(AAT) Intercept an attack. If this is attacked, then this creature's next attack towards that attacker inflicts Imprison and Poison. Attackers take CD = to their ATK -1.

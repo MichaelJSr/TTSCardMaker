@@ -1,0 +1,1 @@
+ALL enemy creatures in this lane are inflicted with 1 stack of Poison when their turn starts.

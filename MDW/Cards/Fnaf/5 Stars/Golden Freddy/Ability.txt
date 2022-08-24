@@ -1,0 +1,3 @@
+(OPT)(OYT) Choose a creature to life-link with until the start of this creatures next turn. Whenever a friendly point-yielding creature dies, this gains +2 ATK and +1 SPD.
+494900
+151500
