@@ -84,7 +84,7 @@ A creature that has attacked cannot move a minion from behind it into a protecti
 ## Attacking
 An attack is classified as any act that could either deal damage or inflict a negative de-buff
 
-An attacking creature can deal 1.5x DMG if its speed is double the target, 2x DMG if triple the target, and so on, this is Combo Damage
+After calculating damage done past DEF, apply a multiplier to the damage dealt based on the speed difference between the attacker and the target (1.5x DMG if attackers speed is double that of the targets, 2x DMG if triple, etc.), known as Combo Damage
 
 When a creature uses an ability to attack all creatures at once, the attacks all happen simultaneously and all count as individual attacks
 
@@ -161,7 +161,9 @@ Similarly, if a creature that has used an action dies mid-turn the creature that
 - (EOT) = Every other turn i.e. Every second turn after ability initiates
 - (OPG) = Once per game
 - (TPG) = Twice per game
+- (MAX x) = Ability/passive can only be activated x amount of times per game
 - (BOT) = Beginning of Turn
+- (FCO) = Friendly creatures only
 - (OD) = On Death
 - (PF) = Primary Field
 - (CD) = Counter Damage
