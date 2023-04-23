@@ -277,6 +277,8 @@ By default, de-buffs take effect and/or run out at the end of the effected creat
 
 Damage dealing de-buffs still take effect on cards in the hand, dealing damage and/or running out at the end of the Global Turn
 
+Mutliple debuffs dealing damage at the end of a creatures turn count as separate instances of damage
+
 Debuff durations will be specified on the card
 
 Standard Debuffs can only have one instance of themselves applied to a creature, but stacking debuffs can have any number of themselves applied
