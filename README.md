@@ -108,7 +108,7 @@ After calculating damage done past DEF, apply a multiplier to the damage dealt b
 - 1.5x DMG if attackers speed is double that of the targets,
 - 2x DMG if triple
 
-When a creature uses an ability to attack all creatures at once, the attacks all happen simultaneously and all count as individual attacks
+When a creature uses an ability or item to attack all enemy creatures at once, the attacks happen left to right chronologically(attacker's perspective) and counter damage is dealt only after all the attacks have occured
 
 Abilities that deal damage or inflict debuffs separate from the attack stat of a creature count as an attack, but do not consume an action, and cannot trigger counter damage
 
