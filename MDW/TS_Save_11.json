@@ -1,7 +1,7 @@
 {
-  "SaveName": "5/27 Table Version",
-  "EpochTime": 1685164024,
-  "Date": "5/27/2023 1:07:04 AM",
+  "SaveName": "5/27 new",
+  "EpochTime": 1685194776,
+  "Date": "5/27/2023 9:39:36 AM",
   "VersionNumber": "v13.2.2",
   "GameMode": "Flex Table",
   "GameType": "",
@@ -222,7 +222,7 @@
       "GUID": "6e930b",
       "Name": "HandTrigger",
       "Transform": {
-        "posX": 40.80479,
+        "posX": 61.1685371,
         "posY": 5.0,
         "posZ": -35.0,
         "rotX": 0.0,
@@ -269,7 +269,7 @@
       "GUID": "4621a8",
       "Name": "HandTrigger",
       "Transform": {
-        "posX": -40.5235748,
+        "posX": -0.144259453,
         "posY": 5.0,
         "posZ": -35.0,
         "rotX": 0.0,
@@ -316,7 +316,7 @@
       "GUID": "a44aae",
       "Name": "HandTrigger",
       "Transform": {
-        "posX": -40.1534233,
+        "posX": -0.8225775,
         "posY": 5.0,
         "posZ": 35.0,
         "rotX": 0.0,
@@ -872,12 +872,12 @@
       "GUID": "c8f3ea",
       "Name": "Deck",
       "Transform": {
-        "posX": 93.37974,
-        "posY": 2.42832685,
-        "posZ": -5.98768139,
-        "rotX": 359.929657,
-        "rotY": 269.9433,
-        "rotZ": 0.0115864743,
+        "posX": 93.37621,
+        "posY": 2.42828584,
+        "posZ": -5.984928,
+        "rotX": 359.928467,
+        "rotY": 269.924866,
+        "rotZ": 0.00589003833,
         "scaleX": 0.75,
         "scaleY": 1.0,
         "scaleZ": 0.75
@@ -1753,12 +1753,12 @@
       "GUID": "5ea918",
       "Name": "Deck",
       "Transform": {
-        "posX": 93.38682,
-        "posY": 2.4078598,
-        "posZ": -8.557653,
-        "rotX": 359.920654,
-        "rotY": 269.9973,
-        "rotZ": 0.02659023,
+        "posX": 93.3862839,
+        "posY": 2.40790081,
+        "posZ": -8.559471,
+        "rotX": 359.922241,
+        "rotY": 269.8942,
+        "rotZ": 0.0270662513,
         "scaleX": 0.75,
         "scaleY": 1.0,
         "scaleZ": 0.75
@@ -2362,12 +2362,12 @@
       "GUID": "7cb915",
       "Name": "Deck",
       "Transform": {
-        "posX": 93.3705139,
-        "posY": 2.41298246,
-        "posZ": -11.1105309,
-        "rotX": 359.924072,
-        "rotY": 270.063416,
-        "rotZ": 0.0489413068,
+        "posX": 93.37063,
+        "posY": 2.41296,
+        "posZ": -11.112608,
+        "rotX": 359.926941,
+        "rotY": 270.258728,
+        "rotZ": 0.049952,
         "scaleX": 0.75,
         "scaleY": 1.0,
         "scaleZ": 0.75
@@ -3039,12 +3039,12 @@
       "GUID": "1ce0c5",
       "Name": "Deck",
       "Transform": {
-        "posX": 93.38536,
-        "posY": 2.4163394,
-        "posZ": -13.6660929,
-        "rotX": 359.9213,
-        "rotY": 270.04303,
-        "rotZ": 0.0141713805,
+        "posX": 93.38774,
+        "posY": 2.41631222,
+        "posZ": -13.6625452,
+        "rotX": 359.921082,
+        "rotY": 270.5997,
+        "rotZ": 0.0125200711,
         "scaleX": 0.75,
         "scaleY": 1.0,
         "scaleZ": 0.75
@@ -3784,12 +3784,12 @@
       "GUID": "92624d",
       "Name": "Counter",
       "Transform": {
-        "posX": -60.5585747,
+        "posX": -60.5586,
         "posY": 1.50848722,
-        "posZ": 8.670623,
-        "rotX": 0.0168737341,
-        "rotY": 180.0011,
-        "rotZ": 0.0798766,
+        "posZ": 8.6706295,
+        "rotX": 0.0168721676,
+        "rotY": 180.000931,
+        "rotZ": 0.07987696,
         "scaleX": 2.0,
         "scaleY": 2.0,
         "scaleZ": 2.0
@@ -3845,17 +3845,17 @@
       "GUID": "f7b60a",
       "Name": "Counter",
       "Transform": {
-        "posX": -60.55863,
-        "posY": 1.51025438,
-        "posZ": 14.6709166,
-        "rotX": 0.0168661959,
-        "rotY": 180.000778,
-        "rotZ": 0.07987752,
+        "posX": -60.55793,
+        "posY": 1.51025319,
+        "posZ": 14.670867,
+        "rotX": 0.0168658532,
+        "rotY": 179.999283,
+        "rotZ": 0.07987628,
         "scaleX": 2.0,
         "scaleY": 2.0,
         "scaleZ": 2.0
       },
-      "Nickname": "Points",
+      "Nickname": "Bricks",
       "Description": "",
       "GMNotes": "",
       "AltLookAngle": {
@@ -3864,9 +3864,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.0,
-        "g": 1.0,
-        "b": 0.68235296
+        "r": 1.0,
+        "g": 0.0,
+        "b": 0.0
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -3883,7 +3883,7 @@
       "HideWhenFaceDown": false,
       "Hands": false,
       "Counter": {
-        "value": 2
+        "value": 0
       },
       "LuaScript": "",
       "LuaScriptState": "",
@@ -3906,12 +3906,12 @@
       "GUID": "f52fee",
       "Name": "Quarter",
       "Transform": {
-        "posX": 97.0464,
-        "posY": 1.69828153,
-        "posZ": -1.00690615,
-        "rotX": 7.049343E-06,
-        "rotY": 180.094131,
-        "rotZ": 179.999924,
+        "posX": 97.04642,
+        "posY": 1.69827783,
+        "posZ": -1.00691414,
+        "rotX": -0.000262965652,
+        "rotY": 180.094223,
+        "rotZ": 179.9997,
         "scaleX": 2.0,
         "scaleY": 2.0,
         "scaleZ": 2.0
@@ -3983,11 +3983,11 @@
       "Name": "Die_6_Rounded",
       "Transform": {
         "posX": 96.90315,
-        "posY": 2.39999175,
-        "posZ": -1.01637518,
-        "rotX": -0.0003190791,
-        "rotY": 91.33452,
-        "rotZ": 180.0,
+        "posY": 2.39998055,
+        "posZ": -1.01636076,
+        "rotX": -0.0007902937,
+        "rotY": 91.33445,
+        "rotZ": 180.000565,
         "scaleX": 2.0,
         "scaleY": 2.0,
         "scaleZ": 2.0
@@ -4092,11 +4092,11 @@
       "Name": "go_game_bowl_white",
       "Transform": {
         "posX": 97.30489,
-        "posY": 1.79291916,
+        "posY": 1.79291975,
         "posZ": 28.6289825,
-        "rotX": 2.13306839E-06,
-        "rotY": 0.000313832279,
-        "rotZ": 5.30115676E-06,
+        "rotX": 2.18647119E-06,
+        "rotY": 0.000313877274,
+        "rotZ": 4.92055324E-06,
         "scaleX": 0.800000131,
         "scaleY": 0.800000131,
         "scaleZ": 0.800000131
@@ -4152,12 +4152,12 @@
       "GUID": "f3e327",
       "Name": "Counter",
       "Transform": {
-        "posX": -60.5582542,
-        "posY": 1.490837,
-        "posZ": -0.3292936,
+        "posX": -60.5582848,
+        "posY": 1.49083686,
+        "posZ": -0.329297572,
         "rotX": 359.9201,
-        "rotY": 269.999634,
-        "rotZ": 0.0168755185,
+        "rotY": 269.99942,
+        "rotZ": 0.0168773234,
         "scaleX": 2.5,
         "scaleY": 2.5,
         "scaleZ": 2.5
@@ -4214,11 +4214,11 @@
       "Name": "Deck",
       "Transform": {
         "posX": 91.66458,
-        "posY": 1.87196839,
-        "posZ": -2.56927538,
+        "posY": 1.87196851,
+        "posZ": -2.56939173,
         "rotX": 359.920135,
         "rotY": 270.0167,
-        "rotZ": 0.016777819,
+        "rotZ": 0.0167775117,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -8630,12 +8630,12 @@
       "GUID": "1df2a8",
       "Name": "Deck",
       "Transform": {
-        "posX": -80.91133,
-        "posY": 1.8616451,
-        "posZ": 23.0743961,
-        "rotX": 0.07990064,
-        "rotY": 89.96888,
-        "rotZ": 359.983276,
+        "posX": -80.91152,
+        "posY": 1.8616457,
+        "posZ": 23.0762863,
+        "rotX": 0.0798582956,
+        "rotY": 89.88957,
+        "rotZ": 359.9831,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -10414,15 +10414,15 @@
           "GUID": "63e4c1",
           "Name": "CardCustom",
           "Transform": {
-            "posX": -41.7305756,
-            "posY": 1.56259835,
-            "posZ": 31.7010651,
-            "rotX": 0.08000041,
-            "rotY": 89.99716,
-            "rotZ": 359.982239,
-            "scaleX": 2.23922753,
+            "posX": -80.9111938,
+            "posY": 2.01704335,
+            "posZ": 23.07454,
+            "rotX": 0.229030356,
+            "rotY": 89.98748,
+            "rotZ": 359.6457,
+            "scaleX": 2.0,
             "scaleY": 1.0,
-            "scaleZ": 2.23922753
+            "scaleZ": 2.0
           },
           "Nickname": "Leaf Shield",
           "Description": "",
@@ -10472,15 +10472,15 @@
           "GUID": "18443c",
           "Name": "CardCustom",
           "Transform": {
-            "posX": -41.73056,
-            "posY": 1.60754335,
-            "posZ": 31.7010574,
-            "rotX": 0.08267812,
-            "rotY": 89.9972,
-            "rotZ": 359.979462,
-            "scaleX": 2.23922753,
+            "posX": -80.91135,
+            "posY": 2.105687,
+            "posZ": 23.07472,
+            "rotX": 0.07965017,
+            "rotY": 90.01331,
+            "rotZ": 1.69388211,
+            "scaleX": 2.0,
             "scaleY": 1.0,
-            "scaleZ": 2.23922753
+            "scaleZ": 2.0
           },
           "Nickname": "Leaf Shield",
           "Description": "",
@@ -10532,12 +10532,12 @@
       "GUID": "79d9cf",
       "Name": "Deck",
       "Transform": {
-        "posX": -80.93408,
-        "posY": 2.081819,
-        "posZ": 18.7702351,
-        "rotX": 0.08004983,
-        "rotY": 90.07924,
-        "rotZ": 359.982941,
+        "posX": -80.93436,
+        "posY": 2.08181953,
+        "posZ": 18.7696762,
+        "rotX": 0.08006385,
+        "rotY": 90.13337,
+        "rotZ": 359.983032,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -15400,12 +15400,12 @@
       "GUID": "7c21cb",
       "Name": "Deck",
       "Transform": {
-        "posX": -80.9376755,
-        "posY": 2.05649424,
-        "posZ": 14.4707842,
-        "rotX": 0.07999157,
-        "rotY": 89.9692154,
-        "rotZ": 359.982971,
+        "posX": -80.93749,
+        "posY": 2.061308,
+        "posZ": 14.470953,
+        "rotX": 0.08000185,
+        "rotY": 89.97777,
+        "rotZ": 359.982941,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -15508,6 +15508,7 @@
         75400,
         75200,
         78300,
+        78400,
         78400
       ],
       "CustomDeck": {
@@ -15964,7 +15965,7 @@
         "BounceCombine": 0
       },
       "Rigidbody": {
-        "Mass": 1.1,
+        "Mass": 1.105,
         "Drag": 0.1,
         "AngularDrag": 0.1,
         "UseGravity": true
@@ -19976,12 +19977,70 @@
           "GUID": "94e334",
           "Name": "CardCustom",
           "Transform": {
-            "posX": -70.2740555,
-            "posY": 2.40663934,
-            "posZ": 14.4649963,
-            "rotX": 0.07253075,
-            "rotY": 89.98928,
-            "rotZ": 359.959473,
+            "posX": -80.93469,
+            "posY": 2.43397284,
+            "posZ": 14.4701328,
+            "rotX": 0.07995471,
+            "rotY": 89.9960861,
+            "rotZ": 359.981354,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Chuckya",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 78400,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "784": {
+              "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Items/Support/3%20Stars/chuckya.png?raw=true",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "b7d7bb",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -80.9346848,
+            "posY": 2.44135714,
+            "posZ": 14.4701471,
+            "rotX": 0.07991679,
+            "rotY": 89.996315,
+            "rotZ": 359.9806,
             "scaleX": 2.0,
             "scaleY": 1.0,
             "scaleZ": 2.0
@@ -20036,12 +20095,12 @@
       "GUID": "140e74",
       "Name": "Deck",
       "Transform": {
-        "posX": -90.0916061,
-        "posY": 1.91658437,
-        "posZ": 24.0385914,
-        "rotX": 0.07991535,
-        "rotY": 89.99262,
-        "rotZ": 359.98288,
+        "posX": -90.09136,
+        "posY": 1.91657615,
+        "posZ": 24.0382442,
+        "rotX": 0.07995998,
+        "rotY": 89.99277,
+        "rotZ": 359.9829,
         "scaleX": 3.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -21393,11 +21452,11 @@
       "GUID": "b317ca",
       "Name": "Deck",
       "Transform": {
-        "posX": -79.90085,
-        "posY": 1.77858317,
-        "posZ": -8.989249,
-        "rotX": 0.07984489,
-        "rotY": 89.95346,
+        "posX": -79.90342,
+        "posY": 1.778585,
+        "posZ": -8.988633,
+        "rotX": 0.07975566,
+        "rotY": 89.9493256,
         "rotZ": 359.9832,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -22350,12 +22409,12 @@
           "GUID": "a6b56f",
           "Name": "CardCustom",
           "Transform": {
-            "posX": -69.23952,
-            "posY": 1.85574436,
-            "posZ": -8.992023,
-            "rotX": 0.08282008,
-            "rotY": 89.9987946,
-            "rotZ": 359.977844,
+            "posX": -79.90372,
+            "posY": 1.8707608,
+            "posZ": -8.988237,
+            "rotX": 0.158645377,
+            "rotY": 89.98976,
+            "rotZ": 359.912,
             "scaleX": 2.0,
             "scaleY": 1.0,
             "scaleZ": 2.0
@@ -22410,12 +22469,12 @@
       "GUID": "c66cfe",
       "Name": "Deck",
       "Transform": {
-        "posX": -80.94349,
-        "posY": 1.8097204,
-        "posZ": 10.1681347,
-        "rotX": 0.0799783841,
-        "rotY": 89.98352,
-        "rotZ": 359.982727,
+        "posX": -80.94275,
+        "posY": 1.81453311,
+        "posZ": 10.1683989,
+        "rotX": 0.0799974948,
+        "rotY": 90.02654,
+        "rotZ": 359.9828,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -22467,7 +22526,8 @@
         71400,
         71900,
         60200,
-        73400
+        73400,
+        79100
       ],
       "CustomDeck": {
         "699": {
@@ -22640,6 +22700,15 @@
           "BackIsHidden": true,
           "UniqueBack": false,
           "Type": 0
+        },
+        "791": {
+          "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Items/Equip/4%20Stars/Blashemous%20Blade.png?raw=true",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
         }
       },
       "LuaScript": "",
@@ -22653,7 +22722,7 @@
         "BounceCombine": 0
       },
       "Rigidbody": {
-        "Mass": 0.844999969,
+        "Mass": 0.85,
         "Drag": 0.1,
         "AngularDrag": 0.1,
         "UseGravity": true
@@ -23707,12 +23776,12 @@
           "GUID": "f00ce0",
           "Name": "CardCustom",
           "Transform": {
-            "posX": -74.38748,
-            "posY": 1.557746,
-            "posZ": 9.142989,
-            "rotX": 0.00178737519,
-            "rotY": 90.00862,
-            "rotZ": 353.348969,
+            "posX": -80.93668,
+            "posY": 1.932707,
+            "posZ": 10.1689548,
+            "rotX": 0.07897366,
+            "rotY": 89.99995,
+            "rotZ": 359.938049,
             "scaleX": 2.0,
             "scaleY": 1.0,
             "scaleZ": 2.0
@@ -23760,6 +23829,64 @@
           "LuaScript": "",
           "LuaScriptState": "",
           "XmlUI": ""
+        },
+        {
+          "GUID": "51d1c5",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -80.93673,
+            "posY": 1.95095575,
+            "posZ": 10.1689844,
+            "rotX": 0.0751152262,
+            "rotY": 90.00124,
+            "rotZ": 359.972137,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Blasphemous Blade",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 79100,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "791": {
+              "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Items/Equip/4%20Stars/Blashemous%20Blade.png?raw=true",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
         }
       ]
     },
@@ -23767,12 +23894,12 @@
       "GUID": "244ba4",
       "Name": "go_game_bowl_black",
       "Transform": {
-        "posX": 97.1324,
-        "posY": 1.79291737,
-        "posZ": -28.6438713,
-        "rotX": -7.491038E-06,
-        "rotY": -0.000859744963,
-        "rotZ": 1.16666615E-05,
+        "posX": 97.13241,
+        "posY": 1.79291666,
+        "posZ": -28.6438885,
+        "rotX": -1.38586884E-05,
+        "rotY": -0.0005906733,
+        "rotZ": -1.4481536E-08,
         "scaleX": 0.800000131,
         "scaleY": 0.800000131,
         "scaleZ": 0.800000131
@@ -23828,11 +23955,11 @@
       "GUID": "b2d24e",
       "Name": "Counter",
       "Transform": {
-        "posX": -60.55831,
-        "posY": 1.50318623,
-        "posZ": -9.330766,
+        "posX": -60.5583267,
+        "posY": 1.50318646,
+        "posZ": -9.330769,
         "rotX": 359.983124,
-        "rotY": 0.00115991163,
+        "rotY": 0.0009902542,
         "rotZ": 359.920135,
         "scaleX": 2.0,
         "scaleY": 2.0,
@@ -23889,12 +24016,12 @@
       "GUID": "088be3",
       "Name": "Deck",
       "Transform": {
-        "posX": -90.0898056,
-        "posY": 1.99409986,
-        "posZ": 9.453903,
-        "rotX": 0.0800527856,
-        "rotY": 89.96883,
-        "rotZ": 359.983063,
+        "posX": -90.0906143,
+        "posY": 1.994111,
+        "posZ": 9.453669,
+        "rotX": 0.0800118148,
+        "rotY": 89.9673,
+        "rotZ": 359.98288,
         "scaleX": 3.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -24318,9 +24445,9 @@
             "rotX": 0.0004495234,
             "rotY": 89.99035,
             "rotZ": 0.000321646774,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Alex YIIK",
           "Description": "",
@@ -24376,9 +24503,9 @@
             "rotX": 7.311956E-05,
             "rotY": 89.99035,
             "rotZ": 0.00065182196,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Doctor Zomboss",
           "Description": "",
@@ -24434,9 +24561,9 @@
             "rotX": -2.70307664E-05,
             "rotY": 89.99035,
             "rotZ": -0.000116019939,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "The Master",
           "Description": "",
@@ -24492,9 +24619,9 @@
             "rotX": -2.6567026E-05,
             "rotY": 89.99035,
             "rotZ": -0.000114147319,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "ABBI",
           "Description": "",
@@ -24550,9 +24677,9 @@
             "rotX": -2.587365E-05,
             "rotY": 89.99035,
             "rotZ": -0.0001116314,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Humphrey",
           "Description": "",
@@ -24608,9 +24735,9 @@
             "rotX": 0.00138970511,
             "rotY": 89.99035,
             "rotZ": 0.00903235,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "OMORI",
           "Description": "",
@@ -24666,9 +24793,9 @@
             "rotX": 0.00138161541,
             "rotY": 89.99035,
             "rotZ": 0.008977976,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "The Big Yellow Cat",
           "Description": "",
@@ -24724,9 +24851,9 @@
             "rotX": 0.00136739772,
             "rotY": 89.99035,
             "rotZ": 0.008884005,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Prince of Darkness",
           "Description": "",
@@ -24782,9 +24909,9 @@
             "rotX": 0.000134020986,
             "rotY": 89.99036,
             "rotZ": -0.000106894084,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "The Thin Man",
           "Description": "",
@@ -24840,9 +24967,9 @@
             "rotX": -6.451022E-05,
             "rotY": 89.99035,
             "rotZ": -0.000257595879,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Pandora",
           "Description": "",
@@ -24898,9 +25025,9 @@
             "rotX": -0.000259258959,
             "rotY": 89.99032,
             "rotZ": 0.00018297846,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Twin Princes",
           "Description": "",
@@ -24956,9 +25083,9 @@
             "rotX": 0.000321585074,
             "rotY": 89.99032,
             "rotZ": 0.0005560149,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Tanjerin",
           "Description": "",
@@ -25014,9 +25141,9 @@
             "rotX": 0.000183638855,
             "rotY": 89.99032,
             "rotZ": -0.0002453416,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Ancient Fuelweaver",
           "Description": "",
@@ -25072,9 +25199,9 @@
             "rotX": 0.000224735544,
             "rotY": 89.9903259,
             "rotZ": 0.0003093602,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Chris and Jordi",
           "Description": "",
@@ -25130,9 +25257,9 @@
             "rotX": -0.000230476813,
             "rotY": 89.9903259,
             "rotZ": 0.000162022159,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Frog",
           "Description": "",
@@ -25188,9 +25315,9 @@
             "rotX": -0.000153721892,
             "rotY": 89.99032,
             "rotZ": 0.000414165232,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Golden Freddy",
           "Description": "",
@@ -25246,9 +25373,9 @@
             "rotX": 0.003821255,
             "rotY": 89.99035,
             "rotZ": 359.992645,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "The Puppet",
           "Description": "",
@@ -25304,9 +25431,9 @@
             "rotX": -5.21309739E-05,
             "rotY": 89.9903259,
             "rotZ": 0.0004618172,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Nightmare King Grimm",
           "Description": "",
@@ -25362,9 +25489,9 @@
             "rotX": -5.09456222E-05,
             "rotY": 89.9903259,
             "rotZ": 0.000449962681,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Pure Vessel",
           "Description": "",
@@ -25420,9 +25547,9 @@
             "rotX": -4.979292E-05,
             "rotY": 89.9903259,
             "rotZ": 0.000438285351,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "The Radiance",
           "Description": "",
@@ -25478,9 +25605,9 @@
             "rotX": -0.000202762458,
             "rotY": 89.99032,
             "rotZ": 0.000140078453,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Crowned Magalor",
           "Description": "",
@@ -25536,9 +25663,9 @@
             "rotX": 0.0002628475,
             "rotY": 89.99032,
             "rotZ": 0.0004669913,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Dark Mind Eye",
           "Description": "",
@@ -25594,9 +25721,9 @@
             "rotX": -4.569328E-05,
             "rotY": 89.99032,
             "rotZ": 0.000399450859,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Galacta Knight",
           "Description": "",
@@ -25652,9 +25779,9 @@
             "rotX": 0.000257289736,
             "rotY": 89.99032,
             "rotZ": 0.000439710828,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "HR-D3",
           "Description": "",
@@ -25710,9 +25837,9 @@
             "rotX": 0.000253348582,
             "rotY": 89.9903,
             "rotZ": 0.000436854229,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Landia",
           "Description": "",
@@ -25768,9 +25895,9 @@
             "rotX": 0.0002485823,
             "rotY": 89.99032,
             "rotZ": 0.000428486848,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Marx",
           "Description": "",
@@ -25826,9 +25953,9 @@
             "rotX": 0.000234952167,
             "rotY": 89.99032,
             "rotZ": 0.000417477539,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Masked Dedede",
           "Description": "",
@@ -25884,9 +26011,9 @@
             "rotX": -0.000184902485,
             "rotY": 89.99032,
             "rotZ": 0.000122888247,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Necrodeus",
           "Description": "",
@@ -25942,9 +26069,9 @@
             "rotX": -3.54502736E-05,
             "rotY": 89.99032,
             "rotZ": 0.000304214918,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Nightmare",
           "Description": "",
@@ -26000,9 +26127,9 @@
             "rotX": -3.8377435E-05,
             "rotY": 89.99032,
             "rotZ": 0.000294358149,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Yin Yarn",
           "Description": "",
@@ -26058,9 +26185,9 @@
             "rotX": 0.000213245192,
             "rotY": 89.99032,
             "rotZ": 0.00035591115,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Zero Override",
           "Description": "",
@@ -26116,9 +26243,9 @@
             "rotX": 0.0001282928,
             "rotY": 89.99032,
             "rotZ": -0.000178691611,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Zero Two",
           "Description": "",
@@ -26174,9 +26301,9 @@
             "rotX": 8.73998652E-05,
             "rotY": 89.99034,
             "rotZ": -8.57168E-05,
-            "scaleX": 2.42404532,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 2.42404532
+            "scaleZ": 3.0
           },
           "Nickname": "Niiue",
           "Description": "",
@@ -26232,9 +26359,9 @@
             "rotX": 0.065063186,
             "rotY": 89.97666,
             "rotZ": 0.012124165,
-            "scaleX": 3.2506578,
+            "scaleX": 3.0,
             "scaleY": 1.0,
-            "scaleZ": 3.2506578
+            "scaleZ": 3.0
           },
           "Nickname": "Ze'mer",
           "Description": "",
@@ -26402,12 +26529,12 @@
       "GUID": "e7e832",
       "Name": "Deck",
       "Transform": {
-        "posX": -90.08971,
-        "posY": 2.13996148,
-        "posZ": 14.3144341,
-        "rotX": 0.08002837,
-        "rotY": 90.00177,
-        "rotZ": 359.982971,
+        "posX": -90.09021,
+        "posY": 2.13995266,
+        "posZ": 14.3141508,
+        "rotX": 0.0801025555,
+        "rotY": 89.98841,
+        "rotZ": 359.983246,
         "scaleX": 3.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -30955,12 +31082,12 @@
       "GUID": "d65c48",
       "Name": "Deck",
       "Transform": {
-        "posX": -90.09136,
-        "posY": 2.17508745,
-        "posZ": 19.1757221,
-        "rotX": 0.0800646,
-        "rotY": 89.99693,
-        "rotZ": 359.983337,
+        "posX": -90.09128,
+        "posY": 2.17990923,
+        "posZ": 19.17578,
+        "rotX": 0.0800119042,
+        "rotY": 89.94518,
+        "rotZ": 359.982849,
         "scaleX": 3.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -31066,7 +31193,8 @@
         74800,
         77400,
         35100,
-        77900
+        77900,
+        79000
       ],
       "CustomDeck": {
         "308": {
@@ -31725,6 +31853,15 @@
           "BackIsHidden": true,
           "UniqueBack": false,
           "Type": 0
+        },
+        "790": {
+          "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Creatures/Kirby/3%20Stars/Holo%20Defense%20API.png?raw=true",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
         }
       },
       "LuaScript": "",
@@ -31738,7 +31875,7 @@
         "BounceCombine": 0
       },
       "Rigidbody": {
-        "Mass": 1.115,
+        "Mass": 1.12,
         "Drag": 0.1,
         "AngularDrag": 0.1,
         "UseGravity": true
@@ -35924,12 +36061,12 @@
           "GUID": "1423d0",
           "Name": "CardCustom",
           "Transform": {
-            "posX": -79.34024,
-            "posY": 2.44958353,
-            "posZ": 18.7640018,
-            "rotX": 0.0862434953,
-            "rotY": 89.97652,
-            "rotZ": 359.971741,
+            "posX": -90.0917053,
+            "posY": 2.55439854,
+            "posZ": 19.1758156,
+            "rotX": 0.0827115253,
+            "rotY": 89.9971161,
+            "rotZ": 359.992859,
             "scaleX": 3.0,
             "scaleY": 1.0,
             "scaleZ": 3.0
@@ -35977,6 +36114,64 @@
           "LuaScript": "",
           "LuaScriptState": "",
           "XmlUI": ""
+        },
+        {
+          "GUID": "67ad11",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -90.09192,
+            "posY": 2.59359074,
+            "posZ": 19.1756878,
+            "rotX": 0.07967708,
+            "rotY": 89.9946,
+            "rotZ": 0.33312878,
+            "scaleX": 3.0,
+            "scaleY": 1.0,
+            "scaleZ": 3.0
+          },
+          "Nickname": "Halo Defense APi",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 79000,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "790": {
+              "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Creatures/Kirby/3%20Stars/Holo%20Defense%20API.png?raw=true",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
         }
       ]
     },
@@ -35984,12 +36179,12 @@
       "GUID": "10908e",
       "Name": "Deck",
       "Transform": {
-        "posX": -79.91145,
-        "posY": 1.91209984,
-        "posZ": -13.2925148,
-        "rotX": 0.07997505,
-        "rotY": 89.9856644,
-        "rotZ": 359.982941,
+        "posX": -79.91268,
+        "posY": 1.91210616,
+        "posZ": -13.2915621,
+        "rotX": 0.080190666,
+        "rotY": 89.91873,
+        "rotZ": 359.982849,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -38905,17 +39100,17 @@
       "GUID": "748515",
       "Name": "Counter",
       "Transform": {
-        "posX": -60.5584221,
-        "posY": 1.50141978,
-        "posZ": -15.3307419,
+        "posX": -60.557724,
+        "posY": 1.50141907,
+        "posZ": -15.3308239,
         "rotX": 359.983124,
-        "rotY": 0.00311117573,
+        "rotY": -0.000418964,
         "rotZ": 359.920135,
         "scaleX": 2.0,
         "scaleY": 2.0,
         "scaleZ": 2.0
       },
-      "Nickname": "Points",
+      "Nickname": "Bricks",
       "Description": "",
       "GMNotes": "",
       "AltLookAngle": {
@@ -38924,9 +39119,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.0,
-        "g": 1.0,
-        "b": 0.68235296
+        "r": 1.0,
+        "g": 0.0,
+        "b": 0.0
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -38943,7 +39138,7 @@
       "HideWhenFaceDown": false,
       "Hands": false,
       "Counter": {
-        "value": 2
+        "value": 0
       },
       "LuaScript": "",
       "LuaScriptState": "",
@@ -38966,12 +39161,12 @@
       "GUID": "6a4df1",
       "Name": "Deck",
       "Transform": {
-        "posX": -79.9246445,
-        "posY": 1.94455338,
-        "posZ": -17.59199,
-        "rotX": 0.0799786747,
-        "rotY": 89.84565,
-        "rotZ": 359.9828,
+        "posX": -79.92397,
+        "posY": 1.94455481,
+        "posZ": -17.59207,
+        "rotX": 0.08025838,
+        "rotY": 89.91353,
+        "rotZ": 359.983,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -42363,12 +42558,12 @@
       "GUID": "d4cb05",
       "Name": "Deck",
       "Transform": {
-        "posX": -79.92859,
-        "posY": 1.79886675,
-        "posZ": -21.89616,
-        "rotX": 0.07996357,
-        "rotY": 89.92631,
-        "rotZ": 359.982635,
+        "posX": -79.9253845,
+        "posY": 1.803674,
+        "posZ": -21.8956985,
+        "rotX": 0.07986559,
+        "rotY": 90.1223755,
+        "rotZ": 359.9827,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -42420,7 +42615,8 @@
         66000,
         71400,
         71900,
-        73400
+        73400,
+        79100
       ],
       "CustomDeck": {
         "699": {
@@ -42593,6 +42789,15 @@
           "BackIsHidden": true,
           "UniqueBack": false,
           "Type": 0
+        },
+        "791": {
+          "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Items/Equip/4%20Stars/Blashemous%20Blade.png?raw=true",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
         }
       },
       "LuaScript": "",
@@ -42606,7 +42811,7 @@
         "BounceCombine": 0
       },
       "Rigidbody": {
-        "Mass": 0.844999969,
+        "Mass": 0.85,
         "Drag": 0.1,
         "AngularDrag": 0.1,
         "UseGravity": true
@@ -43713,6 +43918,64 @@
           "LuaScript": "",
           "LuaScriptState": "",
           "XmlUI": ""
+        },
+        {
+          "GUID": "3fd9fe",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -79.93116,
+            "posY": 1.92719638,
+            "posZ": -21.89386,
+            "rotX": 0.06884013,
+            "rotY": 90.00879,
+            "rotZ": 359.9584,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "Blasphemous Blade",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 79100,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "791": {
+              "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Items/Equip/4%20Stars/Blashemous%20Blade.png?raw=true",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
         }
       ]
     },
@@ -43785,12 +44048,12 @@
       "GUID": "89b33d",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.1260452,
+        "posX": 97.12606,
         "posY": 1.48299742,
-        "posZ": -6.00678825,
-        "rotX": -0.0001775773,
-        "rotY": 0.00219106581,
-        "rotZ": 0.0004628459,
+        "posZ": -6.00679827,
+        "rotX": -0.000330502022,
+        "rotY": 0.0020099096,
+        "rotZ": 0.00017538594,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -43903,7 +44166,7 @@
       "GUID": "bb795f",
       "Name": "HandTrigger",
       "Transform": {
-        "posX": 0.0,
+        "posX": 20.3151188,
         "posY": 5.0,
         "posZ": -35.0,
         "rotX": 0.0,
@@ -43950,12 +44213,12 @@
       "GUID": "6949a1",
       "Name": "Custom_Model_Bag",
       "Transform": {
-        "posX": -96.8978043,
-        "posY": 6.999995,
-        "posZ": 1.93667865,
-        "rotX": 1.37048733E-06,
-        "rotY": 180.315964,
-        "rotZ": 7.22506E-06,
+        "posX": -96.89782,
+        "posY": 6.99999475,
+        "posZ": 1.93668175,
+        "rotX": 1.880827E-06,
+        "rotY": 180.315872,
+        "rotZ": 1.49165362E-05,
         "scaleX": 5.0,
         "scaleY": 5.499998,
         "scaleZ": 5.0
@@ -44999,11 +45262,11 @@
       "Name": "Infinite_Bag",
       "Transform": {
         "posX": 97.12611,
-        "posY": 1.4829973,
-        "posZ": -3.78679085,
-        "rotX": -7.754233E-05,
-        "rotY": 0.021519389,
-        "rotZ": -3.15559919E-06,
+        "posY": 1.48299837,
+        "posZ": -3.78679729,
+        "rotX": -0.0001809012,
+        "rotY": 0.02107348,
+        "rotZ": -8.920228E-05,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -45126,7 +45389,7 @@
       "GUID": "9c8aa9",
       "Name": "HandTrigger",
       "Transform": {
-        "posX": 0.227959156,
+        "posX": 19.7468224,
         "posY": 5.0,
         "posZ": 35.0,
         "rotX": 0.0,
@@ -45173,11 +45436,11 @@
       "GUID": "9dfe92",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -47.05519,
-        "posY": 1.5527544,
-        "posZ": 19.1700974,
-        "rotX": 359.983124,
-        "rotY": 0.0057469327,
+        "posX": -47.0552063,
+        "posY": 1.55275452,
+        "posZ": 19.1701031,
+        "rotX": 359.983154,
+        "rotY": 0.00697753532,
         "rotZ": 359.920135,
         "scaleX": 0.883734,
         "scaleY": 1.0,
@@ -45230,11 +45493,11 @@
       "GUID": "33baee",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -54.05563,
+        "posX": -54.05566,
         "posY": 1.56251383,
-        "posZ": 19.170332,
+        "posZ": 19.17035,
         "rotX": 359.9832,
-        "rotY": 0.0306622144,
+        "rotY": 0.0302353241,
         "rotZ": 359.9201,
         "scaleX": 0.883734,
         "scaleY": 1.0,
@@ -45287,12 +45550,12 @@
       "GUID": "676410",
       "Name": "Deck",
       "Transform": {
-        "posX": -73.56884,
-        "posY": 1.72851264,
-        "posZ": 14.4762726,
-        "rotX": 0.07991395,
-        "rotY": 89.9837,
-        "rotZ": 359.983,
+        "posX": -73.56941,
+        "posY": 1.72851372,
+        "posZ": 14.47659,
+        "rotX": 0.07989735,
+        "rotY": 89.91973,
+        "rotZ": 359.982819,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -45611,12 +45874,12 @@
       "GUID": "203338",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 122.311554,
-        "posY": 1.131109,
-        "posZ": -9.711509,
-        "rotX": 6.794569E-05,
-        "rotY": 179.931534,
-        "rotZ": 359.398254,
+        "posX": 122.311447,
+        "posY": 1.13108563,
+        "posZ": -9.711544,
+        "rotX": 7.440736E-05,
+        "rotY": 179.93042,
+        "rotZ": 359.398529,
         "scaleX": 7.0,
         "scaleY": 1.0,
         "scaleZ": 5.0
@@ -45677,12 +45940,12 @@
       "GUID": "0d4ec1",
       "Name": "Deck",
       "Transform": {
-        "posX": -89.70748,
-        "posY": 1.98400688,
-        "posZ": -23.0121841,
-        "rotX": 0.080047816,
-        "rotY": 89.9547653,
-        "rotZ": 359.982971,
+        "posX": -89.70854,
+        "posY": 1.98400772,
+        "posZ": -23.0124588,
+        "rotX": 0.08007541,
+        "rotY": 89.9496841,
+        "rotZ": 359.983032,
         "scaleX": 3.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -48190,12 +48453,12 @@
       "GUID": "ea8b7c",
       "Name": "Deck",
       "Transform": {
-        "posX": -89.70388,
-        "posY": 2.125048,
-        "posZ": -18.1499767,
-        "rotX": 0.0799971148,
-        "rotY": 89.92195,
-        "rotZ": 359.983215,
+        "posX": -89.70423,
+        "posY": 2.125049,
+        "posZ": -18.1496964,
+        "rotX": 0.0799656138,
+        "rotY": 89.87901,
+        "rotZ": 359.983032,
         "scaleX": 3.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -52675,12 +52938,12 @@
       "GUID": "e572c0",
       "Name": "Deck",
       "Transform": {
-        "posX": -89.70205,
-        "posY": 2.164988,
-        "posZ": -13.2885151,
-        "rotX": 0.0800442547,
-        "rotY": 89.90455,
-        "rotZ": 359.983124,
+        "posX": -89.7025757,
+        "posY": 2.16980243,
+        "posZ": -13.2883615,
+        "rotX": 0.07999165,
+        "rotY": 89.86026,
+        "rotZ": 359.983063,
         "scaleX": 3.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -52786,7 +53049,8 @@
         74800,
         77400,
         35100,
-        77900
+        77900,
+        79000
       ],
       "CustomDeck": {
         "308": {
@@ -53445,6 +53709,15 @@
           "BackIsHidden": true,
           "UniqueBack": false,
           "Type": 0
+        },
+        "790": {
+          "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Creatures/Kirby/3%20Stars/Holo%20Defense%20API.png?raw=true",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
         }
       },
       "LuaScript": "",
@@ -53458,7 +53731,7 @@
         "BounceCombine": 0
       },
       "Rigidbody": {
-        "Mass": 1.115,
+        "Mass": 1.12,
         "Drag": 0.1,
         "AngularDrag": 0.1,
         "UseGravity": true
@@ -57697,6 +57970,64 @@
           "LuaScript": "",
           "LuaScriptState": "",
           "XmlUI": ""
+        },
+        {
+          "GUID": "981c66",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -89.7039,
+            "posY": 2.55502033,
+            "posZ": -13.2893867,
+            "rotX": 0.0196425039,
+            "rotY": 89.99305,
+            "rotZ": 0.2719043,
+            "scaleX": 3.0,
+            "scaleY": 1.0,
+            "scaleZ": 3.0
+          },
+          "Nickname": "Halo Defense APi",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 79000,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "790": {
+              "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Creatures/Kirby/3%20Stars/Holo%20Defense%20API.png?raw=true",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
         }
       ]
     },
@@ -57704,12 +58035,12 @@
       "GUID": "9b6808",
       "Name": "Deck",
       "Transform": {
-        "posX": -89.70088,
-        "posY": 1.90647852,
-        "posZ": -8.42783451,
-        "rotX": 0.0799184144,
-        "rotY": 90.01397,
-        "rotZ": 359.982971,
+        "posX": -89.7008743,
+        "posY": 1.90647793,
+        "posZ": -8.429027,
+        "rotX": 0.0799489543,
+        "rotY": 90.0665054,
+        "rotZ": 359.983063,
         "scaleX": 3.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -59061,11 +59392,11 @@
       "GUID": "2ad331",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -68.4992142,
+        "posX": -68.4992752,
         "posY": 1.58389437,
-        "posZ": 23.39721,
-        "rotX": 0.0798903257,
-        "rotY": 90.02691,
+        "posZ": 23.3972168,
+        "rotX": 0.07988761,
+        "rotY": 90.0286,
         "rotZ": 359.983154,
         "scaleX": 0.883734,
         "scaleY": 1.0,
@@ -59118,11 +59449,11 @@
       "GUID": "cc629b",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -68.48542,
+        "posX": -68.48545,
         "posY": 1.5826056,
         "posZ": 19.0857944,
-        "rotX": 0.0798939,
-        "rotY": 90.02476,
+        "rotX": 0.0798918,
+        "rotY": 90.02564,
         "rotZ": 359.983154,
         "scaleX": 0.883734,
         "scaleY": 1.0,
@@ -59175,11 +59506,11 @@
       "GUID": "dc231e",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -68.4653,
+        "posX": -68.4653244,
         "posY": 1.581326,
         "posZ": 14.8356409,
-        "rotX": 0.07988704,
-        "rotY": 90.0215149,
+        "rotX": 0.07988616,
+        "rotY": 90.02288,
         "rotZ": 359.983154,
         "scaleX": 0.883734,
         "scaleY": 1.0,
@@ -59232,11 +59563,11 @@
       "GUID": "c9acfa",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -68.47374,
-        "posY": 1.58007169,
-        "posZ": 10.5355158,
-        "rotX": 0.07989047,
-        "rotY": 90.02599,
+        "posX": -68.47377,
+        "posY": 1.58007157,
+        "posZ": 10.53552,
+        "rotX": 0.0798948258,
+        "rotY": 90.02674,
         "rotZ": 359.983154,
         "scaleX": 0.883734,
         "scaleY": 1.0,
@@ -59289,12 +59620,12 @@
       "GUID": "113adf",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 122.3102,
-        "posY": 1.24458086,
-        "posZ": -9.611214,
-        "rotX": 0.600966334,
-        "rotY": 269.999176,
-        "rotZ": 0.000105340114,
+        "posX": 122.309708,
+        "posY": 1.24461651,
+        "posZ": -9.611064,
+        "rotX": 0.602612853,
+        "rotY": 269.9977,
+        "rotZ": 0.000101658035,
         "scaleX": 3.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -59350,9 +59681,9 @@
         "posX": 122.273911,
         "posY": 1.07832384,
         "posZ": 10.6168194,
-        "rotX": 1.329405E-07,
+        "rotX": 1.623475E-07,
         "rotY": 178.9349,
-        "rotZ": 3.56134933E-06,
+        "rotZ": 3.54395024E-06,
         "scaleX": 7.0,
         "scaleY": 1.0,
         "scaleZ": 5.0
@@ -59415,10 +59746,10 @@
       "Transform": {
         "posX": 106.034065,
         "posY": 1.07832479,
-        "posZ": -1.56354916,
-        "rotX": -3.5429307E-06,
+        "posZ": -1.5635494,
+        "rotX": -3.541005E-06,
         "rotY": 269.9852,
-        "rotZ": 6.85723549E-08,
+        "rotZ": 7.9347565E-08,
         "scaleX": 4.5,
         "scaleY": 1.0,
         "scaleZ": 4.5
@@ -59526,7 +59857,7 @@
       "GUID": "ed6b15",
       "Name": "HandTrigger",
       "Transform": {
-        "posX": -40.5235748,
+        "posX": -20.4864235,
         "posY": 5.0,
         "posZ": -35.0,
         "rotX": 0.0,
@@ -59573,7 +59904,7 @@
       "GUID": "3a3ef8",
       "Name": "HandTrigger",
       "Transform": {
-        "posX": 40.7763977,
+        "posX": 61.3320541,
         "posY": 5.0,
         "posZ": 35.0,
         "rotX": 0.0,
@@ -59620,7 +59951,7 @@
       "GUID": "a9dc1d",
       "Name": "HandTrigger",
       "Transform": {
-        "posX": -40.1534233,
+        "posX": -21.3634472,
         "posY": 5.0,
         "posZ": 35.0,
         "rotX": 0.0,
@@ -59761,17 +60092,17 @@
       "GUID": "f9a5ff",
       "Name": "Counter",
       "Transform": {
-        "posX": -60.5581322,
-        "posY": 1.49965239,
+        "posX": -60.55822,
+        "posY": 1.49965262,
         "posZ": -21.3306751,
         "rotX": 359.983124,
-        "rotY": 0.0011338169,
+        "rotY": -0.0008861985,
         "rotZ": 359.920135,
         "scaleX": 2.0,
         "scaleY": 2.0,
         "scaleZ": 2.0
       },
-      "Nickname": "Bricks",
+      "Nickname": "Points",
       "Description": "",
       "GMNotes": "",
       "AltLookAngle": {
@@ -59780,9 +60111,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 1.0,
-        "g": 0.0,
-        "b": 0.0
+        "r": 0.0,
+        "g": 1.0,
+        "b": 0.68235296
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -59799,7 +60130,7 @@
       "HideWhenFaceDown": false,
       "Hands": false,
       "Counter": {
-        "value": 0
+        "value": 2
       },
       "LuaScript": "",
       "LuaScriptState": "",
@@ -59822,17 +60153,17 @@
       "GUID": "6f26af",
       "Name": "Counter",
       "Transform": {
-        "posX": -60.55867,
-        "posY": 1.51202106,
-        "posZ": 20.6711655,
-        "rotX": 0.0168625023,
-        "rotY": 180.002457,
-        "rotZ": 0.0798773542,
+        "posX": -60.5587,
+        "posY": 1.51202083,
+        "posZ": 20.67118,
+        "rotX": 0.016864581,
+        "rotY": 180.002563,
+        "rotZ": 0.07987619,
         "scaleX": 2.0,
         "scaleY": 2.0,
         "scaleZ": 2.0
       },
-      "Nickname": "Bricks",
+      "Nickname": "Points",
       "Description": "",
       "GMNotes": "",
       "AltLookAngle": {
@@ -59841,9 +60172,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 1.0,
-        "g": 0.0,
-        "b": 0.0
+        "r": 0.0,
+        "g": 1.0,
+        "b": 0.68235296
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -59860,7 +60191,7 @@
       "HideWhenFaceDown": false,
       "Hands": false,
       "Counter": {
-        "value": 0
+        "value": 2
       },
       "LuaScript": "",
       "LuaScriptState": "",
@@ -59883,12 +60214,12 @@
       "GUID": "194146",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 127.657745,
-        "posY": 1.07841372,
-        "posZ": -9.894832,
-        "rotX": 0.00187426747,
-        "rotY": 269.94104,
-        "rotZ": -0.00387878763,
+        "posX": 127.657791,
+        "posY": 1.07841229,
+        "posZ": -9.894759,
+        "rotX": 0.0018352248,
+        "rotY": 269.932678,
+        "rotZ": -0.00381367444,
         "scaleX": 0.883734,
         "scaleY": 1.0,
         "scaleZ": 0.883734
@@ -59943,9 +60274,9 @@
         "posX": 128.29541,
         "posY": 1.07832348,
         "posZ": 11.1004925,
-        "rotX": -3.22130222E-06,
+        "rotX": -3.24786879E-06,
         "rotY": 269.4368,
-        "rotZ": -1.23241861E-07,
+        "rotZ": -5.82123967E-08,
         "scaleX": 0.883734,
         "scaleY": 1.0,
         "scaleZ": 0.883734
@@ -59997,12 +60328,12 @@
       "GUID": "479371",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.12731,
-        "posY": 1.48299813,
-        "posZ": -8.226791,
-        "rotX": -6.900897E-05,
-        "rotY": 359.966522,
-        "rotZ": -0.000186309335,
+        "posX": 97.12734,
+        "posY": 1.4829967,
+        "posZ": -8.226806,
+        "rotX": 0.0002354215,
+        "rotY": 359.966858,
+        "rotZ": -0.0002528664,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -60016,7 +60347,7 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.3605931,
+        "r": 0.360593,
         "g": 1.0,
         "b": 0.0
       },
@@ -60125,12 +60456,12 @@
       "GUID": "ef92ba",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.12792,
-        "posY": 1.48299778,
-        "posZ": -10.4467964,
-        "rotX": 0.000327651564,
-        "rotY": 0.0272079837,
-        "rotZ": -0.0006096621,
+        "posX": 97.12797,
+        "posY": 1.48299718,
+        "posZ": -10.4468012,
+        "rotX": 0.00015249876,
+        "rotY": 0.0273362081,
+        "rotZ": 0.000117563977,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -60144,7 +60475,7 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.242157936,
+        "r": 0.242157817,
         "g": 0.5958188,
         "b": 1.0
       },
@@ -60253,12 +60584,12 @@
       "GUID": "de8e4a",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.12907,
-        "posY": 1.48299718,
-        "posZ": -12.6667891,
-        "rotX": -6.471687E-05,
-        "rotY": 359.980957,
-        "rotZ": 0.0002959209,
+        "posX": 97.1290741,
+        "posY": 1.48299766,
+        "posZ": -12.6668024,
+        "rotX": 0.000105878571,
+        "rotY": 359.981476,
+        "rotZ": -0.000113170972,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -60381,12 +60712,12 @@
       "GUID": "7962c9",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.12995,
-        "posY": 1.48299718,
-        "posZ": -14.8867826,
-        "rotX": 8.372621E-05,
-        "rotY": 359.982056,
-        "rotZ": 5.92275428E-05,
+        "posX": 97.12997,
+        "posY": 1.482997,
+        "posZ": -14.8867931,
+        "rotX": 1.2106796E-05,
+        "rotY": 359.9823,
+        "rotZ": 0.000284853682,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -60488,12 +60819,12 @@
       "GUID": "d9c4ac",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.10543,
-        "posY": 1.482998,
-        "posZ": 13.0953531,
-        "rotX": 0.00019670905,
+        "posX": 97.1054459,
+        "posY": 1.48299766,
+        "posZ": 13.0953627,
+        "rotX": 7.73694046E-05,
         "rotY": 180.019562,
-        "rotZ": 0.000235725733,
+        "rotZ": 5.63871981E-05,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -60595,12 +60926,12 @@
       "GUID": "1b9ecf",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.10276,
-        "posY": 1.48299813,
-        "posZ": 1.995346,
-        "rotX": -0.000587416929,
-        "rotY": 180.007324,
-        "rotZ": 0.000528423931,
+        "posX": 97.10281,
+        "posY": 1.48299861,
+        "posZ": 1.99535584,
+        "rotX": -0.0007270716,
+        "rotY": 180.006287,
+        "rotZ": 0.000130264074,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -60723,12 +61054,12 @@
       "GUID": "4591b4",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.10315,
-        "posY": 1.48299742,
-        "posZ": 4.215359,
-        "rotX": 4.747274E-05,
-        "rotY": 180.009567,
-        "rotZ": -0.000246523559,
+        "posX": 97.10318,
+        "posY": 1.48299837,
+        "posZ": 4.215362,
+        "rotX": 0.000207059318,
+        "rotY": 180.009857,
+        "rotZ": 6.767549E-05,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -60841,12 +61172,12 @@
       "GUID": "cf1305",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.10371,
-        "posY": 1.4829967,
-        "posZ": 6.43536,
-        "rotX": 0.000133037145,
-        "rotY": 180.01358,
-        "rotZ": -8.91924938E-05,
+        "posX": 97.103714,
+        "posY": 1.48299718,
+        "posZ": 6.43537045,
+        "rotX": 2.22039434E-05,
+        "rotY": 180.013565,
+        "rotZ": -5.48901953E-05,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -60860,7 +61191,7 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.360593081,
+        "r": 0.360592961,
         "g": 1.0,
         "b": 0.0
       },
@@ -60969,12 +61300,12 @@
       "GUID": "eb5c28",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.10427,
-        "posY": 1.48299706,
-        "posZ": 8.655362,
-        "rotX": 0.000134225382,
-        "rotY": 180.0574,
-        "rotZ": -0.000386543,
+        "posX": 97.10428,
+        "posY": 1.4829967,
+        "posZ": 8.655378,
+        "rotX": 0.000839138171,
+        "rotY": 180.057648,
+        "rotZ": -0.000603382767,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -60988,7 +61319,7 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2421579,
+        "r": 0.242157787,
         "g": 0.5958188,
         "b": 1.0
       },
@@ -61097,12 +61428,12 @@
       "GUID": "106068",
       "Name": "Infinite_Bag",
       "Transform": {
-        "posX": 97.10485,
-        "posY": 1.48299813,
-        "posZ": 10.87536,
-        "rotX": 0.000125087914,
-        "rotY": 180.025421,
-        "rotZ": 0.000116567673,
+        "posX": 97.10486,
+        "posY": 1.48299789,
+        "posZ": 10.8753624,
+        "rotX": -0.000366480526,
+        "rotY": 180.025528,
+        "rotZ": 0.000456308422,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -61225,12 +61556,12 @@
       "GUID": "326afc",
       "Name": "Deck",
       "Transform": {
-        "posX": 90.82906,
-        "posY": 1.91755259,
-        "posZ": -5.957195,
-        "rotX": 359.920776,
-        "rotY": 269.902283,
-        "rotZ": 0.0174919683,
+        "posX": 90.8274841,
+        "posY": 1.91756,
+        "posZ": -5.95723248,
+        "rotX": 359.9208,
+        "rotY": 269.907654,
+        "rotZ": 0.016200589,
         "scaleX": 0.75,
         "scaleY": 1.0,
         "scaleZ": 0.75
@@ -61822,11 +62153,11 @@
       "Name": "Deck",
       "Transform": {
         "posX": 93.39129,
-        "posY": 1.75925136,
+        "posY": 1.75925159,
         "posZ": -28.8378963,
-        "rotX": 2.63527454E-05,
+        "rotX": 2.64830724E-05,
         "rotY": 270.020844,
-        "rotZ": -0.0003270577,
+        "rotZ": -0.000325211149,
         "scaleX": 0.75,
         "scaleY": 1.0,
         "scaleZ": 0.75
@@ -62487,9 +62818,9 @@
       "Transform": {
         "posX": 91.72811,
         "posY": 1.35286963,
-        "posZ": -2.56914282,
-        "rotX": 0.07990746,
-        "rotY": 90.0216,
+        "posZ": -2.5691905,
+        "rotX": 0.07990652,
+        "rotY": 90.021965,
         "rotZ": 359.982941,
         "scaleX": 1.61026788,
         "scaleY": 1.0,
@@ -62551,12 +62882,12 @@
       "GUID": "1d95fd",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 84.9973145,
+        "posX": 84.997345,
         "posY": 1.36292815,
-        "posZ": -0.291598141,
+        "posZ": -0.291591972,
         "rotX": 359.9201,
-        "rotY": 270.023224,
-        "rotZ": 0.01684018,
+        "rotY": 270.023926,
+        "rotZ": 0.0168392155,
         "scaleX": 3.33022881,
         "scaleY": 1.0,
         "scaleZ": 3.00392532
@@ -62617,12 +62948,12 @@
       "GUID": "47a97f",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 91.71638,
-        "posY": 1.88904691,
-        "posZ": 1.35608208,
-        "rotX": 0.07989151,
-        "rotY": 90.0300446,
-        "rotZ": 179.983185,
+        "posX": 91.71666,
+        "posY": 1.88904715,
+        "posZ": 1.35607433,
+        "rotX": 0.0798946843,
+        "rotY": 90.03474,
+        "rotZ": 179.9832,
         "scaleX": 2.100204,
         "scaleY": 1.0,
         "scaleZ": 3.15030575
@@ -62683,12 +63014,12 @@
       "GUID": "f0df67",
       "Name": "Deck",
       "Transform": {
-        "posX": 91.65312,
+        "posX": 91.6534042,
         "posY": 2.01115847,
-        "posZ": 1.35599029,
+        "posZ": 1.35596108,
         "rotX": 359.9201,
-        "rotY": 270.0275,
-        "rotZ": 0.0167125948,
+        "rotY": 270.031555,
+        "rotZ": 0.0167091489,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -64658,12 +64989,12 @@
       "GUID": "f9f19f",
       "Name": "Deck",
       "Transform": {
-        "posX": -72.24063,
-        "posY": 1.71108234,
-        "posZ": -22.0688076,
-        "rotX": 0.08007039,
-        "rotY": 90.29681,
-        "rotZ": 359.983246,
+        "posX": -72.2373352,
+        "posY": 1.71588767,
+        "posZ": -22.0677643,
+        "rotX": 0.08002933,
+        "rotY": 90.45241,
+        "rotZ": 359.983429,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -64699,7 +65030,8 @@
       "DeckIDs": [
         18700,
         18400,
-        74400
+        74400,
+        78900
       ],
       "CustomDeck": {
         "187": {
@@ -64722,6 +65054,15 @@
         },
         "744": {
           "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Field/4%20Stars/The_Panda_Future2.png?raw=true",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "789": {
+          "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Field/4%20Stars/The%20Structure.png?raw=true",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -64907,6 +65248,64 @@
           "LuaScript": "",
           "LuaScriptState": "",
           "XmlUI": ""
+        },
+        {
+          "GUID": "d86294",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -72.2624054,
+            "posY": 1.76464772,
+            "posZ": -22.0690155,
+            "rotX": 0.0687668,
+            "rotY": 89.99385,
+            "rotZ": 359.9602,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "The Panda Future",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 78900,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "789": {
+              "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Field/4%20Stars/The%20Structure.png?raw=true",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
         }
       ]
     },
@@ -64914,12 +65313,12 @@
       "GUID": "107dfe",
       "Name": "Deck",
       "Transform": {
-        "posX": -72.26201,
-        "posY": 1.72327292,
-        "posZ": -13.4712906,
-        "rotX": 0.07992339,
-        "rotY": 90.1113739,
-        "rotZ": 359.983246,
+        "posX": -72.26327,
+        "posY": 1.72328031,
+        "posZ": -13.4701033,
+        "rotX": 0.0799607038,
+        "rotY": 90.0168152,
+        "rotZ": 359.982941,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -65306,12 +65705,12 @@
       "GUID": "9bef08",
       "Name": "Deck",
       "Transform": {
-        "posX": -72.2538147,
-        "posY": 1.7171855,
-        "posZ": -17.77277,
-        "rotX": 0.0799881,
-        "rotY": 90.24711,
-        "rotZ": 359.983215,
+        "posX": -72.2534,
+        "posY": 1.71718609,
+        "posZ": -17.77349,
+        "rotX": 0.08008953,
+        "rotY": 90.35993,
+        "rotZ": 359.9835,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -65630,12 +66029,12 @@
       "GUID": "c8760c",
       "Name": "Deck",
       "Transform": {
-        "posX": -73.56671,
-        "posY": 1.73458993,
-        "posZ": 18.77721,
-        "rotX": 0.0799147561,
-        "rotY": 89.96592,
-        "rotZ": 359.982941,
+        "posX": -73.56652,
+        "posY": 1.73458934,
+        "posZ": 18.7770748,
+        "rotX": 0.07989229,
+        "rotY": 89.96036,
+        "rotZ": 359.9828,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -66022,12 +66421,12 @@
       "GUID": "5b1ffa",
       "Name": "Deck",
       "Transform": {
-        "posX": -72.26424,
+        "posX": -72.2668457,
         "posY": 1.71493077,
-        "posZ": -9.160025,
-        "rotX": 0.0798793957,
-        "rotY": 90.04624,
-        "rotZ": 359.983032,
+        "posZ": -9.15985,
+        "rotX": 0.07985588,
+        "rotY": 90.0650253,
+        "rotZ": 359.983276,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -66280,10 +66679,10 @@
       "Transform": {
         "posX": -96.51811,
         "posY": 1.4999975,
-        "posZ": 8.703956,
-        "rotX": -5.18355364E-06,
-        "rotY": 90.03034,
-        "rotZ": 1.36699246E-05,
+        "posZ": 8.703968,
+        "rotX": 9.948107E-06,
+        "rotY": 90.02984,
+        "rotZ": 1.29878754E-05,
         "scaleX": 0.883734,
         "scaleY": 1.0,
         "scaleZ": 0.883734
@@ -66336,11 +66735,11 @@
       "Name": "Custom_Tile",
       "Transform": {
         "posX": -96.52734,
-        "posY": 1.49999857,
-        "posZ": 13.9531422,
-        "rotX": 1.31426468E-05,
-        "rotY": 90.02673,
-        "rotZ": 1.3800407E-05,
+        "posY": 1.49999869,
+        "posZ": 13.9531574,
+        "rotX": 2.451516E-05,
+        "rotY": 90.02674,
+        "rotZ": -2.76093283E-06,
         "scaleX": 0.883734,
         "scaleY": 1.0,
         "scaleZ": 0.883734
@@ -66392,12 +66791,12 @@
       "GUID": "0cc026",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -96.8010559,
-        "posY": 1.49999821,
-        "posZ": 19.28504,
-        "rotX": -2.80483437E-06,
-        "rotY": 90.02716,
-        "rotZ": 1.10616966E-05,
+        "posX": -96.80108,
+        "posY": 1.49999726,
+        "posZ": 19.2850533,
+        "rotX": 1.337354E-05,
+        "rotY": 90.02725,
+        "rotZ": 1.07631195E-05,
         "scaleX": 0.883734,
         "scaleY": 1.0,
         "scaleZ": 0.883734
@@ -66449,12 +66848,12 @@
       "GUID": "2c2fc2",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -96.8136,
-        "posY": 1.49999821,
-        "posZ": 24.2309742,
-        "rotX": 1.40519833E-05,
-        "rotY": 89.99934,
-        "rotZ": 1.97698428E-05,
+        "posX": -96.81363,
+        "posY": 1.49999774,
+        "posZ": 24.230999,
+        "rotX": -1.006705E-05,
+        "rotY": 89.99963,
+        "rotZ": -1.91115778E-05,
         "scaleX": 0.883734,
         "scaleY": 1.0,
         "scaleZ": 0.883734
@@ -66506,12 +66905,12 @@
       "GUID": "d0f929",
       "Name": "Counter",
       "Transform": {
-        "posX": 102.3783,
-        "posY": 1.04835212,
-        "posZ": 5.291025,
-        "rotX": 0.0160860512,
-        "rotY": 269.973633,
-        "rotZ": 0.0104658287,
+        "posX": 102.375511,
+        "posY": 1.0483706,
+        "posZ": 5.28936529,
+        "rotX": 359.9904,
+        "rotY": 270.019684,
+        "rotZ": 359.990021,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -66527,7 +66926,7 @@
       "ColorDiffuse": {
         "r": 0.0,
         "g": 1.0,
-        "b": 0.107801534
+        "b": 0.107801415
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -66588,12 +66987,12 @@
       "GUID": "a0323c",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 102.554253,
-        "posY": 1.19190645,
-        "posZ": 8.099871,
-        "rotX": 0.00089365046,
-        "rotY": 90.00257,
-        "rotZ": 179.9999,
+        "posX": 102.557175,
+        "posY": 1.19192684,
+        "posZ": 8.100181,
+        "rotX": 0.00018978829,
+        "rotY": 89.99929,
+        "rotZ": 180.001877,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -66646,12 +67045,12 @@
       "GUID": "c7c766",
       "Name": "Counter",
       "Transform": {
-        "posX": 104.876549,
-        "posY": 1.04834676,
-        "posZ": 5.28879,
-        "rotX": 0.0151564833,
-        "rotY": 270.035339,
-        "rotZ": -0.00221469114,
+        "posX": 104.874374,
+        "posY": 1.04828811,
+        "posZ": 5.28835964,
+        "rotX": -0.00510046,
+        "rotY": 270.073578,
+        "rotZ": 0.00355909555,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -66666,7 +67065,7 @@
       },
       "ColorDiffuse": {
         "r": 0.0,
-        "g": 0.346385181,
+        "g": 0.346385032,
         "b": 0.9808361
       },
       "LayoutGroupSortIndex": 0,
@@ -66728,12 +67127,12 @@
       "GUID": "044954",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 105.024658,
-        "posY": 1.191905,
-        "posZ": 8.100038,
-        "rotX": 0.0006669004,
-        "rotY": 89.94314,
-        "rotZ": 180.000381,
+        "posX": 105.030685,
+        "posY": 1.191914,
+        "posZ": 8.100353,
+        "rotX": -0.00104867551,
+        "rotY": 89.89397,
+        "rotZ": 179.997513,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -66786,12 +67185,12 @@
       "GUID": "b02fac",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 106.245407,
-        "posY": 1.178318,
-        "posZ": 8.07482052,
-        "rotX": 0.000269951473,
-        "rotY": 179.96254,
-        "rotZ": 180.000092,
+        "posX": 106.245834,
+        "posY": 1.17834926,
+        "posZ": 8.07521248,
+        "rotX": -0.000139189317,
+        "rotY": 179.961563,
+        "rotZ": 180.00029,
         "scaleX": 1.69619608,
         "scaleY": 1.0,
         "scaleZ": 0.898277462
@@ -66873,12 +67272,12 @@
       "GUID": "796530",
       "Name": "Counter",
       "Transform": {
-        "posX": 107.376434,
-        "posY": 1.04829121,
-        "posZ": 5.28103256,
-        "rotX": 0.010181278,
-        "rotY": 270.1162,
-        "rotZ": 359.9924,
+        "posX": 107.374428,
+        "posY": 1.04824328,
+        "posZ": 5.28165531,
+        "rotX": 0.0009123197,
+        "rotY": 270.1646,
+        "rotZ": 0.0067279865,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -66955,12 +67354,12 @@
       "GUID": "0a062a",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 107.487038,
-        "posY": 1.19190812,
-        "posZ": 8.102003,
-        "rotX": 0.0007712239,
-        "rotY": 90.06719,
-        "rotZ": 179.999527,
+        "posX": 107.493042,
+        "posY": 1.19198442,
+        "posZ": 8.104384,
+        "rotX": -0.00111535715,
+        "rotY": 90.0185,
+        "rotZ": 179.996765,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -67013,12 +67412,12 @@
       "GUID": "41fd2b",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 109.950546,
-        "posY": 1.19191563,
-        "posZ": 8.101758,
-        "rotX": 0.00028190366,
-        "rotY": 90.085495,
-        "rotZ": 179.9987,
+        "posX": 109.956329,
+        "posY": 1.19205391,
+        "posZ": 8.106345,
+        "rotX": -0.001326958,
+        "rotY": 90.0389252,
+        "rotZ": 179.9961,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -67071,12 +67470,12 @@
       "GUID": "bbd3f6",
       "Name": "Counter",
       "Transform": {
-        "posX": 109.875313,
-        "posY": 1.04828715,
-        "posZ": 5.2807045,
-        "rotX": 359.99234,
-        "rotY": 270.0227,
-        "rotZ": 0.00181411,
+        "posX": 109.874886,
+        "posY": 1.04832816,
+        "posZ": 5.280442,
+        "rotX": 0.00331068761,
+        "rotY": 270.0248,
+        "rotZ": 0.00292095868,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -67092,7 +67491,7 @@
       "ColorDiffuse": {
         "r": 1.0,
         "g": 0.913321,
-        "b": 0.0609707758
+        "b": 0.0609706864
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -67153,11 +67552,11 @@
       "GUID": "1f4935",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 69.949234,
-        "posY": 1.385586,
-        "posZ": 5.41117144,
+        "posX": 69.9492645,
+        "posY": 1.38558567,
+        "posZ": 5.411171,
         "rotX": 359.983124,
-        "rotY": -0.00112827634,
+        "rotY": -0.000855536,
         "rotZ": 359.920135,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -67219,12 +67618,12 @@
       "GUID": "0942e7",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 69.9618149,
-        "posY": 1.38236582,
-        "posZ": -5.46507359,
-        "rotX": 0.0168685783,
-        "rotY": 180.00235,
-        "rotZ": 0.07987803,
+        "posX": 69.9618454,
+        "posY": 1.38236558,
+        "posZ": -5.46508074,
+        "rotX": 0.0168683361,
+        "rotY": 180.001862,
+        "rotZ": 0.0798780844,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -67285,12 +67684,12 @@
       "GUID": "2c51d6",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -47.3549728,
-        "posY": 1.55089247,
-        "posZ": 11.4278688,
-        "rotX": 0.07987944,
-        "rotY": 90.00825,
-        "rotZ": 359.983124,
+        "posX": -47.3550034,
+        "posY": 1.55089259,
+        "posZ": 11.4278727,
+        "rotX": 0.07987893,
+        "rotY": 90.008316,
+        "rotZ": 359.983154,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -67304,9 +67703,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -67351,11 +67750,11 @@
       "GUID": "82e9dc",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -47.376976,
-        "posY": 1.5521549,
-        "posZ": 15.6099529,
-        "rotX": 0.0798770338,
-        "rotY": 90.00204,
+        "posX": -47.3769951,
+        "posY": 1.55215478,
+        "posZ": 15.6099634,
+        "rotX": 0.07987709,
+        "rotY": 90.00224,
         "rotZ": 359.983124,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -67370,9 +67769,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -67419,10 +67818,10 @@
       "Transform": {
         "posX": -47.3904762,
         "posY": 1.5491786,
-        "posZ": 5.43921471,
-        "rotX": 0.07986549,
-        "rotY": 89.96415,
-        "rotZ": 359.983063,
+        "posZ": 5.43921566,
+        "rotX": 0.07986607,
+        "rotY": 89.9642944,
+        "rotZ": 359.9831,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 3.0
@@ -67436,9 +67835,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -67483,11 +67882,11 @@
       "GUID": "a97e5b",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -47.3894424,
+        "posX": -47.3894577,
         "posY": 1.54791915,
-        "posZ": 1.16723359,
-        "rotX": 0.07993017,
-        "rotY": 90.1817856,
+        "posZ": 1.16723061,
+        "rotX": 0.0799301,
+        "rotY": 90.18203,
         "rotZ": 359.983368,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -67502,9 +67901,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -67549,10 +67948,10 @@
       "GUID": "6600ef",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -47.40132,
-        "posY": 1.54616928,
-        "posZ": -4.831132,
-        "rotX": 0.07987375,
+        "posX": -47.4013519,
+        "posY": 1.5461694,
+        "posZ": -4.83113575,
+        "rotX": 0.07987386,
         "rotY": 89.99167,
         "rotZ": 359.983124,
         "scaleX": 2.0,
@@ -67568,9 +67967,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -67615,11 +68014,11 @@
       "GUID": "78ee28",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -47.4038467,
+        "posX": -47.4038658,
         "posY": 1.544926,
-        "posZ": -9.065756,
-        "rotX": 0.0799081549,
-        "rotY": 90.1088638,
+        "posZ": -9.065765,
+        "rotX": 0.07990896,
+        "rotY": 90.10904,
         "rotZ": 359.983276,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -67634,9 +68033,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -67681,11 +68080,11 @@
       "GUID": "f70490",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -47.3899155,
-        "posY": 1.54277265,
-        "posZ": -16.3123112,
-        "rotX": 0.0798574761,
-        "rotY": 89.935,
+        "posX": -47.38993,
+        "posY": 1.54277277,
+        "posZ": -16.3123188,
+        "rotX": 0.079857856,
+        "rotY": 89.93506,
         "rotZ": 359.983032,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -67700,9 +68099,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -67747,11 +68146,11 @@
       "GUID": "65f89b",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -54.0358162,
-        "posY": 1.56145537,
-        "posZ": 15.6698885,
-        "rotX": 0.079877384,
-        "rotY": 90.0045242,
+        "posX": -54.035862,
+        "posY": 1.56145549,
+        "posZ": 15.6698923,
+        "rotX": 0.07987835,
+        "rotY": 90.00437,
         "rotZ": 359.983124,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -67813,11 +68212,11 @@
       "GUID": "e2946d",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -54.0357857,
-        "posY": 1.56020427,
-        "posZ": 11.42045,
-        "rotX": 0.07987905,
-        "rotY": 90.00777,
+        "posX": -54.03582,
+        "posY": 1.56020415,
+        "posZ": 11.4204617,
+        "rotX": 0.07987869,
+        "rotY": 90.00756,
         "rotZ": 359.983124,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -67879,11 +68278,11 @@
       "GUID": "80b35a",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -54.0355,
+        "posX": -54.0355148,
         "posY": 1.55843639,
-        "posZ": 5.418843,
-        "rotX": 0.07987785,
-        "rotY": 90.00694,
+        "posZ": 5.418844,
+        "rotX": 0.07987884,
+        "rotY": 90.00675,
         "rotZ": 359.983124,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -67945,11 +68344,11 @@
       "GUID": "d9a7c6",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -54.0351,
-        "posY": 1.55718482,
-        "posZ": 1.170256,
-        "rotX": 0.0798778757,
-        "rotY": 90.00566,
+        "posX": -54.0351143,
+        "posY": 1.55718493,
+        "posZ": 1.17025352,
+        "rotX": 0.07987813,
+        "rotY": 90.0058441,
         "rotZ": 359.983124,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -68011,11 +68410,11 @@
       "GUID": "4b445a",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -54.0358162,
-        "posY": 1.55541909,
-        "posZ": -4.8298254,
-        "rotX": 0.07987734,
-        "rotY": 90.00235,
+        "posX": -54.0358467,
+        "posY": 1.555419,
+        "posZ": -4.82982635,
+        "rotX": 0.079876624,
+        "rotY": 90.00214,
         "rotZ": 359.983124,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -68077,11 +68476,11 @@
       "GUID": "1a8853",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -54.03571,
+        "posX": -54.03574,
         "posY": 1.55416739,
-        "posZ": -9.079962,
-        "rotX": 0.07987779,
-        "rotY": 90.00456,
+        "posZ": -9.079967,
+        "rotX": 0.0798778757,
+        "rotY": 90.00437,
         "rotZ": 359.983124,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -68143,11 +68542,11 @@
       "GUID": "bba230",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -54.03525,
-        "posY": 1.55203176,
-        "posZ": -16.3300686,
-        "rotX": 0.07987782,
-        "rotY": 90.00569,
+        "posX": -54.0352821,
+        "posY": 1.552032,
+        "posZ": -16.3300838,
+        "rotX": 0.07987842,
+        "rotY": 90.0057449,
         "rotZ": 359.983124,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -68209,12 +68608,12 @@
       "GUID": "2b467e",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -73.50368,
-        "posY": 1.59077787,
-        "posZ": 23.0789528,
-        "rotX": 0.07988393,
-        "rotY": 89.97833,
-        "rotZ": 359.983154,
+        "posX": -73.50378,
+        "posY": 1.590776,
+        "posZ": 23.0789146,
+        "rotX": 0.07987766,
+        "rotY": 89.9754257,
+        "rotZ": 359.982941,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -68275,12 +68674,12 @@
       "GUID": "788f9b",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -73.50437,
-        "posY": 1.58950949,
-        "posZ": 18.7776146,
-        "rotX": 0.07988873,
-        "rotY": 89.98122,
-        "rotZ": 359.983,
+        "posX": -73.50461,
+        "posY": 1.58951044,
+        "posZ": 18.7775154,
+        "rotX": 0.07988765,
+        "rotY": 89.98177,
+        "rotZ": 359.983032,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -68362,12 +68761,12 @@
       "GUID": "c1b7be",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -73.50443,
-        "posY": 1.58824265,
-        "posZ": 14.4761782,
-        "rotX": 0.0798753947,
-        "rotY": 89.9727859,
-        "rotZ": 359.983032,
+        "posX": -73.50489,
+        "posY": 1.58824384,
+        "posZ": 14.47601,
+        "rotX": 0.07988064,
+        "rotY": 89.98007,
+        "rotZ": 359.9831,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -68449,12 +68848,12 @@
       "GUID": "01e243",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -73.50471,
-        "posY": 1.58697748,
-        "posZ": 10.17494,
-        "rotX": 0.0798611,
-        "rotY": 89.97842,
-        "rotZ": 359.983032,
+        "posX": -73.50559,
+        "posY": 1.58697879,
+        "posZ": 10.1747646,
+        "rotX": 0.0798709244,
+        "rotY": 89.98671,
+        "rotZ": 359.983124,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -68536,12 +68935,12 @@
       "GUID": "07fec8",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -72.1943359,
-        "posY": 1.57945871,
-        "posZ": -9.164899,
-        "rotX": 0.0798617452,
-        "rotY": 90.00368,
-        "rotZ": 359.9832,
+        "posX": -72.19531,
+        "posY": 1.57945776,
+        "posZ": -9.164564,
+        "rotX": 0.07984304,
+        "rotY": 90.00196,
+        "rotZ": 359.983063,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -68602,12 +69001,12 @@
       "GUID": "ced09c",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -72.197,
-        "posY": 1.57819128,
-        "posZ": -13.4662409,
-        "rotX": 0.07987109,
-        "rotY": 89.99747,
-        "rotZ": 359.982971,
+        "posX": -72.19791,
+        "posY": 1.57819521,
+        "posZ": -13.4659481,
+        "rotX": 0.07988266,
+        "rotY": 89.99774,
+        "rotZ": 359.9834,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -68689,12 +69088,12 @@
       "GUID": "b0185e",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -72.19837,
+        "posX": -72.19841,
         "posY": 1.57692909,
-        "posZ": -17.7676735,
-        "rotX": 0.07988039,
-        "rotY": 89.96551,
-        "rotZ": 359.983063,
+        "posZ": -17.7671738,
+        "rotX": 0.0798551962,
+        "rotY": 89.950386,
+        "rotZ": 359.9829,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -68776,12 +69175,12 @@
       "GUID": "b2b438",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -72.19822,
-        "posY": 1.57566059,
-        "posZ": -22.0689468,
-        "rotX": 0.07988918,
-        "rotY": 89.9210052,
-        "rotZ": 359.982971,
+        "posX": -72.19678,
+        "posY": 1.57565749,
+        "posZ": -22.0682964,
+        "rotX": 0.07991268,
+        "rotY": 89.88983,
+        "rotZ": 359.982666,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -68863,12 +69262,12 @@
       "GUID": "db603a",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -80.8465652,
-        "posY": 1.60101271,
-        "posZ": 23.07453,
-        "rotX": 0.07987329,
-        "rotY": 89.99231,
-        "rotZ": 359.983154,
+        "posX": -80.84701,
+        "posY": 1.6010139,
+        "posZ": 23.074728,
+        "rotX": 0.0798965,
+        "rotY": 89.99362,
+        "rotZ": 359.983246,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -68882,9 +69281,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -68950,12 +69349,12 @@
       "GUID": "7504b2",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -80.87007,
-        "posY": 1.59977,
-        "posZ": 18.7712,
-        "rotX": 0.0799066,
-        "rotY": 89.98511,
-        "rotZ": 359.9828,
+        "posX": -80.87024,
+        "posY": 1.59977019,
+        "posZ": 18.7714615,
+        "rotX": 0.07989259,
+        "rotY": 89.9807,
+        "rotZ": 359.9827,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -68969,9 +69368,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -69016,12 +69415,12 @@
       "GUID": "fcfe6b",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -80.87041,
-        "posY": 1.59850478,
-        "posZ": 14.47009,
-        "rotX": 0.079906784,
-        "rotY": 89.98707,
-        "rotZ": 359.982819,
+        "posX": -80.87036,
+        "posY": 1.59850514,
+        "posZ": 14.4703074,
+        "rotX": 0.0799063444,
+        "rotY": 89.98601,
+        "rotZ": 359.98288,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -69035,9 +69434,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -69103,12 +69502,12 @@
       "GUID": "d33db0",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -80.8726654,
-        "posY": 1.59724319,
-        "posZ": 10.1688118,
-        "rotX": 0.07991845,
-        "rotY": 89.99979,
-        "rotZ": 359.982971,
+        "posX": -80.87241,
+        "posY": 1.59724283,
+        "posZ": 10.1690617,
+        "rotX": 0.0799031854,
+        "rotY": 89.99713,
+        "rotZ": 359.9829,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -69122,9 +69521,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -69190,12 +69589,12 @@
       "GUID": "80a87e",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -79.86784,
-        "posY": 1.58640218,
-        "posZ": -21.8942,
-        "rotX": 0.07994384,
-        "rotY": 90.012085,
-        "rotZ": 359.983,
+        "posX": -79.86638,
+        "posY": 1.5864,
+        "posZ": -21.8935318,
+        "rotX": 0.07993122,
+        "rotY": 89.98039,
+        "rotZ": 359.982666,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -69209,9 +69608,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -69277,11 +69676,11 @@
       "GUID": "87db7c",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -79.83845,
-        "posY": 1.59016609,
-        "posZ": -8.988486,
-        "rotX": 0.07985805,
-        "rotY": 89.9968262,
+        "posX": -79.83944,
+        "posY": 1.590167,
+        "posZ": -8.988123,
+        "rotX": 0.07984191,
+        "rotY": 89.99487,
         "rotZ": 359.983124,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
@@ -69296,9 +69695,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -69364,12 +69763,12 @@
       "GUID": "9b8242",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -79.86301,
-        "posY": 1.58892739,
-        "posZ": -13.2918282,
-        "rotX": 0.07987664,
-        "rotY": 89.99947,
-        "rotZ": 359.982941,
+        "posX": -79.86376,
+        "posY": 1.58893025,
+        "posZ": -13.2914677,
+        "rotX": 0.07988975,
+        "rotY": 89.99684,
+        "rotZ": 359.983246,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
         "scaleZ": 3.22590685
@@ -69383,9 +69782,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -69430,11 +69829,11 @@
       "GUID": "08061c",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -79.8643951,
-        "posY": 1.58766353,
-        "posZ": -17.59293,
-        "rotX": 0.07990847,
-        "rotY": 90.00302,
+        "posX": -79.86434,
+        "posY": 1.58766425,
+        "posZ": -17.5924644,
+        "rotX": 0.0799074247,
+        "rotY": 89.9914246,
         "rotZ": 359.982971,
         "scaleX": 2.15060472,
         "scaleY": 1.0,
@@ -69449,9 +69848,9 @@
         "z": 0.0
       },
       "ColorDiffuse": {
-        "r": 0.2980386,
-        "g": 0.2980386,
-        "b": 0.2980386
+        "r": 0.298038483,
+        "g": 0.298038483,
+        "b": 0.298038483
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -69517,11 +69916,11 @@
       "GUID": "63184a",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -13.2738714,
-        "posY": 1.60705435,
-        "posZ": 23.9068871,
+        "posX": -13.2738819,
+        "posY": 1.60705447,
+        "posZ": 23.9069061,
         "rotX": 359.983124,
-        "rotY": -0.00026988858,
+        "rotY": -0.000323972665,
         "rotZ": 179.92012,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -69583,11 +69982,11 @@
       "GUID": "df0c90",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 17.743454,
-        "posY": 1.56378424,
-        "posZ": 23.8091812,
+        "posX": 17.74347,
+        "posY": 1.563784,
+        "posZ": 23.8091965,
         "rotX": 359.983124,
-        "rotY": -0.0011892058,
+        "rotY": -0.00122593052,
         "rotZ": 179.92012,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -69649,9 +70048,9 @@
       "GUID": "9ac85f",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 48.8630524,
-        "posY": 1.520406,
-        "posZ": 23.8286114,
+        "posX": 48.8630829,
+        "posY": 1.52040589,
+        "posZ": 23.8286266,
         "rotX": 359.983124,
         "rotY": 359.993866,
         "rotZ": 179.92012,
@@ -69715,11 +70114,11 @@
       "GUID": "1782ad",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 48.8614,
+        "posX": 48.8614159,
         "posY": 1.506335,
-        "posZ": -23.9645462,
-        "rotX": 0.0168523882,
-        "rotY": 180.0143,
+        "posZ": -23.96457,
+        "rotX": 0.0168527681,
+        "rotY": 180.014084,
         "rotZ": 180.07988,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -69781,11 +70180,11 @@
       "GUID": "a50a83",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 17.79331,
-        "posY": 1.549638,
-        "posZ": -23.99566,
-        "rotX": 0.016850058,
-        "rotY": 180.0153,
+        "posX": 17.7933178,
+        "posY": 1.54963791,
+        "posZ": -23.995676,
+        "rotX": 0.01685128,
+        "rotY": 180.015182,
         "rotZ": 180.07988,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -69847,11 +70246,11 @@
       "GUID": "ad95af",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -13.40067,
+        "posX": -13.4006777,
         "posY": 1.59318042,
-        "posZ": -23.809391,
-        "rotX": 0.0168504231,
-        "rotY": 180.015671,
+        "posZ": -23.8094139,
+        "rotX": 0.0168494731,
+        "rotY": 180.015732,
         "rotZ": 180.07988,
         "scaleX": 2.0,
         "scaleY": 1.0,
@@ -69913,12 +70312,12 @@
       "GUID": "80673c",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 93.39632,
-        "posY": 1.3488,
-        "posZ": -11.1112452,
-        "rotX": 0.07928938,
-        "rotY": 90.00841,
-        "rotZ": 359.94928,
+        "posX": 93.39707,
+        "posY": 1.348793,
+        "posZ": -11.1107864,
+        "rotX": 0.07875886,
+        "rotY": 89.9883347,
+        "rotZ": 359.9495,
         "scaleX": 1.27552509,
         "scaleY": 1.0,
         "scaleZ": 1.27552509
@@ -70000,12 +70399,12 @@
       "GUID": "11a690",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 93.40556,
-        "posY": 1.34871769,
-        "posZ": -8.556241,
-        "rotX": 0.0803431347,
-        "rotY": 89.54383,
-        "rotZ": 359.9792,
+        "posX": 93.4051743,
+        "posY": 1.34872746,
+        "posZ": -8.55592251,
+        "rotX": 0.0820421,
+        "rotY": 89.5469742,
+        "rotZ": 359.985779,
         "scaleX": 1.27552509,
         "scaleY": 1.0,
         "scaleZ": 1.27552509
@@ -70087,12 +70486,12 @@
       "GUID": "ebb374",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 93.39622,
-        "posY": 1.34955049,
-        "posZ": -5.996344,
-        "rotX": 0.07889962,
-        "rotY": 89.78694,
-        "rotZ": 359.983643,
+        "posX": 93.39564,
+        "posY": 1.34951818,
+        "posZ": -5.996105,
+        "rotX": 0.07947519,
+        "rotY": 89.796875,
+        "rotZ": 359.980621,
         "scaleX": 1.27552509,
         "scaleY": 1.0,
         "scaleZ": 1.27552509
@@ -70174,12 +70573,12 @@
       "GUID": "58f809",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 90.84339,
-        "posY": 1.35309255,
-        "posZ": -5.96587944,
-        "rotX": 0.07943002,
-        "rotY": 89.89939,
-        "rotZ": 359.982239,
+        "posX": 90.84281,
+        "posY": 1.35309517,
+        "posZ": -5.96584749,
+        "rotX": 0.0801344737,
+        "rotY": 89.9207,
+        "rotZ": 359.985016,
         "scaleX": 1.27552509,
         "scaleY": 1.0,
         "scaleZ": 1.27552509
@@ -70262,11 +70661,11 @@
       "Name": "Custom_Tile",
       "Transform": {
         "posX": 93.4170456,
-        "posY": 1.49999952,
+        "posY": 1.49999976,
         "posZ": -28.8379459,
-        "rotX": 9.746234E-06,
+        "rotX": 9.651298E-06,
         "rotY": 89.98892,
-        "rotZ": 5.70129851E-05,
+        "rotZ": 5.54407561E-05,
         "scaleX": 1.27552509,
         "scaleY": 1.0,
         "scaleZ": 1.27552509
@@ -70327,12 +70726,12 @@
       "GUID": "8f3a4a",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -89.61064,
-        "posY": 1.603956,
-        "posZ": -8.426651,
-        "rotX": 0.07989069,
-        "rotY": 90.0031738,
-        "rotZ": 359.9832,
+        "posX": -89.61101,
+        "posY": 1.60395586,
+        "posZ": -8.426807,
+        "rotX": 0.07987082,
+        "rotY": 90.0,
+        "rotZ": 359.982971,
         "scaleX": 2.430455,
         "scaleY": 1.0,
         "scaleZ": 4.60332775
@@ -70393,12 +70792,12 @@
       "GUID": "5cbb90",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -89.61165,
-        "posY": 1.6025188,
-        "posZ": -13.2893362,
-        "rotX": 0.0799013451,
-        "rotY": 90.0260544,
-        "rotZ": 359.982941,
+        "posX": -89.61204,
+        "posY": 1.60251927,
+        "posZ": -13.2895985,
+        "rotX": 0.07991733,
+        "rotY": 90.02817,
+        "rotZ": 359.983063,
         "scaleX": 2.430455,
         "scaleY": 1.0,
         "scaleZ": 4.60332775
@@ -70480,12 +70879,12 @@
       "GUID": "04d87e",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -89.6134338,
-        "posY": 1.60108948,
-        "posZ": -18.15066,
-        "rotX": 0.0799120963,
-        "rotY": 90.033226,
-        "rotZ": 359.983032,
+        "posX": -89.61388,
+        "posY": 1.60109091,
+        "posZ": -18.1509171,
+        "rotX": 0.07991283,
+        "rotY": 90.03604,
+        "rotZ": 359.983154,
         "scaleX": 2.430455,
         "scaleY": 1.0,
         "scaleZ": 4.60332775
@@ -70567,12 +70966,12 @@
       "GUID": "a9bdc6",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -89.61533,
+        "posX": -89.61597,
         "posY": 1.599661,
-        "posZ": -23.01161,
-        "rotX": 0.07989116,
-        "rotY": 90.0357056,
-        "rotZ": 359.983,
+        "posZ": -23.011858,
+        "rotX": 0.0798951238,
+        "rotY": 90.03809,
+        "rotZ": 359.982941,
         "scaleX": 2.430455,
         "scaleY": 1.0,
         "scaleZ": 4.60332775
@@ -70654,12 +71053,12 @@
       "GUID": "c4e89f",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -89.99818,
-        "posY": 1.61405671,
-        "posZ": 24.0385666,
-        "rotX": 0.07988864,
-        "rotY": 90.0097656,
-        "rotZ": 359.983215,
+        "posX": -89.99839,
+        "posY": 1.61405337,
+        "posZ": 24.0383835,
+        "rotX": 0.0798924342,
+        "rotY": 90.00901,
+        "rotZ": 359.983,
         "scaleX": 2.430455,
         "scaleY": 1.0,
         "scaleZ": 4.60332775
@@ -70720,12 +71119,12 @@
       "GUID": "6cf0fb",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -89.9996948,
-        "posY": 1.61261833,
-        "posZ": 19.1759,
-        "rotX": 0.07991085,
-        "rotY": 90.01644,
-        "rotZ": 359.9829,
+        "posX": -90.00008,
+        "posY": 1.61262345,
+        "posZ": 19.1756439,
+        "rotX": 0.07990897,
+        "rotY": 90.01857,
+        "rotZ": 359.983154,
         "scaleX": 2.430455,
         "scaleY": 1.0,
         "scaleZ": 4.60332775
@@ -70807,12 +71206,12 @@
       "GUID": "39d430",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -90.00067,
-        "posY": 1.61119175,
-        "posZ": 14.3145723,
-        "rotX": 0.07989841,
-        "rotY": 90.01726,
-        "rotZ": 359.9831,
+        "posX": -90.00116,
+        "posY": 1.61118829,
+        "posZ": 14.3143282,
+        "rotX": 0.0799053,
+        "rotY": 90.01991,
+        "rotZ": 359.9829,
         "scaleX": 2.430455,
         "scaleY": 1.0,
         "scaleZ": 4.60332775
@@ -70894,12 +71293,12 @@
       "GUID": "d6f4cb",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -90.00117,
-        "posY": 1.609758,
-        "posZ": 9.453647,
-        "rotX": 0.079881236,
-        "rotY": 90.01437,
-        "rotZ": 359.9829,
+        "posX": -90.0019455,
+        "posY": 1.6097616,
+        "posZ": 9.453354,
+        "rotX": 0.07987829,
+        "rotY": 90.01894,
+        "rotZ": 359.983063,
         "scaleX": 2.430455,
         "scaleY": 1.0,
         "scaleZ": 4.60332775
@@ -70978,81 +71377,15 @@
       ]
     },
     {
-      "GUID": "07634a",
-      "Name": "Custom_Tile",
-      "Transform": {
-        "posX": 84.35922,
-        "posY": 1.36650252,
-        "posZ": 8.825486,
-        "rotX": 359.9832,
-        "rotY": 0.033131998,
-        "rotZ": 359.9201,
-        "scaleX": 2.29497218,
-        "scaleY": 1.0,
-        "scaleZ": 4.34672
-      },
-      "Nickname": "Graveyard",
-      "Description": "Holds 1 card",
-      "GMNotes": "",
-      "AltLookAngle": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-      },
-      "ColorDiffuse": {
-        "r": 1.0,
-        "g": 1.0,
-        "b": 1.0
-      },
-      "LayoutGroupSortIndex": 0,
-      "Value": 0,
-      "Locked": false,
-      "Grid": true,
-      "Snap": true,
-      "IgnoreFoW": false,
-      "MeasureMovement": false,
-      "DragSelectable": true,
-      "Autoraise": true,
-      "Sticky": true,
-      "Tooltip": true,
-      "GridProjection": false,
-      "HideWhenFaceDown": false,
-      "Hands": false,
-      "CustomImage": {
-        "ImageURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/MDW/Holders/Graveyard.png?raw=true",
-        "ImageSecondaryURL": "",
-        "ImageScalar": 1.0,
-        "WidthScale": 0.0,
-        "CustomTile": {
-          "Type": 0,
-          "Thickness": 0.190000147,
-          "Stackable": false,
-          "Stretch": false
-        }
-      },
-      "LuaScript": "",
-      "LuaScriptState": "",
-      "XmlUI": "",
-      "AttachedSnapPoints": [
-        {
-          "Position": {
-            "x": 0.0,
-            "y": 0.1000002,
-            "z": -0.02
-          }
-        }
-      ]
-    },
-    {
       "GUID": "34bc4e",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 84.5467,
-        "posY": 1.361038,
-        "posZ": -8.844373,
-        "rotX": 0.016915448,
-        "rotY": 179.968445,
-        "rotZ": 0.07986829,
+        "posX": -51.8665848,
+        "posY": 1.54691482,
+        "posZ": -23.4404716,
+        "rotX": 0.0798752457,
+        "rotY": 89.9945755,
+        "rotZ": 359.983124,
         "scaleX": 2.29497218,
         "scaleY": 1.0,
         "scaleZ": 4.34672
@@ -71113,12 +71446,12 @@
       "GUID": "e870a1",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 96.14075,
-        "posY": 1.59999323,
-        "posZ": 17.9110641,
-        "rotX": 4.798904E-05,
-        "rotY": 269.5529,
-        "rotZ": 179.999908,
+        "posX": 96.14068,
+        "posY": 1.59999382,
+        "posZ": 17.9110832,
+        "rotX": 0.000332341151,
+        "rotY": 269.5511,
+        "rotZ": 179.999939,
         "scaleX": 0.962537,
         "scaleY": 1.0,
         "scaleZ": 0.6435761
@@ -71200,12 +71533,12 @@
       "GUID": "61b5e2",
       "Name": "Counter",
       "Transform": {
-        "posX": 97.86976,
-        "posY": 1.47899663,
-        "posZ": 15.7885056,
-        "rotX": -0.000672189752,
-        "rotY": 179.792267,
-        "rotZ": 0.000455443165,
+        "posX": 97.87007,
+        "posY": 1.47899687,
+        "posZ": 15.7885809,
+        "rotX": 0.000210525919,
+        "rotY": 179.791428,
+        "rotZ": 0.000137497613,
         "scaleX": 0.7000003,
         "scaleY": 0.7000003,
         "scaleZ": 0.7000003
@@ -71221,7 +71554,7 @@
       "ColorDiffuse": {
         "r": 0.0,
         "g": 1.0,
-        "b": 0.107801415
+        "b": 0.107801296
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -71282,12 +71615,12 @@
       "GUID": "54deac",
       "Name": "Counter",
       "Transform": {
-        "posX": 97.8585052,
-        "posY": 1.478999,
-        "posZ": 17.206398,
-        "rotX": -0.000189005586,
-        "rotY": 179.742065,
-        "rotZ": 8.271305E-05,
+        "posX": 97.85873,
+        "posY": 1.47899747,
+        "posZ": 17.206459,
+        "rotX": -0.000176971444,
+        "rotY": 179.7369,
+        "rotZ": 0.000174808214,
         "scaleX": 0.7000003,
         "scaleY": 0.7000003,
         "scaleZ": 0.7000003
@@ -71302,7 +71635,7 @@
       },
       "ColorDiffuse": {
         "r": 0.0,
-        "g": 0.346385032,
+        "g": 0.3463849,
         "b": 0.9808361
       },
       "LayoutGroupSortIndex": 0,
@@ -71364,12 +71697,12 @@
       "GUID": "872752",
       "Name": "Counter",
       "Transform": {
-        "posX": 97.8373,
-        "posY": 1.478972,
-        "posZ": 18.6169472,
-        "rotX": -0.000397909083,
-        "rotY": 179.680771,
-        "rotZ": -0.00186415459,
+        "posX": 97.83732,
+        "posY": 1.47897351,
+        "posZ": 18.6169758,
+        "rotX": -0.00202529877,
+        "rotY": 179.6706,
+        "rotZ": -0.00149430963,
         "scaleX": 0.7000003,
         "scaleY": 0.7000003,
         "scaleZ": 0.7000003
@@ -71446,12 +71779,12 @@
       "GUID": "45f88e",
       "Name": "Counter",
       "Transform": {
-        "posX": 97.82257,
-        "posY": 1.4790076,
-        "posZ": 19.9834156,
-        "rotX": -0.000469370047,
-        "rotY": 179.50264,
-        "rotZ": 0.000500780647,
+        "posX": 97.82239,
+        "posY": 1.47901082,
+        "posZ": 19.9834328,
+        "rotX": -0.00276097166,
+        "rotY": 179.488129,
+        "rotZ": 0.00115544989,
         "scaleX": 0.7000003,
         "scaleY": 0.7000003,
         "scaleZ": 0.7000003
@@ -71467,7 +71800,7 @@
       "ColorDiffuse": {
         "r": 1.0,
         "g": 0.913321,
-        "b": 0.0609706864
+        "b": 0.06097059
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -71528,12 +71861,12 @@
       "GUID": "78ffa4",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 96.17486,
-        "posY": 1.613599,
-        "posZ": 15.8085289,
-        "rotX": 0.0006050242,
-        "rotY": 359.9911,
-        "rotZ": 180.000824,
+        "posX": 96.17492,
+        "posY": 1.613598,
+        "posZ": 15.80759,
+        "rotX": -1.32557734E-05,
+        "rotY": 359.964935,
+        "rotZ": 180.000015,
         "scaleX": 0.3603942,
         "scaleY": 1.0,
         "scaleZ": 0.3603942
@@ -71586,12 +71919,12 @@
       "GUID": "f5b26d",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 96.1656647,
+        "posX": 96.16519,
         "posY": 1.61358988,
-        "posZ": 17.1956,
-        "rotX": 0.000212536092,
-        "rotY": 359.9897,
-        "rotZ": 180.0008,
+        "posZ": 17.1945858,
+        "rotX": 0.000328186346,
+        "rotY": 359.965363,
+        "rotZ": 180.000565,
         "scaleX": 0.3603942,
         "scaleY": 1.0,
         "scaleZ": 0.3603942
@@ -71644,12 +71977,12 @@
       "GUID": "e5e962",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 96.16151,
-        "posY": 1.61358833,
-        "posZ": 18.592207,
-        "rotX": 0.000264096947,
-        "rotY": 359.9918,
-        "rotZ": 180.000763,
+        "posX": 96.16057,
+        "posY": 1.61357188,
+        "posZ": 18.5911732,
+        "rotX": 0.0006441414,
+        "rotY": 359.9696,
+        "rotZ": 180.001343,
         "scaleX": 0.3603942,
         "scaleY": 1.0,
         "scaleZ": 0.3603942
@@ -71702,12 +72035,12 @@
       "GUID": "7140c9",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 96.15885,
-        "posY": 1.61355078,
-        "posZ": 20.0067062,
-        "rotX": 0.001197787,
-        "rotY": 359.989929,
-        "rotZ": 180.00177,
+        "posX": 96.15747,
+        "posY": 1.61358011,
+        "posZ": 20.0057163,
+        "rotX": 0.000560250541,
+        "rotY": 359.963531,
+        "rotZ": 180.000687,
         "scaleX": 0.3603942,
         "scaleY": 1.0,
         "scaleZ": 0.3603942
@@ -71760,12 +72093,12 @@
       "GUID": "d86ec5",
       "Name": "Deck",
       "Transform": {
-        "posX": -73.56826,
-        "posY": 1.72624075,
-        "posZ": 23.0786629,
-        "rotX": 0.07990573,
-        "rotY": 90.00765,
-        "rotZ": 359.983032,
+        "posX": -73.567894,
+        "posY": 1.72623432,
+        "posZ": 23.0784321,
+        "rotX": 0.07992953,
+        "rotY": 90.00822,
+        "rotZ": 359.982819,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -72016,12 +72349,12 @@
       "GUID": "9b5161",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 49.01242,
-        "posY": 1.409291,
-        "posZ": -13.2071323,
-        "rotX": 0.01650929,
-        "rotY": 180.266327,
-        "rotZ": 0.079829596,
+        "posX": 49.01131,
+        "posY": 1.40929461,
+        "posZ": -13.20655,
+        "rotX": 0.0165291764,
+        "rotY": 180.276535,
+        "rotZ": 0.0802127644,
         "scaleX": 2.29497218,
         "scaleY": 1.0,
         "scaleZ": 4.34672
@@ -72082,12 +72415,12 @@
       "GUID": "575b6e",
       "Name": "Counter",
       "Transform": {
-        "posX": 53.561718,
-        "posY": 1.3764782,
-        "posZ": -9.382766,
-        "rotX": 359.984161,
-        "rotY": 359.496979,
-        "rotZ": 0.008271808,
+        "posX": 53.5643425,
+        "posY": 1.37438965,
+        "posZ": -9.384083,
+        "rotX": 359.992279,
+        "rotY": 359.567,
+        "rotZ": 359.929016,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -72103,7 +72436,7 @@
       "ColorDiffuse": {
         "r": 0.0,
         "g": 1.0,
-        "b": 0.107801504
+        "b": 0.107801385
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -72164,12 +72497,12 @@
       "GUID": "32f4d6",
       "Name": "Counter",
       "Transform": {
-        "posX": 53.5871544,
-        "posY": 1.37385881,
-        "posZ": -11.88155,
-        "rotX": 359.987732,
-        "rotY": 359.45752,
-        "rotZ": 359.939575,
+        "posX": 53.5878944,
+        "posY": 1.37329578,
+        "posZ": -11.8824863,
+        "rotX": 359.982,
+        "rotY": 359.475555,
+        "rotZ": 359.919922,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -72184,7 +72517,7 @@
       },
       "ColorDiffuse": {
         "r": 0.0,
-        "g": 0.346385151,
+        "g": 0.346385,
         "b": 0.9808361
       },
       "LayoutGroupSortIndex": 0,
@@ -72246,12 +72579,12 @@
       "GUID": "669abb",
       "Name": "Counter",
       "Transform": {
-        "posX": 53.6108627,
-        "posY": 1.386549,
-        "posZ": -14.3823261,
-        "rotX": 359.7164,
-        "rotY": 359.601959,
-        "rotZ": 359.554352,
+        "posX": 53.6110458,
+        "posY": 1.38691282,
+        "posZ": -14.3832064,
+        "rotX": 359.740753,
+        "rotY": 359.594452,
+        "rotZ": 359.5348,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -72328,12 +72661,12 @@
       "GUID": "1858a2",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 56.4479866,
-        "posY": 1.51352751,
-        "posZ": -9.621921,
-        "rotX": 0.016813485,
-        "rotY": 179.969391,
-        "rotZ": 180.07991,
+        "posX": 56.45553,
+        "posY": 1.51351249,
+        "posZ": -9.622117,
+        "rotX": 0.0172870122,
+        "rotY": 180.1098,
+        "rotZ": 180.08136,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -72386,12 +72719,12 @@
       "GUID": "0b5d3f",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 56.44772,
-        "posY": 1.51283693,
-        "posZ": -11.9833412,
-        "rotX": 0.0166561436,
-        "rotY": 179.948151,
-        "rotZ": 180.080154,
+        "posX": 56.44965,
+        "posY": 1.51286709,
+        "posZ": -11.9834661,
+        "rotX": 0.0171710029,
+        "rotY": 180.0843,
+        "rotZ": 180.08046,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -72444,12 +72777,12 @@
       "GUID": "2a4010",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 56.45114,
-        "posY": 1.5121758,
-        "posZ": -14.3446512,
-        "rotX": 0.0168474726,
-        "rotY": 179.903824,
-        "rotZ": 180.079636,
+        "posX": 56.4479942,
+        "posY": 1.51216161,
+        "posZ": -14.3450432,
+        "rotX": 0.0168128032,
+        "rotY": 180.038971,
+        "rotZ": 180.0809,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -72502,12 +72835,12 @@
       "GUID": "5d3ea9",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 56.4725838,
-        "posY": 1.49889112,
-        "posZ": -13.1817551,
-        "rotX": 0.07966428,
-        "rotY": 90.25867,
-        "rotZ": 179.983627,
+        "posX": 56.4715576,
+        "posY": 1.498889,
+        "posZ": -13.1820641,
+        "rotX": 0.08116757,
+        "rotY": 90.25712,
+        "rotZ": 179.983658,
         "scaleX": 1.62664688,
         "scaleY": 1.0,
         "scaleZ": 0.898277462
@@ -72610,12 +72943,12 @@
       "GUID": "d67b0c",
       "Name": "Counter",
       "Transform": {
-        "posX": 53.6220245,
-        "posY": 1.37178016,
-        "posZ": -16.88416,
-        "rotX": 359.982635,
-        "rotY": 359.7481,
-        "rotZ": 359.921234,
+        "posX": 53.6214,
+        "posY": 1.371872,
+        "posZ": -16.8846836,
+        "rotX": 359.977478,
+        "rotY": 359.7314,
+        "rotZ": 359.924133,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -72631,7 +72964,7 @@
       "ColorDiffuse": {
         "r": 1.0,
         "g": 0.913321,
-        "b": 0.0609707534
+        "b": 0.0609706566
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -72692,12 +73025,12 @@
       "GUID": "f0238e",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 56.4534264,
-        "posY": 1.51147854,
-        "posZ": -16.706,
-        "rotX": 0.01658849,
-        "rotY": 179.93512,
-        "rotZ": 180.079681,
+        "posX": 56.44522,
+        "posY": 1.51147318,
+        "posZ": -16.7064781,
+        "rotX": 0.0169343986,
+        "rotY": 180.068,
+        "rotZ": 180.081039,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -72750,12 +73083,12 @@
       "GUID": "f3c47e",
       "Name": "Counter",
       "Transform": {
-        "posX": 96.53856,
-        "posY": 1.47900045,
-        "posZ": -18.0143719,
-        "rotX": -0.00079979084,
-        "rotY": 359.9594,
-        "rotZ": -0.00019246107,
+        "posX": 96.53881,
+        "posY": 1.47899985,
+        "posZ": -18.0145073,
+        "rotX": -0.000510675,
+        "rotY": 359.964264,
+        "rotZ": -0.000110993664,
         "scaleX": 0.7000003,
         "scaleY": 0.7000003,
         "scaleZ": 0.7000003
@@ -72771,7 +73104,7 @@
       "ColorDiffuse": {
         "r": 0.0,
         "g": 1.0,
-        "b": 0.107801385
+        "b": 0.107801251
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -72832,12 +73165,12 @@
       "GUID": "a6ac6f",
       "Name": "Counter",
       "Transform": {
-        "posX": 96.54552,
-        "posY": 1.47898829,
-        "posZ": -19.4323311,
-        "rotX": 0.00202332414,
-        "rotY": 359.9114,
-        "rotZ": 0.0006160619,
+        "posX": 96.54575,
+        "posY": 1.47899735,
+        "posZ": -19.4324169,
+        "rotX": -0.000183479235,
+        "rotY": 359.918243,
+        "rotZ": -4.33099267E-05,
         "scaleX": 0.7000003,
         "scaleY": 0.7000003,
         "scaleZ": 0.7000003
@@ -72852,7 +73185,7 @@
       },
       "ColorDiffuse": {
         "r": 0.0,
-        "g": 0.346385,
+        "g": 0.346384883,
         "b": 0.9808361
       },
       "LayoutGroupSortIndex": 0,
@@ -72914,12 +73247,12 @@
       "GUID": "8064e3",
       "Name": "Counter",
       "Transform": {
-        "posX": 96.56239,
-        "posY": 1.47898579,
-        "posZ": -20.8428841,
-        "rotX": 0.0001439478,
-        "rotY": 359.862244,
-        "rotZ": 0.0007520863,
+        "posX": 96.5624847,
+        "posY": 1.47898316,
+        "posZ": -20.8430347,
+        "rotX": 0.00022976668,
+        "rotY": 359.8642,
+        "rotZ": 0.00101253029,
         "scaleX": 0.7000003,
         "scaleY": 0.7000003,
         "scaleZ": 0.7000003
@@ -72996,12 +73329,12 @@
       "GUID": "a197c0",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 98.26098,
-        "posY": 1.59999108,
-        "posZ": -20.1420383,
-        "rotX": -0.00044947624,
-        "rotY": 89.72253,
-        "rotZ": 179.999924,
+        "posX": 98.26093,
+        "posY": 1.59999454,
+        "posZ": -20.1421852,
+        "rotX": -3.903285E-05,
+        "rotY": 89.7236252,
+        "rotZ": 179.999939,
         "scaleX": 0.962537,
         "scaleY": 1.0,
         "scaleZ": 0.6435761
@@ -73083,12 +73416,12 @@
       "GUID": "efe1a2",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 98.28187,
-        "posY": 1.61356688,
-        "posZ": -22.2457333,
-        "rotX": 1.5955191E-05,
-        "rotY": 358.9969,
-        "rotZ": 179.99939,
+        "posX": 98.282196,
+        "posY": 1.613595,
+        "posZ": -22.2458973,
+        "rotX": 0.000213735431,
+        "rotY": 358.983734,
+        "rotZ": 180.000031,
         "scaleX": 0.3603942,
         "scaleY": 1.0,
         "scaleZ": 0.3603942
@@ -73141,12 +73474,12 @@
       "GUID": "a504f9",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 98.25366,
-        "posY": 1.613586,
-        "posZ": -20.8452873,
-        "rotX": -4.63595052E-06,
-        "rotY": 359.887665,
-        "rotZ": 179.998978,
+        "posX": 98.25374,
+        "posY": 1.61358809,
+        "posZ": -20.8454742,
+        "rotX": 0.000140508928,
+        "rotY": 359.8741,
+        "rotZ": 180.000259,
         "scaleX": 0.3603942,
         "scaleY": 1.0,
         "scaleZ": 0.3603942
@@ -73199,12 +73532,12 @@
       "GUID": "d0f76c",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 98.25193,
-        "posY": 1.61359322,
-        "posZ": -18.0452919,
-        "rotX": 7.767057E-05,
-        "rotY": 0.0235672686,
-        "rotZ": 179.9989,
+        "posX": 98.2514954,
+        "posY": 1.61357415,
+        "posZ": -18.0454922,
+        "rotX": 0.000467862177,
+        "rotY": 0.0119096935,
+        "rotZ": 180.000229,
         "scaleX": 0.3603942,
         "scaleY": 1.0,
         "scaleZ": 0.3603942
@@ -73257,12 +73590,12 @@
       "GUID": "9042e8",
       "Name": "Counter",
       "Transform": {
-        "posX": 96.57297,
-        "posY": 1.47903037,
-        "posZ": -22.20938,
-        "rotX": -0.00214468385,
-        "rotY": 359.685974,
-        "rotZ": -0.00221625343,
+        "posX": 96.57294,
+        "posY": 1.47902393,
+        "posZ": -22.2095852,
+        "rotX": 0.00121553813,
+        "rotY": 359.681183,
+        "rotZ": -0.00195921282,
         "scaleX": 0.7000003,
         "scaleY": 0.7000003,
         "scaleZ": 0.7000003
@@ -73278,7 +73611,7 @@
       "ColorDiffuse": {
         "r": 1.0,
         "g": 0.913321,
-        "b": 0.0609706566
+        "b": 0.0609705672
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -73339,12 +73672,12 @@
       "GUID": "0d6c3a",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 98.24219,
-        "posY": 1.61358237,
-        "posZ": -19.4458561,
-        "rotX": 0.000140940669,
-        "rotY": 0.0259521119,
-        "rotZ": 179.999359,
+        "posX": 98.24195,
+        "posY": 1.61358619,
+        "posZ": -19.4460678,
+        "rotX": 0.000152808265,
+        "rotY": 0.01322558,
+        "rotZ": 180.000153,
         "scaleX": 0.3603942,
         "scaleY": 1.0,
         "scaleZ": 0.3603942
@@ -73397,12 +73730,12 @@
       "GUID": "26234e",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 93.41167,
-        "posY": 1.347237,
-        "posZ": -13.6686954,
-        "rotX": 0.0812406242,
-        "rotY": 89.8341751,
-        "rotZ": 359.982239,
+        "posX": 93.41499,
+        "posY": 1.34722543,
+        "posZ": -13.6678562,
+        "rotX": 0.0778957754,
+        "rotY": 89.756,
+        "rotZ": 359.973633,
         "scaleX": 1.27552509,
         "scaleY": 1.0,
         "scaleZ": 1.27552509
@@ -73463,12 +73796,12 @@
       "GUID": "2ad7ab",
       "Name": "Deck",
       "Transform": {
-        "posX": -73.56954,
-        "posY": 1.72243023,
-        "posZ": 10.1745872,
-        "rotX": 0.07988746,
-        "rotY": 89.9515152,
-        "rotZ": 359.982666,
+        "posX": -73.57028,
+        "posY": 1.72724974,
+        "posZ": 10.1741819,
+        "rotX": 0.07991835,
+        "rotY": 89.95012,
+        "rotZ": 359.9829,
         "scaleX": 2.0,
         "scaleY": 1.0,
         "scaleZ": 2.0
@@ -73504,7 +73837,8 @@
       "DeckIDs": [
         18700,
         18400,
-        74400
+        74400,
+        78900
       ],
       "CustomDeck": {
         "187": {
@@ -73527,6 +73861,15 @@
         },
         "744": {
           "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Field/4%20Stars/The_Panda_Future2.png?raw=true",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "789": {
+          "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Field/4%20Stars/The%20Structure.png?raw=true",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -73659,12 +74002,12 @@
           "GUID": "37ce31",
           "Name": "CardCustom",
           "Transform": {
-            "posX": -73.5687256,
-            "posY": 1.768197,
-            "posZ": 10.1749153,
-            "rotX": 0.07955351,
-            "rotY": 89.991745,
-            "rotZ": 359.9765,
+            "posX": -73.56913,
+            "posY": 1.7637955,
+            "posZ": 10.1748533,
+            "rotX": 0.0793080851,
+            "rotY": 89.99239,
+            "rotZ": 359.974274,
             "scaleX": 2.0,
             "scaleY": 1.0,
             "scaleZ": 2.0
@@ -73712,6 +74055,64 @@
           "LuaScript": "",
           "LuaScriptState": "",
           "XmlUI": ""
+        },
+        {
+          "GUID": "950a4b",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -73.5692444,
+            "posY": 1.77351594,
+            "posZ": 10.1748371,
+            "rotX": 0.07935405,
+            "rotY": 89.99206,
+            "rotZ": 359.974274,
+            "scaleX": 2.0,
+            "scaleY": 1.0,
+            "scaleZ": 2.0
+          },
+          "Nickname": "The Panda Future",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 78900,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "789": {
+              "FaceURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/Field/4%20Stars/The%20Structure.png?raw=true",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/MDW/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
         }
       ]
     },
@@ -73719,12 +74120,12 @@
       "GUID": "abc8ba",
       "Name": "Counter",
       "Transform": {
-        "posX": 22.30701,
-        "posY": 1.41906321,
-        "posZ": -9.37319,
-        "rotX": 359.982117,
-        "rotY": 359.154938,
-        "rotZ": 359.973,
+        "posX": 22.307085,
+        "posY": 1.41810763,
+        "posZ": -9.373182,
+        "rotX": 359.985626,
+        "rotY": 359.1524,
+        "rotZ": 359.9363,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -73740,7 +74141,7 @@
       "ColorDiffuse": {
         "r": 0.0,
         "g": 1.0,
-        "b": 0.107801475
+        "b": 0.107801355
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -73801,12 +74202,12 @@
       "GUID": "3fba16",
       "Name": "Counter",
       "Transform": {
-        "posX": 22.347065,
-        "posY": 1.416841,
-        "posZ": -11.871624,
-        "rotX": 359.982971,
-        "rotY": 359.1139,
-        "rotZ": 359.920441,
+        "posX": 22.347086,
+        "posY": 1.41682339,
+        "posZ": -11.8715725,
+        "rotX": 359.982361,
+        "rotY": 359.1106,
+        "rotZ": 359.918732,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -73821,7 +74222,7 @@
       },
       "ColorDiffuse": {
         "r": 0.0,
-        "g": 0.346385121,
+        "g": 0.346384972,
         "b": 0.9808361
       },
       "LayoutGroupSortIndex": 0,
@@ -73883,12 +74284,12 @@
       "GUID": "ef6e93",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 17.77951,
-        "posY": 1.45282757,
-        "posZ": -13.22465,
-        "rotX": 0.0169787463,
-        "rotY": 179.919067,
-        "rotZ": 0.07983596,
+        "posX": 17.77946,
+        "posY": 1.452827,
+        "posZ": -13.2245226,
+        "rotX": 0.01697827,
+        "rotY": 179.9215,
+        "rotZ": 0.079847984,
         "scaleX": 2.29497218,
         "scaleY": 1.0,
         "scaleZ": 4.34672
@@ -73949,12 +74350,12 @@
       "GUID": "ca5488",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 25.2367229,
-        "posY": 1.55702388,
-        "posZ": -9.612037,
-        "rotX": 0.0173023529,
-        "rotY": 179.968384,
-        "rotZ": 180.083344,
+        "posX": 25.2377739,
+        "posY": 1.55701673,
+        "posZ": -9.61176,
+        "rotX": 0.0169848129,
+        "rotY": 179.986053,
+        "rotZ": 180.081665,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -74007,12 +74408,12 @@
       "GUID": "74fa7f",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 25.2378349,
-        "posY": 1.55635369,
-        "posZ": -11.9728889,
-        "rotX": 0.0172288846,
-        "rotY": 179.978882,
-        "rotZ": 180.082581,
+        "posX": 25.2381287,
+        "posY": 1.5563587,
+        "posZ": -11.9726191,
+        "rotX": 0.01681401,
+        "rotY": 179.997711,
+        "rotZ": 180.081039,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -74065,12 +74466,12 @@
       "GUID": "e5f926",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 25.2394314,
-        "posY": 1.54242444,
-        "posZ": -13.1541061,
-        "rotX": 0.08020174,
-        "rotY": 89.91283,
-        "rotZ": 179.9834,
+        "posX": 25.2393913,
+        "posY": 1.54243255,
+        "posZ": -13.1541233,
+        "rotX": 0.08029362,
+        "rotY": 89.91206,
+        "rotZ": 179.9833,
         "scaleX": 1.62664688,
         "scaleY": 1.0,
         "scaleZ": 0.898277462
@@ -74173,12 +74574,12 @@
       "GUID": "6676a5",
       "Name": "Counter",
       "Transform": {
-        "posX": 22.3857555,
-        "posY": 1.43033326,
-        "posZ": -14.3719139,
-        "rotX": 359.72403,
-        "rotY": 359.259735,
-        "rotZ": 359.5386,
+        "posX": 22.3858242,
+        "posY": 1.43036115,
+        "posZ": -14.3718081,
+        "rotX": 359.722015,
+        "rotY": 359.255035,
+        "rotZ": 359.538574,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -74255,12 +74656,12 @@
       "GUID": "dbf634",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 25.24378,
-        "posY": 1.55563641,
-        "posZ": -14.3349581,
-        "rotX": 0.017279163,
-        "rotY": 179.96904,
-        "rotZ": 180.082733,
+        "posX": 25.2434578,
+        "posY": 1.55563772,
+        "posZ": -14.3347387,
+        "rotX": 0.0168736018,
+        "rotY": 179.986176,
+        "rotZ": 180.08194,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -74313,12 +74714,12 @@
       "GUID": "f72ac6",
       "Name": "Counter",
       "Transform": {
-        "posX": 22.4112568,
-        "posY": 1.41533518,
-        "posZ": -16.8736687,
-        "rotX": 359.981354,
-        "rotY": 359.40155,
-        "rotZ": 359.92218,
+        "posX": 22.411253,
+        "posY": 1.41530073,
+        "posZ": -16.8735714,
+        "rotX": 359.979675,
+        "rotY": 359.392548,
+        "rotZ": 359.920319,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -74334,7 +74735,7 @@
       "ColorDiffuse": {
         "r": 1.0,
         "g": 0.913321,
-        "b": 0.06097073
+        "b": 0.0609706342
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -74395,12 +74796,12 @@
       "GUID": "392e32",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 25.247757,
-        "posY": 1.5549252,
-        "posZ": -16.6965942,
-        "rotX": 0.017051734,
-        "rotY": 179.971344,
-        "rotZ": 180.082947,
+        "posX": 25.2466965,
+        "posY": 1.55496407,
+        "posZ": -16.69638,
+        "rotX": 0.0169837475,
+        "rotY": 179.988,
+        "rotZ": 180.081055,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -74453,12 +74854,12 @@
       "GUID": "b7fe9d",
       "Name": "Counter",
       "Transform": {
-        "posX": -8.74712849,
-        "posY": 1.46252418,
-        "posZ": -9.554185,
-        "rotX": 359.982147,
-        "rotY": 359.264374,
-        "rotZ": 359.9814,
+        "posX": -8.746587,
+        "posY": 1.46163213,
+        "posZ": -9.554302,
+        "rotX": 359.98584,
+        "rotY": 359.281,
+        "rotZ": 359.947479,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -74474,7 +74875,7 @@
       "ColorDiffuse": {
         "r": 0.0,
         "g": 1.0,
-        "b": 0.107801475
+        "b": 0.107801355
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -74535,12 +74936,12 @@
       "GUID": "73e588",
       "Name": "Counter",
       "Transform": {
-        "posX": -8.711841,
-        "posY": 1.46011734,
-        "posZ": -12.0527086,
-        "rotX": 359.983826,
-        "rotY": 359.223969,
-        "rotZ": 359.922333,
+        "posX": -8.711834,
+        "posY": 1.460082,
+        "posZ": -12.052681,
+        "rotX": 359.9793,
+        "rotY": 359.225922,
+        "rotZ": 359.918518,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -74555,7 +74956,7 @@
       },
       "ColorDiffuse": {
         "r": 0.0,
-        "g": 0.346385121,
+        "g": 0.346384972,
         "b": 0.9808361
       },
       "LayoutGroupSortIndex": 0,
@@ -74617,12 +75018,12 @@
       "GUID": "985373",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -13.2818012,
-        "posY": 1.49608076,
-        "posZ": -13.3963757,
-        "rotX": 0.016826909,
-        "rotY": 180.035263,
-        "rotZ": 0.07988618,
+        "posX": -13.2819319,
+        "posY": 1.49607956,
+        "posZ": -13.3964949,
+        "rotX": 0.0168234054,
+        "rotY": 180.035858,
+        "rotZ": 0.07981876,
         "scaleX": 2.29497218,
         "scaleY": 1.0,
         "scaleZ": 4.34672
@@ -74683,12 +75084,12 @@
       "GUID": "a32604",
       "Name": "CardCustom",
       "Transform": {
-        "posX": -5.85021973,
-        "posY": 1.60032809,
-        "posZ": -9.810682,
-        "rotX": 0.0168252755,
-        "rotY": 179.95929,
-        "rotZ": 180.079971,
+        "posX": -5.850076,
+        "posY": 1.60031164,
+        "posZ": -9.810601,
+        "rotX": 0.016879661,
+        "rotY": 179.965256,
+        "rotZ": 180.081177,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -74741,12 +75142,12 @@
       "GUID": "a9bf1e",
       "Name": "CardCustom",
       "Transform": {
-        "posX": -5.849277,
-        "posY": 1.5996269,
-        "posZ": -12.1722536,
-        "rotX": 0.01679028,
-        "rotY": 179.97,
-        "rotZ": 180.080643,
+        "posX": -5.84932566,
+        "posY": 1.5996201,
+        "posZ": -12.1721878,
+        "rotX": 0.0166757,
+        "rotY": 179.977158,
+        "rotZ": 180.0815,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -74799,12 +75200,12 @@
       "GUID": "4bd634",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -5.82176,
-        "posY": 1.58569062,
-        "posZ": -13.3409958,
-        "rotX": 0.08001929,
-        "rotY": 90.0283,
-        "rotZ": 179.983276,
+        "posX": -5.8218956,
+        "posY": 1.58568156,
+        "posZ": -13.3411188,
+        "rotX": 0.08019226,
+        "rotY": 90.0278549,
+        "rotZ": 179.983429,
         "scaleX": 1.62664688,
         "scaleY": 1.0,
         "scaleZ": 0.898277462
@@ -74907,12 +75308,12 @@
       "GUID": "037f3e",
       "Name": "Counter",
       "Transform": {
-        "posX": -8.677918,
-        "posY": 1.47345543,
-        "posZ": -14.5530138,
-        "rotX": 359.719269,
-        "rotY": 359.371246,
-        "rotZ": 359.547516,
+        "posX": -8.678005,
+        "posY": 1.47348368,
+        "posZ": -14.5530434,
+        "rotX": 359.7203,
+        "rotY": 359.3695,
+        "rotZ": 359.5452,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -74989,12 +75390,12 @@
       "GUID": "ffa880",
       "Name": "CardCustom",
       "Transform": {
-        "posX": -5.844277,
-        "posY": 1.59895754,
-        "posZ": -14.53454,
-        "rotX": 0.0167310163,
-        "rotY": 179.975159,
-        "rotZ": 180.080154,
+        "posX": -5.84455538,
+        "posY": 1.598923,
+        "posZ": -14.5345345,
+        "rotX": 0.01686236,
+        "rotY": 179.982391,
+        "rotZ": 180.0817,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -75047,12 +75448,12 @@
       "GUID": "3a4dc8",
       "Name": "Counter",
       "Transform": {
-        "posX": -8.657446,
-        "posY": 1.45858753,
-        "posZ": -17.0548515,
-        "rotX": 359.98175,
-        "rotY": 359.5163,
-        "rotZ": 359.921661,
+        "posX": -8.65758,
+        "posY": 1.45855761,
+        "posZ": -17.0548763,
+        "rotX": 359.9817,
+        "rotY": 359.513031,
+        "rotZ": 359.920441,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -75068,7 +75469,7 @@
       "ColorDiffuse": {
         "r": 1.0,
         "g": 0.913321,
-        "b": 0.06097073
+        "b": 0.0609706342
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -75129,12 +75530,12 @@
       "GUID": "9852f1",
       "Name": "CardCustom",
       "Transform": {
-        "posX": -5.84151125,
-        "posY": 1.59828508,
-        "posZ": -16.8960762,
-        "rotX": 0.01681954,
-        "rotY": 179.969833,
-        "rotZ": 180.07959,
+        "posX": -5.842008,
+        "posY": 1.59826112,
+        "posZ": -16.8960381,
+        "rotX": 0.0166076627,
+        "rotY": 179.977066,
+        "rotZ": 180.080917,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -75187,12 +75588,12 @@
       "GUID": "3e817a",
       "Name": "Counter",
       "Transform": {
-        "posX": -17.9361076,
-        "posY": 1.48060918,
-        "posZ": 9.491967,
-        "rotX": 0.0183568727,
-        "rotY": 179.193787,
-        "rotZ": 0.139687076,
+        "posX": -17.9353676,
+        "posY": 1.48065853,
+        "posZ": 9.4913435,
+        "rotX": 0.0179694761,
+        "rotY": 179.1659,
+        "rotZ": 0.130932435,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -75208,7 +75609,7 @@
       "ColorDiffuse": {
         "r": 0.0,
         "g": 1.0,
-        "b": 0.107801475
+        "b": 0.107801355
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -75269,12 +75670,12 @@
       "GUID": "18e20a",
       "Name": "Counter",
       "Transform": {
-        "posX": -17.9713364,
-        "posY": 1.48007274,
-        "posZ": 11.990592,
-        "rotX": 0.0260432158,
-        "rotY": 179.204849,
-        "rotZ": 0.07142581,
+        "posX": -17.9716263,
+        "posY": 1.48007286,
+        "posZ": 11.9899206,
+        "rotX": 0.0199190713,
+        "rotY": 179.199173,
+        "rotZ": 0.07892303,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -75289,7 +75690,7 @@
       },
       "ColorDiffuse": {
         "r": 0.0,
-        "g": 0.346385121,
+        "g": 0.346384972,
         "b": 0.9808361
       },
       "LayoutGroupSortIndex": 0,
@@ -75351,12 +75752,12 @@
       "GUID": "62e90a",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -13.4016914,
-        "posY": 1.504118,
-        "posZ": 13.334197,
-        "rotX": 359.9832,
-        "rotY": 0.0272374433,
-        "rotZ": 359.920135,
+        "posX": -13.4017,
+        "posY": 1.504117,
+        "posZ": 13.3345642,
+        "rotX": 359.983154,
+        "rotY": 0.02663555,
+        "rotZ": 359.920044,
         "scaleX": 2.29497218,
         "scaleY": 1.0,
         "scaleZ": 4.34672
@@ -75417,12 +75818,12 @@
       "GUID": "007385",
       "Name": "CardCustom",
       "Transform": {
-        "posX": -20.8540363,
-        "posY": 1.629052,
-        "posZ": 16.81012,
-        "rotX": 0.0165808778,
-        "rotY": 180.0055,
-        "rotZ": 180.0769,
+        "posX": -20.854147,
+        "posY": 1.629095,
+        "posZ": 16.8112736,
+        "rotX": 359.983337,
+        "rotY": 359.993561,
+        "rotZ": 179.9213,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -75475,12 +75876,12 @@
       "GUID": "3dddef",
       "Name": "CardCustom",
       "Transform": {
-        "posX": -20.8523617,
-        "posY": 1.62837625,
-        "posZ": 14.4488029,
-        "rotX": 0.0166476239,
-        "rotY": 179.978729,
-        "rotZ": 180.076721,
+        "posX": -20.8520832,
+        "posY": 1.62838113,
+        "posZ": 14.4500437,
+        "rotX": 359.983459,
+        "rotY": 359.993683,
+        "rotZ": 179.921936,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -75533,12 +75934,12 @@
       "GUID": "6e3490",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": -20.8614655,
-        "posY": 1.61447513,
-        "posZ": 13.2777634,
-        "rotX": 359.92,
-        "rotY": 270.022034,
-        "rotZ": 180.017151,
+        "posX": -20.8614635,
+        "posY": 1.61448407,
+        "posZ": 13.2779055,
+        "rotX": 359.920319,
+        "rotY": 270.0225,
+        "rotZ": 180.017136,
         "scaleX": 1.62664688,
         "scaleY": 1.0,
         "scaleZ": 0.898277462
@@ -75641,12 +76042,12 @@
       "GUID": "f0ff88",
       "Name": "Counter",
       "Transform": {
-        "posX": -18.00556,
-        "posY": 1.49514377,
-        "posZ": 14.4910984,
-        "rotX": 359.773346,
-        "rotY": 179.360748,
-        "rotZ": 359.693939,
+        "posX": -18.00567,
+        "posY": 1.49508429,
+        "posZ": 14.4901829,
+        "rotX": 359.75415,
+        "rotY": 179.362732,
+        "rotZ": 359.703461,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -75723,12 +76124,12 @@
       "GUID": "119ada",
       "Name": "CardCustom",
       "Transform": {
-        "posX": -20.8517685,
-        "posY": 1.62767375,
-        "posZ": 12.0868177,
-        "rotX": 0.0169505347,
-        "rotY": 179.989059,
-        "rotZ": 180.077484,
+        "posX": -20.8511,
+        "posY": 1.62769663,
+        "posZ": 12.0880184,
+        "rotX": 359.983337,
+        "rotY": 359.99408,
+        "rotZ": 179.921646,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -75781,12 +76182,12 @@
       "GUID": "31edb1",
       "Name": "Counter",
       "Transform": {
-        "posX": -18.02674,
-        "posY": 1.48170114,
-        "posZ": 16.9923325,
-        "rotX": 0.0159730744,
-        "rotY": 179.51535,
-        "rotZ": 0.08256826,
+        "posX": -18.0265045,
+        "posY": 1.48164368,
+        "posZ": 16.9919853,
+        "rotX": 0.0157410912,
+        "rotY": 179.501862,
+        "rotZ": 0.079410024,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -75802,7 +76203,7 @@
       "ColorDiffuse": {
         "r": 1.0,
         "g": 0.913321,
-        "b": 0.06097073
+        "b": 0.0609706342
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -75863,12 +76264,12 @@
       "GUID": "4bd200",
       "Name": "CardCustom",
       "Transform": {
-        "posX": -20.8508244,
-        "posY": 1.6270045,
-        "posZ": 9.7242,
-        "rotX": 0.0169695653,
-        "rotY": 179.983215,
-        "rotZ": 180.077072,
+        "posX": -20.84967,
+        "posY": 1.6269623,
+        "posZ": 9.725396,
+        "rotX": 359.9834,
+        "rotY": 359.99118,
+        "rotZ": 179.9222,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -75921,12 +76322,12 @@
       "GUID": "463da9",
       "Name": "Counter",
       "Transform": {
-        "posX": 13.3166113,
-        "posY": 1.43700624,
-        "posZ": 9.582482,
-        "rotX": 0.0148058692,
-        "rotY": 179.06546,
-        "rotZ": 0.128852,
+        "posX": 13.3166332,
+        "posY": 1.436326,
+        "posZ": 9.582488,
+        "rotX": 0.0200820751,
+        "rotY": 179.068985,
+        "rotZ": 0.09872971,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -75942,7 +76343,7 @@
       "ColorDiffuse": {
         "r": 0.0,
         "g": 1.0,
-        "b": 0.107801445
+        "b": 0.107801326
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -76003,12 +76404,12 @@
       "GUID": "146746",
       "Name": "Counter",
       "Transform": {
-        "posX": 13.2748051,
-        "posY": 1.43661427,
-        "posZ": 12.0807056,
-        "rotX": 0.0169869233,
-        "rotY": 179.068649,
-        "rotZ": 0.08181145,
+        "posX": 13.2748728,
+        "posY": 1.43652976,
+        "posZ": 12.0808764,
+        "rotX": 0.01821427,
+        "rotY": 179.072357,
+        "rotZ": 0.07773036,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -76023,7 +76424,7 @@
       },
       "ColorDiffuse": {
         "r": 0.0,
-        "g": 0.3463851,
+        "g": 0.346384943,
         "b": 0.9808361
       },
       "LayoutGroupSortIndex": 0,
@@ -76085,12 +76486,12 @@
       "GUID": "25a0ab",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 17.8415871,
-        "posY": 1.46059084,
-        "posZ": 13.43674,
+        "posX": 17.841404,
+        "posY": 1.46059144,
+        "posZ": 13.43703,
         "rotX": 359.982971,
-        "rotY": 359.8839,
-        "rotZ": 359.9201,
+        "rotY": 359.8814,
+        "rotZ": 359.920044,
         "scaleX": 2.29497218,
         "scaleY": 1.0,
         "scaleZ": 4.34672
@@ -76151,12 +76552,12 @@
       "GUID": "febdee",
       "Name": "Counter",
       "Transform": {
-        "posX": 13.2344017,
-        "posY": 1.452081,
-        "posZ": 14.5810719,
-        "rotX": 359.785553,
-        "rotY": 179.216415,
-        "rotZ": 359.698669,
+        "posX": 13.23441,
+        "posY": 1.45174456,
+        "posZ": 14.5811,
+        "rotX": 359.7602,
+        "rotY": 179.218491,
+        "rotZ": 359.6922,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -76233,12 +76634,12 @@
       "GUID": "0b26b3",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 10.4140034,
-        "posY": 1.58483446,
-        "posZ": 14.5496283,
-        "rotX": 0.01779198,
-        "rotY": 179.890854,
-        "rotZ": 180.0808,
+        "posX": 10.4134693,
+        "posY": 1.58482313,
+        "posZ": 14.5491219,
+        "rotX": 359.983032,
+        "rotY": 359.979156,
+        "rotZ": 179.92186,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -76291,12 +76692,12 @@
       "GUID": "edceea",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 10.3819952,
-        "posY": 1.57095373,
-        "posZ": 13.36162,
-        "rotX": 359.9205,
-        "rotY": 269.878784,
-        "rotZ": 180.0173,
+        "posX": 10.3818312,
+        "posY": 1.57095563,
+        "posZ": 13.3616819,
+        "rotX": 359.920258,
+        "rotY": 269.879456,
+        "rotZ": 180.017273,
         "scaleX": 1.62664688,
         "scaleY": 1.0,
         "scaleZ": 0.898277462
@@ -76399,12 +76800,12 @@
       "GUID": "1992f6",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 10.4178038,
-        "posY": 1.5840888,
-        "posZ": 12.1882477,
-        "rotX": 0.0179144219,
-        "rotY": 179.901642,
-        "rotZ": 180.081772,
+        "posX": 10.4181719,
+        "posY": 1.58411384,
+        "posZ": 12.1877384,
+        "rotX": 359.982971,
+        "rotY": 359.9784,
+        "rotZ": 179.921783,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -76457,12 +76858,12 @@
       "GUID": "925b73",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 10.3942156,
-        "posY": 1.58343256,
-        "posZ": 9.845557,
-        "rotX": 0.0179036539,
-        "rotY": 180.005463,
-        "rotZ": 180.080963,
+        "posX": 10.3954582,
+        "posY": 1.5834564,
+        "posZ": 9.845036,
+        "rotX": 359.983063,
+        "rotY": 359.978058,
+        "rotZ": 179.921387,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -76515,12 +76916,12 @@
       "GUID": "2f3fc9",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 10.4082,
-        "posY": 1.585551,
-        "posZ": 16.9187126,
-        "rotX": 0.01748332,
-        "rotY": 180.031952,
-        "rotZ": 180.080826,
+        "posX": 10.4067078,
+        "posY": 1.58556485,
+        "posZ": 16.9182968,
+        "rotX": 359.983154,
+        "rotY": 359.9789,
+        "rotZ": 179.921127,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -76573,12 +76974,12 @@
       "GUID": "8b8cf2",
       "Name": "Counter",
       "Transform": {
-        "posX": 13.207612,
-        "posY": 1.43810177,
-        "posZ": 17.0829735,
-        "rotX": 0.0190780051,
-        "rotY": 179.3709,
-        "rotZ": 0.0786076,
+        "posX": 13.2075615,
+        "posY": 1.43813717,
+        "posZ": 17.0829353,
+        "rotX": 0.0187463332,
+        "rotY": 179.373016,
+        "rotZ": 0.08014494,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -76594,7 +76995,7 @@
       "ColorDiffuse": {
         "r": 1.0,
         "g": 0.913321,
-        "b": 0.06097071
+        "b": 0.0609706119
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -76655,12 +77056,12 @@
       "GUID": "0567df",
       "Name": "Counter",
       "Transform": {
-        "posX": 44.2774353,
-        "posY": 1.39383125,
-        "posZ": 9.456591,
-        "rotX": 0.00757642742,
-        "rotY": 179.1469,
-        "rotZ": 0.13076137,
+        "posX": 44.2749977,
+        "posY": 1.39297152,
+        "posZ": 9.458395,
+        "rotX": 0.03104322,
+        "rotY": 179.2329,
+        "rotZ": 0.09106989,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -76676,7 +77077,7 @@
       "ColorDiffuse": {
         "r": 0.0,
         "g": 1.0,
-        "b": 0.107801445
+        "b": 0.107801326
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -76737,12 +77138,12 @@
       "GUID": "b45030",
       "Name": "Counter",
       "Transform": {
-        "posX": 44.2390862,
-        "posY": 1.39340448,
-        "posZ": 11.9549437,
-        "rotX": 0.0134812426,
-        "rotY": 179.126617,
-        "rotZ": 0.07971128,
+        "posX": 44.238308,
+        "posY": 1.39334381,
+        "posZ": 11.9566288,
+        "rotX": 0.0197159424,
+        "rotY": 179.168579,
+        "rotZ": 0.0784011558,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -76757,7 +77158,7 @@
       },
       "ColorDiffuse": {
         "r": 0.0,
-        "g": 0.3463851,
+        "g": 0.346384943,
         "b": 0.9808361
       },
       "LayoutGroupSortIndex": 0,
@@ -76819,12 +77220,12 @@
       "GUID": "87b185",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 48.8069534,
-        "posY": 1.41738319,
-        "posZ": 13.3054409,
-        "rotX": 359.983,
-        "rotY": 359.963074,
-        "rotZ": 359.92,
+        "posX": 48.80811,
+        "posY": 1.41738367,
+        "posZ": 13.3039694,
+        "rotX": 359.983154,
+        "rotY": 359.975739,
+        "rotZ": 359.920349,
         "scaleX": 2.29497218,
         "scaleY": 1.0,
         "scaleZ": 4.34672
@@ -76885,12 +77286,12 @@
       "GUID": "079c92",
       "Name": "Counter",
       "Transform": {
-        "posX": 44.20155,
-        "posY": 1.40884471,
-        "posZ": 14.455595,
-        "rotX": 359.786072,
-        "rotY": 179.2893,
-        "rotZ": 359.697723,
+        "posX": 44.2018433,
+        "posY": 1.40868962,
+        "posZ": 14.4572678,
+        "rotX": 359.785431,
+        "rotY": 179.274261,
+        "rotZ": 359.688782,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -76967,12 +77368,12 @@
       "GUID": "0b6573",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 41.3574371,
-        "posY": 1.54166079,
-        "posZ": 14.4211969,
-        "rotX": 0.0179221,
-        "rotY": 179.9771,
-        "rotZ": 180.080887,
+        "posX": 41.3604,
+        "posY": 1.54166138,
+        "posZ": 14.4248295,
+        "rotX": 359.9838,
+        "rotY": 0.0750386342,
+        "rotZ": 179.922989,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -77025,12 +77426,12 @@
       "GUID": "f796f5",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 41.3472672,
-        "posY": 1.52775061,
-        "posZ": 13.24018,
-        "rotX": 359.919952,
-        "rotY": 269.9541,
-        "rotZ": 180.0172,
+        "posX": 41.3483124,
+        "posY": 1.5277518,
+        "posZ": 13.2405939,
+        "rotX": 359.9208,
+        "rotY": 269.9515,
+        "rotZ": 180.017044,
         "scaleX": 1.62664688,
         "scaleY": 1.0,
         "scaleZ": 0.898277462
@@ -77133,12 +77534,12 @@
       "GUID": "51d160",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 41.35787,
-        "posY": 1.54091549,
-        "posZ": 12.0588617,
-        "rotX": 0.0180588346,
-        "rotY": 179.955688,
-        "rotZ": 180.081787,
+        "posX": 41.35767,
+        "posY": 1.54097641,
+        "posZ": 12.06253,
+        "rotX": 359.983826,
+        "rotY": 0.06689076,
+        "rotZ": 179.9234,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -77191,12 +77592,12 @@
       "GUID": "a9c464",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 41.35772,
-        "posY": 1.54021716,
-        "posZ": 9.697027,
-        "rotX": 0.0182004347,
-        "rotY": 179.974365,
-        "rotZ": 180.080933,
+        "posX": 41.3549957,
+        "posY": 1.54030418,
+        "posZ": 9.700496,
+        "rotX": 359.984039,
+        "rotY": 0.0465233661,
+        "rotZ": 179.923584,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -77249,12 +77650,12 @@
       "GUID": "3d2198",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 41.3607674,
-        "posY": 1.542365,
-        "posZ": 16.7805042,
-        "rotX": 0.0175866876,
-        "rotY": 180.147873,
-        "rotZ": 180.080978,
+        "posX": 41.36666,
+        "posY": 1.54236364,
+        "posZ": 16.7835751,
+        "rotX": 359.9837,
+        "rotY": 0.07996805,
+        "rotZ": 179.922409,
         "scaleX": 0.5,
         "scaleY": 1.0,
         "scaleZ": 0.5
@@ -77307,12 +77708,12 @@
       "GUID": "43a384",
       "Name": "Counter",
       "Transform": {
-        "posX": 44.17796,
-        "posY": 1.39489138,
-        "posZ": 16.9574814,
-        "rotX": 0.0169321466,
-        "rotY": 179.452148,
-        "rotZ": 0.07803375,
+        "posX": 44.17874,
+        "posY": 1.39494908,
+        "posZ": 16.9582539,
+        "rotX": 0.0121012693,
+        "rotY": 179.4443,
+        "rotZ": 0.08047882,
         "scaleX": 1.0,
         "scaleY": 1.0,
         "scaleZ": 1.0
@@ -77328,7 +77729,7 @@
       "ColorDiffuse": {
         "r": 1.0,
         "g": 0.913321,
-        "b": 0.06097071
+        "b": 0.0609706119
       },
       "LayoutGroupSortIndex": 0,
       "Value": 0,
@@ -77384,6 +77785,72 @@
         "BreakForce": "Infinity",
         "BreakTorgue": "Infinity"
       }
+    },
+    {
+      "GUID": "c42228",
+      "Name": "Custom_Tile",
+      "Transform": {
+        "posX": -51.8431053,
+        "posY": 1.56086481,
+        "posZ": 24.044508,
+        "rotX": 0.07987481,
+        "rotY": 89.99446,
+        "rotZ": 359.983124,
+        "scaleX": 2.29497218,
+        "scaleY": 1.0,
+        "scaleZ": 4.34672
+      },
+      "Nickname": "Graveyard",
+      "Description": "Holds 1 card",
+      "GMNotes": "",
+      "AltLookAngle": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "ColorDiffuse": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0
+      },
+      "LayoutGroupSortIndex": 0,
+      "Value": 0,
+      "Locked": false,
+      "Grid": true,
+      "Snap": true,
+      "IgnoreFoW": false,
+      "MeasureMovement": false,
+      "DragSelectable": true,
+      "Autoraise": true,
+      "Sticky": true,
+      "Tooltip": true,
+      "GridProjection": false,
+      "HideWhenFaceDown": false,
+      "Hands": false,
+      "CustomImage": {
+        "ImageURL": "https://github.com/MichaelJSr/TTSCardMaker/blob/main/MDW/Holders/Graveyard.png?raw=true",
+        "ImageSecondaryURL": "",
+        "ImageScalar": 1.0,
+        "WidthScale": 0.0,
+        "CustomTile": {
+          "Type": 0,
+          "Thickness": 0.190000147,
+          "Stackable": false,
+          "Stretch": false
+        }
+      },
+      "LuaScript": "",
+      "LuaScriptState": "",
+      "XmlUI": "",
+      "AttachedSnapPoints": [
+        {
+          "Position": {
+            "x": 0.0,
+            "y": 0.1000002,
+            "z": -0.02
+          }
+        }
+      ]
     }
   ]
 }
