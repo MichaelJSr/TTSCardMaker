@@ -129,7 +129,7 @@ Multiple damage types can be applied to an instance of damage, combining their e
 
 **Life steal:** The creature that deals this damage is healed by the same amount
 
-**Shockwave:** Deals the damage listed on card to a random target on each slot of the targeted team's primary field excluding the slot of the original target, and also one random target on the secondary field behind the initial target (This does not count as an attack)
+**Shockwave:** Deals damage to all enemy creatures on the primary field aside from the original target, and also the secondary field slot behind the main target(This does not count as an attack)
 
 **De-buff damage:** Is piercing by default, doesn’t count as an attack, and can damage cards that are in the hand
 
@@ -197,6 +197,7 @@ Similarly, if a creature that has used an action dies mid-turn the creature that
 - (OPGT) = Once per global turn. Implies "at any time (AAT)"
 - (TPGT) = Twice per global turn. Implies "at any time (AAT)"
 - (XPGT) = X times per global turn (where X is a number). Implies "at any time (AAT)"
+- (EOGT) = Every other global turn. Implies "at any time (AAT)"
 - (OPG) = Once per game
 - (TPG) = Twice per game
 - (XPG) = X times per game (where X is a number)
