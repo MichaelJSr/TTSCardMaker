@@ -264,7 +264,7 @@ Field items cost 2x their star cost in BRICKS
 
 Field items may occasionally have a clause that reduces their buy price
 
-After a field item is bought from the shop, a new one of equal level is drawn to replace it
+After a field item is bought from the shop, the shop slot does not refill.
 
 At the exact moment that a field item is acquired, the team that acquired it may swap it onto their field for free
 
