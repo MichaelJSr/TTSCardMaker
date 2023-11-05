@@ -1,0 +1,80 @@
+Constructed format is where you can choose whatever cards you want out of the entire deck for your hand.
+Here is a ban list for what cards you cannot choose for this to avoid unfun playstyles and overly broken combos.
+You may also only have one of each item in your hand.
+
+5 star creatures:
+The Radiance
+Marx
+Yin Yarn
+The Thin Man
+Abrason Lincdolt
+Baba
+The Puppet
+Gandhi
+
+4 star creatures:
+NME Salesman
+Nailsage Sly
+Old Foxy
+The Kingchin
+Katarina
+Acrophobia
+Fawful
+DooPliss
+Stranger
+Buzzo
+Oryx The Exalted God
+Tainted Keeper
+Green Mage
+
+3 star creatures:
+Leeroy Jenkins
+Shield Master Pi
+Something
+Mr. Jawsum
+Dark Matter Swordsman
+Master Hand
+Joel Miller
+Tainted Bethany
+Taranza
+Holo defense API
+
+2 star creatures:
+Peter Panda
+Barry The Barrel
+Hooktail
+Gold Fuzzy
+Bob-Ulk
+Tainted Lost
+
+4 star items:
+Amazing Mirror
+The Wall (By Ech)
+Dark Ritual
+Life Link
+Golden Metronome
+Mimic
+Holy Mantle
+Flip
+Grandfather Clock
+Magic Shield
+Time Riddle
+Standstill
+
+3 star items:
+Stalwart Shell
+Second Wind
+Reflection
+Inner Eye
+Blank Card
+Scapular
+The Claw
+
+2 star items:
+Tomorrow I'll
+Gust of Wind
+Spicy Spray
+Berserk
+
+1 star items:
+NME stock
