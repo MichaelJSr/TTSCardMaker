@@ -530,3 +530,5 @@ When upgrading effects, the upgraded effects’ duration is the highest duration
 - If an entire copy deck is exhausted (if there are no more viable items in the entire deck), then replace it with a new copy deck
 
 - If a creature has multiple of the same type/attribute and a field items’ effect can be stacked, then the effect is stacked per applicable type/attribute
+
+- "Counters" are unique per creature unless otherwise stated
