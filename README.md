@@ -378,7 +378,6 @@ Point-yielding creatures may consume an action to generate BRICKS equal to their
 Field items can be stored in the hand, and swapped onto the field for SP equal to their level
 
 # Status effects:
-## De-buffs:
 By default, de-buffs take effect and/or run out at the end of the effected creatures turn
 
 Damage dealing de-buffs still take effect on cards in the hand, dealing damage and/or running out at the end of the Global Turn
@@ -401,91 +400,6 @@ Certain Debuffs/Buffs upgrade themselves when applied  Ex:
 A creature already inflicted by frozen/blazing/plague can have none of the prior debuffs inflicted onto them
 
 When upgrading effects, the upgraded effects’ duration is the highest duration from the effects used in the upgrade unless otherwise specified
-
-### Tier 1
-- **Blindness:** Afflicted attacks random enemy creature
-
-- **Burdened:** -1 SPD, stackable, cannot effect Pandas
-
-- **Burning:** 3DMG, can’t affect fire types
-
-- **Chill:** -25% SPD, can’t affect ice types
-
-- **Disgusted:** Cannot consume food
-
-- **Enfeebled:** -1ATK, Stackable
-
-- **Poison:** 1DMG, can’t affect machines, Stackable
-
-- **Sickness:** -1 DEF -1 ATK -1 SPD, can’t affect machines or the undead
-
-- **Smeckeldorfed:** 1 DMG, Stackable
-
-- **Smoldering:** 2 DMG, can’t affect fire types
-
-- **Softened:** -1DEF, stackable, can't affect water types
-
-- **Thinned:** -1 MaxHP, Stackable
-
-### Tier 2
-- **Afraid:** -2 ATK, -2 SPD
-
-- **Blazing:** 4 DMG, can’t affect fire types
-
-- **Confusion:** Afflicted attacks random creature, and may only use actions for attacking
-
-- **Frostbite:** -25% SPD, 2 DMG, can’t affect ice types
-
-- **Paralyzed:** -50% SPD, can’t affect electric types
-
-- **Plague:** -2 DEF-1ATK-2SPD, can’t affect machines or the undead
-
-- **Restrained:** -1 Action. Stackable
-
-- **Spirit Flame:** 2 DMG, -2 DEF
-
-### Tier 3
-- **Corruption:** Cannot affect dark matter types. When the afflicted uses its ability, it takes 3 damage. Each time the creature takes damage from this de-buff during a Global turn this de-buff does 1 less damage. This resets back to 3 damage at the beginning of the next Global turn. This debuff wears off at the end of Global Turns
-
-- **Cursed Inferno:** 3 DMG until death
-
-- **Frozen:** Creature cannot use actions or switch out, cannot affect ice types
-
-- **Hexed:** If 3 creatures on one team are afflicted with hexed, then all creatures on that team receive double damage. Cards afflicted with Hex take 2 DMG at the end of the Global turn while in the hand
-
-- **Imprisoned:** Ends at end of full turn or the end of the affected creatures turn, whichever comes last. Affected creature cannot use actions or switch out. 
-
-- **Resentful Glare:** Each time the afflicted damages an enemy creature it takes 3 damage 
-
-- **Suffocation:** 1 DMG, stackable
-
-### Tier 4
-- **Condemned:** Card dies in number of turns written on card. The HP that that card had the moment it died is counted as damage for the purpose of abilities or items that track damage taken
-
-- **Contracted:** Lasts until the afflicted exits the field
-
-- **Curse:** -1 star of item usage, this de-buff is inflicted on the entire team rather than a single creature, stackable
-
-- **Despair:** -3ATK -1DEF -3SPD
-
-- **Frozen in time:** The affected Creature cannot use an action, switch out, use its ability, equip items, or be healed until either it’s next turn ends, or the full turn ends, whichever comes last
-
-- **Hemorrhaging:** 0.5 True Damage, Stackable
-
-- **Infected:** -2 DEF +2 ATK, ability negated
-
-- **Overridden:** Inflicted on the entire enemy team. Allows you to see all of that teams' 3 star or lower items, and use 4 stars total of these items throughout these debuff's duration(priority given to your usage over theirs) without consuming SP.
-
-- **Withering:** 2 DMG -1ATK/DEF/SPD at the end of every turn until death
-
-## Buffs
-- **Regen:** 1HP, stackable
-- **Thickened:** +1 MaxHP, stackable
-- **Hardened:** +1 DEF, stackable
-- **Empowered:** +1ATK, stackable
-- **Peppy:** +1 SPD, stackable
-- **Hyper:** +25% SPD
-- **Inspired:** +1 Action on creature's next or current turn
 
 # Attributes
 - Nature
