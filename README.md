@@ -274,6 +274,10 @@ Phase 4 (turn ends):
 - End of turn (ENDT) effects activate
 - Items can be used preemptively for (ENDT) effects
 
+Phase 5 (turn over):
+- Status effects proc (unless otherwise stated)
+- Status effects' duration ticks down 1 turn
+
 # Abbreviations
 Abbreviations marked with a 🕐 icon are considered "Time Based" when used in abilities/item descriptions. These abilities are considered "refreshed" and become usable again in the specified timeframe.
 
