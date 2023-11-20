@@ -450,3 +450,5 @@ When upgrading effects, the upgraded effects’ duration is the highest duration
 - If a creature has multiple of the same type/attribute and a field items’ effect can be stacked, then the effect is stacked per applicable type/attribute
 
 - "Counters" are unique per creature unless otherwise stated
+
+- If a healing item is used to deal DMG, it is instead treated as an attack item, and vice versa
