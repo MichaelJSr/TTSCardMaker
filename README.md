@@ -178,7 +178,7 @@ Multiple damage types can be applied to an instance of damage, combining their e
 
 **Counter:** Can only be dealt as retaliation to an attack. Does not count as an attack, and can bypass abilities and protective minions as a result
 
-**Overkill:** Only applies when a card says so: Extra damage from one attack goes to another applicable card of your choosing, and is effected by the DEF of that chosen target
+**Overkill:** Only applies when a card says so: Extra damage from one attack goes to another applicable card of attackers' choosing, and is effected by the DEF of that chosen target. This does not count as an "attack", and other effects of the attack (such as status effects) do not proc on overkill
 
 **Life steal:** DMG dealt is healed before the attack resolves, with a percent scalar where 100% is 1:1, 50% is 1:2, 200% is 2:1, etc.
 
@@ -382,9 +382,9 @@ Point-yielding creatures may consume an action to generate BRICKS equal to their
 Field items can be stored in the hand, and swapped onto the field for SP equal to their level
 
 # Status effects:
-By default, de-buffs take effect and/or run out at the end of the effected creatures turn
+If a status effect deals DMG or Heals, then by default it procs at ENDT. Otherwise, by default the status effect procs immediately.
 
-Damage dealing de-buffs still take effect on cards in the hand, dealing damage and/or running out at the end of the Global Turn
+If a creature has a status effect and the global turn ends without the creature having ended its turn, then the effect ticks at the end of the global turn, even if the creature is in the hand.
 
 Mutliple debuffs dealing damage at the end of a creatures turn count as separate instances of damage
 
@@ -442,8 +442,6 @@ When upgrading effects, the upgraded effects’ duration is the highest duration
 - A creature cannot intercept while it is not on the field unless otherwise stated (cannot intercept while in hand)
 
 - A creature being “destroyed” causes it to take enough DMG to kill it (regardless of healing or any other possible factors)
-
-- If a creature has a debuff and the global turn ends without the creature having ended it's turn, then the debuff will tick at the end of the global turn
 
 - If an entire copy deck is exhausted (if there are no more viable items in the entire deck), then replace it with a new copy deck
 
