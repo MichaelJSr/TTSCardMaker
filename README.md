@@ -330,11 +330,13 @@ Equip and active items can be negated after their activation while they are stil
 
 Some effects require you to draw a random item. In this case, draw from a copy of the deck until an eligible item is drawn. After the eligible item is drawn, do not replace it in the copy deck, and set aside the copy deck for next time a random item is drawn. If the entire deck is drawn and no eligible items were found, the effect will do nothing. 
 
-Items/abilities may be used reactively to any action/ability/item/event, in which case a “reaction” begins
+Items (unequip/equip/both)/abilities may be used reactively to any action/ability/item/event, in which case a “reaction” begins
 
 “Reactions” resolve before the action/ability/item/event they are reacting to resolve, and there can only be one reaction at a time
 
-Items/abilities that are played reactively resolve backwards, except that offensive items/abilities (bomb/metronome type, or damaging abilities) resolve last and resolve forwards in the order they’re played
+Items/abilities that are played reactively resolve backwards, but offensive items/abilities (attack/offense type, or damaging abilities) resolve last (but still resolve backwards)
+
+If a creature can no longer be targeted by an item, the item and SP isnt used
 
 Items may be played from hand reactively only if its your turn
 
