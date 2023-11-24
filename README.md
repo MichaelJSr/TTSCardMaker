@@ -227,33 +227,27 @@ Abilities that count damage dealt to creatures do not count overkill damage.
 When two (BOGT) effects happen simultaneously the team with the higher cumulative SPD among all their creatures takes precedence.
 
 ## Turns
-A “Global Turn” is defined as when all slots on the field have taken a turn, and is brought to a close by the phrase “Turn Reset”
+A “Global Turn” is defined as when all slots on the field have taken a turn, and is brought to a close by the phrase “Turn Reset”.
+Turn order is based on the 3 lanes on the field, each lane being composed of the two slots facing each other from each team.
 
-Turn order is based on the 3 lanes on the field, each lane being composed of the two slots facing each other from each team
-
-To determine which lane goes first, identify which creature in each slot has the highest speed, and combine each highest speed for each lane. The order of lanes is then determined by those values, highest speed first, lowest last
-
+To determine which lane goes first, identify which creature in each slot has the highest SPD, and combine each highest speed for each lane. The order of lanes is then determined by those values, highest speed first, lowest last
 Within each lane the slot with the higher speed creature goes first
 
 In the case of a tie in either of these cases, percentage of health remaining will be the first tiebreaker (higher health going first), and the star level of the creatures will be the second tiebreaker (higher stars go first)
 
 Once a lane has begun taking its turn, no other slot can take its turn until the current lane is done
-
 If a change of turn order occurs while a creature is in the middle of its turn, that creature gets to finish its turn regardless
-
 If a creature switches out to a new creature with a lower speed, then that creature’s turn can be delayed within a lane if its speed is lower than the other creature in the lane
-
 Similarly, if a creature that has used an action dies mid-turn, the creature that replaces it cannot use an action, but may use its ability
-
 ## Turn Phases
 Phase 0 (when deciding lane/creature turn order (BOGT etc)):
-- Can use facedown items only
+- Can use facedown items
 - Can use (AAT) abilities
 - Turn order may be manipulated through SPD changes
 
 Phase 1 (before turn start):
-- Creature can swap out
-- Can equip items from facedown (before (BOT) effects proc)
+- Creature can swap out and change turn order within the lane
+- Can use items from facedown (before (BOT) effects proc)
 
 Phase 2 (turn starts, before creature acts):
 - Turn order may no longer be manipulated through SPD change
@@ -265,10 +259,11 @@ Phase 3 (creature acts):
 - Can use items from the hand
 - Can swap items from hand to facedown and vice versa
 - Can buy items from the shop
-- Last chance to use items from hand, swap items, and buy items
+- May use items from hand, swap items, and buy items
 
 Phase 4 (turn ends):
 - Can no longer use (OYT) abilities
+- Can no longer use use items from hand, swap items, or buy items
 - End of turn (ENDT) effects activate
 - Items can be used preemptively for (ENDT) effects
 
