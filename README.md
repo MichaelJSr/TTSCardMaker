@@ -347,15 +347,14 @@ Cellphone tower: “Active” items that stay on the field with a constant effec
 
 ## Status effects:
 
-# Procing
+Procing
 If a status effect deals DMG or Heals, then by default it procs at ENDT.
  Otherwise, by default the status effect procs immediately.
 
 If a status effect deals DMG it is piercing by default, doesn’t count as an attack, and can damage cards that are in the hand.
 
 If a creature has a status effect and the global turn ends without the creature having ended its turn, then the effect ticks at the end of the global turn, even if the creature is in the hand.
-
-# Types
+Types
 Standared status effects can only have one instance of themselves applied to a single creature.
 Stacking status effects can have any number of themselves applied.
 
