@@ -316,7 +316,7 @@ You cannot sell items that have already been used, unless they specify their sel
 Shop
 Item’s in the shop my be purchased for 4x the star level of the item in points.
 After an item is bought from the shop, restock the slot with an item of the same star level.
-Once per global turn per team, a team may pay 1 point to shuffle the item shop during their turn.
+Once per turn you may reshuffle the shop for 1 point.
 
 Negation
 If an item is negated or destroyed during use, the star points expended to use it are still expended.
