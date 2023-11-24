@@ -42,65 +42,93 @@ Reveal all shops before card reveals while setting up
 - Two 2-star field items
 - Two 1-star field items
 
+
+## Reactions
+Items/abilities may be used reactively to any action/ability/item/event, in which case a “reaction” begins.
+
+“Reactions” resolve before the action/ability/item/event/reaction they are reacting to resolve.
+
+A chain of reactions must resolve before a new one begins.
+
+Items/abilities that are played reactively resolve backwards, but offensive items/abilities (attack/offense type, or damaging abilities) resolve last.
+
+If a reacion prevents a creature from being targeted by an item, (i.e forcibly switched out/killed before hand) the item and star points aren’t used.
+
+A decision to do attack or use an ability/item cannot be retracted if your opponent reacts to it in some way.
+
+Items may be played from hand reactively only if its your turn.
+
+While a reaction is occuring, items cannot be bought from the shop.
+
+Items may be reactivley unequiped and re-equiped to another creature if it is your turn.
+
+
 ## The Field
-No more or less than 3 creatures must occupy a team’s field unless they run out of creatures
+The place that creatures are placed on is called the primary field, which is organized into 6 slots, 3 for each team.
+Every slot must be filled if possible.
 
-The place that creatures are placed on is called the primary field, which is organized into 6 slots, 3 for each team
+Each slot containing a creature takes one turn during each Global Turn.
 
-Each slot containing a creature takes one turn during each Global Turn
+If an entire lane of creatures is dead, then skip over that lane, but count time as if that lane had gone.
 
-If an entire lane of creatures is dead, then skip over that lane, but count time as if that lane had gone
+Behind the primary field is the Secondary field. This is created by something pushing a creature back into it, either a protective minion or active item designated by the shield symbol
+If a protective minion gains its own protectve minion, it and the creature it’s equipped to are each pushed back one field.
 
-Behind the primary field is the secondary field. A creature in the secondary field cannot use its actions, but can use its ability or switch out
+By default, attacks and enemy items can only hit the primary field.
 
-Any further fields (usually created by multiple layers of minions spawning) have the same restrictions as the Secondary field
+A creature must be in the primary field to use its actions unless otherwise specified, but can use its ability or switch out in any field.
 
-A creature in the hand cannot use actions, use their ability, or have items used on it (equip items stay equipped and may be unequipped)
+A creature can swap fields with its protective minions once during its turn, but only if no actions have been used yet..
 
-## Creatures and Stats
+## Creatures
+Creatures at base have 1 “Action” per global turn that allows them to Attack, Defend, Generate Bricks, or be spent on specific abilities.
+
+Right before a creature starts its turn, you can switch it out with another one in your hand for the cost of 2 points.
+ If it is the first thing to go in the lane, this may change turn order within the lane.
+Equips and Minions will stay equipped to a creature when swapped out. Equips may still be unequipped.
+
+Attacking
+When a creature uses an action to attack, it targets something on the field and does damage to it.
+The damage from attacks are reduced by half of the defense of the target.
+DMG - (1/2*DEF)
+
+Defending
+When a creature uses an action to defend, it is turned 90 degrees, and its DEF stat doubles. It stays like this until the beginning of it’s turn.
+If all creatures on one side of the field are defending, those creatures take 1 True Damage at the end of their turn
+When a creature moves to intercept an attack, it switches (and stays out) of defense mode first.
+
+Mining for Bricks
+Point-yielding creatures may consume an action to generate BRICKS equal to their star level. BRICKS can be used to buy Field Items.
+
+At the beginning of a creatures turn (before they use an ability or do any other action) you have the option to switch it out with another from your hand for the cost of 2 Points.
+
+Death
+When a creature’s HP reaches 0 it dies, and the opposing team gains Points equal to that creature’s star level.
+Creatures composed of multiple targets only award Points when all targets are killed.
+Creatures that are revived from on death effects only yeild Points when they are fully killed.
+For creatures that are revived by other means, points are kept from killing it, but killing the revived version awards no Points.
+
+When a creature dies, and is revived, it’s HP and all of its stats, abilities, turn timers, or counters are reset to their base unless otherwise specified.
+
+## Stats
 Each bar of health represents 2 HP
+ATK and SPD, and DEF are valued as displayed, however ever DEF blocks only half it’s value for incoming DMG.
+HP and SPD canot be reduced below 1 bar.
 
-An increase to the max HP of a creature increases their current HP by the same amount
+HP
+An increase to the Max HP of a creature increases their current HP by the same amount. (This counts as healing)
+A decrease to the Max HP of a creature does not decrease their current HP unless if their current HP would become greater than their Max HP (in which case it is set to Max HP).
+A decrease to the Max HP of a creature does not count as DMG.
+If an item or ability has 2 different healing effects it is counted as one instance of healing.
 
-A decrease to the max HP of a creature does not decrease their current HP unless if their current HP would become greater than their max HP (in which case it is set to max HP)
-
-A decrease to the max HP of a creature does not count as DMG
-
-ATK and SPD are valued as displayed
-
-Every bar of DEF blocks 1/2 a bar of ATK
-
-Stats cannot be reduced below 1 bar, except DEF and ATK which can be reduced to 0 bars
-
+Stat Changes
 When calculating stat changes or damage dealt, Additives are applied first and multiplicatives second
+Multiplicative effects are applied additively i.e. Chilled (-25% SPD) + Paralyzed (-50% SPD) = -75% SPD
 
-Multiplicative effects are applied additively.
-- For example Chilled + Paralyzed = -75% SPD
-
-Damage dealt rounds to the nearest half in the positive direction.
-- For example 3.75 DMG rounds to 4 DMG
-- Overrules the next rule
-
-Stats (and reductions or gains) are rounded to the nearest half in the positive direction, calculated after they would have been applied.
-- For example, inflicting Chilled on a 5 SPD creature (5 - 1.25 SPD = 3.75 SPD) rounds to 4 SPD
-- Inflicting Empowered on a 5 ATK creature (5 + 1.25 ATK = 6.25 ATK) rounds to 6.5 ATK
-- DEF is the exception, it rounds to the nearest whole number
-
-Creatures at base have 1 “Action” per global turn that allows them to Attack, Defend, generate bricks, or various other things
-
-At the beginning of a creatures turn (before they use an ability or do any other action) you have the option to switch it out with another from your hand for the cost of 2 points
-
-When a creature dies, the opposing team gains points equal to that creature’s level
-
-If a creature is revived via an item, points are kept from killing it, but killing the revived version awards no points
-
-Creatures composed of multiple targets only award points when all targets are killed
-
-Creatures that revive with an ability only reward points when they are fully killed
-
-When a creature dies, and is revived, all of its stats, abilities, turn timers, or counters are reset to default
-
-Time does not pass for a creature's abilities while it is in the hand
+Rounding
+Damage dealt rounds to the nearest half in the positive direction, for example 3.75 DMG rounds to 4 DMG. 
+Stats are rounded to the nearest half in the positive direction, after reductions or gains are applied. For example, inflicting Chilled (-25% SPD) on a 5 SPD creature (5 SPD - 1.25 SPD = 3.75 SPD) rounds to 4 SPD, and inflicting Empowered on a 5 ATK creature (5 ATK + 1.25 ATK = 6.25 ATK) rounds to 6.5 ATK.
+DEF is the exception, as it rounds to the nearest whole number.
 
 ## Creature Types
 Most creatures and minions will have a type indicated by an icon on the top left of the card.
@@ -134,99 +162,69 @@ Certain types have special effects that mostly determine what effects they are i
 “Unkown” type upon first summon, may change this type to any other type (including nothing)
 
 ## Minions
-Non protective minions occupy the same field as the summoner, and do not protect them from attacks
-- Non Protective minions are designated by a sword symbol
-- Protective minions are designated by a shield symbol
+Shield icon : Non protective minions occupy the same field as the summoner, and do not protect them from attacks.
+Sword and ribbon icon :Protective minions push the equipped creature (and the non-protective minions around it) back one field.
+A summoner has the option to summon protective minions behind itself in the secondary field.
 
-Protective Minions stand in front of the creature that summoned them, pushing that creature (and the non portective minions around it) back to the secondary field
+Minions will stay equipped to a creature even if it is switched out.
+If all point-yielding creatures in a slot die, then non-persistant minions in that slot also die.
 
-Minions count as creatures for most purposes, however, are different in a few important ways, such as:
-- Awarding no points when killed
-- Not being able to use actions to generate bricks
+Minions do not yeild points when killed.
+Minions cannot generate BRICKS.
 
-Minions will stay with a creature even if it is switched out
-
-If all point-yielding creatures in a slot die, then non-persistant minions in that slot also die
-
-A creature has the option to summon protective minions behind itself in the secondary field
-
-A creature can swap fields with its protective minions once during its turn, but only if both of them have 1 or more actions remaining (it does not cost an action to swap fields)
-
-A creature that has already used an action may not use an action with a protective minion they summon
 
 ## Attacking
-An attack is classified as any act that could either deal damage or inflict a negative de-buff
+Attacks occour when creatures uses an action to preform an attack, when an attack item is used, or an ability deals damage or inflicts debuffs separate from the attack stat of a creature.
+ Attacks from abilities cannot trigger counter damage or counter items.
+
+The damage from attacks are reduced by half of the defense of the target.
+DMG - (1/2*DEF)
 
 After calculating damage done past DEF and rounding, apply a multiplier to the damage dealt based on the SPD difference between the attacker and the target, known as Combo Damage:
-- 1.5x DMG if attackers' speed is double that of the targets
-- 2x DMG if triple
+1.5x DMG if attackers’ speed is double that of the targets,
+2x DMG if triple.
 
-When a creature uses an ability or item to attack all enemy creatures at once, the attacks happen left-to-right from the attacker's perspective and counter damage is dealt only after all the attacks have occured
+If a creature attacks or is attacked, any de-buffs or stat changes inflicted on offense or defense are inflicted before the attack strikes, allowing those effects to alter the result of the attack.
 
-Abilities that deal damage or inflict debuffs separate from the attack stat of a creature count as an attack, but do not consume an action, and cannot trigger counter damage or counter items
+Intercepts make an attack target the interceptor rather then the original target.
 
-A decision to attack cannot be retracted if your opponent activates an item or ability during the attack
-
-If a creature attacks or is attacked, any de-buffs or stat changes inflicted on offense or defense are inflicted before the attack strikes, allowing those effects to alter the result of the attack
+Multi-hit Attacks
+When a creature uses an ability or item to attack all enemy creatures at once, the attacks happen left-to-right from the attacker's perspective and counter damage or on death effects both happen after all instances of the attack are resolved.
 
 ## Damage Types
 Multiple damage types can be applied to an instance of damage, combining their effects.
-
-**Normal:** Non Piercing (blocked by def at a rate of 1 per 2 DEF) 
-
-**Piercing:** Ignores Def
-
-**Counter:** Can only be dealt as retaliation to an attack. Does not count as an attack, and can bypass abilities and protective minions as a result
-
-**Overkill:** Only applies when a card says so: Extra damage from one attack goes to another applicable card of attackers' choosing, and is effected by the DEF of that chosen target. This does not count as an "attack", and other effects of the attack (such as status effects) do not proc on overkill
-
-**Life steal:** DMG dealt is healed before the attack resolves, with a percent scalar where 100% is 1:1, 50% is 1:2, 200% is 2:1, etc.
-
-**Shockwave:** Deals damage to all enemy targets on the primary field aside from the original target, and also the secondary field slot behind the main target (This does not count as an attack)
-
-**De-buff damage:** Is piercing by default, doesn’t count as an attack, and can damage cards that are in the hand
-
-**True damage:** Is piercing, and cannot be negated, redirected, or reduced by any means
-
-## Defending
-When a creature defends, it is turned 90 degrees, and its DEF stat doubles. This is Defense Mode
-
-A creature that defended stays in defense mode until the beginning of their next turn
-
-If all creatures on one side of the field are in defense mode, those creatures take 1 True Damage at the end of their turn
-
-When a creature moves to intercept an attack, it switches out of defense mode first
+Normal: reduced by half of the defense of the target. 
+DMG - (1/2*DEF)
+Piercing: Ignores DEF
+Counter: Can only be dealt as retaliation to an attack. Does not count as an attack, and can bypass abilities and protective minions as a result
+Overkill: Only applies when a card says so: Extra damage from one attack goes to another applicable card of your choosing, and is effected by the DEF of that chosen target. This does not count as an "attack", and other effects of the attack (such as status effects) do not proc on overkill
+Life steal: DMG dealt after DEF is healed before the attack resolves, with a percent scalar where 100% is 1:1, 50% is 1:2, 200% is 2:1, etc.
+True damage: Is piercing, and cannot be negated, redirected, or reduced by any means.Shockwave: Deals damage to all enemy targets on the primary field aside from the original target, and also the secondary field 
 
 ## Abilities
-5+ star creatures cannot have their abilities negated with few exceptions
+A creatures ability is only active while on the field unless otherwise specified.
+Multi turn based abilities such as (EOT) abilities do not count time passing while in the hand.
+If a multi turn based ability such as an (EOT) ability is not used when available it can be used on a future turn instead, but the cooldown does not begin until it is used.
 
-On first summon abilities cannot be negated reactively
+A passive ability is any ability that is not time based, that is an ongoing effect and can happen an infinite amount of times.
+If an item/ability does something upon being negated, the “upon being negated” effect itself has true negation immunity.
 
-If a creature gains an on first summon ability (or if this is the first opportunity that an OFS ability can be procced), proc it now
+"Counters" are unique per creature unless otherwise stated.
 
-Multi turn based abilities such as (EOT) abilities count time passing even while they are negated
+Negation
+Multi turn based abilities such as (EOT) abilities count time passing even while they are negated.
+On first summon abilities cannot be negated reactively.
+5+ star creatures cannot have their abilities negated with few exceptions.True Negation Immunity: Complete immunity to any possible sources of negation, including sources that negate negation-immune creatures.If 2 creatures/sources attempt to negate each other simultaneously, they are both negated.
+Minions/Items/Stats/Counters summoned/gained by an ability remain even if the ability that summoned them is negated or if the creature that summoned them dies. 
 
-If a multi turn based ability such as an (EOT) ability is not used when available it can be used on a future turn instead
+Ability Copying/Stealing/Swapping
+Stolen/Swapped abilities refresh as brand new per creature, if the creature loses that ability then gains it back, it’s not reset but instead incremented by a turn.
+If a creature gains an on first summon ability (or if this is the first opportunity that an OFS ability can be procced), proc it now.
+If multiple abilities conflict (such as multiple on death abilities), the owner may choose the order/which abilities activate.
 
-Minions summoned by an ability remain even if the ability that summoned them is negated or if the creature that summoned them dies (unless they were summoned on that creature that died)
-
-Items given by an ability remain when the card is negated or dies
-
-If a creature is negated, stats or counters gained or lost permanently via abilities are not negated/removed
-
-If 2 creatures/sources attempt to negate each other simultaneously, they are both negated
-
-Abilities that count damage dealt to creatures do not count overkill damage
-
-Stolen/Swapped abilities refresh as brand new per creature, if the creature loses that ability then gains it back, it’s not reset but instead incremented by a turn
-
-A passive ability is any ability that is not time based, that is an ongoing effect and can happen an infinite amount of times
-
-If multiple abilities conflict (such as multiple on death abilities), the owner may choose the order/which abilities activate
-
-If an item/ability does something upon being negated, the “upon being negated” effect itself has true negation immunity
-
-**True Negation Immunity:** Complete immunity to any possible sources of negation, including sources that negate negation-immune creatures
+Misc.
+Abilities that count damage dealt to creatures do not count overkill damage.
+When two (BOGT) effects happen simultaneously the team with the higher cumulative SPD among all their creatures takes precedence.
 
 ## Turns
 A “Global Turn” is defined as when all slots on the field have taken a turn, and is brought to a close by the phrase “Turn Reset”
@@ -308,106 +306,92 @@ Abbreviations marked with a ⌛ icon are considered "Multi Turn" abilities when 
 - (CD) = Counter damage
 
 # Items
-At the beginning of every global turn you are granted 7 Star points, which do not carry over between global turns
+At the beginning of every global turn you are granted 7 Star points, which do not carry over between global turns.
+Star points may be expended to use an item of equivalent level.
 
-Star points may be expended to use an item of equivalent level
-
-Items in the hand can only be used during your turn but you may place 3 items facedown for use when it is not your turn
-
-You cannot use items on creatures in the hand
-
-Once per global turn per team, a team may pay 1 point to shuffle the item shop during their turn
+Items in the hand can only be used during your turn but you may place 3 items facedown for use when it is not your turn.
+You cannot use items on creatures in the hand.
 
 During your turn you can sell items for points equal to their star level. You can also sell items that are facedown at any time
+You cannot sell items that have already been used, unless they specify their sell price changing.
 
-You cannot sell items that have already been used, unless they specify their sell price changing
+Shop
+Item’s in the shop my be purchased for 4x the star level of the item in points.
+After an item is bought from the shop, restock the slot with an item of the same star level.
+Once per global turn per team, a team may pay 1 point to shuffle the item shop during their turn.
 
-If an item is negated or destroyed during use, the star points expended to use it are still expended
+Negation
+If an item is negated or destroyed during use, the star points expended to use it are still expended.
+Items that are negated cannot be sold, or used for any other purpose until the negation ends.
+Equip and active items can be negated after their activation while they are still in effect, requiring star points to be used to reactivate them.
 
-Items that are negated cannot be sold, or used for any other purpose until the negation ends
-
-Equip and active items can be negated after their activation while they are still in effect, requiring star points to be used to reactivate them
-
+Misc.
 Some effects require you to draw a random item. In this case, draw from a copy of the deck until an eligible item is drawn. After the eligible item is drawn, do not replace it in the copy deck, and set aside the copy deck for next time a random item is drawn. If the entire deck is drawn and no eligible items were found, the effect will do nothing. 
 
-Items (unequip/equip/both)/abilities may be used reactively to any action/ability/item/event, in which case a “reaction” begins
-
-“Reactions” resolve before the action/ability/item/event they are reacting to resolve, and there can only be one reaction at a time
-
-Items/abilities that are played reactively resolve backwards, but offensive items/abilities (attack/offense type, or damaging abilities) resolve last (but still resolve backwards)
-
-If a creature can no longer be targeted by an item, the item and SP isnt used
-
-Items may be played from hand reactively only if its your turn
-
-While a reaction is occuring, items cannot be bought from the shop
-
 # Item types
+Item types
 There are various attributes assigned to the top left corner of items that determine how they work
-- **Tomato:** Healing items that can’t be used on machine types
 
-- **Bomb:** Offensive Items that count as an attack when used
+Single Use
+Tomato: “Healing” items that can’t be used on machine types.
+Bomb: “Attack” items that count as an attack when used.
+Metronome: “Offensive” items that do not count as an attack.
+Blue glowy thing: “Support” items.
 
-- **Metronome:** Offensive items that do not count as an attack
+Infinite Use
+Sword and ribbon: “Equip” items that you may equip onto your own creatures and grant a passive effect to the creature they are on which is lost when unequipped. May be unequipped and returned to your hand during your turn. If an equip has a negative effect, cannot be unequipped until the start of the global turn after it was equipped. If equipped creature dies, return equip it to your hand. Equip’s stay equipped onto creatures swapped into the hand, and may be unequipped from creatures in your hand on your turn. 
 
-- **Blue Aura:** Support Items
+Sword and ribbon with a clock: “Fragile Equip” items; same as         but cannot be unequipped and are destroyed when the creature they are on dies.
 
-- **Sword:** Items that you may equip onto your own creatures. May be unequipped during your turn or if the creature dies, returning it to your hand. May be unequipped from creatures in your hand at any time. If it has a negative effect, cannot be unequipped until the start of the next global turn
+Cellphone tower: “Active” items that stay on the field with a constant effect until they are destroyed. They are not creatures, cannot have items equipped to them, cannot have healing items used on them and cannot be inflicted with status effects. Unless they are protective, they are on their own field.
 
-- **Clock:** Same as the **Sword** icon but cannot be unequipped and are destroyed when the creature they are on die
+## Status effects:
 
-- **Active:** Items that stay on the field with a constant affect until they are destroyed. They are not creatures, cannot have items equipped to them, and cannot be inflicted with status effects
+# Procing
+If a status effect deals DMG or Heals, then by default it procs at ENDT.
+ Otherwise, by default the status effect procs immediately.
 
-## Field Items
-Each team may have one field item active at a time for their side
-
-Items cannot be used on field items
-
-Field items are their own slot, and they do not have a turn
-
-Field items cost 2x their star cost in BRICKS
-
-You may spend 3x the star cost of a field item in BRICKS to destroy it at any time
-
-At the beginning of the global turn or on your turn, you may spend 1x the star cost of a field item in BRICKS to negate it until the end of the global turn (field item stays on the field and can be swapped out, but loses its effect temporarily)
-
-Field items occasionally have a clause that reduces their buy price
-
-After a field item is bought, the shop slot does not refill
-
-At the exact moment that a field item is acquired, the team that acquired it may swap it onto their field for free
-
-Field items cannot be sold
-
-Point-yielding creatures may consume an action to generate BRICKS equal to their stars
-
-Field items can be stored in the hand, and swapped onto the field for SP equal to their level
-
-# Status effects:
-If a status effect deals DMG or Heals, then by default it procs at ENDT. Otherwise, by default the status effect procs immediately.
+If a status effect deals DMG it is piercing by default, doesn’t count as an attack, and can damage cards that are in the hand.
 
 If a creature has a status effect and the global turn ends without the creature having ended its turn, then the effect ticks at the end of the global turn, even if the creature is in the hand.
 
-Mutliple debuffs dealing damage at the end of a creatures turn count as separate instances of damage
+# Types
+Standared status effects can only have one instance of themselves applied to a single creature.
+Stacking status effects can have any number of themselves applied.
 
-Debuff durations will be specified on the card
+Certain status effects upgrade themselves when applied Ex:
+Smoldering + Smoldering -> Burning
+Smoldering/Burning + Burning -> Blazing
+Chilled + Chilled -> Frostbite
+Chilled/Frostbite + Frostbite -> 1 turn of Frozen
+Sickness + Sickness -> Plague
 
-Standard buffs/debuffs can only have one instance of themselves applied, but stacking buffs/debuffs can have any number of themselves applied
+A creature already inflicted by Frozen/Blazing/Plague can have none of the prior debuffs inflicted onto them.
 
-Status effects (standard and stacking) set their duration to the application with the longest duration (or longest remaining duration)
+Duration
+When a status effect is stacked or upgraded, the duration is set to whatever is longest.
+If a creature is inflicted with a status effect it already has, the duration is set to the longest duration.
 
-Certain Debuffs/Buffs upgrade themselves when applied  Ex: 
-- *Smoldering + Smoldering -> Burning* 
-- *Smoldering/Burning + Burning -> Blazing*
-- *Chilled + Chilled -> Frostbite*
-- *Chilled/Frostbite + Frostbite -> 1 turn of Frozen*
-- *Sickness + Sickness -> Plague*
+## Field Items:
+Each team may have one Field item active at a time for their side.
+Items cannot be used on Field items.
+Field items are their own slot, and they do not have a turn.
+Field items can be stored in the hand, and swapped onto the field for SP equal to their level.
 
-A creature already inflicted by frozen/blazing/plague can have none of the prior debuffs inflicted onto them
+Obtaining
+Point-yielding creatures may consume an action to generate BRICKS equal to their stars
+Field items cost 2x their star cost in BRICKS.
+If a Field item says -X cost per Y, the cost to buy it is reduced by X BRICKS per every Y type/attribute/other condition.
+After a Field item is bought, the shop slot does not restock.
+At the exact moment that a Field item is acquired, it may be swapped onto the field for free
+Field items cannot be sold.
 
-When upgrading effects, the upgraded effects’ duration is the highest duration from the effects used in the upgrade unless otherwise specified
+Negation
+At the beginning of the global turn or on your turn, you may spend 1x the star cost of a field item in BRICKS to negate it until the end of the global turn (field item stays on the field and can be swapped out, but loses its effect temporarily)
 
-# Attributes
+You may spend 3x the star cost of a field item in BRICKS to destroy it at any time
+
+## Attributes
 - Nature
 - Monster
 - Demon
@@ -434,21 +418,9 @@ When upgrading effects, the upgraded effects’ duration is the highest duration
 - God
 - Creator
 
-# Rare Rulings
-- When two effects happen simultaneously at the beginning of a global turn, the team with the higher cumulative SPD among all their creatures takes precedence
+## Rare Rulings
+A creature being “destroyed” causes it to take enough DMG to kill it (regardless of healing or any other possible factors).
 
-- If multiple attacks happen simultaneously and one of those attacks are intercepted, then the intercepted attack takes precedence and if the creature that intercepted it dies, then the creature summoned in its slot takes its share of damage
+If a creature has multiple of the same type/attribute and a field items’ effect can be stacked, then the effect is stacked per applicable type/attribute.
 
-- If a simultaneous attack hits multiple creatures within the same slot, resolve all simultaneous attacks before dealing counter damage or resolving on death effects
-
-- A creature cannot intercept while it is not on the field unless otherwise stated (cannot intercept while in hand)
-
-- A creature being “destroyed” causes it to take enough DMG to kill it (regardless of healing or any other possible factors)
-
-- If an entire copy deck is exhausted (if there are no more viable items in the entire deck), then replace it with a new copy deck
-
-- If a creature has multiple of the same type/attribute and a field items’ effect can be stacked, then the effect is stacked per applicable type/attribute
-
-- "Counters" are unique per creature unless otherwise stated
-
-- If a healing item is used to deal DMG, it is instead treated as an attack item, and vice versa
+If a healing item is used to deal DMG, it is instead treated as an attack item, and vice versa.
