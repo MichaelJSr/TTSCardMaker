@@ -50,7 +50,10 @@ Items/abilities may be used reactively to any action/ability/item/event, in whic
 
 A chain of reactions must resolve before a new one begins.
 
-Items/abilities that are played reactively resolve backwards, but offensive items/abilities (attack/offense type, or damaging abilities) resolve last.
+Items/abilities that are played reactively resolve backwards, but attack/offense items and damaging abilities resolve last, all with the same priority.
+Attacks from a creature will always be resolved at the very end of a reaction.
+For example: If a creature Attacks, the target uses a healing item, and then the attacker uses an attack item, they will resolve in the order of Healing item, Attack Item, Creature Attack.
+
 
 If a reacion prevents a creature from being targeted by an item, (i.e forcibly switched out/killed before hand) the item and star points aren’t used.
 
