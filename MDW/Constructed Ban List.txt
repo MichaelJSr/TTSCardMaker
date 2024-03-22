@@ -1,16 +1,19 @@
 Constructed format is where you can choose whatever cards you want out of the entire deck for your hand.
 Here is a ban list for what cards you cannot choose for this to avoid unfun playstyles and overly broken combos.
 You may also only have one of each item in your hand.
+Each player can also choose one 3 star or lower field item to be active in the shop at the start of the game (besides banned ones, obviously)
 
 5 star creatures:
 The Radiance
 Marx
 Yin Yarn
-The Thin Man
 Abrason Lincdolt
 Baba
 The Puppet
 Gandhi
+Chef Saltbaker
+Michael
+Leshy
 
 4 star creatures:
 NME Salesman
@@ -38,6 +41,7 @@ Joel Miller
 Tainted Bethany
 Taranza
 Holo defense API
+Lazarus
 
 2 star creatures:
 Peter Panda
@@ -46,17 +50,17 @@ Hooktail
 Gold Fuzzy
 Bob-Ulk
 Tainted Lost
+Auto Croissant
+Koops
 
 4 star items:
 Amazing Mirror
 The Wall (By Ech)
 Dark Ritual
-Life Link
 Golden Metronome
 Mimic
 Holy Mantle
 Flip
-Grandfather Clock
 Magic Shield
 Time Riddle
 Standstill
@@ -69,12 +73,21 @@ Inner Eye
 Blank Card
 Scapular
 The Claw
+Credit Card
+Wand of Obesity
+Life Link
+Forget Me Now
 
 2 star items:
 Tomorrow I'll
 Gust of Wind
 Spicy Spray
 Berserk
+Jera
 
 1 star items:
 NME stock
+
+Field Items:
+The Bank
+E. Gadd's Garage
