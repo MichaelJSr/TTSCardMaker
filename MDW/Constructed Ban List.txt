@@ -42,6 +42,7 @@ Tainted Bethany
 Taranza
 Holo defense API
 Lazarus
+Stay
 
 2 star creatures:
 Peter Panda
