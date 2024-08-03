@@ -4,91 +4,72 @@ You may also only have one of each item in your hand.
 Each player can also choose one 3 star or lower field item to be active in the shop at the start of the game (besides banned ones, obviously)
 
 5 star creatures:
-The Radiance
-Marx
-Yin Yarn
-Abrason Lincdolt
-Baba
-The Puppet
-Gandhi
-Chef Saltbaker
-Michael
-Leshy
+The Radiance - creature/ability copying
+Marx - antifun
+Baba - creature/ability copying
+The Puppet - reliance on RNG
+Gandhi - reliance on RNG
+Chef Saltbaker - too powerful of a counter
+Michael - creature/ability copying
+Leshy - creature/ability copying
 
 4 star creatures:
-NME Salesman
-Nailsage Sly
-Old Foxy
-The Kingchin
-Katarina
-Acrophobia
-Fawful
-DooPliss
-Stranger
-Buzzo
-Oryx The Exalted God
-Tainted Keeper
-Green Mage
+Old Foxy - too difficult to counter and/or requires being countered
+Acrophobia - too difficult to counter and/or requires being countered
+Fawful - antifun
+DooPliss - creature/ability copying
+Stranger - overcentralization, antifun
+Buzzo - too easy to build combos
+Tainted Keeper - too difficult to counter and/or requires being countered
+Green Mage - too easy to build combos
 
 3 star creatures:
-Leeroy Jenkins
-Shield Master Pi
-Something
-Mr. Jawsum
-Dark Matter Swordsman
-Master Hand
-Joel Miller
-Tainted Bethany
-Taranza
-Holo defense API
-Lazarus
-Stay
+Leeroy Jenkins - too powerful of a counter
+Shield Master Pi - too easy to build combos
+Something - antifun
+Mr. Jawsum - too easy to build combos
+Dark Matter Swordsman - creature/ability copying
+Master Hand - antifun
+Joel Miller - antifun
+Tainted Bethany - too easy to build combos
+Taranza - creature/ability copying
+Holo defense API - creature/ability copying
+Stay - antifun, too powerful of a counter
 
 2 star creatures:
-Peter Panda
-Barry The Barrel
-Hooktail
-Gold Fuzzy
-Bob-Ulk
-Tainted Lost
-Auto Croissant
-Koops
+Peter Panda - too easy to build combos
+Barry The Barrel - reliance on RNG
+Auto Croissant - extremely dangerous
+Koops - too easy to build combos
 
 4 star items:
-Amazing Mirror
-The Wall (By Ech)
-Dark Ritual
-Golden Metronome
-Mimic
-Holy Mantle
-Flip
-Magic Shield
-Time Riddle
-Standstill
+Amazing Mirror - creature/ability copying
+The Wall (By Ech) - too easy to build combos
+Golden Metronome - antifun, too powerful of a counter
+Mimic - too easy to build combos
+Flip - too easy to build combos
+Magic Shield - antifun
+Time Riddle - too easy to build combos, creature/ability copying
+Standstill - antifun, too powerful of a counter
 
 3 star items:
-Stalwart Shell
-Second Wind
-Reflection
-Inner Eye
-Blank Card
-Scapular
-The Claw
-Credit Card
-Wand of Obesity
-Life Link
-Forget Me Now
+Stalwart Shell - too easy to build combos
+Reflection - too easy to build combos
+Blank Card - too easy to build combos
+Scapular - too easy to build combos, too powerful of a counter
+Credit Card - too easy to build combos
+Wand of Obesity - too easy to build combos
+Life Link - too easy to build combos, too powerful of a counter
+Forget Me Now - too easy to build combos, too powerful of a counter
 
 2 star items:
-Tomorrow I'll
-Gust of Wind
-Spicy Spray
-Berserk
-Jera
+Tomorrow I'll - too easy to build combos, too powerful of a counter
+Gust of Wind - too powerful of a counter
+Berserk - too easy to build combos
 
 1 star items:
-NME stock
+NME stock - simply too strong
 
 Field Items:
-The Bank
-E. Gadd's Garage
+The Bank - too easy to build combos
+E. Gadd's Garage - too easy to build combos
