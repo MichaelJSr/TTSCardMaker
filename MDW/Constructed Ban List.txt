@@ -6,7 +6,7 @@ Each player can also choose one 3 star or lower field item to be active in the s
 5 star creatures:
 The Radiance - creature/ability copying
 Marx - antifun
-Baba - creature/ability copying
+Baba - too easy to build combos, too powerful of a counter
 The Puppet - reliance on RNG
 Gandhi - reliance on RNG
 Chef Saltbaker - too powerful of a counter
@@ -27,10 +27,8 @@ Green Mage - too easy to build combos
 Leeroy Jenkins - too powerful of a counter
 Shield Master Pi - too easy to build combos
 Something - antifun
-Mr. Jawsum - too easy to build combos
 Dark Matter Swordsman - creature/ability copying
 Master Hand - antifun
-Joel Miller - antifun
 Tainted Bethany - too easy to build combos
 Taranza - creature/ability copying
 Holo defense API - creature/ability copying
@@ -73,3 +71,5 @@ NME stock - simply too strong
 Field Items:
 The Bank - too easy to build combos
 E. Gadd's Garage - too easy to build combos
+Cave of the Past - too powerful of a counter
+Error room - too easy to build combos
