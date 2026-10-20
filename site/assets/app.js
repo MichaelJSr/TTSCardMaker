@@ -280,6 +280,10 @@ function tableHtml(list, p) {
 
 // ---- card detail -----------------------------------------------------------------------------------
 function statBars(c) {
+  if (c.creatures?.length > 1) return c.creatures.map((x, i) => `<div class="creature-label">Creature ${i + 1}</div>${bars(x)}`).join("");
+  return bars(c);
+}
+function bars(c) {
   const rows = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]].filter(([k]) => c[k] != null);
   if (!rows.length) return "";
   return `<div class="statbars">${rows.map(([k, l]) => `<span class="lbl">${l}</span><div class="segs" style="--c:${STAT_COLORS[k]}" role="img" aria-label="${l} ${c[k]}">${Array.from({ length: 10 * Math.max(1, Math.ceil(c[k] / 10)) }, (_, i) => `<i class="${i < c[k] ? "on" : ""}"></i>`).join("")}</div><span class="num">${c[k]}</span>`).join("")}

@@ -5,19 +5,21 @@ const API = "https://api.github.com";
 const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden" };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", stars: "int", types: "list", hp: "int", def: "int",
-  atk: "int", spd: "int", ability: "str", note: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool" };
+  atk: "int", spd: "int", ability: "str", note: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
+  creatures: "creatures" };
 const ORDER = Object.keys(FIELDS);
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
   atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
-  problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban" };
+  problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures" };
 const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. Read by the website and the bot (/update_stats).";
 
 const cardKey = s => (s || "").replace(/_/g, " ").toLowerCase().split(/\s+/).filter(Boolean).join(" ");
 const alnum = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
-const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.join(", ") : "—") : typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
+const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
+  : typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
 
 export function createEditor(app) {
   const { S } = app;
@@ -87,7 +89,8 @@ export function createEditor(app) {
   const snap = c => { if (c && !pristine.has(c.id)) pristine.set(c.id, structuredClone(c)); };
   const baseOf = c => based.get(c.id) || pristine.get(c.id) || c;
   const byKey = k => S.all.find(c => cardKey(c.key) === cardKey(k)) || S.all.find(c => cardKey(c.name) === cardKey(k));
-  const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : f === "dup_of" ? v || "" : v ?? null);
+  const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : f === "dup_of" ? v || ""
+    : f === "creatures" ? (v?.length > 1 ? v.map(x => Object.fromEntries(STATS.map(k => [k, x[k] ?? null]))) : null) : v ?? null);
   const psdValue = (b, f) => tidy(f, b.edited?.includes(f) ? (f === "aliases" ? [] : b.orig?.[f]) : value(b, f));
   function value(c, f) {
     if (f === "aliases") return c.webAliases || [];
@@ -111,6 +114,7 @@ export function createEditor(app) {
       if (t && t !== c) { snap(t); c.dup = t.id; t.dups = [...(t.dups || []), c.id]; }
     } else if (f === "problems_ok") { c.problems_ok = !!v; c.problems = v ? [] : b.problems; }
     else if (f === "allow_high_stats") { c.allow_high_stats = !!v; c.problems = (c.problems || []).filter(p => !v || !p.startsWith("STATS TOO HIGH")); }
+    else if (f === "creatures") { if (v?.length > 1) { c.creatures = v; for (const k of STATS) c[k] = v[0][k] ?? undefined; } else delete c.creatures; }
     else if (v == null || (FIELDS[f] === "bool" && !v)) delete c[f];
     else c[f] = Array.isArray(v) ? [...v] : v;
   }
@@ -192,7 +196,13 @@ export function createEditor(app) {
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
             return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-type="${esc(t)}" aria-pressed="${on}" data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>`)}
         </fieldset>
-        <fieldset><legend>Stats</legend><div class="estats">${STATS.map(f => row(f, num(f))).join("")}</div>
+        <fieldset><legend>Stats</legend>
+          <div class="estats" id="ef-single"${c.creatures?.length > 1 ? " hidden" : ""}>${STATS.map(f => row(f, num(f))).join("")}</div>
+          <div id="ef-creatures-box"${c.creatures?.length > 1 ? "" : " hidden"}><table class="creature-table"><thead><tr><th></th>${STATS.map(k => `<th>${LABEL[k]}</th>`).join("")}</tr></thead>
+            <tbody id="ef-creatures">${(c.creatures?.length > 1 ? c.creatures : []).map((x, i) => creatureRow(x, i)).join("")}</tbody></table>${reset("creatures")}</div>
+          <div class="actions"><button type="button" class="ghost" data-creature="split" ${c.creatures?.length > 1 ? "hidden" : ""}>Split into creatures</button>
+            <button type="button" class="ghost" data-creature="add" ${c.creatures?.length > 1 ? "" : "hidden"}>+ Creature</button>
+            <button type="button" class="ghost" data-creature="remove" ${c.creatures?.length > 1 ? "" : "hidden"}>− Creature</button></div>
           ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 10 is intended</label>`)}
         </fieldset>
         <fieldset><legend>Text</legend>
@@ -217,6 +227,22 @@ export function createEditor(app) {
         <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div>
       </form></div>`;
   }
+  const creatureRow = (x, i) => `<tr><th>${i + 1}</th>${STATS.map(k => `<td><input type="number" min="0" max="99" data-ck="${k}" value="${x[k] ?? ""}" placeholder="—" aria-label="Creature ${i + 1} ${LABEL[k]}"></td>`).join("")}</tr>`;
+  function creatureAction(kind) {
+    const box = document.getElementById("ef-creatures-box"), body = document.getElementById("ef-creatures");
+    const rows = () => [...body.querySelectorAll("tr")].map(tr => Object.fromEntries([...tr.querySelectorAll("[data-ck]")].map(i => [i.dataset.ck, i.value === "" ? null : +i.value])));
+    const single = Object.fromEntries(STATS.map(k => { const v = document.getElementById(`ef-${k}`).value; return [k, v === "" ? null : +v]; }));
+    let list = kind === "split" ? [single, { ...single }] : rows();
+    if (kind === "add") list.push({ ...list[list.length - 1] });
+    if (kind === "remove") list.pop();
+    if (list.length < 2) {                               // back to one creature
+      for (const k of STATS) document.getElementById(`ef-${k}`).value = list[0]?.[k] ?? "";
+      list = [];
+    }
+    body.innerHTML = list.map(creatureRow).join("");
+    box.hidden = !list.length; document.getElementById("ef-single").hidden = !!list.length;
+    for (const b of document.querySelectorAll("[data-creature]")) b.hidden = b.dataset.creature === "split" ? !!list.length : !list.length;
+  }
   // form -> {set, unset, author, ban}, relative to the published card
   function readForm(c) {
     const b = baseOf(c), f = id => document.getElementById(`ef-${id}`);
@@ -232,6 +258,13 @@ export function createEditor(app) {
       hidden: () => f("hidden").checked, allow_high_stats: () => f("allow_high_stats").checked, problems_ok: () => f("problems_ok").checked,
     };
     const want = Object.fromEntries(Object.entries(all).filter(([k]) => f(k === "types" ? "types" : k)).map(([k, get]) => [k, get()]));
+    const box = document.getElementById("ef-creatures-box");
+    if (box) {
+      want.creatures = box.hidden ? null : [...document.querySelectorAll("#ef-creatures tr")].map(tr =>
+        Object.fromEntries([...tr.querySelectorAll("[data-ck]")].map(i => [i.dataset.ck, i.value === "" ? null : Math.max(0, Math.round(+i.value))])));
+      if (!box.hidden) for (const k of STATS) delete want[k];          // creature 1 is the card's stats
+      want.creatures = tidy("creatures", want.creatures);
+    }
     const op = { id: c.id, key: c.key, name: want.name, set: {}, unset: [] };
     for (const [k, v] of Object.entries(want)) {
       const pub = value(b, k);
@@ -277,7 +310,9 @@ export function createEditor(app) {
       const ins = e.target.closest("[data-insert]");
       if (ins) { const s = ta.selectionStart, end = ta.selectionEnd; ta.setRangeText(ins.dataset.insert, s, end, "end"); ta.focus(); update(); return; }
       const r = e.target.closest("[data-reset]");
-      if (r) { resetField(c, r.dataset.reset); update(); }
+      if (r) { resetField(c, r.dataset.reset); update(); return; }
+      const cr = e.target.closest("[data-creature]");
+      if (cr) { creatureAction(cr.dataset.creature); update(); }
     });
     form.addEventListener("submit", e => {
       e.preventDefault();
@@ -293,6 +328,7 @@ export function createEditor(app) {
   function resetField(c, f) {
     const p = psdValue(baseOf(c), f), el = document.getElementById(`ef-${f}`);
     if (f === "types") { for (const t of document.querySelectorAll("#ef-types [data-type]")) { const on = (p || []).includes(t.dataset.type); t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); } return; }
+    if (f === "creatures") { document.getElementById("ef-creatures").innerHTML = (p || []).map(creatureRow).join(""); if (!p) creatureAction("remove"); return; }
     if (!el) return;
     if (el.type === "checkbox") el.checked = !!p;
     else el.value = Array.isArray(p) ? p.join(", ") : p ?? "";

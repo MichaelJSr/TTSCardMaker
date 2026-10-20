@@ -69,13 +69,15 @@ ADMINS_PATH = "MDW/Website Admins.txt"
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
-               "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool}
+               "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list}
 EDIT_NULLABLE = {"subtype", "series", "stars", "hp", "def", "atk", "spd"}      # may be null
-DATA_FIELDS = ("type", "subtype", "series", "stars", "types", "hp", "def", "atk", "spd", "ability", "note")
+DATA_FIELDS = ("type", "subtype", "series", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
+STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
 FIXED_BY = {"hp": ("HP NOT FOUND",), "def": ("DEF NOT FOUND",), "atk": ("ATK NOT FOUND",), "spd": ("SPD NOT FOUND",),
             "ability": ("ABILITY TEXT NOT FOUND", "NO ABILITY LAYER"), "stars": ("NO STARS FOUND",),
-            "type": ("UNKNOWN TYPE",), "types": ("MISSPELT TYPE",), "allow_high_stats": ("STATS TOO HIGH",)}
+            "type": ("UNKNOWN TYPE",), "types": ("MISSPELT TYPE",), "allow_high_stats": ("STATS TOO HIGH",),
+            "creatures": ("SEVERAL CREATURES",)}
 SKIP_PARTS = ("MDW", "Markers")
 
 
@@ -130,7 +132,11 @@ def load_bot_pickle(name):
 
 
 def stat(card, attr):
-    value = getattr(getattr(card, "stats", None), attr, -1)
+    return stat_of(getattr(card, "stats", None), attr)
+
+
+def stat_of(stats, attr):
+    value = getattr(stats, attr, -1)
     return value if isinstance(value, int) and value >= 0 else None
 
 
@@ -347,6 +353,9 @@ def valid_edit(field, value):
         return field in EDIT_NULLABLE
     if kind is int:
         return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+    if field == "creatures":                     # [{"hp": 7, "def": 4, "atk": 5, "spd": 6}, ...]
+        return isinstance(value, list) and all(isinstance(c, dict) and all(k in STAT_KEYS and (v is None or valid_edit("hp", v))
+                                                                           for k, v in c.items()) for c in value)
     if kind is list:
         return isinstance(value, list) and all(isinstance(x, str) for x in value)
     return isinstance(value, kind)
@@ -395,6 +404,11 @@ def apply_edits(entry, edits):
             continue
         orig[field] = entry.get(field)
         entry[field] = list(value) if isinstance(value, list) else value
+    if fields.get("creatures"):                  # creature 1 is the card's stats
+        for k in STAT_KEYS:
+            if k not in fields:
+                orig.setdefault(k, entry.get(k))
+                entry[k] = fields["creatures"][0].get(k)
     entry["edited"] = sorted(fields)
     entry["orig"] = orig                          # PSD values
     if fields.get("aliases"):
@@ -550,9 +564,13 @@ def main():
             return guess
         return png_by_name.get(name.replace(" ", "_").lower() + ".png")
 
-    seen_pngs = set()
+    seen_pngs, bot_dup_names = set(), {}
     for name, c in sorted(stats.items(), key=lambda kv: kv[0].lower()):
         path = getattr(c, "path", "") or ""
+        if getattr(c, "duplicate_of", None):     # the bot's duplicate: only its name is used
+            if getattr(c, "display_name", None):
+                bot_dup_names[name.replace(" ", "_").lower() + ".png"] = c.display_name
+            continue
         png = png_for(path, name)
         if png:
             seen_pngs.add(png)
@@ -564,6 +582,7 @@ def main():
             "ability": getattr(c, "ability", None), "author": getattr(c, "author", None),
             "ts": getattr(c, "timestamp", None) or None, "psd": path, "png": png,
             "problems": list(getattr(c, "problems", []) or []), "key": name,
+            "creatures": [{k: stat_of(x, a) for k, a in STAT_KEYS.items()} for x in getattr(c, "creatures", None) or []] or None,
         }
         # undo the bot's applied edits; the file is the authority
         for field, value in (getattr(c, "parsed_values", None) or {}).items():
@@ -594,7 +613,8 @@ def main():
         if original is None:
             continue
         names = alias_names.get(os.path.basename(path).lower())
-        name = " ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else original["name"]
+        name = (bot_dup_names.get(os.path.basename(path).lower())                     # alias or the PSD's hidden title
+                or (" ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else original["name"]))
         dup = {k: original.get(k) for k in DATA_FIELDS + ("author", "ts", "psd")}
         dup.update(id=unique_slug(name), name=name, key=os.path.splitext(os.path.basename(path))[0].replace("_", " "),
                    png=path, problems=[], dup=original["id"])
