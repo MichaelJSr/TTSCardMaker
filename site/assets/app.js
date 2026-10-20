@@ -1,0 +1,685 @@
+import { compile, suggest, total, SEARCH_HELP } from "./search.js";
+import { esc, norm, makeRenderer, plain, diffWords, tagInfo, badgeHtml, GROUP_NAMES } from "./text.js";
+import * as D from "./deck.js";
+import { renderStats } from "./stats.js";
+
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const view = $("#view"), modal = $("#modal"), tip = $("#tooltip"), toastEl = $("#toast"), qInput = $("#q");
+
+const S = {
+  data: null, cards: [], rules: [], byId: new Map(), banned: new Map(), icons: {}, renderer: null,
+  mentions: new Map(), mentionedBy: new Map(), list: [], decks: [], compare: [],
+  renderedHash: null, listHash: "#/cards", shared: null,
+};
+// The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
+const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
+  ["aux item", "Auxiliary items"], ["status", "Status effects"], ["creatures", "Auxiliary creatures"]];
+const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
+  debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
+const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"]];
+const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
+const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
+  ["new", "Recently updated"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
+
+const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
+const BUILD = document.querySelector('meta[name="build"]')?.content || "";
+const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // same URLs as the preload hints in index.html
+const img = (c, w) => (c.img ? `thumbs/${c.img}-${w}.webp` : "");      // card images: 240 / 360 / 720 px wide
+const thumbUrl = c => img(c, 360);
+/** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 (or 720) px by screen density */
+const imgAttrs = (c, css, big = false) => `src="${img(c, 360)}" srcset="${img(c, 240)} 240w, ${img(c, 360)} 360w${big ? `, ${img(c, 720)} 720w` : ""}" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;
+const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
+const ghUrl = p => `https://github.com/${S.data.repo}/blob/main/${urlPath(p)}`;
+const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
+const date = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "");
+const isStatus = c => c.type === "debuff" || c.type === "buff";
+const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : "");             // item types read "Support", as in the rulebook
+const kindOf = c => (isStatus(c) ? "status" : c.type);
+const shareUrl = id => new URL(`c/${id}/`, document.baseURI).href;
+const iconFor = name => S.icons[norm(name)];
+const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
+
+// ---- boot ------------------------------------------------------------------------------------------
+async function getJson(name) {
+  const r = await fetch(`data/${name}${V}`);
+  if (!r.ok) throw new Error(`${name}: HTTP ${r.status}`);
+  return r.json();
+}
+// loaded on demand: the rulebook pages, and older versions of card text
+let rulesP = null, historyP = null, versionsP = null;
+const loadRules = () => (rulesP ||= getJson("rules.json").then(d => { S.rules = d.rules; }).catch(e => { rulesP = null; throw e; }));
+const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
+  for (const c of [...S.cards, ...(S.rules || [])]) if (h[c.id]) c.history = h[c.id];
+  S.history = h;
+}).catch(e => { historyP = null; throw e; }));
+const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
+function whenLoaded(promise, what, rerender) {
+  promise.then(rerender, e => { view.innerHTML = `<div class="empty">Couldn't load ${esc(what)} (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`; });
+}
+
+async function init() {
+  try {
+    S.data = await getJson("cards.json");
+  } catch (e) {
+    view.innerHTML = `<div class="empty">Couldn't load card data (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`;
+    return;
+  }
+  S.cards = S.data.cards; S.rules = null; S.icons = S.data.icons;
+  for (const c of S.cards) { c.parsed = c.parsed !== false; S.byId.set(c.id, c); }
+  // stats can pass 10 (Sonic's speed bar is two rows: 20), so filters go up to the highest value on a card
+  S.statMax = Object.fromEntries(["hp", "def", "atk", "spd"].map(k => [k, Math.max(10, ...S.cards.map(c => c[k] ?? 0))]));
+  for (const g of S.data.banlist.groups) for (const e of g.entries) {
+    if (!e.id) continue;
+    S.banned.set(e.id, e.reason || "banned");
+    const c = S.byId.get(e.id); if (c) c._banned = e.reason || "banned";
+  }
+  S.renderer = makeRenderer({ cards: S.cards, icons: S.icons });
+  for (const c of S.cards) {
+    const m = S.renderer.mentions(c.ability, c.name);
+    S.mentions.set(c.id, m);
+    if (c.dup) continue;                                   // a duplicate's text is its original's: count it once
+    for (const id of m) { if (!S.mentionedBy.has(id)) S.mentionedBy.set(id, new Set()); S.mentionedBy.get(id).add(c.id); }
+  }
+  // status effects that no card names
+  for (const c of S.cards) if ((c.type === "debuff" || c.type === "buff") && !S.mentionedBy.get(c.id)?.size) c._unused = true;
+  S.decks = D.loadDecks();
+  updateDeckCount();
+  const meta = document.querySelector('meta[name="card"]');
+  if (meta && !location.hash) history.replaceState(null, "", `#/card/${meta.content}`);
+  window.addEventListener("hashchange", route);
+  route();
+}
+
+// ---- routing ---------------------------------------------------------------------------------------
+function parseHash() {
+  const h = location.hash.replace(/^#\/?/, "");
+  const [path, query = ""] = h.split("?");
+  const parts = path.split("/").filter(Boolean).map(decodeURIComponent);
+  return { name: parts[0] || "cards", arg: parts.slice(1).join("/"), params: new URLSearchParams(query) };
+}
+function route() {
+  const r = parseHash();
+  hideTip();
+  if (r.name === "card") {
+    if (!S.renderedHash) renderView({ name: "cards", arg: "", params: new URLSearchParams() }, "#/cards");
+    openCard(r.arg);
+    return;
+  }
+  if (location.hash === S.renderedHash && !modal.hidden) { closeModal(); return; }
+  closeModal();
+  renderView(r, location.hash || "#/cards");
+}
+function renderView(r, hash) {
+  S.renderedHash = hash; S.listHash = hash;
+  $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === r.name || (r.name === "compare" && a.dataset.tab === "cards")));
+  if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
+  const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare };
+  (views[r.name] || renderCards)(r);
+  document.title = `${{ cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare" }[r.name] || "Cards"} · Impossibility Simulator`;
+}
+function setParams(updates, { replace = true } = {}) {
+  const r = parseHash();
+  const p = r.params;
+  for (const [k, v] of Object.entries(updates)) (v === "" || v == null || (Array.isArray(v) && !v.length)) ? p.delete(k) : p.set(k, Array.isArray(v) ? v.join(",") : v);
+  const hash = `#/${r.name === "card" ? "cards" : r.name}${r.arg ? "/" + r.arg : ""}${p.toString() ? "?" + p : ""}`;
+  if (replace) { history.replaceState(null, "", hash); renderView(parseHash(), hash); } else location.hash = hash;
+}
+
+// ---- cards (browse) --------------------------------------------------------------------------------
+const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
+function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi] = v.split("-").map(Number); return [isNaN(lo) ? 0 : lo, isNaN(hi) ? 99 : hi]; }
+function filterCards(p, { facets = true } = {}) {
+  const pred = compile(p.get("q") || "");
+  let list = pred ? S.cards.filter(pred) : S.cards.slice();
+  if (!facets) return list;
+  const kinds = csv(p, "kind"), st = csv(p, "stars").map(Number), subs = csv(p, "sub"), types = csv(p, "types"), flags = csv(p, "flags");
+  const series = p.get("series"), author = p.get("author");
+  if (kinds.length) list = list.filter(c => kinds.includes(kindOf(c)));
+  if (st.length) list = list.filter(c => st.includes(c.stars));
+  if (subs.length) list = list.filter(c => subs.includes(c.subtype));
+  if (types.length) list = list.filter(c => types.every(t => (c.types || []).includes(t)));
+  if (series) list = list.filter(c => c.series === series);
+  if (author) list = list.filter(c => c.author === author);
+  for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => c[k] != null && c[k] >= r[0] && c[k] <= r[1]); }
+  const flagFns = { history: c => !!c.hv, unparsed: c => !c.parsed, problems: c => !!(c.problems && c.problems.length), alias: c => !!(c.aliases && c.aliases.length),
+    dup: c => !!(c.dup || c.dups), unused: c => !!c._unused };
+  for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
+  return list;
+}
+function sortCards(list, sort = "name", dir = "") {
+  const key = {
+    name: c => c.name.toLowerCase(), stars: c => c.stars ?? -1, total: c => (c.hp == null ? -1 : total(c)), hp: c => c.hp ?? -1, def: c => c.def ?? -1,
+    atk: c => c.atk ?? -1, spd: c => c.spd ?? -1, new: c => c.ts ?? 0, series: c => (c.series || "~").toLowerCase(), type: c => kindOf(c),
+    mentioned: c => (S.mentionedBy.get(c.id) || new Set()).size,
+  }[sort] || (c => c.name.toLowerCase());
+  const desc = dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "mentioned"].includes(sort);
+  return list.sort((a, b) => { const x = key(a), y = key(b); return (x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name)) * (desc ? -1 : 1); });
+}
+function chipList(key, options, selected, counts) {
+  return `<div class="chips">${options.map(([v, label]) => `<button type="button" class="chip${selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}">${esc(label)}${counts ? `<span class="n">${counts.get(String(v)) || 0}</span>` : ""}</button>`).join("")}</div>`;
+}
+function tileHtml(c, { small = false, eager = false, css = 190, constructed = false } = {}) {
+  const inDeck = deckHas(c.id);
+  return `<article class="tile" data-open="${c.id}" tabindex="0" aria-label="${esc(c.name)}">
+    ${c.img ? `<img class="art" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(c, small ? 120 : css)} alt="">` : `<div class="art"></div>`}
+    ${constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>` : !c.parsed ? `<span class="flag" data-tip="Not parsed by the bot yet">New</span>`
+      : c._unused ? `<span class="flag unused" data-tip="No card names this status effect">Unused</span>`
+      : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}: same PSD">Duplicate</span>` : ""}
+    ${small ? "" : `<button type="button" class="add${inDeck ? " in" : ""}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "✓ In deck" : "+ Deck"}</button>`}
+    <div class="meta"><div class="name">${esc(c.name)}</div>
+    <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(t, "")).join("")}</div></div></article>`;
+}
+function renderCards(r) {
+  const p = r.params;
+  if (document.activeElement !== qInput) qInput.value = p.get("q") || "";
+  const base = filterCards(p, { facets: false });
+  const list = sortCards(filterCards(p), p.get("sort") || "name", p.get("dir") || "");
+  S.list = list;
+  const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of [].concat(f(c))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };
+  const kindCounts = count(base, kindOf), starCounts = count(base, c => c.stars), subCounts = count(base, c => c.subtype);
+  const typeCounts = count(base, c => c.types || []);
+  const series = [...new Set(S.cards.map(c => c.series).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const authors = [...new Set(S.cards.map(c => c.author).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const starOpts = [...new Set(S.cards.map(c => c.stars).filter(Boolean))].sort((a, b) => a - b).map(s => [s, `${s}★`]);
+  const subOpts = [...new Set(S.cards.map(c => c.subtype).filter(Boolean))].sort().map(s => [s, s[0].toUpperCase() + s.slice(1)]);
+  const typeOpts = [...typeCounts.keys()].sort((a, b) => (typeCounts.get(b) || 0) - (typeCounts.get(a) || 0));
+  const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
+  const active = [];
+  if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
+  for (const k of csv(p, "kind")) active.push(["kind", (KINDS.find(x => x[0] === k) || [k, k])[1], k]);
+  for (const s of csv(p, "stars")) active.push(["stars", `${s}★`, s]);
+  for (const s of csv(p, "sub")) active.push(["sub", cap(s), s]);
+  for (const t of csv(p, "types")) active.push(["types", t.replace(/_/g, " "), t]);
+  if (p.get("series")) active.push(["series", p.get("series")]);
+  if (p.get("author")) active.push(["author", `by ${p.get("author")}`]);
+  for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
+  for (const f of csv(p, "flags")) active.push(["flags", (FLAGS.find(x => x[0] === f) || [f, f])[1], f]);
+  const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
+    return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
+  const suggestions = !list.length && p.get("q") ? suggest(p.get("q"), S.cards) : [];
+
+  view.innerHTML = `<div class="browse">
+    <aside class="filters${S.filtersOpen ? " open" : ""}" aria-label="Filters">
+      <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindCounts.get(k)), csv(p, "kind"), kindCounts)}
+      <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts)}
+      ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts)}` : ""}
+      ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t); const on = csv(p, "types").includes(t);
+        return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(t.replace(/_/g, " "))} (${typeCounts.get(t)})" aria-pressed="${on}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
+      <h3>Series</h3><select data-action="select-param" data-key="series"><option value="">All series</option>${series.map(s => `<option${s === p.get("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>
+      <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
+      <h3>Author</h3><select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === p.get("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>
+      <h3>Flags</h3>${FLAGS
+        .map(([f, l]) => `<label class="check"><input type="checkbox" data-action="toggle-param" data-key="flags" data-value="${f}"${csv(p, "flags").includes(f) ? " checked" : ""}> ${l}</label>`).join("")}
+      <p><button type="button" class="ghost" data-action="clear-filters">Clear all filters</button></p>
+    </aside>
+    <section>
+      <div class="toolbar">
+        <span class="result-count">${list.length.toLocaleString()} card${list.length === 1 ? "" : "s"}</span>
+        <button type="button" class="mobile-only" data-action="toggle-filters">Filters${active.length ? ` (${active.length})` : ""}</button>
+        <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.map(([v, l]) => `<option value="${v}"${v === (p.get("sort") || "name") ? " selected" : ""}>${l}</option>`).join("")}</select></label>
+        <button type="button" class="ghost icon" data-action="flip-dir" title="Reverse order" aria-label="Reverse order">⇅</button>
+        <span class="seg">${[["grid", "Grid"], ["table", "Table"]].map(([v, l]) => `<button type="button" class="${v === view_ ? "on" : ""}" data-action="set-pref" data-key="view" data-value="${v}">${l}</button>`).join("")}</span>
+        ${view_ === "grid" ? `<span class="seg">${[["s", "S"], ["m", "M"], ["l", "L"]].map(([v, l]) => `<button type="button" class="${v === size ? "on" : ""}" data-action="set-pref" data-key="size" data-value="${v}" title="Tile size">${l}</button>`).join("")}</span>` : ""}
+        <button type="button" class="ghost" data-action="random-from-list" title="Random result">Random</button>
+        ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}
+      </div>
+      ${active.length ? `<div class="active-filters">${active.map(([k, l, v]) => `<button type="button" class="chip" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
+      ${!list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
+        : view_ === "table" ? tableHtml(list, p) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}">${list.map((c, i) => tileHtml(c, { eager: i < 8, css: { s: 160, m: 200, l: 270 }[size] || 200 })).join("")}</div>`}
+    </section></div>`;
+}
+function tableHtml(list, p) {
+  const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"], ["new", "Updated"]];
+  const sort = p.get("sort") || "name";
+  return `<table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
+    ${list.map(c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}</td>
+      <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}</td><td class="num">${c.stars ?? ""}</td>
+      ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
+      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td><td>${date(c.ts)}</td></tr>`).join("")}</tbody></table>`;
+}
+
+// ---- card detail -----------------------------------------------------------------------------------
+function statBars(c) {
+  const rows = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]].filter(([k]) => c[k] != null);
+  if (!rows.length) return "";
+  return `<div class="statbars">${rows.map(([k, l]) => `<span class="lbl">${l}</span><div class="segs" style="--c:${STAT_COLORS[k]}" role="img" aria-label="${l} ${c[k]}">${Array.from({ length: 10 * Math.max(1, Math.ceil(c[k] / 10)) }, (_, i) => `<i class="${i < c[k] ? "on" : ""}"></i>`).join("")}</div><span class="num">${c[k]}</span>`).join("")}
+    <span class="lbl">Total</span><span class="muted">${rows.length === 4 ? "HP + DEF + ATK + SPD" : ""}</span><span class="num"><b>${total(c)}</b></span></div>`;
+}
+function similar(c, n = 8) {
+  if (c.hp == null) return [];
+  const v = x => [x.hp ?? 0, x.def ?? 0, x.atk ?? 0, x.spd ?? 0];
+  const a = v(c);
+  return S.cards.filter(x => x.id !== c.id && x.hp != null && x.type === c.type)
+    .map(x => [v(x).reduce((s, y, i) => s + (y - a[i]) ** 2, 0) + Math.abs((x.stars || 0) - (c.stars || 0)) * 2, x])
+    .sort((p, q) => p[0] - q[0]).slice(0, n).map(([, x]) => x);
+}
+function dupsOf(c) {      // the other cards printed from the same PSD
+  const original = c.dup ? S.byId.get(c.dup) : c;
+  return original ? [original, ...(original.dups || []).map(x => S.byId.get(x))].filter(x => x && x.id !== c.id) : [];
+}
+function strip(title, cards) {
+  return cards.length ? `<h3>${esc(title)} <span class="muted">${cards.length}</span></h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
+}
+function openCard(id) {
+  const c = S.byId.get(id);
+  if (!c) { toast("That card doesn't exist (anymore)."); history.replaceState(null, "", S.listHash); return; }
+  const pool = S.list.length && S.list.some(x => x.id === id) ? S.list : S.cards;
+  const i = pool.findIndex(x => x.id === id), prev = pool[(i - 1 + pool.length) % pool.length], next = pool[(i + 1) % pool.length];
+  const inDeck = deckHas(c.id);
+  const mentions = [...(S.mentions.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
+  const mentionedBy = [...(S.mentionedBy.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
+  const sameSeries = c.series ? S.cards.filter(x => x.series === c.series && x.id !== c.id) : [];
+  modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="${esc(c.name)}">
+    <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
+    <div class="detail">
+      <div class="image-wrap">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${thumbUrl(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}
+        <div class="actions" style="justify-content:space-between">
+          <a class="fact" data-nav="prev" href="#/card/${prev.id}" title="Previous (←)">← ${esc(prev.name)}</a>
+          <a class="fact" data-nav="next" href="#/card/${next.id}" title="Next (→)">${esc(next.name)} →</a></div></div>
+      <div>
+        <h2>${esc(c.name)}</h2>
+        <div class="facts">
+          <a class="fact" href="#/cards?kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>
+          ${c.subtype ? `<a class="fact" href="#/cards?sub=${encodeURIComponent(c.subtype)}">${esc(cap(c.subtype))}</a>` : ""}
+          ${c.stars ? `<a class="fact" href="#/cards?stars=${c.stars}"><span class="stars">${stars(c.stars)}</span> ${c.stars}-star</a>` : ""}
+          ${c.series ? `<a class="fact" href="#/cards?series=${encodeURIComponent(c.series)}">${esc(c.series)}</a>` : ""}
+          ${c.author ? `<a class="fact" href="#/cards?author=${encodeURIComponent(c.author)}">by ${esc(c.author)}</a>` : ""}
+          ${c.ts ? `<span class="fact" data-tip="Last PSD commit">updated ${date(c.ts)}</span>` : ""}
+          ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
+          ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
+          ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
+        </div>
+        ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, "")}</a>`).join("")}</div>` : ""}
+        ${statBars(c)}
+        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, c.name)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
+        ${c.aliases ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
+        <div class="actions">
+          <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
+          <button type="button" data-action="copy-link" data-id="${c.id}">Copy link <span class="kbd">c</span></button>
+          <button type="button" data-action="copy-text" data-id="${c.id}">Copy text</button>
+          <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
+          ${c.png ? `<a class="fact" href="${esc(fullUrl(c))}" target="_blank" rel="noopener">Full image</a>` : ""}
+          ${c.psd ? `<a class="fact" href="${esc(ghUrl(c.psd))}" target="_blank" rel="noopener">PSD on GitHub</a>` : ""}
+        </div>
+        ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
+        <div class="related">
+          ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.series || ""}`, sameSeries)}
+          <div id="history-slot">${historyHtml(c)}</div>
+          <div id="versions-slot">${versionsHtml(c)}</div>
+        </div>
+      </div>
+    </div></div>`;
+  modal.hidden = false;
+  document.body.style.overflow = "hidden";
+  modal.scrollTop = 0;
+  document.title = `${c.name} · Impossibility Simulator`;
+  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();   // shortcuts work right away
+  if (c.img) {        // sharper 720 px image once it's loaded (the 360 px one is usually cached from the grid)
+    const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
+  }
+  if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c); }, () => {});
+  if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c); }, () => {});
+}
+
+// ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card
+const versionList = c => {
+  const rows = S.versions && S.versions.cards[c.id];
+  if (!rows) return [];
+  return rows.map(([ci, path]) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png }; });
+};
+const versionUrl = (v, cdn = false) => cdn
+  ? `https://cdn.jsdelivr.net/gh/${S.versions.repo}@${v.sha}/${urlPath(v.path)}`
+  : `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
+function versionsHtml(c) {
+  if (!c.iv) return "";
+  if (!S.versions) return `<h3>Image versions</h3><p class="muted">Loading ${c.iv} versions…</p>`;
+  const vs = versionList(c);
+  if (vs.length < 2) return "";
+  const oldest = vs[vs.length - 1], fromInit = /^(git )?init$/i.test(oldest.subject.trim());
+  return `<h3>Image versions <span class="muted">${vs.length}</span></h3>
+    <p class="muted">Each commit that changed the image${fromInit ? `, since ${date(oldest.ts)} (first upload)` : ""}.</p>
+    <div class="versions">
+      <div class="ver-list" role="group" aria-label="Image versions, newest first">${vs.map((v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
+        <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`).join("")}</div>
+      <div class="ver-compare" id="ver-compare" aria-live="polite"><p class="muted">Pick a version to compare (↑ ↓).</p></div>
+    </div>`;
+}
+function showVersion(c, i) {
+  const vs = versionList(c), v = vs[i], box = $("#ver-compare");
+  if (!v || !box) return;
+  $$(".ver-item", modal).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
+  // text at that time, when the bot's text history lines up with the commit (keep it simple: latest text at or before it)
+  const texts = (c.history || []).concat(c.ability ? [{ ts: c.ts, ability: c.ability }] : []).filter(t => t.ts && t.ts <= v.ts + 3600);
+  const then = texts.length ? texts[texts.length - 1] : null;
+  const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}<br><span class="muted">${esc(v.subject || "")}</span>`;
+  box.innerHTML = i === 0
+    ? `<figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
+    : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img class="ver-old" src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}</figcaption></figure>
+      <figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}</span></figcaption></figure></div>
+      ${then && then.ability && then.ability !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then.ability, c.ability)}</div></div>` : ""}`;
+  const old = $(".ver-old", box);
+  if (old) old.addEventListener("error", () => { if (!old.dataset.cdn) { old.dataset.cdn = "1"; old.src = versionUrl(v, true); } }, { once: false });
+}
+function historyHtml(c) {
+  if (!c.hv) return "";
+  if (!c.history) return `<h3>History</h3><p class="muted">Loading ${c.hv} earlier version${c.hv > 1 ? "s" : ""}…</p>`;
+  const versions = c.history.concat(c.ability ? [{ ts: c.ts, ability: c.ability, current: true }] : []);
+  if (versions.length < 2) return "";
+  return `<h3>History</h3><div class="history">${versions.slice().reverse().map((v, k, arr) => `<div class="ver"><div class="muted">${v.current ? "Current" : "Earlier"}${v.ts ? ` · ${date(v.ts)}` : ""}</div>
+    <div>${k < arr.length - 1 ? diffWords(arr[k + 1].ability, v.ability) : esc(v.ability).replace(/\n/g, "<br>")}</div></div>`).join("")}</div>`;
+}
+function closeModal() {
+  if (modal.hidden) return;
+  modal.hidden = true; modal.innerHTML = ""; document.body.style.overflow = "";
+  document.title = "Impossibility Simulator · Card Browser";
+}
+
+// ---- rulebook --------------------------------------------------------------------------------------
+function renderRules(r) {
+  if (!S.rules) {
+    view.innerHTML = `<div class="loading">Loading the rulebook…</div>`;
+    whenLoaded(loadRules(), "the rulebook", () => { if (parseHash().name === "rules") renderRules(parseHash()); });
+    return;
+  }
+  const q = (r.params.get("q") || "").trim().toLowerCase();
+  if (document.activeElement !== qInput) qInput.value = "";
+  const pages = S.rules.filter(p => !q || (p.ability || "").toLowerCase().includes(q) || p.name.toLowerCase().includes(q));
+  const tags = ["OYT", "AAT", "1PT", "1PGT", "E2T", "FTE2T", "E2GT", "BOT", "ENDT", "BOGT", "ENDGT", "OFS", "OS", "OD", "WOF", "1PG"];
+  const banned = S.data.banlist;
+  view.innerHTML = `<div class="rules">
+    <nav class="toc" aria-label="Rulebook pages"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
+      <a href="#/rules" data-scroll="glossary">Timing tags</a><a href="#/rules" data-scroll="banlist">Constructed ban list</a>
+      ${S.rules.map(p => `<a href="#/rules" data-scroll="page-${p.id}">${esc(p.name)}</a>`).join("")}</nav>
+    <div>
+      ${q ? `<p class="muted">${pages.length} page${pages.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : ""}
+      ${!q ? `<section class="panel" id="glossary"><h3>Timing tags</h3><p class="muted">X can be any number. Hover a badge for its meaning.</p>
+        ${Object.entries(GROUP_NAMES).map(([g, label]) => `<h4>${esc(label)}</h4><div class="glossary">${tags.filter(t => tagInfo(t).group === g).map(t => `<div>${badgeHtml(t)} ${esc(tagInfo(t).meaning)}</div>`).join("")}</div>`).join("")}</section>
+      <section class="panel" id="banlist"><h3>Constructed ban list</h3>${banned.notes.map(n => `<p class="muted">${esc(n)}</p>`).join("")}
+        ${banned.groups.map(g => `<h4>${esc(g.title)}</h4><ul>${g.entries.map(e => `<li>${e.id ? `<a class="card-ref" href="#/card/${e.id}" data-card="${e.id}">${esc(e.name)}</a>` : esc(e.name)} <span class="muted">— ${esc(e.reason)}</span></li>`).join("")}</ul>`).join("")}</section>` : ""}
+      ${pages.map(p => `<article class="page" id="page-${p.id}">${p.img ? `<a href="${esc(fullUrl(p))}" target="_blank" rel="noopener" title="Full-size page"><img loading="lazy" decoding="async" ${imgAttrs(p, 220, true)} alt="${esc(p.name)}"></a>` : "<div></div>"}
+        <div><h3>${esc(p.name)}</h3><div class="ability">${S.renderer.render(p.ability || "")}</div></div></article>`).join("") || `<div class="empty">No rulebook page mentions that.</div>`}
+    </div></div>`;
+  if (q) highlight($$(".page .ability, .page h3", view), q);
+  const input = $("#rules-q");
+  input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#rules-q"); i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }, 200));
+}
+function highlight(els, q) {
+  for (const el of els) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      const text = node.nodeValue, idx = text.toLowerCase().indexOf(q);
+      if (idx < 0) continue;
+      const frag = document.createDocumentFragment();
+      let last = 0, i = idx;
+      while (i >= 0) {
+        frag.append(text.slice(last, i));
+        const m = document.createElement("mark"); m.textContent = text.slice(i, i + q.length); frag.append(m);
+        last = i + q.length; i = text.toLowerCase().indexOf(q, last);
+      }
+      frag.append(text.slice(last)); node.replaceWith(frag);
+    }
+  }
+}
+
+// ---- deck builder ----------------------------------------------------------------------------------
+const deck = () => D.activeDeck(S.decks);
+const deckHas = id => { const d = deck(); return !!d && (d.cards.includes(id) || d.field === id); };
+function updateDeckCount() { const d = deck(); const n = d ? d.cards.length + (d.field ? 1 : 0) : 0; $("#deck-count").textContent = n ? String(n) : ""; }
+function toggleDeck(id) {
+  const c = S.byId.get(id), d = deck();
+  if (!c || !d) return;
+  if (deckHas(id)) { D.removeCard(d, id); toast(`Removed ${c.name} from “${d.name}”`); }
+  else { const err = D.addCard(d, c, S.byId); if (err) { toast(err); return; } toast(`Added ${c.name} to “${d.name}”${c._banned ? " (banned in constructed!)" : ""}`); }
+  D.saveDecks(S.decks); updateDeckCount(); refresh(id);
+}
+function renderDeck(r) {
+  if (r.arg) { const shared = D.decode(r.arg); S.shared = shared; } else S.shared = null;
+  const d = S.shared || deck();
+  const readOnly = !!S.shared;
+  const v = D.validate(d, S.byId, S.banned);
+  const slot = (c, label, tier) => c
+    ? `<div class="slot filled${v.badCards.has(c.id) ? " bad" : ""}" data-open="${c.id}" title="${esc(c.name)}">${c.img ? `<img loading="lazy" decoding="async" ${imgAttrs(c, 130)} alt="${esc(c.name)}">` : ""}<span class="slot-name">${esc(c.name)}</span>${readOnly ? "" : `<button type="button" class="x" data-action="deck-remove" data-id="${c.id}" aria-label="Remove ${esc(c.name)}">✕</button>`}</div>`
+    : `<button type="button" class="slot" data-action="pick" data-tier="${tier}" ${readOnly ? "disabled" : ""}>+ ${esc(label)}</button>`;
+  const cards = d.cards.map(id => S.byId.get(id)).filter(Boolean);
+  const groups = D.HAND.map(g => `<div class="tier-title"><span>${g.label}</span><span class="muted">${cards.filter(c => c.type === g.kind).length} / ${g.tiers.reduce((s, [, n]) => s + n, 0)}</span></div>
+    ${g.tiers.map(([st, n]) => { const have = cards.filter(c => c.type === g.kind && c.stars === st);
+      return `<div class="muted" style="margin:8px 0 4px">${st}★ <span class="stars">${stars(st)}</span> · ${have.length}/${n}</div><div class="slots">${Array.from({ length: Math.max(n, have.length) }, (_, i) => slot(have[i], `${st}★ ${g.kind}`, `${g.kind}:${st}`)).join("")}</div>`; }).join("")}`).join("");
+  const stray = cards.filter(c => !D.groupOf(c) || !D.need(c.type, c.stars));
+  const field = S.byId.get(d.field);
+  const counts = { banned: cards.filter(c => S.banned.has(c.id)).length };
+  view.innerHTML = `<div class="deck">
+    <section>
+      ${readOnly ? `<div class="panel"><b>Shared hand: ${esc(d.name)}</b> · ${v.count}/${v.slots} cards <button type="button" class="primary" data-action="save-shared">Save a copy to my decks</button></div>` : ""}
+      <div class="panel"><h3>${readOnly ? "" : `<input id="deck-name" value="${esc(d.name)}" aria-label="Deck name" style="font:inherit;font-weight:700;background:transparent;border:0;color:inherit;width:100%">`}</h3>
+        <p class="muted">7 creatures and 10 items, one of each, none banned, plus an optional field card (≤${D.FIELD_MAX_STARS}★) for the shop.</p>
+        ${groups}
+        <div class="tier-title"><span>Field card (optional)</span><span class="muted">${field ? 1 : 0} / 1</span></div>
+        <div class="slots">${slot(field, `field card (≤${D.FIELD_MAX_STARS}★)`, "field")}</div>
+        ${stray.length ? `<div class="tier-title"><span>Not allowed in a hand</span></div><div class="slots">${stray.map(c => slot(c)).join("")}</div>` : ""}
+      </div>
+    </section>
+    <aside>
+      <div class="panel"><h3>${v.complete ? "✅ Legal hand" : `Checks · ${v.count}/${v.slots} cards`}</h3><ul class="checks">${v.checks.map(c => `<li class="${c.ok ? "ok" : "err"}">${c.ok ? "✓" : "✗"} ${esc(c.text)}</li>`).join("")}</ul>
+        ${cards.length ? `<p class="muted">Average total stats: ${(cards.filter(c => c.hp != null).reduce((s, c) => s + total(c), 0) / Math.max(1, cards.filter(c => c.hp != null).length)).toFixed(1)} · banned: ${counts.banned}</p>` : ""}</div>
+      ${readOnly ? "" : `<div class="panel"><h3>Build</h3><div class="actions">
+        <button type="button" data-action="deck-random" title="Fill the rest of the hand with random legal cards">Fill randomly</button>
+        <button type="button" class="danger" data-action="deck-clear">Clear</button></div></div>`}
+      <div class="panel"><h3>Share & export</h3><div class="actions">
+        <button type="button" data-action="deck-share">Copy share link</button>
+        <button type="button" data-action="deck-copy-text">Copy as text</button>
+        <button type="button" data-action="deck-tts" title="Tabletop Simulator saved object">Download for TTS</button>
+        <button type="button" data-action="deck-print">Print proxies</button></div>
+        <p class="muted">TTS: save the .json to Documents/My Games/Tabletop Simulator/Saves/Saved Objects, then load it from Objects → Saved Objects.</p></div>
+      ${readOnly ? "" : `<div class="panel"><h3>Import</h3><textarea id="deck-import" placeholder="One card name per line (“Field: name” for the field card)"></textarea>
+        <div class="actions"><button type="button" data-action="deck-import">Import as new deck</button></div></div>
+      <div class="panel"><h3>My decks</h3><div class="deck-list">${S.decks.map(x => `<button type="button" class="${x.id === d.id ? "on" : ""}" data-action="deck-select" data-id="${x.id}">${esc(x.name)} <span class="muted">${x.cards.length + (x.field ? 1 : 0)}</span></button>`).join("")}</div>
+        <div class="actions"><button type="button" data-action="deck-new">New</button><button type="button" data-action="deck-dup">Duplicate</button>
+        <button type="button" class="danger" data-action="deck-delete" ${S.decks.length < 2 ? "disabled" : ""}>Delete</button></div></div>`}
+    </aside></div>`;
+  const nameInput = $("#deck-name");
+  if (nameInput) nameInput.addEventListener("change", () => { d.name = nameInput.value.trim() || "Untitled hand"; D.saveDecks(S.decks); renderDeck(parseHash()); });
+}
+function openPicker(tier) {
+  const [kind, st] = tier.split(":");
+  const d = deck();
+  const fits = c => (kind === "field" ? c.type === "field" && (c.stars || 0) <= D.FIELD_MAX_STARS : c.type === kind && c.stars === Number(st));
+  const render = q => {
+    const pred = compile(q);
+    const list = sortCards(S.cards.filter(c => fits(c) && c.parsed && !deckHas(c.id) && (!pred || pred(c))), "name");
+    $("#picker-grid").innerHTML = list.map(c => tileHtml(c, { small: true, constructed: true }).replace('data-open="', 'data-pick="')).join("") || `<div class="empty">Nothing fits.</div>`;
+  };
+  modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="Pick a card"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>
+    <h3>${kind === "field" ? `Pick a field card (≤${D.FIELD_MAX_STARS}★)` : `Pick a ${st}★ ${kind}`}</h3>
+    <input id="picker-q" type="search" placeholder="Filter… (same search syntax)" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);margin-bottom:12px">
+    <p class="muted">Banned cards are marked: they make the hand illegal.</p>
+    <div class="grid picker" id="picker-grid" style="--tile:120px"></div></div>`;
+  modal.hidden = false; document.body.style.overflow = "hidden";
+  render("");
+  const input = $("#picker-q");
+  input.addEventListener("input", debounce(() => render(input.value), 120));
+  input.focus();
+}
+
+// ---- stats / changes / compare -------------------------------------------------------------------
+function renderStatsView(r) {
+  renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist }, r.params);
+}
+function renderChanges() {
+  if (!historyP || !S.history) {
+    view.innerHTML = `<div class="loading">Loading recent changes…</div>`;
+    whenLoaded(loadHistory(), "card history", () => { if (parseHash().name === "changes") renderChanges(); });
+    return;
+  }
+  const recent = S.cards.filter(c => c.ts).sort((a, b) => b.ts - a.ts).slice(0, 60);
+  const edited = S.cards.filter(c => c.hv).sort((a, b) => b.hv - a.hv);
+  const unparsed = S.cards.filter(c => !c.parsed);
+  const problems = S.cards.filter(c => c.problems && c.problems.length);
+  const item = c => {
+    const last = c.history && c.history.length ? c.history[c.history.length - 1] : null;
+    return `<div class="item">${c.img ? `<img loading="lazy" decoding="async" src="${img(c, 240)}" alt="" data-open="${c.id}">` : "<div></div>"}<div>
+      <a href="#/card/${c.id}"><b>${esc(c.name)}</b></a> <span class="muted">${esc(KIND_LABEL[c.type] || c.type)}${c.stars ? ` · ${c.stars}★` : ""}${c.ts ? ` · ${date(c.ts)}` : ""}${c.author ? ` · ${esc(c.author)}` : ""}</span>
+      ${last && c.ability ? `<div class="ability" style="margin-top:4px;font-size:14px">${diffWords(last.ability, c.ability)}</div>` : ""}</div></div>`;
+  };
+  view.innerHTML = `<div style="max-width:980px;margin:auto">
+    <section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>
+    <section class="panel"><h3>Most revised</h3><div class="feed">${edited.slice(0, 20).map(item).join("") || `<p class="muted">No history yet.</p>`}</div></section>
+    ${unparsed.length ? `<section class="panel"><h3>Not parsed by the bot yet <span class="muted">${unparsed.length}</span></h3><p class="muted">Run /update_stats in Discord to add them.</p>
+      <div class="grid" style="--tile:120px">${unparsed.map(c => tileHtml(c, { small: true })).join("")}</div></section>` : ""}
+    ${problems.length ? `<section class="panel"><h3>Parser notes <span class="muted">${problems.length}</span></h3><ul>${problems.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${c.problems.map(esc).join(" · ")}</span></li>`).join("")}</ul></section>` : ""}
+    <p class="muted">Updated ${new Date(S.data.generated).toLocaleString()} from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p></div>`;
+}
+function renderCompare(r) {
+  const ids = (r.arg || S.compare.join(",")).split(",").filter(id => S.byId.has(id)).slice(0, 5);
+  if (!ids.length) { view.innerHTML = `<div class="empty">Nothing to compare: press “Compare” (x) on a card.</div>`; return; }
+  const cs = ids.map(id => S.byId.get(id)), first = cs[0];
+  const delta = (c, k) => { if (c === first || c[k] == null || first[k] == null) return ""; const d = c[k] - first[k]; return d ? ` <span class="${d > 0 ? "diff-up" : "diff-down"}">${d > 0 ? "+" : ""}${d}</span>` : ""; };
+  view.innerHTML = `<div class="toolbar"><span class="result-count">Comparing ${cs.length} cards</span><button type="button" data-action="share-compare">Copy link</button><button type="button" class="ghost" data-action="compare-clear">Clear</button></div>
+    <div class="compare" style="--n:${cs.length}">${cs.map(c => `<div class="col panel">${c.img ? `<img decoding="async" ${imgAttrs(c, 300)} alt="" data-open="${c.id}">` : ""}
+      <h3><a href="#/card/${c.id}">${esc(c.name)}</a></h3><p class="muted">${esc(KIND_LABEL[c.type] || c.type)} ${c.stars ? `· ${c.stars}★` : ""} ${c.series ? `· ${esc(c.series)}` : ""}</p>
+      ${["hp", "def", "atk", "spd"].map(k => c[k] != null ? `<div>${k.toUpperCase()} <b>${c[k]}</b>${delta(c, k)}</div>` : "").join("")}
+      ${c.hp != null ? `<div>Total <b>${total(c)}</b>${c === first || first.hp == null ? "" : (d => d ? ` <span class="${d > 0 ? "diff-up" : "diff-down"}">${d > 0 ? "+" : ""}${d}</span>` : "")(total(c) - total(first))}</div>` : ""}
+      ${c.ability ? `<div class="ability" style="margin-top:8px">${S.renderer.render(c.ability, c.name)}</div>` : ""}
+      <p><button type="button" class="ghost" data-action="compare-remove" data-id="${c.id}">Remove</button></p></div>`).join("")}</div>`;
+}
+
+// ---- interactions ----------------------------------------------------------------------------------
+function refresh(id) {
+  const inDeck = deckHas(id);
+  for (const b of $$(".add[data-id]")) if (b.dataset.id === id) { b.classList.toggle("in", inDeck); b.textContent = inDeck ? "✓ In deck" : "+ Deck"; }
+  if (!modal.hidden && parseHash().name === "card") openCard(parseHash().arg);
+  else if (parseHash().name === "deck") renderDeck(parseHash());
+}
+function toast(msg) { toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (toastEl.hidden = true), 2600); }
+function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+async function copy(text, what) { try { await navigator.clipboard.writeText(text); toast(`Copied ${what}`); } catch { prompt("Copy:", text); } }
+function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`; modal.hidden = false; }
+
+const actions = {
+  "close": () => { if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
+  "toggle-param": el => { const p = parseHash().params, cur = csv(p, el.dataset.key), v = el.dataset.value;
+    setParams({ [el.dataset.key]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); },
+  "select-param": el => setParams({ [el.dataset.key]: el.value }),
+  "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: csv(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "" }); if (el.dataset.key === "q") qInput.value = ""; },
+  "clear-filters": () => { qInput.value = ""; history.replaceState(null, "", "#/cards"); renderView(parseHash(), "#/cards"); },
+  "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
+    setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
+  "flip-dir": () => { const p = parseHash().params, sort = p.get("sort") || "name"; const defDesc = ["stars", "total", "hp", "def", "atk", "spd", "new", "mentioned"].includes(sort);
+    const curDesc = p.get("dir") ? p.get("dir") === "desc" : defDesc; setParams({ dir: curDesc ? "asc" : "desc" }); },
+  "sort-by": el => { const p = parseHash().params; setParams({ sort: el.dataset.key, dir: p.get("sort") === el.dataset.key && p.get("dir") !== "asc" ? "asc" : "" }); },
+  "set-pref": el => { localStorage.setItem(el.dataset.key, el.dataset.value); setParams({ [el.dataset.key]: el.dataset.value }); },
+  "random-from-list": () => { const l = S.list.length ? S.list : S.cards; location.hash = `#/card/${l[Math.floor(Math.random() * l.length)].id}`; },
+  "deck-toggle": el => toggleDeck(el.dataset.id),
+  "deck-remove": el => { D.removeCard(deck(), el.dataset.id); D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
+  "pick": el => openPicker(el.dataset.tier),
+  "deck-random": () => { D.randomFill(deck(), S.cards, S.banned); D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
+  "deck-clear": () => { if (!confirm("Remove every card from this deck?")) return; const d = deck(); d.cards = []; d.field = null; D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
+  "deck-share": () => copy(new URL(`#/deck/${D.encode(S.shared || deck())}`, document.baseURI).href, "share link"),
+  "deck-copy-text": () => copy(D.toText(S.shared || deck(), S.byId), "deck list"),
+  "deck-tts": () => { const d = S.shared || deck(); D.download(`${d.name.replace(/[^\w\- ]+/g, "") || "hand"}.json`, JSON.stringify(D.ttsSave(d, S.byId, S.data.raw), null, 2)); toast("Downloaded Tabletop Simulator saved object"); },
+  "deck-print": () => { if (!D.printSheet(S.shared || deck(), S.byId, S.data.raw)) toast("Allow pop-ups to print proxies"); },
+  "deck-import": () => { const { deck: d, unknown } = D.fromText($("#deck-import").value, S.cards); D.newDeck(S.decks, d.name, d.cards, d.field); updateDeckCount(); renderDeck(parseHash()); toast(unknown.length ? `Imported; not found: ${unknown.join(", ")}` : "Imported"); },
+  "deck-select": el => { D.setActive(S.decks.find(x => x.id === el.dataset.id)); updateDeckCount(); location.hash = "#/deck"; renderDeck(parseHash()); },
+  "deck-new": () => { D.newDeck(S.decks, `Hand ${S.decks.length + 1}`); updateDeckCount(); renderDeck(parseHash()); },
+  "deck-dup": () => { const d = deck(); D.newDeck(S.decks, `${d.name} (copy)`, d.cards.slice(), d.field); updateDeckCount(); renderDeck(parseHash()); },
+  "deck-delete": () => { const d = deck(); if (S.decks.length < 2 || !confirm(`Delete “${d.name}”?`)) return; S.decks = S.decks.filter(x => x !== d); D.saveDecks(S.decks); D.setActive(S.decks[0]); updateDeckCount(); renderDeck(parseHash()); },
+  "save-shared": () => { const s = S.shared; D.newDeck(S.decks, s.name, s.cards.filter(id => S.byId.has(id)), s.field); updateDeckCount(); location.hash = "#/deck"; toast("Saved to your decks"); },
+  "copy-link": el => copy(shareUrl(el.dataset.id), "card link"),
+  "copy-text": el => { const c = S.byId.get(el.dataset.id); copy(`${c.name}${c.stars ? ` (${c.stars}★ ${c.type})` : ""}\n${plain(c.ability || "")}`, "card text"); },
+  "compare-add": el => { const id = el.dataset.id; if (!S.compare.includes(id)) S.compare = [...S.compare, id].slice(-5); toast(`Comparing ${S.compare.length} card${S.compare.length > 1 ? "s" : ""} (Compare is in the toolbar)`); openCard(id); },
+  "compare-remove": el => { S.compare = S.compare.filter(x => x !== el.dataset.id); location.hash = `#/compare/${S.compare.join(",")}`; },
+  "compare-clear": () => { S.compare = []; location.hash = "#/cards"; },
+  "share-compare": () => copy(new URL(`#/compare/${parseHash().arg || S.compare.join(",")}`, document.baseURI).href, "comparison link"),
+  "toggle-table": el => { const box = $(`#chart-${el.dataset.target}`); const on = el.getAttribute("aria-pressed") !== "true"; el.setAttribute("aria-pressed", on);
+    el.textContent = on ? "Chart" : "Table"; $(".view-chart", box).hidden = on; $(".view-table", box).hidden = !on; },
+  "stats-filter": el => setParams({ [el.dataset.key]: el.value }),
+  "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
+  "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
+};
+document.addEventListener("click", e => {
+  const a = e.target.closest("[data-action]");
+  if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); actions[a.dataset.action]?.(a); return; }
+  const pick = e.target.closest("[data-pick]");
+  if (pick) { const err = D.addCard(deck(), S.byId.get(pick.dataset.pick), S.byId); if (err) toast(err); else { D.saveDecks(S.decks); updateDeckCount(); closeModal(); renderDeck(parseHash()); } return; }
+  const open = e.target.closest("[data-open], .chart [data-card]");
+  if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
+  const ref = e.target.closest("a.card-ref");
+  if (ref) { e.preventDefault(); location.hash = `#/card/${ref.dataset.card}`; return; }
+  const scroll = e.target.closest("[data-scroll]");
+  if (scroll) { e.preventDefault(); document.getElementById(scroll.dataset.scroll)?.scrollIntoView({ behavior: "smooth" }); return; }
+  if (e.target === modal) actions.close();
+});
+document.addEventListener("change", e => {
+  const a = e.target.closest("[data-action]");
+  if (a && (a.tagName === "SELECT" || a.type === "checkbox")) actions[a.dataset.action]?.(a);
+});
+
+// search box
+const runSearch = debounce(() => {
+  const name = parseHash().name;
+  if (name === "rules") { setParams({ q: qInput.value }); return; }
+  if (name !== "cards") { location.hash = `#/cards?q=${encodeURIComponent(qInput.value)}`; return; }
+  setParams({ q: qInput.value });
+}, 160);
+qInput.addEventListener("input", runSearch);
+$("#search-form").addEventListener("submit", e => { e.preventDefault(); const l = S.list; if (l.length === 1) location.hash = `#/card/${l[0].id}`; });
+$("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax</h3><p class="muted">The bot's /query_ability syntax, plus names and aliases.</p>
+  <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
+$("#random").addEventListener("click", () => actions["random-from-list"]());
+$("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
+const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card"], ["d", "Add to / remove from deck"],
+  ["c", "Copy card link"], ["x", "Add to comparison"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–5", "Cards · Rulebook · Deck · Stats · Changes"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+$("#keys").addEventListener("click", showKeys);
+
+document.addEventListener("keydown", e => {
+  const item = document.activeElement?.closest?.(".ver-item");
+  if (item && (e.key === "ArrowDown" || e.key === "ArrowUp")) {   // move through the version list
+    e.preventDefault();
+    const next = e.key === "ArrowDown" ? item.nextElementSibling : item.previousElementSibling;
+    if (next) { next.focus(); next.click(); }
+    return;
+  }
+  const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
+  if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) document.activeElement.blur(); return; }
+  if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+  const inCard = !modal.hidden && parseHash().name === "card", id = parseHash().arg;
+  if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }
+  else if (e.key === "?") showKeys();
+  else if (e.key === "r") actions["random-from-list"]();
+  else if (/^[1-5]$/.test(e.key) && modal.hidden) location.hash = ["#/cards", "#/rules", "#/deck", "#/stats", "#/changes"][+e.key - 1];
+  else if (inCard && (e.key === "ArrowLeft" || e.key === "ArrowRight")) { const link = $(`[data-nav="${e.key === "ArrowLeft" ? "prev" : "next"}"]`, modal); if (link) location.hash = link.getAttribute("href"); }
+  else if (inCard && e.key === "d") toggleDeck(id);
+  else if (inCard && e.key === "c") copy(shareUrl(id), "card link");
+  else if (inCard && e.key === "x") actions["compare-add"]({ dataset: { id } });
+  else if (e.key === "Enter" && document.activeElement?.dataset?.open) location.hash = `#/card/${document.activeElement.dataset.open}`;
+});
+
+// tooltips: [data-tip] text, [data-v]+[data-l] chart values, card links show a preview
+function hideTip() { tip.hidden = true; }
+document.addEventListener("pointerover", e => {
+  const ref = e.target.closest("a.card-ref, .chart [data-card]"), t = e.target.closest("[data-tip], [data-v]");
+  if (!ref && !t) return;
+  tip.replaceChildren();
+  if (t && t.dataset.v !== undefined) {
+    const v = document.createElement("div"); v.className = "v"; v.textContent = t.dataset.v;
+    const l = document.createElement("div"); l.textContent = t.dataset.l || ""; tip.append(v, l);
+  } else if (ref) {
+    const c = S.byId.get(ref.dataset.card);
+    if (!c) return;
+    if (c.img) { const im = document.createElement("img"); im.src = thumbUrl(c); im.alt = ""; tip.append(im); }
+    const n = document.createElement("div"); n.className = "v"; n.textContent = c.name; tip.append(n);
+  } else tip.textContent = t.dataset.tip;
+  tip.hidden = false;
+});
+document.addEventListener("pointermove", e => {
+  if (tip.hidden) return;
+  const r = tip.getBoundingClientRect();
+  let x = e.clientX + 14, y = e.clientY + 16;
+  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
+  tip.style.left = `${x}px`; tip.style.top = `${y}px`;
+});
+document.addEventListener("pointerout", e => { if (e.target.closest("[data-tip], [data-v], a.card-ref, .chart [data-card]")) hideTip(); });
+
+init();
