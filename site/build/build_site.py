@@ -65,6 +65,7 @@ CARD_FOLDERS = ("Creatures/", "Items/", "Field/", "N.M.E/", "Auxiliary/")
 AUTHORS_PATH = "MDW/Card Authors.txt"
 BANLIST_PATH = "MDW/Constructed Ban List.txt"
 EDITS_PATH = "MDW/Card Edits.json"
+ADMINS_PATH = "MDW/Website Admins.txt"
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
@@ -409,6 +410,13 @@ def apply_edits(entry, edits):
         entry["problems"] = [p for p in entry.get("problems") or [] if not p.startswith(answered)] if answered else entry.get("problems")
 
 
+def parse_admins():
+    path = os.path.join(REPO, ADMINS_PATH)
+    if not os.path.exists(path):
+        return []
+    return [l.strip() for l in open(path, encoding="utf-8") if l.strip() and not l.strip().startswith("#")]
+
+
 def build_branch():
     """Branch the Edit button commits to."""
     if os.environ.get("GITHUB_REF_NAME"):
@@ -750,7 +758,8 @@ def main():
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
         "cards": cards, "icons": icons, "banlist": banlist,
         # for the editor
-        "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH},
+        "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH},
+        "admins": parse_admins(),
         "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
         "peopleMap": PEOPLE_AS_WRITTEN,
     }

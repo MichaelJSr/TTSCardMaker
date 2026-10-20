@@ -23,11 +23,13 @@ export function createEditor(app) {
   const { S } = app;
   let token = localStorage.getItem(K.token) || sessionStorage.getItem(K.token) || "";
   let me = null;                                   // { login, admin, push }
-  let stage = load(K.stage, { cards: {}, people: {} });
+  let stage = { cards: {}, people: {}, admins: null, ...load(K.stage, {}) };
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
-  const files = () => S.data.files || { edits: "MDW/Card Edits.json", authors: "MDW/Card Authors.txt", banlist: "MDW/Constructed Ban List.txt" };
+  const files = () => ({ edits: "MDW/Card Edits.json", authors: "MDW/Card Authors.txt", banlist: "MDW/Constructed Ban List.txt", admins: "MDW/Website Admins.txt", ...S.data.files });
+  const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
+  const find = id => S.byId.get(id) || (S.rules || []).find(r => r.id === id);
 
   // ---- GitHub API
   async function gh(path, { method = "GET", body, raw = false, full = false } = {}) {
@@ -75,7 +77,7 @@ export function createEditor(app) {
     if (scopes != null && !/\b(public_)?repo\b/.test(scopes)) throw new Error("This token can't write: give it the public_repo scope.");
     const p = (await gh(`/repos/${S.data.repo}`)).permissions || {};
     if (!p.push) throw new Error(`${user.login} can't push to ${S.data.repo}. Ask an admin to add you.`);
-    me = { login: user.login, admin: !!p.admin, push: true };
+    me = { login: user.login, admin: !!p.admin || isAdmin(user.login), push: true };
     localStorage.removeItem(K.token); sessionStorage.removeItem(K.token);
     (remember ? localStorage : sessionStorage).setItem(K.token, token);
   }
@@ -113,7 +115,7 @@ export function createEditor(app) {
     else c[f] = Array.isArray(v) ? [...v] : v;
   }
   function applyOp(op) {
-    const c = S.byId.get(op.id);
+    const c = find(op.id);
     if (!c) return;
     snap(c);
     const b = baseOf(c);
@@ -137,7 +139,7 @@ export function createEditor(app) {
     return sent.ops;
   }
   function preview() {
-    for (const [id, p] of pristine) { const c = S.byId.get(id); for (const k of Object.keys(c)) delete c[k]; Object.assign(c, structuredClone(p)); }
+    for (const [id, p] of pristine) { const c = find(id); if (!c) continue; for (const k of Object.keys(c)) delete c[k]; Object.assign(c, structuredClone(p)); }
     pristine.clear(); based.clear();
     if (pristineBan) S.data.banlist = structuredClone(pristineBan); else pristineBan = structuredClone(S.data.banlist);
     for (const op of sentOps()) applyOp({ ...op, _sent: true });
@@ -147,12 +149,28 @@ export function createEditor(app) {
     renderBar();
   }
   const save = () => { localStorage.setItem(K.stage, JSON.stringify(stage)); preview(); };
-  const count = () => Object.keys(stage.cards).length + Object.keys(stage.people).length;
+  const count = () => Object.keys(stage.cards).length + Object.keys(stage.people).length + (stage.admins ? 1 : 0);
 
   // ---- the edit form
   const opts = (list, cur) => list.map(([v, l]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(l)}</option>`).join("");
   const uniq = f => [...new Set(S.all.map(f).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const isRule = c => (S.rules || []).includes(c);
+  function ruleFormHtml(c) {
+    const b = baseOf(c);
+    const reset = f => { const p = psdValue(b, f); return same(value(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="Back to what the page says">↺ PSD: ${esc(show(p))}</button>`; };
+    const row = (f, label, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${label}</label><div class="ein">${input}${reset(f)}</div></div>`;
+    return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
+      <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
+      <h2>Edit rulebook page</h2><p class="muted">Goes into your batch. <span class="kbd">${esc(c.key)}</span></p>
+      <form id="edit-form" class="edit-form" autocomplete="off"><fieldset><legend>Page</legend>
+        ${row("name", "Title", `<input id="ef-name" value="${esc(c.name)}">`)}
+        ${row("ability", "Text", `<textarea id="ef-ability" rows="14" spellcheck="true">${esc(c.ability || "")}</textarea><div class="ability preview" id="ef-preview"></div>`)}
+        ${row("note", "Note", `<textarea id="ef-note" rows="2" placeholder="Shown under the page">${esc(c.note || "")}</textarea>`)}
+      </fieldset><div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
+      <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div></form></div>`;
+  }
   function formHtml(c) {
+    if (isRule(c)) return ruleFormHtml(c);
     const b = baseOf(c), isDup = !!b.dup, ban = banOf(c.id), admin = me?.admin;
     const kinds = Object.entries(app.KIND_LABEL).filter(([k]) => k !== "unknown" || k === c.type);
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
@@ -204,15 +222,16 @@ export function createEditor(app) {
     const b = baseOf(c), f = id => document.getElementById(`ef-${id}`);
     const int = id => (f(id).value.trim() === "" ? null : Math.max(0, Math.round(Number(f(id).value))));
     const str = id => (f(id).value.trim() || null);
-    const want = {
-      name: f("name").value.trim() || b.name, type: f("type").value, subtype: str("subtype"), series: str("series"), stars: int("stars"),
-      types: [...document.querySelectorAll("#ef-types .on")].map(x => x.dataset.type),
-      ...Object.fromEntries(STATS.map(s => [s, int(s)])),
-      ability: f("ability").value.replace(/\r/g, "").trim() || null, note: f("note").value.trim() || null,
-      aliases: f("aliases").value.split(",").map(s => s.trim()).filter(Boolean),
-      dup_of: (() => { const v = f("dup_of").value.trim(); return v ? (byKey(v)?.key || v) : ""; })(),
-      hidden: !!f("hidden")?.checked, allow_high_stats: f("allow_high_stats").checked, problems_ok: !!f("problems_ok")?.checked,
+    const all = {
+      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: () => str("series"), stars: () => int("stars"),
+      types: () => [...document.querySelectorAll("#ef-types .on")].map(x => x.dataset.type),
+      ...Object.fromEntries(STATS.map(s => [s, () => int(s)])),
+      ability: () => f("ability").value.replace(/\r/g, "").trim() || null, note: () => f("note").value.trim() || null,
+      aliases: () => f("aliases").value.split(",").map(s => s.trim()).filter(Boolean),
+      dup_of: () => { const v = f("dup_of").value.trim(); return v ? (byKey(v)?.key || v) : ""; },
+      hidden: () => f("hidden").checked, allow_high_stats: () => f("allow_high_stats").checked, problems_ok: () => f("problems_ok").checked,
     };
+    const want = Object.fromEntries(Object.entries(all).filter(([k]) => f(k === "types" ? "types" : k)).map(([k, get]) => [k, get()]));
     const op = { id: c.id, key: c.key, name: want.name, set: {}, unset: [] };
     for (const [k, v] of Object.entries(want)) {
       const pub = value(b, k);
@@ -221,14 +240,16 @@ export function createEditor(app) {
       else op.set[k] = v;
     }
     if (f("author") && f("author").value.trim() !== (b.author || "")) op.author = f("author").value.trim() || null;
-    const ban = { banned: f("banned").checked, group: f("ban-group").value, reason: f("ban-reason").value.trim() };
-    const was = banOf(c.id, pristineBan || S.data.banlist);
-    if (ban.banned !== was.banned || (ban.banned && (ban.group !== was.group || ban.reason !== was.reason))) op.ban = ban;
+    if (f("banned")) {
+      const ban = { banned: f("banned").checked, group: f("ban-group").value, reason: f("ban-reason").value.trim() };
+      const was = banOf(c.id, pristineBan || S.data.banlist);
+      if (ban.banned !== was.banned || (ban.banned && (ban.group !== was.group || ban.reason !== was.reason))) op.ban = ban;
+    }
     return op;
   }
   const opEmpty = op => !Object.keys(op.set).length && !op.unset.length && op.author === undefined && !op.ban;
   function describe(op) {
-    const b = S.byId.get(op.id) ? baseOf(S.byId.get(op.id)) : {};
+    const b = find(op.id) ? baseOf(find(op.id)) : {};
     const out = Object.entries(op.set).map(([k, v]) => `${LABEL[k]}: ${show(value(b, k))} → ${show(v)}`);
     for (const k of op.unset) out.push(`${LABEL[k]}: back to the PSD (${show(psdValue(b, k))})`);
     if (op.author !== undefined) out.push(`Author → ${op.author || "(from git)"}`);
@@ -236,7 +257,7 @@ export function createEditor(app) {
     return out;
   }
   function openForm(id) {
-    const c = S.byId.get(id);
+    const c = find(id);
     if (!c) return;
     if (!me) { openHub(`Sign in to edit ${c.name}.`, id); return; }
     app.modal.innerHTML = formHtml(c);
@@ -264,10 +285,10 @@ export function createEditor(app) {
       if (opEmpty(op)) delete stage.cards[c.id]; else stage.cards[c.id] = op;
       save();
       app.toast(opEmpty(op) ? "No changes" : `Added to the batch: ${count()} unpublished`);
-      app.goCard(c.id);
+      if (isRule(c)) { app.closeModal(); app.rerender(); } else app.goCard(c.id);
     });
     update();
-    document.getElementById("ef-name").focus();
+    document.getElementById(isRule(c) ? "ef-ability" : "ef-name").focus();
   }
   function resetField(c, f) {
     const p = psdValue(baseOf(c), f), el = document.getElementById(`ef-${f}`);
@@ -369,10 +390,13 @@ export function createEditor(app) {
     if (ops.some(o => Object.keys(o.set).length || o.unset.length)) edits[F.edits] = t => editsFile(t, ops, at);
     if (ops.some(o => o.author !== undefined) || Object.keys(people).length) edits[F.authors] = t => authorsFile(t, ops, people);
     if (ops.some(o => o.ban)) edits[F.banlist] = t => banFile(t, ops);
+    if (stage.admins) edits[F.admins] = t => [...(t ?? "").split("\n").filter(l => l.trim().startsWith("#")), ...stage.admins].join("\n") + "\n";
     const names = ops.map(o => o.name);
-    const sha = await commitFiles(edits, message || (names.length > 3 ? `Website edits: ${names.length} cards` : `Website edit: ${[...names, ...(Object.keys(people).length ? ["people"] : [])].join(", ")}`));
+    const what = [...names, ...(Object.keys(people).length ? ["people"] : []), ...(stage.admins ? ["admins"] : [])];
+    const sha = await commitFiles(edits, message || (what.length > 3 ? `Website edits: ${what.length} changes` : `Website edit: ${what.join(", ")}`));
     localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops] }));
-    stage = { cards: {}, people: {} };
+    if (stage.admins) S.data.admins = stage.admins;
+    stage = { cards: {}, people: {}, admins: null };
     save();
     return sha;
   }
@@ -392,8 +416,9 @@ export function createEditor(app) {
     return `<h3>Unpublished changes</h3>
       ${ops.map(op => `<div class="review-item"><div><a href="#/card/${op.id}"><b>${esc(op.name)}</b></a><ul>${describe(op).map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>
         <div class="actions"><button type="button" class="ghost" data-action="edit-card" data-id="${op.id}">Edit</button><button type="button" class="ghost" data-action="edit-discard" data-id="${op.id}">Discard</button></div></div>`).join("")}
+      ${stage.admins ? `<div class="review-item"><div><b>Admins</b><ul><li>${esc(stage.admins.join(", "))}</li></ul></div><div class="actions"><button type="button" class="ghost" data-action="edit-discard-admins">Discard</button></div></div>` : ""}
       ${people.length ? `<div class="review-item"><div><b>People</b><ul>${people.map(([g, d]) => `<li>${esc(g)} shown as ${esc(d)}</li>`).join("")}</ul></div><div class="actions"><button type="button" class="ghost" data-action="edit-discard-people">Discard</button></div></div>` : ""}
-      ${ops.length || people.length ? `<label class="muted" for="edit-msg">Commit message (optional)</label><input id="edit-msg" class="wide" placeholder="Website edits">
+      ${count() ? `<label class="muted" for="edit-msg">Commit message (optional)</label><input id="edit-msg" class="wide" placeholder="Website edits">
         <div class="actions"><button type="button" class="primary" data-action="edit-publish">Publish ${count()} change${count() > 1 ? "s" : ""}</button></div>
         <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch || "main")}). The site rebuilds in a few minutes; the bot reads it on /update_stats.</p>` : `<p class="muted">Nothing to publish.</p>`}
       <p class="muted" id="edit-status" aria-live="polite">${esc(note)}</p>`;
@@ -410,7 +435,9 @@ export function createEditor(app) {
       <p class="muted">Open a card and press Edit (e). Changes wait in your batch until you publish them.</p>
       <div class="actions"><button type="button" data-action="edit-review"${count() ? "" : " disabled"}>Review batch (${count()})</button>
         <label class="check"><input type="checkbox" data-action="edit-show-hidden"${S.showHidden ? " checked" : ""}> show hidden cards</label></div>
-      ${me.admin ? `<h4>People</h4><p class="muted">How each git name is shown.</p><form id="people-form" class="people">${peopleRows()}<div class="actions"><button type="submit">Add to batch</button></div></form>` : ""}
+      ${me.admin ? `<h4>People</h4><p class="muted">How each git name is shown.</p><form id="people-form" class="people">${peopleRows()}<div class="actions"><button type="submit">Add to batch</button></div></form>
+        <h4>Admins</h4><p class="muted">GitHub logins, one per line. The repo owner is always an admin.</p>
+        <form id="admins-form"><textarea id="admins-list" class="wide" rows="4">${esc((stage.admins || S.data.admins || []).join("\n"))}</textarea><div class="actions"><button type="submit">Add to batch</button></div></form>` : ""}
       <p class="muted"><a href="https://github.com/${esc(S.data.repo)}/commits/${esc(S.data.branch || "main")}/${esc(files().edits)}" target="_blank" rel="noopener">Edit history</a> ·
         <a href="https://github.com/${esc(S.data.repo)}/blob/${esc(S.data.branch || "main")}/${esc(files().edits)}" target="_blank" rel="noopener">${esc(files().edits)}</a></p>
       <div class="actions"><button type="button" class="ghost" data-action="edit-signout">Sign out</button></div>`;
@@ -435,6 +462,12 @@ export function createEditor(app) {
         } catch (err) { token = ""; status.textContent = err.message; }
       });
     }
+    document.getElementById("admins-form")?.addEventListener("submit", e => {
+      e.preventDefault();
+      const list = [...new Set(document.getElementById("admins-list").value.split(/[\s,]+/).map(s => s.trim()).filter(Boolean))];
+      stage.admins = same(list, S.data.admins || []) ? null : list;
+      save(); openHub(`${count()} unpublished change${count() === 1 ? "" : "s"}`);
+    });
     document.getElementById("people-form")?.addEventListener("submit", e => {
       e.preventDefault();
       for (const input of e.target.querySelectorAll("[data-git]")) {
@@ -456,7 +489,8 @@ export function createEditor(app) {
     "edit-review": () => app.showDialog(reviewHtml()),
     "edit-discard": el => { delete stage.cards[el.dataset.id]; save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
     "edit-discard-people": () => { stage.people = {}; save(); app.showDialog(reviewHtml("Discarded.")); },
-    "edit-discard-all": () => { if (!confirm(`Discard ${count()} unpublished change${count() > 1 ? "s" : ""}?`)) return; stage = { cards: {}, people: {} }; save(); app.rerender(); },
+    "edit-discard-admins": () => { stage.admins = null; save(); app.showDialog(reviewHtml("Discarded.")); },
+    "edit-discard-all": () => { if (!confirm(`Discard ${count()} unpublished change${count() > 1 ? "s" : ""}?`)) return; stage = { cards: {}, people: {}, admins: null }; save(); app.rerender(); },
     "edit-dismiss-sent": () => { localStorage.removeItem(K.sent); preview(); app.rerender(); },
     "edit-publish": async el => {
       if (!me) { openHub("Sign in to publish."); return; }
@@ -482,5 +516,6 @@ export function createEditor(app) {
       if (token) signIn(token, !!localStorage.getItem(K.token)).then(() => { app.derive(); app.rerender(); }, () => {});
     },
     open: openForm,
+    refresh: preview,
   };
 }

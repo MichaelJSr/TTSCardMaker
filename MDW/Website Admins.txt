@@ -1,0 +1,4 @@
+# Card browser admins (GitHub logins): ban list, hidden cards, people, this list.
+# The repo owner is always one. Anyone with write access can edit cards.
+MichaelJSr
+Zomoroko

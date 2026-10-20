@@ -38,6 +38,7 @@ jobs:
             /MDW/Constructed Ban List.txt
             /MDW/Card Authors.txt
             /MDW/Card Edits.json
+            /MDW/Website Admins.txt
 
       - uses: actions/setup-python@v7
         with:

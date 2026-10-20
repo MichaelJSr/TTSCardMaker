@@ -55,7 +55,7 @@ async function getJson(name) {
 }
 // loaded on demand: the rulebook pages, and older versions of card text
 let rulesP = null, historyP = null, versionsP = null;
-const loadRules = () => (rulesP ||= getJson("rules.json").then(d => { S.rules = d.rules; }).catch(e => { rulesP = null; throw e; }));
+const loadRules = () => (rulesP ||= getJson("rules.json").then(d => { S.rules = d.rules; editor.refresh(); }).catch(e => { rulesP = null; throw e; }));
 const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   for (const c of [...S.cards, ...(S.rules || [])]) if (h[c.id]) c.history = h[c.id];
   S.history = h;
@@ -440,7 +440,8 @@ function renderRules(r) {
       <section class="panel" id="banlist"><h3>Constructed ban list</h3>${banned.notes.map(n => `<p class="muted">${esc(n)}</p>`).join("")}
         ${banned.groups.map(g => `<h4>${esc(g.title)}</h4><ul>${g.entries.map(e => `<li>${e.id ? `<a class="card-ref" href="#/card/${e.id}" data-card="${e.id}">${esc(e.name)}</a>` : esc(e.name)} <span class="muted">— ${esc(e.reason)}</span></li>`).join("")}</ul>`).join("")}</section>` : ""}
       ${pages.map(p => `<article class="page" id="page-${p.id}">${p.img ? `<a href="${esc(fullUrl(p))}" target="_blank" rel="noopener" title="Full-size page"><img loading="lazy" decoding="async" ${imgAttrs(p, 220, true)} alt="${esc(p.name)}"></a>` : "<div></div>"}
-        <div><h3>${esc(p.name)}</h3><div class="ability">${S.renderer.render(p.ability || "")}</div></div></article>`).join("") || `<div class="empty">No rulebook page mentions that.</div>`}
+        <div><h3>${esc(p.name)}${p._staged ? ` <span class="fact staged">Unpublished edit</span>` : ""} <button type="button" class="ghost" data-action="edit-card" data-id="${p.id}" title="Edit this page">Edit</button></h3>
+          <div class="ability">${S.renderer.render(p.ability || "")}</div>${p.note ? `<div class="note"><b>Note</b> ${S.renderer.render(p.note)}</div>` : ""}</div></article>`).join("") || `<div class="empty">No rulebook page mentions that.</div>`}
     </div></div>`;
   if (q) highlight($$(".page .ability, .page h3", view), q);
   const input = $("#rules-q");
