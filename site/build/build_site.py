@@ -66,12 +66,12 @@ AUTHORS_PATH = "MDW/Card Authors.txt"
 BANLIST_PATH = "MDW/Constructed Ban List.txt"
 EDITS_PATH = "MDW/Card Edits.json"
 ADMINS_PATH = "MDW/Website Admins.txt"
-# Card Edits.json fields; same list in edit.js and the bot's CardEdits
-EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "stars": int, "types": list,
+# Card Edits.json fields; same list in edit.js and the bot's CardEdits (subseries: database only, never from the folder)
+EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
                "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list}
-EDIT_NULLABLE = {"subtype", "series", "stars", "hp", "def", "atk", "spd"}      # may be null
-DATA_FIELDS = ("type", "subtype", "series", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
+EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", "spd"}      # may be null
+DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
 FIXED_BY = {"hp": ("HP NOT FOUND",), "def": ("DEF NOT FOUND",), "atk": ("ATK NOT FOUND",), "spd": ("SPD NOT FOUND",),
@@ -243,7 +243,8 @@ def og_size(path):
 def share_text(c):
     """Kind line, stats line, ability: the card's link-preview description."""
     kind = KIND_LABEL.get(c["type"], c["type"].title())
-    head = " · ".join(filter(None, [f"{c['stars']}★ {kind}" if c.get("stars") else kind, c.get("series"), f"by {c['author']}" if c.get("author") else None]))
+    head = " · ".join(filter(None, [f"{c['stars']}★ {kind}" if c.get("stars") else kind, c.get("series"), c.get("subseries"),
+                                    f"by {c['author']}" if c.get("author") else None]))
     stats = " · ".join(f"{label} {c[k]}" for k, label in (("hp", "HP"), ("def", "DEF"), ("atk", "ATK"), ("spd", "SPD")) if c.get(k) is not None)
     text = re.sub(r"\[([^\[\]:]+)(?::\s*(no|tint|sticker))?\]",
                   lambda m: ("non-" if m.group(2) == "no" else "") + m.group(1).replace("_", " ").title(), c.get("ability", "") or "")
@@ -576,7 +577,7 @@ def main():
             seen_pngs.add(png)
         entry = {
             "id": unique_slug(name), "name": name, "type": getattr(c, "card_type", "unknown"),
-            "subtype": getattr(c, "subtype", None), "series": getattr(c, "series", None),
+            "subtype": getattr(c, "subtype", None), "series": getattr(c, "series", None), "subseries": None,   # from edits only
             "stars": getattr(c, "stars", None), "types": list(getattr(c, "types", []) or []),
             "hp": stat(c, "hp"), "def": stat(c, "defense"), "atk": stat(c, "attack"), "spd": stat(c, "speed"),
             "ability": getattr(c, "ability", None), "author": getattr(c, "author", None),
@@ -639,7 +640,7 @@ def main():
         png = png_for(path, name) if low.endswith(".psd") else path
         info = classify(path)
         entry = {"id": unique_slug(name), "name": name, "key": name, "type": info["type"], "subtype": info.get("subtype"),
-                 "series": info.get("series"), "stars": info.get("stars"), "types": [], "hp": None, "def": None,
+                 "series": info.get("series"), "subseries": None, "stars": info.get("stars"), "types": [], "hp": None, "def": None,
                  "atk": None, "spd": None, "ability": None, "author": None, "ts": None,
                  "psd": path if low.endswith(".psd") else None, "png": png, "problems": [], "parsed": False}
         apply_edits(entry, edits)

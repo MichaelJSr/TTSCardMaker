@@ -4,7 +4,7 @@
 //   !die              exclude (works on any term here, e.g. !type==creature)
 //   a & b   a | b     both / either  (| binds looser than &, as in the bot)
 //   hp>5  def<=3  atk==2  spd>=7  stars<4  total>=24        numbers
-//   type==creature  series~kirby  author==chestnut  types~fire  subtype==equip  name~knight
+//   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
 //   is:unparsed  has:history  has:problems  has:alias
 
 export const total = c => (c.hp ?? 0) + (c.def ?? 0) + (c.atk ?? 0) + (c.spd ?? 0);
@@ -15,7 +15,7 @@ const NUM = {
   total: c => (hasStats(c) ? total(c) : null),
 };
 const STR = {
-  type: c => c.type, subtype: c => c.subtype, series: c => c.series, author: c => c.author,
+  type: c => c.type, subtype: c => c.subtype, series: c => c.series, subseries: c => c.subseries, author: c => c.author,
   path: c => c.psd || c.png, ability: c => c.ability, types: c => (c.types || []).join(" "),
   name: c => c.name, alias: c => (c.aliases || []).join(" "), aliases: c => (c.aliases || []).join(" "),
 };
@@ -90,5 +90,6 @@ export const SEARCH_HELP = [
   ["stars<=3 · total>=25", "Stars and total stats"],
   ["type==creature · subtype==equip", "Exact value"],
   ["series~kirby · author~chestnut · types~undead", "Contains"],
+  ["series==mario & subseries~door", "Series and subseries"],
   ["is:unparsed · has:history · has:alias", "Card flags"],
 ];

@@ -5,7 +5,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 
 ## What it has
 
-- **Cards**: grid or sortable table; filters for kind, stars, item type, type icons, series, stat ranges, author and flags.
+- **Cards**: grid or sortable table; filters for kind, stars, item type, type icons, series and subseries, stat ranges, author and flags.
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`),
   and also matches card names and aliases.
 - **Card pages**: full image, stat bars, ability text with icons, timing-tag badges (hover for the meaning) and links to
@@ -17,7 +17,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,
   optional starting field), with live checks, several saved decks, share links, text import/export, random fill,
   printable proxies, and a Tabletop Simulator saved-object download.
-- **Stats**: counts by kind, series, type, timing tag, status effect, author and month; how many legal cards there are
+- **Stats**: counts by kind, series, subseries, type, timing tag, status effect, author and month; how many legal cards there are
   for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
   chart that highlights possible balance outliers. Every chart has a table view.
 - **Changes**: recently updated cards with text diffs, the most revised cards, and cards the bot hasn't parsed yet.
@@ -49,6 +49,10 @@ Anyone with write access to this repo can fix card data on the site: the pencil 
 (classic, `public_repo` scope), Edit (e) on a card stages changes in a batch, and **Review and publish** commits the
 whole batch at once. Fields go to `MDW/Card Edits.json`, authors to `MDW/Card Authors.txt`, bans to
 `MDW/Constructed Ban List.txt`. The site rebuilds on that commit; the bot applies the same files on `/update_stats`.
+A subseries (Goombella: series Mario, subseries Paper Mario: The Thousand-Year Door) exists only as an edit (`subseries`;
+the bot doesn't read it yet). The form splits edits **on the card image** (name, stars, types, stats, ability text) from
+**database only** ones, which come from the card's folder or exist only as edits (kind, item type, series, subseries,
+note, aliases, author, duplicate of, checks, constructed ban, hidden).
 Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a card
 several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own bars.
 Admins are the repo owner plus the GitHub logins in `MDW/Website Admins.txt`; they can also ban, hide cards, rename

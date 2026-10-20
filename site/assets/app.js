@@ -170,12 +170,13 @@ function filterCards(p, { facets = true } = {}) {
   let list = pred ? S.cards.filter(pred) : S.cards.slice();
   if (!facets) return list;
   const kinds = csv(p, "kind"), st = csv(p, "stars").map(Number), subs = csv(p, "sub"), types = csv(p, "types"), flags = csv(p, "flags");
-  const series = p.get("series"), author = p.get("author");
+  const series = p.get("series"), subseries = p.get("subseries"), author = p.get("author");
   if (kinds.length) list = list.filter(c => kinds.includes(kindOf(c)));
   if (st.length) list = list.filter(c => st.includes(c.stars));
   if (subs.length) list = list.filter(c => subs.includes(c.subtype));
   if (types.length) list = list.filter(c => types.every(t => (c.types || []).includes(t)));
   if (series) list = list.filter(c => c.series === series);
+  if (subseries) list = list.filter(c => c.subseries === subseries);
   if (author) list = list.filter(c => c.author === author);
   for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => c[k] != null && c[k] >= r[0] && c[k] <= r[1]); }
   const flagFns = { history: c => !!c.hv, unparsed: c => !c.parsed, problems: c => !!(c.problems && c.problems.length), alias: c => !!(c.aliases && c.aliases.length),
@@ -186,7 +187,7 @@ function filterCards(p, { facets = true } = {}) {
 function sortCards(list, sort = "name", dir = "") {
   const key = {
     name: c => c.name.toLowerCase(), stars: c => c.stars ?? -1, total: c => (c.hp == null ? -1 : total(c)), hp: c => c.hp ?? -1, def: c => c.def ?? -1,
-    atk: c => c.atk ?? -1, spd: c => c.spd ?? -1, new: c => c.ts ?? 0, series: c => (c.series || "~").toLowerCase(), type: c => kindOf(c),
+    atk: c => c.atk ?? -1, spd: c => c.spd ?? -1, new: c => c.ts ?? 0, series: c => `${(c.series || "\uffff").toLowerCase()}\u0001${(c.subseries || "\uffff").toLowerCase()}`, type: c => kindOf(c),
     mentioned: c => (S.mentionedBy.get(c.id) || new Set()).size,
   }[sort] || (c => c.name.toLowerCase());
   const desc = dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "mentioned"].includes(sort);
@@ -219,6 +220,12 @@ function renderCards(r) {
   const kindCounts = count(base, kindOf), starCounts = count(base, c => c.stars), subCounts = count(base, c => c.subtype);
   const typeCounts = count(base, c => c.types || []);
   const series = [...new Set(S.cards.map(c => c.series).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const subseries = [...new Map(S.cards.filter(c => c.subseries && (!p.get("series") || c.series === p.get("series")))   // [series, subseries] of the picked series
+    .map(c => [`${c.series || ""}\u0001${c.subseries}`, [c.series || "", c.subseries]])).values()].sort((a, b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0]));
+  const sharedSub = name => subseries.filter(x => x[1] === name).length > 1;     // same name in two series: say which
+  const subOpt = ([ser, sub]) => { const sh = sharedSub(sub), on = sub === p.get("subseries") && (!sh || ser === p.get("series"));
+    return `<option value="${esc(sub)}"${sh ? ` data-series="${esc(ser)}"` : ""}${on ? " selected" : ""}>${esc(sub)}${sh ? ` (${esc(ser || "no series")})` : ""}</option>`; };
+  const subPicked = p.get("subseries") && !subseries.some(([ser, sub]) => sub === p.get("subseries") && (!sharedSub(sub) || ser === p.get("series")));
   const authors = [...new Set(S.cards.map(c => c.author).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const starOpts = [...new Set(S.cards.map(c => c.stars).filter(Boolean))].sort((a, b) => a - b).map(s => [s, `${s}★`]);
   const subOpts = [...new Set(S.cards.map(c => c.subtype).filter(Boolean))].sort().map(s => [s, s[0].toUpperCase() + s.slice(1)]);
@@ -231,6 +238,7 @@ function renderCards(r) {
   for (const s of csv(p, "sub")) active.push(["sub", cap(s), s]);
   for (const t of csv(p, "types")) active.push(["types", t.replace(/_/g, " "), t]);
   if (p.get("series")) active.push(["series", p.get("series")]);
+  if (p.get("subseries")) active.push(["subseries", p.get("subseries")]);
   if (p.get("author")) active.push(["author", `by ${p.get("author")}`]);
   for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
   for (const f of csv(p, "flags")) active.push(["flags", (FLAGS.find(x => x[0] === f) || [f, f])[1], f]);
@@ -246,6 +254,7 @@ function renderCards(r) {
       ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t); const on = csv(p, "types").includes(t);
         return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(t.replace(/_/g, " "))} (${typeCounts.get(t)})" aria-pressed="${on}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
       <h3>Series</h3><select data-action="select-param" data-key="series"><option value="">All series</option>${series.map(s => `<option${s === p.get("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>
+      ${subseries.length || p.get("subseries") ? `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(p.get("subseries"))}</option>` : ""}${subseries.map(subOpt).join("")}</select>` : ""}
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
       <h3>Author</h3><select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === p.get("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>
       <h3>Flags</h3>${FLAGS
@@ -273,7 +282,7 @@ function tableHtml(list, p) {
   const sort = p.get("sort") || "name";
   return `<table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
     ${list.map(c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}</td>
-      <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}</td><td class="num">${c.stars ?? ""}</td>
+      <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
       <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td><td>${date(c.ts)}</td></tr>`).join("")}</tbody></table>`;
 }
@@ -312,7 +321,9 @@ function openCard(id) {
   const inDeck = deckHas(c.id);
   const mentions = [...(S.mentions.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
   const mentionedBy = [...(S.mentionedBy.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
-  const sameSeries = c.series ? S.cards.filter(x => x.series === c.series && x.id !== c.id) : [];
+  const inSub = x => x.subseries === c.subseries && x.series === c.series;
+  const sameSub = c.subseries ? S.cards.filter(x => inSub(x) && x.id !== c.id) : [];
+  const sameSeries = c.series ? S.cards.filter(x => x.series === c.series && x.id !== c.id && !(c.subseries && inSub(x))) : [];
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
@@ -327,6 +338,7 @@ function openCard(id) {
           ${c.subtype ? `<a class="fact" href="#/cards?sub=${encodeURIComponent(c.subtype)}">${esc(cap(c.subtype))}</a>` : ""}
           ${c.stars ? `<a class="fact" href="#/cards?stars=${c.stars}"><span class="stars">${stars(c.stars)}</span> ${c.stars}-star</a>` : ""}
           ${c.series ? `<a class="fact" href="#/cards?series=${encodeURIComponent(c.series)}">${esc(c.series)}</a>` : ""}
+          ${c.subseries ? `<a class="fact" href="#/cards?${c.series ? `series=${encodeURIComponent(c.series)}&` : ""}subseries=${encodeURIComponent(c.subseries)}" data-tip="Subseries">${esc(c.subseries)}</a>` : ""}
           ${c.author ? `<a class="fact" href="#/cards?author=${encodeURIComponent(c.author)}">by ${esc(c.author)}</a>` : ""}
           ${c.ts ? `<span class="fact" data-tip="Last PSD commit">updated ${date(c.ts)}</span>` : ""}
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
@@ -350,7 +362,7 @@ function openCard(id) {
         </div>
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
-          ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.series || ""}`, sameSeries)}
+          ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="history-slot">${historyHtml(c)}</div>
           <div id="versions-slot">${versionsHtml(c)}</div>
         </div>
@@ -587,7 +599,7 @@ function renderCompare(r) {
   const delta = (c, k) => { if (c === first || c[k] == null || first[k] == null) return ""; const d = c[k] - first[k]; return d ? ` <span class="${d > 0 ? "diff-up" : "diff-down"}">${d > 0 ? "+" : ""}${d}</span>` : ""; };
   view.innerHTML = `<div class="toolbar"><span class="result-count">Comparing ${cs.length} cards</span><button type="button" data-action="share-compare">Copy link</button><button type="button" class="ghost" data-action="compare-clear">Clear</button></div>
     <div class="compare" style="--n:${cs.length}">${cs.map(c => `<div class="col panel">${c.img ? `<img decoding="async" ${imgAttrs(c, 300)} alt="" data-open="${c.id}">` : ""}
-      <h3><a href="#/card/${c.id}">${esc(c.name)}</a></h3><p class="muted">${esc(KIND_LABEL[c.type] || c.type)} ${c.stars ? `· ${c.stars}★` : ""} ${c.series ? `· ${esc(c.series)}` : ""}</p>
+      <h3><a href="#/card/${c.id}">${esc(c.name)}</a></h3><p class="muted">${esc(KIND_LABEL[c.type] || c.type)} ${c.stars ? `· ${c.stars}★` : ""} ${c.series ? `· ${esc(c.series)}` : ""} ${c.subseries ? `· ${esc(c.subseries)}` : ""}</p>
       ${["hp", "def", "atk", "spd"].map(k => c[k] != null ? `<div>${k.toUpperCase()} <b>${c[k]}</b>${delta(c, k)}</div>` : "").join("")}
       ${c.hp != null ? `<div>Total <b>${total(c)}</b>${c === first || first.hp == null ? "" : (d => d ? ` <span class="${d > 0 ? "diff-up" : "diff-down"}">${d > 0 ? "+" : ""}${d}</span>` : "")(total(c) - total(first))}</div>` : ""}
       ${c.ability ? `<div class="ability" style="margin-top:8px">${S.renderer.render(c.ability, c.name)}</div>` : ""}
@@ -598,7 +610,7 @@ function renderCompare(r) {
 const STAT_LABELS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
 function shareHead(c) {
   const kind = KIND_LABEL[c.type] || c.type;
-  return [c.stars ? `${c.stars}★ ${kind}` : kind, c.series, c.author ? `by ${c.author}` : ""].filter(Boolean).join(" · ");
+  return [c.stars ? `${c.stars}★ ${kind}` : kind, c.series, c.subseries, c.author ? `by ${c.author}` : ""].filter(Boolean).join(" · ");
 }
 const shareStats = c => STAT_LABELS.filter(([k]) => c[k] != null).map(([k, l]) => `${l} ${c[k]}`).join(" · ");
 const ability = c => plain(c.ability || "").split("\n").map(l => l.trim()).filter(Boolean);
@@ -663,8 +675,9 @@ const actions = {
   "close": () => { if ($("#edit-form")) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
   "toggle-param": el => { const p = parseHash().params, cur = csv(p, el.dataset.key), v = el.dataset.value;
     setParams({ [el.dataset.key]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); },
-  "select-param": el => setParams({ [el.dataset.key]: el.value }),
-  "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: csv(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "" }); if (el.dataset.key === "q") qInput.value = ""; },
+  "select-param": el => { const k = el.dataset.key, ser = el.selectedOptions?.[0]?.dataset.series;      // a shared subseries picks its series too
+    setParams({ [k]: el.value, ...(k === "series" ? { subseries: "" } : {}), ...(ser ? { series: ser } : {}) }); },
+  "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: csv(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "", ...(el.dataset.key === "series" ? { subseries: "" } : {}) }); if (el.dataset.key === "q") qInput.value = ""; },
   "clear-filters": () => { qInput.value = ""; history.replaceState(null, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },

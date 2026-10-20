@@ -4,12 +4,12 @@ import { esc } from "./text.js";
 const API = "https://api.github.com";
 const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden" };
 // same fields as build_site.py and the bot's CardEdits
-const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", stars: "int", types: "list", hp: "int", def: "int",
+const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
   atk: "int", spd: "int", ability: "str", note: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
   creatures: "creatures" };
 const ORDER = Object.keys(FIELDS);
 const STATS = ["hp", "def", "atk", "spd"];
-const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
+const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
   atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
   problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures" };
 const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. Read by the website and the bot (/update_stats).";
@@ -18,8 +18,33 @@ const cardKey = s => (s || "").replace(/_/g, " ").toLowerCase().split(/\s+/).fil
 const alnum = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
+// where a field's unedited value comes from: the PSD, the card's folder, or nowhere (a database-only default)
+const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", atk: "PSD", spd: "PSD", ability: "PSD", creatures: "PSD",
+  type: "folder", subtype: "folder", series: "folder" };
 const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
   : typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
+
+// Card Edits.json with the ops applied: keys sorted, fields in ORDER, one line per card
+export function editsFile(text, ops, at, by, path = "MDW/Card Edits.json") {
+  let data;
+  try { data = text ? JSON.parse(text) : { about: ABOUT, cards: {} }; }
+  catch (e) { throw new Error(`${path} isn't valid JSON (${e.message}). Fix it on GitHub, then publish again.`); }
+  data.cards ||= {};
+  for (const op of ops) {
+    if (!Object.keys(op.set).length && !op.unset.length) continue;
+    const k = Object.keys(data.cards).find(x => cardKey(x) === cardKey(op.key)) ?? op.key;
+    const cur = { ...(data.cards[k] || {}) };
+    for (const f of op.unset) delete cur[f];
+    Object.assign(cur, op.set);
+    delete cur._by; delete cur._at; delete data.cards[k];
+    const fields = [...ORDER.filter(f => f in cur), ...Object.keys(cur).filter(f => !(f in FIELDS))];
+    if (fields.length) data.cards[k] = { ...Object.fromEntries(fields.map(f => [f, cur[f]])), _by: by, _at: at };
+  }
+  const keys = Object.keys(data.cards).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+  const rest = Object.entries(data).filter(([k]) => k !== "cards").map(([k, v]) => `  ${JSON.stringify(k)}: ${JSON.stringify(v)},`);
+  const body = keys.map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(data.cards[k])}`).join(",\n");
+  return `{\n${rest.join("\n")}${rest.length ? "\n" : ""}  "cards": {${keys.length ? `\n${body}\n  ` : ""}}\n}\n`;
+}
 
 export function createEditor(app) {
   const { S } = app;
@@ -158,10 +183,14 @@ export function createEditor(app) {
   // ---- the edit form
   const opts = (list, cur) => list.map(([v, l]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(l)}</option>`).join("");
   const uniq = f => [...new Set(S.all.map(f).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const subseriesOpts = series => {          // that series' subseries first, then all
+    const own = uniq(x => (x.series === series ? x.subseries : null));
+    return [...own, ...uniq(x => x.subseries).filter(v => !own.includes(v))].map(v => `<option value="${esc(v)}">`).join("");
+  };
   const isRule = c => (S.rules || []).includes(c);
   function ruleFormHtml(c) {
     const b = baseOf(c);
-    const reset = f => { const p = psdValue(b, f); return same(value(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="Back to what the page says">↺ PSD: ${esc(show(p))}</button>`; };
+    const reset = f => { const p = psdValue(b, f); return same(value(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="Back to what the page says">↺ Page: ${esc(show(p))}</button>`; };
     const row = (f, label, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${label}</label><div class="ein">${input}${reset(f)}</div></div>`;
     return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
       <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
@@ -179,7 +208,7 @@ export function createEditor(app) {
     const kinds = Object.entries(app.KIND_LABEL).filter(([k]) => k !== "unknown" || k === c.type);
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
     const typeNames = [...new Set(Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name))].sort();
-    const reset = f => { const p = psdValue(b, f); return same(value(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="Back to what the PSD says">↺ PSD: ${esc(show(p))}</button>`; };
+    const reset = f => { const p = psdValue(b, f), src = FROM[f]; return same(value(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="${src ? `Back to what the ${src} says` : "Remove the edit"}">↺ ${src ? src[0].toUpperCase() + src.slice(1) : "Default"}: ${esc(show(p))}</button>`; };
     const row = (f, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${LABEL[f]}</label><div class="ein">${input}${reset(f)}</div></div>`;
     const num = f => `<input id="ef-${f}" type="number" min="0" max="99" step="1" value="${c[f] ?? ""}" placeholder="—">`;
     return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
@@ -187,12 +216,10 @@ export function createEditor(app) {
       <h2>Edit ${esc(c.name)}</h2>
       <p class="muted">Changes go into your batch; publish the batch when you're done. <span class="kbd">${esc(c.key)}</span></p>
       <form id="edit-form" class="edit-form" autocomplete="off">
+        <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD.</p>
         <fieldset><legend>Card</legend>
           ${row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
-          ${row("type", `<select id="ef-type">${opts(kinds, c.type)}</select>`)}
-          ${row("subtype", `<input id="ef-subtype" list="dl-sub" value="${esc(c.subtype || "")}" placeholder="—"><datalist id="dl-sub">${uniq(x => x.subtype).map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
           ${row("stars", num("stars"))}
-          ${row("series", `<input id="ef-series" list="dl-series" value="${esc(c.series || "")}" placeholder="—"><datalist id="dl-series">${uniq(x => x.series).map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
             return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-type="${esc(t)}" aria-pressed="${on}" data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>`)}
         </fieldset>
@@ -203,18 +230,28 @@ export function createEditor(app) {
           <div class="actions"><button type="button" class="ghost" data-creature="split" ${c.creatures?.length > 1 ? "hidden" : ""}>Split into creatures</button>
             <button type="button" class="ghost" data-creature="add" ${c.creatures?.length > 1 ? "" : "hidden"}>+ Creature</button>
             <button type="button" class="ghost" data-creature="remove" ${c.creatures?.length > 1 ? "" : "hidden"}>− Creature</button></div>
-          ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 10 is intended</label>`)}
         </fieldset>
         <fieldset><legend>Text</legend>
           ${row("ability", `<textarea id="ef-ability" rows="6" spellcheck="true">${esc(c.ability || "")}</textarea>
             <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}" alt="${esc(t)}"></button>` : ""; }).join("")}</div>
             <div class="ability preview" id="ef-preview"></div>`)}
-          ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page">${esc(c.note || "")}</textarea>`)}
         </fieldset>
-        <fieldset><legend>Names and credit</legend>
+        <h3 class="egroup">Database only</h3><p class="muted egroup-note">Not on the card image: from the card's folder, or set only here.</p>
+        <fieldset><legend>Kind and series</legend>
+          ${row("type", `<select id="ef-type">${opts(kinds, c.type)}</select>`)}
+          ${row("subtype", `<input id="ef-subtype" list="dl-sub" value="${esc(c.subtype || "")}" placeholder="—"><datalist id="dl-sub">${uniq(x => x.subtype).map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
+          ${row("series", `<input id="ef-series" list="dl-series" value="${esc(c.series || "")}" placeholder="—"><datalist id="dl-series">${uniq(x => x.series).map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
+          ${row("subseries", `<input id="ef-subseries" list="dl-subseries" value="${esc(c.subseries || "")}" placeholder="—"><datalist id="dl-subseries">${subseriesOpts(c.series)}</datalist>`)}
+        </fieldset>
+        <fieldset><legend>Notes, names and credit</legend>
+          ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page">${esc(c.note || "")}</textarea>`)}
           ${row("aliases", `<input id="ef-aliases" value="${esc((c.webAliases || []).join(", "))}" placeholder="comma separated">${(c.aliases || []).filter(a => !(c.webAliases || []).includes(a)).length ? `<span class="muted">Bot aliases: ${esc(c.aliases.filter(a => !(c.webAliases || []).includes(a)).join(", "))}</span>` : ""}`)}
           <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" list="dl-people" value="${esc(c.author || "")}"><datalist id="dl-people">${(S.data.people || []).map(p => `<option value="${esc(p)}">`).join("")}</datalist>`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(value(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
+        </fieldset>
+        <fieldset><legend>Checks</legend>
+          ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 10 is intended</label>`)}
+          ${c.problems?.length || c.problems_ok ? row("problems_ok", `<label class="check"><input id="ef-problems_ok" type="checkbox"${c.problems_ok ? " checked" : ""}> checked, hide them</label> <span class="muted">${esc((b.problems || []).join(" · "))}</span>`) : ""}
         </fieldset>
         <fieldset${admin ? "" : " disabled"}><legend>Admin${admin ? "" : " (admins only)"}</legend>
           <div class="erow" data-row="ban"><label>Banned</label><div class="ein"><label class="check"><input id="ef-banned" type="checkbox"${ban.banned ? " checked" : ""}> in constructed</label>
@@ -222,7 +259,6 @@ export function createEditor(app) {
             <input id="ef-ban-reason" value="${esc(ban.reason)}" placeholder="reason"></div></div>
           ${row("hidden", `<label class="check"><input id="ef-hidden" type="checkbox"${c.hidden ? " checked" : ""}> hide from the website</label>`)}
         </fieldset>
-        ${c.problems?.length || c.problems_ok ? `<fieldset><legend>Parser notes</legend>${row("problems_ok", `<label class="check"><input id="ef-problems_ok" type="checkbox"${c.problems_ok ? " checked" : ""}> checked, hide them</label> <span class="muted">${esc((b.problems || []).join(" · "))}</span>`)}</fieldset>` : ""}
         <div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
         <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div>
       </form></div>`;
@@ -249,7 +285,7 @@ export function createEditor(app) {
     const int = id => (f(id).value.trim() === "" ? null : Math.max(0, Math.round(Number(f(id).value))));
     const str = id => (f(id).value.trim() || null);
     const all = {
-      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: () => str("series"), stars: () => int("stars"),
+      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: () => str("series"), subseries: () => str("subseries"), stars: () => int("stars"),
       types: () => [...document.querySelectorAll("#ef-types .on")].map(x => x.dataset.type),
       ...Object.fromEntries(STATS.map(s => [s, () => int(s)])),
       ability: () => f("ability").value.replace(/\r/g, "").trim() || null, note: () => f("note").value.trim() || null,
@@ -284,7 +320,8 @@ export function createEditor(app) {
   function describe(op) {
     const b = find(op.id) ? baseOf(find(op.id)) : {};
     const out = Object.entries(op.set).map(([k, v]) => `${LABEL[k]}: ${show(value(b, k))} → ${show(v)}`);
-    for (const k of op.unset) out.push(`${LABEL[k]}: back to the PSD (${show(psdValue(b, k))})`);
+    const src = k => (isRule(find(op.id)) ? "the page" : FROM[k] ? `the ${FROM[k]}` : "the default");
+    for (const k of op.unset) out.push(`${LABEL[k]}: back to ${src(k)} (${show(psdValue(b, k))})`);
     if (op.author !== undefined) out.push(`Author → ${op.author || "(from git)"}`);
     if (op.ban) out.push(op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned");
     return out;
@@ -296,6 +333,8 @@ export function createEditor(app) {
     app.modal.innerHTML = formHtml(c);
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
     const form = document.getElementById("edit-form"), ta = document.getElementById("ef-ability");
+    const ser = document.getElementById("ef-series"), dl = document.getElementById("dl-subseries");
+    if (ser && dl) ser.addEventListener("input", () => { dl.innerHTML = subseriesOpts(ser.value.trim()); });
     const update = () => {
       document.getElementById("ef-preview").innerHTML = ta.value.trim() ? app.render(ta.value, c.name) : `<span class="muted">No ability text.</span>`;
       const lines = describe(readForm(c));
@@ -335,26 +374,6 @@ export function createEditor(app) {
   }
 
   // ---- publishing
-  function editsFile(text, ops, at) {
-    let data;
-    try { data = text ? JSON.parse(text) : { about: ABOUT, cards: {} }; }
-    catch (e) { throw new Error(`${files().edits} isn't valid JSON (${e.message}). Fix it on GitHub, then publish again.`); }
-    data.cards ||= {};
-    for (const op of ops) {
-      if (!Object.keys(op.set).length && !op.unset.length) continue;
-      const k = Object.keys(data.cards).find(x => cardKey(x) === cardKey(op.key)) ?? op.key;
-      const cur = { ...(data.cards[k] || {}) };
-      for (const f of op.unset) delete cur[f];
-      Object.assign(cur, op.set);
-      delete cur._by; delete cur._at; delete data.cards[k];
-      const fields = [...ORDER.filter(f => f in cur), ...Object.keys(cur).filter(f => !(f in FIELDS))];
-      if (fields.length) data.cards[k] = { ...Object.fromEntries(fields.map(f => [f, cur[f]])), _by: me.login, _at: at };
-    }
-    const keys = Object.keys(data.cards).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
-    const rest = Object.entries(data).filter(([k]) => k !== "cards").map(([k, v]) => `  ${JSON.stringify(k)}: ${JSON.stringify(v)},`);
-    const body = keys.map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(data.cards[k])}`).join(",\n");
-    return `{\n${rest.join("\n")}${rest.length ? "\n" : ""}  "cards": {${keys.length ? `\n${body}\n  ` : ""}}\n}\n`;
-  }
   function section(lines, name) {
     const s = lines.findIndex(l => l.trim().toLowerCase() === `[${name}]`);
     if (s < 0) return null;
@@ -423,7 +442,7 @@ export function createEditor(app) {
     const ops = Object.values(stage.cards), people = stage.people, F = files();
     const at = new Date().toISOString().replace(/\.\d+Z$/, "Z");
     const edits = {};
-    if (ops.some(o => Object.keys(o.set).length || o.unset.length)) edits[F.edits] = t => editsFile(t, ops, at);
+    if (ops.some(o => Object.keys(o.set).length || o.unset.length)) edits[F.edits] = t => editsFile(t, ops, at, me.login, F.edits);
     if (ops.some(o => o.author !== undefined) || Object.keys(people).length) edits[F.authors] = t => authorsFile(t, ops, people);
     if (ops.some(o => o.ban)) edits[F.banlist] = t => banFile(t, ops);
     if (stage.admins) edits[F.admins] = t => [...(t ?? "").split("\n").filter(l => l.trim().startsWith("#")), ...stage.admins].join("\n") + "\n";

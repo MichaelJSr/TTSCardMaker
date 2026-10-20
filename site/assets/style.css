@@ -266,6 +266,10 @@ textarea { width: 100%; min-height: 120px; border-radius: 8px; border: 1px solid
 .edit-form fieldset { border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; margin: 0 0 12px; }
 .edit-form fieldset:disabled { opacity: .55; }
 .edit-form legend { font-weight: 700; padding: 0 6px; }
+/* on the card image / database only */
+.edit-form .egroup { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 0 2px; }
+.edit-form .egroup:first-child { margin-top: 4px; }
+.edit-form .egroup-note { margin: 0 0 10px; font-size: 13px; }
 .erow { display: grid; grid-template-columns: 120px 1fr; gap: 6px 12px; align-items: start; margin: 8px 0; }
 .erow > label, .erow > span { padding-top: 6px; font-size: 13px; color: var(--ink-2); }
 .ein { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-width: 0; }

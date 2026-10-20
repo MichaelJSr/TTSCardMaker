@@ -23,7 +23,7 @@ function roundedTop(x, y, w, h, r = 4) {
 function niceMax(v) { if (v <= 0) return 1; const p = 10 ** Math.floor(Math.log10(v)); return Math.ceil(v / p) * p; }
 
 /** Horizontal bars. rows: [{label, value, html?, card?}] */
-function hbar(rows, { labelWidth = 150, unit = "cards", color = "var(--s1)" } = {}) {
+function hbar(rows, { labelWidth = 150, unit = "cards", color = "var(--s1)", chars = 24 } = {}) {
   const rowH = 26, bar = 14, W = 560, plotW = W - labelWidth - 48;
   const max = Math.max(1, ...rows.map(r => r.value));
   const H = rows.length * rowH + 4;
@@ -31,7 +31,7 @@ function hbar(rows, { labelWidth = 150, unit = "cards", color = "var(--s1)" } = 
     const y = i * rowH, w = (r.value / max) * plotW;
     const label = r.html
       ? `<foreignObject x="0" y="${y}" width="${labelWidth - 8}" height="${rowH}"><div xmlns="http://www.w3.org/1999/xhtml" class="svg-label">${r.html}</div></foreignObject>`
-      : `<text class="lbl" x="${labelWidth - 8}" y="${y + rowH / 2 + 4}" text-anchor="end">${esc(trunc(r.label, 24))}</text>`;
+      : `<text class="lbl" x="${labelWidth - 8}" y="${y + rowH / 2 + 4}" text-anchor="end">${esc(trunc(r.label, chars))}</text>`;
     return `<g class="row" data-v="${esc(fmt(r.value))} ${esc(unit)}" data-l="${esc(r.label)}"${r.card ? ` data-card="${esc(r.card)}"` : ""}>
       <rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}"/>${label}
       <path class="mark" d="${roundedRight(labelWidth, y + (rowH - bar) / 2, w, bar)}" fill="${color}"/>
@@ -39,6 +39,7 @@ function hbar(rows, { labelWidth = 150, unit = "cards", color = "var(--s1)" } = 
   });
   return `<svg viewBox="0 0 ${W} ${H}" role="img"><line class="axis" x1="${labelWidth}" x2="${labelWidth}" y1="0" y2="${H - 4}"/>${parts.join("")}</svg>`;
 }
+const SUB_BARS = { labelWidth: 250, chars: 36 };           // subseries names are long ("Paper Mario: The Thousand-Year Door")
 const trunc = (s, n) => (s.length > n ? s.slice(0, n - 1) + "…" : s);
 
 /** Vertical columns: [{label, value}] (single series; label every Nth tick). */
@@ -164,11 +165,14 @@ export function renderStats(root, ctx, params) {
   const count = (arr, key) => { const m = new Map(); for (const x of arr) { const k = key(x); if (k == null || k === "") continue; m.set(k, (m.get(k) || 0) + 1); } return m; };
   const desc = m => [...m.entries()].sort((a, b) => b[1] - a[1]);
 
+  const subKey = c => (c.subseries ? `${c.series || ""}\u0001${c.subseries}` : null);     // a subseries belongs to its series
+  const subCount = new Set(pool.map(subKey).filter(Boolean)).size;
+
   // KPI tiles
   const latest = pool.reduce((m, c) => Math.max(m, c.ts || 0), 0);
   const kpis = [
     ["Cards", pool.length], ["Creatures", pool.filter(c => c.type === "creature").length], ["Items", pool.filter(c => c.type === "item").length],
-    ["Series", new Set(pool.map(c => c.series).filter(Boolean)).size], ["Authors", new Set(pool.map(c => c.author).filter(Boolean)).size],
+    ["Series", new Set(pool.map(c => c.series).filter(Boolean)).size], ...(subCount ? [["Subseries", subCount]] : []), ["Authors", new Set(pool.map(c => c.author).filter(Boolean)).size],
     ["Banned (constructed)", pool.filter(c => banned.has(c.id)).length],
     ["Last card update", latest ? new Date(latest * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "—"],
   ];
@@ -184,6 +188,21 @@ export function renderStats(root, ctx, params) {
   const rest = ser.slice(15).reduce((s, [, v]) => s + v, 0);
   if (rest) top.push({ label: `Other (${ser.length - 15} series)`, value: rest });
   if (top.length) charts.push(card("series", "Creatures by series", `${ser.length} series`, hbar(top, { labelWidth: 190 }), table(["Series", "Creatures"], ser.map(([k, v]) => [k, v]))));
+
+  // 2b subseries: of the picked series (cards without one as their own row), else the top ones overall
+  if (subCount && series) {
+    const rows = desc(count(pool, c => c.subseries)).map(([k, v]) => ({ label: k, value: v }));
+    const none = pool.filter(c => !c.subseries).length;
+    if (none) rows.push({ label: "No subseries", value: none });
+    charts.push(card("subseries", `${series} by subseries`, `${subCount} subseries`, hbar(rows, SUB_BARS), table(["Subseries", "Cards"], rows.map(r => [r.label, r.value]))));
+  } else if (subCount) {
+    const all = desc(count(pool, subKey)).map(([k, v]) => { const [s, sub] = k.split("\u0001"); return { label: sub, series: s, value: v }; });
+    const shared = new Set(all.filter((r, i) => all.findIndex(x => x.label === r.label) !== i).map(r => r.label));   // same name in two series
+    const bars = all.slice(0, 15).map(r => { if (!shared.has(r.label)) return r;             // keep the series readable
+      const s = r.series || "no series"; return { ...r, label: `${trunc(r.label, SUB_BARS.chars - s.length - 3)} (${s})` }; });
+    charts.push(card("subseries", "Top subseries", `${subCount} subseries; pick a series for its breakdown`, hbar(bars, SUB_BARS),
+      table(["Subseries", "Series", "Cards"], all.map(r => [r.label, r.series, r.value]), 2)));
+  }
 
   // 3 starting-hand depth: for each star level the constructed hand uses (rulebook "03 Setting Up"), how many legal
   //   cards there are to pick from. Not banned, parsed by the bot; the same pool the deck builder offers.
