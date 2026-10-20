@@ -4,6 +4,10 @@ import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
 
+// pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
+const baseEl = document.querySelector("base");
+if (baseEl) baseEl.setAttribute("href", new URL(baseEl.getAttribute("href"), location.href).href);
+const ROOT = new URL("./", document.baseURI).href;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const view = $("#view"), modal = $("#modal"), tip = $("#tooltip"), toastEl = $("#toast"), qInput = $("#q");
@@ -38,7 +42,8 @@ const date = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { yea
 const isStatus = c => c.type === "debuff" || c.type === "buff";
 const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : "");             // item types read "Support", as in the rulebook
 const kindOf = c => (isStatus(c) ? "status" : c.type);
-const shareUrl = id => new URL(`c/${id}/`, document.baseURI).href;
+const shareUrl = id => `${ROOT}c/${encodeURIComponent(id)}/`;
+const deckUrl = d => `${ROOT}d/#/deck/${D.encode(d)}`;
 const iconFor = name => S.icons[norm(name)];
 const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
 
@@ -72,9 +77,8 @@ async function init() {
   editor.init();                                           // applies staged edits, then derive()
   S.decks = D.loadDecks();
   updateDeckCount();
-  const meta = document.querySelector('meta[name="card"]');
-  if (meta && !location.hash) history.replaceState(null, "", `#/card/${meta.content}`);
   window.addEventListener("hashchange", route);
+  window.addEventListener("popstate", route);
   route();
 }
 
@@ -116,12 +120,22 @@ const editor = createEditor({
 // ---- routing ---------------------------------------------------------------------------------------
 function parseHash(hash = location.hash) {
   const h = hash.replace(/^#\/?/, "");
+  if (!h && location.href.startsWith(ROOT)) {                 // share URL: c/<id>/
+    const m = location.href.slice(ROOT.length).match(/^c\/([^/?#]+)/);
+    if (m) return { name: "card", arg: decodeURIComponent(m[1]), params: new URLSearchParams() };
+  }
   const [path, query = ""] = h.split("?");
   const parts = path.split("/").filter(Boolean).map(decodeURIComponent);
   return { name: parts[0] || "cards", arg: parts.slice(1).join("/"), params: new URLSearchParams(query) };
 }
+// address bar shows the shareable URL: c/<id>/ for cards, d/#/deck/… for shared hands
+function syncUrl(r) {
+  const want = r.name === "card" ? shareUrl(r.arg) : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
+  if (location.href !== want) history.replaceState(history.state, "", want);
+}
 function route() {
   const r = parseHash();
+  syncUrl(r);
   hideTip();
   if (r.name === "card") {
     if (!S.renderedHash) renderView({ name: "cards", arg: "", params: new URLSearchParams() }, "#/cards");
@@ -324,8 +338,7 @@ function openCard(id) {
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
         <div class="actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
-          <button type="button" data-action="copy-link" data-id="${c.id}">Copy link <span class="kbd">c</span></button>
-          <button type="button" data-action="copy-text" data-id="${c.id}">Copy text</button>
+          <button type="button" data-action="share" data-id="${c.id}">Share <span class="kbd">s</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
           <button type="button" data-action="edit-card" data-id="${c.id}">Edit <span class="kbd">e</span></button>
           ${c.png ? `<a class="fact" href="${esc(fullUrl(c))}" target="_blank" rel="noopener">Full image</a>` : ""}
@@ -497,6 +510,7 @@ function renderDeck(r) {
         <button type="button" class="danger" data-action="deck-clear">Clear</button></div></div>`}
       <div class="panel"><h3>Share & export</h3><div class="actions">
         <button type="button" data-action="deck-share">Copy share link</button>
+        <button type="button" data-action="deck-discord" title="Card names as links, ready to paste">Copy for Discord</button>
         <button type="button" data-action="deck-copy-text">Copy as text</button>
         <button type="button" data-action="deck-tts" title="Tabletop Simulator saved object">Download for TTS</button>
         <button type="button" data-action="deck-print">Print proxies</button></div>
@@ -575,6 +589,59 @@ function renderCompare(r) {
       <p><button type="button" class="ghost" data-action="compare-remove" data-id="${c.id}">Remove</button></p></div>`).join("")}</div>`;
 }
 
+// ---- sharing (same text as the share pages' link previews) -----------------------------------------
+const STAT_LABELS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
+function shareHead(c) {
+  const kind = KIND_LABEL[c.type] || c.type;
+  return [c.stars ? `${c.stars}★ ${kind}` : kind, c.series, c.author ? `by ${c.author}` : ""].filter(Boolean).join(" · ");
+}
+const shareStats = c => STAT_LABELS.filter(([k]) => c[k] != null).map(([k, l]) => `${l} ${c[k]}`).join(" · ");
+const ability = c => plain(c.ability || "").split("\n").map(l => l.trim()).filter(Boolean);
+function shareText(c) {
+  const out = [shareHead(c), shareStats(c), ability(c).join("\n")].filter(Boolean).join("\n");
+  return out.length <= 300 ? out : `${out.slice(0, 297).replace(/\s+\S*$/, "")}…`;
+}
+const md = s => String(s).replace(/([\\*_~`|[\]])/g, "\\$1");
+const mdLink = c => `[${md(c.name)}](<${shareUrl(c.id)}>)`;          // <…> stops Discord's preview
+function cardDiscord(c) {
+  return [`**${mdLink(c)}** · ${shareHead(c)}`, shareStats(c), ...ability(c).map(l => `> ${md(l)}`)].filter(Boolean).join("\n");
+}
+function deckDiscord(d) {
+  const v = D.validate(d, S.byId, S.banned), cards = d.cards.map(id => S.byId.get(id)).filter(Boolean), field = S.byId.get(d.field);
+  const build = link => [`**${md(d.name)}** · ${v.count}/${v.slots} cards · ${v.complete ? "✅ legal" : "not legal yet"}`,
+    ...D.HAND.map(g => { const cs = cards.filter(c => c.type === g.kind).sort((a, b) => a.stars - b.stars); return cs.length ? `**${g.label}:** ${cs.map(link).join(", ")}` : ""; }),
+    field ? `**Field:** ${link(field)}` : "", `[Open the hand](${deckUrl(d)})`].filter(Boolean).join("\n");
+  const text = build(mdLink);
+  return text.length <= 2000 ? text : build(c => md(c.name));        // Discord's limit
+}
+async function copyImage(c) {
+  if (!c?.img || !window.ClipboardItem) { toast("Your browser can't copy images; use Full image"); return; }
+  const blob = new Promise((res, rej) => {
+    const im = new Image(); im.crossOrigin = "anonymous";
+    im.onload = () => { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); cv.toBlob(res, "image/png"); };
+    im.onerror = rej; im.src = img(c, 720);
+  });
+  try { await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]); toast("Copied image"); }
+  catch { toast("Couldn't copy the image"); }
+}
+function openShare(id) {
+  const c = S.byId.get(id);
+  if (!c) return;
+  const url = shareUrl(c.id), text = shareText(c);
+  showDialog(`<h3>Share ${esc(c.name)}</h3>
+    <div class="share-url"><input id="share-url" readonly value="${esc(url)}" aria-label="Card link"><button type="button" class="primary" data-action="copy-link" data-id="${c.id}">Copy link</button></div>
+    <p class="muted">Paste the link in Discord for a preview like this:</p>
+    <div class="embed" style="--c:${esc(c.color || "#3987e5")}"><div class="embed-site">Impossibility Simulator</div><div class="embed-title">${esc(c.name)}</div>
+      <div class="embed-desc">${esc(text).replace(/\n/g, "<br>")}</div>${c.img ? `<img src="${img(c, 360)}" alt="">` : ""}</div>
+    <div class="actions">
+      <button type="button" data-action="share-discord" data-id="${c.id}" title="Name as a link, stats and text, without a preview">Copy as Discord message</button>
+      ${c.img ? `<button type="button" data-action="share-image" data-id="${c.id}">Copy image</button>` : ""}
+      <button type="button" data-action="share-text" data-id="${c.id}">Copy plain text</button>
+      ${navigator.share ? `<button type="button" data-action="share-native" data-id="${c.id}">Share…</button>` : ""}
+    </div>`);
+  $("#share-url").addEventListener("focus", e => e.target.select());
+}
+
 // ---- interactions ----------------------------------------------------------------------------------
 function refresh(id) {
   const inDeck = deckHas(id);
@@ -606,7 +673,8 @@ const actions = {
   "pick": el => openPicker(el.dataset.tier),
   "deck-random": () => { D.randomFill(deck(), S.cards, S.banned); D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
   "deck-clear": () => { if (!confirm("Remove every card from this deck?")) return; const d = deck(); d.cards = []; d.field = null; D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
-  "deck-share": () => copy(new URL(`#/deck/${D.encode(S.shared || deck())}`, document.baseURI).href, "share link"),
+  "deck-share": () => copy(deckUrl(S.shared || deck()), "share link"),
+  "deck-discord": () => copy(deckDiscord(S.shared || deck()), "hand for Discord"),
   "deck-copy-text": () => copy(D.toText(S.shared || deck(), S.byId), "deck list"),
   "deck-tts": () => { const d = S.shared || deck(); D.download(`${d.name.replace(/[^\w\- ]+/g, "") || "hand"}.json`, JSON.stringify(D.ttsSave(d, S.byId, S.data.raw), null, 2)); toast("Downloaded Tabletop Simulator saved object"); },
   "deck-print": () => { if (!D.printSheet(S.shared || deck(), S.byId, S.data.raw)) toast("Allow pop-ups to print proxies"); },
@@ -616,8 +684,12 @@ const actions = {
   "deck-dup": () => { const d = deck(); D.newDeck(S.decks, `${d.name} (copy)`, d.cards.slice(), d.field); updateDeckCount(); renderDeck(parseHash()); },
   "deck-delete": () => { const d = deck(); if (S.decks.length < 2 || !confirm(`Delete “${d.name}”?`)) return; S.decks = S.decks.filter(x => x !== d); D.saveDecks(S.decks); D.setActive(S.decks[0]); updateDeckCount(); renderDeck(parseHash()); },
   "save-shared": () => { const s = S.shared; D.newDeck(S.decks, s.name, s.cards.filter(id => S.byId.has(id)), s.field); updateDeckCount(); location.hash = "#/deck"; toast("Saved to your decks"); },
-  "copy-link": el => copy(shareUrl(el.dataset.id), "card link"),
-  "copy-text": el => { const c = S.byId.get(el.dataset.id); copy(`${c.name}${c.stars ? ` (${c.stars}★ ${c.type})` : ""}\n${plain(c.ability || "")}`, "card text"); },
+  "copy-link": el => copy(shareUrl(el.dataset.id), "link: paste it in Discord"),
+  "share": el => openShare(el.dataset.id),
+  "share-discord": el => copy(cardDiscord(S.byId.get(el.dataset.id)), "card for Discord"),
+  "share-text": el => { const c = S.byId.get(el.dataset.id); copy(`${c.name} · ${shareText(c)}`, "card text"); },
+  "share-image": el => copyImage(S.byId.get(el.dataset.id)),
+  "share-native": el => { const c = S.byId.get(el.dataset.id); navigator.share({ title: c.name, text: shareText(c), url: shareUrl(c.id) }).catch(() => {}); },
   "compare-add": el => { const id = el.dataset.id; if (!S.compare.includes(id)) S.compare = [...S.compare, id].slice(-5); toast(`Comparing ${S.compare.length} card${S.compare.length > 1 ? "s" : ""} (Compare is in the toolbar)`); openCard(id); },
   "compare-remove": el => { S.compare = S.compare.filter(x => x !== el.dataset.id); location.hash = `#/compare/${S.compare.join(",")}`; },
   "compare-clear": () => { S.compare = []; location.hash = "#/cards"; },
@@ -661,7 +733,7 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card"], ["d", "Add to / remove from deck"],
-  ["c", "Copy card link"], ["x", "Add to comparison"], ["e", "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–5", "Cards · Rulebook · Deck · Stats · Changes"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+  ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–5", "Cards · Rulebook · Deck · Stats · Changes"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 $("#edit").addEventListener("click", () => actions["edit-hub"]());
 
@@ -683,7 +755,8 @@ document.addEventListener("keydown", e => {
   else if (/^[1-5]$/.test(e.key) && modal.hidden) location.hash = ["#/cards", "#/rules", "#/deck", "#/stats", "#/changes"][+e.key - 1];
   else if (inCard && (e.key === "ArrowLeft" || e.key === "ArrowRight")) { const link = $(`[data-nav="${e.key === "ArrowLeft" ? "prev" : "next"}"]`, modal); if (link) location.hash = link.getAttribute("href"); }
   else if (inCard && e.key === "d") toggleDeck(id);
-  else if (inCard && e.key === "c") copy(shareUrl(id), "card link");
+  else if (inCard && e.key === "c") copy(shareUrl(id), "link: paste it in Discord");
+  else if (inCard && e.key === "s") openShare(id);
   else if (inCard && e.key === "x") actions["compare-add"]({ dataset: { id } });
   else if (inCard && e.key === "e" && !$("#edit-form")) { e.preventDefault(); editor.open(id); }
   else if (e.key === "Enter" && document.activeElement?.dataset?.open) location.hash = `#/card/${document.activeElement.dataset.open}`;

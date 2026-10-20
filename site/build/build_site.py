@@ -55,6 +55,8 @@ BOT_RAW = f"https://raw.githubusercontent.com/{BOT_REPO}/main/"
 IMAGE_SIZES = {240: 80, 360: 78, 720: 75}    # width -> WebP quality. 240/360: grid at 1x/2x; 720: card view
 IMAGE_WIDTH = 360                            # the size whose dimensions go into cards.json (aspect ratio)
 ICON_SIZE = 96
+OG_WIDTH = 480                               # link-preview image (Discord shows ≤ 300 px tall)
+SITE_NAME = "Impossibility Simulator"
 MIN_CARDS = 100                              # fewer cards than this in stats.pkl means a broken download
 # the game's names for each card_type (rulebook: creature/item decks, field cards, N.M.E. items, auxiliary decks)
 KIND_LABEL = {"creature": "Creature", "item": "Item", "field": "Field card", "minion": "Minion", "nme": "N.M.E. item",
@@ -181,7 +183,9 @@ def image_bytes(path):
 
 
 def image_names(sha):
-    return {w: f"{sha[:16]}-{w}.webp" for w in IMAGE_SIZES}
+    names = {w: f"{sha[:16]}-{w}.webp" for w in IMAGE_SIZES}
+    names["og"] = f"{sha[:16]}-og.jpg"
+    return names
 
 
 def make_images(path, sha):
@@ -198,8 +202,65 @@ def make_images(path, sha):
             im.thumbnail((w, w * 3), Image.LANCZOS)
             im.save(cached[w] + ".tmp", "WEBP", quality=quality, method=4)
             os.replace(cached[w] + ".tmp", cached[w])
+    if not os.path.exists(cached["og"]):       # from the 720 px one: no PNG download
+        with Image.open(cached[720]) as im:
+            im = im.convert("RGBA")
+            im.thumbnail((OG_WIDTH, OG_WIDTH * 3), Image.LANCZOS)
+            flat = Image.new("RGB", im.size, (13, 13, 13))
+            flat.paste(im, mask=im.getchannel("A"))
+            flat.save(cached["og"] + ".tmp", "JPEG", quality=80, optimize=True, progressive=True)
+            os.replace(cached["og"] + ".tmp", cached["og"])
     with Image.open(cached[IMAGE_WIDTH]) as im:
         return sha[:16], im.width, im.height
+
+
+def accent_color(path):
+    """The card's most common vivid color, for embed bars."""
+    with Image.open(path) as im:
+        px = list(im.convert("RGB").resize((40, 80)).getdata())
+    buckets = {}
+    for r, g, b in px:
+        if max(r, g, b) >= 70 and max(r, g, b) - min(r, g, b) >= 60:
+            buckets.setdefault((r // 40, g // 40, b // 40), []).append((r, g, b))
+    if not buckets:
+        return None
+    top = max(buckets.values(), key=len)
+    return "#%02x%02x%02x" % tuple(sum(c[i] for c in top) // len(top) for i in range(3))
+
+
+def og_size(path):
+    with Image.open(path) as im:
+        return im.size
+
+
+def share_text(c):
+    """Kind line, stats line, ability: the card's link-preview description."""
+    kind = KIND_LABEL.get(c["type"], c["type"].title())
+    head = " · ".join(filter(None, [f"{c['stars']}★ {kind}" if c.get("stars") else kind, c.get("series"), f"by {c['author']}" if c.get("author") else None]))
+    stats = " · ".join(f"{label} {c[k]}" for k, label in (("hp", "HP"), ("def", "DEF"), ("atk", "ATK"), ("spd", "SPD")) if c.get(k) is not None)
+    text = re.sub(r"\[([^\[\]:]+)(?::\s*(no|tint|sticker))?\]",
+                  lambda m: ("non-" if m.group(2) == "no" else "") + m.group(1).replace("_", " ").title(), c.get("ability", "") or "")
+    text = "\n".join(" ".join(line.split()) for line in text.splitlines() if line.strip())
+    out = "\n".join(filter(None, [head, stats, text]))
+    return out if len(out) <= 300 else out[:297].rsplit(" ", 1)[0] + "…"
+
+
+def site_banner(cards, path):
+    """1200×630 link-preview image: a fan of 5★ creatures (a stable pick)."""
+    pool = [c for c in cards if c.get("img") and c["type"] == "creature" and c.get("stars") == 5 and not c.get("dup")]
+    picks = sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6]
+    canvas = Image.new("RGB", (1200, 630), (13, 13, 13))
+    ims = []
+    for c in picks:
+        with Image.open(os.path.join(DIST, "thumbs", f"{c['img']}-720.webp")) as im:
+            im = im.convert("RGBA")
+            im.thumbnail((300, 570), Image.LANCZOS)
+            ims.append(im)
+    if ims:
+        step = (1200 - 40 - ims[-1].width) / max(1, len(ims) - 1)
+        for i, im in enumerate(ims):
+            canvas.paste(im, (20 + round(i * step), (630 - im.height) // 2), im)
+    canvas.save(path, "JPEG", quality=85, optimize=True, progressive=True)
 
 
 def build_icons(tree):
@@ -636,6 +697,9 @@ def main():
     pruned = [n for n in os.listdir(cache_dir) if n not in used]
     for n in pruned:
         os.remove(os.path.join(cache_dir, n))
+    for e in jobs:
+        if e.get("img"):
+            e["color"] = accent_color(os.path.join(cache_dir, image_names(tree[e["png"]])[240]))
     made = len(os.listdir(cache_dir)) - cached_before + len(pruned)
     log(f"images: {len(jobs)} cards, {made} new files, {len(pruned)} unused pruned, {len(failed)} failed")
 
@@ -716,30 +780,52 @@ def main():
             fh.write(text)
     template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', rf'\1?v={version}"',
                       open(os.path.join(SITE, "index.html"), encoding="utf-8").read()).replace("<!--BUILD-->", version)
+    site_banner(cards, os.path.join(DIST, "og.jpg"))
+    def og_tags(title, desc, url, image="", size=None, alt=""):
+        tags = [f'<meta property="og:site_name" content="{SITE_NAME}">', '<meta property="og:type" content="website">',
+                f'<meta property="og:title" content="{html.escape(title)}">', f'<meta property="og:description" content="{html.escape(desc)}">',
+                f'<meta name="twitter:card" content="{"summary_large_image" if image else "summary"}">']
+        if url:
+            tags += [f'<meta property="og:url" content="{html.escape(url)}">', f'<link rel="canonical" href="{html.escape(url)}">']
+        if image:
+            tags.append(f'<meta property="og:image" content="{html.escape(image)}">')
+            if size:
+                tags += [f'<meta property="og:image:width" content="{size[0]}">', f'<meta property="og:image:height" content="{size[1]}">']
+            if alt:
+                tags.append(f'<meta property="og:image:alt" content="{html.escape(alt)}">')
+        return "\n".join(tags)
+    site_desc = "Every card, the rulebook, a starting-hand builder and stats."
+    site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(template.replace("<!--HEAD-->", '<base href="./">'))
+        fh.write(template.replace("<!--HEAD-->", '<base href="./">\n' + site_og))
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
-        fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">'))   # absolute: the 404 page can be served at any depth
+        fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">\n' + site_og))   # absolute: the 404 page can be served at any depth
+    os.makedirs(os.path.join(DIST, "d"))                # shared hands: d/#/deck/<code>
+    with open(os.path.join(DIST, "d", "index.html"), "w", encoding="utf-8") as fh:
+        fh.write(template.replace("<!--HEAD-->", '<base href="../">\n' + og_tags(f"Shared starting hand · {SITE_NAME}",
+                 "Open to see the hand, check it and save a copy.", f"{SITE_URL}/d/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))))
+    default_meta = ('<meta name="theme-color" content="#0d0d0d">', '<meta name="description" content="Every Impossibility Simulator card, the rulebook and a starting-hand builder.">')
     for c in cards:
-        text = re.sub(r"\[([^\[\]:]+)(?::\s*(no|tint|sticker))?\]",
-                      lambda m: ("non-" if m.group(2) == "no" else "") + m.group(1).replace("_", " ").title(), c.get("ability", "") or "")
-        bits = [KIND_LABEL.get(c["type"], c["type"].title())] + ([f"{c['stars']}★"] if c.get("stars") else []) + ([c["series"]] if c.get("series") else [])
-        desc = " · ".join(bits) + (" — " + " ".join(text.split()) if text else "")
-        image = RAW + quote(c["png"]) if c.get("png") else ""
-        url = f"{SITE_URL}/c/{c['id']}/" if SITE_URL else ""
+        if c.get("hidden"):
+            continue
+        desc = share_text(c)
+        og = os.path.join(DIST, "thumbs", f"{c['img']}-og.jpg") if c.get("img") else ""
+        if og and SITE_URL:
+            image, size = f"{SITE_URL}/thumbs/{c['img']}-og.jpg", og_size(og)
+        else:
+            image, size = (RAW + quote(c["png"]) if c.get("png") else ""), None
         head = "\n".join([
             '<base href="../../">',
             f'<meta name="card" content="{c["id"]}">',
-            f'<meta property="og:title" content="{html.escape(c["name"])}">',
-            f'<meta property="og:description" content="{html.escape(desc[:300])}">',
-            f'<meta property="og:image" content="{html.escape(image)}">' if image else "",
-            f'<meta property="og:url" content="{html.escape(url)}">' if url else "",
-            '<meta property="og:type" content="website">',
-            '<meta name="twitter:card" content="summary_large_image">',
-            f'<title>{html.escape(c["name"])} · Impossibility Simulator</title>',
+            og_tags(c["name"], desc, f"{SITE_URL}/c/{c['id']}/" if SITE_URL else "", image, size, f"{c['name']} card"),
+            f'<meta name="theme-color" content="{c.get("color") or "#3987e5"}">',
+            f'<meta name="description" content="{html.escape(desc)}">',
+            f'<title>{html.escape(c["name"])} · {SITE_NAME}</title>',
         ])
         os.makedirs(os.path.join(DIST, "c", c["id"]))
         page = template.replace("<!--HEAD-->", head).replace("<title>Impossibility Simulator · Card Browser</title>", "")
+        for tag in default_meta:
+            page = page.replace(tag, "")
         with open(os.path.join(DIST, "c", c["id"], "index.html"), "w", encoding="utf-8") as fh:
             fh.write(page)
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
