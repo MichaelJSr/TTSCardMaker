@@ -1,4 +1,34 @@
 {
   "about": "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. Read by the website and the bot (/update_stats).",
-  "cards": {}
+  "cards": {
+    "Clot Black": {"name":"Black Clot","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Clot Blood": {"name":"Blood Clot","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Clot Bone": {"name":"Bone Clot","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Clot Gold": {"name":"Gold Clot","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Clot White": {"name":"White Clot","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Ingredient Desert Limes": {"name":"Desert Limes","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Ingredient Distillery Dough": {"name":"Distillery Dough","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Ingredient Gnome Berries": {"name":"Gnome Berries","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Ingredient Icy Sugar Cubes": {"name":"Icy Sugar Cubes","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Ingredient Pineapple Mint": {"name":"Pineapple Mint","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Ingredient Wondertart": {"name":"Wondertart","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Kyle": {"name":"hdckighfkvhvgmk","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "NME Stock": {"name":"NME Stock™","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Papyrus": {"name":"The Great Papyrus","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD01Red Bloon": {"name":"Red Bloon","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD02Black Bloon": {"name":"Black Bloon","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD03White Bloon": {"name":"White Bloon","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD04Zebra Bloon": {"name":"Zebra Bloon","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD05Lead Bloon": {"name":"Lead Bloon","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD06Rainbow Bloon": {"name":"Rainbow Bloon","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD07Ceramic Bloon": {"name":"Ceramic Bloon","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD08MOAB": {"name":"M.O.A.B.","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD09DDT": {"name":"D.D.T.","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD10BFB": {"name":"B.F.B.","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD11ZOMG": {"name":"Z.O.M.G.","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD12BAD": {"name":"B.A.D.","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Raw Cock": {"name":"Raw Kawk","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Sans": {"name":"snas.","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "Thunderfury Blessed Blade of the Windseeker": {"name":"Thunderfury: Blessed Blade of the Windseeker","_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"}
+  }
 }
