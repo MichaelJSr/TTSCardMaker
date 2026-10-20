@@ -1,0 +1,70 @@
+# Keeps the Tabletop Simulator save (TTS/Impossibility Simulator.json) current: image links pinned to the commit that
+# last changed each file, new cards added to their decks (TTS/decks.json), names from the card browser.
+# Runs the bot's updater (AutoCroissant commands/tts_save.py) and commits the save when it changed.
+name: TTS save
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.png"
+      - "TTS/decks.json"
+      - "MDW/Card Edits.json"
+  schedule:
+    - cron: "41 11 * * *"    # daily: picks up card-browser names the push ran ahead of
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tts-save
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /TTS/
+            /MDW/Card Edits.json
+
+      - uses: actions/checkout@v7
+        with:
+          repository: bobberlington/AutoCroissant
+          path: bot
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /commands/__init__.py
+            /commands/tts_save.py
+            /commands/repo_history.py
+            /global_config.py
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - run: pip install -q requests
+
+      # The updater reads the checkout at ~/Desktop/TTSCardMaker and keeps a bare blobless history clone at
+      # ~/Documents/TTSCardMaker-history.git (made on first use); the report lands next to the save.
+      - name: Update the save
+        run: |
+          mkdir -p "$HOME/Desktop" "$HOME/Documents"
+          ln -s "$GITHUB_WORKSPACE" "$HOME/Desktop/TTSCardMaker"
+          cd bot
+          python -m commands.tts_save "$GITHUB_WORKSPACE/TTS/Impossibility Simulator.json" | tee "$GITHUB_WORKSPACE/tts-save-report.md"
+
+      - name: Commit the save
+        run: |
+          if git diff --quiet -- "TTS/Impossibility Simulator.json"; then echo "No changes."; exit 0; fi
+          msg=$(grep -E '^## ' tts-save-report.md | sed -E 's/^## (.*) \(([0-9]+)\)$/\2 \1/; s/^## //' | head -4 | paste -sd ',' - | sed 's/,/, /g')
+          git config user.name AutoCroissant
+          git config user.email autocroissant@gmail.com
+          git add "TTS/Impossibility Simulator.json"
+          git commit -m "TTS save: ${msg:-updated}"
+          git push
