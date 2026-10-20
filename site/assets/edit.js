@@ -61,7 +61,11 @@ export function createEditor(app) {
       const tree = [];
       for (const [path, edit] of Object.entries(edits)) {
         const old = await readFile(path, head), next = edit(old);
-        if (next != null && next !== old) tree.push({ path, mode: "100644", type: "blob", content: next });
+        if (next == null || next === old) continue;
+        const entry = { path, mode: "100644", type: "blob" };
+        if (next.length > 1e6) entry.sha = (await gh(`/repos/${repo}/git/blobs`, { method: "POST", body: { content: next, encoding: "utf-8" } })).sha;   // the TTS save
+        else entry.content = next;
+        tree.push(entry);
       }
       if (!tree.length) return null;
       const t = await gh(`/repos/${repo}/git/trees`, { method: "POST", body: { base_tree: base.tree.sha, tree } });
@@ -553,5 +557,7 @@ export function createEditor(app) {
     },
     open: openForm,
     refresh: preview,
+    commit: commitFiles,
+    readFile,
   };
 }

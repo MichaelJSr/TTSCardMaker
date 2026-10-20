@@ -208,6 +208,18 @@ del { background: color-mix(in srgb, var(--danger) 30%, transparent); border-rad
 textarea { width: 100%; min-height: 120px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface-2); padding: 8px; }
 .picker { max-height: 60vh; overflow: auto; }
 
+/* ---- table (the TTS save) ---- */
+.table-page { max-width: 1180px; margin: auto; }
+.table-page table.data td:first-child a { font-weight: 600; }
+.bag { padding: 6px 0; border-bottom: 1px solid var(--grid); } .bag summary { cursor: pointer; } .bag p { margin: 6px 0 2px 16px; font-size: 14px; }
+.tcard .tcard-sub { display: flex; gap: 6px; align-items: center; margin-top: 4px; font-size: 12px; min-height: 20px; }
+.tcard .tcard-sub .muted { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+a.tile { display: block; color: inherit; } a.tile:hover { text-decoration: none; } a.tile .sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+.tcard .tools { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 2px; }
+.scroll-x { overflow-x: auto; }
+.tcard .tools button { padding: 2px 6px; font-size: 12px; } .tcard .tools button.icon { width: 26px; height: 26px; font-size: 13px; }
+.tcard.added .tile, .tcard.moved .tile { outline: 2px solid var(--accent); }
+
 /* ---- stats ---- */
 .kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
 .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }

@@ -3,6 +3,7 @@ import { esc, norm, makeRenderer, plain, diffWords, tagInfo, badgeHtml, GROUP_NA
 import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
+import { createTable } from "./table.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -75,6 +76,7 @@ async function init() {
   S.all = S.data.cards; S.rules = null; S.icons = S.data.icons;
   for (const c of S.all) S.byId.set(c.id, c);
   editor.init();                                           // applies staged edits, then derive()
+  table.init();
   S.decks = D.loadDecks();
   updateDeckCount();
   window.addEventListener("hashchange", route);
@@ -116,6 +118,7 @@ const editor = createEditor({
   openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
   iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
 });
+const table = createTable({ S, view, editor, tileHtml, openPicker, showDialog, toast, closeModal, rerender, onTable: () => parseHash().name === "table" });
 
 // ---- routing ---------------------------------------------------------------------------------------
 function parseHash(hash = location.hash) {
@@ -150,9 +153,9 @@ function renderView(r, hash) {
   S.renderedHash = hash; S.listHash = hash;
   $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === r.name || (r.name === "compare" && a.dataset.tab === "cards")));
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
-  const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare };
+  const views = { cards: renderCards, rules: renderRules, deck: renderDeck, table: table.render, stats: renderStatsView, changes: renderChanges, compare: renderCompare };
   (views[r.name] || renderCards)(r);
-  document.title = `${{ cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare" }[r.name] || "Cards"} · Impossibility Simulator`;
+  document.title = `${{ cards: "Cards", rules: "Rulebook", deck: "Deck builder", table: "Table", stats: "Stats", changes: "Changes", compare: "Compare" }[r.name] || "Cards"} · Impossibility Simulator`;
 }
 function setParams(updates, { replace = true } = {}) {
   const r = parseHash();
@@ -529,25 +532,30 @@ function renderDeck(r) {
   const nameInput = $("#deck-name");
   if (nameInput) nameInput.addEventListener("change", () => { d.name = nameInput.value.trim() || "Untitled hand"; D.saveDecks(S.decks); renderDeck(parseHash()); });
 }
-function openPicker(tier) {
-  const [kind, st] = tier.split(":");
-  const d = deck();
-  const fits = c => (kind === "field" ? c.type === "field" && (c.stars || 0) <= D.FIELD_MAX_STARS : c.type === kind && c.stars === Number(st));
+let pickFn = null;                         // what a [data-pick] click does while the picker is open
+function openPicker({ title, hint = "", fits, onPick, constructed = false }) {
   const render = q => {
     const pred = compile(q);
-    const list = sortCards(S.cards.filter(c => fits(c) && c.parsed && !deckHas(c.id) && (!pred || pred(c))), "name");
-    $("#picker-grid").innerHTML = list.map(c => tileHtml(c, { small: true, constructed: true }).replace('data-open="', 'data-pick="')).join("") || `<div class="empty">Nothing fits.</div>`;
+    const list = sortCards(S.cards.filter(c => fits(c) && (!pred || pred(c))), "name");
+    $("#picker-grid").innerHTML = list.map(c => tileHtml(c, { small: true, constructed }).replace('data-open="', 'data-pick="')).join("") || `<div class="empty">Nothing fits.</div>`;
   };
+  pickFn = onPick;
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="Pick a card"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>
-    <h3>${kind === "field" ? `Pick a field card (≤${D.FIELD_MAX_STARS}★)` : `Pick a ${st}★ ${kind}`}</h3>
+    <h3>${esc(title)}</h3>
     <input id="picker-q" type="search" placeholder="Filter… (same search syntax)" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);margin-bottom:12px">
-    <p class="muted">Banned cards are marked: they make the hand illegal.</p>
+    ${hint ? `<p class="muted">${esc(hint)}</p>` : ""}
     <div class="grid picker" id="picker-grid" style="--tile:120px"></div></div>`;
   modal.hidden = false; document.body.style.overflow = "hidden";
   render("");
   const input = $("#picker-q");
   input.addEventListener("input", debounce(() => render(input.value), 120));
   input.focus();
+}
+function pickForHand(tier) {
+  const [kind, st] = tier.split(":");
+  const fits = c => c.parsed && !deckHas(c.id) && (kind === "field" ? c.type === "field" && (c.stars || 0) <= D.FIELD_MAX_STARS : c.type === kind && c.stars === Number(st));
+  openPicker({ title: kind === "field" ? `Pick a field card (≤${D.FIELD_MAX_STARS}★)` : `Pick a ${st}★ ${kind}`, hint: "Banned cards are marked: they make the hand illegal.", fits, constructed: true,
+    onPick: id => { const err = D.addCard(deck(), S.byId.get(id), S.byId); if (err) toast(err); else { D.saveDecks(S.decks); updateDeckCount(); closeModal(); renderDeck(parseHash()); } } });
 }
 
 // ---- stats / changes / compare -------------------------------------------------------------------
@@ -675,7 +683,7 @@ const actions = {
   "random-from-list": () => { const l = S.list.length ? S.list : S.cards; location.hash = `#/card/${l[Math.floor(Math.random() * l.length)].id}`; },
   "deck-toggle": el => toggleDeck(el.dataset.id),
   "deck-remove": el => { D.removeCard(deck(), el.dataset.id); D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
-  "pick": el => openPicker(el.dataset.tier),
+  "pick": el => pickForHand(el.dataset.tier),
   "deck-random": () => { D.randomFill(deck(), S.cards, S.banned); D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
   "deck-clear": () => { if (!confirm("Remove every card from this deck?")) return; const d = deck(); d.cards = []; d.field = null; D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
   "deck-share": () => copy(deckUrl(S.shared || deck()), "share link"),
@@ -705,12 +713,13 @@ const actions = {
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
   ...editor.actions,
+  ...table.actions,
 };
 document.addEventListener("click", e => {
   const a = e.target.closest("[data-action]");
   if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); actions[a.dataset.action]?.(a); return; }
   const pick = e.target.closest("[data-pick]");
-  if (pick) { const err = D.addCard(deck(), S.byId.get(pick.dataset.pick), S.byId); if (err) toast(err); else { D.saveDecks(S.decks); updateDeckCount(); closeModal(); renderDeck(parseHash()); } return; }
+  if (pick) { pickFn?.(pick.dataset.pick); return; }
   const open = e.target.closest("[data-open], .chart [data-card]");
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
   const ref = e.target.closest("a.card-ref");
@@ -738,7 +747,7 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card"], ["d", "Add to / remove from deck"],
-  ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–5", "Cards · Rulebook · Deck · Stats · Changes"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+  ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Table · Stats · Changes"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 $("#edit").addEventListener("click", () => actions["edit-hub"]());
 
@@ -757,7 +766,7 @@ document.addEventListener("keydown", e => {
   if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }
   else if (e.key === "?") showKeys();
   else if (e.key === "r") actions["random-from-list"]();
-  else if (/^[1-5]$/.test(e.key) && modal.hidden) location.hash = ["#/cards", "#/rules", "#/deck", "#/stats", "#/changes"][+e.key - 1];
+  else if (/^[1-6]$/.test(e.key) && modal.hidden) location.hash = ["#/cards", "#/rules", "#/deck", "#/table", "#/stats", "#/changes"][+e.key - 1];
   else if (inCard && (e.key === "ArrowLeft" || e.key === "ArrowRight")) { const link = $(`[data-nav="${e.key === "ArrowLeft" ? "prev" : "next"}"]`, modal); if (link) location.hash = link.getAttribute("href"); }
   else if (inCard && e.key === "d") toggleDeck(id);
   else if (inCard && e.key === "c") copy(shareUrl(id), "link: paste it in Discord");

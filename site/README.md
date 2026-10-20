@@ -17,13 +17,19 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,
   optional starting field), with live checks, several saved decks, share links, text import/export, random fill,
   printable proxies, and a Tabletop Simulator saved-object download.
+- **Table**: the Tabletop Simulator save (`TTS/Impossibility Simulator.json`, loaded from GitHub when the tab opens) with
+  every deck and bag on the table, where it sits, its rule from `TTS/decks.json` and its cards; a download link and where
+  to install it. Editors can move, copy, add, remove and reorder cards and rename decks; the changes are staged, then
+  published as one commit that re-applies them to the latest save and writes it byte for byte as TTS and the bot do.
+  The bot keeps decks with a rule in step with `TTS/decks.json`, so that commit also excludes from the rule a card whose
+  last copy left such a deck and includes a card put in that the rule doesn't cover; hand-picked decks are left as they are.
 - **Stats**: counts by kind, series, type, timing tag, status effect, author and month; how many legal cards there are
   for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
   chart that highlights possible balance outliers. Every chart has a table view.
 - **Changes**: recently updated cards with text diffs, the most revised cards, and cards the bot hasn't parsed yet.
 
 Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions, `d` add to deck, `c` copy link,
-`s` share, `x` compare, `e` edit, `r` random, `1`–`5` sections, `?` help.
+`s` share, `x` compare, `e` edit, `r` random, `1`–`6` sections, `?` help.
 
 ## Where the data comes from
 
