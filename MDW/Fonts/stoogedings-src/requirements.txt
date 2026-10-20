@@ -1,0 +1,4 @@
+fonttools
+opencv-python-headless
+numpy
+pillow
