@@ -1,3 +1,7 @@
 
 *.ini
 *.DS_Store
+
+# TTS save updater (AutoCroissant commands/tts_save.py): timestamped backups and change report beside the save
+TTS/*.bak.json
+TTS/*.report.md

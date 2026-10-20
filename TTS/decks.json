@@ -1,0 +1,3114 @@
+{
+  "about": "Rules for the TTS save (TTS/Impossibility Simulator.json), written by audit.py. A deck's cards are the repo PNGs matched by rule.folders (globs: * stays inside one folder) plus rule.include, minus rule.exclude. partial: a hand-picked subset (only its own cards are refreshed; card_list = its distinct cards). count: the usual copies per card; odd_counts (per deck): cards at another count. rule null: needs a decision (see AUDIT.md).",
+  "generated": "2026-10-20T10:39:56",
+  "repo_head": "9fbe6835b8a42e6cdb64b1534e67dee3caae3c3b",
+  "decks": {
+    "f33bd9": {
+      "name": "",
+      "where": "near 'Creatures Developer Version'",
+      "position": [
+        -93.4,
+        -23.0
+      ],
+      "cards": 14,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          5
+        ],
+        "folders": [
+          "Creatures/*/5 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "Creatures/Cuphead/5 Stars/Chef_Saltbaker.png",
+        "Creatures/Fnaf/5 Stars/The_Man_Behind_The_Slaughter.png",
+        "Creatures/Kirby/5 Stars/Butterfly.png",
+        "Creatures/Kirby/5 Stars/Marx.png",
+        "Creatures/Kirby/5 Stars/Star_Dream.png",
+        "Creatures/Other/5 Stars/Leshy.png",
+        "Creatures/Other/5 Stars/Michael.png",
+        "Creatures/Other/5 Stars/The_Forbidden_One.png",
+        "Creatures/Other/5 Stars/The_Queen.png",
+        "Creatures/Other/5 Stars/Tyler.png",
+        "Creatures/Other/5 Stars/ZOEY!!!!!.png",
+        "Creatures/ROTMG/5 Stars/Azamoth_the_Forgotten_King.png",
+        "Creatures/Undertale/5 Stars/Sans.png",
+        "Creatures/World Of Warcraft/5 Stars/The_Lich_King.png"
+      ]
+    },
+    "bdb082": {
+      "name": "",
+      "where": "near 'Creatures Developer Version'",
+      "position": [
+        -93.4,
+        -18.1
+      ],
+      "cards": 14,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          4
+        ],
+        "folders": [
+          "Creatures/*/4 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "Creatures/Crypt/4 Stars/Grief.png",
+        "Creatures/Everhood/4 Stars/Green_Mage.png",
+        "Creatures/FTL/4 Stars/The_Kestrel.png",
+        "Creatures/Hollow Knight Silksong/4 Stars/Shakra.png",
+        "Creatures/Kirby/4 Stars/Grand_Doomer.png",
+        "Creatures/Monkey D Folder/4 Stars/Funky_D_Luffy.png",
+        "Creatures/Monkey D Folder/4 Stars/Monkey_D_Goofy.png",
+        "Creatures/Monkey D Folder/4 Stars/Monkey_D_Vour.png",
+        "Creatures/Omori/4 Stars/Acrophobia.png",
+        "Creatures/Other/4 Stars/Astr_Meiana.png",
+        "Creatures/Other/4 Stars/Quote.png",
+        "Creatures/Other/4 Stars/Sonic.png",
+        "Creatures/Pandas/4 Stars/Pandevourer.png",
+        "Creatures/World Of Warcraft/4 Stars/Kalecgos.png"
+      ]
+    },
+    "3a51c6": {
+      "name": "",
+      "where": "near 'Creatures Developer Version'",
+      "position": [
+        -93.4,
+        -13.1
+      ],
+      "cards": 19,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          3
+        ],
+        "folders": [
+          "Creatures/*/3 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "Creatures/Hollow Knight/3 Stars/Markoth.png",
+        "Creatures/Hollow Knight/3 Stars/The_Beast.png",
+        "Creatures/In Sound Mind/3 Stars/The_Shade.png",
+        "Creatures/Isaac/3 Stars/Tainted_Jacob.png",
+        "Creatures/Kirby/3 Stars/Retro_Kirby.png",
+        "Creatures/Mario/3 Stars/Bobbery.png",
+        "Creatures/Mario/3 Stars/Flurrie.png",
+        "Creatures/Mario/3 Stars/King_Bob-omb.png",
+        "Creatures/Monkey D Folder/3 Stars/Monkey_D_Letion.png",
+        "Creatures/Monkey D Folder/3 Stars/Pan_D_Luffy.png",
+        "Creatures/Monkey D Folder/3 Stars/Wokey_D_pronouns.png",
+        "Creatures/Omori/3 Stars/Shattered_Omori.png",
+        "Creatures/Other/3 Stars/Elmadan.png",
+        "Creatures/Other/3 Stars/Empress Bulblax.png",
+        "Creatures/Other/3 Stars/Grimora.png",
+        "Creatures/Other/3 Stars/Niko.png",
+        "Creatures/Other/3 Stars/Puzzled_Cat.png",
+        "Creatures/Other/3 Stars/The_Last_Cabbage_Merchant.png",
+        "Creatures/Undertale/3 Stars/BergenTRUCK.png"
+      ]
+    },
+    "fe5655": {
+      "name": "",
+      "where": "near 'Creatures Developer Version'",
+      "position": [
+        -93.4,
+        -8.2
+      ],
+      "cards": 18,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          2
+        ],
+        "folders": [
+          "Creatures/*/2 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "Creatures/Crypt/2 Stars/Pot_Full_of_Spiders!.png",
+        "Creatures/FTL/2 Stars/Zoltan.png",
+        "Creatures/Kirby/2 Stars/Whispy_Woods.png",
+        "Creatures/Mario/2 Stars/Goombella.png",
+        "Creatures/Mario/2 Stars/Gooper_Blooper.png",
+        "Creatures/Mario/2 Stars/Koops.png",
+        "Creatures/Mario/2 Stars/Ms_Mowz.png",
+        "Creatures/Mario/2 Stars/Yoshi_Kid.png",
+        "Creatures/Monkey D Folder/2 Stars/Mol_D_Truffy.png",
+        "Creatures/Monkey D Folder/2 Stars/Monkey_D_Pression.png",
+        "Creatures/Monkey D Folder/2 Stars/Whippy_D_Cream.png",
+        "Creatures/Other/2 Stars/Auto_Croissant.png",
+        "Creatures/Other/2 Stars/Future_Niiue.png",
+        "Creatures/Other/2 Stars/Igor_Robotowski.png",
+        "Creatures/Other/2 Stars/Little_Guy.png",
+        "Creatures/Other/2 Stars/Slugcat.png",
+        "Creatures/Pandas/2 Stars/Pandanoko.png",
+        "Creatures/R.E.P.O/2 Stars/Apex_Predator.png"
+      ]
+    },
+    "bc1e3f": {
+      "name": "★★★★★",
+      "where": "near 'Creatures'",
+      "position": [
+        -93.4,
+        9.2
+      ],
+      "cards": 56,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          5
+        ],
+        "folders": [
+          "Creatures/*/5 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "f05d89"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "cde2bc": {
+      "name": "★★★★",
+      "where": "near 'Creatures'",
+      "position": [
+        -93.4,
+        14.1
+      ],
+      "cards": 92,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          4
+        ],
+        "folders": [
+          "Creatures/*/4 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "8dc131"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "6ae2a9": {
+      "name": "★★★",
+      "where": "near 'Creatures'",
+      "position": [
+        -93.4,
+        19.0
+      ],
+      "cards": 101,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          3
+        ],
+        "folders": [
+          "Creatures/*/3 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "ac2a14"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "e8e1b6": {
+      "name": "★★",
+      "where": "near 'Creatures'",
+      "position": [
+        -93.4,
+        23.9
+      ],
+      "cards": 45,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          2
+        ],
+        "folders": [
+          "Creatures/*/2 Stars/*.png"
+        ],
+        "count": 1,
+        "exclude": [
+          "Creatures/Other/2 Stars/Stubborn_Queen.png"
+        ]
+      },
+      "confidence": "high",
+      "copies": [
+        "fa254e"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "df0c17": {
+      "name": "★★★★",
+      "where": "near 'Items'",
+      "position": [
+        -84.3,
+        9.9
+      ],
+      "cards": 30,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          4
+        ],
+        "folders": [
+          "Items/*/4 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "9c4f0c"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "213c84": {
+      "name": "★★★",
+      "where": "near 'Items'",
+      "position": [
+        -84.3,
+        14.3
+      ],
+      "cards": 88,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          3
+        ],
+        "folders": [
+          "Items/*/3 Stars/*.png"
+        ],
+        "count": 1,
+        "exclude": [
+          "Items/Equip/3 Stars/Piko_Piko_Hammer.png"
+        ]
+      },
+      "confidence": "high",
+      "copies": [
+        "abb81f"
+      ],
+      "back": "MDW/cardback_item.png",
+      "odd_counts": {
+        "Items/Attack/3 Stars/Big_Bomb.png": 3,
+        "Items/Attack/3 Stars/Blood_Bomb.png": 2,
+        "Items/Attack/3 Stars/Burly_Bomb.png": 2,
+        "Items/Attack/3 Stars/Fireball.png": 2,
+        "Items/Attack/3 Stars/Lightning_Bolt.png": 2,
+        "Items/Attack/3 Stars/POW_Block.png": 2,
+        "Items/Attack/3 Stars/Shooting_Star.png": 2,
+        "Items/Counter/3 Stars/Iron_Spikes.png": 2,
+        "Items/Equip/3 Stars/Metal_Shield.png": 2,
+        "Items/Equip/3 Stars/Titanium_Sword.png": 2,
+        "Items/Heal/3 Stars/Dumplings.png": 2,
+        "Items/Heal/3 Stars/Feast.png": 2,
+        "Items/Heal/3 Stars/Healing_Ritual.png": 2,
+        "Items/Heal/3 Stars/Life_Shroom.png": 2,
+        "Items/Heal/3 Stars/Maxim_Tomato.png": 3,
+        "Items/Heal/3 Stars/Squash_Candy.png": 2,
+        "Items/Heal/3 Stars/Super_Shroom.png": 2,
+        "Items/Negation/3 Stars/Ancient_Stopwatch.png": 2
+      }
+    },
+    "a7e1aa": {
+      "name": "★★",
+      "where": "near 'Items'",
+      "position": [
+        -84.3,
+        18.8
+      ],
+      "cards": 96,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          2
+        ],
+        "folders": [
+          "Items/*/2 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "7cdb04"
+      ],
+      "back": "MDW/cardback_item.png",
+      "odd_counts": {
+        "Items/Attack/2 Stars/Bomb.png": 3,
+        "Items/Attack/2 Stars/Firebomb.png": 2,
+        "Items/Attack/2 Stars/Ice_Bomb.png": 2,
+        "Items/Counter/2 Stars/Stone_Spikes.png": 2,
+        "Items/Equip/2 Stars/Basic_Shield.png": 3,
+        "Items/Equip/2 Stars/Holy_Card.png": 2,
+        "Items/Equip/2 Stars/Iron_Sword.png": 2,
+        "Items/Equip/2 Stars/Tomorrow_I'll.png": 2,
+        "Items/Heal/2 Stars/Grapes.png": 2,
+        "Items/Heal/2 Stars/Mushroom.png": 2,
+        "Items/Heal/2 Stars/Pep_Drink.png": 3,
+        "Items/Heal/2 Stars/Pepperoni_Pizza.png": 2,
+        "Items/Heal/2 Stars/Regeneration_Potion.png": 2,
+        "Items/Heal/2 Stars/The_Chicken.png": 2,
+        "Items/Heal/2 Stars/Watermelon.png": 2,
+        "Items/Infliction/2 Stars/Bag_of_Evil.png": 2,
+        "Items/Infliction/2 Stars/Mr_Softener.png": 2,
+        "Items/Negation/2 Stars/Metronome.png": 5,
+        "Items/Negation/2 Stars/Stopwatch.png": 5,
+        "Items/Support/2 Stars/Gust_of_Trees.png": 2,
+        "Items/Support/2 Stars/Gust_of_Wind.png": 2
+      }
+    },
+    "8fb88d": {
+      "name": "★",
+      "where": "near 'Items'",
+      "position": [
+        -84.3,
+        23.2
+      ],
+      "cards": 39,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          1
+        ],
+        "folders": [
+          "Items/*/1 Stars/*.png"
+        ],
+        "count": 2
+      },
+      "confidence": "high",
+      "copies": [
+        "42909d"
+      ],
+      "back": "MDW/cardback_item.png",
+      "odd_counts": {
+        "Items/Counter/1 Stars/Poison_Trap.png": 1,
+        "Items/Equip/1 Stars/Boko_Club.png": 1,
+        "Items/Equip/1 Stars/Bone's Loans.png": 1,
+        "Items/Equip/1 Stars/GrubSong.png": 1,
+        "Items/Equip/1 Stars/Lazy_Worm.png": 1,
+        "Items/Equip/1 Stars/Leaf_Shield.png": 1,
+        "Items/Equip/1 Stars/Pillow.png": 1,
+        "Items/Equip/1 Stars/Steady_Body.png": 1,
+        "Items/Heal/1 Stars/Ingredient_Desert_Limes.png": 1
+      }
+    },
+    "d3995a": {
+      "name": "N.M.E. Deck",
+      "where": "on 'N.M.E Items'",
+      "position": [
+        -84.1,
+        5.1
+      ],
+      "cards": 26,
+      "rule": {
+        "kind": "nme",
+        "stars": [],
+        "folders": [
+          "N.M.E/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "444f1f"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "888cba": {
+      "name": "",
+      "where": "near 'Baseline Creatures'",
+      "position": [
+        -83.0,
+        -18.0
+      ],
+      "cards": 25,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          4
+        ],
+        "folders": [
+          "Creatures/*/4 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "Creatures/Everhood/4 Stars/Rasta_Beast.png",
+        "Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+        "Creatures/Fnaf/4 Stars/Old_Freddy.png",
+        "Creatures/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+        "Creatures/Hollow Knight/4 Stars/Traitor_Lord.png",
+        "Creatures/Isaac/4 Stars/Dogma.png",
+        "Creatures/Kirby/4 Stars/Dark_Daroach.png",
+        "Creatures/Kirby/4 Stars/Dark_Nebula.png",
+        "Creatures/Kirby/4 Stars/Drawcia_Soul.png",
+        "Creatures/Kirby/4 Stars/Dyna_Blade.png",
+        "Creatures/Kirby/4 Stars/NME_Salesman.png",
+        "Creatures/Kirby/4 Stars/Zero.png",
+        "Creatures/Mario/4 Stars/Cortez.png",
+        "Creatures/Mario/4 Stars/Crystal_King.png",
+        "Creatures/Mario/4 Stars/DooPliss.png",
+        "Creatures/Mario/4 Stars/Macho_Grubba.png",
+        "Creatures/Other/4 Stars/Mr_Krabs.png",
+        "Creatures/Other/4 Stars/Tai_Lung.png",
+        "Creatures/Pandas/4 Stars/Po.png",
+        "Creatures/Souls/4 Stars/Pontiff_Sulyvahn.png",
+        "Creatures/Undertale/4 Stars/Mettaton.png",
+        "Creatures/Undertale/4 Stars/Toriel.png",
+        "Creatures/Undertale/4 Stars/Undyne.png",
+        "Creatures/World Of Warcraft/4 Stars/Warcraftian_Druid.png",
+        "Creatures/World Of Warcraft/4 Stars/Warcraftian_Paladin.png"
+      ]
+    },
+    "66e756": {
+      "name": "",
+      "where": "near 'Baseline Creatures'",
+      "position": [
+        -83.0,
+        -13.1
+      ],
+      "cards": 22,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          3
+        ],
+        "folders": [
+          "Creatures/*/3 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "Creatures/Hollow Knight/3 Stars/Dung_Defender.png",
+        "Creatures/Hollow Knight/3 Stars/Uumuu.png",
+        "Creatures/Kirby/3 Stars/Dark_Matter.png",
+        "Creatures/Kirby/3 Stars/Dark_Matter_Swordsman.png",
+        "Creatures/Kirby/3 Stars/Fatty_Whale.png",
+        "Creatures/Kirby/3 Stars/Final_Dark_Mind_Eye.png",
+        "Creatures/Kirby/3 Stars/Halberd_Main_Cannon.png",
+        "Creatures/Kirby/3 Stars/Halberd_Reactor.png",
+        "Creatures/Kirby/3 Stars/Heavy_Mole.png",
+        "Creatures/Kirby/3 Stars/Kabula.png",
+        "Creatures/Kirby/3 Stars/Kracko.png",
+        "Creatures/Kirby/3 Stars/Magolor.png",
+        "Creatures/Kirby/3 Stars/Mega_Titan.png",
+        "Creatures/Kirby/3 Stars/Metal_General.png",
+        "Creatures/Kirby/3 Stars/Miracle_Matter.png",
+        "Creatures/Kirby/3 Stars/Spinni.png",
+        "Creatures/Mario/3 Stars/Lord_Crump.png",
+        "Creatures/Pandas/3 Stars/P.A.N.D.A._Mk_A.png",
+        "Creatures/Pandas/3 Stars/P.A.N.D.A._Mk_F.png",
+        "Creatures/Pandas/3 Stars/P.A.N.D.A._Mk_T.png",
+        "Creatures/Pandas/3 Stars/Shield_Master_Pi.png",
+        "Creatures/Souls/3 Stars/The_Abyss_Watchers.png"
+      ]
+    },
+    "b53bbf": {
+      "name": "★★★★",
+      "where": "near 'Field Items'",
+      "position": [
+        -76.9,
+        9.9
+      ],
+      "cards": 10,
+      "rule": {
+        "kind": "fields",
+        "stars": [
+          4
+        ],
+        "folders": [
+          "Field/4 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "36ee4c"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "97edb2": {
+      "name": "★★★",
+      "where": "near 'Field Items'",
+      "position": [
+        -76.9,
+        14.3
+      ],
+      "cards": 12,
+      "rule": {
+        "kind": "fields",
+        "stars": [
+          3
+        ],
+        "folders": [
+          "Field/3 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "f16501"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "4e992d": {
+      "name": "★★",
+      "where": "near 'Field Items'",
+      "position": [
+        -76.9,
+        18.7
+      ],
+      "cards": 18,
+      "rule": {
+        "kind": "fields",
+        "stars": [
+          2
+        ],
+        "folders": [
+          "Field/2 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "b14958"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "b25a54": {
+      "name": "★",
+      "where": "near 'Field Items'",
+      "position": [
+        -76.9,
+        23.1
+      ],
+      "cards": 9,
+      "rule": {
+        "kind": "fields",
+        "stars": [
+          1
+        ],
+        "folders": [
+          "Field/1 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "769f68"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "c8333f": {
+      "name": "Status Effects⭐⭐⭐⭐⭐⭐⭐⭐⭐",
+      "where": "on 'All Status Effects'",
+      "position": [
+        89.5,
+        -1.6
+      ],
+      "cards": 64,
+      "rule": {
+        "kind": "status_effects",
+        "stars": [],
+        "folders": [
+          "Auxiliary/Status Effects/Buffs/*.png",
+          "Auxiliary/Status Effects/Debuffs/* Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "ee3c0c",
+        "abd26b"
+      ],
+      "back": "MDW/cardback_statuseffect.png"
+    },
+    "ee3c0c": {
+      "name": "Status Effects⭐⭐⭐⭐⭐⭐⭐⭐⭐",
+      "where": "on 'All Status Effects'",
+      "position": [
+        89.6,
+        1.4
+      ],
+      "cards": 64,
+      "rule": {
+        "kind": "status_effects",
+        "stars": [],
+        "folders": [
+          "Auxiliary/Status Effects/Buffs/*.png",
+          "Auxiliary/Status Effects/Debuffs/* Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "c8333f",
+        "abd26b"
+      ],
+      "back": "MDW/cardback_statuseffect.png"
+    },
+    "0b410c": {
+      "name": "Auxiliary Items",
+      "where": "on 'Auxiliary Items'",
+      "position": [
+        93.0,
+        -3.5
+      ],
+      "cards": 59,
+      "rule": {
+        "kind": "auxiliary_items",
+        "stars": [],
+        "folders": [
+          "Auxiliary/Items/*.png"
+        ],
+        "include": [
+          "Items/Attack/2 Stars/Bomb.png",
+          "Items/Deploy/1 Stars/Poison_Circle.png",
+          "Items/Equip/2 Stars/Holy_Card.png",
+          "Items/Equip/3 Stars/Piko_Piko_Hammer.png",
+          "Items/Heal/1 Stars/Ingredient_Desert_Limes.png",
+          "Items/Heal/2 Stars/Ingredient_Gnome_Berries.png",
+          "Items/Heal/2 Stars/Ingredient_Icy_Sugar_Cubes.png",
+          "Items/Heal/2 Stars/Ingredient_Pineapple_Mint.png",
+          "Items/Heal/2 Stars/Pepperoni_Pizza.png",
+          "Items/Heal/3 Stars/Ingredient_Distillery_Dough.png",
+          "Items/Support/2 Stars/Gasoline.png",
+          "N.M.E/Rope.png"
+        ],
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [
+        "ac4725",
+        "883c04"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "ac4725": {
+      "name": "Auxiliary Items",
+      "where": "on 'Auxiliary Items'",
+      "position": [
+        93.1,
+        3.2
+      ],
+      "cards": 59,
+      "rule": {
+        "kind": "auxiliary_items",
+        "stars": [],
+        "folders": [
+          "Auxiliary/Items/*.png"
+        ],
+        "include": [
+          "Items/Attack/2 Stars/Bomb.png",
+          "Items/Deploy/1 Stars/Poison_Circle.png",
+          "Items/Equip/2 Stars/Holy_Card.png",
+          "Items/Equip/3 Stars/Piko_Piko_Hammer.png",
+          "Items/Heal/1 Stars/Ingredient_Desert_Limes.png",
+          "Items/Heal/2 Stars/Ingredient_Gnome_Berries.png",
+          "Items/Heal/2 Stars/Ingredient_Icy_Sugar_Cubes.png",
+          "Items/Heal/2 Stars/Ingredient_Pineapple_Mint.png",
+          "Items/Heal/2 Stars/Pepperoni_Pizza.png",
+          "Items/Heal/3 Stars/Ingredient_Distillery_Dough.png",
+          "Items/Support/2 Stars/Gasoline.png",
+          "N.M.E/Rope.png"
+        ],
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [
+        "0b410c",
+        "883c04"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "ed587f": {
+      "name": "Minions",
+      "where": "on 'Minions'",
+      "position": [
+        97.4,
+        -3.4
+      ],
+      "cards": 95,
+      "rule": {
+        "kind": "minions",
+        "stars": [],
+        "folders": [
+          "Auxiliary/Minions/*.png",
+          "Auxiliary/Creatures/*.png"
+        ],
+        "include": [
+          "Creatures/Other/2 Stars/Stubborn_Queen.png"
+        ],
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [
+        "6e935f",
+        "f8df22"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "6e935f": {
+      "name": "Minions",
+      "where": "on 'Minions'",
+      "position": [
+        97.4,
+        3.3
+      ],
+      "cards": 95,
+      "rule": {
+        "kind": "minions",
+        "stars": [],
+        "folders": [
+          "Auxiliary/Minions/*.png",
+          "Auxiliary/Creatures/*.png"
+        ],
+        "include": [
+          "Creatures/Other/2 Stars/Stubborn_Queen.png"
+        ],
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [
+        "ed587f",
+        "f8df22"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "444f1f": {
+      "name": "N.M.E. Deck",
+      "where": "on 'N.M.E. Items Copy'",
+      "position": [
+        108.3,
+        18.4
+      ],
+      "cards": 26,
+      "rule": {
+        "kind": "nme",
+        "stars": [],
+        "folders": [
+          "N.M.E/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "d3995a"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "883c04": {
+      "name": "Auxiliary Items",
+      "where": "on 'Auxiliary Items Copy'",
+      "position": [
+        108.3,
+        22.7
+      ],
+      "cards": 59,
+      "rule": {
+        "kind": "auxiliary_items",
+        "stars": [],
+        "folders": [
+          "Auxiliary/Items/*.png"
+        ],
+        "include": [
+          "Items/Attack/2 Stars/Bomb.png",
+          "Items/Deploy/1 Stars/Poison_Circle.png",
+          "Items/Equip/2 Stars/Holy_Card.png",
+          "Items/Equip/3 Stars/Piko_Piko_Hammer.png",
+          "Items/Heal/1 Stars/Ingredient_Desert_Limes.png",
+          "Items/Heal/2 Stars/Ingredient_Gnome_Berries.png",
+          "Items/Heal/2 Stars/Ingredient_Icy_Sugar_Cubes.png",
+          "Items/Heal/2 Stars/Ingredient_Pineapple_Mint.png",
+          "Items/Heal/2 Stars/Pepperoni_Pizza.png",
+          "Items/Heal/3 Stars/Ingredient_Distillery_Dough.png",
+          "Items/Support/2 Stars/Gasoline.png",
+          "N.M.E/Rope.png"
+        ],
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [
+        "ac4725",
+        "0b410c"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "f8df22": {
+      "name": "Minions",
+      "where": "on 'Minions Copy'",
+      "position": [
+        108.3,
+        26.9
+      ],
+      "cards": 95,
+      "rule": {
+        "kind": "minions",
+        "stars": [],
+        "folders": [
+          "Auxiliary/Minions/*.png",
+          "Auxiliary/Creatures/*.png"
+        ],
+        "include": [
+          "Creatures/Other/2 Stars/Stubborn_Queen.png"
+        ],
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [
+        "6e935f",
+        "ed587f"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "abd26b": {
+      "name": "Status Effects⭐⭐⭐⭐⭐⭐⭐⭐⭐",
+      "where": "on 'Status Effects Copy'",
+      "position": [
+        110.2,
+        15.1
+      ],
+      "cards": 64,
+      "rule": {
+        "kind": "status_effects",
+        "stars": [],
+        "folders": [
+          "Auxiliary/Status Effects/Buffs/*.png",
+          "Auxiliary/Status Effects/Debuffs/* Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "c8333f",
+        "ee3c0c"
+      ],
+      "back": "MDW/cardback_statuseffect.png"
+    },
+    "769f68": {
+      "name": "★",
+      "where": "near 'Field Items Copy'",
+      "position": [
+        115.1,
+        13.3
+      ],
+      "cards": 9,
+      "rule": {
+        "kind": "fields",
+        "stars": [
+          1
+        ],
+        "folders": [
+          "Field/1 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "b25a54"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "b14958": {
+      "name": "★★",
+      "where": "near 'Field Items Copy'",
+      "position": [
+        115.1,
+        17.7
+      ],
+      "cards": 18,
+      "rule": {
+        "kind": "fields",
+        "stars": [
+          2
+        ],
+        "folders": [
+          "Field/2 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "4e992d"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "f16501": {
+      "name": "★★★",
+      "where": "near 'Field Items Copy'",
+      "position": [
+        115.1,
+        22.2
+      ],
+      "cards": 12,
+      "rule": {
+        "kind": "fields",
+        "stars": [
+          3
+        ],
+        "folders": [
+          "Field/3 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "97edb2"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "36ee4c": {
+      "name": "★★★★",
+      "where": "near 'Field Items Copy'",
+      "position": [
+        115.1,
+        26.6
+      ],
+      "cards": 10,
+      "rule": {
+        "kind": "fields",
+        "stars": [
+          4
+        ],
+        "folders": [
+          "Field/4 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "b53bbf"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "42909d": {
+      "name": "★",
+      "where": "near 'Items Copy'",
+      "position": [
+        122.6,
+        13.3
+      ],
+      "cards": 39,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          1
+        ],
+        "folders": [
+          "Items/*/1 Stars/*.png"
+        ],
+        "count": 2
+      },
+      "confidence": "high",
+      "copies": [
+        "8fb88d"
+      ],
+      "back": "MDW/cardback_item.png",
+      "odd_counts": {
+        "Items/Counter/1 Stars/Poison_Trap.png": 1,
+        "Items/Equip/1 Stars/Boko_Club.png": 1,
+        "Items/Equip/1 Stars/Bone's Loans.png": 1,
+        "Items/Equip/1 Stars/GrubSong.png": 1,
+        "Items/Equip/1 Stars/Lazy_Worm.png": 1,
+        "Items/Equip/1 Stars/Leaf_Shield.png": 1,
+        "Items/Equip/1 Stars/Pillow.png": 1,
+        "Items/Equip/1 Stars/Steady_Body.png": 1,
+        "Items/Heal/1 Stars/Ingredient_Desert_Limes.png": 1
+      }
+    },
+    "7cdb04": {
+      "name": "★★",
+      "where": "near 'Items Copy'",
+      "position": [
+        122.6,
+        17.7
+      ],
+      "cards": 96,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          2
+        ],
+        "folders": [
+          "Items/*/2 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "a7e1aa"
+      ],
+      "back": "MDW/cardback_item.png",
+      "odd_counts": {
+        "Items/Attack/2 Stars/Bomb.png": 3,
+        "Items/Attack/2 Stars/Firebomb.png": 2,
+        "Items/Attack/2 Stars/Ice_Bomb.png": 2,
+        "Items/Counter/2 Stars/Stone_Spikes.png": 2,
+        "Items/Equip/2 Stars/Basic_Shield.png": 3,
+        "Items/Equip/2 Stars/Holy_Card.png": 2,
+        "Items/Equip/2 Stars/Iron_Sword.png": 2,
+        "Items/Equip/2 Stars/Tomorrow_I'll.png": 2,
+        "Items/Heal/2 Stars/Grapes.png": 2,
+        "Items/Heal/2 Stars/Mushroom.png": 2,
+        "Items/Heal/2 Stars/Pep_Drink.png": 3,
+        "Items/Heal/2 Stars/Pepperoni_Pizza.png": 2,
+        "Items/Heal/2 Stars/Regeneration_Potion.png": 2,
+        "Items/Heal/2 Stars/The_Chicken.png": 2,
+        "Items/Heal/2 Stars/Watermelon.png": 2,
+        "Items/Infliction/2 Stars/Bag_of_Evil.png": 2,
+        "Items/Infliction/2 Stars/Mr_Softener.png": 2,
+        "Items/Negation/2 Stars/Metronome.png": 5,
+        "Items/Negation/2 Stars/Stopwatch.png": 5,
+        "Items/Support/2 Stars/Gust_of_Trees.png": 2,
+        "Items/Support/2 Stars/Gust_of_Wind.png": 2
+      }
+    },
+    "abb81f": {
+      "name": "★★★",
+      "where": "near 'Items Copy'",
+      "position": [
+        122.6,
+        22.2
+      ],
+      "cards": 88,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          3
+        ],
+        "folders": [
+          "Items/*/3 Stars/*.png"
+        ],
+        "count": 1,
+        "exclude": [
+          "Items/Equip/3 Stars/Piko_Piko_Hammer.png"
+        ]
+      },
+      "confidence": "high",
+      "copies": [
+        "213c84"
+      ],
+      "back": "MDW/cardback_item.png",
+      "odd_counts": {
+        "Items/Attack/3 Stars/Big_Bomb.png": 3,
+        "Items/Attack/3 Stars/Blood_Bomb.png": 2,
+        "Items/Attack/3 Stars/Burly_Bomb.png": 2,
+        "Items/Attack/3 Stars/Fireball.png": 2,
+        "Items/Attack/3 Stars/Lightning_Bolt.png": 2,
+        "Items/Attack/3 Stars/POW_Block.png": 2,
+        "Items/Attack/3 Stars/Shooting_Star.png": 2,
+        "Items/Counter/3 Stars/Iron_Spikes.png": 2,
+        "Items/Equip/3 Stars/Metal_Shield.png": 2,
+        "Items/Equip/3 Stars/Titanium_Sword.png": 2,
+        "Items/Heal/3 Stars/Dumplings.png": 2,
+        "Items/Heal/3 Stars/Feast.png": 2,
+        "Items/Heal/3 Stars/Healing_Ritual.png": 2,
+        "Items/Heal/3 Stars/Life_Shroom.png": 2,
+        "Items/Heal/3 Stars/Maxim_Tomato.png": 3,
+        "Items/Heal/3 Stars/Squash_Candy.png": 2,
+        "Items/Heal/3 Stars/Super_Shroom.png": 2,
+        "Items/Negation/3 Stars/Ancient_Stopwatch.png": 2
+      }
+    },
+    "9c4f0c": {
+      "name": "★★★★",
+      "where": "near 'Items Copy'",
+      "position": [
+        122.6,
+        26.6
+      ],
+      "cards": 30,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          4
+        ],
+        "folders": [
+          "Items/*/4 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "df0c17"
+      ],
+      "back": "MDW/cardback_item.png"
+    },
+    "6dbf7e": {
+      "name": "★",
+      "where": "near 'Items Simple Version'",
+      "position": [
+        123.3,
+        -24.8
+      ],
+      "cards": 30,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          1
+        ],
+        "folders": [
+          "Items/*/1 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 2
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback_item.png",
+      "card_list": [
+        "Items/Attack/1 Stars/Bleach.png",
+        "Items/Attack/1 Stars/Mighty_Pebble.png",
+        "Items/Counter/1 Stars/Wooden_Spikes.png",
+        "Items/Equip/1 Stars/Boko_Club.png",
+        "Items/Equip/1 Stars/Copper_Sword.png",
+        "Items/Equip/1 Stars/GrubSong.png",
+        "Items/Equip/1 Stars/Leaf_Shield.png",
+        "Items/Equip/1 Stars/Pillow.png",
+        "Items/Equip/1 Stars/Shellphone.png",
+        "Items/Equip/1 Stars/Steady_Body.png",
+        "Items/Heal/1 Stars/Bolts_and_Screws.png",
+        "Items/Heal/1 Stars/Candy_Corn.png",
+        "Items/Heal/1 Stars/Monster_Meat.png",
+        "Items/Heal/1 Stars/Potato.png",
+        "Items/Heal/1 Stars/Tomato.png",
+        "Items/Infliction/1 Stars/Smoke_Bomb.png",
+        "Items/Support/1 Stars/Consolation_Prize.png",
+        "Items/Support/1 Stars/Dr_Robotnik's_Roboticizer.png"
+      ],
+      "odd_counts": {
+        "Items/Equip/1 Stars/Boko_Club.png": 1,
+        "Items/Equip/1 Stars/GrubSong.png": 1,
+        "Items/Equip/1 Stars/Leaf_Shield.png": 1,
+        "Items/Equip/1 Stars/Pillow.png": 1,
+        "Items/Equip/1 Stars/Shellphone.png": 1,
+        "Items/Equip/1 Stars/Steady_Body.png": 1
+      }
+    },
+    "c86c21": {
+      "name": "★★",
+      "where": "near 'Items Simple Version'",
+      "position": [
+        123.3,
+        -20.4
+      ],
+      "cards": 75,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          2
+        ],
+        "folders": [
+          "Items/*/2 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback_item.png",
+      "card_list": [
+        "Items/Attack/2 Stars/Bomb.png",
+        "Items/Attack/2 Stars/Firebomb.png",
+        "Items/Attack/2 Stars/Ice_Bomb.png",
+        "Items/Attack/2 Stars/Pie.png",
+        "Items/Attack/2 Stars/Zess_Dynamite.png",
+        "Items/Counter/2 Stars/Stone_Spikes.png",
+        "Items/Equip/2 Stars/Basic_Shield.png",
+        "Items/Equip/2 Stars/Door_Shield.png",
+        "Items/Equip/2 Stars/Fire_Staff.png",
+        "Items/Equip/2 Stars/Heavy_Blow.png",
+        "Items/Equip/2 Stars/Holy_Card.png",
+        "Items/Equip/2 Stars/Ice_Staff.png",
+        "Items/Equip/2 Stars/Iron_Sword.png",
+        "Items/Equip/2 Stars/Man_Serpent_Shield.png",
+        "Items/Equip/2 Stars/SpiralHorn_Shield.png",
+        "Items/Equip/2 Stars/Thorns_Of_Agony.png",
+        "Items/Equip/2 Stars/Tomorrow_I'll.png",
+        "Items/Heal/2 Stars/A_Snack.png",
+        "Items/Heal/2 Stars/A_Snack2.png",
+        "Items/Heal/2 Stars/A_Snack3.png",
+        "Items/Heal/2 Stars/All_Purpose_Medical_Kit.png",
+        "Items/Heal/2 Stars/All_Purpose_Medical_Kit2.png",
+        "Items/Heal/2 Stars/Grapes.png",
+        "Items/Heal/2 Stars/Ingredient_Gnome_Berries.png",
+        "Items/Heal/2 Stars/Ingredient_Icy_Sugar_Cubes.png",
+        "Items/Heal/2 Stars/Ingredient_Pineapple_Mint.png",
+        "Items/Heal/2 Stars/Mushroom.png",
+        "Items/Heal/2 Stars/Pep_Drink.png",
+        "Items/Heal/2 Stars/Pepperoni_Pizza.png",
+        "Items/Heal/2 Stars/Regeneration_Potion.png",
+        "Items/Heal/2 Stars/Regeneration_Potion2.png",
+        "Items/Heal/2 Stars/Snow_Bunny.png",
+        "Items/Heal/2 Stars/Strawberry_Shortcake.png",
+        "Items/Heal/2 Stars/The_Chicken.png",
+        "Items/Heal/2 Stars/Thunder_Thighs.png",
+        "Items/Heal/2 Stars/Watermelon.png",
+        "Items/Infliction/2 Stars/Bag_of_Evil.png",
+        "Items/Infliction/2 Stars/Mr_Softener.png",
+        "Items/Negation/2 Stars/Metronome.png",
+        "Items/Negation/2 Stars/Stopwatch.png",
+        "Items/Support/2 Stars/Bag_of_Good.png",
+        "Items/Support/2 Stars/Gasoline.png",
+        "Items/Support/2 Stars/Gust_of_Trees.png",
+        "Items/Support/2 Stars/Gust_of_Wind.png",
+        "Items/Support/2 Stars/NME_Stock.png",
+        "Items/Support/2 Stars/NME_Stock2.png",
+        "Items/Support/2 Stars/Reverse_Mushroom.png",
+        "Items/Support/2 Stars/Volt_Shroom.png"
+      ],
+      "odd_counts": {
+        "Items/Attack/2 Stars/Bomb.png": 3,
+        "Items/Attack/2 Stars/Firebomb.png": 2,
+        "Items/Attack/2 Stars/Ice_Bomb.png": 2,
+        "Items/Counter/2 Stars/Stone_Spikes.png": 2,
+        "Items/Equip/2 Stars/Basic_Shield.png": 3,
+        "Items/Equip/2 Stars/Holy_Card.png": 2,
+        "Items/Equip/2 Stars/Iron_Sword.png": 2,
+        "Items/Equip/2 Stars/Tomorrow_I'll.png": 2,
+        "Items/Heal/2 Stars/Grapes.png": 2,
+        "Items/Heal/2 Stars/Mushroom.png": 2,
+        "Items/Heal/2 Stars/Pep_Drink.png": 3,
+        "Items/Heal/2 Stars/Pepperoni_Pizza.png": 2,
+        "Items/Heal/2 Stars/Regeneration_Potion.png": 2,
+        "Items/Heal/2 Stars/The_Chicken.png": 2,
+        "Items/Heal/2 Stars/Watermelon.png": 2,
+        "Items/Infliction/2 Stars/Bag_of_Evil.png": 2,
+        "Items/Infliction/2 Stars/Mr_Softener.png": 2,
+        "Items/Negation/2 Stars/Metronome.png": 4,
+        "Items/Negation/2 Stars/Stopwatch.png": 4,
+        "Items/Support/2 Stars/Gust_of_Trees.png": 2
+      }
+    },
+    "b630d6": {
+      "name": "★★★",
+      "where": "near 'Items Simple Version'",
+      "position": [
+        123.3,
+        -16.0
+      ],
+      "cards": 68,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          3
+        ],
+        "folders": [
+          "Items/*/3 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback_item.png",
+      "card_list": [
+        "Items/Active/3 Stars/Black_Light_Bulb.png",
+        "Items/Active/3 Stars/Star_Cannon.png",
+        "Items/Attack/3 Stars/Big_Bomb.png",
+        "Items/Attack/3 Stars/Blood_Bomb.png",
+        "Items/Attack/3 Stars/Burly_Bomb.png",
+        "Items/Attack/3 Stars/Fireball.png",
+        "Items/Attack/3 Stars/Lightning_Bolt.png",
+        "Items/Attack/3 Stars/POW_Block.png",
+        "Items/Attack/3 Stars/Shooting_Star.png",
+        "Items/Counter/3 Stars/Crystal_Spikes.png",
+        "Items/Counter/3 Stars/Flame_Trap.png",
+        "Items/Counter/3 Stars/Iron_Spikes.png",
+        "Items/Counter/3 Stars/Spiky_Ball_Trap.png",
+        "Items/Equip/3 Stars/Adrenaline.png",
+        "Items/Equip/3 Stars/Charm_Of_The_Vampire.png",
+        "Items/Equip/3 Stars/Dark_Sword.png",
+        "Items/Equip/3 Stars/Dashmaster.png",
+        "Items/Equip/3 Stars/Deep_Focus.png",
+        "Items/Equip/3 Stars/Flameblade.png",
+        "Items/Equip/3 Stars/Fragile_Heart.png",
+        "Items/Equip/3 Stars/Fragile_Strength.png",
+        "Items/Equip/3 Stars/Maggy's_Bow.png",
+        "Items/Equip/3 Stars/Mechanical_Shield.png",
+        "Items/Equip/3 Stars/Metal_Shield.png",
+        "Items/Equip/3 Stars/Newspaper.png",
+        "Items/Equip/3 Stars/Poison_Shiv.png",
+        "Items/Equip/3 Stars/Quick_Slash.png",
+        "Items/Equip/3 Stars/Shield_of_the_Guilty.png",
+        "Items/Equip/3 Stars/Titanium_Sword.png",
+        "Items/Heal/3 Stars/Bucket_Of_Lard.png",
+        "Items/Heal/3 Stars/Dumplings.png",
+        "Items/Heal/3 Stars/Feast.png",
+        "Items/Heal/3 Stars/Healing_Ritual.png",
+        "Items/Heal/3 Stars/Ingredient_Distillery_Dough.png",
+        "Items/Heal/3 Stars/Life_Shroom.png",
+        "Items/Heal/3 Stars/Maxim_Tomato.png",
+        "Items/Heal/3 Stars/Squash_Candy.png",
+        "Items/Heal/3 Stars/Super_Shroom.png",
+        "Items/Infliction/3 Stars/Flower_Of_Decay.png",
+        "Items/Infliction/3 Stars/Freeze_Spell.png",
+        "Items/Infliction/3 Stars/Ice_Storm.png",
+        "Items/Negation/3 Stars/Ancient_Stopwatch.png",
+        "Items/Negation/3 Stars/Impassable_Obstruction.png",
+        "Items/Support/3 Stars/Blood_Ritual.png",
+        "Items/Support/3 Stars/Blue_Marker.png",
+        "Items/Support/3 Stars/Halo.png",
+        "Items/Support/3 Stars/Scapular.png",
+        "Items/Support/3 Stars/Second_Wind.png"
+      ],
+      "odd_counts": {
+        "Items/Attack/3 Stars/Big_Bomb.png": 3,
+        "Items/Attack/3 Stars/Blood_Bomb.png": 2,
+        "Items/Attack/3 Stars/Burly_Bomb.png": 2,
+        "Items/Attack/3 Stars/Fireball.png": 2,
+        "Items/Attack/3 Stars/Lightning_Bolt.png": 2,
+        "Items/Attack/3 Stars/POW_Block.png": 2,
+        "Items/Attack/3 Stars/Shooting_Star.png": 2,
+        "Items/Counter/3 Stars/Iron_Spikes.png": 2,
+        "Items/Equip/3 Stars/Metal_Shield.png": 2,
+        "Items/Equip/3 Stars/Titanium_Sword.png": 2,
+        "Items/Heal/3 Stars/Dumplings.png": 2,
+        "Items/Heal/3 Stars/Feast.png": 2,
+        "Items/Heal/3 Stars/Healing_Ritual.png": 2,
+        "Items/Heal/3 Stars/Life_Shroom.png": 2,
+        "Items/Heal/3 Stars/Maxim_Tomato.png": 3,
+        "Items/Heal/3 Stars/Squash_Candy.png": 2,
+        "Items/Heal/3 Stars/Super_Shroom.png": 2,
+        "Items/Negation/3 Stars/Ancient_Stopwatch.png": 2
+      }
+    },
+    "091586": {
+      "name": "★★★★",
+      "where": "near 'Items Simple Version'",
+      "position": [
+        123.3,
+        -11.6
+      ],
+      "cards": 17,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          4
+        ],
+        "folders": [
+          "Items/*/4 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback_item.png",
+      "card_list": [
+        "Items/Active/4 Stars/Pandamonium.png",
+        "Items/Attack/4 Stars/Dynamite.png",
+        "Items/Counter/4 Stars/Return_To_Sender.png",
+        "Items/Equip/4 Stars/Binge_Eater.png",
+        "Items/Equip/4 Stars/Blasphemous Blade.png",
+        "Items/Equip/4 Stars/Godhead.png",
+        "Items/Equip/4 Stars/Holy_Blade.png",
+        "Items/Equip/4 Stars/Holy_Mantle.png",
+        "Items/Equip/4 Stars/Kingsoul.png",
+        "Items/Equip/4 Stars/Sacred_Heart.png",
+        "Items/Equip/4 Stars/Shield_of_Ogmur.png",
+        "Items/Equip/4 Stars/Sword_of_Aeons.png",
+        "Items/Heal/4 Stars/Zess_T_Deluxe.png",
+        "Items/Infliction/4 Stars/Crimson_Flag.png",
+        "Items/Infliction/4 Stars/Pandora's_Box.png",
+        "Items/Infliction/4 Stars/Standstill.png",
+        "Items/Negation/4 Stars/Golden_Metronome.png"
+      ]
+    },
+    "b4af5f": {
+      "name": "★★",
+      "where": "near 'Creatures Simple Version'",
+      "position": [
+        131.8,
+        -24.6
+      ],
+      "cards": 17,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          2
+        ],
+        "folders": [
+          "Creatures/*/2 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "Creatures/Bug Fables/2 Stars/Spuder.png",
+        "Creatures/DST/2 Stars/Wilson.png",
+        "Creatures/Everhood/2 Stars/Knight_Lost_A_Lot.png",
+        "Creatures/FTL/2 Stars/Mantis.png",
+        "Creatures/FTL/2 Stars/Zoltan.png",
+        "Creatures/In Sound Mind/2 Stars/Helpful_Mannequin.png",
+        "Creatures/Kirby/2 Stars/Acro.png",
+        "Creatures/Kirby/2 Stars/Whispy_Woods.png",
+        "Creatures/Mario/2 Stars/Gold_Fuzzy.png",
+        "Creatures/Mario/2 Stars/Magnus_Von_Grapple.png",
+        "Creatures/Omori/2 Stars/The_Maverick.png",
+        "Creatures/Other/2 Stars/Stubborn_King.png",
+        "Creatures/Pandas/2 Stars/Assault_Panda.png",
+        "Creatures/Pandas/2 Stars/Minecraft_Panda.png",
+        "Creatures/Pandas/2 Stars/Panda.png",
+        "Creatures/Pandas/2 Stars/YIIK_Panda.png",
+        "Creatures/Pandas/2 Stars/Zompanda.png"
+      ]
+    },
+    "a0d005": {
+      "name": "★★★",
+      "where": "near 'Creatures Simple Version'",
+      "position": [
+        131.8,
+        -19.7
+      ],
+      "cards": 47,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          3
+        ],
+        "folders": [
+          "Creatures/*/3 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "Creatures/DST/3 Stars/WX-78.png",
+        "Creatures/DST/3 Stars/Wigfrid.png",
+        "Creatures/Everhood/3 Stars/Zigg.png",
+        "Creatures/Fnaf/3 Stars/Toy_Chica.png",
+        "Creatures/Hollow Knight/3 Stars/Uumuu.png",
+        "Creatures/Kirby/3 Stars/Daroach.png",
+        "Creatures/Kirby/3 Stars/Doc.png",
+        "Creatures/Kirby/3 Stars/Drawcia.png",
+        "Creatures/Kirby/3 Stars/Fatty_Whale.png",
+        "Creatures/Kirby/3 Stars/Final_Dark_Mind_Eye.png",
+        "Creatures/Kirby/3 Stars/Halberd_Main_Cannon.png",
+        "Creatures/Kirby/3 Stars/Halberd_Reactor.png",
+        "Creatures/Kirby/3 Stars/Heavy_Lobster.png",
+        "Creatures/Kirby/3 Stars/Heavy_Mole.png",
+        "Creatures/Kirby/3 Stars/Kabula.png",
+        "Creatures/Kirby/3 Stars/Kracko.png",
+        "Creatures/Kirby/3 Stars/Magolor.png",
+        "Creatures/Kirby/3 Stars/Mega_Titan.png",
+        "Creatures/Kirby/3 Stars/Metal_General.png",
+        "Creatures/Kirby/3 Stars/Miracle_Matter.png",
+        "Creatures/Kirby/3 Stars/Skullord.png",
+        "Creatures/Kirby/3 Stars/Spinni.png",
+        "Creatures/Kirby/3 Stars/Wham_Bam_Rock.png",
+        "Creatures/Mario/3 Stars/Flurrie.png",
+        "Creatures/Mario/3 Stars/Lord_Crump.png",
+        "Creatures/Omori/3 Stars/Captain_Spaceboy.png",
+        "Creatures/Omori/3 Stars/Kel.png",
+        "Creatures/Omori/3 Stars/Nefarious_Chip.png",
+        "Creatures/Omori/3 Stars/Papa_Chip.png",
+        "Creatures/Omori/3 Stars/SOMETHING.png",
+        "Creatures/Omori/3 Stars/Snow_Angel.png",
+        "Creatures/Omori/3 Stars/Sweetheart.png",
+        "Creatures/Other/3 Stars/Elmadan.png",
+        "Creatures/Other/3 Stars/Grimora.png",
+        "Creatures/Other/3 Stars/King_Harkinian.png",
+        "Creatures/Other/3 Stars/Niko.png",
+        "Creatures/Other/3 Stars/Overseer.png",
+        "Creatures/Pandas/3 Stars/Defcon_Panda.png",
+        "Creatures/Pandas/3 Stars/P.A.N.D.A._Mk_A.png",
+        "Creatures/Pandas/3 Stars/P.A.N.D.A._Mk_F.png",
+        "Creatures/Pandas/3 Stars/P.A.N.D.A._Mk_T.png",
+        "Creatures/Pandas/3 Stars/Pandabal.png",
+        "Creatures/Pandas/3 Stars/Panseida.png",
+        "Creatures/Pandas/3 Stars/Shield_Master_Pi.png",
+        "Creatures/Pandas/3 Stars/Sumo_Panda.png",
+        "Creatures/Souls/3 Stars/The_Abyss_Watchers.png",
+        "Creatures/Undertale/3 Stars/Papyrus.png"
+      ]
+    },
+    "2a34b2": {
+      "name": "★★★★",
+      "where": "near 'Creatures Simple Version'",
+      "position": [
+        131.8,
+        -14.8
+      ],
+      "cards": 42,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          4
+        ],
+        "folders": [
+          "Creatures/*/4 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "Creatures/BTD/4 Stars/Avatar_Of_Wrath.png",
+        "Creatures/DST/4 Stars/Wolfgang.png",
+        "Creatures/Everhood/4 Stars/Rasta_Beast.png",
+        "Creatures/FTL/4 Stars/Glaive_Main_Cannon.png",
+        "Creatures/Fnaf/4 Stars/Old_Bonnie.png",
+        "Creatures/Fnaf/4 Stars/Old_Chica.png",
+        "Creatures/Fnaf/4 Stars/Old_Freddy.png",
+        "Creatures/Hollow Knight/4 Stars/Dryya.png",
+        "Creatures/Hollow Knight/4 Stars/Grey_Prince_Zote.png",
+        "Creatures/Hollow Knight/4 Stars/Hornet.png",
+        "Creatures/Hollow Knight/4 Stars/Traitor_Lord.png",
+        "Creatures/Isaac/4 Stars/Dogma.png",
+        "Creatures/Kirby/4 Stars/Dark_Daroach.png",
+        "Creatures/Kirby/4 Stars/Dark_Nebula.png",
+        "Creatures/Kirby/4 Stars/Drawcia_Soul.png",
+        "Creatures/Kirby/4 Stars/Dyna_Blade.png",
+        "Creatures/Kirby/4 Stars/HR-H.png",
+        "Creatures/Kirby/4 Stars/King_Dedede.png",
+        "Creatures/Kirby/4 Stars/Lor_Starcutter.png",
+        "Creatures/Kirby/4 Stars/Meta_Knight.png",
+        "Creatures/Kirby/4 Stars/Wham_Bam_Bone.png",
+        "Creatures/Kirby/4 Stars/Wham_Bam_Jewel.png",
+        "Creatures/Lisa/4 Stars/Brad_Armstrong.png",
+        "Creatures/Mario/4 Stars/Cortez.png",
+        "Creatures/Mario/4 Stars/Macho_Grubba.png",
+        "Creatures/Mario/4 Stars/Smorg.png",
+        "Creatures/Omori/4 Stars/Arachnophobia.png",
+        "Creatures/Omori/4 Stars/Mari.png",
+        "Creatures/Other/4 Stars/Katarina.png",
+        "Creatures/Other/4 Stars/Militron.png",
+        "Creatures/Other/4 Stars/Morshu.png",
+        "Creatures/Other/4 Stars/Nasus.png",
+        "Creatures/Other/4 Stars/Tai_Lung.png",
+        "Creatures/Pandas/4 Stars/Groda.png",
+        "Creatures/Souls/4 Stars/Pontiff_Sulyvahn.png",
+        "Creatures/Undertale/4 Stars/Toriel.png",
+        "Creatures/Undertale/4 Stars/Undyne.png",
+        "Creatures/World Of Warcraft/4 Stars/Warcraftian_Hunter.png",
+        "Creatures/World Of Warcraft/4 Stars/Warcraftian_Priest.png",
+        "Creatures/World Of Warcraft/4 Stars/Warcraftian_Shaman.png",
+        "Creatures/World Of Warcraft/4 Stars/Warcraftian_Warlock.png",
+        "Creatures/World Of Warcraft/4 Stars/Warcraftian_Warrior.png"
+      ]
+    },
+    "c9a8fc": {
+      "name": "★★★★★",
+      "where": "near 'Creatures Simple Version'",
+      "position": [
+        131.8,
+        -9.9
+      ],
+      "cards": 26,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          5
+        ],
+        "folders": [
+          "Creatures/*/5 Stars/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "Creatures/Bug Fables/5 Stars/Tanjerin.png",
+        "Creatures/DST/5 Stars/Ancient_Fuelweaver.png",
+        "Creatures/Everhood/5 Stars/Frog.png",
+        "Creatures/Fnaf/5 Stars/Golden_Freddy.png",
+        "Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.png",
+        "Creatures/Hollow Knight/5 Stars/Pure_Vessel.png",
+        "Creatures/Hollow Knight/5 Stars/Ze'mer.png",
+        "Creatures/Kirby/5 Stars/Crowned_Magolor.png",
+        "Creatures/Kirby/5 Stars/Dark_Mind_Eye.png",
+        "Creatures/Kirby/5 Stars/Galacta_Knight.png",
+        "Creatures/Kirby/5 Stars/Landia.png",
+        "Creatures/Kirby/5 Stars/Masked_Dedede.png",
+        "Creatures/Kirby/5 Stars/Necrodeus.png",
+        "Creatures/Kirby/5 Stars/Nightmare.png",
+        "Creatures/Kirby/5 Stars/Zero_Two.png",
+        "Creatures/Mario/5 Stars/The_Master.png",
+        "Creatures/Omori/5 Stars/Abbi.png",
+        "Creatures/Omori/5 Stars/Omori.png",
+        "Creatures/Omori/5 Stars/The_Big_Yellow_Cat.png",
+        "Creatures/Other/5 Stars/Bobberlington.png",
+        "Creatures/Other/5 Stars/Doctor_Zomboss.png",
+        "Creatures/Other/5 Stars/Koro-Sensei.png",
+        "Creatures/Other/5 Stars/Niiue.png",
+        "Creatures/Pandas/5 Stars/Pandora.png",
+        "Creatures/Souls/5 Stars/Lothric.png",
+        "Creatures/Undertale/5 Stars/Spamton_Neo.png"
+      ]
+    },
+    "fa254e": {
+      "name": "★★",
+      "where": "near 'Creatures Copy'",
+      "position": [
+        131.8,
+        11.7
+      ],
+      "cards": 45,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          2
+        ],
+        "folders": [
+          "Creatures/*/2 Stars/*.png"
+        ],
+        "count": 1,
+        "exclude": [
+          "Creatures/Other/2 Stars/Stubborn_Queen.png"
+        ]
+      },
+      "confidence": "high",
+      "copies": [
+        "e8e1b6"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "ac2a14": {
+      "name": "★★★",
+      "where": "near 'Creatures Copy'",
+      "position": [
+        131.8,
+        16.6
+      ],
+      "cards": 101,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          3
+        ],
+        "folders": [
+          "Creatures/*/3 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "6ae2a9"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "8dc131": {
+      "name": "★★★★",
+      "where": "near 'Creatures Copy'",
+      "position": [
+        131.8,
+        21.5
+      ],
+      "cards": 92,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          4
+        ],
+        "folders": [
+          "Creatures/*/4 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "cde2bc"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "f05d89": {
+      "name": "★★★★★",
+      "where": "near 'Creatures Copy'",
+      "position": [
+        131.8,
+        26.4
+      ],
+      "cards": 56,
+      "rule": {
+        "kind": "creatures",
+        "stars": [
+          5
+        ],
+        "folders": [
+          "Creatures/*/5 Stars/*.png"
+        ],
+        "count": 1
+      },
+      "confidence": "high",
+      "copies": [
+        "bc1e3f"
+      ],
+      "back": "MDW/cardback.png"
+    },
+    "493fc7": {
+      "name": "3 Star Equips",
+      "where": "Bag 'Specific Item Decks'",
+      "position": [
+        116.0,
+        4.6
+      ],
+      "cards": 0,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          3
+        ],
+        "subtype": "Equip",
+        "folders": [
+          "Items/Equip/3 Stars/*.png"
+        ]
+      },
+      "confidence": "low",
+      "copies": [],
+      "back": "MDW/cardback_item.png"
+    },
+    "79fd59": {
+      "name": "Deck of Rejects",
+      "where": "Bag 'Specific Item Decks'",
+      "position": [
+        116.1,
+        2.9
+      ],
+      "cards": 7,
+      "rule": {
+        "kind": "morgue",
+        "stars": [],
+        "folders": [
+          "MDW/The Morgue/*.png"
+        ],
+        "partial": true,
+        "count": 1
+      },
+      "confidence": "medium",
+      "copies": [],
+      "back": "MDW/cardback.png",
+      "card_list": [
+        "MDW/The Morgue/Developper.png",
+        "MDW/The Morgue/Fire_Guardian's_Stronghold.png",
+        "MDW/The Morgue/Grandfather_Clock.png",
+        "MDW/The Morgue/Satou.png",
+        "MDW/The Morgue/Satou_Matsustaka.png",
+        "MDW/The Morgue/The_Missile.png",
+        "MDW/The Morgue/Warcraftian_Rouge.png"
+      ]
+    },
+    "89e02e": {
+      "name": "1 Star Equips",
+      "where": "Bag 'Specific Item Decks'",
+      "position": [
+        116.6,
+        4.7
+      ],
+      "cards": 0,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          1
+        ],
+        "subtype": "Equip",
+        "folders": [
+          "Items/Equip/1 Stars/*.png"
+        ]
+      },
+      "confidence": "low",
+      "copies": [],
+      "back": "MDW/cardback_item.png"
+    },
+    "b1cb91": {
+      "name": "4 Star Attack Items",
+      "where": "Bag 'Specific Item Decks'",
+      "position": [
+        117.1,
+        4.4
+      ],
+      "cards": 0,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          4
+        ],
+        "subtype": "Attack",
+        "folders": [
+          "Items/Attack/4 Stars/*.png"
+        ]
+      },
+      "confidence": "low",
+      "copies": [],
+      "back": "MDW/cardback_item.png"
+    },
+    "280637": {
+      "name": "2 Star Healing Items",
+      "where": "Bag 'Specific Item Decks'",
+      "position": [
+        117.2,
+        4.1
+      ],
+      "cards": 0,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          2
+        ],
+        "subtype": "Heal",
+        "folders": [
+          "Items/Heal/2 Stars/*.png"
+        ]
+      },
+      "confidence": "low",
+      "copies": [],
+      "back": "MDW/cardback_item.png"
+    },
+    "886307": {
+      "name": "4 Star Equips",
+      "where": "Bag 'Specific Item Decks'",
+      "position": [
+        117.2,
+        4.2
+      ],
+      "cards": 0,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          4
+        ],
+        "subtype": "Equip",
+        "folders": [
+          "Items/Equip/4 Stars/*.png"
+        ]
+      },
+      "confidence": "low",
+      "copies": [],
+      "back": "MDW/cardback_item.png"
+    },
+    "82d617": {
+      "name": "2 Star Equips",
+      "where": "Bag 'Specific Item Decks'",
+      "position": [
+        117.3,
+        5.0
+      ],
+      "cards": 0,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          2
+        ],
+        "subtype": "Equip",
+        "folders": [
+          "Items/Equip/2 Stars/*.png"
+        ]
+      },
+      "confidence": "low",
+      "copies": [],
+      "back": "MDW/cardback_item.png"
+    },
+    "452af0": {
+      "name": "2 Star Attack Items",
+      "where": "Bag 'Specific Item Decks'",
+      "position": [
+        117.5,
+        5.8
+      ],
+      "cards": 0,
+      "rule": {
+        "kind": "items",
+        "stars": [
+          2
+        ],
+        "subtype": "Attack",
+        "folders": [
+          "Items/Attack/2 Stars/*.png"
+        ]
+      },
+      "confidence": "low",
+      "copies": [],
+      "back": "MDW/cardback_item.png"
+    }
+  },
+  "bags": {
+    "89b33d": {
+      "name": "Counters",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        -5.1
+      ],
+      "holds": {
+        "Counter": 1
+      },
+      "contents": [
+        [
+          "Counter",
+          "",
+          ""
+        ]
+      ]
+    },
+    "46f627": {
+      "name": ".5",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        -2.9
+      ],
+      "holds": {
+        "Custom_Tile": 1
+      },
+      "contents": [
+        [
+          "Custom_Tile",
+          "",
+          "Auxiliary/Markers/Green.png, Auxiliary/Markers/Red.png"
+        ]
+      ]
+    },
+    "479371": {
+      "name": "Max HP",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        -7.3
+      ],
+      "holds": {
+        "CardCustom": 1
+      },
+      "contents": [
+        [
+          "CardCustom",
+          "HP",
+          "Auxiliary/Markers/health_marker.png, Auxiliary/Markers/minus_health_marker.png"
+        ]
+      ]
+    },
+    "ef92ba": {
+      "name": "DEF",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        -9.5
+      ],
+      "holds": {
+        "CardCustom": 1
+      },
+      "contents": [
+        [
+          "CardCustom",
+          "DEF",
+          "Auxiliary/Markers/defense_marker.png, Auxiliary/Markers/minus_defense_marker.png"
+        ]
+      ]
+    },
+    "de8e4a": {
+      "name": "ATK",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        -11.7
+      ],
+      "holds": {
+        "CardCustom": 1
+      },
+      "contents": [
+        [
+          "CardCustom",
+          "ATK",
+          "Auxiliary/Markers/attack_marker.png, Auxiliary/Markers/minus_attack_marker.png"
+        ]
+      ]
+    },
+    "7962c9": {
+      "name": "SPD",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        -14.0
+      ],
+      "holds": {
+        "CardCustom": 1
+      },
+      "contents": [
+        [
+          "CardCustom",
+          "SPD",
+          "Auxiliary/Markers/minus_speed_marker.png, Auxiliary/Markers/speed_marker.png"
+        ]
+      ]
+    },
+    "d9c4ac": {
+      "name": "SPD",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        13.9
+      ],
+      "holds": {
+        "CardCustom": 1
+      },
+      "contents": [
+        [
+          "CardCustom",
+          "SPD",
+          "Auxiliary/Markers/minus_speed_marker.png, Auxiliary/Markers/speed_marker.png"
+        ]
+      ]
+    },
+    "1b9ecf": {
+      "name": ".5",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        2.8
+      ],
+      "holds": {
+        "Custom_Tile": 1
+      },
+      "contents": [
+        [
+          "Custom_Tile",
+          "",
+          "Auxiliary/Markers/Green.png, Auxiliary/Markers/Red.png"
+        ]
+      ]
+    },
+    "4591b4": {
+      "name": "Counters",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        5.0
+      ],
+      "holds": {
+        "Counter": 1
+      },
+      "contents": [
+        [
+          "Counter",
+          "",
+          ""
+        ]
+      ]
+    },
+    "cf1305": {
+      "name": "Max HP",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        7.2
+      ],
+      "holds": {
+        "CardCustom": 1
+      },
+      "contents": [
+        [
+          "CardCustom",
+          "HP",
+          "Auxiliary/Markers/health_marker.png, Auxiliary/Markers/minus_health_marker.png"
+        ]
+      ]
+    },
+    "eb5c28": {
+      "name": "DEF",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.7,
+        9.5
+      ],
+      "holds": {
+        "CardCustom": 1
+      },
+      "contents": [
+        [
+          "CardCustom",
+          "DEF",
+          "Auxiliary/Markers/defense_marker.png, Auxiliary/Markers/minus_defense_marker.png"
+        ]
+      ]
+    },
+    "106068": {
+      "name": "ATK",
+      "type": "Infinite_Bag",
+      "where": "table",
+      "position": [
+        100.8,
+        11.7
+      ],
+      "holds": {
+        "CardCustom": 1
+      },
+      "contents": [
+        [
+          "CardCustom",
+          "ATK",
+          "Auxiliary/Markers/attack_marker.png, Auxiliary/Markers/minus_attack_marker.png"
+        ]
+      ]
+    },
+    "4a9f2e": {
+      "name": "Creature Types",
+      "type": "Bag",
+      "where": "table",
+      "position": [
+        106.9,
+        12.1
+      ],
+      "holds": {
+        "Custom_Token": 19
+      },
+      "rule": {
+        "kind": "types",
+        "folders": [
+          "Types/*.png",
+          "Types/Stars/*.png"
+        ],
+        "object": "Custom_Token",
+        "partial": true
+      },
+      "tokens": {
+        "Offensive Minion": "Types/Offensive_Minion.png",
+        "Defensive Minion": "Types/Defensive_Minion.png",
+        "Machine": "Types/machine.png",
+        "Wind": "Types/Wind.png",
+        "Rock": "Types/rock.png",
+        "Panda": "Types/panda.png",
+        "Fire": "Types/fire.png",
+        "Ice": "Types/ice.png",
+        "Water": "Types/water.png",
+        "Electric": "Types/electric.png",
+        "Undead": "Types/undead.png",
+        "Dark": "Types/dark.png",
+        "Light": "Types/lightshadow.png",
+        "Dark Matter": "Types/darkmatter.png",
+        "Unknown": "Types/unknown.png",
+        "Girl": "Types/Girl.png",
+        "No Type": "Types/null.png",
+        "Star": "Types/Stars/star.png",
+        "No Star": "Types/Stars/Null Star.png"
+      }
+    },
+    "32092d": {
+      "name": "Specific Item Decks",
+      "type": "Bag",
+      "where": "table",
+      "position": [
+        106.9,
+        14.9
+      ],
+      "holds": {
+        "Deck": 8
+      },
+      "decks": [
+        "79fd59",
+        "493fc7",
+        "82d617",
+        "452af0",
+        "280637",
+        "b1cb91",
+        "886307",
+        "89e02e"
+      ]
+    },
+    "b7abdb": {
+      "name": "Rulebooks",
+      "type": "Custom_Model_Bag",
+      "where": "table",
+      "position": [
+        -101.2,
+        1.1
+      ],
+      "holds": {
+        "CardCustom": 46
+      },
+      "rule": {
+        "kind": "rulebook",
+        "folders": [
+          "Auxiliary/Rulebook/*.png"
+        ],
+        "exclude": [
+          "Auxiliary/Rulebook/0000_Cover.png",
+          "Auxiliary/Rulebook/0000_Cover_Book.png"
+        ],
+        "loose_cards": true,
+        "nickname": "Page N: Title"
+      },
+      "back": "own face",
+      "texture": "Auxiliary/Rulebook/0000_Cover_Book.png"
+    }
+  },
+  "objects": {
+    "https://steamusercontent-a.akamaihd.net/ugc/879750610978795929/723C50F43FAB3DE3DC12CB8460536E8CB34B60A3/": {
+      "in_git": null,
+      "used_by": {
+        "Custom_Assetbundle ''": 4
+      },
+      "fields": [
+        "AssetbundleURL"
+      ],
+      "guids": [
+        "afc863",
+        "c8edca",
+        "393bf7",
+        "12c65e"
+      ]
+    },
+    "https://i.imgur.com/eHXDjyy.jpg": {
+      "in_git": null,
+      "used_by": {
+        "Chinese_Checkers_Piece 'Flex Table Control'": 1
+      },
+      "fields": [
+        "LuaScriptState (embedded)"
+      ],
+      "guids": [
+        "bd69bd"
+      ]
+    },
+    "https://i.imgur.com/DbPelDi.jpg": {
+      "in_git": null,
+      "used_by": {
+        "Chinese_Checkers_Piece 'Flex Table Control'": 1
+      },
+      "fields": [
+        "LuaScriptState (embedded)"
+      ],
+      "guids": [
+        "bd69bd"
+      ]
+    },
+    "https://i.imgur.com/N0O6aqj.jpg": {
+      "in_git": null,
+      "used_by": {
+        "Chinese_Checkers_Piece 'Flex Table Control'": 1
+      },
+      "fields": [
+        "LuaScriptState (embedded)"
+      ],
+      "guids": [
+        "bd69bd"
+      ]
+    },
+    "MDW/cardback.png": {
+      "in_git": true,
+      "used_by": {
+        "Chinese_Checkers_Piece 'Flex Table Control'": 1
+      },
+      "fields": [
+        "LuaScriptState (embedded)"
+      ],
+      "guids": [
+        "bd69bd"
+      ]
+    },
+    "MDW/Holders/.5 Holder.jpg": {
+      "in_git": true,
+      "used_by": {
+        "Chinese_Checkers_Piece 'Flex Table Control'": 1,
+        "Custom_Tile 'All Status Effects'": 2,
+        "Custom_Tile 'Auxiliary Items'": 2,
+        "Custom_Tile 'Minions'": 2,
+        "Custom_Tile 'Status Effects Copy'": 1,
+        "Custom_Tile 'Minions Copy'": 1,
+        "Custom_Tile 'Auxiliary Items Copy'": 1
+      },
+      "fields": [
+        "ImageURL",
+        "LuaScriptState (embedded)"
+      ],
+      "guids": [
+        "bd69bd",
+        "11a690",
+        "ebb374",
+        "47a97f",
+        "4d6e3a",
+        "263eac",
+        "63f85f",
+        "92c42c",
+        "8b65b4",
+        "75ca31"
+      ]
+    },
+    "https://steamusercontent-a.akamaihd.net/ugc/879750610978796471/14ED0DBD593370733A0309B0950004F33EB9FACA/": {
+      "in_git": null,
+      "used_by": {
+        "Custom_Assetbundle ''": 4
+      },
+      "fields": [
+        "AssetbundleURL"
+      ],
+      "guids": [
+        "f938a2",
+        "9f95fd",
+        "35b95f",
+        "5af8f2"
+      ]
+    },
+    "Auxiliary/Markers/Green.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile '' in .5": 2,
+        "Custom_Tile ''": 36
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "18518b",
+        "4cfbbb",
+        "72e0bf",
+        "945690",
+        "4e91dc",
+        "2f4080",
+        "140fc4",
+        "f9e58f",
+        "132c36",
+        "da60f2",
+        "fc489f",
+        "231e98",
+        "455540",
+        "51d791",
+        "ebd730",
+        "d7e5be",
+        "b0763b",
+        "64a664",
+        "e50ad1",
+        "dff174",
+        "2ac097",
+        "f542d3",
+        "065615",
+        "4caeb4",
+        "757bc5",
+        "7bd483",
+        "28d701",
+        "d05754",
+        "50553a",
+        "cc486f",
+        "f4eb4e",
+        "189d00",
+        "20da95",
+        "f26191",
+        "1bea33",
+        "045d6c",
+        "64107f",
+        "229a99"
+      ]
+    },
+    "Auxiliary/Markers/Red.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile '' in .5": 2,
+        "Custom_Tile ''": 36
+      },
+      "fields": [
+        "ImageSecondaryURL"
+      ],
+      "guids": [
+        "18518b",
+        "4cfbbb",
+        "72e0bf",
+        "945690",
+        "4e91dc",
+        "2f4080",
+        "140fc4",
+        "f9e58f",
+        "132c36",
+        "da60f2",
+        "fc489f",
+        "231e98",
+        "455540",
+        "51d791",
+        "ebd730",
+        "d7e5be",
+        "b0763b",
+        "64a664",
+        "e50ad1",
+        "dff174",
+        "2ac097",
+        "f542d3",
+        "065615",
+        "4caeb4",
+        "757bc5",
+        "7bd483",
+        "28d701",
+        "d05754",
+        "50553a",
+        "cc486f",
+        "f4eb4e",
+        "189d00",
+        "20da95",
+        "f26191",
+        "1bea33",
+        "045d6c",
+        "64107f",
+        "229a99"
+      ]
+    },
+    "Auxiliary/Markers/health_marker.png": {
+      "in_git": true,
+      "used_by": {
+        "CardCustom 'HP' in Max HP": 2
+      },
+      "fields": [
+        "FaceURL"
+      ],
+      "guids": [
+        "609586"
+      ]
+    },
+    "Auxiliary/Markers/minus_health_marker.png": {
+      "in_git": true,
+      "used_by": {
+        "CardCustom 'HP' in Max HP": 2
+      },
+      "fields": [
+        "BackURL"
+      ],
+      "guids": [
+        "609586"
+      ]
+    },
+    "Auxiliary/Markers/defense_marker.png": {
+      "in_git": true,
+      "used_by": {
+        "CardCustom 'DEF' in DEF": 2
+      },
+      "fields": [
+        "FaceURL"
+      ],
+      "guids": [
+        "09ba04"
+      ]
+    },
+    "Auxiliary/Markers/minus_defense_marker.png": {
+      "in_git": true,
+      "used_by": {
+        "CardCustom 'DEF' in DEF": 2
+      },
+      "fields": [
+        "BackURL"
+      ],
+      "guids": [
+        "09ba04"
+      ]
+    },
+    "Auxiliary/Markers/attack_marker.png": {
+      "in_git": true,
+      "used_by": {
+        "CardCustom 'ATK' in ATK": 2
+      },
+      "fields": [
+        "FaceURL"
+      ],
+      "guids": [
+        "304516"
+      ]
+    },
+    "Auxiliary/Markers/minus_attack_marker.png": {
+      "in_git": true,
+      "used_by": {
+        "CardCustom 'ATK' in ATK": 2
+      },
+      "fields": [
+        "BackURL"
+      ],
+      "guids": [
+        "304516"
+      ]
+    },
+    "Auxiliary/Markers/speed_marker.png": {
+      "in_git": true,
+      "used_by": {
+        "CardCustom 'SPD' in SPD": 2
+      },
+      "fields": [
+        "FaceURL"
+      ],
+      "guids": [
+        "e6f324"
+      ]
+    },
+    "Auxiliary/Markers/minus_speed_marker.png": {
+      "in_git": true,
+      "used_by": {
+        "CardCustom 'SPD' in SPD": 2
+      },
+      "fields": [
+        "BackURL"
+      ],
+      "guids": [
+        "e6f324"
+      ]
+    },
+    "MDW/Holders/Discard.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Discard Pile'": 1,
+        "Custom_Tile 'Penalty Box Items'": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "1d95fd",
+        "850ffc"
+      ]
+    },
+    "MDW/Holders/Field.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Field Item Holder'": 2
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "1f4935",
+        "0942e7"
+      ]
+    },
+    "MDW/Holders/Item.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Item Holder'": 12,
+        "Custom_Tile 'N.M.E Items'": 1,
+        "Custom_Tile 'N.M.E. Items Copy'": 1
+      },
+      "fields": [
+        "ImageSecondaryURL",
+        "ImageURL"
+      ],
+      "guids": [
+        "63184a",
+        "df0c90",
+        "9ac85f",
+        "b1d394",
+        "e368b0",
+        "2a0826",
+        "ba1014",
+        "dab142"
+      ]
+    },
+    "MDW/Holders/Graveyard.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Graveyard'": 2,
+        "Custom_Tile 'Penalty Box Creatures'": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "34bc4e",
+        "c42228",
+        "8287a7"
+      ]
+    },
+    "MDW/Holders/Creature_Deck.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Creatures'": 1,
+        "Custom_Tile 'Creatures Copy'": 1,
+        "Custom_Tile 'Creatures Developer Version'": 1,
+        "Custom_Tile 'Baseline Creatures'": 1,
+        "Custom_Tile 'Creatures Simple Version'": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "b33868",
+        "afcd09",
+        "d69f21",
+        "6991bf",
+        "1b9629"
+      ]
+    },
+    "MDW/Holders/Field_Deck.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Field Items'": 1,
+        "Custom_Tile 'Field Items Copy'": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "1c6e7f",
+        "b83429"
+      ]
+    },
+    "MDW/Holders/Item_Deck.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Items'": 1,
+        "Custom_Tile 'Items Copy'": 1,
+        "Custom_Tile 'Items Simple Version'": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "8c4449",
+        "cec004",
+        "266bbc"
+      ]
+    },
+    "MDW/Raid_Boss_Table_Top.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Board ''": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "bfee49"
+      ]
+    },
+    "MDW/Holders/Active.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Active Holder'": 2
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "749baf",
+        "54c3c3"
+      ]
+    },
+    "Types/Offensive_Minion.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Offensive Minion' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "f9e27e"
+      ]
+    },
+    "Types/Defensive_Minion.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Defensive Minion' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "c1bae5"
+      ]
+    },
+    "Types/machine.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Machine' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "1a95e3"
+      ]
+    },
+    "Types/Wind.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Wind' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "3d8131"
+      ]
+    },
+    "Types/rock.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Rock' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "983396"
+      ]
+    },
+    "Types/panda.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Panda' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "002cc1"
+      ]
+    },
+    "Types/fire.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Fire' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "65d71f"
+      ]
+    },
+    "Types/ice.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Ice' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "3246d4"
+      ]
+    },
+    "Types/water.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Water' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "14a1e7"
+      ]
+    },
+    "Types/electric.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Electric' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "87ba92"
+      ]
+    },
+    "Types/undead.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Undead' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "76b426"
+      ]
+    },
+    "Types/dark.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Dark' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "c72d83"
+      ]
+    },
+    "Types/lightshadow.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Light' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "e00c90"
+      ]
+    },
+    "Types/darkmatter.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Dark Matter' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "0bf0fc"
+      ]
+    },
+    "Types/unknown.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Unknown' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "826f8b"
+      ]
+    },
+    "Types/Girl.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Girl' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "517a18"
+      ]
+    },
+    "Types/null.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'No Type' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "2de25e"
+      ]
+    },
+    "Types/Stars/star.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'Star' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "1da2ff"
+      ]
+    },
+    "Types/Stars/Null Star.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Token 'No Star' in Creature Types": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "b8ece3"
+      ]
+    },
+    "MDW/Holders/Creature_Full.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Creature Holder'": 6
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "540ba5",
+        "bd7724",
+        "2dad99",
+        "e1d292",
+        "1c8283",
+        "6c8214"
+      ]
+    },
+    "MDW/Holders/Minion_Full.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Minion Holder'": 2
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "eeaca0",
+        "1fe8f8"
+      ]
+    },
+    "MDW/Holders/Shop_Item.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Item Shop'": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "b1eb7c"
+      ]
+    },
+    "MDW/Holders/Shop_Field.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'Field Shop'": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "404685"
+      ]
+    },
+    "MDW/Holders/Shop_NME.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'N.M.E. Shop'": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "c90b9a"
+      ]
+    },
+    "MDW/Holders/NME.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Tile 'N.M.E Items'": 1,
+        "Custom_Tile 'N.M.E. Items Copy'": 1
+      },
+      "fields": [
+        "ImageURL"
+      ],
+      "guids": [
+        "ba1014",
+        "dab142"
+      ]
+    },
+    "http://pastebin.com/raw/mFbw0N0K": {
+      "in_git": null,
+      "used_by": {
+        "Custom_Model_Bag 'Rulebooks'": 1
+      },
+      "fields": [
+        "MeshURL"
+      ],
+      "guids": [
+        "b7abdb"
+      ]
+    },
+    "Auxiliary/Rulebook/0000_Cover_Book.png": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Model_Bag 'Rulebooks'": 1
+      },
+      "fields": [
+        "DiffuseURL"
+      ],
+      "guids": [
+        "b7abdb"
+      ]
+    },
+    "https://steamusercontent-a.akamaihd.net/ugc/879750610978796176/4A5A65543B98BCFBF57E910D06EC984208223D38/": {
+      "in_git": null,
+      "used_by": {
+        "Custom_Model ''": 1
+      },
+      "fields": [
+        "MeshURL"
+      ],
+      "guids": [
+        "4ee1f2"
+      ]
+    },
+    "MDW/DbPelDi.jpeg": {
+      "in_git": true,
+      "used_by": {
+        "Custom_Model ''": 1
+      },
+      "fields": [
+        "DiffuseURL"
+      ],
+      "guids": [
+        "4ee1f2"
+      ]
+    },
+    "https://api.tabletopsimulator.com/ui/introUI/": {
+      "in_git": null,
+      "used_by": {
+        "Global ''": 1
+      },
+      "fields": [
+        "global script (embedded)"
+      ],
+      "guids": [
+        "-1"
+      ]
+    }
+  },
+  "large_cards": {
+    "source": "Auxiliary/Creatures",
+    "lua_table": "resizeTargets",
+    "key": "Nickname",
+    "current_keys": [
+      "Azamoth The Possessed Vessel",
+      "Igor Roballtowski",
+      "Mettaton EX",
+      "Mettaton NEO",
+      "Morpho Knight",
+      "Shadow Queen"
+    ]
+  }
+}
