@@ -11,7 +11,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **Card pages**: full image, stat bars, ability text with icons, timing-tag badges (hover for the meaning) and links to
   every card it names; "mentions", "mentioned by", similar stats, same series, text history with changes highlighted,
   and an image version viewer: every commit that changed the card's image, compared side by side with the current one.
-  Every card has a shareable link (`/c/<card>/`) that shows a rich preview in Discord.
+  Every card has a shareable link (`/c/<card>/`) that shows a rich preview in Discord. The Share button (s) opens a dialog
+  with that link, a Discord preview, and buttons to copy the card as a Discord message, an image or plain text.
 - **Rulebook**: every page with search and highlighting, the timing-tag glossary, and the constructed ban list.
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,
   optional starting field), with live checks, several saved decks, share links, text import/export, random fill,
@@ -21,7 +22,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   chart that highlights possible balance outliers. Every chart has a table view.
 - **Changes**: recently updated cards with text diffs, the most revised cards, and cards the bot hasn't parsed yet.
 
-Keyboard: `/` search, `←`/`→` previous/next card, `d` add to deck, `c` copy link, `x` compare, `r` random, `1`–`5` sections, `?` help.
+Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions, `d` add to deck, `c` copy link,
+`s` share, `x` compare, `e` edit, `r` random, `1`–`5` sections, `?` help.
 
 ## Where the data comes from
 
@@ -36,9 +38,9 @@ only), following folder moves; the build needs full history for them (CI fetches
 `git fetch --unshallow --filter=blob:none` fixes that).
 
 Each card PNG becomes three WebP images (240 and 360 px for the grid, 720 px for the card view), cached by git blob
-hash in `site/.cache/img`. The first screen loads only `data/cards.json`; `rules.json` and `history.json` load when the
-rulebook, a card's history or the changes feed is opened. Script, style and data URLs carry a build version (`?v=...`),
-so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
+hash in `site/.cache/img`. The first screen loads only `data/cards.json`; `rules.json`, `history.json` and
+`versions.json` load when the rulebook, a card's history or the changes feed is opened. Script, style and data URLs
+carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
 
 ## Editing
@@ -47,7 +49,11 @@ Anyone with write access to this repo can fix card data on the site: the pencil 
 (classic, `public_repo` scope), Edit (e) on a card stages changes in a batch, and **Review and publish** commits the
 whole batch at once. Fields go to `MDW/Card Edits.json`, authors to `MDW/Card Authors.txt`, bans to
 `MDW/Constructed Ban List.txt`. The site rebuilds on that commit; the bot applies the same files on `/update_stats`.
-Admins can also ban, hide cards and rename people. Remove a card's entry from `Card Edits.json` to go back to the PSD.
+Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a card
+several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own bars.
+Admins are the repo owner plus the GitHub logins in `MDW/Website Admins.txt`; they can also ban, hide cards, rename
+people and edit the admin list (committed with the batch). Remove a card's entry from `Card Edits.json` to go back to
+the PSD.
 
 ## Working on it
 
