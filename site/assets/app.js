@@ -2,6 +2,7 @@ import { compile, suggest, total, SEARCH_HELP } from "./search.js";
 import { esc, norm, makeRenderer, plain, diffWords, tagInfo, badgeHtml, GROUP_NAMES } from "./text.js";
 import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
+import { createEditor } from "./edit.js";
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -17,7 +18,8 @@ const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field ca
   ["aux item", "Auxiliary items"], ["status", "Status effects"], ["creatures", "Auxiliary creatures"]];
 const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
-const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"]];
+const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
+  ["unparsed", "Not parsed yet"], ["problems", "Parse problems"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
 const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
   ["new", "Recently updated"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
@@ -65,24 +67,9 @@ async function init() {
     view.innerHTML = `<div class="empty">Couldn't load card data (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`;
     return;
   }
-  S.cards = S.data.cards; S.rules = null; S.icons = S.data.icons;
-  for (const c of S.cards) { c.parsed = c.parsed !== false; S.byId.set(c.id, c); }
-  // stats can pass 10 (Sonic's speed bar is two rows: 20), so filters go up to the highest value on a card
-  S.statMax = Object.fromEntries(["hp", "def", "atk", "spd"].map(k => [k, Math.max(10, ...S.cards.map(c => c[k] ?? 0))]));
-  for (const g of S.data.banlist.groups) for (const e of g.entries) {
-    if (!e.id) continue;
-    S.banned.set(e.id, e.reason || "banned");
-    const c = S.byId.get(e.id); if (c) c._banned = e.reason || "banned";
-  }
-  S.renderer = makeRenderer({ cards: S.cards, icons: S.icons });
-  for (const c of S.cards) {
-    const m = S.renderer.mentions(c.ability, c.name);
-    S.mentions.set(c.id, m);
-    if (c.dup) continue;                                   // a duplicate's text is its original's: count it once
-    for (const id of m) { if (!S.mentionedBy.has(id)) S.mentionedBy.set(id, new Set()); S.mentionedBy.get(id).add(c.id); }
-  }
-  // status effects that no card names
-  for (const c of S.cards) if ((c.type === "debuff" || c.type === "buff") && !S.mentionedBy.get(c.id)?.size) c._unused = true;
+  S.all = S.data.cards; S.rules = null; S.icons = S.data.icons;
+  for (const c of S.all) S.byId.set(c.id, c);
+  editor.init();                                           // applies staged edits, then derive()
   S.decks = D.loadDecks();
   updateDeckCount();
   const meta = document.querySelector('meta[name="card"]');
@@ -91,9 +78,44 @@ async function init() {
   route();
 }
 
+// everything computed from the cards; re-run after an edit
+function derive() {
+  for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; }
+  S.cards = S.all.filter(c => !c.hidden || S.showHidden);
+  // stats can pass 10 (Sonic's speed is 20)
+  S.statMax = Object.fromEntries(["hp", "def", "atk", "spd"].map(k => [k, Math.max(10, ...S.cards.map(c => c[k] ?? 0))]));
+  S.banned = new Map();
+  for (const g of S.data.banlist.groups) for (const e of g.entries) {
+    if (!e.id) continue;
+    S.banned.set(e.id, e.reason || "banned");
+    const c = S.byId.get(e.id); if (c) c._banned = e.reason || "banned";
+  }
+  S.renderer = makeRenderer({ cards: S.cards, icons: S.icons });
+  S.mentions = new Map(); S.mentionedBy = new Map();
+  for (const c of S.cards) {
+    const m = S.renderer.mentions(c.ability, c.name);
+    S.mentions.set(c.id, m);
+    if (c.dup) continue;                                   // a duplicate counts once
+    for (const id of m) { if (!S.mentionedBy.has(id)) S.mentionedBy.set(id, new Set()); S.mentionedBy.get(id).add(c.id); }
+  }
+  for (const c of S.cards) if ((c.type === "debuff" || c.type === "buff") && !S.mentionedBy.get(c.id)?.size) c._unused = true;
+}
+const currentCard = () => (parseHash().name === "card" && !modal.hidden ? parseHash().arg : "");
+const goCard = id => { if (parseHash().name === "card" && parseHash().arg === id) openCard(id); else location.hash = `#/card/${id}`; };
+function rerender() {
+  const onCard = parseHash().name === "card", base = onCard ? S.listHash : location.hash || "#/cards";
+  if (S.renderedHash) renderView(parseHash(base), base);
+  if (onCard && $(".detail", modal)) openCard(parseHash().arg);       // dialogs stay open
+}
+const editor = createEditor({
+  S, KIND_LABEL, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
+  openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
+  iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
+});
+
 // ---- routing ---------------------------------------------------------------------------------------
-function parseHash() {
-  const h = location.hash.replace(/^#\/?/, "");
+function parseHash(hash = location.hash) {
+  const h = hash.replace(/^#\/?/, "");
   const [path, query = ""] = h.split("?");
   const parts = path.split("/").filter(Boolean).map(decodeURIComponent);
   return { name: parts[0] || "cards", arg: parts.slice(1).join("/"), params: new URLSearchParams(query) };
@@ -143,7 +165,7 @@ function filterCards(p, { facets = true } = {}) {
   if (author) list = list.filter(c => c.author === author);
   for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => c[k] != null && c[k] >= r[0] && c[k] <= r[1]); }
   const flagFns = { history: c => !!c.hv, unparsed: c => !c.parsed, problems: c => !!(c.problems && c.problems.length), alias: c => !!(c.aliases && c.aliases.length),
-    dup: c => !!(c.dup || c.dups), unused: c => !!c._unused };
+    dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(c.edited || c._staged || c._sent) };
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   return list;
 }
@@ -163,7 +185,10 @@ function tileHtml(c, { small = false, eager = false, css = 190, constructed = fa
   const inDeck = deckHas(c.id);
   return `<article class="tile" data-open="${c.id}" tabindex="0" aria-label="${esc(c.name)}">
     ${c.img ? `<img class="art" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(c, small ? 120 : css)} alt="">` : `<div class="art"></div>`}
-    ${constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>` : !c.parsed ? `<span class="flag" data-tip="Not parsed by the bot yet">New</span>`
+    ${constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>`
+      : c._staged ? `<span class="flag staged" data-tip="Changed in your unpublished batch">Unpublished</span>`
+      : c.hidden ? `<span class="flag" data-tip="Hidden from the website">Hidden</span>`
+      : !c.parsed ? `<span class="flag" data-tip="Not parsed by the bot yet">New</span>`
       : c._unused ? `<span class="flag unused" data-tip="No card names this status effect">Unused</span>`
       : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}: same PSD">Duplicate</span>` : ""}
     ${small ? "" : `<button type="button" class="add${inDeck ? " in" : ""}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "✓ In deck" : "+ Deck"}</button>`}
@@ -289,16 +314,20 @@ function openCard(id) {
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
+          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : c.edited ? `<span class="fact" data-tip="${esc(`Changed on the website: ${c.edited.join(", ")}${c.editBy ? ` · ${c.editBy}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
+          ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>
         ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, "")}</a>`).join("")}</div>` : ""}
         ${statBars(c)}
         ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, c.name)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
-        ${c.aliases ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
+        ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, c.name)}</div>` : ""}
+        ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
         <div class="actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
           <button type="button" data-action="copy-link" data-id="${c.id}">Copy link <span class="kbd">c</span></button>
           <button type="button" data-action="copy-text" data-id="${c.id}">Copy text</button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
+          <button type="button" data-action="edit-card" data-id="${c.id}">Edit <span class="kbd">e</span></button>
           ${c.png ? `<a class="fact" href="${esc(fullUrl(c))}" target="_blank" rel="noopener">Full image</a>` : ""}
           ${c.psd ? `<a class="fact" href="${esc(ghUrl(c.psd))}" target="_blank" rel="noopener">PSD on GitHub</a>` : ""}
         </div>
@@ -516,6 +545,7 @@ function renderChanges() {
   const edited = S.cards.filter(c => c.hv).sort((a, b) => b.hv - a.hv);
   const unparsed = S.cards.filter(c => !c.parsed);
   const problems = S.cards.filter(c => c.problems && c.problems.length);
+  const webEdits = S.all.filter(c => c.edited).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
   const item = c => {
     const last = c.history && c.history.length ? c.history[c.history.length - 1] : null;
     return `<div class="item">${c.img ? `<img loading="lazy" decoding="async" src="${img(c, 240)}" alt="" data-open="${c.id}">` : "<div></div>"}<div>
@@ -524,6 +554,7 @@ function renderChanges() {
   };
   view.innerHTML = `<div style="max-width:980px;margin:auto">
     <section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>
+    ${webEdits.length ? `<section class="panel"><h3>Edited on the website <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${esc(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></section>` : ""}
     <section class="panel"><h3>Most revised</h3><div class="feed">${edited.slice(0, 20).map(item).join("") || `<p class="muted">No history yet.</p>`}</div></section>
     ${unparsed.length ? `<section class="panel"><h3>Not parsed by the bot yet <span class="muted">${unparsed.length}</span></h3><p class="muted">Run /update_stats in Discord to add them.</p>
       <div class="grid" style="--tile:120px">${unparsed.map(c => tileHtml(c, { small: true })).join("")}</div></section>` : ""}
@@ -557,7 +588,7 @@ async function copy(text, what) { try { await navigator.clipboard.writeText(text
 function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`; modal.hidden = false; }
 
 const actions = {
-  "close": () => { if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
+  "close": () => { if ($("#edit-form")) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
   "toggle-param": el => { const p = parseHash().params, cur = csv(p, el.dataset.key), v = el.dataset.value;
     setParams({ [el.dataset.key]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); },
   "select-param": el => setParams({ [el.dataset.key]: el.value }),
@@ -596,6 +627,7 @@ const actions = {
   "stats-filter": el => setParams({ [el.dataset.key]: el.value }),
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
+  ...editor.actions,
 };
 document.addEventListener("click", e => {
   const a = e.target.closest("[data-action]");
@@ -629,8 +661,9 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card"], ["d", "Add to / remove from deck"],
-  ["c", "Copy card link"], ["x", "Add to comparison"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–5", "Cards · Rulebook · Deck · Stats · Changes"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+  ["c", "Copy card link"], ["x", "Add to comparison"], ["e", "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–5", "Cards · Rulebook · Deck · Stats · Changes"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
+$("#edit").addEventListener("click", () => actions["edit-hub"]());
 
 document.addEventListener("keydown", e => {
   const item = document.activeElement?.closest?.(".ver-item");
@@ -652,6 +685,7 @@ document.addEventListener("keydown", e => {
   else if (inCard && e.key === "d") toggleDeck(id);
   else if (inCard && e.key === "c") copy(shareUrl(id), "card link");
   else if (inCard && e.key === "x") actions["compare-add"]({ dataset: { id } });
+  else if (inCard && e.key === "e" && !$("#edit-form")) { e.preventDefault(); editor.open(id); }
   else if (e.key === "Enter" && document.activeElement?.dataset?.open) location.hash = `#/card/${document.activeElement.dataset.open}`;
 });
 

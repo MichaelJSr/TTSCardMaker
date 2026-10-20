@@ -41,6 +41,14 @@ rulebook, a card's history or the changes feed is opened. Script, style and data
 so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
 
+## Editing
+
+Anyone with write access to this repo can fix card data on the site: the pencil button signs in with a GitHub token
+(classic, `public_repo` scope), Edit (e) on a card stages changes in a batch, and **Review and publish** commits the
+whole batch at once. Fields go to `MDW/Card Edits.json`, authors to `MDW/Card Authors.txt`, bans to
+`MDW/Constructed Ban List.txt`. The site rebuilds on that commit; the bot applies the same files on `/update_stats`.
+Admins can also ban, hide cards and rename people. Remove a card's entry from `Card Edits.json` to go back to the PSD.
+
 ## Working on it
 
 ```

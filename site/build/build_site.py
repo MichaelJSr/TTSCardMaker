@@ -13,6 +13,7 @@ Where the data comes from:
   * Deck rules: the rulebook pages; banned cards from MDW/Constructed Ban List.txt.
   * Authors: MDW/Card Authors.txt ([people] git name = shown name, [cards] Card Name = person) wins over the bot's
     author, the same rule AutoCroissant applies on /update_stats.
+  * Corrections: MDW/Card Edits.json (the website's Edit button); the bot applies it too.
   * Image versions: one pass over the git history (commit metadata only, no file contents) lists every commit that
     changed each card PNG, following exact renames (folder moves). Needs full history: a shallow clone gets none.
 PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
@@ -59,6 +60,19 @@ MIN_CARDS = 100                              # fewer cards than this in stats.pk
 KIND_LABEL = {"creature": "Creature", "item": "Item", "field": "Field card", "minion": "Minion", "nme": "N.M.E. item",
               "aux item": "Auxiliary item", "creatures": "Auxiliary creature", "debuff": "Debuff", "buff": "Buff"}
 CARD_FOLDERS = ("Creatures/", "Items/", "Field/", "N.M.E/", "Auxiliary/")
+AUTHORS_PATH = "MDW/Card Authors.txt"
+BANLIST_PATH = "MDW/Constructed Ban List.txt"
+EDITS_PATH = "MDW/Card Edits.json"
+# Card Edits.json fields; same list in edit.js and the bot's CardEdits
+EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "stars": int, "types": list,
+               "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
+               "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool}
+EDIT_NULLABLE = {"subtype", "series", "stars", "hp", "def", "atk", "spd"}      # may be null
+DATA_FIELDS = ("type", "subtype", "series", "stars", "types", "hp", "def", "atk", "spd", "ability", "note")
+# parser notes an edit answers
+FIXED_BY = {"hp": ("HP NOT FOUND",), "def": ("DEF NOT FOUND",), "atk": ("ATK NOT FOUND",), "spd": ("SPD NOT FOUND",),
+            "ability": ("ABILITY TEXT NOT FOUND", "NO ABILITY LAYER"), "stars": ("NO STARS FOUND",),
+            "type": ("UNKNOWN TYPE",), "types": ("MISSPELT TYPE",), "allow_high_stats": ("STATS TOO HIGH",)}
 SKIP_PARTS = ("MDW", "Markers")
 
 
@@ -225,9 +239,12 @@ def card_key(name):
     return " ".join((name or "").replace("_", " ").lower().split())
 
 
+PEOPLE_AS_WRITTEN = {}                        # [people] with the git names' own case, for the editor
+
+
 def parse_authors():
     """MDW/Card Authors.txt -> (people {lowercase git name: shown name}, cards {card_key: person}). Warns, never fails."""
-    path = os.path.join(REPO, "MDW/Card Authors.txt")
+    path = os.path.join(REPO, AUTHORS_PATH)
     people, cards = {}, {}
     if not os.path.exists(path):
         log("warning: no MDW/Card Authors.txt; authors come from the bot's data only")
@@ -249,6 +266,7 @@ def parse_authors():
             continue
         if section == "people":
             people[left.lower()] = right
+            PEOPLE_AS_WRITTEN[left] = right
         else:
             cards[card_key(left)] = right
     return people, cards
@@ -256,6 +274,89 @@ def parse_authors():
 
 def person(people, name):
     return people.get(name.lower(), name) if name else name
+
+
+# ---- corrections (MDW/Card Edits.json) ----------------------------------------------------------------
+def valid_edit(field, value):
+    kind = EDIT_FIELDS.get(field)
+    if kind is None:
+        return False
+    if value is None:
+        return field in EDIT_NULLABLE
+    if kind is int:
+        return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+    if kind is list:
+        return isinstance(value, list) and all(isinstance(x, str) for x in value)
+    return isinstance(value, kind)
+
+
+def parse_edits():
+    """{card_key: (fields, meta)}; bad entries are skipped."""
+    path = os.path.join(REPO, EDITS_PATH)
+    if not os.path.exists(path):
+        return {}
+    try:
+        data = json.load(open(path, encoding="utf-8"))
+    except ValueError as e:
+        log(f"warning: {EDITS_PATH} isn't valid JSON, no corrections applied: {e}")
+        return {}
+    cards = data.get("cards") if isinstance(data, dict) else None
+    if not isinstance(cards, dict):
+        log(f"warning: {EDITS_PATH} has no \"cards\" object, no corrections applied")
+        return {}
+    edits = {}
+    for name, fields in cards.items():
+        if not isinstance(fields, dict):
+            log(f"warning: {EDITS_PATH}: {name!r} isn't an object, skipped")
+            continue
+        good = {}
+        for field, value in fields.items():
+            if field.startswith("_"):
+                continue
+            if valid_edit(field, value):
+                good[field] = value
+            else:
+                log(f"warning: {EDITS_PATH}: {name}: {field} = {value!r} isn't a known field or has the wrong type, skipped")
+        edits[card_key(name)] = (good, {k: fields[k] for k in ("_by", "_at") if isinstance(fields.get(k), str)})
+    return edits
+
+
+def apply_edits(entry, edits):
+    """All fields but aliases and dup_of (applied later)."""
+    found = edits.get(card_key(entry["key"]))
+    if not found:
+        return
+    fields, meta = found
+    orig = {}
+    for field, value in fields.items():
+        if field in ("aliases", "dup_of"):
+            continue
+        orig[field] = entry.get(field)
+        entry[field] = list(value) if isinstance(value, list) else value
+    entry["edited"] = sorted(fields)
+    entry["orig"] = orig                          # PSD values
+    if fields.get("aliases"):
+        entry["webAliases"] = list(fields["aliases"])
+    if meta.get("_by"):
+        entry["editBy"] = meta["_by"]
+    if meta.get("_at"):
+        entry["editAt"] = meta["_at"]
+    if fields.get("problems_ok"):
+        entry["problems"] = []
+    else:
+        answered = tuple(p for field in fields for p in FIXED_BY.get(field, ()))
+        entry["problems"] = [p for p in entry.get("problems") or [] if not p.startswith(answered)] if answered else entry.get("problems")
+
+
+def build_branch():
+    """Branch the Edit button commits to."""
+    if os.environ.get("GITHUB_REF_NAME"):
+        return os.environ["GITHUB_REF_NAME"]
+    try:
+        out = subprocess.run(["git", "-C", REPO, "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+        return out if out and out != "HEAD" else "main"
+    except (OSError, subprocess.CalledProcessError):
+        return "main"
 
 
 # ---- image versions ----------------------------------------------------------------------------------
@@ -307,7 +408,7 @@ def image_versions(paths):
 
 # ---- ban list --------------------------------------------------------------------------------------
 def parse_banlist(by_norm):
-    path = os.path.join(REPO, "MDW/Constructed Ban List.txt")
+    path = os.path.join(REPO, BANLIST_PATH)
     if not os.path.exists(path):
         return {"notes": [], "groups": []}
     notes, groups, current = [], [], None
@@ -357,6 +458,7 @@ def main():
         log("no aliases:", e)
         aliases = {}
     log(f"bot data: {len(stats)} entries, {len(old_stats)} with history, {len(aliases)} aliases")
+    edits = parse_edits()
 
     png_by_name = {}
     for path in tree:
@@ -392,8 +494,13 @@ def main():
             "hp": stat(c, "hp"), "def": stat(c, "defense"), "atk": stat(c, "attack"), "spd": stat(c, "speed"),
             "ability": getattr(c, "ability", None), "author": getattr(c, "author", None),
             "ts": getattr(c, "timestamp", None) or None, "psd": path, "png": png,
-            "problems": list(getattr(c, "problems", []) or []),
+            "problems": list(getattr(c, "problems", []) or []), "key": name,
         }
+        # undo the bot's applied edits; the file is the authority
+        for field, value in (getattr(c, "parsed_values", None) or {}).items():
+            if field in DATA_FIELDS or field == "problems":
+                entry[field] = list(value) if isinstance(value, list) else value
+        apply_edits(entry, edits)
         versions = []
         for old in old_stats.get(name, []) or []:
             text = getattr(old, "ability", None)
@@ -419,8 +526,10 @@ def main():
             continue
         names = alias_names.get(os.path.basename(path).lower())
         name = " ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else original["name"]
-        dup = {k: v for k, v in original.items() if k not in ("history", "dups")}
-        dup.update(id=unique_slug(name), name=name, png=path, problems=[], dup=original["id"])
+        dup = {k: original.get(k) for k in DATA_FIELDS + ("author", "ts", "psd")}
+        dup.update(id=unique_slug(name), name=name, key=os.path.splitext(os.path.basename(path))[0].replace("_", " "),
+                   png=path, problems=[], dup=original["id"])
+        apply_edits(dup, edits)
         original.setdefault("dups", []).append(dup["id"])
         cards.append(dup)
         seen_pngs.add(path)
@@ -440,11 +549,43 @@ def main():
         known.add(norm(name))
         png = png_for(path, name) if low.endswith(".psd") else path
         info = classify(path)
-        cards.append({"id": unique_slug(name), "name": name, "type": info["type"], "subtype": info.get("subtype"),
-                      "series": info.get("series"), "stars": info.get("stars"), "types": [], "hp": None, "def": None,
-                      "atk": None, "spd": None, "ability": None, "author": None, "ts": None,
-                      "psd": path if low.endswith(".psd") else None, "png": png, "problems": [], "parsed": False})
+        entry = {"id": unique_slug(name), "name": name, "key": name, "type": info["type"], "subtype": info.get("subtype"),
+                 "series": info.get("series"), "stars": info.get("stars"), "types": [], "hp": None, "def": None,
+                 "atk": None, "spd": None, "ability": None, "author": None, "ts": None,
+                 "psd": path if low.endswith(".psd") else None, "png": png, "problems": [], "parsed": False}
+        apply_edits(entry, edits)
+        cards.append(entry)
     # cards.json leaves "parsed" out when true
+
+    # dup_of ("" = not a duplicate)
+    by_id = {e["id"]: e for e in cards}
+    by_key = {}
+    for field in ("key", "name"):
+        for e in cards:
+            by_key.setdefault(card_key(e[field]), e)
+    for e in cards:
+        found = edits.get(card_key(e["key"]))
+        if not found or "dup_of" not in found[0]:
+            continue
+        own, target_name = found[0], found[0]["dup_of"]
+        old = by_id.get(e.get("dup"))
+        if old is not None and e["id"] in old.get("dups", []):
+            old["dups"].remove(e["id"])
+        e.pop("dup", None)
+        if not target_name:
+            continue
+        target = by_key.get(card_key(target_name))
+        if target is None or target is e:
+            log(f"warning: {EDITS_PATH}: {e['key']}: dup_of {target_name!r} isn't another card, ignored")
+            continue
+        e["dup"] = target["id"]
+        target.setdefault("dups", []).append(e["id"])
+        for field in DATA_FIELDS:                 # fill blanks from the original
+            if field not in own and e.get(field) in (None, [], ""):
+                e[field] = target.get(field)
+    edited = [e for e in cards if e.get("edited")]
+    if edits:
+        log(f"corrections: {len(edited)} cards from {EDITS_PATH}" + (f" ({len(edits) - len(edited)} names match no card)" if len(edits) > len(edited) else ""))
 
     # aliases.pkl: alias -> target png file name
     by_png = {os.path.basename(c["png"]).lower(): c for c in cards if c["png"]}
@@ -452,19 +593,24 @@ def main():
         card = by_png.get(str(target).lower())
         if card is not None and norm(str(alias).replace("_", " ")) != norm(card["name"]):     # Breakfast's "breakfast"
             card.setdefault("aliases", []).append(str(alias).replace("_", " "))
+    for e in cards:                               # website aliases
+        for alias in e.get("webAliases", []):
+            if norm(alias) != norm(e["name"]) and norm(alias) not in {norm(a) for a in e.get("aliases", [])}:
+                e.setdefault("aliases", []).append(alias)
 
     # authors: MDW/Card Authors.txt wins over the bot ([people] maps git names to shown names)
     people, credited = parse_authors()
     for e in cards:
         if not e.get("dup"):
-            listed = credited.get(card_key(e["name"]))
+            listed = credited.get(card_key(e["key"])) or credited.get(card_key(e["name"]))
             e["author"] = person(people, listed or e.get("author"))
-    by_id = {e["id"]: e for e in cards}
+            if listed:
+                e["authorListed"] = True
     for e in cards:
         if e.get("dup"):
             e["author"] = by_id[e["dup"]]["author"]          # a duplicate is its original's card
     if credited:
-        log(f"authors: {sum(1 for e in cards if card_key(e['name']) in credited)} cards credited by Card Authors.txt, {len(people)} people")
+        log(f"authors: {sum(1 for e in cards if e.get('authorListed'))} cards credited by Card Authors.txt, {len(people)} people")
 
     # images (cached by blob hash; only new or changed PNGs are fetched and resized)
     jobs = [e for e in cards + rules if e["png"] and e["png"] in tree]
@@ -497,6 +643,7 @@ def main():
     by_norm = {}
     for c in cards:
         by_norm.setdefault(alnum(c["name"]), c)
+        by_norm.setdefault(alnum(c["key"]), c)
         for a in c.get("aliases", []):
             by_norm.setdefault(alnum(a), c)
     banlist = parse_banlist(by_norm)
@@ -538,6 +685,10 @@ def main():
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
         "cards": cards, "icons": icons, "banlist": banlist,
+        # for the editor
+        "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH},
+        "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
+        "peopleMap": PEOPLE_AS_WRITTEN,
     }
     os.makedirs(os.path.join(DIST, "data"))
     files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions}
