@@ -7,9 +7,10 @@
 //   Update all: after editing the text, run the script again and press Update all. Every FX layer is rebuilt from
 //               the current text and keeps its layer style, opacity, fill and blend mode.
 //   Convert overlays: shown when the card still has hand-placed overlay text layers; turns them into effect layers.
-// The words keep the font and size of the text layer. Add colors them with their swatch from MDW/Status Effects.aco or
-// MDW/Attributes.aco when one has their name (two-tone statuses use "<name> 1"); otherwise they keep their color.
-// Change colors in the text, then Update all.
+// The words keep the font and size of the text layer. Status colors and styles come from the status chart,
+// MDW/Croissant's Special Folder/Satus Effect Colors.psd (one text layer per status, in its color, with its style):
+// Add colors the words like the chart and can copy the chart's style. Without the chart, the swatches in
+// MDW/Status Effects.aco / Attributes.aco and the Styles panel are used instead. Change colors in the text, then Update all.
 // "Effect Layers - All Cards.jsx" does all of this for every card in the repo.
 // AutoCroissant flags cards whose FX layers no longer line up with their text.
 #target photoshop
@@ -18,7 +19,8 @@ var FX_TAG = " FX: ";
 var SEP = " | ";
 var NO_STYLE = "None (add one with Layer > Layer Style; Update all keeps it)";
 var EFFECT_LAYERS_HOME = File($.fileName).parent;           // MDW/Scripts
-var SWATCH_FILES = ["Status Effects.aco", "Attributes.aco"]; // in MDW
+var SWATCH_FILES = ["Status Effects.aco", "Attributes.aco"]; // in MDW; fallback colors when the chart is missing
+var CHART_FILE = "Croissant's Special Folder/Satus Effect Colors.psd";   // in MDW; the authority for status colors and styles
 
 function sID(s) { return stringIDToTypeID(s); }
 function cID(s) { return charIDToTypeID(s); }
@@ -247,12 +249,56 @@ function swatchFor(phrase) {
   return sw[k] || sw[k + " 1"] || null;
 }
 function hex(c) { function h(v) { return (v < 16 ? "0" : "") + v.toString(16).toUpperCase(); } return "#" + h(c.r) + h(c.g) + h(c.b); }
-/* color each phrase that has a swatch with it, in the text itself. Returns ["Frozen #9AFFF4", ...] */
+
+// ---------- the status chart ----------
+var CHART = null;
+/* {statuses: {lowercase name: {name, r, g, b, styled, layer}}, doc, opened}; opens the chart if it isn't open */
+function chart() {
+  if (CHART) return CHART;
+  CHART = { statuses: {}, doc: null, opened: false };
+  var f = new File(EFFECT_LAYERS_HOME.parent + "/" + CHART_FILE);
+  if (!f.exists) return CHART;
+  var back = app.documents.length ? app.activeDocument : null;
+  for (var i = 0; i < app.documents.length; i++) { try { if (app.documents[i].fullName.fsName == f.fsName) CHART.doc = app.documents[i]; } catch (e) {} }
+  if (!CHART.doc) { CHART.doc = app.open(f); CHART.opened = true; }
+  app.activeDocument = CHART.doc;
+  var layers = allLayers(CHART.doc, []);
+  for (var i = 0; i < layers.length; i++) {
+    var l = layers[i];
+    if (!isText(l)) continue;
+    try {
+      var label = norm(l.textItem.contents), c = l.textItem.color.rgb;
+      if (label) CHART.statuses[label.toLowerCase()] = { name: label, r: Math.round(c.red), g: Math.round(c.green), b: Math.round(c.blue), styled: hasEffects(l), layer: l };
+    } catch (e) {}
+  }
+  if (back) app.activeDocument = back;
+  return CHART;
+}
+function closeChart() { if (CHART && CHART.opened && CHART.doc) { try { CHART.doc.close(SaveOptions.DONOTSAVECHANGES); } catch (e) {} } CHART = null; }
+function chartStatus(phrase) { return chart().statuses[norm(splitOccurrence(phrase).words).toLowerCase()] || null; }
+/* the color for a phrase: the chart's, else its .aco swatch's (two-tone swatches: "<name> 1"), else null */
+function statusColor(phrase) { return chartStatus(phrase) || swatchFor(phrase); }
+/* the chart's style for a status, onto Photoshop's layer-style clipboard (it works across documents) */
+function copyChartStyle(phrase) {
+  var st = chartStatus(phrase);
+  if (!st || !st.styled) return false;
+  var back = app.activeDocument;
+  app.activeDocument = CHART.doc; CHART.doc.activeLayer = st.layer;
+  executeAction(sID("copyEffects"), undefined, DialogModes.NO);
+  app.activeDocument = back;
+  return true;
+}
+function pasteStyle(doc, layer) {
+  doc.activeLayer = layer;
+  var d = new ActionDescriptor(); d.putBoolean(sID("allowPasteFXOnLayerSet"), true);
+  executeAction(sID("pasteEffects"), d, DialogModes.NO);
+}
+/* color each phrase like the chart (or its swatch), in the text itself. Returns ["Frozen #9AFFF4", ...] */
 function colorWords(doc, base, phrases) {
   var done = [], everyLine = layoutMode(doc, base);
   if (everyLine === null) throw new Error("\"" + base.name + "\": " + LAYOUT_MSG);
   for (var i = 0; i < phrases.length; i++) {
-    var c = swatchFor(phrases[i]);
+    var c = statusColor(phrases[i]);
     if (!c) continue;
     var text = cleanText(doc, base), ranges = phraseRanges(text, [phrases[i]]);
     if (!ranges.length) continue;
@@ -349,13 +395,15 @@ function applyStyle(doc, layer, name) {
   t.putEnumerated(cID("Lyr "), cID("Ordn"), cID("Trgt")); d.putReference(cID("T   "), t);
   executeAction(cID("ASty"), d, DialogModes.NO);
 }
-/* new FX layer above the text's group. style: {kind: "none" | "preset" | "layer", name, layer}.
-   recolor: first color the words with their swatch (colorWords) */
+/* new FX layer above the text's group. style: {kind: "none" | "chart" | "clipboard" | "preset" | "layer", name, layer}
+   ("chart": the chart's style for `name`; "clipboard": a style already copied). recolor: color the words first */
 function addFx(doc, base, phrases, style, recolor) {
+  if (style && style.kind == "chart" && !copyChartStyle(style.name)) style = null;
   if (recolor) colorWords(doc, base, phrases);
   var fx = buildFx(doc, base, phrases), top = topGroup(base);
   if (top != base) fx.move(top, ElementPlacement.PLACEBEFORE);
-  if (style && style.kind == "preset") applyStyle(doc, fx, style.name);
+  if (style && (style.kind == "chart" || style.kind == "clipboard")) pasteStyle(doc, fx);
+  else if (style && style.kind == "preset") applyStyle(doc, fx, style.name);
   else if (style && style.kind == "layer") copyStyle(doc, style.layer, fx);
   doc.activeLayer = fx;
   return fx;
@@ -464,11 +512,11 @@ function convertOverlays(doc, ability, notes) {
   for (var g = 0; g < groups.length; g++) {
     var ov = groups[g].layers[0], phrases = coveredOccurrences(doc, ability, groups[g].phrase, groups[g].layers);
     var color = textKey(doc, ov).getList(sID("textStyleRange")).getObjectValue(0).getObjectValue(sID("textStyle")).getObjectValue(sID("color"));
-    var swatch = swatchFor(groups[g].phrase);
-    if (swatch && notes) {
+    var want = statusColor(groups[g].phrase);
+    if (want && notes) {
       var own = { r: Math.round(color.getDouble(cID("Rd  "))), g: Math.round(color.getDouble(cID("Grn "))), b: Math.round(color.getDouble(cID("Bl  "))) };
-      if (Math.abs(own.r - swatch.r) > 2 || Math.abs(own.g - swatch.g) > 2 || Math.abs(own.b - swatch.b) > 2)
-        notes.push("kept the overlay's color " + hex(own) + " for " + groups[g].phrase + " (swatch " + swatch.name + " is " + hex(swatch) + ")");
+      if (Math.abs(own.r - want.r) > 2 || Math.abs(own.g - want.g) > 2 || Math.abs(own.b - want.b) > 2)
+        notes.push("kept the overlay's color " + hex(own) + " for " + groups[g].phrase + " (the status chart has " + hex(want) + ")");
     }
     var everyLine = layoutMode(doc, ability);
     if (everyLine === null) throw new Error("\"" + ability.name + "\": " + LAYOUT_MSG);
@@ -498,7 +546,10 @@ function ask(doc) {
     var l = layers[i];
     if (l != base && l.typename == "ArtLayer" && (isText(l) || isFx(l)) && hasEffects(l)) styled.push(l);
   }
-  var presets = styleNames(), choices = [NO_STYLE], kinds = [{ kind: "none" }];
+  var presets = styleNames(), choices = [NO_STYLE], kinds = [{ kind: "none" }], charted = [], cs = chart().statuses;
+  for (var k in cs) if (cs.hasOwnProperty(k) && cs[k].styled) charted.push(cs[k].name);
+  charted.sort();
+  for (var i = 0; i < charted.length; i++) { choices.push("Status chart: " + charted[i]); kinds.push({ kind: "chart", name: charted[i] }); }
   for (var i = 0; i < styled.length; i++) { choices.push("Same as layer: " + styled[i].name); kinds.push({ kind: "layer", layer: styled[i] }); }
   for (var i = 0; i < presets.length; i++) { choices.push("Style: " + presets[i]); kinds.push({ kind: "preset", name: presets[i] }); }
 
@@ -510,14 +561,15 @@ function ask(doc) {
   var words = add.add("edittext", undefined, ""); words.characters = 48; words.enabled = !!base;
   add.add("statictext", undefined, "Layer style:");
   var pick = add.add("dropdownlist", undefined, choices); pick.selection = 0; pick.enabled = !!base;
-  var recolor = add.add("checkbox", undefined, "Color the words with their swatch (MDW/Status Effects.aco, Attributes.aco)");
+  var recolor = add.add("checkbox", undefined, "Color the words like the status chart (Satus Effect Colors.psd)");
   recolor.value = true; recolor.enabled = !!base;
   var swatchNote = add.add("statictext", undefined, ""); swatchNote.characters = 48;
   words.onChanging = function () {
     var parts = parseFxName("x" + FX_TAG + words.text).phrases, found = [];
-    for (var i = 0; i < parts.length; i++) { var c = swatchFor(parts[i]); if (c) found.push(c.name + " " + hex(c)); }
-    swatchNote.text = found.length ? "Swatch: " + found.join(", ") : "No swatch with that name: the words keep their color";
+    for (var i = 0; i < parts.length; i++) { var c = statusColor(parts[i]); if (c) found.push(c.name + " " + hex(c)); }
+    swatchNote.text = found.length ? "Color: " + found.join(", ") : "Not in the status chart: the words keep their color";
     var first = words.text.split("|")[0].replace(/^\s+|\s+$/g, "").toLowerCase();
+    for (var i = 0; i < kinds.length; i++) if (kinds[i].kind == "chart" && kinds[i].name.toLowerCase() == first) { pick.selection = i; return; }
     for (var i = 0; i < kinds.length; i++) if (kinds[i].kind == "preset" && kinds[i].name.toLowerCase() == first) { pick.selection = i; return; }
   };
   var list = w.add("panel", undefined, "Effect layers in this card");
@@ -563,7 +615,10 @@ function main() {
   try {
     EFFECT_LAYERS_JOB = ask(doc);
     if (!EFFECT_LAYERS_JOB) return;
-    app.displayDialogs = DialogModes.NO;                     // e.g. color-profile prompts from the scratch mask
+    var st = EFFECT_LAYERS_JOB.style;                        // copy the chart's style now: switching documents
+    if (st && st.kind == "chart") EFFECT_LAYERS_JOB.style = copyChartStyle(st.name) ? { kind: "clipboard" } : null;   // inside the undo step breaks it
+    app.activeDocument = doc;
+    app.displayDialogs = DialogModes.NO;
     doc.suspendHistory("Effect Layers", "doJob()");          // one undo step
     app.displayDialogs = dialogs;
     var job = EFFECT_LAYERS_JOB;
@@ -571,6 +626,6 @@ function main() {
     if (job.converted) alert("Converted " + job.converted.length + " overlay(s):\n" + job.converted.join("\n") + (job.notes.length ? "\n\n" + job.notes.join("\n") : ""));
     if (job.result) alert("Updated " + job.result.done.length + " effect layer(s)." +
       (job.result.failed.length ? "\n\nCouldn't update:\n" + job.result.failed.join("\n") : ""));
-  } finally { app.preferences.rulerUnits = units; app.displayDialogs = dialogs; }
+  } finally { closeChart(); app.preferences.rulerUnits = units; app.displayDialogs = dialogs; }
 }
 if (typeof EFFECT_LAYERS_NO_UI == "undefined") main();

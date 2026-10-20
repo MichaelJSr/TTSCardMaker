@@ -4,17 +4,18 @@
 // documents first. For every card PSD in the repo (MDW, Markers, Rulebook, Types and site are skipped) it:
 //   1. turns old hand-placed overlays into effect layers (see Effect Layers.jsx, "Convert overlays");
 //   2. rebuilds effect layers whose words moved because the text was edited ("Update all", stale ones only);
-//   3. (AUTO_STYLES, on by default) gives each status word that has a style of the same name in the Styles panel
-//      (Blazing, Frozen, ...) an effect layer with that style, unless the card already has one for it, and colors the
-//      word with its swatch from MDW/Status Effects.aco.
+//   3. (AUTO_STYLES, on by default) gives each status word that has a style in the status chart
+//      (MDW/Croissant's Special Folder/Satus Effect Colors.psd: Blazing, Frozen, ...) an effect layer with that style,
+//      unless the card already has one for it, and colors the word like the chart.
 // Cards that change are saved and their PNG re-exported next to the PSD; the rest are closed untouched.
 // A summary is shown at the end and written to "effect-layers-all-cards.log" in the temp folder.
 // It opens every card, so a full run takes a while (about 1-2 seconds per card).
 #target photoshop
 
 var AUTO_STYLES = true;                      // false: only convert overlays and update effect layers
-// the status-effect styles in MDW/Debuff And Attributes Layer Effects.asl (load it into the Styles panel); longest first
-var STATUS_STYLES = ["Frozen In Time", "Spirit Flame", "Hemorrhaging", "Contracted", "Condemned", "Withering", "Infected", "Blazing", "Frozen", "Hexed"];
+// used only without the status chart: these styles from MDW/Debuff And Attributes Layer Effects.asl in the Styles panel
+var STATUS_STYLES = ["Become Back Money", "Corrupted Blood", "Cursed Inferno", "Frozen In Time", "Spirit Flame", "Hemorrhaging",
+  "Contracted", "Condemned", "Withering", "Infected", "Blazing", "Frozen", "Glued", "Hexed", "Curse"];
 var SKIP_FOLDERS = { "MDW": 1, "Markers": 1, "Rulebook": 1, "Types": 1, "site": 1 };
 
 var EFFECT_LAYERS_NO_UI = true;
@@ -32,14 +33,23 @@ function cardFiles(folder, out) {
 }
 /* status words in the text that have a same-named style and no effect layer yet: [{style, phrases}], where phrases
    are "Frozen" or, when some Frozens are already covered (e.g. by "Frozen In Time"), just the free "Frozen#n" */
+/* the styled statuses: from the chart, else STATUS_STYLES that are in the Styles panel; longest first */
+function styledStatuses(presets) {
+  var names = [], cs = chart().statuses;
+  for (var k in cs) if (cs.hasOwnProperty(k) && cs[k].styled) names.push(cs[k].name);
+  if (!names.length)
+    for (var s = 0; s < STATUS_STYLES.length; s++)
+      for (var p = 0; p < presets.length; p++) if (presets[p] == STATUS_STYLES[s]) names.push(STATUS_STYLES[s]);
+  names.sort(function (a, b) { return b.length - a.length; });
+  return names;
+}
 function missingStyled(doc, ability, presets) {
   var text = textKey(doc, ability).getString(sID("textKey")), covered = [], out = [], layers = allLayers(doc, []);
   for (var i = 0; i < layers.length; i++)
     if (isFx(layers[i]) && parseFxName(layers[i].name).base == ability.name) covered = covered.concat(phraseRanges(text, parseFxName(layers[i].name).phrases));
-  for (var s = 0; s < STATUS_STYLES.length; s++) {
-    var word = STATUS_STYLES[s], has = false;
-    for (var p = 0; p < presets.length; p++) if (presets[p] == word) has = true;
-    if (!has) continue;
+  var statuses = styledStatuses(presets);
+  for (var s = 0; s < statuses.length; s++) {
+    var word = statuses[s];
     var ranges = phraseRanges(text, [word]), free = [];
     for (var r = 0; r < ranges.length; r++) {
       var hit = false;
@@ -75,7 +85,8 @@ function processCard(doc, presets) {
   if (AUTO_STYLES && ability) {
     var todo = missingStyled(doc, ability, presets);
     for (var i = 0; i < todo.length; i++) {
-      var fx = addFx(doc, ability, todo[i].phrases, { kind: "preset", name: todo[i].style }, true);
+      var style = chartStatus(todo[i].style) ? { kind: "chart", name: todo[i].style } : { kind: "preset", name: todo[i].style };
+      var fx = addFx(doc, ability, todo[i].phrases, style, true);
       changes.push("added " + fx.name + " (style " + todo[i].style + ")");
     }
   }
@@ -88,6 +99,7 @@ function runAll(root, progress) {
   var units = app.preferences.rulerUnits, dialogs = app.displayDialogs;
   app.preferences.rulerUnits = Units.PIXELS; app.displayDialogs = DialogModes.NO;
   var t0 = new Date().getTime();
+  chart();                                                 // opened once for the whole run
   try {
     for (var i = 0; i < files.length; i++) {
       var rel = decodeURI(files[i].fsName).substr(decodeURI(root.fsName).length + 1);
@@ -107,6 +119,7 @@ function runAll(root, progress) {
       if (doc) { try { doc.close(SaveOptions.DONOTSAVECHANGES); } catch (e2) {} }
     }
   } finally {
+    closeChart();
     app.preferences.rulerUnits = units; app.displayDialogs = dialogs;
   }
   var minutes = Math.round((new Date().getTime() - t0) / 600) / 100;
