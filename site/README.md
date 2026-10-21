@@ -180,6 +180,16 @@ per author and font ("... has pushed a card without adding the ... font to MDW/F
 the commit. It never reverts or rejects a push: the fix is to add the font file to the top level of `MDW/Fonts/`.
 Run it by hand from the Actions tab (`all` = every card, about 813 downloads).
 
+## Card check
+
+`.github/workflows/card-check.yml` runs on every push to `main` that changes a PSD, `site/Card Edits.json` or `Types/`: the
+bot's checker (AutoCroissant `commands/card_check.py`) reads the pushed card PSDs by blob and reports the notes
+`/update_stats` would print for each (NO STARS FOUND, MISSPELT TYPE, SEVERAL CREATURES, HP/DEF/ATK/SPD NOT FOUND, STATS TOO
+HIGH, ABILITY TEXT NOT FOUND, UNKNOWN TYPE), after the card's `site/Card Edits.json` entry (`problems_ok`, `allow_high_stats`,
+`creatures`) and the bot's exclusions. Report only: the job summary, a comment on the commit and, with the same
+`DISCORD_FONT_WEBHOOK` secret, one Discord line per card ("... has pushed ... with: ..."); it never reverts or rejects
+a push, and an unreadable PSD is one error line. Run it by hand from the Actions tab (`all` = every card, 25-30 minutes).
+
 ## Working on it
 
 ```

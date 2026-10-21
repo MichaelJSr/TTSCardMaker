@@ -1,7 +1,7 @@
 # Bakes the website's PSD-kind card edits (site/Card Edits.json: stats, name, ability text) into the card PSDs and
 # PNGs with the bot's edit pipeline (AutoCroissant commands/card_bake.py), one commit per card, the report as the job
-# summary. Dispatch only for now (docs/EDIT_PIPELINE_DESIGN.md section 14, question 7): the push trigger on
-# site/Card Edits.json comes with step S5, once Thunderfury's entry is aligned to the print.
+# summary. Dispatch only for now: Thunderfury's entry is aligned to the print (1c13eaa; docs/EDIT_PIPELINE_DESIGN.md
+# section 14, question 7), so the push trigger on site/Card Edits.json waits only for the PSD-edits hold to lift.
 name: Card edits
 
 on:
