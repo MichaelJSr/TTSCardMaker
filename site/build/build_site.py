@@ -106,6 +106,11 @@ def norm(text):
     return re.sub(r"[\s_\-.'’]+", "", (text or "").lower())
 
 
+def squash(text):
+    """Letters only, lowercased: a title differing from the file name by case or spacing alone (CABBAGE, A P E X) is the same name."""
+    return "".join((text or "").lower().split())
+
+
 def alnum(text):
     """Looser key for hand-typed lists (the ban list): letters and digits only."""
     return re.sub(r"[^a-z0-9]", "", (text or "").lower())
@@ -428,7 +433,8 @@ def apply_edits(entry, edits, psd_sha=None):
                 entry[k] = fields["creatures"][0].get(k)
     entry["edited"] = sorted(fields)
     entry["orig"] = orig                          # PSD values
-    # waiting for the pipeline to bake it into the image (name left out: the bot has no printed title to compare)
+    # waiting for the pipeline to bake it into the image (name left out: a title the bot can't read, or one equal to the
+    # file name, both arrive as no display_name, so a name edit can't be told pending from printed)
     pending = sorted(f for f in fields if f in PSD_FIELDS and f != "name" and entry[f] != orig.get(f))
     if pending:
         entry["pending"] = pending
@@ -600,8 +606,14 @@ def main():
         png = png_for(path, name)
         if png:
             seen_pngs.add(png)
+        is_rule = getattr(c, "card_type", "") == "rulebook" or "/Rulebook/" in path
+        # the printed title the bot read (since 2026-10-21): shown instead of the file name; a Card Edits.json name wins below
+        parsed = getattr(c, "parsed_values", None) or {}
+        title = parsed["name"] if "name" in parsed else getattr(c, "display_name", None)
+        if title and squash(title) == squash(name):   # case or spacing only: the file name (the bot's /query does the same)
+            title = None
         entry = {
-            "id": unique_slug(name), "name": name, "type": getattr(c, "card_type", "unknown"),
+            "id": unique_slug(name), "name": (title if not is_rule else None) or name, "type": getattr(c, "card_type", "unknown"),
             "subtype": getattr(c, "subtype", None), "series": getattr(c, "series", None), "subseries": None,   # from edits only
             "stars": getattr(c, "stars", None), "types": list(getattr(c, "types", []) or []),
             "hp": stat(c, "hp"), "def": stat(c, "defense"), "atk": stat(c, "attack"), "spd": stat(c, "speed"),
@@ -625,7 +637,7 @@ def main():
                 versions.append({"ts": getattr(old, "timestamp", None), "ability": text})
         if versions:
             entry["history"] = sorted(versions, key=lambda v: v["ts"] or 0)
-        (rules if entry["type"] == "rulebook" or "/Rulebook/" in path else cards).append(entry)
+        (rules if is_rule else cards).append(entry)
 
     # duplicates: more PNGs exported from one card's PSD (A_Snack.psd -> A_Snack2.png "Breakfast", A_Snack3.png
     # "Supper"). Same card, different name and art. Named by the bot's alias for that PNG, else the original's name.
@@ -657,7 +669,7 @@ def main():
     log(f"duplicates: {sum(1 for c in cards if c.get('dup'))} PNGs share another card's PSD")
 
     # PSDs the bot hasn't parsed yet, and card PNGs without a PSD: list them, image only
-    known = {norm(c["name"]) for c in cards + rules}
+    known = {norm(c[k]) for c in cards + rules for k in ("name", "key")}     # a shown title differs from the file name
     for path in sorted(tree):
         low = path.lower()
         if not path.startswith(CARD_FOLDERS) or any(p in SKIP_PARTS for p in path.split("/")):
@@ -718,6 +730,9 @@ def main():
         for alias in e.get("webAliases", []):
             if norm(alias) != norm(e["name"]) and norm(alias) not in {norm(a) for a in e.get("aliases", [])}:
                 e.setdefault("aliases", []).append(alias)
+    for e in cards:                               # the file name stays searchable under a printed or corrected title
+        if not e.get("dup") and norm(e["key"]) != norm(e["name"]) and norm(e["key"]) not in {norm(a) for a in e.get("aliases", [])}:
+            e.setdefault("aliases", []).append(e["key"])
 
     # authors: site/Card Authors.txt wins over the bot ([people] maps git names to shown names)
     people, credited = parse_authors()
