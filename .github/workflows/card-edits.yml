@@ -63,7 +63,7 @@ jobs:
           python-version: "3.12"     # no `cache: pip`: it needs a requirements file, and neither sparse checkout has one
 
       # The fork pin: cards + feat/text-engine merged, save(update_preview=), tagged by step S0 of the design.
-      # The tag cards-20261020 does not exist yet: this step fails until S0 pushes it. Plan step 7 drops the pin.
+      # The tag exists since S0 (2026-10-21, cards a6363a04). Plan step 7 drops the pin once upstream has the changes.
       - run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261020"
 
       # Fonts: MDW/Fonts' top level (272 files, 215 MB on 2026-10-20; stoogedings-src/ is another 200 MB and stays
