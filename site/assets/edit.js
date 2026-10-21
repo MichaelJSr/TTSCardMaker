@@ -18,8 +18,8 @@ const cardKey = s => (s || "").replace(/_/g, " ").toLowerCase().split(/\s+/).fil
 const alnum = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
-// where a field's unedited value comes from: the PSD, the card's folder, or nowhere (a database-only default)
-const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", atk: "PSD", spd: "PSD", ability: "PSD", creatures: "PSD",
+// where a field's unedited value comes from: the PSD, the card's folder, or nowhere (a database-only default; creatures too)
+const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", atk: "PSD", spd: "PSD", ability: "PSD",
   type: "folder", subtype: "folder", series: "folder" };
 const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
   : typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
@@ -209,14 +209,15 @@ export function createEditor(app) {
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
     const typeNames = [...new Set(Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name))].sort();
     const reset = f => { const p = psdValue(b, f), src = FROM[f]; return same(value(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="${src ? `Back to what the ${src} says` : "Remove the edit"}">↺ ${src ? src[0].toUpperCase() + src.slice(1) : "Default"}: ${esc(show(p))}</button>`; };
-    const row = (f, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${LABEL[f]}</label><div class="ein">${input}${reset(f)}</div></div>`;
+    const psdNote = f => (b.pending?.includes(f) ? `<span class="fact pending" data-tip="The card image is being regenerated with this edit">PSD pending</span>` : "");
+    const row = (f, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${LABEL[f]}${psdNote(f)}</label><div class="ein">${input}${reset(f)}</div></div>`;
     const num = f => `<input id="ef-${f}" type="number" min="0" max="99" step="1" value="${c[f] ?? ""}" placeholder="—">`;
     return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
       <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
       <h2>Edit ${esc(c.name)}</h2>
       <p class="muted">Changes go into your batch; publish the batch when you're done. <span class="kbd">${esc(c.key)}</span></p>
       <form id="edit-form" class="edit-form" autocomplete="off">
-        <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD.</p>
+        <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD; an edit shows as “PSD pending” until the card image is regenerated.${b.refused ? ` The last image update was refused: ${esc(b.refused)}.` : ""}</p>
         <fieldset><legend>Card</legend>
           ${row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
           ${row("stars", num("stars"))}

@@ -293,6 +293,10 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .edit-bar { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 40; display: flex; gap: 10px; align-items: center;
   background: var(--surface); border: 1px solid var(--border-strong); border-radius: 999px; padding: 6px 8px 6px 16px; box-shadow: var(--shadow); }
 .tile .flag.staged, .fact.staged { background: var(--accent); color: var(--accent-ink); }
+/* edit pipeline: a PSD edit waiting to be baked into the card image, or refused */
+.tile .flag.pending, .fact.pending { background: #1d4f7c; color: #d6ebff; }
+.tile .flag.refused, .fact.refused { background: #7c1d1d; color: #ffd6d6; }
+.data td .fact, .panel li .fact, .erow label .fact { margin-left: 6px; font-size: 11px; }
 .note { background: var(--surface-2); border-left: 3px solid var(--warn); border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
 @media (max-width: 640px) { .erow { grid-template-columns: 1fr; } .edit-bar { left: 8px; right: 8px; transform: none; border-radius: 14px; flex-wrap: wrap; } }
 .review-item .actions { align-self: flex-start; flex-wrap: nowrap; margin: 0; }

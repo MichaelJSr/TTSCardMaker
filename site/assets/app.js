@@ -23,7 +23,7 @@ const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field ca
 const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
 const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
-  ["unparsed", "Not parsed yet"], ["problems", "Parse problems"]];
+  ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
 const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
   ["new", "Recently updated"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
@@ -46,6 +46,14 @@ const shareUrl = id => `${ROOT}c/${encodeURIComponent(id)}/`;
 const deckUrl = d => `${ROOT}d/#/deck/${D.encode(d)}`;
 const iconFor = name => S.icons[norm(name)];
 const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
+// edits the pipeline bakes into the card image (build_site.py PSD_FIELDS): pending, refused, or baked but not re-parsed yet
+const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability" };
+const pendingList = c => (c.pending || []).map(f => FIELD_LABEL[f] || f).join(", ");
+const psdBadges = c => [
+  c.refused ? `<span class="fact refused" data-tip="The last try to regenerate the card image was refused; change the edit or the PSD">Image update refused: ${esc(c.refused)}</span>`
+    : c.pending?.length ? `<span class="fact pending" data-tip="The card image is being regenerated with this edit">PSD pending: ${esc(pendingList(c))}</span>` : "",
+  c.reparsePending ? `<span class="fact" data-tip="The PSD changed since the bot last read it; the data follows on the next /update_stats">Re-parse pending</span>` : "",
+].join("");
 
 // ---- boot ------------------------------------------------------------------------------------------
 async function getJson(name) {
@@ -180,7 +188,8 @@ function filterCards(p, { facets = true } = {}) {
   if (author) list = list.filter(c => c.author === author);
   for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => c[k] != null && c[k] >= r[0] && c[k] <= r[1]); }
   const flagFns = { history: c => !!c.hv, unparsed: c => !c.parsed, problems: c => !!(c.problems && c.problems.length), alias: c => !!(c.aliases && c.aliases.length),
-    dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(c.edited || c._staged || c._sent) };
+    dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(c.edited || c._staged || c._sent),
+    pending: c => !!((c.pending && c.pending.length) || c.refused) };
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   return list;
 }
@@ -203,6 +212,9 @@ function tileHtml(c, { small = false, eager = false, css = 190, constructed = fa
     ${constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>`
       : c._staged ? `<span class="flag staged" data-tip="Changed in your unpublished batch">Unpublished</span>`
       : c.hidden ? `<span class="flag" data-tip="Hidden from the website">Hidden</span>`
+      : c.refused ? `<span class="flag refused" data-tip="Image update refused: ${esc(c.refused)}">Image update refused</span>`
+      : c.pending?.length ? `<span class="flag pending" data-tip="PSD pending: ${esc(pendingList(c))}; the card image is being regenerated">PSD pending</span>`
+      : c.reparsePending ? `<span class="flag" data-tip="The PSD changed since the bot last read it">Re-parse pending</span>`
       : !c.parsed ? `<span class="flag" data-tip="Not parsed by the bot yet">New</span>`
       : c._unused ? `<span class="flag unused" data-tip="No card names this status effect">Unused</span>`
       : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}: same PSD">Duplicate</span>` : ""}
@@ -281,7 +293,7 @@ function tableHtml(list, p) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"], ["new", "Updated"]];
   const sort = p.get("sort") || "name";
   return `<table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
-    ${list.map(c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}</td>
+    ${list.map(c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}${psdBadges(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
       <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td><td>${date(c.ts)}</td></tr>`).join("")}</tbody></table>`;
@@ -345,6 +357,7 @@ function openCard(id) {
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
           ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : c.edited ? `<span class="fact" data-tip="${esc(`Changed on the website: ${c.edited.join(", ")}${c.editBy ? ` · ${c.editBy}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
+          ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>
         ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, "")}</a>`).join("")}</div>` : ""}
@@ -585,7 +598,7 @@ function renderChanges() {
   };
   view.innerHTML = `<div style="max-width:980px;margin:auto">
     <section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>
-    ${webEdits.length ? `<section class="panel"><h3>Edited on the website <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${esc(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></section>` : ""}
+    ${webEdits.length ? `<section class="panel"><h3>Edited on the website <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${esc(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdBadges(c)}</li>`).join("")}</ul></section>` : ""}
     <section class="panel"><h3>Most revised</h3><div class="feed">${edited.slice(0, 20).map(item).join("") || `<p class="muted">No history yet.</p>`}</div></section>
     ${unparsed.length ? `<section class="panel"><h3>Not parsed by the bot yet <span class="muted">${unparsed.length}</span></h3><p class="muted">Run /update_stats in Discord to add them.</p>
       <div class="grid" style="--tile:120px">${unparsed.map(c => tileHtml(c, { small: true })).join("")}</div></section>` : ""}

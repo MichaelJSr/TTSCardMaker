@@ -72,6 +72,8 @@ EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseri
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
                "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list}
 EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", "spd"}      # may be null
+# printed on the card image, so an edit waits for the pipeline ("PSD pending"); CardEdits.KIND "psd" in the bot. creatures is database-only
+PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability"}
 DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
@@ -363,6 +365,12 @@ def valid_edit(field, value):
     return isinstance(value, kind)
 
 
+def valid_verdict(value):
+    """A pipeline `_psd` entry: {"state": str, "for": {field: value}, "psd": "<blob8>", "reason": str, ...}."""
+    return (isinstance(value, dict) and isinstance(value.get("state"), str) and isinstance(value.get("for", {}), dict)
+            and isinstance(value.get("psd", ""), str) and isinstance(value.get("reason", ""), str))
+
+
 def parse_edits():
     """{card_key: (fields, meta)}; bad entries are skipped."""
     path = os.path.join(REPO, EDITS_PATH)
@@ -390,12 +398,18 @@ def parse_edits():
                 good[field] = value
             else:
                 log(f"warning: {EDITS_PATH}: {name}: {field} = {value!r} isn't a known field or has the wrong type, skipped")
-        edits[card_key(name)] = (good, {k: fields[k] for k in ("_by", "_at") if isinstance(fields.get(k), str)})
+        meta = {k: fields[k] for k in ("_by", "_at") if isinstance(fields.get(k), str)}
+        if "_psd" in fields:                            # the edit pipeline's verdict on the PSD fields
+            if valid_verdict(fields["_psd"]):
+                meta["_psd"] = fields["_psd"]
+            else:
+                log(f"warning: {EDITS_PATH}: {name}: _psd = {fields['_psd']!r} isn't a pipeline verdict, skipped")
+        edits[card_key(name)] = (good, meta)
     return edits
 
 
-def apply_edits(entry, edits):
-    """All fields but aliases and dup_of (applied later)."""
+def apply_edits(entry, edits, psd_sha=None):
+    """All fields but aliases and dup_of (applied later). psd_sha: the PSD's blob in the tree, to tell a stale _psd verdict."""
     found = edits.get(card_key(entry["key"]))
     if not found:
         return
@@ -413,6 +427,15 @@ def apply_edits(entry, edits):
                 entry[k] = fields["creatures"][0].get(k)
     entry["edited"] = sorted(fields)
     entry["orig"] = orig                          # PSD values
+    # waiting for the pipeline to bake it into the image (name left out: the bot has no printed title to compare)
+    pending = sorted(f for f in fields if f in PSD_FIELDS and f != "name" and entry[f] != orig.get(f))
+    if pending:
+        entry["pending"] = pending
+    verdict = meta.get("_psd") or {}             # counts only while the refused values and the PSD it was tried on are unchanged
+    tried = verdict.get("for")
+    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) \
+            and psd_sha and verdict.get("psd") and psd_sha.startswith(verdict["psd"]):
+        entry["refused"] = verdict.get("reason") or "refused"
     if fields.get("aliases"):
         entry["webAliases"] = list(fields["aliases"])
     if meta.get("_by"):
@@ -590,7 +613,10 @@ def main():
         for field, value in (getattr(c, "parsed_values", None) or {}).items():
             if field in DATA_FIELDS or field == "problems":
                 entry[field] = list(value) if isinstance(value, list) else value
-        apply_edits(entry, edits)
+        sha = tree.get(path)
+        if sha and getattr(c, "blob_sha", None) and sha != c.blob_sha:
+            entry["reparsePending"] = True       # PSD committed since the bot last read it (a bake, or any edit)
+        apply_edits(entry, edits, sha)
         versions = []
         for old in old_stats.get(name, []) or []:
             text = getattr(old, "ability", None)
@@ -620,7 +646,10 @@ def main():
         dup = {k: original.get(k) for k in DATA_FIELDS + ("author", "ts", "psd")}
         dup.update(id=unique_slug(name), name=name, key=os.path.splitext(os.path.basename(path))[0].replace("_", " "),
                    png=path, problems=[], dup=original["id"])
-        apply_edits(dup, edits)
+        apply_edits(dup, edits, tree.get(original["psd"]))
+        for k in ("pending", "refused", "reparsePending"):   # same PSD: its image changes with the original's
+            if original.get(k) and not dup.get(k):
+                dup[k] = original[k]
         original.setdefault("dups", []).append(dup["id"])
         cards.append(dup)
         seen_pngs.add(path)
@@ -644,7 +673,7 @@ def main():
                  "series": info.get("series"), "subseries": None, "stars": info.get("stars"), "types": [], "hp": None, "def": None,
                  "atk": None, "spd": None, "ability": None, "author": None, "ts": None,
                  "psd": path if low.endswith(".psd") else None, "png": png, "problems": [], "parsed": False}
-        apply_edits(entry, edits)
+        apply_edits(entry, edits, tree.get(path) if low.endswith(".psd") else None)
         cards.append(entry)
     # cards.json leaves "parsed" out when true
 
