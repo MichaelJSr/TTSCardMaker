@@ -18,6 +18,9 @@ Where the data comes from:
   * Corrections: site/Card Edits.json (the website's Edit button); the bot applies it too.
   * Profiles: site/profiles/<login>.json, made on the website by signed-in editors (own profile; admins any) and
     published with the edit batch. Validated here (bad files skipped, bad fields dropped, never a failed build).
+  * Decks: site/decks/<owner>/<slug>.json, hands published from the deck builder by signed-in editors (own decks; admins
+    any) with the edit batch. A public deck is resolved against the visible cards (unknown ones dropped with a warning);
+    a private one is AES-GCM ciphertext made in the browser and passes through as it is. Bad files skipped, never a failed build.
   * Image versions and contributions: one pass over the git history (commit metadata only, no file contents) lists
     every commit that changed each card PNG, following exact renames (folder moves), gives each card its first upload
     (fs, for the person pages' newest cards), and counts per person the commits that added or changed a card (PSD or
@@ -26,8 +29,9 @@ Where the data comes from:
 PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
-data/contributions.json and data/versions.json (loaded when the rulebook, a card's text or image history, the changes feed or
-the People tab is opened), data/details/<id>.json (a card's Details dropdown), images, icons, assets and one share page per card and per person. Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
+data/contributions.json, data/decks.json and data/versions.json (loaded when the rulebook, a card's text or image history, the
+changes feed, the People tab or the published decks are opened), data/details/<id>.json (a card's Details dropdown), images, icons,
+assets and one share page per card, per person and per public deck. Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -79,6 +83,7 @@ BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
 ADMINS_PATH = "site/Website Admins.txt"
 PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
+DECKS_DIR = "site/decks"                      # <owner>/<slug>.json per hand published from the deck builder
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits (subseries: database only, never from the folder)
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
@@ -609,16 +614,16 @@ def read_profiles(cards, people):
     visible = {c["id"]: c for c in cards if not c.get("hidden")}
     out = {}
     for name in sorted(os.listdir(folder)):
-        if not name.endswith(".json"):
-            continue
         rel, path = f"{PROFILES_DIR}/{name}", os.path.join(folder, name)
+        if not name.endswith(".json") or not os.path.isfile(path):
+            continue
         if os.path.getsize(path) > PROFILE_MAX_BYTES:
             log(f"warning: {rel}: over {PROFILE_MAX_BYTES // 1024} KB, skipped")
             continue
         try:
             raw = json.load(open(path, encoding="utf-8"))
-        except ValueError as e:
-            log(f"warning: {rel} isn't valid JSON, skipped: {e}")
+        except (ValueError, OSError) as e:
+            log(f"warning: {rel} can't be read as JSON, skipped: {e}")
             continue
         p, notes = clean_profile(raw, name[:-5], visible, people)
         for note in notes:
@@ -632,6 +637,145 @@ def read_profiles(cards, people):
     if out:
         log(f"profiles: {len(out)} from {PROFILES_DIR}/")
     return [out[k] for k in sorted(out)]
+
+
+# ---- decks (site/decks/<owner>/<slug>.json) -----------------------------------------------------------------
+SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,59}$")                 # the file name: decks.js slugOf(name)
+DECK_MAX_BYTES = 16 * 1024
+DECK_NAME, DECK_DESC, DECK_CARDS = 80, 500, 40                     # same limits as decks.js
+DECK_KDF = {"name": "PBKDF2", "hash": "SHA-256"}                    # a private deck's key derivation (decks.js encrypt)
+DECK_ITER_MAX = 5_000_000                                           # PBKDF2 rounds a browser may be asked for
+DECK_SALT, DECK_IV, DECK_TAG = 16, 12, 16                           # bytes
+DECK_UPDATED_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")      # edit.js's stamp; anything else is ignored (sorts last)
+DECK_FIELDS = {"v", "owner", "name", "description", "cards", "field", "updated"}
+PRIVATE_FIELDS = {"v", "owner", "private", "kdf", "iv", "data", "updated"}
+
+
+def b64_bytes(value, size=None):
+    """Standard base64 (padding optional) -> bytes; None when it isn't, or isn't `size` bytes."""
+    if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9+/]+={0,2}", value):
+        return None
+    body = value.rstrip("=")
+    try:
+        raw = base64.b64decode(body + "=" * (-len(body) % 4), validate=True)
+    except ValueError:
+        return None
+    return raw if size is None or len(raw) == size else None
+
+
+def clean_deck(raw, folder, slug, cards):
+    """One deck file's JSON -> (the entry decks.json gets, notes). None when the file can't be used; a card that isn't
+    one is dropped with a note. folder: the owner folder; slug: the file name without .json; cards: visible cards by id."""
+    if not isinstance(raw, dict):
+        return None, ["not a JSON object"]
+    if type(raw.get("v")) is not int or raw["v"] != 1:              # not a bool: True == 1
+        return None, ['"v" must be 1']
+    owner = raw.get("owner")
+    if not isinstance(owner, str) or not LOGIN_RE.match(owner):
+        return None, ['"owner" must be a GitHub login']
+    if owner.lower() != folder.lower():
+        return None, [f"owner {owner!r} doesn't match the folder {folder!r}"]
+    if not SLUG_RE.match(slug):
+        return None, [f"file name {slug!r} isn't a slug (lowercase letters, digits and -)"]
+    notes = []
+    if owner != folder:                           # the path is what the website edits: its spelling wins
+        notes.append(f"owner {owner!r} is spelled {folder!r} in the folder, which is used")
+        owner = folder
+    updated = raw.get("updated", "")
+    if not (isinstance(updated, str) and (updated == "" or DECK_UPDATED_RE.match(updated))):
+        notes.append(f'"updated" {str(updated)[:40]!r} isn\'t a date like 2026-10-21T13:00:00Z, ignored')
+        updated = ""
+    if raw.get("private") is True:                # only the owner, file name and date are in clear; the shapes are checked, not the content
+        kdf = raw.get("kdf")
+        if not (isinstance(kdf, dict) and kdf.get("name") == DECK_KDF["name"] and kdf.get("hash") == DECK_KDF["hash"]
+                and type(kdf.get("iter")) is int and 1 <= kdf["iter"] <= DECK_ITER_MAX and b64_bytes(kdf.get("salt"), DECK_SALT)):
+            return None, [f'private deck: "kdf" must be PBKDF2 / SHA-256, iter 1 to {DECK_ITER_MAX}, salt {DECK_SALT} bytes in base64']
+        if not b64_bytes(raw.get("iv"), DECK_IV):
+            return None, [f'private deck: "iv" must be {DECK_IV} bytes in base64']
+        data = b64_bytes(raw.get("data"))
+        if data is None or len(data) <= DECK_TAG:
+            return None, ['private deck: "data" must be AES-GCM ciphertext in base64']
+        unknown = sorted(str(k) for k in set(raw) - PRIVATE_FIELDS)
+        if unknown:
+            notes.append(f"unknown fields ignored: {', '.join(unknown)}")
+        kdf = {"name": kdf["name"], "hash": kdf["hash"], "iter": kdf["iter"], "salt": kdf["salt"]}
+        return {"owner": owner, "slug": slug, "private": True, "kdf": kdf, "iv": raw["iv"], "data": raw["data"], "updated": updated}, notes
+    name = one_line(raw.get("name"))
+    if not name or len(name) > DECK_NAME:
+        return None, [f'"name" must be one line of 1 to {DECK_NAME} characters']
+    desc = raw["description"].strip() if isinstance(raw.get("description"), str) else ""
+    if raw.get("description") is not None and (not isinstance(raw["description"], str) or len(desc) > DECK_DESC):
+        notes.append(f"description: text of at most {DECK_DESC} characters, dropped")
+        desc = ""
+    ids_raw = raw.get("cards", [])
+    if not isinstance(ids_raw, list) or len(ids_raw) > DECK_CARDS:
+        return None, [f'"cards" must be a list of up to {DECK_CARDS} card ids']
+    ids, bad = [], []
+    for cid in ids_raw:
+        (ids if isinstance(cid, str) and cid in cards and cid not in ids else bad).append(cid if isinstance(cid, str) else repr(cid))
+    if bad:
+        notes.append(f"{len(bad)} card(s) dropped (not a card, or twice): {', '.join(bad)}")
+    field = raw.get("field")
+    if field is not None and not (isinstance(field, str) and field in cards):
+        notes.append(f"field {field!r} isn't a card, dropped")
+        field, bad = None, bad + [field]
+    unknown = sorted(str(k) for k in set(raw) - DECK_FIELDS)
+    if unknown:
+        notes.append(f"unknown fields ignored: {', '.join(unknown)}")
+    return {"owner": owner, "slug": slug, "name": name, "description": desc, "cards": ids, "dropped": len(bad), "field": field,
+            "updated": updated, "n": len(ids) + (1 if field else 0)}, notes
+
+
+def read_decks(cards):
+    """site/decks/<owner>/*.json -> (public decks, private decks) for data/decks.json, newest first. Warns, never fails:
+    a bad file is skipped. cards: hands are resolved against the visible ones, so the pages and the counts match the site's."""
+    folder = os.path.join(REPO, DECKS_DIR)
+    public, private, seen = [], [], set()
+    visible = {c["id"]: c for c in cards if not c.get("hidden")}
+    for owner in sorted(os.listdir(folder)) if os.path.isdir(folder) else []:
+        if not os.path.isdir(os.path.join(folder, owner)):
+            continue
+        for name in sorted(os.listdir(os.path.join(folder, owner))):
+            rel, path = f"{DECKS_DIR}/{owner}/{name}", os.path.join(folder, owner, name)
+            if not name.endswith(".json") or not os.path.isfile(path):
+                continue
+            if os.path.getsize(path) > DECK_MAX_BYTES:
+                log(f"warning: {rel}: over {DECK_MAX_BYTES // 1024} KB, skipped")
+                continue
+            try:
+                raw = json.load(open(path, encoding="utf-8"))
+            except (ValueError, OSError) as e:
+                log(f"warning: {rel} can't be read as JSON, skipped: {e}")
+                continue
+            d, notes = clean_deck(raw, owner, name[:-5], visible)
+            for note in notes:
+                log(f"warning: {rel}: {note}")
+            if d is None:
+                continue
+            if (d["owner"].lower(), d["slug"]) in seen:
+                log(f"warning: {rel}: another file already has this deck, skipped")
+                continue
+            seen.add((d["owner"].lower(), d["slug"]))
+            (private if d.pop("private", False) else public).append(d)
+    for group in (public, private):
+        group.sort(key=lambda d: (d["owner"].lower(), d["slug"]))
+        group.sort(key=lambda d: d["updated"], reverse=True)
+    if public or private:
+        log(f"decks: {len(public)} public, {len(private)} private from {DECKS_DIR}/")
+    return public, private
+
+
+def deck_text(d, by_id):
+    """A public deck's link-preview description: the hand in words ("7 creatures, 10 items, field card Deepnest"), then
+    the deck's own description."""
+    kinds = {}
+    for c in (by_id[i] for i in d["cards"]):
+        kinds[kind_of(c)] = kinds.get(kind_of(c), 0) + 1
+    order = list(KIND_PLURAL)
+    parts = [f"{n} {kind_word(k, n)}" for k, n in sorted(kinds.items(), key=lambda kv: (order.index(kv[0]) if kv[0] in order else len(order), kv[0]))]
+    if d["field"]:
+        parts.append(f"field card {by_id[d['field']]['name']}")
+    return clip("\n".join(filter(None, [", ".join(parts) or "An empty hand", d["description"]])))
 
 
 def profile_text(p, n_cards, by_id, contrib="", cards_line=""):
@@ -864,6 +1008,11 @@ def kind_of(c):
     return "status" if c.get("type") in ("buff", "debuff") else c.get("type")
 
 
+def kind_word(kind, n):
+    """The kind's word for n cards: 1 field card, 2 field cards."""
+    return KIND_PLURAL.get(kind, kind) if n != 1 else KIND_PLURAL.get(kind, kind).rstrip("s")
+
+
 def cards_text(key, cards):
     """One link-preview line for a person's cards: "120 items, 53 creatures, 32 field cards · mostly Hollow Knight, The
     Binding of Isaac" (the three biggest kinds and series); "" without cards. Counts as cardsBy() in profile.js."""
@@ -877,8 +1026,7 @@ def cards_text(key, cards):
             series[c["series"]] = series.get(c["series"], 0) + 1
     order = list(KIND_PLURAL)
     by_count = sorted(kinds.items(), key=lambda kv: (-kv[1], order.index(kv[0]) if kv[0] in order else len(order), kv[0]))
-    word = lambda k, n: (KIND_PLURAL.get(k, k) if n != 1 else KIND_PLURAL.get(k, k).rstrip("s"))     # 1 field card, 2 field cards
-    line = ", ".join(f"{n} {word(k, n)}" for k, n in by_count[:3])
+    line = ", ".join(f"{n} {kind_word(k, n)}" for k, n in by_count[:3])
     top = sorted(series.items(), key=lambda kv: (-kv[1], kv[0].lower()))[:3]
     return line + (f" · mostly {', '.join(name for name, _ in top)}" if top else "")
 
@@ -1206,13 +1354,16 @@ def main():
         for k in [k for k, v in e.items() if v in (None, [], "") or (k == "parsed" and v is True)]:
             del e[k]                          # drop empty fields to keep the JSON small
     rules.sort(key=lambda r: r["name"].lower())
+    public_decks, private_decks = read_decks(cards)
     data = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
         "cards": cards, "icons": icons, "banlist": banlist,
         # for the editor
-        "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH, "profiles": PROFILES_DIR},
+        "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
+                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR},
         "admins": parse_admins(),
+        "decks": {"public": len(public_decks), "private": len(private_decks)},     # the Deck builder page shows the public count; the list is decks.json
         "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
         "peopleMap": PEOPLE_AS_WRITTEN,
     }
@@ -1223,7 +1374,7 @@ def main():
         f"{sum(r['commits'] for r in contrib['people'])} card commits" + ("" if contrib["available"] else " (no history: batches counted from the edits file)"))
     os.makedirs(os.path.join(DIST, "data"))
     files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
-             "contributions.json": contrib}
+             "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks}}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
@@ -1280,11 +1431,11 @@ def main():
                  "Open to see the hand, check it and save a copy.", f"{SITE_URL}/d/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))))
     default_meta = ('<meta name="theme-color" content="#0d0d0d">', '<meta name="description" content="Every Impossibility Simulator card, the rulebook and a starting-hand builder.">')
     def share_page(parts, head):
-        """DIST/<parts>/index.html: the app with its own <head> (two levels deep, so <base href="../../">)."""
-        page = template.replace("<!--HEAD-->", "\n".join(['<base href="../../">'] + head)).replace("<title>Impossibility Simulator · Card Browser</title>", "")
+        """DIST/<parts>/index.html: the app with its own <head> (<base> climbs back to the site root)."""
+        page = template.replace("<!--HEAD-->", "\n".join([f'<base href="{"../" * len(parts)}">'] + head)).replace("<title>Impossibility Simulator · Card Browser</title>", "")
         for tag in default_meta:
             page = page.replace(tag, "")
-        os.makedirs(os.path.join(DIST, *parts))
+        os.makedirs(os.path.join(DIST, *parts), exist_ok=True)
         with open(os.path.join(DIST, *parts, "index.html"), "w", encoding="utf-8") as fh:
             fh.write(page)
     def og_image(c):
@@ -1327,6 +1478,18 @@ def main():
             '<meta name="theme-color" content="#3987e5">',
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(r["key"])} · {SITE_NAME}</title>',
+        ])
+    for d in public_decks:                        # decks/<owner>/<slug>/: the field card as the preview image, else the top creature, else the site banner
+        creatures = sorted((by_id[i] for i in d["cards"] if by_id[i]["type"] == "creature"), key=lambda c: -(c.get("stars") or 0))
+        pic = by_id.get(d["field"] or "") or (creatures[0] if creatures else None)
+        desc, title = deck_text(d, by_id), f"{d['name']} by {d['owner']}"
+        image, size = og_image(pic) if pic and pic.get("img") else ((f"{SITE_URL}/og.jpg", (1200, 630)) if SITE_URL else ("", None))
+        share_page(("decks", d["owner"], d["slug"]), [
+            f'<meta name="deck" content="{html.escape(d["owner"])}/{d["slug"]}">',
+            og_tags(title, desc, f"{SITE_URL}/decks/{d['owner']}/{d['slug']}/" if SITE_URL else "", image, size, f"{pic['name']} card" if pic and pic.get("img") else ""),
+            f'<meta name="theme-color" content="{(pic or {}).get("color") or "#3987e5"}">',
+            f'<meta name="description" content="{html.escape(desc)}">',
+            f'<title>{html.escape(title)} · {SITE_NAME}</title>',
         ])
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
 

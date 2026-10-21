@@ -3,6 +3,7 @@ import { esc } from "./text.js";
 import { decode as decodeDeck, encode as encodeDeck } from "./deck.js";
 import { validateProfile, profileFile, sameProfile, deckCode, profileHtml, LIMITS, PICKS, ITEM_KINDS } from "./profile.js";
 import * as pick from "./pick.js";
+import * as decks from "./decks.js";
 
 const API = "https://api.github.com";
 const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden" };
@@ -77,8 +78,8 @@ export function describeItems(op, b = {}, { byId, rule = false } = {}) {
   if (op.ban) { const t = op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned"; items.push({ item: "ban", text: t, short: t }); }
   return items.map(x => ({ ...x, psd: isPsd(x.item) }));
 }
-/** The batch bar's lines, one per pending edit: cards (id, name, item, text, psd), then admins, people and profiles
- *  (kind, login); describe(op) gives a card op's items. */
+/** The batch bar's lines, one per pending edit: cards (id, name, item, text, psd), then admins, people, profiles
+ *  (kind, login) and decks (kind, key); describe(op) gives a card op's items. */
 export function barItems(stage, describe) {
   const out = [];
   for (const op of Object.values(stage.cards)) for (const x of describe(op)) out.push({ id: op.id, name: op.name, item: x.item, text: x.short, psd: x.psd });
@@ -86,8 +87,11 @@ export function barItems(stage, describe) {
   const people = Object.entries(stage.people);
   if (people.length) out.push({ kind: "people", text: `People: ${people.map(([g, d]) => `${g} shown as ${d}`).join(", ")}` });
   for (const [login, p] of Object.entries(stage.profiles)) out.push({ kind: "profile", login, text: `${login}'s profile ${p ? "changed" : "removed"}` });
+  for (const [key, f] of Object.entries(stage.decks || {})) out.push({ kind: "deck", key, text: f ? `Deck: ${deckName(stage, key, f)} (${f.private ? "private" : "public"})` : `Deck removed: ${key}` });
   return out;
 }
+/** A staged deck's name: the file's for a public one; a private file keeps it only in stage.deckNames (local, never published). */
+export const deckName = (stage, key, f) => (f && !f.private && f.name) || (stage.deckNames || {})[key] || key.split("/")[1] || key;
 export const sentence = x => (x.name ? `${x.name}: ${x.text}` : x.text);
 
 // Card Edits.json with the ops applied: keys sorted, fields in ORDER, one line per card
@@ -122,12 +126,14 @@ export function createEditor(app) {
   const { S } = app;
   let token = localStorage.getItem(K.token) || sessionStorage.getItem(K.token) || "";
   let me = null;                                   // { login, admin, push }
-  const emptyStage = () => ({ cards: {}, people: {}, admins: null, profiles: {} });   // profiles: login -> profile, or null to remove the file
+  // profiles: login -> profile, or null to remove the file; decks: "<owner>/<slug>" -> the deck file object (decks.js fileOf /
+  // encrypt), or null to remove it; deckNames: the same keys -> name, for the bar (a private file holds its name encrypted)
+  const emptyStage = () => ({ cards: {}, people: {}, admins: null, profiles: {}, decks: {}, deckNames: {} });
   let stage = { ...emptyStage(), ...load(K.stage, {}) };
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
-  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", ...S.data.files });
+  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", decks: "site/decks", ...S.data.files });
   const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
   const find = id => S.byId.get(id) || (S.rules || []).find(r => r.id === id);
 
@@ -229,7 +235,7 @@ export function createEditor(app) {
     }
     c[op._sent ? "_sent" : "_staged"] = true;
   }
-  function sentRecord() {                          // {at, sha, ops, profiles}: published, until the site has rebuilt with it
+  function sentRecord() {                          // {at, sha, ops, profiles, decks, deckNames}: published, until the site has rebuilt with it
     const sent = load(K.sent, null);
     if (!sent) return null;
     if (new Date(S.data.generated) > new Date(sent.at)) { localStorage.removeItem(K.sent); return null; }   // live now
@@ -237,6 +243,7 @@ export function createEditor(app) {
   }
   const sentOps = () => sentRecord()?.ops || [];
   const sentProfiles = () => sentRecord()?.profiles || {};
+  const sentDecks = () => sentRecord()?.decks || {};
   function preview() {
     for (const [id, p] of pristine) { const c = find(id); if (!c) continue; for (const k of Object.keys(c)) delete c[k]; Object.assign(c, structuredClone(p)); }
     pristine.clear(); based.clear();
@@ -248,7 +255,7 @@ export function createEditor(app) {
     renderBar();
   }
   const save = () => { localStorage.setItem(K.stage, JSON.stringify(stage)); preview(); };
-  const count = () => Object.keys(stage.cards).length + Object.keys(stage.people).length + (stage.admins ? 1 : 0) + Object.keys(stage.profiles).length;
+  const count = () => Object.keys(stage.cards).length + Object.keys(stage.people).length + (stage.admins ? 1 : 0) + Object.keys(stage.profiles).length + Object.keys(stage.decks).length;
 
   // ---- the edit form
   const opts = (list, cur) => list.map(([v, l]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(l)}</option>`).join("");
@@ -620,6 +627,81 @@ export function createEditor(app) {
     if (app.modal.hidden) q("#pf-author").focus();   // not when rebuilt under a dialog (a rerender from the review or a card)
   }
 
+  // ---- published decks: site/decks/<owner>/<slug>.json, one more file in the batch (your own; admins anyone's). The dialog
+  // (decks.js publishFormHtml) stages the FILE object: a public one in clear, a private one encrypted here and now, so the
+  // passphrase is never stored. Keys are "<owner>/<slug>" with the owner as GitHub spells it; lookups ignore case.
+  function deckOf(owner, slug) {                   // unpublished state: {file | null (removed), state, key}, or null
+    const want = decks.keyOf(owner, slug), k = Object.keys(stage.decks).find(x => x.toLowerCase() === want);
+    if (k !== undefined) return { file: stage.decks[k], state: "staged", key: k };
+    const sent = sentDecks(), k2 = Object.keys(sent).find(x => x.toLowerCase() === want);
+    return k2 === undefined ? null : { file: sent[k2], state: "sent", key: k2 };
+  }
+  const pendingDecks = () => new Map([...Object.entries(sentDecks()).map(([k, f]) => [k.toLowerCase(), { file: f, state: "sent" }]),
+    ...Object.entries(stage.decks).map(([k, f]) => [k.toLowerCase(), { file: f, state: "staged" }])]);
+  const dropDeck = key => { delete stage.decks[key]; delete stage.deckNames[key]; };
+  function describeDeck(key, f) {
+    if (f.private) return [`Private: encrypted with its passphrase · ${files().decks}/${key}.json`];
+    const cards = (f.cards || []).map(id => S.byId.get(id)?.name).filter(Boolean);
+    return [`${f.private ? "Private" : "Public"} · ${decks.countOf(f)} cards · ${files().decks}/${key}.json`, ...(f.description ? [f.description] : []),
+      cards.join(", ") + (f.field ? ` · field card ${S.byId.get(f.field)?.name || f.field}` : "")];
+  }
+  /** The publish dialog for a saved hand. opts: owner and slug (fixed) with the visibility when replacing a published deck. */
+  async function openPublish(id, { owner = "", slug = "", visibility = "" } = {}) {
+    const hand = app.savedDecks().find(d => d.id === id);
+    if (!hand) { app.toast("That hand isn't in My decks any more"); return; }
+    if (!me) { openHub("Sign in to publish a hand.", () => openPublish(id, { owner, slug, visibility })); return; }
+    owner ||= me.login;
+    if (!mine(owner) && !me.admin) { app.toast("Only admins can publish someone else's deck"); return; }
+    const { deck: hand0, dropped } = decks.validateDeck(hand, { byId: S.byId });
+    const list = (await app.decks().catch(() => [])).filter(d => d.owner.toLowerCase() === owner.toLowerCase());   // the owner's decks, pending included
+    const published = new Map(list.map(d => [d.slug, d]));
+    app.showDialog(decks.publishFormHtml({ name: hand.name, visibility: visibility || "public", lock: !!slug, n: decks.countOf(hand0), dropped: dropped.length }));
+    const form = app.modal.querySelector("#edit-form"), q = sel => form.querySelector(sel);
+    let keepBoth = false;
+    const slugNow = () => { const base = decks.slugOf(q("#pd-name").value); return slug || (keepBoth && published.has(base) ? decks.uniqueSlug(base, published.keys()) : base); };
+    const read = () => ({ visibility: form.querySelector("[name=pd-vis]:checked")?.value === "private" ? "private" : "public", pass: q("#pd-pass").value, pass2: q("#pd-pass2").value,
+      ...decks.validateDeck({ name: q("#pd-name").value, description: q("#pd-desc").value, cards: hand0.cards, field: hand0.field }, { byId: S.byId }) });
+    const update = (dirty = true) => {
+      const r = read(), s = slugNow(), base = decks.slugOf(q("#pd-name").value), was = published.get(s), clash = !slug && published.get(base);
+      q("#pd-private").hidden = r.visibility !== "private";
+      if (r.visibility === "private") {
+        if (r.pass.length < decks.LIMITS.passphrase) r.errors.push(`Passphrase: at least ${decks.LIMITS.passphrase} characters`);
+        else if (r.pass !== r.pass2) r.errors.push("Passphrase: the two don't match");
+      }
+      q("#pd-path").innerHTML = `<span class="kbd">${esc(`${files().decks}/${owner}/${s}.json`)}</span>${was ? ` · replaces <b>${esc(was.private ? "a private deck" : was.name)}</b>` : ""}` +
+        (clash ? ` <button type="button" class="ghost" data-pd-keep>${keepBoth ? "Replace it instead" : "Keep both"}</button>` : "");
+      q("#pd-summary").innerHTML = r.errors.length ? `<span class="err">${r.errors.map(esc).join(" · ")}</span>` : `${r.visibility === "private" ? "Encrypted in this browser; the batch holds only the ciphertext." : "Everyone can open it."}`;
+      if (dirty) form.dataset.dirty = "1";
+      return { ...r, slug: s };
+    };
+    form.addEventListener("input", () => update());
+    form.addEventListener("change", () => update());
+    form.addEventListener("click", e => { if (e.target.closest("[data-pd-keep]")) { keepBoth = !keepBoth; update(); } });
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const r = update(false);
+      if (r.errors.length) { app.toast(r.errors[0]); return; }
+      const btn = form.querySelector("[type=submit]"); btn.disabled = true;
+      try {
+        let file;
+        if (r.visibility === "private") {
+          const subtle = globalThis.crypto?.subtle;
+          if (!subtle) throw new Error("Encrypting needs a secure page (https or localhost)");
+          q("#pd-summary").textContent = "Encrypting…";
+          file = await decks.encrypt(subtle, r.pass, owner, r.slug, r.deck);
+        } else file = decks.fileOf({ owner, ...r.deck });
+        file.updated = new Date().toISOString().replace(/\.\d+Z$/, "Z");           // publish() stamps the real time
+        if (decks.fileText(file).length > decks.LIMITS.file) throw new Error("The deck file would be over 16 KB");
+        const key = findKey(stage.decks, `${owner}/${r.slug}`) ?? `${owner}/${r.slug}`;
+        dropDeck(key); stage.decks[key] = file; stage.deckNames[key] = r.deck.name;
+        save(); form.dataset.dirty = "";
+        app.closeModal(); app.toast(`Added to the batch: ${count()} unpublished`); app.rerender();
+      } catch (err) { btn.disabled = false; q("#pd-summary").innerHTML = `<span class="err">${esc(err.message)}</span>`; }
+    });
+    update(false);
+    q("#pd-name").focus();
+  }
+
   // ---- publishing
   function section(lines, name) {
     const s = lines.findIndex(l => l.trim().toLowerCase() === `[${name}]`);
@@ -697,10 +779,17 @@ export function createEditor(app) {
     if (foreign.length && !me.admin) throw new Error(`Only admins can publish someone else's profile (${foreign.join(", ")}): discard it from the batch.`);
     const profiles = Object.fromEntries(Object.entries(stage.profiles).map(([l, p]) => [l, p && { ...p, updated: at }]));
     for (const [login, p] of Object.entries(profiles)) edits[`${F.profiles}/${login}.json`] = t => (p ? profileFile(p) : t == null ? null : false);   // new, replaced or deleted
+    const others = Object.keys(stage.decks).filter(k => !mine(k.split("/")[0]));
+    if (others.length && !me.admin) throw new Error(`Only admins can publish someone else's deck (${others.join(", ")}): discard it from the batch.`);
+    const decksOut = Object.fromEntries(Object.entries(stage.decks).map(([k, f]) => [k, f && { ...f, updated: at }]));
+    for (const [key, f] of Object.entries(decksOut)) edits[`${F.decks}/${key}.json`] = t => (f ? decks.fileText(f) : t == null ? null : false);   // site/decks/<owner>/<slug>.json
     const names = ops.map(o => o.name);
-    const what = [...names, ...(Object.keys(people).length ? ["people"] : []), ...(stage.admins ? ["admins"] : []), ...Object.keys(profiles).map(l => `${l}'s profile`)];
+    const what = [...names, ...(Object.keys(people).length ? ["people"] : []), ...(stage.admins ? ["admins"] : []), ...Object.keys(profiles).map(l => `${l}'s profile`),
+      ...Object.entries(decksOut).map(([k, f]) => (f ? (f.private ? `private deck ${k}` : `deck ${f.name || k}`) : `deck ${k} removed`))];   // a private deck's name stays out of the public commit message
     const sha = await commitFiles(edits, message || (what.length > 3 ? `Website edits: ${what.length} changes` : `Website edit: ${what.join(", ")}`));
-    localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles } }));
+    const sent = sentRecord() || {};
+    localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
+      decks: { ...sentDecks(), ...decksOut }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));
     if (stage.admins) S.data.admins = stage.admins;
     stage = emptyStage();
     save();
@@ -721,7 +810,7 @@ export function createEditor(app) {
       return;
     }
     const list = barItems(stage, items), m = list.length, open = barOpen || m <= 3, seen = new Set();
-    const revertOf = x => (x.id ? `data-id="${esc(x.id)}" data-item="${esc(x.item)}"` : `data-item="${x.kind}"${x.login ? ` data-login="${esc(x.login)}"` : ""}`);
+    const revertOf = x => (x.id ? `data-id="${esc(x.id)}" data-item="${esc(x.item)}"` : `data-item="${x.kind}"${x.login ? ` data-login="${esc(x.login)}"` : ""}${x.key ? ` data-key="${esc(x.key)}"` : ""}`);
     const li = x => {
       const first = x.id && !seen.has(x.id); if (x.id) seen.add(x.id);
       return `<li><span class="txt">${x.id ? `<a href="#/card/${esc(x.id)}">${esc(x.name)}</a>: ` : ""}${esc(x.text)}${x.psd ? ` <span class="muted" data-tip="${esc(app.PSD_TIP)}">· on the card image</span>` : ""}</span>
@@ -743,6 +832,9 @@ export function createEditor(app) {
       ${people.length ? `<div class="review-item"><div><b>People</b><ul>${people.map(([g, d]) => `<li>${esc(g)} shown as ${esc(d)}</li>`).join("")}</ul></div><div class="actions"><button type="button" class="ghost" data-action="edit-discard-people">Discard</button></div></div>` : ""}
       ${Object.entries(stage.profiles).map(([login, p]) => `<div class="review-item"><div><a href="#/u/${encodeURIComponent(login)}"><b>${esc(login)}'s profile</b></a><ul>${(p ? describeProfile(p) : ["Removed"]).map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>
         <div class="actions">${p ? `<button type="button" class="ghost" data-action="profile-edit" data-login="${esc(login)}">Edit</button>` : ""}<button type="button" class="ghost" data-action="edit-discard-profile" data-login="${esc(login)}">Discard</button></div></div>`).join("")}
+      ${Object.entries(stage.decks).map(([key, f]) => { const [owner, slug] = key.split("/");
+        return `<div class="review-item"><div><a href="${decks.deckHash(owner, slug)}"><b>Deck: ${esc(deckName(stage, key, f))}</b></a><ul>${(f ? describeDeck(key, f) : [`Removed: ${files().decks}/${key}.json`]).map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>
+        <div class="actions"><button type="button" class="ghost" data-action="edit-discard-deck" data-key="${esc(key)}">Discard</button></div></div>`; }).join("")}
       ${count() ? `<label class="muted" for="edit-msg">Commit message (optional)</label><input id="edit-msg" class="wide" placeholder="Website edits">
         <div class="actions"><button type="button" class="primary" data-action="edit-publish">Publish ${count()} change${count() > 1 ? "s" : ""}</button></div>
         <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch || "main")}). The site rebuilds in a few minutes; the bot reads it on /update_stats.</p>` : `<p class="muted">Nothing to publish.</p>`}
@@ -821,6 +913,18 @@ export function createEditor(app) {
     "edit-discard-admins": () => { stage.admins = null; save(); app.showDialog(reviewHtml("Discarded.")); },
     "edit-discard-all": () => { if (!confirm(`Discard ${count()} unpublished change${count() > 1 ? "s" : ""}?`)) return; stage = emptyStage(); save(); app.rerender(); },
     "edit-discard-profile": el => { delete stage.profiles[el.dataset.login]; save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
+    "edit-discard-deck": el => { dropDeck(el.dataset.key); save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
+    // published decks: Publish… on a saved hand, Unpublish and Replace with… on a deck page (own decks; admins any)
+    "deck-unpublish": el => {
+      const { owner, slug } = el.dataset;
+      if (!me) { openHub("Sign in to unpublish a deck."); return; }
+      if (!mine(owner) && !me.admin) { app.toast("Only admins can unpublish someone else's deck"); return; }
+      if (!confirm(`Unpublish this deck? ${files().decks}/${owner}/${slug}.json goes with your next publish.`)) return;
+      const key = findKey(stage.decks, `${owner}/${slug}`) ?? `${owner}/${slug}`;
+      dropDeck(key); stage.decks[key] = null; save();
+      app.toast(`Removal added to the batch: ${count()} unpublished`); app.rerender();
+    },
+    "deck-replace": el => { const id = el.value; el.value = ""; if (id) openPublish(id, { owner: el.dataset.owner, slug: el.dataset.slug, visibility: el.dataset.private ? "private" : "public" }); },
     "profile-edit": el => openProfile(el?.dataset?.login || ""),
     "profile-signin": el => openHub(`Sign in to edit ${el.dataset.login}'s profile.`, () => openProfile(el.dataset.login)),
     "profile-remove": el => {
@@ -832,7 +936,7 @@ export function createEditor(app) {
     "edit-revert": el => {                       // one line of the batch bar
       const { id, item, login } = el.dataset;
       if (id) revert(id, item);
-      else { if (item === "admins") stage.admins = null; else if (item === "people") stage.people = {}; else if (item === "profile") delete stage.profiles[login]; save(); }
+      else { if (item === "admins") stage.admins = null; else if (item === "people") stage.people = {}; else if (item === "profile") delete stage.profiles[login]; else if (item === "deck") dropDeck(el.dataset.key); save(); }
       app.rerender();
     },
     "edit-bar-toggle": () => { barOpen = !barOpen; renderBar(); },
@@ -863,6 +967,8 @@ export function createEditor(app) {
     open: openForm,
     refresh: preview,
     profileOf, pendingProfiles, profilePage,
+    // published decks: the publish dialog for a saved hand, and the staged or just-published files for the pages
+    publishDeck: id => openPublish(id), deckOf, pendingDecks,
     // inline editing (inline.js): single fields into the same batch, and the known values for its lists
     stageField, stageAuthor, stageMany, value: val,
     options: () => ({ series: uniq(c => c.series), subseries: subseriesList,

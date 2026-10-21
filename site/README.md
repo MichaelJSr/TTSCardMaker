@@ -24,7 +24,17 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **Rulebook**: every page with search and highlighting, the timing-tag glossary, and the constructed ban list.
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,
   optional starting field), with live checks, several saved decks, share links, text import/export, random fill,
-  printable proxies, and a Tabletop Simulator saved-object download.
+  printable proxies, and a Tabletop Simulator saved-object download. Signed in, **Publish…** on a saved hand makes it a
+  deck anyone can open: public, or private (encrypted in the browser with a passphrase; only the owner's login, the file
+  name made from the deck's name and the date are in clear, and the passphrase cannot be recovered).
+- **Published decks** (`#/decks`, linked from the Deck builder page; a deck page is `#/decks/<owner>/<slug>`, static
+  `decks/<owner>/<slug>/` that previews in Discord): tiles with the owner, the card count, a complete-hand mark and a
+  few card images; filters for text, owner and complete hands, sorted by date, name or owner. Private decks are not in
+  the browser (nor in its count or owner list): they show only on their owner's page and at their own link. A deck's page
+  shows the hand grouped like the deck builder with the hand checks, and offers Save a copy to my decks, Share link, Copy
+  as text, Discord, TTS save and Print; its owner (or an admin) can replace it with another saved hand or unpublish it. A
+  private deck asks for its passphrase (remembered on the device if you say so). A person's page lists their decks, the
+  private ones as locked links. Format in `site/decks/README.md`; see Decks below.
 - **Stats**: counts by kind, series, subseries, type, timing tag, status effect, author and month; how many legal cards there are
   for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
   chart that highlights possible balance outliers. Every chart has a table view.
@@ -45,8 +55,8 @@ stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a di
 
 The build does not parse PSDs. Card text, stats, authors, aliases and history come from AutoCroissant's
 `stats.pkl` / `aliases.pkl` / `old_stats.pkl` (the same data the Discord bot answers from), so the site is as fresh as
-the bot's last `/update_stats` + `/push`. Images, icons, the ban list, icon names and profiles come from this repo. Cards that are
-in the repo but not yet in the bot's data still appear (image only).
+the bot's last `/update_stats` + `/push`. Images, icons, the ban list, icon names, profiles and published decks come from this
+repo. Cards that are in the repo but not yet in the bot's data still appear (image only).
 
 The Details dropdown reads the bot's `psd_details.json` (AutoCroissant, beside the pickles: one record per card PSD
 keyed by its git blob sha, gathered on `/update_stats` and pushed with the pickles; the site fetches it from the bot
@@ -66,7 +76,8 @@ batch per card; `git fetch --unshallow --filter=blob:none` fixes that).
 Each card PNG becomes three WebP images (240 and 360 px for the grid, 720 px for the card view), cached by git blob
 hash in `site/.cache/img`. The first screen loads only `data/cards.json`; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
-People tab is opened; `details/<id>.json` when a card's Details dropdown is first opened. Script, style and data URLs
+People tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
+when a card's Details dropdown is first opened. Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
 
@@ -137,6 +148,28 @@ everyone at `#/users`; all profile text is escaped and only internal links are m
 duplicated in the profile: it stays in the Author filter, the "by Name" link, search `author==`, the Stats chart and
 the People table.
 
+### Decks
+
+A saved hand can be published from the Deck builder page (**Publish…** next to it in My decks; signed out, the button
+asks for the token first). The dialog takes a name (the hand's), a description and Public or Private; a private deck
+takes a passphrase (8 characters or more, typed twice) and is encrypted right there, in the browser, before it joins
+the batch, so the passphrase is never stored or sent anywhere; whoever has it can open the deck, and nobody can recover
+it. The deck is one more line in the batch bar ("Deck: Burning Bagels (public)") and goes in the same commit as the card
+edits and profiles, as `site/decks/<owner>/<slug>.json` (format in `site/decks/README.md`; the slug is made from the
+name). You publish your own hands, admins anyone's; the deck page offers **Replace with…** (another saved hand, same
+slug and visibility) and **Unpublish** (the removal joins the batch); the pages show "publishing…" until the site
+rebuilds. The hand itself still travels as before: the deck builder's `d/#/deck/<code>` share links are unchanged, and
+a deck page's Share link is one of them. The build validates the files (never failing on one: a bad file is skipped
+with a warning, a card id that isn't a card is dropped and counted), writes `data/decks.json` (public decks with their
+cards resolved, private ones as they are, newest first), counts them in `cards.json` (the Deck builder page shows the
+public count) and writes a static `decks/<owner>/<slug>/` page per public deck with Open Graph tags ("Burning Bagels by
+MichaelJSr", "7 creatures, 10 items, field card Deepnest", the field card's image, else the top creature's, else the site
+banner). Private decks get no static page and are not listed in the deck browser: the owner's person page links them
+(with a lock) and their own `#/decks/<owner>/<slug>` link opens the passphrase form, which shows nothing but the owner,
+file name and date until the passphrase is typed; the owner or an admin can still unpublish or replace one from that
+page, so a forgotten passphrase strands nothing, and the commit message names a private deck by its path only.
+Decryption needs `crypto.subtle` (https or localhost).
+
 ## Font check
 
 `.github/workflows/font-check.yml` runs on every push to `main` that changes a PSD or `MDW/Fonts/`: the bot's checker
@@ -157,5 +190,6 @@ python -m http.server -d site/dist 8000  # then open http://localhost:8000
 
 Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place and drag-to-assign,
-`profile.js` the People pages, `pick.js` the card picker panel, `details.js` the card page's Details dropdown), `site/build/build_site.py`.
+`profile.js` the People pages, `pick.js` the card picker panel, `details.js` the card page's Details dropdown, `decks.js` the
+published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py`.
 Generated files (`site/dist`, `site/.cache`) are git-ignored.

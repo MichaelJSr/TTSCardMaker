@@ -193,18 +193,31 @@ export function cardsPanelHtml(p, x) {
     <p><a href="#/cards?${by}&sort=new">All ${plural(own.length, "card")}</a></p></div></div>`;
 }
 
-/** The person page: the profile (when there is one) over the contributions and the Cards panel; a contributor without
- *  a profile gets a plain header instead. x = profileHtml's x + cardsPanelHtml's x + {person | null, available, titles, date} */
+/** The Decks panel: the person's public decks (decks.js entries, newest first) as the deck browser's tiles, and their
+ *  private ones as locked links (the only place a private deck is listed; the browser leaves them out). x = {decks: {public: [],
+ *  private: []}, deckTile(entry)}; nothing when they have none. */
+export function decksPanelHtml(x) {
+  const pub = Array.isArray(x.decks?.public) ? x.decks.public : [], priv = Array.isArray(x.decks?.private) ? x.decks.private : [];
+  if (!pub.length && !priv.length) return "";
+  const link = d => `<a href="#/decks/${encodeURIComponent(d.owner)}/${encodeURIComponent(d.slug)}">${esc(d.slug)}</a>`;
+  return `<div class="profile"><div class="panel"><h3>Decks <span class="muted">${pub.length + priv.length}</span></h3>
+    ${pub.length ? `<div class="deck-grid">${pub.map(x.deckTile).join("")}</div>` : ""}
+    ${priv.length ? `<p class="muted">🔒 ${plural(priv.length, "private deck")}: ${priv.map(link).join(", ")}</p>` : ""}
+    ${pub.length ? `<p><a href="#/decks?owner=${encodeURIComponent(pub[0].owner)}">All decks by ${esc(pub[0].owner)}</a></p>` : ""}</div></div>`;
+}
+
+/** The person page: the profile (when there is one) over the contributions, the Cards panel and the Decks panel; a contributor
+ *  without a profile gets a plain header instead. x = profileHtml's x + cardsPanelHtml's x + decksPanelHtml's x + {person | null, available, titles, date} */
 export function personHtml(x) {
   const { person, profile } = x;
-  if (!person) return profileHtml(x);
-  if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>${cardsPanelHtml(person, x)}`;
+  if (!person) return `${profileHtml(x)}${decksPanelHtml(x)}`;
+  if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>${cardsPanelHtml(person, x)}${decksPanelHtml(x)}`;
   return `<div class="profile"><div class="panel"><h2>${esc(person.key)}</h2>${contributionsHtml(person, x)}
     <div class="actions">
       ${x.own ? `<button type="button" class="primary" data-action="profile-edit">Make your profile</button>` : ""}
       <button type="button" data-action="copy-user-link" data-login="${esc(person.key)}">Copy link</button>
       <a class="fact" href="#/users">All people</a>
-    </div></div></div>${cardsPanelHtml(person, x)}`;
+    </div></div></div>${cardsPanelHtml(person, x)}${decksPanelHtml(x)}`;
 }
 
 /** rows = peopleRows(...); x = {me, hasOwn, available, since, titles (Map), date(ts)} */

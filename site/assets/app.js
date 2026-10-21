@@ -6,6 +6,7 @@ import { createEditor } from "./edit.js";
 import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers } from "./profile.js";
 import * as inline from "./inline.js";
 import * as details from "./details.js";
+import * as decks from "./decks.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -80,6 +81,11 @@ const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S
 let usersP = null, contribP = null;                     // profiles (data/users.json) and contributions (data/contributions.json): the People tab and person pages
 const loadUsers = () => (usersP ||= getJson("users.json").then(d => { S.users = d.users || []; S.userBy = new Map(S.users.map(p => [p.login.toLowerCase(), p])); return S.userBy; }).catch(e => { usersP = null; throw e; }));
 const loadContrib = () => (contribP ||= getJson("contributions.json").then(d => { S.contrib = d; S.titles = titlesOf(d.people || []); }).catch(e => { contribP = null; throw e; }));
+// published decks (data/decks.json): the deck browser, deck pages and the person pages' Decks panel. A failed load leaves an
+// empty set with the reason (the browser says so; person pages just show no decks) instead of breaking the page.
+let decksP = null;
+const loadDecks = () => (decksP ||= getJson("decks.json").then(d => { S.decksData = decks.normalizeData(d, S.byId); })
+  .catch(e => { decksP = null; S.decksData = { generated: "", decks: [], private: [], error: e.message }; }));
 // the Details dropdown on a card page: data/details/<id>.json, fetched on first open and kept for the session
 const detailsP = new Map();
 const loadDetails = c => detailsP.get(c.id) || detailsP.set(c.id, getJson(`details/${encodeURIComponent(c.id)}.json`).catch(e => { detailsP.delete(c.id); throw e; })).get(c.id);
@@ -143,6 +149,7 @@ const editor = createEditor({
   users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); },
   // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
   view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
+  decks: () => loadDecks().then(() => deckList()),         // the published decks (with the pending ones): the publish dialog's "replaces"
 });
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;
@@ -162,22 +169,30 @@ function renderAccount() {
 }
 
 // ---- routing ---------------------------------------------------------------------------------------
-const STATIC_PAGES = { c: "card", u: "u" };                  // share pages without a hash: c/<id>/, u/<login>/
+const STATIC_PAGES = { c: "card", u: "u" };                  // share pages without a hash: c/<id>/, u/<login>/, decks/<owner>/<slug>/
 function parseHash(hash = location.hash) {
   const h = hash.replace(/^#\/?/, "");
   if (!h && location.href.startsWith(ROOT)) {
-    const m = location.href.slice(ROOT.length).match(/^([cu])\/([^/?#]+)/);
+    const rest = location.href.slice(ROOT.length), m = rest.match(/^([cu])\/([^/?#]+)/);
     if (m) return { name: STATIC_PAGES[m[1]], arg: decodeURIComponent(m[2]), params: new URLSearchParams() };
+    const k = rest.match(/^decks\/([^/?#]+)\/([^/?#]+)/);
+    if (k) return { name: "decks", arg: `${decodeURIComponent(k[1])}/${decodeURIComponent(k[2])}`, params: new URLSearchParams() };
   }
   const [path, query = ""] = h.split("?");
   const parts = path.split("/").filter(Boolean).map(decodeURIComponent);
   if (parts[0] === "u" && parts.length === 3 && parts[2] === "edit") return { name: "u", arg: parts[1], edit: true, params: new URLSearchParams(query) };   // the profile editor
   return { name: parts[0] || "cards", arg: parts.slice(1).join("/"), params: new URLSearchParams(query) };
 }
-const hashOf = r => `#/${r.name}${r.arg ? `/${encodeURIComponent(r.arg)}` : ""}${r.edit ? "/edit" : ""}`;     // the route's hash when the address bar has none
-// address bar shows the shareable URL: c/<id>/ for cards, u/<login>/ for profiles, d/#/deck/… for shared hands; the profile editor stays a hash route
+const hashOf = r => `#/${r.name}${r.arg ? `/${r.arg.split("/").map(encodeURIComponent).join("/")}` : ""}${r.edit ? "/edit" : ""}`;     // the route's hash when the address bar has none
+// a published public deck (its share page exists): the entry, else null
+const staticDeck = arg => { const [o, ...rest] = String(arg || "").split("/"), s = rest.join("/"); const d = S.decksData?.decks.find(x => x.slug === s && x.owner.toLowerCase() === o.toLowerCase()); return d && !editor.deckOf(o, s) ? d : null; };
+// address bar shows the shareable URL: c/<id>/ for cards, u/<login>/ for profiles, decks/<owner>/<slug>/ for published decks, d/#/deck/… for shared hands;
+// the profile editor stays a hash route
 function syncUrl(r) {
-  const want = r.name === "card" ? shareUrl(r.arg) : r.name === "u" && r.arg && !r.edit ? userUrl(r.arg) : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
+  const sd = r.name === "decks" && r.arg ? staticDeck(r.arg) : null;
+  const want = r.name === "card" ? shareUrl(r.arg) : r.name === "u" && r.arg && !r.edit ? userUrl(r.arg) : sd ? deckPageUrl(sd.owner, sd.slug)
+    : r.name === "decks" && r.arg && !location.hash ? location.href                  // a deck's static path before decks.json is loaded (or a private, staged or missing deck): stay, never the bare root
+    : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
   if (location.href !== want) history.replaceState(history.state, "", want);
 }
 function route() {
@@ -197,12 +212,13 @@ function route() {
 function renderView(r, hash) {
   S.renderedHash = hash; S.listHash = hash;
   if (r.name !== "cards") S.selected.clear();
-  const tab = { compare: "cards", u: "users" }[r.name] || r.name;
+  const tab = { compare: "cards", u: "users", decks: "deck" }[r.name] || r.name;
   $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === tab));
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
-  const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare, users: renderUsers, u: renderUser };
+  const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare, users: renderUsers, u: renderUser, decks: renderDecks };
   (views[r.name] || renderCards)(r);
-  const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.edit ? "Edit profile" : r.arg || "People" };
+  const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.edit ? "Edit profile" : r.arg || "People",
+    decks: r.arg ? S.deckTitle || "Deck" : "Published decks" };
   document.title = `${titles[r.name] || "Cards"} · Impossibility Simulator`;
 }
 function setParams(updates, { replace = true } = {}) {
@@ -596,9 +612,12 @@ function renderDeck(r) {
         <p class="muted">TTS: save the .json to Documents/My Games/Tabletop Simulator/Saves/Saved Objects, then load it from Objects → Saved Objects.</p></div>
       ${readOnly ? "" : `<div class="panel"><h3>Import</h3><textarea id="deck-import" placeholder="One card name per line (“Field: name” for the field card)"></textarea>
         <div class="actions"><button type="button" data-action="deck-import">Import as new deck</button></div></div>
-      <div class="panel"><h3>My decks</h3><div class="deck-list">${S.decks.map(x => `<button type="button" class="${x.id === d.id ? "on" : ""}" data-action="deck-select" data-id="${x.id}">${esc(x.name)} <span class="muted">${x.cards.length + (x.field ? 1 : 0)}</span></button>`).join("")}</div>
+      <div class="panel"><h3>My decks</h3><div class="deck-list">${S.decks.map(x => { const n = x.cards.length + (x.field ? 1 : 0);
+        return `<div class="deck-row"><button type="button" class="${x.id === d.id ? "on" : ""}" data-action="deck-select" data-id="${x.id}">${esc(x.name)} <span class="muted">${n}</span></button>
+          <button type="button" class="ghost" data-action="deck-publish" data-id="${x.id}"${n ? "" : " disabled"} title="${editing() ? "Publish this hand as a deck, public or private" : "Sign in to publish this hand"}">${editing() ? "Publish…" : "Sign in to publish"}</button></div>`; }).join("")}</div>
         <div class="actions"><button type="button" data-action="deck-new">New</button><button type="button" data-action="deck-dup">Duplicate</button>
         <button type="button" class="danger" data-action="deck-delete" ${S.decks.length < 2 ? "disabled" : ""}>Delete</button></div></div>`}
+      <p class="muted">Published decks${publishedCount()} · <a href="#/decks">Browse</a></p>
     </aside></div>`;
   const nameInput = $("#deck-name");
   if (nameInput) nameInput.addEventListener("change", () => { d.name = nameInput.value.trim() || "Untitled hand"; D.saveDecks(S.decks); renderDeck(parseHash()); });
@@ -669,11 +688,90 @@ function renderCompare(r) {
       <p><button type="button" class="ghost" data-action="compare-remove" data-id="${c.id}">Remove</button></p></div>`).join("")}</div>`;
 }
 
+// ---- published decks (data/decks.json; staged or just-published ones from the editor): #/decks and #/decks/<owner>/<slug>
+const publishedCount = () => { const n = S.data.decks; return n && typeof n === "object" ? ` (${+n.public || 0})` : ""; };   // cards.json "decks": the public count without a fetch (the browser lists no private deck)
+const deckCtx = () => ({ byId: S.byId, img, validate: d => D.validate(d, S.byId, S.banned) });
+const deckPageUrl = (owner, slug) => `${ROOT}decks/${encodeURIComponent(owner)}/${encodeURIComponent(slug)}/`;
+const passKey = (owner, slug) => `deckPass:${decks.keyOf(owner, slug)}`;   // localStorage: the remembered passphrase
+const opened = new Map();                                 // "<owner>/<slug>:<ciphertext head>" -> the decrypted payload, for the session
+/** Every deck the pages show: the published ones, less those removed in the batch, plus the staged and just-published files. */
+function deckList() {
+  const pending = editor.pendingDecks(), out = [];
+  for (const d of S.decksData ? [...S.decksData.decks, ...S.decksData.private] : []) if (!pending.has(decks.keyOf(d.owner, d.slug))) out.push(d);
+  for (const [key, { file, state }] of pending) { const e = file && decks.entryOf(file, key.split("/")[1], S.byId, state); if (e) out.push(e); }
+  return out;
+}
+/** One deck by owner (any case) and slug: an entry, {removed, state} for one leaving with the batch, or null. */
+function deckAt(owner, slug) {
+  const p = editor.deckOf(owner, slug);
+  if (p && !p.file) return { removed: true, state: p.state, owner, slug };
+  if (p) return decks.entryOf(p.file, slug, S.byId, p.state);
+  return deckList().find(d => d.slug === slug && d.owner.toLowerCase() === owner.toLowerCase()) || null;
+}
+function decksReady() {
+  if (S.decksData) return true;
+  view.innerHTML = `<div class="loading">Loading decks…</div>`;
+  whenLoaded(loadDecks(), "decks", () => { const h = parseHash(); if (h.name === "decks") renderView(h, location.hash || hashOf(h)); });   // through renderView, so the title follows
+  return false;
+}
+function renderDecks(r) {
+  S.deckTitle = ""; S.deckView = null;
+  if (r.arg) { renderDeckPage(r); return; }
+  if (!decksReady()) return;
+  const p = r.params, f = { q: p.get("q") || "", owner: p.get("owner") || "", sort: p.get("sort") || "newest", complete: p.get("complete") === "1" };
+  view.innerHTML = decks.browserHtml(deckList(), f, { ...deckCtx(), error: S.decksData.error });
+  const input = $("#decks-q");
+  input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#decks-q"); if (i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); } }, 200));
+}
+function renderDeckPage(r) {
+  const [owner, ...rest] = r.arg.split("/"), slug = rest.join("/");
+  if (!slug) { location.replace(`#/decks?owner=${encodeURIComponent(owner)}`); return; }       // #/decks/<owner>: that owner's decks
+  if (!decksReady()) return;
+  const d = deckAt(owner, slug);
+  if (!d) { view.innerHTML = decks.missingHtml(); return; }
+  if (d.removed) { view.innerHTML = decks.removedHtml(d); return; }
+  const me = editor.me, here = () => { const h = parseHash(); return h.name === "decks" && h.arg === r.arg; };
+  const ctx = { ...deckCtx(), canEdit: !!me && (me.admin || me.login.toLowerCase() === d.owner.toLowerCase()), hands: S.decks.map(x => ({ id: x.id, name: x.name, n: x.cards.length + (x.field ? 1 : 0) })) };
+  const show = full => { S.deckTitle = full.name; S.deckView = full; view.innerHTML = decks.deckPageHtml(full, ctx); };
+  if (!d.private) {
+    if (!d.state) { S.renderedHash = S.listHash = decks.deckHash(d.owner, d.slug); syncUrl({ name: "decks", arg: `${d.owner}/${d.slug}` }); }   // the share page's URL, the file's spelling
+    show(d); return;
+  }
+  S.deckTitle = "Private deck";
+  const cacheKey = `${decks.keyOf(d.owner, d.slug)}:${String(d.data).slice(0, 24)}`, stored = localStorage.getItem(passKey(d.owner, d.slug));
+  if (opened.has(cacheKey)) { const pl = opened.get(cacheKey); show({ ...d, ...pl, n: decks.countOf(pl), remembered: !!stored }); return; }
+  const subtle = globalThis.crypto?.subtle, passCtx = { canEdit: ctx.canEdit, hands: ctx.hands };   // the Owner panel sits under the form too: no passphrase needed to unpublish or replace
+  if (!subtle) { view.innerHTML = decks.passFormHtml(d, { ...passCtx, noCrypto: true }); return; }
+  const form = () => {
+    view.innerHTML = decks.passFormHtml(d, passCtx);
+    $("#deck-pass").addEventListener("submit", e => { e.preventDefault(); const pass = $("#deck-pass-in").value; if (!pass) return;
+      $("#deck-pass button").disabled = true; $("#deck-pass-err").textContent = "Opening…"; tryOpen(pass, $("#deck-pass-remember").checked, false); });
+    $("#deck-pass-in").focus();
+  };
+  const tryOpen = async (pass, remember, auto) => {
+    try { opened.set(cacheKey, await decks.decrypt(subtle, pass, d.owner, d.slug, d)); if (remember) localStorage.setItem(passKey(d.owner, d.slug), pass); }
+    catch (err) {
+      if (auto) localStorage.removeItem(passKey(d.owner, d.slug));
+      if (!here()) return;
+      if (auto) form();                                                                 // the auto-open showed no form yet
+      else { $("#deck-pass button").disabled = false; $("#deck-pass-in").select(); }   // keep what was typed and the Remember tick
+      $("#deck-pass-err").textContent = auto ? "The remembered passphrase no longer opens this deck" : err.message;
+      return;
+    }
+    if (here()) rerender();
+  };
+  if (stored) { view.innerHTML = `<div class="loading">Opening the deck…</div>`; tryOpen(stored, false, true); return; }
+  form();
+}
+// the deck page's Share, Discord, text, TTS and print act on the deck shown (S.deckView); the deck builder's on the hand
+const ttsDownload = d => { D.download(`${d.name.replace(/[^\w\- ]+/g, "") || "hand"}.json`, JSON.stringify(D.ttsSave(d, S.byId, S.data.raw), null, 2)); toast("Downloaded Tabletop Simulator saved object"); };
+const printDeck = d => { if (!D.printSheet(d, S.byId, S.data.raw)) toast("Allow pop-ups to print proxies"); };
+
 // ---- people: profiles (data/users.json; staged or just-published ones from the editor) + contributions (data/contributions.json)
 function usersReady(name, again) {
-  if (S.users && S.contrib) return true;
+  if (S.users && S.contrib && S.decksData) return true;
   view.innerHTML = `<div class="loading">Loading people…</div>`;
-  whenLoaded(Promise.all([loadUsers(), loadContrib()]), "people", () => { if (parseHash().name === name) again(parseHash()); });
+  whenLoaded(Promise.all([loadUsers(), loadContrib(), loadDecks()]), "people", () => { if (parseHash().name === name) again(parseHash()); });
   return false;
 }
 function renderUser(r) {
@@ -692,9 +790,11 @@ function renderUser(r) {
   const login = pending?.profile?.login || published?.login || person?.key || r.arg;    // the file's spelling: u/<login>/ exists only for it
   if (login !== r.arg) { S.renderedHash = S.listHash = hashOf({ name: "u", arg: login }); syncUrl({ name: "u", arg: login }); }
   const own = !!me && (me.login.toLowerCase() === login.toLowerCase() || !!person?.logins.some(l => l.toLowerCase() === me.login.toLowerCase()));
+  const owners = new Set([login, ...(person?.logins || [])].map(s => s.toLowerCase())), theirs = deckList().filter(d => owners.has(d.owner.toLowerCase()));
   view.innerHTML = personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
     own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }),
-    available: !!S.contrib.available, titles: S.titles, date, month, kinds: KINDS, kindOf });
+    available: !!S.contrib.available, titles: S.titles, date, month, kinds: KINDS, kindOf,
+    decks: { public: decks.sortDecks(theirs.filter(d => !d.private)), private: decks.sortDecks(theirs.filter(d => d.private)) }, deckTile: d => decks.deckTileHtml(d, deckCtx()) });
 }
 function renderUsers() {
   if (!usersReady("users", renderUsers)) return;
@@ -791,8 +891,17 @@ const actions = {
   "deck-share": () => copy(deckUrl(S.shared || deck()), "share link"),
   "deck-discord": () => copy(deckDiscord(S.shared || deck()), "hand for Discord"),
   "deck-copy-text": () => copy(D.toText(S.shared || deck(), S.byId), "deck list"),
-  "deck-tts": () => { const d = S.shared || deck(); D.download(`${d.name.replace(/[^\w\- ]+/g, "") || "hand"}.json`, JSON.stringify(D.ttsSave(d, S.byId, S.data.raw), null, 2)); toast("Downloaded Tabletop Simulator saved object"); },
-  "deck-print": () => { if (!D.printSheet(S.shared || deck(), S.byId, S.data.raw)) toast("Allow pop-ups to print proxies"); },
+  "deck-tts": () => ttsDownload(S.shared || deck()),
+  "deck-print": () => printDeck(S.shared || deck()),
+  // published decks: the deck page's buttons act on the deck shown; Publish… (or Sign in to publish) on the deck builder's saved hands
+  "deck-publish": el => editor.publishDeck(el.dataset.id),
+  "deck-save-copy": () => { const d = S.deckView; if (!d) return; D.newDeck(S.decks, d.name, d.cards.filter(id => S.byId.has(id)), S.byId.has(d.field) ? d.field : null); updateDeckCount(); toast(`Saved “${d.name}” to your decks`); },
+  "deck-page-share": () => { if (S.deckView) copy(deckUrl(S.deckView), "share link"); },
+  "deck-page-discord": () => { if (S.deckView) copy(deckDiscord(S.deckView), "hand for Discord"); },
+  "deck-page-text": () => { if (S.deckView) copy(D.toText(S.deckView, S.byId), "deck list"); },
+  "deck-page-tts": () => { if (S.deckView) ttsDownload(S.deckView); },
+  "deck-page-print": () => { if (S.deckView) printDeck(S.deckView); },
+  "deck-forget": () => { const d = S.deckView; if (!d) return; localStorage.removeItem(passKey(d.owner, d.slug)); toast("Passphrase forgotten"); rerender(); },
   "deck-import": () => { const { deck: d, unknown } = D.fromText($("#deck-import").value, S.cards); D.newDeck(S.decks, d.name, d.cards, d.field); updateDeckCount(); renderDeck(parseHash()); toast(unknown.length ? `Imported; not found: ${unknown.join(", ")}` : "Imported"); },
   "deck-select": el => { D.setActive(S.decks.find(x => x.id === el.dataset.id)); updateDeckCount(); location.hash = "#/deck"; renderDeck(parseHash()); },
   "deck-new": () => { D.newDeck(S.decks, `Hand ${S.decks.length + 1}`); updateDeckCount(); renderDeck(parseHash()); },

@@ -396,3 +396,31 @@ body.dragging-cards .drop-list { display: flex; }
 .psd-details .tree, .psd-details .tree ul { list-style: none; margin: 0; padding-left: 16px; }
 .psd-details .tree { padding-left: 0; font: 12.5px/1.5 ui-monospace, monospace; }
 .psd-details .tree .off { color: var(--muted); } .psd-details .tree .kind { color: var(--muted); font-size: 11px; }
+
+/* ---- decks: the published deck browser (#/decks), deck pages, the publish dialog and the deck builder's Publish buttons ---- */
+.decks { max-width: 1100px; margin: auto; }
+.decks .toolbar input[type=search] { flex: 1 1 200px; min-width: 0; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); }
+.decks .toolbar select { width: auto; }
+.deck-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+.dtile { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow .12s; }
+.dtile:hover { box-shadow: var(--shadow); }
+.dtile .arts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--surface-2); aspect-ratio: 4 / 1.7; }
+.dtile .arts img, .dtile .arts .noart { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; background: var(--surface-3); }
+.dtile .arts .empty-hand { grid-column: 1 / -1; display: grid; place-items: center; color: var(--muted); font-size: 13px; background: transparent; }
+.dtile .arts.lock { display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); font-size: 14px; }
+.dtile .arts:hover { text-decoration: none; }
+.dtile .meta { padding: 8px 10px 10px; }
+.dtile .name { font-weight: 600; color: var(--ink); }
+.dtile .ok { color: var(--good); font-weight: 700; margin-left: 6px; cursor: help; }
+.dtile .sub { font-size: 12.5px; color: var(--muted); margin-top: 2px; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+.dtile .sub .fact, .dtile .sub .kbd { font-size: 11px; }
+.deck-row { display: flex; gap: 6px; } .deck-row > button:first-child { flex: 1 1 auto; min-width: 0; text-align: left; }
+.deck-row > button + button { flex: 0 0 auto; font-size: 13px; white-space: nowrap; }
+.deck-page h2 { margin: 0 0 6px; font-size: 24px; line-height: 1.15; } .deck-page h2 .fact { font-size: 13px; vertical-align: middle; }
+.deck-page .deck-desc { color: var(--ink-2); margin: 0 0 8px; white-space: pre-line; overflow-wrap: anywhere; }
+.deck-page .slot.filled { cursor: pointer; } .deck-page .actions select { width: auto; }
+.deck-pass form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0 4px; }
+.deck-pass input[type=password] { flex: 1 1 200px; min-width: 0; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface-2); }
+.deck-pass .err { min-height: 1.4em; margin: 4px 0; }
+.publish-form .ein .check { margin: 0 12px 0 0; } .publish-form .ein .check input { margin: 0; }
+.publish-form #pd-private { border-left: 2px solid var(--border); padding-left: 10px; margin: 4px 0 8px; }
