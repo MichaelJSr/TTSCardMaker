@@ -61,6 +61,16 @@ Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; t
 people and edit the admin list (committed with the batch). Remove a card's entry from `Card Edits.json` to go back to
 the PSD.
 
+## Font check
+
+`.github/workflows/font-check.yml` runs on every push to `main` that changes a PSD or `MDW/Fonts/`: the bot's checker
+(AutoCroissant `commands/font_check.py`) reads the pushed card PSDs by blob and lists the fonts their visible text layers
+ask for that `MDW/Fonts` does not supply. When something is missing it writes the job summary, posts (if the repository
+secret `DISCORD_FONT_WEBHOOK` is set) to that Discord webhook pinging the card makers' role (`546427268751294475`), one line
+per author and font ("... has pushed a card without adding the ... font to MDW/Fonts, bite this user."), and comments on
+the commit. It never reverts or rejects a push: the fix is to add the font file to the top level of `MDW/Fonts/`.
+Run it by hand from the Actions tab (`all` = every card, about 813 downloads).
+
 ## Working on it
 
 ```
