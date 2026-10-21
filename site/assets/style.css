@@ -371,3 +371,28 @@ body.dragging-cards .drop-list { display: flex; }
 .creature-table { border-collapse: collapse; margin: 4px 0; }
 .creature-table th { font-size: 12px; color: var(--ink-2); padding: 2px 6px; text-align: left; }
 .creature-table input { width: 64px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface-2); }
+
+/* ---- card page: the Details dropdown (the PSD's structure, data/details/<id>.json) ---- */
+.psd-details { margin-top: 18px; font-size: 14px; }
+.psd-details summary { cursor: pointer; }
+.psd-details > summary { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+.psd-details .psd-body { margin-top: 8px; }
+.psd-details .sec { margin: 4px 0; padding-left: 10px; border-left: 2px solid var(--border); }
+.psd-details .sec > summary { font-weight: 600; } .psd-details .sec > summary .muted { font-weight: 400; }
+.psd-details .sec > div { padding: 4px 0 6px; }
+.psd-details .font { margin: 2px 0; } .psd-details .font > summary { font-weight: 400; }
+.psd-details code { font-size: 12.5px; }
+.psd-details ul.plain { margin: 4px 0; padding-left: 18px; }
+.psd-details .pairs { margin: 4px 0; font-size: 14px; gap: 3px 14px; }
+.psd-details table { border-collapse: collapse; width: 100%; font-size: 13px; }
+.psd-details th, .psd-details td { text-align: left; vertical-align: top; padding: 3px 8px 3px 0; border-bottom: 1px solid var(--grid); }
+.psd-details th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+.psd-details td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.psd-details td.wrap { white-space: pre-wrap; overflow-wrap: anywhere; }
+.psd-details tr.off td { color: var(--muted); }
+.psd-details .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--border-strong); vertical-align: -1px; margin-right: 5px; }
+.psd-details .table-wrap { max-height: 320px; }
+.psd-details .facts { margin: 8px 0 0; }
+.psd-details .tree, .psd-details .tree ul { list-style: none; margin: 0; padding-left: 16px; }
+.psd-details .tree { padding-left: 0; font: 12.5px/1.5 ui-monospace, monospace; }
+.psd-details .tree .off { color: var(--muted); } .psd-details .tree .kind { color: var(--muted); font-size: 11px; }

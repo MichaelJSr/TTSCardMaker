@@ -11,6 +11,14 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **Card pages**: full image, stat bars, ability text with icons, timing-tag badges (hover for the meaning) and links to
   every card it names; "mentions", "mentioned by", similar stats, same series, text history with changes highlighted,
   and an image version viewer: every commit that changed the card's image, compared side by side with the current one.
+  A **Details** dropdown at the bottom of the card page (closed by default; the browser remembers it, and its sections,
+  for the session) shows the PSD's structure as the bot read it: fonts (each expandable to its layers; one that
+  `MDW/Fonts` lacks is flagged "missing from MDW/Fonts", "not checked" when the bot had no font index), every text
+  layer (text, font, size, colour, visible), layer effects, smart objects, canvas (size, mode, depth, ICC profile),
+  how the type icons are made (image layers or icon-font tokens), how each stat row is built (template digit row,
+  Top + Bottom rows, drawn bars), status-word layers (FX layers and overlay words), the template check (Name and
+  Ability layers, deviations), the parser's notes with the PSD-vs-edited values, and the layer tree (rendered when
+  its section opens).
   Every card has a shareable link (`/c/<card>/`) that shows a rich preview in Discord. The Share button (s) opens a dialog
   with that link, a Discord preview, and buttons to copy the card as a Discord message, an image or plain text.
 - **Rulebook**: every page with search and highlighting, the timing-tag glossary, and the constructed ban list.
@@ -40,6 +48,13 @@ The build does not parse PSDs. Card text, stats, authors, aliases and history co
 the bot's last `/update_stats` + `/push`. Images, icons, the ban list, icon names and profiles come from this repo. Cards that are
 in the repo but not yet in the bot's data still appear (image only).
 
+The Details dropdown reads the bot's `psd_details.json` (AutoCroissant, beside the pickles: one record per card PSD
+keyed by its git blob sha, gathered on `/update_stats` and pushed with the pickles; the site fetches it from the bot
+repo like the pickles). The build joins a record to a card by the PSD's blob at HEAD, else the blob the bot parsed,
+else the newest record for that path, writes `data/details/<id>.json` (the record plus the card's id and name; a
+duplicate gets its original's) and sets `details: true` on the card. No file, or no record for a card: no dropdown;
+the build never fails on it.
+
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
 bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
 `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/` on 2026-10-20); the
@@ -51,7 +66,7 @@ batch per card; `git fetch --unshallow --filter=blob:none` fixes that).
 Each card PNG becomes three WebP images (240 and 360 px for the grid, 720 px for the card view), cached by git blob
 hash in `site/.cache/img`. The first screen loads only `data/cards.json`; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
-People tab is opened. Script, style and data URLs
+People tab is opened; `details/<id>.json` when a card's Details dropdown is first opened. Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
 
@@ -142,5 +157,5 @@ python -m http.server -d site/dist 8000  # then open http://localhost:8000
 
 Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place and drag-to-assign,
-`profile.js` the People pages, `pick.js` the card picker panel), `site/build/build_site.py`.
+`profile.js` the People pages, `pick.js` the card picker panel, `details.js` the card page's Details dropdown), `site/build/build_site.py`.
 Generated files (`site/dist`, `site/.cache`) are git-ignored.

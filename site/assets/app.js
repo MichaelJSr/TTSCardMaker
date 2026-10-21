@@ -5,6 +5,7 @@ import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
 import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers } from "./profile.js";
 import * as inline from "./inline.js";
+import * as details from "./details.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -13,6 +14,7 @@ const ROOT = new URL("./", document.baseURI).href;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const view = $("#view"), modal = $("#modal"), tip = $("#tooltip"), toastEl = $("#toast"), qInput = $("#q");
+const store = (() => { try { return sessionStorage; } catch { return null; } })();   // storage blocked: the Details dropdown just forgets its state
 
 const S = {
   data: null, cards: [], rules: [], byId: new Map(), banned: new Map(), icons: {}, renderer: null,
@@ -78,6 +80,9 @@ const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S
 let usersP = null, contribP = null;                     // profiles (data/users.json) and contributions (data/contributions.json): the People tab and person pages
 const loadUsers = () => (usersP ||= getJson("users.json").then(d => { S.users = d.users || []; S.userBy = new Map(S.users.map(p => [p.login.toLowerCase(), p])); return S.userBy; }).catch(e => { usersP = null; throw e; }));
 const loadContrib = () => (contribP ||= getJson("contributions.json").then(d => { S.contrib = d; S.titles = titlesOf(d.people || []); }).catch(e => { contribP = null; throw e; }));
+// the Details dropdown on a card page: data/details/<id>.json, fetched on first open and kept for the session
+const detailsP = new Map();
+const loadDetails = c => detailsP.get(c.id) || detailsP.set(c.id, getJson(`details/${encodeURIComponent(c.id)}.json`).catch(e => { detailsP.delete(c.id); throw e; })).get(c.id);
 function whenLoaded(promise, what, rerender) {
   promise.then(rerender, e => { view.innerHTML = `<div class="empty">Couldn't load ${esc(what)} (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`; });
 }
@@ -418,6 +423,7 @@ function openCard(id) {
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="history-slot">${historyHtml(c)}</div>
           <div id="versions-slot">${versionsHtml(c)}</div>
+          ${c.details ? details.detailsHtml(details.readState(store)) : ""}
         </div>
       </div>
     </div></div>`;
@@ -431,6 +437,8 @@ function openCard(id) {
   }
   if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c); }, () => {});
   if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c); }, () => {});
+  const dd = $(".psd-details", modal);
+  if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
   if (editing()) inline.mountCard(modal, c);
 }
 

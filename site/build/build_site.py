@@ -6,6 +6,8 @@ Run by .github/workflows/site.yml on every push to main, every 6 hours (to pick 
 Where the data comes from:
   * Card text, stats, authors, aliases and history: AutoCroissant's stats.pkl / aliases.pkl / old_stats.pkl
     (the same data the Discord bot answers from), downloaded from its public GitHub repo. PSDs are never parsed here.
+    The PSDs' structure (fonts, text layers, effects, stat rows, layer tree) comes from the bot's psd_details.json the
+    same way, keyed by PSD blob sha; a card with a record gets data/details/<id>.json for the card page's Details dropdown.
   * Images: card PNGs in this repo, turned into three WebP sizes (240 px and 360 px for the grid at 1x/2x, 720 px
     for the card view). They are cached by git blob hash in site/.cache/img, so after the first run only new or
     changed cards are downloaded and resized; images no card uses any more are pruned.
@@ -25,7 +27,7 @@ PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) ar
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
 data/contributions.json and data/versions.json (loaded when the rulebook, a card's text or image history, the changes feed or
-the People tab is opened), images, icons, assets and one share page per card and per person. Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
+the People tab is opened), data/details/<id>.json (a card's Details dropdown), images, icons, assets and one share page per card and per person. Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -58,6 +60,7 @@ BOT_REPO = os.environ.get("BOT_REPO", "bobberlington/AutoCroissant")
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 RAW = f"https://raw.githubusercontent.com/{CARD_REPO}/main/"
 BOT_RAW = f"https://raw.githubusercontent.com/{BOT_REPO}/main/"
+DETAILS_JSON = "psd_details.json"            # the bot's PSD structure records {version, cards: {blob sha: record}} (its global_config.DETAILS_JSON)
 IMAGE_SIZES = {240: 80, 360: 78, 720: 75}    # width -> WebP quality. 240/360: grid at 1x/2x; 720: card view
 IMAGE_WIDTH = 360                            # the size whose dimensions go into cards.json (aspect ratio)
 ICON_SIZE = 96
@@ -142,6 +145,38 @@ class _Unpickler(pickle.Unpickler):
 def load_bot_pickle(name):
     data = fetch(BOT_RAW + name)
     return _Unpickler(io.BytesIO(data)).load()
+
+
+def load_bot_json(name):
+    return json.loads(fetch(BOT_RAW + name).decode("utf-8"))
+
+
+def psd_records(data):
+    """The records of the bot's psd_details.json by blob sha; {} for anything but its shape."""
+    cards = data.get("cards") if isinstance(data, dict) else None
+    return {sha: rec for sha, rec in cards.items() if isinstance(rec, dict)} if isinstance(cards, dict) else {}
+
+
+def join_details(cards, records, tree):
+    """
+    The record of each card's PSD: by its blob at HEAD, else the blob the bot parsed, else the newest record for its path.
+
+    Flags the card (details: true in cards.json) and returns {card id: record + id and name} for data/details/<id>.json.
+    A duplicate (same PSD) gets its original's record.
+    """
+    by_path = {}
+    for rec in records.values():
+        path = rec.get("path")
+        if path and str(rec.get("at") or "") >= str(by_path.get(path, {}).get("at") or ""):
+            by_path[path] = rec
+    out = {}
+    for e in cards:
+        path = e.get("psd")
+        rec = (records.get(tree.get(path, "")) or records.get(e.get("_blob") or "") or by_path.get(path)) if path else None
+        if rec:
+            e["details"] = True
+            out[e["id"]] = {**rec, "id": e["id"], "name": e["name"]}      # the card's id and shown name win
+    return out
 
 
 def stat(card, attr):
@@ -909,7 +944,12 @@ def main():
     except Exception as e:
         log("no aliases:", e)
         aliases = {}
-    log(f"bot data: {len(stats)} entries, {len(old_stats)} with history, {len(aliases)} aliases")
+    try:
+        records = psd_records(load_bot_json(DETAILS_JSON))
+    except Exception as e:
+        log("no PSD details:", e)
+        records = {}
+    log(f"bot data: {len(stats)} entries, {len(old_stats)} with history, {len(aliases)} aliases, {len(records)} PSD records")
     edits = parse_edits()
 
     png_by_name = {}
@@ -962,6 +1002,7 @@ def main():
             if field in DATA_FIELDS or field == "problems":
                 entry[field] = list(value) if isinstance(value, list) else value
         sha = tree.get(path)
+        entry["_blob"] = getattr(c, "blob_sha", None)       # the PSD the bot read; join_details, dropped below
         if sha and getattr(c, "blob_sha", None) and sha != c.blob_sha:
             entry["reparsePending"] = True       # PSD committed since the bot last read it (a bake, or any edit)
         apply_edits(entry, edits, sha)
@@ -1151,6 +1192,12 @@ def main():
         log(f"image versions: {sum(len(r) for r in versions['cards'].values())} versions of {len(versions['cards'])} cards "
             f"from {len(versions['commits'])} commits, since {datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}")
 
+    detail_files = join_details(cards, records, tree)
+    for e in cards + rules:
+        e.pop("_blob", None)
+    if records:
+        log(f"PSD details: {len(detail_files)} cards have a record ({len(records)} in {DETAILS_JSON})")
+
     history = {}
     for e in cards + rules:
         if e.get("history"):                  # loaded on demand: the first screen only needs the count
@@ -1181,6 +1228,11 @@ def main():
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
             fh.write(blob)
+    if detail_files:                          # one small file per card, fetched when its Details dropdown opens
+        os.makedirs(os.path.join(DIST, "data", "details"))
+        for cid, rec in detail_files.items():
+            with open(os.path.join(DIST, "data", "details", f"{cid}.json"), "w", encoding="utf-8") as fh:
+                json.dump(rec, fh, separators=(",", ":"), ensure_ascii=False)
     log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), rulebook pages: {len(rules)}, "
         f"icons: {len(set(i['file'] for i in icons.values()))}, banned: {sum(len(g['entries']) for g in banlist['groups'])}")
 
@@ -1191,6 +1243,7 @@ def main():
         digest.update(open(os.path.join(SITE, "index.html") if name == "index.html" else os.path.join(assets_src, name), "rb").read())
     for name in sorted(blobs):
         digest.update(blobs[name])
+    digest.update(f"details:{len(detail_files)}".encode())      # the details files by count only (cards.json changes every build anyway)
     version = digest.hexdigest()[:10]
     os.makedirs(os.path.join(DIST, "assets"))
     for name in os.listdir(assets_src):
