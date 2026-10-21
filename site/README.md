@@ -21,15 +21,17 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
   chart that highlights possible balance outliers. Every chart has a table view.
 - **Changes**: recently updated cards with text diffs, the most revised cards, and cards the bot hasn't parsed yet.
+- **Users**: the people who made a profile (see Profiles below), each with a page `u/<login>/` that previews in Discord.
 
-Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions, `d` add to deck, `c` copy link,
-`s` share, `x` compare, `e` edit, `r` random, `1`–`5` sections, `?` help.
+Top right: **Sign in** (a GitHub token, see Editing) becomes your login once signed in; it opens the editor hub (your
+batch, your profile, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
+`d` add to deck, `c` copy link, `s` share, `x` compare, `e` edit, `r` random, `1`–`6` sections, `?` help.
 
 ## Where the data comes from
 
 The build does not parse PSDs. Card text, stats, authors, aliases and history come from AutoCroissant's
 `stats.pkl` / `aliases.pkl` / `old_stats.pkl` (the same data the Discord bot answers from), so the site is as fresh as
-the bot's last `/update_stats` + `/push`. Images, icons, the ban list and icon names come from this repo. Cards that are
+the bot's last `/update_stats` + `/push`. Images, icons, the ban list, icon names and profiles come from this repo. Cards that are
 in the repo but not yet in the bot's data still appear (image only).
 
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
@@ -40,14 +42,14 @@ only), following folder moves; the build needs full history for them (CI fetches
 `git fetch --unshallow --filter=blob:none` fixes that).
 
 Each card PNG becomes three WebP images (240 and 360 px for the grid, 720 px for the card view), cached by git blob
-hash in `site/.cache/img`. The first screen loads only `data/cards.json`; `rules.json`, `history.json` and
-`versions.json` load when the rulebook, a card's history or the changes feed is opened. Script, style and data URLs
+hash in `site/.cache/img`. The first screen loads only `data/cards.json`; `rules.json`, `history.json`,
+`versions.json` and `users.json` load when the rulebook, a card's history, the changes feed or a profile is opened. Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
 
 ## Editing
 
-Anyone with write access to this repo can fix card data on the site: the pencil button signs in with a GitHub token
+Anyone with write access to this repo can fix card data on the site: **Sign in** (top right) takes a GitHub token
 (classic, `public_repo` scope), Edit (e) on a card stages changes in a batch, and **Review and publish** commits the
 whole batch at once. Fields go to `site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to
 `site/Constructed Ban List.txt`. The site rebuilds on that commit; the bot applies the same files on `/update_stats`.
@@ -58,8 +60,21 @@ note, aliases, author, duplicate of, checks, constructed ban, hidden).
 Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a card
 several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own bars.
 Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards, rename
-people and edit the admin list (committed with the batch). Remove a card's entry from `Card Edits.json` to go back to
-the PSD.
+people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
+`Card Edits.json` to go back to the PSD.
+
+## Profiles
+
+Opt-in: nobody has a profile until they make one (sign in → **Edit profile**, or the Users tab). A profile is
+`site/profiles/<login>.json` (format in `site/profiles/README.md`), staged in the same batch as card edits and
+published in the same commit; you can edit your own, admins anyone's, and a profile can be removed again. Everything in
+it is optional: the name on your cards (from `Card Authors.txt`, so the page links "N cards by …" to the author filter),
+a one-line motto, a series, favourite and hated card and item, a featured hand (a deck builder share link) and up to 12
+label/value pairs. The build validates the files (never failing on one), writes `data/users.json` and a static
+`u/<login>/` page with Open Graph tags, like `c/<card>/`, so a profile link previews in Discord. The site shows the page
+at `#/u/<login>` and the people with a profile at `#/users`; all profile text is escaped and only internal links are
+made from it. Authorship itself is not duplicated there: it stays in the Author filter, the "by Name" link, search
+`author==` and the Stats chart.
 
 ## Font check
 

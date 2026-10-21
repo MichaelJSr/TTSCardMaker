@@ -3,6 +3,7 @@ import { esc, norm, makeRenderer, plain, diffWords, tagInfo, badgeHtml, GROUP_NA
 import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
+import { profileHtml, usersHtml, mergeUsers } from "./profile.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -43,6 +44,7 @@ const isStatus = c => c.type === "debuff" || c.type === "buff";
 const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : "");             // item types read "Support", as in the rulebook
 const kindOf = c => (isStatus(c) ? "status" : c.type);
 const shareUrl = id => `${ROOT}c/${encodeURIComponent(id)}/`;
+const userUrl = login => `${ROOT}u/${encodeURIComponent(login)}/`;
 const deckUrl = d => `${ROOT}d/#/deck/${D.encode(d)}`;
 const iconFor = name => S.icons[norm(name)];
 const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
@@ -70,6 +72,8 @@ const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
 const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
+let usersP = null;                                      // profiles (data/users.json), with the rulebook etc. only when a page needs them
+const loadUsers = () => (usersP ||= getJson("users.json").then(d => { S.users = d.users || []; S.userBy = new Map(S.users.map(p => [p.login.toLowerCase(), p])); return S.userBy; }).catch(e => { usersP = null; throw e; }));
 function whenLoaded(promise, what, rerender) {
   promise.then(rerender, e => { view.innerHTML = `<div class="empty">Couldn't load ${esc(what)} (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`; });
 }
@@ -88,6 +92,7 @@ async function init() {
   updateDeckCount();
   window.addEventListener("hashchange", route);
   window.addEventListener("popstate", route);
+  renderAccount();
   route();
 }
 
@@ -115,8 +120,9 @@ function derive() {
 }
 const currentCard = () => (parseHash().name === "card" && !modal.hidden ? parseHash().arg : "");
 const goCard = id => { if (parseHash().name === "card" && parseHash().arg === id) openCard(id); else location.hash = `#/card/${id}`; };
+const goUser = login => { const r = parseHash(); if (r.name === "u" && r.arg.toLowerCase() === login.toLowerCase()) { closeModal(); renderView(r, hashOf(r)); } else location.hash = `#/u/${encodeURIComponent(login)}`; };
 function rerender() {
-  const onCard = parseHash().name === "card", base = onCard ? S.listHash : location.hash || "#/cards";
+  const onCard = parseHash().name === "card", base = onCard ? S.listHash : location.hash || hashOf(parseHash());
   if (S.renderedHash) renderView(parseHash(base), base);
   if (onCard && $(".detail", modal)) openCard(parseHash().arg);       // dialogs stay open
 }
@@ -124,22 +130,31 @@ const editor = createEditor({
   S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
   openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
   iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
+  users: () => loadUsers(), goUser, myHand: () => D.encode(deck()), onAuth: () => renderAccount(),
 });
+// top right: "Sign in", or the login; both open the editor hub
+function renderAccount() {
+  const b = $("#account"), me = editor.me;
+  b.textContent = me ? me.login : "Sign in";
+  b.title = me ? `${me.login}: edit cards, your profile, sign out` : "Sign in to edit cards and make a profile";
+}
 
 // ---- routing ---------------------------------------------------------------------------------------
+const STATIC_PAGES = { c: "card", u: "u" };                  // share pages without a hash: c/<id>/, u/<login>/
 function parseHash(hash = location.hash) {
   const h = hash.replace(/^#\/?/, "");
-  if (!h && location.href.startsWith(ROOT)) {                 // share URL: c/<id>/
-    const m = location.href.slice(ROOT.length).match(/^c\/([^/?#]+)/);
-    if (m) return { name: "card", arg: decodeURIComponent(m[1]), params: new URLSearchParams() };
+  if (!h && location.href.startsWith(ROOT)) {
+    const m = location.href.slice(ROOT.length).match(/^([cu])\/([^/?#]+)/);
+    if (m) return { name: STATIC_PAGES[m[1]], arg: decodeURIComponent(m[2]), params: new URLSearchParams() };
   }
   const [path, query = ""] = h.split("?");
   const parts = path.split("/").filter(Boolean).map(decodeURIComponent);
   return { name: parts[0] || "cards", arg: parts.slice(1).join("/"), params: new URLSearchParams(query) };
 }
-// address bar shows the shareable URL: c/<id>/ for cards, d/#/deck/… for shared hands
+const hashOf = r => `#/${r.name}${r.arg ? `/${encodeURIComponent(r.arg)}` : ""}`;     // the route's hash when the address bar has none
+// address bar shows the shareable URL: c/<id>/ for cards, u/<login>/ for profiles, d/#/deck/… for shared hands
 function syncUrl(r) {
-  const want = r.name === "card" ? shareUrl(r.arg) : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
+  const want = r.name === "card" ? shareUrl(r.arg) : r.name === "u" && r.arg ? userUrl(r.arg) : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
   if (location.href !== want) history.replaceState(history.state, "", want);
 }
 function route() {
@@ -151,17 +166,20 @@ function route() {
     openCard(r.arg);
     return;
   }
-  if (location.hash === S.renderedHash && !modal.hidden) { closeModal(); return; }
+  const hash = location.hash || hashOf(r);
+  if (hash === S.renderedHash && !modal.hidden) { closeModal(); return; }
   closeModal();
-  renderView(r, location.hash || "#/cards");
+  renderView(r, hash);
 }
 function renderView(r, hash) {
   S.renderedHash = hash; S.listHash = hash;
-  $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === r.name || (r.name === "compare" && a.dataset.tab === "cards")));
+  const tab = { compare: "cards", u: "users" }[r.name] || r.name;
+  $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === tab));
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
-  const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare };
+  const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare, users: renderUsers, u: renderUser };
   (views[r.name] || renderCards)(r);
-  document.title = `${{ cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare" }[r.name] || "Cards"} · Impossibility Simulator`;
+  const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "Users", u: r.arg || "Users" };
+  document.title = `${titles[r.name] || "Cards"} · Impossibility Simulator`;
 }
 function setParams(updates, { replace = true } = {}) {
   const r = parseHash();
@@ -620,6 +638,29 @@ function renderCompare(r) {
       <p><button type="button" class="ghost" data-action="compare-remove" data-id="${c.id}">Remove</button></p></div>`).join("")}</div>`;
 }
 
+// ---- profiles (data/users.json; staged or just-published ones from the editor) -------------------
+function usersReady(name, again) {
+  if (S.users) return true;
+  view.innerHTML = `<div class="loading">Loading profiles…</div>`;
+  whenLoaded(loadUsers(), "profiles", () => { if (parseHash().name === name) again(parseHash()); });
+  return false;
+}
+function renderUser(r) {
+  if (!r.arg) { location.replace("#/users"); return; }                                  // #/u alone is the list
+  if (!usersReady("u", renderUser)) return;
+  const me = editor.me, pending = editor.profileOf(r.arg), published = S.userBy.get(r.arg.toLowerCase()) || null;
+  const login = pending?.profile?.login || published?.login || r.arg;             // the file's spelling: u/<login>/ exists only for it
+  if (login !== r.arg) { S.renderedHash = S.listHash = hashOf({ name: "u", arg: login }); syncUrl({ name: "u", arg: login }); }
+  const own = !!me && me.login.toLowerCase() === login.toLowerCase();
+  view.innerHTML = profileHtml({ login, profile: pending ? pending.profile : published, state: pending?.state || "", removed: !!pending && !pending.profile,
+    own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }) });
+}
+function renderUsers() {
+  if (!usersReady("users", renderUsers)) return;
+  const me = editor.me, rows = mergeUsers(S.users, editor.pendingProfiles());
+  view.innerHTML = usersHtml(rows, { cards: S.cards, me, hasOwn: !!me && rows.some(x => x.profile.login.toLowerCase() === me.login.toLowerCase()) });
+}
+
 // ---- sharing (same text as the share pages' link previews) -----------------------------------------
 const STAT_LABELS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
 function shareHead(c) {
@@ -717,6 +758,7 @@ const actions = {
   "deck-delete": () => { const d = deck(); if (S.decks.length < 2 || !confirm(`Delete “${d.name}”?`)) return; S.decks = S.decks.filter(x => x !== d); D.saveDecks(S.decks); D.setActive(S.decks[0]); updateDeckCount(); renderDeck(parseHash()); },
   "save-shared": () => { const s = S.shared; D.newDeck(S.decks, s.name, s.cards.filter(id => S.byId.has(id)), s.field); updateDeckCount(); location.hash = "#/deck"; toast("Saved to your decks"); },
   "copy-link": el => copy(shareUrl(el.dataset.id), "link: paste it in Discord"),
+  "copy-user-link": el => copy(userUrl(el.dataset.login), "profile link"),
   "share": el => openShare(el.dataset.id),
   "share-discord": el => copy(cardDiscord(S.byId.get(el.dataset.id)), "card for Discord"),
   "share-text": el => { const c = S.byId.get(el.dataset.id); copy(`${c.name} · ${shareText(c)}`, "card text"); },
@@ -765,9 +807,9 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card"], ["d", "Add to / remove from deck"],
-  ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–5", "Cards · Rulebook · Deck · Stats · Changes"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+  ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · Users"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
-$("#edit").addEventListener("click", () => actions["edit-hub"]());
+$("#account").addEventListener("click", () => actions["edit-hub"]());
 
 document.addEventListener("keydown", e => {
   const item = document.activeElement?.closest?.(".ver-item");
@@ -784,7 +826,7 @@ document.addEventListener("keydown", e => {
   if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }
   else if (e.key === "?") showKeys();
   else if (e.key === "r") actions["random-from-list"]();
-  else if (/^[1-5]$/.test(e.key) && modal.hidden) location.hash = ["#/cards", "#/rules", "#/deck", "#/stats", "#/changes"][+e.key - 1];
+  else if (/^[1-6]$/.test(e.key) && modal.hidden) location.hash = ["#/cards", "#/rules", "#/deck", "#/stats", "#/changes", "#/users"][+e.key - 1];
   else if (inCard && (e.key === "ArrowLeft" || e.key === "ArrowRight")) { const link = $(`[data-nav="${e.key === "ArrowLeft" ? "prev" : "next"}"]`, modal); if (link) location.hash = link.getAttribute("href"); }
   else if (inCard && e.key === "d") toggleDeck(id);
   else if (inCard && e.key === "c") copy(shareUrl(id), "link: paste it in Discord");

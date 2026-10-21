@@ -301,6 +301,20 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 @media (max-width: 640px) { .erow { grid-template-columns: 1fr; } .edit-bar { left: 8px; right: 8px; transform: none; border-radius: 14px; flex-wrap: wrap; } }
 .review-item .actions { align-self: flex-start; flex-wrap: nowrap; margin: 0; }
 
+/* ---- profiles ---- */
+#account { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.profile { max-width: 980px; margin: auto; }
+.profile h2 { margin: 0 34px 6px 0; font-size: 26px; line-height: 1.15; }
+.profile .motto { font-size: 17px; color: var(--ink-2); margin: 0 0 14px; }
+.picks { display: flex; flex-wrap: wrap; gap: 14px; margin: 14px 0; } .picks > div { width: 130px; } .picks .tile .meta { padding: 5px 6px; } .picks .tile .name { font-size: 12px; }
+.pick-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+.pairs { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 14px 0; font-size: 14.5px; }
+.pairs dt { color: var(--muted); } .pairs dd { margin: 0; overflow-wrap: anywhere; }
+.frow { display: grid; grid-template-columns: 1fr 2fr; gap: 6px; margin: 6px 0; }
+.frow input { min-width: 0; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface-2); }
+.edit-summary .err { color: var(--danger); }
+@media (max-width: 640px) { .pairs { grid-template-columns: 1fr; gap: 2px 0; } .pairs dd { margin-bottom: 8px; } .frow { grid-template-columns: 1fr; } }
+
 /* ---- sharing ---- */
 .share-url { display: flex; gap: 8px; }
 .share-url input { flex: 1; min-width: 0; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface-2); }

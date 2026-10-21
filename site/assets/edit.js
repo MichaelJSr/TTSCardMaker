@@ -1,5 +1,7 @@
 // Editing: staged in a batch, published as one commit to the card repo.
-import { esc } from "./text.js";
+import { esc, norm } from "./text.js";
+import { decode as decodeDeck } from "./deck.js";
+import { validateProfile, profileFile, deckCode, LIMITS, PICKS } from "./profile.js";
 
 const API = "https://api.github.com";
 const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden" };
@@ -51,11 +53,12 @@ export function createEditor(app) {
   const { S } = app;
   let token = localStorage.getItem(K.token) || sessionStorage.getItem(K.token) || "";
   let me = null;                                   // { login, admin, push }
-  let stage = { cards: {}, people: {}, admins: null, ...load(K.stage, {}) };
+  const emptyStage = () => ({ cards: {}, people: {}, admins: null, profiles: {} });   // profiles: login -> profile, or null to remove the file
+  let stage = { ...emptyStage(), ...load(K.stage, {}) };
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
-  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", ...S.data.files });
+  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", ...S.data.files });
   const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
   const find = id => S.byId.get(id) || (S.rules || []).find(r => r.id === id);
 
@@ -78,7 +81,7 @@ export function createEditor(app) {
     try { return await gh(`/repos/${S.data.repo}/contents/${repoPath(path)}?ref=${ref}`, { raw: true }); }
     catch (e) { if (e.status === 404) return null; throw e; }
   }
-  // files: {path: oldText => newText}; retried on top if someone pushed meanwhile
+  // files: {path: oldText => newText | null (leave it) | false (delete it)}; retried on top if someone pushed meanwhile
   async function commitFiles(edits, message) {
     const repo = S.data.repo, branch = S.data.branch || "main";
     for (let attempt = 0; ; attempt++) {
@@ -87,7 +90,8 @@ export function createEditor(app) {
       const tree = [];
       for (const [path, edit] of Object.entries(edits)) {
         const old = await readFile(path, head), next = edit(old);
-        if (next != null && next !== old) tree.push({ path, mode: "100644", type: "blob", content: next });
+        if (next === false) { if (old != null) tree.push({ path, mode: "100644", type: "blob", sha: null }); }
+        else if (next != null && next !== old) tree.push({ path, mode: "100644", type: "blob", content: next });
       }
       if (!tree.length) return null;
       const t = await gh(`/repos/${repo}/git/trees`, { method: "POST", body: { base_tree: base.tree.sha, tree } });
@@ -108,8 +112,9 @@ export function createEditor(app) {
     me = { login: user.login, admin: !!p.admin || isAdmin(user.login), push: true };
     localStorage.removeItem(K.token); sessionStorage.removeItem(K.token);
     (remember ? localStorage : sessionStorage).setItem(K.token, token);
+    app.onAuth();
   }
-  function signOut() { token = ""; me = null; localStorage.removeItem(K.token); sessionStorage.removeItem(K.token); }
+  function signOut() { token = ""; me = null; localStorage.removeItem(K.token); sessionStorage.removeItem(K.token); app.onAuth(); }
 
   // ---- preview: staged and just-published changes applied to the loaded cards
   const snap = c => { if (c && !pristine.has(c.id)) pristine.set(c.id, structuredClone(c)); };
@@ -162,12 +167,14 @@ export function createEditor(app) {
     }
     c[op._sent ? "_sent" : "_staged"] = true;
   }
-  function sentOps() {
+  function sentRecord() {                          // {at, sha, ops, profiles}: published, until the site has rebuilt with it
     const sent = load(K.sent, null);
-    if (!sent) return [];
-    if (new Date(S.data.generated) > new Date(sent.at)) { localStorage.removeItem(K.sent); return []; }   // live now
-    return sent.ops;
+    if (!sent) return null;
+    if (new Date(S.data.generated) > new Date(sent.at)) { localStorage.removeItem(K.sent); return null; }   // live now
+    return sent;
   }
+  const sentOps = () => sentRecord()?.ops || [];
+  const sentProfiles = () => sentRecord()?.profiles || {};
   function preview() {
     for (const [id, p] of pristine) { const c = find(id); if (!c) continue; for (const k of Object.keys(c)) delete c[k]; Object.assign(c, structuredClone(p)); }
     pristine.clear(); based.clear();
@@ -179,7 +186,7 @@ export function createEditor(app) {
     renderBar();
   }
   const save = () => { localStorage.setItem(K.stage, JSON.stringify(stage)); preview(); };
-  const count = () => Object.keys(stage.cards).length + Object.keys(stage.people).length + (stage.admins ? 1 : 0);
+  const count = () => Object.keys(stage.cards).length + Object.keys(stage.people).length + (stage.admins ? 1 : 0) + Object.keys(stage.profiles).length;
 
   // ---- the edit form
   const opts = (list, cur) => list.map(([v, l]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(l)}</option>`).join("");
@@ -331,7 +338,7 @@ export function createEditor(app) {
   function openForm(id) {
     const c = find(id);
     if (!c) return;
-    if (!me) { openHub(`Sign in to edit ${c.name}.`, id); return; }
+    if (!me) { openHub(`Sign in to edit ${c.name}.`, () => openForm(id)); return; }
     app.modal.innerHTML = formHtml(c);
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
     const form = document.getElementById("edit-form"), ta = document.getElementById("ef-ability");
@@ -373,6 +380,100 @@ export function createEditor(app) {
     if (!el) return;
     if (el.type === "checkbox") el.checked = !!p;
     else el.value = Array.isArray(p) ? p.join(", ") : p ?? "";
+  }
+
+  // ---- profiles: site/profiles/<login>.json, one more file in the batch (your own; admins anyone's)
+  const PLABEL = { author: "Cards as", motto: "Motto", series: "Series", ...Object.fromEntries(PICKS), deck: "Featured hand", facts: "Pairs" };
+  const profileCtx = () => ({ cards: new Map(S.cards.map(c => [c.id, c])), series: new Set(S.cards.map(c => c.series).filter(Boolean)), people: S.data.people || [] });
+  const cardByText = t => { const s = (t || "").trim(), c = s && (S.byId.get(s) || S.cards.find(x => norm(x.name) === norm(s) || (x.aliases || []).some(a => norm(a) === norm(s)))); return c ? c.id : s; };
+  const noDate = p => Object.fromEntries(Object.entries(p || {}).filter(([k]) => k !== "updated"));
+  const sameProfile = (a, b) => profileFile(noDate(a)) === profileFile(noDate(b));   // sorted keys: the build and the form order them differently
+  const mine = login => login.toLowerCase() === me.login.toLowerCase();
+  const findKey = (obj, login) => Object.keys(obj).find(k => k.toLowerCase() === login.toLowerCase());
+  function profileOf(login) {                      // unpublished state: {profile | null (removed), state: "staged" | "sent"}, or null
+    let k = findKey(stage.profiles, login);
+    if (k !== undefined) return { profile: stage.profiles[k], state: "staged" };
+    const sent = sentProfiles(); k = findKey(sent, login);
+    return k === undefined ? null : { profile: sent[k], state: "sent" };
+  }
+  const pendingProfiles = () => new Map([...Object.entries(sentProfiles()).map(([k, p]) => [k.toLowerCase(), { profile: p, state: "sent" }]),
+    ...Object.entries(stage.profiles).map(([k, p]) => [k.toLowerCase(), { profile: p, state: "staged" }])]);
+  function describeProfile(p) {
+    const show = k => (k === "facts" ? p.facts.map(f => `${f.label} = ${f.value}`).join(", ") : k === "deck" ? decodeDeck(p.deck)?.name || "a hand"
+      : PICKS.some(([x]) => x === k) ? S.byId.get(p[k])?.name || p[k] : p[k]);
+    return Object.keys(PLABEL).filter(k => p[k]).map(k => `${PLABEL[k]}: ${show(k)}`);
+  }
+  const factRow = (f = { label: "", value: "" }) => `<div class="frow"><input data-fl maxlength="${LIMITS.label}" value="${esc(f.label)}" placeholder="Label" aria-label="Label"><input data-fv maxlength="${LIMITS.value}" value="${esc(f.value)}" placeholder="Value" aria-label="Value"></div>`;
+  function profileFormHtml(p, exists) {
+    const row = (f, label, input) => `<div class="erow" data-row="${f}"><label for="pf-${f}">${label}</label><div class="ein">${input}</div></div>`;
+    const cardRow = ([k, label]) => row(k, label, `<input id="pf-${k}" list="dl-pcards" value="${esc(p[k] ? S.byId.get(p[k])?.name || p[k] : "")}" placeholder="card name">`);
+    const own = mine(p.login);
+    return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit profile">
+      <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
+      <h2>${own ? "Your profile" : `${esc(p.login)}'s profile`}</h2>
+      <p class="muted">Everything is optional. Goes into your batch as <span class="kbd">${esc(files().profiles)}/${esc(p.login)}.json</span>; the page is u/${esc(p.login)}/.</p>
+      <form id="edit-form" class="edit-form" autocomplete="off">
+        <fieldset><legend>About</legend>
+          ${row("author", "Cards as", `<input id="pf-author" list="dl-people" value="${esc(p.author || "")}" placeholder="the name on your cards"><datalist id="dl-people">${(S.data.people || []).map(x => `<option value="${esc(x)}">`).join("")}</datalist><span class="muted">Links the profile to your cards (the name in Card Authors.txt).</span>`)}
+          ${row("motto", "Motto", `<input id="pf-motto" maxlength="${LIMITS.motto}" value="${esc(p.motto || "")}" placeholder="one line">`)}
+          ${row("series", "Series", `<select id="pf-series"><option value="">—</option>${opts([...profileCtx().series].sort((a, b) => a.localeCompare(b)).map(s => [s, s]), p.series || "")}</select>`)}
+        </fieldset>
+        <fieldset><legend>Cards</legend>${PICKS.map(cardRow).join("")}
+          <datalist id="dl-pcards">${S.cards.map(c => `<option value="${esc(c.name)}">`).join("")}</datalist></fieldset>
+        <fieldset><legend>Featured hand</legend>
+          ${row("deck", "Share link", `<input id="pf-deck" value="${esc(p.deck || "")}" placeholder="a deck builder share link or code"><button type="button" class="ghost" data-deck="mine">Use my current hand</button>`)}
+        </fieldset>
+        <fieldset><legend>More</legend><p class="muted egroup-note">Up to ${LIMITS.facts} label/value pairs, anything you like.</p>
+          <div id="pf-facts">${(p.facts || []).map(factRow).join("")}${factRow()}</div>
+          <div class="actions"><button type="button" class="ghost" data-fact="add">+ Pair</button></div>
+        </fieldset>
+        <div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
+        <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button>
+          ${exists ? `<button type="button" class="ghost danger" data-action="profile-remove" data-login="${esc(p.login)}" style="margin-left:auto">Remove profile</button>` : ""}</div>
+      </form></div>`;
+  }
+  function readProfileForm(login) {
+    const f = id => document.getElementById(`pf-${id}`).value;
+    const raw = { login, author: f("author"), motto: f("motto"), series: f("series"), deck: deckCode(f("deck")),
+      facts: [...document.querySelectorAll("#pf-facts .frow")].map(r => ({ label: r.querySelector("[data-fl]").value, value: r.querySelector("[data-fv]").value })) };
+    for (const [k] of PICKS) raw[k] = cardByText(f(k));
+    return validateProfile(raw, profileCtx());
+  }
+  async function openProfile(login = "") {
+    if (!me) { openHub("Sign in to make your profile.", () => openProfile(login)); return; }
+    login ||= me.login;
+    const own = mine(login);
+    if (!own && !me.admin) { app.toast("Only admins can edit someone else's profile"); return; }
+    const published = (await app.users().catch(() => new Map())).get(login.toLowerCase()) || null;
+    const pending = profileOf(login), live = pending?.state === "sent" ? pending.profile : published;   // the file in the repo (null: none)
+    const p = (pending ? pending.profile : published) || { login: live?.login || (own ? me.login : login) };   // the file's own spelling
+    const base = (pending ? pending.profile : published) || { login: p.login };        // what an untouched form reads as
+    app.modal.innerHTML = profileFormHtml(p, !!live);                                   // in the repo: it can be removed
+    app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
+    const form = document.getElementById("edit-form"), summary = document.getElementById("ef-summary");
+    const update = () => {
+      const r = readProfileForm(p.login), lines = describeProfile(r.profile);
+      summary.innerHTML = r.errors.length ? `<span class="err">${r.errors.map(esc).join(" · ")}</span>` : lines.length ? lines.map(esc).join(" · ") : "Nothing but your login yet.";
+      form.dataset.dirty = sameProfile(r.profile, base) ? "" : "1";
+      return r;
+    };
+    form.addEventListener("input", update);
+    form.addEventListener("change", update);
+    form.addEventListener("click", e => {
+      if (e.target.closest("[data-fact]")) { document.getElementById("pf-facts").insertAdjacentHTML("beforeend", factRow()); return; }
+      if (e.target.closest("[data-deck]")) { document.getElementById("pf-deck").value = app.myHand(); update(); }
+    });
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const { profile, errors } = update();
+      if (errors.length) { app.toast(errors[0]); return; }
+      if (sameProfile(profile, live)) delete stage.profiles[p.login]; else stage.profiles[p.login] = profile;
+      save();
+      app.toast(stage.profiles[p.login] ? `Added to the batch: ${count()} unpublished` : "Same as the published profile");
+      app.goUser(p.login);
+    });
+    update();
+    document.getElementById("pf-author").focus();
   }
 
   // ---- publishing
@@ -448,12 +549,16 @@ export function createEditor(app) {
     if (ops.some(o => o.author !== undefined) || Object.keys(people).length) edits[F.authors] = t => authorsFile(t, ops, people);
     if (ops.some(o => o.ban)) edits[F.banlist] = t => banFile(t, ops);
     if (stage.admins) edits[F.admins] = t => [...(t ?? "").split("\n").filter(l => l.trim().startsWith("#")), ...stage.admins].join("\n") + "\n";
+    const foreign = Object.keys(stage.profiles).filter(l => !mine(l));
+    if (foreign.length && !me.admin) throw new Error(`Only admins can publish someone else's profile (${foreign.join(", ")}): discard it from the batch.`);
+    const profiles = Object.fromEntries(Object.entries(stage.profiles).map(([l, p]) => [l, p && { ...p, updated: at }]));
+    for (const [login, p] of Object.entries(profiles)) edits[`${F.profiles}/${login}.json`] = t => (p ? profileFile(p) : t == null ? null : false);   // new, replaced or deleted
     const names = ops.map(o => o.name);
-    const what = [...names, ...(Object.keys(people).length ? ["people"] : []), ...(stage.admins ? ["admins"] : [])];
+    const what = [...names, ...(Object.keys(people).length ? ["people"] : []), ...(stage.admins ? ["admins"] : []), ...Object.keys(profiles).map(l => `${l}'s profile`)];
     const sha = await commitFiles(edits, message || (what.length > 3 ? `Website edits: ${what.length} changes` : `Website edit: ${what.join(", ")}`));
-    localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops] }));
+    localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles } }));
     if (stage.admins) S.data.admins = stage.admins;
-    stage = { cards: {}, people: {}, admins: null };
+    stage = emptyStage();
     save();
     return sha;
   }
@@ -461,7 +566,7 @@ export function createEditor(app) {
   // ---- batch tray and hub
   function renderBar() {
     let bar = document.getElementById("edit-bar");
-    const n = count(), sending = sentOps().length;
+    const n = count(), sending = !!sentRecord();
     if (!n && !sending) { bar?.remove(); return; }
     if (!bar) { bar = document.createElement("div"); bar.id = "edit-bar"; bar.className = "edit-bar"; bar.setAttribute("role", "region"); bar.setAttribute("aria-label", "Unpublished edits"); document.body.append(bar); }
     bar.innerHTML = n
@@ -475,16 +580,18 @@ export function createEditor(app) {
         <div class="actions"><button type="button" class="ghost" data-action="edit-card" data-id="${op.id}">Edit</button><button type="button" class="ghost" data-action="edit-discard" data-id="${op.id}">Discard</button></div></div>`).join("")}
       ${stage.admins ? `<div class="review-item"><div><b>Admins</b><ul><li>${esc(stage.admins.join(", "))}</li></ul></div><div class="actions"><button type="button" class="ghost" data-action="edit-discard-admins">Discard</button></div></div>` : ""}
       ${people.length ? `<div class="review-item"><div><b>People</b><ul>${people.map(([g, d]) => `<li>${esc(g)} shown as ${esc(d)}</li>`).join("")}</ul></div><div class="actions"><button type="button" class="ghost" data-action="edit-discard-people">Discard</button></div></div>` : ""}
+      ${Object.entries(stage.profiles).map(([login, p]) => `<div class="review-item"><div><a href="#/u/${encodeURIComponent(login)}"><b>${esc(login)}'s profile</b></a><ul>${(p ? describeProfile(p) : ["Removed"]).map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>
+        <div class="actions">${p ? `<button type="button" class="ghost" data-action="profile-edit" data-login="${esc(login)}">Edit</button>` : ""}<button type="button" class="ghost" data-action="edit-discard-profile" data-login="${esc(login)}">Discard</button></div></div>`).join("")}
       ${count() ? `<label class="muted" for="edit-msg">Commit message (optional)</label><input id="edit-msg" class="wide" placeholder="Website edits">
         <div class="actions"><button type="button" class="primary" data-action="edit-publish">Publish ${count()} change${count() > 1 ? "s" : ""}</button></div>
         <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch || "main")}). The site rebuilds in a few minutes; the bot reads it on /update_stats.</p>` : `<p class="muted">Nothing to publish.</p>`}
       <p class="muted" id="edit-status" aria-live="polite">${esc(note)}</p>`;
   }
-  function hubHtml(note = "", then = "") {
+  function hubHtml(note = "") {
     if (!me) return `<h3>Sign in to edit</h3>${note ? `<p>${esc(note)}</p>` : ""}
-      <p class="muted">Anyone with write access to ${esc(S.data.repo)} can edit. Edits are batched and published as one commit, which the website and the bot both read.</p>
+      <p class="muted">Anyone with write access to ${esc(S.data.repo)} can edit cards and make a profile. Edits are batched and published as one commit, which the website and the bot both read.</p>
       <ol class="muted"><li><a href="https://github.com/settings/tokens/new?scopes=public_repo&description=Impossibility%20Simulator%20card%20browser" target="_blank" rel="noopener">Create a GitHub token</a> with only <code>public_repo</code> ticked.</li><li>Paste it here.</li></ol>
-      <form id="signin-form" data-then="${esc(then)}"><input id="signin-token" class="wide" type="password" placeholder="ghp_…" autocomplete="off" required>
+      <form id="signin-form"><input id="signin-token" class="wide" type="password" placeholder="ghp_…" autocomplete="off" required>
         <label class="check"><input id="signin-remember" type="checkbox" checked> remember on this device</label>
         <div class="actions"><button type="submit" class="primary">Sign in</button></div><p class="muted" id="signin-status" aria-live="polite"></p></form>
       <p class="muted">The token stays in this browser and is only sent to api.github.com.</p>`;
@@ -492,6 +599,8 @@ export function createEditor(app) {
       <p class="muted">Open a card and press Edit (e). Changes wait in your batch until you publish them.</p>
       <div class="actions"><button type="button" data-action="edit-review"${count() ? "" : " disabled"}>Review batch (${count()})</button>
         <label class="check"><input type="checkbox" data-action="edit-show-hidden"${S.showHidden ? " checked" : ""}> show hidden cards</label></div>
+      <h4>Profile</h4><p class="muted">Your page, u/${esc(me.login)}/: the name on your cards, a motto, favourite cards, a featured hand. Only people who make one are listed.</p>
+      <div class="actions"><button type="button" data-action="profile-edit">Edit profile</button><a class="fact" href="#/u/${encodeURIComponent(me.login)}">Your profile</a><a class="fact" href="#/users">All users</a></div>
       ${me.admin ? `<h4>People</h4><p class="muted">How each git name is shown.</p><form id="people-form" class="people">${peopleRows()}<div class="actions"><button type="submit">Add to batch</button></div></form>
         <h4>Admins</h4><p class="muted">GitHub logins, one per line. The repo owner is always an admin.</p>
         <form id="admins-form"><textarea id="admins-list" class="wide" rows="4">${esc((stage.admins || S.data.admins || []).join("\n"))}</textarea><div class="actions"><button type="submit">Add to batch</button></div></form>` : ""}
@@ -503,8 +612,8 @@ export function createEditor(app) {
     const map = S.data.peopleMap || {};
     return Object.keys(map).map(g => `<label class="erow"><span>${esc(g)}</span><input data-git="${esc(g)}" value="${esc(stage.people[g] ?? map[g])}"></label>`).join("");
   }
-  function openHub(note = "", then = "") {
-    app.showDialog(hubHtml(note, then));
+  function openHub(note = "", then = null) {         // then: what to open once signed in
+    app.showDialog(hubHtml(note));
     const form = document.getElementById("signin-form");
     if (form) {
       document.getElementById("signin-token").focus();
@@ -515,7 +624,7 @@ export function createEditor(app) {
         try {
           await signIn(document.getElementById("signin-token").value, document.getElementById("signin-remember").checked);
           app.toast(`Signed in as ${me.login}`);
-          if (form.dataset.then) openForm(form.dataset.then); else openHub();
+          if (then) then(); else openHub();
         } catch (err) { token = ""; status.textContent = err.message; }
       });
     }
@@ -547,7 +656,14 @@ export function createEditor(app) {
     "edit-discard": el => { delete stage.cards[el.dataset.id]; save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
     "edit-discard-people": () => { stage.people = {}; save(); app.showDialog(reviewHtml("Discarded.")); },
     "edit-discard-admins": () => { stage.admins = null; save(); app.showDialog(reviewHtml("Discarded.")); },
-    "edit-discard-all": () => { if (!confirm(`Discard ${count()} unpublished change${count() > 1 ? "s" : ""}?`)) return; stage = { cards: {}, people: {}, admins: null }; save(); app.rerender(); },
+    "edit-discard-all": () => { if (!confirm(`Discard ${count()} unpublished change${count() > 1 ? "s" : ""}?`)) return; stage = emptyStage(); save(); app.rerender(); },
+    "edit-discard-profile": el => { delete stage.profiles[el.dataset.login]; save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
+    "profile-edit": el => openProfile(el?.dataset?.login || ""),
+    "profile-remove": el => {
+      const login = el.dataset.login;
+      if (!confirm(`Remove ${login}'s profile? The file goes with your next publish.`)) return;
+      stage.profiles[login] = null; save(); app.toast(`Removal added to the batch: ${count()} unpublished`); app.goUser(login);
+    },
     "edit-dismiss-sent": () => { localStorage.removeItem(K.sent); preview(); app.rerender(); },
     "edit-publish": async el => {
       if (!me) { openHub("Sign in to publish."); return; }
@@ -574,5 +690,6 @@ export function createEditor(app) {
     },
     open: openForm,
     refresh: preview,
+    profileOf, pendingProfiles, openProfile,
   };
 }

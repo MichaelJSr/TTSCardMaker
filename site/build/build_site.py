@@ -14,17 +14,20 @@ Where the data comes from:
   * Authors: site/Card Authors.txt ([people] git name = shown name, [cards] Card Name = person) wins over the bot's
     author, the same rule AutoCroissant applies on /update_stats.
   * Corrections: site/Card Edits.json (the website's Edit button); the bot applies it too.
+  * Profiles: site/profiles/<login>.json, made on the website by signed-in editors (own profile; admins any) and
+    published with the edit batch. Validated here (bad files skipped, bad fields dropped, never a failed build).
   * Image versions: one pass over the git history (commit metadata only, no file contents) lists every commit that
     changed each card PNG, following exact renames (folder moves). Needs full history: a shallow clone gets none.
 PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
 
-Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json and
+Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json and
 data/versions.json (loaded when the rulebook, a card's text or image history or the changes feed is opened), images,
 icons, assets and one share page per card. Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
 """
+import base64
 import hashlib
 import html
 import io
@@ -67,6 +70,7 @@ AUTHORS_PATH = "site/Card Authors.txt"
 BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
 ADMINS_PATH = "site/Website Admins.txt"
+PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits (subseries: database only, never from the folder)
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
@@ -463,6 +467,151 @@ def parse_admins():
     return [l.strip() for l in open(path, encoding="utf-8") if l.strip() and not l.strip().startswith("#")]
 
 
+# ---- profiles (site/profiles/<login>.json) --------------------------------------------------------------
+LOGIN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9-]{0,38}$")          # a GitHub login
+PROFILE_MAX_BYTES = 16 * 1024
+# the same rules as profile.js (LIMITS, PICKS, ITEM_KINDS): one-line text caps, four card slots, label/value pairs
+PROFILE_TEXT = {"motto": 140, "author": 60}
+PROFILE_PICKS = {"favourite": "Favourite card", "hated": "Hated card", "favouriteItem": "Favourite item", "hatedItem": "Hated item"}
+ITEM_KINDS = {"item", "aux item", "nme"}
+PROFILE_PAIRS, PAIR_LABEL, PAIR_VALUE, DECK_CODE = 12, 40, 200, 2000
+PROFILE_FIELDS = {"login", "series", "deck", "facts", "updated", *PROFILE_TEXT, *PROFILE_PICKS}
+
+
+def decode_deck(code):
+    """A deck-builder share code (deck.js encode: base64url of {"n", "c", "f"}) -> {"name", "cards", "field"} as deck.js
+    decode reads it, or None. Strict base64 like atob; a hand with no cards and no field is None too (nothing to show)."""
+    try:
+        o = json.loads(base64.b64decode(code.replace("-", "+").replace("_", "/") + "=" * (-len(code) % 4), validate=True).decode("utf-8"))
+    except (ValueError, UnicodeDecodeError):
+        return None
+    if not isinstance(o, dict):
+        return None
+    cards = [str(c) for c in o["c"]] if isinstance(o.get("c"), list) else []
+    field = str(o["f"]) if o.get("f") else None
+    return {"name": str(o.get("n") or "Shared hand"), "cards": cards, "field": field} if cards or field else None
+
+
+def one_line(value):
+    """A string as one line with single spaces; None for anything else."""
+    return " ".join(value.split()) if isinstance(value, str) else None
+
+
+def clean_profile(raw, stem, cards, people):
+    """One profile file's JSON -> (the fields the site shows, notes). None when the file can't be used at all; a bad field
+    is dropped with a note. stem: the file name without .json; cards: visible cards by id; people: the author names on cards."""
+    if not isinstance(raw, dict):
+        return None, ["not a JSON object"]
+    login = raw.get("login")
+    if not isinstance(login, str) or not LOGIN_RE.match(login):
+        return None, ['"login" must be a GitHub login']
+    if login != stem:                             # the website reads and removes the file by the login's exact spelling
+        return None, [f"login {login!r} doesn't match the file name {stem!r}"]
+    p, notes = {"login": login}, []
+    for field, cap in PROFILE_TEXT.items():
+        if raw.get(field) is None:
+            continue
+        text = one_line(raw[field])
+        if text is None or len(text) > cap:
+            notes.append(f"{field}: one line of at most {cap} characters, dropped")
+        elif text:
+            p[field] = text
+    if "author" in p:                             # the name as cards show it, matched without case
+        known = next((name for name in people if name.lower() == p["author"].lower()), None)
+        if known:
+            p["author"] = known
+        else:
+            notes.append(f"author {p.pop('author')!r} isn't a name cards are credited to, dropped")
+    series = one_line(raw.get("series"))
+    if series:
+        if series in {c.get("series") for c in cards.values()}:
+            p["series"] = series
+        else:
+            notes.append(f"series {series!r} isn't a known series, dropped")
+    for field, label in PROFILE_PICKS.items():
+        cid = raw.get(field)
+        if cid is None:
+            continue
+        card = cards.get(cid) if isinstance(cid, str) else None
+        if card is None:
+            notes.append(f"{label} {cid!r} isn't a card, dropped")
+        elif field.endswith("Item") and card["type"] not in ITEM_KINDS:
+            notes.append(f"{label} {card['name']} isn't an item, dropped")
+        else:
+            p[field] = cid
+    deck = raw.get("deck")
+    if deck is not None:
+        if isinstance(deck, str) and len(deck) <= DECK_CODE and decode_deck(deck):
+            p["deck"] = deck
+        else:
+            notes.append("deck isn't a deck-builder share code, dropped")
+    facts = raw.get("facts")
+    if facts is not None:
+        rows = [(one_line(f.get("label")), one_line(f.get("value"))) for f in facts if isinstance(f, dict)] if isinstance(facts, list) else []
+        good = [{"label": l, "value": v} for l, v in rows if l and v and len(l) <= PAIR_LABEL and len(v) <= PAIR_VALUE]
+        if not isinstance(facts, list) or len(good) != len(facts) or len(good) > PROFILE_PAIRS:
+            notes.append(f"facts: up to {PROFILE_PAIRS} label/value pairs ({PAIR_LABEL}/{PAIR_VALUE} characters), the bad ones dropped")
+        if good[:PROFILE_PAIRS]:
+            p["facts"] = good[:PROFILE_PAIRS]
+    if isinstance(raw.get("updated"), str) and raw["updated"] and len(raw["updated"]) <= 40:
+        p["updated"] = raw["updated"]
+    unknown = sorted(str(k) for k in set(raw) - PROFILE_FIELDS)
+    if unknown:
+        notes.append(f"unknown fields ignored: {', '.join(unknown)}")
+    return p, notes
+
+
+def read_profiles(cards, people):
+    """site/profiles/*.json -> the profiles the site shows, by login. Warns, never fails: a bad file is skipped.
+    cards: visible ones only, so the pages and the counts match the site's."""
+    folder = os.path.join(REPO, PROFILES_DIR)
+    if not os.path.isdir(folder):
+        return []
+    visible = {c["id"]: c for c in cards if not c.get("hidden")}
+    out = {}
+    for name in sorted(os.listdir(folder)):
+        if not name.endswith(".json"):
+            continue
+        rel, path = f"{PROFILES_DIR}/{name}", os.path.join(folder, name)
+        if os.path.getsize(path) > PROFILE_MAX_BYTES:
+            log(f"warning: {rel}: over {PROFILE_MAX_BYTES // 1024} KB, skipped")
+            continue
+        try:
+            raw = json.load(open(path, encoding="utf-8"))
+        except ValueError as e:
+            log(f"warning: {rel} isn't valid JSON, skipped: {e}")
+            continue
+        p, notes = clean_profile(raw, name[:-5], visible, people)
+        for note in notes:
+            log(f"warning: {rel}: {note}")
+        if p is None:
+            continue
+        if p["login"].lower() in out:
+            log(f"warning: {rel}: another file already has this login, skipped")
+            continue
+        out[p["login"].lower()] = p
+    if out:
+        log(f"profiles: {len(out)} from {PROFILES_DIR}/")
+    return [out[k] for k in sorted(out)]
+
+
+def profile_text(p, n_cards, by_id):
+    """The profile page's link-preview description."""
+    lines = [p["motto"]] if p.get("motto") else []
+    if p.get("author"):
+        lines.append(f"{n_cards} card{'' if n_cards == 1 else 's'} by {p['author']}" + (f" · {p['series']}" if p.get("series") else ""))
+    elif p.get("series"):
+        lines.append(p["series"])
+    picks = [f"{label}: {by_id[p[k]]['name']}" for k, label in PROFILE_PICKS.items() if p.get(k) in by_id]
+    if picks:
+        lines.append(" · ".join(picks))
+    deck = decode_deck(p["deck"]) if p.get("deck") else None
+    if deck:
+        lines.append(f"Featured hand: {(one_line(deck['name']) or 'Shared hand')[:60]}")
+    out = "\n".join(lines) or f"{p['login']}'s profile"
+    return out if len(out) <= 300 else out[:297].rsplit(" ", 1)[0] + "…"
+
+
 def build_branch():
     """Branch the Edit button commits to."""
     if os.environ.get("GITHUB_REF_NAME"):
@@ -825,13 +974,14 @@ def main():
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
         "cards": cards, "icons": icons, "banlist": banlist,
         # for the editor
-        "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH},
+        "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH, "profiles": PROFILES_DIR},
         "admins": parse_admins(),
         "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
         "peopleMap": PEOPLE_AS_WRITTEN,
     }
+    profiles = read_profiles(cards, data["people"])
     os.makedirs(os.path.join(DIST, "data"))
-    files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions}
+    files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles}}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
@@ -881,29 +1031,40 @@ def main():
         fh.write(template.replace("<!--HEAD-->", '<base href="../">\n' + og_tags(f"Shared starting hand · {SITE_NAME}",
                  "Open to see the hand, check it and save a copy.", f"{SITE_URL}/d/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))))
     default_meta = ('<meta name="theme-color" content="#0d0d0d">', '<meta name="description" content="Every Impossibility Simulator card, the rulebook and a starting-hand builder.">')
+    def share_page(parts, head):
+        """DIST/<parts>/index.html: the app with its own <head> (two levels deep, so <base href="../../">)."""
+        page = template.replace("<!--HEAD-->", "\n".join(['<base href="../../">'] + head)).replace("<title>Impossibility Simulator · Card Browser</title>", "")
+        for tag in default_meta:
+            page = page.replace(tag, "")
+        os.makedirs(os.path.join(DIST, *parts))
+        with open(os.path.join(DIST, *parts, "index.html"), "w", encoding="utf-8") as fh:
+            fh.write(page)
+    def og_image(c):
+        """The card's 480 px link-preview JPEG when the site has a URL, else the raw PNG."""
+        if c.get("img") and SITE_URL:
+            return f"{SITE_URL}/thumbs/{c['img']}-og.jpg", og_size(os.path.join(DIST, "thumbs", f"{c['img']}-og.jpg"))
+        return (RAW + quote(c["png"]) if c.get("png") else ""), None
     for c in cards:
         if c.get("hidden"):
             continue
-        desc = share_text(c)
-        og = os.path.join(DIST, "thumbs", f"{c['img']}-og.jpg") if c.get("img") else ""
-        if og and SITE_URL:
-            image, size = f"{SITE_URL}/thumbs/{c['img']}-og.jpg", og_size(og)
-        else:
-            image, size = (RAW + quote(c["png"]) if c.get("png") else ""), None
-        head = "\n".join([
-            '<base href="../../">',
+        desc, (image, size) = share_text(c), og_image(c)
+        share_page(("c", c["id"]), [
             f'<meta name="card" content="{c["id"]}">',
             og_tags(c["name"], desc, f"{SITE_URL}/c/{c['id']}/" if SITE_URL else "", image, size, f"{c['name']} card"),
             f'<meta name="theme-color" content="{c.get("color") or "#3987e5"}">',
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(c["name"])} · {SITE_NAME}</title>',
         ])
-        os.makedirs(os.path.join(DIST, "c", c["id"]))
-        page = template.replace("<!--HEAD-->", head).replace("<title>Impossibility Simulator · Card Browser</title>", "")
-        for tag in default_meta:
-            page = page.replace(tag, "")
-        with open(os.path.join(DIST, "c", c["id"], "index.html"), "w", encoding="utf-8") as fh:
-            fh.write(page)
+    for p in profiles:                            # u/<login>/: the favourite card as the preview image, else the site banner
+        n = sum(1 for c in cards if c.get("author") == p["author"] and not c.get("dup") and not c.get("hidden")) if p.get("author") else 0   # as cardsBy() counts
+        desc, fav = profile_text(p, n, by_id), by_id.get(p.get("favourite") or "")
+        image, size = og_image(fav) if fav and fav.get("img") else ((f"{SITE_URL}/og.jpg", (1200, 630)) if SITE_URL else ("", None))
+        share_page(("u", p["login"]), [
+            og_tags(p["login"], desc, f"{SITE_URL}/u/{p['login']}/" if SITE_URL else "", image, size, f"{fav['name']} card" if fav else ""),
+            f'<meta name="theme-color" content="{(fav or {}).get("color") or "#3987e5"}">',
+            f'<meta name="description" content="{html.escape(desc)}">',
+            f'<title>{html.escape(p["login"])} · {SITE_NAME}</title>',
+        ])
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
 
 
