@@ -599,8 +599,8 @@ export function createEditor(app) {
       <p class="muted">Open a card and press Edit (e). Changes wait in your batch until you publish them.</p>
       <div class="actions"><button type="button" data-action="edit-review"${count() ? "" : " disabled"}>Review batch (${count()})</button>
         <label class="check"><input type="checkbox" data-action="edit-show-hidden"${S.showHidden ? " checked" : ""}> show hidden cards</label></div>
-      <h4>Profile</h4><p class="muted">Your page, u/${esc(me.login)}/: the name on your cards, a motto, favourite cards, a featured hand. Only people who make one are listed.</p>
-      <div class="actions"><button type="button" data-action="profile-edit">Edit profile</button><a class="fact" href="#/u/${encodeURIComponent(me.login)}">Your profile</a><a class="fact" href="#/users">All users</a></div>
+      <h4>Profile</h4><p class="muted">Your page, u/${esc(me.login)}/, shows your cards, edits and card commits; a profile adds the name on your cards, a motto, favourite cards and a featured hand.</p>
+      <div class="actions"><button type="button" data-action="profile-edit">Edit profile</button><a class="fact" href="#/u/${encodeURIComponent(me.login)}">Your profile</a><a class="fact" href="#/users">All people</a></div>
       ${me.admin ? `<h4>People</h4><p class="muted">How each git name is shown.</p><form id="people-form" class="people">${peopleRows()}<div class="actions"><button type="submit">Add to batch</button></div></form>
         <h4>Admins</h4><p class="muted">GitHub logins, one per line. The repo owner is always an admin.</p>
         <form id="admins-form"><textarea id="admins-list" class="wide" rows="4">${esc((stage.admins || S.data.admins || []).join("\n"))}</textarea><div class="actions"><button type="submit">Add to batch</button></div></form>` : ""}

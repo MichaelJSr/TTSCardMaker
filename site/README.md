@@ -21,7 +21,9 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
   chart that highlights possible balance outliers. Every chart has a table view.
 - **Changes**: recently updated cards with text diffs, the most revised cards, and cards the bot hasn't parsed yet.
-- **Users**: the people who made a profile (see Profiles below), each with a page `u/<login>/` that previews in Discord.
+- **People**: everyone who made, edited or committed cards, in one table (cards credited, edit batches published on the
+  website, card commits, titles, motto), and a page per person (`#/u/<name>`, static `u/<name>/` that previews in Discord):
+  their profile when they made one (see People below), their contributions with recent edits and recent card commits.
 
 Top right: **Sign in** (a GitHub token, see Editing) becomes your login once signed in; it opens the editor hub (your
 batch, your profile, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
@@ -37,13 +39,15 @@ in the repo but not yet in the bot's data still appear (image only).
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
 bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
 `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/` on 2026-10-20); the
-build and the bot read them, the published site does not include them. Image versions come from the git history (commit metadata
-only), following folder moves; the build needs full history for them (CI fetches it; a shallow local clone gets none,
-`git fetch --unshallow --filter=blob:none` fixes that).
+build and the bot read them, the published site does not include them. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
+following folder moves; the build needs full history for them (CI fetches it; a shallow local clone gets no image
+versions and counts edit batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one
+batch per card; `git fetch --unshallow --filter=blob:none` fixes that).
 
 Each card PNG becomes three WebP images (240 and 360 px for the grid, 720 px for the card view), cached by git blob
 hash in `site/.cache/img`. The first screen loads only `data/cards.json`; `rules.json`, `history.json`,
-`versions.json` and `users.json` load when the rulebook, a card's history, the changes feed or a profile is opened. Script, style and data URLs
+`versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
+People tab is opened. Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
 
@@ -63,18 +67,34 @@ Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; t
 people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
 `Card Edits.json` to go back to the PSD.
 
-## Profiles
+## People
 
-Opt-in: nobody has a profile until they make one (sign in → **Edit profile**, or the Users tab). A profile is
+The People tab lists everyone with a contribution or a profile. Per person: **cards** credited to them (as the Author
+filter counts them), **edits** = publish batches, i.e. commits that changed `site/Card Edits.json` (a hand commit to the
+file counts too; a move of the file doesn't), and **card commits** = commits that added or changed a card's PSD or PNG
+under the card folders (the old `Auxillary/` spelling included; moves and rulebook pages don't count), one per commit
+however many files. The bot's own commits and `_by: AutoCroissant` stamps are left out: a bake is the editor's batch,
+already counted. The top of each column holds a title (ties share it, nobody at 0): **Top card maker** (cards), **Top
+editor** (edits), **Top committer** (card commits). A commit is credited by its git name, else by the GitHub login in a noreply
+email, each looked up in the profiles' `author` fields and then in `[people]` (`Card Authors.txt`); otherwise by the git
+name as written. A website login (`_by`) maps the same way. So a person committing under two names shows twice until an
+admin adds one `[people]` line (`Michael = MichaelJSr`) or, when the other name is their GitHub login, their profile
+names their author. The build writes `data/contributions.json` (small, loaded with `users.json`) and a static `u/<name>/` page for
+each contributor, with the profile's page carrying the summary ("Top card maker · 237 cards · 4 edits · 57 card
+commits") in its link preview.
+
+### Profiles
+
+Opt-in: nobody has a profile until they make one (sign in → **Edit profile**, or the People tab). A profile is
 `site/profiles/<login>.json` (format in `site/profiles/README.md`), staged in the same batch as card edits and
 published in the same commit; you can edit your own, admins anyone's, and a profile can be removed again. Everything in
 it is optional: the name on your cards (from `Card Authors.txt`, so the page links "N cards by …" to the author filter),
 a one-line motto, a series, favourite and hated card and item, a featured hand (a deck builder share link) and up to 12
 label/value pairs. The build validates the files (never failing on one), writes `data/users.json` and a static
 `u/<login>/` page with Open Graph tags, like `c/<card>/`, so a profile link previews in Discord. The site shows the page
-at `#/u/<login>` and the people with a profile at `#/users`; all profile text is escaped and only internal links are
-made from it. Authorship itself is not duplicated there: it stays in the Author filter, the "by Name" link, search
-`author==` and the Stats chart.
+at `#/u/<login>` (the person's contributions follow the profile) and everyone at `#/users`; all profile text is escaped
+and only internal links are made from it. Authorship itself is not duplicated in the profile: it stays in the Author
+filter, the "by Name" link, search `author==`, the Stats chart and the People table.
 
 ## Font check
 

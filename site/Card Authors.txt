@@ -15,6 +15,7 @@ MichaelJSr = MichaelJSr
 TyKim182 = TyKim182
 Tyler9648 = Tyler9648
 Zomoroko = Zomoroko
+Michael = MichaelJSr
 
 [cards]
 

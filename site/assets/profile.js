@@ -1,6 +1,7 @@
-// Profiles: site/profiles/<login>.json, made on the website and published with the edit batch (edit.js), read by
-// build_site.py into data/users.json. Pure functions, plus the profile and users pages. All profile text is user-written:
-// everything is escaped and only internal routes are linked.
+// People: profiles (site/profiles/<login>.json, made on the website and published with the edit batch (edit.js), read by
+// build_site.py into data/users.json) and contributions (data/contributions.json: cards credited, edit batches published
+// and card commits per person, from build_site.py contributions()). Pure functions, plus the person page and the People
+// table. All profile text is user-written: everything is escaped and only internal routes are linked.
 import { esc } from "./text.js";
 import { decode } from "./deck.js";
 
@@ -71,7 +72,7 @@ export function profileHtml(x) {
     const removed = x.state === "sent" ? "'s profile is removed; the site is rebuilding." : "'s profile is removed in your unpublished batch.";
     return `<div class="profile"><div class="empty">${esc(x.login)}${x.removed ? removed : ` has no profile${x.own ? " yet" : ""}.`}
       ${x.own ? `<p><button type="button" class="primary" data-action="profile-edit">${x.removed && x.state !== "sent" ? "Edit it instead" : "Make your profile"}</button></p>` : ""}
-      <p><a href="#/users">All users</a></p></div></div>`;
+      <p><a href="#/users">All people</a></p></div></div>`;
   }
   const card = id => (id ? x.byId.get(id) : null);
   const picks = PICKS.filter(([k]) => card(p[k])).map(([k, label]) => `<div><div class="pick-label">${label}</div>${x.tile(card(p[k]))}</div>`).join("");
@@ -94,19 +95,86 @@ export function profileHtml(x) {
     <div class="actions">
       ${x.canEdit ? `<button type="button" data-action="profile-edit" data-login="${esc(p.login)}">Edit profile</button>` : ""}
       <button type="button" data-action="copy-user-link" data-login="${esc(p.login)}">Copy link</button>
-      <a class="fact" href="#/users">All users</a>
+      <a class="fact" href="#/users">All people</a>
     </div></div></div>`;
 }
 
-/** rows = mergeUsers(...); x = {cards, me, hasOwn} */
-export function usersHtml(rows, x) {
-  const n = rows.length;
-  const row = ({ profile: p, state }) => `<tr><td><a href="#/u/${encodeURIComponent(p.login)}">${esc(p.login)}</a> ${stateFact(state)}</td>
-    <td>${p.author ? `<a href="#/cards?author=${encodeURIComponent(p.author)}">${esc(p.author)}</a>` : ""}</td><td class="num">${p.author ? cardsBy(p.author, x.cards) : ""}</td>
-    <td class="muted">${esc(p.motto || "")}</td></tr>`;
+// ---- contributions (data/contributions.json) ----------------------------------------------------------
+// person = {key, logins[], cards, edits, commits, first, last, recent[[ts, subject, nCards]]}; key = the name cards credit
+export const TITLES = [["cards", "Top card maker", "Most cards"], ["edits", "Top editor", "Most edits: commits to Card Edits.json, published on the website or by hand"],
+  ["commits", "Top committer", "Most commits that added or changed a card (moves and rulebook pages don't count)"]];          // the top count per column; ties share; build_site.py TITLES
+const TITLE_TIP = Object.fromEntries(TITLES.map(([, title, tip]) => [title, tip]));
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+const lc = s => String(s ?? "").toLowerCase();
+const hasLogin = (person, login) => person.logins.some(l => lc(l) === lc(login));
+/** Map key -> titles: the top count in each of TITLES' columns; ties share; nobody at 0. */
+export function titlesOf(people) {
+  const out = new Map(people.map(p => [p.key, []]));
+  for (const [field, title] of TITLES) {
+    const top = Math.max(0, ...people.map(p => p[field] || 0));
+    if (top) for (const p of people) if ((p[field] || 0) === top) out.get(p.key).push(title);
+  }
+  return out;
+}
+/** The person a profile belongs to: its login is one of theirs, or its author field is their key. */
+export const personOf = (profile, people) => people.find(p => hasLogin(p, profile.login) || (profile.author && p.key === profile.author)) || null;
+/** A person by key or by one of their logins, without case. */
+export const findPerson = (arg, people) => people.find(p => lc(p.key) === lc(arg) || hasLogin(p, arg)) || null;
+/** The People table's rows: contributors with their profile (if any), then profiles without contributions; by cards,
+ *  then card commits, then edits, then name. users = mergeUsers(...). */
+export function peopleRows(people, users) {
+  const rows = people.map(person => ({ key: person.key, person, profile: null, state: "" }));
+  for (const { profile, state } of users) {
+    const person = personOf(profile, people), row = person && rows.find(r => r.person === person && !r.profile);
+    if (row) Object.assign(row, { profile, state }); else rows.push({ key: profile.login, person: null, profile, state });
+  }
+  const n = (r, k) => r.person?.[k] || 0;
+  return rows.sort((a, b) => n(b, "cards") - n(a, "cards") || n(b, "commits") - n(a, "commits") || n(b, "edits") - n(a, "edits")
+    || a.key.localeCompare(b.key, undefined, { sensitivity: "base" }));
+}
+const titleChips = (key, titles) => (titles.get(key) || []).map(t => `<span class="fact" data-tip="${esc(TITLE_TIP[t] || "")}">${esc(t)}</span>`).join(" ");
+
+/** The contributions of one person: a facts row, their recent edits (cards.json editBy, the last batch per card) and
+ *  their recent card commits. x = {cards, available, titles (Map), date(ts)} */
+export function contributionsHtml(p, x) {
+  const edits = x.cards.filter(c => c.editBy && hasLogin(p, c.editBy)).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || "")).slice(0, 10);
+  const facts = [
+    p.cards ? `<a class="fact" href="#/cards?author=${encodeURIComponent(p.key)}">${plural(p.cards, "card")} by ${esc(p.key)}</a>` : "",
+    p.edits ? `<span class="fact" data-tip="Commits to Card Edits.json: batches published on the website, or by hand">${plural(p.edits, "edit")}</span>` : "",
+    p.commits ? `<span class="fact" data-tip="Commits that added or changed a card's PSD or PNG; moves and rulebook pages don't count">${plural(p.commits, "card commit")}${p.first ? ` since ${esc(x.date(p.first))}` : ""}</span>` : "",
+    titleChips(p.key, x.titles),
+  ].join("");
+  return `<div class="facts">${facts}</div>
+    ${x.available ? "" : `<p class="muted">Commits aren't in this build; edits are counted from Card Edits.json, which keeps one batch per card.</p>`}
+    ${edits.length ? `<div class="related"><h3>Recent edits</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc((c.edited || []).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
+    ${p.recent?.length ? `<div class="related"><h3>Recent card commits</h3><ul>${p.recent.map(([ts, subject, n]) => `<li>${esc(x.date(ts))} <span class="muted">· ${esc(subject)} · ${plural(n, "card")}</span></li>`).join("")}</ul></div>` : ""}`;
+}
+
+/** The person page: the profile (when there is one) over the contributions; a contributor without a profile gets a
+ *  plain header instead. x = profileHtml's x + {person | null, available, titles, date} */
+export function personHtml(x) {
+  const { person, profile } = x;
+  if (!person) return profileHtml(x);
+  if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>`;
+  return `<div class="profile"><div class="panel"><h2>${esc(person.key)}</h2>${contributionsHtml(person, x)}
+    <div class="actions">
+      ${x.own ? `<button type="button" class="primary" data-action="profile-edit">Make your profile</button>` : ""}
+      <button type="button" data-action="copy-user-link" data-login="${esc(person.key)}">Copy link</button>
+      <a class="fact" href="#/users">All people</a>
+    </div></div></div>`;
+}
+
+/** rows = peopleRows(...); x = {me, hasOwn, available, since, titles (Map), date(ts)} */
+export function peopleHtml(rows, x) {
+  const n = rows.length, link = r => (r.profile ? r.profile.login : r.key);
+  const row = r => `<tr><td><a href="#/u/${encodeURIComponent(link(r))}">${esc(link(r))}</a>${r.person && link(r) !== r.key ? ` <span class="muted">${esc(r.key)}</span>` : ""} ${stateFact(r.state)}</td>
+    <td class="num">${r.person?.cards || ""}</td><td class="num">${r.person?.edits || ""}</td><td class="num">${r.person?.commits || ""}</td>
+    <td>${titleChips(r.key, x.titles)}</td><td class="muted">${esc(r.profile?.motto || "")}</td></tr>`;
+  const scope = x.available ? (x.since ? ` · since ${esc(x.date(x.since))}` : "") : ` · <span class="muted" data-tip="This build has no git history, so card commits are missing and edits are counted from Card Edits.json">commits not in this build</span>`;
   return `<div class="profile">
-    <div class="toolbar"><span class="result-count">${n} user${n === 1 ? "" : "s"} with a profile</span>
-      ${x.me ? (x.hasOwn ? "" : `<button type="button" class="primary" data-action="profile-edit">Make your profile</button>`) : `<span class="muted">Sign in (top right) to make yours.</span>`}</div>
-    ${n ? `<table class="data"><thead><tr><th>User</th><th>Cards as</th><th class="num">Cards</th><th>Motto</th></tr></thead><tbody>${rows.map(row).join("")}</tbody></table>`
-      : `<div class="empty">Nobody has made a profile yet.</div>`}</div>`;
+    <div class="toolbar"><span class="result-count">${n} ${n === 1 ? "person" : "people"}${scope}</span>
+      ${x.me ? (x.hasOwn ? "" : `<button type="button" class="primary" data-action="profile-edit">Make your profile</button>`) : `<span class="muted">Sign in (top right) to make your profile.</span>`}</div>
+    ${n ? `<table class="data"><thead><tr><th>Person</th><th class="num">Cards</th><th class="num">Edits</th><th class="num">Card commits</th><th>Titles</th><th>Motto</th></tr></thead><tbody>${rows.map(row).join("")}</tbody></table>`
+      : `<div class="empty">Nobody yet.</div>`}
+    <p class="muted">Cards credited to each person · edits: commits to Card Edits.json (batches published on the website, or by hand) · card commits: commits that added or changed a card's PSD or PNG (moves and rulebook pages don't count). The top of each column holds its title.</p></div>`;
 }

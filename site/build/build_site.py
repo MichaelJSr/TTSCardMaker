@@ -16,13 +16,15 @@ Where the data comes from:
   * Corrections: site/Card Edits.json (the website's Edit button); the bot applies it too.
   * Profiles: site/profiles/<login>.json, made on the website by signed-in editors (own profile; admins any) and
     published with the edit batch. Validated here (bad files skipped, bad fields dropped, never a failed build).
-  * Image versions: one pass over the git history (commit metadata only, no file contents) lists every commit that
-    changed each card PNG, following exact renames (folder moves). Needs full history: a shallow clone gets none.
+  * Image versions and contributions: one pass over the git history (commit metadata only, no file contents) lists
+    every commit that changed each card PNG, following exact renames (folder moves), and counts per person the commits
+    that added or changed a card (PSD or PNG) and the publish batches (commits to Card Edits.json). Needs full history:
+    a shallow clone gets no image versions and counts edit batches from the file's _by/_at stamps instead.
 PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
 
-Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json and
-data/versions.json (loaded when the rulebook, a card's text or image history or the changes feed is opened), images,
-icons, assets and one share page per card. Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
+Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
+data/contributions.json and data/versions.json (loaded when the rulebook, a card's text or image history, the changes feed or
+the People tab is opened), images, icons, assets and one share page per card and per person. Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -108,11 +110,6 @@ def norm(text):
     """Lenient name key for showing icons: case, spaces, _ - . ' don't matter. (Looser than the bot's parser on
     purpose: the website only decides which image to show, it never judges whether a card is correct.)"""
     return re.sub(r"[\s_\-.'’]+", "", (text or "").lower())
-
-
-def squash(text):
-    """Letters only, lowercased: a title differing from the file name by case or spacing alone (CABBAGE, A P E X) is the same name."""
-    return "".join((text or "").lower().split())
 
 
 def alnum(text):
@@ -595,13 +592,15 @@ def read_profiles(cards, people):
     return [out[k] for k in sorted(out)]
 
 
-def profile_text(p, n_cards, by_id):
-    """The profile page's link-preview description."""
+def profile_text(p, n_cards, by_id, contrib=""):
+    """The profile page's link-preview description; contrib: the person's contrib_text line, if they have contributions."""
     lines = [p["motto"]] if p.get("motto") else []
     if p.get("author"):
         lines.append(f"{n_cards} card{'' if n_cards == 1 else 's'} by {p['author']}" + (f" · {p['series']}" if p.get("series") else ""))
     elif p.get("series"):
         lines.append(p["series"])
+    if contrib:
+        lines.append(contrib)
     picks = [f"{label}: {by_id[p[k]]['name']}" for k, label in PROFILE_PICKS.items() if p.get(k) in by_id]
     if picks:
         lines.append(" · ".join(picks))
@@ -623,32 +622,69 @@ def build_branch():
         return "main"
 
 
-# ---- image versions ----------------------------------------------------------------------------------
-def image_versions(paths):
-    """{current path: [(commit, path then), ...] newest first, one per content change}, commits as
-    (sha, unix time, author, subject). Exact renames (same blob deleted and added in one commit) are followed, so folder
-    moves keep their history; a rename that also changes the image starts a new history. None in a shallow clone."""
-    shallow = subprocess.run(["git", "-C", REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
-    if shallow == "true":
-        log("warning: shallow clone, so no image versions (git fetch --unshallow --filter=blob:none to get them)")
-        return None
-    out = subprocess.run(["git", "-C", REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
-                          "--format=%x01%H%x09%at%x09%an%x09%s", "--", "*.png", "*.PNG"],
-                         capture_output=True, text=True, check=True).stdout
-    tracked = {p: p for p in paths}               # path at the commit being read -> current path
-    versions = {p: [] for p in paths}
-    for chunk in out.split("\x01")[1:]:
+# ---- git history: one `git log --raw` over card PNGs, PSDs and Card Edits.json ----------------------------
+HISTORY_REPO = REPO                           # where git log runs (a test points it at a full-history clone)
+EDIT_PATHS = {EDITS_PATH, "MDW/Card Edits.json"}       # the website's edit batches, after and before the 2026-10-20 move
+HISTORY_PATHS = ("*.png", "*.PNG", "*.psd", "*.PSD", *sorted(EDIT_PATHS))
+BOT_AUTHOR = "AutoCroissant"                  # the bot's commits (AutoCroissant git_commit.AUTHOR) and `_by` stamps: an editor's batch, already counted
+NOREPLY_RE = re.compile(r"^(?:\d+\+)?([^@+]+)@users\.noreply\.github\.com$")   # GitHub's private email carries the login (old form without the id too)
+OLD_CARD_FOLDERS = ("Auxillary/",)            # folder spellings before a rename: the history has them, the tree doesn't
+RULE_PARTS = ("Rules", "Rulebook")            # rulebook pages are not cards
+
+
+def unquote_path(path):
+    """A path as `git -c core.quotePath=false log --raw` prints it: quoted only when it has unusual characters."""
+    if path.startswith('"'):
+        return path[1:-1].encode("latin-1", "backslashreplace").decode("unicode_escape").encode("latin-1").decode("utf-8", "replace")
+    return path
+
+
+def parse_history(text):
+    """`git log --raw --no-renames --no-abbrev --format=%x01%H%x09%at%x09%an%x09%ae%x09%s` -> commits newest first:
+    (sha, unix time, author name, author email, subject, [(status, old blob, new blob, path), ...])."""
+    commits = []
+    for chunk in text.split("\x01")[1:]:
         head, _, body = chunk.partition("\n")
-        sha, ts, author, subject = (head.split("\t", 3) + ["", "", "", ""])[:4]
-        commit = (sha, int(ts or 0), author, subject)
-        adds, dels, mods = [], {}, []
+        sha, ts, name, email, subject = (head.split("\t", 4) + [""] * 5)[:5]
+        entries = []
         for line in body.splitlines():
             if not line.startswith(":"):
                 continue
             meta, _, path = line.partition("\t")
-            if path.startswith('"'):              # unusual characters: git quotes the path
-                path = path[1:-1].encode("latin-1", "backslashreplace").decode("unicode_escape").encode("latin-1").decode("utf-8", "replace")
-            _, _, old, new, status = meta.split()[:5]
+            parts = meta.split()
+            if len(parts) >= 5:
+                entries.append((parts[4], parts[2], parts[3], unquote_path(path)))
+        commits.append((sha, int(ts or 0), name, email, subject, entries))
+    return commits
+
+
+def git_history():
+    """Every commit that touched a card PNG, a PSD or Card Edits.json (parse_history's shape). Commit metadata and trees
+    only, so CI's blob:none clone has it all; None in a shallow clone, which has no history to read."""
+    shallow = subprocess.run(["git", "-C", HISTORY_REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
+    if shallow == "true":
+        log("warning: shallow clone, so no image versions and no commit counts (git fetch --unshallow --filter=blob:none to get them)")
+        return None
+    out = subprocess.run(["git", "-C", HISTORY_REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
+                          "--format=%x01%H%x09%at%x09%an%x09%ae%x09%s", "--", *HISTORY_PATHS], capture_output=True, text=True, check=True).stdout
+    return parse_history(out)
+
+
+# ---- image versions ----------------------------------------------------------------------------------
+def image_versions(paths, commits):
+    """{current path: [(commit, path then), ...] newest first, one per content change}, commits as
+    (sha, unix time, author, subject). Exact renames (same blob deleted and added in one commit) are followed, so folder
+    moves keep their history; a rename that also changes the image starts a new history. None without history."""
+    if commits is None:
+        return None
+    tracked = {p: p for p in paths}               # path at the commit being read -> current path
+    versions = {p: [] for p in paths}
+    for sha, ts, author, _, subject, entries in commits:
+        commit = (sha, ts, author, subject)
+        adds, dels, mods = [], {}, []
+        for status, old, new, path in entries:
+            if not path.lower().endswith(".png"):
+                continue
             if status == "A":
                 adds.append((path, new))
             elif status == "D":
@@ -668,6 +704,117 @@ def image_versions(paths):
             else:
                 versions[key].append((commit, path))
     return versions
+
+
+# ---- contributions (data/contributions.json: who made, edited and committed cards) ---------------------------
+TITLES = (("cards", "Top card maker"), ("edits", "Top editor"), ("commits", "Top committer"))   # top count per column; ties share; same list in profile.js
+RECENT_COMMITS = 10
+PAGE_KEY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,60}$")       # a name that can be a u/<key>/ folder
+
+
+def credit(key, people, by_login):
+    """A git name or GitHub login -> the name the site credits: the author field of the profile with that login (the
+    person's own statement), else [people]; None when neither knows it (case-insensitive, like person())."""
+    p = by_login.get((key or "").lower())
+    if p and p.get("author"):
+        return p["author"]
+    return people.get((key or "").lower())
+
+
+def who(name, email, people, by_login):
+    """A commit's author -> the credited name: credit() of the git name, else of the login in a GitHub noreply email,
+    else the git name as written."""
+    m = NOREPLY_RE.match(email or "")
+    return credit(name, people, by_login) or (m and credit(m.group(1), people, by_login)) or name or ""
+
+
+def login_key(login, people, by_login):
+    """A website login (`_by`) -> the credited name: credit(), else the login itself."""
+    return credit(login, people, by_login) or login
+
+
+def is_card_file(path):
+    """A card's PSD or PNG under the card folders (today's or a renamed spelling), not a template, marker or rulebook page."""
+    return path.lower().endswith((".psd", ".png")) and path.startswith(CARD_FOLDERS + OLD_CARD_FOLDERS) \
+        and not any(p in SKIP_PARTS or p in RULE_PARTS for p in path.split("/"))
+
+
+def contributions(cards, people, profiles, edits, commits):
+    """{"available", "since", "people": [{key, logins, cards, edits, commits, first, last, recent}]} by cards, then commits.
+    cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
+    (a hand commit counts, a pure move doesn't), or without history the file's distinct _by/_at stamps (a floor: it keeps
+    one batch per card). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
+    added, isn't a change), one however many files. The bot's own commits and stamps are left out (its bakes are the
+    editor's batch). logins: the names credited to the person (key, profile logins, [people] names), each in one row."""
+    by_login = {p["login"].lower(): p for p in profiles}
+    rec = {}
+
+    def rec_of(key):
+        return rec.setdefault(key, {"key": key, "cards": 0, "edits": 0, "commits": 0, "first": 0, "last": 0, "recent": []})
+
+    def seen(r, ts):
+        r["first"], r["last"] = min(r["first"] or ts, ts), max(r["last"], ts)
+
+    for c in cards:
+        if c.get("author") and not c.get("dup") and not c.get("hidden"):
+            rec_of(c["author"])["cards"] += 1
+    if commits is not None:
+        for sha, ts, name, email, subject, entries in commits:
+            key = who(name, email, people, by_login)
+            if not key or key.lower() == BOT_AUTHOR.lower() or name.lower() == BOT_AUTHOR.lower():
+                continue
+            gone = {old for s, old, _, _ in entries if s == "D"}
+            changed = lambda s, new: s == "M" or (s == "A" and new not in gone)       # not a blob moved from another path
+            touched = {os.path.splitext(os.path.basename(p))[0].lower() for s, _, new, p in entries if changed(s, new) and is_card_file(p)}
+            edited = any(p in EDIT_PATHS and changed(s, new) for s, _, new, p in entries)
+            if not touched and not edited:
+                continue
+            r = rec_of(key)
+            seen(r, ts)
+            if edited:
+                r["edits"] += 1
+            if touched:
+                r["commits"] += 1
+                if len(r["recent"]) < RECENT_COMMITS:
+                    r["recent"].append([ts, subject, len(touched)])
+    else:
+        for by, at in {(meta["_by"], meta["_at"]) for _, meta in edits.values() if meta.get("_by") and meta.get("_at")}:
+            if by.lower() == BOT_AUTHOR.lower():
+                continue
+            r = rec_of(login_key(by, people, by_login))
+            r["edits"] += 1
+            try:
+                seen(r, int(datetime.fromisoformat(at.replace("Z", "+00:00")).timestamp()))
+            except ValueError:
+                pass
+    out = []
+    for r in rec.values():
+        if not (r["cards"] or r["edits"] or r["commits"]):
+            continue
+        names = {r["key"]} | {p["login"] for p in profiles if p.get("author") == r["key"]} | {g for g, shown in PEOPLE_AS_WRITTEN.items() if shown == r["key"]}
+        r["logins"] = sorted((n for n in names if (credit(n, people, by_login) or n) == r["key"]), key=str.lower)   # a name credits one row
+        out.append(r)
+    out.sort(key=lambda r: (-r["cards"], -r["commits"], -r["edits"], r["key"].lower()))
+    return {"available": commits is not None, "since": min((r["first"] for r in out if r["first"]), default=0), "people": out}
+
+
+def titles_of(rows):
+    """{key: [titles]}: the top count in each of TITLES' columns; ties share; nobody at 0. profile.js titlesOf is the same rule."""
+    out = {r["key"]: [] for r in rows}
+    for field, title in TITLES:
+        top = max((r[field] for r in rows), default=0)
+        for r in rows:
+            if top and r[field] == top:
+                out[r["key"]].append(title)
+    return out
+
+
+def contrib_text(r, titles, with_cards=True):
+    """One link-preview line: "Top card maker · 237 cards · 4 edits · 57 card commits"."""
+    n = lambda field, word: f"{r[field]} {word}{'' if r[field] == 1 else 's'}"
+    parts = list(titles) + ([n("cards", "card")] if with_cards and r["cards"] else []) + ([n("edits", "edit")] if r["edits"] else []) \
+        + ([n("commits", "card commit")] if r["commits"] else [])
+    return " · ".join(parts)
 
 
 # ---- ban list --------------------------------------------------------------------------------------
@@ -759,8 +906,6 @@ def main():
         # the printed title the bot read (since 2026-10-21): shown instead of the file name; a Card Edits.json name wins below
         parsed = getattr(c, "parsed_values", None) or {}
         title = parsed["name"] if "name" in parsed else getattr(c, "display_name", None)
-        if title and squash(title) == squash(name):   # case or spacing only: the file name (the bot's /query does the same)
-            title = None
         entry = {
             "id": unique_slug(name), "name": (title if not is_rule else None) or name, "type": getattr(c, "card_type", "unknown"),
             "subtype": getattr(c, "subtype", None), "series": getattr(c, "series", None), "subseries": None,   # from edits only
@@ -941,7 +1086,8 @@ def main():
     for e in cards + rules:
         if e.get("png") and e["png"] in tree:
             by_png.setdefault(e["png"], []).append(e)
-    found = image_versions(list(by_png))
+    commits = git_history()
+    found = image_versions(list(by_png), commits)
     versions = {"available": found is not None, "repo": CARD_REPO, "commits": [], "cards": {}}
     if found:
         index = {}
@@ -980,8 +1126,13 @@ def main():
         "peopleMap": PEOPLE_AS_WRITTEN,
     }
     profiles = read_profiles(cards, data["people"])
+    contrib = contributions(cards, people, profiles, edits, commits)
+    titles = titles_of(contrib["people"])
+    log(f"contributions: {len(contrib['people'])} people, {sum(r['edits'] for r in contrib['people'])} edit batches, "
+        f"{sum(r['commits'] for r in contrib['people'])} card commits" + ("" if contrib["available"] else " (no history: batches counted from the edits file)"))
     os.makedirs(os.path.join(DIST, "data"))
-    files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles}}
+    files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
+             "contributions.json": contrib}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
@@ -1055,15 +1206,29 @@ def main():
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(c["name"])} · {SITE_NAME}</title>',
         ])
+    person_of = {login.lower(): r for r in contrib["people"] for login in r["logins"]}        # a profile's login -> its contributions
     for p in profiles:                            # u/<login>/: the favourite card as the preview image, else the site banner
         n = sum(1 for c in cards if c.get("author") == p["author"] and not c.get("dup") and not c.get("hidden")) if p.get("author") else 0   # as cardsBy() counts
-        desc, fav = profile_text(p, n, by_id), by_id.get(p.get("favourite") or "")
+        r = person_of.get(p["login"].lower())
+        desc = profile_text(p, n, by_id, contrib_text(r, titles[r["key"]], with_cards=not p.get("author")) if r else "")
+        fav = by_id.get(p.get("favourite") or "")
         image, size = og_image(fav) if fav and fav.get("img") else ((f"{SITE_URL}/og.jpg", (1200, 630)) if SITE_URL else ("", None))
         share_page(("u", p["login"]), [
             og_tags(p["login"], desc, f"{SITE_URL}/u/{p['login']}/" if SITE_URL else "", image, size, f"{fav['name']} card" if fav else ""),
             f'<meta name="theme-color" content="{(fav or {}).get("color") or "#3987e5"}">',
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(p["login"])} · {SITE_NAME}</title>',
+        ])
+    with_profile = {p["login"].lower() for p in profiles}
+    for r in contrib["people"]:                   # u/<key>/ for a contributor without a profile: the same page, the site banner as its image
+        if any(login.lower() in with_profile for login in r["logins"]) or not PAGE_KEY_RE.match(r["key"]):
+            continue
+        desc = contrib_text(r, titles[r["key"]])
+        share_page(("u", r["key"]), [
+            og_tags(r["key"], desc, f"{SITE_URL}/u/{r['key']}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630)),
+            '<meta name="theme-color" content="#3987e5">',
+            f'<meta name="description" content="{html.escape(desc)}">',
+            f'<title>{html.escape(r["key"])} · {SITE_NAME}</title>',
         ])
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
 

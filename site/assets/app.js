@@ -3,7 +3,7 @@ import { esc, norm, makeRenderer, plain, diffWords, tagInfo, badgeHtml, GROUP_NA
 import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
-import { profileHtml, usersHtml, mergeUsers } from "./profile.js";
+import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers } from "./profile.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -72,8 +72,9 @@ const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
 const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
-let usersP = null;                                      // profiles (data/users.json), with the rulebook etc. only when a page needs them
+let usersP = null, contribP = null;                     // profiles (data/users.json) and contributions (data/contributions.json): the People tab and person pages
 const loadUsers = () => (usersP ||= getJson("users.json").then(d => { S.users = d.users || []; S.userBy = new Map(S.users.map(p => [p.login.toLowerCase(), p])); return S.userBy; }).catch(e => { usersP = null; throw e; }));
+const loadContrib = () => (contribP ||= getJson("contributions.json").then(d => { S.contrib = d; S.titles = titlesOf(d.people || []); }).catch(e => { contribP = null; throw e; }));
 function whenLoaded(promise, what, rerender) {
   promise.then(rerender, e => { view.innerHTML = `<div class="empty">Couldn't load ${esc(what)} (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`; });
 }
@@ -178,7 +179,7 @@ function renderView(r, hash) {
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
   const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare, users: renderUsers, u: renderUser };
   (views[r.name] || renderCards)(r);
-  const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "Users", u: r.arg || "Users" };
+  const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.arg || "People" };
   document.title = `${titles[r.name] || "Cards"} · Impossibility Simulator`;
 }
 function setParams(updates, { replace = true } = {}) {
@@ -598,6 +599,7 @@ function openPicker(tier) {
 function renderStatsView(r) {
   renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist }, r.params);
 }
+const BOT = "AutoCroissant";                           // the bot's bake stamps (build_site.py BOT_AUTHOR): not a person page
 function renderChanges() {
   if (!historyP || !S.history) {
     view.innerHTML = `<div class="loading">Loading recent changes…</div>`;
@@ -617,7 +619,7 @@ function renderChanges() {
   };
   view.innerHTML = `<div style="max-width:980px;margin:auto">
     <section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>
-    ${webEdits.length ? `<section class="panel"><h3>Edited on the website <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${esc(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdBadges(c)}</li>`).join("")}</ul></section>` : ""}
+    ${webEdits.length ? `<section class="panel"><h3>Edited on the website <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${c.editBy === BOT ? esc(c.editBy) : `<a href="#/u/${encodeURIComponent(c.editBy)}">${esc(c.editBy)}</a>`}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdBadges(c)}</li>`).join("")}</ul></section>` : ""}
     <section class="panel"><h3>Most revised</h3><div class="feed">${edited.slice(0, 20).map(item).join("") || `<p class="muted">No history yet.</p>`}</div></section>
     ${unparsed.length ? `<section class="panel"><h3>Not parsed by the bot yet <span class="muted">${unparsed.length}</span></h3><p class="muted">Run /update_stats in Discord to add them.</p>
       <div class="grid" style="--tile:120px">${unparsed.map(c => tileHtml(c, { small: true })).join("")}</div></section>` : ""}
@@ -638,27 +640,37 @@ function renderCompare(r) {
       <p><button type="button" class="ghost" data-action="compare-remove" data-id="${c.id}">Remove</button></p></div>`).join("")}</div>`;
 }
 
-// ---- profiles (data/users.json; staged or just-published ones from the editor) -------------------
+// ---- people: profiles (data/users.json; staged or just-published ones from the editor) + contributions (data/contributions.json)
 function usersReady(name, again) {
-  if (S.users) return true;
-  view.innerHTML = `<div class="loading">Loading profiles…</div>`;
-  whenLoaded(loadUsers(), "profiles", () => { if (parseHash().name === name) again(parseHash()); });
+  if (S.users && S.contrib) return true;
+  view.innerHTML = `<div class="loading">Loading people…</div>`;
+  whenLoaded(Promise.all([loadUsers(), loadContrib()]), "people", () => { if (parseHash().name === name) again(parseHash()); });
   return false;
 }
 function renderUser(r) {
   if (!r.arg) { location.replace("#/users"); return; }                                  // #/u alone is the list
   if (!usersReady("u", renderUser)) return;
-  const me = editor.me, pending = editor.profileOf(r.arg), published = S.userBy.get(r.arg.toLowerCase()) || null;
-  const login = pending?.profile?.login || published?.login || r.arg;             // the file's spelling: u/<login>/ exists only for it
+  const me = editor.me, people = S.contrib.people || [];
+  let pending = editor.profileOf(r.arg), published = S.userBy.get(r.arg.toLowerCase()) || null;
+  let person = findPerson(r.arg, people);
+  if (!pending && !published && person) {                                               // a credited name: the profile one of its logins made, if any
+    const row = mergeUsers(S.users, editor.pendingProfiles()).find(u => personOf(u.profile, [person]));
+    if (row) { pending = editor.profileOf(row.profile.login); published = S.userBy.get(row.profile.login.toLowerCase()) || null; }
+  }
+  const profile = pending ? pending.profile : published;
+  if (!person && profile) person = personOf(profile, people);
+  const login = pending?.profile?.login || published?.login || person?.key || r.arg;    // the file's spelling: u/<login>/ exists only for it
   if (login !== r.arg) { S.renderedHash = S.listHash = hashOf({ name: "u", arg: login }); syncUrl({ name: "u", arg: login }); }
-  const own = !!me && me.login.toLowerCase() === login.toLowerCase();
-  view.innerHTML = profileHtml({ login, profile: pending ? pending.profile : published, state: pending?.state || "", removed: !!pending && !pending.profile,
-    own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }) });
+  const own = !!me && (me.login.toLowerCase() === login.toLowerCase() || !!person?.logins.some(l => l.toLowerCase() === me.login.toLowerCase()));
+  view.innerHTML = personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
+    own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }),
+    available: !!S.contrib.available, titles: S.titles, date });
 }
 function renderUsers() {
   if (!usersReady("users", renderUsers)) return;
-  const me = editor.me, rows = mergeUsers(S.users, editor.pendingProfiles());
-  view.innerHTML = usersHtml(rows, { cards: S.cards, me, hasOwn: !!me && rows.some(x => x.profile.login.toLowerCase() === me.login.toLowerCase()) });
+  const me = editor.me, rows = peopleRows(S.contrib.people || [], mergeUsers(S.users, editor.pendingProfiles()));
+  view.innerHTML = peopleHtml(rows, { me, hasOwn: !!me && rows.some(r => r.profile && r.profile.login.toLowerCase() === me.login.toLowerCase()),
+    available: !!S.contrib.available, since: S.contrib.since, titles: S.titles, date });
 }
 
 // ---- sharing (same text as the share pages' link previews) -----------------------------------------
@@ -807,7 +819,7 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card"], ["d", "Add to / remove from deck"],
-  ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · Users"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+  ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 $("#account").addEventListener("click", () => actions["edit-hub"]());
 
