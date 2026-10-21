@@ -54,6 +54,7 @@ jobs:
             /commands/card_models.py
             /commands/card_edits.py
             /commands/github_api.py
+            /commands/git_commit.py
             /commands/repo_history.py
             /global_config.py
 

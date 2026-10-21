@@ -72,7 +72,8 @@ EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseri
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
                "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list}
 EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", "spd"}      # may be null
-# printed on the card image, so an edit waits for the pipeline ("PSD pending"); CardEdits.KIND "psd" in the bot. creatures is database-only
+# printed on the card image, so an edit waits for the pipeline ("PSD pending"). The same set lives in edit.js FROM, app.js
+# FIELD_LABEL, the bot's CardEdits.KIND ("psd") and psd_edit STAT_FIELDS + TEXT_FIELDS + NOT_YET. creatures is database-only
 PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability"}
 DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
@@ -366,8 +367,8 @@ def valid_edit(field, value):
 
 
 def valid_verdict(value):
-    """A pipeline `_psd` entry: {"state": str, "for": {field: value}, "psd": "<blob8>", "reason": str, ...}."""
-    return (isinstance(value, dict) and isinstance(value.get("state"), str) and isinstance(value.get("for", {}), dict)
+    """A pipeline `_psd` entry: {"state": "baked" | "refused", "for": {field: value}, "psd": "<blob8>", "reason": str, ...}."""
+    return (isinstance(value, dict) and value.get("state") in ("baked", "refused") and isinstance(value.get("for", {}), dict)
             and isinstance(value.get("psd", ""), str) and isinstance(value.get("reason", ""), str))
 
 

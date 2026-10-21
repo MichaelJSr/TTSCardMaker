@@ -48,10 +48,11 @@ const iconFor = name => S.icons[norm(name)];
 const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
 // edits the pipeline bakes into the card image (build_site.py PSD_FIELDS): pending, refused, or baked but not re-parsed yet
 const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability" };
+const PSD_TIP = "The card image is being regenerated with this edit";     // the one tip for a pending PSD field (edit.js too)
 const pendingList = c => (c.pending || []).map(f => FIELD_LABEL[f] || f).join(", ");
 const psdBadges = c => [
   c.refused ? `<span class="fact refused" data-tip="The last try to regenerate the card image was refused; change the edit or the PSD">Image update refused: ${esc(c.refused)}</span>`
-    : c.pending?.length ? `<span class="fact pending" data-tip="The card image is being regenerated with this edit">PSD pending: ${esc(pendingList(c))}</span>` : "",
+    : c.pending?.length ? `<span class="fact pending" data-tip="${PSD_TIP}">PSD pending: ${esc(pendingList(c))}</span>` : "",
   c.reparsePending ? `<span class="fact" data-tip="The PSD changed since the bot last read it; the data follows on the next /update_stats">Re-parse pending</span>` : "",
 ].join("");
 
@@ -120,7 +121,7 @@ function rerender() {
   if (onCard && $(".detail", modal)) openCard(parseHash().arg);       // dialogs stay open
 }
 const editor = createEditor({
-  S, KIND_LABEL, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
+  S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
   openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
   iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
 });
@@ -213,7 +214,7 @@ function tileHtml(c, { small = false, eager = false, css = 190, constructed = fa
       : c._staged ? `<span class="flag staged" data-tip="Changed in your unpublished batch">Unpublished</span>`
       : c.hidden ? `<span class="flag" data-tip="Hidden from the website">Hidden</span>`
       : c.refused ? `<span class="flag refused" data-tip="Image update refused: ${esc(c.refused)}">Image update refused</span>`
-      : c.pending?.length ? `<span class="flag pending" data-tip="PSD pending: ${esc(pendingList(c))}; the card image is being regenerated">PSD pending</span>`
+      : c.pending?.length ? `<span class="flag pending" data-tip="${PSD_TIP}: ${esc(pendingList(c))}">PSD pending</span>`
       : c.reparsePending ? `<span class="flag" data-tip="The PSD changed since the bot last read it">Re-parse pending</span>`
       : !c.parsed ? `<span class="flag" data-tip="Not parsed by the bot yet">New</span>`
       : c._unused ? `<span class="flag unused" data-tip="No card names this status effect">Unused</span>`

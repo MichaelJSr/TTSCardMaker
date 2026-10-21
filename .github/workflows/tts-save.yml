@@ -45,6 +45,7 @@ jobs:
             /commands/card_models.py
             /commands/card_edits.py
             /commands/github_api.py
+            /commands/git_commit.py
             /global_config.py
 
       - uses: actions/setup-python@v7
