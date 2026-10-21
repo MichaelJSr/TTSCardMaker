@@ -25,7 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45       # the first run downloads every card PNG (~1.6 GB); later runs reuse cached images
     steps:
-      # The repo history is ~25 GB of PSDs, so check out only what the build reads; card PNGs are
+      # The repo history is ~25 GB of PSDs, so check out only what the build reads (site/ also holds the hand-kept
+      # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs are
       # downloaded on demand and their resized images cached between runs. fetch-depth 0 + blob:none brings every
       # commit and tree (about 25 MB, no file contents) for the image-version history.
       - uses: actions/checkout@v7
@@ -37,10 +38,6 @@ jobs:
             /site/
             /Types/
             /MDW/Fonts/stoogedings-src/stoogedings.json
-            /MDW/Constructed Ban List.txt
-            /MDW/Card Authors.txt
-            /MDW/Card Edits.json
-            /MDW/Website Admins.txt
 
       - uses: actions/setup-python@v7
         with:

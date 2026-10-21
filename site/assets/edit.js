@@ -25,7 +25,7 @@ const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length 
   : typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
 
 // Card Edits.json with the ops applied: keys sorted, fields in ORDER, one line per card
-export function editsFile(text, ops, at, by, path = "MDW/Card Edits.json") {
+export function editsFile(text, ops, at, by, path = "site/Card Edits.json") {
   let data;
   try { data = text ? JSON.parse(text) : { about: ABOUT, cards: {} }; }
   catch (e) { throw new Error(`${path} isn't valid JSON (${e.message}). Fix it on GitHub, then publish again.`); }
@@ -54,7 +54,7 @@ export function createEditor(app) {
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
-  const files = () => ({ edits: "MDW/Card Edits.json", authors: "MDW/Card Authors.txt", banlist: "MDW/Constructed Ban List.txt", admins: "MDW/Website Admins.txt", ...S.data.files });
+  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", ...S.data.files });
   const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
   const find = id => S.byId.get(id) || (S.rules || []).find(r => r.id === id);
 

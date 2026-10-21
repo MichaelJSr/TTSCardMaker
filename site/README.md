@@ -32,8 +32,10 @@ The build does not parse PSDs. Card text, stats, authors, aliases and history co
 the bot's last `/update_stats` + `/push`. Images, icons, the ban list and icon names come from this repo. Cards that are
 in the repo but not yet in the bot's data still appear (image only).
 
-Authors come from `MDW/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
-bot's data; `[people]` maps git names to the names shown. Image versions come from the git history (commit metadata
+Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
+bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
+`Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/` on 2026-10-20); the
+build and the bot read them, the published site does not include them. Image versions come from the git history (commit metadata
 only), following folder moves; the build needs full history for them (CI fetches it; a shallow local clone gets none,
 `git fetch --unshallow --filter=blob:none` fixes that).
 
@@ -47,15 +49,15 @@ downloaded or looks truncated, or if many images fail.
 
 Anyone with write access to this repo can fix card data on the site: the pencil button signs in with a GitHub token
 (classic, `public_repo` scope), Edit (e) on a card stages changes in a batch, and **Review and publish** commits the
-whole batch at once. Fields go to `MDW/Card Edits.json`, authors to `MDW/Card Authors.txt`, bans to
-`MDW/Constructed Ban List.txt`. The site rebuilds on that commit; the bot applies the same files on `/update_stats`.
+whole batch at once. Fields go to `site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to
+`site/Constructed Ban List.txt`. The site rebuilds on that commit; the bot applies the same files on `/update_stats`.
 A subseries (Goombella: series Mario, subseries Paper Mario: The Thousand-Year Door) exists only as an edit (`subseries`;
-the bot doesn't read it yet). The form splits edits **on the card image** (name, stars, types, stats, ability text) from
+the bot reads it too). The form splits edits **on the card image** (name, stars, types, stats, ability text) from
 **database only** ones, which come from the card's folder or exist only as edits (kind, item type, series, subseries,
 note, aliases, author, duplicate of, checks, constructed ban, hidden).
 Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a card
 several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own bars.
-Admins are the repo owner plus the GitHub logins in `MDW/Website Admins.txt`; they can also ban, hide cards, rename
+Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards, rename
 people and edit the admin list (committed with the batch). Remove a card's entry from `Card Edits.json` to go back to
 the PSD.
 

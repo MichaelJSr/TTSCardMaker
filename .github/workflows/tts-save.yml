@@ -9,7 +9,7 @@ on:
     paths:
       - "**/*.png"
       - "TTS/decks.json"
-      - "MDW/Card Edits.json"
+      - "site/Card Edits.json"
   schedule:
     - cron: "41 11 * * *"    # daily: picks up card-browser names the push ran ahead of
   workflow_dispatch:
@@ -31,17 +31,20 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /TTS/
-            /MDW/Card Edits.json
+            /site/Card Edits.json
 
+      # The updater and what it imports (no config.py: github_api reads it in a try/except)
       - uses: actions/checkout@v7
         with:
           repository: bobberlington/AutoCroissant
           path: bot
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            /commands/__init__.py
             /commands/tts_save.py
             /commands/repo_history.py
+            /commands/card_models.py
+            /commands/card_edits.py
+            /commands/github_api.py
             /global_config.py
 
       - uses: actions/setup-python@v7
@@ -50,12 +53,14 @@ jobs:
 
       - run: pip install -q requests
 
-      # The updater reads the checkout at ~/Desktop/TTSCardMaker and keeps a bare blobless history clone at
-      # ~/Documents/TTSCardMaker-history.git (made on first use); the report lands next to the save.
+      # The updater reads TTS/decks.json and site/Card Edits.json from the checkout (AUTOCROISSANT_LOCAL_DIR) and keeps a
+      # bare blobless history clone (AUTOCROISSANT_HISTORY_CLONE, made on first use); the report lands next to the save.
       - name: Update the save
+        shell: bash
+        env:
+          AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
+          AUTOCROISSANT_HISTORY_CLONE: ~/TTSCardMaker-history.git
         run: |
-          mkdir -p "$HOME/Desktop" "$HOME/Documents"
-          ln -s "$GITHUB_WORKSPACE" "$HOME/Desktop/TTSCardMaker"
           cd bot
           python -m commands.tts_save "$GITHUB_WORKSPACE/TTS/Impossibility Simulator.json" | tee "$GITHUB_WORKSPACE/tts-save-report.md"
 

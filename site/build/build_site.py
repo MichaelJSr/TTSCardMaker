@@ -10,10 +10,10 @@ Where the data comes from:
     for the card view). They are cached by git blob hash in site/.cache/img, so after the first run only new or
     changed cards are downloaded and resized; images no card uses any more are pruned.
   * Icons: Types/ and Types/Stars/; icon names and aliases from MDW/Fonts/stoogedings-src/stoogedings.json.
-  * Deck rules: the rulebook pages; banned cards from MDW/Constructed Ban List.txt.
-  * Authors: MDW/Card Authors.txt ([people] git name = shown name, [cards] Card Name = person) wins over the bot's
+  * Deck rules: the rulebook pages; banned cards from site/Constructed Ban List.txt.
+  * Authors: site/Card Authors.txt ([people] git name = shown name, [cards] Card Name = person) wins over the bot's
     author, the same rule AutoCroissant applies on /update_stats.
-  * Corrections: MDW/Card Edits.json (the website's Edit button); the bot applies it too.
+  * Corrections: site/Card Edits.json (the website's Edit button); the bot applies it too.
   * Image versions: one pass over the git history (commit metadata only, no file contents) lists every commit that
     changed each card PNG, following exact renames (folder moves). Needs full history: a shallow clone gets none.
 PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
@@ -62,10 +62,11 @@ MIN_CARDS = 100                              # fewer cards than this in stats.pk
 KIND_LABEL = {"creature": "Creature", "item": "Item", "field": "Field card", "minion": "Minion", "nme": "N.M.E. item",
               "aux item": "Auxiliary item", "creatures": "Auxiliary creature", "debuff": "Debuff", "buff": "Buff"}
 CARD_FOLDERS = ("Creatures/", "Items/", "Field/", "N.M.E/", "Auxiliary/")
-AUTHORS_PATH = "MDW/Card Authors.txt"
-BANLIST_PATH = "MDW/Constructed Ban List.txt"
-EDITS_PATH = "MDW/Card Edits.json"
-ADMINS_PATH = "MDW/Website Admins.txt"
+# the hand-kept website files, directly under site/ (in MDW/ until 2026-10-20); read by the build and the bot, never published
+AUTHORS_PATH = "site/Card Authors.txt"
+BANLIST_PATH = "site/Constructed Ban List.txt"
+EDITS_PATH = "site/Card Edits.json"
+ADMINS_PATH = "site/Website Admins.txt"
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits (subseries: database only, never from the folder)
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
@@ -312,11 +313,11 @@ PEOPLE_AS_WRITTEN = {}                        # [people] with the git names' own
 
 
 def parse_authors():
-    """MDW/Card Authors.txt -> (people {lowercase git name: shown name}, cards {card_key: person}). Warns, never fails."""
+    """site/Card Authors.txt -> (people {lowercase git name: shown name}, cards {card_key: person}). Warns, never fails."""
     path = os.path.join(REPO, AUTHORS_PATH)
     people, cards = {}, {}
     if not os.path.exists(path):
-        log("warning: no MDW/Card Authors.txt; authors come from the bot's data only")
+        log(f"warning: no {AUTHORS_PATH}; authors come from the bot's data only")
         return people, cards
     section = None
     for n, raw in enumerate(open(path, encoding="utf-8", errors="replace"), 1):
@@ -345,7 +346,7 @@ def person(people, name):
     return people.get(name.lower(), name) if name else name
 
 
-# ---- corrections (MDW/Card Edits.json) ----------------------------------------------------------------
+# ---- corrections (site/Card Edits.json) ----------------------------------------------------------------
 def valid_edit(field, value):
     kind = EDIT_FIELDS.get(field)
     if kind is None:
@@ -688,7 +689,7 @@ def main():
             if norm(alias) != norm(e["name"]) and norm(alias) not in {norm(a) for a in e.get("aliases", [])}:
                 e.setdefault("aliases", []).append(alias)
 
-    # authors: MDW/Card Authors.txt wins over the bot ([people] maps git names to shown names)
+    # authors: site/Card Authors.txt wins over the bot ([people] maps git names to shown names)
     people, credited = parse_authors()
     for e in cards:
         if not e.get("dup"):

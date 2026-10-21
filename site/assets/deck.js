@@ -1,4 +1,4 @@
-// Constructed hand builder. Rules from the rulebook ("03 Setting Up") and MDW/Constructed Ban List.txt.
+// Constructed hand builder. Rules from the rulebook ("03 Setting Up") and site/Constructed Ban List.txt.
 import { esc, plain, norm } from "./text.js";
 
 export const HAND = [
