@@ -23,11 +23,14 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **Changes**: recently updated cards with text diffs, the most revised cards, and cards the bot hasn't parsed yet.
 - **People**: everyone who made, edited or committed cards, in one table (cards credited, edit batches published on the
   website, card commits, titles, motto), and a page per person (`#/u/<name>`, static `u/<name>/` that previews in Discord):
-  their profile when they made one (see People below), their contributions with recent edits and recent card commits.
+  their profile when they made one (see People below), their contributions with recent edits and recent card commits,
+  and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
+  (by its image's first upload, from the git history: full-history builds only) and a grid of their 24 newest cards.
 
 Top right: **Sign in** (a GitHub token, see Editing) becomes your login once signed in; it opens the editor hub (your
 batch, your profile, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
-`d` add to deck, `c` copy link, `s` share, `x` compare, `e` edit, `r` random, `1`–`6` sections, `?` help.
+`d` add to deck, `c` copy link, `s` share, `x` compare, `e` edit, `r` random, `1`–`6` sections, `?` help. The single-key
+shortcuts are off while an edit form is open (a card's edit dialog or the profile editor); `Esc` still closes a dialog.
 
 ## Where the data comes from
 
@@ -89,12 +92,23 @@ Opt-in: nobody has a profile until they make one (sign in → **Edit profile**, 
 `site/profiles/<login>.json` (format in `site/profiles/README.md`), staged in the same batch as card edits and
 published in the same commit; you can edit your own, admins anyone's, and a profile can be removed again. Everything in
 it is optional: the name on your cards (from `Card Authors.txt`, so the page links "N cards by …" to the author filter),
-a one-line motto, a series, favourite and hated card and item, a featured hand (a deck builder share link) and up to 12
-label/value pairs. The build validates the files (never failing on one), writes `data/users.json` and a static
-`u/<login>/` page with Open Graph tags, like `c/<card>/`, so a profile link previews in Discord. The site shows the page
-at `#/u/<login>` (the person's contributions follow the profile) and everyone at `#/users`; all profile text is escaped
-and only internal links are made from it. Authorship itself is not duplicated in the profile: it stays in the Author
-filter, the "by Name" link, search `author==`, the Stats chart and the People table.
+a one-line motto, a series, favourite and hated card and item, a featured hand and up to 12 label/value pairs.
+The editor is a page of its own, `#/u/<login>/edit` (Edit profile on the hub, the person page or the review dialog;
+signed out, it asks for the token first and comes back): the form on the left, a live preview of the profile on the
+right (one column on narrow screens). Each card slot shows the chosen card's tile with **Pick** and **Clear**; Pick opens
+a picker inside the page (search box with the search syntax, kind and stars chips, small tiles; the item slots only
+offer items, auxiliary items and N.M.E. items; at most 240 tiles, narrow the search for more). The featured hand is
+picked from the deck builder's saved hands or pasted as a share link; its share code is stored as the hand is at that
+moment, so later deck-builder edits don't follow. **Add to batch** stages the profile and returns to the person page;
+Cancel asks when the form changed; a draft stays in memory per login while the site is open (leaving the page and
+coming back restores it; closing the tab while the editor holds unsaved changes asks first, but a draft left behind
+on another page goes with the tab). The build validates the files (never failing on one), writes `data/users.json` and
+a static `u/<login>/` page with Open Graph tags, like `c/<card>/`, so a profile link previews in Discord (the
+description ends with the person's cards: "120 items, 53 creatures, 32 field cards · mostly Hollow Knight, The Binding
+of Isaac"). The site shows the page at `#/u/<login>` (the person's contributions and cards follow the profile) and
+everyone at `#/users`; all profile text is escaped and only internal links are made from it. Authorship itself is not
+duplicated in the profile: it stays in the Author filter, the "by Name" link, search `author==`, the Stats chart and
+the People table.
 
 ## Font check
 
@@ -114,5 +128,7 @@ python site/build/build_site.py          # writes site/dist (uses local PNGs, ca
 python -m http.server -d site/dist 8000  # then open http://localhost:8000
 ```
 
-Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step), `site/build/build_site.py`.
+Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
+`search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `profile.js` the People pages, `pick.js` the card
+picker panel), `site/build/build_site.py`.
 Generated files (`site/dist`, `site/.cache`) are git-ignored.

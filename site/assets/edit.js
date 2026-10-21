@@ -1,7 +1,8 @@
 // Editing: staged in a batch, published as one commit to the card repo.
-import { esc, norm } from "./text.js";
-import { decode as decodeDeck } from "./deck.js";
-import { validateProfile, profileFile, deckCode, LIMITS, PICKS } from "./profile.js";
+import { esc } from "./text.js";
+import { decode as decodeDeck, encode as encodeDeck } from "./deck.js";
+import { validateProfile, profileFile, sameProfile, deckCode, profileHtml, LIMITS, PICKS, ITEM_KINDS } from "./profile.js";
+import * as pick from "./pick.js";
 
 const API = "https://api.github.com";
 const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden" };
@@ -48,6 +49,12 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json") {
   const body = keys.map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(data.cards[k])}`).join(",\n");
   return `{\n${rest.join("\n")}${rest.length ? "\n" : ""}  "cards": {${keys.length ? `\n${body}\n  ` : ""}}\n}\n`;
 }
+
+/** The profile page's form state (what its inputs hold) for a profile; validateProfile({login, ...state}) gives the profile back. */
+export const profileState = p => ({ author: p.author || "", motto: p.motto || "", series: p.series || "", ...Object.fromEntries(PICKS.map(([k]) => [k, p[k] || ""])),
+  deck: p.deck || "", facts: (p.facts || []).map(f => ({ label: f.label, value: f.value })) });
+/** The deck builder's saved hands as the profile page offers them: [{id, name, n (cards, the field card included)}]. */
+export const savedHands = decks => decks.map(d => ({ id: d.id, name: d.name, n: d.cards.length + (d.field ? 1 : 0) }));
 
 export function createEditor(app) {
   const { S } = app;
@@ -341,7 +348,7 @@ export function createEditor(app) {
     if (!me) { openHub(`Sign in to edit ${c.name}.`, () => openForm(id)); return; }
     app.modal.innerHTML = formHtml(c);
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
-    const form = document.getElementById("edit-form"), ta = document.getElementById("ef-ability");
+    const form = app.modal.querySelector("#edit-form"), ta = document.getElementById("ef-ability");
     const ser = document.getElementById("ef-series"), dl = document.getElementById("dl-subseries");
     if (ser && dl) ser.addEventListener("input", () => { dl.innerHTML = subseriesOpts(ser.value.trim()); });
     const update = () => {
@@ -382,14 +389,17 @@ export function createEditor(app) {
     else el.value = Array.isArray(p) ? p.join(", ") : p ?? "";
   }
 
-  // ---- profiles: site/profiles/<login>.json, one more file in the batch (your own; admins anyone's)
+  // ---- profiles: site/profiles/<login>.json, one more file in the batch (your own; admins anyone's), edited on the page
+  // #/u/<login>/edit: the form left, a live preview of the profile right. The draft stays in memory per login while the page
+  // is loaded; the browser asks before leaving while it's dirty (the card dialog too).
   const PLABEL = { author: "Cards as", motto: "Motto", series: "Series", ...Object.fromEntries(PICKS), deck: "Featured hand", facts: "Pairs" };
   const profileCtx = () => ({ cards: new Map(S.cards.map(c => [c.id, c])), series: new Set(S.cards.map(c => c.series).filter(Boolean)), people: S.data.people || [] });
-  const cardByText = t => { const s = (t || "").trim(), c = s && (S.byId.get(s) || S.cards.find(x => norm(x.name) === norm(s) || (x.aliases || []).some(a => norm(a) === norm(s)))); return c ? c.id : s; };
-  const noDate = p => Object.fromEntries(Object.entries(p || {}).filter(([k]) => k !== "updated"));
-  const sameProfile = (a, b) => profileFile(noDate(a)) === profileFile(noDate(b));   // sorted keys: the build and the form order them differently
   const mine = login => login.toLowerCase() === me.login.toLowerCase();
   const findKey = (obj, login) => Object.keys(obj).find(k => k.toLowerCase() === login.toLowerCase());
+  const drafts = new Map();                        // login (lower) -> form state, while the form differs from the profile
+  let booting = !!token;                           // the stored token's sign-in hasn't settled yet
+  let pageRun = 0;                                 // profilePage calls: a newer one aborts the older
+  window.addEventListener("beforeunload", e => { if (document.querySelector('#edit-form[data-dirty="1"]')) { e.preventDefault(); e.returnValue = ""; } });
   function profileOf(login) {                      // unpublished state: {profile | null (removed), state: "staged" | "sent"}, or null
     let k = findKey(stage.profiles, login);
     if (k !== undefined) return { profile: stage.profiles[k], state: "staged" };
@@ -403,77 +413,132 @@ export function createEditor(app) {
       : PICKS.some(([x]) => x === k) ? S.byId.get(p[k])?.name || p[k] : p[k]);
     return Object.keys(PLABEL).filter(k => p[k]).map(k => `${PLABEL[k]}: ${show(k)}`);
   }
-  const factRow = (f = { label: "", value: "" }) => `<div class="frow"><input data-fl maxlength="${LIMITS.label}" value="${esc(f.label)}" placeholder="Label" aria-label="Label"><input data-fv maxlength="${LIMITS.value}" value="${esc(f.value)}" placeholder="Value" aria-label="Value"></div>`;
-  function profileFormHtml(p, exists) {
-    const row = (f, label, input) => `<div class="erow" data-row="${f}"><label for="pf-${f}">${label}</label><div class="ein">${input}</div></div>`;
-    const cardRow = ([k, label]) => row(k, label, `<input id="pf-${k}" list="dl-pcards" value="${esc(p[k] ? S.byId.get(p[k])?.name || p[k] : "")}" placeholder="card name">`);
-    const own = mine(p.login);
-    return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit profile">
-      <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
-      <h2>${own ? "Your profile" : `${esc(p.login)}'s profile`}</h2>
-      <p class="muted">Everything is optional. Goes into your batch as <span class="kbd">${esc(files().profiles)}/${esc(p.login)}.json</span>; the page is u/${esc(p.login)}/.</p>
-      <form id="edit-form" class="edit-form" autocomplete="off">
-        <fieldset><legend>About</legend>
-          ${row("author", "Cards as", `<input id="pf-author" list="dl-people" value="${esc(p.author || "")}" placeholder="the name on your cards"><datalist id="dl-people">${(S.data.people || []).map(x => `<option value="${esc(x)}">`).join("")}</datalist><span class="muted">Links the profile to your cards (the name in Card Authors.txt).</span>`)}
-          ${row("motto", "Motto", `<input id="pf-motto" maxlength="${LIMITS.motto}" value="${esc(p.motto || "")}" placeholder="one line">`)}
-          ${row("series", "Series", `<select id="pf-series"><option value="">—</option>${opts([...profileCtx().series].sort((a, b) => a.localeCompare(b)).map(s => [s, s]), p.series || "")}</select>`)}
-        </fieldset>
-        <fieldset><legend>Cards</legend>${PICKS.map(cardRow).join("")}
-          <datalist id="dl-pcards">${S.cards.map(c => `<option value="${esc(c.name)}">`).join("")}</datalist></fieldset>
-        <fieldset><legend>Featured hand</legend>
-          ${row("deck", "Share link", `<input id="pf-deck" value="${esc(p.deck || "")}" placeholder="a deck builder share link or code"><button type="button" class="ghost" data-deck="mine">Use my current hand</button>`)}
-        </fieldset>
-        <fieldset><legend>More</legend><p class="muted egroup-note">Up to ${LIMITS.facts} label/value pairs, anything you like.</p>
-          <div id="pf-facts">${(p.facts || []).map(factRow).join("")}${factRow()}</div>
-          <div class="actions"><button type="button" class="ghost" data-fact="add">+ Pair</button></div>
-        </fieldset>
-        <div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
-        <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button>
-          ${exists ? `<button type="button" class="ghost danger" data-action="profile-remove" data-login="${esc(p.login)}" style="margin-left:auto">Remove profile</button>` : ""}</div>
-      </form></div>`;
-  }
-  function readProfileForm(login) {
-    const f = id => document.getElementById(`pf-${id}`).value;
-    const raw = { login, author: f("author"), motto: f("motto"), series: f("series"), deck: deckCode(f("deck")),
-      facts: [...document.querySelectorAll("#pf-facts .frow")].map(r => ({ label: r.querySelector("[data-fl]").value, value: r.querySelector("[data-fv]").value })) };
-    for (const [k] of PICKS) raw[k] = cardByText(f(k));
-    return validateProfile(raw, profileCtx());
-  }
-  async function openProfile(login = "") {
+  function openProfile(login = "") {               // go to the profile's page editor: your own, or anyone's for admins
     if (!me) { openHub("Sign in to make your profile.", () => openProfile(login)); return; }
     login ||= me.login;
-    const own = mine(login);
-    if (!own && !me.admin) { app.toast("Only admins can edit someone else's profile"); return; }
+    app.closeModal();
+    if (!mine(login) && !me.admin) {                 // signed in from the editor's placeholder without the right: back to the person
+      app.toast("Only admins can edit someone else's profile");
+      if (app.route().edit) location.replace(`#/u/${encodeURIComponent(login)}`);
+      return;
+    }
+    app.goEdit(login);
+  }
+  const factRow = (f = { label: "", value: "" }) => `<div class="frow"><input data-fl maxlength="${LIMITS.label}" value="${esc(f.label)}" placeholder="Label" aria-label="Label"><input data-fv maxlength="${LIMITS.value}" value="${esc(f.value)}" placeholder="Value" aria-label="Value"><button type="button" class="ghost icon" data-fact="remove" aria-label="Remove this pair">✕</button></div>`;
+  const slotHtml = ([k, label], id = "") => {      // a card slot: the chosen card's tile, or an empty slot; Pick opens the picker
+    const c = id ? S.byId.get(id) : null;
+    return `<div class="pslot" data-slot="${k}"><div class="pick-label">${esc(label)}</div>
+      ${c ? app.tile(c) : `<div class="slot">${id ? "Unknown card" : k.endsWith("Item") ? "No item" : "No card"}</div>`}
+      <div class="actions"><button type="button" class="ghost" data-pf-pick="${k}">Pick</button>${id ? `<button type="button" class="ghost" data-pf-clear="${k}">Clear</button>` : ""}</div>
+      <input type="hidden" id="pf-${k}" value="${esc(id)}"></div>`;
+  };
+  const handHtml = code => {                       // the featured hand as stored: its name and size
+    if (!code) return `<span class="muted">No featured hand.</span>`;
+    const d = decodeDeck(code);
+    return `${d ? `<b>${esc(d.name)}</b> <span class="muted">${d.cards.length + (d.field ? 1 : 0)} cards</span>` : `<span class="err">Not a deck builder share link</span>`} <button type="button" class="ghost" data-hand="">Clear</button>`;
+  };
+  const handsHtml = decks => savedHands(decks).map(h => `<button type="button" data-hand="${esc(h.id)}"${h.n ? "" : " disabled"} title="Use this saved hand">${esc(h.name)} <span class="muted">${h.n}</span></button>`).join("");
+  function profilePageHtml(p, st, exists) {
+    const row = (f, label, input) => `<div class="erow" data-row="${f}"><label for="pf-${f}">${label}</label><div class="ein">${input}</div></div>`;
+    const own = mine(p.login), series = [...profileCtx().series].sort((a, b) => a.localeCompare(b));
+    return `<div class="profile-edit">
+      <form id="edit-form" class="edit-form panel" autocomplete="off" data-login="${esc(p.login)}" aria-label="Edit profile">
+        <h2>${own ? "Your profile" : `${esc(p.login)}'s profile`}</h2>
+        <p class="muted">Everything is optional. Goes into your batch as <span class="kbd">${esc(files().profiles)}/${esc(p.login)}.json</span>; the page is u/${esc(p.login)}/.</p>
+        <fieldset><legend>About</legend>
+          ${row("author", "Cards as", `<input id="pf-author" list="dl-people" value="${esc(st.author)}" placeholder="the name on your cards"><datalist id="dl-people">${(S.data.people || []).map(x => `<option value="${esc(x)}">`).join("")}</datalist><span class="muted">Links the profile to your cards (the name in Card Authors.txt).</span>`)}
+          ${row("motto", "Motto", `<input id="pf-motto" maxlength="${LIMITS.motto}" value="${esc(st.motto)}" placeholder="one line">`)}
+          ${row("series", "Series", `<select id="pf-series"><option value="">—</option>${opts(series.map(x => [x, x]), st.series)}</select>`)}
+        </fieldset>
+        <fieldset><legend>Cards</legend>
+          <div class="pslots">${PICKS.map(x => slotHtml(x, st[x[0]])).join("")}</div>
+          <div id="pf-picker" class="pick-panel" hidden><div class="toolbar"><b id="pf-picker-title"></b><button type="button" class="ghost" data-pf-pickclose>Close</button></div><div id="pf-picker-body"></div></div>
+        </fieldset>
+        <fieldset><legend>Featured hand</legend>
+          <div id="pf-hand" class="hand-now">${handHtml(st.deck)}</div><input type="hidden" id="pf-deck" value="${esc(st.deck)}">
+          <div class="actions">${handsHtml(app.savedDecks())}</div>
+          <input id="pf-deck-link" class="wide" placeholder="…or paste a deck builder share link" aria-label="Share link">
+          <p class="muted egroup-note">The hand is stored as it is now: later changes in the deck builder don't follow.</p>
+        </fieldset>
+        <fieldset><legend>More</legend><p class="muted egroup-note">Up to ${LIMITS.facts} label/value pairs, anything you like.</p>
+          <div id="pf-facts">${(st.facts.length ? st.facts : [undefined]).map(f => factRow(f)).join("")}</div>
+          <div class="actions"><button type="button" class="ghost" data-fact="add">+ Pair</button></div>
+        </fieldset>
+        <div class="edit-summary muted" id="pf-summary" aria-live="polite"></div>
+        <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button>
+          ${exists ? `<button type="button" class="ghost danger" data-action="profile-remove" data-login="${esc(p.login)}" style="margin-left:auto">Remove profile</button>` : ""}</div>
+      </form>
+      <aside class="edit-preview" aria-label="Preview"><h3 class="egroup">Preview</h3><div id="pf-preview"></div></aside></div>`;
+  }
+  function readState(form) {                       // the form -> profileState's shape (the pasted link moves into #pf-deck once it decodes)
+    const v = id => form.querySelector(`#pf-${id}`).value;
+    return { author: v("author"), motto: v("motto"), series: v("series"), ...Object.fromEntries(PICKS.map(([k]) => [k, v(k)])), deck: v("deck"),
+      facts: [...form.querySelectorAll("#pf-facts .frow")].map(r => ({ label: r.querySelector("[data-fl]").value, value: r.querySelector("[data-fv]").value })) };
+  }
+  async function profilePage(login) {              // the route #/u/<login>/edit
+    // still the page to show after the await: no newer call, and the view's route (S.listHash: a card dialog above keeps it) unchanged
+    const run = ++pageRun, start = S.listHash, here = () => run === pageRun && S.listHash === start;
+    if (!me) {
+      app.view.innerHTML = `<div class="profile"><div class="empty">${booting ? "Signing in…" : `Sign in to edit this profile.<p><button type="button" class="primary" data-action="profile-signin" data-login="${esc(login)}">Sign in</button></p>`}</div></div>`;
+      if (!booting) openHub(`Sign in to edit ${login}'s profile.`, () => openProfile(login));
+      return;
+    }
+    if (!mine(login) && !me.admin) { app.toast("Only admins can edit someone else's profile"); location.replace(`#/u/${encodeURIComponent(login)}`); return; }
+    if (!S.userBy) app.view.innerHTML = `<div class="loading">Loading the profile…</div>`;
     const published = (await app.users().catch(() => new Map())).get(login.toLowerCase()) || null;
+    if (!here()) return;
     const pending = profileOf(login), live = pending?.state === "sent" ? pending.profile : published;   // the file in the repo (null: none)
-    const p = (pending ? pending.profile : published) || { login: live?.login || (own ? me.login : login) };   // the file's own spelling
+    const p = (pending ? pending.profile : published) || { login: live?.login || (mine(login) ? me.login : login) };   // the file's own spelling
     const base = (pending ? pending.profile : published) || { login: p.login };        // what an untouched form reads as
-    app.modal.innerHTML = profileFormHtml(p, !!live);                                   // in the repo: it can be removed
-    app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
-    const form = document.getElementById("edit-form"), summary = document.getElementById("ef-summary");
+    const key = p.login.toLowerCase(), own = mine(p.login);
+    app.view.innerHTML = profilePageHtml(p, drafts.get(key) || profileState(p), !!live);   // in the repo: it can be removed
+    const form = app.view.querySelector("#edit-form"), q = sel => form.querySelector(sel), previewEl = app.view.querySelector("#pf-preview");
     const update = () => {
-      const r = readProfileForm(p.login), lines = describeProfile(r.profile);
-      summary.innerHTML = r.errors.length ? `<span class="err">${r.errors.map(esc).join(" · ")}</span>` : lines.length ? lines.map(esc).join(" · ") : "Nothing but your login yet.";
-      form.dataset.dirty = sameProfile(r.profile, base) ? "" : "1";
+      const st = readState(form), r = validateProfile({ login: p.login, ...st }, profileCtx()), lines = describeProfile(r.profile);
+      if (q("#pf-deck-link").value.trim()) r.errors.unshift("Featured hand: not a deck builder share link");   // the box only keeps text that didn't decode
+      q("#pf-summary").innerHTML = r.errors.length ? `<span class="err">${r.errors.map(esc).join(" · ")}</span>` : lines.length ? lines.map(esc).join(" · ") : "Nothing but your login yet.";
+      const dirty = !sameProfile(r.profile, base);
+      form.dataset.dirty = dirty ? "1" : "";
+      if (dirty) drafts.set(key, st); else drafts.delete(key);
+      previewEl.innerHTML = profileHtml({ login: p.login, profile: r.profile, own, byId: S.byId, cards: S.cards, tile: app.tile, preview: true });
       return r;
     };
-    form.addEventListener("input", update);
-    form.addEventListener("change", update);
+    const setSlot = (k, id) => { q(`[data-slot="${k}"]`).outerHTML = slotHtml(PICKS.find(([x]) => x === k), id); };
+    const setHand = code => { q("#pf-deck").value = code; q("#pf-deck-link").value = ""; q("#pf-hand").innerHTML = handHtml(code); };
+    const closePicker = () => { q("#pf-picker").hidden = true; q("#pf-picker-body").innerHTML = ""; };
+    const openPicker = k => {
+      const [, label] = PICKS.find(([x]) => x === k), item = k.endsWith("Item");
+      q("#pf-picker").hidden = false; q("#pf-picker-title").textContent = `${label}: pick a card`;
+      pick.mount(q("#pf-picker-body"), { cards: S.cards, filter: item ? c => ITEM_KINDS.has(c.type) : null, tile: app.tile, kinds: app.kinds, kindOf: app.kindOf,
+        placeholder: "Search… (the search box's syntax)", onChoose: id => { setSlot(k, id); closePicker(); update(); q(`[data-pf-pick="${k}"]`).focus(); } });
+    };
+    const outsidePicker = e => !e.target.closest("#pf-picker");
+    form.addEventListener("input", e => { if (outsidePicker(e)) update(); });
+    form.addEventListener("change", e => { if (outsidePicker(e)) update(); });
     form.addEventListener("click", e => {
-      if (e.target.closest("[data-fact]")) { document.getElementById("pf-facts").insertAdjacentHTML("beforeend", factRow()); return; }
-      if (e.target.closest("[data-deck]")) { document.getElementById("pf-deck").value = app.myHand(); update(); }
+      const t = sel => e.target.closest(sel);
+      if (t("[data-pf-pick]")) { openPicker(t("[data-pf-pick]").dataset.pfPick); return; }
+      if (t("[data-pf-clear]")) { setSlot(t("[data-pf-clear]").dataset.pfClear, ""); update(); return; }
+      if (t("[data-pf-pickclose]")) { closePicker(); return; }
+      if (t("[data-hand]")) { const d = app.savedDecks().find(x => x.id === t("[data-hand]").dataset.hand); setHand(d ? encodeDeck(d) : ""); update(); return; }
+      const fact = t("[data-fact]")?.dataset.fact;
+      if (fact === "add") { q("#pf-facts").insertAdjacentHTML("beforeend", factRow()); q("#pf-facts .frow:last-child input").focus(); }
+      else if (fact === "remove") { t(".frow").remove(); update(); }
     });
+    q("#pf-deck-link").addEventListener("input", e => { const code = deckCode(e.target.value); if (e.target.value.trim() && decodeDeck(code)) { setHand(code); update(); } });
+    q("#pf-deck-link").addEventListener("keydown", e => { if (e.key === "Enter") e.preventDefault(); });   // not the form's submit
     form.addEventListener("submit", e => {
       e.preventDefault();
       const { profile, errors } = update();
       if (errors.length) { app.toast(errors[0]); return; }
       if (sameProfile(profile, live)) delete stage.profiles[p.login]; else stage.profiles[p.login] = profile;
       save();
+      drafts.delete(key); form.dataset.dirty = "";
       app.toast(stage.profiles[p.login] ? `Added to the batch: ${count()} unpublished` : "Same as the published profile");
       app.goUser(p.login);
     });
     update();
-    document.getElementById("pf-author").focus();
+    if (app.modal.hidden) q("#pf-author").focus();   // not when rebuilt under a dialog (a rerender from the review or a card)
   }
 
   // ---- publishing
@@ -647,9 +712,10 @@ export function createEditor(app) {
   const actions = {
     "edit-hub": () => openHub(),
     "edit-card": el => openForm(el.dataset.id || app.currentCard()),
-    "edit-cancel": () => {
-      const form = document.getElementById("edit-form");
+    "edit-cancel": () => {                       // the card dialog's form, else the profile page's
+      const form = app.modal.querySelector("#edit-form") || document.getElementById("edit-form");
       if (form?.dataset.dirty && !confirm("Discard these changes?")) return;
+      if (form && !app.modal.contains(form)) { drafts.delete(form.dataset.login.toLowerCase()); form.dataset.dirty = ""; location.replace(`#/u/${encodeURIComponent(form.dataset.login)}`); return; }
       const id = app.currentCard(); if (id) app.goCard(id); else app.closeModal();
     },
     "edit-review": () => app.showDialog(reviewHtml()),
@@ -659,10 +725,12 @@ export function createEditor(app) {
     "edit-discard-all": () => { if (!confirm(`Discard ${count()} unpublished change${count() > 1 ? "s" : ""}?`)) return; stage = emptyStage(); save(); app.rerender(); },
     "edit-discard-profile": el => { delete stage.profiles[el.dataset.login]; save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
     "profile-edit": el => openProfile(el?.dataset?.login || ""),
+    "profile-signin": el => openHub(`Sign in to edit ${el.dataset.login}'s profile.`, () => openProfile(el.dataset.login)),
     "profile-remove": el => {
-      const login = el.dataset.login;
+      const login = el.dataset.login, form = document.getElementById("edit-form");
       if (!confirm(`Remove ${login}'s profile? The file goes with your next publish.`)) return;
-      stage.profiles[login] = null; save(); app.toast(`Removal added to the batch: ${count()} unpublished`); app.goUser(login);
+      stage.profiles[login] = null; save(); drafts.delete(login.toLowerCase()); if (form) form.dataset.dirty = "";
+      app.toast(`Removal added to the batch: ${count()} unpublished`); app.goUser(login);
     },
     "edit-dismiss-sent": () => { localStorage.removeItem(K.sent); preview(); app.rerender(); },
     "edit-publish": async el => {
@@ -686,10 +754,10 @@ export function createEditor(app) {
     init() {
       S.showHidden = !!localStorage.getItem(K.hidden);
       preview();
-      if (token) signIn(token, !!localStorage.getItem(K.token)).then(() => { app.derive(); app.rerender(); }, () => {});
+      if (token) signIn(token, !!localStorage.getItem(K.token)).then(() => app.derive(), () => {}).finally(() => { booting = false; app.rerender(); });
     },
     open: openForm,
     refresh: preview,
-    profileOf, pendingProfiles, openProfile,
+    profileOf, pendingProfiles, profilePage,
   };
 }

@@ -17,9 +17,10 @@ Where the data comes from:
   * Profiles: site/profiles/<login>.json, made on the website by signed-in editors (own profile; admins any) and
     published with the edit batch. Validated here (bad files skipped, bad fields dropped, never a failed build).
   * Image versions and contributions: one pass over the git history (commit metadata only, no file contents) lists
-    every commit that changed each card PNG, following exact renames (folder moves), and counts per person the commits
-    that added or changed a card (PSD or PNG) and the publish batches (commits to Card Edits.json). Needs full history:
-    a shallow clone gets no image versions and counts edit batches from the file's _by/_at stamps instead.
+    every commit that changed each card PNG, following exact renames (folder moves), gives each card its first upload
+    (fs, for the person pages' newest cards), and counts per person the commits that added or changed a card (PSD or
+    PNG) and the publish batches (commits to Card Edits.json). Needs full history: a shallow clone gets no image
+    versions, no fs, and counts edit batches from the file's _by/_at stamps instead.
 PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
@@ -66,6 +67,8 @@ MIN_CARDS = 100                              # fewer cards than this in stats.pk
 # the game's names for each card_type (rulebook: creature/item decks, field cards, N.M.E. items, auxiliary decks)
 KIND_LABEL = {"creature": "Creature", "item": "Item", "field": "Field card", "minion": "Minion", "nme": "N.M.E. item",
               "aux item": "Auxiliary item", "creatures": "Auxiliary creature", "debuff": "Debuff", "buff": "Buff"}
+KIND_PLURAL = {"creature": "creatures", "item": "items", "field": "field cards", "minion": "minions", "nme": "N.M.E. items",
+               "aux item": "auxiliary items", "status": "status effects", "creatures": "auxiliary creatures"}   # app.js KINDS
 CARD_FOLDERS = ("Creatures/", "Items/", "Field/", "N.M.E/", "Auxiliary/")
 # the hand-kept website files, directly under site/ (in MDW/ until 2026-10-20); read by the build and the bot, never published
 AUTHORS_PATH = "site/Card Authors.txt"
@@ -250,6 +253,11 @@ def og_size(path):
         return im.size
 
 
+def clip(text, limit=300):
+    """A link-preview description: Discord shows about this much."""
+    return text if len(text) <= limit else text[:limit - 3].rsplit(" ", 1)[0] + "…"
+
+
 def share_text(c):
     """Kind line, stats line, ability: the card's link-preview description."""
     kind = KIND_LABEL.get(c["type"], c["type"].title())
@@ -259,8 +267,7 @@ def share_text(c):
     text = re.sub(r"\[([^\[\]:]+)(?::\s*(no|tint|sticker))?\]",
                   lambda m: ("non-" if m.group(2) == "no" else "") + m.group(1).replace("_", " ").title(), c.get("ability", "") or "")
     text = "\n".join(" ".join(line.split()) for line in text.splitlines() if line.strip())
-    out = "\n".join(filter(None, [head, stats, text]))
-    return out if len(out) <= 300 else out[:297].rsplit(" ", 1)[0] + "…"
+    return clip("\n".join(filter(None, [head, stats, text])))
 
 
 def site_banner(cards, path):
@@ -592,8 +599,9 @@ def read_profiles(cards, people):
     return [out[k] for k in sorted(out)]
 
 
-def profile_text(p, n_cards, by_id, contrib=""):
-    """The profile page's link-preview description; contrib: the person's contrib_text line, if they have contributions."""
+def profile_text(p, n_cards, by_id, contrib="", cards_line=""):
+    """The profile page's link-preview description; contrib: the person's contrib_text line, if they have contributions;
+    cards_line: their cards_text line, if they have cards."""
     lines = [p["motto"]] if p.get("motto") else []
     if p.get("author"):
         lines.append(f"{n_cards} card{'' if n_cards == 1 else 's'} by {p['author']}" + (f" · {p['series']}" if p.get("series") else ""))
@@ -607,8 +615,7 @@ def profile_text(p, n_cards, by_id, contrib=""):
     deck = decode_deck(p["deck"]) if p.get("deck") else None
     if deck:
         lines.append(f"Featured hand: {(one_line(deck['name']) or 'Shared hand')[:60]}")
-    out = "\n".join(lines) or f"{p['login']}'s profile"
-    return out if len(out) <= 300 else out[:297].rsplit(" ", 1)[0] + "…"
+    return person_text(lines, cards_line) or f"{p['login']}'s profile"
 
 
 def build_branch():
@@ -815,6 +822,40 @@ def contrib_text(r, titles, with_cards=True):
     parts = list(titles) + ([n("cards", "card")] if with_cards and r["cards"] else []) + ([n("edits", "edit")] if r["edits"] else []) \
         + ([n("commits", "card commit")] if r["commits"] else [])
     return " · ".join(parts)
+
+
+def kind_of(c):
+    """The card's kind as the site's filters group it: status effects together (app.js kindOf)."""
+    return "status" if c.get("type") in ("buff", "debuff") else c.get("type")
+
+
+def cards_text(key, cards):
+    """One link-preview line for a person's cards: "120 items, 53 creatures, 32 field cards · mostly Hollow Knight, The
+    Binding of Isaac" (the three biggest kinds and series); "" without cards. Counts as cardsBy() in profile.js."""
+    own = [c for c in cards if key and c.get("author") == key and not c.get("dup") and not c.get("hidden")]
+    if not own:
+        return ""
+    kinds, series = {}, {}
+    for c in own:
+        kinds[kind_of(c)] = kinds.get(kind_of(c), 0) + 1
+        if c.get("series"):
+            series[c["series"]] = series.get(c["series"], 0) + 1
+    order = list(KIND_PLURAL)
+    by_count = sorted(kinds.items(), key=lambda kv: (-kv[1], order.index(kv[0]) if kv[0] in order else len(order), kv[0]))
+    word = lambda k, n: (KIND_PLURAL.get(k, k) if n != 1 else KIND_PLURAL.get(k, k).rstrip("s"))     # 1 field card, 2 field cards
+    line = ", ".join(f"{n} {word(k, n)}" for k, n in by_count[:3])
+    top = sorted(series.items(), key=lambda kv: (-kv[1], kv[0].lower()))[:3]
+    return line + (f" · mostly {', '.join(name for name, _ in top)}" if top else "")
+
+
+def person_text(lines, cards_line="", limit=300):
+    """A person's link-preview description: the lines, then the cards line last, whole series dropped from its "mostly"
+    list (then the list itself) rather than cut mid-name when the cap is near."""
+    head = "\n".join(filter(None, lines))
+    while cards_line and len(head) + len(cards_line) + 1 > limit:
+        kinds, _, mostly = cards_line.partition(" · mostly ")
+        cards_line = f"{kinds} · mostly {mostly.rsplit(', ', 1)[0]}" if ", " in mostly else kinds if mostly else ""
+    return clip("\n".join(filter(None, [head, cards_line])), limit)
 
 
 # ---- ban list --------------------------------------------------------------------------------------
@@ -1090,7 +1131,7 @@ def main():
     found = image_versions(list(by_png), commits)
     versions = {"available": found is not None, "repo": CARD_REPO, "commits": [], "cards": {}}
     if found:
-        index = {}
+        index, rule_ids = {}, {e["id"] for e in rules}
         for png, vs in found.items():
             rows = []
             for (sha, ts, author, subject), path in vs:
@@ -1098,6 +1139,9 @@ def main():
                     index[sha] = len(versions["commits"])
                     versions["commits"].append([sha, ts, person(people, author), subject])
                 rows.append([index[sha]] + ([path] if path != png else []))
+            for e in by_png[png]:                 # fs: first upload (the oldest row), for the person pages' newest cards
+                if rows and e["id"] not in rule_ids:
+                    e["fs"] = min(ts for (_, ts, _, _), _ in vs)
             if len(rows) > 1:                     # one version = nothing to compare
                 for e in by_png[png]:
                     versions["cards"][e["id"]] = rows
@@ -1210,7 +1254,8 @@ def main():
     for p in profiles:                            # u/<login>/: the favourite card as the preview image, else the site banner
         n = sum(1 for c in cards if c.get("author") == p["author"] and not c.get("dup") and not c.get("hidden")) if p.get("author") else 0   # as cardsBy() counts
         r = person_of.get(p["login"].lower())
-        desc = profile_text(p, n, by_id, contrib_text(r, titles[r["key"]], with_cards=not p.get("author")) if r else "")
+        desc = profile_text(p, n, by_id, contrib_text(r, titles[r["key"]], with_cards=not p.get("author")) if r else "",
+                            cards_text(r["key"] if r else p.get("author"), cards))
         fav = by_id.get(p.get("favourite") or "")
         image, size = og_image(fav) if fav and fav.get("img") else ((f"{SITE_URL}/og.jpg", (1200, 630)) if SITE_URL else ("", None))
         share_page(("u", p["login"]), [
@@ -1223,7 +1268,7 @@ def main():
     for r in contrib["people"]:                   # u/<key>/ for a contributor without a profile: the same page, the site banner as its image
         if any(login.lower() in with_profile for login in r["logins"]) or not PAGE_KEY_RE.match(r["key"]):
             continue
-        desc = contrib_text(r, titles[r["key"]])
+        desc = person_text([contrib_text(r, titles[r["key"]])], cards_text(r["key"], cards))
         share_page(("u", r["key"]), [
             og_tags(r["key"], desc, f"{SITE_URL}/u/{r['key']}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630)),
             '<meta name="theme-color" content="#3987e5">',

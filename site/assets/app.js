@@ -40,6 +40,7 @@ const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const ghUrl = p => `https://github.com/${S.data.repo}/blob/main/${urlPath(p)}`;
 const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
 const date = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "");
+const month = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short" }) : "");
 const isStatus = c => c.type === "debuff" || c.type === "buff";
 const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : "");             // item types read "Support", as in the rulebook
 const kindOf = c => (isStatus(c) ? "status" : c.type);
@@ -121,7 +122,8 @@ function derive() {
 }
 const currentCard = () => (parseHash().name === "card" && !modal.hidden ? parseHash().arg : "");
 const goCard = id => { if (parseHash().name === "card" && parseHash().arg === id) openCard(id); else location.hash = `#/card/${id}`; };
-const goUser = login => { const r = parseHash(); if (r.name === "u" && r.arg.toLowerCase() === login.toLowerCase()) { closeModal(); renderView(r, hashOf(r)); } else location.hash = `#/u/${encodeURIComponent(login)}`; };
+const goUser = login => { const r = parseHash(); if (r.name === "u" && !r.edit && r.arg.toLowerCase() === login.toLowerCase()) { closeModal(); renderView(r, hashOf(r)); } else location.hash = `#/u/${encodeURIComponent(login)}`; };
+const goEdit = login => { const r = parseHash(); if (r.name === "u" && r.edit && r.arg.toLowerCase() === login.toLowerCase()) renderView(r, hashOf(r)); else location.hash = `#/u/${encodeURIComponent(login)}/edit`; };
 function rerender() {
   const onCard = parseHash().name === "card", base = onCard ? S.listHash : location.hash || hashOf(parseHash());
   if (S.renderedHash) renderView(parseHash(base), base);
@@ -131,7 +133,9 @@ const editor = createEditor({
   S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
   openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
   iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
-  users: () => loadUsers(), goUser, myHand: () => D.encode(deck()), onAuth: () => renderAccount(),
+  users: () => loadUsers(), goUser, goEdit, onAuth: () => renderAccount(),
+  // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
+  view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
 });
 // top right: "Sign in", or the login; both open the editor hub
 function renderAccount() {
@@ -150,12 +154,13 @@ function parseHash(hash = location.hash) {
   }
   const [path, query = ""] = h.split("?");
   const parts = path.split("/").filter(Boolean).map(decodeURIComponent);
+  if (parts[0] === "u" && parts.length === 3 && parts[2] === "edit") return { name: "u", arg: parts[1], edit: true, params: new URLSearchParams(query) };   // the profile editor
   return { name: parts[0] || "cards", arg: parts.slice(1).join("/"), params: new URLSearchParams(query) };
 }
-const hashOf = r => `#/${r.name}${r.arg ? `/${encodeURIComponent(r.arg)}` : ""}`;     // the route's hash when the address bar has none
-// address bar shows the shareable URL: c/<id>/ for cards, u/<login>/ for profiles, d/#/deck/… for shared hands
+const hashOf = r => `#/${r.name}${r.arg ? `/${encodeURIComponent(r.arg)}` : ""}${r.edit ? "/edit" : ""}`;     // the route's hash when the address bar has none
+// address bar shows the shareable URL: c/<id>/ for cards, u/<login>/ for profiles, d/#/deck/… for shared hands; the profile editor stays a hash route
 function syncUrl(r) {
-  const want = r.name === "card" ? shareUrl(r.arg) : r.name === "u" && r.arg ? userUrl(r.arg) : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
+  const want = r.name === "card" ? shareUrl(r.arg) : r.name === "u" && r.arg && !r.edit ? userUrl(r.arg) : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
   if (location.href !== want) history.replaceState(history.state, "", want);
 }
 function route() {
@@ -179,7 +184,7 @@ function renderView(r, hash) {
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
   const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare, users: renderUsers, u: renderUser };
   (views[r.name] || renderCards)(r);
-  const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.arg || "People" };
+  const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.edit ? "Edit profile" : r.arg || "People" };
   document.title = `${titles[r.name] || "Cards"} · Impossibility Simulator`;
 }
 function setParams(updates, { replace = true } = {}) {
@@ -649,6 +654,7 @@ function usersReady(name, again) {
 }
 function renderUser(r) {
   if (!r.arg) { location.replace("#/users"); return; }                                  // #/u alone is the list
+  if (r.edit) { editor.profilePage(r.arg); return; }                                    // #/u/<login>/edit: the profile editor
   if (!usersReady("u", renderUser)) return;
   const me = editor.me, people = S.contrib.people || [];
   let pending = editor.profileOf(r.arg), published = S.userBy.get(r.arg.toLowerCase()) || null;
@@ -664,7 +670,7 @@ function renderUser(r) {
   const own = !!me && (me.login.toLowerCase() === login.toLowerCase() || !!person?.logins.some(l => l.toLowerCase() === me.login.toLowerCase()));
   view.innerHTML = personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
     own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }),
-    available: !!S.contrib.available, titles: S.titles, date });
+    available: !!S.contrib.available, titles: S.titles, date, month, kinds: KINDS, kindOf });
 }
 function renderUsers() {
   if (!usersReady("users", renderUsers)) return;
@@ -739,7 +745,7 @@ async function copy(text, what) { try { await navigator.clipboard.writeText(text
 function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`; modal.hidden = false; }
 
 const actions = {
-  "close": () => { if ($("#edit-form")) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
+  "close": () => { if ($("#edit-form", modal)) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
   "toggle-param": el => { const p = parseHash().params, cur = csv(p, el.dataset.key), v = el.dataset.value;
     setParams({ [el.dataset.key]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); },
   "select-param": el => { const k = el.dataset.key, ser = el.selectedOptions?.[0]?.dataset.series;      // a shared subseries picks its series too
@@ -833,7 +839,7 @@ document.addEventListener("keydown", e => {
   }
   const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
   if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) document.activeElement.blur(); return; }
-  if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (typing || e.metaKey || e.ctrlKey || e.altKey || $("#edit-form")) return;        // no single-key shortcuts while a form (card dialog, profile editor) is up
   const inCard = !modal.hidden && parseHash().name === "card", id = parseHash().arg;
   if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }
   else if (e.key === "?") showKeys();
@@ -844,7 +850,7 @@ document.addEventListener("keydown", e => {
   else if (inCard && e.key === "c") copy(shareUrl(id), "link: paste it in Discord");
   else if (inCard && e.key === "s") openShare(id);
   else if (inCard && e.key === "x") actions["compare-add"]({ dataset: { id } });
-  else if (inCard && e.key === "e" && !$("#edit-form")) { e.preventDefault(); editor.open(id); }
+  else if (inCard && e.key === "e") { e.preventDefault(); editor.open(id); }
   else if (e.key === "Enter" && document.activeElement?.dataset?.open) location.hash = `#/card/${document.activeElement.dataset.open}`;
 });
 

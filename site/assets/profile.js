@@ -5,6 +5,8 @@
 import { esc } from "./text.js";
 import { decode } from "./deck.js";
 
+export const RECENT_CARDS = 24;                                             // the person page's newest cards
+
 export const LOGIN_RE = /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/;              // a GitHub login
 export const LIMITS = { motto: 140, author: 60, facts: 12, label: 40, value: 200, deck: 2000 };
 export const PICKS = [["favourite", "Favourite card"], ["hated", "Hated card"], ["favouriteItem", "Favourite item"], ["hatedItem", "Hated item"]];
@@ -50,6 +52,9 @@ export function validateProfile(raw, ctx) {
 const sortKeys = v => (Array.isArray(v) ? v.map(sortKeys) : v && typeof v === "object" ? Object.fromEntries(Object.keys(v).sort().map(k => [k, sortKeys(v[k])])) : v);
 /** The file: keys sorted, 2-space indent, trailing newline (what Python's json.dumps(sort_keys=True, indent=2, ensure_ascii=False) writes). */
 export const profileFile = p => `${JSON.stringify(sortKeys(p), null, 2)}\n`;
+const noDate = p => Object.fromEntries(Object.entries(p || {}).filter(([k]) => k !== "updated"));
+/** The same profile, whatever the key order and the publish date (the build and the form order the keys differently). */
+export const sameProfile = (a, b) => profileFile(noDate(a)) === profileFile(noDate(b));
 /** A pasted deck link (…/d/#/deck/<code>) or a bare code -> the code. */
 export const deckCode = text => (String(text ?? "").match(/#\/deck\/([A-Za-z0-9_-]+)/) || [, String(text ?? "").trim()])[1];
 /** Published profiles with the unpublished ones applied; pending = Map lowercase login -> {profile | null (removed), state}. */
@@ -58,14 +63,33 @@ export function mergeUsers(published, pending) {
   for (const [k, v] of pending) out.set(k, v);
   return [...out.values()].filter(x => x.profile).sort((a, b) => a.profile.login.localeCompare(b.profile.login, undefined, { sensitivity: "base" }));
 }
-export const cardsBy = (author, cards) => cards.filter(c => c.author === author && !c.dup).length;    // a duplicate counts once
+/** The cards credited to a name, as the Author filter counts them: a duplicate counts once, hidden cards don't. */
+export const cardsOf = (author, cards) => (author ? cards.filter(c => c.author === author && !c.dup && !c.hidden) : []);
+export const cardsBy = (author, cards) => cardsOf(author, cards).length;
+/** The Cards panel's facts for a person's cards: kinds [[kind, n]] by count (ties in `kinds` order), the three biggest
+ *  series [[name, n]], the newest card (by fs, the first upload; null when no card has one) and the `recent` newest
+ *  cards (fs desc, cards without fs last, then name). kindOf(card) groups status effects (app.js kindOf). */
+export function cardFacts(list, { kindOf = c => c.type, kinds = [], recent = RECENT_CARDS } = {}) {
+  const count = (f, m = new Map()) => { for (const c of list) { const k = f(c); if (k) m.set(k, (m.get(k) || 0) + 1); } return m; };
+  const order = new Map(kinds.map(([k], i) => [k, i]));
+  const rank = k => (order.has(k) ? order.get(k) : kinds.length);
+  const byName = (a, b) => a.name.localeCompare(b.name);
+  const newest = list.slice().sort((a, b) => (b.fs || 0) - (a.fs || 0) || byName(a, b));
+  return {
+    kinds: [...count(kindOf)].sort((a, b) => b[1] - a[1] || rank(a[0]) - rank(b[0])),
+    series: [...count(c => c.series)].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 3),
+    newest: newest[0]?.fs ? newest[0] : null,
+    recent: newest.slice(0, recent),
+  };
+}
 
 // ---- pages -----------------------------------------------------------------------------------------
 const stateFact = state => (state === "staged" ? `<span class="fact staged">Unpublished</span>`
   : state === "sent" ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : "");
 const authorLink = (p, cards) => { const n = cardsBy(p.author, cards); return `<a class="fact" href="#/cards?author=${encodeURIComponent(p.author)}">${n} card${n === 1 ? "" : "s"} by ${esc(p.author)}</a>`; };
 
-/** x = {login, profile | null, state, removed, own, canEdit, byId, cards, tile(card)} */
+/** x = {login, profile | null, state, removed, own, canEdit, byId, cards, tile(card), preview?}; preview: the editor's live
+ *  preview, without the buttons and the unpublished state. */
 export function profileHtml(x) {
   const p = x.profile;
   if (!p) {
@@ -84,7 +108,7 @@ export function profileHtml(x) {
       ${p.author ? authorLink(p, x.cards) : ""}
       ${p.series ? `<a class="fact" href="#/cards?series=${encodeURIComponent(p.series)}" data-tip="Series">${esc(p.series)}</a>` : ""}
       ${p.updated ? `<span class="fact" data-tip="Profile last changed">updated ${esc(p.updated.slice(0, 10))}</span>` : ""}
-      ${stateFact(x.state)}
+      ${x.preview ? "" : stateFact(x.state)}
     </div>
     ${p.motto ? `<p class="motto">${esc(p.motto)}</p>` : ""}
     ${picks ? `<div class="picks">${picks}</div>` : ""}
@@ -92,11 +116,11 @@ export function profileHtml(x) {
     ${deck ? `<div class="related"><h3>Featured hand: ${esc(deck.name)} <span class="muted">${hand.length}</span></h3>
       ${hand.length ? `<div class="strip">${hand.map(x.tile).join("")}</div>` : `<p class="muted">None of its cards exist any more.</p>`}
       <p><a href="#/deck/${esc(p.deck)}">Open in the deck builder</a></p></div>` : ""}
-    <div class="actions">
+    ${x.preview ? "" : `<div class="actions">
       ${x.canEdit ? `<button type="button" data-action="profile-edit" data-login="${esc(p.login)}">Edit profile</button>` : ""}
       <button type="button" data-action="copy-user-link" data-login="${esc(p.login)}">Copy link</button>
       <a class="fact" href="#/users">All people</a>
-    </div></div></div>`;
+    </div>`}</div></div>`;
 }
 
 // ---- contributions (data/contributions.json) ----------------------------------------------------------
@@ -150,18 +174,37 @@ export function contributionsHtml(p, x) {
     ${p.recent?.length ? `<div class="related"><h3>Recent card commits</h3><ul>${p.recent.map(([ts, subject, n]) => `<li>${esc(x.date(ts))} <span class="muted">· ${esc(subject)} · ${plural(n, "card")}</span></li>`).join("")}</ul></div>` : ""}`;
 }
 
-/** The person page: the profile (when there is one) over the contributions; a contributor without a profile gets a
- *  plain header instead. x = profileHtml's x + {person | null, available, titles, date} */
+/** The Cards panel: the person's cards by kind (chips to the Cards tab), their biggest series, the newest card (from
+ *  fs, the first upload; left out when the build had no history) and the newest cards.
+ *  x = {cards, kinds ([[kind, label]], app.js KINDS), kindOf, month(ts), tile(card)} */
+export function cardsPanelHtml(p, x) {
+  const own = cardsOf(p.key, x.cards);
+  if (!own.length) return "";
+  const f = cardFacts(own, { kindOf: x.kindOf, kinds: x.kinds });
+  const label = k => (x.kinds.find(([key]) => key === k) || [k, k])[1];
+  const by = `author=${encodeURIComponent(p.key)}`;
+  return `<div class="profile"><div class="panel"><h3>Cards <span class="muted">${own.length}</span></h3>
+    <div class="chips">${f.kinds.map(([k, n]) => `<a class="chip" href="#/cards?${by}&kind=${encodeURIComponent(k)}">${esc(label(k))}<span class="n">${n}</span></a>`).join("")}</div>
+    <div class="facts">
+      ${f.series.length ? `<span class="fact">Mostly ${f.series.map(([s, n]) => `<a href="#/cards?${by}&series=${encodeURIComponent(s)}">${esc(s)}</a> <span class="muted">${n}</span>`).join(", ")}</span>` : ""}
+      ${f.newest ? `<span class="fact" data-tip="First upload of the card image">Newest card: <a href="#/card/${f.newest.id}">${esc(f.newest.name)}</a> · ${esc(x.month(f.newest.fs))}</span>` : ""}
+    </div>
+    <div class="grid" style="--tile:120px">${f.recent.map(x.tile).join("")}</div>
+    <p><a href="#/cards?${by}&sort=new">All ${plural(own.length, "card")}</a></p></div></div>`;
+}
+
+/** The person page: the profile (when there is one) over the contributions and the Cards panel; a contributor without
+ *  a profile gets a plain header instead. x = profileHtml's x + cardsPanelHtml's x + {person | null, available, titles, date} */
 export function personHtml(x) {
   const { person, profile } = x;
   if (!person) return profileHtml(x);
-  if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>`;
+  if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>${cardsPanelHtml(person, x)}`;
   return `<div class="profile"><div class="panel"><h2>${esc(person.key)}</h2>${contributionsHtml(person, x)}
     <div class="actions">
       ${x.own ? `<button type="button" class="primary" data-action="profile-edit">Make your profile</button>` : ""}
       <button type="button" data-action="copy-user-link" data-login="${esc(person.key)}">Copy link</button>
       <a class="fact" href="#/users">All people</a>
-    </div></div></div>`;
+    </div></div></div>${cardsPanelHtml(person, x)}`;
 }
 
 /** rows = peopleRows(...); x = {me, hasOwn, available, since, titles (Map), date(ts)} */

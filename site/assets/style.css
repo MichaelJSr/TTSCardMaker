@@ -79,6 +79,7 @@ main { padding: 16px; outline: none; }
 .chip:hover { background: var(--surface-2); }
 .chip.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 .chip .n { opacity: .65; margin-left: 4px; font-size: 11px; }
+a.chip:hover { text-decoration: none; }
 .icon-toggles { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 4px; }
 .icon-toggle { width: 34px; height: 34px; padding: 3px; border-radius: 8px; background: transparent; border: 1px solid var(--border); }
 .icon-toggle img { width: 100%; height: 100%; object-fit: contain; }
@@ -310,10 +311,26 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .pick-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
 .pairs { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 14px 0; font-size: 14.5px; }
 .pairs dt { color: var(--muted); } .pairs dd { margin: 0; overflow-wrap: anywhere; }
-.frow { display: grid; grid-template-columns: 1fr 2fr; gap: 6px; margin: 6px 0; }
+.frow { display: grid; grid-template-columns: 1fr 2fr auto; gap: 6px; margin: 6px 0; align-items: center; }
 .frow input { min-width: 0; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface-2); }
-.edit-summary .err { color: var(--danger); }
-@media (max-width: 640px) { .pairs { grid-template-columns: 1fr; gap: 2px 0; } .pairs dd { margin-bottom: 8px; } .frow { grid-template-columns: 1fr; } }
+.edit-summary .err, .err { color: var(--danger); }
+@media (max-width: 640px) { .pairs { grid-template-columns: 1fr; gap: 2px 0; } .pairs dd { margin-bottom: 8px; } .frow { grid-template-columns: 1fr 1fr auto; } }
+/* the profile editor page (#/u/<login>/edit): the form left, a live preview right */
+.profile-edit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; max-width: 1400px; margin: auto; }
+@media (max-width: 980px) { .profile-edit { grid-template-columns: minmax(0, 1fr); } .edit-preview { position: static !important; } }
+.profile-edit form h2 { margin: 0 0 6px; font-size: 22px; }
+.edit-preview { position: sticky; top: 64px; }
+.edit-preview h3.egroup { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 8px; }
+.edit-preview .profile { max-width: none; }
+.pslots { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+.pslot .tile .meta { padding: 5px 6px; } .pslot .tile .name { font-size: 12px; }
+.pslot .slot { aspect-ratio: 5 / 9; } .pslot .actions { margin: 6px 0 0; gap: 4px; } .pslot .actions button { padding: 2px 8px; font-size: 13px; }
+.pick-panel { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; margin-top: 12px; background: var(--surface-2); }
+.pick-panel .toolbar { margin-bottom: 8px; } .pick-panel .toolbar b { margin-right: auto; }
+.pick .pick-q { width: 100%; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); margin-bottom: 8px; }
+.pick .chips { margin-bottom: 6px; } .pick .pick-note { margin: 4px 0 8px; font-size: 13px; }
+.pick .grid { max-height: 50vh; }
+.hand-now { margin: 4px 0 8px; }
 
 /* ---- sharing ---- */
 .share-url { display: flex; gap: 8px; }
