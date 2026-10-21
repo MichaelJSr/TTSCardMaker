@@ -29,8 +29,9 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 
 Top right: **Sign in** (a GitHub token, see Editing) becomes your login once signed in; it opens the editor hub (your
 batch, your profile, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
-`d` add to deck, `c` copy link, `s` share, `x` compare, `e` edit, `r` random, `1`–`6` sections, `?` help. The single-key
-shortcuts are off while an edit form is open (a card's edit dialog or the profile editor); `Esc` still closes a dialog.
+`d` add to deck, `c` copy link, `s` share, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections, `?` help. The single-key
+shortcuts are off while an edit form is open (a card's edit dialog or the profile editor) and while an inline control or a
+stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog.
 
 ## Where the data comes from
 
@@ -57,13 +58,24 @@ downloaded or looks truncated, or if many images fail.
 ## Editing
 
 Anyone with write access to this repo can fix card data on the site: **Sign in** (top right) takes a GitHub token
-(classic, `public_repo` scope), Edit (e) on a card stages changes in a batch, and **Review and publish** commits the
-whole batch at once. Fields go to `site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to
+(classic, `public_repo` scope); signed in, the card browser is the editor. On a card page, click a stat cell to set that
+stat (the top lit cell steps it down, so 0 is reachable; above 10 and per-creature stats go through All fields), click
+the ability text to edit it in place (Ctrl/Cmd+Enter or a click elsewhere saves, Esc cancels; the card links in the text
+still work), double-click the name to rename, and click the series, subseries or author chip, or the note, to type a new
+value (series, subseries and author offer the known values; a missing one shows as a dashed `+ series` chip when you
+hover the row). In the cards grid, Ctrl/Cmd-click selects tiles (Shift-click a range, Esc clears; a filter change keeps
+only the tiles still shown) and dragging one or the selection onto a series or author in the filter bar (the values
+appear under the Series and Author selects while you drag) assigns it to every card dragged. Every change lands in the batch bar at the bottom as a sentence ("Goombella: SPD 4 → 5", "Clot Black: Author →
+Chestnut"), each with ↺ to take it back; the bar folds to one line when it gets long, and **Review and publish** commits
+the whole batch at once. **All fields** (e, also in the bar) opens the full form for everything else (kind, item type,
+stars, types, aliases, duplicate of, checks, constructed ban, hidden, creatures). Signed out, none of this shows: the
+pages are the same to the pixel. Fields go to `site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to
 `site/Constructed Ban List.txt`. The site rebuilds on that commit; the bot applies the same files on `/update_stats`.
 A subseries (Goombella: series Mario, subseries Paper Mario: The Thousand-Year Door) exists only as an edit (`subseries`;
-the bot reads it too). The form splits edits **on the card image** (name, stars, types, stats, ability text) from
-**database only** ones, which come from the card's folder or exist only as edits (kind, item type, series, subseries,
-note, aliases, author, duplicate of, checks, constructed ban, hidden).
+the bot reads it too). Edits **on the card image** (name, stars, types, stats, ability text; the form groups them and the
+bar marks them, and they show as "PSD pending" until the image is regenerated) are told apart from **database only**
+ones, which come from the card's folder or exist only as edits (kind, item type, series, subseries, note, aliases,
+author, duplicate of, checks, constructed ban, hidden).
 Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a card
 several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own bars.
 Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards, rename
@@ -129,6 +141,6 @@ python -m http.server -d site/dist 8000  # then open http://localhost:8000
 ```
 
 Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
-`search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `profile.js` the People pages, `pick.js` the card
-picker panel), `site/build/build_site.py`.
+`search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place and drag-to-assign,
+`profile.js` the People pages, `pick.js` the card picker panel), `site/build/build_site.py`.
 Generated files (`site/dist`, `site/.cache`) are git-ignored.

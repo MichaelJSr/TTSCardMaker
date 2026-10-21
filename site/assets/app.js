@@ -4,6 +4,7 @@ import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
 import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers } from "./profile.js";
+import * as inline from "./inline.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -17,6 +18,7 @@ const S = {
   data: null, cards: [], rules: [], byId: new Map(), banned: new Map(), icons: {}, renderer: null,
   mentions: new Map(), mentionedBy: new Map(), list: [], decks: [], compare: [],
   renderedHash: null, listHash: "#/cards", shared: null,
+  selected: new Set(),                                     // tiles picked in the cards grid (edit mode: drag them onto a series or author)
 };
 // The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
@@ -133,10 +135,20 @@ const editor = createEditor({
   S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
   openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
   iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
-  users: () => loadUsers(), goUser, goEdit, onAuth: () => renderAccount(),
+  users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); },
   // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
   view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
 });
+// edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
+const editing = () => !!editor.me;
+inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
+let selectAnchor = null;                                 // the last tile toggled: Shift-click selects from it
+function toggleSelect(id, range) {
+  if (range && selectAnchor) for (const x of inline.rangeIds(S.list.map(c => c.id), selectAnchor, id)) S.selected.add(x);
+  else S.selected.has(id) ? S.selected.delete(id) : S.selected.add(id);
+  selectAnchor = id;
+  inline.reflect(view, S.selected);
+}
 // top right: "Sign in", or the login; both open the editor hub
 function renderAccount() {
   const b = $("#account"), me = editor.me;
@@ -179,6 +191,7 @@ function route() {
 }
 function renderView(r, hash) {
   S.renderedHash = hash; S.listHash = hash;
+  if (r.name !== "cards") S.selected.clear();
   const tab = { compare: "cards", u: "users" }[r.name] || r.name;
   $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === tab));
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
@@ -253,6 +266,7 @@ function renderCards(r) {
   const base = filterCards(p, { facets: false });
   const list = sortCards(filterCards(p), p.get("sort") || "name", p.get("dir") || "");
   S.list = list;
+  if (S.selected.size) { const ids = new Set(list.map(c => c.id)); for (const id of S.selected) if (!ids.has(id)) S.selected.delete(id); }   // a drag carries only shown cards
   const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of [].concat(f(c))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };
   const kindCounts = count(base, kindOf), starCounts = count(base, c => c.stars), subCounts = count(base, c => c.subtype);
   const typeCounts = count(base, c => c.types || []);
@@ -313,6 +327,7 @@ function renderCards(r) {
       ${!list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}">${list.map((c, i) => tileHtml(c, { eager: i < 8, css: { s: 160, m: 200, l: 270 }[size] || 200 })).join("")}</div>`}
     </section></div>`;
+  if (editing()) inline.mountGrid(view);
 }
 function tableHtml(list, p) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"], ["new", "Updated"]];
@@ -394,7 +409,7 @@ function openCard(id) {
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
           <button type="button" data-action="share" data-id="${c.id}">Share <span class="kbd">s</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
-          <button type="button" data-action="edit-card" data-id="${c.id}">Edit <span class="kbd">e</span></button>
+          <button type="button" data-action="edit-card" data-id="${c.id}">${editing() ? "All fields" : "Edit"} <span class="kbd">e</span></button>
           ${c.png ? `<a class="fact" href="${esc(fullUrl(c))}" target="_blank" rel="noopener">Full image</a>` : ""}
           ${c.psd ? `<a class="fact" href="${esc(ghUrl(c.psd))}" target="_blank" rel="noopener">PSD on GitHub</a>` : ""}
         </div>
@@ -416,6 +431,7 @@ function openCard(id) {
   }
   if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c); }, () => {});
   if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c); }, () => {});
+  if (editing()) inline.mountCard(modal, c);
 }
 
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card
@@ -799,6 +815,7 @@ document.addEventListener("click", e => {
   const pick = e.target.closest("[data-pick]");
   if (pick) { const err = D.addCard(deck(), S.byId.get(pick.dataset.pick), S.byId); if (err) toast(err); else { D.saveDecks(S.decks); updateDeckCount(); closeModal(); renderDeck(parseHash()); } return; }
   const open = e.target.closest("[data-open], .chart [data-card]");
+  if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
   const ref = e.target.closest("a.card-ref");
   if (ref) { e.preventDefault(); location.hash = `#/card/${ref.dataset.card}`; return; }
@@ -825,7 +842,7 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card"], ["d", "Add to / remove from deck"],
-  ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+  ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 $("#account").addEventListener("click", () => actions["edit-hub"]());
 
@@ -837,8 +854,8 @@ document.addEventListener("keydown", e => {
     if (next) { next.focus(); next.click(); }
     return;
   }
-  const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
-  if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) document.activeElement.blur(); return; }
+  const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline]");   // the inline controls are inputs; stat rows take the arrows
+  if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size) { S.selected.clear(); inline.reflect(view, S.selected); } return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey || $("#edit-form")) return;        // no single-key shortcuts while a form (card dialog, profile editor) is up
   const inCard = !modal.hidden && parseHash().name === "card", id = parseHash().arg;
   if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }

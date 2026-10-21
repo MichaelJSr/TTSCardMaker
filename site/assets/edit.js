@@ -27,6 +27,68 @@ const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", a
   type: "folder", subtype: "folder", series: "folder" };
 const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
   : typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
+const clip = s => (s.length > 48 ? `${s.slice(0, 45).trimEnd()}…` : s);
+const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : f === "dup_of" ? v || ""
+  : f === "creatures" ? (v?.length > 1 ? v.map(x => Object.fromEntries(STATS.map(k => [k, x[k] ?? null]))) : null) : v ?? null);
+/** A card's value of field f as the form shows it (byId resolves dup_of to the original's key). */
+export function value(c, f, byId) {
+  if (f === "aliases") return c.webAliases || [];
+  if (f === "dup_of") return c.dup ? byId?.get(c.dup)?.key || "" : "";
+  return tidy(f, c[f]);
+}
+/** What the PSD (or folder) says: the pre-edit value when the field was edited, else the value itself. */
+export const psdValue = (b, f, byId) => tidy(f, b.edited?.includes(f) ? (f === "aliases" ? [] : b.orig?.[f]) : value(b, f, byId));
+export const isPsd = f => FROM[f] === "PSD";
+export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && op.author === undefined && !op.ban;
+
+// ---- single-field ops (inline editing; the same rule readForm applies to the whole form)
+/** An inline input's text as field f's value: trimmed, "" -> null (the name falls back to `name`), ints >= 0. */
+export const fromInput = (f, v, name) => (FIELDS[f] === "int" ? (v === "" || v == null ? null : Math.max(0, Math.round(Number(v))))
+  : FIELDS[f] === "str" ? (String(v ?? "").replace(/\r/g, "").trim() || (f === "name" ? name : null)) : v);
+/** op with field f = v, relative to the published card: base = {pub, psd, edited}. Equal to the published value: no entry;
+ *  equal to the PSD's on an edited field: unset; else set. The name follows (op.name is the batch's label for the card). */
+export function mergeField(op, base, f, v) {
+  const set = { ...op.set }, unset = (op.unset || []).filter(k => k !== f);
+  delete set[f];
+  const asPub = same(v, base.pub) || (typeof v === "string" && typeof base.pub === "string" && v === base.pub.replace(/\r/g, "").trim());
+  if (!asPub) { if (same(v, base.psd) && base.edited) unset.push(f); else set[f] = v; }
+  return { ...op, set, unset, ...(f === "name" ? { name: v } : {}) };
+}
+/** op with the author set to v ("" -> from git), or without an author entry when v is the published author. */
+export function mergeAuthor(op, v, published) {
+  const o = { ...op }; v = String(v ?? "").trim();
+  if (v === (published || "")) delete o.author; else o.author = v || null;
+  return o;
+}
+/** op without one item: a field, "author" or "ban" (a reverted name goes back to the published one). */
+export function withoutItem(op, item, name) {
+  const o = { ...op, set: { ...op.set }, unset: (op.unset || []).filter(k => k !== item) };
+  if (item === "author") delete o.author; else if (item === "ban") delete o.ban; else { delete o.set[item]; if (item === "name") o.name = name; }
+  return o;
+}
+/** The review lines of an op against its published base b: [{item, text, short, psd}]; text is the review dialog's line,
+ *  short the batch bar's ("SPD 4 → 5"), psd marks fields printed on the card image. rule: a rulebook page. */
+export function describeItems(op, b = {}, { byId, rule = false } = {}) {
+  const src = k => (rule ? "the page" : FROM[k] ? `the ${FROM[k]}` : "the default");
+  const items = Object.entries(op.set).map(([k, v]) => { const from = show(value(b, k, byId)), to = show(v);
+    return { item: k, text: `${LABEL[k]}: ${from} → ${to}`, short: `${LABEL[k]} ${clip(from)} → ${clip(to)}` }; });
+  for (const k of op.unset || []) { const p = show(psdValue(b, k, byId)); items.push({ item: k, text: `${LABEL[k]}: back to ${src(k)} (${p})`, short: `${LABEL[k]} back to ${src(k)} (${clip(p)})` }); }
+  if (op.author !== undefined) { const t = `Author → ${op.author || "(from git)"}`; items.push({ item: "author", text: t, short: t }); }
+  if (op.ban) { const t = op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned"; items.push({ item: "ban", text: t, short: t }); }
+  return items.map(x => ({ ...x, psd: isPsd(x.item) }));
+}
+/** The batch bar's lines, one per pending edit: cards (id, name, item, text, psd), then admins, people and profiles
+ *  (kind, login); describe(op) gives a card op's items. */
+export function barItems(stage, describe) {
+  const out = [];
+  for (const op of Object.values(stage.cards)) for (const x of describe(op)) out.push({ id: op.id, name: op.name, item: x.item, text: x.short, psd: x.psd });
+  if (stage.admins) out.push({ kind: "admins", text: `Admins: ${stage.admins.join(", ")}` });
+  const people = Object.entries(stage.people);
+  if (people.length) out.push({ kind: "people", text: `People: ${people.map(([g, d]) => `${g} shown as ${d}`).join(", ")}` });
+  for (const [login, p] of Object.entries(stage.profiles)) out.push({ kind: "profile", login, text: `${login}'s profile ${p ? "changed" : "removed"}` });
+  return out;
+}
+export const sentence = x => (x.name ? `${x.name}: ${x.text}` : x.text);
 
 // Card Edits.json with the ops applied: keys sorted, fields in ORDER, one line per card
 export function editsFile(text, ops, at, by, path = "site/Card Edits.json") {
@@ -127,14 +189,7 @@ export function createEditor(app) {
   const snap = c => { if (c && !pristine.has(c.id)) pristine.set(c.id, structuredClone(c)); };
   const baseOf = c => based.get(c.id) || pristine.get(c.id) || c;
   const byKey = k => S.all.find(c => cardKey(c.key) === cardKey(k)) || S.all.find(c => cardKey(c.name) === cardKey(k));
-  const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : f === "dup_of" ? v || ""
-    : f === "creatures" ? (v?.length > 1 ? v.map(x => Object.fromEntries(STATS.map(k => [k, x[k] ?? null]))) : null) : v ?? null);
-  const psdValue = (b, f) => tidy(f, b.edited?.includes(f) ? (f === "aliases" ? [] : b.orig?.[f]) : value(b, f));
-  function value(c, f) {
-    if (f === "aliases") return c.webAliases || [];
-    if (f === "dup_of") return c.dup ? S.byId.get(c.dup)?.key || "" : "";
-    return tidy(f, c[f]);
-  }
+  const val = (c, f) => value(c, f, S.byId), psdVal = (b, f) => psdValue(b, f, S.byId);
   function banOf(id, banlist = S.data.banlist) {
     for (const g of banlist.groups) for (const e of g.entries) if (e.id === id) return { banned: true, group: g.title, reason: e.reason };
     return { banned: false, group: "", reason: "" };
@@ -161,7 +216,7 @@ export function createEditor(app) {
     if (!c) return;
     snap(c);
     const b = baseOf(c);
-    for (const f of op.unset || []) setField(c, f, psdValue(b, f));
+    for (const f of op.unset || []) setField(c, f, psdVal(b, f));
     for (const [f, v] of Object.entries(op.set || {})) setField(c, f, v);
     if (op.author !== undefined) c.author = op.author || b.author;
     if (op.ban) {
@@ -198,14 +253,15 @@ export function createEditor(app) {
   // ---- the edit form
   const opts = (list, cur) => list.map(([v, l]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(l)}</option>`).join("");
   const uniq = f => [...new Set(S.all.map(f).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  const subseriesOpts = series => {          // that series' subseries first, then all
+  const subseriesList = series => {          // that series' subseries first, then all
     const own = uniq(x => (x.series === series ? x.subseries : null));
-    return [...own, ...uniq(x => x.subseries).filter(v => !own.includes(v))].map(v => `<option value="${esc(v)}">`).join("");
+    return [...own, ...uniq(x => x.subseries).filter(v => !own.includes(v))];
   };
+  const subseriesOpts = series => subseriesList(series).map(v => `<option value="${esc(v)}">`).join("");
   const isRule = c => (S.rules || []).includes(c);
   function ruleFormHtml(c) {
     const b = baseOf(c);
-    const reset = f => { const p = psdValue(b, f); return same(value(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="Back to what the page says">↺ Page: ${esc(show(p))}</button>`; };
+    const reset = f => { const p = psdVal(b, f); return same(val(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="Back to what the page says">↺ Page: ${esc(show(p))}</button>`; };
     const row = (f, label, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${label}</label><div class="ein">${input}${reset(f)}</div></div>`;
     return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
       <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
@@ -223,7 +279,7 @@ export function createEditor(app) {
     const kinds = Object.entries(app.KIND_LABEL).filter(([k]) => k !== "unknown" || k === c.type);
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
     const typeNames = [...new Set(Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name))].sort();
-    const reset = f => { const p = psdValue(b, f), src = FROM[f]; return same(value(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="${src ? `Back to what the ${src} says` : "Remove the edit"}">↺ ${src ? src[0].toUpperCase() + src.slice(1) : "Default"}: ${esc(show(p))}</button>`; };
+    const reset = f => { const p = psdVal(b, f), src = FROM[f]; return same(val(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="${src ? `Back to what the ${src} says` : "Remove the edit"}">↺ ${src ? src[0].toUpperCase() + src.slice(1) : "Default"}: ${esc(show(p))}</button>`; };
     const psdNote = f => (b.pending?.includes(f) ? `<span class="fact pending" data-tip="${app.PSD_TIP}">PSD pending</span>` : "");
     const row = (f, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${LABEL[f]}${psdNote(f)}</label><div class="ein">${input}${reset(f)}</div></div>`;
     const num = f => `<input id="ef-${f}" type="number" min="0" max="99" step="1" value="${c[f] ?? ""}" placeholder="—">`;
@@ -263,7 +319,7 @@ export function createEditor(app) {
           ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page">${esc(c.note || "")}</textarea>`)}
           ${row("aliases", `<input id="ef-aliases" value="${esc((c.webAliases || []).join(", "))}" placeholder="comma separated">${(c.aliases || []).filter(a => !(c.webAliases || []).includes(a)).length ? `<span class="muted">Bot aliases: ${esc(c.aliases.filter(a => !(c.webAliases || []).includes(a)).join(", "))}</span>` : ""}`)}
           <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" list="dl-people" value="${esc(c.author || "")}"><datalist id="dl-people">${(S.data.people || []).map(p => `<option value="${esc(p)}">`).join("")}</datalist>`}</div></div>
-          ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(value(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
+          ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
         </fieldset>
         <fieldset><legend>Checks</legend>
           ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 10 is intended</label>`)}
@@ -319,9 +375,9 @@ export function createEditor(app) {
     }
     const op = { id: c.id, key: c.key, name: want.name, set: {}, unset: [] };
     for (const [k, v] of Object.entries(want)) {
-      const pub = value(b, k);
+      const pub = val(b, k);
       if (same(v, pub) || (typeof v === "string" && typeof pub === "string" && v === pub.replace(/\r/g, "").trim())) continue;   // as published
-      if (same(v, psdValue(b, k)) && b.edited?.includes(k)) op.unset.push(k);
+      if (same(v, psdVal(b, k)) && b.edited?.includes(k)) op.unset.push(k);
       else op.set[k] = v;
     }
     if (f("author") && f("author").value.trim() !== (b.author || "")) op.author = f("author").value.trim() || null;
@@ -332,15 +388,38 @@ export function createEditor(app) {
     }
     return op;
   }
-  const opEmpty = op => !Object.keys(op.set).length && !op.unset.length && op.author === undefined && !op.ban;
-  function describe(op) {
-    const b = find(op.id) ? baseOf(find(op.id)) : {};
-    const out = Object.entries(op.set).map(([k, v]) => `${LABEL[k]}: ${show(value(b, k))} → ${show(v)}`);
-    const src = k => (isRule(find(op.id)) ? "the page" : FROM[k] ? `the ${FROM[k]}` : "the default");
-    for (const k of op.unset) out.push(`${LABEL[k]}: back to ${src(k)} (${show(psdValue(b, k))})`);
-    if (op.author !== undefined) out.push(`Author → ${op.author || "(from git)"}`);
-    if (op.ban) out.push(op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned");
-    return out;
+  const items = op => { const c = find(op.id); return describeItems(op, c ? baseOf(c) : {}, { byId: S.byId, rule: isRule(c) }); };
+  const describe = op => items(op).map(x => x.text);
+  // ---- single fields, staged in place (inline.js): merged into the card's op, so the form and the bar see one batch
+  const opFor = c => (stage.cards[c.id] ? structuredClone(stage.cards[c.id]) : { id: c.id, key: c.key, name: baseOf(c).name, set: {}, unset: [] });
+  const put = (id, op) => { if (opEmpty(op)) delete stage.cards[id]; else stage.cards[id] = op; };
+  function stageField(id, f, v, defer = false) {
+    const c = find(id); if (!c || !(f in FIELDS)) return null;
+    const b = baseOf(c);
+    const op = mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, fromInput(f, v, b.name));
+    put(c.id, op); if (!defer) save();
+    return op;
+  }
+  function stageAuthor(id, v, defer = false) {
+    const c = find(id); if (!c) return null;
+    const b = baseOf(c);
+    if (b.dup) { if (!defer) app.toast("A duplicate's author follows the original"); return null; }
+    const op = mergeAuthor(opFor(c), v, b.author);
+    put(c.id, op); if (!defer) save();
+    return op;
+  }
+  function stageMany(ids, key, v) {             // one save for the lot; -> how many cards changed (one already at v doesn't count)
+    let n = 0;
+    for (const id of ids) {
+      const was = JSON.stringify(stage.cards[id] ?? null);
+      if ((key === "author" ? stageAuthor(id, v, true) : stageField(id, key, v, true)) && JSON.stringify(stage.cards[id] ?? null) !== was) n++;
+    }
+    save();
+    return n;
+  }
+  function revert(id, item) {
+    const c = find(id), op = stage.cards[id]; if (!c || !op) return;
+    put(id, withoutItem(op, item, baseOf(c).name)); save();
   }
   function openForm(id) {
     const c = find(id);
@@ -381,7 +460,7 @@ export function createEditor(app) {
     document.getElementById(isRule(c) ? "ef-ability" : "ef-name").focus();
   }
   function resetField(c, f) {
-    const p = psdValue(baseOf(c), f), el = document.getElementById(`ef-${f}`);
+    const p = psdVal(baseOf(c), f), el = document.getElementById(`ef-${f}`);
     if (f === "types") { for (const t of document.querySelectorAll("#ef-types [data-type]")) { const on = (p || []).includes(t.dataset.type); t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); } return; }
     if (f === "creatures") { document.getElementById("ef-creatures").innerHTML = (p || []).map(creatureRow).join(""); if (!p) creatureAction("remove"); return; }
     if (!el) return;
@@ -629,14 +708,31 @@ export function createEditor(app) {
   }
 
   // ---- batch tray and hub
+  // the batch bar: every pending edit as a sentence, each with a revert; one line (ellipsised) when long, with a toggle
+  let barOpen = false;
   function renderBar() {
     let bar = document.getElementById("edit-bar");
     const n = count(), sending = !!sentRecord();
     if (!n && !sending) { bar?.remove(); return; }
     if (!bar) { bar = document.createElement("div"); bar.id = "edit-bar"; bar.className = "edit-bar"; bar.setAttribute("role", "region"); bar.setAttribute("aria-label", "Unpublished edits"); document.body.append(bar); }
-    bar.innerHTML = n
-      ? `<span>✎ <b>${n}</b> unpublished change${n > 1 ? "s" : ""}</span><button type="button" class="primary" data-action="edit-review">Review and publish</button><button type="button" class="ghost" data-action="edit-discard-all">Discard</button>`
-      : `<span class="muted">Published edits show here until the site rebuilds (a few minutes).</span><button type="button" class="ghost" data-action="edit-dismiss-sent">OK</button>`;
+    if (!n) {
+      bar.className = "edit-bar";
+      bar.innerHTML = `<div class="bar-head"><span class="muted">Published edits show here until the site rebuilds (a few minutes).</span><button type="button" class="ghost" data-action="edit-dismiss-sent">OK</button></div>`;
+      return;
+    }
+    const list = barItems(stage, items), m = list.length, open = barOpen || m <= 3, seen = new Set();
+    const revertOf = x => (x.id ? `data-id="${esc(x.id)}" data-item="${esc(x.item)}"` : `data-item="${x.kind}"${x.login ? ` data-login="${esc(x.login)}"` : ""}`);
+    const li = x => {
+      const first = x.id && !seen.has(x.id); if (x.id) seen.add(x.id);
+      return `<li><span class="txt">${x.id ? `<a href="#/card/${esc(x.id)}">${esc(x.name)}</a>: ` : ""}${esc(x.text)}${x.psd ? ` <span class="muted" data-tip="${esc(app.PSD_TIP)}">· on the card image</span>` : ""}</span>
+        <button type="button" class="ghost icon" data-action="edit-revert" ${revertOf(x)} aria-label="Revert ${esc(x.name ? `${x.name} ${LABEL[x.item] || x.item}` : x.kind)}" title="Revert">↺</button>
+        ${first ? `<button type="button" class="ghost" data-action="edit-card" data-id="${esc(x.id)}">All fields</button>` : ""}</li>`;
+    };
+    bar.className = `edit-bar${open ? " open" : ""}`;
+    bar.innerHTML = `<div class="bar-head"><span class="bar-line">✎ <b>${m}</b> unpublished change${m > 1 ? "s" : ""}${open ? "" : ` · ${list.map(x => esc(sentence(x))).join(" · ")}`}</span>
+      ${m > 3 ? `<button type="button" class="ghost icon" data-action="edit-bar-toggle" aria-expanded="${open}" aria-label="${open ? "Collapse" : "Expand"} the list">${open ? "▾" : "▸"}</button>` : ""}
+      <button type="button" class="primary" data-action="edit-review">Review and publish</button><button type="button" class="ghost" data-action="edit-discard-all">Discard</button></div>
+      ${open ? `<ul class="bar-list">${list.map(li).join("")}</ul>` : ""}`;
   }
   function reviewHtml(note = "") {
     const ops = Object.values(stage.cards), people = Object.entries(stage.people);
@@ -661,7 +757,7 @@ export function createEditor(app) {
         <div class="actions"><button type="submit" class="primary">Sign in</button></div><p class="muted" id="signin-status" aria-live="polite"></p></form>
       <p class="muted">The token stays in this browser and is only sent to api.github.com.</p>`;
     return `<h3>Editing as ${esc(me.login)} <span class="fact">${me.admin ? "Admin" : "Editor"}</span></h3>${note ? `<p>${esc(note)}</p>` : ""}
-      <p class="muted">Open a card and press Edit (e). Changes wait in your batch until you publish them.</p>
+      <p class="muted">Open a card and change it in place, or press All fields (e). Changes wait in your batch until you publish them.</p>
       <div class="actions"><button type="button" data-action="edit-review"${count() ? "" : " disabled"}>Review batch (${count()})</button>
         <label class="check"><input type="checkbox" data-action="edit-show-hidden"${S.showHidden ? " checked" : ""}> show hidden cards</label></div>
       <h4>Profile</h4><p class="muted">Your page, u/${esc(me.login)}/, shows your cards, edits and card commits; a profile adds the name on your cards, a motto, favourite cards and a featured hand.</p>
@@ -689,6 +785,7 @@ export function createEditor(app) {
         try {
           await signIn(document.getElementById("signin-token").value, document.getElementById("signin-remember").checked);
           app.toast(`Signed in as ${me.login}`);
+          app.rerender();                          // the view behind the hub goes into edit mode (draggable tiles, drop lists)
           if (then) then(); else openHub();
         } catch (err) { token = ""; status.textContent = err.message; }
       });
@@ -732,6 +829,13 @@ export function createEditor(app) {
       stage.profiles[login] = null; save(); drafts.delete(login.toLowerCase()); if (form) form.dataset.dirty = "";
       app.toast(`Removal added to the batch: ${count()} unpublished`); app.goUser(login);
     },
+    "edit-revert": el => {                       // one line of the batch bar
+      const { id, item, login } = el.dataset;
+      if (id) revert(id, item);
+      else { if (item === "admins") stage.admins = null; else if (item === "people") stage.people = {}; else if (item === "profile") delete stage.profiles[login]; save(); }
+      app.rerender();
+    },
+    "edit-bar-toggle": () => { barOpen = !barOpen; renderBar(); },
     "edit-dismiss-sent": () => { localStorage.removeItem(K.sent); preview(); app.rerender(); },
     "edit-publish": async el => {
       if (!me) { openHub("Sign in to publish."); return; }
@@ -759,5 +863,9 @@ export function createEditor(app) {
     open: openForm,
     refresh: preview,
     profileOf, pendingProfiles, profilePage,
+    // inline editing (inline.js): single fields into the same batch, and the known values for its lists
+    stageField, stageAuthor, stageMany, value: val,
+    options: () => ({ series: uniq(c => c.series), subseries: subseriesList,
+      authors: [...new Set([...(S.data.people || []), ...S.all.map(c => c.author).filter(Boolean)])].sort((a, b) => a.localeCompare(b)) }),
   };
 }

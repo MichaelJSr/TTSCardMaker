@@ -291,16 +291,43 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .people .erow { grid-template-columns: 160px 1fr; }
 .review-item { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
 .review-item ul { margin: 4px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 14px; }
-.edit-bar { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 40; display: flex; gap: 10px; align-items: center;
-  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 999px; padding: 6px 8px 6px 16px; box-shadow: var(--shadow); }
+/* the batch bar: one line (the sentences ellipsised) or, open, a list with a revert per line */
+.edit-bar { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 40; display: flex; flex-direction: column; gap: 2px;
+  max-width: min(880px, calc(100% - 32px)); background: var(--surface); border: 1px solid var(--border-strong); border-radius: 999px; padding: 6px 8px 6px 16px; box-shadow: var(--shadow); }
+.edit-bar .bar-head { display: flex; gap: 10px; align-items: center; min-width: 0; }
+.edit-bar .bar-line { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.edit-bar.open { border-radius: 14px; width: min(760px, calc(100% - 32px)); max-height: 40vh; overflow: auto; }
+.bar-list { margin: 2px 0 0; padding: 0; list-style: none; font-size: 14px; }
+.bar-list li { display: flex; gap: 6px; align-items: center; padding: 1px 0; min-width: 0; }
+.bar-list .txt { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-list button { padding: 1px 8px; font-size: 12px; } .bar-list button.icon { width: 26px; height: 26px; font-size: 14px; }
 .tile .flag.staged, .fact.staged { background: var(--accent); color: var(--accent-ink); }
 /* edit pipeline: a PSD edit waiting to be baked into the card image, or refused */
 .tile .flag.pending, .fact.pending { background: #1d4f7c; color: #d6ebff; }
 .tile .flag.refused, .fact.refused { background: #7c1d1d; color: #ffd6d6; }
 .data td .fact, .panel li .fact, .erow label .fact { margin-left: 6px; font-size: 11px; }
 .note { background: var(--surface-2); border-left: 3px solid var(--warn); border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
-@media (max-width: 640px) { .erow { grid-template-columns: 1fr; } .edit-bar { left: 8px; right: 8px; transform: none; border-radius: 14px; flex-wrap: wrap; } }
+@media (max-width: 640px) { .erow { grid-template-columns: 1fr; } .edit-bar { left: 8px; right: 8px; transform: none; border-radius: 14px; max-width: none; } .edit-bar .bar-head { flex-wrap: wrap; } }
 .review-item .actions { align-self: flex-start; flex-wrap: nowrap; margin: 0; }
+
+/* ---- inline editing (edit mode only: inline.js adds these attributes and classes after render, so nothing applies in view mode) ---- */
+[data-inline] { cursor: text; }
+[data-inline]:hover, [data-inline]:focus-visible { outline: 1px dashed var(--border-strong); outline-offset: 3px; }   /* outline only: no layout shift, the element keeps its own corners */
+[data-inline]:has(.inline-name, .inline-fact, .inline-ability) { outline: 1px solid var(--accent); outline-offset: 3px; }   /* an open editor */
+.segs[data-inline], .segs[data-inline] i { cursor: pointer; }
+.segs[data-inline] i:hover { filter: brightness(1.3); }
+.ghost-fact { background: transparent; border: 1px dashed var(--border-strong); color: var(--muted); cursor: pointer; opacity: 0; transition: opacity .15s; }   /* shown on hover or focus only */
+.facts:hover .ghost-fact, .ghost-fact:focus-visible, .ghost-fact:focus-within { opacity: 1; }
+.ghost-fact:hover { background: var(--surface-2); }
+.inline-name, .inline-fact, .inline-ability { font: inherit; color: inherit; background: transparent; border: 0; border-radius: 0; padding: 0; margin: 0; outline: none; }
+.inline-name { width: 100%; font-weight: inherit; line-height: inherit; }
+.inline-fact { width: max(8ch, var(--w, 8ch)); max-width: 100%; line-height: inherit; }
+.inline-note { width: 100%; }
+.inline-ability { display: block; width: 100%; min-height: 0; line-height: inherit; resize: vertical; }
+.tile[data-selected] { outline: 2px solid var(--accent); outline-offset: -2px; }
+.drop-list { display: none; flex-wrap: wrap; gap: 4px; margin-top: 6px; max-height: 40vh; overflow: auto; }
+body.dragging-cards .drop-list { display: flex; }
+.drop-list .chip.over { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 
 /* ---- profiles ---- */
 #account { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
