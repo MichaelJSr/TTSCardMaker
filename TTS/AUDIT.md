@@ -4,6 +4,25 @@ Save `TTS/Impossibility Simulator.json` (5,501,966 bytes, TTS v14.2.2, "auto_upd
 
 Contents: totals; needs a decision; decks; bags; missing repo cards; images not in the repo; unexpected cards; names; backs; duplicates; large cards; loose cards; non-card images; Militron; repo vs disk; integrity.
 
+## Since this audit (2026-10-22)
+
+The rest of this file is the first audit's record (2026-10-20). Don't re-run `audit.py` to refresh it: it rewrites
+this file and `decks.json` from the save. The second audit's checks are kept in `TTS/checks/` (see its README).
+
+- **CustomDeck keys:** no key names two images any more (the 39 under Integrity). `c9873ddf` moved the 46 rulebook
+  pages (bag `b7abdb`) to keys 1578-1623 and Grandfather Clock and The Missile (`79fd59`) to 1624 and 1625. The
+  highest key is 1625, so new cards take 1626 up. `checks/customdeck_collisions.py` fails on any collision.
+- **Global Lua** (`c9873ddf`, 48 lines): seats join TTS teams (Red, Orange, Green: Hearts; Blue, Purple, Pink:
+  Clubs; other seats: None), and the large cards in `resizeTargets` (kept by the updater) go to scale 3,1,3 when they
+  leave a container. Hand-zone claiming is gone (`HAND_ZONE_GUIDS`, `onObjectEnterZone`, the zone respawn, the
+  colour tint, the team-zone warning). Each zone keeps its saved owner; a TTS team lets teammates see each other's
+  hand zones, so the item holders owned by Red and Blue show to their whole side (not verified for an empty seat).
+  The Flex Table Control (`bd69bd`) now moves each hand by its own index (`getHandTransform(i)`).
+- **Rules** (`decks.json`): `f33bd9`'s `card_list` names `Z!!!!!.png` (decision 12's rename). The Morgue rule
+  (`79fd59`) excludes `MDW/The Morgue/cardback.png`, a back its glob matched; `audit.py` now leaves `cardback*.png`
+  out of every rule. The snapshot fields nothing read (`repo_head`, each deck's `cards`, `large_cards.current_keys`)
+  are gone, from the file and from `audit.py`.
+
 ## Totals
 
 - Top-level objects: **228** (Custom_Tile 81, Deck 49, Counter 43, HandTrigger 16, Infinite_Bag 12, Custom_Assetbundle 8, BlockSquare 6, Custom_Token 2, Bag 2, Chinese_Checkers_Piece 1, Quarter 1, Die_6_Rounded 1, go_game_bowl_white 1, go_game_bowl_black 1, Custom_Board 1, Custom_Model_Bag 1, Custom_Model 1, CardCustom 1).
@@ -1069,7 +1088,7 @@ HEAD vs files on disk under Auxiliary, Creatures, Field, Items, N.M.E, Types, MD
 
 ## Integrity (for the updater)
 
-- CustomDeck ids that mean different images on different objects: 39 (ids 1128, 1410, 1412, 1413, 1416, 1417, 1419, 1420, 1421, 1422, 1424, 1425, 1426, 1427, 1428, 1429, 1430, 1431, 1432, 1433, 1434, 1435, 1436, 1437, 1438, 1439, 1440, 1441, 1442, 1443, 1447, 1448, 1449, 1450, 1451, 1452, 1453, 1454, 1458). Ids come from CardIDs, decks' CustomDeck maps and cards' own CustomDeck keys. The rulebook pages and the Deck of Rejects reuse ids that deck cards also use; stale own keys (1128) clash too. TTS keeps CustomDeck per object, so this works until two such cards meet in one deck; the updater must take new ids above the highest one.
+- CustomDeck ids that mean different images on different objects (0 since 2026-10-22, highest key 1625: see the top): 39 (ids 1128, 1410, 1412, 1413, 1416, 1417, 1419, 1420, 1421, 1422, 1424, 1425, 1426, 1427, 1428, 1429, 1430, 1431, 1432, 1433, 1434, 1435, 1436, 1437, 1438, 1439, 1440, 1441, 1442, 1443, 1447, 1448, 1449, 1450, 1451, 1452, 1453, 1454, 1458). Ids come from CardIDs, decks' CustomDeck maps and cards' own CustomDeck keys. The rulebook pages and the Deck of Rejects reuse ids that deck cards also use; stale own keys (1128) clash too. TTS keeps CustomDeck per object, so this works until two such cards meet in one deck; the updater must take new ids above the highest one.
   - 1128 (stale own key): `Auxiliary/Status Effects/Debuffs/2 Stars/Glued.png`; `Items/Heal/1 Stars/Bolts_and_Screws.png`
   - 1410: `Auxiliary/Rulebook/00_Table_of_Contents.png`; `Field/3 Stars/Elemental_World.png`
   - 1412: `Auxiliary/Rulebook/02_Abbreviations.png`; `Creatures/Monkey D Folder/4 Stars/Funky_D_Luffy.png`
