@@ -10,7 +10,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
   record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
   dropdown open this once; Ctrl-click opens it in a new tab).
-- **Card pages**: full image, stat bars, ability text with icons, timing-tag badges (hover for the meaning) and links to
+- **Card pages**: full image, stat bars, ability text with icons, timing-tag badges such as (1CD), (1/2CD), (1GCD) and
+  (2U) (hover for the meaning) and links to
   every card it names; "mentions", "mentioned by", similar stats, same series, text history with changes highlighted,
   and an image version viewer: every commit that changed the card's image, compared side by side with the current one.
   A **Details** dropdown at the bottom of the card page (closed by default; the browser remembers it, its sections and
@@ -24,7 +25,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   "Decks using this card" lists the public published decks that hold it (the first six, then a link to all of them).
   Every card has a shareable link (`/c/<card>/`) that shows a rich preview in Discord. The Share button (s) opens a dialog
   with that link, a Discord preview, and buttons to copy the card as a Discord message, an image or plain text.
-- **Rulebook**: every page with search and highlighting, the timing-tag glossary, and the constructed ban list. Each
+- **Rulebook**: every page with search and highlighting, the timing-tag glossary (the cooldown and uses tags, and the
+  old tags the rulebook pages still use), and the constructed ban list. Each
   page has the same Details dropdown (the bot reads the rulebook PSDs too), always closed when the page loads, without
   the card-only sections (stat rows, status-word layers, template).
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,

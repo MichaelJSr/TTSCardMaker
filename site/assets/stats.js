@@ -1,6 +1,6 @@
 // Stats dashboard. Marks follow the dataviz method: thin bars with 4px rounded data-ends, hairline grid,
 // values at bar tips, legends for multi-series, hover tooltips, and a table view for every chart.
-import { esc, tagInfo, badgeHtml } from "./text.js";
+import { esc, tagInfo, badgeHtml, TAG } from "./text.js";
 import { total } from "./search.js";
 import { HAND } from "./deck.js";
 
@@ -286,7 +286,7 @@ export function renderStats(root, ctx, params) {
 
   // 8 timing tags
   const tags = new Map();
-  for (const c of pool) for (const m of (c.ability || "").matchAll(/\(([0-9A-Z]{2,6})\)/g)) if (tagInfo(m[1])) tags.set(m[1], (tags.get(m[1]) || 0) + 1);
+  for (const c of pool) for (const m of (c.ability || "").matchAll(TAG)) if (tagInfo(m[1])) tags.set(m[1], (tags.get(m[1]) || 0) + 1);
   const tagRows = desc(tags).slice(0, 18).map(([t, v]) => ({ label: `(${t}) ${tagInfo(t).meaning}`, value: v, html: badgeHtml(t) }));
   if (tagRows.length) charts.push(card("tags", "Timing tags", "", hbar(tagRows, { labelWidth: 110, unit: "uses" }),
     table(["Tag", "Meaning", "Uses"], desc(tags).map(([t, v]) => [`(${t})`, tagInfo(t).meaning, v]), 2)));

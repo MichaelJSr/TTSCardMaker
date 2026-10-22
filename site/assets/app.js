@@ -531,7 +531,9 @@ function renderRules(r) {
   const q = (r.params.get("q") || "").trim().toLowerCase();
   if (document.activeElement !== qInput) qInput.value = "";
   const pages = S.rules.filter(p => !q || (p.ability || "").toLowerCase().includes(q) || p.name.toLowerCase().includes(q));
-  const tags = ["OYT", "AAT", "1PT", "1PGT", "E2T", "FTE2T", "E2GT", "BOT", "ENDT", "BOGT", "ENDGT", "OFS", "OS", "OD", "WOF", "1PG"];
+  const tags = ["OYT", "1CD", "1/2CD", "AAT", "1GCD", "1/2GCD", "BOT", "ENDT", "BOGT", "ENDGT", "OFS", "OS", "OD", "WOF", "1PG", "2U",
+    "1PT", "E2T", "FTE2T", "1PGT", "E2GT"];   // old system last
+  const gloss = list => `<div class="glossary">${list.map(t => `<div>${badgeHtml(t)} ${esc(tagInfo(t).meaning)}</div>`).join("")}</div>`;
   const banned = S.data.banlist;
   view.innerHTML = `<div class="rules">
     <nav class="toc" aria-label="Rulebook pages"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
@@ -540,7 +542,8 @@ function renderRules(r) {
     <div>
       ${q ? `<p class="muted">${pages.length} page${pages.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : ""}
       ${!q ? `<section class="panel" id="glossary"><h3>Timing tags</h3><p class="muted">X can be any number. Hover a badge for its meaning.</p>
-        ${Object.entries(GROUP_NAMES).map(([g, label]) => `<h4>${esc(label)}</h4><div class="glossary">${tags.filter(t => tagInfo(t).group === g).map(t => `<div>${badgeHtml(t)} ${esc(tagInfo(t).meaning)}</div>`).join("")}</div>`).join("")}</section>
+        ${Object.entries(GROUP_NAMES).map(([g, label]) => `<h4>${esc(label)}</h4>${gloss(tags.filter(t => tagInfo(t).group === g && !tagInfo(t).old))}`).join("")}
+        <h4>Old system (rulebook pages)</h4>${gloss(tags.filter(t => tagInfo(t).old))}</section>
       <section class="panel" id="banlist"><h3>Constructed ban list</h3>${banned.notes.map(n => `<p class="muted">${esc(n)}</p>`).join("")}
         ${banned.groups.map(g => `<h4>${esc(g.title)}</h4><ul>${g.entries.map(e => `<li>${e.id ? `<a class="card-ref" href="#/card/${e.id}" data-card="${e.id}">${esc(e.name)}</a>` : esc(e.name)} <span class="muted">— ${esc(e.reason)}</span></li>`).join("")}</ul>`).join("")}</section>` : ""}
       ${pages.map(p => `<article class="page" id="page-${p.id}">${p.img ? `<a href="${esc(fullUrl(p))}" target="_blank" rel="noopener" title="Full-size page"><img loading="lazy" decoding="async" ${imgAttrs(p, 220, true)} alt="${esc(p.name)}"></a>` : "<div></div>"}

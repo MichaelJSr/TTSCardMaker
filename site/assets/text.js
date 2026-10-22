@@ -3,23 +3,32 @@
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 export const norm = s => String(s || "").toLowerCase().replace(/[\s_\-.'’]+/g, "");
 
-// Timing tags from the rulebook's "02 Abbreviations" page. Colors match the stoogedings font badges.
+// Timing tags. Colors match the stoogedings font badges. Cooldowns and uses replaced the older tags on the cards
+// (2026-10-21); the rulebook pages still use the old ones.
 const FIXED = {
   OYT: ["turn", "On your turn"], AAT: ["any", "At any time"],
   BOT: ["forced", "Beginning of turn (forced)"], ENDT: ["forced", "End of turn (forced)"],
   BOGT: ["forced", "Beginning of global turn (forced)"], ENDGT: ["forced", "End of global turn (forced)"],
   OFS: ["trigger", "On first summon"], OS: ["trigger", "On summon"], OD: ["trigger", "On death"], WOF: ["trigger", "While on field"],
 };
+export const TAG = /\((-?[0-9A-Z/]{2,6})\)/g;   // candidates; tagInfo decides
 const times = n => (n === "X" ? "X times" : n === "1" ? "once" : `${n} times`);
+const count = (n, one, many = one + "s") => `${n} ${n === "1" ? one : many}`;
+const old = (group, meaning, multi = false) => ({ group, meaning: `Old system: ${meaning}`, multi, old: true });
 export function tagInfo(tag) {
   if (FIXED[tag]) return { group: FIXED[tag][0], meaning: FIXED[tag][1], multi: false };
   let m;
-  if ((m = /^([1-9X])PGT$/.exec(tag))) return { group: "any", meaning: `Usable ${times(m[1])} per global turn (at any time)` };
-  if ((m = /^([1-9X])PT$/.exec(tag))) return { group: "turn", meaning: `Usable ${times(m[1])} per turn (on your turn)` };
-  if ((m = /^FTE([1-9X])T$/.exec(tag))) return { group: "turn", meaning: `Every ${m[1]} turns, starting on your 1st turn (multi-turn)`, multi: true };
-  if ((m = /^E([1-9X])GT$/.exec(tag))) return { group: "any", meaning: `Every ${m[1]} global turns (at any time, multi-turn)`, multi: true };
-  if ((m = /^E([1-9X])T$/.exec(tag))) return { group: "turn", meaning: `Every ${m[1]} turns, starting on turn ${m[1]} (multi-turn)`, multi: true };
+  if ((m = /^([1-9X])CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: ${count(m[1], "turn")}` };
+  if ((m = /^([1-9X])GCD$/.exec(tag))) return { group: "any", meaning: `Global cooldown: ${count(m[1], "global turn")}` };
+  if ((m = /^(-1|[0-9X])\/([1-9X])CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: ${count(m[1], "turn")}, then ${m[2]}` };
+  if ((m = /^(-1|[0-9X])\/([1-9X])GCD$/.exec(tag))) return { group: "any", meaning: `Global cooldown: ${count(m[1], "global turn")}, then ${m[2]}` };
+  if ((m = /^([1-9X])U$/.exec(tag))) return { group: "trigger", meaning: count(m[1], "use") };
   if ((m = /^([1-9X])PG$/.exec(tag))) return { group: "trigger", meaning: `Can only be activated ${times(m[1])} per game` };
+  if ((m = /^([1-9X])PGT$/.exec(tag))) return old("any", `usable ${times(m[1])} per global turn (at any time)`);
+  if ((m = /^([1-9X])PT$/.exec(tag))) return old("turn", `usable ${times(m[1])} per turn (on your turn)`);
+  if ((m = /^FTE([1-9X])T$/.exec(tag))) return old("turn", `every ${m[1]} turns, starting on your 1st turn (multi-turn)`, true);
+  if ((m = /^E([1-9X])GT$/.exec(tag))) return old("any", `every ${m[1]} global turns (at any time, multi-turn)`, true);
+  if ((m = /^E([1-9X])T$/.exec(tag))) return old("turn", `every ${m[1]} turns, starting on turn ${m[1]} (multi-turn)`, true);
   return null;
 }
 export const GROUP_NAMES = { turn: "On your turn", any: "At any time", forced: "Forced", trigger: "Per game & triggers" };
@@ -45,7 +54,7 @@ export function makeRenderer({ cards, icons }) {
   };
   const names = [...byName.keys()].sort((a, b) => b.length - a.length).map(n => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   const nameRe = names.length ? new RegExp(`(?<![\\w'’])(${names.join("|")})(?![\\w'’])`, "g") : null;
-  const PIECE = /\[([^\[\]\n]{1,48})\]|\(([0-9A-Z]{2,6})\)/g;
+  const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,48})\\]|${TAG.source}`, "g");
 
   function icon(token) {
     const [base, variant] = token.split(":");
