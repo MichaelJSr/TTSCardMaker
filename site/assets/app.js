@@ -214,6 +214,7 @@ function route() {
 function renderView(r, hash) {
   S.renderedHash = hash; S.listHash = hash;
   if (r.name !== "cards") S.selected.clear();
+  if (!(r.name === "u" && r.edit)) editor.leave();
   const tab = { compare: "cards", u: "users", decks: "deck" }[r.name] || r.name;
   $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === tab));
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
@@ -631,8 +632,8 @@ function openPicker(tier) {                              // the shared picker (p
     <h3>${kind === "field" ? `Pick a field card (≤${D.FIELD_MAX_STARS}★)` : `Pick a ${st}★ ${kind}`}</h3>
     <p class="muted">Banned cards are marked: they make the hand illegal.</p><div id="picker-body"></div></div>`;
   modal.hidden = false; document.body.style.overflow = "hidden";
-  pick.mount($("#picker-body"), { cards: S.cards, filter: c => fits(c) && c.parsed && !deckHas(c.id), kinds: KINDS, kindOf,
-    tile: c => tileHtml(c, { small: true, constructed: true }), placeholder: "Filter… (same search syntax)",
+  pick.mount($("#picker-body"), { cards: () => S.cards, filter: c => fits(c) && c.parsed && !deckHas(c.id), kinds: KINDS, kindOf,
+    tile: c => tileHtml(c, { small: true, constructed: true }),
     onChoose: id => { const err = D.addCard(deck(), S.byId.get(id), S.byId); if (err) toast(err); else { D.saveDecks(S.decks); updateDeckCount(); closeModal(); renderDeck(parseHash()); } } });
 }
 
@@ -986,7 +987,7 @@ document.addEventListener("keydown", e => {
   const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline]");   // the inline controls are inputs; stat rows take the arrows
   if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size) { S.selected.clear(); inline.reflect(view, S.selected); } return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
-  if (e.key === "Enter" && ae?.dataset?.open && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
+  if (e.key === "Enter" && ae?.dataset?.open && (modal.hidden || modal.contains(ae)) && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
   if ($("#edit-form")) return;                                                         // no single-key shortcuts while a form (card dialog, profile editor) is up
   const inCard = !modal.hidden && parseHash().name === "card", id = parseHash().arg;
   if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }

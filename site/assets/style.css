@@ -358,7 +358,7 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .pslot .slot { aspect-ratio: 5 / 9; } .pslot .actions { margin: 6px 0 0; gap: 4px; } .pslot .actions button { padding: 2px 8px; font-size: 13px; }
 .pick-panel { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; margin-top: 12px; background: var(--surface-2); }
 .pick-panel .toolbar { margin-bottom: 8px; } .pick-panel .toolbar b { margin-right: auto; }
-.pick .pick-q { width: 100%; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); margin-bottom: 8px; }
+.pick .pick-q { width: 100%; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface-2); margin-bottom: 8px; }
 .pick .chips { margin-bottom: 6px; } .pick .pick-note { margin: 4px 0 8px; font-size: 13px; }
 .pick .grid { max-height: 50vh; }
 .hand-now { margin: 4px 0 8px; }

@@ -5,13 +5,14 @@ import { esc } from "./text.js";
 import { compile } from "./search.js";
 
 export const CAP = 240;                                                   // tiles shown at most: narrow the search for the rest
+const byName = (a, b) => { const x = a.name.toLowerCase(), y = b.name.toLowerCase(); return x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name); };   // as app.js sortCards
 
 /** The cards to show: those passing `filter` and the query, on the chosen kinds and stars, by name, capped.
  *  -> {list, total}; kindOf(card) groups status effects (app.js kindOf). */
 export function pickList(cards, { query = "", kinds = [], stars = [], filter = null, kindOf = c => c.type, cap = CAP } = {}) {
   const pred = compile(query);
   const list = cards.filter(c => (!filter || filter(c)) && (!pred || pred(c)) && (!kinds.length || kinds.includes(kindOf(c)))
-    && (!stars.length || stars.includes(c.stars))).sort((a, b) => a.name.localeCompare(b.name));
+    && (!stars.length || stars.includes(c.stars))).sort(byName);
   return { list: list.slice(0, cap), total: list.length };
 }
 
@@ -32,10 +33,11 @@ export function read(container) {
 }
 
 /** Render the picker into `container` (replacing its contents) and focus the search box (unless `focus` is false).
- *  {cards, filter(card), onChoose(id), placeholder, tile(card) -> tile HTML (app.js tileHtml), kinds ([[kind, label]]), kindOf,
+ *  {cards (or a function returning them: read on each search), filter(card), onChoose(id), placeholder, tile(card) -> tile HTML (app.js tileHtml), kinds ([[kind, label]]), kindOf,
  *  initial: {query, kinds, stars} (read() of an earlier panel)} */
-export function mount(container, { cards, filter = null, onChoose, placeholder = "Search cards…", tile, kinds = [], kindOf = c => c.type, initial = null, focus = true }) {
-  const f = facets(cards, { filter, kinds, kindOf });
+export function mount(container, { cards, filter = null, onChoose, placeholder = "Search… (the search box's syntax)", tile, kinds = [], kindOf = c => c.type, initial = null, focus = true }) {
+  const all = typeof cards === "function" ? cards : () => cards;
+  const f = facets(all(), { filter, kinds, kindOf });
   const state = { query: initial?.query || "", kinds: new Set((initial?.kinds || []).filter(k => f.kinds.some(([x]) => x === k))),   // only chips shown
     stars: new Set((initial?.stars || []).filter(s => f.stars.includes(s))) };
   const chip = (attr, v, set, label) => `<button type="button" class="chip${set.has(v) ? " on" : ""}" data-${attr}="${esc(v)}" aria-pressed="${set.has(v)}">${label}</button>`;
@@ -47,7 +49,7 @@ export function mount(container, { cards, filter = null, onChoose, placeholder =
     <div class="grid picker" style="--tile:120px"></div></div>`;
   const root = container.firstElementChild, input = root.querySelector(".pick-q"), note = root.querySelector(".pick-note"), grid = root.querySelector(".grid");
   const render = () => {
-    const { list, total } = pickList(cards, { query: state.query, kinds: [...state.kinds], stars: [...state.stars], filter, kindOf });
+    const { list, total } = pickList(all(), { query: state.query, kinds: [...state.kinds], stars: [...state.stars], filter, kindOf });
     note.textContent = !total ? "Nothing matches." : total > list.length ? `Showing ${list.length} of ${total}: narrow the search.` : `${total} card${total === 1 ? "" : "s"}`;
     grid.innerHTML = list.map(c => tile(c).replace('data-open="', 'data-choose="')).join("");
   };

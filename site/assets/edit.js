@@ -608,7 +608,7 @@ export function createEditor(app) {
       const [, label] = PICKS.find(([x]) => x === k), item = k.endsWith("Item");
       q("#pf-picker").hidden = false; q("#pf-picker").dataset.slot = k; q("#pf-picker-title").textContent = `${label}: pick a card`;
       pick.mount(q("#pf-picker-body"), { cards: S.cards, filter: item ? c => ITEM_KINDS.has(c.type) : null, tile: app.tile, kinds: app.kinds, kindOf: app.kindOf,
-        placeholder: "Search… (the search box's syntax)", initial, focus,
+        initial, focus,
         onChoose: id => { setSlot(k, id); closePicker(); update(); q(`[data-pf-pick="${k}"]`).focus(); } });
     };
     const outsidePicker = e => !e.target.closest("#pf-picker");
@@ -981,7 +981,7 @@ export function createEditor(app) {
     },
     open: openForm,
     refresh: preview,
-    profileOf, pendingProfiles, profilePage,
+    profileOf, pendingProfiles, profilePage, leave: () => { carry = null; },   // another page rendered: a later editor starts fresh
     // published decks: the publish dialog for a saved hand, and the staged or just-published files for the pages
     publishDeck: id => openPublish(id), deckOf, pendingDecks,
     // inline editing (inline.js): single fields into the same batch, and the known values for its lists
