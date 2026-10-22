@@ -11,9 +11,9 @@ const FIXED = {
   BOGT: ["forced", "Beginning of global turn (forced)"], ENDGT: ["forced", "End of global turn (forced)"],
   OFS: ["trigger", "On first summon"], OS: ["trigger", "On summon"], OD: ["trigger", "On death"], WOF: ["trigger", "While on field"],
 };
-export const TAG = /\((-?[0-9A-Z/]{2,6})\)/g;   // candidates; tagInfo decides
+export const TAG = /\((-?[0-9A-Z/]{2,6})\)/;   // candidates; tagInfo decides. Not /g: copy it to iterate
 const times = n => (n === "X" ? "X times" : n === "1" ? "once" : `${n} times`);
-const count = (n, one, many = one + "s") => `${n} ${n === "1" ? one : many}`;
+const count = (n, one, many = one + "s") => `${n} ${n === "1" || n === "-1" ? one : many}`;
 const old = (group, meaning, multi = false) => ({ group, meaning: `Old system: ${meaning}`, multi, old: true });
 export function tagInfo(tag) {
   if (FIXED[tag]) return { group: FIXED[tag][0], meaning: FIXED[tag][1], multi: false };
@@ -34,7 +34,7 @@ export function tagInfo(tag) {
 export const GROUP_NAMES = { turn: "On your turn", any: "At any time", forced: "Forced", trigger: "Per game & triggers" };
 export const badgeHtml = tag => {
   const t = tagInfo(tag);
-  return t ? `<span class="badge ${t.group}" data-tip="${esc(`(${tag}) ${t.meaning}`)}">${esc(tag)}</span>` : esc(`(${tag})`);
+  return t ? `<span class="badge ${t.group}" data-tip="${esc(`(${tag}) ${t.meaning}`)}">${esc(tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
 };
 
 /** Build the renderer once per data load: knows icons and which card names to link. */
