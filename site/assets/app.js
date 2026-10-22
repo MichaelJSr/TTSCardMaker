@@ -706,16 +706,18 @@ function renderStatsView(r) {
 const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["edits", "Database edits"], ["website", "Website edits"],
   ["revised", "Most revised"], ["parser", "Parser notes"]];
 const NEEDS = { "": "history", revised: "history", changelog: "changelog", edits: "changelog" };   // the data a tab loads first
-function renderChanges(r = parseHash()) {
+function renderChanges(r = parseHash(), held = null) {   // held: the tab a loading page focused, for the loaded redraw
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
   const nav = `<nav class="change-tabs" aria-label="Kinds of changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}"${k === tab ? ' class="on" aria-current="page"' : ""}>${esc(l)}</a>`).join("")}</nav>`;
   const page = body => {
-    const kept = changes.keepsTabFocus(document.activeElement);          // a tab had focus from the keyboard: the chosen one keeps it
+    const el = document.activeElement;   // a tab had focus from the keyboard (or still has it from the loading page): the chosen one keeps it
+    const kept = (held && el === held) || changes.keepsTabFocus(el);
     view.innerHTML = `<div style="max-width:980px;margin:auto">${nav}${body}</div>`;
-    if (kept) $(".change-tabs a.on", view)?.focus();
+    held = kept ? $(".change-tabs a.on", view) : null;
+    held?.focus();
   };
   const here = () => { const now = parseHash(); return now.name === "changes" && (now.arg || "") === (r.arg || "") ? now : null; };
-  const again = () => { const now = here(); if (now) renderChanges(now); };
+  const again = () => { const now = here(); if (now) renderChanges(now, held); };
   if (NEEDS[tab] === "changelog" && !S.changelog) {
     page(`<div class="loading">Loading the changelog…</div>`);
     loadChangelog().then(again, e => { if (here()) page(`<div class="empty">Couldn't load the changelog (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`); });
