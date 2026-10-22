@@ -250,9 +250,8 @@ function setParams(updates, { replace = true } = {}) {
 // ---- cards (browse) --------------------------------------------------------------------------------
 const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
 function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi] = v.split("-").map(Number); return [isNaN(lo) ? 0 : lo, isNaN(hi) ? 99 : hi]; }
-// edited on the website: not the bot's entries of only Discord-typed fields (moved into Card Edits.json, 2026-10-22)
-const MOVED_FIELDS = new Set(["aliases", "series", "subseries"]);
-const webEdited = c => !!c.edited && !(c.editBy === BOT && c.edited.every(f => MOVED_FIELDS.has(f)));
+// edited on the website: no _by AutoCroissant entry (the 2026-10-22 migration's, the moved stat exclusions)
+const webEdited = c => !!c.edited && String(c.editBy || "").toLowerCase() !== BOT.toLowerCase();
 function filterCards(p, { facets = true } = {}) {
   const pred = compile(p.get("q") || "");
   let list = pred ? S.cards.filter(pred) : S.cards.slice();
