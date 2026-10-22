@@ -1,10 +1,12 @@
 # Bakes the website's PSD-kind card edits (site/Card Edits.json: stats, name, ability text) into the card PSDs and
-# PNGs with the bot's edit pipeline (AutoCroissant commands/card_bake.py), one commit per card, the report as the job
-# summary. Dispatch only for now: Thunderfury's entry is aligned to the print (1c13eaa; docs/EDIT_PIPELINE_DESIGN.md
-# section 14, question 7), so the push trigger on site/Card Edits.json waits only for the PSD-edits hold to lift.
+# PNGs with the bot's edit pipeline (AutoCroissant commands/card_bake.py): one commit per run with every baked card's
+# PSD and PNG and the rewritten edits file, the report as the job summary. Every 30 minutes, live, when the gate finds
+# a PSD-kind edit without a final verdict (docs/EDIT_PIPELINE_DESIGN.md section 8); a dispatch always runs.
 name: Card edits
 
 on:
+  schedule:
+    - cron: "*/30 * * * *"   # live; a run with nothing pending ends at the gate
   workflow_dispatch:
     inputs:
       card:
@@ -21,7 +23,7 @@ permissions:
   actions: write      # gh workflow run site.yml / tts-save.yml after a commit (a GITHUB_TOKEN push triggers no workflow)
 
 concurrency:
-  group: tts-save     # shared with tts-save.yml: both commit to main, never two at once
+  group: tts-save     # shared with tts-save.yml: both commit to main, never two at once; a running bake is never cancelled
   cancel-in-progress: false
 
 jobs:
@@ -66,29 +68,51 @@ jobs:
       # The tag exists since S0 (2026-10-21, cards a6363a04). Plan step 7 drops the pin once upstream has the changes.
       - run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261021"
 
+      # Schedule only: go when a PSD-kind edit has no refused verdict for its values on the current PSD
+      # (card_bake.pending). A dispatch always goes.
+      - name: Gate
+        id: gate
+        working-directory: bot
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT" != schedule ]; then echo "go=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          python -c 'import sys; from commands.card_bake import pending; print(*pending(*sys.argv[1:]), sep="\n")' \
+            "$GITHUB_REPOSITORY" "$GITHUB_SHA" > "$RUNNER_TEMP/pending.txt"
+          n=$(grep -c . "$RUNNER_TEMP/pending.txt" || true)
+          names=$(grep . "$RUNNER_TEMP/pending.txt" | paste -sd, - | sed 's/,/, /g' || true)
+          echo "Pending PSD edits at \`${GITHUB_SHA:0:8}\`: $n${names:+ ($names)}." | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "go=$([ "$n" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
       # Fonts: MDW/Fonts' top level (272 files, 215 MB on 2026-10-20; stoogedings-src/ is another 200 MB and stays
       # out), cached by the folder's tree sha; the sparse checkout fetches them only on a miss.
       - id: fonts
+        if: steps.gate.outputs.go == 'true'
         run: echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
 
       - id: font-cache
+        if: steps.gate.outputs.go == 'true'
         uses: actions/cache@v6
         with:
           path: MDW/Fonts
           key: card-fonts-${{ steps.fonts.outputs.sha }}
 
-      - if: steps.font-cache.outputs.cache-hit != 'true'
+      - if: steps.gate.outputs.go == 'true' && steps.font-cache.outputs.cache-hit != 'true'
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
       # The work dir is $RUNNER_TEMP/card-bake (edited PSD, merged PNG, before/after/diff crops, the rewritten file).
+      # The schedule bakes live; a dispatch follows dry_run.
       - name: Bake
+        if: steps.gate.outputs.go == 'true'
         working-directory: bot
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PSD_TOOLS_FONT_DIRS: ${{ github.workspace }}/MDW/Fonts
           CARD: ${{ inputs.card }}
-          DRY_RUN: ${{ inputs.dry_run }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
         run: |
           args=(--repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA")
           [ "$DRY_RUN" = "true" ] && args+=(--dry-run)
@@ -96,15 +120,15 @@ jobs:
           python -m commands.card_bake "${args[@]}" | tee "$RUNNER_TEMP/report.md" >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
-        if: always()        # the report and crops of the cards that did land, even when the Bake step failed
+        if: always() && steps.gate.outputs.go == 'true'     # the report and crops, even when the Bake step failed
         with:
           name: card-bake
           path: ${{ runner.temp }}/card-bake
           if-no-files-found: ignore
 
-      # Only after a commit (a card's "committed `sha`" line or "Refused verdicts committed `sha`"): a GITHUB_TOKEN push
-      # triggers no workflow, so the site build and the TTS save are run here.
-      - if: ${{ !inputs.dry_run }}
+      # Only after the run's commit (its cards' "committed `sha`" lines): a GITHUB_TOKEN push triggers no workflow, so the
+      # site build and the TTS save are run here.
+      - if: steps.gate.outputs.go == 'true' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
