@@ -228,9 +228,14 @@ def rule_matches(rule, path):
     return any(glob_match(g, path) for g in rule.get("folders", []))
 
 
+def is_back(path):
+    """A card back (cardback*.png), never a card."""
+    return os.path.basename(path or "").lower().startswith("cardback")
+
+
 def rule_cards(rule, tree):
-    """Repo PNGs a rule covers."""
-    return sorted(p for p in tree if p.lower().endswith(".png") and rule_matches(rule, p))
+    """Repo PNGs a rule covers (no backs)."""
+    return sorted(p for p in tree if p.lower().endswith(".png") and not is_back(p) and rule_matches(rule, p))
 
 
 def walk(objects, parents=()):
@@ -551,6 +556,11 @@ def main():
         ex = [p for p in rule_cards(r, tree) if p not in have and listed_in.get(p) and not listed_in[p] & set(members)]
         if ex:
             r["exclude"] = ex
+    # backs a rule's folders match: excluded, so the updater never adds one
+    for r in {id(d["rule"]): d["rule"] for d in decks.values() if d.get("rule")}.values():
+        backs = [p for p in sorted(pngs) if is_back(p) and any(glob_match(g, p) for g in r.get("folders", []))]
+        if backs:
+            r["exclude"] = sorted(set(r.get("exclude", [])) | set(backs))
 
     for d in decks.values():
         if not d["parents"]:
@@ -924,13 +934,13 @@ def main():
                   "partial: a hand-picked subset (only its own cards are refreshed; card_list = its distinct cards). "
                   "count: the usual copies per card; odd_counts (per deck): cards at another count. "
                   "rule null: needs a decision (see AUDIT.md)."),
-        "generated": datetime.datetime.now().isoformat(timespec="seconds"), "repo_head": head,
+        "generated": datetime.datetime.now().isoformat(timespec="seconds"),
         "decks": {}, "bags": {}, "objects": {}, "large_cards": {"source": "Auxiliary/Creatures", "lua_table": "resizeTargets",
-                                                               "key": "Nickname", "current_keys": lua_keys},
+                                                               "key": "Nickname"},
     }
     for g, d in sorted(decks.items(), key=lambda kv: (bool(kv[1]["parents"]), kv[1]["pos"][0], kv[1]["pos"][1])):
         entry = {"name": d["name"], "where": d["where"] if d["parents"] else (d["label"] or "table"),
-                 "position": list(d["pos"]), "cards": len(d["cards"]), "rule": d.get("rule"),
+                 "position": list(d["pos"]), "rule": d.get("rule"),
                  "confidence": d.get("confidence"), "copies": d.get("copies", []),
                  "back": (d["backs"].most_common(1)[0][0] if d["backs"] else (back_major.get(d["rule"]["kind"]) if d.get("rule") else None))}
         if d.get("rule") and d["rule"].get("partial"):

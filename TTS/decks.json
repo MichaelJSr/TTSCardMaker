@@ -1,7 +1,6 @@
 {
   "about": "Rules for the TTS save (TTS/Impossibility Simulator.json), written by audit.py. A deck's cards are the repo PNGs matched by rule.folders (globs: * stays inside one folder) plus rule.include, minus rule.exclude. partial: a hand-picked subset (only its own cards are refreshed; card_list = its distinct cards). count: the usual copies per card; odd_counts (per deck): cards at another count. rule null: needs a decision (see AUDIT.md).",
   "generated": "2026-10-20T10:39:56",
-  "repo_head": "9fbe6835b8a42e6cdb64b1534e67dee3caae3c3b",
   "decks": {
     "f33bd9": {
       "name": "",
@@ -10,7 +9,6 @@
         -93.4,
         -23.0
       ],
-      "cards": 14,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -36,7 +34,7 @@
         "Creatures/Other/5 Stars/The_Forbidden_One.png",
         "Creatures/Other/5 Stars/The_Queen.png",
         "Creatures/Other/5 Stars/Tyler.png",
-        "Creatures/Other/5 Stars/ZOEY!!!!!.png",
+        "Creatures/Other/5 Stars/Z!!!!!.png",
         "Creatures/ROTMG/5 Stars/Azamoth_the_Forgotten_King.png",
         "Creatures/Undertale/5 Stars/Sans.png",
         "Creatures/World Of Warcraft/5 Stars/The_Lich_King.png"
@@ -49,7 +47,6 @@
         -93.4,
         -18.1
       ],
-      "cards": 14,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -88,7 +85,6 @@
         -93.4,
         -13.1
       ],
-      "cards": 19,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -132,7 +128,6 @@
         -93.4,
         -8.2
       ],
-      "cards": 18,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -175,7 +170,6 @@
         -93.4,
         9.2
       ],
-      "cards": 56,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -199,7 +193,6 @@
         -93.4,
         14.1
       ],
-      "cards": 92,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -223,7 +216,6 @@
         -93.4,
         19.0
       ],
-      "cards": 101,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -247,7 +239,6 @@
         -93.4,
         23.9
       ],
-      "cards": 45,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -274,7 +265,6 @@
         -84.3,
         9.9
       ],
-      "cards": 30,
       "rule": {
         "kind": "items",
         "stars": [
@@ -298,7 +288,6 @@
         -84.3,
         14.3
       ],
-      "cards": 88,
       "rule": {
         "kind": "items",
         "stars": [
@@ -345,7 +334,6 @@
         -84.3,
         18.8
       ],
-      "cards": 96,
       "rule": {
         "kind": "items",
         "stars": [
@@ -392,7 +380,6 @@
         -84.3,
         23.2
       ],
-      "cards": 39,
       "rule": {
         "kind": "items",
         "stars": [
@@ -427,7 +414,6 @@
         -84.1,
         5.1
       ],
-      "cards": 26,
       "rule": {
         "kind": "nme",
         "stars": [],
@@ -449,7 +435,6 @@
         -83.0,
         -18.0
       ],
-      "cards": 25,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -499,7 +484,6 @@
         -83.0,
         -13.1
       ],
-      "cards": 22,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -546,7 +530,6 @@
         -76.9,
         9.9
       ],
-      "cards": 10,
       "rule": {
         "kind": "fields",
         "stars": [
@@ -570,7 +553,6 @@
         -76.9,
         14.3
       ],
-      "cards": 12,
       "rule": {
         "kind": "fields",
         "stars": [
@@ -594,7 +576,6 @@
         -76.9,
         18.7
       ],
-      "cards": 18,
       "rule": {
         "kind": "fields",
         "stars": [
@@ -618,7 +599,6 @@
         -76.9,
         23.1
       ],
-      "cards": 9,
       "rule": {
         "kind": "fields",
         "stars": [
@@ -642,7 +622,6 @@
         89.5,
         -1.6
       ],
-      "cards": 64,
       "rule": {
         "kind": "status_effects",
         "stars": [],
@@ -666,7 +645,6 @@
         89.6,
         1.4
       ],
-      "cards": 64,
       "rule": {
         "kind": "status_effects",
         "stars": [],
@@ -690,7 +668,6 @@
         93.0,
         -3.5
       ],
-      "cards": 59,
       "rule": {
         "kind": "auxiliary_items",
         "stars": [],
@@ -727,7 +704,6 @@
         93.1,
         3.2
       ],
-      "cards": 59,
       "rule": {
         "kind": "auxiliary_items",
         "stars": [],
@@ -764,7 +740,6 @@
         97.4,
         -3.4
       ],
-      "cards": 95,
       "rule": {
         "kind": "minions",
         "stars": [],
@@ -791,7 +766,6 @@
         97.4,
         3.3
       ],
-      "cards": 95,
       "rule": {
         "kind": "minions",
         "stars": [],
@@ -818,7 +792,6 @@
         108.3,
         18.4
       ],
-      "cards": 26,
       "rule": {
         "kind": "nme",
         "stars": [],
@@ -840,7 +813,6 @@
         108.3,
         22.7
       ],
-      "cards": 59,
       "rule": {
         "kind": "auxiliary_items",
         "stars": [],
@@ -877,7 +849,6 @@
         108.3,
         26.9
       ],
-      "cards": 95,
       "rule": {
         "kind": "minions",
         "stars": [],
@@ -904,7 +875,6 @@
         110.2,
         15.1
       ],
-      "cards": 64,
       "rule": {
         "kind": "status_effects",
         "stars": [],
@@ -928,7 +898,6 @@
         115.1,
         13.3
       ],
-      "cards": 9,
       "rule": {
         "kind": "fields",
         "stars": [
@@ -952,7 +921,6 @@
         115.1,
         17.7
       ],
-      "cards": 18,
       "rule": {
         "kind": "fields",
         "stars": [
@@ -976,7 +944,6 @@
         115.1,
         22.2
       ],
-      "cards": 12,
       "rule": {
         "kind": "fields",
         "stars": [
@@ -1000,7 +967,6 @@
         115.1,
         26.6
       ],
-      "cards": 10,
       "rule": {
         "kind": "fields",
         "stars": [
@@ -1024,7 +990,6 @@
         122.6,
         13.3
       ],
-      "cards": 39,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1059,7 +1024,6 @@
         122.6,
         17.7
       ],
-      "cards": 96,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1106,7 +1070,6 @@
         122.6,
         22.2
       ],
-      "cards": 88,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1153,7 +1116,6 @@
         122.6,
         26.6
       ],
-      "cards": 30,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1177,7 +1139,6 @@
         123.3,
         -24.8
       ],
-      "cards": 30,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1228,7 +1189,6 @@
         123.3,
         -20.4
       ],
-      "cards": 75,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1323,7 +1283,6 @@
         123.3,
         -16.0
       ],
-      "cards": 68,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1416,7 +1375,6 @@
         123.3,
         -11.6
       ],
-      "cards": 17,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1458,7 +1416,6 @@
         131.8,
         -24.6
       ],
-      "cards": 17,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -1500,7 +1457,6 @@
         131.8,
         -19.7
       ],
-      "cards": 47,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -1572,7 +1528,6 @@
         131.8,
         -14.8
       ],
-      "cards": 42,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -1639,7 +1594,6 @@
         131.8,
         -9.9
       ],
-      "cards": 26,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -1690,7 +1644,6 @@
         131.8,
         11.7
       ],
-      "cards": 45,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -1717,7 +1670,6 @@
         131.8,
         16.6
       ],
-      "cards": 101,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -1741,7 +1693,6 @@
         131.8,
         21.5
       ],
-      "cards": 92,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -1765,7 +1716,6 @@
         131.8,
         26.4
       ],
-      "cards": 56,
       "rule": {
         "kind": "creatures",
         "stars": [
@@ -1789,7 +1739,6 @@
         116.0,
         4.6
       ],
-      "cards": 0,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1811,7 +1760,6 @@
         116.1,
         2.9
       ],
-      "cards": 7,
       "rule": {
         "kind": "morgue",
         "stars": [],
@@ -1819,7 +1767,10 @@
           "MDW/The Morgue/*.png"
         ],
         "partial": true,
-        "count": 1
+        "count": 1,
+        "exclude": [
+          "MDW/The Morgue/cardback.png"
+        ]
       },
       "confidence": "medium",
       "copies": [],
@@ -1841,7 +1792,6 @@
         116.6,
         4.7
       ],
-      "cards": 0,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1863,7 +1813,6 @@
         117.1,
         4.4
       ],
-      "cards": 0,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1885,7 +1834,6 @@
         117.2,
         4.1
       ],
-      "cards": 0,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1907,7 +1855,6 @@
         117.2,
         4.2
       ],
-      "cards": 0,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1929,7 +1876,6 @@
         117.3,
         5.0
       ],
-      "cards": 0,
       "rule": {
         "kind": "items",
         "stars": [
@@ -1951,7 +1897,6 @@
         117.5,
         5.8
       ],
-      "cards": 0,
       "rule": {
         "kind": "items",
         "stars": [
@@ -3101,14 +3046,6 @@
   "large_cards": {
     "source": "Auxiliary/Creatures",
     "lua_table": "resizeTargets",
-    "key": "Nickname",
-    "current_keys": [
-      "Azamoth The Possessed Vessel",
-      "Igor Roballtowski",
-      "Mettaton EX",
-      "Mettaton NEO",
-      "Morpho Knight",
-      "Shadow Queen"
-    ]
+    "key": "Nickname"
   }
 }
