@@ -2,8 +2,9 @@
 # builds the card data (db/ JSON on the orphan branch `data`), updates the TTS save and writes the changelog posts. It makes
 # at most one commit on main (M: the bake and the save) and one on `data`. Every stage is the bot's code, checked out from
 # bobberlington/AutoCroissant at the builder ref: card_bake --local, card_data, tts_save --names, changelog post.
-# Migration step 6: dispatch only, dry_run on by default, the posts off (discord.json goes to the artifact only).
-# tts-save.yml and card-edits.yml keep running beside it until the cutover.
+# Migration step 6: dispatch only, dry_run on by default; the bake, the main commit and the posts off (MAIN_COMMIT and
+# POSTS; discord.json goes to the artifact only), so a live run writes only `data`. tts-save.yml and card-edits.yml stay
+# main's writers until the cutover (step 8).
 name: Card sync
 
 on:
@@ -56,17 +57,18 @@ concurrency:
 
 env:
   POSTS: "off"        # step 8 turns the Discord posts on; until then discord.json goes to the artifact only
+  MAIN_COMMIT: "off"  # step 8 turns the bake and the main commit M on; until then only a dry run bakes (nothing committed)
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 90     # Commit main pushes M only before minute 75, so the data commit always gets its turn
     defaults:
       run:
         shell: bash
     env:
-      # Live only on a dispatch with dry_run off (a schedule, when added, runs dry until this line changes)
-      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && !inputs.dry_run && 'false' || 'true' }}
+      # A dispatch runs dry unless dry_run is off; a schedule (step 7) runs live: MAIN_COMMIT and POSTS say what it writes
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
       BUILDER_REF: ${{ inputs.builder_ref || vars.CARD_DATA_BUILDER_REF || 'main' }}
       BOT_REPO: bobberlington/AutoCroissant
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -165,7 +167,7 @@ jobs:
           SEED: ${{ inputs.seed }}
         run: |
           main=$(git rev-parse HEAD)
-          echo "main=$main" >> "$GITHUB_OUTPUT"
+          { echo "main=$main"; echo "start=$(date +%s)"; } >> "$GITHUB_OUTPUT"
           builder=$(git -C bot rev-parse HEAD)
           if [ ! -f bot/commands/card_data.py ]; then
             echo "::error::The builder $BOT_REPO@$BUILDER_REF (${builder:0:8}) has no commands/card_data.py: dispatch with a builder_ref that has it"
@@ -174,7 +176,8 @@ jobs:
           db=carddata/db
           manifest=$db/manifest.json
           save="TTS/Impossibility Simulator.json"
-          inputs=('*.psd' '*.png' 'Types/' 'MDW/Fonts/' 'site/Card Edits.json' 'site/Card Authors.txt' 'TTS/decks.json')
+          inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
+                  'site/Card Edits.json' 'site/Card Authors.txt' 'TTS/decks.json')    # the builder's lower-cased extensions
           why=()
           seed=$SEED
           if [ "$FORCE" = true ]; then why+=("dispatched with force"); fi
@@ -226,11 +229,14 @@ jobs:
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
       # Fonts for the bake and the details' "supplied" flags: MDW/Fonts' top level, cached by its tree sha (card-edits.yml's
-      # key, so the entries carry over); the sparse checkout fetches them only on a miss.
+      # key, so the entries carry over); the sparse checkout fetches them only on a miss. A hit puts them outside the sparse
+      # patterns: without expectFilesOutsideOfPatterns git clears their skip-worktree bits and the bake's ff merge deletes them.
       - name: Fonts tree
         id: fonts
         if: steps.gate.outputs.go == 'true'
-        run: echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
+        run: |
+          git config sparse.expectFilesOutsideOfPatterns true
+          echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
 
       - id: font-cache
         if: steps.gate.outputs.go == 'true'
@@ -259,7 +265,7 @@ jobs:
         if: steps.gate.outputs.go == 'true'
         timeout-minutes: 15
         env:
-          BAKE: ${{ inputs.bake }}
+          BAKE: ${{ (env.MAIN_COMMIT == 'on' || env.DRY_RUN == 'true') && (inputs.bake || 'all') || 'none' }}
         run: |
           python3.14 -m venv "$RUNNER_TEMP/builder"
           "$RUNNER_TEMP/builder/bin/pip" install -q -r bot/requirements-card-data.txt
@@ -272,10 +278,11 @@ jobs:
           fi
 
       # Stage 1: the bake makes one local commit B on main's head in this checkout (nothing pushed); a dry run commits
-      # nothing. A card's error fails the step but keeps B for the others; no B means the run goes on from main's head.
+      # nothing, and with MAIN_COMMIT off only a dry run bakes. A card's error fails the step but keeps B for the others
+      # (card-edits.yml's per-card rule); no B means the run goes on from main's head.
       - name: Bake
         id: bake
-        if: steps.gate.outputs.go == 'true' && steps.venv.outcome == 'success' && inputs.bake != 'none'
+        if: steps.gate.outputs.go == 'true' && steps.venv.outcome == 'success' && inputs.bake != 'none' && (env.MAIN_COMMIT == 'on' || env.DRY_RUN == 'true')
         timeout-minutes: 50
         working-directory: bot
         env:
@@ -370,22 +377,31 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      # Stage 4: one commit M on main's head with B's files and the save, fast-forward only. A temp index and
-      # --missing-ok keep git from fetching the tree's blobs. Main moved meanwhile: M and the data are dropped (the next
-      # run bakes and builds again). After a push, db/'s references to B become M.
+      # Stage 4: one commit M on main's head with B's files and the save, fast-forward only (MAIN_COMMIT on). A temp index
+      # and --missing-ok keep git from fetching the tree's blobs. Past minute 75 M is not pushed (red): the run's last
+      # stages keep their time and the next run does the work. After a push, db/ names M: its references to B become M,
+      # or (a save-only M) the manifest's card_commit and main_commit. Main moved meanwhile: M is dropped, and the data
+      # too when it read B; the run starts over once (a dispatch of its own: github-actions[bot], which never retries).
       - name: Commit main
         id: main
-        if: ${{ !cancelled() && steps.gate.outputs.go == 'true' && env.DRY_RUN != 'true' && (steps.build.outcome == 'success' || steps.bake.outputs.baked != 'true') && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true') }}
+        if: ${{ !cancelled() && steps.gate.outputs.go == 'true' && env.DRY_RUN != 'true' && env.MAIN_COMMIT == 'on' && (steps.build.outcome == 'success' || steps.bake.outputs.baked != 'true') && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true') }}
+        timeout-minutes: 10
         env:
+          GH_TOKEN: ${{ github.token }}
           GIT_NO_LAZY_FETCH: "1"
           MAIN: ${{ steps.gate.outputs.main }}
+          START: ${{ steps.gate.outputs.start }}
           SAVED: ${{ steps.save.outputs.changed }}
+          BUILT: ${{ steps.build.outcome }}
+          RETRY: ${{ github.event_name == 'workflow_dispatch' && github.actor == 'github-actions[bot]' }}
+          INPUTS: ${{ toJSON(inputs) }}
         run: |
           save="TTS/Impossibility Simulator.json"
+          db=$GITHUB_WORKSPACE/carddata/db
           head=$(git rev-parse HEAD)
           parts=()
           if [ "$head" != "$MAIN" ]; then
-            n=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$head" -- '*.psd' | { grep -c . || true; })
+            n=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$head" -- ':(icase)*.psd' | { grep -c . || true; })
             if [ "$n" -gt 0 ]; then parts+=("$n card$([ "$n" = 1 ] || echo s) baked"); else parts+=("edit verdicts"); fi
           fi
           export GIT_INDEX_FILE=$RUNNER_TEMP/main.index
@@ -408,21 +424,55 @@ jobs:
               GIT_COMMITTER_NAME=AutoCroissant GIT_COMMITTER_EMAIL=autocroissant@gmail.com \
               git commit-tree "$tree" -p "$MAIN" -F "$RUNNER_TEMP/main-message.txt")
           git show --no-renames --name-status --format='%H%n%B' "$m" | tee "$RUNNER_TEMP/main.txt"
+          late=$(( (90 - 15) * 60 ))            # the job's timeout-minutes less 15 for what follows M (seconds, each capped)
+          if [ -n "$START" ] && [ $(( $(date +%s) - START )) -gt "$late" ]; then
+            echo "::error::$(( ($(date +%s) - START) / 60 )) minutes into the run: M is not pushed, so no data commit either; the next run does both"
+            exit 1
+          fi
           if ! git push --no-thin origin "$m:refs/heads/main"; then     # a thin pack would want the old blobs as delta bases
             now=$(git ls-remote origin refs/heads/main | cut -f1)
-            if [ -n "$now" ] && [ "$now" != "$MAIN" ]; then
-              echo "::warning::main moved during the run (now ${now:0:8}): M and the data are dropped; the next run bakes and builds again"
-              echo "rejected=true" >> "$GITHUB_OUTPUT"
+            if [ -z "$now" ] || [ "$now" = "$MAIN" ]; then exit 1; fi
+            echo "rejected=true" >> "$GITHUB_OUTPUT"
+            kept=$([ "$head" = "$MAIN" ] && echo "the data (built on main's head) is still committed" || echo "the data (it read B) is dropped")
+            if [ "$RETRY" = true ]; then
+              echo "::warning::main moved again (now ${now:0:8}): M is dropped and $kept; the next run does the work"
               exit 0
             fi
-            exit 1
+            again=(-f dry_run=false -f force=true -f "builder_ref=$(git -C bot rev-parse HEAD)" -f "bake=$(jq -r '.bake // "all"' <<< "$INPUTS")")
+            if [ "$head" != "$MAIN" ]; then    # the dropped data's own inputs too
+              while IFS= read -r kv; do again+=(-f "$kv"); done < <(jq -r '(. // {}) | to_entries[]
+                | select(.key == "full" or .key == "cards" or .key == "seed" or .key == "allow_archive" or .key == "restore")
+                | select(.value != "" and .value != false and .value != "false") | "\(.key)=\(.value)"' <<< "$INPUTS")
+            fi
+            echo "::warning::main moved during the run (now ${now:0:8}): M is dropped and $kept; the run starts over once from the new head"
+            gh workflow run card-sync.yml --ref main -R "$GITHUB_REPOSITORY" "${again[@]}" \
+              || echo "::warning::the new run was not dispatched: the next scheduled run does the work"
+            exit 0
           fi
           { echo "pushed=true"; echo "m=$m"; } >> "$GITHUB_OUTPUT"
           echo "Main commit \`${m:0:8}\`: Card sync: ${subject%, }." >> "$GITHUB_STEP_SUMMARY"
           if [ "$head" != "$MAIN" ]; then
             cd bot
             "$RUNNER_TEMP/builder/bin/python" -m commands.card_data --rewrite "$head" "$m" --checkout "$GITHUB_WORKSPACE" \
-              --db "$GITHUB_WORKSPACE/carddata/db" --message "$RUNNER_TEMP/message.txt"
+              --db "$db" --message "$RUNNER_TEMP/message.txt"
+          elif [ "$BUILT" = success ] && [ -f "$db/manifest.json" ]; then    # card_data's format (card_db.write_db)
+            "$RUNNER_TEMP/builder/bin/python" - "$db/manifest.json" "$MAIN" "$m" "$(git show -s --format=%ct "$m")" "$RUNNER_TEMP/message.txt" <<'EOF'
+          import json, os, sys
+          path, old, new, at, message = sys.argv[1:]
+          with open(path, encoding="utf-8") as fh:
+              manifest = json.load(fh)
+          if manifest.get("card_commit") == old:
+              manifest["card_commit"], manifest["card_commit_at"] = new, float(at)
+          manifest["main_commit"] = new
+          with open(path, "w", encoding="utf-8") as fh:
+              fh.write(json.dumps(manifest, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+          if os.path.isfile(message):
+              with open(message, encoding="utf-8") as fh:
+                  text = fh.read()
+              with open(message, "w", encoding="utf-8") as fh:
+                  fh.write(text.replace(old, new).replace(old[:8], new[:8]))
+          EOF
+            echo "db/ now names ${m:0:8} as the build's main commit."
           fi
 
       # Stage 5: one Discord message per push with events past the posted cursor, as discord.json (in the artifact). The
@@ -430,6 +480,7 @@ jobs:
       - name: Posts
         id: posts
         if: ${{ !cancelled() && steps.gate.outputs.go == 'true' && steps.venv.outcome == 'success' }}
+        timeout-minutes: 3
         working-directory: bot
         run: |
           ids=()
@@ -444,7 +495,8 @@ jobs:
       # Off until step 8 (POSTS) and on every dry run. The cursor moves after each accepted message and rides in the data
       # commit. The URL is never printed; a failed call warns and the rest wait for the next run.
       - name: Send the posts
-        if: ${{ !cancelled() && env.POSTS == 'on' && env.DRY_RUN != 'true' && steps.posts.outcome == 'success' && steps.build.outcome == 'success' && steps.main.outcome != 'failure' && steps.main.outputs.rejected != 'true' }}
+        if: ${{ !cancelled() && env.POSTS == 'on' && env.DRY_RUN != 'true' && steps.posts.outcome == 'success' && steps.build.outcome == 'success' && steps.main.outcome != 'failure' && (steps.main.outputs.rejected != 'true' || steps.bake.outputs.baked != 'true') }}
+        timeout-minutes: 3
         working-directory: bot
         env:
           WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
@@ -463,9 +515,11 @@ jobs:
           done
 
       # Stage 6: db/ and the cursor as one commit on data, never forced; a rejected push fails the run (gate G6's case).
+      # A rejected M drops it only when the data read B.
       - name: Commit data
         id: data-commit
-        if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.build.outcome == 'success' && steps.main.outcome != 'failure' && steps.main.outputs.rejected != 'true' }}
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.build.outcome == 'success' && steps.main.outcome != 'failure' && (steps.main.outputs.rejected != 'true' || steps.bake.outputs.baked != 'true') }}
+        timeout-minutes: 3
         working-directory: carddata
         run: |
           git add -A db
@@ -500,17 +554,18 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-      # Stage 8: a GITHUB_TOKEN push triggers no workflow, so the site build is dispatched after a commit
+      # Stage 8: a GITHUB_TOKEN push triggers no workflow, so the site build is dispatched after a commit (after a data
+      # commit only with MAIN_COMMIT on: in the shadow the site doesn't read the data yet)
       - name: Site build
-        if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.main.outputs.pushed == 'true' || steps.data-commit.outputs.committed == 'true') }}
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.main.outputs.pushed == 'true' || (steps.data-commit.outputs.committed == 'true' && env.MAIN_COMMIT == 'on')) }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY"
 
-      # Stage 9: a failed scheduled run tells Discord once per failing streak (no schedule yet: never). The URL is never
-      # printed; a failed call only warns.
+      # Stage 9: a failed scheduled run tells Discord once per failing streak, with POSTS on (in the shadow nothing reads
+      # this data yet). The URL is never printed; a failed call only warns.
       - name: Tell Discord
-        if: failure() && github.event_name == 'schedule'
+        if: failure() && github.event_name == 'schedule' && env.POSTS == 'on'
         env:
           GH_TOKEN: ${{ github.token }}
           WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
