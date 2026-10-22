@@ -34,7 +34,7 @@ export function remember(storage, key, open) {
 }
 
 /** The dropdown: closed unless `open` (the card page: the session left it open); the body is fetched on first open. */
-export const detailsHtml = (state, open = !!state.details) => `<details class="psd-details"${open ? " open" : ""}><summary>Details</summary><div class="psd-body"><p class="muted">Loading…</p></div></details>`;
+export const detailsHtml = (state, open = !!state.details, id = "") => `<details class="psd-details"${id ? ` data-id="${esc(id)}"` : ""}${open ? " open" : ""}><summary>Details</summary><div class="psd-body"><p class="muted">Loading…</p></div></details>`;
 
 const fontsHtml = (fonts, state = {}) => {
   const names = Object.keys(obj(fonts));
@@ -105,13 +105,13 @@ export function treeHtml(tree, depth = 0) {
  * The dropdown's body: one nested <details> per section.
  * @param rec the record (data/details/<id>.json)
  * @param card the cards.json entry (parser notes, orig/edited)
- * @param extras {badges: the card page's PSD chips (html), labels: field labels}
+ * @param extras {badges: the card page's PSD chips (html), labels: field labels, page: a rulebook page (no card-only sections)}
  * @param state which sections the session left open
  */
 export function bodyHtml(rec, card, extras, state = {}) {
   const r = obj(rec);
   const head = [r.at ? `PSD read ${esc(String(r.at).slice(0, 10))}` : "", r.parser != null ? `parser v${esc(r.parser)}` : "", r.path ? esc(r.path) : ""].filter(Boolean).join(" · ");
-  const n = v => (typeof v === "string" ? null : count(v));
+  const n = v => (typeof v === "string" ? null : count(v)), card_ = !extras?.page;
   return `${head ? `<p class="muted">${head}</p>` : ""}${[
     sec("fonts", "Fonts", n(r.fonts), part(r.fonts, v => fontsHtml(v, state)), state),
     sec("text", "Text layers", n(r.text), part(r.text, textHtml), state),
@@ -119,12 +119,12 @@ export function bodyHtml(rec, card, extras, state = {}) {
     sec("smart", "Smart objects", n(r.smart_objects), part(r.smart_objects, v => list(arr(v))), state),
     sec("canvas", "Canvas", null, part(r.canvas, canvasHtml), state),
     sec("icons", "Type icons", null, Object.hasOwn(ICONS, r.icons) ? iconsHtml(r.icons) : part(r.icons === undefined ? undefined : String(r.icons), () => ""), state),   // a value is a string too
-    sec("stats", "Stat rows", null, part(r.stats, statsHtml), state),
-    sec("words", "Status-word layers", (n(r.fx) ?? 0) + (n(r.overlays) ?? 0), wordsHtml(r.fx, r.overlays), state),
-    sec("template", "Template", null, part(r.template, templateHtml), state),
+    card_ && sec("stats", "Stat rows", null, part(r.stats, statsHtml), state),
+    card_ && sec("words", "Status-word layers", (n(r.fx) ?? 0) + (n(r.overlays) ?? 0), wordsHtml(r.fx, r.overlays), state),
+    card_ && sec("template", "Template", null, part(r.template, templateHtml), state),
     sec("parser", "Parser", null, parserHtml(card, extras), state),
     sec("tree", "Layer tree", n(r.tree), state.tree ? part(r.tree, treeHtml) : `<div class="tree-slot"></div>`, state, state.tree ? ' data-done="1"' : ""),
-  ].join("")}`;
+  ].filter(Boolean).join("")}`;
 }
 
 /**
@@ -136,13 +136,15 @@ export function bodyHtml(rec, card, extras, state = {}) {
  */
 export function mount(el, { card, load, storage, extras, outer = true }) {
   const state = readState(storage);
-  let rec = null, loading = null;
+  let rec = null, loading = null, echo = el.open;      // the browser may fire toggle for the open it was rendered with
   const body = () => el.querySelector(".psd-body");
   const render = () => (loading ||= load().then(r => { rec = r; Object.assign(state, readState(storage)); body().innerHTML = bodyHtml(r, card, extras, state); },   // another dropdown may have changed it
     e => { loading = null; body().innerHTML = `<p class="muted">Couldn't load the PSD details (${esc(e.message)}). Close and open again to retry.</p>`; }));
   el.addEventListener("toggle", e => {                   // capture: toggle doesn't bubble, so one listener serves the sections too
     const t = e.target, ds = t.dataset || {};
-    const key = t === el ? (outer ? "details" : "") : ds.sec || (ds.font != null ? `font:${ds.font}` : "");
+    const first = t === el && echo && t.open;           // a one-off open (a Details link) isn't remembered
+    if (t === el) echo = false;
+    const key = t === el ? (outer && !first ? "details" : "") : ds.sec || (ds.font != null ? `font:${ds.font}` : "");
     if (key) { state[key] = !!t.open; remember(storage, key, t.open); }
     if (t === el) { if (t.open) render(); return; }
     if (key === "tree" && t.open && rec && !t.dataset.done) { t.dataset.done = "1"; const slot = t.querySelector(".tree-slot"); if (slot) slot.innerHTML = part(rec.tree, treeHtml); }

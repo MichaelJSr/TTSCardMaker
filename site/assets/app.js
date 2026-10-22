@@ -65,7 +65,7 @@ const psdBadges = c => [
   c.reparsePending ? `<span class="fact" data-tip="The PSD changed since the bot last read it; the data follows on the next /update_stats">Re-parse pending</span>` : "",
 ].join("");
 // beside PSD chips and parser notes: opens the card with Details open
-const detailsLink = c => (c.details ? `<a class="fact" href="#/card/${c.id}" data-action="open-details" data-id="${c.id}" data-tip="Open the card with its PSD details">Details</a>` : "");
+const detailsLink = c => (c.details ? `<a class="fact details-link" href="#/card/${c.id}?details" data-tip="Open the card with its PSD details">Details</a>` : "");   // a plain link: Ctrl-click opens a tab
 const psdChips = c => { const b = psdBadges(c); return b && b + detailsLink(c); };
 
 // ---- boot ------------------------------------------------------------------------------------------
@@ -206,7 +206,7 @@ function route() {
   hideTip();
   if (r.name === "card") {
     if (!S.renderedHash) renderView({ name: "cards", arg: "", params: new URLSearchParams() }, "#/cards");
-    openCard(r.arg);
+    openCard(r.arg, r.params.has("details"));
     return;
   }
   const hash = location.hash || hashOf(r);
@@ -392,8 +392,10 @@ function dupsOf(c) {      // the other cards printed from the same PSD
 function strip(title, cards) {
   return cards.length ? `<h3>${esc(title)} <span class="muted">${cards.length}</span></h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
 }
-function openCard(id) {
+function openCard(id, showDetails = false) {
   const c = S.byId.get(id);
+  const was = $(".psd-details", modal);                  // a re-render keeps it open
+  showDetails ||= !modal.hidden && !!was?.open && was.dataset.id === id;
   if (!c) { toast("That card doesn't exist (anymore)."); history.replaceState(null, "", S.listHash); return; }
   const pool = S.list.length && S.list.some(x => x.id === id) ? S.list : S.cards;
   const i = pool.findIndex(x => x.id === id), prev = pool[(i - 1 + pool.length) % pool.length], next = pool[(i + 1) % pool.length];
@@ -445,7 +447,7 @@ function openCard(id) {
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="history-slot">${historyHtml(c)}</div>
           <div id="versions-slot">${versionsHtml(c)}</div>
-          ${c.details ? details.detailsHtml(details.readState(store)) : ""}
+          ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
         </div>
       </div>
     </div></div>`;
@@ -547,7 +549,7 @@ function renderRules(r) {
   if (q) highlight($$(".page .ability, .page h3", view), q);
   for (const p of pages) {                               // one Details dropdown per page, always closed at first
     const dd = p.details && document.getElementById(`page-${p.id}`)?.querySelector(".psd-details");
-    if (dd) details.mount(dd, { card: p, load: () => loadDetails(p), storage: store, extras: { badges: psdBadges(p), labels: FIELD_LABEL }, outer: false });
+    if (dd) details.mount(dd, { card: p, load: () => loadDetails(p), storage: store, extras: { badges: psdBadges(p), labels: FIELD_LABEL, page: true }, outer: false });
   }
   const input = $("#rules-q");
   input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#rules-q"); i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }, 200));
@@ -901,7 +903,6 @@ const actions = {
     const curDesc = p.get("dir") ? p.get("dir") === "desc" : defDesc; setParams({ dir: curDesc ? "asc" : "desc" }); },
   "sort-by": el => { const p = parseHash().params; setParams({ sort: el.dataset.key, dir: p.get("sort") === el.dataset.key && p.get("dir") !== "asc" ? "asc" : "" }); },
   "set-pref": el => { localStorage.setItem(el.dataset.key, el.dataset.value); setParams({ [el.dataset.key]: el.dataset.value }); },
-  "open-details": el => { details.remember(store, "details", true); goCard(el.dataset.id); },
   "random-from-list": () => { const l = S.list.length ? S.list : S.cards; location.hash = `#/card/${l[Math.floor(Math.random() * l.length)].id}`; },
   "deck-toggle": el => toggleDeck(el.dataset.id),
   "deck-remove": el => { D.removeCard(deck(), el.dataset.id); D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
@@ -951,6 +952,7 @@ const actions = {
   ...editor.actions,
 };
 document.addEventListener("click", e => {
+  if (e.target.closest("a.details-link")) return;     // the browser follows it
   const a = e.target.closest("[data-action]");
   if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); actions[a.dataset.action]?.(a); return; }
   const open = e.target.closest("[data-open], .chart [data-card]");

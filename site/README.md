@@ -9,7 +9,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`),
   and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
   record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
-  dropdown open).
+  dropdown open this once; Ctrl-click opens it in a new tab).
 - **Card pages**: full image, stat bars, ability text with icons, timing-tag badges (hover for the meaning) and links to
   every card it names; "mentions", "mentioned by", similar stats, same series, text history with changes highlighted,
   and an image version viewer: every commit that changed the card's image, compared side by side with the current one.
@@ -24,7 +24,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   Every card has a shareable link (`/c/<card>/`) that shows a rich preview in Discord. The Share button (s) opens a dialog
   with that link, a Discord preview, and buttons to copy the card as a Discord message, an image or plain text.
 - **Rulebook**: every page with search and highlighting, the timing-tag glossary, and the constructed ban list. Each
-  page has the same Details dropdown (the bot reads the rulebook PSDs too), always closed when the page loads.
+  page has the same Details dropdown (the bot reads the rulebook PSDs too), always closed when the page loads, without
+  the card-only sections (stat rows, status-word layers, template).
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,
   optional starting field), with live checks, several saved decks, share links, text import/export, random fill,
   printable proxies, and a Tabletop Simulator saved-object download. Signed in, **Publish…** on a saved hand makes it a
