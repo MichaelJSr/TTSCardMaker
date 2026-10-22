@@ -30,8 +30,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   for each stat, and a line of its total over time when its stats changed. **Recorded changes** lists, newest first,
   every change the bot recorded to the card: stats (a buff raises the total, a nerf lowers it), stars, kind, item type,
   types, series, timing tags ("(1PT) → (1CD)") and rewordings (each with its word diff). Dates are Pacific time; one
-  from an older record (the bot kept no PSD for it) is marked approximate, and a PSD read again by a newer parser is
-  not a change.
+  from an older record (the bot kept no PSD for it) is marked approximate unless a commit of the PSD has that date, and
+  a PSD read again by a newer parser is not a change (the newer reading counts).
   A **Details** dropdown at the bottom of the card page (closed by default; the browser remembers it, its sections and
   fonts, for the session) shows the PSD's structure as the bot read it: fonts (each expandable to its layers; one that
   `MDW/Fonts` lacks is flagged "missing from MDW/Fonts", "not checked" when the bot had no font index), every text

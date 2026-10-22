@@ -2,7 +2,8 @@
 
 Called by build_site.py with the site's card entries (stars and stats as the card pages show them, edits applied) and
 the bot's stats.pkl / old_stats.pkl (each earlier version of a card, dated by the commit of the PSD it was read from;
-older records with no PSD blob keep their stored date, marked approximate). Days and months are Pacific time (ZONE).
+older records with no PSD blob keep their stored date, marked approximate unless a commit of that PSD has it). Days and
+months are Pacific time (ZONE).
 
   * Cohorts: creatures and minions with all four stats, by star level. A star level with fewer than MIN_COHORT cards
     is compared with its kind's "all stars" cohort, and so are the auxiliary creatures (no star level): they count as
@@ -10,22 +11,25 @@ older records with no PSD blob keep their stored date, marked approximate). Days
     A card with several creatures counts once, by its first creature (the card's own stats).
   * Per card: its cohort, how many cards of it have a lower or higher total, mid-rank percentiles for each stat and
     the total, z of the total, "top" / "bottom" for the top and bottom 10%, the stat lines it had (trend, when they
-    changed) and its recorded changes, newest first. A version with the same date as the one before it is the same PSD
-    read again by a newer parser: not a change.
+    changed) and its recorded changes, newest first. Both read the current card as its page shows it. A version with
+    the same date as the one after it is the same PSD read again by a newer parser: the newer reading replaces it.
   * Over time (full-history builds only, since a card's start is its first upload): each month, the total stats of
     each cohort's cards as they were then.
 
 PSDs are never read here; everything comes from the bot's data.
 """
+import os
 import re
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
+from types import SimpleNamespace
 
 try:
     from zoneinfo import ZoneInfo
     ZONE = ZoneInfo("America/Los_Angeles")  # the bot's TIMEZONE; balance.js TZ
-except Exception:                          # no tz database
+except Exception:                          # no tz database: UTC, and build_site warns
     ZONE = timezone.utc
+ZONE_MISSING = ZONE is timezone.utc
 
 KINDS = ("creature", "minion")             # cohorts: creatures and minions by star level
 AUX = "creatures"                          # auxiliary creatures: no star level, compared with all creatures
@@ -73,6 +77,12 @@ def midrank(value, ordered):
     below = sum(1 for v in ordered if v < value)
     equal = sum(1 for v in ordered if v == value)
     return 100 * (below + equal / 2) / len(ordered)
+
+
+def pct_of(rank):
+    """A mid-rank rounded half up, but never across a flag's edge: 89.5 is 89 (no "top"), 10.5 is 11."""
+    pct = int(rank + .5)
+    return TOP - 1 if TOP > rank and pct >= TOP else BOTTOM + 1 if BOTTOM < rank and pct <= BOTTOM else pct
 
 
 def month_of(ts):
@@ -151,7 +161,7 @@ def card_balance(e, line, key, groups, cohort):
     columns = {k: sorted(sum(l) if k == "total" else l[i] for _, l in rows) for i, k in enumerate(KEYS)}
     values = dict(zip(KEYS, (*line, sum(line))))
     raw = {k: midrank(values[k], columns[k]) for k in KEYS}
-    pct = {k: int(v + .5) for k, v in raw.items()}
+    pct = {k: pct_of(v) for k, v in raw.items()}
     total = values["total"]
     sd = cohort["total"]["sd"]
     out = {"cohort": key, "stats": list(line), "pct": pct, "below": sum(1 for t in columns["total"] if t < total),
@@ -172,6 +182,32 @@ def chain_of(name, stats, old_stats):
                       key=lambda v: v.timestamp)
     current = stats.get(name)
     return versions + ([current] if current is not None and isinstance(getattr(current, "timestamp", None), (int, float)) else [])
+
+
+def shown(e, current):
+    """The current card as its page shows it (Card Edits.json applied), with the bot card's date, blob and path."""
+    return SimpleNamespace(timestamp=current.timestamp, blob_sha=getattr(current, "blob_sha", None), path=getattr(current, "path", None),
+                           stats=SimpleNamespace(**{attr: e.get(k) for k, attr in STATS}), stars=e.get("stars"), card_type=e.get("type"),
+                           subtype=e.get("subtype"), series=e.get("series"), types=e.get("types") or [],
+                           creatures=e.get("creatures") or [], ability=e.get("ability"))
+
+
+def page_chain(e, stats, old_stats):
+    """chain_of for a site card: re-reads folded (a version read again at the same commit by a newer parser gives way to
+    the newer reading) and the current card as shown."""
+    chain = chain_of(e["key"], stats, old_stats)
+    out = [v for v, w in zip(chain, chain[1:]) if v.timestamp != w.timestamp] + chain[len(chain) - 1:]
+    if out and out[len(out) - 1] is stats.get(e["key"]):
+        out[len(out) - 1] = shown(e, out[len(out) - 1])
+    return out
+
+
+def exact(v, psd_commits):
+    """v's date is a commit of its PSD: it has its blob, or a commit touched a PSD of its file name at that second."""
+    if getattr(v, "blob_sha", None):
+        return True
+    name = os.path.basename(getattr(v, "path", None) or "").lower()
+    return psd_commits is not None and (int(v.timestamp), name) in psd_commits
 
 
 def change(a, b, texts):
@@ -215,35 +251,25 @@ def reworked(row):
     return any(k in row for k in ("words", "stats", "stars", "kind", "sub", "types", "lines"))
 
 
-def reread(a, b):
-    """b is the same commit's PSD read again (a newer parser), not a card change."""
-    return a.timestamp == b.timestamp
-
-
-def card_changes(e, chain):
-    """Rows newest first; approx: the newer version has no PSD blob (an older record), so its date is approximate."""
+def card_changes(e, chain, psd_commits=None):
+    """Rows newest first (chain: page_chain); approx: the newer version's date is not known to be its PSD's commit (an
+    older record with no blob, and no commit of that PSD at that second)."""
     texts = [v["ability"] for v in e.get("history") or []] + [e.get("ability") or ""]
     rows = []
-    for i, (a, b) in enumerate(zip(chain, chain[1:])):
-        if reread(a, b):
-            continue
+    for a, b in zip(chain, chain[1:]):
         row = change(a, b, texts)
-        if "text" in row and i == len(chain) - 2:
-            row["text"][1] = len(texts) - 1       # the current text, as the page shows it (an edit wins)
         if row:
-            if not getattr(b, "blob_sha", None):
+            if not exact(b, psd_commits):
                 row["approx"] = True
             rows.append({"ts": int(b.timestamp), **row})
     return rows[::-1]                             # newest first
 
 
-def trend_of(e, chain):
-    """The card's distinct stat lines over time (on the scale; the current one as the page shows it), when there are two or more."""
+def trend_of(chain):
+    """The card's distinct stat lines over time (chain: page_chain; on the scale), when there are two or more."""
     points = []
-    for i, v in enumerate(chain):
-        line = entry_line(e) if i == len(chain) - 1 else line_of(getattr(v, "stats", None))
-        if points and line and points[-1]["ts"] == int(v.timestamp):
-            points.pop()                          # a re-read: the newer parser's line
+    for v in chain:
+        line = line_of(getattr(v, "stats", None))
         if line and sum(line) <= OFF_SCALE and (not points or tuple(points[-1][k] for k, _ in STATS) != line):
             points.append({"ts": int(v.timestamp), **{k: x for (k, _), x in zip(STATS, line)}, "total": sum(line)})
     return points if len(points) > 1 else []
@@ -262,11 +288,9 @@ def over_time(cards, stats, old_stats, sizes, now):
     for e in cards:
         if e.get("dup") or e.get("hidden") or e.get("parsed") is False or e.get("key") not in stats:
             continue
-        chain = chain_of(e["key"], stats, old_stats)
-        if not chain:
+        points = [point(v) for v in page_chain(e, stats, old_stats)]                     # the current card as shown
+        if not points:
             continue
-        points = [point(v) for v in chain[:-1]]
-        points.append((chain[-1].timestamp, e.get("type"), e.get("stars"), entry_line(e)))     # as the page shows it
         start = min([p[0] for p in points] + ([e["fs"]] if e.get("fs") else []))
         lives.append((start, None, points))
     for name, versions in old_stats.items():      # archived: deleted PSDs, tagged by the bot
@@ -305,9 +329,10 @@ def over_time(cards, stats, old_stats, sizes, now):
 
 
 # ---- the file ----------------------------------------------------------------------------------------------------
-def build(cards, stats, old_stats, now=None, history=True):
+def build(cards, stats, old_stats, now=None, history=True, psd_commits=None):
     """data/analytics.json for the site's card entries (before their history is moved to history.json). history = the
-    build read the git history (fs is set): without it, no over-time series (cards would start at their last commit)."""
+    build read the git history (fs is set): without it, no over-time series (cards would start at their last commit).
+    psd_commits = {(commit time, PSD file name in lower case)} from that history: an older record dated by one is exact."""
     now = now or datetime.now(timezone.utc).timestamp()
     members = cohort_members(cards)
     cohorts, groups, sizes = make_cohorts(members)
@@ -319,10 +344,10 @@ def build(cards, stats, old_stats, now=None, history=True):
     for e in cards:
         if e.get("dup") or e.get("key") not in stats:
             continue
-        chain = chain_of(e["key"], stats, old_stats)
-        versions += max(0, len(chain) - 1)
-        rows = card_changes(e, chain)
-        trend = trend_of(e, chain) if e["id"] in out_cards else []
+        versions += max(0, len(chain_of(e["key"], stats, old_stats)) - 1)
+        chain = page_chain(e, stats, old_stats)
+        rows = card_changes(e, chain, psd_commits)
+        trend = trend_of(chain) if e["id"] in out_cards else []
         if rows or trend:
             entry = out_cards.setdefault(e["id"], {})
             if rows:

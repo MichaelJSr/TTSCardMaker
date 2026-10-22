@@ -1675,8 +1675,13 @@ def main():
     if records:
         log(f"PSD details: {len(detail_files)} cards and rulebook pages have a record ({len(records)} in {DETAILS_JSON})")
 
+    if analytics.ZONE_MISSING:
+        warn("no tz database: balance days and months in UTC, not Pacific time as balance.js shows them")
+    psd_commits = None if commits is None else {(ts, os.path.basename(path).lower()) for _, ts, _, _, _, entries, _ in commits
+                                                for status, _, _, path in entries if status != "D" and path.lower().endswith(".psd")}
     try:                                          # balance analytics: never a failed build
-        balance = analytics.build(cards, stats, old_stats if isinstance(old_stats, dict) else {}, history=commits is not None)
+        balance = analytics.build(cards, stats, old_stats if isinstance(old_stats, dict) else {}, history=commits is not None,
+                                  psd_commits=psd_commits)
         for message in analytics.summary(balance):
             log(message)
     except Exception as e:
