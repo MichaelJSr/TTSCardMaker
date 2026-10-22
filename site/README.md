@@ -35,7 +35,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **Published decks** (`#/decks`, linked from the Deck builder page; a deck page is `#/decks/<owner>/<slug>`, static
   `decks/<owner>/<slug>/` that previews in Discord): tiles with the owner, the card count, a complete-hand mark and a
   few card images; filters for text, owner, a card (`?card=<id>`, from a card's page) and complete hands, sorted by date,
-  name or owner. A search on the Cards tab also says how many published decks it finds ("2 published decks match
+  name or owner. A search on the Cards tab also says how many public decks it finds ("2 public decks match
   “bagels”", by deck name, owner, description or card name) and links there. Private decks are not in
   the browser (nor in its count or owner list): they show only on their owner's page and at their own link. A deck's page
   shows the hand grouped like the deck builder with the hand checks, and offers Save a copy to my decks, Share link, Copy
@@ -186,11 +186,12 @@ with a warning, a card id that isn't a card is dropped and counted), writes `dat
 cards resolved, private ones as they are, newest first), counts them in `cards.json` (the Deck builder page shows the
 public count) and writes a static `decks/<owner>/<slug>/` page per public deck with Open Graph tags ("Burning Bagels by
 MichaelJSr", "7 creatures, 10 items, field card Deepnest", and a 1200×630 image of up to six of its cards in page order,
-the field card first, made from their thumbnails and cached in `site/.cache/og` by those images; one card's image when
-it has a single card, else the site banner). Private decks get no static page and are not listed in the deck browser: the owner's person page links them
-(with a lock) and their own `#/decks/<owner>/<slug>` link opens the passphrase form, which shows nothing but the owner,
-file name and date until the passphrase is typed; the owner or an admin can still unpublish or replace one from that
-page, so a forgotten passphrase strands nothing, and the commit message names a private deck by its path only.
+the field card first, made from their thumbnails and cached in `site/.cache/og` by those images; made only when
+`SITE_URL` is set; one card's image when it has a single card, else the site banner). Private decks get no static page
+and are not listed in the deck browser: the owner's person page links them (with a lock) and their own
+`#/decks/<owner>/<slug>` link opens the passphrase form, which shows nothing but the owner, file name and date until the
+passphrase is typed; the owner or an admin can still unpublish or replace one from that page, so a forgotten passphrase
+strands nothing, and the commit message names a private deck by its path only.
 Decryption needs `crypto.subtle` (https or localhost).
 
 ## Font check

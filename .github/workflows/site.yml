@@ -57,9 +57,18 @@ jobs:
 
       - uses: actions/cache@v6
         with:
-          path: site/.cache
+          path: |
+            site/.cache
+            !site/.cache/og
           key: card-images-v2-${{ hashFiles('site/build/build_site.py') }}-${{ steps.images.outputs.key }}
           restore-keys: card-images-v2-
+
+      # Deck preview montages: their own cache, re-saved when a deck changes too.
+      - uses: actions/cache@v6
+        with:
+          path: site/.cache/og
+          key: deck-previews-v1-${{ hashFiles('site/build/build_site.py', 'site/decks/**') }}-${{ steps.images.outputs.key }}
+          restore-keys: deck-previews-v1-
 
       - run: python site/build/build_site.py
         env:

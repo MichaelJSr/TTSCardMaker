@@ -891,6 +891,9 @@ def clean_deck(raw, folder, slug, cards):
     if field is not None and not (isinstance(field, str) and field in cards):
         notes.append(f"field {field!r} isn't a card, dropped")
         field, bad = None, bad + [field]
+    if field in ids:                              # listed once, as the field card
+        ids.remove(field)
+        notes.append(f"field {field!r} is in \"cards\" too, listed once")
     unknown = sorted(str(k) for k in set(raw) - DECK_FIELDS)
     if unknown:
         notes.append(f"unknown fields ignored: {', '.join(unknown)}")
@@ -1776,7 +1779,7 @@ def main():
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(title)} · {SITE_NAME}</title>',
         ])
-    for n in os.listdir(os.path.join(CACHE, "og")):
+    for n in os.listdir(os.path.join(CACHE, "og")) if SITE_URL else []:   # no montages without SITE_URL: keep the cache
         if n not in montages:
             os.remove(os.path.join(CACHE, "og", n))
     if montages:

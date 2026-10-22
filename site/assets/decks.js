@@ -55,6 +55,7 @@ export function validateDeck(raw, { byId = null } = {}) {
     cards = cards.filter(id => byId.has(id) || (dropped.push(id), false));
     if (field && !byId.has(field)) { dropped.push(field); field = null; }
   }
+  if (field) cards = cards.filter(id => id !== field);   // listed once, as the field card
   if (cards.length > LIMITS.cards) errors.push(`At most ${LIMITS.cards} cards`);
   return { deck: { name, description, cards, field }, errors, dropped };
 }
@@ -109,9 +110,10 @@ export function publicEntry(d, byId = null, state = "") {
   const owner = str(d.owner), slug = str(d.slug);
   if (!LOGIN_RE.test(owner) || !SLUG_RE.test(slug)) return null;
   let dropped = Number.isInteger(d.dropped) && d.dropped > 0 ? d.dropped : 0;
-  const cards = [...new Set((Array.isArray(d.cards) ? d.cards : []).map(String))].filter(id => !byId || byId.has(id) || (dropped++, false));
+  let cards = [...new Set((Array.isArray(d.cards) ? d.cards : []).map(String))].filter(id => !byId || byId.has(id) || (dropped++, false));
   let field = d.field ? String(d.field) : null;
   if (field && byId && !byId.has(field)) { field = null; dropped++; }
+  if (field) cards = cards.filter(id => id !== field);   // listed once, as the field card
   return { owner, slug, updated: str(d.updated), state, private: false, name: line(d.name) || slug, description: str(d.description), cards, field, n: cards.length + (field ? 1 : 0), dropped };
 }
 export function privateEntry(d, state = "") {
@@ -226,7 +228,7 @@ export function searchHitsHtml(list, q, ctx = {}) {
   q = line(q);
   const n = q ? filterDecks((Array.isArray(list) ? list : []).filter(d => !obj(d).private), { q }, ctx).length : 0;
   if (!n) return "";
-  return `<p class="deck-hits muted">${n === 1 ? "1 published deck matches" : `${n} published decks match`} “${esc(q)}”. <a href="#/decks?q=${encodeURIComponent(q)}">Show ${n === 1 ? "it" : "them"}</a></p>`;
+  return `<p class="deck-hits muted">${n === 1 ? "1 public deck matches" : `${n} public decks match`} “${esc(q)}”. <a href="#/decks?q=${encodeURIComponent(q)}">Show ${n === 1 ? "it" : "them"}</a></p>`;
 }
 
 /** The hand grouped like the deck builder: creatures by stars, items by stars, the field card, then strays and gone ids. */
