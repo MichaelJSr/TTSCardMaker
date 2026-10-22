@@ -411,6 +411,7 @@ function openCard(id, showDetails = false) {
   const c = S.byId.get(id);
   const was = $(".psd-details", modal);                  // a re-render keeps it open
   showDetails ||= !modal.hidden && !!was?.open && was.dataset.id === id;
+  const wasB = $(".badge-help", modal), keepBadges = !modal.hidden && !!wasB?.open && wasB.dataset.id === id;
   if (!c) { toast("That card doesn't exist (anymore)."); history.replaceState(null, "", S.listHash); return; }
   const pool = S.list.length && S.list.some(x => x.id === id) ? S.list : S.cards;
   const i = pool.findIndex(x => x.id === id), prev = pool[(i - 1 + pool.length) % pool.length], next = pool[(i + 1) % pool.length];
@@ -448,7 +449,7 @@ function openCard(id, showDetails = false) {
         ${statBars(c)}
         ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, c.name)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
         ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, c.name)}</div>` : ""}
-        ${hasBadges(c.ability) || hasBadges(c.note) ? `<details class="badge-help"><summary>Badges</summary>${legendHtml()}</details>` : ""}
+        ${hasBadges(c.ability) || hasBadges(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml()}</details>` : ""}
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
         <div class="actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
