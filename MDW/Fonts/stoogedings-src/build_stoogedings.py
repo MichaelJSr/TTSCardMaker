@@ -9,8 +9,9 @@ Every icon also has a fixed Private Use Area codepoint (stable across rebuilds),
 
 Timing tags become badges: "(1CD)" set in this font draws a pill in the tag's color group (on your turn / at any
 time / forced / per game and triggers). Cooldowns (nCD, a/bCD, nGCD, a/bGCD), uses (nU) and the rulebook's older
-tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-9 or X. "(Action)" gets a grey badge. The text is
-unchanged, so parsers and searches see the same thing as before.
+tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-9 or X. "(Action)" gets a grey badge. Any letter case
+works and draws the same badge: "(1cd)" is (1CD), "(action)" and "(ACTION)" are (Action). The text is unchanged, so
+parsers and searches see the same thing as before.
 
 Renderer behavior that shaped the design (tested in Photoshop 2023 and macOS CoreText):
   * Photoshop renders SVG glyphs, including embedded PNGs, but paints SVG `currentColor` (and context-fill,
@@ -44,6 +45,7 @@ from fontTools.pens.transformPen import TransformPen
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.ttLib import TTFont
 from fontTools.ttLib.tables.S_V_G_ import table_S_V_G_
+from fontTools.ttLib.tables.otBase import USE_HARFBUZZ_REPACKER
 
 TOP, HEIGHT = 820, 1000       # icon box: 0.82em above the baseline to 0.18em below (cards: icon ~1.5-1.9x cap height)
 SIDE = 40                     # side bearing of a color icon, font units
@@ -256,7 +258,7 @@ def badge_tags():
     tags = [("OYT", "turn"), ("AAT", "any")]
     tags += [(t, "forced") for t in ("BOT", "ENDT", "BOGT", "ENDGT")]
     tags += [(t, "trigger") for t in ("OFS", "OS", "OD", "WOF")]
-    tags += [("Action", "neutral")]   # exact case only
+    tags += [("Action", "neutral")]   # the badge's label; CASE matches any case
     for n in nums:   # old system
         tags += [(f"{n}PT", "turn"), (f"E{n}T", "turn"), (f"FTE{n}T", "turn"),
                  (f"{n}PGT", "any"), (f"E{n}GT", "any"), (f"{n}PG", "trigger")]
@@ -469,6 +471,9 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     #           so matching is case-insensitive without changing capitals elsewhere in the font
     #   TOKENS  "[" + .tk characters + "]"  ->  icon glyph
     #   LAYERS  :sticker / :no glyphs  ->  overlapping glyph sequences
+    #   CASE    "(" + a tag in any letter case + ")": each letter becomes the tag's own case, so "(action)" or "(1cd)"
+    #           draws the (Action) or (1CD) badge; anything else in parentheses is left as typed
+    #   BADGES  "(" + tag + ")"  ->  badge glyph
     tok_chars = sorted({c for text in ligatures for c in text[1:-1]})
     tk = {}
     for c in tok_chars:
@@ -490,6 +495,17 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
             for text, (comps, g) in sorted(ligatures.items(), key=lambda kv: -len(kv[0]))]
     mult = [f"  sub {src} by {' '.join(dst)};" for src, dst in multiples]
     badges = [f"  sub {' '.join(comps)} by {g};" for comps, g in sorted(badge_ligatures, key=lambda x: -len(x[0]))]
+    tags = [t for t, _ in badge_tags()]
+    assert len({t.upper() for t in tags}) == len(tags), "badges that differ only in case"
+    gn = lambda c: char_glyph[ord(c)]
+    folds = {k: sorted({c for t in tags for c in t if test(c)}) for k, test in (("UP", str.isupper), ("LOW", str.islower))}
+    fold = [f"lookup FOLD_{k} {{ {' '.join(f'sub {gn(c.swapcase())} by {gn(c)};' for c in cs)} }} FOLD_{k};"
+            for k, cs in folds.items()]
+    pos = lambda c: (f"[{gn(c)} {gn(c.swapcase())}]' lookup FOLD_{'UP' if c.isupper() else 'LOW'}" if c.isalpha()
+                     else f"{gn(c)}'")
+    # one rule per subtable, so each is Format 3 like MARK's (feaLib would merge them into one Format 2)
+    case = "\n  subtable;\n".join(f"  sub {gn('(')} {' '.join(map(pos, t))} {gn(')')};"
+                                  for t in sorted(tags, key=len, reverse=True))
     fea = "\n".join(["languagesystem DFLT dflt;", "languagesystem latn dflt;",
                      f"@TOKIN = [{' '.join(inputs)}];",
                      f"@TK = [{' '.join(tk.values())}];",
@@ -500,9 +516,11 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                      "} MARK;",
                      "lookup TOKENS {", *liga, "} TOKENS;",
                      "lookup LAYERS {", *mult, "} LAYERS;",
+                     *fold,
+                     "lookup CASE {", case, "} CASE;",
                      "lookup BADGES {", *badges, "} BADGES;",
-                     "feature liga { lookup MARK; lookup TOKENS; lookup LAYERS; lookup BADGES; } liga;",
-                     "feature rlig { lookup MARK; lookup TOKENS; lookup LAYERS; lookup BADGES; } rlig;"])
+                     "feature liga { lookup MARK; lookup TOKENS; lookup LAYERS; lookup CASE; lookup BADGES; } liga;",
+                     "feature rlig { lookup MARK; lookup TOKENS; lookup LAYERS; lookup CASE; lookup BADGES; } rlig;"])
     addOpenTypeFeaturesFromString(font, fea)
 
     # names: keep the OFL copyright + license for the Bree Serif letters, drop its trademark/vendor info
@@ -528,6 +546,7 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
 
     out = out_path
     font.recalcTimestamp = False          # keep rebuilds byte-identical so git only sees real changes
+    font.cfg[USE_HARFBUZZ_REPACKER] = False   # same GSUB bytes whether or not uharfbuzz is installed
     font["head"].modified = font["head"].created
     font.save(out + ".tmp")
     os.replace(out + ".tmp", out)         # atomic: Photoshop / Font Book never see a half-written file
