@@ -246,6 +246,8 @@ function setParams(updates, { replace = true } = {}) {
 // ---- cards (browse) --------------------------------------------------------------------------------
 const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
 function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi] = v.split("-").map(Number); return [isNaN(lo) ? 0 : lo, isNaN(hi) ? 99 : hi]; }
+// edited on the website: not the bot's alias-only entries (aliases.pkl moved into Card Edits.json, 2026-10-22)
+const webEdited = c => !!c.edited && !(c.editBy === BOT && c.edited.every(f => f === "aliases"));
 function filterCards(p, { facets = true } = {}) {
   const pred = compile(p.get("q") || "");
   let list = pred ? S.cards.filter(pred) : S.cards.slice();
@@ -261,7 +263,7 @@ function filterCards(p, { facets = true } = {}) {
   if (author) list = list.filter(c => c.author === author);
   for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => c[k] != null && c[k] >= r[0] && c[k] <= r[1]); }
   const flagFns = { history: c => !!c.hv, unparsed: c => !c.parsed, problems: c => !!(c.problems && c.problems.length), alias: c => !!(c.aliases && c.aliases.length),
-    dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(c.edited || c._staged || c._sent),
+    dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(webEdited(c) || c._staged || c._sent),
     pending: c => !!((c.pending && c.pending.length) || c.refused), details: c => !!c.details };
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   return list;
@@ -440,7 +442,7 @@ function openCard(id, showDetails = false) {
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
-          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : c.edited ? `<span class="fact" data-tip="${esc(`Changed on the website: ${c.edited.join(", ")}${c.editBy ? ` · ${c.editBy}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
+          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(`Changed on the website: ${c.edited.join(", ")}${c.editBy ? ` · ${c.editBy}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>
@@ -702,7 +704,7 @@ function renderChanges() {
   const edited = S.cards.filter(c => c.hv).sort((a, b) => b.hv - a.hv);
   const unparsed = S.cards.filter(c => !c.parsed);
   const problems = S.cards.filter(c => c.problems && c.problems.length);
-  const webEdits = S.all.filter(c => c.edited).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
+  const webEdits = S.all.filter(webEdited).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
   const item = c => {
     const last = c.history && c.history.length ? c.history[c.history.length - 1] : null;
     return `<div class="item">${c.img ? `<img loading="lazy" decoding="async" src="${img(c, 240)}" alt="" data-open="${c.id}">` : "<div></div>"}<div>
