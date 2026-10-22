@@ -10,13 +10,21 @@ const FIXED = {
   BOT: ["forced", "Beginning of turn (forced)"], ENDT: ["forced", "End of turn (forced)"],
   BOGT: ["forced", "Beginning of global turn (forced)"], ENDGT: ["forced", "End of global turn (forced)"],
   OFS: ["trigger", "On first summon"], OS: ["trigger", "On summon"], OD: ["trigger", "On death"], WOF: ["trigger", "While on field"],
-  Action: ["neutral", "Costs the creature's action"],   // not a timing tag; exact case only
+  Action: ["neutral", "Costs the creature's action"],   // not a timing tag
 };
-export const TAG = /\((-?[0-9A-Z/]{2,6}|Action)\)/;   // candidates; tagInfo decides. Not /g: copy it to iterate
+export const TAG = /\((-?[0-9A-Za-z/]{2,6})\)/;   // candidates, any case; tagInfo decides. Not /g: copy it to iterate
+// any letter case is the same tag, as in the font: "(1cd)" is (1CD), "(action)" is (Action)
+const CANON = Object.fromEntries(Object.keys(FIXED).map(k => [k.toUpperCase(), k]));
+const canon = tag => { const up = String(tag).toUpperCase(); return CANON[up] ?? up; };
 const times = n => (n === "X" ? "X times" : n === "1" ? "once" : `${n} times`);
 const count = (n, one, many = one + "s") => `${n} ${n === "1" || n === "-1" ? one : many}`;
 const old = (group, meaning, multi = false) => ({ group, meaning: `Old system: ${meaning}`, multi, old: true });
-export function tagInfo(tag) {
+/** {tag (canonical case), group, meaning, multi, old} or null */
+export function tagInfo(typed) {
+  const tag = canon(typed), info = tagMeaning(tag);
+  return info && { tag, ...info };
+}
+function tagMeaning(tag) {
   if (FIXED[tag]) return { group: FIXED[tag][0], meaning: FIXED[tag][1], multi: false };
   let m;
   if ((m = /^([1-9X])CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: ${count(m[1], "turn")}` };
@@ -35,7 +43,7 @@ export function tagInfo(tag) {
 export const GROUP_NAMES = { turn: "On your turn", any: "At any time", forced: "Forced", trigger: "Per game & triggers", neutral: "Other tags" };
 export const badgeHtml = tag => {
   const t = tagInfo(tag);
-  return t ? `<span class="badge ${t.group}" data-tip="${esc(`(${tag}) ${t.meaning}`)}">${esc(tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
+  return t ? `<span class="badge ${t.group}" data-tip="${esc(`(${t.tag}) ${t.meaning}`)}">${esc(t.tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
 };
 
 // badge colour legend, one line per colour: the text of rulebook page 02 Abbreviations; colours come from tagInfo's groups
