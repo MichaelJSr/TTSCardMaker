@@ -265,6 +265,15 @@ ol.bal-changes { list-style: none; padding: 0; margin: 6px 0; }
 .compare { display: grid; grid-template-columns: repeat(var(--n, 2), minmax(220px, 1fr)); gap: 14px; overflow-x: auto; }
 .compare .col img { width: 100%; border-radius: 10px; }
 .diff-up { color: var(--good); } .diff-down { color: var(--danger); }
+.seg a { padding: 5px 12px; color: var(--ink-2); text-decoration: none; }
+.seg a.on { background: var(--surface-3); color: var(--ink); font-weight: 600; }
+.change-tabs { margin-bottom: 14px; }
+.cl-day { margin: 18px 0 8px; font-size: 15px; color: var(--ink-2); }
+.cl-push h3 { margin: 0 0 6px; font-size: 15px; } .cl-push h3 a { color: inherit; }
+.cl-sec h4 { margin: 10px 0 2px; font-size: 13px; color: var(--muted); font-weight: 600; }
+.cl-sec summary { cursor: pointer; color: var(--accent); font-size: 13px; margin-top: 10px; }
+ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0; font-size: 14px; }
+.cl-diff { margin: 4px 0 6px; background: var(--surface-2); border-radius: 8px; padding: 6px 10px; font-size: 14px; }
 
 @media print {
   .top, .no-print { display: none !important; }
