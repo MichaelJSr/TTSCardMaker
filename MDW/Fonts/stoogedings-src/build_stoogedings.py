@@ -9,8 +9,8 @@ Every icon also has a fixed Private Use Area codepoint (stable across rebuilds),
 
 Timing tags become badges: "(1CD)" set in this font draws a pill in the tag's color group (on your turn / at any
 time / forced / per game and triggers). Cooldowns (nCD, a/bCD, nGCD, a/bGCD), uses (nU) and the rulebook's older
-tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-9 or X. The text stays "(1CD)", so parsers and searches
-see the same thing as before.
+tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-9 or X. "(Action)" gets a grey badge. The text stays
+"(1CD)", so parsers and searches see the same thing as before.
 
 Renderer behavior that shaped the design (tested in Photoshop 2023 and macOS CoreText):
   * Photoshop renders SVG glyphs, including embedded PNGs, but paints SVG `currentColor` (and context-fill,
@@ -239,6 +239,7 @@ BADGE_GROUPS = {   # rulebook "02 Abbreviations": color (top, bottom, border) pe
     "any":     ("#9f67ff", "#7c3aed", "#4c1d95"),   # at any time: XGCD, X/XGCD, AAT; old XPGT, EXGT
     "forced":  ("#ef5050", "#dc2626", "#7f1d1d"),   # forced: BOT, ENDT, BOGT, ENDGT
     "trigger": ("#e08a1e", "#b45309", "#78350f"),   # per game and triggers: XPG, XU, OFS, OS, OD, WOF
+    "neutral": ("#64748b", "#475569", "#1e293b"),   # not a timing tag: Action
 }
 BADGE_LABEL = {"-": "\u2212"}     # drawn as a minus sign
 BADGE_BOTTOM, BADGE_TOP = -130, 820    # pill about as tall as the icons (0.95 em), centred on the capitals
@@ -250,11 +251,12 @@ BADGE_SIDE = 40
 
 
 def badge_tags():
-    """Every timing tag, with n as 1-9 or X: [(tag, group)]. The old ones stay for the rulebook pages."""
+    """Every timing tag, with n as 1-9 or X, plus Action: [(tag, group)]. The old ones stay for the rulebook pages."""
     nums, firsts = "123456789X", ["-1", *"0123456789", "X"]
     tags = [("OYT", "turn"), ("AAT", "any")]
     tags += [(t, "forced") for t in ("BOT", "ENDT", "BOGT", "ENDGT")]
     tags += [(t, "trigger") for t in ("OFS", "OS", "OD", "WOF")]
+    tags += [("Action", "neutral")]   # exact case only
     for n in nums:   # old system
         tags += [(f"{n}PT", "turn"), (f"E{n}T", "turn"), (f"FTE{n}T", "turn"),
                  (f"{n}PGT", "any"), (f"E{n}GT", "any"), (f"{n}PG", "trigger")]
