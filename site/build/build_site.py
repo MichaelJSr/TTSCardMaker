@@ -114,10 +114,11 @@ def log(*args):
     print(*args, flush=True)
 
 
-def fetch(url, tries=3):
+def fetch(url, tries=3, accept=None):
+    headers = {"User-Agent": "card-browser-build", **({"Accept": accept} if accept else {})}
     for attempt in range(tries):
         try:
-            with urlopen(Request(url, headers={"User-Agent": "card-browser-build"}), timeout=60) as r:
+            with urlopen(Request(url, headers=headers), timeout=60) as r:
                 return r.read()
         except Exception:
             if attempt == tries - 1:
@@ -186,8 +187,26 @@ class _Unpickler(pickle.Unpickler):
         raise pickle.UnpicklingError(f"{self.source} has a persistent id; refused")
 
 
+_bot_raw = None
+
+
+def bot_raw():
+    """The bot's files at main's current commit: raw main can lag a push by minutes."""
+    global _bot_raw
+    if _bot_raw is None:
+        _bot_raw = BOT_RAW
+        try:
+            sha = fetch(f"https://api.github.com/repos/{BOT_REPO}/commits/main", accept="application/vnd.github.sha").decode().strip()
+            if re.fullmatch(r"[0-9a-f]{40}", sha):
+                _bot_raw = f"https://raw.githubusercontent.com/{BOT_REPO}/{sha}/"
+                log(f"bot data: {BOT_REPO}@{sha[:8]}")
+        except Exception as e:
+            warn(f"bot's main commit unknown ({e}); reading main")
+    return _bot_raw
+
+
 def load_bot_pickle(name):
-    return _Unpickler(fetch(BOT_RAW + name), name).load()
+    return _Unpickler(fetch(bot_raw() + name), name).load()
 
 
 def warn(message):
@@ -224,7 +243,7 @@ def bot_field_warnings(stats, old_stats):
 
 
 def load_bot_json(name):
-    return json.loads(fetch(BOT_RAW + name).decode("utf-8"))
+    return json.loads(fetch(bot_raw() + name).decode("utf-8"))
 
 
 def psd_records(data):
@@ -1342,7 +1361,7 @@ def main():
     try:
         stats = load_bot_pickle("stats.pkl")
     except Exception as e:
-        raise SystemExit(f"error: can't load the bot's card data ({BOT_RAW}stats.pkl): {e}. Not building a site without it.")
+        raise SystemExit(f"error: can't load the bot's card data ({bot_raw()}stats.pkl): {e}. Not building a site without it.")
     if not isinstance(stats, dict) or len(stats) < MIN_CARDS:
         raise SystemExit(f"error: stats.pkl has {len(stats) if isinstance(stats, dict) else 'no'} entries "
                          f"(expected at least {MIN_CARDS}); refusing to deploy a truncated site.")
