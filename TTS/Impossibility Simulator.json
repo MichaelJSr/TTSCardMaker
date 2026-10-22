@@ -157447,7 +157447,7 @@
           "Type": 0
         },
         "127": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD08MOAB.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2d8cce88b9e936b37b5b4b41131fe439811f6ac3/Auxiliary/Minions/PoD08MOAB.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -157456,7 +157456,7 @@
           "Type": 0
         },
         "128": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD09DDT.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/705e3d3470412f3c063365755a847740ba78b740/Auxiliary/Minions/PoD09DDT.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -157465,7 +157465,7 @@
           "Type": 0
         },
         "129": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD10BFB.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c9fc1bbd94c060560addff6d7065eeed0955f264/Auxiliary/Minions/PoD10BFB.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -157483,7 +157483,7 @@
           "Type": 0
         },
         "131": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD12BAD.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/01d8000592e1d07551e466558f2b5ee36343c233/Auxiliary/Minions/PoD12BAD.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -157645,7 +157645,7 @@
           "Type": 0
         },
         "1015": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/76d7598e5b6417094525a3c427b65ca3bd59ed92/Auxiliary/Minions/Clot_White.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d81631039734ba3c90683a68ced5de20f65304a3/Auxiliary/Minions/Clot_White.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -160445,7 +160445,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "127": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD08MOAB.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2d8cce88b9e936b37b5b4b41131fe439811f6ac3/Auxiliary/Minions/PoD08MOAB.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -160503,7 +160503,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "128": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD09DDT.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/705e3d3470412f3c063365755a847740ba78b740/Auxiliary/Minions/PoD09DDT.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -160561,7 +160561,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "129": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD10BFB.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c9fc1bbd94c060560addff6d7065eeed0955f264/Auxiliary/Minions/PoD10BFB.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -160677,7 +160677,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "131": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD12BAD.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/01d8000592e1d07551e466558f2b5ee36343c233/Auxiliary/Minions/PoD12BAD.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -161721,7 +161721,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1015": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/76d7598e5b6417094525a3c427b65ca3bd59ed92/Auxiliary/Minions/Clot_White.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d81631039734ba3c90683a68ced5de20f65304a3/Auxiliary/Minions/Clot_White.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -164231,7 +164231,7 @@
           "Type": 0
         },
         "127": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD08MOAB.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2d8cce88b9e936b37b5b4b41131fe439811f6ac3/Auxiliary/Minions/PoD08MOAB.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -164240,7 +164240,7 @@
           "Type": 0
         },
         "128": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD09DDT.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/705e3d3470412f3c063365755a847740ba78b740/Auxiliary/Minions/PoD09DDT.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -164249,7 +164249,7 @@
           "Type": 0
         },
         "129": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD10BFB.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c9fc1bbd94c060560addff6d7065eeed0955f264/Auxiliary/Minions/PoD10BFB.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -164267,7 +164267,7 @@
           "Type": 0
         },
         "131": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD12BAD.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/01d8000592e1d07551e466558f2b5ee36343c233/Auxiliary/Minions/PoD12BAD.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -164429,7 +164429,7 @@
           "Type": 0
         },
         "1015": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/76d7598e5b6417094525a3c427b65ca3bd59ed92/Auxiliary/Minions/Clot_White.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d81631039734ba3c90683a68ced5de20f65304a3/Auxiliary/Minions/Clot_White.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -167229,7 +167229,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "127": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD08MOAB.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2d8cce88b9e936b37b5b4b41131fe439811f6ac3/Auxiliary/Minions/PoD08MOAB.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -167287,7 +167287,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "128": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD09DDT.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/705e3d3470412f3c063365755a847740ba78b740/Auxiliary/Minions/PoD09DDT.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -167345,7 +167345,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "129": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD10BFB.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c9fc1bbd94c060560addff6d7065eeed0955f264/Auxiliary/Minions/PoD10BFB.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -167461,7 +167461,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "131": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD12BAD.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/01d8000592e1d07551e466558f2b5ee36343c233/Auxiliary/Minions/PoD12BAD.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -168505,7 +168505,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1015": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/76d7598e5b6417094525a3c427b65ca3bd59ed92/Auxiliary/Minions/Clot_White.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d81631039734ba3c90683a68ced5de20f65304a3/Auxiliary/Minions/Clot_White.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -171015,7 +171015,7 @@
           "Type": 0
         },
         "127": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD08MOAB.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2d8cce88b9e936b37b5b4b41131fe439811f6ac3/Auxiliary/Minions/PoD08MOAB.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -171024,7 +171024,7 @@
           "Type": 0
         },
         "128": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD09DDT.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/705e3d3470412f3c063365755a847740ba78b740/Auxiliary/Minions/PoD09DDT.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -171033,7 +171033,7 @@
           "Type": 0
         },
         "129": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD10BFB.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c9fc1bbd94c060560addff6d7065eeed0955f264/Auxiliary/Minions/PoD10BFB.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -171051,7 +171051,7 @@
           "Type": 0
         },
         "131": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD12BAD.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/01d8000592e1d07551e466558f2b5ee36343c233/Auxiliary/Minions/PoD12BAD.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -171213,7 +171213,7 @@
           "Type": 0
         },
         "1015": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/76d7598e5b6417094525a3c427b65ca3bd59ed92/Auxiliary/Minions/Clot_White.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d81631039734ba3c90683a68ced5de20f65304a3/Auxiliary/Minions/Clot_White.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -174013,7 +174013,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "127": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD08MOAB.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2d8cce88b9e936b37b5b4b41131fe439811f6ac3/Auxiliary/Minions/PoD08MOAB.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -174071,7 +174071,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "128": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD09DDT.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/705e3d3470412f3c063365755a847740ba78b740/Auxiliary/Minions/PoD09DDT.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -174129,7 +174129,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "129": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD10BFB.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c9fc1bbd94c060560addff6d7065eeed0955f264/Auxiliary/Minions/PoD10BFB.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -174245,7 +174245,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "131": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d8e94877a1a9fca3f4b8547b6e0cd7fca61b3119/Auxiliary/Minions/PoD12BAD.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/01d8000592e1d07551e466558f2b5ee36343c233/Auxiliary/Minions/PoD12BAD.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -175289,7 +175289,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1015": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/76d7598e5b6417094525a3c427b65ca3bd59ed92/Auxiliary/Minions/Clot_White.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d81631039734ba3c90683a68ced5de20f65304a3/Auxiliary/Minions/Clot_White.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
