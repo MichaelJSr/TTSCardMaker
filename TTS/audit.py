@@ -927,11 +927,16 @@ def main():
     if odd_links:
         decisions.append(f"{len(odd_links)} link(s) use refs/heads/main (Types/Girl.png token, loose Militron); sha pinning will rewrite them like the rest. OK?")
 
-    # ---- write rules file
+    # ---- write rules file (owner-set options of the last one kept: add_new_since, an empty deck's counted rule)
+    try:
+        before = json.load(open(RULES, encoding="utf-8")).get("decks") or {}
+    except (OSError, ValueError, AttributeError):
+        before = {}
     rules = {
         "about": ("Rules for the TTS save (TTS/Impossibility Simulator.json), written by audit.py. A deck's cards are the repo PNGs "
                   "matched by rule.folders (globs: * stays inside one folder) plus rule.include, minus rule.exclude. "
-                  "partial: a hand-picked subset (only its own cards are refreshed; card_list = its distinct cards). "
+                  "partial: a hand-picked subset (only its own cards are refreshed; card_list = its distinct cards); with "
+                  "add_new_since (a commit) it also gains, once, every rule card the save at that commit lacked (renames followed). "
                   "count: the usual copies per card; odd_counts (per deck): cards at another count. "
                   "rule null: needs a decision (see AUDIT.md)."),
         "generated": datetime.datetime.now().isoformat(timespec="seconds"),
@@ -943,6 +948,11 @@ def main():
                  "position": list(d["pos"]), "rule": d.get("rule"),
                  "confidence": d.get("confidence"), "copies": d.get("copies", []),
                  "back": (d["backs"].most_common(1)[0][0] if d["backs"] else (back_major.get(d["rule"]["kind"]) if d.get("rule") else None))}
+        kept = (before.get(g) or {}).get("rule") or {}
+        if entry["rule"] and entry["rule"].get("partial") and kept.get("add_new_since"):
+            entry["rule"] = {**entry["rule"], "add_new_since": kept["add_new_since"]}
+        if not d["cards"] and kept.get("count"):
+            entry["rule"], entry["confidence"] = kept, before[g].get("confidence")
         if d.get("rule") and d["rule"].get("partial"):
             entry["card_list"] = sorted(set(p for p in d["paths"] if p))
         if d["odd_counts"]:

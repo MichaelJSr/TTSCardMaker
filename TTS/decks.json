@@ -1,5 +1,5 @@
 {
-  "about": "Rules for the TTS save (TTS/Impossibility Simulator.json), written by audit.py. A deck's cards are the repo PNGs matched by rule.folders (globs: * stays inside one folder) plus rule.include, minus rule.exclude. partial: a hand-picked subset (only its own cards are refreshed; card_list = its distinct cards). count: the usual copies per card; odd_counts (per deck): cards at another count. rule null: needs a decision (see AUDIT.md).",
+  "about": "Rules for the TTS save (TTS/Impossibility Simulator.json), written by audit.py. A deck's cards are the repo PNGs matched by rule.folders (globs: * stays inside one folder) plus rule.include, minus rule.exclude. partial: a hand-picked subset (only its own cards are refreshed; card_list = its distinct cards); with add_new_since (a commit) it also gains, once, every rule card the save at that commit lacked (renames followed). count: the usual copies per card; odd_counts (per deck): cards at another count. rule null: needs a decision (see AUDIT.md).",
   "generated": "2026-10-20T10:39:56",
   "decks": {
     "f33bd9": {
@@ -18,7 +18,8 @@
           "Creatures/*/5 Stars/*.png"
         ],
         "partial": true,
-        "count": 1
+        "count": 1,
+        "add_new_since": "318001eafdd333cb9ba036027ee8ab0c8c2f4d6d"
       },
       "confidence": "medium",
       "copies": [],
@@ -56,7 +57,8 @@
           "Creatures/*/4 Stars/*.png"
         ],
         "partial": true,
-        "count": 1
+        "count": 1,
+        "add_new_since": "318001eafdd333cb9ba036027ee8ab0c8c2f4d6d"
       },
       "confidence": "medium",
       "copies": [],
@@ -94,7 +96,8 @@
           "Creatures/*/3 Stars/*.png"
         ],
         "partial": true,
-        "count": 1
+        "count": 1,
+        "add_new_since": "318001eafdd333cb9ba036027ee8ab0c8c2f4d6d"
       },
       "confidence": "medium",
       "copies": [],
@@ -104,6 +107,7 @@
         "Creatures/Hollow Knight/3 Stars/The_Beast.png",
         "Creatures/In Sound Mind/3 Stars/The_Shade.png",
         "Creatures/Isaac/3 Stars/Tainted_Jacob.png",
+        "Creatures/Isaac/3 Stars/Tainted_Lazarus.png",
         "Creatures/Kirby/3 Stars/Retro_Kirby.png",
         "Creatures/Mario/3 Stars/Bobbery.png",
         "Creatures/Mario/3 Stars/Flurrie.png",
@@ -115,6 +119,7 @@
         "Creatures/Other/3 Stars/Elmadan.png",
         "Creatures/Other/3 Stars/Empress Bulblax.png",
         "Creatures/Other/3 Stars/Grimora.png",
+        "Creatures/Other/3 Stars/John_Ward.png",
         "Creatures/Other/3 Stars/Niko.png",
         "Creatures/Other/3 Stars/Puzzled_Cat.png",
         "Creatures/Other/3 Stars/The_Last_Cabbage_Merchant.png",
@@ -137,7 +142,8 @@
           "Creatures/*/2 Stars/*.png"
         ],
         "partial": true,
-        "count": 1
+        "count": 1,
+        "add_new_since": "318001eafdd333cb9ba036027ee8ab0c8c2f4d6d"
       },
       "confidence": "medium",
       "copies": [],
@@ -296,10 +302,7 @@
         "folders": [
           "Items/*/3 Stars/*.png"
         ],
-        "count": 1,
-        "exclude": [
-          "Items/Equip/3 Stars/Piko_Piko_Hammer.png"
-        ]
+        "count": 1
       },
       "confidence": "high",
       "copies": [
@@ -1078,10 +1081,7 @@
         "folders": [
           "Items/*/3 Stars/*.png"
         ],
-        "count": 1,
-        "exclude": [
-          "Items/Equip/3 Stars/Piko_Piko_Hammer.png"
-        ]
+        "count": 1
       },
       "confidence": "high",
       "copies": [
@@ -1747,9 +1747,10 @@
         "subtype": "Equip",
         "folders": [
           "Items/Equip/3 Stars/*.png"
-        ]
+        ],
+        "count": 1
       },
-      "confidence": "low",
+      "confidence": "high",
       "copies": [],
       "back": "MDW/cardback_item.png"
     },
@@ -1800,9 +1801,10 @@
         "subtype": "Equip",
         "folders": [
           "Items/Equip/1 Stars/*.png"
-        ]
+        ],
+        "count": 1
       },
-      "confidence": "low",
+      "confidence": "high",
       "copies": [],
       "back": "MDW/cardback_item.png"
     },
@@ -1821,9 +1823,10 @@
         "subtype": "Attack",
         "folders": [
           "Items/Attack/4 Stars/*.png"
-        ]
+        ],
+        "count": 1
       },
-      "confidence": "low",
+      "confidence": "high",
       "copies": [],
       "back": "MDW/cardback_item.png"
     },
@@ -1842,9 +1845,10 @@
         "subtype": "Heal",
         "folders": [
           "Items/Heal/2 Stars/*.png"
-        ]
+        ],
+        "count": 1
       },
-      "confidence": "low",
+      "confidence": "high",
       "copies": [],
       "back": "MDW/cardback_item.png"
     },
@@ -1863,9 +1867,10 @@
         "subtype": "Equip",
         "folders": [
           "Items/Equip/4 Stars/*.png"
-        ]
+        ],
+        "count": 1
       },
-      "confidence": "low",
+      "confidence": "high",
       "copies": [],
       "back": "MDW/cardback_item.png"
     },
@@ -1884,9 +1889,10 @@
         "subtype": "Equip",
         "folders": [
           "Items/Equip/2 Stars/*.png"
-        ]
+        ],
+        "count": 1
       },
-      "confidence": "low",
+      "confidence": "high",
       "copies": [],
       "back": "MDW/cardback_item.png"
     },
@@ -1905,9 +1911,10 @@
         "subtype": "Attack",
         "folders": [
           "Items/Attack/2 Stars/*.png"
-        ]
+        ],
+        "count": 1
       },
-      "confidence": "low",
+      "confidence": "high",
       "copies": [],
       "back": "MDW/cardback_item.png"
     }
