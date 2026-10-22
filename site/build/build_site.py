@@ -485,6 +485,11 @@ def card_key(name):
     return " ".join((name or "").replace("_", " ").lower().split())
 
 
+def printed(text):
+    """A title as the bot reads it (psd_parser.title_text): no BOM, whitespace and control runs as one space."""
+    return re.sub(r"[\s\x00-\x1f]+", " ", (text or "").replace("\ufeff", "")).strip()
+
+
 PEOPLE_AS_WRITTEN = {}                        # [people] with the git names' own case, for the editor
 
 
@@ -582,8 +587,9 @@ def parse_edits():
     return edits
 
 
-def apply_edits(entry, edits, psd_sha=None):
-    """All fields but aliases and dup_of (applied later). psd_sha: the PSD's blob in the tree, to tell a stale _psd verdict."""
+def apply_edits(entry, edits, psd_sha=None, shown=None):
+    """All fields but aliases and dup_of (applied later). psd_sha: the PSD's blob in the tree, to tell a stale _psd verdict.
+    shown: psd_edit.shown_name, None when unknown."""
     found = edits.get(card_key(entry["key"]))
     if not found:
         return
@@ -601,9 +607,12 @@ def apply_edits(entry, edits, psd_sha=None):
                 entry[k] = fields["creatures"][0].get(k)
     entry["edited"] = sorted(fields)
     entry["orig"] = orig                          # PSD values
-    # waiting for the pipeline to bake it into the image (name left out: a title the bot can't read, or one equal to the
-    # file name, both arrive as no display_name, so a name edit can't be told pending from printed)
-    pending = sorted(f for f in fields if f in PSD_FIELDS and f != "name" and entry[f] != orig.get(f))
+    # awaiting a bake, as psd_edit.classify sees it
+    def waits(f):
+        if f == "name":
+            return shown is not None and printed(fields[f]) != shown
+        return entry[f] != orig.get(f)
+    pending = sorted(f for f in fields if f in PSD_FIELDS and fields[f] is not None and waits(f))
     if pending:
         entry["pending"] = pending
     verdict = meta.get("_psd") or {}             # counts only while the refused values and the PSD it was tried on are unchanged
@@ -1257,6 +1266,8 @@ def main():
         # the printed title the bot read (since 2026-10-21): shown instead of the file name; a Card Edits.json name wins below
         parsed = getattr(c, "parsed_values", None) or {}
         title = parsed["name"] if "name" in parsed else getattr(c, "display_name", None)
+        version = getattr(c, "parser_version", None)
+        shown = (title or name) if isinstance(version, int) and version >= 2 else None    # older parses read no titles
         entry = {
             "id": unique_slug(name), "name": (title if not is_rule else None) or name, "type": getattr(c, "card_type", "unknown"),
             "subtype": getattr(c, "subtype", None), "series": getattr(c, "series", None), "subseries": None,   # from edits only
@@ -1275,7 +1286,7 @@ def main():
         entry["_blob"] = getattr(c, "blob_sha", None)       # the PSD the bot read; join_details, dropped below
         if sha and getattr(c, "blob_sha", None) and sha != c.blob_sha:
             entry["reparsePending"] = True       # PSD committed since the bot last read it (a bake, or any edit)
-        apply_edits(entry, edits, sha)
+        apply_edits(entry, edits, sha, shown)
         versions = []
         for old in old_stats.get(name, []) or []:
             text = getattr(old, "ability", None)
