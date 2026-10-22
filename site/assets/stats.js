@@ -62,7 +62,7 @@ function columns(cols, { unit = "cards", color = "var(--s1)", every = 1, height 
 }
 
 /** Stacked columns with a 2px surface gap between segments. cats: labels; series: [{key,label,color}]; get(cat,key) */
-function stacked(cats, series, get, { height = 230, unit = "cards", width = 1000 } = {}) {
+function stacked(cats, series, get, { height = 230, unit = "cards", width = 1000, every = 1 } = {}) {
   const W = width, padL = 36, padB = 26, plotH = height - padB, gap = 2;
   const totals = cats.map(c => series.reduce((s, sr) => s + get(c, sr.key), 0));
   const max = niceMax(Math.max(1, ...totals));
@@ -83,7 +83,7 @@ function stacked(cats, series, get, { height = 230, unit = "cards", width = 1000
       return `<path class="mark" d="${d}" fill="${sr.color}" data-v="${v} ${esc(unit)}" data-l="${esc(`${sr.label}, ${cat}`)}"/>`;
     }).join("");
     return `<g class="col"><rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${plotH}" data-v="${totals[i]} ${esc(unit)}" data-l="${esc(`${cat}: ${series.map(sr => `${sr.label} ${get(cat, sr.key)}`).join(" · ")}`)}"/>${segs}
-      <text x="${x + bw / 2}" y="${height - 8}" text-anchor="middle">${esc(cat)}</text></g>`;
+      ${i % every === 0 ? `<text x="${x + bw / 2}" y="${height - 8}" text-anchor="middle">${esc(cat)}</text>` : ""}</g>`;
   });
   return `<svg viewBox="0 0 ${W} ${height}" role="img">${ticks}<line class="axis" x1="${padL}" x2="${W}" y1="${plotH}" y2="${plotH}"/>${parts.join("")}</svg>`;
 }
@@ -149,9 +149,9 @@ function heatScale() {
 
 function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "" } = {}) {
   return `<section class="chart${wide ? " wide" : ""}" id="chart-${id}">
-    <header><h3>${esc(title)}</h3><button type="button" class="ghost" data-action="toggle-table" data-target="${id}" aria-pressed="false">Table</button></header>
+    <header><h3>${esc(title)}</h3>${tableHtml ? `<button type="button" class="ghost" data-action="toggle-table" data-target="${id}" aria-pressed="false">Table</button>` : ""}</header>
     ${sub ? `<p class="sub">${esc(sub)}</p>` : ""}${legend}
-    <div class="view-chart">${chartHtml}</div><div class="view-table" hidden>${tableHtml}</div></section>`;
+    <div class="view-chart">${chartHtml}</div>${tableHtml ? `<div class="view-table" hidden>${tableHtml}</div>` : ""}</section>`;
 }
 
 // ---- the dashboard ---------------------------------------------------------------------------------
@@ -332,7 +332,8 @@ export function renderStats(root, ctx, params) {
       <label>Series <select data-action="stats-filter" data-key="series"><option value="">All series</option>${allSeries.map(s => `<option${s === series ? " selected" : ""}>${esc(s)}</option>`).join("")}</select></label>
       <span class="muted">${pool.length} cards in scope</span></div>
     <div class="kpis">${kpis.map(([l, v]) => `<div class="kpi"><div class="label">${esc(l)}</div><div class="value${typeof v === "number" ? "" : " text"}">${esc(typeof v === "number" ? v.toLocaleString() : v)}</div></div>`).join("")}</div>
-    <div class="charts">${charts.join("")}</div>`;
+    <div class="charts">${charts.join("")}</div>
+    <div id="stats-balance"></div>`;
 }
 
-export { columns, card as chartCard };                  // the person page's activity chart (profile.js)
+export { columns, card as chartCard, hbar, table, stacked, fmt, trunc };   // the person page's activity chart (profile.js), the Balance charts (balance.js)

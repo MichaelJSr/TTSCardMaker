@@ -35,8 +35,8 @@ Where the data comes from:
 PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
-data/contributions.json, data/decks.json and data/versions.json (loaded when the rulebook, a card's text or image history, the
-changes feed, the People tab or the published decks are opened), data/details/<id>.json (a card's or rulebook page's Details dropdown), images, icons,
+data/contributions.json, data/decks.json, data/versions.json and data/analytics.json (loaded when the rulebook, a card's text or image history, the
+changes feed, the People tab, the published decks, the Stats page or a card's Balance block are opened; analytics.py makes the last), data/details/<id>.json (a card's or rulebook page's Details dropdown), images, icons,
 assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
@@ -61,6 +61,8 @@ from urllib.parse import quote
 from urllib.request import Request, urlopen
 
 from PIL import Image
+
+import analytics
 
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(SITE)
@@ -1672,6 +1674,17 @@ def main():
     if records:
         log(f"PSD details: {len(detail_files)} cards and rulebook pages have a record ({len(records)} in {DETAILS_JSON})")
 
+    try:                                          # balance analytics: never a failed build
+        balance = analytics.build(cards, stats, old_stats if isinstance(old_stats, dict) else {}, history=commits is not None)
+        for message in analytics.summary(balance):
+            log(message)
+    except Exception as e:
+        warn(f"no balance analytics: {type(e).__name__}: {e}")
+        balance = {"cohorts": {}, "cards": {}, "counts": {}, "versions": 0, "since": None, "time": {"months": [], "series": {}}}
+    for e in cards:
+        if e["id"] in balance["cards"]:
+            e["balance"] = True                   # its Balance block loads data/analytics.json
+
     history = {}
     for e in cards + rules:
         if e.get("history"):                  # loaded on demand: the first screen only needs the count
@@ -1713,7 +1726,8 @@ def main():
         f"{sum(r['commits'] for r in contrib['people'])} card commits" + ("" if contrib["available"] else " (no history: batches counted from the edits file)"))
     os.makedirs(os.path.join(DIST, "data"))
     files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
-             "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks}}
+             "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
+             "analytics.json": balance}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:

@@ -236,6 +236,28 @@ textarea { width: 100%; min-height: 120px; border-radius: 8px; border: 1px solid
 .heat td { text-align: center !important; color: var(--ink); }
 .filters-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
 
+/* ---- balance (balance.js): the Stats page's Balance section and the card's Balance block ---- */
+.bal-title { margin: 28px 0 2px; font-size: 20px; } .bal-intro { margin: 0 0 12px; font-size: 13.5px; }
+.chart .band { fill: color-mix(in srgb, var(--s1) 28%, transparent); } .chart .median { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+.chart .area, .spark .area { fill: var(--s1); fill-opacity: .12; }
+.chart .line, .spark .line { fill: none; stroke: var(--s1); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .end, .spark .end { fill: var(--s1); stroke: var(--surface); stroke-width: 2; }
+.chart g.dot:hover .mark { opacity: .8; }
+.multiples { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.chart .facts { margin: 0 0 10px; }
+.bal-empty { margin: 4px 0 0; color: var(--ink-2); font-size: 14px; }
+.bal-line { margin: 0 0 8px; font-size: 14px; }
+.bal-vs { max-width: 460px; font-size: 13px; } .bal-vs td, .bal-vs th { padding: 4px 8px; }
+.related .table-wrap:has(.bal-vs) { max-height: none; }
+.bal-trend { display: flex; align-items: center; gap: 10px; margin: 8px 0 0; font-size: 13px; }
+.spark { width: 240px; height: auto; overflow: visible; } .spark text { fill: var(--ink); font-size: 11.5px; font-weight: 600; } .spark .hit { fill: transparent; }
+ol.bal-changes { list-style: none; padding: 0; margin: 6px 0; }
+.bal-changes li { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 10px; border-left: 2px solid var(--border-strong); padding: 4px 0 4px 12px; margin: 8px 0; font-size: 14px; }
+.bal-changes .when { color: var(--muted); font-size: 13px; } .bal-changes .badge { font-size: 11px; }
+.bal-diff { margin-top: 4px; } .bal-diff summary { cursor: pointer; color: var(--accent); font-size: 13px; }
+.bal-diff > div { margin-top: 6px; background: var(--surface-2); border-radius: 8px; padding: 6px 10px; }
+@media (max-width: 500px) { .bal-changes li { grid-template-columns: 1fr; gap: 2px; } }
+
 /* ---- changes / compare ---- */
 .feed .item { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--grid); }
 .feed img { width: 64px; border-radius: 6px; cursor: pointer; }

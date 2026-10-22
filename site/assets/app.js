@@ -8,6 +8,7 @@ import * as inline from "./inline.js";
 import * as details from "./details.js";
 import * as decks from "./decks.js";
 import * as pick from "./pick.js";
+import * as balance from "./balance.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -85,6 +86,9 @@ const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
 const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
+// balance analytics (data/analytics.json): the Stats page's Balance section and the cards' Balance blocks
+let analyticsP = null;
+const loadAnalytics = () => (analyticsP ||= getJson("analytics.json").then(d => { S.analytics = d; }).catch(e => { analyticsP = null; throw e; }));
 let usersP = null, contribP = null;                     // profiles (data/users.json) and contributions (data/contributions.json): the People tab and person pages
 const loadUsers = () => (usersP ||= getJson("users.json").then(d => { S.users = d.users || []; S.userBy = new Map(S.users.map(p => [p.login.toLowerCase(), p])); return S.userBy; }).catch(e => { usersP = null; throw e; }));
 const loadContrib = () => (contribP ||= getJson("contributions.json").then(d => { S.contrib = d; S.titles = titlesOf(d.people || []); }).catch(e => { contribP = null; throw e; }));
@@ -455,8 +459,10 @@ function openCard(id, showDetails = false) {
         </div>
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
+          <div id="card-balance">${balanceHtml(c)}</div>
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="decks-slot">${usingDecks(c)}</div>
+          <div id="card-changes">${balanceHtml(c, "changes")}</div>
           <div id="history-slot">${historyHtml(c)}</div>
           <div id="versions-slot">${versionsHtml(c)}</div>
           ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
@@ -471,7 +477,10 @@ function openCard(id, showDetails = false) {
   if (c.img) {        // sharper 720 px image once it's loaded (the 360 px one is usually cached from the grid)
     const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
   }
-  if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c); }, () => {});
+  const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
+  if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c); fillBalance(); }, () => {});
+  else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) loadHistory().then(fillBalance, () => {});   // its original's texts
+  if (hasBalance(c) && !S.analytics) loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; });
   if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c); }, () => {});
   const dd = $(".psd-details", modal);
   if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
@@ -516,6 +525,16 @@ function showVersion(c, i) {
       ${then && then.ability && then.ability !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then.ability, c.ability)}</div></div>` : ""}`;
   const old = $(".ver-old", box);
   if (old) old.addEventListener("error", () => { if (!old.dataset.cdn) { old.dataset.cdn = "1"; old.src = versionUrl(v, true); } }, { once: false });
+}
+// ---- balance: the card's standing among its star level and its recorded changes (balance.js)
+const balanceOf = c => (c.dup ? S.byId.get(c.dup) || c : c);         // a duplicate shows its original's
+const hasBalance = c => !!balanceOf(c).balance;
+function balanceHtml(c, part = "balance") {          // part: "balance" (the line) or "changes" (the recorded changes)
+  if (!hasBalance(c)) return "";
+  if (!S.analytics) return part === "balance" ? `<h3>Balance</h3><p class="muted">Loading…</p>` : "";
+  const o = balanceOf(c);
+  const texts = o.hv && !o.history ? null : (o.history || []).map(v => v.ability).concat(o.ability || "");
+  return (part === "balance" ? balance.balanceBlock : balance.changesBlock)(c, S.analytics, { byId: S.byId, texts });
 }
 function historyHtml(c) {
   if (!c.hv) return "";
@@ -665,6 +684,12 @@ function openPicker(tier) {                              // the shared picker (p
 // ---- stats / changes / compare -------------------------------------------------------------------
 function renderStatsView(r) {
   renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist }, r.params);
+  const fill = () => { const slot = $("#stats-balance", view), now = parseHash(); if (slot && now.name === "stats") slot.innerHTML = balance.statsHtml(S.analytics, { cards: S.cards, byId: S.byId }, now.params); };
+  if (S.analytics) fill();
+  else {
+    $("#stats-balance", view).innerHTML = `<p class="loading">Loading the balance section…</p>`;
+    loadAnalytics().then(fill, e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; });
+  }
 }
 const BOT = "AutoCroissant";                           // the bot's bake stamps (build_site.py BOT_AUTHOR): not a person page
 function renderChanges() {
