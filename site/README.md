@@ -42,8 +42,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **People** (the tab shows how many): everyone who made, edited or committed cards, in one table (GitHub picture, cards
   credited, edit batches published on the website, card commits, public decks, titles, motto), and a page per person
   (`#/u/<name>`, static `u/<name>/` that previews in Discord; **Share** opens a dialog with the link, the Discord preview
-  and buttons to copy it as a Discord message or plain text): their profile when they made one (see People below), their
-  GitHub picture and link, their contributions with recent edits, recent edit batches and recent card commits, a chart of
+  and buttons to copy it as a Discord message or plain text: name, titles and counts, never the motto): their profile when they made one (see People below), their
+  GitHub picture and link, their contributions with recently edited cards, recent edit batches and recent card commits, a chart of
   their contributions by month, and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
   (by its image's first upload, from the git history: full-history builds only) and a grid of their 24 newest cards.
 
@@ -128,9 +128,10 @@ for each of them (not as an edit: their batch already counted when they publishe
 title (ties share it, nobody at 0): **Top card maker** (cards), **Top editor** (edits), **Top committer** (card
 commits), and the top of the three added together is the **Top contributor**. A commit is credited by its git name, else by the GitHub login in a noreply
 email, each looked up in the profiles' `author` fields and then in `[people]` (`Card Authors.txt`); otherwise by the git
-name as written. A website login (`_by`) maps the same way. So a person committing under two names shows twice until an
-admin adds one `[people]` line (`Michael = MichaelJSr`) or, when the other name is their GitHub login, their profile
-names their author. The GitHub picture and link come only from a GitHub login known to be the person's: their profile's
+name as written. A website login (`_by` or `Edit-by`) maps the same way, else to the person whose noreply commits carry
+it, else to itself (any case). So a person committing under two names shows twice until an admin adds one `[people]`
+line (`Michael = MichaelJSr`) or, when the other name is their GitHub login, their profile names their author; their
+GitHub login's page (`#/u/<login>`, where their decks link) opens their person page. The GitHub picture and link come only from a GitHub login known to be the person's: their profile's
 login, else the login in their noreply commit emails, their website `_by` stamps or `Edit-by` trailers (a git name is
 not a login: someone known only by name gets neither). The chart has one row per kind (cards by their image's first
 upload, edit batches, card commits), each on its own scale, by month; it needs the git history like the counts.

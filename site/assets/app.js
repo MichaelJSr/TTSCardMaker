@@ -3,7 +3,7 @@ import { esc, norm, makeRenderer, plain, diffWords, tagInfo, badgeHtml, GROUP_NA
 import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
-import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers, shareDialogHtml, personDiscord } from "./profile.js";
+import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers, shareDialogHtml, personDiscord, personText } from "./profile.js";
 import * as inline from "./inline.js";
 import * as details from "./details.js";
 import * as decks from "./decks.js";
@@ -817,8 +817,9 @@ function openUserShare(name) {
     image: fav?.img ? img(fav, 360) : "og.jpg", color: fav?.color }));
   $("#share-url").addEventListener("focus", e => e.target.select());
 }
-const userDiscord = name => personDiscord({ name, url: userUrl(name), person: personAt(name).person, titles: S.titles || new Map(), cards: S.cards, kindOf });
-const userText = name => [name, S.contrib?.previews?.[name] || ""].filter(Boolean).join(" · ");
+const userShare = name => ({ name, url: userUrl(name), person: personAt(name).person, titles: S.titles || new Map(), cards: S.cards, kindOf });
+const userDiscord = name => personDiscord(userShare(name));
+const userText = name => personText(userShare(name));          // no motto or other profile text
 
 // ---- sharing (same text as the share pages' link previews) -----------------------------------------
 const STAT_LABELS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
@@ -930,7 +931,7 @@ const actions = {
   "share-user": el => openUserShare(el.dataset.login),
   "share-user-discord": el => copy(userDiscord(el.dataset.login), "person for Discord"),
   "share-user-text": el => copy(userText(el.dataset.login), "person as text"),
-  "share-user-native": el => { const name = el.dataset.login; navigator.share({ title: name, text: S.contrib?.previews?.[name] || "", url: userUrl(name) }).catch(() => {}); },
+  "share-user-native": el => { const name = el.dataset.login; navigator.share({ title: name, text: personText({ ...userShare(name), name: "" }), url: userUrl(name) }).catch(() => {}); },
   "share": el => openShare(el.dataset.id),
   "share-discord": el => copy(cardDiscord(S.byId.get(el.dataset.id)), "card for Discord"),
   "share-text": el => { const c = S.byId.get(el.dataset.id); copy(`${c.name} · ${shareText(c)}`, "card text"); },

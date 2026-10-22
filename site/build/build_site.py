@@ -1061,11 +1061,6 @@ def who(name, email, people, by_login):
     return credit(name, people, by_login) or (m and credit(m.group(1), people, by_login)) or name or ""
 
 
-def login_key(login, people, by_login):
-    """A website login (`_by`) -> the credited name: credit(), else the login itself."""
-    return credit(login, people, by_login) or login
-
-
 def is_card_file(path):
     """A card's PSD or PNG under the card folders (today's or a renamed spelling), not a template, marker or rulebook page."""
     return path.lower().endswith((".psd", ".png")) and path.startswith(CARD_FOLDERS + OLD_CARD_FOLDERS) \
@@ -1080,12 +1075,31 @@ def contributions(cards, people, profiles, edits, commits):
     one batch per card). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
     added, isn't a change), one however many files. The bot's own commits and stamps are left out, but a bake (a bot
     commit changing a card, with Edit-by trailers) is a card commit of each editor it names, never an edit (their batch
-    already counted). logins: the names credited to the person (key, profile logins, [people] names), each in one row.
+    already counted). A login is the row credit() names, else the row its noreply commits credit most, else its own (any
+    case). logins: the names credited to the person (key, profile logins, [people] names, GitHub logins seen), each in
+    one row.
     github: a GitHub login known to be theirs (their profile's, else the most used of the logins in their noreply commit
     emails, _by stamps and Edit-by trailers), never a git name. recent / recentEdits: the last card commits [ts, subject,
     n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" UTC, cards first uploaded (fs), edits, commits]]."""
     by_login = {p["login"].lower(): p for p in profiles}
-    rec, seen_logins = {}, {}
+    rec, seen_logins, spelled = {}, {}, {}
+    noreply = {}                                  # a noreply email's login -> {credited name: commits}
+    for _, _, name, email, _, _, _ in commits or ():
+        m = NOREPLY_RE.match(email or "")
+        if m and name.lower() != BOT_AUTHOR.lower():
+            c = noreply.setdefault(m.group(1).lower(), {})
+            k = who(name, email, people, by_login)
+            if k:
+                c[k] = c.get(k, 0) + 1
+
+    def row_of(login):
+        """A login's row, or None: credit(), else the name its noreply commits credit most."""
+        c = noreply.get(login.lower())
+        return credit(login, people, by_login) or (min(c, key=lambda n: (-c[n], n.lower())) if c else None)
+
+    def key_of(login):
+        """A website or Edit-by login -> the credited name: row_of(), else the login as first spelled."""
+        return row_of(login) or spelled.setdefault(login.lower(), login)
 
     def rec_of(key):
         return rec.setdefault(key, {"key": key, "cards": 0, "edits": 0, "commits": 0, "first": 0, "last": 0, "recent": [], "recentEdits": [], "months": {}})
@@ -1118,8 +1132,10 @@ def contributions(cards, people, profiles, edits, commits):
             changed = lambda s, new: s == "M" or (s == "A" and new not in gone)       # not a blob moved from another path
             touched = {os.path.splitext(os.path.basename(p))[0].lower() for s, _, new, p in entries if changed(s, new) and is_card_file(p)}
             if bot:                               # a bake: the card commit of each editor named
-                for login in dict.fromkeys(editors) if touched else ():
-                    k = login_key(login, people, by_login)
+                named = {}
+                for login in editors if touched else ():
+                    named.setdefault(key_of(login), login)        # one commit per row named
+                for k, login in named.items():
                     if k.lower() == BOT_AUTHOR.lower():
                         continue
                     r = rec_of(k)
@@ -1151,7 +1167,7 @@ def contributions(cards, people, profiles, edits, commits):
         for by, at in {(meta["_by"], meta["_at"]) for _, meta in edits.values() if meta.get("_by") and meta.get("_at")}:
             if by.lower() == BOT_AUTHOR.lower():
                 continue
-            r = rec_of(login_key(by, people, by_login))
+            r = rec_of(key_of(by))
             r["edits"] += 1
             try:
                 seen(r, int(datetime.fromisoformat(at.replace("Z", "+00:00")).timestamp()))
@@ -1160,13 +1176,15 @@ def contributions(cards, people, profiles, edits, commits):
     for _, meta in edits.values():                # website logins: one per batch stamp
         by = meta.get("_by")
         if by and by.lower() != BOT_AUTHOR.lower():
-            known(login_key(by, people, by_login), by)
+            known(key_of(by), by)
     out = []
     for r in rec.values():
         if not (r["cards"] or r["edits"] or r["commits"]):
             continue
-        names = {r["key"]} | {p["login"] for p in profiles if p.get("author") == r["key"]} | {g for g, shown in PEOPLE_AS_WRITTEN.items() if shown == r["key"]}
-        r["logins"] = sorted((n for n in names if (credit(n, people, by_login) or n) == r["key"]), key=str.lower)   # a name credits one row
+        names = {r["key"]} | {p["login"] for p in profiles if p.get("author") == r["key"]} | {g for g, shown in PEOPLE_AS_WRITTEN.items() if shown == r["key"]} \
+            | set(seen_logins.get(r["key"], ()))
+        own_names = {n.lower(): n for n in sorted(names, reverse=True) if (row_of(n) or n) == r["key"]}   # a name credits one row
+        r["logins"] = sorted(own_names.values(), key=str.lower)
         own = [n for n in r["logins"] if n.lower() in by_login and LOGIN_RE.match(n)]
         counted = seen_logins.get(r["key"], {})
         github = own[0] if own else min(counted, key=lambda n: (-counted[n], n.lower())) if counted else ""
@@ -1593,8 +1611,8 @@ def main():
         previews[p["login"]] = profile_text(p, n, by_id, contrib_text(r, titles[r["key"]], with_cards=not p.get("author")) if r else "",
                                             cards_text(r["key"] if r else p.get("author"), cards))
     with_profile = {p["login"].lower() for p in profiles}
-    for r in contrib["people"]:                   # a contributor without a profile
-        if not any(login.lower() in with_profile for login in r["logins"]) and PAGE_KEY_RE.match(r["key"]):
+    for r in contrib["people"]:                   # a contributor without a profile, whose name no profile's page has
+        if not any(login.lower() in with_profile for login in r["logins"] + [r["key"]]) and PAGE_KEY_RE.match(r["key"]):
             previews[r["key"]] = person_text([contrib_text(r, titles[r["key"]])], cards_text(r["key"], cards))
     contrib["previews"] = previews
     data["peopleCount"] = people_count(contrib["people"], profiles)      # the People tab's counter
@@ -1693,7 +1711,7 @@ def main():
             f'<title>{html.escape(p["login"])} · {SITE_NAME}</title>',
         ])
     for r in contrib["people"]:                   # u/<key>/ for a contributor without a profile: the same page, the site banner as its image
-        if r["key"] not in previews or any(p["login"] == r["key"] for p in profiles):
+        if r["key"] not in previews or r["key"].lower() in with_profile:
             continue
         desc = previews[r["key"]]
         share_page(("u", r["key"]), [

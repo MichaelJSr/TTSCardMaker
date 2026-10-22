@@ -183,7 +183,7 @@ export function contributionsHtml(p, x) {
   ].join("");
   return `<div class="facts">${facts}</div>
     ${x.available ? "" : `<p class="muted">Commits aren't in this build; edits are counted from Card Edits.json, which keeps one batch per card.</p>`}
-    ${edits.length ? `<div class="related"><h3>Recent edits</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc((c.edited || []).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
+    ${edits.length ? `<div class="related"><h3>Recently edited cards</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc((c.edited || []).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
     ${p.recentEdits?.length ? `<div class="related"><h3>Recent edit batches</h3><ul>${p.recentEdits.map(([ts, subject, sha]) => `<li>${commitLink(x.repo, sha, x.date(ts))} <span class="muted">· ${esc(subject)}</span></li>`).join("")}</ul></div>` : ""}
     ${p.recent?.length ? `<div class="related"><h3>Recent card commits</h3><ul>${p.recent.map(([ts, subject, n]) => `<li>${esc(x.date(ts))} <span class="muted">· ${esc(subject)} · ${plural(n, "card")}</span></li>`).join("")}</ul></div>` : ""}`;
 }
@@ -289,7 +289,7 @@ export function peopleHtml(rows, x) {
   return `<div class="profile">
     <div class="toolbar"><span class="result-count">${n} ${n === 1 ? "person" : "people"}${scope}</span>
       ${x.me ? (x.hasOwn ? "" : `<button type="button" class="primary" data-action="profile-edit">Make your profile</button>`) : `<span class="muted">Sign in (top right) to make your profile.</span>`}</div>
-    ${n ? `<table class="data people"><thead><tr><th>Person</th><th class="num">Cards</th><th class="num">Edits</th><th class="num">Card commits</th><th class="num">Decks</th><th>Titles</th><th>Motto</th></tr></thead><tbody>${rows.map(row).join("")}</tbody></table>`
+    ${n ? `<div class="scroll-x"><table class="data people"><thead><tr><th>Person</th><th class="num">Cards</th><th class="num">Edits</th><th class="num">Card commits</th><th class="num">Decks</th><th>Titles</th><th>Motto</th></tr></thead><tbody>${rows.map(row).join("")}</tbody></table></div>`
       : `<div class="empty">Nobody yet.</div>`}
     <p class="muted">Cards credited to each person · edits: commits to Card Edits.json (batches published on the website, or by hand) · card commits: commits that added or changed a card's PSD or PNG (moves and rulebook pages don't count; a card the bot reprinted for an edit counts for the editor) · decks: public decks they published. The top of each column holds its title; the top of the three added together is the Top contributor.</p></div>`;
 }
@@ -313,8 +313,13 @@ export function cardsLine(author, cards, kindOf = c => c.type) {
 /** The Discord message: the name as a link (no preview), titles and counts, the cards line; no profile text, so it carries
  *  no link but the page's. x = {name, url, person | null, titles, cards, kindOf} */
 export function personDiscord(x) {
-  const head = `**[${md(x.name)}](<${x.url}>)**`, p = x.person;
-  return [p ? `${head} · ${md(contribLine(p, x.titles))}` : head, p ? md(cardsLine(p.key, x.cards, x.kindOf)) : ""].filter(Boolean).join("\n");
+  const p = x.person;
+  return [[`**[${md(x.name)}](<${x.url}>)**`, p ? md(contribLine(p, x.titles)) : ""].filter(Boolean).join(" · "), p ? md(cardsLine(p.key, x.cards, x.kindOf)) : ""].filter(Boolean).join("\n");
+}
+/** Plain text: the name, titles and counts, the cards line; no profile text either. x = personDiscord's x, without url */
+export function personText(x) {
+  const p = x.person;
+  return [[x.name, p ? contribLine(p, x.titles) : ""].filter(Boolean).join(" · "), p ? cardsLine(p.key, x.cards, x.kindOf) : ""].filter(Boolean).join("\n");
 }
 /** The share dialog. x = {name, url, text (the page's preview text), image, color, state, native (navigator.share exists)} */
 export function shareDialogHtml(x) {
@@ -326,7 +331,7 @@ export function shareDialogHtml(x) {
       <div class="embed-desc">${esc(x.text || "").replace(/\n/g, "<br>")}</div>${x.image ? `<img src="${esc(x.image)}" alt="">` : ""}</div>
     <div class="actions">
       <button type="button" data-action="share-user-discord" data-login="${login}" title="Name as a link, titles and counts, without a preview">Copy as Discord message</button>
-      <button type="button" data-action="share-user-text" data-login="${login}">Copy plain text</button>
+      <button type="button" data-action="share-user-text" data-login="${login}" title="Name, titles and counts">Copy plain text</button>
       ${x.native ? `<button type="button" data-action="share-user-native" data-login="${login}">Share…</button>` : ""}
     </div>`;
 }

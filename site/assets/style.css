@@ -335,6 +335,7 @@ body.dragging-cards .drop-list { display: flex; }
 .profile h2 { margin: 0 34px 6px 0; font-size: 26px; line-height: 1.15; }
 .profile .motto { font-size: 17px; color: var(--ink-2); margin: 0 0 14px; }
 .person-name { display: flex; align-items: center; gap: 12px; } .person-name .avatar { border-radius: 50%; flex: none; background: var(--surface-2); }
+.scroll-x { overflow-x: auto; } #chart-activity .view-chart { overflow-x: auto; } #chart-activity svg { min-width: 600px; }   /* phones: scroll, not shrink */
 table.people .face { display: inline-block; width: 20px; margin-right: 8px; vertical-align: -5px; } table.people .avatar { border-radius: 50%; display: block; background: var(--surface-2); }
 .profile > .chart { margin-bottom: 14px; border-radius: 14px; }
 .picks { display: flex; flex-wrap: wrap; gap: 14px; margin: 14px 0; } .picks > div { width: 130px; } .picks .tile .meta { padding: 5px 6px; } .picks .tile .name { font-size: 12px; }
