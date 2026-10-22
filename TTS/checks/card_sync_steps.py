@@ -533,12 +533,25 @@ def main_cases(flow: dict) -> None:
         commit(ws, {"site/Card Edits.json": '{"verdict":1}'}, "bake")                     # B on main's head
         moved(bare)
         env["GITHUB_EVENT_NAME"] = "schedule"
+        env["B"] = git(ws, "rev-parse", "HEAD")
         code, text, out = run_step(flow, "main", ws, env, root)
         args = gh_args(root)
         check(code == 0 and out.get("rejected") == "true" and {"bake=all", "retry=schedule", "force=true"} <= set(args)
               and not any(a.startswith(("full=", "cards=", "seed=", "restore=", "allow_archive=")) for a in args),
               f"main moved after a scheduled bake: the retry is marked as the schedule's ({' '.join(args[3:])})"
               + ("" if code == 0 else f"\n{text}"))
+
+        ws, bare, main, env, root = setup(tmp, "bake-unreported")
+        commit(ws, {"site/Card Edits.json": '{"verdict":1}'}, "bake")                     # B made, b= never written
+        code, text, out = run_step(flow, "main", ws, env, root)
+        check(code == 1 and git(bare, "rev-parse", "main") == main and "pushed" not in out and not gh_args(root),
+              "main: HEAD is a B the bake never reported: nothing pushed (red)")
+
+        ws, bare, main, env, root = setup(tmp, "save-only-unbuilt", wrote=False)
+        env["BUILT"] = "failure"
+        code, text, out = run_step(flow, "main", ws, env, root)
+        check(code == 0 and out.get("pushed") == "true" and "did not succeed" in text and "db/ unchanged" not in text,
+              "main: a save-only M after a failed build says so (no data commit)" + ("" if code == 0 else f"\n{text}"))
 
         ws, bare, main, env, root = setup(tmp, "pending-moved")
         moved(bare)

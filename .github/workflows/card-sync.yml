@@ -403,12 +403,17 @@ jobs:
           START: ${{ steps.gate.outputs.start }}
           SAVED: ${{ steps.save.outputs.changed }}
           BUILT: ${{ steps.build.outcome }}
+          B: ${{ steps.bake.outputs.b }}
           RETRY: ${{ inputs.retry && 'true' || 'false' }}
           INPUTS: ${{ toJSON(inputs) }}
         run: |
           save="TTS/Impossibility Simulator.json"
           db=$GITHUB_WORKSPACE/carddata/db
-          head=$(git rev-parse HEAD)
+          head=${B:-$MAIN}                      # the build's commit, not HEAD: a timed-out bake can leave B unreported
+          if [ "$(git rev-parse HEAD)" != "$head" ]; then
+            echo "::error::The checkout's HEAD is not the commit the build read (${head:0:8}): nothing for main"
+            exit 1
+          fi
           parts=()
           if [ "$head" != "$MAIN" ]; then
             n=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$head" -- ':(icase)*.psd' | { grep -c . || true; })
@@ -488,6 +493,8 @@ jobs:
                   fh.write(text.replace(old, new).replace(old[:8], new[:8]))
           EOF
             echo "db/ now names ${m:0:8} as the build's main commit."    # card_data's format (card_db.write_db)
+          elif [ "$BUILT" != success ]; then
+            echo "The build did not succeed: no data commit for M (the gate skips the run's own save commits)."
           else
             echo "db/ unchanged by the build: no data commit for M (the gate skips the run's own save commits)."
           fi
