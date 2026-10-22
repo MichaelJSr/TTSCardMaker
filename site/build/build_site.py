@@ -185,8 +185,9 @@ _STUBS = {}                                   # (module, name) -> stub class, fo
 # fields the site reads; other known fields
 CARD_FIELDS = {"card_type", "path", "timestamp", "ability", "stars", "subtype", "series", "types", "stats", "problems", "author",
                "blob_sha", "parsed_values"}
+# may be missing; archived: a deleted PSD's record; version: a version's start and end (analytics.when)
 CARD_FIELDS_OPTIONAL = {"name", "display_name", "duplicate_of", "creatures", "note", "hidden", "problems_ok", "allow_high_stats",
-                        "alt_names", "subseries", "parser_version", "archived"}      # may be missing; archived: a deleted PSD's record
+                        "alt_names", "subseries", "parser_version", "archived", "version"}
 STATS_FIELDS = {"hp", "defense", "attack", "speed"}
 HISTORY_FIELDS = {"ability", "timestamp"}
 
@@ -1788,7 +1789,7 @@ def main():
         for old in old_stats.get(name, []) or []:
             text = getattr(old, "ability", None)
             if text and text != entry["ability"] and all(v["ability"] != text for v in versions):
-                versions.append({"ts": getattr(old, "timestamp", None), "ability": text})
+                versions.append({"ts": analytics.when(old) if getattr(old, "timestamp", None) is not None else None, "ability": text})
         if versions:
             entry["history"] = sorted(versions, key=lambda v: v["ts"] or 0)
         (rules if is_rule else cards).append(entry)
