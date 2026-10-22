@@ -154,15 +154,15 @@ class CardStats(_Obj):
     """Stub of the bot's CardStats."""
 
 
-# every global the bot's pickles hold; card_models is where the classes live, psd_analyzer the path they are pickled under
+# all the bot's pickles hold
 PICKLE_GLOBALS = {("commands.psd_analyzer", "CardInfo"): CardInfo, ("commands.psd_analyzer", "CardStats"): CardStats,
                   ("commands.card_models", "CardInfo"): CardInfo, ("commands.card_models", "CardStats"): CardStats,
                   ("collections", "defaultdict"): defaultdict, ("builtins", "list"): list}
-# CardInfo fields the site reads (bot_field_warnings); the bot's other fields; CardStats fields
+# fields the site reads; other known fields
 CARD_FIELDS = {"card_type", "path", "timestamp", "ability", "stars", "subtype", "series", "types", "stats", "problems", "author",
                "blob_sha", "parsed_values"}
 CARD_FIELDS_OPTIONAL = {"name", "display_name", "duplicate_of", "creatures", "note", "hidden", "problems_ok", "allow_high_stats",
-                        "alt_names", "subseries", "parser_version"}      # unused, or missing on cards parsed before they existed
+                        "alt_names", "subseries", "parser_version"}      # may be missing
 STATS_FIELDS = {"hp", "defense", "attack", "speed"}
 HISTORY_FIELDS = {"ability", "timestamp"}
 
@@ -192,7 +192,8 @@ def warn(message):
     """A warning in the log, and on the run's summary page in GitHub Actions."""
     log(f"warning: {message}")
     if os.environ.get("GITHUB_ACTIONS"):
-        print(f"::warning title=Card browser build::{message}", flush=True)
+        text = str(message).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")   # workflow command escaping
+        print(f"::warning title=Card browser build::{text}", flush=True)
 
 
 def bot_field_warnings(stats, old_stats):
@@ -321,7 +322,7 @@ def make_images(path, sha, known=None):
     IMAGE_WIDTH one; known = the cached [width, height, color] of this blob, trusted while all its files are there."""
     names = image_names(sha)
     cached = {w: os.path.join(CACHE, "img", n) for w, n in names.items()}
-    if isinstance(known, list) and len(known) == 3 and all(os.path.exists(f) for f in cached.values()):
+    if known and all(os.path.exists(f) for f in cached.values()):
         return (sha[:16], *known)
     if not all(os.path.exists(f) for f in cached.values()):
         src = Image.open(io.BytesIO(image_bytes(path)))
@@ -351,9 +352,16 @@ def load_image_meta():
     try:
         with open(os.path.join(CACHE, IMAGE_META), encoding="utf-8") as fh:
             meta = json.load(fh)
-        return meta["images"] if meta.get("version") == IMAGE_META_VERSION and isinstance(meta.get("images"), dict) else {}
-    except (OSError, ValueError, AttributeError):
+        images = meta["images"] if meta.get("version") == IMAGE_META_VERSION and isinstance(meta.get("images"), dict) else {}
+        return {sha: row for sha, row in images.items() if valid_meta(row)}
+    except (OSError, ValueError, AttributeError, KeyError):
         return {}
+
+
+def valid_meta(row):
+    """[int width, int height, "#rrggbb" or None]"""
+    return (isinstance(row, list) and len(row) == 3 and all(type(n) is int and n > 0 for n in row[:2])
+            and (row[2] is None or isinstance(row[2], str) and re.fullmatch(r"#[0-9a-f]{6}", row[2]) is not None))
 
 
 def save_image_meta(images):
@@ -363,10 +371,12 @@ def save_image_meta(images):
     os.replace(path + ".tmp", path)
 
 
-def link_or_copy(src, dst):
-    """Hardlink (cache files are replaced, never rewritten in place), else copy. An existing dst is the same file."""
+def link_or_copy(src, dst, replace=False):
+    """Hardlink (cache files are replaced, never rewritten in place), else copy. An existing dst is kept unless replace."""
     if os.path.lexists(dst):
-        return
+        if not replace:
+            return
+        os.remove(dst)
     try:
         os.link(src, dst)
     except OSError:
@@ -458,7 +468,7 @@ def build_icons(tree):
             im.thumbnail((ICON_SIZE, ICON_SIZE), Image.LANCZOS)
             im.save(cached + ".tmp", "WEBP", quality=90, alpha_quality=100, method=4)   # shown at ≤34 px
             os.replace(cached + ".tmp", cached)
-        link_or_copy(cached, os.path.join(DIST, "icons", out_name))
+        link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)     # last one wins, as before
         entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
         aliases = manifest["icons"].get(name, {}).get("aliases", [])
         for spelling in [name] + list(aliases):
