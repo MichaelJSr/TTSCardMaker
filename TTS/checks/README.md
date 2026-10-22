@@ -24,7 +24,7 @@ The updater checks import the bot's code, which needs only `requests`.
 | Variable | Default | What |
 |---|---|---|
 | `AUTOCROISSANT` | `~/Desktop/AutoCroissant` | the updater's code (`commands/tts_save.py` and what it imports); `updater_report_decks.py` needs it at the bot's main of 2026-10-22 or later |
-| `TTS_HISTORY` | `/tmp/tts-checks/history.git` | bare blobless clone with main's full history, made or fetched on use (the checkout is shallow) |
+| `TTS_HISTORY` | `/tmp/tts-checks/history.git` | bare blobless clone with main's full history, made or fetched on use (the checkout is shallow; under `run_all.py`, fetched once) |
 | `TTS_REF` | `origin/main` | the commit whose tree the rules and names checks compare with |
 | `TTS_REPO` | this repo | the TTSCardMaker checkout |
 | `TTS_CARDS` | the live website | a `cards.json` file to take the card names from |
@@ -60,7 +60,7 @@ history clone. `tts_save_gate.py` needs `jq` and the bot checkout (`AUTOCROISSAN
 | `final_spot.py` | 30 random cards end to end: image, pin, Nickname, deck rule, CustomDeck wiring (`[n] [seed]` after the save) |
 | `updater_idempotent.py` | The updater run as the Action runs it reports no changes and leaves the bytes alone; unpinned links and a dropped Lua row converge back; an offline website changes nothing; a card taken out of a complete deck comes back once |
 | `updater_report_decks.py` | Report titles ("Links pinned" vs "Links re-pinned (changed files)"), the commit subject beside the report, and no CustomDeck key left unused when a card is re-added |
-| `tts_save_gate.py` | The workflow's daily gate (the owner's names hash, 075e6c43) against real history, `gh` and the names cache mocked: the names hashed from the bot's stats.pkl as build_site.py names cards; PICKLE 3888392 changed them, so it runs; docs-only bot commit 39da9ed didn't, so it skips; a card repo change, no or an unknown last run, a forced run and a failed `gh run list` run (takes no save) |
+| `tts_save_gate.py` | The workflow's daily gate (the owner's names hash, 075e6c43) against real history, `gh` and the names cache (the names the updater last ran with) mocked: the names hashed from the bot's stats.pkl as build_site.py names cards; PICKLE 3888392 changed them, so it runs, and back again after a run with them it runs too; docs-only bot commit 39da9ed didn't, so it skips; a card repo change, no or an unknown last run, a forced run and a failed `gh run list` run (takes no save) |
 
 `contents_lib.py` and `checks_env.py` are shared helpers. The names checks (`contents_names.py`, `final_spot.py`,
 `updater_idempotent.py`) follow the live website, like the updater. When the website's names change (a bot pickle
