@@ -17988,7 +17988,8 @@
             82700,
             112100,
             142000,
-            141900
+            141900,
+            172200
           ],
           "CustomDeck": {
             "1625": {
@@ -18047,6 +18048,15 @@
             },
             "1419": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3acbb1e0fe0eb3971bf33fe07c2516979ac918cf/MDW/The%20Morgue/Developper.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            },
+            "1722": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b6330730235dc2a271f6c174cd2d41374aeb7306/MDW/The%20Morgue/White_Palace.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -18453,6 +18463,64 @@
               "CustomDeck": {
                 "1419": {
                   "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3acbb1e0fe0eb3971bf33fe07c2516979ac918cf/MDW/The%20Morgue/Developper.png",
+                  "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
+                  "NumWidth": 1,
+                  "NumHeight": 1,
+                  "BackIsHidden": true,
+                  "UniqueBack": false,
+                  "Type": 0
+                }
+              },
+              "LuaScript": "",
+              "LuaScriptState": "",
+              "XmlUI": ""
+            },
+            {
+              "GUID": "c8da04",
+              "Name": "CardCustom",
+              "Transform": {
+                "posX": 76.05473,
+                "posY": 1.5104686,
+                "posZ": 21.9739037,
+                "rotX": 0.0178241655,
+                "rotY": 179.9967,
+                "rotZ": 0.07889972,
+                "scaleX": 3.0,
+                "scaleY": 1.0,
+                "scaleZ": 3.0
+              },
+              "Nickname": "White Palace",
+              "Description": "",
+              "GMNotes": "",
+              "AltLookAngle": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              },
+              "ColorDiffuse": {
+                "r": 0.713235259,
+                "g": 0.713235259,
+                "b": 0.713235259
+              },
+              "LayoutGroupSortIndex": 0,
+              "Value": 0,
+              "Locked": false,
+              "Grid": true,
+              "Snap": true,
+              "IgnoreFoW": false,
+              "MeasureMovement": false,
+              "DragSelectable": true,
+              "Autoraise": true,
+              "Sticky": true,
+              "Tooltip": true,
+              "GridProjection": false,
+              "HideWhenFaceDown": true,
+              "Hands": true,
+              "CardID": 172200,
+              "SidewaysCard": false,
+              "CustomDeck": {
+                "1722": {
+                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b6330730235dc2a271f6c174cd2d41374aeb7306/MDW/The%20Morgue/White_Palace.png",
                   "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
                   "NumWidth": 1,
                   "NumHeight": 1,
