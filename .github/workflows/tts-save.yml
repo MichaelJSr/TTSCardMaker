@@ -1,21 +1,22 @@
 # Keeps the Tabletop Simulator save (TTS/Impossibility Simulator.json) current: image links pinned to the commit that
 # last changed each file, new cards added to their decks (TTS/decks.json), names from the card browser.
-# Runs the bot's updater (AutoCroissant commands/tts_save.py) and commits the save when it changed.
+# Once a day, when a card image, the deck rules, the card edits or the save changed since the last successful run, it
+# runs the bot's updater (AutoCroissant commands/tts_save.py) and commits the save when it changed.
 name: TTS save
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "**/*.png"
-      - "TTS/decks.json"
-      - "site/Card Edits.json"
   schedule:
-    - cron: "41 11 * * *"    # daily: picks up card-browser names the push ran ahead of
+    - cron: "41 11 * * *"    # daily
   workflow_dispatch:
+    inputs:
+      force:
+        description: Run even if nothing changed since the last run
+        type: boolean
+        default: true
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: tts-save
@@ -26,15 +27,36 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      # Full history without file contents, for the change check
       - uses: actions/checkout@v7
         with:
+          fetch-depth: 0
+          filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /TTS/
             /site/Card Edits.json
 
+      # Skip the day when nothing the save depends on changed since the last successful run (own commits aside)
+      - name: Changes since the last run
+        id: changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force }}
+        run: |
+          if [ "$FORCE" = "true" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          last=$(gh run list -R "$GITHUB_REPOSITORY" --workflow tts-save.yml --status success --limit 1 --json headSha -q '.[0].headSha')
+          if [ -z "$last" ] || ! git cat-file -e "$last^{commit}" 2>/dev/null; then
+            echo "No earlier run to compare with."; echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          n=$(git log --format='%an|%s' "$last..HEAD" -- '*.png' 'TTS/decks.json' 'site/Card Edits.json' 'TTS/Impossibility Simulator.json' \
+            | { grep -v '^AutoCroissant|TTS save:' || true; } | wc -l)
+          echo "$n commits changed the save's inputs since ${last:0:8}."
+          echo "run=$([ "$n" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
       # The updater and what it imports (no config.py: github_api reads it in a try/except)
       - uses: actions/checkout@v7
+        if: steps.changes.outputs.run == 'true'
         with:
           repository: bobberlington/AutoCroissant
           path: bot
@@ -49,14 +71,17 @@ jobs:
             /global_config.py
 
       - uses: actions/setup-python@v7
+        if: steps.changes.outputs.run == 'true'
         with:
           python-version: "3.12"
 
       - run: pip install -q requests
+        if: steps.changes.outputs.run == 'true'
 
       # The updater reads TTS/decks.json and site/Card Edits.json from the checkout (AUTOCROISSANT_LOCAL_DIR) and keeps a
       # bare blobless history clone (AUTOCROISSANT_HISTORY_CLONE, made on first use); the report lands next to the save.
       - name: Update the save
+        if: steps.changes.outputs.run == 'true'
         shell: bash
         env:
           AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
@@ -66,6 +91,7 @@ jobs:
           python -m commands.tts_save "$GITHUB_WORKSPACE/TTS/Impossibility Simulator.json" | tee "$GITHUB_WORKSPACE/tts-save-report.md"
 
       - name: Commit the save
+        if: steps.changes.outputs.run == 'true'
         run: |
           if git diff --quiet -- "TTS/Impossibility Simulator.json"; then echo "No changes."; exit 0; fi
           msg=$(grep -E '^## ' tts-save-report.md | sed -E 's/^## (.*) \(([0-9]+)\)$/\2 \1/; s/^## //' | head -4 | paste -sd ',' - | sed 's/,/, /g')
