@@ -64,7 +64,7 @@ jobs:
 
       # The fork pin: cards + feat/text-engine merged, save(update_preview=), tagged by step S0 of the design.
       # The tag exists since S0 (2026-10-21, cards a6363a04). Plan step 7 drops the pin once upstream has the changes.
-      - run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261020"
+      - run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261021"
 
       # Fonts: MDW/Fonts' top level (272 files, 215 MB on 2026-10-20; stoogedings-src/ is another 200 MB and stays
       # out), cached by the folder's tree sha; the sparse checkout fetches them only on a miss.
