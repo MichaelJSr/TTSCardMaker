@@ -47,20 +47,25 @@ export function makeRenderer({ cards, icons }) {
   const fold = s => String(s || "").trim().toLowerCase().replace(/[‘’]/g, "'").replace(/\s+/g, " ");
   const byName = new Map();
   const add = (n, c) => { const k = fold(n); if (k.length >= 3 && !byName.has(k)) byName.set(k, c); };
+  const oneWord = s => !/\s/.test(String(s || "").trim());
   for (const c of cards) add(c.name, c);
-  for (const c of cards) add(c.key, c);
+  for (const c of cards) if (!oneWord(c.key) || oneWord(c.name)) add(c.key, c);   // not "Blockade" for The Wall By Ech
   for (const c of cards) add(c.name.trim().replace(/[!?.]+$/, ""), c);      // "Party" for Party!
+  for (const c of cards) if (!oneWord(c.name) && /[^siu]s$/i.test(c.name.trim())) add(c.name.trim().slice(0, -1), c);   // "an X Fist"
   const isRef = (m, text, card) => {
     const t = m[1], spelt = [card.name.trim(), String(card.key || "").trim()];
     if (t === t.toUpperCase() && t !== t.toLowerCase() && !spelt.includes(t)) return false;   // capitals it doesn't print: a heading ("PANDA")
     if (/\s/.test(t)) return true;
     // one word: as spelt or capitalized ("Springtrap", never "stay"), not a label ("Cat: +2 SPD"), after a LEAD word or a card
-    if (!(spelt.includes(t) && !m[2]) && !/^[A-Z]/.test(t)) return false;
-    if (text[m.index + m[0].length] === ":") return false;
-    const w = /(?:^|[\s(“"‘'])([A-Z][\w'’-]*)[^\S\n]+$/.exec(text.slice(0, m.index));
-    return !w || LEAD.test(w[1]) || byName.has(fold(w[1]));
+    if (!(spelt.includes(t) && !m[2]) && !/^\p{Lu}/u.test(t)) return false;
+    const after = text.slice(m.index + m[0].length);
+    if (after[0] === ":") return false;
+    const before = text.slice(0, m.index), w = /(?:^|[\s(“"‘'])(\p{Lu}[\p{L}\p{N}_'’-]*)[^\S\n]+$/u.exec(before);
+    if (w) return LEAD.test(w[1]) || byName.has(fold(w[1]));
+    // opening a clause and followed by to/the/a…: a verb ("(BOGT) Flip to the other creature")
+    return !(/(?:^|[\n.!?:)])[^\S\n]*$/.test(before) && /^[^\S\n]+(?:to|the|a|an|your|its|all|any|each|it|this|that)\b/.test(after));
   };
-  const pat = k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/'/g, "['‘’]").replace(/ /g, "\\s+");
+  const pat = k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/'/g, "['‘’]").replace(/ /g, "[ \\t]+");
   const names = [...byName.keys()].sort((a, b) => b.length - a.length).map(pat);
   const nameRe = names.length ? new RegExp(`(?<![\\w'‘’])(${names.join("|")})((?:['‘’]s|(?<=s)['‘’]|e?s)(?![\\w'‘’]))?(?![\\w'‘’])`, "gi") : null;
   const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,48})\\]|${TAG.source}`, "g");
@@ -73,45 +78,43 @@ export function makeRenderer({ cards, icons }) {
     return variant && variant.trim().toLowerCase() === "no" ? `<span class="tok-no">${img}</span>` : img;
   }
 
-  function* refs(text, selfName) {
-    for (const m of text.matchAll(nameRe)) {
-      const card = byName.get(fold(m[1]));
-      if (card && card.name !== selfName && isRef(m, text, card)) yield [m, card];
+  // icons and badges as [index, length, html]; links as [index, length, card], judged over the whole text with each
+  // icon or badge read as a space, so render and mentions agree
+  function parse(text, selfName) {
+    const pieces = [];
+    for (const m of text.matchAll(PIECE)) {
+      const html = m[1] !== undefined ? icon(m[1]) : (tagInfo(m[2]) ? badgeHtml(m[2]) : null);
+      if (html !== null) pieces.push([m.index, m[0].length, html]);
     }
-  }
-
-  function linkNames(text, selfName, out) {
-    if (!nameRe) { out.push(esc(text)); return; }
-    let last = 0;
-    for (const [m, card] of refs(text, selfName)) {
-      out.push(esc(text.slice(last, m.index)), `<a class="card-ref" href="#/card/${card.id}" data-card="${card.id}">${esc(m[0])}</a>`);
-      last = m.index + m[0].length;
+    const links = [];
+    if (nameRe) {
+      let flat = text, spaced = text;                   // flat: a name never spans an icon; spaced: for isRef
+      for (const [i, n] of pieces) { flat = flat.slice(0, i) + "\0".repeat(n) + flat.slice(i + n); spaced = spaced.slice(0, i) + " ".repeat(n) + spaced.slice(i + n); }
+      for (const m of flat.matchAll(nameRe)) {
+        const card = byName.get(fold(m[1]));
+        if (card && card.name !== selfName && isRef(m, spaced, card)) links.push([m.index, m[0].length, card]);
+      }
     }
-    out.push(esc(text.slice(last)));
+    return { pieces, links };
   }
 
   /** HTML for ability text. */
   function render(text, selfName = "") {
     if (!text) return "";
+    const { pieces, links } = parse(text, selfName);
     const out = [];
     let last = 0;
-    for (const m of text.matchAll(PIECE)) {
-      const html = m[1] !== undefined ? icon(m[1]) : (tagInfo(m[2]) ? badgeHtml(m[2]) : null);
-      if (html === null) continue;
-      linkNames(text.slice(last, m.index), selfName, out);
-      out.push(html);
-      last = m.index + m[0].length;
+    for (const [i, n, x] of [...pieces, ...links].sort((a, b) => a[0] - b[0])) {
+      out.push(esc(text.slice(last, i)), typeof x === "string" ? x : `<a class="card-ref" href="#/card/${x.id}" data-card="${x.id}">${esc(text.slice(i, i + n))}</a>`);
+      last = i + n;
     }
-    linkNames(text.slice(last), selfName, out);
+    out.push(esc(text.slice(last)));
     return out.join("").replace(/\n/g, "<br>");
   }
 
   /** Cards whose names appear in a text (for "mentions" / "mentioned by"). */
   function mentions(text, selfName = "") {
-    const found = new Set();
-    if (!text || !nameRe) return found;
-    for (const [, card] of refs(text.replace(PIECE, " "), selfName)) found.add(card.id);
-    return found;
+    return new Set(text ? parse(text, selfName).links.map(l => l[2].id) : []);
   }
   return { render, mentions, icon };
 }
