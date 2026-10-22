@@ -2,7 +2,9 @@
 *.ini
 *.DS_Store
 
-# TTS save updater (AutoCroissant commands/tts_save.py): timestamped backups and change report beside the save
+# TTS save updater (AutoCroissant commands/tts_save.py): timestamped backups, change report and commit subject beside the save
 TTS/*.bak.json
 TTS/*.report.md
+TTS/*.message.txt
 TTS/audit.json
+__pycache__/

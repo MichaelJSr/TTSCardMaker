@@ -108,7 +108,8 @@ jobs:
         if: steps.changes.outputs.run == 'true'
 
       # The updater reads TTS/decks.json and site/Card Edits.json from the checkout (AUTOCROISSANT_LOCAL_DIR) and keeps a
-      # bare blobless history clone (AUTOCROISSANT_HISTORY_CLONE, made on first use); the report lands next to the save.
+      # bare blobless history clone (AUTOCROISSANT_HISTORY_CLONE, made on first use); the report and the commit subject
+      # (<stem>.report.md, <stem>.message.txt) land next to the save.
       - name: Update the save
         if: steps.changes.outputs.run == 'true'
         shell: bash
@@ -117,17 +118,17 @@ jobs:
           AUTOCROISSANT_HISTORY_CLONE: ~/TTSCardMaker-history.git
         run: |
           cd bot
-          python -m commands.tts_save "$GITHUB_WORKSPACE/TTS/Impossibility Simulator.json" | tee "$GITHUB_WORKSPACE/tts-save-report.md"
+          python -m commands.tts_save "$GITHUB_WORKSPACE/TTS/Impossibility Simulator.json"
 
       - name: Commit the save
         if: steps.changes.outputs.run == 'true'
         run: |
           if git diff --quiet -- "TTS/Impossibility Simulator.json"; then echo "No changes."; exit 0; fi
-          msg=$(grep -E '^## ' tts-save-report.md | sed -E 's/^## (.*) \(([0-9]+)\)$/\2 \1/; s/^## //' | head -4 | paste -sd ',' - | sed 's/,/, /g')
+          msg=$(head -1 "TTS/Impossibility Simulator.message.txt" 2>/dev/null || true)    # the updater's _commit_message
           git config user.name AutoCroissant
           git config user.email autocroissant@gmail.com
           git add "TTS/Impossibility Simulator.json"
-          git commit -m "TTS save: ${msg:-updated}"
+          git commit -m "${msg:-TTS save: updated}"
           git push
 
       # These names are done: tomorrow's check skips unless they or the inputs change
