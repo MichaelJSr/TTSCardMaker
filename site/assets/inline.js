@@ -1,7 +1,7 @@
-// Inline editing, edit mode only (signed in): the card dialog's values edit in place, and tiles in the cards grid select
-// and drag onto a Series or Author value. A DOM upgrade after app.js has rendered (attributes and listeners, no template
-// change), so view mode is untouched. Staging goes through the editor's single-field ops (edit.js stageField/stageAuthor),
-// the same batch the form fills. Helpers above `install` are pure; node checks under /tmp exercise them.
+// Inline editing, edit mode only (signed in): the card dialog's values edit in place, tiles in the cards grid select
+// and drag onto a Series, Subseries or Author value, and the filter bar's selects make new ones. A DOM upgrade after
+// app.js has rendered (attributes and listeners, no template change), so view mode is untouched. Staging goes through
+// the editor's single-field ops (edit.js stageField/stageAuthor), the same batch the form fills. Helpers above `install` are pure; node checks under /tmp exercise them.
 import { esc } from "./text.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
@@ -16,20 +16,33 @@ export const fit = text => Math.min(14, Math.max(2, String(text ?? "").split("\n
 export const dragIds = (id, selected) => (selected.has(id) ? [...selected] : [id]);
 /** Shift-click: the ids of `order` from the anchor to `id`, both included; just `id` without an anchor in the list. */
 export const rangeIds = (order, anchor, id) => { const a = order.indexOf(anchor), b = order.indexOf(id); return a < 0 || b < 0 ? [id] : order.slice(Math.min(a, b), Math.max(a, b) + 1); };
-/** The control for a field: name and chips an input (chips with a datalist of known values), the ability a textarea. */
-export function control(f, v, list = []) {
-  const label = f === "name" ? "Name, Enter to save, Esc to cancel" : f === "ability" ? "Ability text, Ctrl+Enter to save, Esc to cancel" : `${LABEL[f]}, Enter to save, Esc to cancel`;
+/** The control for a field: name and chips an input (chips with a datalist of known values), the ability a textarea.
+ *  fresh: the filter bar's input for a new series, subseries or author. */
+export function control(f, v, list = [], fresh = false) {
+  const label = f === "name" ? "Name, Enter to save, Esc to cancel" : f === "ability" ? "Ability text, Ctrl+Enter to save, Esc to cancel"
+    : `${fresh ? `New ${LABEL[f].toLowerCase()}` : LABEL[f]}, Enter to save, Esc to cancel`;
   if (f === "name") return `<input class="inline-name" aria-label="${label}" value="${esc(v)}">`;
   if (f === "ability") return `<textarea class="inline-ability" rows="${fit(v)}" spellcheck="true" aria-label="${label}">${esc(v)}</textarea>`;
   const dl = list.length ? `<datalist id="inline-dl">${list.map(x => `<option value="${esc(x)}">`).join("")}</datalist>` : "";
-  return `<input class="inline-fact${f === "note" ? " inline-note" : ""}"${dl ? ' list="inline-dl"' : ""} aria-label="${label}" placeholder="${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">${dl}`;
+  return `<input class="inline-fact${f === "note" ? " inline-note" : ""}"${dl ? ' list="inline-dl"' : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">${dl}`;
 }
+/** The bucket options a filter select gets: those it lacks (have: its values), as "X (no cards yet)", selected when picked.
+ *  list: [{value, series?, where?}]; series: a subseries' series (the select-param handler then sets it too); where: shown
+ *  in the brackets ("X (Mario, no cards yet)"). */
+export const bucketOptions = (have, list, picked) => list.filter(x => !have.has(x.value)).map(x => `<option value="${esc(x.value)}"${x.series != null ? ` data-series="${esc(x.series)}"` : ""}${x.value === picked ? " selected" : ""}>${esc(x.value)} (${x.where ? `${esc(x.where)}, ` : ""}no cards yet)</option>`).join("");
+/** The select's last option: "New series…" (data-new-bucket: its value never matters); a subseries needs a picked series. */
+export const newOption = (key, series) => (key === "subseries" && !series ? `<option disabled>Pick a series to add a subseries</option>`
+  : `<option value="" data-new-bucket>New ${LABEL[key].toLowerCase()}…</option>`);
+const chipHtml = (v, fresh) => `<span class="chip" data-value="${esc(v)}"${fresh ? " data-new" : ""}>${esc(v)}</span>`;
+/** A drop list's chips: the new (pending) values first, dashed, then the rest. */
+export const dropChips = (list, fresh) => [...fresh.map(v => chipHtml(v, true)), ...list.filter(v => !fresh.includes(v)).map(v => chipHtml(v, false))].join("");
 
-let A = null;                                      // {editor, modal, selected, goCard, rerender, toast}, from install
+let A = null;                                      // {editor, modal, selected, goCard, rerender, toast, params}, from install
 let card = null;                                   // the card the dialog shows (mountCard)
 let cur = null;                                    // the open editor: {c, f, el, host, html, cls, tip, ctl, v}
 let prov = null;                                   // a stat row changed by keyboard, not yet saved: {row, k, v0}
 let pointer = false;                               // the last input was a pointer (focus moved by a click, not Tab)
+let naming = null;                                 // the filter bar's open "New …" input: {sel, key, input}
 
 // ---- the card dialog
 /** Mark the editable spots of the open card dialog (edit mode only; call after openCard). */
@@ -158,17 +171,28 @@ export function reflect(view, selected) {
   const rc = view.querySelector(".result-count");
   if (rc) rc.textContent = rc.textContent.replace(/ · \d+ selected$/, "") + (selected.size ? ` · ${selected.size} selected` : "");
 }
-/** Make the grid's tiles draggable and add the drop lists (every series, every author) under the two selects; shown only
- *  while a drag is on (body.dragging-cards). Edit mode only; call after renderCards. */
+/** Edit mode only; call after renderCards. The Series, Subseries and Author selects get the new values no card carries yet
+ *  and a "New …" option, in the grid and the table alike (a series without subseries gets its Subseries select). With the
+ *  grid, the tiles turn draggable and drop lists go under the selects (every series, every author; the picked series' own
+ *  subseries), shown only while a drag is on (body.dragging-cards). */
 export function mountGrid(view, api = A) {
-  const grid = view.querySelector(".browse .grid"); if (!grid) return;
+  const filters = view.querySelector(".browse .filters"); if (!filters) return;
+  naming = null;
+  const grid = view.querySelector(".browse .grid"), opts = api.editor.options(), b = opts.buckets;
+  const p = api.params?.() || new URLSearchParams(), series = p.get("series") || "", sel = key => filters.querySelector(`select[data-key="${key}"]`);
+  if (!sel("subseries")) sel("series")?.insertAdjacentHTML("afterend", `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option></select>`);
+  const fresh = { series: b.series.map(value => ({ value })), author: b.author.map(value => ({ value })),
+    subseries: b.subseries.filter(([s]) => !series || s === series).map(([s, value]) => ({ value, series: s, where: series ? "" : s })) };
+  for (const key of ["series", "subseries", "author"]) {
+    const el = sel(key); if (!el) continue;
+    el.insertAdjacentHTML("beforeend", bucketOptions(new Set([...el.options].map(o => o.value)), fresh[key], p.get(key) || "") + newOption(key, series));
+  }
+  if (!grid) return;
   for (const t of grid.querySelectorAll(".tile[data-open]")) t.draggable = true;
   reflect(view, api.selected);
-  const opts = api.editor.options();
-  for (const [key, list] of [["series", opts.series], ["author", opts.authors]]) {
-    const sel = view.querySelector(`.filters select[data-key="${key}"]`); if (!sel) continue;
-    sel.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}" aria-label="Drop cards on a ${key} to set it">${list.map(v => `<span class="chip" data-value="${esc(v)}">${esc(v)}</span>`).join("")}</div>`);
-  }
+  const own = b.subseries.filter(([s]) => s === series).map(([, v]) => v);
+  for (const [key, list, news] of [["series", opts.series, b.series], ["author", opts.authors, b.author], ...(series ? [["subseries", opts.ownSubseries(series), own]] : [])])
+    sel(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}" aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
 }
 const dragOff = () => { document.body.classList.remove("dragging-cards"); for (const c of document.querySelectorAll(".drop-list .over")) c.classList.remove("over"); };
 function onDragStart(e) {
@@ -187,14 +211,57 @@ function onDrop(e) {
   const chip = dragging() && e.target.closest?.(".drop-list .chip"); if (!chip) return;
   e.preventDefault(); dragOff();
   const ids = (e.dataTransfer.getData("text/plain") || "").split(",").filter(Boolean), key = chip.closest(".drop-list").dataset.drop, v = chip.dataset.value;
-  const n = A.editor.stageMany(ids, key, v);
+  const { changed: n, dups, value, error } = A.editor.stageMany(ids, key, v);
   A.selected.clear();
   A.rerender();
-  A.toast(`${n} card${n === 1 ? "" : "s"}: ${key} → ${v}`);
+  A.toast(error || [n ? `${n} card${n === 1 ? "" : "s"}: ${key} → ${value}` : "",
+    dups ? `${dups} duplicate${dups === 1 ? " kept its original's" : "s kept their originals'"} author` : ""].filter(Boolean).join(" · ") || `Already ${value}`);
 }
 
-/** Once at boot: delegated listeners on the modal (editors) and the document (drag). api = {editor, modal, selected (Set of
- *  card ids), goCard, rerender, toast}. */
+// ---- the filter bar: "New series…" (subseries, author) swaps its select for an input; Enter or a click away makes the
+// name (editor.addBucket), Esc or nothing typed puts the select back as it was
+function openName(sel) {
+  closeName(false);
+  sel.hidden = true;
+  sel.insertAdjacentHTML("afterend", control(sel.dataset.key, "", [], true));
+  naming = { sel, key: sel.dataset.key, input: sel.nextElementSibling };
+  naming.input.focus();
+}
+function closeName(refocus) {
+  if (!naming) return;
+  const { sel, input } = naming; naming = null;
+  input.remove(); sel.hidden = false;
+  sel.selectedIndex = Math.max(0, [...sel.options].findIndex(o => o.defaultSelected));
+  if (refocus) sel.focus();
+}
+function createBucket(kbd) {
+  const { key, input } = naming, series = key === "subseries" ? A.params().get("series") || "" : "";
+  const r = A.editor.addBucket(key, input.value, series);
+  if (!r) { closeName(kbd); return; }                                        // nothing typed
+  if (r.error) { A.toast(r.error); if (!kbd) closeName(false); return; }     // after Enter the input stays, to shorten it
+  naming = null;
+  A.toast(r.note || `New ${LABEL[key].toLowerCase()} “${r.name}”${series ? ` of ${series}` : ""}: drag cards onto it under ${LABEL[key]}`);
+  A.rerender();                                                              // the filter stays: the cards to drag are still shown
+  if (kbd) document.querySelector(`.filters select[data-key="${key}"]`)?.focus();
+}
+function onChange(e) {                            // before app.js's listener: the filter doesn't change
+  const sel = e.target.closest?.(".filters select[data-key]");
+  if (!sel || !sel.options[sel.selectedIndex]?.hasAttribute("data-new-bucket")) return;
+  e.stopImmediatePropagation();
+  openName(sel);
+}
+function onNameKey(e) {
+  if (!naming || e.target !== naming.input) return;
+  if (e.key === "Escape") { e.preventDefault(); e.stopImmediatePropagation(); closeName(true); }
+  else if (e.key === "Enter") { e.preventDefault(); e.stopImmediatePropagation(); createBucket(true); }
+}
+function onNameFocusOut(e) {
+  if (!naming || e.target !== naming.input || !document.hasFocus()) return;   // alt-tab leaves it open
+  if (naming.input.value.trim()) createBucket(false); else closeName(false);
+}
+
+/** Once at boot, before app.js's document listeners: delegated listeners on the modal (editors) and the document (drag,
+ *  the filter bar's "New …"). api = {editor, modal, selected (Set of card ids), goCard, rerender, toast, params (the hash's)}. */
 export function install(api) {
   A = api;
   api.modal.addEventListener("pointerdown", () => { pointer = true; });
@@ -207,4 +274,7 @@ export function install(api) {
   document.addEventListener("dragover", onDragOver);
   document.addEventListener("dragleave", onDragLeave);
   document.addEventListener("drop", onDrop);
+  document.addEventListener("change", onChange);
+  document.addEventListener("keydown", onNameKey);
+  document.addEventListener("focusout", onNameFocusOut);
 }

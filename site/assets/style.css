@@ -328,6 +328,8 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .drop-list { display: none; flex-wrap: wrap; gap: 4px; margin-top: 6px; max-height: 40vh; overflow: auto; }
 body.dragging-cards .drop-list { display: flex; }
 .drop-list .chip.over { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.drop-list .chip[data-new] { border-style: dashed; }                 /* a new value no card carries yet */
+.filters .inline-fact { width: 100%; padding: 5px 8px; border: 1px solid var(--accent); border-radius: 8px; background: var(--surface); }
 
 /* ---- profiles ---- */
 #account { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }

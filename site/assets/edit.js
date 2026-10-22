@@ -6,7 +6,7 @@ import * as pick from "./pick.js";
 import * as decks from "./decks.js";
 
 const API = "https://api.github.com";
-const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden" };
+const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets" };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
   atk: "int", spd: "int", ability: "str", note: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
@@ -55,6 +55,36 @@ export function mergeField(op, base, f, v) {
   if (!asPub) { if (same(v, base.psd) && base.edited) unset.push(f); else set[f] = v; }
   return { ...op, set, unset, ...(f === "name" ? { name: v } : {}) };
 }
+// ---- series, subseries and author names: one spelling per name
+export const NAME_MAX = 60;
+/** A name's comparison key: case and spacing don't count. */
+export const nameKey = s => String(s ?? "").toLowerCase().replace(/\s+/g, "");
+const NOUN = { series: "Series", subseries: "Subseries", author: "Author" };
+/** A typed series, subseries or author name: trimmed, spaces collapsed, and the known spelling when one has its nameKey.
+ *  known: [spelling, shown, rank]; the highest rank wins (a [people] line, else the most cards). null when empty,
+ *  {error} for a new name over NAME_MAX, else {name, existed, typed}. */
+export function canonName(kind, raw, known = []) {
+  const typed = String(raw ?? "").trim().replace(/\s+/g, " ");
+  if (!typed) return null;
+  const k = nameKey(typed);
+  let best = null;
+  for (const [s, shown, rank = 0] of known) if (shown && nameKey(s) === k && (!best || rank > best[1])) best = [shown, rank];
+  if (best) return { name: best[0], existed: true, typed };
+  if (typed.length > NAME_MAX) return { error: `${NOUN[kind] || "Names"} names are at most ${NAME_MAX} characters` };
+  return { name: typed, existed: false, typed };
+}
+/** The toast when a typed name is a known one; series: the picked series of an existing subseries. */
+export const sameName = (kind, typed, name, series = "") => (kind === "author" ? (typed === name ? `“${name}” is already an author` : `“${typed}” is shown as ${name}`)
+  : series ? (typed === name ? `“${name}” is already a subseries of ${series}` : `“${typed}” is already the subseries ${name} of ${series}`)
+  : typed === name ? `“${name}” is already a ${kind}` : `“${typed}” is already the ${kind} ${name}`);
+/** sessionStorage's buckets, checked: {series: [name], subseries: [[series, name]], author: [name]}. */
+export function readBuckets(text) {
+  let b; try { b = JSON.parse(text); } catch { b = null; }
+  const strs = a => (Array.isArray(a) ? a.filter(x => typeof x === "string" && x) : []);
+  return { series: strs(b?.series), author: strs(b?.author),
+    subseries: Array.isArray(b?.subseries) ? b.subseries.filter(x => Array.isArray(x) && x.length === 2 && strs(x).length === 2) : [] };
+}
+
 /** op with the author set to v ("" -> from git), or without an author entry when v is the published author. */
 export function mergeAuthor(op, v, published) {
   const o = { ...op }; v = String(v ?? "").trim();
@@ -130,6 +160,8 @@ export function createEditor(app) {
   // encrypt), or null to remove it; deckNames: the same keys -> name, for the bar (a private file holds its name encrypted)
   const emptyStage = () => ({ cards: {}, people: {}, admins: null, profiles: {}, decks: {}, deckNames: {} });
   let stage = { ...emptyStage(), ...load(K.stage, {}) };
+  // new series, subseries and authors made in the filter bar: this tab only, never published (a card carrying one is)
+  let buckets = readBuckets(sessionStorage.getItem(K.buckets));
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
@@ -189,7 +221,7 @@ export function createEditor(app) {
     (remember ? localStorage : sessionStorage).setItem(K.token, token);
     app.onAuth();
   }
-  function signOut() { token = ""; me = null; localStorage.removeItem(K.token); sessionStorage.removeItem(K.token); app.onAuth(); }
+  function signOut() { token = ""; me = null; localStorage.removeItem(K.token); sessionStorage.removeItem(K.token); sessionStorage.removeItem(K.buckets); buckets = readBuckets(null); app.onAuth(); }
 
   // ---- preview: staged and just-published changes applied to the loaded cards
   const snap = c => { if (c && !pristine.has(c.id)) pristine.set(c.id, structuredClone(c)); };
@@ -260,10 +292,41 @@ export function createEditor(app) {
   // ---- the edit form
   const opts = (list, cur) => list.map(([v, l]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(l)}</option>`).join("");
   const uniq = f => [...new Set(S.all.map(f).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  // the known names, buckets included; a bucket no card carries yet is pending ("no cards yet")
+  const carries = (f, v, series) => S.all.some(c => nameKey(c[f]) === nameKey(v) && (series === undefined || nameKey(c.series) === nameKey(series)));
+  const pending = () => ({ series: buckets.series.filter(v => !carries("series", v)), author: buckets.author.filter(v => !carries("author", v)),
+    subseries: buckets.subseries.filter(([s, v]) => !carries("subseries", v, s)) });
+  const ownSubseries = series => [...new Set([...uniq(x => (x.series === series ? x.subseries : null)), ...buckets.subseries.filter(([s]) => s === series).map(([, v]) => v)])];
   const subseriesList = series => {          // that series' subseries first, then all
-    const own = uniq(x => (x.series === series ? x.subseries : null));
-    return [...own, ...uniq(x => x.subseries).filter(v => !own.includes(v))];
+    const own = ownSubseries(series);
+    return [...own, ...new Set([...uniq(x => x.subseries), ...buckets.subseries.map(([, v]) => v)].filter(v => !own.includes(v)))];
   };
+  const seriesList = () => [...new Set([...uniq(c => c.series), ...buckets.series])].sort((a, b) => a.localeCompare(b));
+  const authorList = () => [...new Set([...(S.data.people || []), ...S.all.map(c => c.author).filter(Boolean), ...buckets.author])].sort((a, b) => a.localeCompare(b));
+  function knownNames(kind, series = "", skip = "") {     // canonName's [spelling, shown, rank]: cards (skip: the one being edited), buckets, [people]
+    const rank = new Map(), own = s => (kind === "subseries" && series && s === series ? 1e6 : 0);   // the picked series' own subseries first
+    const add = (v, by) => { if (v) rank.set(v, (rank.get(v) || 0) + by); };
+    for (const c of S.all) if (c.id !== skip) add(c[kind], 1 + own(c.series));
+    if (kind === "subseries") for (const [s, v] of buckets.subseries) add(v, own(s));
+    else for (const v of kind === "series" || kind === "author" ? buckets[kind] : []) add(v, 0);
+    const out = [...rank].map(([v, r]) => [v, v, r]);
+    if (kind === "author") {                       // a [people] line wins: the bot resolves a name through it the same way
+      for (const p of S.data.people || []) out.push([p, p, 0]);
+      for (const [git, shown] of Object.entries(S.data.peopleMap || {})) out.push([git, shown, Infinity]);
+    }
+    return out;
+  }
+  const canonical = (kind, v, series = "", skip = "") => canonName(kind, v, knownNames(kind, series, skip));
+  function addBucket(kind, raw, series = "") {      // -> null (nothing typed), {error}, or {name, existed, note}
+    if (!["series", "subseries", "author"].includes(kind)) return null;
+    if (kind === "subseries" && !series) return { error: "Pick a series to add a subseries" };
+    const r = canonical(kind, raw, series); if (!r || r.error) return r;
+    const here = kind === "subseries" ? ownSubseries(series).some(v => nameKey(v) === nameKey(r.name)) : r.existed;   // a subseries of another series is made here too
+    if (here) return { name: r.name, existed: true, note: sameName(kind, r.typed, r.name, kind === "subseries" ? series : "") };
+    if (kind === "subseries") buckets.subseries.push([series, r.name]); else buckets[kind].push(r.name);
+    try { sessionStorage.setItem(K.buckets, JSON.stringify(buckets)); } catch { /* storage full: kept for this page */ }
+    return { name: r.name, existed: false, note: "" };
+  }
   const subseriesOpts = series => subseriesList(series).map(v => `<option value="${esc(v)}">`).join("");
   const isRule = c => (S.rules || []).includes(c);
   function ruleFormHtml(c) {
@@ -319,13 +382,13 @@ export function createEditor(app) {
         <fieldset><legend>Kind and series</legend>
           ${row("type", `<select id="ef-type">${opts(kinds, c.type)}</select>`)}
           ${row("subtype", `<input id="ef-subtype" list="dl-sub" value="${esc(c.subtype || "")}" placeholder="—"><datalist id="dl-sub">${uniq(x => x.subtype).map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
-          ${row("series", `<input id="ef-series" list="dl-series" value="${esc(c.series || "")}" placeholder="—"><datalist id="dl-series">${uniq(x => x.series).map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
+          ${row("series", `<input id="ef-series" list="dl-series" value="${esc(c.series || "")}" placeholder="—"><datalist id="dl-series">${seriesList().map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
           ${row("subseries", `<input id="ef-subseries" list="dl-subseries" value="${esc(c.subseries || "")}" placeholder="—"><datalist id="dl-subseries">${subseriesOpts(c.series)}</datalist>`)}
         </fieldset>
         <fieldset><legend>Notes, names and credit</legend>
           ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page">${esc(c.note || "")}</textarea>`)}
           ${row("aliases", `<input id="ef-aliases" value="${esc((c.webAliases || []).join(", "))}" placeholder="comma separated">${(c.aliases || []).filter(a => !(c.webAliases || []).includes(a)).length ? `<span class="muted">Bot aliases: ${esc(c.aliases.filter(a => !(c.webAliases || []).includes(a)).join(", "))}</span>` : ""}`)}
-          <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" list="dl-people" value="${esc(c.author || "")}"><datalist id="dl-people">${(S.data.people || []).map(p => `<option value="${esc(p)}">`).join("")}</datalist>`}</div></div>
+          <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" list="dl-people" value="${esc(c.author || "")}"><datalist id="dl-people">${authorList().map(p => `<option value="${esc(p)}">`).join("")}</datalist>`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
         </fieldset>
         <fieldset><legend>Checks</legend>
@@ -363,8 +426,14 @@ export function createEditor(app) {
     const b = baseOf(c), f = id => document.getElementById(`ef-${id}`);
     const int = id => (f(id).value.trim() === "" ? null : Math.max(0, Math.round(Number(f(id).value))));
     const str = id => (f(id).value.trim() || null);
+    let error = "";                                  // a new name too long: shown in the summary, refused on submit
+    const named = (k, series = "") => {             // a changed series or subseries as its known spelling
+      const v = str(k); if (v === val(b, k)) return v;
+      const r = canonical(k, v, series, c.id); if (r?.error) { error = r.error; return val(b, k); }
+      return r ? r.name : null;
+    };
     const all = {
-      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: () => str("series"), subseries: () => str("subseries"), stars: () => int("stars"),
+      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: () => named("series"), subseries: () => named("subseries", named("series") || ""), stars: () => int("stars"),
       types: () => [...document.querySelectorAll("#ef-types .on")].map(x => x.dataset.type),
       ...Object.fromEntries(STATS.map(s => [s, () => int(s)])),
       ability: () => f("ability").value.replace(/\r/g, "").trim() || null, note: () => f("note").value.trim() || null,
@@ -387,12 +456,16 @@ export function createEditor(app) {
       if (same(v, psdVal(b, k)) && b.edited?.includes(k)) op.unset.push(k);
       else op.set[k] = v;
     }
-    if (f("author") && f("author").value.trim() !== (b.author || "")) op.author = f("author").value.trim() || null;
+    if (f("author") && f("author").value.trim() !== (b.author || "")) {
+      const r = canonical("author", f("author").value, "", c.id), a = r?.name || "";
+      if (r?.error) error = r.error; else if (a !== (b.author || "")) op.author = a || null;
+    }
     if (f("banned")) {
       const ban = { banned: f("banned").checked, group: f("ban-group").value, reason: f("ban-reason").value.trim() };
       const was = banOf(c.id, pristineBan || S.data.banlist);
       if (ban.banned !== was.banned || (ban.banned && (ban.group !== was.group || ban.reason !== was.reason))) op.ban = ban;
     }
+    if (error) op.error = error;
     return op;
   }
   const items = op => { const c = find(op.id); return describeItems(op, c ? baseOf(c) : {}, { byId: S.byId, rule: isRule(c) }); };
@@ -400,10 +473,19 @@ export function createEditor(app) {
   // ---- single fields, staged in place (inline.js): merged into the card's op, so the form and the bar see one batch
   const opFor = c => (stage.cards[c.id] ? structuredClone(stage.cards[c.id]) : { id: c.id, key: c.key, name: baseOf(c).name, set: {}, unset: [] });
   const put = (id, op) => { if (opEmpty(op)) delete stage.cards[id]; else stage.cards[id] = op; };
+  // a typed series, subseries or author as its known spelling ("mario" -> Mario); undefined when refused (toast unless defer)
+  function spell(kind, v, series, id, defer) {
+    const r = canonical(kind, v, series, id);
+    if (r?.error) { if (!defer) app.toast(r.error); return undefined; }
+    if (r?.existed && r.name !== r.typed && !defer) app.toast(sameName(kind, r.typed, r.name));
+    return r ? r.name : v;
+  }
   function stageField(id, f, v, defer = false) {
     const c = find(id); if (!c || !(f in FIELDS)) return null;
     const b = baseOf(c);
-    const op = mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, fromInput(f, v, b.name));
+    let x = fromInput(f, v, b.name);
+    if ((f === "series" || f === "subseries") && x != null && (x = spell(f, x, f === "subseries" ? c.series || "" : "", c.id, defer)) === undefined) return null;
+    const op = mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x);
     put(c.id, op); if (!defer) save();
     return op;
   }
@@ -411,18 +493,24 @@ export function createEditor(app) {
     const c = find(id); if (!c) return null;
     const b = baseOf(c);
     if (b.dup) { if (!defer) app.toast("A duplicate's author follows the original"); return null; }
-    const op = mergeAuthor(opFor(c), v, b.author);
+    const a = spell("author", String(v ?? "").trim(), "", c.id, defer); if (a === undefined) return null;
+    const op = mergeAuthor(opFor(c), a, b.author);
     put(c.id, op); if (!defer) save();
     return op;
   }
-  function stageMany(ids, key, v) {             // one save for the lot; -> how many cards changed (one already at v doesn't count)
-    let n = 0;
+  // one save for the lot -> {changed (a card already at v doesn't count), dups (an author drop leaves duplicates alone), value, error}
+  function stageMany(ids, key, v) {
+    const r = canonical(key, v, key === "subseries" ? find(ids[0])?.series || "" : "");
+    if (r?.error) return { changed: 0, dups: 0, value: v, error: r.error };
+    const value = r ? r.name : v;
+    let changed = 0, dups = 0;
     for (const id of ids) {
       const was = JSON.stringify(stage.cards[id] ?? null);
-      if ((key === "author" ? stageAuthor(id, v, true) : stageField(id, key, v, true)) && JSON.stringify(stage.cards[id] ?? null) !== was) n++;
+      if (key === "author" && find(id) && baseOf(find(id)).dup) { dups++; continue; }
+      if ((key === "author" ? stageAuthor(id, value, true) : stageField(id, key, value, true)) && JSON.stringify(stage.cards[id] ?? null) !== was) changed++;
     }
     save();
-    return n;
+    return { changed, dups, value };
   }
   function revert(id, item) {
     const c = find(id), op = stage.cards[id]; if (!c || !op) return;
@@ -439,8 +527,8 @@ export function createEditor(app) {
     if (ser && dl) ser.addEventListener("input", () => { dl.innerHTML = subseriesOpts(ser.value.trim()); });
     const update = () => {
       document.getElementById("ef-preview").innerHTML = ta.value.trim() ? app.render(ta.value, c.name) : `<span class="muted">No ability text.</span>`;
-      const lines = describe(readForm(c));
-      document.getElementById("ef-summary").innerHTML = lines.length ? `<b>${lines.length} change${lines.length > 1 ? "s" : ""}:</b> ${lines.map(esc).join(" · ")}` : "No changes yet.";
+      const op = readForm(c), lines = describe(op);
+      document.getElementById("ef-summary").innerHTML = (op.error ? `<span class="err">${esc(op.error)}.</span> ` : "") + (lines.length ? `<b>${lines.length} change${lines.length > 1 ? "s" : ""}:</b> ${lines.map(esc).join(" · ")}` : "No changes yet.");
       form.dataset.dirty = lines.length ? "1" : "";
     };
     form.addEventListener("input", update);
@@ -458,6 +546,7 @@ export function createEditor(app) {
     form.addEventListener("submit", e => {
       e.preventDefault();
       const op = readForm(c);
+      if (op.error) { app.toast(op.error); return; }
       if (opEmpty(op)) delete stage.cards[c.id]; else stage.cards[c.id] = op;
       save();
       app.toast(opEmpty(op) ? "No changes" : `Added to the batch: ${count()} unpublished`);
@@ -986,7 +1075,8 @@ export function createEditor(app) {
     publishDeck: id => openPublish(id), deckOf, pendingDecks,
     // inline editing (inline.js): single fields into the same batch, and the known values for its lists
     stageField, stageAuthor, stageMany, value: val,
-    options: () => ({ series: uniq(c => c.series), subseries: subseriesList,
-      authors: [...new Set([...(S.data.people || []), ...S.all.map(c => c.author).filter(Boolean)])].sort((a, b) => a.localeCompare(b)) }),
+    // new series, subseries and authors from the filter bar (buckets: pending = no card carries it yet)
+    options: () => ({ series: seriesList(), subseries: subseriesList, ownSubseries, authors: authorList(), buckets: pending() }),
+    addBucket,
   };
 }
