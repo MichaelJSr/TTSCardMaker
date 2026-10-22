@@ -702,11 +702,12 @@ function renderChanges(r = parseHash()) {
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
   const nav = `<nav class="seg change-tabs" aria-label="Changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}" class="${k === tab ? "on" : ""}"${k === tab ? ' aria-current="page"' : ""}>${l}</a>`).join("")}</nav>`;
   const page = body => { view.innerHTML = `<div style="max-width:980px;margin:auto">${nav}${body}</div>`; };
-  const again = () => { const now = parseHash(); if (now.name === "changes" && (now.arg || "") === (r.arg || "")) renderChanges(now); };
+  const here = () => { const now = parseHash(); return now.name === "changes" && (now.arg || "") === (r.arg || "") ? now : null; };
+  const again = () => { const now = here(); if (now) renderChanges(now); };
   if (tab) {
     if (!S.changelog) {
       page(`<div class="loading">Loading the changelog…</div>`);
-      loadChangelog().then(again, e => { if (parseHash().name === "changes") page(`<div class="empty">Couldn't load the changelog (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`); });
+      loadChangelog().then(again, e => { if (here()) page(`<div class="empty">Couldn't load the changelog (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`); });
       return;
     }
     page(tab === "changelog" ? changes.changelogHtml(S.changelog, r.params) : changes.editsHtml(S.changelog, r.params, webEditsHtml()));

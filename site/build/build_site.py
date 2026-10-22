@@ -596,9 +596,9 @@ def parse_authors():
         return authors_of(fh.read(), note=log, written=PEOPLE_AS_WRITTEN)
 
 
-def authors_of(text, note=None, written=None):
+def authors_of(text, note=None, written=None, names=None):
     """Card Authors.txt text -> (people, cards) as parse_authors; note(message) gets each skipped line, written the [people]
-    lines with the git names' own case."""
+    lines with the git names' own case, names {card_key: the card name as written}."""
     people, cards = {}, {}
     section = None
     for n, raw in enumerate(text.replace("\r\n", "\n").replace("\r", "\n").split("\n"), 1):     # as open() reads lines
@@ -622,6 +622,8 @@ def authors_of(text, note=None, written=None):
                 written[left] = right
         else:
             cards[card_key(left)] = right
+            if names is not None:
+                names[card_key(left)] = left
     return people, cards
 
 
@@ -1053,6 +1055,7 @@ NOREPLY_RE = re.compile(r"^(?:\d+\+)?([^@+]+)@users\.noreply\.github\.com$")   #
 OLD_CARD_FOLDERS = ("Auxillary/",)            # folder spellings before a rename: the history has them, the tree doesn't
 RULE_PARTS = ("Rules", "Rulebook")            # rulebook pages are not cards
 EDIT_BY = "Edit-by"                           # a bake commit's trailer, one per editor whose edit it printed (AutoCroissant card_bake)
+TRAILER_RE = re.compile(r"^[^\x00-\x1f\x7f]{1,100}$")       # an Edit-by value: a login, or a Discord name (discord:<name>)
 HISTORY_FORMAT = f"%x01%H%x09%at%x09%an%x09%ae%x09%s%n%x02%(trailers:key={EDIT_BY},valueonly,separator=%x1f)"
 
 
@@ -1065,7 +1068,7 @@ def unquote_path(path):
 
 def parse_history(text):
     """`git log --raw --no-renames --no-abbrev --format=HISTORY_FORMAT` -> commits newest first: (sha, unix time, author
-    name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by logins])."""
+    name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by values: logins, Discord names])."""
     commits = []
     for chunk in text.split("\x01")[1:]:
         head, _, body = chunk.partition("\n")
@@ -1073,7 +1076,7 @@ def parse_history(text):
         entries, editors = [], []
         for line in body.splitlines():
             if line.startswith("\x02"):              # the Edit-by trailers' values
-                editors = [v.strip() for v in line[1:].split("\x1f") if LOGIN_RE.match(v.strip())]
+                editors = [v.strip() for v in line[1:].split("\x1f") if TRAILER_RE.match(v.strip())]
                 continue
             if not line.startswith(":"):
                 continue
@@ -1149,7 +1152,8 @@ def image_versions(paths, commits):
 # ---- changelog (data/changelog.json: the Changes page's Changelog and Database edits tabs) ---------------------------
 # The card sync's events come from the data branch's db/ (site.yml checks it out and sets CARD_DATA_DIR, AutoCroissant
 # docs/Campaigns/DATA_BUILD_ACTION.md §10, §12.1); without it the tabs show no events. The publish batches and the
-# archived cards need no data branch: git history and old_stats.
+# archived cards need no data branch: git history and old_stats. For now it switches only the events: the cards still
+# come from the pickles, so step 8 must add load_card_data() (§10) in the same change that sets it in site.yml.
 CARD_DATA_DIR = os.environ.get("CARD_DATA_DIR", "")
 CHANGELOG_DAYS = 180
 EVENT_KINDS = {"new", "changed", "art", "reparse", "moved", "renamed", "archived", "restored", "edited", "authors", "restore"}   # AutoCroissant changelog.KINDS
@@ -1257,36 +1261,38 @@ def read_blobs(shas):
 
 
 def edits_entries(text):
-    """Card Edits.json text -> {card_key: (name as written, {field: value}, _by)}; {} for anything but its shape. The
-    pipeline's verdicts and stamps are not edits."""
+    """Card Edits.json text -> {card_key: (name as written, {field: value}, (_by, _at))}; {} for anything but its shape.
+    The pipeline's verdicts and stamps are not edits."""
     try:
         cards = json.loads(text).get("cards") if text else None
     except (ValueError, AttributeError):
         return {}
     if not isinstance(cards, dict):
         return {}
-    return {card_key(name): (name, {f: v for f, v in fields.items() if not f.startswith("_")}, fields.get("_by"))
+    return {card_key(name): (name, {f: v for f, v in fields.items() if not f.startswith("_")}, (fields.get("_by"), fields.get("_at")))
             for name, fields in cards.items() if isinstance(fields, dict)}
 
 
 def edit_changes(before, after):
-    """[(card_key, name, {field: [old, new]}, _by of the new entry)] between two Card Edits.json texts, by name."""
+    """[(card_key, name, {field: [old, new]}, _by)] between two Card Edits.json texts, by name. _by is the new entry's
+    when this change restamped it (_by or _at differs), else None: a commit that left the stamp alone isn't that editor's."""
     a, b = edits_entries(before), edits_entries(after)
     out = []
     for key in sorted(set(a) | set(b)):
-        old, new = a.get(key, (None, {}, None)), b.get(key, (None, {}, None))
+        old, new = a.get(key, (None, {}, (None, None))), b.get(key, (None, {}, (None, None)))
         fields = {f: [old[1].get(f), new[1].get(f)] for f in sorted(set(old[1]) | set(new[1])) if old[1].get(f) != new[1].get(f)}
         if fields:
-            out.append((key, new[0] or old[0], fields, new[2] if key in b else None))
+            out.append((key, new[0] or old[0], fields, new[2][0] if key in b and new[2] != old[2] else None))
     return out
 
 
 def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
     """
     The database edits, newest first: each commit since `since` that changed a Card Edits.json entry or a Card
-    Authors.txt line (a website publish batch, a Discord edit, a commit by hand). The bot's bakes, which only write
-    verdicts, a pure move and a change of the file's notes are none. Without history: the current file's entries
-    grouped by their _by/_at stamps (each card's last batch only, `stamped`).
+    Authors.txt line (a website publish batch, a Discord edit, a commit by hand). The bot's bakes (they write verdicts
+    and delete the baked entries; the card sync's changed event shows the bake), a pure move and a change of the file's
+    notes are none. A batch is credited to the stamps it wrote (_by), else its Edit-by trailers, else its author.
+    Without history: the current file's entries grouped by their _by/_at stamps (each card's last batch only, `stamped`).
 
     Returns:
         {"available": bool, "batches": [{sha?, at, via: website|discord|git, by: [names], subject?, stamped?,
@@ -1294,7 +1300,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
           people: [[git name, from, to]], more?: lines past BATCH_LINES}]}
     """
     def card(key, name):
-        row = {"key": name or key, "name": name_of(name or key)}
+        row = {"key": name or key, "name": name_of(name or key)}       # name: as written, when the site lacks the card
         found = id_of(name or key)
         if found:
             row["id"] = found
@@ -1340,13 +1346,16 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
         cards = edit_changes(before["e"], after["e"]) if before["e"] != after["e"] else []
         authors, people_changes = [], []
         if before["a"] != after["a"]:
-            (p0, c0), (p1, c1) = authors_of(before["a"]), authors_of(after["a"])
-            authors = [{**card(k, None), "from": c0.get(k), "to": c1.get(k)} for k in sorted(set(c0) | set(c1)) if c0.get(k) != c1.get(k)]
-            people_changes = [[k, p0.get(k), p1.get(k)] for k in sorted(set(p0) | set(p1)) if p0.get(k) != p1.get(k)]
+            names, people_written = {}, {}
+            (p0, c0), (p1, c1) = (authors_of(t, None, people_written, names) for t in (before["a"], after["a"]))
+            git_name = {k.lower(): k for k in people_written}
+            authors = [{**card(k, names.get(k)), "from": c0.get(k), "to": c1.get(k)} for k in sorted(set(c0) | set(c1)) if c0.get(k) != c1.get(k)]
+            people_changes = [[git_name.get(k, k), p0.get(k), p1.get(k)] for k in sorted(set(p0) | set(p1)) if p0.get(k) != p1.get(k)]
         if not (cards or authors or people_changes):
             continue
         stamps = sorted({shown(by) for _, _, _, by in cards if by and str(by).lower() != BOT_AUTHOR.lower()}, key=str.lower)
-        by = stamps or sorted({credit(e, people, by_login) or e for e in editors}, key=str.lower) or [who(name, email, people, by_login)]
+        named = {shown(e) if discord or e.startswith("discord:") else credit(e, people, by_login) or e for e in editors}   # a Discord name is never a login
+        by = stamps or sorted(named, key=str.lower) or [who(name, email, people, by_login)]
         row = {"sha": sha, "at": ts, "subject": subject, "by": by,
                "via": "discord" if discord else "website" if subject.startswith(WEBSITE_SUBJECT) else "git",
                "cards": [{**card(key, written), "fields": fields} for key, written, fields, _ in cards[:BATCH_LINES]],
@@ -1358,11 +1367,14 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
     return {"available": True, "batches": out}
 
 
-def archived_cards(old_stats, id_of):
+def archived_cards(old_stats, id_of, stats=()):
     """The cards whose PSD left the card repo: old_stats names whose last version carries the bot's `archived` tag
-    {at, path, blob, commit, renamed_to?, backfill?}, newest first."""
+    {at, path, blob, commit, renamed_to?, backfill?}, newest first. A name in stats is back, whatever its tag says (the
+    bot clears it on its next save: card_models.stale_archives)."""
     out = []
     for name, versions in (old_stats or {}).items():
+        if name in stats:
+            continue
         last = versions[len(versions) - 1] if isinstance(versions, list) and versions else None
         tag = getattr(last, "archived", None)
         if not isinstance(tag, dict):
@@ -1472,7 +1484,7 @@ def contributions(cards, people, profiles, edits, commits):
             touched = {os.path.splitext(os.path.basename(p))[0].lower() for s, _, new, p in entries if changed(s, new) and is_card_file(p)}
             if bot:                               # a bake: the card commit of each editor named
                 named = {}                        # row -> [login as first spelled, their cards: one trailer per card]
-                for login in editors if touched else ():
+                for login in [e for e in editors if LOGIN_RE.match(e)] if touched else ():
                     named.setdefault(key_of(login), [login, 0])[1] += 1      # one commit per row named
                 for k, (login, n) in named.items():
                     if k.lower() == BOT_AUTHOR.lower():
@@ -1981,13 +1993,15 @@ def main():
     events, manifest = read_changelog(os.path.abspath(CARD_DATA_DIR)) if CARD_DATA_DIR else (None, None)
     if CARD_DATA_DIR and events is None:
         warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
+    if CARD_DATA_DIR:
+        warn("CARD_DATA_DIR is set but the card data still comes from AutoCroissant's pickles (no load_card_data yet)")
     try:
         batches = edit_batches(edit_history(), people, {p["login"].lower(): p for p in profiles}, edits, id_of, name_of, since)
     except Exception as e:                        # never a failed build
         warn(f"no edit batches: {type(e).__name__}: {e}")
         batches = {"available": False, "batches": []}
     changelog = {"available": events is not None, "since": since, "days": CHANGELOG_DAYS, "repo": CARD_REPO, "source": manifest,
-                 "events": site_events(events or [], id_of, since), "archived": archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of),
+                 "events": site_events(events or [], id_of, since), "archived": archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats),
                  "edits": batches}
     log(f"changelog: {len(changelog['events'])} events" + ("" if events is not None else " (no CARD_DATA_DIR)") +
         f", {len(batches['batches'])} edit batches, {len(changelog['archived'])} archived cards")

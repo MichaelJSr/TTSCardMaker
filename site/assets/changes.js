@@ -132,10 +132,12 @@ export function groupHtml(group, repo, kinds = null) {
   const tail = rereads.length ? `<details class="cl-sec"><summary>The parser re-read ${plural(rereads.length, "card")}</summary><ul class="cl-lines">${rereads.map(eventHtml).join("")}</ul></details>` : "";
   return `<section class="panel cl-push"><h3>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${head}</a>` : head}<span class="muted">: ${esc(countsOf(group))}</span></h3>${secs}${tail}</section>`;
 }
-/** Groups under a heading per day (Pacific), newest first */
+/** Groups under a heading per day (Pacific), newest first by time (a push split across builds, or one older than the
+    last build's, keeps one heading per day), then by seq */
 function daysHtml(groups, repo, kinds) {
   let day = "", out = "";
-  for (const g of [...groups].reverse()) {
+  const byTime = [...groups].reverse().map((g, i) => [g, whoOf(g)[1] || 0, i]).sort((a, b) => b[1] - a[1] || a[2] - b[2]);
+  for (const [g] of byTime) {
     const html = groupHtml(g, repo, kinds);
     if (!html) continue;
     const at = whoOf(g)[1], key = dayKey(at);
@@ -154,7 +156,7 @@ function sourceHtml(C) {
   const commit = s.card_commit ? ` from <a href="https://github.com/${esc(C.repo)}/commit/${esc(s.card_commit)}" target="_blank" rel="noopener">${esc(C.repo.split("/").pop())}@${short(s.card_commit)}</a>` : "";
   return `<p class="muted">Card data built ${esc(at)} (Pacific)${commit}${s.run ? ` (<a href="${esc(s.run)}" target="_blank" rel="noopener">run</a>)` : ""}.</p>`;
 }
-const NOT_YET = "The card sync (every 30 minutes) records each card change here and posts it in Discord, one post per push. This tab fills once the website reads the card sync's data.";
+const NOT_YET = "Once the card sync is running (every 30 minutes), it will record each card change here and post it in Discord, one post per push. Until then this tab has no events.";
 
 // ---- the tabs ---------------------------------------------------------------------------------------------------
 /** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=), and the archived cards */
@@ -179,7 +181,7 @@ export function archivedHtml(rows, repo) {
 }
 /** One edit batch: who, when, where, its commit, and each card's fields old → new */
 export function batchHtml(b, repo) {
-  const who = (b.by || []).map(personLink).join(", ") || "Someone";
+  const who = (b.by || []).map(b.via === "discord" ? esc : personLink).join(", ") || "Someone";   // a Discord name gets no person page (byWhom)
   const subject = b.subject && b.subject.length > 90 ? `${b.subject.slice(0, 89)}…` : b.subject;
   const commit = b.sha && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(b.sha)}" target="_blank" rel="noopener" title="${esc(b.subject || "")}">${esc(subject || short(b.sha))}</a>` : "";
   const cards = (b.cards || []).map(c => { const { line, diff } = fieldsHtml(c.fields); return `<li>${cardLink(c.id, c.name || c.key)}${line ? `: ${line}` : ""}${diff}</li>`; });
