@@ -23,7 +23,7 @@ The updater checks import the bot's code, which needs only `requests`.
 
 | Variable | Default | What |
 |---|---|---|
-| `AUTOCROISSANT` | `~/Desktop/AutoCroissant` | the updater's code (`commands/tts_save.py` and what it imports) |
+| `AUTOCROISSANT` | `~/Desktop/AutoCroissant` | the updater's code (`commands/tts_save.py` and what it imports); `updater_report_decks.py` needs it at the bot's main of 2026-10-22 or later |
 | `TTS_HISTORY` | `/tmp/tts-checks/history.git` | bare blobless clone with main's full history, made or fetched on use (the checkout is shallow) |
 | `TTS_REF` | `origin/main` | the commit whose tree the rules and names checks compare with |
 | `TTS_REPO` | this repo | the TTSCardMaker checkout |
@@ -64,7 +64,7 @@ history clone, and `gh` (logged in) for `tts_save_gate.py`.
 
 `contents_lib.py` and `checks_env.py` are shared helpers. The names checks (`contents_names.py`, `final_spot.py`,
 `updater_idempotent.py`) follow the live website, like the updater. When the website's names change (a bot pickle
-push), they fail until the next `tts-save.yml` run has updated the save.
+push), they fail until the next `tts-save.yml` run has updated the save (21 of 24 pass meanwhile).
 
 Not kept from the audit: the zone-claiming runtime checks (`scripts_global_runtime.py`, `verify_scripts_f1_reload.py`,
 retired with the claiming in `c9873ddf`), the one-off checks of that fix against the old save (`final_bytes.py`,
