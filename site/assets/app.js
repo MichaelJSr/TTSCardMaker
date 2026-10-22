@@ -3,7 +3,7 @@ import { esc, norm, makeRenderer, plain, diffWords, tagInfo, badgeHtml, GROUP_NA
 import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
-import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers } from "./profile.js";
+import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers, shareDialogHtml, personDiscord } from "./profile.js";
 import * as inline from "./inline.js";
 import * as details from "./details.js";
 import * as decks from "./decks.js";
@@ -105,6 +105,7 @@ async function init() {
   editor.init();                                           // applies staged edits, then derive()
   S.decks = D.loadDecks();
   updateDeckCount();
+  updatePeopleCount();
   window.addEventListener("hashchange", route);
   window.addEventListener("popstate", route);
   renderAccount();
@@ -790,18 +791,34 @@ function renderUser(r) {
   const login = pending?.profile?.login || published?.login || person?.key || r.arg;    // the file's spelling: u/<login>/ exists only for it
   if (login !== r.arg) { S.renderedHash = S.listHash = hashOf({ name: "u", arg: login }); syncUrl({ name: "u", arg: login }); }
   const own = !!me && (me.login.toLowerCase() === login.toLowerCase() || !!person?.logins.some(l => l.toLowerCase() === me.login.toLowerCase()));
-  const owners = new Set([login, ...(person?.logins || [])].map(s => s.toLowerCase())), theirs = deckList().filter(d => owners.has(d.owner.toLowerCase()));
+  const owners = new Set([login, person?.github, ...(person?.logins || [])].filter(Boolean).map(s => s.toLowerCase())), theirs = deckList().filter(d => owners.has(d.owner.toLowerCase()));
   view.innerHTML = personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
     own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }),
-    available: !!S.contrib.available, titles: S.titles, date, month, kinds: KINDS, kindOf,
+    available: !!S.contrib.available, since: S.contrib.since, repo: S.data.repo, titles: S.titles, date, month, kinds: KINDS, kindOf,
     decks: { public: decks.sortDecks(theirs.filter(d => !d.private)), private: decks.sortDecks(theirs.filter(d => d.private)) }, deckTile: d => decks.deckTileHtml(d, deckCtx()) });
 }
 function renderUsers() {
   if (!usersReady("users", renderUsers)) return;
   const me = editor.me, rows = peopleRows(S.contrib.people || [], mergeUsers(S.users, editor.pendingProfiles()));
   view.innerHTML = peopleHtml(rows, { me, hasOwn: !!me && rows.some(r => r.profile && r.profile.login.toLowerCase() === me.login.toLowerCase()),
-    available: !!S.contrib.available, since: S.contrib.since, titles: S.titles, date });
+    available: !!S.contrib.available, since: S.contrib.since, titles: S.titles, date, decks: deckList() });
+  updatePeopleCount(rows.length);
 }
+// the People tab's counter: the build's count until the table has been made here (pending profiles included)
+function updatePeopleCount(n = S.data.peopleCount) { $("#people-count").textContent = n ? String(n) : ""; }
+/** Who u/<name>/ is: the profile (pending or published) and the person, as the person page resolves them. */
+function personAt(name) {
+  const pending = editor.profileOf(name), profile = pending ? pending.profile : S.userBy?.get(name.toLowerCase()) || null, people = S.contrib?.people || [];
+  return { profile, state: pending?.state || "", person: findPerson(name, people) || (profile && personOf(profile, people)) };
+}
+function openUserShare(name) {
+  const { profile, person, state } = personAt(name), fav = S.byId.get(profile?.favourite || "");
+  showDialog(shareDialogHtml({ name, url: userUrl(name), text: S.contrib?.previews?.[name] || "", state, native: !!navigator.share,
+    image: fav?.img ? img(fav, 360) : "og.jpg", color: fav?.color }));
+  $("#share-url").addEventListener("focus", e => e.target.select());
+}
+const userDiscord = name => personDiscord({ name, url: userUrl(name), person: personAt(name).person, titles: S.titles || new Map(), cards: S.cards, kindOf });
+const userText = name => [name, S.contrib?.previews?.[name] || ""].filter(Boolean).join(" · ");
 
 // ---- sharing (same text as the share pages' link previews) -----------------------------------------
 const STAT_LABELS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
@@ -909,7 +926,11 @@ const actions = {
   "deck-delete": () => { const d = deck(); if (S.decks.length < 2 || !confirm(`Delete “${d.name}”?`)) return; S.decks = S.decks.filter(x => x !== d); D.saveDecks(S.decks); D.setActive(S.decks[0]); updateDeckCount(); renderDeck(parseHash()); },
   "save-shared": () => { const s = S.shared; D.newDeck(S.decks, s.name, s.cards.filter(id => S.byId.has(id)), s.field); updateDeckCount(); location.hash = "#/deck"; toast("Saved to your decks"); },
   "copy-link": el => copy(shareUrl(el.dataset.id), "link: paste it in Discord"),
-  "copy-user-link": el => copy(userUrl(el.dataset.login), "profile link"),
+  "copy-user-link": el => copy(userUrl(el.dataset.login), "link: paste it in Discord"),
+  "share-user": el => openUserShare(el.dataset.login),
+  "share-user-discord": el => copy(userDiscord(el.dataset.login), "person for Discord"),
+  "share-user-text": el => copy(userText(el.dataset.login), "person as text"),
+  "share-user-native": el => { const name = el.dataset.login; navigator.share({ title: name, text: S.contrib?.previews?.[name] || "", url: userUrl(name) }).catch(() => {}); },
   "share": el => openShare(el.dataset.id),
   "share-discord": el => copy(cardDiscord(S.byId.get(el.dataset.id)), "card for Discord"),
   "share-text": el => { const c = S.byId.get(el.dataset.id); copy(`${c.name} · ${shareText(c)}`, "card text"); },

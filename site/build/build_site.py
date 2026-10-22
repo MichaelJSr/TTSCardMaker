@@ -957,6 +957,8 @@ BOT_AUTHOR = "AutoCroissant"                  # the bot's commits (AutoCroissant
 NOREPLY_RE = re.compile(r"^(?:\d+\+)?([^@+]+)@users\.noreply\.github\.com$")   # GitHub's private email carries the login (old form without the id too)
 OLD_CARD_FOLDERS = ("Auxillary/",)            # folder spellings before a rename: the history has them, the tree doesn't
 RULE_PARTS = ("Rules", "Rulebook")            # rulebook pages are not cards
+EDIT_BY = "Edit-by"                           # a bake commit's trailer, one per editor whose edit it printed (AutoCroissant card_bake)
+HISTORY_FORMAT = f"%x01%H%x09%at%x09%an%x09%ae%x09%s%n%x02%(trailers:key={EDIT_BY},valueonly,separator=%x1f)"
 
 
 def unquote_path(path):
@@ -967,21 +969,24 @@ def unquote_path(path):
 
 
 def parse_history(text):
-    """`git log --raw --no-renames --no-abbrev --format=%x01%H%x09%at%x09%an%x09%ae%x09%s` -> commits newest first:
-    (sha, unix time, author name, author email, subject, [(status, old blob, new blob, path), ...])."""
+    """`git log --raw --no-renames --no-abbrev --format=HISTORY_FORMAT` -> commits newest first: (sha, unix time, author
+    name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by logins])."""
     commits = []
     for chunk in text.split("\x01")[1:]:
         head, _, body = chunk.partition("\n")
         sha, ts, name, email, subject = (head.split("\t", 4) + [""] * 5)[:5]
-        entries = []
+        entries, editors = [], []
         for line in body.splitlines():
+            if line.startswith("\x02"):              # the Edit-by trailers' values
+                editors = [v.strip() for v in line[1:].split("\x1f") if LOGIN_RE.match(v.strip())]
+                continue
             if not line.startswith(":"):
                 continue
             meta, _, path = line.partition("\t")
             parts = meta.split()
             if len(parts) >= 5:
                 entries.append((parts[4], parts[2], parts[3], unquote_path(path)))
-        commits.append((sha, int(ts or 0), name, email, subject, entries))
+        commits.append((sha, int(ts or 0), name, email, subject, entries, editors))
     return commits
 
 
@@ -993,7 +998,7 @@ def git_history():
         log("warning: shallow clone, so no image versions and no commit counts (git fetch --unshallow --filter=blob:none to get them)")
         return None
     out = subprocess.run(["git", "-C", HISTORY_REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
-                          "--format=%x01%H%x09%at%x09%an%x09%ae%x09%s", "--", *HISTORY_PATHS], capture_output=True, text=True, check=True).stdout
+                          f"--format={HISTORY_FORMAT}", "--", *HISTORY_PATHS], capture_output=True, text=True, check=True).stdout
     return parse_history(out)
 
 
@@ -1006,7 +1011,7 @@ def image_versions(paths, commits):
         return None
     tracked = {p: p for p in paths}               # path at the commit being read -> current path
     versions = {p: [] for p in paths}
-    for sha, ts, author, _, subject, entries in commits:
+    for sha, ts, author, _, subject, entries, _ in commits:
         commit = (sha, ts, author, subject)
         adds, dels, mods = [], {}, []
         for status, old, new, path in entries:
@@ -1035,6 +1040,7 @@ def image_versions(paths, commits):
 
 # ---- contributions (data/contributions.json: who made, edited and committed cards) ---------------------------
 TITLES = (("cards", "Top card maker"), ("edits", "Top editor"), ("commits", "Top committer"))   # top count per column; ties share; same list in profile.js
+OVERALL = "Top contributor"                   # the top total of the three columns; profile.js OVERALL
 RECENT_COMMITS = 10
 PAGE_KEY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,60}$")       # a name that can be a u/<key>/ folder
 
@@ -1067,41 +1073,78 @@ def is_card_file(path):
 
 
 def contributions(cards, people, profiles, edits, commits):
-    """{"available", "since", "people": [{key, logins, cards, edits, commits, first, last, recent}]} by cards, then commits.
+    """{"available", "since", "people": [{key, logins, github?, cards, edits, commits, first, last, recent, recentEdits,
+    months}]} by cards, then commits.
     cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
     (a hand commit counts, a pure move doesn't), or without history the file's distinct _by/_at stamps (a floor: it keeps
     one batch per card). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
-    added, isn't a change), one however many files. The bot's own commits and stamps are left out (its bakes are the
-    editor's batch). logins: the names credited to the person (key, profile logins, [people] names), each in one row."""
+    added, isn't a change), one however many files. The bot's own commits and stamps are left out, but a bake (a bot
+    commit changing a card, with Edit-by trailers) is a card commit of each editor it names, never an edit (their batch
+    already counted). logins: the names credited to the person (key, profile logins, [people] names), each in one row.
+    github: a GitHub login known to be theirs (their profile's, else the most used of the logins in their noreply commit
+    emails, _by stamps and Edit-by trailers), never a git name. recent / recentEdits: the last card commits [ts, subject,
+    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" UTC, cards first uploaded (fs), edits, commits]]."""
     by_login = {p["login"].lower(): p for p in profiles}
-    rec = {}
+    rec, seen_logins = {}, {}
 
     def rec_of(key):
-        return rec.setdefault(key, {"key": key, "cards": 0, "edits": 0, "commits": 0, "first": 0, "last": 0, "recent": []})
+        return rec.setdefault(key, {"key": key, "cards": 0, "edits": 0, "commits": 0, "first": 0, "last": 0, "recent": [], "recentEdits": [], "months": {}})
 
     def seen(r, ts):
         r["first"], r["last"] = min(r["first"] or ts, ts), max(r["last"], ts)
 
+    def tally(r, ts, i):
+        m = r["months"].setdefault(datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m"), [0, 0, 0])
+        m[i] += 1
+
+    def known(key, login):
+        if login and LOGIN_RE.match(login):
+            c = seen_logins.setdefault(key, {})
+            c[login] = c.get(login, 0) + 1
+
     for c in cards:
         if c.get("author") and not c.get("dup") and not c.get("hidden"):
-            rec_of(c["author"])["cards"] += 1
+            r = rec_of(c["author"])
+            r["cards"] += 1
+            if c.get("fs"):
+                tally(r, c["fs"], 0)
     if commits is not None:
-        for sha, ts, name, email, subject, entries in commits:
+        for sha, ts, name, email, subject, entries, editors in commits:
+            bot = name.lower() == BOT_AUTHOR.lower()
             key = who(name, email, people, by_login)
-            if not key or key.lower() == BOT_AUTHOR.lower() or name.lower() == BOT_AUTHOR.lower():
+            if not bot and (not key or key.lower() == BOT_AUTHOR.lower()):
                 continue
             gone = {old for s, old, _, _ in entries if s == "D"}
             changed = lambda s, new: s == "M" or (s == "A" and new not in gone)       # not a blob moved from another path
             touched = {os.path.splitext(os.path.basename(p))[0].lower() for s, _, new, p in entries if changed(s, new) and is_card_file(p)}
+            if bot:                               # a bake: the card commit of each editor named
+                for login in dict.fromkeys(editors) if touched else ():
+                    k = login_key(login, people, by_login)
+                    if k.lower() == BOT_AUTHOR.lower():
+                        continue
+                    r = rec_of(k)
+                    known(k, login)
+                    seen(r, ts)
+                    r["commits"] += 1
+                    tally(r, ts, 2)
+                    if len(r["recent"]) < RECENT_COMMITS:
+                        r["recent"].append([ts, subject, len(touched)])
+                continue
             edited = any(p in EDIT_PATHS and changed(s, new) for s, _, new, p in entries)
             if not touched and not edited:
                 continue
             r = rec_of(key)
+            m = NOREPLY_RE.match(email or "")
+            known(key, m and m.group(1))
             seen(r, ts)
             if edited:
                 r["edits"] += 1
+                tally(r, ts, 1)
+                if len(r["recentEdits"]) < RECENT_COMMITS:
+                    r["recentEdits"].append([ts, subject, sha])
             if touched:
                 r["commits"] += 1
+                tally(r, ts, 2)
                 if len(r["recent"]) < RECENT_COMMITS:
                     r["recent"].append([ts, subject, len(touched)])
     else:
@@ -1114,26 +1157,54 @@ def contributions(cards, people, profiles, edits, commits):
                 seen(r, int(datetime.fromisoformat(at.replace("Z", "+00:00")).timestamp()))
             except ValueError:
                 pass
+    for _, meta in edits.values():                # website logins: one per batch stamp
+        by = meta.get("_by")
+        if by and by.lower() != BOT_AUTHOR.lower():
+            known(login_key(by, people, by_login), by)
     out = []
     for r in rec.values():
         if not (r["cards"] or r["edits"] or r["commits"]):
             continue
         names = {r["key"]} | {p["login"] for p in profiles if p.get("author") == r["key"]} | {g for g, shown in PEOPLE_AS_WRITTEN.items() if shown == r["key"]}
         r["logins"] = sorted((n for n in names if (credit(n, people, by_login) or n) == r["key"]), key=str.lower)   # a name credits one row
+        own = [n for n in r["logins"] if n.lower() in by_login and LOGIN_RE.match(n)]
+        counted = seen_logins.get(r["key"], {})
+        github = own[0] if own else min(counted, key=lambda n: (-counted[n], n.lower())) if counted else ""
+        if github:
+            r["github"] = github
+        r["months"] = [[k, *v] for k, v in sorted(r["months"].items())]
         out.append(r)
     out.sort(key=lambda r: (-r["cards"], -r["commits"], -r["edits"], r["key"].lower()))
     return {"available": commits is not None, "since": min((r["first"] for r in out if r["first"]), default=0), "people": out}
 
 
 def titles_of(rows):
-    """{key: [titles]}: the top count in each of TITLES' columns; ties share; nobody at 0. profile.js titlesOf is the same rule."""
+    """{key: [titles]}: OVERALL for the top total of TITLES' columns, then the top count in each column; ties share;
+    nobody at 0. profile.js titlesOf is the same rule."""
     out = {r["key"]: [] for r in rows}
+    best = max((sum(r[f] for f, _ in TITLES) for r in rows), default=0)
+    for r in rows:
+        if best and sum(r[f] for f, _ in TITLES) == best:
+            out[r["key"]].append(OVERALL)
     for field, title in TITLES:
         top = max((r[field] for r in rows), default=0)
         for r in rows:
             if top and r[field] == top:
                 out[r["key"]].append(title)
     return out
+
+
+def people_count(rows, profiles):
+    """The People table's row count, as profile.js peopleRows makes them: each contributor, plus each profile no
+    contributor row takes (a row takes the first profile, by login, whose login is theirs or whose author is their key)."""
+    taken, n = set(), len(rows)
+    for p in sorted(profiles, key=lambda p: p["login"].lower()):
+        r = next((r for r in rows if p["login"].lower() in {l.lower() for l in r["logins"]} or (p.get("author") and r["key"] == p["author"])), None)
+        if r and r["key"] not in taken:
+            taken.add(r["key"])
+        else:
+            n += 1
+    return n
 
 
 def contrib_text(r, titles, with_cards=True):
@@ -1514,6 +1585,19 @@ def main():
     profiles = read_profiles(cards, data["people"])
     contrib = contributions(cards, people, profiles, edits, commits)
     titles = titles_of(contrib["people"])
+    person_of = {login.lower(): r for r in contrib["people"] for login in r["logins"]}        # a profile's login -> its contributions
+    previews = {}                                 # u/<name>/ -> its link-preview text, for the share dialog too
+    for p in profiles:
+        n = sum(1 for c in cards if c.get("author") == p["author"] and not c.get("dup") and not c.get("hidden")) if p.get("author") else 0   # as cardsBy() counts
+        r = person_of.get(p["login"].lower())
+        previews[p["login"]] = profile_text(p, n, by_id, contrib_text(r, titles[r["key"]], with_cards=not p.get("author")) if r else "",
+                                            cards_text(r["key"] if r else p.get("author"), cards))
+    with_profile = {p["login"].lower() for p in profiles}
+    for r in contrib["people"]:                   # a contributor without a profile
+        if not any(login.lower() in with_profile for login in r["logins"]) and PAGE_KEY_RE.match(r["key"]):
+            previews[r["key"]] = person_text([contrib_text(r, titles[r["key"]])], cards_text(r["key"], cards))
+    contrib["previews"] = previews
+    data["peopleCount"] = people_count(contrib["people"], profiles)      # the People tab's counter
     log(f"contributions: {len(contrib['people'])} people, {sum(r['edits'] for r in contrib['people'])} edit batches, "
         f"{sum(r['commits'] for r in contrib['people'])} card commits" + ("" if contrib["available"] else " (no history: batches counted from the edits file)"))
     os.makedirs(os.path.join(DIST, "data"))
@@ -1598,12 +1682,8 @@ def main():
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(c["name"])} · {SITE_NAME}</title>',
         ])
-    person_of = {login.lower(): r for r in contrib["people"] for login in r["logins"]}        # a profile's login -> its contributions
     for p in profiles:                            # u/<login>/: the favourite card as the preview image, else the site banner
-        n = sum(1 for c in cards if c.get("author") == p["author"] and not c.get("dup") and not c.get("hidden")) if p.get("author") else 0   # as cardsBy() counts
-        r = person_of.get(p["login"].lower())
-        desc = profile_text(p, n, by_id, contrib_text(r, titles[r["key"]], with_cards=not p.get("author")) if r else "",
-                            cards_text(r["key"] if r else p.get("author"), cards))
+        desc = previews[p["login"]]
         fav = by_id.get(p.get("favourite") or "")
         image, size = og_image(fav) if fav and fav.get("img") else ((f"{SITE_URL}/og.jpg", (1200, 630)) if SITE_URL else ("", None))
         share_page(("u", p["login"]), [
@@ -1612,11 +1692,10 @@ def main():
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(p["login"])} · {SITE_NAME}</title>',
         ])
-    with_profile = {p["login"].lower() for p in profiles}
     for r in contrib["people"]:                   # u/<key>/ for a contributor without a profile: the same page, the site banner as its image
-        if any(login.lower() in with_profile for login in r["logins"]) or not PAGE_KEY_RE.match(r["key"]):
+        if r["key"] not in previews or any(p["login"] == r["key"] for p in profiles):
             continue
-        desc = person_text([contrib_text(r, titles[r["key"]])], cards_text(r["key"], cards))
+        desc = previews[r["key"]]
         share_page(("u", r["key"]), [
             og_tags(r["key"], desc, f"{SITE_URL}/u/{r['key']}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630)),
             '<meta name="theme-color" content="#3987e5">',

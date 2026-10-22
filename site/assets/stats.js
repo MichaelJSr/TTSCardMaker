@@ -334,3 +334,5 @@ export function renderStats(root, ctx, params) {
     <div class="kpis">${kpis.map(([l, v]) => `<div class="kpi"><div class="label">${esc(l)}</div><div class="value${typeof v === "number" ? "" : " text"}">${esc(typeof v === "number" ? v.toLocaleString() : v)}</div></div>`).join("")}</div>
     <div class="charts">${charts.join("")}</div>`;
 }
+
+export { columns, card as chartCard };                  // the person page's activity chart (profile.js)

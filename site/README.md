@@ -39,10 +39,12 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
   chart that highlights possible balance outliers. Every chart has a table view.
 - **Changes**: recently updated cards with text diffs, the most revised cards, and cards the bot hasn't parsed yet.
-- **People**: everyone who made, edited or committed cards, in one table (cards credited, edit batches published on the
-  website, card commits, titles, motto), and a page per person (`#/u/<name>`, static `u/<name>/` that previews in Discord):
-  their profile when they made one (see People below), their contributions with recent edits and recent card commits,
-  and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
+- **People** (the tab shows how many): everyone who made, edited or committed cards, in one table (GitHub picture, cards
+  credited, edit batches published on the website, card commits, public decks, titles, motto), and a page per person
+  (`#/u/<name>`, static `u/<name>/` that previews in Discord; **Share** opens a dialog with the link, the Discord preview
+  and buttons to copy it as a Discord message or plain text): their profile when they made one (see People below), their
+  GitHub picture and link, their contributions with recent edits, recent edit batches and recent card commits, a chart of
+  their contributions by month, and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
   (by its image's first upload, from the git history: full-history builds only) and a grid of their 24 newest cards.
 
 Top right: **Sign in** (a GitHub token, see Editing) becomes your login once signed in; it opens the editor hub (your
@@ -120,13 +122,19 @@ The People tab lists everyone with a contribution or a profile. Per person: **ca
 filter counts them), **edits** = publish batches, i.e. commits that changed `site/Card Edits.json` (a hand commit to the
 file counts too; a move of the file doesn't), and **card commits** = commits that added or changed a card's PSD or PNG
 under the card folders (the old `Auxillary/` spelling included; moves and rulebook pages don't count), one per commit
-however many files. The bot's own commits and `_by: AutoCroissant` stamps are left out: a bake is the editor's batch,
-already counted. The top of each column holds a title (ties share it, nobody at 0): **Top card maker** (cards), **Top
-editor** (edits), **Top committer** (card commits). A commit is credited by its git name, else by the GitHub login in a noreply
+however many files. The bot's own commits and `_by: AutoCroissant` stamps are left out, except a bake: the bot's commit
+that reprints a card for an edit names each editor in an `Edit-by: <login>` trailer line, and counts as a card commit
+for each of them (not as an edit: their batch already counted when they published it). The top of each column holds a
+title (ties share it, nobody at 0): **Top card maker** (cards), **Top editor** (edits), **Top committer** (card
+commits), and the top of the three added together is the **Top contributor**. A commit is credited by its git name, else by the GitHub login in a noreply
 email, each looked up in the profiles' `author` fields and then in `[people]` (`Card Authors.txt`); otherwise by the git
 name as written. A website login (`_by`) maps the same way. So a person committing under two names shows twice until an
 admin adds one `[people]` line (`Michael = MichaelJSr`) or, when the other name is their GitHub login, their profile
-names their author. The build writes `data/contributions.json` (small, loaded with `users.json`) and a static `u/<name>/` page for
+names their author. The GitHub picture and link come only from a GitHub login known to be the person's: their profile's
+login, else the login in their noreply commit emails, their website `_by` stamps or `Edit-by` trailers (a git name is
+not a login: someone known only by name gets neither). The chart has one row per kind (cards by their image's first
+upload, edit batches, card commits), each on its own scale, by month; it needs the git history like the counts.
+The build writes `data/contributions.json` (small, loaded with `users.json`) and a static `u/<name>/` page for
 each contributor, with the profile's page carrying the summary ("Top card maker · 237 cards · 4 edits · 57 card
 commits") in its link preview.
 
