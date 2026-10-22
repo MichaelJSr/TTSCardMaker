@@ -1,7 +1,7 @@
 # Keeps the Tabletop Simulator save (TTS/Impossibility Simulator.json) current: image links pinned to the commit that
 # last changed each file, new cards added to their decks (TTS/decks.json), names from the card browser.
-# Once a day, when a card image, the deck rules, the card edits or the save changed since the last successful run, it
-# runs the bot's updater (AutoCroissant commands/tts_save.py) and commits the save when it changed.
+# Once a day, when a card image, the deck rules, the card edits, the save or the card browser's names changed since the
+# last successful run, it runs the bot's updater (AutoCroissant commands/tts_save.py) and commits the save when it changed.
 name: TTS save
 
 on:
@@ -37,15 +37,44 @@ jobs:
             /TTS/
             /site/Card Edits.json
 
-      # Skip the day when nothing the save depends on changed since the last successful run (own commits aside)
+      # The card browser's names (cards.json png -> name, what the updater reads), hashed: they come from the bot's data,
+      # not from this repo's history. The file is also the updater's fallback (site/dist) if its own fetch fails.
+      - name: Card browser names
+        id: names
+        shell: bash
+        run: |
+          cards=site/dist/data/cards.json
+          if curl -fsS --retry 3 --create-dirs -o "$cards" https://michaeljsr.github.io/TTSCardMaker/data/cards.json &&
+             sum=$(jq -cS 'reduce (.cards[] | select(.png and .name)) as $c ({}; .[$c.png] = $c.name)' "$cards" | sha256sum | cut -c1-16); then
+            echo "$sum" > "$RUNNER_TEMP/tts-names"; echo "sum=$sum" >> "$GITHUB_OUTPUT"
+          else
+            echo "Card browser names not fetched."
+          fi
+
+      # A cache entry per set of names the updater has run with (saved at the end)
+      - id: names-seen
+        if: steps.names.outputs.sum
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/tts-names
+          key: tts-save-names-${{ steps.names.outputs.sum }}
+          lookup-only: true
+
+      # Skip the day when the updater already ran with these names and nothing the save depends on changed since the
+      # branch's last successful run (own commits aside)
       - name: Changes since the last run
         id: changes
         env:
           GH_TOKEN: ${{ github.token }}
           FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force }}
+          NAMES_SEEN: ${{ steps.names-seen.outputs.cache-hit }}
         run: |
           if [ "$FORCE" = "true" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
-          last=$(gh run list -R "$GITHUB_REPOSITORY" --workflow tts-save.yml --status success --limit 1 --json headSha -q '.[0].headSha')
+          if [ "$NAMES_SEEN" != "true" ]; then
+            echo "The updater hasn't run with the card browser's current names."; echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          last=$(gh run list -R "$GITHUB_REPOSITORY" --workflow tts-save.yml --branch "$GITHUB_REF_NAME" --status success --limit 1 \
+            --json headSha -q '.[0].headSha') || last=""
           if [ -z "$last" ] || ! git cat-file -e "$last^{commit}" 2>/dev/null; then
             echo "No earlier run to compare with."; echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
@@ -100,3 +129,10 @@ jobs:
           git add "TTS/Impossibility Simulator.json"
           git commit -m "TTS save: ${msg:-updated}"
           git push
+
+      # These names are done: tomorrow's check skips unless they or the inputs change
+      - if: steps.changes.outputs.run == 'true' && steps.names.outputs.sum && steps.names-seen.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ runner.temp }}/tts-names
+          key: tts-save-names-${{ steps.names.outputs.sum }}
