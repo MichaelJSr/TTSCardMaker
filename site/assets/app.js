@@ -35,6 +35,7 @@ const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd2
 // [key, label, dir it sets]; "created" = first upload (fs), full-history builds only
 const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
   ["new", "Recently updated"], ["created", "Newest created", ""], ["created", "Oldest created", "asc"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
+const sortOf = p => (p.get("sort") === "created" && !S.created ? "" : p.get("sort")) || "name";   // a shallow build: Name
 const isDesc = (sort, dir) => (dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "created", "mentioned"].includes(sort));
 
 const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
@@ -298,7 +299,7 @@ function renderCards(r) {
   const p = r.params;
   if (document.activeElement !== qInput) qInput.value = p.get("q") || "";
   const base = filterCards(p, { facets: false });
-  const list = sortCards(filterCards(p), p.get("sort") || "name", p.get("dir") || "");
+  const list = sortCards(filterCards(p), sortOf(p), p.get("dir") || "");
   S.list = list;
   if (S.selected.size) { const ids = new Set(list.map(c => c.id)); for (const id of S.selected) if (!ids.has(id)) S.selected.delete(id); }   // a drag carries only shown cards
   const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of [].concat(f(c))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };
@@ -350,7 +351,7 @@ function renderCards(r) {
       <div class="toolbar">
         <span class="result-count">${list.length.toLocaleString()} card${list.length === 1 ? "" : "s"}</span>
         <button type="button" class="mobile-only" data-action="toggle-filters">Filters${active.length ? ` (${active.length})` : ""}</button>
-        <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.filter(([v]) => v !== "created" || S.created).map(([v, l, d]) => { const cur = p.get("sort") || "name";
+        <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.filter(([v]) => v !== "created" || S.created).map(([v, l, d]) => { const cur = sortOf(p);
           return `<option value="${v}"${d !== undefined ? ` data-dir="${d}"` : ""}${v === cur && (d === undefined || (d === "asc") !== isDesc(cur, p.get("dir"))) ? " selected" : ""}>${l}</option>`; }).join("")}</select></label>
         <button type="button" class="ghost icon" data-action="flip-dir" title="Reverse order" aria-label="Reverse order">⇅</button>
         <span class="seg">${[["grid", "Grid"], ["table", "Table"]].map(([v, l]) => `<button type="button" class="${v === view_ ? "on" : ""}" data-action="set-pref" data-key="view" data-value="${v}">${l}</button>`).join("")}</span>
@@ -368,7 +369,7 @@ function renderCards(r) {
 function tableHtml(list, p) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
     ...(S.created ? [["created", "Created"]] : []), ["new", "Updated"]];
-  const sort = p.get("sort") || "name";
+  const sort = sortOf(p);
   return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
     ${list.map(c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
@@ -929,7 +930,7 @@ const actions = {
   "clear-filters": () => { qInput.value = ""; history.replaceState(null, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
-  "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(p.get("sort") || "name", p.get("dir")) ? "asc" : "desc" }); },
+  "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(sortOf(p), p.get("dir")) ? "asc" : "desc" }); },
   "sort-by": el => { const p = parseHash().params; setParams({ sort: el.dataset.key, dir: p.get("sort") === el.dataset.key && p.get("dir") !== "asc" ? "asc" : "" }); },
   "set-pref": el => { localStorage.setItem(el.dataset.key, el.dataset.value); setParams({ [el.dataset.key]: el.dataset.value }); },
   "random-from-list": () => { const l = S.list.length ? S.list : S.cards; location.hash = `#/card/${l[Math.floor(Math.random() * l.length)].id}`; },

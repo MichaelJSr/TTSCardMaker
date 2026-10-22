@@ -39,6 +39,10 @@ export const badgeHtml = tag => {
 
 // words a one-word name may follow: verbs and little words ("Summon Jetpack", "If Gasoline"; "Evil Quote" is something else)
 const LEAD = /^(?:Summon|Resummon|Equip|Create|Cleanse|Inflict|Draw|Acquire|Revive|Gain|Give|Steal|Copy|Become|Remove|Destroy|Discard|Use|Play|Return|Swap|Choose|Target|If|When|Whenever|While|Once|Until|Unless|After|Before|Then|And|Or|A|An|The|This|That|These|Each|Every|Any|Your|Its)$/;
+// a lowercase one-word name after its own verb: "inflict 1T1 smeckeldorfed", "stacks of hardened", "summon a silithid"
+const AMOUNT = "(?:[^\\S\\n]+[\\dX]+T[\\dX]+(?:\\([^)\\n]*\\))?)?";
+const status = new RegExp(`\\b(?:inflict|cleanse|stacks? of)${AMOUNT}[^\\S\\n]+$`, "i");
+const VERB = { buff: status, debuff: status, minion: /\b(?:summon|resummon|revive)(?:[^\S\n]+(?:a|an|the|\d+))?[^\S\n]+$/i };
 
 /** Build the renderer once per data load: knows icons and which card names to link. */
 export function makeRenderer({ cards, icons }) {
@@ -56,18 +60,22 @@ export function makeRenderer({ cards, icons }) {
     const t = m[1], spelt = [card.name.trim(), String(card.key || "").trim()];
     if (t === t.toUpperCase() && t !== t.toLowerCase() && !spelt.includes(t)) return false;   // capitals it doesn't print: a heading ("PANDA")
     if (/\s/.test(t)) return true;
-    // one word: as spelt or capitalized ("Springtrap", never "stay"), not a label ("Cat: +2 SPD"), after a LEAD word or a card
-    if (!(spelt.includes(t) && !m[2]) && !/^\p{Lu}/u.test(t)) return false;
-    const after = text.slice(m.index + m[0].length);
-    if (after[0] === ":") return false;
-    const before = text.slice(0, m.index), w = /(?:^|[\s(“"‘'])(\p{Lu}[\p{L}\p{N}_'’-]*)[^\S\n]+$/u.exec(before);
+    // one word: as spelt, capitalized ("Springtrap", never "stay") or after its VERB; not a label ("Cat: +2 SPD") or
+    // a verb ("Heal 2 HP"); after a LEAD word or a card
+    const after = text.slice(m.index + m[0].length), before = text.slice(0, m.index);
+    if (after[0] === ":" || /^[^\S\n]+(?:\d|X\b)/.test(after)) return false;
+    if (!(spelt.includes(t) && !m[2]) && !/^\p{Lu}/u.test(t)) return !!VERB[card.type]?.test(before);
+    const w = /(?:^|[\s(“"‘'])(\p{Lu}[\p{L}\p{N}_'’-]*)[^\S\n]+$/u.exec(before);
     if (w) return LEAD.test(w[1]) || byName.has(fold(w[1]));
     // opening a clause and followed by to/the/a…: a verb ("(BOGT) Flip to the other creature")
     return !(/(?:^|[\n.!?:)])[^\S\n]*$/.test(before) && /^[^\S\n]+(?:to|the|a|an|your|its|all|any|each|it|this|that)\b/.test(after));
   };
   const pat = k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/'/g, "['‘’]").replace(/ /g, "[ \\t]+");
-  const names = [...byName.keys()].sort((a, b) => b.length - a.length).map(pat);
-  const nameRe = names.length ? new RegExp(`(?<![\\w'‘’])(${names.join("|")})((?:['‘’]s|(?<=s)['‘’]|e?s)(?![\\w'‘’]))?(?![\\w'‘’])`, "gi") : null;
+  // one sticky regex per first word, tried at each word start: far fewer alternatives per place than one of all names
+  const END = "((?:['‘’]s|(?<=s)['‘’]|e?s)(?![\\w'‘’]))?(?![\\w'‘’])", WORD = /(?<![\w'‘’])(?:[\p{L}\p{N}_]+|[^\s\w'‘’])/gu;
+  const groups = new Map();
+  for (const k of [...byName.keys()].sort((a, b) => b.length - a.length)) { const h = k.match(WORD)?.[0] ?? k; groups.set(h, [...(groups.get(h) || []), pat(k)]); }
+  for (const [h, ps] of groups) groups.set(h, new RegExp(`(${ps.join("|")})${END}`, "iy"));
   const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,48})\\]|${TAG.source}`, "g");
 
   function icon(token) {
@@ -87,13 +95,20 @@ export function makeRenderer({ cards, icons }) {
       if (html !== null) pieces.push([m.index, m[0].length, html]);
     }
     const links = [];
-    if (nameRe) {
-      let flat = text, spaced = text;                   // flat: a name never spans an icon; spaced: for isRef
-      for (const [i, n] of pieces) { flat = flat.slice(0, i) + "\0".repeat(n) + flat.slice(i + n); spaced = spaced.slice(0, i) + " ".repeat(n) + spaced.slice(i + n); }
-      for (const m of flat.matchAll(nameRe)) {
-        const card = byName.get(fold(m[1]));
-        if (card && card.name !== selfName && isRef(m, spaced, card)) links.push([m.index, m[0].length, card]);
+    let flat = text, spaced = text;                     // flat: a name never spans an icon; spaced: for isRef
+    for (const [i, n] of pieces) { flat = flat.slice(0, i) + "\0".repeat(n) + flat.slice(i + n); spaced = spaced.slice(0, i) + " ".repeat(n) + spaced.slice(i + n); }
+    let end = 0;
+    for (const w of flat.matchAll(WORD)) {
+      if (w.index < end) continue;
+      const h = w[0].toLowerCase();
+      let m = null;
+      for (const g of [h, h.replace(/s$/, ""), h.replace(/es$/, "")].map(x => groups.get(x))) {   // "drones", "Cabbages"
+        if (g && !m) { g.lastIndex = w.index; m = g.exec(flat); }
       }
+      if (!m) continue;
+      end = m.index + m[0].length;
+      const card = byName.get(fold(m[1]));
+      if (card && card.name !== selfName && isRef(m, spaced, card)) links.push([m.index, m[0].length, card]);
     }
     return { pieces, links };
   }
