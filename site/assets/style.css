@@ -64,6 +64,8 @@ button:disabled { opacity: .45; cursor: default; }
   .top { flex-wrap: wrap; } .brand span { display: none; } .tabs { order: 3; width: 100%; overflow-x: auto; }
   .search { margin-left: 0; max-width: none; }
 }
+@media (min-width: 981px) { .search { min-width: 0; } }   /* one-row bar: shrink, don't widen the page */
+@media (min-width: 981px) and (max-width: 1200px) { .brand span { display: none; } }
 
 main { padding: 16px; outline: none; }
 .loading, .empty { padding: 60px; text-align: center; color: var(--muted); }
@@ -118,7 +120,7 @@ select, .range-row input { width: 100%; padding: 5px 8px; border-radius: 8px; bo
 /* ---- table view ---- */
 table.data { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 table.data th, table.data td { padding: 6px 8px; border-bottom: 1px solid var(--grid); text-align: left; }
-table.data th { color: var(--muted); font-weight: 600; position: sticky; top: 52px; background: var(--page); cursor: pointer; user-select: none; white-space: nowrap; }
+table.data th { color: var(--muted); font-weight: 600; position: sticky; top: 56px; background: var(--page); cursor: pointer; user-select: none; white-space: nowrap; }
 @media (max-width: 980px) { table.data th { top: auto; } }   /* the bar wraps (104-171 px): don't pin under it */
 table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; }
 table.data tr.row { cursor: pointer; } table.data tr.row:hover td { background: var(--surface-2); }
@@ -188,6 +190,7 @@ del { background: color-mix(in srgb, var(--danger) 30%, transparent); border-rad
 .toc a { display: block; padding: 3px 8px; border-radius: 6px; color: var(--ink-2); } .toc a:hover { background: var(--surface-2); text-decoration: none; }
 .page { display: grid; grid-template-columns: 220px 1fr; gap: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 14px; scroll-margin-top: 70px; }
 @media (max-width: 700px) { .page { grid-template-columns: 1fr; } }
+@media (max-width: 980px) { .page { scroll-margin-top: 117px; } } @media (max-width: 640px) { .page { scroll-margin-top: 184px; } }   /* two- and three-row bar */
 .page img { width: 100%; border-radius: 8px; cursor: zoom-in; } .page h3 { margin: 0 0 8px; }
 .page .ability { white-space: pre-line; color: var(--ink-2); }
 .glossary { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 18px; margin: 8px 0 18px; font-size: 14px; }
@@ -339,7 +342,8 @@ body.dragging-cards .drop-list { display: flex; }
 .profile h2 { margin: 0 34px 6px 0; font-size: 26px; line-height: 1.15; }
 .profile .motto { font-size: 17px; color: var(--ink-2); margin: 0 0 14px; }
 .person-name { display: flex; align-items: center; gap: 12px; } .person-name .avatar { border-radius: 50%; flex: none; background: var(--surface-2); }
-@media (max-width: 980px) { .scroll-x { overflow-x: auto; } .browse > section { min-width: 0; } }   /* scrolls only where th isn't pinned */
+@media (max-width: 980px) { .scroll-x { overflow-x: auto; } }   /* scrolls only where th isn't pinned */
+@media (max-width: 1200px) { .browse > section { min-width: 0; } .browse .scroll-x { overflow-x: auto; } .browse table.data th { top: auto; } }   /* cards table outgrows its column */
 #chart-activity .view-chart { overflow-x: auto; } #chart-activity svg { min-width: 600px; }   /* phones: scroll, not shrink */
 table.people .face { display: inline-block; width: 20px; margin-right: 8px; vertical-align: -5px; } table.people .avatar { border-radius: 50%; display: block; background: var(--surface-2); }
 .profile > .chart { margin-bottom: 14px; border-radius: 14px; }
