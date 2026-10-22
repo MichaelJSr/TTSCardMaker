@@ -25,6 +25,11 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   word only when that word is a verb or a card: "Summon Jetpack" links, "Evil Quote" doesn't); "mentions", "mentioned by", similar stats,
   same series, text history with changes highlighted, and an image version viewer: every commit that changed the
   card's image, compared side by side with the current one.
+  A creature's or minion's **Balance** line compares its total stats (HP + DEF + ATK + SPD) with the others of its star
+  level ("Total 35, in the top 10% of 4★ creatures: 92 of the 93 have a lower total"), with their median and middle 80%
+  for each stat, and a line of its total over time when its stats changed. **Recorded changes** lists, newest first,
+  every change the bot recorded to the card: stats (a buff raises the total, a nerf lowers it), stars, kind, item type,
+  types, series, timing tags ("(1PT) → (1CD)") and rewordings (each with its word diff).
   A **Details** dropdown at the bottom of the card page (closed by default; the browser remembers it, its sections and
   fonts, for the session) shows the PSD's structure as the bot read it: fonts (each expandable to its layers; one that
   `MDW/Fonts` lacks is flagged "missing from MDW/Fonts", "not checked" when the bot had no font index), every text
@@ -58,6 +63,16 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **Stats**: counts by kind, series, subseries, type, timing tag, status effect, author and month; how many legal cards there are
   for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
   chart that highlights possible balance outliers. Every chart has a table view.
+  Its **Balance** section: the total stats of each star level of creatures and minions (the middle 80%, the median,
+  the lowest and highest, and the top and bottom 10% as dots), the strongest and weakest cards for their star level,
+  each star level's average total over time (from the card repo's history: a card counts from its first upload), buffs
+  and nerfs by month, every recorded change by month, the most reworked cards, and the cooldown update (the timing
+  tags that became cooldowns, global cooldowns and uses, on Oct 21, 2026 and in an earlier wave on Jun 18, 2026). The
+  kind and series filters apply to it too; a star level's band and median are always over all its cards. A star level
+  with fewer than 5 cards (God Tamer, the one 0★ minion) is compared with all cards of its kind, and so are the 7
+  auxiliary creatures (no star level), with all creatures. The bot's history has no buff or nerf yet (2026-10-22: its
+  one stat change, Tainted Lazarus' 110s becoming two creatures, is off the scale), so the buffs and nerfs panel says so
+  instead of drawing an empty chart.
 - **Changes**: recently updated cards with text diffs, the most revised cards, and cards the bot hasn't parsed yet.
 - **People** (the tab shows how many): everyone who made, edited or committed cards, in one table (GitHub picture, cards
   credited, edit batches published on the website, card commits, public decks, titles, motto), and a page per person
@@ -104,7 +119,9 @@ batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the f
 Each card PNG becomes three WebP images (240 and 360 px for the grid, 720 px for the card view), cached by git blob
 hash in `site/.cache/img`; each image's size and accent color are kept by blob in `site/.cache/images.json` and the
 icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon settings change), so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
-where links fail). The first screen loads only `data/cards.json`; `rules.json`, `history.json`,
+where links fail). The first screen loads only `data/cards.json`; `analytics.json` (the Balance section and blocks,
+computed by `site/build/analytics.py` from the same bot data) loads when the Stats page or a creature, minion or card
+with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
 People tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
 when a card's or rulebook page's Details dropdown is first opened. Script, style and data URLs
@@ -250,6 +267,6 @@ python -m http.server -d site/dist 8000  # then open http://localhost:8000
 
 Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, drag-to-assign and
-the filter bar's New series/subseries/author, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
-published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py`.
+the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
+published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
 Generated files (`site/dist`, `site/.cache`, `site/.og-cache`) are git-ignored.
