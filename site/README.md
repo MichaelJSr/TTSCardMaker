@@ -55,7 +55,11 @@ stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a di
 
 The build does not parse PSDs. Card text, stats, authors, aliases and history come from AutoCroissant's
 `stats.pkl` / `aliases.pkl` / `old_stats.pkl` (the same data the Discord bot answers from), so the site is as fresh as
-the bot's last `/update_stats` + `/push`. Images, icons, the ban list, icon names, profiles and published decks come from this
+the bot's last `/update_stats` + `/push`. The build reads the pickles with an allowlist of exactly what they hold (the
+bot's `CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict` and `list`): a pickle naming
+anything else is refused and nothing in it runs (a refused `stats.pkl` stops the build; the history and aliases are
+skipped with a warning). A field the site reads that the bot's cards lack (a rename in `commands/card_models.py`), or a
+field it doesn't know, is a warning in the log and on the Actions run. Images, icons, the ban list, icon names, profiles and published decks come from this
 repo. Cards that are in the repo but not yet in the bot's data still appear (image only).
 
 The Details dropdown reads the bot's `psd_details.json` (AutoCroissant, beside the pickles: one record per card PSD
@@ -74,7 +78,9 @@ versions and counts edit batches from `Card Edits.json`'s `_by`/`_at` stamps ins
 batch per card; `git fetch --unshallow --filter=blob:none` fixes that).
 
 Each card PNG becomes three WebP images (240 and 360 px for the grid, 720 px for the card view), cached by git blob
-hash in `site/.cache/img`. The first screen loads only `data/cards.json`; `rules.json`, `history.json`,
+hash in `site/.cache/img`; each image's size and accent color are kept by blob in `site/.cache/images.json` and the
+icons in `site/.cache/icons`, so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
+where links fail). The first screen loads only `data/cards.json`; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
 People tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
 when a card's Details dropdown is first opened. Script, style and data URLs

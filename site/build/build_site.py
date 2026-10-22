@@ -6,11 +6,14 @@ Run by .github/workflows/site.yml on every push to main, every 6 hours (to pick 
 Where the data comes from:
   * Card text, stats, authors, aliases and history: AutoCroissant's stats.pkl / aliases.pkl / old_stats.pkl
     (the same data the Discord bot answers from), downloaded from its public GitHub repo. PSDs are never parsed here.
+    The pickles are read into stub classes, and only the globals they hold (PICKLE_GLOBALS) are allowed: anything else
+    is refused, nothing in it run. A field the site reads that the bot's cards lack, or one it doesn't know, is a warning.
     The PSDs' structure (fonts, text layers, effects, stat rows, layer tree) comes from the bot's psd_details.json the
     same way, keyed by PSD blob sha; a card with a record gets data/details/<id>.json for the card page's Details dropdown.
   * Images: card PNGs in this repo, turned into three WebP sizes (240 px and 360 px for the grid at 1x/2x, 720 px
     for the card view). They are cached by git blob hash in site/.cache/img, so after the first run only new or
-    changed cards are downloaded and resized; images no card uses any more are pruned.
+    changed cards are downloaded and resized; images no card uses any more are pruned. Each image's size and accent
+    color are kept in site/.cache/images.json by blob, icons in site/.cache/icons; dist/ gets hardlinks (else copies).
   * Icons: Types/ and Types/Stars/; icon names and aliases from MDW/Fonts/stoogedings-src/stoogedings.json.
   * Deck rules: the rulebook pages; banned cards from site/Constructed Ban List.txt.
   * Authors: site/Card Authors.txt ([people] git name = shown name, [cards] Card Name = person) wins over the bot's
@@ -49,6 +52,7 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 import time
+from collections import defaultdict
 from datetime import datetime, timezone
 from urllib.parse import quote
 from urllib.request import Request, urlopen
@@ -68,6 +72,8 @@ DETAILS_JSON = "psd_details.json"            # the bot's PSD structure records {
 IMAGE_SIZES = {240: 80, 360: 78, 720: 75}    # width -> WebP quality. 240/360: grid at 1x/2x; 720: card view
 IMAGE_WIDTH = 360                            # the size whose dimensions go into cards.json (aspect ratio)
 ICON_SIZE = 96
+IMAGE_META = "images.json"                   # in CACHE: each card image's size and accent color, by PNG blob sha
+IMAGE_META_VERSION = f"1:{IMAGE_WIDTH}:{IMAGE_SIZES[240]}"   # bump the 1 when accent_color changes
 OG_WIDTH = 480                               # link-preview image (Discord shows ≤ 300 px tall)
 SITE_NAME = "Impossibility Simulator"
 MIN_CARDS = 100                              # fewer cards than this in stats.pkl means a broken download
@@ -137,19 +143,81 @@ class _Obj:
     def __setstate__(self, state):
         if isinstance(state, tuple):
             state = state[1] if len(state) > 1 and isinstance(state[1], dict) else state[0]
-        self.__dict__.update(state or {})
+        self.__dict__.update(state if isinstance(state, dict) else {})
+
+
+class CardInfo(_Obj):
+    """Stub of the bot's CardInfo (commands/card_models.py): its fields, no code."""
+
+
+class CardStats(_Obj):
+    """Stub of the bot's CardStats."""
+
+
+# every global the bot's pickles hold; card_models is where the classes live, psd_analyzer the path they are pickled under
+PICKLE_GLOBALS = {("commands.psd_analyzer", "CardInfo"): CardInfo, ("commands.psd_analyzer", "CardStats"): CardStats,
+                  ("commands.card_models", "CardInfo"): CardInfo, ("commands.card_models", "CardStats"): CardStats,
+                  ("collections", "defaultdict"): defaultdict, ("builtins", "list"): list}
+# CardInfo fields the site reads (bot_field_warnings); the bot's other fields; CardStats fields
+CARD_FIELDS = {"card_type", "path", "timestamp", "ability", "stars", "subtype", "series", "types", "stats", "problems", "author",
+               "blob_sha", "parsed_values"}
+CARD_FIELDS_OPTIONAL = {"name", "display_name", "duplicate_of", "creatures", "note", "hidden", "problems_ok", "allow_high_stats",
+                        "alt_names", "subseries", "parser_version"}      # unused, or missing on cards parsed before they existed
+STATS_FIELDS = {"hp", "defense", "attack", "speed"}
+HISTORY_FIELDS = {"ability", "timestamp"}
 
 
 class _Unpickler(pickle.Unpickler):
+    """Builds only PICKLE_GLOBALS: a pickle naming anything else (code to run, a new class) is refused."""
+    def __init__(self, data, source):
+        super().__init__(io.BytesIO(data))
+        self.source = source
+
     def find_class(self, module, name):
-        if module.startswith("commands"):
-            return type(name, (_Obj,), {})
-        return super().find_class(module, name)
+        found = PICKLE_GLOBALS.get((module, name))
+        if found is None:
+            raise pickle.UnpicklingError(f"{self.source} names {module}.{name}, which the bot's pickles never hold (allowed: "
+                                         f"{', '.join(sorted({f'{m}.{n}' for m, n in PICKLE_GLOBALS}))}); refused, nothing in it was run")
+        return found
+
+    def persistent_load(self, pid):
+        raise pickle.UnpicklingError(f"{self.source} has a persistent id; refused")
 
 
 def load_bot_pickle(name):
-    data = fetch(BOT_RAW + name)
-    return _Unpickler(io.BytesIO(data)).load()
+    return _Unpickler(fetch(BOT_RAW + name), name).load()
+
+
+def warn(message):
+    """A warning in the log, and on the run's summary page in GitHub Actions."""
+    log(f"warning: {message}")
+    if os.environ.get("GITHUB_ACTIONS"):
+        print(f"::warning title=Card browser build::{message}", flush=True)
+
+
+def bot_field_warnings(stats, old_stats):
+    """Fields the site reads that the bot's objects lack, and fields it doesn't know (a rename in card_models.py)."""
+    out = []
+    def check(source, objs, needed, known):
+        objs = [o for o in objs if isinstance(o, _Obj)]
+        for field in sorted(needed):
+            missing = sum(1 for o in objs if field not in o.__dict__)
+            if missing:
+                out.append(f"{source}: {missing} of {len(objs)} lack the field {field!r} (renamed in the bot?); "
+                           f"the site shows them without it")
+        extra = {}
+        for o in objs:
+            for field in o.__dict__.keys() - known:
+                extra[field] = extra.get(field, 0) + 1
+        for field, n in sorted(extra.items()):
+            out.append(f"{source}: {n} have the field {field!r} the site doesn't know (new or renamed in the bot?); it isn't shown")
+    cards = list(stats.values())
+    check("stats.pkl cards", cards, CARD_FIELDS, CARD_FIELDS | CARD_FIELDS_OPTIONAL)
+    check("stats.pkl stat lines", [getattr(c, "stats", None) for c in cards] + [x for c in cards for x in getattr(c, "creatures", None) or []],
+          STATS_FIELDS, STATS_FIELDS)
+    old = [o for versions in old_stats.values() for o in versions or []]
+    check("old_stats.pkl cards", old, HISTORY_FIELDS, CARD_FIELDS | CARD_FIELDS_OPTIONAL)
+    return out
 
 
 def load_bot_json(name):
@@ -248,10 +316,13 @@ def image_names(sha):
     return names
 
 
-def make_images(path, sha):
-    """Cached WebP images of a card PNG, named by blob hash. Returns (key, width, height) of the IMAGE_WIDTH one."""
+def make_images(path, sha, known=None):
+    """Cached WebP images of a card PNG, named by blob hash. Returns (key, width, height, accent color), the size of the
+    IMAGE_WIDTH one; known = the cached [width, height, color] of this blob, trusted while all its files are there."""
     names = image_names(sha)
     cached = {w: os.path.join(CACHE, "img", n) for w, n in names.items()}
+    if isinstance(known, list) and len(known) == 3 and all(os.path.exists(f) for f in cached.values()):
+        return (sha[:16], *known)
     if not all(os.path.exists(f) for f in cached.values()):
         src = Image.open(io.BytesIO(image_bytes(path)))
         src = src.convert("RGBA" if src.mode in ("RGBA", "LA", "P") else "RGB")
@@ -271,13 +342,42 @@ def make_images(path, sha):
             flat.save(cached["og"] + ".tmp", "JPEG", quality=80, optimize=True, progressive=True)
             os.replace(cached["og"] + ".tmp", cached["og"])
     with Image.open(cached[IMAGE_WIDTH]) as im:
-        return sha[:16], im.width, im.height
+        width, height = im.width, im.height
+    return sha[:16], width, height, accent_color(cached[240])
+
+
+def load_image_meta():
+    """{blob sha: [width, height, color]} from the last build; {} when missing or made by other image settings."""
+    try:
+        with open(os.path.join(CACHE, IMAGE_META), encoding="utf-8") as fh:
+            meta = json.load(fh)
+        return meta["images"] if meta.get("version") == IMAGE_META_VERSION and isinstance(meta.get("images"), dict) else {}
+    except (OSError, ValueError, AttributeError):
+        return {}
+
+
+def save_image_meta(images):
+    path = os.path.join(CACHE, IMAGE_META)
+    with open(path + ".tmp", "w", encoding="utf-8") as fh:
+        json.dump({"version": IMAGE_META_VERSION, "images": images}, fh, separators=(",", ":"))
+    os.replace(path + ".tmp", path)
+
+
+def link_or_copy(src, dst):
+    """Hardlink (cache files are replaced, never rewritten in place), else copy. An existing dst is the same file."""
+    if os.path.lexists(dst):
+        return
+    try:
+        os.link(src, dst)
+    except OSError:
+        shutil.copyfile(src, dst)
 
 
 def accent_color(path):
     """The card's most common vivid color, for embed bars."""
     with Image.open(path) as im:
-        px = list(im.convert("RGB").resize((40, 80)).getdata())
+        small = im.convert("RGB").resize((40, 80))
+        px = list(small.get_flattened_data() if hasattr(small, "get_flattened_data") else small.getdata())   # Pillow < 12.1
     buckets = {}
     for r, g, b in px:
         if max(r, g, b) >= 70 and max(r, g, b) - min(r, g, b) >= 60:
@@ -337,7 +437,9 @@ def build_icons(tree):
         log("warning: no stoogedings manifest; icons get no aliases")
         manifest = {"icons": {}}
     os.makedirs(os.path.join(DIST, "icons"), exist_ok=True)
-    icons = {}
+    cache_dir = os.path.join(CACHE, "icons")
+    os.makedirs(cache_dir, exist_ok=True)
+    icons, used = {}, set()
     for path in sorted(tree):
         folder, _, file = path.rpartition("/")
         if folder not in ("Types", "Types/Stars") or not file.lower().endswith(".png"):
@@ -346,16 +448,24 @@ def build_icons(tree):
         name = stem.lower() if folder == "Types" else stem.lower().replace(" ", "_")
         kind = "type" if folder == "Types" else "star"
         out_name = f"{slugify(name)}.webp"
-        im = Image.open(io.BytesIO(image_bytes(path))).convert("RGBA")
-        box = im.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox()
-        if box:
-            im = im.crop(box)
-        im.thumbnail((ICON_SIZE, ICON_SIZE), Image.LANCZOS)
-        im.save(os.path.join(DIST, "icons", out_name), "WEBP", quality=90, alpha_quality=100, method=4)   # shown at ≤34 px
+        cached = os.path.join(cache_dir, f"{tree[path][:16]}-{ICON_SIZE}.webp")      # by blob, like the card images
+        used.add(os.path.basename(cached))
+        if not os.path.exists(cached):
+            im = Image.open(io.BytesIO(image_bytes(path))).convert("RGBA")
+            box = im.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox()
+            if box:
+                im = im.crop(box)
+            im.thumbnail((ICON_SIZE, ICON_SIZE), Image.LANCZOS)
+            im.save(cached + ".tmp", "WEBP", quality=90, alpha_quality=100, method=4)   # shown at ≤34 px
+            os.replace(cached + ".tmp", cached)
+        link_or_copy(cached, os.path.join(DIST, "icons", out_name))
         entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
         aliases = manifest["icons"].get(name, {}).get("aliases", [])
         for spelling in [name] + list(aliases):
             icons.setdefault(norm(spelling), entry)
+    for name in os.listdir(cache_dir):
+        if name not in used:
+            os.remove(os.path.join(cache_dir, name))
     return icons
 
 
@@ -1085,12 +1195,12 @@ def main():
     try:
         old_stats = load_bot_pickle("old_stats.pkl")
     except Exception as e:
-        log("no card history:", e)
+        warn(f"no card history: {e}")
         old_stats = {}
     try:
         aliases = load_bot_pickle("aliases.pkl")
     except Exception as e:
-        log("no aliases:", e)
+        warn(f"no aliases: {e}")
         aliases = {}
     try:
         records = psd_records(load_bot_json(DETAILS_JSON))
@@ -1098,6 +1208,8 @@ def main():
         log("no PSD details:", e)
         records = {}
     log(f"bot data: {len(stats)} entries, {len(old_stats)} with history, {len(aliases)} aliases, {len(records)} PSD records")
+    for message in bot_field_warnings(stats, old_stats if isinstance(old_stats, dict) else {}):
+        warn(message)
     edits = parse_edits()
 
     png_by_name = {}
@@ -1274,10 +1386,10 @@ def main():
 
     # images (cached by blob hash; only new or changed PNGs are fetched and resized)
     jobs = [e for e in cards + rules if e["png"] and e["png"] in tree]
-    failed = []
+    failed, meta = [], load_image_meta()
     def images(e):
         try:
-            e["img"], e["tw"], e["th"] = make_images(e["png"], tree[e["png"]])
+            e["img"], e["tw"], e["th"], e["color"] = make_images(e["png"], tree[e["png"]], meta.get(tree[e["png"]]))
         except Exception as err:
             failed.append(e["png"])
             log("image failed:", e["png"], err)
@@ -1292,13 +1404,11 @@ def main():
         if e.get("img"):
             for name in image_names(tree[e["png"]]).values():
                 used.add(name)
-                shutil.copyfile(os.path.join(cache_dir, name), os.path.join(DIST, "thumbs", name))
+                link_or_copy(os.path.join(cache_dir, name), os.path.join(DIST, "thumbs", name))
     pruned = [n for n in os.listdir(cache_dir) if n not in used]
     for n in pruned:
         os.remove(os.path.join(cache_dir, n))
-    for e in jobs:
-        if e.get("img"):
-            e["color"] = accent_color(os.path.join(cache_dir, image_names(tree[e["png"]])[240]))
+    save_image_meta({tree[e["png"]]: [e["tw"], e["th"], e["color"]] for e in jobs if e.get("img")})
     made = len(os.listdir(cache_dir)) - cached_before + len(pruned)
     log(f"images: {len(jobs)} cards, {made} new files, {len(pruned)} unused pruned, {len(failed)} failed")
 
