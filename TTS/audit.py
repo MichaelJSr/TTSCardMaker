@@ -927,7 +927,7 @@ def main():
     if odd_links:
         decisions.append(f"{len(odd_links)} link(s) use refs/heads/main (Types/Girl.png token, loose Militron); sha pinning will rewrite them like the rest. OK?")
 
-    # ---- write rules file (owner-set options of the last one kept: add_new_since, an empty deck's counted rule)
+    # ---- write rules file (owner-set options of the last one kept: add_new_since, complete counted rules)
     try:
         before = json.load(open(RULES, encoding="utf-8")).get("decks") or {}
     except (OSError, ValueError, AttributeError):
@@ -936,7 +936,9 @@ def main():
         "about": ("Rules for the TTS save (TTS/Impossibility Simulator.json), written by audit.py. A deck's cards are the repo PNGs "
                   "matched by rule.folders (globs: * stays inside one folder) plus rule.include, minus rule.exclude. "
                   "partial: a hand-picked subset (only its own cards are refreshed; card_list = its distinct cards); with "
-                  "add_new_since (a commit) it also gains, once, every rule card the save at that commit lacked (renames followed). "
+                  "add_new_since (a commit) it also gains every rule card the save at that commit lacked (renames followed; a card "
+                  "moved to other stars moves to that add_new_since deck; nothing is recorded, so a card taken out by hand comes back "
+                  "unless the rule excludes it). "
                   "count: the usual copies per card; odd_counts (per deck): cards at another count. "
                   "rule null: needs a decision (see AUDIT.md)."),
         "generated": datetime.datetime.now().isoformat(timespec="seconds"),
@@ -951,9 +953,9 @@ def main():
         kept = (before.get(g) or {}).get("rule") or {}
         if entry["rule"] and entry["rule"].get("partial") and kept.get("add_new_since"):
             entry["rule"] = {**entry["rule"], "add_new_since": kept["add_new_since"]}
-        if not d["cards"] and kept.get("count"):
+        if kept.get("count") and not kept.get("partial"):   # a complete counted rule stays complete
             entry["rule"], entry["confidence"] = kept, before[g].get("confidence")
-        if d.get("rule") and d["rule"].get("partial"):
+        if entry["rule"] and entry["rule"].get("partial"):
             entry["card_list"] = sorted(set(p for p in d["paths"] if p))
         if d["odd_counts"]:
             entry["odd_counts"] = {p: n for p, n in d["odd_counts"] if p}

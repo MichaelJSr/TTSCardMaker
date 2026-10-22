@@ -27,8 +27,16 @@ this file and `decks.json` from the save. The second audit's checks are kept in 
   developer decks have `add_new_since: 318001ea` (Tainted Lazarus and John Ward joined `3a51c6`); Nicknames are the
   website's names (131 names, 398 cards); Description, GMNotes, Memo, Tags and scripts are the team's (the updater
   leaves them). Remaining excludes: Stubborn Queen in `e8e1b6`/`fa254e` (it sits in the Minions decks), the Morgue
-  back in `79fd59`. Keys 1626-1721 went to the new cards. `audit.py` keeps `add_new_since` and an empty deck's
-  counted rule when it rewrites `decks.json`.
+  back in `79fd59`. Keys 1626-1721 went to the new cards. `audit.py` keeps `add_new_since` and every complete
+  counted rule when it rewrites `decks.json`. A developer deck re-gains a new card taken out by hand (no record is
+  kept): exclude it in the rule to keep it out.
+  A creature moved to other stars moves from one developer deck to the other (object kept).
+- **Open for the owner:** "new" is read as "not in the save at `318001ea`" (not "PNG not in the repo then": Tainted
+  Lazarus dates from 2023, John Ward from 2025; for PNGs added from now on both agree). White Palace moved to
+  `MDW/The Morgue` (`b6330730`), so it left `b53bbf`/`36ee4c` and is in no deck (`79fd59` is hand-picked). Stubborn
+  Queen (`204963`, scale 2 in the Minions decks) is not in `resizeTargets`. The daily gate's 7 h look-back; the
+  updater code and `build_site.py` names are not watched by the gate. Raw-case titles (SPringtrap, StaR DREAM...) are
+  the website's: ledger L6.
 
 ## Totals
 
