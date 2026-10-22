@@ -178,7 +178,7 @@ _STUBS = {}                                   # (module, name) -> stub class, fo
 CARD_FIELDS = {"card_type", "path", "timestamp", "ability", "stars", "subtype", "series", "types", "stats", "problems", "author",
                "blob_sha", "parsed_values"}
 CARD_FIELDS_OPTIONAL = {"name", "display_name", "duplicate_of", "creatures", "note", "hidden", "problems_ok", "allow_high_stats",
-                        "alt_names", "subseries", "parser_version"}      # may be missing
+                        "alt_names", "subseries", "parser_version", "archived"}      # may be missing; archived: a deleted PSD's record
 STATS_FIELDS = {"hp", "defense", "attack", "speed"}
 HISTORY_FIELDS = {"ability", "timestamp"}
 
