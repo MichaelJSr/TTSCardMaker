@@ -65,6 +65,8 @@ export const fileOf = ({ owner, name, description = "", cards = [], field = null
 export const fileText = file => `${JSON.stringify(sortKeys(file), null, 2)}\n`;
 export const isPrivate = file => !!file && file.private === true;
 export const countOf = d => (Array.isArray(d?.cards) ? d.cards.length : 0) + (d?.field ? 1 : 0);
+/** Whether a public entry's hand holds the card (its field card too). */
+export const usesCard = (d, id) => { d = obj(d); return !!id && !d.private && ((Array.isArray(d.cards) && d.cards.includes(id)) || d.field === id); };
 /** A decrypted payload (or any object) as the page expects it. */
 export const payloadOf = o => { o = obj(o); return { name: line(o.name) || "Hand", description: str(o.description), cards: Array.isArray(o.cards) ? o.cards.map(String) : [], field: o.field ? String(o.field) : null }; };
 
@@ -131,13 +133,14 @@ export const entryOf = (file, slug, byId = null, state = "") => (isPrivate(file)
 // ---- filter and sort ---------------------------------------------------------------------------------
 const label = d => { d = obj(d); return str(d.private ? d.slug : d.name || d.slug).toLowerCase(); };
 const ownerOf = d => str(obj(d).owner).toLowerCase();
-/** p = {q, owner, complete}; ctx = {byId, validate(d) -> {complete}} (private decks match on owner and slug only). */
+/** p = {q, owner, card, complete}; ctx = {byId, validate(d) -> {complete}} (private decks match on owner and slug only). */
 export function filterDecks(list, p = {}, ctx = {}) {
   p = obj(p); ctx = obj(ctx);
   const q = line(p.q).toLowerCase(), owner = str(p.owner).toLowerCase();
   return (Array.isArray(list) ? list : []).filter(e => {
     const d = hand(e);
     if (owner && ownerOf(d) !== owner) return false;
+    if (p.card && !usesCard(d, str(p.card))) return false;
     if (p.complete && (d.private || !ctx.validate?.(d)?.complete)) return false;
     if (!q) return true;
     const hay = [d.owner, d.slug, ...(d.private ? [] : [d.name, d.description, ...[...d.cards, d.field].map(id => ctx.byId?.get(id)?.name || "")])].join("\n").toLowerCase();
@@ -203,11 +206,27 @@ export function browserHtml(list, p = {}, ctx = {}) {
       <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.map(([v, l]) => `<option value="${v}"${v === (p.sort || "newest") ? " selected" : ""}>${l}</option>`).join("")}</select></label>
       <label class="check"><input type="checkbox" data-action="toggle-param" data-key="complete" data-value="1"${p.complete ? " checked" : ""}> complete hands only</label>
       <a class="fact" href="#/deck">Deck builder</a></div>
+    ${p.card ? `<div class="active-filters"><button type="button" class="chip" data-action="remove-param" data-key="card">Using ${esc(cardOf(ctx, str(p.card))?.name || p.card)} ✕</button></div>` : ""}
     ${ctx.error ? `<p class="muted">Couldn't load the published decks (${esc(ctx.error)}). <a href="javascript:location.reload()">Reload</a></p>` : ""}
     ${!list.length ? `<div class="empty">No deck is published yet. Build a hand in the <a href="#/deck">deck builder</a> and press Publish.</div>`
       : !shown.length ? `<div class="empty">No deck matches.</div>`
       : tilesHtml(shown, ctx)}
   </div>`;
+}
+
+/** A card page's "Decks using this card": public decks only, newest first, the first `limit` as tiles. */
+export function usingHtml(list, id, ctx = {}, limit = 6) {
+  const using = sortDecks((Array.isArray(list) ? list : []).filter(d => usesCard(d, id)));
+  if (!using.length) return "";
+  return `<h3>Decks using this card <span class="muted">${using.length}</span></h3>${tilesHtml(using.slice(0, limit), ctx)}
+    ${using.length > limit ? `<p><a href="#/decks?card=${encodeURIComponent(id)}">All ${using.length} decks using this card</a></p>` : ""}`;
+}
+/** The Cards tab's line for a search: how many public decks the deck browser finds for q, with a link there; "" for none. */
+export function searchHitsHtml(list, q, ctx = {}) {
+  q = line(q);
+  const n = q ? filterDecks((Array.isArray(list) ? list : []).filter(d => !obj(d).private), { q }, ctx).length : 0;
+  if (!n) return "";
+  return `<p class="deck-hits muted">${n === 1 ? "1 published deck matches" : `${n} published decks match`} “${esc(q)}”. <a href="#/decks?q=${encodeURIComponent(q)}">Show ${n === 1 ? "it" : "them"}</a></p>`;
 }
 
 /** The hand grouped like the deck builder: creatures by stars, items by stars, the field card, then strays and gone ids. */

@@ -34,7 +34,7 @@ PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) ar
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
 data/contributions.json, data/decks.json and data/versions.json (loaded when the rulebook, a card's text or image history, the
 changes feed, the People tab or the published decks are opened), data/details/<id>.json (a card's or rulebook page's Details dropdown), images, icons,
-assets and one share page per card, per person and per public deck. Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
+assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -75,6 +75,8 @@ ICON_SIZE = 96
 IMAGE_META = "images.json"                   # in CACHE: each card image's size and accent color, by PNG blob sha
 IMAGE_META_VERSION = f"1:{IMAGE_WIDTH}:{IMAGE_SIZES[240]}"   # bump the 1 when accent_color changes
 OG_WIDTH = 480                               # link-preview image (Discord shows ≤ 300 px tall)
+OG_DECK_CARDS = 6                            # cards in a deck page's link-preview montage
+OG_DECK_VERSION = "1"                        # bump when the montage's layout changes (its cache key)
 SITE_NAME = "Impossibility Simulator"
 MIN_CARDS = 100                              # fewer cards than this in stats.pkl means a broken download
 # the game's names for each card_type (rulebook: creature/item decks, field cards, N.M.E. items, auxiliary decks)
@@ -420,22 +422,51 @@ def share_text(c):
     return clip("\n".join(filter(None, [head, stats, text])))
 
 
-def site_banner(cards, path):
-    """1200×630 link-preview image: a fan of 5★ creatures (a stable pick)."""
-    pool = [c for c in cards if c.get("img") and c["type"] == "creature" and c.get("stars") == 5 and not c.get("dup")]
-    picks = sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6]
+def fan(cards, path):
+    """1200×630 JPEG of the cards' 720 px thumbs in a row: centred when they fit, else overlapping edge to edge."""
     canvas = Image.new("RGB", (1200, 630), (13, 13, 13))
     ims = []
-    for c in picks:
+    for c in cards:
         with Image.open(os.path.join(DIST, "thumbs", f"{c['img']}-720.webp")) as im:
             im = im.convert("RGBA")
             im.thumbnail((300, 570), Image.LANCZOS)
             ims.append(im)
     if ims:
-        step = (1200 - 40 - ims[-1].width) / max(1, len(ims) - 1)
-        for i, im in enumerate(ims):
-            canvas.paste(im, (20 + round(i * step), (630 - im.height) // 2), im)
+        width = sum(im.width for im in ims) + 20 * (len(ims) - 1)
+        if width <= 1160:                      # side by side
+            x = (1200 - width) // 2
+            for im in ims:
+                canvas.paste(im, (x, (630 - im.height) // 2), im)
+                x += im.width + 20
+        else:
+            step = (1200 - 40 - ims[-1].width) / max(1, len(ims) - 1)
+            for i, im in enumerate(ims):
+                canvas.paste(im, (20 + round(i * step), (630 - im.height) // 2), im)
     canvas.save(path, "JPEG", quality=85, optimize=True, progressive=True)
+
+
+def site_banner(cards, path):
+    """1200×630 link-preview image: a fan of 5★ creatures (a stable pick)."""
+    pool = [c for c in cards if c.get("img") and c["type"] == "creature" and c.get("stars") == 5 and not c.get("dup")]
+    fan(sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6], path)
+
+
+def deck_cards(d, by_id):
+    """The hand in page order (decks.js handCards): the field card, creatures, items, the rest, each by stars."""
+    cards = [by_id[i] for i in d["cards"] if i != d.get("field")]
+    rank = {"creature": 0, "item": 1}
+    order = sorted(cards, key=lambda c: (rank.get(c["type"], 2), -(c.get("stars") or 0), c["name"].lower()))
+    return ([by_id[d["field"]]] if d.get("field") in by_id else []) + order
+
+
+def deck_montage(picks):
+    """A deck page's link-preview image of its first cards, cached in CACHE/og by their image hashes; (key, cached file)."""
+    key = hashlib.sha256(f"{OG_DECK_VERSION}:{'|'.join(c['img'] for c in picks)}".encode()).hexdigest()[:16]
+    cached = os.path.join(CACHE, "og", f"{key}.jpg")
+    if not os.path.exists(cached):
+        fan(picks, cached + ".tmp")
+        os.replace(cached + ".tmp", cached)
+    return key, cached
 
 
 def build_icons(tree):
@@ -1720,18 +1751,36 @@ def main():
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(r["key"])} · {SITE_NAME}</title>',
         ])
-    for d in public_decks:                        # decks/<owner>/<slug>/: the field card as the preview image, else the top creature, else the site banner
-        creatures = sorted((by_id[i] for i in d["cards"] if by_id[i]["type"] == "creature"), key=lambda c: -(c.get("stars") or 0))
-        pic = by_id.get(d["field"] or "") or (creatures[0] if creatures else None)
+    os.makedirs(os.path.join(CACHE, "og"), exist_ok=True)
+    montages = set()
+    for d in public_decks:                        # decks/<owner>/<slug>/: a montage of its first cards, else one card, else the site banner
+        hand = deck_cards(d, by_id)
+        picks = [c for c in hand if c.get("img")][:OG_DECK_CARDS]
+        pic = picks[0] if picks else (hand[0] if hand else None)
         desc, title = deck_text(d, by_id), f"{d['name']} by {d['owner']}"
         image, size = og_image(pic) if pic and pic.get("img") else ((f"{SITE_URL}/og.jpg", (1200, 630)) if SITE_URL else ("", None))
+        alt = f"{pic['name']} card" if pic and pic.get("img") else ""
+        if SITE_URL and len(picks) > 1:
+            try:
+                key, cached = deck_montage(picks)
+                os.makedirs(os.path.join(DIST, "decks", d["owner"], d["slug"]), exist_ok=True)
+                link_or_copy(cached, os.path.join(DIST, "decks", d["owner"], d["slug"], f"og-{key}.jpg"))
+                montages.add(f"{key}.jpg")
+                image, size, alt = f"{SITE_URL}/decks/{d['owner']}/{d['slug']}/og-{key}.jpg", (1200, 630), ", ".join(c["name"] for c in picks)
+            except Exception as err:              # one card instead
+                warn(f"deck {d['owner']}/{d['slug']}: no preview montage ({err})")
         share_page(("decks", d["owner"], d["slug"]), [
             f'<meta name="deck" content="{html.escape(d["owner"])}/{d["slug"]}">',
-            og_tags(title, desc, f"{SITE_URL}/decks/{d['owner']}/{d['slug']}/" if SITE_URL else "", image, size, f"{pic['name']} card" if pic and pic.get("img") else ""),
+            og_tags(title, desc, f"{SITE_URL}/decks/{d['owner']}/{d['slug']}/" if SITE_URL else "", image, size, alt),
             f'<meta name="theme-color" content="{(pic or {}).get("color") or "#3987e5"}">',
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(title)} · {SITE_NAME}</title>',
         ])
+    for n in os.listdir(os.path.join(CACHE, "og")):
+        if n not in montages:
+            os.remove(os.path.join(CACHE, "og", n))
+    if montages:
+        log(f"deck previews: {len(montages)} montages")
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
 
 

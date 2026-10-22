@@ -351,6 +351,7 @@ function renderCards(r) {
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}
       </div>
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v]) => `<button type="button" class="chip" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
+      <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
       ${!list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}">${list.map((c, i) => tileHtml(c, { eager: i < 8, css: { s: 160, m: 200, l: 270 }[size] || 200 })).join("")}</div>`}
     </section></div>`;
@@ -445,6 +446,7 @@ function openCard(id, showDetails = false) {
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
+          <div id="decks-slot">${usingDecks(c)}</div>
           <div id="history-slot">${historyHtml(c)}</div>
           <div id="versions-slot">${versionsHtml(c)}</div>
           ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
@@ -712,6 +714,22 @@ function deckAt(owner, slug) {
   if (p) return decks.entryOf(p.file, slug, S.byId, p.state);
   return deckList().find(d => d.slug === slug && d.owner.toLowerCase() === owner.toLowerCase()) || null;
 }
+const hasDecks = () => (+S.data.decks?.public || 0) > 0 || editor.pendingDecks().size > 0;   // else no fetch
+const publicDecks = () => deckList().filter(d => !d.private);
+/** Cards tab: the published decks a search finds, filled in once decks.json is loaded. */
+function deckHits(q) {
+  if (!q.trim() || !hasDecks()) return "";
+  if (S.decksData) return decks.searchHitsHtml(publicDecks(), q, deckCtx());
+  loadDecks().then(() => { const el = $("#deck-hits"), h = parseHash(); if (el && h.name === "cards" && (h.params.get("q") || "") === q) el.innerHTML = deckHits(q); });
+  return "";
+}
+/** Card page: the public decks holding the card. */
+function usingDecks(c) {
+  if (!hasDecks()) return "";
+  if (S.decksData) return decks.usingHtml(publicDecks(), c.id, deckCtx());
+  loadDecks().then(() => { const slot = $("#decks-slot"); if (slot && !modal.hidden && parseHash().arg === c.id) slot.innerHTML = usingDecks(c); });
+  return "";
+}
 function decksReady() {
   if (S.decksData) return true;
   view.innerHTML = `<div class="loading">Loading decks…</div>`;
@@ -722,7 +740,7 @@ function renderDecks(r) {
   S.deckTitle = ""; S.deckView = null;
   if (r.arg) { renderDeckPage(r); return; }
   if (!decksReady()) return;
-  const p = r.params, f = { q: p.get("q") || "", owner: p.get("owner") || "", sort: p.get("sort") || "newest", complete: p.get("complete") === "1" };
+  const p = r.params, f = { q: p.get("q") || "", owner: p.get("owner") || "", card: p.get("card") || "", sort: p.get("sort") || "newest", complete: p.get("complete") === "1" };
   view.innerHTML = decks.browserHtml(deckList(), f, { ...deckCtx(), error: S.decksData.error });
   const input = $("#decks-q");
   input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#decks-q"); if (i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); } }, 200));
