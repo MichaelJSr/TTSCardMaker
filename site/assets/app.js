@@ -444,7 +444,7 @@ function openCard(id, showDetails = false) {
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
-          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : c.edited ? `<span class="fact" data-tip="${esc(`Changed on the website: ${c.edited.join(", ")}${c.editBy ? ` · ${c.editBy.replace(/^discord:(.*)/, "$1 (Discord)")}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
+          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : c.edited ? `<span class="fact" data-tip="${esc(`${changes.isDiscord(c.editBy) ? "Changed" : "Changed on the website"}: ${c.edited.join(", ")}${c.editBy ? ` · ${changes.nameText(c.editBy)}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>

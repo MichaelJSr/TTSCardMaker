@@ -1430,7 +1430,7 @@ def contributions(cards, people, profiles, edits, commits):
     cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
     (a hand commit counts, a pure move doesn't), or without history the file's distinct _by/_at stamps (a floor: it keeps
     one batch per card). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
-    added, isn't a change), one however many files. The bot's own commits and stamps are left out, but a bake (a bot
+    added, isn't a change), one however many files. The bot's own commits and stamps and discord:<name> stamps are left out, but a bake (a bot
     commit changing a card, with Edit-by trailers, one per card and editor) is one card commit of each editor it names,
     its recent entry counting their trailers as cards, never an edit (their batch already counted). A login is the row credit() names, else the row its noreply commits credit most, else its own (any
     case). logins: the names credited to the person (key, profile logins, [people] names, GitHub logins seen), each in
@@ -1522,7 +1522,7 @@ def contributions(cards, people, profiles, edits, commits):
                     r["recent"].append([ts, subject, len(touched)])
     else:
         for by, at in {(meta["_by"], meta["_at"]) for _, meta in edits.values() if meta.get("_by") and meta.get("_at")}:
-            if by.lower() == BOT_AUTHOR.lower():
+            if by.lower() == BOT_AUTHOR.lower() or by.startswith("discord:"):     # a Discord user is nobody's row
                 continue
             r = rec_of(key_of(by))
             r["edits"] += 1
@@ -1532,7 +1532,7 @@ def contributions(cards, people, profiles, edits, commits):
                 pass
     for _, meta in edits.values():                # website logins: one per batch stamp
         by = meta.get("_by")
-        if by and by.lower() != BOT_AUTHOR.lower():
+        if by and by.lower() != BOT_AUTHOR.lower() and not by.startswith("discord:"):
             known(key_of(by), by)
     out = []
     for r in rec.values():
