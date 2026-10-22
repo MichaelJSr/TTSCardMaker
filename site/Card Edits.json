@@ -57,6 +57,7 @@
     "The Master": {"series":"Mario","subseries":"Paper Mario","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Thunderfury Blessed Blade of the Windseeker": {"name":"[Thunderfury: Blessed Blade of the Windseeker]","_by":"AutoCroissant","_at":"2026-10-21T13:31:38Z"},
     "Tutankoopa": {"series":"Mario","subseries":"Paper Mario","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
+    "Twin Emperors": {"problems_ok":true,"creatures":[{"hp":7,"def":4,"atk":5,"spd":6},{"hp":7,"def":10,"atk":4,"spd":4}],"_by":"MichaelJSr","_at":"2026-10-22T04:35:02Z"},
     "Vivian": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Yoshi Kid": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"}
   }
