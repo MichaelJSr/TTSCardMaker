@@ -483,6 +483,15 @@ export function createEditor(app) {
   const mine = login => login.toLowerCase() === me.login.toLowerCase();
   const findKey = (obj, login) => Object.keys(obj).find(k => k.toLowerCase() === login.toLowerCase());
   const drafts = new Map();                        // login (lower) -> form state, while the form differs from the profile
+  let carry = null;                                // {key, link, slot, picker}: what the draft doesn't hold, kept over a rebuild
+  const forget = login => { drafts.delete(login.toLowerCase()); if (carry?.key === login.toLowerCase()) carry = null; };
+  function keep() {                                // the page's form, before profilePage replaces it: the link box's text, the open picker
+    const form = app.view.querySelector("#edit-form[data-login]");
+    if (!form) return;
+    const panel = form.querySelector("#pf-picker");
+    carry = { key: form.dataset.login.toLowerCase(), link: form.querySelector("#pf-deck-link").value,
+      slot: panel.hidden ? "" : panel.dataset.slot || "", picker: panel.hidden ? null : pick.read(panel) };
+  }
   let booting = !!token;                           // the stored token's sign-in hasn't settled yet
   let pageRun = 0;                                 // profilePage calls: a newer one aborts the older
   window.addEventListener("beforeunload", e => { if (document.querySelector('#edit-form[data-dirty="1"]')) { e.preventDefault(); e.returnValue = ""; } });
@@ -564,6 +573,7 @@ export function createEditor(app) {
   async function profilePage(login) {              // the route #/u/<login>/edit
     // still the page to show after the await: no newer call, and the view's route (S.listHash: a card dialog above keeps it) unchanged
     const run = ++pageRun, start = S.listHash, here = () => run === pageRun && S.listHash === start;
+    keep();
     if (!me) {
       app.view.innerHTML = `<div class="profile"><div class="empty">${booting ? "Signing in…" : `Sign in to edit this profile.<p><button type="button" class="primary" data-action="profile-signin" data-login="${esc(login)}">Sign in</button></p>`}</div></div>`;
       if (!booting) openHub(`Sign in to edit ${login}'s profile.`, () => openProfile(login));
@@ -577,6 +587,8 @@ export function createEditor(app) {
     const p = (pending ? pending.profile : published) || { login: live?.login || (mine(login) ? me.login : login) };   // the file's own spelling
     const base = (pending ? pending.profile : published) || { login: p.login };        // what an untouched form reads as
     const key = p.login.toLowerCase(), own = mine(p.login);
+    keep();
+    const kept = carry?.key === key ? carry : null; carry = null;
     app.view.innerHTML = profilePageHtml(p, drafts.get(key) || profileState(p), !!live);   // in the repo: it can be removed
     const form = app.view.querySelector("#edit-form"), q = sel => form.querySelector(sel), previewEl = app.view.querySelector("#pf-preview");
     const update = () => {
@@ -591,12 +603,13 @@ export function createEditor(app) {
     };
     const setSlot = (k, id) => { q(`[data-slot="${k}"]`).outerHTML = slotHtml(PICKS.find(([x]) => x === k), id); };
     const setHand = code => { q("#pf-deck").value = code; q("#pf-deck-link").value = ""; q("#pf-hand").innerHTML = handHtml(code); };
-    const closePicker = () => { q("#pf-picker").hidden = true; q("#pf-picker-body").innerHTML = ""; };
-    const openPicker = k => {
+    const closePicker = () => { q("#pf-picker").hidden = true; q("#pf-picker").dataset.slot = ""; q("#pf-picker-body").innerHTML = ""; };
+    const openPicker = (k, initial = null, focus = true) => {
       const [, label] = PICKS.find(([x]) => x === k), item = k.endsWith("Item");
-      q("#pf-picker").hidden = false; q("#pf-picker-title").textContent = `${label}: pick a card`;
+      q("#pf-picker").hidden = false; q("#pf-picker").dataset.slot = k; q("#pf-picker-title").textContent = `${label}: pick a card`;
       pick.mount(q("#pf-picker-body"), { cards: S.cards, filter: item ? c => ITEM_KINDS.has(c.type) : null, tile: app.tile, kinds: app.kinds, kindOf: app.kindOf,
-        placeholder: "Search… (the search box's syntax)", onChoose: id => { setSlot(k, id); closePicker(); update(); q(`[data-pf-pick="${k}"]`).focus(); } });
+        placeholder: "Search… (the search box's syntax)", initial, focus,
+        onChoose: id => { setSlot(k, id); closePicker(); update(); q(`[data-pf-pick="${k}"]`).focus(); } });
     };
     const outsidePicker = e => !e.target.closest("#pf-picker");
     form.addEventListener("input", e => { if (outsidePicker(e)) update(); });
@@ -619,12 +632,14 @@ export function createEditor(app) {
       if (errors.length) { app.toast(errors[0]); return; }
       if (sameProfile(profile, live)) delete stage.profiles[p.login]; else stage.profiles[p.login] = profile;
       save();
-      drafts.delete(key); form.dataset.dirty = "";
+      forget(key); form.dataset.dirty = "";
       app.toast(stage.profiles[p.login] ? `Added to the batch: ${count()} unpublished` : "Same as the published profile");
       app.goUser(p.login);
     });
+    if (kept?.link) q("#pf-deck-link").value = kept.link;   // text that didn't decode: update() still refuses it
     update();
-    if (app.modal.hidden) q("#pf-author").focus();   // not when rebuilt under a dialog (a rerender from the review or a card)
+    if (kept?.slot && PICKS.some(([x]) => x === kept.slot)) openPicker(kept.slot, kept.picker, app.modal.hidden);   // the picker stays open
+    else if (app.modal.hidden) q("#pf-author").focus();   // not when rebuilt under a dialog (a rerender from the review or a card)
   }
 
   // ---- published decks: site/decks/<owner>/<slug>.json, one more file in the batch (your own; admins anyone's). The dialog
@@ -904,7 +919,7 @@ export function createEditor(app) {
     "edit-cancel": () => {                       // the card dialog's form, else the profile page's
       const form = app.modal.querySelector("#edit-form") || document.getElementById("edit-form");
       if (form?.dataset.dirty && !confirm("Discard these changes?")) return;
-      if (form && !app.modal.contains(form)) { drafts.delete(form.dataset.login.toLowerCase()); form.dataset.dirty = ""; location.replace(`#/u/${encodeURIComponent(form.dataset.login)}`); return; }
+      if (form && !app.modal.contains(form)) { forget(form.dataset.login); form.dataset.dirty = ""; location.replace(`#/u/${encodeURIComponent(form.dataset.login)}`); return; }
       const id = app.currentCard(); if (id) app.goCard(id); else app.closeModal();
     },
     "edit-review": () => app.showDialog(reviewHtml()),
@@ -930,7 +945,7 @@ export function createEditor(app) {
     "profile-remove": el => {
       const login = el.dataset.login, form = document.getElementById("edit-form");
       if (!confirm(`Remove ${login}'s profile? The file goes with your next publish.`)) return;
-      stage.profiles[login] = null; save(); drafts.delete(login.toLowerCase()); if (form) form.dataset.dirty = "";
+      stage.profiles[login] = null; save(); forget(login); if (form) form.dataset.dirty = "";
       app.toast(`Removal added to the batch: ${count()} unpublished`); app.goUser(login);
     },
     "edit-revert": el => {                       // one line of the batch bar

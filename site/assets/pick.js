@@ -1,6 +1,6 @@
 // A card picker panel, mounted inside a page: a search box (search.js syntax), kind and stars chips and small tiles;
 // a click or Enter on a tile chooses it. The tiles carry data-choose, never data-open or data-pick, so the document's
-// click listener (app.js) leaves them alone. Used by the profile editor (edit.js); the deck builder has its own dialog.
+// click listener (app.js) leaves them alone. Used by the profile editor (edit.js) and the deck builder's dialog (app.js).
 import { esc } from "./text.js";
 import { compile } from "./search.js";
 
@@ -23,15 +23,26 @@ export function facets(cards, { filter = null, kinds = [], kindOf = c => c.type 
     stars: [...new Set(pool.map(c => c.stars).filter(Boolean))].sort((a, b) => a - b) };
 }
 
-/** Render the picker into `container` (replacing its contents) and focus the search box.
- *  {cards, filter(card), onChoose(id), placeholder, tile(card) -> tile HTML (app.js tileHtml), kinds ([[kind, label]]), kindOf} */
-export function mount(container, { cards, filter = null, onChoose, placeholder = "Search cards…", tile, kinds = [], kindOf = c => c.type }) {
-  const state = { query: "", kinds: new Set(), stars: new Set() };
+/** The picker's search and chips as shown in `container` (the typed text even before the debounce), or null: mount's `initial`. */
+export function read(container) {
+  const root = container?.querySelector(".pick");
+  if (!root) return null;
+  const on = a => [...root.querySelectorAll(`.chip.on[data-${a}]`)].map(b => b.dataset[a]);
+  return { query: root.querySelector(".pick-q").value, kinds: on("kind"), stars: on("star").map(Number) };
+}
+
+/** Render the picker into `container` (replacing its contents) and focus the search box (unless `focus` is false).
+ *  {cards, filter(card), onChoose(id), placeholder, tile(card) -> tile HTML (app.js tileHtml), kinds ([[kind, label]]), kindOf,
+ *  initial: {query, kinds, stars} (read() of an earlier panel)} */
+export function mount(container, { cards, filter = null, onChoose, placeholder = "Search cards…", tile, kinds = [], kindOf = c => c.type, initial = null, focus = true }) {
   const f = facets(cards, { filter, kinds, kindOf });
+  const state = { query: initial?.query || "", kinds: new Set((initial?.kinds || []).filter(k => f.kinds.some(([x]) => x === k))),   // only chips shown
+    stars: new Set((initial?.stars || []).filter(s => f.stars.includes(s))) };
+  const chip = (attr, v, set, label) => `<button type="button" class="chip${set.has(v) ? " on" : ""}" data-${attr}="${esc(v)}" aria-pressed="${set.has(v)}">${label}</button>`;
   container.innerHTML = `<div class="pick">
-    <input type="search" class="pick-q" placeholder="${esc(placeholder)}" aria-label="Search cards" autocomplete="off">
-    ${f.kinds.length > 1 ? `<div class="chips">${f.kinds.map(([k, label, n]) => `<button type="button" class="chip" data-kind="${esc(k)}" aria-pressed="false">${esc(label)}<span class="n">${n}</span></button>`).join("")}</div>` : ""}
-    ${f.stars.length > 1 ? `<div class="chips">${f.stars.map(s => `<button type="button" class="chip" data-star="${s}" aria-pressed="false">${s}★</button>`).join("")}</div>` : ""}
+    <input type="search" class="pick-q" placeholder="${esc(placeholder)}" value="${esc(state.query)}" aria-label="Search cards" autocomplete="off">
+    ${f.kinds.length > 1 ? `<div class="chips">${f.kinds.map(([k, label, n]) => chip("kind", k, state.kinds, `${esc(label)}<span class="n">${n}</span>`)).join("")}</div>` : ""}
+    ${f.stars.length > 1 ? `<div class="chips">${f.stars.map(s => chip("star", s, state.stars, `${s}★`)).join("")}</div>` : ""}
     <p class="muted pick-note" aria-live="polite"></p>
     <div class="grid picker" style="--tile:120px"></div></div>`;
   const root = container.firstElementChild, input = root.querySelector(".pick-q"), note = root.querySelector(".pick-note"), grid = root.querySelector(".grid");
@@ -58,5 +69,5 @@ export function mount(container, { cards, filter = null, onChoose, placeholder =
     if (chosen) { e.preventDefault(); onChoose(chosen.dataset.choose); } else if (e.target === input) e.preventDefault();   // not the form's submit
   });
   render();
-  input.focus();
+  if (focus) input.focus();
 }

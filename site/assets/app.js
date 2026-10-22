@@ -7,6 +7,7 @@ import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mer
 import * as inline from "./inline.js";
 import * as details from "./details.js";
 import * as decks from "./decks.js";
+import * as pick from "./pick.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -623,25 +624,16 @@ function renderDeck(r) {
   const nameInput = $("#deck-name");
   if (nameInput) nameInput.addEventListener("change", () => { d.name = nameInput.value.trim() || "Untitled hand"; D.saveDecks(S.decks); renderDeck(parseHash()); });
 }
-function openPicker(tier) {
+function openPicker(tier) {                              // the shared picker (pick.js) on one tier, in a dialog
   const [kind, st] = tier.split(":");
-  const d = deck();
   const fits = c => (kind === "field" ? c.type === "field" && (c.stars || 0) <= D.FIELD_MAX_STARS : c.type === kind && c.stars === Number(st));
-  const render = q => {
-    const pred = compile(q);
-    const list = sortCards(S.cards.filter(c => fits(c) && c.parsed && !deckHas(c.id) && (!pred || pred(c))), "name");
-    $("#picker-grid").innerHTML = list.map(c => tileHtml(c, { small: true, constructed: true }).replace('data-open="', 'data-pick="')).join("") || `<div class="empty">Nothing fits.</div>`;
-  };
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="Pick a card"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>
     <h3>${kind === "field" ? `Pick a field card (≤${D.FIELD_MAX_STARS}★)` : `Pick a ${st}★ ${kind}`}</h3>
-    <input id="picker-q" type="search" placeholder="Filter… (same search syntax)" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);margin-bottom:12px">
-    <p class="muted">Banned cards are marked: they make the hand illegal.</p>
-    <div class="grid picker" id="picker-grid" style="--tile:120px"></div></div>`;
+    <p class="muted">Banned cards are marked: they make the hand illegal.</p><div id="picker-body"></div></div>`;
   modal.hidden = false; document.body.style.overflow = "hidden";
-  render("");
-  const input = $("#picker-q");
-  input.addEventListener("input", debounce(() => render(input.value), 120));
-  input.focus();
+  pick.mount($("#picker-body"), { cards: S.cards, filter: c => fits(c) && c.parsed && !deckHas(c.id), kinds: KINDS, kindOf,
+    tile: c => tileHtml(c, { small: true, constructed: true }), placeholder: "Filter… (same search syntax)",
+    onChoose: id => { const err = D.addCard(deck(), S.byId.get(id), S.byId); if (err) toast(err); else { D.saveDecks(S.decks); updateDeckCount(); closeModal(); renderDeck(parseHash()); } } });
 }
 
 // ---- stats / changes / compare -------------------------------------------------------------------
@@ -951,8 +943,6 @@ const actions = {
 document.addEventListener("click", e => {
   const a = e.target.closest("[data-action]");
   if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); actions[a.dataset.action]?.(a); return; }
-  const pick = e.target.closest("[data-pick]");
-  if (pick) { const err = D.addCard(deck(), S.byId.get(pick.dataset.pick), S.byId); if (err) toast(err); else { D.saveDecks(S.decks); updateDeckCount(); closeModal(); renderDeck(parseHash()); } return; }
   const open = e.target.closest("[data-open], .chart [data-card]");
   if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
@@ -995,7 +985,9 @@ document.addEventListener("keydown", e => {
   }
   const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline]");   // the inline controls are inputs; stat rows take the arrows
   if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size) { S.selected.clear(); inline.reflect(view, S.selected); } return; }
-  if (typing || e.metaKey || e.ctrlKey || e.altKey || $("#edit-form")) return;        // no single-key shortcuts while a form (card dialog, profile editor) is up
+  if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === "Enter" && ae?.dataset?.open && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
+  if ($("#edit-form")) return;                                                         // no single-key shortcuts while a form (card dialog, profile editor) is up
   const inCard = !modal.hidden && parseHash().name === "card", id = parseHash().arg;
   if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }
   else if (e.key === "?") showKeys();
@@ -1007,7 +999,6 @@ document.addEventListener("keydown", e => {
   else if (inCard && e.key === "s") openShare(id);
   else if (inCard && e.key === "x") actions["compare-add"]({ dataset: { id } });
   else if (inCard && e.key === "e") { e.preventDefault(); editor.open(id); }
-  else if (e.key === "Enter" && document.activeElement?.dataset?.open) location.hash = `#/card/${document.activeElement.dataset.open}`;
 });
 
 // tooltips: [data-tip] text, [data-v]+[data-l] chart values, card links show a preview

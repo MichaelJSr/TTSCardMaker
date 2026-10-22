@@ -149,7 +149,7 @@ a one-line motto, a series, favourite and hated card and item, a featured hand a
 The editor is a page of its own, `#/u/<login>/edit` (Edit profile on the hub, the person page or the review dialog;
 signed out, it asks for the token first and comes back): the form on the left, a live preview of the profile on the
 right (one column on narrow screens). Each card slot shows the chosen card's tile with **Pick** and **Clear**; Pick opens
-a picker inside the page (search box with the search syntax, kind and stars chips, small tiles; the item slots only
+a picker inside the page (the one the deck builder's empty slots open in a dialog: search box with the search syntax, kind and stars chips, small tiles; the item slots only
 offer items, auxiliary items and N.M.E. items; at most 240 tiles, narrow the search for more). The featured hand is
 picked from the deck builder's saved hands or pasted as a share link; its share code is stored as the hand is at that
 moment, so later deck-builder edits don't follow. **Add to batch** stages the profile and returns to the person page;
