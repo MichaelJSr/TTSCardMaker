@@ -1,7 +1,8 @@
 # Bakes the website's PSD-kind card edits (site/Card Edits.json: stats, name, ability text) into the card PSDs and
 # PNGs with the bot's edit pipeline (AutoCroissant commands/card_bake.py): one commit per run with every baked card's
-# PSD and PNG and the rewritten edits file, the report as the job summary. Every 30 minutes, live, when the gate finds
-# a PSD-kind edit without a final verdict (docs/EDIT_PIPELINE_DESIGN.md section 8); a dispatch always runs.
+# PSD and PNG and the rewritten edits file (at most 40 cards baked a run; the rest wait for the next), the report as the
+# job summary. Every 30 minutes, live, when the gate finds a PSD-kind edit without a final verdict
+# (docs/EDIT_PIPELINE_DESIGN.md section 8); a dispatch always runs. A failed scheduled run tells Discord.
 name: Card edits
 
 on:
@@ -22,8 +23,10 @@ permissions:
   contents: write     # the bake commits
   actions: write      # gh workflow run site.yml / tts-save.yml after a commit (a GITHUB_TOKEN push triggers no workflow)
 
+# Its own group: GitHub keeps one pending run per group, so sharing tts-save's would let the next tick replace a pending
+# TTS save. Both retry a commit on a moved head, and a bake that commits runs tts-save.yml afterwards.
 concurrency:
-  group: tts-save     # shared with tts-save.yml: both commit to main, never two at once; a running bake is never cancelled
+  group: card-edits   # a running bake is never cancelled; a newer pending tick replaces an older one
   cancel-in-progress: false
 
 jobs:
@@ -126,11 +129,25 @@ jobs:
           path: ${{ runner.temp }}/card-bake
           if-no-files-found: ignore
 
-      # Only after the run's commit (its cards' "committed `sha`" lines): a GITHUB_TOKEN push triggers no workflow, so the
-      # site build and the TTS save are run here.
-      - if: steps.gate.outputs.go == 'true' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
+      # Only after the run's commit (its cards' "committed `sha`" lines), even when the Bake step failed on a card's error:
+      # a GITHUB_TOKEN push triggers no workflow, so the site build and the TTS save are run here.
+      - if: ${{ !cancelled() && steps.gate.outputs.go == 'true' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           grep -q 'committed `' "$RUNNER_TEMP/report.md" || exit 0
           gh workflow run site.yml && gh workflow run tts-save.yml
+
+      # A failed scheduled run (the commit failed, a card errored, or a step broke) would otherwise repeat unseen every
+      # 30 minutes: one Discord message with the run's link. The URL is never printed; a failed call only warns.
+      - name: Tell Discord
+        if: failure() && github.event_name == 'schedule'
+        shell: bash
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_CHANGELOG_WEBHOOK is not set; no Discord message"; exit 0; fi
+          jq -n --arg run "$RUN" '{content: ("Card edits: the scheduled bake failed. " + $run), allowed_mentions: {parse: []}}' \
+            | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK" \
+            || echo "::warning::the Discord webhook call failed"
