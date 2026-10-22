@@ -284,9 +284,9 @@ export function renderStats(root, ctx, params) {
   });
   if (typeRows.length) charts.push(card("types", "Types on cards", "", hbar(typeRows), table(["Type", "Cards"], typeRows.map(r => [r.label, r.value]))));
 
-  // 8 timing tags
+  // 8 timing tags (not neutral ones such as Action)
   const tags = new Map();
-  for (const c of pool) for (const m of (c.ability || "").matchAll(new RegExp(TAG.source, "g"))) if (tagInfo(m[1])) tags.set(m[1], (tags.get(m[1]) || 0) + 1);
+  for (const c of pool) for (const m of (c.ability || "").matchAll(new RegExp(TAG.source, "g"))) if (tagInfo(m[1]) && tagInfo(m[1]).group !== "neutral") tags.set(m[1], (tags.get(m[1]) || 0) + 1);
   const tagRows = desc(tags).slice(0, 18).map(([t, v]) => ({ label: `(${t}) ${tagInfo(t).meaning}`, value: v, html: badgeHtml(t) }));
   if (tagRows.length) charts.push(card("tags", "Timing tags", "", hbar(tagRows, { labelWidth: 110, unit: "uses" }),
     table(["Tag", "Meaning", "Uses"], desc(tags).map(([t, v]) => [`(${t})`, tagInfo(t).meaning, v]), 2)));
