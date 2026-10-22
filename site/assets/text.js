@@ -37,23 +37,32 @@ export const badgeHtml = tag => {
   return t ? `<span class="badge ${t.group}" data-tip="${esc(`(${tag}) ${t.meaning}`)}">${esc(tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
 };
 
+// words a one-word name may follow: verbs and little words ("Summon Jetpack", "If Gasoline"; "Evil Quote" is something else)
+const LEAD = /^(?:Summon|Resummon|Equip|Create|Cleanse|Inflict|Draw|Acquire|Revive|Gain|Give|Steal|Copy|Become|Remove|Destroy|Discard|Use|Play|Return|Swap|Choose|Target|If|When|Whenever|While|Once|Until|Unless|After|Before|Then|And|Or|A|An|The|This|That|These|Each|Every|Any|Your|Its)$/;
+
 /** Build the renderer once per data load: knows icons and which card names to link. */
 export function makeRenderer({ cards, icons }) {
-  // link card names of 3+ characters, matched case-sensitively. A one-word name ("Rope", "Bomb") doesn't count at the
-  // start of a sentence or right after another capitalized word ("Flame Bomb" is something else).
+  // card names of 3+ characters by printed title or file name: any case, either apostrophe, trailing !?. optional, a
+  // plural or possessive ending kept in the link ("Copper Swords", "Grodus X's")
+  const fold = s => String(s || "").trim().toLowerCase().replace(/[‘’]/g, "'").replace(/\s+/g, " ");
   const byName = new Map();
-  for (const c of cards) {
-    const n = c.name.trim();
-    if (n.length < 3 || byName.has(n)) continue;
-    byName.set(n, c);
-  }
-  const isRef = (name, text, i) => {
-    if (/\s/.test(name)) return true;
-    const before = text.slice(0, i).trimEnd();
-    return !!before && !/[.!?:\n]$/.test(before) && !/(?:^|[\s(])[A-Z][\w'’-]*$/.test(before);
+  const add = (n, c) => { const k = fold(n); if (k.length >= 3 && !byName.has(k)) byName.set(k, c); };
+  for (const c of cards) add(c.name, c);
+  for (const c of cards) add(c.key, c);
+  for (const c of cards) add(c.name.trim().replace(/[!?.]+$/, ""), c);      // "Party" for Party!
+  const isRef = (m, text, card) => {
+    const t = m[1], spelt = [card.name.trim(), String(card.key || "").trim()];
+    if (t === t.toUpperCase() && t !== t.toLowerCase() && !spelt.includes(t)) return false;   // capitals it doesn't print: a heading ("PANDA")
+    if (/\s/.test(t)) return true;
+    // one word: as spelt or capitalized ("Springtrap", never "stay"), not a label ("Cat: +2 SPD"), after a LEAD word or a card
+    if (!(spelt.includes(t) && !m[2]) && !/^[A-Z]/.test(t)) return false;
+    if (text[m.index + m[0].length] === ":") return false;
+    const w = /(?:^|[\s(“"‘'])([A-Z][\w'’-]*)[^\S\n]+$/.exec(text.slice(0, m.index));
+    return !w || LEAD.test(w[1]) || byName.has(fold(w[1]));
   };
-  const names = [...byName.keys()].sort((a, b) => b.length - a.length).map(n => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  const nameRe = names.length ? new RegExp(`(?<![\\w'’])(${names.join("|")})(?![\\w'’])`, "g") : null;
+  const pat = k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/'/g, "['‘’]").replace(/ /g, "\\s+");
+  const names = [...byName.keys()].sort((a, b) => b.length - a.length).map(pat);
+  const nameRe = names.length ? new RegExp(`(?<![\\w'‘’])(${names.join("|")})((?:['‘’]s|(?<=s)['‘’]|e?s)(?![\\w'‘’]))?(?![\\w'‘’])`, "gi") : null;
   const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,48})\\]|${TAG.source}`, "g");
 
   function icon(token) {
@@ -64,15 +73,19 @@ export function makeRenderer({ cards, icons }) {
     return variant && variant.trim().toLowerCase() === "no" ? `<span class="tok-no">${img}</span>` : img;
   }
 
+  function* refs(text, selfName) {
+    for (const m of text.matchAll(nameRe)) {
+      const card = byName.get(fold(m[1]));
+      if (card && card.name !== selfName && isRef(m, text, card)) yield [m, card];
+    }
+  }
+
   function linkNames(text, selfName, out) {
     if (!nameRe) { out.push(esc(text)); return; }
     let last = 0;
-    nameRe.lastIndex = 0;
-    for (const m of text.matchAll(nameRe)) {
-      const name = m[1], card = byName.get(name), i = m.index;
-      if (!card || name === selfName || !isRef(name, text, i)) continue;
-      out.push(esc(text.slice(last, i)), `<a class="card-ref" href="#/card/${card.id}" data-card="${card.id}">${esc(name)}</a>`);
-      last = i + name.length;
+    for (const [m, card] of refs(text, selfName)) {
+      out.push(esc(text.slice(last, m.index)), `<a class="card-ref" href="#/card/${card.id}" data-card="${card.id}">${esc(m[0])}</a>`);
+      last = m.index + m[0].length;
     }
     out.push(esc(text.slice(last)));
   }
@@ -97,11 +110,7 @@ export function makeRenderer({ cards, icons }) {
   function mentions(text, selfName = "") {
     const found = new Set();
     if (!text || !nameRe) return found;
-    const flat = text.replace(PIECE, " ");
-    for (const m of flat.matchAll(nameRe)) {
-      const card = byName.get(m[1]);
-      if (card && m[1] !== selfName && isRef(m[1], flat, m.index)) found.add(card.id);
-    }
+    for (const [, card] of refs(text.replace(PIECE, " "), selfName)) found.add(card.id);
     return found;
   }
   return { render, mentions, icon };
