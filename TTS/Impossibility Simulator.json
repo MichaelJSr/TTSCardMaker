@@ -231,7 +231,7 @@
     "TurnColor": ""
   },
   "DecalPallet": [],
-  "LuaScript": "-- ============================================================\n--  CARD RESIZE ON LEAVE CONTAINER\n-- ============================================================\n\nlocal LARGE_CARD_SCALE = {x=3, y=1, z=3}\n\nlocal resizeTargets = {\n    [\"Azamoth the Possessed Vessel\"] = true,\n    [\"Igor Roballtowski\"]            = true,\n    [\"Mettaton EX\"]                  = true,\n    [\"Mettaton NEO\"]                 = true,\n    [\"Militron (No Armor)\"]          = true,\n    [\"Morpho Knight\"]                = true,\n    [\"Shadow Queen\"]                 = true,\n}\n\nlocal resizedAlready = {} -- GUID → true\n\nfunction onObjectLeaveContainer(container, obj)\n    if obj.tag ~= \"Card\" then return end\n    if not resizeTargets[obj.getName()] then return end\n\n    local guid = obj.getGUID()\n    if resizedAlready[guid] then return end\n\n    Wait.frames(function()\n        if obj and obj.getGUID() ~= nil then\n            obj.setScale(LARGE_CARD_SCALE)\n            resizedAlready[guid] = true\n        end\n    end, 3)\nend\n\n-- ============================================================\n--  TEAM & HAND ZONE MANAGER\n-- ============================================================\n\n-- TTS team names: None, Clubs, Diamonds, Hearts, Spades, Jokers\nlocal TEAMS = {\n    [\"Hearts\"] = {\"Red\", \"Orange\", \"Green\"},\n    [\"Clubs\"]  = {\"Blue\", \"Purple\", \"Pink\"},\n}\n\nlocal HAND_ZONE_GUIDS = {\n    [\"8a8116\"] = \"Red\",\n    [\"e4d480\"] = \"Red\",\n    [\"4fa97e\"] = \"Red\",\n    [\"475bdf\"] = \"Red\",\n    [\"49ade4\"] = \"Red\",\n    [\"bb795f\"] = \"Orange\",\n    [\"4621a8\"] = \"Green\",\n    [\"ed6b15\"] = \"Green\",\n\n    [\"3a3ef8\"] = \"Blue\",\n    [\"14dbec\"] = \"Blue\",\n    [\"2429b2\"] = \"Blue\",\n    [\"fd486e\"] = \"Blue\",\n    [\"d2f475\"] = \"Blue\",\n    [\"9c8aa9\"] = \"Purple\",\n    [\"a9dc1d\"] = \"Pink\",\n    [\"a44aae\"] = \"Pink\",\n}\n\n-- ============================================================\n--  CONSTANTS\n-- ============================================================\n\nlocal ALL_SEAT_COLORS = {\n    \"Red\", \"Blue\", \"Green\", \"Teal\", \"Purple\",\n    \"Pink\", \"Orange\", \"Yellow\", \"White\", \"Brown\"\n}\n\nlocal SEAT_COLOR_RGB = {\n    Red    = {r=0.856, g=0.1,   b=0.094},\n    Blue   = {r=0.118, g=0.53,  b=1},\n    Green  = {r=0.192, g=0.7,   b=0.168},\n    Teal   = {r=0,     g=0.502, b=0.502},\n    Purple = {r=0.627, g=0.125, b=0.941},\n    Pink   = {r=0.96,  g=0.44,  b=0.8},\n    Orange = {r=0.956, g=0.392, b=0.082},\n    Yellow = {r=0.905, g=0.898, b=0.172},\n    White  = {r=1,     g=1,     b=1},\n    Brown  = {r=0.443, g=0.231, b=0.09},\n}\n\nlocal COLOR_TO_TEAM = {}\nlocal VALID_SEAT_COLOR = {}\n\nfor _, c in ipairs(ALL_SEAT_COLORS) do\n    VALID_SEAT_COLOR[c] = true\nend\n\nfor teamName, colors in pairs(TEAMS) do\n    for _, color in ipairs(colors) do\n        COLOR_TO_TEAM[color] = teamName\n    end\nend\n\n-- ============================================================\n--  STATE\n-- ============================================================\n\nlocal zoneOwnership      = {}  -- GUID → owner colour\nlocal zoneTeam           = {}  -- GUID → team\nlocal zoneDataCache      = {}  -- GUID → cached JSON table\nlocal lastPickedUpBy     = {}  -- object GUID → picker colour\nlocal transferInProgress = {}  -- zone GUID → bool\n\n-- ============================================================\n--  UTILITY\n-- ============================================================\n\nlocal function shallowCopy(original)\n    local copy = {}\n    for k,v in pairs(original) do\n        copy[k] = v\n    end\n    return copy\nend\n\n-- ============================================================\n--  ZONE INDEXING\n-- ============================================================\n\nlocal function indexHandZones()\n    zoneOwnership = {}\n    zoneTeam      = {}\n    zoneDataCache = {}\n\n    for guid, seatColor in pairs(HAND_ZONE_GUIDS) do\n        local zone = getObjectFromGUID(guid)\n        if zone then\n            zoneOwnership[guid] = seatColor\n            zoneTeam[guid]      = COLOR_TO_TEAM[seatColor]\n            zoneDataCache[guid] = JSON.decode(zone.getJSON())\n\n            local tint = SEAT_COLOR_RGB[seatColor]\n            if tint then zone.setColorTint(tint) end\n        else\n            print(\"[HandZone] Missing zone GUID: \" .. guid)\n        end\n    end\nend\n\n-- ============================================================\n--  PICKUP TRACKING\n-- ============================================================\n\nfunction onObjectPickUp(player_color, object)\n    lastPickedUpBy[object.getGUID()] = player_color\nend\n\nfunction onObjectDrop(player_color, object)\n    local guid = object.getGUID()\n    Wait.frames(function()\n        lastPickedUpBy[guid] = nil\n    end, 1)\nend\n\nfunction onObjectDestroy(object)\n    resizedAlready[object.getGUID()] = nil\n    lastPickedUpBy[object.getGUID()] = nil\nend\n\n-- ============================================================\n--  TEAM ASSIGNMENT\n-- ============================================================\n\nfunction onPlayerChangeColor(player_color)\n    if not VALID_SEAT_COLOR[player_color] then return end\n\n    local player = Player[player_color]\n    if not player or not player.seated then return end\n\n    local team = COLOR_TO_TEAM[player_color]\n    player.team = team or \"None\"\n\n    if team then\n        broadcastToAll(\n            player.steam_name .. \" joined \" .. player_color ..\n            \" → assigned to \" .. team .. \".\",\n            {r=1, g=1, b=1}\n        )\n    end\nend\n\n-- ============================================================\n--  LOAD\n-- ============================================================\n\nfunction onLoad()\n    Wait.time(function()\n        indexHandZones()\n        for _, color in ipairs(getSeatedPlayers()) do\n            onPlayerChangeColor(color)\n        end\n    end, 1)\nend\n\n-- ============================================================\n--  RESPAWN ZONE FOR NEW OWNER\n-- ============================================================\n\nlocal function respawnZoneForColor(zone, newColor, callback)\n    local oldGUID   = zone.getGUID()\n    local oldOwner  = zoneOwnership[oldGUID]\n    local baseData  = zoneDataCache[oldGUID]\n    if not baseData then return end\n\n    local pos   = zone.getPosition()\n    local rot   = zone.getRotation()\n    local scale = zone.getScale()\n\n    local data = shallowCopy(baseData)\n\n    data.FogColor = newColor\n\n    local tint = SEAT_COLOR_RGB[newColor]\n    if tint then\n        data.ColorDiffuse = {r=tint.r, g=tint.g, b=tint.b, a=0}\n    end\n\n    zone.destruct()\n\n    spawnObjectJSON({\n        json         = JSON.encode(data),\n        position     = pos,\n        rotation     = rot,\n        scale        = scale,\n        snap_to_grid = false,\n        callback_function = function(spawned)\n            local newGUID = spawned.getGUID()\n\n            zoneOwnership[oldGUID] = nil\n            zoneTeam[oldGUID]      = nil\n            zoneDataCache[oldGUID] = nil\n            transferInProgress[oldGUID] = nil\n\n            zoneOwnership[newGUID] = newColor\n            zoneTeam[newGUID]      = COLOR_TO_TEAM[newColor]\n            zoneDataCache[newGUID] = data\n\n            if tint then spawned.setColorTint(tint) end\n\n            if callback then callback(spawned) end\n        end\n    })\n\n    -- Failsafe cleanup\n    Wait.time(function()\n        transferInProgress[oldGUID] = nil\n    end, 1.5)\nend\n\n-- ============================================================\n--  ZONE ENTRY — ownership transfer\n-- ============================================================\n\nfunction onObjectEnterZone(zone, object)\n    if object.tag ~= \"Card\" then return end\n\n    local zoneGUID = zone.getGUID()\n    if transferInProgress[zoneGUID] then return end\n\n    local currentOwner = zoneOwnership[zoneGUID]\n    if not currentOwner then return end\n\n    local moverColor = lastPickedUpBy[object.getGUID()]\n    if not moverColor or moverColor == \"\" or moverColor == \"Black\" then return end\n\n    -- Team check (using cached team)\n    if zoneTeam[zoneGUID] ~= COLOR_TO_TEAM[moverColor] then\n        broadcastToColor(\n            \"You cannot place cards in another team's zone.\",\n            moverColor, {r=1, g=0.3, b=0.3}\n        )\n        return\n    end\n\n    if currentOwner == moverColor then return end\n\n    transferInProgress[zoneGUID] = true\n    local previousOwner = currentOwner\n\n    respawnZoneForColor(zone, moverColor, function(newZone)\n        transferInProgress[newZone.getGUID()] = nil\n    end)\n\n    broadcastToColor(\n        \"You claimed a hand zone (was \" .. previousOwner .. \").\",\n        moverColor, {r=1, g=1, b=1}\n    )\nend",
+  "LuaScript": "-- Impossibility Simulator: seat teams, large cards resized out of containers\n\n-- Seat -> TTS team; other seats get \"None\"\nlocal TEAMS = {\n    Red  = \"Hearts\", Orange = \"Hearts\", Green = \"Hearts\",\n    Blue = \"Clubs\",  Purple = \"Clubs\",  Pink  = \"Clubs\",\n}\n\nlocal LARGE_CARD_SCALE = {x=3, y=1, z=3}\n\n-- Large cards by Nickname; the save updater rewrites these rows\nlocal resizeTargets = {\n    [\"Azamoth the Possessed Vessel\"] = true,\n    [\"Igor Roballtowski\"]            = true,\n    [\"Mettaton EX\"]                  = true,\n    [\"Mettaton NEO\"]                 = true,\n    [\"Militron (No Armor)\"]          = true,\n    [\"Morpho Knight\"]                = true,\n    [\"Shadow Queen\"]                 = true,\n}\n\nfunction onPlayerChangeColor(color)\n    if color == \"Grey\" or color == \"Black\" then return end\n    local player = Player[color]\n    if not player or not player.seated then return end\n    local team = TEAMS[color]\n    player.team = team or \"None\"\n    if team then\n        broadcastToAll(player.steam_name .. \" joined \" .. color .. \" → assigned to \" .. team .. \".\", {r=1, g=1, b=1})\n    end\nend\n\nfunction onLoad()\n    -- players already seated, once the load settles\n    Wait.time(function()\n        for _, color in ipairs(getSeatedPlayers()) do\n            onPlayerChangeColor(color)\n        end\n    end, 1)\nend\n\nfunction onObjectLeaveContainer(container, obj)\n    if obj.type ~= \"Card\" or not resizeTargets[obj.getName()] then return end\n    -- after the take has placed it\n    Wait.frames(function()\n        if not obj.isDestroyed() then obj.setScale(LARGE_CARD_SCALE) end\n    end, 3)\nend\n",
   "LuaScriptState": "",
   "XmlUI": "<!-- Xml UI. See documentation: https://api.tabletopsimulator.com/ui/introUI/ -->",
   "SnapPoints": [
@@ -1097,7 +1097,7 @@
       "HideWhenFaceDown": false,
       "Hands": false,
       "MaterialIndex": 1,
-      "LuaScript": "tableHeightOffset = -9\n\nfunction onSave()\n    saved_data = JSON.encode({tid=tableImageData, cd=checkData})\n    --saved_data = \"\"\n    return saved_data\nend\n\nfunction onload(saved_data)\n    --Loads the tracking for if the game has started yet\n    if saved_data ~= \"\" then\n         local loaded_data = JSON.decode(saved_data)\n         tableImageData = loaded_data.tid\n         checkData = loaded_data.cd\n    else\n        tableImageData = {}\n        checkData = {move=false, scale=false}\n    end\n\n    --Disables interactable status of objects with GUID in list\n    for _, guid in ipairs(ref_noninteractable) do\n        local obj = getObjectFromGUID(guid)\n        if obj then obj.interactable = false end\n    end\n\n    --Establish references to table parts\n    obj_leg1 = getObjectFromGUID(\"afc863\")\n    obj_leg2 = getObjectFromGUID(\"c8edca\")\n    obj_leg3 = getObjectFromGUID(\"393bf7\")\n    obj_leg4 = getObjectFromGUID(\"12c65e\")\n    obj_surface = getObjectFromGUID(\"4ee1f2\")\n    obj_side_top = getObjectFromGUID(\"35b95f\")\n    obj_side_bot = getObjectFromGUID(\"f938a2\")\n    obj_side_lef = getObjectFromGUID(\"9f95fd\")\n    obj_side_rig = getObjectFromGUID(\"5af8f2\")\n\n    controlActive = false\n    createOpenCloseButton()\nend\n\n\n\n--Activation/deactivation of control panel\n\n\n\n--Activated by clicking on\nfunction click_toggleControl(_, color)\n    if permissionCheck(color) then\n        if not controlActive then\n            --Activate control panel\n            controlActive = true\n            self.clearButtons()\n            createOpenCloseButton()\n            createSurfaceInput()\n            createSurfaceButtons()\n            createScaleInput()\n            createScaleButtons()\n        else\n            --Deactivate control panel\n            controlActive = false\n            self.clearButtons()\n            self.clearInputs()\n            createOpenCloseButton()\n\n        end\n    end\nend\n\n\n\n\n--Table surface control\n\n\n\n--Changes table surface\nfunction click_applySurface(_, color)\n    if permissionCheck(color) then\n        updateSurface()\n        broadcastToAll(\"New Table Image Applied\", {0.2,0.9,0.2})\n    end\nend\n\n--Saves table surface\nfunction click_saveSurface(_, color)\n    if permissionCheck(color) then\n        local nickname = self.getInputs()[1].value\n        local url = self.getInputs()[2].value\n        if nickname == \"\" then\n            --No nickname\n            broadcastToAll(\"Please supply a nickname for this save.\", {0.9,0.2,0.2})\n        else\n            --Nickname exists\n\n            if findInImageDataIndex(url, nickname) == nil then\n                --Save doesn't exist already\n                table.insert(tableImageData, {url=url, name=nickname})\n                broadcastToAll(\"Image URL saved to memory.\", {0.2,0.9,0.2})\n                --Refresh buttons\n                self.clearButtons()\n                createOpenCloseButton()\n                createSurfaceButtons()\n                createScaleButtons()\n            else\n                --Save exists already\n                broadcastToAll(\"Memory already contains a save with this Name or URL. Delete it first.\", {0.9,0.2,0.2})\n            end\n        end\n    end\nend\n\n--Loads table surface\nfunction click_loadMemory(_, color, index)\n    if permissionCheck(color) then\n        self.editInput({index=0, value=tableImageData[index].name})\n        self.editInput({index=1, value=tableImageData[index].url})\n        updateSurface()\n        broadcastToAll(\"Table Image Loaded\", {0.2,0.9,0.2})\n    end\nend\n\n--Deletes table surface\nfunction click_deleteMemory(_, color, index)\n    if permissionCheck(color) then\n        table.remove(tableImageData, index)\n        self.clearButtons()\n        createOpenCloseButton()\n        createSurfaceButtons()\n        createScaleButtons()\n        broadcastToAll(\"Element Removed from Memory\", {0.2,0.9,0.2})\n    end\nend\n\n--Updates surface from the values in the input field\nfunction updateSurface()\n    local customInfo = obj_surface.getCustomObject()\n    customInfo.diffuse = self.getInputs()[2].value\n    obj_surface.setCustomObject(customInfo)\n    obj_surface = obj_surface.reload()\nend\n\n\n\n--Table Scale control\n\n\n\n--Applies Scale to table pieces\nfunction click_applyScale(_, color)\n    if permissionCheck(color) then\n        local newWidth = tonumber(self.getInputs()[3].value)\n        local newDepth = tonumber(self.getInputs()[4].value)\n        if type(newWidth) ~= \"number\" then\n            broadcastToAll(\"Invalid Width\", {0.9,0.2,0.2})\n            return\n        elseif type(newDepth) ~= \"number\" then\n            broadcastToAll(\"Invalid Depth\", {0.9,0.2,0.2})\n            return\n        elseif newWidth<0.1 or newDepth<0.1 then\n            broadcastToAll(\"Scale cannot go below 0.1\", {0.9,0.2,0.2})\n            return\n        elseif newWidth>12 or newDepth>12 then\n            broadcastToAll(\"Scale should not go over 12 (world size limitation)\", {0.9,0.2,0.2})\n            return\n        else\n            changeTableScale(math.abs(newWidth), math.abs(newDepth))\n            broadcastToAll(\"Scale applied.\", {0.2,0.9,0.2})\n        end\n    end\nend\n\n--Checks/unchecks move box for hands\nfunction click_checkMove(_, color)\n    if permissionCheck(color) then\n        local find_func = function(o) return o.click_function==\"click_checkMove\" end\n        if checkData.move == true then\n            checkData.move = false\n            local buttonEntry = findButton(self, find_func)\n            self.editButton({index=buttonEntry.index, label=\"\"})\n        else\n            checkData.move = true\n            local buttonEntry = findButton(self, find_func)\n            self.editButton({index=buttonEntry.index, label=string.char(10008)})\n        end\n    end\nend\n\n--Checks/unchecks scale box for hands\n--This button was disabled for technical reasons\n--[[\nfunction click_checkScale(_, color)\n    if permissionCheck(color) then\n        local find_func = function(o) return o.click_function==\"click_checkScale\" end\n        if checkData.scale == true then\n            checkData.scale = false\n            local buttonEntry = findButton(self, find_func)\n            self.editButton({index=buttonEntry.index, label=\"\"})\n        else\n            checkData.scale = true\n            local buttonEntry = findButton(self, find_func)\n            self.editButton({index=buttonEntry.index, label=string.char(10008)})\n        end\n    end\nend\n]]\n\n--Alters scale of elements and moves them\nfunction changeTableScale(width, depth)\n    --Scaling factors used to translate scale to position offset\n    local width2pos = (width-1) * 18\n    local depth2pos = (depth-1) * 18\n\n    --Hand zone movement\n    if checkData.move == true then\n        for _, pc in ipairs(ref_playerColor) do\n            if Player[pc].getHandCount() > 0 then\n                moveHandZone(Player[pc], width2pos, depth2pos)\n            end\n        end\n    end\n    --Hand zone scaling\n    --The button to enable this was disabled for technical reasons\n    if checkData.scale == true then\n        for _, pc in ipairs(ref_playerColor) do\n            if Player[pc].getHandCount() > 0 then\n                scaleHandZone(Player[pc], width, depth)\n            end\n        end\n    end\n\n    --Resizing table elements\n    obj_side_top.setScale({width, 1, 1})\n    obj_side_bot.setScale({width, 1, 1})\n    obj_side_lef.setScale({depth, 1, 1})\n    obj_side_rig.setScale({depth, 1, 1})\n    obj_surface.setScale({width, 1, depth})\n\n    --Moving table elements to accomodate new scale\n    obj_side_lef.setPosition({-width2pos,tableHeightOffset,0})\n    obj_side_rig.setPosition({ width2pos,tableHeightOffset,0})\n    obj_side_top.setPosition({0,tableHeightOffset, depth2pos})\n    obj_side_bot.setPosition({0,tableHeightOffset,-depth2pos})\n    obj_leg1.setPosition({-width2pos,tableHeightOffset,-depth2pos})\n    obj_leg2.setPosition({-width2pos,tableHeightOffset, depth2pos})\n    obj_leg3.setPosition({ width2pos,tableHeightOffset, depth2pos})\n    obj_leg4.setPosition({ width2pos,tableHeightOffset,-depth2pos})\n    self.setPosition(obj_leg4.positionToWorld({-22.12, 8.74,-19.16}))\n    --Only enabled when changing tableHeightOffset\n    --obj_surface.setPosition({0,tableHeightOffset,0})\nend\n\n--Move hand zone, p=player reference, facts are scaling factors\nfunction moveHandZone(p, width2pos, depth2pos)\n    local widthX = obj_side_rig.getPosition().x\n    local depthZ = obj_side_top.getPosition().z\n    for i=1, p.getHandCount() do\n        local handT = p.getHandTransform()\n        local pos = handT.position\n        local y = handT.rotation.y\n\n        if y<45 or y>320 or y>135 and y<225 then\n            if pos.z > 0 then\n                pos.z = pos.z + depth2pos - depthZ\n            else\n                pos.z = pos.z - depth2pos + depthZ\n            end\n        else\n            if pos.x > 0 then\n                pos.x = pos.x + width2pos - widthX\n            else\n                pos.x = pos.x - width2pos + widthX\n            end\n        end\n\n        --Only enabled when changing tableHeightOffset\n        --pos.y = tableHeightOffset + 14\n\n        handT.position = pos\n        p.setHandTransform(handT, i)\n    end\nend\n\n\n---Scales hand zones, p=player reference, facts are scaling factors\nfunction scaleHandZone(p, width, depth)\n    local widthFact = width / obj_side_top.getScale().x\n    local depthFact = depth / obj_side_lef.getScale().x\n    for i=1, p.getHandCount() do\n        local handT = p.getHandTransform()\n        local scale = handT.scale\n        local y = handT.rotation.y\n        if y<45 or y>320 or y>135 and y<225 then\n            scale.x = scale.x * widthFact\n        else\n            scale.x = scale.x * depthFact\n        end\n        handT.scale = scale\n        p.setHandTransform(handT, i)\n    end\nend\n\n\n\n--Information gathering\n\n\n\n--Checks if a color is promoted or host\nfunction permissionCheck(color)\n    if Player[color].host==true or Player[color].promoted==true then\n        return true\n    else\n        return false\n    end\nend\n\n--Locates a string saved within memory file\nfunction findInImageDataIndex(...)\n    for _, str in ipairs({...}) do\n        for i, v in ipairs(tableImageData) do\n            if v.url == str or v.name == str then\n                return i\n            end\n        end\n    end\n    return nil\nend\n\n--Round number (num) to the Nth decimal (dec)\nfunction round(num, dec)\n  local mult = 10^(dec or 0)\n  return math.floor(num * mult + 0.5) / mult\nend\n\n--Locates a button with a helper function\nfunction findButton(obj, func)\n    if func==nil then error(\"No func supplied to findButton\") end\n    for _, v in ipairs(obj.getButtons()) do\n        if func(v) then\n            return v\n        end\n    end\n    return nil\nend\n\n\n\n--Creation of buttons/inputs\n\n\n\nfunction createOpenCloseButton()\n    local tooltip = \"Open Table Control Panel\"\n    if controlActive then\n        tooltip = \"Close Table Control Panel\"\n    end\n    self.createButton({\n        click_function=\"click_toggleControl\", function_owner=self,\n        position={0,0,0}, rotation={-45,0,0}, height=400, width=400,\n        color={1,1,1,0}, tooltip=tooltip\n    })\nend\n\nfunction createSurfaceInput()\n    local currentURL = obj_surface.getCustomObject().diffuse\n    local nickname = \"\"\n    if findInImageDataIndex(currentURL) ~= nil then\n        nickname = tableImageData[findInImageDataIndex(currentURL)].name\n    end\n    self.createInput({\n        label=\"Nickname\", input_function=\"none\", function_owner=self,\n        alignment=3, position={0,0,2}, height=224, width=4000,\n        font_size=200, tooltip=\"Enter nickname for table image (only used for save)\",\n        value=nickname\n    })\n    self.createInput({\n        label=\"URL\", input_function=\"none\", function_owner=self,\n        alignment=3, position={0,0,3}, height=224, width=4000,\n        font_size=200, tooltip=\"Enter URL for tabletop image\",\n        value=currentURL\n    })\nend\n\nfunction createSurfaceButtons()\n    --Label\n    self.createButton({\n        label=\"Tabletop Surface Image\", click_function=\"none\",\n        position={0,0,1}, height=0, width=0, font_size=300, font_color={1,1,1}\n    })\n    --Functional\n    self.createButton({\n        label=\"Apply Image\\nTo Table\", click_function=\"click_applySurface\",\n        function_owner=self, tooltip=\"Apply URL as table image\",\n        position={2,0,4}, height=440, width=1400, font_size=200,\n    })\n    self.createButton({\n        label=\"Save Image\\nTo Memory\", click_function=\"click_saveSurface\",\n        function_owner=self, tooltip=\"Record URL into memory (requires nickname)\",\n        position={-2,0,4}, height=440, width=1400, font_size=200,\n    })\n    --Label\n    self.createButton({\n        label=\"Load From Memory\", click_function=\"none\",\n        position={0,0,5.5}, height=0, width=0, font_size=300, font_color={1,1,1}\n    })\n    --Saves, created dynamically from memory file\n    for i, memoryEntry in ipairs(tableImageData) do\n        --Load\n        local funcName = i..\"loadMemory\"\n        local func = function(x,y) click_loadMemory(x,y,i) end\n        self.setVar(funcName, func)\n        self.createButton({\n            label=memoryEntry.name, click_function=funcName,\n            function_owner=self, tooltip=memoryEntry.url, font_size=200,\n            position={-0.6,0,6.5+0.5*(i-1)}, height=240, width=3300,\n        })\n        --Delete\n        local funcName = i..\"deleteMemory\"\n        local func = function(x,y) click_deleteMemory(x,y,i) end\n        self.setVar(funcName, func)\n        self.createButton({\n            label=\"DELETE\", click_function=funcName,\n            function_owner=self, tooltip=\"\",\n            position={3.6,0,6.5+0.5*(i-1)}, height=240, width=600,\n            font_size=160, font_color={1,0,0}, color={0.8,0.8,0.8}\n        })\n    end\nend\n\nfunction createScaleInput()\n    self.createInput({\n        label=string.char(8644), input_function=\"none\", function_owner=self,\n        alignment=3, position={-8.5,0,2}, height=224, width=400,\n        font_size=200, tooltip=\"Table Width\",\n        value=round(obj_side_top.getScale().x, 1)\n    })\n    self.createInput({\n        label=string.char(8645), input_function=\"none\", function_owner=self,\n        alignment=3, position={-7.5,0,2}, height=224, width=400,\n        font_size=200, tooltip=\"Table Depth\",\n        value=round(obj_side_lef.getScale().x, 1)\n    })\nend\n\nfunction createScaleButtons()\n    --Labels\n    self.createButton({\n        label=\"Table Scale\", click_function=\"none\",\n        position={-8,0,1}, height=0, width=0, font_size=300, font_color={1,1,1}\n    })\n    self.createButton({\n        label=string.char(8644)..\"            \"..string.char(8645),\n        click_function=\"none\",\n        position={-8,0,2}, height=0, width=0, font_size=300, font_color={1,1,1}\n    })\n    self.createButton({\n        label=\"Move Hands:\", click_function=\"none\",\n        position={-8.3,0,3}, height=0, width=0, font_size=200, font_color={1,1,1}\n    })\n    --Disabled due to me removing the feature for technical reasons\n    --[[\n    self.createButton({\n        label=\"Scale Hands:\", click_function=\"none\",\n        position={-8.3,0,4}, height=0, width=0, font_size=200, font_color={1,1,1}\n    })\n    ]]\n    --Checkboxes\n    local label = \"\"\n    if checkData.move == true then label = string.char(10008) end\n    self.createButton({\n        label=label, click_function=\"click_checkMove\",\n        function_owner=self, tooltip=\"Check to move hands when table is rescaled\",\n        position={-6.8,0,3}, height=224, width=224, font_size=200,\n    })\n    --[[\n    local label = \"\"\n    if checkData.scale == true then label = string.char(10008) end\n    self.createButton({\n        label=label, click_function=\"click_checkScale\",\n        function_owner=self, tooltip=\"Check to scale the width of hands when table is rescaled\",\n        position={-6.8,0,4}, height=224, width=224, font_size=200,\n    })\n    ]]\n    --Apply button\n    self.createButton({\n        label=\"Apply Scale\", click_function=\"click_applyScale\",\n        function_owner=self, tooltip=\"Apply width/depth to table\",\n        position={-8,0,4}, height=440, width=1400, font_size=200,\n    })\nend\n\n\n\n\n\n--Data tables\n\n\n\n\nref_noninteractable = {\n    \"afc863\",\"c8edca\",\"393bf7\",\"12c65e\",\"f938a2\",\"9f95fd\",\"35b95f\",\n    \"5af8f2\",\"4ee1f2\",\"bd69bd\"\n}\n\nref_playerColor = {\n    \"White\", \"Brown\", \"Red\", \"Orange\", \"Yellow\",\n    \"Green\", \"Teal\", \"Blue\", \"Purple\", \"Pink\", \"Black\"\n}\n\n--Dummy function, absorbs unwanted triggers\nfunction none() end\n",
+      "LuaScript": "tableHeightOffset = -9\n\nfunction onSave()\n    saved_data = JSON.encode({tid=tableImageData, cd=checkData})\n    --saved_data = \"\"\n    return saved_data\nend\n\nfunction onload(saved_data)\n    --Loads the tracking for if the game has started yet\n    if saved_data ~= \"\" then\n         local loaded_data = JSON.decode(saved_data)\n         tableImageData = loaded_data.tid\n         checkData = loaded_data.cd\n    else\n        tableImageData = {}\n        checkData = {move=false, scale=false}\n    end\n\n    --Disables interactable status of objects with GUID in list\n    for _, guid in ipairs(ref_noninteractable) do\n        local obj = getObjectFromGUID(guid)\n        if obj then obj.interactable = false end\n    end\n\n    --Establish references to table parts\n    obj_leg1 = getObjectFromGUID(\"afc863\")\n    obj_leg2 = getObjectFromGUID(\"c8edca\")\n    obj_leg3 = getObjectFromGUID(\"393bf7\")\n    obj_leg4 = getObjectFromGUID(\"12c65e\")\n    obj_surface = getObjectFromGUID(\"4ee1f2\")\n    obj_side_top = getObjectFromGUID(\"35b95f\")\n    obj_side_bot = getObjectFromGUID(\"f938a2\")\n    obj_side_lef = getObjectFromGUID(\"9f95fd\")\n    obj_side_rig = getObjectFromGUID(\"5af8f2\")\n\n    controlActive = false\n    createOpenCloseButton()\nend\n\n\n\n--Activation/deactivation of control panel\n\n\n\n--Activated by clicking on\nfunction click_toggleControl(_, color)\n    if permissionCheck(color) then\n        if not controlActive then\n            --Activate control panel\n            controlActive = true\n            self.clearButtons()\n            createOpenCloseButton()\n            createSurfaceInput()\n            createSurfaceButtons()\n            createScaleInput()\n            createScaleButtons()\n        else\n            --Deactivate control panel\n            controlActive = false\n            self.clearButtons()\n            self.clearInputs()\n            createOpenCloseButton()\n\n        end\n    end\nend\n\n\n\n\n--Table surface control\n\n\n\n--Changes table surface\nfunction click_applySurface(_, color)\n    if permissionCheck(color) then\n        updateSurface()\n        broadcastToAll(\"New Table Image Applied\", {0.2,0.9,0.2})\n    end\nend\n\n--Saves table surface\nfunction click_saveSurface(_, color)\n    if permissionCheck(color) then\n        local nickname = self.getInputs()[1].value\n        local url = self.getInputs()[2].value\n        if nickname == \"\" then\n            --No nickname\n            broadcastToAll(\"Please supply a nickname for this save.\", {0.9,0.2,0.2})\n        else\n            --Nickname exists\n\n            if findInImageDataIndex(url, nickname) == nil then\n                --Save doesn't exist already\n                table.insert(tableImageData, {url=url, name=nickname})\n                broadcastToAll(\"Image URL saved to memory.\", {0.2,0.9,0.2})\n                --Refresh buttons\n                self.clearButtons()\n                createOpenCloseButton()\n                createSurfaceButtons()\n                createScaleButtons()\n            else\n                --Save exists already\n                broadcastToAll(\"Memory already contains a save with this Name or URL. Delete it first.\", {0.9,0.2,0.2})\n            end\n        end\n    end\nend\n\n--Loads table surface\nfunction click_loadMemory(_, color, index)\n    if permissionCheck(color) then\n        self.editInput({index=0, value=tableImageData[index].name})\n        self.editInput({index=1, value=tableImageData[index].url})\n        updateSurface()\n        broadcastToAll(\"Table Image Loaded\", {0.2,0.9,0.2})\n    end\nend\n\n--Deletes table surface\nfunction click_deleteMemory(_, color, index)\n    if permissionCheck(color) then\n        table.remove(tableImageData, index)\n        self.clearButtons()\n        createOpenCloseButton()\n        createSurfaceButtons()\n        createScaleButtons()\n        broadcastToAll(\"Element Removed from Memory\", {0.2,0.9,0.2})\n    end\nend\n\n--Updates surface from the values in the input field\nfunction updateSurface()\n    local customInfo = obj_surface.getCustomObject()\n    customInfo.diffuse = self.getInputs()[2].value\n    obj_surface.setCustomObject(customInfo)\n    obj_surface = obj_surface.reload()\nend\n\n\n\n--Table Scale control\n\n\n\n--Applies Scale to table pieces\nfunction click_applyScale(_, color)\n    if permissionCheck(color) then\n        local newWidth = tonumber(self.getInputs()[3].value)\n        local newDepth = tonumber(self.getInputs()[4].value)\n        if type(newWidth) ~= \"number\" then\n            broadcastToAll(\"Invalid Width\", {0.9,0.2,0.2})\n            return\n        elseif type(newDepth) ~= \"number\" then\n            broadcastToAll(\"Invalid Depth\", {0.9,0.2,0.2})\n            return\n        elseif newWidth<0.1 or newDepth<0.1 then\n            broadcastToAll(\"Scale cannot go below 0.1\", {0.9,0.2,0.2})\n            return\n        elseif newWidth>12 or newDepth>12 then\n            broadcastToAll(\"Scale should not go over 12 (world size limitation)\", {0.9,0.2,0.2})\n            return\n        else\n            changeTableScale(math.abs(newWidth), math.abs(newDepth))\n            broadcastToAll(\"Scale applied.\", {0.2,0.9,0.2})\n        end\n    end\nend\n\n--Checks/unchecks move box for hands\nfunction click_checkMove(_, color)\n    if permissionCheck(color) then\n        local find_func = function(o) return o.click_function==\"click_checkMove\" end\n        if checkData.move == true then\n            checkData.move = false\n            local buttonEntry = findButton(self, find_func)\n            self.editButton({index=buttonEntry.index, label=\"\"})\n        else\n            checkData.move = true\n            local buttonEntry = findButton(self, find_func)\n            self.editButton({index=buttonEntry.index, label=string.char(10008)})\n        end\n    end\nend\n\n--Checks/unchecks scale box for hands\n--This button was disabled for technical reasons\n--[[\nfunction click_checkScale(_, color)\n    if permissionCheck(color) then\n        local find_func = function(o) return o.click_function==\"click_checkScale\" end\n        if checkData.scale == true then\n            checkData.scale = false\n            local buttonEntry = findButton(self, find_func)\n            self.editButton({index=buttonEntry.index, label=\"\"})\n        else\n            checkData.scale = true\n            local buttonEntry = findButton(self, find_func)\n            self.editButton({index=buttonEntry.index, label=string.char(10008)})\n        end\n    end\nend\n]]\n\n--Alters scale of elements and moves them\nfunction changeTableScale(width, depth)\n    --Scaling factors used to translate scale to position offset\n    local width2pos = (width-1) * 18\n    local depth2pos = (depth-1) * 18\n\n    --Hand zone movement\n    if checkData.move == true then\n        for _, pc in ipairs(ref_playerColor) do\n            if Player[pc].getHandCount() > 0 then\n                moveHandZone(Player[pc], width2pos, depth2pos)\n            end\n        end\n    end\n    --Hand zone scaling\n    --The button to enable this was disabled for technical reasons\n    if checkData.scale == true then\n        for _, pc in ipairs(ref_playerColor) do\n            if Player[pc].getHandCount() > 0 then\n                scaleHandZone(Player[pc], width, depth)\n            end\n        end\n    end\n\n    --Resizing table elements\n    obj_side_top.setScale({width, 1, 1})\n    obj_side_bot.setScale({width, 1, 1})\n    obj_side_lef.setScale({depth, 1, 1})\n    obj_side_rig.setScale({depth, 1, 1})\n    obj_surface.setScale({width, 1, depth})\n\n    --Moving table elements to accomodate new scale\n    obj_side_lef.setPosition({-width2pos,tableHeightOffset,0})\n    obj_side_rig.setPosition({ width2pos,tableHeightOffset,0})\n    obj_side_top.setPosition({0,tableHeightOffset, depth2pos})\n    obj_side_bot.setPosition({0,tableHeightOffset,-depth2pos})\n    obj_leg1.setPosition({-width2pos,tableHeightOffset,-depth2pos})\n    obj_leg2.setPosition({-width2pos,tableHeightOffset, depth2pos})\n    obj_leg3.setPosition({ width2pos,tableHeightOffset, depth2pos})\n    obj_leg4.setPosition({ width2pos,tableHeightOffset,-depth2pos})\n    self.setPosition(obj_leg4.positionToWorld({-22.12, 8.74,-19.16}))\n    --Only enabled when changing tableHeightOffset\n    --obj_surface.setPosition({0,tableHeightOffset,0})\nend\n\n--Move hand zone, p=player reference, facts are scaling factors\nfunction moveHandZone(p, width2pos, depth2pos)\n    local widthX = obj_side_rig.getPosition().x\n    local depthZ = obj_side_top.getPosition().z\n    for i=1, p.getHandCount() do\n        local handT = p.getHandTransform(i)\n        local pos = handT.position\n        local y = handT.rotation.y\n\n        if y<45 or y>320 or y>135 and y<225 then\n            if pos.z > 0 then\n                pos.z = pos.z + depth2pos - depthZ\n            else\n                pos.z = pos.z - depth2pos + depthZ\n            end\n        else\n            if pos.x > 0 then\n                pos.x = pos.x + width2pos - widthX\n            else\n                pos.x = pos.x - width2pos + widthX\n            end\n        end\n\n        --Only enabled when changing tableHeightOffset\n        --pos.y = tableHeightOffset + 14\n\n        handT.position = pos\n        p.setHandTransform(handT, i)\n    end\nend\n\n\n---Scales hand zones, p=player reference, facts are scaling factors\nfunction scaleHandZone(p, width, depth)\n    local widthFact = width / obj_side_top.getScale().x\n    local depthFact = depth / obj_side_lef.getScale().x\n    for i=1, p.getHandCount() do\n        local handT = p.getHandTransform(i)\n        local scale = handT.scale\n        local y = handT.rotation.y\n        if y<45 or y>320 or y>135 and y<225 then\n            scale.x = scale.x * widthFact\n        else\n            scale.x = scale.x * depthFact\n        end\n        handT.scale = scale\n        p.setHandTransform(handT, i)\n    end\nend\n\n\n\n--Information gathering\n\n\n\n--Checks if a color is promoted or host\nfunction permissionCheck(color)\n    if Player[color].host==true or Player[color].promoted==true then\n        return true\n    else\n        return false\n    end\nend\n\n--Locates a string saved within memory file\nfunction findInImageDataIndex(...)\n    for _, str in ipairs({...}) do\n        for i, v in ipairs(tableImageData) do\n            if v.url == str or v.name == str then\n                return i\n            end\n        end\n    end\n    return nil\nend\n\n--Round number (num) to the Nth decimal (dec)\nfunction round(num, dec)\n  local mult = 10^(dec or 0)\n  return math.floor(num * mult + 0.5) / mult\nend\n\n--Locates a button with a helper function\nfunction findButton(obj, func)\n    if func==nil then error(\"No func supplied to findButton\") end\n    for _, v in ipairs(obj.getButtons()) do\n        if func(v) then\n            return v\n        end\n    end\n    return nil\nend\n\n\n\n--Creation of buttons/inputs\n\n\n\nfunction createOpenCloseButton()\n    local tooltip = \"Open Table Control Panel\"\n    if controlActive then\n        tooltip = \"Close Table Control Panel\"\n    end\n    self.createButton({\n        click_function=\"click_toggleControl\", function_owner=self,\n        position={0,0,0}, rotation={-45,0,0}, height=400, width=400,\n        color={1,1,1,0}, tooltip=tooltip\n    })\nend\n\nfunction createSurfaceInput()\n    local currentURL = obj_surface.getCustomObject().diffuse\n    local nickname = \"\"\n    if findInImageDataIndex(currentURL) ~= nil then\n        nickname = tableImageData[findInImageDataIndex(currentURL)].name\n    end\n    self.createInput({\n        label=\"Nickname\", input_function=\"none\", function_owner=self,\n        alignment=3, position={0,0,2}, height=224, width=4000,\n        font_size=200, tooltip=\"Enter nickname for table image (only used for save)\",\n        value=nickname\n    })\n    self.createInput({\n        label=\"URL\", input_function=\"none\", function_owner=self,\n        alignment=3, position={0,0,3}, height=224, width=4000,\n        font_size=200, tooltip=\"Enter URL for tabletop image\",\n        value=currentURL\n    })\nend\n\nfunction createSurfaceButtons()\n    --Label\n    self.createButton({\n        label=\"Tabletop Surface Image\", click_function=\"none\",\n        position={0,0,1}, height=0, width=0, font_size=300, font_color={1,1,1}\n    })\n    --Functional\n    self.createButton({\n        label=\"Apply Image\\nTo Table\", click_function=\"click_applySurface\",\n        function_owner=self, tooltip=\"Apply URL as table image\",\n        position={2,0,4}, height=440, width=1400, font_size=200,\n    })\n    self.createButton({\n        label=\"Save Image\\nTo Memory\", click_function=\"click_saveSurface\",\n        function_owner=self, tooltip=\"Record URL into memory (requires nickname)\",\n        position={-2,0,4}, height=440, width=1400, font_size=200,\n    })\n    --Label\n    self.createButton({\n        label=\"Load From Memory\", click_function=\"none\",\n        position={0,0,5.5}, height=0, width=0, font_size=300, font_color={1,1,1}\n    })\n    --Saves, created dynamically from memory file\n    for i, memoryEntry in ipairs(tableImageData) do\n        --Load\n        local funcName = i..\"loadMemory\"\n        local func = function(x,y) click_loadMemory(x,y,i) end\n        self.setVar(funcName, func)\n        self.createButton({\n            label=memoryEntry.name, click_function=funcName,\n            function_owner=self, tooltip=memoryEntry.url, font_size=200,\n            position={-0.6,0,6.5+0.5*(i-1)}, height=240, width=3300,\n        })\n        --Delete\n        local funcName = i..\"deleteMemory\"\n        local func = function(x,y) click_deleteMemory(x,y,i) end\n        self.setVar(funcName, func)\n        self.createButton({\n            label=\"DELETE\", click_function=funcName,\n            function_owner=self, tooltip=\"\",\n            position={3.6,0,6.5+0.5*(i-1)}, height=240, width=600,\n            font_size=160, font_color={1,0,0}, color={0.8,0.8,0.8}\n        })\n    end\nend\n\nfunction createScaleInput()\n    self.createInput({\n        label=string.char(8644), input_function=\"none\", function_owner=self,\n        alignment=3, position={-8.5,0,2}, height=224, width=400,\n        font_size=200, tooltip=\"Table Width\",\n        value=round(obj_side_top.getScale().x, 1)\n    })\n    self.createInput({\n        label=string.char(8645), input_function=\"none\", function_owner=self,\n        alignment=3, position={-7.5,0,2}, height=224, width=400,\n        font_size=200, tooltip=\"Table Depth\",\n        value=round(obj_side_lef.getScale().x, 1)\n    })\nend\n\nfunction createScaleButtons()\n    --Labels\n    self.createButton({\n        label=\"Table Scale\", click_function=\"none\",\n        position={-8,0,1}, height=0, width=0, font_size=300, font_color={1,1,1}\n    })\n    self.createButton({\n        label=string.char(8644)..\"            \"..string.char(8645),\n        click_function=\"none\",\n        position={-8,0,2}, height=0, width=0, font_size=300, font_color={1,1,1}\n    })\n    self.createButton({\n        label=\"Move Hands:\", click_function=\"none\",\n        position={-8.3,0,3}, height=0, width=0, font_size=200, font_color={1,1,1}\n    })\n    --Disabled due to me removing the feature for technical reasons\n    --[[\n    self.createButton({\n        label=\"Scale Hands:\", click_function=\"none\",\n        position={-8.3,0,4}, height=0, width=0, font_size=200, font_color={1,1,1}\n    })\n    ]]\n    --Checkboxes\n    local label = \"\"\n    if checkData.move == true then label = string.char(10008) end\n    self.createButton({\n        label=label, click_function=\"click_checkMove\",\n        function_owner=self, tooltip=\"Check to move hands when table is rescaled\",\n        position={-6.8,0,3}, height=224, width=224, font_size=200,\n    })\n    --[[\n    local label = \"\"\n    if checkData.scale == true then label = string.char(10008) end\n    self.createButton({\n        label=label, click_function=\"click_checkScale\",\n        function_owner=self, tooltip=\"Check to scale the width of hands when table is rescaled\",\n        position={-6.8,0,4}, height=224, width=224, font_size=200,\n    })\n    ]]\n    --Apply button\n    self.createButton({\n        label=\"Apply Scale\", click_function=\"click_applyScale\",\n        function_owner=self, tooltip=\"Apply width/depth to table\",\n        position={-8,0,4}, height=440, width=1400, font_size=200,\n    })\nend\n\n\n\n\n\n--Data tables\n\n\n\n\nref_noninteractable = {\n    \"afc863\",\"c8edca\",\"393bf7\",\"12c65e\",\"f938a2\",\"9f95fd\",\"35b95f\",\n    \"5af8f2\",\"4ee1f2\",\"bd69bd\"\n}\n\nref_playerColor = {\n    \"White\", \"Brown\", \"Red\", \"Orange\", \"Yellow\",\n    \"Green\", \"Teal\", \"Blue\", \"Purple\", \"Pink\", \"Black\"\n}\n\n--Dummy function, absorbs unwanted triggers\nfunction none() end\n",
       "LuaScriptState": "{\"cd\":{\"move\":true,\"scale\":false},\"tid\":[{\"name\":\"Felt - Green\",\"url\":\"https://i.imgur.com/eHXDjyy.jpg\"},{\"name\":\"Felt - Red\",\"url\":\"https://i.imgur.com/DbPelDi.jpg\"},{\"name\":\"Felt - Grey\",\"url\":\"https://i.imgur.com/N0O6aqj.jpg\"},{\"name\":\"Aberham bechdolt\",\"url\":\"https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png\"},{\"name\":\"Impossibility Simulator\",\"url\":\"https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e9b568a1d93ae526f7b2000de6dc399823fc3f4b/MDW/Holders/.5%20Holder.jpg\"}]}",
       "XmlUI": ""
     },
@@ -17982,8 +17982,8 @@
           "Hands": false,
           "SidewaysCard": false,
           "DeckIDs": [
-            145000,
-            144900,
+            162500,
+            162400,
             82600,
             82700,
             112100,
@@ -17991,7 +17991,7 @@
             141900
           ],
           "CustomDeck": {
-            "1450": {
+            "1625": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3acbb1e0fe0eb3971bf33fe07c2516979ac918cf/MDW/The%20Morgue/The_Missile.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
@@ -18000,7 +18000,7 @@
               "UniqueBack": false,
               "Type": 0
             },
-            "1449": {
+            "1624": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3acbb1e0fe0eb3971bf33fe07c2516979ac918cf/MDW/The%20Morgue/Grandfather_Clock.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
@@ -18100,10 +18100,10 @@
               "GridProjection": false,
               "HideWhenFaceDown": true,
               "Hands": true,
-              "CardID": 145000,
+              "CardID": 162500,
               "SidewaysCard": false,
               "CustomDeck": {
-                "1450": {
+                "1625": {
                   "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3acbb1e0fe0eb3971bf33fe07c2516979ac918cf/MDW/The%20Morgue/The_Missile.png",
                   "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
                   "NumWidth": 1,
@@ -18158,10 +18158,10 @@
               "GridProjection": false,
               "HideWhenFaceDown": true,
               "Hands": true,
-              "CardID": 144900,
+              "CardID": 162400,
               "SidewaysCard": false,
               "CustomDeck": {
-                "1449": {
+                "1624": {
                   "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3acbb1e0fe0eb3971bf33fe07c2516979ac918cf/MDW/The%20Morgue/Grandfather_Clock.png",
                   "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
                   "NumWidth": 1,
@@ -18916,10 +18916,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 145900,
+          "CardID": 157800,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1459": {
+            "1578": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9b7c4b1646fc022b50a5d8f87a4e02c5ed3d7d6/Auxiliary/Rulebook/22_Negation.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9b7c4b1646fc022b50a5d8f87a4e02c5ed3d7d6/Auxiliary/Rulebook/22_Negation.png",
               "NumWidth": 1,
@@ -18974,10 +18974,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 145800,
+          "CardID": 157900,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1458": {
+            "1579": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/21_Damage_Types.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/21_Damage_Types.png",
               "NumWidth": 1,
@@ -19032,10 +19032,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 145700,
+          "CardID": 158000,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1457": {
+            "1580": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f0f5c3b855f6bdf4a74eca74c02e00d8e388f917/Auxiliary/Rulebook/20_Creature_Types.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f0f5c3b855f6bdf4a74eca74c02e00d8e388f917/Auxiliary/Rulebook/20_Creature_Types.png",
               "NumWidth": 1,
@@ -19090,10 +19090,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 145400,
+          "CardID": 158100,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1454": {
+            "1581": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3dc366d15e327ba6cc319c209c905f953a68cc5d/Auxiliary/Rulebook/19_Status_Effects2.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3dc366d15e327ba6cc319c209c905f953a68cc5d/Auxiliary/Rulebook/19_Status_Effects2.png",
               "NumWidth": 1,
@@ -19148,10 +19148,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 145300,
+          "CardID": 158200,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1453": {
+            "1582": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/19_Status_Effects.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/19_Status_Effects.png",
               "NumWidth": 1,
@@ -19206,10 +19206,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 145200,
+          "CardID": 158300,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1452": {
+            "1583": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9b7c4b1646fc022b50a5d8f87a4e02c5ed3d7d6/Auxiliary/Rulebook/18_Field_Cards.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9b7c4b1646fc022b50a5d8f87a4e02c5ed3d7d6/Auxiliary/Rulebook/18_Field_Cards.png",
               "NumWidth": 1,
@@ -19264,10 +19264,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 145100,
+          "CardID": 158400,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1451": {
+            "1584": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/17_Death.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/17_Death.png",
               "NumWidth": 1,
@@ -19322,10 +19322,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 145000,
+          "CardID": 158500,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1450": {
+            "1585": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d05931e93cd2b7939743e5e39019376248819146/Auxiliary/Rulebook/16_The_Field2.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d05931e93cd2b7939743e5e39019376248819146/Auxiliary/Rulebook/16_The_Field2.png",
               "NumWidth": 1,
@@ -19380,10 +19380,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 144900,
+          "CardID": 158600,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1449": {
+            "1586": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/16_The_Field.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/16_The_Field.png",
               "NumWidth": 1,
@@ -19438,10 +19438,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 144800,
+          "CardID": 158700,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1448": {
+            "1587": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d05931e93cd2b7939743e5e39019376248819146/Auxiliary/Rulebook/15_Minions.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d05931e93cd2b7939743e5e39019376248819146/Auxiliary/Rulebook/15_Minions.png",
               "NumWidth": 1,
@@ -19496,10 +19496,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 144700,
+          "CardID": 158800,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1447": {
+            "1588": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ba0167f86ce7743a4efc21c6a8c4cd7a991ed5b7/Auxiliary/Rulebook/14_Item_Types2.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ba0167f86ce7743a4efc21c6a8c4cd7a991ed5b7/Auxiliary/Rulebook/14_Item_Types2.png",
               "NumWidth": 1,
@@ -19554,10 +19554,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 144600,
+          "CardID": 158900,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1446": {
+            "1589": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/14_Item_Types.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/14_Item_Types.png",
               "NumWidth": 1,
@@ -19612,10 +19612,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 144500,
+          "CardID": 159000,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1445": {
+            "1590": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/13_Items.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/13_Items.png",
               "NumWidth": 1,
@@ -19670,10 +19670,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 144400,
+          "CardID": 159100,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1444": {
+            "1591": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions5.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions5.png",
               "NumWidth": 1,
@@ -19728,10 +19728,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 144300,
+          "CardID": 159200,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1443": {
+            "1592": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions4.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions4.png",
               "NumWidth": 1,
@@ -19786,10 +19786,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 144200,
+          "CardID": 159300,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1442": {
+            "1593": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions3.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions3.png",
               "NumWidth": 1,
@@ -19844,10 +19844,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 144100,
+          "CardID": 159400,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1441": {
+            "1594": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions2.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions2.png",
               "NumWidth": 1,
@@ -19902,10 +19902,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 144000,
+          "CardID": 159500,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1440": {
+            "1595": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions.png",
               "NumWidth": 1,
@@ -19960,10 +19960,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 143900,
+          "CardID": 159600,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1439": {
+            "1596": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/326ac8f9b609b52c2fe9d4a2f5c13706ee61f81d/Auxiliary/Rulebook/11_Abilities7.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/326ac8f9b609b52c2fe9d4a2f5c13706ee61f81d/Auxiliary/Rulebook/11_Abilities7.png",
               "NumWidth": 1,
@@ -20018,10 +20018,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 143800,
+          "CardID": 159700,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1438": {
+            "1597": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ba0167f86ce7743a4efc21c6a8c4cd7a991ed5b7/Auxiliary/Rulebook/11_Abilities6.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ba0167f86ce7743a4efc21c6a8c4cd7a991ed5b7/Auxiliary/Rulebook/11_Abilities6.png",
               "NumWidth": 1,
@@ -20076,10 +20076,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 143700,
+          "CardID": 159800,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1437": {
+            "1598": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9b7c4b1646fc022b50a5d8f87a4e02c5ed3d7d6/Auxiliary/Rulebook/11_Abilities5.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9b7c4b1646fc022b50a5d8f87a4e02c5ed3d7d6/Auxiliary/Rulebook/11_Abilities5.png",
               "NumWidth": 1,
@@ -20134,10 +20134,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 143600,
+          "CardID": 159900,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1436": {
+            "1599": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/be43e06b6145a039fcdb86929025738e428deb83/Auxiliary/Rulebook/11_Abilities4.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/be43e06b6145a039fcdb86929025738e428deb83/Auxiliary/Rulebook/11_Abilities4.png",
               "NumWidth": 1,
@@ -20192,10 +20192,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 143500,
+          "CardID": 160000,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1435": {
+            "1600": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/11_Abilities3.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/11_Abilities3.png",
               "NumWidth": 1,
@@ -20250,10 +20250,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 143400,
+          "CardID": 160100,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1434": {
+            "1601": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/11_Abilities2.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/11_Abilities2.png",
               "NumWidth": 1,
@@ -20308,10 +20308,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 143300,
+          "CardID": 160200,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1433": {
+            "1602": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/11_Abilities.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/11_Abilities.png",
               "NumWidth": 1,
@@ -20366,10 +20366,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 143200,
+          "CardID": 160300,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1432": {
+            "1603": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0fb5b627bea76a9ac8494a139a8becb20adb4e6b/Auxiliary/Rulebook/10_Attacking2.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0fb5b627bea76a9ac8494a139a8becb20adb4e6b/Auxiliary/Rulebook/10_Attacking2.png",
               "NumWidth": 1,
@@ -20424,10 +20424,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 143100,
+          "CardID": 160400,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1431": {
+            "1604": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/10_Attacking.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/10_Attacking.png",
               "NumWidth": 1,
@@ -20482,10 +20482,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 143000,
+          "CardID": 160500,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1430": {
+            "1605": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ba0167f86ce7743a4efc21c6a8c4cd7a991ed5b7/Auxiliary/Rulebook/09_TakingYourTurn.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ba0167f86ce7743a4efc21c6a8c4cd7a991ed5b7/Auxiliary/Rulebook/09_TakingYourTurn.png",
               "NumWidth": 1,
@@ -20540,10 +20540,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 142900,
+          "CardID": 160600,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1429": {
+            "1606": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/08_Global_Turn.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/08_Global_Turn.png",
               "NumWidth": 1,
@@ -20598,10 +20598,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 142800,
+          "CardID": 160700,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1428": {
+            "1607": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/07_Stats5.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/07_Stats5.png",
               "NumWidth": 1,
@@ -20656,10 +20656,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 142700,
+          "CardID": 160800,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1427": {
+            "1608": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/07_Stats4.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/07_Stats4.png",
               "NumWidth": 1,
@@ -20714,10 +20714,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 142600,
+          "CardID": 160900,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1426": {
+            "1609": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/07_Stats3.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/07_Stats3.png",
               "NumWidth": 1,
@@ -20772,10 +20772,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 142500,
+          "CardID": 161000,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1425": {
+            "1610": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/07_Stats2.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/07_Stats2.png",
               "NumWidth": 1,
@@ -20830,10 +20830,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 142400,
+          "CardID": 161100,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1424": {
+            "1611": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9b7c4b1646fc022b50a5d8f87a4e02c5ed3d7d6/Auxiliary/Rulebook/07_Stats1.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9b7c4b1646fc022b50a5d8f87a4e02c5ed3d7d6/Auxiliary/Rulebook/07_Stats1.png",
               "NumWidth": 1,
@@ -20888,10 +20888,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 142200,
+          "CardID": 161200,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1422": {
+            "1612": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/06_Reading_Cards2.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/06_Reading_Cards2.png",
               "NumWidth": 1,
@@ -20946,10 +20946,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 142100,
+          "CardID": 161300,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1421": {
+            "1613": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/06_Reading_Cards.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/06_Reading_Cards.png",
               "NumWidth": 1,
@@ -21004,10 +21004,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 142000,
+          "CardID": 161400,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1420": {
+            "1614": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/05_Shops.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/05_Shops.png",
               "NumWidth": 1,
@@ -21062,10 +21062,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 141900,
+          "CardID": 161500,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1419": {
+            "1615": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/04_Table5.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/04_Table5.png",
               "NumWidth": 1,
@@ -21120,10 +21120,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 141800,
+          "CardID": 161600,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1418": {
+            "1616": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/04_Table4.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/04_Table4.png",
               "NumWidth": 1,
@@ -21178,10 +21178,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 141600,
+          "CardID": 161700,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1416": {
+            "1617": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ba0167f86ce7743a4efc21c6a8c4cd7a991ed5b7/Auxiliary/Rulebook/04_Table3.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ba0167f86ce7743a4efc21c6a8c4cd7a991ed5b7/Auxiliary/Rulebook/04_Table3.png",
               "NumWidth": 1,
@@ -21236,10 +21236,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 141700,
+          "CardID": 161800,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1417": {
+            "1618": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/04_Table2.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/04_Table2.png",
               "NumWidth": 1,
@@ -21294,10 +21294,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 141400,
+          "CardID": 161900,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1414": {
+            "1619": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/04_Table.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/04_Table.png",
               "NumWidth": 1,
@@ -21352,10 +21352,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 141300,
+          "CardID": 162000,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1413": {
+            "1620": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/03_Setting_Up.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/03_Setting_Up.png",
               "NumWidth": 1,
@@ -21410,10 +21410,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 141200,
+          "CardID": 162100,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1412": {
+            "1621": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c32fcb816d3d93608f4fb1a02e6beb5a22820b8/Auxiliary/Rulebook/02_Abbreviations.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c32fcb816d3d93608f4fb1a02e6beb5a22820b8/Auxiliary/Rulebook/02_Abbreviations.png",
               "NumWidth": 1,
@@ -21468,10 +21468,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 141100,
+          "CardID": 162200,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1411": {
+            "1622": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bd08d149dfc69f40db02146492435c678d5a8712/Auxiliary/Rulebook/01_Getting_Started.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bd08d149dfc69f40db02146492435c678d5a8712/Auxiliary/Rulebook/01_Getting_Started.png",
               "NumWidth": 1,
@@ -21526,10 +21526,10 @@
           "GridProjection": false,
           "HideWhenFaceDown": true,
           "Hands": true,
-          "CardID": 141000,
+          "CardID": 162300,
           "SidewaysCard": false,
           "CustomDeck": {
-            "1410": {
+            "1623": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bd08d149dfc69f40db02146492435c678d5a8712/Auxiliary/Rulebook/00_Table_of_Contents.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bd08d149dfc69f40db02146492435c678d5a8712/Auxiliary/Rulebook/00_Table_of_Contents.png",
               "NumWidth": 1,
