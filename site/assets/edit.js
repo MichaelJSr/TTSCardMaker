@@ -56,7 +56,7 @@ export function mergeField(op, base, f, v) {
   return { ...op, set, unset, ...(f === "name" ? { name: v } : {}) };
 }
 // ---- series, subseries and author names: one spelling per name
-export const NAME_MAX = 60;
+export const NAME_MAX = 60;                        // characters, an emoji counts one
 /** A name's comparison key: case and spacing don't count. */
 export const nameKey = s => String(s ?? "").toLowerCase().replace(/\s+/g, "");
 const NOUN = { series: "Series", subseries: "Subseries", author: "Author" };
@@ -70,7 +70,7 @@ export function canonName(kind, raw, known = []) {
   let best = null;
   for (const [s, shown, rank = 0] of known) if (shown && nameKey(s) === k && (!best || rank > best[1])) best = [shown, rank];
   if (best) return { name: best[0], existed: true, typed };
-  if (typed.length > NAME_MAX) return { error: `${NOUN[kind] || "Names"} names are at most ${NAME_MAX} characters` };
+  if ([...typed].length > NAME_MAX) return { error: `${NOUN[kind] || "Names"} names are at most ${NAME_MAX} characters` };
   return { name: typed, existed: false, typed };
 }
 /** The toast when a typed name is a known one; series: the picked series of an existing subseries. */
@@ -322,7 +322,12 @@ export function createEditor(app) {
     if (kind === "subseries" && !series) return { error: "Pick a series to add a subseries" };
     const r = canonical(kind, raw, series); if (!r || r.error) return r;
     const here = kind === "subseries" ? ownSubseries(series).some(v => nameKey(v) === nameKey(r.name)) : r.existed;   // a subseries of another series is made here too
-    if (here) return { name: r.name, existed: true, note: sameName(kind, r.typed, r.name, kind === "subseries" ? series : "") };
+    if (here) {                                     // shown nowhere in the filter bar: say why
+      const on = list => list.some(c => nameKey(c[kind]) === nameKey(r.name) && (kind !== "subseries" || c.series === series));
+      const why = on(S.cards) || (kind === "subseries" ? buckets.subseries.some(([s, v]) => s === series && v === r.name) : buckets[kind].includes(r.name)) ? ""
+        : on(S.all) ? ", on hidden cards only" : kind === "author" ? ", with no cards yet" : "";
+      return { name: r.name, existed: true, note: sameName(kind, r.typed, r.name, kind === "subseries" ? series : "") + why };
+    }
     if (kind === "subseries") buckets.subseries.push([series, r.name]); else buckets[kind].push(r.name);
     try { sessionStorage.setItem(K.buckets, JSON.stringify(buckets)); } catch { /* storage full: kept for this page */ }
     return { name: r.name, existed: false, note: "" };
@@ -477,7 +482,7 @@ export function createEditor(app) {
   function spell(kind, v, series, id, defer) {
     const r = canonical(kind, v, series, id);
     if (r?.error) { if (!defer) app.toast(r.error); return undefined; }
-    if (r?.existed && r.name !== r.typed && !defer) app.toast(sameName(kind, r.typed, r.name));
+    if (r?.existed && r.name !== r.typed && !defer) app.toast(kind === "author" ? sameName(kind, r.typed, r.name) : `“${r.typed}” saved as ${r.name}, its known spelling`);
     return r ? r.name : v;
   }
   function stageField(id, f, v, defer = false) {
@@ -498,19 +503,21 @@ export function createEditor(app) {
     put(c.id, op); if (!defer) save();
     return op;
   }
-  // one save for the lot -> {changed (a card already at v doesn't count), dups (an author drop leaves duplicates alone), value, error}
+  // one save for the lot -> {changed (a card already at v doesn't count), dups (an author drop leaves duplicates alone),
+  // kept (a series drop: cards keeping a subseries the new series lacks), value, error}
   function stageMany(ids, key, v) {
     const r = canonical(key, v, key === "subseries" ? find(ids[0])?.series || "" : "");
-    if (r?.error) return { changed: 0, dups: 0, value: v, error: r.error };
-    const value = r ? r.name : v;
+    if (r?.error) return { changed: 0, dups: 0, kept: 0, value: v, error: r.error };
+    const value = r ? r.name : v, moved = [], own = key === "series" ? ownSubseries(value) : [];   // before the drop
     let changed = 0, dups = 0;
     for (const id of ids) {
       const was = JSON.stringify(stage.cards[id] ?? null);
       if (key === "author" && find(id) && baseOf(find(id)).dup) { dups++; continue; }
-      if ((key === "author" ? stageAuthor(id, value, true) : stageField(id, key, value, true)) && JSON.stringify(stage.cards[id] ?? null) !== was) changed++;
+      if ((key === "author" ? stageAuthor(id, value, true) : stageField(id, key, value, true)) && JSON.stringify(stage.cards[id] ?? null) !== was) { changed++; moved.push(id); }
     }
     save();
-    return { changed, dups, value };
+    const kept = key === "series" ? moved.filter(id => { const s = find(id)?.subseries; return s && !own.includes(s); }).length : 0;
+    return { changed, dups, kept, value };
   }
   function revert(id, item) {
     const c = find(id), op = stage.cards[id]; if (!c || !op) return;

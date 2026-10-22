@@ -1,7 +1,8 @@
 // Inline editing, edit mode only (signed in): the card dialog's values edit in place, tiles in the cards grid select
 // and drag onto a Series, Subseries or Author value, and the filter bar's selects make new ones. A DOM upgrade after
 // app.js has rendered (attributes and listeners, no template change), so view mode is untouched. Staging goes through
-// the editor's single-field ops (edit.js stageField/stageAuthor), the same batch the form fills. Helpers above `install` are pure; node checks under /tmp exercise them.
+// the editor's single-field ops (edit.js stageField/stageAuthor), the same batch the form fills. Helpers above
+// `install` are pure; node checks under /tmp exercise them.
 import { esc } from "./text.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
@@ -26,10 +27,13 @@ export function control(f, v, list = [], fresh = false) {
   const dl = list.length ? `<datalist id="inline-dl">${list.map(x => `<option value="${esc(x)}">`).join("")}</datalist>` : "";
   return `<input class="inline-fact${f === "note" ? " inline-note" : ""}"${dl ? ' list="inline-dl"' : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">${dl}`;
 }
-/** The bucket options a filter select gets: those it lacks (have: its values), as "X (no cards yet)", selected when picked.
- *  list: [{value, series?, where?}]; series: a subseries' series (the select-param handler then sets it too); where: shown
- *  in the brackets ("X (Mario, no cards yet)"). */
-export const bucketOptions = (have, list, picked) => list.filter(x => !have.has(x.value)).map(x => `<option value="${esc(x.value)}"${x.series != null ? ` data-series="${esc(x.series)}"` : ""}${x.value === picked ? " selected" : ""}>${esc(x.value)} (${x.where ? `${esc(x.where)}, ` : ""}no cards yet)</option>`).join("");
+/** The bucket options a filter select gets: those it lacks, as "X (no cards yet)", selected when picked. have: its
+ *  optKey()s; list: [{value, series?, where?}]; series: a subseries' series (the select-param handler then sets it too);
+ *  where: that series, shown in the brackets ("X (Mario, no cards yet)") when none is picked. */
+export const bucketOptions = (have, list, picked) => list.filter(x => !have.has(x.where ? `${x.series}\u0001${x.value}` : x.value))
+  .map(x => `<option value="${esc(x.value)}"${x.series != null ? ` data-series="${esc(x.series)}"` : ""}${x.value === picked && !x.where ? " selected" : ""}>${esc(x.value)} (${x.where ? `${esc(x.where)}, ` : ""}no cards yet)</option>`).join("");
+/** An option's key for bucketOptions' have: its series too when it names one (a subseries in two series). */
+export const optKey = o => (o.dataset.series != null ? `${o.dataset.series}\u0001${o.value}` : o.value);
 /** The select's last option: "New series…" (data-new-bucket: its value never matters); a subseries needs a picked series. */
 export const newOption = (key, series) => (key === "subseries" && !series ? `<option disabled>Pick a series to add a subseries</option>`
   : `<option value="" data-new-bucket>New ${LABEL[key].toLowerCase()}…</option>`);
@@ -43,6 +47,7 @@ let cur = null;                                    // the open editor: {c, f, el
 let prov = null;                                   // a stat row changed by keyboard, not yet saved: {row, k, v0}
 let pointer = false;                               // the last input was a pointer (focus moved by a click, not Tab)
 let naming = null;                                 // the filter bar's open "New …" input: {sel, key, input}
+let arrowAt = -1e9;                                // when an arrow key last went to a filter select
 
 // ---- the card dialog
 /** Mark the editable spots of the open card dialog (edit mode only; call after openCard). */
@@ -185,7 +190,7 @@ export function mountGrid(view, api = A) {
     subseries: b.subseries.filter(([s]) => !series || s === series).map(([s, value]) => ({ value, series: s, where: series ? "" : s })) };
   for (const key of ["series", "subseries", "author"]) {
     const el = sel(key); if (!el) continue;
-    el.insertAdjacentHTML("beforeend", bucketOptions(new Set([...el.options].map(o => o.value)), fresh[key], p.get(key) || "") + newOption(key, series));
+    el.insertAdjacentHTML("beforeend", bucketOptions(new Set([...el.options].map(optKey)), fresh[key], p.get(key) || "") + newOption(key, series));
   }
   if (!grid) return;
   for (const t of grid.querySelectorAll(".tile[data-open]")) t.draggable = true;
@@ -211,10 +216,11 @@ function onDrop(e) {
   const chip = dragging() && e.target.closest?.(".drop-list .chip"); if (!chip) return;
   e.preventDefault(); dragOff();
   const ids = (e.dataTransfer.getData("text/plain") || "").split(",").filter(Boolean), key = chip.closest(".drop-list").dataset.drop, v = chip.dataset.value;
-  const { changed: n, dups, value, error } = A.editor.stageMany(ids, key, v);
+  const { changed: n, dups, kept, value, error } = A.editor.stageMany(ids, key, v);
   A.selected.clear();
   A.rerender();
   A.toast(error || [n ? `${n} card${n === 1 ? "" : "s"}: ${key} → ${value}` : "",
+    kept ? `${kept} kept ${kept === 1 ? "its" : "their"} old subseries` : "",
     dups ? `${dups} duplicate${dups === 1 ? " kept its original's" : "s kept their originals'"} author` : ""].filter(Boolean).join(" · ") || `Already ${value}`);
 }
 
@@ -235,22 +241,28 @@ function closeName(refocus) {
   if (refocus) sel.focus();
 }
 function createBucket(kbd) {
-  const { key, input } = naming, series = key === "subseries" ? A.params().get("series") || "" : "";
+  const { sel, key, input } = naming, series = key === "subseries" ? A.params().get("series") || "" : "";
   const r = A.editor.addBucket(key, input.value, series);
   if (!r) { closeName(kbd); return; }                                        // nothing typed
-  if (r.error) { A.toast(r.error); if (!kbd) closeName(false); return; }     // after Enter the input stays, to shorten it
-  naming = null;
-  A.toast(r.note || `New ${LABEL[key].toLowerCase()} “${r.name}”${series ? ` of ${series}` : ""}: drag cards onto it under ${LABEL[key]}`);
-  A.rerender();                                                              // the filter stays: the cards to drag are still shown
-  if (kbd) document.querySelector(`.filters select[data-key="${key}"]`)?.focus();
+  if (r.error) { A.toast(r.error); return; }                                 // the input stays, to shorten it
+  closeName(kbd);
+  const drops = document.querySelector(`.filters .drop-list[data-drop="${key}"]`);
+  if (!r.existed) {                                // added in place, no re-render: a click that ended the typing still lands
+    sel.querySelector("[data-new-bucket]")?.insertAdjacentHTML("beforebegin", bucketOptions(new Set(), [{ value: r.name, ...(series ? { series } : {}) }], ""));
+    const last = drops?.querySelectorAll(".chip[data-new]"), html = dropChips([], [r.name]);
+    if (last?.length) last[last.length - 1].insertAdjacentHTML("afterend", html); else drops?.insertAdjacentHTML("afterbegin", html);
+  }
+  A.toast(r.note || `New ${LABEL[key].toLowerCase()} “${r.name}”${series ? ` of ${series}` : ""}: ${(A.params().get("view") || localStorage.getItem("view")) === "table" ? "in Grid view, drag cards onto it" : `drag cards onto it under ${LABEL[key]}`}`);   // app.js's view choice
 }
 function onChange(e) {                            // before app.js's listener: the filter doesn't change
   const sel = e.target.closest?.(".filters select[data-key]");
   if (!sel || !sel.options[sel.selectedIndex]?.hasAttribute("data-new-bucket")) return;
   e.stopImmediatePropagation();
+  if (performance.now() - arrowAt < 150) { sel.selectedIndex = Math.max(0, [...sel.options].findIndex(o => o.defaultSelected)); return; }   // arrowed past the end of a closed select
   openName(sel);
 }
 function onNameKey(e) {
+  if (!naming && /^(Arrow|Page|Home$|End$)/.test(e.key) && !e.altKey && e.target.closest?.(".filters select[data-key]")) arrowAt = performance.now();
   if (!naming || e.target !== naming.input) return;
   if (e.key === "Escape") { e.preventDefault(); e.stopImmediatePropagation(); closeName(true); }
   else if (e.key === "Enter") { e.preventDefault(); e.stopImmediatePropagation(); createBucket(true); }
