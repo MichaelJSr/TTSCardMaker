@@ -9,6 +9,7 @@ import * as details from "./details.js";
 import * as decks from "./decks.js";
 import * as pick from "./pick.js";
 import * as balance from "./balance.js";
+import * as changes from "./changes.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -89,6 +90,9 @@ const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S
 // balance analytics (data/analytics.json): the Stats page's Balance section and the cards' Balance blocks
 let analyticsP = null;
 const loadAnalytics = () => (analyticsP ||= getJson("analytics.json").then(d => { S.analytics = d; }).catch(e => { analyticsP = null; throw e; }));
+// the Changes page's Changelog and Database edits tabs (data/changelog.json, changes.js)
+let changelogP = null;
+const loadChangelog = () => (changelogP ||= getJson("changelog.json").then(d => { S.changelog = d; }).catch(e => { changelogP = null; throw e; }));
 let usersP = null, contribP = null;                     // profiles (data/users.json) and contributions (data/contributions.json): the People tab and person pages
 const loadUsers = () => (usersP ||= getJson("users.json").then(d => { S.users = d.users || []; S.userBy = new Map(S.users.map(p => [p.login.toLowerCase(), p])); return S.userBy; }).catch(e => { usersP = null; throw e; }));
 const loadContrib = () => (contribP ||= getJson("contributions.json").then(d => { S.contrib = d; S.titles = titlesOf(d.people || []); }).catch(e => { contribP = null; throw e; }));
@@ -443,7 +447,7 @@ function openCard(id, showDetails = false) {
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
-          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(`Changed on the website: ${c.edited.join(", ")}${c.editBy ? ` · ${c.editBy}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
+          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(`${changes.isDiscord(c.editBy) ? "Changed" : "Changed on the website"}: ${c.edited.join(", ")}${c.editBy ? ` · ${changes.nameText(c.editBy)}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>
@@ -697,31 +701,50 @@ function renderStatsView(r) {
   }
 }
 const BOT = "AutoCroissant";                           // the bot's bake stamps (build_site.py BOT_AUTHOR): not a person page
-function renderChanges() {
+// the Changes page's tabs: #/changes (Overview), #/changes/changelog, #/changes/edits
+const CHANGE_TABS = [["", "Overview"], ["changelog", "Changelog"], ["edits", "Database edits"]];
+function renderChanges(r = parseHash()) {
+  const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
+  const nav = `<nav class="seg change-tabs" aria-label="Changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}" class="${k === tab ? "on" : ""}"${k === tab ? ' aria-current="page"' : ""}>${l}</a>`).join("")}</nav>`;
+  const page = body => { view.innerHTML = `<div style="max-width:980px;margin:auto">${nav}${body}</div>`; };
+  const here = () => { const now = parseHash(); return now.name === "changes" && (now.arg || "") === (r.arg || "") ? now : null; };
+  const again = () => { const now = here(); if (now) renderChanges(now); };
+  if (tab) {
+    if (!S.changelog) {
+      page(`<div class="loading">Loading the changelog…</div>`);
+      loadChangelog().then(again, e => { if (here()) page(`<div class="empty">Couldn't load the changelog (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`); });
+      return;
+    }
+    page(tab === "changelog" ? changes.changelogHtml(S.changelog, r.params) : changes.editsHtml(S.changelog, r.params, webEditsHtml()));
+    return;
+  }
   if (!historyP || !S.history) {
-    view.innerHTML = `<div class="loading">Loading recent changes…</div>`;
-    whenLoaded(loadHistory(), "card history", () => { if (parseHash().name === "changes") renderChanges(); });
+    page(`<div class="loading">Loading recent changes…</div>`);
+    whenLoaded(loadHistory(), "card history", again);
     return;
   }
   const recent = S.cards.filter(c => c.ts).sort((a, b) => b.ts - a.ts).slice(0, 60);
   const edited = S.cards.filter(c => c.hv).sort((a, b) => b.hv - a.hv);
   const unparsed = S.cards.filter(c => !c.parsed);
   const problems = S.cards.filter(c => c.problems && c.problems.length);
-  const webEdits = S.all.filter(webEdited).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
   const item = c => {
     const last = c.history && c.history.length ? c.history[c.history.length - 1] : null;
     return `<div class="item">${c.img ? `<img loading="lazy" decoding="async" src="${img(c, 240)}" alt="" data-open="${c.id}">` : "<div></div>"}<div>
       <a href="#/card/${c.id}"><b>${esc(c.name)}</b></a> <span class="muted">${esc(KIND_LABEL[c.type] || c.type)}${c.stars ? ` · ${c.stars}★` : ""}${c.ts ? ` · ${date(c.ts)}` : ""}${c.author ? ` · ${esc(c.author)}` : ""}</span>
       ${last && c.ability ? `<div class="ability" style="margin-top:4px;font-size:14px">${diffWords(last.ability, c.ability)}</div>` : ""}</div></div>`;
   };
-  view.innerHTML = `<div style="max-width:980px;margin:auto">
+  page(`
     <section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>
-    ${webEdits.length ? `<section class="panel"><h3>Edited on the website <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${c.editBy === BOT ? esc(c.editBy) : `<a href="#/u/${encodeURIComponent(c.editBy)}">${esc(c.editBy)}</a>`}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul></section>` : ""}
     <section class="panel"><h3>Most revised</h3><div class="feed">${edited.slice(0, 20).map(item).join("") || `<p class="muted">No history yet.</p>`}</div></section>
     ${unparsed.length ? `<section class="panel"><h3>Not parsed by the bot yet <span class="muted">${unparsed.length}</span></h3><p class="muted">Run /update_stats in Discord to add them.</p>
       <div class="grid" style="--tile:120px">${unparsed.map(c => tileHtml(c, { small: true })).join("")}</div></section>` : ""}
     ${problems.length ? `<section class="panel"><h3>Parser notes <span class="muted">${problems.length}</span></h3><ul>${problems.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${c.problems.map(esc).join(" · ")}</span>${detailsLink(c)}</li>`).join("")}</ul></section>` : ""}
-    <p class="muted">Updated ${new Date(S.data.generated).toLocaleString()} from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p></div>`;
+    <p class="muted">Updated ${new Date(S.data.generated).toLocaleString()} from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`);
+}
+/** The Database edits tab's "Edited on the website or in Discord" panel: the cards a Card Edits.json entry changes now */
+function webEditsHtml() {
+  const webEdits = S.all.filter(webEdited).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
+  return webEdits.length ? `<section class="panel"><h3>Edited on the website or in Discord <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul></section>` : "";
 }
 function renderCompare(r) {
   const ids = (r.arg || S.compare.join(",")).split(",").filter(id => S.byId.has(id)).slice(0, 5);

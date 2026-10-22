@@ -76,7 +76,13 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   auxiliary creatures (no star level), with all creatures. The bot's history has no buff or nerf yet (2026-10-22: its
   one stat change, Tainted Lazarus' 110s becoming two creatures, is off the scale), so the buffs and nerfs panel says so
   instead of drawing an empty chart.
-- **Changes**: recently updated cards with text diffs, the most revised cards, and cards the bot hasn't parsed yet.
+- **Changes**: three tabs. **Overview**: recently updated cards with text diffs, the most revised cards, and cards the bot
+  hasn't parsed yet. **Changelog**: the card sync's events of the last 180 days, one block per push as the Discord posts
+  (new cards, changes with their old values and an ability word diff, new art, moves, renames, archived and restored cards,
+  database edits, parser re-reads), by day in Pacific time, filterable by kind, then the archived cards. **Database
+  edits**: the card sync's edited and authors events, every commit that changed a Card Edits.json entry or a Card
+  Authors.txt line (website, Discord or a commit by hand) with each field's old and new value, and the cards edited on
+  the website. The events need the card sync's data (`CARD_DATA_DIR`); until then those parts say so.
 - **People** (the tab shows how many): everyone who made, edited or committed cards, in one table (GitHub picture, cards
   credited, edit batches published on the website, card commits, public decks, titles, motto), and a page per person
   (`#/u/<name>`, static `u/<name>/` that previews in Discord; **Share** opens a dialog with the link, the Discord preview
@@ -128,7 +134,7 @@ where links fail). The first screen loads only `data/cards.json`; `analytics.jso
 computed by `site/build/analytics.py` from the same bot data) loads when the Stats page or a creature, minion or card
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
-People tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
+People tab is opened; `changelog.json` when the Changelog or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
 when a card's or rulebook page's Details dropdown is first opened. Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
