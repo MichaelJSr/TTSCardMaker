@@ -105,8 +105,19 @@ the ability text to edit it in place (Ctrl/Cmd+Enter or a click elsewhere saves,
 still work), double-click the name to rename, and click the series, subseries or author chip, or the note, to type a new
 value (series, subseries and author offer the known values; a missing one shows as a dashed `+ series` chip when you
 hover the row). In the cards grid, Ctrl/Cmd-click selects tiles (Shift-click a range, Esc clears; a filter change keeps
-only the tiles still shown) and dragging one or the selection onto a series or author in the filter bar (the values
-appear under the Series and Author selects while you drag) assigns it to every card dragged. Every change lands in the batch bar at the bottom as a sentence ("Goombella: SPD 4 → 5", "Clot Black: Author →
+only the tiles still shown) and dragging one or the selection onto a series, subseries or author in the filter bar (the
+values appear under the Series, Subseries and Author selects while you drag; subseries once a series is picked, its own
+ones) assigns it to every card dragged; a drop changes that one field only. To make a new series, subseries or author,
+pick **New series…** (**New subseries…**, with a series picked; **New author…**) at the end of its select and type the
+name in its place (Enter or a click elsewhere makes it, Esc or nothing typed cancels). It shows as "Name (no cards
+yet)" in the select and as a dashed value under it while you drag, and the card page's chips suggest it; the filter
+stays as it was, so the cards to drag are still shown. Until a card carries it, it lives only in your browser tab (gone
+when the tab closes or you sign out) and nothing is published for it. Names are trimmed, their spaces collapsed and at
+most 60 characters; one that differs from a known name only in case or spacing takes the known spelling (the one most
+cards use), on the chips and in All fields too ("mario" is the series Mario), and an author's git or GitHub name from
+`[people]` becomes the name shown ("Michael" is MichaelJSr), as the bot resolves it. A new author's cards go to `[cards]`
+under a new `# --- credited to Name (n) ---` group, with no `[people]` line (that maps a login; an admin can add one
+later). Every change lands in the batch bar at the bottom as a sentence ("Goombella: SPD 4 → 5", "Clot Black: Author →
 Chestnut"), each with ↺ to take it back; the bar folds to one line when it gets long, and **Review and publish** commits
 the whole batch at once. **All fields** (e, also in the bar) opens the full form for everything else (kind, item type,
 stars, types, aliases, duplicate of, checks, constructed ban, hidden, creatures). Signed out, none of this shows: the
@@ -223,7 +234,7 @@ python -m http.server -d site/dist 8000  # then open http://localhost:8000
 ```
 
 Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
-`search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place and drag-to-assign,
-`profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
+`search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, drag-to-assign and
+the filter bar's New series/subseries/author, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
 published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py`.
 Generated files (`site/dist`, `site/.cache`) are git-ignored.
