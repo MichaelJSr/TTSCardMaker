@@ -78,6 +78,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 9. Security/HTML: all strings (Nickname/Description from the save) must be `esc()`-escaped; Description can carry TTS BBCode (`[b]`, `[ffffff]`), not HTML. Don't render untrusted FaceURLs without `esc` (same-origin img only).
 10. Mobile/theme: follow the 980/860 px breakpoints and CSS variables; no drag/drop precedent, so use click-to-select + "Move to..." menus (keyboard accessible) first.
 11. Concurrency between editors: ops staged locally against an old copy; on publish, re-validate ops against the fresh JSON and show conflicts before commit (the edit.js retry loop is silent about semantic conflicts).
+12. Sticky headers (2026-10-22): `position: sticky` pins to the nearest scroll container, so `table.data th { top: 52px }` (under the bar) only works where the page scrolls; inside a wrapper with overflow other than visible/clip it lands 52px down over the first rows. `.table-wrap` (scrolls itself) resets th to `top: 0`; `.scroll-x` scrolls only at <=980px, where the bar wraps to 104-171px and page tables' th get `top: auto`; `.filters`/`.toc` sit at 112px for 861-980px.
 
 ## 7. Profiles (2026-10-21)
 - Files: `site/profiles/<login>.json` (format: `site/profiles/README.md`). Opt-in; one file per GitHub login; the login field must match the file name exactly (the editor reads, replaces and removes the file by that spelling, and keeps it when the signed-in login differs in case; `#/u/<login>` is matched without case and the address bar is rewritten to the file's spelling).
