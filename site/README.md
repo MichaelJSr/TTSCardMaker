@@ -17,7 +17,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
   dropdown open this once; Ctrl-click opens it in a new tab).
 - **Card pages**: full image, stat bars, ability text with icons, timing-tag badges such as (1CD), (1/2CD), (1GCD) and
-  (2U) (hover for the meaning) and links to every card it names (by its printed title or file name, in any case,
+  (2U) (hover for the meaning; a closed **Badges** box under the text says what each color means) and links to every card it names (by its printed title or file name, in any case,
   either apostrophe, plural, singular or possessive: "Copper Swords", "an X Fist", "Grodus X's"; a one-word file name
   only when the title is one word too; a one-word name only as the card spells it, capitalized, or lowercase after its
   own verb ("inflict 1T1 smeckeldorfed", "stacks of hardened", "summon a silithid"); not as a label like "Cat:", not
@@ -43,7 +43,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   "Decks using this card" lists the public published decks that hold it (the first six, then a link to all of them).
   Every card has a shareable link (`/c/<card>/`) that shows a rich preview in Discord. The Share button (s) opens a dialog
   with that link, a Discord preview, and buttons to copy the card as a Discord message, an image or plain text.
-- **Rulebook**: every page with search and highlighting, the timing-tag glossary (the cooldown and uses tags, and the
+- **Rulebook**: every page with search and highlighting, the badge colors (one line per color, as on page 02
+  Abbreviations), the timing-tag glossary (the cooldown and uses tags, and the
   old tags the rulebook pages still use), and the constructed ban list. Each
   page has the same Details dropdown (the bot reads the rulebook PSDs too), always closed when the page loads, without
   the card-only sections (stat rows, status-word layers, template).

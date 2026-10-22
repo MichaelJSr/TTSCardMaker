@@ -194,6 +194,14 @@ del { background: color-mix(in srgb, var(--danger) 30%, transparent); border-rad
 @media (max-width: 980px) { .page { scroll-margin-top: 117px; } } @media (max-width: 640px) { .page { scroll-margin-top: 184px; } }   /* two- and three-row bar */
 .page img { width: 100%; border-radius: 8px; cursor: zoom-in; } .page h3 { margin: 0 0 8px; }
 .page .ability { white-space: pre-line; color: var(--ink-2); }
+.badge-legend { list-style: none; margin: 8px 0; padding: 0; font-size: 14px; line-height: 1.9; }
+.badge-legend .nw { white-space: nowrap; }   /* "(" and "," stay with their badge */
+.badge-legend .swatch { width: .8em; height: .8em; padding: 0; margin-right: 6px; vertical-align: -.05em; cursor: default; }
+.badge-help { margin: 8px 0; font-size: 14px; }
+.badge-help > summary { cursor: pointer; width: fit-content; color: var(--muted); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; padding: 2px 0; }
+.badge-help > summary::after { content: " ⓘ"; text-transform: none; }
+.badge-help[open] > summary { color: var(--ink-2); }
+.badge-help .badge-legend { background: var(--surface-2); border-radius: 12px; padding: 8px 14px; margin-top: 4px; }
 .glossary { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 18px; margin: 8px 0 18px; font-size: 14px; }
 
 /* ---- deck builder ---- */
