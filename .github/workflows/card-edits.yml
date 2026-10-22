@@ -1,8 +1,9 @@
 # Bakes the website's PSD-kind card edits (site/Card Edits.json: stats, name, ability text) into the card PSDs and
 # PNGs with the bot's edit pipeline (AutoCroissant commands/card_bake.py): one commit per run with every baked card's
 # PSD and PNG and the rewritten edits file (at most 40 cards baked a run; the rest wait for the next), the report as the
-# job summary. Every 30 minutes, live, when the gate finds a PSD-kind edit without a final verdict
-# (docs/EDIT_PIPELINE_DESIGN.md section 8); a dispatch always runs. A failed scheduled run tells Discord.
+# job summary. Every 30 minutes, live, when the gate finds a PSD-kind edit without a final verdict, baking only those
+# (docs/EDIT_PIPELINE_DESIGN.md section 8); a dispatch always runs and re-checks every card. The first failed scheduled
+# run of a streak tells Discord.
 name: Card edits
 
 on:
@@ -23,11 +24,13 @@ permissions:
   contents: write     # the bake commits
   actions: write      # gh workflow run site.yml / tts-save.yml after a commit (a GITHUB_TOKEN push triggers no workflow)
 
-# Its own group: GitHub keeps one pending run per group, so sharing tts-save's would let the next tick replace a pending
-# TTS save. Both retry a commit on a moved head, and a bake that commits runs tts-save.yml afterwards.
+# The schedule's own group: GitHub keeps one pending run per group, so sharing tts-save's would let the next tick replace
+# a pending TTS save, and sharing it with dispatches would let a tick replace a pending dispatch (a --card or a dry run)
+# unseen. A dispatch gets a group of its own and may overlap a scheduled bake: the commit holds only blobs still as baked
+# from (a card baked by both is left out of the later commit as head-moved), and the edits file is re-read at the head.
 concurrency:
-  group: card-edits   # a running bake is never cancelled; a newer pending tick replaces an older one
-  cancel-in-progress: false
+  group: ${{ github.event_name == 'schedule' && 'card-edits' || format('card-edits-{0}', github.run_id) }}
+  cancel-in-progress: false   # a running bake is never cancelled; a newer pending tick replaces an older one
 
 jobs:
   bake:
@@ -69,12 +72,14 @@ jobs:
 
       # The fork pin: cards + feat/text-engine merged, save(update_preview=), tagged by step S0 of the design.
       # The tag exists since S0 (2026-10-21, cards a6363a04). Plan step 7 drops the pin once upstream has the changes.
-      - run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261021"
+      - timeout-minutes: 10     # a step's timeout fails the run (Discord is told); the job's cancels it
+        run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261021"
 
       # Schedule only: go when a PSD-kind edit has no refused verdict for its values on the current PSD
       # (card_bake.pending). A dispatch always goes.
       - name: Gate
         id: gate
+        timeout-minutes: 10
         working-directory: bot
         shell: bash
         env:
@@ -106,9 +111,11 @@ jobs:
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
       # The work dir is $RUNNER_TEMP/card-bake (edited PSD, merged PNG, before/after/diff crops, the rewritten file).
-      # The schedule bakes live; a dispatch follows dry_run.
+      # The schedule bakes live and only the gate's cards (--pending: a refused card stays refused, no time spent);
+      # a dispatch follows dry_run and re-checks every card. BUDGET (40 min) is the script's; the timeout is the backstop.
       - name: Bake
         if: steps.gate.outputs.go == 'true'
+        timeout-minutes: 50
         working-directory: bot
         shell: bash
         env:
@@ -116,8 +123,10 @@ jobs:
           PSD_TOOLS_FONT_DIRS: ${{ github.workspace }}/MDW/Fonts
           CARD: ${{ inputs.card }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+          EVENT: ${{ github.event_name }}
         run: |
           args=(--repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA")
+          [ "$EVENT" = schedule ] && args+=(--pending)
           [ "$DRY_RUN" = "true" ] && args+=(--dry-run)
           [ -n "$CARD" ] && args+=(--card "$CARD")
           python -m commands.card_bake "${args[@]}" | tee "$RUNNER_TEMP/report.md" >> "$GITHUB_STEP_SUMMARY"
@@ -138,16 +147,27 @@ jobs:
           grep -q 'committed `' "$RUNNER_TEMP/report.md" || exit 0
           gh workflow run site.yml && gh workflow run tts-save.yml
 
-      # A failed scheduled run (the commit failed, a card errored, or a step broke) would otherwise repeat unseen every
-      # 30 minutes: one Discord message with the run's link. The URL is never printed; a failed call only warns.
+      # A failed scheduled run (the commit failed, a card errored, a step broke or timed out, the job was cancelled at its
+      # 60 minutes) would otherwise repeat unseen every 30 minutes: one Discord message with the run's link, for the
+      # first failure of a streak only (the last finished scheduled run, not counting cancelled or skipped ones, failed:
+      # it was told then). Concurrency cancels only pending runs, which start no step. The URL is never printed; a
+      # failed call only warns.
       - name: Tell Discord
-        if: failure() && github.event_name == 'schedule'
+        if: (failure() || cancelled()) && github.event_name == 'schedule'
         shell: bash
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
           RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_CHANGELOG_WEBHOOK is not set; no Discord message"; exit 0; fi
-          jq -n --arg run "$RUN" '{content: ("Card edits: the scheduled bake failed. " + $run), allowed_mentions: {parse: []}}' \
+          last=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow card-edits.yml --event schedule --status completed \
+            --limit 20 --json databaseId,conclusion \
+            --jq "map(select(.databaseId != $GITHUB_RUN_ID and .conclusion != \"cancelled\" and .conclusion != \"skipped\"))[0].conclusion // \"\"") \
+            || last=""
+          if [ "$last" = failure ] || [ "$last" = timed_out ]; then
+            echo "The last scheduled run failed too: Discord was told then." | tee -a "$GITHUB_STEP_SUMMARY"; exit 0
+          fi
+          jq -n --arg run "$RUN" '{content: ("Card edits: the scheduled bake failed (the next failures stay quiet until a run succeeds). " + $run), allowed_mentions: {parse: []}}' \
             | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK" \
             || echo "::warning::the Discord webhook call failed"
