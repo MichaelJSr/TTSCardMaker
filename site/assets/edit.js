@@ -437,8 +437,10 @@ export function createEditor(app) {
       const r = canonical(k, v, series, c.id); if (r?.error) { error = r.error; return val(b, k); }
       return r ? r.name : null;
     };
+    let seriesRead;                                  // named("series") once: the subseries getter needs it too
+    const seriesName = () => (seriesRead === undefined ? (seriesRead = named("series")) : seriesRead);
     const all = {
-      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: () => named("series"), subseries: () => named("subseries", named("series") || ""), stars: () => int("stars"),
+      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: seriesName, subseries: () => named("subseries", seriesName() || ""), stars: () => int("stars"),
       types: () => [...document.querySelectorAll("#ef-types .on")].map(x => x.dataset.type),
       ...Object.fromEntries(STATS.map(s => [s, () => int(s)])),
       ability: () => f("ability").value.replace(/\r/g, "").trim() || null, note: () => f("note").value.trim() || null,
@@ -478,18 +480,19 @@ export function createEditor(app) {
   // ---- single fields, staged in place (inline.js): merged into the card's op, so the form and the bar see one batch
   const opFor = c => (stage.cards[c.id] ? structuredClone(stage.cards[c.id]) : { id: c.id, key: c.key, name: baseOf(c).name, set: {}, unset: [] });
   const put = (id, op) => { if (opEmpty(op)) delete stage.cards[id]; else stage.cards[id] = op; };
-  // a typed series, subseries or author as its known spelling ("mario" -> Mario); undefined when refused (toast unless defer)
-  function spell(kind, v, series, id, defer) {
+  // a typed series, subseries or author as its known spelling ("mario" -> Mario), with a toast; undefined when refused
+  function spell(kind, v, series, id) {
     const r = canonical(kind, v, series, id);
-    if (r?.error) { if (!defer) app.toast(r.error); return undefined; }
-    if (r?.existed && r.name !== r.typed && !defer) app.toast(kind === "author" ? sameName(kind, r.typed, r.name) : `“${r.typed}” saved as ${r.name}, its known spelling`);
+    if (r?.error) { app.toast(r.error); return undefined; }
+    if (r?.existed && r.name !== r.typed) app.toast(kind === "author" ? sameName(kind, r.typed, r.name) : `“${r.typed}” saved as ${r.name}, its known spelling`);
     return r ? r.name : v;
   }
+  // defer: from stageMany, which has spelled the value already and saves once after; no toasts
   function stageField(id, f, v, defer = false) {
     const c = find(id); if (!c || !(f in FIELDS)) return null;
     const b = baseOf(c);
     let x = fromInput(f, v, b.name);
-    if ((f === "series" || f === "subseries") && x != null && (x = spell(f, x, f === "subseries" ? c.series || "" : "", c.id, defer)) === undefined) return null;
+    if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, f === "subseries" ? c.series || "" : "", c.id)) === undefined) return null;
     const op = mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x);
     put(c.id, op); if (!defer) save();
     return op;
@@ -498,15 +501,19 @@ export function createEditor(app) {
     const c = find(id); if (!c) return null;
     const b = baseOf(c);
     if (b.dup) { if (!defer) app.toast("A duplicate's author follows the original"); return null; }
-    const a = spell("author", String(v ?? "").trim(), "", c.id, defer); if (a === undefined) return null;
+    const a = defer ? String(v ?? "").trim() : spell("author", String(v ?? "").trim(), "", c.id); if (a === undefined) return null;
     const op = mergeAuthor(opFor(c), a, b.author);
     put(c.id, op); if (!defer) save();
     return op;
   }
   // one save for the lot -> {changed (a card already at v doesn't count), dups (an author drop leaves duplicates alone),
-  // kept (a series drop: cards keeping a subseries the new series lacks), value, error}
+  // kept (a series drop: cards keeping a subseries the new series lacks), value, error}. v is spelled once, here: a drop
+  // chip's value (the lists mountGrid's chips come from) stays as it is, so cards can join either of two spellings of a
+  // name; other text goes through canonical()
   function stageMany(ids, key, v) {
-    const r = canonical(key, v, key === "subseries" ? find(ids[0])?.series || "" : "");
+    const series = key === "subseries" ? find(ids[0])?.series || "" : "";
+    const chips = key === "series" ? seriesList() : key === "subseries" ? ownSubseries(series) : key === "author" ? authorList() : [];
+    const r = chips.includes(v) ? { name: v } : canonical(key, v, series);
     if (r?.error) return { changed: 0, dups: 0, kept: 0, value: v, error: r.error };
     const value = r ? r.name : v, moved = [], own = key === "series" ? ownSubseries(value) : [];   // before the drop
     let changed = 0, dups = 0;
@@ -536,7 +543,7 @@ export function createEditor(app) {
       document.getElementById("ef-preview").innerHTML = ta.value.trim() ? app.render(ta.value, c.name) : `<span class="muted">No ability text.</span>`;
       const op = readForm(c), lines = describe(op);
       document.getElementById("ef-summary").innerHTML = (op.error ? `<span class="err">${esc(op.error)}.</span> ` : "") + (lines.length ? `<b>${lines.length} change${lines.length > 1 ? "s" : ""}:</b> ${lines.map(esc).join(" · ")}` : "No changes yet.");
-      form.dataset.dirty = lines.length ? "1" : "";
+      form.dataset.dirty = lines.length || op.error ? "1" : "";       // a refused name is typed text too: Cancel and leaving still ask
     };
     form.addEventListener("input", update);
     form.addEventListener("change", update);

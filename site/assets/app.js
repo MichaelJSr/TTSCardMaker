@@ -158,7 +158,7 @@ const editor = createEditor({
 });
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;
-inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m), params: () => parseHash().params });
+inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
 let selectAnchor = null;                                 // the last tile toggled: Shift-click selects from it
 function toggleSelect(id, range) {
   if (range && selectAnchor) for (const x of inline.rangeIds(S.list.map(c => c.id), selectAnchor, id)) S.selected.add(x);
@@ -355,7 +355,7 @@ function renderCards(r) {
       ${!list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}">${list.map((c, i) => tileHtml(c, { eager: i < 8, css: { s: 160, m: 200, l: 270 }[size] || 200 })).join("")}</div>`}
     </section></div>`;
-  if (editing()) inline.mountGrid(view);
+  if (editing()) inline.mountGrid(view, p);
 }
 function tableHtml(list, p) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"], ["new", "Updated"]];

@@ -41,12 +41,13 @@ const chipHtml = (v, fresh) => `<span class="chip" data-value="${esc(v)}"${fresh
 /** A drop list's chips: the new (pending) values first, dashed, then the rest. */
 export const dropChips = (list, fresh) => [...fresh.map(v => chipHtml(v, true)), ...list.filter(v => !fresh.includes(v)).map(v => chipHtml(v, false))].join("");
 
-let A = null;                                      // {editor, modal, selected, goCard, rerender, toast, params}, from install
+let A = null;                                      // {editor, modal, selected, goCard, rerender, toast}, from install
 let card = null;                                   // the card the dialog shows (mountCard)
 let cur = null;                                    // the open editor: {c, f, el, host, html, cls, tip, ctl, v}
 let prov = null;                                   // a stat row changed by keyboard, not yet saved: {row, k, v0}
 let pointer = false;                               // the last input was a pointer (focus moved by a click, not Tab)
 let naming = null;                                 // the filter bar's open "New …" input: {sel, key, input}
+let listParams = new URLSearchParams();            // the params of the list mountGrid last upgraded (not the hash: a card route has none)
 let arrowAt = -1e9;                                // when an arrow key last went to a filter select
 
 // ---- the card dialog
@@ -80,7 +81,7 @@ export function mountCard(modal, c, api = A) {
   else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="note" data-empty aria-label="Add a note">+ note</button>`);
 }
 function open(el, f) {
-  if (cur) commit(false);
+  if (cur && !commit(false)) { cur?.ctl.focus(); return; }                // a refused name stays open, to shorten it
   if (!el.isConnected || !card) return;
   const c = card, v = f === "author" ? (c.author || "") : String(A.editor.value(c, f) ?? "");
   const opts = A.editor.options(), list = f === "series" ? opts.series : f === "subseries" ? opts.subseries(c.series) : f === "author" ? opts.authors : [];
@@ -99,13 +100,17 @@ function cancel(refocus) {
   if (host !== el) host.replaceWith(el); else { el.innerHTML = html; el.className = cls; if (tip) el.dataset.tip = tip; }
   if (refocus) el.focus();
 }
-function commit(kbd) {                            // kbd: from the keyboard, so focus returns to the spot
-  if (!cur) return;
-  const { c, f, ctl, v } = cur, next = ctl.value.replace(/\r/g, "");
-  if (next.trim() === v.replace(/\r/g, "").trim()) { cancel(kbd); return; }
+function commit(kbd) {                            // kbd: from the keyboard, so focus returns to the spot; false: refused
+  if (!cur) return true;
+  const was = cur, { c, f, ctl, v } = cur, next = ctl.value.replace(/\r/g, "");
+  if (next.trim() === v.replace(/\r/g, "").trim()) { cancel(kbd); return true; }
   cur = null;
-  if (f === "author") A.editor.stageAuthor(c.id, next); else A.editor.stageField(c.id, f, next);
+  if (!(f === "author" ? A.editor.stageAuthor(c.id, next) : A.editor.stageField(c.id, f, next))) {   // refused, with a toast (a name too long):
+    if (was.host.isConnected) cur = was;           // the input and its text stay, as in the filter bar
+    return false;
+  }
   refresh(c, f, kbd);
+  return true;
 }
 function refresh(c, f, kbd) {                      // the dialog again (as the form does), scrolled as it was; after a mouse action
   const scroll = A.modal.scrollTop;                // focus stays off (openCard blurs so the shortcuts work), after a key it comes back
@@ -179,12 +184,13 @@ export function reflect(view, selected) {
 /** Edit mode only; call after renderCards. The Series, Subseries and Author selects get the new values no card carries yet
  *  and a "New …" option, in the grid and the table alike (a series without subseries gets its Subseries select). With the
  *  grid, the tiles turn draggable and drop lists go under the selects (every series, every author; the picked series' own
- *  subseries), shown only while a drag is on (body.dragging-cards). */
-export function mountGrid(view, api = A) {
+ *  subseries), shown only while a drag is on (body.dragging-cards). p: the rendered list's params, renderCards' r.params
+ *  (with the card dialog open the list is S.listHash's, not the hash's). */
+export function mountGrid(view, p, api = A) {
   const filters = view.querySelector(".browse .filters"); if (!filters) return;
-  naming = null;
+  naming = null; listParams = p;
   const grid = view.querySelector(".browse .grid"), opts = api.editor.options(), b = opts.buckets;
-  const p = api.params?.() || new URLSearchParams(), series = p.get("series") || "", sel = key => filters.querySelector(`select[data-key="${key}"]`);
+  const series = p.get("series") || "", sel = key => filters.querySelector(`select[data-key="${key}"]`);
   if (!sel("subseries")) sel("series")?.insertAdjacentHTML("afterend", `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option></select>`);
   const fresh = { series: b.series.map(value => ({ value })), author: b.author.map(value => ({ value })),
     subseries: b.subseries.filter(([s]) => !series || s === series).map(([s, value]) => ({ value, series: s, where: series ? "" : s })) };
@@ -241,7 +247,7 @@ function closeName(refocus) {
   if (refocus) sel.focus();
 }
 function createBucket(kbd) {
-  const { sel, key, input } = naming, series = key === "subseries" ? A.params().get("series") || "" : "";
+  const { sel, key, input } = naming, series = key === "subseries" ? listParams.get("series") || "" : "";
   const r = A.editor.addBucket(key, input.value, series);
   if (!r) { closeName(kbd); return; }                                        // nothing typed
   if (r.error) { A.toast(r.error); return; }                                 // the input stays, to shorten it
@@ -252,7 +258,7 @@ function createBucket(kbd) {
     const last = drops?.querySelectorAll(".chip[data-new]"), html = dropChips([], [r.name]);
     if (last?.length) last[last.length - 1].insertAdjacentHTML("afterend", html); else drops?.insertAdjacentHTML("afterbegin", html);
   }
-  A.toast(r.note || `New ${LABEL[key].toLowerCase()} “${r.name}”${series ? ` of ${series}` : ""}: ${(A.params().get("view") || localStorage.getItem("view")) === "table" ? "in Grid view, drag cards onto it" : `drag cards onto it under ${LABEL[key]}`}`);   // app.js's view choice
+  A.toast(r.note || `New ${LABEL[key].toLowerCase()} “${r.name}”${series ? ` of ${series}` : ""}: ${(listParams.get("view") || localStorage.getItem("view")) === "table" ? "in Grid view, drag cards onto it" : `drag cards onto it under ${LABEL[key]}`}`);   // app.js's view choice
 }
 function onChange(e) {                            // before app.js's listener: the filter doesn't change
   const sel = e.target.closest?.(".filters select[data-key]");
@@ -273,7 +279,7 @@ function onNameFocusOut(e) {
 }
 
 /** Once at boot, before app.js's document listeners: delegated listeners on the modal (editors) and the document (drag,
- *  the filter bar's "New …"). api = {editor, modal, selected (Set of card ids), goCard, rerender, toast, params (the hash's)}. */
+ *  the filter bar's "New …"). api = {editor, modal, selected (Set of card ids), goCard, rerender, toast}. */
 export function install(api) {
   A = api;
   api.modal.addEventListener("pointerdown", () => { pointer = true; });

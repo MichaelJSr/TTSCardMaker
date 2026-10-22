@@ -118,23 +118,23 @@ stays as it was, so the cards to drag are still shown. Until a card carries it, 
 when the tab closes or you sign out) and nothing is published for it. Names are trimmed, their spaces collapsed and at
 most 60 characters; one that differs from a known name only in case or spacing takes the known spelling (the one most
 cards use), on the chips and in All fields too ("mario" is the series Mario), and an author's git or GitHub name from
-`[people]` becomes the name shown ("Michael" is MichaelJSr), as the bot resolves it. A new author's cards go to `[cards]`
-under a new `# --- credited to Name (n) ---` group, with no `[people]` line (that maps a login; an admin can add one
-later). Every change lands in the batch bar at the bottom as a sentence ("Goombella: SPD 4 → 5", "Clot Black: Author →
-Chestnut"), each with ↺ to take it back; the bar folds to one line when it gets long, and **Review and publish** commits
-the whole batch at once. **All fields** (e, also in the bar) opens the full form for everything else (kind, item type,
-stars, types, aliases, duplicate of, checks, constructed ban, hidden, creatures). Signed out, none of this shows: the
-pages are the same to the pixel. Fields go to `site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to
-`site/Constructed Ban List.txt`. The site rebuilds on that commit; the bot applies the same files on `/update_stats`.
-A subseries (Goombella: series Mario, subseries Paper Mario: The Thousand-Year Door) exists only as an edit (`subseries`;
-the bot reads it too). Edits **on the card image** (name, stars, types, stats, ability text; the form groups them and the
-bar marks them, and they show as "PSD pending" until the image is regenerated) are told apart from **database only**
-ones, which come from the card's folder or exist only as edits (kind, item type, series, subseries, note, aliases,
-author, duplicate of, checks, constructed ban, hidden).
-Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a card
-several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own bars.
-Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards, rename
-people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
+`[people]` becomes the name shown ("Michael" is MichaelJSr), as the bot resolves it. A drop sets the value exactly as
+its chip shows it. A new author's cards go to `[cards]` under a new `# --- credited to Name (n) ---` group, with no
+`[people]` line (that maps a login; an admin can add one later). Every change lands in the batch bar at the bottom as a
+sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each with ↺ to take it back; the bar folds to one
+line when it gets long, and **Review and publish** commits the whole batch at once. **All fields** (e, also in the bar)
+opens the full form for everything else (kind, item type, stars, types, aliases, duplicate of, checks, constructed ban,
+hidden, creatures). Signed out, none of this shows: the pages are the same to the pixel. Fields go to
+`site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to `site/Constructed Ban List.txt`. The site rebuilds
+on that commit; the bot applies the same files on `/update_stats`. A subseries (Goombella: series Mario, subseries Paper
+Mario: The Thousand-Year Door) exists only as an edit (`subseries`; the bot reads it too). Edits **on the card image**
+(name, stars, types, stats, ability text; the form groups them and the bar marks them, and they show as "PSD pending"
+until the image is regenerated) are told apart from **database only** ones, which come from the card's folder or exist
+only as edits (kind, item type, series, subseries, note, aliases, author, duplicate of, checks, constructed ban,
+hidden). Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a
+card several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own
+bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
+rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
 `Card Edits.json` to go back to the PSD.
 
 ## People
