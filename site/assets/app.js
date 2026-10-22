@@ -444,7 +444,7 @@ function openCard(id, showDetails = false) {
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
-          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : c.edited ? `<span class="fact" data-tip="${esc(`Changed on the website: ${c.edited.join(", ")}${c.editBy ? ` · ${c.editBy}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
+          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : c.edited ? `<span class="fact" data-tip="${esc(`Changed on the website: ${c.edited.join(", ")}${c.editBy ? ` · ${c.editBy.replace(/^discord:(.*)/, "$1 (Discord)")}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>
@@ -695,7 +695,6 @@ function renderStatsView(r) {
     loadAnalytics().then(fill, e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; });
   }
 }
-const BOT = "AutoCroissant";                           // the bot's bake stamps (build_site.py BOT_AUTHOR): not a person page
 // the Changes page's tabs: #/changes (Overview), #/changes/changelog, #/changes/edits
 const CHANGE_TABS = [["", "Overview"], ["changelog", "Changelog"], ["edits", "Database edits"]];
 function renderChanges(r = parseHash()) {
@@ -739,7 +738,7 @@ function renderChanges(r = parseHash()) {
 /** The Database edits tab's "Edited on the website" panel: the cards a Card Edits.json entry changes now */
 function webEditsHtml() {
   const webEdits = S.all.filter(c => c.edited).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
-  return webEdits.length ? `<section class="panel"><h3>Edited on the website <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${c.editBy === BOT ? esc(c.editBy) : `<a href="#/u/${encodeURIComponent(c.editBy)}">${esc(c.editBy)}</a>`}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul></section>` : "";
+  return webEdits.length ? `<section class="panel"><h3>Edited on the website <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul></section>` : "";
 }
 function renderCompare(r) {
   const ids = (r.arg || S.compare.join(",")).split(",").filter(id => S.byId.has(id)).slice(0, 5);

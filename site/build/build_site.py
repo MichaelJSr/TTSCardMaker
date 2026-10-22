@@ -1153,7 +1153,8 @@ def image_versions(paths, commits):
 # The card sync's events come from the data branch's db/ (site.yml checks it out and sets CARD_DATA_DIR, AutoCroissant
 # docs/Campaigns/DATA_BUILD_ACTION.md §10, §12.1); without it the tabs show no events. The publish batches and the
 # archived cards need no data branch: git history and old_stats. For now it switches only the events: the cards still
-# come from the pickles, so step 8 must add load_card_data() (§10) in the same change that sets it in site.yml.
+# come from the pickles, so load_card_data() (§10) must land before step 7's shadow comparison of cards.json built with
+# and without it (until then that comparison is always equal and tests nothing).
 CARD_DATA_DIR = os.environ.get("CARD_DATA_DIR", "")
 CHANGELOG_DAYS = 180
 EVENT_KINDS = {"new", "changed", "art", "reparse", "moved", "renamed", "archived", "restored", "edited", "authors", "restore"}   # AutoCroissant changelog.KINDS
@@ -1275,14 +1276,16 @@ def edits_entries(text):
 
 def edit_changes(before, after):
     """[(card_key, name, {field: [old, new]}, _by)] between two Card Edits.json texts, by name. _by is the new entry's
-    when this change restamped it (_by or _at differs), else None: a commit that left the stamp alone isn't that editor's."""
+    when this change stamped it (a _by/_at pair no entry had before), else None: a commit that left the stamp alone, or
+    moved it to a renamed key, isn't that editor's."""
     a, b = edits_entries(before), edits_entries(after)
+    had = {stamp for _, _, stamp in a.values()}
     out = []
     for key in sorted(set(a) | set(b)):
         old, new = a.get(key, (None, {}, (None, None))), b.get(key, (None, {}, (None, None)))
         fields = {f: [old[1].get(f), new[1].get(f)] for f in sorted(set(old[1]) | set(new[1])) if old[1].get(f) != new[1].get(f)}
         if fields:
-            out.append((key, new[0] or old[0], fields, new[2][0] if key in b and new[2] != old[2] else None))
+            out.append((key, new[0] or old[0], fields, new[2][0] if key in b and new[2] not in had else None))
     return out
 
 
@@ -1295,7 +1298,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
     Without history: the current file's entries grouped by their _by/_at stamps (each card's last batch only, `stamped`).
 
     Returns:
-        {"available": bool, "batches": [{sha?, at, via: website|discord|git, by: [names], subject?, stamped?,
+        {"available": bool, "batches": [{sha?, at, via: website|discord|git, by: [credited name | discord:<name>], subject?, stamped?,
           cards: [{key, name, id?, fields: {field: [old, new]}}], authors: [{key, name, id?, from, to}],
           people: [[git name, from, to]], more?: lines past BATCH_LINES}]}
     """
@@ -1306,9 +1309,12 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
             row["id"] = found
         return row
 
-    def shown(by):
+    def shown(by, discord=False):
+        """A Discord name keeps its discord: prefix (the site never links it to a person page), anything else is credited"""
         by = str(by or "")
-        return by.split(":", 1)[1] if by.startswith("discord:") else by
+        if by.startswith("discord:") or discord:
+            return by if by.startswith("discord:") else "discord:" + by
+        return credit(by, people, by_login) or by
 
     if commits is None:
         groups = {}
@@ -1354,7 +1360,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
         if not (cards or authors or people_changes):
             continue
         stamps = sorted({shown(by) for _, _, _, by in cards if by and str(by).lower() != BOT_AUTHOR.lower()}, key=str.lower)
-        named = {shown(e) if discord or e.startswith("discord:") else credit(e, people, by_login) or e for e in editors}   # a Discord name is never a login
+        named = {shown(e, discord) for e in editors}   # in a Discord commit every Edit-by is a Discord name
         by = stamps or sorted(named, key=str.lower) or [who(name, email, people, by_login)]
         row = {"sha": sha, "at": ts, "subject": subject, "by": by,
                "via": "discord" if discord else "website" if subject.startswith(WEBSITE_SUBJECT) else "git",

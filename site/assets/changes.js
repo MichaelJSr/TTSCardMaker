@@ -75,10 +75,12 @@ const cardLink = (id, text) => (id ? `<a href="#/card/${encodeURIComponent(id)}"
 const value = v => (v == null || v === "" || (Array.isArray(v) && !v.length) ? "none" : Array.isArray(v) ? v.map(x => (x && typeof x === "object" ? JSON.stringify(x) : x)).join(", ") : typeof v === "object" ? JSON.stringify(v) : String(v));
 const isLogin = s => /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/.test(s || "");
 const personLink = name => (isLogin(name) && name !== "AutoCroissant" ? `<a href="#/u/${encodeURIComponent(name)}">${esc(name)}</a>` : esc(name));
+/** A name as written, or a person page link; a discord:<name> (a Discord user) is never a person page */
+export const nameHtml = name => (String(name || "").startsWith("discord:") ? esc(name.slice(8)) : personLink(name));
 /** "(by X, on the website)" / "(by X, via Discord)" from an edit's _by */
 function byWhom(by) {
   if (!by) return "";
-  return by.startsWith("discord:") ? ` <span class="muted">(by ${esc(by.slice(8))}, via Discord)</span>` : ` <span class="muted">(by ${personLink(by)}, on the website)</span>`;
+  return ` <span class="muted">(by ${nameHtml(by)}, ${by.startsWith("discord:") ? "via Discord" : "on the website"})</span>`;
 }
 /** One field change: "HP 5 → 6", "series Mario → Kirby"; the ability as a word diff below the line */
 function fieldHtml(key, [a, b]) {
@@ -181,7 +183,7 @@ export function archivedHtml(rows, repo) {
 }
 /** One edit batch: who, when, where, its commit, and each card's fields old → new */
 export function batchHtml(b, repo) {
-  const who = (b.by || []).map(b.via === "discord" ? esc : personLink).join(", ") || "Someone";   // a Discord name gets no person page (byWhom)
+  const who = (b.by || []).map(nameHtml).join(", ") || "Someone";   // per name: build_site keeps a Discord name's discord: prefix
   const subject = b.subject && b.subject.length > 90 ? `${b.subject.slice(0, 89)}…` : b.subject;
   const commit = b.sha && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(b.sha)}" target="_blank" rel="noopener" title="${esc(b.subject || "")}">${esc(subject || short(b.sha))}</a>` : "";
   const cards = (b.cards || []).map(c => { const { line, diff } = fieldsHtml(c.fields); return `<li>${cardLink(c.id, c.name || c.key)}${line ? `: ${line}` : ""}${diff}</li>`; });
