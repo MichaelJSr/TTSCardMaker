@@ -10,8 +10,9 @@ const FIXED = {
   BOT: ["forced", "Beginning of turn (forced)"], ENDT: ["forced", "End of turn (forced)"],
   BOGT: ["forced", "Beginning of global turn (forced)"], ENDGT: ["forced", "End of global turn (forced)"],
   OFS: ["trigger", "On first summon"], OS: ["trigger", "On summon"], OD: ["trigger", "On death"], WOF: ["trigger", "While on field"],
+  Action: ["neutral", "Costs the creature's action"],   // not a timing tag; exact case only
 };
-export const TAG = /\((-?[0-9A-Z/]{2,6})\)/;   // candidates; tagInfo decides. Not /g: copy it to iterate
+export const TAG = /\((-?[0-9A-Z/]{2,6}|Action)\)/;   // candidates; tagInfo decides. Not /g: copy it to iterate
 const times = n => (n === "X" ? "X times" : n === "1" ? "once" : `${n} times`);
 const count = (n, one, many = one + "s") => `${n} ${n === "1" || n === "-1" ? one : many}`;
 const old = (group, meaning, multi = false) => ({ group, meaning: `Old system: ${meaning}`, multi, old: true });
@@ -31,7 +32,7 @@ export function tagInfo(tag) {
   if ((m = /^E([1-9X])T$/.exec(tag))) return old("turn", `every ${m[1]} turns, starting on turn ${m[1]} (multi-turn)`, true);
   return null;
 }
-export const GROUP_NAMES = { turn: "On your turn", any: "At any time", forced: "Forced", trigger: "Per game & triggers" };
+export const GROUP_NAMES = { turn: "On your turn", any: "At any time", forced: "Forced", trigger: "Per game & triggers", neutral: "Other tags" };
 export const badgeHtml = tag => {
   const t = tagInfo(tag);
   return t ? `<span class="badge ${t.group}" data-tip="${esc(`(${tag}) ${t.meaning}`)}">${esc(tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);

@@ -954,7 +954,10 @@ def main():
         if entry["rule"] and entry["rule"].get("partial") and kept.get("add_new_since"):
             entry["rule"] = {**entry["rule"], "add_new_since": kept["add_new_since"]}
         if kept.get("count") and not kept.get("partial"):   # a complete counted rule stays complete
-            entry["rule"], entry["confidence"] = kept, before[g].get("confidence")
+            # ...but this run's excludes (sibling-listed cards, backs) its folders match still apply
+            new = set((entry["rule"] or {}).get("exclude", [])) | {p for p in pngs if is_back(p)}
+            ex = set(kept.get("exclude", [])) | {p for p in new if any(glob_match(f, p) for f in kept.get("folders", []))}
+            entry["rule"], entry["confidence"] = ({**kept, "exclude": sorted(ex)} if ex else kept), before[g].get("confidence")
         if entry["rule"] and entry["rule"].get("partial"):
             entry["card_list"] = sorted(set(p for p in d["paths"] if p))
         if d["odd_counts"]:

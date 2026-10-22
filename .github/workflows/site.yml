@@ -63,14 +63,19 @@ jobs:
           restore-keys: card-images-v2-
 
       # Deck preview montages: their own cache in site/.og-cache. The newest one is restored, and it is saved after the build
-      # under the names of the montages in use (each a hash of its pictured images), so a montage that changes for any reason
-      # (a deck, a card's stars or name in the bot's data or Card Edits.json, an image) is saved once, not redrawn each run.
+      # whenever the montages in use (each named by a hash of its pictured images) differ from the restored ones, so a montage
+      # that changes for any reason (a deck, a card's stars or name in the bot's data or Card Edits.json, an image) is saved
+      # once, not redrawn each run. The run id in the key makes each save the newest entry, even when the set of montages
+      # returns to one saved before (an existing key can't be saved over, and restore would keep taking a newer, wrong one).
       - id: og-restore
         uses: actions/cache/restore@v6
         with:
           path: site/.og-cache
           key: deck-previews-v2-${{ github.sha }}
           restore-keys: deck-previews-v2-
+
+      - id: og-before
+        run: echo "names=$(ls site/.og-cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       - run: python site/build/build_site.py
         env:
@@ -79,15 +84,15 @@ jobs:
       - id: og
         run: |
           if [ -n "$(ls -A site/.og-cache 2>/dev/null)" ]; then
-            echo "key=deck-previews-v2-$(ls site/.og-cache | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+            echo "names=$(ls site/.og-cache | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
           fi
 
-      - if: steps.og.outputs.key != '' && steps.og.outputs.key != steps.og-restore.outputs.cache-matched-key
+      - if: steps.og.outputs.names != '' && steps.og.outputs.names != steps.og-before.outputs.names
         uses: actions/cache/save@v6
         continue-on-error: true    # a failed save never stops the deploy
         with:
           path: site/.og-cache
-          key: ${{ steps.og.outputs.key }}
+          key: deck-previews-v2-${{ steps.og.outputs.names }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       - uses: actions/upload-pages-artifact@v5
         with:

@@ -175,8 +175,8 @@ filter counts them), **edits** = publish batches, i.e. commits that changed `sit
 file counts too; a move of the file doesn't), and **card commits** = commits that added or changed a card's PSD or PNG
 under the card folders (the old `Auxillary/` spelling included; moves and rulebook pages don't count), one per commit
 however many files. The bot's own commits and `_by: AutoCroissant` stamps are left out, except a bake: the bot's commit
-that reprints a card for an edit names each editor in an `Edit-by: <login>` trailer line, and counts as a card commit
-for each of them (not as an edit: their batch already counted when they published it). The top of each column holds a
+that reprints cards for edits names each editor in an `Edit-by: <login>` trailer line per card, and counts as one card
+commit for each of them (not as an edit: their batch already counted when they published it). The top of each column holds a
 title (ties share it, nobody at 0): **Top card maker** (cards), **Top editor** (edits), **Top committer** (card
 commits), and the top of the three added together is the **Top contributor**. A commit is credited by its git name, else by the GitHub login in a noreply
 email, each looked up in the profiles' `author` fields and then in `[people]` (`Card Authors.txt`); otherwise by the git

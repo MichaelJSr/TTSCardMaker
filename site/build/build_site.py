@@ -1170,8 +1170,8 @@ def contributions(cards, people, profiles, edits, commits):
     (a hand commit counts, a pure move doesn't), or without history the file's distinct _by/_at stamps (a floor: it keeps
     one batch per card). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
     added, isn't a change), one however many files. The bot's own commits and stamps are left out, but a bake (a bot
-    commit changing a card, with Edit-by trailers) is a card commit of each editor it names, never an edit (their batch
-    already counted). A login is the row credit() names, else the row its noreply commits credit most, else its own (any
+    commit changing a card, with Edit-by trailers, one per card and editor) is one card commit of each editor it names,
+    its recent entry counting their trailers as cards, never an edit (their batch already counted). A login is the row credit() names, else the row its noreply commits credit most, else its own (any
     case). logins: the names credited to the person (key, profile logins, [people] names, GitHub logins seen), each in
     one row.
     github: a GitHub login known to be theirs (their profile's, else the most used of the logins in their noreply commit
@@ -1228,10 +1228,10 @@ def contributions(cards, people, profiles, edits, commits):
             changed = lambda s, new: s == "M" or (s == "A" and new not in gone)       # not a blob moved from another path
             touched = {os.path.splitext(os.path.basename(p))[0].lower() for s, _, new, p in entries if changed(s, new) and is_card_file(p)}
             if bot:                               # a bake: the card commit of each editor named
-                named = {}
+                named = {}                        # row -> [login as first spelled, their cards: one trailer per card]
                 for login in editors if touched else ():
-                    named.setdefault(key_of(login), login)        # one commit per row named
-                for k, login in named.items():
+                    named.setdefault(key_of(login), [login, 0])[1] += 1      # one commit per row named
+                for k, (login, n) in named.items():
                     if k.lower() == BOT_AUTHOR.lower():
                         continue
                     r = rec_of(k)
@@ -1240,7 +1240,7 @@ def contributions(cards, people, profiles, edits, commits):
                     r["commits"] += 1
                     tally(r, ts, 2)
                     if len(r["recent"]) < RECENT_COMMITS:
-                        r["recent"].append([ts, subject, len(touched)])
+                        r["recent"].append([ts, subject, n])
                 continue
             edited = any(p in EDIT_PATHS and changed(s, new) for s, _, new, p in entries)
             if not touched and not edited:
