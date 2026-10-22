@@ -749,7 +749,7 @@ function renderChanges(r = parseHash()) {
 function webEditsHtml() {
   const webEdits = S.all.filter(webEdited).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
   return `<section class="panel"><h3>Edited on the website or in Discord${webEdits.length ? ` <span class="muted">${webEdits.length}</span>` : ""}</h3>
-    <p class="muted">The cards an edit on the website or in Discord changes now, newest first: the fields, who and when. The bot's own entries (the aliases and series it moved there) aren't listed.</p>
+    <p class="muted">The cards an edit on the website or in Discord changes now, newest first: the fields, who and when. Aliases and series the bot moved in from Discord aren't listed.</p>
     ${webEdits.length ? `<ul>${webEdits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(changes.editorFields(c).join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul>` : `<p class="empty">No card is edited on the website or in Discord.</p>`}</section>`;
 }
 /** The Parser notes tab: the cards the bot hasn't parsed yet, and the parser's notes */
