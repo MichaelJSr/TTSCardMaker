@@ -8,7 +8,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **Cards**: grid or sortable table; filters for kind, stars, item type, type icons, series and subseries, stat ranges, author and flags.
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
   column too; another sort picked from the menu runs in its usual direction): by the first upload of the card image,
-  ties by name; a card without one goes last. It needs the git history, so a shallow local build hides it. About 600
+  ties by name; a card without one goes last. It needs the git history, so a shallow local build hides it (a shared
+  `sort=created` link then sorts by name, and the menu says so). About 600
   cards share the first import's dates (2023-11-05/06), uploaded folder by folder, so among them it only tells the
   batches apart.
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`),
@@ -18,9 +19,10 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 - **Card pages**: full image, stat bars, ability text with icons, timing-tag badges such as (1CD), (1/2CD), (1GCD) and
   (2U) (hover for the meaning) and links to every card it names (by its printed title or file name, in any case,
   either apostrophe, plural, singular or possessive: "Copper Swords", "an X Fist", "Grodus X's"; a one-word file name
-  only when the title is one word too; a one-word name only as the card spells it or capitalized, not as a label like
-  "Cat:", not as a verb opening a clause ("Flip to the other creature"), and after a capitalized word only when that
-  word is a verb or a card: "Summon Jetpack" links, "Evil Quote" doesn't); "mentions", "mentioned by", similar stats,
+  only when the title is one word too; a one-word name only as the card spells it, capitalized, or lowercase after its
+  own verb ("inflict 1T1 smeckeldorfed", "stacks of hardened", "summon a silithid"); not as a label like "Cat:", not
+  before a number ("Heal 2 HP"), not as a verb opening a clause ("Flip to the other creature"), and after a capitalized
+  word only when that word is a verb or a card: "Summon Jetpack" links, "Evil Quote" doesn't); "mentions", "mentioned by", similar stats,
   same series, text history with changes highlighted, and an image version viewer: every commit that changed the
   card's image, compared side by side with the current one.
   A **Details** dropdown at the bottom of the card page (closed by default; the browser remembers it, its sections and
