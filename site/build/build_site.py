@@ -9,7 +9,7 @@ Where the data comes from:
     The pickles are read into stub classes, and only the globals they hold (PICKLE_GLOBALS) are allowed: anything else
     is refused, nothing in it run. A field the site reads that the bot's cards lack, or one it doesn't know, is a warning.
     The PSDs' structure (fonts, text layers, effects, stat rows, layer tree) comes from the bot's psd_details.json the
-    same way, keyed by PSD blob sha; a card with a record gets data/details/<id>.json for the card page's Details dropdown.
+    same way, keyed by PSD blob sha; a card or rulebook page with a record gets data/details/<id>.json for its Details dropdown.
   * Images: card PNGs in this repo, turned into three WebP sizes (240 px and 360 px for the grid at 1x/2x, 720 px
     for the card view). They are cached by git blob hash in site/.cache/img, so after the first run only new or
     changed cards are downloaded and resized; images no card uses any more are pruned. Each image's size and accent
@@ -33,7 +33,7 @@ PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) ar
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
 data/contributions.json, data/decks.json and data/versions.json (loaded when the rulebook, a card's text or image history, the
-changes feed, the People tab or the published decks are opened), data/details/<id>.json (a card's Details dropdown), images, icons,
+changes feed, the People tab or the published decks are opened), data/details/<id>.json (a card's or rulebook page's Details dropdown), images, icons,
 assets and one share page per card, per person and per public deck. Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
@@ -235,7 +235,7 @@ def join_details(cards, records, tree):
     """
     The record of each card's PSD: by its blob at HEAD, else the blob the bot parsed, else the newest record for its path.
 
-    Flags the card (details: true in cards.json) and returns {card id: record + id and name} for data/details/<id>.json.
+    Flags the card (details: true in cards.json or rules.json) and returns {card id: record + id and name} for data/details/<id>.json.
     A duplicate (same PSD) gets its original's record.
     """
     by_path = {}
@@ -1573,11 +1573,11 @@ def main():
         log(f"image versions: {sum(len(r) for r in versions['cards'].values())} versions of {len(versions['cards'])} cards "
             f"from {len(versions['commits'])} commits, since {datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}")
 
-    detail_files = join_details(cards, records, tree)
+    detail_files = join_details(cards + rules, records, tree)      # rulebook pages too: the bot reads their PSDs
     for e in cards + rules:
         e.pop("_blob", None)
     if records:
-        log(f"PSD details: {len(detail_files)} cards have a record ({len(records)} in {DETAILS_JSON})")
+        log(f"PSD details: {len(detail_files)} cards and rulebook pages have a record ({len(records)} in {DETAILS_JSON})")
 
     history = {}
     for e in cards + rules:

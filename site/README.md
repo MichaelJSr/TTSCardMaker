@@ -7,12 +7,14 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 
 - **Cards**: grid or sortable table; filters for kind, stars, item type, type icons, series and subseries, stat ranges, author and flags.
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`),
-  and also matches card names and aliases.
+  and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
+  record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
+  dropdown open).
 - **Card pages**: full image, stat bars, ability text with icons, timing-tag badges (hover for the meaning) and links to
   every card it names; "mentions", "mentioned by", similar stats, same series, text history with changes highlighted,
   and an image version viewer: every commit that changed the card's image, compared side by side with the current one.
-  A **Details** dropdown at the bottom of the card page (closed by default; the browser remembers it, and its sections,
-  for the session) shows the PSD's structure as the bot read it: fonts (each expandable to its layers; one that
+  A **Details** dropdown at the bottom of the card page (closed by default; the browser remembers it, its sections and
+  fonts, for the session) shows the PSD's structure as the bot read it: fonts (each expandable to its layers; one that
   `MDW/Fonts` lacks is flagged "missing from MDW/Fonts", "not checked" when the bot had no font index), every text
   layer (text, font, size, colour, visible), layer effects, smart objects, canvas (size, mode, depth, ICC profile),
   how the type icons are made (image layers or icon-font tokens), how each stat row is built (template digit row,
@@ -21,7 +23,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   its section opens).
   Every card has a shareable link (`/c/<card>/`) that shows a rich preview in Discord. The Share button (s) opens a dialog
   with that link, a Discord preview, and buttons to copy the card as a Discord message, an image or plain text.
-- **Rulebook**: every page with search and highlighting, the timing-tag glossary, and the constructed ban list.
+- **Rulebook**: every page with search and highlighting, the timing-tag glossary, and the constructed ban list. Each
+  page has the same Details dropdown (the bot reads the rulebook PSDs too), always closed when the page loads.
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,
   optional starting field), with live checks, several saved decks, share links, text import/export, random fill,
   printable proxies, and a Tabletop Simulator saved-object download. Signed in, **Publish…** on a saved hand makes it a
@@ -68,7 +71,7 @@ The Details dropdown reads the bot's `psd_details.json` (AutoCroissant, beside t
 keyed by its git blob sha, gathered on `/update_stats` and pushed with the pickles; the site fetches it from the bot
 repo like the pickles). The build joins a record to a card by the PSD's blob at HEAD, else the blob the bot parsed,
 else the newest record for that path, writes `data/details/<id>.json` (the record plus the card's id and name; a
-duplicate gets its original's) and sets `details: true` on the card. No file, or no record for a card: no dropdown;
+duplicate gets its original's) and sets `details: true` on the card or rulebook page. No file, or no record for a card: no dropdown;
 the build never fails on it.
 
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
@@ -85,7 +88,7 @@ icons in `site/.cache/icons`, so an unchanged image costs nothing, and `site/dis
 where links fail). The first screen loads only `data/cards.json`; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
 People tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
-when a card's Details dropdown is first opened. Script, style and data URLs
+when a card's or rulebook page's Details dropdown is first opened. Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
 
@@ -215,6 +218,6 @@ python -m http.server -d site/dist 8000  # then open http://localhost:8000
 
 Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place and drag-to-assign,
-`profile.js` the People pages, `pick.js` the card picker panel, `details.js` the card page's Details dropdown, `decks.js` the
+`profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
 published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py`.
 Generated files (`site/dist`, `site/.cache`) are git-ignored.

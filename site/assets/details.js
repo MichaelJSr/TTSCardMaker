@@ -1,8 +1,9 @@
 // The card page's Details dropdown: the PSD's structure as the bot read it (data/details/<id>.json, built from
-// AutoCroissant's psd_details.json). DOM-free at import: app.js renders detailsHtml() into the dialog and mount()s it.
+// AutoCroissant's psd_details.json), on the card page and on each rulebook page. DOM-free at import: app.js renders
+// detailsHtml() and mount()s it.
 import { esc } from "./text.js";
 
-const STATE_KEY = "psd-details";                         // sessionStorage: {details: open?, <section>: open?}
+const STATE_KEY = "psd-details";                         // sessionStorage: {details: open?, <section>: open?, "font:<name>": open?}
 const STATS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
 const ROWS = { template: "template digit row", "two-row": "Top + Bottom rows", pixel: "drawn bars, no digit rows", other: "something else", none: "none" };
 const ICONS = { images: "image layers (Types/ names)", tokens: "icon-font tokens in the text", mixed: "image layers and tokens", none: "none" };
@@ -26,17 +27,22 @@ export function readState(storage) {
 export function writeState(storage, state) {
   try { storage.setItem(STATE_KEY, JSON.stringify(state)); } catch { /* storage off */ }
 }
+/** One key into the stored state (merged: several dropdowns may be mounted at once). */
+export function remember(storage, key, open) {
+  const s = readState(storage);
+  s[key] = !!open; writeState(storage, s);
+}
 
-/** The dropdown as the dialog renders it: closed unless the session left it open; the body is fetched on first open. */
-export const detailsHtml = state => `<details class="psd-details"${state.details ? " open" : ""}><summary>Details</summary><div class="psd-body"><p class="muted">Loading…</p></div></details>`;
+/** The dropdown: closed unless `open` (the card page: the session left it open); the body is fetched on first open. */
+export const detailsHtml = (state, open = !!state.details) => `<details class="psd-details"${open ? " open" : ""}><summary>Details</summary><div class="psd-body"><p class="muted">Loading…</p></div></details>`;
 
-const fontsHtml = fonts => {
+const fontsHtml = (fonts, state = {}) => {
   const names = Object.keys(obj(fonts));
   if (!names.length) return `<p class="muted">No visible text layers.</p>`;
   return names.map(n => {
     const f = obj(fonts[n]), layers = arr(f.layers);
     const flag = f.supplied === false ? ` <span class="fact refused">missing from MDW/Fonts</span>` : f.supplied == null ? ` <span class="muted">not checked</span>` : "";
-    return `<details class="font"><summary><code>${esc(n)}</code>${flag} <span class="muted">${plural(layers.length, "layer")}</span></summary>${list(layers)}</details>`;
+    return `<details class="font" data-font="${esc(n)}"${state[`font:${n}`] === true ? " open" : ""}><summary><code>${esc(n)}</code>${flag} <span class="muted">${plural(layers.length, "layer")}</span></summary>${list(layers)}</details>`;
   }).join("");
 };
 const textHtml = text => {
@@ -107,7 +113,7 @@ export function bodyHtml(rec, card, extras, state = {}) {
   const head = [r.at ? `PSD read ${esc(String(r.at).slice(0, 10))}` : "", r.parser != null ? `parser v${esc(r.parser)}` : "", r.path ? esc(r.path) : ""].filter(Boolean).join(" · ");
   const n = v => (typeof v === "string" ? null : count(v));
   return `${head ? `<p class="muted">${head}</p>` : ""}${[
-    sec("fonts", "Fonts", n(r.fonts), part(r.fonts, fontsHtml), state),
+    sec("fonts", "Fonts", n(r.fonts), part(r.fonts, v => fontsHtml(v, state)), state),
     sec("text", "Text layers", n(r.text), part(r.text, textHtml), state),
     sec("effects", "Effects", n(r.effects), part(r.effects, effectsHtml), state),
     sec("smart", "Smart objects", n(r.smart_objects), part(r.smart_objects, v => list(arr(v))), state),
@@ -122,21 +128,22 @@ export function bodyHtml(rec, card, extras, state = {}) {
 }
 
 /**
- * Wire a rendered dropdown: remember open/closed per session (the sections too), fetch the record on first open, and
- * render the layer tree only when its section opens.
+ * Wire a rendered dropdown: remember open/closed per session (the sections and fonts too), fetch the record on first
+ * open, and render the layer tree only when its section opens.
  * @param el the <details class="psd-details"> element
  * @param load () => promise of the record (memoised by the caller, so a reopened dialog doesn't fetch again)
+ * @param outer false: the dropdown itself isn't remembered (rulebook pages: one per page)
  */
-export function mount(el, { card, load, storage, extras }) {
+export function mount(el, { card, load, storage, extras, outer = true }) {
   const state = readState(storage);
   let rec = null, loading = null;
   const body = () => el.querySelector(".psd-body");
-  const render = () => (loading ||= load().then(r => { rec = r; body().innerHTML = bodyHtml(r, card, extras, state); },
+  const render = () => (loading ||= load().then(r => { rec = r; Object.assign(state, readState(storage)); body().innerHTML = bodyHtml(r, card, extras, state); },   // another dropdown may have changed it
     e => { loading = null; body().innerHTML = `<p class="muted">Couldn't load the PSD details (${esc(e.message)}). Close and open again to retry.</p>`; }));
   el.addEventListener("toggle", e => {                   // capture: toggle doesn't bubble, so one listener serves the sections too
-    const t = e.target, key = t === el ? "details" : t.dataset?.sec;
-    if (!key) return;
-    state[key] = !!t.open; writeState(storage, state);
+    const t = e.target, ds = t.dataset || {};
+    const key = t === el ? (outer ? "details" : "") : ds.sec || (ds.font != null ? `font:${ds.font}` : "");
+    if (key) { state[key] = !!t.open; remember(storage, key, t.open); }
     if (t === el) { if (t.open) render(); return; }
     if (key === "tree" && t.open && rec && !t.dataset.done) { t.dataset.done = "1"; const slot = t.querySelector(".tree-slot"); if (slot) slot.innerHTML = part(rec.tree, treeHtml); }
   }, true);

@@ -376,8 +376,10 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .creature-table th { font-size: 12px; color: var(--ink-2); padding: 2px 6px; text-align: left; }
 .creature-table input { width: 64px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface-2); }
 
-/* ---- card page: the Details dropdown (the PSD's structure, data/details/<id>.json) ---- */
+/* ---- card and rulebook pages: the Details dropdown (the PSD's structure, data/details/<id>.json) ---- */
 .psd-details { margin-top: 18px; font-size: 14px; }
+.page > div { min-width: 0; }                           /* wide Details tables scroll, not stretch the page */
+.page .psd-details { margin-top: 12px; }
 .psd-details summary { cursor: pointer; }
 .psd-details > summary { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
 .psd-details .psd-body { margin-top: 8px; }

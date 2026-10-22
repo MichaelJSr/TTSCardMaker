@@ -5,7 +5,7 @@
 //   a & b   a | b     both / either  (| binds looser than &, as in the bot)
 //   hp>5  def<=3  atk==2  spd>=7  stars<4  total>=24        numbers
 //   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
-//   is:unparsed  has:history  has:problems  has:alias
+//   is:unparsed  has:history  has:problems  has:alias  has:details
 
 export const total = c => (c.hp ?? 0) + (c.def ?? 0) + (c.atk ?? 0) + (c.spd ?? 0);
 const hasStats = c => c.hp != null || c.def != null || c.atk != null || c.spd != null;
@@ -22,6 +22,7 @@ const STR = {
 export const FLAGS = {
   "is:unparsed": c => !c.parsed, "has:history": c => !!c.hv,
   "has:problems": c => !!(c.problems && c.problems.length), "has:alias": c => !!(c.aliases && c.aliases.length),
+  "has:details": c => !!c.details,                       // a PSD details record (the card page's Details dropdown)
 };
 
 export function haystack(c) {
@@ -92,4 +93,5 @@ export const SEARCH_HELP = [
   ["series~kirby · author~chestnut · types~undead", "Contains"],
   ["series==mario & subseries~door", "Series and subseries"],
   ["is:unparsed · has:history · has:alias", "Card flags"],
+  ["has:details", "Cards with PSD details"],
 ];
