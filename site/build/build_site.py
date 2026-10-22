@@ -693,6 +693,13 @@ def parse_edits():
     return edits
 
 
+def folder_series(path):
+    """A creature's series as its folder gives it (AutoCroissant CardClassifier), else None. Not the database's: that
+    can hold a Discord-only series, which reverting to would drop from Card Edits.json."""
+    parts = (path or "").split("/")
+    return parts[len(parts) - 3].lower() if parts[0] == "Creatures" and len(parts) >= 4 else None
+
+
 def apply_edits(entry, edits, psd_sha=None, shown=None):
     """All fields but aliases and dup_of (applied later). psd_sha: the PSD's blob in the tree, to tell a stale _psd verdict.
     shown: psd_edit.shown_name, None when unknown."""
@@ -704,7 +711,7 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     for field, value in fields.items():
         if field in ("aliases", "dup_of"):
             continue
-        orig[field] = entry.get(field)
+        orig[field] = folder_series(entry.get("psd")) if field == "series" else entry.get(field)
         entry[field] = list(value) if isinstance(value, list) else value
     if fields.get("creatures"):                  # creature 1 is the card's stats
         for k in STAT_KEYS:
