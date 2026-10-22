@@ -115,6 +115,8 @@ class Zone:
 
 
 class Wait:
+    LIMIT = 1000    # callbacks one flush may run: a callback that keeps re-arming a wait would otherwise never end
+
     def __init__(self, log):
         self._log, self.queue = log, []
 
@@ -130,8 +132,12 @@ class Wait:
         self.queue.append(fn)
 
     def flush(self):
-        while self.queue:
+        for _ in range(self.LIMIT):
+            if not self.queue:
+                return
             self.queue.pop(0)()
+        self.queue.clear()
+        raise RuntimeError(f"waits still queued after {self.LIMIT} callbacks (one keeps re-arming itself?)")
 
 
 def main():

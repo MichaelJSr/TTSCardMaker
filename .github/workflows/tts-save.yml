@@ -37,41 +37,42 @@ jobs:
             /TTS/
             /site/Card Edits.json
 
+      # The names the updater last ran with: the newest cache entry (saved at the end, its key unique per run, so the
+      # newest is always the last run's names, even when they return to a set it ran with before)
+      - uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/tts-names
+          key: tts-save-names-${{ github.run_id }}
+          restore-keys: tts-save-names-
+
       # The card browser's names (cards.json png -> name, what the updater reads), hashed: they come from the bot's data,
       # not from this repo's history. The file is also the updater's fallback (site/dist) if its own fetch fails.
       - name: Card browser names
         id: names
         shell: bash
         run: |
+          last=$(cat "$RUNNER_TEMP/tts-names" 2>/dev/null || true)
           cards=site/dist/data/cards.json
           if curl -fsS --retry 3 --create-dirs -o "$cards" https://michaeljsr.github.io/TTSCardMaker/data/cards.json &&
              sum=$(jq -cS 'reduce (.cards[] | select(.png and .name)) as $c ({}; .[$c.png] = $c.name)' "$cards" | sha256sum | cut -c1-16); then
             echo "$sum" > "$RUNNER_TEMP/tts-names"; echo "sum=$sum" >> "$GITHUB_OUTPUT"
+            if [ "$sum" = "$last" ]; then echo "same=true" >> "$GITHUB_OUTPUT"; fi
           else
             echo "Card browser names not fetched."
           fi
 
-      # A cache entry per set of names the updater has run with (saved at the end)
-      - id: names-seen
-        if: steps.names.outputs.sum
-        uses: actions/cache/restore@v6
-        with:
-          path: ${{ runner.temp }}/tts-names
-          key: tts-save-names-${{ steps.names.outputs.sum }}
-          lookup-only: true
-
-      # Skip the day when the updater already ran with these names and nothing the save depends on changed since the
+      # Skip the day when the updater last ran with these names and nothing the save depends on changed since the
       # branch's last successful run (own commits aside)
       - name: Changes since the last run
         id: changes
         env:
           GH_TOKEN: ${{ github.token }}
           FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force }}
-          NAMES_SEEN: ${{ steps.names-seen.outputs.cache-hit }}
+          NAMES_SAME: ${{ steps.names.outputs.same }}
         run: |
           if [ "$FORCE" = "true" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
-          if [ "$NAMES_SEEN" != "true" ]; then
-            echo "The updater hasn't run with the card browser's current names."; echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
+          if [ "$NAMES_SAME" != "true" ]; then
+            echo "The updater last ran with other card browser names."; echo "run=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
           last=$(gh run list -R "$GITHUB_REPOSITORY" --workflow tts-save.yml --branch "$GITHUB_REF_NAME" --status success --limit 1 \
             --json headSha -q '.[0].headSha') || last=""
@@ -132,8 +133,8 @@ jobs:
           git push
 
       # These names are done: tomorrow's check skips unless they or the inputs change
-      - if: steps.changes.outputs.run == 'true' && steps.names.outputs.sum && steps.names-seen.outputs.cache-hit != 'true'
+      - if: steps.changes.outputs.run == 'true' && steps.names.outputs.sum && steps.names.outputs.same != 'true'
         uses: actions/cache/save@v6
         with:
           path: ${{ runner.temp }}/tts-names
-          key: tts-save-names-${{ steps.names.outputs.sum }}
+          key: tts-save-names-${{ steps.names.outputs.sum }}-${{ github.run_id }}-${{ github.run_attempt }}

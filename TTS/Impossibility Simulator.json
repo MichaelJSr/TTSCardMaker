@@ -850,9 +850,9 @@
     },
     {
       "Position": {
-        "x": 115.312878,
+        "x": 115.299598,
         "y": 0.512529,
-        "z": -24.810566
+        "z": -24.810603
       },
       "Rotation": {
         "x": 0.0,
@@ -924,9 +924,9 @@
     },
     {
       "Position": {
-        "x": 86.43749,
+        "x": 86.42421,
         "y": 1.552382,
-        "z": 5.430998
+        "z": 5.431061
       },
       "Rotation": {
         "x": 0.0,
@@ -936,9 +936,9 @@
     },
     {
       "Position": {
-        "x": 86.305425,
+        "x": 86.332145,
         "y": 1.549255,
-        "z": -5.626577
+        "z": -5.626618
       },
       "Rotation": {
         "x": 0.0,
@@ -4452,15 +4452,15 @@
       "GUID": "34bc4e",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 86.5054245,
+        "posX": 86.332145,
         "posY": 1.35925436,
-        "posZ": -5.626577,
+        "posZ": -5.626618,
         "rotX": 359.920135,
         "rotY": 269.986481,
         "rotZ": 0.0168913864,
         "scaleX": 2.29497218,
         "scaleY": 1.0,
-        "scaleZ": 4.34672
+        "scaleZ": 4.52
       },
       "Nickname": "Graveyard",
       "Description": "Holds 1 card",
@@ -4509,15 +4509,15 @@
       "GUID": "c42228",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 86.59749,
+        "posX": 86.42421,
         "posY": 1.362382,
-        "posZ": 5.43099833,
+        "posZ": 5.431061,
         "rotX": 359.9201,
         "rotY": 270.020752,
         "rotZ": 0.0168434624,
         "scaleX": 2.29497218,
         "scaleY": 1.0,
-        "scaleZ": 4.34672
+        "scaleZ": 4.52
       },
       "Nickname": "Graveyard",
       "Description": "Holds 1 card",
@@ -186663,15 +186663,15 @@
       "GUID": "8287a7",
       "Name": "Custom_Tile",
       "Transform": {
-        "posX": 115.472878,
+        "posX": 115.299598,
         "posY": 0.322528839,
-        "posZ": -24.8105659,
+        "posZ": -24.810603,
         "rotX": 1.43701718E-05,
         "rotY": 269.987762,
         "rotZ": 8.76463E-05,
         "scaleX": 2.29497218,
         "scaleY": 1.0,
-        "scaleZ": 4.34672
+        "scaleZ": 4.52
       },
       "Nickname": "Penalty Box Creatures",
       "Description": "Needs to be changed",
@@ -186777,9 +186777,9 @@
       "GUID": "a371af",
       "Name": "CardCustom",
       "Transform": {
-        "posX": 115.472809,
+        "posX": 115.299598,
         "posY": 0.526123762,
-        "posZ": -24.81055,
+        "posZ": -24.810603,
         "rotX": 6.50434158E-05,
         "rotY": 269.9721,
         "rotZ": -2.29598645E-05,

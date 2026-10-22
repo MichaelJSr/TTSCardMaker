@@ -26,7 +26,7 @@ def ensure_history(clone: str = HISTORY) -> str:
     if not os.path.exists(clone):
         os.makedirs(os.path.dirname(clone), exist_ok=True)
         subprocess.run(["git", "clone", "-q", "--bare", "--filter=blob:none", CARD_REPO_URL, clone], check=True)
-    else:
+    elif os.environ.get("TTS_HISTORY_FETCHED") != clone:                  # run_all fetched it once for every check
         subprocess.run(["git", "-C", clone, "fetch", "-q", "origin", "+refs/heads/main:refs/heads/main"], check=False)
     shallow = subprocess.run(["git", "-C", clone, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True)
     if shallow.stdout.strip() == "true":
