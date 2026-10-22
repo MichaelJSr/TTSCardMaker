@@ -9,8 +9,8 @@ Every icon also has a fixed Private Use Area codepoint (stable across rebuilds),
 
 Timing tags become badges: "(1CD)" set in this font draws a pill in the tag's color group (on your turn / at any
 time / forced / per game and triggers). Cooldowns (nCD, a/bCD, nGCD, a/bGCD), uses (nU) and the rulebook's older
-tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-9 or X. "(Action)" gets a grey badge. The text stays
-"(1CD)", so parsers and searches see the same thing as before.
+tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-9 or X. "(Action)" gets a grey badge. The text is
+unchanged, so parsers and searches see the same thing as before.
 
 Renderer behavior that shaped the design (tested in Photoshop 2023 and macOS CoreText):
   * Photoshop renders SVG glyphs, including embedded PNGs, but paints SVG `currentColor` (and context-fill,
