@@ -7,9 +7,10 @@ Set a token in this font and it turns into the icon (case-insensitive; space, _ 
   [fire:no]       the icon crossed out with a red prohibition sign
 Every icon also has a fixed Private Use Area codepoint (stable across rebuilds), and U+2605 is the gold star.
 
-Timing tags from the rulebook's abbreviations page become badges: "(1PGT)" set in this font draws a pill in the
-tag's color group (on your turn / at any time / forced / per game and triggers). X can be 1-9 or X. The text stays
-"(1PGT)", so parsers and searches see the same thing as before.
+Timing tags become badges: "(1CD)" set in this font draws a pill in the tag's color group (on your turn / at any
+time / forced / per game and triggers). Cooldowns (nCD, a/bCD, nGCD, a/bGCD), uses (nU) and the rulebook's older
+tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-9 or X. The text stays "(1CD)", so parsers and searches
+see the same thing as before.
 
 Renderer behavior that shaped the design (tested in Photoshop 2023 and macOS CoreText):
   * Photoshop renders SVG glyphs, including embedded PNGs, but paints SVG `currentColor` (and context-fill,
@@ -234,11 +235,12 @@ def prohibition(cx, cy, r, w):
 
 # ---- timing-tag badges ---------------------------------------------------------------------
 BADGE_GROUPS = {   # rulebook "02 Abbreviations": color (top, bottom, border) per time frame
-    "turn":    ("#4f86f7", "#2563eb", "#1e3a8a"),   # on your turn: XPT, EXT, FTEXT, OYT
-    "any":     ("#9f67ff", "#7c3aed", "#4c1d95"),   # at any time: XPGT, EXGT, AAT
+    "turn":    ("#4f86f7", "#2563eb", "#1e3a8a"),   # on your turn: XCD, X/XCD, OYT; old XPT, EXT, FTEXT
+    "any":     ("#9f67ff", "#7c3aed", "#4c1d95"),   # at any time: XGCD, X/XGCD, AAT; old XPGT, EXGT
     "forced":  ("#ef5050", "#dc2626", "#7f1d1d"),   # forced: BOT, ENDT, BOGT, ENDGT
-    "trigger": ("#e08a1e", "#b45309", "#78350f"),   # per game and triggers: XPG, OFS, OS, OD, WOF
+    "trigger": ("#e08a1e", "#b45309", "#78350f"),   # per game and triggers: XPG, XU, OFS, OS, OD, WOF
 }
+BADGE_LABEL = {"-": "\u2212"}     # drawn as a minus sign
 BADGE_BOTTOM, BADGE_TOP = -130, 820    # pill about as tall as the icons (0.95 em), centred on the capitals
 BADGE_CAPS = 540                       # label capital height: close to the body text's own capitals
 BADGE_PAD = 200                        # space between label and pill ends
@@ -248,14 +250,27 @@ BADGE_SIDE = 40
 
 
 def badge_tags():
-    """Every tag the rulebook defines, with X as 1-9 or X: [(tag, group)]."""
+    """Every timing tag, with n as 1-9 or X: [(tag, group)]. The old ones stay for the rulebook pages."""
+    nums, firsts = "123456789X", ["-1", *"0123456789", "X"]
     tags = [("OYT", "turn"), ("AAT", "any")]
     tags += [(t, "forced") for t in ("BOT", "ENDT", "BOGT", "ENDGT")]
     tags += [(t, "trigger") for t in ("OFS", "OS", "OD", "WOF")]
-    for n in "123456789X":
+    for n in nums:   # old system
         tags += [(f"{n}PT", "turn"), (f"E{n}T", "turn"), (f"FTE{n}T", "turn"),
                  (f"{n}PGT", "any"), (f"E{n}GT", "any"), (f"{n}PG", "trigger")]
+    for n in nums:   # cooldowns and uses (2026-10-21)
+        tags += [(f"{n}CD", "turn"), (f"{n}GCD", "any"), (f"{n}U", "trigger")]
+    for cd, group in (("CD", "turn"), ("GCD", "any")):   # a/b cooldowns, e.g. (1/2CD), (-1/1GCD)
+        tags += [(f"{a}/{b}{cd}", group) for a in firsts for b in nums]
     return tags
+
+
+def num(v):
+    return f"{v:.1f}".rstrip("0").rstrip(".")   # 0.1 unit is plenty; keeps the SVG small
+
+
+def badge_glyph(tag):
+    return "badge_" + tag.replace("/", "_").replace("-", "m")   # glyph names can't hold "/"
 
 
 def capsule(x0, y0, w, h, n=24):
@@ -278,14 +293,16 @@ def build_badges(label_font_path):
     scale = BADGE_CAPS / label["OS/2"].sCapHeight
     height = BADGE_TOP - BADGE_BOTTOM
     baseline = (BADGE_TOP + BADGE_BOTTOM) / 2 - BADGE_CAPS / 2
-    out = []
-    for tag, group in badge_tags():
+    out, tags = [], badge_tags()
+    assert len({badge_glyph(t) for t, _ in tags}) == len(tags), "duplicate badge"
+    for tag, group in tags:
         top, bottom, border = BADGE_GROUPS[group]
-        label_width = sum(glyphs[cmap[ord(ch)]].width * scale for ch in tag) + BADGE_TRACKING * (len(tag) - 1)
+        chars = [BADGE_LABEL.get(ch, ch) for ch in tag]
+        label_width = sum(glyphs[cmap[ord(ch)]].width * scale for ch in chars) + BADGE_TRACKING * (len(chars) - 1)
         width = max(height, label_width + 2 * BADGE_PAD)
-        pen = SVGPathPen(glyphs)
+        pen = SVGPathPen(glyphs, ntos=num)
         x = BADGE_SIDE + (width - label_width) / 2            # label centred in the pill
-        for ch in tag:
+        for ch in chars:
             g = cmap[ord(ch)]
             glyphs[g].draw(TransformPen(pen, (scale, 0, 0, -scale, x, -baseline)))
             x += glyphs[g].width * scale + BADGE_TRACKING
@@ -296,7 +313,7 @@ def build_badges(label_font_path):
                 f'ry="{height / 2:.0f}" fill="url(#g)" stroke="{border}" stroke-width="{BADGE_BORDER}"/>'
                 f'<path d="{text}" fill="#ffffff"/>')
         outline = [capsule(BADGE_SIDE, BADGE_BOTTOM, round(width), height)]
-        out.append((tag, f"badge_{tag}", outline, body, round(width) + 2 * BADGE_SIDE))
+        out.append((tag, badge_glyph(tag), outline, body, round(width) + 2 * BADGE_SIDE))
     return out
 
 
@@ -498,7 +515,7 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         1: family, 2: "Regular", 3: f"{ps};1.0", 4: family, 5: "Version 1.000", 6: ps,
         10: "Type [fire], [fire:tint], [fire:sticker] or [fire:no] in this font to get the icon. "
             "Case-insensitive; space, underscore and hyphen are interchangeable. "
-            "Timing tags such as (1PGT) become badges.",
+            "Timing tags such as (1CD) become badges.",
     }
     for nid, val in entries.items():
         name.setName(val, nid, 3, 1, 0x409)
