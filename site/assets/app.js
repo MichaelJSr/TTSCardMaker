@@ -695,6 +695,7 @@ function renderStatsView(r) {
     loadAnalytics().then(fill, e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; });
   }
 }
+const BOT = "AutoCroissant";                           // the bot's bake stamps (build_site.py BOT_AUTHOR): not a person page
 // the Changes page's tabs: #/changes (Overview), #/changes/changelog, #/changes/edits
 const CHANGE_TABS = [["", "Overview"], ["changelog", "Changelog"], ["edits", "Database edits"]];
 function renderChanges(r = parseHash()) {
@@ -735,10 +736,10 @@ function renderChanges(r = parseHash()) {
     ${problems.length ? `<section class="panel"><h3>Parser notes <span class="muted">${problems.length}</span></h3><ul>${problems.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${c.problems.map(esc).join(" · ")}</span>${detailsLink(c)}</li>`).join("")}</ul></section>` : ""}
     <p class="muted">Updated ${new Date(S.data.generated).toLocaleString()} from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`);
 }
-/** The Database edits tab's "Edited on the website" panel: the cards a Card Edits.json entry changes now */
+/** The Database edits tab's "Edited on the website or in Discord" panel: the cards a Card Edits.json entry changes now */
 function webEditsHtml() {
   const webEdits = S.all.filter(c => c.edited).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
-  return webEdits.length ? `<section class="panel"><h3>Edited on the website <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul></section>` : "";
+  return webEdits.length ? `<section class="panel"><h3>Edited on the website or in Discord <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul></section>` : "";
 }
 function renderCompare(r) {
   const ids = (r.arg || S.compare.join(",")).split(",").filter(id => S.byId.has(id)).slice(0, 5);

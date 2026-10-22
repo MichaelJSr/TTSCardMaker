@@ -1163,6 +1163,7 @@ EVENT_KEYS = ("seq", "at", "build", "card_commit", "commit", "by", "edit_by", "k
 PUSH_KEYS = ("after", "before", "by", "at")
 AUTHOR_PATHS = {AUTHORS_PATH, "MDW/Card Authors.txt"}   # before the 2026-10-20 move too
 DISCORD_SUBJECT = "Discord:"                  # the bot's commits of /update_metadata, /mass_replace, /alias (design §11)
+is_discord = lambda by: str(by or "").lower().startswith("discord:")   # a discord:<name> stamp or Edit-by, any case
 WEBSITE_SUBJECT = "Website edit"              # edit.js publish(): "Website edit: …" / "Website edits: n changes"
 BATCH_LINES = 60                              # lines kept per edit batch (Card Authors.txt's first commit credited 813 cards); the rest is `more`
 
@@ -1312,8 +1313,8 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
     def shown(by, discord=False):
         """A Discord name keeps its discord: prefix (the site never links it to a person page), anything else is credited"""
         by = str(by or "")
-        if by.startswith("discord:") or discord:
-            return by if by.startswith("discord:") else "discord:" + by
+        if is_discord(by) or discord:
+            return "discord:" + by[8:] if is_discord(by) else "discord:" + by
         return credit(by, people, by_login) or by
 
     if commits is None:
@@ -1329,7 +1330,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
                 continue
             if ts < since:
                 continue
-            out.append({"at": ts, "via": "discord" if by.startswith("discord:") else "website", "by": [shown(by)], "stamped": True,
+            out.append({"at": ts, "via": "discord" if is_discord(by) else "website", "by": [shown(by)], "stamped": True,
                         "cards": [{**card(k, None), "fields": {f: [None, v] for f, v in sorted(fields.items())}} for k, fields in sorted(rows)],
                         "authors": [], "people": []})
         return {"available": False, "batches": sorted(out, key=lambda b: -b["at"])}
@@ -1522,7 +1523,7 @@ def contributions(cards, people, profiles, edits, commits):
                     r["recent"].append([ts, subject, len(touched)])
     else:
         for by, at in {(meta["_by"], meta["_at"]) for _, meta in edits.values() if meta.get("_by") and meta.get("_at")}:
-            if by.lower() == BOT_AUTHOR.lower() or by.startswith("discord:"):     # a Discord user is nobody's row
+            if by.lower() == BOT_AUTHOR.lower() or is_discord(by):     # a Discord user is nobody's row
                 continue
             r = rec_of(key_of(by))
             r["edits"] += 1
@@ -1532,7 +1533,7 @@ def contributions(cards, people, profiles, edits, commits):
                 pass
     for _, meta in edits.values():                # website logins: one per batch stamp
         by = meta.get("_by")
-        if by and by.lower() != BOT_AUTHOR.lower() and not by.startswith("discord:"):
+        if by and by.lower() != BOT_AUTHOR.lower() and not is_discord(by):
             known(key_of(by), by)
     out = []
     for r in rec.values():

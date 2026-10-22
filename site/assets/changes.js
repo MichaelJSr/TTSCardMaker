@@ -76,15 +76,16 @@ const value = v => (v == null || v === "" || (Array.isArray(v) && !v.length) ? "
 const isLogin = s => /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/.test(s || "");
 const personLink = name => (isLogin(name) && name !== "AutoCroissant" ? `<a href="#/u/${encodeURIComponent(name)}">${esc(name)}</a>` : esc(name));
 /** A discord:<name> stamp or Edit-by: a Discord user, never a website login */
-export const isDiscord = name => String(name || "").startsWith("discord:");
+export const isDiscord = name => String(name || "").toLowerCase().startsWith("discord:");
 /** An editor as plain text: a Discord user "<name> (via Discord)", anything else as written */
 export const nameText = name => (isDiscord(name) ? `${name.slice(8)} (via Discord)` : String(name || ""));
 /** A name as written, or a person page link; a Discord user is "<name> (via Discord)", never a person page */
 export const nameHtml = name => (isDiscord(name) ? esc(nameText(name)) : personLink(name));
-/** "(by X, on the website)" / "(by X, via Discord)" from an edit's _by */
+/** "(by X, on the website)" / "(by X, via Discord)" / "(by AutoCroissant)" from an edit's _by */
 function byWhom(by) {
   if (!by) return "";
-  return ` <span class="muted">(by ${isDiscord(by) ? `${esc(by.slice(8))}, via Discord` : `${personLink(by)}, on the website`})</span>`;
+  // the bot's own entries (the alias migration's _by) came from neither
+  return ` <span class="muted">(by ${isDiscord(by) ? `${esc(by.slice(8))}, via Discord` : by === "AutoCroissant" ? esc(by) : `${personLink(by)}, on the website`})</span>`;
 }
 /** One field change: "HP 5 → 6", "series Mario → Kirby"; the ability as a word diff below the line */
 function fieldHtml(key, [a, b]) {
