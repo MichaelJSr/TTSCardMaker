@@ -10,7 +10,7 @@ const FIXED = {
   BOT: ["forced", "Beginning of turn (forced)"], ENDT: ["forced", "End of turn (forced)"],
   BOGT: ["forced", "Beginning of global turn (forced)"], ENDGT: ["forced", "End of global turn (forced)"],
   OFS: ["trigger", "On first summon"], OS: ["trigger", "On summon"], OD: ["trigger", "On death"], WOF: ["trigger", "While on field"],
-  Action: ["neutral", "Action"],   // not a timing tag; exact case only
+  Action: ["neutral", "Costs the creature's action"],   // not a timing tag; exact case only
 };
 export const TAG = /\((-?[0-9A-Z/]{2,6}|Action)\)/;   // candidates; tagInfo decides. Not /g: copy it to iterate
 const times = n => (n === "X" ? "X times" : n === "1" ? "once" : `${n} times`);
