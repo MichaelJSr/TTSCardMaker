@@ -111,7 +111,8 @@ AutoCroissant` entry (the migration's aliases and series, the moved stat exclusi
 migration added a field to an editor's entry, the entry keeps the editor's `_by` and lists that field in `_bot`
 (`"_bot":["series"]`): the field is nobody's edit, so the Edited badge, the Website edits tab, the person page and the
 stamp-counted edit batches leave it out (the build's `botEdited`). An edit on the website takes a field it sets or
-unsets out of `_bot` (edit.js `editsFile`, as the bot's Discord edits do). The build reads
+unsets out of `_bot`, and an edit to a `_by: AutoCroissant` entry first lists the entry's fields in `_bot`, so the
+editor gets only the fields they change (edit.js `editsFile`, as the bot's Discord edits do). The build reads
 the pickles with an allowlist of what they hold (the bot's `CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict`, `list` and a few plain data types such as
 `set` and `datetime`). Another bot class (`commands.*`, moved or new) is read as plain data with a warning. A pickle
 naming anything else is refused and nothing in it runs: a refused `stats.pkl` stops the build, and the site stays as it

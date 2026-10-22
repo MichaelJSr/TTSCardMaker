@@ -80,6 +80,19 @@ const isBot = name => String(name || "").toLowerCase() === BOT.toLowerCase();
 /** The fields of a card's Card Edits.json entry its editor (editBy) changed: none in the bot's own entries, and not the
     fields the bot's migration added to an editor's entry (botEdited, the entry's _bot) */
 export const editorFields = c => (!c?.edited || isBot(c.editBy) ? [] : c.edited.filter(f => !(c.botEdited || []).includes(f)));
+/** The Website edits tab's cards: those an editor's entry changes now (editorFields), newest first, at most WEB_EDITS_SHOWN;
+    total: how many there are */
+export const WEB_EDITS_SHOWN = 100;
+export function webEdits(all) {
+  const list = all.filter(c => editorFields(c).length).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
+  return { shown: list.slice(0, WEB_EDITS_SHOWN), total: list.length };
+}
+/** Does the chosen tab take the focus after a redraw? Only when a tab had it from the keyboard (:focus-visible): a
+    mouse click hands it none, so no focus ring */
+export function keepsTabFocus(el) {
+  if (!el?.closest?.(".change-tabs")) return false;
+  try { return el.matches(":focus-visible"); } catch { return true; }   // a browser without :focus-visible: as before
+}
 const personLink = name => (isLogin(name) && !isBot(name) ? `<a href="#/u/${encodeURIComponent(name)}">${esc(name)}</a>` : esc(name));
 /** A discord:<name> stamp or Edit-by: a Discord user, never a website login */
 export const isDiscord = name => String(name || "").toLowerCase().startsWith("discord:");

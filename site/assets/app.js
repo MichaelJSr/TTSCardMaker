@@ -710,7 +710,7 @@ function renderChanges(r = parseHash()) {
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
   const nav = `<nav class="change-tabs" aria-label="Kinds of changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}"${k === tab ? ' class="on" aria-current="page"' : ""}>${esc(l)}</a>`).join("")}</nav>`;
   const page = body => {
-    const kept = !!document.activeElement?.closest?.(".change-tabs");     // a tab had focus (keyboard): the chosen one keeps it
+    const kept = changes.keepsTabFocus(document.activeElement);          // a tab had focus from the keyboard: the chosen one keeps it
     view.innerHTML = `<div style="max-width:980px;margin:auto">${nav}${body}</div>`;
     if (kept) $(".change-tabs a.on", view)?.focus();
   };
@@ -745,12 +745,12 @@ function renderChanges(r = parseHash()) {
   const recent = S.cards.filter(c => c.ts).sort((a, b) => b.ts - a.ts).slice(0, 60);
   page(`<section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>${updated}`);
 }
-/** The Website edits tab: the cards an editor's Card Edits.json entry changes now (webEdited: never the bot's) */
+/** The Website edits tab: the cards an editor's Card Edits.json entry changes now (changes.webEdits: never the bot's, at most WEB_EDITS_SHOWN) */
 function webEditsHtml() {
-  const webEdits = S.all.filter(webEdited).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
-  return `<section class="panel"><h3>Edited on the website or in Discord${webEdits.length ? ` <span class="muted">${webEdits.length}</span>` : ""}</h3>
-    <p class="muted">The cards an edit on the website or in Discord changes now, newest first: the fields, who and when. Aliases and series the bot moved in from Discord aren't listed.</p>
-    ${webEdits.length ? `<ul>${webEdits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(changes.editorFields(c).join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul>` : `<p class="empty">No card is edited on the website or in Discord.</p>`}</section>`;
+  const { shown, total } = changes.webEdits(S.all);
+  return `<section class="panel"><h3>Edited on the website or in Discord${total ? ` <span class="muted">${total}</span>` : ""}</h3>
+    <p class="muted">The cards an edit on the website or in Discord changes now, newest first${total > shown.length ? ` (the ${shown.length} newest)` : ""}: the fields, who and when. Aliases and series the bot moved in from Discord aren't listed.</p>
+    ${total ? `<ul>${shown.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(changes.editorFields(c).join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul>` : `<p class="empty">No card is edited on the website or in Discord.</p>`}</section>`;
 }
 /** The Parser notes tab: the cards the bot hasn't parsed yet, and the parser's notes */
 function parserNotesHtml() {
