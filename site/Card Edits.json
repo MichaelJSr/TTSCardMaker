@@ -7,6 +7,7 @@
     "Bobbery": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Cortez": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Crystal King": {"series":"Mario","subseries":"Paper Mario","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
+    "Dark matter": {"name":"Dark Matter","_by":"MichaelJSr","_at":"2026-10-22T14:35:30Z"},
     "DooPliss": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Fawful": {"series":"Mario","subseries":"Mario & Luigi: Superstar Saga","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Flurrie": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
@@ -20,6 +21,8 @@
     "Macho Grubba": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Magnus Von Grapple": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Marilyn": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
+    "Masked Dedede": {"name":"Masked Dedede","_by":"MichaelJSr","_at":"2026-10-22T14:35:30Z"},
+    "Metal General": {"name":"Metal General","_by":"MichaelJSr","_at":"2026-10-22T14:35:30Z"},
     "Ms Mowz": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "NME Stock": {"name":"NME Stock™","_psd":{"state":"refused","for":{"name":"NME Stock™"},"psd":"ae4dfed4","reason":"duplicate: numbered PNGs share the PSD: NME_Stock2.png","at":"2026-10-22T10:20:45Z"},"_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
     "Papyrus": {"name":"The Great Papyrus","_psd":{"state":"refused","for":{"name":"The Great Papyrus"},"psd":"6ce7e011","reason":"unsupported-card: no readable Text/Name layer","at":"2026-10-22T10:20:45Z"},"_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
@@ -32,11 +35,14 @@
     "Smorg": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Sniffle Thwomp": {"series":"Mario","subseries":"Mario & Luigi: Bowser's Inside Story","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Sonic": {"allow_high_stats":true,"_by":"AutoCroissant","_at":"2026-10-21T13:31:38Z"},
+    "Springtrap": {"name":"Springtrap","_by":"MichaelJSr","_at":"2026-10-22T14:35:30Z"},
+    "Star Dream": {"name":"Star Dream","_by":"MichaelJSr","_at":"2026-10-22T14:35:30Z"},
     "Tainted Lazarus": {"problems_ok":true,"_by":"MichaelJSr","_at":"2026-10-22T04:37:15Z"},
     "The Master": {"series":"Mario","subseries":"Paper Mario","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Tutankoopa": {"series":"Mario","subseries":"Paper Mario","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
     "Twin Emperors": {"problems_ok":true,"creatures":[{"hp":7,"def":4,"atk":5,"spd":6},{"hp":7,"def":10,"atk":4,"spd":4}],"_by":"MichaelJSr","_at":"2026-10-22T04:35:02Z"},
     "Vivian": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
-    "Yoshi Kid": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"}
+    "Yoshi Kid": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","_by":"MichaelJSr","_at":"2026-10-20T22:09:18Z"},
+    "Zero Override": {"name":"Zero Override","_by":"MichaelJSr","_at":"2026-10-22T14:35:30Z"}
   }
 }
