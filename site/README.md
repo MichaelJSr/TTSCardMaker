@@ -76,13 +76,17 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   auxiliary creatures (no star level), with all creatures. The bot's history has no buff or nerf yet (2026-10-22: its
   one stat change, Tainted Lazarus' 110s becoming two creatures, is off the scale), so the buffs and nerfs panel says so
   instead of drawing an empty chart.
-- **Changes**: three tabs. **Overview**: recently updated cards with text diffs, the most revised cards, and cards the bot
-  hasn't parsed yet. **Changelog**: the card sync's events of the last 180 days, one block per push as the Discord posts
-  (new cards, changes with their old values and an ability word diff, new art, moves, renames, archived and restored cards,
-  database edits, parser re-reads), by day in Pacific time, filterable by kind, then the archived cards. **Database
-  edits**: the card sync's edited and authors events, every commit that changed a Card Edits.json entry or a Card
-  Authors.txt line (website, Discord or a commit by hand) with each field's old and new value, and the cards edited on
-  the website. The events need the card sync's data (`CARD_DATA_DIR`); until then those parts say so.
+- **Changes**: a row of category tabs across the top; clicking one (or the arrow keys on a focused tab) shows that
+  category alone, the chosen tab underlined, and the address keeps it (`#/changes/changelog`), so a link or a refresh
+  opens the same one. **Recently updated** (`#/changes`): recently updated cards with text diffs. **Changelog**: the card
+  sync's events of the last 180 days, one block per push as the Discord posts (new cards, changes with their old values
+  and an ability word diff, new art, moves, renames, archived and restored cards, database edits, parser re-reads), by day
+  in Pacific time, filterable by kind, then the archived cards. **Database edits**: the card sync's edited and authors
+  events, and every commit that changed a Card Edits.json entry or a Card Authors.txt line (website, Discord or a commit
+  by hand) with each field's old and new value. The events need the card sync's data (`CARD_DATA_DIR`); until then those
+  parts say so. **Website edits**: the cards an edit on the website or in Discord changes now, with the fields, who and
+  when (never the bot's own entries). **Most revised**: the cards with the most earlier versions. **Parser notes**: the
+  cards the bot hasn't parsed yet and the parser's notes.
 - **People** (the tab shows how many): everyone who made, edited or committed cards, in one table (GitHub picture, cards
   credited, edit batches published on the website, card commits, public decks, titles, motto), and a page per person
   (`#/u/<name>`, static `u/<name>/` that previews in Discord; **Share** opens a dialog with the link, the Discord preview
@@ -103,7 +107,11 @@ The build does not parse PSDs. Card text, stats, authors, aliases and history co
 `stats.pkl` / `aliases.pkl` / `old_stats.pkl` (the same data the Discord bot answers from), so the site is as fresh as
 the bot's last `/update_stats` + `/push`. Once `site/Card Edits.json` has `aliases_moved` (aliases.pkl moved into it
 on 2026-10-22), `aliases.pkl` isn't read: the cards' aliases are their Card Edits entries', and no `_by:
-AutoCroissant` entry (the migration's aliases and series, the moved stat exclusions) counts as a website edit. The build reads
+AutoCroissant` entry (the migration's aliases and series, the moved stat exclusions) counts as a website edit. Where the
+migration added a field to an editor's entry, the entry keeps the editor's `_by` and lists that field in `_bot`
+(`"_bot":["series"]`): the field is nobody's edit, so the Edited badge, the Website edits tab, the person page and the
+stamp-counted edit batches leave it out (the build's `botEdited`). An edit on the website takes a field it sets or
+unsets out of `_bot` (edit.js `editsFile`, as the bot's Discord edits do). The build reads
 the pickles with an allowlist of what they hold (the bot's `CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict`, `list` and a few plain data types such as
 `set` and `datetime`). Another bot class (`commands.*`, moved or new) is read as plain data with a warning. A pickle
 naming anything else is refused and nothing in it runs: a refused `stats.pkl` stops the build, and the site stays as it

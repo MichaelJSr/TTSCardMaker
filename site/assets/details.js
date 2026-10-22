@@ -83,7 +83,7 @@ const parserHtml = (card, extras) => {
   const show = v => (v == null ? "—" : Array.isArray(v) ? v.join(", ") : String(v));
   const parts = [];
   if (problems.length) parts.push(`<p>Parser notes: ${problems.map(esc).join(" · ")}</p>`);
-  if (fields.length) parts.push(`<table><tr><th>Field</th><th>On the card (PSD)</th><th>Edited on the website</th></tr>${fields.map(f => `<tr><td>${esc(labels[f])}</td><td class="wrap">${esc(show(orig[f]))}</td><td class="wrap">${esc(show(c[f]))}</td></tr>`).join("")}</table>`);
+  if (fields.length) parts.push(`<table><tr><th>Field</th><th>On the card (PSD)</th><th>Edited</th></tr>${fields.map(f => `<tr><td>${esc(labels[f])}</td><td class="wrap">${esc(show(orig[f]))}</td><td class="wrap">${esc(show(c[f]))}</td></tr>`).join("")}</table>`);
   if (other.length) parts.push(`<p class="muted">Also edited: ${other.map(esc).join(", ")}</p>`);
   if (extras?.badges) parts.push(`<div class="facts">${extras.badges}</div>`);
   return parts.join("") || `<p class="muted">No parser notes; nothing edited.</p>`;

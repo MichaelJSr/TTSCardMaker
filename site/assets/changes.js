@@ -1,5 +1,6 @@
-// The Changes page's Changelog and Database edits tabs, from data/changelog.json (build_site.py: the card sync's events,
-// the edit batches from git history, the archived cards). Events are grouped by push as the Discord posts are
+// The Changes page's Changelog and Database edits tabs (app.js renderChanges has the tab row and the other tabs), from
+// data/changelog.json (build_site.py: the card sync's events, the edit batches from git history, the archived cards).
+// Events are grouped by push as the Discord posts are
 // (AutoCroissant commands/changelog.py: messages(), title_of(), link_of(), SECTIONS). DOM-free: every function returns
 // HTML, every string goes through esc.
 import { esc, diffWords } from "./text.js";
@@ -74,7 +75,12 @@ const kindWord = t => KIND_LABEL[t] || t || KIND_LABEL.unknown;
 const cardLink = (id, text) => (id ? `<a href="#/card/${encodeURIComponent(id)}">${esc(text)}</a>` : `<b>${esc(text)}</b>`);
 const value = v => (v == null || v === "" || (Array.isArray(v) && !v.length) ? "none" : Array.isArray(v) ? v.map(x => (x && typeof x === "object" ? JSON.stringify(x) : x)).join(", ") : typeof v === "object" ? JSON.stringify(v) : String(v));
 const isLogin = s => /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/.test(s || "");
-const personLink = name => (isLogin(name) && name !== "AutoCroissant" ? `<a href="#/u/${encodeURIComponent(name)}">${esc(name)}</a>` : esc(name));
+export const BOT = "AutoCroissant";                       // the bot's _by (build_site.BOT_AUTHOR): nobody's edit
+const isBot = name => String(name || "").toLowerCase() === BOT.toLowerCase();
+/** The fields of a card's Card Edits.json entry its editor (editBy) changed: none in the bot's own entries, and not the
+    fields the bot's migration added to an editor's entry (botEdited, the entry's _bot) */
+export const editorFields = c => (!c?.edited || isBot(c.editBy) ? [] : c.edited.filter(f => !(c.botEdited || []).includes(f)));
+const personLink = name => (isLogin(name) && !isBot(name) ? `<a href="#/u/${encodeURIComponent(name)}">${esc(name)}</a>` : esc(name));
 /** A discord:<name> stamp or Edit-by: a Discord user, never a website login */
 export const isDiscord = name => String(name || "").toLowerCase().startsWith("discord:");
 /** An editor as plain text: a Discord user "<name> (via Discord)", anything else as written */
@@ -85,7 +91,7 @@ export const nameHtml = name => (isDiscord(name) ? esc(nameText(name)) : personL
 function byWhom(by) {
   if (!by) return "";
   // the bot's own entries (the alias migration's _by) came from neither
-  return ` <span class="muted">(by ${isDiscord(by) ? `${esc(by.slice(8))}, via Discord` : by === "AutoCroissant" ? esc(by) : `${personLink(by)}, on the website`})</span>`;
+  return ` <span class="muted">(by ${isDiscord(by) ? `${esc(by.slice(8))}, via Discord` : isBot(by) ? esc(by) : `${personLink(by)}, on the website`})</span>`;
 }
 /** One field change: "HP 5 → 6", "series Mario → Kirby"; the ability as a word diff below the line */
 function fieldHtml(key, [a, b]) {
@@ -200,9 +206,9 @@ export function batchHtml(b, repo) {
     ${b.stamped ? `<p class="muted">From the edit stamps (this build has no git history): each card's last edit only, its new values.</p>` : ""}
     <ul class="cl-lines">${[...cards, ...authors, ...people].join("")}${b.more ? `<li class="muted">and ${esc(b.more)} more${b.sha && repo ? ` in the <a href="https://github.com/${esc(repo)}/commit/${esc(b.sha)}" target="_blank" rel="noopener">commit</a>` : ""}</li>` : ""}</ul></section>`;
 }
-/** The Database edits tab: the card sync's edited and authors events by push, the edit batches (?via=), and webEdits
-    (app.js: the cards edited on the website now) */
-export function editsHtml(C, params, webEdits = "") {
+/** The Database edits tab: the card sync's edited and authors events by push, and the edit batches (?via=); the cards
+    edited now are app.js's Website edits tab */
+export function editsHtml(C, params) {
   const events = (C?.events || []).filter(e => EDIT_KINDS.includes(e.kind));
   const batches = C?.edits?.batches || [], via = csv(params, "via").filter(v => VIA[v]);
   const counts = new Map();
@@ -216,6 +222,5 @@ export function editsHtml(C, params, webEdits = "") {
     <h3 class="cl-day">Applied by the card sync${events.length ? ` <span class="muted">${events.length}</span>` : ""}</h3>${applied}
     <h3 class="cl-day">Edit batches${batches.length ? ` <span class="muted">${batches.length}</span>` : ""}</h3>
     ${present.length > 1 ? chips(present, via, counts, "via") : ""}
-    ${shownBatches.length ? shownBatches.map(b => batchHtml(b, C.repo)).join("") : `<p class="muted">No edit batches in the last ${esc(C?.days || 180)} days.</p>`}
-    ${webEdits}`;
+    ${shownBatches.length ? shownBatches.map(b => batchHtml(b, C.repo)).join("") : `<p class="muted">No edit batches in the last ${esc(C?.days || 180)} days.</p>`}`;
 }

@@ -3,6 +3,7 @@
 // and card commits per person, from build_site.py contributions()). Pure functions, plus the person page and the People
 // table. All profile text is user-written: everything is escaped and only internal routes are linked.
 import { esc } from "./text.js";
+import { editorFields } from "./changes.js";
 import { decode } from "./deck.js";
 import { columns, chartCard } from "./stats.js";
 
@@ -174,7 +175,7 @@ const titleChips = (key, titles) => (titles.get(key) || []).map(t => `<span clas
 /** The contributions of one person: a facts row, their recent edits (cards.json editBy, the last batch per card), their
  *  recent edit batches (commits to Card Edits.json) and their recent card commits. x = {cards, available, titles (Map), date(ts), repo} */
 export function contributionsHtml(p, x) {
-  const edits = x.cards.filter(c => c.editBy && hasLogin(p, c.editBy)).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || "")).slice(0, 10);
+  const edits = x.cards.filter(c => c.editBy && hasLogin(p, c.editBy) && editorFields(c).length).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || "")).slice(0, 10);
   const facts = [
     p.cards ? `<a class="fact" href="#/cards?author=${encodeURIComponent(p.key)}">${plural(p.cards, "card")} by ${esc(p.key)}</a>` : "",
     p.edits ? `<span class="fact" data-tip="Commits to Card Edits.json: batches published on the website, or by hand">${plural(p.edits, "edit")}</span>` : "",
@@ -183,7 +184,7 @@ export function contributionsHtml(p, x) {
   ].join("");
   return `<div class="facts">${facts}</div>
     ${x.available ? "" : `<p class="muted">Commits aren't in this build; edits are counted from Card Edits.json, which keeps one batch per card.</p>`}
-    ${edits.length ? `<div class="related"><h3>Recently edited cards</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc((c.edited || []).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
+    ${edits.length ? `<div class="related"><h3>Recently edited cards</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(editorFields(c).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
     ${p.recentEdits?.length ? `<div class="related"><h3>Recent edit batches</h3><ul>${p.recentEdits.map(([ts, subject, sha]) => `<li>${commitLink(x.repo, sha, x.date(ts))} <span class="muted">· ${esc(subject)}</span></li>`).join("")}</ul></div>` : ""}
     ${p.recent?.length ? `<div class="related"><h3>Recent card commits</h3><ul>${p.recent.map(([ts, subject, n]) => `<li>${esc(x.date(ts))} <span class="muted">· ${esc(subject)} · ${plural(n, "card")}</span></li>`).join("")}</ul></div>` : ""}`;
 }

@@ -137,6 +137,10 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json") {
     for (const f of op.unset) delete cur[f];
     Object.assign(cur, op.set);
     delete cur._by; delete cur._at; delete data.cards[k];
+    if (Array.isArray(cur._bot)) {                 // the bot's migration fields (_bot): one this op sets or unsets is the editor's now
+      cur._bot = cur._bot.filter(f => !(f in op.set) && !op.unset.includes(f) && f in cur);
+      if (!cur._bot.length) delete cur._bot;
+    }
     const fields = [...ORDER.filter(f => f in cur), ...Object.keys(cur).filter(f => !(f in FIELDS))];
     if (fields.length) data.cards[k] = { ...Object.fromEntries(fields.map(f => [f, cur[f]])), _by: by, _at: at };
   }

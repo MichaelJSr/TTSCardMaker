@@ -250,8 +250,9 @@ function setParams(updates, { replace = true } = {}) {
 // ---- cards (browse) --------------------------------------------------------------------------------
 const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
 function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi] = v.split("-").map(Number); return [isNaN(lo) ? 0 : lo, isNaN(hi) ? 99 : hi]; }
-// edited on the website: no _by AutoCroissant entry (the 2026-10-22 migration's, the moved stat exclusions)
-const webEdited = c => !!c.edited && String(c.editBy || "").toLowerCase() !== BOT.toLowerCase();
+// edited on the website or in Discord: an editor's fields (changes.editorFields), never a _by AutoCroissant entry (the
+// 2026-10-22 migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited)
+const webEdited = c => changes.editorFields(c).length > 0;
 function filterCards(p, { facets = true } = {}) {
   const pred = compile(p.get("q") || "");
   let list = pred ? S.cards.filter(pred) : S.cards.slice();
@@ -447,7 +448,7 @@ function openCard(id, showDetails = false) {
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
-          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(`${changes.isDiscord(c.editBy) ? "Changed" : "Changed on the website"}: ${c.edited.join(", ")}${c.editBy ? ` · ${changes.nameText(c.editBy)}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
+          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(`${changes.isDiscord(c.editBy) ? "Changed" : "Changed on the website"}: ${changes.editorFields(c).join(", ")}${c.editBy ? ` · ${changes.nameText(c.editBy)}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>
@@ -700,51 +701,64 @@ function renderStatsView(r) {
     loadAnalytics().then(fill, e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; });
   }
 }
-const BOT = "AutoCroissant";                           // the bot's bake stamps (build_site.py BOT_AUTHOR): not a person page
-// the Changes page's tabs: #/changes (Overview), #/changes/changelog, #/changes/edits
-const CHANGE_TABS = [["", "Overview"], ["changelog", "Changelog"], ["edits", "Database edits"]];
+// the Changes page's category tabs, a row across its top: [hash key, label]; #/changes is the first, #/changes/<key> the others
+// (a link to one survives a refresh), and each shows its own sections only
+const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["edits", "Database edits"], ["website", "Website edits"],
+  ["revised", "Most revised"], ["parser", "Parser notes"]];
+const NEEDS = { "": "history", revised: "history", changelog: "changelog", edits: "changelog" };   // the data a tab loads first
 function renderChanges(r = parseHash()) {
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
-  const nav = `<nav class="seg change-tabs" aria-label="Changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}" class="${k === tab ? "on" : ""}"${k === tab ? ' aria-current="page"' : ""}>${l}</a>`).join("")}</nav>`;
-  const page = body => { view.innerHTML = `<div style="max-width:980px;margin:auto">${nav}${body}</div>`; };
+  const nav = `<nav class="change-tabs" aria-label="Kinds of changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}"${k === tab ? ' class="on" aria-current="page"' : ""}>${esc(l)}</a>`).join("")}</nav>`;
+  const page = body => {
+    const kept = !!document.activeElement?.closest?.(".change-tabs");     // a tab had focus (keyboard): the chosen one keeps it
+    view.innerHTML = `<div style="max-width:980px;margin:auto">${nav}${body}</div>`;
+    if (kept) $(".change-tabs a.on", view)?.focus();
+  };
   const here = () => { const now = parseHash(); return now.name === "changes" && (now.arg || "") === (r.arg || "") ? now : null; };
   const again = () => { const now = here(); if (now) renderChanges(now); };
-  if (tab) {
-    if (!S.changelog) {
-      page(`<div class="loading">Loading the changelog…</div>`);
-      loadChangelog().then(again, e => { if (here()) page(`<div class="empty">Couldn't load the changelog (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`); });
-      return;
-    }
-    page(tab === "changelog" ? changes.changelogHtml(S.changelog, r.params) : changes.editsHtml(S.changelog, r.params, webEditsHtml()));
+  if (NEEDS[tab] === "changelog" && !S.changelog) {
+    page(`<div class="loading">Loading the changelog…</div>`);
+    loadChangelog().then(again, e => { if (here()) page(`<div class="empty">Couldn't load the changelog (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`); });
     return;
   }
-  if (!historyP || !S.history) {
+  if (NEEDS[tab] === "history" && (!historyP || !S.history)) {
     page(`<div class="loading">Loading recent changes…</div>`);
     whenLoaded(loadHistory(), "card history", again);
     return;
   }
-  const recent = S.cards.filter(c => c.ts).sort((a, b) => b.ts - a.ts).slice(0, 60);
-  const edited = S.cards.filter(c => c.hv).sort((a, b) => b.hv - a.hv);
-  const unparsed = S.cards.filter(c => !c.parsed);
-  const problems = S.cards.filter(c => c.problems && c.problems.length);
+  const updated = `<p class="muted">Updated ${new Date(S.data.generated).toLocaleString()} from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
+  if (tab === "changelog") { page(changes.changelogHtml(S.changelog, r.params)); return; }
+  if (tab === "edits") { page(changes.editsHtml(S.changelog, r.params)); return; }
+  if (tab === "website") { page(webEditsHtml() + updated); return; }
+  if (tab === "parser") { page(parserNotesHtml() + updated); return; }
   const item = c => {
     const last = c.history && c.history.length ? c.history[c.history.length - 1] : null;
     return `<div class="item">${c.img ? `<img loading="lazy" decoding="async" src="${img(c, 240)}" alt="" data-open="${c.id}">` : "<div></div>"}<div>
       <a href="#/card/${c.id}"><b>${esc(c.name)}</b></a> <span class="muted">${esc(KIND_LABEL[c.type] || c.type)}${c.stars ? ` · ${c.stars}★` : ""}${c.ts ? ` · ${date(c.ts)}` : ""}${c.author ? ` · ${esc(c.author)}` : ""}</span>
       ${last && c.ability ? `<div class="ability" style="margin-top:4px;font-size:14px">${diffWords(last.ability, c.ability)}</div>` : ""}</div></div>`;
   };
-  page(`
-    <section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>
-    <section class="panel"><h3>Most revised</h3><div class="feed">${edited.slice(0, 20).map(item).join("") || `<p class="muted">No history yet.</p>`}</div></section>
-    ${unparsed.length ? `<section class="panel"><h3>Not parsed by the bot yet <span class="muted">${unparsed.length}</span></h3><p class="muted">Run /update_stats in Discord to add them.</p>
-      <div class="grid" style="--tile:120px">${unparsed.map(c => tileHtml(c, { small: true })).join("")}</div></section>` : ""}
-    ${problems.length ? `<section class="panel"><h3>Parser notes <span class="muted">${problems.length}</span></h3><ul>${problems.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${c.problems.map(esc).join(" · ")}</span>${detailsLink(c)}</li>`).join("")}</ul></section>` : ""}
-    <p class="muted">Updated ${new Date(S.data.generated).toLocaleString()} from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`);
+  if (tab === "revised") {
+    const revised = S.cards.filter(c => c.hv).sort((a, b) => b.hv - a.hv);
+    page(`<section class="panel"><h3>Most revised</h3><p class="muted">The cards with the most earlier versions; text changes since the last one highlighted.</p><div class="feed">${revised.slice(0, 20).map(item).join("") || `<p class="muted">No history yet.</p>`}</div></section>${updated}`);
+    return;
+  }
+  const recent = S.cards.filter(c => c.ts).sort((a, b) => b.ts - a.ts).slice(0, 60);
+  page(`<section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>${updated}`);
 }
-/** The Database edits tab's "Edited on the website or in Discord" panel: the cards a Card Edits.json entry changes now */
+/** The Website edits tab: the cards an editor's Card Edits.json entry changes now (webEdited: never the bot's) */
 function webEditsHtml() {
   const webEdits = S.all.filter(webEdited).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
-  return webEdits.length ? `<section class="panel"><h3>Edited on the website or in Discord <span class="muted">${webEdits.length}</span></h3><ul>${webEdits.slice(0, 40).map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(c.edited.join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul></section>` : "";
+  return `<section class="panel"><h3>Edited on the website or in Discord${webEdits.length ? ` <span class="muted">${webEdits.length}</span>` : ""}</h3>
+    <p class="muted">The cards an edit on the website or in Discord changes now, newest first: the fields, who and when. The bot's own entries (the aliases and series it moved there) aren't listed.</p>
+    ${webEdits.length ? `<ul>${webEdits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(changes.editorFields(c).join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul>` : `<p class="empty">No card is edited on the website or in Discord.</p>`}</section>`;
+}
+/** The Parser notes tab: the cards the bot hasn't parsed yet, and the parser's notes */
+function parserNotesHtml() {
+  const unparsed = S.cards.filter(c => !c.parsed), problems = S.cards.filter(c => c.problems && c.problems.length);
+  if (!unparsed.length && !problems.length) return `<section class="panel"><h3>Parser notes</h3><p class="empty">Every card is parsed, with no parser notes.</p></section>`;
+  return `${unparsed.length ? `<section class="panel"><h3>Not parsed by the bot yet <span class="muted">${unparsed.length}</span></h3><p class="muted">Run /update_stats in Discord to add them.</p>
+      <div class="grid" style="--tile:120px">${unparsed.map(c => tileHtml(c, { small: true })).join("")}</div></section>` : ""}
+    ${problems.length ? `<section class="panel"><h3>Parser notes <span class="muted">${problems.length}</span></h3><ul>${problems.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${c.problems.map(esc).join(" · ")}</span>${detailsLink(c)}</li>`).join("")}</ul></section>` : ""}`;
 }
 function renderCompare(r) {
   const ids = (r.arg || S.compare.join(",")).split(",").filter(id => S.byId.has(id)).slice(0, 5);
@@ -1065,7 +1079,7 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
   <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
-const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card"], ["d", "Add to / remove from deck"],
+const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (on the Changes tabs: the next tab)"], ["d", "Add to / remove from deck"],
   ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 $("#account").addEventListener("click", () => actions["edit-hub"]());
@@ -1076,6 +1090,14 @@ document.addEventListener("keydown", e => {
     e.preventDefault();
     const next = e.key === "ArrowDown" ? item.nextElementSibling : item.previousElementSibling;
     if (next) { next.focus(); next.click(); }
+    return;
+  }
+  const ctab = document.activeElement?.closest?.(".change-tabs a");
+  if (ctab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key) && !e.metaKey && !e.ctrlKey && !e.altKey) {   // the Changes tabs: arrows choose the next
+    e.preventDefault();
+    const all = $$(".change-tabs a"), i = all.indexOf(ctab);
+    const to = all[e.key === "Home" ? 0 : e.key === "End" ? all.length - 1 : (i + (e.key === "ArrowRight" ? 1 : all.length - 1)) % all.length];
+    if (to && to !== ctab) location.hash = to.getAttribute("href");
     return;
   }
   const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline]");   // the inline controls are inputs; stat rows take the arrows

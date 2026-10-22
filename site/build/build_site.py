@@ -101,6 +101,7 @@ AUTHORS_PATH = "site/Card Authors.txt"
 BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
 ALIASES_MOVED = "aliases_moved"               # Card Edits.json key: aliases.pkl moved into it (AutoCroissant card_edits.ALIASES_MOVED)
+BOT_FIELDS = "_bot"                           # an entry's fields the bot's migration set under its editor's _by (discord_edits.BOT_FIELDS)
 ADMINS_PATH = "site/Website Admins.txt"
 PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
 DECKS_DIR = "site/decks"                      # <owner>/<slug>.json per hand published from the deck builder
@@ -698,6 +699,11 @@ def parse_edits():
             else:
                 log(f"warning: {EDITS_PATH}: {name}: {field} = {value!r} isn't a known field or has the wrong type, skipped")
         meta = {k: fields[k] for k in ("_by", "_at") if isinstance(fields.get(k), str)}
+        bot = fields.get(BOT_FIELDS)                  # the fields AutoCroissant set under another editor's _by
+        if isinstance(bot, list) and all(isinstance(f, str) for f in bot):
+            meta[BOT_FIELDS] = bot
+        elif bot is not None:
+            log(f"warning: {EDITS_PATH}: {name}: {BOT_FIELDS} = {bot!r} isn't a list of fields, skipped")
         if "_psd" in fields:                            # the edit pipeline's verdict on the PSD fields
             if valid_verdict(fields["_psd"]):
                 meta["_psd"] = fields["_psd"]
@@ -753,6 +759,9 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
         entry["webAliases"] = list(fields["aliases"])
     if meta.get("_by"):
         entry["editBy"] = meta["_by"]
+    bot = sorted(f for f in fields if f in meta.get(BOT_FIELDS, ()))
+    if bot:                                       # not the editor's: the website credits them to nobody
+        entry["botEdited"] = bot
     if meta.get("_at"):
         entry["editAt"] = meta["_at"]
     if fields.get("problems_ok"):
@@ -1343,8 +1352,9 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
     if commits is None:
         groups = {}
         for key, (fields, meta) in edits.items():
-            if meta.get("_by") and meta.get("_at") and meta["_by"].lower() != BOT_AUTHOR.lower():
-                groups.setdefault((meta["_by"], meta["_at"]), []).append((key, fields))
+            mine = {f: v for f, v in fields.items() if f not in meta.get(BOT_FIELDS, ())}   # not the bot's under their stamp
+            if mine and meta.get("_by") and meta.get("_at") and meta["_by"].lower() != BOT_AUTHOR.lower():
+                groups.setdefault((meta["_by"], meta["_at"]), []).append((key, mine))
         out = []
         for (by, at), rows in groups.items():
             try:
