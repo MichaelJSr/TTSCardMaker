@@ -100,6 +100,7 @@ CARD_FOLDERS = ("Creatures/", "Items/", "Field/", "N.M.E/", "Auxiliary/")
 AUTHORS_PATH = "site/Card Authors.txt"
 BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
+ALIASES_MOVED = "aliases_moved"               # Card Edits.json key: aliases.pkl moved into it (AutoCroissant card_edits.ALIASES_MOVED)
 ADMINS_PATH = "site/Website Admins.txt"
 PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
 DECKS_DIR = "site/decks"                      # <owner>/<slug>.json per hand published from the deck builder
@@ -652,6 +653,21 @@ def valid_verdict(value):
     """A pipeline `_psd` entry: {"state": "baked" | "refused", "for": {field: value}, "psd": "<blob8>", "reason": str, ...}."""
     return (isinstance(value, dict) and value.get("state") in ("baked", "refused") and isinstance(value.get("for", {}), dict)
             and isinstance(value.get("psd", ""), str) and isinstance(value.get("reason", ""), str))
+
+
+def aliases_moved():
+    """Card Edits.json has ALIASES_MOVED: the cards' aliases live there, aliases.pkl no longer counts."""
+    try:
+        data = json.load(open(os.path.join(REPO, EDITS_PATH), encoding="utf-8"))
+    except (OSError, ValueError):
+        return False
+    return isinstance(data, dict) and bool(data.get(ALIASES_MOVED))
+
+
+def edit_aliases(edits, key):
+    """The aliases a card's Card Edits.json entry gives it."""
+    found = edits.get(card_key(key))
+    return [a for a in (found[0].get("aliases") or []) if a.strip()] if found else []
 
 
 def parse_edits():
@@ -1675,11 +1691,15 @@ def main():
     except Exception as e:
         warn(f"no card history: {e}")
         old_stats = {}
-    try:
-        aliases = load_bot_pickle("aliases.pkl")
-    except Exception as e:
-        warn(f"no aliases: {e}")
+    if aliases_moved():
+        log(f"aliases: {EDITS_PATH} has {ALIASES_MOVED}, aliases.pkl not read")
         aliases = {}
+    else:
+        try:
+            aliases = load_bot_pickle("aliases.pkl")
+        except Exception as e:
+            warn(f"no aliases: {e}")
+            aliases = {}
     try:
         records = psd_records(load_bot_json(DETAILS_JSON))
     except Exception as e:
@@ -1756,7 +1776,8 @@ def main():
         (rules if is_rule else cards).append(entry)
 
     # duplicates: more PNGs exported from one card's PSD (A_Snack.psd -> A_Snack2.png "Breakfast", A_Snack3.png
-    # "Supper"). Same card, different name and art. Named by the bot's alias for that PNG, else the original's name.
+    # "Supper"). Same card, different name and art. Named by the bot's alias for that PNG (aliases.pkl's, its Card Edits
+    # entry's), else the original's name.
     alias_names = {}
     for alias, target in aliases.items():
         alias_names.setdefault(str(target).lower(), []).append(str(alias).replace("_", " ").strip())
@@ -1769,7 +1790,7 @@ def main():
         original = by_psd.get((m.group(1) + ".psd").lower())
         if original is None:
             continue
-        names = alias_names.get(os.path.basename(path).lower())
+        names = alias_names.get(os.path.basename(path).lower(), []) + edit_aliases(edits, os.path.splitext(os.path.basename(path))[0])
         name = (bot_dup_names.get(os.path.basename(path).lower())                     # alias or the PSD's hidden title
                 or (" ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else original["name"]))
         dup = {k: original.get(k) for k in DATA_FIELDS + ("author", "ts", "psd")}

@@ -100,8 +100,10 @@ stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a di
 
 The build does not parse PSDs. Card text, stats, authors, aliases and history come from AutoCroissant's
 `stats.pkl` / `aliases.pkl` / `old_stats.pkl` (the same data the Discord bot answers from), so the site is as fresh as
-the bot's last `/update_stats` + `/push`. The build reads the pickles with an allowlist of what they hold (the bot's
-`CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict`, `list` and a few plain data types such as
+the bot's last `/update_stats` + `/push`. Once `site/Card Edits.json` has `aliases_moved` (aliases.pkl moved into it
+on 2026-10-22), `aliases.pkl` isn't read: the cards' aliases are their Card Edits entries', and the bot's entries
+holding only aliases, series or subseries (moved there from Discord) don't count as website edits. The build reads
+the pickles with an allowlist of what they hold (the bot's `CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict`, `list` and a few plain data types such as
 `set` and `datetime`). Another bot class (`commands.*`, moved or new) is read as plain data with a warning. A pickle
 naming anything else is refused and nothing in it runs: a refused `stats.pkl` stops the build, and the site stays as it
 was until `PICKLE_GLOBALS` in `build_site.py` allows it; the history and aliases are skipped with a warning. A field the site reads that the bot's cards lack (a rename in `commands/card_models.py`), or a
