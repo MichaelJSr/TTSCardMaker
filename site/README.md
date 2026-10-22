@@ -143,8 +143,8 @@ login, else the login in their noreply commit emails, their website `_by` stamps
 not a login: someone known only by name gets neither). The chart has one row per kind (cards by their image's first
 upload, edit batches, card commits), each on its own scale, by month; it needs the git history like the counts.
 The build writes `data/contributions.json` (small, loaded with `users.json`) and a static `u/<name>/` page for
-each contributor, with the profile's page carrying the summary ("Top card maker · 237 cards · 4 edits · 57 card
-commits") in its link preview.
+each contributor, carrying the summary ("Top committer · 93 cards · 133 card commits") in its link
+preview.
 
 ### Profiles
 
