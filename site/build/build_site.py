@@ -486,8 +486,18 @@ def card_key(name):
 
 
 def printed(text):
-    """A title as the bot reads it (psd_parser.title_text): no BOM, whitespace and control runs as one space."""
+    """psd_parser.title_text"""
     return re.sub(r"[\s\x00-\x1f]+", " ", (text or "").replace("\ufeff", "")).strip()
+
+
+def ability_text(text):
+    """psd_edit.normalize_ability"""
+    text = (text or "").replace("\r\n", "\n").replace("\r", "\n").replace("\t", " ").replace("\x03", "\n")
+    text = text.replace("\ufeff", "").rstrip()
+    text = text.strip("'\"\n").rstrip(" '\"")
+    if text:
+        text = re.sub(r"\s+([:;,\.\?!])", r"\1", text)
+    return text.strip(" '\"\n")
 
 
 PEOPLE_AS_WRITTEN = {}                        # [people] with the git names' own case, for the editor
@@ -611,6 +621,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     def waits(f):
         if f == "name":
             return shown is not None and printed(fields[f]) != shown
+        if f == "ability":
+            return ability_text(fields[f]) != ability_text(orig.get(f))
         return entry[f] != orig.get(f)
     pending = sorted(f for f in fields if f in PSD_FIELDS and fields[f] is not None and waits(f))
     if pending:
@@ -1318,8 +1330,9 @@ def main():
                    png=path, problems=[], dup=original["id"])
         apply_edits(dup, edits, tree.get(original["psd"]))
         for k in ("pending", "refused", "reparsePending"):   # same PSD: its image changes with the original's
-            if original.get(k) and not dup.get(k):
-                dup[k] = original[k]
+            value = [f for f in original[k] if f != "name"] if k == "pending" and original.get(k) else original.get(k)
+            if value and not dup.get(k):         # not the name: a duplicate prints its own title
+                dup[k] = value
         original.setdefault("dups", []).append(dup["id"])
         cards.append(dup)
         seen_pngs.add(path)
