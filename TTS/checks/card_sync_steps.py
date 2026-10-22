@@ -3,14 +3,17 @@
     python3 card_sync_steps.py            (needs git 2.37 or later, bash and jq; no network)
 1. The step plan: every step's `if:` evaluated as GitHub does (&&, ||, !, ==, the status functions, the implicit
    success()) for the migration's runs: step 6 and 7 (MAIN_COMMIT and POSTS off) bake only on a dry run and write only
-   `data`; step 8 (both on) bakes, commits M and posts; a rejected M keeps a save-only build's data and drops a baked one.
+   `data`; step 8 (both on) bakes, commits M and posts; a rejected M drops the posts and the data; a failed live run
+   (a retry too) alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit main and every later step.
 2. The Gate step's own script on sandbox history: stoogedings-src/ alone doesn't start a run, MDW/Fonts' fonts,
    stoogedings.json and an upper-case .PSD do, and the run's own save commits don't.
 3. The fonts: a cache hit restores them outside the sparse patterns; after the Fonts tree step the bake's fast-forward
    merge (git_commit.local_commit's) keeps them (without it git deletes them: the control).
-4. Commit main's own script on a sandbox origin: a save-only M names itself in the manifest; main moved: M is dropped and
-   one new run is dispatched (with the dropped data's inputs only after a bake), never by a retry; past minute 75 nothing
-   is pushed. Exits 1 when a case gets the wrong answer.
+4. The Bake step's arguments: --pending for a schedule and a schedule's retry, not for a dispatch.
+5. Commit main's own script on a sandbox origin: a save-only M names itself in the manifest when the build wrote db/,
+   and leaves an unchanged db/ alone; a push that failed but landed counts as pushed; main moved: M is dropped and one
+   new run is dispatched (marked retry, the cards, seed and restore carried, never full or allow_archive), none from a
+   retry or while a run is pending; past minute 60 nothing is pushed. Exits 1 when a case gets the wrong answer.
 """
 import json
 import os
@@ -76,6 +79,8 @@ def load() -> dict:
         if x == "env:":
             flow["env"], i = _mapping(lines, i, 0)
             continue
+        if x.startswith("run-name:"):
+            flow["run_name"] = x.split(":", 1)[1].strip()
         if x.startswith("    timeout-minutes:"):
             flow["timeout"] = int(_value(x.split(":", 1)[1]))
         if x == "    env:":
@@ -260,16 +265,31 @@ def plans(flow: dict) -> None:
     check("main" in runs(p) and not {"Send the posts", "data-commit"} & runs(p),
           "step 8, main moved after a bake: the data (it read B) and the posts are dropped")
     p = plan(flow, event="schedule", switches=on, outputs={**go, "save": {"changed": "true"}, "main": {"rejected": "true"}})
-    check({"main", "Send the posts", "data-commit"} <= runs(p),
-          "step 8, main moved, save-only M: the data (built on main's head) and the posts still go")
+    check("main" in runs(p) and not {"Send the posts", "data-commit"} & runs(p),
+          "step 8, main moved, save-only M: the data and the posts are dropped too (card_commit and repin stay)")
     p = plan(flow, event="schedule", switches=on, outputs=baked, outcomes={"build": "failure"})
     check(not {"save", "main", "data-commit"} & runs(p) and "Tell Discord" in runs(p),
           "step 8, build failed after a bake: no save, M or data; Discord told")
     p = plan(flow, event="schedule", switches=on, outputs={**go, "save": {"changed": "true"}}, outcomes={"main": "failure"})
     check("main" in runs(p) and not {"Send the posts", "data-commit"} & runs(p), "step 8, M failed (too late): no posts, no data")
-    late = re.search(r"late=\$\(\( \((\d+) - 15\) \* 60 \)\)", step(flow, "main")["run"])
-    check(bool(late) and int(late.group(1)) == flow["timeout"],
-          f"Commit main's deadline uses the job's timeout ({late and late.group(1)} == {flow['timeout']})")
+    retry = {"dry_run": False, "bake": "all", "force": True, "retry": "schedule"}
+    p = plan(flow, inputs=retry, switches=on, actor="github-actions[bot]", outputs=go, outcomes={"build": "failure"})
+    q = plan(flow, inputs=retry, switches=on, actor="MichaelJSr", outputs=go, outcomes={"build": "failure"})
+    check("Tell Discord" in runs(p) and "Tell Discord" in runs(q), "step 8, a failed retry tells Discord, whoever dispatched it")
+    p = plan(flow, inputs={"dry_run": True, "bake": "all"}, switches=on, outputs=go, outcomes={"build": "failure"})
+    q = plan(flow, inputs={"dry_run": False, "bake": "all"}, switches=on, outputs=go, outcomes={"build": "failure"})
+    check("Tell Discord" not in runs(p) and "Tell Discord" in runs(q), "step 8, a failed dispatch: a live one alerts, a dry one doesn't")
+    names = [evaluate(flow["run_name"], {"github": {"event_name": e}, "inputs": i, "functions": {}})
+             for e, i in (("workflow_dispatch", {"dry_run": True}), ("workflow_dispatch", {"dry_run": False}), ("schedule", {}))
+             if "run_name" in flow] or ["no run-name"]
+    check(names == ["Card sync (dry run)", "Card sync", "Card sync"] and f'\\"{names[0]}\\"' in step(flow, "Tell Discord")["run"],
+          f"run names {names}: the alert's streak leaves out the dry runs by that name")
+    late = re.search(r"late=\$\(\( \((\d+) - (\d+)\) \* 60 \)\)", step(flow, "main")["run"])
+    after = flow["steps"][flow["steps"].index(step(flow, "main")):]
+    caps = [int(s.get("timeout-minutes", "0")) for s in after]
+    check(bool(late) and int(late.group(1)) == flow["timeout"] and all(caps) and int(late.group(2)) >= sum(caps),
+          f"Commit main's deadline: the job's timeout ({late and late.group(1)} == {flow['timeout']}) less "
+          f"{late and late.group(2)} minutes, at least the caps of it and every later step ({' + '.join(map(str, caps))})")
 
 
 # ---------- Sandboxes ----------
@@ -346,6 +366,7 @@ def gate_cases(flow: dict) -> None:
             ({"MDW/Fonts/stoogedings-src/stoogedings.json": '{"x":1}'}, "the icon manifest", "t", True),
             ({"Deep/Two/Card.PSD": "psd", "Deep/Two/Card.PNG": "png"}, "an upper-case card", "t", True),
         ]
+        starts = []
         for files, message, author, want in cases:
             base = git(work, "rev-parse", "HEAD")
             commit(work, files, message, author)
@@ -361,8 +382,10 @@ def gate_cases(flow: dict) -> None:
                                                           "BOT_REPO": "bobberlington/AutoCroissant", "GIT_NO_LAZY_FETCH": "1",
                                                           "FORCE": "false", "FULL": "false", "CARDS": "", "RESTORE": "",
                                                           "SEED": ""}, tmp)
-            check(code == 0 and out.get("go") == str(want).lower() and out.get("start", "").isdigit(),
+            check(code == 0 and out.get("go") == str(want).lower(),
                   f"gate: {message} -> go={out.get('go')} (want {str(want).lower()})" + ("" if code == 0 else f"\n{text}"))
+            starts.append(out.get("start", ""))
+        check(all(x.isdigit() and abs(int(x) - time.time()) < 600 for x in starts), "gate: every run records its start (the deadline's clock)")
 
 
 def fonts_cases(flow: dict) -> None:
@@ -394,10 +417,31 @@ def fonts_cases(flow: dict) -> None:
                 check(not kept, "fonts (control): without the Fonts tree step's config the ff merge deletes them")
 
 
-def main_cases(flow: dict) -> None:
-    script_env = {"GIT_NO_LAZY_FETCH": "1", "BUILT": "success", "GH_TOKEN": "x"}
+def bake_cases(flow: dict) -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        work, bare = origin(tmp)
+        ws = checkout(tmp, bare)
+        runner = os.path.join(tmp, "runner")
+        python = os.path.join(runner, "baker", "bin", "python")
+        write(python, f'#!/bin/bash\nprintf "%s\\n" "$@" > "{os.path.join(tmp, "bake.args")}"\n')
+        os.chmod(python, 0o755)
+        os.makedirs(os.path.join(ws, "bot"))
+        main = git(ws, "rev-parse", "HEAD")
+        for event, retry, want in (("schedule", "", True), ("workflow_dispatch", "schedule", True),
+                                   ("workflow_dispatch", "workflow_dispatch", False), ("workflow_dispatch", "", False)):
+            code, text, out = run_step(flow, "bake", os.path.join(ws, "bot"), {"GITHUB_WORKSPACE": ws, "MAIN": main, "CARD": "all",
+                                                                              "RETRY_OF": retry, "GITHUB_EVENT_NAME": event,
+                                                                              "DRY_RUN": "true"}, tmp)
+            args = open(os.path.join(tmp, "bake.args")).read().split("\n")
+            check(code == 0 and ("--pending" in args) == want and "baked" not in out,
+                  f"bake: {event}{' retry of ' + retry if retry else ''} -> --pending {'yes' if want else 'no'}"
+                  + ("" if code == 0 else f"\n{text}"))
 
-    def setup(tmp: str, name: str) -> tuple:
+
+def main_cases(flow: dict) -> None:
+    script_env = {"GIT_NO_LAZY_FETCH": "1", "BUILT": "success", "GH_TOKEN": "x", "GITHUB_EVENT_NAME": "workflow_dispatch"}
+
+    def setup(tmp: str, name: str, wrote: bool = True) -> tuple:
         work, bare = origin(os.path.join(tmp, name))
         ws = checkout(os.path.join(tmp, name), bare)
         runner = os.path.join(tmp, name, "runner")
@@ -405,13 +449,23 @@ def main_cases(flow: dict) -> None:
         os.symlink(sys.executable, os.path.join(runner, "builder", "bin", "python"))
         fake = os.path.join(tmp, name, "bin")
         os.makedirs(fake)
-        write(os.path.join(fake, "gh"), f'#!/bin/bash\nprintf "%s\\n" "$@" > "{os.path.join(tmp, name, "gh.args")}"\n')
+        write(os.path.join(fake, "gh"), "#!/bin/bash\n"           # run list: the number pending (gh applies --jq)
+              f'if [ "$1" = run ]; then echo "${{FAKE_WAITING:-0}}"; exit 0; fi\n'
+              f'printf "%s\\n" "$@" > "{os.path.join(tmp, name, "gh.args")}"\n')
         os.chmod(os.path.join(fake, "gh"), 0o755)
         subprocess.run(["git", "init", "-q", os.path.join(ws, "bot")], check=True)
         git(os.path.join(ws, "bot"), "commit", "-q", "--allow-empty", "-m", "builder")
         main = git(ws, "rev-parse", "HEAD")
-        write(os.path.join(ws, "carddata/db/manifest.json"),
-              json.dumps({"card_commit": main, "card_commit_at": 1.0, "main_commit": None}, indent=1, sort_keys=True) + "\n")
+        data = os.path.join(ws, "carddata")                       # the data checkout, then this run's build
+        manifest = os.path.join(data, "db/manifest.json")
+        dump = lambda commit_: json.dumps({"card_commit": commit_, "card_commit_at": 1.0, "main_commit": None,   # noqa: E731
+                                           "pending": {"repin": ["Cards/One.png"]}}, indent=1, sort_keys=True) + "\n"
+        write(manifest, dump(main if not wrote else "0" * 40))
+        subprocess.run(["git", "init", "-q", data], check=True)
+        git(data, "add", "-A")
+        git(data, "commit", "-qm", "data")
+        if wrote:
+            write(manifest, dump(main))
         write(os.path.join(runner, "message.txt"), f"Card data: 1 changed (main {main[:8]})\n")
         write(os.path.join(ws, "TTS/Impossibility Simulator.json"), '{"saved":1}')       # the save stage's change
         env = {**script_env, "MAIN": main, "START": str(int(time.time())), "SAVED": "true", "RETRY": "false",
@@ -427,11 +481,14 @@ def main_cases(flow: dict) -> None:
         path = os.path.join(root, "gh.args")
         return open(path).read().split("\n")[:-1] if os.path.exists(path) else []
 
+    def manifest_of(ws: str) -> dict:
+        return json.load(open(os.path.join(ws, "carddata/db/manifest.json")))
+
     with tempfile.TemporaryDirectory() as tmp:
         ws, bare, main, env, root = setup(tmp, "save-only")
         code, text, out = run_step(flow, "main", ws, env, root)
         m = git(bare, "rev-parse", "main")
-        manifest = json.load(open(os.path.join(ws, "carddata/db/manifest.json")))
+        manifest = manifest_of(ws)
         at = float(git(ws, "show", "-s", "--format=%ct", m))
         check(code == 0 and out.get("pushed") == "true" and out.get("m") == m != main
               and (manifest["card_commit"], manifest["main_commit"], manifest["card_commit_at"]) == (m, m, at)
@@ -439,41 +496,69 @@ def main_cases(flow: dict) -> None:
               "main: a save-only M is pushed and the manifest names it (card_commit, main_commit, the message)"
               + ("" if code == 0 else f"\n{text}"))
 
+        ws, bare, main, env, root = setup(tmp, "save-only-unchanged", wrote=False)
+        code, text, out = run_step(flow, "main", ws, env, root)
+        check(code == 0 and out.get("pushed") == "true" and not git(os.path.join(ws, "carddata"), "status", "--porcelain")
+              and "db/ unchanged" in text,
+              "main: a save-only M on an unchanged build leaves db/ alone (no data commit)" + ("" if code == 0 else f"\n{text}"))
+
+        ws, bare, main, env, root = setup(tmp, "push-landed")
+        real = shutil.which("git")
+        write(os.path.join(root, "bin", "git"), f'#!/bin/bash\n"{real}" "$@"; code=$?\n[ "$1" = push ] && exit 1\nexit $code\n')
+        os.chmod(os.path.join(root, "bin", "git"), 0o755)
+        code, text, out = run_step(flow, "main", ws, env, root)
+        m = git(bare, "rev-parse", "main")
+        check(code == 0 and m != main and out.get("pushed") == "true" and out.get("m") == m and "rejected" not in out
+              and not gh_args(root) and manifest_of(ws)["main_commit"] == m,
+              "main: a push that failed on the client but landed counts as pushed (no retry)" + ("" if code == 0 else f"\n{text}"))
+
         ws, bare, main, env, root = setup(tmp, "save-only-moved")
         moved(bare)
+        env["INPUTS"] = json.dumps({"dry_run": False, "full": True, "cards": "Mini Doomer", "seed": "", "bake": "all",
+                                    "force": False, "allow_archive": True, "restore": "", "builder_ref": "", "retry": ""})
         code, text, out = run_step(flow, "main", ws, env, root)
         args = gh_args(root)
-        manifest = json.load(open(os.path.join(ws, "carddata/db/manifest.json")))
-        check(code == 0 and out.get("rejected") == "true" and manifest["main_commit"] is None
-              and args[:3] == ["workflow", "run", "card-sync.yml"] and "dry_run=false" in args and "force=true" in args
-              and "bake=all" in args and f"builder_ref={git(os.path.join(ws, 'bot'), 'rev-parse', 'HEAD')}" in args
-              and not any(a.startswith(("full=", "cards=")) for a in args),
-              f"main moved, save-only: M dropped, one new forced run dispatched ({' '.join(args[3:])})" + ("" if code == 0 else f"\n{text}"))
+        manifest = manifest_of(ws)
+        check(code == 0 and out.get("rejected") == "true" and "pushed" not in out
+              and (manifest["card_commit"], manifest["main_commit"], manifest["pending"]["repin"]) == (main, None, ["Cards/One.png"])
+              and args[:3] == ["workflow", "run", "card-sync.yml"] and {"dry_run=false", "force=true", "bake=all",
+                                                                          "retry=workflow_dispatch", "cards=Mini Doomer"} <= set(args)
+              and f"builder_ref={git(os.path.join(ws, 'bot'), 'rev-parse', 'HEAD')}" in args
+              and not any(a.startswith(("full=", "allow_archive=", "seed=", "restore=")) for a in args)
+              and "full and allow_archive approved" in text,
+              f"main moved, save-only: M dropped, one retry dispatched without the approvals ({' '.join(args[3:])})"
+              + ("" if code == 0 else f"\n{text}"))
 
         ws, bare, main, env, root = setup(tmp, "baked-moved")
         commit(ws, {"site/Card Edits.json": '{"verdict":1}'}, "bake")                     # B on main's head
         moved(bare)
-        env["INPUTS"] = json.dumps({"dry_run": False, "full": True, "cards": "Mini Doomer", "seed": "", "bake": "The Freezer",
-                                    "force": False, "allow_archive": False, "restore": "", "builder_ref": ""})
+        env["GITHUB_EVENT_NAME"] = "schedule"
         code, text, out = run_step(flow, "main", ws, env, root)
         args = gh_args(root)
-        check(code == 0 and out.get("rejected") == "true" and {"full=true", "cards=Mini Doomer", "bake=The Freezer"} <= set(args)
-              and not any(a.startswith(("seed=", "restore=", "allow_archive=")) for a in args),
-              f"main moved after a bake: the new run carries the dropped data's inputs ({' '.join(args[3:])})"
+        check(code == 0 and out.get("rejected") == "true" and {"bake=all", "retry=schedule", "force=true"} <= set(args)
+              and not any(a.startswith(("full=", "cards=", "seed=", "restore=", "allow_archive=")) for a in args),
+              f"main moved after a scheduled bake: the retry is marked as the schedule's ({' '.join(args[3:])})"
               + ("" if code == 0 else f"\n{text}"))
+
+        ws, bare, main, env, root = setup(tmp, "pending-moved")
+        moved(bare)
+        env["FAKE_WAITING"] = "1"
+        code, text, out = run_step(flow, "main", ws, env, root)
+        check(code == 0 and out.get("rejected") == "true" and not gh_args(root) and "is pending" in text,
+              "main moved with a run pending: no retry (it would replace the pending run)")
 
         ws, bare, main, env, root = setup(tmp, "retry-moved")
         moved(bare)
         env["RETRY"] = "true"
         code, text, out = run_step(flow, "main", ws, env, root)
-        check(code == 0 and out.get("rejected") == "true" and not gh_args(root) and "moved again" in text,
+        check(code == 0 and out.get("rejected") == "true" and not gh_args(root),
               "main moved during a retry: a warning, no further run")
 
         ws, bare, main, env, root = setup(tmp, "late")
-        env["START"] = str(int(time.time()) - 76 * 60)
+        env["START"] = str(int(time.time()) - 61 * 60)
         code, text, out = run_step(flow, "main", ws, env, root)
         check(code == 1 and git(bare, "rev-parse", "main") == main and "pushed" not in out,
-              "main: 76 minutes into the run, M is not pushed (red)")
+              "main: 61 minutes into the run, M is not pushed (red)")
 
 
 def main():
@@ -484,6 +569,7 @@ def main():
     plans(flow)
     gate_cases(flow)
     fonts_cases(flow)
+    bake_cases(flow)
     main_cases(flow)
     print(f"{len(FAILED)} failed" if FAILED else "all passed")
     sys.exit(1 if FAILED else 0)
