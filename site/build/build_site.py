@@ -62,7 +62,8 @@ from urllib.request import Request, urlopen
 
 from PIL import Image
 
-import analytics
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))     # for loads by file path (tts_save_gate.py)
+import analytics  # noqa: E402
 
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(SITE)

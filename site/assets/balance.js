@@ -9,10 +9,13 @@ const KINDS = { creature: "creatures", minion: "minions" };
 const ITEM_KIND = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", rulebook: "Rulebook page", unknown: "Other" };
 const STATS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
-const day = ts => new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-const monthKey = ts => { const d = new Date(ts * 1000); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; };
-const dayKey = ts => { const d = new Date(ts * 1000); return `${monthKey(ts)}-${String(d.getDate()).padStart(2, "0")}`; };
-const monthLabel = key => { const [y, m] = key.split("-").map(Number); return new Date(y, m - 1).toLocaleDateString(undefined, { month: "short", year: "2-digit" }); };
+// days and months in one fixed zone, the bot's TIMEZONE (analytics.py ZONE), so every viewer sees the same waves
+const TZ = "America/Los_Angeles";
+const day = ts => new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: TZ });
+const ymd = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ });
+const dayKey = ts => { const p = Object.fromEntries(ymd.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}`; };
+const monthKey = ts => dayKey(ts).slice(0, 7);
+const monthLabel = key => { const [y, m] = key.split("-").map(Number); return new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString(undefined, { month: "short", year: "2-digit", timeZone: "UTC" }); };
 const monthsFrom = (first, last) => {
   const out = [];
   for (let [y, m] = first.split("-").map(Number); `${y}-${String(m).padStart(2, "0")}` <= last; m === 12 ? (y++, (m = 1)) : m++) out.push(`${y}-${String(m).padStart(2, "0")}`);
@@ -184,7 +187,8 @@ export function balanceBlock(c, A, { byId } = {}) {
   const a = cardData(A, c, byId), cohort = a?.cohort && A.cohorts[a.cohort];
   const out = [];
   if (cohort) {
-    const name = cohortName(a.cohort, cohort), total = STATS.reduce((s, [k]) => s + (c[k] ?? 0), 0);
+    const line = a.stats || STATS.map(([k]) => c[k]);          // as built: the cohort numbers are too
+    const name = cohortName(a.cohort, cohort), total = line.reduce((s, v) => s + (v ?? 0), 0);
     const all = a.cohort.endsWith("|all"), of = all ? `all ${cohort.n}` : `the ${cohort.n}`;
     const where = a.flags?.includes("top") ? `in the top 10% of ${name}: ${a.below} of ${of} have a lower total`
       : a.flags?.includes("bottom") ? `in the bottom 10% of ${name}: ${a.above} of ${of} have a higher total`
@@ -192,9 +196,9 @@ export function balanceBlock(c, A, { byId } = {}) {
     const folded = all ? (c.type === "creatures" ? " Auxiliary creatures have no star level, so they are compared with all creatures."
       : ` Fewer than ${A.minCohort} ${KINDS[cohort.kind]} have ${c.stars ?? "no"}★, so it is compared with all of them.`) : "";
     const several = c.creatures?.length > 1 ? " (creature 1)" : "";
-    const rows = [["This card" + several, ...STATS.map(([k]) => (c[k] == null ? "—" : String(c[k]))), String(total)],
+    const rows = [["This card" + several, ...line.map(v => (v == null ? "—" : String(v))), String(total)],
       [`Median of ${name}`, ...["hp", "def", "atk", "spd", "total"].map(k => fmt(cohort[k].p50))],
-      ["Middle 80%", ...["hp", "def", "atk", "spd", "total"].map(k => `${fmt(cohort[k].p10)}–${fmt(cohort[k].p90)}`)]];
+      ["Middle 80%", ...["hp", "def", "atk", "spd", "total"].map(k => `${Math.round(cohort[k].p10)}–${Math.round(cohort[k].p90)}`)]];   // whole stats
     out.push(`<h3>Balance</h3><p class="bal-line"><b>Total ${total}</b>, ${esc(where)}.${esc(folded)}</p>
       <div class="table-wrap"><table class="data bal-vs"><thead><tr><th></th>${STATS.map(([, l]) => `<th class="num">${l}</th>`).join("")}<th class="num">Total</th></tr></thead>
       <tbody>${rows.map(r => `<tr>${r.map((v, i) => (i ? `<td class="num">${esc(v)}</td>` : `<td>${esc(v)}</td>`)).join("")}</tr>`).join("")}</tbody></table></div>`);
@@ -212,10 +216,11 @@ export function changesBlock(c, A, { byId, texts = null } = {}) {
       const parts = changeParts(r);
       const [i, j] = r.text || [];
       const diff = r.words && texts && texts[i] != null && texts[j] != null ? `<details class="bal-diff"><summary>Show the change</summary><div>${diffWords(texts[i], texts[j])}</div></details>` : "";
-      return `<li><span class="when">${esc(day(r.ts))}</span><div>${parts.join("<br>")}${diff}</div></li>`;
+      const when = r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts));
+      return `<li><span class="when">${when}</span><div>${parts.join("<br>")}${diff}</div></li>`;
     }).join("");
     out.push(`<h3>Recorded changes</h3><ol class="bal-changes">${items}</ol>
-      <p class="muted">From the bot's card history${A.since ? ` (since ${esc(day(A.since))})` : ""}: each PSD the bot read, dated by its commit.</p>`);
+      <p class="muted">From the bot's card history${A.since ? ` (since ${esc(day(A.since))})` : ""}: each version the bot read, dated by its PSD's commit (Pacific time). Older records kept no PSD, so their dates are approximate. A PSD read again by a newer parser is not a change.</p>`);
   }
   return out.join("");
 }
@@ -233,7 +238,7 @@ export function statsHtml(A, { cards, byId }, params) {
   const keys = Object.keys(A.cohorts).filter(k => { const kd = k.split("|")[0]; return !kind || kind === kd || (kind === "creatures" && kd === "creature"); });
   const members = new Map();
   for (const [id, a] of Object.entries(A.cards)) if (a.cohort && inPool.has(id)) (members.get(a.cohort) || members.set(a.cohort, []).get(a.cohort)).push([id, a]);
-  const totalOf = id => { const c = byId.get(id); return c ? STATS.reduce((s, [k]) => s + (c[k] ?? 0), 0) : 0; };
+  const totalOf = id => { const l = A.cards[id]?.stats, c = byId.get(id); return l ? l.reduce((s, v) => s + v, 0) : c ? STATS.reduce((s, [k]) => s + (c[k] ?? 0), 0) : 0; };   // as built
   const rows = keys.map(k => {
     const co = A.cohorts[k], mine = members.get(k) || [];
     const dots = mine.filter(([, a]) => a.flags?.length).map(([id, a]) => ({ v: totalOf(id), id, name: byId.get(id)?.name || id, hot: a.flags[0] }));
@@ -329,10 +334,12 @@ export function statsHtml(A, { cards, byId }, params) {
   // the update came in waves: days on which WAVE or more cards changed timing tags; other days are only counted
   const retagged = changes.filter(x => x.r.tags), days = new Map();
   for (const x of retagged) { const d = dayKey(x.r.ts); (days.get(d) || days.set(d, { ts: x.r.ts, cards: new Set(), old: 0, rows: [] }).get(d)).cards.add(x.id); days.get(d).rows.push(x); if (x.r.old) days.get(d).old++; }
-  const waves = [...days.values()].filter(w => w.cards.size >= WAVE).sort((a, b) => b.cards.size - a.cards.size || b.ts - a.ts);
+  const waves = [...days.values()].filter(w => w.cards.size >= WAVE).sort((a, b) => a.ts - b.ts);     // by date
   const tagged = waves.flatMap(w => w.rows);
   if (tagged.length) {
-    const main = waves[0], others = waves.slice(1), rest = new Set(retagged.filter(x => !tagged.includes(x)).map(x => x.id)).size;
+    const main = waves.reduce((m, w) => (w.cards.size > m.cards.size || (w.cards.size === m.cards.size && w.ts > m.ts) ? w : m));   // the biggest
+    const listed = ws => ws.map(w => `${plural(w.cards.size, "card")} on ${day(w.ts)}`).join(", ");
+    const earlier = waves.filter(w => w.ts < main.ts), later = waves.filter(w => w.ts > main.ts), rest = new Set(retagged.filter(x => !tagged.includes(x)).map(x => x.id)).size;
     const pairs = new Map();
     for (const x of tagged) for (const [a, b] of x.r.tags) { const k = `${a}\u0001${b}`; pairs.set(k, (pairs.get(k) || 0) + 1); }
     const pairRows = [...pairs.entries()].sort((a, b) => b[1] - a[1]).map(([k, v]) => { const [a, b] = k.split("\u0001"); return { a, b, value: v }; });
@@ -340,7 +347,7 @@ export function statsHtml(A, { cards, byId }, params) {
     const facts = [["Cards", new Set(tagged.map(x => x.id)).size], ["Timing tags only", tagged.filter(x => !x.r.words).length], ["Also reworded", tagged.filter(x => x.r.words).length],
       ["Turn to global turn", global], ["With stat changes", tagged.filter(x => x.r.stats).length]];
     const sub = `${day(main.ts)}: ${plural(main.cards.size, "card")}${scope} changed timing tags${main.old ? `, ${main.old.toLocaleString()} from the old per-turn and every-N-turns tags` : ""} to cooldowns (CD), global cooldowns (GCD) and uses (U).`
-      + (others.length ? ` Earlier: ${others.map(w => `${plural(w.cards.size, "card")} on ${day(w.ts)}`).join(", ")}.` : "") + (rest ? ` ${plural(rest, "other card")} changed timing tags on other days (not counted here).` : "");
+      + (earlier.length ? ` Earlier: ${listed(earlier)}.` : "") + (later.length ? ` Later: ${listed(later)}.` : "") + (rest ? ` ${plural(rest, "other card")} changed timing tags on other days (not counted here).` : "");
     charts.push(card("bal-cooldown", "The cooldown update", sub,
       `<div class="facts">${facts.map(([l, v]) => `<span class="fact">${esc(l)} <b>${v.toLocaleString()}</b></span>`).join("")}</div>`
       + hbar(pairRows.slice(0, 14).map(p => ({ label: `${p.a || "none"} → ${p.b || "none"}`, value: p.value, html: `${runHtml(p.a)}<span class="muted">→</span>${runHtml(p.b)}` })), { labelWidth: 200, unit: "abilities" }),
@@ -351,6 +358,6 @@ export function statsHtml(A, { cards, byId }, params) {
   if (!charts.length) return "";
   const n = A.counts ? (A.counts.creature || 0) + (A.counts.minion || 0) : 0;
   return `<h2 class="bal-title">Balance</h2>
-    <p class="muted bal-intro">${n ? `${n.toLocaleString()} creatures and minions compared with others of their star level` : "Cards compared with others of their star level"}${A.counts?.creatures ? ` (the ${A.counts.creatures} auxiliary creatures with all creatures)` : ""}, and the ${plural(A.versions || 0, "earlier version")} the bot recorded${since ? ` since ${esc(since)}` : ""}.</p>
+    <p class="muted bal-intro">${n ? `${n.toLocaleString()} creatures and minions compared with others of their star level` : "Cards compared with others of their star level"}${A.counts?.creatures ? ` (the ${A.counts.creatures} auxiliary creatures with all creatures)` : ""}, and the ${plural(A.versions || 0, "earlier version")} the bot recorded${since ? ` since ${esc(since)}` : ""}. Dates are Pacific time, the bot's.</p>
     <div class="charts">${charts.join("")}</div>`;
 }

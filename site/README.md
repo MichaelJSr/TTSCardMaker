@@ -29,7 +29,9 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   level ("Total 35, in the top 10% of 4★ creatures: 92 of the 93 have a lower total"), with their median and middle 80%
   for each stat, and a line of its total over time when its stats changed. **Recorded changes** lists, newest first,
   every change the bot recorded to the card: stats (a buff raises the total, a nerf lowers it), stars, kind, item type,
-  types, series, timing tags ("(1PT) → (1CD)") and rewordings (each with its word diff).
+  types, series, timing tags ("(1PT) → (1CD)") and rewordings (each with its word diff). Dates are Pacific time; one
+  from an older record (the bot kept no PSD for it) is marked approximate, and a PSD read again by a newer parser is
+  not a change.
   A **Details** dropdown at the bottom of the card page (closed by default; the browser remembers it, its sections and
   fonts, for the session) shows the PSD's structure as the bot read it: fonts (each expandable to its layers; one that
   `MDW/Fonts` lacks is flagged "missing from MDW/Fonts", "not checked" when the bot had no font index), every text
@@ -67,7 +69,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   the lowest and highest, and the top and bottom 10% as dots), the strongest and weakest cards for their star level,
   each star level's average total over time (from the card repo's history: a card counts from its first upload), buffs
   and nerfs by month, every recorded change by month, the most reworked cards, and the cooldown update (the timing
-  tags that became cooldowns, global cooldowns and uses, on Oct 21, 2026 and in an earlier wave on Jun 18, 2026). The
+  tags that became cooldowns, global cooldowns and uses, on Oct 21, 2026 and in an earlier wave on Jun 18, 2026, Pacific time). The
   kind and series filters apply to it too; a star level's band and median are always over all its cards. A star level
   with fewer than 5 cards (God Tamer, the one 0★ minion) is compared with all cards of its kind, and so are the 7
   auxiliary creatures (no star level), with all creatures. The bot's history has no buff or nerf yet (2026-10-22: its

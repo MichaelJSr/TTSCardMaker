@@ -1,7 +1,8 @@
 """Balance analytics: data/analytics.json, for the Stats page's Balance section and each card's Balance block.
 
 Called by build_site.py with the site's card entries (stars and stats as the card pages show them, edits applied) and
-the bot's stats.pkl / old_stats.pkl (each earlier version of a card, dated by the commit of the PSD it was read from).
+the bot's stats.pkl / old_stats.pkl (each earlier version of a card, dated by the commit of the PSD it was read from;
+older records with no PSD blob keep their stored date, marked approximate). Days and months are Pacific time (ZONE).
 
   * Cohorts: creatures and minions with all four stats, by star level. A star level with fewer than MIN_COHORT cards
     is compared with its kind's "all stars" cohort, and so are the auxiliary creatures (no star level): they count as
@@ -9,7 +10,8 @@ the bot's stats.pkl / old_stats.pkl (each earlier version of a card, dated by th
     A card with several creatures counts once, by its first creature (the card's own stats).
   * Per card: its cohort, how many cards of it have a lower or higher total, mid-rank percentiles for each stat and
     the total, z of the total, "top" / "bottom" for the top and bottom 10%, the stat lines it had (trend, when they
-    changed) and its recorded changes, newest first.
+    changed) and its recorded changes, newest first. A version with the same date as the one before it is the same PSD
+    read again by a newer parser: not a change.
   * Over time (full-history builds only, since a card's start is its first upload): each month, the total stats of
     each cohort's cards as they were then.
 
@@ -18,6 +20,12 @@ PSDs are never read here; everything comes from the bot's data.
 import re
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
+
+try:
+    from zoneinfo import ZoneInfo
+    ZONE = ZoneInfo("America/Los_Angeles")  # the bot's TIMEZONE; balance.js TZ
+except Exception:                          # no tz database
+    ZONE = timezone.utc
 
 KINDS = ("creature", "minion")             # cohorts: creatures and minions by star level
 AUX = "creatures"                          # auxiliary creatures: no star level, compared with all creatures
@@ -61,20 +69,20 @@ def spread(values):
 
 
 def midrank(value, ordered):
-    """Percent of the cohort below this value, ties counted half."""
+    """Percent of the cohort below this value, ties counted half (unrounded)."""
     below = sum(1 for v in ordered if v < value)
     equal = sum(1 for v in ordered if v == value)
-    return round(100 * (below + equal / 2) / len(ordered))
+    return 100 * (below + equal / 2) / len(ordered)
 
 
 def month_of(ts):
-    return datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m")
+    return datetime.fromtimestamp(ts, ZONE).strftime("%Y-%m")
 
 
 def month_end(month):
-    """The first instant after a "YYYY-MM" month, UTC."""
+    """The first instant after a "YYYY-MM" month, in ZONE."""
     y, m = (int(x) for x in month.split("-"))
-    return datetime(y + (m == 12), m % 12 + 1, 1, tzinfo=timezone.utc).timestamp()
+    return datetime(y + (m == 12), m % 12 + 1, 1, tzinfo=ZONE).timestamp()
 
 
 def months_between(first, last):
@@ -142,16 +150,17 @@ def card_balance(e, line, key, groups, cohort):
     rows = groups[key]
     columns = {k: sorted(sum(l) if k == "total" else l[i] for _, l in rows) for i, k in enumerate(KEYS)}
     values = dict(zip(KEYS, (*line, sum(line))))
-    pct = {k: midrank(values[k], columns[k]) for k in KEYS}
+    raw = {k: midrank(values[k], columns[k]) for k in KEYS}
+    pct = {k: int(v + .5) for k, v in raw.items()}
     total = values["total"]
     sd = cohort["total"]["sd"]
-    out = {"cohort": key, "pct": pct, "below": sum(1 for t in columns["total"] if t < total),
+    out = {"cohort": key, "stats": list(line), "pct": pct, "below": sum(1 for t in columns["total"] if t < total),
            "above": sum(1 for t in columns["total"] if t > total),
            "z_total": round((total - cohort["total"]["mean"]) / sd, 2) if sd else 0.0, "flags": []}
     if len(rows) >= MIN_COHORT:
-        if pct["total"] >= TOP:
+        if raw["total"] >= TOP:
             out["flags"].append("top")
-        elif pct["total"] <= BOTTOM:
+        elif raw["total"] <= BOTTOM:
             out["flags"].append("bottom")
     return out
 
@@ -206,14 +215,24 @@ def reworked(row):
     return any(k in row for k in ("words", "stats", "stars", "kind", "sub", "types", "lines"))
 
 
+def reread(a, b):
+    """b is the same commit's PSD read again (a newer parser), not a card change."""
+    return a.timestamp == b.timestamp
+
+
 def card_changes(e, chain):
+    """Rows newest first; approx: the newer version has no PSD blob (an older record), so its date is approximate."""
     texts = [v["ability"] for v in e.get("history") or []] + [e.get("ability") or ""]
     rows = []
     for i, (a, b) in enumerate(zip(chain, chain[1:])):
+        if reread(a, b):
+            continue
         row = change(a, b, texts)
         if "text" in row and i == len(chain) - 2:
             row["text"][1] = len(texts) - 1       # the current text, as the page shows it (an edit wins)
         if row:
+            if not getattr(b, "blob_sha", None):
+                row["approx"] = True
             rows.append({"ts": int(b.timestamp), **row})
     return rows[::-1]                             # newest first
 
@@ -223,12 +242,18 @@ def trend_of(e, chain):
     points = []
     for i, v in enumerate(chain):
         line = entry_line(e) if i == len(chain) - 1 else line_of(getattr(v, "stats", None))
+        if points and line and points[-1]["ts"] == int(v.timestamp):
+            points.pop()                          # a re-read: the newer parser's line
         if line and sum(line) <= OFF_SCALE and (not points or tuple(points[-1][k] for k, _ in STATS) != line):
             points.append({"ts": int(v.timestamp), **{k: x for (k, _), x in zip(STATS, line)}, "total": sum(line)})
     return points if len(points) > 1 else []
 
 
 # ---- over time ------------------------------------------------------------------------------------------------
+def point(v):
+    return v.timestamp, getattr(v, "card_type", None), getattr(v, "stars", None), line_of(getattr(v, "stats", None))
+
+
 def over_time(cards, stats, old_stats, sizes, now):
     """{months: [...], series: {cohort key: [[n, mean, p10, p50, p90] or None per month]}}: at each month's end, the
     creatures and minions there were then with the stars and stats they had then. A card's start is its image's first
@@ -240,7 +265,7 @@ def over_time(cards, stats, old_stats, sizes, now):
         chain = chain_of(e["key"], stats, old_stats)
         if not chain:
             continue
-        points = [(v.timestamp, v.card_type, v.stars, line_of(getattr(v, "stats", None))) for v in chain[:-1]]
+        points = [point(v) for v in chain[:-1]]
         points.append((chain[-1].timestamp, e.get("type"), e.get("stars"), entry_line(e)))     # as the page shows it
         start = min([p[0] for p in points] + ([e["fs"]] if e.get("fs") else []))
         lives.append((start, None, points))
@@ -251,7 +276,7 @@ def over_time(cards, stats, old_stats, sizes, now):
         at = tag.get("at") if isinstance(tag, dict) else None
         chain = chain_of(name, stats, old_stats)
         if isinstance(at, (int, float)) and chain:
-            lives.append((chain[0].timestamp, at, [(v.timestamp, v.card_type, v.stars, line_of(getattr(v, "stats", None))) for v in chain]))
+            lives.append((chain[0].timestamp, at, [point(v) for v in chain]))
     if not lives:
         return {"months": [], "series": {}}
     months = months_between(month_of(min(s for s, _, _ in lives)), month_of(now))
@@ -320,4 +345,5 @@ def summary(data):
             f"auxiliary creatures (with all creatures); cohorts: {sizes}",
             f"balance: {data['versions']} versions; changes: {len(rows)}, reworks {sum(1 for r in rows if reworked(r))}, "
             f"buffs {sum(1 for r in rows if r.get('bal') == 'buff')}, nerfs {sum(1 for r in rows if r.get('bal') == 'nerf')}, "
-            f"timing tags {sum(1 for r in rows if 'tags' in r)} ({sum(1 for r in rows if r.get('old'))} from the old tags)"]
+            f"timing tags {sum(1 for r in rows if 'tags' in r)} ({sum(1 for r in rows if r.get('old'))} from the old tags), "
+            f"approximate dates {sum(1 for r in rows if r.get('approx'))}"]
