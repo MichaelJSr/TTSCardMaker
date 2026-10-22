@@ -237,7 +237,7 @@ export function cardsPanelHtml(p, x) {
       ${f.newest ? `<span class="fact" data-tip="First upload of the card image">Newest card: <a href="#/card/${f.newest.id}">${esc(f.newest.name)}</a> · ${esc(x.month(f.newest.fs))}</span>` : ""}
     </div>
     <div class="grid" style="--tile:120px">${f.recent.map(x.tile).join("")}</div>
-    <p><a href="#/cards?${by}&sort=new">All ${plural(own.length, "card")}</a></p></div></div>`;
+    <p><a href="#/cards?${by}&sort=created">All ${plural(own.length, "card")}</a></p></div></div>`;
 }
 
 /** The Decks panel: the person's public decks (decks.js entries, newest first) as the deck browser's tiles, and their

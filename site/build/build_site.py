@@ -27,8 +27,9 @@ Where the data comes from:
     any) with the edit batch. A public deck is resolved against the visible cards (unknown ones dropped with a warning);
     a private one is AES-GCM ciphertext made in the browser and passes through as it is. Bad files skipped, never a failed build.
   * Image versions and contributions: one pass over the git history (commit metadata only, no file contents) lists
-    every commit that changed each card PNG, following exact renames (folder moves), gives each card its first upload
-    (fs, for the person pages' newest cards), and counts per person the commits that added or changed a card (PSD or
+    every commit that changed each card PNG, following folder moves (exact renames, and a move that changed the image
+    when one PNG of that file name was deleted), gives each card its first upload (fs: the person pages' newest cards,
+    the Cards tab's created sort), and counts per person the commits that added or changed a card (PSD or
     PNG) and the publish batches (commits to Card Edits.json). Needs full history: a shallow clone gets no image
     versions, no fs, and counts edit batches from the file's _by/_at stamps instead.
 PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
@@ -1084,12 +1085,14 @@ def git_history():
 # ---- image versions ----------------------------------------------------------------------------------
 def image_versions(paths, commits):
     """{current path: [(commit, path then), ...] newest first, one per content change}, commits as
-    (sha, unix time, author, subject). Exact renames (same blob deleted and added in one commit) are followed, so folder
-    moves keep their history; a rename that also changes the image starts a new history. None without history."""
+    (sha, unix time, author, subject). Renames are followed, so folder moves keep their history: exact ones (same blob
+    deleted and added in one commit), and a move that also changed the image when that commit deleted exactly one PNG
+    of the same file name (alnum, any case) and added only this one. None without history."""
     if commits is None:
         return None
     tracked = {p: p for p in paths}               # path at the commit being read -> current path
     versions = {p: [] for p in paths}
+    file_name = lambda p: alnum(os.path.splitext(os.path.basename(p))[0])
     for sha, ts, author, _, subject, entries, _ in commits:
         commit = (sha, ts, author, subject)
         adds, dels, mods = [], {}, []
@@ -1105,15 +1108,26 @@ def image_versions(paths, commits):
         for path in mods:
             if path in tracked:
                 versions[tracked[path]].append((commit, path))
-        for path, blob in adds:
-            if path not in tracked:
-                continue
-            key = tracked.pop(path)
+        changed = defaultdict(list)               # added with an image no delete here had, by file name
+        for path, blob in sorted(adds, key=lambda a: a[0] not in tracked):     # tracked ones claim exact renames first
             renamed_from = dels.get(blob)
             if renamed_from:                      # moved without changing: keep following it under its old name
-                tracked[renamed_from.pop(0)] = key
+                old = renamed_from.pop(0)
+                if path in tracked:
+                    tracked[old] = tracked.pop(path)
             else:
+                changed[file_name(path)].append(path)
+        gone = defaultdict(list)                  # deleted here and no exact rename's source
+        for p in (p for ps in dels.values() for p in ps):
+            gone[file_name(p)].append(p)
+        for name, added in changed.items():
+            for path in added:
+                if path not in tracked:
+                    continue
+                key = tracked.pop(path)
                 versions[key].append((commit, path))
+                if len(added) == 1 and len(gone.get(name, ())) == 1:
+                    tracked[gone[name][0]] = key  # moved and changed: older versions under its old name
     return versions
 
 
@@ -1640,7 +1654,7 @@ def main():
                     index[sha] = len(versions["commits"])
                     versions["commits"].append([sha, ts, person(people, author), subject])
                 rows.append([index[sha]] + ([path] if path != png else []))
-            for e in by_png[png]:                 # fs: first upload (the oldest row), for the person pages' newest cards
+            for e in by_png[png]:                 # fs: first upload (the oldest row): newest cards, the created sort
                 if rows and e["id"] not in rule_ids:
                     e["fs"] = min(ts for (_, ts, _, _), _ in vs)
             if len(rows) > 1:                     # one version = nothing to compare

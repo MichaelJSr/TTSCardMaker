@@ -32,8 +32,10 @@ const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", mi
 const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
   ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"], ["details", "PSD details"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
+// [key, label, dir it sets]; "created" = first upload (fs), full-history builds only
 const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
-  ["new", "Recently updated"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
+  ["new", "Recently updated"], ["created", "Newest created", ""], ["created", "Oldest created", "asc"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
+const isDesc = (sort, dir) => (dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "created", "mentioned"].includes(sort));
 
 const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
 const BUILD = document.querySelector('meta[name="build"]')?.content || "";
@@ -105,6 +107,7 @@ async function init() {
     return;
   }
   S.all = S.data.cards; S.rules = null; S.icons = S.data.icons;
+  S.created = S.all.some(c => c.fs);                      // first uploads: a shallow build has none
   for (const c of S.all) S.byId.set(c.id, c);
   editor.init();                                           // applies staged edits, then derive()
   S.decks = D.loadDecks();
@@ -264,7 +267,11 @@ function sortCards(list, sort = "name", dir = "") {
     atk: c => c.atk ?? -1, spd: c => c.spd ?? -1, new: c => c.ts ?? 0, series: c => `${(c.series || "\uffff").toLowerCase()}\u0001${(c.subseries || "\uffff").toLowerCase()}`, type: c => kindOf(c),
     mentioned: c => (S.mentionedBy.get(c.id) || new Set()).size,
   }[sort] || (c => c.name.toLowerCase());
-  const desc = dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "mentioned"].includes(sort);
+  const desc = isDesc(sort, dir);
+  if (sort === "created") {                                // no date last; ties by name either way
+    const s = desc ? -1 : 1;
+    return list.sort((a, b) => (!a.fs - !b.fs) || s * ((a.fs || 0) - (b.fs || 0)) || a.name.localeCompare(b.name));
+  }
   return list.sort((a, b) => { const x = key(a), y = key(b); return (x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name)) * (desc ? -1 : 1); });
 }
 function chipList(key, options, selected, counts) {
@@ -343,7 +350,8 @@ function renderCards(r) {
       <div class="toolbar">
         <span class="result-count">${list.length.toLocaleString()} card${list.length === 1 ? "" : "s"}</span>
         <button type="button" class="mobile-only" data-action="toggle-filters">Filters${active.length ? ` (${active.length})` : ""}</button>
-        <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.map(([v, l]) => `<option value="${v}"${v === (p.get("sort") || "name") ? " selected" : ""}>${l}</option>`).join("")}</select></label>
+        <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.filter(([v]) => v !== "created" || S.created).map(([v, l, d]) => { const cur = p.get("sort") || "name";
+          return `<option value="${v}"${d !== undefined ? ` data-dir="${d}"` : ""}${v === cur && (d === undefined || (d === "asc") !== isDesc(cur, p.get("dir"))) ? " selected" : ""}>${l}</option>`; }).join("")}</select></label>
         <button type="button" class="ghost icon" data-action="flip-dir" title="Reverse order" aria-label="Reverse order">⇅</button>
         <span class="seg">${[["grid", "Grid"], ["table", "Table"]].map(([v, l]) => `<button type="button" class="${v === view_ ? "on" : ""}" data-action="set-pref" data-key="view" data-value="${v}">${l}</button>`).join("")}</span>
         ${view_ === "grid" ? `<span class="seg">${[["s", "S"], ["m", "M"], ["l", "L"]].map(([v, l]) => `<button type="button" class="${v === size ? "on" : ""}" data-action="set-pref" data-key="size" data-value="${v}" title="Tile size">${l}</button>`).join("")}</span>` : ""}
@@ -358,13 +366,14 @@ function renderCards(r) {
   if (editing()) inline.mountGrid(view, p);
 }
 function tableHtml(list, p) {
-  const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"], ["new", "Updated"]];
+  const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
+    ...(S.created ? [["created", "Created"]] : []), ["new", "Updated"]];
   const sort = p.get("sort") || "name";
   return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
     ${list.map(c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
-      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td><td>${date(c.ts)}</td></tr>`).join("")}</tbody></table></div>`;
+      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td>${date(c.fs)}</td>` : ""}<td>${date(c.ts)}</td></tr>`).join("")}</tbody></table></div>`;
 }
 
 // ---- card detail -----------------------------------------------------------------------------------
@@ -914,14 +923,13 @@ const actions = {
   "close": () => { if ($("#edit-form", modal)) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
   "toggle-param": el => { const p = parseHash().params, cur = csv(p, el.dataset.key), v = el.dataset.value;
     setParams({ [el.dataset.key]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); },
-  "select-param": el => { const k = el.dataset.key, ser = el.selectedOptions?.[0]?.dataset.series;      // a shared subseries picks its series too
-    setParams({ [k]: el.value, ...(k === "series" ? { subseries: "" } : {}), ...(ser ? { series: ser } : {}) }); },
+  "select-param": el => { const k = el.dataset.key, o = el.selectedOptions?.[0]?.dataset || {};      // a shared subseries picks its series too; a sort its direction
+    setParams({ [k]: el.value, ...(k === "series" ? { subseries: "" } : {}), ...(o.series ? { series: o.series } : {}), ...(o.dir !== undefined ? { dir: o.dir } : {}) }); },
   "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: csv(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "", ...(el.dataset.key === "series" ? { subseries: "" } : {}) }); if (el.dataset.key === "q") qInput.value = ""; },
   "clear-filters": () => { qInput.value = ""; history.replaceState(null, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
-  "flip-dir": () => { const p = parseHash().params, sort = p.get("sort") || "name"; const defDesc = ["stars", "total", "hp", "def", "atk", "spd", "new", "mentioned"].includes(sort);
-    const curDesc = p.get("dir") ? p.get("dir") === "desc" : defDesc; setParams({ dir: curDesc ? "asc" : "desc" }); },
+  "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(p.get("sort") || "name", p.get("dir")) ? "asc" : "desc" }); },
   "sort-by": el => { const p = parseHash().params; setParams({ sort: el.dataset.key, dir: p.get("sort") === el.dataset.key && p.get("dir") !== "asc" ? "asc" : "" }); },
   "set-pref": el => { localStorage.setItem(el.dataset.key, el.dataset.value); setParams({ [el.dataset.key]: el.dataset.value }); },
   "random-from-list": () => { const l = S.list.length ? S.list : S.cards; location.hash = `#/card/${l[Math.floor(Math.random() * l.length)].id}`; },
