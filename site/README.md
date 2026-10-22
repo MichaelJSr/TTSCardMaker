@@ -6,14 +6,21 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 ## What it has
 
 - **Cards**: grid or sortable table; filters for kind, stars, item type, type icons, series and subseries, stat ranges, author and flags.
+  Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
+  column too): by the first upload of the card image, ties by name; a card without one goes last. It needs the git
+  history, so a shallow local build hides it. About 600 cards share the first import's dates (2023-11-05/06), uploaded
+  folder by folder, so among them it only tells the batches apart.
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`),
   and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
   record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
   dropdown open this once; Ctrl-click opens it in a new tab).
 - **Card pages**: full image, stat bars, ability text with icons, timing-tag badges such as (1CD), (1/2CD), (1GCD) and
-  (2U) (hover for the meaning) and links to
-  every card it names; "mentions", "mentioned by", similar stats, same series, text history with changes highlighted,
-  and an image version viewer: every commit that changed the card's image, compared side by side with the current one.
+  (2U) (hover for the meaning) and links to every card it names (by its printed title or file name, in any case,
+  either apostrophe, plural or possessive: "Copper Swords", "Grodus X's"; a one-word name only as the card spells it
+  or capitalized, not as a label like "Cat:", and after a capitalized word only when that word is a verb or a card:
+  "Summon Jetpack" links, "Evil Quote" doesn't); "mentions", "mentioned by", similar stats, same series, text history
+  with changes highlighted, and an image version viewer: every commit that changed the card's image, compared side by
+  side with the current one.
   A **Details** dropdown at the bottom of the card page (closed by default; the browser remembers it, its sections and
   fonts, for the session) shows the PSD's structure as the bot read it: fonts (each expandable to its layers; one that
   `MDW/Fonts` lacks is flagged "missing from MDW/Fonts", "not checked" when the bot had no font index), every text
@@ -85,9 +92,10 @@ Authors come from `site/Card Authors.txt` when a card is listed there (the bot u
 bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
 `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/` on 2026-10-20); the
 build and the bot read them, the published site does not include them. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
-following folder moves; the build needs full history for them (CI fetches it; a shallow local clone gets no image
-versions and counts edit batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one
-batch per card; `git fetch --unshallow --filter=blob:none` fixes that).
+following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
+the build needs full history for them (CI fetches it; a shallow local clone gets no image versions and counts edit
+batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one batch per card;
+`git fetch --unshallow --filter=blob:none` fixes that).
 
 Each card PNG becomes three WebP images (240 and 360 px for the grid, 720 px for the card view), cached by git blob
 hash in `site/.cache/img`; each image's size and accent color are kept by blob in `site/.cache/images.json` and the
