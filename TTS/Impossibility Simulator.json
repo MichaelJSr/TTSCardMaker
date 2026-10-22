@@ -185479,6 +185479,71 @@
       "LuaScript": "",
       "LuaScriptState": "",
       "XmlUI": ""
+    },
+    {
+      "GUID": "307b35",
+      "Name": "Custom_Model",
+      "Transform": {
+        "posX": 95.8628845,
+        "posY": 1.59644783,
+        "posZ": 28.8794365,
+        "rotX": 357.671021,
+        "rotY": 0.09821716,
+        "rotZ": 358.1667,
+        "scaleX": 8.900014,
+        "scaleY": 8.900014,
+        "scaleZ": 8.900014
+      },
+      "Nickname": "Maxwell",
+      "Description": "Maxwell is a very good boy",
+      "GMNotes": "",
+      "AltLookAngle": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "ColorDiffuse": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0
+      },
+      "LayoutGroupSortIndex": 0,
+      "Value": 0,
+      "Locked": false,
+      "Grid": true,
+      "Snap": true,
+      "IgnoreFoW": false,
+      "MeasureMovement": false,
+      "DragSelectable": true,
+      "Autoraise": true,
+      "Sticky": true,
+      "Tooltip": true,
+      "GridProjection": false,
+      "HideWhenFaceDown": false,
+      "Hands": false,
+      "CustomMesh": {
+        "MeshURL": "https://steamusercontent-a.akamaihd.net/ugc/2026087820431793346/316E024E4C3915B698E1CFC691AD9EB70AF67A06/",
+        "DiffuseURL": "https://steamusercontent-a.akamaihd.net/ugc/2026087820431794094/7E31AB30620041C3B764B4C6E0328FAD20EF1857/",
+        "NormalURL": "",
+        "ColliderURL": "https://steamusercontent-a.akamaihd.net/ugc/2026087820431793346/316E024E4C3915B698E1CFC691AD9EB70AF67A06/",
+        "Convex": true,
+        "MaterialIndex": 0,
+        "TypeIndex": 0,
+        "CustomShader": {
+          "SpecularColor": {
+            "r": 1.0,
+            "g": 1.0,
+            "b": 1.0
+          },
+          "SpecularIntensity": 0.0,
+          "SpecularSharpness": 7.0,
+          "FresnelStrength": 0.4
+        },
+        "CastShadows": true
+      },
+      "LuaScript": "",
+      "LuaScriptState": "",
+      "XmlUI": ""
     }
   ]
 }
