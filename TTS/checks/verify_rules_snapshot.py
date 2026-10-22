@@ -6,53 +6,31 @@ import os
 import re
 import subprocess
 import sys
-from urllib.parse import unquote
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from checks_env import REF, REPO as TC, save_arg, site_cards  # noqa: E402
-
-LINK = re.compile(r"https://raw\.githubusercontent\.com/MichaelJSr/TTSCardMaker/[^/]+/(.+)")
-
-
-def walk(objs):
-    for o in objs or []:
-        yield o
-        yield from walk(o.get("ContainedObjects"))
-        for st in (o.get("States") or {}).values():
-            yield from walk([st])
+from contents_lib import face, rule_cards, show, walk  # noqa: E402
 
 
-def face(c):
-    cd = c.get("CustomDeck") or {}
-    e = cd.get(str(c.get("CardID", 0) // 100)) or (next(iter(cd.values())) if cd else {})
-    m = LINK.fullmatch((e or {}).get("FaceURL") or "")
-    return unquote(m.group(1)) if m else None
-
-
-def glob(p):
-    out = ""
-    for tok in re.split(r"(\*\*|\*|\?)", p):
-        out += {"**": ".*", "*": "[^/]*", "?": "[^/]"}.get(tok, re.escape(tok))
-    return re.compile(out + r"\Z")
-
-
-def rule_cards(rule, pngs):
-    gs = [glob(g) for g in rule.get("folders", [])]
-    inc, exc = set(rule.get("include", [])), set(rule.get("exclude", []))
-    return [p for p in pngs if p in inc or (p not in exc and any(g.match(p) for g in gs))]
+def load_rules(save_path):
+    """argv[2], else decks.json beside the save (or in its TTS/), else the repo's."""
+    here = os.path.dirname(os.path.abspath(save_path))
+    path = sys.argv[2] if len(sys.argv) > 2 else next(
+        (p for p in (os.path.join(here, "decks.json"), os.path.join(here, "TTS/decks.json")) if os.path.exists(p)), None)
+    if path:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    return json.loads(show("TTS/decks.json"))
 
 
 def main():
     save_path = save_arg()
-    here = os.path.dirname(os.path.abspath(save_path))
-    rules_path = sys.argv[2] if len(sys.argv) > 2 else next(
-        (p for p in (os.path.join(here, "decks.json"), os.path.join(here, "TTS/decks.json")) if os.path.exists(p)), None)
-    save, rules = json.load(open(save_path, encoding="utf-8")), json.load(open(rules_path, encoding="utf-8"))
+    save, rules = json.load(open(save_path, encoding="utf-8")), load_rules(save_path)
     files = subprocess.run(["git", "-C", TC, "ls-tree", "-r", "--name-only", REF], capture_output=True, text=True, check=True).stdout.split("\n")
     fileset = set(files)
     pngs = sorted(p for p in files if p.lower().endswith(".png"))
     site = {c.get("png") for c in site_cards()}
-    decks = {o.get("GUID"): o for o in walk(save.get("ObjectStates")) if o.get("Name") == "Deck"}
+    decks = {o.get("GUID"): o for o, _ in walk(save.get("ObjectStates")) if o.get("Name") == "Deck"}
     fails = []
     for g, e in rules.get("decks", {}).items():
         d = decks.get(g)

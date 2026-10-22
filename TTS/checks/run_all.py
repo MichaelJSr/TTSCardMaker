@@ -20,22 +20,28 @@ CHECKS = [   # file and its extra arguments
     ("updater_idempotent.py",), ("updater_report_decks.py",), ("tts_save_gate.py",),
 ]
 OUT = "/tmp/tts-checks/out"
+TIMEOUT = 600                                               # seconds per check: one that hangs fails, the rest still run
 
 
 def main():
     save = save_arg()
     os.makedirs(OUT, exist_ok=True)
-    ensure_history()                                        # once, before the checks that read it
+    os.environ["TTS_HISTORY_FETCHED"] = ensure_history()    # once, before the checks that read it (they skip the fetch)
     failed = []
     for name, *extra in CHECKS:
         args = [] if name == "tts_save_gate.py" else [save]
         start = time.monotonic()
-        r = subprocess.run([sys.executable, os.path.join(HERE, name), *args, *extra], capture_output=True, text=True)
-        text = r.stdout + r.stderr
+        try:
+            r = subprocess.run([sys.executable, os.path.join(HERE, name), *args, *extra], capture_output=True, text=True,
+                               timeout=TIMEOUT)
+            code, text = r.returncode, r.stdout + r.stderr
+        except subprocess.TimeoutExpired as e:              # its output is bytes even with text=True
+            code = 1
+            text = "".join((b or b"").decode("utf-8", "replace") for b in (e.stdout, e.stderr)) + f"\ntimed out after {TIMEOUT}s"
         with open(os.path.join(OUT, name.replace(".py", ".txt")), "w", encoding="utf-8") as f:
             f.write(text)
-        print(f"{'ok  ' if r.returncode == 0 else 'FAIL'} {name} ({time.monotonic() - start:.0f}s)", flush=True)
-        if r.returncode:
+        print(f"{'ok  ' if code == 0 else 'FAIL'} {name} ({time.monotonic() - start:.0f}s)", flush=True)
+        if code:
             failed.append(name)
             for line in text.strip().splitlines()[-8:]:
                 print("       " + line)
