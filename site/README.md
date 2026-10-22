@@ -66,10 +66,11 @@ stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a di
 
 The build does not parse PSDs. Card text, stats, authors, aliases and history come from AutoCroissant's
 `stats.pkl` / `aliases.pkl` / `old_stats.pkl` (the same data the Discord bot answers from), so the site is as fresh as
-the bot's last `/update_stats` + `/push`. The build reads the pickles with an allowlist of exactly what they hold (the
-bot's `CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict` and `list`): a pickle naming
-anything else is refused and nothing in it runs (a refused `stats.pkl` stops the build; the history and aliases are
-skipped with a warning). A field the site reads that the bot's cards lack (a rename in `commands/card_models.py`), or a
+the bot's last `/update_stats` + `/push`. The build reads the pickles with an allowlist of what they hold (the bot's
+`CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict`, `list` and a few plain data types such as
+`set` and `datetime`). Another bot class (`commands.*`, moved or new) is read as plain data with a warning. A pickle
+naming anything else is refused and nothing in it runs: a refused `stats.pkl` stops the build, and the site stays as it
+was until `PICKLE_GLOBALS` in `build_site.py` allows it; the history and aliases are skipped with a warning. A field the site reads that the bot's cards lack (a rename in `commands/card_models.py`), or a
 field it doesn't know, is a warning in the log and on the Actions run. Images, icons, the ban list, icon names, profiles and published decks come from this
 repo. Cards that are in the repo but not yet in the bot's data still appear (image only).
 
@@ -90,7 +91,7 @@ batch per card; `git fetch --unshallow --filter=blob:none` fixes that).
 
 Each card PNG becomes three WebP images (240 and 360 px for the grid, 720 px for the card view), cached by git blob
 hash in `site/.cache/img`; each image's size and accent color are kept by blob in `site/.cache/images.json` and the
-icons in `site/.cache/icons`, so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
+icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon settings change), so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
 where links fail). The first screen loads only `data/cards.json`; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
 People tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
@@ -199,7 +200,7 @@ with a warning, a card id that isn't a card is dropped and counted), writes `dat
 cards resolved, private ones as they are, newest first), counts them in `cards.json` (the Deck builder page shows the
 public count) and writes a static `decks/<owner>/<slug>/` page per public deck with Open Graph tags ("Burning Bagels by
 MichaelJSr", "7 creatures, 10 items, field card Deepnest", and a 1200×630 image of up to six of its cards in page order,
-the field card first, made from their thumbnails and cached in `site/.cache/og` by those images; made only when
+the field card first, made from their thumbnails and cached in `site/.og-cache` by those images; made only when
 `SITE_URL` is set; one card's image when it has a single card, else the site banner). Private decks get no static page
 and are not listed in the deck browser: the owner's person page links them (with a lock) and their own
 `#/decks/<owner>/<slug>` link opens the passphrase form, which shows nothing but the owner, file name and date until the
@@ -239,4 +240,4 @@ Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no bu
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, drag-to-assign and
 the filter bar's New series/subseries/author, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
 published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py`.
-Generated files (`site/dist`, `site/.cache`) are git-ignored.
+Generated files (`site/dist`, `site/.cache`, `site/.og-cache`) are git-ignored.

@@ -6,14 +6,16 @@ Run by .github/workflows/site.yml on every push to main, every 6 hours (to pick 
 Where the data comes from:
   * Card text, stats, authors, aliases and history: AutoCroissant's stats.pkl / aliases.pkl / old_stats.pkl
     (the same data the Discord bot answers from), downloaded from its public GitHub repo. PSDs are never parsed here.
-    The pickles are read into stub classes, and only the globals they hold (PICKLE_GLOBALS) are allowed: anything else
-    is refused, nothing in it run. A field the site reads that the bot's cards lack, or one it doesn't know, is a warning.
+    The pickles are read into stub classes, and only the globals they hold (PICKLE_GLOBALS, with a few plain data types)
+    are allowed; another bot class (commands.*) is read as plain data with a warning, anything else is refused, nothing
+    in it run. A field the site reads that the bot's cards lack, or one it doesn't know, is a warning.
     The PSDs' structure (fonts, text layers, effects, stat rows, layer tree) comes from the bot's psd_details.json the
     same way, keyed by PSD blob sha; a card or rulebook page with a record gets data/details/<id>.json for its Details dropdown.
   * Images: card PNGs in this repo, turned into three WebP sizes (240 px and 360 px for the grid at 1x/2x, 720 px
     for the card view). They are cached by git blob hash in site/.cache/img, so after the first run only new or
     changed cards are downloaded and resized; images no card uses any more are pruned. Each image's size and accent
-    color are kept in site/.cache/images.json by blob, icons in site/.cache/icons; dist/ gets hardlinks (else copies).
+    color are kept in site/.cache/images.json by blob, icons in site/.cache/icons, deck page montages in site/.og-cache;
+    dist/ gets hardlinks (else copies).
   * Icons: Types/ and Types/Stars/; icon names and aliases from MDW/Fonts/stoogedings-src/stoogedings.json.
   * Deck rules: the rulebook pages; banned cards from site/Constructed Ban List.txt.
   * Authors: site/Card Authors.txt ([people] git name = shown name, [cards] Card Name = person) wins over the bot's
@@ -52,8 +54,8 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 import time
-from collections import defaultdict
-from datetime import datetime, timezone
+from collections import OrderedDict, defaultdict
+from datetime import date, datetime, timedelta, timezone
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
@@ -63,6 +65,7 @@ SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(SITE)
 DIST = os.path.join(SITE, "dist")
 CACHE = os.path.join(SITE, ".cache")
+OG_CACHE = os.path.join(SITE, ".og-cache")   # deck page montages: their own CI cache, so outside CACHE
 CARD_REPO = os.environ.get("CARD_REPO", "MichaelJSr/TTSCardMaker")
 BOT_REPO = os.environ.get("BOT_REPO", "bobberlington/AutoCroissant")
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
@@ -72,6 +75,7 @@ DETAILS_JSON = "psd_details.json"            # the bot's PSD structure records {
 IMAGE_SIZES = {240: 80, 360: 78, 720: 75}    # width -> WebP quality. 240/360: grid at 1x/2x; 720: card view
 IMAGE_WIDTH = 360                            # the size whose dimensions go into cards.json (aspect ratio)
 ICON_SIZE = 96
+ICON_VERSION = f"1-{ICON_SIZE}"              # in the cached icons' names: bump the 1 when build_icons' crop or WebP settings change
 IMAGE_META = "images.json"                   # in CACHE: each card image's size and accent color, by PNG blob sha
 IMAGE_META_VERSION = f"1:{IMAGE_WIDTH}:{IMAGE_SIZES[240]}"   # bump the 1 when accent_color changes
 OG_WIDTH = 480                               # link-preview image (Discord shows ≤ 300 px tall)
@@ -143,6 +147,10 @@ def slugify(name):
 
 # ---- the bot's pickles (read without AutoCroissant's code) ------------------------------------------
 class _Obj:
+    def __init__(self, *args):                # called with arguments (an Enum member, a reduce): keep them as data
+        if args:
+            self.args = args
+
     def __setstate__(self, state):
         if isinstance(state, tuple):
             state = state[1] if len(state) > 1 and isinstance(state[1], dict) else state[0]
@@ -157,10 +165,14 @@ class CardStats(_Obj):
     """Stub of the bot's CardStats."""
 
 
-# all the bot's pickles hold
+# all the bot's pickles hold, plus plain data types a new bot field could bring (built without running anything)
 PICKLE_GLOBALS = {("commands.psd_analyzer", "CardInfo"): CardInfo, ("commands.psd_analyzer", "CardStats"): CardStats,
                   ("commands.card_models", "CardInfo"): CardInfo, ("commands.card_models", "CardStats"): CardStats,
-                  ("collections", "defaultdict"): defaultdict, ("builtins", "list"): list}
+                  ("collections", "defaultdict"): defaultdict, ("builtins", "list"): list,
+                  ("builtins", "set"): set, ("builtins", "frozenset"): frozenset, ("collections", "OrderedDict"): OrderedDict,
+                  ("datetime", "datetime"): datetime, ("datetime", "date"): date, ("datetime", "timedelta"): timedelta,
+                  ("datetime", "timezone"): timezone}
+_STUBS = {}                                   # (module, name) -> stub class, for a commands.* class not in PICKLE_GLOBALS
 # fields the site reads; other known fields
 CARD_FIELDS = {"card_type", "path", "timestamp", "ability", "stars", "subtype", "series", "types", "stats", "problems", "author",
                "blob_sha", "parsed_values"}
@@ -171,16 +183,25 @@ HISTORY_FIELDS = {"ability", "timestamp"}
 
 
 class _Unpickler(pickle.Unpickler):
-    """Builds only PICKLE_GLOBALS: a pickle naming anything else (code to run, a new class) is refused."""
+    """Builds only PICKLE_GLOBALS and stand-ins for the bot's own classes (commands.*, read as plain data, the names in
+    `stubbed`): a pickle naming anything else (code to run) is refused."""
     def __init__(self, data, source):
         super().__init__(io.BytesIO(data))
         self.source = source
+        self.stubbed = set()
 
     def find_class(self, module, name):
         found = PICKLE_GLOBALS.get((module, name))
+        if found is None and (module == "commands" or module.startswith("commands.")):   # moved or new in the bot
+            if (module, name) not in _STUBS:
+                _STUBS[module, name] = {"CardInfo": CardInfo, "CardStats": CardStats}.get(name) or type(
+                    name if name.isidentifier() else "_Stub", (_Obj,), {"__module__": __name__})
+            found = _STUBS[module, name]
+            self.stubbed.add(f"{module}.{name}")
         if found is None:
-            raise pickle.UnpicklingError(f"{self.source} names {module}.{name}, which the bot's pickles never hold (allowed: "
-                                         f"{', '.join(sorted({f'{m}.{n}' for m, n in PICKLE_GLOBALS}))}); refused, nothing in it was run")
+            raise pickle.UnpicklingError(f"{self.source} names {module}.{name}, which isn't data the bot's pickles hold (allowed: "
+                                         f"{', '.join(sorted({f'{m}.{n}' for m, n in PICKLE_GLOBALS}))} and commands.* classes); "
+                                         f"refused, nothing in it was run")
         return found
 
     def persistent_load(self, pid):
@@ -206,7 +227,12 @@ def bot_raw():
 
 
 def load_bot_pickle(name):
-    return _Unpickler(fetch(bot_raw() + name), name).load()
+    unpickler = _Unpickler(fetch(bot_raw() + name), name)
+    data = unpickler.load()
+    if unpickler.stubbed:
+        warn(f"{name} holds {', '.join(sorted(unpickler.stubbed))}, not in PICKLE_GLOBALS (moved or new in the bot?); "
+             f"read as plain data, add it to PICKLE_GLOBALS")
+    return data
 
 
 def warn(message):
@@ -479,9 +505,9 @@ def deck_cards(d, by_id):
 
 
 def deck_montage(picks):
-    """A deck page's link-preview image of its first cards, cached in CACHE/og by their image hashes; (key, cached file)."""
+    """A deck page's link-preview image of its first cards, cached in OG_CACHE by their image hashes; (key, cached file)."""
     key = hashlib.sha256(f"{OG_DECK_VERSION}:{'|'.join(c['img'] for c in picks)}".encode()).hexdigest()[:16]
-    cached = os.path.join(CACHE, "og", f"{key}.jpg")
+    cached = os.path.join(OG_CACHE, f"{key}.jpg")
     if not os.path.exists(cached):
         fan(picks, cached + ".tmp")
         os.replace(cached + ".tmp", cached)
@@ -508,7 +534,7 @@ def build_icons(tree):
         name = stem.lower() if folder == "Types" else stem.lower().replace(" ", "_")
         kind = "type" if folder == "Types" else "star"
         out_name = f"{slugify(name)}.webp"
-        cached = os.path.join(cache_dir, f"{tree[path][:16]}-{ICON_SIZE}.webp")      # by blob, like the card images
+        cached = os.path.join(cache_dir, f"{tree[path][:16]}-{ICON_VERSION}.webp")   # by blob, like the card images
         used.add(os.path.basename(cached))
         if not os.path.exists(cached):
             im = Image.open(io.BytesIO(image_bytes(path))).convert("RGBA")
@@ -1773,7 +1799,8 @@ def main():
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(r["key"])} · {SITE_NAME}</title>',
         ])
-    os.makedirs(os.path.join(CACHE, "og"), exist_ok=True)
+    shutil.rmtree(os.path.join(CACHE, "og"), ignore_errors=True)   # montages lived here before OG_CACHE: not in the image cache
+    os.makedirs(OG_CACHE, exist_ok=True)
     montages = set()
     for d in public_decks:                        # decks/<owner>/<slug>/: a montage of its first cards, else one card, else the site banner
         hand = deck_cards(d, by_id)
@@ -1798,9 +1825,9 @@ def main():
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(title)} · {SITE_NAME}</title>',
         ])
-    for n in os.listdir(os.path.join(CACHE, "og")) if SITE_URL else []:   # no montages without SITE_URL: keep the cache
-        if n not in montages:
-            os.remove(os.path.join(CACHE, "og", n))
+    for n in os.listdir(OG_CACHE) if SITE_URL else []:   # no montages without SITE_URL: keep the cache
+        if n not in montages:                     # site.yml saves the cache under these names, so only the ones in use
+            os.remove(os.path.join(OG_CACHE, n))
     if montages:
         log(f"deck previews: {len(montages)} montages")
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
