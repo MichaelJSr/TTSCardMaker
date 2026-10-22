@@ -36,10 +36,6 @@ for card, _ in walk(save.get("ObjectStates")):
         unnamed[(p, nick)] += 1
     elif known != nick:
         wrong[(p, nick, known)] += 1
-    if (card.get("Description") or "").strip() and re.fullmatch(r"(\s*(turbo-)?(damage|crippler|cripler|support|stacker|jack|"
-                                                               r"summoner|berserker|consumer|tank|devourer|glass))+\s*",
-                                                               card["Description"], re.I):
-        r.fail(f"{p}: role tag left in Description {card['Description']!r}")
 for (p, old, new), n in sorted(wrong.items()):
     r.fail(f"{p}: Nickname {old!r} x{n}, website {new!r}")
 for (p, old), n in sorted(unnamed.items()):

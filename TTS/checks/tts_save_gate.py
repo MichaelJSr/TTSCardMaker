@@ -1,9 +1,14 @@
-"""tts-save.yml's daily gate ('Changes since the last run') against real history, with gh mocked.
+"""tts-save.yml's daily gate ('Changes since the last run') against real history, with gh and the names cache mocked.
 
-    python3 tts_save_gate.py [history clone]    (default $TTS_HISTORY or /tmp/tts-checks/history.git; needs gh logged in)
-The step's own script runs under bash -e. 'gh run list' answers with a made-up last run; 'gh api' asks GitHub for
-real bot commits, cut off at a given time. Exits 1 when a case gets the wrong answer.
+    python3 tts_save_gate.py [history clone]    (default $TTS_HISTORY or /tmp/tts-checks/history.git; needs jq)
+The step's own script runs under bash -e. 'gh run list' answers with a made-up last run. The names cache (the
+workflow's actions/cache entry per hash of the card browser's png -> name map) is mocked with hashes of that map built
+from the bot's stats.pkl at real commits (AUTOCROISSANT checkout), the way build_site.py names cards: PICKLE 3888392
+changed the names, so the updater hasn't seen them and the day runs; a docs-only bot commit (39da9ed) leaves them, so
+the day skips. Exits 1 when a case gets the wrong answer.
 """
+import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -12,19 +17,16 @@ import subprocess
 import sys
 import tempfile
 
-from checks_env import HISTORY, REPO, ensure_history
+from checks_env import BOT, HISTORY, REPO, ensure_history
 
 WORKFLOW = os.path.join(REPO, ".github/workflows/tts-save.yml")
-QUIET = ("2026-10-21T20:00:00Z", "2026-10-22T07:00:00Z")    # last run, cut-off: bot commits from 13:00Z, no pickle
+BUILD_SITE = os.path.join(REPO, "site/build/build_site.py")
+PICKLE, DOCS = "3888392", "39da9ed"     # the bot's printed titles; docs only
 FAKE_GH = """#!/bin/bash
 if [ "$1 $2" = "run list" ]; then
+  [ -n "$MOCK_API_DOWN" ] && exit 1
   while [ $# -gt 0 ]; do [ "$1" = "-q" ] && q=$2; shift; done
   printf '%s' "$MOCK_RUNS" | jq -r "$q"; exit
-fi
-if [ "$1" = "api" ]; then
-  [ -n "$MOCK_API_DOWN" ] && exit 1
-  url=$2; shift 2
-  exec "$REAL_GH" api "$url&until=$MOCK_UNTIL" "$@"
 fi
 exit 1
 """
@@ -44,67 +46,81 @@ def step_script() -> str:
     return "\n".join(body)
 
 
+def names_sum(sha: str, site) -> tuple:
+    """(hash, map) of the png -> name map build_site.py would make from the bot's stats.pkl at sha (PSD path as png)."""
+    data = subprocess.run(["git", "-C", BOT, "show", f"{sha}:stats.pkl"], capture_output=True, check=True).stdout
+    stats = site._Unpickler(data, f"stats.pkl@{sha}").load()
+    names = {}
+    for key, c in stats.items():
+        if getattr(c, "duplicate_of", None):
+            continue
+        path = getattr(c, "path", "") or ""
+        is_rule = getattr(c, "card_type", "") == "rulebook" or "/Rulebook/" in path
+        parsed = getattr(c, "parsed_values", None) or {}
+        title = parsed["name"] if "name" in parsed else getattr(c, "display_name", None)
+        names[re.sub(r"\.psd$", ".png", path, flags=re.I)] = (title if not is_rule else None) or key
+    return hashlib.sha256(json.dumps(names, sort_keys=True).encode()).hexdigest()[:16], names
+
+
 def main():
     clone = sys.argv[1] if len(sys.argv) > 1 else HISTORY
     ensure_history(clone)
-    real_gh = shutil.which("gh")
-    if not real_gh or not shutil.which("jq"):
-        sys.exit("needs gh (logged in) and jq")
-    head = subprocess.run(["git", "-C", clone, "rev-parse", "main"], capture_output=True, text=True, check=True).stdout.strip()
-    before_save = subprocess.run(["git", "-C", clone, "rev-parse", "c9873ddf^"], capture_output=True, text=True,
-                                 check=True).stdout.strip()
+    if not shutil.which("jq"):
+        sys.exit("needs jq")
+    spec = importlib.util.spec_from_file_location("build_site", BUILD_SITE)
+    site = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(site)
+    sums = {}
+    for sha in (f"{PICKLE}^", PICKLE, f"{DOCS}^", DOCS):
+        sums[sha] = names_sum(sha, site)
+    before, after = sums[f"{PICKLE}^"][1], sums[PICKLE][1]
+    changed = sum(1 for p in after if before.get(p) != after[p])
+    print(f"names at {PICKLE}^ {sums[f'{PICKLE}^'][0]}, at {PICKLE} {sums[PICKLE][0]}: {changed} of {len(after)} differ; "
+          f"at {DOCS}^ {sums[f'{DOCS}^'][0]}, at {DOCS} {sums[DOCS][0]}")
+    seen = {sums[f"{PICKLE}^"][0], sums[f"{DOCS}^"][0]}    # the cache: the names the updater ran with
+
+    git = lambda *a: subprocess.run(["git", "-C", clone, *a], capture_output=True, text=True, check=True).stdout.strip()
+    head = git("rev-parse", "main")
+    before_save = git("rev-parse", "c9873ddf^")
     work = tempfile.mkdtemp(prefix="tts-gate_")
-    gh = os.path.join(work, "gh")
-    with open(gh, "w") as f:
+    with open(os.path.join(work, "gh"), "w") as f:
         f.write(FAKE_GH)
-    os.chmod(gh, 0o755)
+    os.chmod(os.path.join(work, "gh"), 0o755)
     script = os.path.join(work, "step.sh")
     with open(script, "w") as f:
         f.write(step_script())
 
-    def run(runs, until="", force="false", api_down=False):
+    def run(last, names, force="false", api_down=False):
         out = os.path.join(work, "out")
         open(out, "w").close()
-        env = {**os.environ, "PATH": work + os.pathsep + os.environ["PATH"], "REAL_GH": real_gh, "GITHUB_OUTPUT": out,
-               "GITHUB_REPOSITORY": "MichaelJSr/TTSCardMaker", "FORCE": force, "BOT_REPO": "bobberlington/AutoCroissant",
-               "MOCK_RUNS": json.dumps(runs), "MOCK_UNTIL": until, "MOCK_API_DOWN": "1" if api_down else ""}
+        runs = [{"headSha": last}] if last else []
+        env = {**os.environ, "PATH": work + os.pathsep + os.environ["PATH"], "GITHUB_OUTPUT": out,
+               "GITHUB_REPOSITORY": "MichaelJSr/TTSCardMaker", "GITHUB_REF_NAME": "main", "FORCE": force,
+               "NAMES_SEEN": "true" if names in seen else "", "MOCK_RUNS": json.dumps(runs),
+               "MOCK_API_DOWN": "1" if api_down else ""}
         r = subprocess.run(["bash", "-e", script], cwd=clone, env=env, capture_output=True, text=True, timeout=120)
         got = re.findall(r"^run=(\w+)$", open(out).read(), re.M)
         return (got[0] if len(got) == 1 else f"exit {r.returncode}, outputs {got}"), (r.stdout + r.stderr).strip()
 
-    def last(sha, started):
-        return [{"headSha": sha, "startedAt": started}]
-
-    cases = [   # (what, runs, until, force, api_down, wanted)
-        ("forced by hand", [], "", "true", False, "true"),
-        ("no earlier run", [], "", "false", False, "true"),
-        ("last run's commit unknown", last("0" * 40, "2026-10-22T07:20:00Z"), "", "false", False, "true"),
-        ("PICKLE 3888392 (07:23Z) after the last run", last(head, "2026-10-22T07:20:00Z"), "2026-10-22T07:40:00Z",
-         "false", False, "true"),
-        ("PICKLE 1.6 h before the last run (website maybe not rebuilt)", last(head, "2026-10-22T09:00:00Z"),
-         "2026-10-22T09:30:00Z", "false", False, "true"),
-        ("docs-only bot commits (39da9ed ...), no pickle", last(head, QUIET[0]), QUIET[1], "false", False, "false"),
-        ("card repo: the save changed (c9873ddf)", last(before_save, QUIET[0]), QUIET[1], "false", False, "true"),
-        ("GitHub API down", last(head, QUIET[0]), QUIET[1], "false", True, "true"),
+    cases = [   # (what, last run's sha, names hash now, force, gh down, wanted)
+        ("forced by hand", head, sums[DOCS][0], "true", False, "true"),
+        (f"PICKLE {PICKLE}: the website's names changed", head, sums[PICKLE][0], "false", False, "true"),
+        (f"docs-only bot commit {DOCS}: names as before, nothing else", head, sums[DOCS][0], "false", False, "false"),
+        ("card repo: the save changed (c9873ddf)", before_save, sums[DOCS][0], "false", False, "true"),
+        ("no earlier run", "", sums[DOCS][0], "false", False, "true"),
+        ("last run's commit unknown", "0" * 40, sums[DOCS][0], "false", False, "true"),
+        ("gh run list fails", head, sums[DOCS][0], "false", True, "true"),
     ]
-    fails = 0
-    for what, runs, until, force, down, wanted in cases:
-        got, log = run(runs, until, force, down)
+    fails = 0 if sums[PICKLE][0] != sums[f"{PICKLE}^"][0] and sums[DOCS][0] == sums[f"{DOCS}^"][0] else 1
+    if fails:
+        print(f"FAIL the names hashes don't tell {PICKLE} from {DOCS}")
+    for what, last, names, force, down, wanted in cases:
+        got, log = run(last, names, force, down)
         ok = got == wanted
         fails += not ok
         print(f"{'ok  ' if ok else 'FAIL'} {what}: run={got} (want {wanted})")
         for line in log.splitlines():
             print("       " + line)
-    # the docs-only window really holds bot commits, just none touching the pickles
-    window = subprocess.run([real_gh, "api", "repos/bobberlington/AutoCroissant/commits?sha=main&since=2026-10-21T13:00:00Z"
-                             f"&until={QUIET[1]}&per_page=100", "-q", "[.[].sha[:7]]"],
-                            capture_output=True, text=True)
-    shas = json.loads(window.stdout or "[]")
-    if "39da9ed" not in shas:
-        fails += 1
-        print(f"FAIL docs-only window lacks 39da9ed: {shas}")
-    else:
-        print(f"ok   docs-only window holds {len(shas)} bot commits, 39da9ed among them")
     shutil.rmtree(work, ignore_errors=True)
     print(f"{fails} failure(s)")
     sys.exit(1 if fails else 0)

@@ -30,8 +30,8 @@ The updater checks import the bot's code, which needs only `requests`.
 | `TTS_CARDS` | the live website | a `cards.json` file to take the card names from |
 | `LUA_PYTHON` | | a Python with lupa |
 
-Network: the website's `cards.json` (names), GitHub raw (`links_http.py`, `final_spot.py`), `git fetch` of the
-history clone, and `gh` (logged in) for `tts_save_gate.py`.
+Network: the website's `cards.json` (names), GitHub raw (`links_http.py`, `final_spot.py`) and `git fetch` of the
+history clone. `tts_save_gate.py` needs `jq` and the bot checkout (`AUTOCROISSANT`) with its history.
 
 ## The checks
 
@@ -40,13 +40,13 @@ history clone, and `gh` (logged in) for `tts_save_gate.py`.
 | `structure.py` | Save shape: keys, cards (CardID, own CustomDeck, 1x1), decks (DeckIDs = cards, CustomDeck = used keys), GUIDs, transforms, bags, snap points, hand zones (FogColor a seat colour) |
 | `serializer.py` | The file is a byte-exact fixed point of the updater's `_dump` (TTS's own JSON style) |
 | `customdeck_collisions.py` | No CustomDeck key names two images anywhere in the save; each card's key is CardID // 100 |
-| `drift.py` | Against the last hand edit (`c9873ddf`, or a ref or file as 2nd argument): only the updater's own kinds of edit (link refs, Nicknames, Descriptions, keys, deck cards, resizeTargets rows). Re-baseline `BASELINE` after a deliberate hand edit of the save |
-| `contents_decks.py` | Complete decks hold exactly their rule's PNGs at the rule's counts; hand-picked decks stay inside their rule; empty decks stay empty |
-| `contents_names.py` | Card Nicknames = the website's names (Card Edits.json first); rulebook pages are "Page N: Title" |
+| `drift.py` | Against the last hand edit (`c9873ddf`, or a ref or file as 2nd argument): only the updater's own kinds of edit (link refs, Nicknames, keys, deck cards, resizeTargets rows); an existing card's Description, GMNotes, Memo, Tags or scripts, or the global Lua outside resizeTargets, changed fails. Re-baseline `BASELINE` after a deliberate hand edit of the save |
+| `contents_decks.py` | Complete decks hold exactly their rule's PNGs at the rule's counts (an empty one fails); hand-picked decks stay inside their rule, and with `add_new_since` hold every rule card the save at that commit lacked |
+| `contents_names.py` | Card Nicknames = the website's names (Card Edits.json first); rulebook pages are "Page N: Title"; Descriptions are not judged (the team's) |
 | `contents_backs.py` | Each deck has its rule's back; backs by card type |
 | `contents_coverage.py` | Every website card is in the save and in a complete rule; the Rulebooks bag holds its pages once each |
 | `contents_resize.py` | The Lua `resizeTargets` rows = the Nicknames of the `Auxiliary/Creatures` cards |
-| `verify_rules_snapshot.py` | `decks.json` agrees with the save: `card_list` of hand-picked decks, and no rule matching a PNG that is not a card (no PSD, not on the website, like a back) |
+| `verify_rules_snapshot.py` | `decks.json` agrees with the save: `card_list` of hand-picked decks (an `add_new_since` deck may hold more: a note), and no rule matching a PNG that is not a card (no PSD, not on the website, like a back) |
 | `scripts_lua_syntax.py` | Every script compiles as Lua 5.2 and uses nothing MoonSharp lacks (lupa) |
 | `scripts_global_refs.py` | GUIDs, colours and teams in the scripts are real; hand zones belong to seats on a team; resizeTargets names large cards |
 | `scripts_state_xml.py` | LuaScriptState is JSON; turn markers agree with their state; XmlUI is well-formed |
@@ -60,11 +60,12 @@ history clone, and `gh` (logged in) for `tts_save_gate.py`.
 | `final_spot.py` | 30 random cards end to end: image, pin, Nickname, deck rule, CustomDeck wiring (`[n] [seed]` after the save) |
 | `updater_idempotent.py` | The updater run as the Action runs it reports no changes and leaves the bytes alone; unpinned links and a dropped Lua row converge back; an offline website changes nothing; a card taken out of a complete deck comes back once |
 | `updater_report_decks.py` | Report titles ("Links pinned" vs "Links re-pinned (changed files)"), the commit subject beside the report, and no CustomDeck key left unused when a card is re-added |
-| `tts_save_gate.py` | The workflow's daily gate against real history with `gh` mocked: a bot pickle push (PICKLE 3888392) runs it, also one landing up to 7 h before the last run; docs-only bot commits don't; a card repo change, an unknown last run, a forced run and a GitHub API failure do (takes no save) |
+| `tts_save_gate.py` | The workflow's daily gate (the owner's names hash, 075e6c43) against real history, `gh` and the names cache mocked: the names hashed from the bot's stats.pkl as build_site.py names cards; PICKLE 3888392 changed them, so it runs; docs-only bot commit 39da9ed didn't, so it skips; a card repo change, no or an unknown last run, a forced run and a failed `gh run list` run (takes no save) |
 
 `contents_lib.py` and `checks_env.py` are shared helpers. The names checks (`contents_names.py`, `final_spot.py`,
 `updater_idempotent.py`) follow the live website, like the updater. When the website's names change (a bot pickle
-push), they fail until the next `tts-save.yml` run has updated the save (21 of 24 pass meanwhile).
+push), they fail until the next `tts-save.yml` run has updated the save (21 of 24 pass meanwhile; 24 of 24 after the
+2026-10-22 run).
 
 Not kept from the audit: the zone-claiming runtime checks (`scripts_global_runtime.py`, `verify_scripts_f1_reload.py`,
 retired with the claiming in `c9873ddf`), the one-off checks of that fix against the old save (`final_bytes.py`,

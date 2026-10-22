@@ -2,8 +2,9 @@
 """Drift of a TTS save against a baseline: anything beyond the updater's own edits fails.
 
 python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref c9873ddf, the last hand edit of the save)
-Allowed: repo link refs, card Nicknames/Descriptions, card CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck,
-cards added to or removed from decks, the resizeTargets rows. Everything else is listed and fails.
+Allowed: repo link refs, card Nicknames, card CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck, cards added to or
+removed from decks, the resizeTargets rows. Everything else is listed and fails: a card's Description, GMNotes, Memo,
+Tags and scripts are the team's (2026-10-22), and the global Lua outside resizeTargets.
 """
 import json
 import os
@@ -20,7 +21,7 @@ BASELINE = "c9873ddf"       # re-baseline here after a deliberate hand edit of t
 SAVE = "TTS/Impossibility Simulator.json"
 LINK = re.compile(r"(https://raw\.githubusercontent\.com/MichaelJSr/TTSCardMaker/)(?:refs/heads/main|main|[0-9a-f]{7,40})/")
 CARDS = ("Card", "CardCustom")
-CARD_FREE = {"Nickname", "Description", "CardID", "CustomDeck"}
+CARD_FREE = {"Nickname", "CardID", "CustomDeck"}
 DECK_FREE = {"DeckIDs", "CustomDeck", "ContainedObjects"}
 LUA_TABLE = re.compile(r"(resizeTargets\s*=\s*\{\n)(.*?)(\n\})", re.S)
 
@@ -67,8 +68,6 @@ def compare(a, b, where, stats):
         free = CARD_FREE
         if a.get("Nickname") != b.get("Nickname"):
             stats["nickname"] += 1
-        if a.get("Description") != b.get("Description"):
-            stats["description"] += 1
         if face(a) != face(b):
             renamed = unquote(face(a)) not in tree() and unquote(face(b)) in tree()
             (notes if renamed else fails).append(f"{where}: card face {face(a)} -> {face(b)}"
@@ -136,15 +135,15 @@ def main(path, base_arg):
             fails.append(f"top-level {k}: {str(base.get(k))[:100]} -> {str(cur.get(k))[:100]}")
     if list(base) != list(cur):
         fails.append("top-level key order changed")
-    if lua_rest(base.get("LuaScript")) != lua_rest(cur.get("LuaScript")):
-        notes.append("LuaScript changed outside resizeTargets (judged by the Lua audit)")
+    if norm(lua_rest(base.get("LuaScript"))) != norm(lua_rest(cur.get("LuaScript"))):
+        fails.append("LuaScript changed outside resizeTargets")
     ta = LUA_TABLE.search(base.get("LuaScript") or "")
     tb = LUA_TABLE.search(cur.get("LuaScript") or "")
     if ta and tb and ta.group(2) != tb.group(2):
         notes.append("resizeTargets rows changed")
     stats = Counter()
     kids(base["ObjectStates"], cur["ObjectStates"], "table", stats, False)
-    notes.append(f"card Nicknames changed {stats['nickname']}, Descriptions {stats['description']}; "
+    notes.append(f"card Nicknames changed {stats['nickname']}; "
                  f"deck cards added {stats['added']}, removed {stats['removed']}")
 
 

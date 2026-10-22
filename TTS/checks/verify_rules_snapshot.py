@@ -1,4 +1,5 @@
-"""decks.json vs the save (C1-C3): card_list, cards, large_cards.current_keys, and no rule matching a non-card PNG.
+"""decks.json vs the save (C1-C3): card_list (an add_new_since deck may hold more), cards, large_cards.current_keys, and
+no rule matching a non-card PNG.
 Usage: verify_rules_snapshot.py [save.json] [decks.json]. Absent snapshot fields are skipped (removing them passes)."""
 import json
 import os
@@ -61,7 +62,9 @@ def main():
         cards = d.get("ContainedObjects") or []
         if "card_list" in e:
             have, listed = {face(c) for c in cards}, set(e["card_list"])
-            if have != listed:
+            if have != listed and ((e.get("rule") or {}).get("add_new_since") and listed <= have):
+                print(f"NOTE {g} card_list: new cards since add_new_since, not listed yet {sorted(have - listed)}")
+            elif have != listed:
                 fails.append(f"{g} card_list: only listed {sorted(listed - have)}, only in deck {sorted(have - listed)}")
         if "cards" in e and e["cards"] != len(cards):
             fails.append(f"{g} cards: {e['cards']} in rules, {len(cards)} in save")

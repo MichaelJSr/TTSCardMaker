@@ -2,14 +2,16 @@
 
     python contents_decks.py [save.json]    (rules: decks.json beside the save, else TTS_REF's; repo: TTS_REF, default origin/main)
 Complete decks: exactly the rule's repo cards, each at odd_counts or count; copies identical.
-Hand-picked decks: inside the rule, counts as recorded. Empty decks: still empty.
+Hand-picked decks: inside the rule, counts as recorded; with add_new_since, every rule card the save at that commit
+lacked (renames by blob) is in. A rule without a count: its deck untouched (none since 2026-10-22).
 """
+import json
 import os
 import sys
 from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from contents_lib import Result, face, load_rules, load_save, rule_cards, tree, walk  # noqa: E402
+from contents_lib import CARD_NAMES, Result, face, load_rules, load_save, rule_cards, show, tree, walk  # noqa: E402
 
 KIND_DIRS = {"creatures": ("Creatures/",), "items": ("Items/",), "fields": ("Field/",), "nme": ("N.M.E/",),
              "minions": ("Auxiliary/Minions/", "Auxiliary/Creatures/"), "auxiliary_items": ("Auxiliary/Items/",),
@@ -20,6 +22,25 @@ save, path = load_save()
 rules = load_rules(path)
 files = tree()
 pngs = sorted(p for p in files if p.lower().endswith(".png"))
+by_blob = {}
+for p_, b_ in files.items():
+    by_blob.setdefault(b_, []).append(p_)
+
+
+def carried(sha):
+    """Today's paths of the cards the save had at sha (a gone path follows its blob when one path has it now)."""
+    old = show("TTS/Impossibility Simulator.json", sha)
+    if old is None:
+        return None
+    had = {face(c) for c, _ in walk(json.loads(old).get("ObjectStates")) if c.get("Name") in CARD_NAMES} - {None}
+    then = tree(sha)
+    for p_ in [x for x in had if x not in files]:
+        moved = by_blob.get(then.get(p_), [])
+        if len(moved) == 1:
+            had.add(moved[0])
+    return had
+
+
 decks = {}
 for o, parents in walk(save.get("ObjectStates")):
     if o.get("Name") == "Deck":
@@ -69,6 +90,18 @@ for g, e in rd.items():
         wrong = [(p, n, odd.get(p, count)) for p, n in faces.items() if n != odd.get(p, count)]
         if wrong:
             r.fail(f"{label} (hand-picked): copies (path, have, recorded) {wrong}")
+        since = rule.get("add_new_since")
+        if since:
+            had = carried(since)
+            if had is None:
+                r.fail(f"{label}: add_new_since {since} has no save")
+            else:
+                new = [p for p in want if p not in had]
+                lacking = [p for p in new if p not in faces]
+                if lacking:
+                    r.fail(f"{label}: new since {since[:8]} but not in it: {lacking}")
+                else:
+                    r.note(f"{label}: {len(new)} rule cards new since {since[:8]}, all in it")
         listed = set(e.get("card_list") or [])
         if listed and listed != set(faces):
             r.note(f"{label}: decks.json card_list stale: not in deck {sorted(listed - set(faces))}, "

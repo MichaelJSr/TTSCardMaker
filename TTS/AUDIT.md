@@ -22,6 +22,13 @@ this file and `decks.json` from the save. The second audit's checks are kept in 
   (`79fd59`) excludes `MDW/The Morgue/cardback.png`, a back its glob matched; `audit.py` now leaves `cardback*.png`
   out of every rule. The snapshot fields nothing read (`repo_head`, each deck's `cards`, `large_cards.current_keys`)
   are gone, from the file and from `audit.py`.
+- **Owner's rules (2026-10-22, later):** the 7 "Specific Item Decks" are complete rules (count 1, back
+  `MDW/cardback_item.png`) and hold their 94 cards; Piko Piko Hammer's exclude is gone from `213c84`/`abb81f`; the four
+  developer decks have `add_new_since: 318001ea` (Tainted Lazarus and John Ward joined `3a51c6`); Nicknames are the
+  website's names (131 names, 398 cards); Description, GMNotes, Memo, Tags and scripts are the team's (the updater
+  leaves them). Remaining excludes: Stubborn Queen in `e8e1b6`/`fa254e` (it sits in the Minions decks), the Morgue
+  back in `79fd59`. Keys 1626-1721 went to the new cards. `audit.py` keeps `add_new_since` and an empty deck's
+  counted rule when it rewrites `decks.json`.
 
 ## Totals
 
