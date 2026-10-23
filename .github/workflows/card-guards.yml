@@ -150,8 +150,10 @@ jobs:
           [ "$ALL" = "true" ] && args+=(--whole-tree)
           python -m commands.card_guards check "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # The report as a comment on the pushed commit, when it says more than "nothing to do". A re-run edits its earlier
-      # comment, and once that run has told Discord (the TOLD mark), the re-run does not post again.
+      # The report as a comment on the pushed commit, when it says more than "nothing to do" (summary.json's "comment":
+      # told, written, an error, or comment-only lines such as R10). A re-run edits its earlier comment, and once that
+      # run has told Discord (the TOLD mark), the re-run does not post again. A failed call fails the run but never stops
+      # Land (its `if` does not ask for this step's success).
       - name: Comment on the commit
         id: comment
         if: env.MODE == 'report' || env.MODE == 'on'
@@ -159,7 +161,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          jq -e '.told + .writes + .errors > 0' "$OUT/summary.json" > /dev/null || exit 0
+          jq -e '.comment > 0' "$OUT/summary.json" > /dev/null || exit 0
           after=$(jq -r .after "$OUT/plan.json")
           old=$(gh api "repos/$GITHUB_REPOSITORY/commits/$after/comments" --paginate \
             --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("## Card guards"))) | .id' | head -n 1) || old=""
@@ -182,10 +184,11 @@ jobs:
       # Wait until 30 minutes after the push, then (CARD_GUARDS=on) leave out every write a later push touched or whose
       # blobs moved and commit the rest once (git_commit: the API with GITHUB_TOKEN, retried on a moved head), and settle
       # the one Discord post (discord-final.json) and the comment's new body (report-landed.md). Report mode: --dry-run.
-      # Exit 1: the commit failed (both files are written first).
+      # Exit 1: the commit failed (both files are written first: land never raises). A dispatch with dry_run off lands at
+      # once on the blob check alone (no quiet window: run it on a push older than 30 minutes).
       - name: Land
         id: land
-        if: env.MODE == 'report' || env.MODE == 'on'
+        if: "!cancelled() && steps.check.outcome == 'success' && (env.MODE == 'report' || env.MODE == 'on')"
         timeout-minutes: 60
         working-directory: bot
         shell: bash
@@ -228,9 +231,11 @@ jobs:
           fi
           if [ -n "$SHA" ]; then gh workflow run site.yml && gh workflow run tts-save.yml; fi
 
-      # The one Discord post, after the quiet window (discord-final.json; check's discord.json if Land broke), only when a
-      # card has a refusal, a remaining issue or a write that did not land, only when the secret is set, never twice for
-      # one push. The URL is never printed; a failed call warns and the comment stands.
+      # The one Discord post, after the quiet window (discord-final.json, as Land settled it; never check's discord.json,
+      # which would tell withdrawn refusals and miss the writes that did not land), only when a card has a refusal, a
+      # remaining issue, an error or a write that did not land, only when the secret is set, never twice for one push.
+      # Land ran but settled nothing (killed or timed out): this step fails, so the run-failed message goes out instead.
+      # The URL is never printed; a failed call warns and the comment stands.
       - name: Tell Discord
         id: tell
         if: >-
@@ -241,9 +246,13 @@ jobs:
           WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT: ${{ steps.comment.outputs.id }}
+          LAND_RAN: ${{ steps.land.outputs.ran }}
         run: |
           post="$OUT/discord-final.json"
-          [ -f "$post" ] || post="$OUT/discord.json"
+          if [ ! -f "$post" ]; then
+            if [ "$LAND_RAN" = true ]; then echo "::error::Land settled no post: nothing told"; exit 1; fi
+            echo "Nothing to tell."; exit 0
+          fi
           jq -e '.content // "" | length > 0' "$post" > /dev/null || { echo "Nothing to tell."; exit 0; }
           if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"; exit 0; fi
           if ! curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @"$post" "$WEBHOOK"; then
@@ -255,6 +264,14 @@ jobs:
             && jq -n --rawfile body "$OUT/comment-told.md" '{body: $body}' \
               | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --input - > /dev/null \
             || echo "::warning::the comment's told mark could not be set: a re-run would post again"
+
+      # A card the guards could not finish (its error is in the post and the comment) turns the run red.
+      - name: Fail on card errors
+        if: steps.check.outcome == 'success'
+        shell: bash
+        run: |
+          errors=$(jq '.card_errors // 0' "$OUT/summary.json")
+          if [ "$errors" -gt 0 ]; then echo "::error::$errors card(s) could not be checked: see the report"; exit 1; fi
 
       # A push run that failed (not checked, the commit failed unposted, a step broke or timed out) would otherwise pass
       # unseen: one message to the standards channel with the run's link, for the first failure of a streak only (the
