@@ -91,6 +91,7 @@ jobs:
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
+            /.mailmap
             /site/Card Edits.json
             /site/Card Authors.txt
             /site/Card Creation Dates.json
