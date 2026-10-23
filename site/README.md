@@ -182,7 +182,7 @@ stays as it was, so the cards to drag are still shown. Until a card carries it, 
 when the tab closes or you sign out) and nothing is published for it. Names are trimmed, their spaces collapsed and at
 most 60 characters; one that differs from a known name only in case or spacing takes the known spelling (the one most
 cards use), on the chips and in All fields too ("mario" is the series Mario), and an author's git or GitHub name from
-`[people]` becomes the name shown ("Michael" is MichaelJSr), as the bot resolves it. A drop sets the value exactly as
+`[people]` becomes the name shown, as the bot resolves it. A drop sets the value exactly as
 its chip shows it. A new author's cards go to `[cards]` under a new `# --- credited to Name (n) ---` group, with no
 `[people]` line (that maps a login; an admin can add one later). Every change lands in the batch bar at the bottom as a
 sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each with ↺ to take it back; the bar folds to one
@@ -215,7 +215,7 @@ commits), and the top of the three added together is the **Top contributor**. A 
 email, each looked up in the profiles' `author` fields and then in `[people]` (`Card Authors.txt`); otherwise by the git
 name as written. A website login (`_by` or `Edit-by`) maps the same way, else to the person whose noreply commits carry
 it, else to itself (any case). So a person committing under two names shows twice until an admin adds one `[people]`
-line (`Michael = MichaelJSr`) or, when the other name is their GitHub login, their profile names their author; their
+line (`git name = shown name`; one person committing under two git names is merged in `.mailmap` instead) or, when the other name is their GitHub login, their profile names their author; their
 GitHub login's page (`#/u/<login>`, where their decks link) opens their person page. The GitHub picture and link come only from a GitHub login known to be the person's: their profile's
 login, else the login in their noreply commit emails, their website `_by` stamps or `Edit-by` trailers (a git name is
 not a login: someone known only by name gets neither). The chart has one row per kind (cards by their image's first

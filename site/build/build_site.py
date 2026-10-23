@@ -1193,7 +1193,7 @@ OLD_CARD_FOLDERS = ("Auxillary/",)            # folder spellings before a rename
 RULE_PARTS = ("Rules", "Rulebook")            # rulebook pages are not cards
 EDIT_BY = "Edit-by"                           # a bake commit's trailer, one per editor whose edit it printed (AutoCroissant card_bake)
 TRAILER_RE = re.compile(r"^[^\x00-\x1f\x7f]{1,100}$")       # an Edit-by value: a login, or a Discord name (discord:<name>)
-HISTORY_FORMAT = f"%x01%H%x09%at%x09%an%x09%ae%x09%s%n%x02%(trailers:key={EDIT_BY},valueonly,separator=%x1f)"
+HISTORY_FORMAT = f"%x01%H%x09%at%x09%aN%x09%aE%x09%s%n%x02%(trailers:key={EDIT_BY},valueonly,separator=%x1f)"
 
 
 def unquote_path(path):
