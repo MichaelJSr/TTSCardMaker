@@ -283,7 +283,7 @@ jobs:
             && "$RUNNER_TEMP/builder/bin/python" -m commands.tts_save --help > /dev/null)
           if [ "$BAKE" != none ]; then
             python3.12 -m venv "$RUNNER_TEMP/baker"
-            "$RUNNER_TEMP/baker/bin/pip" install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023"
+            "$RUNNER_TEMP/baker/bin/pip" install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023b"
             (cd bot && "$RUNNER_TEMP/baker/bin/python" -m commands.card_bake --help > /dev/null)
           fi
 
