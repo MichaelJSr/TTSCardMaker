@@ -199,14 +199,28 @@ export function vault(env) {
  *  (`decks`, a sibling of the token's), the deck's key as additional data. Not tied to the sign-in: Sign out keeps
  *  them; each deck's Forget drops its own. deck: decks.keyOf(owner, slug). env as vault's. */
 export function deckPasses(env) {
-  const { idb, subtle, local } = env = envOf(env), keys = keyring(env), aad = deck => `deck-pass:${deck}`;
+  const { local } = env = envOf(env), keys = keyring(env), aad = deck => `deck-pass:${deck}`;
   const get = k => { try { return local?.getItem(k) ?? null; } catch { return null; } };
   const del = k => { try { local?.removeItem(k); } catch { /* blocked storage */ } };
+  const listed = prefix => { const out = []; try { for (let i = 0; i < local.length; i++) { const k = local.key(i); if (k?.startsWith(prefix)) out.push(k.slice(prefix.length)); } } catch { /* blocked storage */ } return out; };
+  const forgets = new Map();   // deck -> Forget count: a save that started before a Forget stores nothing
+  let saving = 0, removing = null;
   const api = {
     /** Whether one is remembered (sync). */
     has: deck => !!(get(PASS_SEALED + deck) || get(PASS_PLAIN + deck)),
-    /** Remembers it; throws when this browser can't keep it sealed (then nothing is stored). */
-    async save(deck, pass) { if (!local) throw new Error("no localStorage"); local.setItem(PASS_SEALED + deck, await keys.seal(DECKS_ID, aad(deck), pass)); del(PASS_PLAIN + deck); },
+    /** Remembers it (-> false when Forget ran meanwhile); throws when this browser can't keep it sealed (then nothing is stored). */
+    async save(deck, pass) {
+      if (!local) throw new Error("no localStorage");
+      const n = forgets.get(deck) || 0;
+      saving++;
+      try {
+        await removing;
+        const blob = await keys.seal(DECKS_ID, aad(deck), pass);
+        if ((forgets.get(deck) || 0) !== n) return false;
+        local.setItem(PASS_SEALED + deck, blob); del(PASS_PLAIN + deck);
+        return true;
+      } finally { saving--; }
+    },
     /** The passphrase, or null; a sealed one that can't be opened is dropped. An old plain one wins (as migrate) and is sealed. */
     async load(deck) {
       const plain = get(PASS_PLAIN + deck);
@@ -215,18 +229,21 @@ export function deckPasses(env) {
       if (blob) { try { return await keys.open(DECKS_ID, aad(deck), blob); } catch { del(PASS_SEALED + deck); } }
       return null;
     },
-    forget(deck) { del(PASS_SEALED + deck); del(PASS_PLAIN + deck); },
-    /** Seals the plain ones (each deck, or all in localStorage): -> how many. Without IndexedDB or crypto they're dropped
-     *  (nothing is kept in plain text); any other failure keeps it for the next visit. */
+    /** Drops it; the last one also deletes the `decks` key (resolves once that's done). */
+    forget(deck) {
+      forgets.set(deck, (forgets.get(deck) || 0) + 1);
+      del(PASS_SEALED + deck); del(PASS_PLAIN + deck);
+      if (saving || removing || listed(PASS_SEALED).length) return removing || Promise.resolve();
+      return (removing = keys.remove(DECKS_ID).finally(() => { removing = null; }));
+    },
+    /** Seals the plain ones (each deck, or all in localStorage): -> how many. One this browser can't seal (no IndexedDB,
+     *  no crypto, IndexedDB failing) is dropped: nothing is kept in plain text. */
     async migrate(decks = null) {
-      let list = decks;
-      if (!list) { list = []; try { for (let i = 0; i < local.length; i++) { const k = local.key(i); if (k?.startsWith(PASS_PLAIN)) list.push(k.slice(PASS_PLAIN.length)); } } catch { return 0; } }
       let n = 0;
-      for (const deck of list) {
+      for (const deck of decks || listed(PASS_PLAIN)) {
         const plain = get(PASS_PLAIN + deck);
         if (plain == null) continue;
-        if (!idb || !subtle) { del(PASS_PLAIN + deck); continue; }
-        try { await api.save(deck, plain); n++; } catch { /* kept: retried next visit */ }
+        try { if (await api.save(deck, plain)) n++; } catch { del(PASS_PLAIN + deck); }
       }
       return n;
     },

@@ -236,8 +236,9 @@ which signs that browser out.
 Private-deck passphrases remembered with **Remember on this device** are kept the same way, under a second
 non-extractable key in the same IndexedDB (`decks`), in localStorage (`deckPassSealed:<owner>/<slug>`). They are not
 part of the sign-in (anyone with the passphrase opens a private deck, signed in or not), so **Sign out keeps them**; each
-deck's **Forget** removes its own. One remembered in plain text before 2026-10-23 is sealed on the next visit (dropped
-instead in a browser without IndexedDB, which can't remember one safely: Remember there says so and stores nothing).
+deck's **Forget** removes its own (the last one also deletes the `decks` key). One remembered in plain text before
+2026-10-23 is sealed on the next visit, or dropped in a browser that can't seal it (no IndexedDB, or IndexedDB failing):
+nothing stays in plain text, and Remember there says so and stores nothing.
 
 ## People
 
