@@ -1,8 +1,10 @@
 # The push guards (AutoCroissant docs/Campaigns/PUSH_GUARDS.md; the bot's commands/card_guards.py):
-#   1. a card PSD pushed without its PNG gets the PNG from the PSD's own stored image (Photoshop's composite, converted
-#      the way the card was exported), gated; when a gate refuses, no PNG and a report instead;
-#   2. the pushed PSDs are checked against the card standards (CARD_STANDARDIZATION_CAMPAIGN.md); only the owner's easy
-#      fix (Txt2 stories kept in sync, 0 pixels) is made, the rest is reported.
+#   1. a card PSD pushed without its PNG gets the PNG the bake would make: the fork (the pin below) renders the changed
+#      layers in the card's ICC export mode and the old PNG takes the change, gated as the bake is; the PSD's stored image
+#      (Photoshop's composite) is never written, only a cross-check that can refuse. When a gate refuses, no PNG and a
+#      report instead ("PNG not made: ...; export it in Photoshop");
+#   2. the pushed PSDs are checked against the card standards (CARD_STANDARDIZATION_CAMPAIGN.md), fonts (R7) included;
+#      only the owner's easy fix (Txt2 stories kept in sync, 0 pixels) is made, the rest is reported.
 # One report per push: the job summary, a comment on the commit, and ONE Discord post to the standards channel
 # ("<login> pushed <card> with these issues: ..."; nobody pinged, no link previews). The post, the PNGs and the fixes wait
 # for the 30-minute quiet window: a PNG the author pushed meanwhile withdraws its refusal, a card pushed again is left to
@@ -148,11 +150,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      # The fork pin, shared with card-edits.yml and card-sync.yml; cards-20261022b carries TypeLayer.sync_story (R9's fix).
+      # The fork pin, shared with card-edits.yml and card-sync.yml: guard 1's render is the bake's; cards-20261022b carries
+      # TypeLayer.sync_story (R9's fix).
       - timeout-minutes: 10
         run: pip install -q requests fonttools "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261022b"
 
-      # Fonts for the R7 rule: MDW/Fonts' top level, cached by the folder's tree sha as font-check.yml does.
+      # Fonts for the R7 rule (told in the post, as font-check.yml tells them): MDW/Fonts' top level, cached by the
+      # folder's tree sha as font-check.yml does.
       - id: fonts
         run: echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
 
