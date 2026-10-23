@@ -35,6 +35,7 @@ jobs:
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
+            /.mailmap
             /site/
             /Types/
             /MDW/Fonts/stoogedings-src/stoogedings.json
