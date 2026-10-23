@@ -65,7 +65,7 @@ GLOW_SPREAD = 0.20            # Photoshop's Spread: the matte grows by this shar
 GLOW_OPACITY = 0.80
 GLOW_SIGMA = 0.42             # blur sigma per unit of blurred reach (fits that shadow)
 GLOW_WORK = 2                 # font units per px while making it
-GLOW_UPP = 8                  # font units per halo PNG px
+GLOW_UPP = 12                 # font units per halo PNG px
 GLOWS = {"glow": (255, 255, 255), "darkglow": (0, 0, 0)}
 
 DEFAULT_ALIASES = {
