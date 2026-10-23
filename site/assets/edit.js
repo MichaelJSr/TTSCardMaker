@@ -24,6 +24,8 @@ const ABOUT = "Card data fixes from the website's Edit button. Keyed by card fil
 const cardKey = s => (s || "").replace(/_/g, " ").toLowerCase().split(/\s+/).filter(Boolean).join(" ");
 const alnum = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+/** same() for field f: types in any order, as the bake compares them (psd_edit.same_types); the toggles list them sorted. */
+export const sameField = (f, a, b) => (f === "types" && Array.isArray(a) && Array.isArray(b) ? same([...a].sort(), [...b].sort()) : same(a, b));
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
 // where a field's unedited value comes from: the PSD (the set also in build_site.py PSD_FIELDS, app.js FIELD_LABEL, the bot's
 // CardEdits.KIND and psd_edit STAT_FIELDS/TEXT_FIELDS/NOT_YET), the card's folder, or nowhere (a database-only default; creatures too)
@@ -54,8 +56,8 @@ export const fromInput = (f, v, name) => (FIELDS[f] === "int" ? (v === "" || v =
 export function mergeField(op, base, f, v) {
   const set = { ...op.set }, unset = (op.unset || []).filter(k => k !== f);
   delete set[f];
-  const asPub = same(v, base.pub) || (typeof v === "string" && typeof base.pub === "string" && v === base.pub.replace(/\r/g, "").trim());
-  if (!asPub) { if (same(v, base.psd) && base.edited) unset.push(f); else set[f] = v; }
+  const asPub = sameField(f, v, base.pub) || (typeof v === "string" && typeof base.pub === "string" && v === base.pub.replace(/\r/g, "").trim());
+  if (!asPub) { if (sameField(f, v, base.psd) && base.edited) unset.push(f); else set[f] = v; }
   return { ...op, set, unset, ...(f === "name" ? { name: v } : {}) };
 }
 // ---- series, subseries and author names: one spelling per name
@@ -606,8 +608,8 @@ export function createEditor(app) {
     const op = { id: c.id, key: c.key, name: want.name, set: {}, unset: [] };
     for (const [k, v] of Object.entries(want)) {
       const pub = val(b, k);
-      if (same(v, pub) || (typeof v === "string" && typeof pub === "string" && v === pub.replace(/\r/g, "").trim())) continue;   // as published
-      if (same(v, psdVal(b, k)) && b.edited?.includes(k)) op.unset.push(k);
+      if (sameField(k, v, pub) || (typeof v === "string" && typeof pub === "string" && v === pub.replace(/\r/g, "").trim())) continue;   // as published
+      if (sameField(k, v, psdVal(b, k)) && b.edited?.includes(k)) op.unset.push(k);
       else op.set[k] = v;
     }
     if (f("author") && f("author").value.trim() !== (b.author || "")) {

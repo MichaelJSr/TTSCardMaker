@@ -709,6 +709,12 @@ def ability_text(text):
     return text.strip(" '\"\n")
 
 
+def type_keys(types):
+    """A types list as psd_edit.same_types compares it: any order, any case, words joined by space, _, - or nothing alike
+    (psd_parser.IconVocabulary.spellings)."""
+    return sorted(re.sub(r"[ _\-]+", "", str(t).lower()) for t in types or [])
+
+
 PEOPLE_AS_WRITTEN = {}                        # [people] with the git names' own case, for the editor
 
 
@@ -965,6 +971,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
             return shown is not None and printed(fields[f]) != shown
         if f == "ability":
             return ability_text(fields[f]) != ability_text(orig.get(f))
+        if f == "types":                          # any order and spelling, as psd_edit.same_types
+            return type_keys(fields[f]) != type_keys(orig.get(f))
         return entry[f] != orig.get(f)
     pending = sorted(f for f in fields if f in PSD_FIELDS and fields[f] is not None and waits(f))
     if pending:
