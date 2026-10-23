@@ -91,6 +91,7 @@ jobs:
           sparse-checkout: |
             /site/Card Edits.json
             /site/Card Authors.txt
+            /site/Card Creation Dates.json
             /MDW/Fonts/stoogedings-src/stoogedings.json
             /TTS/
 
@@ -183,7 +184,7 @@ jobs:
           manifest=$db/manifest.json
           save="TTS/Impossibility Simulator.json"
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
-                  'site/Card Edits.json' 'site/Card Authors.txt' 'TTS/decks.json')    # the builder's lower-cased extensions
+                  'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json')    # the builder's lower-cased extensions
           why=()
           seed=$SEED
           if [ "$FORCE" = true ]; then why+=("dispatched with force"); fi

@@ -34,7 +34,7 @@ const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", mi
 const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
   ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"], ["details", "PSD details"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
-// [key, label, dir it sets]; "created" = first upload (fs), full-history builds only
+// [key, label, dir it sets]; "created" = the creation date (first Discord post or first upload), when the build has dates
 const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
   ["new", "Recently updated"], ["created", "Newest created", ""], ["created", "Oldest created", "asc"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
 const sortOf = p => (p.get("sort") === "created" && !S.created ? "" : p.get("sort")) || "name";   // a shallow build: Name
@@ -52,6 +52,11 @@ const ghUrl = p => `https://github.com/${S.data.repo}/blob/main/${urlPath(p)}`;
 const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
 const date = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "");
 const month = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short" }) : "");
+const day = d => (d ? new Date(`${d}T12:00:00Z`).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }) : "");
+const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand" };
+/** "about 13 Oct 2023" for a date a Discord post awaiting review may still move */
+const createdText = c => (c.created ? `${c.createdAbout ? "about " : ""}${day(c.created)}` : "");
+const createdTip = c => `${CREATED_TIP[c.createdFrom] || "Created"}${c.createdAbout ? "; provisional: a Discord post awaiting review may still move it" : ""}`;
 const isStatus = c => c.type === "debuff" || c.type === "buff";
 const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : "");             // item types read "Support", as in the rulebook
 const kindOf = c => (isStatus(c) ? "status" : c.type);
@@ -116,7 +121,7 @@ async function init() {
     return;
   }
   S.all = S.data.cards; S.rules = null; S.icons = S.data.icons;
-  S.created = S.all.some(c => c.fs);                      // first uploads: a shallow build has none
+  S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
   editor.init();                                           // applies staged edits, then derive()
   S.decks = D.loadDecks();
@@ -280,9 +285,10 @@ function sortCards(list, sort = "name", dir = "") {
     mentioned: c => (S.mentionedBy.get(c.id) || new Set()).size,
   }[sort] || (c => c.name.toLowerCase());
   const desc = isDesc(sort, dir);
-  if (sort === "created") {                                // no date last; ties by name either way
-    const s = desc ? -1 : 1;
-    return list.sort((a, b) => (!a.fs - !b.fs) || s * ((a.fs || 0) - (b.fs || 0)) || a.name.localeCompare(b.name));
+  if (sort === "created") {                                // no date last; one day by first upload, then name
+    const s = desc ? -1 : 1, cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
+    return list.sort((a, b) => (!a.created - !b.created) || s * cmp(a.created || "", b.created || "") || s * ((a.fs || 0) - (b.fs || 0))
+      || a.name.localeCompare(b.name));
   }
   return list.sort((a, b) => { const x = key(a), y = key(b); return (x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name)) * (desc ? -1 : 1); });
 }
@@ -385,7 +391,7 @@ function tableHtml(list, p) {
     ${list.map(c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
-      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td>${date(c.fs)}</td>` : ""}<td>${date(c.ts)}</td></tr>`).join("")}</tbody></table></div>`;
+      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td></tr>`).join("")}</tbody></table></div>`;
 }
 
 // ---- card detail -----------------------------------------------------------------------------------
@@ -444,6 +450,7 @@ function openCard(id, showDetails = false) {
           ${c.series ? `<a class="fact" href="#/cards?series=${encodeURIComponent(c.series)}">${esc(c.series)}</a>` : ""}
           ${c.subseries ? `<a class="fact" href="#/cards?${c.series ? `series=${encodeURIComponent(c.series)}&` : ""}subseries=${encodeURIComponent(c.subseries)}" data-tip="Subseries">${esc(c.subseries)}</a>` : ""}
           ${c.author ? `<a class="fact" href="#/cards?author=${encodeURIComponent(c.author)}">by ${esc(c.author)}</a>` : ""}
+          ${c.created ? `<span class="fact" data-tip="${esc(createdTip(c))}">created ${createdText(c)}</span>` : ""}
           ${c.ts ? `<span class="fact" data-tip="Last PSD commit">updated ${date(c.ts)}</span>` : ""}
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}

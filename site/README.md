@@ -7,11 +7,10 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 
 - **Cards**: grid or sortable table; filters for kind, stars, item type, type icons, series and subseries, stat ranges, author and flags.
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
-  column too; another sort picked from the menu runs in its usual direction): by the first upload of the card image,
-  ties by name; a card without one goes last. It needs the git history, so a shallow local build hides it (a shared
-  `sort=created` link then sorts by name, and the menu says so). About 600
-  cards share the first import's dates (2023-11-05/06), uploaded folder by folder, so among them it only tells the
-  batches apart.
+  column too; another sort picked from the menu runs in its usual direction): by the card's creation date, ties by
+  first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
+  (`site/Card Creation Dates.json`, below) and the first upload of its image (from the git history); the card page
+  shows it as "created <date>" ("created about <date>" while a Discord post awaiting review may still move it).
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`),
   and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
   record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
@@ -93,7 +92,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   and buttons to copy it as a Discord message or plain text: name, titles and counts, never the motto): their profile when they made one (see People below), their
   GitHub picture and link, their contributions with recently edited cards, recent edit batches and recent card commits, a chart of
   their contributions by month, and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
-  (by its image's first upload, from the git history: full-history builds only) and a grid of their 24 newest cards.
+  (by its creation date) and a grid of their 24 newest cards; the chart counts cards by creation month.
 
 Top right: **Sign in** (a GitHub token, see Editing) becomes your login once signed in; it opens the editor hub (your
 batch, your profile, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
@@ -129,8 +128,12 @@ the build never fails on it.
 
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
 bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
-`Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/` on 2026-10-20); the
-build and the bot read them, the published site does not include them. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
+`Card Creation Dates.json`, `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/`
+on 2026-10-20); the build and the bot read them, the published site does not include them. `Card Creation Dates.json`
+holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand", "provisional": true}`
+(dates only, from the Discord archive kept off the repo), written by AutoCroissant's `python -m commands.discord_edits
+created` (re-run after rulings; it keeps `"from": "hand"` entries, the way to set a date by hand). It is no edit: the
+Changes page and the edit counts never see it. Bad entries are skipped with a warning, never a failed build. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
 following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
 the build needs full history for them (CI fetches it; a shallow local clone gets no image versions and counts edit
 batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one batch per card;
