@@ -61,7 +61,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   the browser (nor in its count or owner list): they show only on their owner's page and at their own link. A deck's page
   shows the hand grouped like the deck builder with the hand checks, and offers Save a copy to my decks, Share link, Copy
   as text, Discord, TTS save and Print; its owner (or an admin) can replace it with another saved hand or unpublish it. A
-  private deck asks for its passphrase (remembered on the device if you say so). A person's page lists their decks, the
+  private deck asks for its passphrase (remembered on the device if you tick **Remember on this device**, encrypted with a
+  key that can't leave the browser; **Forget** on the deck page drops it). A person's page lists their decks, the
   private ones as locked links. Format in `site/decks/README.md`; see Decks below.
 - **Stats**: counts by kind, series, subseries, type, timing tag, status effect, author and month; how many legal cards there are
   for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
@@ -231,6 +232,12 @@ change or delete a file through git, but the password and the `/user` check mean
 with a password; it never gives anyone the token. Signed out, the sign-in opens on **Password** when the site has any
 password files (or this browser last signed in with one). Safari may clear a site's storage after 7 days without a visit,
 which signs that browser out.
+
+Private-deck passphrases remembered with **Remember on this device** are kept the same way, under a second
+non-extractable key in the same IndexedDB (`decks`), in localStorage (`deckPassSealed:<owner>/<slug>`). They are not
+part of the sign-in (anyone with the passphrase opens a private deck, signed in or not), so **Sign out keeps them**; each
+deck's **Forget** removes its own. One remembered in plain text before 2026-10-23 is sealed on the next visit (dropped
+instead in a browser without IndexedDB, which can't remember one safely: Remember there says so and stores nothing).
 
 ## People
 

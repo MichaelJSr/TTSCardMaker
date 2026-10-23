@@ -124,12 +124,12 @@ export function checkPassword(pw, login = "", token = "") {
   return { ok: !problems.length, problems: [...new Set(problems)], length, words };
 }
 
-// ---- this device: the token sealed under a key that can't leave IndexedDB ---------------------------------
+// ---- this device: secrets sealed under keys that can't leave IndexedDB ---------------------------------------
 export const SEALED = "edit-token-sealed";        // {v, iv, ct}: localStorage (kept) or sessionStorage (this tab only)
-const DB = "ttscardmaker-signin", STORE = "keys", KEY_ID = "device", DEVICE_AAD = "device:token";
-/** The device vault. env (for tests): idb, subtle, local, session, random. */
-export function vault({ idb = globalThis.indexedDB, subtle = globalThis.crypto?.subtle, local = globalThis.localStorage,
-  session = globalThis.sessionStorage, random = a => globalThis.crypto.getRandomValues(a) } = {}) {
+export const PASS_SEALED = "deckPassSealed:", PASS_PLAIN = "deckPass:";   // + "<owner lowercase>/<slug>": a remembered deck passphrase (the plain one: before 2026-10-23)
+const DB = "ttscardmaker-signin", STORE = "keys", KEY_ID = "device", DEVICE_AAD = "device:token", DECKS_ID = "decks";
+/** Keys in IndexedDB `ttscardmaker-signin`/`keys`, one per id, each a non-extractable AES-GCM key made on first use. */
+function keyring({ idb, subtle, random }) {
   const req = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
   const openDb = () => { if (!idb) return Promise.reject(new Error("no IndexedDB")); const r = idb.open(DB, 1); r.onupgradeneeded = () => r.result.createObjectStore(STORE); return req(r); };
   async function withStore(mode, fn) {                // one request in its own transaction; resolves once it committed
@@ -141,42 +141,97 @@ export function vault({ idb = globalThis.indexedDB, subtle = globalThis.crypto?.
       return v;
     } finally { db.close(); }
   }
-  async function deviceKey(create) {
-    const key = await withStore("readonly", s => s.get(KEY_ID));
+  async function keyOf(id, create) {
+    const key = await withStore("readonly", s => s.get(id));
     if (key || !create) return key || null;
     const fresh = await subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);   // non-extractable
-    try { await withStore("readwrite", s => s.add(fresh, KEY_ID)); return fresh; }
-    catch { return (await withStore("readonly", s => s.get(KEY_ID))) || null; }   // another tab made one first
+    try { await withStore("readwrite", s => s.add(fresh, id)); return fresh; }
+    catch { return (await withStore("readonly", s => s.get(id))) || null; }   // another tab made one first
   }
+  return {
+    /** The blob text {v, iv, ct}; throws when this browser can't (no IndexedDB, no crypto). */
+    async seal(id, aad, text) {
+      if (!subtle) throw new Error("no crypto.subtle");
+      const key = await keyOf(id, true);
+      if (!key) throw new Error("no device key");
+      const iv = random(new Uint8Array(12));
+      const ct = await subtle.encrypt({ name: "AES-GCM", iv, additionalData: utf8(aad) }, key, utf8(text));
+      return JSON.stringify({ v: 1, iv: b64(iv), ct: b64(new Uint8Array(ct)) });
+    },
+    /** The text in a blob; throws when it can't be opened (key gone, another browser's, altered). */
+    async open(id, aad, blobText) {
+      if (!subtle) throw new Error("no crypto.subtle");
+      const blob = JSON.parse(blobText), key = await keyOf(id, false);
+      if (!key) throw new Error("no device key");
+      return new TextDecoder().decode(await subtle.decrypt({ name: "AES-GCM", iv: unb64(blob.iv), additionalData: utf8(aad) }, key, unb64(blob.ct)));
+    },
+    async remove(id) { try { await withStore("readwrite", s => s.delete(id)); } catch { /* no IndexedDB: nothing kept */ } },
+  };
+}
+const safe = f => { try { return f(); } catch { return null; } };   // blocked storage throws on access
+const envOf = ({ idb = safe(() => globalThis.indexedDB), subtle = globalThis.crypto?.subtle, local = safe(() => globalThis.localStorage),
+  session = safe(() => globalThis.sessionStorage), random = a => globalThis.crypto.getRandomValues(a) } = {}) => ({ idb, subtle, local, session, random });
+/** The device vault (the GitHub token). env (for tests): idb, subtle, local, session, random. */
+export function vault(env) {
+  const { subtle, local, session } = env = envOf(env), keys = keyring(env);
   const drop = () => { try { local?.removeItem(SEALED); } catch { /* blocked storage */ } try { session?.removeItem(SEALED); } catch { /* blocked storage */ } };
   return {
     /** Whether a sealed token waits (sync: the boot's "signing in…"). */
     has: () => { try { return !!(local?.getItem(SEALED) || session?.getItem(SEALED)); } catch { return false; } },
     /** Seals the token: localStorage when kept, else sessionStorage. Throws when this browser can't (no IndexedDB, no crypto). */
     async save(token, keep) {
-      if (!subtle) throw new Error("no crypto.subtle");
-      const key = await deviceKey(true);
-      if (!key) throw new Error("no device key");
-      const iv = random(new Uint8Array(12));
-      const ct = await subtle.encrypt({ name: "AES-GCM", iv, additionalData: utf8(DEVICE_AAD) }, key, utf8(token));
+      const blob = await keys.seal(KEY_ID, DEVICE_AAD, token);
       drop();
-      (keep ? local : session).setItem(SEALED, JSON.stringify({ v: 1, iv: b64(iv), ct: b64(new Uint8Array(ct)) }));
+      (keep ? local : session).setItem(SEALED, blob);
     },
     /** {token, keep} or null; an unreadable blob (key gone, another browser's) is dropped. */
     async load() {
       let text = null, keep = false;
       try { text = local?.getItem(SEALED); keep = !!text; text ||= session?.getItem(SEALED); } catch { return null; }
       if (!text || !subtle) return null;
-      try {
-        const blob = JSON.parse(text), key = await deviceKey(false);
-        if (!key) throw new Error("no device key");
-        const plain = await subtle.decrypt({ name: "AES-GCM", iv: unb64(blob.iv), additionalData: utf8(DEVICE_AAD) }, key, unb64(blob.ct));
-        return { token: new TextDecoder().decode(plain), keep };
-      } catch { drop(); return null; }
+      try { return { token: await keys.open(KEY_ID, DEVICE_AAD, text), keep }; } catch { drop(); return null; }
     },
-    /** Sign out: both blobs and the device key. */
-    async clear() { drop(); try { await withStore("readwrite", s => s.delete(KEY_ID)); } catch { /* no IndexedDB: nothing kept */ } },
+    /** Sign out: both blobs and the device key (the deck passphrases' key stays: they aren't tied to the sign-in). */
+    async clear() { drop(); await keys.remove(KEY_ID); },
   };
+}
+/** Deck passphrases remembered on this device ("Remember on this device"), sealed in localStorage under their own key
+ *  (`decks`, a sibling of the token's), the deck's key as additional data. Not tied to the sign-in: Sign out keeps
+ *  them; each deck's Forget drops its own. deck: decks.keyOf(owner, slug). env as vault's. */
+export function deckPasses(env) {
+  const { idb, subtle, local } = env = envOf(env), keys = keyring(env), aad = deck => `deck-pass:${deck}`;
+  const get = k => { try { return local?.getItem(k) ?? null; } catch { return null; } };
+  const del = k => { try { local?.removeItem(k); } catch { /* blocked storage */ } };
+  const api = {
+    /** Whether one is remembered (sync). */
+    has: deck => !!(get(PASS_SEALED + deck) || get(PASS_PLAIN + deck)),
+    /** Remembers it; throws when this browser can't keep it sealed (then nothing is stored). */
+    async save(deck, pass) { if (!local) throw new Error("no localStorage"); local.setItem(PASS_SEALED + deck, await keys.seal(DECKS_ID, aad(deck), pass)); del(PASS_PLAIN + deck); },
+    /** The passphrase, or null; a sealed one that can't be opened is dropped. An old plain one wins (as migrate) and is sealed. */
+    async load(deck) {
+      const plain = get(PASS_PLAIN + deck);
+      if (plain != null) { await api.migrate([deck]); return plain; }
+      const blob = get(PASS_SEALED + deck);
+      if (blob) { try { return await keys.open(DECKS_ID, aad(deck), blob); } catch { del(PASS_SEALED + deck); } }
+      return null;
+    },
+    forget(deck) { del(PASS_SEALED + deck); del(PASS_PLAIN + deck); },
+    /** Seals the plain ones (each deck, or all in localStorage): -> how many. Without IndexedDB or crypto they're dropped
+     *  (nothing is kept in plain text); any other failure keeps it for the next visit. */
+    async migrate(decks = null) {
+      let list = decks;
+      if (!list) { list = []; try { for (let i = 0; i < local.length; i++) { const k = local.key(i); if (k?.startsWith(PASS_PLAIN)) list.push(k.slice(PASS_PLAIN.length)); } } catch { return 0; } }
+      let n = 0;
+      for (const deck of list) {
+        const plain = get(PASS_PLAIN + deck);
+        if (plain == null) continue;
+        if (!idb || !subtle) { del(PASS_PLAIN + deck); continue; }
+        try { await api.save(deck, plain); n++; } catch { /* kept: retried next visit */ }
+      }
+      return n;
+    },
+  };
+  return api;
 }
 
 // ---- forms (edit.js shows and wires them) -------------------------------------------------------------------
