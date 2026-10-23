@@ -6,7 +6,7 @@
    `data`; step 8 (both on) bakes, commits M and posts; a rejected M drops the posts and the data; a failed live run
    (a retry too) alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit main and every later step.
 2. The Gate step's own script on sandbox history: stoogedings-src/ alone doesn't start a run, MDW/Fonts' fonts,
-   stoogedings.json and an upper-case .PSD do, and the run's own save commits don't.
+   stoogedings.json, an upper-case .PSD and the creation dates do, and the run's own save commits don't.
 3. The fonts: a cache hit restores them outside the sparse patterns; after the Fonts tree step the bake's fast-forward
    merge (git_commit.local_commit's) keeps them (without it git deletes them: the control).
 4. The Bake step's arguments: --pending for a schedule and a schedule's retry, not for a dispatch.
@@ -334,7 +334,7 @@ def checkout(tmp: str, bare: str, name: str = "ws") -> str:
     ws = os.path.join(tmp, name)
     subprocess.run(["git", "clone", "-q", "--filter=blob:none", "--no-checkout", f"file://{bare}", ws], check=True)
     git(ws, "sparse-checkout", "set", "--no-cone", "/site/Card Edits.json", "/site/Card Authors.txt",
-        "/MDW/Fonts/stoogedings-src/stoogedings.json", "/TTS/")
+        "/site/Card Creation Dates.json", "/MDW/Fonts/stoogedings-src/stoogedings.json", "/TTS/")
     git(ws, "checkout", "-q", "main")
     git(ws, "config", "user.name", "t")
     git(ws, "config", "user.email", "t@t")
@@ -365,6 +365,7 @@ def gate_cases(flow: dict) -> None:
             ({"MDW/Fonts/c.ttf": "font c"}, "a font", "t", True),
             ({"MDW/Fonts/stoogedings-src/stoogedings.json": '{"x":1}'}, "the icon manifest", "t", True),
             ({"Deep/Two/Card.PSD": "psd", "Deep/Two/Card.PNG": "png"}, "an upper-case card", "t", True),
+            ({"site/Card Creation Dates.json": '{"cards":{}}'}, "creation dates", "t", True),
         ]
         starts = []
         for files, message, author, want in cases:

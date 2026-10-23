@@ -28,10 +28,13 @@ Where the data comes from:
     a private one is AES-GCM ciphertext made in the browser and passes through as it is. Bad files skipped, never a failed build.
   * Image versions and contributions: one pass over the git history (commit metadata only, no file contents) lists
     every commit that changed each card PNG, following folder moves (exact renames, and a move that changed the image
-    when one PNG of that file name was deleted), gives each card its first upload (fs: the person pages' newest cards,
-    the Cards tab's created sort), and counts per person the commits that added or changed a card (PSD or
-    PNG) and the publish batches (commits to Card Edits.json). Needs full history: a shallow clone gets no image
-    versions, no fs, and counts edit batches from the file's _by/_at stamps instead.
+    when one PNG of that file name was deleted), gives each card its first upload (fs: created's fallback), and counts
+    per person the commits that added or changed a card (PSD or PNG) and the publish batches (commits to Card
+    Edits.json). Needs full history: a shallow clone gets no image versions, no fs, and counts edit batches from the
+    file's _by/_at stamps instead.
+  * Creation dates: site/Card Creation Dates.json (AutoCroissant's `python -m commands.discord_edits created`), each card's
+    first Discord post; a card's created is the earlier of that and fs (a hand-set date wins): the Cards tab's created
+    sort, the card page's "created" fact, the person pages' newest cards and activity chart. Bad entries skipped.
   * Changelog: the card sync's events (CARD_DATA_DIR, the data branch's db/: changelog/YYYY-MM.jsonl, manifest.json;
     unset until the cutover, then no events), the edit batches (one more `git log` over Card Edits.json and Card
     Authors.txt, their versions read in one batch) and the archived cards (old_stats tags).
@@ -100,8 +103,11 @@ CARD_FOLDERS = ("Creatures/", "Items/", "Field/", "N.M.E/", "Auxiliary/")
 AUTHORS_PATH = "site/Card Authors.txt"
 BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
+CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (AutoCroissant discord_edits created; global_config.CREATED_PATH)
+CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first git upload, or set by hand (card_edits.CardDates.FROM)
 ALIASES_MOVED = "aliases_moved"               # Card Edits.json key: aliases.pkl moved into it (AutoCroissant card_edits.ALIASES_MOVED)
-BOT_FIELDS = "_bot"                           # an entry's fields the bot's migration set under its editor's _by (discord_edits.BOT_FIELDS)
+BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (discord_edits.BOT_FIELDS)
+CREDIT = "_credit"                            # {field: {"_by", "_at"}}: a _bot field's Discord editor (discord_edits.CREDIT)
 ADMINS_PATH = "site/Website Admins.txt"
 PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
 DECKS_DIR = "site/decks"                      # <owner>/<slug>.json per hand published from the deck builder
@@ -187,7 +193,7 @@ CARD_FIELDS = {"card_type", "path", "timestamp", "ability", "stars", "subtype", 
                "blob_sha", "parsed_values"}
 # may be missing; archived: a deleted PSD's record; version: a version's start and end (analytics.when)
 CARD_FIELDS_OPTIONAL = {"name", "display_name", "duplicate_of", "creatures", "note", "hidden", "problems_ok", "allow_high_stats",
-                        "alt_names", "subseries", "parser_version", "archived", "version"}
+                        "alt_names", "subseries", "parser_version", "archived", "version", "created"}
 STATS_FIELDS = {"hp", "defense", "attack", "speed"}
 HISTORY_FIELDS = {"ability", "timestamp"}
 
@@ -705,6 +711,9 @@ def parse_edits():
             meta[BOT_FIELDS] = bot
         elif bot is not None:
             log(f"warning: {EDITS_PATH}: {name}: {BOT_FIELDS} = {bot!r} isn't a list of fields, skipped")
+        credit = parse_credit(name, fields.get(CREDIT), meta.get(BOT_FIELDS, ()))
+        if credit:
+            meta[CREDIT] = credit
         if "_psd" in fields:                            # the edit pipeline's verdict on the PSD fields
             if valid_verdict(fields["_psd"]):
                 meta["_psd"] = fields["_psd"]
@@ -712,6 +721,98 @@ def parse_edits():
                 log(f"warning: {EDITS_PATH}: {name}: _psd = {fields['_psd']!r} isn't a pipeline verdict, skipped")
         edits[card_key(name)] = (good, meta)
     return edits
+
+
+def parse_credit(name, credit, bot):
+    """An entry's _credit -> {field: {"_by", "_at"}} for its _bot fields; another shape is a warning, a field out of _bot ignored."""
+    if credit is None:
+        return {}
+    if not isinstance(credit, dict):
+        warn(f"{EDITS_PATH}: {name}: {CREDIT} = {credit!r} isn't an object, skipped")
+        return {}
+    out = {}
+    for field, stamp in credit.items():
+        if not (isinstance(stamp, dict) and isinstance(stamp.get("_by"), str) and stamp["_by"] and isinstance(stamp.get("_at"), str)):
+            warn(f"{EDITS_PATH}: {name}: {CREDIT}.{field} = {stamp!r} isn't {{\"_by\", \"_at\"}}, skipped")
+        elif field in bot:
+            out[field] = {"_by": stamp["_by"], "_at": stamp["_at"]}
+    return out
+
+
+def parse_created():
+    """site/Card Creation Dates.json -> {card_key: {"date", "from"[, "provisional"]}}; bad entries are skipped. Warns, never fails."""
+    path = os.path.join(REPO, CREATED_PATH)
+    if not os.path.exists(path):
+        log(f"no {CREATED_PATH}: cards are dated by their first upload")
+        return {}
+    try:
+        data = json.load(open(path, encoding="utf-8"))
+    except ValueError as e:
+        warn(f"{CREATED_PATH} isn't valid JSON, cards are dated by their first upload: {e}")
+        return {}
+    cards = data.get("cards") if isinstance(data, dict) else None
+    if not isinstance(cards, dict):
+        warn(f"{CREATED_PATH} has no \"cards\" object, cards are dated by their first upload")
+        return {}
+    out, bad = {}, []
+    for name, entry in cards.items():
+        day = entry.get("date") if isinstance(entry, dict) else None
+        try:
+            ok = isinstance(day, str) and date.fromisoformat(day).isoformat() == day and entry.get("from") in CREATED_FROM \
+                and isinstance(entry.get("provisional", False), bool)
+        except ValueError:
+            ok = False
+        if ok:
+            out[card_key(name)] = {"date": day, "from": entry["from"], **({"provisional": True} if entry.get("provisional") else {})}
+        else:
+            bad.append(name)
+    if bad:
+        warn(f"{CREATED_PATH}: {len(bad)} entries skipped (expected {{\"date\": \"YYYY-MM-DD\", \"from\": "
+             f"{' | '.join(CREATED_FROM)}}}): {', '.join(bad[:10])}")
+    return out
+
+
+def created_ts(e):
+    """A card's created day as epoch seconds (noon UTC), else its first upload (fs), else None."""
+    if e.get("created"):
+        return datetime.fromisoformat(e["created"]).replace(hour=12, tzinfo=timezone.utc).timestamp()
+    return e.get("fs")
+
+
+def apply_created(cards, created):
+    """created (UTC day) per card: the earliest evidence, its first Discord post (the file) or its first upload (fs); a hand
+    entry wins. createdFrom says which; createdAbout marks a date an open ruling may still move. Logs, never fails. The
+    bot keeps the same rule (AutoCroissant card_edits.CardDates.created) with its own first upload: the earliest version
+    its database holds."""
+    used, later, today = set(), 0, datetime.now(timezone.utc).date().isoformat()
+    for e in cards:
+        found = created.get(card_key(e["key"]))
+        upload = datetime.fromtimestamp(e["fs"], timezone.utc).date().isoformat() if e.get("fs") else None
+        if found:
+            used.add(card_key(e["key"]))
+        if found and (found["from"] == "hand" or not upload or found["date"] <= upload):
+            e["created"], e["createdFrom"] = found["date"], found["from"]
+            if found.get("provisional"):
+                e["createdAbout"] = True
+        elif upload:
+            e["created"], e["createdFrom"] = upload, "git"
+            later += bool(found)
+    dated = [e for e in cards if e.get("created")]
+    by = {f: sum(1 for e in dated if e["createdFrom"] == f) for f in CREATED_FROM}
+    log(f"created: {len(dated)} of {len(cards)} cards dated ({by['discord']} first Discord post, {by['git']} first upload, "
+        f"{by['hand']} by hand; {sum(1 for e in dated if e.get('createdAbout'))} provisional)")
+    if later:
+        log(f"created: {later} dates in {CREATED_PATH} are after the card's first upload; the upload's used")
+    missing = sorted(e["key"] for e in dated if card_key(e["key"]) not in created)
+    if created and missing:
+        log(f"created: {len(missing)} cards not in {CREATED_PATH}, dated by their first upload until it has them "
+            f"(AutoCroissant's `python -m commands.discord_edits created`): {', '.join(missing[:10])}")
+    if len(created) > len(used):
+        log(f"created: {len(created) - len(used)} names in {CREATED_PATH} match no card: "
+            f"{', '.join(sorted(k for k in created if k not in used)[:10])}")
+    future = sorted(e["key"] for e in dated if e["created"] > today)
+    if future:
+        warn(f"{CREATED_PATH}: {len(future)} dates in the future: {', '.join(future[:10])}")
 
 
 def folder_series(path):
@@ -761,8 +862,11 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     if meta.get("_by"):
         entry["editBy"] = meta["_by"]
     bot = sorted(f for f in fields if f in meta.get(BOT_FIELDS, ()))
-    if bot:                                       # not the editor's: the website credits them to nobody
+    if bot:                                       # not the editor's: credited to nobody, or to their _credit editor
         entry["botEdited"] = bot
+    by_field = {f: [meta[CREDIT][f]["_by"], meta[CREDIT][f]["_at"]] for f in bot if f in meta.get(CREDIT, {})}
+    if by_field:
+        entry["fieldBy"] = by_field
     if meta.get("_at"):
         entry["editAt"] = meta["_at"]
     if fields.get("problems_ok"):
@@ -1323,13 +1427,26 @@ def edit_changes(before, after):
     return out
 
 
+def stamp_groups(fields, meta):
+    """An entry's edited fields by the stamp they are credited to: {(_by, _at): {field: value}}. Its _by takes the fields
+    not in _bot, a _credit editor theirs; the bot's are nobody's."""
+    out = {}
+    bot, credit = meta.get(BOT_FIELDS, ()), meta.get(CREDIT, {})
+    for f, v in fields.items():
+        stamp = (credit[f]["_by"], credit[f]["_at"]) if f in credit else None if f in bot else (meta.get("_by"), meta.get("_at"))
+        if stamp and stamp[0] and stamp[1] and stamp[0].lower() != BOT_AUTHOR.lower():
+            out.setdefault(stamp, {})[f] = v
+    return out
+
+
 def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
     """
     The database edits, newest first: each commit since `since` that changed a Card Edits.json entry or a Card
     Authors.txt line (a website publish batch, a Discord edit, a commit by hand). The bot's bakes (they write verdicts
     and delete the baked entries; the card sync's changed event shows the bake), a pure move and a change of the file's
     notes are none. A batch is credited to the stamps it wrote (_by), else its Edit-by trailers, else its author.
-    Without history: the current file's entries grouped by their _by/_at stamps (each card's last batch only, `stamped`).
+    Without history: the current file's entries grouped by their _by/_at stamps and _credit stamps (each card's last batch
+    only, `stamped`).
 
     Returns:
         {"available": bool, "batches": [{sha?, at, via: website|discord|git, by: [credited name | discord:<name>], subject?, stamped?,
@@ -1353,9 +1470,8 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
     if commits is None:
         groups = {}
         for key, (fields, meta) in edits.items():
-            mine = {f: v for f, v in fields.items() if f not in meta.get(BOT_FIELDS, ())}   # not the bot's under their stamp
-            if mine and meta.get("_by") and meta.get("_at") and meta["_by"].lower() != BOT_AUTHOR.lower():
-                groups.setdefault((meta["_by"], meta["_at"]), []).append((key, mine))
+            for (by, at), mine in stamp_groups(fields, meta).items():
+                groups.setdefault((by, at), {}).setdefault(key, {}).update(mine)
         out = []
         for (by, at), rows in groups.items():
             try:
@@ -1365,7 +1481,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
             if ts < since:
                 continue
             out.append({"at": ts, "via": "discord" if is_discord(by) else "website", "by": [shown(by)], "stamped": True,
-                        "cards": [{**card(k, None), "fields": {f: [None, v] for f, v in sorted(fields.items())}} for k, fields in sorted(rows)],
+                        "cards": [{**card(k, None), "fields": {f: [None, v] for f, v in sorted(fields.items())}} for k, fields in sorted(rows.items())],
                         "authors": [], "people": []})
         return {"available": False, "batches": sorted(out, key=lambda b: -b["at"])}
     wanted = [c for c in commits if c[1] >= since]
@@ -1464,7 +1580,7 @@ def contributions(cards, people, profiles, edits, commits):
     months}]} by cards, then commits.
     cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
     (a hand commit counts, a pure move doesn't), or without history the file's distinct _by/_at stamps (a floor: it keeps
-    one batch per card; an entry holding only `_bot` fields doesn't count). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
+    one batch per card; a `_bot` field counts only for its `_credit` editor). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
     added, isn't a change), one however many files. The bot's own commits and stamps and discord:<name> stamps are left out, but a bake (a bot
     commit changing a card, with Edit-by trailers, one per card and editor) is one card commit of each editor it names,
     its recent entry counting their trailers as cards, never an edit (their batch already counted). A login is the row credit() names, else the row its noreply commits credit most, else its own (any
@@ -1472,7 +1588,7 @@ def contributions(cards, people, profiles, edits, commits):
     one row.
     github: a GitHub login known to be theirs (their profile's, else the most used of the logins in their noreply commit
     emails, _by stamps and Edit-by trailers), never a git name. recent / recentEdits: the last card commits [ts, subject,
-    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" UTC, cards first uploaded (fs), edits, commits]]."""
+    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" UTC, cards created (created, else fs), edits, commits]]."""
     by_login = {p["login"].lower(): p for p in profiles}
     rec, seen_logins, spelled = {}, {}, {}
     noreply = {}                                  # a noreply email's login -> {credited name: commits}
@@ -1512,8 +1628,8 @@ def contributions(cards, people, profiles, edits, commits):
         if c.get("author") and not c.get("dup") and not c.get("hidden"):
             r = rec_of(c["author"])
             r["cards"] += 1
-            if c.get("fs"):
-                tally(r, c["fs"], 0)
+            if c.get("created") or c.get("fs"):
+                tally(r, created_ts(c), 0)
     if commits is not None:
         for sha, ts, name, email, subject, entries, editors in commits:
             bot = name.lower() == BOT_AUTHOR.lower()
@@ -1556,9 +1672,8 @@ def contributions(cards, people, profiles, edits, commits):
                 if len(r["recent"]) < RECENT_COMMITS:
                     r["recent"].append([ts, subject, len(touched)])
     else:
-        for by, at in {(meta["_by"], meta["_at"]) for fields, meta in edits.values() if meta.get("_by") and meta.get("_at")
-                       and any(f not in meta.get(BOT_FIELDS, ()) for f in fields)}:   # an entry left with only the bot's fields: not theirs
-            if by.lower() == BOT_AUTHOR.lower() or is_discord(by):     # a Discord user is nobody's row
+        for by, at in {stamp for fields, meta in edits.values() for stamp in stamp_groups(fields, meta)}:   # a field's own editor
+            if is_discord(by):                    # a Discord user is nobody's row
                 continue
             r = rec_of(key_of(by))
             r["edits"] += 1
@@ -1959,7 +2074,7 @@ def main():
                     index[sha] = len(versions["commits"])
                     versions["commits"].append([sha, ts, person(people, author), subject])
                 rows.append([index[sha]] + ([path] if path != png else []))
-            for e in by_png[png]:                 # fs: first upload (the oldest row): newest cards, the created sort
+            for e in by_png[png]:                 # fs: first upload (the oldest row): created's fallback (apply_created)
                 if rows and e["id"] not in rule_ids:
                     e["fs"] = min(ts for (_, ts, _, _), _ in vs)
             if len(rows) > 1:                     # one version = nothing to compare
@@ -1971,6 +2086,7 @@ def main():
         log(f"image versions: {sum(len(r) for r in versions['cards'].values())} versions of {len(versions['cards'])} cards "
             f"from {len(versions['commits'])} commits, since {datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}")
 
+    apply_created(cards, parse_created())         # after fs: a card's first upload can be the earlier evidence
     detail_files = join_details(cards + rules, records, tree)      # rulebook pages too: the bot reads their PSDs
     for e in cards + rules:
         e.pop("_blob", None)

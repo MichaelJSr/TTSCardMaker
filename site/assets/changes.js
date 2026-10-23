@@ -78,13 +78,35 @@ const isLogin = s => /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/.test(s || "");
 export const BOT = "AutoCroissant";                       // the bot's _by (build_site.BOT_AUTHOR): nobody's edit
 const isBot = name => String(name || "").toLowerCase() === BOT.toLowerCase();
 /** The fields of a card's Card Edits.json entry its editor (editBy) changed: none in the bot's own entries, and not the
-    fields the bot's migration added to an editor's entry (botEdited, the entry's _bot) */
+    fields in the entry's _bot (botEdited: the migration's, or a Discord editor's in fieldBy) */
 export const editorFields = c => (!c?.edited || isBot(c.editBy) ? [] : c.edited.filter(f => !(c.botEdited || []).includes(f)));
-/** The Website edits tab's cards: those an editor's entry changes now (editorFields), newest first, at most WEB_EDITS_SHOWN;
-    total: how many there are */
+/** A card's edits by editor, [{by, at, fields}]: the entry's editor (editorFields), then each Discord editor of its _bot
+    fields (fieldBy {field: [by, at]}, the entry's _credit; their latest at); never the bot */
+export function fieldEditors(c) {
+  const out = [], mine = editorFields(c);
+  if (mine.length) out.push({ by: c.editBy || "", at: c.editAt || "", fields: mine });
+  const credited = new Map();
+  for (const [f, stamp] of Object.entries(c?.fieldBy || {})) {
+    const [by, at] = Array.isArray(stamp) ? stamp : [];
+    if (!by || isBot(by) || !(c.edited || []).includes(f)) continue;
+    const row = credited.get(by.toLowerCase()) || { by, at: "", fields: [] };
+    row.fields.push(f);
+    if (String(at || "") > row.at) row.at = String(at);
+    credited.set(by.toLowerCase(), row);
+  }
+  return [...out, ...credited.values()];
+}
+/** The Edited badge's tooltip: each editor's fields, name and day */
+export function editedTip(c) {
+  const rows = fieldEditors(c);
+  const line = r => `${r.fields.join(", ")}${r.by ? ` · ${nameText(r.by)}` : ""}${r.at ? ` · ${r.at.slice(0, 10)}` : ""}`;
+  return `${rows.some(r => isDiscord(r.by)) ? "Changed" : "Changed on the website"}: ${rows.map(line).join("; ")}`;
+}
+/** The Website edits tab's rows, one per card and editor (fieldEditors: {c, by, at, fields}), newest first, at most
+    WEB_EDITS_SHOWN; total: how many there are */
 export const WEB_EDITS_SHOWN = 100;
 export function webEdits(all) {
-  const list = all.filter(c => editorFields(c).length).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || ""));
+  const list = all.flatMap(c => fieldEditors(c).map(r => ({ c, ...r }))).sort((a, b) => b.at.localeCompare(a.at));
   return { shown: list.slice(0, WEB_EDITS_SHOWN), total: list.length };
 }
 /** Does the chosen tab take the focus after a redraw? Only when a tab had it from the keyboard (:focus-visible): a

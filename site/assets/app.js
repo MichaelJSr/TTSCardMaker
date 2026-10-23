@@ -34,7 +34,7 @@ const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", mi
 const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
   ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"], ["details", "PSD details"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
-// [key, label, dir it sets]; "created" = first upload (fs), full-history builds only
+// [key, label, dir it sets]; "created" = the creation date (first Discord post or first upload), when the build has dates
 const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
   ["new", "Recently updated"], ["created", "Newest created", ""], ["created", "Oldest created", "asc"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
 const sortOf = p => (p.get("sort") === "created" && !S.created ? "" : p.get("sort")) || "name";   // a shallow build: Name
@@ -52,6 +52,11 @@ const ghUrl = p => `https://github.com/${S.data.repo}/blob/main/${urlPath(p)}`;
 const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
 const date = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "");
 const month = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short" }) : "");
+const day = d => (d ? new Date(`${d}T12:00:00Z`).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }) : "");
+const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand" };
+/** "about 13 Oct 2023" for a date a Discord post awaiting review may still move */
+const createdText = c => (c.created ? `${c.createdAbout ? "about " : ""}${day(c.created)}` : "");
+const createdTip = c => `${CREATED_TIP[c.createdFrom] || "Created"}${c.createdAbout ? "; provisional: a Discord post awaiting review may still move it" : ""}`;
 const isStatus = c => c.type === "debuff" || c.type === "buff";
 const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : "");             // item types read "Support", as in the rulebook
 const kindOf = c => (isStatus(c) ? "status" : c.type);
@@ -116,7 +121,7 @@ async function init() {
     return;
   }
   S.all = S.data.cards; S.rules = null; S.icons = S.data.icons;
-  S.created = S.all.some(c => c.fs);                      // first uploads: a shallow build has none
+  S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
   editor.init();                                           // applies staged edits, then derive()
   S.decks = D.loadDecks();
@@ -250,9 +255,9 @@ function setParams(updates, { replace = true } = {}) {
 // ---- cards (browse) --------------------------------------------------------------------------------
 const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
 function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi] = v.split("-").map(Number); return [isNaN(lo) ? 0 : lo, isNaN(hi) ? 99 : hi]; }
-// edited on the website or in Discord: an editor's fields (changes.editorFields), never a _by AutoCroissant entry (the
-// 2026-10-22 migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited)
-const webEdited = c => changes.editorFields(c).length > 0;
+// edited on the website or in Discord: an editor's fields (changes.fieldEditors), never a _by AutoCroissant entry (the
+// 2026-10-22 migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited without fieldBy)
+const webEdited = c => changes.fieldEditors(c).length > 0;
 function filterCards(p, { facets = true } = {}) {
   const pred = compile(p.get("q") || "");
   let list = pred ? S.cards.filter(pred) : S.cards.slice();
@@ -280,9 +285,10 @@ function sortCards(list, sort = "name", dir = "") {
     mentioned: c => (S.mentionedBy.get(c.id) || new Set()).size,
   }[sort] || (c => c.name.toLowerCase());
   const desc = isDesc(sort, dir);
-  if (sort === "created") {                                // no date last; ties by name either way
-    const s = desc ? -1 : 1;
-    return list.sort((a, b) => (!a.fs - !b.fs) || s * ((a.fs || 0) - (b.fs || 0)) || a.name.localeCompare(b.name));
+  if (sort === "created") {                                // no date last; one day by first upload, then name
+    const s = desc ? -1 : 1, cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
+    return list.sort((a, b) => (!a.created - !b.created) || s * cmp(a.created || "", b.created || "") || s * ((a.fs || 0) - (b.fs || 0))
+      || a.name.localeCompare(b.name));
   }
   return list.sort((a, b) => { const x = key(a), y = key(b); return (x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name)) * (desc ? -1 : 1); });
 }
@@ -385,7 +391,7 @@ function tableHtml(list, p) {
     ${list.map(c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
-      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td>${date(c.fs)}</td>` : ""}<td>${date(c.ts)}</td></tr>`).join("")}</tbody></table></div>`;
+      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td></tr>`).join("")}</tbody></table></div>`;
 }
 
 // ---- card detail -----------------------------------------------------------------------------------
@@ -444,11 +450,12 @@ function openCard(id, showDetails = false) {
           ${c.series ? `<a class="fact" href="#/cards?series=${encodeURIComponent(c.series)}">${esc(c.series)}</a>` : ""}
           ${c.subseries ? `<a class="fact" href="#/cards?${c.series ? `series=${encodeURIComponent(c.series)}&` : ""}subseries=${encodeURIComponent(c.subseries)}" data-tip="Subseries">${esc(c.subseries)}</a>` : ""}
           ${c.author ? `<a class="fact" href="#/cards?author=${encodeURIComponent(c.author)}">by ${esc(c.author)}</a>` : ""}
+          ${c.created ? `<span class="fact" data-tip="${esc(createdTip(c))}">created ${createdText(c)}</span>` : ""}
           ${c.ts ? `<span class="fact" data-tip="Last PSD commit">updated ${date(c.ts)}</span>` : ""}
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
-          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(`${changes.isDiscord(c.editBy) ? "Changed" : "Changed on the website"}: ${changes.editorFields(c).join(", ")}${c.editBy ? ` · ${changes.nameText(c.editBy)}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
+          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(changes.editedTip(c))}">Edited</span>` : ""}
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>
@@ -747,12 +754,12 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   const recent = S.cards.filter(c => c.ts).sort((a, b) => b.ts - a.ts).slice(0, 60);
   page(`<section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>${updated}`);
 }
-/** The Website edits tab: the cards an editor's Card Edits.json entry changes now (changes.webEdits: never the bot's, at most WEB_EDITS_SHOWN) */
+/** The Website edits tab: one row per card and editor whose Card Edits.json edit counts now (changes.webEdits: never the bot's, at most WEB_EDITS_SHOWN) */
 function webEditsHtml() {
   const { shown, total } = changes.webEdits(S.all);
   return `<section class="panel"><h3>Edited on the website or in Discord${total ? ` <span class="muted">${total}</span>` : ""}</h3>
     <p class="muted">The cards an edit on the website or in Discord changes now, newest first${total > shown.length ? ` (the ${shown.length} newest)` : ""}: the fields, who and when. Aliases and series the bot moved in from Discord aren't listed.</p>
-    ${total ? `<ul>${shown.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(changes.editorFields(c).join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul>` : `<p class="empty">No card is edited on the website or in Discord.</p>`}</section>`;
+    ${total ? `<ul>${shown.map(({ c, by, at, fields }) => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(fields.join(", "))}${by ? ` · ${changes.nameHtml(by)}` : ""}${at ? ` · ${esc(at.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul>` : `<p class="empty">No card is edited on the website or in Discord.</p>`}</section>`;
 }
 /** The Parser notes tab: the cards the bot hasn't parsed yet, and the parser's notes */
 function parserNotesHtml() {
