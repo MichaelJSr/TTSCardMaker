@@ -28,7 +28,8 @@ Where the data comes from:
     a private one is AES-GCM ciphertext made in the browser and passes through as it is. Bad files skipped, never a failed build.
   * Passwords: site/logins/<login>.json, a signed-in editor's GitHub token encrypted in the browser with their password
     (login.js). Shapes checked (bad files skipped with a warning, never a failed build), copied to data/logins/<login>.json
-    (lowercase name), the password sign-in's fallback when GitHub's API can't be reached.
+    (lowercase name), the password sign-in's fallback when GitHub's API can't be reached (names differing only in case:
+    neither copied); data.passwords = how many.
   * Image versions and contributions: one pass over the git history (commit metadata only, no file contents) lists
     every commit that changed each card PNG, following folder moves (exact renames, and a move that changed the image
     when one PNG of that file name was deleted), gives each card its first upload (fs: created's fallback), and counts
@@ -889,7 +890,7 @@ def parse_admins():
 
 
 # ---- profiles (site/profiles/<login>.json) --------------------------------------------------------------
-LOGIN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9-]{0,38}$")          # a GitHub login
+LOGIN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9-]{0,38}\Z")          # a GitHub login
 PROFILE_MAX_BYTES = 16 * 1024
 # the same rules as profile.js (LIMITS, PICKS, ITEM_KINDS): one-line text caps, four card slots, label/value pairs
 PROFILE_TEXT = {"motto": 140, "author": 60}
@@ -1023,7 +1024,7 @@ DECK_NAME, DECK_DESC, DECK_CARDS = 80, 500, 40                     # same limits
 DECK_KDF = {"name": "PBKDF2", "hash": "SHA-256"}                    # a private deck's key derivation (decks.js encrypt)
 DECK_ITER_MAX = 5_000_000                                           # PBKDF2 rounds a browser may be asked for
 DECK_SALT, DECK_IV, DECK_TAG = 16, 12, 16                           # bytes
-DECK_UPDATED_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")      # edit.js's stamp; anything else is ignored (sorts last)
+DECK_UPDATED_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z\Z")      # edit.js's stamp; anything else is ignored (sorts last)
 DECK_FIELDS = {"v", "owner", "name", "description", "cards", "field", "updated"}
 PRIVATE_FIELDS = {"v", "owner", "private", "kdf", "iv", "data", "updated"}
 
@@ -1109,7 +1110,7 @@ def clean_deck(raw, folder, slug, cards):
 # ---- password sign-in (site/logins/<login>.json) ------------------------------------------------------------
 LOGIN_MAX_BYTES = 4 * 1024
 LOGIN_KDF = "PBKDF2-SHA-256"                                        # login.js KDF
-LOGIN_ITER = (1_000_000, 10_000_000)                                # login.js MIN_ITER, MAX_ITER
+LOGIN_ITER = (1_000_000, 5_000_000)                                 # login.js MIN_ITER, MAX_ITER
 LOGIN_SALT, LOGIN_IV, LOGIN_CT = 16, 12, 1024                       # bytes; ct: the AES-GCM tag (16) plus a token
 LOGIN_FIELDS = ("v", "login", "kdf", "iterations", "salt", "iv", "ct", "at")
 
@@ -1151,7 +1152,7 @@ def clean_login(raw, stem):
 def read_logins():
     """site/logins/*.json -> the password files the site publishes, by login. Warns, never fails: a bad file is skipped."""
     folder = os.path.join(REPO, LOGINS_DIR)
-    out = {}
+    out, clash = {}, set()
     for name in sorted(os.listdir(folder)) if os.path.isdir(folder) else []:
         rel, path = f"{LOGINS_DIR}/{name}", os.path.join(folder, name)
         if not name.endswith(".json") or not os.path.isfile(path):
@@ -1169,10 +1170,13 @@ def read_logins():
             log(f"warning: {rel}: {note}")
         if entry is None:
             continue
-        if entry["login"].lower() in out:
-            log(f"warning: {rel}: another file already has this login, skipped")
+        key = entry["login"].lower()
+        if key in out or key in clash:            # names differing only in case: none is copied, the sign-in asks GitHub for each
+            log(f"warning: {rel}: another file has this login in another case: neither is published (an admin should remove the wrong one)")
+            clash.add(key)
+            out.pop(key, None)
             continue
-        out[entry["login"].lower()] = entry
+        out[key] = entry
     if out:
         log(f"passwords: {len(out)} from {LOGINS_DIR}/")
     return [out[k] for k in sorted(out)]
@@ -2255,6 +2259,12 @@ def main():
                  "edits": batches}
     log(f"changelog: {len(changelog['events'])} events" + ("" if events is not None else " (no CARD_DATA_DIR)") +
         f", {len(batches['batches'])} edit batches, {len(changelog['archived'])} archived cards")
+    try:                                      # password files (read before cards.json: data.passwords opens the sign-in on Password)
+        logins = read_logins()
+    except Exception as e:                    # never a failed build
+        warn(f"no password files: {type(e).__name__}: {e}")
+        logins = []
+    data["passwords"] = len(logins)
     os.makedirs(os.path.join(DIST, "data"))
     files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
@@ -2264,11 +2274,9 @@ def main():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
             fh.write(blob)
     try:                                      # password files: the sign-in's copy when GitHub's API can't be reached
-        logins = read_logins()
+        write_logins(os.path.join(DIST, "data", "logins"), logins)
     except Exception as e:                    # never a failed build
-        warn(f"no password files: {type(e).__name__}: {e}")
-        logins = []
-    write_logins(os.path.join(DIST, "data", "logins"), logins)
+        warn(f"no password files written: {type(e).__name__}: {e}")
     if detail_files:                          # one small file per card, fetched when its Details dropdown opens
         os.makedirs(os.path.join(DIST, "data", "details"))
         for cid, rec in detail_files.items():

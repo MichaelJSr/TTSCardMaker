@@ -24,10 +24,10 @@ reads the file from GitHub's API first (current right after a change) and from t
 - Key = PBKDF2-HMAC-SHA-256(password in Unicode NFC, salt, `iterations`), 256 bits; `ct` = AES-GCM-256 of the token
   (UTF-8) with the 12-byte `iv` and the string `login:<login in lowercase>` as additional data, so a file copied under
   another name does not open. `iterations` is 2,000,000 (0.2 s in Chrome on an M2 Ultra, about a second on a mid-range
-  phone); 1,000,000 to 10,000,000 are accepted. `at`: when it was published.
+  phone); 1,000,000 to 5,000,000 are accepted. `at`: when it was published.
 - The file is public, like everything in the repo: anyone can try to guess the password offline. The website refuses
-  passwords under 12 characters (unless a passphrase of 4 or more words), well-known ones (also with digits or symbols
-  around them), repeated patterns, keyboard and alphabet runs, ones with too few different characters, ones that are mostly the
+  passwords under 12 characters, well-known ones (also with digits or symbols around them), one word with digits or
+  symbols around it under 16 characters (Liverpool1892), repeated patterns, keyboard and alphabet runs, ones with too few different characters, ones that are mostly the
   login, and GitHub tokens. The token needs only the `public_repo` scope.
 - A removed or replaced file stays in the git history: whoever knows an old password can still read the token it held.
   The website says so on Remove and Change; the fix is a new token (regenerate it on GitHub, sign in with it, set the
@@ -38,4 +38,6 @@ reads the file from GitHub's API first (current right after a change) and from t
 
 The build never fails on a password file: one that isn't JSON, is over 4 KB, has another `v`, a `login` other than its
 file name, another `kdf`, `iterations` out of range, or a wrong `salt`, `iv` or `ct` shape is skipped with a warning; a
-bad `at` is ignored, as are unknown fields.
+bad `at` is ignored, as are unknown fields. Two files whose names differ only in case are both left out of
+`data/logins/` (warned); the sign-in then reads each from GitHub and opens the one the password fits. An admin should
+remove the wrong one.

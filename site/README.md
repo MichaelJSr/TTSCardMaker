@@ -211,8 +211,9 @@ stored. From then on, on any device, **Sign in** → **Password** takes the GitH
 page reads the file from GitHub's API (current right after a change; 60 requests an hour per address without a token),
 else the site's copy `data/logins/<login>.json` (as new as the last build), decrypts it, and checks the token with
 GitHub as a token sign-in does (the login must be the file's; an expired or deleted token says so). A password needs 12
-characters or more (or a passphrase of 4 or more words) and is refused, with the reason shown as you type, when it is a
-well-known one (also with digits or symbols around it), a repeated pattern, a keyboard or alphabet run, has too few
+characters or more (4 or more random words are easy to remember) and is refused, with the reason shown as you type, when
+it is a well-known one (also with digits or symbols around it), one word with digits or symbols around it (Liverpool1892)
+under 16 characters, a repeated pattern, a keyboard or alphabet run, has too few
 different characters, is mostly the login, or is a token. The file is public, so anyone can try to guess the password
 offline: a long one used nowhere else is what keeps it safe, and the sign-in page and the dialog say so.
 
@@ -225,7 +226,10 @@ also the fix after making a new token) and **Remove my password** (deletes the f
 sign-in form clears this browser's sign-in, asks for the token, then sets a new password that replaces the file. A
 removed or replaced file stays in the git history, so whoever knew an old password can still read the token it held:
 Change and Remove say so and point to regenerating the token on GitHub. You write only your own file; admins can list
-everyone's (hub → **Password files**) and remove one. Safari may clear a site's storage after 7 days without a visit,
+everyone's (hub → **Password files**) and remove one. That rule is the website's: anyone who can push could still
+change or delete a file through git, but the password and the `/user` check mean that only stops its owner signing in
+with a password; it never gives anyone the token. Signed out, the sign-in opens on **Password** when the site has any
+password files (or this browser last signed in with one). Safari may clear a site's storage after 7 days without a visit,
 which signs that browser out.
 
 ## People

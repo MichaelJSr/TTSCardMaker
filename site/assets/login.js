@@ -7,7 +7,7 @@ import { b64, unb64 } from "./decks.js";
 
 export const KDF = "PBKDF2-SHA-256";
 export const ITER = 2_000_000;                    // ~0.2 s on an M2 Ultra (Chrome), about 1 s on a mid phone; the file is public
-export const MIN_ITER = 1_000_000, MAX_ITER = 10_000_000;     // a file outside is refused: too weak, or would hang the page
+export const MIN_ITER = 1_000_000, MAX_ITER = 5_000_000;      // a file outside is refused: too weak, or would hang the page
 export const LIMITS = { file: 4 * 1024, ct: 1024, salt: 16, iv: 12, tag: 16, min: 12, words: 4, max: 1024 };
 export const DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 const FIELDS = ["v", "login", "kdf", "iterations", "salt", "iv", "ct", "at"];
@@ -86,23 +86,34 @@ const LEET = [{ "@": "a", 4: "a", 3: "e", 1: "i", "!": "i", "|": "i", 0: "o", $:
 const RUNS = ["abcdefghijklmnopqrstuvwxyz", "01234567890", "qwertyuiop", "asdfghjkl", "zxcvbnm", "qwertzuiop", "yxcvbnm",
   "azertyuiop", "qsdfghjklm", "wxcvbn", "1qaz2wsx3edc4rfv5tgb6yhn7ujm8ik9ol0p", "zaq1xsw2cde3vfr4bgt5nhy6mju7"];
 const stepOk = (a, b) => RUNS.some(r => { const i = r.indexOf(a); return i >= 0 && (r[i + 1] === b || r[i - 1] === b); });
+/** One word (4+ letters, at most 2 more elsewhere) with digits and symbols around it: Liverpool1892, Charlie2024!x. A word is
+ *  cased like one (liverpool, Liverpool, LIVERPOOL) and has vowels: random letters (uNTeFvHn) aren't. s: as typed (case kept). */
+const oneWord = s => {
+  const runs = s.split(/[^\p{L}]+/u).filter(Boolean), letters = runs.join("").length, top = runs.reduce((a, r) => (r.length > a.length ? r : a), "");
+  return top.length >= 4 && letters - top.length <= 2 && letters <= 12 && /^(\p{Lu}?\p{Ll}+|\p{Lu}+)$/u.test(top)
+    && (top.toLowerCase().match(/[aeiouy]/g) || []).length / top.length >= 0.25;
+};
+/** A core with digits and symbols around it stripped, leetspeak undone, when it is mostly letters already (L1verp00l). */
+const leetWord = e => (e.replace(/[^\p{L}]/gu, "").length >= 0.7 * [...e].length ? LEET.map(m => [...e].map(ch => m[ch] ?? ch).join("")) : []);
 const commonCore = core => !!core && (COMMON.has(core) || [...COMMON].some(w => w.length >= 3 && core.length % w.length === 0 && w.repeat(core.length / w.length) === core));
 /** Words of a passphrase: runs of 3+ characters with a letter, split on spaces and - _ . , + / */
 export const wordsOf = pw => String(pw ?? "").split(/[\s\-_.,;:+/]+/).filter(w => [...w].length >= 3 && /\p{L}/u.test(w));
-/** {ok, problems: [why], length, words}: at least 12 characters or a passphrase of 4+ words, and none of the first guesses. */
+/** {ok, problems: [why], length, words}: at least 12 characters, and none of the first guesses. */
 export function checkPassword(pw, login = "", token = "") {
   pw = String(pw ?? "").normalize("NFC");
   const length = [...pw].length, words = wordsOf(pw).length, low = pw.toLowerCase(), problems = [];
   if (!length) return { ok: false, problems: ["Type a password"], length, words };
-  if (length < LIMITS.min && words < LIMITS.words) problems.push(`Too short: at least ${LIMITS.min} characters, or a passphrase of ${LIMITS.words} or more words`);
+  if (length < LIMITS.min) problems.push(`Too short: at least ${LIMITS.min} characters (${LIMITS.words} or more random words are easy to remember)`);
   if (length > LIMITS.max) problems.push(`Too long: at most ${LIMITS.max} characters`);
   if ((token && pw.trim() === token.trim()) || /^(ghp|gho|ghu|ghs|ghr)_|^github_pat_/i.test(pw.trim())) problems.push("That's a GitHub token: pick a password you can remember instead");
-  const rest = login ? low.split(login.toLowerCase()).join("") : low;      // without the login: still long enough?
-  if (rest !== low && [...rest].length < LIMITS.min && wordsOf(rest).length < LIMITS.words) problems.push("Mostly your GitHub login: add more than the login");
+  const lg = String(login ?? "").toLowerCase();    // without the login: still long enough? (one under 4 characters only as a word of its own: "al" is in many words)
+  const rest = !lg ? low : lg.length >= 4 ? low.split(lg).join("") : low.replace(new RegExp(`(?<![\\p{L}\\d])${lg}(?![\\p{L}\\d])`, "gu"), "");
+  if (rest !== low && [...rest].length < LIMITS.min) problems.push("Mostly your GitHub login: add more than the login");
   const ends = [low, low.replace(/[\d\W_]+$/u, ""), low.replace(/^[\d\W_]+/u, ""), low.replace(/^[\d\W_]+|[\d\W_]+$/gu, "")];   // digits and symbols around
   const cores = [low.replace(/[^\p{L}]/gu, ""), ...ends.flatMap(e => LEET.map(m => [...e].map(ch => m[ch] ?? ch).join("").replace(/[^\p{L}]/gu, "")))];
   if (!cores[0]) { if (length < 16) problems.push("Only digits and symbols: add words, or use 16 or more"); }
   else if (cores.some(commonCore)) problems.push("Too common: a well-known password (with digits or symbols around it) is among the first guesses");
+  else if (length < 16 && [pw, ...leetWord(pw.replace(/^[\d\W_]+|[\d\W_]+$/gu, ""))].some(oneWord)) problems.push("One word with digits or symbols around it (like Liverpool1892): a dictionary with years finds it fast; add more words");
   if (/^(.+?)\1+$/su.test(low)) problems.push("Repeats a short pattern");
   const chars = [...low.replace(/\s/g, "")];
   if (chars.length > 3) {
@@ -212,7 +223,7 @@ export function passwordFormHtml({ mode = "set", login = "", path = "", offer = 
       <label for="pw-again">Again</label><input id="pw-again" class="wide" type="password" autocomplete="new-password" required>
       <ul class="checks" id="pw-checks" aria-live="polite"></ul>
       <p class="note">Your token is encrypted here, in this browser, and published as <code>${esc(path)}</code>: public, like everything in the repo.
-        Anyone can try to guess the password offline, so make it long (${LIMITS.min}+ characters, or ${LIMITS.words}+ random words) and use it nowhere else.
+        Anyone can try to guess the password offline, so make it long (${LIMITS.min}+ characters; ${LIMITS.words}+ random words are easy to remember) and use it nowhere else.
         The password itself is never sent or stored.${mode === "change" ? " The old file stays in the git history: if the old password may be known, make a new token on GitHub, sign in with it, then set the password." : ""}</p>
       <div class="actions"><button type="submit" class="primary">${mode === "change" ? "Change password" : "Set password"}</button>${offer ? `<button type="button" class="ghost" data-action="pw-later">Not now</button>` : ""}</div>
       <p class="muted" id="pw-status" aria-live="polite"></p></form>`;
