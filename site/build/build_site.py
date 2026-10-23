@@ -35,7 +35,8 @@ Where the data comes from:
   * Image versions and contributions: one pass over the git history (commit metadata only, no file contents; commits
     dated by committer time, as the bot dates versions) lists
     every commit that changed each card PNG, following folder moves (exact renames, and a move that changed the image
-    when one PNG of that file name was deleted), gives each card its first upload (fs: created's fallback), and counts
+    when one PNG of that file name was deleted; not the bot's lossless recompressions, named in its Recompressed
+    trailers), gives each card its first upload (fs: created's fallback), and counts
     per person the commits that added or changed a card (PSD or PNG) and the publish batches (commits to Card
     Edits.json). Needs full history: a shallow clone gets no image versions, no fs, and counts edit batches from the
     file's _by/_at stamps instead.
@@ -1394,10 +1395,13 @@ OLD_CARD_FOLDERS = ("Auxillary/",)            # folder spellings before a rename
 RULE_PARTS = ("Rules", "Rulebook")            # rulebook pages are not cards
 EDIT_BY = "Edit-by"                           # a bake commit's trailer, one per editor whose edit it printed (AutoCroissant card_bake)
 TRAILER_RE = re.compile(r"^[^\x00-\x1f\x7f]{1,100}$")       # an Edit-by value: a login, or a Discord name (discord:<name>)
+RECOMPRESSED = "Recompressed"                 # a bot commit's trailer, one per PNG it only recompressed losslessly (AutoCroissant
+                                              # card_guards.RECOMPRESSED, png_recompress): the same image, so no new version
 # committer time (%ct), as the bot dates versions (commits API committer.date; card_history LOG_FORMAT): a rebased commit's
 # author time can be weeks earlier (Patch 1.9: authored 2026-05-28, committed 2026-06-17), and then no date matches;
 # %aN/%aE through .mailmap, as the bot's %aN
-HISTORY_FORMAT = f"%x01%H%x09%ct%x09%aN%x09%aE%x09%s%n%x02%(trailers:key={EDIT_BY},valueonly,separator=%x1f)"
+HISTORY_FORMAT = (f"%x01%H%x09%ct%x09%aN%x09%aE%x09%s%n%x02%(trailers:key={EDIT_BY},valueonly,separator=%x1f)"
+                  f"%n%x03%(trailers:key={RECOMPRESSED},valueonly,separator=%x1f)")
 
 
 def unquote_path(path):
@@ -1409,15 +1413,19 @@ def unquote_path(path):
 
 def parse_history(text):
     """`git log --raw --no-renames --no-abbrev --format=HISTORY_FORMAT` -> commits newest first: (sha, committer time, author
-    name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by values: logins, Discord names])."""
+    name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by values: logins, Discord names]).
+    A bot commit's change of a PNG its Recompressed trailers name is left out: the same image, losslessly smaller."""
     commits = []
     for chunk in text.split("\x01")[1:]:
         head, _, body = chunk.partition("\n")
         sha, ts, name, email, subject = (head.split("\t", 4) + [""] * 5)[:5]
-        entries, editors = [], []
+        entries, editors, same = [], [], set()
         for line in body.splitlines():
             if line.startswith("\x02"):              # the Edit-by trailers' values
                 editors = [v.strip() for v in line[1:].split("\x1f") if TRAILER_RE.match(v.strip())]
+                continue
+            if line.startswith("\x03"):              # the Recompressed trailers' values: paths
+                same = {v.strip() for v in line[1:].split("\x1f") if v.strip()}
                 continue
             if not line.startswith(":"):
                 continue
@@ -1425,6 +1433,8 @@ def parse_history(text):
             parts = meta.split()
             if len(parts) >= 5:
                 entries.append((parts[4], parts[2], parts[3], unquote_path(path)))
+        if same and name.lower() == BOT_AUTHOR.lower():
+            entries = [e for e in entries if not (e[0] == "M" and e[3] in same)]
         commits.append((sha, int(ts or 0), name, email, subject, entries, editors))
     return commits
 
