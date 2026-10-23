@@ -2,13 +2,15 @@
 # builds the card data (db/ JSON on the orphan branch `data`), updates the TTS save and writes the changelog posts. It makes
 # at most one commit on main (M: the bake and the save) and one on `data`. Every stage is the bot's code, checked out from
 # bobberlington/AutoCroissant at the builder ref: card_bake --local, card_data, tts_save --names, changelog post.
-# Migration step 6: dispatch only, dry_run on by default; the bake, the main commit and the posts off (MAIN_COMMIT and
-# POSTS; discord.json goes to the artifact only), so a live run writes only `data`. tts-save.yml and card-edits.yml stay
-# main's writers until the cutover (step 8).
+# Migration step 7 (the shadow): every 30 minutes, live; dispatches run dry by default; the bake, the main commit and the
+# posts off (MAIN_COMMIT and POSTS; discord.json goes to the artifact only), so a live run writes only `data`.
+# tts-save.yml and card-edits.yml stay main's writers until the cutover (step 8).
 name: Card sync
 run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Card sync (dry run)' || 'Card sync' }}
 
 on:
+  schedule:
+    - cron: "4,34 * * * *"   # most runs end at the gate; with no data branch yet, a run seeds it (the latest PICKLE)
   workflow_dispatch:
     inputs:
       dry_run:
@@ -89,6 +91,7 @@ jobs:
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
+            /.mailmap
             /site/Card Edits.json
             /site/Card Authors.txt
             /site/Card Creation Dates.json
@@ -280,7 +283,7 @@ jobs:
             && "$RUNNER_TEMP/builder/bin/python" -m commands.tts_save --help > /dev/null)
           if [ "$BAKE" != none ]; then
             python3.12 -m venv "$RUNNER_TEMP/baker"
-            "$RUNNER_TEMP/baker/bin/pip" install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261022b"
+            "$RUNNER_TEMP/baker/bin/pip" install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023"
             (cd bot && "$RUNNER_TEMP/baker/bin/python" -m commands.card_bake --help > /dev/null)
           fi
 

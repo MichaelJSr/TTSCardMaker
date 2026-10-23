@@ -147,6 +147,8 @@ export function fieldsHtml(fields) {
 const VERDICT = { buff: ["diff-up", "buff"], nerf: ["diff-down", "nerf"], mixed: ["muted", "buffs and nerfs"] };
 const verdictHtml = e => { const v = VERDICT[e.verdict]; const why = [...(e.buffs || []), ...(e.nerfs || [])].join("; "); return v ? ` <span class="${v[0]}"${why ? ` data-tip="${esc(why)}"` : ""}>(${v[1]})</span>` : ""; };
 const folder = p => String(p || "").split("/").slice(0, -1).join("/");
+/** Where an archived card's PSD went: "moved to MDW/The Morgue" (moved_to: retired, not deleted), else "PSD deleted" */
+const goneText = e => (e.moved_to ? `moved to ${folder(e.moved_to) || e.moved_to}` : "PSD deleted");
 /** One event as a line (the post's _line(), with the old values and the ability diff) */
 export function eventHtml(e) {
   const title = cardLink(e.id, e.title || e.card);
@@ -155,7 +157,7 @@ export function eventHtml(e) {
     case "new": return `<li>${title} <span class="muted">(${esc(kindWord(e.card_type))}${e.stars ? `, ${e.stars}★` : ""})</span>${e.by ? ` by ${esc(e.by)}` : ""}</li>`;
     case "renamed": return `<li>${esc(e.title || e.card)} is now ${cardLink(e.renamedId, e.renamed_to || "?")}</li>`;
     case "moved": return `<li>${title} moved to ${esc(folder(e.path) || "?")}${e.from_path ? ` <span class="muted">from ${esc(folder(e.from_path))}</span>` : ""}</li>`;
-    case "archived": return `<li>${esc(e.title || e.card)} <span class="muted">(PSD deleted)</span></li>`;
+    case "archived": return `<li>${esc(e.title || e.card)} <span class="muted">(${esc(goneText(e))})</span></li>`;
     case "restored": return `<li>${title} <span class="muted">(PSD back)</span></li>`;
     case "art": return `<li>${title}</li>`;
     default: {                                            // changed, edited, authors, reparse
@@ -221,11 +223,13 @@ export function changelogHtml(C, params) {
     ${sourceHtml(C || {})}${present.length > 1 ? chips(present, kinds, counts, "kind") : ""}</section>
     ${body}${archivedHtml(C?.archived || [], C?.repo)}`;
 }
-/** Archived cards: their PSD left the card repo (the bot's tags) */
+/** Archived cards: their PSD left the card folders (the bot's tags): deleted, renamed (renamed_to) or moved into MDW
+    (moved_to) */
 export function archivedHtml(rows, repo) {
   if (!rows.length) return "";
-  const line = r => `<li>${esc(r.title || r.card)} <span class="muted">${esc(kindWord(r.card_type))}${r.stars ? ` · ${r.stars}★` : ""}${r.at ? ` · ${esc(dateLabel(r.at))}` : ""}${r.path ? ` · ${esc(r.path)}` : ""}</span>${r.renamed_to ? ` · now ${cardLink(r.renamedId, r.renamed_to)}` : ""}${r.commit && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(r.commit)}" target="_blank" rel="noopener">${short(r.commit)}</a>` : ""}</li>`;
-  return `<section class="panel"><h3>Archived cards <span class="muted">${rows.length}</span></h3><p class="muted">Cards whose PSD was deleted from the card repo. The bot keeps their last version.</p><ul class="cl-lines">${rows.map(line).join("")}</ul></section>`;
+  const gone = r => (r.renamed_to ? ` · renamed to ${cardLink(r.renamedId, r.renamed_to)}` : ` · ${esc(goneText(r))}`);
+  const line = r => `<li>${esc(r.title || r.card)} <span class="muted">${esc(kindWord(r.card_type))}${r.stars ? ` · ${r.stars}★` : ""}${r.at ? ` · ${esc(dateLabel(r.at))}` : ""}${r.path ? ` · ${esc(r.path)}` : ""}</span>${gone(r)}${r.commit && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(r.commit)}" target="_blank" rel="noopener">${short(r.commit)}</a>` : ""}</li>`;
+  return `<section class="panel"><h3>Archived cards <span class="muted">${rows.length}</span></h3><p class="muted">Cards whose PSD left the card folders: deleted, renamed, or moved to MDW (retired). The bot keeps their last version.</p><ul class="cl-lines">${rows.map(line).join("")}</ul></section>`;
 }
 /** One edit batch: who, when, where, its commit, and each card's fields old → new */
 export function batchHtml(b, repo) {

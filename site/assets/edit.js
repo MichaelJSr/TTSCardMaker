@@ -1,12 +1,14 @@
 // Editing: staged in a batch, published as one commit to the card repo.
 import { esc } from "./text.js";
 import { decode as decodeDeck, encode as encodeDeck } from "./deck.js";
-import { validateProfile, profileFile, sameProfile, deckCode, profileHtml, LIMITS, PICKS, ITEM_KINDS } from "./profile.js";
+import { validateProfile, profileFile, sameProfile, deckCode, profileHtml, LIMITS, PICKS, ITEM_KINDS, LOGIN_RE } from "./profile.js";
 import * as pick from "./pick.js";
 import * as decks from "./decks.js";
+import * as auth from "./login.js";
 
 const API = "https://api.github.com";
-const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets" };
+// token: the plain-text token before 2026-10-23 (sealed on the next load); last: the login a password last signed in
+const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login" };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
   atk: "int", spd: "int", ability: "str", note: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
@@ -165,7 +167,10 @@ export const savedHands = decks => decks.map(d => ({ id: d.id, name: d.name, n: 
 
 export function createEditor(app) {
   const { S } = app;
-  let token = localStorage.getItem(K.token) || sessionStorage.getItem(K.token) || "";
+  // the token: in memory; kept sealed under this browser's device key (login.js vault), never in plain text
+  const device = auth.vault();
+  const legacy = () => localStorage.getItem(K.token) || sessionStorage.getItem(K.token) || "";
+  let token = "";
   let me = null;                                   // { login, admin, push }
   // profiles: login -> profile, or null to remove the file; decks: "<owner>/<slug>" -> the deck file object (decks.js fileOf /
   // encrypt), or null to remove it; deckNames: the same keys -> name, for the bar (a private file holds its name encrypted)
@@ -176,15 +181,15 @@ export function createEditor(app) {
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
-  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", decks: "site/decks", ...S.data.files });
+  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", decks: "site/decks", logins: "site/logins", ...S.data.files });
   const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
   const find = id => S.byId.get(id) || (S.rules || []).find(r => r.id === id);
 
   // ---- GitHub API
-  async function gh(path, { method = "GET", body, raw = false, full = false } = {}) {
+  async function gh(path, { method = "GET", body, raw = false, full = false, anon = false } = {}) {     // anon: no token (signed out)
     const r = await fetch(API + path, {
       method, cache: "no-store", body: body && JSON.stringify(body),
-      headers: { Authorization: `Bearer ${token}`, Accept: raw ? "application/vnd.github.raw+json" : "application/vnd.github+json",
+      headers: { ...(anon ? {} : { Authorization: `Bearer ${token}` }), Accept: raw ? "application/vnd.github.raw+json" : "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28", ...(body ? { "Content-Type": "application/json" } : {}) },
     });
     if (!r.ok) {
@@ -219,20 +224,151 @@ export function createEditor(app) {
     }
   }
 
-  // ---- sign in
-  async function signIn(t, remember) {
+  // ---- sign in: a token, or a login + password (the token sealed in site/logins/<login>.json); kept on this browser sealed
+  // under its device key: localStorage until Sign out (keep), else sessionStorage (this tab)
+  let keptHere = false;                            // this sign-in lasts until Sign out (else this tab)
+  async function signIn(t, keep, { expect = "", store = true } = {}) {
     token = t.trim();
     const { data: user, headers } = await gh("/user", { full: true });
+    if (expect && user.login.toLowerCase() !== expect.toLowerCase()) throw new Error(`That password file holds ${user.login}'s token, not ${expect}'s.`);
     const scopes = headers.get("x-oauth-scopes");
     if (scopes != null && !/\b(public_)?repo\b/.test(scopes)) throw new Error("This token can't write: give it the public_repo scope.");
     const p = (await gh(`/repos/${S.data.repo}`)).permissions || {};
     if (!p.push) throw new Error(`${user.login} can't push to ${S.data.repo}. Ask an admin to add you.`);
     me = { login: user.login, admin: !!p.admin || isAdmin(user.login), push: true };
-    localStorage.removeItem(K.token); sessionStorage.removeItem(K.token);
-    (remember ? localStorage : sessionStorage).setItem(K.token, token);
+    keptHere = !!keep;
+    if (store) await remember(keep);
     app.onAuth();
   }
-  function signOut() { token = ""; me = null; localStorage.removeItem(K.token); sessionStorage.removeItem(K.token); sessionStorage.removeItem(K.buckets); buckets = readBuckets(null); app.onAuth(); }
+  async function remember(keep) {                  // seal the token on this browser; the plain-text one of before goes
+    localStorage.removeItem(K.token); sessionStorage.removeItem(K.token);
+    try { await device.save(token, keep); }
+    catch { keptHere = false; if (keep) app.toast("This browser can't keep you signed in safely: you'll sign in again next time"); }
+  }
+  let offerOnBoot = false;                         // a plain-text token was sealed on this load: offer a password once
+  async function restore() {                       // the boot's silent sign-in
+    const old = legacy(), kept = old ? null : await device.load();
+    if (!old && !kept) return;
+    const keep = old ? !!localStorage.getItem(K.token) : kept.keep;
+    token = old ? old.trim() : kept.token;
+    if (old) { await remember(keep); offerOnBoot = true; }
+    try { await signIn(token, keep, { store: false }); }
+    catch (e) { if (e.status === 401) await device.clear(); throw e; }      // a revoked token isn't kept
+  }
+  function signOut() {
+    token = ""; me = null; pwKnown = null; keptHere = false;
+    localStorage.removeItem(K.last); localStorage.removeItem(K.token); sessionStorage.removeItem(K.token); device.clear().catch(() => {});
+    sessionStorage.removeItem(K.buckets); buckets = readBuckets(null); app.onAuth();
+  }
+
+  // ---- the password file: site/logins/<login>.json (own; admins may remove one), published at once as its own commit
+  const loginPath = l => `${files().logins}/${l}.json`;
+  const stamp = () => new Date().toISOString().replace(/\.\d+Z$/, "Z");
+  let pwKnown = null;                              // {login, file | null}: the signed-in login's published file
+  async function ownPassword(fresh = false) {      // the file, null when none, {damaged} when unreadable
+    if (!fresh && pwKnown?.login === me.login) return pwKnown.file;
+    const text = await readFile(loginPath(me.login), S.data.branch || "main");
+    let file = null;
+    if (text != null) { try { file = auth.checkFile(JSON.parse(text), me.login).file || { damaged: true }; } catch { file = { damaged: true }; } }
+    pwKnown = { login: me.login, file };
+    return file;
+  }
+  /** Signed out: the login's file, from GitHub (fresh right after a publish; 60 requests an hour per address without a
+   *  token), else the site's copy data/logins/<login>.json (as new as the last build). -> {found: [{file, login}], stale}:
+   *  several when files differ only in case (the build publishes none of them); stale: the site's copy was used. */
+  async function fetchPassword(typed) {
+    if (!LOGIN_RE.test(typed)) throw new Error("That isn't a GitHub login.");
+    const lower = typed.toLowerCase(), repo = S.data.repo, ref = S.data.branch || "main", dir = files().logins;
+    let built = null;
+    try { const r = await fetch(`data/logins/${encodeURIComponent(lower)}.json`, { cache: "no-cache" }); if (r.ok) built = await r.json(); } catch { /* not built */ }
+    const api = n => gh(`/repos/${repo}/contents/${repoPath(`${dir}/${n}.json`)}?ref=${ref}`, { raw: true, anon: true }).catch(e => (e.status === 404 ? null : Promise.reject(e)));
+    const parse = text => { try { return JSON.parse(text); } catch { return null; } };
+    const spelled = typeof built?.login === "string" && built.login.toLowerCase() === lower ? built.login : typed;
+    let raws = [], stale = false;                  // [[file name's login, raw]]
+    try {
+      const text = await api(spelled);
+      if (text !== null) raws.push([spelled, parse(text)]);
+      else if (!built) {                           // typed in another case than the file's: find it (them) in the folder
+        const list = await gh(`/repos/${repo}/contents/${repoPath(dir)}?ref=${ref}`, { anon: true }).catch(e => (e.status === 404 ? [] : Promise.reject(e)));
+        for (const x of Array.isArray(list) ? list : []) {
+          const name = String(x.name);
+          if (name.toLowerCase() !== `${lower}.json` || name === `${spelled}.json`) continue;
+          const t = await api(name.slice(0, -5));
+          if (t !== null) raws.push([name.slice(0, -5), parse(t)]);
+        }
+      }
+      if (!raws.length) throw Object.assign(new Error(`${typed} has no password: sign in with the token, then set one.`), { none: true });
+    } catch (e) {
+      if (e.none || !built) throw e.none ? e : new Error(`Couldn't reach GitHub (${e.message}). Try again in a few minutes, or sign in with the token.`);
+      raws = [[built.login, built]]; stale = true; // GitHub unreachable or rate-limited: the site's copy
+    }
+    const found = raws.map(([stem, raw]) => auth.checkFile(raw, stem).file).filter(Boolean).map(file => ({ file, login: file.login }));
+    if (!found.length) throw new Error(`${typed}'s password file is damaged: sign in with the token, then set a new password.`);
+    return { found, stale };
+  }
+  let afterPw = null;                              // what "Not now" / "Continue" opens
+  const later = () => { const next = afterPw; afterPw = null; if (next) next(); else app.closeModal(); };
+  /** The set / change dialog. mode: "set" | "new" (forgot) | "change"; offer: after a token sign-in, with Not now -> next. */
+  function openPassword(mode = "set", { offer = false, next = null } = {}) {
+    if (!me) { openHub("Sign in with your token first."); return; }
+    const login = me.login, path = loginPath(login);
+    afterPw = next;
+    app.showDialog(auth.passwordFormHtml({ mode, login, path, offer }));
+    const form = app.modal.querySelector("#pw-form"), q = sel => form.querySelector(sel), status = q("#pw-status");
+    const update = () => {
+      const p = q("#pw-new").value, a = q("#pw-again").value, r = auth.checkPassword(p, login, token);
+      q("#pw-checks").innerHTML = auth.checksHtml(r, a && p && a !== p ? false : null);
+      return { r, p, same: a === p };
+    };
+    form.addEventListener("input", () => { update(); status.textContent = ""; });
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const { r, p, same } = update(), btn = q("[type=submit]");
+      if (!r.ok) { status.innerHTML = `<span class="err">${esc(r.problems[0])}</span>`; return; }
+      if (!same) { status.innerHTML = `<span class="err">The two passwords don't match</span>`; return; }
+      const subtle = globalThis.crypto?.subtle;
+      if (!subtle) { status.textContent = "Encrypting needs a secure page (https or localhost)"; return; }
+      btn.disabled = true; status.textContent = "Encrypting (about a second)…";
+      try {
+        const file = { ...(await auth.seal(subtle, p, login, token)), at: stamp() };
+        status.textContent = "Publishing…";
+        const sha = await commitFiles({ [path]: () => auth.fileText(file) }, `Website: ${login}'s password`);
+        pwKnown = { login, file }; localStorage.setItem(K.last, login);
+        app.showDialog(`<h3>Password ${mode === "change" ? "changed" : "set"}</h3><p>${sha ? `Commit <a href="https://github.com/${esc(S.data.repo)}/commit/${sha}" target="_blank" rel="noopener">${sha.slice(0, 7)}</a>. ` : ""}On any device: <b>Sign in</b> → <b>Password</b>, then <b>${esc(login)}</b> and your password. ${keptHere ? "This browser stays signed in until you sign out." : "This tab stays signed in until it closes."}</p>
+          <div class="actions"><button type="button" class="primary" data-action="pw-later">${afterPw ? "Continue" : "OK"}</button></div>`);
+      } catch (err) { btn.disabled = false; status.innerHTML = `<span class="err">Not saved: ${esc(err.message)}</span>`; }
+    });
+    q("#pw-new").focus();
+  }
+  async function removePassword(target) {         // own file, or (admins) anyone's
+    if (!me) return;
+    const own = mine(target), path = loginPath(target);
+    if (!own && !me.admin) { app.toast("Only admins can remove someone else's password"); return; }
+    if (!confirm(own ? `Remove your password? ${path} is deleted now. This browser stays signed in; signing in elsewhere (or after Sign out) takes the token again.` : `Remove ${target}'s password? ${path} is deleted now.`)) return;
+    try {
+      const sha = await commitFiles({ [path]: old => (old == null ? null : false) }, `Website: ${target}'s password removed`);
+      if (own) { pwKnown = { login: me.login, file: null }; localStorage.removeItem(K.last); }
+      app.showDialog(`<h3>Password removed</h3><p>${sha ? `Commit <a href="https://github.com/${esc(S.data.repo)}/commit/${sha}" target="_blank" rel="noopener">${sha.slice(0, 7)}</a>. ` : "There was no file. "}${esc(path)} is gone, but the old file stays in the git history: whoever knows the old password can still read the token from it.</p>
+        <p class="note">To be safe, <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">regenerate the token on GitHub</a> (or delete it and make a new one with <code>public_repo</code>), then sign in with the new one${own ? "" : ` (${esc(target)}'s token: tell them)`}.</p>
+        <div class="actions"><button type="button" data-action="edit-hub">Back</button></div>`);
+    } catch (err) { app.toast(`Not removed: ${err.message}`); }
+  }
+  function pwHubHtml(file) {                       // the signed-in hub's Password section
+    if (!file || file.damaged) return `<p class="muted">${file ? "Your password file can't be read." : `Sign in on any device with <b>${esc(me.login)}</b> and a password instead of the token.`}</p>
+      <div class="actions"><button type="button" data-action="pw-set">${file ? "Set a new password" : "Set a password"}</button></div>`;
+    return `<p class="muted">You can sign in on any device with <b>${esc(me.login)}</b> and your password${file.at ? ` (set ${esc(file.at.slice(0, 10))})` : ""}.</p>
+      <div class="actions"><button type="button" data-action="pw-change">Change password</button><button type="button" class="ghost danger" data-action="pw-remove" data-login="${esc(me.login)}">Remove my password</button></div>`;
+  }
+  async function listPasswords() {                 // admins: every password file, each with Remove
+    const el = document.getElementById("pw-list");
+    if (!el) return;
+    el.textContent = "Loading…";
+    try {
+      const list = await gh(`/repos/${S.data.repo}/contents/${repoPath(files().logins)}?ref=${S.data.branch || "main"}`).catch(e => (e.status === 404 ? [] : Promise.reject(e)));
+      const logins = (Array.isArray(list) ? list : []).map(x => String(x.name)).filter(n => n.endsWith(".json")).map(n => n.slice(0, -5));
+      el.innerHTML = logins.length ? `<ul class="pw-files">${logins.map(l => `<li><a href="#/u/${encodeURIComponent(l)}">${esc(l)}</a> <button type="button" class="ghost danger" data-action="pw-remove" data-login="${esc(l)}">Remove</button></li>`).join("")}</ul>` : `<p class="muted">Nobody has a password.</p>`;
+    } catch (err) { el.textContent = `Couldn't list them: ${err.message}`; }
+  }
 
   // ---- preview: staged and just-published changes applied to the loaded cards
   const snap = c => { if (c && !pristine.has(c.id)) pristine.set(c.id, structuredClone(c)); };
@@ -606,7 +742,7 @@ export function createEditor(app) {
     carry = { key: form.dataset.login.toLowerCase(), link: form.querySelector("#pf-deck-link").value,
       slot: panel.hidden ? "" : panel.dataset.slot || "", picker: panel.hidden ? null : pick.read(panel) };
   }
-  let booting = !!token;                           // the stored token's sign-in hasn't settled yet
+  let booting = device.has() || !!legacy();        // the kept token's sign-in hasn't settled yet
   let pageRun = 0;                                 // profilePage calls: a newer one aborts the older
   window.addEventListener("beforeunload", e => { if (document.querySelector('#edit-form[data-dirty="1"]')) { e.preventDefault(); e.returnValue = ""; } });
   function profileOf(login) {                      // unpublished state: {profile | null (removed), state: "staged" | "sent"}, or null
@@ -969,23 +1105,21 @@ export function createEditor(app) {
         <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch || "main")}). The site rebuilds in a few minutes; the bot reads it on /update_stats.</p>` : `<p class="muted">Nothing to publish.</p>`}
       <p class="muted" id="edit-status" aria-live="polite">${esc(note)}</p>`;
   }
+  let forgot = false;                              // Forgot password: after the token sign-in, set a new one
   function hubHtml(note = "") {
-    if (!me) return `<h3>Sign in to edit</h3>${note ? `<p>${esc(note)}</p>` : ""}
-      <p class="muted">Anyone with write access to ${esc(S.data.repo)} can edit cards and make a profile. Edits are batched and published as one commit, which the website and the bot both read.</p>
-      <ol class="muted"><li><a href="https://github.com/settings/tokens/new?scopes=public_repo&description=Impossibility%20Simulator%20card%20browser" target="_blank" rel="noopener">Create a GitHub token</a> with only <code>public_repo</code> ticked.</li><li>Paste it here.</li></ol>
-      <form id="signin-form"><input id="signin-token" class="wide" type="password" placeholder="ghp_…" autocomplete="off" required>
-        <label class="check"><input id="signin-remember" type="checkbox" checked> remember on this device</label>
-        <div class="actions"><button type="submit" class="primary">Sign in</button></div><p class="muted" id="signin-status" aria-live="polite"></p></form>
-      <p class="muted">The token stays in this browser and is only sent to api.github.com.</p>`;
+    if (!me) return auth.signInHtml({ mode: !forgot && (localStorage.getItem(K.last) || S.data.passwords) ? "password" : "token", last: localStorage.getItem(K.last) || "",
+      note, repo: S.data.repo, logins: files().logins, forgot });
     return `<h3>Editing as ${esc(me.login)} <span class="fact">${me.admin ? "Admin" : "Editor"}</span></h3>${note ? `<p>${esc(note)}</p>` : ""}
       <p class="muted">Open a card and change it in place, or press All fields (e). Changes wait in your batch until you publish them.</p>
       <div class="actions"><button type="button" data-action="edit-review"${count() ? "" : " disabled"}>Review batch (${count()})</button>
         <label class="check"><input type="checkbox" data-action="edit-show-hidden"${S.showHidden ? " checked" : ""}> show hidden cards</label></div>
       <h4>Profile</h4><p class="muted">Your page, u/${esc(me.login)}/, shows your cards, edits and card commits; a profile adds the name on your cards, a motto, favourite cards and a featured hand.</p>
       <div class="actions"><button type="button" data-action="profile-edit">Edit profile</button><a class="fact" href="#/u/${encodeURIComponent(me.login)}">Your profile</a><a class="fact" href="#/users">All people</a></div>
+      <h4>Password</h4><div id="hub-pw"><p class="muted">Checking for your password…</p></div>
       ${me.admin ? `<h4>People</h4><p class="muted">How each git name is shown.</p><form id="people-form" class="people">${peopleRows()}<div class="actions"><button type="submit">Add to batch</button></div></form>
         <h4>Admins</h4><p class="muted">GitHub logins, one per line. The repo owner is always an admin.</p>
-        <form id="admins-form"><textarea id="admins-list" class="wide" rows="4">${esc((stage.admins || S.data.admins || []).join("\n"))}</textarea><div class="actions"><button type="submit">Add to batch</button></div></form>` : ""}
+        <form id="admins-form"><textarea id="admins-list" class="wide" rows="4">${esc((stage.admins || S.data.admins || []).join("\n"))}</textarea><div class="actions"><button type="submit">Add to batch</button></div></form>
+        <h4>Password files</h4><p class="muted">Admins may remove anyone's (${esc(files().logins)}/).</p><div class="actions"><button type="button" class="ghost" data-action="pw-list">Show them</button></div><div id="pw-list"></div>` : ""}
       <p class="muted"><a href="https://github.com/${esc(S.data.repo)}/commits/${esc(S.data.branch || "main")}/${esc(files().edits)}" target="_blank" rel="noopener">Edit history</a> ·
         <a href="https://github.com/${esc(S.data.repo)}/blob/${esc(S.data.branch || "main")}/${esc(files().edits)}" target="_blank" rel="noopener">${esc(files().edits)}</a></p>
       <div class="actions"><button type="button" class="ghost" data-action="edit-signout">Sign out</button></div>`;
@@ -996,9 +1130,24 @@ export function createEditor(app) {
   }
   function openHub(note = "", then = null) {         // then: what to open once signed in
     app.showDialog(hubHtml(note));
-    const form = document.getElementById("signin-form");
+    const form = document.getElementById("signin-form"), pwForm = document.getElementById("signin-pw-form");
+    const next = () => (then ? then() : openHub());
     if (form) {
-      document.getElementById("signin-token").focus();
+      const box = document.getElementById("signin-token-box"), focus = () => (box.hidden ? document.getElementById(document.getElementById("signin-login").value ? "signin-password" : "signin-login") : document.getElementById("signin-token")).focus();
+      const mode = m => {                          // Password | Token
+        pwForm.hidden = m !== "password"; box.hidden = m === "password";
+        for (const b of app.modal.querySelectorAll("[data-signin-mode]")) { const on = b.dataset.signinMode === m; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); }
+        focus();
+      };
+      app.modal.querySelector(".dialog").addEventListener("click", async e => {
+        const m = e.target.closest("[data-signin-mode]");
+        if (m) { mode(m.dataset.signinMode); return; }
+        if (e.target.closest("[data-pw-forgot]")) {    // this browser forgets; the token signs in, then a new password replaces the file
+          forgot = true; localStorage.removeItem(K.last); await device.clear().catch(() => {});
+          openHub(note, then);
+        }
+      });
+      focus();
       form.addEventListener("submit", async e => {
         e.preventDefault();
         const status = document.getElementById("signin-status");
@@ -1007,9 +1156,39 @@ export function createEditor(app) {
           await signIn(document.getElementById("signin-token").value, document.getElementById("signin-remember").checked);
           app.toast(`Signed in as ${me.login}`);
           app.rerender();                          // the view behind the hub goes into edit mode (draggable tiles, drop lists)
-          if (then) then(); else openHub();
-        } catch (err) { token = ""; status.textContent = err.message; }
+          if (forgot) { forgot = false; openPassword("new", { offer: true, next }); return; }
+          const file = await ownPassword(true).catch(() => undefined);     // none yet: offer one (unknown: don't)
+          if (file === null) openPassword("set", { offer: true, next }); else next();
+        } catch (err) { token = ""; me = null; status.textContent = err.message; }
       });
+      pwForm.addEventListener("submit", async e => {
+        e.preventDefault();
+        const status = document.getElementById("signin-pw-status"), btn = pwForm.querySelector("[type=submit]"), pass = document.getElementById("signin-password");
+        const subtle = globalThis.crypto?.subtle;
+        if (!subtle) { status.textContent = "Signing in with a password needs a secure page (https or localhost)."; return; }
+        btn.disabled = true;
+        try {
+          status.textContent = "Getting your password file…";
+          const { found, stale } = await fetchPassword(document.getElementById("signin-login").value.trim());
+          status.textContent = "Unlocking (about a second)…";
+          let t = null, file = null, login = "";
+          for (const f of found) {                 // one file, or each of those differing only in case
+            try { t = await auth.unseal(subtle, pass.value, f.login, f.file); ({ file, login } = f); break; } catch (err) { if (err.code !== "wrong") throw err; }
+          }
+          if (t === null) throw new Error(stale ? "Wrong password. GitHub couldn't be reached, so this used the site's copy of your password file, which is a few minutes behind a change: try again later, or sign in with the token." : "Wrong password");
+          status.textContent = "Checking with GitHub…";
+          try { await signIn(t, document.getElementById("signin-pw-remember").checked, { expect: login }); }
+          catch (err) { throw err.status === 401 ? new Error(`The token in ${login}'s password file no longer works (expired or deleted on GitHub): sign in with a new token, then set your password again.`) : err; }
+          localStorage.setItem(K.last, me.login); pwKnown = { login: me.login, file }; forgot = false;
+          app.toast(`Signed in as ${me.login}`);
+          app.rerender();
+          next();
+        } catch (err) { token = ""; me = null; btn.disabled = false; status.textContent = err.message; pass.select(); }
+      });
+    }
+    if (me && document.getElementById("hub-pw")) {
+      ownPassword().then(file => { const el = document.getElementById("hub-pw"); if (el && me) el.innerHTML = pwHubHtml(file); },
+        err => { const el = document.getElementById("hub-pw"); if (el) el.innerHTML = `<p class="muted">Couldn't check for your password (${esc(err.message)}).</p>`; });
     }
     document.getElementById("admins-form")?.addEventListener("submit", e => {
       e.preventDefault();
@@ -1025,6 +1204,14 @@ export function createEditor(app) {
       }
       save(); openHub(`${count()} unpublished change${count() === 1 ? "" : "s"}`);
     });
+  }
+
+  async function offerAfterBoot() {                // a plain-text token was sealed on this load: offer a password once
+    offerOnBoot = false;
+    const file = await ownPassword().catch(() => undefined);
+    if (file !== null || !me) return;
+    if (app.modal.hidden && !document.getElementById("edit-form")) openPassword("set", { offer: true });
+    else app.toast("Your sign-in is now kept encrypted. Set a password in the Sign in menu (top right)");
   }
 
   const actions = {
@@ -1081,6 +1268,11 @@ export function createEditor(app) {
       } catch (err) { el.disabled = false; status.textContent = `Not published: ${err.message}`; }
     },
     "edit-signout": () => { signOut(); app.closeModal(); app.toast("Signed out"); app.rerender(); },
+    "pw-set": () => openPassword("set", { next: () => openHub() }),
+    "pw-change": () => openPassword("change", { next: () => openHub() }),
+    "pw-remove": el => removePassword(el.dataset.login || me?.login || ""),
+    "pw-later": () => later(),
+    "pw-list": () => listPasswords(),
     "edit-show-hidden": el => { S.showHidden = el.checked; localStorage.setItem(K.hidden, el.checked ? "1" : ""); app.derive(); app.rerender(); },
   };
 
@@ -1091,7 +1283,7 @@ export function createEditor(app) {
     init() {
       S.showHidden = !!localStorage.getItem(K.hidden);
       preview();
-      if (token) signIn(token, !!localStorage.getItem(K.token)).then(() => app.derive(), () => {}).finally(() => { booting = false; app.rerender(); });
+      if (booting) restore().then(() => app.derive(), () => { token = ""; me = null; }).finally(() => { booting = false; app.rerender(); if (offerOnBoot && me) offerAfterBoot(); });
     },
     open: openForm,
     refresh: preview,

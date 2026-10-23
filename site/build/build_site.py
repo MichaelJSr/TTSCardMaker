@@ -11,6 +11,8 @@ Where the data comes from:
     in it run. A field the site reads that the bot's cards lack, or one it doesn't know, is a warning.
     The PSDs' structure (fonts, text layers, effects, stat rows, layer tree) comes from the bot's psd_details.json the
     same way, keyed by PSD blob sha; a card or rulebook page with a record gets data/details/<id>.json for its Details dropdown.
+    With CARD_DATA_DIR (the card sync's db/ on the branch data; site.yml sets it from the cutover), the same three come
+    from its stats.json, old_stats.json and psd_details.json instead (load_card_data), read into the same stand-ins.
   * Images: card PNGs in this repo, turned into three WebP sizes (240 px and 360 px for the grid at 1x/2x, 720 px
     for the card view). They are cached by git blob hash in site/.cache/img, so after the first run only new or
     changed cards are downloaded and resized; images no card uses any more are pruned. Each image's size and accent
@@ -26,7 +28,12 @@ Where the data comes from:
   * Decks: site/decks/<owner>/<slug>.json, hands published from the deck builder by signed-in editors (own decks; admins
     any) with the edit batch. A public deck is resolved against the visible cards (unknown ones dropped with a warning);
     a private one is AES-GCM ciphertext made in the browser and passes through as it is. Bad files skipped, never a failed build.
-  * Image versions and contributions: one pass over the git history (commit metadata only, no file contents) lists
+  * Passwords: site/logins/<login>.json, a signed-in editor's GitHub token encrypted in the browser with their password
+    (login.js). Shapes checked (bad files skipped with a warning, never a failed build), copied to data/logins/<login>.json
+    (lowercase name), the password sign-in's fallback when GitHub's API can't be reached (names differing only in case:
+    neither copied); data.passwords = how many.
+  * Image versions and contributions: one pass over the git history (commit metadata only, no file contents; commits
+    dated by committer time, as the bot dates versions) lists
     every commit that changed each card PNG, following folder moves (exact renames, and a move that changed the image
     when one PNG of that file name was deleted), gives each card its first upload (fs: created's fallback), and counts
     per person the commits that added or changed a card (PSD or PNG) and the publish batches (commits to Card
@@ -35,14 +42,15 @@ Where the data comes from:
   * Creation dates: site/Card Creation Dates.json (AutoCroissant's `python -m commands.discord_edits created`), each card's
     first Discord post; a card's created is the earlier of that and fs (a hand-set date wins): the Cards tab's created
     sort, the card page's "created" fact, the person pages' newest cards and activity chart. Bad entries skipped.
-  * Changelog: the card sync's events (CARD_DATA_DIR, the data branch's db/: changelog/YYYY-MM.jsonl, manifest.json;
-    unset until the cutover, then no events), the edit batches (one more `git log` over Card Edits.json and Card
+  * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json; unset until the
+    cutover, then no events), the edit batches (one more `git log` over Card Edits.json and Card
     Authors.txt, their versions read in one batch) and the archived cards (old_stats tags).
 PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
-changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown), images, icons,
+changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown),
+data/logins/<login>.json (the password sign-in's fallback copy), images, icons,
 assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
@@ -111,6 +119,7 @@ CREDIT = "_credit"                            # {field: {"_by", "_at"}}: a _bot 
 ADMINS_PATH = "site/Website Admins.txt"
 PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
 DECKS_DIR = "site/decks"                      # <owner>/<slug>.json per hand published from the deck builder
+LOGINS_DIR = "site/logins"                    # <login>.json: a token sealed with its owner's password (password sign-in)
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits (subseries: database only, never from the folder)
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
@@ -294,6 +303,83 @@ def psd_records(data):
     return {sha: rec for sha, rec in cards.items() if isinstance(rec, dict)} if isinstance(cards, dict) else {}
 
 
+def load_bot_data():
+    """(stats, old_stats, PSD records) from AutoCroissant's pickles and psd_details.json. No stats.pkl: SystemExit; the
+    history and the details are skipped with a warning."""
+    try:
+        stats = load_bot_pickle("stats.pkl")
+    except Exception as e:
+        raise SystemExit(f"error: can't load the bot's card data ({bot_raw()}stats.pkl): {e}. Not building a site without it.")
+    try:
+        old_stats = load_bot_pickle("old_stats.pkl")
+    except Exception as e:
+        warn(f"no card history: {e}")
+        old_stats = {}
+    try:
+        records = psd_records(load_bot_json(DETAILS_JSON))
+    except Exception as e:
+        log("no PSD details:", e)
+        records = {}
+    return stats, old_stats, records
+
+
+# ---- the card sync's data (db/ on the branch data, AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md §8, §10) ----------
+# site.yml checks it out and sets CARD_DATA_DIR from the cutover (step 8); unset, the build reads the pickles as before
+# (the rollback). The shadow (step 7) builds with and without it and compares cards.json.
+CARD_DATA_DIR = os.environ.get("CARD_DATA_DIR", "")
+DB_SCHEMA = 1                                 # AutoCroissant card_db.SCHEMA
+
+
+def stand_in(cls, rec):
+    """A cls stand-in with rec's keys as its fields, as unpickling gives it."""
+    if not isinstance(rec, dict):
+        raise ValueError(f"a {cls.__name__} record is {type(rec).__name__}, not an object")
+    obj = cls()
+    obj.__dict__.update(rec)
+    return obj
+
+
+def card_of(rec):
+    """A db/ record (card_db.record: CardInfo's attribute names; stats and creatures as CardStats') as the stand-in a
+    pickle gives."""
+    card = stand_in(CardInfo, rec)
+    if card.__dict__.get("stats") is not None:
+        card.stats = stand_in(CardStats, card.stats)
+    if card.__dict__.get("creatures") is not None:
+        card.creatures = [stand_in(CardStats, line) for line in card.creatures]
+    return card
+
+
+def db_cards(folder, name):
+    """{name: record or [record, ...]} of db/<name>; ValueError for anything but a schema DB_SCHEMA card file."""
+    with open(os.path.join(folder, name), encoding="utf-8") as fh:
+        data = json.load(fh)
+    if not isinstance(data, dict) or data.get("schema") != DB_SCHEMA or not isinstance(data.get("cards"), dict):
+        raise ValueError(f"{name} is not a schema {DB_SCHEMA} card file")
+    return data["cards"]
+
+
+def load_card_data(folder):
+    """load_bot_data's (stats, old_stats, PSD records) from the card sync's db/: stats.json, old_stats.json and
+    psd_details.json. No readable stats.json: SystemExit, as without stats.pkl."""
+    try:
+        stats = {name: card_of(rec) for name, rec in db_cards(folder, "stats.json").items()}
+    except Exception as e:
+        raise SystemExit(f"error: can't load the card data ({os.path.join(folder, 'stats.json')}): {e}. Not building a site without it.")
+    try:
+        old_stats = {name: [card_of(rec) for rec in recs] for name, recs in db_cards(folder, "old_stats.json").items()}
+    except Exception as e:
+        warn(f"no card history: {e}")
+        old_stats = {}
+    try:
+        with open(os.path.join(folder, DETAILS_JSON), encoding="utf-8") as fh:
+            records = psd_records(json.load(fh))
+    except Exception as e:
+        log("no PSD details:", e)
+        records = {}
+    return stats, old_stats, records
+
+
 def join_details(cards, records, tree):
     """
     The record of each card's PSD: by its blob at HEAD, else the blob the bot parsed, else the newest record for its path.
@@ -323,6 +409,36 @@ def stat(card, attr):
 def stat_of(stats, attr):
     value = getattr(stats, attr, -1)
     return value if isinstance(value, int) and value >= 0 else None
+
+
+def text_since(card, old, text):
+    """When the card's current text started: its start (analytics.when: the bot's carried version.from, else its last
+    PSD commit), or the start of the versions just before it that hold the same text (a stats or art change kept the
+    text). None without a date. The card page dates its current text by this (cards.json since), not by ts."""
+    if not isinstance(getattr(card, "timestamp", None), (int, float)):
+        return None
+    start = analytics.when(card)
+    dated = sorted((v for v in old or [] if isinstance(getattr(v, "timestamp", None), (int, float))), key=analytics.when)
+    for v in reversed(dated):
+        if getattr(v, "ability", None) != text:
+            break
+        start = min(start, analytics.when(v))
+    return start
+
+
+def date_text(entry, card, old):
+    """entry's history (the card's older texts other than entry's ability, oldest first) and since (text_since, when
+    not ts)."""
+    versions = []
+    for v in old or []:
+        text = getattr(v, "ability", None)
+        if text and text != entry["ability"] and all(x["ability"] != text for x in versions):
+            versions.append({"ts": analytics.when(v) if getattr(v, "timestamp", None) is not None else None, "ability": text})
+    if versions:
+        entry["history"] = sorted(versions, key=lambda x: x["ts"] or 0)
+    since = text_since(card, old, entry["ability"])
+    if since is not None and since != entry["ts"]:
+        entry["since"] = since                    # ts stays the last PSD commit ("updated", Recently updated)
 
 
 # ---- repo listing ----------------------------------------------------------------------------------
@@ -884,7 +1000,7 @@ def parse_admins():
 
 
 # ---- profiles (site/profiles/<login>.json) --------------------------------------------------------------
-LOGIN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9-]{0,38}$")          # a GitHub login
+LOGIN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9-]{0,38}\Z")          # a GitHub login
 PROFILE_MAX_BYTES = 16 * 1024
 # the same rules as profile.js (LIMITS, PICKS, ITEM_KINDS): one-line text caps, four card slots, label/value pairs
 PROFILE_TEXT = {"motto": 140, "author": 60}
@@ -1018,7 +1134,7 @@ DECK_NAME, DECK_DESC, DECK_CARDS = 80, 500, 40                     # same limits
 DECK_KDF = {"name": "PBKDF2", "hash": "SHA-256"}                    # a private deck's key derivation (decks.js encrypt)
 DECK_ITER_MAX = 5_000_000                                           # PBKDF2 rounds a browser may be asked for
 DECK_SALT, DECK_IV, DECK_TAG = 16, 12, 16                           # bytes
-DECK_UPDATED_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")      # edit.js's stamp; anything else is ignored (sorts last)
+DECK_UPDATED_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z\Z")      # edit.js's stamp; anything else is ignored (sorts last)
 DECK_FIELDS = {"v", "owner", "name", "description", "cards", "field", "updated"}
 PRIVATE_FIELDS = {"v", "owner", "private", "kdf", "iv", "data", "updated"}
 
@@ -1099,6 +1215,91 @@ def clean_deck(raw, folder, slug, cards):
         notes.append(f"unknown fields ignored: {', '.join(unknown)}")
     return {"owner": owner, "slug": slug, "name": name, "description": desc, "cards": ids, "dropped": len(bad), "field": field,
             "updated": updated, "n": len(ids) + (1 if field else 0)}, notes
+
+
+# ---- password sign-in (site/logins/<login>.json) ------------------------------------------------------------
+LOGIN_MAX_BYTES = 4 * 1024
+LOGIN_KDF = "PBKDF2-SHA-256"                                        # login.js KDF
+LOGIN_ITER = (1_000_000, 5_000_000)                                 # login.js MIN_ITER, MAX_ITER
+LOGIN_SALT, LOGIN_IV, LOGIN_CT = 16, 12, 1024                       # bytes; ct: the AES-GCM tag (16) plus a token
+LOGIN_FIELDS = ("v", "login", "kdf", "iterations", "salt", "iv", "ct", "at")
+
+
+def clean_login(raw, stem):
+    """One password file's JSON -> (the entry data/logins/ gets, notes); None when it can't be used (login.js checkFile)."""
+    if not isinstance(raw, dict):
+        return None, ["not a JSON object"]
+    if type(raw.get("v")) is not int or raw["v"] != 1:
+        return None, ['"v" must be 1']
+    login = raw.get("login")
+    if not isinstance(login, str) or not LOGIN_RE.match(login):
+        return None, ['"login" must be a GitHub login']
+    if login != stem:                             # the file name is the login, exactly: only its owner writes it
+        return None, [f"login {login!r} doesn't match the file name {stem!r}"]
+    if raw.get("kdf") != LOGIN_KDF:
+        return None, [f'"kdf" must be {LOGIN_KDF}']
+    if type(raw.get("iterations")) is not int or not LOGIN_ITER[0] <= raw["iterations"] <= LOGIN_ITER[1]:
+        return None, [f'"iterations" must be {LOGIN_ITER[0]} to {LOGIN_ITER[1]}']
+    if not b64_bytes(raw.get("salt"), LOGIN_SALT):
+        return None, [f'"salt" must be {LOGIN_SALT} bytes in base64']
+    if not b64_bytes(raw.get("iv"), LOGIN_IV):
+        return None, [f'"iv" must be {LOGIN_IV} bytes in base64']
+    ct = b64_bytes(raw.get("ct"))
+    if ct is None or not DECK_TAG < len(ct) <= LOGIN_CT:
+        return None, [f'"ct" must be AES-GCM ciphertext in base64 (at most {LOGIN_CT} bytes)']
+    notes, entry = [], {k: raw[k] for k in LOGIN_FIELDS if k != "at"}
+    at = raw.get("at")
+    if at is not None and not (isinstance(at, str) and DECK_UPDATED_RE.match(at)):
+        notes.append(f'"at" {str(at)[:40]!r} isn\'t a date like 2026-10-23T01:45:00Z, ignored')
+    elif at:
+        entry["at"] = at
+    unknown = sorted(str(k) for k in set(raw) - set(LOGIN_FIELDS))
+    if unknown:
+        notes.append(f"unknown fields ignored: {', '.join(unknown)}")
+    return entry, notes
+
+
+def read_logins():
+    """site/logins/*.json -> the password files the site publishes, by login. Warns, never fails: a bad file is skipped."""
+    folder = os.path.join(REPO, LOGINS_DIR)
+    out, clash = {}, set()
+    for name in sorted(os.listdir(folder)) if os.path.isdir(folder) else []:
+        rel, path = f"{LOGINS_DIR}/{name}", os.path.join(folder, name)
+        if not name.endswith(".json") or not os.path.isfile(path):
+            continue
+        try:
+            if os.path.getsize(path) > LOGIN_MAX_BYTES:
+                log(f"warning: {rel}: over {LOGIN_MAX_BYTES // 1024} KB, skipped")
+                continue
+            raw = json.load(open(path, encoding="utf-8"))
+        except (ValueError, OSError) as e:
+            log(f"warning: {rel} can't be read as JSON, skipped: {e}")
+            continue
+        entry, notes = clean_login(raw, name[:-5])
+        for note in notes:
+            log(f"warning: {rel}: {note}")
+        if entry is None:
+            continue
+        key = entry["login"].lower()
+        if key in out or key in clash:            # names differing only in case: none is copied, the sign-in asks GitHub for each
+            log(f"warning: {rel}: another file has this login in another case: neither is published (an admin should remove the wrong one)")
+            clash.add(key)
+            out.pop(key, None)
+            continue
+        out[key] = entry
+    if out:
+        log(f"passwords: {len(out)} from {LOGINS_DIR}/")
+    return [out[k] for k in sorted(out)]
+
+
+def write_logins(folder, logins):
+    """data/logins/<login in lowercase>.json per password file (the sign-in fetches the typed login, any case)."""
+    if not logins:
+        return
+    os.makedirs(folder, exist_ok=True)
+    for entry in logins:
+        with open(os.path.join(folder, f"{entry['login'].lower()}.json"), "w", encoding="utf-8") as fh:
+            json.dump(entry, fh, separators=(",", ":"), sort_keys=True)
 
 
 def read_decks(cards):
@@ -1193,7 +1394,10 @@ OLD_CARD_FOLDERS = ("Auxillary/",)            # folder spellings before a rename
 RULE_PARTS = ("Rules", "Rulebook")            # rulebook pages are not cards
 EDIT_BY = "Edit-by"                           # a bake commit's trailer, one per editor whose edit it printed (AutoCroissant card_bake)
 TRAILER_RE = re.compile(r"^[^\x00-\x1f\x7f]{1,100}$")       # an Edit-by value: a login, or a Discord name (discord:<name>)
-HISTORY_FORMAT = f"%x01%H%x09%at%x09%an%x09%ae%x09%s%n%x02%(trailers:key={EDIT_BY},valueonly,separator=%x1f)"
+# committer time (%ct), as the bot dates versions (commits API committer.date; card_history LOG_FORMAT): a rebased commit's
+# author time can be weeks earlier (Patch 1.9: authored 2026-05-28, committed 2026-06-17), and then no date matches;
+# %aN/%aE through .mailmap, as the bot's %aN
+HISTORY_FORMAT = f"%x01%H%x09%ct%x09%aN%x09%aE%x09%s%n%x02%(trailers:key={EDIT_BY},valueonly,separator=%x1f)"
 
 
 def unquote_path(path):
@@ -1204,7 +1408,7 @@ def unquote_path(path):
 
 
 def parse_history(text):
-    """`git log --raw --no-renames --no-abbrev --format=HISTORY_FORMAT` -> commits newest first: (sha, unix time, author
+    """`git log --raw --no-renames --no-abbrev --format=HISTORY_FORMAT` -> commits newest first: (sha, committer time, author
     name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by values: logins, Discord names])."""
     commits = []
     for chunk in text.split("\x01")[1:]:
@@ -1240,7 +1444,7 @@ def git_history():
 # ---- image versions ----------------------------------------------------------------------------------
 def image_versions(paths, commits):
     """{current path: [(commit, path then), ...] newest first, one per content change}, commits as
-    (sha, unix time, author, subject). Renames are followed, so folder moves keep their history: exact ones (same blob
+    (sha, committer time, author, subject). Renames are followed, so folder moves keep their history: exact ones (same blob
     deleted and added in one commit), and a move that also changed the image when that commit deleted exactly one PNG
     of the same file name (alnum, any case) and added only this one. None without history."""
     if commits is None:
@@ -1287,16 +1491,13 @@ def image_versions(paths, commits):
 
 
 # ---- changelog (data/changelog.json: the Changes page's Changelog and Database edits tabs) ---------------------------
-# The card sync's events come from the data branch's db/ (site.yml checks it out and sets CARD_DATA_DIR, AutoCroissant
-# docs/Campaigns/DATA_BUILD_ACTION.md §10, §12.1); without it the tabs show no events. The publish batches and the
-# archived cards need no data branch: git history and old_stats. For now it switches only the events: the cards still
-# come from the pickles, so load_card_data() (§10) must land before step 7's shadow comparison of cards.json built with
-# and without it (until then that comparison is always equal and tests nothing).
-CARD_DATA_DIR = os.environ.get("CARD_DATA_DIR", "")
+# The card sync's events come from CARD_DATA_DIR's changelog/ (AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md §12.1);
+# without it the tabs show no events. The publish batches and the archived cards need no data branch: git history and
+# old_stats (the pickles', or db/'s with CARD_DATA_DIR).
 CHANGELOG_DAYS = 180
 EVENT_KINDS = {"new", "changed", "art", "reparse", "moved", "renamed", "archived", "restored", "edited", "authors", "restore"}   # AutoCroissant changelog.KINDS
 EVENT_KEYS = ("seq", "at", "build", "card_commit", "commit", "by", "edit_by", "kind", "card", "title", "card_type", "stars", "path",
-              "from_path", "fields", "verdict", "buffs", "nerfs", "renamed_to", "restored_from")    # what the tabs read; blob and the rest stay in db/
+              "from_path", "fields", "verdict", "buffs", "nerfs", "renamed_to", "moved_to", "restored_from")    # what the tabs read; blob and the rest stay in db/
 PUSH_KEYS = ("after", "before", "by", "at")
 AUTHOR_PATHS = {AUTHORS_PATH, "MDW/Card Authors.txt"}   # before the 2026-10-20 move too
 DISCORD_SUBJECT = "Discord:"                  # the bot's commits of /update_metadata, /mass_replace, /alias (design §11)
@@ -1526,7 +1727,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
 
 def archived_cards(old_stats, id_of, stats=()):
     """The cards whose PSD left the card repo: old_stats names whose last version carries the bot's `archived` tag
-    {at, path, blob, commit, renamed_to?, backfill?}, newest first. A name in stats is back, whatever its tag says (the
+    {at, path, blob, commit, renamed_to?, moved_to?, backfill?} (moved_to: the PSD moved into MDW, retired), newest first. A name in stats is back, whatever its tag says (the
     bot clears it on its next save: card_models.stale_archives)."""
     out = []
     for name, versions in (old_stats or {}).items():
@@ -1538,7 +1739,7 @@ def archived_cards(old_stats, id_of, stats=()):
             continue
         row = {"card": name, "title": getattr(last, "display_name", None) or name, "card_type": getattr(last, "card_type", None),
                "stars": getattr(last, "stars", None), "at": tag.get("at"), "path": tag.get("path") or getattr(last, "path", None),
-               "commit": tag.get("commit"), "renamed_to": tag.get("renamed_to")}
+               "commit": tag.get("commit"), "renamed_to": tag.get("renamed_to"), "moved_to": tag.get("moved_to")}
         renamed = id_of(tag.get("renamed_to"))
         if renamed:
             row["renamedId"] = renamed
@@ -1588,7 +1789,7 @@ def contributions(cards, people, profiles, edits, commits):
     one row.
     github: a GitHub login known to be theirs (their profile's, else the most used of the logins in their noreply commit
     emails, _by stamps and Edit-by trailers), never a git name. recent / recentEdits: the last card commits [ts, subject,
-    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" UTC, cards created (created, else fs), edits, commits]]."""
+    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" Pacific, cards created (created, else fs), edits, commits]]."""
     by_login = {p["login"].lower(): p for p in profiles}
     rec, seen_logins, spelled = {}, {}, {}
     noreply = {}                                  # a noreply email's login -> {credited name: commits}
@@ -1616,7 +1817,7 @@ def contributions(cards, people, profiles, edits, commits):
         r["first"], r["last"] = min(r["first"] or ts, ts), max(r["last"], ts)
 
     def tally(r, ts, i):
-        m = r["months"].setdefault(datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m"), [0, 0, 0])
+        m = r["months"].setdefault(datetime.fromtimestamp(ts, analytics.ZONE).strftime("%Y-%m"), [0, 0, 0])   # Pacific, as the site's dates
         m[i] += 1
 
     def known(key, login):
@@ -1813,18 +2014,12 @@ def main():
 
     tree = repo_tree()
     log(f"repo files: {len(tree)}")
-    try:
-        stats = load_bot_pickle("stats.pkl")
-    except Exception as e:
-        raise SystemExit(f"error: can't load the bot's card data ({bot_raw()}stats.pkl): {e}. Not building a site without it.")
+    data_dir = os.path.abspath(CARD_DATA_DIR) if CARD_DATA_DIR else None
+    stats, old_stats, records = load_card_data(data_dir) if data_dir else load_bot_data()
     if not isinstance(stats, dict) or len(stats) < MIN_CARDS:
-        raise SystemExit(f"error: stats.pkl has {len(stats) if isinstance(stats, dict) else 'no'} entries "
-                         f"(expected at least {MIN_CARDS}); refusing to deploy a truncated site.")
-    try:
-        old_stats = load_bot_pickle("old_stats.pkl")
-    except Exception as e:
-        warn(f"no card history: {e}")
-        old_stats = {}
+        raise SystemExit(f"error: the card data ({'stats.json in ' + data_dir if data_dir else 'stats.pkl'}) has "
+                         f"{len(stats) if isinstance(stats, dict) else 'no'} entries (expected at least {MIN_CARDS}); "
+                         f"refusing to deploy a truncated site.")
     if aliases_moved():
         log(f"aliases: {EDITS_PATH} has {ALIASES_MOVED}, aliases.pkl not read")
         aliases = {}
@@ -1834,12 +2029,8 @@ def main():
         except Exception as e:
             warn(f"no aliases: {e}")
             aliases = {}
-    try:
-        records = psd_records(load_bot_json(DETAILS_JSON))
-    except Exception as e:
-        log("no PSD details:", e)
-        records = {}
-    log(f"bot data: {len(stats)} entries, {len(old_stats)} with history, {len(aliases)} aliases, {len(records)} PSD records")
+    log(f"{'card data (' + data_dir + ')' if data_dir else 'bot data'}: {len(stats)} entries, {len(old_stats)} with history, "
+        f"{len(aliases)} aliases, {len(records)} PSD records")
     for message in bot_field_warnings(stats, old_stats if isinstance(old_stats, dict) else {}):
         warn(message)
     edits = parse_edits()
@@ -1900,13 +2091,7 @@ def main():
         if sha and getattr(c, "blob_sha", None) and sha != c.blob_sha:
             entry["reparsePending"] = True       # PSD committed since the bot last read it (a bake, or any edit)
         apply_edits(entry, edits, sha, shown)
-        versions = []
-        for old in old_stats.get(name, []) or []:
-            text = getattr(old, "ability", None)
-            if text and text != entry["ability"] and all(v["ability"] != text for v in versions):
-                versions.append({"ts": analytics.when(old) if getattr(old, "timestamp", None) is not None else None, "ability": text})
-        if versions:
-            entry["history"] = sorted(versions, key=lambda v: v["ts"] or 0)
+        date_text(entry, c, old_stats.get(name))
         (rules if is_rule else cards).append(entry)
 
     # duplicates: more PNGs exported from one card's PSD (A_Snack.psd -> A_Snack2.png "Breakfast", A_Snack3.png
@@ -1931,6 +2116,7 @@ def main():
         dup.update(id=unique_slug(name), name=name, key=os.path.splitext(os.path.basename(path))[0].replace("_", " "),
                    png=path, problems=[], dup=original["id"])
         apply_edits(dup, edits, tree.get(original["psd"]))
+        date_text(dup, stats[original["key"]], old_stats.get(original["key"]))   # its PSD's history, against its own text
         for k in ("pending", "refused", "reparsePending"):   # same PSD: its image changes with the original's
             value = [f for f in original[k] if f != "name"] if k == "pending" and original.get(k) else original.get(k)
             if value and not dup.get(k):         # not the name: a duplicate prints its own title
@@ -2124,7 +2310,7 @@ def main():
         "cards": cards, "icons": icons, "banlist": banlist,
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
-                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR},
+                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR},
         "admins": parse_admins(),
         "decks": {"public": len(public_decks), "private": len(private_decks)},     # the Deck builder page shows the public count; the list is decks.json
         "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
@@ -2153,11 +2339,9 @@ def main():
     id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
     name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
     since = int(time.time()) - CHANGELOG_DAYS * 86400
-    events, manifest = read_changelog(os.path.abspath(CARD_DATA_DIR)) if CARD_DATA_DIR else (None, None)
-    if CARD_DATA_DIR and events is None:
+    events, manifest = read_changelog(data_dir) if data_dir else (None, None)
+    if data_dir and events is None:
         warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
-    if CARD_DATA_DIR:
-        warn("CARD_DATA_DIR is set but the card data still comes from AutoCroissant's pickles (no load_card_data yet)")
     try:
         batches = edit_batches(edit_history(), people, {p["login"].lower(): p for p in profiles}, edits, id_of, name_of, since)
     except Exception as e:                        # never a failed build
@@ -2168,6 +2352,12 @@ def main():
                  "edits": batches}
     log(f"changelog: {len(changelog['events'])} events" + ("" if events is not None else " (no CARD_DATA_DIR)") +
         f", {len(batches['batches'])} edit batches, {len(changelog['archived'])} archived cards")
+    try:                                      # password files (read before cards.json: data.passwords opens the sign-in on Password)
+        logins = read_logins()
+    except Exception as e:                    # never a failed build
+        warn(f"no password files: {type(e).__name__}: {e}")
+        logins = []
+    data["passwords"] = len(logins)
     os.makedirs(os.path.join(DIST, "data"))
     files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
@@ -2176,6 +2366,10 @@ def main():
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
             fh.write(blob)
+    try:                                      # password files: the sign-in's copy when GitHub's API can't be reached
+        write_logins(os.path.join(DIST, "data", "logins"), logins)
+    except Exception as e:                    # never a failed build
+        warn(f"no password files written: {type(e).__name__}: {e}")
     if detail_files:                          # one small file per card, fetched when its Details dropdown opens
         os.makedirs(os.path.join(DIST, "data", "details"))
         for cid, rec in detail_files.items():

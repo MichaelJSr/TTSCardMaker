@@ -73,7 +73,7 @@ jobs:
       # The fork pin: cards + feat/text-engine merged, save(update_preview=), tagged by step S0 of the design.
       # The tag exists since S0 (2026-10-21, cards a6363a04). Plan step 7 drops the pin once upstream has the changes.
       - timeout-minutes: 10     # a step's timeout fails the run (Discord is told); the job's cancels it
-        run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261022b"
+        run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023"
 
       # Schedule only: go when a PSD-kind edit has no refused verdict for its values on the current PSD
       # (card_bake.pending). A dispatch always goes.

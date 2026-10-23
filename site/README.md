@@ -24,7 +24,11 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   before a number ("Heal 2 HP"), not as a verb opening a clause ("Flip to the other creature"), and after a capitalized
   word only when that word is a verb or a card: "Summon Jetpack" links, "Evil Quote" doesn't); "mentions", "mentioned by", similar stats,
   same series, text history with changes highlighted, and an image version viewer: every commit that changed the
-  card's image, compared side by side with the current one.
+  card's image, compared side by side with the current one, with the text of that time when it differs. The current
+  text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
+  that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history.
+  Every date on the site is Pacific time, the bot's, whatever the viewer's time zone, and commits are dated when they
+  landed (committer time), as the bot dates versions.
   A creature's or minion's **Balance** line compares its total stats (HP + DEF + ATK + SPD) with the others of its star
   level ("Total 35, in the top 10% of 4★ creatures: 92 of the 93 have a lower total"), with their median and middle 80%
   for each stat, and a line of its total over time when its stats changed. **Recorded changes** lists, newest first,
@@ -61,7 +65,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   the browser (nor in its count or owner list): they show only on their owner's page and at their own link. A deck's page
   shows the hand grouped like the deck builder with the hand checks, and offers Save a copy to my decks, Share link, Copy
   as text, Discord, TTS save and Print; its owner (or an admin) can replace it with another saved hand or unpublish it. A
-  private deck asks for its passphrase (remembered on the device if you say so). A person's page lists their decks, the
+  private deck asks for its passphrase (remembered on the device if you tick **Remember on this device**, encrypted with a
+  key that can't leave the browser; **Forget** on the deck page drops it). A person's page lists their decks, the
   private ones as locked links. Format in `site/decks/README.md`; see Decks below.
 - **Stats**: counts by kind, series, subseries, type, timing tag, status effect, author and month; how many legal cards there are
   for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
@@ -78,10 +83,10 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   instead of drawing an empty chart.
 - **Changes**: a row of category tabs across the top; clicking one (or the arrow keys on a focused tab) shows that
   category alone, the chosen tab underlined, and the address keeps it (`#/changes/changelog`), so a link or a refresh
-  opens the same one. **Recently updated** (`#/changes`): recently updated cards with text diffs. **Changelog**: the card
+  opens the same one. **Recently updated** (`#/changes`): recently updated cards with text diffs (none when the update kept the text). **Changelog**: the card
   sync's events of the last 180 days, one block per push as the Discord posts (new cards, changes with their old values
   and an ability word diff, new art, moves, renames, archived and restored cards, database edits, parser re-reads), by day
-  in Pacific time, filterable by kind, then the archived cards. **Database edits**: the card sync's edited and authors
+  in Pacific time, filterable by kind, then the archived cards (deleted, renamed, or moved to MDW: retired). **Database edits**: the card sync's edited and authors
   events, and every commit that changed a Card Edits.json entry or a Card Authors.txt line (website, Discord or a commit
   by hand) with each field's old and new value. The events need the card sync's data (`CARD_DATA_DIR`); until then those
   parts say so. **Website edits**: the cards an edit on the website or in Discord changes now, with the fields, who and
@@ -95,8 +100,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   their contributions by month, and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
   (by its creation date) and a grid of their 24 newest cards; the chart counts cards by creation month.
 
-Top right: **Sign in** (a GitHub token, see Editing) becomes your login once signed in; it opens the editor hub (your
-batch, your profile, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
+Top right: **Sign in** (a GitHub token, or your login and password once you set one; see Editing) becomes your login
+once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
 `d` add to deck, `c` copy link, `s` share, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections, `?` help. The single-key
 shortcuts are off while an edit form is open (a card's edit dialog or the profile editor) and while an inline control or a
 stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog.
@@ -105,7 +110,11 @@ stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a di
 
 The build does not parse PSDs. Card text, stats, authors, aliases and history come from AutoCroissant's
 `stats.pkl` / `aliases.pkl` / `old_stats.pkl` (the same data the Discord bot answers from), so the site is as fresh as
-the bot's last `/update_stats` + `/push`. Once `site/Card Edits.json` has `aliases_moved` (aliases.pkl moved into it
+the bot's last `/update_stats` + `/push`. With `CARD_DATA_DIR` set to a checkout of the card sync's `db/` (branch
+`data`), the cards, history and PSD details come from its `stats.json`, `old_stats.json` and `psd_details.json`
+instead, read into the same stand-ins (`load_card_data`). site.yml sets it from the cutover (its `CARD_DATA`
+switch, and only when the branch exists); until then the shadow compares `cards.json` built both ways by hand, and
+unsetting it is the rollback. Once `site/Card Edits.json` has `aliases_moved` (aliases.pkl moved into it
 on 2026-10-22), `aliases.pkl` isn't read: the cards' aliases are their Card Edits entries', and no `_by:
 AutoCroissant` entry (the migration's aliases and series, the moved stat exclusions) counts as a website edit. Where the
 migration added a field to an editor's entry, the entry keeps the editor's `_by` and lists that field in `_bot`
@@ -124,7 +133,7 @@ the pickles with an allowlist of what they hold (the bot's `CardInfo` and `CardS
 `set` and `datetime`). Another bot class (`commands.*`, moved or new) is read as plain data with a warning. A pickle
 naming anything else is refused and nothing in it runs: a refused `stats.pkl` stops the build, and the site stays as it
 was until `PICKLE_GLOBALS` in `build_site.py` allows it; the history and aliases are skipped with a warning. A field the site reads that the bot's cards lack (a rename in `commands/card_models.py`), or a
-field it doesn't know, is a warning in the log and on the Actions run. Images, icons, the ban list, icon names, profiles and published decks come from this
+field it doesn't know, is a warning in the log and on the Actions run. Images, icons, the ban list, icon names, profiles, published decks and password files come from this
 repo. Cards that are in the repo but not yet in the bot's data still appear (image only).
 
 The Details dropdown reads the bot's `psd_details.json` (AutoCroissant, beside the pickles: one record per card PSD
@@ -182,7 +191,7 @@ stays as it was, so the cards to drag are still shown. Until a card carries it, 
 when the tab closes or you sign out) and nothing is published for it. Names are trimmed, their spaces collapsed and at
 most 60 characters; one that differs from a known name only in case or spacing takes the known spelling (the one most
 cards use), on the chips and in All fields too ("mario" is the series Mario), and an author's git or GitHub name from
-`[people]` becomes the name shown ("Michael" is MichaelJSr), as the bot resolves it. A drop sets the value exactly as
+`[people]` becomes the name shown, as the bot resolves it. A drop sets the value exactly as
 its chip shows it. A new author's cards go to `[cards]` under a new `# --- credited to Name (n) ---` group, with no
 `[people]` line (that maps a login; an admin can add one later). Every change lands in the batch bar at the bottom as a
 sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each with ↺ to take it back; the bar folds to one
@@ -201,6 +210,44 @@ bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.t
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
 `Card Edits.json` to go back to the PSD.
 
+### Signing in and passwords
+
+The first time, sign in with a GitHub token (classic, `public_repo` only). Right after, the site offers **Set a
+password**: typed twice, it is published at once as its own commit (`Website: <login>'s password`, not left in the
+batch, so it works straight away) as `site/logins/<login>.json` (format in `site/logins/README.md`): the token encrypted
+in the browser with the password (PBKDF2-SHA-256, 2,000,000 iterations, AES-GCM-256); the password is never sent or
+stored. From then on, on any device, **Sign in** → **Password** takes the GitHub login (any case) and the password: the
+page reads the file from GitHub's API (current right after a change; 60 requests an hour per address without a token),
+else the site's copy `data/logins/<login>.json` (as new as the last build), decrypts it, and checks the token with
+GitHub as a token sign-in does (the login must be the file's; an expired or deleted token says so). A password needs 12
+characters or more (4 or more random words are easy to remember) and is refused, with the reason shown as you type, when
+it is a well-known one (also with digits or symbols around it), one word with digits or symbols around it (Liverpool1892)
+under 16 characters, a repeated pattern, a keyboard or alphabet run, has too few
+different characters, is mostly the login, or is a token. The file is public, so anyone can try to guess the password
+offline: a long one used nowhere else is what keeps it safe, and the sign-in page and the dialog say so.
+
+Signed in either way, this browser keeps the token until **Sign out**, never in plain text: a non-extractable AES-GCM key
+in IndexedDB (`ttscardmaker-signin`) encrypts it into localStorage (`edit-token-sealed`), or into sessionStorage (this
+tab only) when "keep me signed in" is unticked; each load decrypts it silently, and Sign out deletes both. A token
+remembered in plain text before 2026-10-23 is sealed on the next load, and a password offered once. The hub's
+**Password** section: **Set a password**, or **Change password** (a new password for the same token, replacing the file;
+also the fix after making a new token) and **Remove my password** (deletes the file). **Forgot password?** on the
+sign-in form clears this browser's sign-in, asks for the token, then sets a new password that replaces the file. A
+removed or replaced file stays in the git history, so whoever knew an old password can still read the token it held:
+Change and Remove say so and point to regenerating the token on GitHub. You write only your own file; admins can list
+everyone's (hub → **Password files**) and remove one. That rule is the website's: anyone who can push could still
+change or delete a file through git, but the password and the `/user` check mean that only stops its owner signing in
+with a password; it never gives anyone the token. Signed out, the sign-in opens on **Password** when the site has any
+password files (or this browser last signed in with one). Safari may clear a site's storage after 7 days without a visit,
+which signs that browser out.
+
+Private-deck passphrases remembered with **Remember on this device** are kept the same way, under a second
+non-extractable key in the same IndexedDB (`decks`), in localStorage (`deckPassSealed:<owner>/<slug>`). They are not
+part of the sign-in (anyone with the passphrase opens a private deck, signed in or not), so **Sign out keeps them**; each
+deck's **Forget** removes its own (the last one also deletes the `decks` key). One remembered in plain text before
+2026-10-23 is sealed on the next visit, or dropped in a browser that can't seal it (no IndexedDB, or IndexedDB failing):
+nothing stays in plain text, and Remember there says so and stores nothing.
+
 ## People
 
 The People tab lists everyone with a contribution or a profile. Per person: **cards** credited to them (as the Author
@@ -215,7 +262,7 @@ commits), and the top of the three added together is the **Top contributor**. A 
 email, each looked up in the profiles' `author` fields and then in `[people]` (`Card Authors.txt`); otherwise by the git
 name as written. A website login (`_by` or `Edit-by`) maps the same way, else to the person whose noreply commits carry
 it, else to itself (any case). So a person committing under two names shows twice until an admin adds one `[people]`
-line (`Michael = MichaelJSr`) or, when the other name is their GitHub login, their profile names their author; their
+line (`git name = shown name`; one person committing under two git names is merged in `.mailmap` instead) or, when the other name is their GitHub login, their profile names their author; their
 GitHub login's page (`#/u/<login>`, where their decks link) opens their person page. The GitHub picture and link come only from a GitHub login known to be the person's: their profile's
 login, else the login in their noreply commit emails, their website `_by` stamps or `Edit-by` trailers (a git name is
 not a login: someone known only by name gets neither). The chart has one row per kind (cards by their image's first
@@ -277,7 +324,7 @@ Decryption needs `crypto.subtle` (https or localhost).
 `.github/workflows/font-check.yml` runs on every push to `main` that changes a PSD or `MDW/Fonts/`: the bot's checker
 (AutoCroissant `commands/font_check.py`) reads the pushed card PSDs by blob and lists the fonts their visible text layers
 ask for that `MDW/Fonts` does not supply. When something is missing it writes the job summary, posts (if the repository
-secret `DISCORD_FONT_WEBHOOK` is set) to that Discord webhook pinging the card makers' role (`546427268751294475`), one line
+secret `DISCORD_STANDARDS_WEBHOOK` is set) to the standards channel pinging the card makers' role (`546427268751294475`; the only ping of the checks), one line
 per author and font ("... has pushed a card without adding the ... font to MDW/Fonts, bite this user."), and comments on
 the commit. It never reverts or rejects a push: the fix is to add the font file to the top level of `MDW/Fonts/`.
 Run it by hand from the Actions tab (`all` = every card, about 813 downloads).
@@ -288,8 +335,8 @@ Run it by hand from the Actions tab (`all` = every card, about 813 downloads).
 bot's checker (AutoCroissant `commands/card_check.py`) reads the pushed card PSDs by blob and reports the notes
 `/update_stats` would print for each (NO STARS FOUND, MISSPELT TYPE, SEVERAL CREATURES, HP/DEF/ATK/SPD NOT FOUND, STATS TOO
 HIGH, ABILITY TEXT NOT FOUND, UNKNOWN TYPE), after the card's `site/Card Edits.json` entry (`problems_ok`, `allow_high_stats`,
-`creatures`) and the bot's exclusions. Report only: the job summary, a comment on the commit and, with the same
-`DISCORD_FONT_WEBHOOK` secret, one Discord line per card ("... has pushed ... with: ..."); it never reverts or rejects
+`creatures`) and the bot's exclusions. Report only: the job summary, a comment on the commit and, with the
+`DISCORD_STANDARDS_WEBHOOK` secret (the standards channel, no ping), one Discord line per card ("... has pushed ... with: ..."); it never reverts or rejects
 a push, and an unreadable PSD is one error line. Run it by hand from the Actions tab (`all` = every card, 25-30 minutes).
 
 ## Working on it
@@ -302,6 +349,6 @@ python -m http.server -d site/dist 8000  # then open http://localhost:8000
 
 Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, drag-to-assign and
-the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
+the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `login.js` the password sign-in and this browser's sealed token, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
 published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
 Generated files (`site/dist`, `site/.cache`, `site/.og-cache`) are git-ignored.

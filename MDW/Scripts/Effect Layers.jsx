@@ -343,17 +343,53 @@ function selectKeyed(doc, key) {
   if (picked > limit + 16) { doc.selection.deselect(); throw new Error("the word mask came out wrong (" + picked + " pixels for " + limit + "); nothing was changed"); }
   return picked;
 }
+/* [from, to) of the runs in the icon font (badges, tokens), in cleanText() positions */
+var ICON_FONT_PS = "stoogedings-Regular";
+function iconRuns(tk) {
+  tk = withoutBom(tk);
+  var styles = tk.getList(sID("textStyleRange")), n = tk.getString(sID("textKey")).length, out = [];
+  for (var i = 0; i < styles.count; i++) {
+    var r = styles.getObjectValue(i), st = r.getObjectValue(sID("textStyle"));
+    if (st.hasKey(sID("fontPostScriptName")) && st.getString(sID("fontPostScriptName")) == ICON_FONT_PS)
+      out.push([r.getInteger(sID("from")), Math.min(r.getInteger(sID("to")), n)]);
+  }
+  return out;
+}
+/* alpha channel of the icon font's color glyphs in `base` (badges, color tokens), or null. They are SVG glyphs
+   in their own colors (Photoshop paints currentColor black), so a key's black paint leaves them showing */
+function iconGlyphChannel(doc, base, everyLine) {
+  if (!iconRuns(textKey(doc, base)).length) return null;
+  var gk = base.duplicate(base, ElementPlacement.PLACEBEFORE);
+  setTextKey(doc, gk, restyle(textKey(doc, gk), [], paint(0, 0, 0), everyLine));   // all text black
+  gk.rasterize(RasterizeType.TEXTCONTENTS); clearStyle(doc, gk); gk.visible = true;
+  var ch = null;
+  if (selectKeyed(doc, gk)) { ch = doc.channels.add(); doc.selection.store(ch); }   // merges gk away
+  doc.activeChannels = doc.componentChannels;             // a new channel would otherwise stay the active one
+  doc.selection.deselect();
+  return ch;
+}
+function rangesMeet(a, b) {
+  for (var i = 0; i < a.length; i++) for (var j = 0; j < b.length; j++) if (a[i][0] < b[j][1] && b[j][0] < a[i][1]) return true;
+  return false;
+}
 function buildFx(doc, base, phrases) {
   var ranges = phraseRanges(cleanText(doc, base), phrases);
   if (!ranges.length) throw new Error("\"" + phrases.join(SEP) + "\" isn't in the text of \"" + base.name + "\"");
   var everyLine = layoutMode(doc, base);
   if (everyLine === null) throw new Error("\"" + base.name + "\": " + LAYOUT_MSG);
+  // a badge layer ("Ability FX: (OYT) | [dark]", the gradient cards) takes the icon font's glyphs on purpose: no cut then
+  var glyphs = rangesMeet(ranges, iconRuns(textKey(doc, base))) ? null : iconGlyphChannel(doc, base, everyLine);
   // Key copy: the phrases white, the rest black. Only color changes, so the layout is exactly the text's (squashing
   // the other words instead moved centered lines by a pixel or two through optical kerning).
   var key = base.duplicate(base, ElementPlacement.PLACEBEFORE);
   setTextKey(doc, key, restyle(textKey(doc, key), ranges, paint(0, 0, 0), everyLine, paint(255, 255, 255)));
   key.rasterize(RasterizeType.TEXTCONTENTS); clearStyle(doc, key); key.visible = true;
   var picked = selectKeyed(doc, key);                       // merges the key away
+  if (glyphs) {                                             // badges and color tokens stay out of the FX layer
+    if (picked) { doc.selection.load(glyphs, SelectionType.DIMINISH); picked = hasSelection(doc) ? hardenSelection(doc, 1) : 0; }
+    glyphs.remove();
+    doc.activeChannels = doc.componentChannels;
+  }
   if (!picked) throw new Error("\"" + phrases.join(SEP) + "\" has no visible pixels in \"" + base.name + "\"");
   // the pixels themselves come from an untouched copy of the text, so they are the card's own
   var source = base.duplicate(base, ElementPlacement.PLACEBEFORE);

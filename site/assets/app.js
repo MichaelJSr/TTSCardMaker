@@ -10,6 +10,8 @@ import * as decks from "./decks.js";
 import * as pick from "./pick.js";
 import * as balance from "./balance.js";
 import * as changes from "./changes.js";
+import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
+import { deckPasses } from "./login.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -50,8 +52,6 @@ const imgAttrs = (c, css, big = false) => `src="${img(c, 360)}" srcset="${img(c,
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const ghUrl = p => `https://github.com/${S.data.repo}/blob/main/${urlPath(p)}`;
 const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
-const date = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "");
-const month = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short" }) : "");
 const day = d => (d ? new Date(`${d}T12:00:00Z`).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }) : "");
 const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand" };
 /** "about 13 Oct 2023" for a date a Discord post awaiting review may still move */
@@ -451,7 +451,7 @@ function openCard(id, showDetails = false) {
           ${c.subseries ? `<a class="fact" href="#/cards?${c.series ? `series=${encodeURIComponent(c.series)}&` : ""}subseries=${encodeURIComponent(c.subseries)}" data-tip="Subseries">${esc(c.subseries)}</a>` : ""}
           ${c.author ? `<a class="fact" href="#/cards?author=${encodeURIComponent(c.author)}">by ${esc(c.author)}</a>` : ""}
           ${c.created ? `<span class="fact" data-tip="${esc(createdTip(c))}">created ${createdText(c)}</span>` : ""}
-          ${c.ts ? `<span class="fact" data-tip="Last PSD commit">updated ${date(c.ts)}</span>` : ""}
+          ${c.ts ? `<span class="fact" data-tip="Last PSD commit (Pacific time)">updated ${date(c.ts)}</span>` : ""}
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
@@ -519,7 +519,7 @@ function versionsHtml(c) {
   if (vs.length < 2) return "";
   const oldest = vs[vs.length - 1], fromInit = /^(git )?init$/i.test(oldest.subject.trim());
   return `<h3>Image versions <span class="muted">${vs.length}</span></h3>
-    <p class="muted">Each commit that changed the image${fromInit ? `, since ${date(oldest.ts)} (first upload)` : ""}.</p>
+    <p class="muted">Each commit that changed the image${fromInit ? `, since ${date(oldest.ts)} (first upload)` : ""}. Dates are Pacific time.</p>
     <div class="versions">
       <div class="ver-list" role="group" aria-label="Image versions, newest first">${vs.map((v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
         <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`).join("")}</div>
@@ -530,15 +530,15 @@ function showVersion(c, i) {
   const vs = versionList(c), v = vs[i], box = $("#ver-compare");
   if (!v || !box) return;
   $$(".ver-item", modal).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
-  // text at that time, when the bot's text history lines up with the commit (keep it simple: latest text at or before it)
-  const texts = (c.history || []).concat(c.ability ? [{ ts: c.ts, ability: c.ability }] : []).filter(t => t.ts && t.ts <= v.ts + 3600);
-  const then = texts.length ? texts[texts.length - 1] : null;
+  // text at that time, when the bot's text history lines up with the commit (the latest text at or before it; the
+  // current one from when it started, not from the last PSD commit)
+  const then = textAt(c, v.ts);
   const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}<br><span class="muted">${esc(v.subject || "")}</span>`;
   box.innerHTML = i === 0
     ? `<figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
     : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img class="ver-old" src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}</figcaption></figure>
       <figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}</span></figcaption></figure></div>
-      ${then && then.ability && then.ability !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then.ability, c.ability)}</div></div>` : ""}`;
+      ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
   const old = $(".ver-old", box);
   if (old) old.addEventListener("error", () => { if (!old.dataset.cdn) { old.dataset.cdn = "1"; old.src = versionUrl(v, true); } }, { once: false });
 }
@@ -551,14 +551,6 @@ function balanceHtml(c, part = "balance") {          // part: "balance" (the lin
   const o = balanceOf(c);
   const texts = o.hv && !o.history ? null : (o.history || []).map(v => v.ability).concat(o.ability || "");
   return (part === "balance" ? balance.balanceBlock : balance.changesBlock)(c, S.analytics, { byId: S.byId, texts });
-}
-function historyHtml(c) {
-  if (!c.hv) return "";
-  if (!c.history) return `<h3>History</h3><p class="muted">Loading ${c.hv} earlier version${c.hv > 1 ? "s" : ""}…</p>`;
-  const versions = c.history.concat(c.ability ? [{ ts: c.ts, ability: c.ability, current: true }] : []);
-  if (versions.length < 2) return "";
-  return `<h3>History</h3><div class="history">${versions.slice().reverse().map((v, k, arr) => `<div class="ver"><div class="muted">${v.current ? "Current" : "Earlier"}${v.ts ? ` · ${date(v.ts)}` : ""}</div>
-    <div>${k < arr.length - 1 ? diffWords(arr[k + 1].ability, v.ability) : esc(v.ability).replace(/\n/g, "<br>")}</div></div>`).join("")}</div>`;
 }
 function closeModal() {
   if (modal.hidden) return;
@@ -735,24 +727,24 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
     whenLoaded(loadHistory(), "card history", again);
     return;
   }
-  const updated = `<p class="muted">Updated ${new Date(S.data.generated).toLocaleString()} from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
+  const updated = `<p class="muted">Updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific) from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
   if (tab === "changelog") { page(changes.changelogHtml(S.changelog, r.params)); return; }
   if (tab === "edits") { page(changes.editsHtml(S.changelog, r.params)); return; }
   if (tab === "website") { page(webEditsHtml() + updated); return; }
   if (tab === "parser") { page(parserNotesHtml() + updated); return; }
-  const item = c => {
-    const last = c.history && c.history.length ? c.history[c.history.length - 1] : null;
+  const item = (c, diff = true) => {          // diff: the text change since the last earlier text
+    const last = diff && c.history && c.history.length ? c.history[c.history.length - 1] : null;
     return `<div class="item">${c.img ? `<img loading="lazy" decoding="async" src="${img(c, 240)}" alt="" data-open="${c.id}">` : "<div></div>"}<div>
       <a href="#/card/${c.id}"><b>${esc(c.name)}</b></a> <span class="muted">${esc(KIND_LABEL[c.type] || c.type)}${c.stars ? ` · ${c.stars}★` : ""}${c.ts ? ` · ${date(c.ts)}` : ""}${c.author ? ` · ${esc(c.author)}` : ""}</span>
       ${last && c.ability ? `<div class="ability" style="margin-top:4px;font-size:14px">${diffWords(last.ability, c.ability)}</div>` : ""}</div></div>`;
   };
   if (tab === "revised") {
-    const revised = S.cards.filter(c => c.hv).sort((a, b) => b.hv - a.hv);
-    page(`<section class="panel"><h3>Most revised</h3><p class="muted">The cards with the most earlier versions; text changes since the last one highlighted.</p><div class="feed">${revised.slice(0, 20).map(item).join("") || `<p class="muted">No history yet.</p>`}</div></section>${updated}`);
+    const revised = S.cards.filter(c => c.hv && !c.dup).sort((a, b) => b.hv - a.hv);     // a duplicate has its original's
+    page(`<section class="panel"><h3>Most revised</h3><p class="muted">The cards with the most earlier versions; text changes since the last one highlighted.</p><div class="feed">${revised.slice(0, 20).map(c => item(c)).join("") || `<p class="muted">No history yet.</p>`}</div></section>${updated}`);
     return;
   }
   const recent = S.cards.filter(c => c.ts).sort((a, b) => b.ts - a.ts).slice(0, 60);
-  page(`<section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>${updated}`);
+  page(`<section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted (none when the update kept the text).</p><div class="feed">${recent.map(c => item(c, textChanged(c))).join("")}</div></section>${updated}`);
 }
 /** The Website edits tab: one row per card and editor whose Card Edits.json edit counts now (changes.webEdits: never the bot's, at most WEB_EDITS_SHOWN) */
 function webEditsHtml() {
@@ -787,7 +779,7 @@ function renderCompare(r) {
 const publishedCount = () => { const n = S.data.decks; return n && typeof n === "object" ? ` (${+n.public || 0})` : ""; };   // cards.json "decks": the public count without a fetch (the browser lists no private deck)
 const deckCtx = () => ({ byId: S.byId, img, validate: d => D.validate(d, S.byId, S.banned) });
 const deckPageUrl = (owner, slug) => `${ROOT}decks/${encodeURIComponent(owner)}/${encodeURIComponent(slug)}/`;
-const passKey = (owner, slug) => `deckPass:${decks.keyOf(owner, slug)}`;   // localStorage: the remembered passphrase
+const passes = deckPasses();                              // remembered passphrases, sealed with a key that can't leave IndexedDB
 const opened = new Map();                                 // "<owner>/<slug>:<ciphertext head>" -> the decrypted payload, for the session
 /** Every deck the pages show: the published ones, less those removed in the batch, plus the staged and just-published files. */
 function deckList() {
@@ -849,8 +841,8 @@ function renderDeckPage(r) {
     show(d); return;
   }
   S.deckTitle = "Private deck";
-  const cacheKey = `${decks.keyOf(d.owner, d.slug)}:${String(d.data).slice(0, 24)}`, stored = localStorage.getItem(passKey(d.owner, d.slug));
-  if (opened.has(cacheKey)) { const pl = opened.get(cacheKey); show({ ...d, ...pl, n: decks.countOf(pl), remembered: !!stored }); return; }
+  const deckKey = decks.keyOf(d.owner, d.slug), cacheKey = `${deckKey}:${String(d.data).slice(0, 24)}`, stored = passes.has(deckKey);
+  if (opened.has(cacheKey)) { const pl = opened.get(cacheKey); show({ ...d, ...pl, n: decks.countOf(pl), remembered: stored }); return; }
   const subtle = globalThis.crypto?.subtle, passCtx = { canEdit: ctx.canEdit, hands: ctx.hands };   // the Owner panel sits under the form too: no passphrase needed to unpublish or replace
   if (!subtle) { view.innerHTML = decks.passFormHtml(d, { ...passCtx, noCrypto: true }); return; }
   const form = () => {
@@ -860,18 +852,23 @@ function renderDeckPage(r) {
     $("#deck-pass-in").focus();
   };
   const tryOpen = async (pass, remember, auto) => {
-    try { opened.set(cacheKey, await decks.decrypt(subtle, pass, d.owner, d.slug, d)); if (remember) localStorage.setItem(passKey(d.owner, d.slug), pass); }
+    try { opened.set(cacheKey, await decks.decrypt(subtle, pass, d.owner, d.slug, d)); }
     catch (err) {
-      if (auto) localStorage.removeItem(passKey(d.owner, d.slug));
+      if (auto) passes.forget(deckKey);
       if (!here()) return;
       if (auto) form();                                                                 // the auto-open showed no form yet
       else { $("#deck-pass button").disabled = false; $("#deck-pass-in").select(); }   // keep what was typed and the Remember tick
       $("#deck-pass-err").textContent = auto ? "The remembered passphrase no longer opens this deck" : err.message;
       return;
     }
+    if (remember) await passes.save(deckKey, pass).catch(() => toast("This browser can't remember it safely: not remembered"));
     if (here()) rerender();
   };
-  if (stored) { view.innerHTML = `<div class="loading">Opening the deck…</div>`; tryOpen(stored, false, true); return; }
+  if (stored) {
+    view.innerHTML = `<div class="loading">Opening the deck…</div>`;
+    passes.load(deckKey).then(pass => (pass == null ? here() && form() : tryOpen(pass, false, true)));   // unreadable here: forgotten, the form
+    return;
+  }
   form();
 }
 // the deck page's Share, Discord, text, TTS and print act on the deck shown (S.deckView); the deck builder's on the hand
@@ -1028,7 +1025,7 @@ const actions = {
   "deck-page-text": () => { if (S.deckView) copy(D.toText(S.deckView, S.byId), "deck list"); },
   "deck-page-tts": () => { if (S.deckView) ttsDownload(S.deckView); },
   "deck-page-print": () => { if (S.deckView) printDeck(S.deckView); },
-  "deck-forget": () => { const d = S.deckView; if (!d) return; localStorage.removeItem(passKey(d.owner, d.slug)); toast("Passphrase forgotten"); rerender(); },
+  "deck-forget": () => { const d = S.deckView; if (!d) return; passes.forget(decks.keyOf(d.owner, d.slug)); toast("Passphrase forgotten"); rerender(); },
   "deck-import": () => { const { deck: d, unknown } = D.fromText($("#deck-import").value, S.cards); D.newDeck(S.decks, d.name, d.cards, d.field); updateDeckCount(); renderDeck(parseHash()); toast(unknown.length ? `Imported; not found: ${unknown.join(", ")}` : "Imported"); },
   "deck-select": el => { D.setActive(S.decks.find(x => x.id === el.dataset.id)); updateDeckCount(); location.hash = "#/deck"; renderDeck(parseHash()); },
   "deck-new": () => { D.newDeck(S.decks, `Hand ${S.decks.length + 1}`); updateDeckCount(); renderDeck(parseHash()); },
@@ -1155,3 +1152,4 @@ document.addEventListener("pointermove", e => {
 document.addEventListener("pointerout", e => { if (e.target.closest("[data-tip], [data-v], a.card-ref, .chart [data-card]")) hideTip(); });
 
 init();
+passes.migrate().catch(() => {});                       // passphrases remembered in plain text before 2026-10-23: sealed now
