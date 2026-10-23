@@ -761,7 +761,9 @@ def created_ts(e):
 
 def apply_created(cards, created):
     """created (UTC day) per card: the earliest evidence, its first Discord post (the file) or its first upload (fs); a hand
-    entry wins. createdFrom says which; createdAbout marks a date an open ruling may still move. Logs, never fails."""
+    entry wins. createdFrom says which; createdAbout marks a date an open ruling may still move. Logs, never fails. The
+    bot keeps the same rule (AutoCroissant card_edits.CardDates.created) with its own first upload: the earliest version
+    its database holds."""
     used, later, today = set(), 0, datetime.now(timezone.utc).date().isoformat()
     for e in cards:
         found = created.get(card_key(e["key"]))
@@ -781,6 +783,10 @@ def apply_created(cards, created):
         f"{by['hand']} by hand; {sum(1 for e in dated if e.get('createdAbout'))} provisional)")
     if later:
         log(f"created: {later} dates in {CREATED_PATH} are after the card's first upload; the upload's used")
+    missing = sorted(e["key"] for e in dated if card_key(e["key"]) not in created)
+    if created and missing:
+        log(f"created: {len(missing)} cards not in {CREATED_PATH}, dated by their first upload until it has them "
+            f"(AutoCroissant's `python -m commands.discord_edits created`): {', '.join(missing[:10])}")
     if len(created) > len(used):
         log(f"created: {len(created) - len(used)} names in {CREATED_PATH} match no card: "
             f"{', '.join(sorted(k for k in created if k not in used)[:10])}")

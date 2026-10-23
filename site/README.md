@@ -12,7 +12,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   (`site/Card Creation Dates.json`, below) and the first upload of its image (from the git history); the card page
   shows it as "created <date>" ("created about <date>" while a Discord post awaiting review may still move it).
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`,
-  `created>=2025`, `created==2023-10`: dates at the precision given),
+  `created>=2025`, `created==2023-10`: dates at the precision given; spaces around the operator are fine in both),
   and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
   record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
   dropdown open this once; Ctrl-click opens it in a new tab).
@@ -133,8 +133,12 @@ bot's data; `[people]` maps git names to the names shown. The hand-kept files `C
 on 2026-10-20); the build and the bot read them, the published site does not include them. `Card Creation Dates.json`
 holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand", "provisional": true}`
 (dates only, from the Discord archive kept off the repo), written by AutoCroissant's `python -m commands.discord_edits
-created` (re-run after rulings; it keeps `"from": "hand"` entries, the way to set a date by hand). It is no edit: the
-Changes page and the edit counts never see it. Bad entries are skipped with a warning, never a failed build. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
+created` (re-run after rulings and archive updates; it keeps `"from": "hand"` entries, the way to set a date by hand).
+A card it misses (one made since) is dated by its first upload, with a build log line naming it. The bot reads the file by
+the same rule (AutoCroissant `CardDates.created`), its first upload being the earliest version its database holds: the
+same day for the cards first uploaded since 2026-02, so `/query_ability created>=…` and the search agree (770 of 770
+cards on 2026-10-23, also with the 11 newest left out of the file). It is no edit: the Changes page and the edit
+counts never see it. Bad entries are skipped with a warning, never a failed build. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
 following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
 the build needs full history for them (CI fetches it; a shallow local clone gets no image versions and counts edit
 batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one batch per card;
