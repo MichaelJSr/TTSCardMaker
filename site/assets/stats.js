@@ -3,6 +3,7 @@
 import { esc, tagInfo, badgeHtml, TAG } from "./text.js";
 import { total } from "./search.js";
 import { HAND } from "./deck.js";
+import { date, monthKey } from "./history.js";
 
 // the game's names (rulebook "04 Table")
 const KIND_LABEL = { creature: "Creatures", item: "Items", field: "Field cards", minion: "Minions", nme: "N.M.E. items", "aux item": "Auxiliary items",
@@ -174,7 +175,7 @@ export function renderStats(root, ctx, params) {
     ["Cards", pool.length], ["Creatures", pool.filter(c => c.type === "creature").length], ["Items", pool.filter(c => c.type === "item").length],
     ["Series", new Set(pool.map(c => c.series).filter(Boolean)).size], ...(subCount ? [["Subseries", subCount]] : []), ["Authors", new Set(pool.map(c => c.author).filter(Boolean)).size],
     ["Banned (constructed)", pool.filter(c => banned.has(c.id)).length],
-    ["Last card update", latest ? new Date(latest * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "—"],
+    ["Last card update", latest ? date(latest) : "—"],
   ];
   const charts = [];
 
@@ -317,14 +318,14 @@ export function renderStats(root, ctx, params) {
 
   // 13 timeline
   const months = new Map();
-  for (const c of pool) if (c.ts) { const d = new Date(c.ts * 1000); const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; months.set(k, (months.get(k) || 0) + 1); }
+  for (const c of pool) if (c.ts) { const k = monthKey(c.ts); months.set(k, (months.get(k) || 0) + 1); }     // Pacific
   const keysSorted = [...months.keys()].sort();
   if (keysSorted.length) {
     const [y0, m0] = keysSorted[0].split("-").map(Number), [y1, m1] = keysSorted[keysSorted.length - 1].split("-").map(Number);
     const cols = [];
     for (let y = y0, m = m0; y < y1 || (y === y1 && m <= m1); m === 12 ? (y++, (m = 1)) : m++) {
       const k = `${y}-${String(m).padStart(2, "0")}`;
-      cols.push({ label: new Date(y, m - 1).toLocaleDateString(undefined, { month: "short", year: "2-digit" }), value: months.get(k) || 0 });
+      cols.push({ label: new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString(undefined, { month: "short", year: "2-digit", timeZone: "UTC" }), value: months.get(k) || 0 });
     }
     charts.push(card("timeline", "Last change by month", "", columns(cols, { every: Math.ceil(cols.length / 12) }),
       table(["Month", "Cards"], cols.map(c => [c.label, c.value])), { wide: true }));
