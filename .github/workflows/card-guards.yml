@@ -4,7 +4,9 @@
 #      (Photoshop's composite) is never written, only a cross-check that can refuse. When a gate refuses, no PNG and a
 #      report instead ("PNG not made: ...; export it in Photoshop");
 #   2. the pushed PSDs are checked against the card standards (CARD_STANDARDIZATION_CAMPAIGN.md), fonts (R7) included;
-#      only the owner's easy fix (Txt2 stories kept in sync, 0 pixels) is made, the rest is reported.
+#      only the owner's easy fix (Txt2 stories kept in sync, 0 pixels) is made, the rest is reported;
+#   3. every card PNG the push brought is recompressed losslessly (oxipng: the same pixels and chunks) when that saves
+#      more than 10%, and so is every PNG the bot writes (owner, 2026-10-23: Photoshop's exports are 3-4x bigger).
 # One report per push: the job summary, a comment on the commit, and ONE Discord post to the standards channel
 # ("<login> pushed <card> with these issues: ..."; nobody pinged, no link previews). The post, the PNGs and the fixes wait
 # for the 30-minute quiet window: a PNG the author pushed meanwhile withdraws its refusal, a card pushed again is left to
@@ -152,9 +154,9 @@ jobs:
           python-version: "3.12"
 
       # The fork pin, shared with card-edits.yml and card-sync.yml: guard 1's render is the bake's; cards-20261023 carries
-      # TypeLayer.sync_story (R9's fix).
+      # TypeLayer.sync_story (R9's fix). pyoxipng: the lossless PNG recompression (a wheel for this Python).
       - timeout-minutes: 10
-        run: pip install -q requests fonttools "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023"
+        run: pip install -q requests fonttools pyoxipng==9.1.1 "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023"
 
       # Fonts for the R7 rule (told in the post, as font-check.yml tells them): MDW/Fonts' top level, cached by the
       # folder's tree sha as font-check.yml does.
