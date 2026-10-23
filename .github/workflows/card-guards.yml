@@ -151,10 +151,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      # The fork pin, shared with card-edits.yml and card-sync.yml: guard 1's render is the bake's; cards-20261022b carries
+      # The fork pin, shared with card-edits.yml and card-sync.yml: guard 1's render is the bake's; cards-20261023 carries
       # TypeLayer.sync_story (R9's fix).
       - timeout-minutes: 10
-        run: pip install -q requests fonttools "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261022b"
+        run: pip install -q requests fonttools "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023"
 
       # Fonts for the R7 rule (told in the post, as font-check.yml tells them): MDW/Fonts' top level, cached by the
       # folder's tree sha as font-check.yml does.
