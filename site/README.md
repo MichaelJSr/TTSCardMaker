@@ -65,7 +65,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   the browser (nor in its count or owner list): they show only on their owner's page and at their own link. A deck's page
   shows the hand grouped like the deck builder with the hand checks, and offers Save a copy to my decks, Share link, Copy
   as text, Discord, TTS save and Print; its owner (or an admin) can replace it with another saved hand or unpublish it. A
-  private deck asks for its passphrase (remembered on the device if you say so). A person's page lists their decks, the
+  private deck asks for its passphrase (remembered on the device if you tick **Remember on this device**, encrypted with a
+  key that can't leave the browser; **Forget** on the deck page drops it). A person's page lists their decks, the
   private ones as locked links. Format in `site/decks/README.md`; see Decks below.
 - **Stats**: counts by kind, series, subseries, type, timing tag, status effect, author and month; how many legal cards there are
   for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
@@ -99,8 +100,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   their contributions by month, and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
   (by its creation date) and a grid of their 24 newest cards; the chart counts cards by creation month.
 
-Top right: **Sign in** (a GitHub token, see Editing) becomes your login once signed in; it opens the editor hub (your
-batch, your profile, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
+Top right: **Sign in** (a GitHub token, or your login and password once you set one; see Editing) becomes your login
+once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
 `d` add to deck, `c` copy link, `s` share, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections, `?` help. The single-key
 shortcuts are off while an edit form is open (a card's edit dialog or the profile editor) and while an inline control or a
 stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog.
@@ -132,7 +133,7 @@ the pickles with an allowlist of what they hold (the bot's `CardInfo` and `CardS
 `set` and `datetime`). Another bot class (`commands.*`, moved or new) is read as plain data with a warning. A pickle
 naming anything else is refused and nothing in it runs: a refused `stats.pkl` stops the build, and the site stays as it
 was until `PICKLE_GLOBALS` in `build_site.py` allows it; the history and aliases are skipped with a warning. A field the site reads that the bot's cards lack (a rename in `commands/card_models.py`), or a
-field it doesn't know, is a warning in the log and on the Actions run. Images, icons, the ban list, icon names, profiles and published decks come from this
+field it doesn't know, is a warning in the log and on the Actions run. Images, icons, the ban list, icon names, profiles, published decks and password files come from this
 repo. Cards that are in the repo but not yet in the bot's data still appear (image only).
 
 The Details dropdown reads the bot's `psd_details.json` (AutoCroissant, beside the pickles: one record per card PSD
@@ -208,6 +209,44 @@ card several stat lines (`creatures` in `Card Edits.json`; creature 1 is the car
 bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
 `Card Edits.json` to go back to the PSD.
+
+### Signing in and passwords
+
+The first time, sign in with a GitHub token (classic, `public_repo` only). Right after, the site offers **Set a
+password**: typed twice, it is published at once as its own commit (`Website: <login>'s password`, not left in the
+batch, so it works straight away) as `site/logins/<login>.json` (format in `site/logins/README.md`): the token encrypted
+in the browser with the password (PBKDF2-SHA-256, 2,000,000 iterations, AES-GCM-256); the password is never sent or
+stored. From then on, on any device, **Sign in** → **Password** takes the GitHub login (any case) and the password: the
+page reads the file from GitHub's API (current right after a change; 60 requests an hour per address without a token),
+else the site's copy `data/logins/<login>.json` (as new as the last build), decrypts it, and checks the token with
+GitHub as a token sign-in does (the login must be the file's; an expired or deleted token says so). A password needs 12
+characters or more (4 or more random words are easy to remember) and is refused, with the reason shown as you type, when
+it is a well-known one (also with digits or symbols around it), one word with digits or symbols around it (Liverpool1892)
+under 16 characters, a repeated pattern, a keyboard or alphabet run, has too few
+different characters, is mostly the login, or is a token. The file is public, so anyone can try to guess the password
+offline: a long one used nowhere else is what keeps it safe, and the sign-in page and the dialog say so.
+
+Signed in either way, this browser keeps the token until **Sign out**, never in plain text: a non-extractable AES-GCM key
+in IndexedDB (`ttscardmaker-signin`) encrypts it into localStorage (`edit-token-sealed`), or into sessionStorage (this
+tab only) when "keep me signed in" is unticked; each load decrypts it silently, and Sign out deletes both. A token
+remembered in plain text before 2026-10-23 is sealed on the next load, and a password offered once. The hub's
+**Password** section: **Set a password**, or **Change password** (a new password for the same token, replacing the file;
+also the fix after making a new token) and **Remove my password** (deletes the file). **Forgot password?** on the
+sign-in form clears this browser's sign-in, asks for the token, then sets a new password that replaces the file. A
+removed or replaced file stays in the git history, so whoever knew an old password can still read the token it held:
+Change and Remove say so and point to regenerating the token on GitHub. You write only your own file; admins can list
+everyone's (hub → **Password files**) and remove one. That rule is the website's: anyone who can push could still
+change or delete a file through git, but the password and the `/user` check mean that only stops its owner signing in
+with a password; it never gives anyone the token. Signed out, the sign-in opens on **Password** when the site has any
+password files (or this browser last signed in with one). Safari may clear a site's storage after 7 days without a visit,
+which signs that browser out.
+
+Private-deck passphrases remembered with **Remember on this device** are kept the same way, under a second
+non-extractable key in the same IndexedDB (`decks`), in localStorage (`deckPassSealed:<owner>/<slug>`). They are not
+part of the sign-in (anyone with the passphrase opens a private deck, signed in or not), so **Sign out keeps them**; each
+deck's **Forget** removes its own (the last one also deletes the `decks` key). One remembered in plain text before
+2026-10-23 is sealed on the next visit, or dropped in a browser that can't seal it (no IndexedDB, or IndexedDB failing):
+nothing stays in plain text, and Remember there says so and stores nothing.
 
 ## People
 
@@ -310,6 +349,6 @@ python -m http.server -d site/dist 8000  # then open http://localhost:8000
 
 Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, drag-to-assign and
-the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
+the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `login.js` the password sign-in and this browser's sealed token, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
 published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
 Generated files (`site/dist`, `site/.cache`, `site/.og-cache`) are git-ignored.

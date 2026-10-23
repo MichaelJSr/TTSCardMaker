@@ -11,6 +11,7 @@ import * as pick from "./pick.js";
 import * as balance from "./balance.js";
 import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
+import { deckPasses } from "./login.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -778,7 +779,7 @@ function renderCompare(r) {
 const publishedCount = () => { const n = S.data.decks; return n && typeof n === "object" ? ` (${+n.public || 0})` : ""; };   // cards.json "decks": the public count without a fetch (the browser lists no private deck)
 const deckCtx = () => ({ byId: S.byId, img, validate: d => D.validate(d, S.byId, S.banned) });
 const deckPageUrl = (owner, slug) => `${ROOT}decks/${encodeURIComponent(owner)}/${encodeURIComponent(slug)}/`;
-const passKey = (owner, slug) => `deckPass:${decks.keyOf(owner, slug)}`;   // localStorage: the remembered passphrase
+const passes = deckPasses();                              // remembered passphrases, sealed with a key that can't leave IndexedDB
 const opened = new Map();                                 // "<owner>/<slug>:<ciphertext head>" -> the decrypted payload, for the session
 /** Every deck the pages show: the published ones, less those removed in the batch, plus the staged and just-published files. */
 function deckList() {
@@ -840,8 +841,8 @@ function renderDeckPage(r) {
     show(d); return;
   }
   S.deckTitle = "Private deck";
-  const cacheKey = `${decks.keyOf(d.owner, d.slug)}:${String(d.data).slice(0, 24)}`, stored = localStorage.getItem(passKey(d.owner, d.slug));
-  if (opened.has(cacheKey)) { const pl = opened.get(cacheKey); show({ ...d, ...pl, n: decks.countOf(pl), remembered: !!stored }); return; }
+  const deckKey = decks.keyOf(d.owner, d.slug), cacheKey = `${deckKey}:${String(d.data).slice(0, 24)}`, stored = passes.has(deckKey);
+  if (opened.has(cacheKey)) { const pl = opened.get(cacheKey); show({ ...d, ...pl, n: decks.countOf(pl), remembered: stored }); return; }
   const subtle = globalThis.crypto?.subtle, passCtx = { canEdit: ctx.canEdit, hands: ctx.hands };   // the Owner panel sits under the form too: no passphrase needed to unpublish or replace
   if (!subtle) { view.innerHTML = decks.passFormHtml(d, { ...passCtx, noCrypto: true }); return; }
   const form = () => {
@@ -851,18 +852,23 @@ function renderDeckPage(r) {
     $("#deck-pass-in").focus();
   };
   const tryOpen = async (pass, remember, auto) => {
-    try { opened.set(cacheKey, await decks.decrypt(subtle, pass, d.owner, d.slug, d)); if (remember) localStorage.setItem(passKey(d.owner, d.slug), pass); }
+    try { opened.set(cacheKey, await decks.decrypt(subtle, pass, d.owner, d.slug, d)); }
     catch (err) {
-      if (auto) localStorage.removeItem(passKey(d.owner, d.slug));
+      if (auto) passes.forget(deckKey);
       if (!here()) return;
       if (auto) form();                                                                 // the auto-open showed no form yet
       else { $("#deck-pass button").disabled = false; $("#deck-pass-in").select(); }   // keep what was typed and the Remember tick
       $("#deck-pass-err").textContent = auto ? "The remembered passphrase no longer opens this deck" : err.message;
       return;
     }
+    if (remember) await passes.save(deckKey, pass).catch(() => toast("This browser can't remember it safely: not remembered"));
     if (here()) rerender();
   };
-  if (stored) { view.innerHTML = `<div class="loading">Opening the deck…</div>`; tryOpen(stored, false, true); return; }
+  if (stored) {
+    view.innerHTML = `<div class="loading">Opening the deck…</div>`;
+    passes.load(deckKey).then(pass => (pass == null ? here() && form() : tryOpen(pass, false, true)));   // unreadable here: forgotten, the form
+    return;
+  }
   form();
 }
 // the deck page's Share, Discord, text, TTS and print act on the deck shown (S.deckView); the deck builder's on the hand
@@ -1019,7 +1025,7 @@ const actions = {
   "deck-page-text": () => { if (S.deckView) copy(D.toText(S.deckView, S.byId), "deck list"); },
   "deck-page-tts": () => { if (S.deckView) ttsDownload(S.deckView); },
   "deck-page-print": () => { if (S.deckView) printDeck(S.deckView); },
-  "deck-forget": () => { const d = S.deckView; if (!d) return; localStorage.removeItem(passKey(d.owner, d.slug)); toast("Passphrase forgotten"); rerender(); },
+  "deck-forget": () => { const d = S.deckView; if (!d) return; passes.forget(decks.keyOf(d.owner, d.slug)); toast("Passphrase forgotten"); rerender(); },
   "deck-import": () => { const { deck: d, unknown } = D.fromText($("#deck-import").value, S.cards); D.newDeck(S.decks, d.name, d.cards, d.field); updateDeckCount(); renderDeck(parseHash()); toast(unknown.length ? `Imported; not found: ${unknown.join(", ")}` : "Imported"); },
   "deck-select": el => { D.setActive(S.decks.find(x => x.id === el.dataset.id)); updateDeckCount(); location.hash = "#/deck"; renderDeck(parseHash()); },
   "deck-new": () => { D.newDeck(S.decks, `Hand ${S.decks.length + 1}`); updateDeckCount(); renderDeck(parseHash()); },
@@ -1146,3 +1152,4 @@ document.addEventListener("pointermove", e => {
 document.addEventListener("pointerout", e => { if (e.target.closest("[data-tip], [data-v], a.card-ref, .chart [data-card]")) hideTip(); });
 
 init();
+passes.migrate().catch(() => {});                       // passphrases remembered in plain text before 2026-10-23: sealed now

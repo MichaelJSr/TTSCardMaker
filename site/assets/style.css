@@ -356,6 +356,12 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .note { background: var(--surface-2); border-left: 3px solid var(--warn); border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
 @media (max-width: 640px) { .erow { grid-template-columns: 1fr; } .edit-bar { left: 8px; right: 8px; transform: none; border-radius: 14px; max-width: none; } .edit-bar .bar-head { flex-wrap: wrap; } }
 .review-item .actions { align-self: flex-start; flex-wrap: nowrap; margin: 0; }
+/* sign in: Password | Token, and the password dialog (login.js) */
+.signin-modes { margin: 4px 0 10px; }
+.signin-form label:not(.check), .pw-form label:not(.check) { display: block; font-size: 13px; color: var(--ink-2); margin-top: 6px; }
+.pw-form .checks { list-style: none; padding: 0; margin: 4px 0; font-size: 13px; min-height: 1.2em; }
+.signin-safety { font-size: 12.5px; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 14px; }
+.pw-files { list-style: none; padding: 0; margin: 4px 0; } .pw-files li { display: flex; gap: 8px; align-items: center; padding: 2px 0; }
 
 /* ---- inline editing (edit mode only: inline.js adds these attributes and classes after render, so nothing applies in view mode) ---- */
 [data-inline] { cursor: text; }
