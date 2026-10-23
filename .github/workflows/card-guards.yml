@@ -133,6 +133,7 @@ jobs:
             /commands/png_export.py
             /commands/card_standards.py
             /commands/txt2_repair.py
+            /commands/psd_diff.py
             /commands/card_bake.py
             /commands/card_check.py
             /commands/psd_edit.py
