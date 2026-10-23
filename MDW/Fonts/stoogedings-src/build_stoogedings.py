@@ -24,6 +24,8 @@ Renderer behavior that shaped the design (tested in Photoshop 2023 and macOS Cor
   * CoreText ignores <use> that points at an <image>, so each color glyph embeds its PNG directly.
   * Photoshop draws SVG glyphs whole, past the line box (glow test 2026-10-23), so the halo may reach beyond
     ascent/descent; the spacers widen the token by the halo so it stays off the neighbouring letters.
+  * A layer stroke outlines every bit of a halo's alpha (a black disc on stroked card text): use :glow on
+    unstroked text.
 
 usage: python build_stoogedings.py
 Rebuilds MDW/Fonts/stoogedings.ttf from Types/ and Types/Stars/ of the repo this script lives in. Run it after
