@@ -11,7 +11,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
   (`site/Card Creation Dates.json`, below) and the first upload of its image (from the git history); the card page
   shows it as "created <date>" ("created about <date>" while a Discord post awaiting review may still move it).
-  The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`),
+  The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`,
+  `created>=2025`, `created==2023-10`: dates at the precision given),
   and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
   record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
   dropdown open this once; Ctrl-click opens it in a new tab).

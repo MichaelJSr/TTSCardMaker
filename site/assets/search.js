@@ -5,6 +5,7 @@
 //   a & b   a | b     both / either  (| binds looser than &, as in the bot)
 //   hp>5  def<=3  atk==2  spd>=7  stars<4  total>=24        numbers
 //   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
+//   created>=2025  created==2023-10  created<2021-06-01                   dates at the precision given (as the bot)
 //   is:unparsed  has:history  has:problems  has:alias  has:details
 
 export const total = c => (c.hp ?? 0) + (c.def ?? 0) + (c.atk ?? 0) + (c.spd ?? 0);
@@ -14,10 +15,12 @@ const NUM = {
   hp: c => c.hp, def: c => c.def, atk: c => c.atk, spd: c => c.spd, stars: c => c.stars,
   total: c => (hasStats(c) ? total(c) : null),
 };
+const DATE = { created: c => c.created };                // "YYYY-MM-DD"
+const OPS = { "<": (a, b) => a < b, "<=": (a, b) => a <= b, "==": (a, b) => a === b, ">=": (a, b) => a >= b, ">": (a, b) => a > b };
 const STR = {
   type: c => c.type, subtype: c => c.subtype, series: c => c.series, subseries: c => c.subseries, author: c => c.author,
   path: c => c.psd || c.png, ability: c => c.ability, types: c => (c.types || []).join(" "),
-  name: c => c.name, alias: c => (c.aliases || []).join(" "), aliases: c => (c.aliases || []).join(" "),
+  name: c => c.name, alias: c => (c.aliases || []).join(" "), aliases: c => (c.aliases || []).join(" "), created: c => c.created,
 };
 export const FLAGS = {
   "is:unparsed": c => !c.parsed, "has:history": c => !!c.hv,
@@ -51,10 +54,14 @@ export function compile(query) {
   const lower = q.toLowerCase();
   if (FLAGS[lower]) return FLAGS[lower];
 
-  let m = lower.match(/^(\w+)\s*(<=|>=|==|<|>)\s*(-?\d+)$/);
+  let m = lower.match(/^(\w+)\s*(<=|>=|==|<|>)\s*(\d{4}(?:-\d{2}){0,2})$/);
+  if (m && DATE[m[1]]) {                                  // created>2023: after 2023; created==2023-10: in October 2023
+    const get = DATE[m[1]], v = m[3], op = OPS[m[2]];
+    return c => { const x = get(c); return x != null && op(x.slice(0, v.length), v); };
+  }
+  m = lower.match(/^(\w+)\s*(<=|>=|==|<|>)\s*(-?\d+)$/);
   if (m && NUM[m[1]]) {
-    const get = NUM[m[1]], v = Number(m[3]);
-    const op = { "<": (a, b) => a < b, "<=": (a, b) => a <= b, "==": (a, b) => a === b, ">=": (a, b) => a >= b, ">": (a, b) => a > b }[m[2]];
+    const get = NUM[m[1]], v = Number(m[3]), op = OPS[m[2]];
     return c => { const x = get(c); return x != null && op(x, v); };
   }
   m = q.match(/^(\w+)\s*(==|~)\s*(.+)$/);
@@ -92,6 +99,7 @@ export const SEARCH_HELP = [
   ["type==creature · subtype==equip", "Exact value"],
   ["series~kirby · author~chestnut · types~undead", "Contains"],
   ["series==mario & subseries~door", "Series and subseries"],
+  ["created>=2025 · created==2023-10", "Creation date (first Discord post or upload)"],
   ["is:unparsed · has:history · has:alias", "Card flags"],
   ["has:details", "Cards with PSD details"],
 ];
