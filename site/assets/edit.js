@@ -12,6 +12,7 @@ const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subser
   atk: "int", spd: "int", ability: "str", note: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
   creatures: "creatures" };
 const ORDER = Object.keys(FIELDS);
+const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the bot's _by (changes.js BOT)
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
   atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
@@ -134,9 +135,19 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json") {
     if (!Object.keys(op.set).length && !op.unset.length) continue;
     const k = Object.keys(data.cards).find(x => cardKey(x) === cardKey(op.key)) ?? op.key;
     const cur = { ...(data.cards[k] || {}) };
+    if (isBot(cur._by) && !isBot(by)) cur._bot = ORDER.filter(f => f in cur);   // the bot's entry: its fields stay nobody's edit
     for (const f of op.unset) delete cur[f];
     Object.assign(cur, op.set);
     delete cur._by; delete cur._at; delete data.cards[k];
+    if (Array.isArray(cur._bot)) {                 // the bot's migration fields (_bot): one this op sets or unsets is the editor's now
+      cur._bot = cur._bot.filter(f => !(f in op.set) && !op.unset.includes(f) && f in cur);
+      if (!cur._bot.length) delete cur._bot;
+    }
+    if ("_credit" in cur) {                        // a _bot field's Discord editor: goes with it; not an object: goes (as the bot's)
+      const ok = cur._credit && typeof cur._credit === "object" && !Array.isArray(cur._credit);
+      cur._credit = Object.fromEntries(Object.entries(ok ? cur._credit : {}).filter(([f]) => Array.isArray(cur._bot) && cur._bot.includes(f)));
+      if (!Object.keys(cur._credit).length) delete cur._credit;
+    }
     const fields = [...ORDER.filter(f => f in cur), ...Object.keys(cur).filter(f => !(f in FIELDS))];
     if (fields.length) data.cards[k] = { ...Object.fromEntries(fields.map(f => [f, cur[f]])), _by: by, _at: at };
   }

@@ -2,7 +2,9 @@
 
 Called by build_site.py with the site's card entries (stars and stats as the card pages show them, edits applied) and
 the bot's stats.pkl / old_stats.pkl (each earlier version of a card, dated by the commit of the PSD it was read from;
-older records with no PSD blob keep their stored date, marked approximate unless a commit of that PSD has it). Days and
+older records with no PSD blob keep their stored date, marked approximate unless a commit of that PSD has it). A
+version's `version` record, when it has one, dates it instead (when): the bot keeps no copy of a version whose data a
+later file repeats, and its start moves to the version that holds that data. Days and
 months are Pacific time (ZONE).
 
   * Cohorts: creatures and minions with all four stats, by star level. A star level with fewer than MIN_COHORT cards
@@ -176,17 +178,24 @@ def card_balance(e, line, key, groups, cohort):
 
 
 # ---- versions and changes ---------------------------------------------------------------------------------
+def when(v):
+    """A version's start: its `version` record's from (a start the bot carried from a dropped copy), else its date."""
+    start = (getattr(v, "version", None) or {}).get("from")
+    return start if isinstance(start, (int, float)) else v.timestamp
+
+
 def chain_of(name, stats, old_stats):
     """A card's versions oldest first, its current card last (archived names: no current card)."""
     versions = sorted((v for v in (old_stats.get(name) or []) if isinstance(getattr(v, "timestamp", None), (int, float))),
-                      key=lambda v: v.timestamp)
+                      key=when)
     current = stats.get(name)
     return versions + ([current] if current is not None and isinstance(getattr(current, "timestamp", None), (int, float)) else [])
 
 
 def shown(e, current):
     """The current card as its page shows it (Card Edits.json applied), with the bot card's date, blob and path."""
-    return SimpleNamespace(timestamp=current.timestamp, blob_sha=getattr(current, "blob_sha", None), path=getattr(current, "path", None),
+    return SimpleNamespace(timestamp=current.timestamp, version=getattr(current, "version", None),
+                           blob_sha=getattr(current, "blob_sha", None), path=getattr(current, "path", None),
                            stats=SimpleNamespace(**{attr: e.get(k) for k, attr in STATS}), stars=e.get("stars"), card_type=e.get("type"),
                            subtype=e.get("subtype"), series=e.get("series"), types=e.get("types") or [],
                            creatures=e.get("creatures") or [], ability=e.get("ability"))
@@ -194,20 +203,24 @@ def shown(e, current):
 
 def page_chain(e, stats, old_stats):
     """chain_of for a site card: re-reads folded (a version read again at the same commit by a newer parser gives way to
-    the newer reading) and the current card as shown."""
+    the newer reading; by when, so a start the bot carried still folds) and the current card as shown."""
     chain = chain_of(e["key"], stats, old_stats)
-    out = [v for v, w in zip(chain, chain[1:]) if v.timestamp != w.timestamp] + chain[len(chain) - 1:]
+    out = [v for v, w in zip(chain, chain[1:]) if when(v) != when(w)] + chain[len(chain) - 1:]
     if out and out[len(out) - 1] is stats.get(e["key"]):
         out[len(out) - 1] = shown(e, out[len(out) - 1])
     return out
 
 
 def exact(v, psd_commits):
-    """v's date is a commit of its PSD: it has its blob, or a commit touched a PSD of its file name at that second."""
-    if getattr(v, "blob_sha", None):
+    """v's date (when) is a commit of its PSD: its own with its blob, a start with its commit, or a commit touched a PSD
+    of its file name at that second."""
+    at = when(v)
+    if getattr(v, "blob_sha", None) and at == v.timestamp:
+        return True
+    if at != v.timestamp and (getattr(v, "version", None) or {}).get("from_commit"):
         return True
     name = os.path.basename(getattr(v, "path", None) or "").lower()
-    return psd_commits is not None and (int(v.timestamp), name) in psd_commits
+    return psd_commits is not None and (int(at), name) in psd_commits
 
 
 def change(a, b, texts):
@@ -261,7 +274,7 @@ def card_changes(e, chain, psd_commits=None):
         if row:
             if not exact(b, psd_commits):
                 row["approx"] = True
-            rows.append({"ts": int(b.timestamp), **row})
+            rows.append({"ts": int(when(b)), **row})
     return rows[::-1]                             # newest first
 
 
@@ -271,13 +284,13 @@ def trend_of(chain):
     for v in chain:
         line = line_of(getattr(v, "stats", None))
         if line and sum(line) <= OFF_SCALE and (not points or tuple(points[-1][k] for k, _ in STATS) != line):
-            points.append({"ts": int(v.timestamp), **{k: x for (k, _), x in zip(STATS, line)}, "total": sum(line)})
+            points.append({"ts": int(when(v)), **{k: x for (k, _), x in zip(STATS, line)}, "total": sum(line)})
     return points if len(points) > 1 else []
 
 
 # ---- over time ------------------------------------------------------------------------------------------------
 def point(v):
-    return v.timestamp, getattr(v, "card_type", None), getattr(v, "stars", None), line_of(getattr(v, "stats", None))
+    return when(v), getattr(v, "card_type", None), getattr(v, "stars", None), line_of(getattr(v, "stats", None))
 
 
 def over_time(cards, stats, old_stats, sizes, now):
@@ -300,7 +313,7 @@ def over_time(cards, stats, old_stats, sizes, now):
         at = tag.get("at") if isinstance(tag, dict) else None
         chain = chain_of(name, stats, old_stats)
         if isinstance(at, (int, float)) and chain:
-            lives.append((chain[0].timestamp, at, [point(v) for v in chain]))
+            lives.append((when(chain[0]), at, [point(v) for v in chain]))
     if not lives:
         return {"months": [], "series": {}}
     months = months_between(month_of(min(s for s, _, _ in lives)), month_of(now))
@@ -354,7 +367,7 @@ def build(cards, stats, old_stats, now=None, history=True, psd_commits=None):
                 entry["changes"] = rows
             if trend:
                 entry["trend"] = trend
-    first = min((v.timestamp for vs in old_stats.values() for v in vs or [] if isinstance(getattr(v, "timestamp", None), (int, float))), default=None)
+    first = min((when(v) for vs in old_stats.values() for v in vs or [] if isinstance(getattr(v, "timestamp", None), (int, float))), default=None)
     counts = Counter(e.get("type") for e, _, _ in members)
     return {"cohorts": cohorts, "cards": out_cards, "counts": dict(counts), "versions": versions, "since": int(first) if first else None,
             "time": over_time(cards, stats, old_stats, sizes, now) if history else {"months": [], "series": {}},

@@ -7,12 +7,12 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 
 - **Cards**: grid or sortable table; filters for kind, stars, item type, type icons, series and subseries, stat ranges, author and flags.
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
-  column too; another sort picked from the menu runs in its usual direction): by the first upload of the card image,
-  ties by name; a card without one goes last. It needs the git history, so a shallow local build hides it (a shared
-  `sort=created` link then sorts by name, and the menu says so). About 600
-  cards share the first import's dates (2023-11-05/06), uploaded folder by folder, so among them it only tells the
-  batches apart.
-  The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`),
+  column too; another sort picked from the menu runs in its usual direction): by the card's creation date, ties by
+  first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
+  (`site/Card Creation Dates.json`, below) and the first upload of its image (from the git history); the card page
+  shows it as "created <date>" ("created about <date>" while a Discord post awaiting review may still move it).
+  The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`,
+  `created>=2025`, `created==2023-10`: dates at the precision given; spaces around the operator are fine in both),
   and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
   record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
   dropdown open this once; Ctrl-click opens it in a new tab).
@@ -76,14 +76,24 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   auxiliary creatures (no star level), with all creatures. The bot's history has no buff or nerf yet (2026-10-22: its
   one stat change, Tainted Lazarus' 110s becoming two creatures, is off the scale), so the buffs and nerfs panel says so
   instead of drawing an empty chart.
-- **Changes**: recently updated cards with text diffs, the most revised cards, and cards the bot hasn't parsed yet.
+- **Changes**: a row of category tabs across the top; clicking one (or the arrow keys on a focused tab) shows that
+  category alone, the chosen tab underlined, and the address keeps it (`#/changes/changelog`), so a link or a refresh
+  opens the same one. **Recently updated** (`#/changes`): recently updated cards with text diffs. **Changelog**: the card
+  sync's events of the last 180 days, one block per push as the Discord posts (new cards, changes with their old values
+  and an ability word diff, new art, moves, renames, archived and restored cards, database edits, parser re-reads), by day
+  in Pacific time, filterable by kind, then the archived cards. **Database edits**: the card sync's edited and authors
+  events, and every commit that changed a Card Edits.json entry or a Card Authors.txt line (website, Discord or a commit
+  by hand) with each field's old and new value. The events need the card sync's data (`CARD_DATA_DIR`); until then those
+  parts say so. **Website edits**: the cards an edit on the website or in Discord changes now, with the fields, who and
+  when (never the bot's own entries). **Most revised**: the cards with the most earlier versions. **Parser notes**: the
+  cards the bot hasn't parsed yet and the parser's notes.
 - **People** (the tab shows how many): everyone who made, edited or committed cards, in one table (GitHub picture, cards
   credited, edit batches published on the website, card commits, public decks, titles, motto), and a page per person
   (`#/u/<name>`, static `u/<name>/` that previews in Discord; **Share** opens a dialog with the link, the Discord preview
   and buttons to copy it as a Discord message or plain text: name, titles and counts, never the motto): their profile when they made one (see People below), their
   GitHub picture and link, their contributions with recently edited cards, recent edit batches and recent card commits, a chart of
   their contributions by month, and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
-  (by its image's first upload, from the git history: full-history builds only) and a grid of their 24 newest cards.
+  (by its creation date) and a grid of their 24 newest cards; the chart counts cards by creation month.
 
 Top right: **Sign in** (a GitHub token, see Editing) becomes your login once signed in; it opens the editor hub (your
 batch, your profile, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
@@ -95,8 +105,22 @@ stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a di
 
 The build does not parse PSDs. Card text, stats, authors, aliases and history come from AutoCroissant's
 `stats.pkl` / `aliases.pkl` / `old_stats.pkl` (the same data the Discord bot answers from), so the site is as fresh as
-the bot's last `/update_stats` + `/push`. The build reads the pickles with an allowlist of what they hold (the bot's
-`CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict`, `list` and a few plain data types such as
+the bot's last `/update_stats` + `/push`. Once `site/Card Edits.json` has `aliases_moved` (aliases.pkl moved into it
+on 2026-10-22), `aliases.pkl` isn't read: the cards' aliases are their Card Edits entries', and no `_by:
+AutoCroissant` entry (the migration's aliases and series, the moved stat exclusions) counts as a website edit. Where the
+migration added a field to an editor's entry, the entry keeps the editor's `_by` and lists that field in `_bot`
+(`"_bot":["series"]`): `_bot` holds the fields that are not the stamp editor's. Such a field is nobody's edit, so the
+Edited badge, the Website edits tab, the person page and the stamp-counted edit batches leave it out (the build's
+`botEdited`), unless `_credit` names its editor: a Discord edit to an entry whose PSD fields are another editor's keeps
+that entry's stamps, lists the fields it sets in `_bot` and credits each one
+(`"_credit":{"series":{"_by":"discord:name","_at":"…"}}`). The build keeps a `_credit` field only while it is in `_bot`
+(another shape is a warning) and writes it as the card's `fieldBy`; the badge's tooltip and the Website edits tab (one
+row per card and editor) name that editor "(via Discord)", the stamp-counted batches give each `_credit` stamp a Discord
+batch, and the People counts never give the field to the stamp editor (a Discord user has no row). An edit on the website
+takes a field it sets or unsets out of `_bot` and `_credit` (an empty `_credit`, or one that isn't an object, goes), and an edit to a `_by:
+AutoCroissant` entry first lists the entry's fields in `_bot`, so the editor gets only the fields they change (edit.js
+`editsFile`, as the bot's Discord edits do). The build reads
+the pickles with an allowlist of what they hold (the bot's `CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict`, `list` and a few plain data types such as
 `set` and `datetime`). Another bot class (`commands.*`, moved or new) is read as plain data with a warning. A pickle
 naming anything else is refused and nothing in it runs: a refused `stats.pkl` stops the build, and the site stays as it
 was until `PICKLE_GLOBALS` in `build_site.py` allows it; the history and aliases are skipped with a warning. A field the site reads that the bot's cards lack (a rename in `commands/card_models.py`), or a
@@ -112,8 +136,16 @@ the build never fails on it.
 
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
 bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
-`Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/` on 2026-10-20); the
-build and the bot read them, the published site does not include them. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
+`Card Creation Dates.json`, `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/`
+on 2026-10-20); the build and the bot read them, the published site does not include them. `Card Creation Dates.json`
+holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand", "provisional": true}`
+(dates only, from the Discord archive kept off the repo), written by AutoCroissant's `python -m commands.discord_edits
+created` (re-run after rulings and archive updates; it keeps `"from": "hand"` entries, the way to set a date by hand).
+A card it misses (one made since) is dated by its first upload, with a build log line naming it. The bot reads the file by
+the same rule (AutoCroissant `CardDates.created`), its first upload being the earliest version its database holds: the
+same day for the cards first uploaded since 2026-02, so `/query_ability created>=…` and the search agree (770 of 770
+cards on 2026-10-23, also with the 11 newest left out of the file). It is no edit: the Changes page and the edit
+counts never see it. Bad entries are skipped with a warning, never a failed build. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
 following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
 the build needs full history for them (CI fetches it; a shallow local clone gets no image versions and counts edit
 batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one batch per card;
@@ -126,7 +158,7 @@ where links fail). The first screen loads only `data/cards.json`; `analytics.jso
 computed by `site/build/analytics.py` from the same bot data) loads when the Stats page or a creature, minion or card
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
-People tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
+People tab is opened; `changelog.json` when the Changelog or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
 when a card's or rulebook page's Details dropdown is first opened. Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.

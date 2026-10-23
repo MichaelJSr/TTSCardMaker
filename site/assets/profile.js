@@ -3,6 +3,7 @@
 // and card commits per person, from build_site.py contributions()). Pure functions, plus the person page and the People
 // table. All profile text is user-written: everything is escaped and only internal routes are linked.
 import { esc } from "./text.js";
+import { editorFields } from "./changes.js";
 import { decode } from "./deck.js";
 import { columns, chartCard } from "./stats.js";
 
@@ -67,19 +68,21 @@ export function mergeUsers(published, pending) {
 /** The cards credited to a name, as the Author filter counts them: a duplicate counts once, hidden cards don't. */
 export const cardsOf = (author, cards) => (author ? cards.filter(c => c.author === author && !c.dup && !c.hidden) : []);
 export const cardsBy = (author, cards) => cardsOf(author, cards).length;
+/** A card's creation date as epoch seconds (noon UTC of its created day), else its first upload (fs), else 0. */
+export const createdTs = c => (c.created ? Date.parse(`${c.created}T12:00:00Z`) / 1000 : c.fs || 0);
 /** The Cards panel's facts for a person's cards: kinds [[kind, n]] by count (ties in `kinds` order), the three biggest
- *  series [[name, n]], the newest card (by fs, the first upload; null when no card has one) and the `recent` newest
- *  cards (fs desc, cards without fs last, then name). kindOf(card) groups status effects (app.js kindOf). */
+ *  series [[name, n]], the newest card (by createdTs; null when no card has a date) and the `recent` newest cards
+ *  (createdTs desc, then first upload, undated last, then name). kindOf(card) groups status effects (app.js kindOf). */
 export function cardFacts(list, { kindOf = c => c.type, kinds = [], recent = RECENT_CARDS } = {}) {
   const count = (f, m = new Map()) => { for (const c of list) { const k = f(c); if (k) m.set(k, (m.get(k) || 0) + 1); } return m; };
   const order = new Map(kinds.map(([k], i) => [k, i]));
   const rank = k => (order.has(k) ? order.get(k) : kinds.length);
   const byName = (a, b) => a.name.localeCompare(b.name);
-  const newest = list.slice().sort((a, b) => (b.fs || 0) - (a.fs || 0) || byName(a, b));
+  const newest = list.slice().sort((a, b) => createdTs(b) - createdTs(a) || (b.fs || 0) - (a.fs || 0) || byName(a, b));
   return {
     kinds: [...count(kindOf)].sort((a, b) => b[1] - a[1] || rank(a[0]) - rank(b[0])),
     series: [...count(c => c.series)].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 3),
-    newest: newest[0]?.fs ? newest[0] : null,
+    newest: newest[0] && createdTs(newest[0]) ? newest[0] : null,
     recent: newest.slice(0, recent),
   };
 }
@@ -174,7 +177,7 @@ const titleChips = (key, titles) => (titles.get(key) || []).map(t => `<span clas
 /** The contributions of one person: a facts row, their recent edits (cards.json editBy, the last batch per card), their
  *  recent edit batches (commits to Card Edits.json) and their recent card commits. x = {cards, available, titles (Map), date(ts), repo} */
 export function contributionsHtml(p, x) {
-  const edits = x.cards.filter(c => c.editBy && hasLogin(p, c.editBy)).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || "")).slice(0, 10);
+  const edits = x.cards.filter(c => c.editBy && hasLogin(p, c.editBy) && editorFields(c).length).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || "")).slice(0, 10);
   const facts = [
     p.cards ? `<a class="fact" href="#/cards?author=${encodeURIComponent(p.key)}">${plural(p.cards, "card")} by ${esc(p.key)}</a>` : "",
     p.edits ? `<span class="fact" data-tip="Commits to Card Edits.json: batches published on the website, or by hand">${plural(p.edits, "edit")}</span>` : "",
@@ -183,7 +186,7 @@ export function contributionsHtml(p, x) {
   ].join("");
   return `<div class="facts">${facts}</div>
     ${x.available ? "" : `<p class="muted">Commits aren't in this build; edits are counted from Card Edits.json, which keeps one batch per card.</p>`}
-    ${edits.length ? `<div class="related"><h3>Recently edited cards</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc((c.edited || []).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
+    ${edits.length ? `<div class="related"><h3>Recently edited cards</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(editorFields(c).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
     ${p.recentEdits?.length ? `<div class="related"><h3>Recent edit batches</h3><ul>${p.recentEdits.map(([ts, subject, sha]) => `<li>${commitLink(x.repo, sha, x.date(ts))} <span class="muted">· ${esc(subject)}</span></li>`).join("")}</ul></div>` : ""}
     ${p.recent?.length ? `<div class="related"><h3>Recent card commits</h3><ul>${p.recent.map(([ts, subject, n]) => `<li>${esc(x.date(ts))} <span class="muted">· ${esc(subject)} · ${plural(n, "card")}</span></li>`).join("")}</ul></div>` : ""}`;
 }
@@ -201,7 +204,7 @@ export function monthRange(months) {
   }
   return out;
 }
-export const ACTIVITY = [["cards", "Cards first uploaded", "var(--s1)", "cards"], ["edits", "Edit batches", "var(--s2)", "edits"], ["commits", "Card commits", "var(--s3)", "commits"]];
+export const ACTIVITY = [["cards", "Cards created", "var(--s1)", "cards"], ["edits", "Edit batches", "var(--s2)", "edits"], ["commits", "Card commits", "var(--s3)", "commits"]];
 /** The person's activity chart: one row of monthly columns per kind they have (each on its own scale, so a big import
  *  month doesn't flatten the rest), on one month axis; Table shows the numbers. "" without months. */
 export function activityHtml(p, x = {}) {
@@ -217,12 +220,12 @@ export function activityHtml(p, x = {}) {
   }).join("");
   const table = `<div class="table-wrap"><table class="data"><thead><tr><th>Month</th>${kinds.map(([, name]) => `<th class="num">${esc(name)}</th>`).join("")}</tr></thead>
     <tbody>${range.filter(([, r]) => r).map(([k, r]) => `<tr><td>${esc(label(k))}</td>${kinds.map(([, , , , i]) => `<td class="num">${r[i] || 0}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
-  const sub = `Each row has its own scale. Cards count by their image's first upload${x.since && x.month ? `, so cards made before the history starts (${x.month(x.since)}) count in its first month` : ""}.`;
+  const sub = `Each row has its own scale. Cards count by their creation date (first Discord post or first upload)${x.since && x.month ? `; edits and commits since the history starts (${x.month(x.since)})` : ""}.`;
   return `<div class="profile">${chartCard("activity", "Contributions by month", sub, rows, table)}</div>`;
 }
 
-/** The Cards panel: the person's cards by kind (chips to the Cards tab), their biggest series, the newest card (from
- *  fs, the first upload; left out when the build had no history) and the newest cards.
+/** The Cards panel: the person's cards by kind (chips to the Cards tab), their biggest series, the newest card (by its
+ *  creation date; left out when no card has one) and the newest cards.
  *  x = {cards, kinds ([[kind, label]], app.js KINDS), kindOf, month(ts), tile(card)} */
 export function cardsPanelHtml(p, x) {
   const own = cardsOf(p.key, x.cards);
@@ -234,7 +237,7 @@ export function cardsPanelHtml(p, x) {
     <div class="chips">${f.kinds.map(([k, n]) => `<a class="chip" href="#/cards?${by}&kind=${encodeURIComponent(k)}">${esc(label(k))}<span class="n">${n}</span></a>`).join("")}</div>
     <div class="facts">
       ${f.series.length ? `<span class="fact">Mostly ${f.series.map(([s, n]) => `<a href="#/cards?${by}&series=${encodeURIComponent(s)}">${esc(s)}</a> <span class="muted">${n}</span>`).join(", ")}</span>` : ""}
-      ${f.newest ? `<span class="fact" data-tip="First upload of the card image">Newest card: <a href="#/card/${f.newest.id}">${esc(f.newest.name)}</a> · ${esc(x.month(f.newest.fs))}</span>` : ""}
+      ${f.newest ? `<span class="fact" data-tip="Its first Discord post or first upload">Newest card: <a href="#/card/${f.newest.id}">${esc(f.newest.name)}</a> · ${esc(x.month(createdTs(f.newest)))}</span>` : ""}
     </div>
     <div class="grid" style="--tile:120px">${f.recent.map(x.tile).join("")}</div>
     <p><a href="#/cards?${by}&sort=created">All ${plural(own.length, "card")}</a></p></div></div>`;
