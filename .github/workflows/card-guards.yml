@@ -1,0 +1,214 @@
+# The push guards (AutoCroissant docs/Campaigns/PUSH_GUARDS.md; the bot's commands/card_guards.py):
+#   1. a card PSD pushed without its PNG gets the PNG from the PSD's own stored image (Photoshop's composite, converted
+#      the way the card was exported), gated; when a gate refuses, no PNG and a report instead;
+#   2. the pushed PSDs are checked against the card standards (CARD_STANDARDIZATION_CAMPAIGN.md); only the 0-pixel
+#      fixes (Txt2 stories kept in sync, exact layer names) are made, the rest is reported.
+# One report per push: the job summary, a comment on the commit, and ONE Discord post to the standards channel
+# ("<login> pushed <card> with these issues: ..."; nobody pinged, no link previews). PNGs and fixes land 30 minutes after
+# the push in one bot commit, only where no later push touched the card. It never reverts or rejects a push.
+#
+# Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = push runs skipped, report = check,
+# comment and post but never commit, on = also land). A dispatch defaults to a dry run (job summary and artifacts only).
+name: Card guards
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.psd"
+      - "**/*.PSD"
+      - "**/*.png"
+      - "**/*.PNG"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Job summary and artifacts only: no comment, no Discord, no commit"
+        type: boolean
+        default: true
+      sha:
+        description: "Check this commit as if pushed (against its first parent); empty = main's head"
+        type: string
+        default: ""
+      cards:
+        description: "Only these cards (comma separated, matched like Card Authors.txt); empty = all in the commit"
+        type: string
+        default: ""
+      all:
+        description: "Every card PSD: standards and PNG-vs-PSD, job summary only (about 813 downloads, 40 minutes)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write     # the commit comment and the bot commit
+  actions: write      # gh workflow run site.yml / tts-save.yml after a commit (a GITHUB_TOKEN push triggers no workflow)
+
+# Each push keeps its own run (a shared group keeps one pending run, so a burst of pushes would lose the middle ones'
+# reports); a dispatch gets a group of its own. Parallel landings are safe: each rests on its blobs and retries a moved head.
+concurrency:
+  group: ${{ github.event_name == 'push' && format('card-guards-{0}', github.sha) || format('card-guards-{0}', github.run_id) }}
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    # GITHUB_TOKEN pushes (the guards', the bake's, the save's) start no run; the bot's personal-token pushes are skipped here
+    # and, inside a range, by commit author and subject (card_guards.BOT_SUBJECTS).
+    if: >-
+      github.actor != 'AutoCroissant' && github.actor != 'github-actions[bot]' &&
+      (github.event_name == 'workflow_dispatch' || vars.CARD_GUARDS == 'report' || vars.CARD_GUARDS == 'on')
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      # off | report | on for a push; dry | on for a dispatch (an `all` dispatch never posts or commits)
+      MODE: ${{ github.event_name == 'push' && (vars.CARD_GUARDS || 'off') || ((inputs.dry_run || inputs.all) && 'dry' || 'on') }}
+      OUT: ${{ runner.temp }}/guards
+    steps:
+      - name: Start
+        run: echo "QUIET_FROM=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"    # the quiet window counts from here
+
+      # Every commit and tree, no card blobs (the 28 GB of PSDs and PNGs are never checked out): the push's range and
+      # its PNG pairing come from the trees; the pushed PSDs and PNGs come by blob sha through the API, verified.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          filter: "blob:none"
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/
+
+      # The guards and their import closure (no config.py: github_api reads it in a try/except, the token comes from the
+      # environment). AutoCroissant tests/test_card_guards.py runs --help on exactly this list (card_guards.SPARSE_FILES).
+      - uses: actions/checkout@v7
+        with:
+          repository: bobberlington/AutoCroissant
+          path: bot
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /commands/card_guards.py
+            /commands/png_export.py
+            /commands/card_standards.py
+            /commands/txt2_repair.py
+            /commands/card_bake.py
+            /commands/card_check.py
+            /commands/psd_edit.py
+            /commands/psd_regions.py
+            /commands/psd_parser.py
+            /commands/card_models.py
+            /commands/card_edits.py
+            /commands/font_check.py
+            /commands/github_api.py
+            /commands/git_commit.py
+            /commands/repo_history.py
+            /global_config.py
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      # The fork pin, shared with card-edits.yml (and card-sync.yml). Re-pinned to the tag that carries
+      # TypeLayer.sync_story at the release's step 2; until then the Txt2 rule (R9) only reports (story_sync() is False).
+      - timeout-minutes: 10
+        run: pip install -q requests fonttools "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261022"
+
+      # Fonts for the R7 rule: MDW/Fonts' top level, cached by the folder's tree sha as font-check.yml does.
+      - id: fonts
+        run: echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
+
+      - id: font-cache
+        uses: actions/cache@v6
+        with:
+          path: MDW/Fonts
+          key: card-fonts-${{ steps.fonts.outputs.sha }}
+
+      - if: steps.font-cache.outputs.cache-hit != 'true'
+        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+
+      # A push: before..after. A dispatch: `sha` (or main's head) against its first parent, or with `all` every card PSD.
+      # report.md is the job summary and the comment; discord.json and plan.json feed the steps below.
+      - name: Check
+        timeout-minutes: 60
+        working-directory: bot
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BEFORE: ${{ github.event_name == 'push' && github.event.before || '' }}
+          SHA: ${{ inputs.sha }}
+          CARDS: ${{ inputs.cards }}
+          ALL: ${{ inputs.all }}
+        run: |
+          args=(--clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --after "${SHA:-$GITHUB_SHA}" --author "$GITHUB_ACTOR"
+                --fonts "$GITHUB_WORKSPACE/MDW/Fonts" --out "$OUT")
+          if [ "$MODE" = "dry" ]; then args+=(--mode dry); else args+=(--mode "$MODE"); fi
+          [ -n "$BEFORE" ] && args+=(--before "$BEFORE")
+          [ -n "$CARDS" ] && args+=(--cards "$CARDS")
+          [ "$ALL" = "true" ] && args+=(--whole-tree)
+          python -m commands.card_guards check "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # The Discord post first (the point of the guard): one per push, only when a card has a refusal or a remaining issue,
+      # only when the secret is set. The URL is never printed; a failed call warns and the comment still goes up.
+      - name: Tell Discord
+        if: env.MODE == 'report' || env.MODE == 'on'
+        shell: bash
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
+        run: |
+          jq -e '.content // "" | length > 0' "$OUT/discord.json" > /dev/null || { echo "Nothing to tell."; exit 0; }
+          if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"; exit 0; fi
+          curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @"$OUT/discord.json" "$WEBHOOK" \
+            || echo "::warning::the Discord webhook call failed; the commit comment below stands"
+
+      # ... then the report as a comment on the pushed commit, when it says more than "nothing to do".
+      - name: Comment on the commit
+        id: comment
+        if: env.MODE == 'report' || env.MODE == 'on'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          jq -e '.told + .writes + .errors > 0' "$OUT/summary.json" > /dev/null || exit 0
+          after=$(jq -r .after "$OUT/plan.json")
+          id=$(jq -n --rawfile body "$OUT/report.md" '{body: $body}' \
+            | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$after/comments" --input - --jq .id)
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: card-guards
+          path: ${{ runner.temp }}/guards
+          if-no-files-found: ignore
+
+      # CARD_GUARDS=on with something to write: wait until 30 minutes after the push, leave out every card a later push
+      # touched or whose blobs moved, one commit (git_commit: the API with GITHUB_TOKEN, retried on a moved head).
+      - name: Land
+        id: land
+        if: env.MODE == 'on'
+        timeout-minutes: 45
+        working-directory: bot
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          jq -e '.writes > 0' "$OUT/summary.json" > /dev/null || { echo "Nothing to land."; exit 0; }
+          args=(--plan "$OUT/plan.json" --repo "$GITHUB_REPOSITORY")
+          [ "$EVENT" = push ] && args+=(--quiet-from "$QUIET_FROM")
+          python -m commands.card_guards land "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "sha=$(jq -r '.sha // ""' "$OUT/landed.json")" >> "$GITHUB_OUTPUT"
+
+      # A GITHUB_TOKEN push triggers no workflow: the comment says where the writes landed, and the site build and the TTS
+      # save are run here.
+      - name: Follow up
+        if: steps.land.outputs.sha != ''
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ steps.land.outputs.sha }}
+          COMMENT: ${{ steps.comment.outputs.id }}
+        run: |
+          if [ -n "$COMMENT" ]; then
+            { cat "$OUT/report.md"; printf '\nLanded in %s.\n' "$SHA"; } > "$OUT/report-landed.md"
+            jq -n --rawfile body "$OUT/report-landed.md" '{body: $body}' \
+              | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --input - > /dev/null \
+              || echo "::warning::the commit comment could not be edited"
+          fi
+          gh workflow run site.yml && gh workflow run tts-save.yml
