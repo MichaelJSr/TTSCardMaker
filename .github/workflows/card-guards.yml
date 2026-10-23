@@ -11,7 +11,8 @@
 #
 # Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = push runs skipped, report = check,
 # comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry run (job summary and
-# artifacts only); one that lands refuses while a push run of its commit is still in the quiet window.
+# artifacts only); CARD_GUARDS does not bind it, and one that lands refuses while a push run of its commit is still in the
+# quiet window.
 name: Card guards
 
 on:
@@ -68,13 +69,21 @@ jobs:
       # off | report | on for a push; dry | on for a dispatch (an `all` dispatch never posts or commits); Start lowercases it
       MODE: ${{ github.event_name == 'push' && (vars.CARD_GUARDS || 'off') || ((inputs.dry_run || inputs.all) && 'dry' || 'on') }}
     steps:
-      # The quiet window counts from here. OUT is set here: a job's env may not read the runner context. MODE lowercased:
-      # the job's `if` takes "On", the shell does not.
+      # The quiet window counts from here; a re-run's from the push (the event's pushed_at), so it does not wait again.
+      # OUT is set here: a job's env may not read the runner context. MODE lowercased: the job's `if` takes "On", the
+      # shell does not.
       - name: Start
         shell: bash
+        env:
+          PUSHED_AT: ${{ github.event.repository.pushed_at }}
         run: |
+          from=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ]; then       # a push event's is Unix seconds; an ISO time is taken too
+            if [[ "$PUSHED_AT" =~ ^[0-9]+$ ]]; then from=$(jq -nr --argjson t "$PUSHED_AT" '$t | todate')
+            elif [[ "$PUSHED_AT" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$ ]]; then from=$PUSHED_AT; fi
+          fi
           {
-            echo "QUIET_FROM=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "QUIET_FROM=$from"
             echo "OUT=$RUNNER_TEMP/guards"
             echo "MODE=$(printf %s "$MODE" | tr '[:upper:]' '[:lower:]')"
           } >> "$GITHUB_ENV"
@@ -180,9 +189,10 @@ jobs:
           python -m commands.card_guards check "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
       # The report as a comment on the pushed commit, when it says more than "nothing to do" (summary.json's "comment":
-      # told, written, a card's error, or comment-only lines such as R10). A re-run edits its earlier comment, and once that
-      # run has told Discord (the TOLD mark), the re-run does not post again; one that cannot read the comments counts as
-      # told. A failed call fails the run but never stops Land (its `if` does not ask for this step).
+      # told, written, a card's error, or comment-only lines such as R10). A re-run edits the oldest guards comment, and
+      # once any of them carries the TOLD mark it does not post again. The lookup is tried 3 times; a re-run or a dispatch
+      # that still cannot read it counts as told (an earlier run may have posted). A failed call fails the run but never
+      # stops Land (its `if` does not ask for this step).
       - name: Comment on the commit
         id: comment
         if: env.MODE == 'report' || env.MODE == 'on'
@@ -192,34 +202,42 @@ jobs:
         run: |
           jq -e '.comment > 0' "$OUT/summary.json" > /dev/null || exit 0
           after=$(jq -r .after "$OUT/plan.json")
-          if ! ids=$(gh api "repos/$GITHUB_REPOSITORY/commits/$after/comments" --paginate \
-              --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("## Card guards"))) | .id'); then
-            if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ]; then
+          # the guards' comments on commit $1, oldest first: "<id> <told>" a line (the same lookup as the failure alert's)
+          guards_comments() {
+            local wait raw
+            for wait in 0 10 30; do
+              sleep "$wait"
+              raw=$(gh api "repos/$GITHUB_REPOSITORY/commits/$1/comments" --paginate) || continue
+              jq -r --arg told "$TOLD" '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("## Card guards")))
+                | "\(.id) \(.body | contains($told))"' <<< "$raw"
+              return
+            done
+            return 1
+          }
+          if ! found=$(guards_comments "$after"); then
+            if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] || [ "$GITHUB_EVENT_NAME" != push ]; then
               echo "told=true" >> "$GITHUB_OUTPUT"
-              echo "::error::the commit's comments could not be read: this re-run neither comments nor posts again"; exit 1
+              echo "::error::the commit's comments could not be read: no comment and no post, as an earlier run may have told Discord; re-run once GitHub answers, or this push may stay untold"
+              exit 1
             fi
-            ids=""                              # a first attempt: no earlier comment of this run
+            found=""                            # a push run's first attempt: no earlier comment of its own
           fi
-          old=${ids%%$'\n'*}                    # read whole, not piped into head (a killed gh fails under pipefail)
+          old=${found%% *}
           body="$OUT/report.md"
+          if [[ "$found" == *" true"* ]]; then
+            echo "told=true" >> "$GITHUB_OUTPUT"
+            { cat "$OUT/report.md"; printf '\n%s\n' "$TOLD"; } > "$OUT/report-told.md"
+            body="$OUT/report-told.md"
+          fi
           if [ -n "$old" ]; then
-            if ! was=$(gh api "repos/$GITHUB_REPOSITORY/comments/$old" --jq .body); then
-              echo "told=true" >> "$GITHUB_OUTPUT"
-              echo "::error::the earlier comment could not be read: not posting again"; exit 1
-            fi
-            if [[ "$was" == *"$TOLD"* ]]; then
-              echo "told=true" >> "$GITHUB_OUTPUT"
-              { cat "$OUT/report.md"; printf '\n%s\n' "$TOLD"; } > "$OUT/report-told.md"
-              body="$OUT/report-told.md"
-            fi
+            echo "id=$old" >> "$GITHUB_OUTPUT"  # before the edit: a failed edit keeps the id
             jq -n --rawfile body "$body" '{body: $body}' \
               | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$old" --input - > /dev/null
-            id=$old
           else
             id=$(jq -n --rawfile body "$body" '{body: $body}' \
               | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$after/comments" --input - --jq .id)
+            echo "id=$id" >> "$GITHUB_OUTPUT"
           fi
-          echo "id=$id" >> "$GITHUB_OUTPUT"
 
       # Wait until 30 minutes after the push, then (CARD_GUARDS=on) leave out every write a later push touched or whose
       # blobs moved and commit the rest once (git_commit: the API with GITHUB_TOKEN, retried on a moved head), and settle
@@ -246,9 +264,11 @@ jobs:
           echo "sha=$(jq -r '.sha // ""' "$OUT/landed.json" 2> /dev/null)" >> "$GITHUB_OUTPUT"
           exit "$status"
 
-      # The comment is rewritten with what landed, what did not and why (a broken Land still says so). A GITHUB_TOKEN
-      # push triggers no workflow: the site build and the TTS save are run here.
+      # A GITHUB_TOKEN push triggers no workflow: the site build and the TTS save are run here (when they do not start,
+      # the comment and the post say so, and the run fails). The comment is rewritten with what landed, what did not and
+      # why (a broken Land still says so).
       - name: Follow up
+        id: follow
         if: always() && steps.land.outputs.ran == 'true'
         shell: bash
         env:
@@ -257,6 +277,13 @@ jobs:
           COMMENT: ${{ steps.comment.outputs.id }}
           TOLD_BEFORE: ${{ steps.comment.outputs.told }}
         run: |
+          refresh=ok
+          if [ -n "$SHA" ] && ! { gh workflow run site.yml && gh workflow run tts-save.yml; }; then
+            refresh=failed
+            echo "refresh=failed" >> "$GITHUB_OUTPUT"
+            printf '\n**The site build and the TTS save did not start after this commit: the site catches up within 6 hours, the TTS save the next day.**\n' \
+              >> "$OUT/report-landed.md"
+          fi
           if [ -n "$COMMENT" ]; then
             body="$OUT/report-landed.md"
             if [ ! -f "$body" ]; then
@@ -269,13 +296,15 @@ jobs:
               | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --input - > /dev/null \
               || echo "::warning::the commit comment could not be edited"
           fi
-          if [ -n "$SHA" ]; then gh workflow run site.yml && gh workflow run tts-save.yml; fi
+          if [ "$refresh" = failed ]; then echo "::error::the site build or the TTS save did not start: run them by hand"; exit 1; fi
 
       # The one Discord post, after the quiet window (discord-final.json, as Land settled it; never check's discord.json,
       # which would tell withdrawn refusals and miss the writes that did not land), only when a card has a refusal, a
       # remaining issue, an error or a write that did not land, only when the secret is set, never twice for one push.
       # Land ran but settled nothing (killed or timed out): this step fails, so the run-failed message goes out instead.
-      # The URL is never printed; a failed call warns and the comment stands.
+      # Follow up's site build or TTS save did not start: one more line, when it fits. The URL is never printed; a failed
+      # call warns and the comment stands. The comment then gets the TOLD mark; when the Comment step failed, a comment
+      # of its own carries it, so a re-run does not post again.
       - name: Tell Discord
         id: tell
         if: >-
@@ -287,6 +316,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT: ${{ steps.comment.outputs.id }}
           LAND_RAN: ${{ steps.land.outputs.ran }}
+          REFRESH: ${{ steps.follow.outputs.refresh }}
         run: |
           post="$OUT/discord-final.json"
           if [ ! -f "$post" ]; then
@@ -295,11 +325,24 @@ jobs:
           fi
           jq -e '.content // "" | length > 0' "$post" > /dev/null || { echo "Nothing to tell."; exit 0; }
           if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"; exit 0; fi
+          if [ "$REFRESH" = failed ]; then
+            jq --arg line "The bot's commit did not start the site build and the TTS save: the site catches up within 6 hours, the TTS save the next day." \
+              'if (.content + "\n" + $line | length) <= 2000 then .content += "\n" + $line else . end' "$post" > "$OUT/discord-sent.json"
+            post="$OUT/discord-sent.json"
+          fi
           if ! curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @"$post" "$WEBHOOK"; then
             echo "::warning::the Discord webhook call failed; the commit comment stands"; exit 0
           fi
           echo "posted=true" >> "$GITHUB_OUTPUT"
-          [ -n "$COMMENT" ] || exit 0
+          if [ -z "$COMMENT" ]; then
+            body="$OUT/report-landed.md"
+            [ -f "$body" ] || body="$OUT/report.md"
+            { cat "$body"; printf '\n%s\n' "$TOLD"; } > "$OUT/comment-told.md"
+            jq -n --rawfile body "$OUT/comment-told.md" '{body: $body}' \
+              | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$(jq -r .after "$OUT/plan.json")/comments" --input - > /dev/null \
+              || echo "::warning::no commit comment carries the told mark: a re-run would post again"
+            exit 0
+          fi
           { gh api "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --jq .body && printf '\n%s\n' "$TOLD"; } > "$OUT/comment-told.md" \
             && jq -n --rawfile body "$OUT/comment-told.md" '{body: $body}' \
               | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --input - > /dev/null \
@@ -314,7 +357,9 @@ jobs:
           if [ "$errors" -gt 0 ]; then echo "::error::$errors card(s) could not be checked: see the report"; exit 1; fi
 
       # A failed push run whose post did not go out: one message with the run's link, once per streak. Quiet when the last
-      # finished push run is not green and left STREAK (a red run that posted told nobody), or this push was told. No ping.
+      # finished push run is not green and left STREAK (a red run that posted told nobody), or this push was told: the
+      # Comment step's TOLD, or on a re-run the commit comment's mark looked up here (the Comment step does not run when
+      # Check fails; unreadable counts as told, as there). No ping.
       - name: Tell Discord the run failed
         id: alert
         if: >-
@@ -329,10 +374,30 @@ jobs:
         run: |
           if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"; exit 0; fi
           marked() { [ -n "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$1/artifacts" --jq ".artifacts[] | select(.name == \"$STREAK\") | .name")" ]; }
-          quiet=""
-          if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && marked "$GITHUB_RUN_ID"; then
-            quiet="An earlier attempt of this run told Discord it failed."
-          else
+          # the Comment step's lookup: the guards' comments on commit $1, oldest first, "<id> <told>" a line
+          guards_comments() {
+            local wait raw
+            for wait in 0 10 30; do
+              sleep "$wait"
+              raw=$(gh api "repos/$GITHUB_REPOSITORY/commits/$1/comments" --paginate) || continue
+              jq -r --arg told "$TOLD" '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("## Card guards")))
+                | "\(.id) \(.body | contains($told))"' <<< "$raw"
+              return
+            done
+            return 1
+          }
+          quiet="" streak=true
+          if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ]; then
+            if ! found=$(guards_comments "$GITHUB_SHA"); then
+              quiet="The commit's comments could not be read: an earlier attempt may have told this push; no message." streak=""
+              echo "::warning::$quiet"
+            elif [[ "$found" == *" true"* ]]; then
+              quiet="An earlier attempt told this push on Discord." streak=""
+            elif marked "$GITHUB_RUN_ID"; then
+              quiet="An earlier attempt of this run told Discord it failed."
+            fi
+          fi
+          if [ -z "$quiet" ]; then
             last=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow card-guards.yml --event push --status completed \
               --limit 20 --json databaseId,conclusion \
               --jq "map(select(.databaseId != $GITHUB_RUN_ID and .conclusion != \"skipped\"))[0] | select(. != null and .conclusion != \"success\") | .databaseId") \
@@ -341,11 +406,13 @@ jobs:
           fi
           mkdir -p "$RUNNER_TEMP/streak" && echo "$RUN" > "$RUNNER_TEMP/streak/told.txt"
           if [ -n "$quiet" ]; then
-            echo "$quiet" | tee -a "$GITHUB_STEP_SUMMARY"; echo "streak=true" >> "$GITHUB_OUTPUT"; exit 0
+            echo "$quiet" | tee -a "$GITHUB_STEP_SUMMARY"
+            if [ -n "$streak" ]; then echo "streak=true" >> "$GITHUB_OUTPUT"; fi
+            exit 0
           fi
           if [ "$CHECKED" = success ]; then what="was checked, but its run failed"; else what="was not guarded"; fi
           if jq -n --arg run "$RUN" --arg who "$GITHUB_ACTOR" --arg what "$what" \
-              '{content: ("Card guards: the push by " + $who + " " + $what + " (the next failures stay quiet until a run succeeds). " + $run),
+              '{content: ("Card guards: the push by " + $who + " " + $what + " (the next failures stay quiet until a push run succeeds or posts its issues). " + $run),
                 allowed_mentions: {parse: []}, flags: 4}' \
               | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK"; then
             echo "streak=true" >> "$GITHUB_OUTPUT"
@@ -362,9 +429,11 @@ jobs:
           retention-days: 30
           overwrite: true
 
+      # overwrite: a re-run replaces its earlier attempt's (one name per run)
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: card-guards
           path: ${{ runner.temp }}/guards
           if-no-files-found: ignore
+          overwrite: true
