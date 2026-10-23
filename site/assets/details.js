@@ -1,6 +1,7 @@
 // The card page's Details dropdown: the PSD's structure as the bot read it (data/details/<id>.json, built from
 // AutoCroissant's psd_details.json), on the card page and on each rulebook page. DOM-free at import: app.js renders
 // detailsHtml() and mount()s it.
+import { editorFields } from "./changes.js";
 import { esc } from "./text.js";
 
 const STATE_KEY = "psd-details";                         // sessionStorage: {details: open?, <section>: open?, "font:<name>": open?}
@@ -75,16 +76,19 @@ const templateHtml = t => {
   return `<dl class="pairs"><dt>Name layer</dt><dd>${t.name_layer ? esc(t.name_layer) : `<span class="muted">none</span>`}</dd><dt>Ability layers</dt><dd>${arr(t.ability_layers).map(esc).join(", ") || `<span class="muted">none</span>`}</dd></dl>
     ${dev.length ? `<p class="muted">Deviations from the template</p>${list(dev)}` : `<p class="muted">Follows the template.</p>`}`;
 };
-/** What cards.json already says: the parser's notes and the PSD-vs-edited values (same wording as the card page). */
+/** What cards.json already says: the parser's notes and the PSD-vs-edited values (same wording as the card page);
+    "Also edited" names an editor's fields only (changes.editorFields), the bot's own (its entries, _bot) go apart. */
 const parserHtml = (card, extras) => {
   const c = obj(card), labels = obj(extras?.labels), orig = obj(c.orig);
-  const problems = arr(c.problems), edited = arr(c.edited);
-  const fields = edited.filter(f => f in orig && f in labels), other = edited.filter(f => !fields.includes(f));
+  const problems = arr(c.problems), edited = arr(c.edited), mine = editorFields(c);
+  const fields = edited.filter(f => f in orig && f in labels), other = mine.filter(f => !fields.includes(f));
+  const bot = edited.filter(f => !fields.includes(f) && !mine.includes(f));
   const show = v => (v == null ? "—" : Array.isArray(v) ? v.join(", ") : String(v));
   const parts = [];
   if (problems.length) parts.push(`<p>Parser notes: ${problems.map(esc).join(" · ")}</p>`);
   if (fields.length) parts.push(`<table><tr><th>Field</th><th>On the card (PSD)</th><th>Edited</th></tr>${fields.map(f => `<tr><td>${esc(labels[f])}</td><td class="wrap">${esc(show(orig[f]))}</td><td class="wrap">${esc(show(c[f]))}</td></tr>`).join("")}</table>`);
   if (other.length) parts.push(`<p class="muted">Also edited: ${other.map(esc).join(", ")}</p>`);
+  if (bot.length) parts.push(`<p class="muted">Set by AutoCroissant: ${bot.map(esc).join(", ")}</p>`);
   if (extras?.badges) parts.push(`<div class="facts">${extras.badges}</div>`);
   return parts.join("") || `<p class="muted">No parser notes; nothing edited.</p>`;
 };
