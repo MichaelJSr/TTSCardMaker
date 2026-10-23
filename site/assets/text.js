@@ -101,8 +101,9 @@ export function makeRenderer({ cards, icons }) {
     const [base, variant] = token.split(":");
     const ic = icons[norm(base)];
     if (!ic) return null;
-    const img = `<img class="tok" src="${esc(ic.file)}" alt="${esc(base)}" data-tip="${esc(base.replace(/_/g, " "))}${variant === "no" ? " (not)" : ""}">`;
-    return variant && variant.trim().toLowerCase() === "no" ? `<span class="tok-no">${img}</span>` : img;
+    const no = !!variant && variant.trim().toLowerCase() === "no";
+    const img = `<img class="tok" src="${esc(ic.file)}" alt="${esc(base)}" data-tip="${esc(base.replace(/_/g, " "))}${no ? " (not)" : ""}">`;
+    return no ? `<span class="tok-no">${img}</span>` : img;
   }
 
   // icons and badges as [index, length, html]; links as [index, length, card], judged over the whole text with each
