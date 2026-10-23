@@ -203,9 +203,9 @@ def shown(e, current):
 
 def page_chain(e, stats, old_stats):
     """chain_of for a site card: re-reads folded (a version read again at the same commit by a newer parser gives way to
-    the newer reading) and the current card as shown."""
+    the newer reading; by when, so a start the bot carried still folds) and the current card as shown."""
     chain = chain_of(e["key"], stats, old_stats)
-    out = [v for v, w in zip(chain, chain[1:]) if v.timestamp != w.timestamp] + chain[len(chain) - 1:]
+    out = [v for v, w in zip(chain, chain[1:]) if when(v) != when(w)] + chain[len(chain) - 1:]
     if out and out[len(out) - 1] is stats.get(e["key"]):
         out[len(out) - 1] = shown(e, out[len(out) - 1])
     return out
