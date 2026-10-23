@@ -109,10 +109,17 @@ the bot's last `/update_stats` + `/push`. Once `site/Card Edits.json` has `alias
 on 2026-10-22), `aliases.pkl` isn't read: the cards' aliases are their Card Edits entries', and no `_by:
 AutoCroissant` entry (the migration's aliases and series, the moved stat exclusions) counts as a website edit. Where the
 migration added a field to an editor's entry, the entry keeps the editor's `_by` and lists that field in `_bot`
-(`"_bot":["series"]`): the field is nobody's edit, so the Edited badge, the Website edits tab, the person page and the
-stamp-counted edit batches leave it out (the build's `botEdited`). An edit on the website takes a field it sets or
-unsets out of `_bot`, and an edit to a `_by: AutoCroissant` entry first lists the entry's fields in `_bot`, so the
-editor gets only the fields they change (edit.js `editsFile`, as the bot's Discord edits do). The build reads
+(`"_bot":["series"]`): `_bot` holds the fields that are not the stamp editor's. Such a field is nobody's edit, so the
+Edited badge, the Website edits tab, the person page and the stamp-counted edit batches leave it out (the build's
+`botEdited`), unless `_credit` names its editor: a Discord edit to an entry whose PSD fields are another editor's keeps
+that entry's stamps, lists the fields it sets in `_bot` and credits each one
+(`"_credit":{"series":{"_by":"discord:name","_at":"…"}}`). The build keeps a `_credit` field only while it is in `_bot`
+(another shape is a warning) and writes it as the card's `fieldBy`; the badge's tooltip and the Website edits tab (one
+row per card and editor) name that editor "(via Discord)", the stamp-counted batches give each `_credit` stamp a Discord
+batch, and the People counts never give the field to the stamp editor (a Discord user has no row). An edit on the website
+takes a field it sets or unsets out of `_bot` and `_credit` (an empty `_credit` goes), and an edit to a `_by:
+AutoCroissant` entry first lists the entry's fields in `_bot`, so the editor gets only the fields they change (edit.js
+`editsFile`, as the bot's Discord edits do). The build reads
 the pickles with an allowlist of what they hold (the bot's `CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict`, `list` and a few plain data types such as
 `set` and `datetime`). Another bot class (`commands.*`, moved or new) is read as plain data with a warning. A pickle
 naming anything else is refused and nothing in it runs: a refused `stats.pkl` stops the build, and the site stays as it

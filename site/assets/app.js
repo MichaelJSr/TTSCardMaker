@@ -255,9 +255,9 @@ function setParams(updates, { replace = true } = {}) {
 // ---- cards (browse) --------------------------------------------------------------------------------
 const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
 function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi] = v.split("-").map(Number); return [isNaN(lo) ? 0 : lo, isNaN(hi) ? 99 : hi]; }
-// edited on the website or in Discord: an editor's fields (changes.editorFields), never a _by AutoCroissant entry (the
-// 2026-10-22 migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited)
-const webEdited = c => changes.editorFields(c).length > 0;
+// edited on the website or in Discord: an editor's fields (changes.fieldEditors), never a _by AutoCroissant entry (the
+// 2026-10-22 migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited without fieldBy)
+const webEdited = c => changes.fieldEditors(c).length > 0;
 function filterCards(p, { facets = true } = {}) {
   const pred = compile(p.get("q") || "");
   let list = pred ? S.cards.filter(pred) : S.cards.slice();
@@ -455,7 +455,7 @@ function openCard(id, showDetails = false) {
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
-          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(`${changes.isDiscord(c.editBy) ? "Changed" : "Changed on the website"}: ${changes.editorFields(c).join(", ")}${c.editBy ? ` · ${changes.nameText(c.editBy)}` : ""}${c.editAt ? ` · ${c.editAt.slice(0, 10)}` : ""}`)}">Edited</span>` : ""}
+          ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(changes.editedTip(c))}">Edited</span>` : ""}
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>
@@ -754,12 +754,12 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   const recent = S.cards.filter(c => c.ts).sort((a, b) => b.ts - a.ts).slice(0, 60);
   page(`<section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted.</p><div class="feed">${recent.map(item).join("")}</div></section>${updated}`);
 }
-/** The Website edits tab: the cards an editor's Card Edits.json entry changes now (changes.webEdits: never the bot's, at most WEB_EDITS_SHOWN) */
+/** The Website edits tab: one row per card and editor whose Card Edits.json edit counts now (changes.webEdits: never the bot's, at most WEB_EDITS_SHOWN) */
 function webEditsHtml() {
   const { shown, total } = changes.webEdits(S.all);
   return `<section class="panel"><h3>Edited on the website or in Discord${total ? ` <span class="muted">${total}</span>` : ""}</h3>
     <p class="muted">The cards an edit on the website or in Discord changes now, newest first${total > shown.length ? ` (the ${shown.length} newest)` : ""}: the fields, who and when. Aliases and series the bot moved in from Discord aren't listed.</p>
-    ${total ? `<ul>${shown.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(changes.editorFields(c).join(", "))}${c.editBy ? ` · ${changes.nameHtml(c.editBy)}` : ""}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul>` : `<p class="empty">No card is edited on the website or in Discord.</p>`}</section>`;
+    ${total ? `<ul>${shown.map(({ c, by, at, fields }) => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(fields.join(", "))}${by ? ` · ${changes.nameHtml(by)}` : ""}${at ? ` · ${esc(at.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul>` : `<p class="empty">No card is edited on the website or in Discord.</p>`}</section>`;
 }
 /** The Parser notes tab: the cards the bot hasn't parsed yet, and the parser's notes */
 function parserNotesHtml() {
