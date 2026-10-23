@@ -22,8 +22,8 @@ Renderer behavior that shaped the design (tested in Photoshop 2023 and macOS Cor
     are [halo][icon][spacer] the same way: the halo is its own PNG, drawn first.
     Apple apps (CoreText) draw plain outlines above SVG glyphs, so there :sticker shows only the outline.
   * CoreText ignores <use> that points at an <image>, so each color glyph embeds its PNG directly.
-  * Photoshop clips SVG glyphs to the line box (ascent/descent and the run's advance; probe 2026-10-20), so the
-    halo stays inside it: GLOW_SIZE is what fits under an icon, and the spacers widen the token by the halo.
+  * Photoshop draws SVG glyphs whole, past the line box (glow test 2026-10-23), so the halo may reach beyond
+    ascent/descent; the spacers widen the token by the halo so it stays off the neighbouring letters.
 
 usage: python build_stoogedings.py
 Rebuilds MDW/Fonts/stoogedings.ttf from Types/ and Types/Stars/ of the repo this script lives in. Run it after
@@ -59,8 +59,8 @@ TRACE = 1024                  # long side used for tracing outlines, px
 OUTLINE = 70                  # :sticker outline thickness, font units (~7 px at a 100 px font size)
 NO_RED = "#e01b22"
 FIRST_PUA = 0xE000
-# :glow halo: Nebulous_Precipice's darkmatter drop shadow (120 px, spread 20%, 80%), its size cut to the line box
-GLOW_SIZE = 100               # halo reach, font units: what fits under an icon (descent 281 - 180)
+# :glow halo: Nebulous_Precipice's darkmatter drop shadow (120 px, spread 20%, 80%), its size cut to 0.3 em (owner)
+GLOW_SIZE = 300               # halo reach, font units
 GLOW_SPREAD = 0.20            # Photoshop's Spread: the matte grows by this share of the size
 GLOW_OPACITY = 0.80
 GLOW_SIGMA = 0.42             # blur sigma per unit of blurred reach (fits that shadow)
@@ -451,7 +451,6 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         # glow = [halo, advance GLOW_SIZE-SIDE] [color icon] [glow_space]; glyphs added last
         glow = halo(arr[..., 3], w_u, h_u)
         g_top, g_w, g_h = top + GLOW_SIZE, glow.shape[1] * GLOW_WORK, glow.shape[0] * GLOW_WORK
-        assert g_top <= font["hhea"].ascent and g_top - g_h >= font["hhea"].descent, f"{key}: halo outside the line box"
         size = (max(1, round(g_w / GLOW_UPP)), max(1, round(g_h / GLOW_UPP)))
         g_alpha = np.clip(np.round(cv2.resize(glow, size, interpolation=cv2.INTER_AREA) * 255), 0, 255).astype(np.uint8)
         docs = {}
