@@ -117,7 +117,7 @@ that entry's stamps, lists the fields it sets in `_bot` and credits each one
 (another shape is a warning) and writes it as the card's `fieldBy`; the badge's tooltip and the Website edits tab (one
 row per card and editor) name that editor "(via Discord)", the stamp-counted batches give each `_credit` stamp a Discord
 batch, and the People counts never give the field to the stamp editor (a Discord user has no row). An edit on the website
-takes a field it sets or unsets out of `_bot` and `_credit` (an empty `_credit` goes), and an edit to a `_by:
+takes a field it sets or unsets out of `_bot` and `_credit` (an empty `_credit`, or one that isn't an object, goes), and an edit to a `_by:
 AutoCroissant` entry first lists the entry's fields in `_bot`, so the editor gets only the fields they change (edit.js
 `editsFile`, as the bot's Discord edits do). The build reads
 the pickles with an allowlist of what they hold (the bot's `CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict`, `list` and a few plain data types such as

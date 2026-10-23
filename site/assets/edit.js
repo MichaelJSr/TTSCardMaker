@@ -143,8 +143,9 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json") {
       cur._bot = cur._bot.filter(f => !(f in op.set) && !op.unset.includes(f) && f in cur);
       if (!cur._bot.length) delete cur._bot;
     }
-    if (cur._credit && typeof cur._credit === "object" && !Array.isArray(cur._credit)) {   // a _bot field's Discord editor: goes with it
-      cur._credit = Object.fromEntries(Object.entries(cur._credit).filter(([f]) => (cur._bot || []).includes(f)));
+    if ("_credit" in cur) {                        // a _bot field's Discord editor: goes with it; not an object: goes (as the bot's)
+      const ok = cur._credit && typeof cur._credit === "object" && !Array.isArray(cur._credit);
+      cur._credit = Object.fromEntries(Object.entries(ok ? cur._credit : {}).filter(([f]) => Array.isArray(cur._bot) && cur._bot.includes(f)));
       if (!Object.keys(cur._credit).length) delete cur._credit;
     }
     const fields = [...ORDER.filter(f => f in cur), ...Object.keys(cur).filter(f => !(f in FIELDS))];
