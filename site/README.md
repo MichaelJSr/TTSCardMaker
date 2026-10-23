@@ -324,7 +324,7 @@ Decryption needs `crypto.subtle` (https or localhost).
 `.github/workflows/font-check.yml` runs on every push to `main` that changes a PSD or `MDW/Fonts/`: the bot's checker
 (AutoCroissant `commands/font_check.py`) reads the pushed card PSDs by blob and lists the fonts their visible text layers
 ask for that `MDW/Fonts` does not supply. When something is missing it writes the job summary, posts (if the repository
-secret `DISCORD_STANDARDS_WEBHOOK` is set) to the standards channel pinging the card makers' role (`546427268751294475`), one line
+secret `DISCORD_STANDARDS_WEBHOOK` is set) to the standards channel pinging the card makers' role (`546427268751294475`; the only ping of the checks), one line
 per author and font ("... has pushed a card without adding the ... font to MDW/Fonts, bite this user."), and comments on
 the commit. It never reverts or rejects a push: the fix is to add the font file to the top level of `MDW/Fonts/`.
 Run it by hand from the Actions tab (`all` = every card, about 813 downloads).
@@ -336,7 +336,7 @@ bot's checker (AutoCroissant `commands/card_check.py`) reads the pushed card PSD
 `/update_stats` would print for each (NO STARS FOUND, MISSPELT TYPE, SEVERAL CREATURES, HP/DEF/ATK/SPD NOT FOUND, STATS TOO
 HIGH, ABILITY TEXT NOT FOUND, UNKNOWN TYPE), after the card's `site/Card Edits.json` entry (`problems_ok`, `allow_high_stats`,
 `creatures`) and the bot's exclusions. Report only: the job summary, a comment on the commit and, with the
-`DISCORD_FONT_WEBHOOK` secret (the font channel), one Discord line per card ("... has pushed ... with: ..."); it never reverts or rejects
+`DISCORD_STANDARDS_WEBHOOK` secret (the standards channel, no ping), one Discord line per card ("... has pushed ... with: ..."); it never reverts or rejects
 a push, and an unreadable PSD is one error line. Run it by hand from the Actions tab (`all` = every card, 25-30 minutes).
 
 ## Working on it
