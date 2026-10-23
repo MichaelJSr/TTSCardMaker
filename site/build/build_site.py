@@ -26,6 +26,9 @@ Where the data comes from:
   * Decks: site/decks/<owner>/<slug>.json, hands published from the deck builder by signed-in editors (own decks; admins
     any) with the edit batch. A public deck is resolved against the visible cards (unknown ones dropped with a warning);
     a private one is AES-GCM ciphertext made in the browser and passes through as it is. Bad files skipped, never a failed build.
+  * Passwords: site/logins/<login>.json, a signed-in editor's GitHub token encrypted in the browser with their password
+    (login.js). Shapes checked (bad files skipped with a warning, never a failed build), copied to data/logins/<login>.json
+    (lowercase name), the password sign-in's fallback when GitHub's API can't be reached.
   * Image versions and contributions: one pass over the git history (commit metadata only, no file contents) lists
     every commit that changed each card PNG, following folder moves (exact renames, and a move that changed the image
     when one PNG of that file name was deleted), gives each card its first upload (fs: created's fallback), and counts
@@ -42,7 +45,8 @@ PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) ar
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
-changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown), images, icons,
+changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown),
+data/logins/<login>.json (the password sign-in's fallback copy), images, icons,
 assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
@@ -111,6 +115,7 @@ CREDIT = "_credit"                            # {field: {"_by", "_at"}}: a _bot 
 ADMINS_PATH = "site/Website Admins.txt"
 PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
 DECKS_DIR = "site/decks"                      # <owner>/<slug>.json per hand published from the deck builder
+LOGINS_DIR = "site/logins"                    # <login>.json: a token sealed with its owner's password (password sign-in)
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits (subseries: database only, never from the folder)
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
@@ -1099,6 +1104,88 @@ def clean_deck(raw, folder, slug, cards):
         notes.append(f"unknown fields ignored: {', '.join(unknown)}")
     return {"owner": owner, "slug": slug, "name": name, "description": desc, "cards": ids, "dropped": len(bad), "field": field,
             "updated": updated, "n": len(ids) + (1 if field else 0)}, notes
+
+
+# ---- password sign-in (site/logins/<login>.json) ------------------------------------------------------------
+LOGIN_MAX_BYTES = 4 * 1024
+LOGIN_KDF = "PBKDF2-SHA-256"                                        # login.js KDF
+LOGIN_ITER = (1_000_000, 10_000_000)                                # login.js MIN_ITER, MAX_ITER
+LOGIN_SALT, LOGIN_IV, LOGIN_CT = 16, 12, 1024                       # bytes; ct: the AES-GCM tag (16) plus a token
+LOGIN_FIELDS = ("v", "login", "kdf", "iterations", "salt", "iv", "ct", "at")
+
+
+def clean_login(raw, stem):
+    """One password file's JSON -> (the entry data/logins/ gets, notes); None when it can't be used (login.js checkFile)."""
+    if not isinstance(raw, dict):
+        return None, ["not a JSON object"]
+    if type(raw.get("v")) is not int or raw["v"] != 1:
+        return None, ['"v" must be 1']
+    login = raw.get("login")
+    if not isinstance(login, str) or not LOGIN_RE.match(login):
+        return None, ['"login" must be a GitHub login']
+    if login != stem:                             # the file name is the login, exactly: only its owner writes it
+        return None, [f"login {login!r} doesn't match the file name {stem!r}"]
+    if raw.get("kdf") != LOGIN_KDF:
+        return None, [f'"kdf" must be {LOGIN_KDF}']
+    if type(raw.get("iterations")) is not int or not LOGIN_ITER[0] <= raw["iterations"] <= LOGIN_ITER[1]:
+        return None, [f'"iterations" must be {LOGIN_ITER[0]} to {LOGIN_ITER[1]}']
+    if not b64_bytes(raw.get("salt"), LOGIN_SALT):
+        return None, [f'"salt" must be {LOGIN_SALT} bytes in base64']
+    if not b64_bytes(raw.get("iv"), LOGIN_IV):
+        return None, [f'"iv" must be {LOGIN_IV} bytes in base64']
+    ct = b64_bytes(raw.get("ct"))
+    if ct is None or not DECK_TAG < len(ct) <= LOGIN_CT:
+        return None, [f'"ct" must be AES-GCM ciphertext in base64 (at most {LOGIN_CT} bytes)']
+    notes, entry = [], {k: raw[k] for k in LOGIN_FIELDS if k != "at"}
+    at = raw.get("at")
+    if at is not None and not (isinstance(at, str) and DECK_UPDATED_RE.match(at)):
+        notes.append(f'"at" {str(at)[:40]!r} isn\'t a date like 2026-10-23T01:45:00Z, ignored')
+    elif at:
+        entry["at"] = at
+    unknown = sorted(str(k) for k in set(raw) - set(LOGIN_FIELDS))
+    if unknown:
+        notes.append(f"unknown fields ignored: {', '.join(unknown)}")
+    return entry, notes
+
+
+def read_logins():
+    """site/logins/*.json -> the password files the site publishes, by login. Warns, never fails: a bad file is skipped."""
+    folder = os.path.join(REPO, LOGINS_DIR)
+    out = {}
+    for name in sorted(os.listdir(folder)) if os.path.isdir(folder) else []:
+        rel, path = f"{LOGINS_DIR}/{name}", os.path.join(folder, name)
+        if not name.endswith(".json") or not os.path.isfile(path):
+            continue
+        try:
+            if os.path.getsize(path) > LOGIN_MAX_BYTES:
+                log(f"warning: {rel}: over {LOGIN_MAX_BYTES // 1024} KB, skipped")
+                continue
+            raw = json.load(open(path, encoding="utf-8"))
+        except (ValueError, OSError) as e:
+            log(f"warning: {rel} can't be read as JSON, skipped: {e}")
+            continue
+        entry, notes = clean_login(raw, name[:-5])
+        for note in notes:
+            log(f"warning: {rel}: {note}")
+        if entry is None:
+            continue
+        if entry["login"].lower() in out:
+            log(f"warning: {rel}: another file already has this login, skipped")
+            continue
+        out[entry["login"].lower()] = entry
+    if out:
+        log(f"passwords: {len(out)} from {LOGINS_DIR}/")
+    return [out[k] for k in sorted(out)]
+
+
+def write_logins(folder, logins):
+    """data/logins/<login in lowercase>.json per password file (the sign-in fetches the typed login, any case)."""
+    if not logins:
+        return
+    os.makedirs(folder, exist_ok=True)
+    for entry in logins:
+        with open(os.path.join(folder, f"{entry['login'].lower()}.json"), "w", encoding="utf-8") as fh:
+            json.dump(entry, fh, separators=(",", ":"), sort_keys=True)
 
 
 def read_decks(cards):
@@ -2124,7 +2211,7 @@ def main():
         "cards": cards, "icons": icons, "banlist": banlist,
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
-                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR},
+                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR},
         "admins": parse_admins(),
         "decks": {"public": len(public_decks), "private": len(private_decks)},     # the Deck builder page shows the public count; the list is decks.json
         "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
@@ -2176,6 +2263,12 @@ def main():
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
             fh.write(blob)
+    try:                                      # password files: the sign-in's copy when GitHub's API can't be reached
+        logins = read_logins()
+    except Exception as e:                    # never a failed build
+        warn(f"no password files: {type(e).__name__}: {e}")
+        logins = []
+    write_logins(os.path.join(DIST, "data", "logins"), logins)
     if detail_files:                          # one small file per card, fetched when its Details dropdown opens
         os.makedirs(os.path.join(DIST, "data", "details"))
         for cid, rec in detail_files.items():
