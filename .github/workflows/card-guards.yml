@@ -1,13 +1,13 @@
 # The push guards (AutoCroissant docs/Campaigns/PUSH_GUARDS.md; the bot's commands/card_guards.py):
 #   1. a card PSD pushed without its PNG gets the PNG from the PSD's own stored image (Photoshop's composite, converted
 #      the way the card was exported), gated; when a gate refuses, no PNG and a report instead;
-#   2. the pushed PSDs are checked against the card standards (CARD_STANDARDIZATION_CAMPAIGN.md); only the 0-pixel
-#      fixes (Txt2 stories kept in sync, exact layer names) are made, the rest is reported.
+#   2. the pushed PSDs are checked against the card standards (CARD_STANDARDIZATION_CAMPAIGN.md); only the owner's easy
+#      fix (Txt2 stories kept in sync, 0 pixels) is made, the rest is reported.
 # One report per push: the job summary, a comment on the commit, and ONE Discord post to the standards channel
 # ("<login> pushed <card> with these issues: ..."; nobody pinged, no link previews). The post, the PNGs and the fixes wait
 # for the 30-minute quiet window: a PNG the author pushed meanwhile withdraws its refusal, a card pushed again is left to
-# that push's run, a write that did not land is told. It never reverts or rejects a push. A run that fails tells the
-# standards channel once per failure streak.
+# that push's run, a write that did not land is told (in report mode, the PNG the bot would make). It never reverts or
+# rejects a push. A run that fails tells the standards channel once per failure streak (a cancel by hand does not).
 #
 # Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = push runs skipped, report = check,
 # comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry run (job summary and
@@ -71,7 +71,7 @@ jobs:
     steps:
       # The quiet window counts from here; a re-run's from the push (the event's pushed_at), so it does not wait again.
       # OUT is set here: a job's env may not read the runner context. MODE lowercased: the job's `if` takes "On", the
-      # shell does not.
+      # shell does not. STARTED: the failure alert tells a cancel by hand from the job's timeout.
       - name: Start
         shell: bash
         env:
@@ -84,6 +84,7 @@ jobs:
           fi
           {
             echo "QUIET_FROM=$from"
+            echo "STARTED=$(date +%s)"
             echo "OUT=$RUNNER_TEMP/guards"
             echo "MODE=$(printf %s "$MODE" | tr '[:upper:]' '[:lower:]')"
           } >> "$GITHUB_ENV"
@@ -241,9 +242,11 @@ jobs:
 
       # Wait until 30 minutes after the push, then (CARD_GUARDS=on) leave out every write a later push touched or whose
       # blobs moved and commit the rest once (git_commit: the API with GITHUB_TOKEN, retried on a moved head), and settle
-      # the one Discord post (discord-final.json) and the comment's new body (report-landed.md). Report mode: --dry-run.
-      # Exit 1: the commit failed (both files are written first: land never raises). A dispatch with dry_run off lands at
-      # once on the blob check alone (no quiet window; it was refused above while its commit's push run was waiting).
+      # the one Discord post (discord-final.json) and the comment's new body (report-landed.md). Report mode: --dry-run,
+      # and only with something to tell (its writes are told as lines, never made). Exit 1: the commit failed (both files
+      # are written first: land never raises). A dispatch with dry_run off lands at once on the blob check alone (no quiet
+      # window; it was refused above while its commit's push run was waiting). --rerun (a re-run, a dispatch): an earlier
+      # run may have landed the writes, so a branch that cannot be read tells none of them as not made.
       - name: Land
         id: land
         if: "!cancelled() && steps.check.outcome == 'success' && (env.MODE == 'report' || env.MODE == 'on')"
@@ -254,19 +257,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT: ${{ github.event_name }}
         run: |
-          jq -e '.told + .writes > 0' "$OUT/summary.json" > /dev/null || { echo "Nothing to land or tell."; exit 0; }
+          jq -e --arg mode "$MODE" '.told + (if $mode == "on" then .writes else 0 end) > 0' "$OUT/summary.json" > /dev/null \
+            || { echo "Nothing to land or tell."; exit 0; }
           echo "ran=true" >> "$GITHUB_OUTPUT"
           args=(--plan "$OUT/plan.json" --repo "$GITHUB_REPOSITORY")
           [ "$EVENT" = push ] && args+=(--quiet-from "$QUIET_FROM")
           [ "$MODE" = report ] && args+=(--dry-run)
+          if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] || [ "$EVENT" != push ]; then args+=(--rerun); fi
           status=0
           python -m commands.card_guards land "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
-          echo "sha=$(jq -r '.sha // ""' "$OUT/landed.json" 2> /dev/null)" >> "$GITHUB_OUTPUT"
+          {
+            echo "sha=$(jq -r '.sha // ""' "$OUT/landed.json" 2> /dev/null)"
+            echo "already=$(jq -r '.already // [] | length' "$OUT/landed.json" 2> /dev/null)"
+          } >> "$GITHUB_OUTPUT"
           exit "$status"
 
       # A GITHUB_TOKEN push triggers no workflow: the site build and the TTS save are run here (when they do not start,
-      # the comment and the post say so, and the run fails). The comment is rewritten with what landed, what did not and
-      # why (a broken Land still says so).
+      # the comment and the post say so, and the run fails), and again by a re-run that finds the writes already landed
+      # (its earlier attempt's may not have started; both queue, so a second start is harmless). The comment is rewritten
+      # with what landed, what did not and why (a broken Land still says so).
       - name: Follow up
         id: follow
         if: always() && steps.land.outputs.ran == 'true'
@@ -274,11 +283,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SHA: ${{ steps.land.outputs.sha }}
+          ALREADY: ${{ steps.land.outputs.already }}
           COMMENT: ${{ steps.comment.outputs.id }}
           TOLD_BEFORE: ${{ steps.comment.outputs.told }}
         run: |
-          refresh=ok
-          if [ -n "$SHA" ] && ! { gh workflow run site.yml && gh workflow run tts-save.yml; }; then
+          refresh=ok start=""
+          [ -n "$SHA" ] && start=true
+          if [ "$MODE" = on ] && [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && [ "${ALREADY:-0}" -gt 0 ]; then start=true; fi
+          if [ -n "$start" ] && ! { gh workflow run site.yml && gh workflow run tts-save.yml; }; then
             refresh=failed
             echo "refresh=failed" >> "$GITHUB_OUTPUT"
             printf '\n**The site build and the TTS save did not start after this commit: the site catches up within 6 hours, the TTS save the next day.**\n' \
@@ -359,7 +371,8 @@ jobs:
       # A failed push run whose post did not go out: one message with the run's link, once per streak. Quiet when the last
       # finished push run is not green and left STREAK (a red run that posted told nobody), or this push was told: the
       # Comment step's TOLD, or on a re-run the commit comment's mark looked up here (the Comment step does not run when
-      # Check fails; unreadable counts as told, as there). No ping.
+      # Check fails; unreadable counts as told, as there). Quiet too for a cancel by hand (cancelled before the job's
+      # 150-minute timeout: whoever cancelled it knows). No ping.
       - name: Tell Discord the run failed
         id: alert
         if: >-
@@ -371,7 +384,11 @@ jobs:
           WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
           RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           CHECKED: ${{ steps.check.outcome }}
+          JOB_STATUS: ${{ job.status }}
         run: |
+          if [ "$JOB_STATUS" = cancelled ] && [ $(( $(date +%s) - ${STARTED:-$(date +%s)} )) -lt 8700 ]; then
+            echo "Cancelled by hand: no message." | tee -a "$GITHUB_STEP_SUMMARY"; exit 0
+          fi
           if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"; exit 0; fi
           marked() { [ -n "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$1/artifacts" --jq ".artifacts[] | select(.name == \"$STREAK\") | .name")" ]; }
           # the Comment step's lookup: the guards' comments on commit $1, oldest first, "<id> <told>" a line
