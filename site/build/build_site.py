@@ -420,6 +420,21 @@ def text_since(card, old, text):
     return start
 
 
+def date_text(entry, card, old):
+    """entry's history (the card's older texts other than entry's ability, oldest first) and since (text_since, when
+    not ts)."""
+    versions = []
+    for v in old or []:
+        text = getattr(v, "ability", None)
+        if text and text != entry["ability"] and all(x["ability"] != text for x in versions):
+            versions.append({"ts": analytics.when(v) if getattr(v, "timestamp", None) is not None else None, "ability": text})
+    if versions:
+        entry["history"] = sorted(versions, key=lambda x: x["ts"] or 0)
+    since = text_since(card, old, entry["ability"])
+    if since is not None and since != entry["ts"]:
+        entry["since"] = since                    # ts stays the last PSD commit ("updated", Recently updated)
+
+
 # ---- repo listing ----------------------------------------------------------------------------------
 def repo_tree():
     """{path: blob sha} for every file at HEAD (works in a sparse, blobless checkout)."""
@@ -1682,7 +1697,7 @@ def contributions(cards, people, profiles, edits, commits):
     one row.
     github: a GitHub login known to be theirs (their profile's, else the most used of the logins in their noreply commit
     emails, _by stamps and Edit-by trailers), never a git name. recent / recentEdits: the last card commits [ts, subject,
-    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" UTC, cards created (created, else fs), edits, commits]]."""
+    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" Pacific, cards created (created, else fs), edits, commits]]."""
     by_login = {p["login"].lower(): p for p in profiles}
     rec, seen_logins, spelled = {}, {}, {}
     noreply = {}                                  # a noreply email's login -> {credited name: commits}
@@ -1984,16 +1999,7 @@ def main():
         if sha and getattr(c, "blob_sha", None) and sha != c.blob_sha:
             entry["reparsePending"] = True       # PSD committed since the bot last read it (a bake, or any edit)
         apply_edits(entry, edits, sha, shown)
-        versions = []
-        for old in old_stats.get(name, []) or []:
-            text = getattr(old, "ability", None)
-            if text and text != entry["ability"] and all(v["ability"] != text for v in versions):
-                versions.append({"ts": analytics.when(old) if getattr(old, "timestamp", None) is not None else None, "ability": text})
-        if versions:
-            entry["history"] = sorted(versions, key=lambda v: v["ts"] or 0)
-        since = text_since(c, old_stats.get(name), entry["ability"])
-        if since is not None and since != entry["ts"]:
-            entry["since"] = since                # ts stays the last PSD commit ("updated", Recently updated)
+        date_text(entry, c, old_stats.get(name))
         (rules if is_rule else cards).append(entry)
 
     # duplicates: more PNGs exported from one card's PSD (A_Snack.psd -> A_Snack2.png "Breakfast", A_Snack3.png
@@ -2014,10 +2020,11 @@ def main():
         names = alias_names.get(os.path.basename(path).lower(), []) + edit_aliases(edits, os.path.splitext(os.path.basename(path))[0])
         name = (bot_dup_names.get(os.path.basename(path).lower())                     # alias or the PSD's hidden title
                 or (" ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else original["name"]))
-        dup = {k: original.get(k) for k in DATA_FIELDS + ("author", "ts", "since", "psd", "history")}   # its PSD's history too
+        dup = {k: original.get(k) for k in DATA_FIELDS + ("author", "ts", "psd")}
         dup.update(id=unique_slug(name), name=name, key=os.path.splitext(os.path.basename(path))[0].replace("_", " "),
                    png=path, problems=[], dup=original["id"])
         apply_edits(dup, edits, tree.get(original["psd"]))
+        date_text(dup, stats[original["key"]], old_stats.get(original["key"]))   # its PSD's history, against its own text
         for k in ("pending", "refused", "reparsePending"):   # same PSD: its image changes with the original's
             value = [f for f in original[k] if f != "name"] if k == "pending" and original.get(k) else original.get(k)
             if value and not dup.get(k):         # not the name: a duplicate prints its own title
