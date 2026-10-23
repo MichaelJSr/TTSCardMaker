@@ -110,10 +110,9 @@ jobs:
         with:
           python-version: "3.12"
 
-      # The fork pin, shared with card-edits.yml (and card-sync.yml). Re-pinned to the tag that carries
-      # TypeLayer.sync_story at the release's step 2; until then the Txt2 rule (R9) only reports (story_sync() is False).
+      # The fork pin, shared with card-edits.yml and card-sync.yml; cards-20261022b carries TypeLayer.sync_story (R9's fix).
       - timeout-minutes: 10
-        run: pip install -q requests fonttools "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261022"
+        run: pip install -q requests fonttools "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261022b"
 
       # Fonts for the R7 rule: MDW/Fonts' top level, cached by the folder's tree sha as font-check.yml does.
       - id: fonts
