@@ -5,6 +5,7 @@ Set a token in this font and it turns into the icon (case-insensitive; space, _ 
   [fire:tint]     one-color version that takes the text color
   [fire:sticker]  the icon on an outline that takes the text color
   [fire:no]       the icon crossed out with a red prohibition sign
+  [fire:glow]     the icon on a soft white halo; [fire:darkglow] on a soft black one
 Every icon also has a fixed Private Use Area codepoint (stable across rebuilds), and U+2605 is the gold star.
 
 Timing tags become badges: "(1CD)" set in this font draws a pill in the tag's color group (on your turn / at any
@@ -17,9 +18,14 @@ Renderer behavior that shaped the design (tested in Photoshop 2023 and macOS Cor
   * Photoshop renders SVG glyphs, including embedded PNGs, but paints SVG `currentColor` (and context-fill,
     CPAL var()) black. Anything that should follow the text color is therefore a plain TrueType outline.
   * Photoshop draws overlapping glyphs in text order, so :sticker is [outline][icon][spacer] and :no is
-    [icon][zero-width sign], produced by GSUB multiple substitution; no PNG is stored twice.
+    [icon][zero-width sign], produced by GSUB multiple substitution; no PNG is stored twice. :glow and :darkglow
+    are [halo][icon][spacer] the same way: the halo is its own PNG, drawn first.
     Apple apps (CoreText) draw plain outlines above SVG glyphs, so there :sticker shows only the outline.
   * CoreText ignores <use> that points at an <image>, so each color glyph embeds its PNG directly.
+  * Photoshop draws SVG glyphs whole, past the line box (glow test 2026-10-23), so the halo may reach beyond
+    ascent/descent; the spacers widen the token by the halo so it stays off the neighbouring letters.
+  * A layer stroke outlines every bit of a halo's alpha (a black disc on stroked card text): use :glow on
+    unstroked text.
 
 usage: python build_stoogedings.py
 Rebuilds MDW/Fonts/stoogedings.ttf from Types/ and Types/Stars/ of the repo this script lives in. Run it after
@@ -55,6 +61,14 @@ TRACE = 1024                  # long side used for tracing outlines, px
 OUTLINE = 70                  # :sticker outline thickness, font units (~7 px at a 100 px font size)
 NO_RED = "#e01b22"
 FIRST_PUA = 0xE000
+# :glow halo: Nebulous_Precipice's darkmatter drop shadow (120 px, spread 20%, 80%), its size cut to 0.3 em (owner)
+GLOW_SIZE = 300               # halo reach, font units
+GLOW_SPREAD = 0.20            # Photoshop's Spread: the matte grows by this share of the size
+GLOW_OPACITY = 0.80
+GLOW_SIGMA = 0.42             # blur sigma per unit of blurred reach (fits that shadow)
+GLOW_WORK = 2                 # font units per px while making it
+GLOW_UPP = 12                 # font units per halo PNG px
+GLOWS = {"glow": (255, 255, 255), "darkglow": (0, 0, 0)}
 
 DEFAULT_ALIASES = {
     "darkmatter": ["dark matter"],
@@ -181,6 +195,18 @@ def sticker_mask(alpha, pad):
     m = cv2.morphologyEx(m.astype(np.uint8), cv2.MORPH_CLOSE, ellipse(pad * 0.6)).astype(bool)
     m = fill_holes(remove_small(m, max(12, m.sum() * 0.001)))
     return cv2.dilate(m.astype(np.uint8), ellipse(pad)).astype(bool)
+
+
+def halo(alpha, w_u, h_u):
+    """Halo alpha (0..1) of a w_u x h_u unit icon, GLOW_SIZE beyond it, GLOW_WORK units per px."""
+    size = (max(1, round(w_u / GLOW_WORK)), max(1, round(h_u / GLOW_WORK)))
+    shrink = size[0] < alpha.shape[1]
+    a = cv2.resize(alpha.astype(np.float32) / 255, size, interpolation=cv2.INTER_AREA if shrink else cv2.INTER_LINEAR)
+    a = np.pad(a, round(GLOW_SIZE / GLOW_WORK))
+    a = cv2.dilate(a, ellipse(GLOW_SPREAD * GLOW_SIZE / GLOW_WORK))
+    sigma = GLOW_SIGMA * (1 - GLOW_SPREAD) * GLOW_SIZE / GLOW_WORK
+    a = cv2.GaussianBlur(a, (0, 0), sigma, borderType=cv2.BORDER_CONSTANT)
+    return a * GLOW_OPACITY
 
 
 def trace(mask, upp, x0, top, external=False, eps=0.9):
@@ -366,7 +392,7 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     spacer = "stk_space"
     add_glyph(spacer, [], OUTLINE - SIDE)
 
-    svg_docs, ligatures, multiples = [], {}, []
+    svg_docs, ligatures, multiples, glows, glow_multiples = [], {}, [], [], []
     for key, info in cfg["icons"].items():
         path = os.path.join(repo, info["file"])
         if not os.path.exists(path):
@@ -424,6 +450,21 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         add_glyph(g_no, sil_polys, adv)
         multiples.append((g_no, [g_color, g_no_over]))
 
+        # glow = [halo, advance GLOW_SIZE-SIDE] [color icon] [glow_space]; glyphs added last
+        glow = halo(arr[..., 3], w_u, h_u)
+        g_top, g_w, g_h = top + GLOW_SIZE, glow.shape[1] * GLOW_WORK, glow.shape[0] * GLOW_WORK
+        size = (max(1, round(g_w / GLOW_UPP)), max(1, round(g_h / GLOW_UPP)))
+        g_alpha = np.clip(np.round(cv2.resize(glow, size, interpolation=cv2.INTER_AREA) * 255), 0, 255).astype(np.uint8)
+        docs = {}
+        for variant, rgb in GLOWS.items():
+            buf = io.BytesIO()
+            rgba = np.dstack([np.full_like(g_alpha, v) for v in rgb] + [g_alpha])
+            Image.fromarray(rgba).save(buf, "PNG", optimize=True)
+            docs[variant] = (f'<image x="0" y="{num(-g_top)}" width="{g_w}" height="{g_h}" '
+                             f'xlink:href="data:image/png;base64,{base64.b64encode(buf.getvalue()).decode()}"/>')
+        # outline: the whole halo
+        glows.append((base, adv, trace(glow >= 0.5 / 255, GLOW_WORK, 0, g_top, external=True), docs))
+
         cp = int(info["pua"], 16)
         for t in cmaps:
             t.cmap[cp] = g_color
@@ -433,7 +474,8 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         names = [key] + list(info.get("aliases", []))
         for nm in names:
             for sp in sorted(spellings(nm)):
-                for variant, g in ((None, g_color), ("tint", g_tint), ("sticker", g_stk), ("no", g_no)):
+                for variant, g in ((None, g_color), ("tint", g_tint), ("sticker", g_stk), ("no", g_no),
+                                   *((v, f"{base}.{v}") for v in GLOWS)):
                     text = f"[{sp}{':' + variant if variant else ''}]"
                     comps = [char_glyph.get(ord(c)) for c in text]
                     if None in comps:
@@ -455,6 +497,42 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     font["post"].extraNames = []
     font["post"].mapping = {}
 
+    # GSUB, registered under liga and rlig:
+    #   MARK    inside a token (after "["), each character becomes a ".tk" copy; capitals become the lowercase copy,
+    #           so matching is case-insensitive without changing capitals elsewhere in the font
+    #   TOKENS  "[" + .tk characters + "]"  ->  icon glyph
+    #   LAYERS  :sticker / :no glyphs  ->  overlapping glyph sequences
+    #   CASE    "(" + a tag in any letter case + ")": each letter becomes the tag's own case, so "(action)" or "(1cd)"
+    #           draws the (Action) or (1CD) badge; anything else in parentheses is left as typed
+    #   BADGES  "(" + tag + ")"  ->  badge glyph
+    #   GLOW_TOKENS, GLOW_LAYERS  TOKENS and LAYERS for :glow / :darkglow; last, so older lookups keep their bytes
+    tok_chars = sorted({c for text in ligatures for c in text[1:-1]})
+    glow_texts = {text for text, (_, g) in ligatures.items() if g.rsplit(".", 1)[-1] in GLOWS}
+    assert {c for text in glow_texts for c in text[1:-1]} <= {c for text in ligatures.keys() - glow_texts
+                                                            for c in text[1:-1]}, "a glow token needs a new .tk glyph"
+    tk = {}
+    for c in tok_chars:
+        src = char_glyph[ord(c)]
+        pen = TTGlyphPen(font.getGlyphSet())
+        pen.addComponent(src, (1, 0, 0, 1, 0, 0))
+        tk[c] = src + ".tk"
+        glyf[tk[c]] = pen.glyph()
+        hmtx[tk[c]] = hmtx[src]
+        if tk[c] not in order:
+            order.append(tk[c])
+
+    # glow glyphs last: older glyph ids unchanged
+    glow_space = "glow_space"
+    add_glyph(glow_space, [], GLOW_SIZE - SIDE)
+    for base, adv, halo_polys, docs in glows:
+        for variant, body in docs.items():
+            g, g_bg = f"{base}.{variant}", f"{base}.{variant}_bg"
+            add_glyph(g_bg, halo_polys, GLOW_SIZE - SIDE)
+            svg_docs.append((g_bg, body))
+            add_glyph(g, halo_polys, adv + 2 * (GLOW_SIZE - SIDE))     # only seen if LAYERS doesn't run
+            glow_multiples.append((g, [g_bg, base, glow_space]))
+    font.setGlyphOrder(order)
+
     gid = {n: i for i, n in enumerate(font.getGlyphOrder())}
     svg = table_S_V_G_()
     svg.docList = []
@@ -466,34 +544,17 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     svg.compressed = False
     font["SVG "] = svg
 
-    # GSUB, registered under liga and rlig:
-    #   MARK    inside a token (after "["), each character becomes a ".tk" copy; capitals become the lowercase copy,
-    #           so matching is case-insensitive without changing capitals elsewhere in the font
-    #   TOKENS  "[" + .tk characters + "]"  ->  icon glyph
-    #   LAYERS  :sticker / :no glyphs  ->  overlapping glyph sequences
-    #   CASE    "(" + a tag in any letter case + ")": each letter becomes the tag's own case, so "(action)" or "(1cd)"
-    #           draws the (Action) or (1CD) badge; anything else in parentheses is left as typed
-    #   BADGES  "(" + tag + ")"  ->  badge glyph
-    tok_chars = sorted({c for text in ligatures for c in text[1:-1]})
-    tk = {}
-    for c in tok_chars:
-        src = char_glyph[ord(c)]
-        pen = TTGlyphPen(font.getGlyphSet())
-        pen.addComponent(src, (1, 0, 0, 1, 0, 0))
-        tk[c] = src + ".tk"
-        glyf[tk[c]] = pen.glyph()
-        hmtx[tk[c]] = hmtx[src]
-        if tk[c] not in order:
-            order.append(tk[c])
-    font.setGlyphOrder(order)
     to_tk = [f"  sub {char_glyph[ord(c)]} by {tk[c]};" for c in tok_chars]
     to_tk += [f"  sub {char_glyph[ord(c.upper())]} by {tk[c]};" for c in tok_chars
               if c.isalpha() and ord(c.upper()) in char_glyph]
     inputs = sorted({char_glyph[ord(c)] for c in tok_chars} |
                     {char_glyph[ord(c.upper())] for c in tok_chars if c.isalpha() and ord(c.upper()) in char_glyph})
-    liga = [f"  sub {' '.join([comps[0]] + [tk[c] for c in text[1:-1]] + [comps[-1]])} by {g};"
-            for text, (comps, g) in sorted(ligatures.items(), key=lambda kv: -len(kv[0]))]
+    liga, glow_liga = [], []
+    for text, (comps, g) in sorted(ligatures.items(), key=lambda kv: -len(kv[0])):
+        (glow_liga if text in glow_texts else liga).append(
+            f"  sub {' '.join([comps[0]] + [tk[c] for c in text[1:-1]] + [comps[-1]])} by {g};")
     mult = [f"  sub {src} by {' '.join(dst)};" for src, dst in multiples]
+    glow_mult = [f"  sub {src} by {' '.join(dst)};" for src, dst in glow_multiples]
     badges = [f"  sub {' '.join(comps)} by {g};" for comps, g in sorted(badge_ligatures, key=lambda x: -len(x[0]))]
     tags = [t for t, _ in badge_tags()]
     assert len({t.upper() for t in tags}) == len(tags), "badges that differ only in case"
@@ -506,6 +567,8 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     # one rule per subtable, so each is Format 3 like MARK's (feaLib would merge them into one Format 2)
     case = "\n  subtable;\n".join(f"  sub {gn('(')} {' '.join(map(pos, t))} {gn(')')};"
                                   for t in sorted(tags, key=len, reverse=True))
+    lookups = " ".join(f"lookup {n};" for n in ("MARK", "TOKENS", "LAYERS", "CASE", "BADGES", "GLOW_TOKENS",
+                                                "GLOW_LAYERS"))
     fea = "\n".join(["languagesystem DFLT dflt;", "languagesystem latn dflt;",
                      f"@TOKIN = [{' '.join(inputs)}];",
                      f"@TK = [{' '.join(tk.values())}];",
@@ -519,8 +582,10 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                      *fold,
                      "lookup CASE {", case, "} CASE;",
                      "lookup BADGES {", *badges, "} BADGES;",
-                     "feature liga { lookup MARK; lookup TOKENS; lookup LAYERS; lookup CASE; lookup BADGES; } liga;",
-                     "feature rlig { lookup MARK; lookup TOKENS; lookup LAYERS; lookup CASE; lookup BADGES; } rlig;"])
+                     "lookup GLOW_TOKENS {", *glow_liga, "} GLOW_TOKENS;",
+                     "lookup GLOW_LAYERS {", *glow_mult, "} GLOW_LAYERS;",
+                     f"feature liga {{ {lookups} }} liga;",
+                     f"feature rlig {{ {lookups} }} rlig;"])
     addOpenTypeFeaturesFromString(font, fea)
 
     # names: keep the OFL copyright + license for the Bree Serif letters, drop its trademark/vendor info
@@ -533,8 +598,8 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     entries = {
         0: f"Letters: {bree_copyright} Icons: Impossibility Simulator card art (TTSCardMaker/Types).",
         1: family, 2: "Regular", 3: f"{ps};1.0", 4: family, 5: "Version 1.000", 6: ps,
-        10: "Type [fire], [fire:tint], [fire:sticker] or [fire:no] in this font to get the icon. "
-            "Case-insensitive; space, underscore and hyphen are interchangeable. "
+        10: "Type [fire], [fire:tint], [fire:sticker], [fire:no], [fire:glow] or [fire:darkglow] in this font to get "
+            "the icon. Case-insensitive; space, underscore and hyphen are interchangeable. "
             "Timing tags such as (1CD) become badges.",
     }
     for nid, val in entries.items():

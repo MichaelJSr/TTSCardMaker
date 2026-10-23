@@ -594,8 +594,9 @@ def share_text(c):
     head = " · ".join(filter(None, [f"{c['stars']}★ {kind}" if c.get("stars") else kind, c.get("series"), c.get("subseries"),
                                     f"by {c['author']}" if c.get("author") else None]))
     stats = " · ".join(f"{label} {c[k]}" for k, label in (("hp", "HP"), ("def", "DEF"), ("atk", "ATK"), ("spd", "SPD")) if c.get(k) is not None)
-    text = re.sub(r"\[([^\[\]:]+)(?::\s*(no|tint|sticker))?\]",
-                  lambda m: ("non-" if m.group(2) == "no" else "") + m.group(1).replace("_", " ").title(), c.get("ability", "") or "")
+    text = re.sub(r"\[([^\[\]:]+)(?::\s*(?ai:(no|tint|sticker|glow|darkglow)))?\]",   # variants in any ASCII case, as the font
+                  lambda m: ("non-" if (m.group(2) or "").lower() == "no" else "") + m.group(1).replace("_", " ").title(),
+                  c.get("ability", "") or "")
     text = "\n".join(" ".join(line.split()) for line in text.splitlines() if line.strip())
     return clip("\n".join(filter(None, [head, stats, text])))
 

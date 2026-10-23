@@ -543,11 +543,24 @@ function coveredOccurrences(doc, ability, phrase, overlays) {
   }
   return picked.length ? picked : [phrase];
 }
+/* the overlay's color: its first style run that draws something (Mr_Krabs's "\r2T": the return red, "2T" yellow) */
+function overlayColor(doc, ov) {
+  var tk = withoutBom(textKey(doc, ov)), txt = tk.getString(sID("textKey")), st = tk.getList(sID("textStyleRange")), first = null;
+  for (var i = 0; i < st.count; i++) {
+    var r = st.getObjectValue(i), ts = r.getObjectValue(sID("textStyle"));
+    if (!ts.hasKey(sID("color"))) continue;
+    if (!first) first = ts.getObjectValue(sID("color"));
+    var s = txt.substring(r.getInteger(sID("from")), Math.min(r.getInteger(sID("to")), txt.length));
+    if (/\S/.test(s.replace(/\u0003/g, ""))) return ts.getObjectValue(sID("color"));
+  }
+  if (!first) throw new Error("overlay \"" + ov.name + "\" has no text color");
+  return first;
+}
 function convertOverlays(doc, ability, notes) {
   var groups = findOverlays(doc, ability), made = [];
   for (var g = 0; g < groups.length; g++) {
     var ov = groups[g].layers[0], phrases = coveredOccurrences(doc, ability, groups[g].phrase, groups[g].layers);
-    var color = textKey(doc, ov).getList(sID("textStyleRange")).getObjectValue(0).getObjectValue(sID("textStyle")).getObjectValue(sID("color"));
+    var color = overlayColor(doc, ov);
     var want = statusColor(groups[g].phrase);
     if (want && notes) {
       var own = { r: Math.round(color.getDouble(cID("Rd  "))), g: Math.round(color.getDouble(cID("Grn "))), b: Math.round(color.getDouble(cID("Bl  "))) };
