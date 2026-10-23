@@ -24,7 +24,11 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   before a number ("Heal 2 HP"), not as a verb opening a clause ("Flip to the other creature"), and after a capitalized
   word only when that word is a verb or a card: "Summon Jetpack" links, "Evil Quote" doesn't); "mentions", "mentioned by", similar stats,
   same series, text history with changes highlighted, and an image version viewer: every commit that changed the
-  card's image, compared side by side with the current one.
+  card's image, compared side by side with the current one, with the text of that time when it differs. The current
+  text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
+  that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history.
+  Every date on the site is Pacific time, the bot's, whatever the viewer's time zone, and commits are dated when they
+  landed (committer time), as the bot dates versions.
   A creature's or minion's **Balance** line compares its total stats (HP + DEF + ATK + SPD) with the others of its star
   level ("Total 35, in the top 10% of 4★ creatures: 92 of the 93 have a lower total"), with their median and middle 80%
   for each stat, and a line of its total over time when its stats changed. **Recorded changes** lists, newest first,
@@ -78,10 +82,10 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   instead of drawing an empty chart.
 - **Changes**: a row of category tabs across the top; clicking one (or the arrow keys on a focused tab) shows that
   category alone, the chosen tab underlined, and the address keeps it (`#/changes/changelog`), so a link or a refresh
-  opens the same one. **Recently updated** (`#/changes`): recently updated cards with text diffs. **Changelog**: the card
+  opens the same one. **Recently updated** (`#/changes`): recently updated cards with text diffs (none when the update kept the text). **Changelog**: the card
   sync's events of the last 180 days, one block per push as the Discord posts (new cards, changes with their old values
   and an ability word diff, new art, moves, renames, archived and restored cards, database edits, parser re-reads), by day
-  in Pacific time, filterable by kind, then the archived cards. **Database edits**: the card sync's edited and authors
+  in Pacific time, filterable by kind, then the archived cards (deleted, renamed, or moved to MDW: retired). **Database edits**: the card sync's edited and authors
   events, and every commit that changed a Card Edits.json entry or a Card Authors.txt line (website, Discord or a commit
   by hand) with each field's old and new value. The events need the card sync's data (`CARD_DATA_DIR`); until then those
   parts say so. **Website edits**: the cards an edit on the website or in Discord changes now, with the fields, who and
@@ -105,7 +109,11 @@ stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a di
 
 The build does not parse PSDs. Card text, stats, authors, aliases and history come from AutoCroissant's
 `stats.pkl` / `aliases.pkl` / `old_stats.pkl` (the same data the Discord bot answers from), so the site is as fresh as
-the bot's last `/update_stats` + `/push`. Once `site/Card Edits.json` has `aliases_moved` (aliases.pkl moved into it
+the bot's last `/update_stats` + `/push`. With `CARD_DATA_DIR` set to a checkout of the card sync's `db/` (branch
+`data`), the cards, history and PSD details come from its `stats.json`, `old_stats.json` and `psd_details.json`
+instead, read into the same stand-ins (`load_card_data`). site.yml sets it from the cutover (its `CARD_DATA`
+switch, and only when the branch exists); until then the shadow compares `cards.json` built both ways by hand, and
+unsetting it is the rollback. Once `site/Card Edits.json` has `aliases_moved` (aliases.pkl moved into it
 on 2026-10-22), `aliases.pkl` isn't read: the cards' aliases are their Card Edits entries', and no `_by:
 AutoCroissant` entry (the migration's aliases and series, the moved stat exclusions) counts as a website edit. Where the
 migration added a field to an editor's entry, the entry keeps the editor's `_by` and lists that field in `_bot`

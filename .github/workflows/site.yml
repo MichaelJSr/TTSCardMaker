@@ -20,6 +20,10 @@ concurrency:
   group: pages
   cancel-in-progress: false   # never cut a deployment off halfway; the newest queued run follows it
 
+env:
+  CARD_DATA: "off"   # the cutover (AutoCroissant DATA_BUILD_ACTION.md step 8) turns it on: the card data from the card sync's
+                     # branch data (db/) instead of AutoCroissant's pickles; off, or no data branch: the pickles (the rollback)
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -77,9 +81,27 @@ jobs:
       - id: og-before
         run: echo "names=$(ls site/.og-cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
+      - name: Data branch
+        id: data
+        if: env.CARD_DATA == 'on'
+        run: |
+          if git ls-remote --exit-code origin refs/heads/data > /dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::No data branch: the card data comes from AutoCroissant's pickles"
+          fi
+
+      - uses: actions/checkout@v7
+        if: steps.data.outputs.exists == 'true'
+        with:
+          ref: data
+          path: carddata
+          fetch-depth: 1
+
       - run: python site/build/build_site.py
         env:
           SITE_URL: ${{ steps.pages.outputs.base_url }}
+          CARD_DATA_DIR: ${{ steps.data.outputs.exists == 'true' && 'carddata/db' || '' }}
 
       - id: og
         run: |
