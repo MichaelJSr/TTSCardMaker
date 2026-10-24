@@ -47,8 +47,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   Ability layers, deviations), the parser's notes with the PSD-vs-edited values, and the layer tree (rendered when
   its section opens).
   "Decks using this card" lists the public published decks that hold it (the first six, then a link to all of them).
-  Every card has a shareable link (`/c/<card>/`) that shows a rich preview in Discord. The Share button (s) opens a dialog
-  with that link, a Discord preview, and buttons to copy the card as a Discord message, an image or plain text.
+  Every card has a shareable link (`/c/<card>/`, the address bar's URL; `c` copies it) that shows a rich preview in Discord.
 - **Rulebook**: every page with search and highlighting, the badge colors (one line per color, as on page 02
   Abbreviations), the timing-tag glossary (the cooldown and uses tags, and the
   old tags the rulebook pages still use), and the constructed ban list. Each
@@ -104,7 +103,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 
 Top right: **Sign in** (a GitHub token, or your login and password once you set one; see Editing) becomes your login
 once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
-`d` add to deck, `c` copy link, `s` share, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections, `?` help. The single-key
+`d` add to deck, `c` copy link, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections, `?` help. The single-key
 shortcuts are off while an edit form is open (a card's edit dialog or the profile editor) and while an inline control or a
 stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog.
 
