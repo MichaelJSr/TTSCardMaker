@@ -7,6 +7,7 @@ import * as decks from "./decks.js";
 import * as auth from "./login.js";
 import * as live from "./live.js";
 import * as draft from "./drafts.js";
+import { current as ratingNow } from "./ratings.js";
 
 const API = "https://api.github.com";
 // token: the plain-text token before 2026-10-23 (sealed on the next load); last: the login a password last signed in
@@ -20,8 +21,16 @@ const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
   atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
-  problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures" };
+  problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures",
+  "rate-favorability": "Favorability", "rate-power": "Power" };
 const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. Read by the website and the bot (/update_stats).";
+// site/Card Ratings.json (AutoCroissant card_edits.CardRatings.ABOUT, for a new file)
+export const RATINGS_ABOUT = "Card ratings, 1 to 10. favorability: how much players like the card; power: 1 weak, 5.5 balanced, 10 too strong. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.";
+const RATE = ["favorability", "power"], RATE_SOURCES = ["TTS session", "website"], RATE_RANGE = "Ratings go from 1 to 10";
+/** A typed rating: one decimal, or null when empty; NaN when not 1-10. */
+const rateValue = t => { t = String(t ?? "").trim(); if (t === "") return null; const v = Math.round(Number(t) * 10) / 10; return v >= 1 && v <= 10 ? v : NaN; };
+let pacific = null;                                // one formatter: the Pacific day of a rating
+const pacificDay = d => (pacific ||= new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit" })).format(d);
 
 const cardKey = s => (s || "").replace(/_/g, " ").toLowerCase().split(/\s+/).filter(Boolean).join(" ");
 const alnum = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -47,7 +56,7 @@ export function value(c, f, byId) {
 /** What the PSD (or folder) says: the pre-edit value when the field was edited, else the value itself. */
 export const psdValue = (b, f, byId) => tidy(f, b.edited?.includes(f) ? (f === "aliases" ? [] : b.orig?.[f]) : value(b, f, byId));
 export const isPsd = f => FROM[f] === "PSD";
-export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && op.author === undefined && !op.ban;
+export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && op.author === undefined && !op.ban && !op.rate;
 
 // ---- single-field ops (inline editing; the same rule readForm applies to the whole form)
 /** An inline input's text as field f's value: trimmed, "" -> null (the name falls back to `name`), ints >= 0. */
@@ -98,10 +107,12 @@ export function mergeAuthor(op, v, published) {
   if (v === (published || "")) delete o.author; else o.author = v || null;
   return o;
 }
-/** op without one item: a field, "author" or "ban" (a reverted name goes back to the published one). */
+/** op without one item: a field, "author", "ban" or a rating ("rate-power"; a reverted name goes back to the published one). */
 export function withoutItem(op, item, name) {
   const o = { ...op, set: { ...op.set }, unset: (op.unset || []).filter(k => k !== item) };
-  if (item === "author") delete o.author; else if (item === "ban") delete o.ban; else { delete o.set[item]; if (item === "name") o.name = name; }
+  if (item === "author") delete o.author; else if (item === "ban") delete o.ban;
+  else if (item.startsWith("rate-")) { const r = { ...o.rate }; delete r[item.slice(5)]; if (Object.keys(r).length) o.rate = r; else delete o.rate; }
+  else { delete o.set[item]; if (item === "name") o.name = name; }
   return o;
 }
 /** The review lines of an op against its published base b: [{item, text, short, psd}]; text is the review dialog's line,
@@ -113,6 +124,7 @@ export function describeItems(op, b = {}, { byId, rule = false } = {}) {
   for (const k of op.unset || []) { const p = show(psdValue(b, k, byId)); items.push({ item: k, text: `${LABEL[k]}: back to ${src(k)} (${p})`, short: `${LABEL[k]} back to ${src(k)} (${clip(p)})` }); }
   if (op.author !== undefined) { const t = `Author → ${op.author || "(from git)"}`; items.push({ item: "author", text: t, short: t }); }
   if (op.ban) { const t = op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned"; items.push({ item: "ban", text: t, short: t }); }
+  for (const k of RATE) if (op.rate?.[k] != null) { const l = LABEL[`rate-${k}`]; items.push({ item: `rate-${k}`, text: `${l}: rated ${op.rate[k]}`, short: `${l} ${op.rate[k]}` }); }
   return items.map(x => ({ ...x, psd: isPsd(x.item) }));
 }
 /** The batch bar's lines, one per pending edit: cards (id, name, item, text, psd), then admins, people, profiles
@@ -157,10 +169,43 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json") {
     const fields = [...ORDER.filter(f => f in cur), ...Object.keys(cur).filter(f => !(f in FIELDS))];
     if (fields.length) data.cards[k] = { ...Object.fromEntries(fields.map(f => [f, cur[f]])), _by: by, _at: at };
   }
+  return cardsText(data);
+}
+// the files' layout: the other top-level keys first, cards sorted, one line per card (card_edits.dump_edits)
+function cardsText(data) {
   const keys = Object.keys(data.cards).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
   const rest = Object.entries(data).filter(([k]) => k !== "cards").map(([k, v]) => `  ${JSON.stringify(k)}: ${JSON.stringify(v)},`);
   const body = keys.map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(data.cards[k])}`).join(",\n");
   return `{\n${rest.join("\n")}${rest.length ? "\n" : ""}  "cards": {${keys.length ? `\n${body}\n  ` : ""}}\n}\n`;
+}
+const rank = (list, v) => (list.includes(v) ? list.indexOf(v) : list.length);
+const lower = s => String(s ?? "").toLowerCase();
+/** Card Ratings.json with the ops' ratings added: one entry per scale, dated day, by the login; your entry of that day
+ *  is replaced. Lists oldest first (date, source, by, scale: card_edits.CardRatings.order). */
+export function ratingsFile(text, ops, day, by, path = "site/Card Ratings.json") {
+  let data;
+  try { data = text ? JSON.parse(text) : { about: RATINGS_ABOUT, cards: {} }; }
+  catch (e) { throw new Error(`${path} isn't valid JSON (${e.message}). Fix it on GitHub, then publish again.`); }
+  data.cards ||= {};
+  for (const op of ops) {
+    if (!op.rate) continue;
+    const k = Object.keys(data.cards).find(x => cardKey(x) === cardKey(op.key)) ?? op.key;
+    let list = Array.isArray(data.cards[k]) ? data.cards[k] : [];
+    for (const scale of RATE) {
+      const v = op.rate[scale];
+      if (v == null) continue;
+      if (typeof v !== "number" || !(v >= 1 && v <= 10)) throw new Error(RATE_RANGE);
+      list = list.filter(e => !(e?.date === day && e.scale === scale && e.source === "website" && lower(e.by) === lower(by)));
+      list.push({ date: day, scale, value: Math.round(v * 10) / 10, by, source: "website" });
+    }
+    data.cards[k] = list.map((e, i) => [e, i]).sort(([a, i], [b, j]) => {
+      const x = [String(a?.date ?? ""), rank(RATE_SOURCES, a?.source), lower(a?.by), rank(RATE, a?.scale)];
+      const y = [String(b?.date ?? ""), rank(RATE_SOURCES, b?.source), lower(b?.by), rank(RATE, b?.scale)];
+      for (let n = 0; n < 4; n++) if (x[n] !== y[n]) return x[n] < y[n] ? -1 : 1;
+      return i - j;
+    }).map(([e]) => e);
+  }
+  return cardsText(data);
 }
 
 /** The profile page's form state (what its inputs hold) for a profile; validateProfile({login, ...state}) gives the profile back. */
@@ -192,7 +237,7 @@ export function createEditor(app) {
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
-  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", decks: "site/decks", logins: "site/logins", ...S.data.files });
+  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", decks: "site/decks", logins: "site/logins", ratings: "site/Card Ratings.json", ...S.data.files });
   const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
   const find = id => S.byId.get(id) || (S.rules || []).find(r => r.id === id);
 
@@ -423,6 +468,11 @@ export function createEditor(app) {
         g.entries.push({ name: c.name, reason: op.ban.reason, id: c.id });
       }
     }
+    if (op.rate) {                                 // dashed dots until the rebuild; _rate: the form's start values (drafts.js rawOf)
+      const day = pacificDay(new Date(op._sent ? sentRecord()?.at || Date.now() : Date.now()));
+      c.ratings = [...(c.ratings || []), ...RATE.filter(k => op.rate[k] != null).map(k => ({ date: day, scale: k, value: op.rate[k], by: "you", source: "website", [op._sent ? "_sent" : "_staged"]: true }))];
+      if (!op._sent) c._rate = Object.fromEntries(Object.entries(op.rate).map(([k, v]) => [k, String(v)]));
+    }
     c[op._sent ? "_sent" : "_staged"] = true;
   }
   function sentRecord() {                          // {at, sha, ops, profiles, decks, deckNames}: published, until the site has rebuilt with it
@@ -555,6 +605,11 @@ export function createEditor(app) {
           <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" list="dl-people" value="${esc(c.author || "")}"><datalist id="dl-people">${authorList().map(p => `<option value="${esc(p)}">`).join("")}</datalist>`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
         </fieldset>
+        <fieldset><legend>Ratings</legend>
+          ${RATE.map(k => { const now = ratingNow((b.ratings || []).filter(e => !e._staged), k), v = stage.cards[c.id]?.rate?.[k];
+            return `<div class="erow" data-row="rate-${k}"><label for="ef-rate-${k}">${LABEL[`rate-${k}`]}</label><div class="ein"><input id="ef-rate-${k}" type="number" min="1" max="10" step="0.1" placeholder="1–10" value="${v ?? ""}"><span class="muted">${now ? `${now.value} now` : "not rated"}</span></div></div>`; }).join("")}
+          <p class="muted">Adds your dated rating; empty adds none.</p>
+        </fieldset>
         <fieldset><legend>Checks</legend>
           ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 10 is intended</label>`)}
           ${c.problems?.length || c.problems_ok ? row("problems_ok", `<label class="check"><input id="ef-problems_ok" type="checkbox"${c.problems_ok ? " checked" : ""}> checked, hide them</label> <span class="muted">${esc((b.problems || []).join(" · "))}</span>`) : ""}
@@ -631,6 +686,11 @@ export function createEditor(app) {
       const was = banOf(c.id, pristineBan || S.data.banlist);
       if (ban.banned !== was.banned || (ban.banned && (ban.group !== was.group || ban.reason !== was.reason))) op.ban = ban;
     }
+    if (f("rate-favorability")) {
+      const rate = {};
+      for (const k of RATE) { const v = rateValue(f(`rate-${k}`).value); if (Number.isNaN(v)) error = RATE_RANGE; else if (v != null) rate[k] = v; }
+      if (Object.keys(rate).length) op.rate = rate;
+    }
     if (error) op.error = error;
     return op;
   }
@@ -663,6 +723,17 @@ export function createEditor(app) {
     const a = defer ? String(v ?? "").trim() : spell("author", String(v ?? "").trim(), "", c.id); if (a === undefined) return null;
     const op = mergeAuthor(opFor(c), a, b.author);
     put(c.id, op); if (!defer) save();
+    return op;
+  }
+  // the card page's Rate it: {favorability, power} as typed ("" = none) -> the op, or null (refused: a toast says why)
+  function stageRating(id, values) {
+    const c = find(id); if (!c) return null;
+    const op = opFor(c), rate = {};
+    for (const k of RATE) { const v = rateValue(values[k]); if (Number.isNaN(v)) { app.toast(RATE_RANGE); return null; } if (v != null) rate[k] = v; }
+    if (!Object.keys(rate).length && !op.rate) { app.toast("Type a rating, 1 to 10"); return null; }
+    if (Object.keys(rate).length) op.rate = rate; else delete op.rate;
+    put(c.id, op); save();
+    app.toast(op.rate ? `Added to the batch: ${count()} unpublished` : "Rating removed from the batch");
     return op;
   }
   // one save for the lot -> {changed (a card already at v doesn't count), dups (an author drop leaves duplicates alone),
@@ -1101,6 +1172,7 @@ export function createEditor(app) {
     if (ops.some(o => Object.keys(o.set).length || o.unset.length)) edits[F.edits] = t => editsFile(t, ops, at, me.login, F.edits);
     if (ops.some(o => o.author !== undefined) || Object.keys(people).length) edits[F.authors] = t => authorsFile(t, ops, people);
     if (ops.some(o => o.ban)) edits[F.banlist] = t => banFile(t, ops);
+    if (ops.some(o => o.rate)) edits[F.ratings] = t => ratingsFile(t, ops, pacificDay(new Date(at)), me.login, F.ratings);
     if (stage.admins) edits[F.admins] = t => [...(t ?? "").split("\n").filter(l => l.trim().startsWith("#")), ...stage.admins].join("\n") + "\n";
     const foreign = Object.keys(stage.profiles).filter(l => !mine(l));
     if (foreign.length && !me.admin) throw new Error(`Only admins can publish someone else's profile (${foreign.join(", ")}): discard it from the batch.`);
@@ -1338,6 +1410,8 @@ export function createEditor(app) {
     "pw-remove": el => removePassword(el.dataset.login || me?.login || ""),
     "pw-later": () => later(),
     "pw-list": () => listPasswords(),
+    "rate-add": el => { const id = el.dataset.id, v = k => document.getElementById(`rate-${k}`)?.value ?? "";
+      if (stageRating(id, { favorability: v("favorability"), power: v("power") })) app.goCard(id); },
     "edit-show-hidden": el => { S.showHidden = el.checked; localStorage.setItem(K.hidden, el.checked ? "1" : ""); app.derive(); app.rerender(); },
   };
 
@@ -1368,5 +1442,7 @@ export function createEditor(app) {
     entryFields: (id, op = stage.cards[id]) => { const f = new Set(find(id)?.edited || []);
       for (const o of [...sentOps().filter(x => x.id === id), op].filter(Boolean)) { for (const k of Object.keys(o.set || {})) f.add(k); for (const k of o.unset || []) f.delete(k); }
       return [...f]; },
+    stageRating,
+    myRating: id => stage.cards[id]?.rate || null,
   };
 }

@@ -16,6 +16,7 @@ import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
 import { deckPasses } from "./login.js";
 import { createPreviews } from "./preview.js";
+import * as ratings from "./ratings.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -486,6 +487,7 @@ function openCard(id, showDetails = false) {
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
           <div id="card-balance">${balanceHtml(c)}</div>
+          <div id="card-ratings">${ratings.blockHtml(c, { editing: editing(), mine: editor.myRating(c.id) })}</div>
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>

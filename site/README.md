@@ -48,6 +48,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   its section opens).
   "Decks using this card" lists the public published decks that hold it (the first six, then a link to all of them).
   Every card has a shareable link (`/c/<card>/`, the address bar's URL; `c` copies it) that shows a rich preview in Discord.
+- **Ratings**: each card's favorability and power, 1 to 10, over time, on its card page; signed-in editors add theirs.
 - **Rulebook**: every page with search and highlighting, the badge colors (one line per color, as on page 02
   Abbreviations), the timing-tag glossary (the cooldown and uses tags, and the
   old tags the rulebook pages still use), and the constructed ban list. Each
@@ -146,7 +147,7 @@ the build never fails on it.
 
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
 bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
-`Card Creation Dates.json`, `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/`
+`Card Creation Dates.json`, `Card Ratings.json`, `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/`
 on 2026-10-20); the build and the bot read them, the published site does not include them. `Card Creation Dates.json`
 holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand", "provisional": true}`
 (dates only, from the Discord archive kept off the repo), written by AutoCroissant's `python -m commands.discord_edits
@@ -155,7 +156,11 @@ A card it misses (one made since) is dated by its first upload, with a build log
 the same rule (AutoCroissant `CardDates.created`), its first upload being the earliest version its database holds: the
 same day for the cards first uploaded since 2026-02, so `/query_ability created>=…` and the search agree (770 of 770
 cards on 2026-10-23, also with the 11 newest left out of the file). It is no edit: the Changes page and the edit
-counts never see it. Bad entries are skipped with a warning, never a failed build. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
+counts never see it. Bad entries are skipped with a warning, never a failed build. `Card Ratings.json` holds each
+card's dated ratings, `[{"date", "scale": "favorability" | "power", "value": 1-10, "by": "group" | <login>, "source":
+"TTS session" | "website"}]`, oldest first: the TTS sessions' boards (written by AutoCroissant's `python -m
+commands.tts_ratings`) and the website's Rate it. Only the website reads it (cards.json `ratings`, a login shown as its
+credited name); no edit either, and the bot never reads it. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
 following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
 the build needs full history for them (CI fetches it; a shallow local clone gets no image versions and counts edit
 batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one batch per card;
@@ -212,6 +217,11 @@ card several stat lines (`creatures` in `Card Edits.json`; creature 1 is the car
 bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
 `Card Edits.json` to go back to the PSD.
+
+**Rate it.** Signed in, a card page's Ratings block has Favorability and Power inputs (1 to 10, one decimal; All fields
+has them too): **Add to batch** stages your rating for today, published with the batch to `site/Card Ratings.json`
+(a rating-only batch leaves `Card Edits.json` alone). Rating again the same day replaces yours; removing one is a hand
+edit on GitHub.
 
 **Icons and timing tags as you type.** In card text (the ability and note, in place or in All fields, rulebook pages
 too) typing `[` lists the icons with their pictures, the ones the cards use most first; typing more narrows the list
@@ -376,5 +386,6 @@ Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no bu
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, `tokens.js` the
 icon and timing-tag picker in card text, drag-to-assign and
 the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `login.js` the password sign-in and this browser's sealed token, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
-published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
+published decks: slugs, the file formats and their encryption, the browser and deck pages), `ratings.js` the card
+ratings (their helpers, chart and card-page block), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
 Generated files (`site/dist`, `site/.cache`, `site/.og-cache`) are git-ignored.

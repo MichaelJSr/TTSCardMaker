@@ -124,6 +124,9 @@ BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
 CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (AutoCroissant discord_edits created; global_config.CREATED_PATH)
 CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first git upload, or set by hand (card_edits.CardDates.FROM)
+RATINGS_PATH = "site/Card Ratings.json"         # dated 1-10 ratings (AutoCroissant tts_ratings, the website's Rate it; card_edits.CardRatings)
+RATING_SCALES = ("favorability", "power")
+RATING_SOURCES = ("TTS session", "website")
 ALIASES_MOVED = "aliases_moved"               # Card Edits.json key: aliases.pkl moved into it (AutoCroissant card_edits.ALIASES_MOVED)
 BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (discord_edits.BOT_FIELDS)
 CREDIT = "_credit"                            # {field: {"_by", "_at"}}: a _bot field's Discord editor (discord_edits.CREDIT)
@@ -1137,6 +1140,106 @@ def parse_created():
         warn(f"{CREATED_PATH}: {len(bad)} entries skipped (expected {{\"date\": \"YYYY-MM-DD\", \"from\": "
              f"{' | '.join(CREATED_FROM)}}}): {', '.join(bad[:10])}")
     return out
+
+
+def rating_number(v):
+    """One decimal, as JS Math.round(v * 10) / 10; whole values as int (JSON.stringify writes 7, not 7.0)."""
+    v = int(v * 10 + 0.5) / 10
+    return int(v) if v == int(v) else v
+
+
+def valid_rating(e):
+    """card_edits.CardRatings.valid: {date, scale, value 1-10, by, source}."""
+    if not isinstance(e, dict) or e.get("scale") not in RATING_SCALES or e.get("source") not in RATING_SOURCES:
+        return False
+    v, by, day = e.get("value"), e.get("by"), e.get("date")
+    if not isinstance(v, (int, float)) or isinstance(v, bool) or not 1 <= v <= 10 or not isinstance(by, str) or not by or len(by) > 100:
+        return False
+    try:
+        return isinstance(day, str) and date.fromisoformat(day).isoformat() == day
+    except ValueError:
+        return False
+
+
+def rating_order(entries):
+    """Oldest first: date, source (TTS sessions first), by, scale (card_edits.CardRatings.order, edit.js ratingsFile)."""
+    return sorted(entries, key=lambda e: (e["date"], RATING_SOURCES.index(e["source"]), e["by"].lower(), RATING_SCALES.index(e["scale"])))
+
+
+def parse_ratings():
+    """site/Card Ratings.json -> {card_key: (name, [entry])}; bad entries are skipped. Warns, never fails."""
+    path = os.path.join(REPO, RATINGS_PATH)
+    if not os.path.exists(path):
+        log(f"no {RATINGS_PATH}: no ratings")
+        return {}
+    try:
+        data = json.load(open(path, encoding="utf-8"))
+    except ValueError as e:
+        warn(f"{RATINGS_PATH} isn't valid JSON, no ratings: {e}")
+        return {}
+    cards = data.get("cards") if isinstance(data, dict) else None
+    if not isinstance(cards, dict):
+        warn(f"{RATINGS_PATH} has no \"cards\" object, no ratings")
+        return {}
+    out, bad = {}, []
+    for name, entries in cards.items():
+        entries = entries if isinstance(entries, list) else [None]
+        kept = [{"date": e["date"], "scale": e["scale"], "value": rating_number(e["value"]), "by": e["by"], "source": e["source"]}
+                for e in entries if valid_rating(e)]
+        if len(kept) < len(entries):
+            bad.append(name)
+        if kept:
+            got = out.setdefault(card_key(name), (name, []))
+            got[1].extend(kept)
+    if bad:
+        warn(f"{RATINGS_PATH}: entries skipped on {len(bad)} cards (expected {{date, scale, value 1-10, by, source}}): {', '.join(bad[:10])}")
+    return out
+
+
+def rating_now(entries, scale, day=None, skip=None):
+    """ratings.js current(): the mean of each rater's latest entry of scale (on or before day; skip: a rater, or raters,
+    left out; "group" counts as one) -> {"value" (1 decimal), "raters", "date" (the newest)}, or None."""
+    skip = {skip} if isinstance(skip, str) else set(skip or ())
+    latest = {}
+    for e in entries or ():                       # oldest first: a later one replaces
+        if e.get("scale") == scale and (day is None or e["date"] <= day) and e["by"] not in skip:
+            if e["by"] not in latest or e["date"] >= latest[e["by"]]["date"]:
+                latest[e["by"]] = e
+    if not latest:
+        return None
+    values = [e["value"] for e in latest.values()]
+    return {"value": rating_number(sum(values) / len(values)), "raters": len(latest), "date": max(e["date"] for e in latest.values())}
+
+
+def tier_of(v):
+    """A rating's category 0-4 (edges 2.5, 4.5, 6.5, 8.5; ratings.js tierOf, AutoCroissant tts_ratings.tier_of)."""
+    return max(0, min(4, int((v - 0.5) // 2)))
+
+
+def apply_ratings(cards, ratings, archived, people, by_login):
+    """Card Ratings.json onto the cards: e["ratings"] = [{date, scale, value, by, source}], oldest first; by stays "group",
+    a login becomes its credited name (credit()). A name matching an archived row goes to the card it was renamed to
+    (renamedId), else onto the row (changelog.json). -> {"entries", "cards", "archived", "unmatched": [name]}"""
+    live, by_id = {}, {e["id"]: e for e in cards}
+    for e in cards:
+        live.setdefault(card_key(e["key"]), e)
+    arch = {card_key(r["card"]): r for r in archived}
+    got, rows, counts = {}, {id(r) for r in archived}, {"entries": 0, "cards": 0, "archived": 0, "unmatched": []}
+    for key, (name, entries) in ratings.items():
+        target = live.get(key)
+        if target is None and key in arch:
+            target = by_id.get(arch[key].get("renamedId")) or arch[key]
+        if target is None:
+            counts["unmatched"].append(name)
+            continue
+        target.setdefault("ratings", []).extend(
+            {**e, "by": e["by"] if e["by"] == "group" else credit(e["by"], people, by_login) or e["by"]} for e in entries)
+        got[id(target)] = target
+        counts["entries"] += len(entries)
+    for target in got.values():
+        target["ratings"] = rating_order(target["ratings"])
+        counts["archived" if id(target) in rows else "cards"] += 1
+    return counts
 
 
 def created_ts(e):
@@ -2575,13 +2678,35 @@ def main():
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist,
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
-                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR},
+                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR,
+                                            "ratings": RATINGS_PATH},
         "admins": parse_admins(),
         "decks": {"public": len(public_decks), "private": len(private_decks)},     # the Deck builder page shows the public count; the list is decks.json
         "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
         "peopleMap": PEOPLE_AS_WRITTEN,
     }
     profiles = read_profiles(cards, data["people"])
+    by_login = {p["login"].lower(): p for p in profiles}
+    id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
+    name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
+    archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats)
+    rated = apply_ratings(cards, parse_ratings(), archived, people, by_login)
+    line = f"ratings: {rated['entries']} entries on {rated['cards']} cards ({rated['archived']} archived)"
+    if rated["unmatched"]:
+        warn(f"{line}, {len(rated['unmatched'])} names match no card: {', '.join(rated['unmatched'][:10])}")
+    elif rated["entries"]:
+        log(line)
+
+    # the Changes page's Changelog and Database edits tabs: the card sync's events (with CARD_DATA_DIR), the edit batches, archived cards
+    since = int(time.time()) - CHANGELOG_DAYS * 86400
+    events, manifest = read_changelog(data_dir) if data_dir else (None, None)
+    if data_dir and events is None:
+        warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
+    try:
+        batches = edit_batches(edit_history(), people, by_login, edits, id_of, name_of, since)
+    except Exception as e:                        # never a failed build
+        warn(f"no edit batches: {type(e).__name__}: {e}")
+        batches = {"available": False, "batches": []}
     contrib = contributions(cards, people, profiles, edits, commits)
     titles = titles_of(contrib["people"])
     person_of = {login.lower(): r for r in contrib["people"] for login in r["logins"]}        # a profile's login -> its contributions
@@ -2600,21 +2725,8 @@ def main():
     log(f"contributions: {len(contrib['people'])} people, {sum(r['edits'] for r in contrib['people'])} edit batches, "
         f"{sum(r['commits'] for r in contrib['people'])} card commits" + ("" if contrib["available"] else " (no history: batches counted from the edits file)"))
 
-    # the Changes page's Changelog and Database edits tabs: the card sync's events (with CARD_DATA_DIR), the edit batches, archived cards
-    id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
-    name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
-    since = int(time.time()) - CHANGELOG_DAYS * 86400
-    events, manifest = read_changelog(data_dir) if data_dir else (None, None)
-    if data_dir and events is None:
-        warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
-    try:
-        batches = edit_batches(edit_history(), people, {p["login"].lower(): p for p in profiles}, edits, id_of, name_of, since)
-    except Exception as e:                        # never a failed build
-        warn(f"no edit batches: {type(e).__name__}: {e}")
-        batches = {"available": False, "batches": []}
     changelog = {"available": events is not None, "since": since, "days": CHANGELOG_DAYS, "repo": CARD_REPO, "source": manifest,
-                 "events": site_events(events or [], id_of, since), "archived": archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats),
-                 "edits": batches}
+                 "events": site_events(events or [], id_of, since), "archived": archived, "edits": batches}
     log(f"changelog: {len(changelog['events'])} events" + ("" if events is not None else " (no CARD_DATA_DIR)") +
         f", {len(batches['batches'])} edit batches, {len(changelog['archived'])} archived cards")
     try:                                      # password files (read before cards.json: data.passwords opens the sign-in on Password)

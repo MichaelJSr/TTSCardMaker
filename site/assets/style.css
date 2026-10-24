@@ -605,3 +605,17 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .pv-in-form .pv-panel { margin-top: 0; }
 @media (min-width: 1001px) and (max-width: 1240px) { .has-preview .pv-in-form { float: none; width: auto; max-width: 360px; margin: 0 auto 12px; } }   /* beside the live pane: the fields keep the column */
 @media (max-width: 640px) { .pv-in-form { float: none; width: auto; margin: 0 0 12px; } }
+
+/* round 3: ratings */
+.ratings { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.rate-panel { min-width: 220px; flex: 1 1 260px; max-width: 320px; }
+.rate-head b { font-size: 18px; margin-left: 4px; } .rate-sub { font-size: 12.5px; }
+.rate-chart { width: 100%; max-width: 300px; display: block; margin-top: 4px; }
+.rate-chart text.ax { fill: var(--muted); font-size: 10.5px; font-weight: 400; }
+.rate-chart .grid { stroke: var(--grid); } .rate-chart .mid { stroke: var(--axis); stroke-dasharray: 3 3; }
+.rate-chart .person { fill: var(--surface); stroke: var(--s1); stroke-width: 2; }
+.rate-chart .unpub { stroke-dasharray: 2 2; }
+.rate-table { margin-top: 6px; } .rate-table summary { cursor: pointer; color: var(--accent); font-size: 13px; }
+.rate-table table.data th { position: static; cursor: default; background: none; }
+.rate-add { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
+.rate-add input { width: 7.5em; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); }
