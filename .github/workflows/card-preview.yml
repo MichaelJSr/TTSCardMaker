@@ -1,12 +1,8 @@
-# Card previews for the website (AutoCroissant commands/card_preview.py, docs/EDIT_PIPELINE_DESIGN.md section 16): one
-# card's PSD-kind edit baked exactly as card-edits.yml would bake it (card_bake.bake_card: the same gates, fonts, status
-# chart, icon vocabulary and fork pin) on the runner. Nothing is committed to main and no PSD or PNG is written there: the
-# result goes to the orphan branch `previews` (previews/<request>/: result.json, preview.webp, preview.png; index.json
-# lists them), one commit per run on the branch head (again from a moved head), rewritten as one fresh commit when it
-# holds more than 200 previews or one older than 7 days. The website dispatches it and polls the branch (site/NOTES.md
-# section 19). No Discord. The inputs never reach a shell as code: they pass through env and a file, and card_preview
-# checks them again. Every push trigger in this repo is `branches: [main]`, and a GITHUB_TOKEN push starts no workflow,
-# so the previews commits start nothing.
+# Card previews for the website (AutoCroissant commands/card_preview.py; design section 16): one card's PSD-kind edit
+# baked as card-edits.yml would, nothing committed to main. The result goes to the orphan branch `previews`
+# (previews/<request>/, index.json), one commit per run, rewritten past 200 previews or 7 days; contract: site/NOTES.md
+# section 19. No Discord. The preview job's token is read-only; only the publish job writes (python3, stdlib, no install).
+# Inputs reach the shell only through env and a file. Every push trigger here is `branches: [main]`.
 name: Card preview
 run-name: Card preview ${{ inputs.request }}
 
@@ -27,7 +23,7 @@ on:
         required: true
 
 permissions:
-  contents: write     # the previews branch; the card's blobs are read by sha
+  contents: read      # the publish job alone writes (the previews branch)
 
 # One run per request (a second dispatch of the same id waits; GitHub keeps one waiting); requests run side by side.
 concurrency:
@@ -37,7 +33,9 @@ concurrency:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 11
+    outputs:
+      ok: ${{ steps.validate.outputs.ok }}
     steps:
       # The request names a folder on the branch: a bad one fails the run and publishes nothing. The card and the edit
       # are card_preview's to check (env and a file here): a bad one is published as an input error for the website.
@@ -52,11 +50,11 @@ jobs:
             echo "::error::the request must be 8-64 of A-Z a-z 0-9 -"; exit 1
           fi
           printf '%s' "$EDIT" > "$RUNNER_TEMP/edit.json"
-          echo "OUT=$RUNNER_TEMP/preview" >> "$GITHUB_ENV"
+          echo "ok=true" >> "$GITHUB_OUTPUT"
 
       # The card repo at main, every tree and no file contents (the 16 GB of card folders are never checked out): the
       # card's PSD and PNG, the status chart, the icon manifest and the Types/ PNGs it needs come by blob sha through the
-      # API, verified, as card-edits.yml's do; the fonts below. Publish pushes from this checkout (its credentials).
+      # API, verified, as card-edits.yml's do; the fonts below.
       - uses: actions/checkout@v7
         with:
           filter: blob:none
@@ -73,6 +71,7 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /commands/card_preview.py
+            /commands/card_preview_branch.py
             /commands/card_bake.py
             /commands/psd_edit.py
             /commands/psd_regions.py
@@ -89,10 +88,9 @@ jobs:
         with:
           python-version: "3.12"
 
-      # The fork pin, shared with card-edits.yml and card-guards.yml; pyoxipng: preview.png recompressed losslessly
-      # (png_export.recompress), as card-guards.yml installs it.
+      # card-edits.yml's install: the same fork pin (card-guards.yml's too).
       - timeout-minutes: 5
-        run: pip install -q requests pyoxipng==9.1.1 "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023c"
+        run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023c"
 
       # Fonts as card-edits.yml's: MDW/Fonts' top level, cached by the folder's tree sha (the same cache key), fetched
       # only on a miss.
@@ -121,19 +119,62 @@ jobs:
           CARD: ${{ inputs.card }}
           REQUEST: ${{ inputs.request }}
         run: |
-          python -m commands.card_preview --card="$CARD" --edit "$RUNNER_TEMP/edit.json" --out "$OUT" \
+          python -m commands.card_preview --card="$CARD" --edit "$RUNNER_TEMP/edit.json" --out "$RUNNER_TEMP/preview" \
             --clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" --request="$REQUEST" \
             | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # Even when Preview failed or timed out (a missing result is published as an error to try again); one commit on
-      # previews, never on main.
-      - name: Publish
+      # The files to publish (none if the preview never ran); not preview.png.
+      - name: Hand over
         if: ${{ !cancelled() && steps.validate.outcome == 'success' }}
-        timeout-minutes: 2
+        uses: actions/upload-artifact@v4
+        with:
+          name: card-preview
+          path: |
+            ${{ runner.temp }}/preview/result.json
+            ${{ runner.temp }}/preview/preview.webp
+          if-no-files-found: ignore
+          retention-days: 1
+
+  # The only job that writes: one commit on previews. Runs after a failed preview too (published as try again).
+  publish:
+    needs: preview
+    if: ${{ !cancelled() && needs.preview.outputs.ok == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: write
+    steps:
+      # A git dir to push from (no file contents).
+      - uses: actions/checkout@v7
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/
+
+      # The publisher: stdlib only (card_preview_branch.SPARSE_FILES).
+      - uses: actions/checkout@v7
+        with:
+          repository: bobberlington/AutoCroissant
+          path: bot
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /commands/card_preview_branch.py
+            /commands/repo_history.py
+            /global_config.py
+
+      - name: Take over
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: card-preview
+          path: ${{ runner.temp }}/preview
+
+      - name: Publish
         working-directory: bot
         shell: bash
         env:
           REQUEST: ${{ inputs.request }}
         run: |
-          python -m commands.card_preview publish --out "$OUT" --request="$REQUEST" --git "$GITHUB_WORKSPACE" --png \
+          python3 -m commands.card_preview_branch --out "$RUNNER_TEMP/preview" --request="$REQUEST" --git "$GITHUB_WORKSPACE" \
             | tee -a "$GITHUB_STEP_SUMMARY"

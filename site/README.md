@@ -343,10 +343,10 @@ a push, and an unreadable PSD is one error line. Run it by hand from the Actions
 
 `.github/workflows/card-preview.yml` bakes one card's website edit the way the card bake would, without committing it:
 the website dispatches it (inputs `card`, `edit`, `request`) and reads the result from the branch `previews`
-(`previews/<request>/result.json`, `preview.webp`, `preview.png`; `site/NOTES.md` section 19 has the contract). Nothing is
-written to `main` and nothing is posted. Run it by hand from the Actions tab with a card name, an edit such as
-`{"hp": 8}` and an id such as `manual-test-0001`. The branch is rewritten as one commit when it holds more than 200
-previews or one older than 7 days.
+(`previews/<request>/result.json`, `preview.webp`; `site/NOTES.md` section 19 has the contract). Nothing is written to
+`main` and nothing is posted; only its second job, which publishes, may write. The repo is public, so a previewed edit is
+public too. Run it by hand from the Actions tab with a card name, an edit such as `{"hp": 8}` and an id such as
+`manual-test-0001`. The branch is rewritten as one commit when it holds more than 200 previews or one older than 7 days.
 
 ## Working on it
 
