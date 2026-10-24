@@ -59,6 +59,7 @@ let pointer = false;                               // the last input was a point
 let naming = null;                                 // the filter bar's open "New …" input: {sel, key, input}
 let listParams = new URLSearchParams();            // the params of the list mountGrid last upgraded (not the hash: a card route has none)
 let arrowAt = -1e9;                                // when an arrow key last went to a filter select
+let dragged = null;                                // the ids being dragged (the drop's source of truth)
 
 // ---- the card dialog
 /** Mark the editable spots of the open card dialog (edit mode only; call after openCard). */
@@ -287,35 +288,47 @@ export function mountGrid(view, p, api = A) {
     el.insertAdjacentHTML("beforeend", bucketOptions(new Set([...el.options].map(optKey)), fresh[key], p.get(key) || "") + newOption(key, series));
   }
   if (!grid) return;
-  for (const t of grid.querySelectorAll(".tile[data-open]")) t.draggable = true;
+  for (const t of grid.querySelectorAll(".tile[data-open]")) { t.draggable = true; t.querySelector("img")?.setAttribute("draggable", "false"); }   // the tile drags, not its picture
   reflect(view, api.selected);
   const own = b.subseries.filter(([s]) => s === series).map(([, v]) => v);
   for (const [key, list, news] of [["series", opts.series, b.series], ["author", opts.authors, b.author], ...(series ? [["subseries", opts.ownSubseries(series), own]] : [])])
-    sel(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}" aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
+    sel(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}"${key === "subseries" ? ` data-series="${esc(series)}"` : ""} aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
 }
-const dragOff = () => { document.body.classList.remove("dragging-cards"); for (const c of document.querySelectorAll(".drop-list .over")) c.classList.remove("over"); };
+const DROP = ".drop-list .chip, .tray .bucket[data-pin]";   // a filter-bar value, a pinned box
+/** A drop target's {key, value, series}: a filter-bar chip (its list's data-drop), or a tray box (data-k, data-v, data-s). */
+export const targetOf = el => (el.dataset.pin != null
+  ? { key: el.dataset.k, value: el.dataset.v, series: el.dataset.s || "" }
+  : { key: el.closest(".drop-list").dataset.drop, value: el.dataset.value, series: el.closest(".drop-list").dataset.series || "" });
+const dragOff = () => { dragged = null; document.body.classList.remove("dragging-cards"); for (const c of document.querySelectorAll(".drop-list .over, .tray .over")) c.classList.remove("over"); };
 function onDragStart(e) {
   const t = e.target.closest?.(".tile[draggable]"); if (!t) return;
-  e.dataTransfer.setData("text/plain", dragIds(t.dataset.open, A.selected).join(","));
+  dragged = dragIds(t.dataset.open, A.selected);
+  e.dataTransfer.setData("text/plain", dragged.join(","));   // Firefox starts no drag without data
   e.dataTransfer.effectAllowed = "link";
-  document.body.classList.add("dragging-cards");
+  requestAnimationFrame(() => { if (dragged) document.body.classList.add("dragging-cards"); });   // a layout change inside dragstart cancels it
 }
-const dragging = () => document.body.classList.contains("dragging-cards");   // our tiles, not text or files dragged in
-function onDragOver(e) {
-  const chip = dragging() && e.target.closest?.(".drop-list .chip"); if (!chip) return;
-  e.preventDefault(); e.dataTransfer.dropEffect = "link"; chip.classList.add("over");
+const dragging = () => !!dragged;                  // our tiles, not text or files dragged in
+function onDragOver(e) {                           // dragenter too: Safari and Firefox drop only on a target that cancelled it
+  const t = dragging() && e.target.closest?.(DROP); if (!t) return;
+  e.preventDefault(); e.dataTransfer.dropEffect = "link"; t.classList.add("over");
 }
-function onDragLeave(e) { e.target.closest?.(".drop-list .chip")?.classList.remove("over"); }
+function onDragLeave(e) { const t = e.target.closest?.(DROP); if (t && !t.contains(e.relatedTarget)) t.classList.remove("over"); }
 function onDrop(e) {
-  const chip = dragging() && e.target.closest?.(".drop-list .chip"); if (!chip) return;
-  e.preventDefault(); dragOff();
-  const ids = (e.dataTransfer.getData("text/plain") || "").split(",").filter(Boolean), key = chip.closest(".drop-list").dataset.drop, v = chip.dataset.value;
-  const { changed: n, dups, kept, value, error } = A.editor.stageMany(ids, key, v);
+  const t = dragging() && e.target.closest?.(DROP); if (!t) return;
+  e.preventDefault();
+  const ids = dragged?.length ? dragged : (e.dataTransfer.getData("text/plain") || "").split(",").filter(Boolean);
+  dragOff();
+  dropOn(ids, targetOf(t));
+}
+/** The one staging path for a drop, a tray tap or a number key: key = value on every card in ids, a toast, the selection cleared. */
+export function dropOn(ids, { key, value: v, series = "" }) {
+  const r = A.editor.stageMany(ids, key, v, { series }), { changed: n, dups, kept, value, error } = r;
   A.selected.clear();
   A.rerender();
   A.toast(error || [n ? `${n} card${n === 1 ? "" : "s"}: ${key} → ${value}` : "",
     kept ? `${kept} kept ${kept === 1 ? "its" : "their"} old subseries` : "",
     dups ? `${dups} duplicate${dups === 1 ? " kept its original's" : "s kept their originals'"} author` : ""].filter(Boolean).join(" · ") || `Already ${value}`);
+  return r;
 }
 
 // ---- the filter bar: "New series…" (subseries, author) swaps its select for an input; Enter or a click away makes the
@@ -383,6 +396,7 @@ export function install(api) {
   api.modal.addEventListener("focusout", onFocusOut);
   document.addEventListener("dragstart", onDragStart);
   document.addEventListener("dragend", dragOff);
+  document.addEventListener("dragenter", onDragOver);
   document.addEventListener("dragover", onDragOver);
   document.addEventListener("dragleave", onDragLeave);
   document.addEventListener("drop", onDrop);

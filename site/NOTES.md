@@ -669,3 +669,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - **Item type** (`ITEM_TYPES` in edit.js) is the `Items/` folders, lower case, as the build reads them
   (`parts[1].lower()`): a fixed select in All fields, like Kind. An off-list value (a hand edit) still shows as an option.
   A new item type needs its folder first, then the list (the test keeps the two equal).
+- **Drops staged nothing in Safari (item 18).** The drop targets cancelled `dragover` only. In the HTML drag model
+  (Safari, Firefox) an uncancelled `dragenter` makes `<body>` the current target, its `dragover` isn't cancelled, so no
+  `drop` fires; Chrome is lenient. Now `dragenter` runs the same handler. Also: the tile drags, not its `<img>`
+  (`draggable=false`), so the drag carries no image URL; the ids are kept in `dragged` (dataTransfer only as a fallback);
+  `body.dragging-cards` is added a frame later (a layout change inside `dragstart` cancels the drag). Checked in Chrome
+  by replaying the spec's order (`check18.mjs`), and a trusted drag still stages; not in Safari here (no WebKit tooling).
+- **`inline.dropOn(ids, {key, value, series})`** is the one staging path: a filter-bar value (`targetOf` reads its
+  list's `data-drop`/`data-series`), a pinned box (`data-k/v/s`), a tap on a box, a number key.
