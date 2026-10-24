@@ -563,11 +563,12 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     untouched, 3 boxed (stylised names in fonts the site doesn't have). Sheets: shots `r3-g06-*`, `r3-g07-*`,
     `r3-g08-mock-names.png`.
   - Fonts: `data/fonts.json` (build_site `web_fonts`): `{"fonts": {PSD font name: {file, bytes}}}` for the fonts the
-    details records' text layers name, resolved as font_check resolves them (exact PostScript name after
-    `FONT_ALIASES`, else a loose match without -Regular; the first file by path wins); `font_faces` reads the name table
-    without fontTools and equals font_check.face_names on all 276 files of MDW/Fonts; only .ttf / .otf up to 8 MB (a
-    collection holds several faces); names cached by blob sha in `site/.cache/fonts.json` (CI downloads a font only when
-    its blob is new, 8 at a time, like the PNGs). 129 of the 137 PSD fonts on the 2026-10-23 build. The browser loads one
+    details records' text layers name, as font_check decides them (a face with exactly that PostScript name, the first
+    file by path; since AutoCroissant 89039eb, 2026-10-23, no aliases or loose matches, and the build follows:
+    `FONT_NAMES_VERSION` 2); `font_faces` reads the name table without fontTools and equals font_check.face_names on all
+    of MDW/Fonts; only .ttf / .otf up to 8 MB (a collection holds several faces); names cached by blob sha in
+    `site/.cache/fonts.json` (CI downloads a font only when its blob is new, 8 at a time, like the PNGs). 131 of the 137
+    PSD fonts on the evening's build. The browser loads one
     as a `FontFace` from raw.githubusercontent.com when first drawn (60 ms for a loaded one, else drawn in a stand-in and
     redrawn when it arrives); the caption names a stand-in, and a role whose record names no font ("Stand-in font for the
     name (the card's isn't known)": 266 of 818 records have no name layer). The last 24 images used stay decoded.
@@ -655,7 +656,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   file; an error's Try again when the edit changed; UTF-8 size; psdVal after Publish; the close button; the type row
   as a button; the phone offer, the 1001-1240 px dialog, light-theme type icons. Checks: AutoCroissant
   `tests/test_site_previews.py` (27) and `tests/test_site_editor.py` (16), the twelve new or changed ones failing on the
-  code before; all 137 site tests with this tree. In headless Chrome (scratch ~/Documents/Tools/wt/scratch/site2r3/:
+  code before; all 179 site, picker, card-preview and font_check tests with this tree. In headless Chrome (scratch ~/Documents/Tools/wt/scratch/site2r3/:
   `integ/integ.mjs` 34/34 and `integ/trial.mjs` 15/15 on the merged tree; the review's probes rerun in `h/`): an
   offered draft kept through Esc, a click off and a dialog's Esc; typing over the dialog's offer joins it; Esc after
   Restore keeps it; a 25-minute-old running preview found baked on load with its badge (1 request); an 8-day-old one

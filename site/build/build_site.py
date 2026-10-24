@@ -416,9 +416,8 @@ def join_details(cards, records, tree):
 FONTS_DIR = "MDW/Fonts"                       # the PSDs' fonts, top level only (AutoCroissant font_check.FONTS_DIR)
 FONT_EXTENSIONS = (".ttf", ".otf", ".ttc", ".otc")
 WEB_FONTS = (".ttf", ".otf")                  # what the mock-up loads in the browser (a collection holds several faces)
-FONT_ALIASES = {"Papyrus-Regular": "Papyrus", "Kung-Fu-Panda": "KungFuPanda"}   # AutoCroissant global_config.FONT_ALIASES
 FONT_NAMES = "fonts.json"                     # in CACHE: each font file's face names and size, by blob sha
-FONT_NAMES_VERSION = 1                        # bump when font_faces changes
+FONT_NAMES_VERSION = 2                        # bump when font_faces changes (2: PostScript names only, as font_check since 2026-10-23)
 FONT_WEB_MAX = 8 * 1024 * 1024                # a bigger file isn't offered to the browser: the mock-up draws a stand-in
 
 
@@ -444,10 +443,9 @@ def _name_text(platform, encoding, raw):
 
 def font_faces(data):
     """
-    [PostScript name, [loose names]] per face of a TrueType / OpenType font file, as AutoCroissant's font_check.face_names
-    reads them with fontTools (without it): the PostScript name is name ID 6, else 4, else 1 (the first decodable record,
-    an English one preferred, as fontTools' getDebugName), through ps_name; the loose names add the raw name and family +
-    subfamily. A .ttc / .otc gives one entry per face. Raises ValueError for a file it can't read.
+    The PostScript name of each face of a TrueType / OpenType font file, as AutoCroissant's font_check.face_names reads it
+    with fontTools (without it): name ID 6, else 4, else 1 (the first decodable record, an English one preferred, as
+    fontTools' getDebugName), through ps_name. A .ttc / .otc gives one per face. Raises ValueError for a file it can't read.
     """
     import struct
     try:
@@ -475,20 +473,10 @@ def font_faces(data):
                     if (platform, lang) == (1, 0) and mac is None:
                         mac = value
                 return mac or some
-            raw = next((n for n in (pick(i) for i in (6, 4, 1)) if n), "")
-            ps = ps_name(raw)
-            family = (pick(1) or "") + (pick(2) or "")
-            out.append([ps, list(dict.fromkeys(n for n in (ps, raw, family) if n))])
+            out.append(ps_name(next((n for n in (pick(i) for i in (6, 4, 1)) if n), "")))
         return out
     except struct.error as e:
         raise ValueError(f"not a font file ({e})")
-
-
-def font_keys(name):
-    """norm and, when it differs, norm without -Regular: the loose keys a name matches by (font_check.loose_keys)."""
-    loose = lambda n: re.sub(r"[^a-z0-9]", "", n.casefold())
-    keys = (loose(name), loose(re.sub(r"-?Regular$", "", name)))
-    return keys if keys[1] != keys[0] else keys[:1]
 
 
 def font_bytes(path):
@@ -502,8 +490,8 @@ def font_bytes(path):
 def web_fonts(tree, names):
     """
     {font name: {"file": MDW/Fonts path, "bytes": size}} for the PSD fonts in names a top-level MDW/Fonts file supplies, as
-    font_check resolves a name (the exact PostScript name after FONT_ALIASES, else a loose match; the first file by path
-    wins), for the mock-up to load as a web font: .ttf / .otf up to FONT_WEB_MAX only. Face names are cached by blob sha
+    font_check decides it (a face with exactly that PostScript name; the first file by path wins), for the mock-up to
+    load as a web font: .ttf / .otf up to FONT_WEB_MAX only. Face names are cached by blob sha
     in CACHE/fonts.json (a file is read, from the checkout or downloaded, only when its blob is new); never fails.
     """
     path = os.path.join(CACHE, FONT_NAMES)
@@ -526,18 +514,16 @@ def web_fonts(tree, names):
     new = [p for p in files if not ok(cached.get(tree[p]))]
     with ThreadPoolExecutor(max_workers=8) as pool:   # a CI build downloads them the first time (no MDW/Fonts checkout)
         fresh = dict(zip(new, pool.map(read, new)))
-    used, exact, loose = {}, {}, {}
+    used, exact = {}, {}
     for p in files:
         sha = tree[p]
         row = cached.get(sha) if ok(cached.get(sha)) else fresh.get(p)
         if not row:
             continue
         used[sha] = row
-        for ps, names_of in row["faces"]:
-            if ps:
+        for ps in row["faces"]:
+            if isinstance(ps, str) and ps:
                 exact.setdefault(ps, p)
-            for n in names_of:
-                loose.setdefault(re.sub(r"[^a-z0-9]", "", n.casefold()), p)
     try:
         os.makedirs(CACHE, exist_ok=True)
         with open(path + ".tmp", "w", encoding="utf-8") as fh:
@@ -548,8 +534,7 @@ def web_fonts(tree, names):
     size = {p: used[tree[p]]["bytes"] for p in files if tree[p] in used}
     out = {}
     for name in sorted(n for n in names if isinstance(n, str) and n):
-        target = FONT_ALIASES.get(name, name)
-        p = exact.get(target) or next((loose[k] for k in font_keys(target) if k in loose), None)
+        p = exact.get(name)
         if p and p.lower().endswith(WEB_FONTS) and size.get(p, FONT_WEB_MAX + 1) <= FONT_WEB_MAX:
             out[name] = {"file": p, "bytes": size[p]}
     return out
