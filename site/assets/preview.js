@@ -4,7 +4,8 @@
 // the result on the orphan branch "previews"). The site starts it with the signed-in editor's token, remembers each
 // request in localStorage (the last KEEP per card), checks in the background (pollDelay, up to MAX_WAIT_MS; one tab checks
 // for all) while the editor works on other cards, badges a card whose preview is ready and shows it when the card is
-// opened again: beside the current image (with a diff), or why the bake would refuse it. Pure helpers above createPreviews.
+// opened again: in the card image's viewer (tabs Original, Mock-up, Rendered; a diff), or why the bake would refuse it.
+// Pure helpers above createPreviews.
 import { esc } from "./text.js";
 import { sameField, value, psdValue } from "./edit.js";
 import * as mockup from "./mockup.js";
@@ -214,14 +215,17 @@ const STATE_TEXT = {
   running: "Baking a preview", baked: "Preview ready", redundant: "Nothing to bake", refused: "The bake would refuse this",
   error: "The preview failed", timeout: "No result yet", starting: "Starting", expired: "Preview expired",
 };
-/** The rendered preview's part of the panel for the newest entry e (or none). v: {card, n (fields the image would change
- *  by), hash, now, scopes, images (preview URLs: the 720 px WebP, the full PNG), current (the current image's URL), diff}. */
-export function renderedHtml(e, v) {
+/** The rendered preview of entry e (or none) for the image viewer: {stage, caption, dim}. stage: the preview image over the
+ *  card's image (a hidden current image and the diff canvas with it), or the state's words over the dimmed original (dim);
+ *  caption: the status lines, outcomes, notes and buttons. v: {card, n (fields the image would change by), hash, now,
+ *  scopes, images (preview URLs: the 720 px WebP, the full PNG), current (the current image's URL), diff}. */
+export function renderedParts(e, v) {
   const button = (label, cls = "") => `<button type="button" class="${cls}" data-pv="start"${v.n ? "" : " disabled"}>${label}</button>`;
   const scopeNote = scopeOk(v.scopes) === false ? `<p class="muted pv-note">Your token has only the public_repo scope; starting a preview needs the repo scope (or a fine-grained token with Actions: Read and write).</p>` : "";
+  const words = (text, spin = false) => ({ stage: `<span class="iv-label">${spin ? `<span class="pv-spin" aria-hidden="true"></span> ` : ""}${esc(text)}</span>`, dim: true });
   if (!e) {
-    return `<p class="muted">${v.n ? "A dry-run bake draws your edit into the card image as the bake would; the card itself doesn't change. Anyone can see a previewed edit, as with a published one. It takes a few minutes: open other cards meanwhile, and come back." : "No changes on the card image to preview."}</p>
-      ${scopeNote}<div class="actions">${button("Preview image", "primary")}</div>`;
+    return { ...words("Not previewed yet"), caption: `<p class="muted">${v.n ? "A dry run of the bake, in a few minutes: open other cards meanwhile. Anyone can see a previewed edit." : "No changes on the card image to preview."}</p>
+      ${scopeNote}<div class="actions">${button("Preview image", "primary")}</div>` };
   }
   const r = e.result || {}, stale = DONE.includes(e.state) ? staleWhy(e, v.card, v.hash) : [];
   const staleText = stale.length ? `<p class="pv-stale" role="note">Out of date: ${stale.map(w => (w === "edit" ? "the edit changed since" : "the card changed since")).join(" and ")}. ${button("Preview again", "ghost")}</p>` : "";
@@ -230,30 +234,50 @@ export function renderedHtml(e, v) {
   const notes = r.notes?.length ? `<ul class="pv-notes">${r.notes.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
   const run = r.run || e.run?.url, runLink = run ? ` <a href="${esc(run)}" target="_blank" rel="noopener">The run on GitHub</a>.` : "";
   const again = stale.length ? "" : button("Preview again", "ghost");
+  const state = words(STATE_TEXT[e.state] || e.state);
   if (e.state === "starting" || e.state === "running") {
-    return `${head}<p class="muted" aria-live="polite"><span class="pv-spin" aria-hidden="true"></span> The Action is drawing it, usually in 1 to 3 minutes; checked in the background for up to ${Math.round((e.wait || MAX_WAIT_MS) / 60000)} min.${runLink}</p>`;
+    return { ...words(STATE_TEXT[e.state], true), caption: `${head}<p class="muted">The Action is drawing it, usually in 1 to 3 minutes; checked in the background for up to ${Math.round((e.wait || MAX_WAIT_MS) / 60000)} min.${runLink}</p>` };
   }
-  if (e.state === "expired") return `${head}<p>Its image is gone: previews are kept about a week.</p>${outcomes}<div class="actions">${button("Preview again", "ghost")}</div>`;
-  const pair = (label, alt) => {
+  if (e.state === "expired") return { ...state, caption: `${head}<p>Its image is gone: previews are kept about a week.</p>${outcomes}<div class="actions">${button("Preview again", "ghost")}</div>` };
+  const shot = alt => {                               // the preview in the stage; Diff swaps in the red differences
     const [src, full] = v.images, diff = v.diff && !!v.current;
-    return `<div class="pv-pair${diff ? " diff" : ""}">
-        ${v.current ? `<figure><img src="${esc(v.current)}" alt="${esc(v.card.name)}, current image" crossorigin="anonymous" data-pv-img="current"><figcaption>Current</figcaption></figure>` : ""}
-        <figure><a href="${esc(full || src)}" target="_blank" rel="noopener" title="Full size"><img src="${esc(src)}" alt="${esc(v.card.name)}, ${esc(alt)}" crossorigin="anonymous" data-pv-img="preview" data-fallback="${esc(full || "")}"></a><figcaption>${label}</figcaption></figure>
-        ${v.current ? `<figure class="pv-diff"${diff ? "" : " hidden"}><canvas data-pv-diff role="img" aria-label="Differences between the current image and the preview, in red"></canvas><figcaption>Differences in red <span class="muted" data-pv-changed></span></figcaption></figure>` : ""}
-      </div>
-      <div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${full ? `<a class="fact" href="${esc(full)}" target="_blank" rel="noopener">Full size</a>` : ""}${again}</div>`;
+    return { dim: false,
+      stage: `<a href="${esc(full || src)}" target="_blank" rel="noopener" title="Full size"${diff ? " hidden" : ""}><img src="${esc(src)}" alt="${esc(v.card.name)}, ${esc(alt)}" crossorigin="anonymous" data-pv-img="preview" data-fallback="${esc(full || "")}"></a>
+        ${v.current ? `<img src="${esc(v.current)}" alt="" crossorigin="anonymous" data-pv-img="current" hidden><canvas data-pv-diff role="img" aria-label="Differences between the current image and the preview, in red"${diff ? "" : " hidden"}></canvas>` : ""}`,
+      tools: `<div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${full ? `<a class="fact" href="${esc(full)}" target="_blank" rel="noopener">Full size</a>` : ""}${again}</div>${diff ? `<p class="muted pv-note">Differences in red <span data-pv-changed></span></p>` : ""}` };
   };
-  if (e.state === "baked" && v.images.length) return `${head}${staleText}${pair(`Preview <span class="muted">(dry run)</span>`, "rendered preview")}${outcomes}${notes}`;
-  if (e.state === "baked") return `${head}${staleText}<p>The bake drew it, but no image came with the result.${runLink}</p>${outcomes}${notes}${again ? `<div class="actions">${again}</div>` : ""}`;
-  if (e.state === "redundant") return `${head}${staleText}<p>Already on the card: a bake would change nothing.</p>${outcomes}${notes}`;
+  if (e.state === "baked" && v.images.length) { const s = shot("rendered preview"); return { stage: s.stage, dim: false, caption: `${head}${staleText}${s.tools}${outcomes}${notes}` }; }
+  if (e.state === "baked") return { ...words("No image"), caption: `${head}${staleText}<p>The bake drew it, but no image came with the result.${runLink}</p>${outcomes}${notes}${again ? `<div class="actions">${again}</div>` : ""}` };
+  if (e.state === "redundant") return { ...state, caption: `${head}${staleText}<p>Already on the card: a bake would change nothing.</p>${outcomes}${notes}` };
   if (e.state === "refused") {
-    return `${head}${staleText}<p>${esc(r.reason || "The bake refused this edit.")}</p>${r.image === "refused" && v.images.length ? pair(`What the bake drew before refusing it`, "the bake's render before it refused") : `<div class="actions">${again}</div>`}${outcomes}${notes}`;
+    const reason = `${head}${staleText}<p>${esc(r.reason || "The bake refused this edit.")}</p>`;
+    if (r.image === "refused" && v.images.length) { const s = shot("the bake's render before it refused"); return { stage: s.stage, dim: false, caption: `${reason}<p class="muted pv-note">What the bake drew before refusing it.</p>${s.tools}${outcomes}${notes}` }; }
+    return { ...state, caption: `${reason}<div class="actions">${again}</div>${outcomes}${notes}` };
   }
-  if (e.state === "timeout") return `${head}<p>No result after ${Math.round((e.wait || MAX_WAIT_MS) / 60000)} minutes.${runLink} The run may still finish.</p><div class="actions"><button type="button" class="ghost" data-pv="recheck">Check again</button>${button("Preview again", "ghost")}</div>`;
+  if (e.state === "timeout") return { ...state, caption: `${head}<p>No result after ${Math.round((e.wait || MAX_WAIT_MS) / 60000)} minutes.${runLink} The run may still finish.</p><div class="actions"><button type="button" class="ghost" data-pv="recheck">Check again</button>${button("Preview again", "ghost")}</div>` };
   const input = /^input:/.test(r.reason || "");
   const why = input ? `The bake couldn't read what the website sent (a website bug): ${r.reason}` : r.reason || e.error || "Something went wrong.";
   const errStale = staleWhy(e, v.card, v.hash).includes("edit") ? `<p class="pv-stale" role="note">Out of date: the edit changed since. ${button("Preview again", "ghost")}</p>` : "";   // "Try again" would send the edit as it is now
-  return `${head}<p class="err">${esc(why)}</p>${r.transient ? `<p class="muted">Usually passing: try again.</p>` : ""}${notes}${runLink ? `<p>${runLink}</p>` : ""}${e.error ? scopeNote : ""}${errStale || `<div class="actions">${button("Try again", "ghost")}</div>`}`;
+  return { ...state, caption: `${head}<p class="err">${esc(why)}</p>${r.transient ? `<p class="muted">Usually passing: try again.</p>` : ""}${notes}${runLink ? `<p>${runLink}</p>` : ""}${e.error ? scopeNote : ""}${errStale || `<div class="actions">${button("Try again", "ghost")}</div>`}` };
+}
+/** renderedParts as one piece of markup. */
+export const renderedHtml = (e, v) => { const p = renderedParts(e, v); return p.stage + p.caption; };
+export const TABS = [["original", "Original"], ["mockup", "Mock-up"], ["rendered", "Rendered"]];
+/** The viewer's tabs: a tablist, the mode's tab selected (roving tabindex), "New" on Rendered while a result waits unseen. */
+export const tabsHtml = (mode, { news = false } = {}) => `<div class="iv-tabs" role="tablist" aria-label="Card image">${TABS.map(([m, label]) =>
+  `<button type="button" role="tab" data-iv-tab="${m}" aria-selected="${m === mode}" tabindex="${m === mode ? 0 : -1}">${label}${m === "rendered" && news ? ` <span class="pv-badge inline">New</span>` : ""}</button>`).join("")}</div>`;
+/** The tab a viewer opens on: the card page Rendered while the newest preview's result is unseen, else Original; the Edit
+ *  dialog Mock-up while the form changes the image (n fields), else Original. */
+export const defaultMode = ({ where, n, entry }) => (where === "card" ? (entry && DONE.includes(entry.state) && !entry.seen ? "rendered" : "original") : n ? "mockup" : "original");
+/** The mock-up's caption note from draw()'s result: what went in a box, ran over, wasn't drawn or the bake would refuse. */
+export function mockNote(out) {
+  const lost = Object.entries(out.fonts || {}).filter(([, f]) => !f).map(([n]) => n), cap = s => s[0].toUpperCase() + s.slice(1);
+  const boxed = out.boxed || [], many = boxed.length > 1 || /s$/.test(boxed[0] || "");
+  return [boxed.length ? `${cap(boxed.join(" and "))} in a box: ${many ? "their places" : "its place"} on the image ${many ? "weren't" : "wasn't"} found.` : "",
+    out.over?.length ? `The ${out.over.join(" and the ")} runs past ${out.over.length > 1 ? "their" : "its"} place on the card.` : "",
+    ...(out.refused || []).map(([label, why]) => `The bake would refuse the ${label}: ${why}.`),
+    out.skipped?.length ? `Not drawn: ${[...new Set(out.skipped)].join(", ")}.` : "", lost.length ? `Stand-in font for ${lost.join(", ")}.` : "",
+    out.standIn?.length ? `Stand-in font for the ${out.standIn.join(" and the ")} (the card's isn't known).` : ""].filter(Boolean).join(" ");
 }
 /** The older previews of a card, as buttons to show one: entries after the first. */
 export const olderHtml = (list, now, shown) => (list.length > 1 ? `<div class="pv-older" role="group" aria-label="Earlier previews"><span class="muted">Earlier:</span> ${list.map((e, i) => `<button type="button" class="chip" data-pv-show="${i}" aria-pressed="${i === shown}">${i ? esc(ago(now - e.at)) : "newest"} · ${esc(STATE_TEXT[e.state] || e.state)}</button>`).join(" ")}</div>` : "");
@@ -265,7 +289,7 @@ export function createPreviews(app) {
   let store = readStore(localStorage.getItem(KEY));
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch { /* storage full: this page only */ } };
   const set = s => { store = s; save(); };
-  const live = new Set();                             // the open panels: {id, host, paint}
+  const live = new Set();                             // the open viewers: {id, host, paint}
   const prune = () => { for (const p of [...live]) if (!p.host.isConnected) live.delete(p); };
   const notify = id => { app.badges(); prune(); for (const p of live) if (id == null || p.id === id) p.paint(); };
   const visible = () => document.visibilityState === "visible";
@@ -374,7 +398,7 @@ export function createPreviews(app) {
     } finally { busy = false; announce(finished(before, store)); }
   }
 
-  // ---- marks: the grid's badges, the card page's panel, the Edit dialog's aside
+  // ---- marks: the grid's badges, the image viewer on the card page and in the Edit dialog's Preview pane
   function mountTiles(root) {
     for (const t of root.querySelectorAll(".tile[data-open]")) {
       const id = t.dataset.open, on = hasNews(store, id), b = t.querySelector(".pv-badge");
@@ -382,68 +406,81 @@ export function createPreviews(app) {
       else if (!on && b) b.remove();
     }
   }
-  const views = new Map();                            // card id -> {mode, diff, shown}: the panel's toggles while the page lives
-  function panelHtml(c, v, where) {
-    const list = store[c.id] || [], st = views.get(c.id) || {}, shown = Math.min(st.shown || 0, Math.max(0, list.length - 1)), e = list[shown];
-    const n = v.n, mode = st.mode || (e && DONE.includes(e.state) && where === "card" ? "rendered" : n ? "mockup" : "rendered");
-    const seg = m => `<button type="button" data-pv-mode="${m}" aria-pressed="${mode === m}">${m === "mockup" ? "Mock-up" : "Rendered"}</button>`;
-    const news = hasNews(store, c.id) ? ` <span class="pv-badge inline">New</span>` : "";
-    return `<section class="pv-panel" data-pv-card="${esc(c.id)}" aria-label="Card image preview">
-      <div class="pv-head"><h3>Image with your edit${news}</h3><div class="seg" role="group" aria-label="Preview kind">${seg("mockup")}${seg("rendered")}</div></div>
-      <div class="pv-body" data-mode="${mode}">
-        ${mode === "mockup" ? (n && c.img ? `<figure class="pv-mock"><canvas data-pv-mock role="img" aria-label="Mock-up of ${esc(c.name)} with your edit"></canvas><span class="pv-ribbon" aria-hidden="true">Mock-up</span>
-          <figcaption>${esc(mockup.LABEL)}. <span class="muted" data-pv-mock-note></span></figcaption></figure>
-          ${e && (e.state === "starting" || e.state === "running") ? "" : `<div class="actions"><button type="button" data-pv="start">Preview image</button></div>`}` : `<p class="muted">${c.img ? "No changes on the card image yet." : "This card has no image to draw on."}</p>`)
-          : renderedHtml(e, { ...v, card: c, now: Date.now(), images: e ? imagesOf(e) : [], current: current(c), diff: st.diff, scopes: app.editor.scopes }) + olderHtml(list, Date.now(), shown)}
-      </div></section>`;
-  }
-  function wire(root, c, getV, where) {               // (re)render a panel in root and its listeners
-    const host = root.querySelector(".pv-host");
+  const views = new Map();                            // card id -> {mode, diff, shown}: the viewer's choices while the page lives
+  /** The image viewer in iv (.iv holding .iv-stage > .iv-orig, the original, never re-rendered): tabs, the alternative
+   *  image over the original (the mock-up canvas or the rendered preview) and a caption. Returns its paint(). */
+  function viewer(iv, c, getV, where) {
+    const stage = iv.querySelector(".iv-stage");
+    iv.insertAdjacentHTML("afterbegin", tabsHtml("original"));
+    stage.insertAdjacentHTML("beforeend", `<div class="iv-alt" hidden></div>`);
+    iv.insertAdjacentHTML("beforeend", `<div class="iv-caption" aria-live="polite"></div>`);
+    const tabs = iv.querySelector(".iv-tabs"), alt = stage.querySelector(".iv-alt"), cap = iv.querySelector(".iv-caption");
+    const pick = mode => views.set(c.id, { ...views.get(c.id), mode });
     const paint = () => {
-      const v = getV();
-      host.innerHTML = panelHtml(c, v, where);
-      const canvas = host.querySelector("[data-pv-mock]");
-      if (canvas) drawMock(canvas, c, v, host);
-      const pair = host.querySelector(".pv-pair"), list = store[c.id] || [];
-      if (pair) wirePair(pair, list[Math.min((views.get(c.id) || {}).shown || 0, Math.max(0, list.length - 1))]);
-      const e = list[0];
-      if (where === "card" && e && DONE.includes(e.state) && !e.seen && host.querySelector(".pv-body").dataset.mode === "rendered") { set(patch(store, e.request, { seen: true })); app.badges(); }
+      const v = getV(), list = store[c.id] || [], st = views.get(c.id) || {};
+      const shown = Math.min(st.shown || 0, Math.max(0, list.length - 1)), e = list[shown];
+      const mode = st.mode || defaultMode({ where, n: v.n, entry: list[0] });
+      for (const b of tabs.children) { const on = b.dataset.ivTab === mode; b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1; }
+      const pill = tabs.querySelector(".pv-badge"), news = hasNews(store, c.id);
+      if (news && !pill) tabs.lastElementChild.insertAdjacentHTML("beforeend", ` <span class="pv-badge inline">New</span>`); else if (!news && pill) pill.remove();
+      let show = "orig";
+      if (mode === "mockup" && v.n && c.img) {
+        show = "alt";
+        alt.innerHTML = `<canvas data-pv-mock role="img" aria-label="Mock-up of ${esc(c.name)} with your edit"></canvas><span class="pv-ribbon" aria-hidden="true">Mock-up</span>`;
+        cap.innerHTML = `${esc(mockup.LABEL)}. <span class="muted" data-pv-mock-note></span>${list[0] && (list[0].state === "starting" || list[0].state === "running") ? "" : `<div class="actions"><button type="button" data-pv="start">Preview image</button></div>`}`;
+        drawMock(alt.firstElementChild, c, v, iv);
+      } else if (mode === "mockup") {
+        alt.innerHTML = ""; cap.innerHTML = `<p class="muted">${c.img ? "No changes on the card image yet." : "This card has no image to draw on."}</p>`;
+      } else if (mode === "rendered") {
+        const parts = renderedParts(e, { ...v, card: c, now: Date.now(), images: e ? imagesOf(e) : [], current: current(c), diff: st.diff, scopes: app.editor.scopes });
+        show = parts.dim ? "dim" : "alt";
+        alt.innerHTML = parts.stage; cap.innerHTML = parts.caption + olderHtml(list, Date.now(), shown);
+        if (!parts.dim) wireShot(alt, cap, e);
+        const top = list[0];
+        if (where === "card" && top && DONE.includes(top.state) && !top.seen) { pick("rendered"); set(patch(store, top.request, { seen: true })); app.badges(); tabs.querySelector(".pv-badge")?.remove(); }
+      } else { alt.innerHTML = ""; cap.innerHTML = ""; }
+      alt.hidden = show === "orig";
+      iv.dataset.show = show;
     };
-    host.onclick = ev => {
+    iv.onclick = ev => {
       const t = sel => ev.target.closest(sel);
-      if (t("[data-pv-mode]")) { views.set(c.id, { ...views.get(c.id), mode: t("[data-pv-mode]").dataset.pvMode }); paint(); return; }
+      if (t("[data-iv-tab]")) { pick(t("[data-iv-tab]").dataset.ivTab); paint(); return; }
       if (t("[data-pv-show]")) { views.set(c.id, { ...views.get(c.id), shown: +t("[data-pv-show]").dataset.pvShow }); paint(); return; }
       const act = t("[data-pv]")?.dataset.pv;
       if (act === "start") { views.set(c.id, { ...views.get(c.id), mode: "rendered", shown: 0 }); start(c, getV().edit); }
       else if (act === "diff") { const st = views.get(c.id) || {}; views.set(c.id, { ...st, diff: !st.diff }); paint(); }
       else if (act === "recheck") { const e = (store[c.id] || [])[0]; if (e) { set(patch(store, e.request, { state: "running", wait: Date.now() - e.at + MORE_WAIT_MS })); notify(c.id); poll(store[c.id][0]).then(() => notify(c.id)); schedule(); } }
     };
+    tabs.onkeydown = ev => {                          // arrows, Home, End move between the tabs (not to the next card)
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(ev.key) || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+      ev.preventDefault(); ev.stopPropagation();
+      const all = [...tabs.children], i = Math.max(0, all.indexOf(ev.target.closest("[data-iv-tab]")));
+      const to = all[ev.key === "Home" ? 0 : ev.key === "End" ? all.length - 1 : (i + (ev.key === "ArrowRight" ? 1 : all.length - 1)) % all.length];
+      pick(to.dataset.ivTab); paint(); to.focus();
+    };
     paint();
-    prune(); live.add({ id: c.id, host, paint });
+    prune(); live.add({ id: c.id, host: iv, paint });
     return paint;
   }
-  /** The card page: the panel under the image, edit mode only, for a card with PSD changes or previews. */
+  /** The card page: the viewer on the card image, edit mode only, for a card with PSD changes or previews. */
   function mountCard(modal, c) {
     if (!app.editor.me) return;
     const getV = () => cardV(c);
     if (!getV().n && !(store[c.id] || []).some(e => e.state !== "expired")) return;   // nothing to show but a preview that's gone
-    const wrap = modal.querySelector(".detail .image-wrap");
-    if (!wrap) return;
-    wrap.insertAdjacentHTML("beforeend", `<div class="pv-host"></div>`);
-    wire(wrap, c, getV, "card");
+    const iv = modal.querySelector(".detail .image-wrap .iv");
+    if (iv) viewer(iv, c, getV, "card");
   }
-  /** The Edit dialog: the same panel beside the form's "On the card image" fields, the mock-up following the inputs. */
+  /** The Edit dialog: the viewer at the top of the live Preview pane, the mock-up following the inputs. */
   function mountForm({ form, card: c, read, base }) {
     if (!app.editor.me) return;
-    const note = form.querySelector(".egroup-note");
-    if (!note) return;
-    note.insertAdjacentHTML("afterend", `<div class="pv-host pv-in-form"></div>`);
+    const iv = form.closest(".dialog")?.querySelector(".lp-pane .iv");
+    if (!iv) return;
     const getV = () => formV(c, read(), base);
-    const paint = wire(form, c, getV, "form");
+    const paint = viewer(iv, c, getV, "form");
     let t = null, last = getV().hash;
-    const later = () => { clearTimeout(t); t = setTimeout(() => {      // the mock-up follows the inputs; the panel repaints when the edit changed
-      const v = getV(), cv = form.querySelector("[data-pv-mock]");
-      if (cv && v.n) drawMock(cv, c, v, form.querySelector(".pv-host")); else if (v.hash !== last) paint();
+    const later = () => { clearTimeout(t); t = setTimeout(() => {      // the mock-up follows the inputs; the rest repaints when the edit changed
+      const v = getV(), cv = iv.querySelector("[data-pv-mock]");
+      if (cv && v.n) drawMock(cv, c, v, iv); else if (v.hash !== last) paint();
       last = v.hash;
     }, 120); };
     form.addEventListener("input", later); form.addEventListener("change", later);
@@ -460,31 +497,24 @@ export function createPreviews(app) {
     const t = setTimeout(() => { drawn = true; go(null); }, 150);
     app.loadDetails(c).then(r => { recs.set(c.id, r); clearTimeout(t); if (!drawn || canvas._run === run) go(r); }, () => { recs.set(c.id, null); });
   }
-  const mockNote = out => {
-    const lost = Object.entries(out.fonts).filter(([, f]) => !f).map(([n]) => n), cap = s => s[0].toUpperCase() + s.slice(1);
-    return [out.boxed?.length ? `${cap(out.boxed.join(" and "))} in a box: ${out.boxed.length > 1 ? "their places" : "its place"} on the image weren't found.`.replace("its place on the image weren't", "its place on the image wasn't") : "",
-      out.over?.length ? `The ${out.over.join(" and the ")} runs past ${out.over.length > 1 ? "their" : "its"} place on the card.` : "",
-      out.skipped.length ? `Not drawn: ${[...new Set(out.skipped)].join(", ")}.` : "", lost.length ? `Stand-in font for ${lost.join(", ")}.` : "",
-      out.standIn?.length ? `Stand-in font for the ${out.standIn.join(" and the ")} (the card's isn't known).` : ""].filter(Boolean).join(" ");
-  };
-  function wirePair(pair, e) {
-    const prev = pair.querySelector('[data-pv-img="preview"]');
+  function wireShot(alt, cap, e) {                    // the preview's fallback to the PNG, and the diff while it shows
+    const prev = alt.querySelector('[data-pv-img="preview"]');
     prev?.addEventListener("error", () => {
       const f = prev.dataset.fallback;
       if (f && prev.src !== f) { prev.dataset.fallback = ""; prev.src = f; prev.closest("a").href = f; return; }
       if (e && Date.now() - e.at > LATE_MS) { set(patch(store, e.request, { state: "expired", seen: true })); notify(e.card); }   // the branch dropped it (the contract: a 404 after a day)
     });
-    const canvas = pair.querySelector("[data-pv-diff]");
-    if (!canvas || !pair.classList.contains("diff")) return;
-    const cur = pair.querySelector('[data-pv-img="current"]');
+    const canvas = alt.querySelector("[data-pv-diff]");
+    if (!canvas || canvas.hidden) return;
+    const cur = alt.querySelector('[data-pv-img="current"]');
     const ready = img => (img.complete && img.naturalWidth ? Promise.resolve() : new Promise((ok, no) => { img.addEventListener("load", ok, { once: true }); img.addEventListener("error", no, { once: true }); }));
     Promise.all([ready(cur), ready(prev)]).then(() => {
       const w = cur.naturalWidth, h = Math.round((cur.naturalWidth * prev.naturalHeight) / prev.naturalWidth) || cur.naturalHeight;
       const grab = img => { const k = document.createElement("canvas"); k.width = w; k.height = h; const x = k.getContext("2d"); x.drawImage(img, 0, 0, w, h); return x.getImageData(0, 0, w, h).data; };
       const { data, changed } = diffPixels(grab(cur), grab(prev));
       canvas.width = w; canvas.height = h; canvas.getContext("2d").putImageData(new ImageData(data, w, h), 0, 0);
-      const el = pair.querySelector("[data-pv-changed]"); if (el) el.textContent = `(${(changed * 100).toFixed(1)}% of the pixels)`;
-    }, () => { const el = pair.querySelector("[data-pv-changed]"); if (el) el.textContent = "(couldn't load both images)"; });
+      const el = cap.querySelector("[data-pv-changed]"); if (el) el.textContent = `(${(changed * 100).toFixed(1)}% of the pixels)`;
+    }, () => { const el = cap.querySelector("[data-pv-changed]"); if (el) el.textContent = "(couldn't load both images)"; });
   }
 
   // the first check soon after a load or a sign-in, for a running one or one that timed out while the site was closed
@@ -492,7 +522,7 @@ export function createPreviews(app) {
   function init() { set(expire(store)); soon(); }
   return {
     init, mountTiles, mountCard, mountForm, start, poll: () => poll(),
-    /** a card's values changed (null: any): repaint its open panels */
+    /** a card's values changed (null: any): repaint its open viewers */
     refresh: id => notify(id),
     onAuth() { if (app.editor.me) soon(); },
     hasNews: id => hasNews(store, id), entries: id => store[id] || [],

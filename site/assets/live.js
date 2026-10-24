@@ -68,8 +68,10 @@ export function reveal(pane, f) {
   const r = el.getBoundingClientRect(), b = box.getBoundingClientRect();
   if (r.top < b.top || r.bottom > b.bottom) box.scrollTop += r.top - b.top - 8;
 }
-/** The pane around it: a heading (on narrow screens a button that opens and closes it) and the body. */
-export const paneHtml = (open = false) => `<aside class="lp-pane${open ? " open" : ""}" aria-label="Preview">
+/** The pane around it: a heading (on narrow screens a button that opens and closes it), the card image's viewer (viewer: the
+ *  image URL, ar: its "w/h"; preview.js adds the tabs) and the body. */
+export const paneHtml = (open = false, { viewer = "", ar = "" } = {}) => `<aside class="lp-pane${open ? " open" : ""}" aria-label="Preview">
   <button type="button" class="lp-toggle ghost" aria-expanded="${open}" aria-controls="lp-body"><span>Preview</span> <span class="muted">as it will look once published</span><span class="lp-caret" aria-hidden="true">${open ? "▾" : "▸"}</span></button>
   <h3 class="egroup lp-title">Preview <span class="muted">as it will look once published</span></h3>
+  ${viewer ? `<div class="iv iv-pane"><div class="iv-stage"><div class="iv-orig"><img src="${esc(viewer)}" alt=""${ar ? ` style="aspect-ratio:${esc(ar)}"` : ""}></div></div></div>` : ""}
   <div id="lp-body" class="lp-body" aria-live="off"></div></aside>`;

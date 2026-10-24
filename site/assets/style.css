@@ -163,7 +163,7 @@ mark { background: color-mix(in srgb, var(--warn) 45%, transparent); color: inhe
 .detail { display: grid; grid-template-columns: minmax(260px, 430px) minmax(0, 1fr); gap: 26px; }
 @media (max-width: 820px) { .detail { grid-template-columns: minmax(0, 1fr); } }   /* minmax: the scrolling strips mustn't widen it */
 .detail .image-wrap { position: relative; }
-.detail .image-wrap img { width: 100%; height: auto; border-radius: 12px; display: block; background: var(--surface-2); cursor: zoom-in; }
+.detail .image-wrap .iv-orig img { width: 100%; height: auto; border-radius: 12px; display: block; background: var(--surface-2); cursor: zoom-in; }
 .detail h2 { margin: 0 34px 6px 0; font-size: 26px; line-height: 1.15; }
 .facts { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 14px; }
 .fact { background: var(--surface-2); border-radius: 999px; padding: 2px 10px; font-size: 13px; color: var(--ink-2); }
@@ -575,19 +575,9 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .deck-pass .err { min-height: 1.4em; margin: 4px 0; }
 .publish-form .ein .check { margin: 0 12px 0 0; } .publish-form .ein .check input { margin: 0; }
 .publish-form #pd-private { border-left: 2px solid var(--border); padding-left: 10px; margin: 4px 0 8px; }
-/* ---- image previews (preview.js, mockup.js): the panel under the card page's image and beside the Edit dialog's card fields, the grid badge */
-.pv-panel { margin-top: 12px; border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; background: var(--surface-2); }
-.pv-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-.pv-head h3 { margin: 0; font-size: 14px; }
-.pv-head .seg button { padding: 3px 10px; font-size: 13px; }
-.pv-head .seg button[aria-pressed="true"] { background: var(--surface-3); font-weight: 600; }
-.pv-mock, .pv-pair figure { position: relative; margin: 0; }
-.detail .pv-panel img, .pv-mock canvas, .pv-pair img, .pv-pair canvas { width: 100%; height: auto; display: block; border-radius: 10px; background: var(--surface-3); cursor: auto; }
+/* ---- image previews (preview.js, mockup.js): the viewer's states and notes (its layout: round 3, card page), the grid badge */
 .pv-ribbon { position: absolute; top: 32%; left: 8px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: .06em;
   text-transform: uppercase; background: #fab219; color: #1a1300; box-shadow: 0 1px 4px rgba(0,0,0,.4); pointer-events: none; }
-.pv-panel figcaption { font-size: 12.5px; margin-top: 6px; line-height: 1.35; }
-.pv-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
-.pv-pair.diff figure:first-child { display: none; }            /* diff: the preview beside its differences */
 .pv-state { margin: 0 0 6px; font-size: 13.5px; }
 .pv-stale { background: color-mix(in srgb, var(--warn) 18%, transparent); border-radius: 8px; padding: 6px 8px; font-size: 13px; margin: 0 0 8px; }
 .pv-stale button { margin-left: 6px; padding: 1px 8px; font-size: 12px; }
@@ -601,9 +591,36 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 @media (prefers-reduced-motion: reduce) { .pv-spin { animation: none; } }
 .tile .pv-badge { position: absolute; top: 30px; left: 6px; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #136f2a; color: #fff; }
 .pv-badge.inline { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #136f2a; color: #fff; font-weight: 600; vertical-align: 1px; }
-.pv-in-form { float: right; width: min(280px, 42%); margin: 0 0 10px 14px; }
-.pv-in-form .pv-panel { margin-top: 0; }
-@media (min-width: 1001px) and (max-width: 1240px) { .has-preview .pv-in-form { float: none; width: auto; max-width: 360px; margin: 0 auto 12px; } }   /* beside the live pane: the fields keep the column */
-@media (max-width: 640px) { .pv-in-form { float: none; width: auto; margin: 0 0 12px; } }
 /* round 3: card page */
 .detail .image-wrap .card-actions { margin: 10px 0 4px; }
+.iv-tabs { display: flex; gap: 2px; margin: 0 0 8px; border-bottom: 1px solid var(--border-strong); }
+.iv-tabs button { flex: 1 1 auto; padding: 5px 8px; margin-bottom: -1px; font-size: 13px; color: var(--ink-2); white-space: nowrap;
+  background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: 6px 6px 0 0; }
+.iv-tabs button:hover { background: var(--surface-2); color: var(--ink); }
+.iv-tabs button[aria-selected="true"] { border-bottom-color: var(--accent); color: var(--ink); font-weight: 600; }
+.iv-stage { position: relative; }
+.iv-alt { position: absolute; inset: 0; }
+.iv-alt > canvas, .iv-alt img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 12px; }
+.iv-alt a img { cursor: zoom-in; }
+.iv-alt [hidden] { display: none; }
+.iv[data-show="alt"] .iv-orig { visibility: hidden; }
+.iv[data-show="dim"] .iv-orig { opacity: .35; }
+.iv-label { position: absolute; inset: 0; display: grid; place-items: center; padding: 12px; text-align: center; font-weight: 700; font-size: 15px;
+  color: var(--ink); text-shadow: 0 0 6px var(--surface), 0 0 2px var(--surface); pointer-events: none; }
+@media (max-width: 820px) { .detail .iv-tabs { margin-right: 40px; } }   /* clear of the dialog's close button */
+.iv-caption { font-size: 12.5px; margin-top: 6px; line-height: 1.35; }
+.iv-caption:empty { display: none; }
+.iv-caption .actions { margin: 8px 0 0; } .iv-caption .pv-state { font-size: 13px; }
+.iv-caption [data-pv="diff"][aria-pressed="true"] { background: var(--surface-3); font-weight: 600; }
+.iv-pane { margin: 0 0 12px; }
+.iv-pane .iv-stage { width: fit-content; max-width: 100%; margin: 0 auto; }
+.iv-pane .iv-orig img { display: block; width: auto; max-width: 100%; height: auto; max-height: 52vh; border-radius: 12px; background: var(--surface-2); }
+@media (max-width: 1000px) {   /* the pane is a bar: the viewer shows beside the live card once it's opened */
+  .lp-pane:not(.open) .iv-pane { display: none; }
+  .lp-pane.open:has(.iv-pane) { display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); align-items: start; }
+  .lp-pane.open .lp-toggle { grid-column: 1 / -1; }
+  .lp-pane.open .iv-pane { max-width: 42vw; margin: 0; padding: 0 0 12px 12px; }
+  .lp-pane.open .iv-pane .iv-orig img { max-height: 30vh; }
+  .iv-pane .iv-tabs button { padding: 3px 4px; font-size: 12px; }
+  .iv-pane .iv-tabs { flex-wrap: wrap; }
+}
