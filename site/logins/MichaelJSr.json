@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-24T00:43:09Z",
+  "ct": "HhwAyFZndGS5qucPe2dfL6Cur5BpJu8lpvssa8Zi326EbUGBPutPxyDRhLqC8aCmvMq29adb0f0=",
+  "iterations": 2000000,
+  "iv": "Dvn4RohSm2Gy2+jH",
+  "kdf": "PBKDF2-SHA-256",
+  "login": "MichaelJSr",
+  "salt": "r0g5dVpAAzvWTVBW7mExcg==",
+  "v": 1
+}
