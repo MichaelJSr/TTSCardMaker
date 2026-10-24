@@ -113,7 +113,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   swing"; `madeBuff`/`madeNerf` = rows on others' cards made by them; present with `power` so the page shows `No buffs
   or nerfs recorded yet.`), `revisions` (P3/P12/P13 from stats' `card_revisions` counts, `{self, others, top, theirs,
   most?, untouched, oldest?}`; absent without history), `rework` (P11: `analytics.reworked` rows), `ratings` (P4:
-  `rating_now(..., skip=K)` per own card, `best` up to half of the rated cards, `worst` the rest),
+  `rating_now(..., skip=K)` per own card, `best` up to half of the rated cards, `worst` the rest rated below them),
   `selfBias`/`rater`/`powerVsStats` (P5/P7/P8: only for a person with entries of their own on either scale (P7's twins:
   favorability raters), never "group"; correlations at `MIN_RATERS = 5` cards, P5 at 3), `editFields` (P21:
   `edit_batches(..., fields_by=)` counts every changed field of every batch they are credited with, all time, before the
@@ -764,7 +764,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `body.dragging-cards` is added a frame later (a layout change inside `dragstart` cancels the drag). Checked in Chrome
   by replaying the spec's order (`check18.mjs`), and a trusted drag still stages; not in Safari here (no WebKit tooling).
 - **`inline.dropOn(ids, {key, value, series})`** is the one staging path: a filter-bar value (`targetOf` reads its
-  list's `data-drop`/`data-series`), a pinned box (`data-k/v/s`), a tap on a box, a number key.
+  list's `data-drop`/`data-series`), a pinned box (`data-pin-k/v/s`: `data-v` would be a chart tooltip), a tap on a box, a number key.
 - **The stuck "+" box (item 3).** Reproduced: `+ stars` swapped its chip for a slider at none, and nothing put the chip
   back. Now that slider is `data-fresh`: focus leaving it, a click away or Esc with nothing chosen gives back `+ stars`
   (a keyboard change still saves; moved and back to none counts as nothing chosen, `atNone`). The text editors closed only on `focusout`, which a tap on plain content in iOS
@@ -879,7 +879,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   moved_to retired, else deleted; `ARCHIVE_TAGS`), `author` (Card Authors.txt, by the archived name, or by its title
   when no live card has that title: 'Pizza (item)' is not the live Pizza's > the tag's `author` (backfill) > the last
   version's, through `person`), `created` (the last version's `created.date`, else the Pacific day of its oldest
-  version), `series`. analytics.json gains `archived` (`ARCHIVED_SLIM`: card, title, tag, card_type, stars, series, at,
+  version), `series` (the renamed card's, else the last version's as a live series spells it: 'kirby' -> 'Kirby',
+  `SERIES_ALIASES` for old folder names). analytics.json gains `archived` (`ARCHIVED_SLIM`: card, title, tag, card_type, stars, series, at,
   created, author; no ratings, commit or path) and `revisions` = `{available, mass: MASS_PASS, cards: {id: {name: n}}}`
   from `card_revisions(found, by_png, commits, people, by_login, skip=rule_ids)`: each image version after a PNG's first
   upload, mass passes (`mass_passes`: commits in more than `MASS_PASS` = 20 cards' versions, rulebook pages not counted)
