@@ -14,7 +14,8 @@ const TZ = "America/Los_Angeles";
 const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: TZ }), MONTH = dateFmt({ month: "short", year: "2-digit", timeZone: "UTC" });
 const day = ts => DAY(new Date(ts * 1000));
 const ymd = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ });
-const dayKey = ts => { const p = Object.fromEntries(ymd.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}`; };
+const days = new Map();   // by UTC hour: Pacific days start on the hour, so one formatToParts per hour
+const dayKey = ts => { const h = Math.floor(ts / 3600); let k = days.get(h); if (k === undefined) { const p = Object.fromEntries(ymd.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); days.set(h, k = `${p.year}-${p.month}-${p.day}`); } return k; };
 const monthKey = ts => dayKey(ts).slice(0, 7);
 const monthLabel = key => { const [y, m] = key.split("-").map(Number); return MONTH(new Date(Date.UTC(y, m - 1, 15))); };
 const monthsFrom = (first, last) => {

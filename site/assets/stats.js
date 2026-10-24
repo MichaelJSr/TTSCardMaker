@@ -9,7 +9,8 @@ import { date, monthKey } from "./history.js";
 const KIND_LABEL = { creature: "Creatures", item: "Items", field: "Field cards", minion: "Minions", nme: "N.M.E. items", "aux item": "Auxiliary items",
   debuff: "Debuffs", buff: "Buffs", creatures: "Auxiliary creatures", unknown: "Other" };
 const NF = new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 });   // one formatter: toLocaleString per value was a hotspot
-const fmt = n => NF.format(Math.round(n * 10) / 10);
+const PLAIN = NF.format(-123) === "-123";   // whole numbers under 1000 print as String() does here: skip the formatter (most values)
+const fmt = n => { const v = Math.round(n * 10) / 10; return PLAIN && Number.isInteger(v) && v > -1000 && v < 1000 && !Object.is(v, -0) ? String(v) : NF.format(v); };
 const MONTH = dateFmt({ month: "short", year: "2-digit", timeZone: "UTC" });
 
 // ---- chart primitives (SVG strings; every label is escaped) ----------------------------------------

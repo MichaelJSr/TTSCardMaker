@@ -14,7 +14,8 @@ const ym = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "2-digit",
 export const monthKey = ts => { const p = Object.fromEntries(ym.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); return `${p.year}-${p.month}`; };
 const ymd = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ });
 /** "2026-10-21" in Pacific time */
-export const dayOf = ts => { const p = Object.fromEntries(ymd.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}`; };
+const days = new Map();   // by UTC hour: Pacific days start on the hour, so one formatToParts per hour
+export const dayOf = ts => { const h = Math.floor(ts / 3600); let k = days.get(h); if (k === undefined) { const p = Object.fromEntries(ymd.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); days.set(h, k = `${p.year}-${p.month}-${p.day}`); } return k; };
 /** "2026" in Pacific time */
 export const yearOf = ts => dayOf(ts).slice(0, 4);
 
