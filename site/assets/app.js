@@ -409,10 +409,27 @@ function renderCards(r) {
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v]) => `<button type="button" class="chip" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
       ${!list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
-        : view_ === "table" ? tableHtml(list, p) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}">${list.map((c, i) => tileHtml(c, { eager: i < 8, css: { s: 160, m: 200, l: 270 }[size] || 200 })).join("")}</div>`}
+        : view_ === "table" ? tableHtml(list, p) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}"></div>`}
     </section></div>`;
+  const grid = list.length && view_ !== "table" && $(".browse .grid", view);
+  if (grid) fillGrid(grid, list, { css: { s: 160, m: 200, l: 270 }[size] || 200 });
   if (editing()) inline.mountGrid(view, p);
   if (editing()) previews.mountTiles(view);
+}
+// the grid's tiles by card id {html, el, ed}: a render reuses a tile whose markup (and edit mode) is unchanged instead of
+// parsing it again, so its picture stays loaded. Code that changes a tile in place drops it (refresh); the edit-mode marks
+// (draggable, data-selected, preview badges) are set again after every render.
+const gridTiles = new Map();
+function fillGrid(grid, list, { css }) {
+  const ed = editing(), html = list.map((c, i) => tileHtml(c, { eager: i < 8, css })), els = new Array(list.length), miss = [];
+  for (let i = 0; i < list.length; i++) { const t = gridTiles.get(list[i].id); if (t && t.html === html[i] && t.ed === ed) els[i] = t.el; else miss.push(i); }
+  if (miss.length) {
+    const tpl = document.createElement("template");
+    tpl.innerHTML = miss.map(i => html[i]).join("");
+    const fresh = [...tpl.content.children];
+    miss.forEach((i, k) => { els[i] = fresh[k]; gridTiles.set(list[i].id, { html: html[i], el: fresh[k], ed }); });
+  }
+  grid.append(...els);
 }
 function tableHtml(list, p) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
@@ -993,6 +1010,7 @@ function deckDiscord(d) {
 // ---- interactions ----------------------------------------------------------------------------------
 function refresh(id) {
   const inDeck = deckHas(id);
+  gridTiles.delete(id);
   for (const b of $$(".add[data-id]")) if (b.dataset.id === id) { b.classList.toggle("in", inDeck); b.textContent = inDeck ? "✓ In deck" : "+ Deck"; }
   if (!modal.hidden && parseHash().name === "card") openCard(parseHash().arg);
   else if (parseHash().name === "deck") renderDeck(parseHash());
