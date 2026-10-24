@@ -51,7 +51,8 @@ PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) ar
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
 changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown),
-data/logins/<login>.json (the password sign-in's fallback copy), images, icons,
+data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
+its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json), images, icons,
 assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
@@ -401,6 +402,154 @@ def join_details(cards, records, tree):
             e["details"] = True
             out[e["id"]] = {**rec, "id": e["id"], "name": e["name"]}      # the card's id and shown name win
     return out
+
+
+FONTS_DIR = "MDW/Fonts"                       # the PSDs' fonts, top level only (AutoCroissant font_check.FONTS_DIR)
+FONT_EXTENSIONS = (".ttf", ".otf", ".ttc", ".otc")
+WEB_FONTS = (".ttf", ".otf")                  # what the mock-up loads in the browser (a collection holds several faces)
+FONT_ALIASES = {"Papyrus-Regular": "Papyrus", "Kung-Fu-Panda": "KungFuPanda"}   # AutoCroissant global_config.FONT_ALIASES
+FONT_NAMES = "fonts.json"                     # in CACHE: each font file's face names and size, by blob sha
+FONT_NAMES_VERSION = 1                        # bump when font_faces changes
+FONT_WEB_MAX = 8 * 1024 * 1024                # a bigger file isn't offered to the browser: the mock-up draws a stand-in
+
+
+def ps_name(name):
+    """A name as FreeType reports PostScript names: ASCII 33-126 without []{}()<>/% (font_check.ps_name)."""
+    return re.sub(r"[^!-~]|[\[\]{}()<>/%]", "", name)
+
+
+NAME_CODECS = {0: "utf_16_be", 3: {0: "utf_16_be", 1: "utf_16_be", 10: "utf_16_be", 2: "shift_jis", 3: "gb2312", 4: "big5", 5: "euc_kr", 6: "johab"},
+               1: {0: "mac_roman", 6: "mac_greek", 7: "mac_cyrillic", 29: "mac_latin2", 35: "mac_turkish", 37: "mac_iceland"},
+               2: {0: "ascii", 1: "utf_16_be", 2: "latin_1"}}          # fontTools encodingTools' map, the common part
+
+
+def _name_text(platform, encoding, raw):
+    """A name record's text as fontTools' toUnicode decodes it (an unknown encoding as ASCII); None when it can't."""
+    codec = NAME_CODECS.get(platform, "ascii")
+    codec = codec.get(encoding, "ascii") if isinstance(codec, dict) else codec
+    try:
+        return raw.decode(codec)
+    except (UnicodeDecodeError, LookupError):
+        return None
+
+
+def font_faces(data):
+    """
+    [PostScript name, [loose names]] per face of a TrueType / OpenType font file, as AutoCroissant's font_check.face_names
+    reads them with fontTools (without it): the PostScript name is name ID 6, else 4, else 1 (the first decodable record,
+    an English one preferred, as fontTools' getDebugName), through ps_name; the loose names add the raw name and family +
+    subfamily. A .ttc / .otc gives one entry per face. Raises ValueError for a file it can't read.
+    """
+    import struct
+    try:
+        offsets = list(struct.unpack_from(f">{struct.unpack_from('>I', data, 8)[0]}I", data, 12)) if data[:4] == b"ttcf" else [0]
+        out = []
+        for off in offsets:
+            tables = {data[off + 12 + 16 * i: off + 16 + 16 * i]: struct.unpack_from(">II", data, off + 20 + 16 * i)
+                      for i in range(struct.unpack_from(">H", data, off + 4)[0])}
+            records = []
+            if b"name" in tables:
+                base = tables[b"name"][0]
+                _, count, strings = struct.unpack_from(">HHH", data, base)
+                for i in range(count):
+                    platform, encoding, lang, nid, length, at = struct.unpack_from(">HHHHHH", data, base + 6 + 12 * i)
+                    records.append((nid, platform, lang, _name_text(platform, encoding, data[base + strings + at: base + strings + at + length])))
+
+            def pick(nid):                        # fontTools' getDebugName: Windows English, else Mac English, else the last read
+                some = mac = None
+                for n, platform, lang, value in records:
+                    if n != nid or value is None:
+                        continue
+                    some = value
+                    if (platform, lang) == (3, 0x409):
+                        return value
+                    if (platform, lang) == (1, 0) and mac is None:
+                        mac = value
+                return mac or some
+            raw = next((n for n in (pick(i) for i in (6, 4, 1)) if n), "")
+            ps = ps_name(raw)
+            family = (pick(1) or "") + (pick(2) or "")
+            out.append([ps, list(dict.fromkeys(n for n in (ps, raw, family) if n))])
+        return out
+    except struct.error as e:
+        raise ValueError(f"not a font file ({e})")
+
+
+def font_keys(name):
+    """norm and, when it differs, norm without -Regular: the loose keys a name matches by (font_check.loose_keys)."""
+    loose = lambda n: re.sub(r"[^a-z0-9]", "", n.casefold())
+    keys = (loose(name), loose(re.sub(r"-?Regular$", "", name)))
+    return keys if keys[1] != keys[0] else keys[:1]
+
+
+def font_bytes(path):
+    local = os.path.join(REPO, path)
+    if os.path.isfile(local):
+        with open(local, "rb") as fh:
+            return fh.read()
+    return fetch(RAW + quote(path))
+
+
+def web_fonts(tree, names):
+    """
+    {font name: {"file": MDW/Fonts path, "bytes": size}} for the PSD fonts in names a top-level MDW/Fonts file supplies, as
+    font_check resolves a name (the exact PostScript name after FONT_ALIASES, else a loose match; the first file by path
+    wins), for the mock-up to load as a web font: .ttf / .otf up to FONT_WEB_MAX only. Face names are cached by blob sha
+    in CACHE/fonts.json (a file is read, from the checkout or downloaded, only when its blob is new); never fails.
+    """
+    path = os.path.join(CACHE, FONT_NAMES)
+    try:
+        with open(path, encoding="utf-8") as fh:
+            cached = json.load(fh)
+        cached = cached.get("fonts", {}) if cached.get("version") == FONT_NAMES_VERSION else {}
+    except (OSError, ValueError, AttributeError):
+        cached = {}
+    files = sorted(p for p in tree if p.startswith(FONTS_DIR + "/") and "/" not in p[len(FONTS_DIR) + 1:] and p.lower().endswith(FONT_EXTENSIONS))
+    ok = lambda row: isinstance(row, dict) and isinstance(row.get("faces"), list) and isinstance(row.get("bytes"), int)
+
+    def read(p):                                  # one bad or unreachable font never stops the build
+        try:
+            data = font_bytes(p)
+            return {"faces": font_faces(data), "bytes": len(data)}
+        except Exception as e:
+            log(f"font {p}: {e}")
+            return None
+    new = [p for p in files if not ok(cached.get(tree[p]))]
+    with ThreadPoolExecutor(max_workers=8) as pool:   # a CI build downloads them the first time (no MDW/Fonts checkout)
+        fresh = dict(zip(new, pool.map(read, new)))
+    used, exact, loose = {}, {}, {}
+    for p in files:
+        sha = tree[p]
+        row = cached.get(sha) if ok(cached.get(sha)) else fresh.get(p)
+        if not row:
+            continue
+        used[sha] = row
+        for ps, names_of in row["faces"]:
+            if ps:
+                exact.setdefault(ps, p)
+            for n in names_of:
+                loose.setdefault(re.sub(r"[^a-z0-9]", "", n.casefold()), p)
+    try:
+        os.makedirs(CACHE, exist_ok=True)
+        with open(path + ".tmp", "w", encoding="utf-8") as fh:
+            json.dump({"version": FONT_NAMES_VERSION, "fonts": used}, fh, separators=(",", ":"))
+        os.replace(path + ".tmp", path)
+    except OSError as e:
+        log(f"font names not cached: {e}")
+    size = {p: used[tree[p]]["bytes"] for p in files if tree[p] in used}
+    out = {}
+    for name in sorted(n for n in names if isinstance(n, str) and n):
+        target = FONT_ALIASES.get(name, name)
+        p = exact.get(target) or next((loose[k] for k in font_keys(target) if k in loose), None)
+        if p and p.lower().endswith(WEB_FONTS) and size.get(p, FONT_WEB_MAX + 1) <= FONT_WEB_MAX:
+            out[name] = {"file": p, "bytes": size[p]}
+    return out
+
+
+def record_fonts(records):
+    """The font names the text layers of the details records ask for."""
+    return {t.get("font") for rec in records for t in (rec.get("text") if isinstance(rec.get("text"), list) else [])
+            if isinstance(t, dict) and isinstance(t.get("font"), str)}
 
 
 def stat(card, attr):
@@ -2297,6 +2446,9 @@ def main():
         e.pop("_blob", None)
     if records:
         log(f"PSD details: {len(detail_files)} cards and rulebook pages have a record ({len(records)} in {DETAILS_JSON})")
+    fonts = web_fonts(tree, record_fonts(detail_files.values())) if detail_files else {}     # the mock-up's web fonts (data/fonts.json)
+    if fonts:
+        log(f"web fonts: {len(fonts)} of the {len(record_fonts(detail_files.values()))} PSD fonts from {FONTS_DIR}")
 
     if analytics.ZONE_MISSING:
         warn("no tz database: balance days and months in UTC, not Pacific time as balance.js shows them")
@@ -2380,7 +2532,7 @@ def main():
     os.makedirs(os.path.join(DIST, "data"))
     files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
-             "analytics.json": balance, "changelog.json": changelog}
+             "analytics.json": balance, "changelog.json": changelog, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
