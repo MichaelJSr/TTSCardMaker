@@ -494,23 +494,36 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   (card-preview.yml, AutoCroissant commands/card_preview.py); this is the
   website's side.
 - Modules: `assets/mockup.js` (pure helpers, then `draw`) and `assets/preview.js` (pure helpers, then `createPreviews(app)`,
-  the panel, the store and the background check). Both DOM-free at import. Wiring only elsewhere: app.js imports
+  the viewer, the store and the background check). Both DOM-free at import. Wiring only elsewhere: app.js imports
   `createPreviews`, makes `previews` after the editor (`badges()` re-marks the grid), calls `previews.init()` after
   `editor.init()`, `previews.mountTiles(view)` after `inline.mountGrid`, `previews.mountCard(modal, c)` after
   `inline.mountCard`, `previews.onAuth()` in `onAuth`, and passes `formOpened` to the editor; edit.js as in section 3.
-  Everything is gated on `editing()` / `editor.me`: a signed-out page is unchanged. CSS: the `.pv-*` block at the end of
-  style.css (theme variables; the ribbon and the grid badge use fixed colours like `.tile .flag`).
-- **The panel** ("Image with your edit", `section.pv-panel`): on the card page under the image and its ← → links, for a
-  card whose PSD fields aren't what the PSD prints (`changedOf`: published-not-baked or staged) or that has previews; in
-  the Edit dialog floated beside the "On the card image" fields (`.pv-in-form`; above them, centred and at most 360 px
-  wide, from 1001 to 1240 px where the live pane takes the right column, so the fields keep their width; full width
-  under 640 px). Two buttons
-  (`.seg`, `aria-pressed`): Mock-up and Rendered; the card page opens on Rendered when a result is waiting, else Mock-up.
-  "Preview image" is on both (on Mock-up under the drawing). Keyboard: all plain buttons and links.
+  Everything is gated on `editing()` / `editor.me`: a signed-out page is unchanged. CSS: the `.pv-*` block of style.css
+  (theme variables; the ribbon and the grid badge use fixed colours like `.tile .flag`) and the `.iv-*` rules in its
+  "round 3: card page" block.
+- **The viewer** (2026-10-24, owner's item 14; replaced the "Image with your edit" panel): the card image itself gets
+  three tabs, **Original** · **Mock-up** · **Rendered** (`tabsHtml`: `role="tablist" aria-label="Card image"`, roving
+  tabindex, "New" on Rendered while a result waits unseen), one image spot that flips in place: `.iv > .iv-stage >
+  .iv-orig` holds the original (app.js renders it; on the card page the full-size link and `#detail-img` with its
+  720 px swap; never re-rendered, only hidden with `visibility` so the stage keeps its size), `.iv-alt` over it
+  (`position: absolute; inset: 0`) the mock-up canvas or the rendered preview, `.iv-caption` under it the text
+  (`aria-live`). `.iv[data-show]` = "orig" | "alt" | "dim" (the original at 35% under a state's words: "Baking a
+  preview", "The bake would refuse this", "Preview expired", "Not previewed yet", "No image"). Where: on the card page
+  for a card whose PSD fields aren't what the PSD prints (`changedOf`: published-not-baked or staged) or that has
+  previews (`mountCard`; signed out or nothing to show: the plain image, no tabs); in the Edit dialog at the top of the
+  live Preview pane (live.js `paneHtml(open, {viewer, ar})`, outside `#lp-body` so `paintPreview` never touches it;
+  the live card shows no second small image: edit.js `previewCtx.image` is empty), centred, at most 52vh tall; up to
+  1000 px the pane is a bar and the viewer shows, 30vh tall, beside the live card once the bar is opened. Default tab
+  (`defaultMode`): the card page Rendered while the newest preview has an unseen result (showing it marks it seen and
+  pins the tab), else Original; the Edit dialog Mock-up while the form changes the image, else Original (it follows
+  the form until a tab is picked). A tab picked by hand is kept per card while the page lives (`views`). Keyboard: ←
+  → Home End on a focused tab switch tabs (a listener on the tablist with `stopPropagation`, so the card page's ← →
+  next-card shortcut doesn't fire); Enter and Space are the buttons'. Only the shown tab costs anything: Original
+  fetches no details and draws no canvas.
 - **Mock-up** (`mockup.draw(canvas, {card, src, rec, edit, psd, icons, getFonts, raw, onFont, stale})`): the card's 720 px
   thumb (same origin, so the canvas can read it) drawn off-screen and copied when done (a newer draw drops an older one);
-  only the fields unlike the PSD are redrawn (`changes`): name, text, stats; stars, types and stats above 10 are named in
-  the caption ("Not drawn: stars."), never drawn.
+  only the fields unlike the PSD are redrawn (`changes`): name, text, stats, stars, types (not a reorder); stats above 10
+  are named in the caption ("Not drawn: DEF."), never drawn. Stars and types: section 23.
   - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the area
     is the card template's (`TEMPLATES`, fractions of the image measured on the PSDs' layer boxes on 2026-10-23: `tall`
     1200x2400 creatures and minions, whose stat bars sit at (0.3, 0.5, 0.978, 0.535) + 0.0525 a row on 311 of the 390
@@ -573,6 +586,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     redrawn when it arrives); the caption names a stand-in, and a role whose record names no font ("Stand-in font for the
     name (the card's isn't known)": 266 of 818 records have no name layer). The last 24 images used stay decoded.
   - Label: a "Mock-up" ribbon on the image and the caption "Mock-up: the real image comes from the bake".
+    Caption notes (`mockNote`, exported): what went in a box ("Stars in a box: their places on the image weren't
+    found."), ran over, wasn't drawn, the bake would refuse ("The bake would refuse the stars: <why>."), stand-in fonts.
 - **Rendered** (`createPreviews`): the Action's side is one adapter, `CONTRACT` (workflow, ref, branch, inputs, paths).
   - Start: `GET .../actions/workflows/card-preview.yml` (404: "isn't set up on the card repo yet"), then
     `POST .../dispatches` with `{ref: "main", inputs: {card: c.key, edit: JSON.stringify(edit), request}}`. `edit` =
@@ -604,18 +619,20 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     result or timeout older than 6 days "expired" (no image, no badge: "Its image is gone: previews are kept about a
     week." with Preview again) and drops entries older than 30 days; the preview image's 404 more than a day after the
     press does the same (the contract's rule). A card whose only previews are expired and that has no PSD change gets
-    no panel.
+    no viewer.
   - Result: `readResult` keeps state, transient, reason, notes (20, 500 characters), fields, changes, base, image,
     files (`preview.webp` / `preview.png` names only) and the run (a github.com link only); anything else is a transient
-    error. Baked: Current (the 720 px thumb) beside the preview (preview.webp, 720 px; Full size = preview.png when `files` lists one: since work/card-preview 7646a3cc it never does), Diff
-    (`diffPixels`: changed pixels red over the dimmed current, with the share), each field's outcome ("HP baked · Stars
+    error. Baked: the preview (preview.webp, 720 px) in the image's place, a link to full size (preview.png when `files` lists one: since work/card-preview 7646a3cc it never does, so the WebP), Diff
+    swapping in the red differences (`diffPixels` against a hidden current 720 px thumb: changed pixels red over the
+    dimmed current, with the share in the caption); `renderedParts(e, v)` -> `{stage, caption, dim}`, `renderedHtml` =
+    stage + caption; each field's outcome ("HP baked · Stars
     refused") and the notes. Redundant: "Already on the card". Refused: the reason, with the bake's render when
     `image` is "refused". Baked without an image file: "The bake drew it, but no image came with the result." with the
     outcomes (not an error). Error: an `input:` reason is "a website bug", a transient one "try again"; when the edit
     changed since, "Out of date" with Preview again instead of Try again (which would send the newer edit). Every string
     through `esc()`. "Earlier:" previews are chips (bordered, the shown one pressed).
   - Badge: a tile gets "Preview" (`.pv-badge`, under the flag) while its card's newest preview has a result not yet
-    seen (`hasNews`); the panel's heading says "New"; showing the Rendered tab on the card page marks it seen. A start
+    seen (`hasNews`); the Rendered tab says "New"; showing the Rendered tab on the card page marks it seen. A start
     that failed at once is seen already.
   - Out of date (`staleWhy`): the edit the site would send now hashes differently (`hashOf` over `canonical`: sorted
     keys, sorted types), or the card's image moved (the result's `base.png_blob` against cards.json `img`, its first 16
@@ -626,7 +643,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     read yet. (Polling follows the contract since the 2026-10-23 review: until then every 15 s up to 20 minutes.)
   - Between Publish and the site's rebuild the PSD values come from the built card (edit.js `psdVal` reads `pristine`),
     so a newly published PSD field still counts as one the image doesn't show yet: the mock-up and Preview image stay
-    (they read the published-not-built card as printed before). Open panels are forgotten as soon as they leave the
+    (they read the published-not-built card as printed before). Open viewers are forgotten as soon as they leave the
     page (`prune` on every mount).
 - Checks (2026-10-23): AutoCroissant `tests/test_site_previews.py` (19 tests on preview.js and mockup.js in node and on
   build_site's font names: the entry edit, hashes, request ids, result.json, the store, staleness, badges, start
@@ -663,3 +680,50 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   expired with no panel, a 2-day-old one whose image 404s expired; two tabs: one checks (8 requests for 2 previews in
   33 s), one toast each; close while the palette is open: saved and closed in one click; 1024 px dialog: the Name
   input 362 px (128 before), 9 type columns. Screenshots `~/Documents/Tools/wt/scratch/site2/shots/r3-*.png`.
+
+## 23. Round 3: the card page (2026-10-24)
+- Owner's items 1, 2, 4 and 14. Item 2: the notes under Image versions ("Each commit that changed the image...") and
+  Recorded changes ("From the bot's card history...") are gone; the per-entry "date approximate" stays. Item 4: the
+  Cards tab's "PSD details" chip (section 11; `has:details` stays). Item 1: Add to deck, Compare and Edit sit under
+  the card image (`.image-wrap > .card-actions`, after the viewer, before the ← → links); `.detail` keeps its two
+  children in order (image column, info column: inline.js reads `:scope > div:nth-child(2)`).
+- Item 14a: the image viewer (section 22, "The viewer").
+- Item 14b: the mock-up draws stars and type icons. AutoCroissant's psd_details record has a `header` (since
+  AutoCroissant's work/r3-card-page; records gathered before have none):
+  `{"stars": {"units": [{core, box}], "icon", "at": {"1".."10": [[cx, cy]]}, "refused": {"n" | "*": why}} | null,
+  "types": {"row": [{name, core, box}], "spots": {"n": [boxes past the row]}, "fixed": [[name, why]], "tokens",
+  "refused"} | null}`, canvas px (the mock-up scales by `rec.canvas.w`), a section psd-tools can't read "error: ...".
+  `units`: the shown stars in reading order (rows top to bottom, each right to left: the order the bake hides from);
+  `at[n]`: each count's centres, the bake's own plan (psd_edit.plan_stars: rows of two re-centred, hidden stars shown,
+  copies) when it lays the count out, else the geometry (the first n, then `_star_layouts`; a refused count is still
+  drawn); `icon`: the star layer the bake copies. `row`: the header icons plan_types reads, slot order; `spots[n]`:
+  where a row of n puts the icons past the row (`_icon_spots`, per n: the bake picks the first option that stays
+  clear for that n); `fixed`: icons the bake can't take off (a frame, a group). Site: `changes()` returns `stars`
+  `[from, to]` and `types` `[old, new]`; `starPlan` keeps a shown star when one of the count's centres is within a
+  quarter of a star of it, erases the others (their box, glow included) and draws a star at every centre none covers;
+  `typePlan` mirrors plan_types (kept icons stay in their slot, removed ones are erased, a kept icon past the new
+  count moves to the first free slot, new ones take the next free slots); `fillBox` fills an erased box from the ring
+  of pixels around it (the left-right and top-bottom blends, weighted by nearness, so a gradient goes on through);
+  stars are drawn with the record's star icon (`S.icons`, else the last star's own pixels), types with their icons,
+  with a soft shadow for the PSD's drop shadow and glow. No header, no layout for the count, a token row, or units
+  unlike the stars (The Lich King: 4 units for 5 stars): a dark box over `TEMPLATES[shape].stars` / `.types` with the
+  new stars in rows of two (right to left) or the icons down a column, and the caption says so; a refusal is named.
+- Measured (the new gather over all 764 card PSDs of the Desktop clone, read-only, 36 s with 6 workers; the median
+  header 147 ms, the slowest 338 ms, +~1.5 KB a record): 660 with a stars section (494 every count refused for one
+  reason, mostly "the 'N Stars' folder sets them"; 577 with every count 1-10 laid out; 10 with none), 687 with a type
+  row (526 one icon, 142 two, 15 three, 4 four), 0 token rows, 0 errors. The bake's plan and the geometry agree within
+  4 px on 232 of 248 laid-out counts of 30 random PSD-star cards; the 16 others (rows of two re-centred, hidden stars
+  shown) are why `at` takes the plan. TEMPLATES' stars and types areas are the median union boxes per shape from the
+  same run. Re-measure from psd_details.json once regathered.
+- The regather (`python -m commands.psd_details --clone ...`) waits for the history backfill, with the bot idle, and is
+  committed under the pickle rules; until then every record lacks `header` and the mock-up boxes stars and types.
+- Checks: AutoCroissant `tests/test_site_build.py` (the buttons' order, the notes and the chip gone),
+  `tests/test_site_previews.py` (tabs and default tab, rendered stage/caption split, starPlan, typePlan, fillBox,
+  mockNote), `tests/test_site_editor.py` (the pane's viewer), `tests/test_psd_details.py` (Mini Doomer's, The Lich
+  King's and The Freezer's header). Mutations (the close-up rule, the keep rule, fillBox's ring, `_reading`'s
+  right_first) each fail a test. Headless Chrome over the live site with these assets (fake sign-in, a fake
+  card-preview.yml run, header records served for 8 cards): signed out unchanged but for the buttons; the viewer on
+  the card page and in the Edit dialog at 1400, 1100, 900 and 390 px (nothing wider than the screen; the tabs clear of
+  the close button on a phone); ← → on a tab switch tabs, elsewhere cards; Preview image, the result by default with
+  New, Diff in place; Mini Doomer 2 -> 3 and 2 -> 1 stars, light -> fire; The Lich King boxed with its refusal; Whelp
+  drawn with its refusal; The Freezer + ice under its field icon; Goombella boxed; no console errors.
