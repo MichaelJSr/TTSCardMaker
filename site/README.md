@@ -71,24 +71,27 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   key that can't leave the browser; **Forget** on the deck page drops it). A person's page lists their decks, the
   private ones as locked links. Format in `site/decks/README.md`; see Decks below.
 - **Stats**: counts by kind, series, subseries, type, timing tag, status effect, author and month; how many legal cards there are
-  for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
-  chart that highlights possible balance outliers. Every chart has a table view.
-  Its **Balance** section: the total stats of each star level of creatures and minions (the middle 80%, the median,
-  the lowest and highest, and the top and bottom 10% as dots), the strongest and weakest cards for their star level,
-  each star level's average total over time (from the card repo's history: a card counts from its first upload), buffs
-  and nerfs by month, every recorded change by month, the most reworked cards, and the cooldown update (the timing
-  tags that became cooldowns, global cooldowns and uses, on Oct 21, 2026 and in an earlier wave on Jun 18, 2026, Pacific time). The
-  kind and series filters apply to it too; a star level's band and median are always over all its cards. A star level
-  with fewer than 5 cards (God Tamer, the one 0★ minion) is compared with all cards of its kind, and so are the 7
-  auxiliary creatures (no star level), with all creatures. The bot's history has no buff or nerf yet (2026-10-22: its
-  one stat change, Tainted Lazarus' 110s becoming two creatures, is off the scale), so the buffs and nerfs panel says so
-  instead of drawing an empty chart.
+  for each star level of the starting hand; average stats per star level; stat shapes (each creature's highest stat),
+  cooldowns by star level, ability length by star level and kind, items by type and stars; stat distributions (0-10, with
+  `‹ ›` or `←`/`→` on a stat that goes higher); and a total-stats-vs-stars chart that highlights possible balance
+  outliers. Every chart has a table view; jump links go to Balance, Ratings and History.
+  **Balance**: the total stats of each star level of creatures and minions (the middle 80%, the median, the lowest and
+  highest, the top and bottom 10% as dots), the strongest and weakest for their star level, each star level's average
+  total over time (full-history builds), power creep (by year created), series strength (opens on its table), buffs and
+  nerfs by month and by stat, every recorded change by month, the most reworked cards. A star level with fewer than 5
+  cards is compared with all cards of its kind, and so are the auxiliary creatures, with all creatures.
+  **Ratings** (once cards have ratings): rated power vs stats, favourites and least liked, most divisive (once 3 people
+  rate a card), risers and fallers, power tier vs the ban list, and whether Too Stronk cards got nerfed.
+  **History**: who changes whose cards and the most revised cards (image changes after the upload, mass passes left
+  out; full-history builds), cards created per year, text freshness, and retired and deleted cards. The kind and series
+  filters apply to every section.
 - **Changes**: a row of category tabs across the top; clicking one (or the arrow keys on a focused tab) shows that
   category alone, the chosen tab underlined, and the address keeps it (`#/changes/changelog`), so a link or a refresh
   opens the same one. **Recently updated** (`#/changes`): recently updated cards with text diffs (none when the update kept the text). **Changelog**: the card
   sync's events of the last 180 days, one block per push as the Discord posts (new cards, changes with their old values
   and an ability word diff, new art, moves, renames, archived and restored cards, database edits, parser re-reads), by day
-  in Pacific time, filterable by kind, then the archived cards (deleted, renamed, or moved to MDW: retired). **Database edits**: the card sync's edited and authors
+  in Pacific time, filterable by kind. **Archive**: the cards whose PSD left the card folders, each tagged Renamed,
+Retired (moved to MDW) or Deleted, with chips to filter by tag (`?tag=retired`). **Database edits**: the card sync's edited and authors
   events, and every commit that changed a Card Edits.json entry or a Card Authors.txt line (website, Discord or a commit
   by hand) with each field's old and new value. The events need the card sync's data (`CARD_DATA_DIR`); until then those
   parts say so. **Website edits**: the cards an edit on the website or in Discord changes now, with the fields, who and
@@ -103,7 +106,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   (by its creation date) and a grid of their 24 newest cards; the chart counts cards by creation month.
 
 Top right: **Sign in** (a GitHub token, or your login and password once you set one; see Editing) becomes your login
-once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
+once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card (on a focused stat distribution: more values), `↑`/`↓` image versions,
 `d` add to deck, `c` copy link, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections, `?` help. The single-key
 shortcuts are off while an edit form is open (a card's edit dialog or the profile editor) and while an inline control or a
 stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog.
@@ -172,10 +175,11 @@ icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon s
 with `VARIANT_VERSION`, drawn by the icon font's build script, `MDW/Fonts/stoogedings-src/build_stoogedings.py`, which
 needs that folder's `requirements.txt`: without it the build warns and variants show as the plain icon), so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
 where links fail). The first screen loads only `data/cards.json`; `analytics.json` (the Balance section and blocks,
-computed by `site/build/analytics.py` from the same bot data) loads when the Stats page or a creature, minion or card
+computed by `site/build/analytics.py` from the same bot data, plus the image revisions and archived cards the Stats
+history charts use) loads when the Stats page or a creature, minion or card
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
-People tab is opened; `changelog.json` when the Changelog or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
+People tab is opened; `changelog.json` when the Changelog, Archive or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
 when a card's or rulebook page's Details dropdown is first opened. Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
