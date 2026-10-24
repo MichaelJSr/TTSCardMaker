@@ -528,9 +528,7 @@ function versionsHtml(c) {
   if (!S.versions) return `<h3>Image versions</h3><p class="muted">Loading ${c.iv} versions…</p>`;
   const vs = versionList(c);
   if (vs.length < 2) return "";
-  const oldest = vs[vs.length - 1], fromInit = /^(git )?init$/i.test(oldest.subject.trim());
   return `<h3>Image versions <span class="muted">${vs.length}</span></h3>
-    <p class="muted">Each commit that changed the image${fromInit ? `, since ${date(oldest.ts)} (first upload)` : ""}. Dates are Pacific time.</p>
     <div class="versions">
       <div class="ver-list" role="group" aria-label="Image versions, newest first">${vs.map((v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
         <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`).join("")}</div>
