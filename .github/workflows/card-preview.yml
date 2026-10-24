@@ -90,7 +90,7 @@ jobs:
 
       # card-edits.yml's install: the same fork pin (card-guards.yml's too).
       - timeout-minutes: 5
-        run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023c"
+        run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023d"
 
       # Fonts as card-edits.yml's: MDW/Fonts' top level, cached by the folder's tree sha (the same cache key), fetched
       # only on a miss.
