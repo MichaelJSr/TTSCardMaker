@@ -239,7 +239,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   when the element left the page or lost its tooltip (checked on each pointermove), and on `hideTip()` from code
   (inline.js calls it when an editor opens, closes or commits, and before the dialog re-renders). Every place that
   removes or changes `data-tip` is inline.js (`open` deletes it, `cancel` puts it back, `mountCard`, the palette);
-  app.js's `fillTip` is the old pointerover body, unchanged in what it shows.
+  app.js's `fillTip` is the old pointerover body, unchanged in what it shows. app.js hands inline.js `hideTip` and the icons
+  through `inline.extend` (kept off the lines the picker and previews branches change, so their merges stay clean).
 - **Live preview** (`assets/live.js`) in the Edit dialog (All fields): the card as it will look once the batch is published,
   redrawn on every input from `readForm`'s op over the published card (`baseOf`: unset fields as their PSD values,
   `previewCard`), nothing staged. Shown: the current card image (`data-preview-image`, the slot an image mock-up can
