@@ -685,8 +685,8 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .tok-picker.names { grid-template-columns: minmax(0, 1fr) auto; }
 .tok-picker.names .tp-pic { display: none; }
 .tp-value { font: inherit; }
-.tray { position: sticky; top: 64px; z-index: 6; display: flex; gap: 10px; overflow-x: auto; padding: 8px 0 10px; background: var(--page); }
-@media (min-width: 861px) and (max-width: 980px) { .tray { top: 112px; } }   /* under the two-row bar */
+.tray { position: sticky; top: 56px; z-index: 6; display: flex; gap: 10px; overflow-x: auto; padding: 8px 0 10px; background: var(--page); }
+@media (min-width: 861px) and (max-width: 980px) { .tray { top: 104px; } }   /* under the two-row bar */
 @media (max-width: 860px) { .tray { position: static; } .tray.selecting { position: sticky; top: 0; z-index: 21; } }   /* the bar is tall: over it only while selecting */
 .bucket-wrap { position: relative; flex: 0 0 auto; display: flex; }
 .bucket { min-width: 150px; max-width: 240px; min-height: 64px; padding: 8px 30px 8px 12px; border: 2px dashed var(--border-strong); border-radius: 12px;
