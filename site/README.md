@@ -182,7 +182,8 @@ Anyone with write access to this repo can fix card data on the site: **Sign in**
 stat (the top lit cell steps it down, so 0 is reachable; above 10 and per-creature stats go through All fields), click
 the ability text to edit it in place (Ctrl/Cmd+Enter or a click elsewhere saves, Esc cancels; the card links in the text
 still work), double-click the name to rename, and click the series, subseries or author chip, or the note, to type a new
-value (series, subseries and author offer the known values; a missing one shows as a dashed `+ series` chip when you
+value (series, subseries and author list the known names as you type, in the token picker's list, with their card
+counts; picking one saves it; a missing one shows as a dashed `+ series` chip when you
 hover the row). In the cards grid, Ctrl/Cmd-click selects tiles (Shift-click a range, Esc clears; a filter change keeps
 only the tiles still shown) and dragging one or the selection onto a series, subseries or author in the filter bar (the
 values appear under the Series, Subseries and Author selects while you drag; subseries once a series is picked, its own

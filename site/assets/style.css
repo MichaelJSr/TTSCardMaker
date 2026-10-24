@@ -605,3 +605,8 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .pv-in-form .pv-panel { margin-top: 0; }
 @media (min-width: 1001px) and (max-width: 1240px) { .has-preview .pv-in-form { float: none; width: auto; max-width: 360px; margin: 0 auto 12px; } }   /* beside the live pane: the fields keep the column */
 @media (max-width: 640px) { .pv-in-form { float: none; width: auto; margin: 0 0 12px; } }
+
+/* round 3: editing */
+.tok-picker.names { grid-template-columns: minmax(0, 1fr) auto; }
+.tok-picker.names .tp-pic { display: none; }
+.tp-value { font: inherit; }

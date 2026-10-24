@@ -457,12 +457,21 @@ export function createEditor(app) {
   const pending = () => ({ series: buckets.series.filter(v => !carries("series", v)), author: buckets.author.filter(v => !carries("author", v)),
     subseries: buckets.subseries.filter(([s, v]) => !carries("subseries", v, s)) });
   const ownSubseries = series => [...new Set([...uniq(x => (x.series === series ? x.subseries : null)), ...buckets.subseries.filter(([s]) => s === series).map(([, v]) => v)])];
-  const subseriesList = series => {          // that series' subseries first, then all
-    const own = ownSubseries(series);
-    return [...own, ...new Set([...uniq(x => x.subseries), ...buckets.subseries.map(([, v]) => v)].filter(v => !own.includes(v)))];
-  };
   const seriesList = () => [...new Set([...uniq(c => c.series), ...buckets.series])].sort((a, b) => a.localeCompare(b));
   const authorList = () => [...new Set([...(S.data.people || []), ...S.all.map(c => c.author).filter(Boolean), ...buckets.author])].sort((a, b) => a.localeCompare(b));
+  // the name autofill's entries (tokens.js suggestNames): [{value, n (cards), note, own (in `series`), kind, series}]
+  function nameEntries(kind, series = "") {
+    const cards = n => (n ? `${n} card${n === 1 ? "" : "s"}` : "no cards yet"), count = new Map();
+    if (kind === "subseries") {                     // every [series, subseries] pair: a name in two series is two rows
+      for (const c of S.all) if (c.subseries) { const k = JSON.stringify([c.series || "", c.subseries]); count.set(k, (count.get(k) || 0) + 1); }
+      for (const pair of buckets.subseries) { const k = JSON.stringify(pair); if (!count.has(k)) count.set(k, 0); }
+      return [...count].map(([k, n]) => { const [s, value] = JSON.parse(k), own = !!series && nameKey(s) === nameKey(series);
+        return { value, n, own, kind, series: s, note: own ? cards(n) : `${s || "no series"} · ${cards(n)}` }; });
+    }
+    if (kind !== "series" && kind !== "author") return [];
+    for (const c of S.all) if (c[kind]) count.set(c[kind], (count.get(c[kind]) || 0) + 1);
+    return (kind === "author" ? authorList() : seriesList()).map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
+  }
   function knownNames(kind, series = "", skip = "") {     // canonName's [spelling, shown, rank]: cards (skip: the one being edited), buckets, [people]
     const rank = new Map(), own = s => (kind === "subseries" && series && s === series ? 1e6 : 0);   // the picked series' own subseries first
     const add = (v, by) => { if (v) rank.set(v, (rank.get(v) || 0) + by); };
@@ -492,7 +501,6 @@ export function createEditor(app) {
     try { sessionStorage.setItem(K.buckets, JSON.stringify(buckets)); } catch { /* storage full: kept for this page */ }
     return { name: r.name, existed: false, note: "" };
   }
-  const subseriesOpts = series => subseriesList(series).map(v => `<option value="${esc(v)}">`).join("");
   const isRule = c => (S.rules || []).includes(c);
   function ruleFormHtml(c) {
     const b = baseOf(c);
@@ -549,13 +557,13 @@ export function createEditor(app) {
           ${row("type", `<select id="ef-type">${opts(kinds, c.type)}</select>`)}
           ${row("subtype", `<select id="ef-subtype">${opts([["", "—"], ...ITEM_TYPES.map(t => [t, t[0].toUpperCase() + t.slice(1)]),
             ...[...new Set([c.subtype, psdVal(b, "subtype")])].filter(t => t && !ITEM_TYPES.includes(t)).map(t => [t, t])], c.subtype || "")}</select>`)}
-          ${row("series", `<input id="ef-series" list="dl-series" value="${esc(c.series || "")}" placeholder="—"><datalist id="dl-series">${seriesList().map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
-          ${row("subseries", `<input id="ef-subseries" list="dl-subseries" value="${esc(c.subseries || "")}" placeholder="—"><datalist id="dl-subseries">${subseriesOpts(c.series)}</datalist>`)}
+          ${row("series", `<input id="ef-series" data-suggest="series" autocomplete="off" value="${esc(c.series || "")}" placeholder="—">`)}
+          ${row("subseries", `<input id="ef-subseries" data-suggest="subseries" data-series-from="ef-series" autocomplete="off" value="${esc(c.subseries || "")}" placeholder="—">`)}
         </fieldset>
         <fieldset><legend>Notes, names and credit</legend>
           ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page" data-tokens>${esc(c.note || "")}</textarea>`)}
           ${row("aliases", `<input id="ef-aliases" value="${esc((c.webAliases || []).join(", "))}" placeholder="comma separated">${(c.aliases || []).filter(a => !(c.webAliases || []).includes(a)).length ? `<span class="muted">Bot aliases: ${esc(c.aliases.filter(a => !(c.webAliases || []).includes(a)).join(", "))}</span>` : ""}`)}
-          <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" list="dl-people" value="${esc(c.author || "")}"><datalist id="dl-people">${authorList().map(p => `<option value="${esc(p)}">`).join("")}</datalist>`}</div></div>
+          <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" data-suggest="author" autocomplete="off" value="${esc(c.author || "")}">`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
         </fieldset>
         <fieldset><legend>Checks</legend>
@@ -707,8 +715,6 @@ export function createEditor(app) {
     app.modal.innerHTML = formHtml(c);
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
     const form = app.modal.querySelector("#edit-form"), ta = document.getElementById("ef-ability");
-    const ser = document.getElementById("ef-series"), dl = document.getElementById("dl-subseries");
-    if (ser && dl) ser.addEventListener("input", () => { dl.innerHTML = subseriesOpts(ser.value.trim()); });
     const update = () => {
       document.getElementById("ef-preview").innerHTML = ta.value.trim() ? app.render(ta.value, c.name) : `<span class="muted">No ability text.</span>`;
       const op = readForm(c), lines = describe(op);
@@ -856,7 +862,7 @@ export function createEditor(app) {
         <h2>${own ? "Your profile" : `${esc(p.login)}'s profile`}</h2>
         <p class="muted">Everything is optional. Goes into your batch as <span class="kbd">${esc(files().profiles)}/${esc(p.login)}.json</span>; the page is u/${esc(p.login)}/.</p>
         <fieldset><legend>About</legend>
-          ${row("author", "Cards as", `<input id="pf-author" list="dl-people" value="${esc(st.author)}" placeholder="the name on your cards"><datalist id="dl-people">${(S.data.people || []).map(x => `<option value="${esc(x)}">`).join("")}</datalist><span class="muted">Links the profile to your cards (the name in Card Authors.txt).</span>`)}
+          ${row("author", "Cards as", `<input id="pf-author" data-suggest="author" autocomplete="off" value="${esc(st.author)}" placeholder="the name on your cards"><span class="muted">Links the profile to your cards (the name in Card Authors.txt).</span>`)}
           ${row("motto", "Motto", `<input id="pf-motto" maxlength="${LIMITS.motto}" value="${esc(st.motto)}" placeholder="one line">`)}
           ${row("series", "Series", `<select id="pf-series"><option value="">—</option>${opts(series.map(x => [x, x]), st.series)}</select>`)}
         </fieldset>
@@ -1361,7 +1367,7 @@ export function createEditor(app) {
     // inline editing (inline.js): single fields into the same batch, and the known values for its lists; the drafts
     stageField, stageAuthor, stageMany, value: val, drafts: cardDrafts,
     // new series, subseries and authors from the filter bar (buckets: pending = no card carries it yet)
-    options: () => ({ series: seriesList(), subseries: subseriesList, ownSubseries, authors: authorList(), buckets: pending() }),
+    options: () => ({ series: seriesList(), ownSubseries, authors: authorList(), buckets: pending() }),
     addBucket,
     // image previews (preview.js): GitHub calls with the token, its scopes, and what the PSD prints of a card's fields
     github: (path, opts) => gh(path, opts), get scopes() { return scopes; },
@@ -1371,5 +1377,7 @@ export function createEditor(app) {
     entryFields: (id, op = stage.cards[id]) => { const f = new Set(find(id)?.edited || []);
       for (const o of [...sentOps().filter(x => x.id === id), op].filter(Boolean)) { for (const k of Object.keys(o.set || {})) f.add(k); for (const k of o.unset || []) f.delete(k); }
       return [...f]; },
+    names: nameEntries,
+    canonical: (kind, v, series) => canonical(kind, v, series),
   };
 }

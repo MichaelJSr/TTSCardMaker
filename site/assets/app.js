@@ -186,7 +186,9 @@ const previews = createPreviews({ S, editor, toast: m => toast(m), loadDetails: 
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;
 inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
-tokens.install({ vocab: () => S.vocab || [], icon: (t, o) => S.renderer?.icon(t, o) ?? null });   // "[" or "(" in card text: suggestions
+const seriesFor = el => (el.dataset.seriesFrom ? document.getElementById(el.dataset.seriesFrom)?.value.trim() || "" : el.dataset.series || "");   // a subseries field's series
+tokens.install({ vocab: () => S.vocab || [], icon: (t, o) => S.renderer?.icon(t, o) ?? null,   // "[" or "(" in card text: suggestions
+  names: el => editor.names(el.dataset.suggest, seriesFor(el)) });                              // a name field: the known names
 palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));   // the type palette ranks as the picker
 let selectAnchor = null;                                 // the last tile toggled: Shift-click selects from it
 function toggleSelect(id, range) {
@@ -1102,7 +1104,7 @@ function fillTip(t) {
 }
 const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
 function hideTip() { tips.hide(); }
-inline.extend({ hideTip, icons: () => S.icons });           // editors hide the tooltip; the type palette's icons
+inline.extend({ hideTip, icons: () => S.icons, closePicker: tokens.dismiss });   // editors hide the tooltip and the list; the type palette's icons
 document.addEventListener("pointerover", e => tips.over(e.target));
 document.addEventListener("pointermove", e => {
   if (!tips.move()) return;

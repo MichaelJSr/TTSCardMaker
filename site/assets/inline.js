@@ -23,16 +23,17 @@ export const fit = text => Math.min(14, Math.max(2, String(text ?? "").split("\n
 export const dragIds = (id, selected) => (selected.has(id) ? [...selected] : [id]);
 /** Shift-click: the ids of `order` from the anchor to `id`, both included; just `id` without an anchor in the list. */
 export const rangeIds = (order, anchor, id) => { const a = order.indexOf(anchor), b = order.indexOf(id); return a < 0 || b < 0 ? [id] : order.slice(Math.min(a, b), Math.max(a, b) + 1); };
-/** The control for a field: name and chips an input (chips with a datalist of known values), the ability a textarea.
- *  fresh: the filter bar's input for a new series, subseries or author. The ability and note take the token picker
- *  (tokens.js, data-tokens); while it is open its keys are its own, so the first Esc only closes it. */
-export function control(f, v, list = [], fresh = false) {
+/** The control for a field: name and chips an input, the ability a textarea. fresh: the filter bar's input for a new
+ *  series, subseries or author. The ability and note take the token picker (tokens.js, data-tokens); series, subseries
+ *  and author its list of known names (data-suggest; a subseries' series in data-series). While the list is open its
+ *  keys are its own, so the first Esc only closes it. */
+export function control(f, v, fresh = false, series = "") {
   const label = f === "name" ? "Name, Enter to save, Esc to cancel" : f === "ability" ? "Ability text, Ctrl+Enter to save, Esc to cancel"
     : `${fresh ? `New ${LABEL[f].toLowerCase()}` : LABEL[f]}, Enter to save, Esc to cancel`;
   if (f === "name") return `<input class="inline-name" aria-label="${label}" value="${esc(v)}">`;
   if (f === "ability") return `<textarea class="inline-ability" rows="${fit(v)}" spellcheck="true" aria-label="${label}" data-tokens>${esc(v)}</textarea>`;
-  const dl = list.length ? `<datalist id="inline-dl">${list.map(x => `<option value="${esc(x)}">`).join("")}</datalist>` : "";
-  return `<input class="inline-fact${f === "note" ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${dl ? ' list="inline-dl"' : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">${dl}`;
+  const named = f === "series" || f === "subseries" || f === "author";
+  return `<input class="inline-fact${f === "note" ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${named ? ` data-suggest="${f}" autocomplete="off"` : ""}${f === "subseries" ? ` data-series="${esc(series)}"` : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">`;
 }
 /** The bucket options a filter select gets: those it lacks, as "X (no cards yet)", selected when picked. have: its
  *  optKey()s; list: [{value, series?, where?}]; series: a subseries' series (the select-param handler then sets it too);
@@ -135,13 +136,12 @@ function open(el, f, text = null) {               // text: a restored draft
   if (!el.isConnected || !card) return;
   A.hideTip?.();                                   // its "Click to edit" goes with the data-tip
   const c = card, v = f === "author" ? (c.author || "") : String(A.editor.value(c, f) ?? "");
-  const opts = A.editor.options(), list = f === "series" ? opts.series : f === "subseries" ? opts.subseries(c.series) : f === "author" ? opts.authors : [];
   const swap = el.tagName === "A" || el.tagName === "BUTTON";     // a link would still navigate, a button can't hold an input
   let host = el;
   if (swap) { host = document.createElement("span"); host.className = el.className; host.dataset.inline = f; el.replaceWith(host); }
   cur = { c, f, el, host, html: el.innerHTML, cls: el.className, tip: el.dataset.tip, ctl: null, v, save: keep(c, f, v), snap: drafts()?.snap(c.id, [f]) };
   if (!swap) { delete el.dataset.tip; if (el.tagName === "P") el.className = "ability"; }   // "No ability text." becomes the text box
-  host.innerHTML = control(f, text ?? v, list);
+  host.innerHTML = control(f, text ?? v, false, c.series || "");
   cur.ctl = host.querySelector("input, textarea");
   const save = cur.save; cur.ctl.addEventListener("input", () => save.run());
   if (text != null) save.run();
@@ -356,7 +356,7 @@ export function dropOn(ids, { key, value: v, series = "" }) {
 function openName(sel) {
   closeName(false);
   sel.hidden = true;
-  sel.insertAdjacentHTML("afterend", control(sel.dataset.key, "", [], true));
+  sel.insertAdjacentHTML("afterend", control(sel.dataset.key, "", true, listParams.get("series") || ""));
   naming = { sel, key: sel.dataset.key, input: sel.nextElementSibling };
   naming.input.focus();
 }
@@ -399,7 +399,7 @@ function onNameFocusOut(e) {
   if (naming.input.value.trim()) createBucket(false); else closeName(false);
 }
 
-/** More of the api, after install: {hideTip, icons (() => cards.json icons)}. */
+/** More of the api, after install: {hideTip, icons (() => cards.json icons), closePicker (tokens.js dismiss)}. */
 export const extend = more => { Object.assign(A, more); };
 /** Once at boot, before app.js's document listeners: delegated listeners on the modal (editors) and the document (drag,
  *  the filter bar's "New …"). api = {editor, modal, selected (Set of card ids), goCard, rerender, toast}. */
@@ -415,6 +415,7 @@ export function install(api) {
   api.modal.addEventListener("dblclick", onDblClick);
   api.modal.addEventListener("keydown", onKey);
   api.modal.addEventListener("focusout", onFocusOut);
+  api.modal.addEventListener("suggest-pick", e => { if (cur && e.target === cur.ctl) commit(true); });   // a picked name saves at once
   document.addEventListener("dragstart", onDragStart);
   document.addEventListener("dragend", dragOff);
   document.addEventListener("dragenter", onDragOver);
@@ -424,4 +425,5 @@ export function install(api) {
   document.addEventListener("change", onChange);
   document.addEventListener("keydown", onNameKey);
   document.addEventListener("focusout", onNameFocusOut);
+  document.addEventListener("suggest-pick", e => { if (naming && e.target === naming.input) createBucket(true); });
 }
