@@ -220,7 +220,7 @@ export function activityHtml(p, x = {}) {
   const rows = kinds.map(([, name, color, unit, i]) => {
     const total = range.reduce((n, [, r]) => n + (r ? r[i] || 0 : 0), 0);
     return `<div><div class="legend" style="margin:6px 0 0"><span><i style="background:${color}"></i>${esc(name)} <span class="muted">${total}</span></span></div>
-      ${columns(range.map(([k, r]) => ({ label: label(k), value: r ? r[i] || 0 : 0 })), { unit, color, every, height: 84, width: 940 })}</div>`;
+      ${columns(range.map(([k, r]) => ({ label: label(k), value: r ? r[i] || 0 : 0 })), { unit, color, every, height: 98, width: 940, padT: 14 })}</div>`;
   }).join("");
   const table = `<div class="table-wrap"><table class="data"><thead><tr><th>Month</th>${kinds.map(([, name]) => `<th class="num">${esc(name)}</th>`).join("")}</tr></thead>
     <tbody>${range.filter(([, r]) => r).map(([k, r]) => `<tr><td>${esc(label(k))}</td>${kinds.map(([, , , , i]) => `<td class="num">${r[i] || 0}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;

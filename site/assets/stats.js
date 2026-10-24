@@ -46,23 +46,24 @@ const trunc = (s, n) => (s.length > n ? s.slice(0, n - 1) + "…" : s);
 
 /** Vertical columns: [{label, value}] (single series; label every Nth tick; max: a fixed y scale; minH: a non-zero
     column's least height; vals: its count over it). */
-function columns(cols, { unit = "cards", color = "var(--s1)", every = 1, height = 200, width = 1000, max: fixed, minH = 0, vals = false } = {}) {
-  const W = width, padL = 36, padB = 26, plotH = height - padB, n = cols.length;
+/** padT: room above the top tick's number, for a label sitting right above the chart (it would cover the number) */
+function columns(cols, { unit = "cards", color = "var(--s1)", every = 1, height = 200, width = 1000, max: fixed, minH = 0, vals = false, padT = 0 } = {}) {
+  const W = width, padL = 36, padB = 26, plotH = height - padB - padT, base = padT + plotH, n = cols.length;
   const max = fixed ?? niceMax(Math.max(1, ...cols.map(c => c.value)));
   const band = (W - padL) / Math.max(1, n), bw = Math.min(24, band * 0.7);
   const ticks = [0, max / 2, max].map(t => {
-    const y = plotH - (t / max) * plotH;
+    const y = base - (t / max) * plotH;
     return `<line class="gridline" x1="${padL}" x2="${W}" y1="${y}" y2="${y}"/><text x="${padL - 6}" y="${y + 4}" text-anchor="end">${fmt(t)}</text>`;
   }).join("");
   const parts = cols.map((c, i) => {
     const x = padL + i * band + (band - bw) / 2, h = c.value ? Math.max(minH, (c.value / max) * plotH) : 0;
     return `<g class="col" data-v="${esc(fmt(c.value))} ${esc(unit)}" data-l="${esc(c.label)}">
       <rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${height}"/>
-      <path class="mark" d="${roundedTop(x, plotH - h, bw, h)}" fill="${color}"/>
-      ${vals && c.value ? `<text class="val" x="${x + bw / 2}" y="${Math.max(11, plotH - h - 4)}" text-anchor="middle">${esc(fmt(c.value))}</text>` : ""}
+      <path class="mark" d="${roundedTop(x, base - h, bw, h)}" fill="${color}"/>
+      ${vals && c.value ? `<text class="val" x="${x + bw / 2}" y="${Math.max(padT + 11, base - h - 4)}" text-anchor="middle">${esc(fmt(c.value))}</text>` : ""}
       ${i % every === 0 ? `<text x="${x + bw / 2}" y="${height - 8}" text-anchor="middle">${esc(c.label)}</text>` : ""}</g>`;
   });
-  return `<svg viewBox="0 0 ${W} ${height}" role="img">${ticks}<line class="axis" x1="${padL}" x2="${W}" y1="${plotH}" y2="${plotH}"/>${parts.join("")}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${height}" role="img">${ticks}<line class="axis" x1="${padL}" x2="${W}" y1="${base}" y2="${base}"/>${parts.join("")}</svg>`;
 }
 
 /** Stacked columns with a 2px surface gap between segments. cats: labels; series: [{key,label,color}]; get(cat,key) */
@@ -187,7 +188,7 @@ export const pageRange = k => (k ? [10 * k + 1, 10 * k + 10] : [0, 10]);
 function distPanel({ k, l, counts, pages, yMax, cur }) {
   const paged = pages.length > 1, i = pages.indexOf(cur), [lo, hi] = pageRange(cur);
   const page = p => { const [a, b] = pageRange(p);
-    return `<div class="dist-page" data-page="${p}"${p === cur ? "" : " hidden"}>${columns(Array.from({ length: b - a + 1 }, (_, j) => ({ label: String(a + j), value: counts.get(a + j) || 0 })), { height: 170, width: 320, max: yMax, minH: 3, vals: p > 0 })}</div>`; };
+    return `<div class="dist-page" data-page="${p}"${p === cur ? "" : " hidden"}>${columns(Array.from({ length: b - a + 1 }, (_, j) => ({ label: String(a + j), value: counts.get(a + j) || 0 })), { height: 184, width: 320, max: yMax, minH: 3, vals: p > 0, padT: 14 })}</div>`; };
   const btn = (step, label, off) => `<button type="button" class="ghost" data-action="dist-page" data-step="${step}" aria-label="${label}"${off ? " disabled" : ""}>${step < 0 ? "‹" : "›"}</button>`;
   const pager = paged ? `<span class="dist-pager">${btn(-1, "Lower values", i === 0)}<span class="dist-range">${lo}–${hi}</span>${btn(1, "Higher values", i === pages.length - 1)}</span>` : "";
   return `<div class="dist-panel" data-stat="${k}"${paged ? ` data-pages="${pages.join(",")}" data-cur="${cur}" tabindex="0" aria-label="${l}: ← → for more values"` : ""}>
