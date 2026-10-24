@@ -96,7 +96,8 @@ async function getJson(name) {
 }
 // loaded on demand: the rulebook pages, and older versions of card text
 let rulesP = null, historyP = null, versionsP = null;
-const loadRules = () => (rulesP ||= getJson("rules.json").then(d => { S.rules = d.rules; editor.refresh(); }).catch(e => { rulesP = null; throw e; }));
+// the pages' staged edits (a full re-derive only when one of them has one)
+const loadRules = () => (rulesP ||= getJson("rules.json").then(d => { S.rules = d.rules; if (editor.touches(new Set(d.rules.map(p => p.id)))) editor.refresh(); }).catch(e => { rulesP = null; throw e; }));
 const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   for (const c of [...S.cards, ...(S.rules || [])]) if (h[c.id]) c.history = h[c.id];
   S.history = h;
