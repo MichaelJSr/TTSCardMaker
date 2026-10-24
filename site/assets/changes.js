@@ -243,7 +243,6 @@ export function archiveHtml(rows, repo, params = null) {
     ${present.length > 1 ? chips(present, tags, counts, "tag") : ""}
     ${shown.length ? `<ul class="cl-lines">${shown.map(line).join("")}</ul>` : `<p class="empty">No archived cards.</p>`}</section>`;
 }
-export const archivedHtml = archiveHtml;                  // the old name, for one round
 /** One edit batch: who, when, where, its commit, and each card's fields old → new */
 export function batchHtml(b, repo) {
   // per name: build_site keeps a Discord name's discord: prefix; a Discord batch's line already says "via Discord"

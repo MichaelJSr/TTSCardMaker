@@ -881,8 +881,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `commit_keys(row)` (`who()` of the author; a bot commit: `credit()` of each non-`discord:` Edit-by login, else the
   login; none without trailers); every card id of the PNG gets the counts, rulebook pages none. Computed once in main()
   after `apply_ratings`; the person pages read the same counts. Log line `revisions: n card image changes on m cards`.
-- Archive tab (`#/changes/archive`, changes.js `archiveHtml(rows, repo, params)`; `archivedHtml` stays as an alias one
-  round): the archived rows newest first with their tag pill (`archiveTagHtml`: `.fact.arch.<tag>`, the paths in its
-  tip), "renamed to <card>", kind, stars, author, date and commit; chips per tag (`?tag=`). `ARCHIVE_TAGS` and
-  `archiveTag(row)` (the build's key, else from the fields) are shared with the person page. The Changelog tab no longer
-  lists the archived cards; an archived event shows its pill, a renamed one "renamed to".
+- Archive tab (`#/changes/archive`, changes.js `archiveHtml(rows, repo, params)`): the archived rows newest first with
+  their tag pill (`archiveTagHtml`: `.fact.arch.<tag>`, the paths in its tip), "renamed to <card>", kind, stars, author,
+  date and commit; chips per tag (`?tag=`). `ARCHIVE_TAGS` and `archiveTag(row)` (the build's key, else from the fields)
+  are shared with the person page. The Changelog tab no longer lists the archived cards; an archived event shows its
+  pill, a renamed one "renamed to".
