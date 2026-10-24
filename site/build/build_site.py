@@ -57,7 +57,8 @@ data/contributions.json, data/decks.json, data/versions.json, data/analytics.jso
 changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown),
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json), images, icons,
-assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
+assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
+content and its imports', the data's from its content without the build time; build.txt digests the whole site for site.yml.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -693,7 +694,7 @@ def valid_meta(row):
 def save_image_meta(images):
     path = os.path.join(CACHE, IMAGE_META)
     with open(path + ".tmp", "w", encoding="utf-8") as fh:
-        json.dump({"version": IMAGE_META_VERSION, "images": images}, fh, separators=(",", ":"))
+        fh.write(json.dumps({"version": IMAGE_META_VERSION, "images": images}, separators=(",", ":")))
     os.replace(path + ".tmp", path)
 
 
@@ -787,9 +788,19 @@ def fan(cards, path):
 
 
 def site_banner(cards, path):
-    """1200×630 link-preview image: a fan of 5★ creatures (a stable pick)."""
+    """1200×630 link-preview image: a fan of 5★ creatures (a stable pick), cached in OG_CACHE by their images; the
+    cached file's name."""
     pool = [c for c in cards if c.get("img") and c["type"] == "creature" and c.get("stars") == 5 and not c.get("dup")]
-    fan(sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6], path)
+    picks = sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6]
+    key = hashlib.sha256(f"{OG_DECK_VERSION}:{'|'.join(c['img'] for c in picks)}".encode()).hexdigest()[:16]
+    name = f"banner-{key}.jpg"
+    cached = os.path.join(OG_CACHE, name)
+    if not os.path.exists(cached):
+        os.makedirs(OG_CACHE, exist_ok=True)
+        fan(picks, cached + ".tmp")
+        os.replace(cached + ".tmp", cached)
+    link_or_copy(cached, path, replace=True)
+    return name
 
 
 def deck_cards(d, by_id):
@@ -891,11 +902,11 @@ def build_icons(tree):
     os.makedirs(os.path.join(DIST, "icons"), exist_ok=True)
     cache_dir = os.path.join(CACHE, "icons")
     os.makedirs(cache_dir, exist_ok=True)
-    fb = font_builder() if manifest["icons"] else None
-    reach = variant_reach(fb) if fb else {}
-    if fb:                                                    # a changed build script or tint mode draws them again
+    script = None                                             # a changed build script or tint mode draws them again
+    if manifest["icons"] and os.path.exists(os.path.join(REPO, FONT_BUILD)):
         with open(os.path.join(REPO, FONT_BUILD), "rb") as fh:
             script = hashlib.sha256(fh.read()).hexdigest()
+    fb = font_builder() if manifest["icons"] and not script else None   # its warning
     icons, used, todo = {}, set(), []
     for path in sorted(tree):
         folder, _, file = path.rpartition("/")
@@ -918,15 +929,36 @@ def build_icons(tree):
         link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)     # last one wins, as before
         entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
         info = manifest["icons"].get(name)
-        if fb and info:                                       # the font draws every variant of every manifest icon
+        if script and info:                                   # the font draws every variant of every manifest icon
             tint = info.get("tint", "auto")
             key = hashlib.sha256(f"{script}:{json.dumps(tint, sort_keys=True)}:{ICON_SIZE}".encode()).hexdigest()[:8]
             files = {v: os.path.join(cache_dir, f"{tree[path][:16]}-{v}-{VARIANT_VERSION}-{key}.webp") for v in VARIANT_IMAGES}
-            used.update(os.path.basename(f) for f in files.values())
             todo.append((path, tint, files, out_name, entry))
         aliases = (info or {}).get("aliases", [])
         for spelling in [name] + list(aliases):
             icons.setdefault(norm(spelling), entry)
+
+    # the font build (cv2, fontTools: about 0.2-0.7 s to import) only when a variant image or the reach isn't cached
+    reach_file, reach = f"reach-{script[:16]}-{ICON_SIZE}.json" if script else "", None
+    if todo:
+        try:
+            with open(os.path.join(cache_dir, reach_file), encoding="utf-8") as fh:
+                reach = json.load(fh)
+        except (OSError, ValueError):
+            reach = None
+    if todo and (reach is None or not all(os.path.exists(f) for job in todo for f in job[2].values())):
+        fb = font_builder()
+        if fb is None:
+            todo = []
+        else:
+            reach = variant_reach(fb)
+            with open(os.path.join(cache_dir, reach_file + ".tmp"), "w", encoding="utf-8") as fh:
+                json.dump(reach, fh)
+            os.replace(os.path.join(cache_dir, reach_file + ".tmp"), os.path.join(cache_dir, reach_file))
+    if todo:
+        used.add(reach_file)
+        used.update(os.path.basename(f) for job in todo for f in job[2].values())
+    reach = reach if todo else {}
 
     def draw(job):
         path, tint, files, out_name, entry = job
@@ -2661,6 +2693,88 @@ def parse_banlist(by_norm):
 
 
 # ---- main ------------------------------------------------------------------------------------------
+# ---- build versions (?v=) ------------------------------------------------------------------------------
+IMPORT_RE = re.compile(r'(from\s+"\./([\w-]+\.js))"')     # a module's static imports, as they are stamped
+VOLATILE = {"cards.json": ("generated",), "decks.json": ("generated",), "changelog.json": ("since",)}   # the build's clock
+
+
+def stamp_of(data):
+    return hashlib.sha256(data).hexdigest()[:10]
+
+
+def asset_stamps(texts):
+    """{file: (stamp, text as served)} for site/assets ({file: text}): a file's stamp hashes its served text, and a module's
+    imports carry their own stamps, so a change reaches the URLs of that file and its importers only. An import cycle: one
+    stamp over every file."""
+    deps = {n: [m.group(2) for m in IMPORT_RE.finditer(t)] if n.endswith(".js") else [] for n, t in texts.items()}
+    out = {}
+
+    def stamp(name, path=()):
+        if name in out:
+            return out[name][0]
+        if name in path:
+            raise ValueError(f"import cycle: {' -> '.join(path + (name,))}")
+        text = texts[name]
+        if deps[name]:
+            got = {d: stamp(d, path + (name,)) for d in deps[name] if d in texts}
+            text = IMPORT_RE.sub(lambda m: f'{m.group(1)}?v={got.get(m.group(2)) or stamp_of(m.group(2).encode())}"', text)
+        out[name] = (stamp_of(text.encode("utf-8")), text)
+        return out[name][0]
+    try:
+        for name in sorted(texts):
+            stamp(name)
+    except ValueError as e:
+        log(f"assets: {e}; one stamp for all")
+        digest = hashlib.sha256()
+        for name in sorted(texts):
+            digest.update(name.encode() + b"\0" + texts[name].encode("utf-8") + b"\0")
+        one = digest.hexdigest()[:10]
+        out = {n: (one, IMPORT_RE.sub(rf'\1?v={one}"', t) if n.endswith(".js") else t) for n, t in texts.items()}
+    return out
+
+
+def steady(files, blobs):
+    """{data file: its bytes without the build's clock (VOLATILE)}"""
+    return {name: json.dumps({k: v for k, v in files[name].items() if k not in VOLATILE.get(name, ())}, separators=(",", ":"),
+                             ensure_ascii=False).encode("utf-8") if VOLATILE.get(name) else blob for name, blob in blobs.items()}
+
+
+def data_stamp(data, details):
+    """The data's stamp: the data files (steady()) and the details files ({name: bytes})."""
+    digest = hashlib.sha256()
+    for name in sorted(data):
+        digest.update(name.encode() + b"\0" + data[name] + b"\0")
+    for name in sorted(details):
+        digest.update(f"details/{name}".encode() + b"\0" + details[name] + b"\0")
+    return digest.hexdigest()[:10]
+
+
+BUILD_TXT = "build.txt"                       # in DIST: dist_digest(); site.yml deploys only when it differs from the live one
+
+
+def dist_digest(data):
+    """sha256 over every file in DIST but BUILD_TXT, the data files without the build's clock (data: steady()); the card
+    images (thumbs/, 90% of the bytes) by name and size, as their names are their PNG's blob and this script's settings
+    (its own bytes are in the digest)."""
+    paths = sorted(os.path.relpath(os.path.join(root, name), DIST).replace(os.sep, "/")
+                   for root, _, names in os.walk(DIST) for name in names)
+
+    def sha(rel):
+        if rel.startswith("data/") and rel[5:] in data:
+            return hashlib.sha256(data[rel[5:]]).digest()
+        if rel.startswith("thumbs/"):
+            return str(os.path.getsize(os.path.join(DIST, rel))).encode()
+        with open(os.path.join(DIST, rel), "rb") as fh:
+            return hashlib.sha256(fh.read()).digest()
+    with open(os.path.abspath(__file__), "rb") as fh:
+        digest = hashlib.sha256(fh.read())
+    with ThreadPoolExecutor(max_workers=8) as pool:   # hashlib works outside the GIL
+        for rel, h in zip(paths, pool.map(sha, paths)):
+            if rel != BUILD_TXT:
+                digest.update(rel.encode() + b"\0" + h)
+    return digest.hexdigest()
+
+
 def main():
     started = time.time()
     os.makedirs(os.path.join(CACHE, "img"), exist_ok=True)
@@ -3054,33 +3168,36 @@ def main():
         write_logins(os.path.join(DIST, "data", "logins"), logins)
     except Exception as e:                    # never a failed build
         warn(f"no password files written: {type(e).__name__}: {e}")
-    if detail_files:                          # one small file per card, fetched when its Details dropdown opens
+    details = {f"{cid}.json": json.dumps(rec, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+               for cid, rec in detail_files.items()}   # json.dumps: json.dump to a file is the slow pure-Python encoder
+    if details:                               # one small file per card, fetched when its Details dropdown opens
         os.makedirs(os.path.join(DIST, "data", "details"))
-        for cid, rec in detail_files.items():
-            with open(os.path.join(DIST, "data", "details", f"{cid}.json"), "w", encoding="utf-8") as fh:
-                json.dump(rec, fh, separators=(",", ":"), ensure_ascii=False)
+        for name, blob in details.items():
+            with open(os.path.join(DIST, "data", "details", name), "wb") as fh:
+                fh.write(blob)
     log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), rulebook pages: {len(rules)}, "
         f"icons: {len(set(i['file'] for i in icons.values()))}, banned: {sum(len(g['entries']) for g in banlist['groups'])}")
 
-    # static files, stamped with a build version so browsers never mix an old script with new data
+    # static files, stamped so browsers never mix an old script with new data: each asset by its content (and its imports'),
+    # the data by its content without the build's clock, so a deploy that changed nothing keeps every URL (and the caches)
     assets_src = os.path.join(SITE, "assets")
-    digest = hashlib.sha256()
-    for name in sorted(os.listdir(assets_src)) + ["index.html"]:
-        digest.update(open(os.path.join(SITE, "index.html") if name == "index.html" else os.path.join(assets_src, name), "rb").read())
-    for name in sorted(blobs):
-        digest.update(blobs[name])
-    digest.update(f"details:{len(detail_files)}".encode())      # the details files by count only (cards.json changes every build anyway)
-    version = digest.hexdigest()[:10]
-    os.makedirs(os.path.join(DIST, "assets"))
+    texts = {}
     for name in os.listdir(assets_src):
-        text = open(os.path.join(assets_src, name), encoding="utf-8").read()
-        if name.endswith(".js"):              # module imports: "./x.js" -> "./x.js?v=..."
-            text = re.sub(r'(from\s+"\./[\w-]+\.js)"', rf'\1?v={version}"', text)
+        with open(os.path.join(assets_src, name), encoding="utf-8") as fh:
+            texts[name] = fh.read()
+    assets = asset_stamps(texts)
+    data = steady(files, blobs)
+    version = data_stamp(data, details)
+    os.makedirs(os.path.join(DIST, "assets"))
+    for name, (_, text) in assets.items():
         with open(os.path.join(DIST, "assets", name), "w", encoding="utf-8") as fh:
             fh.write(text)
-    template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', rf'\1?v={version}"',
-                      open(os.path.join(SITE, "index.html"), encoding="utf-8").read()).replace("<!--BUILD-->", version)
-    site_banner(cards, os.path.join(DIST, "og.jpg"))
+    def url(m):                               # index.html's asset and data URLs
+        name = m.group(1).removeprefix("assets/")
+        return f'{m.group(1)}?v={assets[name][0] if name in assets else version}"'
+    with open(os.path.join(SITE, "index.html"), encoding="utf-8") as fh:
+        template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', url, fh.read()).replace("<!--BUILD-->", version)
+    banner = site_banner(cards, os.path.join(DIST, "og.jpg"))
     def og_tags(title, desc, url, image="", size=None, alt=""):
         tags = [f'<meta property="og:site_name" content="{SITE_NAME}">', '<meta property="og:type" content="website">',
                 f'<meta property="og:title" content="{html.escape(title)}">', f'<meta property="og:description" content="{html.escape(desc)}">',
@@ -3177,10 +3294,12 @@ def main():
             f'<title>{html.escape(title)} · {SITE_NAME}</title>',
         ])
     for n in os.listdir(OG_CACHE) if SITE_URL else []:   # no montages without SITE_URL: keep the cache
-        if n not in montages:                     # site.yml saves the cache under these names, so only the ones in use
+        if n not in montages and n != banner:     # site.yml saves the cache under these names, so only the ones in use
             os.remove(os.path.join(OG_CACHE, n))
     if montages:
         log(f"deck previews: {len(montages)} montages")
+    with open(os.path.join(DIST, BUILD_TXT), "w", encoding="utf-8") as fh:
+        fh.write(dist_digest(data) + "\n")
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
 
 
