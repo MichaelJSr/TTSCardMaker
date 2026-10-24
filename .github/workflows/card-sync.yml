@@ -4,7 +4,8 @@
 # bobberlington/AutoCroissant at the builder ref: card_bake --local, card_data, tts_save --names, changelog post.
 # Migration step 7 (the shadow): every 30 minutes, live; dispatches run dry by default; the bake, the main commit and the
 # posts off (MAIN_COMMIT and POSTS; discord.json goes to the artifact only), so a live run writes only `data`.
-# tts-save.yml and card-edits.yml stay main's writers until the cutover (step 8).
+# tts-save.yml and card-edits.yml stay main's writers until the cutover (step 8). The bake's psd-tools fork installs from
+# wheels cached per pin (~25 s a baking run saved).
 name: Card sync
 run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Card sync (dry run)' || 'Card sync' }}
 
@@ -66,6 +67,7 @@ concurrency:
 env:
   POSTS: "off"        # step 8 turns the Discord posts on; until then discord.json goes to the artifact only
   MAIN_COMMIT: "off"  # step 8 turns the bake and the main commit M on; until then only a dry run bakes (nothing committed)
+  PSD_TOOLS_REF: cards-20261023c   # the bake's psd-tools fork pin: card-edits.yml's
 
 jobs:
   sync:
@@ -259,14 +261,24 @@ jobs:
         if: steps.gate.outputs.go == 'true' && steps.font-cache.outputs.cache-hit != 'true'
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
+      # 3.12 last: the step's python-version output is the baker's, for the fork's wheel cache key.
       - uses: actions/setup-python@v7
+        id: python
         if: steps.gate.outputs.go == 'true'
         with:
           python-version: |
-            3.12
             3.14
+            3.12
           cache: pip
           cache-dependency-path: bot/requirements-card-data.txt
+
+      # The bake's fork as card-edits.yml installs it: wheels cached per pin, Python and runner (the same cache entry).
+      - id: wheels
+        if: steps.gate.outputs.go == 'true' && inputs.bake != 'none' && (env.MAIN_COMMIT == 'on' || env.DRY_RUN == 'true')
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/psd-tools-wheels
+          key: psd-tools-${{ env.PSD_TOOLS_REF }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
 
       # Two environments: the builder's pins (psd-tools 1.25.0, the goldens' and the jetson's) on 3.14, and the bake's
       # psd-tools fork on 3.12, as card-edits.yml installs it. --help proves each import closure before any stage.
@@ -276,6 +288,7 @@ jobs:
         timeout-minutes: 15
         env:
           BAKE: ${{ (env.MAIN_COMMIT == 'on' || env.DRY_RUN == 'true') && (inputs.bake || 'all') || 'none' }}
+          HIT: ${{ steps.wheels.outputs.cache-hit }}
         run: |
           python3.14 -m venv "$RUNNER_TEMP/builder"
           "$RUNNER_TEMP/builder/bin/pip" install -q -r bot/requirements-card-data.txt
@@ -283,9 +296,19 @@ jobs:
             && "$RUNNER_TEMP/builder/bin/python" -m commands.tts_save --help > /dev/null)
           if [ "$BAKE" != none ]; then
             python3.12 -m venv "$RUNNER_TEMP/baker"
-            "$RUNNER_TEMP/baker/bin/pip" install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023c"
+            if [ "$HIT" != true ]; then
+              "$RUNNER_TEMP/baker/bin/pip" wheel -q -w ~/.cache/psd-tools-wheels requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@$PSD_TOOLS_REF"
+              echo "wheels=built" >> "$GITHUB_OUTPUT"
+            fi
+            "$RUNNER_TEMP/baker/bin/pip" install -q --no-index -f ~/.cache/psd-tools-wheels requests "psd-tools[composite,text]"
             (cd bot && "$RUNNER_TEMP/baker/bin/python" -m commands.card_bake --help > /dev/null)
           fi
+
+      - if: steps.venv.outputs.wheels == 'built'     # only once they installed
+        uses: actions/cache/save@v6
+        with:
+          path: ~/.cache/psd-tools-wheels
+          key: ${{ steps.wheels.outputs.cache-primary-key }}
 
       # Stage 1: the bake makes one local commit B on main's head in this checkout (nothing pushed); a dry run commits
       # nothing, and with MAIN_COMMIT off only a dry run bakes. A card's error fails the step but keeps B for the others
