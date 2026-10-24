@@ -35,15 +35,20 @@ export const changed = (now, start) => Object.fromEntries(Object.entries(now).fi
  *  `current` doesn't know (the ban row on the card page) counts as one to bring back. */
 export const restorable = (fields, current) => Object.fromEntries(Object.entries(fields || {}).filter(([f, v]) => !(f in current) || !sameRaw(v, current[f])));
 /** The offer's words for the fields: "Ability, HP" (each name once). */
-export const fieldNames = fields => [...new Set(Object.keys(fields).map(f => NAMES[f] || f))].join(", ");
+export const fieldNames = fields => { const at = Object.keys(NAMES), rank = f => (at.includes(f) ? at.indexOf(f) : at.length);
+  return [...new Set(Object.keys(fields).sort((a, b) => rank(a) - rank(b)).map(f => NAMES[f] || f))].join(", "); };   // the form's order
 /** When, roughly: "just now", "5 min ago", "3 h ago", "2 days ago". */
 export function ago(at, now = Date.now()) {
   const m = Math.max(0, Math.round((now - at) / 60000));
   return m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 48 * 60 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`;
 }
-/** The offer: Restore and Discard buttons (data-draft="restore" | "discard"), the fields and when. */
-export const offerHtml = (fields, at, now = Date.now()) => `<div class="draft-offer" role="group" aria-label="Unsaved edit">
-  <span>Restore your unsaved edit? <span class="muted">${esc(fieldNames(fields))} · ${esc(ago(at, now))}</span></span>
+/** The draft's fields whose card value moved since they were typed (base: the card's value then; current: now): a
+ *  newer publish or batch edit that Restore would write over. */
+export const movedSince = (d, current) => Object.keys(d?.fields || {}).filter(f => d.base && f in d.base && f in current && !sameRaw(d.base[f], current[f]));
+/** The offer: Restore and Discard buttons (data-draft="restore" | "discard"), the fields and when; moved: fields the
+ *  card changed since (movedSince). */
+export const offerHtml = (fields, at, now = Date.now(), moved = []) => `<div class="draft-offer" role="group" aria-label="Unsaved edit">
+  <span>Restore your unsaved edit? <span class="muted">${esc(fieldNames(fields))} · ${esc(ago(at, now))}</span>${moved.length ? ` <span class="draft-moved">${esc(fieldNames(Object.fromEntries(moved.map(f => [f, 1]))))} changed on the card since.</span>` : ""}</span>
   <span class="actions"><button type="button" class="primary" data-draft="restore">Restore</button><button type="button" class="ghost" data-draft="discard">Discard</button></span></div>`;
 
 const clean = v => (typeof v === "string" || typeof v === "boolean" || v === null ? true
@@ -56,28 +61,47 @@ export function draftStore(storage, key = DRAFT_KEY, clock = () => Date.now()) {
     const out = {};
     for (const [id, e] of Object.entries(d)) {
       const fields = e && typeof e.fields === "object" && !Array.isArray(e.fields) ? Object.fromEntries(Object.entries(e.fields).filter(([, v]) => clean(v))) : {};
-      if (Object.keys(fields).length) out[id] = { at: Number(e.at) || 0, fields };
+      const base = e && typeof e.base === "object" && !Array.isArray(e.base) ? Object.fromEntries(Object.entries(e.base).filter(([f, v]) => f in fields && clean(v))) : {};
+      if (Object.keys(fields).length) out[id] = { at: Number(e.at) || 0, fields, base };
     }
     return out;
   };
   const write = d => { try { if (Object.keys(d).length) storage.setItem(key, JSON.stringify(d)); else storage.removeItem(key); } catch { /* full or blocked: kept for this page only */ } };
   return {
-    /** card id -> {at, fields}, or null */
+    /** card id -> {at, fields, base}, or null */
     get: id => read()[id] || null,
     ids: () => Object.keys(read()),
-    /** fields typed for card id. whole: they are the card's whole draft (the Edit dialog's changed inputs), else they join
-     *  it (one inline field). Nothing typed (whole, or an empty fields) drops what there was. */
-    put(id, fields, whole = false) {
+    /** fields typed for card id; base: the card's values they were typed over (for movedSince). whole: they are the
+     *  card's whole draft (the Edit dialog's), else they join it (one inline field). Nothing typed (whole, or an empty
+     *  fields) drops what there was. */
+    put(id, fields, whole = false, base = {}) {
       const d = read(), next = { ...(whole ? {} : d[id]?.fields), ...fields };
       if (Object.keys(fields).length || whole) {
-        if (Object.keys(next).length) d[id] = { at: clock(), fields: next }; else delete d[id];
+        const b = { ...(whole ? {} : d[id]?.base), ...base };
+        if (Object.keys(next).length) d[id] = { at: clock(), fields: next, base: Object.fromEntries(Object.entries(b).filter(([f]) => f in next)) }; else delete d[id];
         write(d);
       }
     },
     /** drop card id's draft, or only some of its fields */
     drop(id, fields = null) {
       const d = read(); if (!d[id]) return;
-      if (fields) { for (const f of fields) delete d[id].fields[f]; if (!Object.keys(d[id].fields).length) delete d[id]; } else delete d[id];
+      if (fields) { for (const f of fields) { delete d[id].fields[f]; delete d[id].base?.[f]; } if (!Object.keys(d[id].fields).length) delete d[id]; } else delete d[id];
+      write(d);
+    },
+    /** What card id's draft holds of keys now (null: all of it), to put back with back(): an editor that closes without
+     *  saving leaves an older draft as it found it (a crash's draft is lost only by Discard, a save or a publish). */
+    snap(id, keys = null) {
+      const e = read()[id]; if (!e) return null;
+      const pick = o => Object.fromEntries(Object.entries(o || {}).filter(([f]) => !keys || keys.includes(f)));
+      return { at: e.at, fields: pick(e.fields), base: pick(e.base) };
+    },
+    /** Put keys (null: the whole draft) of card id back as snap held them: those it held come back, the others go. */
+    back(id, snap, keys = null) {
+      const d = read(), e = d[id] || { at: 0, fields: {}, base: {} };
+      const fields = keys ? { ...e.fields } : {}, base = keys ? { ...e.base } : {};
+      for (const f of keys || []) { delete fields[f]; delete base[f]; }
+      Object.assign(fields, snap?.fields); Object.assign(base, snap?.base);
+      if (Object.keys(fields).length) d[id] = { at: snap?.at || e.at || clock(), fields, base }; else delete d[id];
       write(d);
     },
     /** drop several cards' drafts (a publish, Discard all); none given: every draft */

@@ -438,21 +438,29 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `{<card id>: {at, fields: {<field>: value}}}`, the card id being the batch's key (`stage.cards`), field values as the
   form's inputs hold them (text, a checkbox's boolean, the sorted type names, creature rows of text; the ban row as
   `banned`, `ban-group`, `ban-reason`). The Edit dialog writes its changed inputs as the card's whole draft (`changed`
-  against how it opened); an inline editor writes its one field into it; the type palette writes `types`.
+  against how it opened); an inline editor writes its one field into it; the type palette writes `types`. Each field
+  also keeps `base`, the value the card showed when it was typed (`{at, fields, base}`).
   "Restore your unsaved edit? Ability, HP · 5 min ago [Restore] [Discard]" shows over the card (edit mode) and at the top
   of the Edit dialog (Restore focused, so a stray key can't throw it away) when a draft holds a field the card doesn't
   show that way now (`restorable`: text compared trimmed, without \r; so a draft equal to the batch is never offered, and
   is dropped). Restore on the card: one text field opens its inline editor with the text, `types` opens the palette, more
-  open All fields filled in (`editor.open(id, {draft})`). Typing in the dialog over an unanswered offer drops the offer (what
-  is typed now is the draft). Cleared: Add to batch, an inline commit, Esc or Cancel (a confirmed discard; an offer left
-  unanswered stays), the offer's Discard, the batch's Discard (that card) and Discard all, and Publish (the published
-  cards). Not cleared by Sign out (the batch isn't either).
+  open All fields filled in (`editor.open(id, {draft})`). A draft is lost only by a save, a discard or a publish (review
+  of 2026-10-23: clicking the ability box over an offer and pressing Esc, or clicking off, dropped the crash's ability
+  text; one key in the dialog's Note replaced a 5-hour-old draft): every editor takes `snap` of the draft when it opens
+  and puts it back with `back` when it closes without saving (an inline Esc or a click off with nothing changed, the
+  palette's Esc or Cancel, the dialog's Cancel or Esc), whatever was typed meanwhile, so Esc after Restore keeps the
+  draft too; typing in the dialog over an unanswered offer joins the older draft (the offer stays). The offer says
+  "Ability changed on the card since." when a field's `base` isn't what the card shows now (a newer publish or batch
+  edit; `movedSince`), and lists the fields in the form's order. Cleared: Add to batch, an inline commit or palette
+  save that staged (those fields), the offer's Discard, the batch's Discard (that card) and Discard all, and Publish
+  (the published cards). Not cleared by Sign out (the batch isn't either). On a screen of 820 px or less the card
+  page's offer floats at the bottom of the screen until answered (the card image fills the first screen there).
 - **Stars in place** (`assets/stars.js`): in edit mode the stars chip becomes a slider of 10 stars (`role=slider`,
   `aria-valuenow`/`valuetext`, the `.fact` look; hover lights the stars a click would set): click a star to set the count
   (the top lit one again sets one less, so 0 is reachable, as the stat cells), arrows, Home, End, Enter to save, Esc to undo
   a keyboard change, a click away saves it; it runs on inline.js's stat-row code (`SLIDERS`, `prov`). A card without stars
   (buffs, auxiliary creatures) gets "+ stars". Over 10: "Use All fields".
-- **Types in place** (`assets/palette.js`): the type row (`role=group`, tabindex 0) or "+ types" opens a palette under it:
+- **Types in place** (`assets/palette.js`): the type row (`role=button`, tabindex 0, Enter or Space) or "+ types" opens a palette under it:
   a search box (focused) and chips of every type icon with its name (`aria-pressed`), the card's types first. Typing
   narrows it (name or alias exactly, name prefix, alias prefix, then 2+ letters inside a name or alias: the token picker's
   ranking); Enter in the box toggles the first match and clears it, so "fir Enter wat Enter" adds two; Enter on an empty
@@ -464,7 +472,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   entries), and app.js switches it in one line after `tokens.install`:
   `palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));` (without it, `findTypes`). The
   classes are `pal-*` (the picker's are `tp-*`). Against `findTypes`: the same results for 202 of 211 queries; the rest
-  are the picker's extras, a slip ("frie", "watr") and the most used first on a tie ("fi": fire, field). Typing the token picker's "[" in the
+  are the picker's extras, a slip ("frie", "watr") and the most used first on a tie ("fi": fire, field). In the light
+  theme the type icons (palette chips and type rows) get a thin dark outline: "light" and "lightshadow" are white. A
+  press on the card dialog's close button while the palette, an inline editor or a keyboard stars change is open saves
+  it and closes the dialog in one click (inline.js `closing`: the save skips its redraw, which ate the click). Typing the token picker's "[" in the
   ability box and the note works with drafts and both previews: its choice goes in through an `input` event.
 - Checks: AutoCroissant `tests/test_site_editor.py` (13, AC_SITE_SRC; each fails with its logic reverted: a scratch
   mutation run caught 13 of 13), the site tests (70 with this tree). Headless Chrome (Chrome for Testing 156) on a
@@ -491,32 +502,66 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   style.css (theme variables; the ribbon and the grid badge use fixed colours like `.tile .flag`).
 - **The panel** ("Image with your edit", `section.pv-panel`): on the card page under the image and its ← → links, for a
   card whose PSD fields aren't what the PSD prints (`changedOf`: published-not-baked or staged) or that has previews; in
-  the Edit dialog floated beside the "On the card image" fields (`.pv-in-form`, full width under 640 px). Two buttons
+  the Edit dialog floated beside the "On the card image" fields (`.pv-in-form`; above them, centred and at most 360 px
+  wide, from 1001 to 1240 px where the live pane takes the right column, so the fields keep their width; full width
+  under 640 px). Two buttons
   (`.seg`, `aria-pressed`): Mock-up and Rendered; the card page opens on Rendered when a result is waiting, else Mock-up.
   "Preview image" is on both (on Mock-up under the drawing). Keyboard: all plain buttons and links.
 - **Mock-up** (`mockup.draw(canvas, {card, src, rec, edit, psd, icons, getFonts, raw, onFont, stale})`): the card's 720 px
   thumb (same origin, so the canvas can read it) drawn off-screen and copied when done (a newer draw drops an older one);
   only the fields unlike the PSD are redrawn (`changes`): name, text, stats; stars, types and stats above 10 are named in
   the caption ("Not drawn: stars."), never drawn.
-  - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the layout
+  - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the area
     is the card template's (`TEMPLATES`, fractions of the image measured on the PSDs' layer boxes on 2026-10-23: `tall`
     1200x2400 creatures and minions, whose stat bars sit at (0.3, 0.5, 0.978, 0.535) + 0.0525 a row on 311 of the 390
     cards with digit rows; `item` 1200x1800 with the totems' two rows at 0.624; `square` 1200x1200 status effects; the
-    1080x1920 rulebook pages get none), narrowed to where the image shows text: `findText` (rows and columns of sharp
-    edges; hysteresis, so a short last line joins its paragraph; the heaviest cluster of rows; lines split at quiet rows,
-    the size from their pitch, `LINE` = 1.22 ems; "left" or "center" from the lines' edges). A record with `text[].box`
-    (canvas px) is used instead (`recordBox`): adding `layer.bbox` to psd_details' text entries would make the mock-up
-    exact (a bot follow-up, not done).
-  - Erase: pixels near a sharp edge (the glyphs and their outline, dilated by 0.14 em) take the mean colour of the
-    unmasked pixels around them (cells of 0.8 em, empty cells from their neighbours, bilinear), so the art behind keeps
-    its texture where there is no text. The new text's fill and outline are read from the old text's pixels on the way
-    (`textColours`: the brightest on a dark background, the darkest as the outline when darker than it), else the
-    record's colour.
-  - Text: `tokenize` (an icon token the site knows is an icon, `:no` crossed out; another bracket stays text; no break
-    inside "[ice]."), `layout` / `fit` (the old size, shrunk until it fits the region; a name keeps its line count),
-    centred on the old text. Stats: `barRows` (template rows, only for stats the details call "template") checked with
-    `isBar` (ten cells with sharp borders, else "Not drawn: HP"), then `cellPlan`: a cell lights as the last lit one (the
-    rounded first cell: its colour) and darkens as the first dark one (none or the rounded last: a shade).
+    1080x1920 rulebook pages get none): `textArea`, the card's full width, from a little above the template's text
+    (0.06 of the height on tall cards, 0.04 on others) but below the card's stat rows (the rows `isBar` sees, else the
+    template's for the stats the card has), to the bottom; the name's is the template's name box. In it, the block of
+    lines that holds the old text: `textBlocks` (rows and columns of sharp edges; hysteresis, so a short last line joins
+    its paragraph; paragraphs are clusters of rows, lines split at quiet rows; size from the line pitch, `LINE` = 1.22
+    ems; "left" or "center" from the lines' edges) gives every run of up to 12 neighbouring paragraphs that reaches the
+    template's rows, at edge strengths 40, 80 and 130 and two seed strengths (art merges with text at the soft ones, a
+    short line seeds a block only at the low one); `calibrate` measures the old text (`tokenize`d, in the card's font)
+    against each: k = the block's lines' total width / the old text's width on one line at the block's size, and the
+    old text wrapped at the block's width makes about as many lines (within one, or 30%); one line: its size from its
+    width (k 0.6-3; its run of rows at least 0.3 em); `lineLike`: no line over 2.2 times the usual height or 2.6 times
+    the lowest (art read as a line), three lines in four sharing a centre (a tenth of the width) or a left edge (a
+    twentieth); a name: words join within 1.2 line heights (not 4: the stars beside it stay out), one or two lines, as
+    many as the old name wraps to. `bestBlock` keeps the one that fits with the most edge mass. A record with
+    `text[].box` (canvas px) is the area instead (`recordBox`): adding `layer.bbox` to psd_details' text entries would
+    make the mock-up exact (a bot follow-up, not done). An ability layer whose first run is in stoogedings (the text
+    starts with a badge) takes the layer's other font from `rec.fonts` (`layerOf`).
+  - No block holds the old text (text over busy art, a stylised name, an upside-down card): the new text goes in a
+    dark box over the whole area (to the card's edges, opaque, dashed border), so the old text is covered, never half
+    there; the caption says "Text in a box: its place on the image wasn't found." (`out.boxed`).
+  - Erase: the block's lines (a centred block's made even about its centre: `eraseLines`, a line read short past a dim
+    word still goes) plus `strayLines`, lines next to the block it left out (a header in another size or colour, a dim
+    last line: within 1.6 pitches, in its columns, edges per em at least 0.3 of its lines' at edge 25, up to 2.4 line
+    heights and 1.8 of its tallest, lined up with it, no wider than it nor across the card, and not a stat bar:
+    `barLike`, two long straight borders across the band; up to four each way; none for a name). In those lines only,
+    pixels at a sharp edge (25: dim words too), with gaps up to 1.2 em on a row filled (a badge's pill, the image's edge
+    counting as an edge) and dilated by 0.14 em, take the mean colour of the unmasked pixels around them (cells of 0.8
+    em, empty cells from their neighbours, bilinear), so the art keeps its texture outside the letters. The new text's
+    fill and outline are read from the old text's pixels on the way (`textColours`: the brightest on a dark background,
+    the darkest as the outline when darker than it), else the record's colour; one colour (the card's coloured words
+    aren't kept).
+  - Text: `tokenize` (an icon token the site knows is an icon, `:no` crossed out; a timing tag text.js knows is a badge,
+    any case, drawn as its pill in the site's colours; another bracket or parenthesis stays text; no break inside
+    "[ice]."), `layout` / `fit` at the calibrated size and the old line pitch, from the old first line down (a PSD's
+    text grows downwards), at the old width (one old line: the area's, about its centre); shrunk to 40% when it would
+    run past the area's bottom, and then the caption says "The text runs past its place on the card." A name keeps
+    its line count and stays within the room about its centre. Stats: `barRows` (template rows, only for stats the
+    details call "template") checked with `isBar` (ten cells with sharp borders, else "Not drawn: HP"), then
+    `cellPlan`: a cell lights as the last lit one (the rounded first cell: its colour) and darkens as the first dark one
+    (none or the rounded last: a shade).
+  - Measured (scratch bench, ~/Documents/Tools/wt/scratch/site2r3/bench-run.mjs: " Burns [fire]." added to the
+    ability, current image left, mock-up right): the review's 16 cards plus alex-yiik, crock-pot, fragile-strength,
+    flameblade and the cursed idol: 21 placed, 1 boxed (tainted-lazarus, upside down), none with both versions of a
+    line showing; a fresh random 21: all placed, two with a faint ghost of a few letters (fuzzy-horde, grodus-x); the
+    old version showed both versions or erased bars or art on 8 of 17. Names (12 cards): 9 placed with the stars
+    untouched, 3 boxed (stylised names in fonts the site doesn't have). Sheets: shots `r3-g06-*`, `r3-g07-*`,
+    `r3-g08-mock-names.png`.
   - Fonts: `data/fonts.json` (build_site `web_fonts`): `{"fonts": {PSD font name: {file, bytes}}}` for the fonts the
     details records' text layers name, resolved as font_check resolves them (exact PostScript name after
     `FONT_ALIASES`, else a loose match without -Regular; the first file by path wins); `font_faces` reads the name table
@@ -524,14 +569,15 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     collection holds several faces); names cached by blob sha in `site/.cache/fonts.json` (CI downloads a font only when
     its blob is new, 8 at a time, like the PNGs). 129 of the 137 PSD fonts on the 2026-10-23 build. The browser loads one
     as a `FontFace` from raw.githubusercontent.com when first drawn (60 ms for a loaded one, else drawn in a stand-in and
-    redrawn when it arrives); the caption names a stand-in.
+    redrawn when it arrives); the caption names a stand-in, and a role whose record names no font ("Stand-in font for the
+    name (the card's isn't known)": 266 of 818 records have no name layer). The last 24 images used stay decoded.
   - Label: a "Mock-up" ribbon on the image and the caption "Mock-up: the real image comes from the bake".
 - **Rendered** (`createPreviews`): the Action's side is one adapter, `CONTRACT` (workflow, ref, branch, inputs, paths).
   - Start: `GET .../actions/workflows/card-preview.yml` (404: "isn't set up on the card repo yet"), then
     `POST .../dispatches` with `{ref: "main", inputs: {card: c.key, edit: JSON.stringify(edit), request}}`. `edit` =
     `entryEdit(editor.entryFields(id, op), get)`: every PSD-kind field of the card's Card Edits.json entry as Publish
     would leave it (built + published-not-built + the batch's op, or the open form's), plus `creatures` when it holds
-    several, in the edits file's shapes; at most 16 KB. In the Edit dialog the form's values go, saved to the batch or
+    several, in the edits file's shapes; at most 16 KB as card_preview counts it (UTF-8 bytes: `editBytes`). In the Edit dialog the form's values go, saved to the batch or
     not. `request` = `<login>-<time base 36>-<4 random>` (`newRequest`; the Action takes 8-64 of A-Z a-z 0-9 -).
   - Token: a classic token needs the repo scope for the dispatch (GitHub's docs; the sign-in accepts public_repo), a
     fine-grained one Actions: Read and write. A 403/404 says so (`startProblem`: "Your token has only the public_repo
@@ -540,19 +586,33 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   - Store: localStorage `card-previews` = `{card id: [entry, newest first]}`, the last `KEEP` (3) per card, entry =
     `{card, key, name, request, edit, hash, base: {ts, img} at the dispatch, at, state, result?, run?, seen?}`;
     `readStore` drops anything malformed; another tab's writes arrive through the `storage` event.
-  - Background check: while any entry is running, every `POLL_MS` (15 s) from any page, `GET .../contents/previews/
+  - Background check: while any entry is running and someone is signed in, from any page, at the contract's pace
+    (`pollDelay`: every 10 s while one started under 3 minutes ago, then every 30 s), `GET .../contents/previews/
     <request>/result.json?ref=previews` (raw, through the editor's `gh`: never raw.githubusercontent, which caches a 404);
     404 = not yet. Also the run, by `display_title` containing the request (the workflow's run-name "Card preview
-    <request>"), for a link, and an error when it ended without a result (seen twice). Past `MAX_WAIT_MS` (20 min):
-    "No result yet" with Check again (10 more minutes) and Preview again. A result toasts "Preview ready: <card>". Signed
-    out, nothing is checked; signing in resumes it. Several cards run side by side.
+    <request>"), for a link, and an error when it ended without a result (seen twice). Only a check that finds nothing
+    times an entry out (`missed`: past `MAX_WAIT_MS`, 16 minutes, or its own wait: "No result yet" with Check again,
+    10 more minutes, and Preview again; past a day it never comes: expired), so a result that came while the site was
+    closed is found on the next load (the review's case: press, close the laptop, come back 25 minutes later); the
+    first round after a load or a sign-in also looks once at the timed-out ones (`due`). One tab checks for all
+    (`takeLock`: localStorage `card-previews-poll` = `{tab, until}`, 75 s, given up on `pagehide`); the others see the
+    results through the `storage` event. A round's results make one toast, in the tab you're looking at ("Preview
+    ready: Abbi", "Previews finished: Abbi, Acro and Poison"; `finished`, `finishedToast`, 400 ms to gather the
+    storage events). Signed out, no timer runs; signing in starts it. Several cards run side by side.
+  - Expiry: the previews branch keeps a preview about a week (rewritten past 200 previews or 7 days). `expire` makes a
+    result or timeout older than 6 days "expired" (no image, no badge: "Its image is gone: previews are kept about a
+    week." with Preview again) and drops entries older than 30 days; the preview image's 404 more than a day after the
+    press does the same (the contract's rule). A card whose only previews are expired and that has no PSD change gets
+    no panel.
   - Result: `readResult` keeps state, transient, reason, notes (20, 500 characters), fields, changes, base, image,
     files (`preview.webp` / `preview.png` names only) and the run (a github.com link only); anything else is a transient
     error. Baked: Current (the 720 px thumb) beside the preview (preview.webp, 720 px; Full size = preview.png when `files` lists one: since work/card-preview 7646a3cc it never does), Diff
     (`diffPixels`: changed pixels red over the dimmed current, with the share), each field's outcome ("HP baked · Stars
     refused") and the notes. Redundant: "Already on the card". Refused: the reason, with the bake's render when
-    `image` is "refused". Error: an `input:` reason is "a website bug", a transient one "try again". Every string through
-    `esc()`.
+    `image` is "refused". Baked without an image file: "The bake drew it, but no image came with the result." with the
+    outcomes (not an error). Error: an `input:` reason is "a website bug", a transient one "try again"; when the edit
+    changed since, "Out of date" with Preview again instead of Try again (which would send the newer edit). Every string
+    through `esc()`. "Earlier:" previews are chips (bordered, the shown one pressed).
   - Badge: a tile gets "Preview" (`.pv-badge`, under the flag) while its card's newest preview has a result not yet
     seen (`hasNews`); the panel's heading says "New"; showing the Rendered tab on the card page marks it seen. A start
     that failed at once is seen already.
@@ -560,9 +620,13 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     keys, sorted types), or the card's image moved (the result's `base.png_blob` against cards.json `img`, its first 16
     hex digits; before a result, the card's `ts` and `img` at the dispatch): "Out of date: the edit changed since" with
     Preview again. Kept, not dropped: the last three stay listed under "Earlier:".
-  - The server contract's suggestions not followed: polling every 15 s up to 20 minutes (the owner's) instead of 10 s then 30 s
-    up to 16; the request id above instead of `crypto.randomUUID()` (both fit); `card-previews` with three per card instead
-    of `edit-previews` with one; index.json (another device's previews) not read yet.
+  - The server contract's suggestions not followed: the request id above instead of `crypto.randomUUID()` (both fit);
+    `card-previews` with three per card instead of `edit-previews` with one; index.json (another device's previews) not
+    read yet. (Polling follows the contract since the 2026-10-23 review: until then every 15 s up to 20 minutes.)
+  - Between Publish and the site's rebuild the PSD values come from the built card (edit.js `psdVal` reads `pristine`),
+    so a newly published PSD field still counts as one the image doesn't show yet: the mock-up and Preview image stay
+    (they read the published-not-built card as printed before). Open panels are forgotten as soon as they leave the
+    page (`prune` on every mount).
 - Checks (2026-10-23): AutoCroissant `tests/test_site_previews.py` (19 tests on preview.js and mockup.js in node and on
   build_site's font names: the entry edit, hashes, request ids, result.json, the store, staleness, badges, start
   messages, the panel per state, the diff, text found on drawn pixels with a weak line, erase, wrapping and fitting,
@@ -581,7 +645,20 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   comes as soon as one is staged. The server contract as of work/card-preview 7646a3cc: only the WebP is published (no
   Full size link then), and a previewed edit is public, so the panel says "Anyone can see a previewed edit, as with a
   published one" before the first press. Fonts renamed on main (b03b9975) still map: 130 of 137 PSD fonts. Checks:
-  scratch `~/Documents/Tools/wt/scratch/site-round-2/integ.mjs` 33/33 in headless Chrome (every feature of sections
+  scratch `~/Documents/Tools/wt/scratch/site-round-2/integ.mjs` 34/34 in headless Chrome (every feature of sections
   19 and 20 and where they meet; screenshots `round2-*.png`); `trial.mjs` 15/15 on a trial merge with work/token-picker
   8d605085 and the palette switch line (the picker in the dialog and the inline editor with drafts, the live pane and
   the mock-up; the palette with its search); the AutoCroissant site tests.
+- Review fixes (2026-10-23 evening, after merging main's picker and card previews): the mock-up's block search,
+  stray lines, badges and box (above); drafts that survive an editor closed without saving (section 21); results
+  found after the site was closed, expiry, one checking tab, one toast a round, the contract's pace; baked without a
+  file; an error's Try again when the edit changed; UTF-8 size; psdVal after Publish; the close button; the type row
+  as a button; the phone offer, the 1001-1240 px dialog, light-theme type icons. Checks: AutoCroissant
+  `tests/test_site_previews.py` (27) and `tests/test_site_editor.py` (16), the twelve new or changed ones failing on the
+  code before; all 137 site tests with this tree. In headless Chrome (scratch ~/Documents/Tools/wt/scratch/site2r3/:
+  `integ/integ.mjs` 34/34 and `integ/trial.mjs` 15/15 on the merged tree; the review's probes rerun in `h/`): an
+  offered draft kept through Esc, a click off and a dialog's Esc; typing over the dialog's offer joins it; Esc after
+  Restore keeps it; a 25-minute-old running preview found baked on load with its badge (1 request); an 8-day-old one
+  expired with no panel, a 2-day-old one whose image 404s expired; two tabs: one checks (8 requests for 2 previews in
+  33 s), one toast each; close while the palette is open: saved and closed in one click; 1024 px dialog: the Name
+  input 362 px (128 before), 9 type columns. Screenshots `~/Documents/Tools/wt/scratch/site2/shots/r3-*.png`.

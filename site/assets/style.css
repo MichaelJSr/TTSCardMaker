@@ -433,6 +433,13 @@ body.dragging-cards .drop-list { display: flex; }
   border-radius: 12px; background: color-mix(in srgb, var(--warn) 13%, var(--surface-2)); border: 1px solid color-mix(in srgb, var(--warn) 45%, transparent); }
 .draft-offer .actions { margin: 0; }
 .detail .draft-offer { margin-right: 34px; }   /* the close button */
+.draft-moved { font-weight: 600; }
+@media (max-width: 820px) {   /* one column: the card image fills the first screen, so the offer floats at its bottom until answered */
+  .detail .draft-offer { position: fixed; left: 10px; right: 10px; bottom: 10px; z-index: 60; margin: 0; box-shadow: var(--shadow);
+    background: color-mix(in srgb, var(--warn) 18%, var(--surface)); }
+  .detail:has(.draft-offer) { padding-bottom: 96px; }
+}
+:root[data-theme="light"] .ctypes img, :root[data-theme="light"] .pal-type img { filter: drop-shadow(0 0 1px rgba(0,0,0,.7)); }   /* white icons (light, lightshadow) on a light page
 /* the Edit dialog's live preview (live.js): beside the form; on narrow screens a bar at the top that opens it */
 .dialog.edit-dialog.has-preview { width: min(1260px, 100%); }
 .edit-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); gap: 22px; align-items: start; }
@@ -585,8 +592,8 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .pv-stale { background: color-mix(in srgb, var(--warn) 18%, transparent); border-radius: 8px; padding: 6px 8px; font-size: 13px; margin: 0 0 8px; }
 .pv-stale button { margin-left: 6px; padding: 1px 8px; font-size: 12px; }
 .pv-notes { font-size: 13px; margin: 6px 0 0; padding-left: 18px; color: var(--ink-2); }
-.pv-older { font-size: 12.5px; margin: 8px 0 0; } .pv-older button { font-size: 12px; padding: 1px 8px; }
-.pv-older button[aria-pressed="true"] { border-color: var(--accent); }
+.pv-older { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; font-size: 12.5px; margin: 8px 0 0; } .pv-older .chip { font-size: 12px; padding: 1px 9px; }
+.pv-older .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-3); color: var(--ink); font-weight: 600; }
 .pv-note { font-size: 12.5px; }
 .pv-spin { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--muted); border-top-color: transparent; border-radius: 50%;
   animation: pv-spin 1s linear infinite; vertical-align: -2px; }
@@ -596,4 +603,5 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .pv-badge.inline { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #136f2a; color: #fff; font-weight: 600; vertical-align: 1px; }
 .pv-in-form { float: right; width: min(280px, 42%); margin: 0 0 10px 14px; }
 .pv-in-form .pv-panel { margin-top: 0; }
+@media (min-width: 1001px) and (max-width: 1240px) { .has-preview .pv-in-form { float: none; width: auto; max-width: 360px; margin: 0 auto 12px; } }   /* beside the live pane: the fields keep the column */
 @media (max-width: 640px) { .pv-in-form { float: none; width: auto; margin: 0 0 12px; } }

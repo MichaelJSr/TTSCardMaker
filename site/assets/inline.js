@@ -7,7 +7,7 @@
 import { esc } from "./text.js";
 import { starsHtml, paintStars, stepValue } from "./stars.js";
 import { typeVocab, mountPalette, rowHtml } from "./palette.js";
-import { rawOf, restorable, offerHtml, later } from "./drafts.js";
+import { rawOf, restorable, offerHtml, later, movedSince } from "./drafts.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 const SLIDERS = [...STATS, "stars"];                // a row of cells: click one, or arrows and Enter
@@ -50,8 +50,9 @@ export const dropChips = (list, fresh) => [...fresh.map(v => chipHtml(v, true)),
 
 let A = null;                                      // {editor, modal, selected, goCard, rerender, toast}, from install
 let card = null;                                   // the card the dialog shows (mountCard)
-let cur = null;                                    // the open editor: {c, f, el, host, html, cls, tip, ctl, v, save}
-let pal = null;                                    // the open type palette: {c, row, html, tip, temp, save, ctl}
+let cur = null;                                    // the open editor: {c, f, el, host, html, cls, tip, ctl, v, save, snap}
+let pal = null;                                    // the open type palette: {c, row, html, tip, temp, save, ctl, snap}
+let closing = false;                               // this press is on the dialog's close button: a save doesn't redraw the card
 let offered = null;                                // the card dialog's draft offer: {c, fields}
 let prov = null;                                   // a stat row changed by keyboard, not yet saved: {row, k, v0}
 let pointer = false;                               // the last input was a pointer (focus moved by a click, not Tab)
@@ -63,7 +64,7 @@ let arrowAt = -1e9;                                // when an arrow key last wen
 /** Mark the editable spots of the open card dialog (edit mode only; call after openCard). */
 export function mountCard(modal, c, api = A) {
   const detail = modal.querySelector(".detail"); if (!detail) return;
-  card = c; cur = null; prov = null; pal = null; offered = null;
+  card = c; cur = null; prov = null; pal = null; offered = null; closing = false;
   const facts = detail.querySelector(".facts");
   const mark = (el, f, tip) => { if (!el) return; el.dataset.inline = f; el.tabIndex = 0; el.dataset.tip = tip; };
   mark(detail.querySelector("h2"), "name", `Double-click to rename · ${IMAGE}`);
@@ -96,7 +97,7 @@ export function mountCard(modal, c, api = A) {
   const typeRow = detail.querySelector(":scope > div:nth-child(2) > .ctypes");     // types: the row opens the palette
   if (typeRow) {
     mark(typeRow, "types", `Click to change the types · ${IMAGE}`);
-    typeRow.setAttribute("role", "group"); typeRow.setAttribute("aria-label", `Types: ${(c.types || []).map(t => t.replace(/_/g, " ")).join(", ")}. Enter to change them`);
+    typeRow.setAttribute("role", "button"); typeRow.setAttribute("aria-label", `Types: ${(c.types || []).map(t => t.replace(/_/g, " ")).join(", ") || "none"}. Change the types`);
   } else facts.insertAdjacentHTML("beforeend", ghost("types"));
   offer(c, detail);
 }
@@ -108,7 +109,7 @@ function offer(c, detail) {                        // "Restore your unsaved edit
   const fields = restorable(d.fields, now);
   if (!Object.keys(fields).length) { drafts().drop(c.id); return; }   // the batch has it already
   offered = { c, fields };
-  detail.querySelector(":scope > div:nth-child(2)")?.insertAdjacentHTML("afterbegin", offerHtml(fields, d.at));
+  detail.querySelector(":scope > div:nth-child(2)")?.insertAdjacentHTML("afterbegin", offerHtml(fields, d.at, Date.now(), movedSince(d, now)));
 }
 const spot = f => A.modal.querySelector(`.detail [data-inline="${f}"]`);
 function answer(restore) {
@@ -125,7 +126,7 @@ const keep = (c, f, v) => later(() => {            // the editor's text as a dra
   const t = (f === "types" ? pal?.ctl?.value : cur?.f === f && cur.c === c ? cur.ctl.value : null);
   if (t == null) return;
   if (f === "types" ? JSON.stringify(t) === JSON.stringify(v) : String(t).replace(/\r/g, "").trim() === String(v).replace(/\r/g, "").trim()) drafts()?.drop(c.id, [f]);
-  else drafts()?.put(c.id, { [f]: f === "types" ? t : String(t).replace(/\r/g, "") });
+  else drafts()?.put(c.id, { [f]: f === "types" ? t : String(t).replace(/\r/g, "") }, false, { [f]: f === "types" ? v : String(v).replace(/\r/g, "") });
 });
 function open(el, f, text = null) {               // text: a restored draft
   if (cur && !commit(false)) { cur?.ctl.focus(); return; }                // a refused name stays open, to shorten it
@@ -137,7 +138,7 @@ function open(el, f, text = null) {               // text: a restored draft
   const swap = el.tagName === "A" || el.tagName === "BUTTON";     // a link would still navigate, a button can't hold an input
   let host = el;
   if (swap) { host = document.createElement("span"); host.className = el.className; host.dataset.inline = f; el.replaceWith(host); }
-  cur = { c, f, el, host, html: el.innerHTML, cls: el.className, tip: el.dataset.tip, ctl: null, v, save: keep(c, f, v) };
+  cur = { c, f, el, host, html: el.innerHTML, cls: el.className, tip: el.dataset.tip, ctl: null, v, save: keep(c, f, v), snap: drafts()?.snap(c.id, [f]) };
   if (!swap) { delete el.dataset.tip; if (el.tagName === "P") el.className = "ability"; }   // "No ability text." becomes the text box
   host.innerHTML = control(f, text ?? v, list);
   cur.ctl = host.querySelector("input, textarea");
@@ -145,10 +146,10 @@ function open(el, f, text = null) {               // text: a restored draft
   if (text != null) save.run();
   cur.ctl.focus(); if (f !== "ability" && text == null) cur.ctl.select();
 }
-function cancel(refocus) {                        // Esc, or nothing changed: no draft either
+function cancel(refocus) {                        // Esc, or nothing changed: what was typed goes, an older draft stays as it was
   if (!cur) return;
-  const { c, f, el, host, html, cls, tip, save } = cur; cur = null;
-  save.cancel(); drafts()?.drop(c.id, [f]); A.hideTip?.();
+  const { c, f, el, host, html, cls, tip, save, snap } = cur; cur = null;
+  save.cancel(); drafts()?.back(c.id, snap, [f]); A.hideTip?.();
   if (host !== el) host.replaceWith(el); else { el.innerHTML = html; el.className = cls; if (tip) el.dataset.tip = tip; }
   if (refocus) el.focus();
 }
@@ -168,6 +169,7 @@ function commit(kbd) {                            // kbd: from the keyboard, so 
 function refresh(c, f, kbd) {                      // the dialog again (as the form does), scrolled as it was; after a mouse action
   const scroll = A.modal.scrollTop;                // focus stays off (openCard blurs so the shortcuts work), after a key it comes back
   A.hideTip?.();
+  if (closing) { closing = false; return; }        // the dialog is closing: its click closes it (a redraw now would eat that click)
   A.goCard(c.id); A.modal.scrollTop = scroll;
   if (kbd) A.modal.querySelector(`[data-inline="${f}"]`)?.focus();
 }
@@ -201,12 +203,12 @@ function openTypes(el, initial = null) {          // initial: a restored draft
   const html = row.innerHTML, tip = row.dataset.tip, on = initial ? [...initial].sort() : start;
   delete row.dataset.tip; row.classList.add("editing");
   if (initial || temp) row.innerHTML = rowHtml(on, vocab);
-  const p = pal = { c, row, html, tip, temp, save: keep(c, "types", start), ctl: null };
-  const done = () => { pal = null; p.save.cancel(); drafts()?.drop(c.id, ["types"]); A.hideTip?.(); };
+  const p = pal = { c, row, html, tip, temp, save: keep(c, "types", start), ctl: null, snap: drafts()?.snap(c.id, ["types"]) };
+  const done = staged => { pal = null; p.save.cancel(); if (staged) drafts()?.drop(c.id, ["types"]); else drafts()?.back(c.id, p.snap, ["types"]); A.hideTip?.(); };   // not saved: an older draft stays
   p.ctl = mountPalette(row, { vocab, on, first: start,
     onChange: list => { row.innerHTML = rowHtml(list, vocab); p.save.run(); },
-    onSave: (list, kbd) => { done(); if (!sameTypes(list, start) && A.editor.stageField(c.id, "types", list)) refresh(c, "types", kbd); else putBack(p, kbd); },
-    onCancel: kbd => { done(); putBack(p, kbd); } });
+    onSave: (list, kbd) => { const ok = !sameTypes(list, start) && A.editor.stageField(c.id, "types", list); done(ok); if (ok) refresh(c, "types", kbd); else putBack(p, kbd); },
+    onCancel: kbd => { done(false); putBack(p, kbd); } });
   if (initial) p.save.run();
 }
 function putBack(p, kbd) {
@@ -251,7 +253,7 @@ function onKey(e) {
   if (!el || !A.modal.contains(el)) return;
   const f = el.dataset.inline;
   if (SLIDERS.includes(f) && !el.hasAttribute("data-empty")) { statKey(el, f, e); return; }
-  if (e.key === "Enter" && el.tagName !== "A" && el.tagName !== "BUTTON") { e.preventDefault(); e.stopPropagation(); if (f === "types") openTypes(el); else open(el, f); }   // links and buttons click themselves
+  if ((e.key === "Enter" || (e.key === " " && f === "types")) && el.tagName !== "A" && el.tagName !== "BUTTON") { e.preventDefault(); e.stopPropagation(); if (f === "types") openTypes(el); else open(el, f); }   // links and buttons click themselves; the type row is a button
 }
 function onFocusOut(e) {                          // Tab to another control keeps the focus in the dialog; a click doesn't
   if (!document.hasFocus()) return;               // the window losing focus (alt-tab) leaves the editor open
@@ -374,6 +376,7 @@ export function install(api) {
   window.addEventListener("pagehide", flush);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flush(); });
   api.modal.addEventListener("pointerdown", () => { pointer = true; });
+  window.addEventListener("pointerdown", e => { closing = !!(cur || pal || prov) && api.modal.contains(e.target) && !!e.target.closest?.('[data-action="close"]'); }, true);   // before the palette's click-away
   api.modal.addEventListener("click", onClick);
   api.modal.addEventListener("dblclick", onDblClick);
   api.modal.addEventListener("keydown", onKey);

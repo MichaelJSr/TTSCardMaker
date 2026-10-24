@@ -2,9 +2,9 @@
 // bake of the card's PSD-kind fields by the card repo's card-preview.yml (AutoCroissant commands/card_preview.py; the
 // contract in site/NOTES.md §19 "Card previews"; the UI §22: workflow_dispatch with card, edit and request,
 // the result on the orphan branch "previews"). The site starts it with the signed-in editor's token, remembers each
-// request in localStorage (the last KEEP per card), checks every POLL_MS in the background (for up to MAX_WAIT_MS) while
-// the editor works on other cards, badges a card whose preview is ready and shows it when the card is opened again:
-// beside the current image (with a diff), or why the bake would refuse it. Pure helpers above createPreviews.
+// request in localStorage (the last KEEP per card), checks in the background (pollDelay, up to MAX_WAIT_MS; one tab checks
+// for all) while the editor works on other cards, badges a card whose preview is ready and shows it when the card is
+// opened again: beside the current image (with a diff), or why the bake would refuse it. Pure helpers above createPreviews.
 import { esc } from "./text.js";
 import { sameField, value, psdValue } from "./edit.js";
 import * as mockup from "./mockup.js";
@@ -17,7 +17,14 @@ export const CONTRACT = {
   file: (request, name) => `previews/${request}/${name}`,
 };
 export const KEY = "card-previews";                   // localStorage: {card id: [entry, newest first]}
-export const KEEP = 3, POLL_MS = 15000, MAX_WAIT_MS = 20 * 60000, MAX_EDIT = 16384;   // MAX_EDIT: card_preview's, bytes of edit JSON
+export const LOCK_KEY = "card-previews-poll";         // localStorage: {tab, until}: the tab that checks for all of them
+export const KEEP = 3, MAX_EDIT = 16384;              // MAX_EDIT: card_preview's, UTF-8 bytes of the edit's JSON
+// the contract's checks: every 10 s for 3 minutes, then every 30 s, giving up at 16 (the jobs' timeouts add up to 14);
+// "Check again" waits 10 more
+export const POLL_FAST = 10000, POLL_SLOW = 30000, FAST_FOR = 3 * 60000, MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
+// the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404
+// more than a day after the press means it never comes; entries go after 30 days
+export const SHOW_MS = 6 * 864e5, LATE_MS = 864e5, DROP_MS = 30 * 864e5;
 export const PSD_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability"];   // printed on the card (edit.js FROM "PSD")
 export const ENTRY_FIELDS = [...PSD_FIELDS, "creatures"];                                  // what the edit carries (creatures gates a stat bake)
 export const DONE = ["baked", "redundant", "refused", "error"];                            // result.json states
@@ -107,14 +114,51 @@ export function patch(store, request, changes) {
   for (const [id, list] of Object.entries(store)) if (list.some(e => e.request === request)) out[id] = list.map(e => (e.request === request ? { ...e, ...changes } : e));
   return out;
 }
-/** The entries still waiting for their result; past their wait (MAX_WAIT_MS) expire() makes them "timeout". */
+/** The entries still waiting for their result. */
 export const waiting = store => Object.values(store).flat().filter(e => e.state === "running");
+/** The store with old entries settled: a start the page left half done is an error, a result or timeout past SHOW_MS is
+ *  "expired" (its image is gone from the branch), anything past DROP_MS goes. A running one stays running: only a check
+ *  that finds nothing (missed) times it out, so a result that came while the site was closed is still found. */
 export function expire(store, now = Date.now()) {
   let out = store;
-  for (const e of waiting(store)) if (now - e.at > (e.wait || MAX_WAIT_MS)) out = patch(out, e.request, { state: "timeout" });
-  for (const e of Object.values(store).flat()) if (e.state === "starting" && now - e.at > 60000) out = patch(out, e.request, { state: "error", error: "It didn't start: the page closed first.", seen: true });
-  return out;
+  for (const e of Object.values(store).flat()) {
+    if (e.state === "starting" && now - e.at > 60000) out = patch(out, e.request, { state: "error", error: "It didn't start: the page closed first.", seen: true });
+    else if ((DONE.includes(e.state) || e.state === "timeout") && now - e.at > SHOW_MS) out = patch(out, e.request, { state: "expired", seen: true });
+  }
+  const kept = Object.entries(out).map(([id, list]) => [id, list.filter(e => now - e.at <= DROP_MS)]).filter(([, list]) => list.length);
+  return kept.length === Object.keys(out).length && kept.every(([id, list]) => list.length === out[id].length) ? out : Object.fromEntries(kept);
 }
+/** What to look for this round: every running entry; on the first round after a load or a sign-in (first) also the
+ *  timed-out ones younger than SHOW_MS: their result may have come while the site was closed. */
+export const due = (store, now = Date.now(), first = false) => Object.values(store).flat().filter(e => e.state === "running" || (first && e.state === "timeout" && now - e.at < SHOW_MS));
+/** The change for an entry whose result.json isn't there (404): past a day it never comes ("expired"); a running one past
+ *  its wait times out; else none (null). */
+export function missed(e, now = Date.now()) {
+  if (now - e.at > LATE_MS) return { state: "expired", seen: true };
+  if (e.state === "running" && now - e.at > (e.wait || MAX_WAIT_MS)) return { state: "timeout" };
+  return null;
+}
+/** ms to the next check (null: nothing running): POLL_FAST while one started under FAST_FOR ago, else POLL_SLOW. */
+export const pollDelay = (store, now = Date.now()) => { const w = waiting(store); return !w.length ? null : w.some(e => now - e.at < FAST_FOR) ? POLL_FAST : POLL_SLOW; };
+/** One tab checks for all (the others see the results through the storage event): this tab (id `tab`) may check when it
+ *  holds the lock (stored text) or the lock lapsed. -> the lock to store, or null (another tab has it). */
+export function takeLock(lockText, tab, now = Date.now(), ttl = 2 * POLL_SLOW + 15000) {
+  let l; try { l = JSON.parse(lockText); } catch { l = null; }
+  if (l && typeof l === "object" && l.tab !== tab && Number(l.until) > now) return null;
+  return { tab, until: now + ttl };
+}
+/** The entries of `after` that have a result now and didn't in `before`: what to announce. */
+export const finished = (before, after) => { const was = new Map(Object.values(before).flat().map(e => [e.request, e.state]));
+  return Object.values(after).flat().filter(e => DONE.includes(e.state) && was.has(e.request) && !DONE.includes(was.get(e.request)) && was.get(e.request) !== "expired"); };
+/** One toast for the results of a round: "Preview ready: Abbi", "Previews finished: Abbi, Acro and Poison". */
+export function finishedToast(list) {
+  if (!list.length) return "";
+  const names = [...new Set(list.map(e => e.name || e.card))], ready = list.every(e => e.state === "baked");
+  const join = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : names[0];
+  return `${list.length > 1 ? (ready ? "Previews ready" : "Previews finished") : ready ? "Preview ready" : "Preview finished"}: ${join}`;
+}
+/** The edit's size as card_preview counts it: UTF-8 bytes of its JSON. */
+export const editBytes = edit => new TextEncoder().encode(JSON.stringify(edit)).length;
 /** Why a preview no longer shows the card as it would be baked: [] or reasons. "edit": the fields the site would send
  *  now differ; "psd": the card's image changed since (the result's PNG blob, cards.json img being its first 16 hex
  *  digits; before a result, the card's ts and img at the dispatch). */
@@ -145,10 +189,10 @@ export function startProblem(status, message = "", { scopes = null, installed = 
 }
 /** Can this token start Actions, as far as its classic scopes tell: true, false (no repo scope) or null (unknown). */
 export const scopeOk = scopes => (scopes == null ? null : /(^|[\s,])repo([\s,]|$)/.test(scopes));
-/** "just now", "4 min ago", "2 h ago". */
+/** "just now", "4 min ago", "2 h ago", "3 days ago". */
 export function ago(ms) {
   const m = Math.round(ms / 60000);
-  return m < 1 ? "just now" : m < 60 ? `${m} min ago` : `${Math.round(m / 60)} h ago`;
+  return m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 48 * 60 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`;
 }
 /** The diff of two same-sized RGBA images: changed pixels red over a dimmed a. {data, changed (0-1)}. */
 export function diffPixels(a, b, threshold = 48) {
@@ -168,7 +212,7 @@ export const fieldsLine = edit => ENTRY_FIELDS.filter(f => f in edit).map(f => L
 export const outcomesLine = fields => Object.entries(fields || {}).map(([f, how]) => `${LABEL[f] || f} ${how}`).join(" · ");
 const STATE_TEXT = {
   running: "Baking a preview", baked: "Preview ready", redundant: "Nothing to bake", refused: "The bake would refuse this",
-  error: "The preview failed", timeout: "No result yet", starting: "Starting",
+  error: "The preview failed", timeout: "No result yet", starting: "Starting", expired: "Preview expired",
 };
 /** The rendered preview's part of the panel for the newest entry e (or none). v: {card, n (fields the image would change
  *  by), hash, now, scopes, images (preview URLs: the 720 px WebP, the full PNG), current (the current image's URL), diff}. */
@@ -187,8 +231,9 @@ export function renderedHtml(e, v) {
   const run = r.run || e.run?.url, runLink = run ? ` <a href="${esc(run)}" target="_blank" rel="noopener">The run on GitHub</a>.` : "";
   const again = stale.length ? "" : button("Preview again", "ghost");
   if (e.state === "starting" || e.state === "running") {
-    return `${head}<p class="muted" aria-live="polite"><span class="pv-spin" aria-hidden="true"></span> The Action is drawing it; checked every ${POLL_MS / 1000} s, up to ${MAX_WAIT_MS / 60000} min.${runLink}</p>`;
+    return `${head}<p class="muted" aria-live="polite"><span class="pv-spin" aria-hidden="true"></span> The Action is drawing it, usually in 1 to 3 minutes; checked in the background for up to ${Math.round((e.wait || MAX_WAIT_MS) / 60000)} min.${runLink}</p>`;
   }
+  if (e.state === "expired") return `${head}<p>Its image is gone: previews are kept about a week.</p>${outcomes}<div class="actions">${button("Preview again", "ghost")}</div>`;
   const pair = (label, alt) => {
     const [src, full] = v.images, diff = v.diff && !!v.current;
     return `<div class="pv-pair${diff ? " diff" : ""}">
@@ -199,17 +244,19 @@ export function renderedHtml(e, v) {
       <div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${full ? `<a class="fact" href="${esc(full)}" target="_blank" rel="noopener">Full size</a>` : ""}${again}</div>`;
   };
   if (e.state === "baked" && v.images.length) return `${head}${staleText}${pair(`Preview <span class="muted">(dry run)</span>`, "rendered preview")}${outcomes}${notes}`;
+  if (e.state === "baked") return `${head}${staleText}<p>The bake drew it, but no image came with the result.${runLink}</p>${outcomes}${notes}${again ? `<div class="actions">${again}</div>` : ""}`;
   if (e.state === "redundant") return `${head}${staleText}<p>Already on the card: a bake would change nothing.</p>${outcomes}${notes}`;
   if (e.state === "refused") {
     return `${head}${staleText}<p>${esc(r.reason || "The bake refused this edit.")}</p>${r.image === "refused" && v.images.length ? pair(`What the bake drew before refusing it`, "the bake's render before it refused") : `<div class="actions">${again}</div>`}${outcomes}${notes}`;
   }
-  if (e.state === "timeout") return `${head}<p>No result after ${MAX_WAIT_MS / 60000} minutes.${runLink} The run may still finish.</p><div class="actions"><button type="button" class="ghost" data-pv="recheck">Check again</button>${button("Preview again", "ghost")}</div>`;
+  if (e.state === "timeout") return `${head}<p>No result after ${Math.round((e.wait || MAX_WAIT_MS) / 60000)} minutes.${runLink} The run may still finish.</p><div class="actions"><button type="button" class="ghost" data-pv="recheck">Check again</button>${button("Preview again", "ghost")}</div>`;
   const input = /^input:/.test(r.reason || "");
   const why = input ? `The bake couldn't read what the website sent (a website bug): ${r.reason}` : r.reason || e.error || "Something went wrong.";
-  return `${head}<p class="err">${esc(why)}</p>${r.transient ? `<p class="muted">Usually passing: try again.</p>` : ""}${notes}${runLink ? `<p>${runLink}</p>` : ""}${e.error ? scopeNote : ""}<div class="actions">${button("Try again", "ghost")}</div>`;
+  const errStale = staleWhy(e, v.card, v.hash).includes("edit") ? `<p class="pv-stale" role="note">Out of date: the edit changed since. ${button("Preview again", "ghost")}</p>` : "";   // "Try again" would send the edit as it is now
+  return `${head}<p class="err">${esc(why)}</p>${r.transient ? `<p class="muted">Usually passing: try again.</p>` : ""}${notes}${runLink ? `<p>${runLink}</p>` : ""}${e.error ? scopeNote : ""}${errStale || `<div class="actions">${button("Try again", "ghost")}</div>`}`;
 }
 /** The older previews of a card, as buttons to show one: entries after the first. */
-export const olderHtml = (list, now, shown) => (list.length > 1 ? `<p class="muted pv-older">Earlier: ${list.map((e, i) => `<button type="button" class="ghost" data-pv-show="${i}" aria-pressed="${i === shown}">${i ? esc(ago(now - e.at)) : "newest"} · ${esc(STATE_TEXT[e.state] || e.state)}</button>`).join(" ")}</p>` : "");
+export const olderHtml = (list, now, shown) => (list.length > 1 ? `<div class="pv-older" role="group" aria-label="Earlier previews"><span class="muted">Earlier:</span> ${list.map((e, i) => `<button type="button" class="chip" data-pv-show="${i}" aria-pressed="${i === shown}">${i ? esc(ago(now - e.at)) : "newest"} · ${esc(STATE_TEXT[e.state] || e.state)}</button>`).join(" ")}</div>` : "");
 
 export function createPreviews(app) {
   // app: {S, editor (me, github(path, opts), scopes, psdOf(id)), toast, loadDetails(c), getJson(name), signIn(note),
@@ -219,8 +266,20 @@ export function createPreviews(app) {
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch { /* storage full: this page only */ } };
   const set = s => { store = s; save(); };
   const live = new Set();                             // the open panels: {id, host, paint}
-  const notify = id => { app.badges(); for (const p of [...live]) { if (!p.host.isConnected) live.delete(p); else if (id == null || p.id === id) p.paint(); } };
-  window.addEventListener("storage", e => { if (e.key === KEY) { store = readStore(e.newValue); notify(null); } });   // another tab
+  const prune = () => { for (const p of [...live]) if (!p.host.isConnected) live.delete(p); };
+  const notify = id => { app.badges(); prune(); for (const p of live) if (id == null || p.id === id) p.paint(); };
+  const visible = () => document.visibilityState === "visible";
+  let heard = [], heardT = null;                      // results of one round arrive as several storage events: one toast
+  const announce = list => { if (!list.length) return; heard.push(...list); clearTimeout(heardT);
+    heardT = setTimeout(() => { const m = finishedToast(heard); heard = []; if (m && visible()) app.toast(m); }, 400); };
+  window.addEventListener("storage", e => {         // another tab: its starts, and the results the checking tab found
+    if (e.key !== KEY) return;
+    const before = store; store = readStore(e.newValue);
+    announce(finished(before, store)); notify(null); schedule();
+  });
+  const TAB = Math.random().toString(36).slice(2);     // this tab, for the check's lock
+  const lockMine = () => { try { return JSON.parse(localStorage.getItem(LOCK_KEY))?.tab === TAB; } catch { return false; } };
+  window.addEventListener("pagehide", () => { if (lockMine()) localStorage.removeItem(LOCK_KEY); });   // the next tab takes over at once
   const repo = () => S.data.repo;
   const rawUrl = (ref, path) => `https://raw.githubusercontent.com/${repo()}/${ref}/${path.split("/").map(encodeURIComponent).join("/")}`;
   const imagesOf = e => [e.result?.files?.webp, e.result?.files?.png].filter(Boolean).map(f => rawUrl(CONTRACT.branch, CONTRACT.file(e.request, f)));   // the 720 px WebP, the full PNG
@@ -242,7 +301,7 @@ export function createPreviews(app) {
     const ed = app.editor;
     if (!ed.me) { app.signIn(`Sign in to preview ${c.name}'s image.`); return; }
     if (!Object.keys(edit).length) { app.toast("No changes on the card image to preview"); return; }
-    if (JSON.stringify(edit).length > MAX_EDIT) { app.toast("This edit is over 16 KB: the preview takes less"); return; }
+    if (editBytes(edit) > MAX_EDIT) { app.toast("This edit is over 16 KB: the preview takes less"); return; }
     const request = newRequest(ed.me.login), entry = { card: c.id, key: c.key, name: c.name, request, edit, hash: hashOf(edit), base: { ts: c.ts ?? null, img: c.img ?? null }, at: Date.now(), state: "starting" };
     set(remember(store, entry)); notify(c.id);
     try {
@@ -258,14 +317,15 @@ export function createPreviews(app) {
       set(patch(store, request, { state: "error", error: why, seen: true }));   // said at once: no badge
       app.toast("The preview didn't start");
     }
-    notify(c.id); schedule(POLL_MS);
+    notify(c.id); schedule();
   }
 
-  // ---- the background check: every POLL_MS while any is running, from any page
-  let timer = null, busy = false;
-  function schedule(ms = POLL_MS) {
-    if (timer || !waiting(store).length) return;
-    timer = setTimeout(() => { timer = null; poll().finally(() => schedule()); }, ms);
+  // ---- the background check: while any is running (pollDelay), from any page, signed in, by one tab (takeLock)
+  let timer = null, busy = false, first = true;       // first: the round after a load or a sign-in also looks at timed-out ones
+  function schedule(ms = null) {
+    const wait = ms ?? pollDelay(store);
+    if (timer || !app.editor.me || wait == null) return;
+    timer = setTimeout(() => { timer = null; poll().finally(() => schedule()); }, wait);
   }
   async function fetchResult(e) {                     // the result text, or null while there is none
     try { return await app.editor.github(`/repos/${repo()}/contents/${CONTRACT.result(e.request).split("/").map(encodeURIComponent).join("/")}?ref=${CONTRACT.branch}`, { raw: true }); }
@@ -279,20 +339,27 @@ export function createPreviews(app) {
   }
   async function poll(only = null) {
     if (busy || !app.editor.me) return;
+    if (!only) {                                      // one tab checks for all
+      const lock = takeLock(localStorage.getItem(LOCK_KEY), TAB);
+      if (!lock) return;
+      try { localStorage.setItem(LOCK_KEY, JSON.stringify(lock)); } catch { /* storage off: check anyway */ }
+    }
     busy = true;
+    const before = store, look = first;
     try {
       set(expire(store));
-      for (const e of only ? [only] : waiting(store)) {
+      for (const e of only ? [only] : due(store, Date.now(), look)) {
         let raw = null;
         try { raw = await fetchResult(e); } catch { continue; }                 // GitHub unreachable: next time
         if (raw != null) {
           const result = readResult(raw);
           set(patch(store, e.request, { state: result.state, result, done: Date.now() }));
-          app.toast(`${result.state === "baked" ? "Preview ready" : "Preview finished"}: ${e.name}`);
           notify(e.card);
           continue;
         }
-        if (Date.now() - (e.runAt || e.at) < 60000) continue;               // the run: looked up once a minute
+        const gone = missed(e);                                              // not there: timed out, or never coming
+        if (gone) { set(patch(store, e.request, gone)); notify(e.card); continue; }
+        if (e.state !== "running" || Date.now() - (e.runAt || e.at) < 60000) continue;   // the run: looked up once a minute
         const run = await findRun(e).catch(() => null);
         set(patch(store, e.request, { runAt: Date.now() }));
         if (run) {
@@ -303,7 +370,8 @@ export function createPreviews(app) {
           }
         }
       }
-    } finally { busy = false; }
+      if (!only) first = false;
+    } finally { busy = false; announce(finished(before, store)); }
   }
 
   // ---- marks: the grid's badges, the card page's panel, the Edit dialog's aside
@@ -336,9 +404,9 @@ export function createPreviews(app) {
       host.innerHTML = panelHtml(c, v, where);
       const canvas = host.querySelector("[data-pv-mock]");
       if (canvas) drawMock(canvas, c, v, host);
-      const pair = host.querySelector(".pv-pair");
-      if (pair) wirePair(pair);
-      const e = (store[c.id] || [])[0];
+      const pair = host.querySelector(".pv-pair"), list = store[c.id] || [];
+      if (pair) wirePair(pair, list[Math.min((views.get(c.id) || {}).shown || 0, Math.max(0, list.length - 1))]);
+      const e = list[0];
       if (where === "card" && e && DONE.includes(e.state) && !e.seen && host.querySelector(".pv-body").dataset.mode === "rendered") { set(patch(store, e.request, { seen: true })); app.badges(); }
     };
     host.onclick = ev => {
@@ -348,17 +416,17 @@ export function createPreviews(app) {
       const act = t("[data-pv]")?.dataset.pv;
       if (act === "start") { views.set(c.id, { ...views.get(c.id), mode: "rendered", shown: 0 }); start(c, getV().edit); }
       else if (act === "diff") { const st = views.get(c.id) || {}; views.set(c.id, { ...st, diff: !st.diff }); paint(); }
-      else if (act === "recheck") { const e = (store[c.id] || [])[0]; if (e) { set(patch(store, e.request, { state: "running", wait: Date.now() - e.at + 10 * 60000 })); notify(c.id); poll(store[c.id][0]).then(() => notify(c.id)); schedule(); } }
+      else if (act === "recheck") { const e = (store[c.id] || [])[0]; if (e) { set(patch(store, e.request, { state: "running", wait: Date.now() - e.at + MORE_WAIT_MS })); notify(c.id); poll(store[c.id][0]).then(() => notify(c.id)); schedule(); } }
     };
     paint();
-    live.add({ id: c.id, host, paint });
+    prune(); live.add({ id: c.id, host, paint });
     return paint;
   }
   /** The card page: the panel under the image, edit mode only, for a card with PSD changes or previews. */
   function mountCard(modal, c) {
     if (!app.editor.me) return;
     const getV = () => cardV(c);
-    if (!getV().n && !(store[c.id] || []).length) return;
+    if (!getV().n && !(store[c.id] || []).some(e => e.state !== "expired")) return;   // nothing to show but a preview that's gone
     const wrap = modal.querySelector(".detail .image-wrap");
     if (!wrap) return;
     wrap.insertAdjacentHTML("beforeend", `<div class="pv-host"></div>`);
@@ -393,12 +461,19 @@ export function createPreviews(app) {
     app.loadDetails(c).then(r => { recs.set(c.id, r); clearTimeout(t); if (!drawn || canvas._run === run) go(r); }, () => { recs.set(c.id, null); });
   }
   const mockNote = out => {
-    const lost = Object.entries(out.fonts).filter(([, f]) => !f).map(([n]) => n);
-    return [out.skipped.length ? `Not drawn: ${[...new Set(out.skipped)].join(", ")}.` : "", lost.length ? `Stand-in font for ${lost.join(", ")}.` : ""].filter(Boolean).join(" ");
+    const lost = Object.entries(out.fonts).filter(([, f]) => !f).map(([n]) => n), cap = s => s[0].toUpperCase() + s.slice(1);
+    return [out.boxed?.length ? `${cap(out.boxed.join(" and "))} in a box: ${out.boxed.length > 1 ? "their places" : "its place"} on the image weren't found.`.replace("its place on the image weren't", "its place on the image wasn't") : "",
+      out.over?.length ? `The ${out.over.join(" and the ")} runs past ${out.over.length > 1 ? "their" : "its"} place on the card.` : "",
+      out.skipped.length ? `Not drawn: ${[...new Set(out.skipped)].join(", ")}.` : "", lost.length ? `Stand-in font for ${lost.join(", ")}.` : "",
+      out.standIn?.length ? `Stand-in font for the ${out.standIn.join(" and the ")} (the card's isn't known).` : ""].filter(Boolean).join(" ");
   };
-  function wirePair(pair) {
+  function wirePair(pair, e) {
     const prev = pair.querySelector('[data-pv-img="preview"]');
-    prev?.addEventListener("error", () => { const f = prev.dataset.fallback; if (f && prev.src !== f) { prev.dataset.fallback = ""; prev.src = f; prev.closest("a").href = f; } });
+    prev?.addEventListener("error", () => {
+      const f = prev.dataset.fallback;
+      if (f && prev.src !== f) { prev.dataset.fallback = ""; prev.src = f; prev.closest("a").href = f; return; }
+      if (e && Date.now() - e.at > LATE_MS) { set(patch(store, e.request, { state: "expired", seen: true })); notify(e.card); }   // the branch dropped it (the contract: a 404 after a day)
+    });
     const canvas = pair.querySelector("[data-pv-diff]");
     if (!canvas || !pair.classList.contains("diff")) return;
     const cur = pair.querySelector('[data-pv-img="current"]');
@@ -412,12 +487,14 @@ export function createPreviews(app) {
     }, () => { const el = pair.querySelector("[data-pv-changed]"); if (el) el.textContent = "(couldn't load both images)"; });
   }
 
-  function init() { set(expire(store)); if (app.editor.me) { schedule(1000); } }
+  // the first check soon after a load or a sign-in, for a running one or one that timed out while the site was closed
+  const soon = () => { first = true; if (due(store, Date.now(), true).length) schedule(1000); };
+  function init() { set(expire(store)); soon(); }
   return {
     init, mountTiles, mountCard, mountForm, start, poll: () => poll(),
     /** a card's values changed (null: any): repaint its open panels */
     refresh: id => notify(id),
-    onAuth() { if (app.editor.me) schedule(1000); },
+    onAuth() { if (app.editor.me) soon(); },
     hasNews: id => hasNews(store, id), entries: id => store[id] || [],
   };
 }

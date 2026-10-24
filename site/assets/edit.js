@@ -185,9 +185,9 @@ export function createEditor(app) {
   let buckets = readBuckets(sessionStorage.getItem(K.buckets));
   // what the Edit dialog and the inline editors hold before it goes into the batch, per card id (drafts.js)
   const cardDrafts = draft.draftStore(localStorage, K.drafts);
-  let flushDraft = null, formId = "";             // the open form's pending draft (written now when the tab closes), its card
-  window.addEventListener("pagehide", () => flushDraft?.());
-  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flushDraft?.(); });
+  let formDraft = null;                           // the open form's draft: {flush (now, when the tab closes), discard (Cancel)}
+  window.addEventListener("pagehide", () => formDraft?.flush());
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") formDraft?.flush(); });
   let previewOpen = false;                         // narrow screens: the preview bar opened
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
@@ -385,7 +385,7 @@ export function createEditor(app) {
   const snap = c => { if (c && !pristine.has(c.id)) pristine.set(c.id, structuredClone(c)); };
   const baseOf = c => based.get(c.id) || pristine.get(c.id) || c;
   const byKey = k => S.all.find(c => cardKey(c.key) === cardKey(k)) || S.all.find(c => cardKey(c.name) === cardKey(k));
-  const val = (c, f) => value(c, f, S.byId), psdVal = (b, f) => psdValue(b, f, S.byId);
+  const val = (c, f) => value(c, f, S.byId), psdVal = (b, f) => psdValue(pristine.get(b.id) || b, f, S.byId);   // as built: edited/orig aren't updated by a publish
   function banOf(id, banlist = S.data.banlist) {
     for (const g of banlist.groups) for (const e of g.entries) if (e.id === id) return { banned: true, group: g.title, reason: e.reason };
     return { banned: false, group: "", reason: "" };
@@ -722,17 +722,20 @@ export function createEditor(app) {
       if (document.getElementById("ef-creatures-box").hidden) { document.getElementById("ef-creatures-box").hidden = false; document.getElementById("ef-single").hidden = true;
         for (const b of document.querySelectorAll("[data-creature]")) b.hidden = b.dataset.creature === "split"; }
     };
+    let keepOld = null;                             // an unanswered offer's draft: what is typed joins it, never replaces it
     const autosave = draft.later(() => {
       if (!form.isConnected) return;
-      const typed = draft.changed(draft.readValues(form), start);
-      if (Object.keys(typed).length) cardDrafts.put(c.id, typed, true); else cardDrafts.drop(c.id);
+      const typed = draft.changed(draft.readValues(form), start), base = Object.fromEntries(Object.keys(typed).map(f => [f, start[f]]));
+      if (keepOld) cardDrafts.put(c.id, { ...keepOld.fields, ...typed }, true, { ...keepOld.base, ...base });
+      else if (Object.keys(typed).length) cardDrafts.put(c.id, typed, true, base); else cardDrafts.drop(c.id);
     });
-    flushDraft = () => autosave.flush(); formId = c.id;
-    const typing = () => { form.querySelector(".draft-offer")?.remove(); autosave.run(); };   // typing over an offer: what's typed now is the draft
+    const typing = () => autosave.run();
     const older = !restored && cardDrafts.get(c.id), offered = older && draft.restorable(older.fields, start);
     if (restored) draft.fillValues(form, restored, { creatures: setCreatures });
-    else if (offered && Object.keys(offered).length) form.insertAdjacentHTML("afterbegin", draft.offerHtml(offered, older.at));
+    else if (offered && Object.keys(offered).length) { form.insertAdjacentHTML("afterbegin", draft.offerHtml(offered, older.at, Date.now(), draft.movedSince(older, start))); keepOld = older; }
     else if (older) cardDrafts.drop(c.id);                                 // the batch has it already
+    let found = cardDrafts.snap(c.id);              // the draft as the dialog found it: Cancel puts it back (only Discard, a save or a publish lose it)
+    formDraft = { flush: () => autosave.flush(), discard: () => { autosave.cancel(); cardDrafts.back(c.id, found); } };
     form.addEventListener("input", () => { update(); typing(); });
     form.addEventListener("change", () => { update(); typing(); });
     app.modal.querySelector(".lp-toggle")?.addEventListener("click", e => {
@@ -743,9 +746,9 @@ export function createEditor(app) {
     form.addEventListener("click", e => {
       const ans = e.target.closest(".draft-offer [data-draft]");
       if (ans) {
-        form.querySelector(".draft-offer").remove();
+        form.querySelector(".draft-offer").remove(); keepOld = null;
         if (ans.dataset.draft === "restore") { draft.fillValues(form, offered, { creatures: setCreatures }); form.dispatchEvent(new Event("input", { bubbles: true })); }   // as typed: the image previews follow too
-        else { cardDrafts.drop(c.id); app.toast("Unsaved edit discarded"); }
+        else { autosave.cancel(); found = null; cardDrafts.drop(c.id); autosave.run(); app.toast("Unsaved edit discarded"); }   // what was typed meanwhile stays a draft
         document.getElementById(isRule(c) ? "ef-ability" : "ef-name").focus();
         return;
       }
@@ -763,7 +766,7 @@ export function createEditor(app) {
       e.preventDefault();
       const op = readForm(c);
       if (op.error) { app.toast(op.error); return; }
-      autosave.cancel(); cardDrafts.drop(c.id); flushDraft = null;         // in the batch now
+      autosave.cancel(); cardDrafts.drop(c.id); formDraft = null;          // in the batch now
       if (opEmpty(op)) delete stage.cards[c.id]; else stage.cards[c.id] = op;
       save();
       app.toast(opEmpty(op) ? "No changes" : `Added to the batch: ${count()} unpublished`);
@@ -1282,7 +1285,7 @@ export function createEditor(app) {
       if (form?.dataset.dirty && !confirm("Discard these changes?")) return;
       if (form && !app.modal.contains(form)) { forget(form.dataset.login); form.dataset.dirty = ""; location.replace(`#/u/${encodeURIComponent(form.dataset.login)}`); return; }
       const id = app.currentCard();
-      if (form && !form.querySelector(".draft-offer")) { cardDrafts.drop(formId); flushDraft = null; }   // discarded (an offer not answered stays)
+      if (form) { formDraft?.discard(); formDraft = null; }      // what was typed goes; a draft from before the dialog stays
       if (id) app.goCard(id); else app.closeModal();
     },
     "edit-review": () => app.showDialog(reviewHtml()),
