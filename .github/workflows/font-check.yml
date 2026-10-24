@@ -12,6 +12,7 @@ on:
     branches: [main]
     paths:
       - "**/*.psd"
+      - "**/*.PSD"
       - "MDW/Fonts/**"
   workflow_dispatch:
     inputs:

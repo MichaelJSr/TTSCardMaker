@@ -298,8 +298,8 @@ jobs:
 
   # After the quiet window: Land, Follow up, Tell Discord. Only when the check found something to land or tell (report or
   # on). A push's first attempt waits in the environment card-guards-quiet (its 30-minute wait timer, the owner's
-  # setting; no runner is held); a dispatch and a re-run take no environment (the window counts from the push, so a late
-  # re-run lands at once on the blob check, as before).
+  # setting; no runner is held); a dispatch and a re-run take no environment (a re-run waits from the push and counts
+  # later pushes from now, so a late one lands at once on the blob check, as before).
   post:
     needs: check
     if: >-
