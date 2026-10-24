@@ -113,7 +113,8 @@ Retired (moved to MDW) or Deleted, with chips to filter by tag (`?tag=retired`).
 
 Top right: **Sign in** (a GitHub token, or your login and password once you set one; see Editing) becomes your login
 once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card (on a focused stat distribution: more values), `↑`/`↓` image versions,
-`d` add to deck, `c` copy link, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections, `?` help. The single-key
+`d` add to deck, `c` copy link, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections (signed in,
+with cards selected: `1`–`9` drop them on that pinned box), `?` help. The single-key
 shortcuts are off while an edit form is open (a card's edit dialog or the profile editor) and while an inline control or a
 stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog.
 
@@ -197,11 +198,16 @@ Anyone with write access to this repo can fix card data on the site: **Sign in**
 stat (the top lit cell steps it down, so 0 is reachable; above 10 and per-creature stats go through All fields), click
 the ability text to edit it in place (Ctrl/Cmd+Enter or a click elsewhere saves, Esc cancels; the card links in the text
 still work), double-click the name to rename, and click the series, subseries or author chip, or the note, to type a new
-value (series, subseries and author offer the known values; a missing one shows as a dashed `+ series` chip when you
+value (series, subseries and author list the known names as you type, in the token picker's list, with their card
+counts; picking one saves it; a missing one shows as a dashed `+ series` chip when you
 hover the row). In the cards grid, Ctrl/Cmd-click selects tiles (Shift-click a range, Esc clears; a filter change keeps
 only the tiles still shown) and dragging one or the selection onto a series, subseries or author in the filter bar (the
 values appear under the Series, Subseries and Author selects while you drag; subseries once a series is picked, its own
-ones) assigns it to every card dragged; a drop changes that one field only. To make a new series, subseries or author,
+ones) assigns it to every card dragged; a drop changes that one field only. **Pin a box** (in the toolbar, Grid view) pins
+a series, subseries or author as a big box over the grid (up to 9, kept in this browser only, never published; ✕
+unpins): drag cards onto it, or select cards and press its number or tap it (on a phone, **Select** makes a tap select a
+tile; **Done** or Esc ends it). A subseries box sets the subseries only, and only on cards in its series; the others are
+refused, and the toast says how many. To make a new series, subseries or author,
 pick **New series…** (**New subseries…**, with a series picked; **New author…**) at the end of its select and type the
 name in its place (Enter or a click elsewhere makes it, Esc or nothing typed cancels). It shows as "Name (no cards
 yet)" in the select and as a dashed value under it while you drag, and the card page's chips suggest it; the filter
@@ -214,7 +220,7 @@ its chip shows it. A new author's cards go to `[cards]` under a new `# --- credi
 `[people]` line (that maps a login; an admin can add one later). Every change lands in the batch bar at the bottom as a
 sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each with ↺ to take it back; the bar folds to one
 line when it gets long, and **Review and publish** commits the whole batch at once. **All fields** (e, also in the bar)
-opens the full form for everything else (kind, item type, stars, types, aliases, duplicate of, checks, constructed ban,
+opens the full form for everything else (kind, item type (a fixed list: the `Items/` folders), stars, types, aliases, duplicate of, checks, constructed ban,
 hidden, creatures). Signed out, none of this shows: the pages are the same to the pixel. Fields go to
 `site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to `site/Constructed Ban List.txt`. The site rebuilds
 on that commit; the bot applies the same files on `/update_stats`. A subseries (Goombella: series Mario, subseries Paper

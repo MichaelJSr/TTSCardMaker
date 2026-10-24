@@ -750,6 +750,50 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   New, Diff in place; Mini Doomer 2 -> 3 and 2 -> 1 stars, light -> fire; The Lich King boxed with its refusal; Whelp
   drawn with its refusal; The Freezer + ice under its field icon; Goombella boxed; no console errors.
 
+## 24. Editing round 3: item type, drops, the stuck "+" box, autofill, the pinned tray (2026-10-24)
+- Owner's items 3, 15, 16, 17, 18. AutoCroissant `tests/test_site_buckets.py` runs the helpers in node.
+- **Item type** (`ITEM_TYPES` in edit.js) is the `Items/` folders, lower case, as the build reads them
+  (`parts[1].lower()`): a fixed select in All fields, like Kind. An off-list value (a hand edit) still shows as an option.
+  A new item type needs its folder first, then the list (the test keeps the two equal).
+- **Drops staged nothing in Safari (item 18).** The drop targets cancelled `dragover` only. In the HTML drag model
+  (Safari, Firefox) an uncancelled `dragenter` makes `<body>` the current target, its `dragover` isn't cancelled, so no
+  `drop` fires; Chrome is lenient. Now `dragenter` runs the same handler. Also: the tile drags, not its `<img>`
+  (`draggable=false`), so the drag carries no image URL; the ids are kept in `dragged` (dataTransfer only as a fallback);
+  `body.dragging-cards` is added a frame later (a layout change inside `dragstart` cancels the drag). Checked in Chrome
+  by replaying the spec's order (`check18.mjs`), and a trusted drag still stages; not in Safari here (no WebKit tooling).
+- **`inline.dropOn(ids, {key, value, series})`** is the one staging path: a filter-bar value (`targetOf` reads its
+  list's `data-drop`/`data-series`), a pinned box (`data-k/v/s`), a tap on a box, a number key.
+- **The stuck "+" box (item 3).** Reproduced: `+ stars` swapped its chip for a slider at none, and nothing put the chip
+  back. Now that slider is `data-fresh`: focus leaving it, a click away or Esc with nothing chosen gives back `+ stars`
+  (a keyboard change still saves). The text editors closed only on `focusout`, which a tap on plain content in iOS
+  Safari never fires, and the native `<datalist>` popover (series, subseries, author) could outlive its input. A capture
+  `pointerdown` outside the open editor (not on the token list, not on the dialog's scrollbar) now saves it as a click
+  elsewhere does (unchanged: closes; the filter bar's "New …" input too); the palette has had the same rule. `cancel`
+  blurs the input before it goes. Ratings inputs are no inline editor: with none open, a click stages nothing.
+- **Name autofill (item 16).** Series, subseries and author fields (inline, the filter bar's "New …", All fields, the
+  profile's "Cards as") are `[data-suggest="series|subseries|author"]` and use tokens.js's list instead of a native
+  `<datalist>` (the other half of item 3, and the same list in every browser). The whole value is the query
+  (`suggestNames`: same name, prefix, a word's prefix, inside, then one slip; ties: the card's own series' subseries,
+  most cards, name). An empty field lists at once; a field holding a value lists once you type. Rows come from edit.js
+  `names(kind, series)` (cards in `S.all`, so staged edits count, plus the pending buckets; a subseries of another
+  series reads "Mario · 3 cards"). The subseries field's series: `data-series` (inline) or `data-series-from="ef-series"`
+  (All fields), resolved by app.js `seriesFor`. A pick fires `suggest-pick` (detail: the row): the inline editor and the
+  filter bar save at once; Esc closes only the list, typing reopens it. The list closes on a press outside it, with its
+  field (`tokens.dismiss`, called by inline.js `cancel`/`commit`), and when its field is gone. `#ef-dup_of` keeps its
+  card datalist (a card picker, not a name).
+- **The pinned tray (item 17)**, `assets/tray.js`: edit mode, Cards grid. Pins in `localStorage["edit-pins"]`
+  (`[{k, v, s?}]`, at most 9, `readPins` drops junk, repeats by `nameKey`, a subseries without its series), never
+  published. A box is a button (`data-pin/k/v/s`, "Subseries · Mario", the card count from `S.all`, so staged edits
+  count) with its ✕ beside it, not inside (no nested buttons). Drag onto it, tap it with cards selected, or press 1-9
+  (app.js keydown, after the `#edit-form` return, only with a selection; 1-6 still switch tabs with none): all three
+  call `inline.dropOn`. A subseries box stages only cards already in its series, as staged (`splitBySeries`, the rest
+  `refused` in `stageMany`'s result and the toast). `KINDS` is the registry: a new kind is one entry plus `stageMany`
+  support for its key. The pin form (Pin a box, + Pin) uses the name list; a pick pins it (a subseries row brings its
+  series; typed: the filter bar's series, else the one series that has it), Enter pins, Esc or an empty click away
+  cancels. Opening, closing and unpinning repaint the tray in place; only a drop re-renders the grid. Sticky under the
+  bar on wide screens; on phones (tall bar) it scrolls with the page, and sticks over the bar while **Select** is on
+  (a tap on a tile selects it; Done or Esc ends it).
+
 ## 25. Ratings (2026-10-24)
 - File `site/Card Ratings.json` (AutoCroissant `card_edits.CardRatings`, `dump_ratings`): `{about, cards: {"Card Name": [{date
   "YYYY-MM-DD", scale "favorability" | "power", value 1-10 (one decimal; whole as an int), by "group" | <login>, source

@@ -5,6 +5,7 @@ import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
 import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers, shareDialogHtml, personDiscord, personText } from "./profile.js";
 import * as inline from "./inline.js";
+import * as tray from "./tray.js";
 import * as tokens from "./tokens.js";
 import * as palette from "./palette.js";
 import * as details from "./details.js";
@@ -34,6 +35,7 @@ const S = {
   renderedHash: null, listHash: "#/cards", shared: null,
   selected: new Set(),                                     // tiles picked in the cards grid (edit mode: drag them onto a series or author)
   distPage: {},                                            // the Stats distributions' page per stat (this session)
+  selecting: false,                                        // the Select toggle (phones): a tap on a tile selects it
 };
 // The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
@@ -190,7 +192,11 @@ const previews = createPreviews({ S, editor, toast: m => toast(m), loadDetails: 
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;
 inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
-tokens.install({ vocab: () => S.vocab || [], icon: (t, o) => S.renderer?.icon(t, o) ?? null });   // "[" or "(" in card text: suggestions
+tray.install({ view, editor, selected: S.selected, drop: (ids, t) => inline.dropOn(ids, t), toast: m => toast(m), cards: () => S.all,   // the pinned boxes
+  filterSeries: () => parseHash(S.listHash).params.get("series") || "" });
+const seriesFor = el => (el.dataset.seriesFrom ? document.getElementById(el.dataset.seriesFrom)?.value.trim() || "" : el.dataset.series || "");   // a subseries field's series
+tokens.install({ vocab: () => S.vocab || [], icon: (t, o) => S.renderer?.icon(t, o) ?? null,   // "[" or "(" in card text: suggestions
+  names: el => editor.names(el.dataset.suggest, seriesFor(el)) });                              // a name field: the known names
 palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));   // the type palette ranks as the picker
 let selectAnchor = null;                                 // the last tile toggled: Shift-click selects from it
 function toggleSelect(id, range) {
@@ -249,7 +255,7 @@ function route() {
 }
 function renderView(r, hash) {
   S.renderedHash = hash; S.listHash = hash;
-  if (r.name !== "cards") S.selected.clear();
+  if (r.name !== "cards") { S.selected.clear(); S.selecting = false; }
   if (!(r.name === "u" && r.edit)) editor.leave();
   const tab = { compare: "cards", u: "users", decks: "deck" }[r.name] || r.name;
   $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === tab));
@@ -382,6 +388,7 @@ function renderCards(r) {
       <p><button type="button" class="ghost" data-action="clear-filters">Clear all filters</button></p>
     </aside>
     <section>
+      ${editing() && view_ === "grid" ? tray.html(S.selecting) : ""}
       <div class="toolbar">
         <span class="result-count">${list.length.toLocaleString()} card${list.length === 1 ? "" : "s"}</span>
         <button type="button" class="mobile-only" data-action="toggle-filters">Filters${active.length ? ` (${active.length})` : ""}</button>
@@ -391,6 +398,8 @@ function renderCards(r) {
         <span class="seg">${[["grid", "Grid"], ["table", "Table"]].map(([v, l]) => `<button type="button" class="${v === view_ ? "on" : ""}" data-action="set-pref" data-key="view" data-value="${v}">${l}</button>`).join("")}</span>
         ${view_ === "grid" ? `<span class="seg">${[["s", "S"], ["m", "M"], ["l", "L"]].map(([v, l]) => `<button type="button" class="${v === size ? "on" : ""}" data-action="set-pref" data-key="size" data-value="${v}" title="Tile size">${l}</button>`).join("")}</span>` : ""}
         <button type="button" class="ghost" data-action="random-from-list" title="Random result">Random</button>
+        ${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
+          <button type="button" class="ghost" data-action="select-mode" aria-pressed="${S.selecting}">${S.selecting ? "Done" : "Select"}</button>` : ""}
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}
       </div>
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v]) => `<button type="button" class="chip" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
@@ -1041,14 +1050,16 @@ const actions = {
   "dist-page": el => distPage(el.closest(".dist-panel"), +el.dataset.step),
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
+  "select-mode": () => { S.selecting = !S.selecting; if (!S.selecting) S.selected.clear(); rerender(); },
   ...editor.actions,
+  ...tray.actions,
 };
 document.addEventListener("click", e => {
   if (e.target.closest("a.details-link")) return;     // the browser follows it
   const a = e.target.closest("[data-action]");
   if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); actions[a.dataset.action]?.(a); return; }
   const open = e.target.closest("[data-open], .chart [data-card]");
-  if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
+  if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey || S.selecting) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
   const ref = e.target.closest("a.card-ref");
   if (ref) { e.preventDefault(); location.hash = `#/card/${ref.dataset.card}`; return; }
@@ -1075,7 +1086,8 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (Changes tabs: next tab; a stat distribution: more values)"], ["d", "Add to / remove from deck"],
-  ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+  ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"],
+  ...(editing() ? [["1–9", "With cards selected: drop them on that pinned box"]] : []), ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 $("#account").addEventListener("click", () => actions["edit-hub"]());
 
@@ -1098,10 +1110,11 @@ document.addEventListener("keydown", e => {
   const dist = document.activeElement?.closest?.(".dist-panel[tabindex]");
   if (dist && (e.key === "ArrowLeft" || e.key === "ArrowRight") && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); distPage(dist, e.key === "ArrowRight" ? 1 : -1); return; }
   const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline], .star-pick, .type-palette");   // the inline controls are inputs; stat rows and stars take the arrows
-  if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size) { S.selected.clear(); inline.reflect(view, S.selected); } return; }
+  if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size || S.selecting) { S.selected.clear(); if (S.selecting) { S.selecting = false; rerender(); } else inline.reflect(view, S.selected); } return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === "Enter" && ae?.dataset?.open && (modal.hidden || modal.contains(ae)) && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
   if ($("#edit-form")) return;                                                         // no single-key shortcuts while a form (card dialog, profile editor) is up
+  if (modal.hidden && editing() && S.selected.size && parseHash().name === "cards" && tray.dropKey(e.key)) { e.preventDefault(); return; }   // 1-9: onto a pinned box
   const inCard = !modal.hidden && parseHash().name === "card", id = parseHash().arg;
   if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }
   else if (e.key === "?") showKeys();
@@ -1129,7 +1142,7 @@ function fillTip(t) {
 }
 const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
 function hideTip() { tips.hide(); }
-inline.extend({ hideTip, icons: () => S.icons });           // editors hide the tooltip; the type palette's icons
+inline.extend({ hideTip, icons: () => S.icons, closePicker: tokens.dismiss });   // editors hide the tooltip and the list; the type palette's icons
 document.addEventListener("pointerover", e => tips.over(e.target));
 document.addEventListener("pointermove", e => {
   if (!tips.move()) return;
