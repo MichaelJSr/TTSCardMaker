@@ -92,7 +92,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      # card-edits.yml's install: requirements-cards.txt's wheels, cached per that file, runner and Python (the same entry).
+      # card-edits.yml's install: requirements-cards.txt's wheels, cached per that file, runner and Python (the same entry),
+      # but not pyoxipng: card_preview would recompress preview.png (~4 s), which is never published.
       - id: wheels
         uses: actions/cache/restore@v6
         with:
@@ -104,7 +105,7 @@ jobs:
           HIT: ${{ steps.wheels.outputs.cache-hit }}
         run: |
           [ "$HIT" = true ] || pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
-          sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
+          sed -e 's/ @ [^;]*//' -e '/^pyoxipng/d' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
           pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
 
       - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
