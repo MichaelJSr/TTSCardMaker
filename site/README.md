@@ -107,8 +107,9 @@ Retired (moved to MDW) or Deleted, with chips to filter by tag (`?tag=retired`).
   also has their ranks and edited fields, **Balance** (their cards' strength, buffs and nerfs on them and made to others'),
   **Ratings** (how others rate their cards), **Revisions** (who changes their cards' images, whose they change, reworks),
   **Style** (types, status effects and timing tags they use more than others, wordiness, star and kind mix) and
-  **Archived cards**; the Cards panel adds their years, series, banned cards and most referenced card. All from
-  `contributions.json` and the cards already loaded. The Cards tab has a **Banned (constructed)** flag.
+  **Archived cards**; the Cards panel adds their years, series, banned cards and most referenced card, and the Decks panel
+  what their decks hold and how often others' decks use their cards. All from `contributions.json`, `decks.json` and the
+  cards already loaded. The Cards tab has a **Banned (constructed)** flag.
 
 Top right: **Sign in** (a GitHub token, or your login and password once you set one; see Editing) becomes your login
 once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card (on a focused stat distribution: more values), `↑`/`↓` image versions,

@@ -124,7 +124,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   Client (profile.js, from cards.json and `S.mentions`/`S.mentionedBy`, no other file): `styleOf` (P6; ratio = their
   share / all cards' share, n >= 3, ratio >= 1.5, top 3), `mixOf` (P10), `careerOf` (P14), `seriesOf` (P15, ties share
   a lead), `mostReferenced` (P16, n >= 2), `ranksOf` (P18: competition ranking; strength at `power.n` >= 5, words per
-  ability at 5 abilities), memoised per cards array (`route()` renders twice). Panels after the activity chart: Balance,
+  ability at 5 abilities), memoised per cards array (`route()` renders twice); `deckStatsOf` (P20, from decks.json
+  as loaded for the page, pending decks included: their public decks' cards by kind and average stars, and how many of
+  their cards are in how many others' public decks, a duplicate as its original) as facts in the Decks panel, which
+  shows for those alone; nothing while no deck uses their cards (0 decks on 2026-10-24). Panels after the activity chart: Balance,
   Ratings, Revisions, Style, Cards (+ years, series, banned link, most referenced), Archived cards (changes.js
   `archiveTagHtml`), Decks. The strength strip's dots carry `data-card`/`data-v`/`data-l` in a `.chart`, so the chart
   tooltip and click-to-open work; on a phone it keeps 760 px and scrolls. app.js `FLAGS` gains `banned` (`c._banned`).
