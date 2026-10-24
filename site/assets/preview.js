@@ -250,7 +250,7 @@ export function renderedParts(e, v) {
   if (e.state === "baked") return { ...words("No image"), caption: `${head}${staleText}<p>The bake drew it, but no image came with the result.${runLink}</p>${outcomes}${notes}${again ? `<div class="actions">${again}</div>` : ""}` };
   if (e.state === "redundant") return { ...state, caption: `${head}${staleText}<p>Already on the card: a bake would change nothing.</p>${outcomes}${notes}` };
   if (e.state === "refused") {
-    const reason = `${head}${staleText}<p>${esc(r.reason || "The bake refused this edit.")}</p>`;
+    const reason = `${head}${staleText}<p>${esc(String(r.reason || "").replace(/\s*\([^)]*\bledger [A-Z]\d+\)/g, "") || "The bake refused this edit.")}</p>`;
     if (r.image === "refused" && v.images.length) { const s = shot("the bake's render before it refused"); return { stage: s.stage, dim: false, caption: `${reason}<p class="muted pv-note">What the bake drew before refusing it.</p>${s.tools}${outcomes}${notes}` }; }
     return { ...state, caption: `${reason}<div class="actions">${again}</div>${outcomes}${notes}` };
   }
@@ -269,13 +269,37 @@ export const tabsHtml = (mode, { news = false } = {}) => `<div class="iv-tabs" r
 /** The tab a viewer opens on: the card page Rendered while the newest preview's result is unseen, else Original; the Edit
  *  dialog Mock-up while the form changes the image (n fields), else Original. */
 export const defaultMode = ({ where, n, entry }) => (where === "card" ? (entry && DONE.includes(entry.state) && !entry.seen ? "rendered" : "original") : n ? "mockup" : "original");
+// the bake's refusals (AutoCroissant psd_edit plan_stars / plan_types) in plain words, first match; else the text without
+// its field, boxes and ledger codes
+const PLAIN_WHY = [
+  [/folder sets them/, "the card's folder sets them"],
+  [/parser reads no stars/, "this card has none"],
+  [/at least one/, "a card shows at least one"],
+  [/parser counts \d+, the Stars group draws/, "some are in the header text"],
+  [/would make \d+|no folder for|new layout would count|laid out as no row/, "there's no layout for that many"],
+  [/runs off the canvas|would touch/, "there's no room for them"],
+  [/printed as icon tokens/, "they're typed in the text: edit them in Photoshop"],
+  [/not an icon to take off/, "one can't be taken off"],
+  [/no type icon on the card to line/, "there's no icon to line a new one up with"],
+  [/no Types\/ icon|in Types\/|draws nothing/, "an icon has no picture yet"],
+  [/is no type icon/, "one isn't a type icon"],
+  [/Stars groups? draw|group named "Stars"|no star shows|in one group|are elsewhere|clipped to|cannot move|is text|vector shape|smart filters/,
+    "the card's layers aren't laid out the usual way"],
+];
+/** A refusal's reason for the caption: "the '5 Stars' folder sets them (moving the card is ledger S9)" -> "the card's
+ *  folder sets them". */
+export function plainWhy(why) {
+  const s = String(why ?? "");
+  return PLAIN_WHY.find(([re]) => re.test(s))?.[1]
+    ?? (s.replace(/\s*\([^)]*\bledger [A-Z]\d+\)/g, "").replace(/^(?:stars|types): /, "").replace(/ at \(\d+(?:, \d+)*\)/g, "").trim() || "no reason given");
+}
 /** The mock-up's caption note from draw()'s result: what went in a box, ran over, wasn't drawn or the bake would refuse. */
 export function mockNote(out) {
   const lost = Object.entries(out.fonts || {}).filter(([, f]) => !f).map(([n]) => n), cap = s => s[0].toUpperCase() + s.slice(1);
   const boxed = out.boxed || [], many = boxed.length > 1 || /s$/.test(boxed[0] || "");
   return [boxed.length ? `${cap(boxed.join(" and "))} in a box: ${many ? "their places" : "its place"} on the image ${many ? "weren't" : "wasn't"} found.` : "",
     out.over?.length ? `The ${out.over.join(" and the ")} runs past ${out.over.length > 1 ? "their" : "its"} place on the card.` : "",
-    ...(out.refused || []).map(([label, why]) => `The bake would refuse the ${label}: ${why}.`),
+    ...(out.refused || []).map(([label, why]) => `The bake would refuse the ${label}: ${plainWhy(why)}.`),
     out.skipped?.length ? `Not drawn: ${[...new Set(out.skipped)].join(", ")}.` : "", lost.length ? `Stand-in font for ${lost.join(", ")}.` : "",
     out.standIn?.length ? `Stand-in font for the ${out.standIn.join(" and the ")} (the card's isn't known).` : ""].filter(Boolean).join(" ");
 }

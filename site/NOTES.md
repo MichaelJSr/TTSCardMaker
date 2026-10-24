@@ -614,6 +614,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   - Label: a "Mock-up" ribbon on the image and the caption "Mock-up: the real image comes from the bake".
     Caption notes (`mockNote`, exported): what went in a box ("Stars in a box: their places on the image weren't
     found."), ran over, wasn't drawn, the bake would refuse ("The bake would refuse the stars: <why>."), stand-in fonts.
+    `<why>` is `plainWhy(why)` (2026-10-24): psd_edit's refusal mapped to plain words by `PLAIN_WHY` ("the card's folder
+    sets them" for "the '5 Stars' folder sets them (moving the card is ledger S9)"), else the text without its field,
+    boxes and ledger codes; a reworded refusal in psd_edit needs its pattern here too. Rendered drops ledger codes only.
 - **Rendered** (`createPreviews`): the Action's side is one adapter, `CONTRACT` (workflow, ref, branch, inputs, paths).
   - Start: `GET .../actions/workflows/card-preview.yml` (404: "isn't set up on the card repo yet"), then
     `POST .../dispatches` with `{ref: "main", inputs: {card: c.key, edit: JSON.stringify(edit), request}}`. `edit` =
