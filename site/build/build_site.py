@@ -1216,9 +1216,15 @@ def tier_of(v):
     return max(0, min(4, int((v - 0.5) // 2)))
 
 
+def rater_shown(e, people, by_login):
+    """A Card Ratings.json entry as the site shows it: a login credited by another name keeps it as login."""
+    shown = e["by"] if e["by"] == "group" else credit(e["by"], people, by_login) or e["by"]
+    return {**e, "by": shown, "login": e["by"]} if shown != e["by"] else {**e}
+
+
 def apply_ratings(cards, ratings, archived, people, by_login):
-    """Card Ratings.json onto the cards: e["ratings"] = [{date, scale, value, by, source}], oldest first; by stays "group",
-    a login becomes its credited name (credit()). A name matching an archived row goes to the card it was renamed to
+    """Card Ratings.json onto the cards: e["ratings"] = [{date, scale, value, by, source, login?}], oldest first; by stays
+    "group", a login becomes its credited name (credit()), then kept as login (the page's own re-rating). A name matching an archived row goes to the card it was renamed to
     (renamedId), else onto the row (changelog.json). -> {"entries", "cards", "archived", "unmatched": [name]}"""
     live, by_id = {}, {e["id"]: e for e in cards}
     for e in cards:
@@ -1232,8 +1238,7 @@ def apply_ratings(cards, ratings, archived, people, by_login):
         if target is None:
             counts["unmatched"].append(name)
             continue
-        target.setdefault("ratings", []).extend(
-            {**e, "by": e["by"] if e["by"] == "group" else credit(e["by"], people, by_login) or e["by"]} for e in entries)
+        target.setdefault("ratings", []).extend(rater_shown(e, people, by_login) for e in entries)
         got[id(target)] = target
         counts["entries"] += len(entries)
     for target in got.values():

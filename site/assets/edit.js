@@ -473,8 +473,9 @@ export function createEditor(app) {
       }
     }
     if (op.rate) {                                 // dashed dots until the rebuild; _rate: the form's start values (drafts.js rawOf)
-      const day = pacificDay(new Date(op._sent ? sentRecord()?.at || Date.now() : Date.now()));
-      c.ratings = [...(c.ratings || []), ...RATE.filter(k => op.rate[k] != null).map(k => ({ date: day, scale: k, value: op.rate[k], by: "you", source: "website", [op._sent ? "_sent" : "_staged"]: true }))];
+      const day = pacificDay(new Date(op._sent ? sentRecord()?.at || Date.now() : Date.now())), login = me?.login.toLowerCase();
+      const own = login && (c.ratings || []).find(e => !e._staged && !e._sent && e.by !== "group" && (e.login || e.by).toLowerCase() === login);   // rated before: one rater
+      c.ratings = [...(c.ratings || []), ...RATE.filter(k => op.rate[k] != null).map(k => ({ date: day, scale: k, value: op.rate[k], by: "you", ...(own ? { rater: own.by } : {}), source: "website", [op._sent ? "_sent" : "_staged"]: true }))];
       if (!op._sent) c._rate = Object.fromEntries(Object.entries(op.rate).map(([k, v]) => [k, String(v)]));
     }
     c[op._sent ? "_sent" : "_staged"] = true;

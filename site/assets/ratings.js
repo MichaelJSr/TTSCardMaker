@@ -15,13 +15,15 @@ let fmt = null;                                   // one formatter, made on firs
 export const dayLabel = ymd => (fmt ||= new Intl.DateTimeFormat(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" })).format(new Date(`${ymd}T12:00:00Z`));
 
 /** by -> that rater's latest entry of scale (on or before day; skip: a rater or raters left out). The list is oldest
- *  first, so a later entry of the same date replaces. "group" is one rater. */
+ *  first, so a later entry of the same date replaces. "group" is one rater; an unpublished one ("you") counts as its
+ *  rater, the signed-in person's published name (edit.js applyOp). */
 export function latestBy(list = [], scale, { day = null, skip = null } = {}) {
   const out = new Map(), no = skipSet(skip);
   for (const e of list || []) {
-    if (e.scale !== scale || (day && e.date > day) || no.has(e.by)) continue;
-    const was = out.get(e.by);
-    if (!was || e.date >= was.date) out.set(e.by, e);
+    const who = e.rater || e.by;
+    if (e.scale !== scale || (day && e.date > day) || no.has(who)) continue;
+    const was = out.get(who);
+    if (!was || e.date >= was.date) out.set(who, e);
   }
   return out;
 }

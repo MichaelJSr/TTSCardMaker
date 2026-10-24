@@ -813,7 +813,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   value's `tierOf` isn't the category the save shows (1148 of 1148 agree). 1148 entries, 399 names (Cho'Gath and Ech:
   archived, kept under their names).
 - Build (`parse_ratings`, `apply_ratings` after `read_profiles`, before `contributions`): cards.json `ratings` on the card
-  whose `key` matches, a login shown as `credit()`'s name; a name matching an archived row goes to its `renamedId` card,
+  whose `key` matches, a login shown as `credit()`'s name (then kept as `login`, `rater_shown`); a name matching an archived row goes to its `renamedId` card,
   else onto the row (changelog.json `archived[].ratings`); others warn "names match no card" (Cho'Gath and Ech until the
   history backfill tags them archived). `files.ratings`. Python twins of ratings.js: `rating_now(entries, scale, day,
   skip)` -> `{value, raters, date}` | None, `tier_of(v)`.
@@ -826,7 +826,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - Editing: `op.rate = {favorability?, power?}` on the card's op (like `op.ban`): the card page's Rate it (`rate-add`,
   `stageRating`), All fields' Ratings fieldset (`readForm`; prefilled from the staged op, `myRating`), bar lines
   "Favorability 7.5" (`rate-<scale>` items, reverted by `withoutItem`). `applyOp` adds preview entries (by "you",
-  `_staged`/`_sent`) and `c._rate` (drafts.js `rawOf`). `publish` writes `ratingsFile(text, ops, <Pacific day>, login)`:
+  `_staged`/`_sent`; `rater` = your published entries' `by`, matched on `login || by`, so `latestBy` counts you once) and `c._rate` (drafts.js `rawOf`). `publish` writes `ratingsFile(text, ops, <Pacific day>, login)`:
   your entry of that day and scale replaced, others kept; `editsFile` skips a rating-only op, so Card Edits.json is
   untouched. `RATINGS_ABOUT` = `CardRatings.ABOUT`.
 
