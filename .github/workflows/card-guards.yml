@@ -87,6 +87,7 @@ jobs:
       told: ${{ steps.comment.outputs.told }}
       land: ${{ steps.plan.outputs.land }}
       card_errors: ${{ steps.plan.outputs.card_errors }}
+      bot_sha: ${{ steps.bot.outputs.sha }}
     steps:
       # The quiet window counts from here; a re-run's from the push (the event's pushed_at), so it does not wait again.
       # OUT is set here: a job's env may not read the runner context. MODE lowercased: the job's `if` takes "On", the
@@ -140,26 +141,6 @@ jobs:
             fi
           done
 
-      # A landing dispatch would post before a waiting push run of its commit (or a later one): refused.
-      - name: No push run in its window
-        if: github.event_name == 'workflow_dispatch' && env.MODE == 'on'
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHA: ${{ inputs.sha }}
-        run: |
-          sha=$(git rev-parse --verify "${SHA:-$GITHUB_SHA}^{commit}")
-          heads=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow card-guards.yml --event push --limit 50 \
-            --json status,headSha --jq '.[] | select(.status != "completed") | .headSha')
-          for head in $heads; do
-            status=0
-            GIT_NO_LAZY_FETCH=1 git merge-base --is-ancestor "$sha" "$head" 2> /dev/null || status=$?
-            if [ "$status" != 1 ]; then
-              echo "::error::the push run of ${head:0:8} is still in its quiet window: dispatch again once it has finished, or as a dry run"
-              exit 1
-            fi
-          done
-
       # The guards and their import closure (no config.py: github_api reads it in a try/except, the token comes from the
       # environment), and the packages they install. AutoCroissant tests/test_card_guards.py runs --help on exactly this
       # list (card_guards.SPARSE_FILES).
@@ -187,6 +168,12 @@ jobs:
             /commands/repo_history.py
             /global_config.py
             /requirements-cards.txt
+
+      # The post job checks out this same commit: plan and land from one bot version.
+      - name: Bot commit
+        id: bot
+        shell: bash
+        run: echo "sha=$(git -C bot rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-python@v7
         id: python
@@ -365,10 +352,11 @@ jobs:
 
       # The guards and their import closure (no config.py: github_api reads it in a try/except, the token comes from the
       # environment), and the packages they install. AutoCroissant tests/test_card_guards.py runs --help on exactly this
-      # list (card_guards.SPARSE_FILES).
+      # list (card_guards.SPARSE_FILES). The check job's commit: main may have moved during the wait.
       - uses: actions/checkout@v7
         with:
           repository: bobberlington/AutoCroissant
+          ref: ${{ needs.check.outputs.bot_sha }}
           path: bot
           sparse-checkout-cone-mode: false
           sparse-checkout: |
