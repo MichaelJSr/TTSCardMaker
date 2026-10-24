@@ -419,25 +419,44 @@ function renderCards(r) {
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}"></div>`}
     </section></div>`;
   const grid = list.length && view_ !== "table" && $(".browse .grid", view);
-  if (grid) fillGrid(grid, list, { css: { s: 160, m: 200, l: 270 }[size] || 200 });
+  if (grid) fillGrid(grid, list, { css: { s: 160, m: 200, l: 270 }[size] || 200, win });
   else if (list.length && view_ === "table") fillTable($(".browse table.data tbody", view));
   if (editing()) inline.mountGrid(view, p);
   if (editing()) previews.mountTiles(view);
 }
 // the grid's tiles by card id {html, el, ed}: a render reuses a tile whose markup (and edit mode) is unchanged instead of
 // parsing it again, so its picture stays loaded. Code that changes a tile in place drops it (refresh); the edit-mode marks
-// (draggable, data-selected, preview badges) are set again after every render.
+// (draggable, data-selected, preview badges) are set again after every render. The tiles that cover the window go in now,
+// the rest in later tasks (a newer render stops them), with the edit-mode marks.
 const gridTiles = new Map();
-function fillGrid(grid, list, { css }) {
-  const ed = editing(), html = list.map((c, i) => tileHtml(c, { eager: i < 8, css })), els = new Array(list.length), miss = [];
-  for (let i = 0; i < list.length; i++) { const t = gridTiles.get(list[i].id); if (t && t.html === html[i] && t.ed === ed) els[i] = t.el; else miss.push(i); }
-  if (miss.length) {
-    const tpl = document.createElement("template");
-    tpl.innerHTML = miss.map(i => html[i]).join("");
-    const fresh = [...tpl.content.children];
-    miss.forEach((i, k) => { els[i] = fresh[k]; gridTiles.set(list[i].id, { html: html[i], el: fresh[k], ed }); });
-  }
-  grid.append(...els);
+const GRID_FIRST = 96, GRID_CHUNK = 120;
+let gridJob = 0;
+function fillGrid(grid, list, { css, win }) {
+  const ed = editing(), job = ++gridJob;
+  const put = (from, to, mark = false) => {
+    const html = list.slice(from, to).map((c, i) => tileHtml(c, { eager: from + i < 8, css })), els = new Array(html.length), miss = [];
+    for (let i = 0; i < html.length; i++) { const t = gridTiles.get(list[from + i].id); if (t && t.html === html[i] && t.ed === ed) els[i] = t.el; else miss.push(i); }
+    if (miss.length) {
+      const tpl = document.createElement("template");
+      tpl.innerHTML = miss.map(i => html[i]).join("");
+      const fresh = [...tpl.content.children];
+      miss.forEach((i, k) => { els[i] = fresh[k]; gridTiles.set(list[from + i].id, { html: html[i], el: fresh[k], ed }); });
+    }
+    if (!mark) { grid.append(...els); return; }
+    const frag = document.createDocumentFragment();     // edit mode: the marks mountGrid and mountTiles gave the first ones
+    frag.append(...els); inline.markTiles(frag, S.selected); previews.mountTiles(frag); grid.append(frag);
+  };
+  // tiles are 200 px tall or more and 144 px wide or more (with the gap): enough to keep the scroll position
+  const first = win.all ? list.length : Math.max(GRID_FIRST, (Math.floor(win.w / 144) + 1) * Math.ceil((win.y + 2 * win.h) / 200));
+  if (list.length <= first) { put(0, list.length); return; }
+  put(0, first);
+  let k = first;
+  const step = () => {
+    if (job !== gridJob || !grid.isConnected) return;
+    put(k, k += GRID_CHUNK, ed);
+    if (k < list.length) setTimeout(step);
+  };
+  setTimeout(step);
 }
 function tableHtml(list, p, win) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
