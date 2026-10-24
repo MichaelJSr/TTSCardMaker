@@ -239,7 +239,7 @@ function show(el, o, found, typed) {
   const same = field === el && open?.start === o.start && shown();
   if (field && field !== el) close();
   field = el; open = o; items = found;
-  active = typed || !same ? 0 : Math.min(active, items.length - 1);
+  active = o.type === "name" && !o.text ? -1 : typed || !same ? 0 : Math.min(active, items.length - 1);   // an empty name: no row until an arrow
   const host = el.closest('[role="dialog"]') || document.body;   // inside an aria-modal dialog, or readers skip it
   if (list.parentNode !== host) host.append(list, status);
   list.innerHTML = items.map(rowHtml).join("");
@@ -248,7 +248,7 @@ function show(el, o, found, typed) {
   list.classList.toggle("names", o.type === "name");
   el.setAttribute("aria-expanded", "true");
   el.setAttribute("aria-controls", list.id);
-  setActive(active);
+  if (active < 0) { el.removeAttribute("aria-activedescendant"); list.scrollTop = 0; } else setActive(active);
   status.textContent = `${items.length} suggestion${items.length === 1 ? "" : "s"}`;
   place();
 }
@@ -299,9 +299,9 @@ const stop = e => { e.preventDefault(); e.stopImmediatePropagation(); };
 function onKey(e) {                              // capture: before inline.js and app.js (Esc there cancels the edit)
   if (!shown() || e.target !== field || e.isComposing || e.keyCode === 229) return;   // 229: an IME's key (Safari's commit)
   const plainKey = !e.altKey && !e.ctrlKey && !e.metaKey;
-  if ((e.key === "ArrowDown" || e.key === "ArrowUp") && plainKey) { stop(e); setActive(active + (e.key === "ArrowDown" ? 1 : -1)); }
+  if ((e.key === "ArrowDown" || e.key === "ArrowUp") && plainKey) { stop(e); setActive(active < 0 && e.key === "ArrowDown" ? 0 : active + (e.key === "ArrowDown" ? 1 : -1)); }
   else if ((e.key === "PageDown" || e.key === "PageUp") && plainKey) { stop(e); setActive(Math.max(0, Math.min(items.length - 1, active + (e.key === "PageDown" ? ROWS : -ROWS)))); }
-  else if ((e.key === "Enter" || e.key === "Tab") && plainKey && !e.shiftKey) { stop(e); accept(active); }
+  else if ((e.key === "Enter" || e.key === "Tab") && plainKey && !e.shiftKey) { if (active < 0) { close(); return; } stop(e); accept(active); }   // no row: the key goes on
   else if (e.key === "Escape") { stop(e); dismissed = { el: field, start: open.start }; close(); }   // only the picker
 }
 

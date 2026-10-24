@@ -774,7 +774,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   profile's "Cards as") are `[data-suggest="series|subseries|author"]` and use tokens.js's list instead of a native
   `<datalist>` (the other half of item 3, and the same list in every browser). The whole value is the query
   (`suggestNames`: same name, prefix, a word's prefix, inside, then one slip; ties: the card's own series' subseries,
-  most cards, name). An empty field lists at once; a field holding a value lists once you type. Rows come from edit.js
+  most cards, name). An empty field lists at once with no row chosen (Enter and Tab go on to the field, so tabbing
+  through never fills it; ↓ or ↑ chooses one); a field holding a value lists once you type, its first row chosen. Rows come from edit.js
   `names(kind, series)` (cards in `S.all`, so staged edits count, plus the pending buckets; a subseries of another
   series reads "Mario · 3 cards"). The subseries field's series: `data-series` (inline) or `data-series-from="ef-series"`
   (All fields), resolved by app.js `seriesFor`. A pick fires `suggest-pick` (detail: the row): the inline editor and the
