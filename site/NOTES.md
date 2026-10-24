@@ -646,7 +646,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     no viewer.
   - Result: `readResult` keeps state, transient, reason, notes (20, 500 characters), fields, changes, base, image,
     files (`preview.webp` / `preview.png` names only) and the run (a github.com link only); anything else is a transient
-    error. Baked: the preview (preview.webp, 720 px) in the image's place, a link to full size (preview.png when `files` lists one: since work/card-preview 7646a3cc it never does, so the WebP), Diff
+    error. Baked: the preview (preview.webp, 720 px) in the image's place, a link to full size (preview.png when `files` lists one: since work/card-preview a1274af7 it never does, so the WebP), Diff
     swapping in the red differences (`diffPixels` against a hidden current 720 px thumb: changed pixels red over the
     dimmed current, with the share in the caption); `renderedParts(e, v)` -> `{stage, caption, dim}`, `renderedHtml` =
     stage + caption; each field's outcome ("HP baked · Stars
@@ -684,9 +684,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   published page shows it until the bake); at 1000 px and below the pane is the bar at the top and this panel stays in
   the form. Restore in the form's draft offer now fires the form's `input` event, so this panel redraws as for a key
   (it kept the old values until the next one). Inline stars, types and text stage PSD fields, so the card page's panel
-  comes as soon as one is staged. The server contract as of work/card-preview 7646a3cc: only the WebP is published (no
+  comes as soon as one is staged. The server contract as of work/card-preview a1274af7: only the WebP is published (no
   Full size link then), and a previewed edit is public, so the panel says "Anyone can see a previewed edit, as with a
-  published one" before the first press. Fonts renamed on main (b03b9975) still map: 130 of 137 PSD fonts. Checks:
+  published one" before the first press. Fonts renamed on main (92b5ae6b) still map: 130 of 137 PSD fonts. Checks:
   scratch `~/Documents/Tools/wt/scratch/site-round-2/integ.mjs` 34/34 in headless Chrome (every feature of sections
   19 and 20 and where they meet; screenshots `round2-*.png`); `trial.mjs` 15/15 on a trial merge with work/token-picker
   8d605085 and the palette switch line (the picker in the dialog and the inline editor with drafts, the live pane and
