@@ -2041,7 +2041,7 @@ def stamp_groups(fields, meta):
     return out
 
 
-def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
+def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields_by=None):
     """
     The database edits, newest first: each commit since `since` that changed a Card Edits.json entry or a Card
     Authors.txt line (a website publish batch, a Discord edit, a commit by hand). The bot's bakes (they write verdicts
@@ -2054,6 +2054,8 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
         {"available": bool, "batches": [{sha?, at, via: website|discord|git, by: [credited name | discord:<name>], subject?, stamped?,
           cards: [{key, name, id?, fields: {field: [old, new]}}], authors: [{key, name, id?, from, to}],
           people: [[git name, from, to]], more?: lines past BATCH_LINES}]}
+    fields_by: filled with {credited name: {field: lines}} over every line (BATCH_LINES doesn't cut it; a Card Authors.txt
+    line is "author"); Discord names and the bot left out.
     """
     def card(key, name):
         row = {"key": name or key, "name": name_of(name or key)}       # name: as written, when the site lacks the card
@@ -2069,6 +2071,15 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
             return "discord:" + by[8:] if is_discord(by) else "discord:" + by
         return credit(by, people, by_login) or by
 
+    def tally(names, fields):
+        if fields_by is None:
+            return
+        for name in names:
+            if name and not is_discord(name) and name.lower() != BOT_AUTHOR.lower():
+                mine = fields_by.setdefault(name, {})
+                for f in fields:
+                    mine[f] = mine.get(f, 0) + 1
+
     if commits is None:
         groups = {}
         for key, (fields, meta) in edits.items():
@@ -2082,6 +2093,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
                 continue
             if ts < since:
                 continue
+            tally([shown(by)], [f for fields in rows.values() for f in fields])
             out.append({"at": ts, "via": "discord" if is_discord(by) else "website", "by": [shown(by)], "stamped": True,
                         "cards": [{**card(k, None), "fields": {f: [None, v] for f, v in sorted(fields.items())}} for k, fields in sorted(rows.items())],
                         "authors": [], "people": []})
@@ -2115,6 +2127,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
         stamps = sorted({shown(by) for _, _, _, by in cards if by and str(by).lower() != BOT_AUTHOR.lower()}, key=str.lower)
         named = {shown(e, discord) for e in editors}   # in a Discord commit every Edit-by is a Discord name
         by = stamps or sorted(named, key=str.lower) or [who(name, email, people, by_login)]
+        tally(by, [f for _, _, fields, _ in cards for f in fields] + ["author"] * len(authors))
         row = {"sha": sha, "at": ts, "subject": subject, "by": by,
                "via": "discord" if discord else "website" if subject.startswith(WEBSITE_SUBJECT) else "git",
                "cards": [{**card(key, written), "fields": fields} for key, written, fields, _ in cards[:BATCH_LINES]],
@@ -2128,6 +2141,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
 
 ARCHIVE_TAGS = ("renamed", "retired", "deleted")   # changes.js ARCHIVE_TAGS
 ARCHIVED_SLIM = ("card", "title", "tag", "card_type", "stars", "series", "at", "created", "author")   # analytics.json archived (Stats)
+ARCHIVED_PERSON = ("card", "title", "tag", "renamed_to", "renamedId", "moved_to", "at", "created")       # contributions.json people[].archived
 
 
 def archive_tag(tag):
@@ -2172,6 +2186,8 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None):
 TITLES = (("cards", "Top card maker"), ("edits", "Top editor"), ("commits", "Top committer"))   # top count per column; ties share; same list in profile.js
 OVERALL = "Top contributor"                   # the top total of the three columns; profile.js OVERALL
 RECENT_COMMITS = 10
+MIN_RATERS = 5                                # P7/P8: the fewest cards a correlation is shown for (P5: 3 of their own)
+RECENT_BAL = 5                                # P1: the newest buffs and nerfs kept per person
 PAGE_KEY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,60}$")       # a name that can be a u/<key>/ folder
 
 
@@ -2197,9 +2213,9 @@ def is_card_file(path):
         and not any(p in SKIP_PARTS or p in RULE_PARTS for p in path.split("/"))
 
 
-def contributions(cards, people, profiles, edits, commits):
+def contributions(cards, people, profiles, edits, commits, balance=None, revisions=None, archived=(), fields_by=None):
     """{"available", "since", "people": [{key, logins, github?, cards, edits, commits, first, last, recent, recentEdits,
-    months}]} by cards, then commits.
+    months, + person_extras' keys}], "site"?: {z}} by cards, then commits.
     cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
     (a hand commit counts, a pure move doesn't), or without history the file's distinct _by/_at stamps (a floor: it keeps
     one batch per card; a `_bot` field counts only for its `_credit` editor). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
@@ -2210,7 +2226,8 @@ def contributions(cards, people, profiles, edits, commits):
     one row.
     github: a GitHub login known to be theirs (their profile's, else the most used of the logins in their noreply commit
     emails, _by stamps and Edit-by trailers), never a git name. recent / recentEdits: the last card commits [ts, subject,
-    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" Pacific, cards created (created, else fs), edits, commits]]."""
+    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" Pacific, cards created (created, else fs), edits, commits]].
+    balance: analytics.json; revisions: card_revisions(); archived: archived_cards(); fields_by: edit_batches' (person_extras)."""
     by_login = {p["login"].lower(): p for p in profiles}
     rec, seen_logins, spelled = {}, {}, {}
     noreply = {}                                  # a noreply email's login -> {credited name: commits}
@@ -2323,7 +2340,180 @@ def contributions(cards, people, profiles, edits, commits):
         r["months"] = [[k, *v] for k, v in sorted(r["months"].items())]
         out.append(r)
     out.sort(key=lambda r: (-r["cards"], -r["commits"], -r["edits"], r["key"].lower()))
-    return {"available": commits is not None, "since": min((r["first"] for r in out if r["first"]), default=0), "people": out}
+    res = {"available": commits is not None, "since": min((r["first"] for r in out if r["first"]), default=0), "people": out}
+    zs = [v["z_total"] for v in (balance or {}).get("cards", {}).values() if "z_total" in v]
+    if zs:
+        res["site"] = {"z": round(sum(zs) / len(zs), 2)}
+    person_extras(out, cards, commits, people, by_login, balance or {}, revisions, archived or (), fields_by or {})
+    return res
+
+
+# ---- person stats (contributions.json people[]: the person page's Balance, Ratings, Revisions, Archived cards) ---------
+def psd_commits_at(commits, people, by_login):
+    """{committer time: [(credited names, {alnum PSD file names})]} of the commits that added or changed a PSD."""
+    out = {}
+    for row in commits or ():
+        names = {alnum(os.path.splitext(os.path.basename(p))[0]) for s, _, _, p in row[5] if s != "D" and p.lower().endswith(".psd")}
+        if names:
+            out.setdefault(row[1], []).append((commit_keys(row, people, by_login), names))
+    return out
+
+
+def change_by(at_ts, card, row):
+    """Who made an analytics change row (at_ts: psd_commits_at): the one commit at its second; with more, the one that
+    touched a PSD of the card's file name. [] when it's still not one."""
+    got = at_ts.get(row.get("ts"), [])
+    if len(got) > 1:
+        name = alnum(os.path.splitext(os.path.basename(card.get("psd") or ""))[0])
+        got = [g for g in got if name in g[1]]
+    return got[0][0] if len(got) == 1 else []
+
+
+def pearson(xs, ys):
+    """Their correlation (2 dp), or None under MIN_RATERS pairs or with no spread."""
+    n = len(xs)
+    if n < MIN_RATERS:
+        return None
+    mx, my = sum(xs) / n, sum(ys) / n
+    sx, sy = sum((x - mx) ** 2 for x in xs) ** 0.5, sum((y - my) ** 2 for y in ys) ** 0.5
+    return round(sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / (sx * sy), 2) if sx and sy else None
+
+
+def signed1(v):
+    """rating_number() for a difference: one decimal, either sign."""
+    return -rating_number(-v) if v < 0 else rating_number(v)
+
+
+def latest_of(entries, scale):
+    """{by: value}: each rater's latest entry of scale (oldest first, a later one replaces)."""
+    out = {}
+    for e in entries or ():
+        if e.get("scale") == scale:
+            out[e["by"]] = e["value"]
+    return out
+
+
+def person_extras(rows, cards, commits, people, by_login, balance, revisions, archived, fields_by):
+    """Adds to each contributions row (key K; own cards: credited to K, not duplicates, not hidden) what it has of:
+    power (P2) {n, z, top, bottom, dots [[id, z, top|bottom?]]}; bal (P1) {buff, nerf, shift, madeBuff, madeNerf, swing? [id, delta, ts],
+    recent [[id, buff|nerf, delta, ts]]}; revisions (P3, P12, P13) {self, others, top, theirs, most?, untouched, oldest?};
+    rework (P11) {n, of, most?}; ratings (P4) {fav?, favN, power?, powerN, best, worst}; selfBias (P5), rater (P7),
+    powerVsStats (P8): per-person ratings only; editFields (P21) [[field, n]]; archived (P17). NOTES.md §8."""
+    A = balance.get("cards", {})
+    vis = [c for c in cards if c.get("author") and not c.get("dup") and not c.get("hidden")]
+    own = defaultdict(list)
+    for c in vis:
+        own[c["author"]].append(c)
+    at_ts = psd_commits_at(commits, people, by_login)
+    made = defaultdict(Counter)                   # K -> buffs and nerfs they made to others' cards
+    for c in vis:
+        for r in A.get(c["id"], {}).get("changes", ()):
+            if r.get("bal") in ("buff", "nerf"):
+                for k in change_by(at_ts, c, r):
+                    if k != c["author"]:
+                        made[k][r["bal"]] += 1
+    theirs = defaultdict(Counter)                 # K -> {author: their revisions of the author's cards}
+    for c in vis:
+        for k, n in (revisions or {}).get(c["id"], {}).items():
+            if k != c["author"]:
+                theirs[k][c["author"]] += n
+    fav = {c["id"]: latest_of(c.get("ratings"), "favorability") for c in vis}
+    pw = {c["id"]: latest_of(c.get("ratings"), "power") for c in vis}
+    raters = {by for m in fav.values() for by in m if by != "group"}
+    web = Counter(e["by"] for c in [*cards, *archived] for e in c.get("ratings") or () if e.get("source") == "website")
+    top = lambda counts: [[k, n] for k, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0].lower()))[:3]]
+    for r in rows:
+        K, mine = r["key"], own.get(r["key"], [])
+        dots = sorted(([c["id"], A[c["id"]]["z_total"], *A[c["id"]].get("flags", ())[:1]] for c in mine if "z_total" in A.get(c["id"], {})),
+                      key=lambda d: (d[1], d[0]))
+        if dots:
+            flags = Counter(f for c in mine for f in A.get(c["id"], {}).get("flags", ()))
+            r["power"] = {"n": len(dots), "z": round(sum(d[1] for d in dots) / len(dots), 2), "top": flags["top"], "bottom": flags["bottom"], "dots": dots}
+        bal = {"buff": 0, "nerf": 0, "shift": 0, "madeBuff": made[K]["buff"], "madeNerf": made[K]["nerf"], "recent": []}
+        moves = []
+        for c in mine:
+            for row in A.get(c["id"], {}).get("changes", ()):
+                if row.get("bal") in bal:
+                    bal[row["bal"]] += 1
+                    if row["bal"] != "shift":
+                        old, new = row["stats"]
+                        moves.append([c["id"], row["bal"], sum(new) - sum(old), row["ts"]])
+        if moves:
+            swing = max(moves, key=lambda m: (abs(m[2]), m[3]))
+            bal["swing"] = [swing[0], swing[2], swing[3]]
+            bal["recent"] = sorted(moves, key=lambda m: -m[3])[:RECENT_BAL]
+        if dots or any(bal[k] for k in ("buff", "nerf", "shift", "madeBuff", "madeNerf")):
+            r["bal"] = bal
+        if revisions is not None:
+            n = {c["id"]: sum(revisions.get(c["id"], {}).values()) for c in mine}
+            by = Counter()
+            for c in mine:
+                by.update(revisions.get(c["id"], {}))
+            rev = {"self": by.pop(K, 0), "others": sum(by.values()), "top": top(by), "theirs": top(theirs[K]),
+                   "untouched": sum(1 for c in mine if not n[c["id"]])}
+            most = min(mine, key=lambda c: (-n[c["id"]], c["name"].lower()), default=None)
+            if most and n[most["id"]] >= 2:
+                rev["most"] = [most["id"], n[most["id"]]]
+            still = [c for c in mine if not n[c["id"]] and created_ts(c)]
+            if still:
+                rev["oldest"] = min(still, key=lambda c: (created_ts(c), c["name"].lower()))["id"]
+            if mine or rev["theirs"]:
+                r["revisions"] = rev
+        reworks = {c["id"]: (sum(1 for row in A.get(c["id"], {}).get("changes", ()) if analytics.reworked(row)), c["name"].lower()) for c in mine}
+        hit = [i for i, (k, _) in reworks.items() if k]
+        if hit:
+            r["rework"] = {"n": len(hit), "of": len(mine)}
+            most = min(hit, key=lambda i: (-reworks[i][0], reworks[i][1]))
+            if reworks[most][0] >= 2:
+                r["rework"]["most"] = [most, reworks[most][0]]
+        others = lambda c, scale: rating_now(c.get("ratings"), scale, skip=K)      # everyone's but K's
+        fv, pv = ([(c["id"], v["value"]) for c in mine for v in [others(c, scale)] if v] for scale in ("favorability", "power"))
+        if fv or pv:
+            rat = {"favN": len(fv), "powerN": len(pv)}
+            for short, vals in (("fav", fv), ("power", pv)):
+                if vals:
+                    rat[short] = rating_number(sum(v for _, v in vals) / len(vals))
+            if len(fv) >= 2:                      # best takes up to half, worst the rest: never the same card
+                order = sorted(fv, key=lambda x: (-x[1], x[0]))
+                k = min(3, (len(fv) + 1) // 2)
+                rat["best"] = [list(x) for x in order[:k]]
+                rat["worst"] = [list(x) for x in order[k:][::-1][:3]]
+            r["ratings"] = rat
+        if K in raters:
+            bias = {}
+            for scale, short, count, latest in (("favorability", "fav", "n", fav), ("power", "power", "powerN", pw)):
+                d = [latest[c["id"]][K] - v["value"] for c in mine if K in latest[c["id"]] for v in [others(c, scale)] if v]
+                if len(d) >= 3:
+                    bias[short], bias[count] = signed1(sum(d) / len(d)), len(d)
+            if bias:
+                r["selfBias"] = bias
+            pairs = [(fav[c["id"]][K], v["value"]) for c in vis if K in fav[c["id"]] for v in [others(c, "favorability")] if v]
+            if len(pairs) >= MIN_RATERS:
+                rater = {"n": len(pairs), "harsh": signed1(sum(a - b for a, b in pairs) / len(pairs))}
+                agree = pearson([a for a, _ in pairs], [b for _, b in pairs])
+                if agree is not None:
+                    rater["agree"] = agree
+                twin = None
+                for other in sorted(raters - {K}, key=str.lower):
+                    shared = [(m[K], m[other]) for m in fav.values() if K in m and other in m]
+                    rr = pearson([a for a, _ in shared], [b for _, b in shared])
+                    if rr is not None and (twin is None or rr > twin[1]):
+                        twin = [other, rr]
+                if twin:
+                    rater["twin"] = twin
+                r["rater"] = rater
+            pz = [(pw[c["id"]][K], A[c["id"]]["z_total"]) for c in vis if K in pw[c["id"]] and "z_total" in A.get(c["id"], {})]
+            rr = pearson([a for a, _ in pz], [b for _, b in pz])
+            if rr is not None:
+                r["powerVsStats"] = {"r": rr, "n": len(pz)}
+        fields = Counter(fields_by.get(K, {}))
+        if web[K]:
+            fields["rating"] += web[K]
+        if fields:
+            r["editFields"] = [[f, n] for f, n in sorted(fields.items(), key=lambda kv: (-kv[1], kv[0]))]
+        gone = [{k: a[k] for k in ARCHIVED_PERSON if k in a} for a in archived if a.get("author") == K]
+        if gone:
+            r["archived"] = gone
 
 
 def titles_of(rows):
@@ -2765,12 +2955,15 @@ def main():
     events, manifest = read_changelog(data_dir) if data_dir else (None, None)
     if data_dir and events is None:
         warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
+    fields_by = {}                                # the person pages' edits by field: all time
     try:
-        batches = edit_batches(edit_history(), people, by_login, edits, id_of, name_of, since)
+        every = edit_batches(edit_history(), people, by_login, edits, id_of, name_of, 0, fields_by=fields_by)
+        batches = {**every, "batches": [b for b in every["batches"] if b["at"] >= since]}
     except Exception as e:                        # never a failed build
         warn(f"no edit batches: {type(e).__name__}: {e}")
         batches = {"available": False, "batches": []}
-    contrib = contributions(cards, people, profiles, edits, commits)
+        fields_by.clear()
+    contrib = contributions(cards, people, profiles, edits, commits, balance=balance, revisions=revs, archived=archived, fields_by=fields_by)
     titles = titles_of(contrib["people"])
     person_of = {login.lower(): r for r in contrib["people"] for login in r["logins"]}        # a profile's login -> its contributions
     previews = {}                                 # u/<name>/ -> its link-preview text, for the share dialog too
