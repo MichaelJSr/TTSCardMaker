@@ -196,7 +196,10 @@ function distPanel({ k, l, counts, pages, yMax, cur }) {
 
 // ---- cards-only charts after the average stats: stat shapes, cooldowns, ability length, item types ----------------
 const COOLDOWN = /^(?:(?:-1|\d|X)\/)?(\d)(G?)CD$/;          // the recurring number: (1CD) 1, (0/2CD) 2; (XCD) none
-const CD_COLS = [["1CD", "CD", 1], ["2CD", "CD", 2], ["3CD", "CD", 3], ["1GCD", "GCD", 1], ["2GCD", "GCD", 2]];   // 3CD: 3+, 2GCD: 2+
+const USES = /^(\d)U$/;                                       // (2U) 2
+const CD_COLS = [["1CD", "CD", 1], ["2CD", "CD", 2], ["3CD", "CD", 3], ["1GCD", "GCD", 1], ["2GCD", "GCD", 2],
+  ["1U", "U", 1], ["2U", "U", 2], ["3U", "U", 3]];          // 3CD: 3+, 2GCD: 2+, 3U: 3+
+const CD_PLUS = new Set([2, 4, 7]);
 const WORD_KINDS = [["Creatures", ["creature", "creatures"]], ["Minions", ["minion"]], ["Items", ["item"]], ["Auxiliary items", ["aux item"]],
   ["Field cards", ["field"]], ["Debuffs", ["debuff"]], ["N.M.E. items", ["nme"]]];
 const median = v => { const s = [...v].sort((a, b) => a - b), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
@@ -215,24 +218,25 @@ function cardCharts(pool, creatures) {
   const shapeRows = [...shapes].map(([label, value]) => ({ label, value }));
   if (shapeRows.some(r => r.value)) out.push(card("shapes", "Stat shapes", "Creatures and minions by their highest stat.", hbar(shapeRows, { labelWidth: 80 }),
     table(["Highest stat", "Cards"], shapeRows.map(r => [r.label, r.value]))));
-  // S15 cooldowns by star level: each ability's cooldown tag, by its recurring number
+  // S15 cooldowns and uses by star level: each ability's cooldown or uses tag, by its number
   const cd = new Map();
   for (const c of pool) {
     if (!c.stars || !c.ability) continue;
     for (const m of c.ability.matchAll(new RegExp(TAG.source, "g"))) {
-      const t = COOLDOWN.exec(tagInfo(m[1])?.tag || "");
-      if (!t) continue;
-      const n = +t[1], col = t[2] ? (n >= 2 ? 4 : 3) : Math.min(n, 3) - 1;
-      const row = cd.get(c.stars) || cd.set(c.stars, { n: [0, 0, 0, 0, 0], sum: 0, k: 0 }).get(c.stars);
-      row.n[col]++; row.sum += n; row.k++;
+      const tag = tagInfo(m[1])?.tag || "", t = COOLDOWN.exec(tag), u = !t && USES.exec(tag);
+      if (!t && !(u && +u[1])) continue;
+      const n = +(t || u)[1], col = u ? 4 + Math.min(n, 3) : t[2] ? (n >= 2 ? 4 : 3) : Math.min(n, 3) - 1;
+      const row = cd.get(c.stars) || cd.set(c.stars, { n: CD_COLS.map(() => 0), sum: 0, k: 0 }).get(c.stars);
+      row.n[col]++;
+      if (t) { row.sum += n; row.k++; }
     }
   }
   if (cd.size) {
-    const stars = [...cd.keys()].sort((a, b) => a - b), plus = i => (i === 2 || i === 4 ? "+" : "");
+    const stars = [...cd.keys()].sort((a, b) => a - b), plus = i => (CD_PLUS.has(i) ? "+" : ""), avg = r => (r.k ? r.sum / r.k : null);
     const head = ["Stars", ...CD_COLS.map(([tag], i) => ({ html: `${badgeHtml(tag)}${plus(i)}` })), "Avg turns"];
-    out.push(card("cooldowns", "Cooldowns by star level", "Abilities per cooldown, by star level.",
-      heatTable(head, stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n.map(v => v || ""), String(fmt(r.sum / r.k))]; }), { shade: [1, 2, 3, 4, 5], all: true }),
-      table(["Stars", ...CD_COLS.map(([tag], i) => `(${tag})${plus(i)}`), "Avg turns"], stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n, r.sum / r.k]; }))));
+    out.push(card("cooldowns", "Cooldowns and uses by star level", "Abilities per cooldown or uses, by star level.",
+      heatTable(head, stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n.map(v => v || ""), r.k ? String(fmt(avg(r))) : null]; }), { shade: CD_COLS.map((_, i) => i + 1), all: true }),
+      table(["Stars", ...CD_COLS.map(([tag], i) => `(${tag})${plus(i)}`), "Avg turns"], stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n, avg(r)]; }))));
   }
   // S16 ability length: median words (timing tags left out) per star level and kind; under 3 cards: —
   const words = new Map();

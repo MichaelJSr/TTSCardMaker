@@ -841,7 +841,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `fmt` uses one cached `Intl.NumberFormat`.
 - Top part, cards only (`cardCharts`, after Average stats by star level): `shapes` (creatures and minions by their
   single highest stat, ties "Tied"), `cooldowns` (each ability's cooldown tag by its recurring number, CD 1/2/3+ and GCD
-  1/2+ per star level, average turns; shading per column or table, never "darker", which flips with the theme), `words` (median words per ability, timing tags left out, per star level and
+  1/2+, and its uses tag, U 1/2/3+ (S15's nU, review 2026-10-24), per star level; average turns of the cooldowns; shading per column or table, never "darker", which flips with the theme), `words` (median words per ability, timing tags left out, per star level and
   kind; under 3 cards "—"), `itemtypes` (item type x stars). stats.js now exports `heatTable(head, rows, {numericFrom,
   shade, all})`, `heatScale`, `scatter` (options `xTickLabel`, `x0`, `x1`, `y0`, `y1`, `yTicks`, a point's `v`),
   `stacked` (`tip(cat)`), and `chartCard`'s `startTable` (opens on the table, the button reads Chart). Jump links

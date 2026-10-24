@@ -72,7 +72,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   private ones as locked links. Format in `site/decks/README.md`; see Decks below.
 - **Stats**: counts by kind, series, subseries, type, timing tag, status effect, author and month; how many legal cards there are
   for each star level of the starting hand; average stats per star level; stat shapes (each creature's highest stat),
-  cooldowns by star level, ability length by star level and kind, items by type and stars; stat distributions (0-10, with
+  cooldowns and uses by star level, ability length by star level and kind, items by type and stars; stat distributions (0-10, with
   `‹ ›` or `←`/`→` on a stat that goes higher); and a total-stats-vs-stars chart that highlights possible balance
   outliers. Every chart has a table view; jump links go to Balance, Ratings and History.
   **Balance**: the total stats of each star level of creatures and minions (the middle 80%, the median, the lowest and
