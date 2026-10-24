@@ -1,30 +1,30 @@
 {
  "builder": {
-  "commit": "fa6e7084227527c4d1ffb94179e8baedbc3cfe3c",
+  "commit": "8cbb211a2b305b02bb776046581d0fd09c841f3c",
   "parser_version": 2,
   "psd_tools": "1.25.0",
   "python": "3.14",
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-10-23T21:21:00Z",
- "card_commit": "2921ecbd372ee3ac009ff3667dabe1ac5edc961f",
- "card_commit_at": 1792788751.0,
+ "built_at": "2026-10-24T04:25:00Z",
+ "card_commit": "d3ef9d6156ee1e6d370e2e2e41e14443c0828ef3",
+ "card_commit_at": 1792814969.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 2,
   "baked": 0,
   "cards": 820,
-  "changed": 53,
+  "changed": 1,
   "details": 813,
   "failed": 0,
   "new": 0,
-  "versions": 462
+  "versions": 463
  },
  "files": {
-  "old_stats.json": "08e922a25296b7b6be63d6113fc70b10460c3190d177cd717afc16208c869b30",
-  "psd_details.json": "4005f14393b1f9cd55153d40e22f60e6a62981dfa189a46d013647f80d7f0114",
-  "stats.json": "0728817a57c980f68169ac10dcd5df783264190abb098accf4af8ee730ef4a43"
+  "old_stats.json": "46e2a143e0e47ff735d0c9d606927eeb3a78c9c47248aeea47fe3594d53db462",
+  "psd_details.json": "fa12b9a0cff1b7c35b6a2e22e505a47c172d06245c1e3fe27df3b5c6b055cba0",
+  "stats.json": "fdd630a0185c850df4443fcd6b2528ab1f0b0a1c7e3e36ee4af86b9dca23a02d"
  },
  "gates": {},
  "inputs": {
@@ -32,7 +32,7 @@
   "created_blob": "07c402f7c4a6b7ed74e0ebeccda252053a50f1e4",
   "decks_blob": "06423a3363383d6e6ec1e5dc4633b62dc9e50460",
   "edits_blob": "d5bef0faef6347b382c41ba2498c4e7a919c9f24",
-  "fonts_tree": "593702f2f7e090fc008c0ad0311837612db66425",
+  "fonts_tree": "6901674e2a3b3367bcb7fa59bf53364a2227a8ce",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "87993ef69e369ea8006616af4dd4ba961a0525ae"
  },
@@ -43,20 +43,9 @@
   "repin": [],
   "stale": []
  },
- "problems": [
-  {
-   "card": "Computer Virus",
-   "notes": [
-    "HP NOT FOUND",
-    "DEF NOT FOUND",
-    "ATK NOT FOUND",
-    "SPD NOT FOUND"
-   ],
-   "path": "Creatures/Kirby/3 Stars/Computer_Virus.psd"
-  }
- ],
+ "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40025866501",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40062212879",
  "schema": 1,
  "seed": {
   "commit": "a7c310e5edaeadb7746a7eae0c94202a165c244c",
