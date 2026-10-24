@@ -206,7 +206,7 @@ export function renderStats(root, ctx, params) {
   const top = ser.slice(0, 15).map(([k, v]) => ({ label: k, value: v }));
   const rest = ser.slice(15).reduce((s, [, v]) => s + v, 0);
   if (rest) top.push({ label: `Other (${ser.length - 15} series)`, value: rest });
-  if (top.length) charts.push(card("series", "Creatures by series", `${ser.length} series`, hbar(top, { labelWidth: 190 }), table(["Series", "Creatures"], ser.map(([k, v]) => [k, v]))));
+  if (top.length) charts.push(card("series", "Creatures by series", ser.length > 15 ? `Top 15 of ${ser.length} series.` : `${ser.length} series`, hbar(top, { labelWidth: 190 }), table(["Series", "Creatures"], ser.map(([k, v]) => [k, v]))));
 
   // 2b subseries: of the picked series (cards without one as their own row), else the top ones overall
   if (subCount && series) {
@@ -219,7 +219,7 @@ export function renderStats(root, ctx, params) {
     const shared = new Set(all.filter((r, i) => all.findIndex(x => x.label === r.label) !== i).map(r => r.label));   // same name in two series
     const bars = all.slice(0, 15).map(r => { if (!shared.has(r.label)) return r;             // keep the series readable
       const s = r.series || "no series"; return { ...r, label: `${trunc(r.label, SUB_BARS.chars - s.length - 3)} (${s})` }; });
-    charts.push(card("subseries", "Top subseries", `${subCount} subseries; pick a series for its breakdown`, hbar(bars, SUB_BARS),
+    charts.push(card("subseries", "Top subseries", "Pick a series for its breakdown.", hbar(bars, SUB_BARS),
       table(["Subseries", "Series", "Cards"], all.map(r => [r.label, r.series, r.value]), 2)));
   }
 
@@ -236,7 +236,7 @@ export function renderStats(root, ctx, params) {
   }
   if (handRows.length) {
     const rows = handRows.map(r => ({ label: `${r.label} · hand needs ${r.need}`, value: r.value, html: `<span>${esc(r.label)}</span><span class="muted">needs ${r.need}</span>` }));
-    charts.push(card("hand", "Starting-hand choices", "Legal cards per star level vs. how many the hand takes.",
+    charts.push(card("hand", "Starting-hand choices", "Legal cards per star level vs the hand's need.",
       hbar(rows, { labelWidth: 190, unit: "legal cards" }),
       table(["Star level", "Hand needs", "Legal cards", "Banned", "Choices per pick"], handRows.map(r => [r.label, r.need, r.value, r.bannedN, Math.round(r.per * 10) / 10]))));
   }
@@ -258,7 +258,7 @@ export function renderStats(root, ctx, params) {
     const cols = [2, 3, 4, 5, 6].map(i => { const v = rows.map(r => r[i]).filter(x => x != null); return [Math.min(...v), Math.max(...v)]; });
     const heat = `<div class="table-wrap"><table class="data heat"><thead><tr><th>Stars</th><th class="num">Cards</th>${keys.map(([, l]) => `<th class="num">${l}</th>`).join("")}<th class="num">Total</th></tr></thead><tbody>
       ${rows.map(r => `<tr><td>${r[0]}★</td><td class="num">${r[1]}</td>${[2, 3, 4, 5, 6].map((i, j) => `<td class="num" ${shade(r[i], ...cols[j])}>${r[i] == null ? "—" : fmt(r[i])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
-    charts.push(card("tiers", "Average stats by star level", "Creatures and minions. Darker = higher in its column.", heat,
+    charts.push(card("tiers", "Average stats by star level", "Creatures and minions; darker is higher.", heat,
       table(["Stars", "Cards", "HP", "DEF", "ATK", "SPD", "Total"], rows.map(r => [`${r[0]}★`, ...r.slice(1).map(v => (v == null ? "—" : v))]))));
 
     // 5 distributions (small multiples): 0–10, and a pager on a stat with higher values (Sonic's speed is 20)
@@ -287,9 +287,10 @@ export function renderStats(root, ctx, params) {
     });
     pts.filter(p => p.hot).sort((a, b) => Math.abs(b.z) - Math.abs(a.z)).slice(0, 8).forEach(p => (p.showLabel = true));
     if (pts.length > 3) {
-      charts.push(card("outliers", "Total stats vs star level", `Highlighted: 1.5σ+ from their star level's average (possible outliers).${offChart.length ? ` Off the chart: ${offChart.map(c => `${c.name} (${c.stars}★, ${total(c)})`).join(", ")}.` : ""}`,
+      charts.push(card("outliers", "Total stats vs star level", "Highlighted: far from their star level's average.",
         scatter(pts, { xLabel: "star level", yLabel: "HP + DEF + ATK + SPD", xTicks: tiers }),
-        table(["Card", "Stars", "Total", "vs tier avg (σ)"], pts.filter(p => p.hot).sort((a, b) => b.z - a.z).map(p => [p.label, `${p.x}★`, p.y, Math.round(p.z * 10) / 10]), 1), { wide: true }));
+        table(["Card", "Stars", "Total", "vs tier avg (σ)"], [...pts.filter(p => p.hot).sort((a, b) => b.z - a.z).map(p => [p.label, `${p.x}★`, p.y, Math.round(p.z * 10) / 10]),
+          ...offChart.map(c => [c.name, `${c.stars}★`, total(c), "off the chart"])], 1), { wide: true }));
     }
   }
 
@@ -300,7 +301,7 @@ export function renderStats(root, ctx, params) {
     const ic = icons[t.toLowerCase().replace(/[\s_\-.'’]+/g, "")];
     return { label: t.replace(/_/g, " "), value: v, html: `${ic ? `<img src="${esc(ic.file)}" alt="">` : ""}<span>${esc(t.replace(/_/g, " "))}</span>` };
   });
-  if (typeRows.length) charts.push(card("types", "Types on cards", "", hbar(typeRows), table(["Type", "Cards"], typeRows.map(r => [r.label, r.value]))));
+  if (typeRows.length) charts.push(card("types", "Types on cards", "Cards with each type.", hbar(typeRows), table(["Type", "Cards"], typeRows.map(r => [r.label, r.value]))));
 
   // 8 timing tags (not neutral ones such as Action)
   const tags = new Map();
@@ -309,7 +310,7 @@ export function renderStats(root, ctx, params) {
     if (t && t.group !== "neutral") tags.set(t.tag, (tags.get(t.tag) || 0) + 1);
   }
   const tagRows = desc(tags).slice(0, 18).map(([t, v]) => ({ label: `(${t}) ${tagInfo(t).meaning}`, value: v, html: badgeHtml(t) }));
-  if (tagRows.length) charts.push(card("tags", "Timing tags", "", hbar(tagRows, { labelWidth: 110, unit: "uses" }),
+  if (tagRows.length) charts.push(card("tags", "Timing tags", "Abilities using each tag.", hbar(tagRows, { labelWidth: 110, unit: "uses" }),
     table(["Tag", "Meaning", "Uses"], desc(tags).map(([t, v]) => [`(${t})`, tagInfo(t).meaning, v]), 2)));
 
   // 9 status effects + 10 most referenced
@@ -319,9 +320,9 @@ export function renderStats(root, ctx, params) {
   const statusRows = desc(new Map([...refCount].filter(([id]) => statusIds.has(id)))).slice(0, 15).map(([id, v]) => ({ label: byId.get(id).name, value: v, card: id }));
   const unused = cards.filter(c => c._unused && (!series || c.series === series)).sort((a, b) => a.name.localeCompare(b.name));
   const unusedHtml = unused.length ? `<p class="muted">On no card (${unused.length}): ${unused.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}</p>` : "";
-  if (statusRows.length) charts.push(card("status", "Status effects mentioned", "Cards naming each one", hbar(statusRows) + unusedHtml, table(["Status effect", "Cards"], statusRows.map(r => [r.label, r.value]))));
+  if (statusRows.length) charts.push(card("status", "Status effects mentioned", "Cards naming each one.", hbar(statusRows) + unusedHtml, table(["Status effect", "Cards"], statusRows.map(r => [r.label, r.value]))));
   const refRows = desc(new Map([...refCount].filter(([id]) => !statusIds.has(id)))).slice(0, 12).map(([id, v]) => ({ label: byId.get(id).name, value: v, card: id }));
-  if (refRows.length) charts.push(card("refs", "Most referenced cards", "Cards naming them", hbar(refRows, { labelWidth: 180 }), table(["Card", "Mentioned by"], refRows.map(r => [r.label, r.value]))));
+  if (refRows.length) charts.push(card("refs", "Most referenced cards", "Cards naming them.", hbar(refRows, { labelWidth: 180 }), table(["Card", "Mentioned by"], refRows.map(r => [r.label, r.value]))));
 
   // 11 authors
   const authors = desc(count(pool, c => c.author)).map(([k, v]) => ({ label: k, value: v }));
@@ -331,7 +332,7 @@ export function renderStats(root, ctx, params) {
   const reasons = new Map();
   for (const g of ctx.banlist.groups) for (const e of g.entries) for (const r of e.reason.split(/,\s*/)) if (r) reasons.set(r, (reasons.get(r) || 0) + 1);
   const reasonRows = desc(reasons).map(([k, v]) => ({ label: k, value: v }));
-  if (reasonRows.length && !kind && !series) charts.push(card("bans", "Constructed ban reasons", "", hbar(reasonRows, { labelWidth: 230, unit: "bans" }), table(["Reason", "Bans"], reasonRows.map(r => [r.label, r.value]))));
+  if (reasonRows.length && !kind && !series) charts.push(card("bans", "Constructed ban reasons", "Bans per reason.", hbar(reasonRows, { labelWidth: 230, unit: "bans" }), table(["Reason", "Bans"], reasonRows.map(r => [r.label, r.value]))));
 
   // 13 timeline
   const months = new Map();
@@ -344,7 +345,7 @@ export function renderStats(root, ctx, params) {
       const k = `${y}-${String(m).padStart(2, "0")}`;
       cols.push({ label: new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString(undefined, { month: "short", year: "2-digit", timeZone: "UTC" }), value: months.get(k) || 0 });
     }
-    charts.push(card("timeline", "Last change by month", "", columns(cols, { every: Math.ceil(cols.length / 12) }),
+    charts.push(card("timeline", "Last change by month", "Cards by month of their last change.", columns(cols, { every: Math.ceil(cols.length / 12) }),
       table(["Month", "Cards"], cols.map(c => [c.label, c.value])), { wide: true }));
   }
 
