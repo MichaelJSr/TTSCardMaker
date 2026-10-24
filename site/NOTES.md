@@ -286,11 +286,14 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   box, Ctrl+Enter, Save or a click or tap away save; Esc or Cancel put the row back; arrows move between chips. The row
   shows the choice as it changes. Saved through `stageField(id, "types", sorted list)`, so the same set in another order is
   no edit. Vocabulary: cards.json `icons` of kind "type" (35 icons, with aliases). The token picker (branch
-  work/token-picker, `assets/tokens.js`) is not on main yet: `palette.useSearch(fn)` swaps the search for its ranking once
-  it lands (fn(vocab, q) -> entries best first); the classes are `pal-*` (the picker's are `tp-*`). The switch, in app.js
-  after `inline.install`: `palette.useSearch((v, q) => { const by = new Map(v.map(e => [e.name, e])); return
-  tokens.suggest({ type: "icon", base: q, variant: null }, S.vocab || []).filter(r => r.kind === "type" && !r.variant)
-  .map(r => by.get(r.token.slice(1, -1))).filter(Boolean); })` (both rank the same way today).
+  work/token-picker, `assets/tokens.js`) is not on main yet: `palette.useSearch(fn)` swaps the search (fn(vocab, q) ->
+  entries best first) and `palette.pickerSearch(suggest, all)` is the adapter (the picker's plain type rows, mapped back
+  to the palette's entries); the classes are `pal-*` (the picker's are `tp-*`). The switch once it lands, one line in
+  app.js after `inline.install` (with `import * as palette from "./palette.js"`):
+  `palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));`. Checked against the picker branch's
+  tokens.js (8d605085, scratch): same results as `findTypes` for 202 of 211 queries; the rest are the picker's extras,
+  a slip ("frie", "watr") and the most used first on a tie ("fi": fire, field). Typing the token picker's "[" in the
+  ability box and the note works with drafts and both previews: its choice goes in through an `input` event.
 - Checks: AutoCroissant `tests/test_site_editor.py` (13, AC_SITE_SRC; each fails with its logic reverted: a scratch
   mutation run caught 13 of 13), the site tests (70 with this tree). Headless Chrome (Chrome for Testing 156) on a
   scratch build with a fake GitHub API, harnesses in ~/Documents/Tools/wt/scratch/site2-editor/: `tooltip.mjs` 6/6 here,

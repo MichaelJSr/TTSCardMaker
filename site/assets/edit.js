@@ -744,7 +744,7 @@ export function createEditor(app) {
       const ans = e.target.closest(".draft-offer [data-draft]");
       if (ans) {
         form.querySelector(".draft-offer").remove();
-        if (ans.dataset.draft === "restore") { draft.fillValues(form, offered, { creatures: setCreatures }); update(); autosave.run(); }
+        if (ans.dataset.draft === "restore") { draft.fillValues(form, offered, { creatures: setCreatures }); form.dispatchEvent(new Event("input", { bubbles: true })); }   // as typed: the image previews follow too
         else { cardDrafts.drop(c.id); app.toast("Unsaved edit discarded"); }
         document.getElementById(isRule(c) ? "ef-ability" : "ef-name").focus();
         return;

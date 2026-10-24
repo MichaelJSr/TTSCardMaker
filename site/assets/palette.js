@@ -29,6 +29,14 @@ export function findTypes(vocab, q) {
 let search = findTypes;
 /** The palette's search: fn(vocab, q) -> entries best first; none given: findTypes. For the token picker's, once on main. */
 export const useSearch = fn => { search = fn || findTypes; };
+/** The token picker's ranking as the palette's search (its typo slips and most-used order too): suggest = tokens.js
+ *  suggest, all() = its vocabulary (app.js S.vocab). Its plain type rows, mapped back to the palette's entries by name.
+ *  Once tokens.js is on main, in app.js: palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || [])). */
+export const pickerSearch = (suggest, all) => (vocab, q) => {
+  const by = new Map(vocab.map(e => [e.name, e]));
+  return suggest({ type: "icon", base: q, variant: null }, all()).filter(r => r.kind === "type" && !r.variant)
+    .map(r => by.get(r.token.slice(1, -1))).filter(Boolean);
+};
 /** The palette's chips in order: no query, the card's types first (as the palette opened), then the rest by name; a
  *  query, its matches. first: the types to put first. */
 export function paletteOrder(vocab, first, q) {
