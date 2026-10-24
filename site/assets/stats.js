@@ -227,10 +227,10 @@ function cardCharts(pool, creatures) {
   }
   if (cd.size) {
     const stars = [...cd.keys()].sort((a, b) => a - b), plus = i => (i === 2 || i === 4 ? "+" : "");
-    const head = ["Stars", ...CD_COLS.map(([tag], i) => ({ html: `${badgeHtml(tag)}${plus(i)}` })), "Average turns"];
-    out.push(card("cooldowns", "Cooldowns by star level", "Abilities per cooldown; darker is more.",
+    const head = ["Stars", ...CD_COLS.map(([tag], i) => ({ html: `${badgeHtml(tag)}${plus(i)}` })), "Avg turns"];
+    out.push(card("cooldowns", "Cooldowns by star level", "Abilities per cooldown, by star level.",
       heatTable(head, stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n.map(v => v || ""), String(fmt(r.sum / r.k))]; }), { shade: [1, 2, 3, 4, 5], all: true }),
-      table(["Stars", ...CD_COLS.map(([tag], i) => `(${tag})${plus(i)}`), "Average turns"], stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n, r.sum / r.k]; }))));
+      table(["Stars", ...CD_COLS.map(([tag], i) => `(${tag})${plus(i)}`), "Avg turns"], stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n, r.sum / r.k]; }))));
   }
   // S16 ability length: median words (timing tags left out) per star level and kind; under 3 cards: —
   const words = new Map();
@@ -257,7 +257,7 @@ function cardCharts(pool, creatures) {
     for (const c of items) { const r = types.get(c.subtype) || types.set(c.subtype, new Map()).get(c.subtype); r.set(c.stars, (r.get(c.stars) || 0) + 1); }
     const rows = [...types].map(([t, m]) => [t, ...stars.map(st => m.get(st) || 0), [...m.values()].reduce((a, b) => a + b, 0)]).sort((a, b) => b[b.length - 1] - a[a.length - 1] || a[0].localeCompare(b[0]));
     const head = ["Item type", ...stars.map(st => `${st}★`), "All"];
-    out.push(card("itemtypes", "Items by type and stars", "Darker is more.",
+    out.push(card("itemtypes", "Items by type and stars", "Item cards per type and star level.",
       heatTable(head, rows.map(r => [r[0], ...r.slice(1, -1).map(v => v || ""), String(r[r.length - 1])]), { shade: stars.map((_, i) => i + 1), all: true }),
       table(head, rows)));
   }
@@ -342,7 +342,7 @@ export function renderStats(root, ctx, params) {
     const avg = (arr, f) => { const v = arr.map(f).filter(x => x != null); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
     const rows = tiers.map(t => { const g = creatures.filter(c => c.stars === t); return [t, g.length, ...keys.map(([k]) => avg(g, c => c[k])), avg(g, total)]; });
     const heat = heatTable(["Stars", "Cards", ...keys.map(([, l]) => l), "Total"], rows.map(r => [`${r[0]}★`, String(r[1]), ...r.slice(2)]), { shade: [2, 3, 4, 5, 6] });
-    charts.push(card("tiers", "Average stats by star level", "Creatures and minions; darker is higher.", heat,
+    charts.push(card("tiers", "Average stats by star level", "Creatures and minions, shaded per column.", heat,
       table(["Stars", "Cards", "HP", "DEF", "ATK", "SPD", "Total"], rows.map(r => [`${r[0]}★`, ...r.slice(1).map(v => (v == null ? "—" : v))]))));
     at = charts.length;
 
