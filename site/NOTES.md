@@ -47,6 +47,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   Commit message: `message || (what.length > 3 ? "Website edits: N changes" : "Website edit: A, B, C")` where what = card/page names (+ "people", "admins"). User may type a custom message.
   After commit: stores sent-ops, clears stage, `save()`, dialog "Published" with commit link `https://github.com/{repo}/commit/{sha}`; site rebuild takes minutes (workflow); bot reads on /update_stats.
 - Files written (paths from `files()` edit.js:32 = defaults overridden by `S.data.files`): `MDW/Card Edits.json` (`editsFile`: JSON `{about, cards:{key:{fields..., _by, _at}}}`, keys sorted, fixed field ORDER, hand-formatted one-line-per-card), `MDW/Card Authors.txt` (`authorsFile`: INI-ish `[people]`/`[cards]` with `# --- credited to X (n) ---` groups), `MDW/Constructed Ban List.txt` (`banFile`: `Group:` headings, `Name - reason` lines), `MDW/Website Admins.txt` (admins, `#` comment lines preserved). Rulebook pages are edited as cards with type "rulebook" (ids from rules.json), their field changes also go into Card Edits.json (not separate files; `ruleFormHtml` edit.js:162 edits name/ability/note).
+- Image previews (2026-10-23, section 20): the Edit dialog's `openForm` calls `app.formOpened({form, card, read, base})`
+  (not for rulebook pages), and the editor's API gains `github(path, opts)` (its `gh`, with the token), `scopes` (the
+  token's classic scopes from sign-in, null for a fine-grained one), `psdOf(id)` (what the PSD prints of each PSD field)
+  and `entryFields(id, op)` (the fields the card's Card Edits.json entry would hold once published). That is all the
+  wiring; preview.js and mockup.js hold the rest.
 - What a new feature would need (all currently private, so edit.js must be extended; smallest change = add to the returned object at edit.js:545):
   (a) `editor.me` (exists). (b) there is no generic "add op" API; stage holds card-edit ops only (`stage.cards[id] = op`, `save()`), and `publish()` builds a fixed set of files. For a Table tab keep a separate stage (own localStorage key) of save-operations, or add `stage.table = []` plus an `edits[F.table] = t => applyTableOps(t, ops)` line in `publish`. (c) publish: export `commitFiles` (edit.js:56) and call `commitFiles({"TTS/Impossibility Simulator.json": oldText => applyOps(JSON.parse(oldText))...}, msg)`; it already needs `token` (closure), so export a function from the editor object, e.g. `commit: commitFiles`, `readFile`, `gh`. (d) fetch latest content: `readFile(path, ref)` returns raw TEXT at `ref` (use branch name or head sha), null on 404; there is no sha helper beyond the head commit sha (`GET git/ref/heads/main`), blob sha is not used. Unauthenticated alternative for read-only viewing: raw.githubusercontent.com (see 5).
   UI helpers reusable: `app.showDialog`, `app.toast`, `renderBar()` pattern (fixed `.edit-bar`), `reviewHtml` pattern (`.review-item`), `describe(op)`.
@@ -294,3 +299,102 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   an inline field and of the dialog, the offer in both places, never offering what the batch has, Esc and Cancel, Publish
   clearing the published cards' drafts, the preview following name, HP, types and text with "PSD pending", the mobile bar,
   no page errors). Screenshots: ~/Documents/Tools/wt/scratch/site2/shots/editor-*.png.
+
+## 20. Image previews in edit mode: the mock-up and the rendered preview (2026-10-23)
+- Owner's asks (2026-10-23 ~18:15-18:45): see an edit on the card image while making it, three ways: a live card page
+  (section 19), a **quick mock-up** (the new text and numbers drawn over the card image in the browser, instant,
+  labelled as a mock-up) and a **rendered** image ("press preview image to dry run bake a card, work on another card, and
+  then go back to the first to see the preview"). The server side of the rendered one is the "Card previews" section of
+  branch work/card-preview (section 19 there; card-preview.yml, AutoCroissant commands/card_preview.py); this is the
+  website's side.
+- Modules: `assets/mockup.js` (pure helpers, then `draw`) and `assets/preview.js` (pure helpers, then `createPreviews(app)`,
+  the panel, the store and the background check). Both DOM-free at import. Wiring only elsewhere: app.js imports
+  `createPreviews`, makes `previews` after the editor (`badges()` re-marks the grid), calls `previews.init()` after
+  `editor.init()`, `previews.mountTiles(view)` after `inline.mountGrid`, `previews.mountCard(modal, c)` after
+  `inline.mountCard`, `previews.onAuth()` in `onAuth`, and passes `formOpened` to the editor; edit.js as in section 3.
+  Everything is gated on `editing()` / `editor.me`: a signed-out page is unchanged. CSS: the `.pv-*` block at the end of
+  style.css (theme variables; the ribbon and the grid badge use fixed colours like `.tile .flag`).
+- **The panel** ("Image with your edit", `section.pv-panel`): on the card page under the image and its ← → links, for a
+  card whose PSD fields aren't what the PSD prints (`changedOf`: published-not-baked or staged) or that has previews; in
+  the Edit dialog floated beside the "On the card image" fields (`.pv-in-form`, full width under 640 px). Two buttons
+  (`.seg`, `aria-pressed`): Mock-up and Rendered; the card page opens on Rendered when a result is waiting, else Mock-up.
+  "Preview image" is on both (on Mock-up under the drawing). Keyboard: all plain buttons and links.
+- **Mock-up** (`mockup.draw(canvas, {card, src, rec, edit, psd, icons, getFonts, raw, onFont, stale})`): the card's 720 px
+  thumb (same origin, so the canvas can read it) drawn off-screen and copied when done (a newer draw drops an older one);
+  only the fields unlike the PSD are redrawn (`changes`): name, text, stats; stars, types and stats above 10 are named in
+  the caption ("Not drawn: stars."), never drawn.
+  - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the layout
+    is the card template's (`TEMPLATES`, fractions of the image measured on the PSDs' layer boxes on 2026-10-23: `tall`
+    1200x2400 creatures and minions, whose stat bars sit at (0.3, 0.5, 0.978, 0.535) + 0.0525 a row on 311 of the 390
+    cards with digit rows; `item` 1200x1800 with the totems' two rows at 0.624; `square` 1200x1200 status effects; the
+    1080x1920 rulebook pages get none), narrowed to where the image shows text: `findText` (rows and columns of sharp
+    edges; hysteresis, so a short last line joins its paragraph; the heaviest cluster of rows; lines split at quiet rows,
+    the size from their pitch, `LINE` = 1.22 ems; "left" or "center" from the lines' edges). A record with `text[].box`
+    (canvas px) is used instead (`recordBox`): adding `layer.bbox` to psd_details' text entries would make the mock-up
+    exact (a bot follow-up, not done).
+  - Erase: pixels near a sharp edge (the glyphs and their outline, dilated by 0.14 em) take the mean colour of the
+    unmasked pixels around them (cells of 0.8 em, empty cells from their neighbours, bilinear), so the art behind keeps
+    its texture where there is no text. The new text's fill and outline are read from the old text's pixels on the way
+    (`textColours`: the brightest on a dark background, the darkest as the outline when darker than it), else the
+    record's colour.
+  - Text: `tokenize` (an icon token the site knows is an icon, `:no` crossed out; another bracket stays text; no break
+    inside "[ice]."), `layout` / `fit` (the old size, shrunk until it fits the region; a name keeps its line count),
+    centred on the old text. Stats: `barRows` (template rows, only for stats the details call "template") checked with
+    `isBar` (ten cells with sharp borders, else "Not drawn: HP"), then `cellPlan`: a cell lights as the last lit one (the
+    rounded first cell: its colour) and darkens as the first dark one (none or the rounded last: a shade).
+  - Fonts: `data/fonts.json` (build_site `web_fonts`): `{"fonts": {PSD font name: {file, bytes}}}` for the fonts the
+    details records' text layers name, resolved as font_check resolves them (exact PostScript name after
+    `FONT_ALIASES`, else a loose match without -Regular; the first file by path wins); `font_faces` reads the name table
+    without fontTools and equals font_check.face_names on all 276 files of MDW/Fonts; only .ttf / .otf up to 8 MB (a
+    collection holds several faces); names cached by blob sha in `site/.cache/fonts.json` (CI downloads a font only when
+    its blob is new, 8 at a time, like the PNGs). 129 of the 137 PSD fonts on the 2026-10-23 build. The browser loads one
+    as a `FontFace` from raw.githubusercontent.com when first drawn (60 ms for a loaded one, else drawn in a stand-in and
+    redrawn when it arrives); the caption names a stand-in.
+  - Label: a "Mock-up" ribbon on the image and the caption "Mock-up: the real image comes from the bake".
+- **Rendered** (`createPreviews`): the Action's side is one adapter, `CONTRACT` (workflow, ref, branch, inputs, paths).
+  - Start: `GET .../actions/workflows/card-preview.yml` (404: "isn't set up on the card repo yet"), then
+    `POST .../dispatches` with `{ref: "main", inputs: {card: c.key, edit: JSON.stringify(edit), request}}`. `edit` =
+    `entryEdit(editor.entryFields(id, op), get)`: every PSD-kind field of the card's Card Edits.json entry as Publish
+    would leave it (built + published-not-built + the batch's op, or the open form's), plus `creatures` when it holds
+    several, in the edits file's shapes; at most 16 KB. In the Edit dialog the form's values go, saved to the batch or
+    not. `request` = `<login>-<time base 36>-<4 random>` (`newRequest`; the Action takes 8-64 of A-Z a-z 0-9 -).
+  - Token: a classic token needs the repo scope for the dispatch (GitHub's docs; the sign-in accepts public_repo), a
+    fine-grained one Actions: Read and write. A 403/404 says so (`startProblem`: "Your token has only the public_repo
+    scope" when the sign-in's scopes say so, else "can't start Actions"); a public_repo-only token also gets a note under
+    the button before anyone presses it. 401: sign in again; 422: GitHub's message; no network: try again.
+  - Store: localStorage `card-previews` = `{card id: [entry, newest first]}`, the last `KEEP` (3) per card, entry =
+    `{card, key, name, request, edit, hash, base: {ts, img} at the dispatch, at, state, result?, run?, seen?}`;
+    `readStore` drops anything malformed; another tab's writes arrive through the `storage` event.
+  - Background check: while any entry is running, every `POLL_MS` (15 s) from any page, `GET .../contents/previews/
+    <request>/result.json?ref=previews` (raw, through the editor's `gh`: never raw.githubusercontent, which caches a 404);
+    404 = not yet. Also the run, by `display_title` containing the request (the workflow's run-name "Card preview
+    <request>"), for a link, and an error when it ended without a result (seen twice). Past `MAX_WAIT_MS` (20 min):
+    "No result yet" with Check again (10 more minutes) and Preview again. A result toasts "Preview ready: <card>". Signed
+    out, nothing is checked; signing in resumes it. Several cards run side by side.
+  - Result: `readResult` keeps state, transient, reason, notes (20, 500 characters), fields, changes, base, image,
+    files (`preview.webp` / `preview.png` names only) and the run (a github.com link only); anything else is a transient
+    error. Baked: Current (the 720 px thumb) beside the preview (preview.webp, 720 px; Full size = preview.png), Diff
+    (`diffPixels`: changed pixels red over the dimmed current, with the share), each field's outcome ("HP baked · Stars
+    refused") and the notes. Redundant: "Already on the card". Refused: the reason, with the bake's render when
+    `image` is "refused". Error: an `input:` reason is "a website bug", a transient one "try again". Every string through
+    `esc()`.
+  - Badge: a tile gets "Preview" (`.pv-badge`, under the flag) while its card's newest preview has a result not yet
+    seen (`hasNews`); the panel's heading says "New"; showing the Rendered tab on the card page marks it seen. A start
+    that failed at once is seen already.
+  - Out of date (`staleWhy`): the edit the site would send now hashes differently (`hashOf` over `canonical`: sorted
+    keys, sorted types), or the card's image moved (the result's `base.png_blob` against cards.json `img`, its first 16
+    hex digits; before a result, the card's `ts` and `img` at the dispatch): "Out of date: the edit changed since" with
+    Preview again. Kept, not dropped: the last three stay listed under "Earlier:".
+  - Section 19's suggestions not followed: polling every 15 s up to 20 minutes (the owner's) instead of 10 s then 30 s
+    up to 16; the request id above instead of `crypto.randomUUID()` (both fit); `card-previews` with three per card instead
+    of `edit-previews` with one; index.json (another device's previews) not read yet.
+- Checks (2026-10-23): AutoCroissant `tests/test_site_previews.py` (19 tests on preview.js and mockup.js in node and on
+  build_site's font names: the entry edit, hashes, request ids, result.json, the store, staleness, badges, start
+  messages, the panel per state, the diff, text found on drawn pixels with a weak line, erase, wrapping and fitting,
+  stat cells and bars, the record's boxes, font names equal to fontTools' on all of MDW/Fonts, the font map and its
+  cache); 21 mutations of the new code each fail one. In a real browser (Chrome for Testing 156 headless over the
+  DevTools protocol, GitHub's API and raw files faked; a scratch harness, not kept): sign-in, the mock-up following the
+  form in the card's font (FOT Pop Happiness on Mini Doomer), the dispatch's inputs, two previews running at once,
+  badges on two tiles, side by side and the diff, a refusal, out of date after an edit, light and dark, 375 px (nothing
+  wider than the screen), the Action missing, a token that can't start Actions. Screenshots:
+  `~/Documents/Tools/wt/scratch/site2/shots/previews-*.png`. Not run: a live dispatch (card-preview.yml must be on main).
