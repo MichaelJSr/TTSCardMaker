@@ -1,7 +1,7 @@
 // Balance: the Stats page's Balance section and each card's Balance block, from data/analytics.json (build/analytics.py).
 // Charts follow stats.js (dataviz method): thin marks, hairline grid, legends for two series, a table view for each.
 // DOM-free: every function returns HTML, every string goes through esc.
-import { esc, diffWords, badgeHtml, tagInfo } from "./text.js";
+import { esc, diffWords, badgeHtml } from "./text.js";
 import { chartCard as card, hbar, table, stacked, fmt, trunc } from "./stats.js";
 
 const KIND = { creature: "creature", minion: "minion", creatures: "auxiliary creature" };
@@ -21,7 +21,6 @@ const monthsFrom = (first, last) => {
   for (let [y, m] = first.split("-").map(Number); `${y}-${String(m).padStart(2, "0")}` <= last; m === 12 ? (y++, (m = 1)) : m++) out.push(`${y}-${String(m).padStart(2, "0")}`);
   return out;
 };
-const WAVE = 5;                                          // cards on one day that make a wave of the cooldown update
 const plural = (n, one, many = one + "s") => `${n.toLocaleString()} ${n === 1 ? one : many}`;
 
 /** "3★ creatures", "all minions" for a cohort key */
@@ -45,7 +44,6 @@ export function changeKind(r) {
 export const isRework = r => !!(r.words || r.stats || r.stars || r.kind || r.sub || r.types || r.lines);
 const runTags = run => [...run.matchAll(/\(([^()]+)\)/g)].map(m => m[1]);
 const runHtml = run => runTags(run).map(t => badgeHtml(t)).join("") || `<span class="muted">none</span>`;
-const groupOf = run => tagInfo(runTags(run)[0] || "")?.group;
 
 // ---- chart pieces -------------------------------------------------------------------------------------------------
 const legend = items => `<div class="legend">${items.map(([color, label, shape]) => `<span><i style="background:${color}${shape === "line" ? ";height:3px;vertical-align:3px" : ""}"></i>${esc(label)}</span>`).join("")}</div>`;
@@ -328,35 +326,6 @@ export function statsHtml(A, { cards, byId }, params) {
     charts.push(card("bal-reworked", "Most reworked cards", `Changes to how a card plays${scope}: its wording, stats, stars, kind, item type or types (not a timing-tag rename alone). ${plural(top.length, "card")} in all.`,
       hbar(top.slice(0, 15).map(t => ({ label: t.name, value: t.p.n, card: t.id })), { labelWidth: 190, unit: "changes" }),
       table(["Card", "Changes", "Rewordings", "Stats", "Stars, kind, item type", "Types", "Last"], top.map(t => [t.name, t.p.n, t.p.text, t.p.stats, t.p.stars, t.p.types, day(t.p.last)]))));
-  }
-
-  // 7 the cooldown update: tags to cooldowns (CD), global cooldowns (GCD) and uses (U)
-  // the update came in waves: days on which WAVE or more cards changed timing tags; other days are only counted
-  const retagged = changes.filter(x => x.r.tags), days = new Map();
-  for (const x of retagged) {
-    const d = dayKey(x.r.ts), w = days.get(d) || days.set(d, { ts: x.r.ts, cards: new Set(), old: new Set(), rows: [] }).get(d);
-    w.cards.add(x.id); w.rows.push(x); if (x.r.old) w.old.add(x.id);
-  }
-  const waves = [...days.values()].filter(w => w.cards.size >= WAVE).sort((a, b) => a.ts - b.ts);     // by date
-  const tagged = waves.flatMap(w => w.rows);
-  if (tagged.length) {
-    const main = waves.reduce((m, w) => (w.cards.size > m.cards.size || (w.cards.size === m.cards.size && w.ts > m.ts) ? w : m));   // the biggest
-    const listed = ws => ws.map(w => `${plural(w.cards.size, "card")} on ${day(w.ts)}`).join(", ");
-    const earlier = waves.filter(w => w.ts < main.ts), later = waves.filter(w => w.ts > main.ts), rest = new Set(retagged.filter(x => !tagged.includes(x)).map(x => x.id)).size;
-    const pairs = new Map();
-    for (const x of tagged) for (const [a, b] of x.r.tags) { const k = `${a}\u0001${b}`; pairs.set(k, (pairs.get(k) || 0) + 1); }
-    const pairRows = [...pairs.entries()].sort((a, b) => b[1] - a[1]).map(([k, v]) => { const [a, b] = k.split("\u0001"); return { a, b, value: v }; });
-    const cardsOf = f => new Set(tagged.filter(f).map(x => x.id)).size;       // cards, not rows: a card may change twice in a day
-    const all = cardsOf(() => true), reworded = cardsOf(x => x.r.words);
-    const facts = [["Cards", all], ["Timing tags only", all - reworded], ["Also reworded", reworded],
-      ["Turn to global turn", cardsOf(x => x.r.tags.some(([a, b]) => groupOf(a) === "turn" && groupOf(b) === "any"))], ["With stat changes", cardsOf(x => x.r.stats)]];
-    const sub = `${day(main.ts)}: ${plural(main.cards.size, "card")}${scope} changed timing tags${main.old.size ? `, ${main.old.size.toLocaleString()} from the old per-turn and every-N-turns tags` : ""} to cooldowns (CD), global cooldowns (GCD) and uses (U).`
-      + (earlier.length ? ` Earlier: ${listed(earlier)}.` : "") + (later.length ? ` Later: ${listed(later)}.` : "") + (rest ? ` ${plural(rest, "other card")} changed timing tags on other days (not counted here).` : "");
-    charts.push(card("bal-cooldown", "The cooldown update", sub,
-      `<div class="facts">${facts.map(([l, v]) => `<span class="fact">${esc(l)} <b>${v.toLocaleString()}</b></span>`).join("")}</div>`
-      + hbar(pairRows.slice(0, 14).map(p => ({ label: `${p.a || "none"} → ${p.b || "none"}`, value: p.value, html: `${runHtml(p.a)}<span class="muted">→</span>${runHtml(p.b)}` })), { labelWidth: 200, unit: "abilities" }),
-      table(["Date", "Card", "Before", "After", "Also reworded"], tagged.sort((x, y) => y.r.ts - x.r.ts || (byId.get(x.id)?.name || "").localeCompare(byId.get(y.id)?.name || ""))
-        .map(x => [day(x.r.ts), byId.get(x.id)?.name || x.id, x.r.tags.map(t => t[0] || "none").join(" "), x.r.tags.map(t => t[1] || "none").join(" "), x.r.words ? "yes" : ""]), 5)));
   }
 
   if (!charts.length) return "";
