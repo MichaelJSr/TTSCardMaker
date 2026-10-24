@@ -2438,7 +2438,8 @@ def person_extras(rows, cards, commits, people, by_login, balance, revisions, ar
                 theirs[k][c["author"]] += n
     fav = {c["id"]: latest_of(c.get("ratings"), "favorability") for c in vis}
     pw = {c["id"]: latest_of(c.get("ratings"), "power") for c in vis}
-    raters = {by for m in fav.values() for by in m if by != "group"}
+    fav_raters = {by for m in fav.values() for by in m if by != "group"}
+    raters = fav_raters | {by for m in pw.values() for by in m if by != "group"}   # either scale: P5, P8
     web = Counter(e["by"] for c in [*cards, *archived] for e in c.get("ratings") or () if e.get("source") == "website")
     top = lambda counts: [[k, n] for k, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0].lower()))[:3]]
     for r in rows:
@@ -2513,7 +2514,7 @@ def person_extras(rows, cards, commits, people, by_login, balance, revisions, ar
                 if agree is not None:
                     rater["agree"] = agree
                 twin = None
-                for other in sorted(raters - {K}, key=str.lower):
+                for other in sorted(fav_raters - {K}, key=str.lower):
                     shared = [(m[K], m[other]) for m in fav.values() if K in m and other in m]
                     rr = pearson([a for a, _ in shared], [b for _, b in shared])
                     if rr is not None and (twin is None or rr > twin[1]):
