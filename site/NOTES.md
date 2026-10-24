@@ -786,7 +786,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   (`[{k, v, s?}]`, at most 9, `readPins` drops junk, repeats by `nameKey`, a subseries without its series), never
   published. A box is a button (`data-pin/k/v/s`, "Subseries · Mario", the card count from `S.all`, so staged edits
   count) with its ✕ beside it, not inside (no nested buttons). Drag onto it, tap it with cards selected, or press 1-9
-  (app.js keydown, after the `#edit-form` return, only with a selection; 1-6 still switch tabs with none): all three
+  (app.js keydown, after the `#edit-form` return, only with a selection and the tray on screen, Grid view; 1-6 still
+  switch tabs otherwise; switching to Table clears the selection, which it can't show): all three
   call `inline.dropOn`. A subseries box stages only cards already in its series, as staged (`splitBySeries`, the rest
   `refused` in `stageMany`'s result and the toast). `KINDS` is the registry: a new kind is one entry plus `stageMany`
   support for its key. The pin form (Pin a box, + Pin) uses the name list; a pick pins it (a subseries row brings its

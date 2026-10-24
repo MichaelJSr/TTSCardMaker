@@ -1008,7 +1008,10 @@ const actions = {
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
   "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(sortOf(p), p.get("dir")) ? "asc" : "desc" }); },
   "sort-by": el => { const p = parseHash().params; setParams({ sort: el.dataset.key, dir: p.get("sort") === el.dataset.key && p.get("dir") !== "asc" ? "asc" : "" }); },
-  "set-pref": el => { localStorage.setItem(el.dataset.key, el.dataset.value); setParams({ [el.dataset.key]: el.dataset.value }); },
+  "set-pref": el => {
+    if (el.dataset.key === "view" && el.dataset.value === "table") { S.selected.clear(); S.selecting = false; }   // the table shows no selection
+    localStorage.setItem(el.dataset.key, el.dataset.value); setParams({ [el.dataset.key]: el.dataset.value });
+  },
   "random-from-list": () => { const l = S.list.length ? S.list : S.cards; location.hash = `#/card/${l[Math.floor(Math.random() * l.length)].id}`; },
   "deck-toggle": el => toggleDeck(el.dataset.id),
   "deck-remove": el => { D.removeCard(deck(), el.dataset.id); D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
@@ -1114,7 +1117,7 @@ document.addEventListener("keydown", e => {
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === "Enter" && ae?.dataset?.open && (modal.hidden || modal.contains(ae)) && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
   if ($("#edit-form")) return;                                                         // no single-key shortcuts while a form (card dialog, profile editor) is up
-  if (modal.hidden && editing() && S.selected.size && parseHash().name === "cards" && tray.dropKey(e.key)) { e.preventDefault(); return; }   // 1-9: onto a pinned box
+  if (modal.hidden && editing() && S.selected.size && parseHash().name === "cards" && $(".tray", view) && tray.dropKey(e.key)) { e.preventDefault(); return; }   // 1-9: onto a pinned box on screen
   const inCard = !modal.hidden && parseHash().name === "card", id = parseHash().arg;
   if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }
   else if (e.key === "?") showKeys();
