@@ -1224,8 +1224,9 @@ def rater_shown(e, people, by_login):
 
 def apply_ratings(cards, ratings, archived, people, by_login):
     """Card Ratings.json onto the cards: e["ratings"] = [{date, scale, value, by, source, login?}], oldest first; by stays
-    "group", a login becomes its credited name (credit()), then kept as login (the page's own re-rating). A name matching an archived row goes to the card it was renamed to
-    (renamedId), else onto the row (changelog.json). -> {"entries", "cards", "archived", "unmatched": [name]}"""
+    "group", a login becomes its credited name (credit()), then kept as login (the page's own re-rating). A duplicate's
+    go to its original. A name matching an archived row goes to the card it was renamed to (renamedId), else onto the
+    row (changelog.json). -> {"entries", "cards", "archived", "unmatched": [name]}"""
     live, by_id = {}, {e["id"]: e for e in cards}
     for e in cards:
         live.setdefault(card_key(e["key"]), e)
@@ -1233,6 +1234,8 @@ def apply_ratings(cards, ratings, archived, people, by_login):
     got, rows, counts = {}, {id(r) for r in archived}, {"entries": 0, "cards": 0, "archived": 0, "unmatched": []}
     for key, (name, entries) in ratings.items():
         target = live.get(key)
+        if target is not None and target.get("dup") in by_id:
+            target = by_id[target["dup"]]              # a duplicate's ratings are its original's, as its page shows
         if target is None and key in arch:
             target = by_id.get(arch[key].get("renamedId")) or arch[key]
         if target is None:

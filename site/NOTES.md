@@ -813,7 +813,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   value's `tierOf` isn't the category the save shows (1148 of 1148 agree). 1148 entries, 399 names (Cho'Gath and Ech:
   archived, kept under their names).
 - Build (`parse_ratings`, `apply_ratings` after `read_profiles`, before `contributions`): cards.json `ratings` on the card
-  whose `key` matches, a login shown as `credit()`'s name (then kept as `login`, `rater_shown`); a name matching an archived row goes to its `renamedId` card,
+  whose `key` matches, a login shown as `credit()`'s name (then kept as `login`, `rater_shown`); a duplicate's
+  go to its original (All Purpose Medical Kit2's two TS_Save_3 entries); a name matching an archived row goes to its `renamedId` card,
   else onto the row (changelog.json `archived[].ratings`); others warn "names match no card" (Cho'Gath and Ech until the
   history backfill tags them archived). `files.ratings`. Python twins of ratings.js: `rating_now(entries, scale, day,
   skip)` -> `{value, raters, date}` | None, `tier_of(v)`.
