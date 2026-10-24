@@ -390,7 +390,7 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     opts.layout_features = []
     opts.name_IDs = ["*"]
     opts.notdef_outline = True
-    font = TTFont(os.path.join(repo, "MDW/Fonts/BreeSerif-Regular.ttf"))   # OFL letters for partial tokens
+    font = TTFont(os.path.join(repo, "MDW/Fonts/Bree Serif Regular.ttf"))   # OFL letters for partial tokens
     sub = subset.Subsetter(opts)
     sub.populate(unicodes=range(0x20, 0x7F))
     sub.subset(font)
@@ -500,7 +500,7 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                     ligatures[text] = (comps, g)
 
     badge_ligatures = []
-    for tag, name, outline, body, advance in build_badges(os.path.join(repo, "MDW/Fonts/ChangaOne-Regular.ttf")):
+    for tag, name, outline, body, advance in build_badges(os.path.join(repo, "MDW/Fonts/Changa One.ttf")):
         add_glyph(name, outline, advance)
         svg_docs.append((name, body))
         badge_ligatures.append(([char_glyph[ord(c)] for c in f"({tag})"], name))
