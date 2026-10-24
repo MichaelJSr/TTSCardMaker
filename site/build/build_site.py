@@ -694,7 +694,7 @@ def valid_meta(row):
 def save_image_meta(images):
     path = os.path.join(CACHE, IMAGE_META)
     with open(path + ".tmp", "w", encoding="utf-8") as fh:
-        json.dump({"version": IMAGE_META_VERSION, "images": images}, fh, separators=(",", ":"))
+        fh.write(json.dumps({"version": IMAGE_META_VERSION, "images": images}, separators=(",", ":")))
     os.replace(path + ".tmp", path)
 
 
@@ -772,9 +772,19 @@ def fan(cards, path):
 
 
 def site_banner(cards, path):
-    """1200×630 link-preview image: a fan of 5★ creatures (a stable pick)."""
+    """1200×630 link-preview image: a fan of 5★ creatures (a stable pick), cached in OG_CACHE by their images; the
+    cached file's name."""
     pool = [c for c in cards if c.get("img") and c["type"] == "creature" and c.get("stars") == 5 and not c.get("dup")]
-    fan(sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6], path)
+    picks = sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6]
+    key = hashlib.sha256(f"{OG_DECK_VERSION}:{'|'.join(c['img'] for c in picks)}".encode()).hexdigest()[:16]
+    name = f"banner-{key}.jpg"
+    cached = os.path.join(OG_CACHE, name)
+    if not os.path.exists(cached):
+        os.makedirs(OG_CACHE, exist_ok=True)
+        fan(picks, cached + ".tmp")
+        os.replace(cached + ".tmp", cached)
+    link_or_copy(cached, path, replace=True)
+    return name
 
 
 def deck_cards(d, by_id):
@@ -876,11 +886,11 @@ def build_icons(tree):
     os.makedirs(os.path.join(DIST, "icons"), exist_ok=True)
     cache_dir = os.path.join(CACHE, "icons")
     os.makedirs(cache_dir, exist_ok=True)
-    fb = font_builder() if manifest["icons"] else None
-    reach = variant_reach(fb) if fb else {}
-    if fb:                                                    # a changed build script or tint mode draws them again
+    script = None                                             # a changed build script or tint mode draws them again
+    if manifest["icons"] and os.path.exists(os.path.join(REPO, FONT_BUILD)):
         with open(os.path.join(REPO, FONT_BUILD), "rb") as fh:
             script = hashlib.sha256(fh.read()).hexdigest()
+    fb = font_builder() if manifest["icons"] and not script else None   # its warning
     icons, used, todo = {}, set(), []
     for path in sorted(tree):
         folder, _, file = path.rpartition("/")
@@ -903,15 +913,36 @@ def build_icons(tree):
         link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)     # last one wins, as before
         entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
         info = manifest["icons"].get(name)
-        if fb and info:                                       # the font draws every variant of every manifest icon
+        if script and info:                                   # the font draws every variant of every manifest icon
             tint = info.get("tint", "auto")
             key = hashlib.sha256(f"{script}:{json.dumps(tint, sort_keys=True)}:{ICON_SIZE}".encode()).hexdigest()[:8]
             files = {v: os.path.join(cache_dir, f"{tree[path][:16]}-{v}-{VARIANT_VERSION}-{key}.webp") for v in VARIANT_IMAGES}
-            used.update(os.path.basename(f) for f in files.values())
             todo.append((path, tint, files, out_name, entry))
         aliases = (info or {}).get("aliases", [])
         for spelling in [name] + list(aliases):
             icons.setdefault(norm(spelling), entry)
+
+    # the font build (cv2, fontTools: about 0.2-0.7 s to import) only when a variant image or the reach isn't cached
+    reach_file, reach = f"reach-{script[:16]}-{ICON_SIZE}.json" if script else "", None
+    if todo:
+        try:
+            with open(os.path.join(cache_dir, reach_file), encoding="utf-8") as fh:
+                reach = json.load(fh)
+        except (OSError, ValueError):
+            reach = None
+    if todo and (reach is None or not all(os.path.exists(f) for job in todo for f in job[2].values())):
+        fb = font_builder()
+        if fb is None:
+            todo = []
+        else:
+            reach = variant_reach(fb)
+            with open(os.path.join(cache_dir, reach_file + ".tmp"), "w", encoding="utf-8") as fh:
+                json.dump(reach, fh)
+            os.replace(os.path.join(cache_dir, reach_file + ".tmp"), os.path.join(cache_dir, reach_file))
+    if todo:
+        used.add(reach_file)
+        used.update(os.path.basename(f) for job in todo for f in job[2].values())
+    reach = reach if todo else {}
 
     def draw(job):
         path, tint, files, out_name, entry = job
@@ -3124,7 +3155,7 @@ def main():
         return f'{m.group(1)}?v={assets[name][0] if name in assets else version}"'
     with open(os.path.join(SITE, "index.html"), encoding="utf-8") as fh:
         template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', url, fh.read()).replace("<!--BUILD-->", version)
-    site_banner(cards, os.path.join(DIST, "og.jpg"))
+    banner = site_banner(cards, os.path.join(DIST, "og.jpg"))
     def og_tags(title, desc, url, image="", size=None, alt=""):
         tags = [f'<meta property="og:site_name" content="{SITE_NAME}">', '<meta property="og:type" content="website">',
                 f'<meta property="og:title" content="{html.escape(title)}">', f'<meta property="og:description" content="{html.escape(desc)}">',
@@ -3220,7 +3251,7 @@ def main():
             f'<title>{html.escape(title)} · {SITE_NAME}</title>',
         ])
     for n in os.listdir(OG_CACHE) if SITE_URL else []:   # no montages without SITE_URL: keep the cache
-        if n not in montages:                     # site.yml saves the cache under these names, so only the ones in use
+        if n not in montages and n != banner:     # site.yml saves the cache under these names, so only the ones in use
             os.remove(os.path.join(OG_CACHE, n))
     if montages:
         log(f"deck previews: {len(montages)} montages")
