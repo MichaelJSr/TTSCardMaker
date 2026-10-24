@@ -412,7 +412,8 @@ export function ratingsPanelHtml(p, x) {
   const tiles = (label, list) => { const cs = (list || []).map(([id]) => x.byId?.get(id)).filter(Boolean); return cs.length ? `<div><div class="pick-label">${label}</div><div class="strip">${cs.map(x.tile).join("")}</div></div>` : ""; };
   const picks = r ? `${tiles("Most liked", r.best)}${tiles("Least liked", r.worst)}` : "";
   const lines = [
-    sb?.fav != null ? `Own cards: ${sign(sb.fav)} vs others (${sb.n})` : "",
+    sb && (sb.fav != null || sb.power != null) ? `Own cards vs others: ${[sb.fav != null ? `favorability ${sign(sb.fav)} (${sb.n})` : "",
+      sb.power != null ? `power ${sign(sb.power)} (${sb.powerN})` : ""].filter(Boolean).join(" · ")}` : "",
     rt ? `As a rater: ${sign(rt.harsh)} vs others${rt.agree != null ? ` · agreement ${rt.agree.toFixed(2)}` : ""}${rt.twin ? ` · taste twin: ${personA(rt.twin[0])}` : ""}` : "",
     pv ? `<span data-tip="Correlation, −1 to 1">Power ratings vs stats: ${pv.r.toFixed(2)} (${plural(pv.n, "card")})</span>` : "",
   ].filter(Boolean);
