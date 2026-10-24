@@ -440,7 +440,7 @@ const mixRows = (rows, label) => rows.map(([k, mine, all]) => `<div class="p-mix
 export function stylePanelHtml(s, mix, x, n) {
   const chip = (html, [, k, ratio, share]) => `<span class="chip" data-tip="${esc(`${k} of their cards (${pct(k / n)}) vs ${pct(share)} of all cards`)}">${html} ×${ratio}</span>`;
   const row = (label, list, html) => (list.length ? `<div class="p-style"><span class="pick-label">${label}</span><div class="chips">${list.map(r => chip(html(r[0]), r)).join("")}</div></div>` : "");
-  const chips = s ? row("Types", s.types, esc) + row("Status effects", s.status, id => esc(x.byId?.get(id)?.name || id)) + row("Timing tags", s.tags, badgeHtml) : "";
+  const chips = s ? row("Types", s.types, t => esc(t.replace(/_/g, " "))) + row("Status effects", s.status, id => esc(x.byId?.get(id)?.name || id)) + row("Timing tags", s.tags, badgeHtml) : "";
   const words = s?.words != null ? `<p>Words per ability: ${s.words} <span class="muted">· all cards ${s.siteWords}</span></p>` : "";
   const label = k => (x.kinds || []).find(([key]) => key === k)?.[1] || k;
   const mixes = mix && (mix.stars.length || mix.kinds.length) ? `<div class="p-mixes">${mix.stars.length ? `<div><div class="pick-label">Star levels</div>${mixRows(mix.stars, k => `${k}★`)}</div>` : ""}
