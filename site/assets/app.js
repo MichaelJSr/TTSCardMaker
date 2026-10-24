@@ -367,7 +367,7 @@ function renderCards(r) {
   if (p.get("subseries")) active.push(["subseries", p.get("subseries")]);
   if (p.get("author")) active.push(["author", `by ${p.get("author")}`]);
   for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
-  for (const f of csv(p, "flags")) active.push(["flags", (FLAGS.find(x => x[0] === f) || [f, f])[1], f]);
+  for (const f of csv(p, "flags")) { const x = FLAGS.find(x => x[0] === f); if (x) active.push(["flags", x[1], f]); }   // an old flag: ignored
   const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
     return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
   const suggestions = !list.length && p.get("q") ? suggest(p.get("q"), S.cards) : [];
