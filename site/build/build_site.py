@@ -1882,8 +1882,8 @@ def commit_keys(row, people, by_login, row_of=None):
 def mass_passes(found, by_png=None, skip=()):
     """{sha} of the commits in more than MASS_PASS cards' image versions (by_png: a PNG with only skip's ids, a rulebook
     page, doesn't count)."""
-    card = lambda png: by_png is None or any(e["id"] not in skip for e in by_png.get(png, ()))
-    size = Counter(sha for png, vs in found.items() if card(png) for (sha, *_), _ in vs)
+    rule = lambda png: bool(by_png and by_png.get(png)) and all(e["id"] in skip for e in by_png[png])
+    size = Counter(sha for png, vs in found.items() if not rule(png) for (sha, *_), _ in vs)
     return {sha for sha, n in size.items() if n > MASS_PASS}
 
 
