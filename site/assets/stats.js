@@ -142,17 +142,22 @@ const luminance = rgb => { const [r, g, b] = rgb.map(toLin); return 0.2126 * r +
 const contrast = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 /** heat(p) for p in 0..100 → {bg, ink}: background from the theme's ramp, nudged off any mid-tone where neither the dark
     nor the light ink reaches 4.5:1, and the ink that contrasts more. */
+let heatMemo = null;          // per theme: reading the ramp from the CSS forces a style pass (once per heat table was a hotspot)
 function heatScale() {
+  const theme = document.documentElement.dataset?.theme;
+  if (heatMemo && heatMemo.theme === theme) return heatMemo.heat;
   const css = getComputedStyle(document.documentElement), get = n => hex2rgb(css.getPropertyValue(n));
   const lo = oklab(get("--seq-100")), hi = oklab(get("--seq-700")), dark = luminance([11, 11, 11]), light = luminance([240, 239, 236]);
   const at = p => rgbOf(lo.map((v, i) => v + (hi[i] - v) * (p / 100)));
   const pass = rgb => { const L = luminance(rgb); return Math.max(contrast(L, dark), contrast(L, light)) >= 4.5; };
-  return p => {
+  const heat = p => {
     let q = p;
     for (let d = 0; d <= 50 && !pass(at(q)); d++) { if (p - d >= 0 && pass(at(p - d))) { q = p - d; break; } if (p + d <= 100 && pass(at(p + d))) { q = p + d; break; } }
     const rgb = at(q), L = luminance(rgb);
     return { bg: `rgb(${rgb.join(",")})`, ink: contrast(L, dark) >= contrast(L, light) ? "#0b0b0b" : "#f0efec" };
   };
+  if (css.getPropertyValue("--seq-100").trim()) heatMemo = { theme, heat };   // not before the stylesheet has loaded
+  return heat;
 }
 
 /** A heat table: head [text | {html}], rows of cells (a number shaded, null "—", text as is); shade: the columns shaded
