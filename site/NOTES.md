@@ -1,4 +1,4 @@
-# Website notes (2026-10-20, sections 7-12 added 2026-10-21, 13, 14 and the (Action) tag on 2026-10-22, 16-18 on 2026-10-23)
+# Website notes (2026-10-20, sections 7-12 added 2026-10-21, 13, 14 and the (Action) tag on 2026-10-22, 16-19 on 2026-10-23)
 
 Architecture notes on site/ taken while planning the (since reverted) Table tab; line numbers are as of that day. The
 hand-kept files have since moved from MDW/ to site/ (Card Authors.txt, Card Edits.json, Website Admins.txt,
@@ -228,3 +228,68 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   version); the tuple shape is unchanged.
 - Checks: AutoCroissant tests/test_site_build.py::test_a_recompression_is_no_new_image_version (a guards commit with a
   recompressed and a re-exported PNG, a batch commit, a person's commit with the trailer); it fails without this change.
+
+## 19. Token picker and variant pictures (2026-10-23)
+- Owner's request (2026-10-23 ~18:00): typing a stoogedings token (it starts with `[`) suggests the icons with their
+  pictures and narrows as you type, so nobody has to remember the names, and shows the variants too.
+- `assets/tokens.js` (pure helpers above `install`; AutoCroissant tests/test_token_picker.py runs them in node):
+  `openToken(text, caret)` -> the token being typed: an unclosed `[` on the caret's line (a name of letters, digits,
+  spaces, `_ - . '`, then maybe `:` + letters; at most `MAX_TOKEN` 52 characters, text.js PIECE's limit) or `(` + 1-6
+  of text.js TAG's characters that does not start in lower case ("(see below)" and "(only once)" never open);
+  `close` = past the rest of the word at the caret and a `]` or `)` already there. `suggest(open, vocab)`: icons by
+  `norm` (case, spaces, `_ - . '` ignored): exact name or alias, name prefix, alias prefix, then (2+ letters) inside a
+  name or alias; types before stars, then by name; an exact match is followed by its variants. After `name:` the
+  variants (`VARIANTS` = the bot's ICON_VARIANTS: tint, sticker, no, glow, darkglow; the font gives every icon all of
+  them), of that icon when the name is exact, else of every match, prefix first. `(`: `TAGS`, the font's 341
+  (badge_tags, the cards' own first, the rulebook's old ones last, all through tagInfo), any case, an exact one first.
+  At most 120 rows. `applyChoice` puts the canonical `[name]`, `[name:variant]` or `(TAG)` in place of
+  `start..close`, caret after it. `vocabulary(icons)` turns cards.json icons into one entry per icon with its other
+  spellings as `keys`.
+- The dropdown (`install`, app.js boot; `S.vocab` per data load): one `ul#tok-picker` (role listbox, rows role option
+  `#tok-pick-<i>`, each the picture (`renderer.icon(token, {tip: false})`, the variant's own; badgeHtml for a tag),
+  the token, the plain name with the variant's or tag's meaning, the kind), moved into the field's `[role=dialog]`
+  (aria-modal hides the rest from readers) or body; `position: fixed` under the token's `[` (a mirror div measures the
+  caret; above it when there is more room there; `visualViewport` for phone keyboards), 8 rows then it scrolls.
+  Fields are `[data-tokens]`: edit.js `#ef-ability` and `#ef-note` (card and rulebook forms), inline.js
+  `.inline-ability` and `.inline-note`. Listeners on document, capture: `input` opens and narrows (Backspace widens),
+  ArrowLeft/Right/Up/Down/Home/End keyups and pointerups in the field follow the caret (a move out of the token
+  closes); keydown while open: Up/Down (wrap), PageUp/Down, Enter or Tab accept, Esc closes the picker only and stops
+  the event (inline editing's and the dialog's own Esc come next time), and the token Esc closed stays closed until
+  the caret leaves it. Rows: mousedown prevented, so the field keeps the focus and the phone keyboard stays; click
+  accepts. Accepting selects `start..close` and runs `execCommand("insertText")` (undo keeps it; its `input` event
+  updates `#ef-preview`), else sets the value and sends `input`. The field gets aria-expanded, aria-controls,
+  aria-activedescendant; a hidden live region says how many suggestions.
+- Variant pictures: `build_icons` makes `dist/icons/<name>.<variant>.webp` for tint, sticker, glow and darkglow of every
+  manifest icon with the font build's own code: build_stoogedings.py `icon_art(im, tint)` (the per-icon part of
+  `build()`, moved into a function the font build calls too; the font rebuilt byte-identical with it, 2026-10-23) gives
+  the cropped icon, its size in font units, the TRACE-size pixels and the tint, sticker and halo masks; build_site
+  `variant_art` places them as the glyphs do (sticker outline pad px past the icon, halo GLOW_SIZE units left of and
+  above it) in a square around the icon's square box (where `object-fit: contain` puts the plain icon), reaching
+  `variant_reach` past it (OUTLINE / HEIGHT and GLOW_SIZE / HEIGHT, whole pixels at ICON_SIZE: 0.0729 and 0.3021),
+  scaled so the icon is as big as the plain one (96 px long side). tint and sticker take the text colour in the font,
+  so theirs are white masks (lossless) that style.css paints with `currentColor`; glow and darkglow are the halo PNG
+  the font embeds with the icon on it (q90). :no stays style.css's `.tok-no`. Cached by blob in site/.cache/icons as
+  `<blob16>-<variant>-<VARIANT_VERSION>-<hash of the build script and the icon's tint mode>.webp`, pruned with the
+  icons; cold 12 s for 91 icons (31 s CPU over 8 threads, a busy Mac), warm 0.1 s; 0.7 MB of masks and 1.5 MB of glows
+  in dist. Needs the font build's packages (numpy, opencv-python-headless, fonttools): `font_builder()` imports the
+  script, and without it or them (or with a script that has no `icon_art`) there is one warning and no variant
+  pictures, never a failed build. An icon's `v` in cards.json lists its pictures; `iconVariants` = {variant: reach}
+  ({} without them).
+- text.js `makeRenderer({cards, icons, variants})` (`variants` = cards.json iconVariants): `[x:tint]` a `span.tokm`
+  (the mask in the text colour, 1.35em box), `[x:sticker]` a `span.tokv` (--r: its reach) holding the outline mask and
+  the plain icon, `[x:glow]` and `[x:darkglow]` an `img.tokv`. A `.tokv` is (1 + 2 --r) x 1.35em with negative margins
+  above and below of --r x 1.35em: it sits on the line as the plain icon does and its halo spills over the lines above
+  and below, as Photoshop draws the font's; its full width counts, as the font's spacers widen the token. A variant
+  without its picture (an older build, an unknown variant) is the plain icon, as before and as the parser reads it.
+  `plain()` and build_site's `share_text` still flatten every variant.
+- Checks (2026-10-23; harness in ~/Documents/Tools/wt/scratch/picker/: a scratch build of this branch with the image
+  cache cloned and AutoCroissant's pickles, served on localhost, driven in WebKit by `browser/shoot.swift`, a
+  WKWebView offscreen with GitHub's API answered in the page (a stand-in editor, nothing sent) and IndexedDB hidden;
+  screenshots in `shots/`): the Edit dialog's list, narrowing, an exact name's variants, variants after `:`, Enter
+  accepting with the preview updated, timing tags, Esc keeping the dialog, no list for "(see below", light theme;
+  inline editing (a spaced alias, the first Esc only closing the list, the second cancelling, a click accepting with
+  the focus kept), the inline note (Enter accepts, the note stays open), 390 px wide. `variants-font-vs-site.png` sets
+  the font's tokens (WebKit draws its OT-SVG glyphs) next to the site's pictures on dark and light: the same look.
+  AutoCroissant tests/test_token_picker.py (8): each fails with its part reverted to main.
+- Not done: the font draws wide icons up to 1.4 em, the site fits every icon (and so its variants) in a 1.35 em square,
+  as before; the old `.token-bar` buttons stay.
