@@ -631,3 +631,4 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .fact.arch.renamed { background: color-mix(in srgb, var(--s1) 28%, transparent); }
 .fact.arch.retired { background: color-mix(in srgb, var(--s4) 30%, transparent); }
 .fact.arch.deleted { background: color-mix(in srgb, var(--danger) 25%, transparent); }
+.stats-jump { display: flex; gap: 12px; margin-left: auto; font-size: 13.5px; }

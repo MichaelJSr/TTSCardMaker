@@ -11,6 +11,11 @@ export const month = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefine
 const ym = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "2-digit", timeZone: TZ });
 /** "2026-10" in Pacific time */
 export const monthKey = ts => { const p = Object.fromEntries(ym.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); return `${p.year}-${p.month}`; };
+const ymd = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ });
+/** "2026-10-21" in Pacific time */
+export const dayOf = ts => { const p = Object.fromEntries(ymd.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}`; };
+/** "2026" in Pacific time */
+export const yearOf = ts => dayOf(ts).slice(0, 4);
 
 /** When the current text started (build_site since: the bot's carried start), else the last PSD commit (ts) */
 export const textSince = c => c.since ?? c.ts;

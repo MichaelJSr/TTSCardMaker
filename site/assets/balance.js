@@ -85,12 +85,29 @@ function diverging(rows, { unit = "", labelW = 200 } = {}) {
     const d = up ? `M${x},${by}H${x + w - 4}Q${x + w},${by} ${x + w},${by + 4}V${by + bar - 4}Q${x + w},${by + bar} ${x + w - 4},${by + bar}H${x}Z`
       : `M${mid},${by}H${x + 4}Q${x},${by} ${x},${by + 4}V${by + bar - 4}Q${x},${by + bar} ${x + 4},${by + bar}H${mid}Z`;
     const v = `${r.value > 0 ? "+" : r.value < 0 ? "\u2212" : ""}${fmt(Math.abs(r.value))}`;
-    return `<g class="row" data-card="${esc(r.id)}" data-v="${esc(`${v} ${unit}`)}" data-l="${esc(r.tip || r.label)}">
+    return `<g class="row"${r.id ? ` data-card="${esc(r.id)}"` : ""} data-v="${esc(`${v} ${unit}`)}" data-l="${esc(r.tip || r.label)}">
       <rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}"/>
       <text class="lbl" x="${labelW - 8}" y="${y + rowH / 2 + 4}" text-anchor="end">${esc(trunc(r.label, 30))}</text>
       ${w > 0 ? `<path class="mark" d="${d}" fill="var(${up ? "--s1" : "--s2"})"/>` : ""}
       <text class="val" x="${up ? x + w + 5 : x - 5}" y="${y + rowH / 2 + 4}" text-anchor="${up ? "start" : "end"}">${esc(v)}</text></g>`;
   });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img"><line class="axis" x1="${mid}" x2="${mid}" y1="0" y2="${H - 4}"/>${parts.join("")}</svg>`;
+}
+
+/** Two bars per row from one centre line: down to the left (--s2), up to the right (--s1): rows [{label, up, down, tip}] */
+function twoSided(rows, { unit = "points", labelW = 70 } = {}) {
+  const rowH = 26, bar = 14, W = 560, mid = labelW + (W - labelW) / 2, half = (W - labelW) / 2 - 40;
+  const max = Math.max(1, ...rows.flatMap(r => [r.up, r.down]));
+  const parts = rows.map((r, i) => {
+    const y = i * rowH, by = y + (rowH - bar) / 2, wu = (r.up / max) * half, wd = (r.down / max) * half, ty = y + rowH / 2 + 4;
+    const right = wu > 0 ? `<path class="mark" d="M${mid},${by}H${mid + wu - Math.min(4, wu)}Q${mid + wu},${by} ${mid + wu},${by + 4}V${by + bar - 4}Q${mid + wu},${by + bar} ${mid + wu - Math.min(4, wu)},${by + bar}H${mid}Z" fill="var(--s1)"/>` : "";
+    const left = wd > 0 ? `<path class="mark" d="M${mid},${by}H${mid - wd + Math.min(4, wd)}Q${mid - wd},${by} ${mid - wd},${by + 4}V${by + bar - 4}Q${mid - wd},${by + bar} ${mid - wd + Math.min(4, wd)},${by + bar}H${mid}Z" fill="var(--s2)"/>` : "";
+    return `<g class="row" data-v="${esc(`+${fmt(r.up)} · \u2212${fmt(r.down)} ${unit}`)}" data-l="${esc(r.tip || r.label)}">
+      <rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}"/>
+      <text class="lbl" x="${labelW - 8}" y="${ty}" text-anchor="end">${esc(r.label)}</text>${left}${right}
+      <text class="val" x="${mid - wd - 5}" y="${ty}" text-anchor="end">\u2212${esc(fmt(r.down))}</text><text class="val" x="${mid + wu + 5}" y="${ty}">+${esc(fmt(r.up))}</text></g>`;
+  });
+  const H = rows.length * rowH + 4;
   return `<svg viewBox="0 0 ${W} ${H}" role="img"><line class="axis" x1="${mid}" x2="${mid}" y1="0" y2="${H - 4}"/>${parts.join("")}</svg>`;
 }
 
@@ -272,6 +289,38 @@ export function statsHtml(A, { cards, byId }, params) {
       { wide: true }));
   }
 
+  // power creep (by year created) and series strength: a card's total minus its star level's median, as built
+  const strength = new Map();
+  for (const c of pool) { const a = A.cards[c.id], co = a?.cohort && A.cohorts[a.cohort]; if (co) strength.set(c.id, totalOf(c.id) - co.total.p50); }
+  const years = new Map();
+  for (const c of pool) if (strength.has(c.id) && c.created) {
+    const y = c.created.slice(0, 4), g = years.get(y) || years.set(y, { n: 0, s: 0, t: 0 }).get(y);
+    g.n++; g.s += strength.get(c.id); g.t += totalOf(c.id);
+  }
+  const yearRows = [...years].sort((a, b) => a[0].localeCompare(b[0])).map(([y, g]) => ({ y, n: g.n, s: g.s / g.n, t: g.t / g.n }));
+  if (yearRows.some(r => r.n >= 3))
+    charts.push(card("bal-creep", "Power creep", "Average total vs its star level's median, by year created.",
+      diverging(yearRows.filter(r => r.n >= 3).map(r => ({ label: `${r.y} (${r.n})`, value: Math.round(r.s * 10) / 10, tip: `${r.y}: ${r.n} creatures and minions, average total ${fmt(r.t)}` })), { unit: "vs median", labelW: 110 }),
+      table(["Year", "Cards", "Average vs median", "Average total"], yearRows.map(r => [r.y, r.n, Math.round(r.s * 10) / 10, Math.round(r.t * 10) / 10])),
+      { legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
+  if (!series && strength.size) {
+    const bySeries = new Map();
+    for (const c of pool) if (c.series) {
+      const g = bySeries.get(c.series) || bySeries.set(c.series, { cards: 0, n: 0, stars: [], s: 0, authors: new Map() }).get(c.series);
+      g.cards++;
+      if (c.author) g.authors.set(c.author, (g.authors.get(c.author) || 0) + 1);
+      if (strength.has(c.id)) { g.n++; g.s += strength.get(c.id); if (c.stars) g.stars.push(c.stars); }
+    }
+    const rows = [...bySeries].map(([name, g]) => ({ name, ...g, avg: g.n ? Math.round((g.s / g.n) * 10) / 10 : null,
+      top: [...g.authors].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "" })).sort((a, b) => b.cards - a.cards || a.name.localeCompare(b.name));
+    const ranked = rows.filter(r => r.n >= 5).sort((a, b) => b.avg - a.avg), shown = ranked.length > 16 ? [...ranked.slice(0, 8), ...ranked.slice(-8)] : ranked;
+    if (rows.length) charts.push(card("bal-series", "Series strength", "Average total vs its star level's median; 5+ creatures and minions.",
+      shown.length ? diverging(shown.map(r => ({ label: r.name, value: r.avg, tip: `${r.name}: ${r.n} creatures and minions` })), { unit: "vs median" }) : `<p class="muted">No series has 5+ creatures and minions.</p>`,
+      table(["Series", "Cards", "Creatures and minions", "Average stars", "Average vs median", "Authors", "Top author"],
+        rows.map(r => [r.name, r.cards, r.n, r.stars.length ? Math.round((r.stars.reduce((a, b) => a + b, 0) / r.stars.length) * 10) / 10 : "—", r.avg ?? "—", r.authors.size, r.top])),
+      { startTable: true, legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
+  }
+
   // the recorded changes in scope
   const changes = [];
   for (const [id, a] of Object.entries(A.cards)) if (inPool.has(id)) for (const r of a.changes || []) changes.push({ id, r });
@@ -290,6 +339,16 @@ export function statsHtml(A, { cards, byId }, params) {
       table(["Date", "Card", "Change", "Total"], [...bal, ...shifts].sort((x, y) => y.r.ts - x.r.ts).map(x => [day(x.r.ts), byId.get(x.id)?.name || x.id, x.r.bal === "buff" ? "Buff" : x.r.bal === "nerf" ? "Nerf" : "Stats moved", sums(x).join(" → ")]), 3),
       { wide: true, legend: legend([["var(--s1)", "Buffs"], ["var(--s2)", "Nerfs"]]) }));
   } else charts.push(card("bal-buffs", "Buffs and nerfs", "", `<p class="bal-empty">No buffs or nerfs recorded yet.</p>`, ""));
+  if (bal.length || shifts.length) {                  // by stat: the points each stat gained and lost
+    const per = STATS.map(([, label]) => ({ label, up: 0, down: 0, n: 0 }));
+    for (const x of [...bal, ...shifts]) {
+      const [a, b] = x.r.stats;
+      per.forEach((p, i) => { p.up += Math.max(0, b[i] - a[i]); p.down += Math.max(0, a[i] - b[i]); if (a[i] !== b[i]) p.n++; });
+    }
+    charts.push(card("bal-stats", "Buffs and nerfs by stat", "Stat points raised and lowered.", twoSided(per),
+      table(["Stat", "Raised", "Lowered", "Net", "Changes"], per.map(p => [p.label, p.up, p.down, p.up - p.down, p.n])),
+      { legend: legend([["var(--s1)", "Raised"], ["var(--s2)", "Lowered"]]) }));
+  }
 
   // 5 changes by month
   if (changes.length) {
@@ -322,3 +381,5 @@ export function statsHtml(A, { cards, byId }, params) {
     <p class="muted bal-intro">Creatures and minions compared within their star level.</p>
     <div class="charts">${charts.join("")}</div>`;
 }
+
+export { diverging, legend };   // insights.js

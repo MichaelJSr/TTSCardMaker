@@ -17,6 +17,7 @@ import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js"
 import { deckPasses } from "./login.js";
 import { createPreviews } from "./preview.js";
 import * as ratings from "./ratings.js";
+import * as insights from "./insights.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -707,11 +708,19 @@ function openPicker(tier) {                              // the shared picker (p
 // ---- stats / changes / compare -------------------------------------------------------------------
 function renderStatsView(r) {
   renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist, distPage: S.distPage }, r.params);
-  const fill = () => { const slot = $("#stats-balance", view), now = parseHash(); if (slot && now.name === "stats") slot.innerHTML = balance.statsHtml(S.analytics, { cards: S.cards, byId: S.byId }, now.params); };
+  const ctx = { cards: S.cards, byId: S.byId, banned: S.banned };
+  const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History leave out what needs it
+    const now = parseHash();
+    if (now.name !== "stats") return;
+    const put = (id, html) => { const slot = $(`#${id}`, view); if (slot) slot.innerHTML = html; };
+    if (A) put("stats-balance", balance.statsHtml(A, { cards: S.cards, byId: S.byId }, now.params));
+    put("stats-ratings", insights.ratingsHtml(A, ctx, now.params));
+    put("stats-history", insights.historyHtml(A, ctx, now.params));
+  };
   if (S.analytics) fill();
   else {
     $("#stats-balance", view).innerHTML = `<p class="loading">Loading the balance section…</p>`;
-    loadAnalytics().then(fill, e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; });
+    loadAnalytics().then(() => fill(), e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; fill(null); });
   }
 }
 function distPage(panel, step) {          // a stat distribution's pager: the next or previous page of values (stats.js)
