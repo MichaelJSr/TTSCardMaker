@@ -822,15 +822,17 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - `assets/ratings.js` (pure): `SCALES`, `TIERS` (display labels), `tierOf` (edges 2.5/4.5/6.5/8.5), `latestBy(list,
   scale, {day, skip})`, `current(list, scale, {day, skip})` (mean of each rater's latest; "group" is one rater),
   `ratingDates`, `hasPersonal(cards, scale?)`, `dayLabel`, `chartSvg`, `blockHtml`. The card page's Ratings block
-  (`#card-ratings` after `#card-balance`): per scale the current value, its category, "group · <date>" or "n raters ·
-  latest <date>", and a chart (y fixed 1-10, power's dashed "balanced" line at 5.5, the line through each date's
-  consensus, group dots filled, a person's hollow, unpublished dashed; tooltips through `[data-v]`); "All ratings" table.
+  (`#card-ratings` after `#card-balance`; a duplicate's page shows and rates its original's): per scale the current
+  value, its category, "group · <date>" or "n raters · latest <date>", and a chart (y fixed 1-10, power's dashed
+  "balanced" line at 5.5, the line through each date's consensus, group dots filled, a person's hollow, unpublished
+  dashed; tooltips through `[data-v]`); "All ratings" table.
 - Editing: `op.rate = {favorability?, power?}` on the card's op (like `op.ban`): the card page's Rate it (`rate-add`,
-  `stageRating`), All fields' Ratings fieldset (`readForm`; prefilled from the staged op, `myRating`), bar lines
-  "Favorability 7.5" (`rate-<scale>` items, reverted by `withoutItem`). `applyOp` adds preview entries (by "you",
-  `_staged`/`_sent`; `rater` = your published entries' `by`, matched on `login || by`, so `latestBy` counts you once) and `c._rate` (drafts.js `rawOf`). `publish` writes `ratingsFile(text, ops, <Pacific day>, login)`:
-  your entry of that day and scale replaced, others kept; `editsFile` skips a rating-only op, so Card Edits.json is
-  untouched. `RATINGS_ABOUT` = `CardRatings.ABOUT`.
+  `stageRating`; the page repainted where it was scrolled), All fields' Ratings fieldset (none on a duplicate)
+  (`readForm`; prefilled from the staged op, `myRating`), bar lines "Favorability 7.5" (`rate-<scale>` items, reverted
+  by `withoutItem`). `applyOp` adds preview entries (by "you", `_staged`/`_sent`; `rater` = your published entries'
+  `by`, matched on `login || by`, so `latestBy` counts you once) and `c._rate` (drafts.js `rawOf`). `publish` writes
+  `ratingsFile(text, ops, <Pacific day>, login)`: your entry of that day and scale replaced, others kept; `editsFile`
+  skips a rating-only op, so Card Edits.json is untouched. `RATINGS_ABOUT` = `CardRatings.ABOUT`.
 
 ## 26. Stats round 3: distributions, Ratings and History, the Archive (2026-10-24)
 - Removed: Balance's "The cooldown update" (`bal-cooldown`, `WAVE`, `groupOf`) and analytics.py's `old` row flag

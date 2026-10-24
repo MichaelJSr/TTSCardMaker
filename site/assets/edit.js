@@ -619,11 +619,11 @@ export function createEditor(app) {
           <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" data-suggest="author" autocomplete="off" value="${esc(c.author || "")}">`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
         </fieldset>
-        <fieldset><legend>Ratings</legend>
+        ${isDup ? "" : `<fieldset><legend>Ratings</legend>
           ${RATE.map(k => { const now = ratingNow((b.ratings || []).filter(e => !e._staged), k), v = stage.cards[c.id]?.rate?.[k];
             return `<div class="erow" data-row="rate-${k}"><label for="ef-rate-${k}">${LABEL[`rate-${k}`]}</label><div class="ein"><input id="ef-rate-${k}" type="number" min="1" max="10" step="0.1" placeholder="1–10" value="${v ?? ""}"><span class="muted">${now ? `${now.value} now` : "not rated"}</span></div></div>`; }).join("")}
           <p class="muted">Adds your dated rating; empty adds none.</p>
-        </fieldset>
+        </fieldset>`}
         <fieldset><legend>Checks</legend>
           ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 10 is intended</label>`)}
           ${c.problems?.length || c.problems_ok ? row("problems_ok", `<label class="check"><input id="ef-problems_ok" type="checkbox"${c.problems_ok ? " checked" : ""}> checked, hide them</label> <span class="muted">${esc((b.problems || []).join(" · "))}</span>`) : ""}
@@ -1425,8 +1425,9 @@ export function createEditor(app) {
     "pw-remove": el => removePassword(el.dataset.login || me?.login || ""),
     "pw-later": () => later(),
     "pw-list": () => listPasswords(),
-    "rate-add": el => { const id = el.dataset.id, v = k => document.getElementById(`rate-${k}`)?.value ?? "";
-      if (stageRating(id, { favorability: v("favorability"), power: v("power") })) app.goCard(id); },
+    "rate-add": el => { const id = el.dataset.id, v = k => document.getElementById(`rate-${k}`)?.value ?? "";   // a duplicate's page: its original's id
+      if (!stageRating(id, { favorability: v("favorability"), power: v("power") })) return;
+      const top = app.modal.scrollTop; app.goCard(app.currentCard() || id); app.modal.scrollTop = top; },
     "edit-show-hidden": el => { S.showHidden = el.checked; localStorage.setItem(K.hidden, el.checked ? "1" : ""); app.derive(); app.rerender(); },
   };
 

@@ -500,7 +500,7 @@ function openCard(id, showDetails = false) {
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
           <div id="card-balance">${balanceHtml(c)}</div>
-          <div id="card-ratings">${ratings.blockHtml(c, { editing: editing(), mine: editor.myRating(c.id) })}</div>
+          <div id="card-ratings">${ratings.blockHtml(balanceOf(c), { editing: editing(), mine: editor.myRating(balanceOf(c).id) })}</div>
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
