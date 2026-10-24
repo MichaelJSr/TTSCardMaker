@@ -96,7 +96,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 
 ## 8. People: contributions (2026-10-21)
 - Build (build_site.py): one `git log --raw --no-renames --no-abbrev --format=%x01%H%x09%ct%x09%aN%x09%aE%x09%s -- *.png *.PNG *.psd *.PSD 'MDW/Card Edits.json' 'site/Card Edits.json'` in `git_history()` (runs in `HISTORY_REPO`, = REPO; a test wrapper points it at a full-history `--filter=blob:none --no-checkout` clone), parsed once by `parse_history(text)` into `(sha, ts, name, email, subject, [(status, old blob, new blob, path)])` newest first; None in a shallow clone. `image_versions(paths, commits)` consumes the PNG entries exactly as before (same output: checked byte-equal against the previous implementation on the full clone); `contributions(cards, people, profiles, edits, commits)` consumes the rest. Measured on the 547-commit clone: 500 commits in the walk, 1.45 MB of text, 0.1 s; parsing + counting 0.02 s; contributions.json 4.1 KB.
-- Keying: `credit(key, people, by_login)` = the `author` of the profile whose login is the key, else `[people]`, else None; `who(name, email, people, by_login)` = credit of the git name, else of the login in a `[<id>+]<login>@users.noreply.github.com` email, else the git name as written; a login (`_by`, `Edit-by`) goes through `contributions`' `key_of` = credit, else the key its noreply commits credit most (`noreply`, a pre-pass over the history), else the login as first spelled (case-insensitive, so `Croissant2`/`croissant2` are one row; a bake counts once per row named). `BOT_AUTHOR = "AutoCroissant"` is skipped as a commit author and as a `_by` stamp. Each person carries `logins` = {key} ∪ profile logins whose author is the key ∪ `[people]` left-hand sides mapping to the key ∪ the GitHub logins seen for them (noreply, `_by`, `Edit-by`), kept only where `row_of` (credit, else noreply) lands on the key, one spelling per name (so a login sits in one row; the client's `personOf` matches a profile by login first); the client matches `editBy` against it, and `findPerson` / `personOf` match by it, so `#/u/JasonBechdolt` (a deck's "by" link) opens Chestnut's page and a profile under that login joins Chestnut's row: one page, one row, private decks listed once. Split identities merge through one `[people]` line (Michael/MichaelJSr: same email, different git name, no login involved) or a profile's author field when the other name is the GitHub login (Chestnut/JasonBechdolt, Croissant/Croissant2), never code.
+- Keying: `credit(key, people, by_login)` = the `author` of the profile whose login is the key, else `[people]`, else None; `who(name, email, people, by_login)` = credit of the git name, else of the login in a `[<id>+]<login>@users.noreply.github.com` email, else the git name as written; a login (`_by`, `Edit-by`) goes through `contributions`' `key_of` = `login_rows()` (credit, else the key its noreply commits credit most, a pre-pass over the history; made once in main() and also used for ratings' `by`, `edit_batches`' credits and `commit_keys`' Edit-by logins), else the login as first spelled (case-insensitive, so `Croissant2`/`croissant2` are one row; a bake counts once per row named). `BOT_AUTHOR = "AutoCroissant"` is skipped as a commit author and as a `_by` stamp. Each person carries `logins` = {key} ∪ profile logins whose author is the key ∪ `[people]` left-hand sides mapping to the key ∪ the GitHub logins seen for them (noreply, `_by`, `Edit-by`), kept only where `row_of` (credit, else noreply) lands on the key, one spelling per name (so a login sits in one row; the client's `personOf` matches a profile by login first); the client matches `editBy` against it, and `findPerson` / `personOf` match by it, so `#/u/JasonBechdolt` (a deck's "by" link) opens Chestnut's page and a profile under that login joins Chestnut's row: one page, one row, private decks listed once. Split identities merge through one `[people]` line (Michael/MichaelJSr: same email, different git name, no login involved) or a profile's author field when the other name is the GitHub login (Chestnut/JasonBechdolt, Croissant/Croissant2), never code.
 - Counts: cards = visible non-duplicate cards with `author == key`; edits = commits where an edits path is `M`, or `A` with a blob not deleted in the same commit (the MDW -> site move is not a batch: 7 commits touch the file today, 6 count); card commits = commits with an `M`, or an `A` whose blob no `D` in the same commit gave up (a pure move isn't a change: the 2025-02-12 `Auxillary/` -> `Auxiliary/` rename, folder reshuffles), of a `.psd`/`.png` under CARD_FOLDERS or OLD_CARD_FOLDERS (`Auxillary/`) without SKIP_PARTS or RULE_PARTS (`Rules`, `Rulebook`: rulebook pages), one per commit; `recent` = the last 10 card commits as `[ts, subject, distinct card stems]`; `first`/`last` over both kinds. Fallback without history: distinct `(_by, _at)` stamps from Card Edits.json (bot excluded), `available: false`. Today (full history, 390 card commits): MichaelJSr 237/6/65 (with Michael, through `[people]`), Chestnut 178/0/48, hdckighfkvhvgmk 125/0/55, Croissant 93/0/133, bobberlington 82/0/18, Zomoroko 20/0/61, TyKim182 17/0/10, Tyler9648 13/0/0.
 - Titles: `TITLES` (build) = `TITLES` (profile.js): cards -> Top card maker, edits -> Top editor, commits -> Top committer; the top count per column, ties share, nobody at 0; plus `OVERALL` (below). `titles_of` feeds the Open Graph text (`contrib_text`: "Top committer · 93 cards · 133 card commits", appended to `profile_text` for profiles, cards left out when the profile already says "N cards by X"); `titlesOf` in profile.js computes the same for the pages, so the JSON carries no titles.
 - Data: `data/contributions.json` = `{available, since, people: [{key, logins, github?, cards, edits, commits, first, last, recent, recentEdits, months}], previews: {name: text}}` people sorted by cards, commits, edits, key (the fields after `recent` are below). Static pages: `u/<key>/index.html` for each contributor without a profile (login or author matching), only for keys matching `PAGE_KEY_RE` (folder-safe) and no profile's login (any case: that page and preview stay the profile's); 8 today.
@@ -106,28 +106,30 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `recentEdits` = the last 10 edit batches `[ts, subject, sha]` (the person page's "Recent edit batches", the date linking to the commit when `sha` is 40 hex and `repo` is owner/name; the subject is escaped text, never a link). The cards.json list (last batch per card) is kept above it as "Recently edited cards".
   `months` = `[["YYYY-MM" UTC, cards, edits, commits]]`, months with activity only, sorted: cards by the card's `created` (else `fs`; "Cards created", 2026-10-23, was the first upload), edits and card commits by commit time. profile.js `activityHtml(p, x)`: `monthRange` fills every month from the first to the last, one stats.js `columns()` row (exported with `card` as `chartCard`) per kind the person has, colours `--s1`/`--s2`/`--s3`, each on its own scale (the 2023-11 import month holds most cards: MichaelJSr 222 of 237, so a shared or stacked scale flattens everything else), labels every ⌈n/9⌉ months, the stats.js Table toggle (months with activity) and hover values; shown only with history (`available`), between the Contributions and Cards panels; on a phone the chart keeps a 600 px minimum width and scrolls sideways (`#chart-activity`, style.css) rather than shrinking its 940 px viewBox to unreadable text (the stats.js charts still shrink). The `previews` map (`{name: link-preview text}`) is computed once in `main` and used by both the static pages and the share dialog. contributions.json: 3.7 KB -> 7.2 KB (7.5 KB with today's history).
   Overall title: `OVERALL = "Top contributor"` (build and profile.js), the top total of cards + edits + card commits, ties share, nobody at 0, listed before the column titles (so the Open Graph line starts with it). Today MichaelJSr (308).
-- Round 3 person stats (2026-10-24). Build: `contributions(..., balance=None, revisions=None, archived=(), fields_by=None)`
-  (positional calls unchanged) ends with `person_extras()`, which adds per row, each key left out when empty: `power` (P2:
-  own cards' analytics `z_total`, `{n, z, top, bottom, dots: [[id, z, top|bottom?]]}`), `bal` (P1: own cards' analytics
-  rows with `bal`, delta = new total - old; `swing` [id, delta, ts] the largest, shown as "Biggest swing"; `madeBuff`/`madeNerf` = rows on others' cards made by them; present with
-  `power` so the page shows `No buffs or nerfs recorded yet.`), `revisions` (P3/P12/P13 from stats' `card_revisions`
-  counts, `{self, others, top, theirs, most?, untouched, oldest?}`; absent without history), `rework` (P11:
-  `analytics.reworked` rows), `ratings` (P4: `rating_now(..., skip=K)` per own card, `best` up to half of the rated
-  cards, `worst` the rest), `selfBias`/`rater`/`powerVsStats` (P5/P7/P8: only for a person with entries of their own,
-  never "group"; correlations at `MIN_RATERS = 5` cards, P5 at 3), `editFields` (P21: `edit_batches(..., fields_by=)`
-  counts every changed field of every batch they are credited with, all time, before the `BATCH_LINES` cut, a Card
-  Authors.txt line as `author`, not in the commit that created that file, an import of 813 credits; plus `rating` = their website ratings), `archived` (P17: `archived_cards` rows with
-  their `author`, slim `ARCHIVED_PERSON` fields, newest first). Top level `site: {z}` = the mean `z_total`. Who made a
-  change row (`change_by`): the commit that added or changed a PSD at its second (`psd_commits_at`, credited by
-  `commit_keys`); with two, the one with the card's PSD file name; else nobody. main() calls `edit_batches` once for all
-  time and keeps the last `CHANGELOG_DAYS` for changelog.json. contributions.json: 9 KB -> 24 KB (rehearsal data).
-  Client (profile.js, from cards.json and `S.mentions`/`S.mentionedBy`, no other file): `styleOf` (P6; ratio = their
-  share / all cards' share, n >= 3, ratio >= 1.5, top 3), `mixOf` (P10), `careerOf` (P14), `seriesOf` (P15, ties share
-  a lead), `mostReferenced` (P16, n >= 2), `ranksOf` (P18: competition ranking; strength at `power.n` >= 5, words per
-  ability at 5 abilities), memoised per cards array (`route()` renders twice). Panels after the activity chart: Balance,
-  Ratings, Revisions, Style, Cards (+ years, series, banned link, most referenced), Archived cards (changes.js
-  `archiveTagHtml`), Decks. The strength strip's dots carry `data-card`/`data-v`/`data-l` in a `.chart`, so the chart
-  tooltip and click-to-open work; on a phone it keeps 760 px and scrolls. app.js `FLAGS` gains `banned` (`c._banned`).
+- Round 3 person stats (2026-10-24). Build: `contributions(..., balance=None, revisions=None, archived=(),
+  fields_by=None)` (positional calls unchanged) ends with `person_extras()`, which adds per row, each key left out when
+  empty: `power` (P2: own cards' analytics `z_total`, `{n, z, top, bottom, dots: [[id, z, top|bottom?]]}`), `bal` (P1:
+  own cards' analytics rows with `bal`, delta = new total - old; `swing` [id, delta, ts] the largest, shown as "Biggest
+  swing"; `madeBuff`/`madeNerf` = rows on others' cards made by them; present with `power` so the page shows `No buffs
+  or nerfs recorded yet.`), `revisions` (P3/P12/P13 from stats' `card_revisions` counts, `{self, others, top, theirs,
+  most?, untouched, oldest?}`; absent without history), `rework` (P11: `analytics.reworked` rows), `ratings` (P4:
+  `rating_now(..., skip=K)` per own card, `best` up to half of the rated cards, `worst` the rest),
+  `selfBias`/`rater`/`powerVsStats` (P5/P7/P8: only for a person with entries of their own on either scale (P7's twins:
+  favorability raters), never "group"; correlations at `MIN_RATERS = 5` cards, P5 at 3), `editFields` (P21:
+  `edit_batches(..., fields_by=)` counts every changed field of every batch they are credited with, all time, before the
+  `BATCH_LINES` cut, a Card Authors.txt line as `author`, not in the commit that created that file, an import of 813
+  credits; plus `rating` = their website ratings), `archived` (P17: `archived_cards` rows with their `author`, slim
+  `ARCHIVED_PERSON` fields, newest first). Top level `site: {z}` = the mean `z_total`. Who made a change row
+  (`change_by`): the commit that added or changed a PSD at its second (`psd_commits_at`, credited by `commit_keys`);
+  with two, the one with the card's PSD file name; else nobody. main() calls `edit_batches` once for all time and keeps
+  the last `CHANGELOG_DAYS` for changelog.json. contributions.json: 9 KB -> 24 KB (rehearsal data). Client (profile.js,
+  from cards.json and `S.mentions`/`S.mentionedBy`, no other file): `styleOf` (P6; ratio = their share / all cards'
+  share, n >= 3, ratio >= 1.5, top 3), `mixOf` (P10), `careerOf` (P14), `seriesOf` (P15, ties share a lead),
+  `mostReferenced` (P16, n >= 2), `ranksOf` (P18: competition ranking; strength at `power.n` >= 5, words per ability at
+  5 abilities), memoised per cards array (`route()` renders twice). Panels after the activity chart: Balance, Ratings,
+  Revisions, Style, Cards (+ years, series, banned link, most referenced), Archived cards (changes.js `archiveTagHtml`),
+  Decks. The strength strip's dots carry `data-card`/`data-v`/`data-l` in a `.chart`, so the chart tooltip and
+  click-to-open work; on a phone it keeps 760 px and scrolls. app.js `FLAGS` gains `banned` (`c._banned`).
 
 ## 9. Profile editor page, card picker, Cards panel (2026-10-21)
 - Route `#/u/<login>/edit` (app.js): `parseHash` returns `{name: "u", arg: login, edit: true}` for exactly three segments ending in `edit` (any other extra segment still joins into `arg`); `hashOf` appends `/edit`; `syncUrl` leaves it a hash route (no `u/<login>/` rewrite, so the static page never gets an `edit` folder); the title is "Edit profile", the tab highlight stays on People; `goUser` ignores the edit route when deciding "already there", `goEdit(login)` is its twin for the editor. `renderUser` hands the route to `editor.profilePage(login)`, which renders into `#view`: signed out -> a placeholder plus the sign-in hub whose `then` reopens the editor (while the stored token's sign-in is still running, "Signing in…" and the editor appears when it settles: `init` now re-renders after a failed sign-in too); not own and not admin -> toast and `location.replace` to the person page; else it awaits `users.json` (the "Loading the profile…" placeholder only before its first load), checks it is still the page to show (no newer `profilePage` call, and `S.listHash`, the view's route, unchanged: `location.hash` would be the card's while a card dialog is open above the editor, and `rerender()` under a dialog re-renders `S.listHash`), and builds the form from the in-memory draft (`drafts`, a Map by lowercase login, set while the form differs from the profile, cleared on Add to batch, Cancel and Remove) or from the profile.
@@ -813,12 +815,12 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   TS_Save_10 power placements left where TS_Save_8 had them (only Prince Of Darkness moved). The import stops when a
   value's `tierOf` isn't the category the save shows (1148 of 1148 agree). 1148 entries, 399 names (Cho'Gath and Ech:
   archived, kept under their names).
-- Build (`parse_ratings`, `apply_ratings` after `read_profiles`, before `contributions`): cards.json `ratings` on the card
-  whose `key` matches, a login shown as `credit()`'s name (then kept as `login`, `rater_shown`); a duplicate's
-  go to its original (All Purpose Medical Kit2's two TS_Save_3 entries); a name matching an archived row goes to its `renamedId` card,
-  else onto the row (changelog.json `archived[].ratings`); others warn "names match no card" (Cho'Gath and Ech until the
-  history backfill tags them archived). `files.ratings`. Python twins of ratings.js: `rating_now(entries, scale, day,
-  skip)` -> `{value, raters, date}` | None, `tier_of(v)`.
+- Build (`parse_ratings`, `apply_ratings` after `read_profiles`, before `contributions`): cards.json `ratings` on the
+  card whose `key` matches, a login shown as its row's name (`login_rows()`, as contributions keys it; then kept as
+  `login`, `rater_shown`); a duplicate's go to its original (All Purpose Medical Kit2's two TS_Save_3 entries); a name
+  matching an archived row goes to its `renamedId` card, else onto the row (changelog.json `archived[].ratings`); others
+  warn "names match no card" (Cho'Gath and Ech until the history backfill tags them archived). `files.ratings`. Python
+  twins of ratings.js: `rating_now(entries, scale, day, skip)` -> `{value, raters, date}` | None, `tier_of(v)`.
 - `assets/ratings.js` (pure): `SCALES`, `TIERS` (display labels), `tierOf` (edges 2.5/4.5/6.5/8.5), `latestBy(list,
   scale, {day, skip})`, `current(list, scale, {day, skip})` (mean of each rater's latest; "group" is one rater),
   `ratingDates`, `hasPersonal(cards, scale?)`, `dayLabel`, `chartSvg`, `blockHtml`. The card page's Ratings block
@@ -874,16 +876,17 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `created`). history.js gained `dayOf`, `yearOf` (Pacific, one cached formatter). app.js fills `#stats-ratings` and
   `#stats-history` with Balance once analytics.json loads, and with `A = null` when it fails.
 - Build: `archived_cards(old_stats, id_of, stats, people, credited)` adds `tag` (`archive_tag`: renamed_to renamed,
-  moved_to retired, else deleted; `ARCHIVE_TAGS`), `author` (Card Authors.txt, by the archived name, or by its title when no live
-  card has that title: 'Pizza (item)' is not the live Pizza's > the tag's `author` (backfill) > the last version's,
-  through `person`), `created` (the last version's `created.date`, else the Pacific day of its oldest
+  moved_to retired, else deleted; `ARCHIVE_TAGS`), `author` (Card Authors.txt, by the archived name, or by its title
+  when no live card has that title: 'Pizza (item)' is not the live Pizza's > the tag's `author` (backfill) > the last
+  version's, through `person`), `created` (the last version's `created.date`, else the Pacific day of its oldest
   version), `series`. analytics.json gains `archived` (`ARCHIVED_SLIM`: card, title, tag, card_type, stars, series, at,
   created, author; no ratings, commit or path) and `revisions` = `{available, mass: MASS_PASS, cards: {id: {name: n}}}`
-  from `card_revisions(found, by_png, commits, people, by_login, skip=rule_ids)`: each image version after a PNG's
-  first upload, mass passes (`mass_passes`: commits in more than `MASS_PASS` = 20 cards' versions) left out, credited by
-  `commit_keys(row)` (`who()` of the author; a bot commit: `credit()` of each non-`discord:` Edit-by login, else the
-  login; none without trailers); every card id of the PNG gets the counts, rulebook pages none. Computed once in main()
-  after `apply_ratings`; the person pages read the same counts. Log line `revisions: n card image changes on m cards`.
+  from `card_revisions(found, by_png, commits, people, by_login, skip=rule_ids)`: each image version after a PNG's first
+  upload, mass passes (`mass_passes`: commits in more than `MASS_PASS` = 20 cards' versions, rulebook pages not counted)
+  left out, credited by `commit_keys(row)` (`who()` of the author; a bot commit: the row (`login_rows()`) of each
+  non-`discord:` Edit-by login, else the login; none without trailers); every card id of the PNG gets the counts,
+  rulebook pages none. Computed once in main() after `apply_ratings`; the person pages read the same counts. Log line
+  `revisions: n card image changes on m cards`.
 - Archive tab (`#/changes/archive`, changes.js `archiveHtml(rows, repo, params)`): the archived rows newest first with
   their tag pill (`archiveTagHtml`: `.fact.arch.<tag>`, the paths in its tip), "renamed to <card>", kind, stars, author,
   date and commit; chips per tag (`?tag=`). `ARCHIVE_TAGS` and `archiveTag(row)` (the build's key, else from the fields)
