@@ -13,7 +13,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   shows it as "created <date>" ("created about <date>" while a Discord post awaiting review may still move it).
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`,
   `created>=2025`, `created==2023-10`: dates at the precision given; spaces around the operator are fine in both),
-  and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
+  and also matches card names and aliases. The search `has:details` keeps the cards with a Details
   record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
   dropdown open this once; Ctrl-click opens it in a new tab).
 - **Card pages**: the card image (click it for the full-size PNG), stat bars, ability text with icons (variants drawn as the card font draws them: `[fire:tint]`
