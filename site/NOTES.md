@@ -663,3 +663,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   expired with no panel, a 2-day-old one whose image 404s expired; two tabs: one checks (8 requests for 2 previews in
   33 s), one toast each; close while the palette is open: saved and closed in one click; 1024 px dialog: the Name
   input 362 px (128 before), 9 type columns. Screenshots `~/Documents/Tools/wt/scratch/site2/shots/r3-*.png`.
+
+## 24. Editing round 3: item type, drops, the stuck "+" box, autofill, the pinned tray (2026-10-24)
+- Owner's items 3, 15, 16, 17, 18. AutoCroissant `tests/test_site_buckets.py` runs the helpers in node.
+- **Item type** (`ITEM_TYPES` in edit.js) is the `Items/` folders, lower case, as the build reads them
+  (`parts[1].lower()`): a fixed select in All fields, like Kind. An off-list value (a hand edit) still shows as an option.
+  A new item type needs its folder first, then the list (the test keeps the two equal).

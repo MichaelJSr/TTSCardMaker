@@ -199,7 +199,7 @@ its chip shows it. A new author's cards go to `[cards]` under a new `# --- credi
 `[people]` line (that maps a login; an admin can add one later). Every change lands in the batch bar at the bottom as a
 sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each with ↺ to take it back; the bar folds to one
 line when it gets long, and **Review and publish** commits the whole batch at once. **All fields** (e, also in the bar)
-opens the full form for everything else (kind, item type, stars, types, aliases, duplicate of, checks, constructed ban,
+opens the full form for everything else (kind, item type (a fixed list: the `Items/` folders), stars, types, aliases, duplicate of, checks, constructed ban,
 hidden, creatures). Signed out, none of this shows: the pages are the same to the pixel. Fields go to
 `site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to `site/Constructed Ban List.txt`. The site rebuilds
 on that commit; the bot applies the same files on `/update_stats`. A subseries (Goombella: series Mario, subseries Paper

@@ -21,6 +21,8 @@ const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
   atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
   problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures" };
+// item types: the Items/ folders (fixed; a new one needs its folder first)
+export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
 const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. Read by the website and the bot (/update_stats).";
 
 const cardKey = s => (s || "").replace(/_/g, " ").toLowerCase().split(/\s+/).filter(Boolean).join(" ");
@@ -545,7 +547,8 @@ export function createEditor(app) {
         <h3 class="egroup">Database only</h3><p class="muted egroup-note">Not on the card image: from the card's folder, or set only here.</p>
         <fieldset><legend>Kind and series</legend>
           ${row("type", `<select id="ef-type">${opts(kinds, c.type)}</select>`)}
-          ${row("subtype", `<input id="ef-subtype" list="dl-sub" value="${esc(c.subtype || "")}" placeholder="—"><datalist id="dl-sub">${uniq(x => x.subtype).map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
+          ${row("subtype", `<select id="ef-subtype">${opts([["", "—"], ...ITEM_TYPES.map(t => [t, t[0].toUpperCase() + t.slice(1)]),
+            ...[...new Set([c.subtype, psdVal(b, "subtype")])].filter(t => t && !ITEM_TYPES.includes(t)).map(t => [t, t])], c.subtype || "")}</select>`)}
           ${row("series", `<input id="ef-series" list="dl-series" value="${esc(c.series || "")}" placeholder="—"><datalist id="dl-series">${seriesList().map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
           ${row("subseries", `<input id="ef-subseries" list="dl-subseries" value="${esc(c.subseries || "")}" placeholder="—"><datalist id="dl-subseries">${subseriesOpts(c.series)}</datalist>`)}
         </fieldset>
