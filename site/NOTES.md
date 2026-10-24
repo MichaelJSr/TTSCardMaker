@@ -711,25 +711,25 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   children in order (image column, info column: inline.js reads `:scope > div:nth-child(2)`).
 - Item 14a: the image viewer (section 22, "The viewer").
 - Item 14b: the mock-up draws stars and type icons. AutoCroissant's psd_details record has a `header` (since
-  AutoCroissant's work/r3-card-page; records gathered before have none):
-  `{"stars": {"units": [{core, box}], "icon", "at": {"1".."10": [[cx, cy]]}, "refused": {"n" | "*": why}} | null,
-  "types": {"row": [{name, core, box}], "spots": {"n": [boxes past the row]}, "fixed": [[name, why]], "tokens",
-  "refused"} | null}`, canvas px (the mock-up scales by `rec.canvas.w`), a section psd-tools can't read "error: ...".
-  `units`: the shown stars in reading order (rows top to bottom, each right to left: the order the bake hides from);
-  `at[n]`: each count's centres, the bake's own plan (psd_edit.plan_stars: rows of two re-centred, hidden stars shown,
-  copies) when it lays the count out, else the geometry (the first n, then `_star_layouts`; a refused count is still
-  drawn); `icon`: the star layer the bake copies. `row`: the header icons plan_types reads, slot order; `spots[n]`:
-  where a row of n puts the icons past the row (`_icon_spots`, per n: the bake picks the first option that stays
-  clear for that n); `fixed`: icons the bake can't take off (a frame, a group). Site: `changes()` returns `stars`
-  `[from, to]` and `types` `[old, new]`; `starPlan` keeps a shown star when one of the count's centres is within a
-  quarter of a star of it, erases the others (their box, glow included) and draws a star at every centre none covers;
-  `typePlan` mirrors plan_types (kept icons stay in their slot, removed ones are erased, a kept icon past the new
-  count moves to the first free slot, new ones take the next free slots); `fillBox` fills an erased box from the ring
-  of pixels around it (the left-right and top-bottom blends, weighted by nearness, so a gradient goes on through);
-  stars are drawn with the record's star icon (`S.icons`, else the last star's own pixels), types with their icons,
-  with a soft shadow for the PSD's drop shadow and glow. No header, no layout for the count, a token row, or units
-  unlike the stars (The Lich King: 4 units for 5 stars): a dark box over `TEMPLATES[shape].stars` / `.types` with the
-  new stars in rows of two (right to left) or the icons down a column, and the caption says so; a refusal is named.
+  AutoCroissant's work/r3-card-page; records gathered before have none): `{"stars": {"units": [{core, box}], "icon",
+  "at": {"1".."10": [[cx, cy]]}, "refused": {"n" | "*": why}} | null, "types": {"row": [{name, core, box}], "spots":
+  {"n": [boxes past the row]}, "fixed": [[name, why]], "tokens", "refused"} | null}`, canvas px (the mock-up scales by
+  `rec.canvas.w`), a section psd-tools can't read "error: ...". `units`: the shown stars in reading order (rows top to
+  bottom, each right to left: the order the bake hides from); `at[n]`: each count's centres, the bake's own plan
+  (psd_edit.plan_stars: rows of two re-centred, hidden stars shown, copies) when it lays the count out, else the
+  geometry (the first n, then `_star_layouts`; a refused count is still drawn); `icon`: the star layer the bake copies.
+  `row`: the header icons plan_types reads, slot order; `spots[n]`: where a row of n puts the icons past the row
+  (`_icon_spots`, per n: the bake picks the first option that stays clear for that n); `fixed`: icons the bake can't
+  take off (a frame, a group). Site: `changes()` returns `stars` `[from, to]` and `types` `[old, new]`; `starPlan` keeps
+  a shown star when one of the count's centres is within a quarter of a star of it, erases the others (their box, glow
+  included) and draws a star at every centre none covers (none: all erased); `typePlan` mirrors plan_types (kept icons
+  stay in their slot, removed ones are erased, a kept icon past the new count moves to the first free slot, new ones
+  take the next free slots); `fillBox` fills an erased box from the ring of pixels around it (the left-right and
+  top-bottom blends, weighted by nearness, so a gradient goes on through); stars are drawn with the record's star icon
+  (`S.icons`, else the last star's own pixels), types with their icons, with a soft shadow for the PSD's drop shadow and
+  glow. No header, no layout for the count, a token row, or units unlike the stars (The Lich King: 4 units for 5 stars):
+  a dark box over `TEMPLATES[shape].stars` / `.types` with the new stars in rows of two (right to left) or the icons
+  down a column, and the caption says so (no stars or types left: no box, "Not drawn: stars"); a refusal is named.
 - Measured (the new gather over all 764 card PSDs of the Desktop clone, read-only, 36 s with 6 workers; the median
   header 147 ms, the slowest 338 ms, +~1.5 KB a record): 660 with a stars section (494 every count refused for one
   reason, mostly "the 'N Stars' folder sets them"; 577 with every count 1-10 laid out; 10 with none), 687 with a type

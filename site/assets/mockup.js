@@ -423,7 +423,7 @@ const boxAt = ([cx, cy], w, h) => [cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 
  *  not one per unit: boxed. refused: why the bake would refuse the count. */
 export function starPlan(stars, from, to) {
   const st = obj(stars), why = st && obj(st.refused) ? st.refused[to] ?? st.refused["*"] ?? null : null;
-  const units = Array.isArray(st?.units) ? st.units : [], at = obj(st?.at)?.[to];
+  const units = Array.isArray(st?.units) ? st.units : [], at = to === 0 ? [] : obj(st?.at)?.[to];   // none: all erased
   if (!units.length || units.length !== from || !Array.isArray(at)) return { erase: [], draw: [], refused: why, boxed: true };
   const w = median(units.map(u => u.core[2] - u.core[0])), h = median(units.map(u => u.core[3] - u.core[1])), tol = 0.25 * Math.max(w, h);
   const left = units.map(u => ({ u, c: centreOf(u.core) })), draw = [];
@@ -593,6 +593,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   ctx.putImageData(pixels, 0, 0);
   for (const [label, plan] of icons2) {
     if (plan.refused) out.refused.push([label, plan.refused]);
+    if (plan.boxed && !(label === "stars" ? +todo.stars[1] : todo.types[1]?.length)) { out.skipped.push(label); continue; }   // none, with no place: the old ones stay
     if (plan.boxed) { out.boxed.push(label); await drawIconBox(ctx, label, label === "stars" ? todo.stars[1] : todo.types[1], { icons, head, W, H, tpl }); }
     else if (label === "stars") { const src = await starSource(head.stars, icons, img, k); for (const b of plan.draw) drawIcon(ctx, src, at(b)); }
     else for (const d of plan.draw) drawIcon(ctx, await iconOf(icons, d.name), at(d.core));
