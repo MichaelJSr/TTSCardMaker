@@ -256,44 +256,15 @@ export function cardsPanelHtml(p, x) {
 
 /** The Decks panel: the person's public decks (decks.js entries, newest first) as the deck browser's tiles, and their
  *  private ones as locked links (the only place a private deck is listed; the browser leaves them out). x = {decks: {public: [],
- *  private: []}, deckTile(entry), allDecks, byId, kinds, kindOf}; own (cardsOf): P20's facts (deckStatsOf); nothing when
- *  there is neither a deck nor a fact. */
-export function decksPanelHtml(x, own = null) {
+ *  private: []}, deckTile(entry)}; nothing when they have none. */
+export function decksPanelHtml(x) {
   const pub = Array.isArray(x.decks?.public) ? x.decks.public : [], priv = Array.isArray(x.decks?.private) ? x.decks.private : [];
-  const st = own ? deckStatsOf(own, pub, x.allDecks || [], x.byId, x.kindOf) : null;
-  if (!pub.length && !priv.length && !st) return "";
+  if (!pub.length && !priv.length) return "";
   const link = d => `<a href="#/decks/${encodeURIComponent(d.owner)}/${encodeURIComponent(d.slug)}">${esc(d.slug)}</a>`;
-  const label = k => ((x.kinds || []).find(([key]) => key === k)?.[1] || k).toLowerCase();
-  const facts = st ? `<div class="facts">${st.n ? `<span class="fact" data-tip="The cards in their public decks">In their decks: ${st.kinds.map(([k, n]) => `${esc(label(k))} ${n}`).join(" · ")}${st.stars != null ? ` · ${st.stars}★ average` : ""}</span>` : ""}
-    ${st.used.decks ? `<span class="fact">Their cards in others' decks: ${plural(st.used.cards, "card")} in ${plural(st.used.decks, "deck")}</span>` : ""}</div>` : "";
-  return `<div class="profile"><div class="panel"><h3>Decks <span class="muted">${pub.length + priv.length}</span></h3>${facts}
+  return `<div class="profile"><div class="panel"><h3>Decks <span class="muted">${pub.length + priv.length}</span></h3>
     ${pub.length ? `<div class="deck-grid">${pub.map(x.deckTile).join("")}</div>` : ""}
     ${priv.length ? `<p class="muted">🔒 ${plural(priv.length, "private deck")}: ${priv.map(link).join(", ")}</p>` : ""}
     ${pub.length ? `<p><a href="#/decks?owner=${encodeURIComponent(pub[0].owner)}">All decks by ${esc(pub[0].owner)}</a></p>` : ""}</div></div>`;
-}
-
-/** P20: their public decks' cards by kind and average stars, and the others' public decks that use their cards (a
- *  duplicate counts as its original). own: cardsOf; mine: their public decks; all: every deck (decks.js entries).
- *  -> {n, kinds: [[kind, n]], stars, used: {decks, cards}}, or null with neither. */
-export function deckStatsOf(own, mine, all, byId, kindOf = c => c.type) {
-  const idsOf = d => [...(d.cards || []), ...(d.field ? [d.field] : [])], key = d => `${lc(d.owner)}/${d.slug}`;
-  const kinds = new Map();
-  let n = 0, stars = 0, starred = 0;
-  for (const d of mine) for (const id of idsOf(d)) {
-    const c = byId?.get(id); if (!c) continue;
-    n++; kinds.set(kindOf(c), (kinds.get(kindOf(c)) || 0) + 1);
-    if (c.stars) { stars += c.stars; starred++; }
-  }
-  const ownIds = new Set(own.map(c => c.id)), mineKeys = new Set(mine.map(key)), used = new Set();
-  let decks = 0;
-  for (const d of all) {
-    if (d.private || mineKeys.has(key(d))) continue;
-    const hit = idsOf(d).map(id => byId?.get(id)?.dup || id).filter(id => ownIds.has(id));
-    if (hit.length) { decks++; for (const id of hit) used.add(id); }
-  }
-  if (!n && !decks) return null;
-  return { n, kinds: [...kinds].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]))),
-    stars: starred ? Math.round((stars / starred) * 10) / 10 : null, used: { decks, cards: used.size } };
 }
 
 // ---- person stats: pure helpers (P6 P10 P14 P15 P16 P18) from the cards in memory; the build's keys (contributions.json
@@ -495,7 +466,7 @@ export function personHtml(x) {
   const own = cardsOf(person.key, x.cards), statusIds = memoOf(x.cards, "status", () => new Set(x.cards.filter(c => c.type === "debuff" || c.type === "buff").map(c => c.id)));
   const style = own.length ? stylePanelHtml(styleOf(own, x.cards, { mentions: x.mentions, statusIds }), mixOf(own, x.cards, x.kindOf), x, own.length) : "";
   const rest = `${x.available ? activityHtml(person, x) : ""}${balancePanelHtml(person, x)}${ratingsPanelHtml(person, x)}${revisionsPanelHtml(person, x)}${style}`
-    + `${cardsPanelHtml(person, x)}${archivedPanelHtml(person.archived)}${decksPanelHtml(x, own)}`;
+    + `${cardsPanelHtml(person, x)}${archivedPanelHtml(person.archived)}${decksPanelHtml(x)}`;
   if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>${rest}`;
   return `<div class="profile"><div class="panel"><h2 class="person-name">${avatarHtml(person.github, 48)}${esc(person.key)}</h2>
     ${person.github ? `<div class="facts">${githubFact(person.github)}</div>` : ""}${contributionsHtml(person, x)}
