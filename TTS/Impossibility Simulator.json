@@ -271,7 +271,7 @@
     "TurnColor": ""
   },
   "DecalPallet": [],
-  "LuaScript": "-- Impossibility Simulator: seat teams, large cards resized out of containers\n\n-- Seat -> TTS team; other seats get \"None\"\nlocal TEAMS = {\n    Red  = \"Hearts\", Orange = \"Hearts\", Green = \"Hearts\",\n    Blue = \"Clubs\",  Purple = \"Clubs\",  Pink  = \"Clubs\",\n}\n\nlocal LARGE_CARD_SCALE = {x=3, y=1, z=3}\n\n-- Large cards by Nickname; the save updater rewrites these rows\nlocal resizeTargets = {\n    [\"Azamoth the Possessed Vessel\"] = true,\n    [\"Igor Roballtowski\"]            = true,\n    [\"Mettaton EX\"]                  = true,\n    [\"Mettaton NEO\"]                 = true,\n    [\"Militron (no Armor)\"]          = true,\n    [\"Morpho Knight\"]                = true,\n    [\"Shadow Queen\"]                 = true,\n}\n\nfunction onPlayerChangeColor(color)\n    if color == \"Grey\" or color == \"Black\" then return end\n    local player = Player[color]\n    if not player or not player.seated then return end\n    local team = TEAMS[color]\n    player.team = team or \"None\"\n    if team then\n        broadcastToAll(player.steam_name .. \" joined \" .. color .. \" → assigned to \" .. team .. \".\", {r=1, g=1, b=1})\n    end\nend\n\nfunction onLoad()\n    -- players already seated, once the load settles\n    Wait.time(function()\n        for _, color in ipairs(getSeatedPlayers()) do\n            onPlayerChangeColor(color)\n        end\n    end, 1)\nend\n\nfunction onObjectLeaveContainer(container, obj)\n    if obj.type ~= \"Card\" or not resizeTargets[obj.getName()] then return end\n    -- after the take has placed it\n    Wait.frames(function()\n        if not obj.isDestroyed() then obj.setScale(LARGE_CARD_SCALE) end\n    end, 3)\nend\n",
+  "LuaScript": "-- Impossibility Simulator: seat teams, large cards resized out of containers\n\n-- Seat -> TTS team; other seats get \"None\"\nlocal TEAMS = {\n    Red  = \"Hearts\", Orange = \"Hearts\", Green = \"Hearts\",\n    Blue = \"Clubs\",  Purple = \"Clubs\",  Pink  = \"Clubs\",\n}\n\nlocal LARGE_CARD_SCALE = {x=3, y=1, z=3}\n\n-- Large cards by Nickname; the save updater rewrites these rows\nlocal resizeTargets = {\n    [\"Azamoth the Possessed Vessel\"] = true,\n    [\"Igor Roballtowski\"]            = true,\n    [\"Mettaton EX\"]                  = true,\n    [\"Mettaton NEO\"]                 = true,\n    [\"Militron (No Armor)\"]          = true,\n    [\"Morpho Knight\"]                = true,\n    [\"Shadow Queen\"]                 = true,\n}\n\nfunction onPlayerChangeColor(color)\n    if color == \"Grey\" or color == \"Black\" then return end\n    local player = Player[color]\n    if not player or not player.seated then return end\n    local team = TEAMS[color]\n    player.team = team or \"None\"\n    if team then\n        broadcastToAll(player.steam_name .. \" joined \" .. color .. \" → assigned to \" .. team .. \".\", {r=1, g=1, b=1})\n    end\nend\n\nfunction onLoad()\n    -- players already seated, once the load settles\n    Wait.time(function()\n        for _, color in ipairs(getSeatedPlayers()) do\n            onPlayerChangeColor(color)\n        end\n    end, 1)\nend\n\nfunction onObjectLeaveContainer(container, obj)\n    if obj.type ~= \"Card\" or not resizeTargets[obj.getName()] then return end\n    -- after the take has placed it\n    Wait.frames(function()\n        if not obj.isDestroyed() then obj.setScale(LARGE_CARD_SCALE) end\n    end, 3)\nend\n",
   "LuaScriptState": "",
   "XmlUI": "<!-- Xml UI. See documentation: https://api.tabletopsimulator.com/ui/introUI/ -->",
   "SnapPoints": [
@@ -20051,7 +20051,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "adrenaline",
+              "Nickname": "Adrenaline",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -20109,7 +20109,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Charm of the vampire",
+              "Nickname": "Charm of the Vampire",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -20167,7 +20167,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Dark sword",
+              "Nickname": "Dark Sword",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -20399,7 +20399,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Fragile heart",
+              "Nickname": "Fragile Heart",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -20457,7 +20457,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Fragile strength",
+              "Nickname": "Fragile Strength",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -20979,7 +20979,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Poison shiv",
+              "Nickname": "Poison Shiv",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -21211,7 +21211,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Stalwart shell",
+              "Nickname": "Stalwart Shell",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -22013,7 +22013,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Glowing womb",
+              "Nickname": "Glowing Womb",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -22361,7 +22361,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Soul of eden",
+              "Nickname": "Soul of Eden",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -22477,7 +22477,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Thorns Of agony",
+              "Nickname": "Thorns of Agony",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -22811,7 +22811,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Ice bomb",
+              "Nickname": "Ice Bomb",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -23895,7 +23895,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Pep drink",
+              "Nickname": "Pep Drink",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -23953,7 +23953,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Pepperoni pizza",
+              "Nickname": "Pepperoni Pizza",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -24243,7 +24243,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Strawberry shortcake",
+              "Nickname": "Strawberry Shortcake",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -24663,7 +24663,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Golden bomb",
+              "Nickname": "Golden Bomb",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -25107,7 +25107,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Dark ritual",
+              "Nickname": "Dark Ritual",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -26003,7 +26003,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Boko club",
+              "Nickname": "Boko Club",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -26061,7 +26061,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Bone's loans",
+              "Nickname": "Bone's Loans",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -32565,7 +32565,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "dogma",
+          "Nickname": "Dogma",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -34385,7 +34385,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "MAsked Dedede",
+          "Nickname": "Masked Dedede",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -34559,7 +34559,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Zero two",
+          "Nickname": "Zero Two",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -37157,7 +37157,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Thorns Of agony",
+          "Nickname": "Thorns of Agony",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -37969,7 +37969,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Bag of good",
+          "Nickname": "Bag of Good",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -38549,7 +38549,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Strawberry shortcake",
+          "Nickname": "Strawberry Shortcake",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -38723,7 +38723,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pep drink",
+          "Nickname": "Pep Drink",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -38781,7 +38781,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pep drink",
+          "Nickname": "Pep Drink",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -38839,7 +38839,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pep drink",
+          "Nickname": "Pep Drink",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -39361,7 +39361,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Ice bomb",
+          "Nickname": "Ice Bomb",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -39419,7 +39419,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Ice bomb",
+          "Nickname": "Ice Bomb",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -39651,7 +39651,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pepperoni pizza",
+          "Nickname": "Pepperoni Pizza",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -39709,7 +39709,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pepperoni pizza",
+          "Nickname": "Pepperoni Pizza",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -40698,7 +40698,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "consolation prize",
+          "Nickname": "Consolation Prize",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -40756,7 +40756,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "consolation prize",
+          "Nickname": "Consolation Prize",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -41800,7 +41800,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Boko club",
+          "Nickname": "Boko Club",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -53402,7 +53402,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Ice bomb",
+          "Nickname": "Ice Bomb",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -53460,7 +53460,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Ice bomb",
+          "Nickname": "Ice Bomb",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -54040,7 +54040,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pep drink",
+          "Nickname": "Pep Drink",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -54098,7 +54098,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pep drink",
+          "Nickname": "Pep Drink",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -54156,7 +54156,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pep drink",
+          "Nickname": "Pep Drink",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -54388,7 +54388,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Strawberry shortcake",
+          "Nickname": "Strawberry Shortcake",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -55026,7 +55026,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Bag of good",
+          "Nickname": "Bag of Good",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -55780,7 +55780,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Glowing womb",
+          "Nickname": "Glowing Womb",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -56128,7 +56128,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Soul of eden",
+          "Nickname": "Soul of Eden",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -56186,7 +56186,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Thorns Of agony",
+          "Nickname": "Thorns of Agony",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -57810,7 +57810,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pepperoni pizza",
+          "Nickname": "Pepperoni Pizza",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -57868,7 +57868,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pepperoni pizza",
+          "Nickname": "Pepperoni Pizza",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -59228,7 +59228,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Boko club",
+          "Nickname": "Boko Club",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -60330,7 +60330,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Bone's loans",
+          "Nickname": "Bone's Loans",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -60388,7 +60388,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "consolation prize",
+          "Nickname": "Consolation Prize",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -60446,7 +60446,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "consolation prize",
+          "Nickname": "Consolation Prize",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -62502,7 +62502,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Lightning bolt",
+          "Nickname": "Lightning Bolt",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -62560,7 +62560,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Lightning bolt",
+          "Nickname": "Lightning Bolt",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -63082,7 +63082,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Blank card",
+          "Nickname": "Blank Card",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -63894,7 +63894,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Bucket of lard",
+          "Nickname": "Bucket of Lard",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -64126,7 +64126,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Second wind",
+          "Nickname": "Second Wind",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -64358,7 +64358,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Forget me now",
+          "Nickname": "Forget Me Now",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -64590,7 +64590,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Dark sword",
+          "Nickname": "Dark Sword",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -64764,7 +64764,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Fragile heart",
+          "Nickname": "Fragile Heart",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -64822,7 +64822,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Fragile strength",
+          "Nickname": "Fragile Strength",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -65170,7 +65170,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Poison shiv",
+          "Nickname": "Poison Shiv",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -65286,7 +65286,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Stalwart shell",
+          "Nickname": "Stalwart Shell",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -65808,7 +65808,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "adrenaline",
+          "Nickname": "Adrenaline",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -66040,7 +66040,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Charm of the vampire",
+          "Nickname": "Charm of the Vampire",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -66098,7 +66098,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Credit card",
+          "Nickname": "Credit Card",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -66156,7 +66156,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Flower of decay",
+          "Nickname": "Flower of Decay",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -66214,7 +66214,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Ice storm",
+          "Nickname": "Ice Storm",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -66272,7 +66272,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Freeze spell",
+          "Nickname": "Freeze Spell",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -66562,7 +66562,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Mystery gift",
+          "Nickname": "Mystery Gift",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -66794,7 +66794,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Impassable obstruction",
+          "Nickname": "Impassable Obstruction",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -67842,7 +67842,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Golden bomb",
+          "Nickname": "Golden Bomb",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -68074,7 +68074,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Amazing mirror",
+          "Nickname": "Amazing Mirror",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -69060,7 +69060,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Dark ritual",
+          "Nickname": "Dark Ritual",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -70416,7 +70416,7 @@
             "scaleY": 1.0,
             "scaleZ": 1.99964833
           },
-          "Nickname": "How to jump",
+          "Nickname": "How to Jump",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -71496,7 +71496,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Error room",
+          "Nickname": "Error Room",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -76314,7 +76314,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Tainted lost",
+          "Nickname": "Tainted Lost",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -77068,7 +77068,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Little guy",
+          "Nickname": "Little Guy",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -78460,7 +78460,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Little guy",
+          "Nickname": "Little Guy",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -80876,7 +80876,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Miracle matter",
+          "Nickname": "Miracle Matter",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -81166,7 +81166,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Dark MAtter",
+          "Nickname": "Dark Matter",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -82210,7 +82210,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Mr Jawsum",
+          "Nickname": "Mr. Jawsum",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -83718,7 +83718,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "MEtal General",
+          "Nickname": "Metal General",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -88022,7 +88022,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "MEtal General",
+          "Nickname": "Metal General",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -88834,7 +88834,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Dark MAtter",
+          "Nickname": "Dark Matter",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -88892,7 +88892,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Miracle matter",
+          "Nickname": "Miracle Matter",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -94108,7 +94108,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "dogma",
+          "Nickname": "Dogma",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -96864,7 +96864,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "dogma",
+          "Nickname": "Dogma",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -99158,7 +99158,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Zero two",
+          "Nickname": "Zero Two",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -99216,7 +99216,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Zero OVerride",
+          "Nickname": "Zero Override",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -99448,7 +99448,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "MAsked Dedede",
+          "Nickname": "Masked Dedede",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -101072,7 +101072,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "StaR DREAM",
+          "Nickname": "Star Dream",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -102888,7 +102888,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "StaR DREAM",
+          "Nickname": "Star Dream",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -104782,7 +104782,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Tainted lost",
+          "Nickname": "Tainted Lost",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -105536,7 +105536,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Little guy",
+          "Nickname": "Little Guy",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -108068,7 +108068,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Miracle matter",
+          "Nickname": "Miracle Matter",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -108358,7 +108358,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Dark MAtter",
+          "Nickname": "Dark Matter",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -109402,7 +109402,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Mr Jawsum",
+          "Nickname": "Mr. Jawsum",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -110910,7 +110910,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "MEtal General",
+          "Nickname": "Metal General",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -118272,7 +118272,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "dogma",
+          "Nickname": "Dogma",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -120566,7 +120566,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Zero two",
+          "Nickname": "Zero Two",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -120624,7 +120624,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Zero OVerride",
+          "Nickname": "Zero Override",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -120856,7 +120856,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "MAsked Dedede",
+          "Nickname": "Masked Dedede",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -122480,7 +122480,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "StaR DREAM",
+          "Nickname": "Star Dream",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -124072,7 +124072,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Boko club",
+          "Nickname": "Boko Club",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -125174,7 +125174,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Bone's loans",
+          "Nickname": "Bone's Loans",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -125232,7 +125232,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "consolation prize",
+          "Nickname": "Consolation Prize",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -125290,7 +125290,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "consolation prize",
+          "Nickname": "Consolation Prize",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -127143,7 +127143,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Ice bomb",
+          "Nickname": "Ice Bomb",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -127201,7 +127201,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Ice bomb",
+          "Nickname": "Ice Bomb",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -127781,7 +127781,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pep drink",
+          "Nickname": "Pep Drink",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -127839,7 +127839,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pep drink",
+          "Nickname": "Pep Drink",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -127897,7 +127897,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pep drink",
+          "Nickname": "Pep Drink",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -128129,7 +128129,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Strawberry shortcake",
+          "Nickname": "Strawberry Shortcake",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -128767,7 +128767,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Bag of good",
+          "Nickname": "Bag of Good",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -129521,7 +129521,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Glowing womb",
+          "Nickname": "Glowing Womb",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -129869,7 +129869,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Soul of eden",
+          "Nickname": "Soul of Eden",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -129927,7 +129927,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Thorns Of agony",
+          "Nickname": "Thorns of Agony",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -131551,7 +131551,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pepperoni pizza",
+          "Nickname": "Pepperoni Pizza",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -131609,7 +131609,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pepperoni pizza",
+          "Nickname": "Pepperoni Pizza",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -133665,7 +133665,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Lightning bolt",
+          "Nickname": "Lightning Bolt",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -133723,7 +133723,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Lightning bolt",
+          "Nickname": "Lightning Bolt",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -134245,7 +134245,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Blank card",
+          "Nickname": "Blank Card",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -135057,7 +135057,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Bucket of lard",
+          "Nickname": "Bucket of Lard",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -135289,7 +135289,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Second wind",
+          "Nickname": "Second Wind",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -135521,7 +135521,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Forget me now",
+          "Nickname": "Forget Me Now",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -135753,7 +135753,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Dark sword",
+          "Nickname": "Dark Sword",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -135927,7 +135927,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Fragile heart",
+          "Nickname": "Fragile Heart",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -135985,7 +135985,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Fragile strength",
+          "Nickname": "Fragile Strength",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -136333,7 +136333,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Poison shiv",
+          "Nickname": "Poison Shiv",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -136449,7 +136449,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Stalwart shell",
+          "Nickname": "Stalwart Shell",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -136971,7 +136971,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "adrenaline",
+          "Nickname": "Adrenaline",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -137203,7 +137203,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Charm of the vampire",
+          "Nickname": "Charm of the Vampire",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -137261,7 +137261,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Credit card",
+          "Nickname": "Credit Card",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -137319,7 +137319,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Flower of decay",
+          "Nickname": "Flower of Decay",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -137377,7 +137377,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Ice storm",
+          "Nickname": "Ice Storm",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -137435,7 +137435,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Freeze spell",
+          "Nickname": "Freeze Spell",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -137725,7 +137725,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Mystery gift",
+          "Nickname": "Mystery Gift",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -137957,7 +137957,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Impassable obstruction",
+          "Nickname": "Impassable Obstruction",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -139005,7 +139005,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Golden bomb",
+          "Nickname": "Golden Bomb",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -139237,7 +139237,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Amazing mirror",
+          "Nickname": "Amazing Mirror",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -140223,7 +140223,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Dark ritual",
+          "Nickname": "Dark Ritual",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -141579,7 +141579,7 @@
             "scaleY": 1.0,
             "scaleZ": 1.99964833
           },
-          "Nickname": "How to jump",
+          "Nickname": "How to Jump",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -145467,7 +145467,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Error room",
+          "Nickname": "Error Room",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -146873,7 +146873,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Unbreakable strength",
+          "Nickname": "Unbreakable Strength",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -146931,7 +146931,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Unbreakable heart",
+          "Nickname": "Unbreakable Heart",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -148845,7 +148845,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pepperoni pizza",
+          "Nickname": "Pepperoni Pizza",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -151005,7 +151005,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Unbreakable strength",
+          "Nickname": "Unbreakable Strength",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -151063,7 +151063,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Unbreakable heart",
+          "Nickname": "Unbreakable Heart",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -152977,7 +152977,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pepperoni pizza",
+          "Nickname": "Pepperoni Pizza",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -155137,7 +155137,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Unbreakable strength",
+          "Nickname": "Unbreakable Strength",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -155195,7 +155195,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Unbreakable heart",
+          "Nickname": "Unbreakable Heart",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -157109,7 +157109,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Pepperoni pizza",
+          "Nickname": "Pepperoni Pizza",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -161921,7 +161921,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Z.O.M.G",
+          "Nickname": "Z.O.M.G.",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -162095,7 +162095,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "jack-in-the-box zombie",
+          "Nickname": "Jack-in-the-Box Zombie",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -162153,7 +162153,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "polevaulter zombie",
+          "Nickname": "Polevaulter Zombie",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -164009,7 +164009,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Warrior dee",
+          "Nickname": "Warrior Dee",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -164821,7 +164821,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Militron (no Armor)",
+          "Nickname": "Militron (No Armor)",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -168705,7 +168705,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Z.O.M.G",
+          "Nickname": "Z.O.M.G.",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -168879,7 +168879,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "jack-in-the-box zombie",
+          "Nickname": "Jack-in-the-Box Zombie",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -168937,7 +168937,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "polevaulter zombie",
+          "Nickname": "Polevaulter Zombie",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -170793,7 +170793,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Warrior dee",
+          "Nickname": "Warrior Dee",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -171605,7 +171605,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Militron (no Armor)",
+          "Nickname": "Militron (No Armor)",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -175489,7 +175489,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Z.O.M.G",
+          "Nickname": "Z.O.M.G.",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -175663,7 +175663,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "jack-in-the-box zombie",
+          "Nickname": "Jack-in-the-Box Zombie",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -175721,7 +175721,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "polevaulter zombie",
+          "Nickname": "Polevaulter Zombie",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -177577,7 +177577,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Warrior dee",
+          "Nickname": "Warrior Dee",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -178389,7 +178389,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Militron (no Armor)",
+          "Nickname": "Militron (No Armor)",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -180709,7 +180709,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "Miracle matter",
+          "Nickname": "Miracle Matter",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -181173,7 +181173,7 @@
             "scaleY": 1.0,
             "scaleZ": 3.0
           },
-          "Nickname": "MEtal General",
+          "Nickname": "Metal General",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -182613,7 +182613,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Freeze spell",
+          "Nickname": "Freeze Spell",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -182671,7 +182671,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Ice storm",
+          "Nickname": "Ice Storm",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -182729,7 +182729,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Flower of decay",
+          "Nickname": "Flower of Decay",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -182787,7 +182787,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Charm of the vampire",
+          "Nickname": "Charm of the Vampire",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -182961,7 +182961,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "adrenaline",
+          "Nickname": "Adrenaline",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -183367,7 +183367,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Poison shiv",
+          "Nickname": "Poison Shiv",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -183657,7 +183657,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Fragile strength",
+          "Nickname": "Fragile Strength",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -183715,7 +183715,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Fragile heart",
+          "Nickname": "Fragile Heart",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -183831,7 +183831,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Dark sword",
+          "Nickname": "Dark Sword",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -184179,7 +184179,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Second wind",
+          "Nickname": "Second Wind",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -184295,7 +184295,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Bucket of lard",
+          "Nickname": "Bucket of Lard",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -185397,7 +185397,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Lightning bolt",
+          "Nickname": "Lightning Bolt",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -185455,7 +185455,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Lightning bolt",
+          "Nickname": "Lightning Bolt",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -186151,7 +186151,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Impassable obstruction",
+          "Nickname": "Impassable Obstruction",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
