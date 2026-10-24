@@ -239,7 +239,10 @@ function syncUrl(r) {
     : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
   if (location.href !== want) history.replaceState(history.state, "", want);
 }
-function route() {
+let popped = null;                                       // a hash navigation fires popstate, then hashchange: route once
+function route(e) {
+  if (e?.type === "hashchange") { const dup = e.newURL === popped; popped = null; if (dup) return; }
+  else if (e?.type === "popstate") popped = location.href;
   const r = parseHash();
   syncUrl(r);
   hideTip();
@@ -249,7 +252,7 @@ function route() {
     return;
   }
   const hash = location.hash || hashOf(r);
-  if (hash === S.renderedHash && !modal.hidden) { closeModal(); return; }
+  if (hash === S.renderedHash && !modal.hidden) { closeModal(); document.title = S.title; return; }   // the view under it stays
   closeModal();
   renderView(r, hash);
 }
@@ -264,7 +267,7 @@ function renderView(r, hash) {
   (views[r.name] || renderCards)(r);
   const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.edit ? "Edit profile" : r.arg || "People",
     decks: r.arg ? S.deckTitle || "Deck" : "Published decks" };
-  document.title = `${titles[r.name] || "Cards"} · Impossibility Simulator`;
+  S.title = document.title = `${titles[r.name] || "Cards"} · Impossibility Simulator`;
 }
 function setParams(updates, { replace = true } = {}) {
   const r = parseHash();
