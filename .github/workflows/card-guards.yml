@@ -556,12 +556,13 @@ jobs:
       # Comment step's TOLD, or on a re-run the commit comment's mark looked up here (the Comment step does not run when
       # Check fails; unreadable counts as told, as there). Quiet too for a cancel by hand (no cancelled job ran to its
       # timeout, check 100 minutes and post 75, by the attempt's job list; whoever cancelled it knows).
-      # Any job's failure counts (failure() sees the jobs this one needs). No ping.
+      # Any job's failure counts: a step's failure() and cancelled() see only this job, so the needed jobs' results are
+      # read too (a timeout reads as cancelled or failure). No ping.
       - name: Tell Discord the run failed
         id: alert
         if: >-
-          (failure() || cancelled()) && github.event_name == 'push' && needs.post.outputs.posted != 'true' &&
-          needs.check.outputs.told != 'true'
+          (failure() || contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) &&
+          github.event_name == 'push' && needs.post.outputs.posted != 'true' && needs.check.outputs.told != 'true'
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
