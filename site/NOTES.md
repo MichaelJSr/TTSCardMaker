@@ -775,7 +775,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `<datalist>` (the other half of item 3, and the same list in every browser). The whole value is the query
   (`suggestNames`: same name, prefix, a word's prefix, inside, then one slip, the closest whole name first; ties: the
   card's own series' subseries, most cards, name). An empty field lists at once with no row chosen (Enter and Tab go on
-  to the field, so tabbing through never fills it; ↓ or ↑ chooses one); a field holding a value lists once
+  to the field, so tabbing through never fills it; ↓ chooses the first, ↑ the last); a field holding a value lists once
   you type, its first row chosen only when it is the same name, a prefix or a word's prefix (else Enter keeps the typed
   name). Rows come from edit.js `names(kind, series)` (cards in `S.all`, so staged edits count, plus the pending
   buckets; a subseries of another series reads "Mario · 3 cards"). The subseries field's series: `data-series` (inline)

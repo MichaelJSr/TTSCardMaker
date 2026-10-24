@@ -302,7 +302,7 @@ const stop = e => { e.preventDefault(); e.stopImmediatePropagation(); };
 function onKey(e) {                              // capture: before inline.js and app.js (Esc there cancels the edit)
   if (!shown() || e.target !== field || e.isComposing || e.keyCode === 229) return;   // 229: an IME's key (Safari's commit)
   const plainKey = !e.altKey && !e.ctrlKey && !e.metaKey;
-  if ((e.key === "ArrowDown" || e.key === "ArrowUp") && plainKey) { stop(e); setActive(active < 0 && e.key === "ArrowDown" ? 0 : active + (e.key === "ArrowDown" ? 1 : -1)); }
+  if ((e.key === "ArrowDown" || e.key === "ArrowUp") && plainKey) { stop(e); setActive(active < 0 ? (e.key === "ArrowDown" ? 0 : items.length - 1) : active + (e.key === "ArrowDown" ? 1 : -1)); }
   else if ((e.key === "PageDown" || e.key === "PageUp") && plainKey) { stop(e); setActive(Math.max(0, Math.min(items.length - 1, active + (e.key === "PageDown" ? ROWS : -ROWS)))); }
   else if ((e.key === "Enter" || e.key === "Tab") && plainKey && !e.shiftKey) { if (active < 0) { close(); return; } stop(e); accept(active); }   // no row: the key goes on
   else if (e.key === "Escape") { stop(e); dismissed = { el: field, start: open.start }; close(); }   // only the picker
