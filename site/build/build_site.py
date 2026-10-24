@@ -2501,11 +2501,11 @@ def person_extras(rows, cards, commits, people, by_login, balance, revisions, ar
             for short, vals in (("fav", fv), ("power", pv)):
                 if vals:
                     rat[short] = rating_number(sum(v for _, v in vals) / len(vals))
-            if len(fv) >= 2:                      # best takes up to half, worst the rest: never the same card
+            if len(fv) >= 2:                      # best takes up to half, worst the rest below it: never the same card or value
                 order = sorted(fv, key=lambda x: (-x[1], x[0]))
                 k = min(3, (len(fv) + 1) // 2)
                 rat["best"] = [list(x) for x in order[:k]]
-                rat["worst"] = [list(x) for x in order[k:][::-1][:3]]
+                rat["worst"] = [list(x) for x in order[k:][::-1][:3] if x[1] < order[k - 1][1]]
             r["ratings"] = rat
         if K in raters:
             bias = {}
