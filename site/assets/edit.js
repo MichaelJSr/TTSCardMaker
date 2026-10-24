@@ -5,10 +5,12 @@ import { validateProfile, profileFile, sameProfile, deckCode, profileHtml, LIMIT
 import * as pick from "./pick.js";
 import * as decks from "./decks.js";
 import * as auth from "./login.js";
+import * as live from "./live.js";
+import * as draft from "./drafts.js";
 
 const API = "https://api.github.com";
 // token: the plain-text token before 2026-10-23 (sealed on the next load); last: the login a password last signed in
-const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login" };
+const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login", drafts: draft.DRAFT_KEY };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
   atk: "int", spd: "int", ability: "str", note: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
@@ -180,6 +182,12 @@ export function createEditor(app) {
   let stage = { ...emptyStage(), ...load(K.stage, {}) };
   // new series, subseries and authors made in the filter bar: this tab only, never published (a card carrying one is)
   let buckets = readBuckets(sessionStorage.getItem(K.buckets));
+  // what the Edit dialog and the inline editors hold before it goes into the batch, per card id (drafts.js)
+  const cardDrafts = draft.draftStore(localStorage, K.drafts);
+  let flushDraft = null, formId = "";             // the open form's pending draft (written now when the tab closes), its card
+  window.addEventListener("pagehide", () => flushDraft?.());
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flushDraft?.(); });
+  let previewOpen = false;                         // narrow screens: the preview bar opened
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
@@ -507,10 +515,11 @@ export function createEditor(app) {
     const psdNote = f => (b.pending?.includes(f) ? `<span class="fact pending" data-tip="${app.PSD_TIP}">PSD pending</span>` : "");
     const row = (f, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${LABEL[f]}${psdNote(f)}</label><div class="ein">${input}${reset(f)}</div></div>`;
     const num = f => `<input id="ef-${f}" type="number" min="0" max="99" step="1" value="${c[f] ?? ""}" placeholder="—">`;
-    return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
+    return `<div class="dialog edit-dialog has-preview" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
       <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
       <h2>Edit ${esc(c.name)}</h2>
       <p class="muted">Changes go into your batch; publish the batch when you're done. <span class="kbd">${esc(c.key)}</span></p>
+      <div class="edit-cols">
       <form id="edit-form" class="edit-form" autocomplete="off">
         <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD; an edit shows as “PSD pending” until the card image is regenerated.${b.refused ? ` The last image update was refused: ${esc(b.refused)}.` : ""}</p>
         <fieldset><legend>Card</legend>
@@ -557,7 +566,7 @@ export function createEditor(app) {
         </fieldset>
         <div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
         <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div>
-      </form></div>`;
+      </form>${live.paneHtml(previewOpen)}</div></div>`;
   }
   const creatureRow = (x, i) => `<tr><th>${i + 1}</th>${STATS.map(k => `<td><input type="number" min="0" max="99" data-ck="${k}" value="${x[k] ?? ""}" placeholder="—" aria-label="Creature ${i + 1} ${LABEL[k]}"></td>`).join("")}</tr>`;
   function creatureAction(kind) {
@@ -679,10 +688,18 @@ export function createEditor(app) {
     const c = find(id), op = stage.cards[id]; if (!c || !op) return;
     put(id, withoutItem(op, item, baseOf(c).name)); save();
   }
-  function openForm(id) {
+  // the live preview: the card as it will look once published, from the form's op (live.js)
+  const previewCtx = { render: (t, n) => app.render(t, n), statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: p => app.imageOf(p) };
+  function paintPreview(c, op) {
+    const body = app.modal.querySelector("#lp-body"); if (!body) return;
+    const b = baseOf(c), values = { ...op.set, ...Object.fromEntries((op.unset || []).map(f => [f, psdVal(b, f)])) };
+    body.innerHTML = live.previewHtml(live.previewCard(b, values, op.author, f => psdVal(b, f)), live.changedFields(b, values, op.author), previewCtx);
+    for (const a of body.querySelectorAll("a")) a.tabIndex = -1;    // a picture of the page: its links don't leave the form
+  }
+  function openForm(id, { draft: restored = null } = {}) {       // restored: a draft's fields, from the card page's offer
     const c = find(id);
     if (!c) return;
-    if (!me) { openHub(`Sign in to edit ${c.name}.`, () => openForm(id)); return; }
+    if (!me) { openHub(`Sign in to edit ${c.name}.`, () => openForm(id, { draft: restored })); return; }
     app.modal.innerHTML = formHtml(c);
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
     const form = app.modal.querySelector("#edit-form"), ta = document.getElementById("ef-ability");
@@ -693,10 +710,45 @@ export function createEditor(app) {
       const op = readForm(c), lines = describe(op);
       document.getElementById("ef-summary").innerHTML = (op.error ? `<span class="err">${esc(op.error)}.</span> ` : "") + (lines.length ? `<b>${lines.length} change${lines.length > 1 ? "s" : ""}:</b> ${lines.map(esc).join(" · ")}` : "No changes yet.");
       form.dataset.dirty = lines.length || op.error ? "1" : "";       // a refused name is typed text too: Cancel and leaving still ask
+      paintPreview(c, op);
+      const f = document.activeElement?.closest?.("#edit-form [id^='ef-'], #ef-types, #ef-creatures-box")?.id.slice(3);
+      if (f) live.reveal(app.modal.querySelector(".lp-pane"), f === "creatures-box" ? "creatures" : f);
     };
-    form.addEventListener("input", update);
-    form.addEventListener("change", update);
+    // drafts: the inputs that differ from how the form opened, a moment after each key; an older one is offered first
+    const start = draft.readValues(form), setCreatures = rows => {
+      if (!rows) { if (!document.getElementById("ef-creatures-box").hidden) creatureAction("remove"); return; }
+      document.getElementById("ef-creatures").innerHTML = rows.map((r, i) => creatureRow(Object.fromEntries(STATS.map((k, j) => [k, r[j] === "" ? null : r[j]])), i)).join("");
+      if (document.getElementById("ef-creatures-box").hidden) { document.getElementById("ef-creatures-box").hidden = false; document.getElementById("ef-single").hidden = true;
+        for (const b of document.querySelectorAll("[data-creature]")) b.hidden = b.dataset.creature === "split"; }
+    };
+    const autosave = draft.later(() => {
+      if (!form.isConnected) return;
+      const typed = draft.changed(draft.readValues(form), start);
+      if (Object.keys(typed).length) cardDrafts.put(c.id, typed, true); else cardDrafts.drop(c.id);
+    });
+    flushDraft = () => autosave.flush(); formId = c.id;
+    const typing = () => { form.querySelector(".draft-offer")?.remove(); autosave.run(); };   // typing over an offer: what's typed now is the draft
+    const older = !restored && cardDrafts.get(c.id), offered = older && draft.restorable(older.fields, start);
+    if (restored) draft.fillValues(form, restored, { creatures: setCreatures });
+    else if (offered && Object.keys(offered).length) form.insertAdjacentHTML("afterbegin", draft.offerHtml(offered, older.at));
+    else if (older) cardDrafts.drop(c.id);                                 // the batch has it already
+    form.addEventListener("input", () => { update(); typing(); });
+    form.addEventListener("change", () => { update(); typing(); });
+    app.modal.querySelector(".lp-toggle")?.addEventListener("click", e => {
+      previewOpen = !previewOpen;
+      const pane = e.currentTarget.closest(".lp-pane"); pane.classList.toggle("open", previewOpen);
+      e.currentTarget.setAttribute("aria-expanded", String(previewOpen)); e.currentTarget.querySelector(".lp-caret").textContent = previewOpen ? "▾" : "▸";
+    });
     form.addEventListener("click", e => {
+      const ans = e.target.closest(".draft-offer [data-draft]");
+      if (ans) {
+        form.querySelector(".draft-offer").remove();
+        if (ans.dataset.draft === "restore") { draft.fillValues(form, offered, { creatures: setCreatures }); update(); autosave.run(); }
+        else { cardDrafts.drop(c.id); app.toast("Unsaved edit discarded"); }
+        document.getElementById(isRule(c) ? "ef-ability" : "ef-name").focus();
+        return;
+      }
+      if (e.target.closest("[data-type], [data-insert], [data-reset], [data-creature]")) typing();
       const t = e.target.closest("[data-type]");
       if (t) { const on = !t.classList.contains("on"); t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); update(); return; }
       const ins = e.target.closest("[data-insert]");
@@ -710,13 +762,15 @@ export function createEditor(app) {
       e.preventDefault();
       const op = readForm(c);
       if (op.error) { app.toast(op.error); return; }
+      autosave.cancel(); cardDrafts.drop(c.id); flushDraft = null;         // in the batch now
       if (opEmpty(op)) delete stage.cards[c.id]; else stage.cards[c.id] = op;
       save();
       app.toast(opEmpty(op) ? "No changes" : `Added to the batch: ${count()} unpublished`);
       if (isRule(c)) { app.closeModal(); app.rerender(); } else app.goCard(c.id);
     });
     update();
-    document.getElementById(isRule(c) ? "ef-ability" : "ef-name").focus();
+    if (restored) autosave.run();
+    (form.querySelector(".draft-offer [data-draft=restore]") || document.getElementById(isRule(c) ? "ef-ability" : "ef-name")).focus();
   }
   function resetField(c, f) {
     const p = psdVal(baseOf(c), f), el = document.getElementById(`ef-${f}`);
@@ -1058,6 +1112,7 @@ export function createEditor(app) {
     localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
       decks: { ...sentDecks(), ...decksOut }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));
     if (stage.admins) S.data.admins = stage.admins;
+    cardDrafts.dropAll(ops.map(o => o.id));              // published: their drafts are done with
     stage = emptyStage();
     save();
     return sha;
@@ -1223,13 +1278,15 @@ export function createEditor(app) {
       const form = app.modal.querySelector("#edit-form") || document.getElementById("edit-form");
       if (form?.dataset.dirty && !confirm("Discard these changes?")) return;
       if (form && !app.modal.contains(form)) { forget(form.dataset.login); form.dataset.dirty = ""; location.replace(`#/u/${encodeURIComponent(form.dataset.login)}`); return; }
-      const id = app.currentCard(); if (id) app.goCard(id); else app.closeModal();
+      const id = app.currentCard();
+      if (form && !form.querySelector(".draft-offer")) { cardDrafts.drop(formId); flushDraft = null; }   // discarded (an offer not answered stays)
+      if (id) app.goCard(id); else app.closeModal();
     },
     "edit-review": () => app.showDialog(reviewHtml()),
-    "edit-discard": el => { delete stage.cards[el.dataset.id]; save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
+    "edit-discard": el => { delete stage.cards[el.dataset.id]; cardDrafts.drop(el.dataset.id); save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
     "edit-discard-people": () => { stage.people = {}; save(); app.showDialog(reviewHtml("Discarded.")); },
     "edit-discard-admins": () => { stage.admins = null; save(); app.showDialog(reviewHtml("Discarded.")); },
-    "edit-discard-all": () => { if (!confirm(`Discard ${count()} unpublished change${count() > 1 ? "s" : ""}?`)) return; stage = emptyStage(); save(); app.rerender(); },
+    "edit-discard-all": () => { if (!confirm(`Discard ${count()} unpublished change${count() > 1 ? "s" : ""}?`)) return; cardDrafts.dropAll(Object.keys(stage.cards)); stage = emptyStage(); save(); app.rerender(); },
     "edit-discard-profile": el => { delete stage.profiles[el.dataset.login]; save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
     "edit-discard-deck": el => { dropDeck(el.dataset.key); save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
     // published decks: Publish… on a saved hand, Unpublish and Replace with… on a deck page (own decks; admins any)
@@ -1292,8 +1349,8 @@ export function createEditor(app) {
     profileOf, pendingProfiles, profilePage, leave: () => { carry = null; },   // another page rendered: a later editor starts fresh
     // published decks: the publish dialog for a saved hand, and the staged or just-published files for the pages
     publishDeck: id => openPublish(id), deckOf, pendingDecks,
-    // inline editing (inline.js): single fields into the same batch, and the known values for its lists
-    stageField, stageAuthor, stageMany, value: val,
+    // inline editing (inline.js): single fields into the same batch, and the known values for its lists; the drafts
+    stageField, stageAuthor, stageMany, value: val, drafts: cardDrafts,
     // new series, subseries and authors from the filter bar (buckets: pending = no card carries it yet)
     options: () => ({ series: seriesList(), subseries: subseriesList, ownSubseries, authors: authorList(), buckets: pending() }),
     addBucket,

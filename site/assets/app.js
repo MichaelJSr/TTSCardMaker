@@ -12,6 +12,7 @@ import * as balance from "./balance.js";
 import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
 import { deckPasses } from "./login.js";
+import { tipController } from "./tip.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -167,7 +168,7 @@ function rerender() {
 const editor = createEditor({
   S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
   openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
-  iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
+  iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n), statBars: c => statBars(c), imageOf: c => thumbUrl(c),   // the form's live preview
   users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); },
   // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
   view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
@@ -175,7 +176,7 @@ const editor = createEditor({
 });
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;
-inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
+inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m), hideTip: () => hideTip(), icons: () => S.icons });
 let selectAnchor = null;                                 // the last tile toggled: Shift-click selects from it
 function toggleSelect(id, range) {
   if (range && selectAnchor) for (const x of inline.rangeIds(S.list.map(c => c.id), selectAnchor, id)) S.selected.add(x);
@@ -1106,7 +1107,7 @@ document.addEventListener("keydown", e => {
     if (to && to !== ctab) location.hash = to.getAttribute("href");
     return;
   }
-  const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline]");   // the inline controls are inputs; stat rows take the arrows
+  const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline], .star-pick, .type-palette");   // the inline controls are inputs; stat rows and stars take the arrows
   if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size) { S.selected.clear(); inline.reflect(view, S.selected); } return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === "Enter" && ae?.dataset?.open && (modal.hidden || modal.contains(ae)) && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
@@ -1124,32 +1125,31 @@ document.addEventListener("keydown", e => {
   else if (inCard && e.key === "e") { e.preventDefault(); editor.open(id); }
 });
 
-// tooltips: [data-tip] text, [data-v]+[data-l] chart values, card links show a preview
-function hideTip() { tip.hidden = true; }
-document.addEventListener("pointerover", e => {
-  const ref = e.target.closest("a.card-ref, .chart [data-card]"), t = e.target.closest("[data-tip], [data-v]");
-  if (!ref && !t) return;
-  tip.replaceChildren();
-  if (t && t.dataset.v !== undefined) {
+// tooltips: [data-tip] text, [data-v]+[data-l] chart values, card links show a preview; when they go: tip.js
+function fillTip(t) {
+  if (t.dataset.v !== undefined) {
     const v = document.createElement("div"); v.className = "v"; v.textContent = t.dataset.v;
-    const l = document.createElement("div"); l.textContent = t.dataset.l || ""; tip.append(v, l);
-  } else if (ref) {
-    const c = S.byId.get(ref.dataset.card);
-    if (!c) return;
+    const l = document.createElement("div"); l.textContent = t.dataset.l || ""; tip.replaceChildren(v, l);
+  } else if (t.matches("a.card-ref, .chart [data-card]")) {
+    const c = S.byId.get(t.dataset.card);
+    if (!c) return false;
+    tip.replaceChildren();
     if (c.img) { const im = document.createElement("img"); im.src = thumbUrl(c); im.alt = ""; tip.append(im); }
     const n = document.createElement("div"); n.className = "v"; n.textContent = c.name; tip.append(n);
   } else tip.textContent = t.dataset.tip;
-  tip.hidden = false;
-});
+}
+const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
+function hideTip() { tips.hide(); }
+document.addEventListener("pointerover", e => tips.over(e.target));
 document.addEventListener("pointermove", e => {
-  if (tip.hidden) return;
+  if (!tips.move()) return;
   const r = tip.getBoundingClientRect();
   let x = e.clientX + 14, y = e.clientY + 16;
   if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
   if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
 });
-document.addEventListener("pointerout", e => { if (e.target.closest("[data-tip], [data-v], a.card-ref, .chart [data-card]")) hideTip(); });
+document.addEventListener("pointerout", e => tips.out(e.relatedTarget));
 
 init();
 passes.migrate().catch(() => {});                       // passphrases remembered in plain text before 2026-10-23: sealed now
