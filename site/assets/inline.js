@@ -44,6 +44,7 @@ export const optKey = o => (o.dataset.series != null ? `${o.dataset.series}\u000
 /** The select's last option: "New series…" (data-new-bucket: its value never matters); a subseries needs a picked series. */
 export const newOption = (key, series) => (key === "subseries" && !series ? `<option disabled>Pick a series to add a subseries</option>`
   : `<option value="" data-new-bucket>New ${LABEL[key].toLowerCase()}…</option>`);
+const ghost = f => `<button type="button" class="fact ghost-fact" data-inline="${f}" data-empty aria-label="Add ${f}">+ ${f}</button>`;
 const chipHtml = (v, fresh) => `<span class="chip" data-value="${esc(v)}"${fresh ? " data-new" : ""}>${esc(v)}</span>`;
 /** A drop list's chips: the new (pending) values first, dashed, then the rest. */
 export const dropChips = (list, fresh) => [...fresh.map(v => chipHtml(v, true)), ...list.filter(v => !fresh.includes(v)).map(v => chipHtml(v, false))].join("");
@@ -90,7 +91,6 @@ export function mountCard(modal, c, api = A) {
   const note = detail.querySelector(":scope > div:nth-child(2) > .note");
   if (note) mark(note, "note", "Click to edit the note");
   else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="note" data-empty aria-label="Add a note">+ note</button>`);
-  const ghost = f => `<button type="button" class="fact ghost-fact" data-inline="${f}" data-empty aria-label="Add ${f}">+ ${f}</button>`;
   const starChip = chips.find(a => hrefOf(a).startsWith("#/cards?stars="));      // stars: a slider in its place
   if (c.stars > 10) { if (starChip) starChip.dataset.tip = "Use All fields"; }
   else if (starChip) starChip.outerHTML = starsHtml(c.stars);
@@ -149,8 +149,9 @@ function open(el, f, text = null) {               // text: a restored draft
 }
 function cancel(refocus) {                        // Esc, or nothing changed: what was typed goes, an older draft stays as it was
   if (!cur) return;
-  const { c, f, el, host, html, cls, tip, save, snap } = cur; cur = null;
-  save.cancel(); drafts()?.back(c.id, snap, [f]); A.hideTip?.();
+  const { c, f, el, host, html, cls, tip, save, snap, ctl } = cur; cur = null;
+  save.cancel(); drafts()?.back(c.id, snap, [f]); A.hideTip?.(); A.closePicker?.();
+  ctl?.blur();                                     // a native popover goes with it
   if (host !== el) host.replaceWith(el); else { el.innerHTML = html; el.className = cls; if (tip) el.dataset.tip = tip; }
   if (refocus) el.focus();
 }
@@ -164,6 +165,7 @@ function commit(kbd) {                            // kbd: from the keyboard, so 
     return false;
   }
   was.save.cancel(); drafts()?.drop(c.id, [f]);    // in the batch now
+  A.closePicker?.();
   refresh(c, f, kbd);
   return true;
 }
@@ -185,6 +187,7 @@ function commitStat(kbd) {
 function statKey(row, k, e) {
   const now = +row.getAttribute("aria-valuenow"), v0 = prov?.row === row ? prov.v0 : now;
   const v = stepValue(now, e.key, 10);
+  if (e.key === "Escape" && row.hasAttribute("data-fresh") && now === 0) { e.preventDefault(); e.stopPropagation(); unfresh(row, true); return; }
   if (v !== null) { e.preventDefault(); e.stopPropagation(); prov = { row, k, v0 }; paint(row, v); return; }
   if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); commitStat(true); return; }
   if (e.key === "Escape" && now !== v0) { e.preventDefault(); e.stopPropagation(); paint(row, v0); prov = null; }   // else Esc closes the dialog, as usual
@@ -229,7 +232,8 @@ function onClick(e) {
   if (!el || !A.modal.contains(el)) return;
   const f = el.dataset.inline;
   if (f === "stars" && el.hasAttribute("data-empty")) {                     // "+ stars": the slider, at none
-    e.preventDefault(); e.stopPropagation(); el.outerHTML = starsHtml(0); A.modal.querySelector(".detail .star-pick")?.focus(); return;
+    e.preventDefault(); e.stopPropagation(); el.outerHTML = starsHtml(0);
+    const sp = A.modal.querySelector(".detail .star-pick"); if (sp) { sp.dataset.fresh = ""; sp.focus(); } return;   // fresh: nothing chosen puts "+ stars" back
   }
   if (f === "name" || SLIDERS.includes(f)) return;                          // the name on double-click, rows by cell or key
   if ((f === "ability" || f === "note") && e.target.closest("a, .badge, img")) return;   // links in the text still open the card
@@ -261,6 +265,22 @@ function onFocusOut(e) {                          // Tab to another control keep
   const kbd = !!e.relatedTarget && !pointer;
   if (cur) { if (cur.host.contains(e.target) && !cur.host.contains(e.relatedTarget)) commit(kbd); }
   else if (prov && e.target === prov.row) commitStat(kbd);
+  else if (e.target.matches?.(".star-pick[data-fresh]") && !e.target.contains(e.relatedTarget)) unfresh(e.target, false);
+}
+function unfresh(row, refocus) {                   // a "+ stars" slider left at none: the chip again
+  if (!row.isConnected || !row.hasAttribute("data-fresh")) return;
+  row.removeAttribute("data-fresh");               // its blur, as it goes, comes back here
+  row.outerHTML = ghost("stars");
+  if (refocus) spot("stars")?.focus();
+}
+function away(e) {                                 // a click or tap away saves, even when no focus moves (iOS)
+  const t = e.target;
+  if ((t === A.modal || t === document.documentElement) && (e.offsetX >= t.clientWidth || e.offsetY >= t.clientHeight)) return;   // its scrollbar
+  if (t.closest?.(".tok-picker")) return;
+  if (cur && !cur.host.contains(t)) commit(false);
+  const fresh = A.modal.querySelector(".detail .star-pick[data-fresh]");
+  if (fresh && !fresh.contains(t)) { if (prov?.row === fresh) commitStat(false); else unfresh(fresh, false); }
+  if (naming && t !== naming.input) { if (naming.input.value.trim()) createBucket(false); else closeName(false); }
 }
 
 // ---- the cards grid: select with Ctrl/Cmd/Shift-click, drag onto a Series or Author value in the filter bar
@@ -390,6 +410,7 @@ export function install(api) {
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flush(); });
   api.modal.addEventListener("pointerdown", () => { pointer = true; });
   window.addEventListener("pointerdown", e => { closing = !!(cur || pal || prov) && api.modal.contains(e.target) && !!e.target.closest?.('[data-action="close"]'); }, true);   // before the palette's click-away
+  document.addEventListener("pointerdown", away, true);
   api.modal.addEventListener("click", onClick);
   api.modal.addEventListener("dblclick", onDblClick);
   api.modal.addEventListener("keydown", onKey);

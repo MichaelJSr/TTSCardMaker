@@ -677,3 +677,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   by replaying the spec's order (`check18.mjs`), and a trusted drag still stages; not in Safari here (no WebKit tooling).
 - **`inline.dropOn(ids, {key, value, series})`** is the one staging path: a filter-bar value (`targetOf` reads its
   list's `data-drop`/`data-series`), a pinned box (`data-k/v/s`), a tap on a box, a number key.
+- **The stuck "+" box (item 3).** Reproduced: `+ stars` swapped its chip for a slider at none, and nothing put the chip
+  back. Now that slider is `data-fresh`: focus leaving it, a click away or Esc with nothing chosen gives back `+ stars`
+  (a keyboard change still saves). The text editors closed only on `focusout`, which a tap on plain content in iOS
+  Safari never fires, and the native `<datalist>` popover (series, subseries, author) could outlive its input. A capture
+  `pointerdown` outside the open editor (not on the token list, not on the dialog's scrollbar) now saves it as a click
+  elsewhere does (unchanged: closes; the filter bar's "New …" input too); the palette has had the same rule. `cancel`
+  blurs the input before it goes. Ratings inputs are no inline editor: with none open, a click stages nothing.
