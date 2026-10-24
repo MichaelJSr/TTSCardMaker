@@ -109,7 +109,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - Round 3 person stats (2026-10-24). Build: `contributions(..., balance=None, revisions=None, archived=(), fields_by=None)`
   (positional calls unchanged) ends with `person_extras()`, which adds per row, each key left out when empty: `power` (P2:
   own cards' analytics `z_total`, `{n, z, top, bottom, dots: [[id, z, top|bottom?]]}`), `bal` (P1: own cards' analytics
-  rows with `bal`, delta = new total - old; `madeBuff`/`madeNerf` = rows on others' cards made by them; present with
+  rows with `bal`, delta = new total - old; `swing` [id, delta, ts] the largest, shown as "Biggest swing"; `madeBuff`/`madeNerf` = rows on others' cards made by them; present with
   `power` so the page shows `No buffs or nerfs recorded yet.`), `revisions` (P3/P12/P13 from stats' `card_revisions`
   counts, `{self, others, top, theirs, most?, untouched, oldest?}`; absent without history), `rework` (P11:
   `analytics.reworked` rows), `ratings` (P4: `rating_now(..., skip=K)` per own card, `best` up to half of the rated

@@ -395,7 +395,8 @@ export function balancePanelHtml(p, x) {
     const n = b.buff + b.nerf, made = [b.madeNerf ? plural(b.madeNerf, "nerf") : "", b.madeBuff ? plural(b.madeBuff, "buff") : ""].filter(Boolean).join(", ");
     const bar = n ? twoBar([plural(b.buff, "buff"), b.buff, "up"], [plural(b.nerf, "nerf"), b.nerf, "down"]) : "";
     const rows = (b.recent || []).map(([id, kind, d, ts]) => `<li>${cardA(x, id)} · <span class="${kind === "buff" ? "diff-up" : "diff-down"}">${kind} ${sign(d, 0)}</span> <span class="muted">· ${esc(x.month ? x.month(ts) : "")}</span></li>`).join("");
-    bal = `<h4>Buffs and nerfs</h4>${n ? `${bar}<ul class="p-list">${rows}</ul>` : `<p class="muted">No buffs or nerfs recorded yet.</p>`}
+    const sw = b.swing, swing = sw ? `<p>Biggest swing: ${cardA(x, sw[0])} <span class="${sw[1] > 0 ? "diff-up" : "diff-down"}">${sign(sw[1], 0)}</span> <span class="muted">· ${esc(x.month ? x.month(sw[2]) : "")}</span></p>` : "";
+    bal = `<h4>Buffs and nerfs</h4>${n ? `${bar}${swing}<ul class="p-list">${rows}</ul>` : `<p class="muted">No buffs or nerfs recorded yet.</p>`}
       ${made ? `<p>Made: ${made} to others' cards</p>` : ""}`;
   }
   return panel("Balance", `${facts}${pw ? `${legend}${strengthStrip(pw, x)}` : ""}${bal}`);
