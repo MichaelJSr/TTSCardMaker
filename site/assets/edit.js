@@ -174,6 +174,7 @@ export function createEditor(app) {
   const legacy = () => localStorage.getItem(K.token) || sessionStorage.getItem(K.token) || "";
   let token = "";
   let me = null;                                   // { login, admin, push }
+  let scopes = null;                               // the token's classic scopes (x-oauth-scopes); null: unknown (fine-grained)
   // profiles: login -> profile, or null to remove the file; decks: "<owner>/<slug>" -> the deck file object (decks.js fileOf /
   // encrypt), or null to remove it; deckNames: the same keys -> name, for the bar (a private file holds its name encrypted)
   const emptyStage = () => ({ cards: {}, people: {}, admins: null, profiles: {}, decks: {}, deckNames: {} });
@@ -233,11 +234,11 @@ export function createEditor(app) {
     token = t.trim();
     const { data: user, headers } = await gh("/user", { full: true });
     if (expect && user.login.toLowerCase() !== expect.toLowerCase()) throw new Error(`That password file holds ${user.login}'s token, not ${expect}'s.`);
-    const scopes = headers.get("x-oauth-scopes");
-    if (scopes != null && !/\b(public_)?repo\b/.test(scopes)) throw new Error("This token can't write: give it the public_repo scope.");
+    const has = headers.get("x-oauth-scopes");
+    if (has != null && !/\b(public_)?repo\b/.test(has)) throw new Error("This token can't write: give it the public_repo scope.");
     const p = (await gh(`/repos/${S.data.repo}`)).permissions || {};
     if (!p.push) throw new Error(`${user.login} can't push to ${S.data.repo}. Ask an admin to add you.`);
-    me = { login: user.login, admin: !!p.admin || isAdmin(user.login), push: true };
+    me = { login: user.login, admin: !!p.admin || isAdmin(user.login), push: true }; scopes = has;
     keptHere = !!keep;
     if (store) await remember(keep);
     app.onAuth();
@@ -258,7 +259,7 @@ export function createEditor(app) {
     catch (e) { if (e.status === 401) await device.clear(); throw e; }      // a revoked token isn't kept
   }
   function signOut() {
-    token = ""; me = null; pwKnown = null; keptHere = false;
+    token = ""; me = null; scopes = null; pwKnown = null; keptHere = false;
     localStorage.removeItem(K.last); localStorage.removeItem(K.token); sessionStorage.removeItem(K.token); device.clear().catch(() => {});
     sessionStorage.removeItem(K.buckets); buckets = readBuckets(null); app.onAuth();
   }
@@ -716,6 +717,7 @@ export function createEditor(app) {
       if (isRule(c)) { app.closeModal(); app.rerender(); } else app.goCard(c.id);
     });
     update();
+    if (!isRule(c)) app.formOpened?.({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)
     document.getElementById(isRule(c) ? "ef-ability" : "ef-name").focus();
   }
   function resetField(c, f) {
@@ -1297,5 +1299,13 @@ export function createEditor(app) {
     // new series, subseries and authors from the filter bar (buckets: pending = no card carries it yet)
     options: () => ({ series: seriesList(), subseries: subseriesList, ownSubseries, authors: authorList(), buckets: pending() }),
     addBucket,
+    // image previews (preview.js): GitHub calls with the token, its scopes, and what the PSD prints of a card's fields
+    github: (path, opts) => gh(path, opts), get scopes() { return scopes; },
+    psdOf: id => { const c = find(id); return c ? Object.fromEntries(Object.keys(FROM).filter(isPsd).map(f => [f, psdVal(baseOf(c), f)])) : null; },
+    // the fields the card's Card Edits.json entry would hold once published: the built ones, the published-not-built and
+    // the staged ops' (or op: the open form's, relative to the published card)
+    entryFields: (id, op = stage.cards[id]) => { const f = new Set(find(id)?.edited || []);
+      for (const o of [...sentOps().filter(x => x.id === id), op].filter(Boolean)) { for (const k of Object.keys(o.set || {})) f.add(k); for (const k of o.unset || []) f.delete(k); }
+      return [...f]; },
   };
 }

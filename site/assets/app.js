@@ -12,6 +12,7 @@ import * as balance from "./balance.js";
 import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
 import { deckPasses } from "./login.js";
+import { createPreviews } from "./preview.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -124,6 +125,7 @@ async function init() {
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
   editor.init();                                           // applies staged edits, then derive()
+  previews.init();
   S.decks = D.loadDecks();
   updateDeckCount();
   updatePeopleCount();
@@ -168,11 +170,15 @@ const editor = createEditor({
   S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
   openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
   iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
-  users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); },
+  users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
   // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
   view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
   decks: () => loadDecks().then(() => deckList()),         // the published decks (with the pending ones): the publish dialog's "replaces"
+  formOpened: x => previews.mountForm(x),                  // the Edit dialog's image previews
 });
+// image previews in edit mode (preview.js): the mock-up and the rendered dry-run bake, badges on the grid's tiles
+const previews = createPreviews({ S, editor, toast: m => toast(m), loadDetails: c => loadDetails(c), getJson: n => getJson(n),
+  signIn: () => editor.actions["edit-hub"](), badges: () => { if (editing()) previews.mountTiles(view); } });
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;
 inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
@@ -382,6 +388,7 @@ function renderCards(r) {
         : view_ === "table" ? tableHtml(list, p) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}">${list.map((c, i) => tileHtml(c, { eager: i < 8, css: { s: 160, m: 200, l: 270 }[size] || 200 })).join("")}</div>`}
     </section></div>`;
   if (editing()) inline.mountGrid(view, p);
+  if (editing()) previews.mountTiles(view);
 }
 function tableHtml(list, p) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
@@ -501,6 +508,7 @@ function openCard(id, showDetails = false) {
   const dd = $(".psd-details", modal);
   if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
   if (editing()) inline.mountCard(modal, c);
+  if (editing()) previews.mountCard(modal, c);
 }
 
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card

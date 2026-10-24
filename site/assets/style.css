@@ -489,3 +489,32 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .deck-pass .err { min-height: 1.4em; margin: 4px 0; }
 .publish-form .ein .check { margin: 0 12px 0 0; } .publish-form .ein .check input { margin: 0; }
 .publish-form #pd-private { border-left: 2px solid var(--border); padding-left: 10px; margin: 4px 0 8px; }
+/* ---- image previews (preview.js, mockup.js): the panel under the card page's image and beside the Edit dialog's card fields, the grid badge */
+.pv-panel { margin-top: 12px; border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; background: var(--surface-2); }
+.pv-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.pv-head h3 { margin: 0; font-size: 14px; }
+.pv-head .seg button { padding: 3px 10px; font-size: 13px; }
+.pv-head .seg button[aria-pressed="true"] { background: var(--surface-3); font-weight: 600; }
+.pv-mock, .pv-pair figure { position: relative; margin: 0; }
+.detail .pv-panel img, .pv-mock canvas, .pv-pair img, .pv-pair canvas { width: 100%; height: auto; display: block; border-radius: 10px; background: var(--surface-3); cursor: auto; }
+.pv-ribbon { position: absolute; top: 32%; left: 8px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; background: #fab219; color: #1a1300; box-shadow: 0 1px 4px rgba(0,0,0,.4); pointer-events: none; }
+.pv-panel figcaption { font-size: 12.5px; margin-top: 6px; line-height: 1.35; }
+.pv-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.pv-pair.diff figure:first-child { display: none; }            /* diff: the preview beside its differences */
+.pv-state { margin: 0 0 6px; font-size: 13.5px; }
+.pv-stale { background: color-mix(in srgb, var(--warn) 18%, transparent); border-radius: 8px; padding: 6px 8px; font-size: 13px; margin: 0 0 8px; }
+.pv-stale button { margin-left: 6px; padding: 1px 8px; font-size: 12px; }
+.pv-notes { font-size: 13px; margin: 6px 0 0; padding-left: 18px; color: var(--ink-2); }
+.pv-older { font-size: 12.5px; margin: 8px 0 0; } .pv-older button { font-size: 12px; padding: 1px 8px; }
+.pv-older button[aria-pressed="true"] { border-color: var(--accent); }
+.pv-note { font-size: 12.5px; }
+.pv-spin { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--muted); border-top-color: transparent; border-radius: 50%;
+  animation: pv-spin 1s linear infinite; vertical-align: -2px; }
+@keyframes pv-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .pv-spin { animation: none; } }
+.tile .pv-badge { position: absolute; top: 30px; left: 6px; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #136f2a; color: #fff; }
+.pv-badge.inline { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #136f2a; color: #fff; font-weight: 600; vertical-align: 1px; }
+.pv-in-form { float: right; width: min(280px, 42%); margin: 0 0 10px 14px; }
+.pv-in-form .pv-panel { margin-top: 0; }
+@media (max-width: 640px) { .pv-in-form { float: none; width: auto; margin: 0 0 12px; } }
