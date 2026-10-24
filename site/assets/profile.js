@@ -348,8 +348,8 @@ export const wordiness = all => memoOf(all, "words", () => {
   return new Map([...m].map(([k, w]) => [k, { words: w.sum / w.n, n: w.n }]));
 });
 export const RANKS = [["cards", "cards"], ["commits", "card commits"], ["edits", "edits"], ["strength", "strength"], ["words", "words per ability"]];
-/** P18: [[label, rank, of]]: competition ranking (1, 1, 3) among the people rows with a value: cards, card commits, edits,
- *  strength (power.z, at power.n >= 5), words per ability (at 5 abilities). words: wordiness(). */
+/** P18: [[label, rank, of]]: competition ranking (1, 1, 3) among the people rows with a value (two or more): cards, card
+ *  commits, edits, strength (power.z, at power.n >= 5), words per ability (at 5 abilities). words: wordiness(). */
 export function ranksOf(person, people, words = new Map()) {
   const value = (p, k) => (k === "strength" ? (p.power?.n >= 5 ? p.power.z : null) : k === "words" ? (words.get(p.key)?.n >= 5 ? words.get(p.key).words : null) : p[k] || null);
   const out = [];
@@ -357,7 +357,7 @@ export function ranksOf(person, people, words = new Map()) {
     const mine = value(person, k);
     if (mine == null) continue;
     const vals = people.map(p => value(p, k)).filter(v => v != null);
-    out.push([label, 1 + vals.filter(v => v > mine).length, vals.length]);
+    if (vals.length > 1) out.push([label, 1 + vals.filter(v => v > mine).length, vals.length]);
   }
   return out;
 }
