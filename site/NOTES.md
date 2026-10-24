@@ -1,4 +1,4 @@
-# Website notes (2026-10-20, sections 7-12 added 2026-10-21, 13, 14 and the (Action) tag on 2026-10-22, 16-18 on 2026-10-23)
+# Website notes (2026-10-20, sections 7-12 added 2026-10-21, 13, 14 and the (Action) tag on 2026-10-22, 16-19 on 2026-10-23)
 
 Architecture notes on site/ taken while planning the (since reverted) Table tab; line numbers are as of that day. The
 hand-kept files have since moved from MDW/ to site/ (Card Authors.txt, Card Edits.json, Website Admins.txt,
@@ -228,3 +228,70 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   version); the tuple shape is unchanged.
 - Checks: AutoCroissant tests/test_site_build.py::test_a_recompression_is_no_new_image_version (a guards commit with a
   recompressed and a re-exported PNG, a batch commit, a person's commit with the trailer); it fails without this change.
+
+## 19. Card previews: the server side and the website's contract (2026-10-23)
+- Owner's ask (2026-10-23 ~18:10): "press preview image to dry run bake a card, work on another card, and then go back to
+  the first to see the preview". Server side only so far; the UI is a later task, against this contract. Design and
+  measurements: AutoCroissant `docs/EDIT_PIPELINE_DESIGN.md` section 16 (with the manual test plan for the first live
+  dispatch); code: `.github/workflows/card-preview.yml` runs AutoCroissant `commands/card_preview.py`, which is the bake
+  (`card_bake.bake_card`: the same gates, fonts, chart, icon vocabulary and fork pin as card-edits.yml) on one card, on the
+  runner. Nothing is written to main (no PSD, PNG or edits file); no Discord; the result goes to the orphan branch
+  `previews`. No other workflow starts on it (every push trigger here is `branches: [main]`, and a GITHUB_TOKEN push starts
+  none), and the site build never reads it.
+- **Dispatch** (any signed-in editor; the token must belong to a collaborator with write access):
+  `POST https://api.github.com/repos/MichaelJSr/TTSCardMaker/actions/workflows/card-preview.yml/dispatches` with the
+  editor's `gh()` headers (`Authorization: Bearer <token>`, `Accept: application/vnd.github+json`,
+  `X-GitHub-Api-Version: 2022-11-28`) and the body
+  `{"ref": "main", "inputs": {"card": c.key, "edit": JSON.stringify(fields), "request": id}}` -> `204 No Content`.
+  - `request`: `crypto.randomUUID()` (36 characters; the workflow takes `[A-Za-z0-9-]{8,64}` and fails, publishing nothing,
+    on anything else), a new one per press, never reused.
+  - `card`: `c.key` (the Card Edits.json key, the PSD's file name with spaces; a duplicate's own key, so it is refused as
+    the bake refuses duplicates). A PSD path (`c.psd`) works too, but not for duplicates.
+  - `edit`: the card's PSD-kind fields as Publish would leave its entry: the committed Card Edits.json entry with the staged
+    op's `set` and `unset` applied, keeping `name`, `stars`, `types`, `hp`, `def`, `atk`, `spd`, `ability` (+ `creatures`
+    when the entry has a creatures list: it stops a stat bake, as in the bake). All of them, not only the staged ones: the
+    bake will bake the committed ones too. Card Edits.json shapes; at most 16 KB; an unknown field or a bad value comes back
+    as an input error (`_`-keys are ignored).
+  - Token scopes: a classic token needs `repo` for this endpoint (GitHub's docs; whether the `public_repo` tokens sign-in
+    accepts today are enough is item 8 of the test plan); a fine-grained one needs this repository with **Actions: Read and
+    write** (and Contents: Read and write, which publishing edits needs anyway). A 403 or 404 with a token that signs in is a
+    missing scope: say which. 422: a missing input, or the workflow is not on main.
+- **Result**: poll `GET https://api.github.com/repos/MichaelJSr/TTSCardMaker/contents/previews/<request>/result.json?ref=previews`
+  with `Accept: application/vnd.github.raw+json` and `cache: "no-store"`: 404 until it is published (also before the branch
+  exists). Every 10 s for 3 minutes, then every 30 s; give up at 16 minutes (the job's timeout is 15) with "no result: see
+  the run" (`GET .../actions/workflows/card-preview.yml/runs?event=workflow_dispatch&per_page=20`, the run whose
+  `display_title` is `Card preview <request>`). Never poll raw.githubusercontent.com for it: raw caches 5 minutes
+  (`max-age=300`), a 404 too.
+  - The image, once result.json says `image` (`files.webp`): `https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/previews/previews/<request>/preview.webp`
+    (public, CORS `*`; the path is new per request, so the cache never serves an older one; raw serves PNGs as `image/png`,
+    WebP's type to confirm on the first dispatch), or the same contents URL with `Accept: application/vnd.github.raw` read as
+    a blob into `URL.createObjectURL`. 720 px wide (the card view's size); `preview.png` is the full-size PNG the bake would
+    commit (about 1.5 MB, for a "full size" link).
+  - result.json: `state` = `baked` (show the image, `reason` such as `hp 5 -> 8`, `notes`), `redundant` (no image: "already
+    on the card", show the current card), `refused` (the bake would refuse it: `reason` such as `stat>10: hp 25: above 20`;
+    an image only when `image` is `refused`: what the render got before a later gate refused it), `error` (`transient` true:
+    "preview failed, try again", with `run`; false: `reason` starts `input:`, a website bug). `fields` gives each field's
+    outcome (`{stars: refused, hp: baked}`), `changes` the old and new values, `notes` the pixel misses ("name baked with a
+    pixel difference: bad 1.97%, mean 1.60, max 217"), stars or types not baked, FX layers and validator problems; `region`
+    the edited box on the full-size card (to zoom), `took_s`, `at`. The full table is design section 16. Every string goes
+    through `esc()`: reasons and notes quote card text.
+- **Stale or current.** A result describes `base` = `{commit, psd_blob, png_blob}` (full blob shas) and `edit`. It is current
+  while (a) the card's PSD and PNG on main are still those blobs and (b) the fields the site would send now equal `edit`
+  (compare as JSON with sorted keys). (a) cheaply: `base.png_blob.startsWith(c.img)` (cards.json's `img` is the PNG blob's
+  first 16 hex digits; it lags main by a site build); exactly, signed in: `GET /repos/MichaelJSr/TTSCardMaker/contents/<folder of c.psd>?ref=main`
+  lists both files' `sha` in one call. A stale one: "made on an older version of the card (or edit): preview again". A change
+  of the bake itself (AutoCroissant main, the fork pin) between the preview and the bake is not tracked.
+- **Coming back to it.** Keep `{card id: {request, edit, at}}` in localStorage (say `edit-previews`) when dispatching, so
+  another card, a reload or a crash returns to it; drop an entry when its result is stale, or 404 more than a day after
+  `at`. A preview stays at least 6 days unless 150 newer ones came after it: the branch is rewritten as one fresh commit when
+  it holds more than 200 previews or one older than 7 days. `index.json` on the branch (`.../contents/index.json?ref=previews`)
+  lists every preview `{request: {at, card, path, state, psd_blob, png_blob}}`: another device's preview of a card is the
+  newest row with its `path` and current blobs.
+- **Latency.** About 1-1.5 minutes for a stat edit and 1.5-2.5 for an ability or name, from the dispatch to result.json
+  (queue, checkouts and the 27 s pip install measured on card-edits.yml's runs; the bake 14 s for a stat and 26 s for an
+  ability on the dev Mac under load), more when Actions queues. Several requests run side by side, one commit each on
+  `previews` (retried when the head moved); the same request twice waits for the first (don't).
+- Checks (2026-10-23): AutoCroissant `tests/test_card_preview.py` (31 tests: the outcomes on a local card repo, the bad
+  inputs, the branch's commits and rewrites, a moved head and lease, this workflow's shape, no other workflow on the branch,
+  and the job's own Validate, Preview and Publish steps run against a bare repo standing in for GitHub); `actionlint` clean.
+  Not run: a live dispatch (the workflow must be on main first).
