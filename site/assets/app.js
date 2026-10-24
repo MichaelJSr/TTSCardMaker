@@ -6,13 +6,13 @@ import { createEditor } from "./edit.js";
 import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers, shareDialogHtml, personDiscord, personText } from "./profile.js";
 import * as inline from "./inline.js";
 import * as details from "./details.js";
+import { tipController } from "./tip.js";
 import * as decks from "./decks.js";
 import * as pick from "./pick.js";
 import * as balance from "./balance.js";
 import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
 import { deckPasses } from "./login.js";
-import { tipController } from "./tip.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
