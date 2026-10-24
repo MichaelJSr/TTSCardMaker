@@ -231,7 +231,7 @@ export function renderedParts(e, v) {
   const staleText = stale.length ? `<p class="pv-stale" role="note">Out of date: ${stale.map(w => (w === "edit" ? "the edit changed since" : "the card changed since")).join(" and ")}. ${button("Preview again", "ghost")}</p>` : "";
   const head = `<p class="pv-state" data-state="${esc(e.state)}"><b>${esc(STATE_TEXT[e.state] || e.state)}</b> · ${esc(fieldsLine(e.edit || {}))} · <span class="muted">${esc(ago(v.now - e.at))}</span></p>`;
   const outcomes = r.fields && Object.keys(r.fields).length ? `<p class="pv-fields">${esc(outcomesLine(r.fields))}</p>` : "";
-  const notes = r.notes?.length ? `<ul class="pv-notes">${r.notes.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const notes = r.notes?.length ? `<ul class="pv-notes">${r.notes.map(x => `<li>${esc(plainNote(x))}</li>`).join("")}</ul>` : "";
   const run = r.run || e.run?.url, runLink = run ? ` <a href="${esc(run)}" target="_blank" rel="noopener">The run on GitHub</a>.` : "";
   const again = stale.length ? "" : button("Preview again", "ghost");
   const state = words(STATE_TEXT[e.state] || e.state);
@@ -250,7 +250,7 @@ export function renderedParts(e, v) {
   if (e.state === "baked") return { ...words("No image"), caption: `${head}${staleText}<p>The bake drew it, but no image came with the result.${runLink}</p>${outcomes}${notes}${again ? `<div class="actions">${again}</div>` : ""}` };
   if (e.state === "redundant") return { ...state, caption: `${head}${staleText}<p>Already on the card: a bake would change nothing.</p>${outcomes}${notes}` };
   if (e.state === "refused") {
-    const reason = `${head}${staleText}<p>${esc(String(r.reason || "").replace(/\s*\([^)]*\bledger [A-Z]\d+\)/g, "") || "The bake refused this edit.")}</p>`;
+    const reason = `${head}${staleText}<p>${esc(plainReason(r.reason) || "The bake refused this edit.")}</p>`;
     if (r.image === "refused" && v.images.length) { const s = shot("the bake's render before it refused"); return { stage: s.stage, dim: false, caption: `${reason}<p class="muted pv-note">What the bake drew before refusing it.</p>${s.tools}${outcomes}${notes}` }; }
     return { ...state, caption: `${reason}<div class="actions">${again}</div>${outcomes}${notes}` };
   }
@@ -271,6 +271,7 @@ export const tabsHtml = (mode, { news = false } = {}) => `<div class="iv-tabs" r
 export const defaultMode = ({ where, n, entry }) => (where === "card" ? (entry && DONE.includes(entry.state) && !entry.seen ? "rendered" : "original") : n ? "mockup" : "original");
 // the bake's refusals (AutoCroissant psd_edit plan_stars / plan_types) in plain words, first match; else the text without
 // its field, boxes and ledger codes
+const LEDGER = /\s*\([^)]*\bledger [A-Z]\d+\)/g;
 const PLAIN_WHY = [
   [/folder sets them/, "the card's folder sets them"],
   [/parser reads no stars/, "this card has none"],
@@ -291,7 +292,18 @@ const PLAIN_WHY = [
 export function plainWhy(why) {
   const s = String(why ?? "");
   return PLAIN_WHY.find(([re]) => re.test(s))?.[1]
-    ?? (s.replace(/\s*\([^)]*\bledger [A-Z]\d+\)/g, "").replace(/^(?:stars|types): /, "").replace(/ at \(\d+(?:, \d+)*\)/g, "").trim() || "no reason given");
+    ?? (s.replace(LEDGER, "").replace(/^(?:stars|types): /, "").replace(/ at \(\d+(?:, \d+)*\)/g, "").trim() || "no reason given");
+}
+/** A refused result's reason: "unsupported-card: stars: <why>" (parts joined by "; ") -> "The bake would refuse the
+ *  stars: <plainWhy>."; any other reason without its ledger codes. */
+export function plainReason(reason) {
+  const s = String(reason ?? ""), parts = s.split("; ").map(x => /^[a-z-]+: (stars|types): (.*)$/s.exec(x));
+  return s && parts.every(Boolean) ? parts.map(([, f, why]) => `The bake would refuse the ${f}: ${plainWhy(why)}.`).join(" ") : s.replace(LEDGER, "");
+}
+/** A result note: "stars not baked: <code>: <why>" -> "The stars weren't baked: <plainWhy>."; others without ledger codes. */
+export function plainNote(note) {
+  const s = String(note ?? ""), m = /^(stars|types) not baked: [a-z-]+: (.*)$/s.exec(s);
+  return m ? `The ${m[1]} weren't baked: ${plainWhy(m[2])}.` : s.replace(LEDGER, "");
 }
 /** The mock-up's caption note from draw()'s result: what went in a box, ran over, wasn't drawn or the bake would refuse. */
 export function mockNote(out) {
