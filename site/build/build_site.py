@@ -1879,9 +1879,11 @@ def commit_keys(row, people, by_login, row_of=None):
     return [key] if key else []
 
 
-def mass_passes(found):
-    """{sha} of the commits in more than MASS_PASS cards' image versions."""
-    size = Counter(sha for vs in found.values() for (sha, *_), _ in vs)
+def mass_passes(found, by_png=None, skip=()):
+    """{sha} of the commits in more than MASS_PASS cards' image versions (by_png: a PNG with only skip's ids, a rulebook
+    page, doesn't count)."""
+    card = lambda png: by_png is None or any(e["id"] not in skip for e in by_png.get(png, ()))
+    size = Counter(sha for png, vs in found.items() if card(png) for (sha, *_), _ in vs)
     return {sha for sha, n in size.items() if n > MASS_PASS}
 
 
@@ -1891,7 +1893,7 @@ def card_revisions(found, by_png, commits, people, by_login, skip=(), row_of=Non
     duplicate's are its original's), skip's (rulebook pages) none. None without history."""
     if found is None:
         return None
-    mass, rows, out = mass_passes(found), {c[0]: c for c in commits or ()}, {}
+    mass, rows, out = mass_passes(found, by_png, skip), {c[0]: c for c in commits or ()}, {}
     for png, vs in found.items():
         got = Counter(k for (sha, *_), _ in vs[:-1] if sha not in mass and sha in rows for k in commit_keys(rows[sha], people, by_login, row_of))
         if got:
@@ -2966,7 +2968,7 @@ def main():
     balance["archived"] = [{k: r[k] for k in ARCHIVED_SLIM if k in r} for r in archived]
     if revs is not None:
         log(f"revisions: {sum(n for v in revs.values() for n in v.values())} card image changes on {len(revs)} cards "
-            f"({len(mass_passes(found))} mass-pass commits left out)")
+            f"({len(mass_passes(found, by_png, rule_ids))} mass-pass commits left out)")
 
     # the Changes page's Changelog and Database edits tabs: the card sync's events (with CARD_DATA_DIR), the edit batches, archived cards
     since = int(time.time()) - CHANGELOG_DAYS * 86400
