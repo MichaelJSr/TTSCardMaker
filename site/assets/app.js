@@ -788,7 +788,9 @@ function openPicker(tier) {                              // the shared picker (p
 }
 
 // ---- stats / changes / compare -------------------------------------------------------------------
+let statsJob = 0;
 function renderStatsView(r) {
+  const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
   renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist, distPage: S.distPage }, r.params);
   const ctx = { cards: S.cards, byId: S.byId, banned: S.banned };
   const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History leave out what needs it
@@ -799,8 +801,11 @@ function renderStatsView(r) {
     put("stats-ratings", insights.ratingsHtml(A, ctx, now.params));
     put("stats-history", insights.historyHtml(A, ctx, now.params));
   };
-  if (S.analytics) fill();
-  else {
+  const job = ++statsJob, slot = $("#stats-balance", view);
+  if (S.analytics) {                                     // below the first screen, at the top of the page: after it has painted
+    if (top && slot && slot.getBoundingClientRect().top > vh) requestAnimationFrame(() => setTimeout(() => { if (job === statsJob) fill(); }));
+    else fill();
+  } else {
     $("#stats-balance", view).innerHTML = `<p class="loading">Loading the balance section…</p>`;
     loadAnalytics().then(() => fill(), e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; fill(null); });
   }
