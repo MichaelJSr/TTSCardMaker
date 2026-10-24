@@ -168,7 +168,8 @@ function rerender() {
 const editor = createEditor({
   S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
   openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
-  iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n), statBars: c => statBars(c), imageOf: c => thumbUrl(c),   // the form's live preview
+  statBars: c => statBars(c), imageOf: c => thumbUrl(c),   // the form's live preview
+  iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
   users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); },
   // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
   view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
@@ -176,7 +177,7 @@ const editor = createEditor({
 });
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;
-inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m), hideTip: () => hideTip(), icons: () => S.icons });
+inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
 let selectAnchor = null;                                 // the last tile toggled: Shift-click selects from it
 function toggleSelect(id, range) {
   if (range && selectAnchor) for (const x of inline.rangeIds(S.list.map(c => c.id), selectAnchor, id)) S.selected.add(x);
@@ -1140,6 +1141,7 @@ function fillTip(t) {
 }
 const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
 function hideTip() { tips.hide(); }
+inline.extend({ hideTip, icons: () => S.icons });           // editors hide the tooltip; the type palette's icons
 document.addEventListener("pointerover", e => tips.over(e.target));
 document.addEventListener("pointermove", e => {
   if (!tips.move()) return;

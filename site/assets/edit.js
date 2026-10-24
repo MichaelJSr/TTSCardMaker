@@ -769,8 +769,9 @@ export function createEditor(app) {
       if (isRule(c)) { app.closeModal(); app.rerender(); } else app.goCard(c.id);
     });
     update();
+    document.getElementById(isRule(c) ? "ef-ability" : "ef-name").focus();
     if (restored) autosave.run();
-    (form.querySelector(".draft-offer [data-draft=restore]") || document.getElementById(isRule(c) ? "ef-ability" : "ef-name")).focus();
+    form.querySelector(".draft-offer [data-draft=restore]")?.focus();   // an offer: a stray key can't throw the draft away
   }
   function resetField(c, f) {
     const p = psdVal(baseOf(c), f), el = document.getElementById(`ef-${f}`);

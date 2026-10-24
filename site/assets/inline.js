@@ -363,9 +363,10 @@ function onNameFocusOut(e) {
   if (naming.input.value.trim()) createBucket(false); else closeName(false);
 }
 
+/** More of the api, after install: {hideTip, icons (() => cards.json icons)}. */
+export const extend = more => { Object.assign(A, more); };
 /** Once at boot, before app.js's document listeners: delegated listeners on the modal (editors) and the document (drag,
- *  the filter bar's "New …"). api = {editor, modal, selected (Set of card ids), goCard, rerender, toast, hideTip, icons
- *  (() => cards.json icons)}. */
+ *  the filter bar's "New …"). api = {editor, modal, selected (Set of card ids), goCard, rerender, toast}. */
 export function install(api) {
   A = api;
   const flush = () => { cur?.save.flush(); pal?.save.flush(); };    // closing the tab: the draft now, not in a moment
