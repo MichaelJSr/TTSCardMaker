@@ -509,7 +509,7 @@ function openCard(id, showDetails = false) {
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
-      <div class="image-wrap"><div class="iv"><div class="iv-stage"><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${thumbUrl(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
+      <div class="image-wrap"><div class="iv"><div class="iv-stage"><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${placeholderOf(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
         <div class="actions card-actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
@@ -560,7 +560,7 @@ function openCard(id, showDetails = false) {
   modal.scrollTop = 0;
   document.title = `${c.name} · Impossibility Simulator`;
   if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();   // shortcuts work right away
-  if (c.img) {        // sharper 720 px image once it's loaded (the 360 px one is usually cached from the grid)
+  if (c.img && $("#detail-img")?.getAttribute("src") !== img(c, 720)) {        // sharper 720 px image once it's loaded
     const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
@@ -574,6 +574,15 @@ function openCard(id, showDetails = false) {
   if (editing()) previews.mountCard(modal, c);
 }
 
+/** The card dialog's first picture: the grid tile's when it has loaded (240 or 360 px, no new download), the 720 px one a
+ *  share page preloads, else the 360 px one */
+function placeholderOf(c) {
+  if (!c.img) return "";
+  const t = view.querySelector(`.grid .tile[data-open="${CSS.escape(c.id)}"] img.art`);
+  if (t?.complete && t.naturalWidth && t.currentSrc) return t.currentSrc.startsWith(ROOT) ? t.currentSrc.slice(ROOT.length) : t.currentSrc;
+  if (document.querySelector(`link[rel="preload"][as="image"][href="${img(c, 720)}"]`)) return img(c, 720);
+  return thumbUrl(c);
+}
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card
 const versionList = c => {
   const rows = S.versions && S.versions.cards[c.id];
