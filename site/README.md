@@ -103,7 +103,8 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
 
 Top right: **Sign in** (a GitHub token, or your login and password once you set one; see Editing) becomes your login
 once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
-`d` add to deck, `c` copy link, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections, `?` help. The single-key
+`d` add to deck, `c` copy link, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections (signed in,
+with cards selected: `1`–`9` drop them on that pinned box), `?` help. The single-key
 shortcuts are off while an edit form is open (a card's edit dialog or the profile editor) and while an inline control or a
 stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog.
 
@@ -187,7 +188,11 @@ counts; picking one saves it; a missing one shows as a dashed `+ series` chip wh
 hover the row). In the cards grid, Ctrl/Cmd-click selects tiles (Shift-click a range, Esc clears; a filter change keeps
 only the tiles still shown) and dragging one or the selection onto a series, subseries or author in the filter bar (the
 values appear under the Series, Subseries and Author selects while you drag; subseries once a series is picked, its own
-ones) assigns it to every card dragged; a drop changes that one field only. To make a new series, subseries or author,
+ones) assigns it to every card dragged; a drop changes that one field only. **Pin a box** (in the toolbar, Grid view) pins
+a series, subseries or author as a big box over the grid (up to 9, kept in this browser only, never published; ✕
+unpins): drag cards onto it, or select cards and press its number or tap it (on a phone, **Select** makes a tap select a
+tile; **Done** or Esc ends it). A subseries box sets the subseries only, and only on cards in its series; the others are
+refused, and the toast says how many. To make a new series, subseries or author,
 pick **New series…** (**New subseries…**, with a series picked; **New author…**) at the end of its select and type the
 name in its place (Enter or a click elsewhere makes it, Esc or nothing typed cancels). It shows as "Name (no cards
 yet)" in the select and as a dashed value under it while you drag, and the card page's chips suggest it; the filter

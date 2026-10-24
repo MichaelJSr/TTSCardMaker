@@ -69,6 +69,8 @@ export const NAME_MAX = 60;                        // characters, an emoji count
 /** A name's comparison key: case and spacing don't count. */
 export const nameKey = s => String(s ?? "").toLowerCase().replace(/\s+/g, "");
 const NOUN = { series: "Series", subseries: "Subseries", author: "Author" };
+/** A subseries drop: the cards in `series` (case and spaces don't count) and the rest, refused. */
+export const splitBySeries = (cards, series) => ({ ok: cards.filter(c => nameKey(c.series) === nameKey(series)), refused: cards.filter(c => nameKey(c.series) !== nameKey(series)) });
 /** A typed series, subseries or author name: trimmed, spaces collapsed, and the known spelling when one has its nameKey.
  *  known: [spelling, shown, rank]; the highest rank wins (a [people] line, else the most cards). null when empty,
  *  {error} for a new name over NAME_MAX, else {name, existed, typed}. */
@@ -677,14 +679,17 @@ export function createEditor(app) {
     return op;
   }
   // one save for the lot -> {changed (a card already at v doesn't count), dups (an author drop leaves duplicates alone),
-  // kept (a series drop: cards keeping a subseries the new series lacks), value, error}. v is spelled once, here: a drop
-  // chip's value (the lists mountGrid's chips come from) stays as it is, so cards can join either of two spellings of a
-  // name; other text goes through canonical()
-  function stageMany(ids, key, v) {
-    const series = key === "subseries" ? find(ids[0])?.series || "" : "";
+  // kept (a series drop: cards keeping a subseries the new series lacks), refused (a subseries drop: cards not in its
+  // series, as staged), value, error}. v is spelled once, here: a drop chip's value (the lists mountGrid's chips come
+  // from) stays as it is, so cards can join either of two spellings of a name; other text goes through canonical().
+  // series: a subseries' series (a pinned box's), else the first card's (the filter bar's list is all in one series)
+  function stageMany(ids, key, v, { series: ser = "" } = {}) {
+    const series = key === "subseries" ? ser || find(ids[0])?.series || "" : "";
+    let refused = 0;
+    if (key === "subseries") { const r = splitBySeries(ids.map(find).filter(Boolean), series); refused = r.refused.length; ids = r.ok.map(c => c.id); }
     const chips = key === "series" ? seriesList() : key === "subseries" ? ownSubseries(series) : key === "author" ? authorList() : [];
     const r = chips.includes(v) ? { name: v } : canonical(key, v, series);
-    if (r?.error) return { changed: 0, dups: 0, kept: 0, value: v, error: r.error };
+    if (r?.error) return { changed: 0, dups: 0, kept: 0, refused: 0, value: v, error: r.error };
     const value = r ? r.name : v, moved = [], own = key === "series" ? ownSubseries(value) : [];   // before the drop
     let changed = 0, dups = 0;
     for (const id of ids) {
@@ -694,7 +699,7 @@ export function createEditor(app) {
     }
     save();
     const kept = key === "series" ? moved.filter(id => { const s = find(id)?.subseries; return s && !own.includes(s); }).length : 0;
-    return { changed, dups, kept, value };
+    return { changed, dups, kept, refused, value, series };
   }
   function revert(id, item) {
     const c = find(id), op = stage.cards[id]; if (!c || !op) return;

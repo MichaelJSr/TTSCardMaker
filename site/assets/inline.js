@@ -342,10 +342,11 @@ function onDrop(e) {
 }
 /** The one staging path for a drop, a tray tap or a number key: key = value on every card in ids, a toast, the selection cleared. */
 export function dropOn(ids, { key, value: v, series = "" }) {
-  const r = A.editor.stageMany(ids, key, v, { series }), { changed: n, dups, kept, value, error } = r;
+  const r = A.editor.stageMany(ids, key, v, { series }), { changed: n, dups, kept, refused, value, error } = r;
   A.selected.clear();
   A.rerender();
   A.toast(error || [n ? `${n} card${n === 1 ? "" : "s"}: ${key} → ${value}` : "",
+    refused ? `${refused} refused: not in ${r.series}` : "",
     kept ? `${kept} kept ${kept === 1 ? "its" : "their"} old subseries` : "",
     dups ? `${dups} duplicate${dups === 1 ? " kept its original's" : "s kept their originals'"} author` : ""].filter(Boolean).join(" · ") || `Already ${value}`);
   return r;
