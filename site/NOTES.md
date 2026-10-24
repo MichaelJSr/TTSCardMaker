@@ -376,7 +376,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     out, nothing is checked; signing in resumes it. Several cards run side by side.
   - Result: `readResult` keeps state, transient, reason, notes (20, 500 characters), fields, changes, base, image,
     files (`preview.webp` / `preview.png` names only) and the run (a github.com link only); anything else is a transient
-    error. Baked: Current (the 720 px thumb) beside the preview (preview.webp, 720 px; Full size = preview.png), Diff
+    error. Baked: Current (the 720 px thumb) beside the preview (preview.webp, 720 px; Full size = preview.png when `files` lists one: since work/card-preview 7646a3cc it never does), Diff
     (`diffPixels`: changed pixels red over the dimmed current, with the share), each field's outcome ("HP baked · Stars
     refused") and the notes. Redundant: "Already on the card". Refused: the reason, with the bake's render when
     `image` is "refused". Error: an `input:` reason is "a website bug", a transient one "try again". Every string through
@@ -388,7 +388,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     keys, sorted types), or the card's image moved (the result's `base.png_blob` against cards.json `img`, its first 16
     hex digits; before a result, the card's `ts` and `img` at the dispatch): "Out of date: the edit changed since" with
     Preview again. Kept, not dropped: the last three stay listed under "Earlier:".
-  - Section 19's suggestions not followed: polling every 15 s up to 20 minutes (the owner's) instead of 10 s then 30 s
+  - The server contract's suggestions not followed: polling every 15 s up to 20 minutes (the owner's) instead of 10 s then 30 s
     up to 16; the request id above instead of `crypto.randomUUID()` (both fit); `card-previews` with three per card instead
     of `edit-previews` with one; index.json (another device's previews) not read yet.
 - Checks (2026-10-23): AutoCroissant `tests/test_site_previews.py` (19 tests on preview.js and mockup.js in node and on
@@ -401,3 +401,15 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   badges on two tiles, side by side and the diff, a refusal, out of date after an edit, light and dark, 375 px (nothing
   wider than the screen), the Action missing, a token that can't start Actions. Screenshots:
   `~/Documents/Tools/wt/scratch/site2/shots/previews-*.png`. Not run: a live dispatch (card-preview.yml must be on main).
+- Merged with section 19 on branch work/site-round-2 (2026-10-23). The Edit dialog over 1000 px: the fields, this panel
+  floated beside "On the card image", and the live pane on the right (its small image is the current one, as the
+  published page shows it until the bake); at 1000 px and below the pane is the bar at the top and this panel stays in
+  the form. Restore in the form's draft offer now fires the form's `input` event, so this panel redraws as for a key
+  (it kept the old values until the next one). Inline stars, types and text stage PSD fields, so the card page's panel
+  comes as soon as one is staged. The server contract as of work/card-preview 7646a3cc: only the WebP is published (no
+  Full size link then), and a previewed edit is public, so the panel says "Anyone can see a previewed edit, as with a
+  published one" before the first press. Fonts renamed on main (b03b9975) still map: 130 of 137 PSD fonts. Checks:
+  scratch `~/Documents/Tools/wt/scratch/site-round-2/integ.mjs` 33/33 in headless Chrome (every feature of sections
+  19 and 20 and where they meet; screenshots `round2-*.png`); `trial.mjs` 15/15 on a trial merge with work/token-picker
+  8d605085 and the palette switch line (the picker in the dialog and the inline editor with drafts, the live pane and
+  the mock-up; the palette with its search); the AutoCroissant site tests.

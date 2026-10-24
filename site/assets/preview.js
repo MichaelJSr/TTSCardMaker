@@ -176,7 +176,7 @@ export function renderedHtml(e, v) {
   const button = (label, cls = "") => `<button type="button" class="${cls}" data-pv="start"${v.n ? "" : " disabled"}>${label}</button>`;
   const scopeNote = scopeOk(v.scopes) === false ? `<p class="muted pv-note">Your token has only the public_repo scope; starting a preview needs the repo scope (or a fine-grained token with Actions: Read and write).</p>` : "";
   if (!e) {
-    return `<p class="muted">${v.n ? "A dry-run bake draws your edit into the card image as the bake would, and saves nothing. It takes a few minutes: open other cards meanwhile, and come back." : "No changes on the card image to preview."}</p>
+    return `<p class="muted">${v.n ? "A dry-run bake draws your edit into the card image as the bake would; the card itself doesn't change. Anyone can see a previewed edit, as with a published one. It takes a few minutes: open other cards meanwhile, and come back." : "No changes on the card image to preview."}</p>
       ${scopeNote}<div class="actions">${button("Preview image", "primary")}</div>`;
   }
   const r = e.result || {}, stale = DONE.includes(e.state) ? staleWhy(e, v.card, v.hash) : [];
