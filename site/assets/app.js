@@ -740,7 +740,9 @@ function distPage(panel, step) {          // a stat distribution's pager: the ne
   for (const pg of $$(".dist-page", panel)) pg.hidden = +pg.dataset.page !== to;
   const [lo, hi] = to ? [10 * to + 1, 10 * to + 10] : [0, 10];
   $(".dist-range", panel).textContent = `${lo}–${hi}`;
-  $$(".dist-pager button", panel).forEach(b => (b.disabled = pages[pages.indexOf(to) + +b.dataset.step] == null));
+  const had = document.activeElement, btns = $$(".dist-pager button", panel);
+  btns.forEach(b => (b.disabled = pages[pages.indexOf(to) + +b.dataset.step] == null));
+  if (had?.disabled && btns.includes(had)) (btns.find(b => !b.disabled) || panel).focus();   // a disabled button drops focus: keep it in the panel
 }
 // the Changes page's category tabs, a row across its top: [hash key, label]; #/changes is the first, #/changes/<key> the others
 // (a link to one survives a refresh), and each shows its own sections only
