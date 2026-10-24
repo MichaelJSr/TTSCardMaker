@@ -256,12 +256,12 @@ function cardCharts(pool, creatures) {
       heatTable(["Stars", ...kinds.map(([[l]]) => l)], rows, { all: true }),
       table(["Stars", ...kinds.map(([[l]]) => l)], rows.map(r => r.map(v => (v == null ? "—" : v))))));
   }
-  // S19 items by type and stars
+  // S19 items by type and stars; rows read "Support", as in the rulebook
   const items = pool.filter(c => c.type === "item" && c.subtype && c.stars);
   if (items.length) {
     const stars = starsOf(items), types = new Map();
     for (const c of items) { const r = types.get(c.subtype) || types.set(c.subtype, new Map()).get(c.subtype); r.set(c.stars, (r.get(c.stars) || 0) + 1); }
-    const rows = [...types].map(([t, m]) => [t, ...stars.map(st => m.get(st) || 0), [...m.values()].reduce((a, b) => a + b, 0)]).sort((a, b) => b[b.length - 1] - a[a.length - 1] || a[0].localeCompare(b[0]));
+    const rows = [...types].map(([t, m]) => [t[0].toUpperCase() + t.slice(1), ...stars.map(st => m.get(st) || 0), [...m.values()].reduce((a, b) => a + b, 0)]).sort((a, b) => b[b.length - 1] - a[a.length - 1] || a[0].localeCompare(b[0]));
     const head = ["Item type", ...stars.map(st => `${st}★`), "All"];
     out.push(card("itemtypes", "Items by type and stars", "Item cards per type and star level.",
       heatTable(head, rows.map(r => [r[0], ...r.slice(1, -1).map(v => v || ""), String(r[r.length - 1])]), { shade: stars.map((_, i) => i + 1), all: true }),
