@@ -103,7 +103,12 @@ Retired (moved to MDW) or Deleted, with chips to filter by tag (`?tag=retired`).
   and buttons to copy it as a Discord message or plain text: name, titles and counts, never the motto): their profile when they made one (see People below), their
   GitHub picture and link, their contributions with recently edited cards, recent edit batches and recent card commits, a chart of
   their contributions by month, and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
-  (by its creation date) and a grid of their 24 newest cards; the chart counts cards by creation month.
+  (by its creation date) and a grid of their 24 newest cards; the chart counts cards by creation month. Since round 3 the page
+  also has their ranks and edited fields, **Balance** (their cards' strength, buffs and nerfs on them and made to others'),
+  **Ratings** (how others rate their cards), **Revisions** (who changes their cards' images, whose they change, reworks),
+  **Style** (types, status effects and timing tags they use more than others, wordiness, star and kind mix) and
+  **Archived cards**; the Cards panel adds their years, series, banned cards and most referenced card. All from
+  `contributions.json` and the cards already loaded. The Cards tab has a **Banned (constructed)** flag.
 
 Top right: **Sign in** (a GitHub token, or your login and password once you set one; see Editing) becomes your login
 once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card (on a focused stat distribution: more values), `↑`/`↓` image versions,
