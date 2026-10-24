@@ -264,9 +264,10 @@ function onFocusOut(e) {                          // Tab to another control keep
   if (!document.hasFocus()) return;               // the window losing focus (alt-tab) leaves the editor open
   const kbd = !!e.relatedTarget && !pointer;
   if (cur) { if (cur.host.contains(e.target) && !cur.host.contains(e.relatedTarget)) commit(kbd); }
-  else if (prov && e.target === prov.row) commitStat(kbd);
+  else if (prov && e.target === prov.row) { commitStat(kbd); if (atNone(e.target) && !e.target.contains(e.relatedTarget)) unfresh(e.target, false); }   // moved and back
   else if (e.target.matches?.(".star-pick[data-fresh]") && !e.target.contains(e.relatedTarget)) unfresh(e.target, false);
 }
+const atNone = row => row.matches(".star-pick[data-fresh]") && +row.getAttribute("aria-valuenow") === 0;
 function unfresh(row, refocus) {                   // a "+ stars" slider left at none: the chip again
   if (!row.isConnected || !row.hasAttribute("data-fresh")) return;
   row.removeAttribute("data-fresh");               // its blur, as it goes, comes back here
@@ -279,7 +280,7 @@ function away(e) {                                 // a click or tap away saves,
   if (t.closest?.(".tok-picker")) return;
   if (cur && !cur.host.contains(t)) commit(false);
   const fresh = A.modal.querySelector(".detail .star-pick[data-fresh]");
-  if (fresh && !fresh.contains(t)) { if (prov?.row === fresh) commitStat(false); else unfresh(fresh, false); }
+  if (fresh && !fresh.contains(t)) { const moved = prov?.row === fresh; if (moved) commitStat(false); if (!moved || atNone(fresh)) unfresh(fresh, false); }
   if (naming && t !== naming.input) { if (naming.input.value.trim()) createBucket(false); else closeName(false); }
 }
 
