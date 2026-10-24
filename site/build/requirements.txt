@@ -1,1 +1,2 @@
 pillow
+-r ../../MDW/Fonts/stoogedings-src/requirements.txt   # the icon font's build: the token variants' pictures
