@@ -18,7 +18,11 @@ Where the data comes from:
     changed cards are downloaded and resized; images no card uses any more are pruned. Each image's size and accent
     color are kept in site/.cache/images.json by blob, icons in site/.cache/icons, deck page montages in site/.og-cache;
     dist/ gets hardlinks (else copies).
-  * Icons: Types/ and Types/Stars/; icon names and aliases from MDW/Fonts/stoogedings-src/stoogedings.json.
+  * Icons: Types/ and Types/Stars/; icon names and aliases from MDW/Fonts/stoogedings-src/stoogedings.json. Each icon the
+    font has also gets its token variants' pictures ([fire:tint], :sticker, :glow, :darkglow; dist/icons/fire.glow.webp),
+    drawn by the font build's own icon_art (build_stoogedings.py, which needs its requirements.txt: without them,
+    a warning and no variant pictures), cached by blob in site/.cache/icons; cards.json iconVariants holds how far each
+    reaches past the icon (text.js sizes them).
   * Deck rules: the rulebook pages; banned cards from site/Constructed Ban List.txt.
   * Authors: site/Card Authors.txt ([people] git name = shown name, [cards] Card Name = person) wins over the bot's
     author, the same rule AutoCroissant applies on /update_stats.
@@ -60,6 +64,7 @@ many images fail; it degrades gracefully (logs and continues) for missing histor
 import base64
 import hashlib
 import html
+import importlib.util
 import io
 import json
 import os
@@ -95,6 +100,10 @@ IMAGE_SIZES = {240: 80, 360: 78, 720: 75}    # width -> WebP quality. 240/360: g
 IMAGE_WIDTH = 360                            # the size whose dimensions go into cards.json (aspect ratio)
 ICON_SIZE = 96
 ICON_VERSION = f"1-{ICON_SIZE}"              # in the cached icons' names: bump the 1 when build_icons' crop or WebP settings change
+# token variants drawn as images, as the font draws them ([fire:tint] ... [fire:darkglow]); [fire:no] is style.css .tok-no
+VARIANT_IMAGES = ("tint", "sticker", "glow", "darkglow")
+VARIANT_VERSION = "1"                        # in the cached variant images' names: bump when variant_art or its WebP settings change
+FONT_BUILD = "MDW/Fonts/stoogedings-src/build_stoogedings.py"   # its icon_art draws them (needs its requirements.txt)
 IMAGE_META = "images.json"                   # in CACHE: each card image's size and accent color, by PNG blob sha
 IMAGE_META_VERSION = f"1:{IMAGE_WIDTH}:{IMAGE_SIZES[240]}"   # bump the 1 when accent_color changes
 OG_WIDTH = 480                               # link-preview image (Discord shows ≤ 300 px tall)
@@ -648,8 +657,78 @@ def deck_montage(picks):
     return key, cached
 
 
+def font_builder():
+    """FONT_BUILD as a module (variant_art draws with its icon_art), or None, with a warning, without the file or its
+    packages (MDW/Fonts/stoogedings-src/requirements.txt): then token variants show as the plain icon."""
+    path = os.path.join(REPO, FONT_BUILD)
+    if not os.path.exists(path):
+        warn(f"no {FONT_BUILD}: token variants show as the plain icon")
+        return None
+    try:
+        spec = importlib.util.spec_from_file_location("build_stoogedings", path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+    except ImportError as e:
+        warn(f"no variant icons: {e.name or e} missing (pip install -r MDW/Fonts/stoogedings-src/requirements.txt); "
+             "token variants show as the plain icon")
+        return None
+    if not hasattr(module, "icon_art"):
+        warn(f"{FONT_BUILD} has no icon_art: token variants show as the plain icon")
+        return None
+    return module
+
+
+def variant_reach(fb):
+    """{variant: how far its image reaches past the icon's square box on each side, in box widths}: the font's
+    :sticker OUTLINE and :glow GLOW_SIZE against its icon HEIGHT, in whole pixels at ICON_SIZE (text.js sizes them)."""
+    px = lambda units: round(round(ICON_SIZE * units / fb.HEIGHT) / ICON_SIZE, 4)
+    return {"tint": 0, "sticker": px(fb.OUTLINE), "glow": px(fb.GLOW_SIZE), "darkglow": px(fb.GLOW_SIZE)}
+
+
+def variant_art(fb, png, tint, reach):
+    """One icon's variant images, from the font build's own icon_art (fb: FONT_BUILD), the icon as big as the plain
+    one (long side ICON_SIZE px): {variant: RGBA image}. tint and sticker take the text colour, so they are white
+    masks that style.css paints: tint the shape in the plain icon's box, sticker the outline in a square under the plain
+    icon. glow and darkglow are the halo with the icon on it. The squares are the icon's square box (where object-fit:
+    contain puts it) plus reach[v] of it on each side; layers sit where the font's glyphs put them."""
+    art = fb.icon_art(png.convert("RGBA"), tint)
+    arr = art.arr
+    h, w = arr.shape[:2]
+    side = max(w, h)
+    white = lambda alpha: Image.merge("RGBA", [Image.new("L", alpha.size, 255)] * 3 + [alpha])
+    out = {}
+    probe = Image.new("L", art.im.size)
+    probe.thumbnail((ICON_SIZE, ICON_SIZE))                  # the plain icon's size (build_icons)
+    out["tint"] = white(Image.fromarray(art.tint.astype("uint8") * 255)).resize(probe.size, Image.LANCZOS)
+
+    def square(v):
+        """(empty canvas, where the icon's top-left goes) for variant v, at arr's scale"""
+        m = round(reach[v] * side)
+        return Image.new("RGBA", (side + 2 * m,) * 2), (m + (side - w) // 2, m + (side - h) // 2)
+
+    def done(v, im):
+        n = ICON_SIZE + 2 * round(reach[v] * ICON_SIZE)
+        return im.resize((n, n), Image.LANCZOS)
+
+    canvas, (x, y) = square("sticker")                       # the outline glyph: pad px past the icon
+    canvas.paste(white(Image.fromarray(art.sticker.astype("uint8") * 255)), (x - art.pad, y - art.pad))
+    out["sticker"] = done("sticker", canvas)
+    icon = Image.fromarray(arr)
+    halo = Image.fromarray(art.glow_png)                     # the halo PNG: GLOW_SIZE units left of and above the icon
+    halo = halo.resize((round(art.glow_w / art.upp), round(art.glow_h / art.upp)), Image.BICUBIC)
+    for v, rgb in fb.GLOWS.items():
+        canvas, (x, y) = square(v)
+        canvas.paste(Image.merge("RGBA", [Image.new("L", halo.size, c) for c in rgb] + [halo]),
+                     (x - round(fb.GLOW_SIZE / art.upp), y - round(fb.GLOW_SIZE / art.upp)))
+        canvas.alpha_composite(icon, (x, y))
+        out[v] = done(v, canvas)
+    return {v: out[v] for v in VARIANT_IMAGES}
+
+
 def build_icons(tree):
-    """Types/ icons into dist/icons as 96 px WebP; return {normalized spelling: {file, name, kind}}."""
+    """Types/ icons into dist/icons as 96 px WebP, and the variant images (dist/icons/<name>.<variant>.webp) of those in
+    the font. Returns ({normalized spelling: {file, name, kind, v: [variants with an image]}}, {variant: reach}); no
+    variant images without FONT_BUILD's packages."""
     manifest_path = os.path.join(REPO, "MDW/Fonts/stoogedings-src/stoogedings.json")
     if os.path.exists(manifest_path):
         manifest = json.load(open(manifest_path))
@@ -659,7 +738,12 @@ def build_icons(tree):
     os.makedirs(os.path.join(DIST, "icons"), exist_ok=True)
     cache_dir = os.path.join(CACHE, "icons")
     os.makedirs(cache_dir, exist_ok=True)
-    icons, used = {}, set()
+    fb = font_builder() if manifest["icons"] else None
+    reach = variant_reach(fb) if fb else {}
+    if fb:                                                    # a changed build script or tint mode draws them again
+        with open(os.path.join(REPO, FONT_BUILD), "rb") as fh:
+            script = hashlib.sha256(fh.read()).hexdigest()
+    icons, used, todo = {}, set(), []
     for path in sorted(tree):
         folder, _, file = path.rpartition("/")
         if folder not in ("Types", "Types/Stars") or not file.lower().endswith(".png"):
@@ -680,13 +764,38 @@ def build_icons(tree):
             os.replace(cached + ".tmp", cached)
         link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)     # last one wins, as before
         entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
-        aliases = manifest["icons"].get(name, {}).get("aliases", [])
+        info = manifest["icons"].get(name)
+        if fb and info:                                       # the font draws every variant of every manifest icon
+            tint = info.get("tint", "auto")
+            key = hashlib.sha256(f"{script}:{json.dumps(tint, sort_keys=True)}:{ICON_SIZE}".encode()).hexdigest()[:8]
+            files = {v: os.path.join(cache_dir, f"{tree[path][:16]}-{v}-{VARIANT_VERSION}-{key}.webp") for v in VARIANT_IMAGES}
+            used.update(os.path.basename(f) for f in files.values())
+            todo.append((path, tint, files, out_name, entry))
+        aliases = (info or {}).get("aliases", [])
         for spelling in [name] + list(aliases):
             icons.setdefault(norm(spelling), entry)
+
+    def draw(job):
+        path, tint, files, out_name, entry = job
+        if not all(os.path.exists(f) for f in files.values()):
+            try:
+                art = variant_art(fb, Image.open(io.BytesIO(image_bytes(path))), tint, reach)
+            except Exception as e:                            # never a failed build: this icon's variants show plain
+                warn(f"no variant images for {path}: {type(e).__name__}: {e}")
+                return
+            for v, im in art.items():
+                mask = v in ("tint", "sticker")               # white + alpha: lossless is smaller and exact
+                im.save(files[v] + ".tmp", "WEBP", **({"lossless": True} if mask else {"quality": 90, "alpha_quality": 100}), method=4)
+                os.replace(files[v] + ".tmp", files[v])
+        for v, f in files.items():
+            link_or_copy(f, os.path.join(DIST, "icons", out_name.replace(".webp", f".{v}.webp")), replace=True)
+        entry["v"] = list(VARIANT_IMAGES)
+    with ThreadPoolExecutor(max_workers=min(8, os.cpu_count() or 1)) as pool:   # cv2 and Pillow work outside the GIL
+        list(pool.map(draw, todo))
     for name in os.listdir(cache_dir):
         if name not in used:
             os.remove(os.path.join(cache_dir, name))
-    return icons
+    return icons, (reach if any("v" in e for e in icons.values()) else {})
 
 
 # ---- authors ---------------------------------------------------------------------------------------
@@ -2253,7 +2362,7 @@ def main():
     made = len(os.listdir(cache_dir)) - cached_before + len(pruned)
     log(f"images: {len(jobs)} cards, {made} new files, {len(pruned)} unused pruned, {len(failed)} failed")
 
-    icons = build_icons(tree)
+    icons, icon_variants = build_icons(tree)
     by_norm = {}
     for c in cards:
         by_norm.setdefault(alnum(c["name"]), c)
@@ -2326,7 +2435,7 @@ def main():
     data = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
-        "cards": cards, "icons": icons, "banlist": banlist,
+        "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist,
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
                                             "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR},

@@ -63,8 +63,15 @@ const AMOUNT = "(?:[^\\S\\n]+[\\dX]+T[\\dX]+(?:\\([^)\\n]*\\))?)?";
 const status = new RegExp(`\\b(?:inflict|cleanse|stacks? of)${AMOUNT}[^\\S\\n]+$`, "i");
 const VERB = { buff: status, debuff: status, minion: /\b(?:summon|resummon|revive)(?:[^\S\n]+(?:a|an|the|\d+))?[^\S\n]+$/i };
 
-/** Build the renderer once per data load: knows icons and which card names to link. */
-export function makeRenderer({ cards, icons }) {
+// token variants ([fire:glow]), as the font draws them: tint and sticker take the text colour (style.css paints build_site's
+// masks), glow and darkglow are images; one without its image (an older build) is the plain icon, as the parser reads it
+export const VARIANT_NAMES = { tint: "text colour", sticker: "sticker", no: "crossed out", glow: "white glow", darkglow: "black glow" };
+/** The variant's image of an icon entry: icons/fire.webp -> icons/fire.glow.webp */
+export const variantFile = (ic, v) => ic.file.replace(/\.webp$/, `.${v}.webp`);
+
+/** Build the renderer once per data load: knows icons (and their variants' reach, cards.json iconVariants) and which
+ *  card names to link. */
+export function makeRenderer({ cards, icons, variants = {} }) {
   // card names of 3+ characters by printed title or file name: any case, either apostrophe, trailing !?. optional, a
   // plural or possessive ending kept in the link ("Copper Swords", "Grodus X's")
   const fold = s => String(s || "").trim().toLowerCase().replace(/[‘’]/g, "'").replace(/\s+/g, " ");
@@ -97,13 +104,23 @@ export function makeRenderer({ cards, icons }) {
   for (const [h, ps] of groups) groups.set(h, new RegExp(`(${ps.join("|")})${END}`, "iy"));
   const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}`, "g");
 
-  function icon(token) {
+  /** HTML for a token's text ("fire", "fire:glow"), null for no icon; tip: false leaves out the tooltip */
+  function icon(token, { tip = true } = {}) {
     const [base, variant] = token.split(":");
     const ic = icons[norm(base)];
     if (!ic) return null;
-    const no = !!variant && variant.trim().toLowerCase() === "no";
-    const img = `<img class="tok" src="${esc(ic.file)}" alt="${esc(base)}" data-tip="${esc(base.replace(/_/g, " "))}${no ? " (not)" : ""}">`;
-    return no ? `<span class="tok-no">${img}</span>` : img;
+    const v = String(variant ?? "").trim().toLowerCase(), name = base.replace(/_/g, " ");
+    const drawn = v === "no" || (ic.v?.includes(v) && variants[v] !== undefined);
+    const label = drawn ? `${name} (${v === "no" ? "not" : VARIANT_NAMES[v]})` : name;
+    const t = tip ? ` data-tip="${esc(label)}"` : "";
+    const img = `<img class="tok" src="${esc(ic.file)}" alt="${esc(drawn ? label : base)}"${t}>`;
+    if (!drawn) return img;
+    if (v === "no") return `<span class="tok-no">${img}</span>`;
+    const file = esc(variantFile(ic, v)), mask = `-webkit-mask-image:url(&quot;${file}&quot;);mask-image:url(&quot;${file}&quot;)`;
+    const r = `--r:${+variants[v]}`;
+    if (v === "tint") return `<span class="tokm" role="img" aria-label="${esc(label)}" style="${mask}"${t}></span>`;
+    if (v === "sticker") return `<span class="tokv" role="img" aria-label="${esc(label)}" style="${r}"${t}><span class="tokm" style="${mask}"></span><img src="${esc(ic.file)}" alt=""></span>`;
+    return `<img class="tokv" src="${file}" alt="${esc(label)}" style="${r}"${t}>`;
   }
 
   // icons and badges as [index, length, html]; links as [index, length, card], judged over the whole text with each

@@ -18,14 +18,15 @@ export const dragIds = (id, selected) => (selected.has(id) ? [...selected] : [id
 /** Shift-click: the ids of `order` from the anchor to `id`, both included; just `id` without an anchor in the list. */
 export const rangeIds = (order, anchor, id) => { const a = order.indexOf(anchor), b = order.indexOf(id); return a < 0 || b < 0 ? [id] : order.slice(Math.min(a, b), Math.max(a, b) + 1); };
 /** The control for a field: name and chips an input (chips with a datalist of known values), the ability a textarea.
- *  fresh: the filter bar's input for a new series, subseries or author. */
+ *  fresh: the filter bar's input for a new series, subseries or author. The ability and note take the token picker
+ *  (tokens.js, data-tokens); while it is open its keys are its own, so the first Esc only closes it. */
 export function control(f, v, list = [], fresh = false) {
   const label = f === "name" ? "Name, Enter to save, Esc to cancel" : f === "ability" ? "Ability text, Ctrl+Enter to save, Esc to cancel"
     : `${fresh ? `New ${LABEL[f].toLowerCase()}` : LABEL[f]}, Enter to save, Esc to cancel`;
   if (f === "name") return `<input class="inline-name" aria-label="${label}" value="${esc(v)}">`;
-  if (f === "ability") return `<textarea class="inline-ability" rows="${fit(v)}" spellcheck="true" aria-label="${label}">${esc(v)}</textarea>`;
+  if (f === "ability") return `<textarea class="inline-ability" rows="${fit(v)}" spellcheck="true" aria-label="${label}" data-tokens>${esc(v)}</textarea>`;
   const dl = list.length ? `<datalist id="inline-dl">${list.map(x => `<option value="${esc(x)}">`).join("")}</datalist>` : "";
-  return `<input class="inline-fact${f === "note" ? " inline-note" : ""}"${dl ? ' list="inline-dl"' : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">${dl}`;
+  return `<input class="inline-fact${f === "note" ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${dl ? ' list="inline-dl"' : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">${dl}`;
 }
 /** The bucket options a filter select gets: those it lacks, as "X (no cards yet)", selected when picked. have: its
  *  optKey()s; list: [{value, series?, where?}]; series: a subseries' series (the select-param handler then sets it too);
