@@ -41,7 +41,7 @@ const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field ca
 const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
 const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
-  ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"], ["details", "PSD details"],
+  ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"],
   ["banned", "Banned (constructed)"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
 // [key, label, dir it sets]; "created" = the creation date (first Discord post or first upload), when the build has dates
@@ -290,7 +290,7 @@ function filterCards(p, { facets = true } = {}) {
   for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => c[k] != null && c[k] >= r[0] && c[k] <= r[1]); }
   const flagFns = { history: c => !!c.hv, unparsed: c => !c.parsed, problems: c => !!(c.problems && c.problems.length), alias: c => !!(c.aliases && c.aliases.length),
     dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(webEdited(c) || c._staged || c._sent),
-    pending: c => !!((c.pending && c.pending.length) || c.refused), details: c => !!c.details,
+    pending: c => !!((c.pending && c.pending.length) || c.refused),
     banned: c => !!c._banned };
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   return list;
@@ -455,7 +455,12 @@ function openCard(id, showDetails = false) {
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
-      <div class="image-wrap">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${thumbUrl(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}
+      <div class="image-wrap"><div class="iv"><div class="iv-stage"><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${thumbUrl(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
+        <div class="actions card-actions">
+          <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
+          <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
+          <button type="button" data-action="edit-card" data-id="${c.id}">${editing() ? "All fields" : "Edit"} <span class="kbd">e</span></button>
+        </div>
         <div class="actions" style="justify-content:space-between">
           <a class="fact" data-nav="prev" href="#/card/${prev.id}" title="Previous (←)">← ${esc(prev.name)}</a>
           <a class="fact" data-nav="next" href="#/card/${next.id}" title="Next (→)">${esc(next.name)} →</a></div></div>
@@ -483,11 +488,6 @@ function openCard(id, showDetails = false) {
         ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, c.name)}</div>` : ""}
         ${hasBadges(c.ability) || hasBadges(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml()}</details>` : ""}
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
-        <div class="actions">
-          <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
-          <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
-          <button type="button" data-action="edit-card" data-id="${c.id}">${editing() ? "All fields" : "Edit"} <span class="kbd">e</span></button>
-        </div>
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
           <div id="card-balance">${balanceHtml(c)}</div>
@@ -534,9 +534,7 @@ function versionsHtml(c) {
   if (!S.versions) return `<h3>Image versions</h3><p class="muted">Loading ${c.iv} versions…</p>`;
   const vs = versionList(c);
   if (vs.length < 2) return "";
-  const oldest = vs[vs.length - 1], fromInit = /^(git )?init$/i.test(oldest.subject.trim());
   return `<h3>Image versions <span class="muted">${vs.length}</span></h3>
-    <p class="muted">Each commit that changed the image${fromInit ? `, since ${date(oldest.ts)} (first upload)` : ""}. Dates are Pacific time.</p>
     <div class="versions">
       <div class="ver-list" role="group" aria-label="Image versions, newest first">${vs.map((v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
         <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`).join("")}</div>

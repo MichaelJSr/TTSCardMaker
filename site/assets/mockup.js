@@ -1,5 +1,6 @@
-// The quick image mock-up: the edited name, text and stats drawn over the card image in a canvas, at once, in the
-// browser (the Edit dialog and the card page, edit mode). Never the real image: the bake draws that (preview.js).
+// The quick image mock-up: the edited name, text, stats, stars and type icons drawn over the card image in a canvas, at
+// once, in the browser (the Edit dialog and the card page, edit mode). Never the real image: the bake draws that (preview.js).
+// Stars and type icons go where the bake would put them (the details record's header: starPlan, typePlan), else in a box.
 // Layout: the PSD's text boxes when the details record has them (text[].box, canvas px), else the card template's
 // (TEMPLATES, measured on the PSDs, below the stat bars) narrowed to where the image shows text: the block of lines
 // (textBlocks) whose size and line count fit the old text (calibrate). That block is erased with the card's own
@@ -16,11 +17,14 @@ export const LINE = 1.22;                            // line pitch in ems (findT
 // fractions of the image [x0, y0, x1, y1]: where a template prints the name and the text; its stat bars (one row per stat,
 // `step` apart, 10 cells across `box`). Measured on the PSDs' layer boxes (2026-10-23): tall = 1200x2400 creatures and
 // minions (311 of 390 with stat rows sit exactly here), item = 1200x1800 items and field cards (the totems' two rows),
-// square = 1200x1200 status effects.
+// square = 1200x1200 status effects. stars, types: the header's star and type icon areas for the box fallback (the median
+// union of psd_details' header boxes over 764 card PSDs, 2026-10-24: 660 with stars, 687 with type icons).
 export const TEMPLATES = {
-  tall: { name: [0.2, 0, 0.8, 0.1], ability: [0.012, 0.722, 0.988, 0.995], bars: { box: [0.3, 0.5, 0.978, 0.535], step: 0.0525 } },
-  item: { name: [0.2, 0, 0.8, 0.165], ability: [0.012, 0.6, 0.988, 0.995], bars: { box: [0.308, 0.624, 0.986, 0.671], step: 0.053 } },
-  square: { name: [0.17, 0, 0.83, 0.15], ability: [0.012, 0.68, 0.988, 0.995] },
+  tall: { name: [0.2, 0, 0.8, 0.1], ability: [0.012, 0.722, 0.988, 0.995], bars: { box: [0.3, 0.5, 0.978, 0.535], step: 0.0525 },
+    stars: [0.785, 0.007, 0.99, 0.1], types: [0.017, 0.01, 0.179, 0.086] },
+  item: { name: [0.2, 0, 0.8, 0.165], ability: [0.012, 0.6, 0.988, 0.995], bars: { box: [0.308, 0.624, 0.986, 0.671], step: 0.053 },
+    stars: [0.811, 0.013, 0.984, 0.112], types: [0.023, 0.013, 0.162, 0.114] },
+  square: { name: [0.17, 0, 0.83, 0.15], ability: [0.012, 0.68, 0.988, 0.995], stars: [0.78, 0.013, 0.993, 0.21], types: [0.01, 0.013, 0.154, 0.156] },
 };
 /** The template of an image w x h: "tall", "item", "square", or "" (a rulebook page, another size). */
 export const shapeOf = (w, h) => { const r = h / w; return r > 1.9 && r < 2.1 ? "tall" : r > 1.4 && r < 1.6 ? "item" : r > 0.9 && r < 1.1 ? "square" : ""; };   // 1080x1920 rulebook pages: none
@@ -394,9 +398,9 @@ export function cellPlan(from, to, cells = 10) {
 }
 
 /** The fields the mock-up redraws: those of `edit` that differ from the image's (`psd`), as {name, ability, stats: {k: [from,
- *  to]}, skipped: [labels]} (stars, types and stats above 10 aren't drawn). */
+ *  to]}, stars: [from, to] | null, types: [old, new] | null (not a reorder), skipped: [labels]} (stats above 10 aren't drawn). */
 export function changes(edit, psd) {
-  const out = { name: null, ability: null, stats: {}, skipped: [] };
+  const out = { name: null, ability: null, stats: {}, stars: null, types: null, skipped: [] };
   const text = s => String(s ?? "").replace(/\r/g, "").trim();
   if ("name" in edit && text(edit.name) !== text(psd.name)) out.name = text(edit.name);
   if ("ability" in edit && text(edit.ability) !== text(psd.ability)) out.ability = text(edit.ability);
@@ -404,9 +408,78 @@ export function changes(edit, psd) {
     if (edit[k] == null || psd[k] == null || edit[k] > 10 || psd[k] > 10) out.skipped.push(k.toUpperCase());
     else out.stats[k] = [psd[k], edit[k]];
   }
-  if ("stars" in edit && edit.stars !== psd.stars) out.skipped.push("stars");
-  if ("types" in edit && JSON.stringify([...(edit.types || [])].sort()) !== JSON.stringify([...(psd.types || [])].sort())) out.skipped.push("types");
+  if ("stars" in edit && edit.stars != null && edit.stars !== psd.stars) out.stars = [psd.stars ?? 0, edit.stars];
+  if ("types" in edit && JSON.stringify([...(edit.types || [])].map(norm).sort()) !== JSON.stringify([...(psd.types || [])].map(norm).sort())) out.types = [[...(psd.types || [])], [...(edit.types || [])]];
   return out;
+}
+
+// ---- stars and type icons: where the bake would put them (psd_details' header, canvas px; AutoCroissant psd_edit)
+const obj = v => (v && typeof v === "object" && !Array.isArray(v) ? v : null);
+const centreOf = b => [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
+const boxAt = ([cx, cy], w, h) => [cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2];
+/** Stars from `from` to `to` on the record's header.stars: {erase: [box], draw: [box], refused, boxed}. A shown star stays when
+ *  one of the count's centres (at[to], the bake's plan) is within a quarter of a star of its own; the others are erased
+ *  (their box, glow included) and a star drawn at every centre none covers. No record, no layout for the count, or stars
+ *  not one per unit: boxed. refused: why the bake would refuse the count. */
+export function starPlan(stars, from, to) {
+  const st = obj(stars), why = st && obj(st.refused) ? st.refused[to] ?? st.refused["*"] ?? null : null;
+  const units = Array.isArray(st?.units) ? st.units : [], at = obj(st?.at)?.[to];
+  if (!units.length || units.length !== from || !Array.isArray(at)) return { erase: [], draw: [], refused: why, boxed: true };
+  const w = median(units.map(u => u.core[2] - u.core[0])), h = median(units.map(u => u.core[3] - u.core[1])), tol = 0.25 * Math.max(w, h);
+  const left = units.map(u => ({ u, c: centreOf(u.core) })), draw = [];
+  for (const t of at) {
+    const i = left.findIndex(({ c }) => Math.abs(c[0] - t[0]) <= tol && Math.abs(c[1] - t[1]) <= tol);
+    if (i >= 0) left.splice(i, 1); else draw.push(boxAt(t, w, h));
+  }
+  return { erase: left.map(({ u }) => u.box), draw, refused: why, boxed: false };
+}
+/** Type icons from `old` to `now` on the record's header.types, as psd_edit.plan_types does it: kept icons stay in their
+ *  slot, removed ones are erased, a kept icon past the new count moves to the first free slot, new ones take the next free
+ *  slots (spots[count] past the row). -> {erase: [box], draw: [{name, core}], refused, boxed}. A token row, no icon to line
+ *  up with or no spots for the count: boxed. */
+export function typePlan(types, old, now) {
+  const ty = obj(types), row = Array.isArray(ty?.row) ? ty.row : [];
+  if (!ty || ty.tokens) return { erase: [], draw: [], refused: ty?.refused || null, boxed: true };
+  let refused = ty.refused || null;
+  const left = new Map();
+  for (const n of now) left.set(norm(n), (left.get(norm(n)) || 0) + 1);
+  const take = n => { const k = norm(n), m = left.get(k) || 0; if (m) left.set(k, m - 1); return m > 0; };
+  for (const [name, why] of Array.isArray(ty.fixed) ? ty.fixed : []) if (!take(name)) refused ||= `${why}, not an icon to take off`;
+  const kept = row.map(u => take(u.name));
+  const added = now.filter(n => (left.get(norm(n)) || 0) > 0 && take(n));
+  const count = kept.filter(Boolean).length + added.length;
+  if (count > row.length && !row.length) return { erase: [], draw: [], refused: refused || "no type icon on the card to line a new one up with", boxed: true };
+  const more = count > row.length ? obj(ty.spots)?.[count] : [];
+  if (!Array.isArray(more) || more.length !== Math.max(0, count - row.length)) return { erase: [], draw: [], refused, boxed: true };
+  const spots = [...row.slice(0, count).map(u => u.core), ...more], erase = [], draw = [];
+  const free = spots.map((_, i) => i).filter(i => !(i < row.length && kept[i]));
+  row.forEach((u, i) => {
+    if (!kept[i]) erase.push(u.box);
+    else if (i >= count) { const j = free.shift(); erase.push(u.box); draw.push({ name: u.name, core: spots[j] }); }
+  });
+  for (const name of added) draw.push({ name, core: spots[free.shift()] });
+  return { erase, draw, refused, boxed: false };
+}
+/** Fill box (px) of RGBA data in place from the pixels around it: each pixel the mean of the left-right and top-bottom
+ *  blends of the ring just outside (pad px deep), weighted by nearness, so a gradient goes on through it. */
+export function fillBox(data, W, H, box, { pad = 3 } = {}) {
+  const [x0, y0, x1, y1] = px(box, W, H);
+  if (x1 - x0 < 1 || y1 - y0 < 1) return;
+  const ring = (x, y, dx, dy) => { let r = 0, g = 0, b = 0, n = 0;
+    for (let k = 0; k < pad; k++) { const u = x + dx * k, v = y + dy * k; if (u < 0 || v < 0 || u >= W || v >= H) break; const i = (v * W + u) * 4; r += data[i]; g += data[i + 1]; b += data[i + 2]; n++; }
+    return n ? [r / n, g / n, b / n] : null; };
+  const L = [], R = [], T = [], B = [];
+  for (let y = y0; y < y1; y++) { L.push(ring(x0 - 1, y, -1, 0)); R.push(ring(x1, y, 1, 0)); }
+  for (let x = x0; x < x1; x++) { T.push(ring(x, y0 - 1, 0, -1)); B.push(ring(x, y1, 0, 1)); }
+  const mix = (a, b, t) => (a && b ? a.map((v, k) => v + (b[k] - v) * t) : a || b);
+  for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+    const tx = (x - x0 + 0.5) / (x1 - x0), ty = (y - y0 + 0.5) / (y1 - y0);
+    const hz = mix(L[y - y0], R[y - y0], tx), vt = mix(T[x - x0], B[x - x0], ty);
+    const wh = 1 / Math.min(x - x0 + 1, x1 - x), wv = 1 / Math.min(y - y0 + 1, y1 - y);
+    const c = hz && vt ? hz.map((v, k) => (v * wh + vt[k] * wv) / (wh + wv)) : hz || vt;
+    if (!c) continue;
+    const i = (y * W + x) * 4; data[i] = c[0]; data[i + 1] = c[1]; data[i + 2] = c[2];
+  }
 }
 /** The record's box (image px) for a text layer: text[].box ([x0, y0, x1, y1] in canvas px) scaled to the image. */
 export function recordBox(rec, layer, W) {
@@ -462,8 +535,9 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 /** Draw the mock-up into canvas: the card image (src, same origin) with `edit`'s PSD fields over it. opts: {card, src, rec
  *  (details record or null), edit, psd (the image's values), icons, getFonts, raw, onFont (a font has loaded: draw
  *  again), stale (a newer draw started: drop this one)}. Drawn off-screen, then copied. Returns {drawn: [labels], skipped,
- *  boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], fonts: {name: family | ""}, standIn:
- *  [labels without a font name], shape} or null (the image didn't load, or stale). */
+ *  boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused: [[label, why]] (stars or types
+ *  the bake would refuse), fonts: {name: family | ""}, standIn: [labels without a font name], shape} or null (the image
+ *  didn't load, or stale). */
 export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, stale = () => false }) {
   const img = await loadImage(src);
   if (!img || stale()) return null;
@@ -471,9 +545,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const work = document.createElement("canvas"); work.width = W; work.height = H;
   const ctx = work.getContext("2d", { willReadFrequently: true });
   ctx.drawImage(img, 0, 0);
-  const todo = changes(edit, psd), out = { drawn: [], skipped: [...todo.skipped], boxed: [], over: [], fonts: {}, standIn: [], shape };
+  const todo = changes(edit, psd), out = { drawn: [], skipped: [...todo.skipped], boxed: [], over: [], refused: [], fonts: {}, standIn: [], shape };
   const blit = () => { if (stale()) return null; canvas.width = W; canvas.height = H; canvas.getContext("2d").drawImage(work, 0, 0); return out; };
-  if (!tpl) { out.skipped.push(...[todo.name != null && "name", todo.ability != null && "text", ...Object.keys(todo.stats).map(k => k.toUpperCase())].filter(Boolean)); return blit(); }
+  if (!tpl) { out.skipped.push(...[todo.name != null && "name", todo.ability != null && "text", ...Object.keys(todo.stats).map(k => k.toUpperCase()), todo.stars && "stars", todo.types && "types"].filter(Boolean)); return blit(); }
   const pixels = ctx.getImageData(0, 0, W, H), L = luma(pixels.data);
   const family = async (role, label) => {
     const layer = layerOf(rec, role), name = layer?.font || "";
@@ -511,13 +585,62 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (!row) { out.skipped.push(k.toUpperCase()); continue; }
     paintCells(pixels.data, W, H, row, from, to); out.drawn.push(k.toUpperCase());
   }
+  const head = obj(rec?.header), k = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0, at = b => b.map(v => v * k);
+  const icons2 = [];                                  // [label, plan] for the stars and types
+  if (todo.stars) icons2.push(["stars", k ? starPlan(head?.stars, ...todo.stars) : { boxed: true, refused: null }]);
+  if (todo.types) icons2.push(["types", k ? typePlan(head?.types, ...todo.types) : { boxed: true, refused: null }]);
+  for (const [, plan] of icons2) if (!plan.boxed) for (const b of plan.erase) { const g = at(b); fillBox(pixels.data, W, H, [g[0] - 2, g[1] - 2, g[2] + 2, g[3] + 2], { pad: Math.max(2, Math.round(W * 0.004)) }); }
   ctx.putImageData(pixels, 0, 0);
+  for (const [label, plan] of icons2) {
+    if (plan.refused) out.refused.push([label, plan.refused]);
+    if (plan.boxed) { out.boxed.push(label); await drawIconBox(ctx, label, label === "stars" ? todo.stars[1] : todo.types[1], { icons, head, W, H, tpl }); }
+    else if (label === "stars") { const src = await starSource(head.stars, icons, img, k); for (const b of plan.draw) drawIcon(ctx, src, at(b)); }
+    else for (const d of plan.draw) drawIcon(ctx, await iconOf(icons, d.name), at(d.core));
+    out.drawn.push(label);
+  }
   for (const job of jobs) {
     const imgs = await iconImages(job.text, icons);
     if (job.boxed ? drawBox(ctx, job, imgs, W, H, shape) : drawText(ctx, job, imgs, W)) out.over.push(job.label);
     out.drawn.push(job.label);
   }
   return blit();
+}
+/** An icon's image by name (S.icons, norm keys), or null. */
+const iconOf = async (icons, name) => { const ic = icons?.[norm(name)]; return ic?.file ? loadImage(ic.file) : null; };
+/** What a new star is drawn with: the star icon the bake copies (header.stars.icon), else the last shown star's pixels. */
+async function starSource(stars, icons, img, k) {
+  const im = stars.icon ? await iconOf(icons, stars.icon) : null;
+  if (im) return im;
+  const u = stars.units[stars.units.length - 1].core.map(v => v * k);
+  return { img, crop: [u[0], u[1], u[2] - u[0], u[3] - u[1]] };
+}
+/** An icon (an image, or {img, crop}) fitted into box with a soft shadow for the PSD's drop shadow and glow. */
+function drawIcon(ctx, src, box) {
+  if (!src) return;
+  const im = src.img || src, [sx, sy, sw, sh] = src.crop || [0, 0, im.naturalWidth, im.naturalHeight];
+  if (!sw || !sh) return;
+  const bw = box[2] - box[0], bh = box[3] - box[1], s = Math.min(bw / sw, bh / sh), w = sw * s, h = sh * s;
+  ctx.save(); ctx.shadowColor = "rgba(0,0,0,.55)"; ctx.shadowBlur = 0.06 * Math.max(w, h);
+  ctx.drawImage(im, sx, sy, sw, sh, box[0] + (bw - w) / 2, box[1] + (bh - h) / 2, w, h); ctx.restore();
+}
+/** No place found for the stars or types: a dark box over the template's area with the new stars in rows of two (the
+ *  star icon, else a ★) or the type icons down a column. */
+async function drawIconBox(ctx, label, value, { icons, head, W, H, tpl }) {
+  const a = tpl[label], n = label === "stars" ? Math.min(+value || 0, 10) : (value || []).length;
+  if (!a || !n) return;
+  const x0 = a[0] * W, x1 = a[2] * W, y0 = a[1] * H, pad = W * 0.012;
+  const cols = label === "stars" ? 2 : 1, cell = (x1 - x0 - 2 * pad) / cols, rows = Math.ceil(n / cols);
+  const b = [x0, y0, x1, y0 + rows * cell + 2 * pad], rad = Math.min(W * 0.03, cell / 2);
+  ctx.save(); ctx.beginPath(); ctx.moveTo(b[0] + rad, b[1]); ctx.arcTo(b[2], b[1], b[2], b[3], rad); ctx.arcTo(b[2], b[3], b[0], b[3], rad); ctx.arcTo(b[0], b[3], b[0], b[1], rad); ctx.arcTo(b[0], b[1], b[2], b[1], rad); ctx.closePath();
+  ctx.fillStyle = "rgb(16,16,22)"; ctx.fill(); ctx.lineWidth = Math.max(1.5, W * 0.003); ctx.strokeStyle = "rgba(255,255,255,.4)"; ctx.setLineDash([W * 0.012, W * 0.008]); ctx.stroke(); ctx.restore();
+  const star = label === "stars" && head?.stars && typeof head.stars === "object" && head.stars.icon ? await iconOf(icons, head.stars.icon) : null;
+  for (let i = 0; i < n; i++) {
+    const cx = cols === 2 ? x1 - pad - (i % 2 + 0.5) * cell : x0 + pad + cell / 2, cy = y0 + pad + (Math.floor(i / cols) + 0.5) * cell;   // stars right to left, as the cards read
+    const box = boxAt([cx, cy], cell * 0.86, cell * 0.86);
+    if (label === "types") drawIcon(ctx, await iconOf(icons, value[i]), box);
+    else if (star) drawIcon(ctx, star, box);
+    else { ctx.save(); ctx.font = `${cell * 0.8}px ${STAND_IN}`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = "#ffd21f"; ctx.lineWidth = cell * 0.06; ctx.strokeStyle = "#000"; ctx.strokeText("★", cx, cy); ctx.fillText("★", cx, cy); ctx.restore(); }
+  }
 }
 async function iconImages(text, icons) {
   const files = new Set(tokenize(text, icons).flat(2).filter(p => p.icon).map(p => p.icon)), out = new Map();

@@ -234,8 +234,7 @@ export function changesBlock(c, A, { byId, texts = null } = {}) {
       const when = r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts));
       return `<li><span class="when">${when}</span><div>${parts.join("<br>")}${diff}</div></li>`;
     }).join("");
-    out.push(`<h3>Recorded changes</h3><ol class="bal-changes">${items}</ol>
-      <p class="muted">From the bot's card history${A.since ? ` (since ${esc(day(A.since))})` : ""}: each version the bot read, dated by its PSD's commit (Pacific time). Older records kept no PSD, so a date no commit of the PSD confirms is marked approximate. A PSD read again by a newer parser is not a change.</p>`);
+    out.push(`<h3>Recorded changes</h3><ol class="bal-changes">${items}</ol>`);
   }
   return out.join("");
 }
