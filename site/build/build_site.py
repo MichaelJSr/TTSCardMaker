@@ -2165,11 +2165,12 @@ def archive_tag(tag):
 SERIES_ALIASES = {"rotmg": "Realm of the Mad God", "isaac": "The Binding of Isaac", "crypt": "Crypt Custodian", "dst": "Don't Starve"}   # old folder names
 
 
-def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, series_of=None, live_series=()):
+def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, series_of=None, live_series=(), author_of=None):
     """The cards whose PSD left the card repo: old_stats names whose last version carries the bot's `archived` tag
     {at, path, blob, commit, renamed_to?, moved_to?, author?, backfill?} (moved_to: the PSD moved into MDW, retired), newest first. A name in stats is back, whatever its tag says (the
-    bot clears it on its next save: card_models.stale_archives). tag: archive_tag(); author: Card Authors.txt
-    (credited, by name, or by title when no live card has it) > the tag's > the last version's, through person(); created: the last version's created date, else the
+    bot clears it on its next save: card_models.stale_archives). tag: archive_tag(); author: a renamed card's Card Authors.txt
+    line > the old name's (credited, by name, or by title when no live card has it) > the renamed card's (author_of: a card name ->
+    its author) > the tag's > the last version's, through person(); created: the last version's created date, else the
     Pacific day of its oldest version; series: the renamed card's (series_of: a card name -> its series), else the last
     version's as a live series spells it ('kirby' -> 'Kirby', SERIES_ALIASES), else as it was."""
     out = []
@@ -2183,7 +2184,10 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, serie
         if not isinstance(tag, dict):
             continue
         title = getattr(last, "display_name", None) or name
-        listed = (credited or {}).get(card_key(name)) or (None if id_of(title) else (credited or {}).get(card_key(title)))   # a live card's title is its own
+        renamed = id_of(tag.get("renamed_to"))
+        new = tag["renamed_to"] if renamed else None    # history stays with the card it became
+        listed = (new and (credited or {}).get(card_key(new))) or (credited or {}).get(card_key(name)) \
+            or (None if id_of(title) else (credited or {}).get(card_key(title))) or (new and author_of and author_of(new))   # a live card's title is its own
         made = getattr(last, "created", None)
         made = made.get("date") if isinstance(made, dict) else None
         if not made:
@@ -2194,7 +2198,6 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, serie
                "created": made, "author": person(people or {}, listed or tag.get("author") or getattr(last, "author", None)),
                "path": tag.get("path") or getattr(last, "path", None),
                "commit": tag.get("commit"), "renamed_to": tag.get("renamed_to"), "moved_to": tag.get("moved_to")}
-        renamed = id_of(tag.get("renamed_to"))
         if renamed:
             row["renamedId"] = renamed
         raw = row["series"]
@@ -2966,7 +2969,8 @@ def main():
     name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
     series_of = lambda name: (by_key.get(card_key(name)) or {}).get("series") if isinstance(name, str) and name else None
     archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats, people=people, credited=credited,
-                             series_of=series_of, live_series={e["series"] for e in cards if e.get("series")})
+                             series_of=series_of, live_series={e["series"] for e in cards if e.get("series")},
+                             author_of=lambda name: (by_key.get(card_key(name)) or {}).get("author"))
     row_of = login_rows(commits, people, by_login)   # a login's row, as contributions keys it
     rated = apply_ratings(cards, parse_ratings(), archived, people, by_login, row_of)
     line = f"ratings: {rated['entries']} entries on {rated['cards']} cards ({rated['archived']} archived)"

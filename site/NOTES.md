@@ -882,9 +882,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `created`). history.js gained `dayOf`, `yearOf` (Pacific, one cached formatter). app.js fills `#stats-ratings` and
   `#stats-history` with Balance once analytics.json loads, and with `A = null` when it fails.
 - Build: `archived_cards(old_stats, id_of, stats, people, credited)` adds `tag` (`archive_tag`: renamed_to renamed,
-  moved_to retired, else deleted; `ARCHIVE_TAGS`), `author` (Card Authors.txt, by the archived name, or by its title
-  when no live card has that title: 'Pizza (item)' is not the live Pizza's > the tag's `author` (backfill) > the last
-  version's, through `person`), `created` (the last version's `created.date`, else the Pacific day of its oldest
+  moved_to retired, else deleted; `ARCHIVE_TAGS`), `author` (a renamed card's: Card Authors.txt by the live card it
+  became > by the archived name, or by its title when no live card has that title: 'Pizza (item)' is not the live
+  Pizza's > the live card's author (`author_of`) > the tag's `author` (backfill) > the last version's, through
+  `person`), `created` (the last version's `created.date`, else the Pacific day of its oldest
   version), `series` (the renamed card's, else the last version's as a live series spells it: 'kirby' -> 'Kirby',
   `SERIES_ALIASES` for old folder names). analytics.json gains `archived` (`ARCHIVED_SLIM`: card, title, tag, card_type, stars, series, at,
   created, author; no ratings, commit or path) and `revisions` = `{available, mass: MASS_PASS, cards: {id: {name: n}}}`
