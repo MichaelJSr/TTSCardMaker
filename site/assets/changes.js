@@ -22,6 +22,8 @@ export const EDIT_KINDS = ["edited", "authors"];
 const VIA = { website: "on the website", discord: "via Discord", git: "by commit" };
 const FIELD = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", stars: "stars", name: "title", card_type: "kind", type: "kind", subtype: "item type",
   dup_of: "duplicate of", problems_ok: "parser notes checked", allow_high_stats: "high stats allowed" };
+/** A field's name as the Changes page writes it (profile.js) */
+export const fieldName = k => FIELD[k] || k.replace(/_/g, " ");
 
 const parts = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: TZ });
 const partsOf = ts => Object.fromEntries(parts.formatToParts(new Date((ts || 0) * 1000)).map(x => [x.type, x.value]));

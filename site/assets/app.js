@@ -938,6 +938,7 @@ function renderUser(r) {
   view.innerHTML = personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
     own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }),
     available: !!S.contrib.available, since: S.contrib.since, repo: S.data.repo, titles: S.titles, date, month, kinds: KINDS, kindOf,
+    people, site: S.contrib.site || {}, mentions: S.mentions, mentionedBy: S.mentionedBy, banned: S.banned,
     decks: { public: decks.sortDecks(theirs.filter(d => !d.private)), private: decks.sortDecks(theirs.filter(d => d.private)) }, deckTile: d => decks.deckTileHtml(d, deckCtx()) });
 }
 function renderUsers() {

@@ -632,3 +632,30 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .fact.arch.retired { background: color-mix(in srgb, var(--s4) 30%, transparent); }
 .fact.arch.deleted { background: color-mix(in srgb, var(--danger) 25%, transparent); }
 .stats-jump { display: flex; gap: 12px; margin-left: auto; font-size: 13.5px; }
+
+/* round 3: profiles */
+.profile .panel h4 { margin: 14px 0 6px; font-size: 14px; }
+.p-strip.chart { border: 0; padding: 0; background: none; margin: 4px 0 6px; }
+.p-strip svg { width: 100%; height: auto; }
+.p-strip .p-site { stroke: var(--ink-2); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.p-bar-l { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; margin-top: 6px; }
+.p-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; gap: 2px; margin: 4px 0 10px; }
+.p-bar > span { min-width: 4px; }
+.p-bar .me { background: var(--s1); } .p-bar .them { background: var(--deemph); }
+.p-bar .up { background: var(--good); } .p-bar .down { background: var(--danger); }
+.p-list { margin: 4px 0 8px; padding-left: 18px; } .p-list li { margin: 2px 0; }
+.p-edited { margin: -6px 0 12px; font-size: 13px; }
+.p-picks { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin: 8px 0; }
+.p-style { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 6px 0; } .p-style .pick-label { margin: 0; min-width: 100px; }
+.p-mixes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 24px; margin-top: 10px; }
+.p-mix { display: grid; grid-template-columns: 9em minmax(60px, 1fr) 8.5em; gap: 8px; align-items: center; font-size: 13px; margin: 3px 0; }
+.p-mix > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.p-track { position: relative; height: 10px; border-radius: 999px; background: var(--surface-2); }
+.p-track i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: var(--s1); }
+.p-track b { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: var(--ink); }
+@media (max-width: 640px) {
+  .p-picks, .p-mixes { grid-template-columns: minmax(0, 1fr); }
+  .p-mix { grid-template-columns: 7em minmax(40px, 1fr) 7.5em; }
+  .p-style .pick-label { min-width: 0; width: 100%; }
+  .p-strip { overflow-x: auto; } .p-strip svg { min-width: 760px; }   /* scroll, not shrink */
+}
