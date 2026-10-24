@@ -32,7 +32,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  PSD_TOOLS_REF: cards-20261023c   # the psd-tools fork pin: card-edits.yml's
+  PSD_TOOLS_REF: cards-20261023d   # the psd-tools fork pin: card-edits.yml's
 
 jobs:
   preview:

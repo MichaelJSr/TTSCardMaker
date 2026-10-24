@@ -67,7 +67,7 @@ concurrency:
 env:
   POSTS: "off"        # step 8 turns the Discord posts on; until then discord.json goes to the artifact only
   MAIN_COMMIT: "off"  # step 8 turns the bake and the main commit M on; until then only a dry run bakes (nothing committed)
-  PSD_TOOLS_REF: cards-20261023c   # the bake's psd-tools fork pin: card-edits.yml's
+  PSD_TOOLS_REF: cards-20261023d   # the bake's psd-tools fork pin: card-edits.yml's
 
 jobs:
   sync:

@@ -35,7 +35,7 @@ concurrency:
 env:
   # The psd-tools fork pin (cards + feat/text-engine, save(update_preview=); card-guards.yml, card-sync.yml and
   # card-preview.yml pin the same tag). Plan step 7 drops it once upstream has the changes.
-  PSD_TOOLS_REF: cards-20261023c
+  PSD_TOOLS_REF: cards-20261023d
 
 jobs:
   bake:
