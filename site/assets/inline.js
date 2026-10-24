@@ -316,9 +316,9 @@ export function mountGrid(view, p, api = A) {
     sel(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}"${key === "subseries" ? ` data-series="${esc(series)}"` : ""} aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
 }
 const DROP = ".drop-list .chip, .tray .bucket[data-pin]";   // a filter-bar value, a pinned box
-/** A drop target's {key, value, series}: a filter-bar chip (its list's data-drop), or a tray box (data-k, data-v, data-s). */
+/** A drop target's {key, value, series}: a filter-bar chip (its list's data-drop), or a tray box (data-pin-k, -v, -s). */
 export const targetOf = el => (el.dataset.pin != null
-  ? { key: el.dataset.k, value: el.dataset.v, series: el.dataset.s || "" }
+  ? { key: el.dataset.pinK, value: el.dataset.pinV, series: el.dataset.pinS || "" }
   : { key: el.closest(".drop-list").dataset.drop, value: el.dataset.value, series: el.closest(".drop-list").dataset.series || "" });
 const dragOff = () => { dragged = null; document.body.classList.remove("dragging-cards"); for (const c of document.querySelectorAll(".drop-list .over, .tray .over")) c.classList.remove("over"); };
 function onDragStart(e) {

@@ -54,13 +54,13 @@ export function formHtml(f, series = "") {
     + `<input class="pin-name" data-suggest="${f.k}" data-series="${esc(series)}" autocomplete="off" aria-label="${KINDS[f.k].label} to pin" placeholder="${f.k}" value="${esc(f.v || "")}">`
     + `<button type="submit" class="primary">Pin</button></form>`;
 }
-/** The tray's HTML ("" with no pins and no form): boxes data-pin/data-k/data-v/data-s, then + Pin or the open form.
+/** The tray's HTML ("" with no pins and no form): boxes data-pin/data-pin-k/-v/-s (not data-v: tip.js reads that), then + Pin or the open form.
  *  form: the open form's {k, v}; series: the filter bar's; selecting: the Select toggle is on (phones: it stays on screen). */
 export function trayHtml(pins, counts, { form = null, series = "", selecting = false } = {}) {
   if (!pins.length && !form) return "";
   const box = (p, i) => {
     const n = cardsWord(counts[i] || 0), kind = kindText(p);
-    return `<div class="bucket-wrap"><button type="button" class="bucket" data-action="tray-drop" data-pin="${i}" data-k="${p.k}" data-v="${esc(p.v)}"${p.s ? ` data-s="${esc(p.s)}"` : ""}
+    return `<div class="bucket-wrap"><button type="button" class="bucket" data-action="tray-drop" data-pin="${i}" data-pin-k="${p.k}" data-pin-v="${esc(p.v)}"${p.s ? ` data-pin-s="${esc(p.s)}"` : ""}
       aria-label="${esc(`${kind} ${p.v}, ${n}. Drop cards here, or select cards and press ${i + 1}`)}"><span class="b-kind">${esc(kind)}</span>`
       + `<span class="b-value">${esc(p.v)}</span><span class="b-meta">${n}</span><span class="kbd" aria-hidden="true">${i + 1}</span></button>`
       + `<button type="button" class="ghost icon b-x" data-action="tray-unpin" data-i="${i}" aria-label="Unpin ${esc(p.v)}">✕</button></div>`;
