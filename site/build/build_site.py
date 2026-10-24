@@ -1216,15 +1216,16 @@ def tier_of(v):
     return max(0, min(4, int((v - 0.5) // 2)))
 
 
-def rater_shown(e, people, by_login):
-    """A Card Ratings.json entry as the site shows it: a login credited by another name keeps it as login."""
-    shown = e["by"] if e["by"] == "group" else credit(e["by"], people, by_login) or e["by"]
+def rater_shown(e, people, by_login, row_of=None):
+    """A Card Ratings.json entry as the site shows it: a login credited by another name keeps it as login. row_of:
+    login_rows()', else credit()."""
+    shown = e["by"] if e["by"] == "group" else (row_of or (lambda k: credit(k, people, by_login)))(e["by"]) or e["by"]
     return {**e, "by": shown, "login": e["by"]} if shown != e["by"] else {**e}
 
 
-def apply_ratings(cards, ratings, archived, people, by_login):
+def apply_ratings(cards, ratings, archived, people, by_login, row_of=None):
     """Card Ratings.json onto the cards: e["ratings"] = [{date, scale, value, by, source, login?}], oldest first; by stays
-    "group", a login becomes its credited name (credit()), then kept as login (the page's own re-rating). A duplicate's
+    "group", a login becomes its row (row_of: login_rows(), else credit()), then kept as login (the page's own re-rating). A duplicate's
     go to its original. A name matching an archived row goes to the card it was renamed to (renamedId), else onto the
     row (changelog.json). -> {"entries", "cards", "archived", "unmatched": [name]}"""
     live, by_id = {}, {e["id"]: e for e in cards}
@@ -1241,7 +1242,7 @@ def apply_ratings(cards, ratings, archived, people, by_login):
         if target is None:
             counts["unmatched"].append(name)
             continue
-        target.setdefault("ratings", []).extend(rater_shown(e, people, by_login) for e in entries)
+        target.setdefault("ratings", []).extend(rater_shown(e, people, by_login, row_of) for e in entries)
         got[id(target)] = target
         counts["entries"] += len(entries)
     for target in got.values():
@@ -1867,12 +1868,13 @@ def image_versions(paths, commits):
 MASS_PASS = 20                                # a commit changing more card images than this is a mass pass (a template or token pass)
 
 
-def commit_keys(row, people, by_login):
-    """A commit's (parse_history row) credited names: who() of its author; a bot commit (BOT_AUTHOR) -> credit() of each
-    Edit-by login that isn't a discord: name, else the login; [] without trailers."""
+def commit_keys(row, people, by_login, row_of=None):
+    """A commit's (parse_history row) credited names: who() of its author; a bot commit (BOT_AUTHOR) -> the row of each
+    Edit-by login that isn't a discord: name (row_of: login_rows(), else credit()), else the login; [] without trailers."""
     _, _, name, email, _, _, editors = row
     if name.lower() == BOT_AUTHOR.lower():
-        return list(dict.fromkeys(credit(e, people, by_login) or e for e in editors if not is_discord(e)))
+        row_of = row_of or (lambda k: credit(k, people, by_login))
+        return list(dict.fromkeys(row_of(e) or e for e in editors if not is_discord(e)))
     key = who(name, email, people, by_login)
     return [key] if key else []
 
@@ -1883,7 +1885,7 @@ def mass_passes(found):
     return {sha for sha, n in size.items() if n > MASS_PASS}
 
 
-def card_revisions(found, by_png, commits, people, by_login, skip=()):
+def card_revisions(found, by_png, commits, people, by_login, skip=(), row_of=None):
     """{card id: {credited name: image changes after its first upload}} (found: image_versions, newest first, so its last
     row is the upload): mass passes left out, credited by commit_keys(); every card id of the PNG gets the counts (a
     duplicate's are its original's), skip's (rulebook pages) none. None without history."""
@@ -1891,7 +1893,7 @@ def card_revisions(found, by_png, commits, people, by_login, skip=()):
         return None
     mass, rows, out = mass_passes(found), {c[0]: c for c in commits or ()}, {}
     for png, vs in found.items():
-        got = Counter(k for (sha, *_), _ in vs[:-1] if sha not in mass and sha in rows for k in commit_keys(rows[sha], people, by_login))
+        got = Counter(k for (sha, *_), _ in vs[:-1] if sha not in mass and sha in rows for k in commit_keys(rows[sha], people, by_login, row_of))
         if got:
             for e in by_png.get(png, ()):
                 if e["id"] not in skip:
@@ -2049,7 +2051,7 @@ def stamp_groups(fields, meta):
     return out
 
 
-def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields_by=None):
+def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields_by=None, row_of=None):
     """
     The database edits, newest first: each commit since `since` that changed a Card Edits.json entry or a Card
     Authors.txt line (a website publish batch, a Discord edit, a commit by hand). The bot's bakes (they write verdicts
@@ -2064,7 +2066,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
           people: [[git name, from, to]], more?: lines past BATCH_LINES}]}
     fields_by: filled with {credited name: {field: lines}} over every line (BATCH_LINES doesn't cut it; a Card Authors.txt
     line is "author", but not in the commit that created the file: 813 imported credits); Discord names and the bot
-    left out.
+    left out. row_of: login_rows(), else credit().
     """
     def card(key, name):
         row = {"key": name or key, "name": name_of(name or key)}       # name: as written, when the site lacks the card
@@ -2078,7 +2080,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
         by = str(by or "")
         if is_discord(by) or discord:
             return "discord:" + by[8:] if is_discord(by) else "discord:" + by
-        return credit(by, people, by_login) or by
+        return (row_of(by) if row_of else credit(by, people, by_login)) or by
 
     def tally(names, fields):
         if fields_by is None:
@@ -2200,6 +2202,23 @@ RECENT_BAL = 5                                # P1: the newest buffs and nerfs k
 PAGE_KEY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,60}$")       # a name that can be a u/<key>/ folder
 
 
+def login_rows(commits, people, by_login):
+    """A login -> its row, or None: credit(), else the name its noreply commits (not the bot's) credit most."""
+    noreply = {}                                  # a noreply email's login -> {credited name: commits}
+    for _, _, name, email, _, _, _ in commits or ():
+        m = NOREPLY_RE.match(email or "")
+        if m and name.lower() != BOT_AUTHOR.lower():
+            c = noreply.setdefault(m.group(1).lower(), {})
+            k = who(name, email, people, by_login)
+            if k:
+                c[k] = c.get(k, 0) + 1
+
+    def row_of(login):
+        c = noreply.get((login or "").lower())
+        return credit(login, people, by_login) or (min(c, key=lambda n: (-c[n], n.lower())) if c else None)
+    return row_of
+
+
 def credit(key, people, by_login):
     """A git name or GitHub login -> the name the site credits: the author field of the profile with that login (the
     person's own statement), else [people]; None when neither knows it (case-insensitive, like person())."""
@@ -2222,7 +2241,7 @@ def is_card_file(path):
         and not any(p in SKIP_PARTS or p in RULE_PARTS for p in path.split("/"))
 
 
-def contributions(cards, people, profiles, edits, commits, balance=None, revisions=None, archived=(), fields_by=None):
+def contributions(cards, people, profiles, edits, commits, balance=None, revisions=None, archived=(), fields_by=None, row_of=None):
     """{"available", "since", "people": [{key, logins, github?, cards, edits, commits, first, last, recent, recentEdits,
     months, + person_extras' keys}], "site"?: {z}} by cards, then commits.
     cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
@@ -2236,22 +2255,11 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
     github: a GitHub login known to be theirs (their profile's, else the most used of the logins in their noreply commit
     emails, _by stamps and Edit-by trailers), never a git name. recent / recentEdits: the last card commits [ts, subject,
     n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" Pacific, cards created (created, else fs), edits, commits]].
-    balance: analytics.json; revisions: card_revisions(); archived: archived_cards(); fields_by: edit_batches' (person_extras)."""
+    balance: analytics.json; revisions: card_revisions(); archived: archived_cards(); fields_by: edit_batches' (person_extras);
+    row_of: login_rows() (made here without)."""
     by_login = {p["login"].lower(): p for p in profiles}
     rec, seen_logins, spelled = {}, {}, {}
-    noreply = {}                                  # a noreply email's login -> {credited name: commits}
-    for _, _, name, email, _, _, _ in commits or ():
-        m = NOREPLY_RE.match(email or "")
-        if m and name.lower() != BOT_AUTHOR.lower():
-            c = noreply.setdefault(m.group(1).lower(), {})
-            k = who(name, email, people, by_login)
-            if k:
-                c[k] = c.get(k, 0) + 1
-
-    def row_of(login):
-        """A login's row, or None: credit(), else the name its noreply commits credit most."""
-        c = noreply.get(login.lower())
-        return credit(login, people, by_login) or (min(c, key=lambda n: (-c[n], n.lower())) if c else None)
+    row_of = row_of or login_rows(commits, people, by_login)
 
     def key_of(login):
         """A website or Edit-by login -> the credited name: row_of(), else the login as first spelled."""
@@ -2353,18 +2361,18 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
     zs = [v["z_total"] for v in (balance or {}).get("cards", {}).values() if "z_total" in v]
     if zs:
         res["site"] = {"z": round(sum(zs) / len(zs), 2)}
-    person_extras(out, cards, commits, people, by_login, balance or {}, revisions, archived or (), fields_by or {})
+    person_extras(out, cards, commits, people, by_login, balance or {}, revisions, archived or (), fields_by or {}, row_of)
     return res
 
 
 # ---- person stats (contributions.json people[]: the person page's Balance, Ratings, Revisions, Archived cards) ---------
-def psd_commits_at(commits, people, by_login):
+def psd_commits_at(commits, people, by_login, row_of=None):
     """{committer time: [(credited names, {alnum PSD file names})]} of the commits that added or changed a PSD."""
     out = {}
     for row in commits or ():
         names = {alnum(os.path.splitext(os.path.basename(p))[0]) for s, _, _, p in row[5] if s != "D" and p.lower().endswith(".psd")}
         if names:
-            out.setdefault(row[1], []).append((commit_keys(row, people, by_login), names))
+            out.setdefault(row[1], []).append((commit_keys(row, people, by_login, row_of), names))
     return out
 
 
@@ -2402,7 +2410,7 @@ def latest_of(entries, scale):
     return out
 
 
-def person_extras(rows, cards, commits, people, by_login, balance, revisions, archived, fields_by):
+def person_extras(rows, cards, commits, people, by_login, balance, revisions, archived, fields_by, row_of=None):
     """Adds to each contributions row (key K; own cards: credited to K, not duplicates, not hidden) what it has of:
     power (P2) {n, z, top, bottom, dots [[id, z, top|bottom?]]}; bal (P1) {buff, nerf, shift, madeBuff, madeNerf, swing? [id, delta, ts],
     recent [[id, buff|nerf, delta, ts]]}; revisions (P3, P12, P13) {self, others, top, theirs, most?, untouched, oldest?};
@@ -2413,7 +2421,7 @@ def person_extras(rows, cards, commits, people, by_login, balance, revisions, ar
     own = defaultdict(list)
     for c in vis:
         own[c["author"]].append(c)
-    at_ts = psd_commits_at(commits, people, by_login)
+    at_ts = psd_commits_at(commits, people, by_login, row_of)
     made = defaultdict(Counter)                   # K -> buffs and nerfs they made to others' cards
     for c in vis:
         for r in A.get(c["id"], {}).get("changes", ()):
@@ -2946,13 +2954,14 @@ def main():
     id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
     name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
     archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats, people=people, credited=credited)
-    rated = apply_ratings(cards, parse_ratings(), archived, people, by_login)
+    row_of = login_rows(commits, people, by_login)   # a login's row, as contributions keys it
+    rated = apply_ratings(cards, parse_ratings(), archived, people, by_login, row_of)
     line = f"ratings: {rated['entries']} entries on {rated['cards']} cards ({rated['archived']} archived)"
     if rated["unmatched"]:
         warn(f"{line}, {len(rated['unmatched'])} names match no card: {', '.join(rated['unmatched'][:10])}")
     elif rated["entries"]:
         log(line)
-    revs = card_revisions(found, by_png, commits, people, by_login, skip=rule_ids)
+    revs = card_revisions(found, by_png, commits, people, by_login, skip=rule_ids, row_of=row_of)
     balance["revisions"] = {"available": revs is not None, "mass": MASS_PASS, "cards": revs or {}}
     balance["archived"] = [{k: r[k] for k in ARCHIVED_SLIM if k in r} for r in archived]
     if revs is not None:
@@ -2966,13 +2975,13 @@ def main():
         warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
     fields_by = {}                                # the person pages' edits by field: all time
     try:
-        every = edit_batches(edit_history(), people, by_login, edits, id_of, name_of, 0, fields_by=fields_by)
+        every = edit_batches(edit_history(), people, by_login, edits, id_of, name_of, 0, fields_by=fields_by, row_of=row_of)
         batches = {**every, "batches": [b for b in every["batches"] if b["at"] >= since]}
     except Exception as e:                        # never a failed build
         warn(f"no edit batches: {type(e).__name__}: {e}")
         batches = {"available": False, "batches": []}
         fields_by.clear()
-    contrib = contributions(cards, people, profiles, edits, commits, balance=balance, revisions=revs, archived=archived, fields_by=fields_by)
+    contrib = contributions(cards, people, profiles, edits, commits, balance=balance, revisions=revs, archived=archived, fields_by=fields_by, row_of=row_of)
     titles = titles_of(contrib["people"])
     person_of = {login.lower(): r for r in contrib["people"] for login in r["logins"]}        # a profile's login -> its contributions
     previews = {}                                 # u/<name>/ -> its link-preview text, for the share dialog too
