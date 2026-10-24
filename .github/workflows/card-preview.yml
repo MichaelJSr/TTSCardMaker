@@ -2,7 +2,8 @@
 # baked as card-edits.yml would, nothing committed to main. The result goes to the orphan branch `previews`
 # (previews/<request>/, index.json), one commit per run, rewritten past 200 previews or 7 days; contract: site/NOTES.md
 # section 19. No Discord. The preview job's token is read-only; only the publish job writes (python3, stdlib, no install).
-# Inputs reach the shell only through env and a file. Every push trigger here is `branches: [main]`.
+# Inputs reach the shell only through env and a file. Every push trigger here is `branches: [main]`. The psd-tools fork
+# installs from wheels cached per pin (~25 s a preview saved).
 name: Card preview
 run-name: Card preview ${{ inputs.request }}
 
@@ -29,6 +30,9 @@ permissions:
 concurrency:
   group: card-preview-${{ inputs.request }}
   cancel-in-progress: false
+
+env:
+  PSD_TOOLS_REF: cards-20261023d   # the psd-tools fork pin: card-edits.yml's
 
 jobs:
   preview:
@@ -85,12 +89,29 @@ jobs:
             /global_config.py
 
       - uses: actions/setup-python@v7
+        id: python
         with:
           python-version: "3.12"
 
-      # card-edits.yml's install: the same fork pin (card-guards.yml's too).
+      # card-edits.yml's install: the fork's wheels, cached per pin, Python and runner (the same cache entry).
+      - id: wheels
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/psd-tools-wheels
+          key: psd-tools-${{ env.PSD_TOOLS_REF }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+
       - timeout-minutes: 5
-        run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023d"
+        env:
+          HIT: ${{ steps.wheels.outputs.cache-hit }}
+        run: |
+          [ "$HIT" = true ] || pip wheel -q -w ~/.cache/psd-tools-wheels requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@$PSD_TOOLS_REF"
+          pip install -q --no-index -f ~/.cache/psd-tools-wheels requests "psd-tools[composite,text]"
+
+      - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
+        uses: actions/cache/save@v6
+        with:
+          path: ~/.cache/psd-tools-wheels
+          key: ${{ steps.wheels.outputs.cache-primary-key }}
 
       # Fonts as card-edits.yml's: MDW/Fonts' top level, cached by the folder's tree sha (the same cache key), fetched
       # only on a miss.

@@ -3,7 +3,7 @@
 # PSD and PNG and the rewritten edits file (at most 40 cards baked a run; the rest wait for the next), the report as the
 # job summary. Every 30 minutes, live, when the gate finds a PSD-kind edit without a final verdict, baking only those
 # (docs/EDIT_PIPELINE_DESIGN.md section 8); a dispatch always runs and re-checks every card. The first failed scheduled
-# run of a streak tells Discord.
+# run of a streak tells Discord. The psd-tools fork installs from wheels cached per pin (~25 s a run saved).
 name: Card edits
 
 on:
@@ -31,6 +31,11 @@ permissions:
 concurrency:
   group: ${{ github.event_name == 'schedule' && 'card-edits' || format('card-edits-{0}', github.run_id) }}
   cancel-in-progress: false   # a running bake is never cancelled; a newer pending tick replaces an older one
+
+env:
+  # The psd-tools fork pin (cards + feat/text-engine, save(update_preview=); card-guards.yml, card-sync.yml and
+  # card-preview.yml pin the same tag). Plan step 7 drops it once upstream has the changes.
+  PSD_TOOLS_REF: cards-20261023d
 
 jobs:
   bake:
@@ -67,13 +72,30 @@ jobs:
             /global_config.py
 
       - uses: actions/setup-python@v7
+        id: python
         with:
-          python-version: "3.12"     # no `cache: pip`: it needs a requirements file, and neither sparse checkout has one
+          python-version: "3.12"     # no `cache: pip`: the wheels below hold every package
 
-      # The fork pin: cards + feat/text-engine merged, save(update_preview=), tagged by step S0 of the design.
-      # The tag exists since S0 (2026-10-21, cards a6363a04). Plan step 7 drops the pin once upstream has the changes.
+      # The fork and its dependencies as wheels, cached per pin, Python and runner (shared with card-guards, card-sync and
+      # card-preview): a hit installs offline; a miss builds the fork (its C extensions, ~25 s) and saves the wheels.
+      - id: wheels
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/psd-tools-wheels
+          key: psd-tools-${{ env.PSD_TOOLS_REF }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+
       - timeout-minutes: 10     # a step's timeout fails the run (Discord is told); the job's cancels it
-        run: pip install -q requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023d"
+        env:
+          HIT: ${{ steps.wheels.outputs.cache-hit }}
+        run: |
+          [ "$HIT" = true ] || pip wheel -q -w ~/.cache/psd-tools-wheels requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@$PSD_TOOLS_REF"
+          pip install -q --no-index -f ~/.cache/psd-tools-wheels requests "psd-tools[composite,text]"
+
+      - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
+        uses: actions/cache/save@v6
+        with:
+          path: ~/.cache/psd-tools-wheels
+          key: ${{ steps.wheels.outputs.cache-primary-key }}
 
       # Schedule only: go when a PSD-kind edit has no refused verdict for its values on the current PSD
       # (card_bake.pending). A dispatch always goes.

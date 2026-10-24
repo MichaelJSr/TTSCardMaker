@@ -12,6 +12,7 @@
 # for the 30-minute quiet window: a PNG the author pushed meanwhile withdraws its refusal, a card pushed again is left to
 # that push's run, a write that did not land is told (in report mode, the PNG the bot would make). It never reverts or
 # rejects a push. A run that fails tells the standards channel once per failure streak (a cancel by hand does not).
+# The psd-tools fork installs from wheels cached per pin (~25 s a run saved).
 #
 # Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = push runs skipped, report = check,
 # comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry run (job summary and
@@ -55,6 +56,11 @@ permissions:
 concurrency:
   group: ${{ github.event_name == 'push' && format('card-guards-{0}', github.sha) || format('card-guards-{0}', github.run_id) }}
   cancel-in-progress: false
+
+env:
+  # The psd-tools fork pin, shared with card-edits.yml, card-sync.yml and card-preview.yml: guard 1's render is the bake's;
+  # cards-20261023d (round 11) carries TypeLayer.sync_story (R9's fix).
+  PSD_TOOLS_REF: cards-20261023d
 
 jobs:
   guard:
@@ -150,13 +156,31 @@ jobs:
             /global_config.py
 
       - uses: actions/setup-python@v7
+        id: python
         with:
           python-version: "3.12"
 
-      # The fork pin, shared with card-edits.yml and card-sync.yml: guard 1's render is the bake's; cards-20261023d (round 11) carries
-      # TypeLayer.sync_story (R9's fix). pyoxipng: the lossless PNG recompression (a wheel for this Python).
+      # card-edits.yml's install: the fork's wheels, cached per pin, Python and runner (the same cache entry); then from
+      # PyPI fonttools and pyoxipng, the lossless PNG recompression (a wheel for this Python).
+      - id: wheels
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/psd-tools-wheels
+          key: psd-tools-${{ env.PSD_TOOLS_REF }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+
       - timeout-minutes: 10
-        run: pip install -q requests fonttools pyoxipng==9.1.1 "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@cards-20261023d"
+        env:
+          HIT: ${{ steps.wheels.outputs.cache-hit }}
+        run: |
+          [ "$HIT" = true ] || pip wheel -q -w ~/.cache/psd-tools-wheels requests "psd-tools[composite,text] @ git+https://github.com/MichaelJSr/psd-tools@$PSD_TOOLS_REF"
+          pip install -q --no-index -f ~/.cache/psd-tools-wheels requests "psd-tools[composite,text]"
+          pip install -q pyoxipng==9.1.1 fonttools
+
+      - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
+        uses: actions/cache/save@v6
+        with:
+          path: ~/.cache/psd-tools-wheels
+          key: ${{ steps.wheels.outputs.cache-primary-key }}
 
       # Fonts for the R7 rule (told in the post, as font-check.yml tells them): MDW/Fonts' top level, cached by the
       # folder's tree sha as font-check.yml does.
