@@ -287,7 +287,8 @@ jobs:
         if: steps.gate.outputs.go == 'true'
         timeout-minutes: 15
         env:
-          BAKE: ${{ (env.MAIN_COMMIT == 'on' || env.DRY_RUN == 'true') && (inputs.bake || 'all') || 'none' }}
+          # none in any letter case, as the restore's and Bake's `if` compare it: no baker then
+          BAKE: ${{ (env.MAIN_COMMIT == 'on' || env.DRY_RUN == 'true') && inputs.bake != 'none' && (inputs.bake || 'all') || 'none' }}
           HIT: ${{ steps.wheels.outputs.cache-hit }}
         run: |
           python3.14 -m venv "$RUNNER_TEMP/builder"

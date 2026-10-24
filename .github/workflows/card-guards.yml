@@ -58,8 +58,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  # The psd-tools fork pin, shared with card-edits.yml and card-sync.yml: guard 1's render is the bake's; cards-20261023d
-  # (round 11) carries TypeLayer.sync_story (R9's fix).
+  # The psd-tools fork pin, shared with card-edits.yml, card-sync.yml and card-preview.yml: guard 1's render is the bake's;
+  # cards-20261023d (round 11) carries TypeLayer.sync_story (R9's fix).
   PSD_TOOLS_REF: cards-20261023d
 
 jobs:
