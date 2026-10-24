@@ -2,11 +2,17 @@
 // and drag onto a Series, Subseries or Author value, and the filter bar's selects make new ones. A DOM upgrade after
 // app.js has rendered (attributes and listeners, no template change), so view mode is untouched. Staging goes through
 // the editor's single-field ops (edit.js stageField/stageAuthor), the same batch the form fills. Helpers above
-// `install` are pure; node checks under /tmp exercise them.
+// `install` are pure; node checks under /tmp exercise them. Stars (stars.js) and types (palette.js) edit in place too;
+// what is typed is kept as a draft until it is saved (drafts.js), and offered back when the card opens again.
 import { esc } from "./text.js";
+import { starsHtml, paintStars, stepValue } from "./stars.js";
+import { typeVocab, mountPalette, rowHtml } from "./palette.js";
+import { rawOf, restorable, offerHtml, later, movedSince } from "./drafts.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
-const LABEL = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", series: "Series", subseries: "Subseries", author: "Author", note: "Note" };
+const SLIDERS = [...STATS, "stars"];                // a row of cells: click one, or arrows and Enter
+const TEXT = ["name", "ability", "note", "series", "subseries", "author"];   // the fields with a text control
+const LABEL = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", series: "Series", subseries: "Subseries", author: "Author", note: "Note", stars: "Stars", types: "Types" };
 const IMAGE = "on the card image";                 // the form's "On the card image" marker (PSD fields); the rest is database only
 
 /** A click on stat cell `cell` (1-based) of a row showing `current`: that value, or one less for the top lit cell (so 0 is reachable). */
@@ -44,7 +50,10 @@ export const dropChips = (list, fresh) => [...fresh.map(v => chipHtml(v, true)),
 
 let A = null;                                      // {editor, modal, selected, goCard, rerender, toast}, from install
 let card = null;                                   // the card the dialog shows (mountCard)
-let cur = null;                                    // the open editor: {c, f, el, host, html, cls, tip, ctl, v}
+let cur = null;                                    // the open editor: {c, f, el, host, html, cls, tip, ctl, v, save, snap}
+let pal = null;                                    // the open type palette: {c, row, html, tip, temp, save, ctl, snap}
+let closing = false;                               // this press is on the dialog's close button: a save doesn't redraw the card
+let offered = null;                                // the card dialog's draft offer: {c, fields}
 let prov = null;                                   // a stat row changed by keyboard, not yet saved: {row, k, v0}
 let pointer = false;                               // the last input was a pointer (focus moved by a click, not Tab)
 let naming = null;                                 // the filter bar's open "New …" input: {sel, key, input}
@@ -55,7 +64,7 @@ let arrowAt = -1e9;                                // when an arrow key last wen
 /** Mark the editable spots of the open card dialog (edit mode only; call after openCard). */
 export function mountCard(modal, c, api = A) {
   const detail = modal.querySelector(".detail"); if (!detail) return;
-  card = c; cur = null; prov = null;
+  card = c; cur = null; prov = null; pal = null; offered = null; closing = false;
   const facts = detail.querySelector(".facts");
   const mark = (el, f, tip) => { if (!el) return; el.dataset.inline = f; el.tabIndex = 0; el.dataset.tip = tip; };
   mark(detail.querySelector("h2"), "name", `Double-click to rename · ${IMAGE}`);
@@ -80,24 +89,67 @@ export function mountCard(modal, c, api = A) {
   const note = detail.querySelector(":scope > div:nth-child(2) > .note");
   if (note) mark(note, "note", "Click to edit the note");
   else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="note" data-empty aria-label="Add a note">+ note</button>`);
+  const ghost = f => `<button type="button" class="fact ghost-fact" data-inline="${f}" data-empty aria-label="Add ${f}">+ ${f}</button>`;
+  const starChip = chips.find(a => hrefOf(a).startsWith("#/cards?stars="));      // stars: a slider in its place
+  if (c.stars > 10) { if (starChip) starChip.dataset.tip = "Use All fields"; }
+  else if (starChip) starChip.outerHTML = starsHtml(c.stars);
+  else facts.insertAdjacentHTML("beforeend", ghost("stars"));
+  const typeRow = detail.querySelector(":scope > div:nth-child(2) > .ctypes");     // types: the row opens the palette
+  if (typeRow) {
+    mark(typeRow, "types", `Click to change the types · ${IMAGE}`);
+    typeRow.setAttribute("role", "button"); typeRow.setAttribute("aria-label", `Types: ${(c.types || []).map(t => t.replace(/_/g, " ")).join(", ") || "none"}. Change the types`);
+  } else facts.insertAdjacentHTML("beforeend", ghost("types"));
+  offer(c, detail);
 }
-function open(el, f) {
+// ---- drafts: what an editor holds before it is saved, kept in edit.js's draft store (drafts.js)
+const drafts = () => A.editor.drafts;
+function offer(c, detail) {                        // "Restore your unsaved edit?" over the card, when it has a draft the card doesn't show
+  const d = drafts()?.get(c.id); if (!d) return;
+  const now = Object.fromEntries(Object.keys(d.fields).filter(f => !f.startsWith("ban")).map(f => [f, rawOf(c, f, A.editor.value(c, "dup_of"))]));
+  const fields = restorable(d.fields, now);
+  if (!Object.keys(fields).length) { drafts().drop(c.id); return; }   // the batch has it already
+  offered = { c, fields };
+  detail.querySelector(":scope > div:nth-child(2)")?.insertAdjacentHTML("afterbegin", offerHtml(fields, d.at, Date.now(), movedSince(d, now)));
+}
+const spot = f => A.modal.querySelector(`.detail [data-inline="${f}"]`);
+function answer(restore) {
+  const o = offered; offered = null;
+  A.modal.querySelector(".detail .draft-offer")?.remove();
+  if (!o) return;
+  if (!restore) { drafts().drop(o.c.id); A.toast("Unsaved edit discarded"); return; }
+  const keys = Object.keys(o.fields), [f] = keys, el = keys.length === 1 && spot(f);   // one field: its own editor, else All fields
+  if (el && TEXT.includes(f)) open(el, f, o.fields[f]);
+  else if (el && f === "types") openTypes(el, o.fields.types);
+  else A.editor.open(o.c.id, { draft: o.fields });
+}
+const keep = (c, f, v) => later(() => {            // the editor's text as a draft, a moment after each key
+  const t = (f === "types" ? pal?.ctl?.value : cur?.f === f && cur.c === c ? cur.ctl.value : null);
+  if (t == null) return;
+  if (f === "types" ? JSON.stringify(t) === JSON.stringify(v) : String(t).replace(/\r/g, "").trim() === String(v).replace(/\r/g, "").trim()) drafts()?.drop(c.id, [f]);
+  else drafts()?.put(c.id, { [f]: f === "types" ? t : String(t).replace(/\r/g, "") }, false, { [f]: f === "types" ? v : String(v).replace(/\r/g, "") });
+});
+function open(el, f, text = null) {               // text: a restored draft
   if (cur && !commit(false)) { cur?.ctl.focus(); return; }                // a refused name stays open, to shorten it
+  if (pal) pal.ctl.close(true);
   if (!el.isConnected || !card) return;
+  A.hideTip?.();                                   // its "Click to edit" goes with the data-tip
   const c = card, v = f === "author" ? (c.author || "") : String(A.editor.value(c, f) ?? "");
   const opts = A.editor.options(), list = f === "series" ? opts.series : f === "subseries" ? opts.subseries(c.series) : f === "author" ? opts.authors : [];
   const swap = el.tagName === "A" || el.tagName === "BUTTON";     // a link would still navigate, a button can't hold an input
   let host = el;
   if (swap) { host = document.createElement("span"); host.className = el.className; host.dataset.inline = f; el.replaceWith(host); }
-  cur = { c, f, el, host, html: el.innerHTML, cls: el.className, tip: el.dataset.tip, ctl: null, v };
+  cur = { c, f, el, host, html: el.innerHTML, cls: el.className, tip: el.dataset.tip, ctl: null, v, save: keep(c, f, v), snap: drafts()?.snap(c.id, [f]) };
   if (!swap) { delete el.dataset.tip; if (el.tagName === "P") el.className = "ability"; }   // "No ability text." becomes the text box
-  host.innerHTML = control(f, v, list);
+  host.innerHTML = control(f, text ?? v, list);
   cur.ctl = host.querySelector("input, textarea");
-  cur.ctl.focus(); if (f !== "ability") cur.ctl.select();
+  const save = cur.save; cur.ctl.addEventListener("input", () => save.run());
+  if (text != null) save.run();
+  cur.ctl.focus(); if (f !== "ability" && text == null) cur.ctl.select();
 }
-function cancel(refocus) {
+function cancel(refocus) {                        // Esc, or nothing changed: what was typed goes, an older draft stays as it was
   if (!cur) return;
-  const { el, host, html, cls, tip } = cur; cur = null;
+  const { c, f, el, host, html, cls, tip, save, snap } = cur; cur = null;
+  save.cancel(); drafts()?.back(c.id, snap, [f]); A.hideTip?.();
   if (host !== el) host.replaceWith(el); else { el.innerHTML = html; el.className = cls; if (tip) el.dataset.tip = tip; }
   if (refocus) el.focus();
 }
@@ -110,15 +162,19 @@ function commit(kbd) {                            // kbd: from the keyboard, so 
     if (was.host.isConnected) cur = was;           // the input and its text stay, as in the filter bar
     return false;
   }
+  was.save.cancel(); drafts()?.drop(c.id, [f]);    // in the batch now
   refresh(c, f, kbd);
   return true;
 }
 function refresh(c, f, kbd) {                      // the dialog again (as the form does), scrolled as it was; after a mouse action
   const scroll = A.modal.scrollTop;                // focus stays off (openCard blurs so the shortcuts work), after a key it comes back
+  A.hideTip?.();
+  if (closing) { closing = false; return; }        // the dialog is closing: its click closes it (a redraw now would eat that click)
   A.goCard(c.id); A.modal.scrollTop = scroll;
   if (kbd) A.modal.querySelector(`[data-inline="${f}"]`)?.focus();
 }
-const paint = (row, v) => { [...row.children].forEach((i, n) => i.classList.toggle("on", n < v)); row.setAttribute("aria-valuenow", String(v)); if (row.nextElementSibling?.classList.contains("num")) row.nextElementSibling.textContent = String(v); };
+const paint = (row, v) => { if (row.classList.contains("star-pick")) { paintStars(row, v); return; }
+  [...row.children].forEach((i, n) => i.classList.toggle("on", n < v)); row.setAttribute("aria-valuenow", String(v)); if (row.nextElementSibling?.classList.contains("num")) row.nextElementSibling.textContent = String(v); };
 function setStat(k, v, kbd) { if (!card) return; A.editor.stageField(card.id, k, v); refresh(card, k, kbd); }
 function commitStat(kbd) {
   if (!prov) return;
@@ -127,15 +183,43 @@ function commitStat(kbd) {
 }
 function statKey(row, k, e) {
   const now = +row.getAttribute("aria-valuenow"), v0 = prov?.row === row ? prov.v0 : now;
-  const step = { ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1 }[e.key];
-  const v = step !== undefined ? Math.max(0, Math.min(10, now + step)) : e.key === "Home" ? 0 : e.key === "End" ? 10 : null;
+  const v = stepValue(now, e.key, 10);
   if (v !== null) { e.preventDefault(); e.stopPropagation(); prov = { row, k, v0 }; paint(row, v); return; }
   if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); commitStat(true); return; }
   if (e.key === "Escape" && now !== v0) { e.preventDefault(); e.stopPropagation(); paint(row, v0); prov = null; }   // else Esc closes the dialog, as usual
 }
+// ---- types: the palette under the type row (a row made for it on a card without types)
+const sameTypes = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([...b].sort());
+function openTypes(el, initial = null) {          // initial: a restored draft
+  if (cur && !commit(false)) { cur?.ctl.focus(); return; }
+  if (pal || !card || !el.isConnected) return;
+  A.hideTip?.();
+  const c = card, start = [...(c.types || [])].sort(), vocab = typeVocab(A.icons?.());
+  let row = el, temp = false;
+  if (!el.classList.contains("ctypes")) {          // "+ types"
+    A.modal.querySelector(".detail .facts").insertAdjacentHTML("afterend", `<div class="ctypes editing" data-inline="types"></div>`);
+    row = A.modal.querySelector(".detail .facts").nextElementSibling; temp = true;
+  }
+  const html = row.innerHTML, tip = row.dataset.tip, on = initial ? [...initial].sort() : start;
+  delete row.dataset.tip; row.classList.add("editing");
+  if (initial || temp) row.innerHTML = rowHtml(on, vocab);
+  const p = pal = { c, row, html, tip, temp, save: keep(c, "types", start), ctl: null, snap: drafts()?.snap(c.id, ["types"]) };
+  const done = staged => { pal = null; p.save.cancel(); if (staged) drafts()?.drop(c.id, ["types"]); else drafts()?.back(c.id, p.snap, ["types"]); A.hideTip?.(); };   // not saved: an older draft stays
+  p.ctl = mountPalette(row, { vocab, on, first: start,
+    onChange: list => { row.innerHTML = rowHtml(list, vocab); p.save.run(); },
+    onSave: (list, kbd) => { const ok = !sameTypes(list, start) && A.editor.stageField(c.id, "types", list); done(ok); if (ok) refresh(c, "types", kbd); else putBack(p, kbd); },
+    onCancel: kbd => { done(false); putBack(p, kbd); } });
+  if (initial) p.save.run();
+}
+function putBack(p, kbd) {
+  if (p.temp) p.row.remove(); else { p.row.innerHTML = p.html; p.row.classList.remove("editing"); if (p.tip) p.row.dataset.tip = p.tip; }
+  if (kbd) spot("types")?.focus();
+}
 function onClick(e) {
   if (cur && cur.host.contains(e.target)) return;
-  const cell = e.target.closest(".segs[data-inline] > i");
+  const answerBtn = e.target.closest(".detail .draft-offer [data-draft]");
+  if (answerBtn) { e.preventDefault(); e.stopPropagation(); answer(answerBtn.dataset.draft === "restore"); return; }
+  const cell = e.target.closest(".segs[data-inline] > i, .star-pick > i");
   if (cell) {                                                                // relative to the saved value, not a keyboard change not yet saved
     e.stopPropagation(); const row = cell.parentElement, v = prov?.row === row ? prov.v0 : +row.getAttribute("aria-valuenow"); prov = null;
     setStat(row.dataset.inline, cellValue(v, [...row.children].indexOf(cell) + 1), false); return;
@@ -143,11 +227,14 @@ function onClick(e) {
   const el = e.target.closest("[data-inline]");
   if (!el || !A.modal.contains(el)) return;
   const f = el.dataset.inline;
-  if (f === "name" || STATS.includes(f)) return;                            // the name on double-click, rows by cell or key
+  if (f === "stars" && el.hasAttribute("data-empty")) {                     // "+ stars": the slider, at none
+    e.preventDefault(); e.stopPropagation(); el.outerHTML = starsHtml(0); A.modal.querySelector(".detail .star-pick")?.focus(); return;
+  }
+  if (f === "name" || SLIDERS.includes(f)) return;                          // the name on double-click, rows by cell or key
   if ((f === "ability" || f === "note") && e.target.closest("a, .badge, img")) return;   // links in the text still open the card
   if (e.ctrlKey || e.metaKey || e.shiftKey) return;                          // a chip's link still opens in a new tab
   e.preventDefault(); e.stopPropagation();
-  open(el, f);
+  if (f === "types") openTypes(el); else open(el, f);
 }
 function onDblClick(e) {
   const el = e.target.closest('[data-inline="name"]');
@@ -165,8 +252,8 @@ function onKey(e) {
   const el = e.target.closest?.("[data-inline]");
   if (!el || !A.modal.contains(el)) return;
   const f = el.dataset.inline;
-  if (STATS.includes(f)) { statKey(el, f, e); return; }
-  if (e.key === "Enter" && el.tagName !== "A" && el.tagName !== "BUTTON") { e.preventDefault(); e.stopPropagation(); open(el, f); }   // links and buttons click themselves
+  if (SLIDERS.includes(f) && !el.hasAttribute("data-empty")) { statKey(el, f, e); return; }
+  if ((e.key === "Enter" || (e.key === " " && f === "types")) && el.tagName !== "A" && el.tagName !== "BUTTON") { e.preventDefault(); e.stopPropagation(); if (f === "types") openTypes(el); else open(el, f); }   // links and buttons click themselves; the type row is a button
 }
 function onFocusOut(e) {                          // Tab to another control keeps the focus in the dialog; a click doesn't
   if (!document.hasFocus()) return;               // the window losing focus (alt-tab) leaves the editor open
@@ -279,11 +366,17 @@ function onNameFocusOut(e) {
   if (naming.input.value.trim()) createBucket(false); else closeName(false);
 }
 
+/** More of the api, after install: {hideTip, icons (() => cards.json icons)}. */
+export const extend = more => { Object.assign(A, more); };
 /** Once at boot, before app.js's document listeners: delegated listeners on the modal (editors) and the document (drag,
  *  the filter bar's "New …"). api = {editor, modal, selected (Set of card ids), goCard, rerender, toast}. */
 export function install(api) {
   A = api;
+  const flush = () => { cur?.save.flush(); pal?.save.flush(); };    // closing the tab: the draft now, not in a moment
+  window.addEventListener("pagehide", flush);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flush(); });
   api.modal.addEventListener("pointerdown", () => { pointer = true; });
+  window.addEventListener("pointerdown", e => { closing = !!(cur || pal || prov) && api.modal.contains(e.target) && !!e.target.closest?.('[data-action="close"]'); }, true);   // before the palette's click-away
   api.modal.addEventListener("click", onClick);
   api.modal.addEventListener("dblclick", onDblClick);
   api.modal.addEventListener("keydown", onKey);

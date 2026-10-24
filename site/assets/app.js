@@ -1,18 +1,21 @@
 import { compile, suggest, total, SEARCH_HELP } from "./search.js";
-import { esc, norm, makeRenderer, plain, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
+import { esc, norm, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
 import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
 import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers, shareDialogHtml, personDiscord, personText } from "./profile.js";
 import * as inline from "./inline.js";
 import * as tokens from "./tokens.js";
+import * as palette from "./palette.js";
 import * as details from "./details.js";
+import { tipController } from "./tip.js";
 import * as decks from "./decks.js";
 import * as pick from "./pick.js";
 import * as balance from "./balance.js";
 import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
 import { deckPasses } from "./login.js";
+import { createPreviews } from "./preview.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -51,7 +54,6 @@ const thumbUrl = c => img(c, 360);
 /** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 (or 720) px by screen density */
 const imgAttrs = (c, css, big = false) => `src="${img(c, 360)}" srcset="${img(c, 240)} 240w, ${img(c, 360)} 360w${big ? `, ${img(c, 720)} 720w` : ""}" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
-const ghUrl = p => `https://github.com/${S.data.repo}/blob/main/${urlPath(p)}`;
 const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
 const day = d => (d ? new Date(`${d}T12:00:00Z`).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }) : "");
 const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand" };
@@ -125,6 +127,7 @@ async function init() {
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
   editor.init();                                           // applies staged edits, then derive()
+  previews.init();
   S.decks = D.loadDecks();
   updateDeckCount();
   updatePeopleCount();
@@ -169,16 +172,22 @@ function rerender() {
 const editor = createEditor({
   S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
   openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
+  statBars: c => statBars(c), imageOf: c => thumbUrl(c),   // the form's live preview
   iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
-  users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); },
+  users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
   // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
   view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
   decks: () => loadDecks().then(() => deckList()),         // the published decks (with the pending ones): the publish dialog's "replaces"
+  formOpened: x => previews.mountForm(x),                  // the Edit dialog's image previews
 });
+// image previews in edit mode (preview.js): the mock-up and the rendered dry-run bake, badges on the grid's tiles
+const previews = createPreviews({ S, editor, toast: m => toast(m), loadDetails: c => loadDetails(c), getJson: n => getJson(n),
+  signIn: () => editor.actions["edit-hub"](), badges: () => { if (editing()) previews.mountTiles(view); } });
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;
 inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
 tokens.install({ vocab: () => S.vocab || [], icon: (t, o) => S.renderer?.icon(t, o) ?? null });   // "[" or "(" in card text: suggestions
+palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));   // the type palette ranks as the picker
 let selectAnchor = null;                                 // the last tile toggled: Shift-click selects from it
 function toggleSelect(id, range) {
   if (range && selectAnchor) for (const x of inline.rangeIds(S.list.map(c => c.id), selectAnchor, id)) S.selected.add(x);
@@ -385,6 +394,7 @@ function renderCards(r) {
         : view_ === "table" ? tableHtml(list, p) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}">${list.map((c, i) => tileHtml(c, { eager: i < 8, css: { s: 160, m: 200, l: 270 }[size] || 200 })).join("")}</div>`}
     </section></div>`;
   if (editing()) inline.mountGrid(view, p);
+  if (editing()) previews.mountTiles(view);
 }
 function tableHtml(list, p) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
@@ -470,11 +480,8 @@ function openCard(id, showDetails = false) {
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
         <div class="actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
-          <button type="button" data-action="share" data-id="${c.id}">Share <span class="kbd">s</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
           <button type="button" data-action="edit-card" data-id="${c.id}">${editing() ? "All fields" : "Edit"} <span class="kbd">e</span></button>
-          ${c.png ? `<a class="fact" href="${esc(fullUrl(c))}" target="_blank" rel="noopener">Full image</a>` : ""}
-          ${c.psd ? `<a class="fact" href="${esc(ghUrl(c.psd))}" target="_blank" rel="noopener">PSD on GitHub</a>` : ""}
         </div>
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
@@ -504,6 +511,7 @@ function openCard(id, showDetails = false) {
   const dd = $(".psd-details", modal);
   if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
   if (editing()) inline.mountCard(modal, c);
+  if (editing()) previews.mountCard(modal, c);
 }
 
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card
@@ -931,23 +939,9 @@ const userShare = name => ({ name, url: userUrl(name), person: personAt(name).pe
 const userDiscord = name => personDiscord(userShare(name));
 const userText = name => personText(userShare(name));          // no motto or other profile text
 
-// ---- sharing (same text as the share pages' link previews) -----------------------------------------
-const STAT_LABELS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
-function shareHead(c) {
-  const kind = KIND_LABEL[c.type] || c.type;
-  return [c.stars ? `${c.stars}★ ${kind}` : kind, c.series, c.subseries, c.author ? `by ${c.author}` : ""].filter(Boolean).join(" · ");
-}
-const shareStats = c => STAT_LABELS.filter(([k]) => c[k] != null).map(([k, l]) => `${l} ${c[k]}`).join(" · ");
-const ability = c => plain(c.ability || "").split("\n").map(l => l.trim()).filter(Boolean);
-function shareText(c) {
-  const out = [shareHead(c), shareStats(c), ability(c).join("\n")].filter(Boolean).join("\n");
-  return out.length <= 300 ? out : `${out.slice(0, 297).replace(/\s+\S*$/, "")}…`;
-}
+// ---- sharing ---------------------------------------------------------------------------------------
 const md = s => String(s).replace(/([\\*_~`|[\]])/g, "\\$1");
 const mdLink = c => `[${md(c.name)}](<${shareUrl(c.id)}>)`;          // <…> stops Discord's preview
-function cardDiscord(c) {
-  return [`**${mdLink(c)}** · ${shareHead(c)}`, shareStats(c), ...ability(c).map(l => `> ${md(l)}`)].filter(Boolean).join("\n");
-}
 function deckDiscord(d) {
   const v = D.validate(d, S.byId, S.banned), cards = d.cards.map(id => S.byId.get(id)).filter(Boolean), field = S.byId.get(d.field);
   const build = link => [`**${md(d.name)}** · ${v.count}/${v.slots} cards · ${v.complete ? "✅ legal" : "not legal yet"}`,
@@ -955,33 +949,6 @@ function deckDiscord(d) {
     field ? `**Field:** ${link(field)}` : "", `[Open the hand](${deckUrl(d)})`].filter(Boolean).join("\n");
   const text = build(mdLink);
   return text.length <= 2000 ? text : build(c => md(c.name));        // Discord's limit
-}
-async function copyImage(c) {
-  if (!c?.img || !window.ClipboardItem) { toast("Your browser can't copy images; use Full image"); return; }
-  const blob = new Promise((res, rej) => {
-    const im = new Image(); im.crossOrigin = "anonymous";
-    im.onload = () => { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); cv.toBlob(res, "image/png"); };
-    im.onerror = rej; im.src = img(c, 720);
-  });
-  try { await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]); toast("Copied image"); }
-  catch { toast("Couldn't copy the image"); }
-}
-function openShare(id) {
-  const c = S.byId.get(id);
-  if (!c) return;
-  const url = shareUrl(c.id), text = shareText(c);
-  showDialog(`<h3>Share ${esc(c.name)}</h3>
-    <div class="share-url"><input id="share-url" readonly value="${esc(url)}" aria-label="Card link"><button type="button" class="primary" data-action="copy-link" data-id="${c.id}">Copy link</button></div>
-    <p class="muted">Paste the link in Discord for a preview like this:</p>
-    <div class="embed" style="--c:${esc(c.color || "#3987e5")}"><div class="embed-site">Impossibility Simulator</div><div class="embed-title">${esc(c.name)}</div>
-      <div class="embed-desc">${esc(text).replace(/\n/g, "<br>")}</div>${c.img ? `<img src="${img(c, 360)}" alt="">` : ""}</div>
-    <div class="actions">
-      <button type="button" data-action="share-discord" data-id="${c.id}" title="Name as a link, stats and text, without a preview">Copy as Discord message</button>
-      ${c.img ? `<button type="button" data-action="share-image" data-id="${c.id}">Copy image</button>` : ""}
-      <button type="button" data-action="share-text" data-id="${c.id}">Copy plain text</button>
-      ${navigator.share ? `<button type="button" data-action="share-native" data-id="${c.id}">Share…</button>` : ""}
-    </div>`);
-  $("#share-url").addEventListener("focus", e => e.target.select());
 }
 
 // ---- interactions ----------------------------------------------------------------------------------
@@ -1035,17 +1002,11 @@ const actions = {
   "deck-dup": () => { const d = deck(); D.newDeck(S.decks, `${d.name} (copy)`, d.cards.slice(), d.field); updateDeckCount(); renderDeck(parseHash()); },
   "deck-delete": () => { const d = deck(); if (S.decks.length < 2 || !confirm(`Delete “${d.name}”?`)) return; S.decks = S.decks.filter(x => x !== d); D.saveDecks(S.decks); D.setActive(S.decks[0]); updateDeckCount(); renderDeck(parseHash()); },
   "save-shared": () => { const s = S.shared; D.newDeck(S.decks, s.name, s.cards.filter(id => S.byId.has(id)), s.field); updateDeckCount(); location.hash = "#/deck"; toast("Saved to your decks"); },
-  "copy-link": el => copy(shareUrl(el.dataset.id), "link: paste it in Discord"),
   "copy-user-link": el => copy(userUrl(el.dataset.login), "link: paste it in Discord"),
   "share-user": el => openUserShare(el.dataset.login),
   "share-user-discord": el => copy(userDiscord(el.dataset.login), "person for Discord"),
   "share-user-text": el => copy(userText(el.dataset.login), "person as text"),
   "share-user-native": el => { const name = el.dataset.login; navigator.share({ title: name, text: personText({ ...userShare(name), name: "" }), url: userUrl(name) }).catch(() => {}); },
-  "share": el => openShare(el.dataset.id),
-  "share-discord": el => copy(cardDiscord(S.byId.get(el.dataset.id)), "card for Discord"),
-  "share-text": el => { const c = S.byId.get(el.dataset.id); copy(`${c.name} · ${shareText(c)}`, "card text"); },
-  "share-image": el => copyImage(S.byId.get(el.dataset.id)),
-  "share-native": el => { const c = S.byId.get(el.dataset.id); navigator.share({ title: c.name, text: shareText(c), url: shareUrl(c.id) }).catch(() => {}); },
   "compare-add": el => { const id = el.dataset.id; if (!S.compare.includes(id)) S.compare = [...S.compare, id].slice(-5); toast(`Comparing ${S.compare.length} card${S.compare.length > 1 ? "s" : ""} (Compare is in the toolbar)`); openCard(id); },
   "compare-remove": el => { S.compare = S.compare.filter(x => x !== el.dataset.id); location.hash = `#/compare/${S.compare.join(",")}`; },
   "compare-clear": () => { S.compare = []; location.hash = "#/cards"; },
@@ -1089,7 +1050,7 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (on the Changes tabs: the next tab)"], ["d", "Add to / remove from deck"],
-  ["c", "Copy card link"], ["s", "Share"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+  ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 $("#account").addEventListener("click", () => actions["edit-hub"]());
 
@@ -1109,7 +1070,7 @@ document.addEventListener("keydown", e => {
     if (to && to !== ctab) location.hash = to.getAttribute("href");
     return;
   }
-  const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline]");   // the inline controls are inputs; stat rows take the arrows
+  const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline], .star-pick, .type-palette");   // the inline controls are inputs; stat rows and stars take the arrows
   if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size) { S.selected.clear(); inline.reflect(view, S.selected); } return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === "Enter" && ae?.dataset?.open && (modal.hidden || modal.contains(ae)) && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
@@ -1122,37 +1083,36 @@ document.addEventListener("keydown", e => {
   else if (inCard && (e.key === "ArrowLeft" || e.key === "ArrowRight")) { const link = $(`[data-nav="${e.key === "ArrowLeft" ? "prev" : "next"}"]`, modal); if (link) location.hash = link.getAttribute("href"); }
   else if (inCard && e.key === "d") toggleDeck(id);
   else if (inCard && e.key === "c") copy(shareUrl(id), "link: paste it in Discord");
-  else if (inCard && e.key === "s") openShare(id);
   else if (inCard && e.key === "x") actions["compare-add"]({ dataset: { id } });
   else if (inCard && e.key === "e") { e.preventDefault(); editor.open(id); }
 });
 
-// tooltips: [data-tip] text, [data-v]+[data-l] chart values, card links show a preview
-function hideTip() { tip.hidden = true; }
-document.addEventListener("pointerover", e => {
-  const ref = e.target.closest("a.card-ref, .chart [data-card]"), t = e.target.closest("[data-tip], [data-v]");
-  if (!ref && !t) return;
-  tip.replaceChildren();
-  if (t && t.dataset.v !== undefined) {
+// tooltips: [data-tip] text, [data-v]+[data-l] chart values, card links show a preview; when they go: tip.js
+function fillTip(t) {
+  if (t.dataset.v !== undefined) {
     const v = document.createElement("div"); v.className = "v"; v.textContent = t.dataset.v;
-    const l = document.createElement("div"); l.textContent = t.dataset.l || ""; tip.append(v, l);
-  } else if (ref) {
-    const c = S.byId.get(ref.dataset.card);
-    if (!c) return;
+    const l = document.createElement("div"); l.textContent = t.dataset.l || ""; tip.replaceChildren(v, l);
+  } else if (t.matches("a.card-ref, .chart [data-card]")) {
+    const c = S.byId.get(t.dataset.card);
+    if (!c) return false;
+    tip.replaceChildren();
     if (c.img) { const im = document.createElement("img"); im.src = thumbUrl(c); im.alt = ""; tip.append(im); }
     const n = document.createElement("div"); n.className = "v"; n.textContent = c.name; tip.append(n);
   } else tip.textContent = t.dataset.tip;
-  tip.hidden = false;
-});
+}
+const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
+function hideTip() { tips.hide(); }
+inline.extend({ hideTip, icons: () => S.icons });           // editors hide the tooltip; the type palette's icons
+document.addEventListener("pointerover", e => tips.over(e.target));
 document.addEventListener("pointermove", e => {
-  if (tip.hidden) return;
+  if (!tips.move()) return;
   const r = tip.getBoundingClientRect();
   let x = e.clientX + 14, y = e.clientY + 16;
   if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
   if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
 });
-document.addEventListener("pointerout", e => { if (e.target.closest("[data-tip], [data-v], a.card-ref, .chart [data-card]")) hideTip(); });
+document.addEventListener("pointerout", e => tips.out(e.relatedTarget));
 
 init();
 passes.migrate().catch(() => {});                       // passphrases remembered in plain text before 2026-10-23: sealed now

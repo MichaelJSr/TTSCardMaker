@@ -47,6 +47,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   Commit message: `message || (what.length > 3 ? "Website edits: N changes" : "Website edit: A, B, C")` where what = card/page names (+ "people", "admins"). User may type a custom message.
   After commit: stores sent-ops, clears stage, `save()`, dialog "Published" with commit link `https://github.com/{repo}/commit/{sha}`; site rebuild takes minutes (workflow); bot reads on /update_stats.
 - Files written (paths from `files()` edit.js:32 = defaults overridden by `S.data.files`): `MDW/Card Edits.json` (`editsFile`: JSON `{about, cards:{key:{fields..., _by, _at}}}`, keys sorted, fixed field ORDER, hand-formatted one-line-per-card), `MDW/Card Authors.txt` (`authorsFile`: INI-ish `[people]`/`[cards]` with `# --- credited to X (n) ---` groups), `MDW/Constructed Ban List.txt` (`banFile`: `Group:` headings, `Name - reason` lines), `MDW/Website Admins.txt` (admins, `#` comment lines preserved). Rulebook pages are edited as cards with type "rulebook" (ids from rules.json), their field changes also go into Card Edits.json (not separate files; `ruleFormHtml` edit.js:162 edits name/ability/note).
+- Image previews (2026-10-23, section 22): the Edit dialog's `openForm` calls `app.formOpened({form, card, read, base})`
+  (not for rulebook pages), and the editor's API gains `github(path, opts)` (its `gh`, with the token), `scopes` (the
+  token's classic scopes from sign-in, null for a fine-grained one), `psdOf(id)` (what the PSD prints of each PSD field)
+  and `entryFields(id, op)` (the fields the card's Card Edits.json entry would hold once published). That is all the
+  wiring; preview.js and mockup.js hold the rest.
 - What a new feature would need (all currently private, so edit.js must be extended; smallest change = add to the returned object at edit.js:545):
   (a) `editor.me` (exists). (b) there is no generic "add op" API; stage holds card-edit ops only (`stage.cards[id] = op`, `save()`), and `publish()` builds a fixed set of files. For a Table tab keep a separate stage (own localStorage key) of save-operations, or add `stage.table = []` plus an `edits[F.table] = t => applyTableOps(t, ops)` line in `publish`. (c) publish: export `commitFiles` (edit.js:56) and call `commitFiles({"TTS/Impossibility Simulator.json": oldText => applyOps(JSON.parse(oldText))...}, msg)`; it already needs `token` (closure), so export a function from the editor object, e.g. `commit: commitFiles`, `readFile`, `gh`. (d) fetch latest content: `readFile(path, ref)` returns raw TEXT at `ref` (use branch name or head sha), null on 404; there is no sha helper beyond the head commit sha (`GET git/ref/heads/main`), blob sha is not used. Unauthenticated alternative for read-only viewing: raw.githubusercontent.com (see 5).
   UI helpers reusable: `app.showDialog`, `app.toast`, `renderBar()` pattern (fixed `.edit-bar`), `reviewHtml` pattern (`.review-item`), `describe(op)`.
@@ -87,7 +92,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - Routes (app.js): `#/u/<login>` (view `u`, tab highlight `users`) and `#/users`; `parseHash` recognises the static paths `c/<id>/` and `u/<login>/` (STATIC_PAGES) when the address bar has no hash, `syncUrl` rewrites `#/u/<login>` to `u/<login>/`, and `hashOf(r)` supplies the hash `route()`/`rerender()` need when the URL has none. `data/users.json` loads lazily (`loadUsers`, like rules.json) together with `contributions.json` (section 8). Key `6` = People (the tab was labelled Users until 2026-10-21, a label decision for the owner to confirm; `data-tab`, routes and pages kept their names, so it is one word in index.html to undo).
 - Editor (edit.js): `stage.profiles = {login: profile | null}` (null = remove the file), counted and reviewed with the batch; `openProfile(login)` (own profile, or anyone's for admins; `publish()` refuses a batch holding someone else's profile unless the signed-in user is an admin) goes to the editor page (section 9; until 2026-10-21 a dialog), whose form reads back through `validateProfile`; publish adds `edits["site/profiles/<login>.json"] = t => profileFile({...p, updated: at})` (or `false` to delete: `commitFiles` turns `false` into a tree entry with `sha: null`) to the same single commit; the sent record (`edit-sent`) carries `profiles` too, so the page shows "Publishing…" until the site rebuilds. Public API additions: `profileOf(login)`, `pendingProfiles()`, `profilePage(login)`; `openHub(note, then)` takes a callback now. `app.onAuth()` updates `#account` on sign-in/out; `app.users()`, `app.goUser()` are the other new hooks; the editor page's are `app.view`, `app.route()`, `app.tile(card)`, `app.kinds`, `app.kindOf`, `app.savedDecks()` and `app.goEdit(login)` (section 9).
 - Build (build_site.py): `read_profiles(cards, people)` -> `data/users.json` (`{"users": [...]}`, sorted by login; added to `files`, so hashed into the build version) and `u/<login>/index.html` via `share_page` (the card pages use it too) with Open Graph tags (`profile_text`; image = the favourite card's og.jpg, else og.jpg). Never fails the build: bad file skipped, bad field dropped, each with a `warning:` line; 16 KB cap per file. `data.files.profiles = "site/profiles"`.
-- Avatar, GitHub link, Share, counter (2026-10-21): `avatarHtml(login, px)` / `githubUrl(login)` (profile.js) build `https://avatars.githubusercontent.com/<login>?s=<2×px>` (lazy, `alt="<login> on GitHub"`, no referrer) and `https://github.com/<login>` only when the value passes `LOGIN_RE`, else ""; the login is the profile's (`profile.login`, People row `githubOf(r)`) or the person's `github` from contributions.json (section 8), never profile text or a git name. Person page: 48 px in the `h2.person-name` plus a "GitHub: <login>" fact; People table: 20 px `a.face` before the name (an empty `span.face` keeps the column aligned). The page's Copy link became **Share** (`share-user`): app.js `openUserShare(name)` shows `shareDialogHtml` (profile.js, card share dialog's layout: link + Copy link, the Discord embed with the build's preview text `contributions.json previews[name]`, the favourite card's 360 thumb or og.jpg, Copy as Discord message, Copy plain text, Share… when `navigator.share`); `personDiscord` is the name as a `<…>` link (no preview) + `contribLine` + `cardsLine` (the JS twins of `contrib_text` / `cards_text`, byte-equal on today's build), no motto or pairs, so it carries no link from profile text; Copy plain text and Share… use `personText` (the same without markdown or the link; Share… without the name), not the preview, since the preview holds the motto and Discord auto-links URLs in pasted text; a staged or just-published profile gets a note that the preview is the published page's. `personAt(name)` resolves profile and person as the person page does. Counter: `#people-count` (index.html, the deck counter's `.count`) from cards.json `peopleCount` (build `people_count`, = `peopleRows(...).length`: contributors plus profiles no row takes) at boot, then `rows.length` whenever the table renders (pending profiles included).
+- Avatar, GitHub link, Share, counter (2026-10-21): `avatarHtml(login, px)` / `githubUrl(login)` (profile.js) build `https://avatars.githubusercontent.com/<login>?s=<2×px>` (lazy, `alt="<login> on GitHub"`, no referrer) and `https://github.com/<login>` only when the value passes `LOGIN_RE`, else ""; the login is the profile's (`profile.login`, People row `githubOf(r)`) or the person's `github` from contributions.json (section 8), never profile text or a git name. Person page: 48 px in the `h2.person-name` plus a "GitHub: <login>" fact; People table: 20 px `a.face` before the name (an empty `span.face` keeps the column aligned). The page's Copy link became **Share** (`share-user`): app.js `openUserShare(name)` shows `shareDialogHtml` (profile.js: link + Copy link, the Discord embed with the build's preview text `contributions.json previews[name]`, the favourite card's 360 thumb or og.jpg, Copy as Discord message, Copy plain text, Share… when `navigator.share`); `personDiscord` is the name as a `<…>` link (no preview) + `contribLine` + `cardsLine` (the JS twins of `contrib_text` / `cards_text`, byte-equal on today's build), no motto or pairs, so it carries no link from profile text; Copy plain text and Share… use `personText` (the same without markdown or the link; Share… without the name), not the preview, since the preview holds the motto and Discord auto-links URLs in pasted text; a staged or just-published profile gets a note that the preview is the published page's. `personAt(name)` resolves profile and person as the person page does. Counter: `#people-count` (index.html, the deck counter's `.count`) from cards.json `peopleCount` (build `people_count`, = `peopleRows(...).length`: contributors plus profiles no row takes) at boot, then `rows.length` whenever the table renders (pending profiles included).
 
 ## 8. People: contributions (2026-10-21)
 - Build (build_site.py): one `git log --raw --no-renames --no-abbrev --format=%x01%H%x09%ct%x09%aN%x09%aE%x09%s -- *.png *.PNG *.psd *.PSD 'MDW/Card Edits.json' 'site/Card Edits.json'` in `git_history()` (runs in `HISTORY_REPO`, = REPO; a test wrapper points it at a full-history `--filter=blob:none --no-checkout` clone), parsed once by `parse_history(text)` into `(sha, ts, name, email, subject, [(status, old blob, new blob, path)])` newest first; None in a shallow clone. `image_versions(paths, commits)` consumes the PNG entries exactly as before (same output: checked byte-equal against the previous implementation on the full clone); `contributions(cards, people, profiles, edits, commits)` consumes the rest. Measured on the 547-commit clone: 500 commits in the walk, 1.45 MB of text, 0.1 s; parsing + counting 0.02 s; contributions.json 4.1 KB.
@@ -105,7 +110,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 ## 9. Profile editor page, card picker, Cards panel (2026-10-21)
 - Route `#/u/<login>/edit` (app.js): `parseHash` returns `{name: "u", arg: login, edit: true}` for exactly three segments ending in `edit` (any other extra segment still joins into `arg`); `hashOf` appends `/edit`; `syncUrl` leaves it a hash route (no `u/<login>/` rewrite, so the static page never gets an `edit` folder); the title is "Edit profile", the tab highlight stays on People; `goUser` ignores the edit route when deciding "already there", `goEdit(login)` is its twin for the editor. `renderUser` hands the route to `editor.profilePage(login)`, which renders into `#view`: signed out -> a placeholder plus the sign-in hub whose `then` reopens the editor (while the stored token's sign-in is still running, "Signing in…" and the editor appears when it settles: `init` now re-renders after a failed sign-in too); not own and not admin -> toast and `location.replace` to the person page; else it awaits `users.json` (the "Loading the profile…" placeholder only before its first load), checks it is still the page to show (no newer `profilePage` call, and `S.listHash`, the view's route, unchanged: `location.hash` would be the card's while a card dialog is open above the editor, and `rerender()` under a dialog re-renders `S.listHash`), and builds the form from the in-memory draft (`drafts`, a Map by lowercase login, set while the form differs from the profile, cleared on Add to batch, Cancel and Remove) or from the profile.
 - Form (edit.js `profilePageHtml`): `form#edit-form.edit-form.panel` with `data-login`, ids `pf-*` (the card dialog keeps `ef-*`; both forms share the id `edit-form`, so the dialog's lookups are scoped to `app.modal` and `edit-cancel` takes the modal's form first). Layout `.profile-edit`: form left, `aside.edit-preview` right (sticky) with `profileHtml({..., preview: true})` = the profile section without its buttons and state; one column under 980 px. Card slots `.pslot[data-slot]`: the chosen card's small tile (clicking it opens the card, as anywhere) or an empty `.slot`, Pick (`data-pf-pick`) and Clear (`data-pf-clear`), a hidden `#pf-<slot>` input holding the id. Featured hand: `#pf-deck` hidden input with the share code, `#pf-hand` showing the decoded name and size, buttons per saved hand (`data-hand=<deck id>`, from the `app.savedDecks()` hook; the code is `encode(deck)` at click time, so later deck-builder edits don't follow; an empty hand is disabled), and `#pf-deck-link` where a pasted link or code moves into `#pf-deck` as soon as it decodes (Enter there and in the picker's search box is swallowed, so it never submits the form); text left in the box didn't decode, so `update()` adds "Featured hand: not a deck builder share link" to the summary and Add to batch refuses, while the hand itself (`#pf-deck`, the preview, the draft) stays as it was. The hooks the page uses from app.js: `view`, `route()`, `tile(card)`, `kinds`, `kindOf`, `savedDecks()`, `goEdit(login)`. Pairs: `.frow` rows with a remove button; one blank row when there are none. `readState(form)` -> the `profileState(p)` shape (exported, with `savedHands(decks)`; the one-off node checks exercised them) -> `validateProfile({login, ...state})`; `update()` on every input/change outside the picker writes the summary (`#pf-summary`), the preview, `form.dataset.dirty` (via `sameProfile`, now exported from profile.js) and the draft. Submit stages exactly as before (`stage.profiles[login]`, or deleted when equal to the live file) and `goUser`; Cancel confirms when dirty and `location.replace`s to the person page (the editor leaves no history entry behind); a `beforeunload` prompt fires while any `#edit-form` is dirty (the card dialog included). The hub's Edit profile, the person page's buttons and the review dialog's Edit all go through `openProfile` -> the route.
-- Keyboard (app.js): every single-key shortcut (`/`, `?`, `r`, `1`–`6`, the card keys) is off while any `#edit-form` is on the page (and, since section 10, while a stat row `.segs[data-inline]` or a contenteditable element has focus; the inline controls are inputs, so the old test covers them); Escape still closes a dialog. One exception: Enter on a focused tile (`[data-open]`) opens the card as a click does, form or not, unless a form is in the dialog (the card's All fields form above the page); while a dialog is up only its own tiles do (a page tile under the hub, reached with Tab, doesn't). This also stops shortcuts firing from a focused button inside the card edit dialog, and the card keys (`c`, `s`, `x`, `d`, the arrows) in a card dialog opened from a tile on the editor page, since the page's form stays in the DOM underneath. `actions.close` only treats a form inside the modal as the thing to cancel.
+- Keyboard (app.js): every single-key shortcut (`/`, `?`, `r`, `1`–`6`, the card keys) is off while any `#edit-form` is on the page (and, since section 10, while a stat row `.segs[data-inline]` or a contenteditable element has focus; the inline controls are inputs, so the old test covers them); Escape still closes a dialog. One exception: Enter on a focused tile (`[data-open]`) opens the card as a click does, form or not, unless a form is in the dialog (the card's All fields form above the page); while a dialog is up only its own tiles do (a page tile under the hub, reached with Tab, doesn't). This also stops shortcuts firing from a focused button inside the card edit dialog, and the card keys (`c`, `x`, `d`, the arrows) in a card dialog opened from a tile on the editor page, since the page's form stays in the DOM underneath. `actions.close` only treats a form inside the modal as the thing to cancel.
 - Picker module `assets/pick.js`: `mount(container, {cards, filter, onChoose, placeholder, tile, kinds, kindOf, initial, focus})` (`cards` may be a function, read on each search: the deck builder passes `() => S.cards` so a `derive()` under the open dialog shows; chips are counted at mount; one placeholder, the default, for both) renders a search box (search.js `compile`, 120 ms debounce), kind chips (only kinds present after `filter`, in `kinds` order with counts) and stars chips, and `.grid.picker` of 120 px tiles made by the `tile` callback (app.js `tileHtml(c, {small: true})`) with `data-open` rewritten to `data-choose`, so the document's click listener ignores them; the panel's own listeners (on the element it creates, so re-mounting drops them) choose on click or Enter. `pickList` (pure: filter, query, chips, by name as app.js `sortCards(..., "name")`, capped at `CAP` = 240 with a "narrow the search" note) and `facets` are exported. Item slots pass `filter: c => ITEM_KINDS.has(c.type)`. The module is generic on purpose and the only picker: the deck builder's slot dialog (`openPicker` in app.js) mounts it too, with its tier as `filter` and the Banned flag through `tile`. `mount` also takes `initial` (`{query, kinds, stars}`; chips not shown are dropped) and `focus` (false: leave focus alone); `read(container)` returns that state from the DOM (the typed text even before the debounce), or null.
 - Rebuilds (edit.js `keep()`/`carry`): before `profilePage` replaces the page it reads, from the same login's form in the view, what the draft doesn't hold: the link box's text, and the open picker's slot (`#pf-picker[data-slot]`) and `pick.read` state. The next build of that login restores them (the text stays refused in the summary; the picker reopens with focus only when no dialog is up), so a `rerender()` (a card edit staged from a dialog above, show hidden cards, a Discard in the review dialog) and a sign out and back in keep them. A build of another login drops it, and so does any other page rendering (`renderView` calls `editor.leave()` off the editor route), so signing out, leaving and coming back starts fresh; Add to batch, Cancel and Remove forget it with the draft (`forget(login)`).
 - Cards panel (profile.js `cardsPanelHtml`, after the Contributions panel on every person page with cards, profile or not): `cardsOf(author, cards)` (visible, non-duplicate, not hidden; `cardsBy` counts it; no author -> nothing, so the two author-less image-only cards belong to nobody), `cardFacts(list, {kindOf, kinds, recent})` -> kinds by count (ties in KINDS order), the three biggest series, the newest card by `createdTs` (created, else fs; null when no card has one) and the 24 newest (createdTs desc, then fs, undated last, then name; 2026-10-23, was fs). Chips link to `#/cards?author=…&kind=…`, series to the series filter, "All N cards" to `#/cards?author=…&sort=new`. No "first card" fact (every veteran's first upload is the 2023-11-05/06 import), no stars bar, no most-revised fact.
@@ -119,7 +124,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - Batch bar (`renderBar`, same `#edit-bar`, role=region): collapsed = one `.bar-head` line "✎ N unpublished changes · Goombella: SPD 4 → 5 · …" (N = the lines, one per field; the hub's "Review batch (N)" keeps `count()`, one per card; CSS ellipsis), a ▸ toggle (`edit-bar-toggle`, `aria-expanded`; only when more than 3 lines, otherwise the list is always open), Review and publish, Discard. Open = `.edit-bar.open` (14 px radius, 760 px, 40vh scroll) with `ul.bar-list`: `<a href=#/card/id>Name</a>: SPD 4 → 5 · on the card image` (the marker only for PSD fields, tooltip PSD_TIP; database-only lines carry nothing), ↺ (`edit-revert` with `data-id`/`data-item`, or `data-item=admins|people|profile` + `data-login` for the other kinds, quiet: no dialog) and All fields once per card. People are one line (one revert for the group, as the review dialog has one Discard). The sent-only state is unchanged. The modal (z 50) still covers the bar (z 40), as before: the bar is used from the list views.
 - Selection (app.js): `S.selected` (Set of ids), `toggleSelect(id, range)` from the document click handler when `editing()` and Ctrl/Cmd/Shift is held on a grid tile (Shift = `rangeIds` over `S.list` from the last toggled tile); reflected in place (`inline.reflect`), never a re-render. Cleared on Esc with no dialog open, on sign-out (`onAuth`) and when `renderView` shows anything but the cards list; `renderCards` drops ids no longer in the list, so a drag never carries filtered-out cards. Signing in through the hub calls `app.rerender()` so the grid behind it gets its tiles and drop lists at once (the boot path already did). Drag payload = `dragIds(id, S.selected)` as `text/plain` ids; drop = `stageMany` + clear + `rerender` + toast "3 cards: series → Mario". `dragend` and `drop` both clear `body.dragging-cards` (a dropped tile may be re-rendered away before its dragend).
 - Keyboard: Esc cancels an inline edit (and a keyboard stat change not yet saved) and otherwise closes the dialog; the typing guard counts `isContentEditable` and a focused stat row (`closest(".segs[data-inline]")`; a focused chip or the h2 leaves the shortcuts on); the help dialog's `e` line says "(all fields)" only in edit mode; inline controls are real inputs with aria-labels; the three primitives have keyboard paths except the drag (chips per card cover it).
-- Decisions where the brief was open: drop targets are value chips shown only during a drag, under the two selects (a closed `<select>` can't take a per-value drop; dropping on the select itself would only ever assign the current filter value, useless since the filtered grid hides the cards you would drag); Ctrl/Cmd/Shift-click selection, no per-tile checkbox, table view not draggable; the "No ability text." paragraph is the ability editor's host on cards without text (no new chip); the note is a one-line input (no notes exist today; the form keeps the textarea); long values in bar sentences are clipped at 48 characters; the bar's reverts for admins/people/profiles are quiet (the review dialog's Discard buttons, which reopen it, are untouched). Left out as not agreed: stars, a token picker on "[", tag completion on "(", a type-row palette, rulebook title/text in place, Hidden/ban drop targets (Subseries got one with the buckets below); rulebook pages keep their Edit button.
+- Decisions where the brief was open: drop targets are value chips shown only during a drag, under the two selects (a closed `<select>` can't take a per-value drop; dropping on the select itself would only ever assign the current filter value, useless since the filtered grid hides the cards you would drag); Ctrl/Cmd/Shift-click selection, no per-tile checkbox, table view not draggable; the "No ability text." paragraph is the ability editor's host on cards without text (no new chip); the note is a one-line input (no notes exist today; the form keeps the textarea); long values in bar sentences are clipped at 48 characters; the bar's reverts for admins/people/profiles are quiet (the review dialog's Discard buttons, which reopen it, are untouched). Left out as not agreed: stars, a token picker on "[", tag completion on "(", a type-row palette (stars and the palette since 2026-10-23: section 19), rulebook title/text in place, Hidden/ban drop targets (Subseries got one with the buckets below); rulebook pages keep their Edit button.
 - New series, subseries and authors ("buckets", 2026-10-21; the owner: "in edit mode, we should be able to create new series and subseries and authors and more, to bucket cards into"). Idea 20's rules hold: no new popups or panels, one batch bar, view mode unchanged (signed-out pages rendered byte-identical to main under linkedom, stale buckets in sessionStorage included; the only app.js change is `params: () => parseHash().params` in the `inline.install` api).
   - Scope: only series (`series`, free text), subseries (`subseries`, database only, always inside one series) and author (`[cards]` of Card Authors.txt) get "New …": each is a value many cards share with a filter select and a chip editor. Not hidden/problems_ok/allow_high_stats (yes/no), not the ban list (its groups are star tiers of a rules document, each ban needs its own reason, admin-only, no filter facet: a bulk "banned" would be wrong data; stays in All fields), not kind/item type (rulebook categories: a new one is a rules change), not types/stars/stats (icons, numbers) nor aliases/note/dup_of/creatures (one card each).
   - Creating: `mountGrid` (now in the grid and the table alike; drop lists still grid only) appends to the Series and Author selects `<option value="" data-new-bucket>New series…</option>` / "New author…"; the Subseries select gets "New subseries…" with a series picked, else a disabled "Pick a series to add a subseries"; a picked series without subseries has no Subseries select in the template, so mountGrid inserts the same `<h3>Subseries</h3><select data-action="select-param" data-key="subseries">` after the Series select. A document `change` listener from `install` (registered before app.js's, app.js:985) sees the data-new-bucket option, calls `stopImmediatePropagation` (the filter doesn't change), hides the select and puts `control(key, "", [], true)` after it (`input.inline-fact`, aria-label "New series, Enter to save, Esc to cancel"). Document keydown/focusout listeners on that input: Enter or a focusout with text = `createBucket` → `editor.addBucket(kind, text, series)`; Esc or a focusout with nothing typed puts the select back at its `defaultSelected` option (Esc refocuses it); a focusout while `document.hasFocus()` is false is ignored, like the chip editors. A refused name (too long) keeps the input and its text, after Enter or a click away. Made: the "(no cards yet)" option and the dashed drop chip are added in place, no re-render (the hash untouched, and a click that ended the typing still lands on its tile or chip), toast "New series “X”: drag cards onto it under Series" (subseries: "… of Mario …"; in the table view "…: in Grid view, drag cards onto it"), focus on the select after Enter. Arrowing on a closed select past its last value (Windows and Firefox change the value in place; seen as a change within 150 ms of an arrow key) puts the select back instead of opening the input. No drop-on-"+ New" chip: the drop list only shows during a drag and typing in a drop would need a second state (possible follow-up).
@@ -401,3 +406,260 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   timing-tag, choice and text.js tests fail with tokens.js or text.js as before them; screenshots `15-*` and on.
 - Not done: the font draws wide icons up to 1.4 em, the site fits every icon (and so its variants) in a 1.35 em square,
   as before; the old `.token-bar` buttons stay.
+
+## 21. Editor: the tooltip, a live preview, drafts, stars and types in place (2026-10-23)
+- Owner's requests (2026-10-23 ~18:15-18:45). New logic in five DOM-free modules (pure helpers, plus a few that take an
+  element); edit.js, inline.js and app.js only wire them. AutoCroissant `tests/test_site_editor.py` runs them in node.
+- **The stuck tooltip** (`assets/tip.js`). Cause: app.js hid the tooltip only on a pointerout from an element that still
+  had a tooltip; opening an inline editor deletes the host's `data-tip` (inline.js `open`), so leaving through its
+  textarea never hid it, and a re-render under the pointer removed the element it belonged to. Now `tipController` keeps
+  the element the tooltip is for: it goes when the pointer leaves that element (pointerout's relatedTarget outside it),
+  when the element left the page or lost its tooltip (checked on each pointermove), and on `hideTip()` from code
+  (inline.js calls it when an editor opens, closes or commits, and before the dialog re-renders). Every place that
+  removes or changes `data-tip` is inline.js (`open` deletes it, `cancel` puts it back, `mountCard`, the palette);
+  app.js's `fillTip` is the old pointerover body, unchanged in what it shows. app.js hands inline.js `hideTip` and the icons
+  through `inline.extend` (kept off the lines the picker and previews branches change, so their merges stay clean).
+- **Live preview** (`assets/live.js`) in the Edit dialog (All fields): the card as it will look once the batch is published,
+  redrawn on every input from `readForm`'s op over the published card (`baseOf`: unset fields as their PSD values,
+  `previewCard`), nothing staged. Shown: the current card image (`data-preview-image`, the slot an image mock-up can
+  draw over), name, kind, item type, stars, series, subseries, author, Hidden, "PSD pending: …" (the printed fields that
+  will differ from the PSD, as build_site `apply_edits` computes it: a creatures split adds none), types, stat bars (app.js
+  `statBars`), the text with icons and badges (the card renderer), the note, aliases; changed blocks get an accent
+  outline. Its links are inert (tabindex -1, no pointer events) so the form isn't left by accident. Layout decision:
+  a pane beside the form, not the page behind the dialog (the form replaces the card dialog in the same modal, and on a
+  phone a page behind it would be covered anyway). Wide screens (over 1000 px): the dialog widens to 1260 px, the pane is
+  the right column (300-400 px), sticky at the top of the scroll. Narrow screens: the form is one column and the pane is a
+  "Preview" bar pinned at the top of the dialog (a button, `aria-expanded`), closed by default, remembered while the page
+  is open; opened it shows up to 36vh of preview (no image, to save room) and `scroll-padding-top` keeps the field being
+  typed in below it; the pane scrolls to the block of the field being typed in (`reveal`, `blockOf`). Rulebook pages keep
+  their form without the pane (their text preview under the textarea stays).
+- **Drafts** (`assets/drafts.js`): what is typed in the Edit dialog or an inline editor, before it goes into the batch, is
+  saved 400 ms after the last key (and at once on `pagehide` or a hidden tab) to localStorage `edit-drafts`:
+  `{<card id>: {at, fields: {<field>: value}}}`, the card id being the batch's key (`stage.cards`), field values as the
+  form's inputs hold them (text, a checkbox's boolean, the sorted type names, creature rows of text; the ban row as
+  `banned`, `ban-group`, `ban-reason`). The Edit dialog writes its changed inputs as the card's whole draft (`changed`
+  against how it opened); an inline editor writes its one field into it; the type palette writes `types`. Each field
+  also keeps `base`, the value the card showed when it was typed (`{at, fields, base}`).
+  "Restore your unsaved edit? Ability, HP · 5 min ago [Restore] [Discard]" shows over the card (edit mode) and at the top
+  of the Edit dialog (Restore focused, so a stray key can't throw it away) when a draft holds a field the card doesn't
+  show that way now (`restorable`: text compared trimmed, without \r; so a draft equal to the batch is never offered, and
+  is dropped). Restore on the card: one text field opens its inline editor with the text, `types` opens the palette, more
+  open All fields filled in (`editor.open(id, {draft})`). A draft is lost only by a save, a discard or a publish (review
+  of 2026-10-23: clicking the ability box over an offer and pressing Esc, or clicking off, dropped the crash's ability
+  text; one key in the dialog's Note replaced a 5-hour-old draft): every editor takes `snap` of the draft when it opens
+  and puts it back with `back` when it closes without saving (an inline Esc or a click off with nothing changed, the
+  palette's Esc or Cancel, the dialog's Cancel or Esc), whatever was typed meanwhile, so Esc after Restore keeps the
+  draft too; typing in the dialog over an unanswered offer joins the older draft (the offer stays). The offer says
+  "Ability changed on the card since." when a field's `base` isn't what the card shows now (a newer publish or batch
+  edit; `movedSince`), and lists the fields in the form's order. Cleared: Add to batch, an inline commit or palette
+  save that staged (those fields), the offer's Discard, the batch's Discard (that card) and Discard all, and Publish
+  (the published cards). Not cleared by Sign out (the batch isn't either). On a screen of 820 px or less the card
+  page's offer floats at the bottom of the screen until answered (the card image fills the first screen there).
+- **Stars in place** (`assets/stars.js`): in edit mode the stars chip becomes a slider of 10 stars (`role=slider`,
+  `aria-valuenow`/`valuetext`, the `.fact` look; hover lights the stars a click would set): click a star to set the count
+  (the top lit one again sets one less, so 0 is reachable, as the stat cells), arrows, Home, End, Enter to save, Esc to undo
+  a keyboard change, a click away saves it; it runs on inline.js's stat-row code (`SLIDERS`, `prov`). A card without stars
+  (buffs, auxiliary creatures) gets "+ stars". Over 10: "Use All fields".
+- **Types in place** (`assets/palette.js`): the type row (`role=button`, tabindex 0, Enter or Space) or "+ types" opens a palette under it:
+  a search box (focused) and chips of every type icon with its name (`aria-pressed`), the card's types first. Typing
+  narrows it (name or alias exactly, name prefix, alias prefix, then 2+ letters inside a name or alias: the token picker's
+  ranking); Enter in the box toggles the first match and clears it, so "fir Enter wat Enter" adds two; Enter on an empty
+  box, Ctrl+Enter, Save or a click or tap away save; Esc or Cancel put the row back; arrows move between chips. The row
+  shows the choice as it changes. Saved through `stageField(id, "types", sorted list)`, so the same set in another order is
+  no edit. Vocabulary: cards.json `icons` of kind "type" (35 icons, with aliases). The search is the token picker's
+  (section 20, `assets/tokens.js`): `palette.useSearch(fn)` swaps the search (fn(vocab, q) -> entries best first),
+  `palette.pickerSearch(suggest, all)` is the adapter (the picker's plain type rows, mapped back to the palette's
+  entries), and app.js switches it in one line after `tokens.install`:
+  `palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));` (without it, `findTypes`). The
+  classes are `pal-*` (the picker's are `tp-*`). Against `findTypes`: the same results for 202 of 211 queries; the rest
+  are the picker's extras, a slip ("frie", "watr") and the most used first on a tie ("fi": fire, field). In the light
+  theme the type icons (palette chips and type rows) get a thin dark outline: "light" and "lightshadow" are white. A
+  press on the card dialog's close button while the palette, an inline editor or a keyboard stars change is open saves
+  it and closes the dialog in one click (inline.js `closing`: the save skips its redraw, which ate the click). Typing the token picker's "[" in the
+  ability box and the note works with drafts and both previews: its choice goes in through an `input` event.
+- Checks: AutoCroissant `tests/test_site_editor.py` (13, AC_SITE_SRC; each fails with its logic reverted: a scratch
+  mutation run caught 13 of 13), the site tests (70 with this tree). Headless Chrome (Chrome for Testing 156) on a
+  scratch build with a fake GitHub API, harnesses in ~/Documents/Tools/wt/scratch/site2-editor/: `tooltip.mjs` 6/6 here,
+  2/6 on main's build (the tooltip stays through the click away), and `editor_ui.mjs` 61/61 (signed-out view untouched,
+  stars by click and keys, the palette by click, search, Enter, Esc, a click away and "+ types", drafts across a reload of
+  an inline field and of the dialog, the offer in both places, never offering what the batch has, Esc and Cancel, Publish
+  clearing the published cards' drafts, the preview following name, HP, types and text with "PSD pending", the mobile bar,
+  no page errors). Screenshots: ~/Documents/Tools/wt/scratch/site2/shots/editor-*.png.
+
+## 22. Image previews in edit mode: the mock-up and the rendered preview (2026-10-23)
+- Owner's asks (2026-10-23 ~18:15-18:45): see an edit on the card image while making it, three ways: a live card page
+  (section 21), a **quick mock-up** (the new text and numbers drawn over the card image in the browser, instant,
+  labelled as a mock-up) and a **rendered** image ("press preview image to dry run bake a card, work on another card, and
+  then go back to the first to see the preview"). The server side of the rendered one is section 19
+  (card-preview.yml, AutoCroissant commands/card_preview.py); this is the
+  website's side.
+- Modules: `assets/mockup.js` (pure helpers, then `draw`) and `assets/preview.js` (pure helpers, then `createPreviews(app)`,
+  the panel, the store and the background check). Both DOM-free at import. Wiring only elsewhere: app.js imports
+  `createPreviews`, makes `previews` after the editor (`badges()` re-marks the grid), calls `previews.init()` after
+  `editor.init()`, `previews.mountTiles(view)` after `inline.mountGrid`, `previews.mountCard(modal, c)` after
+  `inline.mountCard`, `previews.onAuth()` in `onAuth`, and passes `formOpened` to the editor; edit.js as in section 3.
+  Everything is gated on `editing()` / `editor.me`: a signed-out page is unchanged. CSS: the `.pv-*` block at the end of
+  style.css (theme variables; the ribbon and the grid badge use fixed colours like `.tile .flag`).
+- **The panel** ("Image with your edit", `section.pv-panel`): on the card page under the image and its ← → links, for a
+  card whose PSD fields aren't what the PSD prints (`changedOf`: published-not-baked or staged) or that has previews; in
+  the Edit dialog floated beside the "On the card image" fields (`.pv-in-form`; above them, centred and at most 360 px
+  wide, from 1001 to 1240 px where the live pane takes the right column, so the fields keep their width; full width
+  under 640 px). Two buttons
+  (`.seg`, `aria-pressed`): Mock-up and Rendered; the card page opens on Rendered when a result is waiting, else Mock-up.
+  "Preview image" is on both (on Mock-up under the drawing). Keyboard: all plain buttons and links.
+- **Mock-up** (`mockup.draw(canvas, {card, src, rec, edit, psd, icons, getFonts, raw, onFont, stale})`): the card's 720 px
+  thumb (same origin, so the canvas can read it) drawn off-screen and copied when done (a newer draw drops an older one);
+  only the fields unlike the PSD are redrawn (`changes`): name, text, stats; stars, types and stats above 10 are named in
+  the caption ("Not drawn: stars."), never drawn.
+  - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the area
+    is the card template's (`TEMPLATES`, fractions of the image measured on the PSDs' layer boxes on 2026-10-23: `tall`
+    1200x2400 creatures and minions, whose stat bars sit at (0.3, 0.5, 0.978, 0.535) + 0.0525 a row on 311 of the 390
+    cards with digit rows; `item` 1200x1800 with the totems' two rows at 0.624; `square` 1200x1200 status effects; the
+    1080x1920 rulebook pages get none): `textArea`, the card's full width, from a little above the template's text
+    (0.06 of the height on tall cards, 0.04 on others) but below the card's stat rows (the rows `isBar` sees, else the
+    template's for the stats the card has), to the bottom; the name's is the template's name box. In it, the block of
+    lines that holds the old text: `textBlocks` (rows and columns of sharp edges; hysteresis, so a short last line joins
+    its paragraph; paragraphs are clusters of rows, lines split at quiet rows; size from the line pitch, `LINE` = 1.22
+    ems; "left" or "center" from the lines' edges) gives every run of up to 12 neighbouring paragraphs that reaches the
+    template's rows, at edge strengths 40, 80 and 130 and two seed strengths (art merges with text at the soft ones, a
+    short line seeds a block only at the low one); `calibrate` measures the old text (`tokenize`d, in the card's font)
+    against each: k = the block's lines' total width / the old text's width on one line at the block's size, and the
+    old text wrapped at the block's width makes about as many lines (within one, or 30%); one line: its size from its
+    width (k 0.6-3; its run of rows at least 0.3 em); `lineLike`: no line over 2.2 times the usual height or 2.6 times
+    the lowest (art read as a line), three lines in four sharing a centre (a tenth of the width) or a left edge (a
+    twentieth); a name: words join within 1.2 line heights (not 4: the stars beside it stay out), one or two lines, as
+    many as the old name wraps to. `bestBlock` keeps the one that fits with the most edge mass. A record with
+    `text[].box` (canvas px) is the area instead (`recordBox`): adding `layer.bbox` to psd_details' text entries would
+    make the mock-up exact (a bot follow-up, not done). An ability layer whose first run is in stoogedings (the text
+    starts with a badge) takes the layer's other font from `rec.fonts` (`layerOf`).
+  - No block holds the old text (text over busy art, a stylised name, an upside-down card): the new text goes in a
+    dark box over the whole area (to the card's edges, opaque, dashed border), so the old text is covered, never half
+    there; the caption says "Text in a box: its place on the image wasn't found." (`out.boxed`).
+  - Erase: the block's lines (a centred block's made even about its centre: `eraseLines`, a line read short past a dim
+    word still goes) plus `strayLines`, lines next to the block it left out (a header in another size or colour, a dim
+    last line: within 1.6 pitches, in its columns, edges per em at least 0.3 of its lines' at edge 25, up to 2.4 line
+    heights and 1.8 of its tallest, lined up with it, no wider than it nor across the card, and not a stat bar:
+    `barLike`, two long straight borders across the band; up to four each way; none for a name). In those lines only,
+    pixels at a sharp edge (25: dim words too), with gaps up to 1.2 em on a row filled (a badge's pill, the image's edge
+    counting as an edge) and dilated by 0.14 em, take the mean colour of the unmasked pixels around them (cells of 0.8
+    em, empty cells from their neighbours, bilinear), so the art keeps its texture outside the letters. The new text's
+    fill and outline are read from the old text's pixels on the way (`textColours`: the brightest on a dark background,
+    the darkest as the outline when darker than it), else the record's colour; one colour (the card's coloured words
+    aren't kept).
+  - Text: `tokenize` (an icon token the site knows is an icon, `:no` crossed out; a timing tag text.js knows is a badge,
+    any case, drawn as its pill in the site's colours; another bracket or parenthesis stays text; no break inside
+    "[ice]."), `layout` / `fit` at the calibrated size and the old line pitch, from the old first line down (a PSD's
+    text grows downwards), at the old width (one old line: the area's, about its centre); shrunk to 40% when it would
+    run past the area's bottom, and then the caption says "The text runs past its place on the card." A name keeps
+    its line count and stays within the room about its centre. Stats: `barRows` (template rows, only for stats the
+    details call "template") checked with `isBar` (ten cells with sharp borders, else "Not drawn: HP"), then
+    `cellPlan`: a cell lights as the last lit one (the rounded first cell: its colour) and darkens as the first dark one
+    (none or the rounded last: a shade).
+  - Measured (scratch bench, ~/Documents/Tools/wt/scratch/site2r3/bench-run.mjs: " Burns [fire]." added to the
+    ability, current image left, mock-up right): the review's 16 cards plus alex-yiik, crock-pot, fragile-strength,
+    flameblade and the cursed idol: 21 placed, 1 boxed (tainted-lazarus, upside down), none with both versions of a
+    line showing; a fresh random 21: all placed, two with a faint ghost of a few letters (fuzzy-horde, grodus-x); the
+    old version showed both versions or erased bars or art on 8 of 17. Names (12 cards): 9 placed with the stars
+    untouched, 3 boxed (stylised names in fonts the site doesn't have). Sheets: shots `r3-g06-*`, `r3-g07-*`,
+    `r3-g08-mock-names.png`.
+  - Fonts: `data/fonts.json` (build_site `web_fonts`): `{"fonts": {PSD font name: {file, bytes}}}` for the fonts the
+    details records' text layers name, as font_check decides them (a face with exactly that PostScript name, the first
+    file by path; since AutoCroissant 89039eb, 2026-10-23, no aliases or loose matches, and the build follows:
+    `FONT_NAMES_VERSION` 2); `font_faces` reads the name table without fontTools and equals font_check.face_names on all
+    of MDW/Fonts; only .ttf / .otf up to 8 MB (a collection holds several faces); names cached by blob sha in
+    `site/.cache/fonts.json` (CI downloads a font only when its blob is new, 8 at a time, like the PNGs). 131 of the 137
+    PSD fonts on the evening's build. The browser loads one
+    as a `FontFace` from raw.githubusercontent.com when first drawn (60 ms for a loaded one, else drawn in a stand-in and
+    redrawn when it arrives); the caption names a stand-in, and a role whose record names no font ("Stand-in font for the
+    name (the card's isn't known)": 266 of 818 records have no name layer). The last 24 images used stay decoded.
+  - Label: a "Mock-up" ribbon on the image and the caption "Mock-up: the real image comes from the bake".
+- **Rendered** (`createPreviews`): the Action's side is one adapter, `CONTRACT` (workflow, ref, branch, inputs, paths).
+  - Start: `GET .../actions/workflows/card-preview.yml` (404: "isn't set up on the card repo yet"), then
+    `POST .../dispatches` with `{ref: "main", inputs: {card: c.key, edit: JSON.stringify(edit), request}}`. `edit` =
+    `entryEdit(editor.entryFields(id, op), get)`: every PSD-kind field of the card's Card Edits.json entry as Publish
+    would leave it (built + published-not-built + the batch's op, or the open form's), plus `creatures` when it holds
+    several, in the edits file's shapes; at most 16 KB as card_preview counts it (UTF-8 bytes: `editBytes`). In the Edit dialog the form's values go, saved to the batch or
+    not. `request` = `<login>-<time base 36>-<4 random>` (`newRequest`; the Action takes 8-64 of A-Z a-z 0-9 -).
+  - Token: a classic token needs the repo scope for the dispatch (GitHub's docs; the sign-in accepts public_repo), a
+    fine-grained one Actions: Read and write. A 403/404 says so (`startProblem`: "Your token has only the public_repo
+    scope" when the sign-in's scopes say so, else "can't start Actions"); a public_repo-only token also gets a note under
+    the button before anyone presses it. 401: sign in again; 422: GitHub's message; no network: try again.
+  - Store: localStorage `card-previews` = `{card id: [entry, newest first]}`, the last `KEEP` (3) per card, entry =
+    `{card, key, name, request, edit, hash, base: {ts, img} at the dispatch, at, state, result?, run?, seen?}`;
+    `readStore` drops anything malformed; another tab's writes arrive through the `storage` event.
+  - Background check: while any entry is running and someone is signed in, from any page, at the contract's pace
+    (`pollDelay`: every 10 s while one started under 3 minutes ago, then every 30 s), `GET .../contents/previews/
+    <request>/result.json?ref=previews` (raw, through the editor's `gh`: never raw.githubusercontent, which caches a 404);
+    404 = not yet. Also the run, by `display_title` containing the request (the workflow's run-name "Card preview
+    <request>"), for a link, and an error when it ended without a result (seen twice). Only a check that finds nothing
+    times an entry out (`missed`: past `MAX_WAIT_MS`, 16 minutes, or its own wait: "No result yet" with Check again,
+    10 more minutes, and Preview again; past a day it never comes: expired), so a result that came while the site was
+    closed is found on the next load (the review's case: press, close the laptop, come back 25 minutes later); the
+    first round after a load or a sign-in also looks once at the timed-out ones (`due`). One tab checks for all
+    (`takeLock`: localStorage `card-previews-poll` = `{tab, until}`, 75 s, given up on `pagehide`); the others see the
+    results through the `storage` event. A round's results make one toast, in the tab you're looking at ("Preview
+    ready: Abbi", "Previews finished: Abbi, Acro and Poison"; `finished`, `finishedToast`, 400 ms to gather the
+    storage events). Signed out, no timer runs; signing in starts it. Several cards run side by side.
+  - Expiry: the previews branch keeps a preview about a week (rewritten past 200 previews or 7 days). `expire` makes a
+    result or timeout older than 6 days "expired" (no image, no badge: "Its image is gone: previews are kept about a
+    week." with Preview again) and drops entries older than 30 days; the preview image's 404 more than a day after the
+    press does the same (the contract's rule). A card whose only previews are expired and that has no PSD change gets
+    no panel.
+  - Result: `readResult` keeps state, transient, reason, notes (20, 500 characters), fields, changes, base, image,
+    files (`preview.webp` / `preview.png` names only) and the run (a github.com link only); anything else is a transient
+    error. Baked: Current (the 720 px thumb) beside the preview (preview.webp, 720 px; Full size = preview.png when `files` lists one: since work/card-preview 7646a3cc it never does), Diff
+    (`diffPixels`: changed pixels red over the dimmed current, with the share), each field's outcome ("HP baked · Stars
+    refused") and the notes. Redundant: "Already on the card". Refused: the reason, with the bake's render when
+    `image` is "refused". Baked without an image file: "The bake drew it, but no image came with the result." with the
+    outcomes (not an error). Error: an `input:` reason is "a website bug", a transient one "try again"; when the edit
+    changed since, "Out of date" with Preview again instead of Try again (which would send the newer edit). Every string
+    through `esc()`. "Earlier:" previews are chips (bordered, the shown one pressed).
+  - Badge: a tile gets "Preview" (`.pv-badge`, under the flag) while its card's newest preview has a result not yet
+    seen (`hasNews`); the panel's heading says "New"; showing the Rendered tab on the card page marks it seen. A start
+    that failed at once is seen already.
+  - Out of date (`staleWhy`): the edit the site would send now hashes differently (`hashOf` over `canonical`: sorted
+    keys, sorted types), or the card's image moved (the result's `base.png_blob` against cards.json `img`, its first 16
+    hex digits; before a result, the card's `ts` and `img` at the dispatch): "Out of date: the edit changed since" with
+    Preview again. Kept, not dropped: the last three stay listed under "Earlier:".
+  - The server contract's suggestions not followed: the request id above instead of `crypto.randomUUID()` (both fit);
+    `card-previews` with three per card instead of `edit-previews` with one; index.json (another device's previews) not
+    read yet. (Polling follows the contract since the 2026-10-23 review: until then every 15 s up to 20 minutes.)
+  - Between Publish and the site's rebuild the PSD values come from the built card (edit.js `psdVal` reads `pristine`),
+    so a newly published PSD field still counts as one the image doesn't show yet: the mock-up and Preview image stay
+    (they read the published-not-built card as printed before). Open panels are forgotten as soon as they leave the
+    page (`prune` on every mount).
+- Checks (2026-10-23): AutoCroissant `tests/test_site_previews.py` (19 tests on preview.js and mockup.js in node and on
+  build_site's font names: the entry edit, hashes, request ids, result.json, the store, staleness, badges, start
+  messages, the panel per state, the diff, text found on drawn pixels with a weak line, erase, wrapping and fitting,
+  stat cells and bars, the record's boxes, font names equal to fontTools' on all of MDW/Fonts, the font map and its
+  cache); 21 mutations of the new code each fail one. In a real browser (Chrome for Testing 156 headless over the
+  DevTools protocol, GitHub's API and raw files faked; a scratch harness, not kept): sign-in, the mock-up following the
+  form in the card's font (FOT Pop Happiness on Mini Doomer), the dispatch's inputs, two previews running at once,
+  badges on two tiles, side by side and the diff, a refusal, out of date after an edit, light and dark, 375 px (nothing
+  wider than the screen), the Action missing, a token that can't start Actions. Screenshots:
+  `~/Documents/Tools/wt/scratch/site2/shots/previews-*.png`. Not run: a live dispatch (card-preview.yml must be on main).
+- Merged with section 21 on branch work/site-round-2 (2026-10-23). The Edit dialog over 1000 px: the fields, this panel
+  floated beside "On the card image", and the live pane on the right (its small image is the current one, as the
+  published page shows it until the bake); at 1000 px and below the pane is the bar at the top and this panel stays in
+  the form. Restore in the form's draft offer now fires the form's `input` event, so this panel redraws as for a key
+  (it kept the old values until the next one). Inline stars, types and text stage PSD fields, so the card page's panel
+  comes as soon as one is staged. The server contract as of work/card-preview 7646a3cc: only the WebP is published (no
+  Full size link then), and a previewed edit is public, so the panel says "Anyone can see a previewed edit, as with a
+  published one" before the first press. Fonts renamed on main (b03b9975) still map: 130 of 137 PSD fonts. Checks:
+  scratch `~/Documents/Tools/wt/scratch/site-round-2/integ.mjs` 34/34 in headless Chrome (every feature of sections
+  19 and 20 and where they meet; screenshots `round2-*.png`); `trial.mjs` 15/15 on a trial merge with work/token-picker
+  8d605085 and the palette switch line (the picker in the dialog and the inline editor with drafts, the live pane and
+  the mock-up; the palette with its search); the AutoCroissant site tests.
+- Review fixes (2026-10-23 evening, after merging main's picker and card previews): the mock-up's block search,
+  stray lines, badges and box (above); drafts that survive an editor closed without saving (section 21); results
+  found after the site was closed, expiry, one checking tab, one toast a round, the contract's pace; baked without a
+  file; an error's Try again when the edit changed; UTF-8 size; psdVal after Publish; the close button; the type row
+  as a button; the phone offer, the 1001-1240 px dialog, light-theme type icons. Checks: AutoCroissant
+  `tests/test_site_previews.py` (27) and `tests/test_site_editor.py` (16), the twelve new or changed ones failing on the
+  code before; all 179 site, picker, card-preview and font_check tests with this tree. In headless Chrome (scratch ~/Documents/Tools/wt/scratch/site2r3/:
+  `integ/integ.mjs` 34/34 and `integ/trial.mjs` 15/15 on the merged tree; the review's probes rerun in `h/`): an
+  offered draft kept through Esc, a click off and a dialog's Esc; typing over the dialog's offer joins it; Esc after
+  Restore keeps it; a 25-minute-old running preview found baked on load with its badge (1 request); an 8-day-old one
+  expired with no panel, a 2-day-old one whose image 404s expired; two tabs: one checks (8 requests for 2 previews in
+  33 s), one toast each; close while the palette is open: saved and closed in one click; 1024 px dialog: the Name
+  input 362 px (128 before), 9 type columns. Screenshots `~/Documents/Tools/wt/scratch/site2/shots/r3-*.png`.
