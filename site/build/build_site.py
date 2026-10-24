@@ -2063,7 +2063,8 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
           cards: [{key, name, id?, fields: {field: [old, new]}}], authors: [{key, name, id?, from, to}],
           people: [[git name, from, to]], more?: lines past BATCH_LINES}]}
     fields_by: filled with {credited name: {field: lines}} over every line (BATCH_LINES doesn't cut it; a Card Authors.txt
-    line is "author"); Discord names and the bot left out.
+    line is "author", but not in the commit that created the file: 813 imported credits); Discord names and the bot
+    left out.
     """
     def card(key, name):
         row = {"key": name or key, "name": name_of(name or key)}       # name: as written, when the site lacks the card
@@ -2135,7 +2136,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
         stamps = sorted({shown(by) for _, _, _, by in cards if by and str(by).lower() != BOT_AUTHOR.lower()}, key=str.lower)
         named = {shown(e, discord) for e in editors}   # in a Discord commit every Edit-by is a Discord name
         by = stamps or sorted(named, key=str.lower) or [who(name, email, people, by_login)]
-        tally(by, [f for _, _, fields, _ in cards for f in fields] + ["author"] * len(authors))
+        tally(by, [f for _, _, fields, _ in cards for f in fields] + ["author"] * (len(authors) if before["a"] else 0))   # the file's creation: an import
         row = {"sha": sha, "at": ts, "subject": subject, "by": by,
                "via": "discord" if discord else "website" if subject.startswith(WEBSITE_SUBJECT) else "git",
                "cards": [{**card(key, written), "fields": fields} for key, written, fields, _ in cards[:BATCH_LINES]],

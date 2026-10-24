@@ -116,7 +116,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   cards, `worst` the rest), `selfBias`/`rater`/`powerVsStats` (P5/P7/P8: only for a person with entries of their own,
   never "group"; correlations at `MIN_RATERS = 5` cards, P5 at 3), `editFields` (P21: `edit_batches(..., fields_by=)`
   counts every changed field of every batch they are credited with, all time, before the `BATCH_LINES` cut, a Card
-  Authors.txt line as `author`; plus `rating` = their website ratings), `archived` (P17: `archived_cards` rows with
+  Authors.txt line as `author`, not in the commit that created that file, an import of 813 credits; plus `rating` = their website ratings), `archived` (P17: `archived_cards` rows with
   their `author`, slim `ARCHIVED_PERSON` fields, newest first). Top level `site: {z}` = the mean `z_total`. Who made a
   change row (`change_by`): the commit that added or changed a PSD at its second (`psd_commits_at`, credited by
   `commit_keys`); with two, the one with the card's PSD file name; else nobody. main() calls `edit_batches` once for all
