@@ -1,4 +1,4 @@
-# Website notes (2026-10-20, sections 7-12 added 2026-10-21, 13, 14 and the (Action) tag on 2026-10-22, 16-18 on 2026-10-23)
+# Website notes (2026-10-20, sections 7-12 added 2026-10-21, 13, 14 and the (Action) tag on 2026-10-22, 16-19 on 2026-10-23)
 
 Architecture notes on site/ taken while planning the (since reverted) Table tab; line numbers are as of that day. The
 hand-kept files have since moved from MDW/ to site/ (Card Authors.txt, Card Edits.json, Website Admins.txt,
@@ -119,7 +119,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - Batch bar (`renderBar`, same `#edit-bar`, role=region): collapsed = one `.bar-head` line "✎ N unpublished changes · Goombella: SPD 4 → 5 · …" (N = the lines, one per field; the hub's "Review batch (N)" keeps `count()`, one per card; CSS ellipsis), a ▸ toggle (`edit-bar-toggle`, `aria-expanded`; only when more than 3 lines, otherwise the list is always open), Review and publish, Discard. Open = `.edit-bar.open` (14 px radius, 760 px, 40vh scroll) with `ul.bar-list`: `<a href=#/card/id>Name</a>: SPD 4 → 5 · on the card image` (the marker only for PSD fields, tooltip PSD_TIP; database-only lines carry nothing), ↺ (`edit-revert` with `data-id`/`data-item`, or `data-item=admins|people|profile` + `data-login` for the other kinds, quiet: no dialog) and All fields once per card. People are one line (one revert for the group, as the review dialog has one Discard). The sent-only state is unchanged. The modal (z 50) still covers the bar (z 40), as before: the bar is used from the list views.
 - Selection (app.js): `S.selected` (Set of ids), `toggleSelect(id, range)` from the document click handler when `editing()` and Ctrl/Cmd/Shift is held on a grid tile (Shift = `rangeIds` over `S.list` from the last toggled tile); reflected in place (`inline.reflect`), never a re-render. Cleared on Esc with no dialog open, on sign-out (`onAuth`) and when `renderView` shows anything but the cards list; `renderCards` drops ids no longer in the list, so a drag never carries filtered-out cards. Signing in through the hub calls `app.rerender()` so the grid behind it gets its tiles and drop lists at once (the boot path already did). Drag payload = `dragIds(id, S.selected)` as `text/plain` ids; drop = `stageMany` + clear + `rerender` + toast "3 cards: series → Mario". `dragend` and `drop` both clear `body.dragging-cards` (a dropped tile may be re-rendered away before its dragend).
 - Keyboard: Esc cancels an inline edit (and a keyboard stat change not yet saved) and otherwise closes the dialog; the typing guard counts `isContentEditable` and a focused stat row (`closest(".segs[data-inline]")`; a focused chip or the h2 leaves the shortcuts on); the help dialog's `e` line says "(all fields)" only in edit mode; inline controls are real inputs with aria-labels; the three primitives have keyboard paths except the drag (chips per card cover it).
-- Decisions where the brief was open: drop targets are value chips shown only during a drag, under the two selects (a closed `<select>` can't take a per-value drop; dropping on the select itself would only ever assign the current filter value, useless since the filtered grid hides the cards you would drag); Ctrl/Cmd/Shift-click selection, no per-tile checkbox, table view not draggable; the "No ability text." paragraph is the ability editor's host on cards without text (no new chip); the note is a one-line input (no notes exist today; the form keeps the textarea); long values in bar sentences are clipped at 48 characters; the bar's reverts for admins/people/profiles are quiet (the review dialog's Discard buttons, which reopen it, are untouched). Left out as not agreed: stars, a token picker on "[", tag completion on "(", a type-row palette, rulebook title/text in place, Hidden/ban drop targets (Subseries got one with the buckets below); rulebook pages keep their Edit button.
+- Decisions where the brief was open: drop targets are value chips shown only during a drag, under the two selects (a closed `<select>` can't take a per-value drop; dropping on the select itself would only ever assign the current filter value, useless since the filtered grid hides the cards you would drag); Ctrl/Cmd/Shift-click selection, no per-tile checkbox, table view not draggable; the "No ability text." paragraph is the ability editor's host on cards without text (no new chip); the note is a one-line input (no notes exist today; the form keeps the textarea); long values in bar sentences are clipped at 48 characters; the bar's reverts for admins/people/profiles are quiet (the review dialog's Discard buttons, which reopen it, are untouched). Left out as not agreed: stars, a token picker on "[", tag completion on "(", a type-row palette (stars and the palette since 2026-10-23: section 19), rulebook title/text in place, Hidden/ban drop targets (Subseries got one with the buckets below); rulebook pages keep their Edit button.
 - New series, subseries and authors ("buckets", 2026-10-21; the owner: "in edit mode, we should be able to create new series and subseries and authors and more, to bucket cards into"). Idea 20's rules hold: no new popups or panels, one batch bar, view mode unchanged (signed-out pages rendered byte-identical to main under linkedom, stale buckets in sessionStorage included; the only app.js change is `params: () => parseHash().params` in the `inline.install` api).
   - Scope: only series (`series`, free text), subseries (`subseries`, database only, always inside one series) and author (`[cards]` of Card Authors.txt) get "New …": each is a value many cards share with a filter select and a chip editor. Not hidden/problems_ok/allow_high_stats (yes/no), not the ban list (its groups are star tiers of a rules document, each ban needs its own reason, admin-only, no filter facet: a bulk "banned" would be wrong data; stays in All fields), not kind/item type (rulebook categories: a new one is a rules change), not types/stars/stats (icons, numbers) nor aliases/note/dup_of/creatures (one card each).
   - Creating: `mountGrid` (now in the grid and the table alike; drop lists still grid only) appends to the Series and Author selects `<option value="" data-new-bucket>New series…</option>` / "New author…"; the Subseries select gets "New subseries…" with a series picked, else a disabled "Pick a series to add a subseries"; a picked series without subseries has no Subseries select in the template, so mountGrid inserts the same `<h3>Subseries</h3><select data-action="select-param" data-key="subseries">` after the Series select. A document `change` listener from `install` (registered before app.js's, app.js:985) sees the data-new-bucket option, calls `stopImmediatePropagation` (the filter doesn't change), hides the select and puts `control(key, "", [], true)` after it (`input.inline-fact`, aria-label "New series, Enter to save, Esc to cancel"). Document keydown/focusout listeners on that input: Enter or a focusout with text = `createBucket` → `editor.addBucket(kind, text, series)`; Esc or a focusout with nothing typed puts the select back at its `defaultSelected` option (Esc refocuses it); a focusout while `document.hasFocus()` is false is ignored, like the chip editors. A refused name (too long) keeps the input and its text, after Enter or a click away. Made: the "(no cards yet)" option and the dashed drop chip are added in place, no re-render (the hash untouched, and a click that ended the typing still lands on its tile or chip), toast "New series “X”: drag cards onto it under Series" (subseries: "… of Mario …"; in the table view "…: in Grid view, drag cards onto it"), focus on the select after Enter. Arrowing on a closed select past its last value (Windows and Firefox change the value in place; seen as a change within 150 ms of an arrow key) puts the select back instead of opening the input. No drop-on-"+ New" chip: the drop list only shows during a drag and typing in a drop would need a second state (possible follow-up).
@@ -228,3 +228,68 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   version); the tuple shape is unchanged.
 - Checks: AutoCroissant tests/test_site_build.py::test_a_recompression_is_no_new_image_version (a guards commit with a
   recompressed and a re-exported PNG, a batch commit, a person's commit with the trailer); it fails without this change.
+
+## 19. Editor: the tooltip, a live preview, drafts, stars and types in place (2026-10-23)
+- Owner's requests (2026-10-23 ~18:15-18:45). New logic in five DOM-free modules (pure helpers, plus a few that take an
+  element); edit.js, inline.js and app.js only wire them. AutoCroissant `tests/test_site_editor.py` runs them in node.
+- **The stuck tooltip** (`assets/tip.js`). Cause: app.js hid the tooltip only on a pointerout from an element that still
+  had a tooltip; opening an inline editor deletes the host's `data-tip` (inline.js `open`), so leaving through its
+  textarea never hid it, and a re-render under the pointer removed the element it belonged to. Now `tipController` keeps
+  the element the tooltip is for: it goes when the pointer leaves that element (pointerout's relatedTarget outside it),
+  when the element left the page or lost its tooltip (checked on each pointermove), and on `hideTip()` from code
+  (inline.js calls it when an editor opens, closes or commits, and before the dialog re-renders). Every place that
+  removes or changes `data-tip` is inline.js (`open` deletes it, `cancel` puts it back, `mountCard`, the palette);
+  app.js's `fillTip` is the old pointerover body, unchanged in what it shows.
+- **Live preview** (`assets/live.js`) in the Edit dialog (All fields): the card as it will look once the batch is published,
+  redrawn on every input from `readForm`'s op over the published card (`baseOf`: unset fields as their PSD values,
+  `previewCard`), nothing staged. Shown: the current card image (`data-preview-image`, the slot an image mock-up can
+  draw over), name, kind, item type, stars, series, subseries, author, Hidden, "PSD pending: …" (the printed fields that
+  will differ from the PSD, as build_site `apply_edits` computes it: a creatures split adds none), types, stat bars (app.js
+  `statBars`), the text with icons and badges (the card renderer), the note, aliases; changed blocks get an accent
+  outline. Its links are inert (tabindex -1, no pointer events) so the form isn't left by accident. Layout decision:
+  a pane beside the form, not the page behind the dialog (the form replaces the card dialog in the same modal, and on a
+  phone a page behind it would be covered anyway). Wide screens (over 1000 px): the dialog widens to 1260 px, the pane is
+  the right column (300-400 px), sticky at the top of the scroll. Narrow screens: the form is one column and the pane is a
+  "Preview" bar pinned at the top of the dialog (a button, `aria-expanded`), closed by default, remembered while the page
+  is open; opened it shows up to 36vh of preview (no image, to save room) and `scroll-padding-top` keeps the field being
+  typed in below it; the pane scrolls to the block of the field being typed in (`reveal`, `blockOf`). Rulebook pages keep
+  their form without the pane (their text preview under the textarea stays).
+- **Drafts** (`assets/drafts.js`): what is typed in the Edit dialog or an inline editor, before it goes into the batch, is
+  saved 400 ms after the last key (and at once on `pagehide` or a hidden tab) to localStorage `edit-drafts`:
+  `{<card id>: {at, fields: {<field>: value}}}`, the card id being the batch's key (`stage.cards`), field values as the
+  form's inputs hold them (text, a checkbox's boolean, the sorted type names, creature rows of text; the ban row as
+  `banned`, `ban-group`, `ban-reason`). The Edit dialog writes its changed inputs as the card's whole draft (`changed`
+  against how it opened); an inline editor writes its one field into it; the type palette writes `types`.
+  "Restore your unsaved edit? Ability, HP · 5 min ago [Restore] [Discard]" shows over the card (edit mode) and at the top
+  of the Edit dialog (Restore focused, so a stray key can't throw it away) when a draft holds a field the card doesn't
+  show that way now (`restorable`: text compared trimmed, without \r; so a draft equal to the batch is never offered, and
+  is dropped). Restore on the card: one text field opens its inline editor with the text, `types` opens the palette, more
+  open All fields filled in (`editor.open(id, {draft})`). Typing in the dialog over an unanswered offer drops the offer (what
+  is typed now is the draft). Cleared: Add to batch, an inline commit, Esc or Cancel (a confirmed discard; an offer left
+  unanswered stays), the offer's Discard, the batch's Discard (that card) and Discard all, and Publish (the published
+  cards). Not cleared by Sign out (the batch isn't either).
+- **Stars in place** (`assets/stars.js`): in edit mode the stars chip becomes a slider of 10 stars (`role=slider`,
+  `aria-valuenow`/`valuetext`, the `.fact` look; hover lights the stars a click would set): click a star to set the count
+  (the top lit one again sets one less, so 0 is reachable, as the stat cells), arrows, Home, End, Enter to save, Esc to undo
+  a keyboard change, a click away saves it; it runs on inline.js's stat-row code (`SLIDERS`, `prov`). A card without stars
+  (buffs, auxiliary creatures) gets "+ stars". Over 10: "Use All fields".
+- **Types in place** (`assets/palette.js`): the type row (`role=group`, tabindex 0) or "+ types" opens a palette under it:
+  a search box (focused) and chips of every type icon with its name (`aria-pressed`), the card's types first. Typing
+  narrows it (name or alias exactly, name prefix, alias prefix, then 2+ letters inside a name or alias: the token picker's
+  ranking); Enter in the box toggles the first match and clears it, so "fir Enter wat Enter" adds two; Enter on an empty
+  box, Ctrl+Enter, Save or a click or tap away save; Esc or Cancel put the row back; arrows move between chips. The row
+  shows the choice as it changes. Saved through `stageField(id, "types", sorted list)`, so the same set in another order is
+  no edit. Vocabulary: cards.json `icons` of kind "type" (35 icons, with aliases). The token picker (branch
+  work/token-picker, `assets/tokens.js`) is not on main yet: `palette.useSearch(fn)` swaps the search for its ranking once
+  it lands (fn(vocab, q) -> entries best first); the classes are `pal-*` (the picker's are `tp-*`). The switch, in app.js
+  after `inline.install`: `palette.useSearch((v, q) => { const by = new Map(v.map(e => [e.name, e])); return
+  tokens.suggest({ type: "icon", base: q, variant: null }, S.vocab || []).filter(r => r.kind === "type" && !r.variant)
+  .map(r => by.get(r.token.slice(1, -1))).filter(Boolean); })` (both rank the same way today).
+- Checks: AutoCroissant `tests/test_site_editor.py` (13, AC_SITE_SRC; each fails with its logic reverted: a scratch
+  mutation run caught 13 of 13), the site tests (70 with this tree). Headless Chrome (Chrome for Testing 156) on a
+  scratch build with a fake GitHub API, harnesses in ~/Documents/Tools/wt/scratch/site2-editor/: `tooltip.mjs` 6/6 here,
+  2/6 on main's build (the tooltip stays through the click away), and `editor_ui.mjs` 61/61 (signed-out view untouched,
+  stars by click and keys, the palette by click, search, Enter, Esc, a click away and "+ types", drafts across a reload of
+  an inline field and of the dialog, the offer in both places, never offering what the batch has, Esc and Cancel, Publish
+  clearing the published cards' drafts, the preview following name, HP, types and text with "PSD pending", the mobile bar,
+  no page errors). Screenshots: ~/Documents/Tools/wt/scratch/site2/shots/editor-*.png.
