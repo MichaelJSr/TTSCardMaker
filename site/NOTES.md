@@ -833,7 +833,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   none; the Balance intro is one sentence.
 - Distributions (stats.js): `countValues(cards, k)` (one pass), `distPages(counts)` (page 0 = 0-10 always, page k =
   10k+1 … 10k+10 when a value is there), `pageRange(k)`. One `.dist-panel` per stat with every page rendered and all
-  but the current one hidden, one y scale per stat (`columns({max})`); a stat with values past 10 gets `.dist-pager`
+  but the current one hidden, one y scale per stat (`columns({max})`; a non-zero column at least 3 px, `minH`, and pages above 0 print
+  each count over its column, `vals`, so a lone card at 12 or 20 shows); a stat with values past 10 gets `.dist-pager`
   (‹ range ›), `tabindex` and an aria-label. app.js `distPage(panel, step)` flips the pages (no re-render) and keeps
   the page in `S.distPage` (per session, passed to renderStats as `ctx.distPage`); ←/→ page it while focus is in a paged
   panel (keydown, right after the Changes tabs' block). The table lists 0-10 and every higher value present.
