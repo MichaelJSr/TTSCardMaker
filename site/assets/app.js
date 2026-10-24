@@ -251,7 +251,10 @@ function route(e) {
   syncUrl(r);
   hideTip();
   if (r.name === "card") {
-    if (!S.renderedHash) renderView({ name: "cards", arg: "", params: new URLSearchParams() }, "#/cards");
+    if (!S.renderedHash) {                               // from a link: the grid (and its pictures) when the dialog closes
+      S.list = listOf(new URLSearchParams()); view.replaceChildren();
+      $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === "cards"));
+    }
     openCard(r.arg, r.params.has("details"));
     return;
   }
@@ -308,6 +311,7 @@ function filterCards(p, { facets = true } = {}) {
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   return list;
 }
+const listOf = p => sortCards(filterCards(p), sortOf(p), p.get("dir") || "");   // the cards the grid shows, in order
 function sortCards(list, sort = "name", dir = "") {
   const key = {
     name: c => c.name.toLowerCase(), stars: c => c.stars ?? -1, total: c => (c.hp == null ? -1 : total(c)), hp: c => c.hp ?? -1, def: c => c.def ?? -1,
@@ -346,7 +350,7 @@ function renderCards(r) {
   const p = r.params, win = { y: scrollY, w: innerWidth, h: innerHeight, all: S.restoring };   // before the view goes: read after, they lay out the short page (the scroll clamps)
   if (document.activeElement !== qInput) qInput.value = p.get("q") || "";
   const base = filterCards(p, { facets: false });
-  const list = sortCards(filterCards(p), sortOf(p), p.get("dir") || "");
+  const list = listOf(p);
   S.list = list;
   if (S.selected.size) { const ids = new Set(list.map(c => c.id)); for (const id of S.selected) if (!ids.has(id)) S.selected.delete(id); }   // a drag carries only shown cards
   const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of [].concat(f(c))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };
