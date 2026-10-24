@@ -910,7 +910,9 @@ Measured with a local mirror of the live site (scratch site-perf2/front: serve.m
 relies on:
 - `route(e)` runs once per navigation: a hash navigation fires `popstate` then `hashchange` (same URL, `e.newURL`); the
   `hashchange` of that pair is skipped. A `popstate` alone (c/<id>/ to the root) still routes. Closing a card over the
-  rendered view only closes it (`S.title` puts the view's title back); the view is not drawn again.
+  rendered view only closes it while `viewSig()` is what `renderView` saw (`S.rev`, bumped by `derive()`; the hands; the
+  comparison; the login); else the view is drawn again (an edit, a hand or Compare changed in the dialog). State a dialog
+  can change that a view shows belongs in `viewSig`.
 - Dates: `dateFmt(opts)` (text.js) is `toLocaleDateString(undefined, opts)` with its `Intl.DateTimeFormat` made once.
   Use it (or history.js `date`/`month`) for any date shown per row. stats.js `heatScale()` reads the CSS ramp once per
   theme (`heatMemo`); `fmt` prints whole numbers under 1000 with String() where the formatter prints the same
@@ -926,6 +928,8 @@ relies on:
   `setParams` keeps it), so the browser's scroll restoration finds the page long enough: grid, table and Stats alike.
 - Table view: `tableHtml` writes the rows that cover the window (at least `TABLE_FIRST`, 30 px a row at most, so the
   scroll position holds), `fillTable` appends the rest in `TABLE_CHUNK` tasks; a newer render stops them (`tableJob`).
+  Until the last rows are in, a collapsed `tbody.sizer` holds copies of the rest's widest rows per column (`sizerRows`:
+  longest lines and words, pictures as two letters), so the columns keep their final widths from the first frame.
 - Rulebook: rules.json re-derives (`editor.refresh`) only when a staged or published-not-built edit is on a rulebook
   page (`editor.touches`). No `content-visibility` on its pages: the TOC's smooth jumps landed off target (the pages'
   estimated heights change as they render on the way).
@@ -935,8 +939,9 @@ relies on:
   what `render()` links (test_site_speed).
 - index.html preloads every module app.js imports (test_site_speed). Type icons and the filter toggles load lazily.
 - A card opened from a link (nothing rendered yet) draws no grid behind it: `S.list` is the grid's list (prev/next),
-  the grid comes when the dialog closes. The dialog's first picture is the grid tile's when it has loaded
-  (`placeholderOf`), else the 720 px one a share page preloads, else the 360 px one.
+  the grid comes when the dialog closes, or when something draws the view under the dialog (`rerender` with no card
+  dialog showing). A link to a missing card draws the grid at once (then the toast). The dialog's first picture is the
+  grid tile's when it has loaded (`placeholderOf`), else the 720 px one a share page preloads, else the 360 px one.
 - Build: index.html gets `grid_preload(cards)`: a script that preloads the first `GRID_PRELOADS` pictures in Name order
   with app.js's srcset and the saved tile size, only for the plain grid. c/<id>/ pages preload the 720 px picture.
   `img()`, `imgAttrs` and the tile sizes in app.js must match these (test_site_speed).
@@ -944,4 +949,5 @@ relies on:
   one stamp for all); the data's (`<meta name="build">`, data URLs) hashes the data and details files without the build
   time (`steady`: `generated`, `since`). A build that changed nothing keeps every URL.
 - Deploys: site.yml runs on pushes that touch what the build reads (`paths`); `build.txt` digests the whole site without
-  the build time (`dist_digest`), and a build equal to the live one is not uploaded (the "Updated" line keeps its time).
+  the build time (`dist_digest`), and a build equal to the live one is not uploaded: the Changes page's "Updated" line
+  then shows the last build that changed the site, not the last run (owner's call; every deploy re-dates every file).

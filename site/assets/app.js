@@ -32,7 +32,7 @@ const store = (() => { try { return sessionStorage; } catch { return null; } })(
 const S = {
   data: null, cards: [], rules: [], byId: new Map(), banned: new Map(), icons: {}, renderer: null,
   mentions: new Map(), mentionedBy: new Map(), list: [], decks: [], compare: [],
-  renderedHash: null, listHash: "#/cards", shared: null,
+  renderedHash: null, listHash: "#/cards", shared: null, rev: 0,   // rev: bumped by derive()
   selected: new Set(),                                     // tiles picked in the cards grid (edit mode: drag them onto a series or author)
   distPage: {},                                            // the Stats distributions' page per stat (this session)
   selecting: false,                                        // the Select toggle (phones): a tap on a tile selects it
@@ -147,6 +147,7 @@ async function init() {
 
 // everything computed from the cards; re-run after an edit
 function derive() {
+  S.rev++;
   for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; }
   S.cards = S.all.filter(c => !c.hidden || S.showHidden);
   // stats can pass 10 (Sonic's speed is 20)
@@ -174,7 +175,7 @@ const goUser = login => { const r = parseHash(); if (r.name === "u" && !r.edit &
 const goEdit = login => { const r = parseHash(); if (r.name === "u" && r.edit && r.arg.toLowerCase() === login.toLowerCase()) renderView(r, hashOf(r)); else location.hash = `#/u/${encodeURIComponent(login)}/edit`; };
 function rerender() {
   const onCard = parseHash().name === "card", base = onCard ? S.listHash : location.hash || hashOf(parseHash());
-  if (S.renderedHash) renderView(parseHash(base), base);
+  if (S.renderedHash || !$(".detail", modal)) renderView(parseHash(base), base);   // a card from a link: the grid once its dialog is gone
   if (onCard && $(".detail", modal)) openCard(parseHash().arg);       // dialogs stay open
 }
 const editor = createEditor({
@@ -251,7 +252,8 @@ function route(e) {
   syncUrl(r);
   hideTip();
   if (r.name === "card") {
-    if (!S.renderedHash) {                               // from a link: the grid (and its pictures) when the dialog closes
+    if (!S.renderedHash && !S.byId.has(r.arg)) renderView(parseHash(S.listHash), S.listHash);   // a dead link: the grid, then the toast
+    else if (!S.renderedHash) {                          // from a link: the grid (and its pictures) when the dialog closes
       S.list = listOf(new URLSearchParams()); view.replaceChildren();
       $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === "cards"));
     }
@@ -259,7 +261,7 @@ function route(e) {
     return;
   }
   const hash = location.hash || hashOf(r);
-  if (hash === S.renderedHash && !modal.hidden) { closeModal(); document.title = S.title; return; }   // the view under it stays
+  if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig) { closeModal(); document.title = S.title = titleOf(r); return; }   // nothing changed: the view under it stays
   closeModal();
   renderView(r, hash);
 }
@@ -272,10 +274,16 @@ function renderView(r, hash) {
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
   const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare, users: renderUsers, u: renderUser, decks: renderDecks };
   (views[r.name] || renderCards)(r);
+  S.title = document.title = titleOf(r);
+  S.viewSig = viewSig();
+}
+function titleOf(r) {
   const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.edit ? "Edit profile" : r.arg || "People",
     decks: r.arg ? S.deckTitle || "Deck" : "Published decks" };
-  S.title = document.title = `${titles[r.name] || "Cards"} · Impossibility Simulator`;
+  return `${titles[r.name] || "Cards"} · Impossibility Simulator`;
 }
+// what a card dialog can change under it (edits, hands, the comparison, sign-in): a dialog closes without a redraw while this holds
+function viewSig() { return `${S.rev}|${S.compare.join(",")}|${JSON.stringify(S.decks)}|${editor.me?.login || ""}`; }
 function setParams(updates, { replace = true } = {}) {
   const r = parseHash();
   const p = r.params;
@@ -463,9 +471,25 @@ function tableHtml(list, p, win) {
     ...(S.created ? [["created", "Created"]] : []), ["new", "Updated"]];
   const sort = sortOf(p);
   const first = win.all ? list.length : Math.max(TABLE_FIRST, Math.ceil((win.y + 2 * win.h) / 30));    // rows are 30 px or taller: the scroll position stays
-  tableRest = list.slice(first);
+  tableRest = list.slice(first).map(rowHtml);
   return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
-    ${list.slice(0, first).map(rowHtml).join("")}</tbody></table></div>`;
+    ${list.slice(0, first).map(rowHtml).join("")}</tbody>${tableRest.length ? `<tbody class="sizer" aria-hidden="true" style="visibility:collapse">${sizerRows(tableRest)}</tbody>` : ""}</table></div>`;
+}
+// hidden rows from the rest that hold the columns at their final widths while the rest comes in: per column the longest
+// lines and the longest word (pictures as two letters); removed with the last rows
+function sizerRows(rest) {
+  const top = [], pick = new Set();
+  rest.forEach((h, i) => h.split("</td>").forEach((cell, j) => {
+    const t = cell.replace(/<img\b[^>]*>/g, " MM ").replace(/<div\b/g, "\n<").replace(/<[^>]*>/g, "");
+    const line = Math.max(...t.split("\n").map(x => x.trim().length)), word = Math.max(...t.split(/\s+/).map(x => x.length));
+    const b = top[j] ||= { line: [], word: [] };
+    for (const [arr, v, n] of [[b.line, line, 3], [b.word, word, 1]]) {
+      if (arr.length === n && v <= arr[n - 1][0]) continue;
+      arr.push([v, i]); arr.sort((x, y) => y[0] - x[0]); arr.length = Math.min(arr.length, n);
+    }
+  }));
+  for (const b of top) for (const [, i] of [...b.line, ...b.word]) pick.add(i);
+  return [...pick].sort((x, y) => x - y).map(i => rest[i].replace(/^<tr class="row" data-open="[^"]*">/, "<tr>").replace(/<img class="thumb"[^>]*>/, "")).join("");
 }
 // the table's first rows go in with the page, the rest in later tasks (a newer render or another page stops them)
 const TABLE_FIRST = 100, TABLE_CHUNK = 150;
@@ -475,8 +499,8 @@ function fillTable(tbody) {
   let k = 0;
   const step = () => {
     if (job !== tableJob || !tbody.isConnected) return;
-    tbody.insertAdjacentHTML("beforeend", rest.slice(k, k += TABLE_CHUNK).map(rowHtml).join(""));
-    if (k < rest.length) setTimeout(step);
+    tbody.insertAdjacentHTML("beforeend", rest.slice(k, k += TABLE_CHUNK).join(""));
+    if (k < rest.length) setTimeout(step); else tbody.parentElement.querySelector("tbody.sizer")?.remove();
   };
   if (rest.length) setTimeout(step);
 }
