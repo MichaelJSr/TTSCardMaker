@@ -1,7 +1,7 @@
 // Balance: the Stats page's Balance section and each card's Balance block, from data/analytics.json (build/analytics.py).
 // Charts follow stats.js (dataviz method): thin marks, hairline grid, legends for two series, a table view for each.
 // DOM-free: every function returns HTML, every string goes through esc.
-import { esc, diffWords, badgeHtml } from "./text.js";
+import { esc, diffWords, badgeHtml, dateFmt } from "./text.js";
 import { chartCard as card, hbar, table, stacked, fmt, trunc } from "./stats.js";
 
 const KIND = { creature: "creature", minion: "minion", creatures: "auxiliary creature" };
@@ -11,11 +11,12 @@ const ITEM_KIND = { creature: "Creature", item: "Item", field: "Field card", min
 const STATS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
 // days and months in one fixed zone, the bot's TIMEZONE (analytics.py ZONE), so every viewer sees the same waves
 const TZ = "America/Los_Angeles";
-const day = ts => new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: TZ });
+const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: TZ }), MONTH = dateFmt({ month: "short", year: "2-digit", timeZone: "UTC" });
+const day = ts => DAY(new Date(ts * 1000));
 const ymd = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ });
 const dayKey = ts => { const p = Object.fromEntries(ymd.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}`; };
 const monthKey = ts => dayKey(ts).slice(0, 7);
-const monthLabel = key => { const [y, m] = key.split("-").map(Number); return new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString(undefined, { month: "short", year: "2-digit", timeZone: "UTC" }); };
+const monthLabel = key => { const [y, m] = key.split("-").map(Number); return MONTH(new Date(Date.UTC(y, m - 1, 15))); };
 const monthsFrom = (first, last) => {
   const out = [];
   for (let [y, m] = first.split("-").map(Number); `${y}-${String(m).padStart(2, "0")}` <= last; m === 12 ? (y++, (m = 1)) : m++) out.push(`${y}-${String(m).padStart(2, "0")}`);

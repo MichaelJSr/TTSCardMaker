@@ -2,7 +2,7 @@
 // build_site.py into data/users.json) and contributions (data/contributions.json: cards credited, edit batches published
 // and card commits per person, from build_site.py contributions()). Pure functions, plus the person page and the People
 // table. All profile text is user-written: everything is escaped and only internal routes are linked.
-import { esc, tagInfo, badgeHtml, TAG } from "./text.js";
+import { esc, tagInfo, badgeHtml, TAG, dateFmt } from "./text.js";
 import { editorFields, archiveTag, archiveTagHtml, fieldName } from "./changes.js";
 import { decode } from "./deck.js";
 import { columns, chartCard } from "./stats.js";
@@ -208,6 +208,7 @@ export function monthRange(months) {
   }
   return out;
 }
+const MONTH = dateFmt({ month: "short", year: "2-digit", timeZone: "UTC" });
 export const ACTIVITY = [["cards", "Cards created", "var(--s1)", "cards"], ["edits", "Edit batches", "var(--s2)", "edits"], ["commits", "Card commits", "var(--s3)", "commits"]];
 /** The person's activity chart: one row of monthly columns per kind they have (each on its own scale, so a big import
  *  month doesn't flatten the rest), on one month axis; Table shows the numbers. "" without months. */
@@ -215,7 +216,7 @@ export function activityHtml(p, x = {}) {
   const range = monthRange(p.months);
   const kinds = ACTIVITY.map((k, i) => [...k, i + 1]).filter(([, , , , i]) => range.some(([, r]) => r && r[i]));
   if (!kinds.length) return "";
-  const label = k => { const [y, m] = k.split("-").map(Number); return new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString(undefined, { month: "short", year: "2-digit", timeZone: "UTC" }); };
+  const label = k => { const [y, m] = k.split("-").map(Number); return MONTH(new Date(Date.UTC(y, m - 1, 15))); };
   const every = Math.max(1, Math.ceil(range.length / 9));
   const rows = kinds.map(([, name, color, unit, i]) => {
     const total = range.reduce((n, [, r]) => n + (r ? r[i] || 0 : 0), 0);

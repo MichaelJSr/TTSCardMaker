@@ -1,5 +1,5 @@
 import { compile, suggest, total, SEARCH_HELP } from "./search.js";
-import { esc, norm, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
 import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
@@ -61,7 +61,8 @@ const thumbUrl = c => img(c, 360);
 const imgAttrs = (c, css, big = false) => `src="${img(c, 360)}" srcset="${img(c, 240)} 240w, ${img(c, 360)} 360w${big ? `, ${img(c, 720)} 720w` : ""}" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
-const day = d => (d ? new Date(`${d}T12:00:00Z`).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }) : "");
+const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
 const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand" };
 /** "about 13 Oct 2023" for a date a Discord post awaiting review may still move */
 const createdText = c => (c.created ? `${c.createdAbout ? "about " : ""}${day(c.created)}` : "");

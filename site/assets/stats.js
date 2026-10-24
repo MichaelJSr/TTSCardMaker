@@ -1,6 +1,6 @@
 // Stats dashboard. Marks follow the dataviz method: thin bars with 4px rounded data-ends, hairline grid,
 // values at bar tips, legends for multi-series, hover tooltips, and a table view for every chart.
-import { esc, tagInfo, badgeHtml, TAG, plain } from "./text.js";
+import { esc, tagInfo, badgeHtml, TAG, plain, dateFmt } from "./text.js";
 import { total } from "./search.js";
 import { HAND } from "./deck.js";
 import { date, monthKey } from "./history.js";
@@ -10,6 +10,7 @@ const KIND_LABEL = { creature: "Creatures", item: "Items", field: "Field cards",
   debuff: "Debuffs", buff: "Buffs", creatures: "Auxiliary creatures", unknown: "Other" };
 const NF = new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 });   // one formatter: toLocaleString per value was a hotspot
 const fmt = n => NF.format(Math.round(n * 10) / 10);
+const MONTH = dateFmt({ month: "short", year: "2-digit", timeZone: "UTC" });
 
 // ---- chart primitives (SVG strings; every label is escaped) ----------------------------------------
 function roundedRight(x, y, w, h, r = 4) {
@@ -437,7 +438,7 @@ export function renderStats(root, ctx, params) {
     const cols = [];
     for (let y = y0, m = m0; y < y1 || (y === y1 && m <= m1); m === 12 ? (y++, (m = 1)) : m++) {
       const k = `${y}-${String(m).padStart(2, "0")}`;
-      cols.push({ label: new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString(undefined, { month: "short", year: "2-digit", timeZone: "UTC" }), value: months.get(k) || 0 });
+      cols.push({ label: MONTH(new Date(Date.UTC(y, m - 1, 15))), value: months.get(k) || 0 });
     }
     charts.push(card("timeline", "Last change by month", "Cards by month of their last change.", columns(cols, { every: Math.ceil(cols.length / 12) }),
       table(["Month", "Cards"], cols.map(c => [c.label, c.value])), { wide: true }));

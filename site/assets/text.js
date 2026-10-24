@@ -1,6 +1,8 @@
 // Ability text: icon tokens, timing-tag badges, links to other cards, and word diffs.
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+/** toLocaleDateString(undefined, opts) as a function, its Intl.DateTimeFormat made once on first use (one per call was a hotspot) */
+export const dateFmt = opts => { let f = null; return d => (f ||= new Intl.DateTimeFormat(undefined, opts)).format(d); };
 export const norm = s => String(s || "").toLowerCase().replace(/[\s_\-.'’]+/g, "");
 
 // Timing tags. Colors match the stoogedings font badges. Cooldowns and uses replaced the older tags on the cards
