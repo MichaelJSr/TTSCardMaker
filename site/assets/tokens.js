@@ -68,8 +68,8 @@ export function openToken(text, caret) {
   return null;
 }
 
-/** The fewest edits (a letter added, dropped, changed, or two swapped) from q to the start of s */
-function slips(q, s) {
+/** The fewest edits (a letter added, dropped, changed, or two swapped) from q to the start of s (whole: to all of s) */
+function slips(q, s, whole = false) {
   let prev2 = null, prev = Array.from({ length: s.length + 1 }, (_, j) => j);
   for (let i = 1; i <= q.length; i++) {
     const row = [i];
@@ -79,7 +79,7 @@ function slips(q, s) {
     }
     prev2 = prev; prev = row;
   }
-  return Math.min(...prev);
+  return whole ? prev[s.length] : Math.min(...prev);
 }
 
 const KIND_ORDER = { type: 0, star: 1 };
@@ -150,25 +150,27 @@ export function applyChoice(text, open, item) {
 }
 
 const words = v => String(v).toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+/** How a known name matches a normalized q: 0 same (or no q), 1 prefix, 2 a word's prefix, 3 inside (2+ letters), -1 none */
+const tierOf = (q, v) => { const n = norm(v); return !q || n === q ? 0 : n.startsWith(q) ? 1 : words(v).some(w => w.startsWith(q)) ? 2 : q.length > 1 && n.includes(q) ? 3 : -1; };
 /** Known names for a typed q, best first: entries [{value, n (cards), note, own (the card's own series), kind, series}].
  *  Empty q: own first, then the most cards, then by name. Else: same name, prefix, a word's prefix, inside (2+ letters),
- *  then (3+ letters, nothing else) one slip (two from 6 letters); ties: own, most cards, name. At most LIMIT rows. */
+ *  then (3+ letters, nothing else) one slip (two from 6 letters), the closest whole name first; ties: own, most cards,
+ *  name. At most LIMIT rows. */
 export function suggestNames(q, entries) {
   q = norm(q);
-  const long = q.length > 1, out = [];
+  const out = [];
   for (const e of entries || []) {
-    const n = norm(e.value);
-    const tier = !q || n === q ? 0 : n.startsWith(q) ? 1 : words(e.value).some(w => w.startsWith(q)) ? 2 : long && n.includes(q) ? 3 : -1;
-    if (tier >= 0) out.push({ e, tier });
+    const tier = tierOf(q, e.value);
+    if (tier >= 0) out.push({ e, tier, w: 0 });
   }
   if (!out.length && q.length > 2) {
     const most = q.length > 5 ? 2 : 1;
     for (const e of entries || []) {
-      const d = Math.min(...[norm(e.value), ...words(e.value)].map(k => slips(q, k)));
-      if (d <= most) out.push({ e, tier: 4 + d });
+      const keys = [norm(e.value), ...words(e.value)], d = Math.min(...keys.map(k => slips(q, k)));
+      if (d <= most) out.push({ e, tier: 4 + d, w: Math.min(...keys.map(k => slips(q, k, true))) });
     }
   }
-  return out.sort((a, b) => a.tier - b.tier || !!b.e.own - !!a.e.own || (b.e.n || 0) - (a.e.n || 0) || a.e.value.localeCompare(b.e.value))
+  return out.sort((a, b) => a.tier - b.tier || a.w - b.w || !!b.e.own - !!a.e.own || (b.e.n || 0) - (a.e.n || 0) || a.e.value.localeCompare(b.e.value))
     .slice(0, LIMIT).map(({ e }) => ({ token: e.value, label: e.value, kind: e.kind || "", note: e.note || "", plain: true, value: e.value, series: e.series || "" }));
 }
 
@@ -239,7 +241,8 @@ function show(el, o, found, typed) {
   const same = field === el && open?.start === o.start && shown();
   if (field && field !== el) close();
   field = el; open = o; items = found;
-  active = o.type === "name" && !o.text ? -1 : typed || !same ? 0 : Math.min(active, items.length - 1);   // an empty name: no row until an arrow
+  const t = o.type === "name" ? tierOf(norm(o.text), found[0].value) : 0;   // inside or a slip: Enter keeps the typed name
+  active = o.type === "name" && (!o.text || t < 0 || t > 2) ? -1 : typed || !same ? 0 : Math.min(active, items.length - 1);   // an empty name: no row until an arrow
   const host = el.closest('[role="dialog"]') || document.body;   // inside an aria-modal dialog, or readers skip it
   if (list.parentNode !== host) host.append(list, status);
   list.innerHTML = items.map(rowHtml).join("");
