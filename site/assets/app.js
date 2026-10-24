@@ -32,6 +32,7 @@ const S = {
   mentions: new Map(), mentionedBy: new Map(), list: [], decks: [], compare: [],
   renderedHash: null, listHash: "#/cards", shared: null,
   selected: new Set(),                                     // tiles picked in the cards grid (edit mode: drag them onto a series or author)
+  distPage: {},                                            // the Stats distributions' page per stat (this session)
 };
 // The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
@@ -705,13 +706,23 @@ function openPicker(tier) {                              // the shared picker (p
 
 // ---- stats / changes / compare -------------------------------------------------------------------
 function renderStatsView(r) {
-  renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist }, r.params);
+  renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist, distPage: S.distPage }, r.params);
   const fill = () => { const slot = $("#stats-balance", view), now = parseHash(); if (slot && now.name === "stats") slot.innerHTML = balance.statsHtml(S.analytics, { cards: S.cards, byId: S.byId }, now.params); };
   if (S.analytics) fill();
   else {
     $("#stats-balance", view).innerHTML = `<p class="loading">Loading the balance section…</p>`;
     loadAnalytics().then(fill, e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; });
   }
+}
+function distPage(panel, step) {          // a stat distribution's pager: the next or previous page of values (stats.js)
+  if (!panel?.dataset.pages) return;
+  const pages = panel.dataset.pages.split(",").map(Number), to = pages[pages.indexOf(+panel.dataset.cur) + step];
+  if (to == null) return;
+  panel.dataset.cur = to; S.distPage[panel.dataset.stat] = to;
+  for (const pg of $$(".dist-page", panel)) pg.hidden = +pg.dataset.page !== to;
+  const [lo, hi] = to ? [10 * to + 1, 10 * to + 10] : [0, 10];
+  $(".dist-range", panel).textContent = `${lo}–${hi}`;
+  $$(".dist-pager button", panel).forEach(b => (b.disabled = pages[pages.indexOf(to) + +b.dataset.step] == null));
 }
 // the Changes page's category tabs, a row across its top: [hash key, label]; #/changes is the first, #/changes/<key> the others
 // (a link to one survives a refresh), and each shows its own sections only
@@ -1016,6 +1027,7 @@ const actions = {
   "toggle-table": el => { const box = $(`#chart-${el.dataset.target}`); const on = el.getAttribute("aria-pressed") !== "true"; el.setAttribute("aria-pressed", on);
     el.textContent = on ? "Chart" : "Table"; $(".view-chart", box).hidden = on; $(".view-table", box).hidden = !on; },
   "stats-filter": el => setParams({ [el.dataset.key]: el.value }),
+  "dist-page": el => distPage(el.closest(".dist-panel"), +el.dataset.step),
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
   ...editor.actions,
@@ -1051,7 +1063,7 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
   <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
-const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (on the Changes tabs: the next tab)"], ["d", "Add to / remove from deck"],
+const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (Changes tabs: next tab; a stat distribution: more values)"], ["d", "Add to / remove from deck"],
   ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 $("#account").addEventListener("click", () => actions["edit-hub"]());
@@ -1072,6 +1084,8 @@ document.addEventListener("keydown", e => {
     if (to && to !== ctab) location.hash = to.getAttribute("href");
     return;
   }
+  const dist = document.activeElement?.closest?.(".dist-panel[tabindex]");
+  if (dist && (e.key === "ArrowLeft" || e.key === "ArrowRight") && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); distPage(dist, e.key === "ArrowRight" ? 1 : -1); return; }
   const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline], .star-pick, .type-palette");   // the inline controls are inputs; stat rows and stars take the arrows
   if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size) { S.selected.clear(); inline.reflect(view, S.selected); } return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;

@@ -8,7 +8,8 @@ import { date, monthKey } from "./history.js";
 // the game's names (rulebook "04 Table")
 const KIND_LABEL = { creature: "Creatures", item: "Items", field: "Field cards", minion: "Minions", nme: "N.M.E. items", "aux item": "Auxiliary items",
   debuff: "Debuffs", buff: "Buffs", creatures: "Auxiliary creatures", unknown: "Other" };
-const fmt = n => (Math.round(n * 10) / 10).toLocaleString();
+const NF = new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 });   // one formatter: toLocaleString per value was a hotspot
+const fmt = n => NF.format(Math.round(n * 10) / 10);
 
 // ---- chart primitives (SVG strings; every label is escaped) ----------------------------------------
 function roundedRight(x, y, w, h, r = 4) {
@@ -43,10 +44,10 @@ function hbar(rows, { labelWidth = 150, unit = "cards", color = "var(--s1)", cha
 const SUB_BARS = { labelWidth: 250, chars: 36 };           // subseries names are long ("Paper Mario: The Thousand-Year Door")
 const trunc = (s, n) => (s.length > n ? s.slice(0, n - 1) + "…" : s);
 
-/** Vertical columns: [{label, value}] (single series; label every Nth tick). */
-function columns(cols, { unit = "cards", color = "var(--s1)", every = 1, height = 200, width = 1000 } = {}) {
+/** Vertical columns: [{label, value}] (single series; label every Nth tick; max: a fixed y scale). */
+function columns(cols, { unit = "cards", color = "var(--s1)", every = 1, height = 200, width = 1000, max: fixed } = {}) {
   const W = width, padL = 36, padB = 26, plotH = height - padB, n = cols.length;
-  const max = niceMax(Math.max(1, ...cols.map(c => c.value)));
+  const max = fixed ?? niceMax(Math.max(1, ...cols.map(c => c.value)));
   const band = (W - padL) / Math.max(1, n), bw = Math.min(24, band * 0.7);
   const ticks = [0, max / 2, max].map(t => {
     const y = plotH - (t / max) * plotH;
@@ -155,6 +156,23 @@ function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "" 
     <div class="view-chart">${chartHtml}</div>${tableHtml ? `<div class="view-table" hidden>${tableHtml}</div>` : ""}</section>`;
 }
 
+// ---- stat distributions: page 0 is 0–10, page k is 10k+1 … 10k+10; every page of a stat shares its y scale ----------
+/** values -> Map(value, cards): one pass */
+export const countValues = (cards, k) => { const m = new Map(); for (const c of cards) { const v = c[k]; if (v != null) m.set(v, (m.get(v) || 0) + 1); } return m; };
+/** the pages holding a value: 0 always */
+export const distPages = counts => [...new Set([0, ...[...counts.keys()].filter(v => v > 10).map(v => Math.ceil((v - 10) / 10))])].sort((a, b) => a - b);
+export const pageRange = k => (k ? [10 * k + 1, 10 * k + 10] : [0, 10]);
+/** One stat's panel: every page rendered, all but cur hidden (app.js distPage pages it) */
+function distPanel({ k, l, counts, pages, yMax, cur }) {
+  const paged = pages.length > 1, i = pages.indexOf(cur), [lo, hi] = pageRange(cur);
+  const page = p => { const [a, b] = pageRange(p);
+    return `<div class="dist-page" data-page="${p}"${p === cur ? "" : " hidden"}>${columns(Array.from({ length: b - a + 1 }, (_, j) => ({ label: String(a + j), value: counts.get(a + j) || 0 })), { height: 170, width: 320, max: yMax })}</div>`; };
+  const btn = (step, label, off) => `<button type="button" class="ghost" data-action="dist-page" data-step="${step}" aria-label="${label}"${off ? " disabled" : ""}>${step < 0 ? "‹" : "›"}</button>`;
+  const pager = paged ? `<span class="dist-pager">${btn(-1, "Lower values", i === 0)}<span class="dist-range">${lo}–${hi}</span>${btn(1, "Higher values", i === pages.length - 1)}</span>` : "";
+  return `<div class="dist-panel" data-stat="${k}"${paged ? ` data-pages="${pages.join(",")}" data-cur="${cur}" tabindex="0" aria-label="${l}: ← → for more values"` : ""}>
+    <div class="dist-head"><span class="legend">${l}</span>${pager}</div>${(paged ? pages : [0]).map(page).join("")}</div>`;
+}
+
 // ---- the dashboard ---------------------------------------------------------------------------------
 export function renderStats(root, ctx, params) {
   const { cards, renderer, banned, icons } = ctx;
@@ -243,15 +261,14 @@ export function renderStats(root, ctx, params) {
     charts.push(card("tiers", "Average stats by star level", "Creatures and minions. Darker = higher in its column.", heat,
       table(["Stars", "Cards", "HP", "DEF", "ATK", "SPD", "Total"], rows.map(r => [`${r[0]}★`, ...r.slice(1).map(v => (v == null ? "—" : v))]))));
 
-    // 5 distributions (small multiples)
-    // every value up to 20 (stats can pass 10: Sonic's speed is 20); anything higher shares a last "21+" column
-    const high = Math.max(10, ...creatures.flatMap(c => keys.map(([k]) => c[k] ?? 0))), top = Math.min(high, 20);
-    const bins = Array.from({ length: top + 1 }, (_, i) => [String(i), v => v === i]);
-    if (high > top) bins.push([`${top + 1}+`, v => v > top]);
-    const binCounts = k => bins.map(([label, hit]) => ({ label, value: creatures.filter(c => c[k] != null && hit(c[k])).length }));
-    const multiples = keys.map(([k, l]) => `<div><div class="legend" style="margin:6px 0 0">${l}</div>${columns(binCounts(k), { height: 170, width: 320 })}</div>`).join("");
-    charts.push(card("dist", "Stat distributions", `Creatures and minions per value (0–${high > top ? `${top}, ${top + 1}+` : top})`, `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">${multiples}</div>`,
-      table(["Value", ...keys.map(([, l]) => l)], bins.map(([label], i) => [label, ...keys.map(([k]) => binCounts(k)[i].value)])), { wide: true }));
+    // 5 distributions (small multiples): 0–10, and a pager on a stat with higher values (Sonic's speed is 20)
+    const dist = keys.map(([k, l]) => {
+      const counts = countValues(creatures, k), pages = distPages(counts);
+      return { k, l, counts, pages, yMax: niceMax(Math.max(1, ...counts.values())), cur: pages.includes(ctx.distPage?.[k]) ? ctx.distPage[k] : 0 };
+    });
+    const values = [...new Set([...Array.from({ length: 11 }, (_, i) => i), ...dist.flatMap(d => [...d.counts.keys()].filter(v => v > 10))])].sort((a, b) => a - b);
+    charts.push(card("dist", "Stat distributions", "Creatures and minions per value.", `<div class="dist-grid">${dist.map(distPanel).join("")}</div>`,
+      table(["Value", ...keys.map(([, l]) => l)], values.map(v => [String(v), ...dist.map(d => d.counts.get(v) || 0)])), { wide: true }));
 
     // 6 power outliers (emphasis scatter)
     const complete = creatures.filter(c => c.stars && [c.hp, c.def, c.atk, c.spd].every(v => v != null));
