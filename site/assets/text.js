@@ -109,7 +109,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
     const [base, variant] = token.split(":");
     const ic = icons[norm(base)];
     if (!ic) return null;
-    const v = String(variant ?? "").trim().toLowerCase(), name = base.replace(/_/g, " ");
+    const v = String(variant ?? "").toLowerCase(), name = base.replace(/_/g, " ");   // no spaces around it, as in the font
     const drawn = v === "no" || (ic.v?.includes(v) && variants[v] !== undefined);
     const label = drawn ? `${name} (${v === "no" ? "not" : VARIANT_NAMES[v]})` : name;
     const t = tip ? ` data-tip="${esc(label)}"` : "";

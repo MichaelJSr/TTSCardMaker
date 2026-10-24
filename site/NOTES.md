@@ -234,17 +234,24 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   pictures and narrows as you type, so nobody has to remember the names, and shows the variants too.
 - `assets/tokens.js` (pure helpers above `install`; AutoCroissant tests/test_token_picker.py runs them in node):
   `openToken(text, caret)` -> the token being typed: an unclosed `[` on the caret's line (a name of letters, digits,
-  spaces, `_ - . '`, then maybe `:` + letters; at most `MAX_TOKEN` 52 characters, text.js PIECE's limit) or `(` + 1-6
-  of text.js TAG's characters that does not start in lower case ("(see below)" and "(only once)" never open);
-  `close` = past the rest of the word at the caret and a `]` or `)` already there. `suggest(open, vocab)`: icons by
+  spaces, `_ - . '`, then maybe `:` + letters; at most `MAX_TOKEN` 52 characters, text.js PIECE's limit) or `(` + up to
+  7 of text.js TAG's characters (`-?` + 6: `(-1/2GCD)`) that does not start in lower case ("(see below)" and "(only
+  once)" never open; "(Only once)" opens at "(O" and closes at "(On"). `close` = the caret, or, when the caret is
+  inside a token (the rest of a name, spaces and `:variant` included, then its `]` on the line; for a tag the rest
+  and its `)`), past that `]` or `)`; text after the caret that no `]` or `)` closes is never replaced ("[fi|and ice"
+  + fire = "[fire]and ice"; until the 2026-10-23 review the rest of the word went too). `tail` = that rest's
+  `:variant]`, which a plain icon keeps ("[fi|re:glow]" + fire = "[fire:glow]"). `suggest(open, vocab)`: icons by
   `norm` (case, spaces, `_ - . '` ignored): exact name or alias, name prefix, alias prefix, then (2+ letters) inside a
-  name or alias; types before stars, then by name; an exact match is followed by its variants. After `name:` the
+  name or alias; with none of those (3+ letters), names and aliases whose start is one edit away (two from 6 letters;
+  added, dropped, changed or swapped letters: "[fier" -> fire, field); types before stars, then the most used in the
+  cards (`uses`: `vocabulary(icons, texts)` counts the tokens in every card's ability; machine 18, fire 9, ice 8 on
+  2026-10-23), then by name; an exact match is followed by its variants. After `name:` the
   variants (`VARIANTS` = the bot's ICON_VARIANTS: tint, sticker, no, glow, darkglow; the font gives every icon all of
   them), of that icon when the name is exact, else of every match, prefix first. `(`: `TAGS`, the font's 341
   (badge_tags, the cards' own first, the rulebook's old ones last, all through tagInfo), any case, an exact one first.
-  At most 120 rows. `applyChoice` puts the canonical `[name]`, `[name:variant]` or `(TAG)` in place of
-  `start..close`, caret after it. `vocabulary(icons)` turns cards.json icons into one entry per icon with its other
-  spellings as `keys`.
+  At most 120 rows. `applyChoice` puts the canonical `[name]`, `[name:variant]` or `(TAG)` (a plain icon + `tail`) in
+  place of `start..close`, caret after it. `vocabulary(icons, texts)` turns cards.json icons into one entry per icon
+  with its other spellings as `keys` and its `uses`.
 - The dropdown (`install`, app.js boot; `S.vocab` per data load): one `ul#tok-picker` (role listbox, rows role option
   `#tok-pick-<i>`, each the picture (`renderer.icon(token, {tip: false})`, the variant's own; badgeHtml for a tag),
   the token, the plain name with the variant's or tag's meaning, the kind), moved into the field's `[role=dialog]`
@@ -256,9 +263,12 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   closes); keydown while open: Up/Down (wrap), PageUp/Down, Enter or Tab accept, Esc closes the picker only and stops
   the event (inline editing's and the dialog's own Esc come next time), and the token Esc closed stays closed until
   the caret leaves it. Rows: mousedown prevented, so the field keeps the focus and the phone keyboard stays; click
-  accepts. Accepting selects `start..close` and runs `execCommand("insertText")` (undo keeps it; its `input` event
-  updates `#ef-preview`), else sets the value and sends `input`. The field gets aria-expanded, aria-controls,
-  aria-activedescendant; a hidden live region says how many suggestions.
+  accepts. Accepting selects `start..close` and runs `execCommand("insertText")` with applyChoice's `insert`
+  (undo keeps it; its `input` event updates `#ef-preview`), else sets the value and sends `input`. The field gets
+  aria-autocomplete "list" on focus, aria-expanded, aria-controls (while open), aria-activedescendant; a hidden live
+  region says how many suggestions. No role combobox: on a multi-line textarea it would hide the textbox role, so
+  aria-expanded is a hint some readers skip. IME: no refresh while composing (`compositionend` refreshes), and
+  keydowns with keyCode 229 (Safari's composition-ending Enter has isComposing false) never accept.
 - Variant pictures: `build_icons` makes `dist/icons/<name>.<variant>.webp` for tint, sticker, glow and darkglow of every
   manifest icon with the font build's own code: build_stoogedings.py `icon_art(im, tint)` (the per-icon part of
   `build()`, moved into a function the font build calls too; the font rebuilt byte-identical with it, 2026-10-23) gives
@@ -281,6 +291,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   above and below of --r x 1.35em: it sits on the line as the plain icon does and its halo spills over the lines above
   and below, as Photoshop draws the font's; its full width counts, as the font's spacers widen the token. A variant
   without its picture (an older build, an unknown variant) is the plain icon, as before and as the parser reads it.
+  No spaces around the variant, as in the font and the parser: `[fire: glow]` and `[fire: no]` are the plain icon
+  (until the 2026-10-23 review text.js trimmed them, so `[fire: no]` was crossed out).
   `plain()` and build_site's `share_text` still flatten every variant.
 - Checks (2026-10-23; harness in ~/Documents/Tools/wt/scratch/picker/: a scratch build of this branch with the image
   cache cloned and AutoCroissant's pickles, served on localhost, driven in WebKit by `browser/shoot.swift`, a
@@ -290,6 +302,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   inline editing (a spaced alias, the first Esc only closing the list, the second cancelling, a click accepting with
   the focus kept), the inline note (Enter accepts, the note stays open), 390 px wide. `variants-font-vs-site.png` sets
   the font's tokens (WebKit draws its OT-SVG glyphs) next to the site's pictures on dark and light: the same look.
-  AutoCroissant tests/test_token_picker.py (8): each fails with its part reverted to main.
+  AutoCroissant tests/test_token_picker.py (8): each fails with its part reverted to main. Review fixes the same
+  evening (text after the caret kept, a token's variant kept, the 7-character tags, typos, most used first, strict
+  `:variant` in text.js, ARIA and IME, site.yml's cache key hashing build_stoogedings.py too): the open-token, ranking,
+  timing-tag, choice and text.js tests fail with tokens.js or text.js as before them; screenshots `15-*` and on.
 - Not done: the font draws wide icons up to 1.4 em, the site fits every icon (and so its variants) in a 1.35 em square,
   as before; the old `.token-bar` buttons stay.

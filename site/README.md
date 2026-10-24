@@ -215,13 +215,17 @@ rename people, edit the admin list and edit anyone's profile (all committed with
 `Card Edits.json` to go back to the PSD.
 
 **Icons and timing tags as you type.** In card text (the ability and note, in place or in All fields, rulebook pages
-too) typing `[` lists the icons with their pictures; typing more narrows the list (`[fi` shows field and fire; case,
-spaces, `_` and `-` don't matter, and aliases work: `[barn` finds the poorly drawn barnstar), Backspace widens it. A
-full name lists its variants under it, and `[fire:` lists only the variants, each with its own picture (`:tint`,
-`:sticker`, `:no`, `:glow`, `:darkglow`). `(` and the start of a timing tag (`(1`, `(O`, `(Act`) lists the tags with their
-badges and meanings; brackets around words, like "(see below)", never open it. ↑ ↓ move, Enter or Tab puts the
-token in (`[fire]`, `[fire:glow]`, `(1CD)`, in place of what was typed and any `]` already there), a click or tap does
-too, and Esc closes the list only (a second Esc cancels the edit as usual). The preview follows.
+too) typing `[` lists the icons with their pictures, the ones the cards use most first; typing more narrows the list
+(`[fi` shows fire and field; case, spaces, `_` and `-` don't matter, aliases work: `[barn` finds the poorly drawn
+barnstar, and a typo still finds the icon: `[fier` shows fire and field), Backspace widens it. A full name lists its
+variants under it, and `[fire:` lists only the variants, each with its own picture (`:tint`, `:sticker`, `:no`,
+`:glow`, `:darkglow`). `(` and the start of a timing tag (`(1`, `(O`, `(Act`) lists the tags with their badges and
+meanings; words in brackets that start in lower case, like "(see below)", never open it, and others close it at the
+first letter that fits no tag ("(Only once)" lists the O tags at "(O", then closes at "(On"). ↑ ↓ move, Enter or Tab
+puts the token in (`[fire]`, `[fire:glow]`, `(1CD)`) in place of what you typed, a click or tap does too, and Esc
+closes the list only (a second Esc cancels the edit as usual). Text after the cursor stays, unless the cursor is
+inside a token: then the whole token is replaced, keeping its variant (`[fi|re:glow]` and fire gives `[fire:glow]`).
+The preview follows.
 
 ### Signing in and passwords
 

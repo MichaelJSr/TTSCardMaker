@@ -20,22 +20,29 @@ export const TAGS = (() => {
 })();
 
 /** The icons as one entry each, from cards.json icons ({normalized spelling: {file, name, kind, v}}): [{name, kind,
- *  file, v, keys}], keys = its other spellings (aliases), normalized. */
-export function vocabulary(icons) {
+ *  file, v, keys, uses}], keys = its other spellings (aliases), normalized; uses = its tokens in texts (the cards'). */
+export function vocabulary(icons, texts = []) {
   const by = new Map();
   for (const [key, ic] of Object.entries(icons || {})) {
-    if (!by.has(ic.file)) by.set(ic.file, { name: ic.name, kind: ic.kind, file: ic.file, v: ic.v || [], keys: [] });
+    if (!by.has(ic.file)) by.set(ic.file, { name: ic.name, kind: ic.kind, file: ic.file, v: ic.v || [], keys: [], uses: 0 });
     if (key !== norm(ic.name)) by.get(ic.file).keys.push(key);
+  }
+  for (const t of texts) for (const m of String(t || "").matchAll(/\[([^\[\]\n:]{1,52})(?::[a-z]*)?\]/gi)) {
+    const ic = icons[norm(m[1])];
+    if (ic) by.get(ic.file).uses++;
   }
   return [...by.values()];
 }
 
 const NAME = /^[\p{L}\p{N} _\-.'’]*$/u;          // a token's name as typed (norm drops the separators)
-const TAG_TEXT = /^[-0-9A-Za-z/]{1,6}$/;          // text.js TAG
-/** The token being typed at the caret, or null. {type: "icon", start, end, base, variant} (variant null before a ":") or
- *  {type: "tag", start, end, text}; start: its "[" or "(", end: the caret, close: where a choice's text ends (past the
- *  rest of the word at the caret and a "]" or ")" there). Only on the caret's line. A "(" opens a tag only when the text
- *  after it could start one and does not start in lower case: "(see below)" is words. */
+const TAG_TEXT = /^-?[0-9A-Za-z/]{0,6}$/;         // text.js TAG: (-1/2GCD) is the longest
+const REST_ICON = /^[\p{L}\p{N} _\-.'’:]*\]/u, REST_TAG = /^[-0-9A-Za-z/]*\)/;
+/** The token being typed at the caret, or null. {type: "icon", start, end, close, base, variant, tail} (variant null
+ *  before a ":") or {type: "tag", start, end, close, text}; start: its "[" or "(", end: the caret, close: where a
+ *  choice's text ends: the caret, or past the rest of a token the caret is inside when its "]" or ")" closes it on
+ *  this line ("Heal [fi|re] now"); text after the caret that nothing closes stays ("[fi|and ice"). tail: that rest's
+ *  ":variant]", kept when a plain icon is chosen. Only on the caret's line. A "(" opens a tag only when the text after
+ *  it could start one and does not start in lower case: "(see below)" is words. */
 export function openToken(text, caret) {
   text = String(text ?? "");
   if (!Number.isInteger(caret) || caret < 0 || caret > text.length) return null;
@@ -45,30 +52,57 @@ export function openToken(text, caret) {
     const seg = before.slice(sq + 1), colon = seg.indexOf(":");
     const base = colon < 0 ? seg : seg.slice(0, colon), variant = colon < 0 ? null : seg.slice(colon + 1);
     if (seg.length > MAX_TOKEN || !NAME.test(base) || (variant !== null && !/^[a-z]*$/i.test(variant))) return null;
-    const rest = /^[\p{L}\p{N}_\-.'’:]*\]?/u.exec(after)[0];
-    return { type: "icon", start: line + sq, end: caret, close: caret + rest.length, base, variant };
+    let rest = (colon < 0 ? REST_ICON : /^[a-z]*\]/i).exec(after)?.[0] ?? "";
+    if (seg.length + rest.length - 1 > MAX_TOKEN) rest = "";
+    const at = colon < 0 ? rest.indexOf(":") : -1;
+    return { type: "icon", start: line + sq, end: caret, close: caret + rest.length, base, variant, tail: at < 0 ? "" : rest.slice(at) };
   }
   if (pa > before.lastIndexOf(")") && pa > sq) {
     const seg = before.slice(pa + 1);
-    if (!TAG_TEXT.test(seg) || /^[a-z]/.test(seg)) return null;
-    const rest = /^[-0-9A-Za-z/]*\)?/.exec(after)[0];
+    if (!seg || !TAG_TEXT.test(seg) || /^[a-z]/.test(seg)) return null;
+    let rest = REST_TAG.exec(after)?.[0] ?? "";
+    if (!TAG_TEXT.test(seg + rest.slice(0, -1))) rest = "";
     return { type: "tag", start: line + pa, end: caret, close: caret + rest.length, text: seg };
   }
   return null;
 }
 
+/** The fewest edits (a letter added, dropped, changed, or two swapped) from q to the start of s */
+function slips(q, s) {
+  let prev2 = null, prev = Array.from({ length: s.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= q.length; i++) {
+    const row = [i];
+    for (let j = 1; j <= s.length; j++) {
+      row[j] = Math.min(prev[j] + 1, row[j - 1] + 1, prev[j - 1] + (q[i - 1] === s[j - 1] ? 0 : 1));
+      if (prev2 && i > 1 && j > 1 && q[i - 1] === s[j - 2] && q[i - 2] === s[j - 1]) row[j] = Math.min(row[j], prev2[j - 2] + 1);
+    }
+    prev2 = prev; prev = row;
+  }
+  return Math.min(...prev);
+}
+
 const KIND_ORDER = { type: 0, star: 1 };
 /** Icons matching q (normalized): exact name or alias, then name prefix, alias prefix, then (2+ letters) inside the
- *  name, inside an alias; types before stars, then by name. [{e, exact}] */
+ *  name, inside an alias; with none of those (3+ letters), a slip of the keys: names or aliases that start one edit
+ *  away (two from 6 letters), the fewest first. Types before stars, then the most used in the cards, then by name.
+ *  [{e, exact}] */
 function rank(vocab, q) {
-  const out = [];
+  let out = [];
   for (const e of vocab) {
     const n = norm(e.name), long = q.length > 1;
     const tier = n === q || e.keys.includes(q) ? 0 : n.startsWith(q) ? 1 : e.keys.some(k => k.startsWith(q)) ? 2
       : long && n.includes(q) ? 3 : long && e.keys.some(k => k.includes(q)) ? 4 : -1;
     if (tier >= 0) out.push({ e, tier, exact: tier === 0 });
   }
-  return out.sort((a, b) => a.tier - b.tier || (KIND_ORDER[a.e.kind] ?? 2) - (KIND_ORDER[b.e.kind] ?? 2) || a.e.name.localeCompare(b.e.name));
+  if (!out.length && q.length > 2) {
+    const most = q.length > 5 ? 2 : 1;
+    for (const e of vocab) {
+      const d = Math.min(...[norm(e.name), ...e.keys].map(k => slips(q, k)));
+      if (d <= most) out.push({ e, tier: 5 + d, exact: false });
+    }
+  }
+  return out.sort((a, b) => a.tier - b.tier || (KIND_ORDER[a.e.kind] ?? 2) - (KIND_ORDER[b.e.kind] ?? 2)
+    || (b.e.uses || 0) - (a.e.uses || 0) || a.e.name.localeCompare(b.e.name));
 }
 
 /** A row: {token, label (its plain name), kind ("type", "star", "timing tag"), image (a picture's file; none for a
@@ -105,12 +139,13 @@ export function suggest(open, vocab) {
   return out.slice(0, LIMIT);
 }
 
-/** The text with the open token replaced by a row's token (its own "]" or ")" in place of one already there):
- *  {text, caret (just past it), start, end (the range replaced), insert}. */
+/** The text with the open token (start..close) replaced by a row's token, a plain icon keeping the ":variant" the
+ *  caret was in front of: {text, caret (just past it), start, end (the range replaced), insert}. */
 export function applyChoice(text, open, item) {
   text = String(text ?? "");
+  const insert = open.tail && open.type === "icon" && !item.variant ? item.token.slice(0, -1) + open.tail : item.token;
   const before = text.slice(0, open.start), after = text.slice(open.close);
-  return { text: before + item.token + after, caret: open.start + item.token.length, start: open.start, end: open.close, insert: item.token };
+  return { text: before + insert + after, caret: open.start + insert.length, start: open.start, end: open.close, insert };
 }
 
 // ---- the dropdown, in the browser
@@ -190,7 +225,7 @@ function show(el, o, found, typed) {
   place();
 }
 function close() {
-  if (field) { field.setAttribute("aria-expanded", "false"); field.removeAttribute("aria-activedescendant"); }
+  if (field) { field.setAttribute("aria-expanded", "false"); field.removeAttribute("aria-activedescendant"); field.removeAttribute("aria-controls"); }
   if (list && !list.hidden) { list.hidden = true; list.innerHTML = ""; if (status) status.textContent = ""; }
   field = null; open = null; items = [];
 }
@@ -210,9 +245,9 @@ function accept(i) {
   if (!it || !el) return;
   const want = applyChoice(el.value, o, it);
   close();
-  el.setSelectionRange(o.start, o.close);
+  el.setSelectionRange(want.start, want.end);
   let done = false;
-  try { done = document.execCommand("insertText", false, it.token) && el.value === want.text; } catch { done = false; }   // keeps undo
+  try { done = document.execCommand("insertText", false, want.insert) && el.value === want.text; } catch { done = false; }   // keeps undo
   if (!done) {                                   // the input event (edit.js's live preview) comes from execCommand, or here
     el.value = want.text;
     el.dispatchEvent(new Event("input", { bubbles: true }));
@@ -221,7 +256,7 @@ function accept(i) {
 }
 const stop = e => { e.preventDefault(); e.stopImmediatePropagation(); };
 function onKey(e) {                              // capture: before inline.js and app.js (Esc there cancels the edit)
-  if (!shown() || e.target !== field || e.isComposing) return;
+  if (!shown() || e.target !== field || e.isComposing || e.keyCode === 229) return;   // 229: an IME's key (Safari's commit)
   const plainKey = !e.altKey && !e.ctrlKey && !e.metaKey;
   if ((e.key === "ArrowDown" || e.key === "ArrowUp") && plainKey) { stop(e); setActive(active + (e.key === "ArrowDown" ? 1 : -1)); }
   else if ((e.key === "PageDown" || e.key === "PageUp") && plainKey) { stop(e); setActive(Math.max(0, Math.min(items.length - 1, active + (e.key === "PageDown" ? ROWS : -ROWS)))); }
@@ -250,7 +285,9 @@ export function install(api) {
   });
   list.addEventListener("pointermove", e => { const li = e.target.closest("[data-i]"); if (li && +li.dataset.i !== active) setActive(+li.dataset.i, false); });
   for (const ev of ["pointerup", "pointercancel"]) document.addEventListener(ev, () => { setTimeout(() => { pressing = false; }); }, true);
-  document.addEventListener("input", e => { if (e.target.matches?.(FIELD)) refresh(e.target, true); }, true);
+  document.addEventListener("input", e => { if (e.target.matches?.(FIELD) && !e.isComposing) refresh(e.target, true); }, true);
+  document.addEventListener("compositionend", e => { if (e.target.matches?.(FIELD)) refresh(e.target, true); }, true);
+  document.addEventListener("focusin", e => { if (e.target.matches?.(FIELD)) e.target.setAttribute("aria-autocomplete", "list"); }, true);
   document.addEventListener("keydown", onKey, true);
   document.addEventListener("keyup", e => { if (e.target.matches?.(FIELD) && /^(Arrow(Left|Right|Up|Down)|Home|End)$/.test(e.key)) refresh(e.target, false); }, true);
   document.addEventListener("pointerup", e => { if (e.target.matches?.(FIELD)) setTimeout(() => refresh(e.target, false)); }, true);

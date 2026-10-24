@@ -147,7 +147,7 @@ function derive() {
     const c = S.byId.get(e.id); if (c) c._banned = e.reason || "banned";
   }
   S.renderer = makeRenderer({ cards: S.cards, icons: S.icons, variants: S.data.iconVariants });
-  S.vocab = tokens.vocabulary(S.icons);                    // the token picker's icons
+  S.vocab = tokens.vocabulary(S.icons, S.all.map(c => c.ability));   // the token picker's icons, the most used first
   S.mentions = new Map(); S.mentionedBy = new Map();
   for (const c of S.cards) {
     const m = S.renderer.mentions(c.ability, c.name);
