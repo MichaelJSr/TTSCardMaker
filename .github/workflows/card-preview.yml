@@ -1,7 +1,7 @@
 # Card previews for the website (AutoCroissant commands/card_preview.py; design section 16): one card's PSD-kind edit
 # baked as card-edits.yml would, nothing committed to main. The result goes to the orphan branch `previews`
 # (previews/<request>/, index.json), one commit per run, rewritten past 200 previews or 7 days; contract: site/NOTES.md
-# section 19. No Discord. The preview job's token is read-only; only the publish job writes (python3, stdlib, no install).
+# section 19. No Discord. The preview job's token is read-only; only the publish job writes (stdlib, no install).
 # Inputs reach the shell only through env and a file. Every push trigger here is `branches: [main]`. The card packages
 # (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from wheels cached per that file (~25 s
 # a preview saved).
@@ -90,10 +90,11 @@ jobs:
       - uses: actions/setup-python@v7
         id: python
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
-      # card-edits.yml's install: requirements-cards.txt's wheels, cached per that file, runner and Python (the same entry),
-      # but not pyoxipng: card_preview would recompress preview.png (~4 s), which is never published.
+      # card-edits.yml's install: requirements-cards.txt's wheels, cached per that file, runner and Python (the same entry;
+      # a miss builds them all, pyoxipng too), but pyoxipng not installed: card_preview would recompress preview.png
+      # (~4 s), which is never published.
       - id: wheels
         uses: actions/cache/restore@v6
         with:
@@ -185,6 +186,10 @@ jobs:
             /commands/repo_history.py
             /global_config.py
 
+      - uses: actions/setup-python@v7     # the Actions' one Python; stdlib only (-S), no install
+        with:
+          python-version: "3.14"
+
       - name: Take over
         continue-on-error: true
         uses: actions/download-artifact@v4
@@ -198,5 +203,5 @@ jobs:
         env:
           REQUEST: ${{ inputs.request }}
         run: |
-          python3 -m commands.card_preview_branch --out "$RUNNER_TEMP/preview" --request="$REQUEST" --git "$GITHUB_WORKSPACE" \
+          python -S -m commands.card_preview_branch --out "$RUNNER_TEMP/preview" --request="$REQUEST" --git "$GITHUB_WORKSPACE" \
             | tee -a "$GITHUB_STEP_SUMMARY"
