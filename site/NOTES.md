@@ -903,3 +903,40 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   date and commit; chips per tag (`?tag=`). `ARCHIVE_TAGS` and `archiveTag(row)` (the build's key, else from the fields)
   are shared with the person page. The Changelog tab no longer lists the archived cards; an archived event shows its
   pill, a renamed one "renamed to".
+
+## 27. Speed pass: the front end (2026-10-24)
+
+Measured with a local mirror of the live site (scratch site-perf2/front: serve.mjs, run.mjs, same.mjs). Rules the code now
+relies on:
+- `route(e)` runs once per navigation: a hash navigation fires `popstate` then `hashchange` (same URL, `e.newURL`); the
+  `hashchange` of that pair is skipped. A `popstate` alone (c/<id>/ to the root) still routes. Closing a card over the
+  rendered view only closes it (`S.title` puts the view's title back); the view is not drawn again.
+- Dates: `dateFmt(opts)` (text.js) is `toLocaleDateString(undefined, opts)` with its `Intl.DateTimeFormat` made once.
+  Use it (or history.js `date`/`month`) for any date shown per row. stats.js `heatScale()` reads the CSS ramp once per
+  theme (`heatMemo`); `fmt` prints whole numbers under 1000 with String() where the formatter prints the same
+  (`PLAIN`); history.js `dayOf` and balance.js `dayKey` keep each Pacific day per UTC hour (whole-hour offsets only).
+- Stats: at the top of the page with the Balance slot below the window, Balance, Ratings and History are filled after
+  the first screen has painted (`statsJob` drops a stale fill); scrolled, they are filled at once as before.
+- Cards grid: `fillGrid` keeps each tile's node in `gridTiles` (card id -> its markup, node, edit mode) and reuses it
+  while `tileHtml` gives the same markup. Code that changes a tile in place must drop it (`refresh` does for the deck
+  button) or set its change again after every render (edit mode: `mountGrid`'s draggable, `reflect`, `mountTiles`).
+  Each render puts in the tiles that cover the window (`GRID_FIRST` or more) and the rest in `GRID_CHUNK` tasks
+  (`gridJob` stops them); in edit mode the later ones get their marks there (inline.js `markTiles`, `mountTiles`).
+- Back and Forward draw everything at once (`S.restoring`: the entry's `history.state.drawn`, stamped by `syncUrl`;
+  `setParams` keeps it), so the browser's scroll restoration finds the page long enough: grid, table and Stats alike.
+- Table view: `tableHtml` writes the rows that cover the window (at least `TABLE_FIRST`, 30 px a row at most, so the
+  scroll position holds), `fillTable` appends the rest in `TABLE_CHUNK` tasks; a newer render stops them (`tableJob`).
+- Rulebook: rules.json re-derives (`editor.refresh`) only when a staged or published-not-built edit is on a rulebook
+  page (`editor.touches`). No `content-visibility` on its pages: the TOC's smooth jumps landed off target (the pages'
+  estimated heights change as they render on the way).
+- Read `scrollY` and the window size before replacing the view (renderCards `win`, renderStatsView `top`, `vh`): read
+  after, they force a layout of the short page (`innerWidth` too on phones) and the scroll position clamps.
+- Mentions: `mentions()` parses without building the icons' HTML (`parse(text, self, false)`); it must keep finding
+  what `render()` links (test_site_speed).
+- index.html preloads every module app.js imports (test_site_speed). Type icons and the filter toggles load lazily.
+- A card opened from a link (nothing rendered yet) draws no grid behind it: `S.list` is the grid's list (prev/next),
+  the grid comes when the dialog closes. The dialog's first picture is the grid tile's when it has loaded
+  (`placeholderOf`), else the 720 px one a share page preloads, else the 360 px one.
+- Build: index.html gets `grid_preload(cards)`: a script that preloads the first `GRID_PRELOADS` pictures in Name order
+  with app.js's srcset and the saved tile size, only for the plain grid. c/<id>/ pages preload the 720 px picture.
+  `img()`, `imgAttrs` and the tile sizes in app.js must match these (test_site_speed).
