@@ -1,4 +1,4 @@
-// The Changes page's Changelog and Database edits tabs (app.js renderChanges has the tab row and the other tabs), from
+// The Changes page's Changelog, Archive and Database edits tabs (app.js renderChanges has the tab row and the other tabs), from
 // data/changelog.json (build_site.py: the card sync's events, the edit batches from git history, the archived cards).
 // Events are grouped by push as the Discord posts are
 // (AutoCroissant commands/changelog.py: messages(), title_of(), link_of(), SECTIONS). DOM-free: every function returns
@@ -147,17 +147,25 @@ export function fieldsHtml(fields) {
 const VERDICT = { buff: ["diff-up", "buff"], nerf: ["diff-down", "nerf"], mixed: ["muted", "buffs and nerfs"] };
 const verdictHtml = e => { const v = VERDICT[e.verdict]; const why = [...(e.buffs || []), ...(e.nerfs || [])].join("; "); return v ? ` <span class="${v[0]}"${why ? ` data-tip="${esc(why)}"` : ""}>(${v[1]})</span>` : ""; };
 const folder = p => String(p || "").split("/").slice(0, -1).join("/");
-/** Where an archived card's PSD went: "moved to MDW/The Morgue" (moved_to: retired, not deleted), else "PSD deleted" */
-const goneText = e => (e.moved_to ? `moved to ${folder(e.moved_to) || e.moved_to}` : "PSD deleted");
+// an archived card's tag: [key, label] (build_site ARCHIVE_TAGS)
+export const ARCHIVE_TAGS = [["renamed", "Renamed"], ["retired", "Retired"], ["deleted", "Deleted"]];
+/** The tag's key: the build's, else from the fields (renamed_to, moved_to: its PSD moved into MDW) */
+export const archiveTag = r => (ARCHIVE_TAGS.some(([k]) => k === r.tag) ? r.tag : r.renamed_to ? "renamed" : r.moved_to ? "retired" : "deleted");
+/** The tag as a pill; its tip: where the PSD was (and went) */
+export function archiveTagHtml(r) {
+  const t = archiveTag(r), label = ARCHIVE_TAGS.find(([k]) => k === t)[1];
+  const tip = r.moved_to ? `${r.path || ""} → ${folder(r.moved_to) || r.moved_to}` : r.path || "";
+  return `<span class="fact arch ${t}"${tip ? ` data-tip="${esc(tip)}"` : ""}>${label}</span>`;
+}
 /** One event as a line (the post's _line(), with the old values and the ability diff) */
 export function eventHtml(e) {
   const title = cardLink(e.id, e.title || e.card);
   switch (e.kind) {
     case "restore": return `<li>Card data restored from ${short(e.restored_from || "?")}</li>`;
     case "new": return `<li>${title} <span class="muted">(${esc(kindWord(e.card_type))}${e.stars ? `, ${e.stars}★` : ""})</span>${e.by ? ` by ${esc(e.by)}` : ""}</li>`;
-    case "renamed": return `<li>${esc(e.title || e.card)} is now ${cardLink(e.renamedId, e.renamed_to || "?")}</li>`;
+    case "renamed": return `<li>${esc(e.title || e.card)} renamed to ${cardLink(e.renamedId, e.renamed_to || "?")}</li>`;
     case "moved": return `<li>${title} moved to ${esc(folder(e.path) || "?")}${e.from_path ? ` <span class="muted">from ${esc(folder(e.from_path))}</span>` : ""}</li>`;
-    case "archived": return `<li>${esc(e.title || e.card)} <span class="muted">(${esc(goneText(e))})</span></li>`;
+    case "archived": return `<li>${esc(e.title || e.card)} ${archiveTagHtml(e)}</li>`;
     case "restored": return `<li>${title} <span class="muted">(PSD back)</span></li>`;
     case "art": return `<li>${title}</li>`;
     default: {                                            // changed, edited, authors, reparse
@@ -209,7 +217,7 @@ function sourceHtml(C) {
 const NOT_YET = "Once the card sync is running (every 30 minutes), it will record each card change here and post it in Discord, one post per push. Until then this tab has no events.";
 
 // ---- the tabs ---------------------------------------------------------------------------------------------------
-/** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=), and the archived cards */
+/** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=) */
 export function changelogHtml(C, params) {
   const events = C?.events || [], kinds = csv(params, "kind").filter(k => KINDS.some(([x]) => x === k));
   const counts = new Map();
@@ -221,16 +229,19 @@ export function changelogHtml(C, params) {
   return `<section class="panel"><h3>Changelog${events.length ? ` <span class="muted">${events.length}</span>` : ""}</h3>
     <p class="muted">Every card change the card sync recorded in the last ${esc(C?.days || 180)} days, one block per push, as posted in Discord. Times are Pacific.</p>
     ${sourceHtml(C || {})}${present.length > 1 ? chips(present, kinds, counts, "kind") : ""}</section>
-    ${body}${archivedHtml(C?.archived || [], C?.repo)}`;
+    ${body}`;
 }
-/** Archived cards: their PSD left the card folders (the bot's tags): deleted, renamed (renamed_to) or moved into MDW
-    (moved_to) */
-export function archivedHtml(rows, repo) {
-  if (!rows.length) return "";
-  const gone = r => (r.renamed_to ? ` · renamed to ${cardLink(r.renamedId, r.renamed_to)}` : ` · ${esc(goneText(r))}`);
-  const line = r => `<li>${esc(r.title || r.card)} <span class="muted">${esc(kindWord(r.card_type))}${r.stars ? ` · ${r.stars}★` : ""}${r.at ? ` · ${esc(dateLabel(r.at))}` : ""}${r.path ? ` · ${esc(r.path)}` : ""}</span>${gone(r)}${r.commit && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(r.commit)}" target="_blank" rel="noopener">${short(r.commit)}</a>` : ""}</li>`;
-  return `<section class="panel"><h3>Archived cards <span class="muted">${rows.length}</span></h3><p class="muted">Cards whose PSD left the card folders: deleted, renamed, or moved to MDW (retired). The bot keeps their last version.</p><ul class="cl-lines">${rows.map(line).join("")}</ul></section>`;
+/** The Archive tab: cards whose PSD left the card folders, newest first, with their tag (?tag= filters) */
+export function archiveHtml(rows, repo, params = null) {
+  const tags = csv(params, "tag").filter(t => ARCHIVE_TAGS.some(([k]) => k === t)), counts = new Map();
+  for (const r of rows) counts.set(archiveTag(r), (counts.get(archiveTag(r)) || 0) + 1);
+  const present = ARCHIVE_TAGS.filter(([k]) => counts.get(k)), shown = tags.length ? rows.filter(r => tags.includes(archiveTag(r))) : rows;
+  const line = r => `<li><b>${esc(r.title || r.card)}</b> ${archiveTagHtml(r)}${r.renamed_to ? ` renamed to ${cardLink(r.renamedId, r.renamed_to)}` : ""} <span class="muted">${esc(kindWord(r.card_type))}${r.stars ? ` · ${r.stars}★` : ""}${r.author ? ` · ${nameHtml(r.author)}` : ""}${r.at ? ` · ${esc(dateLabel(r.at))}` : ""}</span>${r.commit && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(r.commit)}" target="_blank" rel="noopener">${short(r.commit)}</a>` : ""}</li>`;
+  return `<section class="panel"><h3>Archive${rows.length ? ` <span class="muted">${rows.length}</span>` : ""}</h3><p class="muted">Renamed, retired (moved to MDW) or deleted cards.</p>
+    ${present.length > 1 ? chips(present, tags, counts, "tag") : ""}
+    ${shown.length ? `<ul class="cl-lines">${shown.map(line).join("")}</ul>` : `<p class="empty">No archived cards.</p>`}</section>`;
 }
+export const archivedHtml = archiveHtml;                  // the old name, for one round
 /** One edit batch: who, when, where, its commit, and each card's fields old → new */
 export function batchHtml(b, repo) {
   // per name: build_site keeps a Discord name's discord: prefix; a Discord batch's line already says "via Discord"

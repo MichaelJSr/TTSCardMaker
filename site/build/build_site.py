@@ -2090,10 +2090,20 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
     return {"available": True, "batches": out}
 
 
-def archived_cards(old_stats, id_of, stats=()):
+ARCHIVE_TAGS = ("renamed", "retired", "deleted")   # changes.js ARCHIVE_TAGS
+
+
+def archive_tag(tag):
+    """The bot's archived tag -> renamed (renamed_to), retired (moved_to: its PSD moved into MDW) or deleted."""
+    return "renamed" if tag.get("renamed_to") else "retired" if tag.get("moved_to") else "deleted"
+
+
+def archived_cards(old_stats, id_of, stats=(), people=None, credited=None):
     """The cards whose PSD left the card repo: old_stats names whose last version carries the bot's `archived` tag
-    {at, path, blob, commit, renamed_to?, moved_to?, backfill?} (moved_to: the PSD moved into MDW, retired), newest first. A name in stats is back, whatever its tag says (the
-    bot clears it on its next save: card_models.stale_archives)."""
+    {at, path, blob, commit, renamed_to?, moved_to?, author?, backfill?} (moved_to: the PSD moved into MDW, retired), newest first. A name in stats is back, whatever its tag says (the
+    bot clears it on its next save: card_models.stale_archives). tag: archive_tag(); author: Card Authors.txt
+    (credited) > the tag's > the last version's, through person(); created: the last version's created date, else the
+    Pacific day of its oldest version; series: the last version's."""
     out = []
     for name, versions in (old_stats or {}).items():
         if name in stats:
@@ -2102,8 +2112,17 @@ def archived_cards(old_stats, id_of, stats=()):
         tag = getattr(last, "archived", None)
         if not isinstance(tag, dict):
             continue
-        row = {"card": name, "title": getattr(last, "display_name", None) or name, "card_type": getattr(last, "card_type", None),
-               "stars": getattr(last, "stars", None), "at": tag.get("at"), "path": tag.get("path") or getattr(last, "path", None),
+        title = getattr(last, "display_name", None) or name
+        listed = (credited or {}).get(card_key(name)) or (credited or {}).get(card_key(title))
+        made = getattr(last, "created", None)
+        made = made.get("date") if isinstance(made, dict) else None
+        if not made:
+            dated = [analytics.when(v) for v in versions if isinstance(getattr(v, "timestamp", None), (int, float))]
+            made = datetime.fromtimestamp(min(dated), analytics.ZONE).strftime("%Y-%m-%d") if dated else None
+        row = {"card": name, "title": title, "tag": archive_tag(tag), "card_type": getattr(last, "card_type", None),
+               "stars": getattr(last, "stars", None), "series": getattr(last, "series", None), "at": tag.get("at"),
+               "created": made, "author": person(people or {}, listed or tag.get("author") or getattr(last, "author", None)),
+               "path": tag.get("path") or getattr(last, "path", None),
                "commit": tag.get("commit"), "renamed_to": tag.get("renamed_to"), "moved_to": tag.get("moved_to")}
         renamed = id_of(tag.get("renamed_to"))
         if renamed:
@@ -2689,7 +2708,7 @@ def main():
     by_login = {p["login"].lower(): p for p in profiles}
     id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
     name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
-    archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats)
+    archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats, people=people, credited=credited)
     rated = apply_ratings(cards, parse_ratings(), archived, people, by_login)
     line = f"ratings: {rated['entries']} entries on {rated['cards']} cards ({rated['archived']} archived)"
     if rated["unmatched"]:

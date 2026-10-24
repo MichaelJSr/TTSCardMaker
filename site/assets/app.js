@@ -726,9 +726,9 @@ function distPage(panel, step) {          // a stat distribution's pager: the ne
 }
 // the Changes page's category tabs, a row across its top: [hash key, label]; #/changes is the first, #/changes/<key> the others
 // (a link to one survives a refresh), and each shows its own sections only
-const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["edits", "Database edits"], ["website", "Website edits"],
+const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["archive", "Archive"], ["edits", "Database edits"], ["website", "Website edits"],
   ["revised", "Most revised"], ["parser", "Parser notes"]];
-const NEEDS = { "": "history", revised: "history", changelog: "changelog", edits: "changelog" };   // the data a tab loads first
+const NEEDS = { "": "history", revised: "history", changelog: "changelog", archive: "changelog", edits: "changelog" };   // the data a tab loads first
 function renderChanges(r = parseHash(), held = null) {   // held: the tab a loading page focused, for the loaded redraw
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
   const nav = `<nav class="change-tabs" aria-label="Kinds of changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}"${k === tab ? ' class="on" aria-current="page"' : ""}>${esc(l)}</a>`).join("")}</nav>`;
@@ -753,6 +753,7 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   }
   const updated = `<p class="muted">Updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific) from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
   if (tab === "changelog") { page(changes.changelogHtml(S.changelog, r.params)); return; }
+  if (tab === "archive") { page(changes.archiveHtml(S.changelog?.archived || [], S.changelog?.repo, r.params)); return; }
   if (tab === "edits") { page(changes.editsHtml(S.changelog, r.params)); return; }
   if (tab === "website") { page(webEditsHtml() + updated); return; }
   if (tab === "parser") { page(parserNotesHtml() + updated); return; }
