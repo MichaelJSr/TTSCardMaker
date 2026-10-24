@@ -3,7 +3,7 @@
 // Events are grouped by push as the Discord posts are
 // (AutoCroissant commands/changelog.py: messages(), title_of(), link_of(), SECTIONS). DOM-free: every function returns
 // HTML, every string goes through esc.
-import { esc, diffWords } from "./text.js";
+import { esc, diffWords, dateFmt } from "./text.js";
 
 const TZ = "America/Los_Angeles";                         // the bot's TIMEZONE: the posts' times, balance.js
 const CARD_SYNC = "Card sync";                            // the push of the run's own commit (changelog.CARD_SYNC)
@@ -30,8 +30,9 @@ const partsOf = ts => Object.fromEntries(parts.formatToParts(new Date((ts || 0) 
 /** "Oct 22 14:05" in Pacific time, as the posts' titles */
 export const when = ts => { const p = partsOf(ts); return `${p.month} ${p.day} ${p.hour}:${p.minute}`; };
 const dayKey = ts => { const p = partsOf(ts); return `${p.year} ${p.month} ${p.day}`; };
-const dayLabel = ts => new Date((ts || 0) * 1000).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "short", day: "numeric", timeZone: TZ });
-const dateLabel = ts => (ts ? new Date(ts * 1000).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: TZ }) : "");
+const DAY = dateFmt({ weekday: "long", year: "numeric", month: "short", day: "numeric", timeZone: TZ }), DATE = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: TZ });
+const dayLabel = ts => DAY(new Date((ts || 0) * 1000));
+const dateLabel = ts => (ts ? DATE(new Date(ts * 1000)) : "");
 const plural = (n, one, many = one + "s") => `${n} ${n === 1 ? one : many}`;
 const short = sha => esc(String(sha || "").slice(0, 8));
 

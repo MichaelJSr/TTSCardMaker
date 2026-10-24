@@ -1,5 +1,5 @@
 import { compile, suggest, total, SEARCH_HELP } from "./search.js";
-import { esc, norm, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
 import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
@@ -61,7 +61,8 @@ const thumbUrl = c => img(c, 360);
 const imgAttrs = (c, css, big = false) => `src="${img(c, 360)}" srcset="${img(c, 240)} 240w, ${img(c, 360)} 360w${big ? `, ${img(c, 720)} 720w` : ""}" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
-const day = d => (d ? new Date(`${d}T12:00:00Z`).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }) : "");
+const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
 const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand" };
 /** "about 13 Oct 2023" for a date a Discord post awaiting review may still move */
 const createdText = c => (c.created ? `${c.createdAbout ? "about " : ""}${day(c.created)}` : "");
@@ -73,7 +74,7 @@ const shareUrl = id => `${ROOT}c/${encodeURIComponent(id)}/`;
 const userUrl = login => `${ROOT}u/${encodeURIComponent(login)}/`;
 const deckUrl = d => `${ROOT}d/#/deck/${D.encode(d)}`;
 const iconFor = name => S.icons[norm(name)];
-const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
+const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" loading="lazy" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
 // edits the pipeline bakes into the card image (build_site.py PSD_FIELDS): pending, refused, or baked but not re-parsed yet
 const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability" };
 const PSD_TIP = "The card image is being regenerated with this edit";     // the one tip for a pending PSD field (edit.js too)
@@ -95,7 +96,8 @@ async function getJson(name) {
 }
 // loaded on demand: the rulebook pages, and older versions of card text
 let rulesP = null, historyP = null, versionsP = null;
-const loadRules = () => (rulesP ||= getJson("rules.json").then(d => { S.rules = d.rules; editor.refresh(); }).catch(e => { rulesP = null; throw e; }));
+// the pages' staged edits (a full re-derive only when one of them has one)
+const loadRules = () => (rulesP ||= getJson("rules.json").then(d => { S.rules = d.rules; if (editor.touches(new Set(d.rules.map(p => p.id)))) editor.refresh(); }).catch(e => { rulesP = null; throw e; }));
 const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   for (const c of [...S.cards, ...(S.rules || [])]) if (h[c.id]) c.history = h[c.id];
   S.history = h;
@@ -237,19 +239,27 @@ function syncUrl(r) {
   const want = r.name === "card" ? shareUrl(r.arg) : r.name === "u" && r.arg && !r.edit ? userUrl(r.arg) : sd ? deckPageUrl(sd.owner, sd.slug)
     : r.name === "decks" && r.arg && !location.hash ? location.href                  // a deck's static path before decks.json is loaded (or a private, staged or missing deck): stay, never the bare root
     : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
-  if (location.href !== want) history.replaceState(history.state, "", want);
+  if (location.href !== want || !history.state?.drawn) history.replaceState({ ...history.state, drawn: true }, "", want);   // drawn: Back or Forward to it restores its scroll
 }
-function route() {
+let popped = null;                                       // a hash navigation fires popstate, then hashchange: route once
+function route(e) {
+  if (e?.type === "hashchange") { const dup = e.newURL === popped; popped = null; if (dup) return; }
+  else if (e?.type === "popstate") popped = location.href;
+  S.restoring = e?.type === "popstate" && !!history.state?.drawn;   // Back or Forward: the browser restores the scroll after this, so no chunks
+  queueMicrotask(() => { S.restoring = false; });
   const r = parseHash();
   syncUrl(r);
   hideTip();
   if (r.name === "card") {
-    if (!S.renderedHash) renderView({ name: "cards", arg: "", params: new URLSearchParams() }, "#/cards");
+    if (!S.renderedHash) {                               // from a link: the grid (and its pictures) when the dialog closes
+      S.list = listOf(new URLSearchParams()); view.replaceChildren();
+      $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === "cards"));
+    }
     openCard(r.arg, r.params.has("details"));
     return;
   }
   const hash = location.hash || hashOf(r);
-  if (hash === S.renderedHash && !modal.hidden) { closeModal(); return; }
+  if (hash === S.renderedHash && !modal.hidden) { closeModal(); document.title = S.title; return; }   // the view under it stays
   closeModal();
   renderView(r, hash);
 }
@@ -264,14 +274,14 @@ function renderView(r, hash) {
   (views[r.name] || renderCards)(r);
   const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.edit ? "Edit profile" : r.arg || "People",
     decks: r.arg ? S.deckTitle || "Deck" : "Published decks" };
-  document.title = `${titles[r.name] || "Cards"} · Impossibility Simulator`;
+  S.title = document.title = `${titles[r.name] || "Cards"} · Impossibility Simulator`;
 }
 function setParams(updates, { replace = true } = {}) {
   const r = parseHash();
   const p = r.params;
   for (const [k, v] of Object.entries(updates)) (v === "" || v == null || (Array.isArray(v) && !v.length)) ? p.delete(k) : p.set(k, Array.isArray(v) ? v.join(",") : v);
   const hash = `#/${r.name === "card" ? "cards" : r.name}${r.arg ? "/" + r.arg : ""}${p.toString() ? "?" + p : ""}`;
-  if (replace) { history.replaceState(null, "", hash); renderView(parseHash(), hash); } else location.hash = hash;
+  if (replace) { history.replaceState(history.state, "", hash); renderView(parseHash(), hash); } else location.hash = hash;
 }
 
 // ---- cards (browse) --------------------------------------------------------------------------------
@@ -301,6 +311,7 @@ function filterCards(p, { facets = true } = {}) {
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   return list;
 }
+const listOf = p => sortCards(filterCards(p), sortOf(p), p.get("dir") || "");   // the cards the grid shows, in order
 function sortCards(list, sort = "name", dir = "") {
   const key = {
     name: c => c.name.toLowerCase(), stars: c => c.stars ?? -1, total: c => (c.hp == null ? -1 : total(c)), hp: c => c.hp ?? -1, def: c => c.def ?? -1,
@@ -336,10 +347,10 @@ function tileHtml(c, { small = false, eager = false, css = 190, constructed = fa
     <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(t, "")).join("")}</div></div></article>`;
 }
 function renderCards(r) {
-  const p = r.params;
+  const p = r.params, win = { y: scrollY, w: innerWidth, h: innerHeight, all: S.restoring };   // before the view goes: read after, they lay out the short page (the scroll clamps)
   if (document.activeElement !== qInput) qInput.value = p.get("q") || "";
   const base = filterCards(p, { facets: false });
-  const list = sortCards(filterCards(p), sortOf(p), p.get("dir") || "");
+  const list = listOf(p);
   S.list = list;
   if (S.selected.size) { const ids = new Set(list.map(c => c.id)); for (const id of S.selected) if (!ids.has(id)) S.selected.delete(id); }   // a drag carries only shown cards
   const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of [].concat(f(c))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };
@@ -378,7 +389,7 @@ function renderCards(r) {
       <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts)}
       ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts)}` : ""}
       ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t); const on = csv(p, "types").includes(t);
-        return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(t.replace(/_/g, " "))} (${typeCounts.get(t)})" aria-pressed="${on}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
+        return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(t.replace(/_/g, " "))} (${typeCounts.get(t)})" aria-pressed="${on}">${ic ? `<img loading="lazy" src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
       <h3>Series</h3><select data-action="select-param" data-key="series"><option value="">All series</option>${series.map(s => `<option${s === p.get("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>
       ${subseries.length || p.get("subseries") ? `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(p.get("subseries"))}</option>` : ""}${subseries.map(subOpt).join("")}</select>` : ""}
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
@@ -405,21 +416,74 @@ function renderCards(r) {
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v]) => `<button type="button" class="chip" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
       ${!list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
-        : view_ === "table" ? tableHtml(list, p) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}">${list.map((c, i) => tileHtml(c, { eager: i < 8, css: { s: 160, m: 200, l: 270 }[size] || 200 })).join("")}</div>`}
+        : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}"></div>`}
     </section></div>`;
+  const grid = list.length && view_ !== "table" && $(".browse .grid", view);
+  if (grid) fillGrid(grid, list, { css: { s: 160, m: 200, l: 270 }[size] || 200, win });
+  else if (list.length && view_ === "table") fillTable($(".browse table.data tbody", view));
   if (editing()) inline.mountGrid(view, p);
   if (editing()) previews.mountTiles(view);
 }
-function tableHtml(list, p) {
+// the grid's tiles by card id {html, el, ed}: a render reuses a tile whose markup (and edit mode) is unchanged instead of
+// parsing it again, so its picture stays loaded. Code that changes a tile in place drops it (refresh); the edit-mode marks
+// (draggable, data-selected, preview badges) are set again after every render. The tiles that cover the window go in now,
+// the rest in later tasks (a newer render stops them), with the edit-mode marks.
+const gridTiles = new Map();
+const GRID_FIRST = 96, GRID_CHUNK = 120;
+let gridJob = 0;
+function fillGrid(grid, list, { css, win }) {
+  const ed = editing(), job = ++gridJob;
+  const put = (from, to, mark = false) => {
+    const html = list.slice(from, to).map((c, i) => tileHtml(c, { eager: from + i < 8, css })), els = new Array(html.length), miss = [];
+    for (let i = 0; i < html.length; i++) { const t = gridTiles.get(list[from + i].id); if (t && t.html === html[i] && t.ed === ed) els[i] = t.el; else miss.push(i); }
+    if (miss.length) {
+      const tpl = document.createElement("template");
+      tpl.innerHTML = miss.map(i => html[i]).join("");
+      const fresh = [...tpl.content.children];
+      miss.forEach((i, k) => { els[i] = fresh[k]; gridTiles.set(list[from + i].id, { html: html[i], el: fresh[k], ed }); });
+    }
+    if (!mark) { grid.append(...els); return; }
+    const frag = document.createDocumentFragment();     // edit mode: the marks mountGrid and mountTiles gave the first ones
+    frag.append(...els); inline.markTiles(frag, S.selected); previews.mountTiles(frag); grid.append(frag);
+  };
+  // tiles are 200 px tall or more and 144 px wide or more (with the gap): enough to keep the scroll position
+  const first = win.all ? list.length : Math.max(GRID_FIRST, (Math.floor(win.w / 144) + 1) * Math.ceil((win.y + 2 * win.h) / 200));
+  if (list.length <= first) { put(0, list.length); return; }
+  put(0, first);
+  let k = first;
+  const step = () => {
+    if (job !== gridJob || !grid.isConnected) return;
+    put(k, k += GRID_CHUNK, ed);
+    if (k < list.length) setTimeout(step);
+  };
+  setTimeout(step);
+}
+function tableHtml(list, p, win) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
     ...(S.created ? [["created", "Created"]] : []), ["new", "Updated"]];
   const sort = sortOf(p);
+  const first = win.all ? list.length : Math.max(TABLE_FIRST, Math.ceil((win.y + 2 * win.h) / 30));    // rows are 30 px or taller: the scroll position stays
+  tableRest = list.slice(first);
   return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
-    ${list.map(c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}${psdChips(c)}</td>
+    ${list.slice(0, first).map(rowHtml).join("")}</tbody></table></div>`;
+}
+// the table's first rows go in with the page, the rest in later tasks (a newer render or another page stops them)
+const TABLE_FIRST = 100, TABLE_CHUNK = 150;
+let tableRest = [], tableJob = 0;
+function fillTable(tbody) {
+  const rest = tableRest, job = ++tableJob; tableRest = [];
+  let k = 0;
+  const step = () => {
+    if (job !== tableJob || !tbody.isConnected) return;
+    tbody.insertAdjacentHTML("beforeend", rest.slice(k, k += TABLE_CHUNK).map(rowHtml).join(""));
+    if (k < rest.length) setTimeout(step);
+  };
+  if (rest.length) setTimeout(step);
+}
+const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
-      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td></tr>`).join("")}</tbody></table></div>`;
-}
+      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td></tr>`;
 
 // ---- card detail -----------------------------------------------------------------------------------
 function statBars(c) {
@@ -464,7 +528,7 @@ function openCard(id, showDetails = false) {
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
-      <div class="image-wrap"><div class="iv"><div class="iv-stage"><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${thumbUrl(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
+      <div class="image-wrap"><div class="iv"><div class="iv-stage"><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${placeholderOf(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
         <div class="actions card-actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
@@ -515,7 +579,7 @@ function openCard(id, showDetails = false) {
   modal.scrollTop = 0;
   document.title = `${c.name} · Impossibility Simulator`;
   if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();   // shortcuts work right away
-  if (c.img) {        // sharper 720 px image once it's loaded (the 360 px one is usually cached from the grid)
+  if (c.img && $("#detail-img")?.getAttribute("src") !== img(c, 720)) {        // sharper 720 px image once it's loaded
     const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
@@ -529,6 +593,15 @@ function openCard(id, showDetails = false) {
   if (editing()) previews.mountCard(modal, c);
 }
 
+/** The card dialog's first picture: the grid tile's when it has loaded (240 or 360 px, no new download), the 720 px one a
+ *  share page preloads, else the 360 px one */
+function placeholderOf(c) {
+  if (!c.img) return "";
+  const t = view.querySelector(`.grid .tile[data-open="${CSS.escape(c.id)}"] img.art`);
+  if (t?.complete && t.naturalWidth && t.currentSrc) return t.currentSrc.startsWith(ROOT) ? t.currentSrc.slice(ROOT.length) : t.currentSrc;
+  if (document.querySelector(`link[rel="preload"][as="image"][href="${img(c, 720)}"]`)) return img(c, 720);
+  return thumbUrl(c);
+}
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card
 const versionList = c => {
   const rows = S.versions && S.versions.cards[c.id];
@@ -715,7 +788,9 @@ function openPicker(tier) {                              // the shared picker (p
 }
 
 // ---- stats / changes / compare -------------------------------------------------------------------
+let statsJob = 0;
 function renderStatsView(r) {
+  const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
   renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist, distPage: S.distPage }, r.params);
   const ctx = { cards: S.cards, byId: S.byId, banned: S.banned };
   const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History leave out what needs it
@@ -726,8 +801,11 @@ function renderStatsView(r) {
     put("stats-ratings", insights.ratingsHtml(A, ctx, now.params));
     put("stats-history", insights.historyHtml(A, ctx, now.params));
   };
-  if (S.analytics) fill();
-  else {
+  const job = ++statsJob, slot = $("#stats-balance", view);
+  if (S.analytics) {                                     // below the first screen, at the top of the page: after it has painted
+    if (top && slot && slot.getBoundingClientRect().top > vh) requestAnimationFrame(() => setTimeout(() => { if (job === statsJob) fill(); }));
+    else fill();
+  } else {
     $("#stats-balance", view).innerHTML = `<p class="loading">Loading the balance section…</p>`;
     loadAnalytics().then(() => fill(), e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; fill(null); });
   }
@@ -989,6 +1067,7 @@ function deckDiscord(d) {
 // ---- interactions ----------------------------------------------------------------------------------
 function refresh(id) {
   const inDeck = deckHas(id);
+  gridTiles.delete(id);
   for (const b of $$(".add[data-id]")) if (b.dataset.id === id) { b.classList.toggle("in", inDeck); b.textContent = inDeck ? "✓ In deck" : "+ Deck"; }
   if (!modal.hidden && parseHash().name === "card") openCard(parseHash().arg);
   else if (parseHash().name === "deck") renderDeck(parseHash());
@@ -1005,7 +1084,7 @@ const actions = {
   "select-param": el => { const k = el.dataset.key, o = el.selectedOptions?.[0]?.dataset || {};      // a shared subseries picks its series too; a sort its direction (default unless the option says)
     setParams({ [k]: el.value, ...(k === "series" ? { subseries: "" } : {}), ...(o.series ? { series: o.series } : {}), ...(k === "sort" ? { dir: o.dir ?? "" } : {}) }); },
   "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: csv(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "", ...(el.dataset.key === "series" ? { subseries: "" } : {}) }); if (el.dataset.key === "q") qInput.value = ""; },
-  "clear-filters": () => { qInput.value = ""; history.replaceState(null, "", "#/cards"); renderView(parseHash(), "#/cards"); },
+  "clear-filters": () => { qInput.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
   "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(sortOf(p), p.get("dir")) ? "asc" : "desc" }); },

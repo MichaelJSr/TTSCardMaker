@@ -1442,6 +1442,7 @@ export function createEditor(app) {
     },
     open: openForm,
     refresh: preview,
+    touches: ids => [...sentOps(), ...Object.values(stage.cards)].some(op => ids.has(op.id)),   // a staged or published-not-built edit on one of ids
     profileOf, pendingProfiles, profilePage, leave: () => { carry = null; },   // another page rendered: a later editor starts fresh
     // published decks: the publish dialog for a saved hand, and the staged or just-published files for the pages
     publishDeck: id => openPublish(id), deckOf, pendingDecks,

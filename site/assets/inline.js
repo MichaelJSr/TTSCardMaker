@@ -291,6 +291,14 @@ export function reflect(view, selected) {
   const rc = view.querySelector(".result-count");
   if (rc) rc.textContent = rc.textContent.replace(/ · \d+ selected$/, "") + (selected.size ? ` · ${selected.size} selected` : "");
 }
+/** The edit-mode marks of the tiles in root: the tile drags, not its picture; data-selected. mountGrid's, and app.js
+ *  fillGrid's for the tiles it adds after the first screen. */
+export function markTiles(root, selected) {
+  for (const t of root.querySelectorAll(".tile[data-open]")) {
+    t.draggable = true; t.querySelector("img")?.setAttribute("draggable", "false");
+    t.toggleAttribute("data-selected", selected.has(t.dataset.open));
+  }
+}
 /** Edit mode only; call after renderCards. The Series, Subseries and Author selects get the new values no card carries yet
  *  and a "New …" option, in the grid and the table alike (a series without subseries gets its Subseries select). With the
  *  grid, the tiles turn draggable and drop lists go under the selects (every series, every author; the picked series' own
@@ -309,7 +317,7 @@ export function mountGrid(view, p, api = A) {
     el.insertAdjacentHTML("beforeend", bucketOptions(new Set([...el.options].map(optKey)), fresh[key], p.get(key) || "") + newOption(key, series));
   }
   if (!grid) return;
-  for (const t of grid.querySelectorAll(".tile[data-open]")) { t.draggable = true; t.querySelector("img")?.setAttribute("draggable", "false"); }   // the tile drags, not its picture
+  markTiles(grid, api.selected);
   reflect(view, api.selected);
   const own = b.subseries.filter(([s]) => s === series).map(([, v]) => v);
   for (const [key, list, news] of [["series", opts.series, b.series], ["author", opts.authors, b.author], ...(series ? [["subseries", opts.ownSubseries(series), own]] : [])])

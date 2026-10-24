@@ -1,6 +1,6 @@
 // Stats dashboard. Marks follow the dataviz method: thin bars with 4px rounded data-ends, hairline grid,
 // values at bar tips, legends for multi-series, hover tooltips, and a table view for every chart.
-import { esc, tagInfo, badgeHtml, TAG, plain } from "./text.js";
+import { esc, tagInfo, badgeHtml, TAG, plain, dateFmt } from "./text.js";
 import { total } from "./search.js";
 import { HAND } from "./deck.js";
 import { date, monthKey } from "./history.js";
@@ -9,7 +9,9 @@ import { date, monthKey } from "./history.js";
 const KIND_LABEL = { creature: "Creatures", item: "Items", field: "Field cards", minion: "Minions", nme: "N.M.E. items", "aux item": "Auxiliary items",
   debuff: "Debuffs", buff: "Buffs", creatures: "Auxiliary creatures", unknown: "Other" };
 const NF = new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 });   // one formatter: toLocaleString per value was a hotspot
-const fmt = n => NF.format(Math.round(n * 10) / 10);
+const PLAIN = NF.format(-123) === "-123";   // whole numbers under 1000 print as String() does here: skip the formatter (most values)
+const fmt = n => { const v = Math.round(n * 10) / 10; return PLAIN && Number.isInteger(v) && v > -1000 && v < 1000 && !Object.is(v, -0) ? String(v) : NF.format(v); };
+const MONTH = dateFmt({ month: "short", year: "2-digit", timeZone: "UTC" });
 
 // ---- chart primitives (SVG strings; every label is escaped) ----------------------------------------
 function roundedRight(x, y, w, h, r = 4) {
@@ -141,17 +143,22 @@ const luminance = rgb => { const [r, g, b] = rgb.map(toLin); return 0.2126 * r +
 const contrast = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 /** heat(p) for p in 0..100 → {bg, ink}: background from the theme's ramp, nudged off any mid-tone where neither the dark
     nor the light ink reaches 4.5:1, and the ink that contrasts more. */
+let heatMemo = null;          // per theme: reading the ramp from the CSS forces a style pass (once per heat table was a hotspot)
 function heatScale() {
+  const theme = document.documentElement.dataset?.theme;
+  if (heatMemo && heatMemo.theme === theme) return heatMemo.heat;
   const css = getComputedStyle(document.documentElement), get = n => hex2rgb(css.getPropertyValue(n));
   const lo = oklab(get("--seq-100")), hi = oklab(get("--seq-700")), dark = luminance([11, 11, 11]), light = luminance([240, 239, 236]);
   const at = p => rgbOf(lo.map((v, i) => v + (hi[i] - v) * (p / 100)));
   const pass = rgb => { const L = luminance(rgb); return Math.max(contrast(L, dark), contrast(L, light)) >= 4.5; };
-  return p => {
+  const heat = p => {
     let q = p;
     for (let d = 0; d <= 50 && !pass(at(q)); d++) { if (p - d >= 0 && pass(at(p - d))) { q = p - d; break; } if (p + d <= 100 && pass(at(p + d))) { q = p + d; break; } }
     const rgb = at(q), L = luminance(rgb);
     return { bg: `rgb(${rgb.join(",")})`, ink: contrast(L, dark) >= contrast(L, light) ? "#0b0b0b" : "#f0efec" };
   };
+  if (css.getPropertyValue("--seq-100").trim()) heatMemo = { theme, heat };   // not before the stylesheet has loaded
+  return heat;
 }
 
 /** A heat table: head [text | {html}], rows of cells (a number shaded, null "—", text as is); shade: the columns shaded
@@ -437,7 +444,7 @@ export function renderStats(root, ctx, params) {
     const cols = [];
     for (let y = y0, m = m0; y < y1 || (y === y1 && m <= m1); m === 12 ? (y++, (m = 1)) : m++) {
       const k = `${y}-${String(m).padStart(2, "0")}`;
-      cols.push({ label: new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString(undefined, { month: "short", year: "2-digit", timeZone: "UTC" }), value: months.get(k) || 0 });
+      cols.push({ label: MONTH(new Date(Date.UTC(y, m - 1, 15))), value: months.get(k) || 0 });
     }
     charts.push(card("timeline", "Last change by month", "Cards by month of their last change.", columns(cols, { every: Math.ceil(cols.length / 12) }),
       table(["Month", "Cards"], cols.map(c => [c.label, c.value])), { wide: true }));

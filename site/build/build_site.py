@@ -747,6 +747,22 @@ def share_text(c):
     return clip("\n".join(filter(None, [head, stats, text])))
 
 
+GRID_PRELOADS = 4                            # the cards grid's first pictures that index.html preloads
+
+
+def grid_preload(cards):
+    """index.html's preload hints for the grid's first pictures (app.js tileHtml: srcset 240w/360w, sizes = the tile size),
+    added by a script only when the page opens on the plain grid (no filters, sort or table view) at the saved tile size."""
+    first = [c["img"] for c in sorted((c for c in cards if not c.get("hidden")), key=lambda c: c["name"].lower()) if c.get("img")][:GRID_PRELOADS]
+    if not first:
+        return ""
+    return ("<script>(() => { try { if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
+            "  const w = { s: 160, l: 270 }[localStorage.getItem(\"size\")] || 200;\n"
+            f"  for (const id of {json.dumps(first)}) {{ const l = document.createElement(\"link\"); l.rel = \"preload\"; l.as = \"image\"; l.href = `thumbs/${{id}}-360.webp`;\n"
+            "    l.imageSrcset = `thumbs/${id}-240.webp 240w, thumbs/${id}-360.webp 360w`; l.imageSizes = `${w}px`; l.fetchPriority = \"high\"; document.head.append(l); }\n"
+            "} catch { /* storage blocked: no hints */ } })();</script>")
+
+
 def fan(cards, path):
     """1200×630 JPEG of the cards' 720 px thumbs in a row: centred when they fit, else overlapping edge to edge."""
     canvas = Image.new("RGB", (1200, 630), (13, 13, 13))
@@ -3081,7 +3097,7 @@ def main():
     site_desc = "Every card, the rulebook, a starting-hand builder and stats."
     site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(template.replace("<!--HEAD-->", '<base href="./">\n' + site_og))
+        fh.write(template.replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards)))
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
         fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">\n' + site_og))   # absolute: the 404 page can be served at any depth
     os.makedirs(os.path.join(DIST, "d"))                # shared hands: d/#/deck/<code>
@@ -3108,6 +3124,7 @@ def main():
         desc, (image, size) = share_text(c), og_image(c)
         share_page(("c", c["id"]), [
             f'<meta name="card" content="{c["id"]}">',
+            *([f'<link rel="preload" as="image" href="thumbs/{c["img"]}-720.webp" fetchpriority="high">'] if c.get("img") else []),   # the dialog's picture (app.js placeholderOf)
             og_tags(c["name"], desc, f"{SITE_URL}/c/{c['id']}/" if SITE_URL else "", image, size, f"{c['name']} card"),
             f'<meta name="theme-color" content="{c.get("color") or "#3987e5"}">',
             f'<meta name="description" content="{html.escape(desc)}">',
