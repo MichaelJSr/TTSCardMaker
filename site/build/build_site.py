@@ -58,7 +58,7 @@ changes feed, the People tab, the published decks, the Stats page or a card's Ba
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json), images, icons,
 assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
-content and its imports', the data's from its content without the build time.
+content and its imports', the data's from its content without the build time; build.txt digests the whole site for site.yml.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -2733,6 +2733,32 @@ def data_stamp(data, details):
     return digest.hexdigest()[:10]
 
 
+BUILD_TXT = "build.txt"                       # in DIST: dist_digest(); site.yml deploys only when it differs from the live one
+
+
+def dist_digest(data):
+    """sha256 over every file in DIST but BUILD_TXT, the data files without the build's clock (data: steady()); the card
+    images (thumbs/, 90% of the bytes) by name and size, as their names are their PNG's blob and this script's settings
+    (its own bytes are in the digest)."""
+    paths = sorted(os.path.relpath(os.path.join(root, name), DIST).replace(os.sep, "/")
+                   for root, _, names in os.walk(DIST) for name in names)
+
+    def sha(rel):
+        if rel.startswith("data/") and rel[5:] in data:
+            return hashlib.sha256(data[rel[5:]]).digest()
+        if rel.startswith("thumbs/"):
+            return str(os.path.getsize(os.path.join(DIST, rel))).encode()
+        with open(os.path.join(DIST, rel), "rb") as fh:
+            return hashlib.sha256(fh.read()).digest()
+    with open(os.path.abspath(__file__), "rb") as fh:
+        digest = hashlib.sha256(fh.read())
+    with ThreadPoolExecutor(max_workers=8) as pool:   # hashlib works outside the GIL
+        for rel, h in zip(paths, pool.map(sha, paths)):
+            if rel != BUILD_TXT:
+                digest.update(rel.encode() + b"\0" + h)
+    return digest.hexdigest()
+
+
 def main():
     started = time.time()
     os.makedirs(os.path.join(CACHE, "img"), exist_ok=True)
@@ -3255,6 +3281,8 @@ def main():
             os.remove(os.path.join(OG_CACHE, n))
     if montages:
         log(f"deck previews: {len(montages)} montages")
+    with open(os.path.join(DIST, BUILD_TXT), "w", encoding="utf-8") as fh:
+        fh.write(dist_digest(data) + "\n")
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
 
 
