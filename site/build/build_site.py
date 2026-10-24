@@ -2158,7 +2158,7 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None):
     """The cards whose PSD left the card repo: old_stats names whose last version carries the bot's `archived` tag
     {at, path, blob, commit, renamed_to?, moved_to?, author?, backfill?} (moved_to: the PSD moved into MDW, retired), newest first. A name in stats is back, whatever its tag says (the
     bot clears it on its next save: card_models.stale_archives). tag: archive_tag(); author: Card Authors.txt
-    (credited) > the tag's > the last version's, through person(); created: the last version's created date, else the
+    (credited, by name, or by title when no live card has it) > the tag's > the last version's, through person(); created: the last version's created date, else the
     Pacific day of its oldest version; series: the last version's."""
     out = []
     for name, versions in (old_stats or {}).items():
@@ -2169,7 +2169,7 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None):
         if not isinstance(tag, dict):
             continue
         title = getattr(last, "display_name", None) or name
-        listed = (credited or {}).get(card_key(name)) or (credited or {}).get(card_key(title))
+        listed = (credited or {}).get(card_key(name)) or (None if id_of(title) else (credited or {}).get(card_key(title)))   # a live card's title is its own
         made = getattr(last, "created", None)
         made = made.get("date") if isinstance(made, dict) else None
         if not made:
