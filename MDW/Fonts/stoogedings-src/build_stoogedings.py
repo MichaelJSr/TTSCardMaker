@@ -40,6 +40,7 @@ import json
 import math
 import os
 import re
+from types import SimpleNamespace
 
 import cv2
 import numpy as np
@@ -207,6 +208,33 @@ def halo(alpha, w_u, h_u):
     sigma = GLOW_SIGMA * (1 - GLOW_SPREAD) * GLOW_SIZE / GLOW_WORK
     a = cv2.GaussianBlur(a, (0, 0), sigma, borderType=cv2.BORDER_CONSTANT)
     return a * GLOW_OPACITY
+
+
+def icon_art(im, tint="auto"):
+    """One icon's pictures, as its glyphs draw them; the website's variant images come from here too
+    (site/build/build_site.py variant_art). im: the PNG as RGBA; tint: its manifest tint mode.
+    Returns im cropped to its visible box, its size in font units (w_u, h_u), the TRACE-size pixels `arr` (upp units per
+    px), the silhouette, the :tint mask, the :sticker mask (pad px past the icon on each side), the :glow halo (GLOW_WORK
+    units per px) and glow_png, the halo PNG's alpha (GLOW_UPP units per px; the halo is glow_w x glow_h units)."""
+    a = np.array(im.getchannel("A"))
+    ys, xs = np.nonzero(a > 8)
+    im = im.crop((xs.min(), ys.min(), xs.max() + 1, ys.max() + 1))
+    aspect = im.width / im.height
+    h_u = HEIGHT if HEIGHT * aspect <= MAX_W else MAX_W / aspect
+    w_u = h_u * aspect
+    big = im.copy()
+    big.thumbnail((TRACE, TRACE), Image.LANCZOS)
+    arr = np.array(big)
+    upp = w_u / big.width
+    sil = silhouette(arr[..., 3])
+    pad = int(round(OUTLINE / upp))
+    glow = halo(arr[..., 3], w_u, h_u)
+    g_w, g_h = glow.shape[1] * GLOW_WORK, glow.shape[0] * GLOW_WORK
+    size = (max(1, round(g_w / GLOW_UPP)), max(1, round(g_h / GLOW_UPP)))
+    glow_png = np.clip(np.round(cv2.resize(glow, size, interpolation=cv2.INTER_AREA) * 255), 0, 255).astype(np.uint8)
+    return SimpleNamespace(im=im, w_u=w_u, h_u=h_u, arr=arr, upp=upp, sil=sil, tint=tint_mask(sil, arr[..., :3], tint),
+                           pad=pad, sticker=sticker_mask(arr[..., 3], pad), glow=glow, glow_w=g_w, glow_h=g_h,
+                           glow_png=glow_png)
 
 
 def trace(mask, upp, x0, top, external=False, eps=0.9):
@@ -398,13 +426,9 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         if not os.path.exists(path):
             print("missing file, codepoint kept reserved:", key, info["file"])
             continue
-        im = Image.open(path).convert("RGBA")
-        a = np.array(im.getchannel("A"))
-        ys, xs = np.nonzero(a > 8)
-        im = im.crop((xs.min(), ys.min(), xs.max() + 1, ys.max() + 1))
-        aspect = im.width / im.height
-        h_u = HEIGHT if HEIGHT * aspect <= MAX_W else MAX_W / aspect
-        w_u = h_u * aspect
+        art = icon_art(Image.open(path).convert("RGBA"), info.get("tint", "auto"))
+        im, w_u, h_u, arr, upp, sil, tint, pad, stk = (art.im, art.w_u, art.h_u, art.arr, art.upp, art.sil, art.tint,
+                                                       art.pad, art.sticker)
         top = TOP - (HEIGHT - h_u) / 2
         w_r, h_r = round(w_u), round(h_u)
 
@@ -413,15 +437,6 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         buf = io.BytesIO()
         small.save(buf, "PNG", optimize=True)
         b64 = base64.b64encode(buf.getvalue()).decode()
-
-        big = im.copy()
-        big.thumbnail((TRACE, TRACE), Image.LANCZOS)
-        arr = np.array(big)
-        upp = w_u / big.width
-        sil = silhouette(arr[..., 3])
-        tint = tint_mask(sil, arr[..., :3], info.get("tint", "auto"))
-        pad = int(round(OUTLINE / upp))
-        stk = sticker_mask(arr[..., 3], pad)
 
         base = "icon_" + re.sub(r"[^a-z0-9]", "_", key)
         adv = round(w_u) + 2 * SIDE
@@ -451,10 +466,8 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         multiples.append((g_no, [g_color, g_no_over]))
 
         # glow = [halo, advance GLOW_SIZE-SIDE] [color icon] [glow_space]; glyphs added last
-        glow = halo(arr[..., 3], w_u, h_u)
-        g_top, g_w, g_h = top + GLOW_SIZE, glow.shape[1] * GLOW_WORK, glow.shape[0] * GLOW_WORK
-        size = (max(1, round(g_w / GLOW_UPP)), max(1, round(g_h / GLOW_UPP)))
-        g_alpha = np.clip(np.round(cv2.resize(glow, size, interpolation=cv2.INTER_AREA) * 255), 0, 255).astype(np.uint8)
+        glow, g_alpha = art.glow, art.glow_png
+        g_top, g_w, g_h = top + GLOW_SIZE, art.glow_w, art.glow_h
         docs = {}
         for variant, rgb in GLOWS.items():
             buf = io.BytesIO()
