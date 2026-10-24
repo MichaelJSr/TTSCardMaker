@@ -792,7 +792,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `refused` in `stageMany`'s result and the toast). `KINDS` is the registry: a new kind is one entry plus `stageMany`
   support for its key. The pin form (Pin a box, + Pin) uses the name list; a pick pins it (a subseries row brings its
   series; typed: the filter bar's series, else the one series that has it), Enter pins, Esc or an empty click away
-  cancels. Opening, closing and unpinning repaint the tray in place; only a drop re-renders the grid. Sticky under the
+  cancels (a `click` capture, not pointerdown, so the repaint never moves or removes what was pressed: a box, ✕,
+  Select or a tile still gets the click). Opening, closing and unpinning repaint the tray in place; only a drop re-renders the grid. Sticky under the
   bar on wide screens; on phones (tall bar) it scrolls with the page, and sticks over the bar while **Select** is on
   (a tap on a tile selects it; Done or Esc ends it).
 

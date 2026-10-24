@@ -138,7 +138,8 @@ export function install(api) {
     if (e.key === "Escape") { e.preventDefault(); e.stopImmediatePropagation(); closeForm(); }
     else if (e.key === "Enter" && e.target.matches(".pin-name")) { e.preventDefault(); submit(); }
   });
-  document.addEventListener("pointerdown", e => {   // a click away: what is typed is pinned, nothing typed cancels (inline.js's rule)
+  document.addEventListener("click", e => {         // a click away: what is typed is pinned, nothing typed cancels (inline.js's rule);
+    // on click, not pointerdown: the repaint then can't move or take away what was pressed, and the click still lands
     if (!form || e.target.closest?.("[data-tray-form], .tok-picker")) return;
     if (A.view.querySelector(".tray .pin-name")?.value.trim()) submit(); else closeForm();
   }, true);
