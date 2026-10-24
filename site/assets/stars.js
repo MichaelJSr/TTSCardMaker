@@ -1,4 +1,4 @@
-// Stars in place (edit mode): a slider of stars instead of the stars chip. NOTES.md §19.
+// Stars in place (edit mode): a slider of stars instead of the stars chip. NOTES.md §21.
 export const MAX = 10;                             // the card page draws at most 10 (app.js stars())
 
 /** The value after key on a slider at `now` (0..max), or null for a key it doesn't take. */

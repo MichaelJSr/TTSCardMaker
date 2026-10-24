@@ -133,6 +133,17 @@ img.tok { width: 1.35em; height: 1.35em; object-fit: contain; vertical-align: -0
 .tok-no { position: relative; display: inline-block; }
 .tok-no::after { content: ""; position: absolute; inset: -1px; border: 2px solid #e01b22; border-radius: 50%;
   background: linear-gradient(45deg, transparent 46%, #e01b22 46%, #e01b22 54%, transparent 54%); pointer-events: none; }
+/* token variants as the font draws them (text.js icon, build_site variant_art): .tokm paints a mask in the text colour (:tint,
+   :sticker's outline); .tokv is a picture --r of the icon's box past it on each side (:sticker, :glow, :darkglow), drawn
+   over the lines above and below as the font's halo is, and as wide as the font's token */
+.tokm { display: inline-block; width: 1.35em; height: 1.35em; vertical-align: -0.32em; margin: 0 1px; background-color: currentColor;
+  -webkit-mask-position: center; mask-position: center; -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.tokv { --s: calc(1.35em * (1 + 2 * var(--r, 0))); width: var(--s); height: var(--s); margin: calc(-1.35em * var(--r, 0)) 1px;
+  vertical-align: -0.32em; object-fit: contain; }
+span.tokv { position: relative; display: inline-block; }
+.tokv > .tokm { position: absolute; inset: 0; width: auto; height: auto; margin: 0; }
+.tokv > img { position: absolute; inset: calc(1.35em * var(--r, 0)); width: 1.35em; height: 1.35em; object-fit: contain; }
 .badge { display: inline-block; padding: 0 .6em; border-radius: 999px; font-size: .92em; font-weight: 800; letter-spacing: .03em; color: #fff;
   vertical-align: .02em; line-height: 1.45; cursor: help; white-space: nowrap; box-shadow: inset 0 0 0 1.5px rgba(0,0,0,.25); }
 .badge.turn { background: var(--b-turn); } .badge.any { background: var(--b-any); }
@@ -332,6 +343,24 @@ ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0;
 .token-bar button { padding: 2px; width: 28px; height: 28px; }
 .token-bar img { width: 22px; height: 22px; object-fit: contain; }
 .ability.preview { width: 100%; min-height: 2.5em; margin: 0; }
+/* the token picker (tokens.js): "[" or "(" in card text */
+.tok-picker { position: fixed; z-index: 70; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-content: start;
+  width: min(400px, calc(100vw - 16px)); max-height: 330px; margin: 0; padding: 4px; list-style: none; overflow-y: auto;
+  overscroll-behavior: contain; background: var(--surface); color: var(--ink); border: 1px solid var(--border-strong);
+  border-radius: 10px; box-shadow: var(--shadow); font-size: 14px; line-height: 1.25; }
+.tok-picker[hidden] { display: none; }
+.tok-picker li { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; gap: 10px;
+  min-height: 40px; padding: 3px 10px 3px 6px; border-radius: 7px; cursor: pointer; }
+.tok-picker li.on { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.tok-picker li:hover:not(.on) { background: var(--surface-2); }
+.tp-pic { display: flex; justify-content: center; align-items: center; min-width: 40px; font-size: 18px; line-height: 1; }
+.tp-pic .badge { font-size: 12px; cursor: inherit; }
+.tp-text { display: flex; flex-direction: column; min-width: 0; }
+.tp-token { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tp-name { color: var(--ink-2); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tp-kind { color: var(--muted); font-size: 12px; white-space: nowrap; }
+@media (pointer: coarse) { .tok-picker li { min-height: 46px; } }
+.tok-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .edit-summary { min-height: 1.4em; margin: 4px 0 8px; }
 .wide { width: 100%; display: block; margin: 4px 0 8px; }

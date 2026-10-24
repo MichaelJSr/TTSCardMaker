@@ -47,7 +47,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   Commit message: `message || (what.length > 3 ? "Website edits: N changes" : "Website edit: A, B, C")` where what = card/page names (+ "people", "admins"). User may type a custom message.
   After commit: stores sent-ops, clears stage, `save()`, dialog "Published" with commit link `https://github.com/{repo}/commit/{sha}`; site rebuild takes minutes (workflow); bot reads on /update_stats.
 - Files written (paths from `files()` edit.js:32 = defaults overridden by `S.data.files`): `MDW/Card Edits.json` (`editsFile`: JSON `{about, cards:{key:{fields..., _by, _at}}}`, keys sorted, fixed field ORDER, hand-formatted one-line-per-card), `MDW/Card Authors.txt` (`authorsFile`: INI-ish `[people]`/`[cards]` with `# --- credited to X (n) ---` groups), `MDW/Constructed Ban List.txt` (`banFile`: `Group:` headings, `Name - reason` lines), `MDW/Website Admins.txt` (admins, `#` comment lines preserved). Rulebook pages are edited as cards with type "rulebook" (ids from rules.json), their field changes also go into Card Edits.json (not separate files; `ruleFormHtml` edit.js:162 edits name/ability/note).
-- Image previews (2026-10-23, section 20): the Edit dialog's `openForm` calls `app.formOpened({form, card, read, base})`
+- Image previews (2026-10-23, section 22): the Edit dialog's `openForm` calls `app.formOpened({form, card, read, base})`
   (not for rulebook pages), and the editor's API gains `github(path, opts)` (its `gh`, with the token), `scopes` (the
   token's classic scopes from sign-in, null for a fine-grained one), `psdOf(id)` (what the PSD prints of each PSD field)
   and `entryFields(id, op)` (the fields the card's Card Edits.json entry would hold once published). That is all the
@@ -234,7 +234,180 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - Checks: AutoCroissant tests/test_site_build.py::test_a_recompression_is_no_new_image_version (a guards commit with a
   recompressed and a re-exported PNG, a batch commit, a person's commit with the trailer); it fails without this change.
 
-## 19. Editor: the tooltip, a live preview, drafts, stars and types in place (2026-10-23)
+## 19. Card previews: the server side and the website's contract (2026-10-23)
+- Owner's ask (2026-10-23 ~18:10): "press preview image to dry run bake a card, work on another card, and then go back
+  to the first to see the preview". Server side only so far; the UI is a later task, against this contract. Design and
+  measurements: AutoCroissant `docs/EDIT_PIPELINE_DESIGN.md` section 16 (with the manual test plan for the first live
+  dispatch); code: `.github/workflows/card-preview.yml` runs AutoCroissant `commands/card_preview.py`, which is the bake
+  (`card_bake.bake_card`: the same gates, fonts, chart, icon vocabulary and fork pin as card-edits.yml) on one card, on
+  the runner, then `commands/card_preview_branch.py`, which publishes the result. Two jobs: the preview holds a
+  read-only token; only the publish job may write, and it needs no install (the standard library), so a preview that
+  failed or never ran is still published, as a try-again error. Nothing is written to main (no PSD, PNG or edits file);
+  no Discord; the result goes to the orphan branch `previews`. No other workflow starts on it (every push trigger here
+  is `branches: [main]`, and a GITHUB_TOKEN push starts none), and the site build never reads it.
+- **Public.** This repo is public: a preview publishes the editor's unpublished edit twice, as the run's inputs in the
+  Actions tab and as `previews/<request>/` and its `index.json` row on the `previews` branch (kept up to 7 days, in
+  history until the next rewrite). Say so before an editor's first press ("anyone can see a previewed edit, as with a
+  published one").
+- **Dispatch** (any signed-in editor; the token must belong to a collaborator with write access):
+  `POST https://api.github.com/repos/MichaelJSr/TTSCardMaker/actions/workflows/card-preview.yml/dispatches` with the
+  editor's `gh()` headers (`Authorization: Bearer <token>`, `Accept: application/vnd.github+json`,
+  `X-GitHub-Api-Version: 2022-11-28`) and the body
+  `{"ref": "main", "inputs": {"card": c.key, "edit": JSON.stringify(fields), "request": id}}` -> `204 No Content`.
+  - `request`: `crypto.randomUUID()` (36 characters; the workflow takes `[A-Za-z0-9-]{8,64}` and fails, publishing
+    nothing, on anything else), a new one per press, never reused.
+  - `card`: `c.key` (the Card Edits.json key, the PSD's file name with spaces; a duplicate's own key, so it is refused
+    as the bake refuses duplicates). A PSD path (`c.psd`) works too if it is one of the bake's cards (not under `MDW/`
+    or `Markers/`), but not for duplicates.
+  - `edit`: the card's PSD-kind fields as Publish would leave its entry: the committed Card Edits.json entry with the
+    staged op's `set` and `unset` applied, keeping `name`, `stars`, `types`, `hp`, `def`, `atk`, `spd`, `ability` (+
+    `creatures` when the entry has a creatures list: it stops a stat bake, as in the bake). All of them, not only the
+    staged ones: the bake will bake the committed ones too. Card Edits.json shapes; at most 16 KB; an unknown field or a
+    bad value comes back as an input error (`_`-keys are ignored). result.json's `edit` is this object exactly as sent
+    (without `_`-keys; a `null` stays a `null`, a creatures list stays the list).
+  - Token scopes: a classic token needs `repo` for this endpoint (GitHub's docs; whether the `public_repo` tokens
+    sign-in accepts today are enough is item 8 of the test plan); a fine-grained one needs this repository with
+    **Actions: Read and write** (and Contents: Read and write, which publishing edits needs anyway). A 403 or 404 with a
+    token that signs in is a missing scope: say which. 422: a missing input, or the workflow is not on main.
+- **Result**: poll
+  `GET https://api.github.com/repos/MichaelJSr/TTSCardMaker/contents/previews/<request>/result.json?ref=previews` with
+  `Accept: application/vnd.github.raw+json` and `cache: "no-store"`: 404 until it is published (also before the branch
+  exists). Every 10 s for 3 minutes, then every 30 s; give up at 16 minutes (the jobs' timeouts add up to 14) with "no
+  result: see the run". The run: `GET .../actions/workflows/card-preview.yml/runs?event=workflow_dispatch&per_page=20`,
+  the one whose `display_title` is `Card preview <request>`; when it is `completed` and result.json still 404s a minute
+  later, it ended without publishing (a bad request, or the publish job failed): stop polling and link the run. Never
+  poll raw.githubusercontent.com for it: raw caches 5 minutes (`max-age=300`), a 404 too.
+  - The image, once result.json says `image` (`files.webp`):
+    `https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/previews/previews/<request>/preview.webp` (public, CORS
+    `*`; the path is new per request, so the cache never serves an older one; raw serves PNGs as `image/png`, WebP's
+    type to confirm on the first dispatch), or the same contents URL with `Accept: application/vnd.github.raw` read as a
+    blob into `URL.createObjectURL`. 720 px wide at quality 75, as the build makes the card view's `-720.webp` (so the
+    current card's `thumbs/<img>-720.webp` sits beside it at the same size). The full-size PNG is not published (about
+    1.5 MB a preview; `files` lists only the WebP; `size` gives the full card's pixels, `region` the edited box on it).
+  - result.json: `state` = `baked` (show the image, `reason` such as `hp 5 -> 8`, `notes`), `redundant` (no image:
+    "already on the card", show the current card), `refused` (the bake would refuse it: `reason` such as
+    `stat>10: hp 25: above 20`; an image only when `image` is `refused`: what the render got before a later gate refused
+    it), `error`, of three kinds: `transient` true: "preview failed, try again" (a runner or GitHub failure, a blob that
+    failed its hash), with `run`; `reason` starting `input:`: the site sent something the preview does not take (a site
+    bug); any other: the preview cannot run on this card or the repo as it is (a broken shared file such as the icon
+    manifest, or a bug in the bot), so show `reason` and `run`, and a new press only helps once that is fixed. `fields`
+    gives each field's outcome (`{stars: refused, hp: baked}`), `changes` the old and new values, `notes` the pixel
+    misses ("name baked with a pixel difference: bad 1.97%, mean 1.60, max 217"), stars or types not baked, FX layers
+    and validator problems; `region` the edited box on the full-size card, `took_s`, `at`. The full table is design
+    section 16. Every string goes through `esc()`: reasons and notes quote card text.
+- **Stale or current.** A result describes `base` = `{commit, psd_blob, png_blob}` (full blob shas) and `edit`. It is
+  current while (a) the card's PSD and PNG on main are still those blobs and (b) the fields the site would send now are
+  the edit it sent: compare with the edit stored at dispatch (or `result.edit`, the same object), both as canonical JSON
+  (keys sorted; build both the same way, so a cleared field or a creatures list compares as itself). (a) cheaply:
+  `base.png_blob.startsWith(c.img)` (cards.json's `img` is the PNG blob's first 16 hex digits; it lags main by a site
+  build); exactly, signed in: `GET /repos/MichaelJSr/TTSCardMaker/contents/<folder of c.psd>?ref=main` lists both files'
+  `sha` in one call. A stale one: "made on an older version of the card (or edit): preview again"; keep showing it,
+  marked, until a new preview replaces it. A change of the bake itself (AutoCroissant main, the fork pin) between the
+  preview and the bake is not tracked.
+- **Coming back to it.** Keep `{card id: {request, edit, at}}` in localStorage (say `card-previews`) when dispatching,
+  so another card, a reload or a crash returns to it; drop an entry when a newer preview of the card replaces it, or on
+  a 404 more than a day after `at`. A preview stays at least 6 days unless 150 newer ones came after it: the branch is
+  rewritten as one fresh commit when it holds more than 200 previews or one older than 7 days. `index.json` on the
+  branch (`.../contents/index.json?ref=previews`) lists every preview
+  `{request: {at, card, path, state, psd_blob, png_blob}}`: another device's preview of a card is the newest row with
+  its `path` and current blobs (its result.json has the edit).
+- **Latency.** About 1-2 minutes for a stat edit and 1.5-3 for an ability or name, from the dispatch to result.json
+  (queue, checkouts and the 27 s pip install measured on card-edits.yml's runs; the bake 14 s for a stat and 26 s for an
+  ability on the dev Mac under load; the publish job's start, about 10-20 s, estimated), more when Actions queues.
+  Several requests run side by side, one commit each on `previews` (retried when the head moved); the same request twice
+  waits for the first (don't).
+- **Budget.** A preview reads its blobs through the API with the run's GITHUB_TOKEN (1,000 requests an hour for this
+  repo, shared with card-edits and card-sync): the icon manifest, the PSD and the PNG (3 for a stat edit, a test), plus
+  the status chart for an ability and the added Types/ icons for a types edit. Fine at hobby volume; a burst of a
+  hundred previews an hour would compete with the schedules. Size: about 60 KB a preview (Mini Doomer's WebP 59 KB,
+  result.json 1 KB), so the branch stays near 12 MB at 200 previews.
+- Checks (2026-10-23): AutoCroissant `tests/test_card_preview.py` (the outcomes on a local card repo, a blobless clone's
+  REST reads, the bad inputs, values kept off the runner's command lines, the branch's commits and rewrites, a moved
+  head and lease, the publisher on the standard library alone, this workflow's shape, no other workflow on the branch,
+  and both jobs' own steps run against a bare repo standing in for GitHub, a failed install too); `actionlint` clean.
+  Not run: a live dispatch (the workflow must be on main first).
+
+## 20. Token picker and variant pictures (2026-10-23)
+- Owner's request (2026-10-23 ~18:00): typing a stoogedings token (it starts with `[`) suggests the icons with their
+  pictures and narrows as you type, so nobody has to remember the names, and shows the variants too.
+- `assets/tokens.js` (pure helpers above `install`; AutoCroissant tests/test_token_picker.py runs them in node):
+  `openToken(text, caret)` -> the token being typed: an unclosed `[` on the caret's line (a name of letters, digits,
+  spaces, `_ - . '`, then maybe `:` + letters; at most `MAX_TOKEN` 52 characters, text.js PIECE's limit) or `(` + up to
+  7 of text.js TAG's characters (`-?` + 6: `(-1/2GCD)`) that does not start in lower case ("(see below)" and "(only
+  once)" never open; "(Only once)" opens at "(O" and closes at "(On"). `close` = the caret, or, when the caret is
+  inside a token (the rest of a name, spaces and `:variant` included, then its `]` on the line; for a tag the rest
+  and its `)`), past that `]` or `)`; text after the caret that no `]` or `)` closes is never replaced ("[fi|and ice"
+  + fire = "[fire]and ice"; until the 2026-10-23 review the rest of the word went too). `tail` = that rest's
+  `:variant]`, which a plain icon keeps ("[fi|re:glow]" + fire = "[fire:glow]"). `suggest(open, vocab)`: icons by
+  `norm` (case, spaces, `_ - . '` ignored): exact name or alias, name prefix, alias prefix, then (2+ letters) inside a
+  name or alias; with none of those (3+ letters), names and aliases whose start is one edit away (two from 6 letters;
+  added, dropped, changed or swapped letters: "[fier" -> fire, field); types before stars, then the most used in the
+  cards (`uses`: `vocabulary(icons, texts)` counts the tokens in every card's ability; machine 18, fire 9, ice 8 on
+  2026-10-23), then by name; an exact match is followed by its variants. After `name:` the
+  variants (`VARIANTS` = the bot's ICON_VARIANTS: tint, sticker, no, glow, darkglow; the font gives every icon all of
+  them), of that icon when the name is exact, else of every match, prefix first. `(`: `TAGS`, the font's 341
+  (badge_tags, the cards' own first, the rulebook's old ones last, all through tagInfo), any case, an exact one first.
+  At most 120 rows. `applyChoice` puts the canonical `[name]`, `[name:variant]` or `(TAG)` (a plain icon + `tail`) in
+  place of `start..close`, caret after it. `vocabulary(icons, texts)` turns cards.json icons into one entry per icon
+  with its other spellings as `keys` and its `uses`.
+- The dropdown (`install`, app.js boot; `S.vocab` per data load): one `ul#tok-picker` (role listbox, rows role option
+  `#tok-pick-<i>`, each the picture (`renderer.icon(token, {tip: false})`, the variant's own; badgeHtml for a tag),
+  the token, the plain name with the variant's or tag's meaning, the kind), moved into the field's `[role=dialog]`
+  (aria-modal hides the rest from readers) or body; `position: fixed` under the token's `[` (a mirror div measures the
+  caret; above it when there is more room there; `visualViewport` for phone keyboards), 8 rows then it scrolls.
+  Fields are `[data-tokens]`: edit.js `#ef-ability` and `#ef-note` (card and rulebook forms), inline.js
+  `.inline-ability` and `.inline-note`. Listeners on document, capture: `input` opens and narrows (Backspace widens),
+  ArrowLeft/Right/Up/Down/Home/End keyups and pointerups in the field follow the caret (a move out of the token
+  closes); keydown while open: Up/Down (wrap), PageUp/Down, Enter or Tab accept, Esc closes the picker only and stops
+  the event (inline editing's and the dialog's own Esc come next time), and the token Esc closed stays closed until
+  the caret leaves it. Rows: mousedown prevented, so the field keeps the focus and the phone keyboard stays; click
+  accepts. Accepting selects `start..close` and runs `execCommand("insertText")` with applyChoice's `insert`
+  (undo keeps it; its `input` event updates `#ef-preview`), else sets the value and sends `input`. The field gets
+  aria-autocomplete "list" on focus, aria-expanded, aria-controls (while open), aria-activedescendant; a hidden live
+  region says how many suggestions. No role combobox: on a multi-line textarea it would hide the textbox role, so
+  aria-expanded is a hint some readers skip. IME: no refresh while composing (`compositionend` refreshes), and
+  keydowns with keyCode 229 (Safari's composition-ending Enter has isComposing false) never accept.
+- Variant pictures: `build_icons` makes `dist/icons/<name>.<variant>.webp` for tint, sticker, glow and darkglow of every
+  manifest icon with the font build's own code: build_stoogedings.py `icon_art(im, tint)` (the per-icon part of
+  `build()`, moved into a function the font build calls too; the font rebuilt byte-identical with it, 2026-10-23) gives
+  the cropped icon, its size in font units, the TRACE-size pixels and the tint, sticker and halo masks; build_site
+  `variant_art` places them as the glyphs do (sticker outline pad px past the icon, halo GLOW_SIZE units left of and
+  above it) in a square around the icon's square box (where `object-fit: contain` puts the plain icon), reaching
+  `variant_reach` past it (OUTLINE / HEIGHT and GLOW_SIZE / HEIGHT, whole pixels at ICON_SIZE: 0.0729 and 0.3021),
+  scaled so the icon is as big as the plain one (96 px long side). tint and sticker take the text colour in the font,
+  so theirs are white masks (lossless) that style.css paints with `currentColor`; glow and darkglow are the halo PNG
+  the font embeds with the icon on it (q90). :no stays style.css's `.tok-no`. Cached by blob in site/.cache/icons as
+  `<blob16>-<variant>-<VARIANT_VERSION>-<hash of the build script and the icon's tint mode>.webp`, pruned with the
+  icons; cold 12 s for 91 icons (31 s CPU over 8 threads, a busy Mac), warm 0.1 s; 0.7 MB of masks and 1.5 MB of glows
+  in dist. Needs the font build's packages (numpy, opencv-python-headless, fonttools): `font_builder()` imports the
+  script, and without it or them (or with a script that has no `icon_art`) there is one warning and no variant
+  pictures, never a failed build. An icon's `v` in cards.json lists its pictures; `iconVariants` = {variant: reach}
+  ({} without them).
+- text.js `makeRenderer({cards, icons, variants})` (`variants` = cards.json iconVariants): `[x:tint]` a `span.tokm`
+  (the mask in the text colour, 1.35em box), `[x:sticker]` a `span.tokv` (--r: its reach) holding the outline mask and
+  the plain icon, `[x:glow]` and `[x:darkglow]` an `img.tokv`. A `.tokv` is (1 + 2 --r) x 1.35em with negative margins
+  above and below of --r x 1.35em: it sits on the line as the plain icon does and its halo spills over the lines above
+  and below, as Photoshop draws the font's; its full width counts, as the font's spacers widen the token. A variant
+  without its picture (an older build, an unknown variant) is the plain icon, as before and as the parser reads it.
+  No spaces around the variant, as in the font and the parser: `[fire: glow]` and `[fire: no]` are the plain icon
+  (until the 2026-10-23 review text.js trimmed them, so `[fire: no]` was crossed out).
+  `plain()` and build_site's `share_text` still flatten every variant.
+- Checks (2026-10-23; harness in ~/Documents/Tools/wt/scratch/picker/: a scratch build of this branch with the image
+  cache cloned and AutoCroissant's pickles, served on localhost, driven in WebKit by `browser/shoot.swift`, a
+  WKWebView offscreen with GitHub's API answered in the page (a stand-in editor, nothing sent) and IndexedDB hidden;
+  screenshots in `shots/`): the Edit dialog's list, narrowing, an exact name's variants, variants after `:`, Enter
+  accepting with the preview updated, timing tags, Esc keeping the dialog, no list for "(see below", light theme;
+  inline editing (a spaced alias, the first Esc only closing the list, the second cancelling, a click accepting with
+  the focus kept), the inline note (Enter accepts, the note stays open), 390 px wide. `variants-font-vs-site.png` sets
+  the font's tokens (WebKit draws its OT-SVG glyphs) next to the site's pictures on dark and light: the same look.
+  AutoCroissant tests/test_token_picker.py (8): each fails with its part reverted to main. Review fixes the same
+  evening (text after the caret kept, a token's variant kept, the 7-character tags, typos, most used first, strict
+  `:variant` in text.js, ARIA and IME, site.yml's cache key hashing build_stoogedings.py too): the open-token, ranking,
+  timing-tag, choice and text.js tests fail with tokens.js or text.js as before them; screenshots `15-*` and on.
+- Not done: the font draws wide icons up to 1.4 em, the site fits every icon (and so its variants) in a 1.35 em square,
+  as before; the old `.token-bar` buttons stay.
+
+## 21. Editor: the tooltip, a live preview, drafts, stars and types in place (2026-10-23)
 - Owner's requests (2026-10-23 ~18:15-18:45). New logic in five DOM-free modules (pure helpers, plus a few that take an
   element); edit.js, inline.js and app.js only wire them. AutoCroissant `tests/test_site_editor.py` runs them in node.
 - **The stuck tooltip** (`assets/tip.js`). Cause: app.js hid the tooltip only on a pointerout from an element that still
@@ -285,14 +458,13 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   ranking); Enter in the box toggles the first match and clears it, so "fir Enter wat Enter" adds two; Enter on an empty
   box, Ctrl+Enter, Save or a click or tap away save; Esc or Cancel put the row back; arrows move between chips. The row
   shows the choice as it changes. Saved through `stageField(id, "types", sorted list)`, so the same set in another order is
-  no edit. Vocabulary: cards.json `icons` of kind "type" (35 icons, with aliases). The token picker (branch
-  work/token-picker, `assets/tokens.js`) is not on main yet: `palette.useSearch(fn)` swaps the search (fn(vocab, q) ->
-  entries best first) and `palette.pickerSearch(suggest, all)` is the adapter (the picker's plain type rows, mapped back
-  to the palette's entries); the classes are `pal-*` (the picker's are `tp-*`). The switch once it lands, one line in
-  app.js after `inline.install` (with `import * as palette from "./palette.js"`):
-  `palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));`. Checked against the picker branch's
-  tokens.js (8d605085, scratch): same results as `findTypes` for 202 of 211 queries; the rest are the picker's extras,
-  a slip ("frie", "watr") and the most used first on a tie ("fi": fire, field). Typing the token picker's "[" in the
+  no edit. Vocabulary: cards.json `icons` of kind "type" (35 icons, with aliases). The search is the token picker's
+  (section 20, `assets/tokens.js`): `palette.useSearch(fn)` swaps the search (fn(vocab, q) -> entries best first),
+  `palette.pickerSearch(suggest, all)` is the adapter (the picker's plain type rows, mapped back to the palette's
+  entries), and app.js switches it in one line after `tokens.install`:
+  `palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));` (without it, `findTypes`). The
+  classes are `pal-*` (the picker's are `tp-*`). Against `findTypes`: the same results for 202 of 211 queries; the rest
+  are the picker's extras, a slip ("frie", "watr") and the most used first on a tie ("fi": fire, field). Typing the token picker's "[" in the
   ability box and the note works with drafts and both previews: its choice goes in through an `input` event.
 - Checks: AutoCroissant `tests/test_site_editor.py` (13, AC_SITE_SRC; each fails with its logic reverted: a scratch
   mutation run caught 13 of 13), the site tests (70 with this tree). Headless Chrome (Chrome for Testing 156) on a
@@ -303,12 +475,12 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   clearing the published cards' drafts, the preview following name, HP, types and text with "PSD pending", the mobile bar,
   no page errors). Screenshots: ~/Documents/Tools/wt/scratch/site2/shots/editor-*.png.
 
-## 20. Image previews in edit mode: the mock-up and the rendered preview (2026-10-23)
+## 22. Image previews in edit mode: the mock-up and the rendered preview (2026-10-23)
 - Owner's asks (2026-10-23 ~18:15-18:45): see an edit on the card image while making it, three ways: a live card page
-  (section 19), a **quick mock-up** (the new text and numbers drawn over the card image in the browser, instant,
+  (section 21), a **quick mock-up** (the new text and numbers drawn over the card image in the browser, instant,
   labelled as a mock-up) and a **rendered** image ("press preview image to dry run bake a card, work on another card, and
-  then go back to the first to see the preview"). The server side of the rendered one is the "Card previews" section of
-  branch work/card-preview (section 19 there; card-preview.yml, AutoCroissant commands/card_preview.py); this is the
+  then go back to the first to see the preview"). The server side of the rendered one is section 19
+  (card-preview.yml, AutoCroissant commands/card_preview.py); this is the
   website's side.
 - Modules: `assets/mockup.js` (pure helpers, then `draw`) and `assets/preview.js` (pure helpers, then `createPreviews(app)`,
   the panel, the store and the background check). Both DOM-free at import. Wiring only elsewhere: app.js imports
@@ -401,7 +573,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   badges on two tiles, side by side and the diff, a refusal, out of date after an edit, light and dark, 375 px (nothing
   wider than the screen), the Action missing, a token that can't start Actions. Screenshots:
   `~/Documents/Tools/wt/scratch/site2/shots/previews-*.png`. Not run: a live dispatch (card-preview.yml must be on main).
-- Merged with section 19 on branch work/site-round-2 (2026-10-23). The Edit dialog over 1000 px: the fields, this panel
+- Merged with section 21 on branch work/site-round-2 (2026-10-23). The Edit dialog over 1000 px: the fields, this panel
   floated beside "On the card image", and the live pane on the right (its small image is the current one, as the
   published page shows it until the bake); at 1000 px and below the pane is the bar at the top and this panel stays in
   the form. Restore in the form's draft offer now fires the form's `input` event, so this panel redraws as for a key

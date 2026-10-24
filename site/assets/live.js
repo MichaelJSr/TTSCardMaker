@@ -1,4 +1,4 @@
-// The Edit dialog's live preview: the card as it will look once published, from the form's op. NOTES.md §19.
+// The Edit dialog's live preview: the card as it will look once published, from the form's op. NOTES.md §21.
 import { esc } from "./text.js";
 
 const STATS = ["hp", "def", "atk", "spd"];

@@ -43,20 +43,26 @@ jobs:
             /site/
             /Types/
             /MDW/Fonts/stoogedings-src/stoogedings.json
+            /MDW/Fonts/stoogedings-src/build_stoogedings.py
+            /MDW/Fonts/stoogedings-src/requirements.txt
 
+      # build_stoogedings.py and its packages (site/build/requirements.txt includes them) draw the token variants' pictures
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: site/build/requirements.txt
+          cache-dependency-path: |
+            site/build/requirements.txt
+            MDW/Fonts/stoogedings-src/requirements.txt
 
       - run: pip install -r site/build/requirements.txt
 
       - id: pages
         uses: actions/configure-pages@v6
 
-      # Cache key = the card PNG blobs + the build script (image sizes live there): the cache is only re-saved when
-      # a card image or the image settings change, and the newest older cache is restored as a starting point.
+      # Cache key = the card PNG blobs + the build scripts (image sizes live there; the font build's draws the token
+      # variants' pictures): the cache is only re-saved when a card image or the image settings change, and the newest
+      # older cache is restored as a starting point.
       - id: images
         run: echo "key=$(git ls-tree -r HEAD | grep -i '\.png$' | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
@@ -64,7 +70,7 @@ jobs:
       - uses: actions/cache@v6
         with:
           path: site/.cache
-          key: card-images-v2-${{ hashFiles('site/build/build_site.py') }}-${{ steps.images.outputs.key }}
+          key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}
           restore-keys: card-images-v2-
 
       # Deck preview montages: their own cache in site/.og-cache. The newest one is restored, and it is saved after the build

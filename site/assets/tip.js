@@ -1,5 +1,5 @@
 // When the tooltip shows and goes (app.js fills it): it goes when the pointer leaves its element, or that element
-// leaves the page or loses its data-tip (an inline editor opened). NOTES.md §19.
+// leaves the page or loses its data-tip (an inline editor opened). NOTES.md §21.
 
 /** What shows a tooltip: data-tip text, chart values (data-v, data-l), a card link's preview. */
 export const TIP_SEL = "[data-tip], [data-v], a.card-ref, .chart [data-card]";

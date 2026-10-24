@@ -16,7 +16,9 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
   record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
   dropdown open this once; Ctrl-click opens it in a new tab).
-- **Card pages**: full image, stat bars, ability text with icons, timing-tag badges such as (1CD), (1/2CD), (1GCD) and
+- **Card pages**: full image, stat bars, ability text with icons (variants drawn as the card font draws them: `[fire:tint]`
+  in the text colour, `[fire:sticker]` on an outline, `[fire:no]` crossed out, `[fire:glow]` and `[fire:darkglow]` on a
+  white or black glow), timing-tag badges such as (1CD), (1/2CD), (1GCD) and
   (2U) (hover for the meaning; a closed **Badges** box under the text says what each color means) and links to every card it names (by its printed title or file name, in any case,
   either apostrophe, plural, singular or possessive: "Copper Swords", "an X Fist", "Grodus X's"; a one-word file name
   only when the title is one word too; a one-word name only as the card spells it, capitalized, or lowercase after its
@@ -162,7 +164,9 @@ batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the f
 
 Each card PNG becomes three WebP images (240 and 360 px for the grid, 720 px for the card view), cached by git blob
 hash in `site/.cache/img`; each image's size and accent color are kept by blob in `site/.cache/images.json` and the
-icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon settings change), so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
+icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon settings change; the token variants' pictures
+with `VARIANT_VERSION`, drawn by the icon font's build script, `MDW/Fonts/stoogedings-src/build_stoogedings.py`, which
+needs that folder's `requirements.txt`: without it the build warns and variants show as the plain icon), so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
 where links fail). The first screen loads only `data/cards.json`; `analytics.json` (the Balance section and blocks,
 computed by `site/build/analytics.py` from the same bot data) loads when the Stats page or a creature, minion or card
 with recorded changes is opened; `rules.json`, `history.json`,
@@ -209,6 +213,19 @@ card several stat lines (`creatures` in `Card Edits.json`; creature 1 is the car
 bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
 `Card Edits.json` to go back to the PSD.
+
+**Icons and timing tags as you type.** In card text (the ability and note, in place or in All fields, rulebook pages
+too) typing `[` lists the icons with their pictures, the ones the cards use most first; typing more narrows the list
+(`[fi` shows fire and field; case, spaces, `_` and `-` don't matter, aliases work: `[barn` finds the poorly drawn
+barnstar, and a typo still finds the icon: `[fier` shows fire and field), Backspace widens it. A full name lists its
+variants under it, and `[fire:` lists only the variants, each with its own picture (`:tint`, `:sticker`, `:no`,
+`:glow`, `:darkglow`). `(` and the start of a timing tag (`(1`, `(O`, `(Act`) lists the tags with their badges and
+meanings; words in brackets that start in lower case, like "(see below)", never open it, and others close it at the
+first letter that fits no tag ("(Only once)" lists the O tags at "(O", then closes at "(On"). ↑ ↓ move, Enter or Tab
+puts the token in (`[fire]`, `[fire:glow]`, `(1CD)`) in place of what you typed, a click or tap does too, and Esc
+closes the list only (a second Esc cancels the edit as usual). Text after the cursor stays, unless the cursor is
+inside a token: then the whole token is replaced, keeping its variant (`[fi|re:glow]` and fire gives `[fire:glow]`).
+The preview follows.
 
 ### Signing in and passwords
 
@@ -339,6 +356,15 @@ HIGH, ABILITY TEXT NOT FOUND, UNKNOWN TYPE), after the card's `site/Card Edits.j
 `DISCORD_STANDARDS_WEBHOOK` secret (the standards channel, no ping), one Discord line per card ("... has pushed ... with: ..."); it never reverts or rejects
 a push, and an unreadable PSD is one error line. Run it by hand from the Actions tab (`all` = every card, 25-30 minutes).
 
+## Card previews
+
+`.github/workflows/card-preview.yml` bakes one card's website edit the way the card bake would, without committing it:
+the website dispatches it (inputs `card`, `edit`, `request`) and reads the result from the branch `previews`
+(`previews/<request>/result.json`, `preview.webp`; `site/NOTES.md` section 19 has the contract). Nothing is written to
+`main` and nothing is posted; only its second job, which publishes, may write. The repo is public, so a previewed edit is
+public too. Run it by hand from the Actions tab with a card name, an edit such as `{"hp": 8}` and an id such as
+`manual-test-0001`. The branch is rewritten as one commit when it holds more than 200 previews or one older than 7 days.
+
 ## Working on it
 
 ```
@@ -348,7 +374,8 @@ python -m http.server -d site/dist 8000  # then open http://localhost:8000
 ```
 
 Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
-`search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, drag-to-assign and
+`search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, `tokens.js` the
+icon and timing-tag picker in card text, drag-to-assign and
 the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `login.js` the password sign-in and this browser's sealed token, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
 published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
 Generated files (`site/dist`, `site/.cache`, `site/.og-cache`) are git-ignored.

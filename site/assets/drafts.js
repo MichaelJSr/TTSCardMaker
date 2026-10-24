@@ -1,5 +1,5 @@
 // Drafts: what the editors hold before it goes into the batch, kept per card id and field in localStorage, offered
-// back when the card opens again. NOTES.md §19.
+// back when the card opens again. NOTES.md §21.
 import { esc } from "./text.js";
 
 export const DRAFT_KEY = "edit-drafts";

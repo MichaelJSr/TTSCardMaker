@@ -1,4 +1,4 @@
-// Types in place (edit mode): a palette of the type icons under the type row, with a search. NOTES.md §19.
+// Types in place (edit mode): a palette of the type icons under the type row, with a search. NOTES.md §21.
 import { esc, norm } from "./text.js";
 
 /** The type icons, one entry each, by name: [{name, file, keys}] from cards.json icons ({spelling: {file, name, kind}});

@@ -5,6 +5,8 @@ import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
 import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers, shareDialogHtml, personDiscord, personText } from "./profile.js";
 import * as inline from "./inline.js";
+import * as tokens from "./tokens.js";
+import * as palette from "./palette.js";
 import * as details from "./details.js";
 import { tipController } from "./tip.js";
 import * as decks from "./decks.js";
@@ -148,7 +150,8 @@ function derive() {
     S.banned.set(e.id, e.reason || "banned");
     const c = S.byId.get(e.id); if (c) c._banned = e.reason || "banned";
   }
-  S.renderer = makeRenderer({ cards: S.cards, icons: S.icons });
+  S.renderer = makeRenderer({ cards: S.cards, icons: S.icons, variants: S.data.iconVariants });
+  S.vocab = tokens.vocabulary(S.icons, S.all.map(c => c.ability));   // the token picker's icons, the most used first
   S.mentions = new Map(); S.mentionedBy = new Map();
   for (const c of S.cards) {
     const m = S.renderer.mentions(c.ability, c.name);
@@ -184,6 +187,8 @@ const previews = createPreviews({ S, editor, toast: m => toast(m), loadDetails: 
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;
 inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
+tokens.install({ vocab: () => S.vocab || [], icon: (t, o) => S.renderer?.icon(t, o) ?? null });   // "[" or "(" in card text: suggestions
+palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));   // the type palette ranks as the picker
 let selectAnchor = null;                                 // the last tile toggled: Shift-click selects from it
 function toggleSelect(id, range) {
   if (range && selectAnchor) for (const x of inline.rangeIds(S.list.map(c => c.id), selectAnchor, id)) S.selected.add(x);

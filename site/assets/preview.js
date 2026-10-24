@@ -1,6 +1,6 @@
 // Card image previews in edit mode: the quick mock-up (mockup.js, drawn in the browser) and the rendered preview, a dry-run
 // bake of the card's PSD-kind fields by the card repo's card-preview.yml (AutoCroissant commands/card_preview.py; the
-// contract in site/NOTES.md "Card previews", from branch work/card-preview: workflow_dispatch with card, edit and request,
+// contract in site/NOTES.md §19 "Card previews"; the UI §22: workflow_dispatch with card, edit and request,
 // the result on the orphan branch "previews"). The site starts it with the signed-in editor's token, remembers each
 // request in localStorage (the last KEEP per card), checks every POLL_MS in the background (for up to MAX_WAIT_MS) while
 // the editor works on other cards, badges a card whose preview is ready and shows it when the card is opened again:

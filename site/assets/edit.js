@@ -501,8 +501,8 @@ export function createEditor(app) {
       <h2>Edit rulebook page</h2><p class="muted">Goes into your batch. <span class="kbd">${esc(c.key)}</span></p>
       <form id="edit-form" class="edit-form" autocomplete="off"><fieldset><legend>Page</legend>
         ${row("name", "Title", `<input id="ef-name" value="${esc(c.name)}">`)}
-        ${row("ability", "Text", `<textarea id="ef-ability" rows="14" spellcheck="true">${esc(c.ability || "")}</textarea><div class="ability preview" id="ef-preview"></div>`)}
-        ${row("note", "Note", `<textarea id="ef-note" rows="2" placeholder="Shown under the page">${esc(c.note || "")}</textarea>`)}
+        ${row("ability", "Text", `<textarea id="ef-ability" rows="14" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea><div class="ability preview" id="ef-preview"></div>`)}
+        ${row("note", "Note", `<textarea id="ef-note" rows="2" placeholder="Shown under the page" data-tokens>${esc(c.note || "")}</textarea>`)}
       </fieldset><div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
       <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div></form></div>`;
   }
@@ -538,7 +538,7 @@ export function createEditor(app) {
             <button type="button" class="ghost" data-creature="remove" ${c.creatures?.length > 1 ? "" : "hidden"}>− Creature</button></div>
         </fieldset>
         <fieldset><legend>Text</legend>
-          ${row("ability", `<textarea id="ef-ability" rows="6" spellcheck="true">${esc(c.ability || "")}</textarea>
+          ${row("ability", `<textarea id="ef-ability" rows="6" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea>
             <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}" alt="${esc(t)}"></button>` : ""; }).join("")}</div>
             <div class="ability preview" id="ef-preview"></div>`)}
         </fieldset>
@@ -550,7 +550,7 @@ export function createEditor(app) {
           ${row("subseries", `<input id="ef-subseries" list="dl-subseries" value="${esc(c.subseries || "")}" placeholder="—"><datalist id="dl-subseries">${subseriesOpts(c.series)}</datalist>`)}
         </fieldset>
         <fieldset><legend>Notes, names and credit</legend>
-          ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page">${esc(c.note || "")}</textarea>`)}
+          ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page" data-tokens>${esc(c.note || "")}</textarea>`)}
           ${row("aliases", `<input id="ef-aliases" value="${esc((c.webAliases || []).join(", "))}" placeholder="comma separated">${(c.aliases || []).filter(a => !(c.webAliases || []).includes(a)).length ? `<span class="muted">Bot aliases: ${esc(c.aliases.filter(a => !(c.webAliases || []).includes(a)).join(", "))}</span>` : ""}`)}
           <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" list="dl-people" value="${esc(c.author || "")}"><datalist id="dl-people">${authorList().map(p => `<option value="${esc(p)}">`).join("")}</datalist>`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
