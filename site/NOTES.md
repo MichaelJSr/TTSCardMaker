@@ -362,7 +362,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   inside a token (the rest of a name, spaces and `:variant` included, then its `]` on the line; for a tag the rest
   and its `)`), past that `]` or `)`; text after the caret that no `]` or `)` closes is never replaced ("[fi|and ice"
   + fire = "[fire]and ice"; until the 2026-10-23 review the rest of the word went too). `tail` = that rest's
-  `:variant]`, which a plain icon keeps ("[fi|re:glow]" + fire = "[fire:glow]"). `suggest(open, vocab)`: icons by
+  `:variant]` when the font draws it, which a plain icon keeps ("[fi|re:glow]" + fire = "[fire:glow]"; "[fi|:]" +
+  fire = "[fire]", never "[fire:]", 2026-10-24). `suggest(open, vocab)`: icons by
   `norm` (case, spaces, `_ - . '` ignored): exact name or alias, name prefix, alias prefix, then (2+ letters) inside a
   name or alias; with none of those (3+ letters), names and aliases whose start is one edit away (two from 6 letters;
   added, dropped, changed or swapped letters: "[fier" -> fire, field); types before stars, then the most used in the
@@ -412,9 +413,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   the plain icon, `[x:glow]` and `[x:darkglow]` an `img.tokv`. A `.tokv` is (1 + 2 --r) x 1.35em with negative margins
   above and below of --r x 1.35em: it sits on the line as the plain icon does and its halo spills over the lines above
   and below, as Photoshop draws the font's; its full width counts, as the font's spacers widen the token. A variant
-  without its picture (an older build, an unknown variant) is the plain icon, as before and as the parser reads it.
-  No spaces around the variant, as in the font and the parser: `[fire: glow]` and `[fire: no]` are the plain icon
-  (until the 2026-10-23 review text.js trimmed them, so `[fire: no]` was crossed out).
+  without its picture (an older build) is the plain icon, as the parser reads it. A variant the font has no ligature
+  for is letters, as on the card (2026-10-24, text.js `splitToken`, also used by mockup.js `tokenize`): `[fire:]`,
+  `[fire:glows]`, and with spaces around it `[fire: glow]` and `[fire:no ]` (until 2026-10-24 these were the plain
+  icon). psd_parser still reads `[fire:]` as `[fire]` (its ICON_VARIANTS has "" for no colon).
   `plain()` and build_site's `share_text` still flatten every variant.
 - Checks (2026-10-23; harness in ~/Documents/Tools/wt/scratch/picker/: a scratch build of this branch with the image
   cache cloned and AutoCroissant's pickles, served on localhost, driven in WebKit by `browser/shoot.swift`, a

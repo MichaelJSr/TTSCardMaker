@@ -66,6 +66,14 @@ const VERB = { buff: status, debuff: status, minion: /\b(?:summon|resummon|reviv
 // token variants ([fire:glow]), as the font draws them: tint and sticker take the text colour (style.css paints build_site's
 // masks), glow and darkglow are images; one without its image (an older build) is the plain icon, as the parser reads it
 export const VARIANT_NAMES = { tint: "text colour", sticker: "sticker", no: "crossed out", glow: "white glow", darkglow: "black glow" };
+/** A token's text ("fire", "Fire:Glow") as {base, v} (v "" without a colon), or null when the font draws no such
+ *  variant: [fire:], [fire:glows] and [fire: glow] print as letters (AutoCroissant psd_parser ICON_VARIANTS). */
+export function splitToken(token) {
+  const s = String(token ?? ""), at = s.indexOf(":");
+  if (at < 0) return { base: s, v: "" };
+  const v = s.slice(at + 1).toLowerCase();
+  return Object.hasOwn(VARIANT_NAMES, v) ? { base: s.slice(0, at), v } : null;
+}
 /** The variant's image of an icon entry: icons/fire.webp -> icons/fire.glow.webp */
 export const variantFile = (ic, v) => ic.file.replace(/\.webp$/, `.${v}.webp`);
 
@@ -104,12 +112,12 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   for (const [h, ps] of groups) groups.set(h, new RegExp(`(${ps.join("|")})${END}`, "iy"));
   const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}`, "g");
 
-  /** HTML for a token's text ("fire", "fire:glow"), null for no icon; tip: false leaves out the tooltip */
+  /** HTML for a token's text ("fire", "fire:glow"), null for no icon or a variant the font lacks; tip: false leaves out
+   *  the tooltip */
   function icon(token, { tip = true } = {}) {
-    const [base, variant] = token.split(":");
-    const ic = icons[norm(base)];
+    const parts = splitToken(token), ic = parts && icons[norm(parts.base)];
     if (!ic) return null;
-    const v = String(variant ?? "").toLowerCase(), name = base.replace(/_/g, " ");   // no spaces around it, as in the font
+    const { base, v } = parts, name = base.replace(/_/g, " ");
     const drawn = v === "no" || (ic.v?.includes(v) && variants[v] !== undefined);
     const label = drawn ? `${name} (${v === "no" ? "not" : VARIANT_NAMES[v]})` : name;
     const t = tip ? ` data-tip="${esc(label)}"` : "";

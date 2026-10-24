@@ -42,7 +42,7 @@ const REST_ICON = /^[\p{L}\p{N} _\-.'’:]*\]/u, REST_TAG = /^[-0-9A-Za-z/]*\)/;
  *  before a ":") or {type: "tag", start, end, close, text}; start: its "[" or "(", end: the caret, close: where a
  *  choice's text ends: the caret, or past the rest of a token the caret is inside when its "]" or ")" closes it on
  *  this line ("Heal [fi|re] now"); text after the caret that nothing closes stays ("[fi|and ice"). tail: that rest's
- *  ":variant]", kept when a plain icon is chosen. Only on the caret's line. A "(" opens a tag only when the text after
+ *  ":variant]" when the font draws it, kept when a plain icon is chosen ("[fi|:]" gives "[fire]"). Only on the caret's line. A "(" opens a tag only when the text after
  *  it could start one and does not start in lower case: "(see below)" is words. */
 export function openToken(text, caret) {
   text = String(text ?? "");
@@ -55,8 +55,9 @@ export function openToken(text, caret) {
     if (seg.length > MAX_TOKEN || !NAME.test(base) || (variant !== null && !/^[a-z]*$/i.test(variant))) return null;
     let rest = (colon < 0 ? REST_ICON : /^[a-z]*\]/i).exec(after)?.[0] ?? "";
     if (seg.length + rest.length - 1 > MAX_TOKEN) rest = "";
-    const at = colon < 0 ? rest.indexOf(":") : -1;
-    return { type: "icon", start: line + sq, end: caret, close: caret + rest.length, base, variant, tail: at < 0 ? "" : rest.slice(at) };
+    const at = colon < 0 ? rest.indexOf(":") : -1, tail = at < 0 ? "" : rest.slice(at);
+    return { type: "icon", start: line + sq, end: caret, close: caret + rest.length, base, variant,
+      tail: VARIANTS.includes(tail.slice(1, -1).toLowerCase()) ? tail : "" };   // not "[fire:]": letters in the font
   }
   if (pa > before.lastIndexOf(")") && pa > sq) {
     const seg = before.slice(pa + 1);

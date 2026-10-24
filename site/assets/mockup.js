@@ -8,7 +8,7 @@
 // tokens as icons and timing tags as badges. When no block fits the old text (text over art, a stylised title), the new
 // text goes in a dark box over the template's area instead ("box"), never over a half-erased old one. Everything above
 // `draw` is pure (node checks run it on plain pixel arrays).
-import { norm, tagInfo, TAG } from "./text.js";
+import { norm, splitToken, tagInfo, TAG } from "./text.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569" };   // style.css --b-*, as the font's badges
@@ -304,15 +304,15 @@ export function textColours(masked, bg) {
 }
 
 /** Ability text as paragraphs of chunks (no break inside a chunk), each piece {text}, {icon, no} (an icon token the
- *  site has, "[fire]", "[fire:no]"; another bracket stays text) or {badge, group} (a timing tag, "(1CD)", as text.js
- *  reads it; another parenthesis stays text). */
+ *  site has, "[fire]", "[fire:no]"; another bracket or variant stays text) or {badge, group} (a timing tag, "(1CD)",
+ *  as text.js reads it; another parenthesis stays text). */
 export function tokenize(text, icons = {}) {
   const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}`, "g");
   return String(text ?? "").replace(/\r/g, "").split("\n").map(line => line.split(/[ \t]+/).filter(Boolean).map(chunk => {
     const out = []; let at = 0;
     for (const m of chunk.matchAll(PIECE)) {
       let piece = null;
-      if (m[1] != null) { const [base, variant = ""] = m[1].split(":"), ic = icons[norm(base)]; if (ic) piece = { icon: ic.file, name: base, no: variant.trim().toLowerCase() === "no" }; }
+      if (m[1] != null) { const t = splitToken(m[1]), ic = t && icons[norm(t.base)]; if (ic) piece = { icon: ic.file, name: t.base, no: t.v === "no" }; }
       else { const t = tagInfo(m[2]); if (t) piece = { badge: t.tag.replace("-", "\u2212"), group: t.group }; }
       if (!piece) continue;
       if (m.index > at) out.push({ text: chunk.slice(at, m.index) });
