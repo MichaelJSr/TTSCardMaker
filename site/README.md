@@ -157,8 +157,9 @@ the build never fails on it.
 
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
 bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
-`Card Creation Dates.json`, `Card Ratings.json`, `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/`
-on 2026-10-20); the build and the bot read them, the published site does not include them. `Card Creation Dates.json`
+`Card Creation Dates.json`, `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/`
+on 2026-10-20), as does `Card Ratings.json` (new on 2026-10-24, read by the build only); the build and the bot read the
+others; the published site includes none of them. `Card Creation Dates.json`
 holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand", "provisional": true}`
 (dates only, from the Discord archive kept off the repo), written by AutoCroissant's `python -m commands.discord_edits
 created` (re-run after rulings and archive updates; it keeps `"from": "hand"` entries, the way to set a date by hand).
