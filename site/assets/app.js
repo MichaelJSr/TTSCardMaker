@@ -261,7 +261,7 @@ function route(e) {
     return;
   }
   const hash = location.hash || hashOf(r);
-  if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig) { closeModal(); document.title = S.title = titleOf(r); return; }   // nothing changed: the view under it stays
+  if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig && !$(".loading", view)) { closeModal(); document.title = S.title = titleOf(r); return; }   // nothing changed (and nothing still loading): the view under it stays
   closeModal();
   renderView(r, hash);
 }
@@ -282,8 +282,8 @@ function titleOf(r) {
     decks: r.arg ? S.deckTitle || "Deck" : "Published decks" };
   return `${titles[r.name] || "Cards"} · Impossibility Simulator`;
 }
-// what a card dialog can change under it (edits, hands, the comparison, sign-in): a dialog closes without a redraw while this holds
-function viewSig() { return `${S.rev}|${S.compare.join(",")}|${JSON.stringify(S.decks)}|${editor.me?.login || ""}`; }
+// what a card dialog can change under it (edits, hands, the comparison, sign-in, the theme): a dialog closes without a redraw while this holds
+function viewSig() { return `${S.rev}|${S.compare.join(",")}|${JSON.stringify(S.decks)}|${editor.me?.login || ""}|${document.documentElement.dataset.theme}`; }
 function setParams(updates, { replace = true } = {}) {
   const r = parseHash();
   const p = r.params;
@@ -471,25 +471,43 @@ function tableHtml(list, p, win) {
     ...(S.created ? [["created", "Created"]] : []), ["new", "Updated"]];
   const sort = sortOf(p);
   const first = win.all ? list.length : Math.max(TABLE_FIRST, Math.ceil((win.y + 2 * win.h) / 30));    // rows are 30 px or taller: the scroll position stays
-  tableRest = list.slice(first).map(rowHtml);
+  const rest = list.slice(first);
+  tableRest = rest.map(rowHtml);
   return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
-    ${list.slice(0, first).map(rowHtml).join("")}</tbody>${tableRest.length ? `<tbody class="sizer" aria-hidden="true" style="visibility:collapse">${sizerRows(tableRest)}</tbody>` : ""}</table></div>`;
+    ${list.slice(0, first).map(rowHtml).join("")}</tbody>${tableRest.length ? `<tbody class="sizer" aria-hidden="true" style="visibility:collapse">${sizerRows(rest, tableRest)}</tbody>` : ""}</table></div>`;
 }
-// hidden rows from the rest that hold the columns at their final widths while the rest comes in: per column the longest
-// lines and the longest word (pictures as two letters); removed with the last rows
-function sizerRows(rest) {
+// hidden rows from the rest that hold the columns at their final widths while the rest comes in: per column the rows with
+// the widest lines and the widest word, measured in the table's fonts (rows with PSD chips always); removed with the last rows
+let measure = null, sized = new WeakMap(), sizedRev = -1;   // sized: a card's [line, word] per column, until derive() runs
+function sizerRows(rest, rows) {
+  if (sizedRev !== S.rev) { sized = new WeakMap(); sizedRev = S.rev; }
+  if (!measure) {
+    const ctx = document.createElement("canvas").getContext("2d"), family = getComputedStyle(document.body).fontFamily, seen = new Map();
+    let px = 0;
+    measure = (t, size) => { const k = size + t; let w = seen.get(k); if (w === undefined) { if (px !== size) ctx.font = `${px = size}px ${family}`; seen.set(k, w = ctx.measureText(t).width); } return w; };
+  }
+  const text = (...lines) => { let line = 0, word = 0; for (const [t, size = 13.5] of lines) { if (!t) continue; line = Math.max(line, measure(t, size));
+    for (const x of t.split(/\s+|(?<=-)(?=\p{L})/u)) if (x) word = Math.max(word, measure(x, size)); } return [line, word]; };
+  const len = v => { const n = String(v ?? "").length; return [n, n]; };
+  const cols = c => [[0, 0], text([c.name]), text([`${KIND_LABEL[c.type] || c.type}${c.subtype ? ` · ${cap(c.subtype)}` : ""}`]),
+    text([c.series], [c.subseries, 12]), len(c.stars), len(c.hp), len(c.def), len(c.atk), len(c.spd), len(c.hp != null ? total(c) : ""),
+    [(c.types || []).filter(iconFor).length, 0], text([c.author]), ...(S.created ? [text([createdText(c)])] : []), text([date(c.ts)])];
   const top = [], pick = new Set();
-  rest.forEach((h, i) => h.split("</td>").forEach((cell, j) => {
-    const t = cell.replace(/<img\b[^>]*>/g, " MM ").replace(/<div\b/g, "\n<").replace(/<[^>]*>/g, "");
-    const line = Math.max(...t.split("\n").map(x => x.trim().length)), word = Math.max(...t.split(/\s+/).map(x => x.length));
-    const b = top[j] ||= { line: [], word: [] };
-    for (const [arr, v, n] of [[b.line, line, 3], [b.word, word, 1]]) {
-      if (arr.length === n && v <= arr[n - 1][0]) continue;
-      arr.push([v, i]); arr.sort((x, y) => y[0] - x[0]); arr.length = Math.min(arr.length, n);
-    }
-  }));
-  for (const b of top) for (const [, i] of [...b.line, ...b.word]) pick.add(i);
-  return [...pick].sort((x, y) => x - y).map(i => rest[i].replace(/^<tr class="row" data-open="[^"]*">/, "<tr>").replace(/<img class="thumb"[^>]*>/, "")).join("");
+  rest.forEach((c, i) => {
+    if (psdChips(c)) pick.add(i);
+    let cs = sized.get(c);
+    if (!cs) sized.set(c, cs = cols(c));
+    cs.forEach(([line, word], j) => {
+      const b = top[j] ||= [[], []];
+      for (const [arr, v, n] of [[b[0], line, 3], [b[1], word, 2]]) {
+        if (!v || (arr.length === n && v <= arr[n - 1][0])) continue;
+        arr.push([v, i]); arr.sort((x, y) => y[0] - x[0]); arr.length = Math.min(arr.length, n);
+      }
+    });
+  });
+  for (const b of top) for (const [, i] of [...b[0], ...b[1]]) pick.add(i);
+  return [...pick].sort((x, y) => x - y).map(i => rows[i].replace(/^<tr class="row" data-open="[^"]*">/, "<tr>")
+    .replace(/<img class="thumb"[^>]*>/, "")).join("");
 }
 // the table's first rows go in with the page, the rest in later tasks (a newer render or another page stops them)
 const TABLE_FIRST = 100, TABLE_CHUNK = 150;
@@ -817,8 +835,9 @@ function renderStatsView(r) {
   const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
   renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist, distPage: S.distPage }, r.params);
   const ctx = { cards: S.cards, byId: S.byId, banned: S.banned };
+  const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
   const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History leave out what needs it
-    const now = parseHash();
+    const now = parseHash(S.renderedHash);
     if (now.name !== "stats") return;
     const put = (id, html) => { const slot = $(`#${id}`, view); if (slot) slot.innerHTML = html; };
     if (A) put("stats-balance", balance.statsHtml(A, { cards: S.cards, byId: S.byId }, now.params));
@@ -831,7 +850,7 @@ function renderStatsView(r) {
     else fill();
   } else {
     $("#stats-balance", view).innerHTML = `<p class="loading">Loading the balance section…</p>`;
-    loadAnalytics().then(() => fill(), e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; fill(null); });
+    loadAnalytics().then(() => fill(), e => { const slot = $("#stats-balance", view); if (slot && onStats()) slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; fill(null); });
   }
 }
 function distPage(panel, step) {          // a stat distribution's pager: the next or previous page of values (stats.js)

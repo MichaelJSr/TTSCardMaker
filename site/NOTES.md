@@ -911,14 +911,16 @@ relies on:
 - `route(e)` runs once per navigation: a hash navigation fires `popstate` then `hashchange` (same URL, `e.newURL`); the
   `hashchange` of that pair is skipped. A `popstate` alone (c/<id>/ to the root) still routes. Closing a card over the
   rendered view only closes it while `viewSig()` is what `renderView` saw (`S.rev`, bumped by `derive()`; the hands; the
-  comparison; the login); else the view is drawn again (an edit, a hand or Compare changed in the dialog). State a dialog
-  can change that a view shows belongs in `viewSig`.
+  comparison; the login; the theme) and the view holds no `.loading` (its data came while the dialog was open: the
+  loaders' callbacks skip a view under a card); else the view is drawn again (an edit, a hand or Compare changed in the
+  dialog). State a dialog can change that a view shows belongs in `viewSig`; a loading placeholder carries `.loading`.
 - Dates: `dateFmt(opts)` (text.js) is `toLocaleDateString(undefined, opts)` with its `Intl.DateTimeFormat` made once.
   Use it (or history.js `date`/`month`) for any date shown per row. stats.js `heatScale()` reads the CSS ramp once per
   theme (`heatMemo`); `fmt` prints whole numbers under 1000 with String() where the formatter prints the same
   (`PLAIN`); history.js `dayOf` and balance.js `dayKey` keep each Pacific day per UTC hour (whole-hour offsets only).
 - Stats: at the top of the page with the Balance slot below the window, Balance, Ratings and History are filled after
-  the first screen has painted (`statsJob` drops a stale fill); scrolled, they are filled at once as before.
+  the first screen has painted (`statsJob` drops a stale fill); scrolled, they are filled at once as before. The fill
+  reads the rendered hash (`S.renderedHash`), so a card opened in the meantime gets them filled under it.
 - Cards grid: `fillGrid` keeps each tile's node in `gridTiles` (card id -> its markup, node, edit mode) and reuses it
   while `tileHtml` gives the same markup. Code that changes a tile in place must drop it (`refresh` does for the deck
   button) or set its change again after every render (edit mode: `mountGrid`'s draggable, `reflect`, `mountTiles`).
@@ -929,7 +931,10 @@ relies on:
 - Table view: `tableHtml` writes the rows that cover the window (at least `TABLE_FIRST`, 30 px a row at most, so the
   scroll position holds), `fillTable` appends the rest in `TABLE_CHUNK` tasks; a newer render stops them (`tableJob`).
   Until the last rows are in, a collapsed `tbody.sizer` holds copies of the rest's widest rows per column (`sizerRows`:
-  longest lines and words, pictures as two letters), so the columns keep their final widths from the first frame.
+  per text column the 3 widest lines and 2 widest words measured on a canvas in the table's fonts, 13.5 px and the
+  subseries' 12 px, words split at spaces and after a hyphen; numbers by length; Types by icon count; rows with PSD chips
+  always; thumbnails left out, they shrink to fit), so the columns keep their final widths from the first frame. A new
+  column or font size in `rowHtml` needs its line in `sizerRows`' `cols`.
 - Rulebook: rules.json re-derives (`editor.refresh`) only when a staged or published-not-built edit is on a rulebook
   page (`editor.touches`). No `content-visibility` on its pages: the TOC's smooth jumps landed off target (the pages'
   estimated heights change as they render on the way).
