@@ -156,7 +156,7 @@ export const archiveTag = r => (ARCHIVE_TAGS.some(([k]) => k === r.tag) ? r.tag 
 /** The tag as a pill; its tip: where the PSD was (and went) */
 export function archiveTagHtml(r) {
   const t = archiveTag(r), label = ARCHIVE_TAGS.find(([k]) => k === t)[1];
-  const tip = r.moved_to ? `${r.path || ""} → ${folder(r.moved_to) || r.moved_to}` : r.path || "";
+  const tip = r.moved_to ? `${r.path ? `${r.path} → ` : "Moved to "}${folder(r.moved_to) || r.moved_to}` : r.path || "";   // no path: a person's rows
   return `<span class="fact arch ${t}"${tip ? ` data-tip="${esc(tip)}"` : ""}>${label}</span>`;
 }
 /** One event as a line (the post's _line(), with the old values and the ability diff) */
