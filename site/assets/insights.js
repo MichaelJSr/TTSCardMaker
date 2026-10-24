@@ -169,7 +169,7 @@ export function ratingsHtml(A, { cards, banned }, params) {
     const facts = [["Too Stronk", n.strong], ["Nerfed later", n.nerfed], ["Plz buff", n.weak], ["Buffed later", n.buffed]];
     charts.push(card("rat-nerfed", "Did Too Stronk cards get nerfed?", anyBal ? "Rated Too Stronk or Plz buff, then changed." : "",
       anyBal ? `<div class="facts">${facts.map(([l, v]) => `<span class="fact">${esc(l)} <b>${v}</b></span>`).join("")}</div>`
-        + (hits.length ? `<ul class="cl-lines">${hits.map(h => `<li>${link(h.c)} <span class="muted">${esc(TIERS.power[h.tier])} ${esc(dayLabel(h.day))} · ${esc(change(h))} ${esc(date(h.row.ts))}</span></li>`).join("")}</ul>` : "")
+        + (hits.length ? `<ul class="cl-lines">${hits.map(h => `<li>${link(h.c)} <span class="muted">${esc(TIERS.power[h.tier])} ${esc(dayLabel(h.day))} · ${h.row.bal === "nerf" ? "nerfed" : "buffed"} ${esc(date(h.row.ts))} (total ${total(h.row.stats[0])} → ${total(h.row.stats[1])})</span></li>`).join("")}</ul>` : "")
         : empty(NO_BAL),
       anyBal && hits.length ? table(["Card", "Tier", "Rated", "Changed", "Change"], hits.map(h => [h.c.name, TIERS.power[h.tier], dayLabel(h.day), date(h.row.ts), change(h)])) : ""));
   }
