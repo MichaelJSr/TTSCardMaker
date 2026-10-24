@@ -133,12 +133,15 @@ export function makeRenderer({ cards, icons, variants = {} }) {
     return `<img class="tokv" src="${file}" alt="${esc(label)}" style="${r}"${t}>`;
   }
 
+  const hasIcon = token => { const parts = splitToken(token); return !!(parts && icons[norm(parts.base)]); };   // icon(token) !== null
   // icons and badges as [index, length, html]; links as [index, length, card], judged over the whole text with each
   // icon or badge read as a space, so render and mentions agree
-  function parse(text, selfName) {
+  // (html false: the pieces' places only, for mentions)
+  function parse(text, selfName, html_ = true) {
     const pieces = [];
     for (const m of text.matchAll(PIECE)) {
-      const html = m[1] !== undefined ? icon(m[1]) : (tagInfo(m[2]) ? badgeHtml(m[2]) : null);
+      const html = !html_ ? (m[1] !== undefined ? hasIcon(m[1]) : !!tagInfo(m[2])) || null
+        : m[1] !== undefined ? icon(m[1]) : (tagInfo(m[2]) ? badgeHtml(m[2]) : null);
       if (html !== null) pieces.push([m.index, m[0].length, html]);
     }
     const links = [];
@@ -149,8 +152,9 @@ export function makeRenderer({ cards, icons, variants = {} }) {
       if (w.index < end) continue;
       const h = w[0].toLowerCase();
       let m = null;
-      for (const g of [h, h.replace(/s$/, ""), h.replace(/es$/, "")].map(x => groups.get(x))) {   // "drones", "Cabbages"
-        if (g && !m) { g.lastIndex = w.index; m = g.exec(flat); }
+      for (const x of h.endsWith("es") ? [h, h.slice(0, -1), h.slice(0, -2)] : h.endsWith("s") ? [h, h.slice(0, -1)] : [h]) {   // "drones", "Cabbages"
+        const g = groups.get(x);
+        if (g) { g.lastIndex = w.index; if ((m = g.exec(flat))) break; }
       }
       if (!m) continue;
       end = m.index + m[0].length;
@@ -176,7 +180,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
 
   /** Cards whose names appear in a text (for "mentions" / "mentioned by"). */
   function mentions(text, selfName = "") {
-    return new Set(text ? parse(text, selfName).links.map(l => l[2].id) : []);
+    return new Set(text ? parse(text, selfName, false).links.map(l => l[2].id) : []);
   }
   return { render, mentions, icon };
 }
