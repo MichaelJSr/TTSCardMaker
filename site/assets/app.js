@@ -74,7 +74,7 @@ const shareUrl = id => `${ROOT}c/${encodeURIComponent(id)}/`;
 const userUrl = login => `${ROOT}u/${encodeURIComponent(login)}/`;
 const deckUrl = d => `${ROOT}d/#/deck/${D.encode(d)}`;
 const iconFor = name => S.icons[norm(name)];
-const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
+const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" loading="lazy" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
 // edits the pipeline bakes into the card image (build_site.py PSD_FIELDS): pending, refused, or baked but not re-parsed yet
 const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability" };
 const PSD_TIP = "The card image is being regenerated with this edit";     // the one tip for a pending PSD field (edit.js too)
@@ -385,7 +385,7 @@ function renderCards(r) {
       <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts)}
       ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts)}` : ""}
       ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t); const on = csv(p, "types").includes(t);
-        return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(t.replace(/_/g, " "))} (${typeCounts.get(t)})" aria-pressed="${on}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
+        return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(t.replace(/_/g, " "))} (${typeCounts.get(t)})" aria-pressed="${on}">${ic ? `<img loading="lazy" src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
       <h3>Series</h3><select data-action="select-param" data-key="series"><option value="">All series</option>${series.map(s => `<option${s === p.get("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>
       ${subseries.length || p.get("subseries") ? `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(p.get("subseries"))}</option>` : ""}${subseries.map(subOpt).join("")}</select>` : ""}
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
