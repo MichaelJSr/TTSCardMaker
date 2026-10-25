@@ -403,7 +403,7 @@ function renderCards(r) {
   if (waiting) loadAnalytics().then(() => { if (parseHash(S.renderedHash || "").name === "cards") rerender(); },
     () => { const el = $(".browse .loading", view); if (el) el.textContent = "Couldn't load the recorded changes."; });
 
-  view.innerHTML = `<div class="browse">
+  const browse = `<div class="browse">
     <aside class="filters${S.filtersOpen ? " open" : ""}" aria-label="Filters">
       <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindCounts.get(k)), csv(p, "kind"), kindCounts)}
       <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts)}
@@ -429,6 +429,8 @@ function renderCards(r) {
       ${waiting ? `<p class="loading">Loading the recorded changes…</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
     </section></div>`;
+  if (adoptFirst(browse, list, view_, size)) firstImgs.clear();
+  else view.innerHTML = browse;
   const grid = list.length && view_ !== "table" && $(".browse .grid", view);
   if (grid) fillGrid(grid, list, { css: (G.TILE_SIZES[size] || G.TILE_SIZES.m)[1], win });
   else if (list.length && view_ === "table") fillTable($(".browse table.data tbody", view));
@@ -451,6 +453,38 @@ function takeFirstImgs(view) {
   }
   return imgs;
 }
+// The grid's first render over that first screen keeps its tiles in the page (Safari redraws an image taken out of the
+// page): each link tile becomes the grid's tile in place and the rest of the page is swapped in around the grid. Any
+// difference (another view, edit mode, other cards first: a cached page): false, a full render.
+let firstScreen = true;
+function adoptFirst(browse, list, view_, size) {
+  if (!firstScreen) return false;
+  firstScreen = false;
+  const old = $(".browse", view), oldGrid = old && $(".grid", old), links = oldGrid ? [...oldGrid.children] : [];
+  if (!links.length || view_ !== "grid" || editing()
+      || links.some((a, i) => a.tagName !== "A" || decodeURIComponent((a.getAttribute("href") || "").slice(2, -1)) !== list[i]?.id)) return false;
+  const tpl = document.createElement("template");
+  tpl.innerHTML = browse;
+  const fresh = tpl.content.firstElementChild, grid = fresh && $(".grid", fresh), section = grid?.parentElement;
+  const oldAside = $("aside.filters", old), oldSection = oldGrid.parentElement;
+  if (!grid || !oldAside || !$("aside.filters", fresh)) return false;
+  const css = (G.TILE_SIZES[size] || G.TILE_SIZES.m)[1];
+  links.forEach((a, i) => {
+    const c = list[i], html = tileHtml(c, { eager: i < 8, css }), t = document.createElement("template");
+    t.innerHTML = html;
+    const meta = $(".meta", a);
+    for (const el of [...t.content.firstElementChild.children]) if (!el.matches(".art, .meta")) a.insertBefore(el, meta);
+    a.dataset.open = c.id;
+    a.tabIndex = 0;
+    gridTiles.set(c.id, { html, el: a, ed: false });
+  });
+  oldAside.replaceWith($("aside.filters", fresh));
+  for (const el of [...oldSection.children]) if (el !== oldGrid) el.remove();
+  for (const el of [...section.children]) if (el !== grid) oldSection.insertBefore(el, oldGrid);
+  oldGrid.className = grid.className;
+  oldGrid.setAttribute("style", grid.getAttribute("style") || "");
+  return true;
+}
 const GRID_FIRST = 96, GRID_CHUNK = 120;
 let gridJob = 0;
 function fillGrid(grid, list, { css, win }) {
@@ -469,9 +503,10 @@ function fillGrid(grid, list, { css, win }) {
         if (img && ["src", "srcset", "sizes"].every(a => img.getAttribute(a) === old.getAttribute(a))) img.replaceWith(old);
       }
     }
-    if (!mark) { grid.append(...els); return; }
+    const add = els.filter(el => el.parentNode !== grid);   // the first screen's tiles stay where they are (adoptFirst)
+    if (!mark) { grid.append(...add); return; }
     const frag = document.createDocumentFragment();     // edit mode: the marks mountGrid and mountTiles gave the first ones
-    frag.append(...els); inline.markTiles(frag, S.selected); previews.mountTiles(frag); grid.append(frag);
+    frag.append(...add); inline.markTiles(frag, S.selected); previews.mountTiles(frag); grid.append(frag);
   };
   // tiles are 200 px tall or more and 144 px wide or more (with the gap): enough to keep the scroll position
   const first = win.all ? list.length : Math.max(GRID_FIRST, (Math.floor(win.w / 144) + 1) * Math.ceil((win.y + 2 * win.h) / 200));
