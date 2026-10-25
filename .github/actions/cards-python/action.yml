@@ -1,0 +1,69 @@
+# The card workflows' one Python setup: Python 3.14 and AutoCroissant requirements-cards.txt (the psd-tools fork's one
+# pin) as wheels cached per that file, runner and Python (one entry for every card job). A hit installs offline with uv
+# (~1 s); a miss builds the wheels with pip (uv has no `pip wheel`) and saves them. The bot checkout is at bot/.
+name: Card Python
+description: Python 3.14 with the card packages from the shared wheel cache
+
+inputs:
+  venv:
+    description: "Install into a new venv here (no pip in it); empty: into setup-python's own"
+    default: ""
+  skip:
+    description: "Packages not installed (space separated, e.g. pyoxipng)"
+    default: ""
+  help:
+    description: "commands.<module> --help for each of these (space separated, run in bot/): the import closure"
+    default: ""
+
+outputs:
+  wheels:
+    description: "built when the cache missed (a new entry was saved)"
+    value: ${{ steps.install.outputs.wheels }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v7
+      id: python
+      with:
+        python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
+
+    - id: wheels
+      uses: actions/cache/restore@v6
+      with:
+        path: ~/.cache/card-wheels
+        key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+
+    - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
+      with:
+        version: "0.13.5"
+        enable-cache: false
+
+    - id: install
+      shell: bash
+      env:
+        HIT: ${{ steps.wheels.outputs.cache-hit }}
+        VENV: ${{ inputs.venv }}
+        SKIP: ${{ inputs.skip }}
+        HELP: ${{ inputs.help }}
+        PYTHON: ${{ steps.python.outputs.python-path }}
+        UV_COMPILE_BYTECODE: "1"
+      run: |
+        if [ "$HIT" != true ]; then
+          pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
+          echo "wheels=built" >> "$GITHUB_OUTPUT"
+        fi
+        sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
+        for name in $SKIP; do sed -i "/^$name\b/d" "$RUNNER_TEMP/cards.txt"; done
+        if [ -n "$VENV" ]; then
+          python -m venv "$VENV" --without-pip
+          PYTHON=$VENV/bin/python
+        fi
+        UV_PYTHON=$PYTHON uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
+        for module in $HELP; do (cd bot && "$PYTHON" -m "commands.$module" --help > /dev/null); done
+
+    - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
+      uses: actions/cache/save@v6
+      with:
+        path: ~/.cache/card-wheels
+        key: ${{ steps.wheels.outputs.cache-primary-key }}

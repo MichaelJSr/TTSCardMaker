@@ -1,11 +1,10 @@
-"""card-sync.yml's lanes, switches and step scripts, offline: which jobs and steps run, both gates, the fonts, the commits.
+"""card-sync.yml's lanes and step scripts, offline: which jobs and steps run, both gates, the fonts, the commits.
 
     python3 card_sync_steps.py            (needs git 2.37 or later, bash and jq; no network)
 1. The step plans: every step's `if:` evaluated as GitHub does (&&, ||, !, ==, the status functions, the implicit
    success()), per lane. Data (Card data, and after the bake): a dry run commits, posts and dispatches nothing; switched
-   off it writes only `data`; on, it posts, commits data and dispatches the site (after the bake, whatever the data
-   did); a failed build commits and posts nothing. Main (Bake and save): off, a bake only on a dry run and no M; on,
-   bake, save, M and the re-pin of baked PNGs; a rejected or late M re-pins nothing; GO from Pending edits runs the
+   it posts, commits data and dispatches the site (after the bake, whatever the data did); a failed build commits and
+   posts nothing. Main (Bake and save): bake, save, M and the re-pin of baked PNGs; bake=none skips the bake; a rejected or late M re-pins nothing; GO from Pending edits runs the
    stages. A failed live job (a retry too) alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit
    main and every later step; after runs the data steps with AFTER = M.
 2. The data Gate on sandbox history: stoogedings-src/ alone and a hand-edited save don't start the data lane; fonts,
@@ -276,7 +275,7 @@ def evaluate(text: str, ctx: dict):
     return out
 
 
-def plan(flow: dict, job: str, event: str = "workflow_dispatch", inputs: dict = None, switches: dict = None,
+def plan(flow: dict, job: str, event: str = "workflow_dispatch", inputs: dict = None,
          actor: str = "MichaelJSr", outcomes: dict = None, outputs: dict = None, needs: dict = None) -> dict:
     """{step id or name: outcome} of one job's run: a step that runs gets its outcome from outcomes (default success)."""
     inputs = dict(inputs or {})
@@ -285,7 +284,7 @@ def plan(flow: dict, job: str, event: str = "workflow_dispatch", inputs: dict = 
     env: dict = {}
     ctx = {"github": github, "inputs": inputs, "vars": {}, "secrets": {}, "steps": {}, "env": env, "needs": needs or {},
            "functions": {"toJSON": json.dumps}}
-    for layer in (flow["env"], switches or {}, flow["jobs"][job]["env"]):
+    for layer in (flow["env"], flow["jobs"][job]["env"]):
         for key, value in layer.items():
             whole = value.startswith("${{") and value.endswith("}}") and value.count("${{") == 1
             env[key] = evaluate(value, ctx) if whole else value
@@ -313,53 +312,46 @@ def plan(flow: dict, job: str, event: str = "workflow_dispatch", inputs: dict = 
 def plans(flow: dict) -> None:
     runs = lambda p: {k for k, v in p.items() if v not in ("skipped",) and k != "env"}    # noqa: E731
     go = {"gate": {"go": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "true"}}}
-    off = {"MAIN_COMMIT": "off", "POSTS": "off"}
-    on = {"MAIN_COMMIT": "on", "POSTS": "on"}
-    check(flow["env"].get("MAIN_COMMIT") == "on" and flow["env"].get("POSTS") == "on", "the cutover: MAIN_COMMIT and POSTS on")
+    check(not {"MAIN_COMMIT", "POSTS"} & set(flow["env"]), "no rollback switches (MAIN_COMMIT, POSTS)")
     data, main, after = (flow["jobs"][j] for j in ("data", "main", "after"))
     check(after["steps"] is data["steps"] and data["env"] == {"AFTER": ""} and after["env"] == {"AFTER": "${{ needs.main.outputs.m }}"},
           "after: the data lane's steps, with AFTER the bake's M")
 
     # The data lane
-    p = plan(flow, "data", inputs={"dry_run": True}, switches=off, outputs=go)
+    p = plan(flow, "data", inputs={"dry_run": True}, outputs=go)
     check(p["env"]["DRY_RUN"] == "true" and {"build", "posts"} <= runs(p) and not {"data-commit", "Site build", "Send the posts"} & runs(p),
           "data, dry dispatch: build and posts; nothing committed, sent or dispatched")
-    p = plan(flow, "data", inputs={"dry_run": False}, switches=off, outputs=go)
-    check(p["env"]["DRY_RUN"] == "false" and "data-commit" in runs(p) and not {"Site build", "Send the posts"} & runs(p),
-          "data, live dispatch switched off: the data commit only (no site build, no posts)")
-    p = plan(flow, "data", event="schedule", switches=off, outputs=go, outcomes={"build": "failure"})
-    check("Tell Discord" not in runs(p), "data, a failed scheduled run: no Discord alert while POSTS is off")
-    p = plan(flow, "data", event="push", switches=on, outputs={**go, "data-commit": {"committed": "true"}})
+    p = plan(flow, "data", event="push", outputs={**go, "data-commit": {"committed": "true"}})
     check({"venv", "fonts", "build", "posts", "Send the posts", "data-commit", "Site build"} <= runs(p),
           "data, a push at once: build, posts, data commit, site build")
-    p = plan(flow, "data", event="schedule", switches=on, outputs=go, outcomes={"build": "failure"})
+    p = plan(flow, "data", event="schedule", outputs=go, outcomes={"build": "failure"})
     check(not {"Send the posts", "data-commit"} & runs(p) and "Tell Discord" in runs(p),
           "data, build failed: no posts, no data commit; Discord told")
     p = plan(flow, "data", event="schedule", outputs={"gate": {"go": "false", "GITHUB_ENV": {"GO": "false"}}})
     check(not {"venv", "build", "posts", "data-commit", "Site build"} & runs(p), "data, nothing to do: the job ends at the gate")
-    p = plan(flow, "after", event="push", switches=on, outputs=go, needs={"main": {"outputs": {"m": "m" * 40}}})
+    p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"m": "m" * 40}}})
     check(p["env"]["AFTER"] == "m" * 40 and {"build", "Send the posts", "data-commit", "Site build"} <= runs(p),
           "after: the data lane on M; the site build follows the bake even with db/ unchanged")
-    p = plan(flow, "data", inputs={"dry_run": True}, switches=on, outputs=go, outcomes={"build": "failure"})
-    q = plan(flow, "data", inputs={"dry_run": False}, switches=on, outputs=go, outcomes={"build": "failure"})
+    p = plan(flow, "data", inputs={"dry_run": True}, outputs=go, outcomes={"build": "failure"})
+    q = plan(flow, "data", inputs={"dry_run": False}, outputs=go, outcomes={"build": "failure"})
     check("Tell Discord" not in runs(p) and "Tell Discord" in runs(q), "data, a failed dispatch: a live one alerts, a dry one doesn't")
 
     # The main lane
     baked = {**go, "bake": {"baked": "true", "b": "b" * 40}, "save": {"changed": "true"}}
-    p = plan(flow, "main", inputs={"dry_run": True, "bake": "all"}, switches=off, outputs=baked)
+    p = plan(flow, "main", inputs={"dry_run": True, "bake": "all"}, outputs=baked)
     check({"bake", "save"} <= runs(p) and not {"main", "repin"} & runs(p), "main, dry dispatch: bake (dry) and save; no M")
-    p = plan(flow, "main", inputs={"dry_run": False, "bake": "all"}, switches=off, outputs={**go, "save": {"changed": "true"}})
-    check("bake" not in runs(p) and "save" in runs(p) and "main" not in runs(p), "main, switched off: no bake, no M")
-    p = plan(flow, "main", event="push", switches=on, outputs={**baked, "main": {"pushed": "true", "pngs": "true"}})
+    p = plan(flow, "main", inputs={"dry_run": False, "bake": "none"}, outputs={**go, "save": {"changed": "true"}})
+    check("bake" not in runs(p) and {"save", "main"} <= runs(p), "main, bake=none: no bake; the save and M")
+    p = plan(flow, "main", event="push", outputs={**baked, "main": {"pushed": "true", "pngs": "true"}})
     check({"venv", "fonts", "bake", "save", "main", "repin"} <= runs(p) and "Site build" not in runs(p),
           "main, after a push's window: bake, save, M, the baked PNGs re-pinned (the site follows the after job)")
-    p = plan(flow, "main", event="schedule", switches=on, outputs={**baked, "main": {"pushed": "true", "pngs": "false"}})
+    p = plan(flow, "main", event="schedule", outputs={**baked, "main": {"pushed": "true", "pngs": "false"}})
     check("main" in runs(p) and "repin" not in runs(p), "main, M without PNGs: nothing to re-pin")
-    p = plan(flow, "main", event="schedule", switches=on, outputs={**baked, "main": {"rejected": "true"}})
+    p = plan(flow, "main", event="schedule", outputs={**baked, "main": {"rejected": "true"}})
     check("main" in runs(p) and "repin" not in runs(p), "main moved: M dropped, no re-pin")
-    p = plan(flow, "main", event="schedule", switches=on, outputs=baked, outcomes={"main": "failure"})
+    p = plan(flow, "main", event="schedule", outputs=baked, outcomes={"main": "failure"})
     check("repin" not in runs(p) and "Tell Discord" in runs(p), "main, M failed (too late): no re-pin; Discord told")
-    p = plan(flow, "main", event="schedule", switches=on, outputs=baked, outcomes={"bake": "failure"})
+    p = plan(flow, "main", event="schedule", outputs=baked, outcomes={"bake": "failure"})
     check({"save", "main"} <= runs(p), "main, a card's bake error: the save and M go on with the other cards (B kept)")
     edits = {"gate": {"go": "false", "edits": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "false", "EDITS": "true"}}}
     p = plan(flow, "main", event="schedule", outputs={**edits, "edits": {"GITHUB_ENV": {"GO": "true"}}, "bake": baked["bake"],
@@ -372,8 +364,8 @@ def plans(flow: dict) -> None:
     p = plan(flow, "main", event="schedule", outputs={"gate": {"go": "false", "edits": "false", "GITHUB_ENV": {"GO": "false", "EDITS": "false"}}})
     check(not {"venv", "edits", "bake", "save"} & runs(p), "main, nothing to do: the job ends at the gate")
     retry = {"dry_run": False, "bake": "all", "force": True, "retry": "schedule"}
-    p = plan(flow, "main", inputs=retry, switches=on, actor="github-actions[bot]", outputs=go, outcomes={"save": "failure"})
-    q = plan(flow, "main", inputs=retry, switches=on, actor="MichaelJSr", outputs=go, outcomes={"save": "failure"})
+    p = plan(flow, "main", inputs=retry, actor="github-actions[bot]", outputs=go, outcomes={"save": "failure"})
+    q = plan(flow, "main", inputs=retry, actor="MichaelJSr", outputs=go, outcomes={"save": "failure"})
     check("Tell Discord" in runs(p) and "Tell Discord" in runs(q), "main, a failed retry tells Discord, whoever dispatched it")
 
     names = [evaluate(flow["run_name"], {"github": {"event_name": e}, "inputs": i, "functions": {}})
@@ -554,8 +546,8 @@ def _bot(ws: str) -> None:
     git(os.path.join(ws, "bot"), "commit", "-q", "--allow-empty", "-m", "bot")
 
 
-DATA_GATE = {"POSTS": "off", "DRY_RUN": "false", "BUILDER_REF": "main", "BOT_REPO": "bobberlington/AutoCroissant",
-             "GIT_NO_LAZY_FETCH": "1", "FORCE": "false", "FULL": "false", "CARDS": "", "RESTORE": "", "SEED": "", "AFTER": ""}
+DATA_GATE = {"DRY_RUN": "false", "BUILDER_REF": "main", "BOT_REPO": "bobberlington/AutoCroissant",
+             "GIT_NO_LAZY_FETCH": "1", "FORCE": "false", "FULL": "false", "CARDS": "", "RESTORE": "", "AFTER": ""}
 
 
 def gate_cases(flow: dict) -> None:
@@ -587,12 +579,12 @@ def gate_cases(flow: dict) -> None:
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, "AFTER": "f" * 40}, tmp)
                 check(code == 0 and out.get("go") == "true" and "the bake's main commit ffffffff" in text,
                       "data gate: after the bake (AFTER) -> go, nothing else changed" + ("" if code == 0 else f"\n{text}"))
-                inputs = {"FULL": "true", "CARDS": "X", "RESTORE": "r" * 40, "SEED": "s" * 40}
+                inputs = {"FULL": "true", "CARDS": "X", "RESTORE": "r" * 40}
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs}, tmp)
-                check(code == 0 and out.get("seed") == "s" * 40 and text.count("dispatched with") == 4,
-                      "data gate: a dispatch's full, cards, restore and seed -> go" + ("" if code == 0 else f"\n{text}"))
+                check(code == 0 and out.get("go") == "true" and text.count("dispatched with") == 3,
+                      "data gate: a dispatch's full, cards and restore -> go" + ("" if code == 0 else f"\n{text}"))
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs, "AFTER": "f" * 40}, tmp)
-                check(code == 0 and out.get("seed") == "" and "dispatched with" not in text,
+                check(code == 0 and "dispatched with" not in text,
                       "data gate: after the bake on a dispatch -> its inputs left out" + ("" if code == 0 else f"\n{text}"))
 
         # The main lane's gate: the cursor is the head of the last run whose Bake and save succeeded
@@ -765,7 +757,7 @@ def main_cases(flow: dict) -> None:
 
         ws, bare, main, env, root = setup(tmp, "save-only-moved")
         moved(bare)
-        env["INPUTS"] = json.dumps({"dry_run": False, "full": True, "cards": "Mini Doomer", "seed": "", "bake": "Mini Doomer",
+        env["INPUTS"] = json.dumps({"dry_run": False, "full": True, "cards": "Mini Doomer", "bake": "Mini Doomer",
                                     "force": False, "allow_archive": True, "restore": "", "builder_ref": "", "retry": ""})
         code, text, out = run_step(job, "main", ws, env, root)
         args = gh_args(root)
@@ -773,7 +765,7 @@ def main_cases(flow: dict) -> None:
               and args[:3] == ["workflow", "run", "card-sync.yml"]
               and {"dry_run=false", "force=true", "bake=Mini Doomer", "retry=workflow_dispatch"} <= set(args)
               and f"builder_ref={git(os.path.join(ws, 'bot'), 'rev-parse', 'HEAD')}" in args
-              and not any(a.startswith(("full=", "allow_archive=", "seed=", "restore=", "cards=")) for a in args),
+              and not any(a.startswith(("full=", "allow_archive=", "restore=", "cards=")) for a in args),
               f"main moved: M dropped, one retry of the main lane dispatched, no data inputs ({' '.join(args[3:])})"
               + ("" if code == 0 else f"\n{text}"))
 
@@ -858,9 +850,9 @@ def build_cases(flow: dict) -> None:
         write(python, f'#!/bin/bash\nprintf "%s\\n" "$@" > "{os.path.join(tmp, "build.args")}"\n')
         os.chmod(python, 0o755)
         manifest = os.path.join(ws, "carddata/db/manifest.json")
-        inputs = {"FULL": "true", "CARDS": "X", "ALLOW_ARCHIVE": "true", "RESTORE": "r" * 40, "SEED": "s" * 40}
-        none = {"FULL": "false", "CARDS": "", "ALLOW_ARCHIVE": "false", "RESTORE": "", "SEED": ""}
-        flags = ("--full", "--cards", "--allow-archive", "--restore", "--seed")
+        inputs = {"FULL": "true", "CARDS": "X", "ALLOW_ARCHIVE": "true", "RESTORE": "r" * 40}
+        none = {"FULL": "false", "CARDS": "", "ALLOW_ARCHIVE": "false", "RESTORE": ""}
+        flags = ("--full", "--cards", "--allow-archive", "--restore")
         for what, extra, has_manifest, want_flags, want_own in (
                 ("a dispatch", {**inputs, "AFTER": ""}, True, True, f"{r},{m}"),
                 ("after the bake on a dispatch", {**inputs, "AFTER": m}, True, False, f"{r},{m}"),
