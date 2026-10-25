@@ -6,5 +6,4 @@
 TTS/*.bak.json
 TTS/*.report.md
 TTS/*.message.txt
-TTS/audit.json
 __pycache__/
