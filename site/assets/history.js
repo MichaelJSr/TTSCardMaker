@@ -9,9 +9,6 @@ const DATE = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone
 export const date = ts => (ts ? DATE(new Date(ts * 1000)) : "");
 /** "Oct 2026" in Pacific time */
 export const month = ts => (ts ? MONTH(new Date(ts * 1000)) : "");
-const ym = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "2-digit", timeZone: TZ });
-/** "2026-10" in Pacific time */
-export const monthKey = ts => { const p = Object.fromEntries(ym.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); return `${p.year}-${p.month}`; };
 const ymd = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: TZ });
 /** "2026-10-21" in Pacific time */
 const days = new Map();   // by UTC hour: Pacific days start on the hour, so one formatToParts per hour

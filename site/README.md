@@ -176,8 +176,7 @@ icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon s
 with `VARIANT_VERSION`, drawn by the icon font's build script, `MDW/Fonts/stoogedings-src/build_stoogedings.py`, which
 needs that folder's `requirements.txt`: without it the build warns and variants show as the plain icon), so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
 where links fail). The first screen loads only `data/cards.json`; `analytics.json` (the Balance section and blocks,
-computed by `site/build/analytics.py` from the same bot data, plus the image revisions and archived cards the Stats
-history charts use) loads when the Stats page or a creature, minion or card
+computed by `site/build/analytics.py` from the same bot data) loads when the Stats page or a creature, minion or card
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
 People tab is opened; `changelog.json` when the Changelog, Archive or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`

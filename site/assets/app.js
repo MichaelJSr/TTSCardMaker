@@ -328,8 +328,8 @@ function filterCards(p, { facets = true } = {}) {
   if (month || change) list = S.analytics ? list.filter(c => balance.changedAs(S.analytics, c, month, change)) : [];   // renderCards loads it
   return list;
 }
-// filters the Stats charts link to (stats.js cardsHref), shown as chips: [param, chip label(v), test(v)]; bal, month and
-// change read analytics.json (renderCards loads it)
+// filters the Stats charts link to (stats.js cardsHref), shown as chips: [param, chip label(v), test(v)]; bal, cohort,
+// month and change read analytics.json (renderCards loads it)
 const LINKED = [
   ["legal", () => "Legal in constructed", () => c => !c._banned && c.parsed !== false],
   ["shape", v => (v === "tied" ? "Tied highest stats" : `Highest stat ${v.toUpperCase()}`), v => c => shapeOf(c) === v],
@@ -338,8 +338,10 @@ const LINKED = [
   ["mentions", v => `Naming ${S.byId.get(v)?.name || v}`, v => c => !!S.mentionedBy.get(v)?.has(c.id)],
   ["fresh", v => `Text from ${v}`, v => c => insights.freshYear(c) === v],
   ["bal", v => `${v === "top" ? "Top" : "Bottom"} 10% for its star level`, v => c => !!S.analytics && balance.flagged(S.analytics, c, v)],
+  ["cohort", v => (v === "any" ? "With all four stats" : `${cap(balance.cohortName(v))} with all four stats`), v => c => !!S.analytics && balance.inCohort(S.analytics, c, v)],
+  ["nodup", () => "Duplicates hidden", () => c => !c.dup],        // Stats counts a duplicate once
 ];
-const needsAnalytics = p => ["bal", "month", "change"].some(k => p.get(k));
+const needsAnalytics = p => ["bal", "cohort", "month", "change"].some(k => p.get(k));
 const listOf = p => sortCards(filterCards(p), sortOf(p), p.get("dir") || "");   // the cards the grid shows, in order
 function sortCards(list, sort = "name", dir = "") {
   const key = {
@@ -408,9 +410,9 @@ function renderCards(r) {
   if (p.get("author")) active.push(["author", `by ${p.get("author")}`]);
   for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
   for (const f of csv(p, "flags")) { const x = FLAGS.find(x => x[0] === f); if (x) active.push(["flags", x[1], f]); }   // an old flag: ignored
-  for (const [k, label] of LINKED) if (p.get(k)) active.push([k, label(p.get(k))]);
   if (p.get("month")) active.push(["month", `Changed ${balance.monthName(p.get("month"))}`]);
   if (p.get("change")) active.push(["change", balance.CHANGE_LABEL[p.get("change")] || p.get("change")]);
+  for (const [k, label] of LINKED) if (p.get(k)) active.push([k, label(p.get(k))]);
   const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
     return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
   const suggestions = !list.length && p.get("q") ? suggest(p.get("q"), S.cards) : [];
@@ -436,7 +438,7 @@ function renderCards(r) {
     <section>
       ${editing() && view_ === "grid" ? tray.html(S.selecting) : ""}
       <div class="toolbar">
-        <span class="result-count">${list.length.toLocaleString()} card${list.length === 1 ? "" : "s"}</span>
+        <span class="result-count">${waiting ? "…" : `${list.length.toLocaleString()} card${list.length === 1 ? "" : "s"}`}</span>
         <button type="button" class="mobile-only" data-action="toggle-filters">Filters${active.length ? ` (${active.length})` : ""}</button>
         <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.filter(([v]) => v !== "created" || S.created).map(([v, l, d]) => { const cur = sortOf(p);
           return `<option value="${v}"${d !== undefined ? ` data-dir="${d}"` : ""}${v === cur && (d === undefined || (d === "asc") !== isDesc(cur, p.get("dir"))) ? " selected" : ""}>${l}</option>`; }).join("")}</select></label>

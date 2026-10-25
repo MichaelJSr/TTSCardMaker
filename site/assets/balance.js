@@ -54,6 +54,11 @@ export function changedAs(A, c, month, change) {
 }
 /** the card is in the top or bottom 10% of its star level (flag: top, bottom) */
 export const flagged = (A, c, flag) => !!cardData(A, c)?.flags?.includes(flag);
+/** the card is in that cohort (a kind's |all one holds every card of the kind; any: in one) */
+export function inCohort(A, c, key) {
+  const k = cardData(A, c)?.cohort;
+  return !!k && (key === "any" || k === key || (key.endsWith("|all") && k.split("|")[0] === key.split("|")[0]));
+}
 export const monthName = monthLabel;                 // app.js month= chip
 /** changes to how a card plays (analytics.py reworked): not a series, spacing or timing-tag rename alone */
 export const isRework = r => !!(r.words || r.stats || r.stars || r.kind || r.sub || r.types || r.lines);
@@ -278,9 +283,8 @@ export function statsHtml(A, { cards, byId }, params) {
   const rows = keys.map(k => {
     const co = A.cohorts[k], mine = members.get(k) || [];
     const dots = mine.filter(([, a]) => a.flags?.length).map(([id, a]) => ({ v: totalOf(id), id, name: byId.get(id)?.name || id, hot: a.flags[0] }));
-    const [kd, st] = k.split("|"), all = st === "all";        // the whole cohort, whatever the scope
     return { key: k, label: cohortName(k, co).replace(/^all /, "All "), n: co.n, q: co.total, dots,
-      href: cardsHref({ kind: all && kd === "creature" ? ["creature", "creatures"] : kd, stars: all ? "" : st }),
+      href: cardsHref({ cohort: k }),
       lo: Math.min(co.total.min ?? co.total.p10, ...dots.map(d => d.v)), hi: Math.max(co.total.max ?? co.total.p90, ...dots.map(d => d.v)) };
   }).filter(r => r.n);
   if (rows.length) {
@@ -325,7 +329,7 @@ export function statsHtml(A, { cards, byId }, params) {
   if (yearRows.some(r => r.n >= 3))
     charts.push(card("bal-creep", "Power creep", "Average total vs its star level's median, by year created.",
       diverging(yearRows.filter(r => r.n >= 3).map(r => ({ label: `${r.y} (${r.n})`, value: Math.round(r.s * 10) / 10, tip: `${r.y}: ${r.n} creatures and minions, average total ${fmt(r.t)}`,
-        href: L({ kind: ["creature", "creatures", "minion"], q: `created==${r.y}` }) })), { unit: "vs median", labelW: 110 }),
+        href: L({ cohort: "any", q: `created==${r.y}` }) })), { unit: "vs median", labelW: 110 }),
       table(["Year", "Cards", "Average vs median", "Average total"], yearRows.map(r => [r.y, r.n, Math.round(r.s * 10) / 10, Math.round(r.t * 10) / 10])),
       { legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
 

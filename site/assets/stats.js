@@ -13,10 +13,10 @@ const PLAIN = NF.format(-123) === "-123";   // whole numbers under 1000 print as
 const fmt = n => { const v = Math.round(n * 10) / 10; return PLAIN && Number.isInteger(v) && v > -1000 && v < 1000 && !Object.is(v, -0) ? String(v) : NF.format(v); };
 
 // ---- links to the Cards grid: a chart element that stands for a set of cards (app.js filterCards reads the params) --
-/** "#/cards?…" for p's filters within the Stats page's scope (its kind and series; global: none) */
+/** "#/cards?…" for p's filters within the Stats page's scope (its kind and series; global: none); no duplicates, as Stats */
 function cardsHref(p, scope = null) {
   const q = new URLSearchParams(), kind = scope?.get?.("kind") || p.kind, series = p.series || scope?.get?.("series");
-  for (const [k, v] of Object.entries({ ...p, kind, series })) if (v != null && v !== "") q.set(k, Array.isArray(v) ? v.join(",") : v);
+  for (const [k, v] of Object.entries({ ...p, kind, series, nodup: 1 })) if (v != null && v !== "") q.set(k, Array.isArray(v) ? v.join(",") : v);
   return `#/cards?${q}`;
 }
 /** inner wrapped in a link to href (an SVG <a> in charts), else as is */
@@ -79,7 +79,7 @@ function columns(cols, { unit = "cards", color = "var(--s1)", every = 1, height 
 
 /** Stacked columns with a 2px surface gap between segments. cats: labels; series: [{key,label,color}]; get(cat,key);
     href(cat, key?): a segment's (key) or a column's cards, or null */
-function stacked(cats, series, get, { height = 230, unit = "cards", width = 1000, every = 1, tip = null, href = () => null } = {}) {
+function stacked(cats, series, get, { height = 230, unit = "cards", width = 1000, every = 1, href = () => null } = {}) {
   const W = width, padL = 36, padB = 26, plotH = height - padB, gap = 2;
   const totals = cats.map(c => series.reduce((s, sr) => s + get(c, sr.key), 0));
   const max = niceMax(Math.max(1, ...totals));
@@ -97,9 +97,9 @@ function stacked(cats, series, get, { height = 230, unit = "cards", width = 1000
       const h = (v / max) * plotH, top = k === series.length - 1 || series.slice(k + 1).every(s2 => !get(cat, s2.key));
       y -= h;
       const d = top ? roundedTop(x, y, bw, Math.max(0, h - gap)) : `M${x},${y + gap}h${bw}v${Math.max(0, h - gap)}h${-bw}Z`;
-      return go(href(cat, sr.key), `${sr.label}, ${cat}`, `<path class="mark" d="${d}" fill="${sr.color}" data-v="${v} ${esc(unit)}" data-l="${esc(`${sr.label}, ${cat}`)}"/>`);
+      return go(h - gap >= 1 ? href(cat, sr.key) : null, `${sr.label}, ${cat}`, `<path class="mark" d="${d}" fill="${sr.color}" data-v="${v} ${esc(unit)}" data-l="${esc(`${sr.label}, ${cat}`)}"/>`);
     }).join("");
-    const l = tip ? tip(cat) : `${cat}: ${series.map(sr => `${sr.label} ${get(cat, sr.key)}`).join(" · ")}`;
+    const l = `${cat}: ${series.map(sr => `${sr.label} ${get(cat, sr.key)}`).join(" · ")}`;
     return `<g class="col">${go(totals[i] ? href(cat) : null, cat, `<rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${plotH}" data-v="${totals[i]} ${esc(unit)}" data-l="${esc(l)}"/>`)}${segs}
       ${i % every === 0 ? `<text x="${x + bw / 2}" y="${height - 8}" text-anchor="middle">${esc(cat)}</text>` : ""}</g>`;
   });
@@ -322,14 +322,16 @@ export function renderStats(root, ctx, params) {
   const count = (arr, key) => { const m = new Map(); for (const x of arr) { const k = key(x); if (k == null || k === "") continue; m.set(k, (m.get(k) || 0) + 1); } return m; };
   const desc = m => [...m.entries()].sort((a, b) => b[1] - a[1]);
 
+  // the series chart's cards: the picked kind, else creatures; the Subseries tile counts theirs
+  const sk = kind || "creature", mine = pool.filter(c => c.type === sk);
   const subKey = c => (c.subseries ? `${c.series || ""}\u0001${c.subseries}` : null);     // a subseries belongs to its series
-  const subCount = new Set(pool.map(subKey).filter(Boolean)).size;
+  const subCount = new Set(mine.map(subKey).filter(Boolean)).size;
 
   // KPI tiles
   const latest = pool.reduce((m, c) => Math.max(m, c.ts || 0), 0);
   const kpis = [
     ["Cards", pool.length], ["Creatures", pool.filter(c => c.type === "creature").length], ["Items", pool.filter(c => c.type === "item").length],
-    ["Series", new Set(pool.map(c => c.series).filter(Boolean)).size], ...(subCount ? [["Subseries", subCount]] : []), ["Authors", new Set(pool.map(c => c.author).filter(Boolean)).size],
+    ["Series", new Set(pool.map(c => c.series).filter(Boolean)).size], ...(subCount ? [[kind ? "Subseries" : "Creature subseries", subCount]] : []), ["Authors", new Set(pool.map(c => c.author).filter(Boolean)).size],
     ["Banned (constructed)", pool.filter(c => banned.has(c.id)).length],
     ["Last card update", latest ? date(latest) : "—"],
   ];
@@ -341,18 +343,18 @@ export function renderStats(root, ctx, params) {
   const byKind = desc(count(pool, c => c.type)).map(([k, v]) => ({ label: KIND_LABEL[k] || k, value: v, href: L({ kind: k }) }));
   charts.push(card("kinds", "Cards by kind", `${pool.length} cards`, hbar(byKind), table(["Kind", "Cards"], byKind.map(r => [r.label, r.value]))));
 
-  // 2 series, each with its subseries under it (creatures without one: "No subseries")
-  const mine = pool.filter(c => c.type === "creature"), ser = desc(count(mine, c => c.series));
+  // 2 series, each with its subseries under it (cards without one: "No subseries")
+  const ser = desc(count(mine, c => c.series)), what = KIND_LABEL[sk] || sk;
   const subsOf = s => { const of = mine.filter(c => c.series === s), rows = desc(count(of, c => c.subseries));
     const none = rows.length ? of.filter(c => !c.subseries).length : 0;
-    return [...rows.map(([sub, v]) => ({ label: sub, value: v, sub: true, tip: `${s} › ${sub}`, href: L({ kind: "creature", series: s, subseries: sub }) })),
+    return [...rows.map(([sub, v]) => ({ label: sub, value: v, sub: true, tip: `${s} › ${sub}`, href: L({ kind: sk, series: s, subseries: sub }) })),
       ...(none ? [{ label: "No subseries", value: none, sub: true, tip: `${s}: no subseries` }] : [])]; };
-  const top = ser.slice(0, 15).flatMap(([k, v]) => [{ label: k, value: v, href: L({ kind: "creature", series: k }) }, ...subsOf(k)]);
+  const top = ser.slice(0, 15).flatMap(([k, v]) => [{ label: k, value: v, href: L({ kind: sk, series: k }) }, ...subsOf(k)]);
   const rest = ser.slice(15).reduce((s, [, v]) => s + v, 0);
   if (rest) top.push({ label: `Other (${ser.length - 15} series)`, value: rest });
   const serRows = ser.flatMap(([k, v]) => [[k, v], ...subsOf(k).map(r => Object.assign([`↳ ${r.label}`, r.value], { sub: true }))]);
-  if (top.length) charts.push(card("series", "Creatures by series", `${ser.length > 15 ? `Top 15 of ${ser.length} series` : `${ser.length} series`}${subCount ? ", with their subseries" : ""}.`,
-    hbar(top, { labelWidth: 230, chars: 32 }), table(["Series", "Creatures"], serRows)));
+  if (top.length) charts.push(card("series", `${what} by series`, `${ser.length > 15 ? `Top 15 of ${ser.length} series` : `${ser.length} series`}${subCount ? ", with their subseries" : ""}.`,
+    hbar(top, { labelWidth: 230, chars: 32 }), table(["Series", what], serRows)));
 
   // 3 starting-hand depth: for each star level the constructed hand uses (rulebook "03 Setting Up"), how many legal
   //   cards there are to pick from. Not banned, parsed by the bot; the same pool the deck builder offers.
@@ -380,7 +382,7 @@ export function renderStats(root, ctx, params) {
     const keys = STAT_KEYS;
     const avg = (arr, f) => { const v = arr.map(f).filter(x => x != null); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
     const rows = tiers.map(t => { const g = creatures.filter(c => c.stars === t); return [t, g.length, ...keys.map(([k]) => avg(g, c => c[k])), avg(g, total)]; });
-    const heat = heatTable(["Stars", "Cards", ...keys.map(([, l]) => l), "Total"], rows.map(r => [`${r[0]}★`, String(r[1]), ...r.slice(2)]), { shade: [2, 3, 4, 5, 6], href: (k, i) => (i < 2 ? L({ kind: MINIONS, stars: rows[k][0] }) : null) });
+    const heat = heatTable(["Stars", "Cards", ...keys.map(([, l]) => l), "Total"], rows.map(r => [`${r[0]}★`, String(r[1]), ...r.slice(2)]), { shade: [2, 3, 4, 5, 6], href: (k, i) => (i < 2 ? L({ kind: MINIONS, stars: rows[k][0], hp: "0-99" }) : null) });
     charts.push(card("tiers", "Average stats by star level", "Creatures and minions, shaded per column.", heat,
       table(["Stars", "Cards", "HP", "DEF", "ATK", "SPD", "Total"], rows.map(r => [`${r[0]}★`, ...r.slice(1).map(v => (v == null ? "—" : v))]))));
     at = charts.length;
@@ -423,7 +425,7 @@ export function renderStats(root, ctx, params) {
 
   // 7 creature types
   const types = new Map();
-  for (const c of pool) for (const t of c.types || []) types.set(t, (types.get(t) || 0) + 1);
+  for (const c of pool) for (const t of new Set(c.types || [])) types.set(t, (types.get(t) || 0) + 1);
   const typeRows = desc(types).map(([t, v]) => {
     const ic = icons[t.toLowerCase().replace(/[\s_\-.'’]+/g, "")];
     return { label: t.replace(/_/g, " "), value: v, href: L({ types: t }), html: `${ic ? `<img src="${esc(ic.file)}" alt="">` : ""}<span>${esc(t.replace(/_/g, " "))}</span>` };
@@ -462,4 +464,4 @@ export function renderStats(root, ctx, params) {
     <div id="stats-balance"></div><div id="stats-ratings"></div><div id="stats-history"></div>`;
 }
 
-export { columns, card as chartCard, hbar, table, stacked, scatter, heatTable, heatScale, fmt, trunc, cardsHref, go, svgRole };   // profile.js's activity chart, balance.js, insights.js
+export { columns, card as chartCard, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole };   // profile.js's activity chart, balance.js, insights.js
