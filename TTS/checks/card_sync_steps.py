@@ -30,7 +30,8 @@
 7. Tell Discord on faked runs: once per failing streak of its lane (the newest other live run where the lane ended;
    runs that skipped it, and dry runs, passed over), once a lane per run (after sees data's failure).
 8. The verdicts (AutoCroissant docs/Future/CARD_SYNC_VERDICTS.md): Bake records keeps M's part only when M landed (the
-   baked events get M), records nothing on a dry run; the data gate goes for records alone; Build passes them on; Guard
+   baked events get M), records nothing on a dry run; every data job looks for unmerged records; the data gate goes for
+   records alone; Build passes them on and lists them in bake-records.json; Guard
    events finds a guards commit's guard-events.json through its Guarded-push run (faked gh), skips one naming another
    commit, and warns for one not found.
 Exits 1 when a case gets the wrong answer.
@@ -336,13 +337,13 @@ def plans(flow: dict) -> None:
     p = plan(flow, "data", event="schedule", outputs={"gate": {"go": "false", "GITHUB_ENV": {"GO": "false"}}})
     check(not {"venv", "build", "posts", "data-commit", "Site build"} & runs(p), "data, nothing to do: the job ends at the gate")
     p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"m": "m" * 40, "baked": "true"}}})
-    check(p["env"]["AFTER"] == "m" * 40 and {"Bake records", "build", "Send the posts", "data-commit", "Site build"} <= runs(p),
+    check(p["env"]["AFTER"] == "m" * 40 and {"records-in", "build", "Send the posts", "data-commit", "Site build"} <= runs(p),
           "after: the data lane on M with the bake's records; the site build follows the bake even with db/ unchanged")
     p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"m": "", "records": "true"}}})
-    check(p["env"]["AFTER"] == "" and {"Bake records", "build"} <= runs(p) and "Site build" not in runs(p),
+    check(p["env"]["AFTER"] == "" and {"records-in", "build"} <= runs(p) and "Site build" not in runs(p),
           "after, verdicts only: the records merged, no site build unless the data commit lands")
     p = plan(flow, "data", event="push", outputs=go)
-    check("Bake records" not in runs(p) and "Guard events" in runs(p), "data: no bake records; the guards' events looked up")
+    check({"records-in", "Guard events"} <= runs(p), "data: unmerged bake records and the guards' events looked up")
     p = plan(flow, "data", inputs={"dry_run": True}, outputs=go, outcomes={"build": "failure"})
     q = plan(flow, "data", inputs={"dry_run": False}, outputs=go, outcomes={"build": "failure"})
     check("Tell Discord" not in runs(p) and "Tell Discord" in runs(q), "data, a failed dispatch: a live one alerts, a dry one doesn't")
@@ -591,9 +592,9 @@ def gate_cases(flow: dict) -> None:
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, "AFTER": "f" * 40, "RECORDS": "true"}, tmp)
                 check(code == 0 and out.get("go") == "true" and "the bake's main commit ffffffff" in text,
                       "data gate: after the bake (AFTER) -> go, nothing else changed" + ("" if code == 0 else f"\n{text}"))
-                write(os.path.join(tmp, "runner", "bake-records", "verdicts.json"), '{"schema":1,"cards":{"x":{"state":"refused"}}}')
+                write(os.path.join(tmp, "runner", "records-in", "verdicts.json"), '{"schema":1,"cards":{"x":{"state":"refused"}}}')
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, "RECORDS": "true"}, tmp)
-                shutil.rmtree(os.path.join(tmp, "runner", "bake-records"))
+                shutil.rmtree(os.path.join(tmp, "runner", "records-in"))
                 check(code == 0 and out.get("go") == "true" and "the bake's records: 1 verdicts, 0 events" in text,
                       "data gate: after a bake that only recorded a verdict -> go" + ("" if code == 0 else f"\n{text}"))
                 inputs = {"FULL": "true", "CARDS": "X", "RESTORE": "r" * 40}
@@ -872,7 +873,7 @@ def build_cases(flow: dict) -> None:
         commit(work, {"Cards/One.psd": "psd 3"}, "Card sync: by hand", "bob")
         git(work, "push", "-q", "origin", "main")
         ws = checkout(tmp, bare)
-        os.makedirs(os.path.join(ws, "bot"))
+        write(os.path.join(ws, "bot", "commands", "card_data.py"), 'add_argument("--verdicts")\n')
         python = os.path.join(tmp, "runner", "venv", "bin", "python")
         write(python, f'#!/bin/bash\nprintf "%s\\n" "$@" > "{os.path.join(tmp, "build.args")}"\n')
         os.chmod(python, 0o755)
@@ -880,7 +881,8 @@ def build_cases(flow: dict) -> None:
         inputs = {"FULL": "true", "CARDS": "X", "ALLOW_ARCHIVE": "true", "RESTORE": "r" * 40}
         none = {"FULL": "false", "CARDS": "", "ALLOW_ARCHIVE": "false", "RESTORE": ""}
         flags = ("--full", "--cards", "--allow-archive", "--restore")
-        records = os.path.join(tmp, "runner", "bake-records")
+        records = os.path.join(tmp, "runner", "records-in")
+        merged = os.path.join(ws, "carddata/db/bake-records.json")
         for what, extra, has_manifest, want_flags, want_own in (
                 ("a dispatch", {**inputs, "AFTER": ""}, True, True, f"{r},{m}"),
                 ("after the bake on a dispatch", {**inputs, "AFTER": m, "RECORDS": "true"}, True, False, f"{r},{m}"),
@@ -888,6 +890,9 @@ def build_cases(flow: dict) -> None:
             if extra.get("RECORDS"):
                 write(os.path.join(records, "verdicts.json"), "{}")
                 write(os.path.join(records, "events.json"), "[]")
+                write(os.path.join(records, "listed.json"), '[{"id":"5","run":50},{"id":"7","run":70}]')
+                write(os.path.join(records, "ids.json"), '{"7":70}')
+                write(merged, '{"merged":{"3":30,"5":50}}')
             elif os.path.isdir(records):
                 shutil.rmtree(records)
             if has_manifest:
@@ -900,6 +905,8 @@ def build_cases(flow: dict) -> None:
             args = open(os.path.join(tmp, "build.args")).read().split("\n")
             own = args[args.index("--own") + 1] if "--own" in args else None
             passed = {"--verdicts", "--events"} <= set(args)
+            if passed:                                  # the merged artifacts: still listed ones kept, these added
+                passed = json.load(open(merged)) == {"merged": {"5": 50, "7": 70}}
             check(code == 0 and all((f in args) == want_flags for f in flags) and own == want_own and passed == bool(extra.get("RECORDS")),
                   f"build: {what} -> inputs {'passed' if want_flags else 'left out'}, --own {own}" + ("" if code == 0 else f"\n{text}"))
 

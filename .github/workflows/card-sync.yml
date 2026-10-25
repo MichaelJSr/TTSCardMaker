@@ -423,8 +423,8 @@ jobs:
           set -e
           if [ "$code" = 2 ]; then echo "::error::A data gate refused: nothing is committed"; fi
           if [ "$code" = 0 ] && [ -n "$merged" ] && [ "$DRY_RUN" != true ]; then   # rides in the data commit
-            jq -n --argjson old "$(jq -c '.merged // {}' "$db/bake-records.json" 2> /dev/null || echo '{}')" \
-              --slurpfile listed "$rec/listed.json" --slurpfile new "$rec/ids.json" \
+            old=$(jq -c '.merged // {}' "$db/bake-records.json" 2> /dev/null || echo '{}')
+            jq -n --argjson old "$old" --slurpfile listed "$rec/listed.json" --slurpfile new "$rec/ids.json" \
               '{merged: (($old | with_entries(select(.key as $k | $listed[0] | any(.id == $k)))) + $new[0])}' \
               > "$db/bake-records.json"                  # the artifacts still listed (not expired), and these
           fi
