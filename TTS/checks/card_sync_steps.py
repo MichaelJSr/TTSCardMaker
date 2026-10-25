@@ -2,14 +2,16 @@
 
     python3 card_sync_steps.py            (needs git 2.37 or later, bash and jq; no network)
 1. The step plan: every step's `if:` evaluated as GitHub does (&&, ||, !, ==, the status functions, the implicit
-   success()) for the migration's runs: step 6 and 7 (MAIN_COMMIT and POSTS off) bake only on a dry run and write only
-   `data`; step 8 (both on) bakes, commits M and posts; a rejected M drops the posts and the data; a failed live run
-   (a retry too) alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit main and every later step.
+   success()) for the runs: both switches on by default (the cutover); off (the rollback) a run bakes only dry and
+   writes only `data`; on, it bakes, commits M and posts; a rejected M drops the posts and the data; a failed live run
+   (a retry too) alerts, a dry one doesn't; GO from the Pending edits step runs the stages, without it none run; the
+   deadline's reserve covers the caps of Commit main and every later step.
 2. The Gate step's own script on sandbox history: stoogedings-src/ alone doesn't start a run, MDW/Fonts' fonts,
-   stoogedings.json, an upper-case .PSD and the creation dates do, and the run's own save commits don't.
+   stoogedings.json, an upper-case .PSD and the creation dates do, and the run's own save commits don't; with nothing
+   changed, a PSD-kind website edit sends the run to the Pending edits step.
 3. The fonts: a cache hit restores them outside the sparse patterns; after the Fonts tree step the bake's fast-forward
    merge (git_commit.local_commit's) keeps them (without it git deletes them: the control).
-4. The Bake step's arguments: --pending for a schedule and a schedule's retry, not for a dispatch.
+4. The Bake step's arguments: --pending for a schedule, a schedule's retry and bake=pending, not for another dispatch.
 5. Commit main's own script on a sandbox origin: a save-only M names itself in the manifest when the build wrote db/,
    and leaves an unchanged db/ alone; a push that failed but landed counts as pushed; main moved: M is dropped and one
    new run is dispatched (marked retry, the cards, seed and restore carried, never full or allow_archive), none from a
@@ -232,6 +234,8 @@ def plan(flow: dict, event: str = "workflow_dispatch", inputs: dict = None, swit
         go = bool(evaluate(cond, ctx)) if cond else not failed[0]
         outcome = outcomes.get(key, "success") if go else "skipped"
         ctx["steps"][key] = {"outcome": outcome, "conclusion": outcome, "outputs": outputs.get(key, {}) if go else {}}
+        if go:
+            env.update(outputs.get(key, {}).get("GITHUB_ENV") or {})     # a step's `>> "$GITHUB_ENV"`
         if outcome == "failure":
             failed[0] = True
         ran[key] = outcome
@@ -241,21 +245,23 @@ def plan(flow: dict, event: str = "workflow_dispatch", inputs: dict = None, swit
 
 def plans(flow: dict) -> None:
     runs = lambda p: {k for k, v in p.items() if v not in ("skipped",) and k != "env"}    # noqa: E731
-    go = {"gate": {"go": "true", "main": "a" * 40}}
+    go = {"gate": {"go": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "true"}}}
     baked = {**go, "bake": {"baked": "true", "b": "b" * 40}, "save": {"changed": "true"}}
+    off = {"MAIN_COMMIT": "off", "POSTS": "off"}
+    check(flow["env"].get("MAIN_COMMIT") == "on" and flow["env"].get("POSTS") == "on", "the cutover: MAIN_COMMIT and POSTS on")
 
-    p = plan(flow, inputs={"dry_run": True, "bake": "all"}, outputs=baked)
+    p = plan(flow, inputs={"dry_run": True, "bake": "all"}, switches=off, outputs=baked)
     check(p["env"]["DRY_RUN"] == "true" and {"bake", "build", "save", "posts"} <= runs(p)
           and not {"main", "data-commit", "Site build", "Send the posts"} & runs(p),
           "step 6, dry dispatch: bake (dry), build, save and posts run; nothing committed or sent")
-    p = plan(flow, inputs={"dry_run": False, "bake": "all"}, outputs={**go, "save": {"changed": "true"}})
+    p = plan(flow, inputs={"dry_run": False, "bake": "all"}, switches=off, outputs={**go, "save": {"changed": "true"}})
     check(p["env"]["DRY_RUN"] == "false" and "bake" not in runs(p) and "main" not in runs(p) and "data-commit" in runs(p)
           and "Site build" not in runs(p) and "Send the posts" not in runs(p),
           "step 6, live dispatch (MAIN_COMMIT off): no bake, no M, the data commit only (no site build, no posts)")
-    p = plan(flow, event="schedule", outputs={**go, "save": {"changed": "true"}})
+    p = plan(flow, event="schedule", switches=off, outputs={**go, "save": {"changed": "true"}})
     check(p["env"]["DRY_RUN"] == "false" and "bake" not in runs(p) and "main" not in runs(p) and "data-commit" in runs(p),
           "step 7, schedule (MAIN_COMMIT and POSTS off): live, writes only data")
-    p = plan(flow, event="schedule", outputs=go, outcomes={"build": "failure"})
+    p = plan(flow, event="schedule", switches=off, outputs=go, outcomes={"build": "failure"})
     check("Tell Discord" not in runs(p), "step 7, a failed scheduled run: no Discord alert while POSTS is off")
     on = {"MAIN_COMMIT": "on", "POSTS": "on"}
     p = plan(flow, event="schedule", switches=on, outputs={**baked, "main": {"pushed": "true"}, "data-commit": {"committed": "true"}})
@@ -272,6 +278,16 @@ def plans(flow: dict) -> None:
           "step 8, build failed after a bake: no save, M or data; Discord told")
     p = plan(flow, event="schedule", switches=on, outputs={**go, "save": {"changed": "true"}}, outcomes={"main": "failure"})
     check("main" in runs(p) and not {"Send the posts", "data-commit"} & runs(p), "step 8, M failed (too late): no posts, no data")
+    edits = {"gate": {"go": "false", "edits": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "false"}}}
+    p = plan(flow, event="schedule", outputs={**edits, "edits": {"GITHUB_ENV": {"GO": "true"}}, "bake": baked["bake"],
+                                              "save": {"changed": "true"}, "main": {"pushed": "true"}})
+    check({"venv", "edits", "bake", "build", "save", "main", "data-commit"} <= runs(p),
+          "step 8, a put-off website edit past its grace (Pending edits sets GO): bake, build, save, M, data")
+    p = plan(flow, event="schedule", outputs=edits)
+    check({"venv", "edits"} <= runs(p) and not {"bake", "build", "save", "main", "data-commit"} & runs(p),
+          "step 8, website edits still in their grace: the Python environment and Pending edits only")
+    p = plan(flow, event="schedule", outputs={"gate": {"go": "false", "edits": "false", "GITHUB_ENV": {"GO": "false"}}})
+    check(not {"venv", "edits", "bake", "build"} & runs(p), "step 8, nothing to do: the run ends at the gate")
     retry = {"dry_run": False, "bake": "all", "force": True, "retry": "schedule"}
     p = plan(flow, inputs=retry, switches=on, actor="github-actions[bot]", outputs=go, outcomes={"build": "failure"})
     q = plan(flow, inputs=retry, switches=on, actor="MichaelJSr", outputs=go, outcomes={"build": "failure"})
@@ -280,10 +296,11 @@ def plans(flow: dict) -> None:
     q = plan(flow, inputs={"dry_run": False, "bake": "all"}, switches=on, outputs=go, outcomes={"build": "failure"})
     check("Tell Discord" not in runs(p) and "Tell Discord" in runs(q), "step 8, a failed dispatch: a live one alerts, a dry one doesn't")
     names = [evaluate(flow["run_name"], {"github": {"event_name": e}, "inputs": i, "functions": {}})
-             for e, i in (("workflow_dispatch", {"dry_run": True}), ("workflow_dispatch", {"dry_run": False}), ("schedule", {}))
+             for e, i in (("workflow_dispatch", {"dry_run": True}), ("workflow_dispatch", {"dry_run": False}), ("schedule", {}),
+                          ("workflow_dispatch", {"dry_run": False, "retry": "schedule"}))
              if "run_name" in flow] or ["no run-name"]
-    check(names == ["Card sync (dry run)", "Card sync", "Card sync"] and f'\\"{names[0]}\\"' in step(flow, "Tell Discord")["run"],
-          f"run names {names}: the alert's streak leaves out the dry runs by that name")
+    check(names == ["Card sync (dry run)", "Card sync", "Card sync", "Card sync (retry)"] and f'\\"{names[0]}\\"' in step(flow, "Tell Discord")["run"],
+          f"run names {names}: the alert's streak leaves out the dry runs by that name; the bot knows a retry by its")
     late = re.search(r"late=\$\(\( \((\d+) - (\d+)\) \* 60 \)\)", step(flow, "main")["run"])
     after = flow["steps"][flow["steps"].index(step(flow, "main")):]
     caps = [int(s.get("timeout-minutes", "0")) for s in after]
@@ -345,7 +362,7 @@ def run_step(flow: dict, name: str, cwd: str, env: dict, tmp: str) -> tuple:
     """A step's run: script under bash -e: (exit code, output, $GITHUB_OUTPUT as a dict)."""
     out = os.path.join(tmp, f"output-{time.monotonic_ns()}")
     open(out, "w").close()
-    e = {**os.environ, "GITHUB_OUTPUT": out, "GITHUB_STEP_SUMMARY": os.path.join(tmp, "summary.md"),
+    e = {**os.environ, "GITHUB_OUTPUT": out, "GITHUB_ENV": out + ".env", "GITHUB_STEP_SUMMARY": os.path.join(tmp, "summary.md"),
          "GITHUB_WORKSPACE": cwd, "RUNNER_TEMP": os.path.join(tmp, "runner"), "GITHUB_REPOSITORY": "MichaelJSr/TTSCardMaker",
          **env}
     r = subprocess.run(BASH + ["-c", step(flow, name)["run"]], cwd=cwd, capture_output=True, text=True, env=e)
@@ -387,6 +404,21 @@ def gate_cases(flow: dict) -> None:
                   f"gate: {message} -> go={out.get('go')} (want {str(want).lower()})" + ("" if code == 0 else f"\n{text}"))
             starts.append(out.get("start", ""))
         check(all(x.isdigit() and abs(int(x) - time.time()) < 600 for x in starts), "gate: every run records its start (the deadline's clock)")
+        commit(work, {"site/Card Edits.json": '{"cards":{"X":{"hp":1,"_by":"web"},"Y":{"series":"s"}}}'}, "website edit", "web")
+        git(work, "push", "-q", "origin", "main")
+        ws = checkout(tmp, bare, "ws-edits")
+        write(os.path.join(ws, "bot/commands/card_data.py"), "")
+        write(os.path.join(ws, "bot/commands/psd_parser.py"), "PARSER_VERSION = 2\n")
+        subprocess.run(["git", "init", "-q", os.path.join(ws, "bot")], check=True)
+        git(os.path.join(ws, "bot"), "commit", "-q", "--allow-empty", "-m", "bot")
+        write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps(
+            {"card_commit": git(work, "rev-parse", "HEAD"), "builder": {"parser_version": 2}, "pending": {"stale": [], "repin": []}}))
+        code, text, out = run_step(flow, "gate", ws, {"POSTS": "off", "DRY_RUN": "false", "BUILDER_REF": "main",
+                                                      "BOT_REPO": "bobberlington/AutoCroissant", "GIT_NO_LAZY_FETCH": "1",
+                                                      "FORCE": "false", "FULL": "false", "CARDS": "", "RESTORE": "", "SEED": ""}, tmp)
+        check(code == 0 and out.get("go") == "false" and out.get("edits") == "true",
+              f"gate: nothing changed, a PSD-kind edit in the file -> go={out.get('go')} edits={out.get('edits')} (want false, true)"
+              + ("" if code == 0 else f"\n{text}"))
 
 
 def fonts_cases(flow: dict) -> None:
@@ -428,14 +460,15 @@ def bake_cases(flow: dict) -> None:
         os.chmod(python, 0o755)
         os.makedirs(os.path.join(ws, "bot"))
         main = git(ws, "rev-parse", "HEAD")
-        for event, retry, want in (("schedule", "", True), ("workflow_dispatch", "schedule", True),
-                                   ("workflow_dispatch", "workflow_dispatch", False), ("workflow_dispatch", "", False)):
-            code, text, out = run_step(flow, "bake", os.path.join(ws, "bot"), {"GITHUB_WORKSPACE": ws, "MAIN": main, "CARD": "all",
+        for event, retry, want, card in (("schedule", "", True, "all"), ("workflow_dispatch", "schedule", True, "all"),
+                                         ("workflow_dispatch", "workflow_dispatch", False, "all"), ("workflow_dispatch", "", False, "all"),
+                                         ("workflow_dispatch", "", True, "pending")):
+            code, text, out = run_step(flow, "bake", os.path.join(ws, "bot"), {"GITHUB_WORKSPACE": ws, "MAIN": main, "CARD": card,
                                                                               "RETRY_OF": retry, "GITHUB_EVENT_NAME": event,
                                                                               "DRY_RUN": "true"}, tmp)
             args = open(os.path.join(tmp, "bake.args")).read().split("\n")
-            check(code == 0 and ("--pending" in args) == want and "baked" not in out,
-                  f"bake: {event}{' retry of ' + retry if retry else ''} -> --pending {'yes' if want else 'no'}"
+            check(code == 0 and ("--pending" in args) == want and "--card" not in args and "baked" not in out,
+                  f"bake: {event}{' retry of ' + retry if retry else ''} bake={card} -> --pending {'yes' if want else 'no'}"
                   + ("" if code == 0 else f"\n{text}"))
 
 

@@ -1,5 +1,5 @@
 # Card previews for the website (AutoCroissant commands/card_preview.py; design section 16): one card's PSD-kind edit
-# baked as card-edits.yml would, nothing committed to main. The result goes to the orphan branch `previews`
+# baked as Card sync would, nothing committed to main. The result goes to the orphan branch `previews`
 # (previews/<request>/, index.json), one commit per run, rewritten past 200 previews or 7 days; contract: site/NOTES.md
 # section 19. No Discord. The preview job's token is read-only; only the publish job writes (stdlib, no install).
 # Inputs reach the shell only through env and a file. Every push trigger here is `branches: [main]`. The card packages
@@ -56,7 +56,7 @@ jobs:
 
       # The card repo at main, every tree and no file contents (the 16 GB of card folders are never checked out): the
       # card's PSD and PNG, the status chart, the icon manifest and the Types/ PNGs it needs come by blob sha through the
-      # API, verified, as card-edits.yml's do; the fonts below.
+      # API, verified, as Card sync's bake does; the fonts below.
       - uses: actions/checkout@v7
         with:
           filter: blob:none
@@ -92,7 +92,7 @@ jobs:
         with:
           python-version: "3.14"
 
-      # card-edits.yml's install: requirements-cards.txt's wheels, cached per that file, runner and Python (the same entry;
+      # card-sync.yml's install: requirements-cards.txt's wheels, cached per that file, runner and Python (the same entry;
       # a miss builds them all, pyoxipng too), but pyoxipng not installed: card_preview would recompress preview.png
       # (~4 s), which is never published.
       - id: wheels
@@ -115,7 +115,7 @@ jobs:
           path: ~/.cache/card-wheels
           key: ${{ steps.wheels.outputs.cache-primary-key }}
 
-      # Fonts as card-edits.yml's: MDW/Fonts' top level, cached by the folder's tree sha (the same cache key), fetched
+      # Fonts as card-sync.yml's: MDW/Fonts' top level, cached by the folder's tree sha (the same cache key), fetched
       # only on a miss.
       - id: fonts
         run: echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"

@@ -1,7 +1,7 @@
 # Card browser
 
 Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMaker/. Rebuilt by
-`.github/workflows/site.yml` on every push to `main`, every 6 hours, and on demand (Actions → Card browser → Run workflow).
+`.github/workflows/site.yml` on every push to `main`, after each Card sync commit, daily, and on demand (Actions → Card browser → Run workflow).
 
 ## What it has
 
@@ -119,13 +119,11 @@ stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a di
 
 ## Where the data comes from
 
-The build does not parse PSDs. Card text, stats, authors, aliases and history come from AutoCroissant's
-`stats.pkl` / `aliases.pkl` / `old_stats.pkl` (the same data the Discord bot answers from), so the site is as fresh as
-the bot's last `/update_stats` + `/push`. With `CARD_DATA_DIR` set to a checkout of the card sync's `db/` (branch
-`data`), the cards, history and PSD details come from its `stats.json`, `old_stats.json` and `psd_details.json`
-instead, read into the same stand-ins (`load_card_data`). site.yml sets it from the cutover (its `CARD_DATA`
-switch, and only when the branch exists); until then the shadow compares `cards.json` built both ways by hand, and
-unsetting it is the rollback. Once `site/Card Edits.json` has `aliases_moved` (aliases.pkl moved into it
+The build does not parse PSDs. Since the cutover (2026-10-24) card text, stats, history and PSD details come from the
+card sync's `db/` (branch `data`; `CARD_DATA_DIR`, set by site.yml's `CARD_DATA` switch when the branch exists): its
+`stats.json`, `old_stats.json` and `psd_details.json`, read into the pickles' stand-ins (`load_card_data`), the same data
+the Discord bot answers from. Without it the build reads AutoCroissant's `stats.pkl` / `aliases.pkl` / `old_stats.pkl`,
+frozen at the cutover: switching `CARD_DATA` off is the rollback. Once `site/Card Edits.json` has `aliases_moved` (aliases.pkl moved into it
 on 2026-10-22), `aliases.pkl` isn't read: the cards' aliases are their Card Edits entries', and no `_by:
 AutoCroissant` entry (the migration's aliases and series, the moved stat exclusions) counts as a website edit. Where the
 migration added a field to an editor's entry, the entry keeps the editor's `_by` and lists that field in `_bot`

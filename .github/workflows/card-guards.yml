@@ -56,7 +56,7 @@ on:
 
 permissions:
   contents: write     # the commit comment and the bot commit
-  actions: write      # gh workflow run site.yml / tts-save.yml after a commit (a GITHUB_TOKEN push triggers no workflow)
+  actions: write      # gh workflow run site.yml / card-sync.yml after a commit (a GITHUB_TOKEN push triggers no workflow)
 
 # Each push keeps its own run (a shared group keeps one pending run, so a burst of pushes would lose the middle ones'
 # reports); a dispatch gets a group of its own. Parallel landings are safe: each rests on its blobs and retries a moved head.
@@ -180,7 +180,7 @@ jobs:
         with:
           python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
-      # card-edits.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
+      # card-sync.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
       # recompression) among them.
       - id: wheels
         uses: actions/cache/restore@v6
@@ -384,7 +384,7 @@ jobs:
         with:
           python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
-      # card-edits.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
+      # card-sync.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
       # recompression) among them.
       - id: wheels
         uses: actions/cache/restore@v6
@@ -436,7 +436,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           exit "$status"
 
-      # A GITHUB_TOKEN push triggers no workflow: the site build and the TTS save are run here (when they do not start,
+      # A GITHUB_TOKEN push triggers no workflow: the site build and the card sync are run here (when they do not start,
       # the comment and the post say so, and the run fails), and again by a re-run that finds the writes already landed
       # (its earlier attempt's may not have started; both queue, so a second start is harmless). The comment is rewritten
       # with what landed, what did not and why (a broken Land still says so).
@@ -454,10 +454,10 @@ jobs:
           refresh=ok start=""
           [ -n "$SHA" ] && start=true
           if [ "$MODE" = on ] && [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && [ "${ALREADY:-0}" -gt 0 ]; then start=true; fi
-          if [ -n "$start" ] && ! { gh workflow run site.yml && gh workflow run tts-save.yml; }; then
+          if [ -n "$start" ] && ! { gh workflow run site.yml && gh workflow run card-sync.yml -f dry_run=false; }; then
             refresh=failed
             echo "refresh=failed" >> "$GITHUB_OUTPUT"
-            printf '\n**The site build and the TTS save did not start after this commit: the site catches up within 6 hours, the TTS save the next day.**\n' \
+            printf '\n**The site build and the card sync did not start after this commit: the next card sync catches up (the site daily at the latest).**\n' \
               >> "$OUT/report-landed.md"
           fi
           if [ -n "$COMMENT" ]; then
@@ -472,13 +472,13 @@ jobs:
               | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --input - > /dev/null \
               || echo "::warning::the commit comment could not be edited"
           fi
-          if [ "$refresh" = failed ]; then echo "::error::the site build or the TTS save did not start: run them by hand"; exit 1; fi
+          if [ "$refresh" = failed ]; then echo "::error::the site build or the card sync did not start: run them by hand"; exit 1; fi
 
       # The one Discord post, after the quiet window (discord-final.json, as Land settled it; never check's discord.json,
       # which would tell withdrawn refusals and miss the writes that did not land), only when a card has a refusal, a
       # remaining issue, an error or a write that did not land, only when the secret is set, never twice for one push.
       # Land ran but settled nothing (killed or timed out): this step fails, so the run-failed message goes out instead.
-      # Follow up's site build or TTS save did not start: one more line, when it fits. The URL is never printed; a failed
+      # Follow up's site build or card sync did not start: one more line, when it fits. The URL is never printed; a failed
       # call warns and the comment stands. The comment then gets the TOLD mark; when the Comment step failed, a comment
       # of its own carries it, so a re-run does not post again.
       - name: Tell Discord
@@ -500,7 +500,7 @@ jobs:
           jq -e '.content // "" | length > 0' "$post" > /dev/null || { echo "Nothing to tell."; exit 0; }
           if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"; exit 0; fi
           if [ "$REFRESH" = failed ]; then
-            jq --arg line "The bot's commit did not start the site build and the TTS save: the site catches up within 6 hours, the TTS save the next day." \
+            jq --arg line "The bot's commit did not start the site build and the card sync: the next card sync catches up (the site daily at the latest)." \
               'if (.content + "\n" + $line | length) <= 2000 then .content += "\n" + $line else . end' "$post" > "$OUT/discord-sent.json"
             post="$OUT/discord-sent.json"
           fi

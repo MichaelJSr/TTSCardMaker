@@ -1,4 +1,4 @@
-"""Runs the bot's TTS save updater on a copy of the save as the tts-save Action does; it must report no changes
+"""Runs the bot's TTS save updater on a copy of the save as Card sync's TTS save step does; it must report no changes
 and leave the bytes identical. Also: perturbed copies must converge back, and an offline website must change nothing.
 Usage: updater_idempotent.py [save.json]
 Rules: decks.json beside the save, else TTSCardMaker origin/main. Card Edits: ../site/Card Edits.json, else origin/main.

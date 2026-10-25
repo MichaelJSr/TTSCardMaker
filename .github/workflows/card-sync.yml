@@ -2,23 +2,23 @@
 # builds the card data (db/ JSON on the orphan branch `data`), updates the TTS save and writes the changelog posts. It makes
 # at most one commit on main (M: the bake and the save) and one on `data`. Every stage is the bot's code, checked out from
 # bobberlington/AutoCroissant at the builder ref: card_bake --local, card_data, tts_save --names, changelog post.
-# Migration step 7 (the shadow): every 30 minutes, live; dispatches run dry by default; the bake, the main commit and the
-# posts off (MAIN_COMMIT and POSTS; discord.json goes to the artifact only), so a live run writes only `data`.
-# tts-save.yml and card-edits.yml stay main's writers until the cutover (step 8). Every stage runs in one environment on
-# Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) installed from
-# the card workflows' wheel cache.
+# Since the cutover (step 8, 2026-10-24) it alone bakes edits and writes the save on main (card-edits.yml and tts-save.yml
+# are gone): runs are live (dry_run off by default), MAIN_COMMIT and POSTS on. The bot's /update_stats (every 30 minutes)
+# dispatches a run once the card repo has been quiet for 30 minutes; the cron is a fallback (GitHub runs it hours late).
+# Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
+# psd-tools fork's one pin) installed from the card workflows' wheel cache.
 name: Card sync
-run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Card sync (dry run)' || 'Card sync' }}
+run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Card sync (dry run)' || inputs.retry && 'Card sync (retry)' || 'Card sync' }}
 
 on:
   schedule:
-    - cron: "4,34 * * * *"   # most runs end at the gate; with no data branch yet, a run seeds it (the latest PICKLE)
+    - cron: "0,30 * * * *"   # fallback; most runs end at the gate; with no data branch yet, a run seeds it (the latest PICKLE)
   workflow_dispatch:
     inputs:
       dry_run:
         description: "Dry run: every stage runs on the runner; nothing is pushed, posted or dispatched (the artifact holds the would-be db/, save and posts)"
         type: boolean
-        default: true
+        default: false
       full:
         description: "Re-parse every card (budgeted runs of 400 downloads; approves gates G4 and G5)"
         type: boolean
@@ -36,7 +36,7 @@ on:
         type: boolean
         default: false
       bake:
-        description: "all, one card's name, or none"
+        description: "all, pending (only edits without a final verdict, as the schedule), one card's name, or none"
         type: string
         default: all
       allow_archive:
@@ -66,8 +66,8 @@ concurrency:
                               # is dispatched only when none is pending)
 
 env:
-  POSTS: "off"        # step 8 turns the Discord posts on; until then discord.json goes to the artifact only
-  MAIN_COMMIT: "off"  # step 8 turns the bake and the main commit M on; until then only a dry run bakes (nothing committed)
+  POSTS: "on"         # the Discord posts (off: discord.json goes to the artifact only)
+  MAIN_COMMIT: "on"   # the bake and the main commit M (off: only a dry run bakes, nothing committed; the rollback)
 
 jobs:
   sync:
@@ -77,7 +77,7 @@ jobs:
       run:
         shell: bash
     env:
-      # A dispatch runs dry unless dry_run is off; a schedule (step 7) runs live: MAIN_COMMIT and POSTS say what it writes
+      # A dispatch runs dry only with dry_run on; a schedule runs live: MAIN_COMMIT and POSTS say what it writes
       DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
       BUILDER_REF: ${{ inputs.builder_ref || vars.CARD_DATA_BUILDER_REF || 'main' }}
       BOT_REPO: bobberlington/AutoCroissant
@@ -166,7 +166,8 @@ jobs:
 
       # Go when (a) a card input changed since the last build's main commit (the run's own save-only commits aside),
       # (b) a budgeted re-parse is pending, (c) the builder's PARSER_VERSION differs from the data's, (d) baked PNGs
-      # await their save links, (e) events are unposted (posts on), (f) a dispatch asks, or there is no data yet.
+      # await their save links, (e) events are unposted (posts on), (f) a dispatch asks, or there is no data yet; else
+      # (g) a website edit the bake put off (recent, capped) is past its grace: the Pending edits step. GO in the env.
       - name: Gate
         id: gate
         env:
@@ -231,7 +232,14 @@ jobs:
               if [ "$last" -gt "$posted" ]; then why+=("events $((posted + 1))-$last not posted"); fi
             fi
           fi
-          { echo "seed=$seed"; echo "go=$([ ${#why[@]} -gt 0 ] && echo true || echo false)"; } >> "$GITHUB_OUTPUT"
+          go=$([ ${#why[@]} -gt 0 ] && echo true || echo false)
+          edits=0
+          if [ "$go" = false ] && [ -f "site/Card Edits.json" ]; then     # card_edits.KIND's psd fields
+            edits=$(jq '[.cards // {} | .[] | select([.name, .stars, .types, .hp, .def, .atk, .spd, .ability] | any(. != null))] | length' \
+              "site/Card Edits.json")
+          fi
+          { echo "seed=$seed"; echo "go=$go"; echo "edits=$([ "$edits" -gt 0 ] && echo true || echo false)"; } >> "$GITHUB_OUTPUT"
+          echo "GO=$go" >> "$GITHUB_ENV"
           {
             echo "## Card sync$([ "$DRY_RUN" = true ] && echo " (dry run)")"
             echo
@@ -240,37 +248,16 @@ jobs:
             echo
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # Fonts for the bake and the details' "supplied" flags: MDW/Fonts' top level, cached by its tree sha (card-edits.yml's
-      # key, so the entries carry over); the sparse checkout fetches them only on a miss. A hit puts them outside the sparse
-      # patterns: without expectFilesOutsideOfPatterns git clears their skip-worktree bits and the bake's ff merge deletes them.
-      - name: Fonts tree
-        id: fonts
-        if: steps.gate.outputs.go == 'true'
-        run: |
-          git config sparse.expectFilesOutsideOfPatterns true
-          echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
-
-      - id: font-cache
-        if: steps.gate.outputs.go == 'true'
-        uses: actions/cache@v6
-        with:
-          path: MDW/Fonts
-          key: card-fonts-${{ steps.fonts.outputs.sha }}
-
-      - name: Fonts (cache miss)
-        if: steps.gate.outputs.go == 'true' && steps.font-cache.outputs.cache-hit != 'true'
-        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
-
       # The Actions' one Python (the jetson's and the Mac tests', 3.14), for every stage.
       - uses: actions/setup-python@v7
         id: python
-        if: steps.gate.outputs.go == 'true'
+        if: env.GO == 'true' || steps.gate.outputs.edits == 'true'
         with:
           python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
-      # requirements-cards.txt as wheels, cached per that file, runner and Python (one entry for the six card workflows).
+      # requirements-cards.txt as wheels, cached per that file, runner and Python (one entry for the card workflows).
       - id: wheels
-        if: steps.gate.outputs.go == 'true'
+        if: env.GO == 'true' || steps.gate.outputs.edits == 'true'
         uses: actions/cache/restore@v6
         with:
           path: ~/.cache/card-wheels
@@ -281,7 +268,7 @@ jobs:
       # proves the import closure before any stage.
       - name: Python environment
         id: venv
-        if: steps.gate.outputs.go == 'true'
+        if: env.GO == 'true' || steps.gate.outputs.edits == 'true'
         timeout-minutes: 15
         env:
           HIT: ${{ steps.wheels.outputs.cache-hit }}
@@ -303,12 +290,57 @@ jobs:
           path: ~/.cache/card-wheels
           key: ${{ steps.wheels.outputs.cache-primary-key }}
 
+      # (g): the bake's put-off edits (card_bake.due: pending, PSD and PNG past the 30-minute grace) start the run.
+      - name: Pending edits
+        id: edits
+        if: steps.gate.outputs.edits == 'true' && env.GO != 'true' && steps.venv.outcome == 'success'
+        timeout-minutes: 5
+        working-directory: bot
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GIT_NO_LAZY_FETCH: "1"
+          MAIN: ${{ steps.gate.outputs.main }}
+        run: |
+          if ! "$RUNNER_TEMP/venv/bin/python" -c 'import sys; from commands.card_bake import due; print(*due(*sys.argv[1:]), sep="\n")' \
+              "$GITHUB_REPOSITORY" "$MAIN" "$GITHUB_WORKSPACE" > "$RUNNER_TEMP/due.txt"; then
+            echo "::warning::the pending website edits were not read: the next run looks again"
+            exit 0
+          fi
+          names=$(grep . "$RUNNER_TEMP/due.txt" | paste -sd, - | sed 's/,/, /g' || true)
+          if [ -n "$names" ]; then
+            echo "- website edits to bake: $names" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "GO=true" >> "$GITHUB_ENV"
+          else
+            echo "No website edit past its grace." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # Fonts for the bake and the details' "supplied" flags: MDW/Fonts' top level, cached by its tree sha (the card workflows'
+      # key, so the entries carry over); the sparse checkout fetches them only on a miss. A hit puts them outside the sparse
+      # patterns: without expectFilesOutsideOfPatterns git clears their skip-worktree bits and the bake's ff merge deletes them.
+      - name: Fonts tree
+        id: fonts
+        if: env.GO == 'true'
+        run: |
+          git config sparse.expectFilesOutsideOfPatterns true
+          echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
+
+      - id: font-cache
+        if: env.GO == 'true'
+        uses: actions/cache@v6
+        with:
+          path: MDW/Fonts
+          key: card-fonts-${{ steps.fonts.outputs.sha }}
+
+      - name: Fonts (cache miss)
+        if: env.GO == 'true' && steps.font-cache.outputs.cache-hit != 'true'
+        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+
       # Stage 1: the bake makes one local commit B on main's head in this checkout (nothing pushed); a dry run commits
-      # nothing, and with MAIN_COMMIT off only a dry run bakes. A card's error fails the step but keeps B for the others
-      # (card-edits.yml's per-card rule); no B means the run goes on from main's head.
+      # nothing, and with MAIN_COMMIT off only a dry run bakes. A card's error fails the step but keeps B for the others (the
+      # bake's per-card rule); no B means the run goes on from main's head. bake=pending (the bot's runs): the schedule's.
       - name: Bake
         id: bake
-        if: steps.gate.outputs.go == 'true' && steps.venv.outcome == 'success' && inputs.bake != 'none' && (env.MAIN_COMMIT == 'on' || env.DRY_RUN == 'true')
+        if: env.GO == 'true' && steps.venv.outcome == 'success' && inputs.bake != 'none' && (env.MAIN_COMMIT == 'on' || env.DRY_RUN == 'true')
         timeout-minutes: 50
         working-directory: bot
         env:
@@ -319,8 +351,10 @@ jobs:
           RETRY_OF: ${{ inputs.retry }}
         run: |
           args=(--repo "$GITHUB_REPOSITORY" --head "$MAIN" --local "$GITHUB_WORKSPACE")
-          if [ "$GITHUB_EVENT_NAME" = schedule ] || [ "$RETRY_OF" = schedule ]; then args+=(--pending); fi   # a dispatch re-checks every card
-          if [ -n "$CARD" ] && [ "$CARD" != all ]; then args+=(--card "$CARD"); fi
+          if [ "$GITHUB_EVENT_NAME" = schedule ] || [ "$RETRY_OF" = schedule ] || [ "$CARD" = pending ]; then
+            args+=(--pending)                   # else a dispatch re-checks every card
+          fi
+          if [ -n "$CARD" ] && [ "$CARD" != all ] && [ "$CARD" != pending ]; then args+=(--card "$CARD"); fi
           if [ "$DRY_RUN" = true ]; then args+=(--dry-run); fi
           set +e
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_bake "${args[@]}" > "$RUNNER_TEMP/bake.md"
@@ -342,7 +376,7 @@ jobs:
       # db/ in carddata/ even on a dry run (the artifact); only the data commit publishes it.
       - name: Build
         id: build
-        if: ${{ !cancelled() && steps.gate.outputs.go == 'true' && steps.venv.outcome == 'success' }}
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
         timeout-minutes: 60
         working-directory: bot
         env:
@@ -379,7 +413,7 @@ jobs:
       # build, from the last good data. Skipped when the build failed after a bake: the bake waits for its data.
       - name: TTS save
         id: save
-        if: ${{ !cancelled() && steps.gate.outputs.go == 'true' && steps.venv.outcome == 'success' && (steps.build.outcome == 'success' || steps.bake.outputs.baked != 'true') }}
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' && (steps.build.outcome == 'success' || steps.bake.outputs.baked != 'true') }}
         timeout-minutes: 20
         working-directory: bot
         env:
@@ -414,7 +448,7 @@ jobs:
       # approved the old head only.
       - name: Commit main
         id: main
-        if: ${{ !cancelled() && steps.gate.outputs.go == 'true' && env.DRY_RUN != 'true' && env.MAIN_COMMIT == 'on' && (steps.build.outcome == 'success' || steps.bake.outputs.baked != 'true') && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true') }}
+        if: ${{ !cancelled() && env.GO == 'true' && env.DRY_RUN != 'true' && env.MAIN_COMMIT == 'on' && (steps.build.outcome == 'success' || steps.bake.outputs.baked != 'true') && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true') }}
         timeout-minutes: 10
         env:
           GH_TOKEN: ${{ github.token }}
@@ -523,7 +557,7 @@ jobs:
       # card ids come from the live site's cards.json; without it the links search the card.
       - name: Posts
         id: posts
-        if: ${{ !cancelled() && steps.gate.outputs.go == 'true' && steps.venv.outcome == 'success' }}
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
         timeout-minutes: 3
         working-directory: bot
         run: |
@@ -536,7 +570,7 @@ jobs:
           "$RUNNER_TEMP/venv/bin/python" -m commands.changelog post --db "$GITHUB_WORKSPACE/carddata/db" --site "$SITE_URL" \
             --repo "$GITHUB_REPOSITORY" "${ids[@]}" --out "$RUNNER_TEMP/discord.json"
 
-      # Off until step 8 (POSTS) and on every dry run. The cursor moves after each accepted message and rides in the data
+      # Off with POSTS off and on every dry run. The cursor moves after each accepted message and rides in the data
       # commit. The URL is never printed; a failed call warns and the rest wait for the next run.
       - name: Send the posts
         if: ${{ !cancelled() && env.POSTS == 'on' && env.DRY_RUN != 'true' && steps.posts.outcome == 'success' && steps.build.outcome == 'success' && steps.main.outcome != 'failure' && steps.main.outputs.rejected != 'true' }}
@@ -576,7 +610,7 @@ jobs:
 
       # Stage 7: the would-be db/, the bake's report and crops, the save's report and diff, the posts and the messages
       - name: Collect the artifact
-        if: always() && steps.gate.outputs.go == 'true'
+        if: always() && env.GO == 'true'
         timeout-minutes: 2
         run: |
           out=$RUNNER_TEMP/card-sync
@@ -592,7 +626,7 @@ jobs:
           git diff -- "TTS/Impossibility Simulator.json" > "$out/save.diff" || true
 
       - uses: actions/upload-artifact@v4
-        if: always() && steps.gate.outputs.go == 'true'
+        if: always() && env.GO == 'true'
         timeout-minutes: 5
         with:
           name: card-sync
@@ -601,7 +635,7 @@ jobs:
           retention-days: 14
 
       # Stage 8: a GITHUB_TOKEN push triggers no workflow, so the site build is dispatched after a commit (after a data
-      # commit only with MAIN_COMMIT on: in the shadow the site doesn't read the data yet)
+      # commit only with MAIN_COMMIT on: off, the site may not read the data)
       - name: Site build
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.main.outputs.pushed == 'true' || (steps.data-commit.outputs.committed == 'true' && env.MAIN_COMMIT == 'on')) }}
         timeout-minutes: 2
@@ -610,7 +644,7 @@ jobs:
         run: gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY"
 
       # Stage 9: a failed live run (scheduled, a retry, the bot's or the owner's dispatch) tells Discord once per failing
-      # streak of live runs, with POSTS on (in the shadow nothing reads this data yet). The URL is never printed; a failed
+      # streak of live runs, with POSTS on. The URL is never printed; a failed
       # call only warns. Dry runs neither alert nor count (their run names say so).
       - name: Tell Discord
         if: failure() && env.POSTS == 'on' && env.DRY_RUN != 'true'

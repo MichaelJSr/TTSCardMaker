@@ -60,7 +60,7 @@ jobs:
         with:
           python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
-      # card-edits.yml's install (the same cache entry): AutoCroissant requirements-cards.txt, the psd-tools fork's one pin,
+      # card-sync.yml's install (the same cache entry): AutoCroissant requirements-cards.txt, the psd-tools fork's one pin,
       # as wheels cached per that file, runner and Python; a hit installs offline, a miss builds them and saves them.
       - id: wheels
         uses: actions/cache/restore@v6

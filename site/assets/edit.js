@@ -25,7 +25,7 @@ const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Serie
   "rate-favorability": "Favorability", "rate-power": "Power" };
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
-const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. Read by the website and the bot (/update_stats).";
+const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. Read by the website and the card sync.";
 // site/Card Ratings.json (AutoCroissant card_edits.CardRatings.ABOUT, for a new file)
 export const RATINGS_ABOUT = "Card ratings, 1 to 10. favorability: how much players like the card; power: 1 weak, 5.5 balanced, 10 too strong. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.";
 const RATE = ["favorability", "power"], RATE_SOURCES = ["TTS session", "website"], RATE_RANGE = "Ratings go from 1 to 10";
@@ -1252,7 +1252,7 @@ export function createEditor(app) {
         <div class="actions"><button type="button" class="ghost" data-action="edit-discard-deck" data-key="${esc(key)}">Discard</button></div></div>`; }).join("")}
       ${count() ? `<label class="muted" for="edit-msg">Commit message (optional)</label><input id="edit-msg" class="wide" placeholder="Website edits">
         <div class="actions"><button type="button" class="primary" data-action="edit-publish">Publish ${count()} change${count() > 1 ? "s" : ""}</button></div>
-        <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch || "main")}). The site rebuilds in a few minutes; the bot reads it on /update_stats.</p>` : `<p class="muted">Nothing to publish.</p>`}
+        <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch || "main")}). The site rebuilds in a few minutes; the next card sync (30 minutes after the last push) brings it to the PSDs and the bot.</p>` : `<p class="muted">Nothing to publish.</p>`}
       <p class="muted" id="edit-status" aria-live="polite">${esc(note)}</p>`;
   }
   let forgot = false;                              // Forgot password: after the token sign-in, set a new one
@@ -1415,7 +1415,7 @@ export function createEditor(app) {
       el.disabled = true; status.textContent = "Publishing…";
       try {
         const sha = await publish(msg);
-        app.showDialog((sha ? `<h3>Published</h3><p>Commit <a href="https://github.com/${esc(S.data.repo)}/commit/${sha}" target="_blank" rel="noopener">${sha.slice(0, 7)}</a>. The website rebuilds in a few minutes; the bot reads it on /update_stats.</p>`
+        app.showDialog((sha ? `<h3>Published</h3><p>Commit <a href="https://github.com/${esc(S.data.repo)}/commit/${sha}" target="_blank" rel="noopener">${sha.slice(0, 7)}</a>. The website rebuilds in a few minutes; the next card sync (30 minutes after the last push) brings it to the PSDs and the bot.</p>`
           : "<h3>Nothing to publish</h3><p>GitHub already has these edits: nothing changed.</p>"));
         app.rerender();
       } catch (err) { el.disabled = false; status.textContent = `Not published: ${err.message}`; }
