@@ -7,6 +7,10 @@
 #   links re-pinned (a second commit). A card push's waits out a fixed 30-minute window (owner, 2026-10-24): the first
 #   push to main touching a card input starts it, pushes while it runs ride along (their data still at once), and when
 #   it is up the lane syncs main's head. After M the after job re-reads the baked cards into `data` (no wait).
+# The bake's verdicts and events live on `data` (AutoCroissant docs/Future/CARD_SYNC_VERDICTS.md): the main job records
+# them (bake-records), the after job merges them in its data commit (verdicts.json; baked, bake-refused), so a refusal
+# makes no main commit and M holds only PSDs, PNGs and dropped edit fields. A guards commit's events (guard-png,
+# guard-fix) come from its run's guard-events artifact and show on the Changes page only, never in a post.
 # Runs are live (dry_run off by default). The bot dispatches only its admins' re-parses (/update_stats force_update or cards). The cron is the fallback for the work no
 # push starts: website edits the bake put off (recent, over the cap), a re-parse in progress, unposted events, a main
 # lane that failed (GitHub runs it late; its main lane waits for a running window like a push's).
@@ -103,6 +107,7 @@ jobs:
         shell: bash
     env:
       AFTER: ""               # the after job: the bake's main commit M
+      RECORDS: ""             # the after job: the bake's records (this run's bake-records artifact)
     steps: &data-steps
       # Main's head (not github.sha): every commit and tree, no file contents but the small files the stages read. The
       # card folders are never checked out; the bake and the build read PSDs by blob sha, local first, else REST.
@@ -162,6 +167,15 @@ jobs:
           path: carddata
           fetch-depth: 1
 
+      # The after job: the main job's verdicts.json and events.json (only what holds: M's part when M landed)
+      - name: Bake records
+        if: env.RECORDS == 'true'
+        continue-on-error: true   # none (the main job recorded nothing): the build goes on without them
+        uses: actions/download-artifact@v4
+        with:
+          name: bake-records
+          path: ${{ runner.temp }}/bake-records
+
       # Go when (a) a card input changed since the last build's main commit, (b) a budgeted re-parse is pending, (c) the
       # builder's PARSER_VERSION differs from the data's, (e) events are unposted, (f) a dispatch asks, there is no
       # data yet, or the bake's M is to be re-read (the after job). GO in the env.
@@ -175,7 +189,7 @@ jobs:
           CARDS: ${{ inputs.cards }}
           RESTORE: ${{ inputs.restore }}
         run: |
-          if [ -n "$AFTER" ]; then FULL=false; CARDS=; RESTORE=; fi     # the dispatch's inputs were the data job's
+          if [ -n "$RECORDS" ]; then FULL=false; CARDS=; RESTORE=; fi   # the dispatch's inputs were the data job's
           main=$(git rev-parse HEAD)
           echo "main=$main" >> "$GITHUB_OUTPUT"
           builder=$(git -C bot rev-parse HEAD)
@@ -189,6 +203,10 @@ jobs:
                   'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json')    # the builder's lower-cased extensions
           why=()
           if [ -n "$AFTER" ]; then why+=("the bake's main commit ${AFTER:0:8} to re-read"); fi
+          rec=$RUNNER_TEMP/bake-records
+          n=$( { jq '.cards | length' "$rec/verdicts.json" 2> /dev/null || echo 0; } | head -1)
+          e=$( { jq 'length' "$rec/events.json" 2> /dev/null || echo 0; } | head -1)
+          if [ "$((n + e))" -gt 0 ]; then why+=("the bake's records: $n verdicts, $e events"); fi
           if [ "$FORCE" = true ]; then why+=("dispatched with force"); fi
           if [ "$FULL" = true ]; then why+=("dispatched with full"); fi
           if [ -n "$CARDS" ]; then why+=("dispatched with cards: $CARDS"); fi
@@ -220,12 +238,52 @@ jobs:
           echo "go=$go" >> "$GITHUB_OUTPUT"
           echo "GO=$go" >> "$GITHUB_ENV"
           {
-            echo "## Card data$([ -n "$AFTER" ] && echo " after the bake")$([ "$DRY_RUN" = true ] && echo " (dry run)")"
+            echo "## Card data$([ -n "$RECORDS" ] && echo " after the bake")$([ "$DRY_RUN" = true ] && echo " (dry run)")"
             echo
             echo "Main \`${main:0:8}\`, builder \`$BOT_REPO@${builder:0:8}\` ($BUILDER_REF)."
             if [ ${#why[@]} -gt 0 ]; then printf -- '- %s\n' "${why[@]}"; else echo "Nothing to do since the last build."; fi
             echo
           } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # The guards' commits since the last build (AutoCroissant, "Card guards: ..."): each one's guard-events.json from the
+      # card-guards run of its push (its Guarded-push trailer), matched by the commit it names. One not found warns: its
+      # events are lost to the Changes page (Discord never shows them).
+      - name: Guard events
+        if: env.GO == 'true'
+        timeout-minutes: 5
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GIT_NO_LAZY_FETCH: "1"
+          MAIN: ${{ steps.gate.outputs.main }}
+        run: |
+          base=$(jq -r '.card_commit // ""' carddata/db/manifest.json 2> /dev/null || true)
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2> /dev/null; then exit 0; fi
+          out=$RUNNER_TEMP/guard-events
+          mkdir -p "$out"
+          git log --format='%H%x09%an%x09%(trailers:key=Guarded-push,valueonly,separator=%x2C)%x09%s' "$base..$MAIN" \
+            | awk -F'\t' '$2 == "AutoCroissant" && index($4, "Card guards:") == 1 { print $1 " " $3 }' > "$out/commits.txt"
+          while read -r sha push; do
+            [ -n "$sha" ] || continue
+            found=""
+            for id in $(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/card-guards.yml/runs?head_sha=${push:-none}&per_page=10" \
+                --jq '.workflow_runs[].id' 2> /dev/null); do
+              art=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/artifacts?name=guard-events" --jq '.artifacts[0].id // empty' 2> /dev/null) || art=""
+              [ -n "$art" ] || continue
+              rm -rf "$out/one" && mkdir -p "$out/one"
+              gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$art/zip" > "$out/one.zip" 2> /dev/null || continue
+              unzip -q -o "$out/one.zip" -d "$out/one" 2> /dev/null || continue
+              if jq -e --arg c "$sha" '.commit == $c' "$out/one/guard-events.json" > /dev/null 2>&1; then
+                cat "$out/one/guard-events.json" >> "$out/all.jsonl"
+                found=true
+                break
+              fi
+            done
+            [ -n "$found" ] || echo "::warning::no guard events for the guards commit ${sha:0:8}: the Changes page misses them"
+          done < "$out/commits.txt"
+          if [ -s "$out/all.jsonl" ]; then
+            jq -s . "$out/all.jsonl" > "$RUNNER_TEMP/guard-events.json"
+            echo "Guard events: $(jq '[.[].events | length] | add' "$RUNNER_TEMP/guard-events.json") from $(jq length "$RUNNER_TEMP/guard-events.json") guards commits."
+          fi
 
       # One environment from requirements-cards.txt for the bake, the build, the save and the posts, on the Actions' one
       # Python (3.14; the shared setup, .github/actions/cards-python). --help proves the import closure before any stage.
@@ -301,7 +359,7 @@ jobs:
           ALLOW_ARCHIVE: ${{ inputs.allow_archive }}
           RESTORE: ${{ inputs.restore }}
         run: |
-          if [ -n "$AFTER" ]; then FULL=false; CARDS=; RESTORE=; ALLOW_ARCHIVE=false; fi
+          if [ -n "$RECORDS" ]; then FULL=false; CARDS=; RESTORE=; ALLOW_ARCHIVE=false; fi
           db=$GITHUB_WORKSPACE/carddata/db
           mkdir -p "$db"
           args=(--repo "$GITHUB_REPOSITORY" --checkout "$GITHUB_WORKSPACE" --head "$HEAD_SHA" --db "$db" --budget 400
@@ -316,6 +374,12 @@ jobs:
           if [ -n "$CARDS" ]; then args+=(--cards "$CARDS"); fi
           if [ "$ALLOW_ARCHIVE" = true ]; then args+=(--allow-archive); fi
           if [ -n "$RESTORE" ]; then args+=(--restore "$RESTORE"); fi
+          rec=$RUNNER_TEMP/bake-records                  # the after job's: the bake's verdicts and events
+          if [ -f "$rec/verdicts.json" ]; then args+=(--verdicts "$rec/verdicts.json"); fi
+          if [ -f "$rec/events.json" ]; then args+=(--events "$rec/events.json"); fi
+          if [ -f "$RUNNER_TEMP/guard-events.json" ] && grep -q -- '"--guard-events"' commands/card_data.py; then
+            args+=(--guard-events "$RUNNER_TEMP/guard-events.json")    # a pinned older builder: not recorded
+          fi
           set +e
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_data "${args[@]}"
           code=$?
@@ -353,13 +417,14 @@ jobs:
           posts=$RUNNER_TEMP/discord.json
           n=$(jq '.messages | length' "$posts")
           for ((i = 0; i < n; i++)); do
-            if ! jq -c ".messages[$i].body" "$posts" | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK"; then
+            silent=$(jq ".messages[$i].body == null" "$posts")       # the guards' events alone: no post, the cursor moves
+            if [ "$silent" != true ] && ! jq -c ".messages[$i].body" "$posts" | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK"; then
               echo "::warning::the Discord webhook call failed: $((n - i)) messages wait for the next run"
               break
             fi
             "$RUNNER_TEMP/venv/bin/python" -m commands.changelog advance --db "$GITHUB_WORKSPACE/carddata/db" \
               --seq "$(jq ".messages[$i].cursor.seq" "$posts")" --push "$(jq -r ".messages[$i].cursor.push // \"\"" "$posts")"
-            sleep 1
+            if [ "$silent" != true ]; then sleep 1; fi
           done
 
       # db/ and the cursor as one commit on data, never forced; a rejected push fails the job (gate G6's case).
@@ -393,7 +458,7 @@ jobs:
         if: always() && env.GO == 'true'
         timeout-minutes: 5
         with:
-          name: ${{ env.AFTER && 'card-data-after' || 'card-data' }}
+          name: ${{ env.RECORDS && 'card-data-after' || 'card-data' }}
           path: ${{ runner.temp }}/card-data
           if-no-files-found: ignore
           retention-days: 14
@@ -541,6 +606,7 @@ jobs:
       saved: ${{ steps.venv.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
       m: ${{ steps.main.outputs.m }}
       baked: ${{ steps.main.outputs.baked }}
+      records: ${{ steps.records.outputs.records }}
     defaults:
       run:
         shell: bash
@@ -619,8 +685,10 @@ jobs:
           GIT_NO_LAZY_FETCH: "1"
           MAIN: ${{ steps.gate.outputs.main }}
         run: |
+          verdicts=()                           # the data's verdicts (an older builder reads them from the edits file)
+          if grep -q '^def due(.*verdicts' commands/card_bake.py; then verdicts=("$GITHUB_WORKSPACE/carddata/db/verdicts.json"); fi
           if ! "$RUNNER_TEMP/venv/bin/python" -c 'import sys; from commands.card_bake import due; print(*due(*sys.argv[1:]), sep="\n")' \
-              "$GITHUB_REPOSITORY" "$MAIN" "$GITHUB_WORKSPACE" > "$RUNNER_TEMP/due.txt"; then
+              "$GITHUB_REPOSITORY" "$MAIN" "$GITHUB_WORKSPACE" "${verdicts[@]}" > "$RUNNER_TEMP/due.txt"; then
             echo "::warning::the pending website edits were not read: the next run looks again"
             exit 0
           fi
@@ -661,6 +729,9 @@ jobs:
           RETRY_OF: ${{ inputs.retry }}
         run: |
           args=(--repo "$GITHUB_REPOSITORY" --head "$MAIN" --local "$GITHUB_WORKSPACE")
+          if grep -q -- '"--verdicts"' commands/card_bake.py; then     # the data's: what --pending keeps to (an older builder: none)
+            args+=(--verdicts "$GITHUB_WORKSPACE/carddata/db/verdicts.json")
+          fi
           if [[ "$GITHUB_EVENT_NAME" =~ ^(schedule|push)$ || "$RETRY_OF" =~ ^(schedule|push)$ || "$CARD" = pending ]]; then
             args+=(--pending)                   # else a dispatch re-checks every card
           fi
@@ -735,7 +806,7 @@ jobs:
           parts=()
           if [ "$head" != "$MAIN" ]; then
             n=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$head" -- ':(icase)*.psd' | { grep -c . || true; })
-            if [ "$n" -gt 0 ]; then parts+=("$n card$([ "$n" = 1 ] || echo s) baked"); else parts+=("edit verdicts"); fi
+            if [ "$n" -gt 0 ]; then parts+=("$n card$([ "$n" = 1 ] || echo s) baked"); else parts+=("edits dropped"); fi
           fi
           export GIT_INDEX_FILE=$RUNNER_TEMP/main.index
           git read-tree "$head"
@@ -785,6 +856,36 @@ jobs:
           { echo "pushed=true"; echo "m=$m"; echo "baked=$([ "$head" != "$MAIN" ] && echo true || echo false)"
             echo "pngs=$([ "$pngs" -gt 0 ] && echo true || echo false)"; } >> "$GITHUB_OUTPUT"
           echo "Main commit \`${m:0:8}\`: Card sync: ${subject%, }." >> "$GITHUB_STEP_SUMMARY"
+
+      # The bake's records for the after job (bake-records): the refusals' verdicts and events always (no main commit),
+      # the landed part (the verdicts the dropped entries held, the baked events, their commit M) only when M landed.
+      # records=true starts the after job; never on a dry run (the artifact still shows them).
+      - name: Bake records
+        id: records
+        if: ${{ !cancelled() && env.GO == 'true' && steps.bake.outcome != 'skipped' }}
+        timeout-minutes: 1
+        env:
+          LANDED: ${{ steps.main.outputs.baked == 'true' }}
+          M: ${{ steps.main.outputs.m }}
+        run: |
+          rec=$RUNNER_TEMP/card-bake out=$RUNNER_TEMP/bake-records
+          mkdir -p "$out"
+          if [ ! -f "$rec/verdicts.json" ] || [ ! -f "$rec/bake-events.json" ]; then echo "No bake records."; exit 0; fi
+          jq --argjson landed "$LANDED" '{schema: 1, cards: (.cards + (if $landed then .landed else {} end))}' "$rec/verdicts.json" > "$out/verdicts.json"
+          jq --argjson landed "$LANDED" --arg m "$M" '[.events[], (if $landed then .landed[] | .commit = $m else empty end)]' \
+            "$rec/bake-events.json" > "$out/events.json"
+          n=$(jq '.cards | length' "$out/verdicts.json") e=$(jq length "$out/events.json")
+          echo "Bake records: $n verdicts, $e events$([ "$LANDED" = true ] || echo " (M did not land: its part left out)")." | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ "$((n + e))" -gt 0 ] && [ "$DRY_RUN" != true ]; then echo "records=true" >> "$GITHUB_OUTPUT"; fi
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && steps.records.outcome == 'success' }}
+        timeout-minutes: 1
+        with:
+          name: bake-records
+          path: ${{ runner.temp }}/bake-records
+          if-no-files-found: ignore
+          retention-days: 14
 
       # The baked PNGs' save links: the save above pinned main before M, so it runs again on M and any change is a second
       # commit on M (the save alone), fast-forward only. Main moved meanwhile: a warning; the next lane's save pins them.
@@ -857,12 +958,13 @@ jobs:
           OUTCOMES: "gate=${{ steps.gate.outcome }} bake=${{ steps.bake.outcome }} save=${{ steps.save.outcome }} main=${{ steps.main.outcome }} repin=${{ steps.repin.outcome }}"
         run: *tell
 
-  # After M (it brought the bake's card files): the data lane again, on main's head then, no wait, without the dispatch's
-  # inputs (full, cards, restore, allow_archive: the data job's). Its site build shows the baked PNGs.
+  # After M (it brought the bake's card files) or a bake that only recorded verdicts: the data lane again, on main's head
+  # then, no wait, without the dispatch's inputs (full, cards, restore, allow_archive: the data job's), with the bake's
+  # records merged in its data commit. Its site build shows the baked PNGs.
   after:
     name: Card data after the bake
     needs: main
-    if: ${{ !cancelled() && needs.main.outputs.baked == 'true' }}
+    if: ${{ !cancelled() && (needs.main.outputs.baked == 'true' || needs.main.outputs.records == 'true') }}
     concurrency:
       group: card-data
       cancel-in-progress: false
@@ -872,7 +974,8 @@ jobs:
       run:
         shell: bash
     env:
-      AFTER: ${{ needs.main.outputs.m }}
+      AFTER: ${{ needs.main.outputs.baked == 'true' && needs.main.outputs.m || '' }}
+      RECORDS: "true"
     steps: *data-steps
 
   # A new wheel or font cache (its key changes with requirements-cards.txt, Python, MDW/Fonts): the older ones go (caches.yml)

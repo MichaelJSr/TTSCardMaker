@@ -1204,6 +1204,33 @@ def parse_edits():
     return edits
 
 
+VERDICTS_JSON = "verdicts.json"                # the bake's verdicts on the data branch (AutoCroissant card_db.VERDICTS_JSON)
+
+
+def add_verdicts(edits, folder):
+    """The data branch's db/verdicts.json ({"cards": {card key: verdict}}) as each card's `_psd` meta, over an old one
+    in Card Edits.json (read for one Card sync cycle, AutoCroissant docs/Future/CARD_SYNC_VERDICTS.md step 6). A card
+    with a verdict and no entry gets one with no fields (a baked card's flags). Warns, never fails."""
+    path = os.path.join(folder, VERDICTS_JSON)
+    if not os.path.exists(path):
+        return edits
+    try:
+        cards = json.load(open(path, encoding="utf-8")).get("cards")
+    except (ValueError, AttributeError) as e:
+        warn(f"{VERDICTS_JSON} isn't valid JSON, no verdicts read: {e}")
+        return edits
+    if not isinstance(cards, dict):
+        warn(f"{VERDICTS_JSON} has no \"cards\" object, no verdicts read")
+        return edits
+    for key, verdict in cards.items():
+        if not valid_verdict(verdict):
+            log(f"warning: {VERDICTS_JSON}: {key}: {verdict!r} isn't a pipeline verdict, skipped")
+            continue
+        fields, meta = edits.get(card_key(key), ({}, {}))
+        edits[card_key(key)] = (fields, {**meta, "_psd": verdict})
+    return edits
+
+
 def parse_created():
     """site/Card Creation Dates.json -> {card_key: {"date", "from"[, "provisional"]}}; bad entries are skipped. Warns, never fails."""
     path = os.path.join(REPO, CREATED_PATH)
@@ -2033,9 +2060,11 @@ def card_revisions(found, by_png, commits, people, by_login, skip=(), row_of=Non
 # The card sync's events come from CARD_DATA_DIR's changelog/ (AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md §12.1);
 # without it the tabs show no events. The publish batches and the archived cards: git history and db/'s old_stats.
 CHANGELOG_DAYS = 180
-EVENT_KINDS = {"new", "changed", "art", "reparse", "moved", "renamed", "archived", "restored", "edited", "authors", "restore"}   # AutoCroissant changelog.KINDS
+EVENT_KINDS = {"new", "changed", "art", "reparse", "moved", "renamed", "archived", "restored", "edited", "authors", "restore",
+               "baked", "bake-refused", "guard-png", "guard-fix"}   # AutoCroissant changelog.KINDS
 EVENT_KEYS = ("seq", "at", "build", "card_commit", "commit", "by", "edit_by", "kind", "card", "title", "card_type", "stars", "path",
-              "from_path", "fields", "verdict", "buffs", "nerfs", "renamed_to", "moved_to", "restored_from")    # what the tabs read; blob and the rest stay in db/
+              "from_path", "fields", "verdict", "buffs", "nerfs", "renamed_to", "moved_to", "restored_from",
+              "reason", "line", "pngs")    # what the tabs read; blob and the rest stay in db/
 PUSH_KEYS = ("after", "before", "by", "at")
 AUTHOR_PATHS = {AUTHORS_PATH, "MDW/Card Authors.txt"}   # before the 2026-10-20 move too
 WEBSITE_SUBJECT = "Website edit"              # edit.js publish(): "Website edit: …" / "Website edits: n changes"
@@ -2965,7 +2994,7 @@ def main():
     log(f"card data ({data_dir}): {len(stats)} entries, {len(old_stats)} with history, {len(records)} PSD records")
     for message in bot_field_warnings(stats, old_stats if isinstance(old_stats, dict) else {}):
         warn(message)
-    edits = parse_edits()
+    edits = add_verdicts(parse_edits(), data_dir)
 
     png_by_name = {}
     for path in tree:

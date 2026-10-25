@@ -10,14 +10,18 @@ const CARD_SYNC = "Card sync";                            // the push of the run
 const BAKED = "Website edits baked into the PSDs";
 const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };   // app.js KIND_LABEL
-// the post's sections, in its order; re-reads close the post with one line (here: a list under it)
+// the post's sections, in its order; re-reads close the post with one line (here: a list under it). The guards' two
+// are this page's alone: no Discord post shows them (changelog.SILENT)
 export const SECTIONS = [[["new"], "New cards"], [["changed"], "Changed"], [["art"], "New art"], [["moved", "renamed"], "Moved and renamed"],
-  [["archived"], "Archived"], [["restored"], "Restored"], [["edited", "authors"], "Database edits"], [["restore"], "Rollback"]];
+  [["archived"], "Archived"], [["restored"], "Restored"], [["edited", "authors"], "Database edits"], [["baked"], "Baked into the PSDs"],
+  [["bake-refused"], "Bake refused"], [["guard-png"], "PNGs from the guards"], [["guard-fix"], "Fixed by the guards"], [["restore"], "Rollback"]];
 const COUNT_WORDS = [["new", "new"], ["changed", "changed"], ["art", "new art"], ["moved", "moved"], ["renamed", "renamed"], ["archived", "archived"],
-  ["restored", "restored"], ["edited", "edited"], ["authors", "edited"], ["reparse", "re-read"], ["restore", "data rollback"]];
+  ["restored", "restored"], ["edited", "edited"], ["authors", "edited"], ["reparse", "re-read"], ["restore", "data rollback"],
+  ["baked", "baked"], ["bake-refused", "bake refused"], ["guard-png", "PNG"], ["guard-fix", "fixed"]];
 // the kind filter: [kind, chip label]
 export const KINDS = [["new", "New"], ["changed", "Changed"], ["art", "New art"], ["moved", "Moved"], ["renamed", "Renamed"], ["archived", "Archived"],
-  ["restored", "Restored"], ["edited", "Edited"], ["authors", "Authors"], ["reparse", "Re-read"], ["restore", "Rollback"]];
+  ["restored", "Restored"], ["edited", "Edited"], ["authors", "Authors"], ["reparse", "Re-read"], ["restore", "Rollback"],
+  ["baked", "Baked"], ["bake-refused", "Bake refused"], ["guard-png", "Guard PNGs"], ["guard-fix", "Guard fixes"]];
 export const EDIT_KINDS = ["edited", "authors"];
 const VIA = { website: "on the website", git: "by commit" };
 const FIELD = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", stars: "stars", name: "title", card_type: "kind", type: "kind", subtype: "item type",
@@ -148,6 +152,10 @@ export function eventHtml(e) {
     case "archived": return `<li>${esc(e.title || e.card)} ${archiveTagHtml(e)}</li>`;
     case "restored": return `<li>${title} <span class="muted">(PSD back)</span></li>`;
     case "art": return `<li>${title}</li>`;
+    case "baked": case "bake-refused": case "guard-png": case "guard-fix": {   // the bake's and the guards' own line
+      const why = e.reason || e.line || "";
+      return `<li>${title}${why ? `: ${esc(why)}` : ""}${e.kind === "baked" && e.pngs?.length ? ' <span class="muted">(PNG re-made)</span>' : ""}</li>`;
+    }
     default: {                                            // changed, edited, authors, reparse
       const { line, diff } = fieldsHtml(e.fields);
       return `<li>${title}${line ? `: ${line}` : ""}${verdictHtml(e)}${e.kind === "edited" ? byWhom(e.edit_by) : ""}${diff}</li>`;
@@ -207,7 +215,7 @@ export function changelogHtml(C, params) {
     : !events.length ? `<p class="empty">No card changes in the last ${esc(C.days)} days.</p>`
     : daysHtml(pushGroups(events), C.repo, kinds.length ? kinds : null) || `<p class="empty">No ${esc(kinds.join(", "))} changes in the last ${esc(C.days)} days.</p>`;
   return `<section class="panel"><h3>Changelog${events.length ? ` <span class="muted">${events.length}</span>` : ""}</h3>
-    <p class="muted">Every card change the card sync recorded in the last ${esc(C?.days || 180)} days, one block per push, as posted in Discord. Times are Pacific.</p>
+    <p class="muted">Every card change the card sync recorded in the last ${esc(C?.days || 180)} days, one block per push, as posted in Discord (the guards' fixes only here). Times are Pacific.</p>
     ${sourceHtml(C || {})}${present.length > 1 ? chips(present, kinds, counts, "kind") : ""}</section>
     ${body}`;
 }

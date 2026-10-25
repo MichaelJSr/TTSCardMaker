@@ -6,7 +6,8 @@
    it posts, commits data and dispatches the site (after the bake, whatever the data did); a failed build commits and
    posts nothing. Main (Bake and save): bake, save, M and the re-pin of baked PNGs; bake=none skips the bake; a rejected or late M re-pins nothing; GO from Pending edits runs the
    stages. A failed live job (a retry too) alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit
-   main and every later step; after runs the data steps with AFTER = M.
+   main and every later step; after runs the data steps with AFTER = M (when it landed) and RECORDS, also for a bake
+   that only recorded verdicts.
 2. The data Gate on sandbox history: stoogedings-src/ alone and a hand-edited save don't start the data lane; fonts,
    stoogedings.json, an upper-case .PSD and the creation dates do; AFTER does, without the dispatch's inputs. The Build
    step's arguments: the dispatch's inputs, none after the bake; --own the main lane's commits since the last build.
@@ -28,6 +29,10 @@
    the window from the push time. The data lane runs at once on every event but a retry.
 7. Tell Discord on faked runs: once per failing streak of its lane (the newest other live run where the lane ended;
    runs that skipped it, and dry runs, passed over), once a lane per run (after sees data's failure).
+8. The verdicts (AutoCroissant docs/Future/CARD_SYNC_VERDICTS.md): Bake records keeps M's part only when M landed (the
+   baked events get M), records nothing on a dry run; the data gate goes for records alone; Build passes them on; Guard
+   events finds a guards commit's guard-events.json through its Guarded-push run (faked gh), skips one naming another
+   commit, and warns for one not found.
 Exits 1 when a case gets the wrong answer.
 """
 import json
@@ -314,8 +319,9 @@ def plans(flow: dict) -> None:
     go = {"gate": {"go": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "true"}}}
     check(not {"MAIN_COMMIT", "POSTS"} & set(flow["env"]), "no rollback switches (MAIN_COMMIT, POSTS)")
     data, main, after = (flow["jobs"][j] for j in ("data", "main", "after"))
-    check(after["steps"] is data["steps"] and data["env"] == {"AFTER": ""} and after["env"] == {"AFTER": "${{ needs.main.outputs.m }}"},
-          "after: the data lane's steps, with AFTER the bake's M")
+    check(after["steps"] is data["steps"] and data["env"] == {"AFTER": "", "RECORDS": ""}
+          and after["env"] == {"AFTER": "${{ needs.main.outputs.baked == 'true' && needs.main.outputs.m || '' }}", "RECORDS": "true"},
+          "after: the data lane's steps, with AFTER the bake's M (when it landed) and its records")
 
     # The data lane
     p = plan(flow, "data", inputs={"dry_run": True}, outputs=go)
@@ -329,9 +335,14 @@ def plans(flow: dict) -> None:
           "data, build failed: no posts, no data commit; Discord told")
     p = plan(flow, "data", event="schedule", outputs={"gate": {"go": "false", "GITHUB_ENV": {"GO": "false"}}})
     check(not {"venv", "build", "posts", "data-commit", "Site build"} & runs(p), "data, nothing to do: the job ends at the gate")
-    p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"m": "m" * 40}}})
-    check(p["env"]["AFTER"] == "m" * 40 and {"build", "Send the posts", "data-commit", "Site build"} <= runs(p),
-          "after: the data lane on M; the site build follows the bake even with db/ unchanged")
+    p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"m": "m" * 40, "baked": "true"}}})
+    check(p["env"]["AFTER"] == "m" * 40 and {"Bake records", "build", "Send the posts", "data-commit", "Site build"} <= runs(p),
+          "after: the data lane on M with the bake's records; the site build follows the bake even with db/ unchanged")
+    p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"m": "", "records": "true"}}})
+    check(p["env"]["AFTER"] == "" and {"Bake records", "build"} <= runs(p) and "Site build" not in runs(p),
+          "after, verdicts only: the records merged, no site build unless the data commit lands")
+    p = plan(flow, "data", event="push", outputs=go)
+    check("Bake records" not in runs(p) and "Guard events" in runs(p), "data: no bake records; the guards' events looked up")
     p = plan(flow, "data", inputs={"dry_run": True}, outputs=go, outcomes={"build": "failure"})
     q = plan(flow, "data", inputs={"dry_run": False}, outputs=go, outcomes={"build": "failure"})
     check("Tell Discord" not in runs(p) and "Tell Discord" in runs(q), "data, a failed dispatch: a live one alerts, a dry one doesn't")
@@ -482,11 +493,12 @@ def timer_cases(flow: dict) -> None:
     check(got == [w for _, w in want] and main["needs"] == "[timer, quiet]"
           and main["concurrency"] == {"group": "card-main", "cancel-in-progress": "false"},
           f"main: a push's after its window, the schedule's unless a window runs, a dispatch's at once; one group ({got})")
-    a = lambda result, baked="": {"result": result, "outputs": {"baked": baked}}  # noqa: E731
+    a = lambda result, baked="", records="": {"result": result, "outputs": {"baked": baked, "records": records}}  # noqa: E731
     got = [bool(evaluate(jobs["after"]["if"], ctx("push", main=n))) for n in (a("success", "true"), a("success", "false"),
-                                                                              a("success"), a("skipped"), a("failure", "true"))]
-    check(got == [True, False, False, False, True] and jobs["after"]["needs"] == "main",
-          f"after: once M brought the bake's card files (a later failure too), not a save-only M ({got})")
+                                                                              a("success"), a("skipped"), a("failure", "true"),
+                                                                              a("success", "false", "true"))]
+    check(got == [True, False, False, False, True, True] and jobs["after"]["needs"] == "main",
+          f"after: once M brought the bake's card files (a later failure too) or the bake recorded verdicts, not a save-only M ({got})")
 
     with tempfile.TemporaryDirectory() as tmp:
         fake = os.path.join(tmp, "bin")
@@ -547,7 +559,7 @@ def _bot(ws: str) -> None:
 
 
 DATA_GATE = {"DRY_RUN": "false", "BUILDER_REF": "main", "BOT_REPO": "bobberlington/AutoCroissant",
-             "GIT_NO_LAZY_FETCH": "1", "FORCE": "false", "FULL": "false", "CARDS": "", "RESTORE": "", "AFTER": ""}
+             "GIT_NO_LAZY_FETCH": "1", "FORCE": "false", "FULL": "false", "CARDS": "", "RESTORE": "", "AFTER": "", "RECORDS": ""}
 
 
 def gate_cases(flow: dict) -> None:
@@ -576,14 +588,19 @@ def gate_cases(flow: dict) -> None:
             check(code == 0 and out.get("go") == str(want).lower(),
                   f"data gate: {message} -> go={out.get('go')} (want {str(want).lower()})" + ("" if code == 0 else f"\n{text}"))
             if message == "icon source":
-                code, text, out = run_step(data, "gate", ws, {**DATA_GATE, "AFTER": "f" * 40}, tmp)
+                code, text, out = run_step(data, "gate", ws, {**DATA_GATE, "AFTER": "f" * 40, "RECORDS": "true"}, tmp)
                 check(code == 0 and out.get("go") == "true" and "the bake's main commit ffffffff" in text,
                       "data gate: after the bake (AFTER) -> go, nothing else changed" + ("" if code == 0 else f"\n{text}"))
+                write(os.path.join(tmp, "runner", "bake-records", "verdicts.json"), '{"schema":1,"cards":{"x":{"state":"refused"}}}')
+                code, text, out = run_step(data, "gate", ws, {**DATA_GATE, "RECORDS": "true"}, tmp)
+                shutil.rmtree(os.path.join(tmp, "runner", "bake-records"))
+                check(code == 0 and out.get("go") == "true" and "the bake's records: 1 verdicts, 0 events" in text,
+                      "data gate: after a bake that only recorded a verdict -> go" + ("" if code == 0 else f"\n{text}"))
                 inputs = {"FULL": "true", "CARDS": "X", "RESTORE": "r" * 40}
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs}, tmp)
                 check(code == 0 and out.get("go") == "true" and text.count("dispatched with") == 3,
                       "data gate: a dispatch's full, cards and restore -> go" + ("" if code == 0 else f"\n{text}"))
-                code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs, "AFTER": "f" * 40}, tmp)
+                code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs, "AFTER": "f" * 40, "RECORDS": "true"}, tmp)
                 check(code == 0 and "dispatched with" not in text,
                       "data gate: after the bake on a dispatch -> its inputs left out" + ("" if code == 0 else f"\n{text}"))
 
@@ -685,6 +702,16 @@ def bake_cases(flow: dict) -> None:
             check(code == 0 and ("--pending" in args) == want and "--card" not in args and "baked" not in out,
                   f"bake: {event}{' retry of ' + retry if retry else ''} bake={card} -> --pending {'yes' if want else 'no'}"
                   + ("" if code == 0 else f"\n{text}"))
+        for has in (False, True):                       # the data's verdicts, for a builder that reads them
+            if has:
+                write(os.path.join(ws, "bot", "commands", "card_bake.py"), 'parser.add_argument("--verdicts")\n')
+            code, text, out = run_step(flow["jobs"]["main"], "bake", os.path.join(ws, "bot"),
+                                       {"GITHUB_WORKSPACE": ws, "MAIN": main, "CARD": "all", "RETRY_OF": "",
+                                        "GITHUB_EVENT_NAME": "schedule", "DRY_RUN": "true"}, tmp)
+            args = open(os.path.join(tmp, "bake.args")).read().split("\n")
+            got = args[args.index("--verdicts") + 1] if "--verdicts" in args else None
+            check(code == 0 and got == (os.path.join(ws, "carddata/db/verdicts.json") if has else None),
+                  f"bake: --verdicts {got} ({'a builder with' if has else 'an older builder without'} it)" + ("" if code == 0 else f"\n{text}"))
 
 
 def main_cases(flow: dict) -> None:
@@ -853,10 +880,16 @@ def build_cases(flow: dict) -> None:
         inputs = {"FULL": "true", "CARDS": "X", "ALLOW_ARCHIVE": "true", "RESTORE": "r" * 40}
         none = {"FULL": "false", "CARDS": "", "ALLOW_ARCHIVE": "false", "RESTORE": ""}
         flags = ("--full", "--cards", "--allow-archive", "--restore")
+        records = os.path.join(tmp, "runner", "bake-records")
         for what, extra, has_manifest, want_flags, want_own in (
                 ("a dispatch", {**inputs, "AFTER": ""}, True, True, f"{r},{m}"),
-                ("after the bake on a dispatch", {**inputs, "AFTER": m}, True, False, f"{r},{m}"),
+                ("after the bake on a dispatch", {**inputs, "AFTER": m, "RECORDS": "true"}, True, False, f"{r},{m}"),
                 ("a push, no data yet", {**none, "AFTER": ""}, False, False, None)):
+            if extra.get("RECORDS"):
+                write(os.path.join(records, "verdicts.json"), "{}")
+                write(os.path.join(records, "events.json"), "[]")
+            elif os.path.isdir(records):
+                shutil.rmtree(records)
             if has_manifest:
                 write(manifest, json.dumps({"card_commit": base}))
             elif os.path.exists(manifest):
@@ -866,7 +899,8 @@ def build_cases(flow: dict) -> None:
             code, text, _ = run_step(data, "build", os.path.join(ws, "bot"), env, tmp)
             args = open(os.path.join(tmp, "build.args")).read().split("\n")
             own = args[args.index("--own") + 1] if "--own" in args else None
-            check(code == 0 and all((f in args) == want_flags for f in flags) and own == want_own,
+            passed = {"--verdicts", "--events"} <= set(args)
+            check(code == 0 and all((f in args) == want_flags for f in flags) and own == want_own and passed == bool(extra.get("RECORDS")),
                   f"build: {what} -> inputs {'passed' if want_flags else 'left out'}, --own {own}" + ("" if code == 0 else f"\n{text}"))
 
 
@@ -922,6 +956,68 @@ def tell_cases(flow: dict) -> None:
                   f"tell: {what} -> {'told: ' + sent if sent else 'quiet'}" + ("" if code == 0 else f"\n{text}"))
 
 
+def records_cases(flow: dict) -> None:
+    """Bake records: the refusals always, M's part (its baked events given M) only when M landed; nothing on a dry run."""
+    job = flow["jobs"]["main"]
+    with tempfile.TemporaryDirectory() as tmp:
+        rec = os.path.join(tmp, "runner", "card-bake")
+        write(os.path.join(rec, "verdicts.json"), json.dumps({"schema": 1, "cards": {"a": {"state": "refused"}},
+                                                               "landed": {"b": {"state": "baked"}, "c": None}}))
+        write(os.path.join(rec, "bake-events.json"), json.dumps({"events": [{"kind": "bake-refused", "card": "A"}],
+                                                                 "landed": [{"kind": "baked", "card": "B"}]}))
+        out = os.path.join(tmp, "runner", "bake-records")
+        for landed, dry, want_cards, want_events, want in (
+                ("true", "false", {"a": {"state": "refused"}, "b": {"state": "baked"}, "c": None},
+                 [{"kind": "bake-refused", "card": "A"}, {"kind": "baked", "card": "B", "commit": "m" * 40}], "true"),
+                ("false", "false", {"a": {"state": "refused"}}, [{"kind": "bake-refused", "card": "A"}], "true"),
+                ("true", "true", None, None, None)):
+            code, text, outputs = run_step(job, "records", tmp, {"LANDED": landed, "M": "m" * 40, "DRY_RUN": dry}, tmp)
+            got = json.load(open(os.path.join(out, "verdicts.json"))), json.load(open(os.path.join(out, "events.json")))
+            ok = code == 0 and outputs.get("records") == want and (want_cards is None or got == ({"schema": 1, "cards": want_cards}, want_events))
+            check(ok, f"bake records: landed={landed} dry={dry} -> records={outputs.get('records')}" + ("" if code == 0 else f"\n{text}"))
+        shutil.rmtree(rec)
+        code, text, outputs = run_step(job, "records", tmp, {"LANDED": "false", "M": "", "DRY_RUN": "false"}, tmp)
+        check(code == 0 and "records" not in outputs and "No bake records." in text, "bake records: none written, none recorded")
+
+
+def guard_cases(flow: dict) -> None:
+    """Guard events: a guards commit's guard-events.json from the run of its Guarded-push (faked gh); a file naming
+    another commit is passed over; a commit with none warns."""
+    data = flow["jobs"]["data"]
+    with tempfile.TemporaryDirectory() as tmp:
+        work, bare = origin(tmp)
+        base = git(work, "rev-parse", "HEAD")
+        push = commit(work, {"Cards/One.psd": "psd 2"}, "a card", "bob")
+        g = commit(work, {"Cards/One.png": "png 2"}, f"Card guards: 1 PNG re-exported (push {push[:8]})\n\nCards/One.png: made\n\n"
+                   f"Guarded-push: {push}", "AutoCroissant")
+        lost = commit(work, {"Cards/One.png": "png 3"}, "Card guards: 1 PNG recompressed (push 00000000)\n\nGuarded-push: " + "0" * 40,
+                      "AutoCroissant")
+        commit(work, {"Cards/One.png": "png 4"}, "Card guards: by hand", "bob")                  # a person's: not looked up
+        git(work, "push", "-q", "origin", "main")
+        ws = checkout(tmp, bare)
+        write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps({"card_commit": base}))
+        arts = os.path.join(tmp, "arts")
+        for name, doc in (("1", {"commit": "f" * 40, "events": [{"kind": "guard-png", "card": "Other"}]}),
+                          ("2", {"commit": g, "push": push, "events": [{"kind": "guard-png", "card": "One"}]})):
+            write(os.path.join(arts, name, "guard-events.json"), json.dumps(doc))
+            subprocess.run(["zip", "-q", "-j", os.path.join(arts, f"{name}.zip"), os.path.join(arts, name, "guard-events.json")], check=True)
+        fake = os.path.join(tmp, "bin")
+        write(os.path.join(fake, "gh"), "#!/bin/bash\n"
+              f'case "$2" in\n'
+              f'  *runs?head_sha={push}*) printf "11\\n12\\n" ;;\n'
+              '  */runs/11/artifacts*) echo 1 ;;\n'
+              '  */runs/12/artifacts*) echo 2 ;;\n'
+              f'  */artifacts/*/zip) cat "{arts}/$(basename "$(dirname "$2")").zip" ;;\n'
+              'esac\n')
+        os.chmod(os.path.join(fake, "gh"), 0o755)
+        env = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "GIT_NO_LAZY_FETCH": "1", "MAIN": git(ws, "rev-parse", "HEAD")}
+        code, text, _ = run_step(data, "Guard events", ws, env, tmp)
+        got = json.load(open(os.path.join(tmp, "runner", "guard-events.json")))
+        check(code == 0 and got == [{"commit": g, "push": push, "events": [{"kind": "guard-png", "card": "One"}]}]
+              and f"no guard events for the guards commit {lost[:8]}" in text and text.count("no guard events") == 1,
+              "guard events: found by the guarded push, the other commit's passed over, a missing one warned" + ("" if code == 0 else f"\n{text}"))
+
+
 def main():
     for tool in ("git", "bash", "jq"):
         if not shutil.which(tool):
@@ -935,6 +1031,8 @@ def main():
     fonts_cases(flow)
     bake_cases(flow)
     main_cases(flow)
+    records_cases(flow)
+    guard_cases(flow)
     print(f"{len(FAILED)} failed" if FAILED else "all passed")
     sys.exit(1 if FAILED else 0)
 
