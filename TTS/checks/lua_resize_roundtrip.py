@@ -114,7 +114,6 @@ def main():
     check(s3["LuaScript"] == before, "restored inputs give back the original bytes")
 
     # still Lua 5.2 and the new key is live
-    probe = after + '\nreturn resizeTargets ~= nil, (function() return nil end)()'
     lua = ("import lupa.lua52 as l,sys;r=l.LuaRuntime();g=r.globals();"
            "g.Wait=r.table();g.Player=r.table();r.execute(sys.stdin.read());"
            "print('ok')")

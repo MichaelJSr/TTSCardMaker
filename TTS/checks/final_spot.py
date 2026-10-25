@@ -8,10 +8,8 @@ import io
 import json
 import os
 import random
-import re
 import subprocess
 import sys
-from urllib.parse import unquote
 
 import requests
 from PIL import Image
