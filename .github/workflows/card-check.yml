@@ -34,6 +34,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    outputs:
+      saved: ${{ steps.wheels.outputs.cache-hit != 'true' }}
     steps:
       # Nothing of the card repo is checked out: the PSDs, Types/ names, the icon manifest and site/Card Edits.json all come
       # by blob sha through the API from the tree at the pushed commit. The checker and its import closure (no config.py:
@@ -129,3 +131,13 @@ jobs:
           jq -e '.cards | length > 0' "$RUNNER_TEMP/report.json" > /dev/null || exit 0
           jq -n --rawfile body "$RUNNER_TEMP/report.md" '{body: $body}' \
             | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" --input - > /dev/null
+
+  # A new wheel cache (its key changes with requirements-cards.txt, Python): the older ones go (caches.yml)
+  caches:
+    needs: check
+    if: ${{ !cancelled() && needs.check.outputs.saved == 'true' }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/caches.yml
+    with:
+      prefixes: cards-

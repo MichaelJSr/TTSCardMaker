@@ -177,6 +177,8 @@ jobs:
       cancel-in-progress: false   # a running sync is never cut off
     runs-on: ubuntu-latest
     timeout-minutes: 90     # Commit main pushes M only before minute 60: the 30 left cover the caps of it and every later step
+    outputs:
+      saved: ${{ steps.venv.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
     defaults:
       run:
         shell: bash
@@ -782,3 +784,13 @@ jobs:
             '{content: ("Card sync failed (" + $stages + "): " + $run + "; the website and the bot keep the last good data."), allowed_mentions: {parse: []}}' \
             | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK" \
             || echo "::warning::the Discord webhook call failed"
+
+  # A new wheel or font cache (its key changes with requirements-cards.txt, Python, MDW/Fonts): the older ones go (caches.yml)
+  caches:
+    needs: sync
+    if: ${{ !cancelled() && needs.sync.outputs.saved == 'true' }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/caches.yml
+    with:
+      prefixes: cards- card-fonts-

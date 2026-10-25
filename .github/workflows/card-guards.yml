@@ -181,7 +181,7 @@ jobs:
           python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
       # card-sync.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
-      # recompression) among them.
+      # recompression) among them. The entries a new key supersedes go in the other card workflows' caches job.
       - id: wheels
         uses: actions/cache/restore@v6
         with:

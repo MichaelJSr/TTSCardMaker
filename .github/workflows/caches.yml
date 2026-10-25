@@ -1,0 +1,50 @@
+# Deletes the Actions caches newer saves superseded, for the workflows that save caches whose keys change over time (the
+# card images and deck previews, the card wheels and fonts): GitHub keeps every entry up to 10 GB, so each new key left the
+# old copies behind. Called after a save. Per key prefix on the caller's ref: all but the newest two, and never one used
+# in the last hour (a running job may be restoring it). Warns, never fails the caller.
+name: Caches
+
+on:
+  workflow_call:
+    inputs:
+      prefixes:
+        description: "Cache key prefixes, space separated"
+        type: string
+        required: true
+
+permissions: {}
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write      # gh cache delete
+    steps:
+      - name: Prune
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREFIXES: ${{ inputs.prefixes }}
+          KEEP: "2"
+          IDLE: "3600"
+        run: |
+          set +e
+          for prefix in $PREFIXES; do
+            if ! list=$(gh cache list -R "$GITHUB_REPOSITORY" --ref "$GITHUB_REF" --key "$prefix" --sort created_at --order desc \
+                --limit 100 --json id,key,lastAccessedAt); then
+              echo "::warning::$prefix caches not listed"; continue
+            fi
+            if ! old=$(jq -r --arg p "$prefix" --argjson keep "$KEEP" --argjson idle "$IDLE" '[.[] | select(.key | startswith($p))]
+                | .[$keep:][] | select((.lastAccessedAt | sub("\\.[0-9]+"; "") | fromdate) < now - $idle) | "\(.id) \(.key)"' <<< "$list"); then
+              echo "::warning::$prefix caches not read"; continue
+            fi
+            n=0
+            while read -r id key; do
+              [ -n "$id" ] || continue
+              if gh cache delete "$id" -R "$GITHUB_REPOSITORY" > /dev/null; then echo "deleted $key"; n=$((n + 1))
+              else echo "::warning::$key not deleted"; fi
+            done <<< "$old"
+            echo "$prefix: $n deleted" | tee -a "$GITHUB_STEP_SUMMARY"
+          done
+          exit 0

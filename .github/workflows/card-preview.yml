@@ -38,6 +38,7 @@ jobs:
     timeout-minutes: 11
     outputs:
       ok: ${{ steps.validate.outputs.ok }}
+      saved: ${{ steps.wheels.outputs.cache-hit != 'true' || steps.font-cache.outputs.cache-hit != 'true' }}
     steps:
       # The request names a folder on the branch: a bad one fails the run and publishes nothing. The card and the edit
       # are card_preview's to check (env and a file here): a bad one is published as an input error for the website.
@@ -214,3 +215,13 @@ jobs:
         run: |
           python -S -m commands.card_preview_branch --out "$RUNNER_TEMP/preview" --request="$REQUEST" --git "$GITHUB_WORKSPACE" \
             | tee -a "$GITHUB_STEP_SUMMARY"
+
+  # A new wheel or font cache (its key changes with requirements-cards.txt, Python, MDW/Fonts): the older ones go (caches.yml)
+  caches:
+    needs: preview
+    if: ${{ !cancelled() && needs.preview.outputs.saved == 'true' }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/caches.yml
+    with:
+      prefixes: cards- card-fonts-

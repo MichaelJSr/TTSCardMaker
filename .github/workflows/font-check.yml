@@ -32,6 +32,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    outputs:
+      saved: ${{ steps.wheels.outputs.cache-hit != 'true' || steps.font-cache.outputs.cache-hit != 'true' }}
     steps:
       # The card folders (16 GB) are never checked out: the PSDs come by blob sha through the API. This checkout brings
       # every tree (so the fonts folder's tree sha is known) and nothing but this workflow's folder.
@@ -141,3 +143,13 @@ jobs:
           jq -e '.cards | length > 0' "$RUNNER_TEMP/report.json" > /dev/null || exit 0
           jq -n --rawfile body "$RUNNER_TEMP/report.md" '{body: $body}' \
             | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" --input - > /dev/null
+
+  # A new wheel or font cache (its key changes with requirements-cards.txt, Python, MDW/Fonts): the older ones go (caches.yml)
+  caches:
+    needs: check
+    if: ${{ !cancelled() && needs.check.outputs.saved == 'true' }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/caches.yml
+    with:
+      prefixes: cards- card-fonts-

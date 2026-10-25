@@ -44,6 +44,7 @@ jobs:
     timeout-minutes: 45       # the first run downloads every card PNG (~1.6 GB); later runs reuse cached images
     outputs:
       deploy: ${{ steps.changed.outputs.deploy }}
+      saved: ${{ steps.cache.outputs.cache-hit != 'true' || steps.og-save.outcome == 'success' || steps.partial.outcome == 'success' }}
     steps:
       # The repo history is ~25 GB of PSDs, so check out only what the build reads (site/ also holds the hand-kept
       # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs are
@@ -90,7 +91,8 @@ jobs:
         run: echo "key=$(git ls-tree -r HEAD | grep -i '\.png$' | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       # Keep `path` exactly site/.cache: actions/cache only restores (restore-keys too) caches saved with the same path list.
-      - uses: actions/cache@v6
+      - id: cache
+        uses: actions/cache@v6
         with:
           path: site/.cache
           key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}
@@ -149,7 +151,8 @@ jobs:
             echo "names=$(ls site/.og-cache | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
           fi
 
-      - if: steps.og.outputs.names != '' && steps.og.outputs.names != steps.og-before.outputs.names
+      - id: og-save
+        if: steps.og.outputs.names != '' && steps.og.outputs.names != steps.og-before.outputs.names
         uses: actions/cache/save@v6
         continue-on-error: true    # a failed save never stops the deploy
         with:
@@ -184,7 +187,8 @@ jobs:
         if: failure() && (steps.build.outcome == 'failure' || steps.build.outcome == 'success')
         run: echo "names=$(find site/.cache 2>/dev/null | LC_ALL=C sort | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
-      - if: failure() && steps.cache-after.outputs.names != '' && steps.cache-after.outputs.names != steps.cache-before.outputs.names
+      - id: partial
+        if: failure() && steps.cache-after.outputs.names != '' && steps.cache-after.outputs.names != steps.cache-before.outputs.names
         uses: actions/cache/save@v6
         with:
           path: site/.cache
@@ -200,3 +204,13 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  # Each save above is a new entry (card images ~150 MB): the older ones go. Beside the deploy, not before it.
+  caches:
+    needs: build
+    if: ${{ !cancelled() && needs.build.outputs.saved == 'true' }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/caches.yml
+    with:
+      prefixes: card-images-v2- deck-previews-v2-
