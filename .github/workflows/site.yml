@@ -22,7 +22,7 @@ on:
       - ".github/workflows/site.yml"
       - "!TTS/**"            # the bot's TTS save commits don't rebuild the site
   schedule:
-    - cron: "17 12 * * *"    # daily fallback: Card sync dispatches a build after each data commit
+    - cron: "0 12 * * *"     # daily fallback: Card sync dispatches a build after each data commit
   workflow_dispatch:
 
 permissions:

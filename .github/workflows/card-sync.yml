@@ -12,7 +12,7 @@ run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Car
 
 on:
   schedule:
-    - cron: "4,34 * * * *"   # fallback; most runs end at the gate; with no data branch yet, a run seeds it (the latest PICKLE)
+    - cron: "0,30 * * * *"   # fallback; most runs end at the gate; with no data branch yet, a run seeds it (the latest PICKLE)
   workflow_dispatch:
     inputs:
       dry_run:
