@@ -360,6 +360,7 @@ function chipList(key, options, selected, counts) {
 const tileEnv = { get thumbs() { return S.data.thumbs; }, get icons() { return S.icons; }, dupName: id => S.byId.get(id)?.name, inDeck: id => deckHas(id) };
 const tileHtml = (c, o) => G.tileHtml(c, o, tileEnv);
 function renderCards(r) {
+  if (!firstImgs) firstImgs = takeFirstImgs(view);
   const p = r.params, win = { y: scrollY, w: innerWidth, h: innerHeight, all: S.restoring };   // before the view goes: read after, they lay out the short page (the scroll clamps)
   if (document.activeElement !== qInput) qInput.value = p.get("q") || "";
   const base = filterCards(p, { facets: false });
@@ -439,6 +440,17 @@ function renderCards(r) {
 // (draggable, data-selected, preview badges) are set again after every render. The tiles that cover the window go in now,
 // the rest in later tasks (a newer render stops them), with the edit-mode marks.
 const gridTiles = new Map();
+// index.html's first screen (build_site first_screen): link tiles whose pictures are already in. The grid's first render
+// moves each such <img> into its own tile when the picture is the same, so they don't load again (no flash).
+let firstImgs = null;
+function takeFirstImgs(view) {
+  const imgs = new Map();
+  for (const a of view.querySelectorAll(".grid > a.tile[href^='c/']")) {
+    const img = a.querySelector("img.art");
+    if (img) imgs.set(decodeURIComponent(a.getAttribute("href").slice(2, -1)), img);
+  }
+  return imgs;
+}
 const GRID_FIRST = 96, GRID_CHUNK = 120;
 let gridJob = 0;
 function fillGrid(grid, list, { css, win }) {
@@ -451,6 +463,11 @@ function fillGrid(grid, list, { css, win }) {
       tpl.innerHTML = miss.map(i => html[i]).join("");
       const fresh = [...tpl.content.children];
       miss.forEach((i, k) => { els[i] = fresh[k]; gridTiles.set(list[from + i].id, { html: html[i], el: fresh[k], ed }); });
+      if (firstImgs?.size) for (const i of miss) {
+        const old = firstImgs.get(list[from + i].id), img = old && els[i].querySelector("img.art");
+        firstImgs.delete(list[from + i].id);
+        if (img && ["src", "srcset", "sizes"].every(a => img.getAttribute(a) === old.getAttribute(a))) img.replaceWith(old);
+      }
     }
     if (!mark) { grid.append(...els); return; }
     const frag = document.createDocumentFragment();     // edit mode: the marks mountGrid and mountTiles gave the first ones
