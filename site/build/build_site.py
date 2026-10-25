@@ -3135,7 +3135,7 @@ def first_screen(cards, icons):
             raise SystemExit(f"error: index.html's first screen differs from grid.js ({what}) at {at}:\n"
                              f"  build_site: {mine[max(0, at - 60):at + 60]!r}\n  grid.js:    {theirs[max(0, at - 60):at + 60]!r}")
     page = ('<template id="first"><div class="browse">\n    <aside class="filters" aria-label="Filters"></aside>\n    <section>\n      '
-            f'{toolbar}\n      <div id="deck-hits"></div>\n      <div class="grid" style="--tile:168px">{"".join(tiles)}</div>\n    </section></div></template>\n'
+            f'{toolbar}\n      <div id="deck-hits"></div>\n      <div class="grid" style="--tile:168px;min-height:200vh;align-content:start">{"".join(tiles)}</div>\n    </section></div></template>\n'
             "<script>(() => { try { if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
             "  const z = localStorage.getItem(\"size\"), t = { s: [\"130px\", 160], l: [\"230px\", 270] }[z], f = document.getElementById(\"first\").content;\n"
             "  if (t) { f.querySelector(\".grid\").style.setProperty(\"--tile\", t[0]); for (const i of f.querySelectorAll(\"img.art\")) i.sizes = `${t[1]}px`;\n"
