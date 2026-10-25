@@ -54,8 +54,8 @@ history clone. `card_sync_steps.py` needs git 2.37+, bash and `jq`.
 | `lua_mock.py` | The global script under a mock TTS API (lupa): only onLoad, onPlayerChangeColor and onObjectLeaveContainer; Red/Orange/Green -> Hearts, Blue/Purple/Pink -> Clubs, other seats None, Grey/Black untouched; large cards to 3,1,3 three frames after leaving a container; no zone or spawn calls; seat swaps, destroyed cards and other adversarial cases. A second argument tests a `.lua` file instead |
 | `lua_table.py` | The updater finds and regenerates `resizeTargets` (a dropped and a stray row come back right; a second run changes nothing) |
 | `lua_resize_roundtrip.py` | The updater's table edit leaves the rest of the script byte-identical and still loads in Lua 5.2 |
-| `links_pins.py` | Every repo link is pinned to a full sha on main, the last commit that changed the file, with canonical %-encoding |
-| `pins_current.py` | Every pinned link serves main's current blob (git's own view, not the updater's walk) |
+| `links_pins.py` | Every repo link is pinned to a full sha on main, the last commit that changed the file, with canonical %-encoding (git log's view noted for failed pins only) |
+| `pins_current.py` | Every pinned link serves main's current blob (git's own view, not the updater's walk); a failure names git log's last change |
 | `links_http.py` | Every URL in the save loads; repo images match their blobs and decode |
 | `final_spot.py` | 30 random cards end to end: image, pin, Nickname, deck rule, CustomDeck wiring (`[n] [seed]` after the save) |
 | `updater_idempotent.py` | The updater run as the Action runs it reports no changes and leaves the bytes alone; unpinned links and a dropped Lua row converge back; an offline website changes nothing; a card taken out of a complete deck comes back once |
