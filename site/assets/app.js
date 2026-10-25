@@ -727,6 +727,7 @@ function closeModal() {
 }
 
 // ---- rulebook --------------------------------------------------------------------------------------
+let rulesAt = "";                                        // the rulebook hash last scrolled to: a re-render stays put
 function renderRules(r) {
   if (!S.rules) {
     view.innerHTML = `<div class="loading">Loading the rulebook…</div>`;
@@ -743,7 +744,7 @@ function renderRules(r) {
   view.innerHTML = `<div class="rules">
     <nav class="toc" aria-label="Rulebook pages"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
       <a href="#/rules" data-scroll="badge-colors">Badge colors</a><a href="#/rules" data-scroll="glossary">Timing tags</a><a href="#/rules" data-scroll="banlist">Constructed ban list</a>
-      ${S.rules.map(p => `<a href="#/rules" data-scroll="page-${p.id}">${esc(p.name)}</a>`).join("")}</nav>
+      ${S.rules.map(p => `<a href="#/rules/${p.id}" data-scroll="page-${p.id}">${esc(p.name)}</a>`).join("")}</nav>
     <div>
       ${q ? `<p class="muted">${pages.length} page${pages.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : ""}
       ${!q ? `<section class="panel" id="badge-colors"><h3>Badge colors</h3>${legendHtml()}</section>
@@ -753,7 +754,7 @@ function renderRules(r) {
       <section class="panel" id="banlist"><h3>Constructed ban list</h3>${banned.notes.map(n => `<p class="muted">${esc(n)}</p>`).join("")}
         ${banned.groups.map(g => `<h4>${esc(g.title)}</h4><ul>${g.entries.map(e => `<li>${e.id ? `<a class="card-ref" href="#/card/${e.id}" data-card="${e.id}">${esc(e.name)}</a>` : esc(e.name)} <span class="muted">— ${esc(e.reason)}</span></li>`).join("")}</ul>`).join("")}</section>` : ""}
       ${pages.map(p => `<article class="page" id="page-${p.id}">${p.img ? `<a href="${esc(fullUrl(p))}" target="_blank" rel="noopener" title="Full-size page"><img loading="lazy" decoding="async" ${imgAttrs(p, 220, true)} alt="${esc(p.name)}"></a>` : "<div></div>"}
-        <div><h3>${esc(p.name)}${p._staged ? ` <span class="fact staged">Unpublished edit</span>` : ""} <button type="button" class="ghost" data-action="edit-card" data-id="${p.id}" title="Edit this page">Edit</button></h3>
+        <div><h3>${esc(p.name)} <a class="page-link" href="#/rules/${p.id}" data-scroll="page-${p.id}" data-tip="Link to this page">#</a>${p._staged ? ` <span class="fact staged">Unpublished edit</span>` : ""} <button type="button" class="ghost" data-action="edit-card" data-id="${p.id}" title="Edit this page">Edit</button></h3>
           <div class="ability">${S.renderer.render(p.ability || "")}</div>${p.note ? `<div class="note"><b>Note</b> ${S.renderer.render(p.note)}</div>` : ""}
           ${p.details ? details.detailsHtml(details.readState(store), false) : ""}</div></article>`).join("") || `<div class="empty">No rulebook page mentions that.</div>`}
     </div></div>`;
@@ -762,6 +763,8 @@ function renderRules(r) {
     const dd = p.details && document.getElementById(`page-${p.id}`)?.querySelector(".psd-details");
     if (dd) details.mount(dd, { card: p, load: () => loadDetails(p), storage: store, extras: { badges: psdBadges(p), labels: FIELD_LABEL, page: true }, outer: false });
   }
+  if (r.arg && !q && rulesAt !== location.hash) document.getElementById(`page-${r.arg}`)?.scrollIntoView();   // #/rules/<id>: that page
+  rulesAt = location.hash;
   const input = $("#rules-q");
   input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#rules-q"); i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }, 200));
 }
@@ -1210,7 +1213,12 @@ document.addEventListener("click", e => {
   const ref = e.target.closest("a.card-ref");
   if (ref) { e.preventDefault(); location.hash = `#/card/${ref.dataset.card}`; return; }
   const scroll = e.target.closest("[data-scroll]");
-  if (scroll) { e.preventDefault(); document.getElementById(scroll.dataset.scroll)?.scrollIntoView({ behavior: "smooth" }); return; }
+  if (scroll) {                                          // a rulebook page's link: its #/rules/<id> in the address bar too
+    e.preventDefault(); document.getElementById(scroll.dataset.scroll)?.scrollIntoView({ behavior: "smooth" });
+    const to = scroll.getAttribute("href");
+    if (to?.startsWith("#/rules/") && to !== location.hash) { rulesAt = to; history.pushState(null, "", to); syncUrl(parseHash()); S.renderedHash = S.listHash = to; }
+    return;
+  }
   if (e.target === modal) actions.close();
 });
 document.addEventListener("change", e => {
