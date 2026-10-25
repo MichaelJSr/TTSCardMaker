@@ -173,7 +173,12 @@ with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
 People tab is opened; `changelog.json` when the Changelog, Archive or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
 when a card's or rulebook page's Details dropdown is first opened. Script, style and data URLs
-carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
+carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The Action ships the scripts as
+one minified bundle, `assets/app.js`, with its source map `assets/app.js.map` (the modules' own text: browser devtools
+show and debug them); a local build without esbuild ships them one by one. `index.html` carries the cards grid's first
+eight tiles (plain links to the cards' pages), so a phone shows cards before the script arrives; a visitor with another
+saved view gets it once the script runs. The build checks those tiles against the site's own code in node and stops on
+any difference (`site/NOTES.md` §31). The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
 
 ## Editing
@@ -386,11 +391,12 @@ public too. Run it by hand from the Actions tab with a card name, an edit such a
 
 ```
 pip install -r site/build/requirements.txt
-python site/build/build_site.py          # writes site/dist (uses local PNGs, caches images in site/.cache/img)
+python site/build/build_site.py          # writes site/dist (uses local PNGs, caches images in site/.cache/img; node for the first screen, ESBUILD=<esbuild> to bundle)
 python -m http.server -d site/dist 8000  # then open http://localhost:8000
 ```
 
-Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step: `app.js` routes and views,
+Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no build step locally; the Action bundles them
+with esbuild: `app.js` routes and views, `grid.js` the cards grid's tiles and toolbar,
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, `tokens.js` the
 icon and timing-tag picker in card text, drag-to-assign and
 the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `login.js` the password sign-in and this browser's sealed token, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
