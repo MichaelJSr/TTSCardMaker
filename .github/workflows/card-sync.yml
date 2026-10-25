@@ -1,14 +1,16 @@
-# Card sync (AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md section 6): one run bakes the website's pending PSD edits,
-# builds the card data (db/ JSON on the orphan branch `data`), updates the TTS save and writes the changelog posts. It makes
-# at most one commit on main (M: the bake and the save) and one on `data`. Every stage is the bot's code, checked out from
-# bobberlington/AutoCroissant at the builder ref: card_bake --local, card_data, tts_save --names, changelog post.
-# Since the cutover (step 8, 2026-10-24) it alone bakes edits and writes the save on main (card-edits.yml and tts-save.yml
-# are gone): runs are live (dry_run off by default), MAIN_COMMIT and POSTS on. The first push to main touching a card input
-# starts a 30-minute timer (owner, 2026-10-24: a fixed window); pushes while it runs start none (their runs end at once),
-# and when it is up the run syncs main's head, everything pushed by then included: a sync comes 30 minutes after the first
-# push of a burst, with or without the bot. The bot dispatches only its admins' re-parses (/update_stats force_update or
-# cards). The cron is the fallback for the work no push starts: website edits the bake put off (recent, over the cap), a
-# re-parse in progress, unposted events (GitHub runs it late; it waits for a running timer like a push).
+# Card sync (AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md section 6): builds the card data (db/ JSON on the orphan
+# branch `data`) and writes the changelog posts, bakes the website's pending PSD edits and updates the TTS save on main.
+# Every stage is the bot's code, checked out from bobberlington/AutoCroissant at the builder ref: card_data, changelog
+# post, card_bake --local, tts_save --names. Two lanes (owner, 2026-10-25: only main's writes wait):
+# - data (Card data): at once on every run but a retry: re-reads main's head, one commit on `data`, the posts, the site.
+# - main (Bake and save): the bake and the save as one commit M on main (fast-forward only), then the baked PNGs' save
+#   links re-pinned (a second commit). A card push's waits out a fixed 30-minute window (owner, 2026-10-24): the first
+#   push to main touching a card input starts it, pushes while it runs ride along (their data still at once), and when
+#   it is up the lane syncs main's head. After M the after job re-reads the baked cards into `data` (no wait).
+# Since the cutover (step 8, 2026-10-24) runs are live (dry_run off by default), MAIN_COMMIT and POSTS on. The bot
+# dispatches only its admins' re-parses (/update_stats force_update or cards). The cron is the fallback for the work no
+# push starts: website edits the bake put off (recent, over the cap), a re-parse in progress, unposted events, a main
+# lane that failed (GitHub runs it late; its main lane waits for a running window like a push's).
 # Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) installed from the card workflows' wheel cache.
 name: Card sync
@@ -31,11 +33,11 @@ on:
       - "TTS/decks.json"
       - "TTS/Impossibility Simulator.json"
   schedule:
-    - cron: "0,30 * * * *"   # fallback; most runs end at the gate or for a timer; with no data branch yet, a run seeds it
+    - cron: "0,30 * * * *"   # fallback; most runs end at the gates or for a window; with no data branch yet, a run seeds it
   workflow_dispatch:
     inputs:
       dry_run:
-        description: "Dry run: every stage runs on the runner; nothing is pushed, posted or dispatched (the artifact holds the would-be db/, save and posts)"
+        description: "Dry run: every stage runs on the runner; nothing is pushed, posted or dispatched (the artifacts hold the would-be db/, save and posts)"
         type: boolean
         default: false
       full:
@@ -51,7 +53,7 @@ on:
         type: string
         default: ""
       force:
-        description: "Run every stage even when the gate finds nothing to do"
+        description: "Run every stage even when the gates find nothing to do"
         type: boolean
         default: false
       bake:
@@ -71,27 +73,439 @@ on:
         type: string
         default: ""
       retry:
-        description: "Set by Card sync when main moved during its run: that run's event (a retry starts no other)"
+        description: "Set by Card sync when main moved during its main lane: that run's event (a retry runs only the main lane)"
         type: string
         default: ""
 
 permissions:
-  contents: write     # push M to main and the data commit to data
+  contents: write     # push M to main and the data commits to data
   actions: write      # gh workflow run site.yml (a GITHUB_TOKEN push triggers no workflow); gh run list
 
 env:
   POSTS: "on"         # the Discord posts (off: discord.json goes to the artifact only)
   MAIN_COMMIT: "on"   # the bake and the main commit M (off: only a dry run bakes, nothing committed; the rollback)
+  # A dispatch runs dry only with dry_run on; a schedule runs live: MAIN_COMMIT and POSTS say what it writes
+  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
+  BUILDER_REF: ${{ inputs.builder_ref || vars.CARD_DATA_BUILDER_REF || 'main' }}
+  BOT_REPO: bobberlington/AutoCroissant
+  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+  SITE_URL: https://michaeljsr.github.io/TTSCardMaker
 
 jobs:
-  # The 30-minute timer (owner, 2026-10-24: a fixed window, not restarted by later pushes). A push's run and the
-  # schedule's first look for a push run still in its timer (waiting, or its Quiet window job unfinished; one pushed over
-  # 40 minutes ago is stuck and holds nothing). One there syncs main's head when its 30 minutes are up, this push's included,
-  # so this run ends at once: it cancels itself (Tell Discord's once-per-streak alert and the bot's notes skip cancelled
-  # runs). Else a push's run waits (Quiet window) and the schedule's syncs now. Runs that cannot be read count as none
-  # (this run goes on); two near-simultaneous pushes may both wait: the second sync ends at the gate.
-  # Dispatches (the bot's admins, the guards) and retries skip both jobs. No job here is in the card-sync group, so a
-  # sync running never holds a timer.
+  # The data lane, at once. One data writer at a time (this job and after share card-data; a newer pending one replaces
+  # an older one), each from the data branch's head when it starts: the posted cursor rides in its commit, so no event
+  # is posted twice.
+  data:
+    name: Card data
+    if: ${{ !inputs.retry }}
+    concurrency:
+      group: card-data
+      cancel-in-progress: false   # a running build is never cut off
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    outputs:
+      saved: ${{ steps.venv.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      AFTER: ""               # the after job: the bake's main commit M
+    steps: &data-steps
+      # Main's head (not github.sha): every commit and tree, no file contents but the small files the stages read. The
+      # card folders are never checked out; the bake and the build read PSDs by blob sha, local first, else REST.
+      - &checkout-main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.mailmap
+            /site/Card Edits.json
+            /site/Card Authors.txt
+            /site/Card Creation Dates.json
+            /MDW/Fonts/stoogedings-src/stoogedings.json
+            /TTS/
+
+      # The builder: exactly card_data.SPARSE_FILES (tests/test_card_data.py runs --help on the three CLIs with this list).
+      # Never psd_analyzer, query_card or utils (discord, pandas); no config.py: the token comes from the environment.
+      - &builder
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ env.BOT_REPO }}
+          ref: ${{ env.BUILDER_REF }}
+          path: bot
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /commands/card_data.py
+            /commands/card_history.py
+            /commands/card_db.py
+            /commands/changelog.py
+            /commands/card_models.py
+            /commands/card_edits.py
+            /commands/psd_parser.py
+            /commands/psd_details.py
+            /commands/psd_regions.py
+            /commands/font_check.py
+            /commands/github_api.py
+            /global_config.py
+            /requirements-cards.txt
+            /commands/card_bake.py
+            /commands/psd_edit.py
+            /commands/git_commit.py
+            /commands/repo_history.py
+            /commands/tts_save.py
+
+      - &data-branch
+        name: Data branch
+        id: data
+        run: |
+          set +e
+          git ls-remote --exit-code origin refs/heads/data > /dev/null
+          code=$?
+          set -e
+          case $code in
+            0) echo "exists=true" >> "$GITHUB_OUTPUT" ;;
+            2) echo "exists=false" >> "$GITHUB_OUTPUT"; echo "No data branch yet." ;;
+            *) exit "$code" ;;
+          esac
+
+      - &data-checkout
+        uses: actions/checkout@v7
+        if: steps.data.outputs.exists == 'true'
+        with:
+          ref: data
+          path: carddata
+          fetch-depth: 1
+
+      # No data branch yet: an empty orphan branch in a clone of its own (credentials kept); the data push creates it
+      - uses: actions/checkout@v7
+        if: steps.data.outputs.exists != 'true'
+        with:
+          ref: main
+          path: carddata
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /db/
+
+      - name: Empty data branch
+        if: steps.data.outputs.exists != 'true'
+        run: git -C carddata switch -q --orphan data
+
+      # Go when (a) a card input changed since the last build's main commit, (b) a budgeted re-parse is pending, (c) the
+      # builder's PARSER_VERSION differs from the data's, (e) events are unposted (posts on), (f) a dispatch asks, there
+      # is no data yet, or the bake's M is to be re-read (the after job). GO in the env.
+      - name: Gate
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GIT_NO_LAZY_FETCH: "1"
+          FORCE: ${{ inputs.force }}
+          FULL: ${{ inputs.full }}
+          CARDS: ${{ inputs.cards }}
+          RESTORE: ${{ inputs.restore }}
+          SEED: ${{ inputs.seed }}
+        run: |
+          main=$(git rev-parse HEAD)
+          echo "main=$main" >> "$GITHUB_OUTPUT"
+          builder=$(git -C bot rev-parse HEAD)
+          if [ ! -f bot/commands/card_data.py ]; then
+            echo "::error::The builder $BOT_REPO@$BUILDER_REF (${builder:0:8}) has no commands/card_data.py: dispatch with a builder_ref that has it"
+            exit 1
+          fi
+          db=carddata/db
+          manifest=$db/manifest.json
+          inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
+                  'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json')    # the builder's lower-cased extensions
+          why=()
+          seed=$SEED
+          if [ -n "$AFTER" ]; then why+=("the bake's main commit ${AFTER:0:8} to re-read"); fi
+          if [ "$FORCE" = true ]; then why+=("dispatched with force"); fi
+          if [ "$FULL" = true ]; then why+=("dispatched with full"); fi
+          if [ -n "$CARDS" ]; then why+=("dispatched with cards: $CARDS"); fi
+          if [ -n "$RESTORE" ]; then why+=("dispatched with restore: $RESTORE"); fi
+          if [ -n "$SEED" ]; then why+=("dispatched with seed: $SEED"); fi
+          if [ ! -f "$manifest" ]; then
+            if [ -z "$seed" ]; then
+              seed=$(gh api "repos/$BOT_REPO/commits?sha=main&path=stats.pkl&per_page=1" --jq '.[0].sha // ""')
+              if [ -z "$seed" ]; then echo "::error::No card data and no PICKLE commit found to seed from"; exit 1; fi
+              why+=("no card data yet: seeded from $BOT_REPO's latest PICKLE ${seed:0:8}")
+            else
+              why+=("no card data yet")
+            fi
+          else
+            base=$(jq -r '.card_commit // ""' "$manifest")
+            if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2> /dev/null; then
+              why+=("the last build's main commit ${base:0:8} is not in main's history")
+            else
+              n=$(git log --format=%H "$base..$main" -- "${inputs[@]}" | { grep -c . || true; })
+              if [ "$n" -gt 0 ]; then why+=("card inputs changed in $n commits since ${base:0:8}"); fi
+            fi
+            stale=$(jq '.pending.stale // [] | length' "$manifest")
+            if [ "$stale" -gt 0 ]; then why+=("$stale cards still to re-parse"); fi
+            built=$(jq -r '.builder.parser_version // ""' "$manifest")
+            parser=$(sed -n 's/^PARSER_VERSION *= *\([0-9][0-9]*\).*/\1/p' bot/commands/psd_parser.py)
+            if [ "$parser" != "$built" ]; then why+=("parser version ${built:-none} -> $parser"); fi
+            if [ "$POSTS" = on ]; then
+              shopt -s nullglob
+              logs=("$db"/changelog/*.jsonl)
+              last=0
+              if [ ${#logs[@]} -gt 0 ]; then last=$(jq -s 'map(.seq // 0) | max // 0' "${logs[@]}"); fi
+              posted=0
+              if [ -f "$db/changelog/posted.json" ]; then posted=$(jq '.seq // 0' "$db/changelog/posted.json"); fi
+              if [ "$last" -gt "$posted" ]; then why+=("events $((posted + 1))-$last not posted"); fi
+            fi
+          fi
+          go=$([ ${#why[@]} -gt 0 ] && echo true || echo false)
+          { echo "seed=$seed"; echo "go=$go"; } >> "$GITHUB_OUTPUT"
+          echo "GO=$go" >> "$GITHUB_ENV"
+          {
+            echo "## Card data$([ -n "$AFTER" ] && echo " after the bake")$([ "$DRY_RUN" = true ] && echo " (dry run)")"
+            echo
+            echo "Main \`${main:0:8}\`, builder \`$BOT_REPO@${builder:0:8}\` ($BUILDER_REF)."
+            if [ ${#why[@]} -gt 0 ]; then printf -- '- %s\n' "${why[@]}"; else echo "Nothing to do since the last build."; fi
+            echo
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # The Actions' one Python (the jetson's and the Mac tests', 3.14), for every stage.
+      - &python
+        uses: actions/setup-python@v7
+        id: python
+        if: env.GO == 'true' || env.EDITS == 'true'
+        with:
+          python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
+
+      # requirements-cards.txt as wheels, cached per that file, runner and Python (one entry for the card workflows).
+      - &wheels
+        id: wheels
+        if: env.GO == 'true' || env.EDITS == 'true'
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/card-wheels
+          key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+
+      - &uv
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
+        if: env.GO == 'true' || env.EDITS == 'true'
+        with:
+          version: "0.13.5"
+          enable-cache: false
+
+      # One environment from requirements-cards.txt for the bake, the build, the save and the posts (until 2026-10-24 the
+      # bake had its own on 3.12). A miss builds the wheels (the fork, pyoxipng from its sdist) and saves them. uv fills the
+      # venv (no pip in it): ~3 s where pip took 14-21 s. --help proves the import closure before any stage.
+      - &venv
+        name: Python environment
+        id: venv
+        if: env.GO == 'true' || env.EDITS == 'true'
+        timeout-minutes: 15
+        env:
+          HIT: ${{ steps.wheels.outputs.cache-hit }}
+          UV_PYTHON: ${{ runner.temp }}/venv/bin/python
+          UV_COMPILE_BYTECODE: "1"
+        run: |
+          if [ "$HIT" != true ]; then
+            pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
+            echo "wheels=built" >> "$GITHUB_OUTPUT"
+          fi
+          sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
+          python -m venv "$RUNNER_TEMP/venv" --without-pip
+          uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
+          (cd bot && for module in card_data tts_save card_bake; do
+            "$RUNNER_TEMP/venv/bin/python" -m "commands.$module" --help > /dev/null
+          done)
+
+      - &wheels-save
+        if: steps.venv.outputs.wheels == 'built'     # only once they installed
+        uses: actions/cache/save@v6
+        with:
+          path: ~/.cache/card-wheels
+          key: ${{ steps.wheels.outputs.cache-primary-key }}
+
+      # Fonts for the bake and the details' "supplied" flags: MDW/Fonts' top level, cached by its tree sha (the card workflows'
+      # key, so the entries carry over); the sparse checkout fetches them only on a miss. A hit puts them outside the sparse
+      # patterns: without expectFilesOutsideOfPatterns git clears their skip-worktree bits and the bake's ff merge deletes them.
+      - &fonts
+        name: Fonts tree
+        id: fonts
+        if: env.GO == 'true'
+        run: |
+          git config sparse.expectFilesOutsideOfPatterns true
+          echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
+
+      - &font-cache
+        id: font-cache
+        if: env.GO == 'true'
+        uses: actions/cache@v6
+        with:
+          path: MDW/Fonts
+          key: card-fonts-${{ steps.fonts.outputs.sha }}
+
+      - &fonts-miss
+        name: Fonts (cache miss)
+        if: env.GO == 'true' && steps.font-cache.outputs.cache-hit != 'true'
+        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+
+      # The build on main's head. Exit 0 written or nothing to do, 2 a gate refused, 1 an error. It writes db/ in
+      # carddata/ even on a dry run (the artifact); only the data commit publishes it. After the bake, M's push is the
+      # card sync's own (--own).
+      - name: Build
+        id: build
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
+        timeout-minutes: 60
+        working-directory: bot
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GIT_NO_LAZY_FETCH: "1"
+          PSD_TOOLS_FONT_DIRS: ${{ github.workspace }}/MDW/Fonts
+          HEAD_SHA: ${{ steps.gate.outputs.main }}
+          SEED: ${{ steps.gate.outputs.seed }}
+          FULL: ${{ inputs.full }}
+          CARDS: ${{ inputs.cards }}
+          ALLOW_ARCHIVE: ${{ inputs.allow_archive }}
+          RESTORE: ${{ inputs.restore }}
+        run: |
+          db=$GITHUB_WORKSPACE/carddata/db
+          mkdir -p "$db"
+          args=(--repo "$GITHUB_REPOSITORY" --checkout "$GITHUB_WORKSPACE" --head "$HEAD_SHA" --db "$db" --budget 400
+                --run "$RUN_URL" --builder-ref "$BUILDER_REF" --summary "$GITHUB_STEP_SUMMARY" --message "$RUNNER_TEMP/message.txt")
+          if [ -n "$AFTER" ]; then args+=(--own "$AFTER"); fi
+          if [ "$FULL" = true ]; then args+=(--full); fi
+          if [ -n "$CARDS" ]; then args+=(--cards "$CARDS"); fi
+          if [ "$ALLOW_ARCHIVE" = true ]; then args+=(--allow-archive); fi
+          if [ -n "$RESTORE" ]; then args+=(--restore "$RESTORE"); fi
+          if [ -n "$SEED" ]; then args+=(--seed "$SEED"); fi
+          set +e
+          "$RUNNER_TEMP/venv/bin/python" -m commands.card_data "${args[@]}"
+          code=$?
+          set -e
+          if [ "$code" = 2 ]; then echo "::error::A data gate refused: nothing is committed"; fi
+          exit "$code"
+
+      # One Discord message per push with events past the posted cursor, as discord.json (in the artifact). The card ids
+      # come from the live site's cards.json; without it the links search the card.
+      - name: Posts
+        id: posts
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
+        timeout-minutes: 3
+        working-directory: bot
+        run: |
+          ids=()
+          if curl -fsS --retry 3 -o "$RUNNER_TEMP/cards.json" "$SITE_URL/data/cards.json"; then
+            ids=(--ids "$RUNNER_TEMP/cards.json")
+          else
+            echo "::warning::the site's cards.json was not fetched: the posts link card searches"
+          fi
+          "$RUNNER_TEMP/venv/bin/python" -m commands.changelog post --db "$GITHUB_WORKSPACE/carddata/db" --site "$SITE_URL" \
+            --repo "$GITHUB_REPOSITORY" "${ids[@]}" --out "$RUNNER_TEMP/discord.json"
+
+      # Off with POSTS off and on every dry run. The cursor moves after each accepted message and rides in the data
+      # commit. The URL is never printed; a failed call warns and the rest wait for the next run.
+      - name: Send the posts
+        if: ${{ !cancelled() && env.POSTS == 'on' && env.DRY_RUN != 'true' && steps.posts.outcome == 'success' && steps.build.outcome == 'success' }}
+        timeout-minutes: 3
+        working-directory: bot
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_CHANGELOG_WEBHOOK is not set; nothing posted"; exit 0; fi
+          posts=$RUNNER_TEMP/discord.json
+          n=$(jq '.messages | length' "$posts")
+          for ((i = 0; i < n; i++)); do
+            if ! jq -c ".messages[$i].body" "$posts" | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK"; then
+              echo "::warning::the Discord webhook call failed: $((n - i)) messages wait for the next run"
+              break
+            fi
+            "$RUNNER_TEMP/venv/bin/python" -m commands.changelog advance --db "$GITHUB_WORKSPACE/carddata/db" \
+              --seq "$(jq ".messages[$i].cursor.seq" "$posts")" --push "$(jq -r ".messages[$i].cursor.push // \"\"" "$posts")"
+            sleep 1
+          done
+
+      # db/ and the cursor as one commit on data, never forced; a rejected push fails the job (gate G6's case).
+      - name: Commit data
+        id: data-commit
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.build.outcome == 'success' }}
+        timeout-minutes: 3
+        working-directory: carddata
+        run: |
+          git add -A db
+          if git diff --cached --quiet; then echo "db/ unchanged: no data commit."; exit 0; fi
+          if [ ! -s "$RUNNER_TEMP/message.txt" ]; then echo "Card data: posted cursor moved" > "$RUNNER_TEMP/message.txt"; fi
+          git -c user.name=AutoCroissant -c user.email=autocroissant@gmail.com commit -q -F "$RUNNER_TEMP/message.txt"
+          git push origin HEAD:refs/heads/data
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+          git log -1 --format="Data commit \`%h\`: %s." | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # The would-be db/, the posts and the message
+      - name: Collect the artifact
+        if: always() && env.GO == 'true'
+        timeout-minutes: 2
+        run: |
+          out=$RUNNER_TEMP/card-data
+          mkdir -p "$out"
+          if [ -d carddata/db ]; then cp -R carddata/db "$out/db"; fi
+          for f in discord.json message.txt; do
+            if [ -f "$RUNNER_TEMP/$f" ]; then cp "$RUNNER_TEMP/$f" "$out/"; fi
+          done
+
+      - uses: actions/upload-artifact@v4
+        if: always() && env.GO == 'true'
+        timeout-minutes: 5
+        with:
+          name: ${{ env.AFTER && 'card-data-after' || 'card-data' }}
+          path: ${{ runner.temp }}/card-data
+          if-no-files-found: ignore
+          retention-days: 14
+
+      # A GITHUB_TOKEN push triggers no workflow, so the site build is dispatched after a data commit (with MAIN_COMMIT
+      # on: off, the site may not read the data) and after the bake (its PNGs), whatever the data did.
+      - name: Site build
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && env.MAIN_COMMIT == 'on' && (steps.data-commit.outputs.committed == 'true' || env.AFTER != '') }}
+        timeout-minutes: 2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY"
+
+      # A failed live job (a push's, scheduled, a retry, a dispatch) tells Discord once per failing streak of live runs
+      # and once per run, with POSTS on. The URL is never printed; a failed call only warns. Dry runs neither alert nor
+      # count (their run names say so).
+      - name: Tell Discord
+        if: failure() && env.POSTS == 'on' && env.DRY_RUN != 'true'
+        timeout-minutes: 2
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
+          OUTCOMES: "gate=${{ steps.gate.outcome }} build=${{ steps.build.outcome }} data=${{ steps.data-commit.outcome }}"
+        run: &tell |
+          if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_CHANGELOG_WEBHOOK is not set; no Discord message"; exit 0; fi
+          told=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs" \
+            --jq '[.jobs[] | select(.conclusion == "failure" or .conclusion == "timed_out")] | length') || told=0
+          if [ "${told:-0}" -gt 0 ]; then echo "Another job of this run failed: Discord was told then."; exit 0; fi
+          last=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --status completed --limit 20 \
+            --json databaseId,conclusion,displayTitle \
+            --jq "map(select(.databaseId != $GITHUB_RUN_ID and .conclusion != \"cancelled\" and .conclusion != \"skipped\"
+              and .displayTitle != \"Card sync (dry run)\"))[0].conclusion // \"\"") \
+            || last=""
+          if [ "$last" = failure ] || [ "$last" = timed_out ]; then
+            echo "The last live run failed too: Discord was told then."
+            exit 0
+          fi
+          stages=$(tr ' ' '\n' <<< "$OUTCOMES" | sed -n 's/=failure$//p' | paste -sd, - | sed 's/,/, /g')
+          jq -n --arg run "$RUN_URL" --arg stages "${stages:-a step}" \
+            '{content: ("Card sync failed (" + $stages + "): " + $run + "; the website and the bot keep the last good data."), allowed_mentions: {parse: []}}' \
+            | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK" \
+            || echo "::warning::the Discord webhook call failed"
+
+  # The main lane's 30-minute window (owner, 2026-10-24: a fixed window, not restarted by later pushes). A push's run and
+  # the schedule's first look for a push run still in its window (waiting, or its Quiet window job unfinished; one pushed
+  # over 40 minutes ago is stuck and holds nothing). One there syncs main's head when its 30 minutes are up, this push's
+  # included, so this run's main lane rides along (skipped; its data lane ran at once). Else a push's run waits (Quiet
+  # window) and the schedule's main lane goes now. Runs that cannot be read count as none (this run goes on); two
+  # near-simultaneous pushes may both wait: the second main lane finds nothing to commit. Dispatches and retries skip
+  # both jobs. No job here is in a group, so a lane running never holds a window.
   timer:
     if: github.event_name == 'schedule' || (github.event_name == 'push' && github.actor != 'github-actions[bot]')
     runs-on: ubuntu-latest
@@ -100,7 +514,7 @@ jobs:
       run:
         shell: bash
     permissions:
-      actions: write      # gh run cancel (itself)
+      actions: read       # gh run list
     outputs:
       other: ${{ steps.other.outputs.run }}
     steps:
@@ -118,27 +532,24 @@ jobs:
           fi
           while read -r id status; do
             [ -n "$id" ] || continue
-            n=1                                  # a run waiting is in its timer (the environment's only wait here)
+            n=1                                  # a run waiting is in its window (the environment's only wait here)
             if [ "$status" != waiting ]; then
               n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" \
                 --jq "[.jobs[] | select(.name == \"$QUIET\" and .status != \"completed\")] | length") || n=0
             fi
             if [ "${n:-0}" -gt 0 ]; then
               echo "run=$id" >> "$GITHUB_OUTPUT"
-              echo "Push run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id is in its 30-minute timer: it syncs main's head when its time is up (this run's work too)." \
+              echo "Push run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id is in its 30-minute window: it bakes and saves main's head when its time is up (this run's work too)." \
                 | tee -a "$GITHUB_STEP_SUMMARY"
-              # Cancelled, not a success: a success here would end a failing streak for Tell Discord and the bot
-              if gh run cancel "$GITHUB_RUN_ID" -R "$GITHUB_REPOSITORY" > /dev/null; then sleep 120
-              else echo "::warning::this run could not cancel itself: it ends as a success"; fi
               exit 0
             fi
           done <<< "$runs"
-          echo "No push run in its timer: $([ "$GITHUB_EVENT_NAME" = push ] && echo "this push starts one" || echo "the sync goes on")." \
+          echo "No push run in its window: $([ "$GITHUB_EVENT_NAME" = push ] && echo "this push starts one" || echo "the main lane goes on")." \
             | tee -a "$GITHUB_STEP_SUMMARY"
 
   # A push's first attempt waits in the environment card-sync-quiet (its 30-minute wait timer, the owner's setting; no
   # runner is held). Without the timer, and on a re-run, Quiet sleeps out what is left of the window from the push
-  # (pushed_at), so a re-run does not wait again. Then the sync, on main's head as it is then.
+  # (pushed_at), so a re-run does not wait again. Then the main lane, on main's head as it is then.
   quiet:
     name: Quiet window
     needs: timer
@@ -166,248 +577,97 @@ jobs:
             sleep "$left"
           fi
 
-  # A push's after its quiet window (a failed one goes on: the gate decides); the schedule's when no timer runs; a
-  # dispatch's at once. One sync at a time; a newer pending one replaces an older one (a retry is dispatched only when no
-  # other run is unfinished).
-  sync:
+  # The main lane: a push's after its window (a failed one goes on), the schedule's when no window runs, a dispatch's
+  # and a retry's at once. One at a time (card-main); a newer pending one replaces an older one (a retry is dispatched
+  # only when no other run is unfinished). It writes only main; db/ is read for the save's names.
+  main:
+    name: Bake and save
     needs: [timer, quiet]
     if: ${{ !cancelled() && (github.event_name == 'push' && needs.quiet.result != 'skipped' || github.event_name != 'push' && !needs.timer.outputs.other) }}
     concurrency:
-      group: card-sync
-      cancel-in-progress: false   # a running sync is never cut off
+      group: card-main
+      cancel-in-progress: false   # a running lane is never cut off
     runs-on: ubuntu-latest
     timeout-minutes: 90     # Commit main pushes M only before minute 60: the 30 left cover the caps of it and every later step
     outputs:
       saved: ${{ steps.venv.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
+      m: ${{ steps.main.outputs.m }}
+      baked: ${{ steps.main.outputs.baked }}
     defaults:
       run:
         shell: bash
-    env:
-      # A dispatch runs dry only with dry_run on; a schedule runs live: MAIN_COMMIT and POSTS say what it writes
-      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
-      BUILDER_REF: ${{ inputs.builder_ref || vars.CARD_DATA_BUILDER_REF || 'main' }}
-      BOT_REPO: bobberlington/AutoCroissant
-      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      SITE_URL: https://michaeljsr.github.io/TTSCardMaker
     steps:
-      # Main's head (not github.sha): every commit and tree, no file contents but the small files the stages read. The
-      # card folders are never checked out; the bake and the build read PSDs by blob sha, local first, else REST.
-      - uses: actions/checkout@v7
-        with:
-          ref: main
-          fetch-depth: 0
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /.mailmap
-            /site/Card Edits.json
-            /site/Card Authors.txt
-            /site/Card Creation Dates.json
-            /MDW/Fonts/stoogedings-src/stoogedings.json
-            /TTS/
+      - *checkout-main
+      - *builder
+      - *data-branch
+      - *data-checkout
 
-      # The builder: exactly card_data.SPARSE_FILES (tests/test_card_data.py runs --help on the three CLIs with this list).
-      # Never psd_analyzer, query_card or utils (discord, pandas); no config.py: the token comes from the environment.
-      - uses: actions/checkout@v7
-        with:
-          repository: ${{ env.BOT_REPO }}
-          ref: ${{ env.BUILDER_REF }}
-          path: bot
-          persist-credentials: false
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /commands/card_data.py
-            /commands/card_history.py
-            /commands/card_db.py
-            /commands/changelog.py
-            /commands/card_models.py
-            /commands/card_edits.py
-            /commands/psd_parser.py
-            /commands/psd_details.py
-            /commands/psd_regions.py
-            /commands/font_check.py
-            /commands/github_api.py
-            /global_config.py
-            /requirements-cards.txt
-            /commands/card_bake.py
-            /commands/psd_edit.py
-            /commands/git_commit.py
-            /commands/repo_history.py
-            /commands/tts_save.py
-
-      - name: Data branch
-        id: data
-        run: |
-          set +e
-          git ls-remote --exit-code origin refs/heads/data > /dev/null
-          code=$?
-          set -e
-          case $code in
-            0) echo "exists=true" >> "$GITHUB_OUTPUT" ;;
-            2) echo "exists=false" >> "$GITHUB_OUTPUT"; echo "No data branch yet: this run seeds the data." ;;
-            *) exit "$code" ;;
-          esac
-
-      - uses: actions/checkout@v7
-        if: steps.data.outputs.exists == 'true'
-        with:
-          ref: data
-          path: carddata
-          fetch-depth: 1
-
-      # No data branch yet: an empty orphan branch in a clone of its own (credentials kept); the data push creates it
-      - uses: actions/checkout@v7
-        if: steps.data.outputs.exists != 'true'
-        with:
-          ref: main
-          path: carddata
-          fetch-depth: 1
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: /db/
-
-      - name: Empty data branch
-        if: steps.data.outputs.exists != 'true'
-        run: git -C carddata switch -q --orphan data
-
-      # Go when (a) a card input changed since the last build's main commit (the run's own save-only commits aside),
-      # (b) a budgeted re-parse is pending, (c) the builder's PARSER_VERSION differs from the data's, (d) baked PNGs
-      # await their save links, (e) events are unposted (posts on), (f) a dispatch asks, or there is no data yet; else
-      # (g) a website edit the bake put off (recent, capped) is past its grace: the Pending edits step. GO in the env.
+      # Go for a push (its window is up), a dispatch or a retry; the schedule's when a card input or the save changed
+      # (the lane's own commits aside) since the head of the last run whose Bake and save finished, or none of the last
+      # 30 runs did; else (g) a website edit the bake put off (recent, capped) may be past its grace: the Pending edits
+      # step. GO and EDITS in the env.
       - name: Gate
         id: gate
         env:
           GH_TOKEN: ${{ github.token }}
           GIT_NO_LAZY_FETCH: "1"
-          FORCE: ${{ inputs.force }}
-          FULL: ${{ inputs.full }}
-          CARDS: ${{ inputs.cards }}
-          RESTORE: ${{ inputs.restore }}
-          SEED: ${{ inputs.seed }}
+          LANE: Bake and save         # this job's name
+          RETRY: ${{ inputs.retry }}
         run: |
           main=$(git rev-parse HEAD)
           { echo "main=$main"; echo "start=$(date +%s)"; } >> "$GITHUB_OUTPUT"
-          builder=$(git -C bot rev-parse HEAD)
-          if [ ! -f bot/commands/card_data.py ]; then
-            echo "::error::The builder $BOT_REPO@$BUILDER_REF (${builder:0:8}) has no commands/card_data.py: dispatch with a builder_ref that has it"
-            exit 1
-          fi
-          db=carddata/db
-          manifest=$db/manifest.json
-          save="TTS/Impossibility Simulator.json"
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
-                  'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json')    # the builder's lower-cased extensions
+                  'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json'
+                  'TTS/Impossibility Simulator.json')
           why=()
-          seed=$SEED
-          if [ "$FORCE" = true ]; then why+=("dispatched with force"); fi
-          if [ "$FULL" = true ]; then why+=("dispatched with full"); fi
-          if [ -n "$CARDS" ]; then why+=("dispatched with cards: $CARDS"); fi
-          if [ -n "$RESTORE" ]; then why+=("dispatched with restore: $RESTORE"); fi
-          if [ -n "$SEED" ]; then why+=("dispatched with seed: $SEED"); fi
-          if [ ! -f "$manifest" ]; then
-            if [ -z "$seed" ]; then
-              seed=$(gh api "repos/$BOT_REPO/commits?sha=main&path=stats.pkl&per_page=1" --jq '.[0].sha // ""')
-              if [ -z "$seed" ]; then echo "::error::No card data and no PICKLE commit found to seed from"; exit 1; fi
-              why+=("no card data yet: seeded from $BOT_REPO's latest PICKLE ${seed:0:8}")
-            else
-              why+=("no card data yet")
-            fi
-          else
-            base=$(jq -r '.card_commit // ""' "$manifest")
-            if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2> /dev/null; then
-              why+=("the last build's main commit ${base:0:8} is not in main's history")
-            else
-              n=$(git log --format=%H "$base..$main" -- "${inputs[@]}" | { grep -c . || true; })
-              n=$((n + $(git log --format='%an|%s' "$base..$main" -- "$save" | { grep -vc '^AutoCroissant|Card sync:' || true; })))
-              if [ "$n" -gt 0 ]; then why+=("card inputs changed in $n commits since ${base:0:8}"); fi
-            fi
-            stale=$(jq '.pending.stale // [] | length' "$manifest")
-            if [ "$stale" -gt 0 ]; then why+=("$stale cards still to re-parse"); fi
-            built=$(jq -r '.builder.parser_version // ""' "$manifest")
-            parser=$(sed -n 's/^PARSER_VERSION *= *\([0-9][0-9]*\).*/\1/p' bot/commands/psd_parser.py)
-            if [ "$parser" != "$built" ]; then why+=("parser version ${built:-none} -> $parser"); fi
-            repin=$(jq '.pending.repin // [] | length' "$manifest")
-            if [ "$repin" -gt 0 ]; then why+=("$repin baked PNGs to pin in the save"); fi
-            if [ "$POSTS" = on ]; then
-              shopt -s nullglob
-              logs=("$db"/changelog/*.jsonl)
-              last=0
-              if [ ${#logs[@]} -gt 0 ]; then last=$(jq -s 'map(.seq // 0) | max // 0' "${logs[@]}"); fi
-              posted=0
-              if [ -f "$db/changelog/posted.json" ]; then posted=$(jq '.seq // 0' "$db/changelog/posted.json"); fi
-              if [ "$last" -gt "$posted" ]; then why+=("events $((posted + 1))-$last not posted"); fi
-            fi
-          fi
+          case $GITHUB_EVENT_NAME in
+            push) why+=("the push's 30-minute window is up") ;;
+            schedule)
+              synced=""
+              if runs=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --status completed --limit 30 \
+                  --json databaseId,headSha --jq '.[] | "\(.databaseId) \(.headSha)"'); then
+                while read -r id sha; do
+                  [ -n "$id" ] || continue
+                  n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" \
+                    --jq "[.jobs[] | select(.name == \"$LANE\" and .conclusion == \"success\")] | length") || n=0
+                  if [ "${n:-0}" -gt 0 ]; then synced=$sha; break; fi
+                done <<< "$runs"
+              fi
+              if [ -z "$synced" ] || ! git cat-file -e "$synced^{commit}" 2> /dev/null; then
+                why+=("no finished $LANE found in the last runs")
+              else
+                n=$(git log --format='%an|%s' "$synced..$main" -- "${inputs[@]}" | { grep -vc '^AutoCroissant|Card sync:' || true; })
+                if [ "$n" -gt 0 ]; then why+=("card inputs changed in $n commits since ${synced:0:8} (the last $LANE)"); fi
+              fi ;;
+            *) why+=("$([ -n "$RETRY" ] && echo "a retry of a $RETRY run" || echo "dispatched")") ;;
+          esac
           go=$([ ${#why[@]} -gt 0 ] && echo true || echo false)
           edits=0
           if [ "$go" = false ] && [ -f "site/Card Edits.json" ]; then     # card_edits.KIND's psd fields
             edits=$(jq '[.cards // {} | .[] | select([.name, .stars, .types, .hp, .def, .atk, .spd, .ability] | any(. != null))] | length' \
               "site/Card Edits.json")
           fi
-          { echo "seed=$seed"; echo "go=$go"; echo "edits=$([ "$edits" -gt 0 ] && echo true || echo false)"; } >> "$GITHUB_OUTPUT"
-          echo "GO=$go" >> "$GITHUB_ENV"
+          edits=$([ "$edits" -gt 0 ] && echo true || echo false)
+          { echo "go=$go"; echo "edits=$edits"; } >> "$GITHUB_OUTPUT"
+          { echo "GO=$go"; echo "EDITS=$edits"; } >> "$GITHUB_ENV"
           {
-            echo "## Card sync$([ "$DRY_RUN" = true ] && echo " (dry run)")"
+            echo "## Bake and save$([ "$DRY_RUN" = true ] && echo " (dry run)")"
             echo
-            echo "Main \`${main:0:8}\`, builder \`$BOT_REPO@${builder:0:8}\` ($BUILDER_REF)."
-            if [ ${#why[@]} -gt 0 ]; then printf -- '- %s\n' "${why[@]}"; else echo "Nothing to do since the last build."; fi
+            echo "Main \`${main:0:8}\`."
+            if [ ${#why[@]} -gt 0 ]; then printf -- '- %s\n' "${why[@]}"; else echo "Nothing to do since the last bake and save."; fi
             echo
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # The Actions' one Python (the jetson's and the Mac tests', 3.14), for every stage.
-      - uses: actions/setup-python@v7
-        id: python
-        if: env.GO == 'true' || steps.gate.outputs.edits == 'true'
-        with:
-          python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
+      - *python
+      - *wheels
+      - *uv
+      - *venv
+      - *wheels-save
 
-      # requirements-cards.txt as wheels, cached per that file, runner and Python (one entry for the card workflows).
-      - id: wheels
-        if: env.GO == 'true' || steps.gate.outputs.edits == 'true'
-        uses: actions/cache/restore@v6
-        with:
-          path: ~/.cache/card-wheels
-          key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
-
-      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
-        if: env.GO == 'true' || steps.gate.outputs.edits == 'true'
-        with:
-          version: "0.13.5"
-          enable-cache: false
-
-      # One environment from requirements-cards.txt for the bake, the build, the save and the posts (until 2026-10-24 the
-      # bake had its own on 3.12). A miss builds the wheels (the fork, pyoxipng from its sdist) and saves them. uv fills the
-      # venv (no pip in it): ~3 s where pip took 14-21 s. --help proves the import closure before any stage.
-      - name: Python environment
-        id: venv
-        if: env.GO == 'true' || steps.gate.outputs.edits == 'true'
-        timeout-minutes: 15
-        env:
-          HIT: ${{ steps.wheels.outputs.cache-hit }}
-          UV_PYTHON: ${{ runner.temp }}/venv/bin/python
-          UV_COMPILE_BYTECODE: "1"
-        run: |
-          if [ "$HIT" != true ]; then
-            pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
-            echo "wheels=built" >> "$GITHUB_OUTPUT"
-          fi
-          sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
-          python -m venv "$RUNNER_TEMP/venv" --without-pip
-          uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
-          (cd bot && for module in card_data tts_save card_bake; do
-            "$RUNNER_TEMP/venv/bin/python" -m "commands.$module" --help > /dev/null
-          done)
-
-      - if: steps.venv.outputs.wheels == 'built'     # only once they installed
-        uses: actions/cache/save@v6
-        with:
-          path: ~/.cache/card-wheels
-          key: ${{ steps.wheels.outputs.cache-primary-key }}
-
-      # (g): the bake's put-off edits (card_bake.due: pending, PSD and PNG past the 30-minute grace) start the run.
+      # (g): the bake's put-off edits (card_bake.due: pending, PSD and PNG past the 30-minute grace) start the lane.
       - name: Pending edits
         id: edits
-        if: steps.gate.outputs.edits == 'true' && env.GO != 'true' && steps.venv.outcome == 'success'
+        if: env.EDITS == 'true' && env.GO != 'true' && steps.venv.outcome == 'success'
         timeout-minutes: 5
         working-directory: bot
         env:
@@ -428,30 +688,13 @@ jobs:
             echo "No website edit past its grace." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
-      # Fonts for the bake and the details' "supplied" flags: MDW/Fonts' top level, cached by its tree sha (the card workflows'
-      # key, so the entries carry over); the sparse checkout fetches them only on a miss. A hit puts them outside the sparse
-      # patterns: without expectFilesOutsideOfPatterns git clears their skip-worktree bits and the bake's ff merge deletes them.
-      - name: Fonts tree
-        id: fonts
-        if: env.GO == 'true'
-        run: |
-          git config sparse.expectFilesOutsideOfPatterns true
-          echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
+      - *fonts
+      - *font-cache
+      - *fonts-miss
 
-      - id: font-cache
-        if: env.GO == 'true'
-        uses: actions/cache@v6
-        with:
-          path: MDW/Fonts
-          key: card-fonts-${{ steps.fonts.outputs.sha }}
-
-      - name: Fonts (cache miss)
-        if: env.GO == 'true' && steps.font-cache.outputs.cache-hit != 'true'
-        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
-
-      # Stage 1: the bake makes one local commit B on main's head in this checkout (nothing pushed); a dry run commits
-      # nothing, and with MAIN_COMMIT off only a dry run bakes. A card's error fails the step but keeps B for the others (the
-      # bake's per-card rule); no B means the run goes on from main's head. --pending: a push's run, the schedule's, their
+      # The bake makes one local commit B on main's head in this checkout (nothing pushed); a dry run commits nothing,
+      # and with MAIN_COMMIT off only a dry run bakes. A card's error fails the step but keeps B for the others (the bake's
+      # per-card rule); no B means the lane goes on from main's head. --pending: a push's run, the schedule's, their
       # retries and bake=pending.
       - name: Bake
         id: bake
@@ -487,62 +730,21 @@ jobs:
           fi
           exit "$code"
 
-      # Stage 2: the build on B (or main's head). Exit 0 written or nothing to do, 2 a gate refused, 1 an error. It writes
-      # db/ in carddata/ even on a dry run (the artifact); only the data commit publishes it.
-      - name: Build
-        id: build
-        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
-        timeout-minutes: 60
-        working-directory: bot
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          GIT_NO_LAZY_FETCH: "1"
-          PSD_TOOLS_FONT_DIRS: ${{ github.workspace }}/MDW/Fonts
-          HEAD_SHA: ${{ steps.bake.outputs.b || steps.gate.outputs.main }}
-          BAKED: ${{ steps.bake.outputs.baked }}
-          SEED: ${{ steps.gate.outputs.seed }}
-          FULL: ${{ inputs.full }}
-          CARDS: ${{ inputs.cards }}
-          ALLOW_ARCHIVE: ${{ inputs.allow_archive }}
-          RESTORE: ${{ inputs.restore }}
-        run: |
-          db=$GITHUB_WORKSPACE/carddata/db
-          mkdir -p "$db"
-          if [ -f "$db/stats.json" ]; then cp "$db/stats.json" "$RUNNER_TEMP/stats.before.json"; fi
-          args=(--repo "$GITHUB_REPOSITORY" --checkout "$GITHUB_WORKSPACE" --head "$HEAD_SHA" --db "$db" --budget 400
-                --run "$RUN_URL" --builder-ref "$BUILDER_REF" --summary "$GITHUB_STEP_SUMMARY" --message "$RUNNER_TEMP/message.txt")
-          if [ "$BAKED" = true ]; then args+=(--baked); fi
-          if [ "$FULL" = true ]; then args+=(--full); fi
-          if [ -n "$CARDS" ]; then args+=(--cards "$CARDS"); fi
-          if [ "$ALLOW_ARCHIVE" = true ]; then args+=(--allow-archive); fi
-          if [ -n "$RESTORE" ]; then args+=(--restore "$RESTORE"); fi
-          if [ -n "$SEED" ]; then args+=(--seed "$SEED"); fi
-          set +e
-          "$RUNNER_TEMP/venv/bin/python" -m commands.card_data "${args[@]}"
-          code=$?
-          set -e
-          if [ "$code" = 2 ]; then echo "::error::A data gate refused: nothing is committed"; fi
-          exit "$code"
-
-      # Stage 3: the save on the checkout (B's Card Edits.json and decks), names from this run's data; after a failed
-      # build, from the last good data. Skipped when the build failed after a bake: the bake waits for its data.
+      # The save on the checkout (B's Card Edits.json and decks), names from the data branch's head (Card Edits.json's
+      # first); with no data, the website's cards.json.
       - name: TTS save
         id: save
-        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' && (steps.build.outcome == 'success' || steps.bake.outputs.baked != 'true') }}
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
         timeout-minutes: 20
         working-directory: bot
         env:
           AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
           AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
-          BUILT: ${{ steps.build.outcome }}
         run: |
           save="TTS/Impossibility Simulator.json"
           names=()
-          if [ "$BUILT" = success ] && [ -f "$GITHUB_WORKSPACE/carddata/db/stats.json" ]; then
+          if [ -f "$GITHUB_WORKSPACE/carddata/db/stats.json" ]; then
             names=(--names "$GITHUB_WORKSPACE/carddata/db/stats.json")
-          elif [ -f "$RUNNER_TEMP/stats.before.json" ]; then
-            names=(--names "$RUNNER_TEMP/stats.before.json")
-            echo "The build did not succeed: names from the last good data."
           else
             echo "No card data: names from the website's cards.json."
           fi
@@ -553,17 +755,14 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      # Stage 4: one commit M on main's head with B's files and the save, fast-forward only (MAIN_COMMIT on). A temp index
-      # and --missing-ok keep git from fetching the tree's blobs. Past minute 60 M is not pushed (red): the 30 minutes left
-      # cover this step's cap and every later one's, and the next run does the work. After a push, db/ names M: its
-      # references to B become M, or (a save-only M, when the build wrote db/) the manifest's card_commit and main_commit.
-      # Main moved meanwhile: M, the posts and the data are all dropped (card_commit and pending.repin stay, so the gate
-      # finds the work again), and the run starts over once from the new head, unless another run is unfinished (it
-      # does the work: a push's in its timer, a pending one). The retry is marked by inputs.retry and starts no other; it
-      # never carries full or allow_archive, which approved the old head only.
+      # One commit M on main's head with B's files and the save, fast-forward only (MAIN_COMMIT on). A temp index and
+      # --missing-ok keep git from fetching the tree's blobs. Past minute 60 M is not pushed (red): the 30 minutes left
+      # cover this step's cap and every later one's, and the next run does the work. Main moved meanwhile: M is dropped
+      # and the lane starts over once from the new head, unless another run is unfinished (it does the work: a push's in
+      # its window, a pending one). The retry is marked by inputs.retry, runs only this lane and starts no other.
       - name: Commit main
         id: main
-        if: ${{ !cancelled() && env.GO == 'true' && env.DRY_RUN != 'true' && env.MAIN_COMMIT == 'on' && (steps.build.outcome == 'success' || steps.bake.outputs.baked != 'true') && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true') }}
+        if: ${{ !cancelled() && env.GO == 'true' && env.DRY_RUN != 'true' && env.MAIN_COMMIT == 'on' && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true') }}
         timeout-minutes: 10
         env:
           GH_TOKEN: ${{ github.token }}
@@ -571,16 +770,14 @@ jobs:
           MAIN: ${{ steps.gate.outputs.main }}
           START: ${{ steps.gate.outputs.start }}
           SAVED: ${{ steps.save.outputs.changed }}
-          BUILT: ${{ steps.build.outcome }}
           B: ${{ steps.bake.outputs.b }}
           RETRY: ${{ inputs.retry && 'true' || 'false' }}
           INPUTS: ${{ toJSON(inputs) }}
         run: |
           save="TTS/Impossibility Simulator.json"
-          db=$GITHUB_WORKSPACE/carddata/db
-          head=${B:-$MAIN}                      # the build's commit, not HEAD: a timed-out bake can leave B unreported
+          head=${B:-$MAIN}                      # the bake's commit, not HEAD: a timed-out bake can leave B unreported
           if [ "$(git rev-parse HEAD)" != "$head" ]; then
-            echo "::error::The checkout's HEAD is not the commit the build read (${head:0:8}): nothing for main"
+            echo "::error::The checkout's HEAD is not the commit the lane made (${head:0:8}): nothing for main"
             exit 1
           fi
           parts=()
@@ -610,7 +807,7 @@ jobs:
           git show --no-renames --name-status --format='%H%n%B' "$m" | tee "$RUNNER_TEMP/main.txt"
           late=$(( (90 - 30) * 60 ))            # the job's timeout-minutes less the caps of this step and the later ones (seconds)
           if [ -n "$START" ] && [ $(( $(date +%s) - START )) -gt "$late" ]; then
-            echo "::error::$(( ($(date +%s) - START) / 60 )) minutes into the run: M is not pushed, so no data commit either; the next run does both"
+            echo "::error::$(( ($(date +%s) - START) / 60 )) minutes into the lane: M is not pushed; the next run does it"
             exit 1
           fi
           ok=true
@@ -621,118 +818,68 @@ jobs:
           if [ "$now" != "$m" ]; then
             if [ -z "$now" ] || [ "$now" = "$MAIN" ]; then exit 1; fi
             echo "rejected=true" >> "$GITHUB_OUTPUT"
-            echo "::warning::main moved during the run (now ${now:0:8}): M, the posts and the data are dropped"
+            echo "::warning::main moved during the lane (now ${now:0:8}): M is dropped"
             if [ "$RETRY" = true ]; then echo "This run was the retry: the next run with work does it."; exit 0; fi
             waiting=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --limit 20 --json databaseId,status,displayTitle \
               --jq "map(select(.status != \"completed\" and .databaseId != ${GITHUB_RUN_ID:-0} and .displayTitle != \"Card sync (dry run)\")) | length") \
               || waiting=0
-            if [ "${waiting:-0}" -gt 0 ]; then echo "Another Card sync run is unfinished (a push's in its timer, or pending): it does the work."; exit 0; fi
-            again=(-f dry_run=false -f force=true -f "retry=$GITHUB_EVENT_NAME" -f "builder_ref=$(git -C bot rev-parse HEAD)"
-                   -f "bake=$(jq -r '.bake // "all"' <<< "$INPUTS")")
-            while IFS= read -r kv; do again+=(-f "$kv"); done < <(jq -r '(. // {}) | to_entries[]
-              | select(.key == "cards" or .key == "seed" or .key == "restore") | select(.value != "") | "\(.key)=\(.value)"' <<< "$INPUTS")
-            lifted=$(jq -r '(. // {}) | [to_entries[] | select(.key == "full" or .key == "allow_archive")
-              | select(.value == true or .value == "true") | .key] | join(" and ")' <<< "$INPUTS")
-            if [ -n "$lifted" ]; then echo "::warning::$lifted approved main ${MAIN:0:8}, not ${now:0:8}: the new run goes without them"; fi
-            gh workflow run card-sync.yml --ref main -R "$GITHUB_REPOSITORY" "${again[@]}" \
+            if [ "${waiting:-0}" -gt 0 ]; then echo "Another Card sync run is unfinished (a push's in its window, or pending): it does the work."; exit 0; fi
+            gh workflow run card-sync.yml --ref main -R "$GITHUB_REPOSITORY" -f dry_run=false -f force=true -f "retry=$GITHUB_EVENT_NAME" \
+              -f "builder_ref=$(git -C bot rev-parse HEAD)" -f "bake=$(jq -r '.bake // "all"' <<< "$INPUTS")" \
               || echo "::warning::the new run was not dispatched: the next run with work does it"
             exit 0
           fi
-          { echo "pushed=true"; echo "m=$m"; } >> "$GITHUB_OUTPUT"
+          pngs=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$head" -- ':(icase)*.png' | { grep -c . || true; })
+          { echo "pushed=true"; echo "m=$m"; echo "baked=$([ "$head" != "$MAIN" ] && echo true || echo false)"
+            echo "pngs=$([ "$pngs" -gt 0 ] && echo true || echo false)"; } >> "$GITHUB_OUTPUT"
           echo "Main commit \`${m:0:8}\`: Card sync: ${subject%, }." >> "$GITHUB_STEP_SUMMARY"
-          if [ "$head" != "$MAIN" ]; then
-            cd bot
-            "$RUNNER_TEMP/venv/bin/python" -m commands.card_data --rewrite "$head" "$m" --checkout "$GITHUB_WORKSPACE" \
-              --db "$db" --message "$RUNNER_TEMP/message.txt"
-          elif [ "$BUILT" = success ] && [ -f "$db/manifest.json" ] && [ -n "$(git -C "$db" status --porcelain -- .)" ]; then
-            "$RUNNER_TEMP/venv/bin/python" - "$db/manifest.json" "$MAIN" "$m" "$(git show -s --format=%ct "$m")" "$RUNNER_TEMP/message.txt" <<'EOF'
-          import json, os, sys
-          path, old, new, at, message = sys.argv[1:]
-          with open(path, encoding="utf-8") as fh:
-              manifest = json.load(fh)
-          if manifest.get("card_commit") == old:
-              manifest["card_commit"], manifest["card_commit_at"] = new, float(at)
-          manifest["main_commit"] = new
-          with open(path, "w", encoding="utf-8") as fh:
-              fh.write(json.dumps(manifest, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
-          if os.path.isfile(message):
-              with open(message, encoding="utf-8") as fh:
-                  text = fh.read()
-              with open(message, "w", encoding="utf-8") as fh:
-                  fh.write(text.replace(old, new).replace(old[:8], new[:8]))
-          EOF
-            echo "db/ now names ${m:0:8} as the build's main commit."    # card_data's format (card_db.write_db)
-          elif [ "$BUILT" != success ]; then
-            echo "The build did not succeed: no data commit for M (the gate skips the run's own save commits)."
-          else
-            echo "db/ unchanged by the build: no data commit for M (the gate skips the run's own save commits)."
-          fi
 
-      # Stage 5: one Discord message per push with events past the posted cursor, as discord.json (in the artifact). The
-      # card ids come from the live site's cards.json; without it the links search the card.
-      - name: Posts
-        id: posts
-        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
-        timeout-minutes: 3
-        working-directory: bot
-        run: |
-          ids=()
-          if curl -fsS --retry 3 -o "$RUNNER_TEMP/cards.json" "$SITE_URL/data/cards.json"; then
-            ids=(--ids "$RUNNER_TEMP/cards.json")
-          else
-            echo "::warning::the site's cards.json was not fetched: the posts link card searches"
-          fi
-          "$RUNNER_TEMP/venv/bin/python" -m commands.changelog post --db "$GITHUB_WORKSPACE/carddata/db" --site "$SITE_URL" \
-            --repo "$GITHUB_REPOSITORY" "${ids[@]}" --out "$RUNNER_TEMP/discord.json"
-
-      # Off with POSTS off and on every dry run. The cursor moves after each accepted message and rides in the data
-      # commit. The URL is never printed; a failed call warns and the rest wait for the next run.
-      - name: Send the posts
-        if: ${{ !cancelled() && env.POSTS == 'on' && env.DRY_RUN != 'true' && steps.posts.outcome == 'success' && steps.build.outcome == 'success' && steps.main.outcome != 'failure' && steps.main.outputs.rejected != 'true' }}
-        timeout-minutes: 3
+      # The baked PNGs' save links: the save above pinned main before M, so it runs again on M and any change is a second
+      # commit on M (the save alone), fast-forward only. Main moved meanwhile: a warning; the next lane's save pins them.
+      - name: Re-pin
+        id: repin
+        if: ${{ !cancelled() && steps.main.outputs.pngs == 'true' }}
+        timeout-minutes: 8
         working-directory: bot
         env:
-          WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
+          AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
+          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
+          GIT_NO_LAZY_FETCH: "1"
+          M: ${{ steps.main.outputs.m }}
         run: |
-          if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_CHANGELOG_WEBHOOK is not set; nothing posted"; exit 0; fi
-          posts=$RUNNER_TEMP/discord.json
-          n=$(jq '.messages | length' "$posts")
-          for ((i = 0; i < n; i++)); do
-            if ! jq -c ".messages[$i].body" "$posts" | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK"; then
-              echo "::warning::the Discord webhook call failed: $((n - i)) messages wait for the next run"
-              break
-            fi
-            "$RUNNER_TEMP/venv/bin/python" -m commands.changelog advance --db "$GITHUB_WORKSPACE/carddata/db" \
-              --seq "$(jq ".messages[$i].cursor.seq" "$posts")" --push "$(jq -r ".messages[$i].cursor.push // \"\"" "$posts")"
-            sleep 1
-          done
+          save="TTS/Impossibility Simulator.json"
+          names=()
+          if [ -f "$GITHUB_WORKSPACE/carddata/db/stats.json" ]; then names=(--names "$GITHUB_WORKSPACE/carddata/db/stats.json"); fi
+          "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$GITHUB_WORKSPACE/$save" "${names[@]}" | tee "$RUNNER_TEMP/repin.md"
+          cd "$GITHUB_WORKSPACE"
+          export GIT_INDEX_FILE=$RUNNER_TEMP/repin.index
+          git read-tree "$M"
+          mode=$(git ls-tree "$M" -- "$save" | cut -d' ' -f1)
+          git update-index --add --cacheinfo "${mode:-100644},$(git hash-object -w -- "$save"),$save"
+          tree=$(git write-tree --missing-ok)
+          unset GIT_INDEX_FILE
+          if [ "$tree" = "$(git rev-parse "$M^{tree}")" ]; then echo "The save's links were current."; exit 0; fi
+          { echo "Card sync: TTS save re-pinned"; echo; head -1 "TTS/Impossibility Simulator.message.txt" 2> /dev/null || true; } \
+            | git stripspace > "$RUNNER_TEMP/repin-message.txt"
+          m2=$(GIT_AUTHOR_NAME=AutoCroissant GIT_AUTHOR_EMAIL=autocroissant@gmail.com \
+               GIT_COMMITTER_NAME=AutoCroissant GIT_COMMITTER_EMAIL=autocroissant@gmail.com \
+               git commit-tree "$tree" -p "$M" -F "$RUNNER_TEMP/repin-message.txt")
+          if ! git push --no-thin origin "$m2:refs/heads/main" && [ "$(git ls-remote origin refs/heads/main | cut -f1)" != "$m2" ]; then
+            echo "::warning::main moved since M: the baked PNGs' save links wait for the next lane"
+            exit 0
+          fi
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+          echo "Main commit \`${m2:0:8}\`: Card sync: TTS save re-pinned." | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # Stage 6: db/ and the cursor as one commit on data, never forced; a rejected push fails the run (gate G6's case).
-      # A rejected M drops it (§6.3 stage 4).
-      - name: Commit data
-        id: data-commit
-        if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.build.outcome == 'success' && steps.main.outcome != 'failure' && steps.main.outputs.rejected != 'true' }}
-        timeout-minutes: 3
-        working-directory: carddata
-        run: |
-          git add -A db
-          if git diff --cached --quiet; then echo "db/ unchanged: no data commit."; exit 0; fi
-          if [ ! -s "$RUNNER_TEMP/message.txt" ]; then echo "Card data: posted cursor moved" > "$RUNNER_TEMP/message.txt"; fi
-          git -c user.name=AutoCroissant -c user.email=autocroissant@gmail.com commit -q -F "$RUNNER_TEMP/message.txt"
-          git push origin HEAD:refs/heads/data
-          echo "committed=true" >> "$GITHUB_OUTPUT"
-          git log -1 --format="Data commit \`%h\`: %s." | tee -a "$GITHUB_STEP_SUMMARY"
-
-      # Stage 7: the would-be db/, the bake's report and crops, the save's report and diff, the posts and the messages
+      # The bake's report and crops, the save's report and diff, the main commits
       - name: Collect the artifact
         if: always() && env.GO == 'true'
         timeout-minutes: 2
         run: |
           out=$RUNNER_TEMP/card-sync
           mkdir -p "$out"
-          if [ -d carddata/db ]; then cp -R carddata/db "$out/db"; fi
           if [ -d "$RUNNER_TEMP/card-bake" ]; then cp -R "$RUNNER_TEMP/card-bake" "$out/bake"; fi
-          for f in bake.md save.md discord.json message.txt main-message.txt main.txt; do
+          for f in bake.md save.md repin.md main-message.txt main.txt; do
             if [ -f "$RUNNER_TEMP/$f" ]; then cp "$RUNNER_TEMP/$f" "$out/"; fi
           done
           for f in TTS/*.report.md TTS/*.message.txt; do
@@ -749,46 +896,37 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-      # Stage 8: a GITHUB_TOKEN push triggers no workflow, so the site build is dispatched after a commit (after a data
-      # commit only with MAIN_COMMIT on: off, the site may not read the data)
-      - name: Site build
-        if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.main.outputs.pushed == 'true' || (steps.data-commit.outputs.committed == 'true' && env.MAIN_COMMIT == 'on')) }}
-        timeout-minutes: 2
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY"
-
-      # Stage 9: a failed live run (a push's, scheduled, a retry, a dispatch) tells Discord once per failing streak of live
-      # runs, with POSTS on. The URL is never printed; a failed call only warns. Dry runs neither alert nor count (their
-      # run names say so).
       - name: Tell Discord
         if: failure() && env.POSTS == 'on' && env.DRY_RUN != 'true'
         timeout-minutes: 2
         env:
           GH_TOKEN: ${{ github.token }}
           WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
-          OUTCOMES: "gate=${{ steps.gate.outcome }} bake=${{ steps.bake.outcome }} build=${{ steps.build.outcome }} save=${{ steps.save.outcome }} main=${{ steps.main.outcome }} data=${{ steps.data-commit.outcome }}"
-        run: |
-          if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_CHANGELOG_WEBHOOK is not set; no Discord message"; exit 0; fi
-          last=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --status completed --limit 20 \
-            --json databaseId,conclusion,displayTitle \
-            --jq "map(select(.databaseId != $GITHUB_RUN_ID and .conclusion != \"cancelled\" and .conclusion != \"skipped\"
-              and .displayTitle != \"Card sync (dry run)\"))[0].conclusion // \"\"") \
-            || last=""
-          if [ "$last" = failure ] || [ "$last" = timed_out ]; then
-            echo "The last live run failed too: Discord was told then."
-            exit 0
-          fi
-          stages=$(tr ' ' '\n' <<< "$OUTCOMES" | sed -n 's/=failure$//p' | paste -sd, - | sed 's/,/, /g')
-          jq -n --arg run "$RUN_URL" --arg stages "${stages:-a step}" \
-            '{content: ("Card sync failed (" + $stages + "): " + $run + "; the website and the bot keep the last good data."), allowed_mentions: {parse: []}}' \
-            | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK" \
-            || echo "::warning::the Discord webhook call failed"
+          OUTCOMES: "gate=${{ steps.gate.outcome }} bake=${{ steps.bake.outcome }} save=${{ steps.save.outcome }} main=${{ steps.main.outcome }} repin=${{ steps.repin.outcome }}"
+        run: *tell
+
+  # After M (it brought the bake's card files): the data lane again, on main's head then, no wait. Its site build shows
+  # the baked PNGs.
+  after:
+    name: Card data after the bake
+    needs: main
+    if: ${{ !cancelled() && needs.main.outputs.baked == 'true' }}
+    concurrency:
+      group: card-data
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+    env:
+      AFTER: ${{ needs.main.outputs.m }}
+    steps: *data-steps
 
   # A new wheel or font cache (its key changes with requirements-cards.txt, Python, MDW/Fonts): the older ones go (caches.yml)
   caches:
-    needs: sync
-    if: ${{ !cancelled() && needs.sync.outputs.saved == 'true' }}
+    needs: [data, main]
+    if: ${{ !cancelled() && (needs.data.outputs.saved == 'true' || needs.main.outputs.saved == 'true') }}
     permissions:
       actions: write
     uses: ./.github/workflows/caches.yml

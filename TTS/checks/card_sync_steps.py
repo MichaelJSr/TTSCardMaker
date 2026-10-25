@@ -1,27 +1,31 @@
-"""card-sync.yml's switches and step scripts, offline: which steps run, the gate's inputs, the fonts, the main commit.
+"""card-sync.yml's lanes, switches and step scripts, offline: which jobs and steps run, both gates, the fonts, the commits.
 
     python3 card_sync_steps.py            (needs git 2.37 or later, bash and jq; no network)
-1. The step plan: every step's `if:` evaluated as GitHub does (&&, ||, !, ==, the status functions, the implicit
-   success()) for the runs: both switches on by default (the cutover); off (the rollback) a run bakes only dry and
-   writes only `data`; on, it bakes, commits M and posts; a rejected M drops the posts and the data; a failed live run
-   (a retry too) alerts, a dry one doesn't; GO from the Pending edits step runs the stages, without it none run; the
-   deadline's reserve covers the caps of Commit main and every later step.
-2. The Gate step's own script on sandbox history: stoogedings-src/ alone doesn't start a run, MDW/Fonts' fonts,
-   stoogedings.json, an upper-case .PSD and the creation dates do, and the run's own save commits don't; with nothing
-   changed, a PSD-kind website edit sends the run to the Pending edits step.
+1. The step plans: every step's `if:` evaluated as GitHub does (&&, ||, !, ==, the status functions, the implicit
+   success()), per lane. Data (Card data, and after the bake): a dry run commits, posts and dispatches nothing; switched
+   off it writes only `data`; on, it posts, commits data and dispatches the site (after the bake, whatever the data
+   did); a failed build commits and posts nothing. Main (Bake and save): off, a bake only on a dry run and no M; on,
+   bake, save, M and the re-pin of baked PNGs; a rejected or late M re-pins nothing; GO from Pending edits runs the
+   stages. A failed live job (a retry too) alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit
+   main and every later step; after runs the data steps with AFTER = M.
+2. The data Gate on sandbox history: stoogedings-src/ alone and a hand-edited save don't start the data lane; fonts,
+   stoogedings.json, an upper-case .PSD and the creation dates do; AFTER does. The main Gate: a push and a dispatch go;
+   the schedule goes when a card input or the save changed (the lane's own commits aside) since the last run whose Bake
+   and save succeeded (faked run lists), or none is found; with nothing changed, a PSD-kind website edit sends it to
+   the Pending edits step.
 3. The fonts: a cache hit restores them outside the sparse patterns; after the Fonts tree step the bake's fast-forward
    merge (git_commit.local_commit's) keeps them (without it git deletes them: the control).
 4. The Bake step's arguments: --pending for a push's run, a schedule, their retries and bake=pending, not for another
    dispatch.
-5. Commit main's own script on a sandbox origin: a save-only M names itself in the manifest when the build wrote db/,
-   and leaves an unchanged db/ alone; a push that failed but landed counts as pushed; main moved: M is dropped and one
-   new run is dispatched (marked retry, the cards, seed and restore carried, never full or allow_archive), none from a
-   retry or while another run is unfinished; past minute 60 nothing is pushed.
-6. The timer (a fixed window): a push's and the schedule's run look for a push run in its timer (Another timer: one
+5. Commit main's own script on a sandbox origin: M pushed with its outputs (baked, pngs); a push that failed but landed
+   counts as pushed; main moved: M is dropped and one new run is dispatched (marked retry, the bake carried, no data
+   inputs), none from a retry or while another run is unfinished; past minute 60 nothing is pushed. Re-pin: the save
+   run again on M, a change is a second commit on M; none when the links were current or main moved.
+6. The timer (a fixed window): a push's and the schedule's run look for a push run in its window (Another timer: one
    waiting, or with its Quiet window job unfinished; not itself, not one stuck 40 minutes; unreadable runs count as
-   none) and end at once when there is one (cancelling themselves: no success to end a failing streak); else a push's
-   waits (card-sync-quiet on its first attempt, in no group) and the schedule's syncs; a dispatch syncs at once; Quiet
-   sleeps out what is left of the window from the push time.
+   none) and skip their main lane when there is one (no cancel: the data lane ran); else a push's waits (card-sync-quiet
+   on its first attempt, in no group) and the schedule's goes; a dispatch's at once; Quiet sleeps out what is left of
+   the window from the push time. The data lane runs at once on every event but a retry.
 Exits 1 when a case gets the wrong answer.
 """
 import json
@@ -38,6 +42,7 @@ from checks_env import REPO
 WORKFLOW = os.path.join(REPO, ".github/workflows/card-sync.yml")
 BASH = ["bash", "--noprofile", "--norc", "-eo", "pipefail"]           # GitHub's `shell: bash`
 FAILED = []
+LANE = "Bake and save"                                              # the main job's name (its gate's cursor)
 
 
 def check(ok: bool, what: str) -> None:
@@ -46,16 +51,20 @@ def check(ok: bool, what: str) -> None:
         FAILED.append(what)
 
 
-# ---------- The workflow file (the subset of YAML it uses) ----------
+# ---------- The workflow file (the subset of YAML it uses: anchors on steps, step lists and scalars) ----------
+def _indent(line: str) -> int:
+    return len(line) - len(line.lstrip())
+
+
 def _block(lines: list, at: int, indent: int) -> tuple:
     """The literal block after line at (deeper than indent): (text, next line)."""
     body, i = [], at + 1
-    while i < len(lines) and (not lines[i].strip() or len(lines[i]) - len(lines[i].lstrip()) > indent):
+    while i < len(lines) and (not lines[i].strip() or _indent(lines[i]) > indent):
         body.append(lines[i])
         i += 1
     while body and not body[-1].strip():
         body.pop()
-    cut = min(len(x) - len(x.lstrip()) for x in body if x.strip())
+    cut = min(_indent(x) for x in body if x.strip())
     return "\n".join(x[cut:] for x in body) + "\n", i
 
 
@@ -70,7 +79,7 @@ def _value(text: str) -> str:
 def _mapping(lines: list, at: int, indent: int) -> tuple:
     """key: value lines deeper than indent after line at: (dict, next line)."""
     out, i = {}, at + 1
-    while i < len(lines) and (not lines[i].strip() or len(lines[i]) - len(lines[i].lstrip()) > indent):
+    while i < len(lines) and (not lines[i].strip() or _indent(lines[i]) > indent):
         x = lines[i].strip()
         if x and not x.startswith("#"):
             key, _, rest = x.partition(":")
@@ -79,11 +88,48 @@ def _mapping(lines: list, at: int, indent: int) -> tuple:
     return out, i
 
 
+def _step(lines: list, at: int, anchors: dict) -> tuple:
+    """One step from its `      - ` line: (dict, next line). An anchor on the dash line names it (the caller's)."""
+    step, j = {}, at
+    while j < len(lines):
+        y = lines[j]
+        if j > at and (y.startswith("      - ") or (y.strip() and _indent(y) < 8)):
+            break
+        line = y[8:]
+        if j == at and line.strip()[:1] == "&":
+            j += 1
+            continue
+        if y.strip() and not y.strip().startswith("#") and (_indent(y) == 8 or j == at):
+            key, _, rest = line.partition(":")
+            key, rest = key.strip(), rest.strip()
+            name = ""
+            if rest.startswith("&"):
+                name, _, rest = rest[1:].partition(" ")
+                rest = rest.strip()
+            if rest.startswith("*"):
+                step[key] = anchors[rest[1:]]
+                j += 1
+                continue
+            if rest == "|":
+                step[key], j = _block(lines, j, 8)
+                if name:
+                    anchors[name] = step[key]
+                continue
+            if rest == "" and key in ("env", "with"):
+                step[key], j = _mapping(lines, j, 8)
+                continue
+            step[key] = _value(rest)
+        j += 1
+    return step, j
+
+
 def load() -> dict:
-    """The sync job's steps, timeout and env at the top (plan's), each job's keys and steps in flow["jobs"]."""
+    """{"env": the workflow's, "run_name", "jobs": {id: {"steps", "env", "timeout", "concurrency", "outputs", "name",
+    "if", "needs", "environment"}}}; aliases resolved."""
     lines = open(WORKFLOW, encoding="utf-8").read().split("\n")
-    flow = {"steps": [], "jobs": {}}
-    job, jobs = {"steps": []}, False          # nothing before `jobs:` is a job's (the push paths look like steps)
+    flow = {"env": {}, "jobs": {}}
+    anchors: dict = {}
+    job, jobs = None, False                   # nothing before `jobs:` is a job's (the push paths look like steps)
     i = 0
     while i < len(lines):
         x = lines[i]
@@ -95,12 +141,15 @@ def load() -> dict:
         jobs = jobs or x == "jobs:"
         m = re.match(r"^  ([\w-]+):$", x) if jobs else None
         if m:
-            job = flow if m.group(1) == "sync" else {"steps": []}
+            job = {"steps": [], "env": {}}
             flow["jobs"][m.group(1)] = job
+        if job is None:
+            i += 1
+            continue
         if x.startswith("    timeout-minutes:"):
             job["timeout"] = int(_value(x.split(":", 1)[1]))
         if x == "    env:":
-            job["job_env"], i = _mapping(lines, i, 4)
+            job["env"], i = _mapping(lines, i, 4)
             continue
         if x in ("    concurrency:", "    outputs:"):
             job[x.strip()[:-1]], i = _mapping(lines, i, 4)
@@ -108,35 +157,29 @@ def load() -> dict:
         if re.match(r"^    (name|if|needs|environment):", x):
             key, _, rest = x.strip().partition(":")
             job[key] = _value(rest)
+        if x.startswith("    steps:"):
+            ref = x.split(":", 1)[1].strip()
+            if ref.startswith("*"):
+                job["steps"] = anchors[ref[1:]]
+            elif ref.startswith("&"):
+                anchors[ref[1:]] = job["steps"]
         if x.startswith("      - "):
-            step, j = {}, i
-            first = True
-            while j < len(lines):
-                y = lines[j]
-                if not first and (y.startswith("      - ") or (y.strip() and len(y) - len(y.lstrip()) < 8)):
-                    break
-                line = y[8:]
-                first = False
-                if y.strip() and not y.strip().startswith("#") and (len(y) - len(y.lstrip()) == 8 or y.startswith("      - ")):
-                    key, _, rest = line.partition(":")
-                    key = key.strip()
-                    if rest.strip() == "|":
-                        step[key], j = _block(lines, j, 8)
-                        continue
-                    if rest.strip() == "" and key in ("env", "with"):
-                        step[key], j = _mapping(lines, j, 8)
-                        continue
-                    step[key] = _value(rest)
-                j += 1
-            job["steps"].append(step)
-            i = j
+            text = x[8:].strip()
+            if text.startswith("*"):
+                job["steps"].append(anchors[text[1:]])
+                i += 1
+                continue
+            s, i = _step(lines, i, anchors)
+            if text.startswith("&"):
+                anchors[text[1:]] = s
+            job["steps"].append(s)
             continue
         i += 1
     return flow
 
 
-def step(flow: dict, name: str) -> dict:
-    return next(s for s in flow["steps"] if s.get("name") == name or s.get("id") == name)
+def step(job: dict, name: str) -> dict:
+    return next(s for s in job["steps"] if s.get("name") == name or s.get("id") == name)
 
 
 # ---------- GitHub expressions ----------
@@ -230,23 +273,24 @@ def evaluate(text: str, ctx: dict):
     return out
 
 
-def plan(flow: dict, event: str = "workflow_dispatch", inputs: dict = None, switches: dict = None, actor: str = "MichaelJSr",
-         outcomes: dict = None, outputs: dict = None) -> dict:
-    """{step id or name: outcome} of one run: a step that runs gets its outcome from outcomes (default success)."""
+def plan(flow: dict, job: str, event: str = "workflow_dispatch", inputs: dict = None, switches: dict = None,
+         actor: str = "MichaelJSr", outcomes: dict = None, outputs: dict = None, needs: dict = None) -> dict:
+    """{step id or name: outcome} of one job's run: a step that runs gets its outcome from outcomes (default success)."""
     inputs = dict(inputs or {})
     outcomes, outputs = outcomes or {}, outputs or {}
     github = {"event_name": event, "actor": actor}
-    env = {**flow["env"], **(switches or {})}
-    ctx = {"github": github, "inputs": inputs, "vars": {}, "secrets": {}, "steps": {}, "env": env,
+    env: dict = {}
+    ctx = {"github": github, "inputs": inputs, "vars": {}, "secrets": {}, "steps": {}, "env": env, "needs": needs or {},
            "functions": {"toJSON": json.dumps}}
-    for key, value in flow["job_env"].items():
-        whole = value.startswith("${{") and value.endswith("}}") and value.count("${{") == 1
-        env[key] = evaluate(value, ctx) if whole else value
+    for layer in (flow["env"], switches or {}, flow["jobs"][job]["env"]):
+        for key, value in layer.items():
+            whole = value.startswith("${{") and value.endswith("}}") and value.count("${{") == 1
+            env[key] = evaluate(value, ctx) if whole else value
     failed = [False]
     ctx["functions"].update(success=lambda: not failed[0], failure=lambda: failed[0], always=lambda: True,
                             cancelled=lambda: False)
     ran = {}
-    for s in flow["steps"]:
+    for s in flow["jobs"][job]["steps"]:
         key = s.get("id") or s.get("name") or s.get("uses")
         cond = s.get("if", "")
         if cond and not any(f in cond for f in STATUS):
@@ -266,66 +310,82 @@ def plan(flow: dict, event: str = "workflow_dispatch", inputs: dict = None, swit
 def plans(flow: dict) -> None:
     runs = lambda p: {k for k, v in p.items() if v not in ("skipped",) and k != "env"}    # noqa: E731
     go = {"gate": {"go": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "true"}}}
-    baked = {**go, "bake": {"baked": "true", "b": "b" * 40}, "save": {"changed": "true"}}
     off = {"MAIN_COMMIT": "off", "POSTS": "off"}
-    check(flow["env"].get("MAIN_COMMIT") == "on" and flow["env"].get("POSTS") == "on", "the cutover: MAIN_COMMIT and POSTS on")
-
-    p = plan(flow, inputs={"dry_run": True, "bake": "all"}, switches=off, outputs=baked)
-    check(p["env"]["DRY_RUN"] == "true" and {"bake", "build", "save", "posts"} <= runs(p)
-          and not {"main", "data-commit", "Site build", "Send the posts"} & runs(p),
-          "step 6, dry dispatch: bake (dry), build, save and posts run; nothing committed or sent")
-    p = plan(flow, inputs={"dry_run": False, "bake": "all"}, switches=off, outputs={**go, "save": {"changed": "true"}})
-    check(p["env"]["DRY_RUN"] == "false" and "bake" not in runs(p) and "main" not in runs(p) and "data-commit" in runs(p)
-          and "Site build" not in runs(p) and "Send the posts" not in runs(p),
-          "step 6, live dispatch (MAIN_COMMIT off): no bake, no M, the data commit only (no site build, no posts)")
-    p = plan(flow, event="schedule", switches=off, outputs={**go, "save": {"changed": "true"}})
-    check(p["env"]["DRY_RUN"] == "false" and "bake" not in runs(p) and "main" not in runs(p) and "data-commit" in runs(p),
-          "step 7, schedule (MAIN_COMMIT and POSTS off): live, writes only data")
-    p = plan(flow, event="schedule", switches=off, outputs=go, outcomes={"build": "failure"})
-    check("Tell Discord" not in runs(p), "step 7, a failed scheduled run: no Discord alert while POSTS is off")
     on = {"MAIN_COMMIT": "on", "POSTS": "on"}
-    p = plan(flow, event="schedule", switches=on, outputs={**baked, "main": {"pushed": "true"}, "data-commit": {"committed": "true"}})
-    check({"bake", "build", "save", "main", "Send the posts", "data-commit", "Site build"} <= runs(p),
-          "step 8, schedule: bake, build, save, M, posts, data, site build")
-    p = plan(flow, event="schedule", switches=on, outputs={**baked, "main": {"rejected": "true"}})
-    check("main" in runs(p) and not {"Send the posts", "data-commit"} & runs(p),
-          "step 8, main moved after a bake: the data (it read B) and the posts are dropped")
-    p = plan(flow, event="schedule", switches=on, outputs={**go, "save": {"changed": "true"}, "main": {"rejected": "true"}})
-    check("main" in runs(p) and not {"Send the posts", "data-commit"} & runs(p),
-          "step 8, main moved, save-only M: the data and the posts are dropped too (card_commit and repin stay)")
-    p = plan(flow, event="schedule", switches=on, outputs=baked, outcomes={"build": "failure"})
-    check(not {"save", "main", "data-commit"} & runs(p) and "Tell Discord" in runs(p),
-          "step 8, build failed after a bake: no save, M or data; Discord told")
-    p = plan(flow, event="schedule", switches=on, outputs={**go, "save": {"changed": "true"}}, outcomes={"main": "failure"})
-    check("main" in runs(p) and not {"Send the posts", "data-commit"} & runs(p), "step 8, M failed (too late): no posts, no data")
-    edits = {"gate": {"go": "false", "edits": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "false"}}}
-    p = plan(flow, event="schedule", outputs={**edits, "edits": {"GITHUB_ENV": {"GO": "true"}}, "bake": baked["bake"],
-                                              "save": {"changed": "true"}, "main": {"pushed": "true"}})
-    check({"venv", "edits", "bake", "build", "save", "main", "data-commit"} <= runs(p),
-          "step 8, a put-off website edit past its grace (Pending edits sets GO): bake, build, save, M, data")
-    p = plan(flow, event="schedule", outputs=edits)
-    check({"venv", "edits"} <= runs(p) and not {"bake", "build", "save", "main", "data-commit"} & runs(p),
-          "step 8, website edits still in their grace: the Python environment and Pending edits only")
-    p = plan(flow, event="schedule", outputs={"gate": {"go": "false", "edits": "false", "GITHUB_ENV": {"GO": "false"}}})
-    check(not {"venv", "edits", "bake", "build"} & runs(p), "step 8, nothing to do: the run ends at the gate")
+    check(flow["env"].get("MAIN_COMMIT") == "on" and flow["env"].get("POSTS") == "on", "the cutover: MAIN_COMMIT and POSTS on")
+    data, main, after = (flow["jobs"][j] for j in ("data", "main", "after"))
+    check(after["steps"] is data["steps"] and data["env"] == {"AFTER": ""} and after["env"] == {"AFTER": "${{ needs.main.outputs.m }}"},
+          "after: the data lane's steps, with AFTER the bake's M")
+
+    # The data lane
+    p = plan(flow, "data", inputs={"dry_run": True}, switches=off, outputs=go)
+    check(p["env"]["DRY_RUN"] == "true" and {"build", "posts"} <= runs(p) and not {"data-commit", "Site build", "Send the posts"} & runs(p),
+          "data, dry dispatch: build and posts; nothing committed, sent or dispatched")
+    p = plan(flow, "data", inputs={"dry_run": False}, switches=off, outputs=go)
+    check(p["env"]["DRY_RUN"] == "false" and "data-commit" in runs(p) and not {"Site build", "Send the posts"} & runs(p),
+          "data, live dispatch switched off: the data commit only (no site build, no posts)")
+    p = plan(flow, "data", event="schedule", switches=off, outputs=go, outcomes={"build": "failure"})
+    check("Tell Discord" not in runs(p), "data, a failed scheduled run: no Discord alert while POSTS is off")
+    p = plan(flow, "data", event="push", switches=on, outputs={**go, "data-commit": {"committed": "true"}})
+    check({"venv", "fonts", "build", "posts", "Send the posts", "data-commit", "Site build"} <= runs(p),
+          "data, a push at once: build, posts, data commit, site build")
+    p = plan(flow, "data", event="schedule", switches=on, outputs=go, outcomes={"build": "failure"})
+    check(not {"Send the posts", "data-commit"} & runs(p) and "Tell Discord" in runs(p),
+          "data, build failed: no posts, no data commit; Discord told")
+    p = plan(flow, "data", event="schedule", outputs={"gate": {"go": "false", "GITHUB_ENV": {"GO": "false"}}})
+    check(not {"venv", "build", "posts", "data-commit", "Site build"} & runs(p), "data, nothing to do: the job ends at the gate")
+    p = plan(flow, "after", event="push", switches=on, outputs=go, needs={"main": {"outputs": {"m": "m" * 40}}})
+    check(p["env"]["AFTER"] == "m" * 40 and {"build", "Send the posts", "data-commit", "Site build"} <= runs(p),
+          "after: the data lane on M; the site build follows the bake even with db/ unchanged")
+    p = plan(flow, "data", inputs={"dry_run": True}, switches=on, outputs=go, outcomes={"build": "failure"})
+    q = plan(flow, "data", inputs={"dry_run": False}, switches=on, outputs=go, outcomes={"build": "failure"})
+    check("Tell Discord" not in runs(p) and "Tell Discord" in runs(q), "data, a failed dispatch: a live one alerts, a dry one doesn't")
+
+    # The main lane
+    baked = {**go, "bake": {"baked": "true", "b": "b" * 40}, "save": {"changed": "true"}}
+    p = plan(flow, "main", inputs={"dry_run": True, "bake": "all"}, switches=off, outputs=baked)
+    check({"bake", "save"} <= runs(p) and not {"main", "repin"} & runs(p), "main, dry dispatch: bake (dry) and save; no M")
+    p = plan(flow, "main", inputs={"dry_run": False, "bake": "all"}, switches=off, outputs={**go, "save": {"changed": "true"}})
+    check("bake" not in runs(p) and "save" in runs(p) and "main" not in runs(p), "main, switched off: no bake, no M")
+    p = plan(flow, "main", event="push", switches=on, outputs={**baked, "main": {"pushed": "true", "pngs": "true"}})
+    check({"venv", "fonts", "bake", "save", "main", "repin"} <= runs(p) and "Site build" not in runs(p),
+          "main, after a push's window: bake, save, M, the baked PNGs re-pinned (the site follows the after job)")
+    p = plan(flow, "main", event="schedule", switches=on, outputs={**baked, "main": {"pushed": "true", "pngs": "false"}})
+    check("main" in runs(p) and "repin" not in runs(p), "main, M without PNGs: nothing to re-pin")
+    p = plan(flow, "main", event="schedule", switches=on, outputs={**baked, "main": {"rejected": "true"}})
+    check("main" in runs(p) and "repin" not in runs(p), "main moved: M dropped, no re-pin")
+    p = plan(flow, "main", event="schedule", switches=on, outputs=baked, outcomes={"main": "failure"})
+    check("repin" not in runs(p) and "Tell Discord" in runs(p), "main, M failed (too late): no re-pin; Discord told")
+    p = plan(flow, "main", event="schedule", switches=on, outputs=baked, outcomes={"bake": "failure"})
+    check({"save", "main"} <= runs(p), "main, a card's bake error: the save and M go on with the other cards (B kept)")
+    edits = {"gate": {"go": "false", "edits": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "false", "EDITS": "true"}}}
+    p = plan(flow, "main", event="schedule", outputs={**edits, "edits": {"GITHUB_ENV": {"GO": "true"}}, "bake": baked["bake"],
+                                                      "save": {"changed": "true"}, "main": {"pushed": "true"}})
+    check({"venv", "edits", "bake", "save", "main"} <= runs(p),
+          "main, a put-off website edit past its grace (Pending edits sets GO): bake, save, M")
+    p = plan(flow, "main", event="schedule", outputs=edits)
+    check({"venv", "edits"} <= runs(p) and not {"bake", "save", "main"} & runs(p),
+          "main, website edits still in their grace: the Python environment and Pending edits only")
+    p = plan(flow, "main", event="schedule", outputs={"gate": {"go": "false", "edits": "false", "GITHUB_ENV": {"GO": "false", "EDITS": "false"}}})
+    check(not {"venv", "edits", "bake", "save"} & runs(p), "main, nothing to do: the job ends at the gate")
     retry = {"dry_run": False, "bake": "all", "force": True, "retry": "schedule"}
-    p = plan(flow, inputs=retry, switches=on, actor="github-actions[bot]", outputs=go, outcomes={"build": "failure"})
-    q = plan(flow, inputs=retry, switches=on, actor="MichaelJSr", outputs=go, outcomes={"build": "failure"})
-    check("Tell Discord" in runs(p) and "Tell Discord" in runs(q), "step 8, a failed retry tells Discord, whoever dispatched it")
-    p = plan(flow, inputs={"dry_run": True, "bake": "all"}, switches=on, outputs=go, outcomes={"build": "failure"})
-    q = plan(flow, inputs={"dry_run": False, "bake": "all"}, switches=on, outputs=go, outcomes={"build": "failure"})
-    check("Tell Discord" not in runs(p) and "Tell Discord" in runs(q), "step 8, a failed dispatch: a live one alerts, a dry one doesn't")
+    p = plan(flow, "main", inputs=retry, switches=on, actor="github-actions[bot]", outputs=go, outcomes={"save": "failure"})
+    q = plan(flow, "main", inputs=retry, switches=on, actor="MichaelJSr", outputs=go, outcomes={"save": "failure"})
+    check("Tell Discord" in runs(p) and "Tell Discord" in runs(q), "main, a failed retry tells Discord, whoever dispatched it")
+
     names = [evaluate(flow["run_name"], {"github": {"event_name": e}, "inputs": i, "functions": {}})
              for e, i in (("workflow_dispatch", {"dry_run": True}), ("workflow_dispatch", {"dry_run": False}), ("schedule", {}),
                           ("workflow_dispatch", {"dry_run": False, "retry": "schedule"}))
              if "run_name" in flow] or ["no run-name"]
-    check(names == ["Card sync (dry run)", "Card sync", "Card sync", "Card sync (retry)"] and f'\\"{names[0]}\\"' in step(flow, "Tell Discord")["run"],
-          f"run names {names}: the alert's streak leaves out the dry runs by that name; the bot knows a retry by its")
-    late = re.search(r"late=\$\(\( \((\d+) - (\d+)\) \* 60 \)\)", step(flow, "main")["run"])
-    after = flow["steps"][flow["steps"].index(step(flow, "main")):]
-    caps = [int(s.get("timeout-minutes", "0")) for s in after]
-    check(bool(late) and int(late.group(1)) == flow["timeout"] and all(caps) and int(late.group(2)) >= sum(caps),
-          f"Commit main's deadline: the job's timeout ({late and late.group(1)} == {flow['timeout']}) less "
+    tells = [step(flow["jobs"][j], "Tell Discord")["run"] for j in ("data", "main")]
+    check(names == ["Card sync (dry run)", "Card sync", "Card sync", "Card sync (retry)"] and tells[0] is tells[1]
+          and f'\\"{names[0]}\\"' in tells[0] and "actions/runs/$GITHUB_RUN_ID/jobs" in tells[0],
+          f"run names {names}: one alert script (once a run) whose streak leaves out the dry runs by that name")
+    late = re.search(r"late=\$\(\( \((\d+) - (\d+)\) \* 60 \)\)", step(main, "main")["run"])
+    rest = main["steps"][main["steps"].index(step(main, "main")):]
+    caps = [int(s.get("timeout-minutes", "0")) for s in rest]
+    check(bool(late) and int(late.group(1)) == main["timeout"] and all(caps) and int(late.group(2)) >= sum(caps),
+          f"Commit main's deadline: the job's timeout ({late and late.group(1)} == {main['timeout']}) less "
           f"{late and late.group(2)} minutes, at least the caps of it and every later step ({' + '.join(map(str, caps))})")
 
 
@@ -378,48 +438,60 @@ def checkout(tmp: str, bare: str, name: str = "ws") -> str:
     return ws
 
 
-def run_step(flow: dict, name: str, cwd: str, env: dict, tmp: str) -> tuple:
+def run_step(job: dict, name: str, cwd: str, env: dict, tmp: str) -> tuple:
     """A step's run: script under bash -e: (exit code, output, $GITHUB_OUTPUT as a dict)."""
     out = os.path.join(tmp, f"output-{time.monotonic_ns()}")
     open(out, "w").close()
     e = {**os.environ, "GITHUB_OUTPUT": out, "GITHUB_ENV": out + ".env", "GITHUB_STEP_SUMMARY": os.path.join(tmp, "summary.md"),
          "GITHUB_WORKSPACE": cwd, "RUNNER_TEMP": os.path.join(tmp, "runner"), "GITHUB_REPOSITORY": "MichaelJSr/TTSCardMaker",
          **env}
-    r = subprocess.run(BASH + ["-c", step(flow, name)["run"]], cwd=cwd, capture_output=True, text=True, env=e)
+    r = subprocess.run(BASH + ["-c", step(job, name)["run"]], cwd=cwd, capture_output=True, text=True, env=e)
     outputs = dict(line.split("=", 1) for line in open(out, encoding="utf-8").read().splitlines() if "=" in line)
     return r.returncode, r.stdout + r.stderr, outputs
 
 
 def timer_cases(flow: dict) -> None:
-    """The timer: which runs look for another timer, wait, or sync; Another timer on faked run lists; Quiet's sleep."""
-    timer, quiet = flow["jobs"]["timer"], flow["jobs"]["quiet"]
-    ctx = lambda event, actor="MichaelJSr", attempt="1", **needs: {  # noqa: E731
-        "github": {"event_name": event, "actor": actor, "run_attempt": attempt}, "needs": needs,
+    """The timer: which runs look for another timer, wait, or bake; Another timer on faked run lists; Quiet's sleep."""
+    jobs = flow["jobs"]
+    timer, quiet, main = jobs["timer"], jobs["quiet"], jobs["main"]
+    ctx = lambda event, actor="MichaelJSr", attempt="1", inputs=None, **needs: {  # noqa: E731
+        "github": {"event_name": event, "actor": actor, "run_attempt": attempt}, "needs": needs, "inputs": inputs or {},
         "functions": {"cancelled": lambda: False}}
+    got = [bool(evaluate(jobs["data"]["if"], ctx(e, inputs=i))) for e, i in (("push", None), ("schedule", None),
+                                                                              ("workflow_dispatch", {"cards": "X"}),
+                                                                              ("workflow_dispatch", {"retry": "push"}))]
+    check(got == [True, True, True, False] and "needs" not in jobs["data"] and "environment" not in jobs["data"]
+          and jobs["data"]["concurrency"] == jobs["after"]["concurrency"] == {"group": "card-data", "cancel-in-progress": "false"},
+          f"data: at once on a push, the schedule and a dispatch, never a retry; one group with after ({got})")
     got = [bool(evaluate(timer["if"], ctx(e, a))) for e, a in (("push", "MichaelJSr"), ("push", "AutoCroissant"),
                                                               ("push", "github-actions[bot]"), ("schedule", "x"),
                                                               ("workflow_dispatch", "x"))]
     check(got == [True, True, False, True, False],
-          f"timer: a person's or the bot's push and the schedule look for a running timer; dispatches never ({got})")
+          f"timer: a person's or the bot's push and the schedule look for a running window; dispatches never ({got})")
     t = lambda result, other="": {"result": result, "outputs": {"other": other} if result != "skipped" else {}}  # noqa: E731
     got = [bool(evaluate(quiet["if"], ctx(e, timer=n))) for e, n in (("push", t("success")), ("push", t("success", "41")),
                                                                      ("push", t("failure")), ("push", t("skipped")),
                                                                      ("schedule", t("success")), ("workflow_dispatch", t("skipped")))]
     check(got == [True, False, True, False, False, False],
-          f"quiet: a push's run waits unless another timer runs (a failed look waits too); nothing else waits ({got})")
+          f"quiet: a push's run waits unless another window runs (a failed look waits too); nothing else waits ({got})")
     check([evaluate(quiet["environment"], ctx("push", attempt=a)) for a in ("1", "2")] == ["card-sync-quiet", ""]
           and quiet.get("name") == "Quiet window" and "concurrency" not in quiet and "concurrency" not in timer
-          and step(timer, "other")["env"]["QUIET"] == quiet["name"],
-          "quiet: card-sync-quiet on the first attempt only, in no group; Another timer looks for its name")
+          and step(timer, "other")["env"]["QUIET"] == quiet["name"] and step(main, "gate")["env"]["LANE"] == main["name"] == LANE,
+          "quiet: card-sync-quiet on the first attempt only, in no group; Another timer looks for its name, the main Gate for main's")
     q = lambda result: {"result": result, "outputs": {}}  # noqa: E731
     want = [(("push", t("success"), q("success")), True), (("push", t("failure"), q("failure")), True),
             (("push", t("success", "41"), q("skipped")), False), (("push", t("skipped"), q("skipped")), False),
             (("schedule", t("success"), q("skipped")), True), (("schedule", t("success", "41"), q("skipped")), False),
             (("schedule", t("failure"), q("skipped")), True), (("workflow_dispatch", t("skipped"), q("skipped")), True)]
-    got = [bool(evaluate(flow["if"], ctx(e, timer=n, quiet=w))) for (e, n, w), _ in want]
-    check(got == [w for _, w in want] and flow["needs"] == "[timer, quiet]"
-          and flow["concurrency"] == {"group": "card-sync", "cancel-in-progress": "false"},
-          f"sync: a push's after its window, the schedule's unless a timer runs, a dispatch's at once; one group ({got})")
+    got = [bool(evaluate(main["if"], ctx(e, timer=n, quiet=w))) for (e, n, w), _ in want]
+    check(got == [w for _, w in want] and main["needs"] == "[timer, quiet]"
+          and main["concurrency"] == {"group": "card-main", "cancel-in-progress": "false"},
+          f"main: a push's after its window, the schedule's unless a window runs, a dispatch's at once; one group ({got})")
+    a = lambda result, baked="": {"result": result, "outputs": {"baked": baked}}  # noqa: E731
+    got = [bool(evaluate(jobs["after"]["if"], ctx("push", main=n))) for n in (a("success", "true"), a("success", "false"),
+                                                                              a("success"), a("skipped"), a("failure", "true"))]
+    check(got == [True, False, False, False, True] and jobs["after"]["needs"] == "main",
+          f"after: once M brought the bake's card files (a later failure too), not a save-only M ({got})")
 
     with tempfile.TemporaryDirectory() as tmp:
         fake = os.path.join(tmp, "bin")
@@ -427,40 +499,34 @@ def timer_cases(flow: dict) -> None:
         write(os.path.join(fake, "gh"), "#!/bin/bash\n"      # gh's --jq on canned JSON: the run list, a run's jobs
               'q=""; prev=""; for a in "$@"; do [ "$prev" = --jq ] && q=$a; prev=$a; done\n'
               '[ -n "$FAKE_FAIL" ] && exit 1\n'
-              f'if [ "$2" = cancel ]; then echo "$3" > "{os.path.join(tmp, "cancelled")}"; [ -z "$FAKE_NO_CANCEL" ]; exit; fi\n'
+              f'if [ "$2" = cancel ]; then echo "$3" > "{os.path.join(tmp, "cancelled")}"; exit; fi\n'
               'if [ "$1" = run ]; then jq -r "$q" <<< "$FAKE_RUNS"; exit; fi\n'
               'id=$(sed -n "s|.*/runs/\\([0-9]*\\)/jobs|\\1|p" <<< "$2"); jq -r "$q" "$FAKE_JOBS/$id.json"\n')
         write(os.path.join(fake, "sleep"), f'#!/bin/bash\necho "$1" > "{os.path.join(tmp, "slept")}"\n')
         for name in ("gh", "sleep"):
             os.chmod(os.path.join(fake, name), 0o755)
-        jobs = os.path.join(tmp, "jobs")
+        jobs_dir = os.path.join(tmp, "jobs")
         stamp = lambda minutes: time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() - minutes * 60))  # noqa: E731
         run = lambda rid, status, minutes=5: {"databaseId": rid, "status": status, "createdAt": stamp(minutes)}  # noqa: E731
-        write(os.path.join(jobs, "41.json"), json.dumps({"jobs": [{"name": "timer", "status": "completed"},
-                                                                  {"name": "Quiet window", "status": "in_progress"}]}))
-        write(os.path.join(jobs, "42.json"), json.dumps({"jobs": [{"name": "Quiet window", "status": "completed"},
-                                                                  {"name": "sync", "status": "in_progress"}]}))
+        write(os.path.join(jobs_dir, "41.json"), json.dumps({"jobs": [{"name": "timer", "status": "completed"},
+                                                                      {"name": "Quiet window", "status": "in_progress"}]}))
+        write(os.path.join(jobs_dir, "42.json"), json.dumps({"jobs": [{"name": "Quiet window", "status": "completed"},
+                                                                      {"name": LANE, "status": "in_progress"}]}))
         cases = [([], "", "no other push run"), ([run(40, "waiting")], "40", "a run waiting on the environment"),
                  ([run(41, "in_progress")], "41", "a run sleeping out its window (no wait timer)"),
-                 ([run(42, "in_progress")], "", "a run past its window (syncing)"),
-                 ([run(99, "waiting")], "", "this run itself"), ([run(43, "waiting", 50)], "", "a timer stuck 50 minutes"),
+                 ([run(42, "in_progress")], "", "a run past its window (baking)"),
+                 ([run(99, "waiting")], "", "this run itself"), ([run(43, "waiting", 50)], "", "a window stuck 50 minutes"),
                  ([run(42, "in_progress"), run(40, "waiting")], "40", "the second of two runs")]
         cancelled = os.path.join(tmp, "cancelled")
+        env = {}
         for runs, want, what in cases:
-            if os.path.exists(cancelled):
-                os.remove(cancelled)
-            env = {"PATH": f"{fake}:{os.environ['PATH']}", "FAKE_RUNS": json.dumps(runs), "FAKE_JOBS": jobs, "GITHUB_RUN_ID": "99",
+            env = {"PATH": f"{fake}:{os.environ['PATH']}", "FAKE_RUNS": json.dumps(runs), "FAKE_JOBS": jobs_dir, "GITHUB_RUN_ID": "99",
                    "GITHUB_EVENT_NAME": "push", "GITHUB_SERVER_URL": "https://github.com", "GH_TOKEN": "x",
                    "QUIET": "Quiet window"}
             code, text, out = run_step(timer, "other", tmp, env, tmp)
-            got = open(cancelled).read().strip() if os.path.exists(cancelled) else ""
-            check(code == 0 and out.get("run", "") == want and got == ("99" if want else ""),
-                  f"Another timer: {what} -> {out.get('run') or 'none'}{', cancels itself' if got else ''}"
+            check(code == 0 and out.get("run", "") == want and not os.path.exists(cancelled),
+                  f"Another timer: {what} -> {out.get('run') or 'none'} (the run goes on: its data lane)"
                   + ("" if code == 0 else f"\n{text}"))
-        code, text, out = run_step(timer, "other", tmp, {**env, "FAKE_RUNS": json.dumps([run(40, "waiting")]),
-                                                         "FAKE_NO_CANCEL": "1"}, tmp)
-        check(code == 0 and out.get("run") == "40" and "could not cancel itself" in text,
-              "Another timer: the cancel refused -> a warning, the run still ends")
         code, text, out = run_step(timer, "other", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
         check(code == 0 and "run" not in out and "were not read" in text, "Another timer: runs not read -> none (this run goes on)")
 
@@ -477,54 +543,89 @@ def timer_cases(flow: dict) -> None:
                   f"quiet: pushed {what} -> sleeps {slept}" + ("" if code == 0 else f"\n{text}"))
 
 
+def _bot(ws: str) -> None:
+    """The builder checkout a gate reads: card_data.py, PARSER_VERSION 2, one commit."""
+    write(os.path.join(ws, "bot/commands/card_data.py"), "")
+    write(os.path.join(ws, "bot/commands/psd_parser.py"), "PARSER_VERSION = 2\n")
+    subprocess.run(["git", "init", "-q", os.path.join(ws, "bot")], check=True)
+    git(os.path.join(ws, "bot"), "commit", "-q", "--allow-empty", "-m", "bot")
+
+
+DATA_GATE = {"POSTS": "off", "DRY_RUN": "false", "BUILDER_REF": "main", "BOT_REPO": "bobberlington/AutoCroissant",
+             "GIT_NO_LAZY_FETCH": "1", "FORCE": "false", "FULL": "false", "CARDS": "", "RESTORE": "", "SEED": "", "AFTER": ""}
+
+
 def gate_cases(flow: dict) -> None:
+    data, main = flow["jobs"]["data"], flow["jobs"]["main"]
     with tempfile.TemporaryDirectory() as tmp:
         work, bare = origin(tmp)
         os.makedirs(os.path.join(tmp, "runner"))
         cases = [  # (files, message, author, expected go)
             ({"MDW/Fonts/stoogedings-src/x.svg": "svg 2"}, "icon source", "t", False),
             ({"site/index.html": "y"}, "site code", "t", False),
-            ({"TTS/Impossibility Simulator.json": '{"a":1}'}, "Card sync: TTS save updated", "AutoCroissant", False),
-            ({"TTS/Impossibility Simulator.json": '{"a":2}'}, "TTS save by hand", "t", True),
+            ({"TTS/Impossibility Simulator.json": '{"a":2}'}, "TTS save by hand", "t", False),
             ({"MDW/Fonts/c.ttf": "font c"}, "a font", "t", True),
             ({"MDW/Fonts/stoogedings-src/stoogedings.json": '{"x":1}'}, "the icon manifest", "t", True),
             ({"Deep/Two/Card.PSD": "psd", "Deep/Two/Card.PNG": "png"}, "an upper-case card", "t", True),
             ({"site/Card Creation Dates.json": '{"cards":{}}'}, "creation dates", "t", True),
         ]
-        starts = []
         for files, message, author, want in cases:
             base = git(work, "rev-parse", "HEAD")
             commit(work, files, message, author)
             git(work, "push", "-q", "origin", "main")
             ws = checkout(tmp, bare, f"ws-{time.monotonic_ns()}")
-            write(os.path.join(ws, "bot/commands/card_data.py"), "")
-            write(os.path.join(ws, "bot/commands/psd_parser.py"), "PARSER_VERSION = 2\n")
-            subprocess.run(["git", "init", "-q", os.path.join(ws, "bot")], check=True)
-            git(os.path.join(ws, "bot"), "commit", "-q", "--allow-empty", "-m", "bot")
+            _bot(ws)
             write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps(
-                {"card_commit": base, "builder": {"parser_version": 2}, "pending": {"stale": [], "repin": []}}))
-            code, text, out = run_step(flow, "gate", ws, {"POSTS": "off", "DRY_RUN": "false", "BUILDER_REF": "main",
-                                                          "BOT_REPO": "bobberlington/AutoCroissant", "GIT_NO_LAZY_FETCH": "1",
-                                                          "FORCE": "false", "FULL": "false", "CARDS": "", "RESTORE": "",
-                                                          "SEED": ""}, tmp)
+                {"card_commit": base, "builder": {"parser_version": 2}, "pending": {"stale": [], "repin": ["x.png"]}}))
+            code, text, out = run_step(data, "gate", ws, DATA_GATE, tmp)
             check(code == 0 and out.get("go") == str(want).lower(),
-                  f"gate: {message} -> go={out.get('go')} (want {str(want).lower()})" + ("" if code == 0 else f"\n{text}"))
-            starts.append(out.get("start", ""))
-        check(all(x.isdigit() and abs(int(x) - time.time()) < 600 for x in starts), "gate: every run records its start (the deadline's clock)")
-        commit(work, {"site/Card Edits.json": '{"cards":{"X":{"hp":1,"_by":"web"},"Y":{"series":"s"}}}'}, "website edit", "web")
+                  f"data gate: {message} -> go={out.get('go')} (want {str(want).lower()})" + ("" if code == 0 else f"\n{text}"))
+            if message == "icon source":
+                code, text, out = run_step(data, "gate", ws, {**DATA_GATE, "AFTER": "f" * 40}, tmp)
+                check(code == 0 and out.get("go") == "true" and "the bake's main commit ffffffff" in text,
+                      "data gate: after the bake (AFTER) -> go, nothing else changed" + ("" if code == 0 else f"\n{text}"))
+
+        # The main lane's gate: the cursor is the head of the last run whose Bake and save succeeded
+        fake = os.path.join(tmp, "bin")
+        write(os.path.join(fake, "gh"), "#!/bin/bash\n"
+              'q=""; prev=""; for a in "$@"; do [ "$prev" = --jq ] && q=$a; prev=$a; done\n'
+              '[ -n "$FAKE_FAIL" ] && exit 1\n'
+              'if [ "$1" = run ]; then jq -r "$q" <<< "$FAKE_RUNS"; exit; fi\n'
+              'id=$(sed -n "s|.*/runs/\\([0-9]*\\)/jobs|\\1|p" <<< "$2"); jq -r "$q" "$FAKE_JOBS/$id.json"\n')
+        os.chmod(os.path.join(fake, "gh"), 0o755)
+        jobs_dir = os.path.join(tmp, "jobs")
+        write(os.path.join(jobs_dir, "7.json"), json.dumps({"jobs": [{"name": "Card data", "conclusion": "success"},
+                                                                     {"name": LANE, "conclusion": "skipped"}]}))
+        write(os.path.join(jobs_dir, "6.json"), json.dumps({"jobs": [{"name": LANE, "conclusion": "success"}]}))
+        write(os.path.join(jobs_dir, "5.json"), json.dumps({"jobs": [{"name": LANE, "conclusion": "failure"}]}))
+        before = git(work, "rev-parse", "HEAD")
+        commit(work, {"Cards/Two.psd": "psd 2"}, "a card", "bob")
+        commit(work, {"TTS/Impossibility Simulator.json": '{"a":3}'}, "Card sync: TTS save updated", "AutoCroissant")
+        git(work, "push", "-q", "origin", "main")
+        head = git(work, "rev-parse", "HEAD")
+        ws = checkout(tmp, bare, "ws-main")
+        _bot(ws)
+        env = {"PATH": f"{fake}:{os.environ['PATH']}", "FAKE_JOBS": jobs_dir, "GH_TOKEN": "x", "GIT_NO_LAZY_FETCH": "1",
+               "LANE": LANE, "RETRY": "", "DRY_RUN": "false"}
+        listed = lambda *pairs: json.dumps([{"databaseId": i, "headSha": s} for i, s in pairs])  # noqa: E731
+        for event, runs, fail, want, what in (
+                ("push", "[]", "", "true", "a push: its window is up"),
+                ("workflow_dispatch", "[]", "", "true", "a dispatch"),
+                ("schedule", listed((7, head), (6, before), (5, head)), "", "true", "a card commit since the last Bake and save"),
+                ("schedule", listed((7, before), (6, head)), "", "false", "only the lane's own commit since (skipped runs passed over)"),
+                ("schedule", listed((5, head)), "", "true", "no Bake and save succeeded in the last runs"),
+                ("schedule", "[]", "1", "true", "the runs not read")):
+            code, text, out = run_step(main, "gate", ws, {**env, "GITHUB_EVENT_NAME": event, "FAKE_RUNS": runs, "FAKE_FAIL": fail}, tmp)
+            check(code == 0 and out.get("go") == want and out.get("main") == head,
+                  f"main gate: {what} -> go={out.get('go')} (want {want})" + ("" if code == 0 else f"\n{text}"))
+        commit(work, {"site/Card Edits.json": '{"cards":{"X":{"hp":1,"_by":"web"},"Y":{"series":"s"}}}'}, "Card sync: edit verdicts",
+               "AutoCroissant")
         git(work, "push", "-q", "origin", "main")
         ws = checkout(tmp, bare, "ws-edits")
-        write(os.path.join(ws, "bot/commands/card_data.py"), "")
-        write(os.path.join(ws, "bot/commands/psd_parser.py"), "PARSER_VERSION = 2\n")
-        subprocess.run(["git", "init", "-q", os.path.join(ws, "bot")], check=True)
-        git(os.path.join(ws, "bot"), "commit", "-q", "--allow-empty", "-m", "bot")
-        write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps(
-            {"card_commit": git(work, "rev-parse", "HEAD"), "builder": {"parser_version": 2}, "pending": {"stale": [], "repin": []}}))
-        code, text, out = run_step(flow, "gate", ws, {"POSTS": "off", "DRY_RUN": "false", "BUILDER_REF": "main",
-                                                      "BOT_REPO": "bobberlington/AutoCroissant", "GIT_NO_LAZY_FETCH": "1",
-                                                      "FORCE": "false", "FULL": "false", "CARDS": "", "RESTORE": "", "SEED": ""}, tmp)
+        _bot(ws)
+        code, text, out = run_step(main, "gate", ws, {**env, "GITHUB_EVENT_NAME": "schedule", "FAKE_RUNS": listed((6, head))}, tmp)
         check(code == 0 and out.get("go") == "false" and out.get("edits") == "true",
-              f"gate: nothing changed, a PSD-kind edit in the file -> go={out.get('go')} edits={out.get('edits')} (want false, true)"
+              f"main gate: nothing changed, a PSD-kind edit in the file -> go={out.get('go')} edits={out.get('edits')} (want false, true)"
               + ("" if code == 0 else f"\n{text}"))
 
 
@@ -535,7 +636,7 @@ def fonts_cases(flow: dict) -> None:
         for with_step in (True, False):
             ws = checkout(tmp, bare, f"ws-{with_step}")
             if with_step:
-                code, text, _ = run_step(flow, "fonts", ws, {}, tmp)
+                code, text, _ = run_step(flow["jobs"]["main"], "fonts", ws, {}, tmp)
                 if code:
                     check(False, f"the Fonts tree step ran\n{text}")
             for name in ("a.ttf", "b.otf"):                     # the cache hit: actions/cache untars MDW/Fonts
@@ -571,9 +672,9 @@ def bake_cases(flow: dict) -> None:
                                          ("push", "", True, ""), ("workflow_dispatch", "push", True, "all"),
                                          ("workflow_dispatch", "workflow_dispatch", False, "all"), ("workflow_dispatch", "", False, "all"),
                                          ("workflow_dispatch", "", True, "pending")):
-            code, text, out = run_step(flow, "bake", os.path.join(ws, "bot"), {"GITHUB_WORKSPACE": ws, "MAIN": main, "CARD": card,
-                                                                              "RETRY_OF": retry, "GITHUB_EVENT_NAME": event,
-                                                                              "DRY_RUN": "true"}, tmp)
+            code, text, out = run_step(flow["jobs"]["main"], "bake", os.path.join(ws, "bot"),
+                                       {"GITHUB_WORKSPACE": ws, "MAIN": main, "CARD": card, "RETRY_OF": retry,
+                                        "GITHUB_EVENT_NAME": event, "DRY_RUN": "true"}, tmp)
             args = open(os.path.join(tmp, "bake.args")).read().split("\n")
             check(code == 0 and ("--pending" in args) == want and "--card" not in args and "baked" not in out,
                   f"bake: {event}{' retry of ' + retry if retry else ''} bake={card} -> --pending {'yes' if want else 'no'}"
@@ -581,14 +682,14 @@ def bake_cases(flow: dict) -> None:
 
 
 def main_cases(flow: dict) -> None:
-    script_env = {"GIT_NO_LAZY_FETCH": "1", "BUILT": "success", "GH_TOKEN": "x", "GITHUB_EVENT_NAME": "workflow_dispatch"}
+    job = flow["jobs"]["main"]
+    script_env = {"GIT_NO_LAZY_FETCH": "1", "GH_TOKEN": "x", "GITHUB_EVENT_NAME": "workflow_dispatch"}
 
-    def setup(tmp: str, name: str, wrote: bool = True) -> tuple:
+    def setup(tmp: str, name: str) -> tuple:
         work, bare = origin(os.path.join(tmp, name))
         ws = checkout(os.path.join(tmp, name), bare)
         runner = os.path.join(tmp, name, "runner")
         os.makedirs(os.path.join(runner, "venv", "bin"))
-        os.symlink(sys.executable, os.path.join(runner, "venv", "bin", "python"))
         fake = os.path.join(tmp, name, "bin")
         os.makedirs(fake)
         write(os.path.join(fake, "gh"), "#!/bin/bash\n"           # run list: the number pending (gh applies --jq)
@@ -598,17 +699,6 @@ def main_cases(flow: dict) -> None:
         subprocess.run(["git", "init", "-q", os.path.join(ws, "bot")], check=True)
         git(os.path.join(ws, "bot"), "commit", "-q", "--allow-empty", "-m", "builder")
         main = git(ws, "rev-parse", "HEAD")
-        data = os.path.join(ws, "carddata")                       # the data checkout, then this run's build
-        manifest = os.path.join(data, "db/manifest.json")
-        dump = lambda commit_: json.dumps({"card_commit": commit_, "card_commit_at": 1.0, "main_commit": None,   # noqa: E731
-                                           "pending": {"repin": ["Cards/One.png"]}}, indent=1, sort_keys=True) + "\n"
-        write(manifest, dump(main if not wrote else "0" * 40))
-        subprocess.run(["git", "init", "-q", data], check=True)
-        git(data, "add", "-A")
-        git(data, "commit", "-qm", "data")
-        if wrote:
-            write(manifest, dump(main))
-        write(os.path.join(runner, "message.txt"), f"Card data: 1 changed (main {main[:8]})\n")
         write(os.path.join(ws, "TTS/Impossibility Simulator.json"), '{"saved":1}')       # the save stage's change
         env = {**script_env, "MAIN": main, "START": str(int(time.time())), "SAVED": "true", "RETRY": "false",
                "INPUTS": "null", "PATH": f"{fake}:{os.environ['PATH']}"}
@@ -623,97 +713,117 @@ def main_cases(flow: dict) -> None:
         path = os.path.join(root, "gh.args")
         return open(path).read().split("\n")[:-1] if os.path.exists(path) else []
 
-    def manifest_of(ws: str) -> dict:
-        return json.load(open(os.path.join(ws, "carddata/db/manifest.json")))
+    def bake(ws: str) -> str:
+        """B on main's head: a verdict, a PSD and its PNG (outside the sparse patterns, as the bake writes them)."""
+        files = {"site/Card Edits.json": '{"verdict":1}', "Cards/One.psd": "baked", "Cards/One.png": "baked"}
+        for path, text in files.items():
+            write(os.path.join(ws, path), text)
+        git(ws, "add", "--sparse", "--", *files)
+        git(ws, "commit", "-qm", "bake")
+        return git(ws, "rev-parse", "HEAD")
 
     with tempfile.TemporaryDirectory() as tmp:
         ws, bare, main, env, root = setup(tmp, "save-only")
-        code, text, out = run_step(flow, "main", ws, env, root)
+        code, text, out = run_step(job, "main", ws, env, root)
         m = git(bare, "rev-parse", "main")
-        manifest = manifest_of(ws)
-        at = float(git(ws, "show", "-s", "--format=%ct", m))
-        check(code == 0 and out.get("pushed") == "true" and out.get("m") == m != main
-              and (manifest["card_commit"], manifest["main_commit"], manifest["card_commit_at"]) == (m, m, at)
-              and m[:8] in open(os.path.join(root, "runner", "message.txt")).read(),
-              "main: a save-only M is pushed and the manifest names it (card_commit, main_commit, the message)"
-              + ("" if code == 0 else f"\n{text}"))
+        check(code == 0 and out.get("pushed") == "true" and out.get("m") == m != main and out.get("baked") == "false"
+              and out.get("pngs") == "false" and git(bare, "log", "-1", "--format=%an|%s", "main") == "AutoCroissant|Card sync: TTS save updated",
+              "main: a save-only M is pushed (no after job, nothing to re-pin)" + ("" if code == 0 else f"\n{text}"))
 
-        ws, bare, main, env, root = setup(tmp, "save-only-unchanged", wrote=False)
-        code, text, out = run_step(flow, "main", ws, env, root)
-        check(code == 0 and out.get("pushed") == "true" and not git(os.path.join(ws, "carddata"), "status", "--porcelain")
-              and "db/ unchanged" in text,
-              "main: a save-only M on an unchanged build leaves db/ alone (no data commit)" + ("" if code == 0 else f"\n{text}"))
+        ws, bare, main, env, root = setup(tmp, "baked")
+        env["B"] = bake(ws)
+        code, text, out = run_step(job, "main", ws, env, root)
+        m = git(bare, "rev-parse", "main")
+        check(code == 0 and out.get("m") == m and out.get("baked") == "true" and out.get("pngs") == "true"
+              and git(bare, "rev-parse", "main^") == main and git(bare, "log", "-1", "--format=%s", "main").startswith("Card sync: 1 card baked, TTS save updated"),
+              "main: B plus the save as one M on main's head (the after job re-reads it; its PNG to re-pin)"
+              + ("" if code == 0 else f"\n{text}"))
 
         ws, bare, main, env, root = setup(tmp, "push-landed")
         real = shutil.which("git")
         write(os.path.join(root, "bin", "git"), f'#!/bin/bash\n"{real}" "$@"; code=$?\n[ "$1" = push ] && exit 1\nexit $code\n')
         os.chmod(os.path.join(root, "bin", "git"), 0o755)
-        code, text, out = run_step(flow, "main", ws, env, root)
+        code, text, out = run_step(job, "main", ws, env, root)
         m = git(bare, "rev-parse", "main")
         check(code == 0 and m != main and out.get("pushed") == "true" and out.get("m") == m and "rejected" not in out
-              and not gh_args(root) and manifest_of(ws)["main_commit"] == m,
-              "main: a push that failed on the client but landed counts as pushed (no retry)" + ("" if code == 0 else f"\n{text}"))
+              and not gh_args(root), "main: a push that failed on the client but landed counts as pushed (no retry)"
+              + ("" if code == 0 else f"\n{text}"))
 
         ws, bare, main, env, root = setup(tmp, "save-only-moved")
         moved(bare)
-        env["INPUTS"] = json.dumps({"dry_run": False, "full": True, "cards": "Mini Doomer", "seed": "", "bake": "all",
+        env["INPUTS"] = json.dumps({"dry_run": False, "full": True, "cards": "Mini Doomer", "seed": "", "bake": "Mini Doomer",
                                     "force": False, "allow_archive": True, "restore": "", "builder_ref": "", "retry": ""})
-        code, text, out = run_step(flow, "main", ws, env, root)
+        code, text, out = run_step(job, "main", ws, env, root)
         args = gh_args(root)
-        manifest = manifest_of(ws)
-        check(code == 0 and out.get("rejected") == "true" and "pushed" not in out
-              and (manifest["card_commit"], manifest["main_commit"], manifest["pending"]["repin"]) == (main, None, ["Cards/One.png"])
-              and args[:3] == ["workflow", "run", "card-sync.yml"] and {"dry_run=false", "force=true", "bake=all",
-                                                                          "retry=workflow_dispatch", "cards=Mini Doomer"} <= set(args)
+        check(code == 0 and out.get("rejected") == "true" and "pushed" not in out and "m" not in out
+              and args[:3] == ["workflow", "run", "card-sync.yml"]
+              and {"dry_run=false", "force=true", "bake=Mini Doomer", "retry=workflow_dispatch"} <= set(args)
               and f"builder_ref={git(os.path.join(ws, 'bot'), 'rev-parse', 'HEAD')}" in args
-              and not any(a.startswith(("full=", "allow_archive=", "seed=", "restore=")) for a in args)
-              and "full and allow_archive approved" in text,
-              f"main moved, save-only: M dropped, one retry dispatched without the approvals ({' '.join(args[3:])})"
+              and not any(a.startswith(("full=", "allow_archive=", "seed=", "restore=", "cards=")) for a in args),
+              f"main moved: M dropped, one retry of the main lane dispatched, no data inputs ({' '.join(args[3:])})"
               + ("" if code == 0 else f"\n{text}"))
 
         ws, bare, main, env, root = setup(tmp, "baked-moved")
-        commit(ws, {"site/Card Edits.json": '{"verdict":1}'}, "bake")                     # B on main's head
+        env["B"] = bake(ws)
         moved(bare)
         env["GITHUB_EVENT_NAME"] = "schedule"
-        env["B"] = git(ws, "rev-parse", "HEAD")
-        code, text, out = run_step(flow, "main", ws, env, root)
+        code, text, out = run_step(job, "main", ws, env, root)
         args = gh_args(root)
-        check(code == 0 and out.get("rejected") == "true" and {"bake=all", "retry=schedule", "force=true"} <= set(args)
-              and not any(a.startswith(("full=", "cards=", "seed=", "restore=", "allow_archive=")) for a in args),
-              f"main moved after a scheduled bake: the retry is marked as the schedule's ({' '.join(args[3:])})"
+        check(code == 0 and out.get("rejected") == "true" and "baked" not in out and {"bake=all", "retry=schedule", "force=true"} <= set(args),
+              f"main moved after a scheduled bake: no after job; the retry is marked as the schedule's ({' '.join(args[3:])})"
               + ("" if code == 0 else f"\n{text}"))
 
         ws, bare, main, env, root = setup(tmp, "bake-unreported")
-        commit(ws, {"site/Card Edits.json": '{"verdict":1}'}, "bake")                     # B made, b= never written
-        code, text, out = run_step(flow, "main", ws, env, root)
+        bake(ws)                                                                  # B made, b= never written
+        code, text, out = run_step(job, "main", ws, env, root)
         check(code == 1 and git(bare, "rev-parse", "main") == main and "pushed" not in out and not gh_args(root),
               "main: HEAD is a B the bake never reported: nothing pushed (red)")
-
-        ws, bare, main, env, root = setup(tmp, "save-only-unbuilt", wrote=False)
-        env["BUILT"] = "failure"
-        code, text, out = run_step(flow, "main", ws, env, root)
-        check(code == 0 and out.get("pushed") == "true" and "did not succeed" in text and "db/ unchanged" not in text,
-              "main: a save-only M after a failed build says so (no data commit)" + ("" if code == 0 else f"\n{text}"))
 
         ws, bare, main, env, root = setup(tmp, "pending-moved")
         moved(bare)
         env["FAKE_WAITING"] = "1"
-        code, text, out = run_step(flow, "main", ws, env, root)
+        code, text, out = run_step(job, "main", ws, env, root)
         check(code == 0 and out.get("rejected") == "true" and not gh_args(root) and "does the work" in text,
               "main moved with another run unfinished (a push's waiting, a pending one): no retry")
 
         ws, bare, main, env, root = setup(tmp, "retry-moved")
         moved(bare)
         env["RETRY"] = "true"
-        code, text, out = run_step(flow, "main", ws, env, root)
+        code, text, out = run_step(job, "main", ws, env, root)
         check(code == 0 and out.get("rejected") == "true" and not gh_args(root),
               "main moved during a retry: a warning, no further run")
 
         ws, bare, main, env, root = setup(tmp, "late")
         env["START"] = str(int(time.time()) - 61 * 60)
-        code, text, out = run_step(flow, "main", ws, env, root)
+        code, text, out = run_step(job, "main", ws, env, root)
         check(code == 1 and git(bare, "rev-parse", "main") == main and "pushed" not in out,
-              "main: 61 minutes into the run, M is not pushed (red)")
+              "main: 61 minutes into the lane, M is not pushed (red)")
+
+        # Re-pin: the save again on M (a fake tts_save that writes the given save), a second commit on M
+        for name, saved, move, want in (("repin", '{"saved":2}', False, "pushed"), ("repin-current", None, False, "current"),
+                                        ("repin-moved", '{"saved":2}', True, "moved")):
+            ws, bare, main, env, root = setup(tmp, name)
+            env["B"] = bake(ws)
+            code, text, out = run_step(job, "main", ws, env, root)
+            m = out.get("m", "")
+            python = os.path.join(root, "runner", "venv", "bin", "python")
+            write(python, "#!/bin/bash\n" + (f"printf '%s' '{saved}' > \"$3\"\n" if saved else "") + 'echo "args: $*"\n')
+            os.chmod(python, 0o755)
+            if move:
+                moved(bare)
+            tip = git(bare, "rev-parse", "main")
+            code, text, out = run_step(job, "repin", os.path.join(ws, "bot"), {"GITHUB_WORKSPACE": ws, "M": m,
+                                                                               "GIT_NO_LAZY_FETCH": "1"}, root)
+            now = git(bare, "rev-parse", "main")
+            if want == "pushed":
+                ok = (out.get("pushed") == "true" and git(bare, "rev-parse", "main^") == m
+                      and git(bare, "diff", "--name-only", m, "main") == "TTS/Impossibility Simulator.json"
+                      and git(bare, "log", "-1", "--format=%an|%s", "main") == "AutoCroissant|Card sync: TTS save re-pinned")
+            elif want == "current":
+                ok = now == m and "pushed" not in out and "were current" in text
+            else:
+                ok = now == tip and "pushed" not in out and "main moved since M" in text
+            check(code == 0 and ok, f"re-pin: {want} -> main {now[:8]}" + ("" if code == 0 else f"\n{text}"))
 
 
 def main():
