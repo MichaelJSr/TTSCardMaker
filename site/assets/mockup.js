@@ -8,7 +8,7 @@
 // tokens as icons and timing tags as badges. When no block fits the old text (text over art, a stylised title), the new
 // text goes in a dark box over the template's area instead ("box"), never over a half-erased old one. Everything above
 // `draw` is pure (node checks run it on plain pixel arrays).
-import { norm, splitToken, tagInfo, TAG } from "./text.js";
+import { norm, splitToken, tagInfo, TAG, variantFile } from "./text.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569" };   // style.css --b-*, as the font's badges
@@ -303,16 +303,16 @@ export function textColours(masked, bg) {
     : { fill: avg(dark), stroke: lum(light) > bgL + 25 ? avg(light) : null };
 }
 
-/** Ability text as paragraphs of chunks (no break inside a chunk), each piece {text}, {icon, no} (an icon token the
- *  site has, "[fire]", "[fire:no]"; another bracket or variant stays text) or {badge, group} (a timing tag, "(1CD)",
- *  as text.js reads it; another parenthesis stays text). */
+/** Ability text as paragraphs of chunks (no break inside a chunk), each piece {text}, {icon, no, sticker} (an icon token
+ *  the site has, "[fire]", "[fire:no]", "[fire:sticker]" with its masks; another bracket or variant stays text) or {badge,
+ *  group} (a timing tag, "(1CD)", as text.js reads it; another parenthesis stays text). */
 export function tokenize(text, icons = {}) {
   const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}`, "g");
   return String(text ?? "").replace(/\r/g, "").split("\n").map(line => line.split(/[ \t]+/).filter(Boolean).map(chunk => {
     const out = []; let at = 0;
     for (const m of chunk.matchAll(PIECE)) {
       let piece = null;
-      if (m[1] != null) { const t = splitToken(m[1]), ic = t && icons[norm(t.base)]; if (ic) piece = { icon: ic.file, name: t.base, no: t.v === "no" }; }
+      if (m[1] != null) { const t = splitToken(m[1]), ic = t && icons[norm(t.base)]; if (ic) piece = { icon: ic.file, name: t.base, no: t.v === "no", sticker: t.v === "sticker" && ["tint", "sticker"].every(v => ic.v?.includes(v)) ? { tint: variantFile(ic, "tint"), outline: variantFile(ic, "sticker") } : null }; }
       else { const t = tagInfo(m[2]); if (t) piece = { badge: t.tag.replace("-", "\u2212"), group: t.group }; }
       if (!piece) continue;
       if (m.index > at) out.push({ text: chunk.slice(at, m.index) });
@@ -498,6 +498,14 @@ export function layerOf(rec, role) {
   return { ...t, font: other ? other[0] : "" };
 }
 const ICON_FONT = /^stoogedings/i;                    // AutoCroissant ICON_FONT_PREFIX: icons and badges, not letters
+const OVERLAY = /^(Color|Gradient|Pattern)Overlay$/;  // psd_details' effect names; a disabled one ends " (off)"
+/** Whether the text layer at path ("Text/Ability") or a group above it has an enabled Color, Gradient or Pattern Overlay
+ *  (the details record's effects): the font then draws its badges and stickers in one colour, Stylistic Alternates
+ *  (AutoCroissant psd_edit one_colour, 2026-10-25). */
+export function oneColour(rec, path) {
+  const fx = rec?.effects && typeof rec.effects === "object" ? rec.effects : {}, parts = String(path || "").split("/");
+  return !!path && parts.some((_, i) => { const e = fx[parts.slice(0, i + 1).join("/")]; return Array.isArray(e) && e.some(n => OVERLAY.test(String(n))); });
+}
 const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
 const hexRgb = h => (/^#[0-9a-f]{6}$/i.test(h || "") ? [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)) : null);
 
@@ -567,7 +575,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (text == null) continue;
     const { fam, layer } = await family(role, label);
     const measure = (t, z) => { ctx.font = `${z}px ${fam}`; return ctx.measureText(t).width; };
-    const own = recordBox(rec, layer?.layer, W);
+    const own = recordBox(rec, layer?.layer, W), one = role === "ability" && oneColour(rec, layer?.layer);
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     const paras = tokenize(old, icons);
     const hit = bestBlock(L, W, H, area, paras, measure, { name: role === "name" });   // the block that holds the old text, or none
@@ -577,8 +585,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       const gone = role === "name" ? b.lines : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name: its own lines (the stars stay)
       const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
       const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25 });   // in the lines only: dim words too
-      jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons });
-    } else { jobs.push({ role, text, label, area, fam, layer, measure, icons, boxed: true }); out.boxed.push(label); }
+      jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons, one });
+    } else { jobs.push({ role, text, label, area, fam, layer, measure, icons, one, boxed: true }); out.boxed.push(label); }
   }
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
@@ -644,25 +652,50 @@ async function drawIconBox(ctx, label, value, { icons, head, W, H, tpl }) {
   }
 }
 async function iconImages(text, icons) {
-  const files = new Set(tokenize(text, icons).flat(2).filter(p => p.icon).map(p => p.icon)), out = new Map();
+  const files = new Set(tokenize(text, icons).flat(2).filter(p => p.icon).flatMap(p => [p.icon, p.sticker?.tint, p.sticker?.outline].filter(Boolean))), out = new Map();
   for (const f of files) out.set(f, await loadImage(f));
   return out;
 }
-/** Lines of pieces from x at baseline base, z px: text with an outline, icons, badges as pills. */
-function paintLines(ctx, lines, { at, base, pitch, z, fam, fill, stroke, imgs }) {
+const STICKER_REACH = 0.0729, STICKER_LINE = 0.04;   // build_stoogedings OUTLINE, STICKER_LINE over HEIGHT
+/** A mask image painted in one colour, into box [x, y, w, h]; inset (0..1) cuts the same mask, shrunk by it, back out
+ *  (the outline of a one-colour sticker). */
+function paintMask(ctx, im, [x, y, w, h], colour, inset = 0) {
+  const c = document.createElement("canvas"); c.width = Math.max(1, Math.ceil(w)); c.height = Math.max(1, Math.ceil(h));
+  const g = c.getContext("2d");
+  g.drawImage(im, 0, 0, c.width, c.height);
+  if (inset) { g.globalCompositeOperation = "destination-out"; g.drawImage(im, c.width * inset, c.height * inset, c.width * (1 - 2 * inset), c.height * (1 - 2 * inset)); }
+  g.globalCompositeOperation = "source-in"; g.fillStyle = rgb(colour); g.fillRect(0, 0, c.width, c.height);
+  ctx.drawImage(c, x, y, w, h);
+}
+/** Lines of pieces from x at baseline base, z px: text with an outline, icons, badges as pills. one (an overlay on the
+ *  ability): badges as outlined pills and stickers as an outline round the one-colour icon, in the text's fill. */
+function paintLines(ctx, lines, { at, base, pitch, z, fam, fill, stroke, imgs, one = false }) {
   ctx.textBaseline = "alphabetic";
   lines.forEach((line, n) => {
     let x = at(line), y = base + n * pitch;
     for (const p of line.pieces) {
-      if (p.icon) {
+      if (p.icon && one && p.sticker && imgs.get(p.sticker.tint) && imgs.get(p.sticker.outline)) {
+        const s = z * 1.05, r = s * STICKER_REACH, bx = x + (p.w - s) / 2, by = y - s * 0.82;
+        paintMask(ctx, imgs.get(p.sticker.outline), [bx - r, by - r, s + 2 * r, s + 2 * r], fill, STICKER_LINE / (1 + 2 * STICKER_REACH));
+        paintMask(ctx, imgs.get(p.sticker.tint), [bx, by, s, s], fill);
+      } else if (p.icon) {
         const im = imgs.get(p.icon), s = z * 1.05;
         if (im) ctx.drawImage(im, x + (p.w - s) / 2, y - s * 0.82, s, s);
         if (p.no) { ctx.save(); ctx.strokeStyle = "#e11"; ctx.lineWidth = Math.max(2, z * 0.12); ctx.beginPath(); ctx.moveTo(x + p.w * 0.1, y - s * 0.75); ctx.lineTo(x + p.w * 0.9, y + s * 0.1); ctx.stroke(); ctx.restore(); }
       } else if (p.badge) {
         const h = z * 0.92, top = y - z * 0.76, r = h / 2, x0 = x + z * 0.06, x1 = x + p.w - z * 0.06;
         ctx.save(); ctx.beginPath(); ctx.moveTo(x0 + r, top); ctx.arcTo(x1, top, x1, top + h, r); ctx.arcTo(x1, top + h, x0, top + h, r); ctx.arcTo(x0, top + h, x0, top, r); ctx.arcTo(x0, top, x1, top, r); ctx.closePath();
-        ctx.fillStyle = BADGE[p.group] || BADGE.neutral; ctx.fill(); ctx.lineWidth = Math.max(1, z * 0.07); ctx.strokeStyle = "rgba(255,255,255,.85)"; ctx.stroke();
-        ctx.font = `800 ${z * BADGE_EM}px ${fam}`; ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText(p.badge, (x0 + x1) / 2, top + h * 0.5 + z * BADGE_EM * 0.36); ctx.restore();
+        ctx.font = `800 ${z * BADGE_EM}px ${fam}`; ctx.textAlign = "center";
+        const lx = (x0 + x1) / 2, ly = top + h * 0.5 + z * BADGE_EM * 0.36;
+        if (one) {                                    // the font's Stylistic Alternates: a pill outline and solid letters
+          ctx.lineJoin = "round";
+          if (stroke) { ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(2, z * 0.21); ctx.stroke(); ctx.lineWidth = Math.max(1.5, z * 0.16); ctx.strokeText(p.badge, lx, ly); }
+          ctx.strokeStyle = rgb(fill); ctx.lineWidth = Math.max(1, z * 0.05); ctx.stroke(); ctx.fillStyle = rgb(fill); ctx.fillText(p.badge, lx, ly);
+        } else {
+          ctx.fillStyle = BADGE[p.group] || BADGE.neutral; ctx.fill(); ctx.lineWidth = Math.max(1, z * 0.07); ctx.strokeStyle = "rgba(255,255,255,.85)"; ctx.stroke();
+          ctx.fillStyle = "#fff"; ctx.fillText(p.badge, lx, ly);
+        }
+        ctx.restore();
       } else if (p.text.trim()) {
         ctx.font = `${z}px ${fam}`;
         if (stroke) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(1.5, z * 0.16); ctx.strokeText(p.text, x, y); }
@@ -674,7 +707,7 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, fill, stroke, imgs })
 }
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a name keeps its line count and stays clear of the stars. */
-function drawText(ctx, { role, text, area, found, size, colours, fam, layer, measure, icons }, imgs, W) {
+function drawText(ctx, { role, text, area, found, size, colours, fam, layer, measure, icons, one }, imgs, W) {
   const paras = tokenize(text, icons), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = found.align === "left" && role !== "name";
@@ -689,12 +722,12 @@ function drawText(ctx, { role, text, area, found, size, colours, fam, layer, mea
   }
   const pitch = pitch0 * (z / size), base = top + z * 0.8;
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base, pitch, z, fam, fill, stroke, imgs });
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base, pitch, z, fam, fill, stroke, imgs, one });
   return over;
 }
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the
  *  old text is covered, never half there. */
-function drawBox(ctx, { role, text, area, fam, measure, icons }, imgs, W, H, shape) {
+function drawBox(ctx, { role, text, area, fam, measure, icons, one }, imgs, W, H, shape) {
   const r = area.seed ? [0, area.seed[0], W, H] : area.box;     // the text area to the card's edges (the old text may touch them)
   const b = area.seed ? r : [r[0] - W * 0.01, r[1] - H * 0.004, r[2] + W * 0.01, r[3] + H * 0.004], pad = W * 0.03;
   const start = role === "name" ? (b[3] - b[1]) * 0.5 : W * (shape === "square" ? 0.06 : shape === "item" ? 0.05 : 0.045);
@@ -704,7 +737,7 @@ function drawBox(ctx, { role, text, area, fam, measure, icons }, imgs, W, H, sha
   ctx.save(); ctx.beginPath(); ctx.moveTo(b[0] + rad, b[1]); ctx.arcTo(b[2], b[1], b[2], b[3], rad); ctx.arcTo(b[2], b[3], b[0], b[3], rad); ctx.arcTo(b[0], b[3], b[0], b[1], rad); ctx.arcTo(b[0], b[1], b[2], b[1], rad); ctx.closePath();
   ctx.fillStyle = "rgb(16,16,22)"; ctx.fill(); ctx.lineWidth = Math.max(1.5, W * 0.003); ctx.strokeStyle = "rgba(255,255,255,.4)"; ctx.setLineDash([W * 0.012, W * 0.008]); ctx.stroke(); ctx.restore();
   const pitch = z * LINE, base = (b[1] + b[3]) / 2 - (lines.length * pitch) / 2 + z * 0.9, mid = (b[0] + b[2]) / 2;
-  paintLines(ctx, lines, { at: l => mid - l.w / 2, base, pitch, z, fam, fill: [255, 255, 255], stroke: [0, 0, 0], imgs });
+  paintLines(ctx, lines, { at: l => mid - l.w / 2, base, pitch, z, fam, fill: [255, 255, 255], stroke: [0, 0, 0], imgs, one });
   return over;
 }
 function paintCells(data, W, H, row, from, to) {

@@ -590,7 +590,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     aren't kept).
   - Text: `tokenize` (an icon token the site knows is an icon, `:no` crossed out; a timing tag text.js knows is a badge,
     any case, drawn as its pill in the site's colours; another bracket or parenthesis stays text; no break inside
-    "[ice]."), `layout` / `fit` at the calibrated size and the old line pitch, from the old first line down (a PSD's
+    "[ice]."). Under an overlay (`oneColour(rec, layer)`: an enabled ColorOverlay, GradientOverlay or PatternOverlay in
+    the details record's `effects` on the ability layer's path or a group above it; 2026-10-25) a badge is a pill
+    outline with solid letters and a `:sticker` an outline round its `:tint` mask, both in the text's fill, as the
+    font's Stylistic Alternates print them (the bake sets them there: AutoCroissant `psd_edit.one_colour`); the sticker
+    outline is the `:sticker` mask with a shrunk copy cut out (`paintMask`), close to the font's 40-unit line. `layout` / `fit` at the calibrated size and the old line pitch, from the old first line down (a PSD's
     text grows downwards), at the old width (one old line: the area's, about its centre); shrunk to 40% when it would
     run past the area's bottom, and then the caption says "The text runs past its place on the card." A name keeps
     its line count and stays within the room about its centre. Stats: `barRows` (template rows, only for stats the

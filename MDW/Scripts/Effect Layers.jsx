@@ -13,6 +13,8 @@
 // MDW/Status Effects.aco / Attributes.aco and the Styles panel are used instead. Change colors in the text, then Update all.
 // "Effect Layers - All Cards.jsx" does all of this for every card in the repo.
 // AutoCroissant flags cards whose FX layers no longer line up with their text.
+// Badges and icons get no FX layer (Add and Update all refuse them): under a Color, Gradient or Pattern Overlay, turn on
+// Stylistic Alternates for them (Character panel menu > OpenType), which draws them in one colour.
 #target photoshop
 
 var FX_TAG = " FX: ";
@@ -377,8 +379,11 @@ function buildFx(doc, base, phrases) {
   if (!ranges.length) throw new Error("\"" + phrases.join(SEP) + "\" isn't in the text of \"" + base.name + "\"");
   var everyLine = layoutMode(doc, base);
   if (everyLine === null) throw new Error("\"" + base.name + "\": " + LAYOUT_MSG);
-  // a badge layer ("Ability FX: (OYT) | [dark]", the gradient cards) takes the icon font's glyphs on purpose: no cut then
-  var glyphs = rangesMeet(ranges, iconRuns(textKey(doc, base))) ? null : iconGlyphChannel(doc, base, everyLine);
+  // badge layers ("Ability FX: (OYT) | [dark]") are retired (2026-10-25): the font's Stylistic Alternates replace them
+  if (rangesMeet(ranges, iconRuns(textKey(doc, base))))
+    throw new Error("\"" + phrases.join(SEP) + "\" takes in a badge or icon: badge FX layers are retired. Under an overlay, "
+      + "select the badges and turn on Character panel menu > OpenType > Stylistic Alternates instead (and delete any badge FX layer)");
+  var glyphs = iconGlyphChannel(doc, base, everyLine);
   // Key copy: the phrases white, the rest black. Only color changes, so the layout is exactly the text's (squashing
   // the other words instead moved centered lines by a pixel or two through optical kerning).
   var key = base.duplicate(base, ElementPlacement.PLACEBEFORE);
