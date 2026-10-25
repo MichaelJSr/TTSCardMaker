@@ -9,7 +9,7 @@ import * as tray from "./tray.js";
 import * as tokens from "./tokens.js";
 import * as palette from "./palette.js";
 import * as details from "./details.js";
-import { tipController } from "./tip.js";
+import { tipController, wireTips } from "./tip.js";
 import * as decks from "./decks.js";
 import * as pick from "./pick.js";
 import * as balance from "./balance.js";
@@ -747,7 +747,7 @@ function renderRules(r) {
     <div>
       ${q ? `<p class="muted">${pages.length} page${pages.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : ""}
       ${!q ? `<section class="panel" id="badge-colors"><h3>Badge colors</h3>${legendHtml()}</section>
-      <section class="panel" id="glossary"><h3>Timing tags</h3><p class="muted">X can be any number; the first number of a pair such as (1/2CD) can also be 0 or −1. Hover a badge for its meaning.</p>
+      <section class="panel" id="glossary"><h3>Timing tags</h3><p class="muted">X can be any number; the first number of a pair such as (1/2CD) can also be 0 or −1. Hover or tap a badge for its meaning.</p>
         ${Object.entries(GROUP_NAMES).map(([g, label]) => `<h4>${esc(label)}</h4>${gloss(tags.filter(t => tagInfo(t).group === g && !tagInfo(t).old))}`).join("")}
         <h4>Old system (rulebook pages)</h4>${gloss(tags.filter(t => tagInfo(t).old))}</section>
       <section class="panel" id="banlist"><h3>Constructed ban list</h3>${banned.notes.map(n => `<p class="muted">${esc(n)}</p>`).join("")}
@@ -1290,16 +1290,13 @@ function fillTip(t) {
 const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
 function hideTip() { tips.hide(); }
 inline.extend({ hideTip, icons: () => S.icons, closePicker: tokens.dismiss });   // editors hide the tooltip and the list; the type palette's icons
-document.addEventListener("pointerover", e => tips.over(e.target));
-document.addEventListener("pointermove", e => {
-  if (!tips.move()) return;
+wireTips(document, tips, (cx, cy) => {
   const r = tip.getBoundingClientRect();
-  let x = e.clientX + 14, y = e.clientY + 16;
-  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
-  if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
+  let x = cx + 14, y = cy + 16;
+  if (x + r.width > innerWidth - 8) x = Math.max(8, cx - r.width - 14);
+  if (y + r.height > innerHeight - 8) y = cy - r.height - 14;
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
 });
-document.addEventListener("pointerout", e => tips.out(e.relatedTarget));
 
 init().finally(fresh.watch);                            // a new deploy reloads the page (fresh.js)
 passes.migrate().catch(() => {});                       // passphrases remembered in plain text before 2026-10-23: sealed now

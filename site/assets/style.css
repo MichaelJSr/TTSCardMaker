@@ -150,6 +150,7 @@ span.tokv { position: relative; display: inline-block; }
 .badge.forced { background: var(--b-forced); } .badge.trigger { background: var(--b-trigger); }
 .badge.neutral { background: var(--b-neutral); }
 a.card-ref { color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; cursor: pointer; }
+@media (pointer: coarse) { a.card-ref { -webkit-touch-callout: none; } }   /* a long press shows its preview (tip.js) */
 mark { background: color-mix(in srgb, var(--warn) 45%, transparent); color: inherit; border-radius: 3px; }
 
 /* ---- modal ---- */
