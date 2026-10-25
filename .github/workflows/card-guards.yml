@@ -212,6 +212,7 @@ jobs:
       # between its two heads; a dispatch: `sha`'s (or main's head's) own, or with `all` every card PSD of the tree.
       # Each exits 0 on findings (an unreadable PSD or a failed API call is one line in its report); one that breaks
       # anyway is a warning and never stops the guards. report.md, report.json and discord.json in $RUNNER_TEMP/<check>.
+      # --clone: a pushed PSD is fetched once into this clone, then read from it by the font check and the guards.
       - name: Card check
         id: card-check
         continue-on-error: true
@@ -228,7 +229,8 @@ jobs:
         run: &check-run |
           out=$RUNNER_TEMP/$CHECK
           mkdir -p "$out"
-          args=(--repo "$GITHUB_REPOSITORY" --after "$AFTER" --json "$out/report.json" --discord "$out/discord.json")
+          args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$AFTER" --json "$out/report.json"
+                --discord "$out/discord.json")
           [ "$CHECK" = font-check ] && args+=(--fonts "$GITHUB_WORKSPACE/MDW/Fonts")
           [ -n "$AUTHOR" ] && args+=(--author "$AUTHOR")
           if [ "$ALL" = true ]; then args+=(--whole-tree); elif [ -n "$BEFORE" ]; then args+=(--before "$BEFORE"); fi
