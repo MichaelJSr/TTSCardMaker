@@ -68,13 +68,21 @@ jobs:
           path: ~/.cache/card-wheels
           key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
 
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
+        with:
+          version: "0.13.5"
+          enable-cache: false
+
+      # uv installs the wheels (~1 s; pip took 5-7 s); a miss builds them with pip (uv has no `pip wheel`)
       - timeout-minutes: 10
         env:
           HIT: ${{ steps.wheels.outputs.cache-hit }}
+          UV_PYTHON: ${{ steps.python.outputs.python-path }}
+          UV_COMPILE_BYTECODE: "1"
         run: |
           [ "$HIT" = true ] || pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
           sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
-          pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
+          uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
 
       - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
         uses: actions/cache/save@v6

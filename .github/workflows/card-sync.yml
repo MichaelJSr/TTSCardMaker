@@ -367,23 +367,31 @@ jobs:
           path: ~/.cache/card-wheels
           key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
 
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
+        if: env.GO == 'true' || steps.gate.outputs.edits == 'true'
+        with:
+          version: "0.13.5"
+          enable-cache: false
+
       # One environment from requirements-cards.txt for the bake, the build, the save and the posts (until 2026-10-24 the
-      # bake had its own on 3.12). A miss builds the wheels (the fork, pyoxipng from its sdist) and saves them. --help
-      # proves the import closure before any stage.
+      # bake had its own on 3.12). A miss builds the wheels (the fork, pyoxipng from its sdist) and saves them. uv fills the
+      # venv (no pip in it): ~3 s where pip took 14-21 s. --help proves the import closure before any stage.
       - name: Python environment
         id: venv
         if: env.GO == 'true' || steps.gate.outputs.edits == 'true'
         timeout-minutes: 15
         env:
           HIT: ${{ steps.wheels.outputs.cache-hit }}
+          UV_PYTHON: ${{ runner.temp }}/venv/bin/python
+          UV_COMPILE_BYTECODE: "1"
         run: |
           if [ "$HIT" != true ]; then
             pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
             echo "wheels=built" >> "$GITHUB_OUTPUT"
           fi
           sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
-          python -m venv "$RUNNER_TEMP/venv"
-          "$RUNNER_TEMP/venv/bin/pip" install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
+          python -m venv "$RUNNER_TEMP/venv" --without-pip
+          uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
           (cd bot && for module in card_data tts_save card_bake; do
             "$RUNNER_TEMP/venv/bin/python" -m "commands.$module" --help > /dev/null
           done)

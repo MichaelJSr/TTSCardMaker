@@ -62,16 +62,22 @@ jobs:
             /MDW/Fonts/stoogedings-src/build_stoogedings.py
             /MDW/Fonts/stoogedings-src/requirements.txt
 
-      # build_stoogedings.py and its packages (site/build/requirements.txt includes them) draw the token variants' pictures
+      # build_stoogedings.py and its packages (site/build/requirements.txt includes them) draw the token variants' pictures.
+      # uv, no cache: ~2 s from PyPI where pip took 5-7 s after a 155 MB pip cache restore.
       - uses: actions/setup-python@v7
+        id: python
         with:
           python-version: "3.14"
-          cache: pip
-          cache-dependency-path: |
-            site/build/requirements.txt
-            MDW/Fonts/stoogedings-src/requirements.txt
 
-      - run: pip install -r site/build/requirements.txt
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
+        with:
+          version: "0.13.5"
+          enable-cache: false
+
+      - run: uv pip install -q -r site/build/requirements.txt
+        env:
+          UV_PYTHON: ${{ steps.python.outputs.python-path }}
+          UV_COMPILE_BYTECODE: "1"
 
       - id: pages
         uses: actions/configure-pages@v6
