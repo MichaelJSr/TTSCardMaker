@@ -9,10 +9,11 @@
    stages. A failed live job (a retry too) alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit
    main and every later step; after runs the data steps with AFTER = M.
 2. The data Gate on sandbox history: stoogedings-src/ alone and a hand-edited save don't start the data lane; fonts,
-   stoogedings.json, an upper-case .PSD and the creation dates do; AFTER does. The main Gate: a push and a dispatch go;
-   the schedule goes when a card input or the save changed (the lane's own commits aside) since the last run whose Bake
-   and save succeeded (faked run lists), or none is found; with nothing changed, a PSD-kind website edit sends it to
-   the Pending edits step.
+   stoogedings.json, an upper-case .PSD and the creation dates do; AFTER does, without the dispatch's inputs. The Build
+   step's arguments: the dispatch's inputs, none after the bake; --own the main lane's commits since the last build.
+   The main Gate: a push and a dispatch go; the schedule goes when a card input or the save changed (the lane's own
+   commits aside) since the last live run whose Bake and save succeeded (faked run lists; dry runs passed over), or
+   none is found; with nothing changed, a PSD-kind website edit sends it to the Pending edits step.
 3. The fonts: a cache hit restores them outside the sparse patterns; after the Fonts tree step the bake's fast-forward
    merge (git_commit.local_commit's) keeps them (without it git deletes them: the control).
 4. The Bake step's arguments: --pending for a push's run, a schedule, their retries and bake=pending, not for another
@@ -26,6 +27,8 @@
    none) and skip their main lane when there is one (no cancel: the data lane ran); else a push's waits (card-sync-quiet
    on its first attempt, in no group) and the schedule's goes; a dispatch's at once; Quiet sleeps out what is left of
    the window from the push time. The data lane runs at once on every event but a retry.
+7. Tell Discord on faked runs: once per failing streak of its lane (the newest other live run where the lane ended;
+   runs that skipped it, and dry runs, passed over), once a lane per run (after sees data's failure).
 Exits 1 when a case gets the wrong answer.
 """
 import json
@@ -584,6 +587,13 @@ def gate_cases(flow: dict) -> None:
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, "AFTER": "f" * 40}, tmp)
                 check(code == 0 and out.get("go") == "true" and "the bake's main commit ffffffff" in text,
                       "data gate: after the bake (AFTER) -> go, nothing else changed" + ("" if code == 0 else f"\n{text}"))
+                inputs = {"FULL": "true", "CARDS": "X", "RESTORE": "r" * 40, "SEED": "s" * 40}
+                code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs}, tmp)
+                check(code == 0 and out.get("seed") == "s" * 40 and text.count("dispatched with") == 4,
+                      "data gate: a dispatch's full, cards, restore and seed -> go" + ("" if code == 0 else f"\n{text}"))
+                code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs, "AFTER": "f" * 40}, tmp)
+                check(code == 0 and out.get("seed") == "" and "dispatched with" not in text,
+                      "data gate: after the bake on a dispatch -> its inputs left out" + ("" if code == 0 else f"\n{text}"))
 
         # The main lane's gate: the cursor is the head of the last run whose Bake and save succeeded
         fake = os.path.join(tmp, "bin")
@@ -597,6 +607,7 @@ def gate_cases(flow: dict) -> None:
         write(os.path.join(jobs_dir, "7.json"), json.dumps({"jobs": [{"name": "Card data", "conclusion": "success"},
                                                                      {"name": LANE, "conclusion": "skipped"}]}))
         write(os.path.join(jobs_dir, "6.json"), json.dumps({"jobs": [{"name": LANE, "conclusion": "success"}]}))
+        write(os.path.join(jobs_dir, "8.json"), json.dumps({"jobs": [{"name": LANE, "conclusion": "success"}]}))
         write(os.path.join(jobs_dir, "5.json"), json.dumps({"jobs": [{"name": LANE, "conclusion": "failure"}]}))
         before = git(work, "rev-parse", "HEAD")
         commit(work, {"Cards/Two.psd": "psd 2"}, "a card", "bob")
@@ -607,13 +618,16 @@ def gate_cases(flow: dict) -> None:
         _bot(ws)
         env = {"PATH": f"{fake}:{os.environ['PATH']}", "FAKE_JOBS": jobs_dir, "GH_TOKEN": "x", "GIT_NO_LAZY_FETCH": "1",
                "LANE": LANE, "RETRY": "", "DRY_RUN": "false"}
-        listed = lambda *pairs: json.dumps([{"databaseId": i, "headSha": s} for i, s in pairs])  # noqa: E731
+        listed = lambda *pairs, dry=(): json.dumps([{"databaseId": i, "headSha": s,  # noqa: E731
+                                                      "displayTitle": "Card sync (dry run)" if i in dry else "Card sync"}
+                                                     for i, s in pairs])
         for event, runs, fail, want, what in (
                 ("push", "[]", "", "true", "a push: its window is up"),
                 ("workflow_dispatch", "[]", "", "true", "a dispatch"),
                 ("schedule", listed((7, head), (6, before), (5, head)), "", "true", "a card commit since the last Bake and save"),
                 ("schedule", listed((7, before), (6, head)), "", "false", "only the lane's own commit since (skipped runs passed over)"),
                 ("schedule", listed((5, head)), "", "true", "no Bake and save succeeded in the last runs"),
+                ("schedule", listed((8, head), (6, before), dry=(8,)), "", "true", "a dry run's Bake and save passed over"),
                 ("schedule", "[]", "1", "true", "the runs not read")):
             code, text, out = run_step(main, "gate", ws, {**env, "GITHUB_EVENT_NAME": event, "FAKE_RUNS": runs, "FAKE_FAIL": fail}, tmp)
             check(code == 0 and out.get("go") == want and out.get("main") == head,
@@ -826,6 +840,96 @@ def main_cases(flow: dict) -> None:
             check(code == 0 and ok, f"re-pin: {want} -> main {now[:8]}" + ("" if code == 0 else f"\n{text}"))
 
 
+def build_cases(flow: dict) -> None:
+    """The Build step's arguments (a fake Python): the dispatch's inputs, none after the bake; --own the lane's commits."""
+    data = flow["jobs"]["data"]
+    with tempfile.TemporaryDirectory() as tmp:
+        work, bare = origin(tmp)
+        base = git(work, "rev-parse", "HEAD")
+        commit(work, {"Cards/One.psd": "psd 2"}, "a card", "bob")
+        m = commit(work, {"Cards/One.psd": "baked"}, "Card sync: 1 card baked, TTS save updated", "AutoCroissant")
+        r = commit(work, {"TTS/Impossibility Simulator.json": '{"r":1}'}, "Card sync: TTS save re-pinned", "AutoCroissant")
+        commit(work, {"site/Card Edits.json": '{"v":2}'}, "Card edits: X", "AutoCroissant")      # the bot's: not the lane's
+        commit(work, {"Cards/One.psd": "psd 3"}, "Card sync: by hand", "bob")
+        git(work, "push", "-q", "origin", "main")
+        ws = checkout(tmp, bare)
+        os.makedirs(os.path.join(ws, "bot"))
+        python = os.path.join(tmp, "runner", "venv", "bin", "python")
+        write(python, f'#!/bin/bash\nprintf "%s\\n" "$@" > "{os.path.join(tmp, "build.args")}"\n')
+        os.chmod(python, 0o755)
+        manifest = os.path.join(ws, "carddata/db/manifest.json")
+        inputs = {"FULL": "true", "CARDS": "X", "ALLOW_ARCHIVE": "true", "RESTORE": "r" * 40, "SEED": "s" * 40}
+        none = {"FULL": "false", "CARDS": "", "ALLOW_ARCHIVE": "false", "RESTORE": "", "SEED": ""}
+        flags = ("--full", "--cards", "--allow-archive", "--restore", "--seed")
+        for what, extra, has_manifest, want_flags, want_own in (
+                ("a dispatch", {**inputs, "AFTER": ""}, True, True, f"{r},{m}"),
+                ("after the bake on a dispatch", {**inputs, "AFTER": m}, True, False, f"{r},{m}"),
+                ("a push, no data yet", {**none, "AFTER": ""}, False, False, None)):
+            if has_manifest:
+                write(manifest, json.dumps({"card_commit": base}))
+            elif os.path.exists(manifest):
+                os.remove(manifest)
+            env = {"GITHUB_WORKSPACE": ws, "HEAD_SHA": git(ws, "rev-parse", "HEAD"), "GIT_NO_LAZY_FETCH": "1",
+                   "RUN_URL": "u", "BUILDER_REF": "main", **extra}
+            code, text, _ = run_step(data, "build", os.path.join(ws, "bot"), env, tmp)
+            args = open(os.path.join(tmp, "build.args")).read().split("\n")
+            own = args[args.index("--own") + 1] if "--own" in args else None
+            check(code == 0 and all((f in args) == want_flags for f in flags) and own == want_own,
+                  f"build: {what} -> inputs {'passed' if want_flags else 'left out'}, --own {own}" + ("" if code == 0 else f"\n{text}"))
+
+
+def tell_cases(flow: dict) -> None:
+    """Tell Discord on faked runs and jobs: once per failing streak of its lane, once a lane per run."""
+    tell = step(flow["jobs"]["data"], "Tell Discord")
+    with tempfile.TemporaryDirectory() as tmp:
+        fake = os.path.join(tmp, "bin")
+        told = os.path.join(tmp, "told")
+        write(os.path.join(fake, "gh"), "#!/bin/bash\n"
+              'q=""; prev=""; for a in "$@"; do [ "$prev" = --jq ] && q=$a; prev=$a; done\n'
+              'if [ "$1" = run ]; then jq -r "$q" <<< "$FAKE_RUNS"; exit; fi\n'
+              'id=$(sed -n "s|.*/runs/\\([0-9]*\\)/jobs|\\1|p" <<< "$2"); jq -r "$q" "$FAKE_JOBS/$id.json"\n')
+        write(os.path.join(fake, "curl"), f'#!/bin/bash\ncat > "{told}"\n')
+        for name in ("gh", "curl"):
+            os.chmod(os.path.join(fake, name), 0o755)
+        os.makedirs(os.path.join(tmp, "runner"))
+        job = lambda name, conclusion=None: {"name": name, "conclusion": conclusion}  # noqa: E731
+        D, A = "Card data", "Card data after the bake"
+        cases = [  # (what, this job, this run's jobs, the other runs [(id, jobs, dry)], want told)
+            ("main fails after a data-only run, its last main failed", "main", [job(D, "success"), job(LANE)],
+             [(7, [job(D, "success"), job(LANE, "skipped")], False), (6, [job(LANE, "failure")], False)], False),
+            ("main fails after a data-only run, its last main passed", "main", [job(D, "success"), job(LANE)],
+             [(7, [job(D, "success"), job(LANE, "skipped")], False), (6, [job(LANE, "success")], False)], True),
+            ("data fails, the last data passed", "data", [job(D), job(LANE)], [(7, [job(D, "success")], False)], True),
+            ("after fails once data failed in this run", "after", [job(D, "failure"), job(LANE, "success"), job(A)],
+             [(7, [job(D, "success")], False)], False),
+            ("main fails once data failed in this run (the other lane)", "main", [job(D, "failure"), job(LANE)],
+             [(7, [job(D, "success"), job(LANE, "success")], False)], True),
+            ("data fails, a push run in its window failed its data", "data", [job(D), job(LANE)],
+             [(10, [job(D, "failure"), job("Quiet window")], False), (7, [job(D, "success")], False)], False),
+            ("main fails, a dry run's main passed", "main", [job(D), job(LANE)],
+             [(11, [job(LANE, "success")], True), (6, [job(LANE, "failure")], False)], False),
+            ("data fails, a replaced data job passed over", "data", [job(D), job(LANE)],
+             [(12, [job(D, "cancelled")], False), (6, [job(D, "failure")], False)], False),
+            ("data fails, the lane never ran before", "data", [job(D)], [(6, [job(LANE, "failure")], False)], True)]
+        for what, this, own, others, want in cases:
+            jobs_dir = os.path.join(tmp, f"jobs-{time.monotonic_ns()}")
+            write(os.path.join(jobs_dir, "99.json"), json.dumps({"jobs": own}))
+            for rid, jobs, _ in others:
+                write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": jobs}))
+            runs = [{"databaseId": 99, "displayTitle": "Card sync"}] + [
+                {"databaseId": rid, "displayTitle": "Card sync (dry run)" if dry else "Card sync"} for rid, _, dry in others]
+            if os.path.exists(told):
+                os.remove(told)
+            env = {"PATH": f"{fake}:{os.environ['PATH']}", "FAKE_RUNS": json.dumps(runs), "FAKE_JOBS": jobs_dir,
+                   "GITHUB_RUN_ID": "99", "GITHUB_JOB": this, "GH_TOKEN": "x", "WEBHOOK": "w", "RUN_URL": "https://run/99",
+                   "OUTCOMES": "gate=success build=failure bake=failure"}
+            code, text, _ = run_step({"steps": [tell]}, "Tell Discord", tmp, env, tmp)
+            sent = json.loads(open(told).read())["content"] if os.path.exists(told) else ""
+            lane = LANE if this == "main" else D
+            check(code == 0 and bool(sent) == want and (not sent or f"({lane}: " in sent),
+                  f"tell: {what} -> {'told: ' + sent if sent else 'quiet'}" + ("" if code == 0 else f"\n{text}"))
+
+
 def main():
     for tool in ("git", "bash", "jq"):
         if not shutil.which(tool):
@@ -834,6 +938,8 @@ def main():
     plans(flow)
     timer_cases(flow)
     gate_cases(flow)
+    build_cases(flow)
+    tell_cases(flow)
     fonts_cases(flow)
     bake_cases(flow)
     main_cases(flow)

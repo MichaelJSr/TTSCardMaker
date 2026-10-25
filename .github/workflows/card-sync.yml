@@ -209,6 +209,7 @@ jobs:
           RESTORE: ${{ inputs.restore }}
           SEED: ${{ inputs.seed }}
         run: |
+          if [ -n "$AFTER" ]; then FULL=false; CARDS=; RESTORE=; SEED=; fi     # the dispatch's inputs were the data job's
           main=$(git rev-parse HEAD)
           echo "main=$main" >> "$GITHUB_OUTPUT"
           builder=$(git -C bot rev-parse HEAD)
@@ -350,8 +351,9 @@ jobs:
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
       # The build on main's head. Exit 0 written or nothing to do, 2 a gate refused, 1 an error. It writes db/ in
-      # carddata/ even on a dry run (the artifact); only the data commit publishes it. After the bake, M's push is the
-      # card sync's own (--own).
+      # carddata/ even on a dry run (the artifact); only the data commit publishes it. The main lane's commits since the
+      # last build are the card sync's own pushes (--own), whichever data job reads them first. After the bake the
+      # dispatch's inputs are left out (they were the data job's).
       - name: Build
         id: build
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
@@ -368,11 +370,17 @@ jobs:
           ALLOW_ARCHIVE: ${{ inputs.allow_archive }}
           RESTORE: ${{ inputs.restore }}
         run: |
+          if [ -n "$AFTER" ]; then FULL=false; CARDS=; RESTORE=; SEED=; ALLOW_ARCHIVE=false; fi
           db=$GITHUB_WORKSPACE/carddata/db
           mkdir -p "$db"
           args=(--repo "$GITHUB_REPOSITORY" --checkout "$GITHUB_WORKSPACE" --head "$HEAD_SHA" --db "$db" --budget 400
                 --run "$RUN_URL" --builder-ref "$BUILDER_REF" --summary "$GITHUB_STEP_SUMMARY" --message "$RUNNER_TEMP/message.txt")
-          if [ -n "$AFTER" ]; then args+=(--own "$AFTER"); fi
+          base=$(jq -r '.card_commit // ""' "$db/manifest.json" 2> /dev/null || true)
+          if [ -n "$base" ] && git -C "$GITHUB_WORKSPACE" cat-file -e "$base^{commit}" 2> /dev/null; then
+            own=$(git -C "$GITHUB_WORKSPACE" log --format='%H|%an|%s' "$base..$HEAD_SHA" \
+              | sed -n 's/^\([0-9a-f]*\)|AutoCroissant|Card sync:.*/\1/p' | paste -sd, -)
+            if [ -n "$own" ]; then args+=(--own "$own"); fi
+          fi
           if [ "$FULL" = true ]; then args+=(--full); fi
           if [ -n "$CARDS" ]; then args+=(--cards "$CARDS"); fi
           if [ "$ALLOW_ARCHIVE" = true ]; then args+=(--allow-archive); fi
@@ -469,9 +477,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY"
 
-      # A failed live job (a push's, scheduled, a retry, a dispatch) tells Discord once per failing streak of live runs
-      # and once per run, with POSTS on. The URL is never printed; a failed call only warns. Dry runs neither alert nor
-      # count (their run names say so).
+      # A failed live job (a push's, scheduled, a retry, a dispatch) tells Discord once per failing streak of its lane
+      # (data: Card data and after the bake; main: Bake and save), with POSTS on: the streak is the lane's outcome in the
+      # newest other live run where it ended (finished or not), so runs that skipped the lane neither end nor count. A
+      # lane tells once a run (after follows data, so it sees data's failure); the two lanes may each tell. The URL is
+      # never printed; a failed call only warns. Dry runs neither alert nor count (their run names say so).
       - name: Tell Discord
         if: failure() && env.POSTS == 'on' && env.DRY_RUN != 'true'
         timeout-minutes: 2
@@ -481,21 +491,29 @@ jobs:
           OUTCOMES: "gate=${{ steps.gate.outcome }} build=${{ steps.build.outcome }} data=${{ steps.data-commit.outcome }}"
         run: &tell |
           if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_CHANGELOG_WEBHOOK is not set; no Discord message"; exit 0; fi
+          if [ "$GITHUB_JOB" = main ]; then lane='.name == "Bake and save"'; what="Bake and save"; keep="website edits wait for the next bake"
+          else lane='(.name | startswith("Card data"))'; what="Card data"; keep="the website and the bot keep the last good data"; fi
+          bad='(.conclusion == "failure" or .conclusion == "timed_out")'
           told=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs" \
-            --jq '[.jobs[] | select(.conclusion == "failure" or .conclusion == "timed_out")] | length') || told=0
-          if [ "${told:-0}" -gt 0 ]; then echo "Another job of this run failed: Discord was told then."; exit 0; fi
-          last=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --status completed --limit 20 \
-            --json databaseId,conclusion,displayTitle \
-            --jq "map(select(.databaseId != $GITHUB_RUN_ID and .conclusion != \"cancelled\" and .conclusion != \"skipped\"
-              and .displayTitle != \"Card sync (dry run)\"))[0].conclusion // \"\"") \
-            || last=""
-          if [ "$last" = failure ] || [ "$last" = timed_out ]; then
-            echo "The last live run failed too: Discord was told then."
+            --jq "[.jobs[] | select(($lane) and $bad)] | length") || told=0
+          if [ "${told:-0}" -gt 0 ]; then echo "$what failed earlier in this run: Discord was told then."; exit 0; fi
+          ids=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --limit 20 --json databaseId,displayTitle \
+            --jq ".[] | select(.databaseId != $GITHUB_RUN_ID and .displayTitle != \"Card sync (dry run)\") | .databaseId") \
+            || ids=""
+          last=""
+          for id in $(head -10 <<< "$ids"); do        # the newest live run where the lane ended (a push run's data ends long before it)
+            last=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" \
+              --jq "[.jobs[] | select(($lane) and .conclusion != null and .conclusion != \"skipped\" and .conclusion != \"cancelled\")]
+                | if length == 0 then \"\" elif any(.[]; $bad) then \"failure\" else \"success\" end") || last=""
+            if [ -n "$last" ]; then break; fi
+          done
+          if [ "$last" = failure ]; then
+            echo "$what failed in the last live run where it ran too: Discord was told then."
             exit 0
           fi
           stages=$(tr ' ' '\n' <<< "$OUTCOMES" | sed -n 's/=failure$//p' | paste -sd, - | sed 's/,/, /g')
-          jq -n --arg run "$RUN_URL" --arg stages "${stages:-a step}" \
-            '{content: ("Card sync failed (" + $stages + "): " + $run + "; the website and the bot keep the last good data."), allowed_mentions: {parse: []}}' \
+          jq -n --arg run "$RUN_URL" --arg what "$what" --arg stages "${stages:-a step}" --arg keep "$keep" \
+            '{content: ("Card sync failed (" + $what + ": " + $stages + "): " + $run + "; " + $keep + "."), allowed_mentions: {parse: []}}' \
             | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK" \
             || echo "::warning::the Discord webhook call failed"
 
@@ -625,7 +643,8 @@ jobs:
             schedule)
               synced=""
               if runs=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --status completed --limit 30 \
-                  --json databaseId,headSha --jq '.[] | "\(.databaseId) \(.headSha)"'); then
+                  --json databaseId,headSha,displayTitle \
+                  --jq '.[] | select(.displayTitle != "Card sync (dry run)") | "\(.databaseId) \(.headSha)"'); then
                 while read -r id sha; do
                   [ -n "$id" ] || continue
                   n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" \
@@ -905,8 +924,8 @@ jobs:
           OUTCOMES: "gate=${{ steps.gate.outcome }} bake=${{ steps.bake.outcome }} save=${{ steps.save.outcome }} main=${{ steps.main.outcome }} repin=${{ steps.repin.outcome }}"
         run: *tell
 
-  # After M (it brought the bake's card files): the data lane again, on main's head then, no wait. Its site build shows
-  # the baked PNGs.
+  # After M (it brought the bake's card files): the data lane again, on main's head then, no wait, without the dispatch's
+  # inputs (full, cards, seed, restore, allow_archive: the data job's). Its site build shows the baked PNGs.
   after:
     name: Card data after the bake
     needs: main
