@@ -376,7 +376,9 @@ jobs:
           rec=$RUNNER_TEMP/bake-records                  # the after job's: the bake's verdicts and events
           if [ -f "$rec/verdicts.json" ]; then args+=(--verdicts "$rec/verdicts.json"); fi
           if [ -f "$rec/events.json" ]; then args+=(--events "$rec/events.json"); fi
-          if [ -f "$RUNNER_TEMP/guard-events.json" ]; then args+=(--guard-events "$RUNNER_TEMP/guard-events.json"); fi
+          if [ -f "$RUNNER_TEMP/guard-events.json" ] && grep -q -- '"--guard-events"' commands/card_data.py; then
+            args+=(--guard-events "$RUNNER_TEMP/guard-events.json")    # a pinned older builder: not recorded
+          fi
           set +e
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_data "${args[@]}"
           code=$?
