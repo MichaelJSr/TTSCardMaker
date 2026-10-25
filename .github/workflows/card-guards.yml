@@ -13,23 +13,24 @@
 #      prints) and commands/font_check.py (fonts MDW/Fonts does not supply). Each reports AT ONCE, as before: the job
 #      summary, its own comment on the commit and its own Discord message in the standards channel (the font check's
 #      pings the card makers' role, owner 2026-10-23; the card check's pings nobody). Never a gate.
-# The guards' report (1-3), one per push: the job summary, a comment on the commit, and ONE Discord post to the standards channel
-# ("<login> pushed <card> with these issues: ..."; nobody pinged, no link previews). The post, the PNGs and the fixes wait
-# for the 30-minute quiet window: a PNG the author pushed meanwhile withdraws its refusal, a card pushed again is left to
-# that push's run, a write that did not land is told (in report mode, the PNG the bot would make). It never reverts or
-# rejects a push. A run that fails tells the standards channel once per failure streak (a cancel by hand does not).
+# The guards' report (1-3), one per push: the job summary, a comment on the commit, and ONE Discord post to the
+# standards channel ("<login> pushed <card> with these issues: ..."; nobody pinged, no link previews). The post, the
+# PNGs and the fixes wait for the 30-minute quiet window: a PNG the author pushed meanwhile withdraws its refusal, a
+# card pushed again is left to that push's run, a write that did not land is told (in report mode, the PNG the bot would
+# make). It never reverts or rejects a push. A run that fails tells the standards channel once per failure streak (a
+# cancel by hand does not).
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
 # wheel cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
 #
-# Three jobs (2026-10-24): `check` runs the two checks and the guards' check and comments, then ends; `post` lands and posts after the quiet window, held by
-# the environment card-guards-quiet's 30-minute wait timer (a push's first attempt; no runner waits); `finish` turns card
-# errors red and tells a failed run. Without the environment's timer (it is the owner's setting), Land sleeps out the
-# window as before.
+# Three jobs (2026-10-24): `check` runs the two checks and the guards' check and comments, then ends; `post` lands and
+# posts after the quiet window, held by the environment card-guards-quiet's 30-minute wait timer (a push's first
+# attempt; no runner waits); `finish` turns card errors red and tells a failed run. Without the environment's timer (it
+# is the owner's setting), Land sleeps out the window as before.
 #
 # Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = the guards skipped, the two checks still
-# run; report = check, comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry run (job summary and
-# artifacts only); CARD_GUARDS does not bind it, and one that lands refuses while a push run of its commit is still in the
-# quiet window.
+# run; report = check, comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry
+# run (job summary and artifacts only); CARD_GUARDS does not bind it, and one that lands refuses while a push run of its
+# commit is still in the quiet window.
 name: Card guards
 
 on:
