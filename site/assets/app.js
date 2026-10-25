@@ -75,7 +75,7 @@ const pendingList = c => (c.pending || []).map(f => FIELD_LABEL[f] || f).join(",
 const psdBadges = c => [
   c.refused ? `<span class="fact refused" data-tip="The last try to regenerate the card image was refused; change the edit or the PSD">Image update refused: ${esc(c.refused)}</span>`
     : c.pending?.length ? `<span class="fact pending" data-tip="${PSD_TIP}">PSD pending: ${esc(pendingList(c))}</span>` : "",
-  c.reparsePending ? `<span class="fact" data-tip="The PSD changed since the bot last read it; the data follows on the next /update_stats">Re-parse pending</span>` : "",
+  c.reparsePending ? `<span class="fact" data-tip="The PSD changed since the card data was built; the next card sync reads it">Re-parse pending</span>` : "",
 ].join("");
 // beside PSD chips and parser notes: opens the card with Details open
 const detailsLink = c => (c.details ? `<a class="fact details-link" href="#/card/${c.id}?details" data-tip="Open the card with its PSD details">Details</a>` : "");   // a plain link: Ctrl-click opens a tab
@@ -316,8 +316,8 @@ function tileHtml(c, { small = false, eager = false, css = 190, constructed = fa
       : c.hidden ? `<span class="flag" data-tip="Hidden from the website">Hidden</span>`
       : c.refused ? `<span class="flag refused" data-tip="Image update refused: ${esc(c.refused)}">Image update refused</span>`
       : c.pending?.length ? `<span class="flag pending" data-tip="${PSD_TIP}: ${esc(pendingList(c))}">PSD pending</span>`
-      : c.reparsePending ? `<span class="flag" data-tip="The PSD changed since the bot last read it">Re-parse pending</span>`
-      : !c.parsed ? `<span class="flag" data-tip="Not parsed by the bot yet">New</span>`
+      : c.reparsePending ? `<span class="flag" data-tip="The PSD changed since the card data was built">Re-parse pending</span>`
+      : !c.parsed ? `<span class="flag" data-tip="Not in the card data yet">New</span>`
       : c._unused ? `<span class="flag unused" data-tip="No card names this status effect">Unused</span>`
       : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}: same PSD">Duplicate</span>` : ""}
     ${small ? "" : `<button type="button" class="add${inDeck ? " in" : ""}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "✓ In deck" : "+ Deck"}</button>`}
@@ -768,7 +768,7 @@ function webEditsHtml() {
 function parserNotesHtml() {
   const unparsed = S.cards.filter(c => !c.parsed), problems = S.cards.filter(c => c.problems && c.problems.length);
   if (!unparsed.length && !problems.length) return `<section class="panel"><h3>Parser notes</h3><p class="empty">Every card is parsed, with no parser notes.</p></section>`;
-  return `${unparsed.length ? `<section class="panel"><h3>Not parsed by the bot yet <span class="muted">${unparsed.length}</span></h3><p class="muted">Run /update_stats in Discord to add them.</p>
+  return `${unparsed.length ? `<section class="panel"><h3>Not in the card data yet <span class="muted">${unparsed.length}</span></h3><p class="muted">The next card sync adds them.</p>
       <div class="grid" style="--tile:120px">${unparsed.map(c => tileHtml(c, { small: true })).join("")}</div></section>` : ""}
     ${problems.length ? `<section class="panel"><h3>Parser notes <span class="muted">${problems.length}</span></h3><ul>${problems.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${c.problems.map(esc).join(" · ")}</span>${detailsLink(c)}</li>`).join("")}</ul></section>` : ""}`;
 }

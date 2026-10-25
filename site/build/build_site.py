@@ -1,7 +1,6 @@
 """Build the static card browser into site/dist.
 
-Run by .github/workflows/site.yml on every push to main, every 6 hours (to pick up the bot's latest
-/update_stats data), and on demand. Also runs locally: `python site/build/build_site.py`, then serve site/dist.
+Run by .github/workflows/site.yml on every push to main, after each Card sync commit, daily, and on demand. Also runs locally: `python site/build/build_site.py`, then serve site/dist.
 
 Where the data comes from:
   * Card text, stats, authors, aliases and history: AutoCroissant's stats.pkl / aliases.pkl / old_stats.pkl
@@ -83,7 +82,7 @@ from urllib.request import Request, urlopen
 
 from PIL import Image
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))     # for loads by file path (tts_save_gate.py)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))     # for loads by file path (the bot's bench scripts)
 import analytics  # noqa: E402
 
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
