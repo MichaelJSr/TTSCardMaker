@@ -1055,7 +1055,7 @@ function renderDeckPage(r) {
   form();
 }
 // the deck page's Share, Discord, text, TTS and print act on the deck shown (S.deckView); the deck builder's on the hand
-const ttsDownload = d => { D.download(`${d.name.replace(/[^\w\- ]+/g, "") || "hand"}.json`, JSON.stringify(D.ttsSave(d, S.byId, S.data.raw), null, 2)); toast("Downloaded Tabletop Simulator saved object"); };
+const ttsDownload = d => { D.download(`${d.name.replace(/[^\w\- ]+/g, "") || "hand"}.json`, JSON.stringify(D.ttsSave(d, S.byId, S.data.raw, S.data.pins), null, 2)); toast("Downloaded Tabletop Simulator saved object"); };
 const printDeck = d => { if (!D.printSheet(d, S.byId, S.data.raw)) toast("Allow pop-ups to print proxies"); };
 
 // ---- people: profiles (data/users.json; staged or just-published ones from the editor) + contributions (data/contributions.json)

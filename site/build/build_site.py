@@ -96,6 +96,7 @@ CARD_REPO = os.environ.get("CARD_REPO", "MichaelJSr/TTSCardMaker")
 BOT_REPO = os.environ.get("BOT_REPO", "bobberlington/AutoCroissant")
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 RAW = f"https://raw.githubusercontent.com/{CARD_REPO}/main/"
+CARD_BACKS = ("MDW/cardback.png", "MDW/cardback_item.png")    # deck.js ttsSave's backs
 DETAILS_JSON = "psd_details.json"            # the PSD structure records {version, cards: {blob sha: record}} (AutoCroissant card_db.DETAILS_JSON)
 IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
@@ -1789,10 +1790,11 @@ def unquote_path(path):
     return path
 
 
-def parse_history(text):
+def parse_history(text, last=None):
     """`git log --raw --no-renames --no-abbrev --format=HISTORY_FORMAT` -> commits newest first: (sha, committer time, author
     name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by values: logins, Discord names]).
-    A bot commit's change of a PNG its Recompressed trailers name is left out: the same image, losslessly smaller."""
+    A bot commit's change of a PNG its Recompressed trailers name is left out: the same image, losslessly smaller.
+    last (a dict): filled with {path: (commit that last changed it, its blob then)}, recompressions included."""
     commits = []
     for chunk in text.split("\x01")[1:]:
         head, _, body = chunk.partition("\n")
@@ -1811,22 +1813,24 @@ def parse_history(text):
             parts = meta.split()
             if len(parts) >= 5:
                 entries.append((parts[4], parts[2], parts[3], unquote_path(path)))
+                if last is not None and parts[4] != "D":
+                    last.setdefault(entries[-1][3], (sha, parts[3]))
         if same and name.lower() == BOT_AUTHOR.lower():
             entries = [e for e in entries if not (e[0] == "M" and e[3] in same)]
         commits.append((sha, int(ts or 0), name, email, subject, entries, editors))
     return commits
 
 
-def git_history():
-    """Every commit that touched a card PNG, a PSD or Card Edits.json (parse_history's shape). Commit metadata and trees
-    only, so CI's blob:none clone has it all; None in a shallow clone, which has no history to read."""
+def git_history(last=None):
+    """Every commit that touched a card PNG, a PSD or Card Edits.json (parse_history's shape; last as there). Commit
+    metadata and trees only, so CI's blob:none clone has it all; None in a shallow clone, which has no history to read."""
     shallow = subprocess.run(["git", "-C", HISTORY_REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
     if shallow == "true":
         log("warning: shallow clone, so no image versions and no commit counts (git fetch --unshallow --filter=blob:none to get them)")
         return None
     out = subprocess.run(["git", "-C", HISTORY_REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
                           f"--format={HISTORY_FORMAT}", "--", *HISTORY_PATHS], capture_output=True, text=True, check=True).stdout
-    return parse_history(out)
+    return parse_history(out, last)
 
 
 # ---- image versions ----------------------------------------------------------------------------------
@@ -2971,7 +2975,12 @@ def main():
     for e in cards + rules:
         if e.get("png") and e["png"] in tree:
             by_png.setdefault(e["png"], []).append(e)
-    commits = git_history()
+    last = {}
+    commits = git_history(last)
+    pin = lambda path: last[path][0] if path in tree and last.get(path, (None, None))[1] == tree[path] else None
+    for e in cards:                               # deck.js: the TTS save's pinned links (AutoCroissant tts_save _pin_links)
+        if e.get("png") and pin(e["png"]):
+            e["pin"] = pin(e["png"])
     found = image_versions(list(by_png), commits)
     versions = {"available": found is not None, "repo": CARD_REPO, "commits": [], "cards": {}}
     rule_ids = {e["id"] for e in rules}
@@ -3035,6 +3044,7 @@ def main():
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "source": source_time(),              # edit.js: a publish is live once this reaches its commit's date
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
+        "pins": {p: pin(p) for p in CARD_BACKS if pin(p)},    # deck.js: the card backs' pinned links
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist,
         "thumbs": {w: thumb_tag(w) for w in IMAGE_SIZES},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
         # for the editor
