@@ -19,6 +19,7 @@ import { deckPasses } from "./login.js";
 import { createPreviews } from "./preview.js";
 import * as ratings from "./ratings.js";
 import * as insights from "./insights.js";
+import * as fresh from "./fresh.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -1283,5 +1284,5 @@ document.addEventListener("pointermove", e => {
 });
 document.addEventListener("pointerout", e => tips.out(e.relatedTarget));
 
-init();
+init().finally(fresh.watch);                            // a new deploy reloads the page (fresh.js)
 passes.migrate().catch(() => {});                       // passphrases remembered in plain text before 2026-10-23: sealed now

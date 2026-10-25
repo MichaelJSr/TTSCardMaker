@@ -8,6 +8,7 @@ import * as auth from "./login.js";
 import * as live from "./live.js";
 import * as draft from "./drafts.js";
 import { current as ratingNow } from "./ratings.js";
+import { soon } from "./fresh.js";
 
 const API = "https://api.github.com";
 // token: the plain-text token before 2026-10-23 (sealed on the next load); last: the login a password last signed in
@@ -265,7 +266,7 @@ export function createEditor(app) {
     catch (e) { if (e.status === 404) return null; throw e; }
   }
   // files: {path: oldText => newText | null (leave it) | false (delete it)}; retried on top if someone pushed meanwhile
-  async function commitFiles(edits, message) {
+  async function commitFiles(edits, message, got = {}) {   // got.date: the commit's date (GitHub's clock)
     const repo = S.data.repo, branch = S.data.branch || "main";
     for (let attempt = 0; ; attempt++) {
       const head = (await gh(`/repos/${repo}/git/ref/heads/${branch}`)).object.sha;
@@ -279,7 +280,7 @@ export function createEditor(app) {
       if (!tree.length) return null;
       const t = await gh(`/repos/${repo}/git/trees`, { method: "POST", body: { base_tree: base.tree.sha, tree } });
       const c = await gh(`/repos/${repo}/git/commits`, { method: "POST", body: { message, tree: t.sha, parents: [head] } });
-      try { await gh(`/repos/${repo}/git/refs/heads/${branch}`, { method: "PATCH", body: { sha: c.sha } }); return c.sha; }
+      try { await gh(`/repos/${repo}/git/refs/heads/${branch}`, { method: "PATCH", body: { sha: c.sha } }); got.date = c.committer?.date; return c.sha; }
       catch (e) { if (e.status !== 422 || attempt >= 3) throw e; }
     }
   }
@@ -480,10 +481,11 @@ export function createEditor(app) {
     }
     c[op._sent ? "_sent" : "_staged"] = true;
   }
-  function sentRecord() {                          // {at, sha, ops, profiles, decks, deckNames}: published, until the site has rebuilt with it
+  function sentRecord() {                          // {at, committed, sha, ops, profiles, decks, deckNames}: published, until the site has rebuilt with it
     const sent = load(K.sent, null);
     if (!sent) return null;
-    if (new Date(S.data.generated) > new Date(sent.at)) { localStorage.removeItem(K.sent); return null; }   // live now
+    // built from its commit or a later one (commit dates, GitHub's); before 2026-10-25: the build's clock
+    if (S.data.source && sent.committed ? Date.parse(S.data.source) >= Date.parse(sent.committed) : new Date(S.data.generated) > new Date(sent.at)) { localStorage.removeItem(K.sent); app.toast("Live now: your published edits are on the site"); return null; }
     return sent;
   }
   const sentOps = () => sentRecord()?.ops || [];
@@ -1200,10 +1202,11 @@ export function createEditor(app) {
     const names = ops.map(o => o.name);
     const what = [...names, ...(Object.keys(people).length ? ["people"] : []), ...(stage.admins ? ["admins"] : []), ...Object.keys(profiles).map(l => `${l}'s profile`),
       ...Object.entries(decksOut).map(([k, f]) => (f ? (f.private ? `private deck ${k}` : `deck ${f.name || k}`) : `deck ${k} removed`))];   // a private deck's name stays out of the public commit message
-    const sha = await commitFiles(edits, message || (what.length > 3 ? `Website edits: ${what.length} changes` : `Website edit: ${what.join(", ")}`));
+    const got = {}, sha = await commitFiles(edits, message || (what.length > 3 ? `Website edits: ${what.length} changes` : `Website edit: ${what.join(", ")}`), got);
     const sent = sentRecord() || {};
-    if (sha) localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
+    if (sha) localStorage.setItem(K.sent, JSON.stringify({ at, committed: got.date, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
       decks: { ...sentDecks(), ...decksOut }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));   // no commit: no rebuild to wait for (the site already has it)
+    if (sha) soon();                                   // reloads when its build is live (fresh.js)
     if (stage.admins) S.data.admins = stage.admins;
     cardDrafts.dropAll(ops.map(o => o.id));              // published: their drafts are done with
     stage = emptyStage();
@@ -1439,6 +1442,7 @@ export function createEditor(app) {
     init() {
       S.showHidden = !!localStorage.getItem(K.hidden);
       preview();
+      const sent = sentRecord(); if (sent) soon(Date.parse(sent.at));   // still waiting for its build
       if (booting) restore().then(() => app.derive(), () => { token = ""; me = null; }).finally(() => { booting = false; app.rerender(); if (offerOnBoot && me) offerAfterBoot(); });
     },
     open: openForm,

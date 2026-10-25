@@ -60,7 +60,8 @@ changes feed, the People tab, the published decks, the Stats page or a card's Ba
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json), images, icons,
 assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
-content and its imports', the data's from its content without the build time; build.txt digests the whole site (which build is live).
+content and its imports', the data's from its content without the build time; build.txt digests the whole site (which build is live),
+then the page's stamp (<meta name="page">), which open pages poll for (fresh.js).
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -1847,6 +1848,14 @@ def profile_text(p, n_cards, by_id, contrib="", cards_line=""):
     return person_text(lines, cards_line) or f"{p['login']}'s profile"
 
 
+def source_time():
+    """The built commit's committer date (ISO), "" outside git."""
+    try:
+        return subprocess.run(["git", "-C", REPO, "show", "-s", "--format=%cI", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return ""
+
+
 def build_branch():
     """Branch the Edit button commits to."""
     if os.environ.get("GITHUB_REF_NAME"):
@@ -2759,7 +2768,7 @@ def parse_banlist(by_norm):
 # ---- main ------------------------------------------------------------------------------------------
 # ---- build versions (?v=) ------------------------------------------------------------------------------
 IMPORT_RE = re.compile(r'(from\s+"\./([\w-]+\.js))"')     # a module's static imports, as they are stamped
-VOLATILE = {"cards.json": ("generated",), "decks.json": ("generated",), "changelog.json": ("since",)}   # the build's clock
+VOLATILE = {"cards.json": ("generated", "source"), "decks.json": ("generated",), "changelog.json": ("since",)}   # the build's clock
 
 
 def stamp_of(data):
@@ -2813,7 +2822,7 @@ def data_stamp(data, details):
     return digest.hexdigest()[:10]
 
 
-BUILD_TXT = "build.txt"                       # in DIST: dist_digest(), which build is live
+BUILD_TXT = "build.txt"                       # in DIST: dist_digest() (which build is live), then the page stamp
 
 
 def dist_digest(data):
@@ -3155,6 +3164,7 @@ def main():
     public_decks, private_decks = read_decks(cards)
     data = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "source": source_time(),              # edit.js: a publish is live once this reaches its commit's date
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist,
         "thumbs": {w: thumb_tag(w) for w in IMAGE_SIZES},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
@@ -3271,6 +3281,8 @@ def main():
         return f'{m.group(1)}?v={assets[name][0] if name in assets else version}"'
     with open(os.path.join(SITE, "index.html"), encoding="utf-8") as fh:
         template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', url, fh.read()).replace("<!--BUILD-->", version)
+    page = stamp_of(template.encode("utf-8"))  # the page's stamp: build.txt's 2nd line (fresh.js)
+    template = template.replace("<!--PAGE-->", page)
     banner = site_banner(cards, os.path.join(DIST, "og.jpg"))
     def og_tags(title, desc, url, image="", size=None, alt=""):
         tags = [f'<meta property="og:site_name" content="{SITE_NAME}">', '<meta property="og:type" content="website">',
@@ -3373,7 +3385,7 @@ def main():
     if montages:
         log(f"deck previews: {len(montages)} montages")
     with open(os.path.join(DIST, BUILD_TXT), "w", encoding="utf-8") as fh:
-        fh.write(dist_digest(data) + "\n")
+        fh.write(dist_digest(data) + "\n" + page + "\n")
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
 
 
