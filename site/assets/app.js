@@ -1,7 +1,7 @@
 import { compile, suggest, total, SEARCH_HELP } from "./search.js";
 import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
 import * as D from "./deck.js";
-import { renderStats } from "./stats.js";
+import { renderStats, shapeOf, cooldownCols, tagsOf } from "./stats.js";
 import { createEditor } from "./edit.js";
 import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers, shareDialogHtml, personDiscord, personText } from "./profile.js";
 import * as inline from "./inline.js";
@@ -37,10 +37,12 @@ const S = {
   selected: new Set(),                                     // tiles picked in the cards grid (edit mode: drag them onto a series or author)
   distPage: {},                                            // the Stats distributions' page per stat (this session)
   selecting: false,                                        // the Select toggle (phones): a tap on a tile selects it
+  toTop: false,                                            // a Stats chart link was followed: the grid opens at its top
 };
 // The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
   ["aux item", "Auxiliary items"], ["status", "Status effects"], ["creatures", "Auxiliary creatures"]];
+const KIND_PLURAL = { debuff: "Debuffs", buff: "Buffs", unknown: "Other" };   // kind= values the chips don't have (the Stats links)
 const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
 const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
@@ -277,6 +279,7 @@ function renderView(r, hash) {
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
   const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare, users: renderUsers, u: renderUser, decks: renderDecks };
   (views[r.name] || renderCards)(r);
+  if (S.toTop) { S.toTop = false; scrollTo(0, 0); }
   S.title = document.title = titleOf(r);
   S.viewSig = viewSig();
 }
@@ -307,7 +310,7 @@ function filterCards(p, { facets = true } = {}) {
   if (!facets) return list;
   const kinds = csv(p, "kind"), st = csv(p, "stars").map(Number), subs = csv(p, "sub"), types = csv(p, "types"), flags = csv(p, "flags");
   const series = p.get("series"), subseries = p.get("subseries"), author = p.get("author");
-  if (kinds.length) list = list.filter(c => kinds.includes(kindOf(c)));
+  if (kinds.length) list = list.filter(c => kinds.includes(kindOf(c)) || kinds.includes(c.type));      // debuff, buff: a Stats link
   if (st.length) list = list.filter(c => st.includes(c.stars));
   if (subs.length) list = list.filter(c => subs.includes(c.subtype));
   if (types.length) list = list.filter(c => types.every(t => (c.types || []).includes(t)));
@@ -320,8 +323,23 @@ function filterCards(p, { facets = true } = {}) {
     pending: c => !!((c.pending && c.pending.length) || c.refused),
     banned: c => !!c._banned };
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
+  for (const [k, , test] of LINKED) { const v = p.get(k); if (v) list = list.filter(test(v)); }
+  const month = p.get("month"), change = p.get("change");
+  if (month || change) list = S.analytics ? list.filter(c => balance.changedAs(S.analytics, c, month, change)) : [];   // renderCards loads it
   return list;
 }
+// filters the Stats charts link to (stats.js cardsHref), shown as chips: [param, chip label(v), test(v)]; bal, month and
+// change read analytics.json (renderCards loads it)
+const LINKED = [
+  ["legal", () => "Legal in constructed", () => c => !c._banned && c.parsed !== false],
+  ["shape", v => (v === "tied" ? "Tied highest stats" : `Highest stat ${v.toUpperCase()}`), v => c => shapeOf(c) === v],
+  ["cd", v => `(${v.replace("+", "")})${v.endsWith("+") ? "+" : ""}`, v => c => cooldownCols(c).some(x => x.key === v)],
+  ["tag", v => `(${v})`, v => c => tagsOf(c).includes(v)],
+  ["mentions", v => `Naming ${S.byId.get(v)?.name || v}`, v => c => !!S.mentionedBy.get(v)?.has(c.id)],
+  ["fresh", v => `Text from ${v}`, v => c => insights.freshYear(c) === v],
+  ["bal", v => `${v === "top" ? "Top" : "Bottom"} 10% for its star level`, v => c => !!S.analytics && balance.flagged(S.analytics, c, v)],
+];
+const needsAnalytics = p => ["bal", "month", "change"].some(k => p.get(k));
 const listOf = p => sortCards(filterCards(p), sortOf(p), p.get("dir") || "");   // the cards the grid shows, in order
 function sortCards(list, sort = "name", dir = "") {
   const key = {
@@ -381,7 +399,7 @@ function renderCards(r) {
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
   const active = [];
   if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
-  for (const k of csv(p, "kind")) active.push(["kind", (KINDS.find(x => x[0] === k) || [k, k])[1], k]);
+  for (const k of csv(p, "kind")) active.push(["kind", (KINDS.find(x => x[0] === k) || [k, KIND_PLURAL[k] || k])[1], k]);
   for (const s of csv(p, "stars")) active.push(["stars", `${s}★`, s]);
   for (const s of csv(p, "sub")) active.push(["sub", cap(s), s]);
   for (const t of csv(p, "types")) active.push(["types", t.replace(/_/g, " "), t]);
@@ -390,9 +408,15 @@ function renderCards(r) {
   if (p.get("author")) active.push(["author", `by ${p.get("author")}`]);
   for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
   for (const f of csv(p, "flags")) { const x = FLAGS.find(x => x[0] === f); if (x) active.push(["flags", x[1], f]); }   // an old flag: ignored
+  for (const [k, label] of LINKED) if (p.get(k)) active.push([k, label(p.get(k))]);
+  if (p.get("month")) active.push(["month", `Changed ${balance.monthName(p.get("month"))}`]);
+  if (p.get("change")) active.push(["change", balance.CHANGE_LABEL[p.get("change")] || p.get("change")]);
   const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
     return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
   const suggestions = !list.length && p.get("q") ? suggest(p.get("q"), S.cards) : [];
+  const waiting = needsAnalytics(p) && !S.analytics;      // a Stats link's change filters: the grid again once analytics.json is in
+  if (waiting) loadAnalytics().then(() => { if (parseHash(S.renderedHash || "").name === "cards") rerender(); },
+    () => { const el = $(".browse .loading", view); if (el) el.textContent = "Couldn't load the recorded changes."; });
 
   view.innerHTML = `<div class="browse">
     <aside class="filters${S.filtersOpen ? " open" : ""}" aria-label="Filters">
@@ -426,7 +450,7 @@ function renderCards(r) {
       </div>
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v]) => `<button type="button" class="chip" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
-      ${!list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
+      ${waiting ? `<p class="loading">Loading the recorded changes…</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}"></div>`}
     </section></div>`;
   const grid = list.length && view_ !== "table" && $(".browse .grid", view);
@@ -836,16 +860,16 @@ function openPicker(tier) {                              // the shared picker (p
 let statsJob = 0;
 function renderStatsView(r) {
   const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
-  renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist, distPage: S.distPage }, r.params);
-  const ctx = { cards: S.cards, byId: S.byId, banned: S.banned };
+  renderStats(view, { cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage }, r.params);
+  const ctx = { cards: S.cards };
   const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
-  const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History leave out what needs it
+  const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History go in with it
     const now = parseHash(S.renderedHash);
     if (now.name !== "stats") return;
     const put = (id, html) => { const slot = $(`#${id}`, view); if (slot) slot.innerHTML = html; };
     if (A) put("stats-balance", balance.statsHtml(A, { cards: S.cards, byId: S.byId }, now.params));
-    put("stats-ratings", insights.ratingsHtml(A, ctx, now.params));
-    put("stats-history", insights.historyHtml(A, ctx, now.params));
+    put("stats-ratings", insights.ratingsHtml(ctx, now.params));
+    put("stats-history", insights.historyHtml(ctx, now.params));
   };
   const job = ++statsJob, slot = $("#stats-balance", view);
   if (S.analytics) {                                     // below the first screen, at the top of the page: after it has painted
@@ -1192,6 +1216,8 @@ document.addEventListener("click", e => {
   const open = e.target.closest("[data-open], .chart [data-card]");
   if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey || S.selecting) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
+  const go = e.target.closest(".chart a.go");             // a Stats chart's cards: the grid from its top
+  if (go && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) { e.preventDefault(); S.toTop = true; location.hash = go.getAttribute("href"); return; }
   const ref = e.target.closest("a.card-ref");
   if (ref) { e.preventDefault(); location.hash = `#/card/${ref.dataset.card}`; return; }
   const scroll = e.target.closest("[data-scroll]");
@@ -1263,6 +1289,7 @@ function fillTip(t) {
   if (t.dataset.v !== undefined) {
     const v = document.createElement("div"); v.className = "v"; v.textContent = t.dataset.v;
     const l = document.createElement("div"); l.textContent = t.dataset.l || ""; tip.replaceChildren(v, l);
+    if (t.closest(".chart a.go")) { const h = document.createElement("div"); h.className = "muted"; h.textContent = "Show these cards"; tip.append(h); }   // a Stats link
   } else if (t.matches("a.card-ref, .chart [data-card]")) {
     const c = S.byId.get(t.dataset.card);
     if (!c) return false;

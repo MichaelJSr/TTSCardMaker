@@ -70,21 +70,20 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   private deck asks for its passphrase (remembered on the device if you tick **Remember on this device**, encrypted with a
   key that can't leave the browser; **Forget** on the deck page drops it). A person's page lists their decks, the
   private ones as locked links. Format in `site/decks/README.md`; see Decks below.
-- **Stats**: counts by kind, series, subseries, type, timing tag, status effect, author and month; how many legal cards there are
+- **Stats**: counts by kind, series (each with its subseries under it), type, timing tag, status effect and author; how many legal cards there are
   for each star level of the starting hand; average stats per star level; stat shapes (each creature's highest stat),
   cooldowns and uses by star level, ability length by star level and kind, items by type and stars; stat distributions (0-10, with
   `‹ ›` or `←`/`→` on a stat that goes higher); and a total-stats-vs-stars chart that highlights possible balance
   outliers. Every chart has a table view; jump links go to Balance, Ratings and History.
   **Balance**: the total stats of each star level of creatures and minions (the middle 80%, the median, the lowest and
   highest, the top and bottom 10% as dots), the strongest and weakest for their star level, each star level's average
-  total over time (full-history builds), power creep (by year created), series strength (opens on its table), buffs and
-  nerfs by month and by stat, every recorded change by month, the most reworked cards. A star level with fewer than 5
+  total over time (full-history builds), power creep (by year created), buffs and nerfs by month and by stat, every
+  recorded change by month (timing-tag-only changes left out), the most reworked cards. A star level with fewer than 5
   cards is compared with all cards of its kind, and so are the auxiliary creatures, with all creatures.
-  **Ratings** (once cards have ratings): rated power vs stats, favourites and least liked, most divisive (once 3 people
-  rate a card), risers and fallers, power tier vs the ban list, and whether Too Stronk cards got nerfed.
-  **History**: who changes whose cards and the most revised cards (image changes after the upload, mass passes left
-  out; full-history builds), cards created per year, text freshness, and retired and deleted cards. The kind and series
-  filters apply to every section.
+  **Ratings** (once cards have ratings): favourites and least liked, most divisive (once 3 people rate a card), risers
+  and fallers. **History**: cards created per year, text freshness. The kind and series filters apply to every section.
+  A bar, column, cell or legend entry that stands for a set of cards opens the Cards grid with those cards (a link:
+  Back returns to Stats); a single card opens the card.
 - **Changes**: a row of category tabs across the top; clicking one (or the arrow keys on a focused tab) shows that
   category alone, the chosen tab underlined, and the address keeps it (`#/changes/changelog`), so a link or a refresh
   opens the same one. **Recently updated** (`#/changes`): recently updated cards with text diffs (none when the update kept the text). **Changelog**: the card

@@ -1986,7 +1986,7 @@ def image_versions(paths, commits):
     return versions
 
 
-# ---- revisions (analytics.json revisions: Stats' who changes whose cards, most revised; the person pages) -----------
+# ---- revisions (the person pages: image changes after the upload) -------------------------------------------------
 MASS_PASS = 20                                # a commit changing more card images than this is a mass pass (a template or token pass)
 
 
@@ -2275,7 +2275,6 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
 
 
 ARCHIVE_TAGS = ("renamed", "retired", "deleted")   # changes.js ARCHIVE_TAGS
-ARCHIVED_SLIM = ("card", "title", "tag", "card_type", "stars", "series", "at", "created", "author")   # analytics.json archived (Stats)
 ARCHIVED_PERSON = ("card", "title", "tag", "renamed_to", "renamedId", "moved_to", "at", "created")       # contributions.json people[].archived
 
 
@@ -3197,8 +3196,6 @@ def main():
     elif rated["entries"]:
         log(line)
     revs = card_revisions(found, by_png, commits, people, by_login, skip=rule_ids, row_of=row_of)
-    balance["revisions"] = {"available": revs is not None, "mass": MASS_PASS, "cards": revs or {}}
-    balance["archived"] = [{k: r[k] for k in ARCHIVED_SLIM if k in r} for r in archived]
     if revs is not None:
         log(f"revisions: {sum(n for v in revs.values() for n in v.values())} card image changes on {len(revs)} cards "
             f"({len(mass_passes(found, by_png, rule_ids))} mass-pass commits left out)")

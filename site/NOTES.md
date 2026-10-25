@@ -1041,3 +1041,38 @@ relies on:
   13 (Live now toast, record cleared); typing in the search box: the bar at 5.2, its Refresh 0.1 s after the click.
   The race (a build of an earlier commit landing first, run_race.sh): 719375bb cleared the record on it with "Live now"
   and never showed the real build by 120 s; now the record stays on it and clears on the real build, 14 s after.
+
+## 30. Stats pruned, subseries in the series chart, charts link to the grid (2026-10-25, owner's rulings)
+- Removed (UI, data, code): Constructed ban reasons, Last change by month, Top subseries / "<series> by subseries"
+  (stats.js); Series strength (balance.js); Rated power vs stats, Power tier vs ban list, "Did Too Stronk cards get
+  nerfed?", Who changes whose cards, Most revised cards, Retired and deleted cards (insights.js). analytics.json loses
+  `revisions` and `archived` (`ARCHIVED_SLIM` gone); `card_revisions` stays for the person pages, the Changes page keeps
+  its Most revised tab and Archive. `ratingsHtml({cards}, params)` and `historyHtml({cards}, params)` no longer take A.
+- Recorded changes by month: no "Timing tags only"; `changeKind` returns null for a row whose only change is its timing
+  tags (not counted), "other" when it also changed stars, kind, item type, types or series.
+- Creatures by series: each series row is followed by its subseries (creatures, then "No subseries" when some have none),
+  `hbar` rows with `sub` (thinner bar at 55%, muted 11px label); the table has `↳` rows (`tr.sub`, indented).
+- Links: `cardsHref(p, scope)` (stats.js) makes `#/cards?…` from grid params over the Stats scope (its kind wins, its
+  series unless the element has one; a cohort row passes no scope: it is the whole cohort). `go()` wraps an SVG element
+  in `<a class="go" href aria-label="…: show these cards">`; an svg with links drops `role="img"` (it would hide them).
+  `hbar`/`columns`/`diverging`/strip rows take `href`; `stacked` takes `href(cat, key?)` (segment, or the column's hit);
+  `twoSided`/`updown` take `upHref`/`downHref` and split the hit area in halves; `heatTable` takes `href(row, col)` (an
+  `<a>` in the cell, `data-tip`); `legend` items take a 4th `href`. Single-card elements keep `data-card` (open the
+  card); unlinked: Others, No subseries, Middle 80%, the over-time panels, the colour keys of the per-card and per-year
+  charts (above/below the median or average, rose/fell, raised/lowered).
+- Mapping: kinds kind=; series kind=creature&series= (&subseries=); hand kind&stars&legal=1; average stats (Stars and
+  Cards cells) and distributions kind=creature,creatures,minion&stars= / &hp=v-v; stat shapes shape=; cooldowns cd=
+  (CD_KEYS: 1CD, 2CD, 3CD+, 1GCD, 2GCD+, 1U, 2U, 3U+) &stars=; ability length stars&kind; items kind=item&sub=(&stars=);
+  types types=; timing tags tag=; status effects and most referenced mentions=<id>; authors author=; cohort rows
+  kind(&stars), Top/Bottom 10% legend bal=top|bottom; power creep kind&q=created==Y; buffs and nerfs month=&change=buff|nerf
+  (legend: change only); by stat change=hp+ / hp-…; recorded changes month=&change=text|stats|other (column: month,
+  any counted change); created per year q=created==Y&author= (legend author=); text freshness fresh=Y.
+- Grid (app.js filterCards): kind= also matches a raw type (debuff, buff, unknown; chip "Debuffs"); `LINKED` = legal,
+  shape (stats.js `shapeOf`), cd (`cooldownCols`), tag (`tagsOf`), mentions (`S.mentionedBy`), fresh (insights.js
+  `freshYear`), bal (balance.js `flagged`), each a removable chip; month and change go through balance.js `changedAs`
+  (Pacific months, `CHANGE_LABEL` chips). bal/month/change need analytics.json: the grid says "Loading the recorded
+  changes…" and draws again when it is in. A followed chart link sets `S.toTop` (the grid opens at its top); Back
+  restores the Stats scroll (drawn state). The tooltip adds "Show these cards" under a linked element's value; the
+  cursor is a pointer only on links and cards (`.chart .hit` lost its pointer).
+- Counts: bars count cards without duplicates (Stats' pool), the grid shows a duplicate's tile too (8 on 2026-10-25);
+  the cooldown and timing-tag charts count abilities' tags, the grid the cards with them.

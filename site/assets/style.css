@@ -250,8 +250,13 @@ textarea { width: 100%; min-height: 120px; border-radius: 8px; border: 1px solid
 .chart svg text { fill: var(--muted); font-size: 11px; } .chart svg text.lbl { fill: var(--ink-2); font-size: 12px; }
 .chart svg text.val { fill: var(--ink); font-size: 11.5px; font-weight: 600; }
 .chart .gridline { stroke: var(--grid); stroke-width: 1; } .chart .axis { stroke: var(--axis); stroke-width: 1; }
-.chart .hit { fill: transparent; cursor: pointer; } .chart .mark { transition: opacity .1s; }
-.chart g.row:hover .mark, .chart g.col:hover .mark { opacity: .8; }
+.chart .hit { fill: transparent; } .chart .mark { transition: opacity .1s; }
+.chart a.go, .chart [data-card] { cursor: pointer; }   /* a Stats link to its cards in the grid, a card */
+.chart g.row:hover .mark, .chart g.col:hover .mark, .chart a.go:hover .mark, .chart a.go:focus-visible .mark { opacity: .8; }
+.chart svg text.lbl.sub { fill: var(--muted); font-size: 11px; } .chart path.mark.sub { fill-opacity: .55; }   /* a subseries under its series */
+table.data tr.sub td { color: var(--ink-2); font-size: 12.5px; } table.data tr.sub td:first-child { padding-left: 18px; }
+.chart table.heat a.go { color: inherit; display: block; } .chart table.heat a.go:hover { text-decoration: underline; }
+.legend a.go { color: inherit; } .legend a.go:hover { color: var(--ink); text-decoration: underline; }
 .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: var(--ink-2); margin: 0 0 8px; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
 .table-wrap { max-height: 360px; overflow: auto; } .table-wrap table.data th { top: 0; }

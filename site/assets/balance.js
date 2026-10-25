@@ -2,9 +2,8 @@
 // Charts follow stats.js (dataviz method): thin marks, hairline grid, legends for two series, a table view for each.
 // DOM-free: every function returns HTML, every string goes through esc.
 import { esc, diffWords, badgeHtml, dateFmt } from "./text.js";
-import { chartCard as card, hbar, table, stacked, fmt, trunc } from "./stats.js";
+import { chartCard as card, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole } from "./stats.js";
 
-const KIND = { creature: "creature", minion: "minion", creatures: "auxiliary creature" };
 const KINDS = { creature: "creatures", minion: "minions" };
 const ITEM_KIND = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", rulebook: "Rulebook page", unknown: "Other" };
@@ -35,23 +34,39 @@ export function cardData(A, c, byId) {
   if (!A || !c) return null;
   return A.cards[c.id] || (c.dup && A.cards[c.dup]) || null;
 }
-/** a change row's kind for the monthly chart: each counted once */
+/** a change row's kind for the monthly chart: each counted once; null: timing tags only (not counted) */
 export function changeKind(r) {
   if (r.stats || r.lines) return "stats";
   if (r.words) return "text";
-  if (r.tags) return "tags";
+  if (r.tags && !(r.stars || r.kind || r.sub || r.types || r.series)) return null;
   return "other";
 }
+// the Cards grid's change= filter (app.js; the charts link to it): buffs and nerfs, the monthly chart's kinds, a stat raised or lowered
+const CHANGE = { buff: r => r.bal === "buff", nerf: r => r.bal === "nerf", text: r => changeKind(r) === "text", stats: r => changeKind(r) === "stats",
+  other: r => changeKind(r) === "other" };
+STATS.forEach(([k], i) => { CHANGE[`${k}+`] = r => !!r.bal && r.stats[1][i] > r.stats[0][i]; CHANGE[`${k}-`] = r => !!r.bal && r.stats[1][i] < r.stats[0][i]; });
+export const CHANGE_LABEL = { buff: "Buffed", nerf: "Nerfed", text: "Ability reworded", stats: "Stats changed", other: "Other changes",
+  ...Object.fromEntries(STATS.flatMap(([k, l]) => [[`${k}+`, `${l} raised`], [`${k}-`, `${l} lowered`]])) };
+/** the card has a recorded change of that kind (any counted one without) in that Pacific month (any without) */
+export function changedAs(A, c, month, change) {
+  const test = change ? CHANGE[change] : r => changeKind(r) != null;
+  return !!test && (cardData(A, c)?.changes || []).some(r => (!month || monthKey(r.ts) === month) && test(r));
+}
+/** the card is in the top or bottom 10% of its star level (flag: top, bottom) */
+export const flagged = (A, c, flag) => !!cardData(A, c)?.flags?.includes(flag);
+export const monthName = monthLabel;                 // app.js month= chip
 /** changes to how a card plays (analytics.py reworked): not a series, spacing or timing-tag rename alone */
 export const isRework = r => !!(r.words || r.stats || r.stars || r.kind || r.sub || r.types || r.lines);
 const runTags = run => [...run.matchAll(/\(([^()]+)\)/g)].map(m => m[1]);
 const runHtml = run => runTags(run).map(t => badgeHtml(t)).join("") || `<span class="muted">none</span>`;
 
 // ---- chart pieces -------------------------------------------------------------------------------------------------
-const legend = items => `<div class="legend">${items.map(([color, label, shape]) => `<span><i style="background:${color}${shape === "line" ? ";height:3px;vertical-align:3px" : ""}"></i>${esc(label)}</span>`).join("")}</div>`;
+/** items [color, label, shape?, href?]: an entry with href links to its cards */
+const legend = items => `<div class="legend">${items.map(([color, label, shape, href]) => { const inner = `<i style="background:${color}${shape === "line" ? ";height:3px;vertical-align:3px" : ""}"></i>${esc(label)}`;
+  return href ? `<a class="go" href="${esc(href)}" data-tip="Show these cards">${inner}</a>` : `<span>${inner}</span>`; }).join("")}</div>`;
 
 /** One row per cohort: the middle 80% as a band, the median as a tick, the lowest to highest as a hairline, and the
-    top and bottom 10% of the cards in scope as dots. rows: [{label, q:{p10,p50,p90}, lo, hi, dots:[{v,id,name,hot}]}] */
+    top and bottom 10% of the cards in scope as dots. rows: [{label, q:{p10,p50,p90}, lo, hi, dots:[{v,id,name,hot}], href?}] */
 function strips(rows) {
   const W = 1000, labelW = 170, padR = 30, rowH = 40, top = 6, axisH = 26, H = top + rows.length * rowH + axisH;
   const lo = Math.floor(Math.min(...rows.map(r => r.lo))) - 1, hi = Math.ceil(Math.max(...rows.map(r => r.hi))) + 1;
@@ -66,18 +81,18 @@ function strips(rows) {
       return `<g class="dot" data-card="${esc(d.id)}" data-v="${esc(`${d.v} total`)}" data-l="${esc(`${d.name} · ${d.hot === "top" ? "top" : "bottom"} 10% of ${r.label}`)}">
         <circle class="hit" cx="${X(d.v)}" cy="${cy}" r="11"/><circle class="mark" cx="${X(d.v)}" cy="${cy}" r="4" fill="var(${d.hot === "top" ? "--s1" : "--s2"})" stroke="var(--surface)" stroke-width="2"/></g>`;
     }).join("");
-    return `<g class="row" data-v="${esc(`median ${fmt(p50)}`)}" data-l="${esc(`${r.label} (${r.n}): middle 80% ${fmt(p10)}–${fmt(p90)}, lowest ${r.lo}, highest ${r.hi}`)}">
+    return `${go(r.href, r.label, `<g class="row" data-v="${esc(`median ${fmt(p50)}`)}" data-l="${esc(`${r.label} (${r.n}): middle 80% ${fmt(p10)}–${fmt(p90)}, lowest ${r.lo}, highest ${r.hi}`)}">
       <rect class="hit" x="0" y="${y - rowH / 2}" width="${W}" height="${rowH}"/>
       <text class="lbl" x="${labelW - 10}" y="${y + 4}" text-anchor="end">${esc(trunc(`${r.label} (${r.n})`, 26))}</text>
       <line class="axis" x1="${X(r.lo)}" x2="${X(r.hi)}" y1="${y}" y2="${y}"/>
       <rect class="band" x="${X(p10)}" y="${y - 6}" width="${Math.max(2, X(p90) - X(p10))}" height="12" rx="4"/>
       <line class="median" x1="${X(p50)}" x2="${X(p50)}" y1="${y - 10}" y2="${y + 10}"/>
-      <text class="val" x="${X(p50)}" y="${y - 13}" text-anchor="middle">${esc(fmt(p50))}</text></g>${dots}`;
+      <text class="val" x="${X(p50)}" y="${y - 13}" text-anchor="middle">${esc(fmt(p50))}</text></g>`)}${dots}`;
   }).join("");
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" class="strips">${grid}${body}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}"${svgRole(rows.some(r => r.href))} class="strips">${grid}${body}</svg>`;
 }
 
-/** Bars to both sides of a centre line: rows [{label, value, id}] (value > 0 right in --s1, < 0 left in --s2) */
+/** Bars to both sides of a centre line: rows [{label, value, id?, href?}] (value > 0 right in --s1, < 0 left in --s2) */
 function diverging(rows, { unit = "", labelW = 200 } = {}) {
   const rowH = 24, bar = 14, W = 560, plotW = W - labelW - 40, mid = labelW + plotW / 2;
   const max = Math.max(1, ...rows.map(r => Math.abs(r.value)));
@@ -87,16 +102,17 @@ function diverging(rows, { unit = "", labelW = 200 } = {}) {
     const d = up ? `M${x},${by}H${x + w - 4}Q${x + w},${by} ${x + w},${by + 4}V${by + bar - 4}Q${x + w},${by + bar} ${x + w - 4},${by + bar}H${x}Z`
       : `M${mid},${by}H${x + 4}Q${x},${by} ${x},${by + 4}V${by + bar - 4}Q${x},${by + bar} ${x + 4},${by + bar}H${mid}Z`;
     const v = `${r.value > 0 ? "+" : r.value < 0 ? "\u2212" : ""}${fmt(Math.abs(r.value))}`;
-    return `<g class="row"${r.id ? ` data-card="${esc(r.id)}"` : ""} data-v="${esc(`${v} ${unit}`)}" data-l="${esc(r.tip || r.label)}">
+    return go(r.href, r.label, `<g class="row"${r.id && !r.href ? ` data-card="${esc(r.id)}"` : ""} data-v="${esc(`${v} ${unit}`)}" data-l="${esc(r.tip || r.label)}">
       <rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}"/>
       <text class="lbl" x="${labelW - 8}" y="${y + rowH / 2 + 4}" text-anchor="end">${esc(trunc(r.label, 30))}</text>
       ${w > 0 ? `<path class="mark" d="${d}" fill="var(${up ? "--s1" : "--s2"})"/>` : ""}
-      <text class="val" x="${up ? x + w + 5 : x - 5}" y="${y + rowH / 2 + 4}" text-anchor="${up ? "start" : "end"}">${esc(v)}</text></g>`;
+      <text class="val" x="${up ? x + w + 5 : x - 5}" y="${y + rowH / 2 + 4}" text-anchor="${up ? "start" : "end"}">${esc(v)}</text></g>`);
   });
-  return `<svg viewBox="0 0 ${W} ${H}" role="img"><line class="axis" x1="${mid}" x2="${mid}" y1="0" y2="${H - 4}"/>${parts.join("")}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}"${svgRole(rows.some(r => r.href))}><line class="axis" x1="${mid}" x2="${mid}" y1="0" y2="${H - 4}"/>${parts.join("")}</svg>`;
 }
 
-/** Two bars per row from one centre line: down to the left (--s2), up to the right (--s1): rows [{label, up, down, tip}] */
+/** Two bars per row from one centre line: down to the left (--s2), up to the right (--s1): rows [{label, up, down, tip,
+    upHref?, downHref?}]; with links each half of the row is one */
 function twoSided(rows, { unit = "points", labelW = 70 } = {}) {
   const rowH = 26, bar = 14, W = 560, mid = labelW + (W - labelW) / 2, half = (W - labelW) / 2 - 40;
   const max = Math.max(1, ...rows.flatMap(r => [r.up, r.down]));
@@ -104,16 +120,19 @@ function twoSided(rows, { unit = "points", labelW = 70 } = {}) {
     const y = i * rowH, by = y + (rowH - bar) / 2, wu = (r.up / max) * half, wd = (r.down / max) * half, ty = y + rowH / 2 + 4;
     const right = wu > 0 ? `<path class="mark" d="M${mid},${by}H${mid + wu - Math.min(4, wu)}Q${mid + wu},${by} ${mid + wu},${by + 4}V${by + bar - 4}Q${mid + wu},${by + bar} ${mid + wu - Math.min(4, wu)},${by + bar}H${mid}Z" fill="var(--s1)"/>` : "";
     const left = wd > 0 ? `<path class="mark" d="M${mid},${by}H${mid - wd + Math.min(4, wd)}Q${mid - wd},${by} ${mid - wd},${by + 4}V${by + bar - 4}Q${mid - wd},${by + bar} ${mid - wd + Math.min(4, wd)},${by + bar}H${mid}Z" fill="var(--s2)"/>` : "";
-    return `<g class="row" data-v="${esc(`+${fmt(r.up)} · \u2212${fmt(r.down)} ${unit}`)}" data-l="${esc(r.tip || r.label)}">
-      <rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}"/>
+    const side = (href, x, w, n, sign) => go(n ? href : null, `${r.label} ${sign === "+" ? "raised" : "lowered"}`,
+      `<rect class="hit" x="${x}" y="${y}" width="${w}" height="${rowH}" data-v="${esc(`${sign}${fmt(n)} ${unit}`)}" data-l="${esc(r.tip || r.label)}"/>`);
+    const hits = r.upHref || r.downHref ? side(r.downHref, 0, mid, r.down, "\u2212") + side(r.upHref, mid, W - mid, r.up, "+") : `<rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}"/>`;
+    return `<g class="row" data-v="${esc(`+${fmt(r.up)} · \u2212${fmt(r.down)} ${unit}`)}" data-l="${esc(r.tip || r.label)}">${hits}
       <text class="lbl" x="${labelW - 8}" y="${ty}" text-anchor="end">${esc(r.label)}</text>${left}${right}
       <text class="val" x="${mid - wd - 5}" y="${ty}" text-anchor="end">\u2212${esc(fmt(r.down))}</text><text class="val" x="${mid + wu + 5}" y="${ty}">+${esc(fmt(r.up))}</text></g>`;
   });
   const H = rows.length * rowH + 4;
-  return `<svg viewBox="0 0 ${W} ${H}" role="img"><line class="axis" x1="${mid}" x2="${mid}" y1="0" y2="${H - 4}"/>${parts.join("")}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}"${svgRole(rows.some(r => r.upHref || r.downHref))}><line class="axis" x1="${mid}" x2="${mid}" y1="0" y2="${H - 4}"/>${parts.join("")}</svg>`;
 }
 
-/** Columns up (a) and down (b) from one baseline, by month: [{label, up, down, tip}] */
+/** Columns up (a) and down (b) from one baseline, by month: [{label, up, down, tip, upHref?, downHref?}]; with links
+    each half of the column is one */
 function updown(cols, { every = 1 } = {}) {
   const W = 1000, padL = 36, H = 220, axisH = 26, plotH = H - axisH, mid = plotH / 2;
   const max = Math.max(1, ...cols.flatMap(c => [c.up, c.down]));
@@ -125,12 +144,14 @@ function updown(cols, { every = 1 } = {}) {
     const x = padL + i * band + (band - bw) / 2, hu = Y(c.up), hd = Y(c.down), r = 4;
     const upPath = hu > 0 ? `M${x},${mid}V${mid - hu + Math.min(r, hu)}Q${x},${mid - hu} ${x + Math.min(r, bw / 2)},${mid - hu}H${x + bw - Math.min(r, bw / 2)}Q${x + bw},${mid - hu} ${x + bw},${mid - hu + Math.min(r, hu)}V${mid}Z` : "";
     const downPath = hd > 0 ? `M${x},${mid + 2}V${mid + hd - Math.min(r, hd)}Q${x},${mid + hd} ${x + Math.min(r, bw / 2)},${mid + hd}H${x + bw - Math.min(r, bw / 2)}Q${x + bw},${mid + hd} ${x + bw},${mid + hd - Math.min(r, hd)}V${mid + 2}Z` : "";
+    const side = (href, y, n, what) => go(n ? href : null, `${c.label} ${what}`,
+      `<rect class="hit" x="${padL + i * band}" y="${y}" width="${band}" height="${mid}" data-v="${esc(`${n} ${what}`)}" data-l="${esc(c.tip || c.label)}"/>`);
     return `<g class="col" data-v="${esc(`${c.up} up · ${c.down} down`)}" data-l="${esc(c.tip || c.label)}">
-      <rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${plotH}"/>
+      ${c.upHref || c.downHref ? side(c.upHref, 0, c.up, "up") + side(c.downHref, mid, c.down, "down") : `<rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${plotH}"/>`}
       ${upPath ? `<path class="mark" d="${upPath}" fill="var(--s1)"/>` : ""}${downPath ? `<path class="mark" d="${downPath}" fill="var(--s2)"/>` : ""}
       ${i % every === 0 ? `<text x="${x + bw / 2}" y="${H - 8}" text-anchor="middle">${esc(c.label)}</text>` : ""}</g>`;
   }).join("");
-  return `<svg viewBox="0 0 ${W} ${H}" role="img">${grid}${parts}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}"${svgRole(cols.some(c => c.upHref || c.downHref))}>${grid}${parts}</svg>`;
 }
 
 /** One small chart per cohort over the months: the average total as a line, the middle 80% as a band; months with
@@ -247,7 +268,7 @@ export function statsHtml(A, { cards, byId }, params) {
   const kind = params.get("kind") || "", series = params.get("series") || "";
   const pool = cards.filter(c => !c.dup && (!kind || c.type === kind) && (!series || c.series === series));
   const inPool = new Set(pool.map(c => c.id));
-  const charts = [];
+  const charts = [], L = p => cardsHref(p, params);
 
   // 1 cohorts: the middle 80% of each star level, and its top and bottom 10% in scope
   const keys = Object.keys(A.cohorts).filter(k => { const kd = k.split("|")[0]; return !kind || kind === kd || (kind === "creatures" && kd === "creature"); });
@@ -257,14 +278,16 @@ export function statsHtml(A, { cards, byId }, params) {
   const rows = keys.map(k => {
     const co = A.cohorts[k], mine = members.get(k) || [];
     const dots = mine.filter(([, a]) => a.flags?.length).map(([id, a]) => ({ v: totalOf(id), id, name: byId.get(id)?.name || id, hot: a.flags[0] }));
+    const [kd, st] = k.split("|"), all = st === "all";        // the whole cohort, whatever the scope
     return { key: k, label: cohortName(k, co).replace(/^all /, "All "), n: co.n, q: co.total, dots,
+      href: cardsHref({ kind: all && kd === "creature" ? ["creature", "creatures"] : kd, stars: all ? "" : st }),
       lo: Math.min(co.total.min ?? co.total.p10, ...dots.map(d => d.v)), hi: Math.max(co.total.max ?? co.total.p90, ...dots.map(d => d.v)) };
   }).filter(r => r.n);
   if (rows.length) {
     charts.push(card("bal-cohorts", "Total stats by star level", "Band: middle 80%. Tick: median. Dots: top and bottom 10%.",
       strips(rows), table(["Star level", "Cards", "Lowest", "Bottom of the middle 80%", "Median", "Top of the middle 80%", "Highest", "Average"],
         rows.map(r => { const t = A.cohorts[r.key].total; return [r.label, r.n, t.min ?? "—", t.p10, t.p50, t.p90, t.max ?? "—", t.mean]; })),
-      { wide: true, legend: legend([["var(--s1)", "Top 10%"], ["var(--s2)", "Bottom 10%"], ["color-mix(in srgb, var(--s1) 28%, transparent)", "Middle 80%"]]) }));
+      { wide: true, legend: legend([["var(--s1)", "Top 10%", "", L({ bal: "top" })], ["var(--s2)", "Bottom 10%", "", L({ bal: "bottom" })], ["color-mix(in srgb, var(--s1) 28%, transparent)", "Middle 80%"]]) }));
 
     // 2 outliers: distance from the star level's median
     const flagged = [...members.entries()].flatMap(([k, ms]) => ms.filter(([, a]) => a.flags?.length).map(([id, a]) => {
@@ -290,7 +313,7 @@ export function statsHtml(A, { cards, byId }, params) {
       { wide: true }));
   }
 
-  // power creep (by year created) and series strength: a card's total minus its star level's median, as built
+  // power creep (by year created): a card's total minus its star level's median, as built
   const strength = new Map();
   for (const c of pool) { const a = A.cards[c.id], co = a?.cohort && A.cohorts[a.cohort]; if (co) strength.set(c.id, totalOf(c.id) - co.total.p50); }
   const years = new Map();
@@ -301,26 +324,10 @@ export function statsHtml(A, { cards, byId }, params) {
   const yearRows = [...years].sort((a, b) => a[0].localeCompare(b[0])).map(([y, g]) => ({ y, n: g.n, s: g.s / g.n, t: g.t / g.n }));
   if (yearRows.some(r => r.n >= 3))
     charts.push(card("bal-creep", "Power creep", "Average total vs its star level's median, by year created.",
-      diverging(yearRows.filter(r => r.n >= 3).map(r => ({ label: `${r.y} (${r.n})`, value: Math.round(r.s * 10) / 10, tip: `${r.y}: ${r.n} creatures and minions, average total ${fmt(r.t)}` })), { unit: "vs median", labelW: 110 }),
+      diverging(yearRows.filter(r => r.n >= 3).map(r => ({ label: `${r.y} (${r.n})`, value: Math.round(r.s * 10) / 10, tip: `${r.y}: ${r.n} creatures and minions, average total ${fmt(r.t)}`,
+        href: L({ kind: ["creature", "creatures", "minion"], q: `created==${r.y}` }) })), { unit: "vs median", labelW: 110 }),
       table(["Year", "Cards", "Average vs median", "Average total"], yearRows.map(r => [r.y, r.n, Math.round(r.s * 10) / 10, Math.round(r.t * 10) / 10])),
       { legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
-  if (!series && strength.size) {
-    const bySeries = new Map();
-    for (const c of pool) if (c.series) {
-      const g = bySeries.get(c.series) || bySeries.set(c.series, { cards: 0, n: 0, stars: [], s: 0, authors: new Map() }).get(c.series);
-      g.cards++;
-      if (c.author) g.authors.set(c.author, (g.authors.get(c.author) || 0) + 1);
-      if (strength.has(c.id)) { g.n++; g.s += strength.get(c.id); if (c.stars) g.stars.push(c.stars); }
-    }
-    const rows = [...bySeries].map(([name, g]) => ({ name, ...g, avg: g.n ? Math.round((g.s / g.n) * 10) / 10 : null,
-      top: [...g.authors].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "" })).sort((a, b) => b.cards - a.cards || a.name.localeCompare(b.name));
-    const ranked = rows.filter(r => r.n >= 5).sort((a, b) => b.avg - a.avg), shown = ranked.length > 16 ? [...ranked.slice(0, 8), ...ranked.slice(-8)] : ranked;
-    if (rows.length) charts.push(card("bal-series", "Series strength", "Average total vs its star level's median; 5+ creatures and minions.",
-      shown.length ? diverging(shown.map(r => ({ label: r.name, value: r.avg, tip: `${r.name}: ${r.n} creatures and minions` })), { unit: "vs median" }) : `<p class="muted">No series has 5+ creatures and minions.</p>`,
-      table(["Series", "Cards", "Creatures and minions", "Average stars", "Average vs median", "Authors", "Top author"],
-        rows.map(r => [r.name, r.cards, r.n, r.stars.length ? Math.round((r.stars.reduce((a, b) => a + b, 0) / r.stars.length) * 10) / 10 : "—", r.avg ?? "—", r.authors.size, r.top])),
-      { startTable: true, legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
-  }
 
   // the recorded changes in scope
   const changes = [];
@@ -333,15 +340,16 @@ export function statsHtml(A, { cards, byId }, params) {
     const months = monthsFrom(monthKey(Math.min(...bal.map(x => x.r.ts))), monthKey(Math.max(...bal.map(x => x.r.ts))));
     const cols = months.map(m => { const here = bal.filter(x => monthKey(x.r.ts) === m);
       return { label: monthLabel(m), up: here.filter(x => x.r.bal === "buff").length, down: here.filter(x => x.r.bal === "nerf").length,
+        upHref: L({ month: m, change: "buff" }), downHref: L({ month: m, change: "nerf" }),
         tip: here.length ? here.map(x => `${byId.get(x.id)?.name || x.id} (${x.r.bal})`).slice(0, 6).join(", ") + (here.length > 6 ? "…" : "") : monthLabel(m) }; });
     const sums = x => x.r.stats.map(l => l.reduce((s, v) => s + v, 0));
     charts.push(card("bal-buffs", "Buffs and nerfs by month", "Buffs raise total stats; nerfs lower them.",
       updown(cols, { every: Math.ceil(cols.length / 12) }),
       table(["Date", "Card", "Change", "Total"], [...bal, ...shifts].sort((x, y) => y.r.ts - x.r.ts).map(x => [day(x.r.ts), byId.get(x.id)?.name || x.id, x.r.bal === "buff" ? "Buff" : x.r.bal === "nerf" ? "Nerf" : "Stats moved", sums(x).join(" → ")]), 3),
-      { wide: true, legend: legend([["var(--s1)", "Buffs"], ["var(--s2)", "Nerfs"]]) }));
+      { wide: true, legend: legend([["var(--s1)", "Buffs", "", L({ change: "buff" })], ["var(--s2)", "Nerfs", "", L({ change: "nerf" })]]) }));
   } else charts.push(card("bal-buffs", "Buffs and nerfs", "", `<p class="bal-empty">No buffs or nerfs recorded yet.</p>`, ""));
   if (bal.length || shifts.length) {                  // by stat: the points each stat gained and lost
-    const per = STATS.map(([, label]) => ({ label, up: 0, down: 0, n: 0 }));
+    const per = STATS.map(([k, label]) => ({ label, up: 0, down: 0, n: 0, upHref: L({ change: `${k}+` }), downHref: L({ change: `${k}-` }) }));
     for (const x of [...bal, ...shifts]) {
       const [a, b] = x.r.stats;
       per.forEach((p, i) => { p.up += Math.max(0, b[i] - a[i]); p.down += Math.max(0, a[i] - b[i]); if (a[i] !== b[i]) p.n++; });
@@ -351,18 +359,20 @@ export function statsHtml(A, { cards, byId }, params) {
       { legend: legend([["var(--s1)", "Raised"], ["var(--s2)", "Lowered"]]) }));
   }
 
-  // 5 changes by month
-  if (changes.length) {
-    const months = monthsFrom(monthKey(Math.min(...changes.map(x => x.r.ts))), monthKey(Math.max(...changes.map(x => x.r.ts))));
-    const SERIES = [{ key: "text", label: "Ability reworded", color: "var(--s1)" }, { key: "tags", label: "Timing tags only", color: "var(--s2)" },
-      { key: "stats", label: "Stats", color: "var(--s3)" }, { key: "other", label: "Other (stars, kind, types, series)", color: "var(--deemph)" }];   // gray: --s4 beside --s2 fails the palette check
-    const counts = new Map(months.map(m => [m, { text: 0, tags: 0, stats: 0, other: 0 }]));
-    for (const x of changes) counts.get(monthKey(x.r.ts))[changeKind(x.r)]++;
-    const labels = months.map(monthLabel), byLabel = new Map(months.map((m, i) => [labels[i], counts.get(m)]));
+  // 5 changes by month (timing tags only: left out)
+  const counted = changes.filter(x => changeKind(x.r));
+  if (counted.length) {
+    const months = monthsFrom(monthKey(Math.min(...counted.map(x => x.r.ts))), monthKey(Math.max(...counted.map(x => x.r.ts))));
+    const SERIES = [{ key: "text", label: "Ability reworded", color: "var(--s1)" }, { key: "stats", label: "Stats", color: "var(--s3)" },
+      { key: "other", label: "Other (stars, kind, types, series)", color: "var(--deemph)" }];
+    const counts = new Map(months.map(m => [m, { text: 0, stats: 0, other: 0 }]));
+    for (const x of counted) counts.get(monthKey(x.r.ts))[changeKind(x.r)]++;
+    const labels = months.map(monthLabel), byLabel = new Map(months.map((m, i) => [labels[i], { m, v: counts.get(m) }]));
     charts.push(card("bal-months", "Recorded changes by month", "Changes per month, by what changed.",
-      stacked(labels, SERIES, (cat, key) => byLabel.get(cat)[key], { unit: "changes", every: Math.ceil(labels.length / 12) }),
-      table(["Month", ...SERIES.map(s => s.label), "All"], months.map((m, i) => { const v = counts.get(m); return [labels[i], v.text, v.tags, v.stats, v.other, v.text + v.tags + v.stats + v.other]; })),
-      { wide: true, legend: legend(SERIES.map(s => [s.color, s.label])) }));
+      stacked(labels, SERIES, (cat, key) => byLabel.get(cat).v[key], { unit: "changes", every: Math.ceil(labels.length / 12),
+        href: (cat, key) => L({ month: byLabel.get(cat).m, change: key }) }),
+      table(["Month", ...SERIES.map(s => s.label), "All"], months.map((m, i) => { const v = counts.get(m); return [labels[i], v.text, v.stats, v.other, v.text + v.stats + v.other]; })),
+      { wide: true, legend: legend(SERIES.map(s => [s.color, s.label, "", L({ change: s.key })])) }));
   }
 
   // 6 most reworked
