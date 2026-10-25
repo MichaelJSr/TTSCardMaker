@@ -76,8 +76,8 @@ export function splitToken(token) {
   const v = s.slice(at + 1).toLowerCase();
   return Object.hasOwn(VARIANT_NAMES, v) ? { base: s.slice(0, at), v } : null;
 }
-/** The variant's image of an icon entry: icons/fire.webp -> icons/fire.glow.webp */
-export const variantFile = (ic, v) => ic.file.replace(/\.webp$/, `.${v}.webp`);
+/** The variant's image of an icon entry: icons/fire.webp?v=s -> icons/fire.glow.webp?v=s (the stamp covers the variants) */
+export const variantFile = (ic, v) => ic.file.replace(/\.webp(?=\?|$)/, `.${v}.webp`);
 
 /** Build the renderer once per data load: knows icons (and their variants' reach, cards.json iconVariants) and which
  *  card names to link. */

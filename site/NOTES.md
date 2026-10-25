@@ -20,7 +20,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - CSS conventions (style.css, one file): theme via `:root[data-theme=dark|light]` custom props (`--page --surface --surface-2 --surface-3 --border --border-strong --ink --ink-2 --muted --accent --danger --good --warn`, chart `--s1..--s4`); theme set pre-paint in index.html:20 from localStorage "theme". Use existing classes: `.panel` (card box, 14px radius), `.toolbar`, `.actions` (button row), `.grid` + `.tile` (card tile, `--tile` width var; tileHtml() in app.js:~190 builds one), `.strip` (h-scroll tile row), `.slots/.slot` (deck slots, 2:3 aspect), `.tier-title`, `.chips/.chip`, `.seg` (segmented buttons), `.fact`, `.muted`, `.num`, `.kbd`, `button.primary/.ghost/.icon/.danger`, `table.data`, `.empty`, `.loading`, `.check`, `.erow/.ein` (form rows), `.wide` (full width input), `.stars`. Layout idiom: two-column CSS grid (`.deck {1fr 340px}` at style.css:193, `.browse {260px 1fr}`) collapsing to one column via `@media (max-width: 980px|860px)`; sticky sidebars at `top:64px`. Header wraps under 980px (`.tabs` becomes scrollable row). Inline `style=` is used liberally for one-offs. Print rules at style.css:240. No CSS framework or preprocessor.
 
 ## 2. Data loading
-- `getJson(name)` app.js:~58: `fetch("data/"+name+"?v=<build>")` relative to `<base>`; ordinary HTTP cache keyed by the `?v=` build hash (no service worker, no Cache API). `cards.json` is preloaded in index.html:12 and awaited in `init()` before first render.
+- `getJson(name)` app.js:~58: `fetch("data/"+name+"?v=<build>")` relative to `<base>`; ordinary HTTP cache keyed by the `?v=` build hash (the service worker never touches data, §28). `cards.json` is preloaded in index.html:12 and awaited in `init()` before first render.
 - Files (dist/data/, sizes from the 2026-10-20 build):
   - cards.json 409 KB: `{generated, repo:"MichaelJSr/TTSCardMaker", botRepo:"bobberlington/AutoCroissant", raw:"https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/", cards[], icons{}, banlist{notes[], groups[{title, entries[{name, reason, id}]}]}, branch:"main", files{edits,authors,banlist,admins,profiles,decks}, admins[logins], people[], peopleMap{git:shown}, decks{public,private}}`. icons = `{normalizedName: {file:"icons/x.webp", name, kind:"type"|...}}`.
   - rules.json 67 KB `{rules:[{id, name, type:"rulebook", ability, ...}]}` (lazy: rulebook tab). history.json 48 KB `{cardId: [{ts, ability}]}` (lazy: changes tab / card with `hv`). versions.json `{available, repo, commits[[sha,ts,author,subject]], cards{id:[[commitIdx, path]]}}`; currently `available:false`, empty (76 bytes).
@@ -28,7 +28,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   - decks.json (2026-10-21; lazy: `#/decks`, a deck page, a person's Decks panel): `{generated, decks: [{owner, slug, name, description, cards[visible ids], dropped, field|null, updated, n}], private: [{owner, slug, kdf{name,hash,iter,salt}, iv, data, updated}]}`, both newest first. cards.json carries the counts as `decks: {public, private}` and `files.decks = "site/decks"`. Section 12.
   - analytics.json (2026-10-22; 105 KB, 13 KB gzipped; lazy: the Stats page's Balance section, a card with `balance: true`): section 14.
 - Card record (cards.json, empty fields dropped; 773 cards; types: creature 298, item 189, minion 91, debuff 52, field 50, aux item 48, nme 26, buff 12, creatures 7). Fields: `id` (slug, e.g. "a-snack"), `name`, `type` (kind), `subtype` (item type e.g. heal), `series`, `stars` (int), `types[]` (icon names), `hp def atk spd`, `ability` (text with `[type]` tokens and \n), `author`, `ts` (last PSD commit, epoch s), `psd`, `png` (repo path of full PNG), `key` (card file key used in Card Edits.json/Authors), `dups[]` (ids that are copies of this card; on the copy: `dup` = original id), `aliases[]`, `authorListed`, `img` (hash for thumbs), `tw`,`th` (360-wide thumb dims), `color` (accent hex), `hv` (history count), `iv` (image versions, only over 1), `fs` (first upload of the image, epoch s, from the git history: full-history builds only, every card with a history row), `created` (the creation date "YYYY-MM-DD": the earlier of `site/Card Creation Dates.json`'s first Discord post and `fs`, a hand-set date winning; `createdFrom` "discord" | "git" | "hand", `createdAbout: true` while provisional; build_site `apply_created`, 2026-10-23), `problems[]`, `creatures[]` (list of per-creature stat objects when a card has several), `ratings[]` (dated 1-10 ratings, oldest first: section 25), `parsed:false` (only when not parsed), plus editor-only fields at runtime: `edited`, `orig`, `editAt`, `webAliases`, `hidden`, `note`, `problems_ok`, `allow_high_stats`, `_staged`, `_sent`, `_banned`, `_unused`. Cards have NO sha/GUID or TTS ids (`details: true`, 2026-10-21, only says `data/details/<id>.json` exists; the record is joined by blob sha at build time). Note `c.type` of a field card = "field", status effects "debuff"/"buff".
-- Images: thumbnails `thumbs/<img>-{240|360|720}.webp` (app.js:~44 `img(c,w)`, `imgAttrs(c, cssPx)` gives src+srcset+width/height); full-size PNG = `S.data.raw + urlPath(c.png)` (raw.githubusercontent.com, `fullUrl(c)` app.js:~49; this is what TTS FaceURL uses in deck.js:156); card back images `raw + "MDW/cardback.png"` and `MDW/cardback_item.png` (deck.js:181-183). Icons `icons/<name>.webp`. Name lookup helpers: `S.byId`, `norm(name)` (text.js:4: lowercase, strips spaces/_-.'), search `compile(query)` (search.js:35) returns predicate; matches names + aliases; `suggest(q, cards)`.
+- Images: thumbnails `thumbs/<img>-{240|360|720}.avif` (AVIF since 2026-10-24, §28) (app.js:~44 `img(c,w)`, `imgAttrs(c, cssPx)` gives src+srcset+width/height); full-size PNG = `S.data.raw + urlPath(c.png)` (raw.githubusercontent.com, `fullUrl(c)` app.js:~49; this is what TTS FaceURL uses in deck.js:156); card back images `raw + "MDW/cardback.png"` and `MDW/cardback_item.png` (deck.js:181-183). Icons `icons/<name>.webp?v=<stamp>` (§28). Name lookup helpers: `S.byId`, `norm(name)` (text.js:4: lowercase, strips spaces/_-.'), search `compile(query)` (search.js:35) returns predicate; matches names + aliases; `suggest(q, cards)`.
   A TTS save references cards by Nickname / FaceURL (PNG path under raw), so mapping save card -> site card = match `FaceURL` against `raw + urlPath(c.png)` (primary), else `norm(Nickname)` against `norm(c.name)` / aliases (as `D.fromText` does, deck.js:132-134).
 
 ## 3. Editor (assets/edit.js, 557 lines)
@@ -953,7 +953,37 @@ relies on:
 - Stamps (`?v=`): an asset's is its served text's hash with its imports' stamps in it (`asset_stamps`; an import cycle:
   one stamp for all); the data's (`<meta name="build">`, data URLs) hashes the data and details files without the build
   time (`steady`: `generated`, `since`). A build that changed nothing keeps every URL.
-- Deploys: site.yml runs on pushes that touch what the build reads (`paths`); schedule and dispatch runs always deploy.
-  `build.txt` digests the whole site without the build time (`dist_digest`). Skipping the deploy of a build equal to the
-  live one (every deploy re-dates every file, so returning browsers download it all again) is the owner's to decide: it
-  would leave the Changes page's "Updated" line at the last build that changed the site, not the last run.
+- Deploys: site.yml runs on pushes that touch what the build reads (`paths`). `build.txt` digests the whole site
+  without the build time (`dist_digest`); a run whose build equals the live one (its build.txt) doesn't deploy (§28).
+
+## 28. Pictures: AVIF, the deploy gate, the service worker (2026-10-24, owner's decisions)
+
+- Card images are AVIF only: `IMAGE_SIZES` {240, 360, 720: quality 50}, `AVIF` (4:4:4, speed 6, one thread each; the
+  image pool runs cards in parallel), named `thumbs/<blob16>-<w>.avif`. No WebP fallback: Safari before 16 shows no
+  card pictures (accepted). Measured (scratch png-research/website; site-img): -41% / -39% / -32% at 240 / 360 / 720
+  against WebP q80/78/75, ssimulacra2 higher, red text keeps its colour. The og JPEGs and deck montages are made from
+  the 720 px AVIF (Pillow decodes it). requirements.txt pins `pillow>=11.3` (AVIF in the wheels); the build stops at
+  once on a Pillow without AVIF.
+- Encode cost: about 0.9 CPU-s per card on the Mac (WebP: 0.09); a full re-encode of ~820 entries is ~12 CPU-min there,
+  an estimated 20-25 on the runner. `IMAGE_BUDGET` (site.yml: 1800 s): images not made by then are left; the build
+  writes `partial=true` to `$GITHUB_OUTPUT` and fails, and site.yml saves `site/.cache` under
+  `card-images-v2-...-partial-<run>` (actions/cache saves only after a passing job), which the next run's restore-keys
+  pick up. Later runs encode only new blobs.
+- Deploy gate (restored): the `changed` step compares `dist/build.txt` with the live `build.txt`; equal: no upload, no
+  deploy job; unreadable: deploy. The Changes page says "Site updated <time> (Pacific), the last build that changed it":
+  `generated` is the time of the deployed build, which is now the last build that changed the site. edit.js
+  `sentRecord` still clears on `generated > sent.at`: a published batch always changes the site (Card Edits.json's
+  commit is in the changelog), so its build deploys.
+- Icon URLs carry a stamp: `icons/<name>.webp?v=<10 hex>` (sha256 of the blob, `ICON_VERSION`, `VARIANT_VERSION` and
+  the variant key), shared by its variants (text.js `variantFile` keeps the query). File names in dist are unchanged.
+- Service worker: `site/sw.js`, written by `write_worker` to `dist/sw.js` (scope: the site root, so `c/<id>/`, `u/`,
+  `d/`, `decks/` pages are inside) with `IN_USE`: one string of 10-hex names (thumb blobs' first ten, icon stamps).
+  It answers only GET, non-Range requests for `thumbs/<blob16>-<w>.avif` (no query) and `icons/<name>.webp?v=<hex>`
+  under its scope: cache first (`pictures-1`), else the network, and keeps a 200 same-origin response whose name is in
+  use. Everything else (pages, data, assets, sw.js, og JPEGs, unstamped icons) is not intercepted. install: skipWaiting;
+  activate: deletes other `pictures-*` caches and entries not in `IN_USE`, then claims. No storage: the network.
+  app.js `startWorker()` registers `new URL("sw.js", ROOT)` after load and, once the worker controls the page, posts
+  `{seen}` (picture URLs already loaded); the worker puts the in-use ones in from the HTTP cache. sw.js changes only
+  when a picture changes (about 7 KB gzipped). Bump `CACHE` if what it keeps changes. To retire it: ship a sw.js whose
+  activate deletes `pictures-*` and calls `self.registration.unregister()`, and drop `startWorker`.
+

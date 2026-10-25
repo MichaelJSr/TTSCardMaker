@@ -343,7 +343,7 @@ export function createPreviews(app) {
   const repo = () => S.data.repo;
   const rawUrl = (ref, path) => `https://raw.githubusercontent.com/${repo()}/${ref}/${path.split("/").map(encodeURIComponent).join("/")}`;
   const imagesOf = e => [e.result?.files?.webp, e.result?.files?.png].filter(Boolean).map(f => rawUrl(CONTRACT.branch, CONTRACT.file(e.request, f)));   // the 720 px WebP, the full PNG
-  const current = c => (c.img ? `thumbs/${c.img}-720.webp` : "");
+  const current = c => (c.img ? `thumbs/${c.img}-720.avif` : "");
 
   // ---- the values: the card's (published + staged) or the open form's, against the PSD's
   const psdOf = c => app.editor.psdOf(c.id) || {};

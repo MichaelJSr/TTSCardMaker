@@ -55,7 +55,7 @@ const isDesc = (sort, dir) => (dir ? dir === "desc" : ["stars", "total", "hp", "
 const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
 const BUILD = document.querySelector('meta[name="build"]')?.content || "";
 const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // same URLs as the preload hints in index.html
-const img = (c, w) => (c.img ? `thumbs/${c.img}-${w}.webp` : "");      // card images: 240 / 360 / 720 px wide
+const img = (c, w) => (c.img ? `thumbs/${c.img}-${w}.avif` : "");      // card images: 240 / 360 / 720 px wide
 const thumbUrl = c => img(c, 360);
 /** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 (or 720) px by screen density */
 const imgAttrs = (c, css, big = false) => `src="${img(c, 360)}" srcset="${img(c, 240)} 240w, ${img(c, 360)} 360w${big ? `, ${img(c, 720)} 720w` : ""}" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;
@@ -143,6 +143,23 @@ async function init() {
   window.addEventListener("popstate", route);
   renderAccount();
   route();
+  startWorker();
+}
+
+/** The service worker (sw.js: card pictures and icons kept by their versioned URLs across deploys). Once it controls the
+ *  page, it is told the pictures loaded before it ran, which it takes from the HTTP cache. */
+function startWorker() {
+  if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
+  const seen = () => {
+    const sw = navigator.serviceWorker.controller;
+    const urls = performance.getEntriesByType("resource").filter(r => r.responseEnd > 0 && /\/(thumbs|icons)\//.test(r.name)).map(r => r.name);
+    if (sw && urls.length) sw.postMessage({ seen: urls });
+  };
+  const start = () => navigator.serviceWorker.register(new URL("sw.js", ROOT).href)
+    .then(() => (navigator.serviceWorker.controller ? null : new Promise(ok => navigator.serviceWorker.addEventListener("controllerchange", ok, { once: true }))))
+    .then(() => setTimeout(seen, 3000))
+    .catch(() => { /* no worker: the network as before */ });
+  if (document.readyState === "complete") start(); else addEventListener("load", start, { once: true });
 }
 
 // everything computed from the cards; re-run after an edit
@@ -892,7 +909,7 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
     whenLoaded(loadHistory(), "card history", again);
     return;
   }
-  const updated = `<p class="muted">Updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific) from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
+  const updated = `<p class="muted">Site updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific), the last build that changed it, from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
   if (tab === "changelog") { page(changes.changelogHtml(S.changelog, r.params)); return; }
   if (tab === "archive") { page(changes.archiveHtml(S.changelog?.archived || [], S.changelog?.repo, r.params)); return; }
   if (tab === "edits") { page(changes.editsHtml(S.changelog, r.params)); return; }
