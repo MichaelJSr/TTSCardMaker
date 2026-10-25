@@ -1356,6 +1356,12 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     if not found:
         return
     fields, meta = found
+    verdict = meta.get("_psd") or {}             # counts only while the PSD it was tried on (or baked) is the tree's
+    current = bool(psd_sha and verdict.get("psd") and psd_sha.startswith(verdict["psd"]))
+    if verdict.get("state") == "baked" and current and verdict.get("reason"):
+        entry["baked"] = verdict["reason"]        # the bot's bake of this PSD, its flags with it (kept alone once no field is left)
+    if not fields:
+        return
     orig = {}
     for field, value in fields.items():
         if field in ("aliases", "dup_of"):
@@ -1381,10 +1387,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     pending = sorted(f for f in fields if f in PSD_FIELDS and fields[f] is not None and waits(f))
     if pending:
         entry["pending"] = pending
-    verdict = meta.get("_psd") or {}             # counts only while the refused values and the PSD it was tried on are unchanged
-    tried = verdict.get("for")
-    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) \
-            and psd_sha and verdict.get("psd") and psd_sha.startswith(verdict["psd"]):
+    tried = verdict.get("for")                    # a refusal: while the refused values are unchanged too
+    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) and current:
         entry["refused"] = verdict.get("reason") or "refused"
     if fields.get("aliases"):
         entry["webAliases"] = list(fields["aliases"])
@@ -2892,7 +2896,7 @@ def main():
                    png=path, problems=[], dup=original["id"])
         apply_edits(dup, edits, tree.get(original["psd"]))
         date_text(dup, stats[original["key"]], old_stats.get(original["key"]))   # its PSD's history, against its own text
-        for k in ("pending", "refused", "reparsePending"):   # same PSD: its image changes with the original's
+        for k in ("pending", "refused", "baked", "reparsePending"):   # same PSD: its image changes with the original's
             value = [f for f in original[k] if f != "name"] if k == "pending" and original.get(k) else original.get(k)
             if value and not dup.get(k):         # not the name: a duplicate prints its own title
                 dup[k] = value
