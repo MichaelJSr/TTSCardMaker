@@ -58,8 +58,6 @@ export function value(c, f, byId) {
 /** What the PSD (or folder) says: the pre-edit value when the field was edited, else the value itself. */
 export const psdValue = (b, f, byId) => tidy(f, b.edited?.includes(f) ? (f === "aliases" ? [] : b.orig?.[f]) : value(b, f, byId));
 export const isPsd = f => FROM[f] === "PSD";
-/** The Edit viewer's picture: the card view's 720 px thumb from app.imageOf's 360 px one (app.js img()). */
-export const viewerImage = src => src.replace(/-360\.avif$/, "-720.avif");
 export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && op.author === undefined && !op.ban && !op.rate;
 
 // ---- single-field ops (inline editing; the same rule readForm applies to the whole form)
@@ -638,7 +636,7 @@ export function createEditor(app) {
         </fieldset>
         <div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
         <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div>
-      </form>${live.paneHtml(previewOpen, { viewer: viewerImage(app.imageOf(c)), ar: c.tw && c.th ? `${c.tw}/${c.th}` : "" })}</div></div>`;
+      </form>${live.paneHtml(previewOpen, { viewer: app.imageOf(c, 720), ar: c.tw && c.th ? `${c.tw}/${c.th}` : "" })}</div></div>`;
   }
   const creatureRow = (x, i) => `<tr><th>${i + 1}</th>${STATS.map(k => `<td><input type="number" min="0" max="99" data-ck="${k}" value="${x[k] ?? ""}" placeholder="—" aria-label="Creature ${i + 1} ${LABEL[k]}"></td>`).join("")}</tr>`;
   function creatureAction(kind) {

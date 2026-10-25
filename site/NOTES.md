@@ -28,7 +28,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   - decks.json (2026-10-21; lazy: `#/decks`, a deck page, a person's Decks panel): `{generated, decks: [{owner, slug, name, description, cards[visible ids], dropped, field|null, updated, n}], private: [{owner, slug, kdf{name,hash,iter,salt}, iv, data, updated}]}`, both newest first. cards.json carries the counts as `decks: {public, private}` and `files.decks = "site/decks"`. Section 12.
   - analytics.json (2026-10-22; 105 KB, 13 KB gzipped; lazy: the Stats page's Balance section, a card with `balance: true`): section 14.
 - Card record (cards.json, empty fields dropped; 773 cards; types: creature 298, item 189, minion 91, debuff 52, field 50, aux item 48, nme 26, buff 12, creatures 7). Fields: `id` (slug, e.g. "a-snack"), `name`, `type` (kind), `subtype` (item type e.g. heal), `series`, `stars` (int), `types[]` (icon names), `hp def atk spd`, `ability` (text with `[type]` tokens and \n), `author`, `ts` (last PSD commit, epoch s), `psd`, `png` (repo path of full PNG), `key` (card file key used in Card Edits.json/Authors), `dups[]` (ids that are copies of this card; on the copy: `dup` = original id), `aliases[]`, `authorListed`, `img` (hash for thumbs), `tw`,`th` (360-wide thumb dims), `color` (accent hex), `hv` (history count), `iv` (image versions, only over 1), `fs` (first upload of the image, epoch s, from the git history: full-history builds only, every card with a history row), `created` (the creation date "YYYY-MM-DD": the earlier of `site/Card Creation Dates.json`'s first Discord post and `fs`, a hand-set date winning; `createdFrom` "discord" | "git" | "hand", `createdAbout: true` while provisional; build_site `apply_created`, 2026-10-23), `problems[]`, `creatures[]` (list of per-creature stat objects when a card has several), `ratings[]` (dated 1-10 ratings, oldest first: section 25), `parsed:false` (only when not parsed), plus editor-only fields at runtime: `edited`, `orig`, `editAt`, `webAliases`, `hidden`, `note`, `problems_ok`, `allow_high_stats`, `_staged`, `_sent`, `_banned`, `_unused`. Cards have NO sha/GUID or TTS ids (`details: true`, 2026-10-21, only says `data/details/<id>.json` exists; the record is joined by blob sha at build time). Note `c.type` of a field card = "field", status effects "debuff"/"buff".
-- Images: thumbnails `thumbs/<img>-{240|360|720}.avif` (AVIF since 2026-10-24, §28) (app.js:~44 `img(c,w)`, `imgAttrs(c, cssPx)` gives src+srcset+width/height); full-size PNG = `S.data.raw + urlPath(c.png)` (raw.githubusercontent.com, `fullUrl(c)` app.js:~49; this is what TTS FaceURL uses in deck.js:156); card back images `raw + "MDW/cardback.png"` and `MDW/cardback_item.png` (deck.js:181-183). Icons `icons/<name>.webp?v=<stamp>` (§28). Name lookup helpers: `S.byId`, `norm(name)` (text.js:4: lowercase, strips spaces/_-.'), search `compile(query)` (search.js:35) returns predicate; matches names + aliases; `suggest(q, cards)`.
+- Images: thumbnails `thumbs/<img>-{240|360|720}-<tag>.avif` (AVIF since 2026-10-24, §28; the tags in cards.json `thumbs`) (app.js:~44 `img(c,w)`, `imgAttrs(c, cssPx)` gives src+srcset+width/height); full-size PNG = `S.data.raw + urlPath(c.png)` (raw.githubusercontent.com, `fullUrl(c)` app.js:~49; this is what TTS FaceURL uses in deck.js:156); card back images `raw + "MDW/cardback.png"` and `MDW/cardback_item.png` (deck.js:181-183). Icons `icons/<name>.webp?v=<stamp>` (§28). Name lookup helpers: `S.byId`, `norm(name)` (text.js:4: lowercase, strips spaces/_-.'), search `compile(query)` (search.js:35) returns predicate; matches names + aliases; `suggest(q, cards)`.
   A TTS save references cards by Nickname / FaceURL (PNG path under raw), so mapping save card -> site card = match `FaceURL` against `raw + urlPath(c.png)` (primary), else `norm(Nickname)` against `norm(c.name)` / aliases (as `D.fromText` does, deck.js:132-134).
 
 ## 3. Editor (assets/edit.js, 557 lines)
@@ -961,10 +961,18 @@ relies on:
 
 ## 28. Pictures: AVIF, the deploy gate, the service worker (2026-10-24, owner's decisions)
 
-- Card images are AVIF only: `IMAGE_SIZES` {240, 360, 720: quality 50}, `AVIF` (4:4:4, speed 6, one thread each; the
-  image pool runs cards in parallel), named `thumbs/<blob16>-<w>.avif`. No WebP fallback: Safari before 16 shows no
-  card pictures (accepted). Measured (scratch png-research/website; site-img): -43% / -40% / -33% at 240 / 360 / 720 (dist totals, no ICC)
-  against WebP q80/78/75, ssimulacra2 higher, red text keeps its colour. The og JPEGs and deck montages are made from
+- Card images are AVIF only: `IMAGE_SIZES` {240: 60, 360: 55, 720: 50} (quality), `AVIF` (4:4:4, speed 6, one thread
+  each; the image pool runs cards in parallel), named `thumbs/<blob16>-<w>-<tag>.avif`: `thumb_tag(w)` is 6 hex digits
+  of `THUMB_VERSION`, the width, its quality and `AVIF` (not max_threads), and cards.json `thumbs` gives app.js `img()`
+  the three. A settings change renames that width's files, so it re-encodes that width only (restored older caches
+  too) and returning visitors' workers never keep old bytes under the URL; bump `THUMB_VERSION` to re-encode all (a
+  resize change). No WebP fallback: Safari before 16 shows no card pictures (accepted).
+- Quality (ssimulacra2 against a LANCZOS reference on the dark background, all 817 images; scratch site-img-adv2
+  score_all.py, q240.jsonl, q360.jsonl): q50 everywhere (the first pick, from a 60-card sample without rulebook pages)
+  scored below WebP q80 at 240 px on 483 images (by more than 5 on 259; rulebook pages 76.3 -> 70.7, small text visibly
+  smudged) and at 360 px on 401 (by more than 5 on 110). q60 at 240: below WebP by more than 5 on 2, mean +8.5, 12.9 MB
+  vs 16.7 (-23%); q55 at 360: by more than 5 on 11, no rulebook page, mean +5.8, 19.5 vs 28.4 MB (-31%); q50 at 720:
+  mean +4, 42.6 vs 63.4 MB (-33%). Red text keeps its colour (4:4:4). The og JPEGs and deck montages are made from
   the 720 px AVIF (Pillow decodes it). requirements.txt pins `pillow>=11.3` (AVIF in the wheels); the build stops at
   once on a Pillow without AVIF.
 - Encode cost: about 0.8 CPU-s per card on the Mac (WebP: 0.09); a full re-encode of ~820 entries is about 11 CPU-min
@@ -976,16 +984,24 @@ relies on:
   blobs. The thumbs carry no ICC profile (`icc_profile=None`: Pillow's AVIF writer copies the PNG's, about 3 KB, +34% at
   240 px; WebP never had one, so colours are as before).
 - Deploy gate (restored): the `changed` step compares `dist/build.txt` with the live `build.txt`; equal: no upload, no
-  deploy job; unreadable: deploy. The Changes page says "Site updated <time> (Pacific), the last build that changed it":
+  deploy job; unreadable: deploy. `dist_digest` hashes every file's bytes (thumbs too, about 0.4 s) and nothing else: an
+  edit to build_site.py alone builds the same digest (it used to hash the script, which deployed byte-identical sites). The Changes page says "Site updated <time> (Pacific), the last build that changed it":
   `generated` is the time of the deployed build, which is now the last build that changed the site. edit.js
   `sentRecord` still clears on `generated > sent.at`: a published batch always changes the site (Card Edits.json's
   commit is in the changelog), so its build deploys.
-- Icon URLs carry a stamp: `icons/<name>.webp?v=<10 hex>` (sha256 of the blob, `ICON_VERSION`, `VARIANT_VERSION` and
-  the variant key), shared by its variants (text.js `variantFile` keeps the query). File names in dist are unchanged.
+- Icon file names carry a stamp: `icons/<name>.<stamp>.webp` and `icons/<name>.<stamp>.<variant>.webp` (10 hex digits:
+  sha256 of the blob, `ICON_VERSION`, `VARIANT_VERSION` and the variant key; text.js `variantFile` inserts the variant).
+  Not a `?v=` query: Pages ignores it, so a tab left open across a deploy got the new file for its old stamp and its
+  worker kept it under that stamp, which a revert then served (scratch site-img/review/sim; fixed, site-img/fix4/sim.mjs:
+  the old stamp's URL is a 404 under the next deploy and the revert serves its own bytes).
+- Accent colours (`color`: share pages' theme-color, embed bars) come from the PNG's 240 px resize before encoding
+  (`accent_color(image)`), not the decoded thumb, so codec settings don't move them; images.json rows of the WebP builds
+  (`IMAGE_META_WEBP`) are kept, so no card's colour changes with the switch (a fresh computation would move about 60 of
+  772 by a near-tie vote). Drop `IMAGE_META_WEBP` once deployed.
 - Service worker: `site/sw.js`, written by `write_worker` to `dist/sw.js` (scope: the site root, so `c/<id>/`, `u/`,
   `d/`, `decks/` pages are inside) with `IN_USE`: one string of 10-hex names (thumb blobs' first ten, icon stamps).
-  It answers only GET, non-Range requests for `thumbs/<blob16>-<w>.avif` (no query) and `icons/<name>.webp?v=<hex>`
-  under its scope: cache first (`pictures-1`), else the network, and keeps a 200 same-origin response whose name is in
+  `TAGS` holds the build's three thumb tags. It answers only GET, non-Range, query-less requests under its scope for
+  `thumbs/<blob16>-<w>-<tag>.avif` with a current tag and `icons/<name>.<stamp>[.<variant>].webp`: cache first (`pictures-1`), else the network, and keeps a 200 same-origin response whose name is in
   use. Everything else (pages, data, assets, sw.js, og JPEGs, unstamped icons) is not intercepted. install: skipWaiting;
   activate: deletes other `pictures-*` caches and entries not in `IN_USE`, then claims. No storage: the network.
   app.js `startWorker()` registers `new URL("sw.js", ROOT)` after load and, once the worker controls the page, posts

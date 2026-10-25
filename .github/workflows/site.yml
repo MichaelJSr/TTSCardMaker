@@ -76,9 +76,10 @@ jobs:
       - id: pages
         uses: actions/configure-pages@v6
 
-      # Cache key = the card PNG blobs + the build scripts (image sizes live there; the font build's draws the token
-      # variants' pictures): the cache is only re-saved when a card image or the image settings change, and the newest
-      # older cache is restored as a starting point.
+      # Cache key = the card PNG blobs + the build scripts (image settings live there; the font build's draws the token
+      # variants' pictures): the cache is only re-saved when a card image or the build changes, and the newest older cache
+      # is restored as a starting point. The thumbs' names carry their settings (build_site.py thumb_tag), so a restored
+      # cache made with other settings re-encodes those widths.
       - id: images
         run: echo "key=$(git ls-tree -r HEAD | grep -i '\.png$' | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 

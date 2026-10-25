@@ -55,7 +55,7 @@ const isDesc = (sort, dir) => (dir ? dir === "desc" : ["stars", "total", "hp", "
 const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
 const BUILD = document.querySelector('meta[name="build"]')?.content || "";
 const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // same URLs as the preload hints in index.html
-const img = (c, w) => (c.img ? `thumbs/${c.img}-${w}.avif` : "");      // card images: 240 / 360 / 720 px wide
+const img = (c, w) => (c.img ? `thumbs/${c.img}-${w}-${S.data.thumbs[w]}.avif` : "");   // card images: 240 / 360 / 720 px wide (tag: their settings)
 const thumbUrl = c => img(c, 360);
 /** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 (or 720) px by screen density */
 const imgAttrs = (c, css, big = false) => `src="${img(c, 360)}" srcset="${img(c, 240)} 240w, ${img(c, 360)} 360w${big ? `, ${img(c, 720)} 720w` : ""}" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;
@@ -198,7 +198,7 @@ function rerender() {
 const editor = createEditor({
   S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
   openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
-  statBars: c => statBars(c), imageOf: c => thumbUrl(c),   // the form's live preview
+  statBars: c => statBars(c), imageOf: (c, w = 360) => img(c, w),   // the form's live preview; 720: the Edit viewer
   iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
   users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
   // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
@@ -207,7 +207,7 @@ const editor = createEditor({
   formOpened: x => previews.mountForm(x),                  // the Edit dialog's image previews
 });
 // image previews in edit mode (preview.js): the mock-up and the rendered dry-run bake, badges on the grid's tiles
-const previews = createPreviews({ S, editor, toast: m => toast(m), loadDetails: c => loadDetails(c), getJson: n => getJson(n),
+const previews = createPreviews({ S, editor, img, toast: m => toast(m), loadDetails: c => loadDetails(c), getJson: n => getJson(n),
   signIn: () => editor.actions["edit-hub"](), badges: () => { if (editing()) previews.mountTiles(view); } });
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;

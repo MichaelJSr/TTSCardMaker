@@ -1,23 +1,26 @@
 // The site's service worker (build_site.py writes it to the site root with the pictures in use; app.js registers it).
-// It keeps the card pictures and type icons, whose URLs name their content (thumbs/<blob>-<width>.avif,
-// icons/<name>.webp?v=<stamp>), so a returning visitor doesn't download them again after a deploy (Pages re-dates every
-// file and caches 10 minutes). Every other request (pages, data, scripts) goes to the network untouched, as without a
+// It keeps the card pictures and type icons, whose file names name their content (thumbs/<blob>-<width>-<tag>.avif,
+// icons/<name>.<stamp>[.<variant>].webp: an old URL gets its own picture or a 404, never another one), so a returning
+// visitor doesn't download them again after a deploy (Pages re-dates every file and caches 10 minutes). Every other request (pages, data, scripts) goes to the network untouched, as without a
 // worker. A deploy that changes a picture changes this file: the new worker takes over at once (every version serves
 // the same immutable URLs) and deletes what the site no longer uses. Bump CACHE when what it keeps changes.
 const CACHE = "pictures-1", PREFIX = "pictures-";
 // the build's: the pictures the site uses, 10 hex digits each (a blob's first ten, an icon's stamp); none: keep everything
 const IN_USE = new Set(/*PICTURES*/"".match(/[0-9a-f]{10}/g));
+// the build's thumb settings tags, 6 hex digits each (build_site.py thumb_tag); none: any
+const TAGS = new Set(/*TAGS*/"".match(/[0-9a-f]{6}/g));
 const SCOPE = new URL(self.registration.scope).pathname;
-const THUMB = /^thumbs\/([0-9a-f]{16})-(?:240|360|720)\.avif$/, ICON = /^icons\/[\w.-]+\.webp$/, STAMP = /^\?v=([0-9a-f]+)$/;
+const THUMB = /^thumbs\/([0-9a-f]{16})-(?:240|360|720)-([0-9a-f]{6})\.avif$/;
+const ICON = /^icons\/[a-z0-9-]+\.([0-9a-f]{10})(?:\.(?:tint|sticker|glow|darkglow))?\.webp$/;
 
 /** The picture's content name (blob or stamp) when this URL is one the worker keeps, else "" */
 function nameOf(url) {
-  if (url.origin !== self.location.origin || !url.pathname.startsWith(SCOPE)) return "";
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(SCOPE) || url.search) return "";
   const rel = url.pathname.slice(SCOPE.length);
-  const t = !url.search && THUMB.exec(rel);
-  if (t) return t[1].slice(0, 10);
-  const s = ICON.test(rel) && STAMP.exec(url.search);
-  return s ? s[1] : "";
+  const t = THUMB.exec(rel);
+  if (t) return !TAGS.size || TAGS.has(t[2]) ? t[1].slice(0, 10) : "";
+  const i = ICON.exec(rel);
+  return i ? i[1] : "";
 }
 const inUse = name => !!name && (!IN_USE.size || IN_USE.has(name));
 const keepable = res => res.status === 200 && res.type === "basic";

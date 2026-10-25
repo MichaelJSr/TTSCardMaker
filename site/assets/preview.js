@@ -344,7 +344,7 @@ export function createPreviews(app) {
   const repo = () => S.data.repo;
   const rawUrl = (ref, path) => `https://raw.githubusercontent.com/${repo()}/${ref}/${path.split("/").map(encodeURIComponent).join("/")}`;
   const imagesOf = e => [e.result?.files?.webp, e.result?.files?.png].filter(Boolean).map(f => rawUrl(CONTRACT.branch, CONTRACT.file(e.request, f)));   // the 720 px WebP, the full PNG
-  const current = c => (c.img ? `thumbs/${c.img}-720.avif` : "");
+  const current = c => app.img(c, 720);
   // the Diff's other side: the result's before.webp (the card's PNG made as preview.webp, so unchanged pixels match);
   // a result from before it was published has none: the site's AVIF thumb, whose codec noise shows too
   const beforeOf = e => (e?.result?.files?.before ? rawUrl(CONTRACT.branch, CONTRACT.file(e.request, e.result.files.before)) : "");
