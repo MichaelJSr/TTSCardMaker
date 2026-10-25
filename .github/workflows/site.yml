@@ -72,7 +72,8 @@ jobs:
           UV_PYTHON: ${{ steps.python.outputs.python-path }}
           UV_COMPILE_BYTECODE: "1"
 
-      # esbuild minifies the JS and CSS file by file (build_site.py minify). Exact version: same source, same bytes.
+      # esbuild bundles the JS into one script with a source map and minifies the CSS (build_site.py bundle, minify); node
+      # checks index.html's first screen against grid.js (first_screen). Exact version: same source, same bytes.
       - run: npm install --prefix "$RUNNER_TEMP/esbuild" --no-save --no-audit --no-fund esbuild@0.28.2
 
       - id: pages

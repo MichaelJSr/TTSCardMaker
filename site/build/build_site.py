@@ -57,8 +57,9 @@ data/contributions.json, data/decks.json, data/versions.json, data/analytics.jso
 changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown),
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json), images, icons,
-assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
-content and its imports', the data's from its content without the build time; build.txt digests the whole site (which build is live),
+assets (with esbuild: one bundle, assets/app.js, and its source map; else the modules one by one) and one share page per card, per person and per public deck (its preview image a montage of its cards).
+index.html carries the plain grid's first tiles (first_screen, checked against grid.js in node). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
+content and its imports' (the bundle's from its code and map), the data's from its content without the build time; build.txt digests the whole site (which build is live),
 then the page's stamp (<meta name="page">), which open pages poll for (fresh.js).
 game.txt: every visible card and rulebook page, the timing tags and the ban list as plain text (game_text), linked from the Rulebook.
 
@@ -787,10 +788,13 @@ def share_text(c):
 GRID_PRELOADS = 4                            # the cards grid's first pictures that index.html preloads
 
 
-def grid_preload(cards):
-    """index.html's preload hints for the grid's first pictures (app.js tileHtml: srcset 240w/360w, sizes = the tile size),
-    added by a script only when the page opens on the plain grid (no filters, sort or table view) at the saved tile size."""
-    first = [c["img"] for c in sorted((c for c in cards if not c.get("hidden")), key=lambda c: c["name"].lower()) if c.get("img")][:GRID_PRELOADS]
+def grid_preload(cards, ids=None):
+    """index.html's preload hints for the grid's first pictures (grid.js tileHtml: srcset 240w/360w, sizes = the tile size),
+    added by a script only when the page opens on the plain grid (no filters, sort or table view) at the saved tile size.
+    ids: the grid's first cards in order (first_screen), else Name order."""
+    by_id = {c["id"]: c for c in cards}
+    order = [by_id[i] for i in ids] if ids else sorted((c for c in cards if not c.get("hidden")), key=lambda c: c["name"].lower())
+    first = [c["img"] for c in order if c.get("img")][:GRID_PRELOADS]
     if not first:
         return ""
     return ("<script>(() => { try { if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
@@ -2896,10 +2900,15 @@ def asset_stamps(texts):
     return out
 
 
+def esbuild():
+    """esbuild's path ($ESBUILD, else on PATH; site.yml pins it), or None"""
+    return os.environ.get("ESBUILD") or shutil.which("esbuild")
+
+
 def minify(texts):
-    """{file: text} minified file by file with esbuild ($ESBUILD, else on PATH; site.yml pins it), as {file: bytes}.
-    No esbuild, or it failed: None (the files go out as they are)."""
-    exe = os.environ.get("ESBUILD") or shutil.which("esbuild")
+    """{file: text} minified file by file with esbuild, as {file: bytes}. No esbuild, or it failed: None (the files go out
+    as they are)."""
+    exe = esbuild()
     if not exe:
         log("assets: no esbuild, not minified")
         return None
@@ -2924,6 +2933,44 @@ def minify(texts):
     return got
 
 
+BUNDLE = "app.js"                             # the entry module: the bundle keeps its name; app.js.map beside it
+
+
+def bundle(texts):
+    """site/assets' modules ({file: text}, as written) as one minified esbuild bundle of BUNDLE and its imports, with a
+    source map (sources assets/src/<file>, their text inside it): (code, map, stamp), the stamp hashing both, in the
+    code's sourceMappingURL too. No esbuild, or it failed: None (the modules go out one by one)."""
+    exe = esbuild()
+    if not exe:
+        return None
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = os.path.realpath(tmp)           # esbuild's map paths: relative to the real one (macOS /var -> /private/var)
+        src = os.path.join(tmp, "assets", "src")
+        os.makedirs(src)
+        for name, text in texts.items():
+            with open(os.path.join(src, name), "w", encoding="utf-8") as fh:
+                fh.write(text)
+        out = os.path.join(tmp, "assets", BUNDLE)
+        try:
+            subprocess.run([exe, os.path.join(src, BUNDLE), "--bundle", "--minify", "--format=esm", "--sourcemap", "--log-level=error",
+                            f"--outfile={out}"], capture_output=True, text=True, check=True)
+            with open(out, "rb") as fh:
+                code = fh.read()
+            with open(out + ".map", "rb") as fh:
+                smap = fh.read()
+        except (OSError, subprocess.CalledProcessError) as e:
+            warn(f"assets not bundled: esbuild: {getattr(e, 'stderr', '') or e}")
+            return None
+    tail = f"//# sourceMappingURL={BUNDLE}.map".encode()
+    if not code.rstrip().endswith(tail):
+        warn("assets not bundled: no sourceMappingURL")
+        return None
+    stamp = stamp_of(code + b"\0" + smap)
+    code = code.rstrip()[:-len(tail)] + tail + f"?v={stamp}\n".encode()
+    log(f"assets: {len(texts)} modules bundled into {BUNDLE} with esbuild, {sum(len(t.encode()) for t in texts.values())} -> {len(code)} bytes")
+    return code, smap, stamp
+
+
 def inline_css(page, css):
     """page with its style.css link swapped for the stylesheet itself (index.html only: one round trip less on first paint)."""
     link = re.search(r'<link rel="stylesheet" href="assets/style\.css\?v=\w+">', page)
@@ -2931,6 +2978,103 @@ def inline_css(page, css):
         warn("index.html: style.css not inlined")
         return page
     return page[:link.start()] + f"<style>{css}</style>" + page[link.end():]
+
+
+FIRST_TILES, FIRST_EAGER = 8, 4               # index.html's pre-written grid: tiles, and of them loaded eagerly
+FIRST_CHECK = os.path.join(os.path.dirname(os.path.abspath(__file__)), "check_first.mjs")
+# grid.js's, for the first screen (check_first.mjs fails the build on any difference)
+TILE_KIND = {**KIND_LABEL, "unknown": "Other"}
+TILE_CSS = 200                                # TILE_SIZES.m: the default tile's picture, css px
+TILE_TITLE = ' title="Tile size"'
+SORTS = [("name", "Name"), ("stars", "Stars"), ("total", "Total stats"), ("hp", "HP"), ("def", "DEF"), ("atk", "ATK"), ("spd", "SPD"),
+         ("new", "Recently updated"), ("created", "Newest created", ""), ("created", "Oldest created", "asc"), ("series", "Series"),
+         ("type", "Kind"), ("mentioned", "Most referenced")]
+
+
+def js_esc(s):
+    """text.js esc"""
+    return re.sub(r"[&<>\"']", lambda m: {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[m.group()], "" if s is None else str(s))
+
+
+def tile_html(c, eager, icons):
+    """grid.js tileHtml(c, {link: true, eager, css: TILE_CSS}): a plain link to the card's page"""
+    def url(w):
+        return f"thumbs/{c['img']}-{w}-{thumb_tag(w)}.avif"
+    dims = f' width="{c["tw"]}" height="{c["th"]}"' if c.get("tw") else ""
+    load = 'fetchpriority="high"' if eager else 'loading="lazy"'
+    art = (f'<img class="art" {load} decoding="async" src="{url(360)}" '
+           f'srcset="{url(240)} 240w, {url(360)} 360w" sizes="{TILE_CSS}px"{dims} alt="">' if c.get("img") else '<div class="art"></div>')
+    def icon(t):
+        ic = icons.get(re.sub(r"[\s_\-.'’]+", "", str(t or "").lower()))
+        return (f'<img class="" loading="lazy" src="{js_esc(ic["file"])}" alt="{js_esc(t)}" data-tip="{js_esc(t.replace("_", " "))}">'
+                if ic else "")
+    stars = f'<span class="stars">{"★" * min(c["stars"], 10)}</span>' if c.get("stars") else ""
+    href = quote(c["id"], safe="-_.!~*'()")       # encodeURIComponent
+    return (f'<a class="tile" href="c/{href}/" aria-label="{js_esc(c["name"])}">\n    {art}\n    \n    \n'
+            f'    <div class="meta"><div class="name">{js_esc(c["name"])}</div>\n'
+            f'    <div class="sub">{stars}<span>{js_esc(TILE_KIND.get(c["type"]) or c["type"])}</span>'
+            f'{"".join(icon(t) for t in (c.get("types") or [])[:3])}</div></div></a>')
+
+
+def toolbar_html(count, created):
+    """grid.js toolbarHtml for the default grid: Name, Grid, M"""
+    opts = "".join(f'<option value="{v}"{f" data-dir={json.dumps(d[0])}" if d else ""}{" selected" if v == "name" and not d else ""}>{label}</option>'
+                   for v, label, *d in SORTS if v != "created" or created)
+    seg = lambda key, pairs, on, extra="": "".join(f'<button type="button" class="{"on" if v == on else ""}" data-action="set-pref" data-key="{key}" '
+                                                   f'data-value="{v}"{extra}>{label}</button>' for v, label in pairs)
+    return ('<div class="toolbar">\n'
+            f'        <span class="result-count">{count:,} card{"" if count == 1 else "s"}</span>\n'
+            '        <button type="button" class="mobile-only" data-action="toggle-filters">Filters</button>\n'
+            f'        <label class="muted">Sort <select data-action="select-param" data-key="sort">{opts}</select></label>\n'
+            '        <button type="button" class="ghost icon" data-action="flip-dir" title="Reverse order" aria-label="Reverse order">⇅</button>\n'
+            f'        <span class="seg">{seg("view", (("grid", "Grid"), ("table", "Table")), "grid")}</span>\n'
+            f'        <span class="seg">{seg("size", (("s", "S"), ("m", "M"), ("l", "L")), "m", TILE_TITLE)}</span>\n'
+            '        <button type="button" class="ghost" data-action="random-from-list" title="Random result">Random</button>\n'
+            '        \n'
+            '      </div>')
+
+
+def first_screen(cards, icons):
+    """index.html's first screen: the plain grid's toolbar and first FIRST_TILES tiles as links to the cards' pages, in a
+    <template> a script puts in the view when the page opens on the plain grid (grid_preload's rule) at the saved tile
+    size; app.js redraws the view when it runs. The cards and the markup are checked against the site's own code in node
+    (check_first.mjs): a difference fails the build. (html, ids), or None without node."""
+    exe = os.environ.get("NODE") or shutil.which("node")
+    if not exe:
+        log("first screen: no node to check it with, index.html goes without")
+        return None
+    src = os.path.join(SITE, "assets")
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            for name in os.listdir(src):
+                if name.endswith(".js"):
+                    shutil.copyfile(os.path.join(src, name), os.path.join(tmp, name))
+            with open(os.path.join(tmp, "package.json"), "w") as fh:
+                fh.write('{"type": "module"}')
+            payload = {"cards": cards, "icons": icons, "thumbs": {str(w): thumb_tag(w) for w in IMAGE_SIZES}, "n": FIRST_TILES, "eager": FIRST_EAGER}
+            done = subprocess.run([exe, FIRST_CHECK, tmp], input=json.dumps(payload, ensure_ascii=False), capture_output=True, text=True,
+                                  encoding="utf-8", check=True, timeout=300)
+        got = json.loads(done.stdout)
+    except (OSError, ValueError, subprocess.SubprocessError) as e:
+        raise SystemExit(f"error: the first screen's check didn't run: {getattr(e, 'stderr', '') or e}")
+    by_id = {c["id"]: c for c in cards}
+    tiles = [tile_html(by_id[i], k < FIRST_EAGER, icons) for k, i in enumerate(got["ids"])]
+    toolbar = toolbar_html(sum(1 for c in cards if not c.get("hidden")), any(c.get("created") for c in cards))
+    for what, mine, theirs in [*((f"tile {i}", t, j) for i, t, j in zip(got["ids"], tiles, got["tiles"])), ("toolbar", toolbar, got["toolbar"])]:
+        if mine != theirs:
+            at = next((k for k, (a, b) in enumerate(zip(mine, theirs)) if a != b), min(len(mine), len(theirs)))
+            raise SystemExit(f"error: index.html's first screen differs from grid.js ({what}) at {at}:\n"
+                             f"  build_site: {mine[max(0, at - 60):at + 60]!r}\n  grid.js:    {theirs[max(0, at - 60):at + 60]!r}")
+    page = ('<template id="first"><div class="browse">\n    <aside class="filters" aria-label="Filters"></aside>\n    <section>\n      '
+            f'{toolbar}\n      <div id="deck-hits"></div>\n      <div class="grid" style="--tile:168px">{"".join(tiles)}</div>\n    </section></div></template>\n'
+            "<script>(() => { try { if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
+            "  const z = localStorage.getItem(\"size\"), t = { s: [\"130px\", 160], l: [\"230px\", 270] }[z], f = document.getElementById(\"first\").content;\n"
+            "  if (t) { f.querySelector(\".grid\").style.setProperty(\"--tile\", t[0]); for (const i of f.querySelectorAll(\"img.art\")) i.sizes = `${t[1]}px`;\n"
+            "    for (const b of f.querySelectorAll('[data-key=\"size\"]')) b.className = b.dataset.value === z ? \"on\" : \"\"; }\n"
+            "  document.getElementById(\"view\").replaceChildren(f);\n"
+            "} catch { /* storage blocked: app.js draws the view */ } })();</script>")
+    log(f"first screen: {len(tiles)} tiles, the same as grid.js draws them")
+    return page, got["ids"]
 
 
 def steady(files, blobs):
@@ -3395,15 +3539,24 @@ def main():
     data = steady(files, blobs)
     version = data_stamp(data, details)
     os.makedirs(os.path.join(DIST, "assets"))
+    packed = bundle({name: text for name, text in texts.items() if name.endswith(".js")})   # with esbuild: one script
+    if packed:
+        assets = {name: v for name, v in assets.items() if not name.endswith(".js")}
     served = minify({name: text for name, (_, text) in assets.items()}) or {name: text.encode("utf-8") for name, (_, text) in assets.items()}
-    for name, blob in served.items():           # stamps hash the source: same source, same URL
+    stamps = {name: stamp for name, (stamp, _) in assets.items()}
+    if packed:
+        served[BUNDLE], served[BUNDLE + ".map"], stamps[BUNDLE] = packed
+    for name, blob in served.items():           # stamps hash the source (the bundle: its code and map): same source, same URL
         with open(os.path.join(DIST, "assets", name), "wb") as fh:
             fh.write(blob)
     def url(m):                               # index.html's asset and data URLs
         name = m.group(1).removeprefix("assets/")
-        return f'{m.group(1)}?v={assets[name][0] if name in assets else version}"'
+        return f'{m.group(1)}?v={stamps[name] if name in stamps else version}"'
     with open(os.path.join(SITE, "index.html"), encoding="utf-8") as fh:
-        template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', url, fh.read()).replace("<!--BUILD-->", version)
+        template = fh.read()
+    if packed:                                # the bundle holds every module: no hints for them
+        template = re.sub(r'<link rel="modulepreload" href="assets/(?!' + re.escape(BUNDLE) + r'")[\w-]+\.js">\n', "", template)
+    template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', url, template).replace("<!--BUILD-->", version)
     page = stamp_of(template.encode("utf-8"))  # the page's stamp: build.txt's 2nd line (fresh.js)
     template = template.replace("<!--PAGE-->", page)
     banner = site_banner(cards, os.path.join(DIST, "og.jpg"))
@@ -3423,7 +3576,9 @@ def main():
     site_desc = "Every card, the rulebook, a starting-hand builder and stats."
     site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards)))
+        first = first_screen(cards, icons)
+        index = inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards, first and first[1]))
+        fh.write(index.replace("</main>\n", f"</main>\n{first[0]}\n", 1) if first else index)
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
         fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">\n' + site_og))   # absolute: the 404 page can be served at any depth
     os.makedirs(os.path.join(DIST, "d"))                # shared hands: d/#/deck/<code>

@@ -20,6 +20,8 @@ import { createPreviews } from "./preview.js";
 import * as ratings from "./ratings.js";
 import * as insights from "./insights.js";
 import * as fresh from "./fresh.js";
+import * as G from "./grid.js";
+import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc } from "./grid.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -43,27 +45,20 @@ const S = {
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
   ["aux item", "Auxiliary items"], ["status", "Status effects"], ["creatures", "Auxiliary creatures"]];
 const KIND_PLURAL = { debuff: "Debuffs", buff: "Buffs", unknown: "Other" };   // kind= values the chips don't have (the Stats links)
-const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
-  debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
 const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
   ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"],
   ["banned", "Banned (constructed)"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
-// [key, label, dir it sets]; "created" = the creation date (first Discord post or first upload), when the build has dates
-const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
-  ["new", "Recently updated"], ["created", "Newest created", ""], ["created", "Oldest created", "asc"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
 const sortOf = p => (p.get("sort") === "created" && !S.created ? "" : p.get("sort")) || "name";   // a shallow build: Name
-const isDesc = (sort, dir) => (dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "created", "mentioned"].includes(sort));
 
 const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
 const BUILD = document.querySelector('meta[name="build"]')?.content || "";
 const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // same URLs as the preload hints in index.html
-const img = (c, w) => (c.img ? `thumbs/${c.img}-${w}-${S.data.thumbs[w]}.avif` : "");   // card images: 240 / 360 / 720 px wide (tag: their settings)
+const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 240 / 360 / 720 px wide (tag: their settings)
 const thumbUrl = c => img(c, 360);
 /** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 (or 720) px by screen density */
-const imgAttrs = (c, css, big = false) => `src="${img(c, 360)}" srcset="${img(c, 240)} 240w, ${img(c, 360)} 360w${big ? `, ${img(c, 720)} 720w` : ""}" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;
+const imgAttrs = (c, css, big = false) => G.imgAttrs(S.data.thumbs, c, css, big);
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
-const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
 const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
 const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand" };
@@ -77,11 +72,7 @@ const shareUrl = id => `${ROOT}c/${encodeURIComponent(id)}/`;
 const userUrl = login => `${ROOT}u/${encodeURIComponent(login)}/`;
 const deckUrl = d => `${ROOT}d/#/deck/${D.encode(d)}`;
 const iconFor = name => S.icons[norm(name)];
-const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" loading="lazy" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
-// edits the pipeline bakes into the card image (build_site.py PSD_FIELDS): pending, refused, or baked but not re-parsed yet
-const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability" };
-const PSD_TIP = "The card image is being regenerated with this edit";     // the one tip for a pending PSD field (edit.js too)
-const pendingList = c => (c.pending || []).map(f => FIELD_LABEL[f] || f).join(", ");
+const iconImg = (name, cls = "tok") => G.iconImg(S.icons, name, cls);
 const psdBadges = c => [
   c.refused ? `<span class="fact refused" data-tip="The last try to regenerate the card image was refused; change the edit or the PSD">Image update refused: ${esc(c.refused)}</span>`
     : c.pending?.length ? `<span class="fact pending" data-tip="${PSD_TIP}">PSD pending: ${esc(pendingList(c))}</span>` : "",
@@ -351,38 +342,23 @@ const needsAnalytics = p => ["bal", "cohort", "month", "change"].some(k => p.get
 const listOf = p => exactFirst(sortCards(filterCards(p), sortOf(p), p.get("dir") || ""), p.get("q"));   // the cards the grid shows, in order (search.js exactFirst)
 function sortCards(list, sort = "name", dir = "") {
   const key = {
-    name: c => c.name.toLowerCase(), stars: c => c.stars ?? -1, total: c => (c.hp == null ? -1 : total(c)), hp: c => c.hp ?? -1, def: c => c.def ?? -1,
+    name: G.nameKey, stars: c => c.stars ?? -1, total: c => (c.hp == null ? -1 : total(c)), hp: c => c.hp ?? -1, def: c => c.def ?? -1,
     atk: c => c.atk ?? -1, spd: c => c.spd ?? -1, new: c => c.ts ?? 0, series: c => `${(c.series || "\uffff").toLowerCase()}\u0001${(c.subseries || "\uffff").toLowerCase()}`, type: c => kindOf(c),
     mentioned: c => (S.mentionedBy.get(c.id) || new Set()).size,
-  }[sort] || (c => c.name.toLowerCase());
+  }[sort] || G.nameKey;
   const desc = isDesc(sort, dir);
   if (sort === "created") {                                // no date last; one day by first upload, then name
     const s = desc ? -1 : 1, cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
     return list.sort((a, b) => (!a.created - !b.created) || s * cmp(a.created || "", b.created || "") || s * ((a.fs || 0) - (b.fs || 0))
       || a.name.localeCompare(b.name));
   }
-  return list.sort((a, b) => { const x = key(a), y = key(b); return (x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name)) * (desc ? -1 : 1); });
+  return list.sort(G.byKey(key, desc));
 }
 function chipList(key, options, selected, counts) {
   return `<div class="chips">${options.map(([v, label]) => `<button type="button" class="chip${selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}">${esc(label)}${counts ? `<span class="n">${counts.get(String(v)) || 0}</span>` : ""}</button>`).join("")}</div>`;
 }
-function tileHtml(c, { small = false, eager = false, css = 190, constructed = false } = {}) {
-  const inDeck = deckHas(c.id);
-  return `<article class="tile" data-open="${c.id}" tabindex="0" aria-label="${esc(c.name)}">
-    ${c.img ? `<img class="art" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(c, small ? 120 : css)} alt="">` : `<div class="art"></div>`}
-    ${constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>`
-      : c._staged ? `<span class="flag staged" data-tip="Changed in your unpublished batch">Unpublished</span>`
-      : c.hidden ? `<span class="flag" data-tip="Hidden from the website">Hidden</span>`
-      : c.refused ? `<span class="flag refused" data-tip="Image update refused: ${esc(c.refused)}">Image update refused</span>`
-      : c.pending?.length ? `<span class="flag pending" data-tip="${PSD_TIP}: ${esc(pendingList(c))}">PSD pending</span>`
-      : c.reparsePending ? `<span class="flag" data-tip="The PSD changed since the card data was built">Re-parse pending</span>`
-      : !c.parsed ? `<span class="flag" data-tip="Not in the card data yet">New</span>`
-      : c._unused ? `<span class="flag unused" data-tip="No card names this status effect">Unused</span>`
-      : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}: same PSD">Duplicate</span>` : ""}
-    ${small ? "" : `<button type="button" class="add${inDeck ? " in" : ""}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "✓ In deck" : "+ Deck"}</button>`}
-    <div class="meta"><div class="name">${esc(c.name)}</div>
-    <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(t, "")).join("")}</div></div></article>`;
-}
+const tileEnv = { get thumbs() { return S.data.thumbs; }, get icons() { return S.icons; }, dupName: id => S.byId.get(id)?.name, inDeck: id => deckHas(id) };
+const tileHtml = (c, o) => G.tileHtml(c, o, tileEnv);
 function renderCards(r) {
   const p = r.params, win = { y: scrollY, w: innerWidth, h: innerHeight, all: S.restoring };   // before the view goes: read after, they lay out the short page (the scroll clamps)
   if (document.activeElement !== qInput) qInput.value = p.get("q") || "";
@@ -443,26 +419,17 @@ function renderCards(r) {
     </aside>
     <section>
       ${editing() && view_ === "grid" ? tray.html(S.selecting) : ""}
-      <div class="toolbar">
-        <span class="result-count">${waiting ? "…" : `${list.length.toLocaleString()} card${list.length === 1 ? "" : "s"}`}</span>
-        <button type="button" class="mobile-only" data-action="toggle-filters">Filters${active.length ? ` (${active.length})` : ""}</button>
-        <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.filter(([v]) => v !== "created" || S.created).map(([v, l, d]) => { const cur = sortOf(p);
-          return `<option value="${v}"${d !== undefined ? ` data-dir="${d}"` : ""}${v === cur && (d === undefined || (d === "asc") !== isDesc(cur, p.get("dir"))) ? " selected" : ""}>${l}</option>`; }).join("")}</select></label>
-        <button type="button" class="ghost icon" data-action="flip-dir" title="Reverse order" aria-label="Reverse order">⇅</button>
-        <span class="seg">${[["grid", "Grid"], ["table", "Table"]].map(([v, l]) => `<button type="button" class="${v === view_ ? "on" : ""}" data-action="set-pref" data-key="view" data-value="${v}">${l}</button>`).join("")}</span>
-        ${view_ === "grid" ? `<span class="seg">${[["s", "S"], ["m", "M"], ["l", "L"]].map(([v, l]) => `<button type="button" class="${v === size ? "on" : ""}" data-action="set-pref" data-key="size" data-value="${v}" title="Tile size">${l}</button>`).join("")}</span>` : ""}
-        <button type="button" class="ghost" data-action="random-from-list" title="Random result">Random</button>
-        ${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
+      ${G.toolbarHtml({ count: list.length, waiting, active: active.length, sort: sortOf(p), dir: p.get("dir"), created: S.created, view: view_, size,
+        tail: `${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
           <button type="button" class="ghost" data-action="select-mode" aria-pressed="${S.selecting}">${S.selecting ? "Done" : "Select"}</button>` : ""}
-        ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}
-      </div>
+        ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}` })}
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v]) => `<button type="button" class="chip" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
       ${waiting ? `<p class="loading">Loading the recorded changes…</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
-        : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}"></div>`}
+        : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
     </section></div>`;
   const grid = list.length && view_ !== "table" && $(".browse .grid", view);
-  if (grid) fillGrid(grid, list, { css: { s: 160, m: 200, l: 270 }[size] || 200, win });
+  if (grid) fillGrid(grid, list, { css: (G.TILE_SIZES[size] || G.TILE_SIZES.m)[1], win });
   else if (list.length && view_ === "table") fillTable($(".browse table.data tbody", view));
   if (editing()) inline.mountGrid(view, p);
   if (editing()) previews.mountTiles(view);
