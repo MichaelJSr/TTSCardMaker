@@ -3,7 +3,7 @@
 // inline.js dropOn, the one path for drops. A new kind of box (Kind, Item type, a ban group…) is one KINDS entry plus
 // edit.js stageMany support for its key. The helpers above `install` are pure (AutoCroissant tests/test_site_buckets.py).
 import { esc } from "./text.js";
-import { nameKey, NAME_MAX } from "./edit.js";
+import { nameKey, NAME_MAX, renameButton } from "./edit.js";
 
 export const PIN_KEY = "edit-pins", MAX_PINS = 9;
 export const KINDS = { series: { label: "Series" }, subseries: { label: "Subseries", needsSeries: true }, author: { label: "Author" } };
@@ -32,6 +32,10 @@ export function addPin(pins, pin) {
   return { pins: [...pins, pin] };
 }
 export const removePin = (pins, i) => pins.filter((_, j) => j !== i);
+/** The pins after a Rename everywhere ({key, from, to, series}): the renamed value's, and a renamed series' subseries. */
+export const renamedPins = (pins, { key, from, to, series = "" }) => readPins(JSON.stringify(pins.map(p =>
+  p.k === key && nameKey(p.v) === nameKey(from) && (!KINDS[p.k].needsSeries || nameKey(p.s) === nameKey(series)) ? { ...p, v: to }
+    : key === "series" && p.s && nameKey(p.s) === nameKey(from) ? { ...p, s: to } : p)));
 /** "1".."9" -> a pin index, when that many are pinned; else null. */
 export const pinOfKey = (key, pins) => (/^[1-9]$/.test(key) && +key <= pins.length ? +key - 1 : null);
 /** Cards carrying each pin's value (a subseries: in its series too), in one pass. */
@@ -63,7 +67,7 @@ export function trayHtml(pins, counts, { form = null, series = "", selecting = f
     return `<div class="bucket-wrap"><button type="button" class="bucket" data-action="tray-drop" data-pin="${i}" data-pin-k="${p.k}" data-pin-v="${esc(p.v)}"${p.s ? ` data-pin-s="${esc(p.s)}"` : ""}
       aria-label="${esc(`${kind} ${p.v}, ${n}. Drop cards here, or select cards and press ${i + 1}`)}"><span class="b-kind">${esc(kind)}</span>`
       + `<span class="b-value">${esc(p.v)}</span><span class="b-meta">${n}</span><span class="kbd" aria-hidden="true">${i + 1}</span></button>`
-      + `<button type="button" class="ghost icon b-x" data-action="tray-unpin" data-i="${i}" aria-label="Unpin ${esc(p.v)}">✕</button></div>`;
+      + `<button type="button" class="ghost icon b-x" data-action="tray-unpin" data-i="${i}" aria-label="Unpin ${esc(p.v)}">✕</button>${renameButton(p.k, p.v, p.s || "", "ghost icon b-rn")}</div>`;
   };
   const tail = form ? formHtml(form, series) : pins.length < MAX_PINS ? `<button type="button" class="bucket add" data-action="tray-add">+ Pin</button>` : "";
   return `<div class="tray${selecting ? " selecting" : ""}" role="group" aria-label="Pinned boxes">${pins.map(box).join("")}${tail}</div>`;
@@ -128,6 +132,7 @@ export function install(api) {
   pins = readPins(localStorage.getItem(PIN_KEY));
   document.addEventListener("submit", e => { if (e.target.matches?.("[data-tray-form]")) { e.preventDefault(); submit(); } });
   document.addEventListener("suggest-pick", e => { if (e.target.matches?.(".tray .pin-name")) submit(e.detail); });
+  document.addEventListener("value-renamed", e => { pins = renamedPins(pins, e.detail); save(); });   // edit.js: before it re-renders
   document.addEventListener("input", e => { if (form && e.target.matches?.(".tray .pin-name")) form.v = e.target.value; });
   document.addEventListener("change", e => {        // the kind: the input's list follows
     if (!form || !e.target.matches?.(".tray .pin-kind")) return;

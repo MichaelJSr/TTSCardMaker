@@ -8,6 +8,7 @@ import { esc } from "./text.js";
 import { starsHtml, paintStars, stepValue } from "./stars.js";
 import { typeVocab, mountPalette, rowHtml } from "./palette.js";
 import { rawOf, restorable, offerHtml, later, movedSince } from "./drafts.js";
+import { renameButton } from "./edit.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 const SLIDERS = [...STATS, "stars"];                // a row of cells: click one, or arrows and Enter
@@ -89,6 +90,9 @@ export function mountCard(modal, c, api = A) {
     if (chip[f]) { chip[f].dataset.inline = f; chip[f].dataset.tip = `Click to edit the ${LABEL[f].toLowerCase()}`; }
     else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="${f}" data-empty aria-label="Add a ${LABEL[f].toLowerCase()}">+ ${LABEL[f].toLowerCase()}</button>`);
   }
+  const subChip = chips.find(a => hrefOf(a).startsWith("#/cards?sub="));     // Rename everywhere beside each value
+  for (const [f, el] of [["subtype", subChip], ["series", chip.series], ["subseries", chip.subseries], ["author", chip.author]])
+    if (el && c[f]) el.insertAdjacentHTML("afterend", renameButton(f, c[f], f === "subseries" ? c.series || "" : "", "fact ghost-fact rename-tag"));
   const note = detail.querySelector(":scope > div:nth-child(2) > .note");
   if (note) mark(note, "note", "Click to edit the note");
   else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="note" data-empty aria-label="Add a note">+ note</button>`);
@@ -316,6 +320,14 @@ export function mountGrid(view, p, api = A) {
     const el = sel(key); if (!el) continue;
     el.insertAdjacentHTML("beforeend", bucketOptions(new Set([...el.options].map(optKey)), fresh[key], p.get(key) || "") + newOption(key, series));
   }
+  const picked = { series: p.get("series") || "", subseries: p.get("subseries") || "", author: p.get("author") || "" };   // Rename everywhere under a picked value
+  const subOf = picked.subseries && (series || [...new Set(api.editor.names("subseries").filter(e => e.value === picked.subseries).map(e => e.series))]);
+  for (const key of ["series", "subseries", "author"]) {
+    const s = key === "subseries" ? (typeof subOf === "string" ? subOf : subOf?.length === 1 ? subOf[0] : null) : "";
+    if (picked[key] && s !== null) sel(key)?.insertAdjacentHTML("afterend", renameButton(key, picked[key], s, "ghost rename-value", `⇄ Rename “${picked[key]}”…`));
+  }
+  const subs = (p.get("sub") || "").split(",").filter(Boolean), subChips = filters.querySelector('[data-key="sub"]')?.closest(".chips");
+  if (subs.length === 1 && subChips) subChips.insertAdjacentHTML("afterend", renameButton("subtype", subs[0], "", "ghost rename-value", `⇄ Rename “${subs[0]}”…`));
   if (!grid) return;
   markTiles(grid, api.selected);
   reflect(view, api.selected);
