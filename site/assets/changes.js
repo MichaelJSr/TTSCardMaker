@@ -271,7 +271,7 @@ export function editsHtml(C, params) {
   const applied = !C?.available ? `<p class="muted">${esc(NOT_YET)}</p>`
     : events.length ? daysHtml(pushGroups(events), C.repo, EDIT_KINDS) : `<p class="muted">No database edits in the last ${esc(C.days)} days.</p>`;
   return `<section class="panel"><h3>Database edits</h3>
-    <p class="muted">Edits to the card data that don't come from a PSD: the website's Edit button, Discord's /update_metadata and /alias, and commits to Card Edits.json or Card Authors.txt. Times are Pacific.</p></section>
+    <p class="muted">Edits to the card data that don't come from a PSD: the website's Edit button (Discord's /update_metadata and /alias until 2026-10-25), and commits to Card Edits.json or Card Authors.txt. Times are Pacific.</p></section>
     <h3 class="cl-day">Applied by the card sync${events.length ? ` <span class="muted">${events.length}</span>` : ""}</h3>${applied}
     <h3 class="cl-day">Edit batches${batches.length ? ` <span class="muted">${batches.length}</span>` : ""}</h3>
     ${present.length > 1 ? chips(present, via, counts, "via") : ""}
