@@ -217,7 +217,12 @@ most 60 characters; one that differs from a known name only in case or spacing t
 cards use), on the chips and in All fields too ("mario" is the series Mario), and an author's git or GitHub name from
 `[people]` becomes the name shown, as the bot resolves it. A drop sets the value exactly as
 its chip shows it. A new author's cards go to `[cards]` under a new `# --- credited to Name (n) ---` group, with no
-`[people]` line (that maps a login; an admin can add one later). Every change lands in the batch bar at the bottom as a
+`[people]` line (that maps a login; an admin can add one later). **Rename everywhere** (⇄, under a picked series,
+subseries, author or item type in the filter bar, on a pinned box, beside a card's chips) renames that value on every card
+that has it, hidden ones too: type the new name (the known ones are listed), the dialog says how many cards change, and
+**Add to batch** queues one edit per card. A name that exists merges them into it, in its spelling; an item type must be
+one of the Items/ folders; a duplicate's author follows its original. A pinned box or a filter on the old name follows
+the new one. (It replaces the bot's retired `/mass_replace`.) Every change lands in the batch bar at the bottom as a
 sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each with ↺ to take it back; the bar folds to one
 line when it gets long, and **Review and publish** commits the whole batch at once. **All fields** (e, also in the bar)
 opens the full form for everything else (kind, item type (a fixed list: the `Items/` folders), stars, types, aliases, duplicate of, checks, constructed ban,

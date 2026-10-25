@@ -106,6 +106,15 @@ export function readBuckets(text) {
     subseries: Array.isArray(b?.subseries) ? b.subseries.filter(x => Array.isArray(x) && x.length === 2 && strs(x).length === 2) : [] };
 }
 
+// ---- Rename everywhere (edit mode): a value renamed on every card carrying it, one edit per card
+export const RENAME = { series: "series", subseries: "subseries", author: "author", subtype: "item type" };
+/** The cards carrying `from` as key (case and spacing don't count); a subseries: in `series` too. */
+export const carrying = (cards, key, from, series = "") => cards.filter(c => c[key] && nameKey(c[key]) === nameKey(from)
+  && (key !== "subseries" || nameKey(c.series) === nameKey(series)));
+/** The Rename button of a listed value (filter bar, pinned box, card tag): cls its class, text its label. */
+export const renameButton = (key, v, series = "", cls = "ghost", text = "⇄") => `<button type="button" class="${cls}" data-action="rename-value" data-rename-k="${key}" data-rename-v="${esc(v)}"${
+  series ? ` data-rename-s="${esc(series)}"` : ""} aria-label="${esc(`Rename the ${RENAME[key]} ${v} everywhere`)}" title="Rename everywhere">${esc(text)}</button>`;
+
 /** op with the author set to v ("" -> from git), or without an author entry when v is the published author. */
 export function mergeAuthor(op, v, published) {
   const o = { ...op }; v = String(v ?? "").trim();
@@ -523,14 +532,19 @@ export function createEditor(app) {
       return [...count].map(([k, n]) => { const [s, value] = JSON.parse(k), own = !!series && nameKey(s) === nameKey(series);
         return { value, n, own, kind, series: s, note: own ? cards(n) : `${s || "no series"} · ${cards(n)}` }; });
     }
+    if (kind === "subtype") {                      // the Items/ folders
+      for (const c of S.all) if (c.subtype) count.set(c.subtype, (count.get(c.subtype) || 0) + 1);
+      return ITEM_TYPES.map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
+    }
     if (kind !== "series" && kind !== "author") return [];
     for (const c of S.all) if (c[kind]) count.set(c[kind], (count.get(c[kind]) || 0) + 1);
     return (kind === "author" ? authorList() : seriesList()).map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
   }
-  function knownNames(kind, series = "", skip = "") {     // canonName's [spelling, shown, rank]: cards (skip: the one being edited), buckets, [people]
+  function knownNames(kind, series = "", skip = "") {     // canonName's [spelling, shown, rank]: cards (skip: the one being edited, or a Set of ids), buckets, [people]
     const rank = new Map(), own = s => (kind === "subseries" && series && s === series ? 1e6 : 0);   // the picked series' own subseries first
     const add = (v, by) => { if (v) rank.set(v, (rank.get(v) || 0) + by); };
-    for (const c of S.all) if (c.id !== skip) add(c[kind], 1 + own(c.series));
+    const skipped = skip instanceof Set ? id => skip.has(id) : id => id === skip;
+    for (const c of S.all) if (!skipped(c.id)) add(c[kind], 1 + own(c.series));
     if (kind === "subseries") for (const [s, v] of buckets.subseries) add(v, own(s));
     else for (const v of kind === "series" || kind === "author" ? buckets[kind] : []) add(v, 0);
     const out = [...rank].map(([v, r]) => [v, v, r]);
@@ -778,6 +792,67 @@ export function createEditor(app) {
   function revert(id, item) {
     const c = find(id), op = stage.cards[id]; if (!c || !op) return;
     put(id, withoutItem(op, item, baseOf(c).name)); save();
+  }
+  // ---- Rename everywhere: `from` -> the typed name on every card carrying it (hidden ones too), each card's own edit
+  // (stageField / stageAuthor). Onto a known name: merged, in its spelling; an item type: an Items/ folder; a duplicate's
+  // author follows its original. -> null (nothing typed), {error}, or {name, change (ids), others (cards already there), dups}
+  function renamePlan(key, from, typed, series = "") {
+    const cards = carrying(S.all, key, from, series), ids = new Set(cards.map(c => c.id));
+    let name;
+    if (key === "subtype") {
+      name = String(typed ?? "").trim().toLowerCase();
+      if (!name) return null;
+      if (!ITEM_TYPES.includes(name)) return { error: `Item types are the Items folders: ${ITEM_TYPES.join(", ")}` };
+    } else {
+      const r = canonName(key, typed, knownNames(key, series, ids));
+      if (!r || r.error) return r;
+      name = r.name;
+    }
+    const dups = key === "author" ? cards.filter(c => baseOf(c).dup) : [];
+    return { name, change: cards.filter(c => !dups.includes(c) && c[key] !== name).map(c => c.id), dups: dups.length,
+      others: carrying(S.all, key, name, series).filter(c => !ids.has(c.id)).length };
+  }
+  function renameAll(key, from, typed, series = "") {      // stages the plan, one save
+    const p = renamePlan(key, from, typed, series);
+    if (!p || p.error || !p.change.length) return p;
+    for (const id of p.change) if (key === "author") stageAuthor(id, p.name, true); else stageField(id, key, p.name, true);
+    save();
+    return p;
+  }
+  const cardsN = n => `${n} card${n === 1 ? "" : "s"}`;
+  function openRename(key, from, series = "") {
+    if (!RENAME[key] || !from) return;
+    if (!me) { openHub(`Sign in to rename ${from}.`); return; }
+    const noun = RENAME[key], back = app.currentCard();
+    app.showDialog(`<h3>Rename the ${noun} “${esc(from)}” everywhere</h3>
+      <form id="rename-form" autocomplete="off"><p class="muted">Every card with it${key === "subseries" ? ` in ${esc(series || "no series")}` : ""}, hidden ones too, gets its own edit in your batch, published with the rest in one commit. A name that exists merges them into it.</p>
+        <input id="rn-to" class="wide" data-suggest="${key}"${key === "subseries" ? ` data-series="${esc(series)}"` : ""} value="${esc(from)}" aria-label="New ${noun}">
+        <p class="edit-summary muted" id="rn-summary" aria-live="polite"></p>
+        <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="rename-cancel">Cancel</button></div></form>`);
+    const form = app.modal.querySelector("#rename-form"), input = form.querySelector("#rn-to"), btn = form.querySelector("[type=submit]");
+    const update = () => {
+      const p = renamePlan(key, from, input.value, series);
+      btn.disabled = !p || !!p.error || !p.change.length;
+      form.querySelector("#rn-summary").innerHTML = !p ? "Type the new name." : p.error ? `<span class="err">${esc(p.error)}</span>`
+        : !p.change.length ? `Nothing changes: ${p.dups ? "duplicates follow their originals" : `every card has ${esc(p.name)}`}.`
+        : [`<b>${cardsN(p.change.length)} change${p.change.length === 1 ? "s" : ""}</b>: ${noun} → ${esc(p.name)}`, p.others ? `merges with the ${cardsN(p.others)} already there` : "",
+          p.dups ? `${p.dups === 1 ? "1 duplicate keeps its original's" : `${p.dups} duplicates keep their originals'`} author` : ""].filter(Boolean).join(" · ");
+    };
+    input.addEventListener("input", update);
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const p = renameAll(key, from, input.value, series);
+      if (!p || p.error || !p.change.length) { update(); return; }
+      app.toast(`${cardsN(p.change.length)}: ${noun} → ${p.name} · ${count()} unpublished`);
+      document.dispatchEvent(new CustomEvent("value-renamed", { detail: { key, from, to: p.name, series } }));   // the pinned boxes follow (tray.js)
+      if (back) { app.goCard(back); return; }
+      app.closeModal();
+      const r = app.route(), pk = key === "subtype" ? "sub" : key, cur = r.name === "cards" ? r.params.get(pk) : null;   // a filter on the old name follows it
+      if (cur?.split(",").some(v => nameKey(v) === nameKey(from))) app.setParams({ [pk]: [...new Set(cur.split(",").map(v => (nameKey(v) === nameKey(from) ? p.name : v)))] });
+      else app.rerender();
+    });
+    update();
+    input.focus(); input.select();
   }
   // the live preview: the card as it will look once published, from the form's op (live.js)
   const previewCtx = { render: (t, n) => app.render(t, n), statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
@@ -1432,6 +1507,8 @@ export function createEditor(app) {
     "rate-add": el => { const id = el.dataset.id, v = k => document.getElementById(`rate-${k}`)?.value ?? "";   // a duplicate's page: its original's id
       if (!stageRating(id, { favorability: v("favorability"), power: v("power") })) return;
       const top = app.modal.scrollTop; app.goCard(app.currentCard() || id); app.modal.scrollTop = top; },
+    "rename-value": el => openRename(el.dataset.renameK, el.dataset.renameV, el.dataset.renameS || ""),
+    "rename-cancel": () => { const id = app.currentCard(); if (id) app.goCard(id); else app.closeModal(); },
     "edit-show-hidden": el => { S.showHidden = el.checked; localStorage.setItem(K.hidden, el.checked ? "1" : ""); app.derive(); app.rerender(); },
   };
 
@@ -1468,5 +1545,6 @@ export function createEditor(app) {
     myRating: id => stage.cards[id]?.rate || null,
     names: nameEntries,
     canonical: (kind, v, series) => canonical(kind, v, series),
+    renamePlan, renameAll,
   };
 }

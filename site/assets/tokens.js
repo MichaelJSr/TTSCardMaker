@@ -177,7 +177,7 @@ export function suggestNames(q, entries) {
 
 // ---- the dropdown, in the browser
 const FIELD = "[data-tokens], [data-suggest]";
-const LIST_LABEL = { series: "Series", subseries: "Subseries", author: "Authors" };
+const LIST_LABEL = { series: "Series", subseries: "Subseries", author: "Authors", subtype: "Item types" };
 const COPY = ["boxSizing", "width", "height", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth", "borderStyle",
   "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "fontStyle", "fontVariant", "fontWeight", "fontStretch", "fontSize",
   "lineHeight", "fontFamily", "textAlign", "textTransform", "textIndent", "letterSpacing", "wordSpacing", "tabSize", "wordBreak"];
