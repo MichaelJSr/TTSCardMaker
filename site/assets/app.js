@@ -894,9 +894,9 @@ function distPage(panel, step) {          // a stat distribution's pager: the ne
 }
 // the Changes page's category tabs, a row across its top: [hash key, label]; #/changes is the first, #/changes/<key> the others
 // (a link to one survives a refresh), and each shows its own sections only
-const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["archive", "Archive"], ["edits", "Database edits"], ["website", "Website edits"],
-  ["revised", "Most revised"], ["parser", "Parser notes"]];
-const NEEDS = { "": "history", revised: "history", changelog: "changelog", archive: "changelog", edits: "changelog" };   // the data a tab loads first
+const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["archive", "Archive"], ["edits", "Database edits"],
+  ["parser", "Parser notes"]];
+const NEEDS = { "": "history", changelog: "changelog", archive: "changelog", edits: "changelog" };   // the data a tab loads first
 function renderChanges(r = parseHash(), held = null) {   // held: the tab a loading page focused, for the loaded redraw
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
   const nav = `<nav class="change-tabs" aria-label="Kinds of changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}"${k === tab ? ' class="on" aria-current="page"' : ""}>${esc(l)}</a>`).join("")}</nav>`;
@@ -923,7 +923,6 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   if (tab === "changelog") { page(changes.changelogHtml(S.changelog, r.params)); return; }
   if (tab === "archive") { page(changes.archiveHtml(S.changelog?.archived || [], S.changelog?.repo, r.params)); return; }
   if (tab === "edits") { page(changes.editsHtml(S.changelog, r.params)); return; }
-  if (tab === "website") { page(webEditsHtml() + updated); return; }
   if (tab === "parser") { page(parserNotesHtml() + updated); return; }
   const item = (c, diff = true) => {          // diff: the text change since the last earlier text
     const last = diff && c.history && c.history.length ? c.history[c.history.length - 1] : null;
@@ -931,20 +930,8 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
       <a href="#/card/${c.id}"><b>${esc(c.name)}</b></a> <span class="muted">${esc(KIND_LABEL[c.type] || c.type)}${c.stars ? ` · ${c.stars}★` : ""}${c.ts ? ` · ${date(c.ts)}` : ""}${c.author ? ` · ${esc(c.author)}` : ""}</span>
       ${last && c.ability ? `<div class="ability" style="margin-top:4px;font-size:14px">${diffWords(last.ability, c.ability)}</div>` : ""}</div></div>`;
   };
-  if (tab === "revised") {
-    const revised = S.cards.filter(c => c.hv && !c.dup).sort((a, b) => b.hv - a.hv);     // a duplicate has its original's
-    page(`<section class="panel"><h3>Most revised</h3><p class="muted">The cards with the most earlier versions; text changes since the last one highlighted.</p><div class="feed">${revised.slice(0, 20).map(c => item(c)).join("") || `<p class="muted">No history yet.</p>`}</div></section>${updated}`);
-    return;
-  }
   const recent = S.cards.filter(c => c.ts).sort((a, b) => b.ts - a.ts).slice(0, 60);
   page(`<section class="panel"><h3>Recently updated</h3><p class="muted">Text changes highlighted (none when the update kept the text).</p><div class="feed">${recent.map(c => item(c, textChanged(c))).join("")}</div></section>${updated}`);
-}
-/** The Website edits tab: one row per card and editor whose Card Edits.json edit counts now (changes.webEdits: never the bot's, at most WEB_EDITS_SHOWN) */
-function webEditsHtml() {
-  const { shown, total } = changes.webEdits(S.all);
-  return `<section class="panel"><h3>Edited on the website or in Discord${total ? ` <span class="muted">${total}</span>` : ""}</h3>
-    <p class="muted">The cards an edit on the website or in Discord changes now, newest first${total > shown.length ? ` (the ${shown.length} newest)` : ""}: the fields, who and when. Aliases and series the bot moved in from Discord aren't listed.</p>
-    ${total ? `<ul>${shown.map(({ c, by, at, fields }) => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(fields.join(", "))}${by ? ` · ${changes.nameHtml(by)}` : ""}${at ? ` · ${esc(at.slice(0, 10))}` : ""}</span>${psdChips(c)}</li>`).join("")}</ul>` : `<p class="empty">No card is edited on the website or in Discord.</p>`}</section>`;
 }
 /** The Parser notes tab: the cards the bot hasn't parsed yet, and the parser's notes */
 function parserNotesHtml() {

@@ -3,15 +3,13 @@
 Run by .github/workflows/site.yml on every push to main, after each Card sync commit, daily, and on demand. Also runs locally: `python site/build/build_site.py`, then serve site/dist.
 
 Where the data comes from:
-  * Card text, stats, authors, aliases and history: AutoCroissant's stats.pkl / aliases.pkl / old_stats.pkl
-    (the same data the Discord bot answers from), downloaded from its public GitHub repo. PSDs are never parsed here.
-    The pickles are read into stub classes, and only the globals they hold (PICKLE_GLOBALS, with a few plain data types)
-    are allowed; another bot class (commands.*) is read as plain data with a warning, anything else is refused, nothing
-    in it run. A field the site reads that the bot's cards lack, or one it doesn't know, is a warning.
-    The PSDs' structure (fonts, text layers, effects, stat rows, layer tree) comes from the bot's psd_details.json the
-    same way, keyed by PSD blob sha; a card or rulebook page with a record gets data/details/<id>.json for its Details dropdown.
-    With CARD_DATA_DIR (the card sync's db/ on the branch data; site.yml sets it from the cutover), the same three come
-    from its stats.json, old_stats.json and psd_details.json instead (load_card_data), read into the same stand-ins.
+  * Card text, stats, authors and history: the card sync's db/ on this repo's branch data (stats.json, old_stats.json;
+    the same data the Discord bot answers from), in CARD_DATA_DIR (site.yml checks the branch out; locally:
+    `git worktree add /tmp/carddata origin/data`, then CARD_DATA_DIR=/tmp/carddata/db). PSDs are never parsed here.
+    The records are read into stand-ins of the bot's classes (load_card_data); a field the site reads that the cards
+    lack, or one it doesn't know, is a warning. The PSDs' structure (fonts, text layers, effects, stat rows, layer
+    tree) comes from its psd_details.json, keyed by PSD blob sha; a card or rulebook page with a record gets
+    data/details/<id>.json for its Details dropdown. Aliases come from site/Card Edits.json.
   * Images: card PNGs in this repo, turned into three AVIF sizes (240 px and 360 px for the grid at 1x/2x, 720 px
     for the card view; AVIF only, no WebP copies). They are cached by git blob hash and encode settings (thumb_tag, in
     the file names) in site/.cache/img, so after the first run only new or changed cards (or a width whose settings
@@ -27,7 +25,7 @@ Where the data comes from:
     reaches past the icon (text.js sizes them).
   * Deck rules: the rulebook pages; banned cards from site/Constructed Ban List.txt.
   * Authors: site/Card Authors.txt ([people] git name = shown name, [cards] Card Name = person) wins over the bot's
-    author, the same rule AutoCroissant applies on /update_stats.
+    author, the same rule the card data build applies.
   * Corrections: site/Card Edits.json (the website's Edit button); the bot applies it too.
   * Profiles: site/profiles/<login>.json, made on the website by signed-in editors (own profile; admins any) and
     published with the edit batch. Validated here (bad files skipped, bad fields dropped, never a failed build).
@@ -49,9 +47,9 @@ Where the data comes from:
   * Creation dates: site/Card Creation Dates.json (AutoCroissant's `python -m commands.discord_edits created`), each card's
     first Discord post; a card's created is the earlier of that and fs (a hand-set date wins): the Cards tab's created
     sort, the card page's "created" fact, the person pages' newest cards and activity chart. Bad entries skipped.
-  * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json; unset until the
-    cutover, then no events), the edit batches (one more `git log` over Card Edits.json and Card
-    Authors.txt, their versions read in one batch) and the archived cards (old_stats tags).
+  * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json), the edit batches
+    (one more `git log` over Card Edits.json and Card Authors.txt, their versions read in one batch) and the archived
+    cards (old_stats tags).
 PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
@@ -73,15 +71,14 @@ import importlib.util
 import io
 import json
 import os
-import pickle
 import re
 import shutil
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 import time
-from collections import Counter, OrderedDict, defaultdict
-from datetime import date, datetime, timedelta, timezone
+from collections import Counter, defaultdict
+from datetime import date, datetime, timezone
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
@@ -99,8 +96,7 @@ CARD_REPO = os.environ.get("CARD_REPO", "MichaelJSr/TTSCardMaker")
 BOT_REPO = os.environ.get("BOT_REPO", "bobberlington/AutoCroissant")
 SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 RAW = f"https://raw.githubusercontent.com/{CARD_REPO}/main/"
-BOT_RAW = f"https://raw.githubusercontent.com/{BOT_REPO}/main/"
-DETAILS_JSON = "psd_details.json"            # the bot's PSD structure records {version, cards: {blob sha: record}} (its global_config.DETAILS_JSON)
+DETAILS_JSON = "psd_details.json"            # the PSD structure records {version, cards: {blob sha: record}} (AutoCroissant card_db.DETAILS_JSON)
 IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
 THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality and AVIF rename by themselves
@@ -128,7 +124,7 @@ OG_DECK_CARDS = 6                            # cards in a deck page's link-previ
 CREATOR_CARDS = ("Croissant", "Michael", "Bobberlington", "The Forbidden One", "Kyle", "Tyler", "Z!!!!!")   # the site's preview fan (owner 2026-10-25; alternating warm and dark, Z!!!!! shown whole), by file key; Kyle is hdckighfkvhvgmk's
 OG_DECK_VERSION = "1"                        # bump when the montage's layout changes (its cache key)
 SITE_NAME = "Impossibility Simulator"
-MIN_CARDS = 100                              # fewer cards than this in stats.pkl means a broken download
+MIN_CARDS = 100                              # fewer cards than this in stats.json means broken data
 # the game's names for each card_type (rulebook: creature/item decks, field cards, N.M.E. items, auxiliary decks)
 KIND_LABEL = {"creature": "Creature", "item": "Item", "field": "Field card", "minion": "Minion", "nme": "N.M.E. item",
               "aux item": "Auxiliary item", "creatures": "Auxiliary creature", "debuff": "Debuff", "buff": "Buff"}
@@ -144,7 +140,6 @@ CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first 
 RATINGS_PATH = "site/Card Ratings.json"         # dated 1-10 ratings (AutoCroissant tts_ratings, the website's Rate it; card_edits.CardRatings)
 RATING_SCALES = ("favorability", "power")
 RATING_SOURCES = ("TTS session", "website")
-ALIASES_MOVED = "aliases_moved"               # Card Edits.json key: aliases.pkl moved into it (AutoCroissant card_edits.ALIASES_MOVED)
 BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (old Discord edits, until 2026-10-25)
 CREDIT = "_credit"                            # {field: {"_by", "_at"}}: a _bot field's Discord editor (old entries)
 ADMINS_PATH = "site/Website Admins.txt"
@@ -200,16 +195,9 @@ def slugify(name):
     return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", name.lower())).strip("-") or "card"
 
 
-# ---- the bot's pickles (read without AutoCroissant's code) ------------------------------------------
+# ---- stand-ins of the bot's card classes (its data, none of its code) ------------------------------------------
 class _Obj:
-    def __init__(self, *args):                # called with arguments (an Enum member, a reduce): keep them as data
-        if args:
-            self.args = args
-
-    def __setstate__(self, state):
-        if isinstance(state, tuple):
-            state = state[1] if len(state) > 1 and isinstance(state[1], dict) else state[0]
-        self.__dict__.update(state if isinstance(state, dict) else {})
+    """A record's keys as fields (stand_in)."""
 
 
 class CardInfo(_Obj):
@@ -220,14 +208,6 @@ class CardStats(_Obj):
     """Stub of the bot's CardStats."""
 
 
-# all the bot's pickles hold, plus plain data types a new bot field could bring (built without running anything)
-PICKLE_GLOBALS = {("commands.psd_analyzer", "CardInfo"): CardInfo, ("commands.psd_analyzer", "CardStats"): CardStats,
-                  ("commands.card_models", "CardInfo"): CardInfo, ("commands.card_models", "CardStats"): CardStats,
-                  ("collections", "defaultdict"): defaultdict, ("builtins", "list"): list,
-                  ("builtins", "set"): set, ("builtins", "frozenset"): frozenset, ("collections", "OrderedDict"): OrderedDict,
-                  ("datetime", "datetime"): datetime, ("datetime", "date"): date, ("datetime", "timedelta"): timedelta,
-                  ("datetime", "timezone"): timezone}
-_STUBS = {}                                   # (module, name) -> stub class, for a commands.* class not in PICKLE_GLOBALS
 # fields the site reads; other known fields
 CARD_FIELDS = {"card_type", "path", "timestamp", "ability", "stars", "subtype", "series", "types", "stats", "problems", "author",
                "blob_sha", "parsed_values"}
@@ -236,59 +216,6 @@ CARD_FIELDS_OPTIONAL = {"name", "display_name", "duplicate_of", "creatures", "no
                         "alt_names", "subseries", "parser_version", "archived", "version", "created"}
 STATS_FIELDS = {"hp", "defense", "attack", "speed"}
 HISTORY_FIELDS = {"ability", "timestamp"}
-
-
-class _Unpickler(pickle.Unpickler):
-    """Builds only PICKLE_GLOBALS and stand-ins for the bot's own classes (commands.*, read as plain data, the names in
-    `stubbed`): a pickle naming anything else (code to run) is refused."""
-    def __init__(self, data, source):
-        super().__init__(io.BytesIO(data))
-        self.source = source
-        self.stubbed = set()
-
-    def find_class(self, module, name):
-        found = PICKLE_GLOBALS.get((module, name))
-        if found is None and (module == "commands" or module.startswith("commands.")):   # moved or new in the bot
-            if (module, name) not in _STUBS:
-                _STUBS[module, name] = {"CardInfo": CardInfo, "CardStats": CardStats}.get(name) or type(
-                    name if name.isidentifier() else "_Stub", (_Obj,), {"__module__": __name__})
-            found = _STUBS[module, name]
-            self.stubbed.add(f"{module}.{name}")
-        if found is None:
-            raise pickle.UnpicklingError(f"{self.source} names {module}.{name}, which isn't data the bot's pickles hold (allowed: "
-                                         f"{', '.join(sorted({f'{m}.{n}' for m, n in PICKLE_GLOBALS}))} and commands.* classes); "
-                                         f"refused, nothing in it was run")
-        return found
-
-    def persistent_load(self, pid):
-        raise pickle.UnpicklingError(f"{self.source} has a persistent id; refused")
-
-
-_bot_raw = None
-
-
-def bot_raw():
-    """The bot's files at main's current commit: raw main can lag a push by minutes."""
-    global _bot_raw
-    if _bot_raw is None:
-        _bot_raw = BOT_RAW
-        try:
-            sha = fetch(f"https://api.github.com/repos/{BOT_REPO}/commits/main", accept="application/vnd.github.sha").decode().strip()
-            if re.fullmatch(r"[0-9a-f]{40}", sha):
-                _bot_raw = f"https://raw.githubusercontent.com/{BOT_REPO}/{sha}/"
-                log(f"bot data: {BOT_REPO}@{sha[:8]}")
-        except Exception as e:
-            warn(f"bot's main commit unknown ({e}); reading main")
-    return _bot_raw
-
-
-def load_bot_pickle(name):
-    unpickler = _Unpickler(fetch(bot_raw() + name), name)
-    data = unpickler.load()
-    if unpickler.stubbed:
-        warn(f"{name} holds {', '.join(sorted(unpickler.stubbed))}, not in PICKLE_GLOBALS (moved or new in the bot?); "
-             f"read as plain data, add it to PICKLE_GLOBALS")
-    return data
 
 
 def warn(message):
@@ -316,53 +243,28 @@ def bot_field_warnings(stats, old_stats):
         for field, n in sorted(extra.items()):
             out.append(f"{source}: {n} have the field {field!r} the site doesn't know (new or renamed in the bot?); it isn't shown")
     cards = list(stats.values())
-    check("stats.pkl cards", cards, CARD_FIELDS, CARD_FIELDS | CARD_FIELDS_OPTIONAL)
-    check("stats.pkl stat lines", [getattr(c, "stats", None) for c in cards] + [x for c in cards for x in getattr(c, "creatures", None) or []],
+    check("stats.json cards", cards, CARD_FIELDS, CARD_FIELDS | CARD_FIELDS_OPTIONAL)
+    check("stats.json stat lines", [getattr(c, "stats", None) for c in cards] + [x for c in cards for x in getattr(c, "creatures", None) or []],
           STATS_FIELDS, STATS_FIELDS)
     old = [o for versions in old_stats.values() for o in versions or []]
-    check("old_stats.pkl cards", old, HISTORY_FIELDS, CARD_FIELDS | CARD_FIELDS_OPTIONAL)
+    check("old_stats.json cards", old, HISTORY_FIELDS, CARD_FIELDS | CARD_FIELDS_OPTIONAL)
     return out
 
 
-def load_bot_json(name):
-    return json.loads(fetch(bot_raw() + name).decode("utf-8"))
-
-
 def psd_records(data):
-    """The records of the bot's psd_details.json by blob sha; {} for anything but its shape."""
+    """The records of psd_details.json by blob sha; {} for anything but its shape."""
     cards = data.get("cards") if isinstance(data, dict) else None
     return {sha: rec for sha, rec in cards.items() if isinstance(rec, dict)} if isinstance(cards, dict) else {}
 
 
-def load_bot_data():
-    """(stats, old_stats, PSD records) from AutoCroissant's pickles and psd_details.json. No stats.pkl: SystemExit; the
-    history and the details are skipped with a warning."""
-    try:
-        stats = load_bot_pickle("stats.pkl")
-    except Exception as e:
-        raise SystemExit(f"error: can't load the bot's card data ({bot_raw()}stats.pkl): {e}. Not building a site without it.")
-    try:
-        old_stats = load_bot_pickle("old_stats.pkl")
-    except Exception as e:
-        warn(f"no card history: {e}")
-        old_stats = {}
-    try:
-        records = psd_records(load_bot_json(DETAILS_JSON))
-    except Exception as e:
-        log("no PSD details:", e)
-        records = {}
-    return stats, old_stats, records
-
-
 # ---- the card sync's data (db/ on the branch data, AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md §8, §10) ----------
-# site.yml checks it out and sets CARD_DATA_DIR from the cutover (step 8); unset, the build reads the pickles as before
-# (the rollback). The shadow (step 7) builds with and without it and compares cards.json.
+# site.yml checks it out and sets CARD_DATA_DIR; the build needs it.
 CARD_DATA_DIR = os.environ.get("CARD_DATA_DIR", "")
 DB_SCHEMA = 1                                 # AutoCroissant card_db.SCHEMA
 
 
 def stand_in(cls, rec):
-    """A cls stand-in with rec's keys as its fields, as unpickling gives it."""
+    """A cls stand-in with rec's keys as its fields."""
     if not isinstance(rec, dict):
         raise ValueError(f"a {cls.__name__} record is {type(rec).__name__}, not an object")
     obj = cls()
@@ -371,8 +273,7 @@ def stand_in(cls, rec):
 
 
 def card_of(rec):
-    """A db/ record (card_db.record: CardInfo's attribute names; stats and creatures as CardStats') as the stand-in a
-    pickle gives."""
+    """A db/ record (card_db.record: CardInfo's attribute names; stats and creatures as CardStats') as a stand-in."""
     card = stand_in(CardInfo, rec)
     if card.__dict__.get("stats") is not None:
         card.stats = stand_in(CardStats, card.stats)
@@ -391,8 +292,8 @@ def db_cards(folder, name):
 
 
 def load_card_data(folder):
-    """load_bot_data's (stats, old_stats, PSD records) from the card sync's db/: stats.json, old_stats.json and
-    psd_details.json. No readable stats.json: SystemExit, as without stats.pkl."""
+    """(stats, old_stats, PSD records) from the card sync's db/: stats.json, old_stats.json and psd_details.json. No
+    readable stats.json: SystemExit."""
     try:
         stats = {name: card_of(rec) for name, rec in db_cards(folder, "stats.json").items()}
     except Exception as e:
@@ -1141,15 +1042,6 @@ def valid_verdict(value):
     """A pipeline `_psd` entry: {"state": "baked" | "refused", "for": {field: value}, "psd": "<blob8>", "reason": str, ...}."""
     return (isinstance(value, dict) and value.get("state") in ("baked", "refused") and isinstance(value.get("for", {}), dict)
             and isinstance(value.get("psd", ""), str) and isinstance(value.get("reason", ""), str))
-
-
-def aliases_moved():
-    """Card Edits.json has ALIASES_MOVED: the cards' aliases live there, aliases.pkl no longer counts."""
-    try:
-        data = json.load(open(os.path.join(REPO, EDITS_PATH), encoding="utf-8"))
-    except (OSError, ValueError):
-        return False
-    return isinstance(data, dict) and bool(data.get(ALIASES_MOVED))
 
 
 def edit_aliases(edits, key):
@@ -2027,8 +1919,7 @@ def card_revisions(found, by_png, commits, people, by_login, skip=(), row_of=Non
 
 # ---- changelog (data/changelog.json: the Changes page's Changelog and Database edits tabs) ---------------------------
 # The card sync's events come from CARD_DATA_DIR's changelog/ (AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md §12.1);
-# without it the tabs show no events. The publish batches and the archived cards need no data branch: git history and
-# old_stats (the pickles', or db/'s with CARD_DATA_DIR).
+# without it the tabs show no events. The publish batches and the archived cards: git history and db/'s old_stats.
 CHANGELOG_DAYS = 180
 EVENT_KINDS = {"new", "changed", "art", "reparse", "moved", "renamed", "archived", "restored", "edited", "authors", "restore"}   # AutoCroissant changelog.KINDS
 EVENT_KEYS = ("seq", "at", "build", "card_commit", "commit", "by", "edit_by", "kind", "card", "title", "card_type", "stars", "path",
@@ -2858,23 +2749,16 @@ def main():
 
     tree = repo_tree()
     log(f"repo files: {len(tree)}")
-    data_dir = os.path.abspath(CARD_DATA_DIR) if CARD_DATA_DIR else None
-    stats, old_stats, records = load_card_data(data_dir) if data_dir else load_bot_data()
+    if not CARD_DATA_DIR:
+        raise SystemExit("error: no CARD_DATA_DIR: set it to a checkout of the data branch's db/ "
+                         "(git worktree add /tmp/carddata origin/data; CARD_DATA_DIR=/tmp/carddata/db).")
+    data_dir = os.path.abspath(CARD_DATA_DIR)
+    stats, old_stats, records = load_card_data(data_dir)
     if not isinstance(stats, dict) or len(stats) < MIN_CARDS:
-        raise SystemExit(f"error: the card data ({'stats.json in ' + data_dir if data_dir else 'stats.pkl'}) has "
+        raise SystemExit(f"error: the card data (stats.json in {data_dir}) has "
                          f"{len(stats) if isinstance(stats, dict) else 'no'} entries (expected at least {MIN_CARDS}); "
                          f"refusing to deploy a truncated site.")
-    if aliases_moved():
-        log(f"aliases: {EDITS_PATH} has {ALIASES_MOVED}, aliases.pkl not read")
-        aliases = {}
-    else:
-        try:
-            aliases = load_bot_pickle("aliases.pkl")
-        except Exception as e:
-            warn(f"no aliases: {e}")
-            aliases = {}
-    log(f"{'card data (' + data_dir + ')' if data_dir else 'bot data'}: {len(stats)} entries, {len(old_stats)} with history, "
-        f"{len(aliases)} aliases, {len(records)} PSD records")
+    log(f"card data ({data_dir}): {len(stats)} entries, {len(old_stats)} with history, {len(records)} PSD records")
     for message in bot_field_warnings(stats, old_stats if isinstance(old_stats, dict) else {}):
         warn(message)
     edits = parse_edits()
@@ -2939,11 +2823,7 @@ def main():
         (rules if is_rule else cards).append(entry)
 
     # duplicates: more PNGs exported from one card's PSD (A_Snack.psd -> A_Snack2.png "Breakfast", A_Snack3.png
-    # "Supper"). Same card, different name and art. Named by the bot's alias for that PNG (aliases.pkl's, its Card Edits
-    # entry's), else the original's name.
-    alias_names = {}
-    for alias, target in aliases.items():
-        alias_names.setdefault(str(target).lower(), []).append(str(alias).replace("_", " ").strip())
+    # "Supper"). Same card, different name and art. Named by its Card Edits entry's aliases, else the original's name.
     lower_tree = {path.lower() for path in tree}
     by_psd = {c["psd"].lower(): c for c in cards if c.get("psd")}
     for path in sorted(tree):
@@ -2953,7 +2833,7 @@ def main():
         original = by_psd.get((m.group(1) + ".psd").lower())
         if original is None:
             continue
-        names = alias_names.get(os.path.basename(path).lower(), []) + edit_aliases(edits, os.path.splitext(os.path.basename(path))[0])
+        names = edit_aliases(edits, os.path.splitext(os.path.basename(path))[0])
         name = (bot_dup_names.get(os.path.basename(path).lower())                     # alias or the PSD's hidden title
                 or (" ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else original["name"]))
         dup = {k: original.get(k) for k in DATA_FIELDS + ("author", "ts", "psd")}
@@ -3022,12 +2902,6 @@ def main():
     if edits:
         log(f"corrections: {len(edited)} cards from {EDITS_PATH}" + (f" ({len(edits) - len(edited)} names match no card)" if len(edits) > len(edited) else ""))
 
-    # aliases.pkl: alias -> target png file name
-    by_png = {os.path.basename(c["png"]).lower(): c for c in cards if c["png"]}
-    for alias, target in aliases.items():
-        card = by_png.get(str(target).lower())
-        if card is not None and norm(str(alias).replace("_", " ")) != norm(card["name"]):     # Breakfast's "breakfast"
-            card.setdefault("aliases", []).append(str(alias).replace("_", " "))
     for e in cards:                               # website aliases
         for alias in e.get("webAliases", []):
             if norm(alias) != norm(e["name"]) and norm(alias) not in {norm(a) for a in e.get("aliases", [])}:
@@ -3200,10 +3074,10 @@ def main():
         log(f"revisions: {sum(n for v in revs.values() for n in v.values())} card image changes on {len(revs)} cards "
             f"({len(mass_passes(found, by_png, rule_ids))} mass-pass commits left out)")
 
-    # the Changes page's Changelog and Database edits tabs: the card sync's events (with CARD_DATA_DIR), the edit batches, archived cards
+    # the Changes page's Changelog and Database edits tabs: the card sync's events, the edit batches, archived cards
     since = int(time.time()) - CHANGELOG_DAYS * 86400
-    events, manifest = read_changelog(data_dir) if data_dir else (None, None)
-    if data_dir and events is None:
+    events, manifest = read_changelog(data_dir)
+    if events is None:
         warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
     fields_by = {}                                # the person pages' edits by field: all time
     try:
@@ -3233,7 +3107,7 @@ def main():
 
     changelog = {"available": events is not None, "since": since, "days": CHANGELOG_DAYS, "repo": CARD_REPO, "source": manifest,
                  "events": site_events(events or [], id_of, since), "archived": archived, "edits": batches}
-    log(f"changelog: {len(changelog['events'])} events" + ("" if events is not None else " (no CARD_DATA_DIR)") +
+    log(f"changelog: {len(changelog['events'])} events" + ("" if events is not None else " (no changelog folder)") +
         f", {len(batches['batches'])} edit batches, {len(changelog['archived'])} archived cards")
     try:                                      # password files (read before cards.json: data.passwords opens the sign-in on Password)
         logins = read_logins()

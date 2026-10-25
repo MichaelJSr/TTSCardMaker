@@ -105,13 +105,6 @@ export function editedTip(c) {
   const line = r => `${r.fields.join(", ")}${r.by ? ` · ${nameText(r.by)}` : ""}${r.at ? ` · ${r.at.slice(0, 10)}` : ""}`;
   return `${rows.some(r => isDiscord(r.by)) ? "Changed" : "Changed on the website"}: ${rows.map(line).join("; ")}`;
 }
-/** The Website edits tab's rows, one per card and editor (fieldEditors: {c, by, at, fields}), newest first, at most
-    WEB_EDITS_SHOWN; total: how many there are */
-export const WEB_EDITS_SHOWN = 100;
-export function webEdits(all) {
-  const list = all.flatMap(c => fieldEditors(c).map(r => ({ c, ...r }))).sort((a, b) => b.at.localeCompare(a.at));
-  return { shown: list.slice(0, WEB_EDITS_SHOWN), total: list.length };
-}
 /** Does the chosen tab take the focus after a redraw? Only when a tab had it from the keyboard (:focus-visible): a
     mouse click hands it none, so no focus ring */
 export function keepsTabFocus(el) {
@@ -259,8 +252,7 @@ export function batchHtml(b, repo) {
     ${b.stamped ? `<p class="muted">From the edit stamps (this build has no git history): each card's last edit only, its new values.</p>` : ""}
     <ul class="cl-lines">${[...cards, ...authors, ...people].join("")}${b.more ? `<li class="muted">and ${esc(b.more)} more${b.sha && repo ? ` in the <a href="https://github.com/${esc(repo)}/commit/${esc(b.sha)}" target="_blank" rel="noopener">commit</a>` : ""}</li>` : ""}</ul></section>`;
 }
-/** The Database edits tab: the card sync's edited and authors events by push, and the edit batches (?via=); the cards
-    edited now are app.js's Website edits tab */
+/** The Database edits tab: the card sync's edited and authors events by push, and the edit batches (?via=) */
 export function editsHtml(C, params) {
   const events = (C?.events || []).filter(e => EDIT_KINDS.includes(e.kind));
   const batches = C?.edits?.batches || [], via = csv(params, "via").filter(v => VIA[v]);

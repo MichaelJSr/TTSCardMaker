@@ -118,13 +118,12 @@ stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a di
 
 ## Where the data comes from
 
-The build does not parse PSDs. Since the cutover (2026-10-24) card text, stats, history and PSD details come from the
-card sync's `db/` (branch `data`; `CARD_DATA_DIR`, set by site.yml's `CARD_DATA` switch when the branch exists): its
-`stats.json`, `old_stats.json` and `psd_details.json`, read into the pickles' stand-ins (`load_card_data`), the same data
-the Discord bot answers from. Without it the build reads AutoCroissant's `stats.pkl` / `aliases.pkl` / `old_stats.pkl`,
-frozen at the cutover: switching `CARD_DATA` off is the rollback. Once `site/Card Edits.json` has `aliases_moved` (aliases.pkl moved into it
-on 2026-10-22), `aliases.pkl` isn't read: the cards' aliases are their Card Edits entries', and no `_by:
-AutoCroissant` entry (the migration's aliases and series, the moved stat exclusions) counts as a website edit. Where the
+The build does not parse PSDs. Card text, stats, history and PSD details come from the card sync's `db/` (branch
+`data`, the only source since 2026-10-25; `CARD_DATA_DIR`, which site.yml sets to its checkout and a local build needs:
+`git worktree add /tmp/carddata origin/data`, then `CARD_DATA_DIR=/tmp/carddata/db`): its `stats.json`, `old_stats.json`
+and `psd_details.json`, read into stand-ins of the bot's classes (`load_card_data`), the same data the Discord bot
+answers from. AutoCroissant's pickles (`stats.pkl`, `aliases.pkl`, `old_stats.pkl`) are gone. The cards' aliases are
+their Card Edits entries' (`aliases.pkl` moved into it on 2026-10-22), and no `_by: AutoCroissant` entry (the migration's aliases and series, the moved stat exclusions) counts as a website edit. Where the
 migration added a field to an editor's entry, the entry keeps the editor's `_by` and lists that field in `_bot`
 (`"_bot":["series"]`): `_bot` holds the fields that are not the stamp editor's. Such a field is nobody's edit, so the
 Edited badge, the Website edits tab, the person page and the stamp-counted edit batches leave it out (the build's
@@ -136,17 +135,13 @@ row per card and editor) name that editor "(via Discord)", the stamp-counted bat
 batch, and the People counts never give the field to the stamp editor (a Discord user has no row). An edit on the website
 takes a field it sets or unsets out of `_bot` and `_credit` (an empty `_credit`, or one that isn't an object, goes), and an edit to a `_by:
 AutoCroissant` entry first lists the entry's fields in `_bot`, so the editor gets only the fields they change (edit.js
-`editsFile`, as the bot's Discord edits do). The build reads
-the pickles with an allowlist of what they hold (the bot's `CardInfo` and `CardStats`, as stand-ins without its code, plus `defaultdict`, `list` and a few plain data types such as
-`set` and `datetime`). Another bot class (`commands.*`, moved or new) is read as plain data with a warning. A pickle
-naming anything else is refused and nothing in it runs: a refused `stats.pkl` stops the build, and the site stays as it
-was until `PICKLE_GLOBALS` in `build_site.py` allows it; the history and aliases are skipped with a warning. A field the site reads that the bot's cards lack (a rename in `commands/card_models.py`), or a
-field it doesn't know, is a warning in the log and on the Actions run. Images, icons, the ban list, icon names, profiles, published decks and password files come from this
+`editsFile`, as the bot's Discord edits do). No readable `stats.json` stops the build and the site stays as it was; the
+history is skipped with a warning. A field the site reads that the cards lack (a rename in AutoCroissant's
+`commands/card_models.py`), or a field it doesn't know, is a warning in the log and on the Actions run. Images, icons, the ban list, icon names, profiles, published decks and password files come from this
 repo. Cards that are in the repo but not yet in the bot's data still appear (image only).
 
-The Details dropdown reads the bot's `psd_details.json` (AutoCroissant, beside the pickles: one record per card PSD
-keyed by its git blob sha, gathered on `/update_stats` and pushed with the pickles; the site fetches it from the bot
-repo like the pickles). The build joins a record to a card by the PSD's blob at HEAD, else the blob the bot parsed,
+The Details dropdown reads `db/psd_details.json` (one record per card PSD keyed by its git blob sha, gathered by the
+card sync's build). The build joins a record to a card by the PSD's blob at HEAD, else the blob the bot parsed,
 else the newest record for that path, writes `data/details/<id>.json` (the record plus the card's id and name; a
 duplicate gets its original's) and sets `details: true` on the card or rulebook page. No file, or no record for a card: no dropdown;
 the build never fails on it.

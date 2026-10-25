@@ -49,7 +49,7 @@ on:
         type: string
         default: ""
       seed:
-        description: "Start the data from this AutoCroissant commit's pickles (with no data yet: its latest PICKLE)"
+        description: "Start the data from this AutoCroissant commit's pickles (with no data yet: its last PICKLE, 1282743b)"
         type: string
         default: ""
       force:
@@ -231,9 +231,8 @@ jobs:
           if [ -n "$SEED" ]; then why+=("dispatched with seed: $SEED"); fi
           if [ ! -f "$manifest" ]; then
             if [ -z "$seed" ]; then
-              seed=$(gh api "repos/$BOT_REPO/commits?sha=main&path=stats.pkl&per_page=1" --jq '.[0].sha // ""')
-              if [ -z "$seed" ]; then echo "::error::No card data and no PICKLE commit found to seed from"; exit 1; fi
-              why+=("no card data yet: seeded from $BOT_REPO's latest PICKLE ${seed:0:8}")
+              seed=1282743b7f38c2ffa0b63d24341179a1f9d2b732    # the bot's last PICKLE (pickles retired 2026-10-25)
+              why+=("no card data yet: seeded from $BOT_REPO's last PICKLE ${seed:0:8}")
             else
               why+=("no card data yet")
             fi
