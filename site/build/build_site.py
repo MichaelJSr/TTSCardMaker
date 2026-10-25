@@ -2866,6 +2866,15 @@ def asset_stamps(texts):
     return out
 
 
+def inline_css(page, css):
+    """page with its style.css link swapped for the stylesheet itself (index.html only: one round trip less on first paint)."""
+    link = re.search(r'<link rel="stylesheet" href="assets/style\.css\?v=\w+">', page)
+    if not link or "</style" in css.lower():
+        warn("index.html: style.css not inlined")
+        return page
+    return page[:link.start()] + f"<style>{css}</style>" + page[link.end():]
+
+
 def steady(files, blobs):
     """{data file: its bytes without the build's clock (VOLATILE)}"""
     return {name: json.dumps({k: v for k, v in files[name].items() if k not in VOLATILE.get(name, ())}, separators=(",", ":"),
@@ -3355,7 +3364,7 @@ def main():
     site_desc = "Every card, the rulebook, a starting-hand builder and stats."
     site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(template.replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards)))
+        fh.write(inline_css(template, assets["style.css"][1]).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards)))
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
         fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">\n' + site_og))   # absolute: the 404 page can be served at any depth
     os.makedirs(os.path.join(DIST, "d"))                # shared hands: d/#/deck/<code>
