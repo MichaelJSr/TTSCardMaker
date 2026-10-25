@@ -9,6 +9,7 @@
 import { esc } from "./text.js";
 import { sameField, value, psdValue } from "./edit.js";
 import * as mockup from "./mockup.js";
+import { partsLine } from "./parts.js";
 
 /** The Action's side, in one place: change it here if card-preview.yml's inputs or files change. */
 export const CONTRACT = {
@@ -27,11 +28,11 @@ export const POLL_FAST = 10000, POLL_SLOW = 30000, FAST_FOR = 3 * 60000, MAX_WAI
 // more than a day after the press means it never comes; entries go after 30 days
 export const SHOW_MS = 6 * 864e5, LATE_MS = 864e5, DROP_MS = 30 * 864e5;
 export const PSD_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability"];   // printed on the card (edit.js FROM "PSD")
-export const ENTRY_FIELDS = [...PSD_FIELDS, "creatures"];                                  // what the edit carries (creatures gates a stat bake)
+export const ENTRY_FIELDS = [...PSD_FIELDS, "creatures", "parts"];                         // what the edit carries (creatures gates a stat bake; parts: per layer)
 export const DONE = ["baked", "redundant", "refused", "error"];                            // result.json states
 const REQUEST_RE = /^[A-Za-z0-9-]{8,64}$/;            // card-preview.yml's check
 const STATS = ["hp", "def", "atk", "spd"];
-const LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Text", creatures: "Creatures" };
+const LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Text", creatures: "Creatures", parts: "Text boxes" };
 
 const text = v => String(v ?? "").replace(/\r/g, "").trim();
 /** The edit a preview sends: the PSD-kind fields (and creatures) of the card's Card Edits.json entry as Publish would leave
@@ -42,7 +43,7 @@ export function entryEdit(fields, get) {
   for (const f of ENTRY_FIELDS) {
     if (!fields.includes(f)) continue;
     const v = get(f);
-    if (f === "creatures" ? !(Array.isArray(v) && v.length > 1) : v === undefined) continue;
+    if (f === "creatures" ? !(Array.isArray(v) && v.length > 1) : f === "parts" ? !(v && typeof v === "object" && Object.keys(v).length) : v === undefined) continue;
     out[f] = f === "types" ? [...(v || [])] : typeof v === "string" ? text(v) : v;
   }
   return out;
@@ -90,7 +91,9 @@ export function readResult(raw) {
   const fields = Object.fromEntries(Object.entries(obj(r.fields)).filter(([k, v]) => k in LABEL && typeof v === "string").map(([k, v]) => [k, v.slice(0, 20)]));
   const changes = (Array.isArray(r.changes) ? r.changes : []).filter(x => x && typeof x === "object" && typeof x.field === "string").slice(0, 12)
     .map(x => ({ field: x.field, old: x.old, new: x.new }));
-  return { state: r.state, transient: r.transient === true, reason: r.reason ? clip(r.reason) : "", notes, fields, changes, base,
+  const parts = Object.fromEntries(Object.entries(obj(r.parts)).filter(([k, v]) => /^(\d+|\+ability)$/.test(k) && typeof v === "string").slice(0, 64).map(([k, v]) => [k, v.slice(0, 20)]));   // v2: per layer
+  return { state: r.state, transient: r.transient === true, reason: r.reason ? clip(r.reason) : "", notes, fields, changes, base, parts,
+    variant: Number.isInteger(r.variant) ? r.variant : null,
     image: r.image === "baked" || r.image === "refused" ? r.image : null, files, run: typeof r.run === "string" && /^https:\/\/github\.com\//.test(r.run) ? r.run : "" };
 }
 /** The store read from localStorage text: only well-formed entries, newest first, KEEP per card. */
@@ -231,7 +234,8 @@ export function renderedParts(e, v) {
   const r = e.result || {}, stale = DONE.includes(e.state) ? staleWhy(e, v.card, v.hash) : [];
   const staleText = stale.length ? `<p class="pv-stale" role="note">Out of date: ${stale.map(w => (w === "edit" ? "the edit changed since" : "the card changed since")).join(" and ")}. ${button("Preview again", "ghost")}</p>` : "";
   const head = `<p class="pv-state" data-state="${esc(e.state)}"><b>${esc(STATE_TEXT[e.state] || e.state)}</b> · ${esc(fieldsLine(e.edit || {}))} · <span class="muted">${esc(ago(v.now - e.at))}</span></p>`;
-  const outcomes = r.fields && Object.keys(r.fields).length ? `<p class="pv-fields">${esc(outcomesLine(r.fields))}</p>` : "";
+  const outcomes = (r.fields && Object.keys(r.fields).length ? `<p class="pv-fields">${esc(outcomesLine(r.fields))}</p>` : "")
+    + (r.parts && Object.keys(r.parts).length ? `<p class="pv-fields">${esc(partsLine(r.parts))}</p>` : "");
   const notes = r.notes?.length ? `<ul class="pv-notes">${r.notes.map(x => `<li>${esc(plainNote(x))}</li>`).join("")}</ul>` : "";
   const run = r.run || e.run?.url, runLink = run ? ` <a href="${esc(run)}" target="_blank" rel="noopener">The run on GitHub</a>.` : "";
   const again = stale.length ? "" : button("Preview again", "ghost");
@@ -352,12 +356,19 @@ export function createPreviews(app) {
   // ---- the values: the card's (published + staged) or the open form's, against the PSD's
   const psdOf = c => app.editor.psdOf(c.id) || {};
   // v: {edit (sent), hash, n (fields the image would change by), cur (every PSD field's value), psd}
-  const values = (cur, psd, edit) => ({ edit, hash: hashOf(edit), n: Object.keys(changedOf(cur, psd)).length, cur, psd });
+  const values = (cur, psd, edit) => ({ edit, hash: hashOf(edit), n: Object.keys(changedOf(cur, psd)).length || (cur.parts ? 1 : 0), cur, psd });   // part edits whose join reads the same still change the image
+  // the parts editor: the PSD's entry (variant 1's) holds the part edits, stars, types and stats of every picture
+  const withParts = (c, cur, edit, op = null) => {
+    const parts = app.editor.entryParts?.(c.id, op), first = c.variantOf && S.byId.get(c.variantOf);
+    if (first) { const own = entryEdit(app.editor.entryFields(first.id), f => value(first, f, S.byId)); for (const f of ENTRY_FIELDS) if (f !== "name" && f !== "ability" && f in own && !(f in edit)) edit[f] = own[f]; }
+    if (parts) { edit.parts = parts; cur.parts = parts; }
+    return values(cur, psdOf(c), edit);
+  };
   const cardV = c => { const cur = Object.fromEntries(PSD_FIELDS.map(f => [f, value(c, f, S.byId)]));   // published + staged
-    return values(cur, psdOf(c), entryEdit(app.editor.entryFields(c.id), f => value(c, f, S.byId))); };
+    return withParts(c, cur, entryEdit(app.editor.entryFields(c.id), f => value(c, f, S.byId))); };
   const formV = (c, op, base) => {                    // the open form's, relative to the published card (base)
     const get = f => (f in op.set ? op.set[f] : (op.unset || []).includes(f) ? psdValue(base, f, S.byId) : value(base, f, S.byId));
-    return values(Object.fromEntries(PSD_FIELDS.map(f => [f, get(f)])), psdOf(c), entryEdit(app.editor.entryFields(c.id, op), get));
+    return withParts(c, Object.fromEntries(PSD_FIELDS.map(f => [f, get(f)])), entryEdit(app.editor.entryFields(c.id, op), get), op);
   };
 
   // ---- starting one

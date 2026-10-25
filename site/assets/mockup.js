@@ -413,6 +413,25 @@ export function changes(edit, psd) {
   return out;
 }
 
+/** The boxes to redraw from per-layer edits (PARTS_EDITOR.md §5; parts: Card Edits.json's, by layer id): [{id, role (name |
+ *  ability), old, text (null: the layer is deleted), box (canvas px), added}] for the record's parts whose edit differs
+ *  from the layer's text; an added ability goes in the template's Ability box. */
+export function partJobs(rec, parts) {
+  const p = obj(rec?.parts);
+  if (!p || !obj(parts)) return [];
+  const list = [...(p.title || []).map(x => ["name", x]), ...(p.ability || []).map(x => ["ability", x]), ...(p.blocks || []).map(x => ["ability", x])];
+  const out = [];
+  for (const [role, part] of list) {
+    const e = parts[String(part?.id)];
+    if (!e || typeof e !== "object") continue;
+    const text = e.delete ? null : String(e.text ?? "");
+    if (text !== part.text) out.push({ id: String(part.id), role, old: String(part.text ?? ""), text, box: Array.isArray(part.box) ? part.box : null, added: false, layer: String(part.layer || "") });
+  }
+  const add = obj(parts["+ability"]), tb = rec?.template?.ability?.box;
+  if (add?.text && !(p.ability || []).length) out.push({ id: "+ability", role: "ability", old: "", text: String(add.text), box: Array.isArray(tb) ? tb : null, added: true });
+  return out;
+}
+
 // ---- stars and type icons: where the bake would put them (psd_details' header, canvas px; AutoCroissant psd_edit)
 const obj = v => (v && typeof v === "object" && !Array.isArray(v) ? v : null);
 const centreOf = b => [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
@@ -557,8 +576,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const blit = () => { if (stale()) return null; canvas.width = W; canvas.height = H; canvas.getContext("2d").drawImage(work, 0, 0); return out; };
   if (!tpl) { out.skipped.push(...[todo.name != null && "name", todo.ability != null && "text", ...Object.keys(todo.stats).map(k => k.toUpperCase()), todo.stars && "stars", todo.types && "types"].filter(Boolean)); return blit(); }
   const pixels = ctx.getImageData(0, 0, W, H), L = luma(pixels.data);
-  const family = async (role, label) => {
-    const layer = layerOf(rec, role), name = layer?.font || "";
+  const family = async (role, label, path = "") => {        // path: a part's own layer, when the record lists it
+    const own = path && Array.isArray(rec?.text) ? rec.text.find(t => t && t.layer === path && !ICON_FONT.test(String(t.font || ""))) : null;
+    const layer = own || layerOf(rec, role), name = layer?.font || "";
     const pending = name ? loadFont(name, { getFonts, raw }) : Promise.resolve("");
     let fam = "";
     const ready = await Promise.race([pending, new Promise(r => setTimeout(() => r(null), 60))]);   // a loaded font draws at once
@@ -570,23 +590,29 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const bars = barRows(shape, W, H, card, rec).filter(r => isBar(L, W, H, r.box));   // the rows drawn on
   const rows = barRows(shape, W, H, card, null), seen = rows.filter(r => isBar(L, W, H, r.box)), lowest = seen.length ? seen : rows;
   const barsBottom = lowest.length ? Math.max(...lowest.map(r => r.box[3])) : 0;   // the text starts below the card's stat rows (where they are seen, else the template's)
-  const jobs = [];
-  for (const [role, text, old, label] of [["name", todo.name, psd.name, "name"], ["ability", todo.ability, psd.ability, "text"]]) {
-    if (text == null) continue;
-    const { fam, layer } = await family(role, label);
+  const jobs = [], kc = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0;
+  const specs = [["name", todo.name, psd.name, "name"], ["ability", todo.ability, psd.ability, "text"]].filter(x => x[1] != null).map(([role, text, old, label]) => ({ role, text, old, label }));
+  const partly = partJobs(rec, edit.parts);
+  if (obj(rec?.parts) && obj(edit.parts)) specs.length = 0;   // one box per layer: each changed layer in its own box, not the joined fields
+  for (const j of partly) specs.push({ role: j.role, text: j.text, old: j.old, label: j.role === "name" ? "name" : "text", own: j.box && kc ? j.box.map(v => v * kc) : null, added: j.added, part: true, path: j.layer });
+  for (const { role, text, old, label, own: partBox, added, part, path } of specs) {
+    const { fam, layer } = await family(role, label, path);
     const measure = (t, z) => { ctx.font = `${z}px ${fam}`; return ctx.measureText(t).width; };
-    const own = recordBox(rec, layer?.layer, W), one = role === "ability" && oneColour(rec, layer?.layer);
+    const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
+    if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, boxed: true }); out.boxed.push(label); continue; }
     const paras = tokenize(old, icons);
     const hit = bestBlock(L, W, H, area, paras, measure, { name: role === "name" });   // the block that holds the old text, or none
     if (hit) {
       const { b, cal, edge } = hit, z = cal.size;
       const strayTop = seen.length ? Math.min(area.box[1], barsBottom + 0.004 * H) : own ? area.box[1] : (TEMPLATES[shape].ability[1] - 0.06) * H;   // stat rows not seen where the template has them: look higher
-      const gone = role === "name" ? b.lines : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name: its own lines (the stars stay)
+      const gone = role === "name" || part ? (role === "name" ? b.lines : eraseLines(b)) : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name or one layer: its own lines
       const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
       const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25 });   // in the lines only: dim words too
+      if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
       jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons, one });
-    } else { jobs.push({ role, text, label, area, fam, layer, measure, icons, one, boxed: true }); out.boxed.push(label); }
+    } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
+    else { jobs.push({ role, text, label, area: part ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, boxed: true }); out.boxed.push(label); }   // a layer's box: covered, never the card below it
   }
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
@@ -713,7 +739,7 @@ function drawText(ctx, { role, text, area, found, size, colours, fam, layer, mea
   const left = found.align === "left" && role !== "name";
   const maxW = left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
   const pitch0 = found.pitch || size * LINE, top = found.lines[0][1];
-  let { size: z, lines } = fit(paras, maxW, Infinity, size, measure, role === "name" ? { lines: Math.max(1, found.lines.length), min: 0.3 } : {});
+  let { size: z, lines } = fit(paras, maxW, Infinity, size, measure, role === "name" ? { lines: Math.max(1, found.lines.length, paras.length), min: 0.3 } : {});   // a title's line break: two lines
   let over = false;
   if (role !== "name") {                              // past the area's bottom: smaller, down to 40%; still past it: said so
     const room2 = region[3] - top, need = s => (lines.length - 1) * pitch0 * (s / size) + s * 1.05;
