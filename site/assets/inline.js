@@ -243,11 +243,21 @@ function onClick(e) {
   if ((f === "ability" || f === "note") && e.target.closest("a, .badge, img")) return;   // links in the text still open the card
   if (e.ctrlKey || e.metaKey || e.shiftKey) return;                          // a chip's link still opens in a new tab
   e.preventDefault(); e.stopPropagation();
-  if (f === "types") openTypes(el); else open(el, f);
+  if (f === "types") openTypes(el); else openText(el, f);
+}
+/** A text field: in place, unless the card's record has parts and the field isn't one layer (several, or none): then
+ *  the Edit dialog at that field, one box per layer (PARTS_EDITOR.md §5). */
+function openText(el, f) {
+  const c = card;
+  if ((f !== "name" && f !== "ability") || !c?.details || !A.editor.partsFor) { open(el, f); return; }
+  A.editor.partsFor(c).then(n => {
+    if (card !== c || !el.isConnected) return;
+    if (n && (n.rule || n[f === "name" ? "title" : "ability"] !== 1)) A.editor.open(c.id, { focus: f }); else open(el, f);
+  });
 }
 function onDblClick(e) {
   const el = e.target.closest('[data-inline="name"]');
-  if (el && A.modal.contains(el)) { e.preventDefault(); open(el, "name"); }
+  if (el && A.modal.contains(el)) { e.preventDefault(); openText(el, "name"); }
 }
 function onKey(e) {
   pointer = false;
@@ -262,7 +272,7 @@ function onKey(e) {
   if (!el || !A.modal.contains(el)) return;
   const f = el.dataset.inline;
   if (SLIDERS.includes(f) && !el.hasAttribute("data-empty")) { statKey(el, f, e); return; }
-  if ((e.key === "Enter" || (e.key === " " && f === "types")) && el.tagName !== "A" && el.tagName !== "BUTTON") { e.preventDefault(); e.stopPropagation(); if (f === "types") openTypes(el); else open(el, f); }   // links and buttons click themselves; the type row is a button
+  if ((e.key === "Enter" || (e.key === " " && f === "types")) && el.tagName !== "A" && el.tagName !== "BUTTON") { e.preventDefault(); e.stopPropagation(); if (f === "types") openTypes(el); else openText(el, f); }   // links and buttons click themselves; the type row is a button
 }
 function onFocusOut(e) {                          // Tab to another control keeps the focus in the dialog; a click doesn't
   if (!document.hasFocus()) return;               // the window losing focus (alt-tab) leaves the editor open

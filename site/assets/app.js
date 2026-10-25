@@ -87,7 +87,12 @@ const psdBadges = c => [
     : c.pending?.length ? `<span class="fact pending" data-tip="${PSD_TIP}">PSD pending: ${esc(pendingList(c))}</span>` : "",
   c.reparsePending ? `<span class="fact" data-tip="The PSD changed since the card data was built; the next card sync reads it">Re-parse pending</span>` : "",
   c.baked && !c.refused ? `<span class="fact" data-tip="The bot regenerated the card image from the edit; its notes say what it drew best-effort">Image baked: ${esc(c.baked)}</span>` : "",
+  c.partFlags ? `<span class="fact${c.partFlags.skipped ? " refused" : ""}" data-tip="The last bake, per text layer: a layer changed in Photoshop since the edit is skipped (redo it in Edit)">Text boxes: ${esc(Object.entries(c.partFlags).map(([k, n]) => `${n} ${k}`).join(", "))}</span>` : "",
+  c.moved ? `<span class="fact" data-tip="A stars edit moved the card into its stars folder">moved to ${esc(c.moved.replace(/\/$/, "").split("/").pop())}</span>` : "",
 ].join("");
+// one PSD's pictures (layers tagged " #N"): separate cards, linked
+const variantFacts = c => (c.variantOf ? `<a class="fact" href="#/card/${c.variantOf}" data-tip="Another picture of the same PSD">A variant of ${esc(S.byId.get(c.variantOf)?.name || "")}</a>`
+  : c.variants?.length ? `<span class="fact" data-tip="Other pictures of the same PSD">Variants: ${c.variants.map(id => `<a href="#/card/${id}">${esc(S.byId.get(id)?.name || id)}</a>`).join(" · ")}</span>` : "");
 // beside PSD chips and parser notes: opens the card with Details open
 const detailsLink = c => (c.details ? `<a class="fact details-link" href="#/card/${c.id}?details" data-tip="Open the card with its PSD details">Details</a>` : "");   // a plain link: Ctrl-click opens a tab
 const psdChips = c => { const b = psdBadges(c); return b && b + detailsLink(c); };
@@ -192,6 +197,7 @@ const editor = createEditor({
   view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
   decks: () => loadDecks().then(() => deckList()),         // the published decks (with the pending ones): the publish dialog's "replaces"
   formOpened: x => previews.mountForm(x),                  // the Edit dialog's image previews
+  loadDetails: c => loadDetails(c),                        // the parts editor's boxes (details/<id>.json)
   setParams: u => setParams(u),                            // Rename everywhere: a filter on the old name follows it
 });
 // image previews in edit mode (preview.js): the mock-up and the rendered dry-run bake, badges on the grid's tiles
@@ -622,6 +628,7 @@ function openCard(id, showDetails = false) {
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
+          ${variantFacts(c)}
           ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(changes.editedTip(c))}">Edited</span>` : ""}
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}

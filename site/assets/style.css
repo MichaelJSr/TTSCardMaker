@@ -711,3 +711,27 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 .pin-form { flex: 0 0 auto; display: flex; gap: 6px; align-items: center; min-height: 64px; padding: 0 10px; border: 2px dashed var(--border-strong); border-radius: 12px; }
 .pin-form select { width: auto; }
 .pin-form input { width: 180px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); }
+
+/* the parts editor: one box per PSD text layer (edit.js, parts.js) */
+.ein.parts { display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 8px; min-width: 0; }
+.part-box { border: 1px solid var(--border-strong); border-radius: 10px; padding: 6px 8px; }
+.part-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 12px; color: var(--ink-2); margin-bottom: 4px; }
+.part-head .part-del { margin-left: auto; padding: 2px 8px; font-size: 12px; }
+.part-box textarea.part-text { width: 100%; resize: vertical; min-height: 2.4em; height: auto; }
+.part-box .part-gone { display: none; margin: 2px 0; color: var(--danger); font-size: 13px; }
+.part-box.deleted textarea, .part-box.deleted .part-del { display: none; }
+.part-box.deleted .part-gone { display: block; }
+.part-shared { color: var(--warn); }
+.part-warn { color: var(--warn); font-size: 13px; margin: 4px 0; }
+.part-warn.dropped { text-decoration: line-through; opacity: .7; }
+.part-note, .part-join { font-size: 12px; margin: 2px 0; }
+.part-variant { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; }
+.part-variant button.on { border-color: var(--accent); }
+.part-jump { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.part-jump button { padding: 2px 8px; font-size: 12px; }
+.part-rule-cols { display: grid; grid-template-columns: minmax(140px, 220px) 1fr; gap: 10px; align-items: start; }
+.part-page { position: sticky; top: 0; }
+.part-page img { width: 100%; height: 100%; display: block; border-radius: 6px; }
+.part-page .part-hl { position: absolute; border: 2px solid var(--accent); border-radius: 3px; background: color-mix(in srgb, var(--accent) 18%, transparent); pointer-events: none; }
+.part-list { display: flex; flex-direction: column; gap: 8px; }
+@media (max-width: 640px) { .part-rule-cols { grid-template-columns: 1fr; } .part-page { position: relative; max-width: 220px; } }

@@ -9,19 +9,20 @@ import * as live from "./live.js";
 import * as draft from "./drafts.js";
 import { current as ratingNow } from "./ratings.js";
 import { soon } from "./fresh.js";
+import * as P from "./parts.js";
 
 const API = "https://api.github.com";
 // token: the plain-text token before 2026-10-23 (sealed on the next load); last: the login a password last signed in
 const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login", drafts: draft.DRAFT_KEY };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
-  atk: "int", spd: "int", ability: "str", note: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
+  atk: "int", spd: "int", ability: "str", parts: "parts", note: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
   creatures: "creatures" };
 const ORDER = Object.keys(FIELDS);
 const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the bot's _by (changes.js BOT)
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
-  atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
+  atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
   problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures",
   "rate-favorability": "Favorability", "rate-power": "Power" };
 // item types: the Items/ folders (fixed; a new one needs its folder first)
@@ -43,7 +44,7 @@ export const sameField = (f, a, b) => (f === "types" && Array.isArray(a) && Arra
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
 // where a field's unedited value comes from: the PSD (the set also in build_site.py PSD_FIELDS, app.js FIELD_LABEL, the bot's
 // CardEdits.KIND and psd_edit STAT_FIELDS/TEXT_FIELDS/NOT_YET), the card's folder, or nowhere (a database-only default; creatures too)
-const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", atk: "PSD", spd: "PSD", ability: "PSD",
+const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", atk: "PSD", spd: "PSD", ability: "PSD", parts: "PSD",
   type: "folder", subtype: "folder", series: "folder" };
 const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
   : typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
@@ -145,16 +146,25 @@ export function withoutItem(op, item, name) {
   const o = { ...op, set: { ...op.set }, unset: (op.unset || []).filter(k => k !== item) };
   if (item === "author") delete o.author; else if (item === "ban") delete o.ban;
   else if (item.startsWith("rate-")) { const r = { ...o.rate }; delete r[item.slice(5)]; if (Object.keys(r).length) o.rate = r; else delete o.rate; }
-  else { delete o.set[item]; if (item === "name") o.name = name; }
+  else if (item === "parts") { delete o.set.parts; o.unset = o.unset.filter(k => !k.startsWith(P.PART)); }
+  else {
+    delete o.set[item]; if (item === "name") o.name = name;
+    if ((item === "name" || item === "ability") && o.set.parts) {     // the boxes behind a derived field go with it
+      const keep = Object.fromEntries(Object.entries(o.set.parts).filter(([, p]) => p.field !== item));
+      if (Object.keys(keep).length) o.set.parts = keep; else delete o.set.parts;
+    }
+  }
   return o;
 }
 /** The review lines of an op against its published base b: [{item, text, short, psd}]; text is the review dialog's line,
  *  short the batch bar's ("SPD 4 → 5"), psd marks fields printed on the card image. rule: a rulebook page. */
 export function describeItems(op, b = {}, { byId, rule = false } = {}) {
   const src = k => (rule ? "the page" : FROM[k] ? `the ${FROM[k]}` : "the default");
-  const items = Object.entries(op.set).map(([k, v]) => { const from = show(value(b, k, byId)), to = show(v);
+  const items = Object.entries(op.set).filter(([k]) => k !== "parts").map(([k, v]) => { const from = show(value(b, k, byId)), to = show(v);
     return { item: k, text: `${LABEL[k]}: ${from} → ${to}`, short: `${LABEL[k]} ${clip(from)} → ${clip(to)}` }; });
-  for (const k of op.unset || []) { const p = show(psdValue(b, k, byId)); items.push({ item: k, text: `${LABEL[k]}: back to ${src(k)} (${p})`, short: `${LABEL[k]} back to ${src(k)} (${clip(p)})` }); }
+  const boxes = Object.keys(op.set.parts || {}).length, back = (op.unset || []).filter(k => k.startsWith(P.PART)).length;
+  if (boxes || back) { const t = `Text boxes: ${[boxes && `${boxes} changed`, back && `${back} back to the PSD`].filter(Boolean).join(", ")}`; items.push({ item: "parts", text: t, short: t }); }
+  for (const k of (op.unset || []).filter(k => !k.startsWith(P.PART))) { const p = show(psdValue(b, k, byId)); items.push({ item: k, text: `${LABEL[k]}: back to ${src(k)} (${p})`, short: `${LABEL[k]} back to ${src(k)} (${clip(p)})` }); }
   if (op.author !== undefined) { const t = `Author → ${op.author || "(from git)"}`; items.push({ item: "author", text: t, short: t }); }
   if (op.ban) { const t = op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned"; items.push({ item: "ban", text: t, short: t }); }
   for (const k of RATE) if (op.rate?.[k] != null) { const l = LABEL[`rate-${k}`]; items.push({ item: `rate-${k}`, text: `${l}: rated ${op.rate[k]}`, short: `${l} ${op.rate[k]}` }); }
@@ -177,7 +187,7 @@ export const deckName = (stage, key, f) => (f && !f.private && f.name) || (stage
 export const sentence = x => (x.name ? `${x.name}: ${x.text}` : x.text);
 
 // Card Edits.json with the ops applied: keys sorted, fields in ORDER, one line per card
-export function editsFile(text, ops, at, by, path = "site/Card Edits.json") {
+export function editsFile(text, ops, at, by, path = "site/Card Edits.json", onConflict = null) {   // onConflict(op, keys): boxes someone else edited meanwhile
   let data;
   try { data = text ? JSON.parse(text) : { about: ABOUT, cards: {} }; }
   catch (e) { throw new Error(`${path} isn't valid JSON (${e.message}). Fix it on GitHub, then publish again.`); }
@@ -187,8 +197,11 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json") {
     const k = Object.keys(data.cards).find(x => cardKey(x) === cardKey(op.key)) ?? op.key;
     const cur = { ...(data.cards[k] || {}) };
     if (isBot(cur._by) && !isBot(by)) cur._bot = ORDER.filter(f => f in cur);   // the bot's entry: its fields stay nobody's edit
-    for (const f of op.unset) delete cur[f];
-    Object.assign(cur, op.set);
+    if (op.partsBase && onConflict) { const keys = P.partConflicts(cur.parts, op.partsBase); if (keys.length) onConflict(op, keys, cur.parts); }
+    const { parts, ...set } = op.set, unsetParts = op.unset.filter(f => f.startsWith(P.PART)).map(f => f.slice(P.PART.length));
+    for (const f of op.unset) if (!f.startsWith(P.PART)) delete cur[f];
+    Object.assign(cur, set);
+    if (parts || unsetParts.length) { const m = P.mergeParts(cur.parts, parts, unsetParts); if (m) cur.parts = m; else delete cur.parts; }   // per layer
     delete cur._by; delete cur._at; delete data.cards[k];
     if (Array.isArray(cur._bot)) {                 // the bot's migration fields (_bot): one this op sets or unsets is the editor's now
       cur._bot = cur._bot.filter(f => !(f in op.set) && !op.unset.includes(f) && f in cur);
@@ -597,8 +610,141 @@ export function createEditor(app) {
     return { name: r.name, existed: false, note: "" };
   }
   const isRule = c => (S.rules || []).includes(c);
+  // ---- the parts editor (PARTS_EDITOR.md §5): one box per PSD text layer when the card's details record has parts
+  const recs = new Map();                          // card id -> its details record (null: none or unreadable)
+  const groupOf = c => { const first = (c.variantOf && S.byId.get(c.variantOf)) || c;     // one PSD's pictures, variant 1 first
+    return first.variants?.length ? [first, ...first.variants.map(i => S.byId.get(i)).filter(Boolean)] : [c]; };
+  /** Load the records the dialog needs (the card's, and its sibling pictures'), then run go. */
+  function withRecs(c, go) {
+    const need = [c, ...groupOf(c)].filter(x => x.details && !recs.has(x.id) && app.loadDetails);
+    if (!need.length) return go();
+    Promise.all(need.map(x => app.loadDetails(x).then(d => recs.set(x.id, d), () => recs.set(x.id, null)))).then(go);
+  }
+  /** The card's boxes, or null (no parts in its record: the joined fields as before). */
+  function partsView(c) {
+    const built = recs.get(c.id);
+    if (!P.partsOf(built)) return null;
+    const first = groupOf(c)[0], has = o => o && (o.set?.parts || o.unset?.some(k => k.startsWith(P.PART)));
+    const rec = { ...built, partEdits: { ...built.partEdits }, partState: { ...built.partState } };
+    for (const o of sentOps().filter(o => o.id === first.id && has(o))) {      // published, not built yet: as Card Edits.json holds them
+      for (const k of o.unset.filter(k => k.startsWith(P.PART)).map(k => k.slice(P.PART.length))) { delete rec.partEdits[k]; delete rec.partState[k]; }
+      for (const [k, v] of Object.entries(o.set.parts || {})) { rec.partEdits[k] = v; rec.partState[k] = "pending"; }
+    }
+    const list = P.boxes(rec, isRule(c)), so = stage.cards[first.id];
+    let added = P.addedEdit(rec);
+    if (has(so)) {                                 // the boxes open with the batch's text; readForm compares with the published
+      for (const b of list) {
+        const p = so.set.parts?.[b.key];
+        if (p) { b.start = p.delete ? b.part.text : p.text; b.deleted = !!p.delete; }
+        else if (so.unset.includes(P.PART + b.key)) { b.start = b.part.text; b.deleted = false; }
+      }
+      if (so.set.parts?.[P.ADD]) added = { text: so.set.parts[P.ADD].text, state: "pending" };
+      else if (so.unset.includes(P.PART + P.ADD)) added = null;
+    }
+    return list.length ? { rec, list, added, rule: isRule(c), picture: built.picture || null } : null;
+  }
+  let partForm = null;                             // the open dialog's box state: {c, view, deleted, drops, added (shown), last (focused box)}
+  const partEl = key => document.getElementById(`ef-part:${key}`);
+  function partValues() {                          // the dialog's boxes -> readParts' form
+    const f = partForm, values = Object.fromEntries(f.view.list.map(b => [b.key, partEl(b.key)?.value ?? b.start]));
+    const add = partEl(P.ADD), added = f.added && add ? add.value : null;
+    return { values, deleted: f.deleted, added, drops: f.drops };
+  }
+  const rowsOf = t => Math.min(10, Math.max(1, String(t ?? "").split("\n").length));
+  function boxHtml(b, view, many) {
+    const fx = b.kind === "ability" ? P.fxOf(view.rec, b.part) : [], k = esc(b.key);
+    const warn = b.state === "stale" && b.edit ? `<div class="part-warn">⚠ Photoshop changed this layer after your edit: it will be skipped. Photoshop now: “${esc(b.part.text)}” Yours: “${esc(b.edit.delete ? "(delete the layer)" : b.edit.text)}”
+        <span class="actions"><button type="button" class="ghost" data-part-ps="${k}">Start from Photoshop's text</button>${b.edit.delete ? "" : `<button type="button" class="ghost" data-part-redo="${k}">Redo mine over it</button>`}</span></div>`
+      : b.skipped ? `<div class="part-warn">⚠ Not applied${b.skipped.at ? ` (${esc(P.when(b.skipped.at))})` : ""}: ${esc(b.label.split(" · ")[0])} changed in Photoshop since this edit. Redo it on the website if still wanted.
+        <span class="actions"><button type="button" class="ghost" data-part-skipped="${k}">Redo</button></span></div>` : "";
+    const follow = P.followHtml(b.part);
+    return `<div class="part-box${b.deleted ? " deleted" : ""}" data-part-box="${k}" data-kind="${b.kind}">
+      <div class="part-head"><label for="ef-part:${k}">${esc(b.label)}</label>${P.sharedHtml(b.part, view.picture)}${many ? `<button type="button" class="ghost part-del" data-part-del="${k}">Delete layer</button>` : ""}</div>
+      <textarea id="ef-part:${k}" class="part-text" rows="${rowsOf(b.start)}" spellcheck="true"${b.kind === "title" ? "" : " data-tokens"} data-part="${k}" aria-label="${esc(b.label)}">${esc(b.start)}</textarea>
+      <p class="part-gone">Will be DELETED from the PSD${fx.length ? `, with ${esc(fx.map(x => `‘${x.split("/").pop()}’`).join(", "))}` : ""}. <button type="button" class="ghost" data-part-undo="${k}">Undo</button></p>
+      ${warn}${follow ? `<p class="muted part-note">${follow}</p>` : ""}</div>`;
+  }
+  /** The boxes of one kind (title, ability, block), with their notes. */
+  function boxesHtml(view, kind) {
+    const list = view.list.filter(b => b.kind === kind), many = kind !== "block" && list.length > 1;
+    return list.map(b => boxHtml(b, view, many)).join("");
+  }
+  function addHtml(view, c) {                      // + Add an ability: a card with no Ability layer (never a rule page)
+    if (view.rule || view.list.some(b => b.kind === "ability")) return "";
+    const t = view.rec.template, was = view.added, file = t?.file ? t.file.split("/").pop().replace(/\.psd$/i, "") : "its kind's template";
+    return `<div class="part-box part-add" data-part-box="${P.ADD}"${was ? "" : " hidden"}><div class="part-head"><label for="ef-part:${P.ADD}">New ability</label><button type="button" class="ghost" data-part-add-remove>Remove</button></div>
+      <textarea id="ef-part:${P.ADD}" class="part-text" rows="3" spellcheck="true" data-tokens data-part="${P.ADD}">${esc(was?.text || "")}</textarea>
+      <p class="muted part-note">New layer ‘Ability’ from ${esc(file)} (box, font, size); the bake flags it for a look.${was?.state === "stale" ? " ⚠ The card has an Ability layer now (added in Photoshop): this one will be skipped." : ""}</p></div>
+      <button type="button" class="ghost" data-part-add${was ? " hidden" : ""}>+ Add an ability</button>`;
+  }
+  function partsTop(view, c) {                     // above the boxes: the data's age, the variant pictures, edits for gone layers
+    const pic = view.picture, first = pic?.cards?.[0], gone = P.goneEdits(view.rec);
+    return [view.rec.stale ? `<p class="part-warn">⚠ The card changed since this data was built: an edit made now may be skipped.</p>` : "",
+      pic ? `<p class="part-variant">Edit ${esc(c.name)}${pic.n > 1 && first ? ` · a variant of ${esc(first.name)}` : ""} · picture ${pic.n} of ${pic.cards.length} ${pic.cards.map(x => `<button type="button" class="ghost${x.n === pic.n ? " on" : ""}" data-part-pic="${esc(x.id)}"${x.n === pic.n ? ' aria-current="true"' : ""}>${esc(x.name)}</button>`).join("")}</p>` : "",
+      ...gone.map(g => `<p class="part-warn" data-part-gone="${esc(g.key)}">⚠ An edit waits for a layer that's gone from the PSD (${esc(g.edit.layer || g.key)}): the bake skips it. <button type="button" class="ghost" data-part-drop="${esc(g.key)}">Drop it</button></p>`)].join("");
+  }
+  /** readForm's part: op.set.parts, the part unsets and the derived name/ability (only for a field whose boxes changed). */
+  function readParts(c, b, want, op) {
+    const view = partForm?.c === c ? partForm.view : partsView(c);
+    const r = P.readParts(view.rec, view.list, partForm?.c === c ? partValues() : {});
+    const dv = P.derived(view.list, r.texts, r.added), fieldOf = k => (k === P.ADD ? "ability" : view.list.find(x => x.key === k)?.field || view.rec.partEdits?.[k]?.field);
+    const left = P.mergeParts(Object.fromEntries(Object.entries(view.rec.partEdits || {}).filter(([k]) => view.rec.partState?.[k] !== "gone")), r.set, r.unset) || {};
+    for (const f of ["name", "ability"]) {
+      if (!Object.keys(r.set).some(k => fieldOf(k) === f) && !r.unset.some(k => fieldOf(k) === f)) continue;
+      if (Object.values(left).some(p => p.field === f)) want[f] = f === "name" ? dv.name || b.name : dv.ability;
+      else if (b.edited?.includes(f)) op.unset.push(f);          // no box of it left: the derived field goes
+    }
+    if (Object.keys(r.set).length) op.set.parts = r.set;
+    op.unset.push(...r.unset.map(k => P.PART + k));
+    if (Object.keys(r.set).length || r.unset.length) op.partsBase = Object.fromEntries([...Object.keys(r.set), ...r.unset].map(k => [k, view.rec.partEdits?.[k] ?? null]));
+    return { error: r.error, notes: r.notes, texts: r.texts, added: r.added, derived: dv };
+  }
+  /** Where an op's fields go on a PSD with several pictures: part edits, stars, types and stats into the PSD's entry
+   *  (variant 1's); each picture's derived name/ability into its own. -> [[card, op]] to stage (c's first). */
+  function routeOps(c, op, read) {
+    const group = groupOf(c), first = group[0];
+    if (group.length < 2 || !read) return [[c, op]];
+    const out = new Map([[c.id, [c, op]]]);
+    const opOf = x => out.get(x.id)?.[1] || (out.set(x.id, [x, opFor(x)]), out.get(x.id)[1]);
+    if (first !== c) {                              // the PSD-kind fields go to the PSD's entry
+      const to = opOf(first);
+      for (const f of ["stars", "types", ...STATS, "creatures"]) {
+        if (f in op.set) { to.set[f] = op.set[f]; delete op.set[f]; }
+        if (op.unset.includes(f)) { to.unset = [...new Set([...(to.unset || []), f])]; op.unset = op.unset.filter(x => x !== f); }
+      }
+      const mine = new Set(partsView(c)?.list.map(x => x.key) || []);      // this picture's boxes: the form's word on them is the last
+      const kept = Object.fromEntries(Object.entries(to.set.parts || {}).filter(([k]) => !mine.has(k)));
+      if (op.set.parts || Object.keys(kept).length !== Object.keys(to.set.parts || {}).length) {
+        const all = { ...kept, ...op.set.parts }; if (Object.keys(all).length) to.set.parts = all; else delete to.set.parts;
+      }
+      delete op.set.parts;
+      const pu = op.unset.filter(x => x.startsWith(P.PART));
+      if (pu.length) { to.unset = [...new Set([...(to.unset || []), ...pu])]; op.unset = op.unset.filter(x => !x.startsWith(P.PART)); }
+      if (op.partsBase) { to.partsBase = { ...to.partsBase, ...op.partsBase }; delete op.partsBase; }
+    }
+    for (const x of group) {                        // the other pictures' derived fields, where an edited layer shows
+      if (x === c) continue;
+      const v = partsView(x); if (!v) continue;
+      const edited = v.list.filter(bx => bx.key in read.texts && read.texts[bx.key] !== (bx.deleted ? null : bx.start));
+      if (!edited.length) continue;
+      const dv = P.derived(v.list, P.viewTexts(v.list, read.texts)), bx = baseOf(x), o = opOf(x);
+      for (const f of ["name", "ability"]) {
+        if (!edited.some(e => e.field === f)) continue;
+        const now = f === "name" ? dv.name || bx.name : dv.ability;
+        if (!sameField(f, now, val(bx, f))) o.set[f] = now;
+        if (f === "name") o.name = now;
+      }
+    }
+    return [...out.values()];
+  }
+  function ruleBoxesHtml(view, c) {                // a rule page: a jump list, the page with the focused block marked, one box per block
+    const blocks = view.list, cw = view.rec.canvas?.w, ch = view.rec.canvas?.h;
+    return `<div class="part-rule"><nav class="part-jump" aria-label="Blocks">${blocks.map(b => `<button type="button" class="ghost" data-part-jump="${esc(b.key)}">${esc(b.label)}</button>`).join("")}</nav>
+      <div class="part-rule-cols"><div class="part-page"${cw && ch ? ` data-w="${cw}" data-h="${ch}" style="aspect-ratio:${cw}/${ch}"` : ""}><img src="${esc(app.imageOf(c, 720))}" alt=""><i class="part-hl" hidden></i></div>
+      <div class="part-list">${boxesHtml(view, "block")}</div></div></div>`;
+  }
   function ruleFormHtml(c) {
-    const b = baseOf(c);
+    const b = baseOf(c), view = partsView(c);
     const reset = f => { const p = psdVal(b, f); return same(val(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="Back to what the page says">↺ Page: ${esc(show(p))}</button>`; };
     const row = (f, label, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${label}</label><div class="ein">${input}${reset(f)}</div></div>`;
     return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
@@ -606,14 +752,15 @@ export function createEditor(app) {
       <h2>Edit rulebook page</h2><p class="muted">Goes into your batch. <span class="kbd">${esc(c.key)}</span></p>
       <form id="edit-form" class="edit-form" autocomplete="off"><fieldset><legend>Page</legend>
         ${row("name", "Title", `<input id="ef-name" value="${esc(c.name)}">`)}
-        ${row("ability", "Text", `<textarea id="ef-ability" rows="14" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea><div class="ability preview" id="ef-preview"></div>`)}
+        ${view ? `${partsTop(view, c)}<div class="erow" data-row="ability"><span class="elabel">Text</span><div class="ein parts"><p class="muted part-note">One box per text block on the page (Title and Note are database only).</p>${ruleBoxesHtml(view, c)}<p class="muted part-join">On the site:</p><div class="ability preview" id="ef-preview"></div></div></div>`
+          : row("ability", "Text", `<textarea id="ef-ability" rows="14" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea><div class="ability preview" id="ef-preview"></div>`)}
         ${row("note", "Note", `<textarea id="ef-note" rows="2" placeholder="Shown under the page" data-tokens>${esc(c.note || "")}</textarea>`)}
       </fieldset><div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
       <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div></form></div>`;
   }
   function formHtml(c) {
     if (isRule(c)) return ruleFormHtml(c);
-    const b = baseOf(c), isDup = !!b.dup, ban = banOf(c.id), admin = me?.admin;
+    const b = baseOf(c), isDup = !!b.dup, ban = banOf(c.id), admin = me?.admin, view = partsView(c);
     const kinds = Object.entries(app.KIND_LABEL).filter(([k]) => k !== "unknown" || k === c.type);
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
     const typeNames = [...new Set(Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name))].sort();
@@ -628,11 +775,14 @@ export function createEditor(app) {
       <div class="edit-cols">
       <form id="edit-form" class="edit-form" autocomplete="off">
         <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD; an edit shows as “PSD pending” until the card image is regenerated.${b.refused ? ` The last image update was refused: ${esc(b.refused)}.` : ""}</p>
+        ${view ? partsTop(view, c) : ""}
         <fieldset><legend>Card</legend>
-          ${row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
-          ${row("stars", num("stars"))}
+          ${view?.list.some(x => x.kind === "title") ? `<div class="erow" data-row="name"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts">${boxesHtml(view, "title")}
+            <p class="muted part-join" id="ef-name-join"></p></div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
+          ${row("stars", num("stars"))}${view ? `<p class="muted part-note" id="ef-stars-note"></p>` : ""}
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
             return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-type="${esc(t)}" aria-pressed="${on}" data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>`)}
+          ${view && !(psdVal(b, "types") || []).length ? `<p class="muted part-note">No type icon yet: the first goes at ${esc(view.rec.template?.file ? view.rec.template.file.split("/").pop().replace(/\.psd$/i, "") : "the template")}'s spot (flagged).</p>` : ""}
         </fieldset>
         <fieldset><legend>Stats</legend>
           <div class="estats" id="ef-single"${c.creatures?.length > 1 ? " hidden" : ""}>${STATS.map(f => row(f, num(f))).join("")}</div>
@@ -643,7 +793,10 @@ export function createEditor(app) {
             <button type="button" class="ghost" data-creature="remove" ${c.creatures?.length > 1 ? "" : "hidden"}>− Creature</button></div>
         </fieldset>
         <fieldset><legend>Text</legend>
-          ${row("ability", `<textarea id="ef-ability" rows="6" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea>
+          ${view ? `<div class="erow" data-row="ability"><span class="elabel">${LABEL.ability}${psdNote("ability")}</span><div class="ein parts">${boxesHtml(view, "ability")}${addHtml(view, c)}
+            <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}" alt="${esc(t)}"></button>` : ""; }).join("")}</div>
+            <p class="muted part-join">On the site:</p><div class="ability preview" id="ef-preview"></div></div></div>`
+          : row("ability", `<textarea id="ef-ability" rows="6" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea>
             <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}" alt="${esc(t)}"></button>` : ""; }).join("")}</div>
             <div class="ability preview" id="ef-preview"></div>`)}
         </fieldset>
@@ -727,6 +880,12 @@ export function createEditor(app) {
       want.creatures = tidy("creatures", want.creatures);
     }
     const op = { id: c.id, key: c.key, name: want.name, set: {}, unset: [] };
+    lastRead = null;
+    if (partsView(c)) {                              // one box per layer: parts, and the derived fields of the boxes changed
+      lastRead = readParts(c, b, want, op);
+      if (lastRead.error) error = lastRead.error;
+      op.name = want.name || b.name;
+    }
     for (const [k, v] of Object.entries(want)) {
       const pub = val(b, k);
       if (sameField(k, v, pub) || (typeof v === "string" && typeof pub === "string" && v === pub.replace(/\r/g, "").trim())) continue;   // as published
@@ -748,8 +907,10 @@ export function createEditor(app) {
       if (Object.keys(rate).length) op.rate = rate;
     }
     if (error) op.error = error;
+    op.unset = [...new Set(op.unset)];
     return op;
   }
+  let lastRead = null;                             // readForm's parts reading (texts, derived), for routeOps
   const items = op => { const c = find(op.id); return describeItems(op, c ? baseOf(c) : {}, { byId: S.byId, rule: isRule(c) }); };
   const describe = op => items(op).map(x => x.text);
   // ---- single fields, staged in place (inline.js): merged into the card's op, so the form and the bar see one batch
@@ -766,10 +927,31 @@ export function createEditor(app) {
   function stageField(id, f, v, defer = false) {
     const c = find(id); if (!c || !(f in FIELDS)) return null;
     const b = baseOf(c);
+    const one = (f === "name" || f === "ability") && partsView(c);
+    if (one && !one.rule && one.list.filter(x => x.field === f).length === 1) return stagePart(c, one, f, v, defer);
     let x = fromInput(f, v, b.name);
     if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, f === "subseries" ? c.series || "" : "", c.id)) === undefined) return null;
     const op = mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x);
     put(c.id, op); if (!defer) save();
+    return op;
+  }
+  // an inline edit of a card's one title or ability layer, as a part edit (the parts format whenever the record has parts)
+  function stagePart(c, view, f, v, defer) {
+    const box = view.list.find(x => x.field === f), b = baseOf(c), text = P.tidyText(f === "name" ? String(v ?? "").replace(/\s+/g, " ") : v) || (f === "name" ? box.start : "");
+    const r = P.readParts(view.rec, view.list, { values: { [box.key]: text } });
+    if (r.error) { app.toast(r.error); return null; }
+    let op = opFor(c);
+    const parts = { ...op.set.parts }; delete parts[box.key];
+    if (r.set[box.key]) parts[box.key] = r.set[box.key];
+    if (Object.keys(parts).length) op.set.parts = parts; else delete op.set.parts;
+    op.unset = (op.unset || []).filter(k => k !== P.PART + box.key).concat(r.unset.includes(box.key) ? [P.PART + box.key] : []);
+    if (r.set[box.key] || r.unset.includes(box.key)) op.partsBase = { ...op.partsBase, [box.key]: view.rec.partEdits?.[box.key] ?? null };
+    const now = f === "name" ? P.joinTitle([text]) : r.texts[box.key] ?? "";
+    const stillPart = r.set[box.key] || (view.rec.partEdits?.[box.key] && !r.unset.includes(box.key));
+    op = stillPart ? mergeField(op, { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, now || null)
+      : { ...op, set: Object.fromEntries(Object.entries(op.set).filter(([k]) => k !== f)), unset: [...new Set([...op.unset.filter(k => k !== f), ...(b.edited?.includes(f) ? [f] : [])])] };
+    for (const [x, o] of routeOps(c, op, { texts: { [box.key]: r.texts[box.key] } })) put(x.id, o);
+    if (!defer) save();
     return op;
   }
   function stageAuthor(id, v, defer = false) {
@@ -907,17 +1089,47 @@ export function createEditor(app) {
     body.innerHTML = live.previewHtml(live.previewCard(b, values, op.author, f => psdVal(b, f)), live.changedFields(b, values, op.author), previewCtx);
     for (const a of body.querySelectorAll("a")) a.tabIndex = -1;    // a picture of the page: its links don't leave the form
   }
-  function openForm(id, { draft: restored = null } = {}) {       // restored: a draft's fields, from the card page's offer
+  // restored: a draft's fields, from the card page's offer; focus: "name" | "ability" | a layer id (inline.js on a card of several boxes)
+  function openForm(id, { draft: restored = null, focus = null } = {}) {
     const c = find(id);
     if (!c) return;
-    if (!me) { openHub(`Sign in to edit ${c.name}.`, () => openForm(id, { draft: restored })); return; }
+    if (!me) { openHub(`Sign in to edit ${c.name}.`, () => openForm(id, { draft: restored, focus })); return; }
+    if ([c, ...groupOf(c)].some(x => x.details && !recs.has(x.id) && app.loadDetails)) { withRecs(c, () => openForm(id, { draft: restored, focus })); return; }
+    const view = partsView(c);
+    partForm = view ? { c, view, deleted: new Set(view.list.filter(x => x.deleted).map(x => x.key)), drops: new Set(), added: !!view.added, last: null } : null;
     app.modal.innerHTML = formHtml(c);
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
     const form = app.modal.querySelector("#edit-form"), ta = document.getElementById("ef-ability");
+    const first = () => (focus && view ? (/^\d+$/.test(focus) ? partEl(focus) : form.querySelector(`.part-box[data-kind="${focus === "name" ? "title" : focus === "ability" ? "ability" : "block"}"] [data-part]`)) : null)
+      || document.getElementById(isRule(c) ? "ef-ability" : "ef-name") || form.querySelector("[data-part]");
+    const paintBoxes = () => {                     // the deleted boxes, the added one, the rule page's mark
+      if (!partForm) return;
+      for (const el of form.querySelectorAll(".part-box[data-part-box]")) el.classList.toggle("deleted", partForm.deleted.has(el.dataset.partBox));
+      const add = form.querySelector(".part-add"); if (add) { add.hidden = !partForm.added; form.querySelector("[data-part-add]").hidden = partForm.added; }
+      for (const el of form.querySelectorAll("[data-part-gone]")) el.classList.toggle("dropped", partForm.drops.has(el.dataset.partGone));
+    };
+    const mark = key => {                          // a rule page: the focused block's box on the page
+      const page = form.querySelector(".part-page"), hl = page?.querySelector(".part-hl"), part = view?.list.find(x => x.key === key)?.part;
+      if (!hl) return;
+      const w = +page.dataset.w, h = +page.dataset.h;
+      if (!part?.box || !w || !h) { hl.hidden = true; return; }
+      const [x0, y0, x1, y1] = part.box;
+      Object.assign(hl.style, { left: `${(x0 / w) * 100}%`, top: `${(y0 / h) * 100}%`, width: `${((x1 - x0) / w) * 100}%`, height: `${((y1 - y0) / h) * 100}%` });
+      hl.hidden = false;
+    };
     const update = () => {
-      document.getElementById("ef-preview").innerHTML = ta.value.trim() ? app.render(ta.value, c.name) : `<span class="muted">No ability text.</span>`;
-      const op = readForm(c), lines = describe(op);
-      document.getElementById("ef-summary").innerHTML = (op.error ? `<span class="err">${esc(op.error)}.</span> ` : "") + (lines.length ? `<b>${lines.length} change${lines.length > 1 ? "s" : ""}:</b> ${lines.map(esc).join(" · ")}` : "No changes yet.");
+      const op = readForm(c), lines = describe(op), text = partForm ? lastRead?.derived.ability || "" : ta.value;
+      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text, c.name) : `<span class="muted">No ability text.</span>`;
+      if (partForm) {
+        const join = document.getElementById("ef-name-join"); if (join) join.textContent = `Name on the site: “${lastRead?.derived.name || ""}”`;
+        const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");
+        const mv = sn && st ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
+        if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${partForm.view.rec.header?.stars ? " and redraws the printed stars" : ""}.` : "";
+        paintBoxes();
+      }
+      const notes = lastRead?.notes || [];
+      document.getElementById("ef-summary").innerHTML = (op.error ? `<span class="err">${esc(op.error)}.</span> ` : "") + (lines.length ? `<b>${lines.length} change${lines.length > 1 ? "s" : ""}:</b> ${lines.map(esc).join(" · ")}` : "No changes yet.")
+        + (notes.length ? ` <span class="part-warn">${notes.map(esc).join(" · ")}</span>` : "");
       form.dataset.dirty = lines.length || op.error ? "1" : "";       // a refused name is typed text too: Cancel and leaving still ask
       paintPreview(c, op);
       const f = document.activeElement?.closest?.("#edit-form [id^='ef-'], #ef-types, #ef-creatures-box")?.id.slice(3);
@@ -938,13 +1150,23 @@ export function createEditor(app) {
       else if (Object.keys(typed).length) cardDrafts.put(c.id, typed, true, base); else cardDrafts.drop(c.id);
     });
     const typing = () => autosave.run();
+    const joined = partForm && !restored && Object.keys(cardDrafts.get(c.id)?.fields || {}).filter(f => (f === "name" || f === "ability") && !(f in start));
+    if (joined?.length) { cardDrafts.drop(c.id, joined); app.toast(`An older unsaved ${joined.map(f => LABEL[f]).join(" and ")} edit can't go into the boxes: dropped`); }   // a joined draft of a card of several layers
     const older = !restored && cardDrafts.get(c.id), offered = older && draft.restorable(older.fields, start);
     if (restored) draft.fillValues(form, restored, { creatures: setCreatures });
     else if (offered && Object.keys(offered).length) { form.insertAdjacentHTML("afterbegin", draft.offerHtml(offered, older.at, Date.now(), draft.movedSince(older, start))); keepOld = older; }
     else if (older) cardDrafts.drop(c.id);                                 // the batch has it already
     let found = cardDrafts.snap(c.id);              // the draft as the dialog found it: Cancel puts it back (only Discard, a save or a publish lose it)
     formDraft = { flush: () => autosave.flush(), discard: () => { autosave.cancel(); cardDrafts.back(c.id, found); } };
-    form.addEventListener("input", () => { update(); typing(); });
+    form.addEventListener("input", e => {
+      const box = e.target.closest?.("[data-part]");
+      if (box) {                                  // straight apostrophes as typed or pasted (owner 10-25); the box grows with its lines
+        if (/[‘’]/.test(box.value)) { const at = box.selectionStart; box.value = box.value.replace(/[‘’]/g, "'"); box.setSelectionRange(at, at); }
+        box.rows = rowsOf(box.value);
+      }
+      update(); typing();
+    });
+    form.addEventListener("focusin", e => { const box = e.target.closest?.("[data-part]"); if (box && partForm) { partForm.last = box; mark(box.dataset.part); } });
     form.addEventListener("change", () => { update(); typing(); });
     app.modal.querySelector(".lp-toggle")?.addEventListener("click", e => {
       previewOpen = !previewOpen;
@@ -957,14 +1179,30 @@ export function createEditor(app) {
         form.querySelector(".draft-offer").remove(); keepOld = null;
         if (ans.dataset.draft === "restore") { draft.fillValues(form, offered, { creatures: setCreatures }); form.dispatchEvent(new Event("input", { bubbles: true })); }   // as typed: the image previews follow too
         else { autosave.cancel(); found = null; cardDrafts.drop(c.id); autosave.run(); app.toast("Unsaved edit discarded"); }   // what was typed meanwhile stays a draft
-        document.getElementById(isRule(c) ? "ef-ability" : "ef-name").focus();
+        first()?.focus();
         return;
+      }
+      const pb = partForm && e.target.closest("[data-part-del], [data-part-undo], [data-part-ps], [data-part-redo], [data-part-skipped], [data-part-add], [data-part-add-remove], [data-part-drop], [data-part-pic], [data-part-jump]");
+      if (pb) {
+        const d = pb.dataset, box = k => view.list.find(x => x.key === k), set = (k, t) => { const el = partEl(k); if (el) { el.value = t; el.rows = rowsOf(t); el.focus(); } };
+        if (d.partPic) { if (d.partPic !== c.id) { autosave.flush(); openForm(d.partPic); } return; }
+        if (d.partJump) { const el = partEl(d.partJump); el?.scrollIntoView({ block: "nearest" }); el?.focus(); return; }
+        if (d.partDel) partForm.deleted.add(d.partDel);
+        else if (d.partUndo) { partForm.deleted.delete(d.partUndo); partEl(d.partUndo)?.focus(); }
+        else if (d.partPs) { partForm.drops.add(d.partPs); set(d.partPs, box(d.partPs).part.text); pb.closest(".part-warn")?.remove(); }
+        else if (d.partRedo) { set(d.partRedo, box(d.partRedo).edit.text); pb.closest(".part-warn")?.remove(); }
+        else if (d.partSkipped) set(d.partSkipped, box(d.partSkipped).skipped.text || "");
+        else if (pb.hasAttribute("data-part-add")) { partForm.added = true; paintBoxes(); partEl(P.ADD)?.focus(); }
+        else if (pb.hasAttribute("data-part-add-remove")) { partForm.added = false; const el = partEl(P.ADD); if (el) el.value = ""; }
+        else if (d.partDrop) partForm.drops.add(d.partDrop);
+        update(); typing(); return;
       }
       if (e.target.closest("[data-type], [data-insert], [data-reset], [data-creature]")) typing();
       const t = e.target.closest("[data-type]");
       if (t) { const on = !t.classList.contains("on"); t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); update(); return; }
       const ins = e.target.closest("[data-insert]");
-      if (ins) { const s = ta.selectionStart, end = ta.selectionEnd; ta.setRangeText(ins.dataset.insert, s, end, "end"); ta.focus(); update(); return; }
+      if (ins) { const box = partForm?.last?.isConnected ? partForm.last : ta || form.querySelector(".part-box[data-kind=ability] [data-part]"); if (!box) return;
+        const s = box.selectionStart, end = box.selectionEnd; box.setRangeText(ins.dataset.insert, s, end, "end"); box.focus(); update(); return; }
       const r = e.target.closest("[data-reset]");
       if (r) { resetField(c, r.dataset.reset); update(); return; }
       const cr = e.target.closest("[data-creature]");
@@ -975,14 +1213,16 @@ export function createEditor(app) {
       const op = readForm(c);
       if (op.error) { app.toast(op.error); return; }
       autosave.cancel(); cardDrafts.drop(c.id); formDraft = null;          // in the batch now
-      if (opEmpty(op)) delete stage.cards[c.id]; else stage.cards[c.id] = op;
+      const routed = routeOps(c, op, lastRead);    // a picture's PSD fields: the PSD's entry
+      for (const [x, o] of routed) { if (opEmpty(o)) delete stage.cards[x.id]; else stage.cards[x.id] = o; }
       save();
-      app.toast(opEmpty(op) ? "No changes" : `Added to the batch: ${count()} unpublished`);
+      app.toast(routed.every(([, o]) => opEmpty(o)) ? "No changes" : `Added to the batch: ${count()} unpublished`);
       if (isRule(c)) { app.closeModal(); app.rerender(); } else app.goCard(c.id);
     });
     update();
     if (!isRule(c)) app.formOpened?.({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)
-    document.getElementById(isRule(c) ? "ef-ability" : "ef-name").focus();
+    if (partForm) paintBoxes();
+    first()?.focus();
     if (restored) autosave.run();
     form.querySelector(".draft-offer [data-draft=restore]")?.focus();   // an offer: a stray key can't throw the draft away
   }
@@ -1303,14 +1543,16 @@ export function createEditor(app) {
     return lines.join("\n");
   }
   // the drafted fields an op covers: other fields' drafts (a card a rename reached) stay
-  const opFields = op => [...Object.keys(op.set || {}), ...(op.unset || []), ...(op.author !== undefined ? ["author"] : []),
+  const opFields = op => [...Object.keys(op.set || {}), ...Object.keys(op.set?.parts || {}).map(k => P.PART + k), ...(op.unset || []), ...(op.author !== undefined ? ["author"] : []),
     ...(op.ban ? ["banned", "ban-group", "ban-reason"] : []), ...(op.rate ? RATE.map(k => `rate-${k}`) : [])];
   const dropDrafts = ops => { for (const op of ops) cardDrafts.drop(op.id, opFields(op)); };
   async function publish(message) {
     const ops = Object.values(stage.cards), people = stage.people, F = files();
     const at = new Date().toISOString().replace(/\.\d+Z$/, "Z");
     const edits = {};
-    if (ops.some(o => Object.keys(o.set).length || o.unset.length)) edits[F.edits] = t => editsFile(t, ops, at, me.login, F.edits);
+    const clashes = new Map();                     // boxes someone else edited since they were staged: "op name: layer"
+    const clash = (op, keys, theirs) => { for (const k of keys) clashes.set(`${op.name}: ${op.set.parts?.[k]?.layer || theirs?.[k]?.layer || k}`, theirs?.[k]?.text ?? (theirs?.[k]?.delete ? "(delete)" : "(none)")); };
+    if (ops.some(o => Object.keys(o.set).length || o.unset.length)) edits[F.edits] = t => editsFile(t, ops, at, me.login, F.edits, clash);
     if (ops.some(o => o.author !== undefined) || Object.keys(people).length) edits[F.authors] = t => authorsFile(t, ops, people);
     if (ops.some(o => o.ban)) edits[F.banlist] = t => banFile(t, ops);
     if (ops.some(o => o.rate)) edits[F.ratings] = t => ratingsFile(t, ops, pacificDay(new Date(at)), me.login, F.ratings);
@@ -1327,6 +1569,7 @@ export function createEditor(app) {
     const what = [...names, ...(Object.keys(people).length ? ["people"] : []), ...(stage.admins ? ["admins"] : []), ...Object.keys(profiles).map(l => `${l}'s profile`),
       ...Object.entries(decksOut).map(([k, f]) => (f ? (f.private ? `private deck ${k}` : `deck ${f.name || k}`) : `deck ${k} removed`))];   // a private deck's name stays out of the public commit message
     const got = {}, sha = await commitFiles(edits, message || (what.length > 3 ? `Website edits: ${what.length} changes` : `Website edit: ${what.join(", ")}`), got);
+    if (sha && clashes.size) app.toast(`Someone else edited ${clashes.size === 1 ? "this box" : "these boxes"} meanwhile; yours replaced theirs: ${[...clashes].map(([w, t]) => `${w} (theirs: “${t.length > 40 ? `${t.slice(0, 38)}…` : t}”)`).join(" · ")}`);
     const sent = sentRecord() || {};
     if (sha) localStorage.setItem(K.sent, JSON.stringify({ at, committed: got.date, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
       decks: { ...sentDecks(), ...decksOut }, people: { ...sentPeople(), ...people }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));   // no commit: no rebuild to wait for (the site already has it)
@@ -1591,6 +1834,17 @@ export function createEditor(app) {
       for (const o of [...sentOps().filter(x => x.id === id), op].filter(Boolean)) { for (const k of Object.keys(o.set || {})) f.add(k); for (const k of o.unset || []) f.delete(k); }
       return [...f]; },
     stageRating,
+    // the parts editor: a card's boxes per field once its record is loaded ({title, ability, rule} or null: no parts), and
+    // the parts its Card Edits.json entry (its PSD's: variant 1's) would hold once published, for the previews
+    partsFor: c => new Promise(ok => withRecs(c, () => { const v = partsView(c); ok(v && { rule: v.rule, title: v.list.filter(x => x.kind === "title").length, ability: v.list.filter(x => x.kind === "ability").length }); })),
+    entryParts(id, op = null) {
+      const c = find(id); if (!c) return null;
+      const first = groupOf(c)[0], v = partsView(first) || partsView(c); if (!v) return null;
+      const o = op && op.id === first.id ? op : stage.cards[first.id], mine = op && op.id !== first.id ? op : null;
+      let parts = P.mergeParts(Object.fromEntries(Object.entries(v.rec.partEdits || {}).filter(([k]) => v.rec.partState?.[k] === "pending")), o?.set?.parts, (o?.unset || []).filter(k => k.startsWith(P.PART)).map(k => k.slice(P.PART.length)));
+      if (mine) parts = P.mergeParts(parts, mine.set?.parts, (mine.unset || []).filter(k => k.startsWith(P.PART)).map(k => k.slice(P.PART.length)));
+      return parts;
+    },
     myRating: id => stage.cards[id]?.rate || null,
     names: nameEntries,
     canonical: (kind, v, series) => canonical(kind, v, series),

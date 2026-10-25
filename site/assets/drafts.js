@@ -37,7 +37,7 @@ export const changed = (now, start) => Object.fromEntries(Object.entries(now).fi
 export const restorable = (fields, current) => Object.fromEntries(Object.entries(fields || {}).filter(([f, v]) => !(f in current) || !sameRaw(v, current[f])));
 /** The offer's words for the fields: "Ability, HP" (each name once). */
 export const fieldNames = fields => { const at = Object.keys(NAMES), rank = f => (at.includes(f) ? at.indexOf(f) : at.length);
-  return [...new Set(Object.keys(fields).sort((a, b) => rank(a) - rank(b)).map(f => NAMES[f] || f))].join(", "); };   // the form's order
+  return [...new Set(Object.keys(fields).sort((a, b) => rank(a) - rank(b)).map(f => NAMES[f] || (f.startsWith("part:") ? "Text boxes" : f)))].join(", "); };   // the form's order; part:<layer id>: a box of the parts editor
 /** When, roughly: "just now", "5 min ago", "3 h ago", "2 days ago". */
 export function ago(at, now = Date.now()) {
   const m = Math.max(0, Math.round((now - at) / 60000));
@@ -138,7 +138,7 @@ export function fillValues(form, fields, { creatures = null } = {}) {
       for (const b of form.querySelectorAll("#ef-types [data-type]")) { const on = Array.isArray(v) && v.includes(b.dataset.type); b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); }
     } else if (f === "creatures") creatures?.(v);
     else {
-      const el = form.querySelector(`#ef-${f}`);
+      const el = form.querySelector(/^[\w-]+$/.test(f) ? `#ef-${f}` : `[id="ef-${String(f).replace(/["\\]/g, "\\$&")}"]`);     // part:<layer id> has a colon
       if (!el) continue;
       if (el.type === "checkbox") el.checked = !!v; else el.value = v ?? "";
     }
