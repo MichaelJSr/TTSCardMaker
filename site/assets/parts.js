@@ -9,6 +9,14 @@ export const ADD = "+ability";                     // the key of an ability adde
 const arr = v => (Array.isArray(v) ? v : []);
 /** A box's text as published: no \r, straight apostrophes (owner 10-25), blank ends gone. */
 export const tidyText = t => String(t ?? "").replace(/\r/g, "").replace(/[‘’]/g, "'").trim();
+/** Straight apostrophes in a text box as typed or pasted (owner 10-25), the caret kept; whether it changed. */
+export function straighten(box) {
+  if (!box || !/[‘’]/.test(box.value ?? "")) return false;
+  const a = box.selectionStart, b = box.selectionEnd;
+  box.value = box.value.replace(/[‘’]/g, "'");
+  if (a != null) box.setSelectionRange(a, b);
+  return true;
+}
 
 /** The record's parts when it has boxes ({title, ability, blocks, follow}), else null (the editor works as before). */
 export function partsOf(d) {

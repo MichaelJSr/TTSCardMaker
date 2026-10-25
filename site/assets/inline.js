@@ -9,6 +9,7 @@ import { starsHtml, paintStars, stepValue } from "./stars.js";
 import { typeVocab, mountPalette, rowHtml } from "./palette.js";
 import { rawOf, restorable, offerHtml, later, movedSince } from "./drafts.js";
 import { renameButton } from "./edit.js";
+import { straighten } from "./parts.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 const SLIDERS = [...STATS, "stars"];                // a row of cells: click one, or arrows and Enter
@@ -147,7 +148,8 @@ function open(el, f, text = null) {               // text: a restored draft
   if (!swap) { delete el.dataset.tip; if (el.tagName === "P") el.className = "ability"; }   // "No ability text." becomes the text box
   host.innerHTML = control(f, text ?? v, false, c.series || "");
   cur.ctl = host.querySelector("input, textarea");
-  const save = cur.save; cur.ctl.addEventListener("input", () => save.run());
+  const save = cur.save, words = f === "name" || f === "ability" || f === "note";
+  cur.ctl.addEventListener("input", e => { if (words && !e.isComposing) straighten(e.target); save.run(); });   // straight apostrophes (owner 10-25)
   if (text != null) save.run();
   cur.ctl.focus(); if (f !== "ability" && text == null) cur.ctl.select();
 }

@@ -1176,10 +1176,8 @@ export function createEditor(app) {
     formDraft = { flush: () => autosave.flush(), discard: () => { autosave.cancel(); cardDrafts.back(c.id, found); } };
     form.addEventListener("input", e => {
       const box = e.target.closest?.("[data-part]");
-      if (box) {                                  // straight apostrophes as typed or pasted (owner 10-25); the box grows with its lines
-        if (/[‘’]/.test(box.value)) { const at = box.selectionStart; box.value = box.value.replace(/[‘’]/g, "'"); box.setSelectionRange(at, at); }
-        box.rows = rowsOf(box.value);
-      }
+      if (!e.isComposing && e.target.matches?.("[data-part], #ef-name, #ef-ability, #ef-note")) P.straighten(e.target);   // straight apostrophes as typed or pasted (owner 10-25)
+      if (box) box.rows = rowsOf(box.value);      // the box grows with its lines
       update(); typing();
     });
     form.addEventListener("focusin", e => { const box = e.target.closest?.("[data-part]"); if (box && partForm) { partForm.last = box; mark(box.dataset.part); } });
