@@ -111,6 +111,25 @@ export const RENAME = { series: "series", subseries: "subseries", author: "autho
 /** The cards carrying `from` as key (case and spacing don't count); a subseries: in `series` too. */
 export const carrying = (cards, key, from, series = "") => cards.filter(c => c[key] && nameKey(c[key]) === nameKey(from)
   && (key !== "subseries" || nameKey(c.series) === nameKey(series)));
+/** A list's filter after a rename ({key, from, to, series}): {param: values} on the new name, or null (no filter on it;
+ *  a subseries: not one in the renamed series, or shared, a name another series' cards keep). */
+export function renamedFilter(params, { key, from, to, series = "" }, shared = false) {
+  const pk = key === "subtype" ? "sub" : key, cur = params.get(pk), s = params.get("series");
+  if (!cur?.split(",").some(v => nameKey(v) === nameKey(from))) return null;
+  if (key === "subseries" && (s ? nameKey(s) !== nameKey(series) : shared)) return null;
+  return { [pk]: [...new Set(cur.split(",").map(v => (nameKey(v) === nameKey(from) ? to : v)))] };
+}
+/** The authors [people] lines ({git: shown}, staged over base) move: lowercase shown name -> new name, for a name that
+ *  has its own line and whose every line moves alike (cards credited to it follow: build_site person(), CardAuthors.resolve). */
+export function peopleMoves(base, people) {
+  const low = o => new Map(Object.entries(o).map(([g, v]) => [g.toLowerCase(), v]));
+  const was = low(base), now = new Map([...was, ...low(people)]), out = new Map();
+  for (const [g, v] of Object.entries(people)) {
+    const old = String(was.get(g.toLowerCase()) ?? g).toLowerCase();
+    if (now.get(old) === v && [...was].every(([k, x]) => x.toLowerCase() !== old || now.get(k) === v)) out.set(old, v);
+  }
+  return out;
+}
 /** The Rename button of a listed value (filter bar, pinned box, card tag): cls its class, text its label. */
 export const renameButton = (key, v, series = "", cls = "ghost", text = "⇄") => `<button type="button" class="${cls}" data-action="rename-value" data-rename-k="${key}" data-rename-v="${esc(v)}"${
   series ? ` data-rename-s="${esc(series)}"` : ""} aria-label="${esc(`Rename the ${RENAME[key]} ${v} everywhere`)}" title="Rename everywhere">${esc(text)}</button>`;
@@ -500,13 +519,20 @@ export function createEditor(app) {
   const sentOps = () => sentRecord()?.ops || [];
   const sentProfiles = () => sentRecord()?.profiles || {};
   const sentDecks = () => sentRecord()?.decks || {};
+  const sentPeople = () => sentRecord()?.people || {};
+  function movePeople(base, people, mark) {       // cards whose author a [people] line moves (peopleMoves)
+    const m = peopleMoves(base, people); if (!m.size) return;
+    for (const c of S.all) { const to = m.get(String(c.author || "").toLowerCase()); if (to !== undefined && to !== c.author) { snap(c); c.author = to; c[mark] = true; } }
+  }
   function preview() {
     for (const [id, p] of pristine) { const c = find(id); if (!c) continue; for (const k of Object.keys(c)) delete c[k]; Object.assign(c, structuredClone(p)); }
     pristine.clear(); based.clear();
     if (pristineBan) S.data.banlist = structuredClone(pristineBan); else pristineBan = structuredClone(S.data.banlist);
     for (const op of sentOps()) applyOp({ ...op, _sent: true });
+    movePeople(S.data.peopleMap || {}, sentPeople(), "_sent");
     for (const id of pristine.keys()) based.set(id, structuredClone(S.byId.get(id)));
     for (const op of Object.values(stage.cards)) applyOp(op);
+    movePeople({ ...S.data.peopleMap, ...sentPeople() }, stage.people, "_staged");
     app.derive();
     renderBar();
   }
@@ -795,7 +821,8 @@ export function createEditor(app) {
   }
   // ---- Rename everywhere: `from` -> the typed name on every card carrying it (hidden ones too), each card's own edit
   // (stageField / stageAuthor). Onto a known name: merged, in its spelling; an item type: an Items/ folder; a duplicate's
-  // author follows its original. -> null (nothing typed), {error}, or {name, change (ids), others (cards already there), dups}
+  // author follows its original; an author's [people] lines move too (replace_author did), cards they carry need no edit.
+  // -> null (nothing typed), {error}, or {name, change (ids to edit), cards (changing), people {git: name}, others, dups}
   function renamePlan(key, from, typed, series = "") {
     const cards = carrying(S.all, key, from, series), ids = new Set(cards.map(c => c.id));
     let name;
@@ -804,17 +831,29 @@ export function createEditor(app) {
       if (!name) return null;
       if (!ITEM_TYPES.includes(name)) return { error: `Item types are the Items folders: ${ITEM_TYPES.join(", ")}` };
     } else {
-      const r = canonName(key, typed, knownNames(key, series, ids));
+      const r = canonName(key, typed, knownNames(key, series, ids).filter(([, shown]) => nameKey(shown) !== nameKey(from)));   // from's own spelling can change
       if (!r || r.error) return r;
       name = r.name;
     }
-    const dups = key === "author" ? cards.filter(c => baseOf(c).dup) : [];
-    return { name, change: cards.filter(c => !dups.includes(c) && c[key] !== name).map(c => c.id), dups: dups.length,
+    const dups = key === "author" ? cards.filter(c => baseOf(c).dup) : [], moved = cards.filter(c => !dups.includes(c) && c[key] !== name);
+    let change = moved, people = {};
+    if (key === "author") {                        // every line showing from, and "from = name" when from is a name without one
+      const lines = { ...S.data.peopleMap, ...sentPeople(), ...stage.people }, low = from.toLowerCase();
+      for (const [g, v] of Object.entries(lines)) if (nameKey(v) === nameKey(from) && v !== name) people[g] = name;
+      if (!Object.keys(lines).some(g => g.toLowerCase() === low) && (S.data.people || []).some(x => x.toLowerCase() === low)) people[from] = name;
+      const now = new Map(Object.entries({ ...lines, ...people }).map(([g, v]) => [g.toLowerCase(), v]));
+      const raw = c => (stage.cards[c.id]?.author !== undefined ? stage.cards[c.id].author : baseOf(c).author);   // the name its line credits
+      change = moved.filter(c => !raw(c) || now.get(raw(c).toLowerCase()) !== name);
+    }
+    return { name, change: change.map(c => c.id), cards: moved.length, people, dups: dups.length,
       others: carrying(S.all, key, name, series).filter(c => !ids.has(c.id)).length };
   }
+  const idle = p => !p || !!p.error || (!p.change.length && !Object.keys(p.people).length);
   function renameAll(key, from, typed, series = "") {      // stages the plan, one save
     const p = renamePlan(key, from, typed, series);
-    if (!p || p.error || !p.change.length) return p;
+    if (idle(p)) return p;
+    const was = { ...S.data.peopleMap, ...sentPeople() };
+    for (const [g, v] of Object.entries(p.people)) if (was[g] === v) delete stage.people[g]; else stage.people[g] = v;
     for (const id of p.change) if (key === "author") stageAuthor(id, p.name, true); else stageField(id, key, p.name, true);
     save();
     return p;
@@ -832,24 +871,30 @@ export function createEditor(app) {
     const form = app.modal.querySelector("#rename-form"), input = form.querySelector("#rn-to"), btn = form.querySelector("[type=submit]");
     const update = () => {
       const p = renamePlan(key, from, input.value, series);
-      btn.disabled = !p || !!p.error || !p.change.length;
+      const ppl = Object.keys(p?.people || {});
+      btn.disabled = idle(p);
       form.querySelector("#rn-summary").innerHTML = !p ? "Type the new name." : p.error ? `<span class="err">${esc(p.error)}</span>`
-        : !p.change.length ? `Nothing changes: ${p.dups ? "duplicates follow their originals" : `every card has ${esc(p.name)}`}.`
-        : [`<b>${cardsN(p.change.length)} change${p.change.length === 1 ? "s" : ""}</b>: ${noun} → ${esc(p.name)}`, p.others ? `merges with the ${cardsN(p.others)} already there` : "",
+        : idle(p) ? `Nothing changes: ${p.dups ? "duplicates follow their originals" : `every card has ${esc(p.name)}`}.`
+        : [p.cards ? `<b>${cardsN(p.cards)} change${p.cards === 1 ? "s" : ""}</b>: ${noun} → ${esc(p.name)}` : "", p.others ? `merges with the ${cardsN(p.others)} already there` : "",
+          ppl.length ? `[people]: ${esc(ppl.join(", "))} shown as ${esc(p.name)} (rulebook pages and new cards follow)` : "",
           p.dups ? `${p.dups === 1 ? "1 duplicate keeps its original's" : `${p.dups} duplicates keep their originals'`} author` : ""].filter(Boolean).join(" · ");
     };
     input.addEventListener("input", update);
     form.addEventListener("submit", e => {
       e.preventDefault();
       const p = renameAll(key, from, input.value, series);
-      if (!p || p.error || !p.change.length) { update(); return; }
-      app.toast(`${cardsN(p.change.length)}: ${noun} → ${p.name} · ${count()} unpublished`);
-      document.dispatchEvent(new CustomEvent("value-renamed", { detail: { key, from, to: p.name, series } }));   // the pinned boxes follow (tray.js)
-      if (back) { app.goCard(back); return; }
+      if (idle(p)) { update(); return; }
+      app.toast(`${cardsN(p.cards)}: ${noun} → ${p.name} · ${count()} unpublished`);
+      const detail = { key, from, to: p.name, series }, shared = carrying(S.all, key, from).length > 0;   // a subseries other series keep
+      document.dispatchEvent(new CustomEvent("value-renamed", { detail }));   // the pinned boxes follow (tray.js)
+      if (back) {                                  // the list under the card: its filter follows
+        const [path, q = ""] = S.listHash.split("?"), params = new URLSearchParams(q), u = /^#?\/?(cards)?$/.test(path) && renamedFilter(params, detail, shared);
+        if (u) { for (const [k, v] of Object.entries(u)) params.set(k, v.join(",")); S.listHash = `${path}?${params}`; }
+        app.goCard(back); return;
+      }
       app.closeModal();
-      const r = app.route(), pk = key === "subtype" ? "sub" : key, cur = r.name === "cards" ? r.params.get(pk) : null;   // a filter on the old name follows it
-      if (cur?.split(",").some(v => nameKey(v) === nameKey(from))) app.setParams({ [pk]: [...new Set(cur.split(",").map(v => (nameKey(v) === nameKey(from) ? p.name : v)))] });
-      else app.rerender();
+      const r = app.route(), u = r.name === "cards" && renamedFilter(r.params, detail, shared);   // a filter on the old name follows it
+      if (u) app.setParams(u); else app.rerender();
     });
     update();
     input.focus(); input.select();
@@ -1257,6 +1302,10 @@ export function createEditor(app) {
     }
     return lines.join("\n");
   }
+  // the drafted fields an op covers: other fields' drafts (a card a rename reached) stay
+  const opFields = op => [...Object.keys(op.set || {}), ...(op.unset || []), ...(op.author !== undefined ? ["author"] : []),
+    ...(op.ban ? ["banned", "ban-group", "ban-reason"] : []), ...(op.rate ? RATE.map(k => `rate-${k}`) : [])];
+  const dropDrafts = ops => { for (const op of ops) cardDrafts.drop(op.id, opFields(op)); };
   async function publish(message) {
     const ops = Object.values(stage.cards), people = stage.people, F = files();
     const at = new Date().toISOString().replace(/\.\d+Z$/, "Z");
@@ -1280,10 +1329,10 @@ export function createEditor(app) {
     const got = {}, sha = await commitFiles(edits, message || (what.length > 3 ? `Website edits: ${what.length} changes` : `Website edit: ${what.join(", ")}`), got);
     const sent = sentRecord() || {};
     if (sha) localStorage.setItem(K.sent, JSON.stringify({ at, committed: got.date, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
-      decks: { ...sentDecks(), ...decksOut }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));   // no commit: no rebuild to wait for (the site already has it)
+      decks: { ...sentDecks(), ...decksOut }, people: { ...sentPeople(), ...people }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));   // no commit: no rebuild to wait for (the site already has it)
     if (sha) soon();                                   // reloads when its build is live (fresh.js)
     if (stage.admins) S.data.admins = stage.admins;
-    cardDrafts.dropAll(ops.map(o => o.id));              // published: their drafts are done with
+    dropDrafts(ops);                                     // published: their fields' drafts are done with
     stage = emptyStage();
     save();
     return sha;
@@ -1457,7 +1506,7 @@ export function createEditor(app) {
     "edit-discard": el => { delete stage.cards[el.dataset.id]; cardDrafts.drop(el.dataset.id); save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
     "edit-discard-people": () => { stage.people = {}; save(); app.showDialog(reviewHtml("Discarded.")); },
     "edit-discard-admins": () => { stage.admins = null; save(); app.showDialog(reviewHtml("Discarded.")); },
-    "edit-discard-all": () => { if (!confirm(`Discard ${count()} unpublished change${count() > 1 ? "s" : ""}?`)) return; cardDrafts.dropAll(Object.keys(stage.cards)); stage = emptyStage(); save(); app.rerender(); },
+    "edit-discard-all": () => { if (!confirm(`Discard ${count()} unpublished change${count() > 1 ? "s" : ""}?`)) return; dropDrafts(Object.values(stage.cards)); stage = emptyStage(); save(); app.rerender(); },
     "edit-discard-profile": el => { delete stage.profiles[el.dataset.login]; save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
     "edit-discard-deck": el => { dropDeck(el.dataset.key); save(); app.showDialog(reviewHtml("Discarded.")); app.rerender(); },
     // published decks: Publish… on a saved hand, Unpublish and Replace with… on a deck page (own decks; admins any)

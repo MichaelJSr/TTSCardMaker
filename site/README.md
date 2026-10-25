@@ -221,8 +221,9 @@ its chip shows it. A new author's cards go to `[cards]` under a new `# --- credi
 subseries, author or item type in the filter bar, on a pinned box, beside a card's chips) renames that value on every card
 that has it, hidden ones too: type the new name (the known ones are listed), the dialog says how many cards change, and
 **Add to batch** queues one edit per card. A name that exists merges them into it, in its spelling; an item type must be
-one of the Items/ folders; a duplicate's author follows its original. A pinned box or a filter on the old name follows
-the new one. (It replaces the bot's retired `/mass_replace`.) Every change lands in the batch bar at the bottom as a
+one of the Items/ folders; a duplicate's author follows its original. An author's `[people]` lines move too (and
+`old = new` joins them when the name has none), so git-credited cards, rulebook pages and new PSDs follow; only cards
+they don't carry get their own edit. A pinned box or a filter on the old name follows the new one. (It replaces the bot's retired `/mass_replace`.) Every change lands in the batch bar at the bottom as a
 sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each with ↺ to take it back; the bar folds to one
 line when it gets long, and **Review and publish** commits the whole batch at once. **All fields** (e, also in the bar)
 opens the full form for everything else (kind, item type (a fixed list: the `Items/` folders), stars, types, aliases, duplicate of, checks, constructed ban,
