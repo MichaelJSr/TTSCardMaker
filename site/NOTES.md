@@ -1046,8 +1046,8 @@ relies on:
 - Removed (UI, data, code): Constructed ban reasons, Last change by month, Top subseries / "<series> by subseries"
   (stats.js); Series strength (balance.js); Rated power vs stats, Power tier vs ban list, "Did Too Stronk cards get
   nerfed?", Who changes whose cards, Most revised cards, Retired and deleted cards (insights.js). analytics.json loses
-  `revisions` and `archived` (`ARCHIVED_SLIM` gone); `card_revisions` stays for the person pages, the Changes page keeps
-  its Most revised tab and Archive. `ratingsHtml({cards}, params)` and `historyHtml({cards}, params)` no longer take A.
+  `revisions` and `archived` (`ARCHIVED_SLIM` gone); `card_revisions` stays for the person pages (their Most revised
+  fact); the Changes page keeps its Archive tab. `ratingsHtml({cards}, params)` and `historyHtml({cards}, params)` no longer take A.
 - Recorded changes by month: no "Timing tags only"; `changeKind` returns null for a row whose only change is its timing
   tags (not counted), "other" when it also changed stars, kind, item type, types or series.
 - Creatures by series: each series row is followed by its subseries (creatures, then "No subseries" when some have none),
