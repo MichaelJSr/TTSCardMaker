@@ -8,8 +8,9 @@
 #   push to main touching a card input starts it, pushes while it runs ride along (their data still at once), and when
 #   it is up the lane syncs main's head. After M the after job re-reads the baked cards into `data` (no wait).
 # The bake's verdicts and events live on `data` (AutoCroissant docs/Future/CARD_SYNC_VERDICTS.md): the main job records
-# them (bake-records), the after job merges them in its data commit (verdicts.json; baked, bake-refused), so a refusal
-# makes no main commit and M holds only PSDs, PNGs and dropped edit fields. A guards commit's events (guard-png,
+# them (bake-records), the first data job after it (the after job, else the next) merges them in its data commit
+# (verdicts.json; baked, bake-refused; the merged artifacts in bake-records.json), so a refusal makes no main commit and
+# M holds only PSDs, PNGs and dropped edit fields. A guards commit's events (guard-png,
 # guard-fix) come from its run's guard-events artifact and show on the Changes page only, never in a post.
 # Runs are live (dry_run off by default). The bot dispatches only its admins' re-parses (/update_stats force_update or cards). The cron is the fallback for the work no
 # push starts: website edits the bake put off (recent, over the cap), a re-parse in progress, unposted events, a main
@@ -107,7 +108,7 @@ jobs:
         shell: bash
     env:
       AFTER: ""               # the after job: the bake's main commit M
-      RECORDS: ""             # the after job: the bake's records (this run's bake-records artifact)
+      RECORDS: ""             # the after job: its dispatch inputs are the data job's (the records come from any run)
     steps: &data-steps
       # Main's head (not github.sha): every commit and tree, no file contents but the small files the stages read. The
       # card folders are never checked out; the bake and the build read PSDs by blob sha, local first, else REST.
@@ -167,14 +168,47 @@ jobs:
           path: carddata
           fetch-depth: 1
 
-      # The after job: the main job's verdicts.json and events.json (only what holds: M's part when M landed)
-      - name: Bake records
-        if: env.RECORDS == 'true'
-        continue-on-error: true   # none (the main job recorded nothing): the build goes on without them
-        uses: actions/download-artifact@v4
-        with:
-          name: bake-records
-          path: ${{ runner.temp }}/bake-records
+      # The bake's records not merged yet: every live main job's bake-records artifact (verdicts.json, events.json; only
+      # what holds: M's part when M landed) not in db/bake-records.json, oldest first, at most 20, folded into one
+      # verdicts.json (a later verdict wins) and events.json. Any data job merges them, so an after job lost (replaced
+      # while pending in card-data, cancelled, failed, a gate) loses nothing: the next data job takes its records. The
+      # main job reads them too (its Unmerged verdicts step). A failed download stops there: the rest wait, in order.
+      - &records-in
+        name: Earlier bake records
+        id: records-in
+        continue-on-error: true   # not read: the next job looks again
+        timeout-minutes: 5
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESTORE: ${{ inputs.restore }}
+        run: |
+          out=$RUNNER_TEMP/records-in
+          rm -rf "$out" && mkdir -p "$out"
+          if [ -n "$RESTORE" ] && [ -z "$RECORDS" ]; then echo "A restore merges no bake records."; exit 0; fi
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=bake-records&per_page=100" \
+            --jq '[.artifacts[] | select(.expired | not) | {id: (.id | tostring), run: .workflow_run.id}] | sort_by(.id | tonumber)' \
+            > "$out/listed.json"
+          seen=$(jq -c '.merged // {}' carddata/db/bake-records.json 2> /dev/null || echo '{}')
+          jq -c --argjson seen "$seen" '.[] | select($seen[.id] == null)' "$out/listed.json" | head -20 > "$out/new.jsonl"
+          cards='{}' events='[]' ids='{}'
+          while read -r row; do
+            id=$(jq -r .id <<< "$row") run=$(jq -r .run <<< "$row")
+            rm -rf "$out/one" && mkdir -p "$out/one"
+            if ! gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$out/one.zip" \
+                || ! unzip -q -o "$out/one.zip" -d "$out/one" \
+                || ! v=$(jq -c '.cards // {}' "$out/one/verdicts.json") || ! e=$(jq -c '. // []' "$out/one/events.json"); then
+              echo "::warning::the bake records of run $run were not read: they and later ones wait for the next job"
+              break
+            fi
+            cards=$(jq -c --argjson v "$v" '. + $v' <<< "$cards")
+            events=$(jq -c --argjson e "$e" '. + $e' <<< "$events")
+            ids=$(jq -c --arg id "$id" --argjson run "$run" '. + {($id): $run}' <<< "$ids")
+          done < "$out/new.jsonl"
+          echo "$ids" > "$out/ids.json"
+          if [ "$ids" = '{}' ]; then echo "No bake records to merge."; exit 0; fi
+          jq -n --argjson c "$cards" '{schema: 1, cards: $c}' > "$out/verdicts.json"
+          echo "$events" > "$out/events.json"
+          echo "Bake records of runs $(jq -r '[.[]] | map(tostring) | join(", ")' "$out/ids.json"): $(jq length <<< "$cards") verdicts, $(jq length <<< "$events") events."
 
       # Go when (a) a card input changed since the last build's main commit, (b) a budgeted re-parse is pending, (c) the
       # builder's PARSER_VERSION differs from the data's, (e) events are unposted, (f) a dispatch asks, there is no
@@ -203,7 +237,7 @@ jobs:
                   'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json')    # the builder's lower-cased extensions
           why=()
           if [ -n "$AFTER" ]; then why+=("the bake's main commit ${AFTER:0:8} to re-read"); fi
-          rec=$RUNNER_TEMP/bake-records
+          rec=$RUNNER_TEMP/records-in
           n=$( { jq '.cards | length' "$rec/verdicts.json" 2> /dev/null || echo 0; } | head -1)
           e=$( { jq 'length' "$rec/events.json" 2> /dev/null || echo 0; } | head -1)
           if [ "$((n + e))" -gt 0 ]; then why+=("the bake's records: $n verdicts, $e events"); fi
@@ -374,9 +408,12 @@ jobs:
           if [ -n "$CARDS" ]; then args+=(--cards "$CARDS"); fi
           if [ "$ALLOW_ARCHIVE" = true ]; then args+=(--allow-archive); fi
           if [ -n "$RESTORE" ]; then args+=(--restore "$RESTORE"); fi
-          rec=$RUNNER_TEMP/bake-records                  # the after job's: the bake's verdicts and events
-          if [ -f "$rec/verdicts.json" ]; then args+=(--verdicts "$rec/verdicts.json"); fi
-          if [ -f "$rec/events.json" ]; then args+=(--events "$rec/events.json"); fi
+          rec=$RUNNER_TEMP/records-in                    # the bake's verdicts and events not merged yet
+          merged=""
+          if [ -z "$RESTORE" ] && [ -f "$rec/verdicts.json" ] && grep -q -- '"--verdicts"' commands/card_data.py; then
+            args+=(--verdicts "$rec/verdicts.json" --events "$rec/events.json")
+            merged=true                                  # a pinned older builder: they wait for a newer one
+          fi
           if [ -f "$RUNNER_TEMP/guard-events.json" ] && grep -q -- '"--guard-events"' commands/card_data.py; then
             args+=(--guard-events "$RUNNER_TEMP/guard-events.json")    # a pinned older builder: not recorded
           fi
@@ -385,6 +422,12 @@ jobs:
           code=$?
           set -e
           if [ "$code" = 2 ]; then echo "::error::A data gate refused: nothing is committed"; fi
+          if [ "$code" = 0 ] && [ -n "$merged" ] && [ "$DRY_RUN" != true ]; then   # rides in the data commit
+            jq -n --argjson old "$(jq -c '.merged // {}' "$db/bake-records.json" 2> /dev/null || echo '{}')" \
+              --slurpfile listed "$rec/listed.json" --slurpfile new "$rec/ids.json" \
+              '{merged: (($old | with_entries(select(.key as $k | $listed[0] | any(.id == $k)))) + $new[0])}' \
+              > "$db/bake-records.json"                  # the artifacts still listed (not expired), and these
+          fi
           exit "$code"
 
       # One Discord message per push with events past the posted cursor, as discord.json (in the artifact). The card ids
@@ -857,9 +900,10 @@ jobs:
             echo "pngs=$([ "$pngs" -gt 0 ] && echo true || echo false)"; } >> "$GITHUB_OUTPUT"
           echo "Main commit \`${m:0:8}\`: Card sync: ${subject%, }." >> "$GITHUB_STEP_SUMMARY"
 
-      # The bake's records for the after job (bake-records): the refusals' verdicts and events always (no main commit),
+      # The bake's records for the data lane (bake-records): the refusals' verdicts and events always (no main commit),
       # the landed part (the verdicts the dropped entries held, the baked events, their commit M) only when M landed.
-      # records=true starts the after job; never on a dry run (the artifact still shows them).
+      # records=true starts the after job; whichever data job comes first merges them. A dry run's artifact has its own
+      # name (bake-records-dry-run): never merged.
       - name: Bake records
         id: records
         if: ${{ !cancelled() && env.GO == 'true' && steps.bake.outcome != 'skipped' }}
@@ -879,10 +923,10 @@ jobs:
           if [ "$((n + e))" -gt 0 ] && [ "$DRY_RUN" != true ]; then echo "records=true" >> "$GITHUB_OUTPUT"; fi
 
       - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() && steps.records.outcome == 'success' }}
+        if: ${{ !cancelled() && (steps.records.outputs.records == 'true' || env.DRY_RUN == 'true' && steps.records.outcome == 'success') }}
         timeout-minutes: 1
         with:
-          name: bake-records
+          name: ${{ env.DRY_RUN == 'true' && 'bake-records-dry-run' || 'bake-records' }}
           path: ${{ runner.temp }}/bake-records
           if-no-files-found: ignore
           retention-days: 14
@@ -960,7 +1004,8 @@ jobs:
 
   # After M (it brought the bake's card files) or a bake that only recorded verdicts: the data lane again, on main's head
   # then, no wait, without the dispatch's inputs (full, cards, restore, allow_archive: the data job's), with the bake's
-  # records merged in its data commit. Its site build shows the baked PNGs.
+  # records merged in its data commit. Its site build shows the baked PNGs. Replaced while pending (card-data), or lost,
+  # the next data job merges the records.
   after:
     name: Card data after the bake
     needs: main
