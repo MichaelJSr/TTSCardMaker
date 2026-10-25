@@ -60,6 +60,7 @@ its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json), images
 assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
 content and its imports', the data's from its content without the build time; build.txt digests the whole site (which build is live),
 then the page's stamp (<meta name="page">), which open pages poll for (fresh.js).
+game.txt: every visible card and rulebook page, the timing tags and the ban list as plain text (game_text), linked from the Rulebook.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -2651,6 +2652,75 @@ def parse_banlist(by_norm):
     return {"notes": notes, "groups": groups}
 
 
+# ---- game.txt: the whole game as plain text (AutoCroissant docs/Future/GAME_TXT.md) ----------------
+GAME_TXT = "game.txt"
+GAME_KINDS = ("creature", "item", "field", "minion", "nme", "aux item", "buff", "debuff", "creatures")   # app.js KINDS order
+GAME_TAGS = (                                 # the rulebook's Timing tags panel (app.js renderRules, text.js tagInfo)
+    ("On your turn", (("OYT", "On your turn"), ("1CD", "Cooldown: 1 turn"), ("1/2CD", "Cooldown: 1 turn, then 2"))),
+    ("At any time", (("AAT", "At any time"), ("1GCD", "Global cooldown: 1 global turn"),
+                     ("1/2GCD", "Global cooldown: 1 global turn, then 2"))),
+    ("Forced", (("BOT", "Beginning of turn (forced)"), ("ENDT", "End of turn (forced)"),
+                ("BOGT", "Beginning of global turn (forced)"), ("ENDGT", "End of global turn (forced)"))),
+    ("Per game & triggers", (("OFS", "On first summon"), ("OS", "On summon"), ("OD", "On death"), ("WOF", "While on field"),
+                             ("1PG", "Can only be activated once per game"), ("2U", "2 uses"))),
+    ("Other tags", (("Action", "Costs the creature's action"),)),
+    ("Old system (rulebook pages)", (("1PT", "usable once per turn (on your turn)"),
+                                     ("E2T", "every 2 turns, starting on turn 2 (multi-turn)"),
+                                     ("FTE2T", "every 2 turns, starting on your 1st turn (multi-turn)"),
+                                     ("1PGT", "usable once per global turn (at any time)"),
+                                     ("E2GT", "every 2 global turns (at any time, multi-turn)"))),
+)
+
+
+def game_words(text, icons):
+    """Icon tokens as words ([fire] -> fire, [fire:no] -> not fire); other [..] text prints as it is, as on the site."""
+    def word(m):
+        base, _, v = m.group(1).partition(":")
+        if norm(base) not in icons or (v and v.lower() not in VARIANT_IMAGES + ("no",)):
+            return m.group(0)
+        return ("not " if v.lower() == "no" else "") + base.replace("_", " ")
+    text = re.sub(r"\[([^\[\]\n]{1,52})\]", word, text or "")
+    return "\n".join(line.rstrip() for line in text.strip().splitlines())
+
+
+def game_text(cards, rules, banlist, icons, manifest):
+    """game.txt: a header, the rulebook pages in book order, the timing tags, the ban list, then every visible card by
+    kind and series; a variant picture as its own card, its text only when it differs. Stats as printed (bars). Dated by
+    the card data, so a no-change build keeps the file. ’ as '."""
+    shown = [c for c in cards if not c.get("hidden")]
+    by_id, m = {c["id"]: c for c in cards if c.get("id")}, manifest or {}
+    out = [f"{SITE_NAME}: every card and rulebook page as plain text.", f"{len(shown)} cards, {len(rules)} rulebook pages."
+           + (f" Card data built {m['built_at']} from card commit {m['card_commit'][:12]}." if m.get("built_at") and m.get("card_commit") else "")
+           + (f" {SITE_URL}/" if SITE_URL else ""), "", "# Rulebook", ""]
+    for p in rules:
+        out += [f"## {p['name']}", game_words(p.get("ability"), icons), ""]
+    out += ["# Timing tags", "X can be any number; the first number of a pair such as (1/2CD) can also be 0 or -1.", ""]
+    for group, tags in GAME_TAGS:
+        out += [f"## {group}", *(f"({t}) {('Old system: ' if group.startswith('Old') else '') + meaning}" for t, meaning in tags), ""]
+    out += ["# Constructed ban list", *banlist["notes"], ""]
+    for g in banlist["groups"]:
+        out += [f"## {g['title']}", *(e["name"] + (f" - {e['reason']}" if e["reason"] else "") for e in g["entries"]), ""]
+    order = {k: i for i, k in enumerate(GAME_KINDS)}
+    for kind in sorted({c.get("type") or "unknown" for c in shown}, key=lambda k: (order.get(k, len(order)), k)):
+        group = sorted((c for c in shown if (c.get("type") or "unknown") == kind),
+                       key=lambda c: ((c.get("series") or "~").lower(), c["name"].lower()))
+        plural = {**KIND_PLURAL, "buff": "buffs (status effects)", "debuff": "debuffs (status effects)"}.get(kind, kind)
+        out += [f"# {plural[:1].upper() + plural[1:]} ({len(group)})", ""]
+        for c in group:
+            bars = [" ".join(f"{k.upper()} {'?' if s.get(k) is None else s[k]}" for k in STAT_KEYS) for s in c.get("creatures") or [c]
+                    if any(s.get(k) is not None for k in STAT_KEYS)]
+            label = KIND_LABEL.get(kind, kind) + (f" ({c['subtype']})" if c.get("subtype") else "")
+            line = [c["name"], label, f"{c['stars']}★" if c.get("stars") is not None else "",
+                    ", ".join(t.replace("_", " ") for t in c.get("types") or []), "; ".join(bars),
+                    " / ".join(x for x in (c.get("series"), c.get("subseries")) if x)]
+            orig = by_id.get(c.get("dup"))           # a variant picture: its own card; same text not repeated
+            if orig:
+                line.append(f"variant of {orig['name']}")
+            text = c.get("ability") if not orig or c.get("ability") != orig.get("ability") else None
+            out += [" | ".join(x for x in line if x), *([game_words(text, icons)] if text else []), ""]
+    return "\n".join(out).replace("’", "'")
+
+
 # ---- main ------------------------------------------------------------------------------------------
 # ---- build versions (?v=) ------------------------------------------------------------------------------
 IMPORT_RE = re.compile(r'(from\s+"\./([\w-]+\.js))"')     # a module's static imports, as they are stamped
@@ -3126,6 +3196,10 @@ def main():
                 fh.write(blob)
     log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), rulebook pages: {len(rules)}, "
         f"icons: {len(set(i['file'] for i in icons.values()))}, banned: {sum(len(g['entries']) for g in banlist['groups'])}")
+    game = game_text(cards, rules, banlist, icons, manifest)
+    with open(os.path.join(DIST, GAME_TXT), "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(game)
+    log(f"{GAME_TXT}: {len(game.encode())} bytes, about {round(len(game.split()) * 1.3)} tokens")
 
     # static files, stamped so browsers never mix an old script with new data: each asset by its content (and its imports'),
     # the data by its content without the build's clock, so a deploy that changed nothing keeps every URL (and the caches)

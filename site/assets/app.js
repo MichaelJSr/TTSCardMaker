@@ -746,6 +746,7 @@ function renderRules(r) {
       ${S.rules.map(p => `<a href="#/rules" data-scroll="page-${p.id}">${esc(p.name)}</a>`).join("")}</nav>
     <div>
       ${q ? `<p class="muted">${pages.length} page${pages.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : ""}
+      ${!q ? `<p class="muted">The whole game in one text file: <a href="game.txt" target="_blank" rel="noopener">game.txt</a> (every card and rulebook page).</p>` : ""}
       ${!q ? `<section class="panel" id="badge-colors"><h3>Badge colors</h3>${legendHtml()}</section>
       <section class="panel" id="glossary"><h3>Timing tags</h3><p class="muted">X can be any number; the first number of a pair such as (1/2CD) can also be 0 or −1. Hover a badge for its meaning.</p>
         ${Object.entries(GROUP_NAMES).map(([g, label]) => `<h4>${esc(label)}</h4>${gloss(tags.filter(t => tagInfo(t).group === g && !tagInfo(t).old))}`).join("")}
