@@ -324,9 +324,29 @@ export function tokenize(text, icons = {}) {
   }));
 }
 const ICON_EM = 1.1;                                  // an icon's width in ems
-const BADGE_EM = 0.78;                                // a badge's letters, in ems of the text
-/** A piece's width at size: an icon ICON_EM, a badge its letters (bold, BADGE_EM) and its pill's ends, else the text. */
-const pieceW = (p, size, measure) => (p.icon ? ICON_EM * size : p.badge ? measure(p.badge, size * BADGE_EM) * 1.1 + size * 0.75 : measure(p.text, size));
+const BADGE_EM = 0.78;                                // a badge's letters, in ems of the text, at BADGE_H
+const BADGE_H = 0.92;                                 // the pill's height in ems before it is fitted
+export const BADGE_RATIO = 1.35;                      // the pill over the text's capital height (AutoCroissant psd_edit)
+/** [capital height, capital middle] above the baseline of the drawn "H" at z px in fam (0.7 and 0.35 em without
+ *  actualBoundingBox*): what a badge is fitted to. */
+export function capOf(ctx, fam, z) {
+  ctx.font = `${z}px ${fam}`;
+  const m = ctx.measureText("H"), up = m.actualBoundingBoxAscent, down = m.actualBoundingBoxDescent || 0;
+  return Number.isFinite(up) && up > 0 ? [up + down, (up - down) / 2] : [0.7 * z, 0.35 * z];
+}
+/** A badge fitted as the bake fits it (owner 2026-10-25): {h, top, k} with the pill BADGE_RATIO times the capital height,
+ *  its middle on the capitals' middle (top: px above the baseline), k its scale against the unfitted pill. */
+export function badgeFit(z, cap) {
+  const [capH, mid] = cap || [0.7 * z, 0.35 * z], h = BADGE_RATIO * capH;
+  return { h, top: mid + h / 2, k: h / (BADGE_H * z) };
+}
+/** A piece's width at size: an icon ICON_EM, a badge its letters (bold, BADGE_EM) and its pill's ends at its fitted
+ *  scale (measure.cap: capOf), else the text. */
+const pieceW = (p, size, measure) => {
+  if (!p.badge) return p.icon ? ICON_EM * size : measure(p.text, size);
+  const { k } = badgeFit(size, measure.cap?.(size));
+  return measure(p.badge, size * BADGE_EM * k) * 1.1 + size * 0.75 * k;
+};
 /** Lines of paragraphs at font size `size` within maxW: [{pieces: [{text | icon, w}], w}] (a space between chunks);
  *  measure(text, size) -> px. An empty paragraph is an empty line. */
 export function layout(paras, maxW, size, measure) {
@@ -598,6 +618,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   for (const { role, text, old, label, own: partBox, added, part, path } of specs) {
     const { fam, layer } = await family(role, label, path);
     const measure = (t, z) => { ctx.font = `${z}px ${fam}`; return ctx.measureText(t).width; };
+    measure.cap = z => capOf(ctx, fam, z);
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, boxed: true }); out.boxed.push(label); continue; }
@@ -709,10 +730,11 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, fill, stroke, imgs, o
         if (im) ctx.drawImage(im, x + (p.w - s) / 2, y - s * 0.82, s, s);
         if (p.no) { ctx.save(); ctx.strokeStyle = "#e11"; ctx.lineWidth = Math.max(2, z * 0.12); ctx.beginPath(); ctx.moveTo(x + p.w * 0.1, y - s * 0.75); ctx.lineTo(x + p.w * 0.9, y + s * 0.1); ctx.stroke(); ctx.restore(); }
       } else if (p.badge) {
-        const h = z * 0.92, top = y - z * 0.76, r = h / 2, x0 = x + z * 0.06, x1 = x + p.w - z * 0.06;
+        const fitted = badgeFit(z, capOf(ctx, fam, z)), h = fitted.h, k = fitted.k, top = y - fitted.top, r = h / 2;
+        const x0 = x + z * 0.06 * k, x1 = x + p.w - z * 0.06 * k;
         ctx.save(); ctx.beginPath(); ctx.moveTo(x0 + r, top); ctx.arcTo(x1, top, x1, top + h, r); ctx.arcTo(x1, top + h, x0, top + h, r); ctx.arcTo(x0, top + h, x0, top, r); ctx.arcTo(x0, top, x1, top, r); ctx.closePath();
-        ctx.font = `800 ${z * BADGE_EM}px ${fam}`; ctx.textAlign = "center";
-        const lx = (x0 + x1) / 2, ly = top + h * 0.5 + z * BADGE_EM * 0.36;
+        ctx.font = `800 ${z * BADGE_EM * k}px ${fam}`; ctx.textAlign = "center";
+        const lx = (x0 + x1) / 2, ly = top + h * 0.5 + z * BADGE_EM * k * 0.36;
         if (one) {                                    // the font's Stylistic Alternates: a pill outline and solid letters
           ctx.lineJoin = "round";
           if (stroke) { ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(2, z * 0.21); ctx.stroke(); ctx.lineWidth = Math.max(1.5, z * 0.16); ctx.strokeText(p.badge, lx, ly); }
