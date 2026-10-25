@@ -1076,8 +1076,8 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
   and any stack-trace tool map a bundle position to the module and line). Its `?v=` hashes the code and the map and is
   on its `sourceMappingURL` too. Every page keeps one `modulepreload` and the script; the other modules' hints go.
   style.css is minified on its own as before. No esbuild (a local build) or a failed bundle (a warning): the modules go
-  out one by one, stamped as before (`asset_stamps`). Only static imports: a dynamic `import()` would need esbuild's
-  `--splitting` (S-3 in the optimization plan).
+  out one by one, stamped as before (`asset_stamps`). Since §32 the bundle is split: the editor, Stats and People load on
+  first use.
 - **grid.js**: `tileHtml`, `toolbarHtml`, the Name order (`byKey`, `nameKey`), `SORTS`, `isDesc`, `KIND_LABEL`,
   `thumb`/`imgAttrs`/`iconImg`, `TILE_SIZES`, moved out of app.js and DOM-free (app.js wraps them with its state).
 - **First screen** (`first_screen`): the plain grid's toolbar (Name, Grid, M) and its first `FIRST_TILES` (8) tiles,
@@ -1102,4 +1102,49 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
   so it runs later: DOMContentLoaded 2.90 -> 3.77 s (fast 0.72 -> 0.89), the whole grid 3.52 -> 4.04 s (fast 1.01 ->
   1.16), TBT +15-20 ms; the tiles are links meanwhile. The bundle alone (no first screen): LCP 3.31, DOMContentLoaded
   3.12, the whole grid 3.40 s. `fetchpriority="low"` on tiles 5-8 changed nothing (the emulated line ignores priority).
+
+## 32. Loaded on first use: the editor, Stats, People (2026-10-25, owner's decision)
+
+Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan). app.js imports three modules with
+`import()`, each when first needed; everything else is unchanged.
+- **editing.js** (edit.js, inline.js, tray.js, tokens.js, palette.js, preview.js and what they import: live, drafts,
+  stars, parts, mockup): the first Edit, Sign in, `e`, Publish a hand, a deck page's owner buttons, `#/u/<login>/edit`, or
+  any `data-action` app.js lacks (`act`: edit mode's actions join `actions` once loaded). At boot, beside cards.json, when
+  the browser keeps what the editor applies at init (`wantsEditor`: a sealed or old token, a staged batch with something
+  in it, a just-published batch, Show hidden, a card preview: edit.js K, login.js SEALED, preview.js KEY; change them
+  together); init() waits for it, so staged edits are there on the first draw. Until then `editor` is `IDLE` (nobody
+  signed in, nothing staged: `me` null, no pending decks or profiles) and `derive()` runs in init() itself. The token
+  picker's vocabulary is made on first use per `S.rev` (it was made in every `derive()`).
+- **charts.js** (stats.js, balance.js, insights.js): the Stats tab, a card's Balance block (`loadAnalytics` waits for
+  both analytics.json and charts.js, so `S.analytics` set means charts.js is in) and the grid filters the charts link to
+  (`shape`, `cd`, `tag`, `fresh`: "Loading…" until charts.js is in, as `bal`, `cohort`, `month`, `change` wait for
+  analytics.json).
+- **profile.js**: the People tab and person pages (`loadContrib` waits for it, `S.titles` from it). `LOGIN_RE` moved to
+  text.js (profile.js re-exports it) so login.js and decks.js, which the deck pages need, don't pull it in.
+- **Loading state:** a view shows `<div class="loading">Loading…</div>` (the editor's: "Loading the editor…") and draws
+  when it is in (`whenLoaded`: a failure says so with Reload); a click shows the toast "Loading the editor…" until then.
+- **Build** (`bundle`): esbuild `--splitting` with `--entry-names=[name] --chunk-names=[name]-[hash]` and a metafile:
+  app.js stays `assets/app.js` (`?v=` as before); every other file is a chunk named by its hash (`editing-<hash>.js`,
+  `chunk-<hash>.js`, the code shared by several), with its map beside it and its `sourceMappingURL` stamped by its code
+  and map. `shared_once` ends each `import()`ed module, in esbuild's copy only, with a bare import of every module the
+  page loads: a chunk holds the code one set of entries shares, so the page's modules would otherwise make three chunks
+  (each a request beside the first screen's pictures); now app.js imports one. No modulepreload for it: under the
+  harness's 4G emulation every request beside the pictures delays them (with the hint: LCP +80 ms slow 4G, +45 ms fast,
+  for DOMContentLoaded -0.5 s / -0.14 s more), so app.js fetches it once it runs. `<meta name="chunks">` (every page)
+  lists each `import()`'s chunks the page lacks; app.js's `early()` preloads them together before the `import()`, so a
+  first open is one round trip, not one per level. A deploy removes the old chunks: a page left open across one gets a
+  failed load ("Couldn't load …, Reload") until fresh.js reloads it. Without esbuild the modules go out one by one,
+  `import("./x.js?v=…")` stamped like the static imports (`IMPORT_RE`), and index.html's hints list only the page's
+  modules (the lazy ones' hints are gone from the template).
+- **Sizes** (local build, lane1 data, gzipped): first visit 2 scripts, 60.1 KB (app.js 27.0, its chunk 33.1) against one
+  161.5 KB bundle (-101.4 KB); the editor 76.8 + 11.1 (profile.js) + 10.1 (stats.js); Stats 11.1 + 10.1; People 0.8 +
+  11.1 + 10.1 (shared chunks once).
+- Measured 10-25 (scratch opt/site-phone `firstload.mjs` over `serve.mjs`, as §31; both sites built locally from the same
+  data; 5 interleaved cold runs, median): slow 4G LCP 2.05 -> 2.04 s (the first screen's pictures no longer waited on the
+  script since §31), the whole grid 4.07 -> 3.57 s, DOMContentLoaded 3.77 -> 3.29 s, TBT 112 -> 72 ms, script 154 -> 113 ms;
+  fast 4G LCP 0.49 -> 0.48 s, grid 1.20 -> 1.12 s, DOMContentLoaded 0.90 -> 0.83 s; bytes 564 -> 462 KB. The cost, first
+  opens on slow 4G (3 runs): Stats 0.18 -> 0.87 s, People 1.25 -> 1.35 s (its data comes alongside), Edit to the sign-in
+  0.02 -> 1.06 s.
+- AutoCroissant `tests/test_site_build.py::test_editor_stats_and_people_load_on_first_use` (the stamped `import()`s
+  without esbuild; with it, ESBUILD set: no editor, Stats or People source in the first visit's maps, the meta list).
 
