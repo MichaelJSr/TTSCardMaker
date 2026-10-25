@@ -13,10 +13,10 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   shows it as "created <date>" ("created about <date>" while a Discord post awaiting review may still move it).
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`,
   `created>=2025`, `created==2023-10`: dates at the precision given; spaces around the operator are fine in both),
-  and also matches card names and aliases. The "PSD details" flag (search `has:details`) keeps the cards with a Details
-  record; the table and the Changes tab link "Details" beside PSD chips and parser notes (it opens the card with the
-  dropdown open this once; Ctrl-click opens it in a new tab).
-- **Card pages**: the card image (click it for the full-size PNG), stat bars, ability text with icons (variants drawn as the card font draws them: `[fire:tint]`
+  and also matches card names and aliases. The table and the Changes tab link "Details" beside PSD chips and parser
+  notes (it opens the card with the dropdown open this once; Ctrl-click opens it in a new tab).
+- **Card pages**: the card image (click it for the full-size PNG; signed in, with an edit on the image: tabs Original,
+  Mock-up and Rendered) with Add to deck, Compare and Edit under it, stat bars, ability text with icons (variants drawn as the card font draws them: `[fire:tint]`
   in the text colour, `[fire:sticker]` on an outline, `[fire:no]` crossed out, `[fire:glow]` and `[fire:darkglow]` on a
   white or black glow), timing-tag badges such as (1CD), (1/2CD), (1GCD) and
   (2U) (hover for the meaning; a closed **Badges** box under the text says what each color means) and links to every card it names (by its printed title or file name, in any case,
@@ -48,6 +48,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   its section opens).
   "Decks using this card" lists the public published decks that hold it (the first six, then a link to all of them).
   Every card has a shareable link (`/c/<card>/`, the address bar's URL; `c` copies it) that shows a rich preview in Discord.
+- **Ratings**: each card's favorability and power, 1 to 10, over time, on its card page; signed-in editors add theirs.
 - **Rulebook**: every page with search and highlighting, the badge colors (one line per color, as on page 02
   Abbreviations), the timing-tag glossary (the cooldown and uses tags, and the
   old tags the rulebook pages still use), and the constructed ban list. Each
@@ -70,24 +71,27 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   key that can't leave the browser; **Forget** on the deck page drops it). A person's page lists their decks, the
   private ones as locked links. Format in `site/decks/README.md`; see Decks below.
 - **Stats**: counts by kind, series, subseries, type, timing tag, status effect, author and month; how many legal cards there are
-  for each star level of the starting hand; average stats per star level; stat distributions; and a total-stats-vs-stars
-  chart that highlights possible balance outliers. Every chart has a table view.
-  Its **Balance** section: the total stats of each star level of creatures and minions (the middle 80%, the median,
-  the lowest and highest, and the top and bottom 10% as dots), the strongest and weakest cards for their star level,
-  each star level's average total over time (from the card repo's history: a card counts from its first upload), buffs
-  and nerfs by month, every recorded change by month, the most reworked cards, and the cooldown update (the timing
-  tags that became cooldowns, global cooldowns and uses, on Oct 21, 2026 and in an earlier wave on Jun 18, 2026, Pacific time). The
-  kind and series filters apply to it too; a star level's band and median are always over all its cards. A star level
-  with fewer than 5 cards (God Tamer, the one 0★ minion) is compared with all cards of its kind, and so are the 7
-  auxiliary creatures (no star level), with all creatures. The bot's history has no buff or nerf yet (2026-10-22: its
-  one stat change, Tainted Lazarus' 110s becoming two creatures, is off the scale), so the buffs and nerfs panel says so
-  instead of drawing an empty chart.
+  for each star level of the starting hand; average stats per star level; stat shapes (each creature's highest stat),
+  cooldowns and uses by star level, ability length by star level and kind, items by type and stars; stat distributions (0-10, with
+  `‹ ›` or `←`/`→` on a stat that goes higher); and a total-stats-vs-stars chart that highlights possible balance
+  outliers. Every chart has a table view; jump links go to Balance, Ratings and History.
+  **Balance**: the total stats of each star level of creatures and minions (the middle 80%, the median, the lowest and
+  highest, the top and bottom 10% as dots), the strongest and weakest for their star level, each star level's average
+  total over time (full-history builds), power creep (by year created), series strength (opens on its table), buffs and
+  nerfs by month and by stat, every recorded change by month, the most reworked cards. A star level with fewer than 5
+  cards is compared with all cards of its kind, and so are the auxiliary creatures, with all creatures.
+  **Ratings** (once cards have ratings): rated power vs stats, favourites and least liked, most divisive (once 3 people
+  rate a card), risers and fallers, power tier vs the ban list, and whether Too Stronk cards got nerfed.
+  **History**: who changes whose cards and the most revised cards (image changes after the upload, mass passes left
+  out; full-history builds), cards created per year, text freshness, and retired and deleted cards. The kind and series
+  filters apply to every section.
 - **Changes**: a row of category tabs across the top; clicking one (or the arrow keys on a focused tab) shows that
   category alone, the chosen tab underlined, and the address keeps it (`#/changes/changelog`), so a link or a refresh
   opens the same one. **Recently updated** (`#/changes`): recently updated cards with text diffs (none when the update kept the text). **Changelog**: the card
   sync's events of the last 180 days, one block per push as the Discord posts (new cards, changes with their old values
   and an ability word diff, new art, moves, renames, archived and restored cards, database edits, parser re-reads), by day
-  in Pacific time, filterable by kind, then the archived cards (deleted, renamed, or moved to MDW: retired). **Database edits**: the card sync's edited and authors
+  in Pacific time, filterable by kind. **Archive**: the cards whose PSD left the card folders, each tagged Renamed,
+Retired (moved to MDW/The Morgue), Unfinished (moved to MDW/Unfinished) or Deleted, with chips to filter by tag (`?tag=retired`). **Database edits**: the card sync's edited and authors
   events, and every commit that changed a Card Edits.json entry or a Card Authors.txt line (website, Discord or a commit
   by hand) with each field's old and new value. The events need the card sync's data (`CARD_DATA_DIR`); until then those
   parts say so. **Website edits**: the cards an edit on the website or in Discord changes now, with the fields, who and
@@ -99,11 +103,17 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   and buttons to copy it as a Discord message or plain text: name, titles and counts, never the motto): their profile when they made one (see People below), their
   GitHub picture and link, their contributions with recently edited cards, recent edit batches and recent card commits, a chart of
   their contributions by month, and a Cards panel: their cards by kind (chips to the Cards tab), the series they mostly draw from, their newest card
-  (by its creation date) and a grid of their 24 newest cards; the chart counts cards by creation month.
+  (by its creation date) and a grid of their 24 newest cards; the chart counts cards by creation month. Since round 3 the page
+  also has their ranks and edited fields, **Balance** (their cards' strength, buffs and nerfs on them and made to others'),
+  **Ratings** (how others rate their cards), **Revisions** (who changes their cards' images, whose they change, reworks),
+  **Style** (types, status effects and timing tags they use more than others, wordiness, star and kind mix) and
+  **Archived cards**; the Cards panel adds their years, series, banned cards and most referenced card. All from
+  `contributions.json` and the cards already loaded. The Cards tab has a **Banned (constructed)** flag.
 
 Top right: **Sign in** (a GitHub token, or your login and password once you set one; see Editing) becomes your login
-once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card, `↑`/`↓` image versions,
-`d` add to deck, `c` copy link, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections, `?` help. The single-key
+once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card (on a focused stat distribution: more values), `↑`/`↓` image versions,
+`d` add to deck, `c` copy link, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections (signed in,
+with cards selected: `1`–`9` drop them on that pinned box), `?` help. The single-key
 shortcuts are off while an edit form is open (a card's edit dialog or the profile editor) and while an inline control or a
 stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog.
 
@@ -145,7 +155,8 @@ the build never fails on it.
 Authors come from `site/Card Authors.txt` when a card is listed there (the bot uses the same file), otherwise from the
 bot's data; `[people]` maps git names to the names shown. The hand-kept files `Card Authors.txt`, `Card Edits.json`,
 `Card Creation Dates.json`, `Website Admins.txt` and `Constructed Ban List.txt` sit directly under `site/` (moved from `MDW/`
-on 2026-10-20); the build and the bot read them, the published site does not include them. `Card Creation Dates.json`
+on 2026-10-20), as does `Card Ratings.json` (new on 2026-10-24; the build and the website's editor read it, never the bot); the build and the bot read the
+others; the published site includes none of them. `Card Creation Dates.json`
 holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand", "provisional": true}`
 (dates only, from the Discord archive kept off the repo), written by AutoCroissant's `python -m commands.discord_edits
 created` (re-run after rulings and archive updates; it keeps `"from": "hand"` entries, the way to set a date by hand).
@@ -153,7 +164,11 @@ A card it misses (one made since) is dated by its first upload, with a build log
 the same rule (AutoCroissant `CardDates.created`), its first upload being the earliest version its database holds: the
 same day for the cards first uploaded since 2026-02, so `/query_ability created>=…` and the search agree (770 of 770
 cards on 2026-10-23, also with the 11 newest left out of the file). It is no edit: the Changes page and the edit
-counts never see it. Bad entries are skipped with a warning, never a failed build. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
+counts never see it. Bad entries are skipped with a warning, never a failed build. `Card Ratings.json` holds each
+card's dated ratings, `[{"date", "scale": "favorability" | "power", "value": 1-10, "by": "group" | <login>, "source":
+"TTS session" | "website"}]`, oldest first: the TTS sessions' boards (written by AutoCroissant's `python -m
+commands.tts_ratings`) and the website's Rate it. Only the website reads it (cards.json `ratings`, a login shown as its
+credited name); no edit either, and the bot never reads it. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
 following folder moves (also a move that changed the image: the only PNG of that file name deleted in that commit);
 the build needs full history for them (CI fetches it; a shallow local clone gets no image versions and counts edit
 batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one batch per card;
@@ -165,10 +180,11 @@ icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon s
 with `VARIANT_VERSION`, drawn by the icon font's build script, `MDW/Fonts/stoogedings-src/build_stoogedings.py`, which
 needs that folder's `requirements.txt`: without it the build warns and variants show as the plain icon), so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
 where links fail). The first screen loads only `data/cards.json`; `analytics.json` (the Balance section and blocks,
-computed by `site/build/analytics.py` from the same bot data) loads when the Stats page or a creature, minion or card
+computed by `site/build/analytics.py` from the same bot data, plus the image revisions and archived cards the Stats
+history charts use) loads when the Stats page or a creature, minion or card
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
-People tab is opened; `changelog.json` when the Changelog or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
+People tab is opened; `changelog.json` when the Changelog, Archive or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
 when a card's or rulebook page's Details dropdown is first opened. Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
@@ -180,11 +196,16 @@ Anyone with write access to this repo can fix card data on the site: **Sign in**
 stat (the top lit cell steps it down, so 0 is reachable; above 10 and per-creature stats go through All fields), click
 the ability text to edit it in place (Ctrl/Cmd+Enter or a click elsewhere saves, Esc cancels; the card links in the text
 still work), double-click the name to rename, and click the series, subseries or author chip, or the note, to type a new
-value (series, subseries and author offer the known values; a missing one shows as a dashed `+ series` chip when you
+value (series, subseries and author list the known names as you type, in the token picker's list, with their card
+counts; picking one saves it; a missing one shows as a dashed `+ series` chip when you
 hover the row). In the cards grid, Ctrl/Cmd-click selects tiles (Shift-click a range, Esc clears; a filter change keeps
 only the tiles still shown) and dragging one or the selection onto a series, subseries or author in the filter bar (the
 values appear under the Series, Subseries and Author selects while you drag; subseries once a series is picked, its own
-ones) assigns it to every card dragged; a drop changes that one field only. To make a new series, subseries or author,
+ones) assigns it to every card dragged; a drop changes that one field only. **Pin a box** (in the toolbar, Grid view) pins
+a series, subseries or author as a big box over the grid (up to 9, kept in this browser only, never published; ✕
+unpins): drag cards onto it, or select cards and press its number or tap it (on a phone, **Select** makes a tap select a
+tile; **Done** or Esc ends it). A subseries box sets the subseries only, and only on cards in its series; the others are
+refused, and the toast says how many. To make a new series, subseries or author,
 pick **New series…** (**New subseries…**, with a series picked; **New author…**) at the end of its select and type the
 name in its place (Enter or a click elsewhere makes it, Esc or nothing typed cancels). It shows as "Name (no cards
 yet)" in the select and as a dashed value under it while you drag, and the card page's chips suggest it; the filter
@@ -197,7 +218,7 @@ its chip shows it. A new author's cards go to `[cards]` under a new `# --- credi
 `[people]` line (that maps a login; an admin can add one later). Every change lands in the batch bar at the bottom as a
 sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each with ↺ to take it back; the bar folds to one
 line when it gets long, and **Review and publish** commits the whole batch at once. **All fields** (e, also in the bar)
-opens the full form for everything else (kind, item type, stars, types, aliases, duplicate of, checks, constructed ban,
+opens the full form for everything else (kind, item type (a fixed list: the `Items/` folders), stars, types, aliases, duplicate of, checks, constructed ban,
 hidden, creatures). Signed out, none of this shows: the pages are the same to the pixel. Fields go to
 `site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to `site/Constructed Ban List.txt`. The site rebuilds
 on that commit; the bot applies the same files on `/update_stats`. A subseries (Goombella: series Mario, subseries Paper
@@ -210,6 +231,11 @@ card several stat lines (`creatures` in `Card Edits.json`; creature 1 is the car
 bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
 `Card Edits.json` to go back to the PSD.
+
+**Rate it.** Signed in, a card page's Ratings block has Favorability and Power inputs (1 to 10, one decimal; All fields
+has them too): **Add to batch** stages your rating for today, published with the batch to `site/Card Ratings.json`
+(a rating-only batch leaves `Card Edits.json` alone). Rating again the same day replaces yours; removing one is a hand
+edit on GitHub.
 
 **Icons and timing tags as you type.** In card text (the ability and note, in place or in All fields, rulebook pages
 too) typing `[` lists the icons with their pictures, the ones the cards use most first; typing more narrows the list
@@ -374,5 +400,6 @@ Code: `site/index.html`, `site/assets/` (plain JavaScript modules and CSS, no bu
 `search.js`, `text.js`, `deck.js`, `stats.js`, `edit.js` the editor, `inline.js` editing in place, `tokens.js` the
 icon and timing-tag picker in card text, drag-to-assign and
 the filter bar's New series/subseries/author, `balance.js` the Balance section and the cards' Balance blocks, `login.js` the password sign-in and this browser's sealed token, `profile.js` the People pages, `pick.js` the card picker panel, `details.js` the Details dropdown (card and rulebook pages), `decks.js` the
-published decks: slugs, the file formats and their encryption, the browser and deck pages), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
+published decks: slugs, the file formats and their encryption, the browser and deck pages), `ratings.js` the card
+ratings (their helpers, chart and card-page block), `site/build/build_site.py` and `site/build/analytics.py` (the balance analytics).
 Generated files (`site/dist`, `site/.cache`, `site/.og-cache`) are git-ignored.

@@ -56,7 +56,8 @@ data/contributions.json, data/decks.json, data/versions.json, data/analytics.jso
 changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown),
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json), images, icons,
-assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a build version (?v=...) so a deploy never mixes old scripts with new data.
+assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
+content and its imports', the data's from its content without the build time; build.txt digests the whole site (which build is live).
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -75,7 +76,7 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 import time
-from collections import OrderedDict, defaultdict
+from collections import Counter, OrderedDict, defaultdict
 from datetime import date, datetime, timedelta, timezone
 from urllib.parse import quote
 from urllib.request import Request, urlopen
@@ -123,6 +124,9 @@ BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
 CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (AutoCroissant discord_edits created; global_config.CREATED_PATH)
 CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first git upload, or set by hand (card_edits.CardDates.FROM)
+RATINGS_PATH = "site/Card Ratings.json"         # dated 1-10 ratings (AutoCroissant tts_ratings, the website's Rate it; card_edits.CardRatings)
+RATING_SCALES = ("favorability", "power")
+RATING_SOURCES = ("TTS session", "website")
 ALIASES_MOVED = "aliases_moved"               # Card Edits.json key: aliases.pkl moved into it (AutoCroissant card_edits.ALIASES_MOVED)
 BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (discord_edits.BOT_FIELDS)
 CREDIT = "_credit"                            # {field: {"_by", "_at"}}: a _bot field's Discord editor (discord_edits.CREDIT)
@@ -689,7 +693,7 @@ def valid_meta(row):
 def save_image_meta(images):
     path = os.path.join(CACHE, IMAGE_META)
     with open(path + ".tmp", "w", encoding="utf-8") as fh:
-        json.dump({"version": IMAGE_META_VERSION, "images": images}, fh, separators=(",", ":"))
+        fh.write(json.dumps({"version": IMAGE_META_VERSION, "images": images}, separators=(",", ":")))
     os.replace(path + ".tmp", path)
 
 
@@ -743,6 +747,22 @@ def share_text(c):
     return clip("\n".join(filter(None, [head, stats, text])))
 
 
+GRID_PRELOADS = 4                            # the cards grid's first pictures that index.html preloads
+
+
+def grid_preload(cards):
+    """index.html's preload hints for the grid's first pictures (app.js tileHtml: srcset 240w/360w, sizes = the tile size),
+    added by a script only when the page opens on the plain grid (no filters, sort or table view) at the saved tile size."""
+    first = [c["img"] for c in sorted((c for c in cards if not c.get("hidden")), key=lambda c: c["name"].lower()) if c.get("img")][:GRID_PRELOADS]
+    if not first:
+        return ""
+    return ("<script>(() => { try { if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
+            "  const w = { s: 160, l: 270 }[localStorage.getItem(\"size\")] || 200;\n"
+            f"  for (const id of {json.dumps(first)}) {{ const l = document.createElement(\"link\"); l.rel = \"preload\"; l.as = \"image\"; l.href = `thumbs/${{id}}-360.webp`;\n"
+            "    l.imageSrcset = `thumbs/${id}-240.webp 240w, thumbs/${id}-360.webp 360w`; l.imageSizes = `${w}px`; l.fetchPriority = \"high\"; document.head.append(l); }\n"
+            "} catch { /* storage blocked: no hints */ } })();</script>")
+
+
 def fan(cards, path):
     """1200×630 JPEG of the cards' 720 px thumbs in a row: centred when they fit, else overlapping edge to edge."""
     canvas = Image.new("RGB", (1200, 630), (13, 13, 13))
@@ -767,9 +787,19 @@ def fan(cards, path):
 
 
 def site_banner(cards, path):
-    """1200×630 link-preview image: a fan of 5★ creatures (a stable pick)."""
+    """1200×630 link-preview image: a fan of 5★ creatures (a stable pick), cached in OG_CACHE by their images; the
+    cached file's name."""
     pool = [c for c in cards if c.get("img") and c["type"] == "creature" and c.get("stars") == 5 and not c.get("dup")]
-    fan(sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6], path)
+    picks = sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6]
+    key = hashlib.sha256(f"{OG_DECK_VERSION}:{'|'.join(c['img'] for c in picks)}".encode()).hexdigest()[:16]
+    name = f"banner-{key}.jpg"
+    cached = os.path.join(OG_CACHE, name)
+    if not os.path.exists(cached):
+        os.makedirs(OG_CACHE, exist_ok=True)
+        fan(picks, cached + ".tmp")
+        os.replace(cached + ".tmp", cached)
+    link_or_copy(cached, path, replace=True)
+    return name
 
 
 def deck_cards(d, by_id):
@@ -871,11 +901,11 @@ def build_icons(tree):
     os.makedirs(os.path.join(DIST, "icons"), exist_ok=True)
     cache_dir = os.path.join(CACHE, "icons")
     os.makedirs(cache_dir, exist_ok=True)
-    fb = font_builder() if manifest["icons"] else None
-    reach = variant_reach(fb) if fb else {}
-    if fb:                                                    # a changed build script or tint mode draws them again
+    script = None                                             # a changed build script or tint mode draws them again
+    if manifest["icons"] and os.path.exists(os.path.join(REPO, FONT_BUILD)):
         with open(os.path.join(REPO, FONT_BUILD), "rb") as fh:
             script = hashlib.sha256(fh.read()).hexdigest()
+    fb = font_builder() if manifest["icons"] and not script else None   # its warning
     icons, used, todo = {}, set(), []
     for path in sorted(tree):
         folder, _, file = path.rpartition("/")
@@ -898,15 +928,36 @@ def build_icons(tree):
         link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)     # last one wins, as before
         entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
         info = manifest["icons"].get(name)
-        if fb and info:                                       # the font draws every variant of every manifest icon
+        if script and info:                                   # the font draws every variant of every manifest icon
             tint = info.get("tint", "auto")
             key = hashlib.sha256(f"{script}:{json.dumps(tint, sort_keys=True)}:{ICON_SIZE}".encode()).hexdigest()[:8]
             files = {v: os.path.join(cache_dir, f"{tree[path][:16]}-{v}-{VARIANT_VERSION}-{key}.webp") for v in VARIANT_IMAGES}
-            used.update(os.path.basename(f) for f in files.values())
             todo.append((path, tint, files, out_name, entry))
         aliases = (info or {}).get("aliases", [])
         for spelling in [name] + list(aliases):
             icons.setdefault(norm(spelling), entry)
+
+    # the font build (cv2, fontTools: about 0.2-0.7 s to import) only when a variant image or the reach isn't cached
+    reach_file, reach = f"reach-{script[:16]}-{ICON_SIZE}.json" if script else "", None
+    if todo:
+        try:
+            with open(os.path.join(cache_dir, reach_file), encoding="utf-8") as fh:
+                reach = json.load(fh)
+        except (OSError, ValueError):
+            reach = None
+    if todo and (reach is None or not all(os.path.exists(f) for job in todo for f in job[2].values())):
+        fb = font_builder()
+        if fb is None:
+            todo = []
+        else:
+            reach = variant_reach(fb)
+            with open(os.path.join(cache_dir, reach_file + ".tmp"), "w", encoding="utf-8") as fh:
+                json.dump(reach, fh)
+            os.replace(os.path.join(cache_dir, reach_file + ".tmp"), os.path.join(cache_dir, reach_file))
+    if todo:
+        used.add(reach_file)
+        used.update(os.path.basename(f) for job in todo for f in job[2].values())
+    reach = reach if todo else {}
 
     def draw(job):
         path, tint, files, out_name, entry = job
@@ -1138,6 +1189,115 @@ def parse_created():
     return out
 
 
+def rating_number(v):
+    """One decimal, as JS Math.round(v * 10) / 10; whole values as int (JSON.stringify writes 7, not 7.0)."""
+    v = int(v * 10 + 0.5) / 10
+    return int(v) if v == int(v) else v
+
+
+def valid_rating(e):
+    """card_edits.CardRatings.valid: {date, scale, value 1-10, by, source}."""
+    if not isinstance(e, dict) or e.get("scale") not in RATING_SCALES or e.get("source") not in RATING_SOURCES:
+        return False
+    v, by, day = e.get("value"), e.get("by"), e.get("date")
+    if not isinstance(v, (int, float)) or isinstance(v, bool) or not 1 <= v <= 10 or not isinstance(by, str) or not by or len(by) > 100:
+        return False
+    try:
+        return isinstance(day, str) and date.fromisoformat(day).isoformat() == day
+    except ValueError:
+        return False
+
+
+def rating_order(entries):
+    """Oldest first: date, source (TTS sessions first), by, scale (card_edits.CardRatings.order, edit.js ratingsFile)."""
+    return sorted(entries, key=lambda e: (e["date"], RATING_SOURCES.index(e["source"]), e["by"].lower(), RATING_SCALES.index(e["scale"])))
+
+
+def parse_ratings():
+    """site/Card Ratings.json -> {card_key: (name, [entry])}; bad entries are skipped. Warns, never fails."""
+    path = os.path.join(REPO, RATINGS_PATH)
+    if not os.path.exists(path):
+        log(f"no {RATINGS_PATH}: no ratings")
+        return {}
+    try:
+        data = json.load(open(path, encoding="utf-8"))
+    except ValueError as e:
+        warn(f"{RATINGS_PATH} isn't valid JSON, no ratings: {e}")
+        return {}
+    cards = data.get("cards") if isinstance(data, dict) else None
+    if not isinstance(cards, dict):
+        warn(f"{RATINGS_PATH} has no \"cards\" object, no ratings")
+        return {}
+    out, bad = {}, []
+    for name, entries in cards.items():
+        entries = entries if isinstance(entries, list) else [None]
+        kept = [{"date": e["date"], "scale": e["scale"], "value": rating_number(e["value"]), "by": e["by"], "source": e["source"]}
+                for e in entries if valid_rating(e)]
+        if len(kept) < len(entries):
+            bad.append(name)
+        if kept:
+            got = out.setdefault(card_key(name), (name, []))
+            got[1].extend(kept)
+    if bad:
+        warn(f"{RATINGS_PATH}: entries skipped on {len(bad)} cards (expected {{date, scale, value 1-10, by, source}}): {', '.join(bad[:10])}")
+    return out
+
+
+def rating_now(entries, scale, day=None, skip=None):
+    """ratings.js current(): the mean of each rater's latest entry of scale (on or before day; skip: a rater, or raters,
+    left out; "group" counts as one) -> {"value" (1 decimal), "raters", "date" (the newest)}, or None."""
+    skip = {skip} if isinstance(skip, str) else set(skip or ())
+    latest = {}
+    for e in entries or ():                       # oldest first: a later one replaces
+        if e.get("scale") == scale and (day is None or e["date"] <= day) and e["by"] not in skip:
+            if e["by"] not in latest or e["date"] >= latest[e["by"]]["date"]:
+                latest[e["by"]] = e
+    if not latest:
+        return None
+    values = [e["value"] for e in latest.values()]
+    return {"value": rating_number(sum(values) / len(values)), "raters": len(latest), "date": max(e["date"] for e in latest.values())}
+
+
+def tier_of(v):
+    """A rating's category 0-4 (edges 2.5, 4.5, 6.5, 8.5; ratings.js tierOf, AutoCroissant tts_ratings.tier_of)."""
+    return max(0, min(4, int((v - 0.5) // 2)))
+
+
+def rater_shown(e, people, by_login, row_of=None):
+    """A Card Ratings.json entry as the site shows it: a login credited by another name keeps it as login. row_of:
+    login_rows()', else credit()."""
+    shown = e["by"] if e["by"] == "group" else (row_of or (lambda k: credit(k, people, by_login)))(e["by"]) or e["by"]
+    return {**e, "by": shown, "login": e["by"]} if shown != e["by"] else {**e}
+
+
+def apply_ratings(cards, ratings, archived, people, by_login, row_of=None):
+    """Card Ratings.json onto the cards: e["ratings"] = [{date, scale, value, by, source, login?}], oldest first; by stays
+    "group", a login becomes its row (row_of: login_rows(), else credit()), then kept as login (the page's own re-rating). A duplicate's
+    go to its original. A name matching an archived row goes to the card it was renamed to (renamedId), else onto the
+    row (changelog.json). -> {"entries", "cards", "archived", "unmatched": [name]}"""
+    live, by_id = {}, {e["id"]: e for e in cards}
+    for e in cards:
+        live.setdefault(card_key(e["key"]), e)
+    arch = {card_key(r["card"]): r for r in archived}
+    got, rows, counts = {}, {id(r) for r in archived}, {"entries": 0, "cards": 0, "archived": 0, "unmatched": []}
+    for key, (name, entries) in ratings.items():
+        target = live.get(key)
+        if target is not None and target.get("dup") in by_id:
+            target = by_id[target["dup"]]              # a duplicate's ratings are its original's, as its page shows
+        if target is None and key in arch:
+            target = by_id.get(arch[key].get("renamedId")) or arch[key]
+        if target is None:
+            counts["unmatched"].append(name)
+            continue
+        target.setdefault("ratings", []).extend(rater_shown(e, people, by_login, row_of) for e in entries)
+        got[id(target)] = target
+        counts["entries"] += len(entries)
+    for target in got.values():
+        target["ratings"] = rating_order(target["ratings"])
+        counts["archived" if id(target) in rows else "cards"] += 1
+    return counts
+
+
 def created_ts(e):
     """A card's created day as epoch seconds (noon UTC), else its first upload (fs), else None."""
     if e.get("created"):
@@ -1195,6 +1355,12 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     if not found:
         return
     fields, meta = found
+    verdict = meta.get("_psd") or {}             # counts only while the PSD it was tried on (or baked) is the tree's
+    current = bool(psd_sha and verdict.get("psd") and psd_sha.startswith(verdict["psd"]))
+    if verdict.get("state") == "baked" and current and verdict.get("reason"):
+        entry["baked"] = verdict["reason"]        # the bot's bake of this PSD, its flags with it (kept alone once no field is left)
+    if not fields:
+        return
     orig = {}
     for field, value in fields.items():
         if field in ("aliases", "dup_of"):
@@ -1220,10 +1386,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     pending = sorted(f for f in fields if f in PSD_FIELDS and fields[f] is not None and waits(f))
     if pending:
         entry["pending"] = pending
-    verdict = meta.get("_psd") or {}             # counts only while the refused values and the PSD it was tried on are unchanged
-    tried = verdict.get("for")
-    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) \
-            and psd_sha and verdict.get("psd") and psd_sha.startswith(verdict["psd"]):
+    tried = verdict.get("for")                    # a refusal: while the refused values are unchanged too
+    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) and current:
         entry["refused"] = verdict.get("reason") or "refused"
     if fields.get("aliases"):
         entry["webAliases"] = list(fields["aliases"])
@@ -1751,6 +1915,45 @@ def image_versions(paths, commits):
     return versions
 
 
+# ---- revisions (analytics.json revisions: Stats' who changes whose cards, most revised; the person pages) -----------
+MASS_PASS = 20                                # a commit changing more card images than this is a mass pass (a template or token pass)
+
+
+def commit_keys(row, people, by_login, row_of=None):
+    """A commit's (parse_history row) credited names: who() of its author; a bot commit (BOT_AUTHOR) -> the row of each
+    Edit-by login that isn't a discord: name (row_of: login_rows(), else credit()), else the login; [] without trailers."""
+    _, _, name, email, _, _, editors = row
+    if name.lower() == BOT_AUTHOR.lower():
+        row_of = row_of or (lambda k: credit(k, people, by_login))
+        return list(dict.fromkeys(row_of(e) or e for e in editors if not is_discord(e)))
+    key = who(name, email, people, by_login)
+    return [key] if key else []
+
+
+def mass_passes(found, by_png=None, skip=()):
+    """{sha} of the commits in more than MASS_PASS cards' image versions (by_png: a PNG with only skip's ids, a rulebook
+    page, doesn't count)."""
+    rule = lambda png: bool(by_png and by_png.get(png)) and all(e["id"] in skip for e in by_png[png])
+    size = Counter(sha for png, vs in found.items() if not rule(png) for (sha, *_), _ in vs)
+    return {sha for sha, n in size.items() if n > MASS_PASS}
+
+
+def card_revisions(found, by_png, commits, people, by_login, skip=(), row_of=None):
+    """{card id: {credited name: image changes after its first upload}} (found: image_versions, newest first, so its last
+    row is the upload): mass passes left out, credited by commit_keys(); every card id of the PNG gets the counts (a
+    duplicate's are its original's), skip's (rulebook pages) none. None without history."""
+    if found is None:
+        return None
+    mass, rows, out = mass_passes(found, by_png, skip), {c[0]: c for c in commits or ()}, {}
+    for png, vs in found.items():
+        got = Counter(k for (sha, *_), _ in vs[:-1] if sha not in mass and sha in rows for k in commit_keys(rows[sha], people, by_login, row_of))
+        if got:
+            for e in by_png.get(png, ()):
+                if e["id"] not in skip:
+                    out[e["id"]] = dict(sorted(got.items(), key=lambda kv: (-kv[1], kv[0].lower())))
+    return out
+
+
 # ---- changelog (data/changelog.json: the Changes page's Changelog and Database edits tabs) ---------------------------
 # The card sync's events come from CARD_DATA_DIR's changelog/ (AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md §12.1);
 # without it the tabs show no events. The publish batches and the archived cards need no data branch: git history and
@@ -1901,7 +2104,7 @@ def stamp_groups(fields, meta):
     return out
 
 
-def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
+def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields_by=None, row_of=None):
     """
     The database edits, newest first: each commit since `since` that changed a Card Edits.json entry or a Card
     Authors.txt line (a website publish batch, a Discord edit, a commit by hand). The bot's bakes (they write verdicts
@@ -1914,6 +2117,9 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
         {"available": bool, "batches": [{sha?, at, via: website|discord|git, by: [credited name | discord:<name>], subject?, stamped?,
           cards: [{key, name, id?, fields: {field: [old, new]}}], authors: [{key, name, id?, from, to}],
           people: [[git name, from, to]], more?: lines past BATCH_LINES}]}
+    fields_by: filled with {credited name: {field: lines}} over every line (BATCH_LINES doesn't cut it; a Card Authors.txt
+    line is "author", but not in the commit that created the file: 813 imported credits); Discord names and the bot
+    left out. row_of: login_rows(), else credit().
     """
     def card(key, name):
         row = {"key": name or key, "name": name_of(name or key)}       # name: as written, when the site lacks the card
@@ -1927,7 +2133,16 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
         by = str(by or "")
         if is_discord(by) or discord:
             return "discord:" + by[8:] if is_discord(by) else "discord:" + by
-        return credit(by, people, by_login) or by
+        return (row_of(by) if row_of else credit(by, people, by_login)) or by
+
+    def tally(names, fields):
+        if fields_by is None:
+            return
+        for name in names:
+            if name and not is_discord(name) and name.lower() != BOT_AUTHOR.lower():
+                mine = fields_by.setdefault(name, {})
+                for f in fields:
+                    mine[f] = mine.get(f, 0) + 1
 
     if commits is None:
         groups = {}
@@ -1942,6 +2157,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
                 continue
             if ts < since:
                 continue
+            tally([shown(by)], [f for fields in rows.values() for f in fields])
             out.append({"at": ts, "via": "discord" if is_discord(by) else "website", "by": [shown(by)], "stamped": True,
                         "cards": [{**card(k, None), "fields": {f: [None, v] for f, v in sorted(fields.items())}} for k, fields in sorted(rows.items())],
                         "authors": [], "people": []})
@@ -1975,6 +2191,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
         stamps = sorted({shown(by) for _, _, _, by in cards if by and str(by).lower() != BOT_AUTHOR.lower()}, key=str.lower)
         named = {shown(e, discord) for e in editors}   # in a Discord commit every Edit-by is a Discord name
         by = stamps or sorted(named, key=str.lower) or [who(name, email, people, by_login)]
+        tally(by, [f for _, _, fields, _ in cards for f in fields] + ["author"] * (len(authors) if before["a"] else 0))   # the file's creation: an import
         row = {"sha": sha, "at": ts, "subject": subject, "by": by,
                "via": "discord" if discord else "website" if subject.startswith(WEBSITE_SUBJECT) else "git",
                "cards": [{**card(key, written), "fields": fields} for key, written, fields, _ in cards[:BATCH_LINES]],
@@ -1986,11 +2203,33 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since):
     return {"available": True, "batches": out}
 
 
-def archived_cards(old_stats, id_of, stats=()):
+ARCHIVE_TAGS = ("renamed", "retired", "deleted")   # changes.js ARCHIVE_TAGS
+ARCHIVED_SLIM = ("card", "title", "tag", "card_type", "stars", "series", "at", "created", "author")   # analytics.json archived (Stats)
+ARCHIVED_PERSON = ("card", "title", "tag", "renamed_to", "renamedId", "moved_to", "at", "created")       # contributions.json people[].archived
+
+
+def archive_tag(tag):
+    """The bot's archived tag -> renamed (renamed_to), unfinished (moved_to MDW/Unfinished), retired (moved_to elsewhere
+    in MDW: The Morgue) or deleted."""
+    moved = tag.get("moved_to") or ""
+    return "renamed" if tag.get("renamed_to") else "unfinished" if moved.startswith("MDW/Unfinished/") \
+        else "retired" if moved else "deleted"
+
+
+SERIES_ALIASES = {"rotmg": "Realm of the Mad God", "isaac": "The Binding of Isaac", "crypt": "Crypt Custodian", "dst": "Don't Starve"}   # old folder names
+
+
+def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, series_of=None, live_series=(), author_of=None):
     """The cards whose PSD left the card repo: old_stats names whose last version carries the bot's `archived` tag
-    {at, path, blob, commit, renamed_to?, moved_to?, backfill?} (moved_to: the PSD moved into MDW, retired), newest first. A name in stats is back, whatever its tag says (the
-    bot clears it on its next save: card_models.stale_archives)."""
+    {at, path, blob, commit, renamed_to?, moved_to?, author?, backfill?} (moved_to: the PSD moved into MDW, retired), newest first. A name in stats is back, whatever its tag says (the
+    bot clears it on its next save: card_models.stale_archives). tag: archive_tag(); author: a renamed card's Card Authors.txt
+    line > the old name's (credited, by name, or by title when no live card has it) > the renamed card's (author_of: a card name ->
+    its author) > the tag's > the last version's, through person(); created: the last version's created date, else the
+    Pacific day of its oldest version; series: the renamed card's (series_of: a card name -> its series), else the last
+    version's as a live series spells it ('kirby' -> 'Kirby', SERIES_ALIASES), else as it was."""
     out = []
+    spell = {s.lower(): s for s in live_series if s}
+    spell.update({k: v for k, v in SERIES_ALIASES.items() if v in live_series})
     for name, versions in (old_stats or {}).items():
         if name in stats:
             continue
@@ -1998,12 +2237,25 @@ def archived_cards(old_stats, id_of, stats=()):
         tag = getattr(last, "archived", None)
         if not isinstance(tag, dict):
             continue
-        row = {"card": name, "title": getattr(last, "display_name", None) or name, "card_type": getattr(last, "card_type", None),
-               "stars": getattr(last, "stars", None), "at": tag.get("at"), "path": tag.get("path") or getattr(last, "path", None),
-               "commit": tag.get("commit"), "renamed_to": tag.get("renamed_to"), "moved_to": tag.get("moved_to")}
+        title = getattr(last, "display_name", None) or name
         renamed = id_of(tag.get("renamed_to"))
+        new = tag["renamed_to"] if renamed else None    # history stays with the card it became
+        listed = (new and (credited or {}).get(card_key(new))) or (credited or {}).get(card_key(name)) \
+            or (None if id_of(title) else (credited or {}).get(card_key(title))) or (new and author_of and author_of(new))   # a live card's title is its own
+        made = getattr(last, "created", None)
+        made = made.get("date") if isinstance(made, dict) else None
+        if not made:
+            dated = [analytics.when(v) for v in versions if isinstance(getattr(v, "timestamp", None), (int, float))]
+            made = datetime.fromtimestamp(min(dated), analytics.ZONE).strftime("%Y-%m-%d") if dated else None
+        row = {"card": name, "title": title, "tag": archive_tag(tag), "card_type": getattr(last, "card_type", None),
+               "stars": getattr(last, "stars", None), "series": getattr(last, "series", None), "at": tag.get("at"),
+               "created": made, "author": person(people or {}, listed or tag.get("author") or getattr(last, "author", None)),
+               "path": tag.get("path") or getattr(last, "path", None),
+               "commit": tag.get("commit"), "renamed_to": tag.get("renamed_to"), "moved_to": tag.get("moved_to")}
         if renamed:
             row["renamedId"] = renamed
+        raw = row["series"]
+        row["series"] = (renamed and series_of and series_of(tag["renamed_to"])) or (spell.get(raw.lower(), raw) if isinstance(raw, str) else raw)
         out.append({k: v for k, v in row.items() if v not in (None, "")})
     return sorted(out, key=lambda r: (-(r.get("at") or 0), r["card"].lower()))
 
@@ -2012,7 +2264,26 @@ def archived_cards(old_stats, id_of, stats=()):
 TITLES = (("cards", "Top card maker"), ("edits", "Top editor"), ("commits", "Top committer"))   # top count per column; ties share; same list in profile.js
 OVERALL = "Top contributor"                   # the top total of the three columns; profile.js OVERALL
 RECENT_COMMITS = 10
+MIN_RATERS = 5                                # P7/P8: the fewest cards a correlation is shown for (P5: 3 of their own)
+RECENT_BAL = 5                                # P1: the newest buffs and nerfs kept per person
 PAGE_KEY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,60}$")       # a name that can be a u/<key>/ folder
+
+
+def login_rows(commits, people, by_login):
+    """A login -> its row, or None: credit(), else the name its noreply commits (not the bot's) credit most."""
+    noreply = {}                                  # a noreply email's login -> {credited name: commits}
+    for _, _, name, email, _, _, _ in commits or ():
+        m = NOREPLY_RE.match(email or "")
+        if m and name.lower() != BOT_AUTHOR.lower():
+            c = noreply.setdefault(m.group(1).lower(), {})
+            k = who(name, email, people, by_login)
+            if k:
+                c[k] = c.get(k, 0) + 1
+
+    def row_of(login):
+        c = noreply.get((login or "").lower())
+        return credit(login, people, by_login) or (min(c, key=lambda n: (-c[n], n.lower())) if c else None)
+    return row_of
 
 
 def credit(key, people, by_login):
@@ -2037,9 +2308,9 @@ def is_card_file(path):
         and not any(p in SKIP_PARTS or p in RULE_PARTS for p in path.split("/"))
 
 
-def contributions(cards, people, profiles, edits, commits):
+def contributions(cards, people, profiles, edits, commits, balance=None, revisions=None, archived=(), fields_by=None, row_of=None):
     """{"available", "since", "people": [{key, logins, github?, cards, edits, commits, first, last, recent, recentEdits,
-    months}]} by cards, then commits.
+    months, + person_extras' keys}], "site"?: {z}} by cards, then commits.
     cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
     (a hand commit counts, a pure move doesn't), or without history the file's distinct _by/_at stamps (a floor: it keeps
     one batch per card; a `_bot` field counts only for its `_credit` editor). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
@@ -2050,22 +2321,12 @@ def contributions(cards, people, profiles, edits, commits):
     one row.
     github: a GitHub login known to be theirs (their profile's, else the most used of the logins in their noreply commit
     emails, _by stamps and Edit-by trailers), never a git name. recent / recentEdits: the last card commits [ts, subject,
-    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" Pacific, cards created (created, else fs), edits, commits]]."""
+    n cards] and edit batches [ts, subject, sha]. months: [["YYYY-MM" Pacific, cards created (created, else fs), edits, commits]].
+    balance: analytics.json; revisions: card_revisions(); archived: archived_cards(); fields_by: edit_batches' (person_extras);
+    row_of: login_rows() (made here without)."""
     by_login = {p["login"].lower(): p for p in profiles}
     rec, seen_logins, spelled = {}, {}, {}
-    noreply = {}                                  # a noreply email's login -> {credited name: commits}
-    for _, _, name, email, _, _, _ in commits or ():
-        m = NOREPLY_RE.match(email or "")
-        if m and name.lower() != BOT_AUTHOR.lower():
-            c = noreply.setdefault(m.group(1).lower(), {})
-            k = who(name, email, people, by_login)
-            if k:
-                c[k] = c.get(k, 0) + 1
-
-    def row_of(login):
-        """A login's row, or None: credit(), else the name its noreply commits credit most."""
-        c = noreply.get(login.lower())
-        return credit(login, people, by_login) or (min(c, key=lambda n: (-c[n], n.lower())) if c else None)
+    row_of = row_of or login_rows(commits, people, by_login)
 
     def key_of(login):
         """A website or Edit-by login -> the credited name: row_of(), else the login as first spelled."""
@@ -2163,7 +2424,181 @@ def contributions(cards, people, profiles, edits, commits):
         r["months"] = [[k, *v] for k, v in sorted(r["months"].items())]
         out.append(r)
     out.sort(key=lambda r: (-r["cards"], -r["commits"], -r["edits"], r["key"].lower()))
-    return {"available": commits is not None, "since": min((r["first"] for r in out if r["first"]), default=0), "people": out}
+    res = {"available": commits is not None, "since": min((r["first"] for r in out if r["first"]), default=0), "people": out}
+    zs = [v["z_total"] for v in (balance or {}).get("cards", {}).values() if "z_total" in v]
+    if zs:
+        res["site"] = {"z": round(sum(zs) / len(zs), 2)}
+    person_extras(out, cards, commits, people, by_login, balance or {}, revisions, archived or (), fields_by or {}, row_of)
+    return res
+
+
+# ---- person stats (contributions.json people[]: the person page's Balance, Ratings, Revisions, Archived cards) ---------
+def psd_commits_at(commits, people, by_login, row_of=None):
+    """{committer time: [(credited names, {alnum PSD file names})]} of the commits that added or changed a PSD."""
+    out = {}
+    for row in commits or ():
+        names = {alnum(os.path.splitext(os.path.basename(p))[0]) for s, _, _, p in row[5] if s != "D" and p.lower().endswith(".psd")}
+        if names:
+            out.setdefault(row[1], []).append((commit_keys(row, people, by_login, row_of), names))
+    return out
+
+
+def change_by(at_ts, card, row):
+    """Who made an analytics change row (at_ts: psd_commits_at): the one commit at its second; with more, the one that
+    touched a PSD of the card's file name. [] when it's still not one."""
+    got = at_ts.get(row.get("ts"), [])
+    if len(got) > 1:
+        name = alnum(os.path.splitext(os.path.basename(card.get("psd") or ""))[0])
+        got = [g for g in got if name in g[1]]
+    return got[0][0] if len(got) == 1 else []
+
+
+def pearson(xs, ys):
+    """Their correlation (2 dp), or None under MIN_RATERS pairs or with no spread."""
+    n = len(xs)
+    if n < MIN_RATERS:
+        return None
+    mx, my = sum(xs) / n, sum(ys) / n
+    sx, sy = sum((x - mx) ** 2 for x in xs) ** 0.5, sum((y - my) ** 2 for y in ys) ** 0.5
+    return round(sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / (sx * sy), 2) if sx and sy else None
+
+
+def signed1(v):
+    """rating_number() for a difference: one decimal, either sign."""
+    return -rating_number(-v) if v < 0 else rating_number(v)
+
+
+def latest_of(entries, scale):
+    """{by: value}: each rater's latest entry of scale (oldest first, a later one replaces)."""
+    out = {}
+    for e in entries or ():
+        if e.get("scale") == scale:
+            out[e["by"]] = e["value"]
+    return out
+
+
+def person_extras(rows, cards, commits, people, by_login, balance, revisions, archived, fields_by, row_of=None):
+    """Adds to each contributions row (key K; own cards: credited to K, not duplicates, not hidden) what it has of:
+    power (P2) {n, z, top, bottom, dots [[id, z, top|bottom?]]}; bal (P1) {buff, nerf, shift, madeBuff, madeNerf, swing? [id, delta, ts],
+    recent [[id, buff|nerf, delta, ts]]}; revisions (P3, P12, P13) {self, others, top, theirs, most?, untouched, oldest?};
+    rework (P11) {n, of, most?}; ratings (P4) {fav?, favN, power?, powerN, best, worst}; selfBias (P5), rater (P7),
+    powerVsStats (P8): per-person ratings only; editFields (P21) [[field, n]]; archived (P17). NOTES.md §8."""
+    A = balance.get("cards", {})
+    vis = [c for c in cards if c.get("author") and not c.get("dup") and not c.get("hidden")]
+    own = defaultdict(list)
+    for c in vis:
+        own[c["author"]].append(c)
+    at_ts = psd_commits_at(commits, people, by_login, row_of)
+    made = defaultdict(Counter)                   # K -> buffs and nerfs they made to others' cards
+    for c in vis:
+        for r in A.get(c["id"], {}).get("changes", ()):
+            if r.get("bal") in ("buff", "nerf"):
+                for k in change_by(at_ts, c, r):
+                    if k != c["author"]:
+                        made[k][r["bal"]] += 1
+    theirs = defaultdict(Counter)                 # K -> {author: their revisions of the author's cards}
+    for c in vis:
+        for k, n in (revisions or {}).get(c["id"], {}).items():
+            if k != c["author"]:
+                theirs[k][c["author"]] += n
+    fav = {c["id"]: latest_of(c.get("ratings"), "favorability") for c in vis}
+    pw = {c["id"]: latest_of(c.get("ratings"), "power") for c in vis}
+    fav_raters = {by for m in fav.values() for by in m if by != "group"}
+    raters = fav_raters | {by for m in pw.values() for by in m if by != "group"}   # either scale: P5, P8
+    web = Counter(e["by"] for c in [*cards, *archived] for e in c.get("ratings") or () if e.get("source") == "website")
+    top = lambda counts: [[k, n] for k, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0].lower()))[:3]]
+    for r in rows:
+        K, mine = r["key"], own.get(r["key"], [])
+        dots = sorted(([c["id"], A[c["id"]]["z_total"], *A[c["id"]].get("flags", ())[:1]] for c in mine if "z_total" in A.get(c["id"], {})),
+                      key=lambda d: (d[1], d[0]))
+        if dots:
+            flags = Counter(f for c in mine for f in A.get(c["id"], {}).get("flags", ()))
+            r["power"] = {"n": len(dots), "z": round(sum(d[1] for d in dots) / len(dots), 2), "top": flags["top"], "bottom": flags["bottom"], "dots": dots}
+        bal = {"buff": 0, "nerf": 0, "shift": 0, "madeBuff": made[K]["buff"], "madeNerf": made[K]["nerf"], "recent": []}
+        moves = []
+        for c in mine:
+            for row in A.get(c["id"], {}).get("changes", ()):
+                if row.get("bal") in bal:
+                    bal[row["bal"]] += 1
+                    if row["bal"] != "shift":
+                        old, new = row["stats"]
+                        moves.append([c["id"], row["bal"], sum(new) - sum(old), row["ts"]])
+        if moves:
+            swing = max(moves, key=lambda m: (abs(m[2]), m[3]))
+            bal["swing"] = [swing[0], swing[2], swing[3]]
+            bal["recent"] = sorted(moves, key=lambda m: -m[3])[:RECENT_BAL]
+        if dots or any(bal[k] for k in ("buff", "nerf", "shift", "madeBuff", "madeNerf")):
+            r["bal"] = bal
+        if revisions is not None:
+            n = {c["id"]: sum(revisions.get(c["id"], {}).values()) for c in mine}
+            by = Counter()
+            for c in mine:
+                by.update(revisions.get(c["id"], {}))
+            rev = {"self": by.pop(K, 0), "others": sum(by.values()), "top": top(by), "theirs": top(theirs[K]),
+                   "untouched": sum(1 for c in mine if not n[c["id"]])}
+            most = min(mine, key=lambda c: (-n[c["id"]], c["name"].lower()), default=None)
+            if most and n[most["id"]] >= 2:
+                rev["most"] = [most["id"], n[most["id"]]]
+            still = [c for c in mine if not n[c["id"]] and created_ts(c)]
+            if still:
+                rev["oldest"] = min(still, key=lambda c: (created_ts(c), c["name"].lower()))["id"]
+            if mine or rev["theirs"]:
+                r["revisions"] = rev
+        reworks = {c["id"]: (sum(1 for row in A.get(c["id"], {}).get("changes", ()) if analytics.reworked(row)), c["name"].lower()) for c in mine}
+        hit = [i for i, (k, _) in reworks.items() if k]
+        if hit:
+            r["rework"] = {"n": len(hit), "of": len(mine)}
+            most = min(hit, key=lambda i: (-reworks[i][0], reworks[i][1]))
+            if reworks[most][0] >= 2:
+                r["rework"]["most"] = [most, reworks[most][0]]
+        others = lambda c, scale: rating_now(c.get("ratings"), scale, skip=K)      # everyone's but K's
+        fv, pv = ([(c["id"], v["value"]) for c in mine for v in [others(c, scale)] if v] for scale in ("favorability", "power"))
+        if fv or pv:
+            rat = {"favN": len(fv), "powerN": len(pv)}
+            for short, vals in (("fav", fv), ("power", pv)):
+                if vals:
+                    rat[short] = rating_number(sum(v for _, v in vals) / len(vals))
+            if len(fv) >= 2:                      # best takes up to half, worst the rest below it: never the same card or value
+                order = sorted(fv, key=lambda x: (-x[1], x[0]))
+                k = min(3, (len(fv) + 1) // 2)
+                rat["best"] = [list(x) for x in order[:k]]
+                rat["worst"] = [list(x) for x in order[k:][::-1][:3] if x[1] < order[k - 1][1]]
+            r["ratings"] = rat
+        if K in raters:
+            bias = {}
+            for scale, short, count, latest in (("favorability", "fav", "n", fav), ("power", "power", "powerN", pw)):
+                d = [latest[c["id"]][K] - v["value"] for c in mine if K in latest[c["id"]] for v in [others(c, scale)] if v]
+                if len(d) >= 3:
+                    bias[short], bias[count] = signed1(sum(d) / len(d)), len(d)
+            if bias:
+                r["selfBias"] = bias
+            pairs = [(fav[c["id"]][K], v["value"]) for c in vis if K in fav[c["id"]] for v in [others(c, "favorability")] if v]
+            if len(pairs) >= MIN_RATERS:
+                rater = {"n": len(pairs), "harsh": signed1(sum(a - b for a, b in pairs) / len(pairs))}
+                agree = pearson([a for a, _ in pairs], [b for _, b in pairs])
+                if agree is not None:
+                    rater["agree"] = agree
+                twin = None
+                for other in sorted(fav_raters - {K}, key=str.lower):
+                    shared = [(m[K], m[other]) for m in fav.values() if K in m and other in m]
+                    rr = pearson([a for a, _ in shared], [b for _, b in shared])
+                    if rr is not None and (twin is None or rr > twin[1]):
+                        twin = [other, rr]
+                if twin:
+                    rater["twin"] = twin
+                r["rater"] = rater
+            pz = [(pw[c["id"]][K], A[c["id"]]["z_total"]) for c in vis if K in pw[c["id"]] and "z_total" in A.get(c["id"], {})]
+            rr = pearson([a for a, _ in pz], [b for _, b in pz])
+            if rr is not None:
+                r["powerVsStats"] = {"r": rr, "n": len(pz)}
+        fields = Counter(fields_by.get(K, {}))
+        if web[K]:
+            fields["rating"] += web[K]
+        if fields:
+            r["editFields"] = [[f, n] for f, n in sorted(fields.items(), key=lambda kv: (-kv[1], kv[0]))]
+        gone = [{k: a[k] for k in ARCHIVED_PERSON if k in a} for a in archived if a.get("author") == K]
+        if gone:
+            r["archived"] = gone
 
 
 def titles_of(rows):
@@ -2264,6 +2699,88 @@ def parse_banlist(by_norm):
 
 
 # ---- main ------------------------------------------------------------------------------------------
+# ---- build versions (?v=) ------------------------------------------------------------------------------
+IMPORT_RE = re.compile(r'(from\s+"\./([\w-]+\.js))"')     # a module's static imports, as they are stamped
+VOLATILE = {"cards.json": ("generated",), "decks.json": ("generated",), "changelog.json": ("since",)}   # the build's clock
+
+
+def stamp_of(data):
+    return hashlib.sha256(data).hexdigest()[:10]
+
+
+def asset_stamps(texts):
+    """{file: (stamp, text as served)} for site/assets ({file: text}): a file's stamp hashes its served text, and a module's
+    imports carry their own stamps, so a change reaches the URLs of that file and its importers only. An import cycle: one
+    stamp over every file."""
+    deps = {n: [m.group(2) for m in IMPORT_RE.finditer(t)] if n.endswith(".js") else [] for n, t in texts.items()}
+    out = {}
+
+    def stamp(name, path=()):
+        if name in out:
+            return out[name][0]
+        if name in path:
+            raise ValueError(f"import cycle: {' -> '.join(path + (name,))}")
+        text = texts[name]
+        if deps[name]:
+            got = {d: stamp(d, path + (name,)) for d in deps[name] if d in texts}
+            text = IMPORT_RE.sub(lambda m: f'{m.group(1)}?v={got.get(m.group(2)) or stamp_of(m.group(2).encode())}"', text)
+        out[name] = (stamp_of(text.encode("utf-8")), text)
+        return out[name][0]
+    try:
+        for name in sorted(texts):
+            stamp(name)
+    except ValueError as e:
+        log(f"assets: {e}; one stamp for all")
+        digest = hashlib.sha256()
+        for name in sorted(texts):
+            digest.update(name.encode() + b"\0" + texts[name].encode("utf-8") + b"\0")
+        one = digest.hexdigest()[:10]
+        out = {n: (one, IMPORT_RE.sub(rf'\1?v={one}"', t) if n.endswith(".js") else t) for n, t in texts.items()}
+    return out
+
+
+def steady(files, blobs):
+    """{data file: its bytes without the build's clock (VOLATILE)}"""
+    return {name: json.dumps({k: v for k, v in files[name].items() if k not in VOLATILE.get(name, ())}, separators=(",", ":"),
+                             ensure_ascii=False).encode("utf-8") if VOLATILE.get(name) else blob for name, blob in blobs.items()}
+
+
+def data_stamp(data, details):
+    """The data's stamp: the data files (steady()) and the details files ({name: bytes})."""
+    digest = hashlib.sha256()
+    for name in sorted(data):
+        digest.update(name.encode() + b"\0" + data[name] + b"\0")
+    for name in sorted(details):
+        digest.update(f"details/{name}".encode() + b"\0" + details[name] + b"\0")
+    return digest.hexdigest()[:10]
+
+
+BUILD_TXT = "build.txt"                       # in DIST: dist_digest(), which build is live
+
+
+def dist_digest(data):
+    """sha256 over every file in DIST but BUILD_TXT, the data files without the build's clock (data: steady()); the card
+    images (thumbs/, 90% of the bytes) by name and size, as their names are their PNG's blob and this script's settings
+    (its own bytes are in the digest)."""
+    paths = sorted(os.path.relpath(os.path.join(root, name), DIST).replace(os.sep, "/")
+                   for root, _, names in os.walk(DIST) for name in names)
+
+    def sha(rel):
+        if rel.startswith("data/") and rel[5:] in data:
+            return hashlib.sha256(data[rel[5:]]).digest()
+        if rel.startswith("thumbs/"):
+            return str(os.path.getsize(os.path.join(DIST, rel))).encode()
+        with open(os.path.join(DIST, rel), "rb") as fh:
+            return hashlib.sha256(fh.read()).digest()
+    with open(os.path.abspath(__file__), "rb") as fh:
+        digest = hashlib.sha256(fh.read())
+    with ThreadPoolExecutor(max_workers=8) as pool:   # hashlib works outside the GIL
+        for rel, h in zip(paths, pool.map(sha, paths)):
+            if rel != BUILD_TXT:
+                digest.update(rel.encode() + b"\0" + h)
+    return digest.hexdigest()
+
+
 def main():
     started = time.time()
     os.makedirs(os.path.join(CACHE, "img"), exist_ok=True)
@@ -2378,7 +2895,7 @@ def main():
                    png=path, problems=[], dup=original["id"])
         apply_edits(dup, edits, tree.get(original["psd"]))
         date_text(dup, stats[original["key"]], old_stats.get(original["key"]))   # its PSD's history, against its own text
-        for k in ("pending", "refused", "reparsePending"):   # same PSD: its image changes with the original's
+        for k in ("pending", "refused", "baked", "reparsePending"):   # same PSD: its image changes with the original's
             value = [f for f in original[k] if f != "name"] if k == "pending" and original.get(k) else original.get(k)
             if value and not dup.get(k):         # not the name: a duplicate prints its own title
                 dup[k] = value
@@ -2512,8 +3029,9 @@ def main():
     commits = git_history()
     found = image_versions(list(by_png), commits)
     versions = {"available": found is not None, "repo": CARD_REPO, "commits": [], "cards": {}}
+    rule_ids = {e["id"] for e in rules}
     if found:
-        index, rule_ids = {}, {e["id"] for e in rules}
+        index = {}
         for png, vs in found.items():
             rows = []
             for (sha, ts, author, subject), path in vs:
@@ -2574,14 +3092,49 @@ def main():
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist,
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
-                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR},
+                                            "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR,
+                                            "ratings": RATINGS_PATH},
         "admins": parse_admins(),
         "decks": {"public": len(public_decks), "private": len(private_decks)},     # the Deck builder page shows the public count; the list is decks.json
         "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
         "peopleMap": PEOPLE_AS_WRITTEN,
     }
     profiles = read_profiles(cards, data["people"])
-    contrib = contributions(cards, people, profiles, edits, commits)
+    by_login = {p["login"].lower(): p for p in profiles}
+    id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
+    name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
+    series_of = lambda name: (by_key.get(card_key(name)) or {}).get("series") if isinstance(name, str) and name else None
+    archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats, people=people, credited=credited,
+                             series_of=series_of, live_series={e["series"] for e in cards if e.get("series")},
+                             author_of=lambda name: (by_key.get(card_key(name)) or {}).get("author"))
+    row_of = login_rows(commits, people, by_login)   # a login's row, as contributions keys it
+    rated = apply_ratings(cards, parse_ratings(), archived, people, by_login, row_of)
+    line = f"ratings: {rated['entries']} entries on {rated['cards']} cards ({rated['archived']} archived)"
+    if rated["unmatched"]:
+        warn(f"{line}, {len(rated['unmatched'])} names match no card: {', '.join(rated['unmatched'][:10])}")
+    elif rated["entries"]:
+        log(line)
+    revs = card_revisions(found, by_png, commits, people, by_login, skip=rule_ids, row_of=row_of)
+    balance["revisions"] = {"available": revs is not None, "mass": MASS_PASS, "cards": revs or {}}
+    balance["archived"] = [{k: r[k] for k in ARCHIVED_SLIM if k in r} for r in archived]
+    if revs is not None:
+        log(f"revisions: {sum(n for v in revs.values() for n in v.values())} card image changes on {len(revs)} cards "
+            f"({len(mass_passes(found, by_png, rule_ids))} mass-pass commits left out)")
+
+    # the Changes page's Changelog and Database edits tabs: the card sync's events (with CARD_DATA_DIR), the edit batches, archived cards
+    since = int(time.time()) - CHANGELOG_DAYS * 86400
+    events, manifest = read_changelog(data_dir) if data_dir else (None, None)
+    if data_dir and events is None:
+        warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
+    fields_by = {}                                # the person pages' edits by field: all time
+    try:
+        every = edit_batches(edit_history(), people, by_login, edits, id_of, name_of, 0, fields_by=fields_by, row_of=row_of)
+        batches = {**every, "batches": [b for b in every["batches"] if b["at"] >= since]}
+    except Exception as e:                        # never a failed build
+        warn(f"no edit batches: {type(e).__name__}: {e}")
+        batches = {"available": False, "batches": []}
+        fields_by.clear()
+    contrib = contributions(cards, people, profiles, edits, commits, balance=balance, revisions=revs, archived=archived, fields_by=fields_by, row_of=row_of)
     titles = titles_of(contrib["people"])
     person_of = {login.lower(): r for r in contrib["people"] for login in r["logins"]}        # a profile's login -> its contributions
     previews = {}                                 # u/<name>/ -> its link-preview text, for the share dialog too
@@ -2599,21 +3152,8 @@ def main():
     log(f"contributions: {len(contrib['people'])} people, {sum(r['edits'] for r in contrib['people'])} edit batches, "
         f"{sum(r['commits'] for r in contrib['people'])} card commits" + ("" if contrib["available"] else " (no history: batches counted from the edits file)"))
 
-    # the Changes page's Changelog and Database edits tabs: the card sync's events (with CARD_DATA_DIR), the edit batches, archived cards
-    id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
-    name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
-    since = int(time.time()) - CHANGELOG_DAYS * 86400
-    events, manifest = read_changelog(data_dir) if data_dir else (None, None)
-    if data_dir and events is None:
-        warn(f"CARD_DATA_DIR {CARD_DATA_DIR} has no changelog folder; the Changelog tab shows no events")
-    try:
-        batches = edit_batches(edit_history(), people, {p["login"].lower(): p for p in profiles}, edits, id_of, name_of, since)
-    except Exception as e:                        # never a failed build
-        warn(f"no edit batches: {type(e).__name__}: {e}")
-        batches = {"available": False, "batches": []}
     changelog = {"available": events is not None, "since": since, "days": CHANGELOG_DAYS, "repo": CARD_REPO, "source": manifest,
-                 "events": site_events(events or [], id_of, since), "archived": archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats),
-                 "edits": batches}
+                 "events": site_events(events or [], id_of, since), "archived": archived, "edits": batches}
     log(f"changelog: {len(changelog['events'])} events" + ("" if events is not None else " (no CARD_DATA_DIR)") +
         f", {len(batches['batches'])} edit batches, {len(changelog['archived'])} archived cards")
     try:                                      # password files (read before cards.json: data.passwords opens the sign-in on Password)
@@ -2634,33 +3174,36 @@ def main():
         write_logins(os.path.join(DIST, "data", "logins"), logins)
     except Exception as e:                    # never a failed build
         warn(f"no password files written: {type(e).__name__}: {e}")
-    if detail_files:                          # one small file per card, fetched when its Details dropdown opens
+    details = {f"{cid}.json": json.dumps(rec, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+               for cid, rec in detail_files.items()}   # json.dumps: json.dump to a file is the slow pure-Python encoder
+    if details:                               # one small file per card, fetched when its Details dropdown opens
         os.makedirs(os.path.join(DIST, "data", "details"))
-        for cid, rec in detail_files.items():
-            with open(os.path.join(DIST, "data", "details", f"{cid}.json"), "w", encoding="utf-8") as fh:
-                json.dump(rec, fh, separators=(",", ":"), ensure_ascii=False)
+        for name, blob in details.items():
+            with open(os.path.join(DIST, "data", "details", name), "wb") as fh:
+                fh.write(blob)
     log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), rulebook pages: {len(rules)}, "
         f"icons: {len(set(i['file'] for i in icons.values()))}, banned: {sum(len(g['entries']) for g in banlist['groups'])}")
 
-    # static files, stamped with a build version so browsers never mix an old script with new data
+    # static files, stamped so browsers never mix an old script with new data: each asset by its content (and its imports'),
+    # the data by its content without the build's clock, so a deploy that changed nothing keeps every URL (and the caches)
     assets_src = os.path.join(SITE, "assets")
-    digest = hashlib.sha256()
-    for name in sorted(os.listdir(assets_src)) + ["index.html"]:
-        digest.update(open(os.path.join(SITE, "index.html") if name == "index.html" else os.path.join(assets_src, name), "rb").read())
-    for name in sorted(blobs):
-        digest.update(blobs[name])
-    digest.update(f"details:{len(detail_files)}".encode())      # the details files by count only (cards.json changes every build anyway)
-    version = digest.hexdigest()[:10]
-    os.makedirs(os.path.join(DIST, "assets"))
+    texts = {}
     for name in os.listdir(assets_src):
-        text = open(os.path.join(assets_src, name), encoding="utf-8").read()
-        if name.endswith(".js"):              # module imports: "./x.js" -> "./x.js?v=..."
-            text = re.sub(r'(from\s+"\./[\w-]+\.js)"', rf'\1?v={version}"', text)
+        with open(os.path.join(assets_src, name), encoding="utf-8") as fh:
+            texts[name] = fh.read()
+    assets = asset_stamps(texts)
+    data = steady(files, blobs)
+    version = data_stamp(data, details)
+    os.makedirs(os.path.join(DIST, "assets"))
+    for name, (_, text) in assets.items():
         with open(os.path.join(DIST, "assets", name), "w", encoding="utf-8") as fh:
             fh.write(text)
-    template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', rf'\1?v={version}"',
-                      open(os.path.join(SITE, "index.html"), encoding="utf-8").read()).replace("<!--BUILD-->", version)
-    site_banner(cards, os.path.join(DIST, "og.jpg"))
+    def url(m):                               # index.html's asset and data URLs
+        name = m.group(1).removeprefix("assets/")
+        return f'{m.group(1)}?v={assets[name][0] if name in assets else version}"'
+    with open(os.path.join(SITE, "index.html"), encoding="utf-8") as fh:
+        template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', url, fh.read()).replace("<!--BUILD-->", version)
+    banner = site_banner(cards, os.path.join(DIST, "og.jpg"))
     def og_tags(title, desc, url, image="", size=None, alt=""):
         tags = [f'<meta property="og:site_name" content="{SITE_NAME}">', '<meta property="og:type" content="website">',
                 f'<meta property="og:title" content="{html.escape(title)}">', f'<meta property="og:description" content="{html.escape(desc)}">',
@@ -2677,7 +3220,7 @@ def main():
     site_desc = "Every card, the rulebook, a starting-hand builder and stats."
     site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(template.replace("<!--HEAD-->", '<base href="./">\n' + site_og))
+        fh.write(template.replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards)))
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
         fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">\n' + site_og))   # absolute: the 404 page can be served at any depth
     os.makedirs(os.path.join(DIST, "d"))                # shared hands: d/#/deck/<code>
@@ -2704,6 +3247,7 @@ def main():
         desc, (image, size) = share_text(c), og_image(c)
         share_page(("c", c["id"]), [
             f'<meta name="card" content="{c["id"]}">',
+            *([f'<link rel="preload" as="image" href="thumbs/{c["img"]}-720.webp" fetchpriority="high">'] if c.get("img") else []),   # the dialog's picture (app.js placeholderOf)
             og_tags(c["name"], desc, f"{SITE_URL}/c/{c['id']}/" if SITE_URL else "", image, size, f"{c['name']} card"),
             f'<meta name="theme-color" content="{c.get("color") or "#3987e5"}">',
             f'<meta name="description" content="{html.escape(desc)}">',
@@ -2756,10 +3300,12 @@ def main():
             f'<title>{html.escape(title)} · {SITE_NAME}</title>',
         ])
     for n in os.listdir(OG_CACHE) if SITE_URL else []:   # no montages without SITE_URL: keep the cache
-        if n not in montages:                     # site.yml saves the cache under these names, so only the ones in use
+        if n not in montages and n != banner:     # site.yml saves the cache under these names, so only the ones in use
             os.remove(os.path.join(OG_CACHE, n))
     if montages:
         log(f"deck previews: {len(montages)} montages")
+    with open(os.path.join(DIST, BUILD_TXT), "w", encoding="utf-8") as fh:
+        fh.write(dist_digest(data) + "\n")
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
 
 

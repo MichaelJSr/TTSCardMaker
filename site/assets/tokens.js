@@ -1,7 +1,8 @@
 // The token picker: typing "[" in card text suggests the stoogedings icons with their pictures, and after "name:" that
 // icon's variants; "(" and the start of a timing tag ("(1") suggests the tags. Typing narrows, Backspace widens. The
 // helpers above `install` are pure (AutoCroissant tests/test_token_picker.py runs them in node); install wires them to
-// the text fields marked data-tokens (edit.js, inline.js).
+// the text fields marked data-tokens (edit.js, inline.js). The same list suggests known names in the fields marked
+// data-suggest="series|subseries|author" (suggestNames), whose whole value is the query; a pick fires "suggest-pick".
 import { esc, norm, tagInfo, badgeHtml, VARIANT_NAMES, variantFile } from "./text.js";
 
 export const MAX_TOKEN = 52;                     // text.js PIECE: [thunderfury blessed blade of the starseeker:darkglow]
@@ -41,7 +42,7 @@ const REST_ICON = /^[\p{L}\p{N} _\-.'’:]*\]/u, REST_TAG = /^[-0-9A-Za-z/]*\)/;
  *  before a ":") or {type: "tag", start, end, close, text}; start: its "[" or "(", end: the caret, close: where a
  *  choice's text ends: the caret, or past the rest of a token the caret is inside when its "]" or ")" closes it on
  *  this line ("Heal [fi|re] now"); text after the caret that nothing closes stays ("[fi|and ice"). tail: that rest's
- *  ":variant]", kept when a plain icon is chosen. Only on the caret's line. A "(" opens a tag only when the text after
+ *  ":variant]" when the font draws it, kept when a plain icon is chosen ("[fi|:]" gives "[fire]"). Only on the caret's line. A "(" opens a tag only when the text after
  *  it could start one and does not start in lower case: "(see below)" is words. */
 export function openToken(text, caret) {
   text = String(text ?? "");
@@ -54,8 +55,9 @@ export function openToken(text, caret) {
     if (seg.length > MAX_TOKEN || !NAME.test(base) || (variant !== null && !/^[a-z]*$/i.test(variant))) return null;
     let rest = (colon < 0 ? REST_ICON : /^[a-z]*\]/i).exec(after)?.[0] ?? "";
     if (seg.length + rest.length - 1 > MAX_TOKEN) rest = "";
-    const at = colon < 0 ? rest.indexOf(":") : -1;
-    return { type: "icon", start: line + sq, end: caret, close: caret + rest.length, base, variant, tail: at < 0 ? "" : rest.slice(at) };
+    const at = colon < 0 ? rest.indexOf(":") : -1, tail = at < 0 ? "" : rest.slice(at);
+    return { type: "icon", start: line + sq, end: caret, close: caret + rest.length, base, variant,
+      tail: VARIANTS.includes(tail.slice(1, -1).toLowerCase()) ? tail : "" };   // not "[fire:]": letters in the font
   }
   if (pa > before.lastIndexOf(")") && pa > sq) {
     const seg = before.slice(pa + 1);
@@ -67,8 +69,8 @@ export function openToken(text, caret) {
   return null;
 }
 
-/** The fewest edits (a letter added, dropped, changed, or two swapped) from q to the start of s */
-function slips(q, s) {
+/** The fewest edits (a letter added, dropped, changed, or two swapped) from q to the start of s (whole: to all of s) */
+function slips(q, s, whole = false) {
   let prev2 = null, prev = Array.from({ length: s.length + 1 }, (_, j) => j);
   for (let i = 1; i <= q.length; i++) {
     const row = [i];
@@ -78,7 +80,7 @@ function slips(q, s) {
     }
     prev2 = prev; prev = row;
   }
-  return Math.min(...prev);
+  return whole ? prev[s.length] : Math.min(...prev);
 }
 
 const KIND_ORDER = { type: 0, star: 1 };
@@ -148,16 +150,43 @@ export function applyChoice(text, open, item) {
   return { text: before + insert + after, caret: open.start + insert.length, start: open.start, end: open.close, insert };
 }
 
+const words = v => String(v).toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+/** How a known name matches a normalized q: 0 same (or no q), 1 prefix, 2 a word's prefix, 3 inside (2+ letters), -1 none */
+const tierOf = (q, v) => { const n = norm(v); return !q || n === q ? 0 : n.startsWith(q) ? 1 : words(v).some(w => w.startsWith(q)) ? 2 : q.length > 1 && n.includes(q) ? 3 : -1; };
+/** Known names for a typed q, best first: entries [{value, n (cards), note, own (the card's own series), kind, series}].
+ *  Empty q: own first, then the most cards, then by name. Else: same name, prefix, a word's prefix, inside (2+ letters),
+ *  then (3+ letters, nothing else) one slip (two from 6 letters), the closest whole name first; ties: own, most cards,
+ *  name. At most LIMIT rows. */
+export function suggestNames(q, entries) {
+  q = norm(q);
+  const out = [];
+  for (const e of entries || []) {
+    const tier = tierOf(q, e.value);
+    if (tier >= 0) out.push({ e, tier, w: 0 });
+  }
+  if (!out.length && q.length > 2) {
+    const most = q.length > 5 ? 2 : 1;
+    for (const e of entries || []) {
+      const keys = [norm(e.value), ...words(e.value)], d = Math.min(...keys.map(k => slips(q, k)));
+      if (d <= most) out.push({ e, tier: 4 + d, w: Math.min(...keys.map(k => slips(q, k, true))) });
+    }
+  }
+  return out.sort((a, b) => a.tier - b.tier || a.w - b.w || !!b.e.own - !!a.e.own || (b.e.n || 0) - (a.e.n || 0) || a.e.value.localeCompare(b.e.value))
+    .slice(0, LIMIT).map(({ e }) => ({ token: e.value, label: e.value, kind: e.kind || "", note: e.note || "", plain: true, value: e.value, series: e.series || "" }));
+}
+
 // ---- the dropdown, in the browser
-const FIELD = "[data-tokens]";
+const FIELD = "[data-tokens], [data-suggest]";
+const LIST_LABEL = { series: "Series", subseries: "Subseries", author: "Authors" };
 const COPY = ["boxSizing", "width", "height", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth", "borderStyle",
   "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "fontStyle", "fontVariant", "fontWeight", "fontStretch", "fontSize",
   "lineHeight", "fontFamily", "textAlign", "textTransform", "textIndent", "letterSpacing", "wordSpacing", "tabSize", "wordBreak"];
-let A = null;                                    // {vocab: () => vocabulary, icon: (token, opts) => html}, from install
+let A = null;                                    // {vocab: () => vocabulary, icon: (token, opts) => html, names: el => entries}, from install
 let list = null, status = null;                  // the listbox and its live count
 let field = null, open = null, items = [], active = 0;
 let dismissed = null;                            // {el, start}: Esc closed the picker for this token
 let pressing = false;                            // a press on the list: the field's blur is not a close
+let picking = false;                             // a name going in: its input event doesn't open the list again
 
 const shown = () => !!list && !list.hidden && list.isConnected && !!field?.isConnected;
 /** Where text position pos of a textarea or input is on screen: {left, top, bottom} (a mirror of the field) */
@@ -179,6 +208,7 @@ function caretBox(el, pos) {
   return { left: Math.min(Math.max(left, r.left), r.right), top: y, bottom: y + lh };
 }
 function place() {
+  if (list && !list.hidden && !field?.isConnected) { close(); return; }   // its field is gone: so is the list
   if (!shown()) return;
   const vv = window.visualViewport, top = vv ? vv.offsetTop : 0, bottom = vv ? vv.offsetTop + vv.height : innerHeight;
   const width = vv ? vv.offsetLeft + vv.width : innerWidth, at = caretBox(field, open.start);
@@ -190,11 +220,11 @@ function place() {
   list.style.top = `${up ? at.top - h - 4 : at.bottom + 4}px`;
 }
 function rowHtml(it, i) {
-  const pic = it.tag ? badgeHtml(it.tag).replace(/ data-tip="[^"]*"/, "") : (A.icon(it.token.slice(1, -1), { tip: false }) || "");
-  const sub = it.note ? `${it.label} · ${it.note}` : it.label;
+  const pic = it.plain ? "" : it.tag ? badgeHtml(it.tag).replace(/ data-tip="[^"]*"/, "") : (A.icon(it.token.slice(1, -1), { tip: false }) || "");
+  const sub = it.plain ? it.note : it.note ? `${it.label} · ${it.note}` : it.label;
   return `<li id="tok-pick-${i}" role="option" aria-selected="${i === active}" data-i="${i}"${i === active ? ' class="on"' : ""}>`
     + `<span class="tp-pic" aria-hidden="true">${pic.replace(/<img /g, '<img loading="lazy" ')}</span>`
-    + `<span class="tp-text"><span class="tp-token">${esc(it.token)}</span><span class="tp-name">${esc(sub)}</span></span>`
+    + `<span class="tp-text"><span class="tp-token${it.plain ? " tp-value" : ""}">${esc(it.token)}</span><span class="tp-name">${esc(sub)}</span></span>`
     + `<span class="tp-kind">${esc(it.kind)}</span></li>`;
 }
 function setActive(i, scroll = true) {
@@ -212,15 +242,17 @@ function show(el, o, found, typed) {
   const same = field === el && open?.start === o.start && shown();
   if (field && field !== el) close();
   field = el; open = o; items = found;
-  active = typed || !same ? 0 : Math.min(active, items.length - 1);
+  const t = o.type === "name" ? tierOf(norm(o.text), found[0].value) : 0;   // inside or a slip: Enter keeps the typed name
+  active = o.type === "name" && (!o.text || t < 0 || t > 2) ? -1 : typed || !same ? 0 : Math.min(active, items.length - 1);   // an empty name: no row until an arrow
   const host = el.closest('[role="dialog"]') || document.body;   // inside an aria-modal dialog, or readers skip it
   if (list.parentNode !== host) host.append(list, status);
   list.innerHTML = items.map(rowHtml).join("");
   list.hidden = false;
-  list.setAttribute("aria-label", o.type === "tag" ? "Timing tags" : "Icons");
+  list.setAttribute("aria-label", o.type === "name" ? LIST_LABEL[el.dataset.suggest] || "Names" : o.type === "tag" ? "Timing tags" : "Icons");
+  list.classList.toggle("names", o.type === "name");
   el.setAttribute("aria-expanded", "true");
   el.setAttribute("aria-controls", list.id);
-  setActive(active);
+  if (active < 0) { el.removeAttribute("aria-activedescendant"); list.scrollTop = 0; } else setActive(active);
   status.textContent = `${items.length} suggestion${items.length === 1 ? "" : "s"}`;
   place();
 }
@@ -231,6 +263,7 @@ function close() {
 }
 /** Look at the token at el's caret again; typed: by input (else a caret move only updates an open picker). */
 function refresh(el, typed) {
+  if (el.matches("[data-suggest]")) { names(el, typed); return; }
   const o = el.selectionStart === el.selectionEnd ? openToken(el.value, el.selectionStart) : null;
   if (dismissed && (dismissed.el !== el || o?.start !== dismissed.start)) dismissed = null;
   if (!o || dismissed) { if (field === el) close(); return; }
@@ -240,12 +273,20 @@ function refresh(el, typed) {
   const found = suggest(o, A.vocab());
   if (found.length) show(el, o, found, typed); else if (field === el) close();
 }
+function names(el, typed) {                      // a name field: its whole value is the query; a caret move changes nothing
+  if (!typed) return;
+  dismissed = null;                              // Esc shut it until the next key
+  const found = suggestNames(el.value, A.names?.(el) || []);
+  if (found.length) show(el, { type: "name", start: 0, end: el.value.length, close: el.value.length, text: el.value }, found, true);
+  else if (field === el) close();
+}
 function accept(i) {
   const it = items[i], el = field, o = open;
   if (!it || !el) return;
   const want = applyChoice(el.value, o, it);
   close();
   el.setSelectionRange(want.start, want.end);
+  picking = !!it.plain;
   let done = false;
   try { done = document.execCommand("insertText", false, want.insert) && el.value === want.text; } catch { done = false; }   // keeps undo
   if (!done) {                                   // the input event (edit.js's live preview) comes from execCommand, or here
@@ -253,18 +294,23 @@ function accept(i) {
     el.dispatchEvent(new Event("input", { bubbles: true }));
   }
   el.setSelectionRange(want.caret, want.caret);
+  picking = false;
+  if (it.plain) el.dispatchEvent(new CustomEvent("suggest-pick", { bubbles: true, detail: it }));   // a name: the editor saves it
 }
+/** Close the list (an editor closing). */
+export function dismiss() { close(); }
 const stop = e => { e.preventDefault(); e.stopImmediatePropagation(); };
 function onKey(e) {                              // capture: before inline.js and app.js (Esc there cancels the edit)
   if (!shown() || e.target !== field || e.isComposing || e.keyCode === 229) return;   // 229: an IME's key (Safari's commit)
   const plainKey = !e.altKey && !e.ctrlKey && !e.metaKey;
-  if ((e.key === "ArrowDown" || e.key === "ArrowUp") && plainKey) { stop(e); setActive(active + (e.key === "ArrowDown" ? 1 : -1)); }
+  if ((e.key === "ArrowDown" || e.key === "ArrowUp") && plainKey) { stop(e); setActive(active < 0 ? (e.key === "ArrowDown" ? 0 : items.length - 1) : active + (e.key === "ArrowDown" ? 1 : -1)); }
   else if ((e.key === "PageDown" || e.key === "PageUp") && plainKey) { stop(e); setActive(Math.max(0, Math.min(items.length - 1, active + (e.key === "PageDown" ? ROWS : -ROWS)))); }
-  else if ((e.key === "Enter" || e.key === "Tab") && plainKey && !e.shiftKey) { stop(e); accept(active); }
+  else if ((e.key === "Enter" || e.key === "Tab") && plainKey && !e.shiftKey) { if (active < 0) { close(); return; } stop(e); accept(active); }   // no row: the key goes on
   else if (e.key === "Escape") { stop(e); dismissed = { el: field, start: open.start }; close(); }   // only the picker
 }
 
-/** Once at boot. api = {vocab: () => vocabulary(icons) of the loaded data, icon: (token text, {tip}) => html or null}. */
+/** Once at boot. api = {vocab: () => vocabulary(icons) of the loaded data, icon: (token text, {tip}) => html or null,
+ *  names: a data-suggest field => suggestNames' entries}. */
 export function install(api) {
   A = api;
   list = document.createElement("ul");
@@ -285,9 +331,12 @@ export function install(api) {
   });
   list.addEventListener("pointermove", e => { const li = e.target.closest("[data-i]"); if (li && +li.dataset.i !== active) setActive(+li.dataset.i, false); });
   for (const ev of ["pointerup", "pointercancel"]) document.addEventListener(ev, () => { setTimeout(() => { pressing = false; }); }, true);
-  document.addEventListener("input", e => { if (e.target.matches?.(FIELD) && !e.isComposing) refresh(e.target, true); }, true);
+  document.addEventListener("input", e => { if (e.target.matches?.(FIELD) && !e.isComposing && !picking) refresh(e.target, true); }, true);
   document.addEventListener("compositionend", e => { if (e.target.matches?.(FIELD)) refresh(e.target, true); }, true);
-  document.addEventListener("focusin", e => { if (e.target.matches?.(FIELD)) e.target.setAttribute("aria-autocomplete", "list"); }, true);
+  document.addEventListener("focusin", e => { if (!e.target.matches?.(FIELD)) return;
+    e.target.setAttribute("aria-autocomplete", "list");
+    if (e.target.matches("[data-suggest]") && !e.target.value) refresh(e.target, true); }, true);   // an empty name field lists the names at once
+  document.addEventListener("pointerdown", e => { if (shown() && !list.contains(e.target) && e.target !== field) close(); }, true);
   document.addEventListener("keydown", onKey, true);
   document.addEventListener("keyup", e => { if (e.target.matches?.(FIELD) && /^(Arrow(Left|Right|Up|Down)|Home|End)$/.test(e.key)) refresh(e.target, false); }, true);
   document.addEventListener("pointerup", e => { if (e.target.matches?.(FIELD)) setTimeout(() => refresh(e.target, false)); }, true);

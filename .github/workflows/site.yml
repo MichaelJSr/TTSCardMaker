@@ -5,8 +5,22 @@ name: Card browser
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - "TTS/**"             # the bot's TTS save commits don't rebuild the site
+    paths:                   # only what the build reads (checked out below, or read through git: tree, log)
+      - "site/**"
+      - "Types/**"
+      - ".mailmap"
+      - "MDW/Fonts/*"
+      - "MDW/Fonts/stoogedings-src/stoogedings.json"
+      - "MDW/Fonts/stoogedings-src/build_stoogedings.py"
+      - "MDW/Fonts/stoogedings-src/requirements.txt"
+      - "MDW/Card Edits.json"
+      - "MDW/Card Authors.txt"
+      - "**.png"
+      - "**.PNG"
+      - "**.psd"
+      - "**.PSD"
+      - ".github/workflows/site.yml"
+      - "!TTS/**"            # the bot's TTS save commits don't rebuild the site
   schedule:
     - cron: "17 12 * * *"    # daily fallback: Card sync dispatches a build after each data commit
   workflow_dispatch:
