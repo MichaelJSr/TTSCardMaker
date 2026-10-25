@@ -19,7 +19,7 @@ const COUNT_WORDS = [["new", "new"], ["changed", "changed"], ["art", "new art"],
 export const KINDS = [["new", "New"], ["changed", "Changed"], ["art", "New art"], ["moved", "Moved"], ["renamed", "Renamed"], ["archived", "Archived"],
   ["restored", "Restored"], ["edited", "Edited"], ["authors", "Authors"], ["reparse", "Re-read"], ["restore", "Rollback"]];
 export const EDIT_KINDS = ["edited", "authors"];
-const VIA = { website: "on the website", discord: "via Discord", git: "by commit" };
+const VIA = { website: "on the website", git: "by commit" };
 const FIELD = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", stars: "stars", name: "title", card_type: "kind", type: "kind", subtype: "item type",
   dup_of: "duplicate of", problems_ok: "parser notes checked", allow_high_stats: "high stats allowed" };
 /** A field's name as the Changes page writes it (profile.js) */
@@ -81,29 +81,17 @@ const isLogin = s => /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/.test(s || "");
 export const BOT = "AutoCroissant";                       // the bot's _by (build_site.BOT_AUTHOR): nobody's edit
 const isBot = name => String(name || "").toLowerCase() === BOT.toLowerCase();
 /** The fields of a card's Card Edits.json entry its editor (editBy) changed: none in the bot's own entries, and not the
-    fields in the entry's _bot (botEdited: the migration's, or a Discord editor's in fieldBy) */
+    fields in the entry's _bot (botEdited: the 2026-10-22 migration's) */
 export const editorFields = c => (!c?.edited || isBot(c.editBy) ? [] : c.edited.filter(f => !(c.botEdited || []).includes(f)));
-/** A card's edits by editor, [{by, at, fields}]: the entry's editor (editorFields), then each Discord editor of its _bot
-    fields (fieldBy {field: [by, at]}, the entry's _credit; their latest at); never the bot */
+/** A card's edits by editor, [{by, at, fields}]: the entry's editor (editorFields), never the bot */
 export function fieldEditors(c) {
-  const out = [], mine = editorFields(c);
-  if (mine.length) out.push({ by: c.editBy || "", at: c.editAt || "", fields: mine });
-  const credited = new Map();
-  for (const [f, stamp] of Object.entries(c?.fieldBy || {})) {
-    const [by, at] = Array.isArray(stamp) ? stamp : [];
-    if (!by || isBot(by) || !(c.edited || []).includes(f)) continue;
-    const row = credited.get(by.toLowerCase()) || { by, at: "", fields: [] };
-    row.fields.push(f);
-    if (String(at || "") > row.at) row.at = String(at);
-    credited.set(by.toLowerCase(), row);
-  }
-  return [...out, ...credited.values()];
+  const mine = editorFields(c);
+  return mine.length ? [{ by: c.editBy || "", at: c.editAt || "", fields: mine }] : [];
 }
-/** The Edited badge's tooltip: each editor's fields, name and day */
+/** The Edited badge's tooltip: the editor's fields, name and day */
 export function editedTip(c) {
-  const rows = fieldEditors(c);
-  const line = r => `${r.fields.join(", ")}${r.by ? ` · ${nameText(r.by)}` : ""}${r.at ? ` · ${r.at.slice(0, 10)}` : ""}`;
-  return `${rows.some(r => isDiscord(r.by)) ? "Changed" : "Changed on the website"}: ${rows.map(line).join("; ")}`;
+  const line = r => `${r.fields.join(", ")}${r.by ? ` · ${r.by}` : ""}${r.at ? ` · ${r.at.slice(0, 10)}` : ""}`;
+  return `Changed on the website: ${fieldEditors(c).map(line).join("; ")}`;
 }
 /** Does the chosen tab take the focus after a redraw? Only when a tab had it from the keyboard (:focus-visible): a
     mouse click hands it none, so no focus ring */
@@ -111,18 +99,13 @@ export function keepsTabFocus(el) {
   if (!el?.closest?.(".change-tabs")) return false;
   try { return el.matches(":focus-visible"); } catch { return true; }   // a browser without :focus-visible: as before
 }
+/** A name as written, or a person page link */
 const personLink = name => (isLogin(name) && !isBot(name) ? `<a href="#/u/${encodeURIComponent(name)}">${esc(name)}</a>` : esc(name));
-/** A discord:<name> stamp or Edit-by: a Discord user, never a website login */
-export const isDiscord = name => String(name || "").toLowerCase().startsWith("discord:");
-/** An editor as plain text: a Discord user "<name> (via Discord)", anything else as written */
-export const nameText = name => (isDiscord(name) ? `${name.slice(8)} (via Discord)` : String(name || ""));
-/** A name as written, or a person page link; a Discord user is "<name> (via Discord)", never a person page */
-export const nameHtml = name => (isDiscord(name) ? esc(nameText(name)) : personLink(name));
-/** "(by X, on the website)" / "(by X, via Discord)" / "(by AutoCroissant)" from an edit's _by */
+/** "(by X, on the website)" / "(by AutoCroissant)" from an edit's _by */
 function byWhom(by) {
   if (!by) return "";
-  // the bot's own entries (the alias migration's _by) came from neither
-  return ` <span class="muted">(by ${isDiscord(by) ? `${esc(by.slice(8))}, via Discord` : isBot(by) ? esc(by) : `${personLink(by)}, on the website`})</span>`;
+  // the bot's own entries (the alias migration's _by) are not the website's
+  return ` <span class="muted">(by ${isBot(by) ? esc(by) : `${personLink(by)}, on the website`})</span>`;
 }
 /** One field change: "HP 5 → 6", "series Mario → Kirby"; the ability as a word diff below the line */
 function fieldHtml(key, [a, b]) {
@@ -233,15 +216,14 @@ export function archiveHtml(rows, repo, params = null) {
   const tags = csv(params, "tag").filter(t => ARCHIVE_TAGS.some(([k]) => k === t)), counts = new Map();
   for (const r of rows) counts.set(archiveTag(r), (counts.get(archiveTag(r)) || 0) + 1);
   const present = ARCHIVE_TAGS.filter(([k]) => counts.get(k)), shown = tags.length ? rows.filter(r => tags.includes(archiveTag(r))) : rows;
-  const line = r => `<li><b>${esc(r.title || r.card)}</b> ${archiveTagHtml(r)}${r.renamed_to ? ` renamed to ${cardLink(r.renamedId, r.renamed_to)}` : ""} <span class="muted">${esc(kindWord(r.card_type))}${r.stars ? ` · ${r.stars}★` : ""}${r.author ? ` · ${nameHtml(r.author)}` : ""}${r.at ? ` · ${esc(dateLabel(r.at))}` : ""}</span>${r.commit && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(r.commit)}" target="_blank" rel="noopener">${short(r.commit)}</a>` : ""}</li>`;
+  const line = r => `<li><b>${esc(r.title || r.card)}</b> ${archiveTagHtml(r)}${r.renamed_to ? ` renamed to ${cardLink(r.renamedId, r.renamed_to)}` : ""} <span class="muted">${esc(kindWord(r.card_type))}${r.stars ? ` · ${r.stars}★` : ""}${r.author ? ` · ${personLink(r.author)}` : ""}${r.at ? ` · ${esc(dateLabel(r.at))}` : ""}</span>${r.commit && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(r.commit)}" target="_blank" rel="noopener">${short(r.commit)}</a>` : ""}</li>`;
   return `<section class="panel"><h3>Archive${rows.length ? ` <span class="muted">${rows.length}</span>` : ""}</h3><p class="muted">Renamed, retired (moved to MDW) or deleted cards.</p>
     ${present.length > 1 ? chips(present, tags, counts, "tag") : ""}
     ${shown.length ? `<ul class="cl-lines">${shown.map(line).join("")}</ul>` : `<p class="empty">No archived cards.</p>`}</section>`;
 }
 /** One edit batch: who, when, where, its commit, and each card's fields old → new */
 export function batchHtml(b, repo) {
-  // per name: build_site keeps a Discord name's discord: prefix; a Discord batch's line already says "via Discord"
-  const who = (b.by || []).map(n => (b.via === "discord" && isDiscord(n) ? esc(n.slice(8)) : nameHtml(n))).join(", ") || "Someone";
+  const who = (b.by || []).map(personLink).join(", ") || "Someone";
   const subject = b.subject && b.subject.length > 90 ? `${b.subject.slice(0, 89)}…` : b.subject;
   const commit = b.sha && repo ? ` · <a href="https://github.com/${esc(repo)}/commit/${esc(b.sha)}" target="_blank" rel="noopener" title="${esc(b.subject || "")}">${esc(subject || short(b.sha))}</a>` : "";
   const cards = (b.cards || []).map(c => { const { line, diff } = fieldsHtml(c.fields); return `<li>${cardLink(c.id, c.name || c.key)}${line ? `: ${line}` : ""}${diff}</li>`; });
@@ -258,7 +240,7 @@ export function editsHtml(C, params) {
   const batches = C?.edits?.batches || [], via = csv(params, "via").filter(v => VIA[v]);
   const counts = new Map();
   for (const b of batches) counts.set(b.via, (counts.get(b.via) || 0) + 1);
-  const present = Object.keys(VIA).filter(v => counts.get(v)).map(v => [v, { website: "Website", discord: "Discord", git: "Commits" }[v]]);
+  const present = Object.keys(VIA).filter(v => counts.get(v)).map(v => [v, { website: "Website", git: "Commits" }[v]]);
   const shownBatches = via.length ? batches.filter(b => via.includes(b.via)) : batches;
   const applied = !C?.available ? `<p class="muted">${esc(NOT_YET)}</p>`
     : events.length ? daysHtml(pushGroups(events), C.repo, EDIT_KINDS) : `<p class="muted">No database edits in the last ${esc(C.days)} days.</p>`;
