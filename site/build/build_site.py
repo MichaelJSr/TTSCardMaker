@@ -651,16 +651,16 @@ def card_raw():
     """The card repo's files at the build's commit in Actions (raw main is a CDN copy up to 5 minutes old); main elsewhere
     (a local commit may not be pushed)."""
     global _card_raw
-    if _card_raw is None:
-        _card_raw = RAW
-        if os.environ.get("GITHUB_ACTIONS") != "true":
-            return _card_raw
-        try:
-            sha = subprocess.run(["git", "-C", REPO, "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
-            if re.fullmatch(r"[0-9a-f]{40}", sha):
-                _card_raw = f"https://raw.githubusercontent.com/{CARD_REPO}/{sha}/"
-        except (OSError, subprocess.CalledProcessError):
-            pass
+    if _card_raw is None:          # set once final: image threads may race here
+        base = RAW
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            try:
+                sha = subprocess.run(["git", "-C", REPO, "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+                if re.fullmatch(r"[0-9a-f]{40}", sha):
+                    base = f"https://raw.githubusercontent.com/{CARD_REPO}/{sha}/"
+            except (OSError, subprocess.CalledProcessError):
+                pass
+        _card_raw = base
     return _card_raw
 
 
