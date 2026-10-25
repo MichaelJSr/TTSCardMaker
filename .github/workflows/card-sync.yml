@@ -717,6 +717,25 @@ jobs:
 
       - *venv
 
+      # The data checkout plus the bake records no data job merged yet (an earlier run's after job still pending, or
+      # lost): Pending edits and the bake read these verdicts, so a card refused a run ago is not baked and told again.
+      # Local only: this job never writes data.
+      - *records-in
+      - name: Unmerged verdicts
+        if: steps.venv.outcome == 'success' && steps.records-in.outcome == 'success'
+        timeout-minutes: 1
+        working-directory: bot
+        run: |
+          rec=$RUNNER_TEMP/records-in/verdicts.json
+          if [ ! -f "$rec" ] || ! grep -q '^def merge_verdicts' commands/card_db.py; then exit 0; fi
+          "$RUNNER_TEMP/venv/bin/python" - "$GITHUB_WORKSPACE/carddata/db" "$rec" <<'PY'
+          import json, sys
+          from commands.card_db import merge_verdicts
+          with open(sys.argv[2], encoding="utf-8") as fh:
+              keys = merge_verdicts(sys.argv[1], json.load(fh)["cards"])
+          print(f"Verdicts not on data yet: {', '.join(keys) or 'none new'}.")
+          PY
+
       # (g): the bake's put-off edits (card_bake.due: pending, PSD and PNG past the 30-minute grace) start the lane.
       - name: Pending edits
         id: edits
