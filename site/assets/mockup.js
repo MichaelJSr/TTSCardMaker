@@ -551,7 +551,8 @@ const hexRgb = h => (/^#[0-9a-f]{6}$/i.test(h || "") ? [1, 3, 5].map(i => parseI
 // ---- drawing (canvas; the browser)
 const fontFaces = new Map();                          // font name -> Promise<family | "">
 let fontsP = null;                                    // data/fonts.json
-/** The family to draw a PSD font in: a FontFace from MDW/Fonts when data/fonts.json maps it (loaded once), else "". */
+/** The family to draw a PSD font in: a FontFace from MDW/Fonts when data/fonts.json maps it (loaded once), else "".
+ *  Its WOFF2 copy on the site first, the TTF/OTF from raw when that copy fails (fontSrc). */
 export function loadFont(name, { getFonts, raw }) {
   if (!name || typeof FontFace === "undefined") return Promise.resolve("");
   if (!fontFaces.has(name)) {
@@ -560,12 +561,17 @@ export function loadFont(name, { getFonts, raw }) {
       const f = map[name];
       if (!f || typeof f.file !== "string") return "";
       const family = `mk-${norm(name).slice(0, 40) || "font"}`;
-      const face = new FontFace(family, `url("${raw}${f.file.split("/").map(encodeURIComponent).join("/")}")`);
+      const face = new FontFace(family, fontSrc(f, raw));
       await face.load(); document.fonts.add(face);
       return family;
     }).catch(() => ""));
   }
   return fontFaces.get(name);
+}
+/** A FontFace source list: the build's WOFF2 copy (f.woff2, relative to the page), then the file on raw. */
+export function fontSrc(f, raw, base = typeof document !== "undefined" ? document.baseURI : undefined) {
+  const own = `url("${raw}${f.file.split("/").map(encodeURIComponent).join("/")}")`;
+  return typeof f.woff2 === "string" && base ? `url("${new URL(f.woff2, base).href}") format("woff2"), ${own}` : own;
 }
 const images = new Map();                             // src -> Promise<Image | null>, the last IMAGES used (a card's is 720 px, decoded)
 const IMAGES = 24;

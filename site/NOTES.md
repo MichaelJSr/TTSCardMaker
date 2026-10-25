@@ -595,7 +595,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     of MDW/Fonts; only .ttf / .otf up to 8 MB (a collection holds several faces); names cached by blob sha in
     `site/.cache/fonts.json` (CI downloads a font only when its blob is new, 8 at a time, like the PNGs). 131 of the 137
     PSD fonts on the evening's build. The browser loads one
-    as a `FontFace` from raw.githubusercontent.com when first drawn (60 ms for a loaded one, else drawn in a stand-in and
+    as a `FontFace` when first drawn: its WOFF2 copy on the site, else from raw.githubusercontent.com (§32) (60 ms for a loaded one, else drawn in a stand-in and
     redrawn when it arrives); the caption names a stand-in, and a role whose record names no font ("Stand-in font for the
     name (the card's isn't known)": 266 of 818 records have no name layer). The last 24 images used stay decoded.
   - Label: a "Mock-up" ribbon on the image and the caption "Mock-up: the real image comes from the bake".
@@ -1102,4 +1102,29 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
   so it runs later: DOMContentLoaded 2.90 -> 3.77 s (fast 0.72 -> 0.89), the whole grid 3.52 -> 4.04 s (fast 1.01 ->
   1.16), TBT +15-20 ms; the tiles are links meanwhile. The bundle alone (no first screen): LCP 3.31, DOMContentLoaded
   3.12, the whole grid 3.40 s. `fetchpriority="low"` on tiles 5-8 changed nothing (the emulated line ignores priority).
+
+## 32. The mock-up's fonts as WOFF2 (2026-10-25, owner's decision)
+
+Owner, 10-25 ~15:20 (S-4 of the optimization plan): WOFF2 copies of the editor's fonts, full glyph sets, only the fonts
+the cards use.
+- **Build** (`web_woff2`, after `web_fonts`): each file `data/fonts.json` maps (the details records' fonts) gets a WOFF2
+  copy, `fonts/<blob16>-<woff2_tag>.woff2`, and its entry `woff2` (that path) and `wbytes`. fontTools' encoder, every
+  glyph kept (`woff2_bytes`); the cmap is compiled again by fontTools, because Chrome refuses Apple Kid's own (a format 4
+  range past the last glyph). Not the icon font: the mock-up never draws in it (`ICON_FONT`). The tag hashes
+  `WOFF2_VERSION` and fontTools' and brotli's versions (pinned in `requirements.txt`): a change re-encodes under new
+  names. Cached in `site/.cache/woff2` like the card images (unused ones pruned); a new font blob is the only encode.
+  site.yml's cache key hashes the top-level `MDW/Fonts` .ttf/.otf blobs and `requirements.txt` too, so a new font is
+  saved once. A font that fails to encode, or no brotli, leaves its entry without `woff2`; never a failed build.
+- **Browser** (`mockup.js` `fontSrc`): the FontFace's source is the WOFF2 copy, then the TTF/OTF on raw: a missing copy
+  (an old fonts.json after a deploy) falls back by itself.
+- Measured on the 10-25 data (130 files): 28.3 MB -> 14.4 MB (51%; per file median 42%, 8-77%). Per card (the fonts of
+  its text layers, 814 cards): median 81 -> 37 KB, p90 1,092 -> 313 KB, max 4.76 -> 3.53 MB (PopJoyStd-B). Cold encode
+  about 55 s on a Mac (75 CPU-s), warm 0 s; the site grows by 14 MB.
+- Checked: every copy decoded again equals its source in glyph order, cmap, hmtx, glyf outlines and instructions or CFF
+  charstrings, and the other tables byte for byte (113,823 glyphs, 0 differences). Headless Chrome loads 130 of 130
+  copies; from raw it loaded 127 (Academy Engraved LET, EarthboundZero: a bad table directory; Apple Kid: the cmap), so
+  those cards' previews now draw in their fonts. The Edit dialog's mock-up of Enraged (Calibri), Monkey D Goofy (EB
+  Garamond), Sword (PopJoyStd-B) and Po (an Ability set in stoogedings) draws the same pixels from WOFF2 as from raw;
+  Joel Miller (Apple Kid, EarthboundZero) draws in its fonts, where raw gave stand-ins. AutoCroissant
+  `tests/test_site_previews.py::test_woff2_copies`.
 

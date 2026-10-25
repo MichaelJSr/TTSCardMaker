@@ -167,7 +167,8 @@ hash in `site/.cache/img` (a full re-encode is about 11 CPU-minutes on a Mac, mo
 icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon settings change; the token variants' pictures
 with `VARIANT_VERSION`, drawn by the icon font's build script, `MDW/Fonts/stoogedings-src/build_stoogedings.py`, which
 needs that folder's `requirements.txt`: without it the build warns and variants show as the plain icon), so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
-where links fail). The first screen loads only `data/cards.json`; `analytics.json` (the Balance section and blocks,
+where links fail). The edit mock-up's fonts get WOFF2 copies in `fonts/` (every glyph kept; cached by blob in
+`site/.cache/woff2`, NOTES §32); the browser falls back to the file on raw.githubusercontent.com without one. The first screen loads only `data/cards.json`; `analytics.json` (the Balance section and blocks,
 computed by `site/build/analytics.py` from the same bot data) loads when the Stats page or a creature, minion or card
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the

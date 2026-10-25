@@ -1,2 +1,4 @@
 pillow>=11.3          # AVIF (the card images)
 -r ../../MDW/Fonts/stoogedings-src/requirements.txt   # the icon font's build: the token variants' pictures
+fonttools==4.67.0    # the mock-up's fonts as WOFF2 (build_site woff2_tag: a new version re-encodes them)
+brotli==1.2.1        # WOFF2's compressor
