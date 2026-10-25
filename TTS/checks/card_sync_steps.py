@@ -702,6 +702,16 @@ def bake_cases(flow: dict) -> None:
             check(code == 0 and ("--pending" in args) == want and "--card" not in args and "baked" not in out,
                   f"bake: {event}{' retry of ' + retry if retry else ''} bake={card} -> --pending {'yes' if want else 'no'}"
                   + ("" if code == 0 else f"\n{text}"))
+        for has in (False, True):                       # the data's verdicts, for a builder that reads them
+            if has:
+                write(os.path.join(ws, "bot", "commands", "card_bake.py"), 'parser.add_argument("--verdicts")\n')
+            code, text, out = run_step(flow["jobs"]["main"], "bake", os.path.join(ws, "bot"),
+                                       {"GITHUB_WORKSPACE": ws, "MAIN": main, "CARD": "all", "RETRY_OF": "",
+                                        "GITHUB_EVENT_NAME": "schedule", "DRY_RUN": "true"}, tmp)
+            args = open(os.path.join(tmp, "bake.args")).read().split("\n")
+            got = args[args.index("--verdicts") + 1] if "--verdicts" in args else None
+            check(code == 0 and got == (os.path.join(ws, "carddata/db/verdicts.json") if has else None),
+                  f"bake: --verdicts {got} ({'a builder with' if has else 'an older builder without'} it)" + ("" if code == 0 else f"\n{text}"))
 
 
 def main_cases(flow: dict) -> None:

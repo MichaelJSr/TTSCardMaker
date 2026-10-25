@@ -682,8 +682,10 @@ jobs:
           GIT_NO_LAZY_FETCH: "1"
           MAIN: ${{ steps.gate.outputs.main }}
         run: |
+          verdicts=()                           # the data's verdicts (an older builder reads them from the edits file)
+          if grep -q '^def due(.*verdicts' commands/card_bake.py; then verdicts=("$GITHUB_WORKSPACE/carddata/db/verdicts.json"); fi
           if ! "$RUNNER_TEMP/venv/bin/python" -c 'import sys; from commands.card_bake import due; print(*due(*sys.argv[1:]), sep="\n")' \
-              "$GITHUB_REPOSITORY" "$MAIN" "$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/carddata/db/verdicts.json" > "$RUNNER_TEMP/due.txt"; then
+              "$GITHUB_REPOSITORY" "$MAIN" "$GITHUB_WORKSPACE" "${verdicts[@]}" > "$RUNNER_TEMP/due.txt"; then
             echo "::warning::the pending website edits were not read: the next run looks again"
             exit 0
           fi
@@ -723,8 +725,10 @@ jobs:
           CARD: ${{ inputs.bake }}
           RETRY_OF: ${{ inputs.retry }}
         run: |
-          args=(--repo "$GITHUB_REPOSITORY" --head "$MAIN" --local "$GITHUB_WORKSPACE"
-                --verdicts "$GITHUB_WORKSPACE/carddata/db/verdicts.json")     # the data's: what --pending keeps to
+          args=(--repo "$GITHUB_REPOSITORY" --head "$MAIN" --local "$GITHUB_WORKSPACE")
+          if grep -q -- '"--verdicts"' commands/card_bake.py; then     # the data's: what --pending keeps to (an older builder: none)
+            args+=(--verdicts "$GITHUB_WORKSPACE/carddata/db/verdicts.json")
+          fi
           if [[ "$GITHUB_EVENT_NAME" =~ ^(schedule|push)$ || "$RETRY_OF" =~ ^(schedule|push)$ || "$CARD" = pending ]]; then
             args+=(--pending)                   # else a dispatch re-checks every card
           fi
