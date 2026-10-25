@@ -54,11 +54,22 @@ def strings(v, where=""):
 def last_changed(repo, head):
     """Updater rule: path -> newest commit (topo) whose blob differs from every parent's."""
     rows = [l.split() for l in git(repo, "rev-list", "--parents", "--topo-order", "--reverse", head).splitlines()]
-    maps = {}
+    # one diff-tree for all commits, each against its first parent (root: against nothing)
+    pairs = "".join(f"{c} {ps[0]}\n" if ps else f"{c}\n" for c, *ps in rows)
+    out = subprocess.run(["git", "-C", repo, "diff-tree", "--stdin", "--always", "--root", "-r", "--no-renames", "-z"],
+                         input=pairs.encode(), capture_output=True, check=True).stdout.decode().split("\0")
+    maps, i = {}, 0
     for c, *ps in rows:
         olds = [maps[p] for p in ps]
-        cur = {}
-        for p, b in tree(repo, c).items():
+        cur = dict(olds[0]) if olds else {}
+        i += 1                                  # header: the commit id
+        while i < len(out) - 1 and out[i].startswith(":"):
+            meta, p = out[i].split(" "), out[i + 1]
+            i += 2
+            if meta[4] == "D" or meta[1] == "160000":
+                cur.pop(p, None)                # gone, or a submodule
+                continue
+            b = meta[3]
             cur[p] = next(((b, o[p][1]) for o in olds if p in o and o[p][0] == b), (b, c))
         maps[c] = cur
     return {p: c for p, (_, c) in maps[rows[-1][0]].items()}
