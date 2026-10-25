@@ -2,7 +2,7 @@
 // build_site.py into data/users.json) and contributions (data/contributions.json: cards credited, edit batches published
 // and card commits per person, from build_site.py contributions()). Pure functions, plus the person page and the People
 // table. All profile text is user-written: everything is escaped and only internal routes are linked.
-import { esc, tagInfo, badgeHtml, TAG, dateFmt } from "./text.js";
+import { esc, tagInfo, badgeHtml, TAG, dateFmt, LOGIN_RE } from "./text.js";
 import { editorFields, archiveTag, archiveTagHtml, fieldName } from "./changes.js";
 import { decode } from "./deck.js";
 import { columns, chartCard } from "./stats.js";
@@ -10,7 +10,7 @@ import { TIERS } from "./ratings.js";
 
 export const RECENT_CARDS = 24;                                             // the person page's newest cards
 
-export const LOGIN_RE = /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/;              // a GitHub login
+export { LOGIN_RE };
 export const LIMITS = { motto: 140, author: 60, facts: 12, label: 40, value: 200, deck: 2000 };
 export const PICKS = [["favourite", "Favourite card"], ["hated", "Hated card"], ["favouriteItem", "Favourite item"], ["hatedItem", "Hated item"]];
 export const ITEM_KINDS = new Set(["item", "aux item", "nme"]);

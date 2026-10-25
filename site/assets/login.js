@@ -1,8 +1,7 @@
 // Password sign-in: the GitHub token encrypted with its owner's password, published as site/logins/<login>.json so any
 // device signs in with login + password; and this browser's sign-in kept encrypted under a device key that can't leave
 // IndexedDB (never the token in plain text). DOM-free at import: edit.js wires the forms built here.
-import { esc } from "./text.js";
-import { LOGIN_RE } from "./profile.js";
+import { esc, LOGIN_RE } from "./text.js";
 import { b64, unb64 } from "./decks.js";
 
 export const KDF = "PBKDF2-SHA-256";

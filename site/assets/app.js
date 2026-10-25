@@ -1,24 +1,14 @@
 import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
 import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
 import * as D from "./deck.js";
-import { renderStats, shapeOf, cooldownCols, tagsOf } from "./stats.js";
-import { createEditor } from "./edit.js";
-import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers, shareDialogHtml, personDiscord, personText } from "./profile.js";
-import * as inline from "./inline.js";
-import * as tray from "./tray.js";
-import * as tokens from "./tokens.js";
-import * as palette from "./palette.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
 import * as decks from "./decks.js";
 import * as pick from "./pick.js";
-import * as balance from "./balance.js";
 import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
-import { deckPasses } from "./login.js";
-import { createPreviews } from "./preview.js";
+import { deckPasses, SEALED } from "./login.js";
 import * as ratings from "./ratings.js";
-import * as insights from "./insights.js";
 import * as fresh from "./fresh.js";
 import * as G from "./grid.js";
 import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc } from "./grid.js";
@@ -103,15 +93,23 @@ const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
 const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
-// balance analytics (data/analytics.json): the Stats page's Balance section and the cards' Balance blocks
+// loaded on first use (esbuild chunks; without esbuild, the modules): charts.js (stats.js, balance.js, insights.js) for the Stats
+// page, the cards' Balance blocks and the grid filters its charts link to; profile.js for the People tab and person pages.
+// early(): a module's chunks all at once (index.html's meta chunks, build_site.py bundle), so the first open is one round trip
+const CHUNKS = (() => { try { return JSON.parse(document.querySelector('meta[name="chunks"]')?.content || "{}"); } catch { return {}; } })();
+const early = name => { for (const href of CHUNKS[name] || []) if (!document.querySelector(`link[href="${href}"]`)) document.head.append(Object.assign(document.createElement("link"), { rel: "modulepreload", href })); };
+let St = null, chartsP = null, Pf = null, profileP = null;
+const loadCharts = () => (chartsP ||= (early("charts.js"), import("./charts.js")).then(m => { St = m; }).catch(e => { chartsP = null; throw e; }));
+const loadProfile = () => (profileP ||= (early("profile.js"), import("./profile.js")).then(m => { Pf = m; }).catch(e => { profileP = null; throw e; }));
+// balance analytics (data/analytics.json, with charts.js): the Stats page's Balance section and the cards' Balance blocks
 let analyticsP = null;
-const loadAnalytics = () => (analyticsP ||= getJson("analytics.json").then(d => { S.analytics = d; }).catch(e => { analyticsP = null; throw e; }));
+const loadAnalytics = () => (analyticsP ||= Promise.all([getJson("analytics.json"), loadCharts()]).then(([d]) => { S.analytics = d; }).catch(e => { analyticsP = null; throw e; }));
 // the Changes page's Changelog and Database edits tabs (data/changelog.json, changes.js)
 let changelogP = null;
 const loadChangelog = () => (changelogP ||= getJson("changelog.json").then(d => { S.changelog = d; }).catch(e => { changelogP = null; throw e; }));
 let usersP = null, contribP = null;                     // profiles (data/users.json) and contributions (data/contributions.json): the People tab and person pages
 const loadUsers = () => (usersP ||= getJson("users.json").then(d => { S.users = d.users || []; S.userBy = new Map(S.users.map(p => [p.login.toLowerCase(), p])); return S.userBy; }).catch(e => { usersP = null; throw e; }));
-const loadContrib = () => (contribP ||= getJson("contributions.json").then(d => { S.contrib = d; S.titles = titlesOf(d.people || []); }).catch(e => { contribP = null; throw e; }));
+const loadContrib = () => (contribP ||= Promise.all([getJson("contributions.json"), loadProfile()]).then(([d]) => { S.contrib = d; S.titles = Pf.titlesOf(d.people || []); }).catch(e => { contribP = null; throw e; }));
 // published decks (data/decks.json): the deck browser, deck pages and the person pages' Decks panel. A failed load leaves an
 // empty set with the reason (the browser says so; person pages just show no decks) instead of breaking the page.
 let decksP = null;
@@ -134,8 +132,10 @@ async function init() {
   S.all = S.data.cards; S.rules = null; S.icons = S.data.icons;
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
-  editor.init();                                           // applies staged edits, then derive()
-  previews.init();
+  if (editorP) await editorP.catch(() => {});
+  if (editor !== IDLE) { editor.init(); previews.init(); }  // applies staged edits, then derive()
+  else derive();
+  S.ready = true;
   S.decks = D.loadDecks();
   updateDeckCount();
   updatePeopleCount();
@@ -159,7 +159,6 @@ function derive() {
     const c = S.byId.get(e.id); if (c) c._banned = e.reason || "banned";
   }
   S.renderer = makeRenderer({ cards: S.cards, icons: S.icons, variants: S.data.iconVariants });
-  S.vocab = tokens.vocabulary(S.icons, S.all.map(c => c.ability));   // the token picker's icons, the most used first
   S.mentions = new Map(); S.mentionedBy = new Map();
   for (const c of S.cards) {
     const m = S.renderer.mentions(c.ability, c.name);
@@ -178,31 +177,61 @@ function rerender() {
   if (S.renderedHash || !$(".detail", modal)) renderView(parseHash(base), base);   // a card from a link: the grid once its dialog is gone
   if (onCard && $(".detail", modal)) openCard(parseHash().arg);       // dialogs stay open
 }
-const editor = createEditor({
-  S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
-  openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
-  statBars: c => statBars(c), imageOf: (c, w = 360) => img(c, w),   // the form's live preview; 720: the Edit viewer
-  iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
-  users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
-  // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
-  view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
-  decks: () => loadDecks().then(() => deckList()),         // the published decks (with the pending ones): the publish dialog's "replaces"
-  formOpened: x => previews.mountForm(x),                  // the Edit dialog's image previews
-  loadDetails: c => loadDetails(c),                        // the parts editor's boxes (details/<id>.json)
-  setParams: u => setParams(u),                            // Rename everywhere: a filter on the old name follows it
-});
-// image previews in edit mode (preview.js): the mock-up and the rendered dry-run bake, badges on the grid's tiles
-const previews = createPreviews({ S, editor, img, toast: m => toast(m), loadDetails: c => loadDetails(c), getJson: n => getJson(n),
-  signIn: () => editor.actions["edit-hub"](), badges: () => { if (editing()) previews.mountTiles(view); } });
-// edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
-const editing = () => !!editor.me;
-inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
-tray.install({ view, editor, selected: S.selected, drop: (ids, t) => inline.dropOn(ids, t), toast: m => toast(m), cards: () => S.all,   // the pinned boxes
-  filterSeries: () => parseHash(S.listHash).params.get("series") || "" });
-const seriesFor = el => (el.dataset.seriesFrom ? document.getElementById(el.dataset.seriesFrom)?.value.trim() || "" : el.dataset.series || "");   // a subseries field's series
-tokens.install({ vocab: () => S.vocab || [], icon: (t, o) => S.renderer?.icon(t, o) ?? null,   // "[" or "(" in card text: suggestions
-  names: el => editor.names(el.dataset.suggest, seriesFor(el)) });                              // a name field: the known names
-palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));   // the type palette ranks as the picker
+// ---- edit mode, loaded on first use (editing.js): a sign-in, an Edit button, or at boot when this browser keeps a sign-in, a
+// staged or just-published edit, Show hidden or a card preview (edit.js K, login.js SEALED, preview.js KEY). Until then
+// `editor` is IDLE: nobody signed in, nothing staged.
+const IDLE = { me: null, touches: () => false, leave() {}, deckOf: () => null, pendingDecks: () => new Map(), profileOf: () => null,
+  pendingProfiles: () => new Map(), myRating: () => null };
+let editor = IDLE, previews = null, inline = null, tray = null, editorP = null;
+const editing = () => !!editor.me;                      // edit mode = signed in: the card dialog and the grid edit in place
+const kept = k => { try { return localStorage.getItem(k) || sessionStorage.getItem(k) || ""; } catch { return ""; } };
+const holds = s => { try { const v = JSON.parse(s); return !!v && Object.values(v).some(x => x && (typeof x !== "object" || Object.keys(x).length)); } catch { return !!s; } };
+const wantsEditor = () => !!(kept(SEALED) || kept("edit-token") || kept("edit-sent") || kept("edit-show-hidden")) || holds(kept("edit-stage")) || holds(kept("card-previews"));
+function loadEditor(say = false) {                       // say: "Loading…" while it comes (a click)
+  const note = "Loading the editor…";
+  if (!editorP && say) toast(note);
+  return (editorP ||= (early("editing.js"), import("./editing.js")).then(M => {
+    const ed = startEditor(M);
+    if (S.ready) { ed.init(); previews.init(); }          // else init() does
+    if (toastEl.textContent === note) toastEl.hidden = true;
+    return ed;
+  }).catch(e => { editorP = null; toast(`Couldn't load the editor (${e.message})`); throw e; }));
+}
+const withEditor = fn => loadEditor(true).then(fn, () => {});
+function startEditor(M) {
+  const ed = M.createEditor({
+    S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
+    openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
+    statBars: c => statBars(c), imageOf: (c, w = 360) => img(c, w),   // the form's live preview; 720: the Edit viewer
+    iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
+    users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
+    // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
+    view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
+    decks: () => loadDecks().then(() => deckList()),         // the published decks (with the pending ones): the publish dialog's "replaces"
+    formOpened: x => previews.mountForm(x),                  // the Edit dialog's image previews
+    loadDetails: c => loadDetails(c),                        // the parts editor's boxes (details/<id>.json)
+    setParams: u => setParams(u),                            // Rename everywhere: a filter on the old name follows it
+  });
+  editor = ed;
+  // image previews in edit mode (preview.js): the mock-up and the rendered dry-run bake, badges on the grid's tiles
+  previews = M.createPreviews({ S, editor: ed, img, toast: m => toast(m), loadDetails: c => loadDetails(c), getJson: n => getJson(n),
+    signIn: () => ed.actions["edit-hub"](), badges: () => { if (editing()) previews.mountTiles(view); } });
+  // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
+  inline = M.inline; tray = M.tray;
+  inline.install({ editor: ed, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
+  tray.install({ view, editor: ed, selected: S.selected, drop: (ids, t) => inline.dropOn(ids, t), toast: m => toast(m), cards: () => S.all,   // the pinned boxes
+    filterSeries: () => parseHash(S.listHash).params.get("series") || "" });
+  const seriesFor = el => (el.dataset.seriesFrom ? document.getElementById(el.dataset.seriesFrom)?.value.trim() || "" : el.dataset.series || "");   // a subseries field's series
+  let vocab = null, vocabRev = -1;                         // the token picker's icons, the most used first (after each derive())
+  const vocabOf = () => { if (vocabRev !== S.rev) { vocab = M.tokens.vocabulary(S.icons, S.all.map(c => c.ability)); vocabRev = S.rev; } return vocab; };
+  M.tokens.install({ vocab: () => (S.all ? vocabOf() : []), icon: (t, o) => S.renderer?.icon(t, o) ?? null,   // "[" or "(" in card text: suggestions
+    names: el => ed.names(el.dataset.suggest, seriesFor(el)) });                                       // a name field: the known names
+  M.palette.useSearch(M.palette.pickerSearch(M.tokens.suggest, () => (S.all ? vocabOf() : [])));    // the type palette ranks as the picker
+  inline.extend({ hideTip, icons: () => S.icons, closePicker: M.tokens.dismiss });   // editors hide the tooltip and the list; the type palette's icons
+  Object.assign(actions, ed.actions, tray.actions);
+  renderAccount();
+  return ed;
+}
 let selectAnchor = null;                                 // the last tile toggled: Shift-click selects from it
 function toggleSelect(id, range) {
   if (range && selectAnchor) for (const x of inline.rangeIds(S.list.map(c => c.id), selectAnchor, id)) S.selected.add(x);
@@ -322,23 +351,24 @@ function filterCards(p, { facets = true } = {}) {
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   for (const [k, , test] of LINKED) { const v = p.get(k); if (v) list = list.filter(test(v)); }
   const month = p.get("month"), change = p.get("change");
-  if (month || change) list = S.analytics ? list.filter(c => balance.changedAs(S.analytics, c, month, change)) : [];   // renderCards loads it
+  if (month || change) list = S.analytics ? list.filter(c => St.balance.changedAs(S.analytics, c, month, change)) : [];   // renderCards loads it
   return list;
 }
 // filters the Stats charts link to (stats.js cardsHref), shown as chips: [param, chip label(v), test(v)]; bal, cohort,
 // month and change read analytics.json (renderCards loads it)
 const LINKED = [
   ["legal", () => "Legal in constructed", () => c => !c._banned && c.parsed !== false],
-  ["shape", v => (v === "tied" ? "Tied highest stats" : `Highest stat ${v.toUpperCase()}`), v => c => shapeOf(c) === v],
-  ["cd", v => `(${v.replace("+", "")})${v.endsWith("+") ? "+" : ""}`, v => c => cooldownCols(c).some(x => x.key === v)],
-  ["tag", v => `(${v})`, v => c => tagsOf(c).includes(v)],
+  ["shape", v => (v === "tied" ? "Tied highest stats" : `Highest stat ${v.toUpperCase()}`), v => c => !!St && St.stats.shapeOf(c) === v],
+  ["cd", v => `(${v.replace("+", "")})${v.endsWith("+") ? "+" : ""}`, v => c => !!St && St.stats.cooldownCols(c).some(x => x.key === v)],
+  ["tag", v => `(${v})`, v => c => !!St && St.stats.tagsOf(c).includes(v)],
   ["mentions", v => `Naming ${S.byId.get(v)?.name || v}`, v => c => !!S.mentionedBy.get(v)?.has(c.id)],
-  ["fresh", v => `Text from ${v}`, v => c => insights.freshYear(c) === v],
-  ["bal", v => `${v === "top" ? "Top" : "Bottom"} 10% for its star level`, v => c => !!S.analytics && balance.flagged(S.analytics, c, v)],
-  ["cohort", v => (v === "any" ? "With all four stats" : `${cap(balance.cohortName(v))} with all four stats`), v => c => !!S.analytics && balance.inCohort(S.analytics, c, v)],
+  ["fresh", v => `Text from ${v}`, v => c => !!St && St.insights.freshYear(c) === v],
+  ["bal", v => `${v === "top" ? "Top" : "Bottom"} 10% for its star level`, v => c => !!S.analytics && St.balance.flagged(S.analytics, c, v)],
+  ["cohort", v => (v === "any" ? "With all four stats" : St ? `${cap(St.balance.cohortName(v))} with all four stats` : v), v => c => !!S.analytics && St.balance.inCohort(S.analytics, c, v)],
   ["nodup", () => "Duplicates hidden", () => c => !c.dup],        // Stats counts a duplicate once
 ];
 const needsAnalytics = p => ["bal", "cohort", "month", "change"].some(k => p.get(k));
+const needsCharts = p => ["shape", "cd", "tag", "fresh"].some(k => p.get(k));   // charts.js: the other Stats links
 const listOf = p => exactFirst(sortCards(filterCards(p), sortOf(p), p.get("dir") || ""), p.get("q"));   // the cards the grid shows, in order (search.js exactFirst)
 function sortCards(list, sort = "name", dir = "") {
   const key = {
@@ -392,15 +422,15 @@ function renderCards(r) {
   if (p.get("author")) active.push(["author", `by ${p.get("author")}`]);
   for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
   for (const f of csv(p, "flags")) { const x = FLAGS.find(x => x[0] === f); if (x) active.push(["flags", x[1], f]); }   // an old flag: ignored
-  if (p.get("month")) active.push(["month", `Changed ${balance.monthName(p.get("month"))}`]);
-  if (p.get("change")) active.push(["change", balance.CHANGE_LABEL[p.get("change")] || p.get("change")]);
+  if (p.get("month")) active.push(["month", `Changed ${St ? St.balance.monthName(p.get("month")) : p.get("month")}`]);
+  if (p.get("change")) active.push(["change", St?.balance.CHANGE_LABEL[p.get("change")] || p.get("change")]);
   for (const [k, label] of LINKED) if (p.get(k)) active.push([k, label(p.get(k))]);
   const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
     return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
   const suggestions = !list.length && p.get("q") ? suggest(p.get("q"), S.cards) : [];
-  const waiting = needsAnalytics(p) && !S.analytics;      // a Stats link's change filters: the grid again once analytics.json is in
-  if (waiting) loadAnalytics().then(() => { if (parseHash(S.renderedHash || "").name === "cards") rerender(); },
-    () => { const el = $(".browse .loading", view); if (el) el.textContent = "Couldn't load the recorded changes."; });
+  const changed = needsAnalytics(p) && !S.analytics, waiting = changed || (needsCharts(p) && !St);   // a Stats link's filters: the grid again once analytics.json (charts.js) is in
+  if (waiting) (changed ? loadAnalytics() : loadCharts()).then(() => { if (parseHash(S.renderedHash || "").name === "cards") rerender(); },
+    () => { const el = $(".browse .loading", view); if (el) el.textContent = changed ? "Couldn't load the recorded changes." : "Couldn't load the filter."; });
 
   view.innerHTML = `<div class="browse">
     <aside class="filters${S.filtersOpen ? " open" : ""}" aria-label="Filters">
@@ -425,7 +455,7 @@ function renderCards(r) {
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}` })}
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v]) => `<button type="button" class="chip" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
-      ${waiting ? `<p class="loading">Loading the recorded changes…</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
+      ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
     </section></div>`;
   const grid = list.length && view_ !== "table" && $(".browse .grid", view);
@@ -692,7 +722,7 @@ function balanceHtml(c, part = "balance") {          // part: "balance" (the lin
   if (!S.analytics) return part === "balance" ? `<h3>Balance</h3><p class="muted">Loading…</p>` : "";
   const o = balanceOf(c);
   const texts = o.hv && !o.history ? null : (o.history || []).map(v => v.ability).concat(o.ability || "");
-  return (part === "balance" ? balance.balanceBlock : balance.changesBlock)(c, S.analytics, { byId: S.byId, texts });
+  return (part === "balance" ? St.balance.balanceBlock : St.balance.changesBlock)(c, S.analytics, { byId: S.byId, texts });
 }
 function closeModal() {
   if (modal.hidden) return;
@@ -839,17 +869,22 @@ function openPicker(tier) {                              // the shared picker (p
 // ---- stats / changes / compare -------------------------------------------------------------------
 let statsJob = 0;
 function renderStatsView(r) {
+  if (!St) {                                             // the first open: charts.js
+    view.innerHTML = `<div class="loading">Loading…</div>`;
+    whenLoaded(loadCharts(), "the Stats page", () => { const h = parseHash(); if (h.name === "stats") renderView(h, location.hash || hashOf(h)); });
+    return;
+  }
   const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
-  renderStats(view, { cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage }, r.params);
+  St.stats.renderStats(view, { cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage }, r.params);
   const ctx = { cards: S.cards };
   const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
   const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History go in with it
     const now = parseHash(S.renderedHash);
     if (now.name !== "stats") return;
     const put = (id, html) => { const slot = $(`#${id}`, view); if (slot) slot.innerHTML = html; };
-    if (A) put("stats-balance", balance.statsHtml(A, { cards: S.cards, byId: S.byId }, now.params));
-    put("stats-ratings", insights.ratingsHtml(ctx, now.params));
-    put("stats-history", insights.historyHtml(ctx, now.params));
+    if (A) put("stats-balance", St.balance.statsHtml(A, { cards: S.cards, byId: S.byId }, now.params));
+    put("stats-ratings", St.insights.ratingsHtml(ctx, now.params));
+    put("stats-history", St.insights.historyHtml(ctx, now.params));
   };
   const job = ++statsJob, slot = $("#stats-balance", view);
   if (S.analytics) {                                     // below the first screen, at the top of the page: after it has painted
@@ -1038,29 +1073,33 @@ const printDeck = d => { if (!D.printSheet(d, S.byId, S.data.raw)) toast("Allow 
 
 // ---- people: profiles (data/users.json; staged or just-published ones from the editor) + contributions (data/contributions.json)
 function usersReady(name, again) {
-  if (S.users && S.contrib && S.decksData) return true;
+  if (S.users && S.contrib && S.decksData) return true;   // S.contrib: with profile.js
   view.innerHTML = `<div class="loading">Loading people…</div>`;
   whenLoaded(Promise.all([loadUsers(), loadContrib(), loadDecks()]), "people", () => { if (parseHash().name === name) again(parseHash()); });
   return false;
 }
 function renderUser(r) {
   if (!r.arg) { location.replace("#/users"); return; }                                  // #/u alone is the list
-  if (r.edit) { editor.profilePage(r.arg); return; }                                    // #/u/<login>/edit: the profile editor
+  if (r.edit) {                                                                         // #/u/<login>/edit: the profile editor
+    if (editor === IDLE) { view.innerHTML = `<div class="loading">Loading the editor…</div>`; whenLoaded(loadEditor(), "the editor", () => { const h = parseHash(); if (h.name === "u" && h.edit) renderView(h, location.hash || hashOf(h)); }); }
+    else editor.profilePage(r.arg);
+    return;
+  }
   if (!usersReady("u", renderUser)) return;
   const me = editor.me, people = S.contrib.people || [];
   let pending = editor.profileOf(r.arg), published = S.userBy.get(r.arg.toLowerCase()) || null;
-  let person = findPerson(r.arg, people);
+  let person = Pf.findPerson(r.arg, people);
   if (!pending && !published && person) {                                               // a credited name: the profile one of its logins made, if any
-    const row = mergeUsers(S.users, editor.pendingProfiles()).find(u => personOf(u.profile, [person]));
+    const row = Pf.mergeUsers(S.users, editor.pendingProfiles()).find(u => Pf.personOf(u.profile, [person]));
     if (row) { pending = editor.profileOf(row.profile.login); published = S.userBy.get(row.profile.login.toLowerCase()) || null; }
   }
   const profile = pending ? pending.profile : published;
-  if (!person && profile) person = personOf(profile, people);
+  if (!person && profile) person = Pf.personOf(profile, people);
   const login = pending?.profile?.login || published?.login || person?.key || r.arg;    // the file's spelling: u/<login>/ exists only for it
   if (login !== r.arg) { S.renderedHash = S.listHash = hashOf({ name: "u", arg: login }); syncUrl({ name: "u", arg: login }); }
   const own = !!me && (me.login.toLowerCase() === login.toLowerCase() || !!person?.logins.some(l => l.toLowerCase() === me.login.toLowerCase()));
   const owners = new Set([login, person?.github, ...(person?.logins || [])].filter(Boolean).map(s => s.toLowerCase())), theirs = deckList().filter(d => owners.has(d.owner.toLowerCase()));
-  view.innerHTML = personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
+  view.innerHTML = Pf.personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
     own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }),
     available: !!S.contrib.available, since: S.contrib.since, repo: S.data.repo, titles: S.titles, date, month, kinds: KINDS, kindOf,
     people, site: S.contrib.site || {}, mentions: S.mentions, mentionedBy: S.mentionedBy, banned: S.banned,
@@ -1068,8 +1107,8 @@ function renderUser(r) {
 }
 function renderUsers() {
   if (!usersReady("users", renderUsers)) return;
-  const me = editor.me, rows = peopleRows(S.contrib.people || [], mergeUsers(S.users, editor.pendingProfiles()));
-  view.innerHTML = peopleHtml(rows, { me, hasOwn: !!me && rows.some(r => r.profile && r.profile.login.toLowerCase() === me.login.toLowerCase()),
+  const me = editor.me, rows = Pf.peopleRows(S.contrib.people || [], Pf.mergeUsers(S.users, editor.pendingProfiles()));
+  view.innerHTML = Pf.peopleHtml(rows, { me, hasOwn: !!me && rows.some(r => r.profile && r.profile.login.toLowerCase() === me.login.toLowerCase()),
     available: !!S.contrib.available, since: S.contrib.since, titles: S.titles, date, decks: deckList() });
   updatePeopleCount(rows.length);
 }
@@ -1078,17 +1117,17 @@ function updatePeopleCount(n = S.data.peopleCount) { $("#people-count").textCont
 /** Who u/<name>/ is: the profile (pending or published) and the person, as the person page resolves them. */
 function personAt(name) {
   const pending = editor.profileOf(name), profile = pending ? pending.profile : S.userBy?.get(name.toLowerCase()) || null, people = S.contrib?.people || [];
-  return { profile, state: pending?.state || "", person: findPerson(name, people) || (profile && personOf(profile, people)) };
+  return { profile, state: pending?.state || "", person: Pf.findPerson(name, people) || (profile && Pf.personOf(profile, people)) };
 }
 function openUserShare(name) {
   const { profile, person, state } = personAt(name), fav = S.byId.get(profile?.favourite || "");
-  showDialog(shareDialogHtml({ name, url: userUrl(name), text: S.contrib?.previews?.[name] || "", state, native: !!navigator.share,
+  showDialog(Pf.shareDialogHtml({ name, url: userUrl(name), text: S.contrib?.previews?.[name] || "", state, native: !!navigator.share,
     image: fav?.img ? img(fav, 360) : "og.jpg", color: fav?.color }));
   $("#share-url").addEventListener("focus", e => e.target.select());
 }
 const userShare = name => ({ name, url: userUrl(name), person: personAt(name).person, titles: S.titles || new Map(), cards: S.cards, kindOf });
-const userDiscord = name => personDiscord(userShare(name));
-const userText = name => personText(userShare(name));          // no motto or other profile text
+const userDiscord = name => Pf.personDiscord(userShare(name));
+const userText = name => Pf.personText(userShare(name));          // no motto or other profile text
 
 // ---- sharing ---------------------------------------------------------------------------------------
 const md = s => String(s).replace(/([\\*_~`|[\]])/g, "\\$1");
@@ -1143,7 +1182,7 @@ const actions = {
   "deck-tts": () => ttsDownload(S.shared || deck()),
   "deck-print": () => printDeck(S.shared || deck()),
   // published decks: the deck page's buttons act on the deck shown; Publish… (or Sign in to publish) on the deck builder's saved hands
-  "deck-publish": el => editor.publishDeck(el.dataset.id),
+  "deck-publish": el => withEditor(ed => ed.publishDeck(el.dataset.id)),
   "deck-save-copy": () => { const d = S.deckView; if (!d) return; D.newDeck(S.decks, d.name, d.cards.filter(id => S.byId.has(id)), S.byId.has(d.field) ? d.field : null); updateDeckCount(); toast(`Saved “${d.name}” to your decks`); },
   "deck-page-share": () => { if (S.deckView) copy(deckUrl(S.deckView), "share link"); },
   "deck-page-discord": () => { if (S.deckView) copy(deckDiscord(S.deckView), "hand for Discord"); },
@@ -1161,7 +1200,7 @@ const actions = {
   "share-user": el => openUserShare(el.dataset.login),
   "share-user-discord": el => copy(userDiscord(el.dataset.login), "person for Discord"),
   "share-user-text": el => copy(userText(el.dataset.login), "person as text"),
-  "share-user-native": el => { const name = el.dataset.login; navigator.share({ title: name, text: personText({ ...userShare(name), name: "" }), url: userUrl(name) }).catch(() => {}); },
+  "share-user-native": el => { const name = el.dataset.login; navigator.share({ title: name, text: Pf.personText({ ...userShare(name), name: "" }), url: userUrl(name) }).catch(() => {}); },
   "compare-add": el => { const id = el.dataset.id; if (!S.compare.includes(id)) S.compare = [...S.compare, id].slice(-5); toast(`Comparing ${S.compare.length} card${S.compare.length > 1 ? "s" : ""} (Compare is in the toolbar)`); openCard(id); },
   "compare-remove": el => { S.compare = S.compare.filter(x => x !== el.dataset.id); location.hash = `#/compare/${S.compare.join(",")}`; },
   "compare-clear": () => { S.compare = []; location.hash = "#/cards"; },
@@ -1173,13 +1212,16 @@ const actions = {
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
   "select-mode": () => { S.selecting = !S.selecting; if (!S.selecting) S.selected.clear(); rerender(); },
-  ...editor.actions,
-  ...tray.actions,
-};
+};                                                       // + edit mode's (createEditor)
+/** An action by name; one only edit mode has (edit.js, tray.js) loads it first. */
+function act(name, el) {
+  if (actions[name]) actions[name](el);
+  else if (editor === IDLE) withEditor(() => actions[name]?.(el));
+}
 document.addEventListener("click", e => {
   if (e.target.closest("a.details-link")) return;     // the browser follows it
   const a = e.target.closest("[data-action]");
-  if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); actions[a.dataset.action]?.(a); return; }
+  if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); act(a.dataset.action, a); return; }
   const open = e.target.closest("[data-open], .chart [data-card]");
   if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey || S.selecting) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
@@ -1198,7 +1240,7 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("change", e => {
   const a = e.target.closest("[data-action]");
-  if (a && (a.tagName === "SELECT" || a.type === "checkbox")) actions[a.dataset.action]?.(a);
+  if (a && (a.tagName === "SELECT" || a.type === "checkbox")) act(a.dataset.action, a);
 });
 
 // search box
@@ -1218,7 +1260,7 @@ const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help
   ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"],
   ...(editing() ? [["1–9", "With cards selected: drop them on that pinned box"]] : []), ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
-$("#account").addEventListener("click", () => actions["edit-hub"]());
+$("#account").addEventListener("click", () => act("edit-hub"));
 
 document.addEventListener("keydown", e => {
   const item = document.activeElement?.closest?.(".ver-item");
@@ -1239,7 +1281,7 @@ document.addEventListener("keydown", e => {
   const dist = document.activeElement?.closest?.(".dist-panel[tabindex]");
   if (dist && (e.key === "ArrowLeft" || e.key === "ArrowRight") && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); distPage(dist, e.key === "ArrowRight" ? 1 : -1); return; }
   const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline], .star-pick, .type-palette");   // the inline controls are inputs; stat rows and stars take the arrows
-  if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size || S.selecting) { S.selected.clear(); if (S.selecting) { S.selecting = false; rerender(); } else inline.reflect(view, S.selected); } return; }
+  if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size || S.selecting) { S.selected.clear(); if (S.selecting) { S.selecting = false; rerender(); } else inline?.reflect(view, S.selected); } return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === "Enter" && ae?.dataset?.open && (modal.hidden || modal.contains(ae)) && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
   if ($("#edit-form")) return;                                                         // no single-key shortcuts while a form (card dialog, profile editor) is up
@@ -1253,7 +1295,7 @@ document.addEventListener("keydown", e => {
   else if (inCard && e.key === "d") toggleDeck(id);
   else if (inCard && e.key === "c") copy(shareUrl(id), "link: paste it in Discord");
   else if (inCard && e.key === "x") actions["compare-add"]({ dataset: { id } });
-  else if (inCard && e.key === "e") { e.preventDefault(); editor.open(id); }
+  else if (inCard && e.key === "e") { e.preventDefault(); withEditor(ed => ed.open(id)); }
 });
 
 // tooltips: [data-tip] text, [data-v]+[data-l] chart values, card links show a preview; when they go: tip.js
@@ -1272,7 +1314,6 @@ function fillTip(t) {
 }
 const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
 function hideTip() { tips.hide(); }
-inline.extend({ hideTip, icons: () => S.icons, closePicker: tokens.dismiss });   // editors hide the tooltip and the list; the type palette's icons
 wireTips(document, tips, (cx, cy) => {
   const r = tip.getBoundingClientRect();
   let x = cx + 14, y = cy + 16;
@@ -1281,5 +1322,6 @@ wireTips(document, tips, (cx, cy) => {
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
 });
 
+if (wantsEditor()) loadEditor().catch(() => {});          // at once, beside cards.json
 init().finally(fresh.watch);                            // a new deploy reloads the page (fresh.js)
 passes.migrate().catch(() => {});                       // passphrases remembered in plain text before 2026-10-23: sealed now

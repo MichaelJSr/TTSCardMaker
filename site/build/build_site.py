@@ -2861,7 +2861,7 @@ def game_text(cards, rules, banlist, icons, manifest):
 
 # ---- main ------------------------------------------------------------------------------------------
 # ---- build versions (?v=) ------------------------------------------------------------------------------
-IMPORT_RE = re.compile(r'(from\s+"\./([\w-]+\.js))"')     # a module's static imports, as they are stamped
+IMPORT_RE = re.compile(r'((?:from\s+|import\()"\./([\w-]+\.js))"')   # a module's imports (static, dynamic), as they are stamped
 VOLATILE = {"cards.json": ("generated", "source"), "decks.json": ("generated",), "changelog.json": ("since",)}   # the build's clock
 
 
@@ -2936,10 +2936,30 @@ def minify(texts):
 BUNDLE = "app.js"                             # the entry module: the bundle keeps its name; app.js.map beside it
 
 
+def shared_once(texts):
+    """texts with each module BUNDLE loads by import() ending in a bare import of every module the page loads (BUNDLE's
+    static imports, transitively), for esbuild only: a chunk holds the code shared by one set of entries, so the page's
+    modules, reached by every entry alike, make one chunk, not one per set (each a request beside the first screen's
+    pictures). The page has them all already: no code moves into the lazy chunks and nothing runs twice."""
+    deps = {n: [(m.group(1).startswith("import("), m.group(2)) for m in IMPORT_RE.finditer(t)] for n, t in texts.items()}
+    page, todo = set(), [BUNDLE]
+    while todo:
+        n = todo.pop()
+        if n in texts and n not in page:
+            page.add(n)
+            todo += [d for dyn, d in deps[n] if not dyn]
+    lazy = {d for dyn, d in deps.get(BUNDLE, []) if dyn and d in texts}
+    tail = "".join(f'import "./{m}";' for m in sorted(page - {BUNDLE}))
+    return {n: t + f"\n{tail}\n" if n in lazy else t for n, t in texts.items()}
+
+
 def bundle(texts):
-    """site/assets' modules ({file: text}, as written) as one minified esbuild bundle of BUNDLE and its imports, with a
-    source map (sources assets/src/<file>, their text inside it): (code, map, stamp), the stamp hashing both, in the
-    code's sourceMappingURL too. No esbuild, or it failed: None (the modules go out one by one)."""
+    """site/assets' modules ({file: text}, as written) bundled from BUNDLE by esbuild, minified, split where app.js imports
+    a module with import() (loaded on first use): (files, stamp, hints, lazy). files {name: bytes}: BUNDLE, its chunks
+    (`<name>-<hash>.js`, the hash their stamp) and a source map beside each (sources assets/src/<file>, their text inside
+    it), each code's sourceMappingURL stamped by the map and the code. stamp: BUNDLE's. hints: the chunks BUNDLE imports.
+    lazy {module as import() names it: its chunks the page lacks}, so one round trip brings them. No esbuild, or it
+    failed: None (the modules go out one by one)."""
     exe = esbuild()
     if not exe:
         return None
@@ -2947,28 +2967,62 @@ def bundle(texts):
         tmp = os.path.realpath(tmp)           # esbuild's map paths: relative to the real one (macOS /var -> /private/var)
         src = os.path.join(tmp, "assets", "src")
         os.makedirs(src)
-        for name, text in texts.items():
+        for name, text in shared_once(texts).items():
             with open(os.path.join(src, name), "w", encoding="utf-8") as fh:
                 fh.write(text)
-        out = os.path.join(tmp, "assets", BUNDLE)
+        meta = os.path.join(tmp, "meta.json")
         try:
-            subprocess.run([exe, os.path.join(src, BUNDLE), "--bundle", "--minify", "--format=esm", "--sourcemap", "--log-level=error",
-                            f"--outfile={out}"], capture_output=True, text=True, check=True)
-            with open(out, "rb") as fh:
-                code = fh.read()
-            with open(out + ".map", "rb") as fh:
-                smap = fh.read()
-        except (OSError, subprocess.CalledProcessError) as e:
+            subprocess.run([exe, os.path.join(src, BUNDLE), "--bundle", "--splitting", "--minify", "--format=esm", "--sourcemap",
+                            "--log-level=error", "--entry-names=[name]", "--chunk-names=[name]-[hash]", f"--metafile={meta}",
+                            f"--outdir={os.path.join(tmp, 'assets')}"], capture_output=True, text=True, check=True, cwd=tmp)   # metafile paths: from tmp
+            with open(meta, encoding="utf-8") as fh:
+                outputs = json.load(fh)["outputs"]
+            files = {}
+            for path in outputs:
+                with open(os.path.join(tmp, path), "rb") as fh:
+                    files[os.path.basename(path)] = fh.read()
+        except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as e:
             warn(f"assets not bundled: esbuild: {getattr(e, 'stderr', '') or e}")
             return None
-    tail = f"//# sourceMappingURL={BUNDLE}.map".encode()
-    if not code.rstrip().endswith(tail):
-        warn("assets not bundled: no sourceMappingURL")
+    stamps = {}
+    for name in [n for n in files if n.endswith(".js")]:
+        code, smap = files[name], files.get(name + ".map", b"")
+        tail = f"//# sourceMappingURL={name}.map".encode()
+        if not smap or not code.rstrip().endswith(tail):
+            warn(f"assets not bundled: no sourceMappingURL in {name}")
+            return None
+        stamps[name] = stamp_of(code + b"\0" + smap)
+        files[name] = code.rstrip()[:-len(tail)] + tail + f"?v={stamps[name]}\n".encode()
+    if BUNDLE not in files:
+        warn("assets not bundled: no entry")
         return None
-    stamp = stamp_of(code + b"\0" + smap)
-    code = code.rstrip()[:-len(tail)] + tail + f"?v={stamp}\n".encode()
-    log(f"assets: {len(texts)} modules bundled into {BUNDLE} with esbuild, {sum(len(t.encode()) for t in texts.values())} -> {len(code)} bytes")
-    return code, smap, stamp
+    out_of = {os.path.basename(p): o for p, o in outputs.items() if p.endswith(".js")}
+    def static(name, seen):                   # name and the chunks it imports, transitively
+        if name not in seen:
+            seen.add(name)
+            for i in out_of[name].get("imports", []):
+                if i.get("kind") == "import-statement":
+                    static(os.path.basename(i["path"]), seen)
+        return seen
+    page = static(BUNDLE, set())
+    hints = sorted(page - {BUNDLE})
+    lazy = {}
+    for i in out_of[BUNDLE].get("imports", []):
+        if i.get("kind") == "dynamic-import":
+            name = os.path.basename(i["path"])
+            entry = os.path.basename(out_of[name].get("entryPoint", ""))
+            lazy[entry] = [name] + sorted(static(name, set()) - page - {name})
+    log(f"assets: {len(texts)} modules bundled with esbuild into {BUNDLE} ({len(files[BUNDLE])} bytes) and the {len(hints)} chunk(s) it "
+        f"imports, {len(lazy)} loaded on first use ({', '.join(f'{k}: {sum(len(files[n]) for n in v)} bytes' for k, v in sorted(lazy.items()))})")
+    return files, stamps[BUNDLE], hints, lazy
+
+
+def chunk_tags(lazy):
+    """index.html's map of the chunks each import() of app.js loads (meta chunks: app.js early()). No modulepreload for the
+    chunk app.js imports: beside the first screen's pictures it cost them (LCP +80 ms on slow 4G, +45 on fast; NOTES §32)."""
+    if not lazy:
+        return ""
+    return f'\n<meta name="chunks" content="{html.escape(json.dumps({k: [f"assets/{n}" for n in v] for k, v in sorted(lazy.items())}, separators=(",", ":")))}">'
 
 
 def inline_css(page, css):
@@ -3539,13 +3593,14 @@ def main():
     data = steady(files, blobs)
     version = data_stamp(data, details)
     os.makedirs(os.path.join(DIST, "assets"))
-    packed = bundle({name: text for name, text in texts.items() if name.endswith(".js")})   # with esbuild: one script
+    packed = bundle({name: text for name, text in texts.items() if name.endswith(".js")})   # with esbuild: one script and its chunks
     if packed:
         assets = {name: v for name, v in assets.items() if not name.endswith(".js")}
     served = minify({name: text for name, (_, text) in assets.items()}) or {name: text.encode("utf-8") for name, (_, text) in assets.items()}
     stamps = {name: stamp for name, (stamp, _) in assets.items()}
     if packed:
-        served[BUNDLE], served[BUNDLE + ".map"], stamps[BUNDLE] = packed
+        files, stamps[BUNDLE], _, lazy = packed
+        served.update(files)
     for name, blob in served.items():           # stamps hash the source (the bundle: its code and map): same source, same URL
         with open(os.path.join(DIST, "assets", name), "wb") as fh:
             fh.write(blob)
@@ -3557,6 +3612,12 @@ def main():
     if packed:                                # the bundle holds every module: no hints for them
         template = re.sub(r'<link rel="modulepreload" href="assets/(?!' + re.escape(BUNDLE) + r'")[\w-]+\.js">\n', "", template)
     template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', url, template).replace("<!--BUILD-->", version)
+    if packed:                                # the lazy chunks' list, after the bundle's hint
+        tag = f'<link rel="modulepreload" href="assets/{BUNDLE}?v={stamps[BUNDLE]}">'
+        if tag in template:
+            template = template.replace(tag, tag + chunk_tags(lazy), 1)
+        else:
+            warn("index.html: no modulepreload for the bundle, so no chunks list: a first open loads chunk after chunk")
     page = stamp_of(template.encode("utf-8"))  # the page's stamp: build.txt's 2nd line (fresh.js)
     template = template.replace("<!--PAGE-->", page)
     banner = site_banner(cards, os.path.join(DIST, "og.jpg"))

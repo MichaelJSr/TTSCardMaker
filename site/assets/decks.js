@@ -2,8 +2,7 @@
 // (edit.js stages it with the batch; build_site.py reads the folder into data/decks.json). A public file holds the hand in
 // clear; a private one is AES-GCM ciphertext made here, opened on the deck page with its passphrase. DOM-free at import:
 // app.js renders the HTML below and wires it. Every string is user-written and goes through esc.
-import { esc } from "./text.js";
-import { LOGIN_RE } from "./profile.js";
+import { esc, LOGIN_RE } from "./text.js";
 import { HAND } from "./deck.js";
 
 export const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,59}$/;
