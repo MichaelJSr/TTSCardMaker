@@ -1,5 +1,5 @@
 {
-  "about": "When each card was made: the earlier of its first Discord post and its first upload to this repo (UTC day); provisional: an open ruling on the Discord archive may still move it. Written by AutoCroissant (python -m commands.discord_edits created); an entry with \"from\": \"hand\" is set by hand and kept. Read by the website (the created sort, card pages) and the bot (/update_stats).",
+  "about": "When each card was made: the earlier of its first Discord post and its first upload to this repo (UTC day); provisional: an open ruling on the Discord archive may still move it. Written by AutoCroissant (python -m commands.card_dates created); an entry with \"from\": \"hand\" is set by hand and kept. Read by the website (the created sort, card pages) and the bot (/update_stats).",
   "cards": {
     "A Snack": {"date":"2023-10-13","from":"discord"},
     "A Snack2": {"date":"2023-10-13","from":"discord"},

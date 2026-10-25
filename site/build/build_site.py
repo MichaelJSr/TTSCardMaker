@@ -44,7 +44,7 @@ Where the data comes from:
     per person the commits that added or changed a card (PSD or PNG) and the publish batches (commits to Card
     Edits.json). Needs full history: a shallow clone gets no image versions, no fs, and counts edit batches from the
     file's _by/_at stamps instead.
-  * Creation dates: site/Card Creation Dates.json (AutoCroissant's `python -m commands.discord_edits created`), each card's
+  * Creation dates: site/Card Creation Dates.json (AutoCroissant's `python -m commands.card_dates created`), each card's
     first Discord post; a card's created is the earlier of that and fs (a hand-set date wins): the Cards tab's created
     sort, the card page's "created" fact, the person pages' newest cards and activity chart. Bad entries skipped.
   * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json), the edit batches
@@ -137,7 +137,7 @@ CARD_FOLDERS = ("Creatures/", "Items/", "Field/", "N.M.E/", "Auxiliary/")
 AUTHORS_PATH = "site/Card Authors.txt"
 BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
-CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (AutoCroissant discord_edits created; global_config.CREATED_PATH)
+CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (AutoCroissant card_dates created; global_config.CREATED_PATH)
 CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first git upload, or set by hand (card_edits.CardDates.FROM)
 RATINGS_PATH = "site/Card Ratings.json"         # dated 1-10 ratings (AutoCroissant tts_ratings, the website's Rate it; card_edits.CardRatings)
 RATING_SCALES = ("favorability", "power")
@@ -1379,7 +1379,7 @@ def apply_created(cards, created):
     missing = sorted(e["key"] for e in dated if card_key(e["key"]) not in created)
     if created and missing:
         log(f"created: {len(missing)} cards not in {CREATED_PATH}, dated by their first upload until it has them "
-            f"(AutoCroissant's `python -m commands.discord_edits created`): {', '.join(missing[:10])}")
+            f"(AutoCroissant's `python -m commands.card_dates created`): {', '.join(missing[:10])}")
     if len(created) > len(used):
         log(f"created: {len(created) - len(used)} names in {CREATED_PATH} match no card: "
             f"{', '.join(sorted(k for k in created if k not in used)[:10])}")

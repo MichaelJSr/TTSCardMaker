@@ -144,7 +144,7 @@ bot's data; `[people]` maps git names to the names shown. The hand-kept files `C
 on 2026-10-20), as does `Card Ratings.json` (new on 2026-10-24; the build and the website's editor read it, never the bot); the build and the bot read the
 others; the published site includes none of them. `Card Creation Dates.json`
 holds each card's first Discord post as `{"date": "YYYY-MM-DD", "from": "discord" | "git" | "hand", "provisional": true}`
-(dates only, from the Discord archive kept off the repo), written by AutoCroissant's `python -m commands.discord_edits
+(dates only, from the Discord archive kept off the repo), written by AutoCroissant's `python -m commands.card_dates
 created` (re-run after rulings and archive updates; it keeps `"from": "hand"` entries, the way to set a date by hand).
 A card it misses (one made since) is dated by its first upload, with a build log line naming it. The bot reads the file by
 the same rule (AutoCroissant `CardDates.created`), its first upload being the earliest version its database holds: the
