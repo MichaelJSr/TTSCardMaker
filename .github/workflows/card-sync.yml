@@ -17,6 +17,10 @@
 # (job chain): at once for a re-parse in progress, unmerged bake records and edits over the bake's cap; through the
 # 30-minute window for website edits held by a recent push. The hourly safety cron (GitHub starts it late or not at all)
 # catches what the chain leaves: unposted events, a lane that failed, a chain that stopped.
+# One main lane per guarded push (owner, 2026-10-25, P-2): a push's main lane skips itself when that push's guards have
+# fixes to land (card-guards.yml's "Fixes to land"); their Follow up starts Card sync once they land (or land nothing),
+# so its one main lane bakes and saves the fixed PNGs. The schedule's and a chained run's skip theirs while any guards
+# run with fixes is unfinished.
 # Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) installed from the card workflows' wheel cache.
 name: Card sync
@@ -581,6 +585,7 @@ jobs:
       actions: read       # gh run list
     outputs:
       other: ${{ steps.other.outputs.run }}
+      guards: ${{ steps.guards.outputs.run }}
     steps:
       - name: Another timer
         id: other
@@ -611,6 +616,42 @@ jobs:
           echo "No push run in its window: $([ "$GITHUB_EVENT_NAME" = push ] && echo "this push starts one" || echo "the main lane goes on")." \
             | tee -a "$GITHUB_STEP_SUMMARY"
 
+      # The guards' fixes (P-2): a guards push run with fixes to land (its check job's step "Fixes to land") starts Card
+      # sync once they land, landed or not (its Follow up). A push's run looks for its own push's at the window's end
+      # (Quiet window): unfinished, or finished with Follow up done. The schedule's and a chained run's look here for any
+      # unfinished one (two hours back). One found: this run's main lane is skipped (its data lane ran). Runs that cannot
+      # be read count as none (the main lane goes on).
+      - &guards
+        name: Guards' fixes
+        id: guards
+        if: github.job == 'quiet' || github.event_name != 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event_name == 'push' && github.sha || '' }}
+          FIXES: Fixes to land        # card-guards.yml's check-job step
+          FOLLOW: Follow up           # card-guards.yml's post-job step that dispatches Card sync
+        run: |
+          q="repos/$GITHUB_REPOSITORY/actions/workflows/card-guards.yml/runs?event=push&per_page=30"
+          if [ -n "$SHA" ]; then q="$q&head_sha=$SHA"; fi
+          if ! runs=$(gh api "$q" --jq '.workflow_runs[] | select((.created_at | fromdate) > now - 120 * 60) | "\(.id) \(.status)"'); then
+            echo "::warning::the guards' runs were not read: the main lane goes on"
+            runs=""
+          fi
+          while read -r id status; do
+            [ -n "$id" ] || continue
+            if [ -z "$SHA" ] && [ "$status" = completed ]; then continue; fi     # another push's: unfinished only
+            hold=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[].steps // [] | .[]] as \$s
+              | (\$s | any(.name == \"$FIXES\" and .conclusion == \"success\"))
+                and (\"$status\" != \"completed\" or (\$s | any(.name == \"$FOLLOW\" and .conclusion == \"success\")))") || hold=false
+            if [ "$hold" = true ]; then
+              echo "run=$id" >> "$GITHUB_OUTPUT"
+              echo "Guards run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id lands fixes: the Card sync run it starts bakes and saves (this run's main lane is skipped)." \
+                | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          done <<< "$runs"
+          echo "No guards run with fixes to land: the main lane goes on." | tee -a "$GITHUB_STEP_SUMMARY"
+
   # A push's first attempt, and a chained wait's, waits in the environment card-sync-quiet (its 30-minute wait timer, the
   # owner's setting; no runner is held). Without the timer, and on a re-run, Quiet sleeps out what is left of the window
   # from the push (pushed_at; a chained run's from its dispatch), so a re-run does not wait again. Then the main lane, on
@@ -618,7 +659,7 @@ jobs:
   quiet:
     name: Quiet window
     needs: timer
-    if: ${{ !cancelled() && (github.event_name == 'push' || startsWith(inputs.chain, 'wait')) && needs.timer.result != 'skipped' && !needs.timer.outputs.other }}
+    if: ${{ !cancelled() && (github.event_name == 'push' || startsWith(inputs.chain, 'wait')) && needs.timer.result != 'skipped' && !needs.timer.outputs.other && !needs.timer.outputs.guards }}
     environment: ${{ github.run_attempt == '1' && 'card-sync-quiet' || '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 35     # the whole window without the timer
@@ -626,7 +667,9 @@ jobs:
       run:
         shell: bash
     permissions:
-      actions: read         # a chained run's start
+      actions: read         # a chained run's start; the guards' runs
+    outputs:
+      guards: ${{ steps.guards.outputs.run }}
     steps:
       - name: Quiet
         env:
@@ -647,14 +690,18 @@ jobs:
             sleep "$left"
           fi
 
+      # This push's guards (a chained wait: any unfinished guards run), now the window is up
+      - *guards
+
   # The main lane: a push's after its window (a failed one goes on), the schedule's and a chained run's when no window
-  # runs (a chained wait's after its own), another dispatch's and a retry's at once. One at a time (card-main); a newer
+  # runs (a chained wait's after its own), another dispatch's and a retry's at once; none while guards' fixes are to land
+  # (the run their Follow up starts is the one). One at a time (card-main); a newer
   # pending one replaces an older one (a retry is dispatched only when no other run is unfinished). It writes only main;
   # db/ is read for the save's names.
   main:
     name: Bake and save
     needs: [timer, quiet]
-    if: ${{ !cancelled() && (github.event_name == 'push' && needs.quiet.result != 'skipped' || github.event_name != 'push' && !needs.timer.outputs.other) }}
+    if: ${{ !cancelled() && (github.event_name == 'push' && needs.quiet.result != 'skipped' || github.event_name != 'push' && !needs.timer.outputs.other) && !needs.timer.outputs.guards && !needs.quiet.outputs.guards }}
     concurrency:
       group: card-main
       cancel-in-progress: false   # a running lane is never cut off
@@ -1113,7 +1160,7 @@ jobs:
   chain-data:
     name: Chain after the data
     needs: [data, timer]
-    if: ${{ !cancelled() && !inputs.dry_run && needs.timer.result == 'success' && !needs.timer.outputs.other && (github.event_name == 'push' || startsWith(inputs.chain, 'wait')) }}
+    if: ${{ !cancelled() && !inputs.dry_run && needs.timer.result == 'success' && !needs.timer.outputs.other && !needs.timer.outputs.guards && (github.event_name == 'push' || startsWith(inputs.chain, 'wait')) }}
     concurrency:
       group: card-chain
       cancel-in-progress: false

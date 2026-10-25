@@ -18,7 +18,9 @@
 # PNGs and the fixes wait for the 30-minute quiet window: a PNG the author pushed meanwhile withdraws its refusal, a
 # card pushed again is left to that push's run, a write that did not land is told (in report mode, the PNG the bot would
 # make). It never reverts or rejects a push. A run that fails tells the standards channel once per failure streak (a
-# cancel by hand does not).
+# cancel by hand does not). One main lane per guarded push (P-2): a push with fixes to land (on) marks its check job
+# ("Fixes to land"); that push's Card sync run skips its main lane, and Follow up starts Card sync once Land is done,
+# landed or not.
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
 # wheel cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
 #
@@ -90,6 +92,7 @@ jobs:
       comment: ${{ steps.comment.outputs.id }}
       told: ${{ steps.comment.outputs.told }}
       land: ${{ steps.plan.outputs.land }}
+      fixes: ${{ steps.plan.outputs.fixes }}
       card_errors: ${{ steps.plan.outputs.card_errors }}
       bot_sha: ${{ steps.bot.outputs.sha }}
       saved: ${{ steps.setup.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
@@ -353,7 +356,7 @@ jobs:
           fi
 
       # What the post job needs: whether there is anything to land or tell (none: no wait, no post job), and the plan with
-      # its files (the artifact). summary.json's told, writes and card errors.
+      # its files (the artifact). summary.json's told, writes and card errors. fixes: a push's writes to land (on).
       - name: Plan for the post job
         id: plan
         if: always() && steps.check.outcome == 'success'
@@ -361,6 +364,9 @@ jobs:
         run: |
           jq -e --arg mode "$MODE" '.told + (if $mode == "on" then .writes else 0 end) > 0' "$OUT/summary.json" > /dev/null \
             && echo "land=true" >> "$GITHUB_OUTPUT"
+          if [ "$GITHUB_EVENT_NAME" = push ] && [ "$MODE" = on ] && jq -e '.writes > 0' "$OUT/summary.json" > /dev/null; then
+            echo "fixes=true" >> "$GITHUB_OUTPUT"
+          fi
           echo "card_errors=$(jq '.card_errors // 0' "$OUT/summary.json")" >> "$GITHUB_OUTPUT"
 
       # overwrite: a re-run replaces its earlier attempt's (one name per run); the post job adds what Land settled
@@ -371,6 +377,13 @@ jobs:
           path: ${{ runner.temp }}/guards
           if-no-files-found: ignore
           overwrite: true
+
+      # The mark Card sync reads (its step "Guards' fixes", by this name): this push's main lane waits for the post job,
+      # whose Follow up then starts the one main lane (landed or not).
+      - name: Fixes to land
+        if: always() && steps.plan.outputs.fixes == 'true'   # a failed Comment step too: Plan and Follow up run anyway
+        shell: bash
+        run: echo "This push's fixes land after the quiet window; Follow up then starts Card sync's main lane."
 
   # After the quiet window: Land, Follow up, Tell Discord. Only when the check found something to land or tell (report or
   # on). A push's first attempt waits in the environment card-guards-quiet (its wait timer, the owner's setting, about 25
@@ -513,11 +526,12 @@ jobs:
       # A GITHUB_TOKEN push triggers no workflow: the card sync is run here, its bake only for pending edits (its data
       # commit dispatches the site build; when it does not start, the comment and the post say so, and the run fails),
       # and again by a re-run that finds the writes already landed (its earlier attempt's may not have started; both
-      # queue, so a second start is harmless). The comment is rewritten
+      # queue, so a second start is harmless). With fixes it always starts one, landed or not, Land broken or not: this
+      # push's own Card sync run skipped its main lane for it (Card sync's "Guards' fixes"). The comment is rewritten
       # with what landed, what did not and why (a broken Land still says so).
       - name: Follow up
         id: follow
-        if: always() && steps.land.outputs.ran == 'true'
+        if: always() && (steps.land.outputs.ran == 'true' || needs.check.outputs.fixes == 'true')
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -525,17 +539,27 @@ jobs:
           ALREADY: ${{ steps.land.outputs.already }}
           COMMENT: ${{ needs.check.outputs.comment }}
           TOLD_BEFORE: ${{ steps.told.outputs.told }}
+          FIXES: ${{ needs.check.outputs.fixes }}
+          LAND_RAN: ${{ steps.land.outputs.ran }}
         run: |
           refresh=ok start=""
           [ -n "$SHA" ] && start=true
+          [ "$FIXES" = true ] && start=true
           if [ "$MODE" = on ] && [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && [ "${ALREADY:-0}" -gt 0 ]; then start=true; fi
-          if [ -n "$start" ] && ! gh workflow run card-sync.yml -f dry_run=false -f bake=pending; then
+          started=""
+          if [ -n "$start" ]; then
+            for wait in 0 10 30; do               # tried 3 times: with fixes no other run bakes this push
+              sleep "$wait"
+              if gh workflow run card-sync.yml -f dry_run=false -f bake=pending; then started=true; break; fi
+            done
+          fi
+          if [ -n "$start" ] && [ -z "$started" ]; then
             refresh=failed
             echo "refresh=failed" >> "$GITHUB_OUTPUT"
             printf '\n**The card sync did not start after this commit: its next run catches up.**\n' \
               >> "$OUT/report-landed.md"
           fi
-          if [ -n "$COMMENT" ]; then
+          if [ -n "$COMMENT" ] && [ "$LAND_RAN" = true ]; then
             body="$OUT/report-landed.md"
             if [ ! -f "$body" ]; then
               { cat "$OUT/report.md"; printf '\n**The bot could not finish this push (see the run): nothing above was committed.**\n'; } \
