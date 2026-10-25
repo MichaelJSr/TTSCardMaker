@@ -7,15 +7,15 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-10-25T13:49:26Z",
- "card_commit": "19db3675ce0652f407b176fbb73f9d54ed034cf5",
- "card_commit_at": 1792936063.0,
+ "built_at": "2026-10-25T14:21:37Z",
+ "card_commit": "f12e69bf650845a2d2ce8e72602508075586e04d",
+ "card_commit_at": 1792938063.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 92,
   "baked": 0,
   "cards": 820,
-  "changed": 12,
+  "changed": 0,
   "details": 815,
   "failed": 0,
   "new": 0,
@@ -45,7 +45,7 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40199346519",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40201822529",
  "schema": 1,
  "seed": {
   "commit": "1282743b7f38c2ffa0b63d24341179a1f9d2b732",
