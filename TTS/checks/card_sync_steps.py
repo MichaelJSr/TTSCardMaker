@@ -11,11 +11,17 @@
    changed, a PSD-kind website edit sends the run to the Pending edits step.
 3. The fonts: a cache hit restores them outside the sparse patterns; after the Fonts tree step the bake's fast-forward
    merge (git_commit.local_commit's) keeps them (without it git deletes them: the control).
-4. The Bake step's arguments: --pending for a schedule, a schedule's retry and bake=pending, not for another dispatch.
+4. The Bake step's arguments: --pending for a push's run, a schedule, their retries and bake=pending, not for another
+   dispatch.
 5. Commit main's own script on a sandbox origin: a save-only M names itself in the manifest when the build wrote db/,
    and leaves an unchanged db/ alone; a push that failed but landed counts as pushed; main moved: M is dropped and one
    new run is dispatched (marked retry, the cards, seed and restore carried, never full or allow_archive), none from a
-   retry or while a run is pending; past minute 60 nothing is pushed. Exits 1 when a case gets the wrong answer.
+   retry or while another run is unfinished; past minute 60 nothing is pushed.
+6. The timer (a fixed window): a push's and the schedule's run look for a push run in its timer (Another timer: one
+   waiting, or with its Quiet window job unfinished; not itself, not one stuck 40 minutes; unreadable runs count as
+   none) and end at once when there is one; else a push's waits (card-sync-quiet on its first attempt, in no group) and
+   the schedule's syncs; a dispatch syncs at once; Quiet sleeps out what is left of the window from the push time.
+Exits 1 when a case gets the wrong answer.
 """
 import json
 import os
@@ -73,8 +79,10 @@ def _mapping(lines: list, at: int, indent: int) -> tuple:
 
 
 def load() -> dict:
+    """The sync job's steps, timeout and env at the top (plan's), each job's keys and steps in flow["jobs"]."""
     lines = open(WORKFLOW, encoding="utf-8").read().split("\n")
-    flow = {"steps": []}
+    flow = {"steps": [], "jobs": {}}
+    job, jobs = {"steps": []}, False          # nothing before `jobs:` is a job's (the push paths look like steps)
     i = 0
     while i < len(lines):
         x = lines[i]
@@ -83,11 +91,22 @@ def load() -> dict:
             continue
         if x.startswith("run-name:"):
             flow["run_name"] = x.split(":", 1)[1].strip()
+        jobs = jobs or x == "jobs:"
+        m = re.match(r"^  ([\w-]+):$", x) if jobs else None
+        if m:
+            job = flow if m.group(1) == "sync" else {"steps": []}
+            flow["jobs"][m.group(1)] = job
         if x.startswith("    timeout-minutes:"):
-            flow["timeout"] = int(_value(x.split(":", 1)[1]))
+            job["timeout"] = int(_value(x.split(":", 1)[1]))
         if x == "    env:":
-            flow["job_env"], i = _mapping(lines, i, 4)
+            job["job_env"], i = _mapping(lines, i, 4)
             continue
+        if x in ("    concurrency:", "    outputs:"):
+            job[x.strip()[:-1]], i = _mapping(lines, i, 4)
+            continue
+        if re.match(r"^    (name|if|needs|environment):", x):
+            key, _, rest = x.strip().partition(":")
+            job[key] = _value(rest)
         if x.startswith("      - "):
             step, j = {}, i
             first = True
@@ -108,7 +127,7 @@ def load() -> dict:
                         continue
                     step[key] = _value(rest)
                 j += 1
-            flow["steps"].append(step)
+            job["steps"].append(step)
             i = j
             continue
         i += 1
@@ -370,6 +389,83 @@ def run_step(flow: dict, name: str, cwd: str, env: dict, tmp: str) -> tuple:
     return r.returncode, r.stdout + r.stderr, outputs
 
 
+def timer_cases(flow: dict) -> None:
+    """The timer: which runs look for another timer, wait, or sync; Another timer on faked run lists; Quiet's sleep."""
+    timer, quiet = flow["jobs"]["timer"], flow["jobs"]["quiet"]
+    ctx = lambda event, actor="MichaelJSr", attempt="1", **needs: {  # noqa: E731
+        "github": {"event_name": event, "actor": actor, "run_attempt": attempt}, "needs": needs,
+        "functions": {"cancelled": lambda: False}}
+    got = [bool(evaluate(timer["if"], ctx(e, a))) for e, a in (("push", "MichaelJSr"), ("push", "AutoCroissant"),
+                                                              ("push", "github-actions[bot]"), ("schedule", "x"),
+                                                              ("workflow_dispatch", "x"))]
+    check(got == [True, True, False, True, False],
+          f"timer: a person's or the bot's push and the schedule look for a running timer; dispatches never ({got})")
+    t = lambda result, other="": {"result": result, "outputs": {"other": other} if result != "skipped" else {}}  # noqa: E731
+    got = [bool(evaluate(quiet["if"], ctx(e, timer=n))) for e, n in (("push", t("success")), ("push", t("success", "41")),
+                                                                     ("push", t("failure")), ("push", t("skipped")),
+                                                                     ("schedule", t("success")), ("workflow_dispatch", t("skipped")))]
+    check(got == [True, False, True, False, False, False],
+          f"quiet: a push's run waits unless another timer runs (a failed look waits too); nothing else waits ({got})")
+    check([evaluate(quiet["environment"], ctx("push", attempt=a)) for a in ("1", "2")] == ["card-sync-quiet", ""]
+          and quiet.get("name") == "Quiet window" and "concurrency" not in quiet and "concurrency" not in timer
+          and step(timer, "other")["env"]["QUIET"] == quiet["name"],
+          "quiet: card-sync-quiet on the first attempt only, in no group; Another timer looks for its name")
+    q = lambda result: {"result": result, "outputs": {}}  # noqa: E731
+    want = [(("push", t("success"), q("success")), True), (("push", t("failure"), q("failure")), True),
+            (("push", t("success", "41"), q("skipped")), False), (("push", t("skipped"), q("skipped")), False),
+            (("schedule", t("success"), q("skipped")), True), (("schedule", t("success", "41"), q("skipped")), False),
+            (("schedule", t("failure"), q("skipped")), True), (("workflow_dispatch", t("skipped"), q("skipped")), True)]
+    got = [bool(evaluate(flow["if"], ctx(e, timer=n, quiet=w))) for (e, n, w), _ in want]
+    check(got == [w for _, w in want] and flow["needs"] == "[timer, quiet]"
+          and flow["concurrency"] == {"group": "card-sync", "cancel-in-progress": "false"},
+          f"sync: a push's after its window, the schedule's unless a timer runs, a dispatch's at once; one group ({got})")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        fake = os.path.join(tmp, "bin")
+        os.makedirs(os.path.join(tmp, "runner"))
+        write(os.path.join(fake, "gh"), "#!/bin/bash\n"      # gh's --jq on canned JSON: the run list, a run's jobs
+              'q=""; prev=""; for a in "$@"; do [ "$prev" = --jq ] && q=$a; prev=$a; done\n'
+              '[ -n "$FAKE_FAIL" ] && exit 1\n'
+              'if [ "$1" = run ]; then jq -r "$q" <<< "$FAKE_RUNS"; exit; fi\n'
+              'id=$(sed -n "s|.*/runs/\\([0-9]*\\)/jobs|\\1|p" <<< "$2"); jq -r "$q" "$FAKE_JOBS/$id.json"\n')
+        write(os.path.join(fake, "sleep"), f'#!/bin/bash\necho "$1" > "{os.path.join(tmp, "slept")}"\n')
+        for name in ("gh", "sleep"):
+            os.chmod(os.path.join(fake, name), 0o755)
+        jobs = os.path.join(tmp, "jobs")
+        stamp = lambda minutes: time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() - minutes * 60))  # noqa: E731
+        run = lambda rid, status, minutes=5: {"databaseId": rid, "status": status, "createdAt": stamp(minutes)}  # noqa: E731
+        write(os.path.join(jobs, "41.json"), json.dumps({"jobs": [{"name": "timer", "status": "completed"},
+                                                                  {"name": "Quiet window", "status": "in_progress"}]}))
+        write(os.path.join(jobs, "42.json"), json.dumps({"jobs": [{"name": "Quiet window", "status": "completed"},
+                                                                  {"name": "sync", "status": "in_progress"}]}))
+        cases = [([], "", "no other push run"), ([run(40, "waiting")], "40", "a run waiting on the environment"),
+                 ([run(41, "in_progress")], "41", "a run sleeping out its window (no wait timer)"),
+                 ([run(42, "in_progress")], "", "a run past its window (syncing)"),
+                 ([run(99, "waiting")], "", "this run itself"), ([run(43, "waiting", 50)], "", "a timer stuck 50 minutes"),
+                 ([run(42, "in_progress"), run(40, "waiting")], "40", "the second of two runs")]
+        for runs, want, what in cases:
+            env = {"PATH": f"{fake}:{os.environ['PATH']}", "FAKE_RUNS": json.dumps(runs), "FAKE_JOBS": jobs, "GITHUB_RUN_ID": "99",
+                   "GITHUB_EVENT_NAME": "push", "GITHUB_SERVER_URL": "https://github.com", "GH_TOKEN": "x",
+                   "QUIET": "Quiet window"}
+            code, text, out = run_step(timer, "other", tmp, env, tmp)
+            check(code == 0 and out.get("run", "") == want, f"Another timer: {what} -> {out.get('run') or 'none'}"
+                  + ("" if code == 0 else f"\n{text}"))
+        code, text, out = run_step(timer, "other", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
+        check(code == 0 and "run" not in out and "were not read" in text, "Another timer: runs not read -> none (this run goes on)")
+
+        now = int(time.time())
+        for pushed, low, high, what in ((str(now - 31 * 60), None, None, "past the window (the timer held it)"),
+                                        (str(now - 10 * 60), 1190, 1200, "10 minutes ago (no timer)"),
+                                        (time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(now - 20 * 60)), 590, 600, "an ISO time"),
+                                        ("", 1790, 1800, "no push time")):
+            if os.path.exists(os.path.join(tmp, "slept")):
+                os.remove(os.path.join(tmp, "slept"))
+            code, text, _ = run_step(quiet, "Quiet", tmp, {"PUSHED_AT": pushed, "PATH": f"{fake}:{os.environ['PATH']}"}, tmp)
+            slept = int(open(os.path.join(tmp, "slept")).read()) if os.path.exists(os.path.join(tmp, "slept")) else None
+            check(code == 0 and (slept is None if low is None else low <= slept <= high),
+                  f"quiet: pushed {what} -> sleeps {slept}" + ("" if code == 0 else f"\n{text}"))
+
+
 def gate_cases(flow: dict) -> None:
     with tempfile.TemporaryDirectory() as tmp:
         work, bare = origin(tmp)
@@ -461,6 +557,7 @@ def bake_cases(flow: dict) -> None:
         os.makedirs(os.path.join(ws, "bot"))
         main = git(ws, "rev-parse", "HEAD")
         for event, retry, want, card in (("schedule", "", True, "all"), ("workflow_dispatch", "schedule", True, "all"),
+                                         ("push", "", True, ""), ("workflow_dispatch", "push", True, "all"),
                                          ("workflow_dispatch", "workflow_dispatch", False, "all"), ("workflow_dispatch", "", False, "all"),
                                          ("workflow_dispatch", "", True, "pending")):
             code, text, out = run_step(flow, "bake", os.path.join(ws, "bot"), {"GITHUB_WORKSPACE": ws, "MAIN": main, "CARD": card,
@@ -591,8 +688,8 @@ def main_cases(flow: dict) -> None:
         moved(bare)
         env["FAKE_WAITING"] = "1"
         code, text, out = run_step(flow, "main", ws, env, root)
-        check(code == 0 and out.get("rejected") == "true" and not gh_args(root) and "is pending" in text,
-              "main moved with a run pending: no retry (it would replace the pending run)")
+        check(code == 0 and out.get("rejected") == "true" and not gh_args(root) and "does the work" in text,
+              "main moved with another run unfinished (a push's waiting, a pending one): no retry")
 
         ws, bare, main, env, root = setup(tmp, "retry-moved")
         moved(bare)
@@ -614,6 +711,7 @@ def main():
             sys.exit(f"needs {tool}")
     flow = load()
     plans(flow)
+    timer_cases(flow)
     gate_cases(flow)
     fonts_cases(flow)
     bake_cases(flow)

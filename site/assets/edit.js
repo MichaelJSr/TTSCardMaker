@@ -1252,7 +1252,7 @@ export function createEditor(app) {
         <div class="actions"><button type="button" class="ghost" data-action="edit-discard-deck" data-key="${esc(key)}">Discard</button></div></div>`; }).join("")}
       ${count() ? `<label class="muted" for="edit-msg">Commit message (optional)</label><input id="edit-msg" class="wide" placeholder="Website edits">
         <div class="actions"><button type="button" class="primary" data-action="edit-publish">Publish ${count()} change${count() > 1 ? "s" : ""}</button></div>
-        <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch || "main")}). The site rebuilds in a few minutes; the next card sync (30 minutes after the last push) brings it to the PSDs and the bot.</p>` : `<p class="muted">Nothing to publish.</p>`}
+        <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch || "main")}). The site rebuilds in a few minutes; the card sync brings it to the PSDs and the bot within about 30 minutes.</p>` : `<p class="muted">Nothing to publish.</p>`}
       <p class="muted" id="edit-status" aria-live="polite">${esc(note)}</p>`;
   }
   let forgot = false;                              // Forgot password: after the token sign-in, set a new one
@@ -1415,7 +1415,7 @@ export function createEditor(app) {
       el.disabled = true; status.textContent = "Publishing…";
       try {
         const sha = await publish(msg);
-        app.showDialog(`<h3>Published</h3><p>${sha ? `Commit <a href="https://github.com/${esc(S.data.repo)}/commit/${sha}" target="_blank" rel="noopener">${sha.slice(0, 7)}</a>.` : "Nothing changed on GitHub."} The website rebuilds in a few minutes; the next card sync (30 minutes after the last push) brings it to the PSDs and the bot.</p>`);
+        app.showDialog(`<h3>Published</h3><p>${sha ? `Commit <a href="https://github.com/${esc(S.data.repo)}/commit/${sha}" target="_blank" rel="noopener">${sha.slice(0, 7)}</a>.` : "Nothing changed on GitHub."} The website rebuilds in a few minutes; the card sync brings it to the PSDs and the bot within about 30 minutes.</p>`);
         app.rerender();
       } catch (err) { el.disabled = false; status.textContent = `Not published: ${err.message}`; }
     },

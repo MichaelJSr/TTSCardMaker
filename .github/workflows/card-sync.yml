@@ -3,16 +3,35 @@
 # at most one commit on main (M: the bake and the save) and one on `data`. Every stage is the bot's code, checked out from
 # bobberlington/AutoCroissant at the builder ref: card_bake --local, card_data, tts_save --names, changelog post.
 # Since the cutover (step 8, 2026-10-24) it alone bakes edits and writes the save on main (card-edits.yml and tts-save.yml
-# are gone): runs are live (dry_run off by default), MAIN_COMMIT and POSTS on. The bot's /update_stats (every 30 minutes)
-# dispatches a run once the card repo has been quiet for 30 minutes; the cron is a fallback (GitHub runs it hours late).
+# are gone): runs are live (dry_run off by default), MAIN_COMMIT and POSTS on. The first push to main touching a card input
+# starts a 30-minute timer (owner, 2026-10-24: a fixed window); pushes while it runs start none (their runs end at once),
+# and when it is up the run syncs main's head, everything pushed by then included: a sync comes 30 minutes after the first
+# push of a burst, with or without the bot. The bot dispatches only its admins' re-parses (/update_stats force_update or
+# cards). The cron is the fallback for the work no push starts: website edits the bake put off (recent, over the cap), a
+# re-parse in progress, unposted events (GitHub runs it late; it waits for a running timer like a push).
 # Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) installed from the card workflows' wheel cache.
 name: Card sync
 run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Card sync (dry run)' || inputs.retry && 'Card sync (retry)' || 'Card sync' }}
 
 on:
+  # The gate's card inputs and the hand-edited TTS save. GITHUB_TOKEN pushes (Card sync's M, the guards' commits) start no
+  # run; the bot's own (Discord edits, /bake_cards, /update_tts_save) do: card changes that start nothing back.
+  push:
+    branches: [main]
+    paths:
+      - "**.[pP][sS][dD]"
+      - "**.[pP][nN][gG]"
+      - "Types/**"
+      - "MDW/Fonts/*"
+      - "MDW/Fonts/stoogedings-src/stoogedings.json"
+      - "site/Card Edits.json"
+      - "site/Card Authors.txt"
+      - "site/Card Creation Dates.json"
+      - "TTS/decks.json"
+      - "TTS/Impossibility Simulator.json"
   schedule:
-    - cron: "0,30 * * * *"   # fallback; most runs end at the gate; with no data branch yet, a run seeds it (the latest PICKLE)
+    - cron: "0,30 * * * *"   # fallback; most runs end at the gate or for a timer; with no data branch yet, a run seeds it
   workflow_dispatch:
     inputs:
       dry_run:
@@ -60,17 +79,98 @@ permissions:
   contents: write     # push M to main and the data commit to data
   actions: write      # gh workflow run site.yml (a GITHUB_TOKEN push triggers no workflow); gh run list
 
-concurrency:
-  group: card-sync
-  cancel-in-progress: false   # a running sync is never cut off; a newer pending run replaces an older one (a retry
-                              # is dispatched only when none is pending)
-
 env:
   POSTS: "on"         # the Discord posts (off: discord.json goes to the artifact only)
   MAIN_COMMIT: "on"   # the bake and the main commit M (off: only a dry run bakes, nothing committed; the rollback)
 
 jobs:
+  # The 30-minute timer (owner, 2026-10-24: a fixed window, not restarted by later pushes). A push's run and the
+  # schedule's first look for a push run still in its timer (waiting, or its Quiet window job unfinished; one pushed over
+  # 40 minutes ago is stuck and holds nothing). One there syncs main's head when its 30 minutes are up, this push's included,
+  # so this run ends at once. Else a push's run waits (Quiet window) and the schedule's syncs now. Runs that cannot be
+  # read count as none (this run goes on); two near-simultaneous pushes may both wait: the second sync ends at the gate.
+  # Dispatches (the bot's admins, the guards) and retries skip both jobs. No job here is in the card-sync group, so a
+  # sync running never holds a timer.
+  timer:
+    if: github.event_name == 'schedule' || (github.event_name == 'push' && github.actor != 'github-actions[bot]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash
+    permissions:
+      actions: read
+    outputs:
+      other: ${{ steps.other.outputs.run }}
+    steps:
+      - name: Another timer
+        id: other
+        env:
+          GH_TOKEN: ${{ github.token }}
+          QUIET: Quiet window      # the quiet job's name
+        run: |
+          if ! runs=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --event push --limit 20 --json databaseId,status,createdAt \
+              --jq ".[] | select(.status != \"completed\" and .databaseId != ${GITHUB_RUN_ID:-0}
+                and (.createdAt | fromdate) > now - 40 * 60) | \"\\(.databaseId) \\(.status)\""); then
+            echo "::warning::the push runs were not read: this run goes on"
+            runs=""
+          fi
+          while read -r id status; do
+            [ -n "$id" ] || continue
+            n=1                                  # a run waiting is in its timer (the environment's only wait here)
+            if [ "$status" != waiting ]; then
+              n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" \
+                --jq "[.jobs[] | select(.name == \"$QUIET\" and .status != \"completed\")] | length") || n=0
+            fi
+            if [ "${n:-0}" -gt 0 ]; then
+              echo "run=$id" >> "$GITHUB_OUTPUT"
+              echo "Push run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id is in its 30-minute timer: it syncs main's head when its time is up (this run's work too)." \
+                | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          done <<< "$runs"
+          echo "No push run in its timer: $([ "$GITHUB_EVENT_NAME" = push ] && echo "this push starts one" || echo "the sync goes on")." \
+            | tee -a "$GITHUB_STEP_SUMMARY"
+
+  # A push's first attempt waits in the environment card-sync-quiet (its 30-minute wait timer, the owner's setting; no
+  # runner is held). Without the timer, and on a re-run, Quiet sleeps out what is left of the window from the push
+  # (pushed_at), so a re-run does not wait again. Then the sync, on main's head as it is then.
+  quiet:
+    name: Quiet window
+    needs: timer
+    if: ${{ !cancelled() && github.event_name == 'push' && needs.timer.result != 'skipped' && !needs.timer.outputs.other }}
+    environment: ${{ github.run_attempt == '1' && 'card-sync-quiet' || '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35     # the whole window without the timer
+    defaults:
+      run:
+        shell: bash
+    permissions: {}
+    steps:
+      - name: Quiet
+        env:
+          PUSHED_AT: ${{ github.event.repository.pushed_at }}
+        run: |
+          now=$(date +%s)
+          from=$now                              # a push event's pushed_at is Unix seconds; an ISO time is taken too
+          if [[ "$PUSHED_AT" =~ ^[0-9]+$ ]]; then from=$PUSHED_AT
+          elif [[ "$PUSHED_AT" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$ ]]; then from=$(jq -nr --arg t "$PUSHED_AT" '$t | fromdate')
+          else echo "::warning::no push time: the window counts from now"; fi
+          left=$((from + 30 * 60 - now))
+          if [ "$left" -gt 0 ]; then
+            echo "Quiet window: $((left / 60)) min left (no wait timer, or a re-run)."
+            sleep "$left"
+          fi
+
+  # A push's after its quiet window (a failed one goes on: the gate decides); the schedule's when no timer runs; a
+  # dispatch's at once. One sync at a time; a newer pending one replaces an older one (a retry is dispatched only when no
+  # other run is unfinished).
   sync:
+    needs: [timer, quiet]
+    if: ${{ !cancelled() && (github.event_name == 'push' && needs.quiet.result != 'skipped' || github.event_name != 'push' && !needs.timer.outputs.other) }}
+    concurrency:
+      group: card-sync
+      cancel-in-progress: false   # a running sync is never cut off
     runs-on: ubuntu-latest
     timeout-minutes: 90     # Commit main pushes M only before minute 60: the 30 left cover the caps of it and every later step
     defaults:
@@ -337,7 +437,8 @@ jobs:
 
       # Stage 1: the bake makes one local commit B on main's head in this checkout (nothing pushed); a dry run commits
       # nothing, and with MAIN_COMMIT off only a dry run bakes. A card's error fails the step but keeps B for the others (the
-      # bake's per-card rule); no B means the run goes on from main's head. bake=pending (the bot's runs): the schedule's.
+      # bake's per-card rule); no B means the run goes on from main's head. --pending: a push's run, the schedule's, their
+      # retries and bake=pending.
       - name: Bake
         id: bake
         if: env.GO == 'true' && steps.venv.outcome == 'success' && inputs.bake != 'none' && (env.MAIN_COMMIT == 'on' || env.DRY_RUN == 'true')
@@ -351,7 +452,7 @@ jobs:
           RETRY_OF: ${{ inputs.retry }}
         run: |
           args=(--repo "$GITHUB_REPOSITORY" --head "$MAIN" --local "$GITHUB_WORKSPACE")
-          if [ "$GITHUB_EVENT_NAME" = schedule ] || [ "$RETRY_OF" = schedule ] || [ "$CARD" = pending ]; then
+          if [[ "$GITHUB_EVENT_NAME" =~ ^(schedule|push)$ || "$RETRY_OF" =~ ^(schedule|push)$ || "$CARD" = pending ]]; then
             args+=(--pending)                   # else a dispatch re-checks every card
           fi
           if [ -n "$CARD" ] && [ "$CARD" != all ] && [ "$CARD" != pending ]; then args+=(--card "$CARD"); fi
@@ -443,9 +544,9 @@ jobs:
       # cover this step's cap and every later one's, and the next run does the work. After a push, db/ names M: its
       # references to B become M, or (a save-only M, when the build wrote db/) the manifest's card_commit and main_commit.
       # Main moved meanwhile: M, the posts and the data are all dropped (card_commit and pending.repin stay, so the gate
-      # finds the work again), and the run starts over once from the new head, unless a run is pending (it would be
-      # replaced). The retry is marked by inputs.retry and starts no other; it never carries full or allow_archive, which
-      # approved the old head only.
+      # finds the work again), and the run starts over once from the new head, unless another run is unfinished (it
+      # does the work: a push's in its timer, a pending one). The retry is marked by inputs.retry and starts no other; it
+      # never carries full or allow_archive, which approved the old head only.
       - name: Commit main
         id: main
         if: ${{ !cancelled() && env.GO == 'true' && env.DRY_RUN != 'true' && env.MAIN_COMMIT == 'on' && (steps.build.outcome == 'success' || steps.bake.outputs.baked != 'true') && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true') }}
@@ -508,10 +609,10 @@ jobs:
             echo "rejected=true" >> "$GITHUB_OUTPUT"
             echo "::warning::main moved during the run (now ${now:0:8}): M, the posts and the data are dropped"
             if [ "$RETRY" = true ]; then echo "This run was the retry: the next run with work does it."; exit 0; fi
-            waiting=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --limit 20 --json status \
-              --jq 'map(select(.status == "queued" or .status == "pending" or .status == "waiting" or .status == "requested")) | length') \
+            waiting=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --limit 20 --json databaseId,status,displayTitle \
+              --jq "map(select(.status != \"completed\" and .databaseId != ${GITHUB_RUN_ID:-0} and .displayTitle != \"Card sync (dry run)\")) | length") \
               || waiting=0
-            if [ "${waiting:-0}" -gt 0 ]; then echo "A Card sync run is pending: it does the work (a new run would replace it)."; exit 0; fi
+            if [ "${waiting:-0}" -gt 0 ]; then echo "Another Card sync run is unfinished (a push's in its timer, or pending): it does the work."; exit 0; fi
             again=(-f dry_run=false -f force=true -f "retry=$GITHUB_EVENT_NAME" -f "builder_ref=$(git -C bot rev-parse HEAD)"
                    -f "bake=$(jq -r '.bake // "all"' <<< "$INPUTS")")
             while IFS= read -r kv; do again+=(-f "$kv"); done < <(jq -r '(. // {}) | to_entries[]
@@ -643,9 +744,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY"
 
-      # Stage 9: a failed live run (scheduled, a retry, the bot's or the owner's dispatch) tells Discord once per failing
-      # streak of live runs, with POSTS on. The URL is never printed; a failed
-      # call only warns. Dry runs neither alert nor count (their run names say so).
+      # Stage 9: a failed live run (a push's, scheduled, a retry, a dispatch) tells Discord once per failing streak of live
+      # runs, with POSTS on. The URL is never printed; a failed call only warns. Dry runs neither alert nor count (their
+      # run names say so).
       - name: Tell Discord
         if: failure() && env.POSTS == 'on' && env.DRY_RUN != 'true'
         timeout-minutes: 2

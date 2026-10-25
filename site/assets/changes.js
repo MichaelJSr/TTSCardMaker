@@ -218,7 +218,7 @@ function sourceHtml(C) {
   const commit = s.card_commit ? ` from <a href="https://github.com/${esc(C.repo)}/commit/${esc(s.card_commit)}" target="_blank" rel="noopener">${esc(C.repo.split("/").pop())}@${short(s.card_commit)}</a>` : "";
   return `<p class="muted">Card data built ${esc(at)} (Pacific)${commit}${s.run ? ` (<a href="${esc(s.run)}" target="_blank" rel="noopener">run</a>)` : ""}.</p>`;
 }
-const NOT_YET = "Once the card sync is running (every 30 minutes), it will record each card change here and post it in Discord, one post per push. Until then this tab has no events.";
+const NOT_YET = "Once the card sync is running (within 30 minutes of a card push), it will record each card change here and post it in Discord, one post per push. Until then this tab has no events.";
 
 // ---- the tabs ---------------------------------------------------------------------------------------------------
 /** The Changelog tab: the events of the last C.days days by day and push, a kind filter (?kind=) */
