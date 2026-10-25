@@ -645,12 +645,48 @@ def classify(path):
 
 
 # ---- thumbnails and icons ----------------------------------------------------------------------------
-def image_bytes(path):
+_card_raw = None
+
+
+def card_raw():
+    """The card repo's files at the build's commit in Actions (raw main is a CDN copy up to 5 minutes old); main elsewhere
+    (a local commit may not be pushed)."""
+    global _card_raw
+    if _card_raw is None:
+        _card_raw = RAW
+        if os.environ.get("GITHUB_ACTIONS") != "true":
+            return _card_raw
+        try:
+            sha = subprocess.run(["git", "-C", REPO, "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+            if re.fullmatch(r"[0-9a-f]{40}", sha):
+                _card_raw = f"https://raw.githubusercontent.com/{CARD_REPO}/{sha}/"
+        except (OSError, subprocess.CalledProcessError):
+            pass
+    return _card_raw
+
+
+def blob_sha(data):
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def image_bytes(path, sha=None):
+    """The file from the checkout, else downloaded at the build's commit (then main) and checked against its blob sha,
+    so a picture named by a blob is that blob's picture."""
     local = os.path.join(REPO, path)
     if os.path.isfile(local):
         with open(local, "rb") as fh:
             return fh.read()
-    return fetch(RAW + quote(path))
+    err = None
+    for base in dict.fromkeys((card_raw(), RAW)):
+        try:
+            data = fetch(base + quote(path))
+        except Exception as e:
+            err = e
+            continue
+        if sha is None or blob_sha(data) == sha:
+            return data
+        err = ValueError(f"{base}{path} is not blob {sha[:12]}")
+    raise err
 
 
 def image_names(sha):
@@ -667,7 +703,7 @@ def make_images(path, sha, known=None):
     cached = {w: os.path.join(CACHE, "img", n) for w, n in names.items()}
     if known and all(os.path.exists(f) for f in cached.values()):
         return (sha[:16], *known)
-    src = Image.open(io.BytesIO(image_bytes(path)))
+    src = Image.open(io.BytesIO(image_bytes(path, sha)))
     src = src.convert("RGBA" if src.mode in ("RGBA", "LA", "P") else "RGB")
     sized = {}
     for w, quality in IMAGE_SIZES.items():
@@ -935,7 +971,7 @@ def build_icons(tree):
         cached = os.path.join(cache_dir, f"{tree[path][:16]}-{ICON_VERSION}.webp")   # by blob, like the card images
         used.add(os.path.basename(cached))
         if not os.path.exists(cached):
-            im = Image.open(io.BytesIO(image_bytes(path))).convert("RGBA")
+            im = Image.open(io.BytesIO(image_bytes(path, tree[path]))).convert("RGBA")
             box = im.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox()
             if box:
                 im = im.crop(box)
@@ -986,7 +1022,7 @@ def build_icons(tree):
         path, tint, files, out_name, entry = job
         if not all(os.path.exists(f) for f in files.values()):
             try:
-                art = variant_art(fb, Image.open(io.BytesIO(image_bytes(path))), tint, reach)
+                art = variant_art(fb, Image.open(io.BytesIO(image_bytes(path, tree[path]))), tint, reach)
             except Exception as e:                            # never a failed build: this icon's variants show plain
                 warn(f"no variant images for {path}: {type(e).__name__}: {e}")
                 return

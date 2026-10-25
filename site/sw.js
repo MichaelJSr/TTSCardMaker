@@ -37,7 +37,13 @@ async function picture(event, url) {
   return res;
 }
 
-self.addEventListener("install", () => self.skipWaiting());
+self.addEventListener("install", event => {
+  // everything but thumbs/ and icons/ (pages, data, scripts) straight to the network without starting this worker:
+  // a stopped worker otherwise starts for each page load (Chrome's static routing; elsewhere the fetch handler skips them)
+  if (event.addRoutes && self.URLPattern) event.waitUntil(event.addRoutes({ condition: { not: { or: ["thumbs/*", "icons/*"].map(p =>
+    ({ urlPattern: new URLPattern({ pathname: SCOPE + p }) })) } }, source: "network" }).catch(() => {}));
+  self.skipWaiting();
+});
 self.addEventListener("activate", event => event.waitUntil((async () => {
   for (const name of await caches.keys()) if (name.startsWith(PREFIX) && name !== CACHE) await caches.delete(name);
   if (IN_USE.size) {

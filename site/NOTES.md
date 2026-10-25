@@ -980,15 +980,17 @@ relies on:
   images not made by then are left and the build fails. `images.json` is written in a `finally` around the image pool,
   and site.yml's last step saves `site/.cache` under `card-images-v2-...-partial-<run>` whenever the job failed after the
   build step ran (out of time, too many failed downloads, an error, the step's 38-minute timeout, a later step:
-  actions/cache saves only after a passing job), which the next run's restore-keys pick up. Later runs encode only new
+  actions/cache saves only after a passing job) and the cache's file names changed (`cache-before` / `cache-after`: a
+  build that stopped before the images, e.g. no bot data, adds no ~160 MB copy), which the next run's restore-keys pick up. Later runs encode only new
   blobs. The thumbs carry no ICC profile (`icc_profile=None`: Pillow's AVIF writer copies the PNG's, about 3 KB, +34% at
   240 px; WebP never had one, so colours are as before).
 - Deploy gate (restored): the `changed` step compares `dist/build.txt` with the live `build.txt`; equal: no upload, no
   deploy job; unreadable: deploy. `dist_digest` hashes every file's bytes (thumbs too, about 0.4 s) and nothing else: an
   edit to build_site.py alone builds the same digest (it used to hash the script, which deployed byte-identical sites). The Changes page says "Site updated <time> (Pacific), the last build that changed it":
   `generated` is the time of the deployed build, which is now the last build that changed the site. edit.js
-  `sentRecord` still clears on `generated > sent.at`: a published batch always changes the site (Card Edits.json's
-  commit is in the changelog), so its build deploys.
+  `sentRecord` still clears on `generated > sent.at`: a published batch that made a commit changes the site (the commit
+  is in the changelog), so its build deploys. A batch GitHub already had (commitFiles returns null: a ratings, admins
+  or people file equal to the batch) writes no sent record, so nothing waits for a deploy the gate would skip.
 - Icon file names carry a stamp: `icons/<name>.<stamp>.webp` and `icons/<name>.<stamp>.<variant>.webp` (10 hex digits:
   sha256 of the blob, `ICON_VERSION`, `VARIANT_VERSION` and the variant key; text.js `variantFile` inserts the variant).
   Not a `?v=` query: Pages ignores it, so a tab left open across a deploy got the new file for its old stamp and its

@@ -1202,8 +1202,8 @@ export function createEditor(app) {
       ...Object.entries(decksOut).map(([k, f]) => (f ? (f.private ? `private deck ${k}` : `deck ${f.name || k}`) : `deck ${k} removed`))];   // a private deck's name stays out of the public commit message
     const sha = await commitFiles(edits, message || (what.length > 3 ? `Website edits: ${what.length} changes` : `Website edit: ${what.join(", ")}`));
     const sent = sentRecord() || {};
-    localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
-      decks: { ...sentDecks(), ...decksOut }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));
+    if (sha) localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
+      decks: { ...sentDecks(), ...decksOut }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));   // no commit: no rebuild to wait for (the site already has it)
     if (stage.admins) S.data.admins = stage.admins;
     cardDrafts.dropAll(ops.map(o => o.id));              // published: their drafts are done with
     stage = emptyStage();
@@ -1415,7 +1415,8 @@ export function createEditor(app) {
       el.disabled = true; status.textContent = "Publishing…";
       try {
         const sha = await publish(msg);
-        app.showDialog(`<h3>Published</h3><p>${sha ? `Commit <a href="https://github.com/${esc(S.data.repo)}/commit/${sha}" target="_blank" rel="noopener">${sha.slice(0, 7)}</a>.` : "Nothing changed on GitHub."} The website rebuilds in a few minutes; the bot reads it on /update_stats.</p>`);
+        app.showDialog((sha ? `<h3>Published</h3><p>Commit <a href="https://github.com/${esc(S.data.repo)}/commit/${sha}" target="_blank" rel="noopener">${sha.slice(0, 7)}</a>. The website rebuilds in a few minutes; the bot reads it on /update_stats.</p>`
+          : "<h3>Nothing to publish</h3><p>GitHub already has these edits: nothing changed.</p>"));
         app.rerender();
       } catch (err) { el.disabled = false; status.textContent = `Not published: ${err.message}`; }
     },

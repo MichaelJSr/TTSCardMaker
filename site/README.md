@@ -176,8 +176,8 @@ the build needs full history for them (CI fetches it; a shallow local clone gets
 batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the file keeps one batch per card;
 `git fetch --unshallow --filter=blob:none` fixes that).
 
-Each card PNG becomes three AVIF images (240 and 360 px for the grid, 720 px for the card view; quality 50, 4:4:4,
-speed 6; AVIF only, so a browser without AVIF, Safari before 16, shows no card pictures), cached by git blob
+Each card PNG becomes three AVIF images (240 and 360 px for the grid, 720 px for the card view; quality 60/55/50
+at 240/360/720, `IMAGE_SIZES` and NOTES §28; 4:4:4, speed 6; AVIF only, so a browser without AVIF, Safari before 16, shows no card pictures), cached by git blob
 hash in `site/.cache/img` (a full re-encode is about 11 CPU-minutes on a Mac, more on the runner: `IMAGE_BUDGET` in
 `site.yml` splits it over runs when it doesn't fit one); each image's size and accent color are kept by blob in `site/.cache/images.json` and the
 icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon settings change; the token variants' pictures

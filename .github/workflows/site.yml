@@ -90,6 +90,10 @@ jobs:
           key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}
           restore-keys: card-images-v2-
 
+      # The restored cache's file names, for the failure save at the end: a build that failed before making any image saves nothing.
+      - id: cache-before
+        run: echo "names=$(ls -R site/.cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
       # Deck preview montages: their own cache in site/.og-cache. The newest one is restored, and it is saved after the build
       # whenever the montages in use (each named by a hash of its pictured images) differ from the restored ones, so a montage
       # that changes for any reason (a deck, a card's stars or name in the bot's data or Card Edits.json, an image) is saved
@@ -168,8 +172,13 @@ jobs:
 
       # actions/cache saves only after a job that passed: a job that failed once the build ran (out of image time, failed
       # downloads, an error, the step's timeout, or a step after it) saves its images here, under a key of its own that
-      # restore-keys finds, so the next run (the 6-hourly one, or run it by hand) carries on from them. Keep it last.
-      - if: failure() && (steps.build.outcome == 'failure' || steps.build.outcome == 'success')
+      # restore-keys finds, so the next run (the 6-hourly one, or run it by hand) carries on from them. Only when the cache
+      # changed: a build that stopped before the images (no bot data, a truncated site) adds no copy. Keep these last.
+      - id: cache-after
+        if: failure() && (steps.build.outcome == 'failure' || steps.build.outcome == 'success')
+        run: echo "names=$(ls -R site/.cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      - if: failure() && steps.cache-after.outputs.names != '' && steps.cache-after.outputs.names != steps.cache-before.outputs.names
         uses: actions/cache/save@v6
         with:
           path: site/.cache
