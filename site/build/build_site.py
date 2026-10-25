@@ -2206,8 +2206,11 @@ ARCHIVED_PERSON = ("card", "title", "tag", "renamed_to", "renamedId", "moved_to"
 
 
 def archive_tag(tag):
-    """The bot's archived tag -> renamed (renamed_to), retired (moved_to: its PSD moved into MDW) or deleted."""
-    return "renamed" if tag.get("renamed_to") else "retired" if tag.get("moved_to") else "deleted"
+    """The bot's archived tag -> renamed (renamed_to), unfinished (moved_to MDW/Unfinished), retired (moved_to elsewhere
+    in MDW: The Morgue) or deleted."""
+    moved = tag.get("moved_to") or ""
+    return "renamed" if tag.get("renamed_to") else "unfinished" if moved.startswith("MDW/Unfinished/") \
+        else "retired" if moved else "deleted"
 
 
 SERIES_ALIASES = {"rotmg": "Realm of the Mad God", "isaac": "The Binding of Isaac", "crypt": "Crypt Custodian", "dst": "Don't Starve"}   # old folder names

@@ -91,7 +91,7 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   sync's events of the last 180 days, one block per push as the Discord posts (new cards, changes with their old values
   and an ability word diff, new art, moves, renames, archived and restored cards, database edits, parser re-reads), by day
   in Pacific time, filterable by kind. **Archive**: the cards whose PSD left the card folders, each tagged Renamed,
-Retired (moved to MDW) or Deleted, with chips to filter by tag (`?tag=retired`). **Database edits**: the card sync's edited and authors
+Retired (moved to MDW/The Morgue), Unfinished (moved to MDW/Unfinished) or Deleted, with chips to filter by tag (`?tag=retired`). **Database edits**: the card sync's edited and authors
   events, and every commit that changed a Card Edits.json entry or a Card Authors.txt line (website, Discord or a commit
   by hand) with each field's old and new value. The events need the card sync's data (`CARD_DATA_DIR`); until then those
   parts say so. **Website edits**: the cards an edit on the website or in Discord changes now, with the fields, who and

@@ -222,7 +222,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   do; app.js, stats.js and the person pages use them; contributions' months are Pacific too.
 - Archived cards: build_site passes the tag's `moved_to` (a PSD moved into MDW, retired) to changelog.json's archived
   rows, and `EVENT_KEYS` passes it in events; since round 3 each row and event shows its tag (Renamed, Retired,
-  Deleted) on the Changes page's Archive tab (§26).
+  Unfinished, Deleted) on the Changes page's Archive tab (§26).
 - `load_card_data(folder)` (CARD_DATA_DIR): db/'s stats.json, old_stats.json (schema 1, AutoCroissant card_db's records)
   and psd_details.json, read into the pickles' stand-ins (stats and creatures as CardStats), so the rest of the build is
   unchanged; no readable stats.json stops the build as a missing stats.pkl does. site.yml: `CARD_DATA` (off until the
@@ -885,7 +885,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   `created`). history.js gained `dayOf`, `yearOf` (Pacific, one cached formatter). app.js fills `#stats-ratings` and
   `#stats-history` with Balance once analytics.json loads, and with `A = null` when it fails.
 - Build: `archived_cards(old_stats, id_of, stats, people, credited)` adds `tag` (`archive_tag`: renamed_to renamed,
-  moved_to retired, else deleted; `ARCHIVE_TAGS`), `author` (a renamed card's: Card Authors.txt by the live card it
+  moved_to MDW/Unfinished unfinished (owner, 2026-10-24), other moved_to retired, else deleted; `ARCHIVE_TAGS`), `author` (a renamed card's: Card Authors.txt by the live card it
   became > by the archived name, or by its title when no live card has that title: 'Pizza (item)' is not the live
   Pizza's > the live card's author (`author_of`) > the tag's `author` (backfill) > the last version's, through
   `person`), `created` (the last version's `created.date`, else the Pacific day of its oldest
