@@ -141,8 +141,7 @@ CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first 
 RATINGS_PATH = "site/Card Ratings.json"         # dated 1-10 ratings (AutoCroissant tts_ratings, the website's Rate it; card_edits.CardRatings)
 RATING_SCALES = ("favorability", "power")
 RATING_SOURCES = ("TTS session", "website")
-BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (old Discord edits, until 2026-10-25)
-CREDIT = "_credit"                            # {field: {"_by", "_at"}}: a _bot field's Discord editor (old entries)
+BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (the 2026-10-22 migration's)
 ADMINS_PATH = "site/Website Admins.txt"
 PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
 DECKS_DIR = "site/decks"                      # <owner>/<slug>.json per hand published from the deck builder
@@ -1084,9 +1083,6 @@ def parse_edits():
             meta[BOT_FIELDS] = bot
         elif bot is not None:
             log(f"warning: {EDITS_PATH}: {name}: {BOT_FIELDS} = {bot!r} isn't a list of fields, skipped")
-        credit = parse_credit(name, fields.get(CREDIT), meta.get(BOT_FIELDS, ()))
-        if credit:
-            meta[CREDIT] = credit
         if "_psd" in fields:                            # the edit pipeline's verdict on the PSD fields
             if valid_verdict(fields["_psd"]):
                 meta["_psd"] = fields["_psd"]
@@ -1094,22 +1090,6 @@ def parse_edits():
                 log(f"warning: {EDITS_PATH}: {name}: _psd = {fields['_psd']!r} isn't a pipeline verdict, skipped")
         edits[card_key(name)] = (good, meta)
     return edits
-
-
-def parse_credit(name, credit, bot):
-    """An entry's _credit -> {field: {"_by", "_at"}} for its _bot fields; another shape is a warning, a field out of _bot ignored."""
-    if credit is None:
-        return {}
-    if not isinstance(credit, dict):
-        warn(f"{EDITS_PATH}: {name}: {CREDIT} = {credit!r} isn't an object, skipped")
-        return {}
-    out = {}
-    for field, stamp in credit.items():
-        if not (isinstance(stamp, dict) and isinstance(stamp.get("_by"), str) and stamp["_by"] and isinstance(stamp.get("_at"), str)):
-            warn(f"{EDITS_PATH}: {name}: {CREDIT}.{field} = {stamp!r} isn't {{\"_by\", \"_at\"}}, skipped")
-        elif field in bot:
-            out[field] = {"_by": stamp["_by"], "_at": stamp["_at"]}
-    return out
 
 
 def parse_created():
@@ -1350,11 +1330,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     if meta.get("_by"):
         entry["editBy"] = meta["_by"]
     bot = sorted(f for f in fields if f in meta.get(BOT_FIELDS, ()))
-    if bot:                                       # not the editor's: credited to nobody, or to their _credit editor
+    if bot:                                       # not the editor's: credited to nobody
         entry["botEdited"] = bot
-    by_field = {f: [meta[CREDIT][f]["_by"], meta[CREDIT][f]["_at"]] for f in bot if f in meta.get(CREDIT, {})}
-    if by_field:
-        entry["fieldBy"] = by_field
     if meta.get("_at"):
         entry["editAt"] = meta["_at"]
     if fields.get("problems_ok"):
@@ -1773,7 +1750,7 @@ NOREPLY_RE = re.compile(r"^(?:\d+\+)?([^@+]+)@users\.noreply\.github\.com$")   #
 OLD_CARD_FOLDERS = ("Auxillary/",)            # folder spellings before a rename: the history has them, the tree doesn't
 RULE_PARTS = ("Rules", "Rulebook")            # rulebook pages are not cards
 EDIT_BY = "Edit-by"                           # a bake commit's trailer, one per editor whose edit it printed (AutoCroissant card_bake)
-TRAILER_RE = re.compile(r"^[^\x00-\x1f\x7f]{1,100}$")       # an Edit-by value: a login, or a Discord name (discord:<name>)
+TRAILER_RE = re.compile(r"^[^\x00-\x1f\x7f]{1,100}$")       # an Edit-by value: a login
 RECOMPRESSED = "Recompressed"                 # a bot commit's trailer, one per PNG it only recompressed losslessly (AutoCroissant
                                               # card_guards.RECOMPRESSED, png_recompress): the same image, so no new version
 # committer time (%ct), as the bot dates versions (commits API committer.date; card_history LOG_FORMAT): a rebased commit's
@@ -1792,7 +1769,7 @@ def unquote_path(path):
 
 def parse_history(text, last=None):
     """`git log --raw --no-renames --no-abbrev --format=HISTORY_FORMAT` -> commits newest first: (sha, committer time, author
-    name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by values: logins, Discord names]).
+    name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by values: logins]).
     A bot commit's change of a PNG its Recompressed trailers name is left out: the same image, losslessly smaller.
     last (a dict): filled with {path: (commit that last changed it, its blob then)}, recompressions included."""
     commits = []
@@ -1888,11 +1865,11 @@ MASS_PASS = 20                                # a commit changing more card imag
 
 def commit_keys(row, people, by_login, row_of=None):
     """A commit's (parse_history row) credited names: who() of its author; a bot commit (BOT_AUTHOR) -> the row of each
-    Edit-by login that isn't a discord: name (row_of: login_rows(), else credit()), else the login; [] without trailers."""
+    Edit-by login (row_of: login_rows(), else credit()), else the login; [] without trailers."""
     _, _, name, email, _, _, editors = row
     if name.lower() == BOT_AUTHOR.lower():
         row_of = row_of or (lambda k: credit(k, people, by_login))
-        return list(dict.fromkeys(row_of(e) or e for e in editors if not is_discord(e)))
+        return list(dict.fromkeys(row_of(e) or e for e in editors))
     key = who(name, email, people, by_login)
     return [key] if key else []
 
@@ -1930,8 +1907,6 @@ EVENT_KEYS = ("seq", "at", "build", "card_commit", "commit", "by", "edit_by", "k
               "from_path", "fields", "verdict", "buffs", "nerfs", "renamed_to", "moved_to", "restored_from")    # what the tabs read; blob and the rest stay in db/
 PUSH_KEYS = ("after", "before", "by", "at")
 AUTHOR_PATHS = {AUTHORS_PATH, "MDW/Card Authors.txt"}   # before the 2026-10-20 move too
-DISCORD_SUBJECT = "Discord:"                  # the bot's commits of /update_metadata, /mass_replace, /alias (design §11)
-is_discord = lambda by: str(by or "").lower().startswith("discord:")   # a discord:<name> stamp or Edit-by, any case
 WEBSITE_SUBJECT = "Website edit"              # edit.js publish(): "Website edit: …" / "Website edits: n changes"
 BATCH_LINES = 60                              # lines kept per edit batch (Card Authors.txt's first commit credited 813 cards); the rest is `more`
 
@@ -2060,11 +2035,11 @@ def edit_changes(before, after):
 
 def stamp_groups(fields, meta):
     """An entry's edited fields by the stamp they are credited to: {(_by, _at): {field: value}}. Its _by takes the fields
-    not in _bot, a _credit editor theirs; the bot's are nobody's."""
+    not in _bot; the bot's are nobody's."""
     out = {}
-    bot, credit = meta.get(BOT_FIELDS, ()), meta.get(CREDIT, {})
+    bot = meta.get(BOT_FIELDS, ())
     for f, v in fields.items():
-        stamp = (credit[f]["_by"], credit[f]["_at"]) if f in credit else None if f in bot else (meta.get("_by"), meta.get("_at"))
+        stamp = None if f in bot else (meta.get("_by"), meta.get("_at"))
         if stamp and stamp[0] and stamp[1] and stamp[0].lower() != BOT_AUTHOR.lower():
             out.setdefault(stamp, {})[f] = v
     return out
@@ -2073,19 +2048,18 @@ def stamp_groups(fields, meta):
 def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields_by=None, row_of=None):
     """
     The database edits, newest first: each commit since `since` that changed a Card Edits.json entry or a Card
-    Authors.txt line (a website publish batch, a Discord edit, a commit by hand). The bot's bakes (they write verdicts
+    Authors.txt line (a website publish batch, a commit by hand). The bot's bakes (they write verdicts
     and delete the baked entries; the card sync's changed event shows the bake), a pure move and a change of the file's
     notes are none. A batch is credited to the stamps it wrote (_by), else its Edit-by trailers, else its author.
-    Without history: the current file's entries grouped by their _by/_at stamps and _credit stamps (each card's last batch
-    only, `stamped`).
+    Without history: the current file's entries grouped by their _by/_at stamps (each card's last batch only, `stamped`).
 
     Returns:
-        {"available": bool, "batches": [{sha?, at, via: website|discord|git, by: [credited name | discord:<name>], subject?, stamped?,
+        {"available": bool, "batches": [{sha?, at, via: website|git, by: [credited name], subject?, stamped?,
           cards: [{key, name, id?, fields: {field: [old, new]}}], authors: [{key, name, id?, from, to}],
           people: [[git name, from, to]], more?: lines past BATCH_LINES}]}
     fields_by: filled with {credited name: {field: lines}} over every line (BATCH_LINES doesn't cut it; a Card Authors.txt
-    line is "author", but not in the commit that created the file: 813 imported credits); Discord names and the bot
-    left out. row_of: login_rows(), else credit().
+    line is "author", but not in the commit that created the file: 813 imported credits); the bot left out. row_of:
+    login_rows(), else credit().
     """
     def card(key, name):
         row = {"key": name or key, "name": name_of(name or key)}       # name: as written, when the site lacks the card
@@ -2094,18 +2068,16 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
             row["id"] = found
         return row
 
-    def shown(by, discord=False):
-        """A Discord name keeps its discord: prefix (the site never links it to a person page), anything else is credited"""
+    def shown(by):
+        """The credited name"""
         by = str(by or "")
-        if is_discord(by) or discord:
-            return "discord:" + by[8:] if is_discord(by) else "discord:" + by
         return (row_of(by) if row_of else credit(by, people, by_login)) or by
 
     def tally(names, fields):
         if fields_by is None:
             return
         for name in names:
-            if name and not is_discord(name) and name.lower() != BOT_AUTHOR.lower():
+            if name and name.lower() != BOT_AUTHOR.lower():
                 mine = fields_by.setdefault(name, {})
                 for f in fields:
                     mine[f] = mine.get(f, 0) + 1
@@ -2124,7 +2096,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
             if ts < since:
                 continue
             tally([shown(by)], [f for fields in rows.values() for f in fields])
-            out.append({"at": ts, "via": "discord" if is_discord(by) else "website", "by": [shown(by)], "stamped": True,
+            out.append({"at": ts, "via": "website", "by": [shown(by)], "stamped": True,
                         "cards": [{**card(k, None), "fields": {f: [None, v] for f, v in sorted(fields.items())}} for k, fields in sorted(rows.items())],
                         "authors": [], "people": []})
         return {"available": False, "batches": sorted(out, key=lambda b: -b["at"])}
@@ -2133,8 +2105,7 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
     text = lambda sha: blobs.get(sha, "") if sha and sha.strip("0") else ""
     out = []
     for sha, ts, name, email, subject, entries, editors in wanted:
-        discord = subject.startswith(DISCORD_SUBJECT)
-        if name.lower() == BOT_AUTHOR.lower() and not discord:
+        if name.lower() == BOT_AUTHOR.lower():
             continue                              # a bake's verdicts
         before = {"e": "", "a": ""}
         after = {"e": "", "a": ""}
@@ -2155,11 +2126,11 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
         if not (cards or authors or people_changes):
             continue
         stamps = sorted({shown(by) for _, _, _, by in cards if by and str(by).lower() != BOT_AUTHOR.lower()}, key=str.lower)
-        named = {shown(e, discord) for e in editors}   # in a Discord commit every Edit-by is a Discord name
+        named = {shown(e) for e in editors}
         by = stamps or sorted(named, key=str.lower) or [who(name, email, people, by_login)]
         tally(by, [f for _, _, fields, _ in cards for f in fields] + ["author"] * (len(authors) if before["a"] else 0))   # the file's creation: an import
         row = {"sha": sha, "at": ts, "subject": subject, "by": by,
-               "via": "discord" if discord else "website" if subject.startswith(WEBSITE_SUBJECT) else "git",
+               "via": "website" if subject.startswith(WEBSITE_SUBJECT) else "git",
                "cards": [{**card(key, written), "fields": fields} for key, written, fields, _ in cards[:BATCH_LINES]],
                "authors": authors[:max(0, BATCH_LINES - len(cards))], "people": people_changes[:max(0, BATCH_LINES - len(cards) - len(authors))]}
         more = len(cards) + len(authors) + len(people_changes) - len(row["cards"]) - len(row["authors"]) - len(row["people"])
@@ -2270,8 +2241,8 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
     months, + person_extras' keys}], "site"?: {z}} by cards, then commits.
     cards: visible non-duplicate cards credited to the name. edits = publish batches: commits that changed Card Edits.json
     (a hand commit counts, a pure move doesn't), or without history the file's distinct _by/_at stamps (a floor: it keeps
-    one batch per card; a `_bot` field counts only for its `_credit` editor). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
-    added, isn't a change), one however many files. The bot's own commits and stamps and discord:<name> stamps are left out, but a bake (a bot
+    one batch per card; a `_bot` field counts for nobody). commits: commits that added or changed a card PSD or PNG (a move, the same blob deleted and
+    added, isn't a change), one however many files. The bot's own commits and stamps are left out, but a bake (a bot
     commit changing a card, with Edit-by trailers, one per card and editor) is one card commit of each editor it names,
     its recent entry counting their trailers as cards, never an edit (their batch already counted). A login is the row credit() names, else the row its noreply commits credit most, else its own (any
     case). logins: the names credited to the person (key, profile logins, [people] names, GitHub logins seen), each in
@@ -2353,8 +2324,6 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
                     r["recent"].append([ts, subject, len(touched)])
     else:
         for by, at in {stamp for fields, meta in edits.values() for stamp in stamp_groups(fields, meta)}:   # a field's own editor
-            if is_discord(by):                    # a Discord user is nobody's row
-                continue
             r = rec_of(key_of(by))
             r["edits"] += 1
             try:
@@ -2363,7 +2332,7 @@ def contributions(cards, people, profiles, edits, commits, balance=None, revisio
                 pass
     for _, meta in edits.values():                # website logins: one per batch stamp
         by = meta.get("_by")
-        if by and by.lower() != BOT_AUTHOR.lower() and not is_discord(by):
+        if by and by.lower() != BOT_AUTHOR.lower():
             known(key_of(by), by)
     out = []
     for r in rec.values():
@@ -2908,17 +2877,17 @@ def main():
 
     # authors: site/Card Authors.txt wins over the bot ([people] maps git names to shown names)
     people, credited = parse_authors()
+    listed_n = 0
     for e in cards:
         if not e.get("dup"):
             listed = credited.get(card_key(e["key"])) or credited.get(card_key(e["name"]))
             e["author"] = person(people, listed or e.get("author"))
-            if listed:
-                e["authorListed"] = True
+            listed_n += bool(listed)
     for e in cards:
         if e.get("dup"):
             e["author"] = by_id[e["dup"]]["author"]          # a duplicate is its original's card
     if credited:
-        log(f"authors: {sum(1 for e in cards if e.get('authorListed'))} cards credited by Card Authors.txt, {len(people)} people")
+        log(f"authors: {listed_n} cards credited by Card Authors.txt, {len(people)} people")
 
     # images (cached by blob hash; only new or changed PNGs are fetched and encoded)
     if not features.check("avif"):
