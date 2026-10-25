@@ -92,7 +92,7 @@ jobs:
 
       # The restored cache's file names, for the failure save at the end: a build that failed before making any image saves nothing.
       - id: cache-before
-        run: echo "names=$(ls -R site/.cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+        run: echo "names=$(find site/.cache 2>/dev/null | LC_ALL=C sort | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       # Deck preview montages: their own cache in site/.og-cache. The newest one is restored, and it is saved after the build
       # whenever the montages in use (each named by a hash of its pictured images) differ from the restored ones, so a montage
@@ -176,7 +176,7 @@ jobs:
       # changed: a build that stopped before the images (no bot data, a truncated site) adds no copy. Keep these last.
       - id: cache-after
         if: failure() && (steps.build.outcome == 'failure' || steps.build.outcome == 'success')
-        run: echo "names=$(ls -R site/.cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+        run: echo "names=$(find site/.cache 2>/dev/null | LC_ALL=C sort | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       - if: failure() && steps.cache-after.outputs.names != '' && steps.cache-after.outputs.names != steps.cache-before.outputs.names
         uses: actions/cache/save@v6
