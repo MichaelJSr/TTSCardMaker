@@ -1,34 +1,34 @@
 {
  "builder": {
-  "commit": "3ca616e804c9c992fa8b205639829451a283b7b7",
+  "commit": "6000b4a06f6f13a0fe52420d88effca61d46a276",
   "parser_version": 2,
   "psd_tools": "1.26.0+cards",
   "python": "3.14",
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-10-24T16:53:41Z",
- "card_commit": "5edf655c4de27d5e9efd5523027468bacce083a1",
- "card_commit_at": 1792857529.0,
+ "built_at": "2026-10-25T01:06:31Z",
+ "card_commit": "d050875f9f1d906f1650c9c5b4290dab432b6b18",
+ "card_commit_at": 1792890092.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
-  "archived": 66,
+  "archived": 92,
   "baked": 0,
   "cards": 820,
-  "changed": 2,
+  "changed": 0,
   "details": 815,
   "failed": 0,
   "new": 0,
-  "versions": 1162
+  "versions": 1258
  },
  "files": {
-  "old_stats.json": "9f35cc58f95f6ca0da01e51b626a1b22370146097089947c5fa02b512cc85b71",
-  "psd_details.json": "93283c494bace853225afd1585312c56f99c11e8452e51d1832286e976c7adc5",
-  "stats.json": "0e75dc84bed81dc72152a69ce37878cea4bab5f449ee380b6d7d242bb0292b1c"
+  "old_stats.json": "6ce4b0167d774293d1ac004a34048f9f96b731fc475c153ac0daa13b5f1ae94e",
+  "psd_details.json": "90e501177da083c46b7ad050cea6abca732a4b50c0a3ea4808eff462f0ab4fca",
+  "stats.json": "94ba07ea9a5fd3b26a308a90140739481dc15b059ec608198312ed1335ee1d4b"
  },
  "gates": {},
  "inputs": {
-  "authors_blob": "8ebe7bc687c746afa71e085ece5aa6697d816d49",
+  "authors_blob": "865f27ebdead059b2e0639aed79abb49fe736001",
   "created_blob": "07c402f7c4a6b7ed74e0ebeccda252053a50f1e4",
   "decks_blob": "06423a3363383d6e6ec1e5dc4633b62dc9e50460",
   "edits_blob": "d5bef0faef6347b382c41ba2498c4e7a919c9f24",
@@ -45,10 +45,10 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40113597018",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40149282531",
  "schema": 1,
  "seed": {
-  "commit": "cf9fd20370022779392205f70945a3b82d35df02",
+  "commit": "6000b4a06f6f13a0fe52420d88effca61d46a276",
   "repo": "bobberlington/AutoCroissant"
  }
 }
