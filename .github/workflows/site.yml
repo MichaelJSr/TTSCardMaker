@@ -172,7 +172,7 @@ jobs:
 
       # actions/cache saves only after a job that passed: a job that failed once the build ran (out of image time, failed
       # downloads, an error, the step's timeout, or a step after it) saves its images here, under a key of its own that
-      # restore-keys finds, so the next run (the 6-hourly one, or run it by hand) carries on from them. Only when the cache
+      # restore-keys finds, so the next run (the daily one, or run it by hand) carries on from them. Only when the cache
       # changed: a build that stopped before the images (no bot data, a truncated site) adds no copy. Keep these last.
       - id: cache-after
         if: failure() && (steps.build.outcome == 'failure' || steps.build.outcome == 'success')
