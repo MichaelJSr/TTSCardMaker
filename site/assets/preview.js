@@ -86,7 +86,7 @@ export function readResult(raw) {
   const clip = v => String(v).slice(0, 500), obj = v => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
   const notes = (Array.isArray(r.notes) ? r.notes : r.notes ? [r.notes] : []).filter(n => n != null && n !== "").slice(0, 20).map(n => clip(typeof n === "string" ? n : JSON.stringify(n)));
   const base = Object.fromEntries(Object.entries(obj(r.base)).filter(([, v]) => typeof v === "string").map(([k, v]) => [k, v.slice(0, 64)]));
-  const files = Object.fromEntries(Object.entries(obj(r.files)).filter(([k, v]) => ["webp", "png"].includes(k) && typeof v === "string" && /^[\w.-]+\.(webp|png)$/i.test(v)));
+  const files = Object.fromEntries(Object.entries(obj(r.files)).filter(([k, v]) => ["webp", "png", "before"].includes(k) && typeof v === "string" && /^[\w.-]+\.(webp|png)$/i.test(v)));
   const fields = Object.fromEntries(Object.entries(obj(r.fields)).filter(([k, v]) => k in LABEL && typeof v === "string").map(([k, v]) => [k, v.slice(0, 20)]));
   const changes = (Array.isArray(r.changes) ? r.changes : []).filter(x => x && typeof x === "object" && typeof x.field === "string").slice(0, 12)
     .map(x => ({ field: x.field, old: x.old, new: x.new }));
@@ -218,7 +218,8 @@ const STATE_TEXT = {
 /** The rendered preview of entry e (or none) for the image viewer: {stage, caption, dim}. stage: the preview image over the
  *  card's image (a hidden current image and the diff canvas with it), or the state's words over the dimmed original (dim);
  *  caption: the status lines, outcomes, notes and buttons. v: {card, n (fields the image would change by), hash, now,
- *  scopes, images (preview URLs: the 720 px WebP, the full PNG), current (the current image's URL), diff}. */
+ *  scopes, images (preview URLs: the 720 px WebP, the full PNG), current (what Diff compares with: the result's before.webp,
+ *  else the site's image), mixed (current is the site's AVIF: another codec), diff}. */
 export function renderedParts(e, v) {
   const button = (label, cls = "") => `<button type="button" class="${cls}" data-pv="start"${v.n ? "" : " disabled"}>${label}</button>`;
   const scopeNote = scopeOk(v.scopes) === false ? `<p class="muted pv-note">Your token has only the public_repo scope; starting a preview needs the repo scope (or a fine-grained token with Actions: Read and write).</p>` : "";
@@ -244,7 +245,7 @@ export function renderedParts(e, v) {
     return { dim: false,
       stage: `<a href="${esc(full || src)}" target="_blank" rel="noopener" title="Full size"${diff ? " hidden" : ""}><img src="${esc(src)}" alt="${esc(v.card.name)}, ${esc(alt)}" crossorigin="anonymous" data-pv-img="preview" data-fallback="${esc(full || "")}"></a>
         ${v.current ? `<img src="${esc(v.current)}" alt="" crossorigin="anonymous" data-pv-img="current" hidden><canvas data-pv-diff role="img" aria-label="Differences between the current image and the preview, in red"${diff ? "" : " hidden"}></canvas>` : ""}`,
-      tools: `<div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${full ? `<a class="fact" href="${esc(full)}" target="_blank" rel="noopener">Full size</a>` : ""}${again}</div>${diff ? `<p class="muted pv-note">Differences in red <span data-pv-changed></span></p>` : ""}` };
+      tools: `<div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${full ? `<a class="fact" href="${esc(full)}" target="_blank" rel="noopener">Full size</a>` : ""}${again}</div>${diff ? `<p class="muted pv-note">Differences in red <span data-pv-changed></span>${v.mixed ? ". An older preview: compared with the site's image, another format, so faint red outlines show where nothing changed" : ""}</p>` : ""}` };
   };
   if (e.state === "baked" && v.images.length) { const s = shot("rendered preview"); return { stage: s.stage, dim: false, caption: `${head}${staleText}${s.tools}${outcomes}${notes}` }; }
   if (e.state === "baked") return { ...words("No image"), caption: `${head}${staleText}<p>The bake drew it, but no image came with the result.${runLink}</p>${outcomes}${notes}${again ? `<div class="actions">${again}</div>` : ""}` };
@@ -343,7 +344,10 @@ export function createPreviews(app) {
   const repo = () => S.data.repo;
   const rawUrl = (ref, path) => `https://raw.githubusercontent.com/${repo()}/${ref}/${path.split("/").map(encodeURIComponent).join("/")}`;
   const imagesOf = e => [e.result?.files?.webp, e.result?.files?.png].filter(Boolean).map(f => rawUrl(CONTRACT.branch, CONTRACT.file(e.request, f)));   // the 720 px WebP, the full PNG
-  const current = c => (c.img ? `thumbs/${c.img}-720.webp` : "");
+  const current = c => app.img(c, 720);
+  // the Diff's other side: the result's before.webp (the card's PNG made as preview.webp, so unchanged pixels match);
+  // a result from before it was published has none: the site's AVIF thumb, whose codec noise shows too
+  const beforeOf = e => (e?.result?.files?.before ? rawUrl(CONTRACT.branch, CONTRACT.file(e.request, e.result.files.before)) : "");
 
   // ---- the values: the card's (published + staged) or the open form's, against the PSD's
   const psdOf = c => app.editor.psdOf(c.id) || {};
@@ -469,7 +473,7 @@ export function createPreviews(app) {
       } else if (mode === "mockup") {
         alt.innerHTML = ""; cap.innerHTML = `<p class="muted">${c.img ? "No changes on the card image yet." : "This card has no image to draw on."}</p>`;
       } else if (mode === "rendered") {
-        const parts = renderedParts(e, { ...v, card: c, now: Date.now(), images: e ? imagesOf(e) : [], current: current(c), diff: st.diff, scopes: app.editor.scopes });
+        const parts = renderedParts(e, { ...v, card: c, now: Date.now(), images: e ? imagesOf(e) : [], current: beforeOf(e) || current(c), mixed: !!e && !beforeOf(e), diff: st.diff, scopes: app.editor.scopes });
         show = parts.dim ? "dim" : "alt";
         alt.innerHTML = parts.stage; cap.innerHTML = parts.caption + olderHtml(list, Date.now(), shown);
         if (!parts.dim) wireShot(alt, cap, e);

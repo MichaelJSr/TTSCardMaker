@@ -636,7 +636,7 @@ export function createEditor(app) {
         </fieldset>
         <div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
         <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div>
-      </form>${live.paneHtml(previewOpen, { viewer: app.imageOf(c).replace(/-360\.webp$/, "-720.webp"), ar: c.tw && c.th ? `${c.tw}/${c.th}` : "" })}</div></div>`;
+      </form>${live.paneHtml(previewOpen, { viewer: app.imageOf(c, 720), ar: c.tw && c.th ? `${c.tw}/${c.th}` : "" })}</div></div>`;
   }
   const creatureRow = (x, i) => `<tr><th>${i + 1}</th>${STATS.map(k => `<td><input type="number" min="0" max="99" data-ck="${k}" value="${x[k] ?? ""}" placeholder="—" aria-label="Creature ${i + 1} ${LABEL[k]}"></td>`).join("")}</tr>`;
   function creatureAction(kind) {
@@ -1202,8 +1202,8 @@ export function createEditor(app) {
       ...Object.entries(decksOut).map(([k, f]) => (f ? (f.private ? `private deck ${k}` : `deck ${f.name || k}`) : `deck ${k} removed`))];   // a private deck's name stays out of the public commit message
     const sha = await commitFiles(edits, message || (what.length > 3 ? `Website edits: ${what.length} changes` : `Website edit: ${what.join(", ")}`));
     const sent = sentRecord() || {};
-    localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
-      decks: { ...sentDecks(), ...decksOut }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));
+    if (sha) localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
+      decks: { ...sentDecks(), ...decksOut }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));   // no commit: no rebuild to wait for (the site already has it)
     if (stage.admins) S.data.admins = stage.admins;
     cardDrafts.dropAll(ops.map(o => o.id));              // published: their drafts are done with
     stage = emptyStage();
@@ -1415,7 +1415,8 @@ export function createEditor(app) {
       el.disabled = true; status.textContent = "Publishing…";
       try {
         const sha = await publish(msg);
-        app.showDialog(`<h3>Published</h3><p>${sha ? `Commit <a href="https://github.com/${esc(S.data.repo)}/commit/${sha}" target="_blank" rel="noopener">${sha.slice(0, 7)}</a>.` : "Nothing changed on GitHub."} The website rebuilds in a few minutes; the card sync brings it to the PSDs and the bot within about 30 minutes.</p>`);
+        app.showDialog((sha ? `<h3>Published</h3><p>Commit <a href="https://github.com/${esc(S.data.repo)}/commit/${sha}" target="_blank" rel="noopener">${sha.slice(0, 7)}</a>. The website rebuilds in a few minutes; the card sync brings it to the PSDs and the bot within about 30 minutes.</p>`
+          : "<h3>Nothing to publish</h3><p>GitHub already has these edits: nothing changed.</p>"));
         app.rerender();
       } catch (err) { el.disabled = false; status.textContent = `Not published: ${err.message}`; }
     },

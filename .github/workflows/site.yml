@@ -42,6 +42,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 45       # the first run downloads every card PNG (~1.6 GB); later runs reuse cached images
+    outputs:
+      deploy: ${{ steps.changed.outputs.deploy }}
     steps:
       # The repo history is ~25 GB of PSDs, so check out only what the build reads (site/ also holds the hand-kept
       # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs are
@@ -74,9 +76,10 @@ jobs:
       - id: pages
         uses: actions/configure-pages@v6
 
-      # Cache key = the card PNG blobs + the build scripts (image sizes live there; the font build's draws the token
-      # variants' pictures): the cache is only re-saved when a card image or the image settings change, and the newest
-      # older cache is restored as a starting point.
+      # Cache key = the card PNG blobs + the build scripts (image settings live there; the font build's draws the token
+      # variants' pictures): the cache is only re-saved when a card image or the build changes, and the newest older cache
+      # is restored as a starting point. The thumbs' names carry their settings (build_site.py thumb_tag), so a restored
+      # cache made with other settings re-encodes those widths.
       - id: images
         run: echo "key=$(git ls-tree -r HEAD | grep -i '\.png$' | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
@@ -86,6 +89,10 @@ jobs:
           path: site/.cache
           key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}
           restore-keys: card-images-v2-
+
+      # The restored cache's file names, for the failure save at the end: a build that failed before making any image saves nothing.
+      - id: cache-before
+        run: echo "names=$(find site/.cache 2>/dev/null | LC_ALL=C sort | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       # Deck preview montages: their own cache in site/.og-cache. The newest one is restored, and it is saved after the build
       # whenever the montages in use (each named by a hash of its pictured images) differ from the restored ones, so a montage
@@ -119,10 +126,16 @@ jobs:
           path: carddata
           fetch-depth: 1
 
-      - run: python site/build/build_site.py
+      # IMAGE_BUDGET: images not made in 30 minutes (a full AVIF re-encode is ~11 CPU-minutes on a Mac, an estimated 20-25
+      # on the runner) are left for the next run; the build then fails (nothing deployed) and the job's last step keeps what
+      # it made. The step's timeout leaves that save time to run before the job's.
+      - id: build
+        timeout-minutes: 38
+        run: python site/build/build_site.py
         env:
           SITE_URL: ${{ steps.pages.outputs.base_url }}
           CARD_DATA_DIR: ${{ steps.data.outputs.exists == 'true' && 'carddata/db' || '' }}
+          IMAGE_BUDGET: "1800"
 
       - id: og
         run: |
@@ -137,12 +150,43 @@ jobs:
           path: site/.og-cache
           key: deck-previews-v2-${{ steps.og.outputs.names }}-${{ github.run_id }}-${{ github.run_attempt }}
 
+      # Pages dates every file by its deploy (the ETag too), so each deploy makes returning browsers download the whole
+      # site again: deploy only a site that differs from the live one. build.txt is a digest of the whole site without the
+      # build's clock; a schedule tick or a dispatch that rebuilt the same site stops here. No live digest: deploy.
+      - id: changed
+        env:
+          SITE_URL: ${{ steps.pages.outputs.base_url }}
+        run: |
+          live=$(curl -fsSL --max-time 30 "$SITE_URL/build.txt?run=$GITHUB_RUN_ID" || true)
+          if [ -n "$live" ] && [ "$live" = "$(cat site/dist/build.txt)" ]; then
+            echo "The live site is this build ($live): nothing to deploy" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/upload-pages-artifact@v5
+        if: steps.changed.outputs.deploy == 'true'
         with:
           path: site/dist
 
+      # actions/cache saves only after a job that passed: a job that failed once the build ran (out of image time, failed
+      # downloads, an error, the step's timeout, or a step after it) saves its images here, under a key of its own that
+      # restore-keys finds, so the next run (the daily one, or run it by hand) carries on from them. Only when the cache
+      # changed: a build that stopped before the images (no bot data, a truncated site) adds no copy. Keep these last.
+      - id: cache-after
+        if: failure() && (steps.build.outcome == 'failure' || steps.build.outcome == 'success')
+        run: echo "names=$(find site/.cache 2>/dev/null | LC_ALL=C sort | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      - if: failure() && steps.cache-after.outputs.names != '' && steps.cache-after.outputs.names != steps.cache-before.outputs.names
+        uses: actions/cache/save@v6
+        with:
+          path: site/.cache
+          key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}-partial-${{ github.run_id }}-${{ github.run_attempt }}
+
   deploy:
     needs: build
+    if: needs.build.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

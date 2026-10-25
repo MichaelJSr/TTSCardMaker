@@ -155,6 +155,7 @@ jobs:
           path: |
             ${{ runner.temp }}/preview/result.json
             ${{ runner.temp }}/preview/preview.webp
+            ${{ runner.temp }}/preview/before.webp
           if-no-files-found: ignore
           retention-days: 1
 

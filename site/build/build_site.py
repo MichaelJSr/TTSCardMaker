@@ -12,13 +12,16 @@ Where the data comes from:
     same way, keyed by PSD blob sha; a card or rulebook page with a record gets data/details/<id>.json for its Details dropdown.
     With CARD_DATA_DIR (the card sync's db/ on the branch data; site.yml sets it from the cutover), the same three come
     from its stats.json, old_stats.json and psd_details.json instead (load_card_data), read into the same stand-ins.
-  * Images: card PNGs in this repo, turned into three WebP sizes (240 px and 360 px for the grid at 1x/2x, 720 px
-    for the card view). They are cached by git blob hash in site/.cache/img, so after the first run only new or
-    changed cards are downloaded and resized; images no card uses any more are pruned. Each image's size and accent
-    color are kept in site/.cache/images.json by blob, icons in site/.cache/icons, deck page montages in site/.og-cache;
-    dist/ gets hardlinks (else copies).
+  * Images: card PNGs in this repo, turned into three AVIF sizes (240 px and 360 px for the grid at 1x/2x, 720 px
+    for the card view; AVIF only, no WebP copies). They are cached by git blob hash and encode settings (thumb_tag, in
+    the file names) in site/.cache/img, so after the first run only new or changed cards (or a width whose settings
+    changed) are downloaded and encoded; images no card uses any more are pruned. With
+    IMAGE_BUDGET (seconds; site.yml sets it), images not made by then are left for the next run: the build fails
+    (nothing deployed) and site.yml saves the cache (it does after any failed build), so a full re-encode spans runs.
+    Each image's size and accent color are kept in site/.cache/images.json by blob, icons in site/.cache/icons, deck
+    page montages in site/.og-cache; dist/ gets hardlinks (else copies).
   * Icons: Types/ and Types/Stars/; icon names and aliases from MDW/Fonts/stoogedings-src/stoogedings.json. Each icon the
-    font has also gets its token variants' pictures ([fire:tint], :sticker, :glow, :darkglow; dist/icons/fire.glow.webp),
+    font has also gets its token variants' pictures ([fire:tint], :sticker, :glow, :darkglow; dist/icons/fire.<stamp>.glow.webp),
     drawn by the font build's own icon_art (build_stoogedings.py, which needs its requirements.txt: without them,
     a warning and no variant pictures), cached by blob in site/.cache/icons; cards.json iconVariants holds how far each
     reaches past the icon (text.js sizes them).
@@ -81,7 +84,7 @@ from datetime import date, datetime, timedelta, timezone
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
-from PIL import Image
+from PIL import Image, features
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))     # for loads by file path (the bot's bench scripts)
 import analytics  # noqa: E402
@@ -97,7 +100,18 @@ SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 RAW = f"https://raw.githubusercontent.com/{CARD_REPO}/main/"
 BOT_RAW = f"https://raw.githubusercontent.com/{BOT_REPO}/main/"
 DETAILS_JSON = "psd_details.json"            # the bot's PSD structure records {version, cards: {blob sha: record}} (its global_config.DETAILS_JSON)
-IMAGE_SIZES = {240: 80, 360: 78, 720: 75}    # width -> WebP quality. 240/360: grid at 1x/2x; 720: card view
+IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
+AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
+THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality and AVIF rename by themselves
+
+
+def thumb_tag(w):
+    """6 hex digits of a width's encode settings, in its file names: new settings, new files (and URLs)."""
+    avif = {k: v for k, v in AVIF.items() if k != "max_threads"}
+    return hashlib.sha256(f"{THUMB_VERSION}:{w}:{IMAGE_SIZES[w]}:{json.dumps(avif, sort_keys=True)}".encode()).hexdigest()[:6]
+
+
+IMAGE_BUDGET = float(os.environ.get("IMAGE_BUDGET") or 0)      # seconds for making images (0: no limit): the rest waits for the next run
 IMAGE_WIDTH = 360                            # the size whose dimensions go into cards.json (aspect ratio)
 ICON_SIZE = 96
 ICON_VERSION = f"1-{ICON_SIZE}"              # in the cached icons' names: bump the 1 when build_icons' crop or WebP settings change
@@ -106,7 +120,8 @@ VARIANT_IMAGES = ("tint", "sticker", "glow", "darkglow")
 VARIANT_VERSION = "1"                        # in the cached variant images' names: bump when variant_art or its WebP settings change
 FONT_BUILD = "MDW/Fonts/stoogedings-src/build_stoogedings.py"   # its icon_art draws them (needs its requirements.txt)
 IMAGE_META = "images.json"                   # in CACHE: each card image's size and accent color, by PNG blob sha
-IMAGE_META_VERSION = f"1:{IMAGE_WIDTH}:{IMAGE_SIZES[240]}"   # bump the 1 when accent_color changes
+IMAGE_META_VERSION = f"3:{IMAGE_WIDTH}"       # bump the 3 when accent_color or the resize changes
+IMAGE_META_WEBP = f"1:{IMAGE_WIDTH}:80"      # the WebP builds' rows: same sizes, their colours kept (no hue change); drop once deployed
 OG_WIDTH = 480                               # link-preview image (Discord shows ≤ 300 px tall)
 OG_DECK_CARDS = 6                            # cards in a deck page's link-preview montage
 OG_DECK_VERSION = "1"                        # bump when the montage's layout changes (its cache key)
@@ -629,36 +644,74 @@ def classify(path):
 
 
 # ---- thumbnails and icons ----------------------------------------------------------------------------
-def image_bytes(path):
+_card_raw = None
+
+
+def card_raw():
+    """The card repo's files at the build's commit in Actions (raw main is a CDN copy up to 5 minutes old); main elsewhere
+    (a local commit may not be pushed)."""
+    global _card_raw
+    if _card_raw is None:          # set once final: image threads may race here
+        base = RAW
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            try:
+                sha = subprocess.run(["git", "-C", REPO, "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+                if re.fullmatch(r"[0-9a-f]{40}", sha):
+                    base = f"https://raw.githubusercontent.com/{CARD_REPO}/{sha}/"
+            except (OSError, subprocess.CalledProcessError):
+                pass
+        _card_raw = base
+    return _card_raw
+
+
+def blob_sha(data):
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def image_bytes(path, sha=None):
+    """The file from the checkout, else downloaded at the build's commit (then main) and checked against its blob sha,
+    so a picture named by a blob is that blob's picture."""
     local = os.path.join(REPO, path)
     if os.path.isfile(local):
         with open(local, "rb") as fh:
             return fh.read()
-    return fetch(RAW + quote(path))
+    err = None
+    for base in dict.fromkeys((card_raw(), RAW)):
+        try:
+            data = fetch(base + quote(path))
+        except Exception as e:
+            err = e
+            continue
+        if sha is None or blob_sha(data) == sha:
+            return data
+        err = ValueError(f"{base}{path} is not blob {sha[:12]}")
+    raise err
 
 
 def image_names(sha):
-    names = {w: f"{sha[:16]}-{w}.webp" for w in IMAGE_SIZES}
+    names = {w: f"{sha[:16]}-{w}-{thumb_tag(w)}.avif" for w in IMAGE_SIZES}
     names["og"] = f"{sha[:16]}-og.jpg"
     return names
 
 
 def make_images(path, sha, known=None):
-    """Cached WebP images of a card PNG, named by blob hash. Returns (key, width, height, accent color), the size of the
-    IMAGE_WIDTH one; known = the cached [width, height, color] of this blob, trusted while all its files are there."""
+    """Cached AVIF images of a card PNG, named by blob hash and encode settings (thumb_tag). Returns (key, width, height,
+    accent color), the size of the IMAGE_WIDTH one; known = the cached [width, height, color] of this blob, kept (missing
+    files are made again)."""
     names = image_names(sha)
     cached = {w: os.path.join(CACHE, "img", n) for w, n in names.items()}
     if known and all(os.path.exists(f) for f in cached.values()):
         return (sha[:16], *known)
-    if not all(os.path.exists(f) for f in cached.values()):
-        src = Image.open(io.BytesIO(image_bytes(path)))
-        src = src.convert("RGBA" if src.mode in ("RGBA", "LA", "P") else "RGB")
-        for w, quality in IMAGE_SIZES.items():
-            if os.path.exists(cached[w]):
-                continue
-            im = src.copy()
-            im.thumbnail((w, w * 3), Image.LANCZOS)
-            im.save(cached[w] + ".tmp", "WEBP", quality=quality, method=4)
+    src = Image.open(io.BytesIO(image_bytes(path, sha)))
+    src = src.convert("RGBA" if src.mode in ("RGBA", "LA", "P") else "RGB")
+    sized = {}
+    for w, quality in IMAGE_SIZES.items():
+        if os.path.exists(cached[w]) and (known or w not in (240, IMAGE_WIDTH)):
+            continue
+        sized[w] = im = src.copy()
+        im.thumbnail((w, w * 3), Image.LANCZOS)
+        if not os.path.exists(cached[w]):
+            im.save(cached[w] + ".tmp", "AVIF", quality=quality, icc_profile=None, **AVIF)   # no profile: WebP never had one
             os.replace(cached[w] + ".tmp", cached[w])
     if not os.path.exists(cached["og"]):       # from the 720 px one: no PNG download
         with Image.open(cached[720]) as im:
@@ -668,9 +721,9 @@ def make_images(path, sha, known=None):
             flat.paste(im, mask=im.getchannel("A"))
             flat.save(cached["og"] + ".tmp", "JPEG", quality=80, optimize=True, progressive=True)
             os.replace(cached["og"] + ".tmp", cached["og"])
-    with Image.open(cached[IMAGE_WIDTH]) as im:
-        width, height = im.width, im.height
-    return sha[:16], width, height, accent_color(cached[240])
+    if known:
+        return (sha[:16], *known)
+    return sha[:16], *sized[IMAGE_WIDTH].size, accent_color(sized[240])   # the colour from the PNG: no codec noise
 
 
 def load_image_meta():
@@ -678,7 +731,8 @@ def load_image_meta():
     try:
         with open(os.path.join(CACHE, IMAGE_META), encoding="utf-8") as fh:
             meta = json.load(fh)
-        images = meta["images"] if meta.get("version") == IMAGE_META_VERSION and isinstance(meta.get("images"), dict) else {}
+        ok = meta.get("version") in (IMAGE_META_VERSION, IMAGE_META_WEBP) and isinstance(meta.get("images"), dict)
+        images = meta["images"] if ok else {}
         return {sha: row for sha, row in images.items() if valid_meta(row)}
     except (OSError, ValueError, AttributeError, KeyError):
         return {}
@@ -709,11 +763,10 @@ def link_or_copy(src, dst, replace=False):
         shutil.copyfile(src, dst)
 
 
-def accent_color(path):
-    """The card's most common vivid color, for embed bars."""
-    with Image.open(path) as im:
-        small = im.convert("RGB").resize((40, 80))
-        px = list(small.get_flattened_data() if hasattr(small, "get_flattened_data") else small.getdata())   # Pillow < 12.1
+def accent_color(im):
+    """The card's most common vivid color, for embed bars (im: its 240 px picture before encoding)."""
+    small = im.convert("RGB").resize((40, 80))
+    px = list(small.get_flattened_data() if hasattr(small, "get_flattened_data") else small.getdata())   # Pillow < 12.1
     buckets = {}
     for r, g, b in px:
         if max(r, g, b) >= 70 and max(r, g, b) - min(r, g, b) >= 60:
@@ -758,8 +811,8 @@ def grid_preload(cards):
         return ""
     return ("<script>(() => { try { if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
             "  const w = { s: 160, l: 270 }[localStorage.getItem(\"size\")] || 200;\n"
-            f"  for (const id of {json.dumps(first)}) {{ const l = document.createElement(\"link\"); l.rel = \"preload\"; l.as = \"image\"; l.href = `thumbs/${{id}}-360.webp`;\n"
-            "    l.imageSrcset = `thumbs/${id}-240.webp 240w, thumbs/${id}-360.webp 360w`; l.imageSizes = `${w}px`; l.fetchPriority = \"high\"; document.head.append(l); }\n"
+            f"  for (const id of {json.dumps(first)}) {{ const l = document.createElement(\"link\"); l.rel = \"preload\"; l.as = \"image\"; l.href = `thumbs/${{id}}-360-{thumb_tag(360)}.avif`;\n"
+            f"    l.imageSrcset = `thumbs/${{id}}-240-{thumb_tag(240)}.avif 240w, thumbs/${{id}}-360-{thumb_tag(360)}.avif 360w`; l.imageSizes = `${{w}}px`; l.fetchPriority = \"high\"; document.head.append(l); }}\n"
             "} catch { /* storage blocked: no hints */ } })();</script>")
 
 
@@ -768,7 +821,7 @@ def fan(cards, path):
     canvas = Image.new("RGB", (1200, 630), (13, 13, 13))
     ims = []
     for c in cards:
-        with Image.open(os.path.join(DIST, "thumbs", f"{c['img']}-720.webp")) as im:
+        with Image.open(os.path.join(DIST, "thumbs", f"{c['img']}-720-{thumb_tag(720)}.avif")) as im:
             im = im.convert("RGBA")
             im.thumbnail((300, 570), Image.LANCZOS)
             ims.append(im)
@@ -889,8 +942,8 @@ def variant_art(fb, png, tint, reach):
 
 
 def build_icons(tree):
-    """Types/ icons into dist/icons as 96 px WebP, and the variant images (dist/icons/<name>.<variant>.webp) of those in
-    the font. Returns ({normalized spelling: {file, name, kind, v: [variants with an image]}}, {variant: reach}); no
+    """Types/ icons into dist/icons as 96 px WebP (<name>.<stamp>.webp), and the variant images
+    (<name>.<stamp>.<variant>.webp) of those in the font. Returns ({normalized spelling: {file, name, kind, v: [variants with an image]}}, {variant: reach}); no
     variant images without FONT_BUILD's packages."""
     manifest_path = os.path.join(REPO, "MDW/Fonts/stoogedings-src/stoogedings.json")
     if os.path.exists(manifest_path):
@@ -914,23 +967,28 @@ def build_icons(tree):
         stem = os.path.splitext(file)[0]
         name = stem.lower() if folder == "Types" else stem.lower().replace(" ", "_")
         kind = "type" if folder == "Types" else "star"
-        out_name = f"{slugify(name)}.webp"
         cached = os.path.join(cache_dir, f"{tree[path][:16]}-{ICON_VERSION}.webp")   # by blob, like the card images
         used.add(os.path.basename(cached))
         if not os.path.exists(cached):
-            im = Image.open(io.BytesIO(image_bytes(path))).convert("RGBA")
+            im = Image.open(io.BytesIO(image_bytes(path, tree[path]))).convert("RGBA")
             box = im.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox()
             if box:
                 im = im.crop(box)
             im.thumbnail((ICON_SIZE, ICON_SIZE), Image.LANCZOS)
             im.save(cached + ".tmp", "WEBP", quality=90, alpha_quality=100, method=4)   # shown at ≤34 px
             os.replace(cached + ".tmp", cached)
-        link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)     # last one wins, as before
-        entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
         info = manifest["icons"].get(name)
+        key = ""
         if script and info:                                   # the font draws every variant of every manifest icon
             tint = info.get("tint", "auto")
             key = hashlib.sha256(f"{script}:{json.dumps(tint, sort_keys=True)}:{ICON_SIZE}".encode()).hexdigest()[:8]
+        # the stamp in the file names (icon and variants): an old page's URL gets its own picture or a 404, never another
+        # deploy's
+        stamp = hashlib.sha256(f"{tree[path]}:{ICON_VERSION}:{VARIANT_VERSION}:{key}".encode()).hexdigest()[:10]
+        out_name = f"{slugify(name)}.{stamp}.webp"
+        link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)
+        entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
+        if key:
             files = {v: os.path.join(cache_dir, f"{tree[path][:16]}-{v}-{VARIANT_VERSION}-{key}.webp") for v in VARIANT_IMAGES}
             todo.append((path, tint, files, out_name, entry))
         aliases = (info or {}).get("aliases", [])
@@ -963,7 +1021,7 @@ def build_icons(tree):
         path, tint, files, out_name, entry = job
         if not all(os.path.exists(f) for f in files.values()):
             try:
-                art = variant_art(fb, Image.open(io.BytesIO(image_bytes(path))), tint, reach)
+                art = variant_art(fb, Image.open(io.BytesIO(image_bytes(path, tree[path]))), tint, reach)
             except Exception as e:                            # never a failed build: this icon's variants show plain
                 warn(f"no variant images for {path}: {type(e).__name__}: {e}")
                 return
@@ -2759,21 +2817,17 @@ BUILD_TXT = "build.txt"                       # in DIST: dist_digest(), which bu
 
 
 def dist_digest(data):
-    """sha256 over every file in DIST but BUILD_TXT, the data files without the build's clock (data: steady()); the card
-    images (thumbs/, 90% of the bytes) by name and size, as their names are their PNG's blob and this script's settings
-    (its own bytes are in the digest)."""
+    """sha256 over every file in DIST but BUILD_TXT (thumbs/ too, by content), the data files without the build's clock
+    (data: steady()): a build that only changed this script digests the same."""
     paths = sorted(os.path.relpath(os.path.join(root, name), DIST).replace(os.sep, "/")
                    for root, _, names in os.walk(DIST) for name in names)
 
     def sha(rel):
         if rel.startswith("data/") and rel[5:] in data:
             return hashlib.sha256(data[rel[5:]]).digest()
-        if rel.startswith("thumbs/"):
-            return str(os.path.getsize(os.path.join(DIST, rel))).encode()
         with open(os.path.join(DIST, rel), "rb") as fh:
             return hashlib.sha256(fh.read()).digest()
-    with open(os.path.abspath(__file__), "rb") as fh:
-        digest = hashlib.sha256(fh.read())
+    digest = hashlib.sha256()
     with ThreadPoolExecutor(max_workers=8) as pool:   # hashlib works outside the GIL
         for rel, h in zip(paths, pool.map(sha, paths)):
             if rel != BUILD_TXT:
@@ -2984,10 +3038,17 @@ def main():
     if credited:
         log(f"authors: {sum(1 for e in cards if e.get('authorListed'))} cards credited by Card Authors.txt, {len(people)} people")
 
-    # images (cached by blob hash; only new or changed PNGs are fetched and resized)
+    # images (cached by blob hash; only new or changed PNGs are fetched and encoded)
+    if not features.check("avif"):
+        raise SystemExit("error: this Pillow can't write AVIF (the card images); pip install -r site/build/requirements.txt")
     jobs = [e for e in cards + rules if e["png"] and e["png"] in tree]
-    failed, meta = [], load_image_meta()
+    failed, later, meta = [], [], load_image_meta()
+    deadline = time.time() + IMAGE_BUDGET if IMAGE_BUDGET > 0 else None
     def images(e):
+        if deadline and time.time() > deadline and not all(
+                os.path.exists(os.path.join(CACHE, "img", n)) for n in image_names(tree[e["png"]]).values()):
+            later.append(e["png"])                # over the budget: the next run makes it
+            return
         try:
             e["img"], e["tw"], e["th"], e["color"] = make_images(e["png"], tree[e["png"]], meta.get(tree[e["png"]]))
         except Exception as err:
@@ -2995,8 +3056,14 @@ def main():
             log("image failed:", e["png"], err)
     cache_dir = os.path.join(CACHE, "img")
     cached_before = len(os.listdir(cache_dir))
-    with ThreadPoolExecutor(min(16, (os.cpu_count() or 4) * 2)) as pool:
-        list(pool.map(images, jobs))
+    try:
+        with ThreadPoolExecutor(min(16, (os.cpu_count() or 4) * 2)) as pool:
+            list(pool.map(images, jobs))
+    finally:                                      # whatever stops the build now, site.yml saves the cache with what was made
+        save_image_meta({**meta, **{tree[e["png"]]: [e["tw"], e["th"], e["color"]] for e in jobs if e.get("img")}})
+    if later:
+        raise SystemExit(f"error: {len(later)} of {len(jobs)} card images not made within IMAGE_BUDGET ({IMAGE_BUDGET:.0f}s); "
+                         f"the next run makes them (the {len(jobs) - len(later)} done are cached). Not deploying.")
     if len(failed) > max(5, len(jobs) // 50):
         raise SystemExit(f"error: {len(failed)} of {len(jobs)} card images failed (network?); not deploying a site with missing images.")
     used = set()
@@ -3090,6 +3157,7 @@ def main():
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist,
+        "thumbs": {w: thumb_tag(w) for w in IMAGE_SIZES},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
                                             "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR,
@@ -3247,7 +3315,7 @@ def main():
         desc, (image, size) = share_text(c), og_image(c)
         share_page(("c", c["id"]), [
             f'<meta name="card" content="{c["id"]}">',
-            *([f'<link rel="preload" as="image" href="thumbs/{c["img"]}-720.webp" fetchpriority="high">'] if c.get("img") else []),   # the dialog's picture (app.js placeholderOf)
+            *([f'<link rel="preload" as="image" href="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" fetchpriority="high">'] if c.get("img") else []),   # the dialog's picture (app.js placeholderOf)
             og_tags(c["name"], desc, f"{SITE_URL}/c/{c['id']}/" if SITE_URL else "", image, size, f"{c['name']} card"),
             f'<meta name="theme-color" content="{c.get("color") or "#3987e5"}">',
             f'<meta name="description" content="{html.escape(desc)}">',

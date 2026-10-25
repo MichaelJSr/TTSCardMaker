@@ -1,2 +1,2 @@
-pillow
+pillow>=11.3          # AVIF (the card images)
 -r ../../MDW/Fonts/stoogedings-src/requirements.txt   # the icon font's build: the token variants' pictures
