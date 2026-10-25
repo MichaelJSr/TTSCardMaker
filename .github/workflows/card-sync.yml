@@ -250,14 +250,15 @@ jobs:
           echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
 
       # The details' "supplied" flags need only the fonts' PostScript names: font_check.save_names' file (CARD_FONT_NAMES),
-      # cached by the same sha; the fonts are fetched only on a miss, or for a builder without save_names.
+      # cached by the same sha plus font_check.py's hash (the file's format is the builder's); the fonts are fetched
+      # only on a miss, or for a builder without save_names.
       - name: Font names cache
         id: font-names
         if: env.GO == 'true'
         uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}/font-names.json
-          key: card-font-names-${{ steps.fonts.outputs.sha }}
+          key: card-font-names-${{ steps.fonts.outputs.sha }}-${{ hashFiles('bot/commands/font_check.py') }}
 
       - name: Font names
         if: env.GO == 'true' && steps.venv.outcome == 'success'
