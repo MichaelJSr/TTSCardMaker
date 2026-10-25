@@ -42,8 +42,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 45       # the first run downloads every card PNG (~1.6 GB); later runs reuse cached images
-    outputs:
-      deploy: ${{ steps.changed.outputs.deploy }}
     steps:
       # The repo history is ~25 GB of PSDs, so check out only what the build reads (site/ also holds the hand-kept
       # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs are
@@ -139,29 +137,12 @@ jobs:
           path: site/.og-cache
           key: deck-previews-v2-${{ steps.og.outputs.names }}-${{ github.run_id }}-${{ github.run_attempt }}
 
-      # Pages dates every file by its deploy (the ETag too), so each deploy makes returning browsers download the whole
-      # site again: deploy only a site that differs from the live one. build.txt is a digest of the whole site without the
-      # build's clock; a schedule tick or a dispatch that rebuilt the same site stops here. No live digest: deploy.
-      - id: changed
-        env:
-          SITE_URL: ${{ steps.pages.outputs.base_url }}
-        run: |
-          live=$(curl -fsSL --max-time 30 "$SITE_URL/build.txt?run=$GITHUB_RUN_ID" || true)
-          if [ -n "$live" ] && [ "$live" = "$(cat site/dist/build.txt)" ]; then
-            echo "The live site is this build ($live): nothing to deploy" | tee -a "$GITHUB_STEP_SUMMARY"
-            echo "deploy=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "deploy=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - uses: actions/upload-pages-artifact@v5
-        if: steps.changed.outputs.deploy == 'true'
         with:
           path: site/dist
 
   deploy:
     needs: build
-    if: needs.build.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

@@ -953,6 +953,7 @@ relies on:
 - Stamps (`?v=`): an asset's is its served text's hash with its imports' stamps in it (`asset_stamps`; an import cycle:
   one stamp for all); the data's (`<meta name="build">`, data URLs) hashes the data and details files without the build
   time (`steady`: `generated`, `since`). A build that changed nothing keeps every URL.
-- Deploys: site.yml runs on pushes that touch what the build reads (`paths`); `build.txt` digests the whole site without
-  the build time (`dist_digest`), and a build equal to the live one is not uploaded: the Changes page's "Updated" line
-  then shows the last build that changed the site, not the last run (owner's call; every deploy re-dates every file).
+- Deploys: site.yml runs on pushes that touch what the build reads (`paths`); schedule and dispatch runs always deploy.
+  `build.txt` digests the whole site without the build time (`dist_digest`). Skipping the deploy of a build equal to the
+  live one (every deploy re-dates every file, so returning browsers download it all again) is the owner's to decide: it
+  would leave the Changes page's "Updated" line at the last build that changed the site, not the last run.

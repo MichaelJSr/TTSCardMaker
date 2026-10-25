@@ -439,7 +439,8 @@ export function createPreviews(app) {
     for (const t of root.querySelectorAll(".tile[data-open]")) {
       const id = t.dataset.open, on = hasNews(store, id), b = t.querySelector(".pv-badge");
       if (on && !b) t.insertAdjacentHTML("beforeend", `<span class="pv-badge" data-tip="${esc(badgeTip(store[id][0].state))}">Preview</span>`);
-      else if (!on && b) b.remove();
+      else if (on) b.dataset.tip = badgeTip(store[id][0].state);   // a reused tile: its tip as of now
+      else if (b) b.remove();
     }
   }
   const views = new Map();                            // card id -> {mode, diff, shown}: the viewer's choices while the page lives

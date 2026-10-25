@@ -963,11 +963,12 @@ function deckAt(owner, slug) {
 }
 const hasDecks = () => (+S.data.decks?.public || 0) > 0 || editor.pendingDecks().size > 0;   // else no fetch
 const publicDecks = () => deckList().filter(d => !d.private);
-/** Cards tab: the published decks a search finds, filled in once decks.json is loaded. */
+/** Cards tab: the published decks a search finds, filled in once decks.json is loaded (the drawn view's search: a
+ *  card dialog may be over it). */
 function deckHits(q) {
   if (!q.trim() || !hasDecks()) return "";
   if (S.decksData) return decks.searchHitsHtml(publicDecks(), q, deckCtx());
-  loadDecks().then(() => { const el = $("#deck-hits"), h = parseHash(); if (el && h.name === "cards" && (h.params.get("q") || "") === q) el.innerHTML = deckHits(q); });
+  loadDecks().then(() => { const el = $("#deck-hits"), h = parseHash(S.renderedHash || ""); if (el && h.name === "cards" && (h.params.get("q") || "") === q) el.innerHTML = deckHits(q); });
   return "";
 }
 /** Card page: the public decks holding the card. */

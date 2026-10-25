@@ -58,7 +58,7 @@ changes feed, the People tab, the published decks, the Stats page or a card's Ba
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json), images, icons,
 assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
-content and its imports', the data's from its content without the build time; build.txt digests the whole site for site.yml.
+content and its imports', the data's from its content without the build time; build.txt digests the whole site (which build is live).
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -2749,7 +2749,7 @@ def data_stamp(data, details):
     return digest.hexdigest()[:10]
 
 
-BUILD_TXT = "build.txt"                       # in DIST: dist_digest(); site.yml deploys only when it differs from the live one
+BUILD_TXT = "build.txt"                       # in DIST: dist_digest(), which build is live
 
 
 def dist_digest(data):
