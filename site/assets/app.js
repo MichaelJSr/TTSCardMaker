@@ -190,6 +190,7 @@ const editor = createEditor({
   view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
   decks: () => loadDecks().then(() => deckList()),         // the published decks (with the pending ones): the publish dialog's "replaces"
   formOpened: x => previews.mountForm(x),                  // the Edit dialog's image previews
+  setParams: u => setParams(u),                            // Rename everywhere: a filter on the old name follows it
 });
 // image previews in edit mode (preview.js): the mock-up and the rendered dry-run bake, badges on the grid's tiles
 const previews = createPreviews({ S, editor, img, toast: m => toast(m), loadDetails: c => loadDetails(c), getJson: n => getJson(n),

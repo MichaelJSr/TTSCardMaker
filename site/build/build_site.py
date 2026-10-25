@@ -125,6 +125,7 @@ IMAGE_META_VERSION = f"3:{IMAGE_WIDTH}"       # bump the 3 when accent_color or 
 IMAGE_META_WEBP = f"1:{IMAGE_WIDTH}:80"      # the WebP builds' rows: same sizes, their colours kept (no hue change); drop once deployed
 OG_WIDTH = 480                               # link-preview image (Discord shows ≤ 300 px tall)
 OG_DECK_CARDS = 6                            # cards in a deck page's link-preview montage
+CREATOR_CARDS = ("Croissant", "Michael", "Bobberlington", "The Forbidden One", "Kyle", "Tyler", "Z!!!!!")   # the site's preview fan (owner 2026-10-25; alternating warm and dark, Z!!!!! shown whole), by file key; Kyle is hdckighfkvhvgmk's
 OG_DECK_VERSION = "1"                        # bump when the montage's layout changes (its cache key)
 SITE_NAME = "Impossibility Simulator"
 MIN_CARDS = 100                              # fewer cards than this in stats.pkl means a broken download
@@ -144,8 +145,8 @@ RATINGS_PATH = "site/Card Ratings.json"         # dated 1-10 ratings (AutoCroiss
 RATING_SCALES = ("favorability", "power")
 RATING_SOURCES = ("TTS session", "website")
 ALIASES_MOVED = "aliases_moved"               # Card Edits.json key: aliases.pkl moved into it (AutoCroissant card_edits.ALIASES_MOVED)
-BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (discord_edits.BOT_FIELDS)
-CREDIT = "_credit"                            # {field: {"_by", "_at"}}: a _bot field's Discord editor (discord_edits.CREDIT)
+BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (old Discord edits, until 2026-10-25)
+CREDIT = "_credit"                            # {field: {"_by", "_at"}}: a _bot field's Discord editor (old entries)
 ADMINS_PATH = "site/Website Admins.txt"
 PROFILES_DIR = "site/profiles"                # <login>.json per person who made a profile on the website
 DECKS_DIR = "site/decks"                      # <owner>/<slug>.json per hand published from the deck builder
@@ -841,10 +842,13 @@ def fan(cards, path):
 
 
 def site_banner(cards, path):
-    """1200×630 link-preview image: a fan of 5★ creatures (a stable pick), cached in OG_CACHE by their images; the
-    cached file's name."""
-    pool = [c for c in cards if c.get("img") and c["type"] == "creature" and c.get("stars") == 5 and not c.get("dup")]
-    picks = sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6]
+    """1200×630 link-preview image: a fan of the creators' cards (CREATOR_CARDS, in order; else 5★ creatures, a stable
+    pick), cached in OG_CACHE by their images; the cached file's name."""
+    by_key = {c.get("key"): c for c in cards if c.get("img") and not c.get("dup")}
+    picks = [by_key[k] for k in CREATOR_CARDS if k in by_key]
+    if not picks:
+        pool = [c for c in cards if c.get("img") and c["type"] == "creature" and c.get("stars") == 5 and not c.get("dup")]
+        picks = sorted(pool, key=lambda c: hashlib.md5(c["id"].encode()).hexdigest())[:6]
     key = hashlib.sha256(f"{OG_DECK_VERSION}:{'|'.join(c['img'] for c in picks)}".encode()).hexdigest()[:16]
     name = f"banner-{key}.jpg"
     cached = os.path.join(OG_CACHE, name)
