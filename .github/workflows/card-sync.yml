@@ -97,7 +97,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     outputs:
-      saved: ${{ steps.venv.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
+      saved: ${{ steps.venv.outputs.wheels == 'built' }}
     defaults:
       run:
         shell: bash
@@ -237,9 +237,10 @@ jobs:
           venv: ${{ runner.temp }}/venv
           help: card_data tts_save card_bake
 
-      # Fonts for the bake and the details' "supplied" flags: MDW/Fonts' top level, cached by its tree sha (the card workflows'
-      # key, so the entries carry over); the sparse checkout fetches them only on a miss. A hit puts them outside the sparse
-      # patterns: without expectFilesOutsideOfPatterns git clears their skip-worktree bits and the bake's ff merge deletes them.
+      # MDW/Fonts' tree sha, the font caches' key. The bake's fonts (main job): its top level, cached by that sha (the card
+      # workflows' key, so the entries carry over); the sparse checkout fetches them only on a miss. A hit puts them outside
+      # the sparse patterns: without expectFilesOutsideOfPatterns git clears their skip-worktree bits and the bake's ff
+      # merge deletes them.
       - &fonts
         name: Fonts tree
         id: fonts
@@ -248,18 +249,35 @@ jobs:
           git config sparse.expectFilesOutsideOfPatterns true
           echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
 
-      - &font-cache
-        id: font-cache
+      # The details' "supplied" flags need only the fonts' PostScript names: font_check.save_names' file (CARD_FONT_NAMES),
+      # cached by the same sha; the fonts are fetched only on a miss, or for a builder without save_names.
+      - name: Font names cache
+        id: font-names
         if: env.GO == 'true'
         uses: actions/cache@v6
         with:
-          path: MDW/Fonts
-          key: card-fonts-${{ steps.fonts.outputs.sha }}
+          path: ${{ runner.temp }}/font-names.json
+          key: card-font-names-${{ steps.fonts.outputs.sha }}
 
-      - &fonts-miss
-        name: Fonts (cache miss)
-        if: env.GO == 'true' && steps.font-cache.outputs.cache-hit != 'true'
-        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+      - name: Font names
+        if: env.GO == 'true' && steps.venv.outcome == 'success'
+        env:
+          HIT: ${{ steps.font-names.outputs.cache-hit }}
+        run: |
+          if ! grep -q '^def save_names' bot/commands/font_check.py; then     # an older builder reads the fonts
+            git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+            exit 0
+          fi
+          if [ "$HIT" != true ]; then
+            git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+            if ! (cd bot && "$RUNNER_TEMP/venv/bin/python" -c 'import sys; from commands.font_check import save_names; save_names(*sys.argv[1:])' \
+                "$GITHUB_WORKSPACE/MDW/Fonts" "$RUNNER_TEMP/font-names.json"); then
+              rm -f "$RUNNER_TEMP/font-names.json"
+              echo "::warning::font names not saved: the build reads the fonts"
+              exit 0
+            fi
+          fi
+          echo "CARD_FONT_NAMES=$RUNNER_TEMP/font-names.json" >> "$GITHUB_ENV"
 
       # The build on main's head. Exit 0 written or nothing to do, 2 a gate refused, 1 an error. It writes db/ in
       # carddata/ even on a dry run (the artifact); only the data commit publishes it. The main lane's commits since the
@@ -612,8 +630,16 @@ jobs:
           fi
 
       - *fonts
-      - *font-cache
-      - *fonts-miss
+      - id: font-cache
+        if: env.GO == 'true'
+        uses: actions/cache@v6
+        with:
+          path: MDW/Fonts
+          key: card-fonts-${{ steps.fonts.outputs.sha }}
+
+      - name: Fonts (cache miss)
+        if: env.GO == 'true' && steps.font-cache.outputs.cache-hit != 'true'
+        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
       # The bake makes one local commit B on main's head in this checkout (nothing pushed); a dry run commits nothing.
       # A card's error fails the step but keeps B for the others (the bake's
