@@ -213,7 +213,8 @@ CARD_FIELDS = {"card_type", "path", "timestamp", "ability", "stars", "subtype", 
                "blob_sha", "parsed_values"}
 # may be missing; archived: a deleted PSD's record; version: a version's start and end (analytics.when)
 CARD_FIELDS_OPTIONAL = {"name", "display_name", "duplicate_of", "creatures", "note", "hidden", "problems_ok", "allow_high_stats",
-                        "alt_names", "subseries", "parser_version", "archived", "version", "created"}
+                        "alt_names", "subseries", "parser_version", "archived", "version", "created",
+                        "variant", "variant_of", "variants"}             # a PSD's pictures (PARTS_EDITOR.md §2.4)
 STATS_FIELDS = {"hp", "defense", "attack", "speed"}
 HISTORY_FIELDS = {"ability", "timestamp"}
 
@@ -312,18 +313,79 @@ def load_card_data(folder):
     return stats, old_stats, records
 
 
-def join_details(cards, records, tree):
+def link_variants(cards):
+    """The pictures of one PSD (stats.json variant, variant_of): variant 1 gets `variants` (the other ids, in picture
+    order), each other picture `variantOf` (variant 1's id). A picture whose variant 1 isn't listed stays a plain card."""
+    by_key = {card_key(e["key"]): e for e in cards}
+    for e in cards:
+        first = by_key.get(card_key(e.pop("_variantOf", None) or ""))
+        if e.get("variant") and first is not None and first is not e:
+            e["variantOf"] = first["id"]
+            first.setdefault("variants", []).append(e)
+    for e in cards:
+        if e.get("variants"):
+            e["variants"] = [v["id"] for v in sorted(e["variants"], key=lambda v: v["variant"])]
+        elif e.get("variant") and not e.get("variantOf"):
+            del e["variant"]                      # no other picture: a plain card
+
+
+def details_parts(rec, e, by_id, meta, tree_blob, rec_blob):
+    """The details record's VERSION 2 `parts` as one card's editor needs them (PARTS_EDITOR.md §2.5): the parts its picture
+    shows, each with `shared` (the other pictures' names that show it) and `follow`; partState and the pending part edits
+    from Card Edits.json; skipped edits (_psd.skipped, while that PSD is current); `stale` when the record isn't the PSD at HEAD."""
+    parts = rec.get("parts")
+    if not isinstance(parts, dict):
+        return None
+    n = e.get("variant") or 1
+    first = by_id.get(e.get("variantOf")) or e
+    group = [first] + [by_id[i] for i in first.get("variants", []) if i in by_id]
+    pictures = {(c.get("variant") or 1): c["name"] for c in group}
+    follow = [f for f in parts.get("follow") or [] if isinstance(f, dict)]
+
+    def shows(p):
+        v = p.get("variants")
+        return v is None or n in v
+
+    def view(p):
+        v = p.get("variants")
+        q = {**p, "shared": [name for k, name in sorted(pictures.items()) if k != n and (v is None or k in v)] if len(pictures) > 1 else [],
+             "follow": [{"layer": f.get("layer"), "how": f.get("how")} for f in follow if p.get("id") in (f.get("of") or []) and shows(f)]}
+        return q
+    out = {k: [view(p) for p in parts.get(k) or [] if isinstance(p, dict) and shows(p)] for k in ("title", "ability", "blocks")}
+    out["follow"] = [f for f in follow if shows(f)]
+    every = {str(p.get("id")) for k in ("title", "ability", "blocks") for p in parts.get(k) or [] if isinstance(p, dict)}
+    shas = {str(p.get("id")): p.get("sha") for k in ("title", "ability", "blocks") for p in parts.get(k) or [] if isinstance(p, dict)}
+    state, pending = {}, {}
+    for key, p in ((meta or {}).get("parts") or {}).items():
+        if key == "+ability":
+            state[key] = "stale" if out["ability"] else "pending"
+        elif key not in every:
+            state[key] = "gone"
+        else:
+            state[key] = "pending" if p.get("sha") == shas.get(key) else "stale"
+        pending[key] = {k: p[k] for k in ("field", "text", "delete", "was", "sha", "psd", "layer") if k in p}
+    verdict = (meta or {}).get("_psd") or {}
+    skipped = verdict.get("skipped") if tree_blob and isinstance(verdict.get("psd"), str) and tree_blob.startswith(verdict["psd"]) else None
+    return {"parts": out, "variants": parts.get("variants"), "template": parts.get("template"), "partState": state, "partEdits": pending,
+            "skipped": {k: {**v, "at": verdict.get("at")} for k, v in skipped.items() if isinstance(v, dict)} if isinstance(skipped, dict) else {},
+            "psdBlob": rec_blob, "stale": bool(e.get("reparsePending") or (tree_blob and rec_blob and tree_blob != rec_blob)),
+            "picture": {"n": n, "cards": [{"n": c.get("variant") or 1, "id": c["id"], "name": c["name"]} for c in group]} if len(group) > 1 else None}
+
+
+def join_details(cards, records, tree, edits=None):
     """
     The record of each card's PSD: by its blob at HEAD, else the blob the bot parsed, else the newest record for its path.
 
     Flags the card (details: true in cards.json or rules.json) and returns {card id: record + id and name} for data/details/<id>.json.
-    A duplicate (same PSD) gets its original's record.
+    A duplicate (same PSD) gets its original's record. A VERSION 2 record's parts come as details_parts() gives them; the
+    part edits live in the PSD's entry (variant 1's).
     """
-    by_path = {}
+    by_path, blob_of = {}, {id(rec): sha for sha, rec in records.items()}
     for rec in records.values():
         path = rec.get("path")
         if path and str(rec.get("at") or "") >= str(by_path.get(path, {}).get("at") or ""):
             by_path[path] = rec
+    by_id = {e["id"]: e for e in cards}
     out = {}
     for e in cards:
         path = e.get("psd")
@@ -331,6 +393,11 @@ def join_details(cards, records, tree):
         if rec:
             e["details"] = True
             out[e["id"]] = {**rec, "id": e["id"], "name": e["name"]}      # the card's id and shown name win
+            first = by_id.get(e.get("variantOf")) or e
+            found = (edits or {}).get(card_key(first["key"]))
+            parts = details_parts(rec, e, by_id, found[1] if found else None, tree.get(path), blob_of.get(id(rec)))
+            if parts is not None:
+                out[e["id"]].update(parts)
     return out
 
 
@@ -1044,6 +1111,29 @@ def valid_verdict(value):
             and isinstance(value.get("psd", ""), str) and isinstance(value.get("reason", ""), str))
 
 
+PART_KEY = re.compile(r"^(\d+|\+ability)\Z")       # a part edit's key: the layer's id, or +ability (AutoCroissant CardEdits.TYPES)
+HEX8 = re.compile(r"^[0-9a-f]{8}\Z")
+PARTS_MAX, PART_TEXT_MAX = 64, 4096
+
+
+def valid_parts(value):
+    """A Card Edits.json `parts` (PARTS_EDITOR.md §3): {lyid | "+ability": {field, text | delete, was, sha, psd, layer}}."""
+    if not isinstance(value, dict) or not value or len(value) > PARTS_MAX:
+        return False
+    for key, p in value.items():
+        if not (isinstance(key, str) and PART_KEY.match(key) and isinstance(p, dict) and p.get("field") in ("name", "ability")):
+            return False
+        if ("text" in p) == bool(p.get("delete")) or ("text" in p and not (isinstance(p["text"], str) and len(p["text"].encode("utf-8")) <= PART_TEXT_MAX)):
+            return False
+        if not (isinstance(p.get("psd"), str) and HEX8.match(p["psd"]) or key == "+ability" and p.get("psd") in (None, "")):
+            return False
+        if not (isinstance(p.get("sha"), str) and HEX8.match(p["sha"]) or key == "+ability" and p.get("sha") is None):
+            return False
+        if key == "+ability" and (p.get("delete") or p["field"] != "ability"):
+            return False
+    return True
+
+
 def edit_aliases(edits, key):
     """The aliases a card's Card Edits.json entry gives it."""
     found = edits.get(card_key(key))
@@ -1069,15 +1159,23 @@ def parse_edits():
         if not isinstance(fields, dict):
             log(f"warning: {EDITS_PATH}: {name!r} isn't an object, skipped")
             continue
-        good = {}
+        good, parts = {}, None
         for field, value in fields.items():
             if field.startswith("_"):
+                continue
+            if field == "parts":                        # per-layer text edits: the details' partState, never a field
+                if valid_parts(value):
+                    parts = value
+                else:
+                    log(f"warning: {EDITS_PATH}: {name}: parts isn't per-layer edits (PARTS_EDITOR.md §3), skipped")
                 continue
             if valid_edit(field, value):
                 good[field] = value
             else:
                 log(f"warning: {EDITS_PATH}: {name}: {field} = {value!r} isn't a known field or has the wrong type, skipped")
         meta = {k: fields[k] for k in ("_by", "_at") if isinstance(fields.get(k), str)}
+        if parts:
+            meta["parts"] = parts
         bot = fields.get(BOT_FIELDS)                  # the fields AutoCroissant set under another editor's _by
         if isinstance(bot, list) and all(isinstance(f, str) for f in bot):
             meta[BOT_FIELDS] = bot
@@ -1314,7 +1412,19 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     current = bool(psd_sha and verdict.get("psd") and psd_sha.startswith(verdict["psd"]))
     if verdict.get("state") == "baked" and current and verdict.get("reason"):
         entry["baked"] = verdict["reason"]        # the bot's bake of this PSD, its flags with it (kept alone once no field is left)
+    if current and isinstance(verdict.get("parts"), dict):     # per-layer outcomes: {"baked": 2, "skipped": 1}
+        flags = {}
+        for how in verdict["parts"].values():
+            if isinstance(how, str):
+                flags[how] = flags.get(how, 0) + 1
+        if flags:
+            entry["partFlags"] = flags
+    if current and isinstance(verdict.get("moved"), str):
+        entry["moved"] = verdict["moved"]         # a stars edit moved the card into its N Stars folder
+    parted = sorted({p["field"] for p in (meta.get("parts") or {}).values()})
     if not fields:
+        if parted:
+            entry["pending"] = parted
         return
     orig = {}
     for field, value in fields.items():
@@ -1331,6 +1441,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     entry["orig"] = orig                          # PSD values
     # awaiting a bake, as psd_edit.classify sees it
     def waits(f):
+        if f in parted:                           # per-layer edits wait on their parts, never on the derived text
+            return True
         if f == "name":
             return shown is not None and printed(fields[f]) != shown
         if f == "ability":
@@ -1338,7 +1450,7 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
         if f == "types":                          # any order and spelling, as psd_edit.same_types
             return type_keys(fields[f]) != type_keys(orig.get(f))
         return entry[f] != orig.get(f)
-    pending = sorted(f for f in fields if f in PSD_FIELDS and fields[f] is not None and waits(f))
+    pending = sorted({f for f in fields if f in PSD_FIELDS and fields[f] is not None and waits(f)} | set(parted))
     if pending:
         entry["pending"] = pending
     tried = verdict.get("for")                    # a refusal: while the refused values are unchanged too
@@ -2035,7 +2147,7 @@ def edits_entries(text):
         return {}
     if not isinstance(cards, dict):
         return {}
-    return {card_key(name): (name, {f: v for f, v in fields.items() if not f.startswith("_")}, (fields.get("_by"), fields.get("_at")))
+    return {card_key(name): (name, {f: v for f, v in fields.items() if not f.startswith("_") and f != "parts"}, (fields.get("_by"), fields.get("_at")))
             for name, fields in cards.items() if isinstance(fields, dict)}
 
 
@@ -2770,8 +2882,9 @@ def main():
         used_slugs.add(slug)
         return slug
 
-    def png_for(psd_path, name):
-        guess = psd_path[: len(psd_path) - 4] + ".png" if psd_path.lower().endswith(".psd") else None
+    def png_for(psd_path, name, variant=None):
+        number = str(variant) if isinstance(variant, int) and variant > 1 else ""     # variant N: NameN.png
+        guess = psd_path[: len(psd_path) - 4] + number + ".png" if psd_path.lower().endswith(".psd") else None
         if guess in tree:
             return guess
         return png_by_name.get(name.replace(" ", "_").lower() + ".png")
@@ -2783,7 +2896,8 @@ def main():
             if getattr(c, "display_name", None):
                 bot_dup_names[name.replace(" ", "_").lower() + ".png"] = c.display_name
             continue
-        png = png_for(path, name)
+        variant = getattr(c, "variant", None)
+        png = png_for(path, name, variant)
         if png:
             seen_pngs.add(png)
         is_rule = getattr(c, "card_type", "") == "rulebook" or "/Rulebook/" in path
@@ -2812,12 +2926,16 @@ def main():
             entry["reparsePending"] = True       # PSD committed since the bot last read it (a bake, or any edit)
         apply_edits(entry, edits, sha, shown)
         date_text(entry, c, old_stats.get(name))
+        if isinstance(variant, int) and not isinstance(variant, bool) and variant >= 1:
+            entry["variant"] = variant            # one picture of a PSD with several (" #N" layers); variantOf/variants below
+            entry["_variantOf"] = getattr(c, "variant_of", None) or name
         (rules if is_rule else cards).append(entry)
+    link_variants(cards)
 
     # duplicates: more PNGs exported from one card's PSD (A_Snack.psd -> A_Snack2.png "Breakfast", A_Snack3.png
     # "Supper"). Same card, different name and art. Named by its Card Edits entry's aliases, else the original's name.
     lower_tree = {path.lower() for path in tree}
-    by_psd = {c["psd"].lower(): c for c in cards if c.get("psd")}
+    by_psd = {c["psd"].lower(): c for c in cards if c.get("psd") and c.get("variant", 1) == 1}
     for path in sorted(tree):
         m = re.match(r"(.+?)(\d+)\.png$", path, re.I)
         if not m or path in seen_pngs or not path.startswith(CARD_FOLDERS) or (m.group(1) + m.group(2) + ".psd").lower() in lower_tree:
@@ -2997,7 +3115,7 @@ def main():
             f"from {len(versions['commits'])} commits, since {datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}")
 
     apply_created(cards, parse_created())         # after fs: a card's first upload can be the earlier evidence
-    detail_files = join_details(cards + rules, records, tree)      # rulebook pages too: the bot reads their PSDs
+    detail_files = join_details(cards + rules, records, tree, edits)      # rulebook pages too: the bot reads their PSDs
     for e in cards + rules:
         e.pop("_blob", None)
     if records:
