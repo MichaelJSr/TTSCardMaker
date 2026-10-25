@@ -515,8 +515,13 @@ export function createPreviews(app) {
     return paint;
   }
   /** The card page: the viewer on the card image, edit mode only, for a card with PSD changes or previews. */
-  function mountCard(modal, c) {
+  function mountCard(modal, c, loaded = false) {
     if (!app.editor.me) return;
+    if (!loaded && app.editor.partsLoaded?.(c) === false) {     // the part edits come from the details records: those first
+      const iv = modal.querySelector(".detail .image-wrap .iv");
+      if (iv) app.editor.loadParts(c).then(() => { if (iv.isConnected) mountCard(modal, c, true); });
+      return;
+    }
     const getV = () => cardV(c);
     if (!getV().n && !(store[c.id] || []).some(e => e.state !== "expired")) return;   // nothing to show but a preview that's gone
     const iv = modal.querySelector(".detail .image-wrap .iv");

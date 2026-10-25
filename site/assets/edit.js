@@ -141,13 +141,17 @@ export function mergeAuthor(op, v, published) {
   if (v === (published || "")) delete o.author; else o.author = v || null;
   return o;
 }
-/** op without one item: a field, "author", "ban" or a rating ("rate-power"; a reverted name goes back to the published one). */
-export function withoutItem(op, item, name) {
+/** op without one item: a field, "author", "ban" or a rating ("rate-power"; a reverted name goes back to the published one).
+ *  "parts": the boxes, and the name/ability derived from them (fields: theirs, else the staged boxes' own). */
+export function withoutItem(op, item, name, fields = null) {
   const o = { ...op, set: { ...op.set }, unset: (op.unset || []).filter(k => k !== item) };
   if (item === "author") delete o.author; else if (item === "ban") delete o.ban;
   else if (item.startsWith("rate-")) { const r = { ...o.rate }; delete r[item.slice(5)]; if (Object.keys(r).length) o.rate = r; else delete o.rate; }
-  else if (item === "parts") { delete o.set.parts; o.unset = o.unset.filter(k => !k.startsWith(P.PART)); }
-  else {
+  else if (item === "parts") {
+    const derived = fields || [...new Set(Object.values(o.set.parts || {}).map(p => p.field))];
+    delete o.set.parts; delete o.partsBase; o.unset = o.unset.filter(k => !k.startsWith(P.PART) && !derived.includes(k));
+    for (const f of derived) { delete o.set[f]; if (f === "name") o.name = name; }
+  } else {
     delete o.set[item]; if (item === "name") o.name = name;
     if ((item === "name" || item === "ability") && o.set.parts) {     // the boxes behind a derived field go with it
       const keep = Object.fromEntries(Object.entries(o.set.parts).filter(([, p]) => p.field !== item));
@@ -615,12 +619,12 @@ export function createEditor(app) {
   const groupOf = c => { const first = (c.variantOf && S.byId.get(c.variantOf)) || c;     // one PSD's pictures, variant 1 first
     return first.variants?.length ? [first, ...first.variants.map(i => S.byId.get(i)).filter(Boolean)] : [c]; };
   /** Load the records the dialog needs (the card's, and its sibling pictures'), then run go. */
-  function withRecs(c, go) {
+  function withRecs(c, go, quiet = false) {
     const need = [c, ...groupOf(c)].filter(x => x.details && !recs.has(x.id) && app.loadDetails);
     if (!need.length) return go();
     let failed = false;                            // unreadable now: the joined fields this time, tried again on the next open
     Promise.all(need.map(x => app.loadDetails(x).then(d => recs.set(x.id, d), () => { failed = true; }))).then(() => {
-      if (failed) app.toast("Couldn't load the card's text layers: editing the joined text");
+      if (failed && !quiet) app.toast("Couldn't load the card's text layers: editing the joined text");
       go(failed ? need : null);
     });
   }
@@ -931,8 +935,9 @@ export function createEditor(app) {
   function stageField(id, f, v, defer = false) {
     const c = find(id); if (!c || !(f in FIELDS)) return null;
     const b = baseOf(c);
-    const one = (f === "name" || f === "ability") && partsView(c);
-    if (one && !one.rule && one.list.filter(x => x.field === f).length === 1) return stagePart(c, one, f, v, defer);
+    const one = (f === "name" || f === "ability") && partsView(c), n = one ? one.list.filter(x => x.field === f).length : 0;
+    if (one && !one.rule && n === 1) return stagePart(c, one, f, v, defer);
+    if (one && (f === "ability" || !one.rule)) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
     let x = fromInput(f, v, b.name);
     if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, f === "subseries" ? c.series || "" : "", c.id)) === undefined) return null;
     const op = mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x);
@@ -941,7 +946,7 @@ export function createEditor(app) {
   }
   // an inline edit of a card's one title or ability layer, as a part edit (the parts format whenever the record has parts)
   function stagePart(c, view, f, v, defer) {
-    const box = view.list.find(x => x.field === f), b = baseOf(c), text = P.tidyText(f === "name" ? String(v ?? "").replace(/\s+/g, " ") : v) || (f === "name" ? box.start : "");
+    const box = view.list.find(x => x.field === f), b = baseOf(c), text = (f === "name" ? P.keepBreaks(box.start, P.tidyText(String(v ?? "").replace(/\s+/g, " "))) : P.tidyText(v)) || (f === "name" ? box.start : "");
     const r = P.readParts(view.rec, view.list, { values: { [box.key]: text } });
     if (r.error) { app.toast(r.error); return null; }
     let op = opFor(c);
@@ -1003,6 +1008,17 @@ export function createEditor(app) {
   }
   function revert(id, item) {
     const c = find(id), op = stage.cards[id]; if (!c || !op) return;
+    if (item === "parts") {                        // the boxes, and every picture's name/ability derived from them
+      const keys = [...Object.keys(op.set.parts || {}), ...(op.unset || []).filter(k => k.startsWith(P.PART)).map(k => k.slice(P.PART.length))];
+      for (const x of groupOf(c)) {
+        const v = partsView(x), o = stage.cards[x.id]; if (!o) continue;
+        const shown = k => x === c || k === P.ADD || v?.list.some(b => b.key === k);   // another picture: the layers it shows
+        const fields = [...new Set(keys.filter(shown).map(k => (k === P.ADD ? "ability" : op.set.parts?.[k]?.field || v?.list.find(b => b.key === k)?.field || v?.rec.partEdits?.[k]?.field)).filter(Boolean))];
+        if (x === c) put(x.id, withoutItem(o, "parts", baseOf(x).name, fields));
+        else if (fields.length) put(x.id, fields.reduce((a, f) => withoutItem(a, f, baseOf(x).name), o));
+      }
+      save(); return;
+    }
     put(id, withoutItem(op, item, baseOf(c).name)); save();
   }
   // ---- Rename everywhere: `from` -> the typed name on every card carrying it (hidden ones too), each card's own edit
@@ -1154,7 +1170,8 @@ export function createEditor(app) {
       else if (Object.keys(typed).length) cardDrafts.put(c.id, typed, true, base); else cardDrafts.drop(c.id);
     });
     const typing = () => autosave.run();
-    const joined = partForm && !restored && Object.keys(cardDrafts.get(c.id)?.fields || {}).filter(f => (f === "name" || f === "ability") && !(f in start));
+    const joined = partForm && Object.keys((restored || cardDrafts.get(c.id)?.fields) || {}).filter(f => (f === "name" || f === "ability") && !(f in start));
+    if (joined?.length && restored) restored = Object.fromEntries(Object.entries(restored).filter(([f]) => !joined.includes(f)));
     if (joined?.length) { cardDrafts.drop(c.id, joined); app.toast(`An older unsaved ${joined.map(f => LABEL[f]).join(" and ")} edit can't go into the boxes: dropped`); }   // a joined draft of a card of several layers
     const older = !restored && cardDrafts.get(c.id), offered = older && draft.restorable(older.fields, start);
     if (restored) draft.fillValues(form, restored, { creatures: setCreatures });
@@ -1841,6 +1858,8 @@ export function createEditor(app) {
     // the parts editor: a card's boxes per field once its record is loaded ({title, ability, rule} or null: no parts), and
     // the parts its Card Edits.json entry (its PSD's: variant 1's) would hold once published, for the previews
     partsFor: c => new Promise(ok => withRecs(c, () => { const v = partsView(c); ok(v && { rule: v.rule, title: v.list.filter(x => x.kind === "title").length, ability: v.list.filter(x => x.kind === "ability").length }); })),
+    partsLoaded: c => [c, ...groupOf(c)].every(x => !x.details || recs.has(x.id) || !app.loadDetails),
+    loadParts: c => new Promise(ok => withRecs(c, ok, true)),        // the previews: the records entryParts reads
     entryParts(id, op = null) {
       const c = find(id); if (!c) return null;
       const first = groupOf(c)[0], v = partsView(first) || partsView(c); if (!v) return null;

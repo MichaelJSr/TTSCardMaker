@@ -390,14 +390,26 @@ def join_details(cards, records, tree, edits=None):
     for e in cards:
         path = e.get("psd")
         rec = (records.get(tree.get(path, "")) or records.get(e.get("_blob") or "") or by_path.get(path)) if path else None
+        plain = e.pop("_plain", None)             # apply_edits' pending without the part edits' fields
         if rec:
             e["details"] = True
             out[e["id"]] = {**rec, "id": e["id"], "name": e["name"]}      # the card's id and shown name win
+            if e.get("dup") and by_id.get(e["dup"], {}).get("psd") == path:
+                out[e["id"]].pop("parts", None)   # a numbered PNG of the PSD: not its first picture's boxes (§4.1: tag the variant layers)
+                continue
             first = by_id.get(e.get("variantOf")) or e
             found = (edits or {}).get(card_key(first["key"]))
             parts = details_parts(rec, e, by_id, found[1] if found else None, tree.get(path), blob_of.get(id(rec)))
             if parts is not None:
                 out[e["id"]].update(parts)
+                shown = {str(p.get("id")) for k in ("title", "ability", "blocks") for p in parts["parts"][k]}
+                here = {p["field"] for k, p in parts["partEdits"].items() if "field" in p and (k == "+ability" or k in shown
+                        or (parts["partState"].get(k) == "gone" and first is e))}
+                pending = sorted(set((e.get("pending") or []) if plain is None else plain) | here)   # a part's field: on the pictures showing its layer
+                if pending:
+                    e["pending"] = pending
+                else:
+                    e.pop("pending", None)
     return out
 
 
@@ -1422,6 +1434,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     if current and isinstance(verdict.get("moved"), str):
         entry["moved"] = verdict["moved"]         # a stars edit moved the card into its N Stars folder
     parted = sorted({p["field"] for p in (meta.get("parts") or {}).values()})
+    if parted:
+        entry["_plain"] = []                      # pending without the parts: join_details adds the ones this picture shows
     if not fields:
         if parted:
             entry["pending"] = parted
@@ -1450,7 +1464,10 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
         if f == "types":                          # any order and spelling, as psd_edit.same_types
             return type_keys(fields[f]) != type_keys(orig.get(f))
         return entry[f] != orig.get(f)
-    pending = sorted({f for f in fields if f in PSD_FIELDS and fields[f] is not None and waits(f)} | set(parted))
+    plain = {f for f in fields if f in PSD_FIELDS and fields[f] is not None and f not in parted and waits(f)}
+    pending = sorted(plain | set(parted))
+    if parted:
+        entry["_plain"] = sorted(plain)
     if pending:
         entry["pending"] = pending
     tried = verdict.get("for")                    # a refusal: while the refused values are unchanged too

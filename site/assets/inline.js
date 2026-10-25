@@ -124,7 +124,7 @@ function answer(restore) {
   if (!o) return;
   if (!restore) { drafts().drop(o.c.id); A.toast("Unsaved edit discarded"); return; }
   const keys = Object.keys(o.fields), [f] = keys, el = keys.length === 1 && spot(f);   // one field: its own editor, else All fields
-  if (el && TEXT.includes(f)) open(el, f, o.fields[f]);
+  if (el && TEXT.includes(f)) openText(el, f, o.fields[f]);
   else if (el && f === "types") openTypes(el, o.fields.types);
   else A.editor.open(o.c.id, { draft: o.fields });
 }
@@ -247,12 +247,12 @@ function onClick(e) {
 }
 /** A text field: in place, unless the card's record has parts and the field isn't one layer (several, or none): then
  *  the Edit dialog at that field, one box per layer (PARTS_EDITOR.md §5). */
-function openText(el, f) {
+function openText(el, f, text = null) {          // text: a restored draft (the dialog drops a joined one on several boxes)
   const c = card;
-  if ((f !== "name" && f !== "ability") || !c?.details || !A.editor.partsFor) { open(el, f); return; }
+  if ((f !== "name" && f !== "ability") || !c?.details || !A.editor.partsFor) { open(el, f, text); return; }
   A.editor.partsFor(c).then(n => {
     if (card !== c || !el.isConnected) return;
-    if (n && (n.rule || n[f === "name" ? "title" : "ability"] !== 1)) A.editor.open(c.id, { focus: f }); else open(el, f);
+    if (n && (n.rule || n[f === "name" ? "title" : "ability"] !== 1)) A.editor.open(c.id, { focus: f, ...(text != null ? { draft: { [f]: text } } : {}) }); else open(el, f, text);
   });
 }
 function onDblClick(e) {

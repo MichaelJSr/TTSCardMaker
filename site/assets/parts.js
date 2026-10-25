@@ -19,6 +19,21 @@ export function partsOf(d) {
 }
 /** The card's name from its title boxes: each line break read as a space (the name stays one line). */
 export const joinTitle = texts => texts.map(t => String(t).split("\n").map(s => s.trim()).filter(Boolean).join(" ")).filter(Boolean).join(" ");
+/** A one-line name typed over a title box with line breaks: each break stays where the text around it is unchanged. */
+export function keepBreaks(was, now) {
+  const lines = String(was ?? "").split("\n").map(s => s.trim()).filter(Boolean), old = lines.join(" "), n = String(now ?? "");
+  if (lines.length < 2) return n;
+  let pre = 0, suf = 0, at = -1;
+  while (pre < old.length && pre < n.length && old[pre] === n[pre]) pre++;
+  while (suf < Math.min(old.length, n.length) - pre && old[old.length - 1 - suf] === n[n.length - 1 - suf]) suf++;
+  const out = [...n];
+  for (const l of lines.slice(0, -1)) {
+    at += l.length + 1;                            // the space that was a break
+    const j = at < pre ? at : at >= old.length - suf ? at + n.length - old.length : -1;
+    if (j >= 0 && out[j] === " ") out[j] = "\n";
+  }
+  return out.join("");
+}
 /** The ability from its boxes, in reading order (the parser's join, without its type and padding clean-up). */
 export const joinAbility = texts => texts.map(t => String(t).trim()).filter(Boolean).join("\n");
 const baseName = layer => String(layer || "").split("/").pop().replace(/ #\d{1,2}(,\d{1,2})*$/, "").trim();

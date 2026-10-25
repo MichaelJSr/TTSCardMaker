@@ -626,7 +626,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   for (const [, plan] of icons2) if (!plan.boxed) for (const b of plan.erase) { const g = at(b); fillBox(pixels.data, W, H, [g[0] - 2, g[1] - 2, g[2] + 2, g[3] + 2], { pad: Math.max(2, Math.round(W * 0.004)) }); }
   ctx.putImageData(pixels, 0, 0);
   for (const [label, plan] of icons2) {
-    if (plan.refused) out.refused.push([label, plan.refused]);
+    if (plan.refused && !(label === "stars" && obj(rec?.parts) && /folder sets them/.test(plan.refused))) out.refused.push([label, plan.refused]);   // with parts the card moves folder (the dialog's note)
     if (plan.boxed && !(label === "stars" ? +todo.stars[1] : todo.types[1]?.length)) { out.skipped.push(label); continue; }   // none, with no place: the old ones stay
     if (plan.boxed) { out.boxed.push(label); await drawIconBox(ctx, label, label === "stars" ? todo.stars[1] : todo.types[1], { icons, head, W, H, tpl }); }
     else if (label === "stars") { const src = await starSource(head.stars, icons, img, k); for (const b of plan.draw) drawIcon(ctx, src, at(b)); }
