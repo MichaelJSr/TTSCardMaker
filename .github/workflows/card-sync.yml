@@ -4,9 +4,9 @@
 # bobberlington/AutoCroissant at the builder ref: card_bake --local, card_data, tts_save --names, changelog post.
 # Migration step 7 (the shadow): every 30 minutes, live; dispatches run dry by default; the bake, the main commit and the
 # posts off (MAIN_COMMIT and POSTS; discord.json goes to the artifact only), so a live run writes only `data`.
-# tts-save.yml and card-edits.yml stay main's writers until the cutover (step 8). The build and the bake install the card
-# packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) from wheels cached per that file (~25 s
-# a Python saved).
+# tts-save.yml and card-edits.yml stay main's writers until the cutover (step 8). Every stage runs in one environment on
+# Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) installed from
+# the card workflows' wheel cache.
 name: Card sync
 run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Card sync (dry run)' || 'Card sync' }}
 
@@ -261,54 +261,41 @@ jobs:
         if: steps.gate.outputs.go == 'true' && steps.font-cache.outputs.cache-hit != 'true'
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
-      # The builder's Python (the jetson's and the Mac tests', 3.14), then the baker's (card-edits.yml's, 3.12, last on PATH).
-      - uses: actions/setup-python@v7
-        id: builder-python
-        if: steps.gate.outputs.go == 'true'
-        with:
-          python-version: "3.14"
-
+      # The Actions' one Python (the jetson's and the Mac tests', 3.14), for every stage.
       - uses: actions/setup-python@v7
         id: python
         if: steps.gate.outputs.go == 'true'
         with:
-          python-version: "3.12"     # no `cache: pip`: the wheels below hold every package
+          python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
-      # requirements-cards.txt as wheels for both Pythons, cached per that file, runner and the two Pythons (this
-      # workflow's own entry: card-edits.yml's holds 3.12's alone).
+      # requirements-cards.txt as wheels, cached per that file, runner and Python (one entry for the six card workflows).
       - id: wheels
         if: steps.gate.outputs.go == 'true'
         uses: actions/cache/restore@v6
         with:
           path: ~/.cache/card-wheels
-          key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.builder-python.outputs.python-version }}-py${{ steps.python.outputs.python-version }}
+          key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
 
-      # Two environments from requirements-cards.txt: the builder's on 3.14 and the bake's on 3.12 (only when the run
-      # bakes). A miss builds both Pythons' wheels, a bake or not (the entry is saved for both). --help proves each
-      # import closure before any stage.
-      - name: Python environments
+      # One environment from requirements-cards.txt for the bake, the build, the save and the posts (until 2026-10-24 the
+      # bake had its own on 3.12). A miss builds the wheels (the fork, pyoxipng from its sdist) and saves them. --help
+      # proves the import closure before any stage.
+      - name: Python environment
         id: venv
         if: steps.gate.outputs.go == 'true'
         timeout-minutes: 15
         env:
-          # none in any letter case, as Bake's `if` compares it: no baker then
-          BAKE: ${{ (env.MAIN_COMMIT == 'on' || env.DRY_RUN == 'true') && inputs.bake != 'none' && (inputs.bake || 'all') || 'none' }}
           HIT: ${{ steps.wheels.outputs.cache-hit }}
         run: |
           if [ "$HIT" != true ]; then
-            for python in python3.14 python3.12; do "$python" -m pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt; done
+            pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
             echo "wheels=built" >> "$GITHUB_OUTPUT"
           fi
           sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
-          python3.14 -m venv "$RUNNER_TEMP/builder"
-          "$RUNNER_TEMP/builder/bin/pip" install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
-          (cd bot && "$RUNNER_TEMP/builder/bin/python" -m commands.card_data --help > /dev/null \
-            && "$RUNNER_TEMP/builder/bin/python" -m commands.tts_save --help > /dev/null)
-          if [ "$BAKE" != none ]; then
-            python3.12 -m venv "$RUNNER_TEMP/baker"
-            "$RUNNER_TEMP/baker/bin/pip" install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
-            (cd bot && "$RUNNER_TEMP/baker/bin/python" -m commands.card_bake --help > /dev/null)
-          fi
+          python -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
+          (cd bot && for module in card_data tts_save card_bake; do
+            "$RUNNER_TEMP/venv/bin/python" -m "commands.$module" --help > /dev/null
+          done)
 
       - if: steps.venv.outputs.wheels == 'built'     # only once they installed
         uses: actions/cache/save@v6
@@ -336,7 +323,7 @@ jobs:
           if [ -n "$CARD" ] && [ "$CARD" != all ]; then args+=(--card "$CARD"); fi
           if [ "$DRY_RUN" = true ]; then args+=(--dry-run); fi
           set +e
-          "$RUNNER_TEMP/baker/bin/python" -m commands.card_bake "${args[@]}" > "$RUNNER_TEMP/bake.md"
+          "$RUNNER_TEMP/venv/bin/python" -m commands.card_bake "${args[@]}" > "$RUNNER_TEMP/bake.md"
           code=$?
           set -e
           cat "$RUNNER_TEMP/bake.md"
@@ -382,7 +369,7 @@ jobs:
           if [ -n "$RESTORE" ]; then args+=(--restore "$RESTORE"); fi
           if [ -n "$SEED" ]; then args+=(--seed "$SEED"); fi
           set +e
-          "$RUNNER_TEMP/builder/bin/python" -m commands.card_data "${args[@]}"
+          "$RUNNER_TEMP/venv/bin/python" -m commands.card_data "${args[@]}"
           code=$?
           set -e
           if [ "$code" = 2 ]; then echo "::error::A data gate refused: nothing is committed"; fi
@@ -410,7 +397,7 @@ jobs:
           else
             echo "No card data: names from the website's cards.json."
           fi
-          "$RUNNER_TEMP/builder/bin/python" -m commands.tts_save "$GITHUB_WORKSPACE/$save" "${names[@]}" | tee "$RUNNER_TEMP/save.md"
+          "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$GITHUB_WORKSPACE/$save" "${names[@]}" | tee "$RUNNER_TEMP/save.md"
           if git -C "$GITHUB_WORKSPACE" diff --quiet -- "$save"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
@@ -506,10 +493,10 @@ jobs:
           echo "Main commit \`${m:0:8}\`: Card sync: ${subject%, }." >> "$GITHUB_STEP_SUMMARY"
           if [ "$head" != "$MAIN" ]; then
             cd bot
-            "$RUNNER_TEMP/builder/bin/python" -m commands.card_data --rewrite "$head" "$m" --checkout "$GITHUB_WORKSPACE" \
+            "$RUNNER_TEMP/venv/bin/python" -m commands.card_data --rewrite "$head" "$m" --checkout "$GITHUB_WORKSPACE" \
               --db "$db" --message "$RUNNER_TEMP/message.txt"
           elif [ "$BUILT" = success ] && [ -f "$db/manifest.json" ] && [ -n "$(git -C "$db" status --porcelain -- .)" ]; then
-            "$RUNNER_TEMP/builder/bin/python" - "$db/manifest.json" "$MAIN" "$m" "$(git show -s --format=%ct "$m")" "$RUNNER_TEMP/message.txt" <<'EOF'
+            "$RUNNER_TEMP/venv/bin/python" - "$db/manifest.json" "$MAIN" "$m" "$(git show -s --format=%ct "$m")" "$RUNNER_TEMP/message.txt" <<'EOF'
           import json, os, sys
           path, old, new, at, message = sys.argv[1:]
           with open(path, encoding="utf-8") as fh:
@@ -546,7 +533,7 @@ jobs:
           else
             echo "::warning::the site's cards.json was not fetched: the posts link card searches"
           fi
-          "$RUNNER_TEMP/builder/bin/python" -m commands.changelog post --db "$GITHUB_WORKSPACE/carddata/db" --site "$SITE_URL" \
+          "$RUNNER_TEMP/venv/bin/python" -m commands.changelog post --db "$GITHUB_WORKSPACE/carddata/db" --site "$SITE_URL" \
             --repo "$GITHUB_REPOSITORY" "${ids[@]}" --out "$RUNNER_TEMP/discord.json"
 
       # Off until step 8 (POSTS) and on every dry run. The cursor moves after each accepted message and rides in the data
@@ -566,7 +553,7 @@ jobs:
               echo "::warning::the Discord webhook call failed: $((n - i)) messages wait for the next run"
               break
             fi
-            "$RUNNER_TEMP/builder/bin/python" -m commands.changelog advance --db "$GITHUB_WORKSPACE/carddata/db" \
+            "$RUNNER_TEMP/venv/bin/python" -m commands.changelog advance --db "$GITHUB_WORKSPACE/carddata/db" \
               --seq "$(jq ".messages[$i].cursor.seq" "$posts")" --push "$(jq -r ".messages[$i].cursor.push // \"\"" "$posts")"
             sleep 1
           done

@@ -65,7 +65,7 @@ jobs:
       # build_stoogedings.py and its packages (site/build/requirements.txt includes them) draw the token variants' pictures
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: "3.14"
           cache: pip
           cache-dependency-path: |
             site/build/requirements.txt

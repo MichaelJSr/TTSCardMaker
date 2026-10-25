@@ -83,6 +83,7 @@ const psdBadges = c => [
   c.refused ? `<span class="fact refused" data-tip="The last try to regenerate the card image was refused; change the edit or the PSD">Image update refused: ${esc(c.refused)}</span>`
     : c.pending?.length ? `<span class="fact pending" data-tip="${PSD_TIP}">PSD pending: ${esc(pendingList(c))}</span>` : "",
   c.reparsePending ? `<span class="fact" data-tip="The PSD changed since the bot last read it; the data follows on the next /update_stats">Re-parse pending</span>` : "",
+  c.baked && !c.refused ? `<span class="fact" data-tip="The bot regenerated the card image from the edit; its notes say what it drew best-effort">Image baked: ${esc(c.baked)}</span>` : "",
 ].join("");
 // beside PSD chips and parser notes: opens the card with Details open
 const detailsLink = c => (c.details ? `<a class="fact details-link" href="#/card/${c.id}?details" data-tip="Open the card with its PSD details">Details</a>` : "");   // a plain link: Ctrl-click opens a tab

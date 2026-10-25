@@ -72,11 +72,11 @@ jobs:
       - uses: actions/setup-python@v7
         id: python
         with:
-          python-version: "3.12"     # no `cache: pip`: the wheels below hold every package
+          python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
-      # requirements-cards.txt as wheels, cached per that file, runner and Python (shared with card-guards and card-preview;
-      # a re-pin in it is a new entry): a hit installs offline; a miss builds the fork (its C extensions, ~25 s) and saves
-      # the wheels.
+      # requirements-cards.txt as wheels, cached per that file, runner and Python (one entry for the six card workflows; a
+      # re-pin in it is a new entry): a hit installs offline; a miss builds the fork (its C extensions) and pyoxipng (no
+      # cp314 wheel: Rust, from its sdist) and saves the wheels.
       - id: wheels
         uses: actions/cache/restore@v6
         with:

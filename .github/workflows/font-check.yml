@@ -3,7 +3,8 @@
 # and, when the secret DISCORD_STANDARDS_WEBHOOK is set, a Discord message in the standards channel pinging the card makers'
 # role (owner, 2026-10-23: the only role ping of the checks' posts). It never reverts or
 # rejects a push: the card stays as pushed, its author is asked to add the font. The first standardization rule
-# (AutoCroissant docs/Campaigns/CARD_STANDARDIZATION_CAMPAIGN.md section 5); later rules take the same shape.
+# (AutoCroissant docs/Campaigns/CARD_STANDARDIZATION_CAMPAIGN.md section 5); later rules take the same shape. The card
+# packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows' wheel cache.
 name: Font check
 
 on:
@@ -11,6 +12,7 @@ on:
     branches: [main]
     paths:
       - "**/*.psd"
+      - "**/*.PSD"
       - "MDW/Fonts/**"
   workflow_dispatch:
     inputs:
@@ -40,7 +42,7 @@ jobs:
             /.github/
 
       # The checker and its import closure (no config.py: github_api reads it in a try/except; the token comes from the
-      # environment). tests/test_font_check.py runs --help on exactly this list.
+      # environment), and the packages it installs. tests/test_font_check.py runs --help on exactly this list.
       - uses: actions/checkout@v7
         with:
           repository: bobberlington/AutoCroissant
@@ -50,12 +52,34 @@ jobs:
             /commands/font_check.py
             /commands/github_api.py
             /global_config.py
+            /requirements-cards.txt
 
       - uses: actions/setup-python@v7
+        id: python
         with:
-          python-version: "3.12"
+          python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
-      - run: pip install -q psd-tools fonttools requests
+      # card-edits.yml's install (the same cache entry): AutoCroissant requirements-cards.txt, the psd-tools fork's one pin,
+      # as wheels cached per that file, runner and Python; a hit installs offline, a miss builds them and saves them.
+      - id: wheels
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/card-wheels
+          key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+
+      - timeout-minutes: 10
+        env:
+          HIT: ${{ steps.wheels.outputs.cache-hit }}
+        run: |
+          [ "$HIT" = true ] || pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
+          sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
+          pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
+
+      - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
+        uses: actions/cache/save@v6
+        with:
+          path: ~/.cache/card-wheels
+          key: ${{ steps.wheels.outputs.cache-primary-key }}
 
       # Fonts: MDW/Fonts' top level (270 font files, 215 MB on 2026-10-21; stoogedings-src/ is the icon font's source and
       # stays out), cached by the folder's tree sha as card-edits.yml does; the sparse checkout fetches them only on a miss.

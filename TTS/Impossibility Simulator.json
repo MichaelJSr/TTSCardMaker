@@ -26865,8 +26865,8 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1582": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Rulebook/19_Status_Effects.png",
-              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Rulebook/19_Status_Effects.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2b2189ddc5b53228384676f6f0debf5817946a1f/Auxiliary/Rulebook/19_Status_Effects.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2b2189ddc5b53228384676f6f0debf5817946a1f/Auxiliary/Rulebook/19_Status_Effects.png",
               "NumWidth": 1,
               "NumHeight": 1,
               "BackIsHidden": true,
