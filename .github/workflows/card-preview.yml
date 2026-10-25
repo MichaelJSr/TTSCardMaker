@@ -2,9 +2,8 @@
 # baked as Card sync would, nothing committed to main. The result goes to the orphan branch `previews`
 # (previews/<request>/, index.json), one commit per run, rewritten past 200 previews or 7 days; contract: site/NOTES.md
 # section 19. No Discord. The preview job's token is read-only; only the publish job writes (stdlib, no install).
-# Inputs reach the shell only through env and a file. Every push trigger here is `branches: [main]`. The card packages
-# (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from wheels cached per that file (~25 s
-# a preview saved).
+# Inputs reach the shell only through env and a file. The card packages (AutoCroissant requirements-cards.txt, the
+# psd-tools fork's one pin) install from wheels cached per that file (~25 s a preview saved).
 name: Card preview
 run-name: Card preview ${{ inputs.request }}
 
@@ -38,7 +37,7 @@ jobs:
     timeout-minutes: 11
     outputs:
       ok: ${{ steps.validate.outputs.ok }}
-      saved: ${{ steps.wheels.outputs.cache-hit != 'true' || steps.font-cache.outputs.cache-hit != 'true' }}
+      saved: ${{ steps.setup.outputs.wheels == 'built' || steps.font-cache.outputs.cache-hit != 'true' }}
     steps:
       # The request names a folder on the branch: a bad one fails the run and publishes nothing. The card and the edit
       # are card_preview's to check (env and a file here): a bad one is published as an input error for the website.
@@ -88,41 +87,13 @@ jobs:
             /global_config.py
             /requirements-cards.txt
 
-      - uses: actions/setup-python@v7
-        id: python
-        with:
-          python-version: "3.14"
-
-      # card-sync.yml's install: requirements-cards.txt's wheels, cached per that file, runner and Python (the same entry;
-      # a miss builds them all, pyoxipng too), but pyoxipng not installed: card_preview would recompress preview.png
+      # The shared setup (.github/actions/cards-python), without pyoxipng: card_preview would recompress preview.png
       # (~4 s), which is never published.
-      - id: wheels
-        uses: actions/cache/restore@v6
-        with:
-          path: ~/.cache/card-wheels
-          key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
-
-      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
-        with:
-          version: "0.13.5"
-          enable-cache: false
-
-      # uv installs the wheels (~1 s; pip took 5-7 s); a miss builds them with pip (uv has no `pip wheel`)
       - timeout-minutes: 5
-        env:
-          HIT: ${{ steps.wheels.outputs.cache-hit }}
-          UV_PYTHON: ${{ steps.python.outputs.python-path }}
-          UV_COMPILE_BYTECODE: "1"
-        run: |
-          [ "$HIT" = true ] || pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
-          sed -e 's/ @ [^;]*//' -e '/^pyoxipng/d' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
-          uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
-
-      - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
-        uses: actions/cache/save@v6
+        uses: ./.github/actions/cards-python
+        id: setup
         with:
-          path: ~/.cache/card-wheels
-          key: ${{ steps.wheels.outputs.cache-primary-key }}
+          skip: pyoxipng
 
       # Fonts as card-sync.yml's: MDW/Fonts' top level, cached by the folder's tree sha (the same cache key), fetched
       # only on a miss.
