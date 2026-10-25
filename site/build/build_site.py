@@ -76,6 +76,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from concurrent.futures import ThreadPoolExecutor
 import time
 from collections import Counter, defaultdict
@@ -2866,6 +2867,34 @@ def asset_stamps(texts):
     return out
 
 
+def minify(texts):
+    """{file: text} minified file by file with esbuild ($ESBUILD, else on PATH; site.yml pins it), as {file: bytes}.
+    No esbuild, or it failed: None (the files go out as they are)."""
+    exe = os.environ.get("ESBUILD") or shutil.which("esbuild")
+    if not exe:
+        log("assets: no esbuild, not minified")
+        return None
+    with tempfile.TemporaryDirectory() as tmp:
+        src, out = os.path.join(tmp, "src"), os.path.join(tmp, "out")
+        os.makedirs(src)
+        for name, text in texts.items():
+            with open(os.path.join(src, name), "w", encoding="utf-8") as fh:
+                fh.write(text)
+        try:
+            ver = subprocess.run([exe, "--version"], capture_output=True, text=True, check=True).stdout.strip()
+            subprocess.run([exe, *(os.path.join(src, n) for n in sorted(texts)), "--minify", "--format=esm", "--log-level=error",
+                            f"--outdir={out}"], capture_output=True, text=True, check=True)
+            got = {}
+            for name in texts:
+                with open(os.path.join(out, name), "rb") as fh:
+                    got[name] = fh.read()
+        except (OSError, subprocess.CalledProcessError) as e:
+            warn(f"assets not minified: esbuild: {getattr(e, 'stderr', '') or e}")
+            return None
+    log(f"assets: minified with esbuild {ver}, {sum(len(t.encode()) for t in texts.values())} -> {sum(map(len, got.values()))} bytes")
+    return got
+
+
 def inline_css(page, css):
     """page with its style.css link swapped for the stylesheet itself (index.html only: one round trip less on first paint)."""
     link = re.search(r'<link rel="stylesheet" href="assets/style\.css\?v=\w+">', page)
@@ -3337,9 +3366,10 @@ def main():
     data = steady(files, blobs)
     version = data_stamp(data, details)
     os.makedirs(os.path.join(DIST, "assets"))
-    for name, (_, text) in assets.items():
-        with open(os.path.join(DIST, "assets", name), "w", encoding="utf-8") as fh:
-            fh.write(text)
+    served = minify({name: text for name, (_, text) in assets.items()}) or {name: text.encode("utf-8") for name, (_, text) in assets.items()}
+    for name, blob in served.items():           # stamps hash the source: same source, same URL
+        with open(os.path.join(DIST, "assets", name), "wb") as fh:
+            fh.write(blob)
     def url(m):                               # index.html's asset and data URLs
         name = m.group(1).removeprefix("assets/")
         return f'{m.group(1)}?v={assets[name][0] if name in assets else version}"'
@@ -3364,7 +3394,7 @@ def main():
     site_desc = "Every card, the rulebook, a starting-hand builder and stats."
     site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(inline_css(template, assets["style.css"][1]).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards)))
+        fh.write(inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards)))
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
         fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">\n' + site_og))   # absolute: the 404 page can be served at any depth
     os.makedirs(os.path.join(DIST, "d"))                # shared hands: d/#/deck/<code>

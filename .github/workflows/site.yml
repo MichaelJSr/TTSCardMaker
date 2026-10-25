@@ -72,6 +72,9 @@ jobs:
           UV_PYTHON: ${{ steps.python.outputs.python-path }}
           UV_COMPILE_BYTECODE: "1"
 
+      # esbuild minifies the JS and CSS file by file (build_site.py minify). Exact version: same source, same bytes.
+      - run: npm install --prefix "$RUNNER_TEMP/esbuild" --no-save --no-audit --no-fund esbuild@0.28.2
+
       - id: pages
         uses: actions/configure-pages@v6
 
@@ -126,6 +129,7 @@ jobs:
           SITE_URL: ${{ steps.pages.outputs.base_url }}
           CARD_DATA_DIR: carddata/db
           IMAGE_BUDGET: "1800"
+          ESBUILD: ${{ runner.temp }}/esbuild/node_modules/.bin/esbuild
 
       - id: og
         run: |
