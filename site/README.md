@@ -1,7 +1,8 @@
 # Card browser
 
 Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMaker/. Rebuilt by
-`.github/workflows/site.yml` on every push to `main`, after each Card sync commit, daily, and on demand (Actions → Card browser → Run workflow).
+`.github/workflows/site.yml` after each Card sync data commit (card pushes and website edits build there, on the new
+data), on a push of site code, daily, and on demand (Actions → Card browser → Run workflow).
 
 ## What it has
 
@@ -91,11 +92,9 @@ Impossibility Simulator's card browser: https://michaeljsr.github.io/TTSCardMake
   and an ability word diff, new art, moves, renames, archived and restored cards, database edits, parser re-reads), by day
   in Pacific time, filterable by kind. **Archive**: the cards whose PSD left the card folders, each tagged Renamed,
 Retired (moved to MDW/The Morgue), Unfinished (moved to MDW/Unfinished) or Deleted, with chips to filter by tag (`?tag=retired`). **Database edits**: the card sync's edited and authors
-  events, and every commit that changed a Card Edits.json entry or a Card Authors.txt line (website, Discord or a commit
-  by hand) with each field's old and new value. The events need the card sync's data (`CARD_DATA_DIR`); until then those
-  parts say so. **Website edits**: the cards an edit on the website or in Discord changes now, with the fields, who and
-  when (never the bot's own entries). **Most revised**: the cards with the most earlier versions. **Parser notes**: the
-  cards the bot hasn't parsed yet and the parser's notes.
+  events, and every commit that changed a Card Edits.json entry or a Card Authors.txt line (website or a commit by hand)
+  with each field's old and new value. The events need the card sync's data (`CARD_DATA_DIR`); until then those parts
+  say so. **Parser notes**: the cards the bot hasn't parsed yet and the parser's notes.
 - **People** (the tab shows how many): everyone who made, edited or committed cards, in one table (GitHub picture, cards
   credited, edit batches published on the website, card commits, public decks, titles, motto), and a page per person
   (`#/u/<name>`, static `u/<name>/` that previews in Discord; **Share** opens a dialog with the link, the Discord preview
@@ -126,16 +125,9 @@ answers from. AutoCroissant's pickles (`stats.pkl`, `aliases.pkl`, `old_stats.pk
 their Card Edits entries' (`aliases.pkl` moved into it on 2026-10-22), and no `_by: AutoCroissant` entry (the migration's aliases and series, the moved stat exclusions) counts as a website edit. Where the
 migration added a field to an editor's entry, the entry keeps the editor's `_by` and lists that field in `_bot`
 (`"_bot":["series"]`): `_bot` holds the fields that are not the stamp editor's. Such a field is nobody's edit, so the
-Edited badge, the Website edits tab, the person page and the stamp-counted edit batches leave it out (the build's
-`botEdited`), unless `_credit` names its editor: a Discord edit to an entry whose PSD fields are another editor's keeps
-that entry's stamps, lists the fields it sets in `_bot` and credits each one
-(`"_credit":{"series":{"_by":"discord:name","_at":"…"}}`). The build keeps a `_credit` field only while it is in `_bot`
-(another shape is a warning) and writes it as the card's `fieldBy`; the badge's tooltip and the Website edits tab (one
-row per card and editor) name that editor "(via Discord)", the stamp-counted batches give each `_credit` stamp a Discord
-batch, and the People counts never give the field to the stamp editor (a Discord user has no row). An edit on the website
-takes a field it sets or unsets out of `_bot` and `_credit` (an empty `_credit`, or one that isn't an object, goes), and an edit to a `_by:
-AutoCroissant` entry first lists the entry's fields in `_bot`, so the editor gets only the fields they change (edit.js
-`editsFile`, as the bot's Discord edits do). No readable `stats.json` stops the build and the site stays as it was; the
+Edited badge, the person page and the stamp-counted edit batches leave it out (the build's `botEdited`). An edit on
+the website takes a field it sets or unsets out of `_bot`, and an edit to a `_by: AutoCroissant` entry first lists the
+entry's fields in `_bot`, so the editor gets only the fields they change (edit.js `editsFile`). No readable `stats.json` stops the build and the site stays as it was; the
 history is skipped with a warning. A field the site reads that the cards lack (a rename in AutoCroissant's
 `commands/card_models.py`), or a field it doesn't know, is a warning in the log and on the Actions run. Images, icons, the ban list, icon names, profiles, published decks and password files come from this
 repo. Cards that are in the repo but not yet in the bot's data still appear (image only).
@@ -221,8 +213,8 @@ sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each wit
 line when it gets long, and **Review and publish** commits the whole batch at once. **All fields** (e, also in the bar)
 opens the full form for everything else (kind, item type (a fixed list: the `Items/` folders), stars, types, aliases, duplicate of, checks, constructed ban,
 hidden, creatures). Signed out, none of this shows: the pages are the same to the pixel. Fields go to
-`site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to `site/Constructed Ban List.txt`. The site rebuilds
-on that commit; the bot applies the same files on `/update_stats`. A subseries (Goombella: series Mario, subseries Paper
+`site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to `site/Constructed Ban List.txt`. Card sync reads
+them on that commit and rebuilds the site after its data commit. A subseries (Goombella: series Mario, subseries Paper
 Mario: The Thousand-Year Door) exists only as an edit (`subseries`; the bot reads it too). Edits **on the card image**
 (name, stars, types, stats, ability text; the form groups them and the bar marks them, and they show as "PSD pending"
 until the image is regenerated) are told apart from **database only** ones, which come from the card's folder or exist
