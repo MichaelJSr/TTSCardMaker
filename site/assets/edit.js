@@ -7,6 +7,7 @@ import * as decks from "./decks.js";
 import * as auth from "./login.js";
 import * as live from "./live.js";
 import * as draft from "./drafts.js";
+import { current as ratingNow } from "./ratings.js";
 
 const API = "https://api.github.com";
 // token: the plain-text token before 2026-10-23 (sealed on the next load); last: the login a password last signed in
@@ -20,8 +21,18 @@ const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
   atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
-  problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures" };
+  problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures",
+  "rate-favorability": "Favorability", "rate-power": "Power" };
+// item types: the Items/ folders (fixed; a new one needs its folder first)
+export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
 const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. Read by the website and the bot (/update_stats).";
+// site/Card Ratings.json (AutoCroissant card_edits.CardRatings.ABOUT, for a new file)
+export const RATINGS_ABOUT = "Card ratings, 1 to 10. favorability: how much players like the card; power: 1 weak, 5.5 balanced, 10 too strong. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.";
+const RATE = ["favorability", "power"], RATE_SOURCES = ["TTS session", "website"], RATE_RANGE = "Ratings go from 1 to 10";
+/** A typed rating: one decimal, or null when empty; NaN when not 1-10. */
+const rateValue = t => { t = String(t ?? "").trim(); if (t === "") return null; const v = Math.round(Number(t) * 10) / 10; return v >= 1 && v <= 10 ? v : NaN; };
+let pacific = null;                                // one formatter: the Pacific day of a rating
+const pacificDay = d => (pacific ||= new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit" })).format(d);
 
 const cardKey = s => (s || "").replace(/_/g, " ").toLowerCase().split(/\s+/).filter(Boolean).join(" ");
 const alnum = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -47,7 +58,7 @@ export function value(c, f, byId) {
 /** What the PSD (or folder) says: the pre-edit value when the field was edited, else the value itself. */
 export const psdValue = (b, f, byId) => tidy(f, b.edited?.includes(f) ? (f === "aliases" ? [] : b.orig?.[f]) : value(b, f, byId));
 export const isPsd = f => FROM[f] === "PSD";
-export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && op.author === undefined && !op.ban;
+export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && op.author === undefined && !op.ban && !op.rate;
 
 // ---- single-field ops (inline editing; the same rule readForm applies to the whole form)
 /** An inline input's text as field f's value: trimmed, "" -> null (the name falls back to `name`), ints >= 0. */
@@ -67,6 +78,8 @@ export const NAME_MAX = 60;                        // characters, an emoji count
 /** A name's comparison key: case and spacing don't count. */
 export const nameKey = s => String(s ?? "").toLowerCase().replace(/\s+/g, "");
 const NOUN = { series: "Series", subseries: "Subseries", author: "Author" };
+/** A subseries drop: the cards in `series` (case and spaces don't count) and the rest, refused. */
+export const splitBySeries = (cards, series) => ({ ok: cards.filter(c => nameKey(c.series) === nameKey(series)), refused: cards.filter(c => nameKey(c.series) !== nameKey(series)) });
 /** A typed series, subseries or author name: trimmed, spaces collapsed, and the known spelling when one has its nameKey.
  *  known: [spelling, shown, rank]; the highest rank wins (a [people] line, else the most cards). null when empty,
  *  {error} for a new name over NAME_MAX, else {name, existed, typed}. */
@@ -98,10 +111,12 @@ export function mergeAuthor(op, v, published) {
   if (v === (published || "")) delete o.author; else o.author = v || null;
   return o;
 }
-/** op without one item: a field, "author" or "ban" (a reverted name goes back to the published one). */
+/** op without one item: a field, "author", "ban" or a rating ("rate-power"; a reverted name goes back to the published one). */
 export function withoutItem(op, item, name) {
   const o = { ...op, set: { ...op.set }, unset: (op.unset || []).filter(k => k !== item) };
-  if (item === "author") delete o.author; else if (item === "ban") delete o.ban; else { delete o.set[item]; if (item === "name") o.name = name; }
+  if (item === "author") delete o.author; else if (item === "ban") delete o.ban;
+  else if (item.startsWith("rate-")) { const r = { ...o.rate }; delete r[item.slice(5)]; if (Object.keys(r).length) o.rate = r; else delete o.rate; }
+  else { delete o.set[item]; if (item === "name") o.name = name; }
   return o;
 }
 /** The review lines of an op against its published base b: [{item, text, short, psd}]; text is the review dialog's line,
@@ -113,6 +128,7 @@ export function describeItems(op, b = {}, { byId, rule = false } = {}) {
   for (const k of op.unset || []) { const p = show(psdValue(b, k, byId)); items.push({ item: k, text: `${LABEL[k]}: back to ${src(k)} (${p})`, short: `${LABEL[k]} back to ${src(k)} (${clip(p)})` }); }
   if (op.author !== undefined) { const t = `Author → ${op.author || "(from git)"}`; items.push({ item: "author", text: t, short: t }); }
   if (op.ban) { const t = op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned"; items.push({ item: "ban", text: t, short: t }); }
+  for (const k of RATE) if (op.rate?.[k] != null) { const l = LABEL[`rate-${k}`]; items.push({ item: `rate-${k}`, text: `${l}: rated ${op.rate[k]}`, short: `${l} ${op.rate[k]}` }); }
   return items.map(x => ({ ...x, psd: isPsd(x.item) }));
 }
 /** The batch bar's lines, one per pending edit: cards (id, name, item, text, psd), then admins, people, profiles
@@ -157,10 +173,43 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json") {
     const fields = [...ORDER.filter(f => f in cur), ...Object.keys(cur).filter(f => !(f in FIELDS))];
     if (fields.length) data.cards[k] = { ...Object.fromEntries(fields.map(f => [f, cur[f]])), _by: by, _at: at };
   }
+  return cardsText(data);
+}
+// the files' layout: the other top-level keys first, cards sorted, one line per card (card_edits.dump_edits)
+function cardsText(data) {
   const keys = Object.keys(data.cards).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
   const rest = Object.entries(data).filter(([k]) => k !== "cards").map(([k, v]) => `  ${JSON.stringify(k)}: ${JSON.stringify(v)},`);
   const body = keys.map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(data.cards[k])}`).join(",\n");
   return `{\n${rest.join("\n")}${rest.length ? "\n" : ""}  "cards": {${keys.length ? `\n${body}\n  ` : ""}}\n}\n`;
+}
+const rank = (list, v) => (list.includes(v) ? list.indexOf(v) : list.length);
+const lower = s => String(s ?? "").toLowerCase();
+/** Card Ratings.json with the ops' ratings added: one entry per scale, dated day, by the login; your entry of that day
+ *  is replaced. Lists oldest first (date, source, by, scale: card_edits.CardRatings.order). */
+export function ratingsFile(text, ops, day, by, path = "site/Card Ratings.json") {
+  let data;
+  try { data = text ? JSON.parse(text) : { about: RATINGS_ABOUT, cards: {} }; }
+  catch (e) { throw new Error(`${path} isn't valid JSON (${e.message}). Fix it on GitHub, then publish again.`); }
+  data.cards ||= {};
+  for (const op of ops) {
+    if (!op.rate) continue;
+    const k = Object.keys(data.cards).find(x => cardKey(x) === cardKey(op.key)) ?? op.key;
+    let list = Array.isArray(data.cards[k]) ? data.cards[k] : [];
+    for (const scale of RATE) {
+      const v = op.rate[scale];
+      if (v == null) continue;
+      if (typeof v !== "number" || !(v >= 1 && v <= 10)) throw new Error(RATE_RANGE);
+      list = list.filter(e => !(e?.date === day && e.scale === scale && e.source === "website" && lower(e.by) === lower(by)));
+      list.push({ date: day, scale, value: Math.round(v * 10) / 10, by, source: "website" });
+    }
+    data.cards[k] = list.map((e, i) => [e, i]).sort(([a, i], [b, j]) => {
+      const x = [String(a?.date ?? ""), rank(RATE_SOURCES, a?.source), lower(a?.by), rank(RATE, a?.scale)];
+      const y = [String(b?.date ?? ""), rank(RATE_SOURCES, b?.source), lower(b?.by), rank(RATE, b?.scale)];
+      for (let n = 0; n < 4; n++) if (x[n] !== y[n]) return x[n] < y[n] ? -1 : 1;
+      return i - j;
+    }).map(([e]) => e);
+  }
+  return cardsText(data);
 }
 
 /** The profile page's form state (what its inputs hold) for a profile; validateProfile({login, ...state}) gives the profile back. */
@@ -192,7 +241,7 @@ export function createEditor(app) {
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
-  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", decks: "site/decks", logins: "site/logins", ...S.data.files });
+  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", decks: "site/decks", logins: "site/logins", ratings: "site/Card Ratings.json", ...S.data.files });
   const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
   const find = id => S.byId.get(id) || (S.rules || []).find(r => r.id === id);
 
@@ -423,6 +472,12 @@ export function createEditor(app) {
         g.entries.push({ name: c.name, reason: op.ban.reason, id: c.id });
       }
     }
+    if (op.rate) {                                 // dashed dots until the rebuild; _rate: the form's start values (drafts.js rawOf)
+      const day = pacificDay(new Date(op._sent ? sentRecord()?.at || Date.now() : Date.now())), login = me?.login.toLowerCase();
+      const own = login && (c.ratings || []).find(e => !e._staged && !e._sent && e.by !== "group" && (e.login || e.by).toLowerCase() === login);   // rated before: one rater
+      c.ratings = [...(c.ratings || []), ...RATE.filter(k => op.rate[k] != null).map(k => ({ date: day, scale: k, value: op.rate[k], by: "you", ...(own ? { rater: own.by } : {}), source: "website", [op._sent ? "_sent" : "_staged"]: true }))];
+      if (!op._sent) c._rate = Object.fromEntries(Object.entries(op.rate).map(([k, v]) => [k, String(v)]));
+    }
     c[op._sent ? "_sent" : "_staged"] = true;
   }
   function sentRecord() {                          // {at, sha, ops, profiles, decks, deckNames}: published, until the site has rebuilt with it
@@ -455,12 +510,21 @@ export function createEditor(app) {
   const pending = () => ({ series: buckets.series.filter(v => !carries("series", v)), author: buckets.author.filter(v => !carries("author", v)),
     subseries: buckets.subseries.filter(([s, v]) => !carries("subseries", v, s)) });
   const ownSubseries = series => [...new Set([...uniq(x => (x.series === series ? x.subseries : null)), ...buckets.subseries.filter(([s]) => s === series).map(([, v]) => v)])];
-  const subseriesList = series => {          // that series' subseries first, then all
-    const own = ownSubseries(series);
-    return [...own, ...new Set([...uniq(x => x.subseries), ...buckets.subseries.map(([, v]) => v)].filter(v => !own.includes(v)))];
-  };
   const seriesList = () => [...new Set([...uniq(c => c.series), ...buckets.series])].sort((a, b) => a.localeCompare(b));
   const authorList = () => [...new Set([...(S.data.people || []), ...S.all.map(c => c.author).filter(Boolean), ...buckets.author])].sort((a, b) => a.localeCompare(b));
+  // the name autofill's entries (tokens.js suggestNames): [{value, n (cards), note, own (in `series`), kind, series}]
+  function nameEntries(kind, series = "") {
+    const cards = n => (n ? `${n} card${n === 1 ? "" : "s"}` : "no cards yet"), count = new Map();
+    if (kind === "subseries") {                     // every [series, subseries] pair: a name in two series is two rows
+      for (const c of S.all) if (c.subseries) { const k = JSON.stringify([c.series || "", c.subseries]); count.set(k, (count.get(k) || 0) + 1); }
+      for (const pair of buckets.subseries) { const k = JSON.stringify(pair); if (!count.has(k)) count.set(k, 0); }
+      return [...count].map(([k, n]) => { const [s, value] = JSON.parse(k), own = !!series && nameKey(s) === nameKey(series);
+        return { value, n, own, kind, series: s, note: own ? cards(n) : `${s || "no series"} · ${cards(n)}` }; });
+    }
+    if (kind !== "series" && kind !== "author") return [];
+    for (const c of S.all) if (c[kind]) count.set(c[kind], (count.get(c[kind]) || 0) + 1);
+    return (kind === "author" ? authorList() : seriesList()).map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
+  }
   function knownNames(kind, series = "", skip = "") {     // canonName's [spelling, shown, rank]: cards (skip: the one being edited), buckets, [people]
     const rank = new Map(), own = s => (kind === "subseries" && series && s === series ? 1e6 : 0);   // the picked series' own subseries first
     const add = (v, by) => { if (v) rank.set(v, (rank.get(v) || 0) + by); };
@@ -490,7 +554,6 @@ export function createEditor(app) {
     try { sessionStorage.setItem(K.buckets, JSON.stringify(buckets)); } catch { /* storage full: kept for this page */ }
     return { name: r.name, existed: false, note: "" };
   }
-  const subseriesOpts = series => subseriesList(series).map(v => `<option value="${esc(v)}">`).join("");
   const isRule = c => (S.rules || []).includes(c);
   function ruleFormHtml(c) {
     const b = baseOf(c);
@@ -545,16 +608,22 @@ export function createEditor(app) {
         <h3 class="egroup">Database only</h3><p class="muted egroup-note">Not on the card image: from the card's folder, or set only here.</p>
         <fieldset><legend>Kind and series</legend>
           ${row("type", `<select id="ef-type">${opts(kinds, c.type)}</select>`)}
-          ${row("subtype", `<input id="ef-subtype" list="dl-sub" value="${esc(c.subtype || "")}" placeholder="—"><datalist id="dl-sub">${uniq(x => x.subtype).map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
-          ${row("series", `<input id="ef-series" list="dl-series" value="${esc(c.series || "")}" placeholder="—"><datalist id="dl-series">${seriesList().map(v => `<option value="${esc(v)}">`).join("")}</datalist>`)}
-          ${row("subseries", `<input id="ef-subseries" list="dl-subseries" value="${esc(c.subseries || "")}" placeholder="—"><datalist id="dl-subseries">${subseriesOpts(c.series)}</datalist>`)}
+          ${row("subtype", `<select id="ef-subtype">${opts([["", "—"], ...ITEM_TYPES.map(t => [t, t[0].toUpperCase() + t.slice(1)]),
+            ...[...new Set([c.subtype, psdVal(b, "subtype")])].filter(t => t && !ITEM_TYPES.includes(t)).map(t => [t, t])], c.subtype || "")}</select>`)}
+          ${row("series", `<input id="ef-series" data-suggest="series" autocomplete="off" value="${esc(c.series || "")}" placeholder="—">`)}
+          ${row("subseries", `<input id="ef-subseries" data-suggest="subseries" data-series-from="ef-series" autocomplete="off" value="${esc(c.subseries || "")}" placeholder="—">`)}
         </fieldset>
         <fieldset><legend>Notes, names and credit</legend>
           ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page" data-tokens>${esc(c.note || "")}</textarea>`)}
           ${row("aliases", `<input id="ef-aliases" value="${esc((c.webAliases || []).join(", "))}" placeholder="comma separated">${(c.aliases || []).filter(a => !(c.webAliases || []).includes(a)).length ? `<span class="muted">Bot aliases: ${esc(c.aliases.filter(a => !(c.webAliases || []).includes(a)).join(", "))}</span>` : ""}`)}
-          <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" list="dl-people" value="${esc(c.author || "")}"><datalist id="dl-people">${authorList().map(p => `<option value="${esc(p)}">`).join("")}</datalist>`}</div></div>
+          <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" data-suggest="author" autocomplete="off" value="${esc(c.author || "")}">`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
         </fieldset>
+        ${isDup ? "" : `<fieldset><legend>Ratings</legend>
+          ${RATE.map(k => { const now = ratingNow((b.ratings || []).filter(e => !e._staged), k), v = stage.cards[c.id]?.rate?.[k];
+            return `<div class="erow" data-row="rate-${k}"><label for="ef-rate-${k}">${LABEL[`rate-${k}`]}</label><div class="ein"><input id="ef-rate-${k}" type="number" min="1" max="10" step="0.1" placeholder="1–10" value="${v ?? ""}"><span class="muted">${now ? `${now.value} now` : "not rated"}</span></div></div>`; }).join("")}
+          <p class="muted">Adds your dated rating; empty adds none.</p>
+        </fieldset>`}
         <fieldset><legend>Checks</legend>
           ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 10 is intended</label>`)}
           ${c.problems?.length || c.problems_ok ? row("problems_ok", `<label class="check"><input id="ef-problems_ok" type="checkbox"${c.problems_ok ? " checked" : ""}> checked, hide them</label> <span class="muted">${esc((b.problems || []).join(" · "))}</span>`) : ""}
@@ -567,7 +636,7 @@ export function createEditor(app) {
         </fieldset>
         <div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
         <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div>
-      </form>${live.paneHtml(previewOpen)}</div></div>`;
+      </form>${live.paneHtml(previewOpen, { viewer: app.imageOf(c).replace(/-360\.webp$/, "-720.webp"), ar: c.tw && c.th ? `${c.tw}/${c.th}` : "" })}</div></div>`;
   }
   const creatureRow = (x, i) => `<tr><th>${i + 1}</th>${STATS.map(k => `<td><input type="number" min="0" max="99" data-ck="${k}" value="${x[k] ?? ""}" placeholder="—" aria-label="Creature ${i + 1} ${LABEL[k]}"></td>`).join("")}</tr>`;
   function creatureAction(kind) {
@@ -631,6 +700,11 @@ export function createEditor(app) {
       const was = banOf(c.id, pristineBan || S.data.banlist);
       if (ban.banned !== was.banned || (ban.banned && (ban.group !== was.group || ban.reason !== was.reason))) op.ban = ban;
     }
+    if (f("rate-favorability")) {
+      const rate = {};
+      for (const k of RATE) { const v = rateValue(f(`rate-${k}`).value); if (Number.isNaN(v)) error = RATE_RANGE; else if (v != null) rate[k] = v; }
+      if (Object.keys(rate).length) op.rate = rate;
+    }
     if (error) op.error = error;
     return op;
   }
@@ -665,15 +739,29 @@ export function createEditor(app) {
     put(c.id, op); if (!defer) save();
     return op;
   }
+  // the card page's Rate it: {favorability, power} as typed ("" = none) -> the op, or null (refused: a toast says why)
+  function stageRating(id, values) {
+    const c = find(id); if (!c) return null;
+    const op = opFor(c), rate = {};
+    for (const k of RATE) { const v = rateValue(values[k]); if (Number.isNaN(v)) { app.toast(RATE_RANGE); return null; } if (v != null) rate[k] = v; }
+    if (!Object.keys(rate).length && !op.rate) { app.toast("Type a rating, 1 to 10"); return null; }
+    if (Object.keys(rate).length) op.rate = rate; else delete op.rate;
+    put(c.id, op); save();
+    app.toast(op.rate ? `Added to the batch: ${count()} unpublished` : "Rating removed from the batch");
+    return op;
+  }
   // one save for the lot -> {changed (a card already at v doesn't count), dups (an author drop leaves duplicates alone),
-  // kept (a series drop: cards keeping a subseries the new series lacks), value, error}. v is spelled once, here: a drop
-  // chip's value (the lists mountGrid's chips come from) stays as it is, so cards can join either of two spellings of a
-  // name; other text goes through canonical()
-  function stageMany(ids, key, v) {
-    const series = key === "subseries" ? find(ids[0])?.series || "" : "";
+  // kept (a series drop: cards keeping a subseries the new series lacks), refused (a subseries drop: cards not in its
+  // series, as staged), value, error}. v is spelled once, here: a drop chip's value (the lists mountGrid's chips come
+  // from) stays as it is, so cards can join either of two spellings of a name; other text goes through canonical().
+  // series: a subseries' series (a pinned box's), else the first card's (the filter bar's list is all in one series)
+  function stageMany(ids, key, v, { series: ser = "" } = {}) {
+    const series = key === "subseries" ? ser || find(ids[0])?.series || "" : "";
+    let refused = 0;
+    if (key === "subseries") { const r = splitBySeries(ids.map(find).filter(Boolean), series); refused = r.refused.length; ids = r.ok.map(c => c.id); }
     const chips = key === "series" ? seriesList() : key === "subseries" ? ownSubseries(series) : key === "author" ? authorList() : [];
     const r = chips.includes(v) ? { name: v } : canonical(key, v, series);
-    if (r?.error) return { changed: 0, dups: 0, kept: 0, value: v, error: r.error };
+    if (r?.error) return { changed: 0, dups: 0, kept: 0, refused: 0, value: v, error: r.error };
     const value = r ? r.name : v, moved = [], own = key === "series" ? ownSubseries(value) : [];   // before the drop
     let changed = 0, dups = 0;
     for (const id of ids) {
@@ -683,14 +771,14 @@ export function createEditor(app) {
     }
     save();
     const kept = key === "series" ? moved.filter(id => { const s = find(id)?.subseries; return s && !own.includes(s); }).length : 0;
-    return { changed, dups, kept, value };
+    return { changed, dups, kept, refused, value, series };
   }
   function revert(id, item) {
     const c = find(id), op = stage.cards[id]; if (!c || !op) return;
     put(id, withoutItem(op, item, baseOf(c).name)); save();
   }
   // the live preview: the card as it will look once published, from the form's op (live.js)
-  const previewCtx = { render: (t, n) => app.render(t, n), statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: p => app.imageOf(p) };
+  const previewCtx = { render: (t, n) => app.render(t, n), statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
   function paintPreview(c, op) {
     const body = app.modal.querySelector("#lp-body"); if (!body) return;
     const b = baseOf(c), values = { ...op.set, ...Object.fromEntries((op.unset || []).map(f => [f, psdVal(b, f)])) };
@@ -704,8 +792,6 @@ export function createEditor(app) {
     app.modal.innerHTML = formHtml(c);
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
     const form = app.modal.querySelector("#edit-form"), ta = document.getElementById("ef-ability");
-    const ser = document.getElementById("ef-series"), dl = document.getElementById("dl-subseries");
-    if (ser && dl) ser.addEventListener("input", () => { dl.innerHTML = subseriesOpts(ser.value.trim()); });
     const update = () => {
       document.getElementById("ef-preview").innerHTML = ta.value.trim() ? app.render(ta.value, c.name) : `<span class="muted">No ability text.</span>`;
       const op = readForm(c), lines = describe(op);
@@ -853,7 +939,7 @@ export function createEditor(app) {
         <h2>${own ? "Your profile" : `${esc(p.login)}'s profile`}</h2>
         <p class="muted">Everything is optional. Goes into your batch as <span class="kbd">${esc(files().profiles)}/${esc(p.login)}.json</span>; the page is u/${esc(p.login)}/.</p>
         <fieldset><legend>About</legend>
-          ${row("author", "Cards as", `<input id="pf-author" list="dl-people" value="${esc(st.author)}" placeholder="the name on your cards"><datalist id="dl-people">${(S.data.people || []).map(x => `<option value="${esc(x)}">`).join("")}</datalist><span class="muted">Links the profile to your cards (the name in Card Authors.txt).</span>`)}
+          ${row("author", "Cards as", `<input id="pf-author" data-suggest="author" autocomplete="off" value="${esc(st.author)}" placeholder="the name on your cards"><span class="muted">Links the profile to your cards (the name in Card Authors.txt).</span>`)}
           ${row("motto", "Motto", `<input id="pf-motto" maxlength="${LIMITS.motto}" value="${esc(st.motto)}" placeholder="one line">`)}
           ${row("series", "Series", `<select id="pf-series"><option value="">—</option>${opts(series.map(x => [x, x]), st.series)}</select>`)}
         </fieldset>
@@ -1101,6 +1187,7 @@ export function createEditor(app) {
     if (ops.some(o => Object.keys(o.set).length || o.unset.length)) edits[F.edits] = t => editsFile(t, ops, at, me.login, F.edits);
     if (ops.some(o => o.author !== undefined) || Object.keys(people).length) edits[F.authors] = t => authorsFile(t, ops, people);
     if (ops.some(o => o.ban)) edits[F.banlist] = t => banFile(t, ops);
+    if (ops.some(o => o.rate)) edits[F.ratings] = t => ratingsFile(t, ops, pacificDay(new Date(at)), me.login, F.ratings);
     if (stage.admins) edits[F.admins] = t => [...(t ?? "").split("\n").filter(l => l.trim().startsWith("#")), ...stage.admins].join("\n") + "\n";
     const foreign = Object.keys(stage.profiles).filter(l => !mine(l));
     if (foreign.length && !me.admin) throw new Error(`Only admins can publish someone else's profile (${foreign.join(", ")}): discard it from the batch.`);
@@ -1338,6 +1425,9 @@ export function createEditor(app) {
     "pw-remove": el => removePassword(el.dataset.login || me?.login || ""),
     "pw-later": () => later(),
     "pw-list": () => listPasswords(),
+    "rate-add": el => { const id = el.dataset.id, v = k => document.getElementById(`rate-${k}`)?.value ?? "";   // a duplicate's page: its original's id
+      if (!stageRating(id, { favorability: v("favorability"), power: v("power") })) return;
+      const top = app.modal.scrollTop; app.goCard(app.currentCard() || id); app.modal.scrollTop = top; },
     "edit-show-hidden": el => { S.showHidden = el.checked; localStorage.setItem(K.hidden, el.checked ? "1" : ""); app.derive(); app.rerender(); },
   };
 
@@ -1352,13 +1442,14 @@ export function createEditor(app) {
     },
     open: openForm,
     refresh: preview,
+    touches: ids => [...sentOps(), ...Object.values(stage.cards)].some(op => ids.has(op.id)),   // a staged or published-not-built edit on one of ids
     profileOf, pendingProfiles, profilePage, leave: () => { carry = null; },   // another page rendered: a later editor starts fresh
     // published decks: the publish dialog for a saved hand, and the staged or just-published files for the pages
     publishDeck: id => openPublish(id), deckOf, pendingDecks,
     // inline editing (inline.js): single fields into the same batch, and the known values for its lists; the drafts
     stageField, stageAuthor, stageMany, value: val, drafts: cardDrafts,
     // new series, subseries and authors from the filter bar (buckets: pending = no card carries it yet)
-    options: () => ({ series: seriesList(), subseries: subseriesList, ownSubseries, authors: authorList(), buckets: pending() }),
+    options: () => ({ series: seriesList(), ownSubseries, authors: authorList(), buckets: pending() }),
     addBucket,
     // image previews (preview.js): GitHub calls with the token, its scopes, and what the PSD prints of a card's fields
     github: (path, opts) => gh(path, opts), get scopes() { return scopes; },
@@ -1368,5 +1459,9 @@ export function createEditor(app) {
     entryFields: (id, op = stage.cards[id]) => { const f = new Set(find(id)?.edited || []);
       for (const o of [...sentOps().filter(x => x.id === id), op].filter(Boolean)) { for (const k of Object.keys(o.set || {})) f.add(k); for (const k of o.unset || []) f.delete(k); }
       return [...f]; },
+    stageRating,
+    myRating: id => stage.cards[id]?.rate || null,
+    names: nameEntries,
+    canonical: (kind, v, series) => canonical(kind, v, series),
   };
 }

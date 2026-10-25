@@ -45,8 +45,6 @@ KEYS = tuple(k for k, _ in STATS) + ("total",)
 OLD_TAG = r"[1-9X]PGT|[1-9X]PT|FTE[1-9X]T|E[1-9X]GT|E[1-9X]T"
 NEW_TAG = r"[1-9X]G?CD|(?:-1|[0-9X])/[1-9X]G?CD|[1-9X]U"
 TAG_RUN = re.compile(rf"(?:\((?:{OLD_TAG}|{NEW_TAG})\))+")      # adjacent cooldown-family tags: "(1CD)(2U)"
-OLD_RE = re.compile(rf"\((?:{OLD_TAG})\)")
-NEW_RE = re.compile(rf"\((?:{NEW_TAG})\)")
 
 
 def line_of(stats):
@@ -251,8 +249,6 @@ def change(a, b, texts):
         ra, rb = tag_runs(xa), tag_runs(xb)
         if sorted(ra) != sorted(rb):
             row["tags"] = [[x, y] for x, y in zip(ra, rb) if x != y] if len(ra) == len(rb) else [[" ".join(ra), " ".join(rb)]]
-            if OLD_RE.search(xa) and not OLD_RE.search(xb) and NEW_RE.search(xb):
-                row["old"] = True                 # from the old tags to cooldowns and uses
         if skeleton(xa) != skeleton(xb):
             row["words"] = True                   # the wording changed, not only the timing tags
     return row
@@ -383,5 +379,5 @@ def summary(data):
             f"auxiliary creatures (with all creatures); cohorts: {sizes}",
             f"balance: {data['versions']} versions; changes: {len(rows)}, reworks {sum(1 for r in rows if reworked(r))}, "
             f"buffs {sum(1 for r in rows if r.get('bal') == 'buff')}, nerfs {sum(1 for r in rows if r.get('bal') == 'nerf')}, "
-            f"timing tags {sum(1 for r in rows if 'tags' in r)} ({sum(1 for r in rows if r.get('old'))} from the old tags), "
+            f"timing tags {sum(1 for r in rows if 'tags' in r)}, "
             f"approximate dates {sum(1 for r in rows if r.get('approx'))}"]

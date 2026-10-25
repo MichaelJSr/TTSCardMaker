@@ -1,10 +1,11 @@
 import { compile, suggest, total, SEARCH_HELP } from "./search.js";
-import { esc, norm, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
 import * as D from "./deck.js";
 import { renderStats } from "./stats.js";
 import { createEditor } from "./edit.js";
 import { personHtml, peopleHtml, peopleRows, personOf, findPerson, titlesOf, mergeUsers, shareDialogHtml, personDiscord, personText } from "./profile.js";
 import * as inline from "./inline.js";
+import * as tray from "./tray.js";
 import * as tokens from "./tokens.js";
 import * as palette from "./palette.js";
 import * as details from "./details.js";
@@ -16,6 +17,8 @@ import * as changes from "./changes.js";
 import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
 import { deckPasses } from "./login.js";
 import { createPreviews } from "./preview.js";
+import * as ratings from "./ratings.js";
+import * as insights from "./insights.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -29,8 +32,10 @@ const store = (() => { try { return sessionStorage; } catch { return null; } })(
 const S = {
   data: null, cards: [], rules: [], byId: new Map(), banned: new Map(), icons: {}, renderer: null,
   mentions: new Map(), mentionedBy: new Map(), list: [], decks: [], compare: [],
-  renderedHash: null, listHash: "#/cards", shared: null,
+  renderedHash: null, listHash: "#/cards", shared: null, rev: 0,   // rev: bumped by derive()
   selected: new Set(),                                     // tiles picked in the cards grid (edit mode: drag them onto a series or author)
+  distPage: {},                                            // the Stats distributions' page per stat (this session)
+  selecting: false,                                        // the Select toggle (phones): a tap on a tile selects it
 };
 // The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
@@ -38,7 +43,8 @@ const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field ca
 const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
 const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
-  ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"], ["details", "PSD details"]];
+  ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"],
+  ["banned", "Banned (constructed)"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
 // [key, label, dir it sets]; "created" = the creation date (first Discord post or first upload), when the build has dates
 const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
@@ -55,7 +61,8 @@ const thumbUrl = c => img(c, 360);
 const imgAttrs = (c, css, big = false) => `src="${img(c, 360)}" srcset="${img(c, 240)} 240w, ${img(c, 360)} 360w${big ? `, ${img(c, 720)} 720w` : ""}" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`;
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");
-const day = d => (d ? new Date(`${d}T12:00:00Z`).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }) : "");
+const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+const day = d => (d ? DAY(new Date(`${d}T12:00:00Z`)) : "");
 const CREATED_TIP = { discord: "First posted on Discord", git: "First uploaded to the card repo", hand: "Creation date set by hand" };
 /** "about 13 Oct 2023" for a date a Discord post awaiting review may still move */
 const createdText = c => (c.created ? `${c.createdAbout ? "about " : ""}${day(c.created)}` : "");
@@ -67,7 +74,7 @@ const shareUrl = id => `${ROOT}c/${encodeURIComponent(id)}/`;
 const userUrl = login => `${ROOT}u/${encodeURIComponent(login)}/`;
 const deckUrl = d => `${ROOT}d/#/deck/${D.encode(d)}`;
 const iconFor = name => S.icons[norm(name)];
-const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
+const iconImg = (name, cls = "tok") => { const ic = iconFor(name); return ic ? `<img class="${cls}" loading="lazy" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
 // edits the pipeline bakes into the card image (build_site.py PSD_FIELDS): pending, refused, or baked but not re-parsed yet
 const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability" };
 const PSD_TIP = "The card image is being regenerated with this edit";     // the one tip for a pending PSD field (edit.js too)
@@ -76,6 +83,7 @@ const psdBadges = c => [
   c.refused ? `<span class="fact refused" data-tip="The last try to regenerate the card image was refused; change the edit or the PSD">Image update refused: ${esc(c.refused)}</span>`
     : c.pending?.length ? `<span class="fact pending" data-tip="${PSD_TIP}">PSD pending: ${esc(pendingList(c))}</span>` : "",
   c.reparsePending ? `<span class="fact" data-tip="The PSD changed since the bot last read it; the data follows on the next /update_stats">Re-parse pending</span>` : "",
+  c.baked && !c.refused ? `<span class="fact" data-tip="The bot regenerated the card image from the edit; its notes say what it drew best-effort">Image baked: ${esc(c.baked)}</span>` : "",
 ].join("");
 // beside PSD chips and parser notes: opens the card with Details open
 const detailsLink = c => (c.details ? `<a class="fact details-link" href="#/card/${c.id}?details" data-tip="Open the card with its PSD details">Details</a>` : "");   // a plain link: Ctrl-click opens a tab
@@ -89,7 +97,8 @@ async function getJson(name) {
 }
 // loaded on demand: the rulebook pages, and older versions of card text
 let rulesP = null, historyP = null, versionsP = null;
-const loadRules = () => (rulesP ||= getJson("rules.json").then(d => { S.rules = d.rules; editor.refresh(); }).catch(e => { rulesP = null; throw e; }));
+// the pages' staged edits (a full re-derive only when one of them has one)
+const loadRules = () => (rulesP ||= getJson("rules.json").then(d => { S.rules = d.rules; if (editor.touches(new Set(d.rules.map(p => p.id)))) editor.refresh(); }).catch(e => { rulesP = null; throw e; }));
 const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
   for (const c of [...S.cards, ...(S.rules || [])]) if (h[c.id]) c.history = h[c.id];
   S.history = h;
@@ -139,6 +148,7 @@ async function init() {
 
 // everything computed from the cards; re-run after an edit
 function derive() {
+  S.rev++;
   for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; }
   S.cards = S.all.filter(c => !c.hidden || S.showHidden);
   // stats can pass 10 (Sonic's speed is 20)
@@ -166,7 +176,7 @@ const goUser = login => { const r = parseHash(); if (r.name === "u" && !r.edit &
 const goEdit = login => { const r = parseHash(); if (r.name === "u" && r.edit && r.arg.toLowerCase() === login.toLowerCase()) renderView(r, hashOf(r)); else location.hash = `#/u/${encodeURIComponent(login)}/edit`; };
 function rerender() {
   const onCard = parseHash().name === "card", base = onCard ? S.listHash : location.hash || hashOf(parseHash());
-  if (S.renderedHash) renderView(parseHash(base), base);
+  if (S.renderedHash || !$(".detail", modal)) renderView(parseHash(base), base);   // a card from a link: the grid once its dialog is gone
   if (onCard && $(".detail", modal)) openCard(parseHash().arg);       // dialogs stay open
 }
 const editor = createEditor({
@@ -186,7 +196,11 @@ const previews = createPreviews({ S, editor, toast: m => toast(m), loadDetails: 
 // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
 const editing = () => !!editor.me;
 inline.install({ editor, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
-tokens.install({ vocab: () => S.vocab || [], icon: (t, o) => S.renderer?.icon(t, o) ?? null });   // "[" or "(" in card text: suggestions
+tray.install({ view, editor, selected: S.selected, drop: (ids, t) => inline.dropOn(ids, t), toast: m => toast(m), cards: () => S.all,   // the pinned boxes
+  filterSeries: () => parseHash(S.listHash).params.get("series") || "" });
+const seriesFor = el => (el.dataset.seriesFrom ? document.getElementById(el.dataset.seriesFrom)?.value.trim() || "" : el.dataset.series || "");   // a subseries field's series
+tokens.install({ vocab: () => S.vocab || [], icon: (t, o) => S.renderer?.icon(t, o) ?? null,   // "[" or "(" in card text: suggestions
+  names: el => editor.names(el.dataset.suggest, seriesFor(el)) });                              // a name field: the known names
 palette.useSearch(palette.pickerSearch(tokens.suggest, () => S.vocab || []));   // the type palette ranks as the picker
 let selectAnchor = null;                                 // the last tile toggled: Shift-click selects from it
 function toggleSelect(id, range) {
@@ -227,41 +241,56 @@ function syncUrl(r) {
   const want = r.name === "card" ? shareUrl(r.arg) : r.name === "u" && r.arg && !r.edit ? userUrl(r.arg) : sd ? deckPageUrl(sd.owner, sd.slug)
     : r.name === "decks" && r.arg && !location.hash ? location.href                  // a deck's static path before decks.json is loaded (or a private, staged or missing deck): stay, never the bare root
     : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
-  if (location.href !== want) history.replaceState(history.state, "", want);
+  if (location.href !== want || !history.state?.drawn) history.replaceState({ ...history.state, drawn: true }, "", want);   // drawn: Back or Forward to it restores its scroll
 }
-function route() {
+let popped = null;                                       // a hash navigation fires popstate, then hashchange: route once
+function route(e) {
+  if (e?.type === "hashchange") { const dup = e.newURL === popped; popped = null; if (dup) return; }
+  else if (e?.type === "popstate") popped = location.href;
+  S.restoring = e?.type === "popstate" && !!history.state?.drawn;   // Back or Forward: the browser restores the scroll after this, so no chunks
+  queueMicrotask(() => { S.restoring = false; });
   const r = parseHash();
   syncUrl(r);
   hideTip();
   if (r.name === "card") {
-    if (!S.renderedHash) renderView({ name: "cards", arg: "", params: new URLSearchParams() }, "#/cards");
+    if (!S.renderedHash && !S.byId.has(r.arg)) renderView(parseHash(S.listHash), S.listHash);   // a dead link: the grid, then the toast
+    else if (!S.renderedHash) {                          // from a link: the grid (and its pictures) when the dialog closes
+      S.list = listOf(new URLSearchParams()); view.replaceChildren();
+      $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === "cards"));
+    }
     openCard(r.arg, r.params.has("details"));
     return;
   }
   const hash = location.hash || hashOf(r);
-  if (hash === S.renderedHash && !modal.hidden) { closeModal(); return; }
+  if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig && !$(".loading", view)) { closeModal(); document.title = S.title = titleOf(r); return; }   // nothing changed (and nothing still loading): the view under it stays
   closeModal();
   renderView(r, hash);
 }
 function renderView(r, hash) {
   S.renderedHash = hash; S.listHash = hash;
-  if (r.name !== "cards") S.selected.clear();
+  if (r.name !== "cards") { S.selected.clear(); S.selecting = false; }
   if (!(r.name === "u" && r.edit)) editor.leave();
   const tab = { compare: "cards", u: "users", decks: "deck" }[r.name] || r.name;
   $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === tab));
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
   const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare, users: renderUsers, u: renderUser, decks: renderDecks };
   (views[r.name] || renderCards)(r);
+  S.title = document.title = titleOf(r);
+  S.viewSig = viewSig();
+}
+function titleOf(r) {
   const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.edit ? "Edit profile" : r.arg || "People",
     decks: r.arg ? S.deckTitle || "Deck" : "Published decks" };
-  document.title = `${titles[r.name] || "Cards"} · Impossibility Simulator`;
+  return `${titles[r.name] || "Cards"} · Impossibility Simulator`;
 }
+// what a card dialog can change under it (edits, hands, the comparison, sign-in, the theme): a dialog closes without a redraw while this holds
+function viewSig() { return `${S.rev}|${S.compare.join(",")}|${JSON.stringify(S.decks)}|${editor.me?.login || ""}|${document.documentElement.dataset.theme}`; }
 function setParams(updates, { replace = true } = {}) {
   const r = parseHash();
   const p = r.params;
   for (const [k, v] of Object.entries(updates)) (v === "" || v == null || (Array.isArray(v) && !v.length)) ? p.delete(k) : p.set(k, Array.isArray(v) ? v.join(",") : v);
   const hash = `#/${r.name === "card" ? "cards" : r.name}${r.arg ? "/" + r.arg : ""}${p.toString() ? "?" + p : ""}`;
-  if (replace) { history.replaceState(null, "", hash); renderView(parseHash(), hash); } else location.hash = hash;
+  if (replace) { history.replaceState(history.state, "", hash); renderView(parseHash(), hash); } else location.hash = hash;
 }
 
 // ---- cards (browse) --------------------------------------------------------------------------------
@@ -286,10 +315,12 @@ function filterCards(p, { facets = true } = {}) {
   for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => c[k] != null && c[k] >= r[0] && c[k] <= r[1]); }
   const flagFns = { history: c => !!c.hv, unparsed: c => !c.parsed, problems: c => !!(c.problems && c.problems.length), alias: c => !!(c.aliases && c.aliases.length),
     dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(webEdited(c) || c._staged || c._sent),
-    pending: c => !!((c.pending && c.pending.length) || c.refused), details: c => !!c.details };
+    pending: c => !!((c.pending && c.pending.length) || c.refused),
+    banned: c => !!c._banned };
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   return list;
 }
+const listOf = p => sortCards(filterCards(p), sortOf(p), p.get("dir") || "");   // the cards the grid shows, in order
 function sortCards(list, sort = "name", dir = "") {
   const key = {
     name: c => c.name.toLowerCase(), stars: c => c.stars ?? -1, total: c => (c.hp == null ? -1 : total(c)), hp: c => c.hp ?? -1, def: c => c.def ?? -1,
@@ -325,10 +356,10 @@ function tileHtml(c, { small = false, eager = false, css = 190, constructed = fa
     <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(t, "")).join("")}</div></div></article>`;
 }
 function renderCards(r) {
-  const p = r.params;
+  const p = r.params, win = { y: scrollY, w: innerWidth, h: innerHeight, all: S.restoring };   // before the view goes: read after, they lay out the short page (the scroll clamps)
   if (document.activeElement !== qInput) qInput.value = p.get("q") || "";
   const base = filterCards(p, { facets: false });
-  const list = sortCards(filterCards(p), sortOf(p), p.get("dir") || "");
+  const list = listOf(p);
   S.list = list;
   if (S.selected.size) { const ids = new Set(list.map(c => c.id)); for (const id of S.selected) if (!ids.has(id)) S.selected.delete(id); }   // a drag carries only shown cards
   const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of [].concat(f(c))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };
@@ -356,7 +387,7 @@ function renderCards(r) {
   if (p.get("subseries")) active.push(["subseries", p.get("subseries")]);
   if (p.get("author")) active.push(["author", `by ${p.get("author")}`]);
   for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
-  for (const f of csv(p, "flags")) active.push(["flags", (FLAGS.find(x => x[0] === f) || [f, f])[1], f]);
+  for (const f of csv(p, "flags")) { const x = FLAGS.find(x => x[0] === f); if (x) active.push(["flags", x[1], f]); }   // an old flag: ignored
   const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
     return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
   const suggestions = !list.length && p.get("q") ? suggest(p.get("q"), S.cards) : [];
@@ -367,7 +398,7 @@ function renderCards(r) {
       <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts)}
       ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts)}` : ""}
       ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t); const on = csv(p, "types").includes(t);
-        return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(t.replace(/_/g, " "))} (${typeCounts.get(t)})" aria-pressed="${on}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
+        return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(t.replace(/_/g, " "))} (${typeCounts.get(t)})" aria-pressed="${on}">${ic ? `<img loading="lazy" src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
       <h3>Series</h3><select data-action="select-param" data-key="series"><option value="">All series</option>${series.map(s => `<option${s === p.get("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>
       ${subseries.length || p.get("subseries") ? `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(p.get("subseries"))}</option>` : ""}${subseries.map(subOpt).join("")}</select>` : ""}
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
@@ -377,6 +408,7 @@ function renderCards(r) {
       <p><button type="button" class="ghost" data-action="clear-filters">Clear all filters</button></p>
     </aside>
     <section>
+      ${editing() && view_ === "grid" ? tray.html(S.selecting) : ""}
       <div class="toolbar">
         <span class="result-count">${list.length.toLocaleString()} card${list.length === 1 ? "" : "s"}</span>
         <button type="button" class="mobile-only" data-action="toggle-filters">Filters${active.length ? ` (${active.length})` : ""}</button>
@@ -386,26 +418,115 @@ function renderCards(r) {
         <span class="seg">${[["grid", "Grid"], ["table", "Table"]].map(([v, l]) => `<button type="button" class="${v === view_ ? "on" : ""}" data-action="set-pref" data-key="view" data-value="${v}">${l}</button>`).join("")}</span>
         ${view_ === "grid" ? `<span class="seg">${[["s", "S"], ["m", "M"], ["l", "L"]].map(([v, l]) => `<button type="button" class="${v === size ? "on" : ""}" data-action="set-pref" data-key="size" data-value="${v}" title="Tile size">${l}</button>`).join("")}</span>` : ""}
         <button type="button" class="ghost" data-action="random-from-list" title="Random result">Random</button>
+        ${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
+          <button type="button" class="ghost" data-action="select-mode" aria-pressed="${S.selecting}">${S.selecting ? "Done" : "Select"}</button>` : ""}
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}
       </div>
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v]) => `<button type="button" class="chip" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
       ${!list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
-        : view_ === "table" ? tableHtml(list, p) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}">${list.map((c, i) => tileHtml(c, { eager: i < 8, css: { s: 160, m: 200, l: 270 }[size] || 200 })).join("")}</div>`}
+        : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${{ s: "130px", m: "168px", l: "230px" }[size] || "168px"}"></div>`}
     </section></div>`;
+  const grid = list.length && view_ !== "table" && $(".browse .grid", view);
+  if (grid) fillGrid(grid, list, { css: { s: 160, m: 200, l: 270 }[size] || 200, win });
+  else if (list.length && view_ === "table") fillTable($(".browse table.data tbody", view));
   if (editing()) inline.mountGrid(view, p);
   if (editing()) previews.mountTiles(view);
 }
-function tableHtml(list, p) {
+// the grid's tiles by card id {html, el, ed}: a render reuses a tile whose markup (and edit mode) is unchanged instead of
+// parsing it again, so its picture stays loaded. Code that changes a tile in place drops it (refresh); the edit-mode marks
+// (draggable, data-selected, preview badges) are set again after every render. The tiles that cover the window go in now,
+// the rest in later tasks (a newer render stops them), with the edit-mode marks.
+const gridTiles = new Map();
+const GRID_FIRST = 96, GRID_CHUNK = 120;
+let gridJob = 0;
+function fillGrid(grid, list, { css, win }) {
+  const ed = editing(), job = ++gridJob;
+  const put = (from, to, mark = false) => {
+    const html = list.slice(from, to).map((c, i) => tileHtml(c, { eager: from + i < 8, css })), els = new Array(html.length), miss = [];
+    for (let i = 0; i < html.length; i++) { const t = gridTiles.get(list[from + i].id); if (t && t.html === html[i] && t.ed === ed) els[i] = t.el; else miss.push(i); }
+    if (miss.length) {
+      const tpl = document.createElement("template");
+      tpl.innerHTML = miss.map(i => html[i]).join("");
+      const fresh = [...tpl.content.children];
+      miss.forEach((i, k) => { els[i] = fresh[k]; gridTiles.set(list[from + i].id, { html: html[i], el: fresh[k], ed }); });
+    }
+    if (!mark) { grid.append(...els); return; }
+    const frag = document.createDocumentFragment();     // edit mode: the marks mountGrid and mountTiles gave the first ones
+    frag.append(...els); inline.markTiles(frag, S.selected); previews.mountTiles(frag); grid.append(frag);
+  };
+  // tiles are 200 px tall or more and 144 px wide or more (with the gap): enough to keep the scroll position
+  const first = win.all ? list.length : Math.max(GRID_FIRST, (Math.floor(win.w / 144) + 1) * Math.ceil((win.y + 2 * win.h) / 200));
+  if (list.length <= first) { put(0, list.length); return; }
+  put(0, first);
+  let k = first;
+  const step = () => {
+    if (job !== gridJob || !grid.isConnected) return;
+    put(k, k += GRID_CHUNK, ed);
+    if (k < list.length) setTimeout(step);
+  };
+  setTimeout(step);
+}
+function tableHtml(list, p, win) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
     ...(S.created ? [["created", "Created"]] : []), ["new", "Updated"]];
   const sort = sortOf(p);
+  const first = win.all ? list.length : Math.max(TABLE_FIRST, Math.ceil((win.y + 2 * win.h) / 30));    // rows are 30 px or taller: the scroll position stays
+  const rest = list.slice(first);
+  tableRest = rest.map(rowHtml);
   return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
-    ${list.map(c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}${psdChips(c)}</td>
+    ${list.slice(0, first).map(rowHtml).join("")}</tbody>${tableRest.length ? `<tbody class="sizer" aria-hidden="true" style="visibility:collapse">${sizerRows(rest, tableRest)}</tbody>` : ""}</table></div>`;
+}
+// hidden rows from the rest that hold the columns at their final widths while the rest comes in: per column the rows with
+// the widest lines and the widest word, measured in the table's fonts (rows with PSD chips always); removed with the last rows
+let measure = null, sized = new WeakMap(), sizedRev = -1;   // sized: a card's [line, word] per column, until derive() runs
+function sizerRows(rest, rows) {
+  if (sizedRev !== S.rev) { sized = new WeakMap(); sizedRev = S.rev; }
+  if (!measure) {
+    const ctx = document.createElement("canvas").getContext("2d"), family = getComputedStyle(document.body).fontFamily, seen = new Map();
+    let px = 0;
+    measure = (t, size) => { const k = size + t; let w = seen.get(k); if (w === undefined) { if (px !== size) ctx.font = `${px = size}px ${family}`; seen.set(k, w = ctx.measureText(t).width); } return w; };
+  }
+  const text = (...lines) => { let line = 0, word = 0; for (const [t, size = 13.5] of lines) { if (!t) continue; line = Math.max(line, measure(t, size));
+    for (const x of t.split(/\s+|(?<=-)(?=\p{L})/u)) if (x) word = Math.max(word, measure(x, size)); } return [line, word]; };
+  const len = v => { const n = String(v ?? "").length; return [n, n]; };
+  const cols = c => [[0, 0], text([c.name]), text([`${KIND_LABEL[c.type] || c.type}${c.subtype ? ` · ${cap(c.subtype)}` : ""}`]),
+    text([c.series], [c.subseries, 12]), len(c.stars), len(c.hp), len(c.def), len(c.atk), len(c.spd), len(c.hp != null ? total(c) : ""),
+    [(c.types || []).filter(iconFor).length, 0], text([c.author]), ...(S.created ? [text([createdText(c)])] : []), text([date(c.ts)])];
+  const top = [], pick = new Set();
+  rest.forEach((c, i) => {
+    if (psdChips(c)) pick.add(i);
+    let cs = sized.get(c);
+    if (!cs) sized.set(c, cs = cols(c));
+    cs.forEach(([line, word], j) => {
+      const b = top[j] ||= [[], []];
+      for (const [arr, v, n] of [[b[0], line, 3], [b[1], word, 2]]) {
+        if (!v || (arr.length === n && v <= arr[n - 1][0])) continue;
+        arr.push([v, i]); arr.sort((x, y) => y[0] - x[0]); arr.length = Math.min(arr.length, n);
+      }
+    });
+  });
+  for (const b of top) for (const [, i] of [...b[0], ...b[1]]) pick.add(i);
+  return [...pick].sort((x, y) => x - y).map(i => rows[i].replace(/^<tr class="row" data-open="[^"]*">/, "<tr>")
+    .replace(/<img class="thumb"[^>]*>/, "")).join("");
+}
+// the table's first rows go in with the page, the rest in later tasks (a newer render or another page stops them)
+const TABLE_FIRST = 100, TABLE_CHUNK = 150;
+let tableRest = [], tableJob = 0;
+function fillTable(tbody) {
+  const rest = tableRest, job = ++tableJob; tableRest = [];
+  let k = 0;
+  const step = () => {
+    if (job !== tableJob || !tbody.isConnected) return;
+    tbody.insertAdjacentHTML("beforeend", rest.slice(k, k += TABLE_CHUNK).join(""));
+    if (k < rest.length) setTimeout(step); else tbody.parentElement.querySelector("tbody.sizer")?.remove();
+  };
+  if (rest.length) setTimeout(step);
+}
+const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
-      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td></tr>`).join("")}</tbody></table></div>`;
-}
+      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td></tr>`;
 
 // ---- card detail -----------------------------------------------------------------------------------
 function statBars(c) {
@@ -450,7 +571,12 @@ function openCard(id, showDetails = false) {
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
-      <div class="image-wrap">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${thumbUrl(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}
+      <div class="image-wrap"><div class="iv"><div class="iv-stage"><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${placeholderOf(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
+        <div class="actions card-actions">
+          <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
+          <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
+          <button type="button" data-action="edit-card" data-id="${c.id}">${editing() ? "All fields" : "Edit"} <span class="kbd">e</span></button>
+        </div>
         <div class="actions" style="justify-content:space-between">
           <a class="fact" data-nav="prev" href="#/card/${prev.id}" title="Previous (←)">← ${esc(prev.name)}</a>
           <a class="fact" data-nav="next" href="#/card/${next.id}" title="Next (→)">${esc(next.name)} →</a></div></div>
@@ -478,14 +604,10 @@ function openCard(id, showDetails = false) {
         ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, c.name)}</div>` : ""}
         ${hasBadges(c.ability) || hasBadges(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml()}</details>` : ""}
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
-        <div class="actions">
-          <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
-          <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
-          <button type="button" data-action="edit-card" data-id="${c.id}">${editing() ? "All fields" : "Edit"} <span class="kbd">e</span></button>
-        </div>
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
           <div id="card-balance">${balanceHtml(c)}</div>
+          <div id="card-ratings">${ratings.blockHtml(balanceOf(c), { editing: editing(), mine: editor.myRating(balanceOf(c).id) })}</div>
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
@@ -500,7 +622,7 @@ function openCard(id, showDetails = false) {
   modal.scrollTop = 0;
   document.title = `${c.name} · Impossibility Simulator`;
   if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();   // shortcuts work right away
-  if (c.img) {        // sharper 720 px image once it's loaded (the 360 px one is usually cached from the grid)
+  if (c.img && $("#detail-img")?.getAttribute("src") !== img(c, 720)) {        // sharper 720 px image once it's loaded
     const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
@@ -514,6 +636,15 @@ function openCard(id, showDetails = false) {
   if (editing()) previews.mountCard(modal, c);
 }
 
+/** The card dialog's first picture: the grid tile's when it has loaded (240 or 360 px, no new download), the 720 px one a
+ *  share page preloads, else the 360 px one */
+function placeholderOf(c) {
+  if (!c.img) return "";
+  const t = view.querySelector(`.grid .tile[data-open="${CSS.escape(c.id)}"] img.art`);
+  if (t?.complete && t.naturalWidth && t.currentSrc) return t.currentSrc.startsWith(ROOT) ? t.currentSrc.slice(ROOT.length) : t.currentSrc;
+  if (document.querySelector(`link[rel="preload"][as="image"][href="${img(c, 720)}"]`)) return img(c, 720);
+  return thumbUrl(c);
+}
 // ---- image versions: every commit that changed the card's PNG (from git history), shown next to the current card
 const versionList = c => {
   const rows = S.versions && S.versions.cards[c.id];
@@ -528,9 +659,7 @@ function versionsHtml(c) {
   if (!S.versions) return `<h3>Image versions</h3><p class="muted">Loading ${c.iv} versions…</p>`;
   const vs = versionList(c);
   if (vs.length < 2) return "";
-  const oldest = vs[vs.length - 1], fromInit = /^(git )?init$/i.test(oldest.subject.trim());
   return `<h3>Image versions <span class="muted">${vs.length}</span></h3>
-    <p class="muted">Each commit that changed the image${fromInit ? `, since ${date(oldest.ts)} (first upload)` : ""}. Dates are Pacific time.</p>
     <div class="versions">
       <div class="ver-list" role="group" aria-label="Image versions, newest first">${vs.map((v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
         <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`).join("")}</div>
@@ -702,20 +831,46 @@ function openPicker(tier) {                              // the shared picker (p
 }
 
 // ---- stats / changes / compare -------------------------------------------------------------------
+let statsJob = 0;
 function renderStatsView(r) {
-  renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist }, r.params);
-  const fill = () => { const slot = $("#stats-balance", view), now = parseHash(); if (slot && now.name === "stats") slot.innerHTML = balance.statsHtml(S.analytics, { cards: S.cards, byId: S.byId }, now.params); };
-  if (S.analytics) fill();
-  else {
+  const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
+  renderStats(view, { cards: S.cards, renderer: S.renderer, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, banlist: S.data.banlist, distPage: S.distPage }, r.params);
+  const ctx = { cards: S.cards, byId: S.byId, banned: S.banned };
+  const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
+  const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History leave out what needs it
+    const now = parseHash(S.renderedHash);
+    if (now.name !== "stats") return;
+    const put = (id, html) => { const slot = $(`#${id}`, view); if (slot) slot.innerHTML = html; };
+    if (A) put("stats-balance", balance.statsHtml(A, { cards: S.cards, byId: S.byId }, now.params));
+    put("stats-ratings", insights.ratingsHtml(A, ctx, now.params));
+    put("stats-history", insights.historyHtml(A, ctx, now.params));
+  };
+  const job = ++statsJob, slot = $("#stats-balance", view);
+  if (S.analytics) {                                     // below the first screen, at the top of the page: after it has painted
+    if (top && slot && slot.getBoundingClientRect().top > vh) requestAnimationFrame(() => setTimeout(() => { if (job === statsJob) fill(); }));
+    else fill();
+  } else {
     $("#stats-balance", view).innerHTML = `<p class="loading">Loading the balance section…</p>`;
-    loadAnalytics().then(fill, e => { const slot = $("#stats-balance", view); if (slot && parseHash().name === "stats") slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; });
+    loadAnalytics().then(() => fill(), e => { const slot = $("#stats-balance", view); if (slot && onStats()) slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; fill(null); });
   }
+}
+function distPage(panel, step) {          // a stat distribution's pager: the next or previous page of values (stats.js)
+  if (!panel?.dataset.pages) return;
+  const pages = panel.dataset.pages.split(",").map(Number), to = pages[pages.indexOf(+panel.dataset.cur) + step];
+  if (to == null) return;
+  panel.dataset.cur = to; S.distPage[panel.dataset.stat] = to;
+  for (const pg of $$(".dist-page", panel)) pg.hidden = +pg.dataset.page !== to;
+  const [lo, hi] = to ? [10 * to + 1, 10 * to + 10] : [0, 10];
+  $(".dist-range", panel).textContent = `${lo}–${hi}`;
+  const had = document.activeElement, btns = $$(".dist-pager button", panel);
+  btns.forEach(b => (b.disabled = pages[pages.indexOf(to) + +b.dataset.step] == null));
+  if (had?.disabled && btns.includes(had)) (btns.find(b => !b.disabled) || panel).focus();   // a disabled button drops focus: keep it in the panel
 }
 // the Changes page's category tabs, a row across its top: [hash key, label]; #/changes is the first, #/changes/<key> the others
 // (a link to one survives a refresh), and each shows its own sections only
-const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["edits", "Database edits"], ["website", "Website edits"],
+const CHANGE_TABS = [["", "Recently updated"], ["changelog", "Changelog"], ["archive", "Archive"], ["edits", "Database edits"], ["website", "Website edits"],
   ["revised", "Most revised"], ["parser", "Parser notes"]];
-const NEEDS = { "": "history", revised: "history", changelog: "changelog", edits: "changelog" };   // the data a tab loads first
+const NEEDS = { "": "history", revised: "history", changelog: "changelog", archive: "changelog", edits: "changelog" };   // the data a tab loads first
 function renderChanges(r = parseHash(), held = null) {   // held: the tab a loading page focused, for the loaded redraw
   const tab = CHANGE_TABS.some(([k]) => k && k === r.arg) ? r.arg : "";
   const nav = `<nav class="change-tabs" aria-label="Kinds of changes">${CHANGE_TABS.map(([k, l]) => `<a href="#/changes${k ? `/${k}` : ""}"${k === tab ? ' class="on" aria-current="page"' : ""}>${esc(l)}</a>`).join("")}</nav>`;
@@ -740,6 +895,7 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   }
   const updated = `<p class="muted">Updated ${new Date(S.data.generated).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" })} (Pacific) from <a href="https://github.com/${esc(S.data.botRepo)}" target="_blank" rel="noopener">${esc(S.data.botRepo)}</a> and <a href="https://github.com/${esc(S.data.repo)}" target="_blank" rel="noopener">${esc(S.data.repo)}</a>.</p>`;
   if (tab === "changelog") { page(changes.changelogHtml(S.changelog, r.params)); return; }
+  if (tab === "archive") { page(changes.archiveHtml(S.changelog?.archived || [], S.changelog?.repo, r.params)); return; }
   if (tab === "edits") { page(changes.editsHtml(S.changelog, r.params)); return; }
   if (tab === "website") { page(webEditsHtml() + updated); return; }
   if (tab === "parser") { page(parserNotesHtml() + updated); return; }
@@ -808,11 +964,12 @@ function deckAt(owner, slug) {
 }
 const hasDecks = () => (+S.data.decks?.public || 0) > 0 || editor.pendingDecks().size > 0;   // else no fetch
 const publicDecks = () => deckList().filter(d => !d.private);
-/** Cards tab: the published decks a search finds, filled in once decks.json is loaded. */
+/** Cards tab: the published decks a search finds, filled in once decks.json is loaded (the drawn view's search: a
+ *  card dialog may be over it). */
 function deckHits(q) {
   if (!q.trim() || !hasDecks()) return "";
   if (S.decksData) return decks.searchHitsHtml(publicDecks(), q, deckCtx());
-  loadDecks().then(() => { const el = $("#deck-hits"), h = parseHash(); if (el && h.name === "cards" && (h.params.get("q") || "") === q) el.innerHTML = deckHits(q); });
+  loadDecks().then(() => { const el = $("#deck-hits"), h = parseHash(S.renderedHash || ""); if (el && h.name === "cards" && (h.params.get("q") || "") === q) el.innerHTML = deckHits(q); });
   return "";
 }
 /** Card page: the public decks holding the card. */
@@ -913,6 +1070,7 @@ function renderUser(r) {
   view.innerHTML = personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
     own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }),
     available: !!S.contrib.available, since: S.contrib.since, repo: S.data.repo, titles: S.titles, date, month, kinds: KINDS, kindOf,
+    people, site: S.contrib.site || {}, mentions: S.mentions, mentionedBy: S.mentionedBy, banned: S.banned,
     decks: { public: decks.sortDecks(theirs.filter(d => !d.private)), private: decks.sortDecks(theirs.filter(d => d.private)) }, deckTile: d => decks.deckTileHtml(d, deckCtx()) });
 }
 function renderUsers() {
@@ -954,6 +1112,7 @@ function deckDiscord(d) {
 // ---- interactions ----------------------------------------------------------------------------------
 function refresh(id) {
   const inDeck = deckHas(id);
+  gridTiles.delete(id);
   for (const b of $$(".add[data-id]")) if (b.dataset.id === id) { b.classList.toggle("in", inDeck); b.textContent = inDeck ? "✓ In deck" : "+ Deck"; }
   if (!modal.hidden && parseHash().name === "card") openCard(parseHash().arg);
   else if (parseHash().name === "deck") renderDeck(parseHash());
@@ -970,12 +1129,15 @@ const actions = {
   "select-param": el => { const k = el.dataset.key, o = el.selectedOptions?.[0]?.dataset || {};      // a shared subseries picks its series too; a sort its direction (default unless the option says)
     setParams({ [k]: el.value, ...(k === "series" ? { subseries: "" } : {}), ...(o.series ? { series: o.series } : {}), ...(k === "sort" ? { dir: o.dir ?? "" } : {}) }); },
   "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: csv(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "", ...(el.dataset.key === "series" ? { subseries: "" } : {}) }); if (el.dataset.key === "q") qInput.value = ""; },
-  "clear-filters": () => { qInput.value = ""; history.replaceState(null, "", "#/cards"); renderView(parseHash(), "#/cards"); },
+  "clear-filters": () => { qInput.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
   "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(sortOf(p), p.get("dir")) ? "asc" : "desc" }); },
   "sort-by": el => { const p = parseHash().params; setParams({ sort: el.dataset.key, dir: p.get("sort") === el.dataset.key && p.get("dir") !== "asc" ? "asc" : "" }); },
-  "set-pref": el => { localStorage.setItem(el.dataset.key, el.dataset.value); setParams({ [el.dataset.key]: el.dataset.value }); },
+  "set-pref": el => {
+    if (el.dataset.key === "view" && el.dataset.value === "table") { S.selected.clear(); S.selecting = false; }   // the table shows no selection
+    localStorage.setItem(el.dataset.key, el.dataset.value); setParams({ [el.dataset.key]: el.dataset.value });
+  },
   "random-from-list": () => { const l = S.list.length ? S.list : S.cards; location.hash = `#/card/${l[Math.floor(Math.random() * l.length)].id}`; },
   "deck-toggle": el => toggleDeck(el.dataset.id),
   "deck-remove": el => { D.removeCard(deck(), el.dataset.id); D.saveDecks(S.decks); updateDeckCount(); renderDeck(parseHash()); },
@@ -1014,16 +1176,19 @@ const actions = {
   "toggle-table": el => { const box = $(`#chart-${el.dataset.target}`); const on = el.getAttribute("aria-pressed") !== "true"; el.setAttribute("aria-pressed", on);
     el.textContent = on ? "Chart" : "Table"; $(".view-chart", box).hidden = on; $(".view-table", box).hidden = !on; },
   "stats-filter": el => setParams({ [el.dataset.key]: el.value }),
+  "dist-page": el => distPage(el.closest(".dist-panel"), +el.dataset.step),
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
+  "select-mode": () => { S.selecting = !S.selecting; if (!S.selecting) S.selected.clear(); rerender(); },
   ...editor.actions,
+  ...tray.actions,
 };
 document.addEventListener("click", e => {
   if (e.target.closest("a.details-link")) return;     // the browser follows it
   const a = e.target.closest("[data-action]");
   if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); actions[a.dataset.action]?.(a); return; }
   const open = e.target.closest("[data-open], .chart [data-card]");
-  if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
+  if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey || S.selecting) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
   const ref = e.target.closest("a.card-ref");
   if (ref) { e.preventDefault(); location.hash = `#/card/${ref.dataset.card}`; return; }
@@ -1049,8 +1214,9 @@ $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax<
   <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
 $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
-const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (on the Changes tabs: the next tab)"], ["d", "Add to / remove from deck"],
-  ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"], ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (Changes tabs: next tab; a stat distribution: more values)"], ["d", "Add to / remove from deck"],
+  ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"],
+  ...(editing() ? [["1–9", "With cards selected: drop them on that pinned box"]] : []), ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 $("#account").addEventListener("click", () => actions["edit-hub"]());
 
@@ -1070,11 +1236,14 @@ document.addEventListener("keydown", e => {
     if (to && to !== ctab) location.hash = to.getAttribute("href");
     return;
   }
+  const dist = document.activeElement?.closest?.(".dist-panel[tabindex]");
+  if (dist && (e.key === "ArrowLeft" || e.key === "ArrowRight") && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); distPage(dist, e.key === "ArrowRight" ? 1 : -1); return; }
   const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline], .star-pick, .type-palette");   // the inline controls are inputs; stat rows and stars take the arrows
-  if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size) { S.selected.clear(); inline.reflect(view, S.selected); } return; }
+  if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size || S.selecting) { S.selected.clear(); if (S.selecting) { S.selecting = false; rerender(); } else inline.reflect(view, S.selected); } return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === "Enter" && ae?.dataset?.open && (modal.hidden || modal.contains(ae)) && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
   if ($("#edit-form")) return;                                                         // no single-key shortcuts while a form (card dialog, profile editor) is up
+  if (modal.hidden && editing() && S.selected.size && parseHash().name === "cards" && $(".tray", view) && tray.dropKey(e.key)) { e.preventDefault(); return; }   // 1-9: onto a pinned box on screen
   const inCard = !modal.hidden && parseHash().name === "card", id = parseHash().arg;
   if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }
   else if (e.key === "?") showKeys();
@@ -1102,7 +1271,7 @@ function fillTip(t) {
 }
 const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
 function hideTip() { tips.hide(); }
-inline.extend({ hideTip, icons: () => S.icons });           // editors hide the tooltip; the type palette's icons
+inline.extend({ hideTip, icons: () => S.icons, closePicker: tokens.dismiss });   // editors hide the tooltip and the list; the type palette's icons
 document.addEventListener("pointerover", e => tips.over(e.target));
 document.addEventListener("pointermove", e => {
   if (!tips.move()) return;

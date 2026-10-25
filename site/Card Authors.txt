@@ -851,3 +851,21 @@ WX-78 = Tyler9648
 20 Creature Types = Croissant
 21 Damage Types = Croissant
 22 Negation = Croissant
+
+# --- archived cards (owner, 2026-10-24) ---
+Bill Cipher = hdckighfkvhvgmk
+Giegue = hdckighfkvhvgmk
+Giegue Old = hdckighfkvhvgmk
+Grandfather Clock = hdckighfkvhvgmk
+Insanity Wisp = hdckighfkvhvgmk
+The Missile = hdckighfkvhvgmk
+The One Who Rhymes = hdckighfkvhvgmk
+The One Who Rhymes2 = hdckighfkvhvgmk
+Magolor Soul = Chestnut
+Marx Soul = Chestnut
+Marx's Wrath = Chestnut
+Zero Two's Revenge = Chestnut
+Overridden = bobberlington
+Puppeteered = bobberlington
+Star Dream Nova = Zomoroko
+Tylord = Croissant

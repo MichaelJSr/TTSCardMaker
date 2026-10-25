@@ -23,16 +23,17 @@ export const fit = text => Math.min(14, Math.max(2, String(text ?? "").split("\n
 export const dragIds = (id, selected) => (selected.has(id) ? [...selected] : [id]);
 /** Shift-click: the ids of `order` from the anchor to `id`, both included; just `id` without an anchor in the list. */
 export const rangeIds = (order, anchor, id) => { const a = order.indexOf(anchor), b = order.indexOf(id); return a < 0 || b < 0 ? [id] : order.slice(Math.min(a, b), Math.max(a, b) + 1); };
-/** The control for a field: name and chips an input (chips with a datalist of known values), the ability a textarea.
- *  fresh: the filter bar's input for a new series, subseries or author. The ability and note take the token picker
- *  (tokens.js, data-tokens); while it is open its keys are its own, so the first Esc only closes it. */
-export function control(f, v, list = [], fresh = false) {
+/** The control for a field: name and chips an input, the ability a textarea. fresh: the filter bar's input for a new
+ *  series, subseries or author. The ability and note take the token picker (tokens.js, data-tokens); series, subseries
+ *  and author its list of known names (data-suggest; a subseries' series in data-series). While the list is open its
+ *  keys are its own, so the first Esc only closes it. */
+export function control(f, v, fresh = false, series = "") {
   const label = f === "name" ? "Name, Enter to save, Esc to cancel" : f === "ability" ? "Ability text, Ctrl+Enter to save, Esc to cancel"
     : `${fresh ? `New ${LABEL[f].toLowerCase()}` : LABEL[f]}, Enter to save, Esc to cancel`;
   if (f === "name") return `<input class="inline-name" aria-label="${label}" value="${esc(v)}">`;
   if (f === "ability") return `<textarea class="inline-ability" rows="${fit(v)}" spellcheck="true" aria-label="${label}" data-tokens>${esc(v)}</textarea>`;
-  const dl = list.length ? `<datalist id="inline-dl">${list.map(x => `<option value="${esc(x)}">`).join("")}</datalist>` : "";
-  return `<input class="inline-fact${f === "note" ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${dl ? ' list="inline-dl"' : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">${dl}`;
+  const named = f === "series" || f === "subseries" || f === "author";
+  return `<input class="inline-fact${f === "note" ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${named ? ` data-suggest="${f}" autocomplete="off"` : ""}${f === "subseries" ? ` data-series="${esc(series)}"` : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">`;
 }
 /** The bucket options a filter select gets: those it lacks, as "X (no cards yet)", selected when picked. have: its
  *  optKey()s; list: [{value, series?, where?}]; series: a subseries' series (the select-param handler then sets it too);
@@ -44,6 +45,7 @@ export const optKey = o => (o.dataset.series != null ? `${o.dataset.series}\u000
 /** The select's last option: "New series…" (data-new-bucket: its value never matters); a subseries needs a picked series. */
 export const newOption = (key, series) => (key === "subseries" && !series ? `<option disabled>Pick a series to add a subseries</option>`
   : `<option value="" data-new-bucket>New ${LABEL[key].toLowerCase()}…</option>`);
+const ghost = f => `<button type="button" class="fact ghost-fact" data-inline="${f}" data-empty aria-label="Add ${f}">+ ${f}</button>`;
 const chipHtml = (v, fresh) => `<span class="chip" data-value="${esc(v)}"${fresh ? " data-new" : ""}>${esc(v)}</span>`;
 /** A drop list's chips: the new (pending) values first, dashed, then the rest. */
 export const dropChips = (list, fresh) => [...fresh.map(v => chipHtml(v, true)), ...list.filter(v => !fresh.includes(v)).map(v => chipHtml(v, false))].join("");
@@ -59,6 +61,7 @@ let pointer = false;                               // the last input was a point
 let naming = null;                                 // the filter bar's open "New …" input: {sel, key, input}
 let listParams = new URLSearchParams();            // the params of the list mountGrid last upgraded (not the hash: a card route has none)
 let arrowAt = -1e9;                                // when an arrow key last went to a filter select
+let dragged = null;                                // the ids being dragged (the drop's source of truth)
 
 // ---- the card dialog
 /** Mark the editable spots of the open card dialog (edit mode only; call after openCard). */
@@ -89,7 +92,6 @@ export function mountCard(modal, c, api = A) {
   const note = detail.querySelector(":scope > div:nth-child(2) > .note");
   if (note) mark(note, "note", "Click to edit the note");
   else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="note" data-empty aria-label="Add a note">+ note</button>`);
-  const ghost = f => `<button type="button" class="fact ghost-fact" data-inline="${f}" data-empty aria-label="Add ${f}">+ ${f}</button>`;
   const starChip = chips.find(a => hrefOf(a).startsWith("#/cards?stars="));      // stars: a slider in its place
   if (c.stars > 10) { if (starChip) starChip.dataset.tip = "Use All fields"; }
   else if (starChip) starChip.outerHTML = starsHtml(c.stars);
@@ -134,13 +136,12 @@ function open(el, f, text = null) {               // text: a restored draft
   if (!el.isConnected || !card) return;
   A.hideTip?.();                                   // its "Click to edit" goes with the data-tip
   const c = card, v = f === "author" ? (c.author || "") : String(A.editor.value(c, f) ?? "");
-  const opts = A.editor.options(), list = f === "series" ? opts.series : f === "subseries" ? opts.subseries(c.series) : f === "author" ? opts.authors : [];
   const swap = el.tagName === "A" || el.tagName === "BUTTON";     // a link would still navigate, a button can't hold an input
   let host = el;
   if (swap) { host = document.createElement("span"); host.className = el.className; host.dataset.inline = f; el.replaceWith(host); }
   cur = { c, f, el, host, html: el.innerHTML, cls: el.className, tip: el.dataset.tip, ctl: null, v, save: keep(c, f, v), snap: drafts()?.snap(c.id, [f]) };
   if (!swap) { delete el.dataset.tip; if (el.tagName === "P") el.className = "ability"; }   // "No ability text." becomes the text box
-  host.innerHTML = control(f, text ?? v, list);
+  host.innerHTML = control(f, text ?? v, false, c.series || "");
   cur.ctl = host.querySelector("input, textarea");
   const save = cur.save; cur.ctl.addEventListener("input", () => save.run());
   if (text != null) save.run();
@@ -148,8 +149,9 @@ function open(el, f, text = null) {               // text: a restored draft
 }
 function cancel(refocus) {                        // Esc, or nothing changed: what was typed goes, an older draft stays as it was
   if (!cur) return;
-  const { c, f, el, host, html, cls, tip, save, snap } = cur; cur = null;
-  save.cancel(); drafts()?.back(c.id, snap, [f]); A.hideTip?.();
+  const { c, f, el, host, html, cls, tip, save, snap, ctl } = cur; cur = null;
+  save.cancel(); drafts()?.back(c.id, snap, [f]); A.hideTip?.(); A.closePicker?.();
+  ctl?.blur();                                     // a native popover goes with it
   if (host !== el) host.replaceWith(el); else { el.innerHTML = html; el.className = cls; if (tip) el.dataset.tip = tip; }
   if (refocus) el.focus();
 }
@@ -163,6 +165,7 @@ function commit(kbd) {                            // kbd: from the keyboard, so 
     return false;
   }
   was.save.cancel(); drafts()?.drop(c.id, [f]);    // in the batch now
+  A.closePicker?.();
   refresh(c, f, kbd);
   return true;
 }
@@ -184,6 +187,7 @@ function commitStat(kbd) {
 function statKey(row, k, e) {
   const now = +row.getAttribute("aria-valuenow"), v0 = prov?.row === row ? prov.v0 : now;
   const v = stepValue(now, e.key, 10);
+  if (e.key === "Escape" && row.hasAttribute("data-fresh") && now === 0) { e.preventDefault(); e.stopPropagation(); unfresh(row, true); return; }
   if (v !== null) { e.preventDefault(); e.stopPropagation(); prov = { row, k, v0 }; paint(row, v); return; }
   if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); commitStat(true); return; }
   if (e.key === "Escape" && now !== v0) { e.preventDefault(); e.stopPropagation(); paint(row, v0); prov = null; }   // else Esc closes the dialog, as usual
@@ -228,7 +232,8 @@ function onClick(e) {
   if (!el || !A.modal.contains(el)) return;
   const f = el.dataset.inline;
   if (f === "stars" && el.hasAttribute("data-empty")) {                     // "+ stars": the slider, at none
-    e.preventDefault(); e.stopPropagation(); el.outerHTML = starsHtml(0); A.modal.querySelector(".detail .star-pick")?.focus(); return;
+    e.preventDefault(); e.stopPropagation(); el.outerHTML = starsHtml(0);
+    const sp = A.modal.querySelector(".detail .star-pick"); if (sp) { sp.dataset.fresh = ""; sp.focus(); } return;   // fresh: nothing chosen puts "+ stars" back
   }
   if (f === "name" || SLIDERS.includes(f)) return;                          // the name on double-click, rows by cell or key
   if ((f === "ability" || f === "note") && e.target.closest("a, .badge, img")) return;   // links in the text still open the card
@@ -259,7 +264,24 @@ function onFocusOut(e) {                          // Tab to another control keep
   if (!document.hasFocus()) return;               // the window losing focus (alt-tab) leaves the editor open
   const kbd = !!e.relatedTarget && !pointer;
   if (cur) { if (cur.host.contains(e.target) && !cur.host.contains(e.relatedTarget)) commit(kbd); }
-  else if (prov && e.target === prov.row) commitStat(kbd);
+  else if (prov && e.target === prov.row) { commitStat(kbd); if (atNone(e.target) && !e.target.contains(e.relatedTarget)) unfresh(e.target, false); }   // moved and back
+  else if (e.target.matches?.(".star-pick[data-fresh]") && !e.target.contains(e.relatedTarget)) unfresh(e.target, false);
+}
+const atNone = row => row.matches(".star-pick[data-fresh]") && +row.getAttribute("aria-valuenow") === 0;
+function unfresh(row, refocus) {                   // a "+ stars" slider left at none: the chip again
+  if (!row.isConnected || !row.hasAttribute("data-fresh")) return;
+  row.removeAttribute("data-fresh");               // its blur, as it goes, comes back here
+  row.outerHTML = ghost("stars");
+  if (refocus) spot("stars")?.focus();
+}
+function away(e) {                                 // a click or tap away saves, even when no focus moves (iOS)
+  const t = e.target;
+  if ((t === A.modal || t === document.documentElement) && (e.offsetX >= t.clientWidth || e.offsetY >= t.clientHeight)) return;   // its scrollbar
+  if (t.closest?.(".tok-picker")) return;
+  if (cur && !cur.host.contains(t)) commit(false);
+  const fresh = A.modal.querySelector(".detail .star-pick[data-fresh]");
+  if (fresh && !fresh.contains(t)) { const moved = prov?.row === fresh; if (moved) commitStat(false); if (!moved || atNone(fresh)) unfresh(fresh, false); }
+  if (naming && t !== naming.input) { if (naming.input.value.trim()) createBucket(false); else closeName(false); }
 }
 
 // ---- the cards grid: select with Ctrl/Cmd/Shift-click, drag onto a Series or Author value in the filter bar
@@ -268,6 +290,14 @@ export function reflect(view, selected) {
   for (const t of view.querySelectorAll(".browse .grid .tile[data-open]")) t.toggleAttribute("data-selected", selected.has(t.dataset.open));
   const rc = view.querySelector(".result-count");
   if (rc) rc.textContent = rc.textContent.replace(/ · \d+ selected$/, "") + (selected.size ? ` · ${selected.size} selected` : "");
+}
+/** The edit-mode marks of the tiles in root: the tile drags, not its picture; data-selected. mountGrid's, and app.js
+ *  fillGrid's for the tiles it adds after the first screen. */
+export function markTiles(root, selected) {
+  for (const t of root.querySelectorAll(".tile[data-open]")) {
+    t.draggable = true; t.querySelector("img")?.setAttribute("draggable", "false");
+    t.toggleAttribute("data-selected", selected.has(t.dataset.open));
+  }
 }
 /** Edit mode only; call after renderCards. The Series, Subseries and Author selects get the new values no card carries yet
  *  and a "New …" option, in the grid and the table alike (a series without subseries gets its Subseries select). With the
@@ -287,35 +317,48 @@ export function mountGrid(view, p, api = A) {
     el.insertAdjacentHTML("beforeend", bucketOptions(new Set([...el.options].map(optKey)), fresh[key], p.get(key) || "") + newOption(key, series));
   }
   if (!grid) return;
-  for (const t of grid.querySelectorAll(".tile[data-open]")) t.draggable = true;
+  markTiles(grid, api.selected);
   reflect(view, api.selected);
   const own = b.subseries.filter(([s]) => s === series).map(([, v]) => v);
   for (const [key, list, news] of [["series", opts.series, b.series], ["author", opts.authors, b.author], ...(series ? [["subseries", opts.ownSubseries(series), own]] : [])])
-    sel(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}" aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
+    sel(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}"${key === "subseries" ? ` data-series="${esc(series)}"` : ""} aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
 }
-const dragOff = () => { document.body.classList.remove("dragging-cards"); for (const c of document.querySelectorAll(".drop-list .over")) c.classList.remove("over"); };
+const DROP = ".drop-list .chip, .tray .bucket[data-pin]";   // a filter-bar value, a pinned box
+/** A drop target's {key, value, series}: a filter-bar chip (its list's data-drop), or a tray box (data-pin-k, -v, -s). */
+export const targetOf = el => (el.dataset.pin != null
+  ? { key: el.dataset.pinK, value: el.dataset.pinV, series: el.dataset.pinS || "" }
+  : { key: el.closest(".drop-list").dataset.drop, value: el.dataset.value, series: el.closest(".drop-list").dataset.series || "" });
+const dragOff = () => { dragged = null; document.body.classList.remove("dragging-cards"); for (const c of document.querySelectorAll(".drop-list .over, .tray .over")) c.classList.remove("over"); };
 function onDragStart(e) {
   const t = e.target.closest?.(".tile[draggable]"); if (!t) return;
-  e.dataTransfer.setData("text/plain", dragIds(t.dataset.open, A.selected).join(","));
+  dragged = dragIds(t.dataset.open, A.selected);
+  e.dataTransfer.setData("text/plain", dragged.join(","));   // Firefox starts no drag without data
   e.dataTransfer.effectAllowed = "link";
-  document.body.classList.add("dragging-cards");
+  requestAnimationFrame(() => { if (dragged) document.body.classList.add("dragging-cards"); });   // a layout change inside dragstart cancels it
 }
-const dragging = () => document.body.classList.contains("dragging-cards");   // our tiles, not text or files dragged in
-function onDragOver(e) {
-  const chip = dragging() && e.target.closest?.(".drop-list .chip"); if (!chip) return;
-  e.preventDefault(); e.dataTransfer.dropEffect = "link"; chip.classList.add("over");
+const dragging = () => !!dragged;                  // our tiles, not text or files dragged in
+function onDragOver(e) {                           // dragenter too: Safari and Firefox drop only on a target that cancelled it
+  const t = dragging() && e.target.closest?.(DROP); if (!t) return;
+  e.preventDefault(); e.dataTransfer.dropEffect = "link"; t.classList.add("over");
 }
-function onDragLeave(e) { e.target.closest?.(".drop-list .chip")?.classList.remove("over"); }
+function onDragLeave(e) { const t = e.target.closest?.(DROP); if (t && !t.contains(e.relatedTarget)) t.classList.remove("over"); }
 function onDrop(e) {
-  const chip = dragging() && e.target.closest?.(".drop-list .chip"); if (!chip) return;
-  e.preventDefault(); dragOff();
-  const ids = (e.dataTransfer.getData("text/plain") || "").split(",").filter(Boolean), key = chip.closest(".drop-list").dataset.drop, v = chip.dataset.value;
-  const { changed: n, dups, kept, value, error } = A.editor.stageMany(ids, key, v);
+  const t = dragging() && e.target.closest?.(DROP); if (!t) return;
+  e.preventDefault();
+  const ids = dragged?.length ? dragged : (e.dataTransfer.getData("text/plain") || "").split(",").filter(Boolean);
+  dragOff();
+  dropOn(ids, targetOf(t));
+}
+/** The one staging path for a drop, a tray tap or a number key: key = value on every card in ids, a toast, the selection cleared. */
+export function dropOn(ids, { key, value: v, series = "" }) {
+  const r = A.editor.stageMany(ids, key, v, { series }), { changed: n, dups, kept, refused, value, error } = r;
   A.selected.clear();
   A.rerender();
   A.toast(error || [n ? `${n} card${n === 1 ? "" : "s"}: ${key} → ${value}` : "",
+    refused ? `${refused} refused: not in ${r.series}` : "",
     kept ? `${kept} kept ${kept === 1 ? "its" : "their"} old subseries` : "",
     dups ? `${dups} duplicate${dups === 1 ? " kept its original's" : "s kept their originals'"} author` : ""].filter(Boolean).join(" · ") || `Already ${value}`);
+  return r;
 }
 
 // ---- the filter bar: "New series…" (subseries, author) swaps its select for an input; Enter or a click away makes the
@@ -323,7 +366,7 @@ function onDrop(e) {
 function openName(sel) {
   closeName(false);
   sel.hidden = true;
-  sel.insertAdjacentHTML("afterend", control(sel.dataset.key, "", [], true));
+  sel.insertAdjacentHTML("afterend", control(sel.dataset.key, "", true, listParams.get("series") || ""));
   naming = { sel, key: sel.dataset.key, input: sel.nextElementSibling };
   naming.input.focus();
 }
@@ -366,7 +409,7 @@ function onNameFocusOut(e) {
   if (naming.input.value.trim()) createBucket(false); else closeName(false);
 }
 
-/** More of the api, after install: {hideTip, icons (() => cards.json icons)}. */
+/** More of the api, after install: {hideTip, icons (() => cards.json icons), closePicker (tokens.js dismiss)}. */
 export const extend = more => { Object.assign(A, more); };
 /** Once at boot, before app.js's document listeners: delegated listeners on the modal (editors) and the document (drag,
  *  the filter bar's "New …"). api = {editor, modal, selected (Set of card ids), goCard, rerender, toast}. */
@@ -377,16 +420,20 @@ export function install(api) {
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flush(); });
   api.modal.addEventListener("pointerdown", () => { pointer = true; });
   window.addEventListener("pointerdown", e => { closing = !!(cur || pal || prov) && api.modal.contains(e.target) && !!e.target.closest?.('[data-action="close"]'); }, true);   // before the palette's click-away
+  document.addEventListener("pointerdown", away, true);
   api.modal.addEventListener("click", onClick);
   api.modal.addEventListener("dblclick", onDblClick);
   api.modal.addEventListener("keydown", onKey);
   api.modal.addEventListener("focusout", onFocusOut);
+  api.modal.addEventListener("suggest-pick", e => { if (cur && e.target === cur.ctl) commit(true); });   // a picked name saves at once
   document.addEventListener("dragstart", onDragStart);
   document.addEventListener("dragend", dragOff);
+  document.addEventListener("dragenter", onDragOver);
   document.addEventListener("dragover", onDragOver);
   document.addEventListener("dragleave", onDragLeave);
   document.addEventListener("drop", onDrop);
   document.addEventListener("change", onChange);
   document.addEventListener("keydown", onNameKey);
   document.addEventListener("focusout", onNameFocusOut);
+  document.addEventListener("suggest-pick", e => { if (naming && e.target === naming.input) createBucket(true); });
 }

@@ -1,6 +1,8 @@
 // Ability text: icon tokens, timing-tag badges, links to other cards, and word diffs.
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+/** toLocaleDateString(undefined, opts) as a function, its Intl.DateTimeFormat made once on first use (one per call was a hotspot) */
+export const dateFmt = opts => { let f = null; return d => (f ||= new Intl.DateTimeFormat(undefined, opts)).format(d); };
 export const norm = s => String(s || "").toLowerCase().replace(/[\s_\-.'’]+/g, "");
 
 // Timing tags. Colors match the stoogedings font badges. Cooldowns and uses replaced the older tags on the cards
@@ -66,6 +68,14 @@ const VERB = { buff: status, debuff: status, minion: /\b(?:summon|resummon|reviv
 // token variants ([fire:glow]), as the font draws them: tint and sticker take the text colour (style.css paints build_site's
 // masks), glow and darkglow are images; one without its image (an older build) is the plain icon, as the parser reads it
 export const VARIANT_NAMES = { tint: "text colour", sticker: "sticker", no: "crossed out", glow: "white glow", darkglow: "black glow" };
+/** A token's text ("fire", "Fire:Glow") as {base, v} (v "" without a colon), or null when the font draws no such
+ *  variant: [fire:], [fire:glows] and [fire: glow] print as letters (AutoCroissant psd_parser ICON_VARIANTS). */
+export function splitToken(token) {
+  const s = String(token ?? ""), at = s.indexOf(":");
+  if (at < 0) return { base: s, v: "" };
+  const v = s.slice(at + 1).toLowerCase();
+  return Object.hasOwn(VARIANT_NAMES, v) ? { base: s.slice(0, at), v } : null;
+}
 /** The variant's image of an icon entry: icons/fire.webp -> icons/fire.glow.webp */
 export const variantFile = (ic, v) => ic.file.replace(/\.webp$/, `.${v}.webp`);
 
@@ -104,12 +114,12 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   for (const [h, ps] of groups) groups.set(h, new RegExp(`(${ps.join("|")})${END}`, "iy"));
   const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}`, "g");
 
-  /** HTML for a token's text ("fire", "fire:glow"), null for no icon; tip: false leaves out the tooltip */
+  /** HTML for a token's text ("fire", "fire:glow"), null for no icon or a variant the font lacks; tip: false leaves out
+   *  the tooltip */
   function icon(token, { tip = true } = {}) {
-    const [base, variant] = token.split(":");
-    const ic = icons[norm(base)];
+    const parts = splitToken(token), ic = parts && icons[norm(parts.base)];
     if (!ic) return null;
-    const v = String(variant ?? "").toLowerCase(), name = base.replace(/_/g, " ");   // no spaces around it, as in the font
+    const { base, v } = parts, name = base.replace(/_/g, " ");
     const drawn = v === "no" || (ic.v?.includes(v) && variants[v] !== undefined);
     const label = drawn ? `${name} (${v === "no" ? "not" : VARIANT_NAMES[v]})` : name;
     const t = tip ? ` data-tip="${esc(label)}"` : "";
@@ -123,12 +133,15 @@ export function makeRenderer({ cards, icons, variants = {} }) {
     return `<img class="tokv" src="${file}" alt="${esc(label)}" style="${r}"${t}>`;
   }
 
+  const hasIcon = token => { const parts = splitToken(token); return !!(parts && icons[norm(parts.base)]); };   // icon(token) !== null
   // icons and badges as [index, length, html]; links as [index, length, card], judged over the whole text with each
   // icon or badge read as a space, so render and mentions agree
-  function parse(text, selfName) {
+  // (html false: the pieces' places only, for mentions)
+  function parse(text, selfName, html_ = true) {
     const pieces = [];
     for (const m of text.matchAll(PIECE)) {
-      const html = m[1] !== undefined ? icon(m[1]) : (tagInfo(m[2]) ? badgeHtml(m[2]) : null);
+      const html = !html_ ? (m[1] !== undefined ? hasIcon(m[1]) : !!tagInfo(m[2])) || null
+        : m[1] !== undefined ? icon(m[1]) : (tagInfo(m[2]) ? badgeHtml(m[2]) : null);
       if (html !== null) pieces.push([m.index, m[0].length, html]);
     }
     const links = [];
@@ -139,8 +152,9 @@ export function makeRenderer({ cards, icons, variants = {} }) {
       if (w.index < end) continue;
       const h = w[0].toLowerCase();
       let m = null;
-      for (const g of [h, h.replace(/s$/, ""), h.replace(/es$/, "")].map(x => groups.get(x))) {   // "drones", "Cabbages"
-        if (g && !m) { g.lastIndex = w.index; m = g.exec(flat); }
+      for (const x of h.endsWith("es") ? [h, h.slice(0, -1), h.slice(0, -2)] : h.endsWith("s") ? [h, h.slice(0, -1)] : [h]) {   // "drones", "Cabbages"
+        const g = groups.get(x);
+        if (g) { g.lastIndex = w.index; if ((m = g.exec(flat))) break; }
       }
       if (!m) continue;
       end = m.index + m[0].length;
@@ -166,7 +180,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
 
   /** Cards whose names appear in a text (for "mentions" / "mentioned by"). */
   function mentions(text, selfName = "") {
-    return new Set(text ? parse(text, selfName).links.map(l => l[2].id) : []);
+    return new Set(text ? parse(text, selfName, false).links.map(l => l[2].id) : []);
   }
   return { render, mentions, icon };
 }
