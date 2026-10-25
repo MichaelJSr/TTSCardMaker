@@ -2688,10 +2688,12 @@ def game_text(cards, rules, banlist, icons, manifest):
     kind and series; a variant picture as its own card, its text only when it differs. Stats as printed (bars). Dated by
     the card data, so a no-change build keeps the file. ’ as '."""
     shown = [c for c in cards if not c.get("hidden")]
-    by_id, m = {c["id"]: c for c in cards if c.get("id")}, manifest or {}
+    by_id, m = {c["id"]: c for c in shown if c.get("id")}, manifest or {}     # a hidden original: the variant keeps its text
     out = [f"{SITE_NAME}: every card and rulebook page as plain text.", f"{len(shown)} cards, {len(rules)} rulebook pages."
            + (f" Card data built {m['built_at']} from card commit {m['card_commit'][:12]}." if m.get("built_at") and m.get("card_commit") else "")
-           + (f" {SITE_URL}/" if SITE_URL else ""), "", "# Rulebook", ""]
+           + (f" {SITE_URL}/" if SITE_URL else ""),
+           "Card lines: name | kind | stars | types | HP DEF ATK SPD (one set per creature) | series, then on a variant picture"
+           " | variant of its original. - is an empty field. The ability follows.", "", "# Rulebook", ""]
     for p in rules:
         out += [f"## {p['name']}", game_words(p.get("ability"), icons), ""]
     out += ["# Timing tags", "X can be any number; the first number of a pair such as (1/2CD) can also be 0 or -1.", ""]
@@ -2717,7 +2719,7 @@ def game_text(cards, rules, banlist, icons, manifest):
             if orig:
                 line.append(f"variant of {orig['name']}")
             text = c.get("ability") if not orig or c.get("ability") != orig.get("ability") else None
-            out += [" | ".join(x for x in line if x), *([game_words(text, icons)] if text else []), ""]
+            out += [" | ".join(x or "-" for x in line), *([game_words(text, icons)] if text else []), ""]
     return "\n".join(out).replace("’", "'")
 
 
