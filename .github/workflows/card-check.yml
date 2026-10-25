@@ -40,7 +40,7 @@ jobs:
       # Nothing of the card repo is checked out: the PSDs, Types/ names, the icon manifest and site/Card Edits.json all come
       # by blob sha through the API from the tree at the pushed commit. The checker and its import closure (no config.py:
       # github_api reads it in a try/except; the token comes from the environment), and the packages it installs (fonttools:
-      # card_check reuses font_check's helpers, which import fontTools). Never psd_analyzer or repo_traverser (discord,
+      # card_check reuses font_check's helpers, which import fontTools). Never psd_analyzer (discord,
       # pandas). This list is card_check.SPARSE_FILES; tests/test_card_check.py runs --help on exactly it.
       - uses: actions/checkout@v7
         with:
