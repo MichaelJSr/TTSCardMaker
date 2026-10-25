@@ -618,7 +618,11 @@ export function createEditor(app) {
   function withRecs(c, go) {
     const need = [c, ...groupOf(c)].filter(x => x.details && !recs.has(x.id) && app.loadDetails);
     if (!need.length) return go();
-    Promise.all(need.map(x => app.loadDetails(x).then(d => recs.set(x.id, d), () => recs.set(x.id, null)))).then(go);
+    let failed = false;                            // unreadable now: the joined fields this time, tried again on the next open
+    Promise.all(need.map(x => app.loadDetails(x).then(d => recs.set(x.id, d), () => { failed = true; }))).then(() => {
+      if (failed) app.toast("Couldn't load the card's text layers: editing the joined text");
+      go(failed ? need : null);
+    });
   }
   /** The card's boxes, or null (no parts in its record: the joined fields as before). */
   function partsView(c) {
@@ -1090,11 +1094,11 @@ export function createEditor(app) {
     for (const a of body.querySelectorAll("a")) a.tabIndex = -1;    // a picture of the page: its links don't leave the form
   }
   // restored: a draft's fields, from the card page's offer; focus: "name" | "ability" | a layer id (inline.js on a card of several boxes)
-  function openForm(id, { draft: restored = null, focus = null } = {}) {
+  function openForm(id, { draft: restored = null, focus = null, skipRecs = false } = {}) {
     const c = find(id);
     if (!c) return;
     if (!me) { openHub(`Sign in to edit ${c.name}.`, () => openForm(id, { draft: restored, focus })); return; }
-    if ([c, ...groupOf(c)].some(x => x.details && !recs.has(x.id) && app.loadDetails)) { withRecs(c, () => openForm(id, { draft: restored, focus })); return; }
+    if (!skipRecs && [c, ...groupOf(c)].some(x => x.details && !recs.has(x.id) && app.loadDetails)) { withRecs(c, failed => openForm(id, { draft: restored, focus, skipRecs: !!failed })); return; }
     const view = partsView(c);
     partForm = view ? { c, view, deleted: new Set(view.list.filter(x => x.deleted).map(x => x.key)), drops: new Set(), added: !!view.added, last: null } : null;
     app.modal.innerHTML = formHtml(c);
