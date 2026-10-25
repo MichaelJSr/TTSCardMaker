@@ -1005,7 +1005,8 @@ relies on:
   `d/`, `decks/` pages are inside) with `IN_USE`: one string of 10-hex names (thumb blobs' first ten, icon stamps).
   `TAGS` holds the build's three thumb tags. It answers only GET, non-Range, query-less requests under its scope for
   `thumbs/<blob16>-<w>-<tag>.avif` with a current tag and `icons/<name>.<stamp>[.<variant>].webp`: cache first (`pictures-1`), else the network, and keeps a 200 same-origin response whose name is in
-  use. Everything else (pages, data, assets, sw.js, og JPEGs, unstamped icons) is not intercepted. install: skipWaiting;
+  use. Everything else (pages, data, assets, sw.js, og JPEGs, unstamped icons) is not intercepted, and outside thumbs/
+  and icons/ a static route (install's `addRoutes`, Chrome) sends it to the network without the worker. install: skipWaiting;
   activate: deletes other `pictures-*` caches and entries not in `IN_USE`, then claims. No storage: the network.
   app.js `startWorker()` registers `new URL("sw.js", ROOT)` after load and, once the worker controls the page, posts
   `{seen}` (picture URLs already loaded); the worker puts the in-use ones in from the HTTP cache. sw.js changes only
@@ -1017,6 +1018,19 @@ relies on:
   1401 -> 369 KB (no pictures), within 10 minutes 0 -> 0 (a 304 for sw.js); card page first 500 -> 493 KB, after a
   deploy 500 -> 442. 4x phone (9 Mbps, 85 ms): grid first 709 -> 628 KB (q50: 599), LCP 996 -> 1020 ms; after a deploy
   709 -> 369 KB, LCP 828 -> 844; card page LCP 436 -> 428 first, 368 -> 348 after a deploy; the sharp 720 px picture
-  851 -> 824 ms after a deploy. Timings within noise (the Mac's load average was 50-70 during the runs). Scripts:
-  scratch site-img/fix4/load4.mjs (m3/load3.mjs with the dists from the environment).
+  851 -> 824 ms after a deploy. Scripts: scratch site-img/fix4/load4.mjs (m3/load3.mjs with the dists from the environment).
+- The worker's gain is bytes only, and it costs first paint on every return visit (corrected after review; scratch
+  site-img/fix5, m/load6.mjs, 6 interleaved rounds, medians, main / AVIF without sw.js / this branch with the routes):
+  revisit within 10 minutes, first paint desktop 12 / 12 / 20 ms, 4x phone 30 / 30 / 54 ms (every branch round slower
+  than every main round); with the worker stopped first (a real returning visitor) desktop 12 / 12 / 20, phone
+  34 / 34 / 56. LCP on those revisits is unchanged (desktop 60 / 64 / 54, phone 160 / 154 / 168). After a deploy the
+  worker saves the bytes (desktop 1401 / 1207 / 369 KB, phone 709 / 627 / 369) but not time: LCP desktop 76 / 80 / 80
+  ms, phone 798 / 802 / 800; worker stopped 76 / 76 / 86 and 812 / 816 / 828 (LCP waits on the 26 JS modules and the
+  data, not the preloaded thumb). AVIF alone costs nothing measurable, so the delay is the worker's. sw.js's install
+  adds a static route (`addRoutes`, Chrome): everything but thumbs/ and icons/ goes to the network without starting
+  the worker. It did not shrink the cost here (desktop 20 ms with or without it), and a control whose route sends every
+  request to the network (the worker registered, never used: dists/unused) still paints at 20 vs 12 ms: the cost is a
+  page being controlled at all, not the picture path. Trade-off for the owner: about 8 ms (desktop) and 22-26 ms (4x
+  phone) of first paint on every return visit, for 0.26-0.84 MB less per returning visitor (phone / desktop grid, vs AVIF
+  without the worker) after each deploy.
 
