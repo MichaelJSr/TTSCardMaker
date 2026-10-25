@@ -1,4 +1,4 @@
-import { compile, suggest, total, SEARCH_HELP } from "./search.js";
+import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
 import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
 import * as D from "./deck.js";
 import { renderStats, shapeOf, cooldownCols, tagsOf } from "./stats.js";
@@ -342,7 +342,7 @@ const LINKED = [
   ["nodup", () => "Duplicates hidden", () => c => !c.dup],        // Stats counts a duplicate once
 ];
 const needsAnalytics = p => ["bal", "cohort", "month", "change"].some(k => p.get(k));
-const listOf = p => sortCards(filterCards(p), sortOf(p), p.get("dir") || "");   // the cards the grid shows, in order
+const listOf = p => exactFirst(sortCards(filterCards(p), sortOf(p), p.get("dir") || ""), p.get("q"));   // the cards the grid shows, in order (search.js exactFirst)
 function sortCards(list, sort = "name", dir = "") {
   const key = {
     name: c => c.name.toLowerCase(), stars: c => c.stars ?? -1, total: c => (c.hp == null ? -1 : total(c)), hp: c => c.hp ?? -1, def: c => c.def ?? -1,
@@ -1226,7 +1226,7 @@ const runSearch = debounce(() => {
   setParams({ q: qInput.value });
 }, 160);
 qInput.addEventListener("input", runSearch);
-$("#search-form").addEventListener("submit", e => { e.preventDefault(); const l = S.list; if (l.length === 1) location.hash = `#/card/${l[0].id}`; });
+$("#search-form").addEventListener("submit", e => { e.preventDefault(); const ex = exactOf(qInput.value, S.cards), l = ex.length === 1 ? ex : S.list; if (l.length === 1) location.hash = `#/card/${l[0].id}`; });   // one exact name, else one result
 $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax</h3><p class="muted">The bot's /query_ability syntax, plus names and aliases.</p>
   <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
 $("#random").addEventListener("click", () => actions["random-from-list"]());
