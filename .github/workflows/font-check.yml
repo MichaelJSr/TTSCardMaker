@@ -59,7 +59,7 @@ jobs:
         with:
           python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
-      # card-edits.yml's install (the same cache entry): AutoCroissant requirements-cards.txt, the psd-tools fork's one pin,
+      # card-sync.yml's install (the same cache entry): AutoCroissant requirements-cards.txt, the psd-tools fork's one pin,
       # as wheels cached per that file, runner and Python; a hit installs offline, a miss builds them and saves them.
       - id: wheels
         uses: actions/cache/restore@v6
@@ -82,7 +82,7 @@ jobs:
           key: ${{ steps.wheels.outputs.cache-primary-key }}
 
       # Fonts: MDW/Fonts' top level (270 font files, 215 MB on 2026-10-21; stoogedings-src/ is the icon font's source and
-      # stays out), cached by the folder's tree sha as card-edits.yml does; the sparse checkout fetches them only on a miss.
+      # stays out), cached by the folder's tree sha as card-sync.yml does; the sparse checkout fetches them only on a miss.
       - id: fonts
         run: echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
 

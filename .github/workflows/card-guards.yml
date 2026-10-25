@@ -180,7 +180,7 @@ jobs:
         with:
           python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
-      # card-edits.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
+      # card-sync.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
       # recompression) among them.
       - id: wheels
         uses: actions/cache/restore@v6
@@ -384,7 +384,7 @@ jobs:
         with:
           python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
-      # card-edits.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
+      # card-sync.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
       # recompression) among them.
       - id: wheels
         uses: actions/cache/restore@v6
