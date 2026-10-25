@@ -144,23 +144,6 @@ async function init() {
   window.addEventListener("popstate", route);
   renderAccount();
   route();
-  startWorker();
-}
-
-/** The service worker (sw.js: card pictures and icons kept by their versioned URLs across deploys). Once it controls the
- *  page, it is told the pictures loaded before it ran, which it takes from the HTTP cache. */
-function startWorker() {
-  if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
-  const seen = () => {
-    const sw = navigator.serviceWorker.controller;
-    const urls = performance.getEntriesByType("resource").filter(r => r.responseEnd > 0 && /\/(thumbs|icons)\//.test(r.name)).map(r => r.name);
-    if (sw && urls.length) sw.postMessage({ seen: urls });
-  };
-  const start = () => navigator.serviceWorker.register(new URL("sw.js", ROOT).href)
-    .then(() => (navigator.serviceWorker.controller ? null : new Promise(ok => navigator.serviceWorker.addEventListener("controllerchange", ok, { once: true }))))
-    .then(() => setTimeout(seen, 3000))
-    .catch(() => { /* no worker: the network as before */ });
-  if (document.readyState === "complete") start(); else addEventListener("load", start, { once: true });
 }
 
 // everything computed from the cards; re-run after an edit

@@ -983,7 +983,7 @@ def build_icons(tree):
             tint = info.get("tint", "auto")
             key = hashlib.sha256(f"{script}:{json.dumps(tint, sort_keys=True)}:{ICON_SIZE}".encode()).hexdigest()[:8]
         # the stamp in the file names (icon and variants): an old page's URL gets its own picture or a 404, never another
-        # deploy's, so the service worker (sw.js) can keep them by URL
+        # deploy's
         stamp = hashlib.sha256(f"{tree[path]}:{ICON_VERSION}:{VARIANT_VERSION}:{key}".encode()).hexdigest()[:10]
         out_name = f"{slugify(name)}.{stamp}.webp"
         link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)
@@ -2814,23 +2814,6 @@ def data_stamp(data, details):
 
 
 BUILD_TXT = "build.txt"                       # in DIST: dist_digest(), which build is live
-WORKER = "sw.js"                              # site/sw.js, written to the site root (its scope) with the pictures in use
-ICON_STAMP = re.compile(r"\.([0-9a-f]{10})\.webp$")   # build_icons' icons/<name>.<stamp>.webp
-
-
-def write_worker(entries, icons):
-    """DIST/sw.js: site/sw.js with the content names of every picture the site uses (card and rulebook images' blobs,
-    the icons' stamps; 10 hex digits each) and the thumbs' settings tags, which its worker keeps and the rest of its
-    cache it deletes."""
-    with open(os.path.join(SITE, WORKER), encoding="utf-8") as fh:
-        text = fh.read()
-    for mark in ('/*PICTURES*/""', '/*TAGS*/""'):
-        if mark not in text:
-            raise SystemExit(f'error: site/{WORKER} has no {mark}')
-    names = {e["img"][:10] for e in entries if e.get("img")} | {m.group(1) for i in icons.values() if (m := ICON_STAMP.search(i["file"]))}
-    with open(os.path.join(DIST, WORKER), "w", encoding="utf-8") as fh:   # one string of 10-digit names: sw.js is about 7 KB gzipped
-        fh.write(text.replace('/*PICTURES*/""', json.dumps("".join(sorted(names))))
-                 .replace('/*TAGS*/""', json.dumps("".join(thumb_tag(w) for w in IMAGE_SIZES))))
 
 
 def dist_digest(data):
@@ -3283,7 +3266,6 @@ def main():
     for name, (_, text) in assets.items():
         with open(os.path.join(DIST, "assets", name), "w", encoding="utf-8") as fh:
             fh.write(text)
-    write_worker(cards + rules, icons)
     def url(m):                               # index.html's asset and data URLs
         name = m.group(1).removeprefix("assets/")
         return f'{m.group(1)}?v={assets[name][0] if name in assets else version}"'

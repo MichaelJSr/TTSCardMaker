@@ -20,7 +20,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - CSS conventions (style.css, one file): theme via `:root[data-theme=dark|light]` custom props (`--page --surface --surface-2 --surface-3 --border --border-strong --ink --ink-2 --muted --accent --danger --good --warn`, chart `--s1..--s4`); theme set pre-paint in index.html:20 from localStorage "theme". Use existing classes: `.panel` (card box, 14px radius), `.toolbar`, `.actions` (button row), `.grid` + `.tile` (card tile, `--tile` width var; tileHtml() in app.js:~190 builds one), `.strip` (h-scroll tile row), `.slots/.slot` (deck slots, 2:3 aspect), `.tier-title`, `.chips/.chip`, `.seg` (segmented buttons), `.fact`, `.muted`, `.num`, `.kbd`, `button.primary/.ghost/.icon/.danger`, `table.data`, `.empty`, `.loading`, `.check`, `.erow/.ein` (form rows), `.wide` (full width input), `.stars`. Layout idiom: two-column CSS grid (`.deck {1fr 340px}` at style.css:193, `.browse {260px 1fr}`) collapsing to one column via `@media (max-width: 980px|860px)`; sticky sidebars at `top:64px`. Header wraps under 980px (`.tabs` becomes scrollable row). Inline `style=` is used liberally for one-offs. Print rules at style.css:240. No CSS framework or preprocessor.
 
 ## 2. Data loading
-- `getJson(name)` app.js:~58: `fetch("data/"+name+"?v=<build>")` relative to `<base>`; ordinary HTTP cache keyed by the `?v=` build hash (the service worker never touches data, §28). `cards.json` is preloaded in index.html:12 and awaited in `init()` before first render.
+- `getJson(name)` app.js:~58: `fetch("data/"+name+"?v=<build>")` relative to `<base>`; ordinary HTTP cache keyed by the `?v=` build hash. `cards.json` is preloaded in index.html:12 and awaited in `init()` before first render.
 - Files (dist/data/, sizes from the 2026-10-20 build):
   - cards.json 409 KB: `{generated, repo:"MichaelJSr/TTSCardMaker", botRepo:"bobberlington/AutoCroissant", raw:"https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/", cards[], icons{}, banlist{notes[], groups[{title, entries[{name, reason, id}]}]}, branch:"main", files{edits,authors,banlist,admins,profiles,decks}, admins[logins], people[], peopleMap{git:shown}, decks{public,private}}`. icons = `{normalizedName: {file:"icons/x.webp", name, kind:"type"|...}}`.
   - rules.json 67 KB `{rules:[{id, name, type:"rulebook", ability, ...}]}` (lazy: rulebook tab). history.json 48 KB `{cardId: [{ts, ability}]}` (lazy: changes tab / card with `hv`). versions.json `{available, repo, commits[[sha,ts,author,subject]], cards{id:[[commitIdx, path]]}}`; currently `available:false`, empty (76 bytes).
@@ -28,7 +28,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   - decks.json (2026-10-21; lazy: `#/decks`, a deck page, a person's Decks panel): `{generated, decks: [{owner, slug, name, description, cards[visible ids], dropped, field|null, updated, n}], private: [{owner, slug, kdf{name,hash,iter,salt}, iv, data, updated}]}`, both newest first. cards.json carries the counts as `decks: {public, private}` and `files.decks = "site/decks"`. Section 12.
   - analytics.json (2026-10-22; 105 KB, 13 KB gzipped; lazy: the Stats page's Balance section, a card with `balance: true`): section 14.
 - Card record (cards.json, empty fields dropped; 773 cards; types: creature 298, item 189, minion 91, debuff 52, field 50, aux item 48, nme 26, buff 12, creatures 7). Fields: `id` (slug, e.g. "a-snack"), `name`, `type` (kind), `subtype` (item type e.g. heal), `series`, `stars` (int), `types[]` (icon names), `hp def atk spd`, `ability` (text with `[type]` tokens and \n), `author`, `ts` (last PSD commit, epoch s), `psd`, `png` (repo path of full PNG), `key` (card file key used in Card Edits.json/Authors), `dups[]` (ids that are copies of this card; on the copy: `dup` = original id), `aliases[]`, `authorListed`, `img` (hash for thumbs), `tw`,`th` (360-wide thumb dims), `color` (accent hex), `hv` (history count), `iv` (image versions, only over 1), `fs` (first upload of the image, epoch s, from the git history: full-history builds only, every card with a history row), `created` (the creation date "YYYY-MM-DD": the earlier of `site/Card Creation Dates.json`'s first Discord post and `fs`, a hand-set date winning; `createdFrom` "discord" | "git" | "hand", `createdAbout: true` while provisional; build_site `apply_created`, 2026-10-23), `problems[]`, `creatures[]` (list of per-creature stat objects when a card has several), `ratings[]` (dated 1-10 ratings, oldest first: section 25), `parsed:false` (only when not parsed), plus editor-only fields at runtime: `edited`, `orig`, `editAt`, `webAliases`, `hidden`, `note`, `problems_ok`, `allow_high_stats`, `_staged`, `_sent`, `_banned`, `_unused`. Cards have NO sha/GUID or TTS ids (`details: true`, 2026-10-21, only says `data/details/<id>.json` exists; the record is joined by blob sha at build time). Note `c.type` of a field card = "field", status effects "debuff"/"buff".
-- Images: thumbnails `thumbs/<img>-{240|360|720}-<tag>.avif` (AVIF since 2026-10-24, §28; the tags in cards.json `thumbs`) (app.js:~44 `img(c,w)`, `imgAttrs(c, cssPx)` gives src+srcset+width/height); full-size PNG = `S.data.raw + urlPath(c.png)` (raw.githubusercontent.com, `fullUrl(c)` app.js:~49; this is what TTS FaceURL uses in deck.js:156); card back images `raw + "MDW/cardback.png"` and `MDW/cardback_item.png` (deck.js:181-183). Icons `icons/<name>.webp?v=<stamp>` (§28). Name lookup helpers: `S.byId`, `norm(name)` (text.js:4: lowercase, strips spaces/_-.'), search `compile(query)` (search.js:35) returns predicate; matches names + aliases; `suggest(q, cards)`.
+- Images: thumbnails `thumbs/<img>-{240|360|720}-<tag>.avif` (AVIF since 2026-10-24, §28; the tags in cards.json `thumbs`) (app.js:~44 `img(c,w)`, `imgAttrs(c, cssPx)` gives src+srcset+width/height); full-size PNG = `S.data.raw + urlPath(c.png)` (raw.githubusercontent.com, `fullUrl(c)` app.js:~49; this is what TTS FaceURL uses in deck.js:156); card back images `raw + "MDW/cardback.png"` and `MDW/cardback_item.png` (deck.js:181-183). Icons `icons/<name>.<stamp>.webp` (§28). Name lookup helpers: `S.byId`, `norm(name)` (text.js:4: lowercase, strips spaces/_-.'), search `compile(query)` (search.js:35) returns predicate; matches names + aliases; `suggest(q, cards)`.
   A TTS save references cards by Nickname / FaceURL (PNG path under raw), so mapping save card -> site card = match `FaceURL` against `raw + urlPath(c.png)` (primary), else `norm(Nickname)` against `norm(c.name)` / aliases (as `D.fromText` does, deck.js:132-134).
 
 ## 3. Editor (assets/edit.js, 557 lines)
@@ -960,13 +960,13 @@ relies on:
 - Deploys: site.yml runs on pushes that touch what the build reads (`paths`). `build.txt` digests the whole site
   without the build time (`dist_digest`); a run whose build equals the live one (its build.txt) doesn't deploy (§28).
 
-## 28. Pictures: AVIF, the deploy gate, the service worker (2026-10-24, owner's decisions)
+## 28. Pictures: AVIF, the deploy gate (2026-10-24, owner's decisions)
 
 - Card images are AVIF only: `IMAGE_SIZES` {240: 60, 360: 55, 720: 50} (quality), `AVIF` (4:4:4, speed 6, one thread
   each; the image pool runs cards in parallel), named `thumbs/<blob16>-<w>-<tag>.avif`: `thumb_tag(w)` is 6 hex digits
   of `THUMB_VERSION`, the width, its quality and `AVIF` (not max_threads), and cards.json `thumbs` gives app.js `img()`
   the three. A settings change renames that width's files, so it re-encodes that width only (restored older caches
-  too) and returning visitors' workers never keep old bytes under the URL; bump `THUMB_VERSION` to re-encode all (a
+  too) and returning visitors' caches never hold old bytes under the URL; bump `THUMB_VERSION` to re-encode all (a
   resize change). No WebP fallback: Safari before 16 shows no card pictures (accepted).
 - Quality (ssimulacra2 against a LANCZOS reference on the dark background, all 817 images; scratch site-img-adv2
   score_all.py, q240.jsonl, q360.jsonl): q50 everywhere (the first pick, from a 60-card sample without rulebook pages)
@@ -994,43 +994,22 @@ relies on:
   or people file equal to the batch) writes no sent record, so nothing waits for a deploy the gate would skip.
 - Icon file names carry a stamp: `icons/<name>.<stamp>.webp` and `icons/<name>.<stamp>.<variant>.webp` (10 hex digits:
   sha256 of the blob, `ICON_VERSION`, `VARIANT_VERSION` and the variant key; text.js `variantFile` inserts the variant).
-  Not a `?v=` query: Pages ignores it, so a tab left open across a deploy got the new file for its old stamp and its
-  worker kept it under that stamp, which a revert then served (scratch site-img/review/sim; fixed, site-img/fix4/sim.mjs:
+  Not a `?v=` query: Pages ignores it, so a tab left open across a deploy got the new file for its old stamp and a
+  cache kept it under that stamp, which a revert then served (scratch site-img/review/sim; fixed, site-img/fix4/sim.mjs:
   the old stamp's URL is a 404 under the next deploy and the revert serves its own bytes).
 - Accent colours (`color`: share pages' theme-color, embed bars) come from the PNG's 240 px resize before encoding
   (`accent_color(image)`), not the decoded thumb, so codec settings don't move them; images.json rows of the WebP builds
   (`IMAGE_META_WEBP`) are kept, so no card's colour changes with the switch (a fresh computation would move about 60 of
   772 by a near-tie vote). Drop `IMAGE_META_WEBP` once deployed.
-- Service worker: `site/sw.js`, written by `write_worker` to `dist/sw.js` (scope: the site root, so `c/<id>/`, `u/`,
-  `d/`, `decks/` pages are inside) with `IN_USE`: one string of 10-hex names (thumb blobs' first ten, icon stamps).
-  `TAGS` holds the build's three thumb tags. It answers only GET, non-Range, query-less requests under its scope for
-  `thumbs/<blob16>-<w>-<tag>.avif` with a current tag and `icons/<name>.<stamp>[.<variant>].webp`: cache first (`pictures-1`), else the network, and keeps a 200 same-origin response whose name is in
-  use. Everything else (pages, data, assets, sw.js, og JPEGs, unstamped icons) is not intercepted, and outside thumbs/
-  and icons/ a static route (install's `addRoutes`, Chrome) sends it to the network without the worker. install: skipWaiting;
-  activate: deletes other `pictures-*` caches and entries not in `IN_USE`, then claims. No storage: the network.
-  app.js `startWorker()` registers `new URL("sw.js", ROOT)` after load and, once the worker controls the page, posts
-  `{seen}` (picture URLs already loaded); the worker puts the in-use ones in from the HTTP cache. sw.js changes only
-  when a picture changes (about 7 KB gzipped). Bump `CACHE` if what it keeps changes. To retire it: ship a sw.js whose
-  activate deletes `pictures-*` and calls `self.registration.unregister()`, and drop `startWorker`.
 - Measured over plain http://127.0.0.1 (a Pages-like server: max-age=600, an ETag per deploy; HTTPS with
-  --ignore-certificate-errors turns Chrome's HTTP cache off and skews repeat visits), 5 rounds, medians, main vs this
-  (q60/55/50): desktop grid first visit 1401 -> 1208 KB (240 px thumbs 904 -> 703; q50 was 1019), after a deploy
-  1401 -> 369 KB (no pictures), within 10 minutes 0 -> 0 (a 304 for sw.js); card page first 500 -> 493 KB, after a
-  deploy 500 -> 442. 4x phone (9 Mbps, 85 ms): grid first 709 -> 628 KB (q50: 599), LCP 996 -> 1020 ms; after a deploy
-  709 -> 369 KB, LCP 828 -> 844; card page LCP 436 -> 428 first, 368 -> 348 after a deploy; the sharp 720 px picture
-  851 -> 824 ms after a deploy. Scripts: scratch site-img/fix4/load4.mjs (m3/load3.mjs with the dists from the environment).
-- The worker's gain is bytes only, and it costs first paint on every return visit (corrected after review; scratch
-  site-img/fix5, m/load6.mjs, 6 interleaved rounds, medians, main / AVIF without sw.js / this branch with the routes):
-  revisit within 10 minutes, first paint desktop 12 / 12 / 20 ms, 4x phone 30 / 30 / 54 ms (every branch round slower
-  than every main round); with the worker stopped first (a real returning visitor) desktop 12 / 12 / 20, phone
-  34 / 34 / 56. LCP on those revisits is unchanged (desktop 60 / 64 / 54, phone 160 / 154 / 168). After a deploy the
-  worker saves the bytes (desktop 1401 / 1207 / 369 KB, phone 709 / 627 / 369) but not time: LCP desktop 76 / 80 / 80
-  ms, phone 798 / 802 / 800; worker stopped 76 / 76 / 86 and 812 / 816 / 828 (LCP waits on the 26 JS modules and the
-  data, not the preloaded thumb). AVIF alone costs nothing measurable, so the delay is the worker's. sw.js's install
-  adds a static route (`addRoutes`, Chrome): everything but thumbs/ and icons/ goes to the network without starting
-  the worker. It did not shrink the cost here (desktop 20 ms with or without it), and a control whose route sends every
-  request to the network (the worker registered, never used: dists/unused) still paints at 20 vs 12 ms: the cost is a
-  page being controlled at all, not the picture path. Trade-off for the owner: about 8 ms (desktop) and 22-26 ms (4x
-  phone) of first paint on every return visit, for 0.26-0.84 MB less per returning visitor (phone / desktop grid, vs AVIF
-  without the worker) after each deploy.
-
+  --ignore-certificate-errors turns Chrome's HTTP cache off and skews repeat visits), medians, main vs AVIF: desktop grid
+  first visit 1401 -> 1208 KB (240 px thumbs 904 -> 703; q50 was 1019), after a deploy 1401 -> 1207 KB; 4x phone
+  (9 Mbps, 85 ms) grid first 709 -> 628 KB (q50: 599), after a deploy 709 -> 627; card page first 500 -> 493 KB. AVIF
+  costs nothing measurable in time: revisit first paint desktop 12 / 12 ms, phone 30 / 30; LCP after a deploy desktop
+  76 / 80, phone 798 / 802; phone grid first visit LCP 996 -> 1020 (scratch site-img/fix4/load4.mjs, fix5/m/load6.mjs).
+- No service worker (owner 2026-10-24, after a trial on this branch; never deployed): one that kept the thumbs and
+  stamped icons across deploys saved 0.26-0.84 MB per returning visitor after each deploy (phone / desktop grid) but
+  cost every return visit about 8 ms (desktop) and 22-26 ms (4x phone) of first paint, with or without a static route,
+  even when it handled no request (a controlled page costs, not the picture path); LCP was unchanged (scratch
+  site-img/fix5). The browser's HTTP cache still reuses an unchanged thumb within its 10 minutes, and a changed card
+  gets a new name. The trial's code: work/site-img's history (da24fc0e..c50eafcb).
