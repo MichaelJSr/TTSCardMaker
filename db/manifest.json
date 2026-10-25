@@ -1,37 +1,37 @@
 {
  "builder": {
-  "commit": "6000b4a06f6f13a0fe52420d88effca61d46a276",
+  "commit": "49aa31d3e992ae8bf81f1723520e9cae79831e37",
   "parser_version": 2,
   "psd_tools": "1.26.0+cards",
   "python": "3.14",
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-10-25T01:06:31Z",
- "card_commit": "d050875f9f1d906f1650c9c5b4290dab432b6b18",
- "card_commit_at": 1792890092.0,
+ "built_at": "2026-10-25T05:12:32Z",
+ "card_commit": "18a40544a58ba7131838ea6ffb45b09a27e33735",
+ "card_commit_at": 1792903817.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 92,
   "baked": 0,
   "cards": 820,
-  "changed": 0,
+  "changed": 1,
   "details": 815,
   "failed": 0,
   "new": 0,
-  "versions": 1258
+  "versions": 1259
  },
  "files": {
-  "old_stats.json": "6ce4b0167d774293d1ac004a34048f9f96b731fc475c153ac0daa13b5f1ae94e",
-  "psd_details.json": "90e501177da083c46b7ad050cea6abca732a4b50c0a3ea4808eff462f0ab4fca",
-  "stats.json": "94ba07ea9a5fd3b26a308a90140739481dc15b059ec608198312ed1335ee1d4b"
+  "old_stats.json": "aa8e798e1cff30cb397f1d96c68645074f4cfd664091e28ecc4ede2c4459dbca",
+  "psd_details.json": "4fd2f2eedb0400cad01683640b4258c19e1707faf47fe7dc293c01823c6e3234",
+  "stats.json": "4a10b72ff4a5041efa7a79bd2da2b0d0ae46378d8047b22cda876e4d166bd7ca"
  },
  "gates": {},
  "inputs": {
   "authors_blob": "865f27ebdead059b2e0639aed79abb49fe736001",
   "created_blob": "07c402f7c4a6b7ed74e0ebeccda252053a50f1e4",
   "decks_blob": "06423a3363383d6e6ec1e5dc4633b62dc9e50460",
-  "edits_blob": "d5bef0faef6347b382c41ba2498c4e7a919c9f24",
+  "edits_blob": "6fe17eeebd99cf03c77f3d172ca91fcf2a2308c0",
   "fonts_tree": "6901674e2a3b3367bcb7fa59bf53364a2227a8ce",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "87993ef69e369ea8006616af4dd4ba961a0525ae"
@@ -45,7 +45,7 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40149282531",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40164586338",
  "schema": 1,
  "seed": {
   "commit": "6000b4a06f6f13a0fe52420d88effca61d46a276",
