@@ -13,6 +13,9 @@ time / forced / per game and triggers). Cooldowns (nCD, a/bCD, nGCD, a/bGCD), us
 tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-9 or X. "(Action)" gets a grey badge. Any letter case
 works and draws the same badge: "(1cd)" is (1CD), "(action)" and "(ACTION)" are (Action). The text is unchanged, so
 parsers and searches see the same thing as before.
+Under a Color/Gradient/Pattern Overlay a colour badge or :sticker is a blob (the overlay repaints every pixel), so
+Stylistic Alternates (salt) swap them for one-colour shapes in the text color: a badge becomes a pill outline with solid
+letters, a :sticker a thin outline around the :tint icon. The text is unchanged.
 
 Renderer behavior that shaped the design (tested in Photoshop 2023 and macOS CoreText):
   * Photoshop renders SVG glyphs, including embedded PNGs, but paints SVG `currentColor` (and context-fill,
@@ -47,6 +50,7 @@ import numpy as np
 from PIL import Image
 from fontTools import subset
 from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
+from fontTools.pens.recordingPen import RecordingPen
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
 from fontTools.pens.ttGlyphPen import TTGlyphPen
@@ -60,6 +64,7 @@ MAX_W = 1400                  # very wide icons are scaled down to this width
 RASTER = 256                  # long side of the embedded PNG, px (card icons render at ~80-150 px)
 TRACE = 1024                  # long side used for tracing outlines, px
 OUTLINE = 70                  # :sticker outline thickness, font units (~7 px at a 100 px font size)
+STICKER_LINE = 40             # salt :sticker: outline thickness; the rest of OUTLINE is the gap to the icon
 NO_RED = "#e01b22"
 FIRST_PUA = 0xE000
 # :glow halo: Nebulous_Precipice's darkmatter drop shadow (120 px, spread 20%, 80%), its size cut to 0.3 em (owner)
@@ -304,6 +309,7 @@ BADGE_PAD = 200                        # space between label and pill ends
 BADGE_TRACKING = 26                    # extra space between label letters
 BADGE_BORDER = 30
 BADGE_SIDE = 40
+BADGE_LINE = 50                        # salt badge: pill outline thickness (same advance as the badge)
 
 
 def badge_tags():
@@ -345,7 +351,7 @@ def capsule(x0, y0, w, h, n=24):
 
 
 def build_badges(label_font_path):
-    """[(tag, glyph name, plain outline, svg body, advance)] for every timing tag."""
+    """[(tag, glyph name, plain outline, svg body, advance, (salt outline, salt label))] for every timing tag."""
     label = TTFont(label_font_path)
     glyphs, cmap = label.getGlyphSet(), label.getBestCmap()
     scale = BADGE_CAPS / label["OS/2"].sCapHeight
@@ -359,10 +365,12 @@ def build_badges(label_font_path):
         label_width = sum(glyphs[cmap[ord(ch)]].width * scale for ch in chars) + BADGE_TRACKING * (len(chars) - 1)
         width = max(height, label_width + 2 * BADGE_PAD)
         pen = SVGPathPen(glyphs, ntos=num)
+        letters = RecordingPen()                              # label as outlines, y up
         x = BADGE_SIDE + (width - label_width) / 2            # label centred in the pill
         for ch in chars:
             g = cmap[ord(ch)]
             glyphs[g].draw(TransformPen(pen, (scale, 0, 0, -scale, x, -baseline)))
+            glyphs[g].draw(TransformPen(letters, (scale, 0, 0, scale, x, baseline)))
             x += glyphs[g].width * scale + BADGE_TRACKING
         text = pen.getCommands()
         body = (f'<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{top}"/>'
@@ -371,7 +379,9 @@ def build_badges(label_font_path):
                 f'ry="{height / 2:.0f}" fill="url(#g)" stroke="{border}" stroke-width="{BADGE_BORDER}"/>'
                 f'<path d="{text}" fill="#ffffff"/>')
         outline = [capsule(BADGE_SIDE, BADGE_BOTTOM, round(width), height)]
-        out.append((tag, badge_glyph(tag), outline, body, round(width) + 2 * BADGE_SIDE))
+        t = BADGE_LINE
+        ring = outline + [capsule(BADGE_SIDE + t, BADGE_BOTTOM + t, round(width) - 2 * t, height - 2 * t)[::-1]]
+        out.append((tag, badge_glyph(tag), outline, body, round(width) + 2 * BADGE_SIDE, (ring, letters)))
     return out
 
 
@@ -420,7 +430,7 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     spacer = "stk_space"
     add_glyph(spacer, [], OUTLINE - SIDE)
 
-    svg_docs, ligatures, multiples, glows, glow_multiples = [], {}, [], [], []
+    svg_docs, ligatures, multiples, glows, glow_multiples, sticker_alts = [], {}, [], [], [], []
     for key, info in cfg["icons"].items():
         path = os.path.join(repo, info["file"])
         if not os.path.exists(path):
@@ -455,6 +465,11 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         add_glyph(g_stk_bg, stk_polys, OUTLINE - SIDE)
         add_glyph(g_stk, stk_polys, adv + 2 * (OUTLINE - SIDE))       # only seen if LAYERS doesn't run
         multiples.append((g_stk, [g_stk_bg, g_color, spacer]))
+        # salt sticker: [outline ring + :tint icon] as one plain glyph, in place of the three above
+        ring = stk & ~cv2.erode(stk.astype(np.uint8), ellipse(STICKER_LINE / upp)).astype(bool)
+        ring[pad:pad + tint.shape[0], pad:pad + tint.shape[1]] |= tint
+        sticker_alts.append(([g_stk_bg, g_color, spacer], g_stk + ".salt",
+                             trace(ring, upp, OUTLINE - pad * upp, top + pad * upp), adv + 2 * (OUTLINE - SIDE)))
 
         # no = [color icon] [zero-width red sign drawn back over it]
         cx, cy = -adv + SIDE + w_u / 2, TOP - HEIGHT / 2
@@ -499,11 +514,12 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                         continue
                     ligatures[text] = (comps, g)
 
-    badge_ligatures = []
-    for tag, name, outline, body, advance in build_badges(os.path.join(repo, "MDW/Fonts/Changa One.ttf")):
+    badge_ligatures, badge_alts = [], []
+    for tag, name, outline, body, advance, alt in build_badges(os.path.join(repo, "MDW/Fonts/Changa One.ttf")):
         add_glyph(name, outline, advance)
         svg_docs.append((name, body))
         badge_ligatures.append(([char_glyph[ord(c)] for c in f"({tag})"], name))
+        badge_alts.append((name, advance, alt))
 
     font.setGlyphOrder(order)
     font["post"].formatType = 2.0
@@ -519,6 +535,9 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     #           draws the (Action) or (1CD) badge; anything else in parentheses is left as typed
     #   BADGES  "(" + tag + ")"  ->  badge glyph
     #   GLOW_TOKENS, GLOW_LAYERS  TOKENS and LAYERS for :glow / :darkglow; last, so older lookups keep their bytes
+    # and under salt (Stylistic Alternates), after those:
+    #   SALT_BADGES    badge glyph  ->  outlined pill
+    #   SALT_STICKERS  [outline][color icon][spacer] of a :sticker  ->  one plain glyph: thin outline + :tint icon
     tok_chars = sorted({c for text in ligatures for c in text[1:-1]})
     glow_texts = {text for text, (_, g) in ligatures.items() if g.rsplit(".", 1)[-1] in GLOWS}
     assert {c for text in glow_texts for c in text[1:-1]} <= {c for text in ligatures.keys() - glow_texts
@@ -544,6 +563,23 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
             svg_docs.append((g_bg, body))
             add_glyph(g, halo_polys, adv + 2 * (GLOW_SIZE - SIDE))     # only seen if LAYERS doesn't run
             glow_multiples.append((g, [g_bg, base, glow_space]))
+    # salt (one-colour) badges and stickers last: older glyph ids unchanged
+    for name, advance, (polys, label) in badge_alts:
+        pen = TTGlyphPen(None)
+        for p in polys:
+            pen.moveTo(p[0])
+            for pt in p[1:]:
+                pen.lineTo(pt)
+            pen.closePath()
+        label.replay(pen)
+        g = pen.glyph()
+        g.recalcBounds(glyf)
+        glyf[name + ".salt"] = g
+        hmtx[name + ".salt"] = (advance, g.xMin)
+        if name + ".salt" not in order:
+            order.append(name + ".salt")
+    for _, name, polys, advance in sticker_alts:
+        add_glyph(name, polys, advance)
     font.setGlyphOrder(order)
 
     gid = {n: i for i, n in enumerate(font.getGlyphOrder())}
@@ -582,6 +618,8 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                                   for t in sorted(tags, key=len, reverse=True))
     lookups = " ".join(f"lookup {n};" for n in ("MARK", "TOKENS", "LAYERS", "CASE", "BADGES", "GLOW_TOKENS",
                                                 "GLOW_LAYERS"))
+    salt_badges = [f"  sub {n} by {n}.salt;" for n, _, _ in badge_alts]
+    salt_stickers = [f"  sub {' '.join(seq)} by {g};" for seq, g, _, _ in sticker_alts]
     fea = "\n".join(["languagesystem DFLT dflt;", "languagesystem latn dflt;",
                      f"@TOKIN = [{' '.join(inputs)}];",
                      f"@TK = [{' '.join(tk.values())}];",
@@ -597,8 +635,11 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                      "lookup BADGES {", *badges, "} BADGES;",
                      "lookup GLOW_TOKENS {", *glow_liga, "} GLOW_TOKENS;",
                      "lookup GLOW_LAYERS {", *glow_mult, "} GLOW_LAYERS;",
+                     "lookup SALT_BADGES {", *salt_badges, "} SALT_BADGES;",
+                     "lookup SALT_STICKERS {", *salt_stickers, "} SALT_STICKERS;",
                      f"feature liga {{ {lookups} }} liga;",
-                     f"feature rlig {{ {lookups} }} rlig;"])
+                     f"feature rlig {{ {lookups} }} rlig;",
+                     "feature salt { lookup SALT_BADGES; lookup SALT_STICKERS; } salt;"])
     addOpenTypeFeaturesFromString(font, fea)
 
     # names: keep the OFL copyright + license for the Bree Serif letters, drop its trademark/vendor info
