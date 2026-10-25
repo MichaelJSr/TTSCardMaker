@@ -149,6 +149,7 @@ jobs:
             /requirements-cards.txt
             /commands/card_bake.py
             /commands/psd_edit.py
+            /commands/png_export.py
             /commands/git_commit.py
             /commands/repo_history.py
             /commands/tts_save.py

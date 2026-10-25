@@ -1,7 +1,8 @@
 # The card workflows' one Python setup: Python 3.14 and AutoCroissant requirements-cards.txt (the psd-tools fork's one
 # pin) as wheels cached per its requirement lines (comments don't count), runner and Python (one entry for every card
-# job). A hit installs offline with uv (~1 s); a miss builds the wheels with pip (uv has no `pip wheel`) and saves them,
-# reusing the newest entry's pyoxipng (pinned; its Rust build is most of a miss). The bot checkout is at bot/.
+# job). A hit installs offline with uv (~1 s); a miss builds the wheels with pip (uv has no `pip wheel`) and saves them.
+# The oxipng CLI (the lossless PNG recompression, AutoCroissant png_export) is the release binary, its sha256 pinned.
+# The bot checkout is at bot/.
 name: Card Python
 description: Python 3.14 with the card packages from the shared wheel cache
 
@@ -9,9 +10,9 @@ inputs:
   venv:
     description: "Install into a new venv here (no pip in it); empty: into setup-python's own"
     default: ""
-  skip:
-    description: "Packages not installed (space separated, e.g. pyoxipng)"
-    default: ""
+  oxipng:
+    description: "Install the oxipng CLI (false: the PNGs written are not recompressed)"
+    default: "true"
   help:
     description: "commands.<module> --help for each of these (space separated, run in bot/): the import closure"
     default: ""
@@ -40,7 +41,6 @@ runs:
       with:
         path: ~/.cache/card-wheels
         key: cards-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
-        restore-keys: cards-     # a miss starts from the newest entry (only its pyoxipng is kept)
 
     - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
       with:
@@ -52,19 +52,16 @@ runs:
       env:
         HIT: ${{ steps.wheels.outputs.cache-hit }}
         VENV: ${{ inputs.venv }}
-        SKIP: ${{ inputs.skip }}
         HELP: ${{ inputs.help }}
         PYTHON: ${{ steps.python.outputs.python-path }}
         UV_COMPILE_BYTECODE: "1"
       run: |
         if [ "$HIT" != true ]; then
-          mkdir -p ~/.cache/card-wheels     # restore-keys' entry: pip skips a pyoxipng for another Python
-          find ~/.cache/card-wheels -type f ! -name 'pyoxipng-*' -delete
+          mkdir -p ~/.cache/card-wheels
           pip wheel -q -f ~/.cache/card-wheels -w ~/.cache/card-wheels -r bot/requirements-cards.txt
           echo "wheels=built" >> "$GITHUB_OUTPUT"
         fi
         sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
-        for name in $SKIP; do sed -i "/^$name\b/d" "$RUNNER_TEMP/cards.txt"; done
         if [ -n "$VENV" ]; then
           python -m venv "$VENV" --without-pip
           PYTHON=$VENV/bin/python
@@ -77,3 +74,18 @@ runs:
       with:
         path: ~/.cache/card-wheels
         key: ${{ steps.wheels.outputs.cache-primary-key }}
+
+    - if: inputs.oxipng == 'true'     # AutoCroissant docs/Future/SMALLER_PNG_PUSHES.md
+      shell: bash
+      env:
+        VERSION: "10.2.1"
+        SHA256: "1813750ef592c5350ca79c88f98b2c0876d05c826dc7156245256d4255c1ad17"   # x86_64-unknown-linux-musl
+      run: |
+        [ "$RUNNER_OS-$RUNNER_ARCH" = Linux-X64 ] || { echo "::error::oxipng: a Linux X64 runner only"; exit 1; }
+        name=oxipng-$VERSION-x86_64-unknown-linux-musl
+        curl -fsSL --retry 3 -o "$RUNNER_TEMP/$name.tar.gz" "https://github.com/oxipng/oxipng/releases/download/v$VERSION/$name.tar.gz"
+        echo "$SHA256  $RUNNER_TEMP/$name.tar.gz" | sha256sum -c --quiet
+        mkdir -p "$RUNNER_TEMP/oxipng"
+        tar -xzf "$RUNNER_TEMP/$name.tar.gz" -C "$RUNNER_TEMP/oxipng" --strip-components 1 "$name/oxipng"
+        "$RUNNER_TEMP/oxipng/oxipng" --version
+        echo "$RUNNER_TEMP/oxipng" >> "$GITHUB_PATH"

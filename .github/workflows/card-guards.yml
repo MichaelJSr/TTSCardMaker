@@ -181,7 +181,7 @@ jobs:
         shell: bash
         run: echo "sha=$(git -C bot rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      # requirements-cards.txt's wheels, pyoxipng's (the lossless PNG recompression) among them
+      # requirements-cards.txt's wheels and the oxipng CLI (the lossless PNG recompression)
       - timeout-minutes: 10
         uses: ./.github/actions/cards-python
         id: setup

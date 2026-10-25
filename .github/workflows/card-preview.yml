@@ -88,13 +88,13 @@ jobs:
             /global_config.py
             /requirements-cards.txt
 
-      # The shared setup (.github/actions/cards-python), without pyoxipng: card_preview would recompress preview.png
+      # The shared setup (.github/actions/cards-python), without the oxipng CLI: the bake would recompress preview.png
       # (~4 s), which is never published.
       - timeout-minutes: 5
         uses: ./.github/actions/cards-python
         id: setup
         with:
-          skip: pyoxipng
+          oxipng: "false"
 
       # Fonts as card-sync.yml's: MDW/Fonts' top level, cached by the folder's tree sha (the same cache key), fetched
       # only on a miss.
