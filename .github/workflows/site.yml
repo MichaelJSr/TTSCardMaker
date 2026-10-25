@@ -5,22 +5,18 @@ name: Card browser
 on:
   push:
     branches: [main]
-    paths:                   # only what the build reads (checked out below, or read through git: tree, log)
+    # Site code and site-only files. Card inputs (PSDs, PNGs, Types/, the fonts, stoogedings.json and the card files in
+    # site/) start Card sync, which dispatches this build after its data commit: no build here on the old data.
+    paths:
       - "site/**"
-      - "Types/**"
+      - "!site/Card Edits.json"
+      - "!site/Card Authors.txt"
+      - "!site/Card Creation Dates.json"
+      - "!site/**.md"
       - ".mailmap"
-      - "MDW/Fonts/*"
-      - "MDW/Fonts/stoogedings-src/stoogedings.json"
       - "MDW/Fonts/stoogedings-src/build_stoogedings.py"
       - "MDW/Fonts/stoogedings-src/requirements.txt"
-      - "MDW/Card Edits.json"
-      - "MDW/Card Authors.txt"
-      - "**.png"
-      - "**.PNG"
-      - "**.psd"
-      - "**.PSD"
       - ".github/workflows/site.yml"
-      - "!TTS/**"            # the bot's TTS save commits don't rebuild the site
   schedule:
     - cron: "0 12 * * *"     # daily fallback: Card sync dispatches a build after each data commit
   workflow_dispatch:
@@ -184,6 +180,7 @@ jobs:
     needs: build
     if: needs.build.outputs.deploy == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

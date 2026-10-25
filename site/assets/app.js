@@ -1,4 +1,4 @@
-import { compile, suggest, total, SEARCH_HELP } from "./search.js";
+import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
 import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
 import * as D from "./deck.js";
 import { renderStats, shapeOf, cooldownCols, tagsOf } from "./stats.js";
@@ -9,7 +9,7 @@ import * as tray from "./tray.js";
 import * as tokens from "./tokens.js";
 import * as palette from "./palette.js";
 import * as details from "./details.js";
-import { tipController } from "./tip.js";
+import { tipController, wireTips } from "./tip.js";
 import * as decks from "./decks.js";
 import * as pick from "./pick.js";
 import * as balance from "./balance.js";
@@ -301,8 +301,8 @@ function setParams(updates, { replace = true } = {}) {
 // ---- cards (browse) --------------------------------------------------------------------------------
 const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
 function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi] = v.split("-").map(Number); return [isNaN(lo) ? 0 : lo, isNaN(hi) ? 99 : hi]; }
-// edited on the website or in Discord: an editor's fields (changes.fieldEditors), never a _by AutoCroissant entry (the
-// 2026-10-22 migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited without fieldBy)
+// edited on the website: an editor's fields (changes.fieldEditors), never a _by AutoCroissant entry (the 2026-10-22
+// migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited)
 const webEdited = c => changes.fieldEditors(c).length > 0;
 function filterCards(p, { facets = true } = {}) {
   const pred = compile(p.get("q") || "");
@@ -342,7 +342,7 @@ const LINKED = [
   ["nodup", () => "Duplicates hidden", () => c => !c.dup],        // Stats counts a duplicate once
 ];
 const needsAnalytics = p => ["bal", "cohort", "month", "change"].some(k => p.get(k));
-const listOf = p => sortCards(filterCards(p), sortOf(p), p.get("dir") || "");   // the cards the grid shows, in order
+const listOf = p => exactFirst(sortCards(filterCards(p), sortOf(p), p.get("dir") || ""), p.get("q"));   // the cards the grid shows, in order (search.js exactFirst)
 function sortCards(list, sort = "name", dir = "") {
   const key = {
     name: c => c.name.toLowerCase(), stars: c => c.stars ?? -1, total: c => (c.hp == null ? -1 : total(c)), hp: c => c.hp ?? -1, def: c => c.def ?? -1,
@@ -727,6 +727,7 @@ function closeModal() {
 }
 
 // ---- rulebook --------------------------------------------------------------------------------------
+let rulesAt = "";                                        // the rulebook hash last scrolled to: a re-render stays put
 function renderRules(r) {
   if (!S.rules) {
     view.innerHTML = `<div class="loading">Loading the rulebook…</div>`;
@@ -743,18 +744,18 @@ function renderRules(r) {
   view.innerHTML = `<div class="rules">
     <nav class="toc" aria-label="Rulebook pages"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
       <a href="#/rules" data-scroll="badge-colors">Badge colors</a><a href="#/rules" data-scroll="glossary">Timing tags</a><a href="#/rules" data-scroll="banlist">Constructed ban list</a>
-      ${S.rules.map(p => `<a href="#/rules" data-scroll="page-${p.id}">${esc(p.name)}</a>`).join("")}</nav>
+      ${S.rules.map(p => `<a href="#/rules/${p.id}" data-scroll="page-${p.id}">${esc(p.name)}</a>`).join("")}</nav>
     <div>
       ${q ? `<p class="muted">${pages.length} page${pages.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : ""}
       ${!q ? `<p class="muted">The whole game in one text file: <a href="game.txt" target="_blank" rel="noopener">game.txt</a> (every card and rulebook page).</p>` : ""}
       ${!q ? `<section class="panel" id="badge-colors"><h3>Badge colors</h3>${legendHtml()}</section>
-      <section class="panel" id="glossary"><h3>Timing tags</h3><p class="muted">X can be any number; the first number of a pair such as (1/2CD) can also be 0 or −1. Hover a badge for its meaning.</p>
+      <section class="panel" id="glossary"><h3>Timing tags</h3><p class="muted">X can be any number; the first number of a pair such as (1/2CD) can also be 0 or −1. Hover or tap a badge for its meaning.</p>
         ${Object.entries(GROUP_NAMES).map(([g, label]) => `<h4>${esc(label)}</h4>${gloss(tags.filter(t => tagInfo(t).group === g && !tagInfo(t).old))}`).join("")}
         <h4>Old system (rulebook pages)</h4>${gloss(tags.filter(t => tagInfo(t).old))}</section>
       <section class="panel" id="banlist"><h3>Constructed ban list</h3>${banned.notes.map(n => `<p class="muted">${esc(n)}</p>`).join("")}
         ${banned.groups.map(g => `<h4>${esc(g.title)}</h4><ul>${g.entries.map(e => `<li>${e.id ? `<a class="card-ref" href="#/card/${e.id}" data-card="${e.id}">${esc(e.name)}</a>` : esc(e.name)} <span class="muted">— ${esc(e.reason)}</span></li>`).join("")}</ul>`).join("")}</section>` : ""}
       ${pages.map(p => `<article class="page" id="page-${p.id}">${p.img ? `<a href="${esc(fullUrl(p))}" target="_blank" rel="noopener" title="Full-size page"><img loading="lazy" decoding="async" ${imgAttrs(p, 220, true)} alt="${esc(p.name)}"></a>` : "<div></div>"}
-        <div><h3>${esc(p.name)}${p._staged ? ` <span class="fact staged">Unpublished edit</span>` : ""} <button type="button" class="ghost" data-action="edit-card" data-id="${p.id}" title="Edit this page">Edit</button></h3>
+        <div><h3>${esc(p.name)} <a class="page-link" href="#/rules/${p.id}" data-scroll="page-${p.id}" data-tip="Link to this page">#</a>${p._staged ? ` <span class="fact staged">Unpublished edit</span>` : ""} <button type="button" class="ghost" data-action="edit-card" data-id="${p.id}" title="Edit this page">Edit</button></h3>
           <div class="ability">${S.renderer.render(p.ability || "")}</div>${p.note ? `<div class="note"><b>Note</b> ${S.renderer.render(p.note)}</div>` : ""}
           ${p.details ? details.detailsHtml(details.readState(store), false) : ""}</div></article>`).join("") || `<div class="empty">No rulebook page mentions that.</div>`}
     </div></div>`;
@@ -763,6 +764,8 @@ function renderRules(r) {
     const dd = p.details && document.getElementById(`page-${p.id}`)?.querySelector(".psd-details");
     if (dd) details.mount(dd, { card: p, load: () => loadDetails(p), storage: store, extras: { badges: psdBadges(p), labels: FIELD_LABEL, page: true }, outer: false });
   }
+  if (r.arg && !q && rulesAt !== location.hash) document.getElementById(`page-${r.arg}`)?.scrollIntoView();   // #/rules/<id>: that page
+  rulesAt = location.hash;
   const input = $("#rules-q");
   input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#rules-q"); i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }, 200));
 }
@@ -1056,7 +1059,7 @@ function renderDeckPage(r) {
   form();
 }
 // the deck page's Share, Discord, text, TTS and print act on the deck shown (S.deckView); the deck builder's on the hand
-const ttsDownload = d => { D.download(`${d.name.replace(/[^\w\- ]+/g, "") || "hand"}.json`, JSON.stringify(D.ttsSave(d, S.byId, S.data.raw), null, 2)); toast("Downloaded Tabletop Simulator saved object"); };
+const ttsDownload = d => { D.download(`${d.name.replace(/[^\w\- ]+/g, "") || "hand"}.json`, JSON.stringify(D.ttsSave(d, S.byId, S.data.raw, S.data.pins), null, 2)); toast("Downloaded Tabletop Simulator saved object"); };
 const printDeck = d => { if (!D.printSheet(d, S.byId, S.data.raw)) toast("Allow pop-ups to print proxies"); };
 
 // ---- people: profiles (data/users.json; staged or just-published ones from the editor) + contributions (data/contributions.json)
@@ -1211,7 +1214,12 @@ document.addEventListener("click", e => {
   const ref = e.target.closest("a.card-ref");
   if (ref) { e.preventDefault(); location.hash = `#/card/${ref.dataset.card}`; return; }
   const scroll = e.target.closest("[data-scroll]");
-  if (scroll) { e.preventDefault(); document.getElementById(scroll.dataset.scroll)?.scrollIntoView({ behavior: "smooth" }); return; }
+  if (scroll) {                                          // a rulebook page's link: its #/rules/<id> in the address bar too
+    e.preventDefault(); document.getElementById(scroll.dataset.scroll)?.scrollIntoView({ behavior: "smooth" });
+    const to = scroll.getAttribute("href");
+    if (to?.startsWith("#/rules/") && to !== location.hash) { rulesAt = to; history.pushState(null, "", to); syncUrl(parseHash()); S.renderedHash = S.listHash = to; }
+    return;
+  }
   if (e.target === modal) actions.close();
 });
 document.addEventListener("change", e => {
@@ -1227,7 +1235,7 @@ const runSearch = debounce(() => {
   setParams({ q: qInput.value });
 }, 160);
 qInput.addEventListener("input", runSearch);
-$("#search-form").addEventListener("submit", e => { e.preventDefault(); const l = S.list; if (l.length === 1) location.hash = `#/card/${l[0].id}`; });
+$("#search-form").addEventListener("submit", e => { e.preventDefault(); const ex = exactOf(qInput.value, S.cards), l = ex.length === 1 ? ex : S.list; if (l.length === 1) location.hash = `#/card/${l[0].id}`; });   // one exact name, else one result
 $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax</h3><p class="muted">The bot's /query_ability syntax, plus names and aliases.</p>
   <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
 $("#random").addEventListener("click", () => actions["random-from-list"]());
@@ -1284,23 +1292,20 @@ function fillTip(t) {
     const c = S.byId.get(t.dataset.card);
     if (!c) return false;
     tip.replaceChildren();
-    if (c.img) { const im = document.createElement("img"); im.src = thumbUrl(c); im.alt = ""; tip.append(im); }
+    if (c.img) { const im = document.createElement("img"); im.style.aspectRatio = `auto ${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}`; im.src = thumbUrl(c); im.alt = ""; tip.append(im); }   // sized before it loads: place() flips it right
     const n = document.createElement("div"); n.className = "v"; n.textContent = c.name; tip.append(n);
   } else tip.textContent = t.dataset.tip;
 }
 const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
 function hideTip() { tips.hide(); }
 inline.extend({ hideTip, icons: () => S.icons, closePicker: tokens.dismiss });   // editors hide the tooltip and the list; the type palette's icons
-document.addEventListener("pointerover", e => tips.over(e.target));
-document.addEventListener("pointermove", e => {
-  if (!tips.move()) return;
+wireTips(document, tips, (cx, cy) => {
   const r = tip.getBoundingClientRect();
-  let x = e.clientX + 14, y = e.clientY + 16;
-  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
-  if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
+  let x = cx + 14, y = cy + 16;
+  if (x + r.width > innerWidth - 8) x = Math.max(8, cx - r.width - 14);
+  if (y + r.height > innerHeight - 8) y = cy - r.height - 14;
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
 });
-document.addEventListener("pointerout", e => tips.out(e.relatedTarget));
 
 init().finally(fresh.watch);                            // a new deploy reloads the page (fresh.js)
 passes.migrate().catch(() => {});                       // passphrases remembered in plain text before 2026-10-23: sealed now

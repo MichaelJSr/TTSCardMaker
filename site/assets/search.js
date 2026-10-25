@@ -7,6 +7,7 @@
 //   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
 //   created>=2025  created==2023-10  created<2021-06-01                   dates at the precision given (as the bot)
 //   is:unparsed  has:history  has:problems  has:alias
+import { norm } from "./text.js";
 
 export const total = c => (c.hp ?? 0) + (c.def ?? 0) + (c.atk ?? 0) + (c.spd ?? 0);
 const hasStats = c => c.hp != null || c.def != null || c.atk != null || c.spd != null;
@@ -74,6 +75,17 @@ export function compile(query) {
     return c => re.test(haystack(c));
   }
   return c => haystack(c).includes(lower);
+}
+
+/** The cards whose name or an alias is the query (text.js norm: case, spaces and dots aside; quotes allowed). */
+export function exactOf(query, cards) {
+  const q = norm((query || "").trim().replace(/^"(.*)"$/, "$1"));
+  return q ? cards.filter(c => norm(c.name) === q || (c.aliases || []).some(a => norm(a) === q)) : [];
+}
+/** list with exactOf's cards first, whatever the sort; the rest keep their order. */
+export function exactFirst(list, query) {
+  const top = new Set(exactOf(query, list));
+  return top.size ? [...list.filter(c => top.has(c)), ...list.filter(c => !top.has(c))] : list;
 }
 
 /** Closest card names for "did you mean" (bigram similarity). */
