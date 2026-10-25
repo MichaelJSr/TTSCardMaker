@@ -1,6 +1,7 @@
 # The card workflows' one Python setup: Python 3.14 and AutoCroissant requirements-cards.txt (the psd-tools fork's one
-# pin) as wheels cached per that file, runner and Python (one entry for every card job). A hit installs offline with uv
-# (~1 s); a miss builds the wheels with pip (uv has no `pip wheel`) and saves them. The bot checkout is at bot/.
+# pin) as wheels cached per its requirement lines (comments don't count), runner and Python (one entry for every card
+# job). A hit installs offline with uv (~1 s); a miss builds the wheels with pip (uv has no `pip wheel`) and saves them,
+# reusing the newest entry's pyoxipng (pinned; its Rust build is most of a miss). The bot checkout is at bot/.
 name: Card Python
 description: Python 3.14 with the card packages from the shared wheel cache
 
@@ -28,11 +29,18 @@ runs:
       with:
         python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
 
+    - id: reqs     # pip's comment rule: a # at the start or after whitespace
+      shell: bash
+      run: |
+        sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' bot/requirements-cards.txt | sha256sum | cut -d' ' -f1)
+        echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
     - id: wheels
       uses: actions/cache/restore@v6
       with:
         path: ~/.cache/card-wheels
-        key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+        key: cards-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+        restore-keys: cards-     # a miss starts from the newest entry (only its pyoxipng is kept)
 
     - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
       with:
@@ -50,7 +58,9 @@ runs:
         UV_COMPILE_BYTECODE: "1"
       run: |
         if [ "$HIT" != true ]; then
-          pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
+          mkdir -p ~/.cache/card-wheels     # restore-keys' entry: pip skips a pyoxipng for another Python
+          find ~/.cache/card-wheels -type f ! -name 'pyoxipng-*' -delete
+          pip wheel -q -f ~/.cache/card-wheels -w ~/.cache/card-wheels -r bot/requirements-cards.txt
           echo "wheels=built" >> "$GITHUB_OUTPUT"
         fi
         sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
