@@ -8,6 +8,7 @@ import * as auth from "./login.js";
 import * as live from "./live.js";
 import * as draft from "./drafts.js";
 import { current as ratingNow } from "./ratings.js";
+import { soon } from "./fresh.js";
 
 const API = "https://api.github.com";
 // token: the plain-text token before 2026-10-23 (sealed on the next load); last: the login a password last signed in
@@ -483,7 +484,7 @@ export function createEditor(app) {
   function sentRecord() {                          // {at, sha, ops, profiles, decks, deckNames}: published, until the site has rebuilt with it
     const sent = load(K.sent, null);
     if (!sent) return null;
-    if (new Date(S.data.generated) > new Date(sent.at)) { localStorage.removeItem(K.sent); return null; }   // live now
+    if (new Date(S.data.generated) > new Date(sent.at)) { localStorage.removeItem(K.sent); app.toast("Live now: your published edits are on the site"); return null; }
     return sent;
   }
   const sentOps = () => sentRecord()?.ops || [];
@@ -1204,6 +1205,7 @@ export function createEditor(app) {
     const sent = sentRecord() || {};
     if (sha) localStorage.setItem(K.sent, JSON.stringify({ at, sha, ops: [...sentOps(), ...ops], profiles: { ...sentProfiles(), ...profiles },
       decks: { ...sentDecks(), ...decksOut }, deckNames: { ...(sent.deckNames || {}), ...stage.deckNames } }));   // no commit: no rebuild to wait for (the site already has it)
+    if (sha) soon();                                   // reloads when its build is live (fresh.js)
     if (stage.admins) S.data.admins = stage.admins;
     cardDrafts.dropAll(ops.map(o => o.id));              // published: their drafts are done with
     stage = emptyStage();
@@ -1439,6 +1441,7 @@ export function createEditor(app) {
     init() {
       S.showHidden = !!localStorage.getItem(K.hidden);
       preview();
+      const sent = sentRecord(); if (sent) soon(Date.parse(sent.at));   // still waiting for its build
       if (booting) restore().then(() => app.derive(), () => { token = ""; me = null; }).finally(() => { booting = false; app.rerender(); if (offerOnBoot && me) offerAfterBoot(); });
     },
     open: openForm,

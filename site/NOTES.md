@@ -1013,3 +1013,26 @@ relies on:
   even when it handled no request (a controlled page costs, not the picture path); LCP was unchanged (scratch
   site-img/fix5). The browser's HTTP cache still reuses an unchanged thumb within its 10 minutes, and a changed card
   gets a new name. The trial's code: work/site-img's history (da24fc0e..c50eafcb).
+
+## 29. A new deploy reaches open pages (2026-10-25)
+
+- Pages sends every file with `Cache-Control: max-age=600`, so a browser that had the site in the last 10 minutes kept
+  the old index.html (and its old `?v=` URLs) for up to 10 minutes after a deploy, and an open tab never changed.
+- `build.txt` has a 2nd line, the page's stamp: a hash of index.html's template once its `?v=` stamps and the data's
+  are in (`<meta name="page">`; every page shares it). site.yml's gate compares the whole file, so nothing changes
+  there.
+- `assets/fresh.js` (app.js `init().finally(fresh.watch)`): fetches `build.txt?t=<now>` with `cache: "no-store"` on
+  load, when the tab shows again (`visibilitychange`) and every 3 minutes; another stamp reloads the page
+  (`fetch(page, {cache: "reload"})`, then `location.reload()`: Chrome revalidates the HTML on reload anyway). With
+  something typed or open (`[data-dirty="1"]`, `.editing`, a form or text field in the dialog, a focused text field) it
+  shows a "The site was updated. Refresh" bar instead; its button reloads (edit.js's beforeunload still asks for a dirty
+  form, drafts flush on pagehide). sessionStorage `fresh-tried`: one automatic reload per stamp (a stale CDN copy
+  gets the bar, not a loop).
+- After a publish (edit.js `soon()`, and on load while a sent record waits): every 15 s for 15 minutes from `sent.at`.
+  The reloaded page's `sentRecord` clears on `generated > sent.at` with a "Live now" toast; a build without the publish
+  keeps the record and the checks.
+- Measured (scratch site-fresh: serve.py, a Pages-like server with max-age=600 and ETags; measure.mjs, headless
+  Chrome; the AC test fixture's site, deploy = new card text), seconds from the deploy until the open page has it:
+  tab left open: never (by 660 s) -> 178 (the 3-minute check); tab shown again 5 s after: never -> 5.1 (0.1 after the
+  return); site opened again: 601 (max-age) -> 1.2 (the cached page loads, then reloads); a publish waiting: never ->
+  13 (Live now toast, record cleared); typing in the search box: the bar at 5.2, its Refresh 0.1 s after the click.

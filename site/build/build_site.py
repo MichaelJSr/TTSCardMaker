@@ -60,7 +60,8 @@ changes feed, the People tab, the published decks, the Stats page or a card's Ba
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json), images, icons,
 assets and one share page per card, per person and per public deck (its preview image a montage of its cards). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
-content and its imports', the data's from its content without the build time; build.txt digests the whole site (which build is live).
+content and its imports', the data's from its content without the build time; build.txt digests the whole site (which build is live),
+then the page's stamp (<meta name="page">), which open pages poll for (fresh.js).
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -2813,7 +2814,7 @@ def data_stamp(data, details):
     return digest.hexdigest()[:10]
 
 
-BUILD_TXT = "build.txt"                       # in DIST: dist_digest(), which build is live
+BUILD_TXT = "build.txt"                       # in DIST: dist_digest() (which build is live), then the page stamp
 
 
 def dist_digest(data):
@@ -3271,6 +3272,8 @@ def main():
         return f'{m.group(1)}?v={assets[name][0] if name in assets else version}"'
     with open(os.path.join(SITE, "index.html"), encoding="utf-8") as fh:
         template = re.sub(r'((?:assets/[\w-]+\.(?:js|css))|data/cards\.json)"', url, fh.read()).replace("<!--BUILD-->", version)
+    page = stamp_of(template.encode("utf-8"))  # the page's stamp: build.txt's 2nd line (fresh.js)
+    template = template.replace("<!--PAGE-->", page)
     banner = site_banner(cards, os.path.join(DIST, "og.jpg"))
     def og_tags(title, desc, url, image="", size=None, alt=""):
         tags = [f'<meta property="og:site_name" content="{SITE_NAME}">', '<meta property="og:type" content="website">',
@@ -3373,7 +3376,7 @@ def main():
     if montages:
         log(f"deck previews: {len(montages)} montages")
     with open(os.path.join(DIST, BUILD_TXT), "w", encoding="utf-8") as fh:
-        fh.write(dist_digest(data) + "\n")
+        fh.write(dist_digest(data) + "\n" + page + "\n")
     log(f"site written to {DIST} (build {version}, {time.time() - started:.0f}s)")
 
 
