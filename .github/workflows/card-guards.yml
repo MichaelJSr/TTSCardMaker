@@ -5,26 +5,32 @@
 #      without Maximize Compatibility) gets the PNG under the bake's own gates alone, told "no stored image to cross-check".
 #      When a gate refuses, no PNG and a report instead ("PNG not made: ...; export it in Photoshop");
 #   2. the pushed PSDs are checked against the card standards (CARD_STANDARDIZATION_CAMPAIGN.md); only the owner's easy
-#      fix (Txt2 stories kept in sync, 0 pixels) is made, the rest is reported. Missing fonts are font-check.yml's alone;
+#      fix (Txt2 stories kept in sync, 0 pixels) is made, the rest is reported. Missing fonts are the font check's alone;
 #   3. every card PNG the push brought is recompressed losslessly (oxipng: the same pixels and chunks) when that saves
-#      more than 10%, and so is every PNG the bot writes (owner, 2026-10-23: Photoshop's exports are 3-4x bigger).
-# One report per push: the job summary, a comment on the commit, and ONE Discord post to the standards channel
-# ("<login> pushed <card> with these issues: ..."; nobody pinged, no link previews). The post, the PNGs and the fixes wait
-# for the 30-minute quiet window: a PNG the author pushed meanwhile withdraws its refusal, a card pushed again is left to
-# that push's run, a write that did not land is told (in report mode, the PNG the bot would make). It never reverts or
-# rejects a push. A run that fails tells the standards channel once per failure streak (a cancel by hand does not).
+#      more than 10%, and so is every PNG the bot writes (owner, 2026-10-23: Photoshop's exports are 3-4x bigger);
+#   4. the card check and the font check (card-check.yml and font-check.yml until 2026-10-25), on every push whatever
+#      CARD_GUARDS says: AutoCroissant commands/card_check.py (the parser's and validator's notes, the lines /update_stats
+#      prints) and commands/font_check.py (fonts MDW/Fonts does not supply). Each reports AT ONCE, as before: the job
+#      summary, its own comment on the commit and its own Discord message in the standards channel (the font check's
+#      pings the card makers' role, owner 2026-10-23; the card check's pings nobody). Never a gate.
+# The guards' report (1-3), one per push: the job summary, a comment on the commit, and ONE Discord post to the
+# standards channel ("<login> pushed <card> with these issues: ..."; nobody pinged, no link previews). The post, the
+# PNGs and the fixes wait for the 30-minute quiet window: a PNG the author pushed meanwhile withdraws its refusal, a
+# card pushed again is left to that push's run, a write that did not land is told (in report mode, the PNG the bot would
+# make). It never reverts or rejects a push. A run that fails tells the standards channel once per failure streak (a
+# cancel by hand does not).
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
-# wheel cache.
+# wheel cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
 #
-# Three jobs (2026-10-24): `check` checks and comments, then ends; `post` lands and posts after the quiet window, held by
-# the environment card-guards-quiet's 30-minute wait timer (a push's first attempt; no runner waits); `finish` turns card
-# errors red and tells a failed run. Without the environment's timer (it is the owner's setting), Land sleeps out the
-# window as before.
+# Three jobs (2026-10-24): `check` runs the two checks and the guards' check and comments, then ends; `post` lands and
+# posts after the quiet window, held by the environment card-guards-quiet's 30-minute wait timer (a push's first
+# attempt; no runner waits); `finish` turns card errors red and tells a failed run. Without the environment's timer (it
+# is the owner's setting), Land sleeps out the window as before.
 #
-# Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = push runs skipped, report = check,
-# comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry run (job summary and
-# artifacts only); CARD_GUARDS does not bind it, and one that lands refuses while a push run of its commit is still in the
-# quiet window.
+# Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = the guards skipped, the two checks still
+# run; report = check, comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry
+# run (job summary and artifacts only); CARD_GUARDS does not bind it, and one that lands refuses while a push run of its
+# commit is still in the quiet window.
 name: Card guards
 
 on:
@@ -35,6 +41,7 @@ on:
       - "**/*.PSD"
       - "**/*.png"
       - "**/*.PNG"
+      - "MDW/Fonts/*"         # the font check: a font added
   workflow_dispatch:
     inputs:
       dry_run:
@@ -50,13 +57,13 @@ on:
         type: string
         default: ""
       all:
-        description: "Every card PSD: standards and PNG-vs-PSD, job summary only (about 813 downloads, 40 minutes)"
+        description: "Every card PSD: standards, PNG-vs-PSD and both checks, job summary only (about 813 downloads each, 2 hours)"
         type: boolean
         default: false
 
 permissions:
   contents: write     # the commit comment and the bot commit
-  actions: write      # gh workflow run site.yml / card-sync.yml after a commit (a GITHUB_TOKEN push triggers no workflow)
+  actions: write      # gh workflow run card-sync.yml after a commit (a GITHUB_TOKEN push triggers no workflow)
 
 # Each push keeps its own run (a shared group keeps one pending run, so a burst of pushes would lose the middle ones'
 # reports); a dispatch gets a group of its own. Parallel landings are safe: each rests on its blobs and retries a moved head.
@@ -65,14 +72,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Every push and dispatch (GITHUB_TOKEN pushes start no run; inside a range the bot's commits are left out by author,
+  # card_guards.Writer.bot). The two checks always; the guards' steps unless MODE is off.
   check:
-    # GITHUB_TOKEN pushes (the guards', the bake's, the save's) start no run; the bot's personal-token pushes are skipped here
-    # and, inside a range, by commit author (card_guards.Writer.bot: a path a person also changed is still guarded).
-    if: >-
-      github.actor != 'AutoCroissant' && github.actor != 'github-actions[bot]' &&
-      (github.event_name == 'workflow_dispatch' || vars.CARD_GUARDS == 'report' || vars.CARD_GUARDS == 'on')
     runs-on: ubuntu-latest
-    timeout-minutes: 100    # Check (90) and the comment; the quiet window is the post job's
+    timeout-minutes: ${{ inputs.all && 150 || 40 }}    # finish's alert reads 40; the quiet window is the post job's
     env:
       # the comment's mark that this push's one Discord post went out (a re-run checks it)
       TOLD: "<!-- card-guards: told on Discord -->"
@@ -88,6 +92,7 @@ jobs:
       land: ${{ steps.plan.outputs.land }}
       card_errors: ${{ steps.plan.outputs.card_errors }}
       bot_sha: ${{ steps.bot.outputs.sha }}
+      saved: ${{ steps.setup.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
     steps:
       # The quiet window counts from here; a re-run's from the push (the event's pushed_at), so it does not wait again.
       # OUT is set here: a job's env may not read the runner context. MODE lowercased: the job's `if` takes "On", the
@@ -175,46 +180,108 @@ jobs:
         shell: bash
         run: echo "sha=$(git -C bot rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-python@v7
-        id: python
-        with:
-          python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
-
-      # card-sync.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
-      # recompression) among them. The entries a new key supersedes go in the other card workflows' caches job.
-      - id: wheels
-        uses: actions/cache/restore@v6
-        with:
-          path: ~/.cache/card-wheels
-          key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
-
-      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
-        with:
-          version: "0.13.5"
-          enable-cache: false
-
-      # uv installs the wheels (~1 s; pip took 5-7 s); a miss builds them with pip (uv has no `pip wheel`)
+      # requirements-cards.txt's wheels, pyoxipng's (the lossless PNG recompression) among them
       - timeout-minutes: 10
-        env:
-          HIT: ${{ steps.wheels.outputs.cache-hit }}
-          UV_PYTHON: ${{ steps.python.outputs.python-path }}
-          UV_COMPILE_BYTECODE: "1"
-        run: |
-          [ "$HIT" = true ] || pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
-          sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
-          uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
+        uses: ./.github/actions/cards-python
+        id: setup
 
-      - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
-        uses: actions/cache/save@v6
+      # Fonts for the font check (and R8's box text): MDW/Fonts' top level, cached by its tree sha (Card sync's key); the
+      # sparse checkout fetches them only on a miss. One that fails leaves no folder: no font check (it would call every
+      # font missing), R8 fetches its own, and nothing is cached.
+      - id: fonts
+        shell: bash
+        run: echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
+
+      - id: font-cache
+        uses: actions/cache@v6
         with:
-          path: ~/.cache/card-wheels
-          key: ${{ steps.wheels.outputs.cache-primary-key }}
+          path: MDW/Fonts
+          key: card-fonts-${{ steps.fonts.outputs.sha }}
+
+      - id: fonts-miss
+        if: steps.font-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          if ! git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'; then
+            echo "::warning::the fonts were not fetched: no font check"
+            rm -rf MDW/Fonts
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The two checks, at once (before the guards' check, so their posts are not held up). A push: the PSDs changed
+      # between its two heads; a dispatch: `sha`'s (or main's head's) own, or with `all` every card PSD of the tree.
+      # Each exits 0 on findings (an unreadable PSD or a failed API call is one line in its report); one that breaks
+      # anyway is a warning and never stops the guards. report.md, report.json and discord.json in $RUNNER_TEMP/<check>.
+      # --clone: a pushed PSD is fetched once into this clone, then read from it by the font check and the guards.
+      - name: Card check
+        id: card-check
+        continue-on-error: true
+        timeout-minutes: ${{ inputs.all && 45 || 10 }}
+        working-directory: bot
+        shell: bash
+        env:
+          CHECK: card-check
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BEFORE: ${{ github.event_name == 'push' && github.event.before || '' }}
+          AUTHOR: ${{ github.event_name == 'push' && github.actor || '' }}
+          AFTER: ${{ inputs.sha || github.sha }}
+          ALL: ${{ inputs.all }}
+        run: &check-run |
+          out=$RUNNER_TEMP/$CHECK
+          mkdir -p "$out"
+          args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$AFTER" --json "$out/report.json"
+                --discord "$out/discord.json")
+          [ "$CHECK" = font-check ] && args+=(--fonts "$GITHUB_WORKSPACE/MDW/Fonts")
+          [ -n "$AUTHOR" ] && args+=(--author "$AUTHOR")
+          if [ "$ALL" = true ]; then args+=(--whole-tree); elif [ -n "$BEFORE" ]; then args+=(--before "$BEFORE"); fi
+          python -m "commands.${CHECK/-/_}" "${args[@]}" | tee "$out/report.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Font check
+        id: font-check
+        if: steps.fonts-miss.outputs.ok != 'false'
+        continue-on-error: true
+        timeout-minutes: ${{ inputs.all && 45 || 10 }}
+        working-directory: bot
+        shell: bash
+        env:
+          CHECK: font-check
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BEFORE: ${{ github.event_name == 'push' && github.event.before || '' }}
+          AUTHOR: ${{ github.event_name == 'push' && github.actor || '' }}
+          AFTER: ${{ inputs.sha || github.sha }}
+          ALL: ${{ inputs.all }}
+        run: *check-run
+
+      # A push's checks with something to say: each one's own Discord message (only when the webhook secret is set; the
+      # URL is never printed) and its own comment on the pushed commit. A dispatch only reports in the job summary.
+      # A failed call warns.
+      - name: Tell the checks
+        if: ${{ !cancelled() && github.event_name == 'push' }}
+        shell: bash
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for name in card-check font-check; do
+            out=$RUNNER_TEMP/$name
+            [ -f "$out/report.json" ] || continue
+            jq -e '.cards | length > 0' "$out/report.json" > /dev/null || { echo "$name: nothing to report."; continue; }
+            if [ -z "$WEBHOOK" ]; then
+              echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"
+            elif ! curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @"$out/discord.json" "$WEBHOOK"; then
+              echo "::warning::$name: the Discord webhook call failed; the commit comment stands"
+            fi
+            jq -n --rawfile body "$out/report.md" '{body: $body}' \
+              | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" --input - > /dev/null \
+              || echo "::warning::$name: the commit comment failed"
+          done
 
       # A push: before..after. A dispatch: `sha` (or main's head) against its first parent, or with `all` every card PSD.
       # report.md is the job summary and the comment; plan.json feeds the post job. Exit 1: not checked (the alert).
       - name: Check
         id: check
-        timeout-minutes: 90
+        if: env.MODE != 'off'
+        timeout-minutes: ${{ inputs.all && 60 || 15 }}
         working-directory: bot
         shell: bash
         env:
@@ -297,7 +364,7 @@ jobs:
 
       # overwrite: a re-run replaces its earlier attempt's (one name per run); the post job adds what Land settled
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && env.MODE != 'off'
         with:
           name: card-guards
           path: ${{ runner.temp }}/guards
@@ -320,7 +387,7 @@ jobs:
       TOLD: "<!-- card-guards: told on Discord -->"
       MODE: ${{ needs.check.outputs.mode }}
       QUIET_FROM: ${{ needs.check.outputs.quiet_from }}
-      GH_REPO: ${{ github.repository }}     # gh workflow run without a checkout of the card repo
+      GH_REPO: ${{ github.repository }}     # gh workflow run from outside the card repo's checkout
     outputs:
       posted: ${{ steps.tell.outputs.posted }}
     steps:
@@ -358,6 +425,14 @@ jobs:
           echo "::warning::the commit's comments could not be read: no post, as an earlier attempt may have told Discord"
           echo "told=true" >> "$GITHUB_OUTPUT"
 
+      # The shared setup only (.github/actions/cards-python), first: a root checkout empties the workspace, bot/ too
+      - uses: actions/checkout@v7
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/actions/
+
       # The guards and their import closure (no config.py: github_api reads it in a try/except, the token comes from the
       # environment), and the packages they install. AutoCroissant tests/test_card_guards.py runs --help on exactly this
       # list (card_guards.SPARSE_FILES). The check job's commit: main may have moved during the wait.
@@ -387,40 +462,8 @@ jobs:
             /global_config.py
             /requirements-cards.txt
 
-      - uses: actions/setup-python@v7
-        id: python
-        with:
-          python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
-
-      # card-sync.yml's install (the same cache entry): requirements-cards.txt's wheels, pyoxipng's (the lossless PNG
-      # recompression) among them.
-      - id: wheels
-        uses: actions/cache/restore@v6
-        with:
-          path: ~/.cache/card-wheels
-          key: cards-${{ hashFiles('bot/requirements-cards.txt') }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
-
-      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
-        with:
-          version: "0.13.5"
-          enable-cache: false
-
-      # uv installs the wheels (~1 s; pip took 5-7 s); a miss builds them with pip (uv has no `pip wheel`)
       - timeout-minutes: 10
-        env:
-          HIT: ${{ steps.wheels.outputs.cache-hit }}
-          UV_PYTHON: ${{ steps.python.outputs.python-path }}
-          UV_COMPILE_BYTECODE: "1"
-        run: |
-          [ "$HIT" = true ] || pip wheel -q -w ~/.cache/card-wheels -r bot/requirements-cards.txt
-          sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
-          uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
-
-      - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
-        uses: actions/cache/save@v6
-        with:
-          path: ~/.cache/card-wheels
-          key: ${{ steps.wheels.outputs.cache-primary-key }}
+        uses: ./.github/actions/cards-python
 
       # 30 minutes after the push (the environment's wait timer held this job; Land sleeps out what is left, all of the
       # window without the timer), then (CARD_GUARDS=on) leave out every write a later push touched or whose blobs moved
@@ -452,9 +495,10 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           exit "$status"
 
-      # A GITHUB_TOKEN push triggers no workflow: the site build and the card sync are run here (when they do not start,
-      # the comment and the post say so, and the run fails), and again by a re-run that finds the writes already landed
-      # (its earlier attempt's may not have started; both queue, so a second start is harmless). The comment is rewritten
+      # A GITHUB_TOKEN push triggers no workflow: the card sync is run here, its bake only for pending edits (its data
+      # commit dispatches the site build; when it does not start, the comment and the post say so, and the run fails),
+      # and again by a re-run that finds the writes already landed (its earlier attempt's may not have started; both
+      # queue, so a second start is harmless). The comment is rewritten
       # with what landed, what did not and why (a broken Land still says so).
       - name: Follow up
         id: follow
@@ -470,10 +514,10 @@ jobs:
           refresh=ok start=""
           [ -n "$SHA" ] && start=true
           if [ "$MODE" = on ] && [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && [ "${ALREADY:-0}" -gt 0 ]; then start=true; fi
-          if [ -n "$start" ] && ! { gh workflow run site.yml && gh workflow run card-sync.yml -f dry_run=false; }; then
+          if [ -n "$start" ] && ! gh workflow run card-sync.yml -f dry_run=false -f bake=pending; then
             refresh=failed
             echo "refresh=failed" >> "$GITHUB_OUTPUT"
-            printf '\n**The site build and the card sync did not start after this commit: the next card sync catches up (the site daily at the latest).**\n' \
+            printf '\n**The card sync did not start after this commit: its next run catches up.**\n' \
               >> "$OUT/report-landed.md"
           fi
           if [ -n "$COMMENT" ]; then
@@ -488,13 +532,13 @@ jobs:
               | gh api --method PATCH "repos/$GITHUB_REPOSITORY/comments/$COMMENT" --input - > /dev/null \
               || echo "::warning::the commit comment could not be edited"
           fi
-          if [ "$refresh" = failed ]; then echo "::error::the site build or the card sync did not start: run them by hand"; exit 1; fi
+          if [ "$refresh" = failed ]; then echo "::error::the card sync did not start: run it by hand"; exit 1; fi
 
       # The one Discord post, after the quiet window (discord-final.json, as Land settled it; never check's discord.json,
       # which would tell withdrawn refusals and miss the writes that did not land), only when a card has a refusal, a
       # remaining issue, an error or a write that did not land, only when the secret is set, never twice for one push.
       # Land ran but settled nothing (killed or timed out): this step fails, so the run-failed message goes out instead.
-      # Follow up's site build or card sync did not start: one more line, when it fits. The URL is never printed; a failed
+      # Follow up's card sync did not start: one more line, when it fits. The URL is never printed; a failed
       # call warns and the comment stands. The comment then gets the TOLD mark; when the Comment step failed, a comment
       # of its own carries it, so a re-run does not post again.
       - name: Tell Discord
@@ -516,7 +560,7 @@ jobs:
           jq -e '.content // "" | length > 0' "$post" > /dev/null || { echo "Nothing to tell."; exit 0; }
           if [ -z "$WEBHOOK" ]; then echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"; exit 0; fi
           if [ "$REFRESH" = failed ]; then
-            jq --arg line "The bot's commit did not start the site build and the card sync: the next card sync catches up (the site daily at the latest)." \
+            jq --arg line "The bot's commit did not start the card sync: its next run catches up." \
               'if (.content + "\n" + $line | length) <= 2000 then .content += "\n" + $line else . end' "$post" > "$OUT/discord-sent.json"
             post="$OUT/discord-sent.json"
           fi
@@ -550,7 +594,7 @@ jobs:
   # A red run where it should be one, and the standards channel told once per failure streak.
   finish:
     needs: [check, post]
-    if: always() && needs.check.result != 'skipped'
+    if: always() && needs.check.outputs.mode != 'off'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -571,7 +615,7 @@ jobs:
       # finished push run is not green and left STREAK (a red run that posted told nobody), or this push was told: the
       # Comment step's TOLD, or on a re-run the commit comment's mark looked up here (the Comment step does not run when
       # Check fails; unreadable counts as told, as there). Quiet too for a cancel by hand (no cancelled job ran to its
-      # timeout, check 100 minutes and post 75, by the attempt's job list; whoever cancelled it knows).
+      # timeout, check 40 minutes and post 75, by the attempt's job list; whoever cancelled it knows).
       # Any job's failure counts: a step's failure() and cancelled() see only this job, so the needed jobs' results are
       # read too (a timeout reads as cancelled or failure). No ping.
       - name: Tell Discord the run failed
@@ -593,10 +637,10 @@ jobs:
               --jq '[.jobs[] | select(.conclusion == "cancelled" and .started_at and .completed_at)
                      | {(.name): ((.completed_at | fromdate) - (.started_at | fromdate))}] | add // {}') || ran=""
             if [ -n "$ran" ]; then
-              timed_out=$(jq -r --argjson limit '{"check": 100, "post": 75}' \
+              timed_out=$(jq -r --argjson limit '{"check": 40, "post": 75}' \
                 'to_entries | map(select(.value >= ($limit[.key] // 0) * 60 - 120)) | length' <<< "$ran")
             else                                # no job list: the old rule, from the check's Start
-              timed_out=$(( $(date +%s) - ${STARTED:-$(date +%s)} >= 5700 ))
+              timed_out=$(( $(date +%s) - ${STARTED:-$(date +%s)} >= 2280 ))
             fi
             if [ "$timed_out" = 0 ]; then echo "Cancelled by hand: no message." | tee -a "$GITHUB_STEP_SUMMARY"; exit 0; fi
           fi
@@ -656,3 +700,13 @@ jobs:
           path: ${{ runner.temp }}/streak
           retention-days: 30
           overwrite: true
+
+  # A new wheel or font cache (its key changes with requirements-cards.txt, Python, MDW/Fonts): the older ones go (caches.yml)
+  caches:
+    needs: check
+    if: ${{ !cancelled() && needs.check.outputs.saved == 'true' }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/caches.yml
+    with:
+      prefixes: cards- card-fonts-

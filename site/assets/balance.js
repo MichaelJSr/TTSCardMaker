@@ -222,9 +222,6 @@ export function changeParts(r) {
 }
 
 // ---- the card's Balance block -------------------------------------------------------------------------------------
-/** Both parts. texts = the card's history texts then its current one (history.json + ability), for the diffs; null while loading */
-export function cardHtml(c, A, opts = {}) { return balanceBlock(c, A, opts) + changesBlock(c, A, opts); }
-
 /** The Balance line: the card's total among its star level, with the median and the middle 80% */
 export function balanceBlock(c, A, { byId } = {}) {
   const a = cardData(A, c, byId), cohort = a?.cohort && A.cohorts[a.cohort];

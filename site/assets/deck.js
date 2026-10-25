@@ -151,9 +151,11 @@ export function fromText(text, cards) {
 // ---- Tabletop Simulator saved object -------------------------------------------------------------
 const guid = () => Math.random().toString(16).slice(2, 8);
 const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
+/** raw (.../main/) at the commit that last changed the file, as the TTS save links it: TTS has that image cached. */
+const pinned = (raw, pin) => (pin ? raw.replace(/[^/]+\/$/, `${pin}/`) : raw);
 function ttsCard(card, key, raw, back, x) {
   const ratio = card.th && card.tw ? card.th / card.tw : 1.5;
-  const custom = { FaceURL: raw + urlPath(card.png), BackURL: back, NumWidth: 1, NumHeight: 1, BackIsHidden: true, UniqueBack: false, Type: 0 };
+  const custom = { FaceURL: pinned(raw, card.pin) + urlPath(card.png), BackURL: back, NumWidth: 1, NumHeight: 1, BackIsHidden: true, UniqueBack: false, Type: 0 };
   return {
     Name: "Card", GUID: guid(), CardID: key * 100, Nickname: card.name, Description: plain(card.ability || ""),
     Transform: { posX: x, posY: 1, posZ: 0, rotX: 0, rotY: 180, rotZ: 0, scaleX: 1, scaleY: 1, scaleZ: +(ratio / 1.4).toFixed(3) },
@@ -172,15 +174,17 @@ function ttsPile(nickname, cards, startKey, raw, back, x) {
   };
   return deck;
 }
-export function ttsSave(deck, byId, raw) {
+/** pins: {repo path: commit} for the card backs (build_site.py). */
+export function ttsSave(deck, byId, raw, pins = {}) {
+  const backUrl = path => pinned(raw, pins[path]) + path;
   const cards = deck.cards.map(id => byId.get(id)).filter(c => c && c.png);
   const creatures = cards.filter(c => c.type === "creature").sort((a, b) => b.stars - a.stars);
   const items = cards.filter(c => c.type !== "creature").sort((a, b) => b.stars - a.stars);
   const field = byId.get(deck.field);
   const objects = [];
-  if (creatures.length) objects.push(ttsPile(`${deck.name} — creatures`, creatures, 1, raw, raw + "MDW/cardback.png", -4));
-  if (items.length) objects.push(ttsPile(`${deck.name} — items`, items, 101, raw, raw + "MDW/cardback_item.png", 0));
-  if (field && field.png) objects.push(ttsCard(field, 201, raw, raw + "MDW/cardback_item.png", 4));
+  if (creatures.length) objects.push(ttsPile(`${deck.name} — creatures`, creatures, 1, raw, backUrl("MDW/cardback.png"), -4));
+  if (items.length) objects.push(ttsPile(`${deck.name} — items`, items, 101, raw, backUrl("MDW/cardback_item.png"), 0));
+  if (field && field.png) objects.push(ttsCard(field, 201, raw, backUrl("MDW/cardback_item.png"), 4));
   return {
     SaveName: deck.name, GameMode: "", Gravity: 0.5, PlayArea: 0.5, Date: new Date().toLocaleString(), Table: "", Sky: "",
     Note: "", Rules: "", XmlUI: "", LuaScript: "", LuaScriptState: "", ObjectStates: objects, TabStates: {}, VersionNumber: "",
