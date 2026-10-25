@@ -17,9 +17,9 @@ Where the data comes from:
     for the card view; AVIF only, no WebP copies). They are cached by git blob hash in site/.cache/img, so after the
     first run only new or changed cards are downloaded and encoded; images no card uses any more are pruned. With
     IMAGE_BUDGET (seconds; site.yml sets it), images not made by then are left for the next run: the build fails
-    (nothing deployed) and site.yml saves the cache, so a full re-encode spans runs. Each image's size and accent
-    color are kept in site/.cache/images.json by blob, icons in site/.cache/icons, deck page montages in site/.og-cache;
-    dist/ gets hardlinks (else copies).
+    (nothing deployed) and site.yml saves the cache (it does after any failed build), so a full re-encode spans runs.
+    Each image's size and accent color are kept in site/.cache/images.json by blob, icons in site/.cache/icons, deck
+    page montages in site/.og-cache; dist/ gets hardlinks (else copies).
   * Icons: Types/ and Types/Stars/; icon names and aliases from MDW/Fonts/stoogedings-src/stoogedings.json. Each icon the
     font has also gets its token variants' pictures ([fire:tint], :sticker, :glow, :darkglow; dist/icons/fire.glow.webp),
     drawn by the font build's own icon_art (build_stoogedings.py, which needs its requirements.txt: without them,
@@ -663,7 +663,7 @@ def make_images(path, sha, known=None):
                 continue
             im = src.copy()
             im.thumbnail((w, w * 3), Image.LANCZOS)
-            im.save(cached[w] + ".tmp", "AVIF", quality=quality, **AVIF)
+            im.save(cached[w] + ".tmp", "AVIF", quality=quality, icc_profile=None, **AVIF)   # no profile: WebP never had one
             os.replace(cached[w] + ".tmp", cached[w])
     if not os.path.exists(cached["og"]):       # from the 720 px one: no PNG download
         with Image.open(cached[720]) as im:
@@ -3020,13 +3020,12 @@ def main():
             log("image failed:", e["png"], err)
     cache_dir = os.path.join(CACHE, "img")
     cached_before = len(os.listdir(cache_dir))
-    with ThreadPoolExecutor(min(16, (os.cpu_count() or 4) * 2)) as pool:
-        list(pool.map(images, jobs))
-    if later:                                     # the cache keeps what was made (site.yml saves it on this exit)
+    try:
+        with ThreadPoolExecutor(min(16, (os.cpu_count() or 4) * 2)) as pool:
+            list(pool.map(images, jobs))
+    finally:                                      # whatever stops the build now, site.yml saves the cache with what was made
         save_image_meta({**meta, **{tree[e["png"]]: [e["tw"], e["th"], e["color"]] for e in jobs if e.get("img")}})
-        if os.environ.get("GITHUB_OUTPUT"):
-            with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
-                fh.write("partial=true\n")
+    if later:
         raise SystemExit(f"error: {len(later)} of {len(jobs)} card images not made within IMAGE_BUDGET ({IMAGE_BUDGET:.0f}s); "
                          f"the next run makes them (the {len(jobs) - len(later)} done are cached). Not deploying.")
     if len(failed) > max(5, len(jobs) // 50):

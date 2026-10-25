@@ -68,7 +68,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   * jsDelivr `https://cdn.jsdelivr.net/gh/MichaelJSr/TTSCardMaker@main/TTS/...` already used as fallback for old image versions (app.js:377-379); caches branch refs for ~12 h unless purged; jsDelivr refuses files > 20 MB (5.5 MB OK) but is a poor choice for "latest".
   * GitHub API contents with `Accept: application/vnd.github.raw+json` (what `readFile` does): up to 100 MB, always fresh, but needs token (60 req/h unauthenticated) and the editor's `readFile` only works signed in. This is the right call right before computing a publish (guarantees merge against latest).
 - Large data handling already in code: lazy-loading of the big optional JSONs (history/versions/rules) via memoised promises; first screen only needs 409 KB cards.json; `content-visibility:auto` on tiles; `loading="lazy"`; thumbs at 240/360/720. Nothing deals with CORS errors besides the jsDelivr `error` fallback on old-version images (app.js:408). No streaming/worker use; JSON.parse of 5.5 MB on main thread takes ~30-60 ms, fine; JSON.stringify for commit similar. Inline tree `content` for 5.5 MB works (tree API accepts up to 100 MB), but request body is a JSON-escaped copy (~6-7 MB) and the PATCH-retry loop re-uploads it each attempt.
-- Build speed and safety (2026-10-21, AutoCroissant BUGS §1.6). `site/.cache/images.json` = `{version, images: {PNG blob sha: [tw, th, color]}}`; `make_images(path, sha, known)` returns the cached row while all 4 files of the blob exist, else makes them and computes `accent_color` (now in the thread pool); the file is rewritten each build with the used blobs only; `IMAGE_META_VERSION` (`1:<IMAGE_WIDTH>:<240 quality>`) drops it when the settings change: bump its `1` when `accent_color` changes. Icons are cached by blob in `site/.cache/icons/<sha16>-<ICON_VERSION>.webp` (pruned like img/; `ICON_VERSION` = `1-<ICON_SIZE>`: bump its `1` when build_icons' crop or WebP settings change, since site.yml's restore-keys bring back older caches and a cached icon is never redrawn). `link_or_copy` hardlinks cache -> dist/thumbs and dist/icons (copy on OSError; an existing thumb is skipped, an existing icon replaced so the last same-named icon wins as before): safe because cache files are only ever replaced (`.tmp` + `os.replace`) or removed, never written in place; nothing may write into a dist thumb or icon. Local warm build 7.0-7.7 s -> 3.7-4.2 s (user CPU 3.6 s -> 0.6 s; the rest is the 4 fetches and the dist rmtree/writes). Pickles: `_Unpickler(data, source)` builds only `PICKLE_GLOBALS` (`commands.psd_analyzer` and `commands.card_models` `CardInfo`/`CardStats` stubs, `collections.defaultdict`, `builtins.list`: what stats.pkl, old_stats.pkl and aliases.pkl hold, checked with a recording `find_class`) plus plain data types a new field could bring (`set`, `frozenset`, `OrderedDict`, `datetime`/`date`/`timedelta`/`timezone`); another `commands.*` class (moved or new in the bot) is read as plain data, not refused: `CardInfo`/`CardStats` by name keep their stubs, anything else gets a `_Obj` subclass from `_STUBS` (`_Obj.__init__(*args)` keeps a reduce's arguments as `args`, e.g. an Enum member), and `load_bot_pickle` `warn()`s naming them; everything else raises `UnpicklingError` naming the global (for stats.pkl that stops the build); `persistent_load` refuses too. `bot_field_warnings` after loading: every `CARD_FIELDS` / `STATS_FIELDS` (card and creature stat lines) / `HISTORY_FIELDS` (old_stats) missing on any object, and any field outside `CARD_FIELDS | CARD_FIELDS_OPTIONAL` / `STATS_FIELDS`, is a `warn()` (log line, plus a `::warning` annotation under GitHub Actions, `%`/CR/LF escaped). `load_image_meta` drops rows that aren't `[int, int, "#rrggbb" or null]`. A new CardInfo field in the bot means adding it to one of the two sets. Nothing else in TTSCardMaker unpickles (the workflows' bot modules read JSON).
+- Build speed and safety (2026-10-21, AutoCroissant BUGS §1.6). `site/.cache/images.json` = `{version, images: {PNG blob sha: [tw, th, color]}}`; `make_images(path, sha, known)` returns the cached row while all 4 files of the blob exist, else makes them and computes `accent_color` (now in the thread pool); the file is rewritten each build with the used blobs only; `IMAGE_META_VERSION` (`2:<IMAGE_WIDTH>:avif<240 quality>`) drops it when the settings change: bump its `2` when `accent_color` changes. Icons are cached by blob in `site/.cache/icons/<sha16>-<ICON_VERSION>.webp` (pruned like img/; `ICON_VERSION` = `1-<ICON_SIZE>`: bump its `1` when build_icons' crop or WebP settings change, since site.yml's restore-keys bring back older caches and a cached icon is never redrawn). `link_or_copy` hardlinks cache -> dist/thumbs and dist/icons (copy on OSError; an existing thumb is skipped, an existing icon replaced so the last same-named icon wins as before): safe because cache files are only ever replaced (`.tmp` + `os.replace`) or removed, never written in place; nothing may write into a dist thumb or icon. Local warm build 7.0-7.7 s -> 3.7-4.2 s (user CPU 3.6 s -> 0.6 s; the rest is the 4 fetches and the dist rmtree/writes). Pickles: `_Unpickler(data, source)` builds only `PICKLE_GLOBALS` (`commands.psd_analyzer` and `commands.card_models` `CardInfo`/`CardStats` stubs, `collections.defaultdict`, `builtins.list`: what stats.pkl, old_stats.pkl and aliases.pkl hold, checked with a recording `find_class`) plus plain data types a new field could bring (`set`, `frozenset`, `OrderedDict`, `datetime`/`date`/`timedelta`/`timezone`); another `commands.*` class (moved or new in the bot) is read as plain data, not refused: `CardInfo`/`CardStats` by name keep their stubs, anything else gets a `_Obj` subclass from `_STUBS` (`_Obj.__init__(*args)` keeps a reduce's arguments as `args`, e.g. an Enum member), and `load_bot_pickle` `warn()`s naming them; everything else raises `UnpicklingError` naming the global (for stats.pkl that stops the build); `persistent_load` refuses too. `bot_field_warnings` after loading: every `CARD_FIELDS` / `STATS_FIELDS` (card and creature stat lines) / `HISTORY_FIELDS` (old_stats) missing on any object, and any field outside `CARD_FIELDS | CARD_FIELDS_OPTIONAL` / `STATS_FIELDS`, is a `warn()` (log line, plus a `::warning` annotation under GitHub Actions, `%`/CR/LF escaped). `load_image_meta` drops rows that aren't `[int, int, "#rrggbb" or null]`. A new CardInfo field in the bot means adding it to one of the two sets. Nothing else in TTSCardMaker unpickles (the workflows' bot modules read JSON).
 - PSD pending (2026-10-21, AutoCroissant EDIT_PIPELINE_DESIGN §9): `apply_edits(entry, edits, psd_sha, shown)` marks a PSD field pending as `psd_edit.classify` would try it: a value set (null stats are never baked) and unlike the PSD; a `name` against `shown` = the bot's title (`parsed_values["name"]`, else `display_name`), else the file name, through `printed()` (= `title_text`), only for cards with `parser_version` >= 2 (older pickles never read titles: no name pending); an `ability` through `ability_text()` (= `normalize_ability`). On the 2026-10-21 v2 sweep it matches `psd_edit.classify` (not `bake_card`'s earlier gates) on the real PSDs: 6 name jobs plus Sans and Papyrus (pending until the pipeline refuses them, no readable Text/Name), 21 already printed. A duplicate's own name edit is never pending, and a duplicate copies its original's pending fields but `name` (it prints its own title).
 - Not done: no prediction of a refusal before the pipeline writes `_psd`: shown "PSD pending" until then are Sans and Papyrus (the Details record's `template.name_layer` could tell), stars and types (never baked yet), an original with numbered PNGs and its duplicates, stats beside a `creatures` list, a card with no PNG; a staged, unpublished edit shows no "PSD pending" until it is published.
 
@@ -78,7 +78,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 3. Auth timing: `editor.init()` signs in asynchronously (edit.js:552); `editor.me` is null at first render. Render read-only first, then rerender on sign-in (app already calls `app.rerender()` after init sign-in). Token has `public_repo` scope and push is checked once; admin-only features use `me.admin`.
 4. Routing: `route()` expects hash routes; nested args are joined `parts.slice(1).join("/")`. `renderView` runs again on `setParams` (replaceState) so view renders must be idempotent and cheap; async fetch results must check `parseHash().name === "table"` before painting (pattern at app.js:428). `rerender()` is invoked by editor after any edit, so the Table view must keep its own state outside the DOM (innerHTML is wiped on each render, losing scroll, form focus, drag state).
 5. Mapping: save cards -> site cards (nicknames can differ from site names, duplicates share a PSD/art with different names, aliases, hidden cards are absent from `S.cards` but present in `S.byId`/`S.all`; custom FaceURL could point at old image versions). Fall back to showing the raw Nickname + FaceURL image when no site card matches. Bags (`Name: "Bag"` / `Custom_Model_Bag` etc.) and nested `ContainedObjects` are recursive; the site has no existing tree view.
-6. Performance: a 5.5 MB save has thousands of objects; build the object tree lazily (collapsed bags/decks, `loading="lazy"` images, reuse `content-visibility:auto`) and use thumbs by `c.img` (240/360 webp) rather than the full PNG FaceURL (hundreds of KB each).
+6. Performance: a 5.5 MB save has thousands of objects; build the object tree lazily (collapsed bags/decks, `loading="lazy"` images, reuse `content-visibility:auto`) and use thumbs by `c.img` (240/360 avif) rather than the full PNG FaceURL (hundreds of KB each).
 7. Staleness/caching: raw.githubusercontent CDN lag (up to 5 min) means a view that shows "latest" may be older than what publish will merge against; display the commit sha/time of what was loaded, and re-read via API before publish (already what `commitFiles` does).
 8. Deployment: new asset needs no build change, but new generated routes/paths do; every push to main (incl. bot commits of the save) triggers the whole site workflow, and the 45-minute build; consider `paths-ignore`. The workflow sparse checkout excludes TTS/ so build-time reads of the save would need it added.
 9. Security/HTML: all strings (Nickname/Description from the save) must be `esc()`-escaped; Description can carry TTS BBCode (`[b]`, `[ffffff]`), not HTML. Don't render untrusted FaceURLs without `esc` (same-origin img only).
@@ -301,13 +301,15 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   the one whose `display_title` is `Card preview <request>`; when it is `completed` and result.json still 404s a minute
   later, it ended without publishing (a bad request, or the publish job failed): stop polling and link the run. Never
   poll raw.githubusercontent.com for it: raw caches 5 minutes (`max-age=300`), a 404 too.
-  - The image, once result.json says `image` (`files.webp`):
+  - The image, once result.json says `image` (`files.webp`; `files.before`: the card before the edit, for the Diff):
     `https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/previews/previews/<request>/preview.webp` (public, CORS
     `*`; the path is new per request, so the cache never serves an older one; raw serves PNGs as `image/png`, WebP's
     type to confirm on the first dispatch), or the same contents URL with `Accept: application/vnd.github.raw` read as a
-    blob into `URL.createObjectURL`. 720 px wide at quality 75, as the build makes the card view's `-720.webp` (so the
-    current card's `thumbs/<img>-720.webp` sits beside it at the same size). The full-size PNG is not published (about
-    1.5 MB a preview; `files` lists only the WebP; `size` gives the full card's pixels, `region` the edited box on it).
+    blob into `URL.createObjectURL`. 720 px wide, WebP quality 75 (the card view's width). Beside it `before.webp`: the
+    card's official PNG (the one the bake merged onto) made the same way, so the Diff compares one codec with itself and
+    unchanged pixels match (the site's thumbs are AVIF: against them codec noise marks 1-5% of an unchanged card red,
+    more than a stat edit changes). The full-size PNG is not published (about 1.5 MB a preview; `files` lists the
+    WebPs; `size` gives the full card's pixels, `region` the edited box on it).
   - result.json: `state` = `baked` (show the image, `reason` such as `hp 5 -> 8`, `notes`), `redundant` (no image:
     "already on the card", show the current card), `refused` (the bake would refuse it: `reason` such as
     `stat>10: hp 25: above 20`; an image only when `image` is `refused`: what the render got before a later gate refused
@@ -343,8 +345,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - **Budget.** A preview reads its blobs through the API with the run's GITHUB_TOKEN (1,000 requests an hour for this
   repo, shared with card-edits and card-sync): the icon manifest, the PSD and the PNG (3 for a stat edit, a test), plus
   the status chart for an ability and the added Types/ icons for a types edit. Fine at hobby volume; a burst of a
-  hundred previews an hour would compete with the schedules. Size: about 60 KB a preview (Mini Doomer's WebP 59 KB,
-  result.json 1 KB), so the branch stays near 12 MB at 200 previews.
+  hundred previews an hour would compete with the schedules. Size: about 120 KB a preview (Mini Doomer's WebP 59 KB, its
+  before.webp about the same, result.json 1 KB), so the branch stays near 24 MB at 200 previews.
 - Checks (2026-10-23): AutoCroissant `tests/test_card_preview.py` (the outcomes on a local card repo, a blobless clone's
   REST reads, the bad inputs, values kept off the runner's command lines, the branch's commits and rewrites, a moved
   head and lease, the publisher on the standard library alone, this workflow's shape, no other workflow on the branch,
@@ -653,10 +655,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     press does the same (the contract's rule). A card whose only previews are expired and that has no PSD change gets
     no viewer.
   - Result: `readResult` keeps state, transient, reason, notes (20, 500 characters), fields, changes, base, image,
-    files (`preview.webp` / `preview.png` names only) and the run (a github.com link only); anything else is a transient
+    files (`webp`, `png`, `before`: `.webp` / `.png` names only) and the run (a github.com link only); anything else is a transient
     error. Baked: the preview (preview.webp, 720 px) in the image's place, a link to full size (preview.png when `files` lists one: since work/card-preview a1274af7 it never does, so the WebP), Diff
-    swapping in the red differences (`diffPixels` against a hidden current 720 px thumb: changed pixels red over the
-    dimmed current, with the share in the caption); `renderedParts(e, v)` -> `{stage, caption, dim}`, `renderedHtml` =
+    swapping in the red differences (`diffPixels` against the result's `before.webp`, hidden: changed pixels red over the
+    dimmed card, with the share in the caption; a result without one, from before it was published, diffs against the
+    720 px AVIF thumb with a note that codec noise shows too); `renderedParts(e, v)` -> `{stage, caption, dim}`, `renderedHtml` =
     stage + caption; each field's outcome ("HP baked · Stars
     refused") and the notes. Redundant: "Already on the card". Refused: the reason, with the bake's render when
     `image` is "refused". Baked without an image file: "The bake drew it, but no image came with the result." with the
@@ -960,15 +963,18 @@ relies on:
 
 - Card images are AVIF only: `IMAGE_SIZES` {240, 360, 720: quality 50}, `AVIF` (4:4:4, speed 6, one thread each; the
   image pool runs cards in parallel), named `thumbs/<blob16>-<w>.avif`. No WebP fallback: Safari before 16 shows no
-  card pictures (accepted). Measured (scratch png-research/website; site-img): -41% / -39% / -32% at 240 / 360 / 720
+  card pictures (accepted). Measured (scratch png-research/website; site-img): -43% / -40% / -33% at 240 / 360 / 720 (dist totals, no ICC)
   against WebP q80/78/75, ssimulacra2 higher, red text keeps its colour. The og JPEGs and deck montages are made from
   the 720 px AVIF (Pillow decodes it). requirements.txt pins `pillow>=11.3` (AVIF in the wheels); the build stops at
   once on a Pillow without AVIF.
-- Encode cost: about 0.9 CPU-s per card on the Mac (WebP: 0.09); a full re-encode of ~820 entries is ~12 CPU-min there,
-  an estimated 20-25 on the runner. `IMAGE_BUDGET` (site.yml: 1800 s): images not made by then are left; the build
-  writes `partial=true` to `$GITHUB_OUTPUT` and fails, and site.yml saves `site/.cache` under
-  `card-images-v2-...-partial-<run>` (actions/cache saves only after a passing job), which the next run's restore-keys
-  pick up. Later runs encode only new blobs.
+- Encode cost: about 0.8 CPU-s per card on the Mac (WebP: 0.09); a full re-encode of ~820 entries is about 11 CPU-min
+  there (870 vs 211 CPU-s for a whole cold build), an estimated 20-25 on the runner. `IMAGE_BUDGET` (site.yml: 1800 s):
+  images not made by then are left and the build fails. `images.json` is written in a `finally` around the image pool,
+  and site.yml's last step saves `site/.cache` under `card-images-v2-...-partial-<run>` whenever the job failed after the
+  build step ran (out of time, too many failed downloads, an error, the step's 38-minute timeout, a later step:
+  actions/cache saves only after a passing job), which the next run's restore-keys pick up. Later runs encode only new
+  blobs. The thumbs carry no ICC profile (`icc_profile=None`: Pillow's AVIF writer copies the PNG's, about 3 KB, +34% at
+  240 px; WebP never had one, so colours are as before).
 - Deploy gate (restored): the `changed` step compares `dist/build.txt` with the live `build.txt`; equal: no upload, no
   deploy job; unreadable: deploy. The Changes page says "Site updated <time> (Pacific), the last build that changed it":
   `generated` is the time of the deployed build, which is now the last build that changed the site. edit.js
@@ -986,4 +992,11 @@ relies on:
   `{seen}` (picture URLs already loaded); the worker puts the in-use ones in from the HTTP cache. sw.js changes only
   when a picture changes (about 7 KB gzipped). Bump `CACHE` if what it keeps changes. To retire it: ship a sw.js whose
   activate deletes `pictures-*` and calls `self.registration.unregister()`, and drop `startWorker`.
+- Measured over plain http://127.0.0.1 (a Pages-like server: max-age=600, an ETag per deploy; HTTPS with
+  --ignore-certificate-errors turns Chrome's HTTP cache off and skews repeat visits), 5 rounds, medians, main vs this:
+  desktop grid first visit 1401 -> 1019 KB, after a deploy 1401 -> 369 KB (no pictures), within 10 minutes 0 -> 0 (a
+  304 for sw.js); card page first 500 -> 491 KB, after a deploy 500 -> 442. 4x phone (9 Mbps, 85 ms): grid first 709 ->
+  599 KB, LCP 968 -> 956 ms; after a deploy 709 -> 369 KB, LCP 812 -> 816; card page LCP 416 -> 408 first, 368 -> 340
+  after a deploy, 32 -> 52 within 10 minutes (the worker's start); the sharp 720 px picture 847 -> 790 ms after a
+  deploy. Scripts: scratch site-img/m3/load3.mjs.
 

@@ -178,7 +178,7 @@ batches from `Card Edits.json`'s `_by`/`_at` stamps instead, a floor since the f
 
 Each card PNG becomes three AVIF images (240 and 360 px for the grid, 720 px for the card view; quality 50, 4:4:4,
 speed 6; AVIF only, so a browser without AVIF, Safari before 16, shows no card pictures), cached by git blob
-hash in `site/.cache/img` (a full re-encode is about 15 CPU-minutes on a Mac, more on the runner: `IMAGE_BUDGET` in
+hash in `site/.cache/img` (a full re-encode is about 11 CPU-minutes on a Mac, more on the runner: `IMAGE_BUDGET` in
 `site.yml` splits it over runs when it doesn't fit one); each image's size and accent color are kept by blob in `site/.cache/images.json` and the
 icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon settings change; the token variants' pictures
 with `VARIANT_VERSION`, drawn by the icon font's build script, `MDW/Fonts/stoogedings-src/build_stoogedings.py`, which
@@ -387,7 +387,7 @@ a push, and an unreadable PSD is one error line. Run it by hand from the Actions
 
 `.github/workflows/card-preview.yml` bakes one card's website edit the way the card bake would, without committing it:
 the website dispatches it (inputs `card`, `edit`, `request`) and reads the result from the branch `previews`
-(`previews/<request>/result.json`, `preview.webp`; `site/NOTES.md` section 19 has the contract). Nothing is written to
+(`previews/<request>/result.json`, `preview.webp`, `before.webp` for the Diff; `site/NOTES.md` section 19 has the contract). Nothing is written to
 `main` and nothing is posted; only its second job, which publishes, may write. The repo is public, so a previewed edit is
 public too. Run it by hand from the Actions tab with a card name, an edit such as `{"hp": 8}` and an id such as
 `manual-test-0001`. The branch is rewritten as one commit when it holds more than 200 previews or one older than 7 days.
