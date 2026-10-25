@@ -23,9 +23,9 @@
 # wheel cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
 #
 # Three jobs (2026-10-24): `check` runs the two checks and the guards' check and comments, then ends; `post` lands and
-# posts after the quiet window, held by the environment card-guards-quiet's 30-minute wait timer (a push's first
-# attempt; no runner waits); `finish` turns card errors red and tells a failed run. Without the environment's timer (it
-# is the owner's setting), Land sleeps out the window as before.
+# posts after the quiet window, 30 minutes from the push: the environment card-guards-quiet's wait timer holds it (a
+# push's first attempt; no runner waits; about 25 minutes, counted from the check's end), Land sleeps out the rest. Without
+# the environment's timer (it is the owner's setting), Land sleeps out the whole window as before.
 #
 # Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = the guards skipped, the two checks still
 # run; report = check, comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry
@@ -94,7 +94,8 @@ jobs:
       bot_sha: ${{ steps.bot.outputs.sha }}
       saved: ${{ steps.setup.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
     steps:
-      # The quiet window counts from here; a re-run's from the push (the event's pushed_at), so it does not wait again.
+      # The quiet window counts from the push (the event's pushed_at; every attempt, so a re-run does not wait again),
+      # else from here.
       # OUT is set here: a job's env may not read the runner context. MODE lowercased: the job's `if` takes "On", the
       # shell does not. STARTED: the failure alert tells a cancel by hand from a job's timeout. The post job reads them.
       - name: Start
@@ -103,11 +104,10 @@ jobs:
         env:
           PUSHED_AT: ${{ github.event.repository.pushed_at }}
         run: |
-          from=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          if [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ]; then       # a push event's is Unix seconds; an ISO time is taken too
-            if [[ "$PUSHED_AT" =~ ^[0-9]+$ ]]; then from=$(jq -nr --argjson t "$PUSHED_AT" '$t | todate')
-            elif [[ "$PUSHED_AT" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$ ]]; then from=$PUSHED_AT; fi
-          fi
+          from=$(date -u +%Y-%m-%dT%H:%M:%SZ)          # a push event's pushed_at is Unix seconds; an ISO time is taken too
+          if [[ "$PUSHED_AT" =~ ^[0-9]+$ ]]; then from=$(jq -nr --argjson t "$PUSHED_AT" '$t | todate')
+          elif [[ "$PUSHED_AT" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$ ]]; then from=$PUSHED_AT
+          elif [ "$GITHUB_EVENT_NAME" = push ]; then echo "::warning::no push time: the quiet window counts from now"; fi
           mode=$(printf %s "$MODE" | tr '[:upper:]' '[:lower:]')
           {
             echo "QUIET_FROM=$from"
@@ -373,9 +373,10 @@ jobs:
           overwrite: true
 
   # After the quiet window: Land, Follow up, Tell Discord. Only when the check found something to land or tell (report or
-  # on). A push's first attempt waits in the environment card-guards-quiet (its 30-minute wait timer, the owner's
-  # setting; no runner is held); a dispatch and a re-run take no environment (a re-run waits from the push and counts
-  # later pushes from now, so a late one lands at once on the blob check, as before).
+  # on). A push's first attempt waits in the environment card-guards-quiet (its wait timer, the owner's setting, about 25
+  # minutes from the check's end; no runner is held), then Land sleeps to 30 minutes after the push (at most a minute under a
+  # 30-minute timer); a dispatch and a re-run take no environment (a re-run waits from the push and counts later pushes
+  # from now, so a late one lands at once on the blob check, as before).
   post:
     needs: check
     if: >-
@@ -467,8 +468,8 @@ jobs:
       - timeout-minutes: 10
         uses: ./.github/actions/cards-python
 
-      # 30 minutes after the push (the environment's wait timer held this job; Land sleeps out what is left, all of the
-      # window without the timer), then (CARD_GUARDS=on) leave out every write a later push touched or whose blobs moved
+      # 30 minutes after the push (the environment's wait timer held this job; Land sleeps out what is left: up to the
+      # check's length under a 25-minute timer, all of the window without the timer), then (CARD_GUARDS=on) leave out every write a later push touched or whose blobs moved
       # and commit the rest once (git_commit: the API with GITHUB_TOKEN, retried on a moved head), and settle the one
       # Discord post (discord-final.json) and the comment's new body (report-landed.md). Report mode: --dry-run (its
       # writes are told as lines, never made). Exit 1: the commit failed (both files
