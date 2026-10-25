@@ -19,8 +19,9 @@
    retry or while another run is unfinished; past minute 60 nothing is pushed.
 6. The timer (a fixed window): a push's and the schedule's run look for a push run in its timer (Another timer: one
    waiting, or with its Quiet window job unfinished; not itself, not one stuck 40 minutes; unreadable runs count as
-   none) and end at once when there is one; else a push's waits (card-sync-quiet on its first attempt, in no group) and
-   the schedule's syncs; a dispatch syncs at once; Quiet sleeps out what is left of the window from the push time.
+   none) and end at once when there is one (cancelling themselves: no success to end a failing streak); else a push's
+   waits (card-sync-quiet on its first attempt, in no group) and the schedule's syncs; a dispatch syncs at once; Quiet
+   sleeps out what is left of the window from the push time.
 Exits 1 when a case gets the wrong answer.
 """
 import json
@@ -426,6 +427,7 @@ def timer_cases(flow: dict) -> None:
         write(os.path.join(fake, "gh"), "#!/bin/bash\n"      # gh's --jq on canned JSON: the run list, a run's jobs
               'q=""; prev=""; for a in "$@"; do [ "$prev" = --jq ] && q=$a; prev=$a; done\n'
               '[ -n "$FAKE_FAIL" ] && exit 1\n'
+              f'if [ "$2" = cancel ]; then echo "$3" > "{os.path.join(tmp, "cancelled")}"; [ -z "$FAKE_NO_CANCEL" ]; exit; fi\n'
               'if [ "$1" = run ]; then jq -r "$q" <<< "$FAKE_RUNS"; exit; fi\n'
               'id=$(sed -n "s|.*/runs/\\([0-9]*\\)/jobs|\\1|p" <<< "$2"); jq -r "$q" "$FAKE_JOBS/$id.json"\n')
         write(os.path.join(fake, "sleep"), f'#!/bin/bash\necho "$1" > "{os.path.join(tmp, "slept")}"\n')
@@ -443,13 +445,22 @@ def timer_cases(flow: dict) -> None:
                  ([run(42, "in_progress")], "", "a run past its window (syncing)"),
                  ([run(99, "waiting")], "", "this run itself"), ([run(43, "waiting", 50)], "", "a timer stuck 50 minutes"),
                  ([run(42, "in_progress"), run(40, "waiting")], "40", "the second of two runs")]
+        cancelled = os.path.join(tmp, "cancelled")
         for runs, want, what in cases:
+            if os.path.exists(cancelled):
+                os.remove(cancelled)
             env = {"PATH": f"{fake}:{os.environ['PATH']}", "FAKE_RUNS": json.dumps(runs), "FAKE_JOBS": jobs, "GITHUB_RUN_ID": "99",
                    "GITHUB_EVENT_NAME": "push", "GITHUB_SERVER_URL": "https://github.com", "GH_TOKEN": "x",
                    "QUIET": "Quiet window"}
             code, text, out = run_step(timer, "other", tmp, env, tmp)
-            check(code == 0 and out.get("run", "") == want, f"Another timer: {what} -> {out.get('run') or 'none'}"
+            got = open(cancelled).read().strip() if os.path.exists(cancelled) else ""
+            check(code == 0 and out.get("run", "") == want and got == ("99" if want else ""),
+                  f"Another timer: {what} -> {out.get('run') or 'none'}{', cancels itself' if got else ''}"
                   + ("" if code == 0 else f"\n{text}"))
+        code, text, out = run_step(timer, "other", tmp, {**env, "FAKE_RUNS": json.dumps([run(40, "waiting")]),
+                                                         "FAKE_NO_CANCEL": "1"}, tmp)
+        check(code == 0 and out.get("run") == "40" and "could not cancel itself" in text,
+              "Another timer: the cancel refused -> a warning, the run still ends")
         code, text, out = run_step(timer, "other", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
         check(code == 0 and "run" not in out and "were not read" in text, "Another timer: runs not read -> none (this run goes on)")
 

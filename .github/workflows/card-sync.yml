@@ -87,8 +87,9 @@ jobs:
   # The 30-minute timer (owner, 2026-10-24: a fixed window, not restarted by later pushes). A push's run and the
   # schedule's first look for a push run still in its timer (waiting, or its Quiet window job unfinished; one pushed over
   # 40 minutes ago is stuck and holds nothing). One there syncs main's head when its 30 minutes are up, this push's included,
-  # so this run ends at once. Else a push's run waits (Quiet window) and the schedule's syncs now. Runs that cannot be
-  # read count as none (this run goes on); two near-simultaneous pushes may both wait: the second sync ends at the gate.
+  # so this run ends at once: it cancels itself (Tell Discord's once-per-streak alert and the bot's notes skip cancelled
+  # runs). Else a push's run waits (Quiet window) and the schedule's syncs now. Runs that cannot be read count as none
+  # (this run goes on); two near-simultaneous pushes may both wait: the second sync ends at the gate.
   # Dispatches (the bot's admins, the guards) and retries skip both jobs. No job here is in the card-sync group, so a
   # sync running never holds a timer.
   timer:
@@ -99,7 +100,7 @@ jobs:
       run:
         shell: bash
     permissions:
-      actions: read
+      actions: write      # gh run cancel (itself)
     outputs:
       other: ${{ steps.other.outputs.run }}
     steps:
@@ -126,6 +127,9 @@ jobs:
               echo "run=$id" >> "$GITHUB_OUTPUT"
               echo "Push run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id is in its 30-minute timer: it syncs main's head when its time is up (this run's work too)." \
                 | tee -a "$GITHUB_STEP_SUMMARY"
+              # Cancelled, not a success: a success here would end a failing streak for Tell Discord and the bot
+              if gh run cancel "$GITHUB_RUN_ID" -R "$GITHUB_REPOSITORY" > /dev/null; then sleep 120
+              else echo "::warning::this run could not cancel itself: it ends as a success"; fi
               exit 0
             fi
           done <<< "$runs"
