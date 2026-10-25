@@ -423,6 +423,14 @@ jobs:
           echo "::warning::the commit's comments could not be read: no post, as an earlier attempt may have told Discord"
           echo "told=true" >> "$GITHUB_OUTPUT"
 
+      # The shared setup only (.github/actions/cards-python), first: a root checkout empties the workspace, bot/ too
+      - uses: actions/checkout@v7
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/actions/
+
       # The guards and their import closure (no config.py: github_api reads it in a try/except, the token comes from the
       # environment), and the packages they install. AutoCroissant tests/test_card_guards.py runs --help on exactly this
       # list (card_guards.SPARSE_FILES). The check job's commit: main may have moved during the wait.
@@ -451,14 +459,6 @@ jobs:
             /commands/repo_history.py
             /global_config.py
             /requirements-cards.txt
-
-      # The shared setup only (.github/actions/cards-python; no card files)
-      - uses: actions/checkout@v7
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /.github/actions/
 
       - timeout-minutes: 10
         uses: ./.github/actions/cards-python
