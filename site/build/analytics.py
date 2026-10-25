@@ -1,7 +1,7 @@
 """Balance analytics: data/analytics.json, for the Stats page's Balance section and each card's Balance block.
 
 Called by build_site.py with the site's card entries (stars and stats as the card pages show them, edits applied) and
-the bot's stats.pkl / old_stats.pkl (each earlier version of a card, dated by the commit of the PSD it was read from;
+the card data's stats.json / old_stats.json (each earlier version of a card, dated by the commit of the PSD it was read from;
 older records with no PSD blob keep their stored date, marked approximate unless a commit of that PSD has it). A
 version's `version` record, when it has one, dates it instead (when): the bot keeps no copy of a version whose data a
 later file repeats, and its start moves to the version that holds that data. Days and
