@@ -8,7 +8,7 @@ on:
     paths-ignore:
       - "TTS/**"             # the bot's TTS save commits don't rebuild the site
   schedule:
-    - cron: "17 */6 * * *"   # every 6 hours: picks up the bot's latest /update_stats data
+    - cron: "17 12 * * *"    # daily fallback: Card sync dispatches a build after each data commit
   workflow_dispatch:
 
 permissions:
@@ -21,8 +21,8 @@ concurrency:
   cancel-in-progress: false   # never cut a deployment off halfway; the newest queued run follows it
 
 env:
-  CARD_DATA: "off"   # the cutover (AutoCroissant DATA_BUILD_ACTION.md step 8) turns it on: the card data from the card sync's
-                     # branch data (db/) instead of AutoCroissant's pickles; off, or no data branch: the pickles (the rollback)
+  CARD_DATA: "on"    # the card data from Card sync's branch data (db/), since the cutover (2026-10-24); off, or no data
+                     # branch: AutoCroissant's pickles, frozen at the cutover (the rollback)
 
 jobs:
   build:

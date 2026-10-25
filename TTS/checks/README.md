@@ -1,8 +1,8 @@
 # TTS save checks
 
 Re-runnable checks of the Tabletop Simulator save (`TTS/Impossibility Simulator.json`), its rules (`TTS/decks.json`),
-its Lua, its links and the updater that keeps it (AutoCroissant `commands/tts_save.py`, run daily by
-`.github/workflows/tts-save.yml`). They came out of the 2026-10-22 audit. They only read: no check writes the save,
+its Lua, its links and the updater that keeps it (AutoCroissant `commands/tts_save.py`, run by
+`.github/workflows/card-sync.yml`). They came out of the 2026-10-22 audit. They only read: no check writes the save,
 the rules or a checkout (the updater checks run on copies in a temp dir).
 
 ## Run
@@ -31,7 +31,7 @@ The updater checks import the bot's code, which needs only `requests`.
 | `LUA_PYTHON` | | a Python with lupa |
 
 Network: the website's `cards.json` (names), GitHub raw (`links_http.py`, `final_spot.py`) and `git fetch` of the
-history clone. `tts_save_gate.py` needs `jq` and the bot checkout (`AUTOCROISSANT`) with its history.
+history clone. `card_sync_steps.py` needs git 2.37+, bash and `jq`.
 
 ## The checks
 
@@ -60,12 +60,11 @@ history clone. `tts_save_gate.py` needs `jq` and the bot checkout (`AUTOCROISSAN
 | `final_spot.py` | 30 random cards end to end: image, pin, Nickname, deck rule, CustomDeck wiring (`[n] [seed]` after the save) |
 | `updater_idempotent.py` | The updater run as the Action runs it reports no changes and leaves the bytes alone; unpinned links and a dropped Lua row converge back; an offline website changes nothing; a card taken out of a complete deck comes back once |
 | `updater_report_decks.py` | Report titles ("Links pinned" vs "Links re-pinned (changed files)"), the commit subject beside the report, and no CustomDeck key left unused when a card is re-added |
-| `tts_save_gate.py` | The workflow's daily gate (the owner's names hash, 075e6c43) against real history, `gh` and the names cache (the names the updater last ran with) mocked: the names hashed from the bot's stats.pkl as build_site.py names cards; PICKLE 3888392 changed them, so it runs, and back again after a run with them it runs too; docs-only bot commit 39da9ed didn't, so it skips; a card repo change, no or an unknown last run, a forced run and a failed `gh run list` run (takes no save) |
-| `card_sync_steps.py` | card-sync.yml offline (git 2.37+, bash, jq): every step's `if:` evaluated for the migration's runs (steps 6 and 7, MAIN_COMMIT and POSTS off: a bake only on a dry run, only `data` written, no alert; step 8: bake, M, posts; a rejected M drops the posts and the data; a failed live run or retry alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit main and every later step); the Gate script on sandbox history (stoogedings-src alone skips; fonts, stoogedings.json, an upper-case .PSD and a hand-edited save run; Card sync's own save commits don't); a font cache hit's fonts survive the bake's ff merge (deleted without the Fonts tree step: the control); the Bake step's --pending (a schedule and its retry); Commit main's script on a sandbox origin (a save-only M named in the manifest only when the build wrote db/; a failed push that landed counts as pushed; main moved: one retry marked `retry`, without full or allow_archive, none from a retry or while a run is pending; nothing pushed past minute 60 or when HEAD is a B the bake never reported) |
+| `card_sync_steps.py` | card-sync.yml offline (git 2.37+, bash, jq): every step's `if:` evaluated for the migration's runs (steps 6 and 7, MAIN_COMMIT and POSTS off: a bake only on a dry run, only `data` written, no alert; step 8: bake, M, posts; a rejected M drops the posts and the data; a failed live run or retry alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit main and every later step); the Gate script on sandbox history (stoogedings-src alone skips; fonts, stoogedings.json, an upper-case .PSD and a hand-edited save run; Card sync's own save commits don't; with nothing changed, a PSD-kind website edit sends the run to the Pending edits step, card_bake.due); the plan with GO from the Pending edits step; a font cache hit's fonts survive the bake's ff merge (deleted without the Fonts tree step: the control); the Bake step's --pending (a schedule, its retry and bake=pending); Commit main's script on a sandbox origin (a save-only M named in the manifest only when the build wrote db/; a failed push that landed counts as pushed; main moved: one retry marked `retry`, without full or allow_archive, none from a retry or while a run is pending; nothing pushed past minute 60 or when HEAD is a B the bake never reported) |
 
 `contents_lib.py` and `checks_env.py` are shared helpers. The names checks (`contents_names.py`, `final_spot.py`,
 `updater_idempotent.py`) follow the live website, like the updater. When the website's names change (a bot pickle
-push), they fail until the next `tts-save.yml` run has updated the save (21 of 24 pass meanwhile; 24 of 24 after the
+push), they fail until the next Card sync run has updated the save (21 of 24 pass meanwhile; 24 of 24 after the
 2026-10-22 run).
 
 Not kept from the audit: the zone-claiming runtime checks (`scripts_global_runtime.py`, `verify_scripts_f1_reload.py`,

@@ -17,7 +17,7 @@ CHECKS = [   # file and its extra arguments
     ("scripts_lua_syntax.py",), ("scripts_global_refs.py",), ("scripts_state_xml.py",), ("verify_scripts_static.py",),
     ("lua_mock.py",), ("lua_table.py",), ("lua_resize_roundtrip.py",),
     ("links_pins.py",), ("pins_current.py",), ("links_http.py",), ("final_spot.py",),
-    ("updater_idempotent.py",), ("updater_report_decks.py",), ("tts_save_gate.py",), ("card_sync_steps.py",),
+    ("updater_idempotent.py",), ("updater_report_decks.py",), ("card_sync_steps.py",),
 ]
 OUT = "/tmp/tts-checks/out"
 TIMEOUT = 600                                               # seconds per check: one that hangs fails, the rest still run
@@ -29,7 +29,7 @@ def main():
     os.environ["TTS_HISTORY_FETCHED"] = ensure_history()    # once, before the checks that read it (they skip the fetch)
     failed = []
     for name, *extra in CHECKS:
-        args = [] if name in ("tts_save_gate.py", "card_sync_steps.py") else [save]
+        args = [] if name == "card_sync_steps.py" else [save]
         start = time.monotonic()
         try:
             r = subprocess.run([sys.executable, os.path.join(HERE, name), *args, *extra], capture_output=True, text=True,
