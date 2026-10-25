@@ -1009,10 +1009,11 @@ relies on:
   when a picture changes (about 7 KB gzipped). Bump `CACHE` if what it keeps changes. To retire it: ship a sw.js whose
   activate deletes `pictures-*` and calls `self.registration.unregister()`, and drop `startWorker`.
 - Measured over plain http://127.0.0.1 (a Pages-like server: max-age=600, an ETag per deploy; HTTPS with
-  --ignore-certificate-errors turns Chrome's HTTP cache off and skews repeat visits), 5 rounds, medians, main vs this:
-  desktop grid first visit 1401 -> 1019 KB, after a deploy 1401 -> 369 KB (no pictures), within 10 minutes 0 -> 0 (a
-  304 for sw.js); card page first 500 -> 491 KB, after a deploy 500 -> 442. 4x phone (9 Mbps, 85 ms): grid first 709 ->
-  599 KB, LCP 968 -> 956 ms; after a deploy 709 -> 369 KB, LCP 812 -> 816; card page LCP 416 -> 408 first, 368 -> 340
-  after a deploy, 32 -> 52 within 10 minutes (the worker's start); the sharp 720 px picture 847 -> 790 ms after a
-  deploy. Scripts: scratch site-img/m3/load3.mjs.
+  --ignore-certificate-errors turns Chrome's HTTP cache off and skews repeat visits), 5 rounds, medians, main vs this
+  (q60/55/50): desktop grid first visit 1401 -> 1208 KB (240 px thumbs 904 -> 703; q50 was 1019), after a deploy
+  1401 -> 369 KB (no pictures), within 10 minutes 0 -> 0 (a 304 for sw.js); card page first 500 -> 493 KB, after a
+  deploy 500 -> 442. 4x phone (9 Mbps, 85 ms): grid first 709 -> 628 KB (q50: 599), LCP 996 -> 1020 ms; after a deploy
+  709 -> 369 KB, LCP 828 -> 844; card page LCP 436 -> 428 first, 368 -> 348 after a deploy; the sharp 720 px picture
+  851 -> 824 ms after a deploy. Timings within noise (the Mac's load average was 50-70 during the runs). Scripts:
+  scratch site-img/fix4/load4.mjs (m3/load3.mjs with the dists from the environment).
 
