@@ -1848,6 +1848,14 @@ def profile_text(p, n_cards, by_id, contrib="", cards_line=""):
     return person_text(lines, cards_line) or f"{p['login']}'s profile"
 
 
+def source_time():
+    """The built commit's committer date (ISO), "" outside git."""
+    try:
+        return subprocess.run(["git", "-C", REPO, "show", "-s", "--format=%cI", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return ""
+
+
 def build_branch():
     """Branch the Edit button commits to."""
     if os.environ.get("GITHUB_REF_NAME"):
@@ -2760,7 +2768,7 @@ def parse_banlist(by_norm):
 # ---- main ------------------------------------------------------------------------------------------
 # ---- build versions (?v=) ------------------------------------------------------------------------------
 IMPORT_RE = re.compile(r'(from\s+"\./([\w-]+\.js))"')     # a module's static imports, as they are stamped
-VOLATILE = {"cards.json": ("generated",), "decks.json": ("generated",), "changelog.json": ("since",)}   # the build's clock
+VOLATILE = {"cards.json": ("generated", "source"), "decks.json": ("generated",), "changelog.json": ("since",)}   # the build's clock
 
 
 def stamp_of(data):
@@ -3156,6 +3164,7 @@ def main():
     public_decks, private_decks = read_decks(cards)
     data = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "source": source_time(),              # edit.js: a publish is live once this reaches its commit's date
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist,
         "thumbs": {w: thumb_tag(w) for w in IMAGE_SIZES},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
