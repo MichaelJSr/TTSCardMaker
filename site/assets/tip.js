@@ -1,11 +1,11 @@
 // When the tooltip shows and goes (app.js fills it): it goes when the pointer leaves its element, or that element
 // leaves the page or loses its data-tip (an inline editor opened). NOTES.md §21. Touch: a tap shows it, the next tap
-// elsewhere or a scroll hides it; on a link only a long press does (the tap opens it).
+// elsewhere or a scroll hides it; on a card link only a long press does (the tap opens it), other links keep theirs.
 
 /** What shows a tooltip: data-tip text, chart values (data-v, data-l), a card link's preview. */
 export const TIP_SEL = "[data-tip], [data-v], a.card-ref, .chart [data-card]";
 const REF = "a.card-ref, .chart [data-card]";
-/** What a tap follows (app.js's click handler): a tooltip there shows on a long press only. */
+/** What a tap follows (app.js's click handler): no tooltip on a tap, a card link's on a long press. */
 const NAV = "a[href], [data-open], .chart [data-card]";
 export const LONG_PRESS = 450;                           // ms
 
@@ -49,7 +49,7 @@ export function tipController({ fill, show, hide }) {
 
 /** Wire a tipController to the document's pointer events; place(x, y) puts the tooltip near that point. */
 export function wireTips(doc, tips, place) {
-  let press = null, swallow = false;                     // a touch held on a link: its long-press timer
+  let press = null, swallow = false;                     // a touch held on a card link: its long-press timer
   const cancel = () => { if (press) clearTimeout(press.timer); press = null; };
   doc.addEventListener("pointerover", e => tips.over(e.target, e.pointerType));
   doc.addEventListener("pointerout", e => tips.out(e.relatedTarget, e.pointerType));
@@ -62,7 +62,7 @@ export function wireTips(doc, tips, place) {
     if (e.pointerType !== "touch") return;
     tips.down(e.target);
     const s = tipSource(e.target);
-    if (s && s.closest(NAV)) {
+    if (s && s.matches(REF)) {                           // other links: the browser's long press (link menu)
       const { clientX: x, clientY: y, target } = e;
       press = { x, y, timer: setTimeout(() => { press = null; if (tips.tap(target, true)) { swallow = true; place(x, y); } }, LONG_PRESS) };
     }

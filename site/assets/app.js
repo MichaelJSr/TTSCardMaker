@@ -1291,7 +1291,7 @@ function fillTip(t) {
     const c = S.byId.get(t.dataset.card);
     if (!c) return false;
     tip.replaceChildren();
-    if (c.img) { const im = document.createElement("img"); im.src = thumbUrl(c); im.alt = ""; tip.append(im); }
+    if (c.img) { const im = document.createElement("img"); im.style.aspectRatio = `auto ${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}`; im.src = thumbUrl(c); im.alt = ""; tip.append(im); }   // sized before it loads: place() flips it right
     const n = document.createElement("div"); n.className = "v"; n.textContent = c.name; tip.append(n);
   } else tip.textContent = t.dataset.tip;
 }
