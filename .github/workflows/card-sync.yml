@@ -141,6 +141,7 @@ jobs:
             /commands/card_edits.py
             /commands/psd_parser.py
             /commands/psd_details.py
+            /commands/psd_parts.py
             /commands/psd_regions.py
             /commands/font_check.py
             /commands/github_api.py

@@ -165,6 +165,7 @@ jobs:
             /commands/psd_edit.py
             /commands/psd_regions.py
             /commands/psd_parser.py
+            /commands/psd_parts.py
             /commands/card_models.py
             /commands/card_edits.py
             /commands/font_check.py
@@ -453,6 +454,7 @@ jobs:
             /commands/psd_edit.py
             /commands/psd_regions.py
             /commands/psd_parser.py
+            /commands/psd_parts.py
             /commands/card_models.py
             /commands/card_edits.py
             /commands/font_check.py
