@@ -79,19 +79,20 @@ jobs:
       - id: pages
         uses: actions/configure-pages@v6
 
-      # Cache key = the card PNG blobs + the build scripts (image settings live there; the font build's draws the token
-      # variants' pictures): the cache is only re-saved when a card image or the build changes, and the newest older cache
-      # is restored as a starting point. The thumbs' names carry their settings (build_site.py thumb_tag), so a restored
+      # Cache key = the card PNG and MDW/Fonts blobs + the build scripts (image settings live there; the font build's draws
+      # the token variants' pictures) + the build's pins (the WOFF2 fonts' names carry fontTools' and brotli's versions): the
+      # cache is only re-saved when a card image, a font or the build changes, and the newest older cache is restored as a
+      # starting point. The thumbs' names carry their settings (build_site.py thumb_tag), so a restored
       # cache made with other settings re-encodes those widths.
       - id: images
-        run: echo "key=$(git ls-tree -r HEAD | grep -i '\.png$' | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+        run: echo "key=$(git ls-tree -r HEAD | grep -iE '\.png$|[[:space:]]MDW/Fonts/[^/]+\.(ttf|otf)$' | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       # Keep `path` exactly site/.cache: actions/cache only restores (restore-keys too) caches saved with the same path list.
       - id: cache
         uses: actions/cache@v6
         with:
           path: site/.cache
-          key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}
+          key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'site/build/requirements.txt', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}
           restore-keys: card-images-v2-
 
       # The restored cache's file names, for the failure save at the end: a build that failed before making any image saves nothing.
@@ -179,7 +180,7 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: site/.cache
-          key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}-partial-${{ github.run_id }}-${{ github.run_attempt }}
+          key: card-images-v2-${{ hashFiles('site/build/build_site.py', 'site/build/requirements.txt', 'MDW/Fonts/stoogedings-src/build_stoogedings.py') }}-${{ steps.images.outputs.key }}-partial-${{ github.run_id }}-${{ github.run_attempt }}
 
   deploy:
     needs: build

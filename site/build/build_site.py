@@ -56,7 +56,7 @@ Output (site/dist): data/cards.json (everything the first screen needs), data/ru
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
 changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown),
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
-its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json), images, icons,
+its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json; a WOFF2 copy in fonts/, cached in site/.cache/woff2), images, icons,
 assets (with esbuild: one bundle, assets/app.js, and its source map; else the modules one by one) and one share page per card, per person and per public deck (its preview image a montage of its cards).
 index.html carries the plain grid's first tiles (first_screen, checked against grid.js in node). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
 content and its imports' (the bundle's from its code and map), the data's from its content without the build time; build.txt digests the whole site (which build is live),
@@ -541,6 +541,75 @@ def web_fonts(tree, names):
         if p and p.lower().endswith(WEB_FONTS) and size.get(p, FONT_WEB_MAX + 1) <= FONT_WEB_MAX:
             out[name] = {"file": p, "bytes": size[p]}
     return out
+
+
+WOFF2 = "woff2"                               # CACHE/woff2 and DIST/fonts: <blob16>-<woff2_tag>.woff2
+ICON_FONT = re.compile(r"stoogedings", re.I)  # mockup.js ICON_FONT: never drawn as a web font, so no copy
+
+
+WOFF2_VERSION = 1                             # bump when woff2_bytes changes: new names, so every copy is made again
+
+
+def woff2_tag():
+    """A hash of WOFF2_VERSION and the encoder's versions: another fontTools or brotli encodes under new names (as thumb_tag)."""
+    import brotli
+    from fontTools import version
+    return hashlib.sha1(f"woff2 {WOFF2_VERSION} {version} {brotli.__version__}".encode()).hexdigest()[:6]
+
+
+def woff2_bytes(data):
+    """The font as WOFF2, every glyph kept (fontTools' woff2.compress), its cmap written anew by fontTools: Chrome refuses
+    Apple Kid's own (a format 4 range past the last glyph)."""
+    from fontTools.ttLib import TTFont
+    font = TTFont(io.BytesIO(data), recalcBBoxes=False, recalcTimestamp=False)
+    if "cmap" in font:
+        font["cmap"]                              # decompiled, so compiled again on save
+    font.flavor = "woff2"
+    out = io.BytesIO()
+    font.save(out, reorderTables=False)
+    return out.getvalue()
+
+
+def web_woff2(fonts, tree):
+    """
+    WOFF2 copies of the web fonts (full glyph sets) in DIST/fonts, cached in CACHE/woff2 by blob and woff2_tag; adds
+    "woff2" (its path in the site) and "wbytes" to each entry of fonts. A file that fails, or no fontTools / brotli,
+    leaves its entry without one: the mock-up loads the TTF/OTF from raw. Unused copies pruned; never fails.
+    """
+    try:
+        tag = woff2_tag()
+    except ImportError as e:
+        warn(f"no WOFF2 fonts: {e.name or e} missing (pip install -r site/build/requirements.txt); the mock-up loads them from raw")
+        return 0
+    cache_dir = os.path.join(CACHE, WOFF2)
+    os.makedirs(cache_dir, exist_ok=True)
+    os.makedirs(os.path.join(DIST, "fonts"), exist_ok=True)
+    want = {f["file"]: f"{tree[f['file']][:16]}-{tag}.woff2" for n, f in fonts.items() if not ICON_FONT.match(n) and f["file"] in tree}
+
+    def make(p):
+        dst = os.path.join(cache_dir, want[p])
+        if os.path.exists(dst):
+            return False
+        try:
+            data = woff2_bytes(image_bytes(p, tree[p]))
+            with open(dst + ".tmp", "wb") as fh:
+                fh.write(data)
+            os.replace(dst + ".tmp", dst)
+            return True
+        except Exception as e:
+            log(f"woff2 {p}: {type(e).__name__}: {e}")
+            return False
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        made = sum(pool.map(make, sorted(want)))
+    for n, f in fonts.items():
+        name = want.get(f["file"]) if not ICON_FONT.match(n) else None
+        src = os.path.join(cache_dir, name) if name else None
+        if src and os.path.exists(src):
+            link_or_copy(src, os.path.join(DIST, "fonts", name))
+            f["woff2"], f["wbytes"] = f"fonts/{name}", os.path.getsize(src)
+    for n in set(os.listdir(cache_dir)) - set(want.values()):
+        os.remove(os.path.join(cache_dir, n))
+    return made
 
 
 def record_fonts(records):
@@ -3019,7 +3088,7 @@ def bundle(texts):
 
 def chunk_tags(lazy):
     """index.html's map of the chunks each import() of app.js loads (meta chunks: app.js early()). No modulepreload for the
-    chunk app.js imports: beside the first screen's pictures it cost them (LCP +80 ms on slow 4G, +45 on fast; NOTES §32)."""
+    chunk app.js imports: beside the first screen's pictures it cost them (LCP +80 ms on slow 4G, +45 on fast; NOTES §33)."""
     if not lazy:
         return ""
     return f'\n<meta name="chunks" content="{html.escape(json.dumps({k: [f"assets/{n}" for n in v] for k, v in sorted(lazy.items())}, separators=(",", ":")))}">'
@@ -3120,7 +3189,7 @@ def first_screen(cards, icons):
             raise SystemExit(f"error: index.html's first screen differs from grid.js ({what}) at {at}:\n"
                              f"  build_site: {mine[max(0, at - 60):at + 60]!r}\n  grid.js:    {theirs[max(0, at - 60):at + 60]!r}")
     page = ('<template id="first"><div class="browse">\n    <aside class="filters" aria-label="Filters"></aside>\n    <section>\n      '
-            f'{toolbar}\n      <div id="deck-hits"></div>\n      <div class="grid" style="--tile:168px">{"".join(tiles)}</div>\n    </section></div></template>\n'
+            f'{toolbar}\n      <div id="deck-hits"></div>\n      <div class="grid" style="--tile:168px;min-height:200vh;align-content:start">{"".join(tiles)}</div>\n    </section></div></template>\n'
             "<script>(() => { try { if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
             "  const z = localStorage.getItem(\"size\"), t = { s: [\"130px\", 160], l: [\"230px\", 270] }[z], f = document.getElementById(\"first\").content;\n"
             "  if (t) { f.querySelector(\".grid\").style.setProperty(\"--tile\", t[0]); for (const i of f.querySelectorAll(\"img.art\")) i.sizes = `${t[1]}px`;\n"
@@ -3454,7 +3523,9 @@ def main():
         log(f"PSD details: {len(detail_files)} cards and rulebook pages have a record ({len(records)} in {DETAILS_JSON})")
     fonts = web_fonts(tree, record_fonts(detail_files.values())) if detail_files else {}     # the mock-up's web fonts (data/fonts.json)
     if fonts:
-        log(f"web fonts: {len(fonts)} of the {len(record_fonts(detail_files.values()))} PSD fonts from {FONTS_DIR}")
+        made = web_woff2(fonts, tree)
+        log(f"web fonts: {len(fonts)} of the {len(record_fonts(detail_files.values()))} PSD fonts from {FONTS_DIR}, "
+            f"{sum('woff2' in f for f in fonts.values())} as WOFF2 ({made} new)")
 
     if analytics.ZONE_MISSING:
         warn("no tz database: balance days and months in UTC, not Pacific time as balance.js shows them")
