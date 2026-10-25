@@ -8,7 +8,7 @@
 # Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) installed from the card workflows' wheel cache.
 name: Card sync
-run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Card sync (dry run)' || 'Card sync' }}
+run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'Card sync (dry run)' || inputs.retry && 'Card sync (retry)' || 'Card sync' }}
 
 on:
   schedule:

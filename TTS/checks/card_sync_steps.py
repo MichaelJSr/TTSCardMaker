@@ -296,10 +296,11 @@ def plans(flow: dict) -> None:
     q = plan(flow, inputs={"dry_run": False, "bake": "all"}, switches=on, outputs=go, outcomes={"build": "failure"})
     check("Tell Discord" not in runs(p) and "Tell Discord" in runs(q), "step 8, a failed dispatch: a live one alerts, a dry one doesn't")
     names = [evaluate(flow["run_name"], {"github": {"event_name": e}, "inputs": i, "functions": {}})
-             for e, i in (("workflow_dispatch", {"dry_run": True}), ("workflow_dispatch", {"dry_run": False}), ("schedule", {}))
+             for e, i in (("workflow_dispatch", {"dry_run": True}), ("workflow_dispatch", {"dry_run": False}), ("schedule", {}),
+                          ("workflow_dispatch", {"dry_run": False, "retry": "schedule"}))
              if "run_name" in flow] or ["no run-name"]
-    check(names == ["Card sync (dry run)", "Card sync", "Card sync"] and f'\\"{names[0]}\\"' in step(flow, "Tell Discord")["run"],
-          f"run names {names}: the alert's streak leaves out the dry runs by that name")
+    check(names == ["Card sync (dry run)", "Card sync", "Card sync", "Card sync (retry)"] and f'\\"{names[0]}\\"' in step(flow, "Tell Discord")["run"],
+          f"run names {names}: the alert's streak leaves out the dry runs by that name; the bot knows a retry by its")
     late = re.search(r"late=\$\(\( \((\d+) - (\d+)\) \* 60 \)\)", step(flow, "main")["run"])
     after = flow["steps"][flow["steps"].index(step(flow, "main")):]
     caps = [int(s.get("timeout-minutes", "0")) for s in after]
