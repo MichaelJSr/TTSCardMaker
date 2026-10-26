@@ -947,7 +947,7 @@ export function createEditor(app) {
     if (box) {
       want.creatures = box.hidden ? null : [...document.querySelectorAll("#ef-creatures tr")].map(tr =>
         Object.fromEntries([...tr.querySelectorAll("[data-ck]")].map(i => [i.dataset.ck, i.value === "" ? null : Math.max(0, Math.round(+i.value))])));
-      if (!box.hidden) for (const k of STATS) delete want[k];          // creature 1 is the card's stats
+      if (!box.hidden) for (const k of STATS) want[k] = want.creatures[0]?.[k] ?? null;   // creature 1 is the card's stats: a change bakes
       want.creatures = tidy("creatures", want.creatures);
     }
     const siteOn = k => !!f(`site-${k}`)?.checked, site = SITE_FIELDS.filter(siteOn);
