@@ -6,7 +6,11 @@ data), on a push of site code, daily, and on demand (Actions → Card browser �
 
 ## What it has
 
-- **Cards**: grid or sortable table; filters for kind, stars, item type, type icons, series and subseries, stat ranges, author and flags.
+- **Cards**: grid or sortable table; filters for kind, stars, item type, type icons, series and subseries, stat ranges, author, font
+  (a text box with autofill; `font=`) and flags, and **Missing** (cards with no series, types, ability, author, artwork
+  source...; every sort puts cards lacking its value last). A right-click or long press on a filter excludes it (≠ on the
+  Series, Subseries and Author selects). **My filters**: searches saved in this browser ("Save as filter" beside the
+  search box), each one a checkbox in the sidebar (`cf=` keeps, `xcf=` drops; a link carries them).
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
   column too; another sort picked from the menu runs in its usual direction): by the card's creation date, ties by
   first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
@@ -27,7 +31,8 @@ data), on a push of site code, daily, and on demand (Actions → Card browser �
   before a number ("Heal 2 HP"), not as a verb opening a clause ("Flip to the other creature"), and after a capitalized
   word only when that word is a verb or a card: "Summon Jetpack" links, "Evil Quote" doesn't); "mentions", "mentioned by", similar stats,
   same series, text history with changes highlighted, and an image version viewer: every commit that changed the
-  card's image, compared side by side with the current one, with the text of that time when it differs. The current
+  card's image, compared side by side with the current one, with the text of that time when it differs (each version,
+text or image, links its commit when it is known), and the artwork sources when set. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
   that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history; a
   variant picture (one PSD's picture 2, 3...: a duplicate of picture 1) its own.
@@ -198,8 +203,8 @@ counts; picking one saves it; a missing one shows as a dashed `+ series` chip wh
 hover the row). In the cards grid, Ctrl/Cmd-click selects tiles (Shift-click a range, Esc clears; a filter change keeps
 only the tiles still shown) and dragging one or the selection onto a series, subseries or author in the filter bar (the
 values appear under the Series, Subseries and Author selects while you drag) assigns it to every card dragged; a drop changes that one field only. **Pin a box** (in the toolbar, Grid view) pins
-a series, subseries or author as a big box over the grid (up to 9, kept in this browser only, never published; ✕
-unpins): drag cards onto it, or select cards and press its number or tap it (on a phone, **Select** makes a tap select a
+a series, subseries or author as a big box over the grid (up to 100, kept in this browser only, never published; ✕
+unpins): drag cards onto it, or select cards and press its number (the first nine) or tap it (on a phone, **Select** makes a tap select a
 tile; **Done** or Esc ends it). A subseries box sets the subseries only, on cards of any series. To make a new series,
 subseries or author, pick **New series…** (**New subseries…**, **New author…**) at the end of its select and type the
 name in its place (Enter or a click elsewhere makes it, Esc or nothing typed cancels). It shows as "Name (no cards
@@ -229,7 +234,9 @@ shows all its cards (the Series select narrows them), and renaming it renames it
 (name, stars, types, stats, ability text; the form groups them and the bar marks them, and they show as "PSD pending"
 until the image is regenerated) are told apart from **database only** ones, which come from the card's folder or exist
 only as edits (kind, item type, series, subseries, note, aliases, author, duplicate of, checks, constructed ban,
-hidden). Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a
+hidden, artwork source, ability artwork source). An image field ticked **Website only (don't change the card image)**
+is shown on the website and by the bot but never baked (a quiet "Website only" tag). **Also rename the card's files**
+(under a name edit) has the bake rename the PSD and PNGs to the new name; links to the old page redirect. Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a
 card several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own
 bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
