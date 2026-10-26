@@ -16,18 +16,22 @@ const API = "https://api.github.com";
 const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login", drafts: draft.DRAFT_KEY };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
-  atk: "int", spd: "int", ability: "str", parts: "parts", note: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
+  atk: "int", spd: "int", ability: "str", parts: "parts", note: "str", art: "str", ability_art: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
   creatures: "creatures" };
 const ORDER = Object.keys(FIELDS);
 const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the bot's _by (changes.js BOT)
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
-  atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
-  problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures",
+  atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", note: "Note", art: "Artwork source", ability_art: "Ability artwork source", aliases: "Aliases",
+  dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures",
   "rate-favorability": "Favorability", "rate-power": "Power" };
+// artwork sources (main, ability): free text, each entry its own (build_site.py ART_MAX, the bot's card_edits.ART_MAX)
+export const ART_FIELDS = ["art", "ability_art"], ART_MAX = 500;
+/** An artwork source's error ("" when fine): at most ART_MAX characters, an emoji counts one (Python's len). */
+export const artError = (f, v) => (ART_FIELDS.includes(f) && typeof v === "string" && [...v].length > ART_MAX ? `${LABEL[f]}: at most ${ART_MAX} characters` : "");
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
-const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. Read by the website and the card sync.";
+const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. Read by the website and the card sync.";
 // true beside a name: the bake renames the card's files to it (owner 2026-10-25; build_site.py RENAME_KEY, the bot's card_edits.RENAME)
 export const RENAME_KEY = "_rename", RENAME_LABEL = "Also rename the card's files";
 /** An entry's `_rename` after an op: ticked or unticked (op.rename), and gone without a name or with a website-only one. */
@@ -881,6 +885,7 @@ export function createEditor(app) {
         </fieldset>
         <fieldset><legend>Notes, names and credit</legend>
           ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page" data-tokens>${esc(c.note || "")}</textarea>`)}
+          ${ART_FIELDS.map(k => row(k, `<input id="ef-${k}" value="${esc(c[k] || "")}" placeholder="${k === "art" ? "the card's artwork: a link, an artist or a game" : "the ability's artwork"}">`)).join("")}
           ${row("aliases", `<input id="ef-aliases" value="${esc((c.webAliases || []).join(", "))}" placeholder="comma separated">${(c.aliases || []).filter(a => !(c.webAliases || []).includes(a)).length ? `<span class="muted">Bot aliases: ${esc(c.aliases.filter(a => !(c.webAliases || []).includes(a)).join(", "))}</span>` : ""}`)}
           <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" data-suggest="author" autocomplete="off" value="${esc(c.author || "")}">`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
@@ -938,6 +943,7 @@ export function createEditor(app) {
       types: () => [...document.querySelectorAll("#ef-types .on")].map(x => x.dataset.type),
       ...Object.fromEntries(STATS.map(s => [s, () => int(s)])),
       ability: () => f("ability").value.replace(/\r/g, "").trim() || null, note: () => f("note").value.trim() || null,
+      ...Object.fromEntries(ART_FIELDS.map(k => [k, () => { const v = f(k).value.replace(/\s+/g, " ").trim() || null; error ||= artError(k, v); return v; }])),
       aliases: () => f("aliases").value.split(",").map(s => s.trim()).filter(Boolean),
       dup_of: () => { const v = f("dup_of").value.trim(); return v ? (byKey(v)?.key || v) : ""; },
       hidden: () => f("hidden").checked, allow_high_stats: () => f("allow_high_stats").checked, problems_ok: () => f("problems_ok").checked,
@@ -1009,6 +1015,7 @@ export function createEditor(app) {
     if (one && !one.rule && n === 1) return stagePart(c, one, f, v, defer);
     if (one && (f === "ability" || !one.rule)) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
     let x = fromInput(f, v, b.name);
+    if (ART_FIELDS.includes(f) && x != null) { x = x.replace(/\s+/g, " "); if (artError(f, x)) { if (!defer) app.toast(artError(f, x)); return null; } }
     if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, f === "subseries" ? c.series || "" : "", c.id)) === undefined) return null;
     const op = mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x);
     put(c.id, op); if (!defer) save();

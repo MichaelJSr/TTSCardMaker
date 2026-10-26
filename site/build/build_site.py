@@ -151,9 +151,11 @@ DECKS_DIR = "site/decks"                      # <owner>/<slug>.json per hand pub
 LOGINS_DIR = "site/logins"                    # <login>.json: a token sealed with its owner's password (password sign-in)
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits (subseries: database only, never from the folder)
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
-               "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "aliases": list,
-               "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list}
-EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", "spd"}      # may be null
+               "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "art": str, "ability_art": str,
+               "aliases": list, "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list}
+EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", "spd", "art", "ability_art"}      # may be null
+# artwork sources (main, ability): free text, each entry its own (a duplicate's never its original's); the bot's card_edits.ART_MAX
+ART_FIELDS, ART_MAX = ("art", "ability_art"), 500
 # printed on the card image, so an edit waits for the pipeline ("PSD pending"). The same set lives in edit.js FROM, app.js
 # FIELD_LABEL, the bot's CardEdits.KIND ("psd") and psd_edit STAT_FIELDS + TEXT_FIELDS + NOT_YET. creatures is database-only
 PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability"}
@@ -221,7 +223,8 @@ CARD_FIELDS = {"card_type", "path", "timestamp", "ability", "stars", "subtype", 
 # may be missing; archived: a deleted PSD's record; version: a version's start and end (analytics.when)
 CARD_FIELDS_OPTIONAL = {"name", "display_name", "duplicate_of", "creatures", "note", "hidden", "problems_ok", "allow_high_stats",
                         "alt_names", "subseries", "parser_version", "archived", "version", "created",
-                        "variant", "variant_of", "variants"}             # a PSD's pictures (PARTS_EDITOR.md §2.4)
+                        "variant", "variant_of", "variants",             # a PSD's pictures (PARTS_EDITOR.md §2.4)
+                        "art", "ability_art"}                            # from Card Edits.json (read there)
 STATS_FIELDS = {"hp", "defense", "attack", "speed"}
 HISTORY_FIELDS = {"ability", "timestamp"}
 
@@ -1213,6 +1216,8 @@ def valid_edit(field, value):
                                                                            for k, v in c.items()) for c in value)
     if kind is list:
         return isinstance(value, list) and all(isinstance(x, str) for x in value)
+    if field in ART_FIELDS:
+        return isinstance(value, str) and len(value) <= ART_MAX
     return isinstance(value, kind)
 
 
