@@ -97,7 +97,7 @@ export function tileHtml(c, { small = false, eager = false, css = 190, construct
       : c.reparsePending ? `<span class="flag" data-tip="The PSD changed since the card data was built">Re-parse pending</span>`
       : !c.parsed ? `<span class="flag" data-tip="Not in the card data yet">New</span>`
       : c._unused ? `<span class="flag unused" data-tip="No card names this status effect">Unused</span>`
-      : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(env.dupName(c.dup) || "")}: same PSD">Duplicate</span>` : ""}
+      : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(env.dupName(c.dup) || "")}: the same card, counted once">Duplicate</span>` : ""}
     ${small || link ? "" : `<button type="button" class="add${inDeck ? " in" : ""}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "✓ In deck" : "+ Deck"}</button>`}
     <div class="meta"><div class="name">${esc(c.name)}</div>
     <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(env.icons, t, "")).join("")}</div></div>${link ? "</a>" : "</article>"}`;

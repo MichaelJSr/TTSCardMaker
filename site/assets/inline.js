@@ -87,7 +87,7 @@ export function mountCard(modal, c, api = A) {
   const chip = { series: chips.find(a => hrefOf(a).startsWith("#/cards?series=") && !hrefOf(a).includes("subseries=")),
     subseries: chips.find(a => hrefOf(a).includes("subseries=")), author: chips.find(a => hrefOf(a).startsWith("#/cards?author=")) };
   for (const f of ["series", "subseries", "author"]) {
-    if (f === "author" && c.dup) { if (chip.author) chip.author.dataset.tip = "Same as the original"; continue; }
+    if (f === "author" && c.dup && !c.variantOf) { if (chip.author) chip.author.dataset.tip = "Same as the original"; continue; }   // a variant: its own
     if (chip[f]) { chip[f].dataset.inline = f; chip[f].dataset.tip = `Click to edit the ${LABEL[f].toLowerCase()}`; }
     else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="${f}" data-empty aria-label="Add a ${LABEL[f].toLowerCase()}">+ ${LABEL[f].toLowerCase()}</button>`);
   }
