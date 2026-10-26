@@ -10,11 +10,14 @@ import { typeVocab, mountPalette, rowHtml } from "./palette.js";
 import { rawOf, restorable, offerHtml, later, movedSince } from "./drafts.js";
 import { renameButton } from "./edit.js";
 import { straighten } from "./parts.js";
+import { ART } from "./art.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 const SLIDERS = [...STATS, "stars"];                // a row of cells: click one, or arrows and Enter
-const TEXT = ["name", "ability", "note", "series", "subseries", "author"];   // the fields with a text control
-const LABEL = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", series: "Series", subseries: "Subseries", author: "Author", note: "Note", stars: "Stars", types: "Types" };
+const ART_KEYS = ART.map(([k]) => k);               // the artwork sources: one line each, under the note
+const TEXT = ["name", "ability", "note", ...ART_KEYS, "series", "subseries", "author"];   // the fields with a text control
+const LABEL = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", series: "Series", subseries: "Subseries", author: "Author", note: "Note", stars: "Stars", types: "Types",
+  ...Object.fromEntries(ART) };
 const IMAGE = "on the card image";                 // the form's "On the card image" marker (PSD fields); the rest is database only
 
 /** A click on stat cell `cell` (1-based) of a row showing `current`: that value, or one less for the top lit cell (so 0 is reachable). */
@@ -35,7 +38,7 @@ export function control(f, v, fresh = false) {
   if (f === "name") return `<input class="inline-name" aria-label="${label}" value="${esc(v)}">`;
   if (f === "ability") return `<textarea class="inline-ability" rows="${fit(v)}" spellcheck="true" aria-label="${label}" data-tokens>${esc(v)}</textarea>`;
   const named = f === "series" || f === "subseries" || f === "author";
-  return `<input class="inline-fact${f === "note" ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${named ? ` data-suggest="${f}" autocomplete="off"` : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">`;
+  return `<input class="inline-fact${f === "note" || ART_KEYS.includes(f) ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${named ? ` data-suggest="${f}" autocomplete="off"` : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">`;
 }
 /** The bucket options a filter select gets: those it lacks, as "X (no cards yet)", selected when picked. have: its
  *  option values; list: [name]. */
@@ -94,6 +97,11 @@ export function mountCard(modal, c, api = A) {
   const note = detail.querySelector(":scope > div:nth-child(2) > .note");
   if (note) mark(note, "note", "Click to edit the note");
   else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="note" data-empty aria-label="Add a note">+ note</button>`);
+  for (const [k, label] of ART) {                  // every entry its own, duplicates and variant pictures too
+    const el = detail.querySelector(`:scope > div:nth-child(2) > .art-src[data-art="${k}"]`);
+    if (el) mark(el, k, `Click to edit the ${label.toLowerCase()}`);
+    else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="${k}" data-empty aria-label="Add the ${label.toLowerCase()}">+ ${label.toLowerCase()}</button>`);
+  }
   const starChip = chips.find(a => hrefOf(a).startsWith("#/cards?stars="));      // stars: a slider in its place
   if (c.stars > 10) { if (starChip) starChip.dataset.tip = "Use All fields"; }
   else if (starChip) starChip.outerHTML = starsHtml(c.stars);
@@ -239,7 +247,7 @@ function onClick(e) {
     const sp = A.modal.querySelector(".detail .star-pick"); if (sp) { sp.dataset.fresh = ""; sp.focus(); } return;   // fresh: nothing chosen puts "+ stars" back
   }
   if (f === "name" || SLIDERS.includes(f)) return;                          // the name on double-click, rows by cell or key
-  if ((f === "ability" || f === "note") && e.target.closest("a, .badge, img")) return;   // links in the text still open the card
+  if ((f === "ability" || f === "note" || ART_KEYS.includes(f)) && e.target.closest("a, .badge, img")) return;   // links in the text still open (the card, the source)
   if (e.ctrlKey || e.metaKey || e.shiftKey) return;                          // a chip's link still opens in a new tab
   e.preventDefault(); e.stopPropagation();
   if (f === "types") openTypes(el); else openText(el, f);
@@ -337,7 +345,9 @@ export function mountGrid(view, p, api = A) {
   for (const [key, list, news] of [["series", opts.series, b.series], ["subseries", opts.subseries, b.subseries], ["author", opts.authors, b.author]])
     at(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}" aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
 }
-const DROP = ".drop-list .chip, .tray .bucket[data-pin]";   // a filter-bar value, a pinned box
+const DROP = ".drop-list .chip, .tray .bucket-wrap";   // a filter-bar value, a pinned box with its ✕ and rename buttons
+/** The chip or pinned box (.bucket[data-pin]) a drop region stands for. */
+const boxOf = r => (r?.classList.contains("bucket-wrap") ? r.querySelector(".bucket[data-pin]") : r);
 /** A drop target's {key, value}: a filter-bar chip (its list's data-drop), or a tray box (data-pin-k, -v). */
 export const targetOf = el => (el.dataset.pin != null
   ? { key: el.dataset.pinK, value: el.dataset.pinV }
@@ -352,12 +362,12 @@ function onDragStart(e) {
 }
 const dragging = () => !!dragged;                  // our tiles, not text or files dragged in
 function onDragOver(e) {                           // dragenter too: Safari and Firefox drop only on a target that cancelled it
-  const t = dragging() && e.target.closest?.(DROP); if (!t) return;
+  const t = dragging() && boxOf(e.target.closest?.(DROP)); if (!t) return;
   e.preventDefault(); e.dataTransfer.dropEffect = "link"; t.classList.add("over");
 }
-function onDragLeave(e) { const t = e.target.closest?.(DROP); if (t && !t.contains(e.relatedTarget)) t.classList.remove("over"); }
+function onDragLeave(e) { const r = e.target.closest?.(DROP); if (r && !r.contains(e.relatedTarget)) boxOf(r)?.classList.remove("over"); }
 function onDrop(e) {
-  const t = dragging() && e.target.closest?.(DROP); if (!t) return;
+  const t = dragging() && boxOf(e.target.closest?.(DROP)); if (!t) return;
   e.preventDefault();
   const ids = dragged?.length ? dragged : (e.dataTransfer.getData("text/plain") || "").split(",").filter(Boolean);
   dragOff();

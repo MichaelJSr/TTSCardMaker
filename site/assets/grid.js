@@ -46,6 +46,8 @@ export const MISSING = [
   ["stats", "No stats", "Creatures and minions missing HP, DEF, ATK or SPD", c => ["creature", "minion", "creatures"].includes(c.type) && STATS.some(k => c[k] == null)],
   ["itemtype", "No item type", "Items without an item type", c => c.type === "item" && !c.subtype],
   ["ratings", "No ratings", "Not rated for power or favorability", c => !c.ratings?.length],
+  ["art", "No artwork source", "", c => !c.art?.trim()],
+  ["abilityart", "No ability artwork source", "", c => !c.ability_art?.trim()],
 ];
 
 // exclusions (a right-click or long press in the sidebar): x<key> params drop the cards that match any of their values;

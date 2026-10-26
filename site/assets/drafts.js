@@ -8,7 +8,7 @@ const STATS = ["hp", "def", "atk", "spd"];
 const CHECKS = new Set(["hidden", "allow_high_stats", "problems_ok", "banned"]);
 // the offer's words for the form's keys (edit.js LABEL, plus the ban row's three inputs)
 const NAMES = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP",
-  def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
+  def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", art: "Artwork source", ability_art: "Ability artwork source", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
   problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", banned: "Ban", "ban-group": "Ban", "ban-reason": "Ban",
   creatures: "Creatures", "rate-favorability": "Favorability", "rate-power": "Power", rename: "Rename files" };
 

@@ -25,7 +25,8 @@ export const KINDS = [["new", "New"], ["changed", "Changed"], ["art", "New art"]
 export const EDIT_KINDS = ["edited", "authors"];
 const VIA = { website: "on the website", git: "by commit" };
 const FIELD = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", stars: "stars", name: "title", card_type: "kind", type: "kind", subtype: "item type",
-  dup_of: "duplicate of", problems_ok: "parser notes checked", allow_high_stats: "high stats allowed" };
+  dup_of: "duplicate of", problems_ok: "parser notes checked", allow_high_stats: "high stats allowed", art: "artwork source",
+  ability_art: "ability artwork source" };
 /** A field's name as the Changes page writes it (profile.js) */
 export const fieldName = k => FIELD[k] || k.replace(/_/g, " ");
 

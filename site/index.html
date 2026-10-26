@@ -25,6 +25,7 @@
 <link rel="modulepreload" href="assets/ratings.js">
 <link rel="modulepreload" href="assets/fresh.js">
 <link rel="modulepreload" href="assets/grid.js">
+<link rel="modulepreload" href="assets/myfilters.js">
 <link rel="stylesheet" href="assets/style.css">
 <script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";</script>
 <script type="module" src="assets/app.js"></script>
@@ -46,6 +47,7 @@
   </nav>
   <form class="search" id="search-form" role="search">
     <input id="q" type="search" placeholder="Search cards…  (press /)" autocomplete="off" spellcheck="false" aria-label="Search cards">
+    <button type="button" class="ghost" id="save-filter" title="Save this search to My filters">Save as filter</button>
     <button type="button" class="ghost icon" id="search-help" aria-label="Search syntax" title="Search syntax">?</button>
   </form>
   <div class="top-actions">
