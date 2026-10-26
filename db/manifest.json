@@ -1,15 +1,15 @@
 {
  "builder": {
-  "commit": "7ba8e4f49acb6d229254f55e5b243472dbfc37d1",
+  "commit": "a198191597bf0556e681ccaf53755ace218096ef",
   "parser_version": 3,
   "psd_tools": "1.26.0+cards",
   "python": "3.14",
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-10-26T00:29:05Z",
- "card_commit": "a58b241ac81a3b82244519ea99254a8b795a89a9",
- "card_commit_at": 1792974154.0,
+ "built_at": "2026-10-26T01:30:39Z",
+ "card_commit": "9af79e9b5d10acb304b60cf877522aa3daa78740",
+ "card_commit_at": 1792978025.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 92,
@@ -31,7 +31,7 @@
   "authors_blob": "9c3af5b8b668d1defe9e805bba7f9fff55300e67",
   "created_blob": "fe965ed3536d98166e8ff94b2b34778ab8985078",
   "decks_blob": "06423a3363383d6e6ec1e5dc4633b62dc9e50460",
-  "edits_blob": "6fe17eeebd99cf03c77f3d172ca91fcf2a2308c0",
+  "edits_blob": "eaad73506f82a653ab8fa99ec09bafe10ad53043",
   "fonts_tree": "a35dc32c74873a3270ff48ffcfee146da634ad1a",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "87993ef69e369ea8006616af4dd4ba961a0525ae"
@@ -43,19 +43,8 @@
   "repin": [],
   "stale": []
  },
- "problems": [
-  {
-   "card": "Computer Virus",
-   "notes": [
-    "HP NOT FOUND",
-    "DEF NOT FOUND",
-    "ATK NOT FOUND",
-    "SPD NOT FOUND"
-   ],
-   "path": "Creatures/Kirby/3 Stars/Computer_Virus.psd"
-  }
- ],
+ "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40249532979",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40254523570",
  "schema": 1
 }
