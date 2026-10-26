@@ -157,6 +157,8 @@ EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", 
 # printed on the card image, so an edit waits for the pipeline ("PSD pending"). The same set lives in edit.js FROM, app.js
 # FIELD_LABEL, the bot's CardEdits.KIND ("psd") and psd_edit STAT_FIELDS + TEXT_FIELDS + NOT_YET. creatures is database-only
 PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability"}
+# true beside a name: the bake renames the card's files to it (owner 2026-10-25; edit.js RENAME, the bot's card_edits.RENAME)
+RENAME_KEY = "_rename"
 DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
@@ -640,6 +642,23 @@ def text_since(card, old, text):
             break
         start = min(start, analytics.when(v))
     return start
+
+
+def renamed_into(old_stats):
+    """{card name: the names renamed into it, along the bot's archive tags' renamed_to chains}: one card's history."""
+    to = {}
+    for name, versions in (old_stats or {}).items():
+        tag = getattr(versions[len(versions) - 1], "archived", None) if isinstance(versions, list) and versions else None
+        if isinstance(tag, dict) and isinstance(tag.get("renamed_to"), str) and tag["renamed_to"] != name:
+            to[name] = tag["renamed_to"]
+    out = {}
+    for name in to:
+        seen, end = {name}, to[name]
+        while end in to and end not in seen:
+            seen.add(end)
+            end = to[end]
+        out.setdefault(end, []).append(name)
+    return out
 
 
 def date_text(entry, card, old):
@@ -1268,6 +1287,10 @@ def parse_edits():
             meta[BOT_FIELDS] = bot
         elif bot is not None:
             log(f"warning: {EDITS_PATH}: {name}: {BOT_FIELDS} = {bot!r} isn't a list of fields, skipped")
+        if fields.get(RENAME_KEY) is True and isinstance(good.get("name"), str):   # the bake renames its files too
+            meta[RENAME_KEY] = True
+        elif RENAME_KEY in fields and not isinstance(fields[RENAME_KEY], bool):
+            log(f"warning: {EDITS_PATH}: {name}: {RENAME_KEY} = {fields[RENAME_KEY]!r} isn't true or false, skipped")
         if "_psd" in fields:                            # the edit pipeline's verdict on the PSD fields
             if valid_verdict(fields["_psd"]):
                 meta["_psd"] = fields["_psd"]
@@ -1516,6 +1539,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
             entry["partFlags"] = flags
     if current and isinstance(verdict.get("moved"), str):
         entry["moved"] = verdict["moved"]         # a stars edit moved the card into its N Stars folder
+    if meta.get(RENAME_KEY) and "name" in fields and "name" not in (meta.get("_site") or []):
+        entry["renameFiles"] = True               # the bake renames its files to the name (the bot's CardEdits.renames)
     parted = sorted({p["field"] for p in (meta.get("parts") or {}).values()})
     if parted:
         entry["_plain"] = []                      # pending without the parts: join_details adds the ones this picture shows
@@ -1987,8 +2012,11 @@ RECOMPRESSED = "Recompressed"                 # a bot commit's trailer, one per 
 # committer time (%ct), as the bot dates versions (commits API committer.date; card_history LOG_FORMAT): a rebased commit's
 # author time can be weeks earlier (Patch 1.9: authored 2026-05-28, committed 2026-06-17), and then no date matches;
 # %aN/%aE through .mailmap, as the bot's %aN
+RENAMED = "Renamed"                           # a bake commit's trailer per file it renamed: "<old path> -> <new path>" (AutoCroissant
+                                              # card_models.RENAMED: the editor's "Also rename the card's files")
 HISTORY_FORMAT = (f"%x01%H%x09%ct%x09%aN%x09%aE%x09%s%n%x02%(trailers:key={EDIT_BY},valueonly,separator=%x1f)"
-                  f"%n%x03%(trailers:key={RECOMPRESSED},valueonly,separator=%x1f)")
+                  f"%n%x03%(trailers:key={RECOMPRESSED},valueonly,separator=%x1f)"
+                  f"%n%x04%(trailers:key={RENAMED},valueonly,separator=%x1f)")
 
 
 def unquote_path(path):
@@ -1998,11 +2026,12 @@ def unquote_path(path):
     return path
 
 
-def parse_history(text, last=None):
+def parse_history(text, last=None, renamed=None):
     """`git log --raw --no-renames --no-abbrev --format=HISTORY_FORMAT` -> commits newest first: (sha, committer time, author
     name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by values: logins]).
     A bot commit's change of a PNG its Recompressed trailers name is left out: the same image, losslessly smaller.
-    last (a dict): filled with {path: (commit that last changed it, its blob then)}, recompressions included."""
+    last (a dict): filled with {path: (commit that last changed it, its blob then)}, recompressions included.
+    renamed (a dict): filled with {sha: {new path: old path}} from a bot commit's Renamed trailers."""
     commits = []
     for chunk in text.split("\x01")[1:]:
         head, _, body = chunk.partition("\n")
@@ -2014,6 +2043,11 @@ def parse_history(text, last=None):
                 continue
             if line.startswith("\x03"):              # the Recompressed trailers' values: paths
                 same = {v.strip() for v in line[1:].split("\x1f") if v.strip()}
+                continue
+            if line.startswith("\x04"):              # the Renamed trailers' values: "<old> -> <new>"
+                told = [v.strip().partition(" -> ") for v in line[1:].split("\x1f")]
+                if renamed is not None and name.lower() == BOT_AUTHOR.lower():
+                    renamed.setdefault(sha, {}).update({new: old for old, sep, new in told if sep and old and new})
                 continue
             if not line.startswith(":"):
                 continue
@@ -2029,8 +2063,8 @@ def parse_history(text, last=None):
     return commits
 
 
-def git_history(last=None):
-    """Every commit that touched a card PNG, a PSD or Card Edits.json (parse_history's shape; last as there). Commit
+def git_history(last=None, renamed=None):
+    """Every commit that touched a card PNG, a PSD or Card Edits.json (parse_history's shape; last and renamed as there). Commit
     metadata and trees only, so CI's blob:none clone has it all; None in a shallow clone, which has no history to read."""
     shallow = subprocess.run(["git", "-C", HISTORY_REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
     if shallow == "true":
@@ -2038,15 +2072,16 @@ def git_history(last=None):
         return None
     out = subprocess.run(["git", "-C", HISTORY_REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
                           f"--format={HISTORY_FORMAT}", "--", *HISTORY_PATHS], capture_output=True, text=True, check=True).stdout
-    return parse_history(out, last)
+    return parse_history(out, last, renamed)
 
 
 # ---- image versions ----------------------------------------------------------------------------------
-def image_versions(paths, commits):
+def image_versions(paths, commits, renamed=None):
     """{current path: [(commit, path then), ...] newest first, one per content change}, commits as
     (sha, committer time, author, subject). Renames are followed, so folder moves keep their history: exact ones (same blob
-    deleted and added in one commit), and a move that also changed the image when that commit deleted exactly one PNG
-    of the same file name (alnum, any case) and added only this one. None without history."""
+    deleted and added in one commit), a move that also changed the image when that commit deleted exactly one PNG
+    of the same file name (alnum, any case) and added only this one, and a rename the bake told (renamed: parse_history's,
+    a card renamed and redrawn in one commit). None without history."""
     if commits is None:
         return None
     tracked = {p: p for p in paths}               # path at the commit being read -> current path
@@ -2079,13 +2114,16 @@ def image_versions(paths, commits):
         gone = defaultdict(list)                  # deleted here and no exact rename's source
         for p in (p for ps in dels.values() for p in ps):
             gone[file_name(p)].append(p)
+        told = (renamed or {}).get(sha) or {}     # new path -> old path: the bake renamed and redrew it
         for name, added in changed.items():
             for path in added:
                 if path not in tracked:
                     continue
                 key = tracked.pop(path)
                 versions[key].append((commit, path))
-                if len(added) == 1 and len(gone.get(name, ())) == 1:
+                if told.get(path) in gone.get(file_name(told.get(path) or ""), ()):
+                    tracked[told[path]] = key     # renamed: older versions under its old name
+                elif len(added) == 1 and len(gone.get(name, ())) == 1:
                     tracked[gone[name][0]] = key  # moved and changed: older versions under its old name
     return versions
 
@@ -2419,6 +2457,33 @@ def archived_cards(old_stats, id_of, stats=(), people=None, credited=None, autho
             row["renamedId"] = renamed
         out.append({k: v for k, v in row.items() if v not in (None, "")})
     return sorted(out, key=lambda r: (-(r.get("at") or 0), r["card"].lower()))
+
+
+def redirects(archived, used, id_of):
+    """{old slug: card id} for the renamed cards (archived_cards' rows, renamed_to chains followed to a card of today)
+    whose old c/<slug>/ no card has now: their share links keep working."""
+    to = {r["card"]: r["renamed_to"] for r in archived if r.get("renamed_to")}
+    out = {}
+    for name in sorted(to):
+        seen, end = {name}, to[name]
+        while id_of(end) is None and end in to and end not in seen:
+            seen.add(end)
+            end = to[end]
+        slug, target = slugify(name), id_of(end)
+        if target and slug not in used and slug != target:
+            out.setdefault(slug, target)
+    return out
+
+
+def redirect_page(target, site_url=""):
+    """c/<old slug>/index.html: straight on to c/<target>/ (the address's #part kept), with a plain link."""
+    url = f"{site_url}/c/{target}/" if site_url else f"../{target}/"
+    href = html.escape(url)
+    return (f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Moved · {SITE_NAME}</title>\n'
+            f'<meta name="robots" content="noindex"><link rel="canonical" href="{href}">\n'
+            f'<meta http-equiv="refresh" content="0; url={href}">\n'
+            f'<script>location.replace({json.dumps(url)} + location.search + location.hash)</script></head>\n'
+            f'<body><p>This card has a new name: <a href="{href}">{href}</a></p></body></html>\n')
 
 
 # ---- contributions (data/contributions.json: who made, edited and committed cards) ---------------------------
@@ -3172,6 +3237,8 @@ def main():
             png_by_name.setdefault(os.path.basename(path).lower(), path)
 
     cards, rules, used_slugs = [], [], set()
+    into = renamed_into(old_stats if isinstance(old_stats, dict) else {})
+    history_of = lambda name: [v for n in into.get(name, ()) for v in old_stats.get(n) or []] + list(old_stats.get(name) or [])
 
     def unique_slug(name):
         base = slugify(name)
@@ -3224,7 +3291,7 @@ def main():
         if sha and getattr(c, "blob_sha", None) and sha != c.blob_sha:
             entry["reparsePending"] = True       # PSD committed since the bot last read it (a bake, or any edit)
         apply_edits(entry, edits, sha, shown)
-        date_text(entry, c, old_stats.get(name))
+        date_text(entry, c, history_of(name))     # a renamed card's history goes on (its old names' versions)
         if isinstance(variant, int) and not isinstance(variant, bool) and variant >= 1:
             entry["variant"] = variant            # one picture of a PSD with several (" #N" layers); variantOf/variants below
             entry["_variantOf"] = getattr(c, "variant_of", None) or name
@@ -3249,7 +3316,7 @@ def main():
         dup.update(id=unique_slug(name), name=name, key=os.path.splitext(os.path.basename(path))[0].replace("_", " "),
                    png=path, problems=[], dup=original["id"])
         apply_edits(dup, edits, tree.get(original["psd"]))
-        date_text(dup, stats[original["key"]], old_stats.get(original["key"]))   # its PSD's history, against its own text
+        date_text(dup, stats[original["key"]], history_of(original["key"]))   # its PSD's history, against its own text
         for k in ("pending", "refused", "baked", "reparsePending"):   # same PSD: its image changes with the original's
             value = [f for f in original[k] if f != "name"] if k == "pending" and original.get(k) else original.get(k)
             if value and not dup.get(k):         # not the name: a duplicate prints its own title
@@ -3388,13 +3455,13 @@ def main():
     for e in cards + rules:
         if e.get("png") and e["png"] in tree:
             by_png.setdefault(e["png"], []).append(e)
-    last = {}
-    commits = git_history(last)
+    last, renamed = {}, {}
+    commits = git_history(last, renamed)
     pin = lambda path: last[path][0] if path in tree and last.get(path, (None, None))[1] == tree[path] else None
     for e in cards:                               # deck.js: the TTS save's pinned links (AutoCroissant tts_save _pin_links)
         if e.get("png") and pin(e["png"]):
             e["pin"] = pin(e["png"])
-    found = image_versions(list(by_png), commits)
+    found = image_versions(list(by_png), commits, renamed)
     versions = {"available": found is not None, "repo": CARD_REPO, "commits": [], "cards": {}}
     rule_ids = {e["id"] for e in rules}
     if found:
@@ -3646,6 +3713,13 @@ def main():
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(c["name"])} · {SITE_NAME}</title>',
         ])
+    moved = redirects(archived, used_slugs, id_of)   # renamed cards: their old share links go on to the new name's page
+    for slug, target in moved.items():
+        os.makedirs(os.path.join(DIST, "c", slug), exist_ok=True)
+        with open(os.path.join(DIST, "c", slug, "index.html"), "w", encoding="utf-8") as fh:
+            fh.write(redirect_page(target, SITE_URL))
+    if moved:
+        log(f"redirects: {len(moved)} renamed cards' old pages")
     for p in profiles:                            # u/<login>/: the favourite card as the preview image, else the site banner
         desc = previews[p["login"]]
         fav = by_id.get(p.get("favourite") or "")

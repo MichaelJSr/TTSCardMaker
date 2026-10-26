@@ -10,7 +10,7 @@ const CHECKS = new Set(["hidden", "allow_high_stats", "problems_ok", "banned"]);
 const NAMES = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP",
   def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
   problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", banned: "Ban", "ban-group": "Ban", "ban-reason": "Ban",
-  creatures: "Creatures", "rate-favorability": "Favorability", "rate-power": "Power" };
+  creatures: "Creatures", "rate-favorability": "Favorability", "rate-power": "Power", rename: "Rename files" };
 
 const text = v => String(v ?? "").replace(/\r/g, "");
 /** A field's value as the Edit dialog's input shows it for card c (edit.js formHtml): text for inputs, a boolean for a
@@ -23,6 +23,7 @@ export function rawOf(c, f, dupKey = "") {
   if (f === "type") return text(c.type);
   if (f.startsWith("rate-")) return text(c._rate?.[f.slice(5)]);         // the staged rating (edit.js applyOp)
   if (CHECKS.has(f)) return !!c[f];
+  if (f === "rename") return !!c.renameFiles;           // edit.js renameRow
   return text(c[f]);
 }
 /** Two raw values alike: text compared trimmed and without \r (what the form and the inline editors save). */
