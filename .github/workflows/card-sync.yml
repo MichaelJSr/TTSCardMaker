@@ -10,8 +10,8 @@
 # The bake's verdicts and events live on `data` (AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md): the main job records
 # them (bake-records), the first data job after it (the after job, else the next) merges them in its data commit
 # (verdicts.json; baked, bake-refused; the merged artifacts in bake-records.json), so a refusal makes no main commit of
-# its own and M holds only PSDs, PNGs, dropped edit fields and a refused card's website-only fields moved to `_site`
-# (Card Edits.json only; AutoCroissant 97b1e73). A guards commit's events (guard-png,
+# its own. M holds the bake's PSDs, PNGs and Card Edits.json changes (dropped edit fields; website-only fields moved to
+# `_site`, a refused card's too since AutoCroissant 97b1e73) plus the TTS save. A guards commit's events (guard-png,
 # guard-fix) come from its run's guard-events artifact and show on the Changes page only, never in a post.
 # Runs are live (dry_run off by default). The bot dispatches only its admins' re-parses (/update_stats force_update or
 # cards). Leftover work chains (owner, 2026-10-25): a live run that ends with work left dispatches the next run itself
