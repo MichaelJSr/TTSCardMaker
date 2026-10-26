@@ -1548,5 +1548,6 @@ wireTips(document, tips, (cx, cy) => {
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
 }, { match: xTarget, run: el => actions["toggle-param"](el, true) });
 
+try { for (const k of Object.keys(localStorage)) if (k === "edit-token" || k.startsWith("deckPass:")) localStorage.removeItem(k); } catch {}   // plain-text secrets of before 2026-10-23
 if (wantsEditor()) loadEditor().catch(() => {});          // at once, beside cards.json
 init().finally(fresh.watch);                            // a new deploy reloads the page (fresh.js)

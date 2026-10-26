@@ -376,8 +376,7 @@ export function createEditor(app) {
     if (store) await remember(keep);
     app.onAuth();
   }
-  async function remember(keep) {                  // seal the token on this browser; a plain-text one of before 2026-10-23 goes
-    localStorage.removeItem("edit-token");
+  async function remember(keep) {                  // seal the token on this browser
     try { await device.save(token, keep); }
     catch { keptHere = false; if (keep) app.toast("This browser can't keep you signed in safely: you'll sign in again next time"); }
   }
