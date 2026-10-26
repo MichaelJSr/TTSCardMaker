@@ -27561,8 +27561,8 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1594": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions2.png",
-              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e52736c696b54c46ad1d5ab88454b3d0b093f3aa/Auxiliary/Rulebook/12_Reactions2.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Rulebook/12_Reactions2.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Rulebook/12_Reactions2.png",
               "NumWidth": 1,
               "NumHeight": 1,
               "BackIsHidden": true,
@@ -28605,8 +28605,8 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1612": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Rulebook/06_Reading_Cards2.png",
-              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Rulebook/06_Reading_Cards2.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Rulebook/06_Reading_Cards2.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Rulebook/06_Reading_Cards2.png",
               "NumWidth": 1,
               "NumHeight": 1,
               "BackIsHidden": true,
@@ -28663,8 +28663,8 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1613": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Rulebook/06_Reading_Cards.png",
-              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Rulebook/06_Reading_Cards.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Rulebook/06_Reading_Cards.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Rulebook/06_Reading_Cards.png",
               "NumWidth": 1,
               "NumHeight": 1,
               "BackIsHidden": true,
@@ -28779,8 +28779,8 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1615": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/04_Table5.png",
-              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/65a8a0b2f390c60744221093b671f41215649e74/Auxiliary/Rulebook/04_Table5.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Rulebook/04_Table5.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Rulebook/04_Table5.png",
               "NumWidth": 1,
               "NumHeight": 1,
               "BackIsHidden": true,
@@ -71295,7 +71295,7 @@
           "Type": 0
         },
         "1569": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -71844,7 +71844,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "The gates of AHN'QiRAj",
+          "Nickname": "The Gates of Ahn'Qiraj",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -71875,7 +71875,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1569": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -145266,7 +145266,7 @@
           "Type": 0
         },
         "1569": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -145815,7 +145815,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "The gates of AHN'QiRAj",
+          "Nickname": "The Gates of Ahn'Qiraj",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -145846,7 +145846,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1569": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -146498,7 +146498,7 @@
           "Type": 0
         },
         "1573": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -149947,7 +149947,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "The Temple of AHN'QiRAj",
+          "Nickname": "The Temple of Ahn'Qiraj",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -149978,7 +149978,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1573": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -150630,7 +150630,7 @@
           "Type": 0
         },
         "1573": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -154079,7 +154079,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "The Temple of AHN'QiRAj",
+          "Nickname": "The Temple of Ahn'Qiraj",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -154110,7 +154110,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1573": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -154762,7 +154762,7 @@
           "Type": 0
         },
         "1573": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -158211,7 +158211,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "The Temple of AHN'QiRAj",
+          "Nickname": "The Temple of Ahn'Qiraj",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -158242,7 +158242,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1573": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b69935b97393de5f8388a445a55368d1f507bf37/Auxiliary/Items/The_Temple_of_Ahn'Qiraj.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
