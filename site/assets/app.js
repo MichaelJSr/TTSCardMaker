@@ -11,6 +11,7 @@ import { deckPasses, SEALED } from "./login.js";
 import * as ratings from "./ratings.js";
 import * as fresh from "./fresh.js";
 import * as G from "./grid.js";
+import * as CF from "./myfilters.js";
 import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc } from "./grid.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
@@ -323,13 +324,17 @@ function viewSig() { return `${S.rev}|${S.compare.join(",")}|${JSON.stringify(S.
 function setParams(updates, { replace = true } = {}) {
   const r = parseHash();
   const p = r.params;
-  for (const [k, v] of Object.entries(updates)) (v === "" || v == null || (Array.isArray(v) && !v.length)) ? p.delete(k) : p.set(k, Array.isArray(v) ? v.join(",") : v);
+  for (const [k, v] of Object.entries(updates)) {
+    if (CF.MULTI.has(k)) { p.delete(k); for (const x of [].concat(v ?? [])) if (x) p.append(k, x); continue; }   // cf=a&cf=b: one param each
+    (v === "" || v == null || (Array.isArray(v) && !v.length)) ? p.delete(k) : p.set(k, Array.isArray(v) ? v.join(",") : v);
+  }
   const hash = `#/${r.name === "card" ? "cards" : r.name}${r.arg ? "/" + r.arg : ""}${p.toString() ? "?" + p : ""}`;
   if (replace) { history.replaceState(history.state, "", hash); renderView(parseHash(), hash); } else location.hash = hash;
 }
 
 // ---- cards (browse) --------------------------------------------------------------------------------
 const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
+const vals = (p, k) => (CF.MULTI.has(k) ? CF.vals(p, k) : csv(p, k));   // cf, xcf: repeated params
 function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi] = v.split("-").map(Number); return [isNaN(lo) ? 0 : lo, isNaN(hi) ? 99 : hi]; }
 // edited on the website: an editor's fields (changes.fieldEditors), never a _by AutoCroissant entry (the 2026-10-22
 // migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited)
@@ -356,6 +361,7 @@ function filterCards(p, { facets = true } = {}) {
   const missing = G.MISSING.filter(([k]) => csv(p, "missing").includes(k));   // cards missing all of them
   if (missing.length) list = list.filter(c => missing.every(x => x[3](c)));
   list = G.dropExcluded(list, p, flagFns);                                     // xkind=…, xtypes=…: the sidebar's exclusions
+  list = CF.apply(list, p);                                                    // cf=…, xcf=…: My filters
   for (const [k, , test] of LINKED) { const v = p.get(k); if (v) list = list.filter(test(v)); }
   const month = p.get("month"), change = p.get("change");
   if (month || change) list = S.analytics ? list.filter(c => St.balance.changedAs(S.analytics, c, month, change)) : [];   // renderCards loads it
@@ -397,7 +403,7 @@ function chipList(key, options, selected, counts, xs = [], removes = null) {
   return `<div class="chips">${options.map(([v, label]) => { const x = xs.includes(String(v)), n = x ? removes(key, String(v)) : counts?.get(String(v)) || 0;
     return `<button type="button" class="chip${x ? " x" : selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : ""}>${esc(label)}${counts ? `<span class="n">${x ? `−${n}` : n}</span>` : ""}</button>`; }).join("")}</div>`;
 }
-const XABLE = new Set(["kind", "stars", "sub", "types", "flags", "missing"]);   // a right-click (long press) excludes
+const XABLE = new Set(["kind", "stars", "sub", "types", "flags", "missing", "cf"]);   // a right-click (long press) excludes
 const NOT_KEYS = ["series", "subseries", "author"];                              // a select with a ≠ toggle
 /** a sidebar control a right-click or long press on `t` excludes with, or null */
 const xTarget = t => { const el = t?.closest?.('[data-action="toggle-param"]') || t?.closest?.("label.check")?.querySelector('[data-action="toggle-param"]');
@@ -434,9 +440,14 @@ function renderCards(r) {
   const subOpts = [...new Set(S.cards.map(c => c.subtype).filter(Boolean))].sort().map(s => [s, s[0].toUpperCase() + s.slice(1)]);
   const typeOpts = [...typeCounts.keys()].sort((a, b) => (typeCounts.get(b) || 0) - (typeCounts.get(a) || 0));
   const missOpts = G.MISSING.filter(([k]) => missCounts.get(k) || miss.includes(k) || xmiss.includes(k));      // none to show: hidden
+  const mine = CF.saved(), cfIn = CF.vals(p, "cf"), cfOut = CF.vals(p, "xcf");                         // My filters (myfilters.js)
+  const cfRemoves = v => { const q = new URLSearchParams(p); q.delete("xcf"); for (const x of cfOut) if (x !== v) q.append("xcf", x); return Math.max(0, filterCards(q).length - list.length); };
+  const cfSave = v => (mine.includes(v) ? "" : `<button type="button" class="chip cf-save" data-action="cf-save" data-value="${esc(v)}" title="Save to My filters">Save</button>`);   // from a link
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
   const active = [];
   if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
+  for (const v of cfIn) active.push(["cf", v, v, false, cfSave(v)]);
+  for (const v of cfOut) active.push(["xcf", `not ${v}`, v, true, cfSave(v)]);
   for (const k of csv(p, "kind")) active.push(["kind", (KINDS.find(x => x[0] === k) || [k, KIND_PLURAL[k] || k])[1], k]);
   for (const s of csv(p, "stars")) active.push(["stars", `${s}★`, s]);
   for (const s of csv(p, "sub")) active.push(["sub", cap(s), s]);
@@ -462,6 +473,8 @@ function renderCards(r) {
 
   const browse = `<div class="browse">
     <aside class="filters${S.filtersOpen ? " open" : ""}" aria-label="Filters">
+      ${mine.length ? `<h3>My filters</h3>${mine.map(v => { const x = cfOut.includes(v), f = CF.pred(v), n = x ? cfRemoves(v) : f ? list.filter(f).length : list.length;
+        return `<div class="cf-row"><label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="cf" data-value="${esc(v)}"${!x && cfIn.includes(v) ? " checked" : ""}${x ? ` aria-label="${esc(v)}: excluded"` : ""}> <span class="cf-q">${esc(v)}</span><span class="n">${x ? `−${n}` : n}</span></label><button type="button" class="ghost cf-del" data-action="cf-delete" data-value="${esc(v)}" title="Remove this filter" aria-label="Remove the filter ${esc(v)}">✕</button></div>`; }).join("")}` : ""}
       <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindCounts.get(k)), csv(p, "kind"), kindCounts, xs("kind"), removes)}
       <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts, xs("stars"), removes)}
       ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts, xs("sub"), removes)}` : ""}
@@ -485,7 +498,7 @@ function renderCards(r) {
         tail: `${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
           <button type="button" class="ghost" data-action="select-mode" aria-pressed="${S.selecting}">${S.selecting ? "Done" : "Select"}</button>` : ""}
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}` })}
-      ${active.length ? `<div class="active-filters">${active.map(([k, l, v, x]) => `<button type="button" class="chip${x ? " x" : ""}" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
+      ${active.length ? `<div class="active-filters">${active.map(([k, l, v, x, more = ""]) => `<button type="button" class="chip${x ? " x" : ""}" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>${more}`).join("")}</div>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
       ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
@@ -1185,15 +1198,21 @@ function refresh(id) {
   else if (parseHash().name === "deck") renderDeck(parseHash());
 }
 function toast(msg) { toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (toastEl.hidden = true), 2600); }
+/** a toast with an Undo button, up a little longer */
+function toastUndo(msg, undo) {
+  toast(msg); clearTimeout(toast.t); toast.t = setTimeout(() => (toastEl.hidden = true), 6000);
+  const b = Object.assign(document.createElement("button"), { type: "button", className: "toast-undo", textContent: "Undo" });
+  b.addEventListener("click", () => { toastEl.hidden = true; undo(); }, { once: true }); toastEl.append(" ", b);
+}
 function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
 async function copy(text, what) { try { await navigator.clipboard.writeText(text); toast(`Copied ${what}`); } catch { prompt("Copy:", text); } }
 function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`; modal.hidden = false; }
 
 const actions = {
   "close": () => { if ($("#edit-form", modal)) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
-  "toggle-param": (el, exclude = false) => { const p = parseHash().params, k = el.dataset.key, cur = csv(p, k), v = el.dataset.value;
+  "toggle-param": (el, exclude = false) => { const p = parseHash().params, k = el.dataset.key, cur = vals(p, k), v = el.dataset.value;
     if (!XABLE.has(k) || !el.closest(".browse .filters")) { setParams({ [k]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); return; }
-    const [inc, exc] = G.flip(cur, csv(p, `x${k}`), v, exclude); setParams({ [k]: inc, [`x${k}`]: exc }); },
+    const [inc, exc] = G.flip(cur, vals(p, `x${k}`), v, exclude); setParams({ [k]: inc, [`x${k}`]: exc }); },
   "select-param": el => { const k = el.dataset.key, o = el.selectedOptions?.[0]?.dataset || {};      // a shared subseries picks its series too; a sort its direction (default unless the option says)
     const p = parseHash().params;
     if (NOT_KEYS.includes(k) && el.closest(".browse .filters") && !p.get(k) && (p.get(`x${k}`) || S.notPick.has(k))) {   // ≠ on: the pick is excluded
@@ -1203,7 +1222,7 @@ const actions = {
     if (!inc && !exc) { S.notPick[S.notPick.has(k) ? "delete" : "add"](k); rerender(); return; }
     if (inc) S.notPick.add(k); else S.notPick.delete(k);
     setParams({ [k]: exc, [`x${k}`]: inc, ...(k === "series" && inc ? { subseries: "" } : {}) }); },
-  "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: csv(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "", ...(el.dataset.key === "series" ? { subseries: "" } : {}) }); if (el.dataset.key === "q") qInput.value = ""; },
+  "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: vals(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "", ...(el.dataset.key === "series" ? { subseries: "" } : {}) }); if (el.dataset.key === "q") qInput.value = ""; },
   "clear-filters": () => { qInput.value = ""; S.notPick.clear(); history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
@@ -1255,6 +1274,13 @@ const actions = {
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
   "select-mode": () => { S.selecting = !S.selecting; if (!S.selecting) S.selected.clear(); rerender(); },
+  // My filters: a link's search saved; ✕ forgets one (and drops it from the address), Undo puts both back
+  "cf-save": el => { const v = el.dataset.value, had = CF.add(v); toast(had ? `Already in My filters as “${had}”` : `Saved “${v}” to My filters`); rerender(); },
+  "cf-delete": el => { const v = el.dataset.value, p = parseHash().params, was = { cf: vals(p, "cf").includes(v), xcf: vals(p, "xcf").includes(v) }, at = CF.remove(v);
+    if (was.cf || was.xcf) setParams({ cf: vals(p, "cf").filter(x => x !== v), xcf: vals(p, "xcf").filter(x => x !== v) }); else rerender();
+    toastUndo(`Removed “${v}” from My filters`, () => { CF.add(v, at); const r = parseHash();
+      if (r.name === "cards" && (was.cf || was.xcf)) { const q = r.params, k = was.cf ? "cf" : "xcf"; setParams({ [k]: [...vals(q, k).filter(x => x !== v), v] }); }
+      else if (r.name === "cards" || r.name === "card") rerender(); }); },
 };                                                       // + edit mode's (createEditor)
 /** An action by name; one only edit mode has (edit.js, tray.js) loads it first. */
 function act(name, el) {
@@ -1294,6 +1320,12 @@ const runSearch = debounce(() => {
   setParams({ q: qInput.value });
 }, 160);
 qInput.addEventListener("input", runSearch);
+$("#save-filter")?.addEventListener("click", () => {   // the search box's text as a filter in My filters (CSS shows it while there's text)
+  const q = qInput.value.trim(); if (!q) return;
+  const had = CF.add(q); qInput.value = "";
+  toast(had ? `Already in My filters as “${had}”` : `Saved “${q}” to My filters`);
+  const r = parseHash(); if (r.name === "cards" || r.name === "rules") setParams({ q: "" });
+});
 $("#search-form").addEventListener("submit", e => { e.preventDefault(); const ex = exactOf(qInput.value, S.cards), l = ex.length === 1 ? ex : S.list; if (l.length === 1) location.hash = `#/card/${l[0].id}`; });   // one exact name, else one result
 $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax</h3><p class="muted">The bot's /query_ability syntax, plus names and aliases.</p>
   <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
