@@ -27,7 +27,21 @@ const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Serie
   "rate-favorability": "Favorability", "rate-power": "Power" };
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
-const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). Read by the website and the card sync.";
+const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. Read by the website and the card sync.";
+// true beside a name: the bake renames the card's files to it (owner 2026-10-25; build_site.py RENAME_KEY, the bot's card_edits.RENAME)
+export const RENAME_KEY = "_rename", RENAME_LABEL = "Also rename the card's files";
+/** An entry's `_rename` after an op: ticked or unticked (op.rename), and gone without a name or with a website-only one. */
+export function renameFlag(cur, op) {
+  if (op.rename === true) cur[RENAME_KEY] = true; else if (op.rename === false) delete cur[RENAME_KEY];
+  if (cur.name == null || (Array.isArray(cur[SITE]) && cur[SITE].includes("name"))) delete cur[RENAME_KEY];
+  return cur;
+}
+/** op.rename from the form's tick, for a card whose name is edited once published (b: its published base). */
+export function renameTick(op, b, ticked) {
+  const named = "name" in op.set ? op.set.name != null : !op.unset.includes("name") && !!b.edited?.includes("name");
+  if (named && ticked !== !!b.renameFiles) op.rename = ticked; else delete op.rename;
+  return op;
+}
 // an entry's website-only fields (build_site.py SITE_KEY, the bot's card_edits.SITE): differ from the card image on purpose, never baked
 export const SITE = "_site", SITE_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability"];
 const SITE_LABEL = "Website only (don't change the card image)";
@@ -70,7 +84,7 @@ export function value(c, f, byId) {
 /** What the PSD (or folder) says: the pre-edit value when the field was edited, else the value itself. */
 export const psdValue = (b, f, byId) => tidy(f, b.edited?.includes(f) ? (f === "aliases" ? [] : b.orig?.[f]) : value(b, f, byId));
 export const isPsd = f => FROM[f] === "PSD";
-export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && !Object.keys(op.site || {}).length && op.author === undefined && !op.ban && !op.rate;
+export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && !Object.keys(op.site || {}).length && op.author === undefined && !op.ban && !op.rate && op.rename === undefined;
 
 // ---- single-field ops (inline editing; the same rule readForm applies to the whole form)
 /** An inline input's text as field f's value: trimmed, "" -> null (the name falls back to `name`), ints >= 0. */
@@ -155,6 +169,8 @@ export function mergeAuthor(op, v, published) {
  *  "parts": the boxes, and the name/ability derived from them (fields: theirs, else the staged boxes' own). */
 export function withoutItem(op, item, name, fields = null) {
   const o = { ...op, set: { ...op.set }, unset: (op.unset || []).filter(k => k !== item) };
+  if (item === "rename" || item === "name") delete o.rename;     // the files' rename goes with the name
+  if (item === "rename") return o;
   const unsite = f => { if (o.site && f in o.site) { o.site = { ...o.site }; delete o.site[f]; if (!Object.keys(o.site).length) delete o.site; } };
   if (item.startsWith("site-")) { unsite(item.slice(5)); return o; }
   unsite(item);
@@ -186,6 +202,7 @@ export function describeItems(op, b = {}, { byId, rule = false } = {}) {
   if (op.ban) { const t = op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned"; items.push({ item: "ban", text: t, short: t }); }
   for (const k of RATE) if (op.rate?.[k] != null) { const l = LABEL[`rate-${k}`]; items.push({ item: `rate-${k}`, text: `${l}: rated ${op.rate[k]}`, short: `${l} ${op.rate[k]}` }); }
   for (const [k, on] of Object.entries(op.site || {})) { const t = `${LABEL[k]}: ${on ? "website only (the card image keeps its text)" : "on the card image too"}`; items.push({ item: `site-${k}`, text: t, short: t }); }
+  if (op.rename !== undefined) { const t = op.rename ? "Files: renamed to the name" : "Files: keep their name"; items.push({ item: "rename", text: t, short: t }); }
   const site = siteAfter(op, b);
   return items.map(x => ({ ...x, psd: isPsd(x.item) && !site.includes(x.item) }));
 }
@@ -212,7 +229,7 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json", onCo
   catch (e) { throw new Error(`${path} isn't valid JSON (${e.message}). Fix it on GitHub, then publish again.`); }
   data.cards ||= {};
   for (const op of ops) {
-    if (!Object.keys(op.set).length && !op.unset.length && !Object.keys(op.site || {}).length) continue;
+    if (!Object.keys(op.set).length && !op.unset.length && !Object.keys(op.site || {}).length && op.rename === undefined) continue;
     const k = Object.keys(data.cards).find(x => cardKey(x) === cardKey(op.key)) ?? op.key;
     const cur = { ...(data.cards[k] || {}) };
     if (isBot(cur._by) && !isBot(by)) cur._bot = ORDER.filter(f => f in cur);   // the bot's entry: its fields stay nobody's edit
@@ -225,6 +242,7 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json", onCo
     for (const [f, on] of Object.entries(op.site || {})) if (on) site.add(f); else site.delete(f);
     const kept = SITE_FIELDS.filter(f => site.has(f) && cur[f] != null);
     if (kept.length) cur[SITE] = kept; else delete cur[SITE];
+    renameFlag(cur, op);                           // after _site: a website-only name renames nothing
     delete cur._by; delete cur._at; delete data.cards[k];
     if (Array.isArray(cur._bot)) {                 // the bot's migration fields (_bot): one this op sets or unsets is the editor's now
       cur._bot = cur._bot.filter(f => !(f in op.set) && !op.unset.includes(f) && f in cur);
@@ -531,6 +549,8 @@ export function createEditor(app) {
       if (pend.size) c.pending = [...pend].sort(); else delete c.pending;
     }
     if (op.author !== undefined) c.author = op.author || b.author;
+    if (op.rename !== undefined) { if (op.rename) c.renameFiles = true; else delete c.renameFiles; }
+    if (c.renameFiles && (c.name === b.name && !b.edited?.includes("name") || (op.unset || []).includes("name"))) delete c.renameFiles;
     if (op.ban) {
       for (const g of S.data.banlist.groups) g.entries = g.entries.filter(e => e.id !== c.id);
       if (op.ban.banned) {
@@ -797,6 +817,12 @@ export function createEditor(app) {
       </fieldset><div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
       <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div></form></div>`;
   }
+  /** "Also rename the card's files" under the name (off by default): a card with its own PSD, its first picture. */
+  function renameRow(c, b) {
+    if (b.dup || (c.variant || 1) > 1 || !c.psd) return "";
+    return `<div class="erow" data-row="rename"><span class="elabel"></span><div class="ein"><label class="check"><input id="ef-rename" type="checkbox"${c.renameFiles ? " checked" : ""}> ${RENAME_LABEL}</label>
+      <p class="muted part-note">With a new name: the PSD and its pictures take it when the card image is updated.</p></div></div>`;
+  }
   function formHtml(c) {
     if (isRule(c)) return ruleFormHtml(c);
     const b = baseOf(c), isDup = !!b.dup, ban = banOf(c.id), admin = me?.admin, view = partsView(c);
@@ -822,6 +848,7 @@ export function createEditor(app) {
         <fieldset><legend>Card</legend>
           ${view?.list.some(x => x.kind === "title") ? `<div class="erow" data-row="name"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
             <p class="muted part-join" id="ef-name-join"></p></div>${plain("name", `<input id="ef-name" value="${esc(c.name)}">`)}</div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
+          ${renameRow(c, b)}
           ${row("stars", num("stars"))}${view ? `<p class="muted part-note" id="ef-stars-note"></p>` : ""}
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
             return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-type="${esc(t)}" aria-pressed="${on}" data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>`)}
@@ -956,6 +983,7 @@ export function createEditor(app) {
       const has = k in op.set ? op.set[k] != null : !op.unset.includes(k) && !!b.edited?.includes(k) && b[k] != null;
       if (f(`site-${k}`) && has && siteOn(k) !== (b.siteOnly || []).includes(k)) op.site = { ...op.site, [k]: siteOn(k) };
     }
+    if (f("rename")) renameTick(op, b, f("rename").checked && !siteOn("name"));   // a website-only name renames nothing
     if (error) op.error = error;
     op.unset = [...new Set(op.unset)];
     return op;
@@ -1619,7 +1647,7 @@ export function createEditor(app) {
   }
   // the drafted fields an op covers: other fields' drafts (a card a rename reached) stay
   const opFields = op => [...Object.keys(op.set || {}), ...Object.keys(op.set?.parts || {}).map(k => P.PART + k), ...(op.unset || []), ...(op.author !== undefined ? ["author"] : []),
-    ...(op.ban ? ["banned", "ban-group", "ban-reason"] : []), ...(op.rate ? RATE.map(k => `rate-${k}`) : [])];
+    ...(op.ban ? ["banned", "ban-group", "ban-reason"] : []), ...(op.rate ? RATE.map(k => `rate-${k}`) : []), ...(op.rename !== undefined ? ["rename"] : [])];
   const dropDrafts = ops => { for (const op of ops) cardDrafts.drop(op.id, opFields(op)); };
   async function publish(message) {
     const ops = Object.values(stage.cards), people = stage.people, F = files();
@@ -1627,7 +1655,7 @@ export function createEditor(app) {
     const edits = {};
     const clashes = new Map();                     // boxes someone else edited since they were staged: "op name: layer"
     const clash = (op, keys, theirs) => { for (const k of keys) clashes.set(`${op.name}: ${op.set.parts?.[k]?.layer || theirs?.[k]?.layer || k}`, theirs?.[k]?.text ?? (theirs?.[k]?.delete ? "(delete)" : "(none)")); };
-    if (ops.some(o => Object.keys(o.set).length || o.unset.length)) edits[F.edits] = t => editsFile(t, ops, at, me.login, F.edits, clash);
+    if (ops.some(o => Object.keys(o.set).length || o.unset.length || o.rename !== undefined)) edits[F.edits] = t => editsFile(t, ops, at, me.login, F.edits, clash);
     if (ops.some(o => o.author !== undefined) || Object.keys(people).length) edits[F.authors] = t => authorsFile(t, ops, people);
     if (ops.some(o => o.ban)) edits[F.banlist] = t => banFile(t, ops);
     if (ops.some(o => o.rate)) edits[F.ratings] = t => ratingsFile(t, ops, pacificDay(new Date(at)), me.login, F.ratings);

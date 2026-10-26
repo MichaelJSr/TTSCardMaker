@@ -133,6 +133,7 @@ async function init() {
   S.all = S.data.cards; S.rules = null; S.icons = S.data.icons;
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
+  for (const [old, id] of Object.entries(S.data.moved || {})) if (!S.byId.has(old) && S.byId.has(id)) S.byId.set(old, S.byId.get(id));   // a renamed card's old id: links, picks, share codes
   if (editorP) await editorP.catch(() => {});
   if (editor !== IDLE) { editor.init(); previews.init(); }  // applies staged edits, then derive()
   else derive();
@@ -281,6 +282,7 @@ function route(e) {
   S.restoring = e?.type === "popstate" && !!history.state?.drawn;   // Back or Forward: the browser restores the scroll after this, so no chunks
   queueMicrotask(() => { S.restoring = false; });
   const r = parseHash();
+  if (r.name === "card" && S.data?.moved?.[r.arg] && S.byId.has(r.arg)) r.arg = S.byId.get(r.arg).id;   // a renamed card: its new page
   syncUrl(r);
   hideTip();
   if (r.name === "card") {
@@ -466,7 +468,9 @@ function renderCards(r) {
       ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
     </section></div>`;
+  const filtersTop = $(".browse .filters", view)?.scrollTop || 0;   // a click there redraws it: keep its place
   view.innerHTML = browse;
+  if (filtersTop) $(".browse .filters", view).scrollTop = filtersTop;
   const grid = list.length && view_ !== "table" && $(".browse .grid", view);
   if (grid) fillGrid(grid, list, { css: (G.TILE_SIZES[size] || G.TILE_SIZES.m)[1], win });
   else if (list.length && view_ === "table") fillTable($(".browse table.data tbody", view));

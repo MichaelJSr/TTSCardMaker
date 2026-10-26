@@ -1160,3 +1160,21 @@ Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan
 - AutoCroissant `tests/test_site_build.py::test_editor_stats_and_people_load_on_first_use` (the stamped `import()`s
   without esbuild; with it, ESBUILD set: no editor, Stats or People source in the first visit's maps, the meta list).
 
+
+## 34. Renaming a card's files (2026-10-25, owner: "can you make it an option to change the file name or not?")
+
+- Edit dialog: "Also rename the card's files" under the name (off by default; not on rulebook pages, duplicates or a
+  variant's picture 2+). Ticked beside a name edit: `"_rename": true` in the card's Card Edits.json entry (`renameTick`,
+  `renameFlag`; gone with the name, and never beside a website-only name). cards.json `renameFiles` shows it ticked.
+- The bake (AutoCroissant card_bake `plan_rename`): after the title, the PSD and its PNGs (NameN.png too) take the name's
+  file stem (spaces as `_`, characters no file can hold dropped), in the same commit, with `Renamed: <old> -> <new>`
+  trailers; a stars move and a rename go together. Refused: a card file of that name already (any case), a name with
+  nothing a file can hold, a name another card of the run takes. A printed name still renames (numbered PNGs too). The same commit moves the card's keys in Card Edits.json (the old name an alias, `_rename`
+  gone), Card Authors.txt, Card Creation Dates.json, Card Ratings.json and TTS/decks.json.
+- Followers of the trailers: the data build (one card: `renamed_to`, its author, series and dates kept), the TTS save,
+  and this build: image versions go on under the old path (`image_versions(..., renamed)`), the text history includes
+  the old names' versions (`renamed_into`), and `c/<old slug>/` redirects to the new page (`redirects`, `redirect_page`). The old id also
+  follows in profile picks and published hands (`read_profiles`, `read_decks`) and in the app (cards.json `moved`:
+  `#/card/<old id>`, share codes, saved hands).
+- AutoCroissant `tests/test_card_bake.py::test_a_rename_bake_moves_the_files_and_everything_keyed_by_them`,
+  `tests/test_site_build.py::test_a_renamed_card_goes_on_and_its_old_page_redirects`.
