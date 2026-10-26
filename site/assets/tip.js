@@ -47,8 +47,9 @@ export function tipController({ fill, show, hide }) {
   };
 }
 
-/** Wire a tipController to the document's pointer events; place(x, y) puts the tooltip near that point. */
-export function wireTips(doc, tips, place) {
+/** Wire a tipController to the document's pointer events; place(x, y) puts the tooltip near that point. hold: a touch
+ *  long press of its own, no tooltip ({match(target): the element or null, run(el)}: app.js's exclusions). */
+export function wireTips(doc, tips, place, hold = null) {
   let press = null, swallow = false;                     // a touch held on a card link: its long-press timer
   const cancel = () => { if (press) clearTimeout(press.timer); press = null; };
   doc.addEventListener("pointerover", e => tips.over(e.target, e.pointerType));
@@ -61,6 +62,8 @@ export function wireTips(doc, tips, place) {
     cancel(); swallow = false;
     if (e.pointerType !== "touch") return;
     tips.down(e.target);
+    const own = hold?.match(e.target);
+    if (own) { const { clientX: x, clientY: y } = e; press = { x, y, timer: setTimeout(() => { press = null; swallow = true; tips.hide(); hold.run(own); }, LONG_PRESS) }; return; }
     const s = tipSource(e.target);
     if (s && s.matches(REF)) {                           // other links: the browser's long press (link menu)
       const { clientX: x, clientY: y, target } = e;

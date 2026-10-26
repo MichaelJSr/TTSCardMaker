@@ -740,3 +740,21 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 .part-page .part-hl { position: absolute; border: 2px solid var(--accent); border-radius: 3px; background: color-mix(in srgb, var(--accent) 18%, transparent); pointer-events: none; }
 .part-list { display: flex; flex-direction: column; gap: 8px; }
 @media (max-width: 640px) { .part-rule-cols { grid-template-columns: 1fr; } .part-page { position: relative; max-width: 220px; } }
+/* exclusions: a right-click (long press) on a filter; the ≠ beside a select */
+.filters .chip, .filters .icon-toggle, .filters .check { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+.chip.x, .active-filters .chip.x { border-color: var(--danger); color: var(--danger); text-decoration: line-through; background: color-mix(in srgb, var(--danger) 10%, transparent); }
+.active-filters .chip.x { text-decoration: none; }                    /* it reads "not …" */
+.chip.x .n { text-decoration: none; display: inline-block; }
+.icon-toggle.x { position: relative; border-color: var(--danger); background: color-mix(in srgb, var(--danger) 14%, transparent); }
+.icon-toggle.x img { opacity: .55; }
+.icon-toggle.x::after { content: ""; position: absolute; left: 3px; right: 3px; top: 50%; border-top: 2px solid var(--danger); transform: rotate(-45deg); }
+.check.x { color: var(--danger); text-decoration: line-through; }
+.check.x .n { text-decoration: none; display: inline-block; }
+.check.x input { outline: 1px solid var(--danger); }
+.sel-row { display: flex; gap: 4px; align-items: center; }
+.sel-row select { flex: 1; min-width: 0; }
+.sel-row .not { flex: none; width: 30px; height: 30px; padding: 0; border-radius: 8px; border: 1px solid var(--border-strong); background: transparent; color: var(--ink-2); }
+.sel-row .not[aria-pressed="true"] { border-color: var(--danger); color: var(--danger); background: color-mix(in srgb, var(--danger) 14%, transparent); }
+.sel-row.x select { border-color: var(--danger); color: var(--danger); text-decoration: line-through; }
+.x-hint { font-size: 12px; margin: 14px 0 0; }
+.sel-row.x select option { color: var(--ink); text-decoration: none; }
