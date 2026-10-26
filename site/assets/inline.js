@@ -251,7 +251,7 @@ function onClick(e) {
  *  the Edit dialog at that field, one box per layer (PARTS_EDITOR.md §5). */
 function openText(el, f, text = null) {          // text: a restored draft (the dialog drops a joined one on several boxes)
   const c = card;
-  if ((f !== "name" && f !== "ability") || !c?.details || !A.editor.partsFor) { open(el, f, text); return; }
+  if ((f !== "name" && f !== "ability") || !c?.details || !A.editor.partsFor || (c.siteOnly || []).includes(f)) { open(el, f, text); return; }   // website only: one plain value
   A.editor.partsFor(c).then(n => {
     if (card !== c || !el.isConnected) return;
     if (n && (n.rule || n[f === "name" ? "title" : "ability"] !== 1)) A.editor.open(c.id, { focus: f, ...(text != null ? { draft: { [f]: text } } : {}) }); else open(el, f, text);

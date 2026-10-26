@@ -66,6 +66,7 @@ const iconImg = (name, cls = "tok") => G.iconImg(S.icons, name, cls);
 const psdBadges = c => [
   c.refused ? `<span class="fact refused" data-tip="The last try to regenerate the card image was refused; change the edit or the PSD">Image update refused: ${esc(c.refused)}</span>`
     : c.pending?.length ? `<span class="fact pending" data-tip="${PSD_TIP}">PSD pending: ${esc(pendingList(c))}</span>` : "",
+  c.siteOnly?.length ? `<span class="fact site-only" data-tip="${esc(`Website only: ${c.siteOnly.map(f => FIELD_LABEL[f] || f).join(", ")}. The card image keeps its printed value`)}">Website only</span>` : "",
   c.reparsePending ? `<span class="fact" data-tip="The PSD changed since the card data was built; the next card sync reads it">Re-parse pending</span>` : "",
   c.baked && !c.refused ? `<span class="fact" data-tip="The bot regenerated the card image from the edit; its notes say what it drew best-effort">Image baked: ${esc(c.baked)}</span>` : "",
   c.partFlags ? `<span class="fact${c.partFlags.skipped ? " refused" : ""}" data-tip="The last bake, per text layer: a layer changed in Photoshop since the edit is skipped (redo it in Edit)">Text boxes: ${esc(Object.entries(c.partFlags).map(([k, n]) => `${n} ${k}`).join(", "))}</span>` : "",

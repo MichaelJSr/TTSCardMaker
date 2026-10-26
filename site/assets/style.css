@@ -388,6 +388,10 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .tile .flag.staged, .fact.staged { background: var(--accent); color: var(--accent-ink); }
 /* edit pipeline: a PSD edit waiting to be baked into the card image, or refused */
 .tile .flag.pending, .fact.pending { background: #1d4f7c; color: #d6ebff; }
+.site-box { flex: 1 1 100%; font-size: 12px; margin: 0; }
+.site-on .site-boxes { opacity: .45; pointer-events: none; } .site-on .site-boxes .part-join { display: none; }
+.site-plain { flex: 1 1 100%; display: flex; flex-direction: column; gap: 4px; } .site-plain[hidden] { display: none; }
+.site-plain input, .site-plain textarea { width: 100%; }
 .tile .flag.refused, .fact.refused { background: #7c1d1d; color: #ffd6d6; }
 .data td .fact, .panel li .fact, .erow label .fact { margin-left: 6px; font-size: 11px; }
 .note { background: var(--surface-2); border-left: 3px solid var(--warn); border-radius: 8px; padding: 8px 12px; margin: 8px 0; }

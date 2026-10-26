@@ -157,6 +157,8 @@ EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", 
 # printed on the card image, so an edit waits for the pipeline ("PSD pending"). The same set lives in edit.js FROM, app.js
 # FIELD_LABEL, the bot's CardEdits.KIND ("psd") and psd_edit STAT_FIELDS + TEXT_FIELDS + NOT_YET. creatures is database-only
 PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability"}
+# an entry's website-only fields: printed differently on purpose, never baked (edit.js SITE, the bot's card_edits.SITE)
+SITE_KEY, SITE_FIELDS = "_site", ("name", "stars", "types", "hp", "def", "atk", "spd", "ability")
 DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
@@ -407,7 +409,7 @@ def join_details(cards, records, tree, edits=None):
                 out[e["id"]].update(parts)
                 shown = {str(p.get("id")) for k in ("title", "ability", "blocks") for p in parts["parts"][k]}
                 here = {p["field"] for k, p in parts["partEdits"].items() if "field" in p and (k == "+ability" or k in shown
-                        or (parts["partState"].get(k) == "gone" and first is e))}
+                        or (parts["partState"].get(k) == "gone" and first is e))} - set(e.get("siteOnly") or [])
                 pending = sorted(set((e.get("pending") or []) if plain is None else plain) | here)   # a part's field: on the pictures showing its layer
                 if pending:
                     e["pending"] = pending
@@ -1268,6 +1270,13 @@ def parse_edits():
             meta[BOT_FIELDS] = bot
         elif bot is not None:
             log(f"warning: {EDITS_PATH}: {name}: {BOT_FIELDS} = {bot!r} isn't a list of fields, skipped")
+        site = fields.get(SITE_KEY)                     # website-only fields: those with a value (CardEdits.site_only)
+        if isinstance(site, list):
+            site = [f for f in SITE_FIELDS if f in site and good.get(f) is not None]
+            if site:
+                meta[SITE_KEY] = site
+        elif site is not None:
+            log(f"warning: {EDITS_PATH}: {name}: {SITE_KEY} = {site!r} isn't a list of fields, skipped")
         if "_psd" in fields:                            # the edit pipeline's verdict on the PSD fields
             if valid_verdict(fields["_psd"]):
                 meta["_psd"] = fields["_psd"]
@@ -1516,7 +1525,10 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
             entry["partFlags"] = flags
     if current and isinstance(verdict.get("moved"), str):
         entry["moved"] = verdict["moved"]         # a stars edit moved the card into its N Stars folder
-    parted = sorted({p["field"] for p in (meta.get("parts") or {}).values()})
+    site = meta.get(SITE_KEY) or []
+    parted = sorted({p["field"] for p in (meta.get("parts") or {}).values()} - set(site))
+    if site:
+        entry["siteOnly"] = list(site)            # never baked: "Website only", not "PSD pending"
     if parted:
         entry["_plain"] = []                      # pending without the parts: join_details adds the ones this picture shows
     if not fields:
@@ -1547,7 +1559,7 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
         if f == "types":                          # any order and spelling, as psd_edit.same_types
             return type_keys(fields[f]) != type_keys(orig.get(f))
         return entry[f] != orig.get(f)
-    plain = {f for f in fields if f in PSD_FIELDS and fields[f] is not None and f not in parted and waits(f)}
+    plain = {f for f in fields if f in PSD_FIELDS and fields[f] is not None and f not in parted and f not in site and waits(f)}
     pending = sorted(plain | set(parted))
     if parted:
         entry["_plain"] = sorted(plain)

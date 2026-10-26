@@ -359,6 +359,7 @@ export function createPreviews(app) {
   const values = (cur, psd, edit) => ({ edit, hash: hashOf(edit), n: Object.keys(changedOf(cur, psd)).length || (cur.parts ? 1 : 0), cur, psd });   // part edits whose join reads the same still change the image
   // the parts editor: the PSD's entry (variant 1's) holds the part edits, stars, types and stats of every picture
   const withParts = (c, cur, edit, op = null) => {
+    for (const f of app.editor.siteFields?.(c.id, op || undefined) || []) cur[f] = psdOf(c)[f];   // website only: the image keeps it
     const parts = app.editor.entryParts?.(c.id, op), first = c.variantOf && S.byId.get(c.variantOf);
     if (first) { const own = entryEdit(app.editor.entryFields(first.id), f => value(first, f, S.byId)); for (const f of ENTRY_FIELDS) if (f !== "name" && f !== "ability" && f in own && !(f in edit)) edit[f] = own[f]; }
     if (parts) { edit.parts = parts; cur.parts = parts; }
