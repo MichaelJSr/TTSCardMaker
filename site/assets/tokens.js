@@ -153,9 +153,9 @@ export function applyChoice(text, open, item) {
 const words = v => String(v).toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
 /** How a known name matches a normalized q: 0 same (or no q), 1 prefix, 2 a word's prefix, 3 inside (2+ letters), -1 none */
 const tierOf = (q, v) => { const n = norm(v); return !q || n === q ? 0 : n.startsWith(q) ? 1 : words(v).some(w => w.startsWith(q)) ? 2 : q.length > 1 && n.includes(q) ? 3 : -1; };
-/** Known names for a typed q, best first: entries [{value, n (cards), note, own (the card's own series), kind, series}].
- *  Empty q: own first, then the most cards, then by name. Else: same name, prefix, a word's prefix, inside (2+ letters),
- *  then (3+ letters, nothing else) one slip (two from 6 letters), the closest whole name first; ties: own, most cards,
+/** Known names for a typed q, best first: entries [{value, n (cards), note, kind}].
+ *  Empty q: the most cards, then by name. Else: same name, prefix, a word's prefix, inside (2+ letters),
+ *  then (3+ letters, nothing else) one slip (two from 6 letters), the closest whole name first; ties: most cards,
  *  name. At most LIMIT rows. */
 export function suggestNames(q, entries) {
   q = norm(q);
@@ -171,8 +171,8 @@ export function suggestNames(q, entries) {
       if (d <= most) out.push({ e, tier: 4 + d, w: Math.min(...keys.map(k => slips(q, k, true))) });
     }
   }
-  return out.sort((a, b) => a.tier - b.tier || a.w - b.w || !!b.e.own - !!a.e.own || (b.e.n || 0) - (a.e.n || 0) || a.e.value.localeCompare(b.e.value))
-    .slice(0, LIMIT).map(({ e }) => ({ token: e.value, label: e.value, kind: e.kind || "", note: e.note || "", plain: true, value: e.value, series: e.series || "" }));
+  return out.sort((a, b) => a.tier - b.tier || a.w - b.w || (b.e.n || 0) - (a.e.n || 0) || a.e.value.localeCompare(b.e.value))
+    .slice(0, LIMIT).map(({ e }) => ({ token: e.value, label: e.value, kind: e.kind || "", note: e.note || "", plain: true, value: e.value }));
 }
 
 // ---- the dropdown, in the browser
