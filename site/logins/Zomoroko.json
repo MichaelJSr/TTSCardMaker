@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-26T00:36:50Z",
+  "ct": "NLrjNNV9vCeGEVeCWXZfmJcIgKb3M8yDl9bKsv3YuXtNfuiSuNyVlHResUq8fySORQ90X2B6rZw=",
+  "iterations": 2000000,
+  "iv": "eyJr670lyXg4S82U",
+  "kdf": "PBKDF2-SHA-256",
+  "login": "Zomoroko",
+  "salt": "TrpRqw6SOQkIKIi7aOEiGA==",
+  "v": 1
+}

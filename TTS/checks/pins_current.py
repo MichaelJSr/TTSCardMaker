@@ -1,5 +1,5 @@
 """Every repo link in the save must serve main's current file: pinned sha's blob == main's blob (git's own view,
-independent of the updater's history walk). Also counts pins that are not git log's last-change commit.
+independent of the updater's history walk). A failed pin's line names git log's last change of the file.
 Usage: pins_current.py [save.json]   (history: $TTS_HISTORY, made or fetched)"""
 import os
 import re
@@ -36,7 +36,7 @@ links = {}
 for m in LINK.finditer(text):
     links[(m.group(1), unquote(m.group(2)))] = links.get((m.group(1), unquote(m.group(2))), 0) + 1
 main = tree("main", sorted({p for _, p in links}))
-fail, unpinned, gone, older = [], [], [], []
+fail, unpinned, gone = [], [], []
 by_sha = {}
 for sha, p in links:
     by_sha.setdefault(sha, []).append(p)
@@ -49,18 +49,14 @@ for sha, paths in sorted(by_sha.items()):
         if p not in main:
             gone.append((sha, p))
         elif at.get(p) != main[p]:
-            fail.append(f"{p}: pinned {sha[:8]} serves blob {str(at.get(p))[:8]}, main has {main[p][:8]}")
-        else:
             last = git("rev-list", "-1", "main", "--", p).strip()
-            if last != sha:
-                older.append(f"{p}: {sha[:8]} (git log's last change {last[:8]}, same blob)")
+            fail.append(f"{p}: pinned {sha[:8]} serves blob {str(at.get(p))[:8]}, main has {main[p][:8]} "
+                        f"(git log's last change {last[:8]})")
 print(f"{len(links)} distinct links ({sum(links.values())} total), {len(by_sha)} shas")
 for x in unpinned:
     print("UNPINNED:", x)
 for x in gone:
     print("GONE:", x)
-for x in older:
-    print("note:", x)
 for x in fail:
     print("FAIL:", x)
 bad = fail + [f"unpinned {x}" for x in unpinned] + [f"gone {x}" for x in gone]

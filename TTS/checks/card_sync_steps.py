@@ -40,6 +40,11 @@
    edits; none when nothing is left, a lane failed, another live run's lane reads it (queued, waiting), after
    CHAIN_IDLE runs without progress or CHAIN_MAX runs (said in the summary), or on a dry run. A run whose main lane
    waits a window also looks after its data lane (Chain after the data, the same step), so a re-parse goes on at once.
+10. One main lane per guarded push (P-2; faked gh): Guards' fixes skips a push's main lane when its own guards run has
+   fixes to land (card-guards.yml's "Fixes to land"; unfinished, or done with Follow up started), the schedule's and a
+   chain's while any guards run with fixes is unfinished; it goes when the guards have nothing to land, failed to start
+   Card sync, were cancelled, are absent or unreadable. card-guards.yml's side: the names Card sync reads, Plan's fixes
+   (a push in on mode with writes), Follow up's dispatch with fixes whether Land landed or ran (tried 3 times).
 Exits 1 when a case gets the wrong answer.
 """
 import json
@@ -54,6 +59,7 @@ import time
 from checks_env import REPO
 
 WORKFLOW = os.path.join(REPO, ".github/workflows/card-sync.yml")
+GUARDS = os.path.join(REPO, ".github/workflows/card-guards.yml")
 BASH = ["bash", "--noprofile", "--norc", "-eo", "pipefail"]           # GitHub's `shell: bash`
 FAILED = []
 LANE = "Bake and save"                                              # the main job's name (its gate's cursor)
@@ -137,10 +143,10 @@ def _step(lines: list, at: int, anchors: dict) -> tuple:
     return step, j
 
 
-def load() -> dict:
+def load(path: str = WORKFLOW) -> dict:
     """{"env": the workflow's, "run_name", "jobs": {id: {"steps", "env", "timeout", "concurrency", "outputs", "name",
     "if", "needs", "environment"}}}; aliases resolved."""
-    lines = open(WORKFLOW, encoding="utf-8").read().split("\n")
+    lines = open(path, encoding="utf-8").read().split("\n")
     flow = {"env": {}, "jobs": {}}
     anchors: dict = {}
     job, jobs = None, False                   # nothing before `jobs:` is a job's (the push paths look like steps)
@@ -161,7 +167,8 @@ def load() -> dict:
             i += 1
             continue
         if x.startswith("    timeout-minutes:"):
-            job["timeout"] = int(_value(x.split(":", 1)[1]))
+            value = _value(x.split(":", 1)[1])
+            job["timeout"] = int(value) if value.isdigit() else value
         if x == "    env:":
             job["env"], i = _mapping(lines, i, 4)
             continue
@@ -1180,6 +1187,132 @@ def guard_cases(flow: dict) -> None:
               "guard events: found by the guarded push, the other commit's passed over, a missing one warned" + ("" if code == 0 else f"\n{text}"))
 
 
+def lane_cases(flow: dict) -> None:
+    """One main lane per guarded push (P-2): the jobs' ifs; Guards' fixes on faked guards runs; card-guards.yml's side
+    (the step names Card sync reads, Plan's fixes, Follow up's dispatch with fixes, landed or not)."""
+    jobs = flow["jobs"]
+    timer, quiet, main, early = jobs["timer"], jobs["quiet"], jobs["main"], jobs["chain-data"]
+    mark = step(timer, "guards")
+    t = lambda other="", guards="": {"result": "success", "outputs": {"other": other, "guards": guards}}  # noqa: E731
+    q = lambda result, guards="": {"result": result, "outputs": {"guards": guards}}  # noqa: E731
+    ctx = lambda e, inputs=None, job="", **needs: {  # noqa: E731
+        "github": {"event_name": e, "job": job, "run_attempt": "1"}, "inputs": inputs or {}, "needs": needs, "steps": {},
+        "functions": {"cancelled": lambda: False, "startsWith": starts}}
+    wait = {"dry_run": False, "chain": "wait 1 1"}
+    want = [(("push", None, t(), q("success")), True), (("push", None, t(), q("success", "51")), False),
+            (("schedule", None, t(guards="51"), q("skipped")), False), (("schedule", None, t(), q("skipped")), True),
+            (("workflow_dispatch", {"chain": "now 1 0"}, t(guards="51"), q("skipped")), False),
+            (("workflow_dispatch", wait, t(), q("success", "51")), False),
+            (("workflow_dispatch", {"bake": "pending"}, {"result": "skipped", "outputs": {}}, q("skipped")), True)]
+    got = [bool(evaluate(main["if"], ctx(e, i, timer=n, quiet=w))) for (e, i, n, w), _ in want]
+    check(got == [w for _, w in want], f"main: skipped while guards' fixes are to land (the push's at its window's end, "
+          f"any unfinished for the schedule and a chain); the guards' own dispatch goes ({got})")
+    got = [bool(evaluate(quiet["if"], ctx("workflow_dispatch", wait, timer=n))) for n in (t(), t(guards="51"))]
+    got += [bool(evaluate(early["if"], ctx("workflow_dispatch", wait, timer=n))) for n in (t(), t(guards="51"))]
+    check(got == [True, False, True, False], f"a chained wait with guards' fixes found: no window, no early chain ({got})")
+    got = [bool(evaluate(mark["if"], ctx(e, job=j))) for e, j in (("push", "timer"), ("schedule", "timer"),
+                                                                  ("workflow_dispatch", "timer"), ("push", "quiet"),
+                                                                  ("workflow_dispatch", "quiet"))]
+    check(got == [False, True, True, True, True] and step(quiet, "guards") is mark and quiet["outputs"] == {"guards": "${{ steps.guards.outputs.run }}"}
+          and timer["outputs"]["guards"] == "${{ steps.guards.outputs.run }}",
+          f"Guards' fixes: a push's at its window's end (Quiet window), the schedule's and a chain's at the start ({got})")
+
+    guards = load(GUARDS)
+    check(any(s.get("name") == mark["env"]["FIXES"] and s.get("if") == "always() && steps.plan.outputs.fixes == 'true'" for s in guards["jobs"]["check"]["steps"])
+          and step(guards["jobs"]["post"], "follow").get("name") == mark["env"]["FOLLOW"]
+          and guards["jobs"]["check"]["outputs"].get("fixes") == "${{ steps.plan.outputs.fixes }}",
+          "card-guards.yml: the check job's mark and the post job's Follow up carry the names Card sync reads")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        fake = os.path.join(tmp, "bin")
+        calls = os.path.join(tmp, "calls")
+        write(os.path.join(fake, "gh"), "#!/bin/bash\n"
+              f'echo "$*" >> "{calls}"\n'
+              'q=""; prev=""; path=""; for a in "$@"; do [ "$prev" = --jq ] && q=$a; case $a in repos/*) path=$a;; esac; prev=$a; done\n'
+              'if [ "$1" = workflow ]; then n=$(grep -c "^workflow run" "' + calls + '"); [ "$n" -gt "${FAKE_FAILS:-0}" ]; exit; fi\n'
+              '[ -n "$FAKE_FAIL" ] && exit 1\n'
+              'case $path in\n'
+              '  */card-guards.yml/runs*) jq -r "$q" <<< "$FAKE_GUARDS" ;;\n'
+              '  */jobs) id=$(sed -n "s|.*/runs/\\([0-9]*\\)/jobs|\\1|p" <<< "$path"); jq -r "$q" "$FAKE_JOBS/$id.json" ;;\n'
+              'esac\n')
+        write(os.path.join(fake, "sleep"), "#!/bin/bash\n")
+        for name in ("gh", "sleep"):
+            os.chmod(os.path.join(fake, name), 0o755)
+        jobs_dir = os.path.join(tmp, "jobs")
+        st = lambda name, conclusion: {"name": name, "status": "completed" if conclusion else "in_progress", "conclusion": conclusion}  # noqa: E731
+        check_job = lambda fixes: {"name": "check", "status": "completed", "steps": [  # noqa: E731
+            st("Plan for the post job", "success"), st("Fixes to land", "success" if fixes else "skipped")]}
+        for rid, doc in ((51, [check_job(True), {"name": "post", "status": "waiting"}]),                    # in its window
+                         (52, [check_job(True), {"name": "post", "status": "in_progress", "steps": [st("Land", None)]}]),
+                         (53, [check_job(False), {"name": "post", "status": "waiting"}]),                   # report, or no writes
+                         (54, [check_job(True), {"name": "post", "status": "completed", "steps": [st("Land", "success"), st("Follow up", "success")]}]),
+                         (55, [check_job(True), {"name": "post", "status": "completed", "steps": [st("Land", "failure"), st("Follow up", "failure")]}]),
+                         (56, [check_job(True), {"name": "post", "status": "completed", "conclusion": "cancelled", "steps": []}])):
+            write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": doc}))
+        stamp = lambda minutes: time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() - minutes * 60))  # noqa: E731
+        run = lambda rid, status, minutes=31: {"id": rid, "status": status, "created_at": stamp(minutes)}  # noqa: E731
+        sha = "c" * 40
+        cases = [  # (SHA, guards runs, the run held by, what)
+            (sha, [run(51, "in_progress")], "51", "the push's guards waiting to land fixes: skipped"),
+            (sha, [run(52, "in_progress")], "52", "the push's guards landing: skipped"),
+            (sha, [run(53, "in_progress")], "", "the push's guards with nothing to land (report mode, no writes): goes"),
+            (sha, [run(54, "completed")], "54", "the push's guards done, Follow up started Card sync: skipped"),
+            (sha, [run(55, "completed")], "", "the push's guards failed to start Card sync: goes (no bake lost)"),
+            (sha, [run(56, "completed")], "", "the push's guards cancelled before Follow up: goes"),
+            (sha, [], "", "no guards run for the push (CARD_GUARDS off): goes"),
+            ("", [run(54, "completed"), run(51, "in_progress")], "51", "the schedule: an unfinished guards run with fixes: skipped"),
+            ("", [run(54, "completed")], "", "the schedule: finished guards runs are passed over: goes"),
+            ("", [run(51, "in_progress", 150)], "", "the schedule: a guards run over two hours old is passed over: goes"),
+        ]
+        env = {}
+        for want_sha, runs, want, what in cases:
+            if os.path.exists(calls):
+                os.remove(calls)
+            env = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "SHA": want_sha, "FAKE_JOBS": jobs_dir,
+                   "FAKE_GUARDS": json.dumps({"workflow_runs": runs}), "GITHUB_SERVER_URL": "https://github.com",
+                   "FIXES": mark["env"]["FIXES"], "FOLLOW": mark["env"]["FOLLOW"]}
+            code, text, out = run_step(timer, "guards", tmp, env, tmp)
+            asked = open(calls).read() if os.path.exists(calls) else ""
+            ok = code == 0 and out.get("run", "") == want and ((f"head_sha={want_sha}" in asked) == bool(want_sha))
+            check(ok, f"Guards' fixes: {what} -> {out.get('run') or 'none'}" + ("" if ok else f"\n{text}\n{asked}"))
+        code, text, out = run_step(timer, "guards", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
+        check(code == 0 and "run" not in out and "were not read" in text, "Guards' fixes: runs not read -> none (the main lane goes on)")
+
+        # card-guards.yml: Plan's fixes and Follow up's dispatch
+        gplan, follow = step(guards["jobs"]["check"], "plan"), step(guards["jobs"]["post"], "follow")
+        out_dir = os.path.join(tmp, "guards")
+        for event, mode, summ, want, what in (
+                ("push", "on", {"told": 0, "writes": 2}, ("true", "true"), "a push with writes (on): fixes"),
+                ("push", "report", {"told": 1, "writes": 2}, ("true", None), "report mode: told, no fixes"),
+                ("push", "on", {"told": 1, "writes": 0}, ("true", None), "told only: no fixes"),
+                ("workflow_dispatch", "on", {"told": 0, "writes": 2}, ("true", None), "a landing dispatch: no fixes (no push run waits)")):
+            write(os.path.join(out_dir, "summary.json"), json.dumps({**summ, "card_errors": 0}))
+            code, text, out = run_step(guards["jobs"]["check"], "plan", tmp, {"OUT": out_dir, "MODE": mode, "GITHUB_EVENT_NAME": event}, tmp)
+            check(code == 0 and (out.get("land"), out.get("fixes")) == want, f"guards Plan: {what} -> land={out.get('land')} fixes={out.get('fixes')}"
+                  + ("" if code == 0 else f"\n{text}"))
+        cond = lambda ran, fixes: bool(evaluate(follow["if"], {  # noqa: E731
+            "steps": {"land": {"outputs": {"ran": ran}}}, "needs": {"check": {"outputs": {"fixes": fixes}}},
+            "functions": {"always": lambda: True}}))
+        check([cond("true", ""), cond("", "true"), cond("", "")] == [True, True, False] and "steps.plan.outputs.fixes" in gplan["run"] + str(guards["jobs"]["check"]["outputs"]),
+              "guards Follow up: after Land, or with fixes even when Land never ran")
+        for env_, fails, want_runs, want_code, what in (
+                ({"SHA": "a" * 40}, 0, 1, 0, "landed: Card sync started"),
+                ({"FIXES": "true"}, 0, 1, 0, "fixes, nothing landed: Card sync still started (the push's main lane skipped)"),
+                ({"FIXES": "true", "SHA": "a" * 40}, 2, 3, 0, "fixes: tried again, started on the third"),
+                ({"FIXES": "true"}, 3, 3, 1, "fixes, never started: red, said"),
+                ({}, 0, 0, 0, "nothing landed, no fixes: nothing started")):
+            if os.path.exists(calls):
+                os.remove(calls)
+            write(os.path.join(out_dir, "report-landed.md"), "landed\n")
+            e = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "OUT": out_dir, "MODE": "on", "SHA": "", "ALREADY": "0",
+                 "COMMENT": "7", "TOLD_BEFORE": "", "FIXES": "", "LAND_RAN": "", "FAKE_FAILS": str(fails), "GITHUB_RUN_ATTEMPT": "1", **env_}
+            code, text, out = run_step(guards["jobs"]["post"], "follow", tmp, e, tmp)
+            asked = open(calls).read().splitlines() if os.path.exists(calls) else []
+            starts_ = [a for a in asked if a.startswith("workflow run card-sync.yml") and "bake=pending" in a]
+            ok = code == want_code and len(starts_) == want_runs and not any("PATCH" in a for a in asked)
+            check(ok, f"guards Follow up: {what} ({len(starts_)} dispatches, no comment edit without Land)" + ("" if ok else f"\n{text}\n{asked}"))
+
+
 def main():
     for tool in ("git", "bash", "jq"):
         if not shutil.which(tool):
@@ -1196,6 +1329,7 @@ def main():
     records_cases(flow)
     guard_cases(flow)
     chain_cases(flow)
+    lane_cases(flow)
     print(f"{len(FAILED)} failed" if FAILED else "all passed")
     sys.exit(1 if FAILED else 0)
 
