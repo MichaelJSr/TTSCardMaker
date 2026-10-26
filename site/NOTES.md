@@ -795,9 +795,16 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   cancels (a `click` capture, not pointerdown, so the repaint never moves or removes what was pressed: a box, ✕,
   Select or a tile still gets the click). Opening, closing and unpinning repaint the tray in place; only a drop re-renders the grid. Sticky under the
   bar on wide screens; on phones (tall bar) it scrolls with the page, and sticks over the bar while **Select** is on
-  (a tap on a tile selects it; Done or Esc ends it). The boxes wrap into columns (`minmax(180px, 1fr)`, 150px on phones: 5 at 1280 px, 2
-  at 390 px); past about 3.4 rows or 40% of the screen the tray scrolls inside (its scroll kept over redraws), and a
-  drag in its top or bottom 40 px scrolls it (inline.js `edgeScroll`: Safari doesn't autoscroll overflow boxes).
+  (a tap on a tile selects it; Done or Esc ends it). The boxes wrap into columns (`minmax(150px, 1fr)`: 9 boxes and + Pin on one row at 1920 px, 2 columns
+  at 390 px); past about 3.4 rows or 40% of the screen the tray scrolls inside (its scroll kept over redraws; no
+  overscroll-behavior, so at its ends the wheel scrolls the page). At 980 px and below the boxes are shorter (name, then
+  kind · count) and the cap is about 2.5 rows or 30%. A drag in its top or bottom 40 px (a sixth of a shorter tray) scrolls it, up to 5 px a frame
+  (inline.js `edgeScroll`: Safari doesn't autoscroll overflow boxes; Chrome does in the outer ~20 px, so a frame only
+  tops up what Chrome moved; one rAF loop; leaving the window stops it), and the box under the resting pointer is lit as
+  it scrolls (`relight`), so the lit box is the one a drop hits. What follows the sticky tray gets its height as
+  `scroll-margin-top` (tray.js `padTop`, `--tray-pad`), so Tab never leaves a focused card under it (not the page's
+  scroll-padding: focus inside the sticky tray would scroll the page to the top); past nine boxes a "Skip to cards" button (shown on
+  focus) jumps past their Tab stops.
 
 ## 25. Ratings (2026-10-24)
 - File `site/Card Ratings.json` (AutoCroissant `card_edits.CardRatings`, `dump_ratings`): `{about, cards: {"Card Name": [{date

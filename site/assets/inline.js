@@ -352,20 +352,38 @@ const boxOf = r => (r?.classList.contains("bucket-wrap") ? r.querySelector(".buc
 export const targetOf = el => (el.dataset.pin != null
   ? { key: el.dataset.pinK, value: el.dataset.pinV }
   : { key: el.closest(".drop-list").dataset.drop, value: el.dataset.value });
-// Edge autoscroll for the tray (it scrolls past ~3 rows of boxes): a drag in its top or bottom EDGE px scrolls it,
-// faster nearer the edge. Done here, not left to the browser: Safari doesn't autoscroll overflow boxes in a drag.
-const EDGE = 40;
-let roll = null;                                   // {tray, v: px a frame, until: ms}: a dragover keeps it going
+// Edge autoscroll for the tray (it scrolls past ~3 rows of boxes): a drag in its top or bottom EDGE px (a sixth of a short tray) scrolls it,
+// faster nearer the edge up to MAXV px a frame. Safari doesn't autoscroll overflow boxes in a drag; Chrome does in the
+// outer ~20 px, so while the browser scrolls it at least as fast, this one waits (the speed is the larger of the two, not the sum).
+const EDGE = 40, MAXV = 5;
+let roll = null, raf = 0;                          // roll {tray, v: px a frame, x, y: the pointer, at: scrollTop after the last frame, native: when the browser last did, until: ms}
 function edgeScroll(e) {
   const tray = document.querySelector(".browse > section > .tray"), r = tray?.getBoundingClientRect();
-  const v = !r || tray.scrollHeight <= tray.clientHeight || e.clientX < r.left || e.clientX > r.right ? 0
-    : e.clientY >= r.top && e.clientY < r.top + EDGE ? -Math.ceil((r.top + EDGE - e.clientY) / 4)
-    : e.clientY <= r.bottom && e.clientY > r.bottom - EDGE ? Math.ceil((e.clientY - (r.bottom - EDGE)) / 4) : 0;
-  if (!v) { roll = null; return; }
-  const on = !!roll; roll = { tray, v, until: performance.now() + 500 };   // dragover repeats while the pointer rests (~350 ms)
-  if (!on) requestAnimationFrame(rollOn);
+  const edge = Math.min(EDGE, r ? r.height / 6 : 0);   // a short tray (phones): smaller zones, the middle rows stay still
+  const d = !r || tray.scrollHeight <= tray.clientHeight || e.clientX < r.left || e.clientX > r.right ? 0
+    : e.clientY >= r.top && e.clientY < r.top + edge ? e.clientY - (r.top + edge)
+    : e.clientY <= r.bottom && e.clientY > r.bottom - edge ? e.clientY - (r.bottom - edge) : 0;
+  if (!d) { roll = null; return; }                 // a queued frame then stops itself: one loop at most (raf)
+  const v = Math.sign(d) * Math.min(MAXV, Math.ceil(Math.abs(d) / 6));
+  const go = roll?.tray === tray;
+  roll = { tray, v, x: e.clientX, y: e.clientY, at: go ? roll.at : tray.scrollTop, native: go ? roll.native : -1e9, until: performance.now() + 500 };   // dragover repeats while the pointer rests
+  if (!raf) raf = requestAnimationFrame(rollOn);
 }
-function rollOn(t) { if (!roll || t > roll.until || !roll.tray.isConnected) { roll = null; return; } roll.tray.scrollTop += roll.v; requestAnimationFrame(rollOn); }
+function rollOn(t) {
+  raf = 0;
+  if (!roll || t > roll.until || !roll.tray.isConnected) { roll = null; return; }
+  const { tray, v } = roll, moved = (tray.scrollTop - roll.at) * Math.sign(v);
+  if (moved >= Math.abs(v)) roll.native = t;      // the browser scrolls it at least as fast: leave it to the browser a while
+  else if (!(t - roll.native < 150)) tray.scrollTop = roll.at + v;
+  roll.at = tray.scrollTop;
+  relight(roll.x, roll.y);                         // the boxes moved under a resting pointer: light the one a drop would hit
+  raf = requestAnimationFrame(rollOn);
+}
+function relight(x, y) {
+  const t = boxOf(document.elementFromPoint(x, y)?.closest(DROP));
+  for (const c of document.querySelectorAll(".tray .over")) if (c !== t) c.classList.remove("over");
+  if (t?.closest(".tray")) t.classList.add("over");
+}
 const dragOff = () => { roll = null; dragged = null; document.body.classList.remove("dragging-cards"); for (const c of document.querySelectorAll(".drop-list .over, .tray .over")) c.classList.remove("over"); };
 function onDragStart(e) {
   const t = e.target.closest?.(".tile[draggable]"); if (!t) return;
@@ -380,7 +398,10 @@ function onDragOver(e) {                           // dragenter too: Safari and 
   const t = dragging() && boxOf(e.target.closest?.(DROP)); if (!t) return;
   e.preventDefault(); e.dataTransfer.dropEffect = "link"; t.classList.add("over");
 }
-function onDragLeave(e) { const r = e.target.closest?.(DROP); if (r && !r.contains(e.relatedTarget)) boxOf(r)?.classList.remove("over"); }
+function onDragLeave(e) {
+  if (!e.relatedTarget) roll = null;               // left the window: no scrolling on (a dragenter starts it again)
+  const r = e.target.closest?.(DROP); if (r && !r.contains(e.relatedTarget)) boxOf(r)?.classList.remove("over");
+}
 function onDrop(e) {
   const t = dragging() && boxOf(e.target.closest?.(DROP)); if (!t) return;
   e.preventDefault();

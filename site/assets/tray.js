@@ -67,7 +67,8 @@ export function trayHtml(pins, counts, { form = null, selecting = false } = {}) 
       + `<button type="button" class="ghost icon b-x" data-action="tray-unpin" data-i="${i}" aria-label="Unpin ${esc(p.v)}">✕</button>${renameButton(p.k, p.v, "ghost icon b-rn")}</div>`;
   };
   const tail = form ? formHtml(form) : pins.length < MAX_PINS ? `<button type="button" class="bucket add" data-action="tray-add">+ Pin</button>` : "";
-  return `<div class="tray${selecting ? " selecting" : ""}" role="group" aria-label="Pinned boxes">${pins.map(box).join("")}${tail}</div>`;
+  const skip = pins.length > KEYED ? `<button type="button" class="tray-skip" data-action="tray-skip">Skip to cards</button>` : "";   // 3 Tab stops a box: shown on focus
+  return `<div class="tray${selecting ? " selecting" : ""}" role="group" aria-label="Pinned boxes">${skip}${pins.map(box).join("")}${tail}</div>`;
 }
 
 // ---- in the page
@@ -76,7 +77,18 @@ let pins = [];                                     // read once, written on chan
 let form = null;                                   // the open pin form: {k, v}
 let selecting = false;                             // as renderCards last drew it
 let trayTop = 0, keep = false;                     // the tray's own scroll, kept over a redraw (it scrolls past ~3 rows)
-const restore = () => { const t = A.view.querySelector(".browse > section > .tray"); if (t && t.scrollTop !== trayTop) t.scrollTop = trayTop; };
+const trayEl = () => A.view.querySelector(".browse > section > .tray");
+// --tray-pad: what the sticky tray covers, the scroll-margin-top of what comes after it (style.css), so a card focused
+// by Tab isn't left under it. Not the page's scroll-padding: focus inside the sticky tray would then scroll the page up.
+let sized = null;                                  // a ResizeObserver, made on first use (node imports the helpers above)
+function padTop() {
+  const t = trayEl(), cs = t && getComputedStyle(t);
+  t?.parentElement.style.setProperty("--tray-pad", cs.position === "sticky" ? `${Math.ceil(parseFloat(cs.top) + t.offsetHeight) + 8}px` : "0px");
+}
+const restore = () => {
+  const t = trayEl(); if (t && t.scrollTop !== trayTop) t.scrollTop = trayTop;
+  sized ??= new ResizeObserver(padTop); sized.disconnect(); if (t) sized.observe(t); padTop();
+};
 const save = () => { try { localStorage.setItem(PIN_KEY, JSON.stringify(pins)); } catch { /* storage full: kept for this page */ } };
 /** The tray for renderCards (edit mode, Grid); sel: the Select toggle. */
 export function html(sel = selecting) {
@@ -119,6 +131,10 @@ export const actions = {
   "tray-add": () => { form = { k: form?.k || "series", v: "" }; paint(true); },
   "tray-unpin": el => { pins = removePin(pins, +el.dataset.i); save(); paint(); },
   "tray-drop": el => drop(+el.dataset.pin),
+  "tray-skip": el => {                             // to the first control after the tray (Sort), as Tab would after its last box
+    const t = el.closest(".tray"), all = [...t.parentElement.querySelectorAll("a[href], button, input, select, textarea, [tabindex]")];
+    all.find(x => !t.contains(x) && x.tabIndex >= 0 && !x.disabled && x.getClientRects().length)?.focus();
+  },
 };
 /** Once at boot, before app.js's document listeners. api = {view, editor, selected (Set), drop (inline.dropOn), toast,
  *  cards: () => S.all}. */
