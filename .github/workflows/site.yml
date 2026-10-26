@@ -73,7 +73,8 @@ jobs:
           UV_COMPILE_BYTECODE: "1"
 
       # esbuild bundles the JS (app.js and the chunks loaded on first use) with source maps and minifies the CSS
-      # (build_site.py bundle, minify). Exact version: same source, same bytes.
+      # (build_site.py bundle, minify); node checks index.html's first screen against grid.js (first_screen). Exact
+      # version: same source, same bytes.
       - run: npm install --prefix "$RUNNER_TEMP/esbuild" --no-save --no-audit --no-fund esbuild@0.28.2
 
       - id: pages

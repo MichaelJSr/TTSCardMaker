@@ -168,7 +168,7 @@ icons in `site/.cache/icons` (named with `ICON_VERSION`: bump it when the icon s
 with `VARIANT_VERSION`, drawn by the icon font's build script, `MDW/Fonts/stoogedings-src/build_stoogedings.py`, which
 needs that folder's `requirements.txt`: without it the build warns and variants show as the plain icon), so an unchanged image costs nothing, and `site/dist` gets hardlinks to the cached files (copies
 where links fail). The edit mock-up's fonts get WOFF2 copies in `fonts/` (every glyph kept; cached by blob in
-`site/.cache/woff2`, NOTES §32); the browser falls back to the file on raw.githubusercontent.com without one. The grid loads only `data/cards.json`; `analytics.json` (the Balance section and blocks,
+`site/.cache/woff2`, NOTES §32); the browser falls back to the file on raw.githubusercontent.com without one. The first screen loads only `data/cards.json`; `analytics.json` (the Balance section and blocks,
 computed by `site/build/analytics.py` from the same bot data) loads when the Stats page or a creature, minion or card
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
@@ -395,7 +395,7 @@ public too. Run it by hand from the Actions tab with a card name, an edit such a
 
 ```
 pip install -r site/build/requirements.txt
-python site/build/build_site.py          # writes site/dist (uses local PNGs, caches images in site/.cache/img; ESBUILD=<esbuild> to bundle)
+python site/build/build_site.py          # writes site/dist (uses local PNGs, caches images in site/.cache/img; node for the first screen, ESBUILD=<esbuild> to bundle)
 python -m http.server -d site/dist 8000  # then open http://localhost:8000
 ```
 
