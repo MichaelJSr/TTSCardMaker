@@ -1416,7 +1416,7 @@ $("#random").addEventListener("click", () => actions["random-from-list"]());
 $("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (Changes tabs: next tab; a stat distribution: more values)"], ["d", "Add to / remove from deck"],
   ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"],
-  ...(editing() ? [["1–9", "With cards selected: drop them on that pinned box"]] : []), ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
+  ...(editing() ? [["1–9", "With cards selected: drop them on that pinned box (the first nine)"]] : []), ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);
 $("#keys").addEventListener("click", showKeys);
 $("#account").addEventListener("click", () => act("edit-hub"));
 

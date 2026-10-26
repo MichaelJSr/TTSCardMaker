@@ -699,11 +699,13 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .tok-picker.names { grid-template-columns: minmax(0, 1fr) auto; }
 .tok-picker.names .tp-pic { display: none; }
 .tp-value { font: inherit; }
-.tray { position: sticky; top: 56px; z-index: 6; display: flex; gap: 10px; overflow-x: auto; padding: 8px 0 10px; background: var(--page); }
+/* the pinned tray: boxes in rows and columns; past ~3 rows (or 40% of the screen) it scrolls inside, the 4th row peeking out */
+.tray { --row: 76px; position: sticky; top: 56px; z-index: 6; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px;
+  max-height: min(40vh, calc(3.4 * var(--row) + 3 * 10px + 18px)); overflow-y: auto; overscroll-behavior: contain; padding: 8px 0 10px; background: var(--page); }
 @media (min-width: 861px) and (max-width: 980px) { .tray { top: 104px; } }   /* under the two-row bar */
-@media (max-width: 860px) { .tray { position: static; } .tray.selecting { position: sticky; top: 0; z-index: 21; } }   /* the bar is tall: over it only while selecting */
-.bucket-wrap { position: relative; flex: 0 0 auto; display: flex; }
-.bucket { min-width: 150px; max-width: 240px; min-height: 64px; padding: 8px 54px 8px 12px; border: 2px dashed var(--border-strong); border-radius: 12px;
+@media (max-width: 860px) { .tray { position: static; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } .tray.selecting { position: sticky; top: 0; z-index: 21; } }   /* the bar is tall: over it only while selecting */
+.bucket-wrap { position: relative; display: flex; min-width: 0; }
+.bucket { flex: 1 1 auto; min-width: 0; min-height: 64px; padding: 8px 54px 8px 12px; border: 2px dashed var(--border-strong); border-radius: 12px;
   display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left; background: var(--surface); color: var(--ink); }
 .bucket .b-kind { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
 .bucket .b-value { max-width: 100%; font-size: 16px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -713,10 +715,10 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .bucket-wrap .b-rn { position: absolute; right: 26px; top: 2px; padding: 2px 6px; }
 body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 .bucket.over { border-style: solid; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
-.bucket.add { flex: 0 0 auto; align-items: center; min-width: 110px; padding-right: 12px; color: var(--muted); }
-.pin-form { flex: 0 0 auto; display: flex; gap: 6px; align-items: center; min-height: 64px; padding: 0 10px; border: 2px dashed var(--border-strong); border-radius: 12px; }
+.bucket.add { align-items: center; min-width: 0; padding-right: 12px; color: var(--muted); }
+.pin-form { grid-column: 1 / -1; justify-self: start; max-width: 100%; display: flex; gap: 6px; align-items: center; min-height: 64px; padding: 0 10px; border: 2px dashed var(--border-strong); border-radius: 12px; }
 .pin-form select { width: auto; }
-.pin-form input { width: 180px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); }
+.pin-form input { width: 180px; min-width: 0; flex: 0 1 auto; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); }
 
 /* the parts editor: one box per PSD text layer (edit.js, parts.js) */
 .ein.parts { display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 8px; min-width: 0; }

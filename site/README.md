@@ -112,7 +112,7 @@ Retired (moved to MDW/The Morgue), Unfinished (moved to MDW/Unfinished) or Delet
 Top right: **Sign in** (a GitHub token, or your login and password once you set one; see Editing) becomes your login
 once signed in; it opens the editor hub (your batch, your profile, your password, sign out). Keyboard: `/` search, `Esc` close, `←`/`→` previous/next card (on a focused stat distribution: more values), `↑`/`↓` image versions,
 `d` add to deck, `c` copy link, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections (signed in,
-with cards selected: `1`–`9` drop them on that pinned box), `?` help. The single-key
+with cards selected: `1`–`9` drop them on the first nine pinned boxes), `?` help. The single-key
 shortcuts are off while an edit form is open (a card's edit dialog or the profile editor) and while an inline control or a
 stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog.
 

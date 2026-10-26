@@ -783,9 +783,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   closes on a press outside it, with its field (`tokens.dismiss`, called by inline.js `cancel`/`commit`), and when its
   field is gone. `#ef-dup_of` keeps its card datalist (a card picker, not a name).
 - **The pinned tray (item 17)**, `assets/tray.js`: edit mode, Cards grid. Pins in `localStorage["edit-pins"]`
-  (`[{k, v, s?}]`, at most 9, `readPins` drops junk, repeats by `nameKey`, a subseries without its series), never
+  (`[{k, v, s?}]`, at most 100 since 2026-10-25 (9 before), `readPins` drops junk, repeats by `nameKey`, a subseries without its series), never
   published. A box is a button (`data-pin/k/v/s`, "Subseries · Mario", the card count from `S.all`, so staged edits
-  count) with its ✕ beside it, not inside (no nested buttons). Drag onto it, tap it with cards selected, or press 1-9
+  count) with its ✕ beside it, not inside (no nested buttons). Drag onto it, tap it with cards selected, or press 1-9 (the first nine boxes; the rest have no key)
   (app.js keydown, after the `#edit-form` return, only with a selection and the tray on screen, Grid view; 1-6 still
   switch tabs otherwise; switching to Table clears the selection, which it can't show): all three
   call `inline.dropOn`. A subseries box stages only cards already in its series, as staged (`splitBySeries`, the rest
@@ -795,7 +795,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   cancels (a `click` capture, not pointerdown, so the repaint never moves or removes what was pressed: a box, ✕,
   Select or a tile still gets the click). Opening, closing and unpinning repaint the tray in place; only a drop re-renders the grid. Sticky under the
   bar on wide screens; on phones (tall bar) it scrolls with the page, and sticks over the bar while **Select** is on
-  (a tap on a tile selects it; Done or Esc ends it).
+  (a tap on a tile selects it; Done or Esc ends it). The boxes wrap into columns (`minmax(180px, 1fr)`, 150px on phones: 5 at 1280 px, 2
+  at 390 px); past about 3.4 rows or 40% of the screen the tray scrolls inside (its scroll kept over redraws), and a
+  drag in its top or bottom 40 px scrolls it (inline.js `edgeScroll`: Safari doesn't autoscroll overflow boxes).
 
 ## 25. Ratings (2026-10-24)
 - File `site/Card Ratings.json` (AutoCroissant `card_edits.CardRatings`, `dump_ratings`): `{about, cards: {"Card Name": [{date

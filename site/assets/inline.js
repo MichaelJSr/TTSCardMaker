@@ -352,7 +352,21 @@ const boxOf = r => (r?.classList.contains("bucket-wrap") ? r.querySelector(".buc
 export const targetOf = el => (el.dataset.pin != null
   ? { key: el.dataset.pinK, value: el.dataset.pinV }
   : { key: el.closest(".drop-list").dataset.drop, value: el.dataset.value });
-const dragOff = () => { dragged = null; document.body.classList.remove("dragging-cards"); for (const c of document.querySelectorAll(".drop-list .over, .tray .over")) c.classList.remove("over"); };
+// Edge autoscroll for the tray (it scrolls past ~3 rows of boxes): a drag in its top or bottom EDGE px scrolls it,
+// faster nearer the edge. Done here, not left to the browser: Safari doesn't autoscroll overflow boxes in a drag.
+const EDGE = 40;
+let roll = null;                                   // {tray, v: px a frame, until: ms}: a dragover keeps it going
+function edgeScroll(e) {
+  const tray = document.querySelector(".browse > section > .tray"), r = tray?.getBoundingClientRect();
+  const v = !r || tray.scrollHeight <= tray.clientHeight || e.clientX < r.left || e.clientX > r.right ? 0
+    : e.clientY >= r.top && e.clientY < r.top + EDGE ? -Math.ceil((r.top + EDGE - e.clientY) / 4)
+    : e.clientY <= r.bottom && e.clientY > r.bottom - EDGE ? Math.ceil((e.clientY - (r.bottom - EDGE)) / 4) : 0;
+  if (!v) { roll = null; return; }
+  const on = !!roll; roll = { tray, v, until: performance.now() + 500 };   // dragover repeats while the pointer rests (~350 ms)
+  if (!on) requestAnimationFrame(rollOn);
+}
+function rollOn(t) { if (!roll || t > roll.until || !roll.tray.isConnected) { roll = null; return; } roll.tray.scrollTop += roll.v; requestAnimationFrame(rollOn); }
+const dragOff = () => { roll = null; dragged = null; document.body.classList.remove("dragging-cards"); for (const c of document.querySelectorAll(".drop-list .over, .tray .over")) c.classList.remove("over"); };
 function onDragStart(e) {
   const t = e.target.closest?.(".tile[draggable]"); if (!t) return;
   dragged = dragIds(t.dataset.open, A.selected);
@@ -362,6 +376,7 @@ function onDragStart(e) {
 }
 const dragging = () => !!dragged;                  // our tiles, not text or files dragged in
 function onDragOver(e) {                           // dragenter too: Safari and Firefox drop only on a target that cancelled it
+  if (dragging()) edgeScroll(e);
   const t = dragging() && boxOf(e.target.closest?.(DROP)); if (!t) return;
   e.preventDefault(); e.dataTransfer.dropEffect = "link"; t.classList.add("over");
 }

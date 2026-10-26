@@ -1,11 +1,11 @@
 // The pinned tray (edit mode, Cards grid): big boxes over the grid to drop cards on, pinned per browser (localStorage
-// "edit-pins", never published). Drag tiles onto a box, or select tiles and press its number or tap it; staging is
+// "edit-pins", never published). Drag tiles onto a box, or select tiles and press its number (the first nine) or tap it; staging is
 // inline.js dropOn, the one path for drops. A new kind of box (Kind, Item type, a ban group…) is one KINDS entry plus
 // edit.js stageMany support for its key. The helpers above `install` are pure (AutoCroissant tests/test_site_buckets.py).
 import { esc } from "./text.js";
 import { nameKey, NAME_MAX, renameButton } from "./edit.js";
 
-export const PIN_KEY = "edit-pins", MAX_PINS = 9;
+export const PIN_KEY = "edit-pins", MAX_PINS = 100, KEYED = 9;   // 100: a sanity cap; keys 1-9 reach the first nine
 export const KINDS = { series: { label: "Series" }, subseries: { label: "Subseries" }, author: { label: "Author" } };
 
 export const samePin = (a, b) => a.k === b.k && nameKey(a.v) === nameKey(b.v);
@@ -25,7 +25,7 @@ export function readPins(text) {
   }
   return out;
 }
-/** -> {pins} or {error}: "Already pinned", "At most 9 pins". */
+/** -> {pins} or {error}: "Already pinned", "At most 100 pins". */
 export function addPin(pins, pin) {
   if (pins.some(p => samePin(p, pin))) return { error: "Already pinned" };
   if (pins.length >= MAX_PINS) return { error: `At most ${MAX_PINS} pins` };
@@ -34,7 +34,7 @@ export function addPin(pins, pin) {
 export const removePin = (pins, i) => pins.filter((_, j) => j !== i);
 /** The pins after a Rename everywhere ({key, from, to}): the renamed value's. */
 export const renamedPins = (pins, { key, from, to }) => readPins(JSON.stringify(pins.map(p => (p.k === key && nameKey(p.v) === nameKey(from) ? { ...p, v: to } : p))));
-/** "1".."9" -> a pin index, when that many are pinned; else null. */
+/** "1".."9" -> a pin index (the first nine), when that many are pinned; else null. */
 export const pinOfKey = (key, pins) => (/^[1-9]$/.test(key) && +key <= pins.length ? +key - 1 : null);
 /** Cards carrying each pin's value (a subseries: in any series), in one pass. */
 export function countPins(pins, cards) {
@@ -60,10 +60,10 @@ export function formHtml(f) {
 export function trayHtml(pins, counts, { form = null, selecting = false } = {}) {
   if (!pins.length && !form) return "";
   const box = (p, i) => {
-    const n = cardsWord(counts[i] || 0), kind = kindText(p);
+    const n = cardsWord(counts[i] || 0), kind = kindText(p), keyed = i < KEYED;
     return `<div class="bucket-wrap"><button type="button" class="bucket" data-action="tray-drop" data-pin="${i}" data-pin-k="${p.k}" data-pin-v="${esc(p.v)}"
-      aria-label="${esc(`${kind} ${p.v}, ${n}. Drop cards here, or select cards and press ${i + 1}`)}"><span class="b-kind">${esc(kind)}</span>`
-      + `<span class="b-value">${esc(p.v)}</span><span class="b-meta">${n}</span><span class="kbd" aria-hidden="true">${i + 1}</span></button>`
+      aria-label="${esc(`${kind} ${p.v}, ${n}. Drop cards here, or select cards and ${keyed ? `press ${i + 1}` : "choose this box"}`)}"><span class="b-kind">${esc(kind)}</span>`
+      + `<span class="b-value" title="${esc(p.v)}">${esc(p.v)}</span><span class="b-meta">${n}</span>${keyed ? `<span class="kbd" aria-hidden="true">${i + 1}</span>` : ""}</button>`
       + `<button type="button" class="ghost icon b-x" data-action="tray-unpin" data-i="${i}" aria-label="Unpin ${esc(p.v)}">✕</button>${renameButton(p.k, p.v, "ghost icon b-rn")}</div>`;
   };
   const tail = form ? formHtml(form) : pins.length < MAX_PINS ? `<button type="button" class="bucket add" data-action="tray-add">+ Pin</button>` : "";
@@ -75,10 +75,13 @@ let A = null;                                      // {view, editor, selected, d
 let pins = [];                                     // read once, written on change
 let form = null;                                   // the open pin form: {k, v}
 let selecting = false;                             // as renderCards last drew it
+let trayTop = 0, keep = false;                     // the tray's own scroll, kept over a redraw (it scrolls past ~3 rows)
+const restore = () => { const t = A.view.querySelector(".browse > section > .tray"); if (t && t.scrollTop !== trayTop) t.scrollTop = trayTop; };
 const save = () => { try { localStorage.setItem(PIN_KEY, JSON.stringify(pins)); } catch { /* storage full: kept for this page */ } };
 /** The tray for renderCards (edit mode, Grid); sel: the Select toggle. */
 export function html(sel = selecting) {
   selecting = sel;
+  if (!keep) { keep = true; requestAnimationFrame(() => { if (keep) { keep = false; restore(); } }); }   // renderCards writes it in this task
   return trayHtml(pins, countPins(pins, A.cards()), { form, selecting });
 }
 export const pinned = () => pins.length;
@@ -86,6 +89,7 @@ function paint(focus = false) {                    // in place: the grid isn't r
   const sec = A.view.querySelector(".browse > section"); if (!sec) return;
   const old = sec.querySelector(":scope > .tray"), next = html();
   if (old) old.outerHTML = next; else if (next) sec.insertAdjacentHTML("afterbegin", next);
+  keep = false; restore();                         // now, so a focused form can still scroll itself into view
   sec.querySelector('.toolbar [data-action="tray-add"]')?.toggleAttribute("hidden", pins.length > 0);
   if (focus) sec.querySelector(".tray .pin-name")?.focus();
 }
@@ -124,6 +128,7 @@ export function install(api) {
   document.addEventListener("submit", e => { if (e.target.matches?.("[data-tray-form]")) { e.preventDefault(); submit(); } });
   document.addEventListener("suggest-pick", e => { if (e.target.matches?.(".tray .pin-name")) submit(); });
   document.addEventListener("value-renamed", e => { pins = renamedPins(pins, e.detail); save(); });   // edit.js: before it re-renders
+  document.addEventListener("scroll", e => { if (e.target.matches?.(".browse > section > .tray")) trayTop = e.target.scrollTop; }, true);
   document.addEventListener("input", e => { if (form && e.target.matches?.(".tray .pin-name")) form.v = e.target.value; });
   document.addEventListener("change", e => {        // the kind: the input's list follows
     if (!form || !e.target.matches?.(".tray .pin-kind")) return;
