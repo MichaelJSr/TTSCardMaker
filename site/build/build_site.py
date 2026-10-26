@@ -3595,6 +3595,8 @@ def main():
     page = stamp_of(template.encode("utf-8"))  # the page's stamp: build.txt's 2nd line (fresh.js)
     template = template.replace("<!--PAGE-->", page)
     banner = site_banner(cards, os.path.join(DIST, "og.jpg"))
+    with open(os.path.join(DIST, "og.jpg"), "rb") as fh:        # link previews cache the image by URL: a new image, a new URL
+        og_url = f"{SITE_URL}/og.jpg?v={stamp_of(fh.read())}" if SITE_URL else ""
     def og_tags(title, desc, url, image="", size=None, alt=""):
         tags = [f'<meta property="og:site_name" content="{SITE_NAME}">', '<meta property="og:type" content="website">',
                 f'<meta property="og:title" content="{html.escape(title)}">', f'<meta property="og:description" content="{html.escape(desc)}">',
@@ -3609,7 +3611,7 @@ def main():
                 tags.append(f'<meta property="og:image:alt" content="{html.escape(alt)}">')
         return "\n".join(tags)
     site_desc = "Every card, the rulebook, a starting-hand builder and stats."
-    site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))
+    site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", og_url, (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards)))
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
@@ -3617,7 +3619,7 @@ def main():
     os.makedirs(os.path.join(DIST, "d"))                # shared hands: d/#/deck/<code>
     with open(os.path.join(DIST, "d", "index.html"), "w", encoding="utf-8") as fh:
         fh.write(template.replace("<!--HEAD-->", '<base href="../">\n' + og_tags(f"Shared starting hand · {SITE_NAME}",
-                 "Open to see the hand, check it and save a copy.", f"{SITE_URL}/d/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630))))
+                 "Open to see the hand, check it and save a copy.", f"{SITE_URL}/d/" if SITE_URL else "", og_url, (1200, 630))))
     default_meta = ('<meta name="theme-color" content="#0d0d0d">', '<meta name="description" content="Every Impossibility Simulator card, the rulebook and a starting-hand builder.">')
     def share_page(parts, head):
         """DIST/<parts>/index.html: the app with its own <head> (<base> climbs back to the site root)."""
@@ -3647,7 +3649,7 @@ def main():
     for p in profiles:                            # u/<login>/: the favourite card as the preview image, else the site banner
         desc = previews[p["login"]]
         fav = by_id.get(p.get("favourite") or "")
-        image, size = og_image(fav) if fav and fav.get("img") else ((f"{SITE_URL}/og.jpg", (1200, 630)) if SITE_URL else ("", None))
+        image, size = og_image(fav) if fav and fav.get("img") else ((og_url, (1200, 630)) if SITE_URL else ("", None))
         share_page(("u", p["login"]), [
             og_tags(p["login"], desc, f"{SITE_URL}/u/{p['login']}/" if SITE_URL else "", image, size, f"{fav['name']} card" if fav else ""),
             f'<meta name="theme-color" content="{(fav or {}).get("color") or "#3987e5"}">',
@@ -3659,7 +3661,7 @@ def main():
             continue
         desc = previews[r["key"]]
         share_page(("u", r["key"]), [
-            og_tags(r["key"], desc, f"{SITE_URL}/u/{r['key']}/" if SITE_URL else "", f"{SITE_URL}/og.jpg" if SITE_URL else "", (1200, 630)),
+            og_tags(r["key"], desc, f"{SITE_URL}/u/{r['key']}/" if SITE_URL else "", og_url, (1200, 630)),
             '<meta name="theme-color" content="#3987e5">',
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(r["key"])} · {SITE_NAME}</title>',
@@ -3672,7 +3674,7 @@ def main():
         picks = [c for c in hand if c.get("img")][:OG_DECK_CARDS]
         pic = picks[0] if picks else (hand[0] if hand else None)
         desc, title = deck_text(d, by_id), f"{d['name']} by {d['owner']}"
-        image, size = og_image(pic) if pic and pic.get("img") else ((f"{SITE_URL}/og.jpg", (1200, 630)) if SITE_URL else ("", None))
+        image, size = og_image(pic) if pic and pic.get("img") else ((og_url, (1200, 630)) if SITE_URL else ("", None))
         alt = f"{pic['name']} card" if pic and pic.get("img") else ""
         if SITE_URL and len(picks) > 1:
             try:
