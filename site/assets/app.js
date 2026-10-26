@@ -414,7 +414,7 @@ function renderCards(r) {
   const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of [].concat(f(c))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };
   const kindCounts = count(base, kindOf), starCounts = count(base, c => c.stars), subCounts = count(base, c => c.subtype);
   const typeCounts = count(base, c => c.types || []);
-  const xs = k => csv(p, `x${k}`), removed = new Map();
+  const xs = k => G.xvals(p, k), removed = new Map();
   const removes = (k, v) => { const id = `${k}\u0001${v}`; if (!removed.has(id)) { const q = new URLSearchParams(p); q.set(`x${k}`, xs(k).filter(x => x !== v).join(","));
     removed.set(id, Math.max(0, filterCards(q).length - list.length)); } return removed.get(id); };   // without it, less with it
   const miss = csv(p, "missing"), xmiss = xs("missing"), missCounts = new Map(G.MISSING.map(([k, , , test]) => [k, list.filter(test).length]));   // what ticking it would show
@@ -449,7 +449,7 @@ function renderCards(r) {
   for (const [k, l] of G.MISSING) if (miss.includes(k)) active.push(["missing", l, k]);
   const xLabel = { kind: k => (KINDS.find(x => x[0] === k) || [k, KIND_PLURAL[k] || k])[1], stars: s => `${s}★`, sub: cap, types: t => t.replace(/_/g, " "),
     flags: f => FLAGS.find(x => x[0] === f)?.[1], missing: k => G.MISSING.find(x => x[0] === k)?.[1], series: v => v, subseries: v => v, author: v => `by ${v}` };
-  for (const k of G.X_KEYS) for (const v of xs(k)) { const l = xLabel[k](v); if (l) active.push([`x${k}`, `not ${l}`, v, true]); }   // an old flag: ignored
+  for (const k of G.X_KEYS) for (const v of xs(k)) { const l = xLabel[k](v); if (l) active.push([`x${k}`, `not ${l}`, G.ONE.has(k) ? undefined : v, true]); }   // an old flag: ignored
   if (p.get("month")) active.push(["month", `Changed ${St ? St.balance.monthName(p.get("month")) : p.get("month")}`]);
   if (p.get("change")) active.push(["change", St?.balance.CHANGE_LABEL[p.get("change")] || p.get("change")]);
   for (const [k, label] of LINKED) if (p.get(k)) active.push([k, label(p.get(k))]);

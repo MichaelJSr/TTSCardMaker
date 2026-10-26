@@ -62,10 +62,13 @@ export const X_TESTS = {
 };
 export const X_KEYS = [...Object.keys(X_TESTS), "flags"];
 const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
+export const ONE = new Set(["series", "subseries", "author"]);     // single-value selects: a comma is part of the name
+/** a key's excluded values */
+export const xvals = (p, k) => (ONE.has(k) ? (p.get(`x${k}`) ? [p.get(`x${k}`)] : []) : csv(p, `x${k}`));
 /** list without the cards the x-params name; flags: {flag: test(card)} */
 export function dropExcluded(list, p, flags = {}) {
   for (const k of X_KEYS) {
-    const vs = csv(p, `x${k}`), t = k === "flags" ? (c, v) => !!flags[v]?.(c) : X_TESTS[k];
+    const vs = xvals(p, k), t = k === "flags" ? (c, v) => !!flags[v]?.(c) : X_TESTS[k];
     if (vs.length) list = list.filter(c => !vs.some(v => t(c, v)));
   }
   return list;
