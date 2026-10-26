@@ -29,7 +29,8 @@ data), on a push of site code, daily, and on demand (Actions → Card browser �
   same series, text history with changes highlighted, and an image version viewer: every commit that changed the
   card's image, compared side by side with the current one, with the text of that time when it differs. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
-  that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history.
+  that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history; a
+  variant picture (one PSD's picture 2, 3...: a duplicate of picture 1) its own.
   Every date on the site is Pacific time, the bot's, whatever the viewer's time zone, and commits are dated when they
   landed (committer time), as the bot dates versions.
   A creature's or minion's **Balance** line compares its total stats (HP + DEF + ATK + SPD) with the others of its star
@@ -213,7 +214,7 @@ its chip shows it. A new author's cards go to `[cards]` under a new `# --- credi
 subseries, author or item type in the filter bar, on a pinned box, beside a card's chips) renames that value on every card
 that has it, hidden ones too: type the new name (the known ones are listed), the dialog says how many cards change, and
 **Add to batch** queues one edit per card. A name that exists merges them into it, in its spelling; an item type must be
-one of the Items/ folders; a duplicate's author follows its original. An author's `[people]` lines move too (and
+one of the Items/ folders; a duplicate's author follows its original (a variant picture keeps its own). An author's `[people]` lines move too (and
 `old = new` joins them when the name has none), so git-credited cards, rulebook pages and new PSDs follow; only cards
 they don't carry get their own edit. A pinned box or a filter on the old name follows the new one. (It replaces the bot's retired `/mass_replace`.) Every change lands in the batch bar at the bottom as a
 sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each with ↺ to take it back; the bar folds to one

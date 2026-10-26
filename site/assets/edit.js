@@ -77,6 +77,8 @@ const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", a
 const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
   : typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
 const clip = s => (s.length > 48 ? `${s.slice(0, 45).trimEnd()}…` : s);
+/** A duplicate whose author and ratings are its original's; a variant picture keeps its own. */
+const follows = c => !!c.dup && !c.variantOf;
 const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : f === "dup_of" ? v || ""
   : f === "creatures" ? (v?.length > 1 ? v.map(x => Object.fromEntries(STATS.map(k => [k, x[k] ?? null]))) : null) : v ?? null);
 /** A card's value of field f as the form shows it (byId resolves dup_of to the original's key). */
@@ -713,9 +715,9 @@ export function createEditor(app) {
       <button type="button" class="ghost" data-part-add${was ? " hidden" : ""}>+ Add an ability</button>`;
   }
   function partsTop(view, c) {                     // above the boxes: the data's age, the variant pictures, edits for gone layers
-    const pic = view.picture, first = pic?.cards?.[0], gone = P.goneEdits(view.rec);
+    const pic = view.picture, first = (c.dup && S.byId.get(c.dup)) || pic?.cards?.[0], gone = P.goneEdits(view.rec);
     return [view.rec.stale ? `<p class="part-warn">⚠ The card changed since this data was built: an edit made now may be skipped.</p>` : "",
-      pic ? `<p class="part-variant">Edit ${esc(c.name)}${pic.n > 1 && first ? ` · a variant of ${esc(first.name)}` : ""} · picture ${pic.n} of ${pic.cards.length} ${pic.cards.map(x => `<button type="button" class="ghost${x.n === pic.n ? " on" : ""}" data-part-pic="${esc(x.id)}"${x.n === pic.n ? ' aria-current="true"' : ""}>${esc(x.name)}</button>`).join("")}</p>` : "",
+      pic ? `<p class="part-variant">Edit ${esc(c.name)}${pic.n > 1 && first ? ` · a duplicate of ${esc(first.name)}` : ""} · picture ${pic.n} of ${pic.cards.length} ${pic.cards.map(x => `<button type="button" class="ghost${x.n === pic.n ? " on" : ""}" data-part-pic="${esc(x.id)}"${x.n === pic.n ? ' aria-current="true"' : ""}>${esc(x.name)}</button>`).join("")}</p>` : "",
       ...gone.map(g => `<p class="part-warn" data-part-gone="${esc(g.key)}">⚠ An edit waits for a layer that's gone from the PSD (${esc(g.edit.layer || g.key)}): the bake skips it. <button type="button" class="ghost" data-part-drop="${esc(g.key)}">Drop it</button></p>`)].join("");
   }
   /** readForm's part: op.set.parts, the part unsets and the derived name/ability (only for a field whose boxes changed). */
@@ -811,7 +813,7 @@ export function createEditor(app) {
   }
   function formHtml(c) {
     if (isRule(c)) return ruleFormHtml(c);
-    const b = baseOf(c), isDup = !!b.dup, ban = banOf(c.id), admin = me?.admin, view = partsView(c);
+    const b = baseOf(c), isDup = follows(b), ban = banOf(c.id), admin = me?.admin, view = partsView(c);
     const kinds = Object.entries(app.KIND_LABEL).filter(([k]) => k !== "unknown" || k === c.type);
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
     const typeNames = [...new Set(Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name))].sort();
@@ -870,7 +872,7 @@ export function createEditor(app) {
           ${ART_FIELDS.map(k => row(k, `<input id="ef-${k}" value="${esc(c[k] || "")}" placeholder="${k === "art" ? "the card's artwork: a link, an artist or a game" : "the ability's artwork"}">`)).join("")}
           ${row("aliases", `<input id="ef-aliases" value="${esc((c.webAliases || []).join(", "))}" placeholder="comma separated">${(c.aliases || []).filter(a => !(c.webAliases || []).includes(a)).length ? `<span class="muted">Bot aliases: ${esc(c.aliases.filter(a => !(c.webAliases || []).includes(a)).join(", "))}</span>` : ""}`)}
           <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" data-suggest="author" autocomplete="off" value="${esc(c.author || "")}">`}</div></div>
-          ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="not a duplicate"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
+          ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="${c.variantOf ? esc(S.byId.get(c.variantOf)?.key || "") : "not a duplicate"}"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
         </fieldset>
         ${isDup ? "" : `<fieldset><legend>Ratings</legend>
           ${RATE.map(k => { const now = ratingNow((b.ratings || []).filter(e => !e._staged), k), v = stage.cards[c.id]?.rate?.[k];
@@ -1023,7 +1025,7 @@ export function createEditor(app) {
   function stageAuthor(id, v, defer = false) {
     const c = find(id); if (!c) return null;
     const b = baseOf(c);
-    if (b.dup) { if (!defer) app.toast("A duplicate's author follows the original"); return null; }
+    if (follows(b)) { if (!defer) app.toast("A duplicate's author follows the original"); return null; }
     const a = defer ? String(v ?? "").trim() : spell("author", String(v ?? "").trim(), c.id); if (a === undefined) return null;
     const op = mergeAuthor(opFor(c), a, b.author);
     put(c.id, op); if (!defer) save();
@@ -1051,7 +1053,7 @@ export function createEditor(app) {
     let changed = 0, dups = 0;
     for (const id of ids) {
       const was = JSON.stringify(stage.cards[id] ?? null);
-      if (key === "author" && find(id) && baseOf(find(id)).dup) { dups++; continue; }
+      if (key === "author" && find(id) && follows(baseOf(find(id)))) { dups++; continue; }
       if ((key === "author" ? stageAuthor(id, value, true) : stageField(id, key, value, true)) && JSON.stringify(stage.cards[id] ?? null) !== was) changed++;
     }
     save();
@@ -1088,7 +1090,7 @@ export function createEditor(app) {
       if (!r || r.error) return r;
       name = r.name;
     }
-    const dups = key === "author" ? cards.filter(c => baseOf(c).dup) : [], moved = cards.filter(c => !dups.includes(c) && c[key] !== name);
+    const dups = key === "author" ? cards.filter(c => follows(baseOf(c))) : [], moved = cards.filter(c => !dups.includes(c) && c[key] !== name);
     let change = moved, people = {};
     if (key === "author") {                        // every line showing from, and "from = name" when from is a name without one
       const lines = { ...S.data.peopleMap, ...sentPeople(), ...stage.people }, low = from.toLowerCase();

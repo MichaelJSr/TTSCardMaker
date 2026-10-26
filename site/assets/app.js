@@ -75,9 +75,6 @@ const psdBadges = c => [
   c.partFlags ? `<span class="fact${c.partFlags.skipped ? " refused" : ""}" data-tip="The last bake, per text layer: a layer changed in Photoshop since the edit is skipped (redo it in Edit)">Text boxes: ${esc(Object.entries(c.partFlags).map(([k, n]) => `${n} ${k}`).join(", "))}</span>` : "",
   c.moved ? `<span class="fact" data-tip="A stars edit moved the card into its stars folder">moved to ${esc(c.moved.replace(/\/$/, "").split("/").pop())}</span>` : "",
 ].join("");
-// one PSD's pictures (layers tagged " #N"): separate cards, linked
-const variantFacts = c => (c.variantOf ? `<a class="fact" href="#/card/${c.variantOf}" data-tip="Another picture of the same PSD">A variant of ${esc(S.byId.get(c.variantOf)?.name || "")}</a>`
-  : c.variants?.length ? `<span class="fact" data-tip="Other pictures of the same PSD">Variants: ${c.variants.map(id => `<a href="#/card/${id}">${esc(S.byId.get(id)?.name || id)}</a>`).join(" · ")}</span>` : "");
 // beside PSD chips and parser notes: opens the card with Details open
 const detailsLink = c => (c.details ? `<a class="fact details-link" href="#/card/${c.id}?details" data-tip="Open the card with its PSD details">Details</a>` : "");   // a plain link: Ctrl-click opens a tab
 const psdChips = c => { const b = psdBadges(c); return b && b + detailsLink(c); };
@@ -757,8 +754,7 @@ function openCard(id, showDetails = false) {
           ${c.ts ? `<span class="fact" data-tip="Last PSD commit (Pacific time)">updated ${date(c.ts)}</span>` : ""}
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
-          ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="Same PSD, different name and art">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
-          ${variantFacts(c)}
+          ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="The same card, counted once">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
           ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(changes.editedTip(c))}">Edited</span>` : ""}
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
@@ -773,7 +769,7 @@ function openCard(id, showDetails = false) {
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
           <div id="card-balance">${balanceHtml(c)}</div>
-          <div id="card-ratings">${ratings.blockHtml(balanceOf(c), { editing: editing(), mine: editor.myRating(balanceOf(c).id) })}</div>
+          <div id="card-ratings">${ratings.blockHtml(ratedOf(c), { editing: editing(), mine: editor.myRating(ratedOf(c).id) })}</div>
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
@@ -851,6 +847,7 @@ function showVersion(c, i) {
 }
 // ---- balance: the card's standing among its star level and its recorded changes (balance.js)
 const balanceOf = c => (c.dup ? S.byId.get(c.dup) || c : c);         // a duplicate shows its original's
+const ratedOf = c => (c.variantOf ? c : balanceOf(c));                // a variant picture keeps its own ratings
 const hasBalance = c => !!balanceOf(c).balance;
 function balanceHtml(c, part = "balance") {          // part: "balance" (the line) or "changes" (the recorded changes)
   if (!hasBalance(c)) return "";

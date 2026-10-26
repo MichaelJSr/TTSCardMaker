@@ -404,7 +404,7 @@ def join_details(cards, records, tree, edits=None):
         if rec:
             e["details"] = True
             out[e["id"]] = {**rec, "id": e["id"], "name": e["name"]}      # the card's id and shown name win
-            if e.get("dup") and by_id.get(e["dup"], {}).get("psd") == path:
+            if e.get("dup") and not e.get("variantOf") and by_id.get(e["dup"], {}).get("psd") == path:
                 out[e["id"]].pop("parts", None)   # a numbered PNG of the PSD: not its first picture's boxes (§4.1: tag the variant layers)
                 continue
             first = by_id.get(e.get("variantOf")) or e
@@ -1486,8 +1486,8 @@ def apply_ratings(cards, ratings, archived, people, by_login, row_of=None):
     got, rows, counts = {}, {id(r) for r in archived}, {"entries": 0, "cards": 0, "archived": 0, "unmatched": []}
     for key, (name, entries) in ratings.items():
         target = live.get(key)
-        if target is not None and target.get("dup") in by_id:
-            target = by_id[target["dup"]]              # a duplicate's ratings are its original's, as its page shows
+        if target is not None and target.get("dup") in by_id and not target.get("variantOf"):
+            target = by_id[target["dup"]]              # a duplicate's ratings are its original's, as its page shows (a variant: its own)
         if target is None and key in arch:
             target = by_id.get(arch[key].get("renamedId")) or arch[key]
         if target is None:
@@ -2996,15 +2996,15 @@ def game_words(text, icons):
 
 def game_text(cards, rules, banlist, icons, manifest):
     """game.txt: a header, the rulebook pages in book order, the timing tags, the ban list, then every visible card by
-    kind and series; a variant picture as its own card, its text only when it differs. Stats as printed (bars). Dated by
+    kind and series; a duplicate as its own card, its text only when it differs. Stats as printed (bars). Dated by
     the card data, so a no-change build keeps the file. ’ as '."""
     shown = [c for c in cards if not c.get("hidden")]
-    by_id, m = {c["id"]: c for c in shown if c.get("id")}, manifest or {}     # a hidden original: the variant keeps its text
+    by_id, m = {c["id"]: c for c in shown if c.get("id")}, manifest or {}     # a hidden original: the duplicate keeps its text
     out = [f"{SITE_NAME}: every card and rulebook page as plain text.", f"{len(shown)} cards, {len(rules)} rulebook pages."
            + (f" Card data built {m['built_at']} from card commit {m['card_commit'][:12]}." if m.get("built_at") and m.get("card_commit") else "")
            + (f" {SITE_URL}/" if SITE_URL else ""),
-           "Card lines: name | kind | stars | types | HP DEF ATK SPD (one set per creature) | series, then on a variant picture"
-           " | variant of its original. - is an empty field. The ability follows.", "", "# Rulebook", ""]
+           "Card lines: name | kind | stars | types | HP DEF ATK SPD (one set per creature) | series, then on a duplicate"
+           " | duplicate of its original. - is an empty field. The ability follows.", "", "# Rulebook", ""]
     for p in rules:
         out += [f"## {p['name']}", game_words(p.get("ability"), icons), ""]
     out += ["# Timing tags", "X can be any number; the first number of a pair such as (1/2CD) can also be 0 or -1.", ""]
@@ -3026,9 +3026,9 @@ def game_text(cards, rules, banlist, icons, manifest):
             line = [c["name"], label, f"{c['stars']}★" if c.get("stars") is not None else "",
                     ", ".join(t.replace("_", " ") for t in c.get("types") or []), "; ".join(bars),
                     " / ".join(x for x in (c.get("series"), c.get("subseries")) if x)]
-            orig = by_id.get(c.get("dup"))           # a variant picture: its own card; same text not repeated
+            orig = by_id.get(c.get("dup"))           # a duplicate: same text not repeated
             if orig:
-                line.append(f"variant of {orig['name']}")
+                line.append(f"duplicate of {orig['name']}")
             text = c.get("ability") if not orig or c.get("ability") != orig.get("ability") else None
             out += [" | ".join(x or "-" for x in line), *([game_words(text, icons)] if text else []), ""]
     return "\n".join(out).replace("’", "'")
@@ -3396,7 +3396,7 @@ def main():
     seen_pngs, bot_dup_names = set(), {}
     for name, c in sorted(stats.items(), key=lambda kv: kv[0].lower()):
         path = getattr(c, "path", "") or ""
-        if getattr(c, "duplicate_of", None):     # the bot's duplicate: only its name is used
+        if getattr(c, "duplicate_of", None) and not getattr(c, "variant_of", None):     # the bot's duplicate: only its name is used
             if getattr(c, "display_name", None):
                 bot_dup_names[name.replace(" ", "_").lower() + ".png"] = c.display_name
             continue
@@ -3509,9 +3509,21 @@ def main():
             continue
         e["dup"] = target["id"]
         target.setdefault("dups", []).append(e["id"])
-        for field in DATA_FIELDS:                 # fill blanks from the original
+        for field in DATA_FIELDS if not e.get("variantOf") else ():     # fill blanks from the original (a variant: its own)
             if field not in own and e.get(field) in (None, [], ""):
                 e[field] = target.get(field)
+    for e in cards:                               # a variant picture is a duplicate (owner 10-25): of picture 1, else the card its dup_of names
+        if not e.get("variantOf"):
+            continue
+        if "dup_of" in e.get("edited", []):
+            e.setdefault("orig", {})["dup_of"] = by_id[e["variantOf"]]["key"]     # the editor's default
+        target = by_id.get(e.get("dup"))
+        if target is not None and target is not e and not target.get("variantOf") and not target.get("dup"):
+            continue
+        if target is not None and e["id"] in target.get("dups", []):
+            target["dups"].remove(e["id"])
+        e["dup"] = e["variantOf"]
+        by_id[e["dup"]].setdefault("dups", []).append(e["id"])
     edited = [e for e in cards if e.get("edited")]
     if edits:
         log(f"corrections: {len(edited)} cards from {EDITS_PATH}" + (f" ({len(edits) - len(edited)} names match no card)" if len(edits) > len(edited) else ""))
@@ -3521,19 +3533,19 @@ def main():
             if norm(alias) != norm(e["name"]) and norm(alias) not in {norm(a) for a in e.get("aliases", [])}:
                 e.setdefault("aliases", []).append(alias)
     for e in cards:                               # the file name stays searchable under a printed or corrected title
-        if not e.get("dup") and norm(e["key"]) != norm(e["name"]) and norm(e["key"]) not in {norm(a) for a in e.get("aliases", [])}:
+        if (not e.get("dup") or e.get("variantOf")) and norm(e["key"]) != norm(e["name"]) and norm(e["key"]) not in {norm(a) for a in e.get("aliases", [])}:
             e.setdefault("aliases", []).append(e["key"])
 
     # authors: site/Card Authors.txt wins over the bot ([people] maps git names to shown names)
     people, credited = parse_authors()
     listed_n = 0
     for e in cards:
-        if not e.get("dup"):
+        if not e.get("dup") or e.get("variantOf"):     # a variant picture: its own author
             listed = credited.get(card_key(e["key"])) or credited.get(card_key(e["name"]))
             e["author"] = person(people, listed or e.get("author"))
             listed_n += bool(listed)
     for e in cards:
-        if e.get("dup"):
+        if e.get("dup") and not e.get("variantOf"):
             e["author"] = by_id[e["dup"]]["author"]          # a duplicate is its original's card
     if credited:
         log(f"authors: {listed_n} cards credited by Card Authors.txt, {len(people)} people")
