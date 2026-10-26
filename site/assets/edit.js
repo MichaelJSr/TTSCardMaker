@@ -722,7 +722,9 @@ export function createEditor(app) {
       if (site.includes("ability")) form.added = null;
     }
     const r = P.readParts(view.rec, view.list, form);
-    for (const [k, p] of Object.entries(view.rec.partEdits || {})) if (site.includes(p.field)) { delete r.set[k]; if (!r.unset.includes(k)) r.unset.push(k); }
+    const used = (k, f) => groupOf(c).some(x => x !== c && !siteAfter(stage.cards[x.id], baseOf(x)).includes(f)    // another picture's normal edit
+      && (k === P.ADD || !!partsView(x)?.list.some(bx => bx.key === k)));
+    for (const [k, p] of Object.entries(view.rec.partEdits || {})) if (site.includes(p.field) && !used(k, p.field)) { delete r.set[k]; if (!r.unset.includes(k)) r.unset.push(k); }
     const dv = P.derived(view.list, r.texts, r.added), fieldOf = k => (k === P.ADD ? "ability" : view.list.find(x => x.key === k)?.field || view.rec.partEdits?.[k]?.field);
     const left = P.mergeParts(Object.fromEntries(Object.entries(view.rec.partEdits || {}).filter(([k]) => view.rec.partState?.[k] !== "gone")), r.set, r.unset) || {};
     for (const f of ["name", "ability"]) {
@@ -764,9 +766,9 @@ export function createEditor(app) {
       const v = partsView(x); if (!v) continue;
       const edited = v.list.filter(bx => bx.key in read.texts && read.texts[bx.key] !== (bx.deleted ? null : bx.start));
       if (!edited.length) continue;
-      const dv = P.derived(v.list, P.viewTexts(v.list, read.texts)), bx = baseOf(x), o = opOf(x);
+      const dv = P.derived(v.list, P.viewTexts(v.list, read.texts)), bx = baseOf(x), o = opOf(x), off = siteAfter(o, bx);
       for (const f of ["name", "ability"]) {
-        if (!edited.some(e => e.field === f)) continue;
+        if (!edited.some(e => e.field === f) || off.includes(f)) continue;    // its website-only text stays
         const now = f === "name" ? dv.name || bx.name : dv.ability;
         if (!sameField(f, now, val(bx, f))) o.set[f] = now;
         if (f === "name") o.name = now;
