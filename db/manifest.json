@@ -7,7 +7,7 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-10-26T12:59:54Z",
+ "built_at": "2026-10-26T13:00:47Z",
  "card_commit": "211993684d50f74e0778519361a996f8900945b5",
  "card_commit_at": 1793019022.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
@@ -23,12 +23,10 @@
  },
  "files": {
   "old_stats.json": "50a10f6f5d72dab8211b6493eb7ba9088bca4b8a8241f9e19b9ddeb32948cf5f",
-  "psd_details.json": "7d577dde3a701bdd960d3a56349b425eb621e572b96bbfe5f2c95dfdd390779b",
-  "stats.json": "391b7d88776ea37aac51aff28684c3f3df43ad3a59ad3a57c186e48ce81cfa2b"
+  "psd_details.json": "7554591abd8eab0694bf5711a74591f952eb91b74cd9b8ea676bdb17f033096f",
+  "stats.json": "48b766f8cb3c60b74e9b4647f1ced7dfaa6718040cea1d256ac215368ebea2a5"
  },
- "gates": {
-  "G4": "lifted by full (approved by https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40325860429)"
- },
+ "gates": {},
  "inputs": {
   "authors_blob": "06d216d292e67ff372cfeff29686df97728613af",
   "created_blob": "fe965ed3536d98166e8ff94b2b34778ab8985078",
@@ -41,28 +39,12 @@
  "main_commit": null,
  "pending": {
   "failed": [],
-  "full": {
-   "approved_run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40325860429",
-   "parser_version": 5
-  },
+  "full": null,
   "repin": [],
-  "stale": [
-   "N.M.E/Rope.psd",
-   "N.M.E/Sigil_of_Divinity.psd",
-   "N.M.E/Staff_of_Purity.psd",
-   "N.M.E/Star_Jar.psd",
-   "N.M.E/Star_Scraper.psd",
-   "N.M.E/Termination_Shock.psd",
-   "N.M.E/The_Bagel.psd",
-   "N.M.E/The_Bank.psd",
-   "N.M.E/The_Claw.psd",
-   "N.M.E/The_Evil,_Fricked_Up_Cursed_Idol.psd",
-   "N.M.E/Whacka_Bump.psd",
-   "N.M.E/chuckya.psd"
-  ]
+  "stale": []
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40326566248",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40326915348",
  "schema": 1
 }
