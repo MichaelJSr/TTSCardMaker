@@ -584,7 +584,7 @@ function dupsOf(c) {      // the other cards printed from the same PSD
   return original ? [original, ...(original.dups || []).map(x => S.byId.get(x))].filter(x => x && x.id !== c.id) : [];
 }
 function strip(title, cards) {
-  return cards.length ? `<h3>${esc(title)} <span class="muted">${cards.length}</span></h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
+  return cards.length ? `<h3><span class="muted">${cards.length}</span> ${esc(title)}</h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
 }
 function openCard(id, showDetails = false) {
   const c = S.byId.get(id);
