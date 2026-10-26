@@ -33,6 +33,7 @@ const S = {
   selecting: false,                                        // the Select toggle (phones): a tap on a tile selects it
   toTop: false,                                            // a Stats chart link was followed: the grid opens at its top
   notPick: new Set(),                                      // series, subseries, author: ≠ pressed with nothing picked yet
+  fontUse: null,                                           // card id -> its fonts (data/cardfonts.json), once the Font filter loads it
 };
 // The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
@@ -119,6 +120,26 @@ const loadDecks = () => (decksP ||= getJson("decks.json").then(d => { S.decksDat
 // the Details dropdown on a card page: data/details/<id>.json, fetched on first open and kept for the session
 const detailsP = new Map();
 const loadDetails = c => detailsP.get(c.id) || detailsP.set(c.id, getJson(`details/${encodeURIComponent(c.id)}.json`).catch(e => { detailsP.delete(c.id); throw e; })).get(c.id);
+// the Font filter: each card's fonts as its Details panel lists them (data/cardfonts.json: a name table, index lists per
+// card id), loaded on the filter's first use or for a font= / xfont= link
+let fontsP = null;
+const loadFonts = () => (fontsP ||= getJson("cardfonts.json").then(d => { const names = d.fonts || [];
+  S.fontUse = new Map(Object.entries(d.cards || {}).map(([id, ix]) => [id, ix.map(i => names[i]).filter(Boolean)])); }).catch(e => { fontsP = null; throw e; }));
+const fontsOf = c => S.fontUse?.get(c.id) || [];
+const needsFonts = p => p.has("font") || p.has("xfont");
+// the name list under a data-suggest field (tokens.js): the Font box for everyone, the editor's name fields in edit mode
+const tokenApi = { vocab: () => [], icon: (t, o) => S.renderer?.icon(t, o) ?? null,
+  names: el => (el.dataset.suggest === "font" ? fontEntries() : editor.names?.(el.dataset.suggest) || []) };
+let tokensMod = null, tokensP = null;
+const useTokens = m => { if (!tokensMod) { tokensMod = m; m.install(tokenApi); } return m; };   // once: the editor imports the same module
+const loadTokens = () => (tokensP ||= (early("tokens.js"), import("./tokens.js")).then(useTokens).catch(e => { tokensP = null; throw e; }));
+// the Font box's suggestions: the fonts the shown cards use (not those already picked), each with its card count
+function fontEntries() {
+  if (!S.fontUse) return [];
+  const n = new Map(), p = parseHash().params, on = new Set([...vals(p, "font"), ...vals(p, "xfont")]);
+  for (const c of S.cards) for (const f of fontsOf(c)) n.set(f, (n.get(f) || 0) + 1);
+  return [...n].filter(([f]) => !on.has(f)).map(([value, k]) => ({ value, n: k, note: `${k} card${k === 1 ? "" : "s"}` }));
+}
 function whenLoaded(promise, what, rerender) {
   promise.then(rerender, e => { view.innerHTML = `<div class="empty">Couldn't load ${esc(what)} (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`; });
 }
@@ -224,8 +245,8 @@ function startEditor(M) {
   tray.install({ view, editor: ed, selected: S.selected, drop: (ids, t) => inline.dropOn(ids, t), toast: m => toast(m), cards: () => S.all });   // the pinned boxes
   let vocab = null, vocabRev = -1;                         // the token picker's icons, the most used first (after each derive())
   const vocabOf = () => { if (vocabRev !== S.rev) { vocab = M.tokens.vocabulary(S.icons, S.all.map(c => c.ability)); vocabRev = S.rev; } return vocab; };
-  M.tokens.install({ vocab: () => (S.all ? vocabOf() : []), icon: (t, o) => S.renderer?.icon(t, o) ?? null,   // "[" or "(" in card text: suggestions
-    names: el => ed.names(el.dataset.suggest) });                                       // a name field: the known names
+  tokenApi.vocab = () => (S.all ? vocabOf() : []);         // "[" or "(" in card text: suggestions; a name field: the known names (tokenApi)
+  useTokens(M.tokens);
   M.palette.useSearch(M.palette.pickerSearch(M.tokens.suggest, () => (S.all ? vocabOf() : [])));    // the type palette ranks as the picker
   inline.extend({ hideTip, icons: () => S.icons, closePicker: M.tokens.dismiss });   // editors hide the tooltip and the list; the type palette's icons
   Object.assign(actions, ed.actions, tray.actions);
@@ -321,7 +342,7 @@ function setParams(updates, { replace = true } = {}) {
   const r = parseHash();
   const p = r.params;
   for (const [k, v] of Object.entries(updates)) {
-    if (CF.MULTI.has(k)) { p.delete(k); for (const x of [].concat(v ?? [])) if (x) p.append(k, x); continue; }   // cf=a&cf=b: one param each
+    if (MULTI.has(k)) { p.delete(k); for (const x of [].concat(v ?? [])) if (x) p.append(k, x); continue; }   // cf=a&cf=b: one param each
     (v === "" || v == null || (Array.isArray(v) && !v.length)) ? p.delete(k) : p.set(k, Array.isArray(v) ? v.join(",") : v);
   }
   const hash = `#/${r.name === "card" ? "cards" : r.name}${r.arg ? "/" + r.arg : ""}${p.toString() ? "?" + p : ""}`;
@@ -330,7 +351,8 @@ function setParams(updates, { replace = true } = {}) {
 
 // ---- cards (browse) --------------------------------------------------------------------------------
 const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
-const vals = (p, k) => (CF.MULTI.has(k) ? CF.vals(p, k) : csv(p, k));   // cf, xcf: repeated params
+const MULTI = new Set([...CF.MULTI, "font", "xfont"]);                   // repeated params, one value each (names may hold commas)
+const vals = (p, k) => (MULTI.has(k) ? CF.vals(p, k) : csv(p, k));       // cf, xcf, font, xfont
 function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi] = v.split("-").map(Number); return [isNaN(lo) ? 0 : lo, isNaN(hi) ? 99 : hi]; }
 // edited on the website: an editor's fields (changes.fieldEditors), never a _by AutoCroissant entry (the 2026-10-22
 // migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited)
@@ -358,6 +380,8 @@ function filterCards(p, { facets = true } = {}) {
   if (missing.length) list = list.filter(c => missing.every(x => x[3](c)));
   list = G.dropExcluded(list, p, flagFns);                                     // xkind=…, xtypes=…: the sidebar's exclusions
   list = CF.apply(list, p);                                                    // cf=…, xcf=…: My filters
+  const fin = vals(p, "font"), fout = vals(p, "xfont");                        // font=…: any of them; xfont=…: none (renderCards loads the data)
+  if (fin.length || fout.length) list = !S.fontUse ? [] : list.filter(c => { const f = fontsOf(c); return (!fin.length || f.some(x => fin.includes(x))) && !f.some(x => fout.includes(x)); });
   for (const [k, , test] of LINKED) { const v = p.get(k); if (v) list = list.filter(test(v)); }
   const month = p.get("month"), change = p.get("change");
   if (month || change) list = S.analytics ? list.filter(c => St.balance.changedAs(S.analytics, c, month, change)) : [];   // renderCards loads it
@@ -399,7 +423,7 @@ function chipList(key, options, selected, counts, xs = [], removes = null) {
   return `<div class="chips">${options.map(([v, label]) => { const x = xs.includes(String(v)), n = x ? removes(key, String(v)) : counts?.get(String(v)) || 0;
     return `<button type="button" class="chip${x ? " x" : selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : ""}>${esc(label)}${counts ? `<span class="n">${x ? `−${n}` : n}</span>` : ""}</button>`; }).join("")}</div>`;
 }
-const XABLE = new Set(["kind", "stars", "sub", "types", "flags", "missing", "cf"]);   // a right-click (long press) excludes
+const XABLE = new Set(["kind", "stars", "sub", "types", "flags", "missing", "cf", "font"]);   // a right-click (long press) excludes
 const NOT_KEYS = ["series", "subseries", "author"];                              // a select with a ≠ toggle
 /** a sidebar control a right-click or long press on `t` excludes with, or null */
 const xTarget = t => { const el = t?.closest?.('[data-action="toggle-param"]') || t?.closest?.("label.check")?.querySelector('[data-action="toggle-param"]');
@@ -435,6 +459,8 @@ function renderCards(r) {
   const mine = CF.saved(), cfIn = CF.vals(p, "cf"), cfOut = CF.vals(p, "xcf");                         // My filters (myfilters.js)
   const cfRemoves = v => { const q = new URLSearchParams(p); q.delete("xcf"); for (const x of cfOut) if (x !== v) q.append("xcf", x); return Math.max(0, filterCards(q).length - list.length); };
   const cfSave = v => (mine.includes(v) ? "" : `<button type="button" class="chip cf-save" data-action="cf-save" data-value="${esc(v)}" title="Save to My filters">Save</button>`);   // from a link
+  const fontIn = vals(p, "font"), fontOut = vals(p, "xfont"), fontCounts = S.fontUse ? count(base, fontsOf) : null;   // the Font filter
+  const fontRemoves = (k, v) => { const q = new URLSearchParams(p); q.delete("xfont"); for (const x of fontOut) if (x !== v) q.append("xfont", x); return Math.max(0, filterCards(q).length - list.length); };
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
   const active = [];
   if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
@@ -447,6 +473,8 @@ function renderCards(r) {
   if (p.get("series")) active.push(["series", p.get("series")]);
   if (p.get("subseries")) active.push(["subseries", p.get("subseries")]);
   if (p.get("author")) active.push(["author", `by ${p.get("author")}`]);
+  for (const v of fontIn) active.push(["font", v, v]);
+  for (const v of fontOut) active.push(["xfont", `not ${v}`, v, true]);
   for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
   for (const f of csv(p, "flags")) { const x = FLAGS.find(x => x[0] === f); if (x) active.push(["flags", x[1], f]); }   // an old flag: ignored
   for (const [k, l] of G.MISSING) if (miss.includes(k)) active.push(["missing", l, k]);
@@ -459,8 +487,9 @@ function renderCards(r) {
   const rangeSel = (k, which) => { const r_ = rangeOf(p, k); const cur = r_ ? Math.min(r_[which], S.statMax[k]) : (which ? S.statMax[k] : 0);
     return `<select data-action="range" data-key="${k}" data-which="${which}" aria-label="${k} ${which ? "max" : "min"}">${Array.from({ length: S.statMax[k] + 1 }, (_, i) => `<option${i === cur ? " selected" : ""}>${i}</option>`).join("")}</select>`; };
   const suggestions = !list.length && p.get("q") ? suggest(p.get("q"), S.cards) : [];
-  const changed = needsAnalytics(p) && !S.analytics, waiting = changed || (needsCharts(p) && !St);   // a Stats link's filters: the grid again once analytics.json (charts.js) is in
-  if (waiting) (changed ? loadAnalytics() : loadCharts()).then(() => { if (parseHash(S.renderedHash || "").name === "cards") rerender(); },
+  const changed = needsAnalytics(p) && !S.analytics, fontWait = needsFonts(p) && !S.fontUse;
+  const waiting = changed || fontWait || (needsCharts(p) && !St);   // a Stats link's filters, a font link: the grid again once analytics.json (charts.js, cardfonts.json) is in
+  if (waiting) (changed ? loadAnalytics() : fontWait ? loadFonts() : loadCharts()).then(() => { if (parseHash(S.renderedHash || "").name === "cards") rerender(); },
     () => { const el = $(".browse .loading", view); if (el) el.textContent = changed ? "Couldn't load the recorded changes." : "Couldn't load the filter."; });
 
   const browse = `<div class="browse">
@@ -476,6 +505,8 @@ function renderCards(r) {
       ${subseries.length || pickOf("subseries") ? `<h3>Subseries</h3>${notSel("subseries", `<select data-action="select-param" data-key="subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(pickOf("subseries"))}</option>` : ""}${subseries.map(s => `<option${s === pickOf("subseries") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}` : ""}
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
       <h3>Author</h3>${notSel("author", `<select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === pickOf("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>`)}
+      <h3>Font</h3><input type="text" class="font-box" data-suggest="font" autocomplete="off" spellcheck="false" placeholder="Type a font…" title="Cards using any picked font" aria-label="Font: cards using any picked font">
+      ${fontIn.length || fontOut.length ? `${chipList("font", [...fontIn, ...fontOut].map(f => [f, f]), fontIn, fontCounts, fontOut, fontRemoves)}${fontIn.length > 1 ? `<p class="muted font-any">Cards with any of them.</p>` : ""}` : ""}
       <h3>Flags</h3>${FLAGS
         .map(([f, l]) => { const x = xs("flags").includes(f);
           return `<label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="flags" data-value="${f}"${!x && csv(p, "flags").includes(f) ? " checked" : ""}${x ? ` aria-label="${l}: excluded"` : ""}> ${l}${x ? `<span class="n">−${removes("flags", f)}</span>` : ""}</label>`; }).join("")}
@@ -1307,7 +1338,7 @@ const actions = {
     if (inc) S.notPick.add(k); else S.notPick.delete(k);
     setParams({ [k]: exc, [`x${k}`]: inc }); },
   "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: vals(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "" }); if (el.dataset.key === "q") qInput.value = ""; },
-  "clear-filters": () => { qInput.value = ""; S.notPick.clear(); history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
+  "clear-filters": () => { qInput.value = ""; S.notPick.clear(); const fb = $(".browse .font-box", view); if (fb) fb.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
   "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(sortOf(p), p.get("dir")) ? "asc" : "desc" }); },
@@ -1473,6 +1504,16 @@ function fillTip(t) {
 }
 const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
 function hideTip() { tips.hide(); }
+// the Font box: its data and list load on first focus (then the list opens as if typed); a pick or Enter (the best
+// suggestion when no row is chosen) adds the font, the box empties and keeps the focus
+const addFont = (el, v) => { el.value = ""; const p = parseHash().params; setParams({ font: [...vals(p, "font").filter(x => x !== v), v], xfont: vals(p, "xfont").filter(x => x !== v) }); };
+document.addEventListener("focusin", e => { const el = e.target; if (!el.matches?.(".font-box") || (S.fontUse && tokensMod)) return;
+  Promise.all([loadFonts(), loadTokens()]).then(() => { if (document.activeElement === el) el.dispatchEvent(new Event("input", { bubbles: true })); }, () => toast("Couldn't load the fonts"));
+});
+document.addEventListener("suggest-pick", e => { if (e.target.matches?.(".font-box")) addFont(e.target, e.detail.value); });
+document.addEventListener("keydown", e => { const el = e.target; if (e.key !== "Enter" || !el.matches?.(".font-box") || e.isComposing || !tokensMod) return;
+  e.preventDefault(); const best = el.value.trim() && tokensMod.suggestNames(el.value, fontEntries())[0];
+  if (best) addFont(el, best.value); else if (el.value.trim()) toast("No card uses a font by that name"); });
 // exclusions: a right-click on a sidebar filter (a long press on touch: wireTips; the menu a touch brings up is only suppressed)
 let touchAt = -1e9;
 document.addEventListener("pointerdown", e => { if (e.pointerType === "touch") touchAt = performance.now(); }, true);

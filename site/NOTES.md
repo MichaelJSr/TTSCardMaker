@@ -1286,3 +1286,15 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   bytes on the card's path or an older name of it, but 4 move commits on rows that changed kind or stars; 38 texts
   link a commit before their shown date (the bot dates renamed cards from the rename, pickle-era versions from the
   path's last commit). history.json +5.2% (+8.9% gzipped), analytics.json +5.7% (+10.2% gzipped).
+
+## 38. The Font filter (2026-10-25, owner: "can you allow filtering by font? have a text box for entering a font with autofill")
+- Sidebar, after Author: a Font box. Typing suggests the fonts the shown cards use with their card counts ("Perpetua,
+  95 cards"), through tokens.js's name list (`data-suggest="font"`, `suggestNames`: any case, anywhere in the name,
+  spaces, `_`, `-` ignored); ↑ ↓ Enter Esc, click, tap. Enter with no row chosen adds the best suggestion. Picked fonts
+  are chips (any of them: "Cards with any of them."); right-click or long press excludes ("not Perpetua"), as Kind.
+- URL: `font=` and `xfont=`, repeated, one font each (myfilters.js `vals`). A link loads the data first ("Loading…").
+- A card's fonts are its Details panel's: the record's `fonts` keys (build_site.py `card_fonts`); variant pictures their
+  PSD's, PNG-only duplicates none. Names as stored (PostScript).
+- Data: `data/cardfonts.json` `{fonts: [name, most used first], cards: {id: [index]}}`, fetched on the box's first focus
+  (with tokens.js, now its own chunk, which edit mode shares: one install, app.js `useTokens`). Inlined in cards.json it
+  cost +3.6% gzipped (111,661 -> 115,709 B); the file is 18,967 B (7,844 gzipped). app.js +2.5 KB (+0.9 KB gzipped).

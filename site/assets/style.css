@@ -776,6 +776,11 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 .sel-row .not[aria-pressed="true"] { border-color: var(--danger); color: var(--danger); background: color-mix(in srgb, var(--danger) 14%, transparent); }
 .sel-row.x select { border-color: var(--danger); color: var(--danger); text-decoration: line-through; }
 .x-hint { font-size: 12px; margin: 14px 0 0; }
+.filters .font-box { width: 100%; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); }
+.filters .font-box + .chips { margin-top: 6px; }
+.filters .font-box + .chips .chip { max-width: 100%; overflow-wrap: anywhere; text-align: left; }
+.filters .font-any { font-size: 12px; margin: 4px 0 0; }
+@media (max-width: 860px) { .filters .font-box { font-size: 16px; } }   /* no zoom on focus (iOS) */
 .sel-row.x select option { color: var(--ink); text-decoration: none; }
 /* My filters: saved searches (myfilters.js); Save as filter shows while the search box has text */
 #save-filter { flex: none; white-space: nowrap; padding: 6px 10px; border-color: var(--border-strong); }

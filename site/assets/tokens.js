@@ -2,7 +2,8 @@
 // icon's variants; "(" and the start of a timing tag ("(1") suggests the tags. Typing narrows, Backspace widens. The
 // helpers above `install` are pure (AutoCroissant tests/test_token_picker.py runs them in node); install wires them to
 // the text fields marked data-tokens (edit.js, inline.js). The same list suggests known names in the fields marked
-// data-suggest="series|subseries|author" (suggestNames), whose whole value is the query; a pick fires "suggest-pick".
+// data-suggest="series|subseries|author|font" (suggestNames), whose whole value is the query; a pick fires "suggest-pick".
+// Edit mode loads it (editing.js); the grid's Font box loads it for everyone (app.js loadTokens): one install either way.
 import { esc, norm, tagInfo, badgeHtml, VARIANT_NAMES, variantFile } from "./text.js";
 
 export const MAX_TOKEN = 52;                     // text.js PIECE: [thunderfury blessed blade of the starseeker:darkglow]
@@ -177,7 +178,7 @@ export function suggestNames(q, entries) {
 
 // ---- the dropdown, in the browser
 const FIELD = "[data-tokens], [data-suggest]";
-const LIST_LABEL = { series: "Series", subseries: "Subseries", author: "Authors", subtype: "Item types" };
+const LIST_LABEL = { series: "Series", subseries: "Subseries", author: "Authors", subtype: "Item types", font: "Fonts" };
 const COPY = ["boxSizing", "width", "height", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth", "borderStyle",
   "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "fontStyle", "fontVariant", "fontWeight", "fontStretch", "fontSize",
   "lineHeight", "fontFamily", "textAlign", "textTransform", "textIndent", "letterSpacing", "wordSpacing", "tabSize", "wordBreak"];

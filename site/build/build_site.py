@@ -55,6 +55,7 @@ PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) ar
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
 changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown),
+data/cardfonts.json (the grid's Font filter: each card's Details fonts, loaded on the filter's first use),
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json; a WOFF2 copy in fonts/, cached in site/.cache/woff2), images, icons,
 assets (with esbuild: one bundle, assets/app.js, and its source map; else the modules one by one) and one share page per card, per person and per public deck (its preview image a montage of its cards).
@@ -623,6 +624,24 @@ def record_fonts(records):
     """The font names the text layers of the details records ask for."""
     return {t.get("font") for rec in records for t in (rec.get("text") if isinstance(rec.get("text"), list) else [])
             if isinstance(t, dict) and isinstance(t.get("font"), str)}
+
+
+CARD_FONTS = "cardfonts.json"                # data/: the grid's Font filter, loaded on its first use
+
+
+def card_fonts(cards, detail_files):
+    """The Font filter's data: {"fonts": [PostScript name, most used first], "cards": {card id: [index, ...]}}. A card's
+    fonts are its Details panel's (its record's "fonts" keys), so the two agree; a card without a record has none."""
+    used = {}
+    for e in cards:
+        f = (detail_files.get(e["id"]) or {}).get("fonts")
+        names = [n for n in f if isinstance(n, str) and n] if isinstance(f, dict) else []
+        if names:
+            used[e["id"]] = names
+    count = Counter(n for names in used.values() for n in names)
+    fonts = sorted(count, key=lambda n: (-count[n], n))
+    at = {n: i for i, n in enumerate(fonts)}
+    return {"fonts": fonts, "cards": {cid: [at[n] for n in names] for cid, names in used.items()}}
 
 
 def stat(card, attr):
@@ -3641,6 +3660,8 @@ def main():
         e.pop("_blob", None)
     if records:
         log(f"PSD details: {len(detail_files)} cards and rulebook pages have a record ({len(records)} in {DETAILS_JSON})")
+    font_use = card_fonts(cards, detail_files)    # the Font filter (data/cardfonts.json)
+    log(f"font filter: {len(font_use['fonts'])} fonts on {len(font_use['cards'])} cards")
     fonts = web_fonts(tree, record_fonts(detail_files.values())) if detail_files else {}     # the mock-up's web fonts (data/fonts.json)
     if fonts:
         made = web_woff2(fonts, tree)
@@ -3760,7 +3781,7 @@ def main():
     os.makedirs(os.path.join(DIST, "data"))
     files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
-             "analytics.json": balance, "changelog.json": changelog, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
+             "analytics.json": balance, "changelog.json": changelog, CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
     for name, blob in blobs.items():
         with open(os.path.join(DIST, "data", name), "wb") as fh:
