@@ -33,7 +33,7 @@ export function read(container) {
 }
 
 /** Render the picker into `container` (replacing its contents) and focus the search box (unless `focus` is false).
- *  {cards (or a function returning them: read on each search), filter(card), onChoose(id), placeholder, tile(card) -> tile HTML (app.js tileHtml), kinds ([[kind, label]]), kindOf,
+ *  {cards (or a function returning them: read on each search), filter(card), onChoose(id), placeholder, tile(card, {href: false}) -> tile HTML (app.js tileHtml), kinds ([[kind, label]]), kindOf,
  *  initial: {query, kinds, stars} (read() of an earlier panel)} */
 export function mount(container, { cards, filter = null, onChoose, placeholder = "Search… (the search box's syntax)", tile, kinds = [], kindOf = c => c.type, initial = null, focus = true }) {
   const all = typeof cards === "function" ? cards : () => cards;
@@ -51,7 +51,7 @@ export function mount(container, { cards, filter = null, onChoose, placeholder =
   const render = () => {
     const { list, total } = pickList(all(), { query: state.query, kinds: [...state.kinds], stars: [...state.stars], filter, kindOf });
     note.textContent = !total ? "Nothing matches." : total > list.length ? `Showing ${list.length} of ${total}: narrow the search.` : `${total} card${total === 1 ? "" : "s"}`;
-    grid.innerHTML = list.map(c => tile(c).replace('data-open="', 'data-choose="')).join("");
+    grid.innerHTML = list.map(c => tile(c, { href: false }).replace('data-open="', 'data-choose="')).join("");   // a choice, no link
   };
   let t = null;
   input.addEventListener("input", () => { clearTimeout(t); t = setTimeout(() => { state.query = input.value; render(); }, 120); });

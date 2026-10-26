@@ -1101,8 +1101,8 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
   (`tileHtml(c, {link: true})`: no flag, no deck button), so a tap before the script opens the card's page. The filters
   column is empty until app.js's first render fills it. That render keeps the tiles in the page (`adoptFirst`, §36):
   each link tile that is its card's tile as app.js draws it now (`isEqualNode` with `tileHtml(c, {link: true})`) gets
-  its flag, deck button, `data-open` and `tabindex` in place, keeping its href (middle-click, Cmd-click, Open in new
-  tab; edit mode's `markTiles` drops it, §41); any other (a
+  its flag, deck button and `data-open` in place, keeping its href (every tile is a link, §41; edit mode's `markTiles`
+  drops it); any other (a
   staged edit, Show hidden) is replaced. Removed 10-25 evening when Safari kept flashing, back the same night: the flash
   was edit mode's redraw after a kept sign-in (§36), with or without the first screen.
 - **Parity** (`check_first.mjs`, node on a temp copy of site/assets as an ES module package): the default list as app.js
@@ -1347,3 +1347,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   filters), so an off font is kept for this page only (`S.fontKept`); Clear all filters forgets them.
 - **First screen**: an adopted tile keeps its href, so middle-click, Cmd/Ctrl/Shift-click and Open in new tab open its
   page; a plain click opens the dialog. Edit mode's `markTiles` drops the href (a card drag, never a link drag).
+- **Every tile a link** (owner 10-26): grid.js `tileHtml` draws each card tile as `<a class="tile" href="c/<id>/"
+  data-open>` (the grid, person pages, Parser notes; a picker's choices stay `<article>`: `href: false`), so hover shows
+  the address and the browser's link menu works on every card; a plain click or Enter opens the dialog. In edit mode
+  `markTiles` drops the href and sets `tabindex` 0 (sign-out remakes the tiles); adopted tiles get no `tabindex` now.
