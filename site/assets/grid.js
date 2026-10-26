@@ -86,11 +86,12 @@ export function flip(inc, exc, v, exclude = false) {
   return [inc.includes(v) ? inc.filter(x => x !== v) : [...inc, v], exc];
 }
 
-/** env: { thumbs, icons, dupName(id), inDeck(id) }; link: a plain link to the card's page, no flag or deck button (the
- *  tiles index.html carries before the script runs) */
-export function tileHtml(c, { small = false, eager = false, css = 190, constructed = false, link = false } = {}, env) {
-  const inDeck = !link && env.inDeck(c.id);
-  return `${link ? `<a class="tile" href="c/${encodeURIComponent(c.id)}/" aria-label="${esc(c.name)}">` : `<article class="tile" data-open="${c.id}" tabindex="0" aria-label="${esc(c.name)}">`}
+/** env: { thumbs, icons, dupName(id), inDeck(id) }. A tile links to the card's page (a plain click opens the dialog:
+ *  app.js; edit mode's markTiles drops the href). link: a plain link, no flag or deck button (the tiles index.html
+ *  carries before the script runs); href false: no link (a picker's choice) */
+export function tileHtml(c, { small = false, eager = false, css = 190, constructed = false, link = false, href = true } = {}, env) {
+  const inDeck = !link && env.inDeck(c.id), url = `c/${encodeURIComponent(c.id)}/`, label = `aria-label="${esc(c.name)}"`;
+  return `${link ? `<a class="tile" href="${url}" ${label}>` : href ? `<a class="tile" href="${url}" data-open="${c.id}" ${label}>` : `<article class="tile" data-open="${c.id}" tabindex="0" ${label}>`}
     ${c.img ? `<img class="art" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(env.thumbs, c, small ? 120 : css)} alt="">` : `<div class="art"></div>`}
     ${link ? "" : constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>`
       : c._staged ? `<span class="flag staged" data-tip="Changed in your unpublished batch">Unpublished</span>`
@@ -103,7 +104,7 @@ export function tileHtml(c, { small = false, eager = false, css = 190, construct
       : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(env.dupName(c.dup) || "")}: the same card, counted once">Duplicate</span>` : ""}
     ${small || link ? "" : `<button type="button" class="add${inDeck ? " in" : ""}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "✓ In deck" : "+ Deck"}</button>`}
     <div class="meta"><div class="name">${esc(c.name)}</div>
-    <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(env.icons, t, "")).join("")}</div></div>${link ? "</a>" : "</article>"}`;
+    <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(env.icons, t, "")).join("")}</div></div>${link || href ? "</a>" : "</article>"}`;
 }
 
 /** the grid's toolbar; sort: the shown sort, dir: the dir param, created: the build has creation dates, tail: edit mode's

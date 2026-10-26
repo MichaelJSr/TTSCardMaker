@@ -104,7 +104,7 @@ select, .range-row input { width: 100%; padding: 5px 8px; border-radius: 8px; bo
 .tile { position: relative; content-visibility: auto; contain-intrinsic-size: 168px 300px; border-radius: 12px;
   background: var(--surface); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: transform .12s, box-shadow .12s; }
 .tile:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-a.tile { display: block; color: inherit; text-decoration: none; }   /* index.html's pre-written tiles */
+a.tile { display: block; color: inherit; text-decoration: none; }   /* a tile links to its card's page */
 .tile .art { display: block; width: 100%; background: var(--surface-2); aspect-ratio: 5 / 8; object-fit: cover; object-position: top; }
 .tile .meta { padding: 7px 9px 9px; }
 .tile .name { font-weight: 600; font-size: 13.5px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

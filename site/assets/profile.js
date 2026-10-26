@@ -16,7 +16,8 @@ export const ITEM_KINDS = new Set(["item", "aux item", "nme"]);
 const line = s => String(s ?? "").split(/\s+/).filter(Boolean).join(" ");   // one line, single spaces
 
 /** The profile's fields checked against the site's data: {profile (known fields only, cleaned), errors[]}.
- *  ctx = {cards: Map id -> card, series: Set, people: [author names]}. build_site.py clean_profile applies the same rules. */
+ *  ctx = {cards: Map id -> card, series: Set, subseries: Map name -> Set of its cards' series, people: [author names]}.
+ *  build_site.py clean_profile applies the same rules. */
 export function validateProfile(raw, ctx) {
   raw = raw && typeof raw === "object" ? raw : {};
   const errors = [], p = { login: String(raw.login ?? "") };
@@ -30,6 +31,8 @@ export function validateProfile(raw, ctx) {
   if (motto.length > LIMITS.motto) errors.push(`Motto: at most ${LIMITS.motto} characters`); else if (motto) p.motto = motto;
   const series = line(raw.series);
   if (series) { if (ctx.series.has(series)) p.series = series; else errors.push(`Series: “${series}” isn't a known series`); }
+  const sub = line(raw.subseries), within = ctx.subseries?.get(sub);     // one name across series; with a series, one its cards use
+  if (sub) { if (!within) errors.push(`Subseries: “${sub}” isn't a known subseries`); else if (p.series && !within.has(p.series)) errors.push(`Subseries: “${sub}” has no cards in ${p.series}`); else p.subseries = sub; }
   for (const [k, label] of PICKS) {
     const id = line(raw[k]);
     if (!id) continue;
@@ -95,6 +98,11 @@ export const githubUrl = login => (LOGIN_RE.test(login || "") ? `https://github.
 export const avatarHtml = (login, px) => (LOGIN_RE.test(login || "")
   ? `<img class="avatar" src="https://avatars.githubusercontent.com/${encodeURIComponent(login)}?s=${px * 2}" width="${px}" height="${px}" loading="lazy" decoding="async" referrerpolicy="no-referrer" alt="${esc(login)} on GitHub">` : "");
 const githubFact = login => (githubUrl(login) ? `<a class="fact" href="${githubUrl(login)}" target="_blank" rel="noopener">GitHub: ${esc(login)}</a>` : "");
+/** The favourite series and subseries as one chip ("Don't Starve › Gourmet Expansion"), linked to those cards. */
+const seriesFact = p => {
+  const parts = [["series", p.series], ["subseries", p.subseries]].filter(([, v]) => v);
+  return parts.length ? `<a class="fact" href="#/cards?${parts.map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&")}" data-tip="${p.subseries ? (p.series ? "Series › subseries" : "Subseries") : "Series"}">${esc(parts.map(([, v]) => v).join(" › "))}</a>` : "";
+};
 const authorLink = (p, cards) => { const n = cardsBy(p.author, cards); return `<a class="fact" href="#/cards?author=${encodeURIComponent(p.author)}">${n} card${n === 1 ? "" : "s"} by ${esc(p.author)}</a>`; };
 
 /** x = {login, profile | null, state, removed, own, canEdit, byId, cards, tile(card), preview?}; preview: the editor's live
@@ -116,7 +124,7 @@ export function profileHtml(x) {
     <div class="facts">
       ${githubFact(p.login)}
       ${p.author ? authorLink(p, x.cards) : ""}
-      ${p.series ? `<a class="fact" href="#/cards?series=${encodeURIComponent(p.series)}" data-tip="Series">${esc(p.series)}</a>` : ""}
+      ${seriesFact(p)}
       ${p.updated ? `<span class="fact" data-tip="Profile last changed">updated ${esc(p.updated.slice(0, 10))}</span>` : ""}
       ${x.preview ? "" : stateFact(x.state)}
     </div>

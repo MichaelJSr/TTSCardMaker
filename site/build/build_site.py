@@ -1669,7 +1669,7 @@ PROFILE_TEXT = {"motto": 140, "author": 60}
 PROFILE_PICKS = {"favourite": "Favourite card", "hated": "Hated card", "favouriteItem": "Favourite item", "hatedItem": "Hated item"}
 ITEM_KINDS = {"item", "aux item", "nme"}
 PROFILE_PAIRS, PAIR_LABEL, PAIR_VALUE, DECK_CODE = 12, 40, 200, 2000
-PROFILE_FIELDS = {"login", "series", "deck", "facts", "updated", *PROFILE_TEXT, *PROFILE_PICKS}
+PROFILE_FIELDS = {"login", "series", "subseries", "deck", "facts", "updated", *PROFILE_TEXT, *PROFILE_PICKS}
 
 
 def decode_deck(code):
@@ -1723,6 +1723,15 @@ def clean_profile(raw, stem, cards, people, moved=None):
             p["series"] = series
         else:
             notes.append(f"series {series!r} isn't a known series, dropped")
+    subseries = one_line(raw.get("subseries"))   # one name across series; with a series, one its cards use
+    if subseries:
+        within = {c.get("series") for c in cards.values() if c.get("subseries") == subseries}
+        if not within:
+            notes.append(f"subseries {subseries!r} isn't a known subseries, dropped")
+        elif "series" in p and p["series"] not in within:
+            notes.append(f"subseries {subseries!r} has no cards in series {p['series']!r}, dropped")
+        else:
+            p["subseries"] = subseries
     for field, label in PROFILE_PICKS.items():
         cid = raw.get(field)
         if cid is None:
@@ -2024,10 +2033,11 @@ def profile_text(p, n_cards, by_id, contrib="", cards_line=""):
     """The profile page's link-preview description; contrib: the person's contrib_text line, if they have contributions;
     cards_line: their cards_text line, if they have cards."""
     lines = [p["motto"]] if p.get("motto") else []
+    series = " › ".join(filter(None, (p.get("series"), p.get("subseries"))))
     if p.get("author"):
-        lines.append(f"{n_cards} card{'' if n_cards == 1 else 's'} by {p['author']}" + (f" · {p['series']}" if p.get("series") else ""))
-    elif p.get("series"):
-        lines.append(p["series"])
+        lines.append(f"{n_cards} card{'' if n_cards == 1 else 's'} by {p['author']}" + (f" · {series}" if series else ""))
+    elif series:
+        lines.append(series)
     if contrib:
         lines.append(contrib)
     picks = [f"{label}: {by_id[p[k]]['name']}" for k, label in PROFILE_PICKS.items() if p.get(k) in by_id]

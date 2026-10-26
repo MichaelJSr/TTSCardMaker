@@ -130,7 +130,7 @@ const fontsOf = c => S.fontUse?.get(c.id) || [];
 const needsFonts = p => p.has("font") || p.has("xfont");
 // the name list under a data-suggest field (tokens.js): the Font box for everyone, the editor's name fields in edit mode
 const tokenApi = { vocab: () => [], icon: (t, o) => S.renderer?.icon(t, o) ?? null,
-  names: el => (el.dataset.suggest === "font" ? fontEntries() : editor.names?.(el.dataset.suggest) || []) };
+  names: el => (el.dataset.suggest === "font" ? fontEntries() : editor.names?.(el.dataset.suggest, el) || []) };
 let tokensMod = null, tokensP = null;
 const useTokens = m => { if (!tokensMod) { tokensMod = m; m.install(tokenApi); } return m; };   // once: the editor imports the same module
 const loadTokens = () => (tokensP ||= (early("tokens.js"), import("./tokens.js")).then(useTokens).catch(e => { tokensP = null; throw e; }));
@@ -231,7 +231,7 @@ function startEditor(M) {
     iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
     users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
     // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
-    view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
+    view, route: () => parseHash(), tile: (c, o) => tileHtml(c, { small: true, ...o }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
     decks: () => loadDecks().then(() => deckList()),         // the published decks (with the pending ones): the publish dialog's "replaces"
     formOpened: x => previews.mountForm(x),                  // the Edit dialog's image previews
     loadDetails: c => loadDetails(c),                        // the parts editor's boxes (details/<id>.json)
@@ -651,9 +651,9 @@ function longestRun(seq) {
   return run;
 }
 // index.html's first screen (build_site first_screen): link tiles whose pictures are already in. The first render makes
-// each one that is its card's tile as the site draws it now the grid's tile in place: the flag and deck button added, the
-// href kept (middle-click, Cmd-click, Open in new tab: owner 10-26; edit mode's markTiles drops it: no link drag). Any
-// other (a staged edit, say) fillGrid replaces.
+// each one that is its card's tile as the site draws it now the grid's tile in place: the flag, deck button and data-open
+// added (every tile links to its card's page: owner 10-26; edit mode's markTiles drops the href). Any other (a staged
+// edit, say) fillGrid replaces.
 function adoptFirst(grid, css) {
   for (const a of grid.querySelectorAll(":scope > a.tile:not([data-open])")) {
     const c = S.byId.get(decodeURIComponent((a.getAttribute("href") || "").slice(2, -1))), t = document.createElement("template");
@@ -663,7 +663,7 @@ function adoptFirst(grid, css) {
     const html = tileHtml(c, { css }), meta = $(".meta", a);
     t.innerHTML = html;
     for (const el of [...t.content.firstElementChild.children]) if (!el.matches(".art, .meta")) a.insertBefore(el, meta);
-    a.dataset.open = c.id; a.tabIndex = 0;
+    a.dataset.open = c.id;
     gridTiles.set(c.id, { html, el: a, ed: false, css });
   }
 }
@@ -1034,7 +1034,7 @@ function openPicker(tier) {                              // the shared picker (p
     <p class="muted">Banned cards are marked: they make the hand illegal.</p><div id="picker-body"></div></div>`;
   modal.hidden = false; document.body.style.overflow = "hidden";
   pick.mount($("#picker-body"), { cards: () => S.cards, filter: c => fits(c) && c.parsed && !deckHas(c.id), kinds: KINDS, kindOf,
-    tile: c => tileHtml(c, { small: true, constructed: true }),
+    tile: (c, o) => tileHtml(c, { small: true, constructed: true, ...o }),
     onChoose: id => { const err = D.addCard(deck(), S.byId.get(id), S.byId); if (err) toast(err); else { D.saveDecks(S.decks); updateDeckCount(); closeModal(); renderDeck(parseHash()); } } });
 }
 
@@ -1430,7 +1430,7 @@ document.addEventListener("click", e => {
   if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); act(a.dataset.action, a); return; }
   const open = e.target.closest("[data-open], .chart [data-card]");
   if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey || S.selecting) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
-  if (open?.matches("a[href]") && (e.metaKey || e.ctrlKey || e.shiftKey || e.button)) return;   // an adopted first-screen tile: the browser opens its page
+  if (open?.matches("a[href]") && (e.metaKey || e.ctrlKey || e.shiftKey || e.button)) return;   // a tile's link: the browser opens its page
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
   const go = e.target.closest(".chart a.go");             // a Stats chart's cards: the grid from its top
   if (go && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) { e.preventDefault(); S.toTop = true; location.hash = go.getAttribute("href"); return; }
