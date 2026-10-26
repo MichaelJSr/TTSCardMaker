@@ -57,6 +57,7 @@ let card = null;                                   // the card the dialog shows 
 let cur = null;                                    // the open editor: {c, f, el, host, html, cls, tip, ctl, v, save, snap}
 let pal = null;                                    // the open type palette: {c, row, html, tip, temp, save, ctl, snap}
 let closing = false;                               // this press is on the dialog's close button: a save doesn't redraw the card
+let stay = false;                                  // this press is on the backdrop and ends an edit: its click doesn't close the card
 let offered = null;                                // the card dialog's draft offer: {c, fields}
 let prov = null;                                   // a stat row changed by keyboard, not yet saved: {row, k, v0}
 let pointer = false;                               // the last input was a pointer (focus moved by a click, not Tab)
@@ -443,7 +444,9 @@ export function install(api) {
   window.addEventListener("pagehide", flush);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flush(); });
   api.modal.addEventListener("pointerdown", () => { pointer = true; });
-  window.addEventListener("pointerdown", e => { closing = !!(cur || pal || prov) && api.modal.contains(e.target) && !!e.target.closest?.('[data-action="close"]'); }, true);   // before the palette's click-away
+  window.addEventListener("pointerdown", e => { closing = !!(cur || pal || prov) && api.modal.contains(e.target) && !!e.target.closest?.('[data-action="close"]');
+    stay = !!(cur || pal || prov) && e.target === api.modal; }, true);   // before the palette's click-away
+  window.addEventListener("click", e => { if (stay && e.target === api.modal) e.stopPropagation(); stay = false; }, true);   // the card stays open (app.js closes on a backdrop click)
   document.addEventListener("pointerdown", away, true);
   api.modal.addEventListener("click", onClick);
   api.modal.addEventListener("dblclick", onDblClick);
