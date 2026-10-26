@@ -536,9 +536,10 @@ function morph(el, to) {
   else if (el.tagName === "INPUT") el.checked = to.hasAttribute("checked");
 }
 // the grid's tiles by card id {html, el, ed, css}: html is the tile's markup without eager (its place doesn't change it),
-// ed: last placed in edit mode. A render reuses a tile while its markup is unchanged, so its picture stays loaded; entering
-// edit mode too (its marks, draggable, data-selected and preview badges, are set after every render), leaving it makes the
-// tiles anew. Code that changes a tile in place updates its markup here (refresh).
+// ed: last placed in edit mode, css: its picture's width for the tile size (another size sets sizes in place). A render
+// reuses a tile while its markup is unchanged, so its picture stays loaded; entering edit mode too (its marks, draggable,
+// data-selected and preview badges, are set after every render), leaving it makes the tiles anew. Code that changes a
+// tile in place updates its markup here (refresh).
 const gridTiles = new Map();
 const GRID_FIRST = 96, GRID_CHUNK = 120, GRID_EAGER = 8;
 let gridJob = 0;
@@ -558,6 +559,9 @@ function fillGrid(grid, list, { css, win }) {
     const els = [], made = [];
     for (let i = from; i < to; i++) {
       const c = list[i], html = tileHtml(c, { css }), t = gridTiles.get(c.id);
+      if (t && t.css !== css && t.html.replace(`sizes="${t.css}px"`, `sizes="${css}px"`) === html) {   // another tile size: its picture's sizes only
+        t.el.querySelector("img.art")?.setAttribute("sizes", `${css}px`); t.html = html; t.css = css;
+      }
       if (t && t.html === html && (ed || !t.ed)) { t.ed = ed; els.push(t.el); } else { els.push(null); made.push([i, html]); }
     }
     if (made.length) {

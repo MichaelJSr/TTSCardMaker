@@ -1218,8 +1218,8 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   longest run of tiles already in the list's order stays, `longestRun`; the others move in their turn); new or changed
   tiles go in. The cache's markup is the tile's without `eager` (a tile's place doesn't change it; the first 8 places
   are still made eager); entering edit mode reuses the tiles (the marks come after every render), leaving it (sign-out)
-  makes them anew; `refresh` (the deck button) updates the cached markup instead of dropping it. Another view (table,
-  "Loading…", no match, another tab) draws as before.
+  makes them anew; another tile size (S, M, L) sets the pictures' `sizes` in place; `refresh` (the deck button) updates
+  the cached markup instead of dropping it. Another view (table, "Loading…", no match, another tab) draws as before.
 - **Proof** (scratch noflash2 `proof.mjs`, headless Chrome, MutationObserver on #view counting tiles, tile pictures and
   any `<img>` leaving it; 1280, 1400, 1920 and 390 px): 0 across the first screen's takeover (the 8 tiles the same
   elements, no shift), the kept sign-in's restore and its edit-mode redraw (#view never rewritten), a no-op redraw signed
