@@ -274,7 +274,7 @@ function parseHash(hash = location.hash) {
   const h = hash.replace(/^#\/?/, "");
   if (!h && location.href.startsWith(ROOT)) {
     const rest = location.href.slice(ROOT.length), m = rest.match(/^([cu])\/([^/?#]+)/);
-    if (m) return { name: STATIC_PAGES[m[1]], arg: decodeURIComponent(m[2]), params: new URLSearchParams() };
+    if (m) return { name: STATIC_PAGES[m[1]], arg: decodeURIComponent(m[2]), params: new URLSearchParams(m[1] === "u" ? location.search : "") };   // u/<login>/?stars=<kind>
     const k = rest.match(/^decks\/([^/?#]+)\/([^/?#]+)/);
     if (k) return { name: "decks", arg: `${decodeURIComponent(k[1])}/${decodeURIComponent(k[2])}`, params: new URLSearchParams() };
   }
@@ -283,14 +283,15 @@ function parseHash(hash = location.hash) {
   if (parts[0] === "u" && parts.length === 3 && parts[2] === "edit") return { name: "u", arg: parts[1], edit: true, params: new URLSearchParams(query) };   // the profile editor
   return { name: parts[0] || "cards", arg: parts.slice(1).join("/"), params: new URLSearchParams(query) };
 }
-const hashOf = r => `#/${r.name}${r.arg ? `/${r.arg.split("/").map(encodeURIComponent).join("/")}` : ""}${r.edit ? "/edit" : ""}`;     // the route's hash when the address bar has none
+const hashOf = r => `#/${r.name}${r.arg ? `/${r.arg.split("/").map(encodeURIComponent).join("/")}` : ""}${r.edit ? "/edit" : ""}${r.name === "u" && !r.edit ? personQuery(r.params) : ""}`;     // the route's hash when the address bar has none
+const personQuery = p => (p?.get("stars") ? `?stars=${encodeURIComponent(p.get("stars"))}` : "");   // a person page's view state: the Star levels' kind
 // a published public deck (its share page exists): the entry, else null
 const staticDeck = arg => { const [o, ...rest] = String(arg || "").split("/"), s = rest.join("/"); const d = S.decksData?.decks.find(x => x.slug === s && x.owner.toLowerCase() === o.toLowerCase()); return d && !editor.deckOf(o, s) ? d : null; };
 // address bar shows the shareable URL: c/<id>/ for cards, u/<login>/ for profiles, decks/<owner>/<slug>/ for published decks, d/#/deck/… for shared hands;
 // the profile editor stays a hash route
 function syncUrl(r) {
   const sd = r.name === "decks" && r.arg ? staticDeck(r.arg) : null;
-  const want = r.name === "card" ? shareUrl(r.arg) : r.name === "u" && r.arg && !r.edit ? userUrl(r.arg) : sd ? deckPageUrl(sd.owner, sd.slug)
+  const want = r.name === "card" ? shareUrl(r.arg) : r.name === "u" && r.arg && !r.edit ? userUrl(r.arg) + personQuery(r.params) : sd ? deckPageUrl(sd.owner, sd.slug)
     : r.name === "decks" && r.arg && !location.hash ? location.href                  // a deck's static path before decks.json is loaded (or a private, staged or missing deck): stay, never the bare root
     : `${ROOT}${r.name === "deck" && r.arg ? "d/" : ""}${location.hash}`;
   if (location.href !== want || !history.state?.drawn) history.replaceState({ ...history.state, drawn: true }, "", want);   // drawn: Back or Forward to it restores its scroll
@@ -1260,14 +1261,23 @@ function renderUser(r) {
   const profile = pending ? pending.profile : published;
   if (!person && profile) person = Pf.personOf(profile, people);
   const login = pending?.profile?.login || published?.login || person?.key || r.arg;    // the file's spelling: u/<login>/ exists only for it
-  if (login !== r.arg) { S.renderedHash = S.listHash = hashOf({ name: "u", arg: login }); syncUrl({ name: "u", arg: login }); }
+  if (login !== r.arg) { const to = { name: "u", arg: login, params: r.params }; S.renderedHash = S.listHash = hashOf(to); syncUrl(to); }
   const own = !!me && (me.login.toLowerCase() === login.toLowerCase() || !!person?.logins.some(l => l.toLowerCase() === me.login.toLowerCase()));
   const owners = new Set([login, person?.github, ...(person?.logins || [])].filter(Boolean).map(s => s.toLowerCase())), theirs = deckList().filter(d => owners.has(d.owner.toLowerCase()));
   view.innerHTML = Pf.personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
     own, canEdit: own || !!me?.admin, byId: S.byId, cards: S.cards, tile: c => tileHtml(c, { small: true }),
     available: !!S.contrib.available, since: S.contrib.since, repo: S.data.repo, titles: S.titles, date, month, kinds: KINDS, kindOf,
-    people, site: S.contrib.site || {}, mentions: S.mentions, mentionedBy: S.mentionedBy, banned: S.banned,
+    people, site: S.contrib.site || {}, mentions: S.mentions, starKind: r.params.get("stars") || "", mentionedBy: S.mentionedBy, banned: S.banned,
     decks: { public: decks.sortDecks(theirs.filter(d => !d.private)), private: decks.sortDecks(theirs.filter(d => d.private)) }, deckTile: d => decks.deckTileHtml(d, deckCtx()) });
+  if (r.params.get("stars") && !$(".p-stars", view)?.dataset.kind) personStars({ name: "u", arg: login, params: r.params }, "");   // an unknown kind: all, out of the address
+}
+/** The Star levels' kind in the address (u/<login>/?stars=<kind>), without a redraw; the address only while it shows the person. */
+function personStars(r, kind) {
+  const params = new URLSearchParams(r.params);
+  if (kind) params.set("stars", kind); else params.delete("stars");
+  const to = { ...r, params };
+  S.renderedHash = S.listHash = hashOf(to);
+  if (parseHash().name === "u") syncUrl(to);
 }
 function renderUsers() {
   if (!usersReady("users", renderUsers)) return;
@@ -1376,6 +1386,7 @@ const actions = {
   "save-shared": () => { const s = S.shared; D.newDeck(S.decks, s.name, s.cards.filter(id => S.byId.has(id)), s.field); updateDeckCount(); location.hash = "#/deck"; toast("Saved to your decks"); },
   "copy-user-link": el => copy(userUrl(el.dataset.login), "link: paste it in Discord"),
   "share-user": el => openUserShare(el.dataset.login),
+  "person-stars": el => { const box = el.closest(".p-stars"); if (!box || !Pf) return; Pf.showStars(box, el.dataset.kind, S.cards, kindOf); personStars(parseHash(), el.dataset.kind); },
   "share-user-discord": el => copy(userDiscord(el.dataset.login), "person for Discord"),
   "share-user-text": el => copy(userText(el.dataset.login), "person as text"),
   "share-user-native": el => { const name = el.dataset.login; navigator.share({ title: name, text: Pf.personText({ ...userShare(name), name: "" }), url: userUrl(name) }).catch(() => {}); },

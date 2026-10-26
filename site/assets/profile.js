@@ -305,15 +305,21 @@ export function styleOf(own, all, x = {}) {
   return { types: group("type"), status: group("status"), tags: group("tag"), words: w == null ? null : round1(w), siteWords: site.words == null ? null : round1(site.words) };
 }
 /** P10: {stars, kinds: [[key, their share, all cards' share]]} (0-1): star levels among cards with stars, kinds of all
- *  (all: the site's cards; duplicates and hidden ones left out here). */
-export function mixOf(own, all, kindOf = c => c.type) {
+ *  (all: the site's cards; duplicates and hidden ones left out here). kind: star levels within that kind (kindOf), both sides. */
+export function mixOf(own, all, kindOf = c => c.type, kind = "") {
   all = all.filter(visible);
   const shares = (list, f) => { const m = new Map(); let n = 0; for (const c of list) { const k = f(c); if (k == null) continue; n++; m.set(k, (m.get(k) || 0) + 1); } return [m, n]; };
-  const rows = f => {
-    const [a, an] = shares(all, f), [o, on] = shares(own, f);
+  const rows = (f, mine = own, site = all) => {
+    const [a, an] = shares(site, f), [o, on] = shares(mine, f);
     return [...new Set([...a.keys(), ...o.keys()])].map(k => [k, on ? (o.get(k) || 0) / on : 0, an ? (a.get(k) || 0) / an : 0]).filter(r => r[1] > 0);
   };
-  return { stars: rows(c => c.stars ?? null).sort((a, b) => a[0] - b[0]), kinds: rows(kindOf).sort((a, b) => b[1] - a[1] || b[2] - a[2]) };
+  const of = kind ? c => kindOf(c) === kind : () => true;
+  return { stars: rows(c => c.stars ?? null, own.filter(of), all.filter(of)).sort((a, b) => a[0] - b[0]), kinds: rows(kindOf).sort((a, b) => b[1] - a[1] || b[2] - a[2]) };
+}
+/** The kinds of their cards with a star level: kinds' order ([[key, label]], app.js KINDS), others after. */
+export function starKinds(own, kindOf = c => c.type, kinds = []) {
+  const order = kinds.map(([k]) => k), rank = k => (order.includes(k) ? order.indexOf(k) : order.length);
+  return [...new Set(own.filter(c => c.stars != null).map(kindOf).filter(Boolean))].sort((a, b) => rank(a) - rank(b) || String(a).localeCompare(String(b)));
 }
 const yearOf = c => (c.created ? +c.created.slice(0, 4) : c.fs ? new Date(c.fs * 1000).getUTCFullYear() : 0);
 /** P14: {first, last (cards), years: [[year, n]], best: [year, n]} by createdTs (undated cards left out); null without dates. */
@@ -438,14 +444,28 @@ export function revisionsPanelHtml(p, x) {
   return panel("Revisions", `${v ? `<p class="muted">Image changes after the first upload; passes over 20 cards left out.</p>` : ""}${bar}${chips}${facts ? `<div class="facts">${facts}</div>` : ""}`);
 }
 const mixRows = (rows, label) => rows.map(([k, mine, all]) => `<div class="p-mix"><span>${esc(label(k))}</span><span class="p-track"><i style="width:${(mine * 100).toFixed(1)}%"></i><b style="left:${(all * 100).toFixed(1)}%"></b></span><span class="muted">${pct(mine)} · all ${pct(all)}</span></div>`).join("");
-/** Style (P6, P10). s = styleOf(), mix = mixOf(); x = {byId, kinds} */
-export function stylePanelHtml(s, mix, x, n) {
+const starRows = rows => mixRows(rows, k => `${k}★`);
+/** The Star levels block; stars = {key (the person), kinds: starKinds(), kind (picked, "" = all)}: a kind picker past one kind. */
+function starsHtml(rows, stars, label) {
+  const kinds = stars?.kinds || [], on = stars?.kind || "";
+  const pick = kinds.length > 1 ? `<div class="chips p-star-kinds" role="group" aria-label="Star levels of">${[["", "All"], ...kinds.map(k => [k, label(k)])]
+    .map(([k, l]) => `<button type="button" class="chip${k === on ? " on" : ""}" data-action="person-stars" data-kind="${esc(k)}" aria-pressed="${k === on}">${esc(l)}</button>`).join("")}</div>` : "";
+  return `<div class="p-stars" data-person="${esc(stars?.key || "")}" data-kind="${esc(on)}"><div class="pick-label">Star levels</div>${pick}<div class="p-stars-rows">${starRows(rows)}</div></div>`;
+}
+/** A kind picked on the Star levels block: its rows and buttons redrawn in place (nothing else on the page). */
+export function showStars(box, kind, cards, kindOf) {
+  box.querySelector(".p-stars-rows").innerHTML = starRows(mixOf(cardsOf(box.dataset.person, cards), cards, kindOf, kind).stars);
+  box.dataset.kind = kind;
+  for (const b of box.querySelectorAll(".p-star-kinds button")) { const on = b.dataset.kind === kind; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); }
+}
+/** Style (P6, P10). s = styleOf(), mix = mixOf(); x = {byId, kinds}; stars: starsHtml's */
+export function stylePanelHtml(s, mix, x, n, stars = null) {
   const chip = (html, [, k, ratio, share]) => `<span class="chip" data-tip="${esc(`${k} of their cards (${pct(k / n)}) vs ${pct(share)} of all cards`)}">${html} ×${ratio}</span>`;
   const row = (label, list, html) => (list.length ? `<div class="p-style"><span class="pick-label">${label}</span><div class="chips">${list.map(r => chip(html(r[0]), r)).join("")}</div></div>` : "");
   const chips = s ? row("Types", s.types, t => esc(t.replace(/_/g, " "))) + row("Status effects", s.status, id => esc(x.byId?.get(id)?.name || id)) + row("Timing tags", s.tags, badgeHtml) : "";
   const words = s?.words != null ? `<p>Words per ability: ${s.words} <span class="muted">· all cards ${s.siteWords}</span></p>` : "";
   const label = k => (x.kinds || []).find(([key]) => key === k)?.[1] || k;
-  const mixes = mix && (mix.stars.length || mix.kinds.length) ? `<div class="p-mixes">${mix.stars.length ? `<div><div class="pick-label">Star levels</div>${mixRows(mix.stars, k => `${k}★`)}</div>` : ""}
+  const mixes = mix && (mix.stars.length || mix.kinds.length) ? `<div class="p-mixes">${mix.stars.length ? starsHtml(mix.stars, stars, label) : ""}
     ${mix.kinds.length ? `<div><div class="pick-label">Kinds</div>${mixRows(mix.kinds, label)}</div>` : ""}</div>` : "";
   if (!chips && !words && !mixes) return "";
   return panel("Style", `${chips}${words}${mixes}`);
@@ -461,12 +481,13 @@ export function archivedPanelHtml(rows) {
 /** The person page: the profile (when there is one) over the contributions, the activity chart, Balance, Ratings,
  *  Revisions, Style, the Cards panel, Archived cards and the Decks panel; a contributor without a profile gets a plain
  *  header instead. x = profileHtml's x + cardsPanelHtml's x + decksPanelHtml's x + {person | null, available, since,
- *  titles, date, month, repo, people, site, mentions} */
+ *  titles, date, month, repo, people, site, mentions, starKind (the Star levels' kind)} */
 export function personHtml(x) {
   const { person, profile } = x;
   if (!person) return `${profileHtml(x)}${decksPanelHtml(x)}`;
   const own = cardsOf(person.key, x.cards), statusIds = memoOf(x.cards, "status", () => new Set(x.cards.filter(c => c.type === "debuff" || c.type === "buff").map(c => c.id)));
-  const style = own.length ? stylePanelHtml(styleOf(own, x.cards, { mentions: x.mentions, statusIds }), mixOf(own, x.cards, x.kindOf), x, own.length) : "";
+  const kinds = starKinds(own, x.kindOf, x.kinds), kind = kinds.length > 1 && kinds.includes(x.starKind) ? x.starKind : "";   // ?stars=<kind>; else all
+  const style = own.length ? stylePanelHtml(styleOf(own, x.cards, { mentions: x.mentions, statusIds }), mixOf(own, x.cards, x.kindOf, kind), x, own.length, { key: person.key, kinds, kind }) : "";
   const rest = `${x.available ? activityHtml(person, x) : ""}${balancePanelHtml(person, x)}${ratingsPanelHtml(person, x)}${revisionsPanelHtml(person, x)}${style}`
     + `${cardsPanelHtml(person, x)}${archivedPanelHtml(person.archived)}${decksPanelHtml(x)}`;
   if (profile || x.removed) return `${profileHtml(x)}<div class="profile"><div class="panel"><h3>Contributions</h3>${contributionsHtml(person, x)}</div></div>${rest}`;

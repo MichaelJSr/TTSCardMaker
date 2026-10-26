@@ -658,6 +658,7 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .p-track { position: relative; height: 10px; border-radius: 999px; background: var(--surface-2); }
 .p-track i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: var(--s1); }
 .p-track b { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: var(--ink); }
+.p-star-kinds { margin: -2px 0 6px; }   /* the Star levels' kind */
 @media (max-width: 640px) {
   .p-picks, .p-mixes { grid-template-columns: minmax(0, 1fr); }
   .p-mix { grid-template-columns: 7em minmax(40px, 1fr) 7.5em; }
