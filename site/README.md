@@ -196,13 +196,11 @@ value (series, subseries and author list the known names as you type, in the tok
 counts; picking one saves it; a missing one shows as a dashed `+ series` chip when you
 hover the row). In the cards grid, Ctrl/Cmd-click selects tiles (Shift-click a range, Esc clears; a filter change keeps
 only the tiles still shown) and dragging one or the selection onto a series, subseries or author in the filter bar (the
-values appear under the Series, Subseries and Author selects while you drag; subseries once a series is picked, its own
-ones) assigns it to every card dragged; a drop changes that one field only. **Pin a box** (in the toolbar, Grid view) pins
+values appear under the Series, Subseries and Author selects while you drag) assigns it to every card dragged; a drop changes that one field only. **Pin a box** (in the toolbar, Grid view) pins
 a series, subseries or author as a big box over the grid (up to 9, kept in this browser only, never published; ✕
 unpins): drag cards onto it, or select cards and press its number or tap it (on a phone, **Select** makes a tap select a
-tile; **Done** or Esc ends it). A subseries box sets the subseries only, and only on cards in its series; the others are
-refused, and the toast says how many. To make a new series, subseries or author,
-pick **New series…** (**New subseries…**, with a series picked; **New author…**) at the end of its select and type the
+tile; **Done** or Esc ends it). A subseries box sets the subseries only, on cards of any series. To make a new series,
+subseries or author, pick **New series…** (**New subseries…**, **New author…**) at the end of its select and type the
 name in its place (Enter or a click elsewhere makes it, Esc or nothing typed cancels). It shows as "Name (no cards
 yet)" in the select and as a dashed value under it while you drag, and the card page's chips suggest it; the filter
 stays as it was, so the cards to drag are still shown. Until a card carries it, it lives only in your browser tab (gone
@@ -224,7 +222,9 @@ opens the full form for everything else (kind, item type (a fixed list: the `Ite
 hidden, creatures). Signed out, none of this shows: the pages are the same to the pixel. Fields go to
 `site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to `site/Constructed Ban List.txt`. Card sync reads
 them on that commit and rebuilds the site after its data commit. A subseries (Goombella: series Mario, subseries Paper
-Mario: The Thousand-Year Door) exists only as an edit (`subseries`; the bot reads it too). Edits **on the card image**
+Mario: The Thousand-Year Door) exists only as an edit (`subseries`; the bot reads it too). It is one group across series:
+the same name under two series is one subseries, a card may have one without a series, picking it in the filter bar
+shows all its cards (the Series select narrows them), and renaming it renames it everywhere. Edits **on the card image**
 (name, stars, types, stats, ability text; the form groups them and the bar marks them, and they show as "PSD pending"
 until the image is regenerated) are told apart from **database only** ones, which come from the card's folder or exist
 only as edits (kind, item type, series, subseries, note, aliases, author, duplicate of, checks, constructed ban,

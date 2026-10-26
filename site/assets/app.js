@@ -221,13 +221,11 @@ function startEditor(M) {
   // edit mode = signed in: the card dialog and the cards grid edit in place (inline.js), the form stays as "All fields"
   inline = M.inline; tray = M.tray;
   inline.install({ editor: ed, modal, selected: S.selected, goCard: id => goCard(id), rerender: () => rerender(), toast: m => toast(m) });
-  tray.install({ view, editor: ed, selected: S.selected, drop: (ids, t) => inline.dropOn(ids, t), toast: m => toast(m), cards: () => S.all,   // the pinned boxes
-    filterSeries: () => parseHash(S.listHash).params.get("series") || "" });
-  const seriesFor = el => (el.dataset.seriesFrom ? document.getElementById(el.dataset.seriesFrom)?.value.trim() || "" : el.dataset.series || "");   // a subseries field's series
+  tray.install({ view, editor: ed, selected: S.selected, drop: (ids, t) => inline.dropOn(ids, t), toast: m => toast(m), cards: () => S.all });   // the pinned boxes
   let vocab = null, vocabRev = -1;                         // the token picker's icons, the most used first (after each derive())
   const vocabOf = () => { if (vocabRev !== S.rev) { vocab = M.tokens.vocabulary(S.icons, S.all.map(c => c.ability)); vocabRev = S.rev; } return vocab; };
   M.tokens.install({ vocab: () => (S.all ? vocabOf() : []), icon: (t, o) => S.renderer?.icon(t, o) ?? null,   // "[" or "(" in card text: suggestions
-    names: el => ed.names(el.dataset.suggest, seriesFor(el)) });                                       // a name field: the known names
+    names: el => ed.names(el.dataset.suggest) });                                       // a name field: the known names
   M.palette.useSearch(M.palette.pickerSearch(M.tokens.suggest, () => (S.all ? vocabOf() : [])));    // the type palette ranks as the picker
   inline.extend({ hideTip, icons: () => S.icons, closePicker: M.tokens.dismiss });   // editors hide the tooltip and the list; the type palette's icons
   Object.assign(actions, ed.actions, tray.actions);
@@ -407,12 +405,9 @@ function renderCards(r) {
   const typeCounts = count(base, c => c.types || []);
   const miss = csv(p, "missing"), missCounts = new Map(G.MISSING.map(([k, , , test]) => [k, list.filter(test).length]));   // what ticking it would show
   const series = [...new Set(S.cards.map(c => c.series).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  const subseries = [...new Map(S.cards.filter(c => c.subseries && (!p.get("series") || c.series === p.get("series")))   // [series, subseries] of the picked series
-    .map(c => [`${c.series || ""}\u0001${c.subseries}`, [c.series || "", c.subseries]])).values()].sort((a, b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0]));
-  const sharedSub = name => subseries.filter(x => x[1] === name).length > 1;     // same name in two series: say which
-  const subOpt = ([ser, sub]) => { const sh = sharedSub(sub), on = sub === p.get("subseries") && (!sh || ser === p.get("series"));
-    return `<option value="${esc(sub)}"${sh ? ` data-series="${esc(ser)}"` : ""}${on ? " selected" : ""}>${esc(sub)}${sh ? ` (${esc(ser || "no series")})` : ""}</option>`; };
-  const subPicked = p.get("subseries") && !subseries.some(([ser, sub]) => sub === p.get("subseries") && (!sharedSub(sub) || ser === p.get("series")));
+  const subseries = [...new Set(S.cards.filter(c => c.subseries && (!p.get("series") || c.series === p.get("series"))).map(c => c.subseries))]   // each name once (a picked series: its own)
+    .sort((a, b) => a.localeCompare(b));
+  const subPicked = p.get("subseries") && !subseries.includes(p.get("subseries"));
   const authors = [...new Set(S.cards.map(c => c.author).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const starOpts = [...new Set(S.cards.map(c => c.stars).filter(Boolean))].sort((a, b) => a - b).map(s => [s, `${s}★`]);
   const subOpts = [...new Set(S.cards.map(c => c.subtype).filter(Boolean))].sort().map(s => [s, s[0].toUpperCase() + s.slice(1)]);
@@ -449,7 +444,7 @@ function renderCards(r) {
       ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t); const on = csv(p, "types").includes(t);
         return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(t.replace(/_/g, " "))} (${typeCounts.get(t)})" aria-pressed="${on}">${ic ? `<img loading="lazy" src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
       <h3>Series</h3><select data-action="select-param" data-key="series"><option value="">All series</option>${series.map(s => `<option${s === p.get("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>
-      ${subseries.length || p.get("subseries") ? `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(p.get("subseries"))}</option>` : ""}${subseries.map(subOpt).join("")}</select>` : ""}
+      ${subseries.length || p.get("subseries") ? `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(p.get("subseries"))}</option>` : ""}${subseries.map(s => `<option${s === p.get("subseries") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>` : ""}
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
       <h3>Author</h3><select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === p.get("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>
       <h3>Flags</h3>${FLAGS
@@ -609,7 +604,7 @@ function openCard(id, showDetails = false) {
   const inDeck = deckHas(c.id);
   const mentions = [...(S.mentions.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
   const mentionedBy = [...(S.mentionedBy.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
-  const inSub = x => x.subseries === c.subseries && x.series === c.series;
+  const inSub = x => x.subseries === c.subseries;                // any series
   const sameSub = c.subseries ? S.cards.filter(x => inSub(x) && x.id !== c.id) : [];
   const sameSeries = c.series ? S.cards.filter(x => x.series === c.series && x.id !== c.id && !(c.subseries && inSub(x))) : [];
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="${esc(c.name)}">
@@ -631,7 +626,7 @@ function openCard(id, showDetails = false) {
           ${c.subtype ? `<a class="fact" href="#/cards?sub=${encodeURIComponent(c.subtype)}">${esc(cap(c.subtype))}</a>` : ""}
           ${c.stars ? `<a class="fact" href="#/cards?stars=${c.stars}"><span class="stars">${stars(c.stars)}</span> ${c.stars}-star</a>` : ""}
           ${c.series ? `<a class="fact" href="#/cards?series=${encodeURIComponent(c.series)}">${esc(c.series)}</a>` : ""}
-          ${c.subseries ? `<a class="fact" href="#/cards?${c.series ? `series=${encodeURIComponent(c.series)}&` : ""}subseries=${encodeURIComponent(c.subseries)}" data-tip="Subseries">${esc(c.subseries)}</a>` : ""}
+          ${c.subseries ? `<a class="fact" href="#/cards?subseries=${encodeURIComponent(c.subseries)}" data-tip="Subseries">${esc(c.subseries)}</a>` : ""}
           ${c.author ? `<a class="fact" href="#/cards?author=${encodeURIComponent(c.author)}">by ${esc(c.author)}</a>` : ""}
           ${c.created ? `<span class="fact" data-tip="${esc(createdTip(c))}">created ${createdText(c)}</span>` : ""}
           ${c.ts ? `<span class="fact" data-tip="Last PSD commit (Pacific time)">updated ${date(c.ts)}</span>` : ""}
@@ -1171,9 +1166,9 @@ const actions = {
   "close": () => { if ($("#edit-form", modal)) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
   "toggle-param": el => { const p = parseHash().params, cur = csv(p, el.dataset.key), v = el.dataset.value;
     setParams({ [el.dataset.key]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); },
-  "select-param": el => { const k = el.dataset.key, o = el.selectedOptions?.[0]?.dataset || {};      // a shared subseries picks its series too; a sort its direction (default unless the option says)
-    setParams({ [k]: el.value, ...(k === "series" ? { subseries: "" } : {}), ...(o.series ? { series: o.series } : {}), ...(k === "sort" ? { dir: o.dir ?? "" } : {}) }); },
-  "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: csv(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "", ...(el.dataset.key === "series" ? { subseries: "" } : {}) }); if (el.dataset.key === "q") qInput.value = ""; },
+  "select-param": el => { const k = el.dataset.key, o = el.selectedOptions?.[0]?.dataset || {};      // a sort: its direction (default unless the option says)
+    setParams({ [k]: el.value, ...(k === "sort" ? { dir: o.dir ?? "" } : {}) }); },
+  "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: csv(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "" }); if (el.dataset.key === "q") qInput.value = ""; },
   "clear-filters": () => { qInput.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },

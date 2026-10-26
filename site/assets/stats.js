@@ -324,8 +324,7 @@ export function renderStats(root, ctx, params) {
 
   // the series chart's cards: the picked kind, else creatures; the Subseries tile counts theirs
   const sk = kind || "creature", mine = pool.filter(c => c.type === sk);
-  const subKey = c => (c.subseries ? `${c.series || ""}\u0001${c.subseries}` : null);     // a subseries belongs to its series
-  const subCount = new Set(mine.map(subKey).filter(Boolean)).size;
+  const subCount = new Set(mine.map(c => c.subseries).filter(Boolean)).size;     // a name in two series: one subseries
 
   // KPI tiles
   const latest = pool.reduce((m, c) => Math.max(m, c.ts || 0), 0);
@@ -343,16 +342,23 @@ export function renderStats(root, ctx, params) {
   const byKind = desc(count(pool, c => c.type)).map(([k, v]) => ({ label: KIND_LABEL[k] || k, value: v, href: L({ kind: k }) }));
   charts.push(card("kinds", "Cards by kind", `${pool.length} cards`, hbar(byKind), table(["Kind", "Cards"], byKind.map(r => [r.label, r.value]))));
 
-  // 2 series, each with its subseries under it (cards without one: "No subseries")
-  const ser = desc(count(mine, c => c.series)), what = KIND_LABEL[sk] || sk;
-  const subsOf = s => { const of = mine.filter(c => c.series === s), rows = desc(count(of, c => c.subseries));
+  // 2 series, each with its subseries under it (cards without one: "No subseries"; a subseries in several series: under
+  //   each); cards with a subseries but no series: under "No series", last
+  const ser = desc(count(mine, c => c.series)), what = KIND_LABEL[sk] || sk, noSer = mine.filter(c => !c.series);
+  const subsOf = (s, of = mine.filter(c => c.series === s), f = { series: s }) => { const rows = desc(count(of, c => c.subseries));
     const none = rows.length ? of.filter(c => !c.subseries).length : 0;
-    return [...rows.map(([sub, v]) => ({ label: sub, value: v, sub: true, tip: `${s} › ${sub}`, href: L({ kind: sk, series: s, subseries: sub }) })),
+    return [...rows.map(([sub, v]) => ({ label: sub, value: v, sub: true, tip: `${s} › ${sub}`, href: L({ kind: sk, ...f, subseries: sub }) })),
       ...(none ? [{ label: "No subseries", value: none, sub: true, tip: `${s}: no subseries` }] : [])]; };
+  const rowsOf = (k, v, subs) => [[k, v], ...subs.map(r => Object.assign([`↳ ${r.label}`, r.value], { sub: true }))];
   const top = ser.slice(0, 15).flatMap(([k, v]) => [{ label: k, value: v, href: L({ kind: sk, series: k }) }, ...subsOf(k)]);
   const rest = ser.slice(15).reduce((s, [, v]) => s + v, 0);
   if (rest) top.push({ label: `Other (${ser.length - 15} series)`, value: rest });
-  const serRows = ser.flatMap(([k, v]) => [[k, v], ...subsOf(k).map(r => Object.assign([`↳ ${r.label}`, r.value], { sub: true }))]);
+  const serRows = ser.flatMap(([k, v]) => rowsOf(k, v, subsOf(k)));
+  if (noSer.some(c => c.subseries)) {
+    const subs = subsOf("No series", noSer, { missing: "series" });
+    top.push({ label: "No series", value: noSer.length, href: L({ kind: sk, missing: "series" }) }, ...subs);
+    serRows.push(...rowsOf("No series", noSer.length, subs));
+  }
   if (top.length) charts.push(card("series", `${what} by series`, `${ser.length > 15 ? `Top 15 of ${ser.length} series` : `${ser.length} series`}${subCount ? ", with their subseries" : ""}.`,
     hbar(top, { labelWidth: 230, chars: 32 }), table(["Series", what], serRows)));
 
