@@ -34,6 +34,7 @@ const S = {
   toTop: false,                                            // a Stats chart link was followed: the grid opens at its top
   notPick: new Set(),                                      // series, subseries, author: ≠ pressed with nothing picked yet
   fontUse: null,                                           // card id -> its fonts (data/cardfonts.json), once the Font filter loads it
+  fontKept: [],                                            // the Font chips listed, in order: picked, excluded, or clicked off (this page only)
 };
 // The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
@@ -420,11 +421,14 @@ function sortCards(list, sort = "name", dir = "") {
   }
   return list.sort(G.byKey(key, desc));
 }
-// xs: the excluded values (red, struck through, the count = the cards they remove: removes(key, v))
-function chipList(key, options, selected, counts, xs = [], removes = null) {
+// xs: the excluded values (red, struck through, the count = the cards they remove: removes(key, v)); del: a ✕ after each
+function chipList(key, options, selected, counts, xs = [], removes = null, del = null) {
   return `<div class="chips">${options.map(([v, label]) => { const x = xs.includes(String(v)), n = x ? removes(key, String(v)) : counts?.get(String(v)) || 0;
-    return `<button type="button" class="chip${x ? " x" : selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : ""}>${esc(label)}${counts ? `<span class="n">${x ? `−${n}` : n}</span>` : ""}</button>`; }).join("")}</div>`;
+    return `${del ? `<span class="chip-wrap">` : ""}<button type="button" class="chip${x ? " x" : selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : ""}>${esc(label)}${counts ? `<span class="n">${x ? `−${n}` : n}</span>` : ""}</button>${del ? `${del(v, label)}</span>` : ""}`; }).join("")}</div>`;
 }
+// the Font chips: chipList's, each with a ✕ that forgets it (a click turns it off and on, like Kind)
+const fontChips = (...a) => chipList("font", S.fontKept.map(f => [f, f]), ...a,
+  v => `<button type="button" class="ghost font-del" data-action="font-forget" data-value="${esc(v)}" title="Remove this font" aria-label="Remove the font ${esc(v)}">✕</button>`);
 const XABLE = new Set(["kind", "stars", "sub", "types", "flags", "missing", "cf", "font"]);   // a right-click (long press) excludes
 const NOT_KEYS = ["series", "subseries", "author"];                              // a select with a ≠ toggle
 /** a sidebar control a right-click or long press on `t` excludes with, or null */
@@ -462,6 +466,7 @@ function renderCards(r) {
   const cfRemoves = v => { const q = new URLSearchParams(p); q.delete("xcf"); for (const x of cfOut) if (x !== v) q.append("xcf", x); return Math.max(0, filterCards(q).length - list.length); };
   const cfSave = v => (mine.includes(v) ? "" : `<button type="button" class="chip cf-save" data-action="cf-save" data-value="${esc(v)}" title="Save to My filters">Save</button>`);   // from a link
   const fontIn = vals(p, "font"), fontOut = vals(p, "xfont"), fontCounts = S.fontUse ? count(base, fontsOf) : null;   // the Font filter
+  for (const f of [...fontIn, ...fontOut]) if (!S.fontKept.includes(f)) S.fontKept.push(f);   // a font off stays listed (owner 10-26), not in the address
   const fontRemoves = (k, v) => { const q = new URLSearchParams(p); q.delete("xfont"); for (const x of fontOut) if (x !== v) q.append("xfont", x); return Math.max(0, filterCards(q).length - list.length); };
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
   const active = [];
@@ -508,7 +513,7 @@ function renderCards(r) {
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
       <h3>Author</h3>${notSel("author", `<select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === pickOf("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>`)}
       <h3>Font</h3><input type="text" class="font-box" data-suggest="font" autocomplete="off" spellcheck="false" placeholder="Type a font…" title="Cards using any picked font" aria-label="Font: cards using any picked font">
-      ${fontIn.length || fontOut.length ? `${chipList("font", [...fontIn, ...fontOut].map(f => [f, f]), fontIn, fontCounts, fontOut, fontRemoves)}${fontIn.length > 1 ? `<p class="muted font-any">Cards with any of them.</p>` : ""}` : ""}
+      ${S.fontKept.length ? `${fontChips(fontIn, fontCounts, fontOut, fontRemoves)}${fontIn.length > 1 ? `<p class="muted font-any">Cards with any of them.</p>` : ""}` : ""}
       <h3>Flags</h3>${FLAGS
         .map(([f, l]) => { const x = xs("flags").includes(f);
           return `<label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="flags" data-value="${f}"${!x && csv(p, "flags").includes(f) ? " checked" : ""}${x ? ` aria-label="${l}: excluded"` : ""}> ${l}${x ? `<span class="n">−${removes("flags", f)}</span>` : ""}</label>`; }).join("")}
@@ -646,8 +651,9 @@ function longestRun(seq) {
   return run;
 }
 // index.html's first screen (build_site first_screen): link tiles whose pictures are already in. The first render makes
-// each one that is its card's tile as the site draws it now the grid's tile in place: the flag and deck button added, no
-// href (a tile like the others: no link drag in edit mode). Any other (a staged edit, say) fillGrid replaces.
+// each one that is its card's tile as the site draws it now the grid's tile in place: the flag and deck button added, the
+// href kept (middle-click, Cmd-click, Open in new tab: owner 10-26; edit mode's markTiles drops it: no link drag). Any
+// other (a staged edit, say) fillGrid replaces.
 function adoptFirst(grid, css) {
   for (const a of grid.querySelectorAll(":scope > a.tile:not([data-open])")) {
     const c = S.byId.get(decodeURIComponent((a.getAttribute("href") || "").slice(2, -1))), t = document.createElement("template");
@@ -657,7 +663,7 @@ function adoptFirst(grid, css) {
     const html = tileHtml(c, { css }), meta = $(".meta", a);
     t.innerHTML = html;
     for (const el of [...t.content.firstElementChild.children]) if (!el.matches(".art, .meta")) a.insertBefore(el, meta);
-    a.removeAttribute("href"); a.dataset.open = c.id; a.tabIndex = 0;
+    a.dataset.open = c.id; a.tabIndex = 0;
     gridTiles.set(c.id, { html, el: a, ed: false, css });
   }
 }
@@ -881,6 +887,7 @@ function showVersion(c, i) {
 // ---- balance: the card's standing among its star level and its recorded changes (balance.js)
 const balanceOf = c => (c.dup ? S.byId.get(c.dup) || c : c);         // a duplicate shows its original's
 const ratedOf = c => (c.variantOf ? c : balanceOf(c));                // a variant picture keeps its own ratings
+G.ratedBy(ratedOf);                                                   // the Missing filter's No ratings, as the page shows them
 const hasBalance = c => !!balanceOf(c).balance;
 function balanceHtml(c, part = "balance") {          // part: "balance" (the line) or "changes" (the recorded changes)
   if (!hasBalance(c)) return "";
@@ -1348,8 +1355,11 @@ const actions = {
     if (!inc && !exc) { S.notPick[S.notPick.has(k) ? "delete" : "add"](k); rerender(); return; }
     if (inc) S.notPick.add(k); else S.notPick.delete(k);
     setParams({ [k]: exc, [`x${k}`]: inc }); },
-  "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: vals(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "" }); if (el.dataset.key === "q") qInput.value = ""; },
-  "clear-filters": () => { qInput.value = ""; S.notPick.clear(); const fb = $(".browse .font-box", view); if (fb) fb.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
+  "font-forget": el => { const v = el.dataset.value, p = parseHash().params; S.fontKept = S.fontKept.filter(f => f !== v);
+    if (vals(p, "font").includes(v) || vals(p, "xfont").includes(v)) setParams({ font: vals(p, "font").filter(f => f !== v), xfont: vals(p, "xfont").filter(f => f !== v) }); else rerender(); },
+  "remove-param": el => { const p = parseHash().params; if (el.dataset.key === "font" || el.dataset.key === "xfont") S.fontKept = S.fontKept.filter(f => f !== el.dataset.value);   // the bar's ✕: gone, as before
+    if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: vals(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "" }); if (el.dataset.key === "q") qInput.value = ""; },
+  "clear-filters": () => { qInput.value = ""; S.notPick.clear(); S.fontKept = []; const fb = $(".browse .font-box", view); if (fb) fb.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
   "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(sortOf(p), p.get("dir")) ? "asc" : "desc" }); },
@@ -1420,6 +1430,7 @@ document.addEventListener("click", e => {
   if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); act(a.dataset.action, a); return; }
   const open = e.target.closest("[data-open], .chart [data-card]");
   if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey || S.selecting) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
+  if (open?.matches("a[href]") && (e.metaKey || e.ctrlKey || e.shiftKey || e.button)) return;   // an adopted first-screen tile: the browser opens its page
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
   const go = e.target.closest(".chart a.go");             // a Stats chart's cards: the grid from its top
   if (go && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) { e.preventDefault(); S.toTop = true; location.hash = go.getAttribute("href"); return; }

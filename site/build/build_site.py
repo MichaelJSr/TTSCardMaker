@@ -50,7 +50,8 @@ Where the data comes from:
   * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json), the edit batches
     (one more `git log` over Card Edits.json and Card Authors.txt, their versions read in one batch) and the archived
     cards (old_stats tags).
-PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only.
+PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only; a PNG
+whose Card Edits dup_of names its original is a duplicate (the card data's duplicate_of).
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
@@ -3412,12 +3413,13 @@ def main():
             return guess
         return png_by_name.get(name.replace(" ", "_").lower() + ".png")
 
-    seen_pngs, bot_dup_names = set(), {}
+    seen_pngs, bot_dup_names, bot_dups = set(), {}, []
     for name, c in sorted(stats.items(), key=lambda kv: kv[0].lower()):
         path = getattr(c, "path", "") or ""
-        if getattr(c, "duplicate_of", None) and not getattr(c, "variant_of", None):     # the bot's duplicate: only its name is used
+        if getattr(c, "duplicate_of", None) and not getattr(c, "variant_of", None):     # the bot's duplicate: made below
             if getattr(c, "display_name", None):
                 bot_dup_names[name.replace(" ", "_").lower() + ".png"] = c.display_name
+            bot_dups.append((name, c))
             continue
         variant = getattr(c, "variant", None)
         png = png_for(path, name, variant)
@@ -3457,21 +3459,13 @@ def main():
 
     # duplicates: more PNGs exported from one card's PSD (A_Snack.psd -> A_Snack2.png "Breakfast", A_Snack3.png
     # "Supper"). Same card, different name and art. Named by its Card Edits entry's aliases, else the original's name.
-    lower_tree = {path.lower() for path in tree}
-    by_psd = {c["psd"].lower(): c for c in cards if c.get("psd") and c.get("variant", 1) == 1}
-    for path in sorted(tree):
-        m = re.match(r"(.+?)(\d+)\.png$", path, re.I)
-        if not m or path in seen_pngs or not path.startswith(CARD_FOLDERS) or (m.group(1) + m.group(2) + ".psd").lower() in lower_tree:
-            continue                          # not numbered, already a card, or it has a PSD of its own
-        original = by_psd.get((m.group(1) + ".psd").lower())
-        if original is None:
-            continue
-        names = edit_aliases(edits, os.path.splitext(os.path.basename(path))[0])
+    def add_dup(original, key, path, fallback):
+        """A duplicate of original: its data, author and history; its own name (alias, else fallback), picture and edits."""
+        names = edit_aliases(edits, key)
         name = (bot_dup_names.get(os.path.basename(path).lower())                     # alias or the PSD's hidden title
-                or (" ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else original["name"]))
+                or (" ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else fallback))
         dup = {k: original.get(k) for k in DATA_FIELDS + ("author", "ts", "psd")}
-        dup.update(id=unique_slug(name), name=name, key=os.path.splitext(os.path.basename(path))[0].replace("_", " "),
-                   png=path, problems=[], dup=original["id"])
+        dup.update(id=unique_slug(name), name=name, key=key, png=path, problems=[], dup=original["id"])
         apply_edits(dup, edits, tree.get(original["psd"]))
         date_text(dup, stats[original["key"]], history_of(original["key"]))   # its PSD's history, against its own text
         for k in ("pending", "refused", "baked", "reparsePending"):   # same PSD: its image changes with the original's
@@ -3481,6 +3475,27 @@ def main():
         original.setdefault("dups", []).append(dup["id"])
         cards.append(dup)
         seen_pngs.add(path)
+
+    lower_tree = {path.lower() for path in tree}
+    by_psd = {c["psd"].lower(): c for c in cards if c.get("psd") and c.get("variant", 1) == 1}
+    for path in sorted(tree):
+        m = re.match(r"(.+?)(\d+)\.png$", path, re.I)
+        if not m or path in seen_pngs or not path.startswith(CARD_FOLDERS) or (m.group(1) + m.group(2) + ".psd").lower() in lower_tree:
+            continue                          # not numbered, already a card, or it has a PSD of its own
+        original = by_psd.get((m.group(1) + ".psd").lower())
+        if original is None:
+            continue
+        add_dup(original, os.path.splitext(os.path.basename(path))[0].replace("_", " "), path, original["name"])
+    # picture-only duplicates (owner 10-26): a PNG with no PSD whose Card Edits dup_of names its original (Stubborn_Queen.png),
+    # the bot's duplicate_of record; the original's data, its own name, picture and art
+    originals = {c["key"]: c for c in cards if not c.get("dup")}
+    for name, c in bot_dups:
+        original = originals.get(c.duplicate_of)
+        own = os.path.dirname(original["psd"] or "") + "/" + name.replace(" ", "_") + ".png" if original else None
+        png = own if own in tree else png_by_name.get(name.replace(" ", "_").lower() + ".png")
+        if original is None or not png or png in seen_pngs:
+            continue                              # no original listed, no picture, or a numbered duplicate made above
+        add_dup(original, name, png, name)
     log(f"duplicates: {sum(1 for c in cards if c.get('dup'))} PNGs share another card's PSD")
 
     # PSDs the bot hasn't parsed yet, and card PNGs without a PSD: list them, image only

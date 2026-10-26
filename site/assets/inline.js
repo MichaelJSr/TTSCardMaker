@@ -317,6 +317,7 @@ export function reflect(view, selected) {
 export function markTiles(root, selected) {
   for (const t of root.querySelectorAll(".tile[data-open]")) {
     t.draggable = true; t.querySelector("img")?.setAttribute("draggable", "false");
+    t.removeAttribute("href");                       // an adopted first-screen tile: a card drag, never a link drag
     t.toggleAttribute("data-selected", selected.has(t.dataset.open));
   }
 }

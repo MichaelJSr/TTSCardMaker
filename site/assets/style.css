@@ -782,6 +782,10 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 .filters .font-box { width: 100%; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); }
 .filters .font-box + .chips { margin-top: 6px; }
 .filters .font-box + .chips .chip { max-width: 100%; overflow-wrap: anywhere; text-align: left; }
+.chip-wrap { display: inline-flex; align-items: center; max-width: 100%; }
+.chip-wrap .chip { min-width: 0; }
+.font-del { flex: none; width: 22px; height: 22px; padding: 0; font-size: 11px; color: var(--muted); }
+@media (pointer: coarse) { .font-del { width: 36px; height: 36px; } }
 .filters .font-any { font-size: 12px; margin: 4px 0 0; }
 @media (max-width: 860px) { .filters .font-box { font-size: 16px; } }   /* no zoom on focus (iOS) */
 .sel-row.x select option { color: var(--ink); text-decoration: none; }

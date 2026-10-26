@@ -1298,7 +1298,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   are chips (any of them: "Cards with any of them."); right-click or long press excludes ("not Perpetua"), as Kind.
 - URL: `font=` and `xfont=`, repeated, one font each (myfilters.js `vals`). A link loads the data first ("Loading…").
 - A card's fonts are its Details panel's: the record's `fonts` keys (build_site.py `card_fonts`); variant pictures their
-  PSD's, PNG-only duplicates none. Names as stored (PostScript).
+  PSD's, PNG-only duplicates their original's (§41). Names as stored (PostScript).
 - Data: `data/cardfonts.json` `{fonts: [name, most used first], cards: {id: [index]}}`, fetched on the box's first focus
   (with tokens.js, now its own chunk, which edit mode shares: one install, app.js `useTokens`). Inlined in cards.json it
   cost +3.6% gzipped (111,661 -> 115,709 B); the file is 18,967 B (7,844 gzipped). app.js +2.5 KB (+0.9 KB gzipped).
@@ -1330,3 +1330,17 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 - One target per head: a badge inside a noted head drops its own tip (`badgeHtml(tag, false)`, the cooldown table's
   "3CD+"). A note in a `<summary>` gets a wider tap area and a tap on it doesn't toggle the section (tip.js). A note
   that depends on a picker follows it (Star levels: the picked kind on both sides).
+
+## 41. Picture-only duplicates, font chips off, first-screen links (2026-10-26, owner's rulings)
+- **Picture-only duplicates** (a PNG with no PSD whose Card Edits.json entry names its original in `dup_of`: Stubborn
+  Queen, Gust of Trees): build_site makes them from the card data's `duplicate_of` record as it makes every duplicate
+  (`add_dup`): the original's data, author, PSD, history and fonts; its own name (aliases, else its file name), picture,
+  artwork sources and Card Edits entry; counted once. Before, they were image only under "Not parsed yet". AutoCroissant
+  `tests/test_site_build.py::test_a_picture_only_duplicate_is_its_originals_card`.
+- **Missing: No ratings** reads the ratings a card's page shows (grid.js `ratedBy`, app.js `ratedOf`): a duplicate's
+  are its original's, a variant picture's its own.
+- **Font chips**: a click on a picked font turns it off and keeps it listed (like Kind); a click turns it on again; its ✕
+  forgets it; the active-filter bar's ✕ forgets it too. Off states leave the address, as every filter's do (Kind, My
+  filters), so an off font is kept for this page only (`S.fontKept`); Clear all filters forgets them.
+- **First screen**: an adopted tile keeps its href, so middle-click, Cmd/Ctrl/Shift-click and Open in new tab open its
+  page; a plain click opens the dialog. Edit mode's `markTiles` drops the href (a card drag, never a link drag).

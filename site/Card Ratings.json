@@ -1,5 +1,5 @@
 {
-  "about": "Card ratings, 1 to 10. favorability: how much players like the card; power: 1 weak, 5.5 balanced, 10 too strong. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.",
+  "about": "Card ratings, whole numbers 1 to 10. favorability: how much players like the card; power: 1 weak, 10 too strong; the middle (5.5) is balanced. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.",
   "cards": {
     "ABBI": [{"date":"2023-04-28","scale":"favorability","value":8,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":6,"by":"group","source":"TTS session"},{"date":"2025-03-02","scale":"power","value":6,"by":"group","source":"TTS session"},{"date":"2025-04-28","scale":"favorability","value":7,"by":"group","source":"TTS session"}],
     "Abigail": [{"date":"2025-04-28","scale":"favorability","value":3,"by":"group","source":"TTS session"}],
