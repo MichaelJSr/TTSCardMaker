@@ -290,7 +290,7 @@ export function ratingsFile(text, ops, day, by, path = "site/Card Ratings.json")
 }
 
 /** The profile page's form state (what its inputs hold) for a profile; validateProfile({login, ...state}) gives the profile back. */
-export const profileState = p => ({ author: p.author || "", motto: p.motto || "", series: p.series || "", ...Object.fromEntries(PICKS.map(([k]) => [k, p[k] || ""])),
+export const profileState = p => ({ author: p.author || "", motto: p.motto || "", series: p.series || "", subseries: p.subseries || "", ...Object.fromEntries(PICKS.map(([k]) => [k, p[k] || ""])),
   deck: p.deck || "", facts: (p.facts || []).map(f => ({ label: f.label, value: f.value })) });
 /** The deck builder's saved hands as the profile page offers them: [{id, name, n (cards, the field card included)}]. */
 export const savedHands = decks => decks.map(d => ({ id: d.id, name: d.name, n: d.cards.length + (d.field ? 1 : 0) }));
@@ -606,8 +606,13 @@ export function createEditor(app) {
   const seriesList = () => [...new Set([...uniq(c => c.series), ...buckets.series])].sort((a, b) => a.localeCompare(b));
   const authorList = () => [...new Set([...(S.data.people || []), ...S.all.map(c => c.author).filter(Boolean), ...buckets.author])].sort((a, b) => a.localeCompare(b));
   // the name autofill's entries (tokens.js suggestNames): [{value, n (cards), note, kind}]
-  function nameEntries(kind) {
+  function nameEntries(kind, el) {                 // el: the field; the profile's subseries offers its series' (data-series-from)
     const cards = n => (n ? `${n} card${n === 1 ? "" : "s"}` : "no cards yet"), count = new Map();
+    if (kind === "subseries" && el?.dataset.seriesFrom) {   // shown cards only, as validateProfile checks; no buckets
+      const series = document.getElementById(el.dataset.seriesFrom)?.value || "";
+      for (const c of S.cards) if (c.subseries && (!series || c.series === series)) count.set(c.subseries, (count.get(c.subseries) || 0) + 1);
+      return [...count].map(([value, n]) => ({ value, n, kind, note: cards(n) }));
+    }
     if (kind === "subtype") {                      // the Items/ folders
       for (const c of S.all) if (c.subtype) count.set(c.subtype, (count.get(c.subtype) || 0) + 1);
       return ITEM_TYPES.map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
@@ -1324,8 +1329,12 @@ export function createEditor(app) {
   // ---- profiles: site/profiles/<login>.json, one more file in the batch (your own; admins anyone's), edited on the page
   // #/u/<login>/edit: the form left, a live preview of the profile right. The draft stays in memory per login while the page
   // is loaded; the browser asks before leaving while it's dirty (the card dialog too).
-  const PLABEL = { author: "Cards as", motto: "Motto", series: "Series", ...Object.fromEntries(PICKS), deck: "Featured hand", facts: "Pairs" };
-  const profileCtx = () => ({ cards: new Map(S.cards.map(c => [c.id, c])), series: new Set(S.cards.map(c => c.series).filter(Boolean)), people: S.data.people || [] });
+  const PLABEL = { author: "Cards as", motto: "Motto", series: "Series", subseries: "Subseries", ...Object.fromEntries(PICKS), deck: "Featured hand", facts: "Pairs" };
+  const profileCtx = () => {
+    const subseries = new Map();                   // name -> the series its cards are in
+    for (const c of S.cards) if (c.subseries) subseries.set(c.subseries, (subseries.get(c.subseries) || new Set()).add(c.series));
+    return { cards: new Map(S.cards.map(c => [c.id, c])), series: new Set(S.cards.map(c => c.series).filter(Boolean)), subseries, people: S.data.people || [] };
+  };
   const mine = login => login.toLowerCase() === me.login.toLowerCase();
   const findKey = (obj, login) => Object.keys(obj).find(k => k.toLowerCase() === login.toLowerCase());
   const drafts = new Map();                        // login (lower) -> form state, while the form differs from the profile
@@ -1390,6 +1399,7 @@ export function createEditor(app) {
           ${row("author", "Cards as", `<input id="pf-author" data-suggest="author" autocomplete="off" value="${esc(st.author)}" placeholder="the name on your cards"><span class="muted">Links the profile to your cards (the name in Card Authors.txt).</span>`)}
           ${row("motto", "Motto", `<input id="pf-motto" maxlength="${LIMITS.motto}" value="${esc(st.motto)}" placeholder="one line">`)}
           ${row("series", "Series", `<select id="pf-series"><option value="">—</option>${opts(series.map(x => [x, x]), st.series)}</select>`)}
+          ${row("subseries", "Subseries", `<input id="pf-subseries" data-suggest="subseries" data-series-from="pf-series" autocomplete="off" spellcheck="false" value="${esc(st.subseries)}" placeholder="—">`)}
         </fieldset>
         <fieldset><legend>Cards</legend>
           <div class="pslots">${PICKS.map(x => slotHtml(x, st[x[0]])).join("")}</div>
@@ -1413,7 +1423,7 @@ export function createEditor(app) {
   }
   function readState(form) {                       // the form -> profileState's shape (the pasted link moves into #pf-deck once it decodes)
     const v = id => form.querySelector(`#pf-${id}`).value;
-    return { author: v("author"), motto: v("motto"), series: v("series"), ...Object.fromEntries(PICKS.map(([k]) => [k, v(k)])), deck: v("deck"),
+    return { author: v("author"), motto: v("motto"), series: v("series"), subseries: v("subseries"), ...Object.fromEntries(PICKS.map(([k]) => [k, v(k)])), deck: v("deck"),
       facts: [...form.querySelectorAll("#pf-facts .frow")].map(r => ({ label: r.querySelector("[data-fl]").value, value: r.querySelector("[data-fv]").value })) };
   }
   async function profilePage(login) {              // the route #/u/<login>/edit

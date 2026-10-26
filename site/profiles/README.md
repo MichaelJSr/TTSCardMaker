@@ -19,7 +19,8 @@ Format (keys sorted, 2-space indent, trailing newline; everything but `login` op
   "hatedItem": "a-snack",
   "login": "MichaelJSr",
   "motto": "One line.",
-  "series": "OMORI",
+  "series": "Hollow Knight",
+  "subseries": "Hollow Knight: Silksong",
   "updated": "2026-10-21T12:00:00Z"
 }
 ```
@@ -29,9 +30,11 @@ Format (keys sorted, 2-space indent, trailing newline; everything but `login` op
   the login's website edits (`_by` in `Card Edits.json`) and commits (a GitHub noreply email, or the login as git name)
   count towards that name's contributions.
 - `favourite`, `hated`, `favouriteItem`, `hatedItem`: card ids (the slug in a card's link); the item ones must be items.
-- `series`: one of the known series. `motto`: one line, up to 140 characters.
+- `series`: one of the known series. `subseries`: one of the known subseries; with a `series`, one its cards use. The
+  profile shows them as one link to those cards ("Don't Starve › Gourmet Expansion").
+- `motto`: one line, up to 140 characters.
 - `deck`: a deck builder share code (the part after `d/#/deck/`) with at least one card, shown as the hand's cards.
 - `facts`: up to 12 label/value pairs (40/200 characters). `updated`: set by the website when publishing.
 
 The build never fails on a profile: a file that isn't JSON, is over 16 KB or whose `login` doesn't match is skipped with
-a warning; a bad field (a card that no longer exists, an unknown series…) is dropped with a warning; unknown fields are ignored.
+a warning; a bad field (a card that no longer exists, an unknown series or subseries…) is dropped with a warning; unknown fields are ignored.

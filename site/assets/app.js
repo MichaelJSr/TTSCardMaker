@@ -130,7 +130,7 @@ const fontsOf = c => S.fontUse?.get(c.id) || [];
 const needsFonts = p => p.has("font") || p.has("xfont");
 // the name list under a data-suggest field (tokens.js): the Font box for everyone, the editor's name fields in edit mode
 const tokenApi = { vocab: () => [], icon: (t, o) => S.renderer?.icon(t, o) ?? null,
-  names: el => (el.dataset.suggest === "font" ? fontEntries() : editor.names?.(el.dataset.suggest) || []) };
+  names: el => (el.dataset.suggest === "font" ? fontEntries() : editor.names?.(el.dataset.suggest, el) || []) };
 let tokensMod = null, tokensP = null;
 const useTokens = m => { if (!tokensMod) { tokensMod = m; m.install(tokenApi); } return m; };   // once: the editor imports the same module
 const loadTokens = () => (tokensP ||= (early("tokens.js"), import("./tokens.js")).then(useTokens).catch(e => { tokensP = null; throw e; }));

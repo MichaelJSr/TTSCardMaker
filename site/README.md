@@ -327,7 +327,8 @@ Opt-in: nobody has a profile until they make one (sign in → **Edit profile**, 
 `site/profiles/<login>.json` (format in `site/profiles/README.md`), staged in the same batch as card edits and
 published in the same commit; you can edit your own, admins anyone's, and a profile can be removed again. Everything in
 it is optional: the name on your cards (from `Card Authors.txt`, so the page links "N cards by …" to the author filter),
-a one-line motto, a series, favourite and hated card and item, a featured hand and up to 12 label/value pairs.
+a one-line motto, a series and subseries (the subseries field suggests the picked series' own), favourite and hated
+card and item, a featured hand and up to 12 label/value pairs.
 The editor is a page of its own, `#/u/<login>/edit` (Edit profile on the hub, the person page or the review dialog;
 signed out, it asks for the token first and comes back): the form on the left, a live preview of the profile on the
 right (one column on narrow screens). Each card slot shows the chosen card's tile with **Pick** and **Clear**; Pick opens
