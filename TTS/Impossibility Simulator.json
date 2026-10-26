@@ -24359,7 +24359,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Thunder Thighs",
+              "Nickname": "Thunder thighs",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -36809,7 +36809,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Thunder Thighs",
+          "Nickname": "Thunder thighs",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -52783,7 +52783,7 @@
           "Type": 0
         },
         "863": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Items/Support/2%20Stars/Spicy_Spray.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Items/Support/2%20Stars/Spicy_Spray.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -55289,7 +55289,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "863": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Items/Support/2%20Stars/Spicy_Spray.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Items/Support/2%20Stars/Spicy_Spray.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -56534,7 +56534,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Thunder Thighs",
+          "Nickname": "Thunder thighs",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -72885,7 +72885,7 @@
           "Type": 0
         },
         "933": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/2%20Stars/Forsaken_City.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/Forsaken_City.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -72966,7 +72966,7 @@
           "Type": 0
         },
         "1496": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/383fd2edfcce3b233eb4f876aaa4601a47b9bf93/Field/2%20Stars/The_Core.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/The_Core.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -73439,7 +73439,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "933": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/2%20Stars/Forsaken_City.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/Forsaken_City.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -73961,7 +73961,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1496": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/383fd2edfcce3b233eb4f876aaa4601a47b9bf93/Field/2%20Stars/The_Core.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/The_Core.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -79829,7 +79829,7 @@
           "Type": 0
         },
         "822": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Other/3%20Stars/Pizza.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Creatures/Other/3%20Stars/Pizza.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -84039,7 +84039,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "822": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Other/3%20Stars/Pizza.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Creatures/Other/3%20Stars/Pizza.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107021,7 +107021,7 @@
           "Type": 0
         },
         "822": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Other/3%20Stars/Pizza.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Creatures/Other/3%20Stars/Pizza.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -111231,7 +111231,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "822": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Other/3%20Stars/Pizza.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Creatures/Other/3%20Stars/Pizza.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b85bef3ecd9a9fa6d04979664682374aece32de7/MDW/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -126524,7 +126524,7 @@
           "Type": 0
         },
         "863": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Items/Support/2%20Stars/Spicy_Spray.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Items/Support/2%20Stars/Spicy_Spray.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -129030,7 +129030,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "863": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Items/Support/2%20Stars/Spicy_Spray.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Items/Support/2%20Stars/Spicy_Spray.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -130275,7 +130275,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Thunder Thighs",
+          "Nickname": "Thunder thighs",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -143112,7 +143112,7 @@
           "Type": 0
         },
         "933": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/2%20Stars/Forsaken_City.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/Forsaken_City.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -143193,7 +143193,7 @@
           "Type": 0
         },
         "1496": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/383fd2edfcce3b233eb4f876aaa4601a47b9bf93/Field/2%20Stars/The_Core.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/The_Core.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -143666,7 +143666,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "933": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/2%20Stars/Forsaken_City.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/Forsaken_City.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -144188,7 +144188,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1496": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/383fd2edfcce3b233eb4f876aaa4601a47b9bf93/Field/2%20Stars/The_Core.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/The_Core.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
