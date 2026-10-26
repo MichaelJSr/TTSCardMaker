@@ -3459,8 +3459,9 @@ def main():
 
     # duplicates: more PNGs exported from one card's PSD (A_Snack.psd -> A_Snack2.png "Breakfast", A_Snack3.png
     # "Supper"). Same card, different name and art. Named by its Card Edits entry's aliases, else the original's name.
-    def add_dup(original, key, path, fallback):
-        """A duplicate of original: its data, author and history; its own name (alias, else fallback), picture and edits."""
+    def add_dup(original, key, path, fallback, export=True):
+        """A duplicate of original: its data, author and history; its own name (alias, else fallback), picture and edits.
+        export: path is one of the original PSD's own PNGs (the bake redraws it)."""
         names = edit_aliases(edits, key)
         name = (bot_dup_names.get(os.path.basename(path).lower())                     # alias or the PSD's hidden title
                 or (" ".join(w[:1].upper() + w[1:] for w in max(names, key=len).split()) if names else fallback))
@@ -3468,7 +3469,8 @@ def main():
         dup.update(id=unique_slug(name), name=name, key=key, png=path, problems=[], dup=original["id"])
         apply_edits(dup, edits, tree.get(original["psd"]))
         date_text(dup, stats[original["key"]], history_of(original["key"]))   # its PSD's history, against its own text
-        for k in ("pending", "refused", "baked", "reparsePending"):   # same PSD: its image changes with the original's
+        for k in ("pending", "refused", "baked", "reparsePending") if export else ("reparsePending",):
+            # same PSD: an export's image changes with the original's; a picture-only one's never does
             value = [f for f in original[k] if f != "name"] if k == "pending" and original.get(k) else original.get(k)
             if value and not dup.get(k):         # not the name: a duplicate prints its own title
                 dup[k] = value
@@ -3495,7 +3497,7 @@ def main():
         png = own if own in tree else png_by_name.get(name.replace(" ", "_").lower() + ".png")
         if original is None or not png or png in seen_pngs:
             continue                              # no original listed, no picture, or a numbered duplicate made above
-        add_dup(original, name, png, name)
+        add_dup(original, name, png, name, export=False)
     log(f"duplicates: {sum(1 for c in cards if c.get('dup'))} PNGs share another card's PSD")
 
     # PSDs the bot hasn't parsed yet, and card PNGs without a PSD: list them, image only
