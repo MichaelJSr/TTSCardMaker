@@ -6,7 +6,6 @@ import { esc, tagInfo, badgeHtml, TAG, dateFmt, LOGIN_RE, noted } from "./text.j
 import { editorFields, archiveTag, archiveTagHtml, fieldName } from "./changes.js";
 import { decode } from "./deck.js";
 import { columns, chartCard } from "./stats.js";
-import { TIERS } from "./ratings.js";
 
 export const RECENT_CARDS = 24;                                             // the person page's newest cards
 
@@ -247,7 +246,7 @@ export function cardsPanelHtml(p, x) {
       ${f.series.length ? `<span class="fact">Mostly ${f.series.map(([s, n]) => `<a href="#/cards?${by}&series=${encodeURIComponent(s)}">${esc(s)}</a> <span class="muted">${n}</span>`).join(", ")}</span>` : ""}
       ${f.newest ? `<span class="fact" data-tip="By creation date: its first Discord post or first upload, unless set by hand">Newest card: <a href="#/card/${f.newest.id}">${esc(f.newest.name)}</a> · ${esc(x.month(createdTs(f.newest)))}</span>` : ""}
       ${career ? `<span class="fact" data-tip="Years of their first and newest cards, by creation date; best year: the most cards created">${yearOf(career.first)}${yearOf(career.last) !== yearOf(career.first) ? `–${yearOf(career.last)}` : ""}${career.years.length > 1 ? ` · best year ${career.best[0]} (${career.best[1]})` : ""}</span>` : ""}
-      ${series.n ? `<span class="fact"${series.leads.length ? ` data-tip="${esc(`Top author (nobody has more of its cards; ties count) of ${series.leads.slice(0, 10).join(", ")}${series.leads.length > 10 ? ", …" : ""}`)}"` : ""}>${series.n} series${series.leads.length ? ` · top author in ${series.leads.length}` : ""}</span>` : ""}
+      ${series.n ? `<span class="fact"${series.leads.length ? ` data-tip="${esc(`Series where nobody has more cards than them (ties count): ${series.leads.slice(0, 3).join(", ")}${series.leads.length > 3 ? ", …" : ""}`)}"` : ""}>${series.n} series${series.leads.length ? ` · top author in ${series.leads.length}` : ""}</span>` : ""}
       ${banned ? `<a class="fact banned" href="#/cards?${by}&flags=banned" data-tip="In the constructed ban list">${banned} banned</a>` : ""}
       ${ref ? `<span class="fact" data-tip="Their card whose name appears in the most other cards' ability text">Most referenced: <a href="#/card/${ref[0].id}">${esc(ref[0].name)}</a> · named by ${ref[1]} cards</span>` : ""}
     </div>
@@ -354,7 +353,7 @@ export const wordiness = all => memoOf(all, "words", () => {
   for (const c of all) if (c.author && !c.dup && !c.hidden && c.ability) { const w = m.get(c.author) || { sum: 0, n: 0 }; w.sum += wordCount(c); w.n++; m.set(c.author, w); }
   return new Map([...m].map(([k, w]) => [k, { words: w.sum / w.n, n: w.n }]));
 });
-const RANK_TIP = { strength: n => `Among ${n} people with 5+ creatures and minions, by average total stats vs star level`,
+const RANK_TIP = { strength: n => `Among ${n} people with 5+ creatures and minions, by average total stats vs their kind and star level`,
   "words per ability": n => `Among ${n} people with 5+ cards with ability text; the wordiest ranks first` };
 export const RANKS = [["cards", "cards"], ["commits", "card commits"], ["edits", "edits"], ["strength", "strength"], ["words", "words per ability"]];
 /** P18: [[label, rank, of]]: competition ranking (1, 1, 3) among the people rows with a value (two or more): cards, card
@@ -396,8 +395,8 @@ function strengthStrip(power, x) {
 export function balancePanelHtml(p, x) {
   const pw = p.power, b = p.bal;
   if (!pw && !b) return "";
-  const facts = pw ? `<div class="facts"><span class="fact" data-tip="Total stats vs their star level's average, in standard deviations. Creatures and minions.">Average ${sign(pw.z, 2)} vs their star level</span>
-    ${pw.top ? `<span class="fact" data-tip="Their creatures and minions whose total stats rank in the top 10% for their star level">${pw.top} in the top 10%</span>` : ""}${pw.bottom ? `<span class="fact" data-tip="Their creatures and minions whose total stats rank in the bottom 10% for their star level">${pw.bottom} in the bottom 10%</span>` : ""}</div>` : "";
+  const facts = pw ? `<div class="facts"><span class="fact" data-tip="Mean over their creatures and minions of total stats vs their kind and star level, in standard deviations">Average ${sign(pw.z, 2)} vs their star level</span>
+    ${pw.top ? `<span class="fact" data-tip="Their creatures and minions in the top 10% by total stats of their kind and star level (whole kind if under 5)">${pw.top} in the top 10%</span>` : ""}${pw.bottom ? `<span class="fact" data-tip="Their creatures and minions in the bottom 10% by total stats of their kind and star level (whole kind if under 5)">${pw.bottom} in the bottom 10%</span>` : ""}</div>` : "";
   const legend = pw ? `<div class="legend"><span><i style="background:var(--s1)"></i>top 10%</span><span><i style="background:var(--s2)"></i>bottom 10%</span><span><i style="background:var(--deemph)"></i>others</span></div>` : "";
   let bal = "";
   if (b) {
@@ -415,16 +414,15 @@ const RATE_TIP = scale => `Mean over their cards of others' ${scale}: each rater
 export function ratingsPanelHtml(p, x) {
   const r = p.ratings, sb = p.selfBias, rt = p.rater, pv = p.powerVsStats;
   if (!r && !sb && !rt && !pv) return "";
-  const bands = `${TIERS.power.map((t, i) => `${2 * i + 1}–${2 * i + 2} ${t}`).join(" · ")}`;
   const facts = r ? `<div class="facts">${r.fav != null ? `<span class="fact" data-tip="${esc(RATE_TIP("favorability"))}">Favorability ${r.fav} · ${plural(r.favN, "card")}</span>` : ""}
-    ${r.power != null ? `<span class="fact" data-tip="${esc(`${RATE_TIP("power ratings")}. ${bands}`)}">Power ${r.power} · ${plural(r.powerN, "card")}</span>` : ""}</div>` : "";
+    ${r.power != null ? `<span class="fact" data-tip="${esc(RATE_TIP("power ratings"))}">Power ${r.power} · ${plural(r.powerN, "card")}</span>` : ""}</div>` : "";
   const tiles = (label, list, tip) => { const cs = (list || []).map(([id]) => x.byId?.get(id)).filter(Boolean); return cs.length ? `<div><div class="pick-label">${noted(label, tip)}</div><div class="strip">${cs.map(x.tile).join("")}</div></div>` : ""; };
   const picks = r ? `${tiles("Most liked", r.best, "Their cards others rate highest on favorability, up to 3")}${tiles("Least liked", r.worst, "Their cards others rate lowest on favorability, up to 3, below the most liked")}` : "";
   const lines = [
     sb && (sb.fav != null || sb.power != null) ? `${noted("Own cards vs others", "Their rating of their own cards minus others' average, on average; (n): cards compared")}: ${[sb.fav != null ? `favorability ${sign(sb.fav)} (${sb.n})` : "",
       sb.power != null ? `power ${sign(sb.power)} (${sb.powerN})` : ""].filter(Boolean).join(" · ")}` : "",
     rt ? `${noted("As a rater", "Favorability they give minus others' average on the same cards; agreement: correlation, −1 to 1")}: ${sign(rt.harsh)} vs others${rt.agree != null ? ` · agreement ${rt.agree.toFixed(2)}` : ""}${rt.twin ? ` · ${noted("taste twin", "The rater whose favorability ratings best match theirs (5+ cards rated by both)")}: ${personA(rt.twin[0])}` : ""}` : "",
-    pv ? `${noted("Power ratings vs stats", "Correlation (−1 to 1) of their power ratings with the cards' total stats vs star level")}: ${pv.r.toFixed(2)} (${plural(pv.n, "card")})` : "",
+    pv ? `${noted("Power ratings vs stats", "Correlation (−1 to 1) of their power ratings with the cards' total stats vs their kind and star level")}: ${pv.r.toFixed(2)} (${plural(pv.n, "card")})` : "",
   ].filter(Boolean);
   return panel("Ratings", `${facts}${picks ? `<div class="p-picks">${picks}</div>` : ""}${lines.length ? `<ul class="p-list">${lines.map(l => `<li>${l}</li>`).join("")}</ul>` : ""}`);
 }
@@ -450,18 +448,24 @@ const STYLE_TIP = { Types: "Types 1.5× or more as common on their cards as on a
   "Timing tags": "Timing tags their cards use 1.5× or more as often as all cards do (3+ cards); × is the ratio" };
 const mixRows = (rows, label) => rows.map(([k, mine, all]) => `<div class="p-mix"><span>${esc(label(k))}</span><span class="p-track"><i style="width:${(mine * 100).toFixed(1)}%"></i><b style="left:${(all * 100).toFixed(1)}%"></b></span><span class="muted">${pct(mine)} · all ${pct(all)}</span></div>`).join("");
 const starRows = rows => mixRows(rows, k => `${k}★`);
+/** The Star levels note; l: the picked kind's label (both sides narrowed to it), "" = all cards */
+const starTip = l => { const k = l && (l.startsWith("N.M.E.") ? l : l[0].toLowerCase() + l.slice(1));
+  return k ? `Their ${k}' share at each star level vs all ${k}' share; only ones with a star level` : "Their cards' share at each star level vs all cards' share; only cards with a star level"; };
 /** The Star levels block; stars = {key (the person), kinds: starKinds(), kind (picked, "" = all)}: a kind picker past one kind. */
 function starsHtml(rows, stars, label) {
   const kinds = stars?.kinds || [], on = stars?.kind || "";
   const pick = kinds.length > 1 ? `<div class="chips p-star-kinds" role="group" aria-label="Star levels of">${[["", "All"], ...kinds.map(k => [k, label(k)])]
     .map(([k, l]) => `<button type="button" class="chip${k === on ? " on" : ""}" data-action="person-stars" data-kind="${esc(k)}" aria-pressed="${k === on}">${esc(l)}</button>`).join("")}</div>` : "";
-  return `<div class="p-stars" data-person="${esc(stars?.key || "")}" data-kind="${esc(on)}"><div class="pick-label">${noted("Star levels", "Their cards' share at each star level vs all cards' share; only cards with a star level")}</div>${pick}<div class="p-stars-rows">${starRows(rows)}</div></div>`;
+  return `<div class="p-stars" data-person="${esc(stars?.key || "")}" data-kind="${esc(on)}"><div class="pick-label">${noted("Star levels", starTip(on && label(on)))}</div>${pick}<div class="p-stars-rows">${starRows(rows)}</div></div>`;
 }
 /** A kind picked on the Star levels block: its rows and buttons redrawn in place (nothing else on the page). */
 export function showStars(box, kind, cards, kindOf) {
   box.querySelector(".p-stars-rows").innerHTML = starRows(mixOf(cardsOf(box.dataset.person, cards), cards, kindOf, kind).stars);
   box.dataset.kind = kind;
-  for (const b of box.querySelectorAll(".p-star-kinds button")) { const on = b.dataset.kind === kind; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); }
+  for (const b of box.querySelectorAll(".p-star-kinds button")) {
+    const on = b.dataset.kind === kind; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on));
+    if (on) box.querySelector(".pick-label .qn")?.setAttribute("data-tip", starTip(kind && b.textContent));   // the note follows the kind
+  }
 }
 /** Style (P6, P10). s = styleOf(), mix = mixOf(); x = {byId, kinds}; stars: starsHtml's */
 export function stylePanelHtml(s, mix, x, n, stars = null) {
