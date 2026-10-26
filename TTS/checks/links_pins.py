@@ -119,6 +119,7 @@ def main():
     for (r, enc), where in sorted(links.items()):
         p = unquote(enc)
         tag = f"{r[:10]}/{enc} ({len(where)}x, e.g. {where[0]})"
+        failed = len(bad)
         if not re.fullmatch(r"[0-9a-f]{40}", r):
             bad.append(f"NOT PINNED to a full sha: {tag}")
             continue
@@ -139,6 +140,8 @@ def main():
             bad.append(f"STALE pin (blob differs from {ref}): {tag}")
         if rule.get(p) != r:
             bad.append(f"PIN NOT LATEST: {tag} want {rule.get(p)}")
+        if len(bad) == failed:              # git log notes only for failed pins
+            continue
         if p not in loglast:
             loglast[p] = git(repo, "log", "--format=%H", "-1", head, "--", p).strip()
         if loglast[p] != rule.get(p):
