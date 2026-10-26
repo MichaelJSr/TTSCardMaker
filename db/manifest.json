@@ -1,15 +1,15 @@
 {
  "builder": {
-  "commit": "fed909462a562635cc99fb01d05310711984a531",
+  "commit": "7ba8e4f49acb6d229254f55e5b243472dbfc37d1",
   "parser_version": 3,
   "psd_tools": "1.26.0+cards",
   "python": "3.14",
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-10-25T21:25:06Z",
- "card_commit": "b6b22965ee23054ff96569803cb73fc8b8957da8",
- "card_commit_at": 1792963477.0,
+ "built_at": "2026-10-26T00:29:05Z",
+ "card_commit": "a58b241ac81a3b82244519ea99254a8b795a89a9",
+ "card_commit_at": 1792974154.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 92,
@@ -23,8 +23,8 @@
  },
  "files": {
   "old_stats.json": "09fae2cc24672467e4720cf9a1dee2e63845edc0208a903a9d020b40f95bf90d",
-  "psd_details.json": "c390a07869f4f7dc5fe9f9a39695fa4f1f4f0e70058faa822e51e35fb55f30d3",
-  "stats.json": "c0996ec94f6d275a7284bdfea79256b7900977dc0d4398e17c4d16f2144b90ef"
+  "psd_details.json": "78f4cdc0c6a1437cc8e0233699a6984a94ce874a77585112754bc4bf32d908a4",
+  "stats.json": "40817d0495ce253ed2d8956c22201ad9a09a7cf3ac1a98c101a8ef82b3243857"
  },
  "gates": {},
  "inputs": {
@@ -32,7 +32,7 @@
   "created_blob": "fe965ed3536d98166e8ff94b2b34778ab8985078",
   "decks_blob": "06423a3363383d6e6ec1e5dc4633b62dc9e50460",
   "edits_blob": "6fe17eeebd99cf03c77f3d172ca91fcf2a2308c0",
-  "fonts_tree": "7e2f51fea0a9ef9b8ccb0a3e742fb91cca44dca7",
+  "fonts_tree": "a35dc32c74873a3270ff48ffcfee146da634ad1a",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "87993ef69e369ea8006616af4dd4ba961a0525ae"
  },
@@ -43,8 +43,19 @@
   "repin": [],
   "stale": []
  },
- "problems": [],
+ "problems": [
+  {
+   "card": "Computer Virus",
+   "notes": [
+    "HP NOT FOUND",
+    "DEF NOT FOUND",
+    "ATK NOT FOUND",
+    "SPD NOT FOUND"
+   ],
+   "path": "Creatures/Kirby/3 Stars/Computer_Virus.psd"
+  }
+ ],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40235365161",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/40249532979",
  "schema": 1
 }
