@@ -372,10 +372,6 @@ jobs:
         env:
           HIT: ${{ steps.font-names.outputs.cache-hit }}
         run: |
-          if ! grep -q '^def save_names' bot/commands/font_check.py; then     # an older builder reads the fonts
-            git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
-            exit 0
-          fi
           if [ "$HIT" != true ]; then
             git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
             if ! (cd bot && "$RUNNER_TEMP/venv/bin/python" -c 'import sys; from commands.font_check import save_names; save_names(*sys.argv[1:])' \
@@ -423,12 +419,12 @@ jobs:
           if [ -n "$RESTORE" ]; then args+=(--restore "$RESTORE"); fi
           rec=$RUNNER_TEMP/records-in                    # the bake's verdicts and events not merged yet
           merged=""
-          if [ -z "$RESTORE" ] && [ -f "$rec/verdicts.json" ] && grep -q -- '"--verdicts"' commands/card_data.py; then
+          if [ -z "$RESTORE" ] && [ -f "$rec/verdicts.json" ]; then
             args+=(--verdicts "$rec/verdicts.json" --events "$rec/events.json")
-            merged=true                                  # a pinned older builder: they wait for a newer one
+            merged=true
           fi
-          if [ -f "$RUNNER_TEMP/guard-events.json" ] && grep -q -- '"--guard-events"' commands/card_data.py; then
-            args+=(--guard-events "$RUNNER_TEMP/guard-events.json")    # a pinned older builder: not recorded
+          if [ -f "$RUNNER_TEMP/guard-events.json" ]; then
+            args+=(--guard-events "$RUNNER_TEMP/guard-events.json")
           fi
           set +e
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_data "${args[@]}"
@@ -796,7 +792,7 @@ jobs:
         working-directory: bot
         run: |
           rec=$RUNNER_TEMP/records-in/verdicts.json
-          if [ ! -f "$rec" ] || ! grep -q '^def merge_verdicts' commands/card_db.py; then exit 0; fi
+          if [ ! -f "$rec" ]; then exit 0; fi
           "$RUNNER_TEMP/venv/bin/python" - "$GITHUB_WORKSPACE/carddata/db" "$rec" <<'PY'
           import json, sys
           from commands.card_db import merge_verdicts
@@ -816,10 +812,8 @@ jobs:
           GIT_NO_LAZY_FETCH: "1"
           MAIN: ${{ steps.gate.outputs.main }}
         run: |
-          verdicts=()                           # the data's verdicts (an older builder reads them from the edits file)
-          if grep -q '^def due(.*verdicts' commands/card_bake.py; then verdicts=("$GITHUB_WORKSPACE/carddata/db/verdicts.json"); fi
           if ! "$RUNNER_TEMP/venv/bin/python" -c 'import sys; from commands.card_bake import due; print(*due(*sys.argv[1:]), sep="\n")' \
-              "$GITHUB_REPOSITORY" "$MAIN" "$GITHUB_WORKSPACE" "${verdicts[@]}" > "$RUNNER_TEMP/due.txt"; then
+              "$GITHUB_REPOSITORY" "$MAIN" "$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/carddata/db/verdicts.json" > "$RUNNER_TEMP/due.txt"; then
             echo "::warning::the pending website edits were not read: the next run looks again"
             exit 0
           fi
@@ -859,10 +853,8 @@ jobs:
           CARD: ${{ inputs.bake }}
           RETRY_OF: ${{ inputs.retry }}
         run: |
-          args=(--repo "$GITHUB_REPOSITORY" --head "$MAIN" --local "$GITHUB_WORKSPACE")
-          if grep -q -- '"--verdicts"' commands/card_bake.py; then     # the data's: what --pending keeps to (an older builder: none)
-            args+=(--verdicts "$GITHUB_WORKSPACE/carddata/db/verdicts.json")
-          fi
+          args=(--repo "$GITHUB_REPOSITORY" --head "$MAIN" --local "$GITHUB_WORKSPACE"
+                --verdicts "$GITHUB_WORKSPACE/carddata/db/verdicts.json")    # the data's: what --pending keeps to
           if [[ "$GITHUB_EVENT_NAME" =~ ^(schedule|push)$ || "$RETRY_OF" =~ ^(schedule|push)$ || "$CARD" = pending ]]; then
             args+=(--pending)                   # else a dispatch re-checks every card
           fi
@@ -1032,10 +1024,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GIT_NO_LAZY_FETCH: "1"
         run: |
-          if ! grep -q '^def due(.*verdicts' commands/card_bake.py || ! grep -q '^def merge_verdicts' commands/card_db.py; then
-            echo "An older builder: the website edits left are not counted."
-            exit 0
-          fi
           if ! "$RUNNER_TEMP/venv/bin/python" - "$GITHUB_REPOSITORY" "$(git -C "$GITHUB_WORKSPACE" rev-parse HEAD)" \
               "$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/carddata/db" "$RUNNER_TEMP/bake-records/verdicts.json" > "$RUNNER_TEMP/left.txt" <<'PY'
           import json, os, sys

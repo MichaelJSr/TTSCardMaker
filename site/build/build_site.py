@@ -1344,11 +1344,6 @@ def parse_edits():
             meta[RENAME_KEY] = True                     # the bake renames its files too
         elif RENAME_KEY in fields and not isinstance(fields[RENAME_KEY], bool):
             log(f"warning: {EDITS_PATH}: {name}: {RENAME_KEY} = {fields[RENAME_KEY]!r} isn't true or false, skipped")
-        if "_psd" in fields:                            # the edit pipeline's verdict on the PSD fields
-            if valid_verdict(fields["_psd"]):
-                meta["_psd"] = fields["_psd"]
-            else:
-                log(f"warning: {EDITS_PATH}: {name}: _psd = {fields['_psd']!r} isn't a pipeline verdict, skipped")
         edits[card_key(name)] = (good, meta)
     return edits
 
@@ -1357,9 +1352,8 @@ VERDICTS_JSON = "verdicts.json"                # the bake's verdicts on the data
 
 
 def add_verdicts(edits, folder):
-    """The data branch's db/verdicts.json ({"cards": {card key: verdict}}) as each card's `_psd` meta, over an old one
-    in Card Edits.json (read for one Card sync cycle, AutoCroissant docs/Future/CARD_SYNC_VERDICTS.md step 6). A card
-    with a verdict and no entry gets one with no fields (a baked card's flags). Warns, never fails."""
+    """The data branch's db/verdicts.json ({"cards": {card key: verdict}}) as each card's `_psd` meta. A card with a
+    verdict and no entry gets one with no fields (a baked card's flags). Warns, never fails."""
     path = os.path.join(folder, VERDICTS_JSON)
     if not os.path.exists(path):
         return edits
