@@ -644,10 +644,13 @@ def text_since(card, old, text):
     return start
 
 
-def renamed_into(old_stats):
-    """{card name: the names renamed into it, along the bot's archive tags' renamed_to chains}: one card's history."""
+def renamed_into(old_stats, stats=()):
+    """{card name: the names renamed into it, along the bot's archive tags' renamed_to chains}: one card's history (a name
+    in stats is a card again: its own)."""
     to = {}
     for name, versions in (old_stats or {}).items():
+        if name in stats:
+            continue
         tag = getattr(versions[len(versions) - 1], "archived", None) if isinstance(versions, list) and versions else None
         if isinstance(tag, dict) and isinstance(tag.get("renamed_to"), str) and tag["renamed_to"] != name:
             to[name] = tag["renamed_to"]
@@ -3238,7 +3241,7 @@ def main():
             png_by_name.setdefault(os.path.basename(path).lower(), path)
 
     cards, rules, used_slugs = [], [], set()
-    into = renamed_into(old_stats if isinstance(old_stats, dict) else {})
+    into = renamed_into(old_stats if isinstance(old_stats, dict) else {}, stats)
     history_of = lambda name: [v for n in into.get(name, ()) for v in old_stats.get(n) or []] + list(old_stats.get(name) or [])
 
     def unique_slug(name):
