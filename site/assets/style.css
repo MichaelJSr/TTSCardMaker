@@ -81,7 +81,7 @@ main { padding: 16px; outline: none; }
 .chip { border: 1px solid var(--border-strong); background: transparent; border-radius: 999px; padding: 3px 10px; font-size: 13px; color: var(--ink-2); }
 .chip:hover { background: var(--surface-2); }
 .chip.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.chip .n { opacity: .65; margin-left: 4px; font-size: 11px; }
+.chip .n, .check .n { opacity: .65; margin-left: 4px; font-size: 11px; }
 a.chip:hover { text-decoration: none; }
 .icon-toggles { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 4px; }
 .icon-toggle { width: 34px; height: 34px; padding: 3px; border-radius: 8px; background: transparent; border: 1px solid var(--border); }
