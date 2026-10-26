@@ -1,5 +1,4 @@
-// The cards grid's tiles, toolbar and Name order: DOM-free, so the build renders them in node to check the first screen it
-// writes into index.html (build_site.py first_screen, check_first.mjs).
+// The cards grid's tiles, toolbar and Name order (app.js draws the grid with them).
 import { esc, norm } from "./text.js";
 
 export const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",

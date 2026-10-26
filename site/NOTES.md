@@ -935,8 +935,8 @@ relies on:
   the grid comes when the dialog closes, or when something draws the view under the dialog (`rerender` with no card
   dialog showing). A link to a missing card draws the grid at once (then the toast). The dialog's first picture is the
   grid tile's when it has loaded (`placeholderOf`), else the 720 px one a share page preloads, else the 360 px one.
-- Build: index.html gets `grid_preload(cards, ids)`: a script that preloads the first `GRID_PRELOADS` pictures of the
-  first screen's cards (§31; Name order without node) with grid.js's srcset and the saved tile size, only for the plain
+- Build: index.html gets `grid_preload(cards)`: a script that preloads the first `GRID_PRELOADS` pictures of the
+  grid's first cards (Name order) with grid.js's srcset and the saved tile size, only for the plain
   grid. c/<id>/ pages preload the 720 px picture. grid.js `thumb`, `imgAttrs` and `TILE_SIZES` must match these.
 - Stamps (`?v=`): an asset's is its served text's hash with its imports' stamps in it (`asset_stamps`; an import cycle:
   one stamp for all); the data's (`<meta name="build">`, data URLs) hashes the data and details files without the build
@@ -1067,7 +1067,7 @@ relies on:
 - Counts: a link opens the cards its element counts (nodup); Types on cards counts a type once per card (Pandora lists
   panda twice). The cooldown and timing-tag charts count abilities' tags, the grid the cards with them.
 
-## 31. First paint: one script, the first screen in index.html (2026-10-25, owner's decision)
+## 31. First paint: one script (the first screen in index.html was removed the same day) (2026-10-25, owner's decisions)
 
 Owner, 10-25 ~15:00, after the A/B numbers: "Build it": one esbuild bundle with a published source map, the default
 view's first 8 tiles in index.html, and a parity check in node that fails the build.
@@ -1080,21 +1080,7 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
   first use.
 - **grid.js**: `tileHtml`, `toolbarHtml`, the Name order (`byKey`, `nameKey`), `SORTS`, `isDesc`, `KIND_LABEL`,
   `thumb`/`imgAttrs`/`iconImg`, `TILE_SIZES`, moved out of app.js and DOM-free (app.js wraps them with its state).
-- **First screen** (`first_screen`): the plain grid's toolbar (Name, Grid, M) and its first `FIRST_TILES` (8) tiles,
-  the first `FIRST_EAGER` (4) loaded eagerly, in a `<template id="first">` after `<main>`. An inline script puts it in
-  `#view` when the page opens on the plain grid (no hash parameters, saved view not Table: `grid_preload`'s rule), at the
-  saved tile size (S, L: `--tile`, the pictures' `sizes`, the S/M/L button); else "Loading cards…" stays and app.js draws
-  the visitor's own view (sort, filters, Table). The tiles are plain links, `<a class="tile" href="c/<id>/">`
-  (`tileHtml(c, {link: true})`: no flag, no deck button), so a tap before the script opens the card's page. The filters
-  column is empty until app.js's `renderCards` replaces the view; its tiles take the same places (no shift), flags and
-  deck buttons with them.
-- **Parity** (`check_first.mjs`, node on a temp copy of site/assets as an ES module package): the default list as app.js
-  makes it (cards not hidden, Name order: mirrors `listOf` with no parameters; change both together) through grid.js's
-  `tileHtml` and `toolbarHtml`. build_site renders the same cards with `tile_html` and `toolbar_html` and stops the build
-  ("index.html's first screen differs from grid.js", with both texts at the first difference) on any difference: a
-  change to a tile or the toolbar needs the same change there. Counts are written en-US; a browser redraws them in its
-  own. No node: no first screen (logged), the rest as before. AutoCroissant `tests/test_site_build.py` (the first screen
-  and a forced difference).
+- **First screen: removed 10-25 evening** (owner, after Safari kept flashing): index.html carried the plain grid's first 8 tiles as links (a `<template id="first">`, checked against grid.js in node by `check_first.mjs`); when app.js took over, Safari redrew every picture (the whole grid flashed at ~2 s) even with the tiles kept in the page untouched and the scrollbar's width reserved (`scrollbar-gutter: stable` stays). The page shows "Loading cards…" until app.js draws the grid again, as before. Kept: the bundle, minify, inline CSS, WOFF2 fonts (§32), on-demand chunks (§33).
 - Measured 10-25 (scratch opt/site-phone `firstload.mjs` over `serve.mjs`, Pages-like HTTP/2 and gzip; emulated
   mid-range phone, 4x CPU, cold cache; both sites built locally from the same data; 5 interleaved runs, median (range)):
   slow 4G LCP 3.43 (3.42-3.44) -> 2.05 s (2.01-2.05), fast 4G 0.91 (0.90-0.93) -> 0.50 s (0.46-0.51); FCP unchanged
