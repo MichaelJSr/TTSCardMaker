@@ -30,6 +30,7 @@ const S = {
   distPage: {},                                            // the Stats distributions' page per stat (this session)
   selecting: false,                                        // the Select toggle (phones): a tap on a tile selects it
   toTop: false,                                            // a Stats chart link was followed: the grid opens at its top
+  notPick: new Set(),                                      // series, subseries, author: ≠ pressed with nothing picked yet
 };
 // The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
@@ -352,6 +353,7 @@ function filterCards(p, { facets = true } = {}) {
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   const missing = G.MISSING.filter(([k]) => csv(p, "missing").includes(k));   // cards missing all of them
   if (missing.length) list = list.filter(c => missing.every(x => x[3](c)));
+  list = G.dropExcluded(list, p, flagFns);                                     // xkind=…, xtypes=…: the sidebar's exclusions
   for (const [k, , test] of LINKED) { const v = p.get(k); if (v) list = list.filter(test(v)); }
   const month = p.get("month"), change = p.get("change");
   if (month || change) list = S.analytics ? list.filter(c => St.balance.changedAs(S.analytics, c, month, change)) : [];   // renderCards loads it
@@ -388,9 +390,16 @@ function sortCards(list, sort = "name", dir = "") {
   }
   return list.sort(G.byKey(key, desc));
 }
-function chipList(key, options, selected, counts) {
-  return `<div class="chips">${options.map(([v, label]) => `<button type="button" class="chip${selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}">${esc(label)}${counts ? `<span class="n">${counts.get(String(v)) || 0}</span>` : ""}</button>`).join("")}</div>`;
+// xs: the excluded values (red, struck through, the count = the cards they remove: removes(key, v))
+function chipList(key, options, selected, counts, xs = [], removes = null) {
+  return `<div class="chips">${options.map(([v, label]) => { const x = xs.includes(String(v)), n = x ? removes(key, String(v)) : counts?.get(String(v)) || 0;
+    return `<button type="button" class="chip${x ? " x" : selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : ""}>${esc(label)}${counts ? `<span class="n">${x ? `−${n}` : n}</span>` : ""}</button>`; }).join("")}</div>`;
 }
+const XABLE = new Set(["kind", "stars", "sub", "types", "flags", "missing"]);   // a right-click (long press) excludes
+const NOT_KEYS = ["series", "subseries", "author"];                              // a select with a ≠ toggle
+/** a sidebar control a right-click or long press on `t` excludes with, or null */
+const xTarget = t => { const el = t?.closest?.('[data-action="toggle-param"]') || t?.closest?.("label.check")?.querySelector('[data-action="toggle-param"]');
+  return el && XABLE.has(el.dataset.key) && el.closest(".browse .filters") ? el : null; };
 const tileEnv = { get thumbs() { return S.data.thumbs; }, get icons() { return S.icons; }, dupName: id => S.byId.get(id)?.name, inDeck: id => deckHas(id) };
 const tileHtml = (c, o) => G.tileHtml(c, o, tileEnv);
 function renderCards(r) {
@@ -403,16 +412,22 @@ function renderCards(r) {
   const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of [].concat(f(c))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };
   const kindCounts = count(base, kindOf), starCounts = count(base, c => c.stars), subCounts = count(base, c => c.subtype);
   const typeCounts = count(base, c => c.types || []);
-  const miss = csv(p, "missing"), missCounts = new Map(G.MISSING.map(([k, , , test]) => [k, list.filter(test).length]));   // what ticking it would show
+  const xs = k => G.xvals(p, k), removed = new Map();
+  const removes = (k, v) => { const id = `${k}\u0001${v}`; if (!removed.has(id)) { const q = new URLSearchParams(p); q.set(`x${k}`, xs(k).filter(x => x !== v).join(","));
+    removed.set(id, Math.max(0, filterCards(q).length - list.length)); } return removed.get(id); };   // without it, less with it
+  const miss = csv(p, "missing"), xmiss = xs("missing"), missCounts = new Map(G.MISSING.map(([k, , , test]) => [k, list.filter(test).length]));   // what ticking it would show
   const series = [...new Set(S.cards.map(c => c.series).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const pickOf = k => p.get(k) || p.get(`x${k}`) || "";                        // the select shows an excluded value too
   const subseries = [...new Set(S.cards.filter(c => c.subseries && (!p.get("series") || c.series === p.get("series"))).map(c => c.subseries))]   // each name once (a picked series: its own)
     .sort((a, b) => a.localeCompare(b));
-  const subPicked = p.get("subseries") && !subseries.includes(p.get("subseries"));
+  const subPicked = pickOf("subseries") && !subseries.includes(pickOf("subseries"));
+  const notSel = (k, html) => { const x = !p.get(k) && (!!p.get(`x${k}`) || S.notPick.has(k));   // ≠: the select excludes
+    return `<div class="sel-row${x ? " x" : ""}">${html}<button type="button" class="not" data-action="not-param" data-key="${k}" aria-pressed="${x}" title="Exclude this ${k}" aria-label="Exclude this ${k}">≠</button></div>`; };
   const authors = [...new Set(S.cards.map(c => c.author).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const starOpts = [...new Set(S.cards.map(c => c.stars).filter(Boolean))].sort((a, b) => a - b).map(s => [s, `${s}★`]);
   const subOpts = [...new Set(S.cards.map(c => c.subtype).filter(Boolean))].sort().map(s => [s, s[0].toUpperCase() + s.slice(1)]);
   const typeOpts = [...typeCounts.keys()].sort((a, b) => (typeCounts.get(b) || 0) - (typeCounts.get(a) || 0));
-  const missOpts = G.MISSING.filter(([k]) => missCounts.get(k) || miss.includes(k));      // none to show: hidden
+  const missOpts = G.MISSING.filter(([k]) => missCounts.get(k) || miss.includes(k) || xmiss.includes(k));      // none to show: hidden
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
   const active = [];
   if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
@@ -426,6 +441,9 @@ function renderCards(r) {
   for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
   for (const f of csv(p, "flags")) { const x = FLAGS.find(x => x[0] === f); if (x) active.push(["flags", x[1], f]); }   // an old flag: ignored
   for (const [k, l] of G.MISSING) if (miss.includes(k)) active.push(["missing", l, k]);
+  const xLabel = { kind: k => (KINDS.find(x => x[0] === k) || [k, KIND_PLURAL[k] || k])[1], stars: s => `${s}★`, sub: cap, types: t => t.replace(/_/g, " "),
+    flags: f => FLAGS.find(x => x[0] === f)?.[1], missing: k => G.MISSING.find(x => x[0] === k)?.[1], series: v => v, subseries: v => v, author: v => `by ${v}` };
+  for (const k of G.X_KEYS) for (const v of xs(k)) { const l = xLabel[k](v); if (l) active.push([`x${k}`, `not ${l}`, G.ONE.has(k) ? undefined : v, true]); }   // an old flag: ignored
   if (p.get("month")) active.push(["month", `Changed ${St ? St.balance.monthName(p.get("month")) : p.get("month")}`]);
   if (p.get("change")) active.push(["change", St?.balance.CHANGE_LABEL[p.get("change")] || p.get("change")]);
   for (const [k, label] of LINKED) if (p.get(k)) active.push([k, label(p.get(k))]);
@@ -438,18 +456,21 @@ function renderCards(r) {
 
   const browse = `<div class="browse">
     <aside class="filters${S.filtersOpen ? " open" : ""}" aria-label="Filters">
-      <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindCounts.get(k)), csv(p, "kind"), kindCounts)}
-      <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts)}
-      ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts)}` : ""}
-      ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t); const on = csv(p, "types").includes(t);
-        return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(t.replace(/_/g, " "))} (${typeCounts.get(t)})" aria-pressed="${on}">${ic ? `<img loading="lazy" src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
-      <h3>Series</h3><select data-action="select-param" data-key="series"><option value="">All series</option>${series.map(s => `<option${s === p.get("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>
-      ${subseries.length || p.get("subseries") ? `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(p.get("subseries"))}</option>` : ""}${subseries.map(s => `<option${s === p.get("subseries") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>` : ""}
+      <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindCounts.get(k)), csv(p, "kind"), kindCounts, xs("kind"), removes)}
+      <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts, xs("stars"), removes)}
+      ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts, xs("sub"), removes)}` : ""}
+      ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t), x = xs("types").includes(t), on = !x && csv(p, "types").includes(t), name = t.replace(/_/g, " ");
+        return `<button type="button" class="icon-toggle${on ? " on" : ""}${x ? " x" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(x ? `not ${name} (removes ${removes("types", t)})` : `${name} (${typeCounts.get(t)})`)}" aria-pressed="${on}"${x ? ` aria-label="${esc(name)}: excluded"` : ""}>${ic ? `<img loading="lazy" src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
+      <h3>Series</h3>${notSel("series", `<select data-action="select-param" data-key="series"><option value="">All series</option>${series.map(s => `<option${s === pickOf("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}
+      ${subseries.length || pickOf("subseries") ? `<h3>Subseries</h3>${notSel("subseries", `<select data-action="select-param" data-key="subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(pickOf("subseries"))}</option>` : ""}${subseries.map(s => `<option${s === pickOf("subseries") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}` : ""}
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
-      <h3>Author</h3><select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === p.get("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>
+      <h3>Author</h3>${notSel("author", `<select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === pickOf("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>`)}
       <h3>Flags</h3>${FLAGS
-        .map(([f, l]) => `<label class="check"><input type="checkbox" data-action="toggle-param" data-key="flags" data-value="${f}"${csv(p, "flags").includes(f) ? " checked" : ""}> ${l}</label>`).join("")}
-      ${missOpts.length ? `<h3>Missing</h3>${missOpts.map(([k, l, tip]) => `<label class="check"${tip ? ` title="${esc(tip)}"` : ""}><input type="checkbox" data-action="toggle-param" data-key="missing" data-value="${k}"${miss.includes(k) ? " checked" : ""}> ${l}<span class="n">${missCounts.get(k)}</span></label>`).join("")}` : ""}
+        .map(([f, l]) => { const x = xs("flags").includes(f);
+          return `<label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="flags" data-value="${f}"${!x && csv(p, "flags").includes(f) ? " checked" : ""}${x ? ` aria-label="${l}: excluded"` : ""}> ${l}${x ? `<span class="n">−${removes("flags", f)}</span>` : ""}</label>`; }).join("")}
+      ${missOpts.length ? `<h3>Missing</h3>${missOpts.map(([k, l, tip]) => { const x = xmiss.includes(k);
+        return `<label class="check${x ? " x" : ""}"${tip ? ` title="${esc(tip)}"` : ""}><input type="checkbox" data-action="toggle-param" data-key="missing" data-value="${k}"${!x && miss.includes(k) ? " checked" : ""}${x ? ` aria-label="${l}: excluded"` : ""}> ${l}<span class="n">${x ? `−${removes("missing", k)}` : missCounts.get(k)}</span></label>`; }).join("")}` : ""}
+      <p class="muted x-hint">Right-click or long-press a filter to exclude it.</p>
       <p><button type="button" class="ghost" data-action="clear-filters">Clear all filters</button></p>
     </aside>
     <section>
@@ -458,7 +479,7 @@ function renderCards(r) {
         tail: `${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
           <button type="button" class="ghost" data-action="select-mode" aria-pressed="${S.selecting}">${S.selecting ? "Done" : "Select"}</button>` : ""}
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}` })}
-      ${active.length ? `<div class="active-filters">${active.map(([k, l, v]) => `<button type="button" class="chip" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
+      ${active.length ? `<div class="active-filters">${active.map(([k, l, v, x]) => `<button type="button" class="chip${x ? " x" : ""}" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>`).join("")}</div>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
       ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
@@ -1164,12 +1185,20 @@ function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="d
 
 const actions = {
   "close": () => { if ($("#edit-form", modal)) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
-  "toggle-param": el => { const p = parseHash().params, cur = csv(p, el.dataset.key), v = el.dataset.value;
-    setParams({ [el.dataset.key]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); },
+  "toggle-param": (el, exclude = false) => { const p = parseHash().params, k = el.dataset.key, cur = csv(p, k), v = el.dataset.value;
+    if (!XABLE.has(k) || !el.closest(".browse .filters")) { setParams({ [k]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); return; }
+    const [inc, exc] = G.flip(cur, csv(p, `x${k}`), v, exclude); setParams({ [k]: inc, [`x${k}`]: exc }); },
   "select-param": el => { const k = el.dataset.key, o = el.selectedOptions?.[0]?.dataset || {};      // a sort: its direction (default unless the option says)
+    const p = parseHash().params;
+    if (NOT_KEYS.includes(k) && el.closest(".browse .filters") && !p.get(k) && (p.get(`x${k}`) || S.notPick.has(k))) {   // ≠ on: the pick is excluded
+      S.notPick.add(k); setParams({ [`x${k}`]: el.value }); return; }
     setParams({ [k]: el.value, ...(k === "sort" ? { dir: o.dir ?? "" } : {}) }); },
+  "not-param": el => { const k = el.dataset.key, p = parseHash().params, inc = p.get(k) || "", exc = p.get(`x${k}`) || "";   // ≠: the select's value in or out
+    if (!inc && !exc) { S.notPick[S.notPick.has(k) ? "delete" : "add"](k); rerender(); return; }
+    if (inc) S.notPick.add(k); else S.notPick.delete(k);
+    setParams({ [k]: exc, [`x${k}`]: inc }); },
   "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: csv(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "" }); if (el.dataset.key === "q") qInput.value = ""; },
-  "clear-filters": () => { qInput.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
+  "clear-filters": () => { qInput.value = ""; S.notPick.clear(); history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
   "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(sortOf(p), p.get("dir")) ? "asc" : "desc" }); },
@@ -1322,13 +1351,17 @@ function fillTip(t) {
 }
 const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; }, hide: () => { tip.hidden = true; } });
 function hideTip() { tips.hide(); }
+// exclusions: a right-click on a sidebar filter (a long press on touch: wireTips; the menu a touch brings up is only suppressed)
+let touchAt = -1e9;
+document.addEventListener("pointerdown", e => { if (e.pointerType === "touch") touchAt = performance.now(); }, true);
+document.addEventListener("contextmenu", e => { const el = xTarget(e.target); if (!el) return; e.preventDefault(); if (performance.now() - touchAt > 1500) actions["toggle-param"](el, true); });
 wireTips(document, tips, (cx, cy) => {
   const r = tip.getBoundingClientRect();
   let x = cx + 14, y = cy + 16;
   if (x + r.width > innerWidth - 8) x = Math.max(8, cx - r.width - 14);
   if (y + r.height > innerHeight - 8) y = cy - r.height - 14;
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
-});
+}, { match: xTarget, run: el => actions["toggle-param"](el, true) });
 
 if (wantsEditor()) loadEditor().catch(() => {});          // at once, beside cards.json
 init().finally(fresh.watch);                            // a new deploy reloads the page (fresh.js)

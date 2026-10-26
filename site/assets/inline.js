@@ -322,11 +322,12 @@ export function mountGrid(view, p, api = A) {
   naming = null; listParams = p;
   const grid = view.querySelector(".browse .grid"), opts = api.editor.options(), b = opts.buckets;
   const sel = key => filters.querySelector(`select[data-key="${key}"]`);
-  if (!sel("subseries")) sel("series")?.insertAdjacentHTML("afterend", `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option></select>`);
+  const at = key => sel(key)?.closest(".sel-row") || sel(key);            // after the select's ≠ toggle
+  if (!sel("subseries")) at("series")?.insertAdjacentHTML("afterend", `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option></select>`);
   for (const key of ["series", "subseries", "author"]) {
     const el = sel(key); if (!el) continue;
     el.insertAdjacentHTML("beforeend", bucketOptions(new Set([...el.options].map(o => o.value)), b[key], p.get(key) || "") + newOption(key));
-    if (p.get(key)) el.insertAdjacentHTML("afterend", renameButton(key, p.get(key), "ghost rename-value", `⇄ Rename “${p.get(key)}”…`));   // Rename everywhere under a picked value
+    if (p.get(key)) at(key)?.insertAdjacentHTML("afterend", renameButton(key, p.get(key), "ghost rename-value", `⇄ Rename “${p.get(key)}”…`));   // Rename everywhere under a picked value
   }
   const subs = (p.get("sub") || "").split(",").filter(Boolean), subChips = filters.querySelector('[data-key="sub"]')?.closest(".chips");
   if (subs.length === 1 && subChips) subChips.insertAdjacentHTML("afterend", renameButton("subtype", subs[0], "ghost rename-value", `⇄ Rename “${subs[0]}”…`));
@@ -334,7 +335,7 @@ export function mountGrid(view, p, api = A) {
   markTiles(grid, api.selected);
   reflect(view, api.selected);
   for (const [key, list, news] of [["series", opts.series, b.series], ["subseries", opts.subseries, b.subseries], ["author", opts.authors, b.author]])
-    sel(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}" aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
+    at(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}" aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
 }
 const DROP = ".drop-list .chip, .tray .bucket[data-pin]";   // a filter-bar value, a pinned box
 /** A drop target's {key, value}: a filter-bar chip (its list's data-drop), or a tray box (data-pin-k, -v). */
