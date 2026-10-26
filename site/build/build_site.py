@@ -634,18 +634,19 @@ def stat_of(stats, attr):
     return value if isinstance(value, int) and value >= 0 else None
 
 
-def text_since(card, old, text):
-    """When the card's current text started: its start (analytics.when: the bot's carried version.from, else its last
-    PSD commit), or the start of the versions just before it that hold the same text (a stats or art change kept the
-    text). None without a date. The card page dates its current text by this (cards.json since), not by ts."""
+def text_start(card, old, text):
+    """The version the card's current text started at: the card, or the earliest of the versions just before it that
+    hold the same text (a stats or art change kept the text). None without a date. The card page dates its current
+    text by its start (analytics.when: cards.json since), not by ts."""
     if not isinstance(getattr(card, "timestamp", None), (int, float)):
         return None
-    start = analytics.when(card)
+    start = card
     dated = sorted((v for v in old or [] if isinstance(getattr(v, "timestamp", None), (int, float))), key=analytics.when)
     for v in reversed(dated):
         if getattr(v, "ability", None) != text:
             break
-        start = min(start, analytics.when(v))
+        if analytics.when(v) < analytics.when(start):
+            start = v
     return start
 
 
@@ -670,18 +671,28 @@ def renamed_into(old_stats, stats=()):
 
 
 def date_text(entry, card, old):
-    """entry's history (the card's older texts other than entry's ability, oldest first) and since (text_since, when
+    """entry's history (the card's older texts other than entry's ability, oldest first) and since (text_start's, when
     not ts)."""
     versions = []
     for v in old or []:
         text = getattr(v, "ability", None)
         if text and text != entry["ability"] and all(x["ability"] != text for x in versions):
-            versions.append({"ts": analytics.when(v) if getattr(v, "timestamp", None) is not None else None, "ability": text})
+            versions.append({"ts": analytics.when(v) if getattr(v, "timestamp", None) is not None else None, "ability": text, "_v": v})
     if versions:
         entry["history"] = sorted(versions, key=lambda x: x["ts"] or 0)
-    since = text_since(card, old, entry["ability"])
+    start = text_start(card, old, entry["ability"])
+    since = None if start is None else analytics.when(start)
+    entry["_textv"] = start                       # its commit: text_commits
     if since is not None and since != entry["ts"]:
         entry["since"] = since                    # ts stays the last PSD commit ("updated", Recently updated)
+
+
+def text_commits(e, commits):
+    """(date, commit or None) of each text e's History block shows (analytics.start_commit; the current one dated as
+    history.js textSince); the private version fields dropped."""
+    out = [(v["ts"], analytics.start_commit(v.pop("_v", None), commits)) for v in e.get("history") or ()]
+    current = analytics.start_commit(e.pop("_textv", None), commits)
+    return out + [(e.get("since") or e.get("ts"), current)] if out else []
 
 
 # ---- repo listing ----------------------------------------------------------------------------------
@@ -3622,11 +3633,12 @@ def main():
 
     if analytics.ZONE_MISSING:
         warn("no tz database: balance days and months in UTC, not Pacific time as balance.js shows them")
+    commit_at = {sha: ts for sha, ts, *_ in commits or ()}     # a version's commit: analytics.start_commit
     psd_commits = None if commits is None else {(ts, os.path.basename(path).lower()) for _, ts, _, _, _, entries, _ in commits
                                                 for status, _, _, path in entries if status != "D" and path.lower().endswith(".psd")}
     try:                                          # balance analytics: never a failed build
         balance = analytics.build(cards, stats, old_stats if isinstance(old_stats, dict) else {}, history=commits is not None,
-                                  psd_commits=psd_commits)
+                                  psd_commits=psd_commits, commits=commit_at)
         for message in analytics.summary(balance):
             log(message)
     except Exception as e:
@@ -3636,13 +3648,15 @@ def main():
         if e["id"] in balance["cards"]:
             e["balance"] = True                   # its Balance block loads data/analytics.json
 
-    history = {}
+    history, texts = {}, []
     for e in cards + rules:
+        texts += text_commits(e, commit_at)
         if e.get("history"):                  # loaded on demand: the first screen only needs the count
             history[e["id"]] = e.pop("history")
             e["hv"] = len(history[e["id"]])
         for k in [k for k, v in e.items() if v in (None, [], "") or (k == "parsed" and v is True)]:
             del e[k]                          # drop empty fields to keep the JSON small
+    history["_commits"] = analytics.commit_table(texts)      # each text's commit by its date (card ids never start with _)
     rules.sort(key=lambda r: r["name"].lower())
     id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
     archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats, people=people, credited=credited,

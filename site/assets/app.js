@@ -1,5 +1,5 @@
 import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
-import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges, commitLink } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
@@ -777,7 +777,7 @@ function openCard(id, showDetails = false) {
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
-          <div id="history-slot">${historyHtml(c)}</div>
+          <div id="history-slot">${historyHtml(c, S.data.repo, S.history?._commits)}</div>
           <div id="versions-slot">${versionsHtml(c)}</div>
           ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
         </div>
@@ -792,7 +792,7 @@ function openCard(id, showDetails = false) {
     const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
-  if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c); fillBalance(); }, () => {});
+  if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c, S.data.repo, S.history._commits); fillBalance(); }, () => {});
   else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) loadHistory().then(fillBalance, () => {});   // its original's texts
   if (hasBalance(c) && !S.analytics) loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; });
   if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c); }, () => {});
@@ -839,11 +839,12 @@ function showVersion(c, i) {
   // text at that time, when the bot's text history lines up with the commit (the latest text at or before it; the
   // current one from when it started, not from the last PSD commit)
   const then = textAt(c, v.ts);
-  const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}<br><span class="muted">${esc(v.subject || "")}</span>`;
+  const link = w => { const a = commitLink(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`); return a && ` · ${a}`; };
+  const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}${link(v)}<br><span class="muted">${esc(v.subject || "")}</span>`;
   box.innerHTML = i === 0
     ? `<figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
     : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img class="ver-old" src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}</figcaption></figure>
-      <figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}</span></figcaption></figure></div>
+      <figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
       ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
   const old = $(".ver-old", box);
   if (old) old.addEventListener("error", () => { if (!old.dataset.cdn) { old.dataset.cdn = "1"; old.src = versionUrl(v, true); } }, { once: false });
@@ -856,7 +857,7 @@ function balanceHtml(c, part = "balance") {          // part: "balance" (the lin
   if (!S.analytics) return part === "balance" ? `<h3>Balance</h3><p class="muted">Loading…</p>` : "";
   const o = balanceOf(c);
   const texts = o.hv && !o.history ? null : (o.history || []).map(v => v.ability).concat(o.ability || "");
-  return (part === "balance" ? St.balance.balanceBlock : St.balance.changesBlock)(c, S.analytics, { byId: S.byId, texts });
+  return (part === "balance" ? St.balance.balanceBlock : St.balance.changesBlock)(c, S.analytics, { byId: S.byId, texts, repo: S.data.repo });
 }
 function closeModal() {
   if (modal.hidden) return;

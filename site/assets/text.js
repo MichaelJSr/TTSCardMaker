@@ -3,6 +3,8 @@
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 /** toLocaleDateString(undefined, opts) as a function, its Intl.DateTimeFormat made once on first use (one per call was a hotspot) */
 export const dateFmt = opts => { let f = null; return d => (f ||= new Intl.DateTimeFormat(undefined, opts)).format(d); };
+/** A quiet link to a card version's commit on GitHub ("" without one); label: its accessible name */
+export const commitLink = (repo, sha, label) => (repo && sha ? `<a class="commit-link" href="https://github.com/${esc(repo)}/commit/${esc(sha)}" target="_blank" rel="noopener" aria-label="${esc(label)}">commit</a>` : "");
 export const LOGIN_RE = /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/;              // a GitHub login (here: login.js and decks.js need it without profile.js)
 export const norm = s => String(s || "").toLowerCase().replace(/[\s_\-.'’]+/g, "");
 

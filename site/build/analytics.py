@@ -182,6 +182,26 @@ def when(v):
     return start if isinstance(start, (int, float)) else v.timestamp
 
 
+COMMIT_LEN = 12                               # a commit's sha in the data: GitHub's /commit/ pages take this prefix
+
+
+def start_commit(v, commits):
+    """The commit version v started at (its version record's from_commit), shortened, when commits ({sha: committer
+    time}: the build's git history) has it at v's start (when); else None."""
+    sha = (getattr(v, "version", None) or {}).get("from_commit") if v is not None else None
+    return sha[:COMMIT_LEN] if isinstance(sha, str) and commits and commits.get(sha) == when(v) else None
+
+
+def commit_table(pairs):
+    """{str(second): sha} from (date, sha or None) of the versions a file shows: a version's commit is the one at its
+    date. A second where any version has none, or another commit, is left out (no link rather than a wrong one)."""
+    seen = {}
+    for ts, sha in pairs:
+        if isinstance(ts, (int, float)):
+            seen.setdefault(str(int(ts)), set()).add(sha if ts == int(ts) else None)
+    return {k: v.pop() for k, v in seen.items() if len(v) == 1 and None not in v}
+
+
 def chain_of(name, stats, old_stats):
     """A card's versions oldest first, its current card last (archived names: no current card)."""
     versions = sorted((v for v in (old_stats.get(name) or []) if isinstance(getattr(v, "timestamp", None), (int, float))),
@@ -260,9 +280,9 @@ def reworked(row):
     return any(k in row for k in ("words", "stats", "stars", "kind", "sub", "types", "lines"))
 
 
-def card_changes(e, chain, psd_commits=None):
+def card_changes(e, chain, psd_commits=None, commits=None):
     """Rows newest first (chain: page_chain); approx: the newer version's date is not known to be its PSD's commit (an
-    older record with no blob, and no commit of that PSD at that second)."""
+    older record with no blob, and no commit of that PSD at that second); _c: the newer version's commit (start_commit)."""
     texts = [v["ability"] for v in e.get("history") or []] + [e.get("ability") or ""]
     rows = []
     for a, b in zip(chain, chain[1:]):
@@ -270,7 +290,7 @@ def card_changes(e, chain, psd_commits=None):
         if row:
             if not exact(b, psd_commits):
                 row["approx"] = True
-            rows.append({"ts": int(when(b)), **row})
+            rows.append({"ts": int(when(b)), **row, "_c": start_commit(b, commits)})
     return rows[::-1]                             # newest first
 
 
@@ -338,10 +358,11 @@ def over_time(cards, stats, old_stats, sizes, now):
 
 
 # ---- the file ----------------------------------------------------------------------------------------------------
-def build(cards, stats, old_stats, now=None, history=True, psd_commits=None):
+def build(cards, stats, old_stats, now=None, history=True, psd_commits=None, commits=None):
     """data/analytics.json for the site's card entries (before their history is moved to history.json). history = the
     build read the git history (fs is set): without it, no over-time series (cards would start at their last commit).
-    psd_commits = {(commit time, PSD file name in lower case)} from that history: an older record dated by one is exact."""
+    psd_commits = {(commit time, PSD file name in lower case)} from that history: an older record dated by one is exact.
+    commits = {sha: committer time} from it: the change rows' commits, by date ("commits": commit_table)."""
     now = now or datetime.now(timezone.utc).timestamp()
     members = cohort_members(cards)
     cohorts, groups, sizes = make_cohorts(members)
@@ -355,7 +376,7 @@ def build(cards, stats, old_stats, now=None, history=True, psd_commits=None):
             continue
         versions += max(0, len(chain_of(e["key"], stats, old_stats)) - 1)
         chain = page_chain(e, stats, old_stats)
-        rows = card_changes(e, chain, psd_commits)
+        rows = card_changes(e, chain, psd_commits, commits)
         trend = trend_of(chain) if e["id"] in out_cards else []
         if rows or trend:
             entry = out_cards.setdefault(e["id"], {})
@@ -363,11 +384,13 @@ def build(cards, stats, old_stats, now=None, history=True, psd_commits=None):
                 entry["changes"] = rows
             if trend:
                 entry["trend"] = trend
+    rows = [r for e in out_cards.values() for r in e.get("changes", ())]
+    table = commit_table([(r["ts"], r.pop("_c", None)) for r in rows])
     first = min((when(v) for vs in old_stats.values() for v in vs or [] if isinstance(getattr(v, "timestamp", None), (int, float))), default=None)
     counts = Counter(e.get("type") for e, _, _ in members)
     return {"cohorts": cohorts, "cards": out_cards, "counts": dict(counts), "versions": versions, "since": int(first) if first else None,
             "time": over_time(cards, stats, old_stats, sizes, now) if history else {"months": [], "series": {}},
-            "minCohort": MIN_COHORT, "offScale": OFF_SCALE}
+            "minCohort": MIN_COHORT, "offScale": OFF_SCALE, "commits": table}
 
 
 def summary(data):

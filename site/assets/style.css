@@ -184,6 +184,9 @@ mark { background: color-mix(in srgb, var(--warn) 45%, transparent); color: inhe
 .strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; }
 .strip .tile { flex: 0 0 110px; } .strip .tile .meta { padding: 5px 6px; } .strip .tile .name { font-size: 12px; }
 .history .ver { border-left: 2px solid var(--border-strong); padding: 4px 0 4px 12px; margin: 8px 0; font-size: 14px; }
+/* a card version's commit on GitHub (history.js, app.js showVersion, balance.js): quiet, still a link */
+.commit-link { color: var(--ink-2); font-size: 12px; text-decoration: underline dotted; text-underline-offset: 2px; }
+.commit-link:hover { color: var(--accent); }
 ins { background: color-mix(in srgb, var(--good) 30%, transparent); text-decoration: none; border-radius: 3px; }
 del { background: color-mix(in srgb, var(--danger) 30%, transparent); border-radius: 3px; }
 .kbd { font: 12px ui-monospace, monospace; padding: 1px 6px; border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 5px; }
