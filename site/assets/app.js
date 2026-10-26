@@ -466,7 +466,9 @@ function renderCards(r) {
       ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
     </section></div>`;
+  const filtersTop = $(".browse .filters", view)?.scrollTop || 0;   // a click there redraws it: keep its place
   view.innerHTML = browse;
+  if (filtersTop) $(".browse .filters", view).scrollTop = filtersTop;
   const grid = list.length && view_ !== "table" && $(".browse .grid", view);
   if (grid) fillGrid(grid, list, { css: (G.TILE_SIZES[size] || G.TILE_SIZES.m)[1], win });
   else if (list.length && view_ === "table") fillTable($(".browse table.data tbody", view));
