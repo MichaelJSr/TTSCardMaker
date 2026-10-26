@@ -345,7 +345,9 @@ export function mountGrid(view, p, api = A) {
   for (const [key, list, news] of [["series", opts.series, b.series], ["subseries", opts.subseries, b.subseries], ["author", opts.authors, b.author]])
     at(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}" aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
 }
-const DROP = ".drop-list .chip, .tray .bucket[data-pin]";   // a filter-bar value, a pinned box
+const DROP = ".drop-list .chip, .tray .bucket-wrap";   // a filter-bar value, a pinned box with its ✕ and rename buttons
+/** The chip or pinned box (.bucket[data-pin]) a drop region stands for. */
+const boxOf = r => (r?.classList.contains("bucket-wrap") ? r.querySelector(".bucket[data-pin]") : r);
 /** A drop target's {key, value}: a filter-bar chip (its list's data-drop), or a tray box (data-pin-k, -v). */
 export const targetOf = el => (el.dataset.pin != null
   ? { key: el.dataset.pinK, value: el.dataset.pinV }
@@ -360,12 +362,12 @@ function onDragStart(e) {
 }
 const dragging = () => !!dragged;                  // our tiles, not text or files dragged in
 function onDragOver(e) {                           // dragenter too: Safari and Firefox drop only on a target that cancelled it
-  const t = dragging() && e.target.closest?.(DROP); if (!t) return;
+  const t = dragging() && boxOf(e.target.closest?.(DROP)); if (!t) return;
   e.preventDefault(); e.dataTransfer.dropEffect = "link"; t.classList.add("over");
 }
-function onDragLeave(e) { const t = e.target.closest?.(DROP); if (t && !t.contains(e.relatedTarget)) t.classList.remove("over"); }
+function onDragLeave(e) { const r = e.target.closest?.(DROP); if (r && !r.contains(e.relatedTarget)) boxOf(r)?.classList.remove("over"); }
 function onDrop(e) {
-  const t = dragging() && e.target.closest?.(DROP); if (!t) return;
+  const t = dragging() && boxOf(e.target.closest?.(DROP)); if (!t) return;
   e.preventDefault();
   const ids = dragged?.length ? dragged : (e.dataTransfer.getData("text/plain") || "").split(",").filter(Boolean);
   dragOff();
