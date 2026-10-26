@@ -170,6 +170,8 @@ jobs:
             /commands/git_commit.py
             /commands/repo_history.py
             /commands/tts_save.py
+            /commands/ability_place.py
+            /commands/ability_index.json
 
       # The data branch (restore rewrites a bad one; a lost branch is pushed back by hand from a clone)
       - &data-checkout

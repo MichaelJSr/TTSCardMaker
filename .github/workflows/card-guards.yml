@@ -177,6 +177,8 @@ jobs:
             /commands/repo_history.py
             /global_config.py
             /requirements-cards.txt
+            /commands/ability_place.py
+            /commands/ability_index.json
 
       # The post job checks out this same commit: plan and land from one bot version.
       - name: Bot commit
@@ -477,6 +479,8 @@ jobs:
             /commands/repo_history.py
             /global_config.py
             /requirements-cards.txt
+            /commands/ability_place.py
+            /commands/ability_index.json
 
       - timeout-minutes: 10
         uses: ./.github/actions/cards-python
