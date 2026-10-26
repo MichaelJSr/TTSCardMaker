@@ -256,7 +256,7 @@ export function changesBlock(c, A, { byId, texts = null, repo = "" } = {}) {
       const parts = changeParts(r);
       const [i, j] = r.text || [];
       const diff = r.words && texts && texts[i] != null && texts[j] != null ? `<details class="bal-diff"><summary>Show the change</summary><div>${diffWords(texts[i], texts[j])}</div></details>` : "";
-      const link = commitLink(repo, A.commits?.[r.ts], `Commit for the ${day(r.ts)} change`);       // by date: analytics commit_table
+      const link = commitLink(repo, A.commits?.[r.c], `Commit for the ${day(r.ts)} change`);        // r.c: index in commits
       const when = (r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts))) + (link && `<br>${link}`);
       return `<li><span class="when">${when}</span><div>${parts.join("<br>")}${diff}</div></li>`;
     }).join("");

@@ -1257,17 +1257,23 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 
 ## 37. A card version's commit (2026-10-25, owner: "the ability to go to the commit for a specific card version on the website, optionally")
 - A quiet "commit" link (text.js `commitLink`: GitHub `/commit/<sha>`, new tab, `rel=noopener`, aria-label "Commit for the
-  Oct 21, 2026 version") beside each History text, each Recorded change, and in the image versions' compare box (the
-  picked version and the current one; the list rows stay buttons, so ↑ ↓ are unchanged).
-- Which commit: the bot's `version.from_commit` (the commit a version started at), kept only when the build's git
-  history has it at that version's start, to the second (`analytics.start_commit`). Not the version's `blob_sha`: that
-  is the last PSD read for the version (often a later commit that kept the data, e.g. a standardize pass): it
-  named another commit for 755 of 2,149 versions. Image versions already carry their commit (versions.json).
-- Data: by date, no per-entry field: history.json `_commits` and analytics.json `commits`, `{second: 12-char sha}`
-  (`commit_table`); a second where any shown version has no commit, or another one, is left out. A shallow clone has
-  no history, so no links.
-- Measured on data d4dd2172 and main a7ed9744 (history from a blobless clone): History texts 1,733 of 1,735 linked (two
-  versions the bot recorded with no start commit or blob: The Gates and The Temple of Ahn'Qiraj, 2026-05-28); Recorded
-  changes 1,090 of 1,090; image versions 4,281 of 4,281. Each linked commit is at the shown date and changed the card's
-  PSD or PNG (an old name for renamed cards), or Card Edits.json for 30 website-edit versions. history.json +2.2%
-  (+5.6% gzipped), analytics.json +2.0% (+8.3% gzipped).
+  Oct 21, 2026 version"; muted, 12px; `commitAfter` keeps " · commit" on one line) beside each History text, each
+  Recorded change, and in the image versions' compare box (the picked version and the current one; the list rows stay
+  buttons, so ↑ ↓ are unchanged).
+- Which commit (`analytics.version_commit`, trees only): the one that made the bytes the version's PSD held at its
+  start. The record's path is followed back through pure renames (the same blob deleted at another path in one commit;
+  the bake's Renamed trailers for a redraw), as image versions are, and its `blob_sha` (its newest reading: art-only
+  commits since keep a version going) must be met on the way. No link: edit and authors versions (the bot dates them
+  by the newest Card Edits.json or Card Authors.txt commit, which made no card change), no blob, bytes the version
+  before already had (a rename, a re-read), or a commit at or before a blobless previous version's start. A change
+  row that changed kind, stars or item type links a move of the card's PSD at its start (the folder made it).
+- Data: history.json `_shas` (12-char shas), each text's `c` (an index), the current text's `n` on the newest older
+  text; analytics.json `commits` (a list) and each row's `c`. A shallow clone has no history, so no links.
+- Measured on data d4dd2172 and main a7ed9744 (history from a blobless clone): History texts 1,697 of 1,735 linked (29
+  edit versions: 28 rulebook pages and the Gates of Ahn'Qiraj, whose straight apostrophes came from AutoCroissant;
+  7 with no exact commit: 5 renamed cards whose old name had the same bytes, Shadow Queen's move, Jevil's broken path
+  history; 2 without a blob); Recorded changes 1,083 of
+  1,090 (5 pickle-era folder moves, Jevil, 1 edit); image versions 4,281 of 4,281. Every linked commit made new PSD
+  bytes on the card's path or an older name of it, but 4 move commits on rows that changed kind or stars; 38 texts
+  link a commit before their shown date (the bot dates renamed cards from the rename, pickle-era versions from the
+  path's last commit). history.json +5.2% (+8.9% gzipped), analytics.json +5.7% (+10.2% gzipped).

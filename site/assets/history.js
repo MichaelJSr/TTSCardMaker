@@ -28,12 +28,13 @@ export function textAt(c, ts) {
   return then.length ? then[then.length - 1].ability : null;
 }
 /** The History block: each text, newest first, its changes from the one before highlighted ("" with one text or none);
- * a text's commit link from commits (history.json _commits: by date) and repo */
-export function historyHtml(c, repo = "", commits = {}) {
+ * a text's commit link from shas (history.json _shas: a text's c, the current text's n on the newest older one) and repo */
+export function historyHtml(c, repo = "", shas = []) {
+  const sha = v => shas?.[v.current ? c.history?.[c.history.length - 1]?.n : v.c];
   if (!c.hv) return "";
   if (!c.history) return `<h3>History</h3><p class="muted">Loading ${c.hv} earlier version${c.hv > 1 ? "s" : ""}…</p>`;
   const versions = textsOf(c);
   if (versions.length < 2) return "";
-  return `<h3>History</h3><div class="history">${versions.slice().reverse().map((v, k, arr) => `<div class="ver"><div class="muted">${v.current ? "Current" : "Earlier"}${v.ts ? ` · ${date(v.ts)}` : ""}${v.ts && commits[v.ts] ? ` · ${commitLink(repo, commits[v.ts], `Commit for the ${date(v.ts)} version`)}` : ""}</div>
+  return `<h3>History</h3><div class="history">${versions.slice().reverse().map((v, k, arr) => `<div class="ver"><div class="muted">${v.current ? "Current" : "Earlier"}${v.ts ? ` · ${date(v.ts)}` : ""}${v.ts && sha(v) ? ` · ${commitLink(repo, sha(v), `Commit for the ${date(v.ts)} version`)}` : ""}</div>
     <div>${k < arr.length - 1 ? diffWords(arr[k + 1].ability, v.ability) : esc(v.ability).replace(/\n/g, "<br>")}</div></div>`).join("")}</div>`;
 }
