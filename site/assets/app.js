@@ -13,6 +13,7 @@ import * as fresh from "./fresh.js";
 import * as G from "./grid.js";
 import * as CF from "./myfilters.js";
 import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc } from "./grid.js";
+import { artHtml } from "./art.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -676,6 +677,7 @@ function openCard(id, showDetails = false) {
         ${statBars(c)}
         ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, c.name)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
         ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, c.name)}</div>` : ""}
+        ${artHtml(c)}
         ${hasBadges(c.ability) || hasBadges(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml()}</details>` : ""}
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
