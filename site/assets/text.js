@@ -53,9 +53,9 @@ function tagMeaning(tag) {
   return null;
 }
 export const GROUP_NAMES = { turn: "On your turn", any: "At any time", forced: "Forced", trigger: "Per game & triggers", neutral: "Other tags" };
-export const badgeHtml = tag => {
+export const badgeHtml = (tag, tip = true) => {   // tip false: the note is the parent's (a "3CD+" head)
   const t = tagInfo(tag);
-  return t ? `<span class="badge ${t.group}" data-tip="${esc(`(${t.tag}) ${t.meaning}`)}">${esc(t.tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
+  return t ? `<span class="badge ${t.group}"${tip ? ` data-tip="${esc(`(${t.tag}) ${t.meaning}`)}"` : ""}>${esc(t.tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
 };
 
 // badge colour legend, one line per colour: the text of rulebook page 02 Abbreviations; colours come from tagInfo's groups

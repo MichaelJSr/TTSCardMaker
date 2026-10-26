@@ -273,7 +273,7 @@ function cardCharts(pool, creatures, L) {
   if (cd.size) {
     const stars = [...cd.keys()].sort((a, b) => a - b), plus = i => (CD_PLUS.has(i) ? "+" : ""), avg = r => (r.k ? r.sum / r.k : null);
     const plusTip = i => CD_PLUS_TIP[CD_COLS[i][0]], avgHead = { label: "Avg turns", tip: "Mean recurring number of the cooldown and global cooldown tags; uses tags left out" };
-    const head = ["Stars", ...CD_COLS.map(([tag], i) => ({ html: `${badgeHtml(tag)}${plus(i) && noted("+", plusTip(i))}` })), avgHead];
+    const head = ["Stars", ...CD_COLS.map(([tag], i) => (plus(i) ? { html: `${badgeHtml(tag, false)}+`, tip: plusTip(i) } : { html: badgeHtml(tag) })), avgHead];
     out.push(card("cooldowns", "Cooldowns and uses by star level", "Abilities per cooldown or uses, by star level.",
       heatTable(head, stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n.map(v => v || ""), r.k ? String(fmt(avg(r))) : null]; }), { shade: CD_COLS.map((_, i) => i + 1), all: true,
         href: (k, i) => (i >= 1 && i <= CD_COLS.length ? L({ stars: stars[k], cd: CD_KEYS[i - 1] }) : null) }),
