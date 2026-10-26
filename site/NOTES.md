@@ -5,7 +5,7 @@ and the line numbers left in them are of 2026-10-20. The hand-kept files have si
 Authors.txt, Card Edits.json, Website Admins.txt, Constructed Ban List.txt): read `MDW/<file>` below as `site/<file>`.
 
 
-Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modules, no bundler, no framework.
+Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modules, no framework; site.yml bundles them with esbuild (§31).
 
 ## 1. Page structure
 - Tabs are static `<a data-tab>` links in index.html:30-37: cards, rules, deck, stats, changes, users (plus hidden routes `compare`, `u` = a profile, `card` = modal). Header buttons: random, theme, account (`#account`: "Sign in" or the login, opens the editor hub; the pencil until 2026-10-21), keys.
