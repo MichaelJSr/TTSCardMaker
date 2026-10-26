@@ -50,8 +50,8 @@ Where the data comes from:
   * Changelog: the card sync's events (CARD_DATA_DIR's changelog/YYYY-MM.jsonl and manifest.json), the edit batches
     (one more `git log` over Card Edits.json and Card Authors.txt, their versions read in one batch) and the archived
     cards (old_stats tags).
-PSDs in the repo that the bot hasn't parsed yet (and card PNGs without a PSD) are still listed, image only; a PNG
-whose Card Edits dup_of names its original is a duplicate (the card data's duplicate_of).
+PSDs in the repo that the bot hasn't parsed yet are still listed, image only; a PNG whose Card Edits dup_of names its
+original is a duplicate (the card data's duplicate_of).
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
@@ -124,7 +124,6 @@ VARIANT_VERSION = "1"                        # in the cached variant images' nam
 FONT_BUILD = "MDW/Fonts/stoogedings-src/build_stoogedings.py"   # its icon_art draws them (needs its requirements.txt)
 IMAGE_META = "images.json"                   # in CACHE: each card image's size and accent color, by PNG blob sha
 IMAGE_META_VERSION = f"3:{IMAGE_WIDTH}"       # bump the 3 when accent_color or the resize changes
-IMAGE_META_WEBP = f"1:{IMAGE_WIDTH}:80"      # the WebP builds' rows: same sizes, their colours kept (no hue change); drop once deployed
 OG_WIDTH = 480                               # link-preview image (Discord shows ≤ 300 px tall)
 OG_DECK_CARDS = 6                            # cards in a deck page's link-preview montage
 CREATOR_CARDS = ("Croissant", "Michael", "Bobberlington", "The Forbidden One", "Kyle", "Tyler", "Z!!!!!")   # the site's preview fan (owner 2026-10-25; alternating warm and dark, Z!!!!! shown whole), by file key; Kyle is hdckighfkvhvgmk's
@@ -847,7 +846,7 @@ def load_image_meta():
     try:
         with open(os.path.join(CACHE, IMAGE_META), encoding="utf-8") as fh:
             meta = json.load(fh)
-        ok = meta.get("version") in (IMAGE_META_VERSION, IMAGE_META_WEBP) and isinstance(meta.get("images"), dict)
+        ok = meta.get("version") == IMAGE_META_VERSION and isinstance(meta.get("images"), dict)
         images = meta["images"] if ok else {}
         return {sha: row for sha, row in images.items() if valid_meta(row)}
     except (OSError, ValueError, AttributeError, KeyError):
@@ -1449,7 +1448,7 @@ def parse_ratings():
     out, bad = {}, []
     for name, entries in cards.items():
         entries = entries if isinstance(entries, list) else [None]
-        kept = [{"date": e["date"], "scale": e["scale"], "value": rating_number(e["value"]), "by": e["by"], "source": e["source"]}
+        kept = [{"date": e["date"], "scale": e["scale"], "value": e["value"], "by": e["by"], "source": e["source"]}
                 for e in entries if valid_rating(e)]
         if len(kept) < len(entries):
             bad.append(name)
@@ -3371,8 +3370,6 @@ def dist_digest(data):
 def main():
     started = time.time()
     os.makedirs(os.path.join(CACHE, "img"), exist_ok=True)
-    if os.path.isdir(os.path.join(CACHE, "thumbs")):          # cache layout before 2026-10-20
-        shutil.rmtree(os.path.join(CACHE, "thumbs"))
     if os.path.exists(DIST):
         shutil.rmtree(DIST)
     os.makedirs(os.path.join(DIST, "thumbs"))
@@ -3433,8 +3430,7 @@ def main():
         # the printed title the bot read (since 2026-10-21): shown instead of the file name; a Card Edits.json name wins below
         parsed = getattr(c, "parsed_values", None) or {}
         title = parsed["name"] if "name" in parsed else getattr(c, "display_name", None)
-        version = getattr(c, "parser_version", None)
-        shown = (title or name) if isinstance(version, int) and version >= 2 else None    # older parses read no titles
+        shown = title or name
         entry = {
             "id": unique_slug(name), "name": (title if not is_rule else None) or name, "type": getattr(c, "card_type", "unknown"),
             "subtype": getattr(c, "subtype", None), "series": getattr(c, "series", None), "subseries": None,   # from edits only
@@ -3482,16 +3478,6 @@ def main():
         cards.append(dup)
         seen_pngs.add(path)
 
-    lower_tree = {path.lower() for path in tree}
-    by_psd = {c["psd"].lower(): c for c in cards if c.get("psd") and c.get("variant", 1) == 1}
-    for path in sorted(tree):
-        m = re.match(r"(.+?)(\d+)\.png$", path, re.I)
-        if not m or path in seen_pngs or not path.startswith(CARD_FOLDERS) or (m.group(1) + m.group(2) + ".psd").lower() in lower_tree:
-            continue                          # not numbered, already a card, or it has a PSD of its own
-        original = by_psd.get((m.group(1) + ".psd").lower())
-        if original is None:
-            continue
-        add_dup(original, os.path.splitext(os.path.basename(path))[0].replace("_", " "), path, original["name"])
     # picture-only duplicates (owner 10-26): a PNG with no PSD whose Card Edits dup_of names its original (Stubborn_Queen.png),
     # the bot's duplicate_of record; the original's data, its own name, picture and art
     originals = {c["key"]: c for c in cards if not c.get("dup")}
@@ -3504,25 +3490,25 @@ def main():
         add_dup(original, name, png, name, export=False)
     log(f"duplicates: {sum(1 for c in cards if c.get('dup'))} PNGs share another card's PSD")
 
-    # PSDs the bot hasn't parsed yet, and card PNGs without a PSD: list them, image only
+    # PSDs the bot hasn't parsed yet: list them, image only
     known = {norm(c[k]) for c in cards + rules for k in ("name", "key")}     # a shown title differs from the file name
     for path in sorted(tree):
         low = path.lower()
         if not path.startswith(CARD_FOLDERS) or any(p in SKIP_PARTS for p in path.split("/")):
             continue
-        if not (low.endswith(".psd") or (low.endswith(".png") and path not in seen_pngs)):
+        if not low.endswith(".psd"):
             continue
         name = os.path.splitext(os.path.basename(path))[0].replace("_", " ")
         if norm(name) in known or "/Rulebook/" in path:
             continue
         known.add(norm(name))
-        png = png_for(path, name) if low.endswith(".psd") else path
+        png = png_for(path, name)
         info = classify(path)
         entry = {"id": unique_slug(name), "name": name, "key": name, "type": info["type"], "subtype": info.get("subtype"),
                  "series": info.get("series"), "subseries": None, "stars": info.get("stars"), "types": [], "hp": None, "def": None,
                  "atk": None, "spd": None, "ability": None, "author": None, "ts": None,
-                 "psd": path if low.endswith(".psd") else None, "png": png, "problems": [], "parsed": False}
-        apply_edits(entry, edits, tree.get(path) if low.endswith(".psd") else None)
+                 "psd": path, "png": png, "problems": [], "parsed": False}
+        apply_edits(entry, edits, tree.get(path))
         cards.append(entry)
     # cards.json leaves "parsed" out when true
 
@@ -3701,7 +3687,7 @@ def main():
             log(message)
     except Exception as e:
         warn(f"no balance analytics: {type(e).__name__}: {e}")
-        balance = {"cohorts": {}, "cards": {}, "counts": {}, "versions": 0, "since": None, "time": {"months": [], "series": {}}}
+        balance = {"cohorts": {}, "cards": {}, "counts": {}, "versions": 0, "time": {"months": [], "series": {}}}
     for e in cards:
         if e["id"] in balance["cards"]:
             e["balance"] = True                   # its Balance block loads data/analytics.json
