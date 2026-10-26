@@ -133,12 +133,13 @@ const tokenApi = { vocab: () => [], icon: (t, o) => S.renderer?.icon(t, o) ?? nu
 let tokensMod = null, tokensP = null;
 const useTokens = m => { if (!tokensMod) { tokensMod = m; m.install(tokenApi); } return m; };   // once: the editor imports the same module
 const loadTokens = () => (tokensP ||= (early("tokens.js"), import("./tokens.js")).then(useTokens).catch(e => { tokensP = null; throw e; }));
-// the Font box's suggestions: the fonts the shown cards use (not those already picked), each with its card count
+// the Font box's suggestions: the fonts the searched cards use, counted as the Font chips count them (the search, not
+// the sidebar filters); picked and excluded ones marked (picking an excluded one moves it back in)
 function fontEntries() {
   if (!S.fontUse) return [];
-  const n = new Map(), p = parseHash().params, on = new Set([...vals(p, "font"), ...vals(p, "xfont")]);
-  for (const c of S.cards) for (const f of fontsOf(c)) n.set(f, (n.get(f) || 0) + 1);
-  return [...n].filter(([f]) => !on.has(f)).map(([value, k]) => ({ value, n: k, note: `${k} card${k === 1 ? "" : "s"}` }));
+  const n = new Map(), p = parseHash().params, on = new Set(vals(p, "font")), off = new Set(vals(p, "xfont"));
+  for (const c of filterCards(p, { facets: false })) for (const f of fontsOf(c)) n.set(f, (n.get(f) || 0) + 1);
+  return [...n].map(([value, k]) => ({ value, n: k, note: `${k} card${k === 1 ? "" : "s"}${on.has(value) ? ", picked" : off.has(value) ? ", excluded" : ""}` }));
 }
 function whenLoaded(promise, what, rerender) {
   promise.then(rerender, e => { view.innerHTML = `<div class="empty">Couldn't load ${esc(what)} (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`; });
@@ -1506,14 +1507,17 @@ const tips = tipController({ fill: fillTip, show: () => { tip.hidden = false; },
 function hideTip() { tips.hide(); }
 // the Font box: its data and list load on first focus (then the list opens as if typed); a pick or Enter (the best
 // suggestion when no row is chosen) adds the font, the box empties and keeps the focus
-const addFont = (el, v) => { el.value = ""; const p = parseHash().params; setParams({ font: [...vals(p, "font").filter(x => x !== v), v], xfont: vals(p, "xfont").filter(x => x !== v) }); };
+const addFont = (el, v) => { el.value = ""; const p = parseHash().params; if (vals(p, "font").includes(v)) { toast("Already picked"); return; }
+  setParams({ font: [...vals(p, "font").filter(x => x !== v), v], xfont: vals(p, "xfont").filter(x => x !== v) }); };
 document.addEventListener("focusin", e => { const el = e.target; if (!el.matches?.(".font-box") || (S.fontUse && tokensMod)) return;
   Promise.all([loadFonts(), loadTokens()]).then(() => { if (document.activeElement === el) el.dispatchEvent(new Event("input", { bubbles: true })); }, () => toast("Couldn't load the fonts"));
 });
 document.addEventListener("suggest-pick", e => { if (e.target.matches?.(".font-box")) addFont(e.target, e.detail.value); });
 document.addEventListener("keydown", e => { const el = e.target; if (e.key !== "Enter" || !el.matches?.(".font-box") || e.isComposing || !tokensMod) return;
-  e.preventDefault(); const best = el.value.trim() && tokensMod.suggestNames(el.value, fontEntries())[0];
-  if (best) addFont(el, best.value); else if (el.value.trim()) toast("No card uses a font by that name"); });
+  e.preventDefault(); const typed = norm(el.value); if (!typed) return;
+  const best = tokensMod.suggestNames(el.value, fontEntries())[0];   // the same name first, a picked one too (addFont says so)
+  if (best) addFont(el, best.value);
+  else toast(S.cards.some(c => fontsOf(c).some(f => norm(f) === typed)) ? "No card in this search uses that font" : "No card uses a font by that name"); });
 // exclusions: a right-click on a sidebar filter (a long press on touch: wireTips; the menu a touch brings up is only suppressed)
 let touchAt = -1e9;
 document.addEventListener("pointerdown", e => { if (e.pointerType === "touch") touchAt = performance.now(); }, true);

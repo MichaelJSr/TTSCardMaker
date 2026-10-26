@@ -1288,9 +1288,11 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   path's last commit). history.json +5.2% (+8.9% gzipped), analytics.json +5.7% (+10.2% gzipped).
 
 ## 38. The Font filter (2026-10-25, owner: "can you allow filtering by font? have a text box for entering a font with autofill")
-- Sidebar, after Author: a Font box. Typing suggests the fonts the shown cards use with their card counts ("Perpetua,
-  95 cards"), through tokens.js's name list (`data-suggest="font"`, `suggestNames`: any case, anywhere in the name,
-  spaces, `_`, `-` ignored); ↑ ↓ Enter Esc, click, tap. Enter with no row chosen adds the best suggestion. Picked fonts
+- Sidebar, after Author: a Font box. Typing suggests the fonts the searched cards use with their card counts ("Perpetua,
+  95 cards"; counted over the search like the Font chips, not the sidebar filters), through tokens.js's name list
+  (`data-suggest="font"`, `suggestNames`: any case, anywhere in the name, spaces, `_`, `-` ignored); ↑ ↓ Enter Esc,
+  click, tap. Enter with no row chosen adds the best suggestion. Picked and excluded fonts stay in the list, marked
+  ("picked": a pick says "Already picked"; "excluded": a pick moves it to the picked). Picked fonts
   are chips (any of them: "Cards with any of them."); right-click or long press excludes ("not Perpetua"), as Kind.
 - URL: `font=` and `xfont=`, repeated, one font each (myfilters.js `vals`). A link loads the data first ("Loading…").
 - A card's fonts are its Details panel's: the record's `fonts` keys (build_site.py `card_fonts`); variant pictures their
