@@ -1237,12 +1237,20 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   are still made eager); entering edit mode reuses the tiles (the marks come after every render), leaving it (sign-out)
   makes them anew; another tile size (S, M, L) sets the pictures' `sizes` in place; `refresh` (the deck button) updates
   the cached markup instead of dropping it. Another view (table, "Loading…", no match, another tab) draws as before.
-- **Proof** (scratch noflash2 `proof.mjs`, headless Chrome, MutationObserver on #view counting tiles, tile pictures and
-  any `<img>` leaving it; 1280, 1400, 1920 and 390 px): 0 across the first screen's takeover (the 8 tiles the same
-  elements, no shift), the kept sign-in's restore and its edit-mode redraw (#view never rewritten), a no-op redraw signed
-  out and in edit mode, Select on and off, a creature's dialog loading analytics.json then closed, Stats back to the
-  cards, `#/cards?change=buff` redrawn, + Deck then a redraw. A filter click: exactly the tiles filtered out leave
-  (474 of 772 for Creatures), unticked none; a sort: tiles move (754), none made anew; a staged inline edit: its one tile.
-  The filters and toolbar equal a fresh load's (markup, select values, boxes) after filters, a series pick, Clear all
-  and in edit mode; the order equals a fresh load's after a filter and a sort. The dialog, Edit, inline editing, the
-  TTS download and sign-out work; no page or console errors.
+- **Proof** (scratch noflash2 `proof.mjs`, headless Chrome, a MutationObserver on #view counting the tiles, tile
+  pictures and any `<img>` that leave it; the bundled build at 1280, 1400, 1920 and 390 px, 43 checks each): 0 across
+  the first screen's takeover (the 8 tiles the same elements, no shift), the kept sign-in's restore and its edit-mode
+  redraw (#view never rewritten), a no-op redraw signed out and in edit mode, Select on and off, tile sizes S, L, M, a
+  creature's dialog loading analytics.json then closed, Stats back to the cards, `#/cards?change=buff` redrawn, + Deck
+  then a redraw. A filter click: exactly the tiles filtered out leave (474 of 772 for Creatures), unticked none; an
+  exclusion (right-click): the 298 excluded; a sort: tiles move (754 for Stars), none made anew; a staged inline edit:
+  its one tile. The filters and toolbar equal a fresh load's (markup, select values, boxes) after filters, a series
+  pick, Clear all, an exclusion and in edit mode; the order equals a fresh load's after a filter, an exclusion and a
+  sort. The dialog, Edit, inline editing, the TTS download and sign-out work; no page or console errors there or on
+  any page (`smoke.mjs`, signed out and in, 1280 and 390). Without the sizes patch, S, L, M remade all 772 tiles 3
+  times (the check fails as it should). Safari itself was not run (Keychain prompts); these counts stand in.
+- First paint with the first screen back (§31; opt/site-phone `firstload.mjs` over `serve.mjs`, main without it against
+  this, both built from the same data, 5 interleaved cold runs, median; the Mac under load, load average ~75): slow 4G
+  LCP 2.88 -> 2.01 s, first tile 2.84 -> 0.69 s, FCP 0.70 -> 0.68 s, DOMContentLoaded 2.68 -> 3.33 s, the whole grid
+  3.01 -> 3.66 s, TBT 86 -> 94 ms; fast 4G LCP 0.96 -> 0.48 s, first tile 0.91 -> 0.22 s, FCP 0.26 -> 0.28 s,
+  DOMContentLoaded 0.74 -> 0.82 s, the whole grid 1.07 -> 1.16 s; bytes 463 -> 466 KB, requests the same.
