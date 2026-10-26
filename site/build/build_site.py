@@ -167,10 +167,11 @@ SITE_KEY, SITE_FIELDS = "_site", ("name", "stars", "types", "hp", "def", "atk", 
 DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
-FIXED_BY = {"hp": ("HP NOT FOUND",), "def": ("DEF NOT FOUND",), "atk": ("ATK NOT FOUND",), "spd": ("SPD NOT FOUND",),
+FIXED_BY = {"hp": ("HP NOT FOUND", "NO STATS FOUND"), "def": ("DEF NOT FOUND", "NO STATS FOUND"),
+            "atk": ("ATK NOT FOUND", "NO STATS FOUND"), "spd": ("SPD NOT FOUND", "NO STATS FOUND"),
             "ability": ("ABILITY TEXT NOT FOUND", "NO ABILITY LAYER"), "stars": ("NO STARS FOUND",),
             "type": ("UNKNOWN TYPE",), "types": ("MISSPELT TYPE",), "allow_high_stats": ("STATS TOO HIGH",),
-            "creatures": ("SEVERAL CREATURES",)}
+            "creatures": ("SEVERAL CREATURES", "NO STATS FOUND")}
 SKIP_PARTS = ("MDW", "Markers")
 
 
