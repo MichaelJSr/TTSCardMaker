@@ -1190,8 +1190,8 @@ Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan
 
 ## 34. Renaming a card's files (2026-10-25, owner: "can you make it an option to change the file name or not?")
 
-- Edit dialog: "Also rename the card's files" under the name (off by default; not on rulebook pages or duplicates,
-  a variant's picture 2+ included). Ticked beside a name edit: `"_rename": true` in the card's Card Edits.json entry (`renameTick`,
+- Edit dialog: "Also rename the card's files" under the name (off by default; not on rulebook pages, PNG-only cards
+  or duplicates, variant pictures 2+ being duplicates). Ticked beside a name edit: `"_rename": true` in the card's Card Edits.json entry (`renameTick`,
   `renameFlag`; gone with the name, and never beside a website-only name). cards.json `renameFiles` shows it ticked.
 - The bake (AutoCroissant card_bake `plan_rename`): after the title, the PSD and its PNGs (NameN.png too) take the name's
   file stem (spaces as `_`, characters no file can hold dropped), in the same commit, with `Renamed: <old> -> <new>`
