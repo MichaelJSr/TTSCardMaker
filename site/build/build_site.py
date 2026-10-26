@@ -1287,8 +1287,9 @@ def parse_edits():
             meta[BOT_FIELDS] = bot
         elif bot is not None:
             log(f"warning: {EDITS_PATH}: {name}: {BOT_FIELDS} = {bot!r} isn't a list of fields, skipped")
-        if fields.get(RENAME_KEY) is True and isinstance(good.get("name"), str):   # the bake renames its files too
-            meta[RENAME_KEY] = True
+        site = fields.get("_site")                     # a website-only name renames nothing (the bot's CardEdits.renames)
+        if fields.get(RENAME_KEY) is True and isinstance(good.get("name"), str) and not (isinstance(site, list) and "name" in site):
+            meta[RENAME_KEY] = True                     # the bake renames its files too
         elif RENAME_KEY in fields and not isinstance(fields[RENAME_KEY], bool):
             log(f"warning: {EDITS_PATH}: {name}: {RENAME_KEY} = {fields[RENAME_KEY]!r} isn't true or false, skipped")
         if "_psd" in fields:                            # the edit pipeline's verdict on the PSD fields
@@ -1539,7 +1540,7 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
             entry["partFlags"] = flags
     if current and isinstance(verdict.get("moved"), str):
         entry["moved"] = verdict["moved"]         # a stars edit moved the card into its N Stars folder
-    if meta.get(RENAME_KEY) and "name" in fields and "name" not in (meta.get("_site") or []):
+    if meta.get(RENAME_KEY) and "name" in fields:
         entry["renameFiles"] = True               # the bake renames its files to the name (the bot's CardEdits.renames)
     parted = sorted({p["field"] for p in (meta.get("parts") or {}).values()})
     if parted:
