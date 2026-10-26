@@ -1,7 +1,7 @@
 // Balance: the Stats page's Balance section and each card's Balance block, from data/analytics.json (build/analytics.py).
 // Charts follow stats.js (dataviz method): thin marks, hairline grid, legends for two series, a table view for each.
 // DOM-free: every function returns HTML, every string goes through esc.
-import { esc, diffWords, badgeHtml, dateFmt } from "./text.js";
+import { esc, diffWords, badgeHtml, dateFmt, commitLink } from "./text.js";
 import { chartCard as card, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole } from "./stats.js";
 
 const KINDS = { creature: "creatures", minion: "minions" };
@@ -249,14 +249,15 @@ export function balanceBlock(c, A, { byId } = {}) {
 }
 
 /** The card's recorded changes, newest first: stats (buff, nerf), stars, kind, types, series, timing tags, wording */
-export function changesBlock(c, A, { byId, texts = null } = {}) {
+export function changesBlock(c, A, { byId, texts = null, repo = "" } = {}) {
   const a = cardData(A, c, byId), out = [];
   if (a?.changes?.length) {
     const items = a.changes.map(r => {
       const parts = changeParts(r);
       const [i, j] = r.text || [];
       const diff = r.words && texts && texts[i] != null && texts[j] != null ? `<details class="bal-diff"><summary>Show the change</summary><div>${diffWords(texts[i], texts[j])}</div></details>` : "";
-      const when = r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts));
+      const link = commitLink(repo, A.commits?.[r.c], `Commit for the ${day(r.ts)} change`);        // r.c: index in commits
+      const when = (r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts))) + (link && `<br>${link}`);
       return `<li><span class="when">${when}</span><div>${parts.join("<br>")}${diff}</div></li>`;
     }).join("");
     out.push(`<h3>Recorded changes</h3><ol class="bal-changes">${items}</ol>`);

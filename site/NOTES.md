@@ -189,7 +189,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 ## 16. Card history dates and the card sync's data (2026-10-23)
 - From AutoCroissant's history audit (C2, C5, C3-site-local-day, C3-dup-history-split, the archive tags' `moved_to`) and the
   card sync's dry-run check (DATA_BUILD_ACTION.md §10, step 7).
-- `since` (build_site `text_since`, cards.json): when the current text started: the card's start (`analytics.when`: the
+- `since` (build_site `text_start`, cards.json): when the current text started: the card's start (`analytics.when`: the
   bot's carried `version.from`, else its timestamp), or the start of the versions just before it with the same text (a
   stats change, or an edit dated after the PSD). Only written when it differs from `ts`, which stays the last PSD commit
   ("updated", Recently updated's order). `assets/history.js` (DOM-free) dates the current text by `since ?? ts` in the
@@ -1263,3 +1263,26 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   LCP 2.88 -> 2.01 s, first tile 2.84 -> 0.69 s, FCP 0.70 -> 0.68 s, DOMContentLoaded 2.68 -> 3.33 s, the whole grid
   3.01 -> 3.66 s, TBT 86 -> 94 ms; fast 4G LCP 0.96 -> 0.48 s, first tile 0.91 -> 0.22 s, FCP 0.26 -> 0.28 s,
   DOMContentLoaded 0.74 -> 0.82 s, the whole grid 1.07 -> 1.16 s; bytes 463 -> 466 KB, requests the same.
+
+## 37. A card version's commit (2026-10-25, owner: "the ability to go to the commit for a specific card version on the website, optionally")
+- A quiet "commit" link (text.js `commitLink`: GitHub `/commit/<sha>`, new tab, `rel=noopener`, aria-label "Commit for the
+  Oct 21, 2026 version"; muted, 12px; `commitAfter` keeps " · commit" on one line) beside each History text, each
+  Recorded change, and in the image versions' compare box (the picked version and the current one; the list rows stay
+  buttons, so ↑ ↓ are unchanged).
+- Which commit (`analytics.version_commit`, trees only): the one that made the bytes the version's PSD held at its
+  start. The record's path is followed back through pure renames (the same blob deleted at another path in one commit;
+  the bake's Renamed trailers for a redraw), as image versions are, and its `blob_sha` (its newest reading: art-only
+  commits since keep a version going) must be met on the way. No link: edit and authors versions (the bot dates them
+  by the newest Card Edits.json or Card Authors.txt commit, which made no card change), no blob, bytes the version
+  before already had (a rename, a re-read), or a commit at or before a blobless previous version's start. A change
+  row that changed kind, stars or item type links a move of the card's PSD at its start (the folder made it).
+- Data: history.json `_shas` (12-char shas), each text's `c` (an index), the current text's `n` on the newest older
+  text; analytics.json `commits` (a list) and each row's `c`. A shallow clone has no history, so no links.
+- Measured on data d4dd2172 and main a7ed9744 (history from a blobless clone): History texts 1,697 of 1,735 linked (29
+  edit versions: 28 rulebook pages and the Gates of Ahn'Qiraj, whose straight apostrophes came from AutoCroissant;
+  7 with no exact commit: 5 renamed cards whose old name had the same bytes, Shadow Queen's move, Jevil's broken path
+  history; 2 without a blob); Recorded changes 1,083 of
+  1,090 (5 pickle-era folder moves, Jevil, 1 edit); image versions 4,281 of 4,281. Every linked commit made new PSD
+  bytes on the card's path or an older name of it, but 4 move commits on rows that changed kind or stars; 38 texts
+  link a commit before their shown date (the bot dates renamed cards from the rename, pickle-era versions from the
+  path's last commit). history.json +5.2% (+8.9% gzipped), analytics.json +5.7% (+10.2% gzipped).

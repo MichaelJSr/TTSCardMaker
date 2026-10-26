@@ -182,6 +182,90 @@ def when(v):
     return start if isinstance(start, (int, float)) else v.timestamp
 
 
+COMMIT_LEN = 12                               # a commit's sha in the data: GitHub's /commit/ pages take this prefix
+
+
+def psd_lineage(commits, renamed=None):
+    """The PSD changes of commits (build_site.parse_history, newest first) for version_commit: {path: [(position, sha,
+    committer time, status, new blob, source), ...] newest first}; source, for an add whose bytes came from another
+    path: (that path or None when unsure, pure: the same blob deleted there in that commit) or (old path, False) from
+    the bake's Renamed trailers (renamed: parse_history's) for a card renamed and redrawn. Trees only."""
+    by_path = {}
+    for pos, (sha, ts, _, _, _, entries, *_) in enumerate(commits or ()):
+        psd = [e for e in entries if e[3].lower().endswith(".psd")]
+        dels = {}
+        for status, old, _, path in psd:
+            if status == "D":
+                dels.setdefault(old, []).append(path)
+        gone = {p for ps in dels.values() for p in ps}
+        told = (renamed or {}).get(sha) or {}
+        for status, _, new, path in psd:
+            if status == "D":
+                continue
+            src = None
+            if status == "A" and new in dels:
+                same = [p for p in dels[new] if os.path.basename(p).lower() == os.path.basename(path).lower()] or dels[new]
+                src = (same[0] if len(same) == 1 else None, True)
+            elif status == "A" and told.get(path) in gone:
+                src = (told[path], False)
+            by_path.setdefault(path, []).append((pos, sha, ts, status, new, src))
+    return by_path
+
+
+def held_at(lineage, path, at, blob):
+    """(sha, time, blob) of the change that gave path's bytes at time at (psd_lineage), renames followed back, plus
+    whether blob was met on the way and the pure renames at at; None when unknown."""
+    seen, after, moves = False, -1, set()         # after: only commits older than a followed rename
+    for _ in range(100):
+        for pos, sha, ts, status, new, src in lineage.get(path, ()):
+            if pos <= after:
+                continue
+            seen = seen or new == blob
+            if src and (src[1] or ts > at):       # its bytes came from src's path (a redraw after at too)
+                if src[0] is None:
+                    return None
+                if src[1] and ts == at:
+                    moves.add(sha)
+                path, after = src[0], pos
+                break
+            if ts <= at:
+                return sha, ts, new, seen, moves
+        else:
+            return None
+    return None
+
+
+FOLDER_KEYS = ("kind", "stars", "sub")         # change rows' fields a card's folder gives (a move can change them)
+
+
+def version_commit(v, prev, lineage, moved=False):
+    """The commit that made version v (prev: the version before it, or None), shortened; None when unsure (no link
+    rather than a wrong one). The commit that made the bytes v's PSD held at v's start (when): v's path followed back
+    through renames (a pure rename made no bytes; a record's path can be one its PSD got later), its blob (the newest
+    reading: art-only changes since keep a version going) met on the way. None for an edit or authors version (no
+    card commit made it), no blob, bytes prev already had (moved: what changed can come from the folder, so a move of
+    v's PSD at v's start made it), or, when prev's blob is unknown, a commit at or before prev's start."""
+    if v is None or not lineage:
+        return None
+    info = getattr(v, "version", None) or {}
+    blob, path, at = getattr(v, "blob_sha", None), getattr(v, "path", None), when(v)
+    if info.get("cause") in ("edit", "authors") or not blob or not path:
+        return None
+    found = held_at(lineage, path, at, blob)
+    if found is None:
+        return None
+    sha, ts, new, seen, moves = found
+    before = getattr(prev, "blob_sha", None) if prev is not None else None
+    if not seen:
+        return None                               # v's blob is not this path's
+    if before in (new, blob):                     # nothing new in the PSD: the folder move made it, or nothing did
+        move = info.get("from_commit") if moved and info.get("cause") in ("moved", "psd") else None
+        return move[:COMMIT_LEN] if move in moves else None
+    if prev is not None and not before and ts <= when(prev):
+        return None                               # prev may have had these bytes
+    return sha[:COMMIT_LEN]
+
+
 def chain_of(name, stats, old_stats):
     """A card's versions oldest first, its current card last (archived names: no current card)."""
     versions = sorted((v for v in (old_stats.get(name) or []) if isinstance(getattr(v, "timestamp", None), (int, float))),
@@ -260,9 +344,9 @@ def reworked(row):
     return any(k in row for k in ("words", "stats", "stars", "kind", "sub", "types", "lines"))
 
 
-def card_changes(e, chain, psd_commits=None):
+def card_changes(e, chain, psd_commits=None, lineage=None):
     """Rows newest first (chain: page_chain); approx: the newer version's date is not known to be its PSD's commit (an
-    older record with no blob, and no commit of that PSD at that second)."""
+    older record with no blob, and no commit of that PSD at that second); _c: the newer version's commit (version_commit)."""
     texts = [v["ability"] for v in e.get("history") or []] + [e.get("ability") or ""]
     rows = []
     for a, b in zip(chain, chain[1:]):
@@ -270,7 +354,7 @@ def card_changes(e, chain, psd_commits=None):
         if row:
             if not exact(b, psd_commits):
                 row["approx"] = True
-            rows.append({"ts": int(when(b)), **row})
+            rows.append({"ts": int(when(b)), **row, "_c": version_commit(b, a, lineage, any(k in row for k in FOLDER_KEYS))})
     return rows[::-1]                             # newest first
 
 
@@ -338,10 +422,11 @@ def over_time(cards, stats, old_stats, sizes, now):
 
 
 # ---- the file ----------------------------------------------------------------------------------------------------
-def build(cards, stats, old_stats, now=None, history=True, psd_commits=None):
+def build(cards, stats, old_stats, now=None, history=True, psd_commits=None, lineage=None):
     """data/analytics.json for the site's card entries (before their history is moved to history.json). history = the
     build read the git history (fs is set): without it, no over-time series (cards would start at their last commit).
-    psd_commits = {(commit time, PSD file name in lower case)} from that history: an older record dated by one is exact."""
+    psd_commits = {(commit time, PSD file name in lower case)} from that history: an older record dated by one is exact.
+    lineage = psd_lineage of it: each change row's "c", an index into "commits" (version_commit)."""
     now = now or datetime.now(timezone.utc).timestamp()
     members = cohort_members(cards)
     cohorts, groups, sizes = make_cohorts(members)
@@ -355,7 +440,7 @@ def build(cards, stats, old_stats, now=None, history=True, psd_commits=None):
             continue
         versions += max(0, len(chain_of(e["key"], stats, old_stats)) - 1)
         chain = page_chain(e, stats, old_stats)
-        rows = card_changes(e, chain, psd_commits)
+        rows = card_changes(e, chain, psd_commits, lineage)
         trend = trend_of(chain) if e["id"] in out_cards else []
         if rows or trend:
             entry = out_cards.setdefault(e["id"], {})
@@ -363,11 +448,16 @@ def build(cards, stats, old_stats, now=None, history=True, psd_commits=None):
                 entry["changes"] = rows
             if trend:
                 entry["trend"] = trend
+    table = {}                                    # sha -> index in "commits"
+    for r in (r for e in out_cards.values() for r in e.get("changes", ())):
+        sha = r.pop("_c", None)
+        if sha:
+            r["c"] = table.setdefault(sha, len(table))
     first = min((when(v) for vs in old_stats.values() for v in vs or [] if isinstance(getattr(v, "timestamp", None), (int, float))), default=None)
     counts = Counter(e.get("type") for e, _, _ in members)
     return {"cohorts": cohorts, "cards": out_cards, "counts": dict(counts), "versions": versions, "since": int(first) if first else None,
             "time": over_time(cards, stats, old_stats, sizes, now) if history else {"months": [], "series": {}},
-            "minCohort": MIN_COHORT, "offScale": OFF_SCALE}
+            "minCohort": MIN_COHORT, "offScale": OFF_SCALE, "commits": list(table)}
 
 
 def summary(data):
