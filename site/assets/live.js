@@ -11,9 +11,9 @@ const sameValue = (f, a, b) => (f === "types" ? JSON.stringify([...(a || [])].ma
 
 /** The published card b with the form's values: {field: value} (edit.js readForm's set, its unset fields as their PSD
  *  values), author (op.author: undefined = unchanged, null = from git). psd(f): field f's PSD value, for "PSD pending"
- *  (the card's own pending fields stay unless the form puts them back). Applies the values as edit.js setField does,
- *  without the side data (duplicate links, the ban list). */
-export function previewCard(b, values, author, psd = () => undefined) {
+ *  (the card's own pending fields stay unless the form puts them back); site: the website-only fields (never pending).
+ *  Applies the values as edit.js setField does, without the side data (duplicate links, the ban list). */
+export function previewCard(b, values, author, psd = () => undefined, site = null) {
   const p = structuredClone(b);
   for (const [f, v] of Object.entries(values)) {
     if (f === "creatures") { if (v?.length > 1) { p.creatures = v; for (const k of STATS) p[k] = v[0][k] ?? undefined; } else delete p.creatures; }
@@ -25,6 +25,7 @@ export function previewCard(b, values, author, psd = () => undefined) {
   if (author !== undefined) p.author = author || b.author;
   const pending = new Set(b.pending || []);
   for (const f of PSD_FIELDS) if (f in values) { if (values[f] != null && !sameValue(f, values[f], psd(f))) pending.add(f); else pending.delete(f); }
+  if (site) { for (const f of site) pending.delete(f); if (site.length) p.siteOnly = [...site]; else delete p.siteOnly; }
   if (pending.size) p.pending = PSD_FIELDS.filter(f => pending.has(f)); else delete p.pending;
   return p;
 }
@@ -39,14 +40,14 @@ export function previewHtml(p, changed, ctx) {
   const fact = (f, html) => (html ? `<span class="fact${changed.has(f) ? " lp-changed" : ""}">${html}</span>` : "");
   const src = ctx.image(p);
   const types = (p.types || []).map(t => { const ic = ctx.iconFor(t); return ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}" title="${esc(t.replace(/_/g, " "))}">` : `<span class="fact">${esc(t)}</span>`; }).join("");
-  const pending = (p.pending || []).map(f => LABEL[f] || f).join(", ");
+  const pending = (p.pending || []).map(f => LABEL[f] || f).join(", "), site = (p.siteOnly || []).map(f => LABEL[f] || f).join(", ");
   return `<div class="lp-card">
     <div class="lp-top">${src ? `<img class="lp-img" src="${esc(src)}" alt="" data-preview-image>` : ""}
       <div class="lp-head"><h2 class="${mark("name", "lp-name")}">${esc(p.name)}</h2>
         <div class="facts">${fact("type", esc(ctx.kindLabel[p.type] || p.type || ""))}${fact("subtype", p.subtype ? esc(p.subtype[0].toUpperCase() + p.subtype.slice(1)) : "")}
           ${fact("stars", p.stars ? `<span class="stars">${"★".repeat(Math.min(p.stars, 10))}</span> ${p.stars}-star` : "")}${fact("series", esc(p.series || ""))}${fact("subseries", esc(p.subseries || ""))}
           ${fact("author", p.author ? `by ${esc(p.author)}` : "")}${p.hidden ? `<span class="fact${changed.has("hidden") ? " lp-changed" : ""}">Hidden</span>` : ""}
-          ${pending ? `<span class="fact pending">PSD pending: ${esc(pending)}</span>` : ""}</div></div></div>
+          ${pending ? `<span class="fact pending">PSD pending: ${esc(pending)}</span>` : ""}${site ? `<span class="fact site-only" data-tip="${esc(`Website only: ${site}. The card image keeps its printed value`)}">Website only</span>` : ""}</div></div></div>
     ${types ? `<div class="${mark("types", "ctypes")}">${types}</div>` : changed.has("types") ? `<p class="muted lp-changed">No types.</p>` : ""}
     <div class="${mark("stats", "lp-stats")}">${ctx.statBars(p)}</div>
     ${p.ability ? `<div class="${mark("ability", "ability")}">${ctx.render(p.ability, p.name)}</div>` : `<p class="muted lp-noability${changed.has("ability") ? " lp-changed" : ""}">No ability text.</p>`}

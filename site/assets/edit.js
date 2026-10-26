@@ -27,13 +27,13 @@ const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Serie
   "rate-favorability": "Favorability", "rate-power": "Power" };
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
-const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _rename: true beside a name: the bake also renames the card's files to it. Read by the website and the card sync.";
+const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. Read by the website and the card sync.";
 // true beside a name: the bake renames the card's files to it (owner 2026-10-25; build_site.py RENAME_KEY, the bot's card_edits.RENAME)
 export const RENAME_KEY = "_rename", RENAME_LABEL = "Also rename the card's files";
 /** An entry's `_rename` after an op: ticked or unticked (op.rename), and gone without a name or with a website-only one. */
 export function renameFlag(cur, op) {
   if (op.rename === true) cur[RENAME_KEY] = true; else if (op.rename === false) delete cur[RENAME_KEY];
-  if (cur.name == null || (Array.isArray(cur._site) && cur._site.includes("name"))) delete cur[RENAME_KEY];
+  if (cur.name == null || (Array.isArray(cur[SITE]) && cur[SITE].includes("name"))) delete cur[RENAME_KEY];
   return cur;
 }
 /** op.rename from the form's tick, for a card whose name is edited once published (b: its published base). */
@@ -41,6 +41,16 @@ export function renameTick(op, b, ticked) {
   const named = "name" in op.set ? op.set.name != null : !op.unset.includes("name") && !!b.edited?.includes("name");
   if (named && ticked !== !!b.renameFiles) op.rename = ticked; else delete op.rename;
   return op;
+}
+// an entry's website-only fields (build_site.py SITE_KEY, the bot's card_edits.SITE): differ from the card image on purpose, never baked
+export const SITE = "_site", SITE_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability"];
+const SITE_LABEL = "Website only (don't change the card image)";
+/** The website-only fields after an op's ticks (op.site: {field: true | false}) over the published ones. */
+export function siteAfter(op, b = {}) {
+  const s = new Set(b.siteOnly || []);
+  for (const [f, on] of Object.entries(op?.site || {})) if (on) s.add(f); else s.delete(f);
+  for (const f of op?.unset || []) s.delete(f);
+  return SITE_FIELDS.filter(f => s.has(f));
 }
 // site/Card Ratings.json (AutoCroissant card_edits.CardRatings.ABOUT, for a new file)
 export const RATINGS_ABOUT = "Card ratings, 1 to 10. favorability: how much players like the card; power: 1 weak, 5.5 balanced, 10 too strong. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.";
@@ -74,7 +84,7 @@ export function value(c, f, byId) {
 /** What the PSD (or folder) says: the pre-edit value when the field was edited, else the value itself. */
 export const psdValue = (b, f, byId) => tidy(f, b.edited?.includes(f) ? (f === "aliases" ? [] : b.orig?.[f]) : value(b, f, byId));
 export const isPsd = f => FROM[f] === "PSD";
-export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && op.author === undefined && !op.ban && !op.rate && op.rename === undefined;
+export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && !Object.keys(op.site || {}).length && op.author === undefined && !op.ban && !op.rate && op.rename === undefined;
 
 // ---- single-field ops (inline editing; the same rule readForm applies to the whole form)
 /** An inline input's text as field f's value: trimmed, "" -> null (the name falls back to `name`), ints >= 0. */
@@ -161,6 +171,9 @@ export function withoutItem(op, item, name, fields = null) {
   const o = { ...op, set: { ...op.set }, unset: (op.unset || []).filter(k => k !== item) };
   if (item === "rename" || item === "name") delete o.rename;     // the files' rename goes with the name
   if (item === "rename") return o;
+  const unsite = f => { if (o.site && f in o.site) { o.site = { ...o.site }; delete o.site[f]; if (!Object.keys(o.site).length) delete o.site; } };
+  if (item.startsWith("site-")) { unsite(item.slice(5)); return o; }
+  unsite(item);
   if (item === "author") delete o.author; else if (item === "ban") delete o.ban;
   else if (item.startsWith("rate-")) { const r = { ...o.rate }; delete r[item.slice(5)]; if (Object.keys(r).length) o.rate = r; else delete o.rate; }
   else if (item === "parts") {
@@ -188,8 +201,10 @@ export function describeItems(op, b = {}, { byId, rule = false } = {}) {
   if (op.author !== undefined) { const t = `Author → ${op.author || "(from git)"}`; items.push({ item: "author", text: t, short: t }); }
   if (op.ban) { const t = op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned"; items.push({ item: "ban", text: t, short: t }); }
   for (const k of RATE) if (op.rate?.[k] != null) { const l = LABEL[`rate-${k}`]; items.push({ item: `rate-${k}`, text: `${l}: rated ${op.rate[k]}`, short: `${l} ${op.rate[k]}` }); }
+  for (const [k, on] of Object.entries(op.site || {})) { const t = `${LABEL[k]}: ${on ? "website only (the card image keeps its text)" : "on the card image too"}`; items.push({ item: `site-${k}`, text: t, short: t }); }
   if (op.rename !== undefined) { const t = op.rename ? "Files: renamed to the name" : "Files: keep their name"; items.push({ item: "rename", text: t, short: t }); }
-  return items.map(x => ({ ...x, psd: isPsd(x.item) }));
+  const site = siteAfter(op, b);
+  return items.map(x => ({ ...x, psd: isPsd(x.item) && !site.includes(x.item) }));
 }
 /** The batch bar's lines, one per pending edit: cards (id, name, item, text, psd), then admins, people, profiles
  *  (kind, login) and decks (kind, key); describe(op) gives a card op's items. */
@@ -214,7 +229,7 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json", onCo
   catch (e) { throw new Error(`${path} isn't valid JSON (${e.message}). Fix it on GitHub, then publish again.`); }
   data.cards ||= {};
   for (const op of ops) {
-    if (!Object.keys(op.set).length && !op.unset.length && op.rename === undefined) continue;
+    if (!Object.keys(op.set).length && !op.unset.length && !Object.keys(op.site || {}).length && op.rename === undefined) continue;
     const k = Object.keys(data.cards).find(x => cardKey(x) === cardKey(op.key)) ?? op.key;
     const cur = { ...(data.cards[k] || {}) };
     if (isBot(cur._by) && !isBot(by)) cur._bot = ORDER.filter(f => f in cur);   // the bot's entry: its fields stay nobody's edit
@@ -223,7 +238,11 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json", onCo
     for (const f of op.unset) if (!f.startsWith(P.PART)) delete cur[f];
     Object.assign(cur, set);
     if (parts || unsetParts.length) { const m = P.mergeParts(cur.parts, parts, unsetParts); if (m) cur.parts = m; else delete cur.parts; }   // per layer
-    renameFlag(cur, op);
+    const site = new Set(Array.isArray(cur[SITE]) ? cur[SITE] : []);       // website-only fields: ticked, unticked; one without a value goes
+    for (const [f, on] of Object.entries(op.site || {})) if (on) site.add(f); else site.delete(f);
+    const kept = SITE_FIELDS.filter(f => site.has(f) && cur[f] != null);
+    if (kept.length) cur[SITE] = kept; else delete cur[SITE];
+    renameFlag(cur, op);                           // after _site: a website-only name renames nothing
     delete cur._by; delete cur._at; delete data.cards[k];
     if (Array.isArray(cur._bot)) {                 // the bot's migration fields (_bot): one this op sets or unsets is the editor's now
       cur._bot = cur._bot.filter(f => !(f in op.set) && !op.unset.includes(f) && f in cur);
@@ -522,6 +541,13 @@ export function createEditor(app) {
     const b = baseOf(c);
     for (const f of op.unset || []) setField(c, f, psdVal(b, f));
     for (const [f, v] of Object.entries(op.set || {})) setField(c, f, v);
+    if (op.site || c.siteOnly) {                   // website only: never "PSD pending"; unticked, a pending edit again
+      const site = siteAfter(op, c), pend = new Set(c.pending || []);
+      for (const [f, on] of Object.entries(op.site || {})) if (!on && c[f] != null && !sameField(f, c[f], psdVal(b, f))) pend.add(f);
+      for (const f of site) pend.delete(f);
+      if (site.length) c.siteOnly = site; else delete c.siteOnly;
+      if (pend.size) c.pending = [...pend].sort(); else delete c.pending;
+    }
     if (op.author !== undefined) c.author = op.author || b.author;
     if (op.rename !== undefined) { if (op.rename) c.renameFiles = true; else delete c.renameFiles; }
     if (c.renameFiles && (c.name === b.name && !b.edited?.includes("name") || (op.unset || []).includes("name"))) delete c.renameFiles;
@@ -707,13 +733,22 @@ export function createEditor(app) {
       ...gone.map(g => `<p class="part-warn" data-part-gone="${esc(g.key)}">⚠ An edit waits for a layer that's gone from the PSD (${esc(g.edit.layer || g.key)}): the bake skips it. <button type="button" class="ghost" data-part-drop="${esc(g.key)}">Drop it</button></p>`)].join("");
   }
   /** readForm's part: op.set.parts, the part unsets and the derived name/ability (only for a field whose boxes changed). */
-  function readParts(c, b, want, op) {
+  function readParts(c, b, want, op, site = []) {
     const view = partForm?.c === c ? partForm.view : partsView(c);
-    const r = P.readParts(view.rec, view.list, partForm?.c === c ? partValues() : {});
+    const form = partForm?.c === c ? partValues() : {}, off = k => site.includes(view.list.find(x => x.key === k)?.field);
+    if (site.length && form.values) {              // a website-only field: its boxes as they opened, its part edits go
+      for (const x of view.list) if (site.includes(x.field)) form.values[x.key] = x.start;
+      form.deleted = new Set([...form.deleted].filter(k => !off(k)));
+      if (site.includes("ability")) form.added = null;
+    }
+    const r = P.readParts(view.rec, view.list, form);
+    const used = (k, f) => groupOf(c).some(x => x !== c && !siteAfter(stage.cards[x.id], baseOf(x)).includes(f)    // another picture's normal edit
+      && (k === P.ADD || !!partsView(x)?.list.some(bx => bx.key === k)));
+    for (const [k, p] of Object.entries(view.rec.partEdits || {})) if (site.includes(p.field) && !used(k, p.field)) { delete r.set[k]; if (!r.unset.includes(k)) r.unset.push(k); }
     const dv = P.derived(view.list, r.texts, r.added), fieldOf = k => (k === P.ADD ? "ability" : view.list.find(x => x.key === k)?.field || view.rec.partEdits?.[k]?.field);
     const left = P.mergeParts(Object.fromEntries(Object.entries(view.rec.partEdits || {}).filter(([k]) => view.rec.partState?.[k] !== "gone")), r.set, r.unset) || {};
     for (const f of ["name", "ability"]) {
-      if (!Object.keys(r.set).some(k => fieldOf(k) === f) && !r.unset.some(k => fieldOf(k) === f)) continue;
+      if (site.includes(f) || (!Object.keys(r.set).some(k => fieldOf(k) === f) && !r.unset.some(k => fieldOf(k) === f))) continue;
       if (Object.values(left).some(p => p.field === f)) want[f] = f === "name" ? dv.name || b.name : dv.ability;
       else if (b.edited?.includes(f)) op.unset.push(f);          // no box of it left: the derived field goes
     }
@@ -734,6 +769,7 @@ export function createEditor(app) {
       for (const f of ["stars", "types", ...STATS, "creatures"]) {
         if (f in op.set) { to.set[f] = op.set[f]; delete op.set[f]; }
         if (op.unset.includes(f)) { to.unset = [...new Set([...(to.unset || []), f])]; op.unset = op.unset.filter(x => x !== f); }
+        if (op.site && f in op.site) { to.site = { ...to.site, [f]: op.site[f] }; delete op.site[f]; if (!Object.keys(op.site).length) delete op.site; }
       }
       const mine = new Set(partsView(c)?.list.map(x => x.key) || []);      // this picture's boxes: the form's word on them is the last
       const kept = Object.fromEntries(Object.entries(to.set.parts || {}).filter(([k]) => !mine.has(k)));
@@ -750,9 +786,9 @@ export function createEditor(app) {
       const v = partsView(x); if (!v) continue;
       const edited = v.list.filter(bx => bx.key in read.texts && read.texts[bx.key] !== (bx.deleted ? null : bx.start));
       if (!edited.length) continue;
-      const dv = P.derived(v.list, P.viewTexts(v.list, read.texts)), bx = baseOf(x), o = opOf(x);
+      const dv = P.derived(v.list, P.viewTexts(v.list, read.texts)), bx = baseOf(x), o = opOf(x), off = siteAfter(o, bx);
       for (const f of ["name", "ability"]) {
-        if (!edited.some(e => e.field === f)) continue;
+        if (!edited.some(e => e.field === f) || off.includes(f)) continue;    // its website-only text stays
         const now = f === "name" ? dv.name || bx.name : dv.ability;
         if (!sameField(f, now, val(bx, f))) o.set[f] = now;
         if (f === "name") o.name = now;
@@ -794,8 +830,12 @@ export function createEditor(app) {
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
     const typeNames = [...new Set(Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name))].sort();
     const reset = f => { const p = psdVal(b, f), src = FROM[f]; return same(val(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="${src ? `Back to what the ${src} says` : "Remove the edit"}">↺ ${src ? src[0].toUpperCase() + src.slice(1) : "Default"}: ${esc(show(p))}</button>`; };
-    const psdNote = f => (b.pending?.includes(f) ? `<span class="fact pending" data-tip="${app.PSD_TIP}">PSD pending</span>` : "");
-    const row = (f, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${LABEL[f]}${psdNote(f)}</label><div class="ein">${input}${reset(f)}</div></div>`;
+    const on = f => (c.siteOnly || []).includes(f);
+    const psdNote = f => (b.pending?.includes(f) && !on(f) ? `<span class="fact pending" data-tip="${app.PSD_TIP}">PSD pending</span>` : "");   // website only: its ticked box says so
+    const siteBox = f => `<label class="check site-box"><input id="ef-site-${f}" type="checkbox" data-site="${f}"${on(f) ? " checked" : ""}> ${SITE_LABEL}</label>`;
+    // a field edited as boxes (one per PSD layer): website only, one plain input instead, the boxes greyed
+    const plain = (f, input) => `<div class="site-plain"${on(f) ? "" : " hidden"}>${input}<p class="muted part-note">The card image keeps its text.</p></div>${siteBox(f)}`;
+    const row = (f, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${LABEL[f]}${psdNote(f)}</label><div class="ein">${input}${reset(f)}${SITE_FIELDS.includes(f) ? siteBox(f) : ""}</div></div>`;
     const num = f => `<input id="ef-${f}" type="number" min="0" max="99" step="1" value="${c[f] ?? ""}" placeholder="—">`;
     return `<div class="dialog edit-dialog has-preview" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
       <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
@@ -803,11 +843,11 @@ export function createEditor(app) {
       <p class="muted">Changes go into your batch; publish the batch when you're done. <span class="kbd">${esc(c.key)}</span></p>
       <div class="edit-cols">
       <form id="edit-form" class="edit-form" autocomplete="off">
-        <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD; an edit shows as “PSD pending” until the card image is regenerated.${b.refused ? ` The last image update was refused: ${esc(b.refused)}.` : ""}</p>
+        <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD; an edit shows as “PSD pending” until the card image is regenerated, unless it's website only.${b.refused ? ` The last image update was refused: ${esc(b.refused)}.` : ""}</p>
         ${view ? partsTop(view, c) : ""}
         <fieldset><legend>Card</legend>
-          ${view?.list.some(x => x.kind === "title") ? `<div class="erow" data-row="name"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts">${boxesHtml(view, "title")}
-            <p class="muted part-join" id="ef-name-join"></p></div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
+          ${view?.list.some(x => x.kind === "title") ? `<div class="erow" data-row="name"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
+            <p class="muted part-join" id="ef-name-join"></p></div>${plain("name", `<input id="ef-name" value="${esc(c.name)}">`)}</div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
           ${renameRow(c, b)}
           ${row("stars", num("stars"))}${view ? `<p class="muted part-note" id="ef-stars-note"></p>` : ""}
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
@@ -823,7 +863,8 @@ export function createEditor(app) {
             <button type="button" class="ghost" data-creature="remove" ${c.creatures?.length > 1 ? "" : "hidden"}>− Creature</button></div>
         </fieldset>
         <fieldset><legend>Text</legend>
-          ${view ? `<div class="erow" data-row="ability"><span class="elabel">${LABEL.ability}${psdNote("ability")}</span><div class="ein parts">${boxesHtml(view, "ability")}${addHtml(view, c)}
+          ${view ? `<div class="erow" data-row="ability"><span class="elabel">${LABEL.ability}${psdNote("ability")}</span><div class="ein parts" data-site-of="ability"><div class="site-boxes">${boxesHtml(view, "ability")}${addHtml(view, c)}</div>
+            ${plain("ability", `<textarea id="ef-ability" rows="6" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea>`)}
             <div class="token-bar" aria-label="Insert an icon">${typeNames.map(t => { const ic = app.iconFor(t); return ic ? `<button type="button" class="ghost" data-insert="[${esc(t)}]" data-tip="[${esc(t)}]"><img src="${esc(ic.file)}" alt="${esc(t)}"></button>` : ""; }).join("")}</div>
             <p class="muted part-join">On the site:</p><div class="ability preview" id="ef-preview"></div></div></div>`
           : row("ability", `<textarea id="ef-ability" rows="6" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea>
@@ -909,10 +950,12 @@ export function createEditor(app) {
       if (!box.hidden) for (const k of STATS) delete want[k];          // creature 1 is the card's stats
       want.creatures = tidy("creatures", want.creatures);
     }
+    const siteOn = k => !!f(`site-${k}`)?.checked, site = SITE_FIELDS.filter(siteOn);
+    for (const k of ["name", "ability"]) if (!siteOn(k) && document.querySelector(`#edit-form [data-site-of="${k}"]`)) delete want[k];   // its boxes speak for it
     const op = { id: c.id, key: c.key, name: want.name, set: {}, unset: [] };
     lastRead = null;
     if (partsView(c)) {                              // one box per layer: parts, and the derived fields of the boxes changed
-      lastRead = readParts(c, b, want, op);
+      lastRead = readParts(c, b, want, op, site);
       if (lastRead.error) error = lastRead.error;
       op.name = want.name || b.name;
     }
@@ -936,7 +979,11 @@ export function createEditor(app) {
       for (const k of RATE) { const v = rateValue(f(`rate-${k}`).value); if (Number.isNaN(v)) error = RATE_RANGE; else if (v != null) rate[k] = v; }
       if (Object.keys(rate).length) op.rate = rate;
     }
-    if (f("rename")) renameTick(op, b, f("rename").checked && !f("site-name")?.checked);   // a website-only name renames nothing
+    for (const k of SITE_FIELDS) {                  // ticked or unticked: for a field with a value once published
+      const has = k in op.set ? op.set[k] != null : !op.unset.includes(k) && !!b.edited?.includes(k) && b[k] != null;
+      if (f(`site-${k}`) && has && siteOn(k) !== (b.siteOnly || []).includes(k)) op.site = { ...op.site, [k]: siteOn(k) };
+    }
+    if (f("rename")) renameTick(op, b, f("rename").checked && !siteOn("name"));   // a website-only name renames nothing
     if (error) op.error = error;
     op.unset = [...new Set(op.unset)];
     return op;
@@ -958,7 +1005,7 @@ export function createEditor(app) {
   function stageField(id, f, v, defer = false) {
     const c = find(id); if (!c || !(f in FIELDS)) return null;
     const b = baseOf(c);
-    const one = (f === "name" || f === "ability") && partsView(c), n = one ? one.list.filter(x => x.field === f).length : 0;
+    const one = (f === "name" || f === "ability") && !(c.siteOnly || []).includes(f) && partsView(c), n = one ? one.list.filter(x => x.field === f).length : 0;
     if (one && !one.rule && n === 1) return stagePart(c, one, f, v, defer);
     if (one && (f === "ability" || !one.rule)) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
     let x = fromInput(f, v, b.name);
@@ -1129,7 +1176,7 @@ export function createEditor(app) {
   function paintPreview(c, op) {
     const body = app.modal.querySelector("#lp-body"); if (!body) return;
     const b = baseOf(c), values = { ...op.set, ...Object.fromEntries((op.unset || []).map(f => [f, psdVal(b, f)])) };
-    body.innerHTML = live.previewHtml(live.previewCard(b, values, op.author, f => psdVal(b, f)), live.changedFields(b, values, op.author), previewCtx);
+    body.innerHTML = live.previewHtml(live.previewCard(b, values, op.author, f => psdVal(b, f), siteAfter(op, b)), live.changedFields(b, values, op.author), previewCtx);
     for (const a of body.querySelectorAll("a")) a.tabIndex = -1;    // a picture of the page: its links don't leave the form
   }
   // restored: a draft's fields, from the card page's offer; focus: "name" | "ability" | a layer id (inline.js on a card of several boxes)
@@ -1144,7 +1191,15 @@ export function createEditor(app) {
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
     const form = app.modal.querySelector("#edit-form"), ta = document.getElementById("ef-ability");
     const first = () => (focus && view ? (/^\d+$/.test(focus) ? partEl(focus) : form.querySelector(`.part-box[data-kind="${focus === "name" ? "title" : focus === "ability" ? "ability" : "block"}"] [data-part]`)) : null)
-      || document.getElementById(isRule(c) ? "ef-ability" : "ef-name") || form.querySelector("[data-part]");
+      || [document.getElementById(isRule(c) ? "ef-ability" : "ef-name")].find(el => el && !el.closest("[hidden]")) || form.querySelector("[data-part]");
+    const siteOn = f => !!document.getElementById(`ef-site-${f}`)?.checked;
+    const paintSite = () => {                      // a website-only field edited as boxes: the plain input, the boxes greyed
+      for (const wrap of form.querySelectorAll("[data-site-of]")) {
+        const on = siteOn(wrap.dataset.siteOf);
+        wrap.classList.toggle("site-on", on); wrap.querySelector(".site-plain").hidden = !on;
+        for (const el of wrap.querySelectorAll(".site-boxes textarea, .site-boxes button")) el.disabled = on;
+      }
+    };
     const paintBoxes = () => {                     // the deleted boxes, the added one, the rule page's mark
       if (!partForm) return;
       for (const el of form.querySelectorAll(".part-box[data-part-box]")) el.classList.toggle("deleted", partForm.deleted.has(el.dataset.partBox));
@@ -1161,7 +1216,8 @@ export function createEditor(app) {
       hl.hidden = false;
     };
     const update = () => {
-      const op = readForm(c), lines = describe(op), text = partForm ? lastRead?.derived.ability || "" : ta.value;
+      paintSite();
+      const op = readForm(c), lines = describe(op), text = partForm && !siteOn("ability") ? lastRead?.derived.ability || "" : ta.value;
       document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text, c.name) : `<span class="muted">No ability text.</span>`;
       if (partForm) {
         const join = document.getElementById("ef-name-join"); if (join) join.textContent = `Name on the site: “${lastRead?.derived.name || ""}”`;
@@ -1193,7 +1249,8 @@ export function createEditor(app) {
       else if (Object.keys(typed).length) cardDrafts.put(c.id, typed, true, base); else cardDrafts.drop(c.id);
     });
     const typing = () => autosave.run();
-    const joined = partForm && Object.keys((restored || cardDrafts.get(c.id)?.fields) || {}).filter(f => (f === "name" || f === "ability") && !(f in start));
+    const kept = (restored || cardDrafts.get(c.id)?.fields) || {}, boxed = f => !!form.querySelector(`[data-site-of="${f}"]`) && !kept[`site-${f}`];
+    const joined = partForm && Object.keys(kept).filter(f => (f === "name" || f === "ability") && (!(f in start) || boxed(f)));
     if (joined?.length && restored) restored = Object.fromEntries(Object.entries(restored).filter(([f]) => !joined.includes(f)));
     if (joined?.length) { cardDrafts.drop(c.id, joined); app.toast(`An older unsaved ${joined.map(f => LABEL[f]).join(" and ")} edit can't go into the boxes: dropped`); }   // a joined draft of a card of several layers
     const older = !restored && cardDrafts.get(c.id), offered = older && draft.restorable(older.fields, start);
@@ -1209,7 +1266,11 @@ export function createEditor(app) {
       update(); typing();
     });
     form.addEventListener("focusin", e => { const box = e.target.closest?.("[data-part]"); if (box && partForm) { partForm.last = box; mark(box.dataset.part); } });
-    form.addEventListener("change", () => { update(); typing(); });
+    form.addEventListener("change", e => {
+      const box = e.target.closest?.("[data-site]"), f = box?.dataset.site, el = f && document.getElementById(`ef-${f}`);
+      if (box?.checked && el && form.querySelector(`[data-site-of="${f}"]`) && lastRead?.derived?.[f] != null) el.value = lastRead.derived[f];   // the boxes' text to start from
+      update(); typing();
+    });
     app.modal.querySelector(".lp-toggle")?.addEventListener("click", e => {
       previewOpen = !previewOpen;
       const pane = e.currentTarget.closest(".lp-pane"); pane.classList.toggle("open", previewOpen);
@@ -1243,7 +1304,7 @@ export function createEditor(app) {
       const t = e.target.closest("[data-type]");
       if (t) { const on = !t.classList.contains("on"); t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); update(); return; }
       const ins = e.target.closest("[data-insert]");
-      if (ins) { const box = partForm?.last?.isConnected ? partForm.last : ta || form.querySelector(".part-box[data-kind=ability] [data-part]"); if (!box) return;
+      if (ins) { const box = siteOn("ability") && ta ? ta : partForm?.last?.isConnected ? partForm.last : (ta?.closest("[hidden]") ? null : ta) || form.querySelector(".part-box[data-kind=ability] [data-part]"); if (!box) return;
         const s = box.selectionStart, end = box.selectionEnd; box.setRangeText(ins.dataset.insert, s, end, "end"); box.focus(); update(); return; }
       const r = e.target.closest("[data-reset]");
       if (r) { resetField(c, r.dataset.reset); update(); return; }
@@ -1874,7 +1935,9 @@ export function createEditor(app) {
     // the staged ops' (or op: the open form's, relative to the published card)
     entryFields: (id, op = stage.cards[id]) => { const f = new Set(find(id)?.edited || []);
       for (const o of [...sentOps().filter(x => x.id === id), op].filter(Boolean)) { for (const k of Object.keys(o.set || {})) f.add(k); for (const k of o.unset || []) f.delete(k); }
-      return [...f]; },
+      const c = find(id), off = c ? siteAfter(op, baseOf(c)) : [];     // website only: never baked
+      return [...f].filter(k => !off.includes(k)); },
+    siteFields: (id, op = stage.cards[id]) => { const c = find(id); return c ? siteAfter(op, baseOf(c)) : []; },
     stageRating,
     // the parts editor: a card's boxes per field once its record is loaded ({title, ability, rule} or null: no parts), and
     // the parts its Card Edits.json entry (its PSD's: variant 1's) would hold once published, for the previews

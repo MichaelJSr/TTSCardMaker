@@ -159,6 +159,8 @@ EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", 
 PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability"}
 # true beside a name: the bake renames the card's files to it (owner 2026-10-25; edit.js RENAME, the bot's card_edits.RENAME)
 RENAME_KEY = "_rename"
+# an entry's website-only fields: printed differently on purpose, never baked (edit.js SITE, the bot's card_edits.SITE)
+SITE_KEY, SITE_FIELDS = "_site", ("name", "stars", "types", "hp", "def", "atk", "spd", "ability")
 DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
@@ -409,7 +411,7 @@ def join_details(cards, records, tree, edits=None):
                 out[e["id"]].update(parts)
                 shown = {str(p.get("id")) for k in ("title", "ability", "blocks") for p in parts["parts"][k]}
                 here = {p["field"] for k, p in parts["partEdits"].items() if "field" in p and (k == "+ability" or k in shown
-                        or (parts["partState"].get(k) == "gone" and first is e))}
+                        or (parts["partState"].get(k) == "gone" and first is e))} - set(e.get("siteOnly") or [])
                 pending = sorted(set((e.get("pending") or []) if plain is None else plain) | here)   # a part's field: on the pictures showing its layer
                 if pending:
                     e["pending"] = pending
@@ -1290,8 +1292,15 @@ def parse_edits():
             meta[BOT_FIELDS] = bot
         elif bot is not None:
             log(f"warning: {EDITS_PATH}: {name}: {BOT_FIELDS} = {bot!r} isn't a list of fields, skipped")
-        site = fields.get("_site")                     # a website-only name renames nothing (the bot's CardEdits.renames)
-        if fields.get(RENAME_KEY) is True and isinstance(good.get("name"), str) and not (isinstance(site, list) and "name" in site):
+        site = fields.get(SITE_KEY)                     # website-only fields: those with a value (CardEdits.site_only)
+        if isinstance(site, list):
+            site = [f for f in SITE_FIELDS if f in site and good.get(f) is not None]
+            if site:
+                meta[SITE_KEY] = site
+        elif site is not None:
+            log(f"warning: {EDITS_PATH}: {name}: {SITE_KEY} = {site!r} isn't a list of fields, skipped")
+        # a website-only name renames nothing (the bot's CardEdits.renames)
+        if fields.get(RENAME_KEY) is True and isinstance(good.get("name"), str) and "name" not in meta.get(SITE_KEY, ()):
             meta[RENAME_KEY] = True                     # the bake renames its files too
         elif RENAME_KEY in fields and not isinstance(fields[RENAME_KEY], bool):
             log(f"warning: {EDITS_PATH}: {name}: {RENAME_KEY} = {fields[RENAME_KEY]!r} isn't true or false, skipped")
@@ -1545,7 +1554,10 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
         entry["moved"] = verdict["moved"]         # a stars edit moved the card into its N Stars folder
     if meta.get(RENAME_KEY) and "name" in fields:
         entry["renameFiles"] = True               # the bake renames its files to the name (the bot's CardEdits.renames)
-    parted = sorted({p["field"] for p in (meta.get("parts") or {}).values()})
+    site = meta.get(SITE_KEY) or []
+    parted = sorted({p["field"] for p in (meta.get("parts") or {}).values()} - set(site))
+    if site:
+        entry["siteOnly"] = list(site)            # never baked: "Website only", not "PSD pending"
     if parted:
         entry["_plain"] = []                      # pending without the parts: join_details adds the ones this picture shows
     if not fields:
@@ -1576,14 +1588,15 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
         if f == "types":                          # any order and spelling, as psd_edit.same_types
             return type_keys(fields[f]) != type_keys(orig.get(f))
         return entry[f] != orig.get(f)
-    plain = {f for f in fields if f in PSD_FIELDS and fields[f] is not None and f not in parted and waits(f)}
+    plain = {f for f in fields if f in PSD_FIELDS and fields[f] is not None and f not in parted and f not in site and waits(f)}
     pending = sorted(plain | set(parted))
     if parted:
         entry["_plain"] = sorted(plain)
     if pending:
         entry["pending"] = pending
     tried = verdict.get("for")                    # a refusal: while the refused values are unchanged too
-    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) and current:
+    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) and current \
+            and any(f not in site for f in tried):    # a website-only field's old refusal stays quiet
         entry["refused"] = verdict.get("reason") or "refused"
     if fields.get("aliases"):
         entry["webAliases"] = list(fields["aliases"])
