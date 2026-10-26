@@ -502,7 +502,7 @@
     "PoD08MOAB": {"series":"Bloons TD","aliases":["moab"],"_by":"AutoCroissant","_at":"2026-10-22T22:02:11Z"},
     "PoD09DDT": {"series":"Bloons TD","aliases":["ddt"],"_by":"AutoCroissant","_at":"2026-10-22T22:02:11Z"},
     "PoD10BFB": {"series":"Bloons TD","aliases":["bfb"],"_by":"AutoCroissant","_at":"2026-10-22T22:02:11Z"},
-    "PoD11ZOMG": {"series":"Bloons TD","aliases":["zomg"],"_psd":{"state":"baked","for":{"name":"Z.O.M.G."},"psd":"9b87525a","reason":"name 'Z.O.M.G' -> 'Z.O.M.G.'","at":"2026-10-23T18:29:01Z"},"_bot":["series","aliases"],"_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
+    "PoD11ZOMG": {"series":"Bloons TD","aliases":["zomg"],"_bot":["series","aliases"],"_by":"MichaelJSr","_at":"2026-10-20T18:41:54Z"},
     "PoD12BAD": {"series":"Bloons TD","aliases":["bad"],"_by":"AutoCroissant","_at":"2026-10-22T22:02:11Z"},
     "Poison": {"art":"SpongeBob SquarePants Season 3 Ep. 56a \"Born Again Krabs\"","_by":"Zomoroko","_at":"2026-10-26T08:04:26Z"},
     "Poison Circle": {"series":"Wings of Vi","_by":"AutoCroissant","_at":"2026-10-22T22:02:11Z"},
