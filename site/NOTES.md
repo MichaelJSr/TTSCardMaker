@@ -911,7 +911,7 @@ relies on:
   the first screen has painted (`statsJob` drops a stale fill); scrolled, they are filled at once as before. The fill
   reads the rendered hash (`S.renderedHash`), so a card opened in the meantime gets them filled under it.
 - Cards grid: `fillGrid` keeps each tile's node in `gridTiles` (card id -> its markup without `eager`, node, edit mode,
-  size) and reuses it while `tileHtml` gives the same markup; since §35 the grid itself stays and its children are
+  size) and reuses it while `tileHtml` gives the same markup; since §36 the grid itself stays and its children are
   reconciled. Code that changes a tile in place must update its markup there (`refresh` does for the deck button) or
   set its change again after every render (edit mode: `mountGrid`'s draggable, `reflect`, `mountTiles`). Each render
   places the tiles that cover the window (`GRID_FIRST` or more) and the rest in `GRID_CHUNK` tasks (`gridJob` stops
@@ -1088,11 +1088,11 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
   saved tile size (S, L: `--tile`, the pictures' `sizes`, the S/M/L button); else "Loading cards…" stays and app.js draws
   the visitor's own view (sort, filters, Table). The tiles are plain links, `<a class="tile" href="c/<id>/">`
   (`tileHtml(c, {link: true})`: no flag, no deck button), so a tap before the script opens the card's page. The filters
-  column is empty until app.js's first render fills it. That render keeps the tiles in the page (`adoptFirst`, §35):
+  column is empty until app.js's first render fills it. That render keeps the tiles in the page (`adoptFirst`, §36):
   each link tile that is its card's tile as app.js draws it now (`isEqualNode` with `tileHtml(c, {link: true})`) gets
   its flag, deck button, `data-open` and `tabindex` in place and loses its href (a tile like the others); any other (a
   staged edit, Show hidden) is replaced. Removed 10-25 evening when Safari kept flashing, back the same night: the flash
-  was edit mode's redraw after a kept sign-in (§35), with or without the first screen.
+  was edit mode's redraw after a kept sign-in (§36), with or without the first screen.
 - **Parity** (`check_first.mjs`, node on a temp copy of site/assets as an ES module package): the default list as app.js
   makes it (cards not hidden, Name order: mirrors `listOf` with no parameters; change both together) through grid.js's
   `tileHtml` and `toolbarHtml`. build_site renders the same cards with `tile_html` and `toolbar_html` and stops the build
@@ -1197,7 +1197,24 @@ Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan
 - AutoCroissant `tests/test_card_bake.py::test_a_rename_bake_moves_the_files_and_everything_keyed_by_them`,
   `tests/test_site_build.py::test_a_renamed_card_goes_on_and_its_old_page_redirects`.
 
-## 35. The grid stays in the page: Safari's flash (2026-10-25 night)
+## 35. A subseries across series (2026-10-25, owner: "if i click just a subseries i should see all cards under that subseries regardless of series, but i can filter by series if i want")
+- A subseries is one name across series (the same name under Kirby and Mario is one subseries), and a card may have one
+  without a series. This replaces "always inside one series" in § 10 (buckets) and § 24 (autofill, pinned tray).
+- Filter bar: the Subseries select lists each name once (a picked series: the names its cards use); picking one shows
+  every series' cards, the Series select narrows them, and changing or removing the series keeps the subseries. The card
+  page's subseries chip links to `#/cards?subseries=…` alone; "More from <subseries>" is every series' cards.
+- Editor (edit.js, inline.js, tray.js, tokens.js): subseries buckets and pins are plain names (an older tab's
+  `[series, name]` bucket or `{s}` pin reads as its name); the name list, `canonical`, `addBucket`, drops, pinned boxes and
+  Rename everywhere ignore the series ("New subseries…" needs no picked series; a drop sets it on cards of any series;
+  a rename renames it on every card).
+- Stats: the series chart keeps each series' subseries under it (a subseries in two series shows under both); cards
+  with a subseries but no series go under "No series", last (shown only then; it links to `missing=series`). The
+  Subseries tile counts names.
+- AutoCroissant: the changelog and the history count the same subseries in another series (or without one) as a series
+  change (`card_history.same_series`; the 2026-10-20 split still is none). Test:
+  `tests/test_site_stats.py::test_a_subseries_is_one_name_across_series`.
+
+## 36. The grid stays in the page: Safari's flash (2026-10-25 night)
 
 Owner, 10-25 evening: in Safari "the entire page/grid flashes after about 2 seconds" ("all of the images flash or are
 reloaded"), on with or without the first screen (§31). Not the first screen: edit mode.
