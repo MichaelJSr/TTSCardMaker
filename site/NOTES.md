@@ -1327,3 +1327,6 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   help, a faint dotted underline); `headHtml` takes `{label | html, tip}` heads (stats.js `table`, `heatTable`), and
   `chartCard`'s `tip` option notes a chart's title. Fact chips keep their own look: their note is the chip's `data-tip`.
 - A note says exactly what the code computes (scope, filters, rounding, which cards count); change it with the code.
+- One target per head: a badge inside a noted head drops its own tip (`badgeHtml(tag, false)`, the cooldown table's
+  "3CD+"). A note in a `<summary>` gets a wider tap area and a tap on it doesn't toggle the section (tip.js). A note
+  that depends on a picker follows it (Star levels: the picked kind on both sides).

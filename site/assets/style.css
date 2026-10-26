@@ -197,6 +197,7 @@ del { background: color-mix(in srgb, var(--danger) 30%, transparent); border-rad
 .tooltip { position: fixed; z-index: 80; pointer-events: none; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 10px;
   box-shadow: var(--shadow); padding: 8px 10px; font-size: 13px; max-width: 280px; }
 .qn { cursor: help; text-decoration: underline dotted color-mix(in srgb, currentColor 45%, transparent); text-decoration-thickness: 1px; text-underline-offset: 3px; }   /* a stat's note (text.js noteHtml) */
+summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same layout */
 .tooltip .v { font-weight: 700; font-size: 15px; } .tooltip img { width: 150px; border-radius: 8px; display: block; margin-bottom: 6px; }
 .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 90; background: var(--ink); color: var(--page);
   border-radius: 10px; padding: 8px 14px; font-size: 14px; box-shadow: var(--shadow); }

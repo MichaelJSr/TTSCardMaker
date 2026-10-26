@@ -1,6 +1,7 @@
 // When the tooltip shows and goes (app.js fills it): it goes when the pointer leaves its element, or that element
 // leaves the page or loses its data-tip (an inline editor opened). NOTES.md §21. Touch: a tap shows it, the next tap
 // elsewhere or a scroll hides it; on a card link only a long press does (the tap opens it), other links keep theirs.
+// A tapped note inside a <summary> (details.js counts) shows without toggling the section.
 
 /** What shows a tooltip: data-tip text, chart values (data-v, data-l), a card link's preview. */
 export const TIP_SEL = "[data-tip], [data-v], a.card-ref, .chart [data-card]";
@@ -51,6 +52,7 @@ export function tipController({ fill, show, hide }) {
  *  long press of its own, no tooltip ({match(target): the element or null, run(el)}: app.js's exclusions). */
 export function wireTips(doc, tips, place, hold = null) {
   let press = null, swallow = false;                     // a touch held on a card link: its long-press timer
+  let touched = false;                                   // the last press was a touch
   const cancel = () => { if (press) clearTimeout(press.timer); press = null; };
   doc.addEventListener("pointerover", e => tips.over(e.target, e.pointerType));
   doc.addEventListener("pointerout", e => tips.out(e.relatedTarget, e.pointerType));
@@ -59,8 +61,8 @@ export function wireTips(doc, tips, place, hold = null) {
     if (e.pointerType !== "touch" && tips.move()) place(e.clientX, e.clientY);
   });
   doc.addEventListener("pointerdown", e => {
-    cancel(); swallow = false;
-    if (e.pointerType !== "touch") return;
+    cancel(); swallow = false; touched = e.pointerType === "touch";
+    if (!touched) return;
     tips.down(e.target);
     const own = hold?.match(e.target);
     if (own) { const { clientX: x, clientY: y } = e; press = { x, y, timer: setTimeout(() => { press = null; swallow = true; tips.hide(); hold.run(own); }, LONG_PRESS) }; return; }
@@ -77,6 +79,7 @@ export function wireTips(doc, tips, place, hold = null) {
   });
   doc.addEventListener("pointercancel", cancel);
   doc.addEventListener("click", e => { if (swallow) { swallow = false; e.preventDefault(); e.stopPropagation(); } }, true);   // the long press showed the tip: no navigation
+  doc.addEventListener("click", e => { if (touched && e.target.closest?.("summary .qn")) e.preventDefault(); }, true);       // a tapped note in a summary: no toggle
   doc.addEventListener("contextmenu", e => { if (swallow || press) e.preventDefault(); });                                    // Android's link menu
   doc.defaultView?.addEventListener("scroll", () => { cancel(); tips.scrolled(); }, { passive: true, capture: true });
 }
