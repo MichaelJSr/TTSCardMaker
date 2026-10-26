@@ -142,7 +142,7 @@ BANLIST_PATH = "site/Constructed Ban List.txt"
 EDITS_PATH = "site/Card Edits.json"
 CREATED_PATH = "site/Card Creation Dates.json"  # when each card was made (AutoCroissant card_dates created; global_config.CREATED_PATH)
 CREATED_FROM = ("discord", "git", "hand")       # its first Discord post, first git upload, or set by hand (card_edits.CardDates.FROM)
-RATINGS_PATH = "site/Card Ratings.json"         # dated 1-10 ratings (AutoCroissant tts_ratings, the website's Rate it; card_edits.CardRatings)
+RATINGS_PATH = "site/Card Ratings.json"         # dated whole-number 1-10 ratings (AutoCroissant tts_ratings, the website's Rate it; card_edits.CardRatings)
 RATING_SCALES = ("favorability", "power")
 RATING_SOURCES = ("TTS session", "website")
 BOT_FIELDS = "_bot"                           # an entry's fields that are not its _by editor's (the 2026-10-22 migration's)
@@ -1419,11 +1419,11 @@ def rating_number(v):
 
 
 def valid_rating(e):
-    """card_edits.CardRatings.valid: {date, scale, value 1-10, by, source}."""
+    """card_edits.CardRatings.valid: {date, scale, value (a whole number 1-10), by, source}."""
     if not isinstance(e, dict) or e.get("scale") not in RATING_SCALES or e.get("source") not in RATING_SOURCES:
         return False
     v, by, day = e.get("value"), e.get("by"), e.get("date")
-    if not isinstance(v, (int, float)) or isinstance(v, bool) or not 1 <= v <= 10 or not isinstance(by, str) or not by or len(by) > 100:
+    if not isinstance(v, int) or isinstance(v, bool) or not 1 <= v <= 10 or not isinstance(by, str) or not by or len(by) > 100:
         return False
     try:
         return isinstance(day, str) and date.fromisoformat(day).isoformat() == day
@@ -1462,7 +1462,7 @@ def parse_ratings():
             got = out.setdefault(card_key(name), (name, []))
             got[1].extend(kept)
     if bad:
-        warn(f"{RATINGS_PATH}: entries skipped on {len(bad)} cards (expected {{date, scale, value 1-10, by, source}}): {', '.join(bad[:10])}")
+        warn(f"{RATINGS_PATH}: entries skipped on {len(bad)} cards (expected {{date, scale, value: a whole number 1-10, by, source}}): {', '.join(bad[:10])}")
     return out
 
 

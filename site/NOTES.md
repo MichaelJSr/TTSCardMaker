@@ -808,7 +808,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 
 ## 25. Ratings (2026-10-24)
 - File `site/Card Ratings.json` (AutoCroissant `card_edits.CardRatings`, `dump_ratings`): `{about, cards: {"Card Name": [{date
-  "YYYY-MM-DD", scale "favorability" | "power", value 1-10 (one decimal; whole as an int), by "group" | <login>, source
+  "YYYY-MM-DD", scale "favorability" | "power", value a whole number 1-10 (owner, 2026-10-26: the 830 one-decimal values
+  were rounded half up that day, 5.5 -> 6; averages keep one decimal), by "group" | <login>, source
   "TTS session" | "website"}]}}`, keyed like Card Edits.json (`card_key`), one line per card, lists ordered by date,
   source (TTS first), by (lower case), scale. Not a card file: no Action, card sync, check or bot reads it (AutoCroissant
   `test_bot_ignores_ratings`); not in EDIT_PATHS, so no edit batch.
@@ -817,7 +818,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   3DText labels (power: Plz buff :(, Below Average, Balens, Above Average, Too Stronk; favorability: Pain, Dislike,
   Bogstandard, Like, Nut on you) at x positions: the value is piecewise linear in a card's x between the label midpoints
   (midpoint i/i+1 -> 2i+2.5; label i about 2i+1.5, exactly when centred; past the end labels the same half-band), clamped
-  1-10, one decimal. Skipped: TS_Save_3's joke "Double Pain" column, the Forbidden Tier (The Missile, Kalecgos), the 265
+  1-10, one decimal, then the nearest whole number, halves up (a re-run gives the migrated file; no value changed
+  category). Skipped: TS_Save_3's joke "Double Pain" column, the Forbidden Tier (The Missile, Kalecgos), the 265
   TS_Save_10 power placements left where TS_Save_8 had them (only Prince Of Darkness moved). The import stops when a
   value's `tierOf` isn't the category the save shows (1148 of 1148 agree). 1148 entries, 399 names (Cho'Gath and Ech:
   archived, kept under their names).
@@ -836,7 +838,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   dashed; tooltips through `[data-v]`); "All ratings" table.
 - Editing: `op.rate = {favorability?, power?}` on the card's op (like `op.ban`): the card page's Rate it (`rate-add`,
   `stageRating`; the page repainted where it was scrolled), All fields' Ratings fieldset (none on a duplicate)
-  (`readForm`; prefilled from the staged op, `myRating`), bar lines "Favorability 7.5" (`rate-<scale>` items, reverted
+  (`readForm`; prefilled from the staged op, `myRating`), bar lines "Favorability 7" (`rate-<scale>` items, reverted
   by `withoutItem`). `applyOp` adds preview entries (by "you", `_staged`/`_sent`; `rater` = your published entries'
   `by`, matched on `login || by`, so `latestBy` counts you once) and `c._rate` (drafts.js `rawOf`). `publish` writes
   `ratingsFile(text, ops, <Pacific day>, login)`: your entry of that day and scale replaced, others kept; `editsFile`

@@ -1,9 +1,10 @@
-// Card ratings: favorability and power, 1 to 10, dated (site/Card Ratings.json, as cards.json `ratings`). Pure helpers
-// for the card page, Stats and People; build_site.py rating_now and tier_of are the Python twins. NOTES.md §25.
+// Card ratings: favorability and power, whole numbers 1 to 10 (their means keep one decimal), dated (site/Card
+// Ratings.json, as cards.json `ratings`). Pure helpers for the card page, Stats and People; build_site.py rating_now and
+// tier_of are the Python twins. NOTES.md §25.
 import { esc } from "./text.js";
 
 export const SCALES = [["favorability", "Favorability", "How much players like this card, 1 to 10"],
-  ["power", "Power", "How strong players find it: 1 weak, 5.5 balanced, 10 too strong"]];
+  ["power", "Power", "How strong players find it: 1 weak, 10 too strong; the middle (5.5) is balanced"]];
 // the TTS boards' category labels (the import matches the saves' own, "Plz buff :(" included)
 export const TIERS = { power: ["Plz buff", "Below Average", "Balens", "Above Average", "Too Stronk"],
   favorability: ["Pain", "Dislike", "Bogstandard", "Like", "Nut on you"] };
@@ -74,7 +75,7 @@ export function blockHtml(c, { editing = false, mine = null } = {}) {
   const list = c.ratings || [];
   if (!list.length && !editing) return "";
   const rows = [...list].reverse().map(e => `<tr><td>${esc(dayLabel(e.date))}</td><td>${esc(SCALES.find(([k]) => k === e.scale)?.[1] || e.scale)}</td><td class="num">${esc(String(e.value))}</td><td>${esc(e.by === "group" ? "group (TTS session)" : e._staged || e._sent ? "you (unpublished)" : e.by)}</td></tr>`).join("");
-  const input = ([k, label]) => `<input type="number" id="rate-${k}" min="1" max="10" step="0.1" placeholder="${label}" aria-label="${label}, 1 to 10" value="${esc(mine?.[k] ?? "")}">`;
+  const input = ([k, label]) => `<input type="number" id="rate-${k}" min="1" max="10" step="1" placeholder="${label}" aria-label="${label}, 1 to 10" value="${esc(mine?.[k] ?? "")}">`;
   return `<h3>Ratings</h3><div class="ratings">${SCALES.map(s => panelHtml(list, s)).join("")}</div>
     ${list.length ? `<details class="rate-table"><summary>All ratings <span class="muted">${list.length}</span></summary><table class="data"><thead><tr><th>Date</th><th>Rating</th><th class="num">Value</th><th>By</th></tr></thead><tbody>${rows}</tbody></table></details>` : ""}
     ${editing ? `<div class="rate-add"><span>Rate it</span>${SCALES.map(input).join("")}<button type="button" data-action="rate-add" data-id="${esc(c.id)}">Add to batch</button></div>` : ""}`;

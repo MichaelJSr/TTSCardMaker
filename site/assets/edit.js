@@ -57,10 +57,10 @@ export function siteAfter(op, b = {}) {
   return SITE_FIELDS.filter(f => s.has(f));
 }
 // site/Card Ratings.json (AutoCroissant card_edits.CardRatings.ABOUT, for a new file)
-export const RATINGS_ABOUT = "Card ratings, 1 to 10. favorability: how much players like the card; power: 1 weak, 5.5 balanced, 10 too strong. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.";
-const RATE = ["favorability", "power"], RATE_SOURCES = ["TTS session", "website"], RATE_RANGE = "Ratings go from 1 to 10";
-/** A typed rating: one decimal, or null when empty; NaN when not 1-10. */
-const rateValue = t => { t = String(t ?? "").trim(); if (t === "") return null; const v = Math.round(Number(t) * 10) / 10; return v >= 1 && v <= 10 ? v : NaN; };
+export const RATINGS_ABOUT = "Card ratings, whole numbers 1 to 10. favorability: how much players like the card; power: 1 weak, 10 too strong; the middle (5.5) is balanced. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.";
+const RATE = ["favorability", "power"], RATE_SOURCES = ["TTS session", "website"], RATE_RANGE = "Whole numbers 1 to 10";
+/** A typed rating: a whole number 1-10, null when empty, else NaN (owner 2026-10-26: no decimals). */
+const rateValue = t => { t = String(t ?? "").trim(); if (t === "") return null; const v = Number(t); return Number.isInteger(v) && v >= 1 && v <= 10 ? v : NaN; };
 let pacific = null;                                // one formatter: the Pacific day of a rating
 const pacificDay = d => (pacific ||= new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit" })).format(d);
 
@@ -275,9 +275,9 @@ export function ratingsFile(text, ops, day, by, path = "site/Card Ratings.json")
     for (const scale of RATE) {
       const v = op.rate[scale];
       if (v == null) continue;
-      if (typeof v !== "number" || !(v >= 1 && v <= 10)) throw new Error(RATE_RANGE);
+      if (!Number.isInteger(v) || !(v >= 1 && v <= 10)) throw new Error(RATE_RANGE);
       list = list.filter(e => !(e?.date === day && e.scale === scale && e.source === "website" && lower(e.by) === lower(by)));
-      list.push({ date: day, scale, value: Math.round(v * 10) / 10, by, source: "website" });
+      list.push({ date: day, scale, value: v, by, source: "website" });
     }
     data.cards[k] = list.map((e, i) => [e, i]).sort(([a, i], [b, j]) => {
       const x = [String(a?.date ?? ""), rank(RATE_SOURCES, a?.source), lower(a?.by), rank(RATE, a?.scale)];
@@ -876,7 +876,7 @@ export function createEditor(app) {
         </fieldset>
         ${isDup ? "" : `<fieldset><legend>Ratings</legend>
           ${RATE.map(k => { const now = ratingNow((b.ratings || []).filter(e => !e._staged), k), v = stage.cards[c.id]?.rate?.[k];
-            return `<div class="erow" data-row="rate-${k}"><label for="ef-rate-${k}">${LABEL[`rate-${k}`]}</label><div class="ein"><input id="ef-rate-${k}" type="number" min="1" max="10" step="0.1" placeholder="1–10" value="${v ?? ""}"><span class="muted">${now ? `${now.value} now` : "not rated"}</span></div></div>`; }).join("")}
+            return `<div class="erow" data-row="rate-${k}"><label for="ef-rate-${k}">${LABEL[`rate-${k}`]}</label><div class="ein"><input id="ef-rate-${k}" type="number" min="1" max="10" step="1" placeholder="1–10" value="${v ?? ""}"><span class="muted">${now ? `${now.value} now` : "not rated"}</span></div></div>`; }).join("")}
           <p class="muted">Adds your dated rating; empty adds none.</p>
         </fieldset>`}
         <fieldset><legend>Checks</legend>

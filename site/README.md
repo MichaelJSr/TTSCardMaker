@@ -157,7 +157,7 @@ the same rule (AutoCroissant `CardDates.created`), its first upload being the ea
 same day for the cards first uploaded since 2026-02, so `/query_ability created>=…` and the search agree (770 of 770
 cards on 2026-10-23, also with the 11 newest left out of the file). It is no edit: the Changes page and the edit
 counts never see it. Bad entries are skipped with a warning, never a failed build. `Card Ratings.json` holds each
-card's dated ratings, `[{"date", "scale": "favorability" | "power", "value": 1-10, "by": "group" | <login>, "source":
+card's dated ratings, `[{"date", "scale": "favorability" | "power", "value": a whole number 1-10, "by": "group" | <login>, "source":
 "TTS session" | "website"}]`, oldest first: the TTS sessions' boards (written by AutoCroissant's `python -m
 commands.tts_ratings`) and the website's Rate it. Only the website reads it (cards.json `ratings`, a login shown as its
 credited name); no edit either, and the bot never reads it. Image versions and the People tab's commit counts come from one pass over the git history (commit metadata only),
@@ -242,7 +242,7 @@ bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.t
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
 `Card Edits.json` to go back to the PSD.
 
-**Rate it.** Signed in, a card page's Ratings block has Favorability and Power inputs (1 to 10, one decimal; All fields
+**Rate it.** Signed in, a card page's Ratings block has Favorability and Power inputs (whole numbers 1 to 10; All fields
 has them too): **Add to batch** stages your rating for today, published with the batch to `site/Card Ratings.json`
 (a rating-only batch leaves `Card Edits.json` alone). Rating again the same day replaces yours; removing one is a hand
 edit on GitHub.
