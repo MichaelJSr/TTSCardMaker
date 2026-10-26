@@ -911,7 +911,7 @@ relies on:
   the first screen has painted (`statsJob` drops a stale fill); scrolled, they are filled at once as before. The fill
   reads the rendered hash (`S.renderedHash`), so a card opened in the meantime gets them filled under it.
 - Cards grid: `fillGrid` keeps each tile's node in `gridTiles` (card id -> its markup without `eager`, node, edit mode,
-  size) and reuses it while `tileHtml` gives the same markup; since §34 the grid itself stays and its children are
+  size) and reuses it while `tileHtml` gives the same markup; since §35 the grid itself stays and its children are
   reconciled. Code that changes a tile in place must update its markup there (`refresh` does for the deck button) or
   set its change again after every render (edit mode: `mountGrid`'s draggable, `reflect`, `mountTiles`). Each render
   places the tiles that cover the window (`GRID_FIRST` or more) and the rest in `GRID_CHUNK` tasks (`gridJob` stops
@@ -1088,11 +1088,11 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
   saved tile size (S, L: `--tile`, the pictures' `sizes`, the S/M/L button); else "Loading cards…" stays and app.js draws
   the visitor's own view (sort, filters, Table). The tiles are plain links, `<a class="tile" href="c/<id>/">`
   (`tileHtml(c, {link: true})`: no flag, no deck button), so a tap before the script opens the card's page. The filters
-  column is empty until app.js's first render fills it. That render keeps the tiles in the page (`adoptFirst`, §34):
+  column is empty until app.js's first render fills it. That render keeps the tiles in the page (`adoptFirst`, §35):
   each link tile that is its card's tile as app.js draws it now (`isEqualNode` with `tileHtml(c, {link: true})`) gets
   its flag, deck button, `data-open` and `tabindex` in place and loses its href (a tile like the others); any other (a
   staged edit, Show hidden) is replaced. Removed 10-25 evening when Safari kept flashing, back the same night: the flash
-  was edit mode's redraw after a kept sign-in (§34), with or without the first screen.
+  was edit mode's redraw after a kept sign-in (§35), with or without the first screen.
 - **Parity** (`check_first.mjs`, node on a temp copy of site/assets as an ES module package): the default list as app.js
   makes it (cards not hidden, Name order: mirrors `listOf` with no parameters; change both together) through grid.js's
   `tileHtml` and `toolbarHtml`. build_site renders the same cards with `tile_html` and `toolbar_html` and stops the build
@@ -1178,7 +1178,26 @@ Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan
 - AutoCroissant `tests/test_site_build.py::test_editor_stats_and_people_load_on_first_use` (the stamped `import()`s
   without esbuild; with it, ESBUILD set: no editor, Stats or People source in the first visit's maps, the meta list).
 
-## 34. The grid stays in the page: Safari's flash (2026-10-25 night)
+
+## 34. Renaming a card's files (2026-10-25, owner: "can you make it an option to change the file name or not?")
+
+- Edit dialog: "Also rename the card's files" under the name (off by default; not on rulebook pages, duplicates or a
+  variant's picture 2+). Ticked beside a name edit: `"_rename": true` in the card's Card Edits.json entry (`renameTick`,
+  `renameFlag`; gone with the name, and never beside a website-only name). cards.json `renameFiles` shows it ticked.
+- The bake (AutoCroissant card_bake `plan_rename`): after the title, the PSD and its PNGs (NameN.png too) take the name's
+  file stem (spaces as `_`, characters no file can hold dropped), in the same commit, with `Renamed: <old> -> <new>`
+  trailers; a stars move and a rename go together. Refused: a card file of that name already (any case), a name with
+  nothing a file can hold, a name another card of the run takes. A printed name still renames (numbered PNGs too). The same commit moves the card's keys in Card Edits.json (the old name an alias, `_rename`
+  gone), Card Authors.txt, Card Creation Dates.json, Card Ratings.json and TTS/decks.json.
+- Followers of the trailers: the data build (one card: `renamed_to`, its author, series and dates kept), the TTS save,
+  and this build: image versions go on under the old path (`image_versions(..., renamed)`), the text history includes
+  the old names' versions (`renamed_into`), and `c/<old slug>/` redirects to the new page (`redirects`, `redirect_page`). The old id also
+  follows in profile picks and published hands (`read_profiles`, `read_decks`) and in the app (cards.json `moved`:
+  `#/card/<old id>`, share codes, saved hands).
+- AutoCroissant `tests/test_card_bake.py::test_a_rename_bake_moves_the_files_and_everything_keyed_by_them`,
+  `tests/test_site_build.py::test_a_renamed_card_goes_on_and_its_old_page_redirects`.
+
+## 35. The grid stays in the page: Safari's flash (2026-10-25 night)
 
 Owner, 10-25 evening: in Safari "the entire page/grid flashes after about 2 seconds" ("all of the images flash or are
 reloaded"), on with or without the first screen (§31). Not the first screen: edit mode.

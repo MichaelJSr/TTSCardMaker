@@ -57,6 +57,7 @@ let card = null;                                   // the card the dialog shows 
 let cur = null;                                    // the open editor: {c, f, el, host, html, cls, tip, ctl, v, save, snap}
 let pal = null;                                    // the open type palette: {c, row, html, tip, temp, save, ctl, snap}
 let closing = false;                               // this press is on the dialog's close button: a save doesn't redraw the card
+let stay = false;                                  // this press is on the backdrop and ends an edit: its click doesn't close the card
 let offered = null;                                // the card dialog's draft offer: {c, fields}
 let prov = null;                                   // a stat row changed by keyboard, not yet saved: {row, k, v0}
 let pointer = false;                               // the last input was a pointer (focus moved by a click, not Tab)
@@ -325,7 +326,8 @@ export function mountGrid(view, p, api = A) {
   naming = null; listParams = p;
   const grid = view.querySelector(".browse .grid"), opts = api.editor.options(), b = opts.buckets;
   const series = p.get("series") || "", sel = key => filters.querySelector(`select[data-key="${key}"]`);
-  if (!sel("subseries")) sel("series")?.insertAdjacentHTML("afterend", `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option></select>`);
+  const at = key => sel(key)?.closest(".sel-row") || sel(key);            // after the select's ≠ toggle
+  if (!sel("subseries")) at("series")?.insertAdjacentHTML("afterend", `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option></select>`);
   const fresh = { series: b.series.map(value => ({ value })), author: b.author.map(value => ({ value })),
     subseries: b.subseries.filter(([s]) => !series || s === series).map(([s, value]) => ({ value, series: s, where: series ? "" : s })) };
   for (const key of ["series", "subseries", "author"]) {
@@ -336,7 +338,7 @@ export function mountGrid(view, p, api = A) {
   const subOf = picked.subseries && (series || [...new Set(api.editor.names("subseries").filter(e => e.value === picked.subseries).map(e => e.series))]);
   for (const key of ["series", "subseries", "author"]) {
     const s = key === "subseries" ? (typeof subOf === "string" ? subOf : subOf?.length === 1 ? subOf[0] : null) : "";
-    if (picked[key] && s !== null) sel(key)?.insertAdjacentHTML("afterend", renameButton(key, picked[key], s, "ghost rename-value", `⇄ Rename “${picked[key]}”…`));
+    if (picked[key] && s !== null) at(key)?.insertAdjacentHTML("afterend", renameButton(key, picked[key], s, "ghost rename-value", `⇄ Rename “${picked[key]}”…`));
   }
   const subs = (p.get("sub") || "").split(",").filter(Boolean), subChips = filters.querySelector('[data-key="sub"]')?.closest(".chips");
   if (subs.length === 1 && subChips) subChips.insertAdjacentHTML("afterend", renameButton("subtype", subs[0], "", "ghost rename-value", `⇄ Rename “${subs[0]}”…`));
@@ -345,7 +347,7 @@ export function mountGrid(view, p, api = A) {
   reflect(view, api.selected);
   const own = b.subseries.filter(([s]) => s === series).map(([, v]) => v);
   for (const [key, list, news] of [["series", opts.series, b.series], ["author", opts.authors, b.author], ...(series ? [["subseries", opts.ownSubseries(series), own]] : [])])
-    sel(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}"${key === "subseries" ? ` data-series="${esc(series)}"` : ""} aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
+    at(key)?.insertAdjacentHTML("afterend", `<div class="drop-list" data-drop="${key}"${key === "subseries" ? ` data-series="${esc(series)}"` : ""} aria-label="Drop cards on a ${key} to set it">${dropChips(list, news)}</div>`);
 }
 const DROP = ".drop-list .chip, .tray .bucket[data-pin]";   // a filter-bar value, a pinned box
 /** A drop target's {key, value, series}: a filter-bar chip (its list's data-drop), or a tray box (data-pin-k, -v, -s). */
@@ -443,7 +445,9 @@ export function install(api) {
   window.addEventListener("pagehide", flush);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flush(); });
   api.modal.addEventListener("pointerdown", () => { pointer = true; });
-  window.addEventListener("pointerdown", e => { closing = !!(cur || pal || prov) && api.modal.contains(e.target) && !!e.target.closest?.('[data-action="close"]'); }, true);   // before the palette's click-away
+  window.addEventListener("pointerdown", e => { closing = !!(cur || pal || prov) && api.modal.contains(e.target) && !!e.target.closest?.('[data-action="close"]');
+    stay = !!(cur || pal || prov) && e.target === api.modal; }, true);   // before the palette's click-away
+  window.addEventListener("click", e => { if (stay && e.target === api.modal) e.stopPropagation(); stay = false; }, true);   // the card stays open (app.js closes on a backdrop click)
   document.addEventListener("pointerdown", away, true);
   api.modal.addEventListener("click", onClick);
   api.modal.addEventListener("dblclick", onDblClick);

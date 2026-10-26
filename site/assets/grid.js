@@ -48,6 +48,40 @@ export const MISSING = [
   ["ratings", "No ratings", "Not rated for power or favorability", c => !c.ratings?.length],
 ];
 
+// exclusions (a right-click or long press in the sidebar): x<key> params drop the cards that match any of their values;
+// test(card, value) per key, flags from app.js
+const STATUS = new Set(["debuff", "buff"]);
+export const X_TESTS = {
+  kind: (c, v) => c.type === v || (v === "status" && STATUS.has(c.type)),
+  stars: (c, v) => c.stars === +v,
+  sub: (c, v) => c.subtype === v,
+  types: (c, v) => !!c.types?.includes(v),
+  missing: (c, v) => !!MISSING.find(m => m[0] === v)?.[3](c),       // xmissing=series: has a series
+  series: (c, v) => c.series === v,
+  subseries: (c, v) => c.subseries === v,
+  author: (c, v) => c.author === v,
+};
+export const X_KEYS = [...Object.keys(X_TESTS), "flags"];
+const csv = (p, k) => (p.get(k) ? p.get(k).split(",").filter(Boolean) : []);
+export const ONE = new Set(["series", "subseries", "author"]);     // single-value selects: a comma is part of the name
+/** a key's excluded values */
+export const xvals = (p, k) => (ONE.has(k) ? (p.get(`x${k}`) ? [p.get(`x${k}`)] : []) : csv(p, `x${k}`));
+/** list without the cards the x-params name; flags: {flag: test(card)} */
+export function dropExcluded(list, p, flags = {}) {
+  for (const k of X_KEYS) {
+    const vs = xvals(p, k), t = k === "flags" ? (c, v) => !!flags[v]?.(c) : X_TESTS[k];
+    if (vs.length) list = list.filter(c => !vs.some(v => t(c, v)));
+  }
+  return list;
+}
+/** a filter value's [include, exclude] lists after a click (neutral -> in -> neutral; excluded -> neutral) or an exclude
+ *  (a right-click: in or neutral -> excluded -> neutral) */
+export function flip(inc, exc, v, exclude = false) {
+  if (exc.includes(v)) return [inc, exc.filter(x => x !== v)];
+  if (exclude) return [inc.filter(x => x !== v), [...exc, v]];
+  return [inc.includes(v) ? inc.filter(x => x !== v) : [...inc, v], exc];
+}
+
 /** env: { thumbs, icons, dupName(id), inDeck(id) }; link: a plain link to the card's page, no flag or deck button (the
  *  tiles index.html carries before the script runs) */
 export function tileHtml(c, { small = false, eager = false, css = 190, constructed = false, link = false } = {}, env) {
