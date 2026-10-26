@@ -1,5 +1,5 @@
 import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
-import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges, commitLink } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges, commitAfter } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
@@ -839,7 +839,7 @@ function showVersion(c, i) {
   // text at that time, when the bot's text history lines up with the commit (the latest text at or before it; the
   // current one from when it started, not from the last PSD commit)
   const then = textAt(c, v.ts);
-  const link = w => { const a = commitLink(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`); return a && ` · ${a}`; };
+  const link = w => commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`);
   const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}${link(v)}<br><span class="muted">${esc(v.subject || "")}</span>`;
   box.innerHTML = i === 0
     ? `<figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`

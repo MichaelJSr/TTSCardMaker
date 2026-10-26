@@ -1,7 +1,7 @@
 // A card's text over time on its page (app.js): the History block, the image versions' "Text then", the Recently updated
 // feed's diff, and the site's dates. Dates are Pacific time, the bot's TIMEZONE (balance.js, changes.js, /query as_of),
 // so every viewer sees the same day. DOM-free: every function returns HTML or data.
-import { esc, diffWords, dateFmt, commitLink } from "./text.js";
+import { esc, diffWords, dateFmt, commitAfter } from "./text.js";
 
 export const TZ = "America/Los_Angeles";
 /** "Oct 21, 2026" in Pacific time */
@@ -35,6 +35,6 @@ export function historyHtml(c, repo = "", shas = []) {
   if (!c.history) return `<h3>History</h3><p class="muted">Loading ${c.hv} earlier version${c.hv > 1 ? "s" : ""}…</p>`;
   const versions = textsOf(c);
   if (versions.length < 2) return "";
-  return `<h3>History</h3><div class="history">${versions.slice().reverse().map((v, k, arr) => `<div class="ver"><div class="muted">${v.current ? "Current" : "Earlier"}${v.ts ? ` · ${date(v.ts)}` : ""}${v.ts && sha(v) ? ` · ${commitLink(repo, sha(v), `Commit for the ${date(v.ts)} version`)}` : ""}</div>
+  return `<h3>History</h3><div class="history">${versions.slice().reverse().map((v, k, arr) => `<div class="ver"><div class="muted">${v.current ? "Current" : "Earlier"}${v.ts ? ` · ${date(v.ts)}` : ""}${v.ts ? commitAfter(repo, sha(v), `Commit for the ${date(v.ts)} version`) : ""}</div>
     <div>${k < arr.length - 1 ? diffWords(arr[k + 1].ability, v.ability) : esc(v.ability).replace(/\n/g, "<br>")}</div></div>`).join("")}</div>`;
 }

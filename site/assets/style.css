@@ -187,6 +187,7 @@ mark { background: color-mix(in srgb, var(--warn) 45%, transparent); color: inhe
 /* a card version's commit on GitHub (history.js, app.js showVersion, balance.js): quiet, still a link */
 .commit-link { color: var(--muted); font-size: 12px; text-decoration: underline dotted; text-underline-offset: 2px; }
 .commit-link:hover { color: var(--accent); }
+.commit-at { white-space: nowrap; }
 ins { background: color-mix(in srgb, var(--good) 30%, transparent); text-decoration: none; border-radius: 3px; }
 del { background: color-mix(in srgb, var(--danger) 30%, transparent); border-radius: 3px; }
 .kbd { font: 12px ui-monospace, monospace; padding: 1px 6px; border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 5px; }
