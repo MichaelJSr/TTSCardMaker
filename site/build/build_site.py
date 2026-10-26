@@ -1638,9 +1638,10 @@ def one_line(value):
     return " ".join(value.split()) if isinstance(value, str) else None
 
 
-def clean_profile(raw, stem, cards, people):
+def clean_profile(raw, stem, cards, people, moved=None):
     """One profile file's JSON -> (the fields the site shows, notes). None when the file can't be used at all; a bad field
-    is dropped with a note. stem: the file name without .json; cards: visible cards by id; people: the author names on cards."""
+    is dropped with a note. stem: the file name without .json; cards: visible cards by id; people: the author names on cards;
+    moved: redirects()' {old id: id}, a renamed card's pick follows it."""
     if not isinstance(raw, dict):
         return None, ["not a JSON object"]
     login = raw.get("login")
@@ -1673,6 +1674,7 @@ def clean_profile(raw, stem, cards, people):
         cid = raw.get(field)
         if cid is None:
             continue
+        cid = (moved or {}).get(cid, cid) if isinstance(cid, str) else cid
         card = cards.get(cid) if isinstance(cid, str) else None
         if card is None:
             notes.append(f"{label} {cid!r} isn't a card, dropped")
@@ -1702,7 +1704,7 @@ def clean_profile(raw, stem, cards, people):
     return p, notes
 
 
-def read_profiles(cards, people):
+def read_profiles(cards, people, moved=None):
     """site/profiles/*.json -> the profiles the site shows, by login. Warns, never fails: a bad file is skipped.
     cards: visible ones only, so the pages and the counts match the site's."""
     folder = os.path.join(REPO, PROFILES_DIR)
@@ -1722,7 +1724,7 @@ def read_profiles(cards, people):
         except (ValueError, OSError) as e:
             log(f"warning: {rel} can't be read as JSON, skipped: {e}")
             continue
-        p, notes = clean_profile(raw, name[:-5], visible, people)
+        p, notes = clean_profile(raw, name[:-5], visible, people, moved)
         for note in notes:
             log(f"warning: {rel}: {note}")
         if p is None:
@@ -1760,9 +1762,10 @@ def b64_bytes(value, size=None):
     return raw if size is None or len(raw) == size else None
 
 
-def clean_deck(raw, folder, slug, cards):
+def clean_deck(raw, folder, slug, cards, moved=None):
     """One deck file's JSON -> (the entry decks.json gets, notes). None when the file can't be used; a card that isn't
-    one is dropped with a note. folder: the owner folder; slug: the file name without .json; cards: visible cards by id."""
+    one is dropped with a note. folder: the owner folder; slug: the file name without .json; cards: visible cards by id;
+    moved: redirects()' {old id: id}, a renamed card stays in the hand."""
     if not isinstance(raw, dict):
         return None, ["not a JSON object"]
     if type(raw.get("v")) is not int or raw["v"] != 1:              # not a bool: True == 1
@@ -1808,11 +1811,12 @@ def clean_deck(raw, folder, slug, cards):
     if not isinstance(ids_raw, list) or len(ids_raw) > DECK_CARDS:
         return None, [f'"cards" must be a list of up to {DECK_CARDS} card ids']
     ids, bad = [], []
-    for cid in ids_raw:
+    follow = lambda cid: (moved or {}).get(cid, cid) if isinstance(cid, str) else cid
+    for cid in map(follow, ids_raw):
         (ids if isinstance(cid, str) and cid in cards and cid not in ids else bad).append(cid if isinstance(cid, str) else repr(cid))
     if bad:
         notes.append(f"{len(bad)} card(s) dropped (not a card, or twice): {', '.join(bad)}")
-    field = raw.get("field")
+    field = follow(raw.get("field"))
     if field is not None and not (isinstance(field, str) and field in cards):
         notes.append(f"field {field!r} isn't a card, dropped")
         field, bad = None, bad + [field]
@@ -1911,7 +1915,7 @@ def write_logins(folder, logins):
             json.dump(entry, fh, separators=(",", ":"), sort_keys=True)
 
 
-def read_decks(cards):
+def read_decks(cards, moved=None):
     """site/decks/<owner>/*.json -> (public decks, private decks) for data/decks.json, newest first. Warns, never fails:
     a bad file is skipped. cards: hands are resolved against the visible ones, so the pages and the counts match the site's."""
     folder = os.path.join(REPO, DECKS_DIR)
@@ -1932,7 +1936,7 @@ def read_decks(cards):
             except (ValueError, OSError) as e:
                 log(f"warning: {rel} can't be read as JSON, skipped: {e}")
                 continue
-            d, notes = clean_deck(raw, owner, name[:-5], visible)
+            d, notes = clean_deck(raw, owner, name[:-5], visible, moved)
             for note in notes:
                 log(f"warning: {rel}: {note}")
             if d is None:
@@ -3525,7 +3529,11 @@ def main():
         for k in [k for k, v in e.items() if v in (None, [], "") or (k == "parsed" and v is True)]:
             del e[k]                          # drop empty fields to keep the JSON small
     rules.sort(key=lambda r: r["name"].lower())
-    public_decks, private_decks = read_decks(cards)
+    id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
+    archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats, people=people, credited=credited,
+                             author_of=lambda name: (by_key.get(card_key(name)) or {}).get("author"))
+    moved = redirects(archived, used_slugs, id_of)   # renamed cards: their old ids (pages, picks, hands) go on to the new one
+    public_decks, private_decks = read_decks(cards, moved)
     data = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "source": source_time(),              # edit.js: a publish is live once this reaches its commit's date
@@ -3541,13 +3549,11 @@ def main():
         "decks": {"public": len(public_decks), "private": len(private_decks)},     # the Deck builder page shows the public count; the list is decks.json
         "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
         "peopleMap": PEOPLE_AS_WRITTEN,
+        **({"moved": moved} if moved else {}),     # app.js: a renamed card's old id -> its id (links, share codes)
     }
-    profiles = read_profiles(cards, data["people"])
+    profiles = read_profiles(cards, data["people"], moved)
     by_login = {p["login"].lower(): p for p in profiles}
-    id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
     name_of = lambda key: (by_key.get(card_key(key)) or {}).get("name") or key
-    archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats, people=people, credited=credited,
-                             author_of=lambda name: (by_key.get(card_key(name)) or {}).get("author"))
     row_of = login_rows(commits, people, by_login)   # a login's row, as contributions keys it
     rated = apply_ratings(cards, parse_ratings(), archived, people, by_login, row_of)
     line = f"ratings: {rated['entries']} entries on {rated['cards']} cards ({rated['archived']} archived)"
@@ -3717,7 +3723,6 @@ def main():
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(c["name"])} · {SITE_NAME}</title>',
         ])
-    moved = redirects(archived, used_slugs, id_of)   # renamed cards: their old share links go on to the new name's page
     for slug, target in moved.items():
         os.makedirs(os.path.join(DIST, "c", slug), exist_ok=True)
         with open(os.path.join(DIST, "c", slug, "index.html"), "w", encoding="utf-8") as fh:

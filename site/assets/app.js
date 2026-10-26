@@ -132,6 +132,7 @@ async function init() {
   S.all = S.data.cards; S.rules = null; S.icons = S.data.icons;
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
+  for (const [old, id] of Object.entries(S.data.moved || {})) if (!S.byId.has(old) && S.byId.has(id)) S.byId.set(old, S.byId.get(id));   // a renamed card's old id: links, picks, share codes
   if (editorP) await editorP.catch(() => {});
   if (editor !== IDLE) { editor.init(); previews.init(); }  // applies staged edits, then derive()
   else derive();
@@ -280,6 +281,7 @@ function route(e) {
   S.restoring = e?.type === "popstate" && !!history.state?.drawn;   // Back or Forward: the browser restores the scroll after this, so no chunks
   queueMicrotask(() => { S.restoring = false; });
   const r = parseHash();
+  if (r.name === "card" && S.data?.moved?.[r.arg] && S.byId.has(r.arg)) r.arg = S.byId.get(r.arg).id;   // a renamed card: its new page
   syncUrl(r);
   hideTip();
   if (r.name === "card") {
