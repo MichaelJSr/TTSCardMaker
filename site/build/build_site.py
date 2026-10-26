@@ -167,11 +167,11 @@ SITE_KEY, SITE_FIELDS = "_site", ("name", "stars", "types", "hp", "def", "atk", 
 DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
-FIXED_BY = {"hp": ("HP NOT FOUND", "NO STATS FOUND"), "def": ("DEF NOT FOUND", "NO STATS FOUND"),
-            "atk": ("ATK NOT FOUND", "NO STATS FOUND"), "spd": ("SPD NOT FOUND", "NO STATS FOUND"),
+FIXED_BY = {"hp": ("HP NOT FOUND",), "def": ("DEF NOT FOUND",), "atk": ("ATK NOT FOUND",), "spd": ("SPD NOT FOUND",),
             "ability": ("ABILITY TEXT NOT FOUND", "NO ABILITY LAYER"), "stars": ("NO STARS FOUND",),
             "type": ("UNKNOWN TYPE",), "types": ("MISSPELT TYPE",), "allow_high_stats": ("STATS TOO HIGH",),
             "creatures": ("SEVERAL CREATURES", "NO STATS FOUND")}
+FIXED_BY_ALL = {("hp", "def", "atk", "spd"): ("NO STATS FOUND",)}    # answered once every one has a value
 SKIP_PARTS = ("MDW", "Markers")
 
 
@@ -1566,6 +1566,12 @@ def folder_series(path):
     return parts[len(parts) - 3].lower() if parts[0] == "Creatures" and len(parts) >= 4 else None
 
 
+def answered(fields):
+    """The parser notes these edited fields answer (the bot's CardEdits.answered)."""
+    return tuple(p for f in fields for p in FIXED_BY.get(f, ())) + tuple(
+        p for keys, notes in FIXED_BY_ALL.items() if all(fields.get(k) is not None for k in keys) for p in notes)
+
+
 def apply_edits(entry, edits, psd_sha=None, shown=None):
     """All fields but aliases and dup_of (applied later). psd_sha: the PSD's blob in the tree, to tell a stale _psd verdict.
     shown: psd_edit.shown_name, None when unknown."""
@@ -1644,8 +1650,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     if fields.get("problems_ok"):
         entry["problems"] = []
     else:
-        answered = tuple(p for field in fields for p in FIXED_BY.get(field, ()))
-        entry["problems"] = [p for p in entry.get("problems") or [] if not p.startswith(answered)] if answered else entry.get("problems")
+        notes = answered(fields)
+        entry["problems"] = [p for p in entry.get("problems") or [] if not p.startswith(notes)] if notes else entry.get("problems")
 
 
 def parse_admins():
