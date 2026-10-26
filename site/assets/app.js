@@ -349,6 +349,8 @@ function filterCards(p, { facets = true } = {}) {
     pending: c => !!((c.pending && c.pending.length) || c.refused),
     banned: c => !!c._banned };
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
+  const missing = G.MISSING.filter(([k]) => csv(p, "missing").includes(k));   // cards missing all of them
+  if (missing.length) list = list.filter(c => missing.every(x => x[3](c)));
   for (const [k, , test] of LINKED) { const v = p.get(k); if (v) list = list.filter(test(v)); }
   const month = p.get("month"), change = p.get("change");
   if (month || change) list = S.analytics ? list.filter(c => St.balance.changedAs(S.analytics, c, month, change)) : [];   // renderCards loads it
@@ -371,15 +373,16 @@ const needsAnalytics = p => ["bal", "cohort", "month", "change"].some(k => p.get
 const needsCharts = p => ["shape", "cd", "tag", "fresh"].some(k => p.get(k));   // charts.js: the other Stats links
 const listOf = p => exactFirst(sortCards(filterCards(p), sortOf(p), p.get("dir") || ""), p.get("q"));   // the cards the grid shows, in order (search.js exactFirst)
 function sortCards(list, sort = "name", dir = "") {
+  const own = k => c => c[k] ?? null, low = v => v?.toLowerCase() || null;   // null: the card lacks it (last either way, G.byKey)
   const key = {
-    name: G.nameKey, stars: c => c.stars ?? -1, total: c => (c.hp == null ? -1 : total(c)), hp: c => c.hp ?? -1, def: c => c.def ?? -1,
-    atk: c => c.atk ?? -1, spd: c => c.spd ?? -1, new: c => c.ts ?? 0, series: c => `${(c.series || "\uffff").toLowerCase()}\u0001${(c.subseries || "\uffff").toLowerCase()}`, type: c => kindOf(c),
+    name: G.nameKey, stars: c => c.stars || null, total: c => (["hp", "def", "atk", "spd"].every(k => c[k] == null) ? null : total(c)), hp: own("hp"), def: own("def"),
+    atk: own("atk"), spd: own("spd"), new: own("ts"), series: [c => low(c.series), c => low(c.subseries)], type: c => (c.type && c.type !== "unknown" ? kindOf(c) : null),
     mentioned: c => (S.mentionedBy.get(c.id) || new Set()).size,
   }[sort] || G.nameKey;
   const desc = isDesc(sort, dir);
-  if (sort === "created") {                                // no date last; one day by first upload, then name
+  if (sort === "created") {                                // no date last, by name; one day by first upload, then name
     const s = desc ? -1 : 1, cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
-    return list.sort((a, b) => (!a.created - !b.created) || s * cmp(a.created || "", b.created || "") || s * ((a.fs || 0) - (b.fs || 0))
+    return list.sort((a, b) => (!a.created - !b.created) || (a.created ? s * cmp(a.created, b.created) || s * ((a.fs || 0) - (b.fs || 0)) : 0)
       || a.name.localeCompare(b.name));
   }
   return list.sort(G.byKey(key, desc));
@@ -399,6 +402,7 @@ function renderCards(r) {
   const count = (arr, f) => { const m = new Map(); for (const c of arr) for (const k of [].concat(f(c))) if (k != null) m.set(String(k), (m.get(String(k)) || 0) + 1); return m; };
   const kindCounts = count(base, kindOf), starCounts = count(base, c => c.stars), subCounts = count(base, c => c.subtype);
   const typeCounts = count(base, c => c.types || []);
+  const miss = csv(p, "missing"), missCounts = new Map(G.MISSING.map(([k, , , test]) => [k, list.filter(test).length]));   // what ticking it would show
   const series = [...new Set(S.cards.map(c => c.series).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const subseries = [...new Map(S.cards.filter(c => c.subseries && (!p.get("series") || c.series === p.get("series")))   // [series, subseries] of the picked series
     .map(c => [`${c.series || ""}\u0001${c.subseries}`, [c.series || "", c.subseries]])).values()].sort((a, b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0]));
@@ -410,6 +414,7 @@ function renderCards(r) {
   const starOpts = [...new Set(S.cards.map(c => c.stars).filter(Boolean))].sort((a, b) => a - b).map(s => [s, `${s}★`]);
   const subOpts = [...new Set(S.cards.map(c => c.subtype).filter(Boolean))].sort().map(s => [s, s[0].toUpperCase() + s.slice(1)]);
   const typeOpts = [...typeCounts.keys()].sort((a, b) => (typeCounts.get(b) || 0) - (typeCounts.get(a) || 0));
+  const missOpts = G.MISSING.filter(([k]) => missCounts.get(k) || miss.includes(k));      // none to show: hidden
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
   const active = [];
   if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
@@ -422,6 +427,7 @@ function renderCards(r) {
   if (p.get("author")) active.push(["author", `by ${p.get("author")}`]);
   for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
   for (const f of csv(p, "flags")) { const x = FLAGS.find(x => x[0] === f); if (x) active.push(["flags", x[1], f]); }   // an old flag: ignored
+  for (const [k, l] of G.MISSING) if (miss.includes(k)) active.push(["missing", l, k]);
   if (p.get("month")) active.push(["month", `Changed ${St ? St.balance.monthName(p.get("month")) : p.get("month")}`]);
   if (p.get("change")) active.push(["change", St?.balance.CHANGE_LABEL[p.get("change")] || p.get("change")]);
   for (const [k, label] of LINKED) if (p.get(k)) active.push([k, label(p.get(k))]);
@@ -445,6 +451,7 @@ function renderCards(r) {
       <h3>Author</h3><select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === p.get("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>
       <h3>Flags</h3>${FLAGS
         .map(([f, l]) => `<label class="check"><input type="checkbox" data-action="toggle-param" data-key="flags" data-value="${f}"${csv(p, "flags").includes(f) ? " checked" : ""}> ${l}</label>`).join("")}
+      ${missOpts.length ? `<h3>Missing</h3>${missOpts.map(([k, l, tip]) => `<label class="check"${tip ? ` title="${esc(tip)}"` : ""}><input type="checkbox" data-action="toggle-param" data-key="missing" data-value="${k}"${miss.includes(k) ? " checked" : ""}> ${l}<span class="n">${missCounts.get(k)}</span></label>`).join("")}` : ""}
       <p><button type="button" class="ghost" data-action="clear-filters">Clear all filters</button></p>
     </aside>
     <section>
@@ -584,7 +591,7 @@ function dupsOf(c) {      // the other cards printed from the same PSD
   return original ? [original, ...(original.dups || []).map(x => S.byId.get(x))].filter(x => x && x.id !== c.id) : [];
 }
 function strip(title, cards) {
-  return cards.length ? `<h3>${esc(title)} <span class="muted">${cards.length}</span></h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
+  return cards.length ? `<h3><span class="muted">${cards.length}</span> ${esc(title)}</h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
 }
 function openCard(id, showDetails = false) {
   const c = S.byId.get(id);

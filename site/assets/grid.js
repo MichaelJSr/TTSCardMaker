@@ -24,8 +24,28 @@ export const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total sta
   ["new", "Recently updated"], ["created", "Newest created", ""], ["created", "Oldest created", "asc"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
 export const isDesc = (sort, dir) => (dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "created", "mentioned"].includes(sort));
 export const nameKey = c => c.name.toLowerCase();
-/** sort by key, ties by name */
-export const byKey = (key, desc = false) => (a, b) => { const x = key(a), y = key(b); return (x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name)) * (desc ? -1 : 1); };
+/** sort by key (or keys in turn), ties by name; a card without the value (null) goes last either way, those in name order */
+export const byKey = (key, desc = false) => { const keys = [].concat(key), s = desc ? -1 : 1;
+  return (a, b) => {
+    for (const k of keys) { const x = k(a), y = k(b);
+      if (x == null || y == null) return x == null && y == null ? a.name.localeCompare(b.name) : x == null ? 1 : -1;
+      if (x !== y) return x < y ? -s : s; }
+    return s * a.name.localeCompare(b.name);
+  }; };
+
+const STATS = ["hp", "def", "atk", "spd"];
+// the Missing filter: [param value, label, title (no data-tip: a tap would leave it up), test]; lacking = absent, null, "" or []
+export const MISSING = [
+  ["series", "No series", "", c => !c.series],
+  ["subseries", "No subseries", "", c => !c.subseries],
+  ["types", "No types", "No type icons", c => !c.types?.length],
+  ["ability", "No ability", "", c => !c.ability?.trim()],
+  ["author", "No author", "No one credited", c => !c.author],
+  ["stars", "No stars", "", c => !c.stars],
+  ["stats", "No stats", "Creatures and minions missing HP, DEF, ATK or SPD", c => ["creature", "minion", "creatures"].includes(c.type) && STATS.some(k => c[k] == null)],
+  ["itemtype", "No item type", "Items without an item type", c => c.type === "item" && !c.subtype],
+  ["ratings", "No ratings", "Not rated for power or favorability", c => !c.ratings?.length],
+];
 
 /** env: { thumbs, icons, dupName(id), inDeck(id) }; link: a plain link to the card's page, no flag or deck button (the
  *  tiles index.html carries before the script runs) */
