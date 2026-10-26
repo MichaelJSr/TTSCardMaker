@@ -12,8 +12,8 @@ import { soon } from "./fresh.js";
 import * as P from "./parts.js";
 
 const API = "https://api.github.com";
-// token: the plain-text token before 2026-10-23 (sealed on the next load); last: the login a password last signed in
-const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login", drafts: draft.DRAFT_KEY };
+// last: the login a password last signed in
+const K = { stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login", drafts: draft.DRAFT_KEY };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
   atk: "int", spd: "int", ability: "str", parts: "parts", note: "str", art: "str", ability_art: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
@@ -126,11 +126,11 @@ export function canonName(kind, raw, known = []) {
 /** The toast when a typed name is a known one. */
 export const sameName = (kind, typed, name) => (kind === "author" ? (typed === name ? `“${name}” is already an author` : `“${typed}” is shown as ${name}`)
   : typed === name ? `“${name}” is already a ${kind}` : `“${typed}” is already the ${kind} ${name}`);
-/** sessionStorage's buckets, checked: {series: [name], subseries: [name], author: [name]} (an older tab's [series, name]: its name). */
+/** sessionStorage's buckets, checked: {series: [name], subseries: [name], author: [name]}. */
 export function readBuckets(text) {
   let b; try { b = JSON.parse(text); } catch { b = null; }
   const strs = a => (Array.isArray(a) ? a.filter(x => typeof x === "string" && x) : []);
-  const subs = Array.isArray(b?.subseries) ? b.subseries.map(x => (Array.isArray(x) ? x[1] : x)) : [];
+  const subs = Array.isArray(b?.subseries) ? b.subseries : [];
   return { series: strs(b?.series), author: strs(b?.author), subseries: [...new Set(strs(subs))] };
 }
 
@@ -299,7 +299,6 @@ export function createEditor(app) {
   const { S } = app;
   // the token: in memory; kept sealed under this browser's device key (login.js vault), never in plain text
   const device = auth.vault();
-  const legacy = () => localStorage.getItem(K.token) || sessionStorage.getItem(K.token) || "";
   let token = "";
   let me = null;                                   // { login, admin, push }
   let scopes = null;                               // the token's classic scopes (x-oauth-scopes); null: unknown (fine-grained)
@@ -318,7 +317,7 @@ export function createEditor(app) {
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
-  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", decks: "site/decks", logins: "site/logins", ratings: "site/Card Ratings.json", ...S.data.files });
+  const files = () => S.data.files;
   const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
   const find = id => S.byId.get(id) || (S.rules || []).find(r => r.id === id);
 
@@ -343,7 +342,7 @@ export function createEditor(app) {
   }
   // files: {path: oldText => newText | null (leave it) | false (delete it)}; retried on top if someone pushed meanwhile
   async function commitFiles(edits, message, got = {}) {   // got.date: the commit's date (GitHub's clock)
-    const repo = S.data.repo, branch = S.data.branch || "main";
+    const repo = S.data.repo, branch = S.data.branch;
     for (let attempt = 0; ; attempt++) {
       const head = (await gh(`/repos/${repo}/git/ref/heads/${branch}`)).object.sha;
       const base = await gh(`/repos/${repo}/git/commits/${head}`);
@@ -377,24 +376,21 @@ export function createEditor(app) {
     if (store) await remember(keep);
     app.onAuth();
   }
-  async function remember(keep) {                  // seal the token on this browser; the plain-text one of before goes
-    localStorage.removeItem(K.token); sessionStorage.removeItem(K.token);
+  async function remember(keep) {                  // seal the token on this browser; a plain-text one of before 2026-10-23 goes
+    localStorage.removeItem("edit-token");
     try { await device.save(token, keep); }
     catch { keptHere = false; if (keep) app.toast("This browser can't keep you signed in safely: you'll sign in again next time"); }
   }
-  let offerOnBoot = false;                         // a plain-text token was sealed on this load: offer a password once
   async function restore() {                       // the boot's silent sign-in
-    const old = legacy(), kept = old ? null : await device.load();
-    if (!old && !kept) return;
-    const keep = old ? !!localStorage.getItem(K.token) : kept.keep;
-    token = old ? old.trim() : kept.token;
-    if (old) { await remember(keep); offerOnBoot = true; }
-    try { await signIn(token, keep, { store: false }); }
+    const kept = await device.load();
+    if (!kept) return;
+    token = kept.token;
+    try { await signIn(token, kept.keep, { store: false }); }
     catch (e) { if (e.status === 401) await device.clear(); throw e; }      // a revoked token isn't kept
   }
   function signOut() {
     token = ""; me = null; scopes = null; pwKnown = null; keptHere = false;
-    localStorage.removeItem(K.last); localStorage.removeItem(K.token); sessionStorage.removeItem(K.token); device.clear().catch(() => {});
+    localStorage.removeItem(K.last); device.clear().catch(() => {});
     sessionStorage.removeItem(K.buckets); buckets = readBuckets(null); app.onAuth();
   }
 
@@ -404,7 +400,7 @@ export function createEditor(app) {
   let pwKnown = null;                              // {login, file | null}: the signed-in login's published file
   async function ownPassword(fresh = false) {      // the file, null when none, {damaged} when unreadable
     if (!fresh && pwKnown?.login === me.login) return pwKnown.file;
-    const text = await readFile(loginPath(me.login), S.data.branch || "main");
+    const text = await readFile(loginPath(me.login), S.data.branch);
     let file = null;
     if (text != null) { try { file = auth.checkFile(JSON.parse(text), me.login).file || { damaged: true }; } catch { file = { damaged: true }; } }
     pwKnown = { login: me.login, file };
@@ -415,7 +411,7 @@ export function createEditor(app) {
    *  several when files differ only in case (the build publishes none of them); stale: the site's copy was used. */
   async function fetchPassword(typed) {
     if (!LOGIN_RE.test(typed)) throw new Error("That isn't a GitHub login.");
-    const lower = typed.toLowerCase(), repo = S.data.repo, ref = S.data.branch || "main", dir = files().logins;
+    const lower = typed.toLowerCase(), repo = S.data.repo, ref = S.data.branch, dir = files().logins;
     let built = null;
     try { const r = await fetch(`data/logins/${encodeURIComponent(lower)}.json`, { cache: "no-cache" }); if (r.ok) built = await r.json(); } catch { /* not built */ }
     const api = n => gh(`/repos/${repo}/contents/${repoPath(`${dir}/${n}.json`)}?ref=${ref}`, { raw: true, anon: true }).catch(e => (e.status === 404 ? null : Promise.reject(e)));
@@ -501,7 +497,7 @@ export function createEditor(app) {
     if (!el) return;
     el.textContent = "Loading…";
     try {
-      const list = await gh(`/repos/${S.data.repo}/contents/${repoPath(files().logins)}?ref=${S.data.branch || "main"}`).catch(e => (e.status === 404 ? [] : Promise.reject(e)));
+      const list = await gh(`/repos/${S.data.repo}/contents/${repoPath(files().logins)}?ref=${S.data.branch}`).catch(e => (e.status === 404 ? [] : Promise.reject(e)));
       const logins = (Array.isArray(list) ? list : []).map(x => String(x.name)).filter(n => n.endsWith(".json")).map(n => n.slice(0, -5));
       el.innerHTML = logins.length ? `<ul class="pw-files">${logins.map(l => `<li><a href="#/u/${encodeURIComponent(l)}">${esc(l)}</a> <button type="button" class="ghost danger" data-action="pw-remove" data-login="${esc(l)}">Remove</button></li>`).join("")}</ul>` : `<p class="muted">Nobody has a password.</p>`;
     } catch (err) { el.textContent = `Couldn't list them: ${err.message}`; }
@@ -569,8 +565,8 @@ export function createEditor(app) {
   function sentRecord() {                          // {at, committed, sha, ops, profiles, decks, deckNames}: published, until the site has rebuilt with it
     const sent = load(K.sent, null);
     if (!sent) return null;
-    // built from its commit or a later one (commit dates, GitHub's); before 2026-10-25: the build's clock
-    if (S.data.source && sent.committed ? Date.parse(S.data.source) >= Date.parse(sent.committed) : new Date(S.data.generated) > new Date(sent.at)) { localStorage.removeItem(K.sent); app.toast("Live now: your published edits are on the site"); return null; }
+    // built from its commit or a later one (commit dates, GitHub's)
+    if (S.data.source && sent.committed && Date.parse(S.data.source) >= Date.parse(sent.committed)) { localStorage.removeItem(K.sent); app.toast("Live now: your published edits are on the site"); return null; }
     return sent;
   }
   const sentOps = () => sentRecord()?.ops || [];
@@ -1359,7 +1355,7 @@ export function createEditor(app) {
     carry = { key: form.dataset.login.toLowerCase(), link: form.querySelector("#pf-deck-link").value,
       slot: panel.hidden ? "" : panel.dataset.slot || "", picker: panel.hidden ? null : pick.read(panel) };
   }
-  let booting = device.has() || !!legacy();        // the kept token's sign-in hasn't settled yet
+  let booting = device.has();                      // the kept token's sign-in hasn't settled yet
   let pageRun = 0;                                 // profilePage calls: a newer one aborts the older
   window.addEventListener("beforeunload", e => { if (document.querySelector('#edit-form[data-dirty="1"]')) { e.preventDefault(); e.returnValue = ""; } });
   function profileOf(login) {                      // unpublished state: {profile | null (removed), state: "staged" | "sent"}, or null
@@ -1730,7 +1726,7 @@ export function createEditor(app) {
         <div class="actions"><button type="button" class="ghost" data-action="edit-discard-deck" data-key="${esc(key)}">Discard</button></div></div>`; }).join("")}
       ${count() ? `<label class="muted" for="edit-msg">Commit message (optional)</label><input id="edit-msg" class="wide" placeholder="Website edits">
         <div class="actions"><button type="button" class="primary" data-action="edit-publish">Publish ${count()} change${count() > 1 ? "s" : ""}</button></div>
-        <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch || "main")}). The site rebuilds in a few minutes; the card sync brings it to the bot within minutes and to the PSDs within about 30 minutes.</p>` : `<p class="muted">Nothing to publish.</p>`}
+        <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch)}). The site rebuilds in a few minutes; the card sync brings it to the bot within minutes and to the PSDs within about 30 minutes.</p>` : `<p class="muted">Nothing to publish.</p>`}
       <p class="muted" id="edit-status" aria-live="polite">${esc(note)}</p>`;
   }
   let forgot = false;                              // Forgot password: after the token sign-in, set a new one
@@ -1748,8 +1744,8 @@ export function createEditor(app) {
         <h4>Admins</h4><p class="muted">GitHub logins, one per line. The repo owner is always an admin.</p>
         <form id="admins-form"><textarea id="admins-list" class="wide" rows="4">${esc((stage.admins || S.data.admins || []).join("\n"))}</textarea><div class="actions"><button type="submit">Add to batch</button></div></form>
         <h4>Password files</h4><p class="muted">Admins may remove anyone's (${esc(files().logins)}/).</p><div class="actions"><button type="button" class="ghost" data-action="pw-list">Show them</button></div><div id="pw-list"></div>` : ""}
-      <p class="muted"><a href="https://github.com/${esc(S.data.repo)}/commits/${esc(S.data.branch || "main")}/${esc(files().edits)}" target="_blank" rel="noopener">Edit history</a> ·
-        <a href="https://github.com/${esc(S.data.repo)}/blob/${esc(S.data.branch || "main")}/${esc(files().edits)}" target="_blank" rel="noopener">${esc(files().edits)}</a></p>
+      <p class="muted"><a href="https://github.com/${esc(S.data.repo)}/commits/${esc(S.data.branch)}/${esc(files().edits)}" target="_blank" rel="noopener">Edit history</a> ·
+        <a href="https://github.com/${esc(S.data.repo)}/blob/${esc(S.data.branch)}/${esc(files().edits)}" target="_blank" rel="noopener">${esc(files().edits)}</a></p>
       <div class="actions"><button type="button" class="ghost" data-action="edit-signout">Sign out</button></div>`;
   }
   function peopleRows() {
@@ -1834,14 +1830,6 @@ export function createEditor(app) {
     });
   }
 
-  async function offerAfterBoot() {                // a plain-text token was sealed on this load: offer a password once
-    offerOnBoot = false;
-    const file = await ownPassword().catch(() => undefined);
-    if (file !== null || !me) return;
-    if (app.modal.hidden && !document.getElementById("edit-form")) openPassword("set", { offer: true });
-    else app.toast("Your sign-in is now kept encrypted. Set a password in the Sign in menu (top right)");
-  }
-
   const actions = {
     "edit-hub": () => openHub(),
     "edit-card": el => openForm(el.dataset.id || app.currentCard()),
@@ -1920,7 +1908,7 @@ export function createEditor(app) {
       S.showHidden = !!localStorage.getItem(K.hidden);
       preview();
       const sent = sentRecord(); if (sent) soon(Date.parse(sent.at));   // still waiting for its build
-      if (booting) restore().then(() => app.derive(), () => { token = ""; me = null; }).finally(() => { booting = false; app.rerender(); if (offerOnBoot && me) offerAfterBoot(); });
+      if (booting) restore().then(() => app.derive(), () => { token = ""; me = null; }).finally(() => { booting = false; app.rerender(); });
     },
     open: openForm,
     refresh: preview,

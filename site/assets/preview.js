@@ -247,7 +247,7 @@ export function renderedParts(e, v) {
   const shot = alt => {                               // the preview in the stage; Diff swaps in the red differences
     const [src, full] = v.images, diff = v.diff && !!v.current;
     return { dim: false,
-      stage: `<a href="${esc(full || src)}" target="_blank" rel="noopener" title="Full size"${diff ? " hidden" : ""}><img src="${esc(src)}" alt="${esc(v.card.name)}, ${esc(alt)}" crossorigin="anonymous" data-pv-img="preview" data-fallback="${esc(full || "")}"></a>
+      stage: `<a href="${esc(full || src)}" target="_blank" rel="noopener" title="Full size"${diff ? " hidden" : ""}><img src="${esc(src)}" alt="${esc(v.card.name)}, ${esc(alt)}" crossorigin="anonymous" data-pv-img="preview"></a>
         ${v.current ? `<img src="${esc(v.current)}" alt="" crossorigin="anonymous" data-pv-img="current" hidden><canvas data-pv-diff role="img" aria-label="Differences between the current image and the preview, in red"${diff ? "" : " hidden"}></canvas>` : ""}`,
       tools: `<div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${full ? `<a class="fact" href="${esc(full)}" target="_blank" rel="noopener">Full size</a>` : ""}${again}</div>${diff ? `<p class="muted pv-note">Differences in red <span data-pv-changed></span>${v.mixed ? ". An older preview: compared with the site's image, another format, so faint red outlines show where nothing changed" : ""}</p>` : ""}` };
   };
@@ -266,7 +266,6 @@ export function renderedParts(e, v) {
   return { ...state, caption: `${head}<p class="err">${esc(why)}</p>${r.transient ? `<p class="muted">Usually passing: try again.</p>` : ""}${notes}${runLink ? `<p>${runLink}</p>` : ""}${e.error ? scopeNote : ""}${errStale || `<div class="actions">${button("Try again", "ghost")}</div>`}` };
 }
 /** renderedParts as one piece of markup. */
-export const renderedHtml = (e, v) => { const p = renderedParts(e, v); return p.stage + p.caption; };
 export const TABS = [["original", "Original"], ["mockup", "Mock-up"], ["rendered", "Rendered"]];
 /** The viewer's tabs: a tablist, the mode's tab selected (roving tabindex), "New" on Rendered while a result waits unseen. */
 export const tabsHtml = (mode, { news = false } = {}) => `<div class="iv-tabs" role="tablist" aria-label="Card image">${TABS.map(([m, label]) =>
@@ -555,11 +554,9 @@ export function createPreviews(app) {
     const t = setTimeout(() => { drawn = true; go(null); }, 150);
     app.loadDetails(c).then(r => { recs.set(c.id, r); clearTimeout(t); if (!drawn || canvas._run === run) go(r); }, () => { recs.set(c.id, null); });
   }
-  function wireShot(alt, cap, e) {                    // the preview's fallback to the PNG, and the diff while it shows
+  function wireShot(alt, cap, e) {                    // a preview gone from the branch, and the diff while it shows
     const prev = alt.querySelector('[data-pv-img="preview"]');
     prev?.addEventListener("error", () => {
-      const f = prev.dataset.fallback;
-      if (f && prev.src !== f) { prev.dataset.fallback = ""; prev.src = f; prev.closest("a").href = f; return; }
       if (e && Date.now() - e.at > LATE_MS) { set(patch(store, e.request, { state: "expired", seen: true })); notify(e.card); }   // the branch dropped it (the contract: a 404 after a day)
     });
     const canvas = alt.querySelector("[data-pv-diff]");

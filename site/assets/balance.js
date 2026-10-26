@@ -230,7 +230,7 @@ export function balanceBlock(c, A, { byId } = {}) {
   const a = cardData(A, c, byId), cohort = a?.cohort && A.cohorts[a.cohort];
   const out = [];
   if (cohort) {
-    const line = a.stats || STATS.map(([k]) => c[k]);          // as built: the cohort numbers are too
+    const line = a.stats;                                      // as built: the cohort numbers are too
     const name = cohortName(a.cohort, cohort), total = line.reduce((s, v) => s + (v ?? 0), 0);
     const all = a.cohort.endsWith("|all"), of = all ? `all ${cohort.n}` : `the ${cohort.n}`;
     const where = a.flags?.includes("top") ? `in the top 10% of ${name}: ${a.below} of ${of} have a lower total`
@@ -260,7 +260,7 @@ export function changesBlock(c, A, { byId, texts = null, repo = "" } = {}) {
       const parts = changeParts(r);
       const [i, j] = r.text || [];
       const diff = r.words && texts && texts[i] != null && texts[j] != null ? `<details class="bal-diff"><summary>Show the change</summary><div>${diffWords(texts[i], texts[j])}</div></details>` : "";
-      const link = commitLink(repo, A.commits?.[r.c], `Commit for the ${day(r.ts)} change`);        // r.c: index in commits
+      const link = commitLink(repo, A.commits[r.c], `Commit for the ${day(r.ts)} change`);        // r.c: index in commits
       const when = (r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts))) + (link && `<br>${link}`);
       return `<li><span class="when">${when}</span><div>${parts.join("<br>")}${diff}</div></li>`;
     }).join("");

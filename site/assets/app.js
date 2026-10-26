@@ -211,7 +211,7 @@ let editor = IDLE, previews = null, inline = null, tray = null, editorP = null;
 const editing = () => !!editor.me;                      // edit mode = signed in: the card dialog and the grid edit in place
 const kept = k => { try { return localStorage.getItem(k) || sessionStorage.getItem(k) || ""; } catch { return ""; } };
 const holds = s => { try { const v = JSON.parse(s); return !!v && Object.values(v).some(x => x && (typeof x !== "object" || Object.keys(x).length)); } catch { return !!s; } };
-const wantsEditor = () => !!(kept(SEALED) || kept("edit-token") || kept("edit-sent") || kept("edit-show-hidden")) || holds(kept("edit-stage")) || holds(kept("card-previews"));
+const wantsEditor = () => !!(kept(SEALED) || kept("edit-sent") || kept("edit-show-hidden")) || holds(kept("edit-stage")) || holds(kept("card-previews"));
 function loadEditor(say = false) {                       // say: "Loading…" while it comes (a click)
   const note = "Loading the editor…";
   if (!editorP && say) toast(note);
@@ -852,9 +852,7 @@ const versionList = c => {
   if (!rows) return [];
   return rows.map(([ci, path]) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png }; });
 };
-const versionUrl = (v, cdn = false) => cdn
-  ? `https://cdn.jsdelivr.net/gh/${S.versions.repo}@${v.sha}/${urlPath(v.path)}`
-  : `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
+const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
 function versionsHtml(c) {
   if (!c.iv) return "";
   if (!S.versions) return `<h3>Image versions</h3><p class="muted">Loading ${c.iv} versions…</p>`;
@@ -881,8 +879,6 @@ function showVersion(c, i) {
     : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img class="ver-old" src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}</figcaption></figure>
       <figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
       ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
-  const old = $(".ver-old", box);
-  if (old) old.addEventListener("error", () => { if (!old.dataset.cdn) { old.dataset.cdn = "1"; old.src = versionUrl(v, true); } }, { once: false });
 }
 // ---- balance: the card's standing among its star level and its recorded changes (balance.js)
 const balanceOf = c => (c.dup ? S.byId.get(c.dup) || c : c);         // a duplicate shows its original's
@@ -1554,4 +1550,3 @@ wireTips(document, tips, (cx, cy) => {
 
 if (wantsEditor()) loadEditor().catch(() => {});          // at once, beside cards.json
 init().finally(fresh.watch);                            // a new deploy reloads the page (fresh.js)
-passes.migrate().catch(() => {});                       // passphrases remembered in plain text before 2026-10-23: sealed now

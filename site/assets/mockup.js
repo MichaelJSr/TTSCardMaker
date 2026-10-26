@@ -13,7 +13,7 @@ import { norm, splitToken, tagInfo, TAG, variantFile } from "./text.js";
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569" };   // style.css --b-*, as the font's badges
 const STATS = ["hp", "def", "atk", "spd"];
-export const LINE = 1.22;                            // line pitch in ems (findText reads a size back from it)
+export const LINE = 1.22;                            // line pitch in ems
 // fractions of the image [x0, y0, x1, y1]: where a template prints the name and the text; its stat bars (one row per stat,
 // `step` apart, 10 cells across `box`). Measured on the PSDs' layer boxes (2026-10-23): tall = 1200x2400 creatures and
 // minions (311 of 390 with stat rows sit exactly here), item = 1200x1800 items and field cards (the totems' two rows),
@@ -51,8 +51,8 @@ export function runs(a, thr) {
 
 /** Where the image shows text inside box (px): {box, lines: [[x0, y0, x1, y1]], size (font px), pitch, align: "center" |
  *  "left", mass}, or null. Text is where many sharp edges are (glyphs with their outline). Rows: hysteresis, so a short
- *  last line ("it.") joins the paragraph of the strong rows next to it; clusters of rows are paragraphs. findText: the
- *  heaviest paragraph; textBlocks: every run of up to 12 neighbouring paragraphs that reaches into the seed rows ([y0, y1]
+ *  last line ("it.") joins the paragraph of the strong rows next to it; clusters of rows are paragraphs. textBlocks:
+ *  every run of up to 12 neighbouring paragraphs that reaches into the seed rows ([y0, y1]
  *  px), the heaviest first, for calibrate to pick the one that holds the old text (a blank line between paragraphs, a last
  *  paragraph in another colour, art above or below). Lines are the runs between quiet rows (pitch, size and alignment come
  *  from them). L: luma(), W x H. */
@@ -117,8 +117,6 @@ export function textBlocks(L, W, H, box, { edge = 40, seed = null, most = Infini
   }
   return out.sort((a, b) => b.mass - a.mass).slice(0, most);
 }
-/** The heaviest single paragraph of textBlocks, or null. */
-export const findText = (L, W, H, box, opts = {}) => textBlocks(L, W, H, box, { ...opts, span: 1, most: 1 })[0] || null;
 /** How well a found block holds the old text (paras: tokenize(old)): measured at the block's size the old text is k times
  *  as wide as the block's lines together, and wrapped at the block's width it makes nPred lines (against the block's).
  *  size: the block's size scaled by k (the old text at it fills the block as the old one did). ok: k within 0.62-1.6 and
