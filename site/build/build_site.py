@@ -1566,7 +1566,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     if pending:
         entry["pending"] = pending
     tried = verdict.get("for")                    # a refusal: while the refused values are unchanged too
-    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) and current:
+    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) and current \
+            and any(f not in site for f in tried):    # a website-only field's old refusal stays quiet
         entry["refused"] = verdict.get("reason") or "refused"
     if fields.get("aliases"):
         entry["webAliases"] = list(fields["aliases"])
