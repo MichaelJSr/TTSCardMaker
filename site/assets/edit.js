@@ -680,6 +680,17 @@ export function createEditor(app) {
     }
     return list.length ? { rec, list, added, rule: isRule(c), picture: built.picture || null } : null;
   }
+  // the title drawn into the picture: no title layer, no text in the title region (of the Text group): a new title is
+  // website only (the bot's psd_edit.title_in_picture; TITLE_REGION is psd_parser.TITLE_REGION_RATIO)
+  const TITLE_REGION = 0.12;
+  function titleInPicture(view) {
+    if (!view || view.rule || view.list.some(b => b.kind === "title")) return false;
+    const texts = (Array.isArray(view.rec.text) ? view.rec.text : []).filter(t => t && typeof t.layer === "string"), h = view.rec.canvas?.h;
+    if (!h) return false;
+    const grouped = texts.some(t => t.layer.startsWith("Text/"));
+    return !texts.some(t => t.visible && (t.text || "").trim() && Array.isArray(t.box) && t.box[1] < h * TITLE_REGION
+      && (!grouped || t.layer.startsWith("Text/")) && !t.layer.includes(" FX: ") && t.layer.split("/").pop().trim().toLowerCase() !== "ability");
+  }
   let partForm = null;                             // the open dialog's box state: {c, view, deleted, drops, added (shown), last (focused box)}
   const partEl = key => document.getElementById(`ef-part:${key}`);
   function partValues() {                          // the dialog's boxes -> readParts' form
@@ -836,6 +847,7 @@ export function createEditor(app) {
         <fieldset><legend>Card</legend>
           ${view?.list.some(x => x.kind === "title") ? `<div class="erow" data-row="name"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
             <p class="muted part-join" id="ef-name-join"></p></div>${plain("name", `<input id="ef-name" value="${esc(c.name)}">`)}</div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
+          ${titleInPicture(view) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
           ${renameRow(c, b)}
           ${row("stars", num("stars"))}${view ? `<p class="muted part-note" id="ef-stars-note"></p>` : ""}
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
