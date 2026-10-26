@@ -1,4 +1,4 @@
-// The parts editor (AutoCroissant docs/Future/PARTS_EDITOR.md §3, §5): one text box per PSD layer the parser reads as a
+// The parts editor (AutoCroissant docs/Finished/session-2026-10-26/PARTS_EDITOR.md §3, §5): one text box per PSD layer the parser reads as a
 // title, ability or rule-page block, from data/details/<id>.json's VERSION 2 `parts` (build_site details_parts). Edits
 // publish per layer to Card Edits.json's `parts` (keyed by layer id, or +ability) with the derived name/ability. A card
 // whose record has no parts edits as before. Pure: edit.js draws the boxes.

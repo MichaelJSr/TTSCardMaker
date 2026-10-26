@@ -7,7 +7,7 @@
 #   links re-pinned (a second commit). A card push's waits out a fixed 30-minute window (owner, 2026-10-24): the first
 #   push to main touching a card input starts it, pushes while it runs ride along (their data still at once), and when
 #   it is up the lane syncs main's head. After M the after job re-reads the baked cards into `data` (no wait).
-# The bake's verdicts and events live on `data` (AutoCroissant docs/Future/CARD_SYNC_VERDICTS.md): the main job records
+# The bake's verdicts and events live on `data` (AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md): the main job records
 # them (bake-records), the first data job after it (the after job, else the next) merges them in its data commit
 # (verdicts.json; baked, bake-refused; the merged artifacts in bake-records.json), so a refusal makes no main commit and
 # M holds only PSDs, PNGs and dropped edit fields. A guards commit's events (guard-png,

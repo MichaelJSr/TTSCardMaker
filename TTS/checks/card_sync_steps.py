@@ -30,7 +30,7 @@
    schedule (now) or a push (wait: card-sync-quiet, the window from its dispatch); its main Gate is the schedule's.
 7. Tell Discord on faked runs: once per failing streak of its lane (the newest other live run where the lane ended;
    runs that skipped it, and dry runs, passed over), once a lane per run (after sees data's failure).
-8. The verdicts (AutoCroissant docs/Future/CARD_SYNC_VERDICTS.md): Bake records keeps M's part only when M landed (the
+8. The verdicts (AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md): Bake records keeps M's part only when M landed (the
    baked events get M), records nothing on a dry run; every data job looks for unmerged records; the data gate goes for
    records alone; Build passes them on and lists them in bake-records.json; Guard
    events finds a guards commit's guard-events.json through its Guarded-push run (faked gh), skips one naming another

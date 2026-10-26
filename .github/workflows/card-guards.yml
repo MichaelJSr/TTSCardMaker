@@ -517,7 +517,7 @@ jobs:
 
       # The landed commit's changelog events (guard-events.json: re-made or recompressed PNGs and the fixes, never the
       # Single-line Composer) for the card sync's data job, which finds this run by the push and reads them (the Changes
-      # page shows them, Discord never: AutoCroissant docs/Future/CARD_SYNC_VERDICTS.md). Before Follow up starts it.
+      # page shows them, Discord never: AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md). Before Follow up starts it.
       - uses: actions/upload-artifact@v4
         if: always() && steps.land.outputs.sha != ''
         with:
