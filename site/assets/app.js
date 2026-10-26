@@ -495,41 +495,102 @@ function renderCards(r) {
       ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
     </section></div>`;
-  const filtersTop = $(".browse .filters", view)?.scrollTop || 0;   // a click there redraws it: keep its place
-  view.innerHTML = browse;
-  if (filtersTop) $(".browse .filters", view).scrollTop = filtersTop;
-  const grid = list.length && view_ !== "table" && $(".browse .grid", view);
+  const filters = $(".browse .filters", view), filtersTop = filters?.scrollTop || 0;   // a click there redraws it: keep its place
+  const grid = keepGrid(browse) || (view.innerHTML = browse, $(GRID, view));
+  if (filtersTop && $(".browse .filters", view) !== filters) $(".browse .filters", view).scrollTop = filtersTop;
   if (grid) fillGrid(grid, list, { css: (G.TILE_SIZES[size] || G.TILE_SIZES.m)[1], win });
   else if (list.length && view_ === "table") fillTable($(".browse table.data tbody", view));
   if (editing()) inline.mountGrid(view, p);
   if (editing()) previews.mountTiles(view);
 }
-// the grid's tiles by card id {html, el, ed}: a render reuses a tile whose markup (and edit mode) is unchanged instead of
-// parsing it again, so its picture stays loaded. Code that changes a tile in place drops it (refresh); the edit-mode marks
-// (draggable, data-selected, preview badges) are set again after every render. The tiles that cover the window go in now,
-// the rest in later tasks (a newer render stops them), with the edit-mode marks.
+// The grid stays in the page while the view stays a grid: Safari draws a picture again when its <img> leaves the page or
+// comes back (the whole grid flashed at each redraw, e.g. the one entering edit mode after a kept sign-in). The filters
+// are patched in place (morph: their icons stay), the rest of the browse is swapped in around the grid, and fillGrid
+// reconciles the tiles. null: no grid before or now (the caller draws the view).
+const GRID = ".browse > section > .grid";
+function keepGrid(browse) {
+  const old = $(":scope > .browse", view), oldGrid = old && $(":scope > section > .grid", old), oldAside = old && $(":scope > aside.filters", old);
+  if (!oldGrid || !oldAside) return null;
+  const tpl = document.createElement("template");
+  tpl.innerHTML = browse;
+  const fresh = tpl.content.firstElementChild, grid = $(":scope > section > .grid", fresh), aside = $(":scope > aside.filters", fresh);
+  if (!grid || !aside) return null;
+  for (const n of [...view.childNodes]) if (n !== old) n.remove();
+  morph(oldAside, aside);
+  const section = grid.parentElement, oldSection = oldGrid.parentElement;
+  for (const n of [...oldSection.childNodes]) if (n !== oldGrid) n.remove();
+  let before = true;
+  for (const n of [...section.childNodes]) if (n === grid) before = false; else if (before) oldSection.insertBefore(n, oldGrid); else oldSection.append(n);
+  for (const [a, b] of [[old, fresh], [oldSection, section], [oldGrid, grid]]) sameAttrs(a, b);
+  return oldGrid;
+}
+const sameAttrs = (el, to) => {
+  for (const { name } of [...el.attributes]) if (!to.hasAttribute(name)) el.removeAttribute(name);
+  for (const { name, value } of to.attributes) if (el.getAttribute(name) !== value) el.setAttribute(name, value);
+};
+// el made like to (its fresh copy), keeping el's nodes where the tags match; form controls as the markup says
+function morph(el, to) {
+  if (el.nodeName !== to.nodeName) { el.replaceWith(to); return; }
+  if (el.nodeType !== 1) { if (el.nodeValue !== to.nodeValue) el.nodeValue = to.nodeValue; return; }
+  sameAttrs(el, to);
+  const pick = el.tagName === "SELECT" ? Math.max(0, [...to.options].findIndex(o => o.hasAttribute("selected"))) : -1;
+  const a = [...el.childNodes], b = [...to.childNodes];
+  b.forEach((n, i) => (i < a.length ? morph(a[i], n) : el.append(n)));
+  for (const n of a.slice(b.length)) n.remove();
+  if (pick >= 0) el.selectedIndex = pick;
+  else if (el.tagName === "INPUT") el.checked = to.hasAttribute("checked");
+}
+// the grid's tiles by card id {html, el, ed, css}: html is the tile's markup without eager (its place doesn't change it),
+// ed: last placed in edit mode, css: its picture's width for the tile size (another size sets sizes in place). A render
+// reuses a tile while its markup is unchanged, so its picture stays loaded; entering edit mode too (its marks, draggable,
+// data-selected and preview badges, are set after every render), leaving it makes the tiles anew. Code that changes a
+// tile in place updates its markup here (refresh).
 const gridTiles = new Map();
-const GRID_FIRST = 96, GRID_CHUNK = 120;
+const GRID_FIRST = 96, GRID_CHUNK = 120, GRID_EAGER = 8;
 let gridJob = 0;
+// The grid's children become the list's tiles in place: a tile still shown keeps its element, and its place unless the
+// order changed around it (the longest run already in the list's order stays, the others move); gone tiles leave first,
+// new ones go in. The tiles that cover the window are placed now, the rest in later tasks (a newer render stops them;
+// until then the old ones stay below), with the edit-mode marks.
 function fillGrid(grid, list, { css, win }) {
   const ed = editing(), job = ++gridJob;
+  adoptFirst(grid, css);
+  const at = new Map(list.map((c, i) => [c.id, i])), shown = new Map();   // card id -> its tile in the grid now
+  for (const el of [...grid.children]) { const id = el.dataset.open; if (!at.has(id) || shown.has(id)) el.remove(); else shown.set(id, el); }
+  const now = [...shown.values()], stay = new Set([...longestRun(now.map(el => at.get(el.dataset.open)))].map(i => now[i]));
+  let last = null;                                         // the last tile placed
   const put = (from, to, mark = false) => {
-    const html = list.slice(from, to).map((c, i) => tileHtml(c, { eager: from + i < 8, css })), els = new Array(html.length), miss = [];
-    for (let i = 0; i < html.length; i++) { const t = gridTiles.get(list[from + i].id); if (t && t.html === html[i] && t.ed === ed) els[i] = t.el; else miss.push(i); }
-    if (miss.length) {
-      const tpl = document.createElement("template");
-      tpl.innerHTML = miss.map(i => html[i]).join("");
-      const fresh = [...tpl.content.children];
-      miss.forEach((i, k) => { els[i] = fresh[k]; gridTiles.set(list[from + i].id, { html: html[i], el: fresh[k], ed }); });
+    to = Math.min(to, list.length);
+    const els = [], made = [];
+    for (let i = from; i < to; i++) {
+      const c = list[i], html = tileHtml(c, { css }), t = gridTiles.get(c.id);
+      if (t && t.css !== css && t.html.replace(`sizes="${t.css}px"`, `sizes="${css}px"`) === html) {   // another tile size: its picture's sizes only
+        t.el.querySelector("img.art")?.setAttribute("sizes", `${css}px`); t.html = html; t.css = css;
+      }
+      if (t && t.html === html && (ed || !t.ed)) { t.ed = ed; els.push(t.el); } else { els.push(null); made.push([i, html]); }
     }
-    if (!mark) { grid.append(...els); return; }
-    const frag = document.createDocumentFragment();     // edit mode: the marks mountGrid and mountTiles gave the first ones
-    frag.append(...els); inline.markTiles(frag, S.selected); previews.mountTiles(frag); grid.append(frag);
+    if (made.length) {
+      const tpl = document.createElement("template");
+      tpl.innerHTML = made.map(([i, html]) => (i < GRID_EAGER ? tileHtml(list[i], { css, eager: true }) : html)).join("");
+      const fresh = [...tpl.content.children];
+      made.forEach(([i, html], k) => { els[i - from] = fresh[k]; gridTiles.set(list[i].id, { html, el: fresh[k], ed, css }); });
+    }
+    const add = els.filter(el => el.parentNode !== grid);   // new, or back from an earlier render
+    if (mark && add.length) { const frag = document.createDocumentFragment(); frag.append(...add); inline.markTiles(frag, S.selected); previews.mountTiles(frag); }
+    let next = last ? last.nextSibling : grid.firstChild;
+    els.forEach((el, k) => {
+      const old = shown.get(list[from + k].id);
+      if (old && old !== el) { if (old === next) next = next.nextSibling; old.remove(); }   // made anew: its markup changed
+      while (next && next !== el && !stay.has(next)) next = next.nextSibling;             // one that moves: placed in its turn
+      if (next === el) next = el.nextSibling; else grid.insertBefore(el, next);
+      last = el;
+    });
+    if (to === list.length) while (last?.nextSibling) last.nextSibling.remove();
   };
   // tiles are 200 px tall or more and 144 px wide or more (with the gap): enough to keep the scroll position
   const first = win.all ? list.length : Math.max(GRID_FIRST, (Math.floor(win.w / 144) + 1) * Math.ceil((win.y + 2 * win.h) / 200));
-  if (list.length <= first) { put(0, list.length); return; }
   put(0, first);
+  if (first >= list.length) return;
   let k = first;
   const step = () => {
     if (job !== gridJob || !grid.isConnected) return;
@@ -537,6 +598,35 @@ function fillGrid(grid, list, { css, win }) {
     if (k < list.length) setTimeout(step);
   };
   setTimeout(step);
+}
+// the positions in seq of a longest increasing run (patience sorting)
+function longestRun(seq) {
+  const tails = [], prev = new Array(seq.length);
+  seq.forEach((v, i) => {
+    let lo = 0, hi = tails.length;
+    while (lo < hi) { const m = (lo + hi) >> 1; if (seq[tails[m]] < v) lo = m + 1; else hi = m; }
+    prev[i] = lo ? tails[lo - 1] : -1;
+    tails[lo] = i;
+  });
+  const run = new Set();
+  for (let i = tails.length ? tails[tails.length - 1] : -1; i >= 0; i = prev[i]) run.add(i);
+  return run;
+}
+// index.html's first screen (build_site first_screen): link tiles whose pictures are already in. The first render makes
+// each one that is its card's tile as the site draws it now the grid's tile in place: the flag and deck button added, no
+// href (a tile like the others: no link drag in edit mode). Any other (a staged edit, say) fillGrid replaces.
+function adoptFirst(grid, css) {
+  for (const a of grid.querySelectorAll(":scope > a.tile:not([data-open])")) {
+    const c = S.byId.get(decodeURIComponent((a.getAttribute("href") || "").slice(2, -1))), t = document.createElement("template");
+    if (!c) continue;
+    t.innerHTML = tileHtml(c, { link: true, eager: !!$("img.art", a)?.hasAttribute("fetchpriority"), css });
+    if (!t.content.firstElementChild?.isEqualNode(a)) continue;
+    const html = tileHtml(c, { css }), meta = $(".meta", a);
+    t.innerHTML = html;
+    for (const el of [...t.content.firstElementChild.children]) if (!el.matches(".art, .meta")) a.insertBefore(el, meta);
+    a.removeAttribute("href"); a.dataset.open = c.id; a.tabIndex = 0;
+    gridTiles.set(c.id, { html, el: a, ed: false, css });
+  }
 }
 function tableHtml(list, p, win) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
@@ -1184,9 +1274,9 @@ function deckDiscord(d) {
 
 // ---- interactions ----------------------------------------------------------------------------------
 function refresh(id) {
-  const inDeck = deckHas(id);
-  gridTiles.delete(id);
+  const inDeck = deckHas(id), t = gridTiles.get(id), c = S.byId.get(id);
   for (const b of $$(".add[data-id]")) if (b.dataset.id === id) { b.classList.toggle("in", inDeck); b.textContent = inDeck ? "✓ In deck" : "+ Deck"; }
+  if (t?.el.isConnected && c) t.html = tileHtml(c, { css: t.css }); else gridTiles.delete(id);   // its tile, changed in place, stays
   if (!modal.hidden && parseHash().name === "card") openCard(parseHash().arg);
   else if (parseHash().name === "deck") renderDeck(parseHash());
 }
