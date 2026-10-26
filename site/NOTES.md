@@ -1178,3 +1178,20 @@ Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan
   `#/card/<old id>`, share codes, saved hands).
 - AutoCroissant `tests/test_card_bake.py::test_a_rename_bake_moves_the_files_and_everything_keyed_by_them`,
   `tests/test_site_build.py::test_a_renamed_card_goes_on_and_its_old_page_redirects`.
+
+## 35. A subseries across series (2026-10-25, owner: "if i click just a subseries i should see all cards under that subseries regardless of series, but i can filter by series if i want")
+- A subseries is one name across series (the same name under Kirby and Mario is one subseries), and a card may have one
+  without a series. This replaces "always inside one series" in § 10 (buckets) and § 24 (autofill, pinned tray).
+- Filter bar: the Subseries select lists each name once (a picked series: the names its cards use); picking one shows
+  every series' cards, the Series select narrows them, and changing or removing the series keeps the subseries. The card
+  page's subseries chip links to `#/cards?subseries=…` alone; "More from <subseries>" is every series' cards.
+- Editor (edit.js, inline.js, tray.js, tokens.js): subseries buckets and pins are plain names (an older tab's
+  `[series, name]` bucket or `{s}` pin reads as its name); the name list, `canonical`, `addBucket`, drops, pinned boxes and
+  Rename everywhere ignore the series ("New subseries…" needs no picked series; a drop sets it on cards of any series;
+  a rename renames it on every card).
+- Stats: the series chart keeps each series' subseries under it (a subseries in two series shows under both); cards
+  with a subseries but no series go under "No series", last (shown only then; it links to `missing=series`). The
+  Subseries tile counts names.
+- AutoCroissant: the changelog and the history count the same subseries in another series (or without one) as a series
+  change (`card_history.same_series`; the 2026-10-20 split still is none). Test:
+  `tests/test_site_stats.py::test_a_subseries_is_one_name_across_series`.

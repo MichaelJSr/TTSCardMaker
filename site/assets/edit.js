@@ -108,8 +108,6 @@ export const NAME_MAX = 60;                        // characters, an emoji count
 /** A name's comparison key: case and spacing don't count. */
 export const nameKey = s => String(s ?? "").toLowerCase().replace(/\s+/g, "");
 const NOUN = { series: "Series", subseries: "Subseries", author: "Author" };
-/** A subseries drop: the cards in `series` (case and spaces don't count) and the rest, refused. */
-export const splitBySeries = (cards, series) => ({ ok: cards.filter(c => nameKey(c.series) === nameKey(series)), refused: cards.filter(c => nameKey(c.series) !== nameKey(series)) });
 /** A typed series, subseries or author name: trimmed, spaces collapsed, and the known spelling when one has its nameKey.
  *  known: [spelling, shown, rank]; the highest rank wins (a [people] line, else the most cards). null when empty,
  *  {error} for a new name over NAME_MAX, else {name, existed, typed}. */
@@ -123,29 +121,25 @@ export function canonName(kind, raw, known = []) {
   if ([...typed].length > NAME_MAX) return { error: `${NOUN[kind] || "Names"} names are at most ${NAME_MAX} characters` };
   return { name: typed, existed: false, typed };
 }
-/** The toast when a typed name is a known one; series: the picked series of an existing subseries. */
-export const sameName = (kind, typed, name, series = "") => (kind === "author" ? (typed === name ? `“${name}” is already an author` : `“${typed}” is shown as ${name}`)
-  : series ? (typed === name ? `“${name}” is already a subseries of ${series}` : `“${typed}” is already the subseries ${name} of ${series}`)
+/** The toast when a typed name is a known one. */
+export const sameName = (kind, typed, name) => (kind === "author" ? (typed === name ? `“${name}” is already an author` : `“${typed}” is shown as ${name}`)
   : typed === name ? `“${name}” is already a ${kind}` : `“${typed}” is already the ${kind} ${name}`);
-/** sessionStorage's buckets, checked: {series: [name], subseries: [[series, name]], author: [name]}. */
+/** sessionStorage's buckets, checked: {series: [name], subseries: [name], author: [name]} (an older tab's [series, name]: its name). */
 export function readBuckets(text) {
   let b; try { b = JSON.parse(text); } catch { b = null; }
   const strs = a => (Array.isArray(a) ? a.filter(x => typeof x === "string" && x) : []);
-  return { series: strs(b?.series), author: strs(b?.author),
-    subseries: Array.isArray(b?.subseries) ? b.subseries.filter(x => Array.isArray(x) && x.length === 2 && strs(x).length === 2) : [] };
+  const subs = Array.isArray(b?.subseries) ? b.subseries.map(x => (Array.isArray(x) ? x[1] : x)) : [];
+  return { series: strs(b?.series), author: strs(b?.author), subseries: [...new Set(strs(subs))] };
 }
 
 // ---- Rename everywhere (edit mode): a value renamed on every card carrying it, one edit per card
 export const RENAME = { series: "series", subseries: "subseries", author: "author", subtype: "item type" };
-/** The cards carrying `from` as key (case and spacing don't count); a subseries: in `series` too. */
-export const carrying = (cards, key, from, series = "") => cards.filter(c => c[key] && nameKey(c[key]) === nameKey(from)
-  && (key !== "subseries" || nameKey(c.series) === nameKey(series)));
-/** A list's filter after a rename ({key, from, to, series}): {param: values} on the new name, or null (no filter on it;
- *  a subseries: not one in the renamed series, or shared, a name another series' cards keep). */
-export function renamedFilter(params, { key, from, to, series = "" }, shared = false) {
-  const pk = key === "subtype" ? "sub" : key, cur = params.get(pk), s = params.get("series");
+/** The cards carrying `from` as key (case and spacing don't count); a subseries: in any series. */
+export const carrying = (cards, key, from) => cards.filter(c => c[key] && nameKey(c[key]) === nameKey(from));
+/** A list's filter after a rename ({key, from, to}): {param: values} on the new name, or null (no filter on it). */
+export function renamedFilter(params, { key, from, to }) {
+  const pk = key === "subtype" ? "sub" : key, cur = params.get(pk);
   if (!cur?.split(",").some(v => nameKey(v) === nameKey(from))) return null;
-  if (key === "subseries" && (s ? nameKey(s) !== nameKey(series) : shared)) return null;
   return { [pk]: [...new Set(cur.split(",").map(v => (nameKey(v) === nameKey(from) ? to : v)))] };
 }
 /** The authors [people] lines ({git: shown}, staged over base) move: lowercase shown name -> new name, for a name that
@@ -160,8 +154,7 @@ export function peopleMoves(base, people) {
   return out;
 }
 /** The Rename button of a listed value (filter bar, pinned box, card tag): cls its class, text its label. */
-export const renameButton = (key, v, series = "", cls = "ghost", text = "⇄") => `<button type="button" class="${cls}" data-action="rename-value" data-rename-k="${key}" data-rename-v="${esc(v)}"${
-  series ? ` data-rename-s="${esc(series)}"` : ""} aria-label="${esc(`Rename the ${RENAME[key]} ${v} everywhere`)}" title="Rename everywhere">${esc(text)}</button>`;
+export const renameButton = (key, v, cls = "ghost", text = "⇄") => `<button type="button" class="${cls}" data-action="rename-value" data-rename-k="${key}" data-rename-v="${esc(v)}" aria-label="${esc(`Rename the ${RENAME[key]} ${v} everywhere`)}" title="Rename everywhere">${esc(text)}</button>`;
 
 /** op with the author set to v ("" -> from git), or without an author entry when v is the published author. */
 export function mergeAuthor(op, v, published) {
@@ -605,36 +598,28 @@ export function createEditor(app) {
   const opts = (list, cur) => list.map(([v, l]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(l)}</option>`).join("");
   const uniq = f => [...new Set(S.all.map(f).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   // the known names, buckets included; a bucket no card carries yet is pending ("no cards yet")
-  const carries = (f, v, series) => S.all.some(c => nameKey(c[f]) === nameKey(v) && (series === undefined || nameKey(c.series) === nameKey(series)));
-  const pending = () => ({ series: buckets.series.filter(v => !carries("series", v)), author: buckets.author.filter(v => !carries("author", v)),
-    subseries: buckets.subseries.filter(([s, v]) => !carries("subseries", v, s)) });
-  const ownSubseries = series => [...new Set([...uniq(x => (x.series === series ? x.subseries : null)), ...buckets.subseries.filter(([s]) => s === series).map(([, v]) => v)])];
+  const carries = (f, v) => S.all.some(c => nameKey(c[f]) === nameKey(v));
+  const pending = () => Object.fromEntries(["series", "subseries", "author"].map(f => [f, buckets[f].filter(v => !carries(f, v))]));
+  const subseriesList = () => [...new Set([...uniq(c => c.subseries), ...buckets.subseries])].sort((a, b) => a.localeCompare(b));   // every series'
   const seriesList = () => [...new Set([...uniq(c => c.series), ...buckets.series])].sort((a, b) => a.localeCompare(b));
   const authorList = () => [...new Set([...(S.data.people || []), ...S.all.map(c => c.author).filter(Boolean), ...buckets.author])].sort((a, b) => a.localeCompare(b));
-  // the name autofill's entries (tokens.js suggestNames): [{value, n (cards), note, own (in `series`), kind, series}]
-  function nameEntries(kind, series = "") {
+  // the name autofill's entries (tokens.js suggestNames): [{value, n (cards), note, kind}]
+  function nameEntries(kind) {
     const cards = n => (n ? `${n} card${n === 1 ? "" : "s"}` : "no cards yet"), count = new Map();
-    if (kind === "subseries") {                     // every [series, subseries] pair: a name in two series is two rows
-      for (const c of S.all) if (c.subseries) { const k = JSON.stringify([c.series || "", c.subseries]); count.set(k, (count.get(k) || 0) + 1); }
-      for (const pair of buckets.subseries) { const k = JSON.stringify(pair); if (!count.has(k)) count.set(k, 0); }
-      return [...count].map(([k, n]) => { const [s, value] = JSON.parse(k), own = !!series && nameKey(s) === nameKey(series);
-        return { value, n, own, kind, series: s, note: own ? cards(n) : `${s || "no series"} · ${cards(n)}` }; });
-    }
     if (kind === "subtype") {                      // the Items/ folders
       for (const c of S.all) if (c.subtype) count.set(c.subtype, (count.get(c.subtype) || 0) + 1);
       return ITEM_TYPES.map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
     }
-    if (kind !== "series" && kind !== "author") return [];
+    if (!["series", "subseries", "author"].includes(kind)) return [];
     for (const c of S.all) if (c[kind]) count.set(c[kind], (count.get(c[kind]) || 0) + 1);
-    return (kind === "author" ? authorList() : seriesList()).map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
+    return (kind === "author" ? authorList() : kind === "subseries" ? subseriesList() : seriesList()).map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
   }
-  function knownNames(kind, series = "", skip = "") {     // canonName's [spelling, shown, rank]: cards (skip: the one being edited, or a Set of ids), buckets, [people]
-    const rank = new Map(), own = s => (kind === "subseries" && series && s === series ? 1e6 : 0);   // the picked series' own subseries first
+  function knownNames(kind, skip = "") {     // canonName's [spelling, shown, rank]: cards (skip: the one being edited, or a Set of ids), buckets, [people]
+    const rank = new Map();
     const add = (v, by) => { if (v) rank.set(v, (rank.get(v) || 0) + by); };
     const skipped = skip instanceof Set ? id => skip.has(id) : id => id === skip;
-    for (const c of S.all) if (!skipped(c.id)) add(c[kind], 1 + own(c.series));
-    if (kind === "subseries") for (const [s, v] of buckets.subseries) add(v, own(s));
-    else for (const v of kind === "series" || kind === "author" ? buckets[kind] : []) add(v, 0);
+    for (const c of S.all) if (!skipped(c.id)) add(c[kind], 1);
+    for (const v of buckets[kind] || []) add(v, 0);
     const out = [...rank].map(([v, r]) => [v, v, r]);
     if (kind === "author") {                       // a [people] line wins: the bot resolves a name through it the same way
       for (const p of S.data.people || []) out.push([p, p, 0]);
@@ -642,19 +627,16 @@ export function createEditor(app) {
     }
     return out;
   }
-  const canonical = (kind, v, series = "", skip = "") => canonName(kind, v, knownNames(kind, series, skip));
-  function addBucket(kind, raw, series = "") {      // -> null (nothing typed), {error}, or {name, existed, note}
+  const canonical = (kind, v, skip = "") => canonName(kind, v, knownNames(kind, skip));
+  function addBucket(kind, raw) {                   // -> null (nothing typed), {error}, or {name, existed, note}
     if (!["series", "subseries", "author"].includes(kind)) return null;
-    if (kind === "subseries" && !series) return { error: "Pick a series to add a subseries" };
-    const r = canonical(kind, raw, series); if (!r || r.error) return r;
-    const here = kind === "subseries" ? ownSubseries(series).some(v => nameKey(v) === nameKey(r.name)) : r.existed;   // a subseries of another series is made here too
-    if (here) {                                     // shown nowhere in the filter bar: say why
-      const on = list => list.some(c => nameKey(c[kind]) === nameKey(r.name) && (kind !== "subseries" || c.series === series));
-      const why = on(S.cards) || (kind === "subseries" ? buckets.subseries.some(([s, v]) => s === series && v === r.name) : buckets[kind].includes(r.name)) ? ""
-        : on(S.all) ? ", on hidden cards only" : kind === "author" ? ", with no cards yet" : "";
-      return { name: r.name, existed: true, note: sameName(kind, r.typed, r.name, kind === "subseries" ? series : "") + why };
+    const r = canonical(kind, raw); if (!r || r.error) return r;
+    if (r.existed) {                                // shown nowhere in the filter bar: say why
+      const on = list => list.some(c => nameKey(c[kind]) === nameKey(r.name));
+      const why = on(S.cards) || buckets[kind].includes(r.name) ? "" : on(S.all) ? ", on hidden cards only" : kind === "author" ? ", with no cards yet" : "";
+      return { name: r.name, existed: true, note: sameName(kind, r.typed, r.name) + why };
     }
-    if (kind === "subseries") buckets.subseries.push([series, r.name]); else buckets[kind].push(r.name);
+    buckets[kind].push(r.name);
     try { sessionStorage.setItem(K.buckets, JSON.stringify(buckets)); } catch { /* storage full: kept for this page */ }
     return { name: r.name, existed: false, note: "" };
   }
@@ -881,7 +863,7 @@ export function createEditor(app) {
           ${row("subtype", `<select id="ef-subtype">${opts([["", "—"], ...ITEM_TYPES.map(t => [t, t[0].toUpperCase() + t.slice(1)]),
             ...[...new Set([c.subtype, psdVal(b, "subtype")])].filter(t => t && !ITEM_TYPES.includes(t)).map(t => [t, t])], c.subtype || "")}</select>`)}
           ${row("series", `<input id="ef-series" data-suggest="series" autocomplete="off" value="${esc(c.series || "")}" placeholder="—">`)}
-          ${row("subseries", `<input id="ef-subseries" data-suggest="subseries" data-series-from="ef-series" autocomplete="off" value="${esc(c.subseries || "")}" placeholder="—">`)}
+          ${row("subseries", `<input id="ef-subseries" data-suggest="subseries" autocomplete="off" value="${esc(c.subseries || "")}" placeholder="—">`)}
         </fieldset>
         <fieldset><legend>Notes, names and credit</legend>
           ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page" data-tokens>${esc(c.note || "")}</textarea>`)}
@@ -931,15 +913,13 @@ export function createEditor(app) {
     const int = id => (f(id).value.trim() === "" ? null : Math.max(0, Math.round(Number(f(id).value))));
     const str = id => (f(id).value.trim() || null);
     let error = "";                                  // a new name too long: shown in the summary, refused on submit
-    const named = (k, series = "") => {             // a changed series or subseries as its known spelling
+    const named = k => {                            // a changed series or subseries as its known spelling
       const v = str(k); if (v === val(b, k)) return v;
-      const r = canonical(k, v, series, c.id); if (r?.error) { error = r.error; return val(b, k); }
+      const r = canonical(k, v, c.id); if (r?.error) { error = r.error; return val(b, k); }
       return r ? r.name : null;
     };
-    let seriesRead;                                  // named("series") once: the subseries getter needs it too
-    const seriesName = () => (seriesRead === undefined ? (seriesRead = named("series")) : seriesRead);
     const all = {
-      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: seriesName, subseries: () => named("subseries", seriesName() || ""), stars: () => int("stars"),
+      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: () => named("series"), subseries: () => named("subseries"), stars: () => int("stars"),
       types: () => [...document.querySelectorAll("#ef-types .on")].map(x => x.dataset.type),
       ...Object.fromEntries(STATS.map(s => [s, () => int(s)])),
       ability: () => f("ability").value.replace(/\r/g, "").trim() || null, note: () => f("note").value.trim() || null,
@@ -972,7 +952,7 @@ export function createEditor(app) {
       else op.set[k] = v;
     }
     if (f("author") && f("author").value.trim() !== (b.author || "")) {
-      const r = canonical("author", f("author").value, "", c.id), a = r?.name || "";
+      const r = canonical("author", f("author").value, c.id), a = r?.name || "";
       if (r?.error) error = r.error; else if (a !== (b.author || "")) op.author = a || null;
     }
     if (f("banned")) {
@@ -1001,8 +981,8 @@ export function createEditor(app) {
   const opFor = c => (stage.cards[c.id] ? structuredClone(stage.cards[c.id]) : { id: c.id, key: c.key, name: baseOf(c).name, set: {}, unset: [] });
   const put = (id, op) => { if (opEmpty(op)) delete stage.cards[id]; else stage.cards[id] = op; };
   // a typed series, subseries or author as its known spelling ("mario" -> Mario), with a toast; undefined when refused
-  function spell(kind, v, series, id) {
-    const r = canonical(kind, v, series, id);
+  function spell(kind, v, id) {
+    const r = canonical(kind, v, id);
     if (r?.error) { app.toast(r.error); return undefined; }
     if (r?.existed && r.name !== r.typed) app.toast(kind === "author" ? sameName(kind, r.typed, r.name) : `“${r.typed}” saved as ${r.name}, its known spelling`);
     return r ? r.name : v;
@@ -1016,7 +996,7 @@ export function createEditor(app) {
     if (one && (f === "ability" || !one.rule)) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
     let x = fromInput(f, v, b.name);
     if (ART_FIELDS.includes(f) && x != null) { x = x.replace(/\s+/g, " "); if (artError(f, x)) { if (!defer) app.toast(artError(f, x)); return null; } }
-    if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, f === "subseries" ? c.series || "" : "", c.id)) === undefined) return null;
+    if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, c.id)) === undefined) return null;
     const op = mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x);
     put(c.id, op); if (!defer) save();
     return op;
@@ -1044,7 +1024,7 @@ export function createEditor(app) {
     const c = find(id); if (!c) return null;
     const b = baseOf(c);
     if (b.dup) { if (!defer) app.toast("A duplicate's author follows the original"); return null; }
-    const a = defer ? String(v ?? "").trim() : spell("author", String(v ?? "").trim(), "", c.id); if (a === undefined) return null;
+    const a = defer ? String(v ?? "").trim() : spell("author", String(v ?? "").trim(), c.id); if (a === undefined) return null;
     const op = mergeAuthor(opFor(c), a, b.author);
     put(c.id, op); if (!defer) save();
     return op;
@@ -1061,27 +1041,21 @@ export function createEditor(app) {
     return op;
   }
   // one save for the lot -> {changed (a card already at v doesn't count), dups (an author drop leaves duplicates alone),
-  // kept (a series drop: cards keeping a subseries the new series lacks), refused (a subseries drop: cards not in its
-  // series, as staged), value, error}. v is spelled once, here: a drop chip's value (the lists mountGrid's chips come
-  // from) stays as it is, so cards can join either of two spellings of a name; other text goes through canonical().
-  // series: a subseries' series (a pinned box's), else the first card's (the filter bar's list is all in one series)
-  function stageMany(ids, key, v, { series: ser = "" } = {}) {
-    const series = key === "subseries" ? ser || find(ids[0])?.series || "" : "";
-    let refused = 0;
-    if (key === "subseries") { const r = splitBySeries(ids.map(find).filter(Boolean), series); refused = r.refused.length; ids = r.ok.map(c => c.id); }
-    const chips = key === "series" ? seriesList() : key === "subseries" ? ownSubseries(series) : key === "author" ? authorList() : [];
-    const r = chips.includes(v) ? { name: v } : canonical(key, v, series);
-    if (r?.error) return { changed: 0, dups: 0, kept: 0, refused: 0, value: v, error: r.error };
-    const value = r ? r.name : v, moved = [], own = key === "series" ? ownSubseries(value) : [];   // before the drop
+  // value, error}. v is spelled once, here: a drop chip's value (the lists mountGrid's chips come from) stays as it is,
+  // so cards can join either of two spellings of a name; other text goes through canonical(). A subseries: any card's.
+  function stageMany(ids, key, v) {
+    const chips = key === "series" ? seriesList() : key === "subseries" ? subseriesList() : key === "author" ? authorList() : [];
+    const r = chips.includes(v) ? { name: v } : canonical(key, v);
+    if (r?.error) return { changed: 0, dups: 0, value: v, error: r.error };
+    const value = r ? r.name : v;
     let changed = 0, dups = 0;
     for (const id of ids) {
       const was = JSON.stringify(stage.cards[id] ?? null);
       if (key === "author" && find(id) && baseOf(find(id)).dup) { dups++; continue; }
-      if ((key === "author" ? stageAuthor(id, value, true) : stageField(id, key, value, true)) && JSON.stringify(stage.cards[id] ?? null) !== was) { changed++; moved.push(id); }
+      if ((key === "author" ? stageAuthor(id, value, true) : stageField(id, key, value, true)) && JSON.stringify(stage.cards[id] ?? null) !== was) changed++;
     }
     save();
-    const kept = key === "series" ? moved.filter(id => { const s = find(id)?.subseries; return s && !own.includes(s); }).length : 0;
-    return { changed, dups, kept, refused, value, series };
+    return { changed, dups, value };
   }
   function revert(id, item) {
     const c = find(id), op = stage.cards[id]; if (!c || !op) return;
@@ -1102,15 +1076,15 @@ export function createEditor(app) {
   // (stageField / stageAuthor). Onto a known name: merged, in its spelling; an item type: an Items/ folder; a duplicate's
   // author follows its original; an author's [people] lines move too (replace_author did), cards they carry need no edit.
   // -> null (nothing typed), {error}, or {name, change (ids to edit), cards (changing), people {git: name}, others, dups}
-  function renamePlan(key, from, typed, series = "") {
-    const cards = carrying(S.all, key, from, series), ids = new Set(cards.map(c => c.id));
+  function renamePlan(key, from, typed) {
+    const cards = carrying(S.all, key, from), ids = new Set(cards.map(c => c.id));
     let name;
     if (key === "subtype") {
       name = String(typed ?? "").trim().toLowerCase();
       if (!name) return null;
       if (!ITEM_TYPES.includes(name)) return { error: `Item types are the Items folders: ${ITEM_TYPES.join(", ")}` };
     } else {
-      const r = canonName(key, typed, knownNames(key, series, ids).filter(([, shown]) => nameKey(shown) !== nameKey(from)));   // from's own spelling can change
+      const r = canonName(key, typed, knownNames(key, ids).filter(([, shown]) => nameKey(shown) !== nameKey(from)));   // from's own spelling can change
       if (!r || r.error) return r;
       name = r.name;
     }
@@ -1125,11 +1099,11 @@ export function createEditor(app) {
       change = moved.filter(c => !raw(c) || now.get(raw(c).toLowerCase()) !== name);
     }
     return { name, change: change.map(c => c.id), cards: moved.length, people, dups: dups.length,
-      others: carrying(S.all, key, name, series).filter(c => !ids.has(c.id)).length };
+      others: carrying(S.all, key, name).filter(c => !ids.has(c.id)).length };
   }
   const idle = p => !p || !!p.error || (!p.change.length && !Object.keys(p.people).length);
-  function renameAll(key, from, typed, series = "") {      // stages the plan, one save
-    const p = renamePlan(key, from, typed, series);
+  function renameAll(key, from, typed) {      // stages the plan, one save
+    const p = renamePlan(key, from, typed);
     if (idle(p)) return p;
     const was = { ...S.data.peopleMap, ...sentPeople() };
     for (const [g, v] of Object.entries(p.people)) if (was[g] === v) delete stage.people[g]; else stage.people[g] = v;
@@ -1138,18 +1112,18 @@ export function createEditor(app) {
     return p;
   }
   const cardsN = n => `${n} card${n === 1 ? "" : "s"}`;
-  function openRename(key, from, series = "") {
+  function openRename(key, from) {
     if (!RENAME[key] || !from) return;
     if (!me) { openHub(`Sign in to rename ${from}.`); return; }
     const noun = RENAME[key], back = app.currentCard();
     app.showDialog(`<h3>Rename the ${noun} “${esc(from)}” everywhere</h3>
-      <form id="rename-form" autocomplete="off"><p class="muted">Every card with it${key === "subseries" ? ` in ${esc(series || "no series")}` : ""}, hidden ones too, gets its own edit in your batch, published with the rest in one commit. A name that exists merges them into it.</p>
-        <input id="rn-to" class="wide" data-suggest="${key}"${key === "subseries" ? ` data-series="${esc(series)}"` : ""} value="${esc(from)}" aria-label="New ${noun}">
+      <form id="rename-form" autocomplete="off"><p class="muted">Every card with it${key === "subseries" ? ", in any series" : ""}, hidden ones too, gets its own edit in your batch, published with the rest in one commit. A name that exists merges them into it.</p>
+        <input id="rn-to" class="wide" data-suggest="${key}" value="${esc(from)}" aria-label="New ${noun}">
         <p class="edit-summary muted" id="rn-summary" aria-live="polite"></p>
         <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="rename-cancel">Cancel</button></div></form>`);
     const form = app.modal.querySelector("#rename-form"), input = form.querySelector("#rn-to"), btn = form.querySelector("[type=submit]");
     const update = () => {
-      const p = renamePlan(key, from, input.value, series);
+      const p = renamePlan(key, from, input.value);
       const ppl = Object.keys(p?.people || {});
       btn.disabled = idle(p);
       form.querySelector("#rn-summary").innerHTML = !p ? "Type the new name." : p.error ? `<span class="err">${esc(p.error)}</span>`
@@ -1161,18 +1135,18 @@ export function createEditor(app) {
     input.addEventListener("input", update);
     form.addEventListener("submit", e => {
       e.preventDefault();
-      const p = renameAll(key, from, input.value, series);
+      const p = renameAll(key, from, input.value);
       if (idle(p)) { update(); return; }
       app.toast(`${cardsN(p.cards)}: ${noun} → ${p.name} · ${count()} unpublished`);
-      const detail = { key, from, to: p.name, series }, shared = carrying(S.all, key, from).length > 0;   // a subseries other series keep
+      const detail = { key, from, to: p.name };
       document.dispatchEvent(new CustomEvent("value-renamed", { detail }));   // the pinned boxes follow (tray.js)
       if (back) {                                  // the list under the card: its filter follows
-        const [path, q = ""] = S.listHash.split("?"), params = new URLSearchParams(q), u = /^#?\/?(cards)?$/.test(path) && renamedFilter(params, detail, shared);
+        const [path, q = ""] = S.listHash.split("?"), params = new URLSearchParams(q), u = /^#?\/?(cards)?$/.test(path) && renamedFilter(params, detail);
         if (u) { for (const [k, v] of Object.entries(u)) params.set(k, v.join(",")); S.listHash = `${path}?${params}`; }
         app.goCard(back); return;
       }
       app.closeModal();
-      const r = app.route(), u = r.name === "cards" && renamedFilter(r.params, detail, shared);   // a filter on the old name follows it
+      const r = app.route(), u = r.name === "cards" && renamedFilter(r.params, detail);   // a filter on the old name follows it
       if (u) app.setParams(u); else app.rerender();
     });
     update();
@@ -1909,7 +1883,7 @@ export function createEditor(app) {
     "rate-add": el => { const id = el.dataset.id, v = k => document.getElementById(`rate-${k}`)?.value ?? "";   // a duplicate's page: its original's id
       if (!stageRating(id, { favorability: v("favorability"), power: v("power") })) return;
       const top = app.modal.scrollTop; app.goCard(app.currentCard() || id); app.modal.scrollTop = top; },
-    "rename-value": el => openRename(el.dataset.renameK, el.dataset.renameV, el.dataset.renameS || ""),
+    "rename-value": el => openRename(el.dataset.renameK, el.dataset.renameV),
     "rename-cancel": () => { const id = app.currentCard(); if (id) app.goCard(id); else app.closeModal(); },
     "edit-show-hidden": el => { S.showHidden = el.checked; localStorage.setItem(K.hidden, el.checked ? "1" : ""); app.derive(); app.rerender(); },
   };
@@ -1933,7 +1907,7 @@ export function createEditor(app) {
     // inline editing (inline.js): single fields into the same batch, and the known values for its lists; the drafts
     stageField, stageAuthor, stageMany, value: val, drafts: cardDrafts,
     // new series, subseries and authors from the filter bar (buckets: pending = no card carries it yet)
-    options: () => ({ series: seriesList(), ownSubseries, authors: authorList(), buckets: pending() }),
+    options: () => ({ series: seriesList(), subseries: subseriesList(), authors: authorList(), buckets: pending() }),
     addBucket,
     // image previews (preview.js): GitHub calls with the token, its scopes, and what the PSD prints of a card's fields
     github: (path, opts) => gh(path, opts), get scopes() { return scopes; },
@@ -1961,7 +1935,7 @@ export function createEditor(app) {
     },
     myRating: id => stage.cards[id]?.rate || null,
     names: nameEntries,
-    canonical: (kind, v, series) => canonical(kind, v, series),
+    canonical: (kind, v) => canonical(kind, v),
     renamePlan, renameAll,
   };
 }
