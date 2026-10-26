@@ -1,5 +1,5 @@
 import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
-import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges, commitAfter } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges, commitAfter, noted } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
@@ -745,8 +745,8 @@ function dupsOf(c) {      // the other cards printed from the same PSD
   const original = c.dup ? S.byId.get(c.dup) : c;
   return original ? [original, ...(original.dups || []).map(x => S.byId.get(x))].filter(x => x && x.id !== c.id) : [];
 }
-function strip(title, cards) {
-  return cards.length ? `<h3><span class="muted">${cards.length}</span> ${esc(title)}</h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
+function strip(title, cards, tip = "") {
+  return cards.length ? `<h3><span class="muted">${cards.length}</span> ${noted(title, tip)}</h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
 }
 function openCard(id, showDetails = false) {
   const c = S.byId.get(id);
@@ -803,7 +803,7 @@ function openCard(id, showDetails = false) {
         <div class="related">
           <div id="card-balance">${balanceHtml(c)}</div>
           <div id="card-ratings">${ratings.blockHtml(ratedOf(c), { editing: editing(), mine: editor.myRating(ratedOf(c).id) })}</div>
-          ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
+          ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions, "Cards its ability text names")}${strip("Mentioned by", mentionedBy, "Cards whose ability text names this card")}${strip("Similar stats", similar(c), "The 8 cards of the same kind nearest in HP, DEF, ATK and SPD, star level weighed in")}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
           <div id="history-slot">${historyHtml(c, S.data.repo, S.history?._shas)}</div>
@@ -985,7 +985,7 @@ function renderDeck(r) {
   const counts = { banned: cards.filter(c => S.banned.has(c.id)).length };
   view.innerHTML = `<div class="deck">
     <section>
-      ${readOnly ? `<div class="panel"><b>Shared hand: ${esc(d.name)}</b> · ${v.count}/${v.slots} cards <button type="button" class="primary" data-action="save-shared">Save a copy to my decks</button></div>` : ""}
+      ${readOnly ? `<div class="panel"><b>Shared hand: ${esc(d.name)}</b> · ${noted(`${v.count}/${v.slots} cards`, D.CHECK_TIP)} <button type="button" class="primary" data-action="save-shared">Save a copy to my decks</button></div>` : ""}
       <div class="panel"><h3>${readOnly ? "" : `<input id="deck-name" value="${esc(d.name)}" aria-label="Deck name" style="font:inherit;font-weight:700;background:transparent;border:0;color:inherit;width:100%">`}</h3>
         <p class="muted">7 creatures and 10 items, one of each, none banned, plus an optional field card (≤${D.FIELD_MAX_STARS}★) for the shop.</p>
         ${groups}
@@ -995,8 +995,8 @@ function renderDeck(r) {
       </div>
     </section>
     <aside>
-      <div class="panel"><h3>${v.complete ? "✅ Legal hand" : `Checks · ${v.count}/${v.slots} cards`}</h3><ul class="checks">${v.checks.map(c => `<li class="${c.ok ? "ok" : "err"}">${c.ok ? "✓" : "✗"} ${esc(c.text)}</li>`).join("")}</ul>
-        ${cards.length ? `<p class="muted">Average total stats: ${(cards.filter(c => c.hp != null).reduce((s, c) => s + total(c), 0) / Math.max(1, cards.filter(c => c.hp != null).length)).toFixed(1)} · banned: ${counts.banned}</p>` : ""}</div>
+      <div class="panel"><h3>${v.complete ? "✅ Legal hand" : `Checks · ${noted(`${v.count}/${v.slots} cards`, D.CHECK_TIP)}`}</h3><ul class="checks">${v.checks.map(c => `<li class="${c.ok ? "ok" : "err"}">${c.ok ? "✓" : "✗"} ${esc(c.text)}</li>`).join("")}</ul>
+        ${cards.length ? `<p class="muted">${noted("Average total stats", "Mean HP + DEF + ATK + SPD of the hand's cards with stats; field card left out")}: ${(cards.filter(c => c.hp != null).reduce((s, c) => s + total(c), 0) / Math.max(1, cards.filter(c => c.hp != null).length)).toFixed(1)} · banned: ${counts.banned}</p>` : ""}</div>
       ${readOnly ? "" : `<div class="panel"><h3>Build</h3><div class="actions">
         <button type="button" data-action="deck-random" title="Fill the rest of the hand with random legal cards">Fill randomly</button>
         <button type="button" class="danger" data-action="deck-clear">Clear</button></div></div>`}

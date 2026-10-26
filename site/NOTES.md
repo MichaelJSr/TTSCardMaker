@@ -1320,3 +1320,10 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   language (`compile`). Params `cf=` (keep the cards it matches) and `xcf=` (drop them), one param per search, repeated,
   never a comma list (`MULTI`, app.js `setParams`), so any search round-trips; a link applies them for anyone, and its
   chips offer Save. AutoCroissant `tests/test_site_custom_filters.py`.
+
+## 40. Stat notes (2026-10-26, owner: "for tables where appropriate ... a very small footnote ... on hover that explains what the stat is")
+- One short sentence per number or column that needs it, through the site's `data-tip` (tip.js: hover, tap on touch), on
+  the column header or the stat's label, never on each cell. text.js `noteHtml`/`noted` wrap the label in `.qn` (cursor
+  help, a faint dotted underline); `headHtml` takes `{label | html, tip}` heads (stats.js `table`, `heatTable`), and
+  `chartCard`'s `tip` option notes a chart's title. Fact chips keep their own look: their note is the chip's `data-tip`.
+- A note says exactly what the code computes (scope, filters, rounding, which cards count); change it with the code.

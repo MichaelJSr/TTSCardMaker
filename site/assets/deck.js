@@ -6,6 +6,7 @@ export const HAND = [
   { kind: "item", label: "Items", tiers: [[4, 2], [3, 3], [2, 3], [1, 2]] },
 ];
 export const FIELD_MAX_STARS = 3;
+export const CHECK_TIP = "Cards in the hand, field card not counted, of the 17 a starting hand holds";   // the Checks' count (validate)
 const SLOTS = HAND.reduce((n, g) => n + g.tiers.reduce((m, [, k]) => m + k, 0), 0);
 
 // ---- storage -------------------------------------------------------------------------------------

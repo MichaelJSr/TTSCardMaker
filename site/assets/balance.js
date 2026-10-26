@@ -1,7 +1,7 @@
 // Balance: the Stats page's Balance section and each card's Balance block, from data/analytics.json (build/analytics.py).
 // Charts follow stats.js (dataviz method): thin marks, hairline grid, legends for two series, a table view for each.
 // DOM-free: every function returns HTML, every string goes through esc.
-import { esc, diffWords, badgeHtml, dateFmt, commitLink } from "./text.js";
+import { esc, diffWords, badgeHtml, dateFmt, commitLink, noted } from "./text.js";
 import { chartCard as card, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole } from "./stats.js";
 
 const KINDS = { creature: "creatures", minion: "minions" };
@@ -34,6 +34,9 @@ export function cardData(A, c, byId) {
   if (!A || !c) return null;
   return A.cards[c.id] || (c.dup && A.cards[c.dup]) || null;
 }
+/** the monthly chart's columns' notes (changeKind) */
+const KIND_TIP = { text: "Wording changes with no stat change", stats: "Changes to stats or to the number of creatures on the card",
+  other: "Everything else: stars, kind, item type, types, series, ability spacing" };
 /** a change row's kind for the monthly chart: each counted once; null: timing tags only (not counted) */
 export function changeKind(r) {
   if (r.stats || r.lines) return "stats";
@@ -237,13 +240,14 @@ export function balanceBlock(c, A, { byId } = {}) {
       : ` Fewer than ${A.minCohort} ${KINDS[cohort.kind]} have ${c.stars ?? "no"}★, so it is compared with all of them.`) : "";
     const several = c.creatures?.length > 1 ? " (creature 1)" : "";
     const rows = [["This card" + several, ...line.map(v => (v == null ? "—" : String(v))), String(total)],
-      [`Median of ${name}`, ...["hp", "def", "atk", "spd", "total"].map(k => fmt(cohort[k].p50))],
-      ["Middle 80%", ...["hp", "def", "atk", "spd", "total"].map(k => `${fmt(cohort[k].p10)}–${fmt(cohort[k].p90)}`)]];
-    out.push(`<h3>Balance</h3><p class="bal-line"><b>Total ${total}</b>, ${esc(where)}.${esc(folded)}</p>
+      [noted(`Median of ${name}`, "Each column's own median among these cards (Total: the median total)"), ...["hp", "def", "atk", "spd", "total"].map(k => fmt(cohort[k].p50))],
+      [noted("Middle 80%", "Each column's 10th to 90th percentile among these cards"), ...["hp", "def", "atk", "spd", "total"].map(k => `${fmt(cohort[k].p10)}–${fmt(cohort[k].p90)}`)]];
+    const ranked = a.flags?.length ? noted(where, "By rank among the cards named, ties counted half; only in groups of 5 or more") : esc(where);
+    out.push(`<h3>Balance</h3><p class="bal-line"><b>Total ${total}</b>, ${ranked}.${esc(folded)}</p>
       <div class="table-wrap"><table class="data bal-vs"><thead><tr><th></th>${STATS.map(([, l]) => `<th class="num">${l}</th>`).join("")}<th class="num">Total</th></tr></thead>
-      <tbody>${rows.map(r => `<tr>${r.map((v, i) => (i ? `<td class="num">${esc(v)}</td>` : `<td>${esc(v)}</td>`)).join("")}</tr>`).join("")}</tbody></table></div>`);
+      <tbody>${rows.map((r, k) => `<tr>${r.map((v, i) => (i ? `<td class="num">${esc(v)}</td>` : `<td>${k ? v : esc(v)}</td>`)).join("")}</tr>`).join("")}</tbody></table></div>`);
     if (c._staged || c._sent) out.push(`<p class="muted">As built, before this card's unpublished edits.</p>`);
-    if (a.trend?.length > 1) out.push(`<div class="bal-trend"><span class="muted">Total over time</span>${sparkline(a.trend)}</div>`);
+    if (a.trend?.length > 1) out.push(`<div class="bal-trend"><span class="muted">${noted("Total over time", "Its total stats over its recorded versions, a point per stat change; totals over 40 left out")}</span>${sparkline(a.trend)}</div>`);
   }
   return out.join("");
 }
@@ -260,7 +264,7 @@ export function changesBlock(c, A, { byId, texts = null, repo = "" } = {}) {
       const when = (r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts))) + (link && `<br>${link}`);
       return `<li><span class="when">${when}</span><div>${parts.join("<br>")}${diff}</div></li>`;
     }).join("");
-    out.push(`<h3>Recorded changes</h3><ol class="bal-changes">${items}</ol>`);
+    out.push(`<h3>${noted("Recorded changes", "Changes between its recorded versions; buff: total stats up, nerf: down")}</h3><ol class="bal-changes">${items}</ol>`);
   }
   return out.join("");
 }
@@ -287,9 +291,12 @@ export function statsHtml(A, { cards, byId }, params) {
   }).filter(r => r.n);
   if (rows.length) {
     charts.push(card("bal-cohorts", "Total stats by star level", "Band: middle 80%. Tick: median. Dots: top and bottom 10%.",
-      strips(rows), table(["Star level", "Cards", "Lowest", "Bottom of the middle 80%", "Median", "Top of the middle 80%", "Highest", "Average"],
+      strips(rows), table([{ label: "Star level", tip: "Star levels with under 5 cards have no row of their own, only the All row" },
+        { label: "Cards", tip: "Creatures and minions with all four stats in this group, across all series" }, "Lowest",
+        { label: "Bottom of the middle 80%", tip: "10th percentile: about 10% of the row's cards have a lower total" }, "Median",
+        { label: "Top of the middle 80%", tip: "90th percentile: about 10% of the row's cards have a higher total" }, "Highest", "Average"],
         rows.map(r => { const t = A.cohorts[r.key].total; return [r.label, r.n, t.min ?? "—", t.p10, t.p50, t.p90, t.max ?? "—", t.mean]; })),
-      { wide: true, legend: legend([["var(--s1)", "Top 10%", "", L({ bal: "top" })], ["var(--s2)", "Bottom 10%", "", L({ bal: "bottom" })], ["color-mix(in srgb, var(--s1) 28%, transparent)", "Middle 80%"]]) }));
+      { wide: true, tip: "HP + DEF + ATK + SPD of every creature and minion with all four stats; dots: cards in scope", legend: legend([["var(--s1)", "Top 10%", "", L({ bal: "top" })], ["var(--s2)", "Bottom 10%", "", L({ bal: "bottom" })], ["color-mix(in srgb, var(--s1) 28%, transparent)", "Middle 80%"]]) }));
 
     // 2 outliers: distance from the star level's median
     const flagged = [...members.entries()].flatMap(([k, ms]) => ms.filter(([, a]) => a.flags?.length).map(([id, a]) => {
@@ -301,8 +308,9 @@ export function statsHtml(A, { cards, byId }, params) {
       const bars = [...ups, ...downs].map(f => ({ ...f, tip: `${f.label}: total ${f.total}, median of ${cohortName(f.k, f.co)} ${fmt(f.co.total.p50)}` }));
       charts.push(card("bal-outliers", "Strongest and weakest for their star level", "Total minus its star level's median.",
         diverging(bars, { unit: "vs median" }),
-        table(["Card", "Star level", "Total", "Median", "Difference", "Lower totals"], flagged.map(f => [f.label, cohortName(f.k, f.co), f.total, f.co.total.p50, f.value, `${f.a.below} of ${f.co.n}`]), 2),
-        { legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
+        table(["Card", "Star level", "Total", "Median", { label: "Difference", tip: "Its total minus the median total of its star level" },
+          { label: "Lower totals", tip: "Cards of its star level with a lower total, of all of them" }], flagged.map(f => [f.label, cohortName(f.k, f.co), f.total, f.co.total.p50, f.value, `${f.a.below} of ${f.co.n}`]), 2),
+        { tip: "Cards in scope in the top or bottom 10% of their star level; the chart shows 10 each way", legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
     }
 
     // 3 over time: small multiples, one per star level
@@ -311,8 +319,8 @@ export function statsHtml(A, { cards, byId }, params) {
     const multi = months.length && panels.length ? multiples(months, panels, A.minCohort) : "";
     charts.push(card("bal-time", "Average total by star level over time", multi ? "Average total per star level, by month." : "",
       multi ? `<div class="multiples">${multi}</div>` : `<p class="muted">Needs a full-history build.</p>`,
-      multi ? table(["Month", ...panels.map(p => p.label)], months.map((m, i) => [monthLabel(m), ...panels.map(p => (p.points[i] && p.points[i][0] >= A.minCohort ? `${fmt(p.points[i][1])} (${p.points[i][0]})` : "—"))]), 1) : "",
-      { wide: true }));
+      multi ? table(["Month", ...panels.map(p => ({ label: p.label, tip: "Average total that month (cards counted); — under 5 cards" }))], months.map((m, i) => [monthLabel(m), ...panels.map(p => (p.points[i] && p.points[i][0] >= A.minCohort ? `${fmt(p.points[i][1])} (${p.points[i][0]})` : "—"))]), 1) : "",
+      { wide: true, tip: multi ? "At each month's end, the cards as they were then (deleted ones too); totals over 40 left out" : "" }));
   }
 
   // power creep (by year created): a card's total minus its star level's median, as built
@@ -328,8 +336,8 @@ export function statsHtml(A, { cards, byId }, params) {
     charts.push(card("bal-creep", "Power creep", "Average total vs its star level's median, by year created.",
       diverging(yearRows.filter(r => r.n >= 3).map(r => ({ label: `${r.y} (${r.n})`, value: Math.round(r.s * 10) / 10, tip: `${r.y}: ${r.n} creatures and minions, average total ${fmt(r.t)}`,
         href: L({ cohort: "any", q: `created==${r.y}` }) })), { unit: "vs median", labelW: 110 }),
-      table(["Year", "Cards", "Average vs median", "Average total"], yearRows.map(r => [r.y, r.n, Math.round(r.s * 10) / 10, Math.round(r.t * 10) / 10])),
-      { legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
+      table(["Year", "Cards", { label: "Average vs median", tip: "Mean of each card's total minus its star level's median (all of its kind if few)" }, "Average total"], yearRows.map(r => [r.y, r.n, Math.round(r.s * 10) / 10, Math.round(r.t * 10) / 10])),
+      { tip: "Creatures and minions by year created; the chart leaves out years with under 3 cards", legend: legend([["var(--s1)", "Above the median"], ["var(--s2)", "Below the median"]]) }));
 
   // the recorded changes in scope
   const changes = [];
@@ -347,8 +355,9 @@ export function statsHtml(A, { cards, byId }, params) {
     const sums = x => x.r.stats.map(l => l.reduce((s, v) => s + v, 0));
     charts.push(card("bal-buffs", "Buffs and nerfs by month", "Buffs raise total stats; nerfs lower them.",
       updown(cols, { every: Math.ceil(cols.length / 12) }),
-      table(["Date", "Card", "Change", "Total"], [...bal, ...shifts].sort((x, y) => y.r.ts - x.r.ts).map(x => [day(x.r.ts), byId.get(x.id)?.name || x.id, x.r.bal === "buff" ? "Buff" : x.r.bal === "nerf" ? "Nerf" : "Stats moved", sums(x).join(" → ")]), 3),
-      { wide: true, legend: legend([["var(--s1)", "Buffs", "", L({ change: "buff" })], ["var(--s2)", "Nerfs", "", L({ change: "nerf" })]]) }));
+      table(["Date", "Card", { label: "Change", tip: "Buff: total rose; Nerf: total fell; Stats moved: same total, stats shifted" },
+        { label: "Total", tip: "HP + DEF + ATK + SPD before and after the change" }], [...bal, ...shifts].sort((x, y) => y.r.ts - x.r.ts).map(x => [day(x.r.ts), byId.get(x.id)?.name || x.id, x.r.bal === "buff" ? "Buff" : x.r.bal === "nerf" ? "Nerf" : "Stats moved", sums(x).join(" → ")]), 3),
+      { wide: true, tip: "From recorded versions, by Pacific month; changes with a total over 40 aren't counted", legend: legend([["var(--s1)", "Buffs", "", L({ change: "buff" })], ["var(--s2)", "Nerfs", "", L({ change: "nerf" })]]) }));
   } else charts.push(card("bal-buffs", "Buffs and nerfs", "", `<p class="bal-empty">No buffs or nerfs recorded yet.</p>`, ""));
   if (bal.length || shifts.length) {                  // by stat: the points each stat gained and lost
     const per = STATS.map(([k, label]) => ({ label, up: 0, down: 0, n: 0, upHref: L({ change: `${k}+` }), downHref: L({ change: `${k}-` }) }));
@@ -357,8 +366,8 @@ export function statsHtml(A, { cards, byId }, params) {
       per.forEach((p, i) => { p.up += Math.max(0, b[i] - a[i]); p.down += Math.max(0, a[i] - b[i]); if (a[i] !== b[i]) p.n++; });
     }
     charts.push(card("bal-stats", "Buffs and nerfs by stat", "Stat points raised and lowered.", twoSided(per),
-      table(["Stat", "Raised", "Lowered", "Net", "Changes"], per.map(p => [p.label, p.up, p.down, p.up - p.down, p.n])),
-      { legend: legend([["var(--s1)", "Raised"], ["var(--s2)", "Lowered"]]) }));
+      table(["Stat", "Raised", "Lowered", "Net", { label: "Changes", tip: "Buffs, nerfs and stat moves in scope that changed this stat" }], per.map(p => [p.label, p.up, p.down, p.up - p.down, p.n])),
+      { tip: "Points each stat gained and lost over all buffs, nerfs and stat moves in scope", legend: legend([["var(--s1)", "Raised"], ["var(--s2)", "Lowered"]]) }));
   }
 
   // 5 changes by month (timing tags only: left out)
@@ -373,8 +382,8 @@ export function statsHtml(A, { cards, byId }, params) {
     charts.push(card("bal-months", "Recorded changes by month", "Changes per month, by what changed.",
       stacked(labels, SERIES, (cat, key) => byLabel.get(cat).v[key], { unit: "changes", every: Math.ceil(labels.length / 12),
         href: (cat, key) => L({ month: byLabel.get(cat).m, change: key }) }),
-      table(["Month", ...SERIES.map(s => s.label), "All"], months.map((m, i) => { const v = counts.get(m); return [labels[i], v.text, v.stats, v.other, v.text + v.stats + v.other]; })),
-      { wide: true, legend: legend(SERIES.map(s => [s.color, s.label, "", L({ change: s.key })])) }));
+      table(["Month", ...SERIES.map(s => ({ label: s.label, tip: KIND_TIP[s.key] })), "All"], months.map((m, i) => { const v = counts.get(m); return [labels[i], v.text, v.stats, v.other, v.text + v.stats + v.other]; })),
+      { wide: true, tip: "Each change counted once (stats before wording); timing-tag-only changes left out", legend: legend(SERIES.map(s => [s.color, s.label, "", L({ change: s.key })])) }));
   }
 
   // 6 most reworked
@@ -386,7 +395,9 @@ export function statsHtml(A, { cards, byId }, params) {
     const what = p => [p.text && plural(p.text, "rewording"), p.stats && plural(p.stats, "stat change"), p.stars && plural(p.stars, "star, kind or item type change"), p.types && plural(p.types, "type change")].filter(Boolean).join(", ");
     charts.push(card("bal-reworked", "Most reworked cards", "Wording, stats, stars, kind or types changed.",
       hbar(top.slice(0, 15).map(t => ({ label: t.name, value: t.p.n, card: t.id })), { labelWidth: 190, unit: "changes" }),
-      table(["Card", "Changes", "Rewordings", "Stats", "Stars, kind, item type", "Types", "Last"], top.map(t => [t.name, t.p.n, t.p.text, t.p.stats, t.p.stars, t.p.types, day(t.p.last)]))));
+      table(["Card", { label: "Changes", tip: "Changes to its wording, stats, stars, kind, item type, types or creatures" }, "Rewordings",
+        { label: "Stats", tip: "Changes to its stats or its number of creatures" }, "Stars, kind, item type", "Types",
+        { label: "Last", tip: "Date of its newest such change (Pacific time)" }], top.map(t => [t.name, t.p.n, t.p.text, t.p.stats, t.p.stars, t.p.types, day(t.p.last)]))));
   }
 
   if (!charts.length) return "";

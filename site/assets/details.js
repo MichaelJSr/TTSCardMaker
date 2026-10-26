@@ -2,7 +2,7 @@
 // AutoCroissant's psd_details.json), on the card page and on each rulebook page. DOM-free at import: app.js renders
 // detailsHtml() and mount()s it.
 import { editorFields } from "./changes.js";
-import { esc } from "./text.js";
+import { esc, noted } from "./text.js";
 
 const STATE_KEY = "psd-details";                         // sessionStorage: {details: open?, <section>: open?, "font:<name>": open?}
 const STATS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
@@ -20,7 +20,7 @@ const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 const list = items => (items.length ? `<ul class="plain">${items.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<p class="muted">None.</p>`);
 // a section the bot couldn't read is a short string; a missing one was never recorded
 const part = (v, render) => (v === undefined ? `<p class="muted">Not recorded.</p>` : typeof v === "string" ? `<p class="muted">${esc(v)}</p>` : render(v));
-const sec = (id, title, n, body, state, attrs = "") => `<details class="sec" data-sec="${id}"${state[id] ? " open" : ""}${attrs}><summary>${esc(title)}${n != null ? ` <span class="muted">${n}</span>` : ""}</summary><div>${body}</div></details>`;
+const sec = (id, title, n, body, state, attrs = "", tip = "") => `<details class="sec" data-sec="${id}"${state[id] ? " open" : ""}${attrs}><summary>${esc(title)}${n != null ? ` <span class="muted">${noted(String(n), tip)}</span>` : ""}</summary><div>${body}</div></details>`;
 
 export function readState(storage) {
   try { const s = JSON.parse(storage.getItem(STATE_KEY) || "{}"); return s && typeof s === "object" && !Array.isArray(s) ? s : {}; } catch { return {}; }
@@ -49,7 +49,7 @@ const fontsHtml = (fonts, state = {}) => {
 const textHtml = text => {
   const rows = arr(text).map(obj);
   if (!rows.length) return `<p class="muted">No text layers.</p>`;
-  return `<div class="table-wrap"><table><tr><th>Layer</th><th>Text</th><th>Font</th><th>Size</th><th>Colour</th><th>Visible</th></tr>${rows.map(t => {
+  return `<div class="table-wrap"><table><tr><th>Layer</th><th>Text</th><th>Font</th><th>${noted("Size", "Font size of the layer's first text run, as stored (before any layer scaling)")}</th><th>Colour</th><th>Visible</th></tr>${rows.map(t => {
     const color = HEX.test(t.color || "") ? t.color.toLowerCase() : "";
     return `<tr${t.visible === false ? ' class="off"' : ""}><td>${esc(t.layer)}</td><td class="wrap">${esc(ctl(t.text))}</td><td><code>${esc(t.font ?? "")}</code></td><td class="num">${t.size != null ? num(t.size) : ""}</td><td>${color ? `<i class="swatch" style="background:${color}"></i>${color}` : ""}</td><td>${t.visible === false ? "hidden" : "yes"}</td></tr>`;
   }).join("")}</table></div>`;
@@ -117,9 +117,9 @@ export function bodyHtml(rec, card, extras, state = {}) {
   const head = [r.at ? `PSD read ${esc(String(r.at).slice(0, 10))}` : "", r.parser != null ? `parser v${esc(r.parser)}` : "", r.path ? esc(r.path) : ""].filter(Boolean).join(" · ");
   const n = v => (typeof v === "string" ? null : count(v)), card_ = !extras?.page;
   return `${head ? `<p class="muted">${head}</p>` : ""}${[
-    sec("fonts", "Fonts", n(r.fonts), part(r.fonts, v => fontsHtml(v, state)), state),
+    sec("fonts", "Fonts", n(r.fonts), part(r.fonts, v => fontsHtml(v, state)), state, "", "Fonts of the visible text layers"),
     sec("text", "Text layers", n(r.text), part(r.text, textHtml), state),
-    sec("effects", "Effects", n(r.effects), part(r.effects, effectsHtml), state),
+    sec("effects", "Effects", n(r.effects), part(r.effects, effectsHtml), state, "", "Layers with layer effects, switched-off ones included"),
     sec("smart", "Smart objects", n(r.smart_objects), part(r.smart_objects, v => list(arr(v))), state),
     sec("canvas", "Canvas", null, part(r.canvas, canvasHtml), state),
     sec("icons", "Type icons", null, Object.hasOwn(ICONS, r.icons) ? iconsHtml(r.icons) : part(r.icons === undefined ? undefined : String(r.icons), () => ""), state),   // a value is a string too
@@ -127,7 +127,7 @@ export function bodyHtml(rec, card, extras, state = {}) {
     card_ && sec("words", "Status-word layers", (n(r.fx) ?? 0) + (n(r.overlays) ?? 0), wordsHtml(r.fx, r.overlays), state),
     card_ && sec("template", "Template", null, part(r.template, templateHtml), state),
     sec("parser", "Parser", null, parserHtml(card, extras), state),
-    sec("tree", "Layer tree", n(r.tree), state.tree ? part(r.tree, treeHtml) : `<div class="tree-slot"></div>`, state, state.tree ? ' data-done="1"' : ""),
+    sec("tree", "Layer tree", n(r.tree), state.tree ? part(r.tree, treeHtml) : `<div class="tree-slot"></div>`, state, state.tree ? ' data-done="1"' : "", "Top-level layers and groups; nested layers not counted"),
   ].filter(Boolean).join("")}`;
 }
 

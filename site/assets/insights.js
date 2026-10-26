@@ -56,8 +56,10 @@ export function ratingsHtml({ cards }, params) {
     const ups = favs.filter(x => d(x) > 0).slice(0, 10), downs = favs.filter(x => d(x) < 0).slice(-10);
     charts.push(card("rat-fav", "Favourites and least liked", `Favorability, 1–10; bars from the average (${fmt(m)}).`,
       diverging([...ups, ...downs].map(x => ({ label: x.c.name, value: d(x), id: x.c.id, tip: `${x.c.name}: ${x.r.value} favorability` })), { unit: "vs average" }),
-      table(["Card", "Favorability", "Raters", "Last rated"], favs.map(x => [x.c.name, x.r.value, x.r.raters, dayLabel(x.r.date)]), 1),
-      { legend: legend([["var(--s1)", "Above the average"], ["var(--s2)", "Below the average"]]) }));
+      table(["Card", { label: "Favorability", tip: "Mean of each rater's latest favorability, 1–10; a group rating counts as one rater" },
+        { label: "Raters", tip: "People who rated its favorability; a TTS session's group counts as one" },
+        { label: "Last rated", tip: "Date of the newest rating counted" }], favs.map(x => [x.c.name, x.r.value, x.r.raters, dayLabel(x.r.date)]), 1),
+      { tip: "Cards with a group rating or 3+ raters; bars: favorability minus these cards' average", legend: legend([["var(--s1)", "Above the average"], ["var(--s2)", "Below the average"]]) }));
   }
 
   // S5 most divisive: people's latest favorability (not the group's), 3+ of them; spread = population SD
@@ -72,7 +74,8 @@ export function ratingsHtml({ cards }, params) {
     if (rows.length) {
       rows.sort((a, b) => b.sd - a.sd || a.c.name.localeCompare(b.c.name));
       charts.push(card("rat-divisive", "Most divisive", "Spread of raters' favorability; 3+ raters.", dotRows(rows.slice(0, 10)),
-        table(["Card", "Raters", "Spread", "Lowest", "Highest"], rows.map(r => [r.c.name, r.raters.length, round1(r.sd), r.lo, r.hi]))));
+        table(["Card", { label: "Raters", tip: "People with a favorability rating; group ratings not counted" },
+          { label: "Spread", tip: "Standard deviation of each person's latest favorability; group ratings left out" }, "Lowest", "Highest"], rows.map(r => [r.c.name, r.raters.length, round1(r.sd), r.lo, r.hi]))));
     }
   }
 
@@ -89,8 +92,9 @@ export function ratingsHtml({ cards }, params) {
     const bars = [...moves.filter(x => x.d > 0).slice(0, 8), ...moves.filter(x => x.d < 0).slice(-8)];
     charts.push(card("rat-movers", "Risers and fallers", "Favorability, first rating to now.",
       diverging(bars.map(x => ({ label: x.c.name, value: x.d, id: x.c.id, tip: `${x.c.name}: ${x.from.value} → ${x.to.value} (${dayLabel(x.from.date)} → ${dayLabel(x.to.date)})` })), { unit: "favorability" }),
-      table(["Card", "First", "Now", "Change", "From", "To"], moves.map(x => [x.c.name, x.from.value, x.to.value, signed(x.d), dayLabel(x.from.date), dayLabel(x.to.date)])),
-      { legend: legend([["var(--s1)", "Rose"], ["var(--s2)", "Fell"]]) }));
+      table(["Card", { label: "First", tip: "Favorability on its first rating day: the mean of that day's ratings" },
+        { label: "Now", tip: "Mean of each rater's latest favorability" }, "Change", "From", { label: "To", tip: "Date of the newest rating counted in Now" }], moves.map(x => [x.c.name, x.from.value, x.to.value, signed(x.d), dayLabel(x.from.date), dayLabel(x.to.date)])),
+      { tip: "Cards whose favorability moved 0.5 or more since their first rating day", legend: legend([["var(--s1)", "Rose"], ["var(--s2)", "Fell"]]) }));
   }
 
   return `<h2 class="bal-title">Ratings</h2><p class="muted bal-intro">From TTS sessions and card pages.</p>
@@ -117,7 +121,7 @@ export function historyHtml({ cards }, params) {
     const href = (y, k) => (k === "" ? null : L({ q: `created==${y}`, author: k }));     // Others: no filter
     charts.push(card("hist-created", "Cards created per year", "By author; the rest as Others.", stacked(years, series, get, { width: 560, href }),
       table(["Year", ...series.map(s => s.label), "All"], years.map(y => [y, ...series.map(s => get(y, s.key)), series.reduce((n, s) => n + get(y, s.key), 0)])),
-      { legend: legend(series.map(s => [s.color, s.label, "", s.key ? L({ author: s.key }) : null])) }));
+      { tip: "Cards by the year they were created, as on their card pages; the top 4 authors, the rest Others", legend: legend(series.map(s => [s.color, s.label, "", s.key ? L({ author: s.key }) : null])) }));
   }
 
   // S13 text freshness: the year a card's ability last changed (its current text's start), else its creation
@@ -134,7 +138,8 @@ export function historyHtml({ cards }, params) {
     for (let y = Math.min(...ys); y <= Math.max(...ys); y++) years.push(String(y));
     charts.push(card("hist-fresh", "Text freshness", "Cards by the year their ability last changed.",
       columns(years.map(y => ({ label: y, value: fresh.get(y)?.n || 0, href: L({ fresh: y }) })), { width: 560, height: 200 }),
-      table(["Year", "Cards", "Oldest card that year"], years.map(y => [y, fresh.get(y)?.n || 0, fresh.get(y)?.c?.name || ""]), 1)));
+      table(["Year", "Cards", { label: "Oldest card that year", tip: "The card whose current text started earliest that year" }], years.map(y => [y, fresh.get(y)?.n || 0, fresh.get(y)?.c?.name || ""]), 1),
+      { tip: "The year each card's current ability text started; without text history, the year it was created" }));
   }
 
   return charts.length ? `<h2 class="bal-title">History</h2><div class="charts">${charts.join("")}</div>` : "";

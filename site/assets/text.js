@@ -7,6 +7,11 @@ export const dateFmt = opts => { let f = null; return d => (f ||= new Intl.DateT
 export const commitLink = (repo, sha, label) => (repo && sha ? `<a class="commit-link" href="https://github.com/${esc(repo)}/commit/${esc(sha)}" target="_blank" rel="noopener" aria-label="${esc(label)}">commit</a>` : "");
 /** " · commit" after a date, the dot kept with the link when the line wraps ("" without one) */
 export const commitAfter = (repo, sha, label) => { const a = commitLink(repo, sha, label); return a && ` <span class="commit-at">· ${a}</span>`; };
+/** html with a short note in its tooltip (a column header or a stat's label, never each cell): the faint dotted cue (.qn) */
+export const noteHtml = (html, note) => (note ? `<span class="qn" data-tip="${esc(note)}">${html}</span>` : html);
+export const noted = (label, note) => noteHtml(esc(label), note);
+/** a table head cell's content: text, {html}, or either with a note ({label | html, tip}) */
+export const headHtml = h => (h && typeof h === "object" ? noteHtml(h.html ?? esc(h.label), h.tip) : esc(h));
 export const LOGIN_RE = /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/;              // a GitHub login (here: login.js and decks.js need it without profile.js)
 export const norm = s => String(s || "").toLowerCase().replace(/[\s_\-.'’]+/g, "");
 
