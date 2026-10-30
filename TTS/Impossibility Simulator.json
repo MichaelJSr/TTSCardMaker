@@ -183798,8 +183798,8 @@
       "GridProjection": false,
       "HideWhenFaceDown": false,
       "Hands": false,
-      "LuaScript": "local colorCycle = {\n    {0, 1, 0},  -- Green\n    {1, 1, 0},  -- Yellow\n    {1, 0, 0},  -- Red\n}\n\nlocal stateNames = {\n    \"Has not taken its turn\", -- Green\n    \"Is taking its turn\",     -- Yellow\n    \"Has taken its turn\"      -- Red\n}\n\nlocal currentIndex = 1\nlocal lastUpY = nil\nlocal ready = true\n\nfunction onLoad(saved_data)\n    if saved_data ~= \"\" then\n        local loaded = JSON.decode(saved_data)\n        currentIndex = loaded.currentIndex or 1\n    end\n\n    applyState()\n\n    lastUpY = self.getTransformUp().y\n    startLuaCoroutine(self, \"watchFlip\")\nend\n\nfunction onSave()\n    return JSON.encode({\n        currentIndex = currentIndex\n    })\nend\n\nfunction watchFlip()\n    while true do\n        coroutine.yield(0)\n\n        local upY = self.getTransformUp().y\n\n        -- Detect sign change (object flipped)\n        if ready and (upY * lastUpY < 0) then\n            ready = false\n            advanceColor()\n        end\n\n        -- Reset trigger once flip settles\n        if math.abs(upY) > 0.9 then\n            ready = true\n        end\n\n        lastUpY = upY\n    end\nend\n\nfunction advanceColor()\n    currentIndex = currentIndex + 1\n    if currentIndex > #colorCycle then\n        currentIndex = 1\n    end\n\n    applyState()\nend\n\nfunction applyState()\n    self.setColorTint(colorCycle[currentIndex])\n    self.setName(stateNames[currentIndex])\nend",
-      "LuaScriptState": "{\"currentIndex\":1}",
+      "LuaScript": "",
+      "LuaScriptState": "",
       "XmlUI": ""
     },
     {
@@ -183846,8 +183846,8 @@
       "GridProjection": false,
       "HideWhenFaceDown": false,
       "Hands": false,
-      "LuaScript": "local colorCycle = {\n    {0, 1, 0},  -- Green\n    {1, 1, 0},  -- Yellow\n    {1, 0, 0},  -- Red\n}\n\nlocal stateNames = {\n    \"Has not taken its turn\", -- Green\n    \"Is taking its turn\",     -- Yellow\n    \"Has taken its turn\"      -- Red\n}\n\nlocal currentIndex = 1\nlocal lastUpY = nil\nlocal ready = true\n\nfunction onLoad(saved_data)\n    if saved_data ~= \"\" then\n        local loaded = JSON.decode(saved_data)\n        currentIndex = loaded.currentIndex or 1\n    end\n\n    applyState()\n\n    lastUpY = self.getTransformUp().y\n    startLuaCoroutine(self, \"watchFlip\")\nend\n\nfunction onSave()\n    return JSON.encode({\n        currentIndex = currentIndex\n    })\nend\n\nfunction watchFlip()\n    while true do\n        coroutine.yield(0)\n\n        local upY = self.getTransformUp().y\n\n        -- Detect sign change (object flipped)\n        if ready and (upY * lastUpY < 0) then\n            ready = false\n            advanceColor()\n        end\n\n        -- Reset trigger once flip settles\n        if math.abs(upY) > 0.9 then\n            ready = true\n        end\n\n        lastUpY = upY\n    end\nend\n\nfunction advanceColor()\n    currentIndex = currentIndex + 1\n    if currentIndex > #colorCycle then\n        currentIndex = 1\n    end\n\n    applyState()\nend\n\nfunction applyState()\n    self.setColorTint(colorCycle[currentIndex])\n    self.setName(stateNames[currentIndex])\nend",
-      "LuaScriptState": "{\"currentIndex\":1}",
+      "LuaScript": "",
+      "LuaScriptState": "",
       "XmlUI": ""
     },
     {
@@ -183894,8 +183894,8 @@
       "GridProjection": false,
       "HideWhenFaceDown": false,
       "Hands": false,
-      "LuaScript": "local colorCycle = {\n    {0, 1, 0},  -- Green\n    {1, 1, 0},  -- Yellow\n    {1, 0, 0},  -- Red\n}\n\nlocal stateNames = {\n    \"Has not taken its turn\", -- Green\n    \"Is taking its turn\",     -- Yellow\n    \"Has taken its turn\"      -- Red\n}\n\nlocal currentIndex = 1\nlocal lastUpY = nil\nlocal ready = true\n\nfunction onLoad(saved_data)\n    if saved_data ~= \"\" then\n        local loaded = JSON.decode(saved_data)\n        currentIndex = loaded.currentIndex or 1\n    end\n\n    applyState()\n\n    lastUpY = self.getTransformUp().y\n    startLuaCoroutine(self, \"watchFlip\")\nend\n\nfunction onSave()\n    return JSON.encode({\n        currentIndex = currentIndex\n    })\nend\n\nfunction watchFlip()\n    while true do\n        coroutine.yield(0)\n\n        local upY = self.getTransformUp().y\n\n        -- Detect sign change (object flipped)\n        if ready and (upY * lastUpY < 0) then\n            ready = false\n            advanceColor()\n        end\n\n        -- Reset trigger once flip settles\n        if math.abs(upY) > 0.9 then\n            ready = true\n        end\n\n        lastUpY = upY\n    end\nend\n\nfunction advanceColor()\n    currentIndex = currentIndex + 1\n    if currentIndex > #colorCycle then\n        currentIndex = 1\n    end\n\n    applyState()\nend\n\nfunction applyState()\n    self.setColorTint(colorCycle[currentIndex])\n    self.setName(stateNames[currentIndex])\nend",
-      "LuaScriptState": "{\"currentIndex\":1}",
+      "LuaScript": "",
+      "LuaScriptState": "",
       "XmlUI": ""
     },
     {
@@ -183942,8 +183942,8 @@
       "GridProjection": false,
       "HideWhenFaceDown": false,
       "Hands": false,
-      "LuaScript": "local colorCycle = {\n    {0, 1, 0},  -- Green\n    {1, 1, 0},  -- Yellow\n    {1, 0, 0},  -- Red\n}\n\nlocal stateNames = {\n    \"Has not taken its turn\", -- Green\n    \"Is taking its turn\",     -- Yellow\n    \"Has taken its turn\"      -- Red\n}\n\nlocal currentIndex = 1\nlocal lastUpY = nil\nlocal ready = true\n\nfunction onLoad(saved_data)\n    if saved_data ~= \"\" then\n        local loaded = JSON.decode(saved_data)\n        currentIndex = loaded.currentIndex or 1\n    end\n\n    applyState()\n\n    lastUpY = self.getTransformUp().y\n    startLuaCoroutine(self, \"watchFlip\")\nend\n\nfunction onSave()\n    return JSON.encode({\n        currentIndex = currentIndex\n    })\nend\n\nfunction watchFlip()\n    while true do\n        coroutine.yield(0)\n\n        local upY = self.getTransformUp().y\n\n        -- Detect sign change (object flipped)\n        if ready and (upY * lastUpY < 0) then\n            ready = false\n            advanceColor()\n        end\n\n        -- Reset trigger once flip settles\n        if math.abs(upY) > 0.9 then\n            ready = true\n        end\n\n        lastUpY = upY\n    end\nend\n\nfunction advanceColor()\n    currentIndex = currentIndex + 1\n    if currentIndex > #colorCycle then\n        currentIndex = 1\n    end\n\n    applyState()\nend\n\nfunction applyState()\n    self.setColorTint(colorCycle[currentIndex])\n    self.setName(stateNames[currentIndex])\nend",
-      "LuaScriptState": "{\"currentIndex\":1}",
+      "LuaScript": "",
+      "LuaScriptState": "",
       "XmlUI": ""
     },
     {
@@ -183990,8 +183990,8 @@
       "GridProjection": false,
       "HideWhenFaceDown": false,
       "Hands": false,
-      "LuaScript": "local colorCycle = {\n    {0, 1, 0},  -- Green\n    {1, 1, 0},  -- Yellow\n    {1, 0, 0},  -- Red\n}\n\nlocal stateNames = {\n    \"Has not taken its turn\", -- Green\n    \"Is taking its turn\",     -- Yellow\n    \"Has taken its turn\"      -- Red\n}\n\nlocal currentIndex = 1\nlocal lastUpY = nil\nlocal ready = true\n\nfunction onLoad(saved_data)\n    if saved_data ~= \"\" then\n        local loaded = JSON.decode(saved_data)\n        currentIndex = loaded.currentIndex or 1\n    end\n\n    applyState()\n\n    lastUpY = self.getTransformUp().y\n    startLuaCoroutine(self, \"watchFlip\")\nend\n\nfunction onSave()\n    return JSON.encode({\n        currentIndex = currentIndex\n    })\nend\n\nfunction watchFlip()\n    while true do\n        coroutine.yield(0)\n\n        local upY = self.getTransformUp().y\n\n        -- Detect sign change (object flipped)\n        if ready and (upY * lastUpY < 0) then\n            ready = false\n            advanceColor()\n        end\n\n        -- Reset trigger once flip settles\n        if math.abs(upY) > 0.9 then\n            ready = true\n        end\n\n        lastUpY = upY\n    end\nend\n\nfunction advanceColor()\n    currentIndex = currentIndex + 1\n    if currentIndex > #colorCycle then\n        currentIndex = 1\n    end\n\n    applyState()\nend\n\nfunction applyState()\n    self.setColorTint(colorCycle[currentIndex])\n    self.setName(stateNames[currentIndex])\nend",
-      "LuaScriptState": "{\"currentIndex\":1}",
+      "LuaScript": "",
+      "LuaScriptState": "",
       "XmlUI": ""
     },
     {
@@ -184038,8 +184038,8 @@
       "GridProjection": false,
       "HideWhenFaceDown": false,
       "Hands": false,
-      "LuaScript": "local colorCycle = {\n    {0, 1, 0},  -- Green\n    {1, 1, 0},  -- Yellow\n    {1, 0, 0},  -- Red\n}\n\nlocal stateNames = {\n    \"Has not taken its turn\", -- Green\n    \"Is taking its turn\",     -- Yellow\n    \"Has taken its turn\"      -- Red\n}\n\nlocal currentIndex = 1\nlocal lastUpY = nil\nlocal ready = true\n\nfunction onLoad(saved_data)\n    if saved_data ~= \"\" then\n        local loaded = JSON.decode(saved_data)\n        currentIndex = loaded.currentIndex or 1\n    end\n\n    applyState()\n\n    lastUpY = self.getTransformUp().y\n    startLuaCoroutine(self, \"watchFlip\")\nend\n\nfunction onSave()\n    return JSON.encode({\n        currentIndex = currentIndex\n    })\nend\n\nfunction watchFlip()\n    while true do\n        coroutine.yield(0)\n\n        local upY = self.getTransformUp().y\n\n        -- Detect sign change (object flipped)\n        if ready and (upY * lastUpY < 0) then\n            ready = false\n            advanceColor()\n        end\n\n        -- Reset trigger once flip settles\n        if math.abs(upY) > 0.9 then\n            ready = true\n        end\n\n        lastUpY = upY\n    end\nend\n\nfunction advanceColor()\n    currentIndex = currentIndex + 1\n    if currentIndex > #colorCycle then\n        currentIndex = 1\n    end\n\n    applyState()\nend\n\nfunction applyState()\n    self.setColorTint(colorCycle[currentIndex])\n    self.setName(stateNames[currentIndex])\nend",
-      "LuaScriptState": "{\"currentIndex\":1}",
+      "LuaScript": "",
+      "LuaScriptState": "",
       "XmlUI": ""
     },
     {

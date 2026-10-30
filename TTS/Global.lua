@@ -1,4 +1,4 @@
--- Impossibility Simulator: seat teams, large cards resized out of containers, card details on hover.
+-- Impossibility Simulator: seat teams, large cards resized out of containers, card details, turn markers.
 -- The save's global script: edit this file (TTS/Global.lua), never the save; Card sync writes it into the save.
 
 -- Seat -> TTS team; other seats get "None"
@@ -49,61 +49,69 @@ function onObjectLeaveContainer(container, obj)
     end, 3)
 end
 
--- Card details. Hover a card: a strip at the bottom of your screen explains its timing tags, types and the status
--- effects it names. Right-click a card > Card details: everything about it, in a panel with Rules buttons that open the
--- rulebook PDF at the chapter. Each player sees only their own; "Card info" turns the strip off. Data: the website's
--- data/tts.json and TTS/Rulebook/pages.json, fetched a moment after the save loads. No Lua patterns over long text
--- (MoonSharp's are limited): plain finds only.
+-- Card details: right-click a card > Card details. A panel only that player sees: drag it by its title bar, A- / A+
+-- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
+-- (status effects and others) spawn beside the card with a click. Data: the website's data/tts.json and
+-- TTS/Rulebook/pages.json, fetched a moment after the save loads. No Lua patterns over long text (MoonSharp's are
+-- limited): plain finds only.
 local DETAILS_URL = "https://michaeljsr.github.io/TTSCardMaker/data/tts.json"
 local PAGES_URL = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/TTS/Rulebook/pages.json"
 local RAW_PREFIX = "https://raw.githubusercontent.com/"
+local RAW_MAIN = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/"
 local SEATS = {"White", "Brown", "Red", "Orange", "Yellow", "Green", "Teal", "Blue", "Purple", "Pink", "Grey", "Black"}
 local BADGE = {turn = "#60a5fa", any = "#a78bfa", forced = "#f87171", trigger = "#fbbf24", neutral = "#cbd5e1"}
-local DIM = "#94a3b8"
-local STRIP_W, DETAILS_W, FONT = 760, 480, 14
-local RULE_BUTTONS = 4
+local DIM, HEAD = "#94a3b8", "#7dd3fc"
+local SIZES = {{w = 440, h = 540, f = 14}, {w = 540, h = 660, f = 16}, {w = 660, h = 800, f = 18}}
+local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 4, 6, 40, 30
+local BACKS = {{"Buff", "MDW/Assets/cardback_statuseffect.png"}, {"Debuff", "MDW/Assets/cardback_statuseffect.png"},
+    {"Creature", "MDW/Assets/cardback.png"}, {"Minion", "MDW/Assets/cardback.png"}, {"Auxiliary creature", "MDW/Assets/cardback.png"}}
 
 local details, tagCase, chapterPage, pageOfTitle = nil, {}, {}, {}
-local stripOff, pinned, open, hideToken, rulesFor, menued = {}, {}, {}, {}, {}, setmetatable({}, {__mode = "k"})
+local sizeOf, shown, menued, cardIndex = {}, {}, setmetatable({}, {__mode = "k"}), nil
 
 local function decode(text)
     local ok, data = pcall(JSON.decode, text or "")
     return ok and type(data) == "table" and data or nil
 end
 
-local function rulesRow(prefix)
-    local row = {tag = "HorizontalLayout", attributes = {id = prefix .. "_rules", rectAlignment = "LowerCenter", offsetXY = "0 8",
-        height = 28, spacing = 6, childForceExpandWidth = false, childAlignment = "MiddleLeft"}, children = {}}
-    for i = 1, RULE_BUTTONS do
-        table.insert(row.children, {tag = "Button", attributes = {id = prefix .. "_r" .. i, onClick = "openRules",
-            preferredWidth = 150, fontSize = 13, active = false}, value = "Rules"})
-    end
-    return row
+local function button(id, label, onClick, attrs)
+    local a = {id = id, onClick = onClick, fontSize = 13, textColor = "#e2e8f0", colors = "#334155|#475569|#1e293b|#33415580"}
+    for k, v in pairs(attrs or {}) do a[k] = v end
+    return {tag = "Button", attributes = a, value = label}
 end
 
-local function panel(id, color, align, pivot, offset, width, strip)
-    local kids = {
-        {tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperCenter", offsetXY = "0 -8", width = width - 20,
-            height = 44, fontSize = FONT, color = "#f1f5f9", alignment = "UpperLeft", horizontalOverflow = "Wrap",
-            verticalOverflow = "Truncate"}, value = ""},
-        rulesRow(id)}
-    if not strip then                                  -- the details panel closes with its button
-        table.insert(kids, {tag = "Button", attributes = {id = id .. "_close", rectAlignment = "UpperRight", offsetXY = "-6 -6",
-            width = 26, height = 26, fontSize = 14, onClick = "closeDetails"}, value = "X"})
-    end
-    return {tag = "Panel", attributes = {id = id, visibility = color, active = false, rectAlignment = align, pivot = pivot,
-        offsetXY = offset, width = width, height = 60, color = "#0b1220E6", raycastTarget = true,
-        onMouseEnter = strip and "stripEnter" or nil, onMouseExit = strip and "stripExit" or nil}, children = kids}
+local function row(id, prefix, n, onClick)
+    local r = {tag = "HorizontalLayout", attributes = {id = id, rectAlignment = "LowerLeft", height = ROW_H, spacing = 6,
+        childForceExpandWidth = false, childAlignment = "MiddleLeft", active = false}, children = {}}
+    for i = 1, n do table.insert(r.children, button(prefix .. i, "", onClick, {preferredWidth = 120, active = false})) end
+    return r
+end
+
+-- one seat's panel (its children placed by size(), below)
+local function detailsPanel(c)
+    local id = c .. "_d"
+    return {tag = "Panel", attributes = {id = id, visibility = c, active = false, allowDragging = true,
+        returnToOriginalPositionWhenReleased = false, rectAlignment = "MiddleRight", offsetXY = "-60 0", width = 540, height = 660,
+        color = "#0f1729F2", outline = "#3b4b6b", outlineSize = "2 -2"}, children = {
+        {tag = "Panel", attributes = {id = id .. "_head", rectAlignment = "UpperCenter", height = TITLE_H, color = "#1b2740"}, children = {
+            {tag = "Text", attributes = {id = id .. "_title", rectAlignment = "MiddleLeft", offsetXY = "12 0", height = TITLE_H,
+                fontStyle = "Bold", color = "#ffffff", alignment = "MiddleLeft", horizontalOverflow = "Overflow"}, value = ""},
+            button(id .. "_smaller", "A-", "detailsSize", {rectAlignment = "MiddleRight", offsetXY = "-84 0", width = 36, height = 28}),
+            button(id .. "_bigger", "A+", "detailsSize", {rectAlignment = "MiddleRight", offsetXY = "-44 0", width = 36, height = 28}),
+            button(id .. "_close", "X", "closeDetails", {rectAlignment = "MiddleRight", offsetXY = "-4 0", width = 36, height = 28})}},
+        {tag = "VerticalScrollView", attributes = {id = id .. "_scroll", rectAlignment = "UpperCenter", offsetXY = "0 -" .. (TITLE_H + 4),
+            color = "#00000000", scrollSensitivity = 30, horizontalScrollbarVisibility = "AutoHideAndExpandViewport",
+            verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {
+            {tag = "Panel", attributes = {id = id .. "_page", height = 100}, children = {
+                {tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
+                    alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}}}},
+        row(id .. "_rules", id .. "_r", RULE_BUTTONS, "openRules"),
+        row(id .. "_cards", id .. "_c", CARD_BUTTONS, "spawnNamed")}}
 end
 
 local function buildPanels()
     local xml = UI.getXmlTable() or {}
-    for _, c in ipairs(SEATS) do
-        table.insert(xml, panel(c .. "_strip", c, "LowerCenter", "0.5 0", "0 80", STRIP_W, true))
-        table.insert(xml, panel(c .. "_details", c, "MiddleLeft", "0 0.5", "20 0", DETAILS_W, false))
-        table.insert(xml, {tag = "Button", attributes = {id = c .. "_toggle", visibility = c, rectAlignment = "LowerRight",
-            offsetXY = "-10 10", width = 120, height = 26, fontSize = 13, onClick = "toggleStrip"}, value = "Card info: on"})
-    end
+    for _, c in ipairs(SEATS) do table.insert(xml, detailsPanel(c)) end
     UI.setXmlTable(xml)
 end
 
@@ -151,8 +159,19 @@ local function unescape(s)
     return table.concat(out)
 end
 
--- the card's PNG path in the card repo (raw.githubusercontent.com/owner/repo/ref/<path>), or nil (not a card, or
--- hidden from this player)
+-- a repo link's path (raw.githubusercontent.com/owner/repo/ref/<path>), or nil
+local function pathOf(url)
+    if not url or url:sub(1, #RAW_PREFIX) ~= RAW_PREFIX then return nil end
+    local at = #RAW_PREFIX + 1
+    for _ = 1, 3 do
+        local slash = url:find("/", at, true)
+        if not slash then return nil end
+        at = slash + 1
+    end
+    return unescape(url:sub(at))
+end
+
+-- the card's PNG path, or nil (not a card, or hidden from this player: face down or in another player's hand)
 local function cardPath(obj, color)
     if obj == nil or obj.isDestroyed() or obj.type ~= "Card" or obj.is_face_down then return nil end
     for _, other in ipairs(getSeatedPlayers()) do
@@ -166,14 +185,7 @@ local function cardPath(obj, color)
     if not url then
         for _, deck in pairs(obj.getData().CustomDeck or {}) do url = deck.FaceURL break end
     end
-    if not url or url:sub(1, #RAW_PREFIX) ~= RAW_PREFIX then return nil end
-    local at = #RAW_PREFIX + 1
-    for _ = 1, 3 do                                    -- past the owner, the repo and the commit
-        local slash = url:find("/", at, true)
-        if not slash then return nil end
-        at = slash + 1
-    end
-    return unescape(url:sub(at))
+    return pathOf(url)
 end
 
 local function badge(tag)
@@ -198,35 +210,6 @@ local function withBadges(text)
     return table.concat(out)
 end
 
-local function firstLine(text)
-    local nl = text:find("\n", 1, true)
-    return nl and text:sub(1, nl - 1) or text
-end
-
-local function lead(text, limit)                       -- the first line, cut at a space before limit
-    local first = firstLine(text)
-    if #first <= limit then return first end
-    local cut = limit
-    while cut > limit / 2 and first:byte(cut) ~= 32 do cut = cut - 1 end
-    return first:sub(1, cut > limit / 2 and cut - 1 or limit) .. "..."
-end
-
-local function kindLine(card)
-    local bits = {card.k}
-    if card.st then table.insert(bits, math.floor(card.st) .. "★") end
-    return table.concat(bits, " · ")
-end
-
--- the chapters a card's details point to: timing tags, its types', status effects
-local function chaptersOf(card)
-    local out, seen = {}, {}
-    local function add(id) if id and not seen[id] and details.chapters[id] then seen[id] = true table.insert(out, id) end end
-    if card.g then add("timing-tags") end
-    for _, t in ipairs(card.t or {}) do add((details.types[t] or {}).c) end
-    if card.x then add("status-effects") end
-    return out
-end
-
 local function visibleLength(line)                     -- without <tags>
     local n, i = 0, 1
     while true do
@@ -249,83 +232,106 @@ local function lines(text, perLine)
     return n
 end
 
-local function show(id, color, text, width, card)
-    local rules = chaptersOf(card)
-    rulesFor[color] = rules
-    for i = 1, RULE_BUTTONS do
-        local chapter = rules[i] and details.chapters[rules[i]]
-        UI.setAttribute(id .. "_r" .. i, "active", chapter and "true" or "false")
-        if chapter then UI.setValue(id .. "_r" .. i, chapter.title) end
-    end
-    local textHeight = math.min(900, lines(text, math.floor((width - 20) / (FONT * 0.52))) * math.ceil(FONT * 1.3) + 4)
-    UI.setValue(id .. "_text", text)
-    UI.setAttribute(id .. "_text", "height", textHeight)
-    UI.setAttribute(id, "height", textHeight + (#rules > 0 and 52 or 16))
-    UI.setAttribute(id, "active", "true")
+-- the chapters a card's details point to: timing tags, its types', status effects
+local function chaptersOf(card)
+    local out, seen = {}, {}
+    local function add(id) if id and not seen[id] and details.chapters[id] then seen[id] = true table.insert(out, id) end end
+    if card.g then add("timing-tags") end
+    for _, t in ipairs(card.t or {}) do add((details.types[t] or {}).c) end
+    if card.x then add("status-effects") end
+    return out
 end
 
-local function hide(id) UI.setAttribute(id, "active", "false") end
-
-local function stripText(card)
-    local out = {"<b>" .. card.n .. "</b>  <color=" .. DIM .. ">" .. kindLine(card) .. "</color>"}
-    for _, tag in ipairs(card.g or {}) do table.insert(out, badge(tag) .. " " .. details.tags[tag].m) end
-    for _, t in ipairs(card.t or {}) do
-        local info = details.types[t]
-        if info then table.insert(out, "<b>" .. info.n .. "</b>  " .. lead(info.x, 110)) end
-    end
+-- the cards a card's text names, to spawn: its status effects, then the others ({name, path})
+local function namedOf(card)
+    local out = {}
     for _, name in ipairs(card.x or {}) do
         local s = details.statuses[name]
-        if s then table.insert(out, "<b>" .. name .. "</b>  " .. lead(withBadges(s.x), 110)) end
+        if s and s.p then table.insert(out, {name, s.p}) end
     end
-    if #out == 1 then return nil end
-    table.insert(out, "<color=" .. DIM .. "><i>Right-click the card > Card details for everything</i></color>")
-    return table.concat(out, "\n")
+    for _, path in ipairs(card.m or {}) do
+        local c = details.cards[path]
+        if c then table.insert(out, {c.n, path}) end
+    end
+    return out
 end
 
 local function detailsText(card)
-    local out = {"<size=20><b>" .. card.n .. "</b></size>",
-        "<color=" .. DIM .. ">" .. kindLine(card) .. (card.by and (" · by " .. card.by) or "") .. "</color>"}
-    if card.s then table.insert(out, card.s) end
+    local bits = {card.k}
+    if card.st then table.insert(bits, math.floor(card.st) .. "★") end
+    if card.by then table.insert(bits, "by " .. card.by) end
+    local out = {"<color=" .. DIM .. ">" .. table.concat(bits, " · ") .. "</color>"}
+    if card.s then table.insert(out, "<b>" .. card.s .. "</b>") end
     if card.a then table.insert(out, "\n" .. withBadges(card.a)) end
+    local function section(title) table.insert(out, "\n<color=" .. HEAD .. "><b>" .. title .. "</b></color>") end
     if card.g then
-        table.insert(out, "\n<b>Timing tags</b>")
-        for _, tag in ipairs(card.g) do table.insert(out, badge(tag) .. " " .. details.tags[tag].m) end
+        section("TIMING TAGS")
+        for _, tag in ipairs(card.g) do table.insert(out, badge(tag) .. "  " .. details.tags[tag].m) end
     end
     local typed = {}
     for _, t in ipairs(card.t or {}) do
         local info = details.types[t]
-        if info then table.insert(typed, "<b>" .. info.n .. "</b>: " .. info.x) end
+        if info then table.insert(typed, "<b>" .. info.n .. "</b>  " .. info.x) end
     end
-    if #typed > 0 then table.insert(out, "\n<b>Types</b>\n" .. table.concat(typed, "\n")) end
+    if #typed > 0 then section("TYPES") for _, line in ipairs(typed) do table.insert(out, line) end end
     if card.x then
-        table.insert(out, "\n<b>Status effects</b>")
+        section("STATUS EFFECTS")
         for _, name in ipairs(card.x) do
             local s = details.statuses[name]
-            if s then table.insert(out, "<b>" .. name .. "</b> (" .. s.k .. "): " .. withBadges(s.x)) end
+            if s then table.insert(out, "<b>" .. name .. "</b> <color=" .. DIM .. ">(" .. s.k .. ")</color>  " .. withBadges(s.x)) end
         end
     end
     return table.concat(out, "\n")
 end
 
-local function hideLater(color)
-    local token = {}
-    hideToken[color] = token
-    Wait.time(function()
-        if hideToken[color] == token and not pinned[color] then hide(color .. "_strip") end
-    end, 0.8)
-end
-
-function onObjectHover(color, obj)
-    if not details or open[color] then return end
-    local path = cardPath(obj, color)
-    local card = path and details.cards[path]
-    local text = card and not stripOff[color] and stripText(card)
-    if text then
-        hideToken[color] = nil
-        show(color .. "_strip", color, text, STRIP_W, card)
-    else
-        hideLater(color)
+-- a seat's panel laid out at its size, for its card: the text's height measured, the Rules and spawn rows filled
+local function layout(color)
+    local open = shown[color]
+    if not open then return end
+    local id, sz = color .. "_d", SIZES[sizeOf[color] or 2]
+    local rules, named = chaptersOf(open.card), namedOf(open.card)
+    local function fill(prefix, list, n, label)
+        local any = false
+        for i = 1, n do
+            local item = list[i]
+            UI.setAttribute(prefix .. i, "active", item and "true" or "false")
+            if item then
+                local text = label(item)
+                any = true
+                UI.setAttribute(prefix .. i, "text", text)
+                UI.setAttribute(prefix .. i, "preferredWidth", math.floor(#text * sz.f * 0.55 + 22))
+                UI.setAttribute(prefix .. i, "fontSize", sz.f - 2)
+            end
+        end
+        return any
     end
+    local hasRules = fill(id .. "_r", rules, RULE_BUTTONS, function(ch) return "Rules: " .. details.chapters[ch].title end)
+    local hasCards = fill(id .. "_c", named, CARD_BUTTONS, function(n) return "+ " .. n[1] end)
+    open.rules, open.named = rules, named
+    local foot = (hasRules and ROW_H + 8 or 0) + (hasCards and ROW_H + 8 or 0) + 8
+    UI.setAttribute(id .. "_rules", "active", hasRules and "true" or "false")
+    UI.setAttribute(id .. "_cards", "active", hasCards and "true" or "false")
+    UI.setAttribute(id .. "_rules", "offsetXY", "10 " .. (hasCards and ROW_H + 16 or 8))
+    UI.setAttribute(id .. "_cards", "offsetXY", "10 8")
+    for _, r in ipairs({id .. "_rules", id .. "_cards"}) do UI.setAttribute(r, "width", sz.w - 20) end
+    local text = detailsText(open.card)
+    local textW = sz.w - 44
+    local textH = lines(text, math.floor(textW / (sz.f * 0.52))) * math.ceil(sz.f * 1.32) + 12
+    UI.setAttribute(id, "width", sz.w)
+    UI.setAttribute(id, "height", sz.h)
+    UI.setAttribute(id .. "_head", "width", sz.w)
+    UI.setAttribute(id .. "_title", "width", sz.w - 140)
+    UI.setAttribute(id .. "_title", "fontSize", sz.f + 3)
+    UI.setValue(id .. "_title", open.card.n)
+    UI.setAttribute(id .. "_scroll", "width", sz.w - 8)
+    UI.setAttribute(id .. "_scroll", "height", sz.h - TITLE_H - 4 - foot)
+    UI.setAttribute(id .. "_page", "width", sz.w - 24)
+    UI.setAttribute(id .. "_page", "height", textH)
+    UI.setAttribute(id .. "_text", "width", textW)
+    UI.setAttribute(id .. "_text", "height", textH)
+    UI.setAttribute(id .. "_text", "fontSize", sz.f)
+    UI.setValue(id .. "_text", text)
+    UI.setAttribute(id, "active", "true")
 end
 
 function showDetails(color, obj)
@@ -333,28 +339,20 @@ function showDetails(color, obj)
     local path = cardPath(obj, color)
     local card = path and details.cards[path]
     if not card then broadcastToColor("No details for this card.", color, {1, 0.6, 0.6}) return end
-    open[color] = true
-    hide(color .. "_strip")
-    show(color .. "_details", color, detailsText(card), DETAILS_W, card)
+    shown[color] = {card = card, obj = obj}
+    layout(color)
 end
 
 function closeDetails(player)
-    open[player.color] = nil
-    hide(player.color .. "_details")
+    shown[player.color] = nil
+    UI.setAttribute(player.color .. "_d", "active", "false")
 end
 
-function stripEnter(player) pinned[player.color] = true end
-
-function stripExit(player)
-    pinned[player.color] = nil
-    hideLater(player.color)
-end
-
-function toggleStrip(player)
+function detailsSize(player, _, id)
     local color = player.color
-    stripOff[color] = not stripOff[color] or nil
-    UI.setValue(color .. "_toggle", stripOff[color] and "Card info: off" or "Card info: on")
-    if stripOff[color] then hide(color .. "_strip") end
+    local step = id:sub(-7) == "_bigger" and 1 or -1
+    sizeOf[color] = math.max(1, math.min(#SIZES, (sizeOf[color] or 2) + step))
+    layout(color)
 end
 
 -- the rulebook PDF on the table, else taken out of the Rulebooks bag to where the player points
@@ -378,16 +376,78 @@ end
 
 function openRules(player, _, id)
     local color = player.color
-    local n = tonumber(id:sub(-1))                     -- "<color>_strip_r2": the 2nd button
-    local chapter = details and n and details.chapters[(rulesFor[color] or {})[n]]
+    local open, n = shown[color], tonumber(id:sub(-1))    -- "<color>_d_r2": the 2nd button
+    local chapter = open and n and open.rules and details.chapters[open.rules[n]]
     if not chapter then return end
     local page = chapterPage[tonumber(chapter.num)] or pageOfTitle[chapter.title]
-    if not page then
-        broadcastToColor("The rulebook's pages aren't loaded yet.", color, {1, 0.6, 0.6})
-        return
-    end
+    if not page then broadcastToColor("The rulebook's pages aren't loaded yet.", color, {1, 0.6, 0.6}) return end
     withRulebook(color, function(book)
         book.Book.setPage(page)
         broadcastToColor("Rulebook: " .. chapter.title .. " (page " .. (page + 1) .. ")", color, {1, 1, 1})
     end)
+end
+
+-- the save's own cards by their pictures (a spawned copy keeps the team's description and all), read on first use
+local function indexCards()
+    cardIndex = {}
+    local function add(d)
+        if d.Name == "Card" or d.Name == "CardCustom" then
+            local deck = d.CustomDeck or {}
+            local face = deck[tostring(math.floor((d.CardID or 0) / 100))]
+            if not face then for _, v in pairs(deck) do face = v break end end
+            local p = face and pathOf(face.FaceURL)
+            if p and not cardIndex[p] then cardIndex[p] = d end
+        end
+        for _, k in ipairs(d.ContainedObjects or {}) do add(k) end
+    end
+    for _, o in ipairs(getObjects()) do
+        if o.type == "Deck" or o.type == "Bag" or o.type == "Infinite" or o.type == "Card" then add(o.getData()) end
+    end
+end
+
+-- a card the save lacks, made from its picture and its kind's back
+local function madeCard(path, card)
+    local back = "MDW/Assets/cardback_item.png"
+    for _, kb in ipairs(BACKS) do if (card.k or ""):find(kb[1], 1, true) == 1 then back = kb[2] end end
+    local enc = function(p) return (p:gsub(" ", "%%20")) end
+    return {Name = "CardCustom", Nickname = card.n, CardID = 100,
+        Transform = {posX = 0, posY = 0, posZ = 0, rotX = 0, rotY = 0, rotZ = 0, scaleX = 1, scaleY = 1, scaleZ = 1},
+        CustomDeck = {["1"] = {FaceURL = RAW_MAIN .. enc(path), BackURL = RAW_MAIN .. enc(back), NumWidth = 1, NumHeight = 1,
+            BackIsHidden = true, UniqueBack = false, Type = 0}}}
+end
+
+function spawnNamed(player, _, id)
+    local color = player.color
+    local open, n = shown[color], tonumber(id:sub(-1))    -- "<color>_d_c3": the 3rd card it names
+    local item = open and n and open.named and open.named[n]
+    if not item then return end
+    if not cardIndex then indexCards() end
+    local data = cardIndex[item[2]] or madeCard(item[2], details.cards[item[2]] or {n = item[1]})
+    data.GUID = nil
+    local from = open.obj and not open.obj.isDestroyed() and open.obj
+    local at = from and from.getPosition() or Player[color].getHandTransform().position
+    open.spawned = (open.spawned or 0) + 1
+    local pos = {at.x + 2.6 * open.spawned, at.y + 1.5, at.z}
+    spawnObjectData({data = data, position = pos, rotation = {0, from and from.getRotation().y or 0, 0},
+        callback_function = function(o)
+            if resizeTargets[o.getName()] then o.setScale(LARGE_CARD_SCALE) end
+        end})
+end
+
+-- The turn markers: flipped by a player, they go green "Has not taken its turn" -> yellow "Is taking its turn" -> red
+-- "Has taken its turn" (their name and tint say where they are; one event, no script on the markers)
+local TURN_STATES = {{name = "Has not taken its turn", tint = {0, 1, 0}}, {name = "Is taking its turn", tint = {1, 1, 0}},
+    {name = "Has taken its turn", tint = {1, 0, 0}}}
+
+function onObjectRotate(obj, _, flip, _, _, oldFlip)
+    if flip == oldFlip then return end
+    local name = obj.getName()
+    for i, state in ipairs(TURN_STATES) do
+        if state.name == name then
+            local nextState = TURN_STATES[i % #TURN_STATES + 1]
+            obj.setColorTint(nextState.tint)
+            obj.setName(nextState.name)
+            return
+        end
+    end
 end

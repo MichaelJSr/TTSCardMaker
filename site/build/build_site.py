@@ -3235,16 +3235,22 @@ def type_meanings(chapters, icons):
 
 def tts_details(cards, chapters, icons, tag_table):
     """data/tts.json for the TTS save's script, cards keyed by their PNG's path (the save's card links): name, kind,
-    stars, stats, ability (icons as words), types, timing tags and the status effects the ability names; with the
-    types', tags' and statuses' meanings and the chapters (their numbers find the PDF's pages). Hidden cards left out."""
+    stars, stats, ability (icons as words), types, timing tags, the status effects the ability names and the other cards
+    it names (m: their paths, exact names); with the types', tags' and statuses' meanings (a status's path: p) and the
+    chapters (their numbers find the PDF's pages). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
     types, statuses = type_meanings(chapters, icons), {}
     for c in shown:
         if c.get("type") in ("buff", "debuff") and c.get("ability") and not c.get("dup"):
-            statuses.setdefault(c["name"], {"x": game_words(c["ability"], icons), "k": c["type"]})
+            statuses.setdefault(c["name"], {"x": game_words(c["ability"], icons), "k": c["type"], **({"p": c["png"]} if c.get("png") else {})})
     named = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(statuses, key=len, reverse=True)) + r")(?![\w'’])", re.I) \
         if statuses else None
     lower = {n.lower(): n for n in statuses}
+    by_name = {}                                      # a card's name -> its PNG (the first, no duplicate)
+    for c in shown:
+        if c.get("png") and not c.get("dup") and len(c["name"]) >= 3 and c["name"] not in statuses:
+            by_name.setdefault(c["name"], c["png"])
+    names = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(by_name, key=len, reverse=True)) + r")(?![\w'’])") if by_name else None
     out_cards, used_tags = {}, {}
     for c in shown:
         if not c.get("png"):
@@ -3257,13 +3263,16 @@ def tts_details(cards, chapters, icons, tag_table):
                 tags.append(info[0])
                 used_tags[info[0]] = {"g": info[1], "m": info[2]}
         hits = [] if not named else [lower[m[1].lower()] for m in named.finditer(text)]
+        named_cards = [] if not names else [by_name[m[1]] for m in names.finditer(text)]
+        mentioned = [q for i, q in enumerate(named_cards) if q not in named_cards[:i] and q != c["png"]][:6]
         bars = [" ".join(f"{k.upper()} {'?' if s.get(k) is None else s[k]}" for k in STAT_KEYS) for s in c.get("creatures") or [c]
                 if any(s.get(k) is not None for k in STAT_KEYS)]
         out_cards[c["png"]] = {k: v for k, v in {
             "n": c["name"], "k": KIND_LABEL.get(c.get("type"), c.get("type") or "") + (f" ({c['subtype']})" if c.get("subtype") else ""),
             "st": c.get("stars"), "s": "; ".join(bars) or None, "a": game_words(text, icons) or None,
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
-            "x": [n for i, n in enumerate(hits) if n not in hits[:i] and n != c["name"]] or None, "by": c.get("author")}.items() if v}
+            "x": [n for i, n in enumerate(hits) if n not in hits[:i] and n != c["name"]] or None, "m": mentioned or None,
+            "by": c.get("author")}.items() if v}
     return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
             "tags": dict(sorted(used_tags.items())), "statuses": dict(sorted(statuses.items())), "cards": out_cards}
 
