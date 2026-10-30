@@ -242,8 +242,8 @@ const stars = html => html.replace(/★+/g, s => `<span class="rb-stars">${s}</s
 
 // width=40 or 37.5 (per cent of the line) or width=6em; height=2em
 const sizeStyle = a => [a.width && `width:${/^\d+(\.\d+)?$/.test(a.width) ? `${a.width}%` : a.width}`, a.height && `height:${a.height}`].filter(Boolean).join(";").replace(/[^\w%.:;-]/g, "");
-function imgHtml(b, ctx, inLine = false) {
-  const a = b.attrs || { cls: [] }, size = ctx.size?.(b.src), url = ctx.imgUrl ? ctx.imgUrl(b.src) : IMG_DIR + b.src, style = inLine ? sizeStyle(a) : "";
+function imgHtml(b, ctx, inLine = false) {   // --w: its width, for one without width= (drawn its size in the page's px)
+  const a = b.attrs || { cls: [] }, size = ctx.size?.(b.src), url = ctx.imgUrl ? ctx.imgUrl(b.src) : IMG_DIR + b.src, style = inLine ? sizeStyle(a) : size ? `--w:${Number(size[0])}` : "";
   const dims = size ? ` width="${size[0]}" height="${size[1]}"` : "";
   return `<img class="${inLine ? `rb-icon ${clsOf(a)}` : "rb-img"}" src="${esc(url)}" alt="${esc(b.alt)}"${dims}${style ? ` style="${style}"` : ""}${lazy(ctx)}>`;
 }

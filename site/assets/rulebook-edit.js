@@ -210,6 +210,7 @@ function extent(lines, from, kind) {
   return [from, end];
 }
 const page = () => M.api.modal.querySelector("#rbe-page");
+const pagePx = () => parseFloat(getComputedStyle(page()).getPropertyValue("--rb-px")) || 1;   // the page's px (drawn to scale), in screen px
 const isContainer = n => n.dataset?.kind === "section" || (n.dataset?.kind === "fence" && CONTAINERS.includes(n.dataset.fence));
 const boxOf = el => (el === page() ? el : el.querySelector(":scope > .rb-panel") || el);   // where % are measured
 // the containers' boxes (measured once per drag, again after a scroll)
@@ -1061,8 +1062,8 @@ async function upload(files, at = null) {
       const url = URL.createObjectURL(blob);
       M.uploads.set(name, { base64, url, size: [w, h] });
       if (!at) insertBlock(`![](${name})`);
-      else {                                           // dropped on the page: put there, at most a third of its container
-        const pl = plan(at.x, at.y), wide = Math.min(w, boxOf(pl.into || page()).clientWidth / 3);
+      else {                                           // dropped on the page: put there its size, at most a third of its container
+        const pl = plan(at.x, at.y), wide = Math.min(w * pagePx(), boxOf(pl.into || page()).clientWidth / 3);
         drop({ src: name }, pl, at.x, at.y, wide);
         at = { x: at.x + 24, y: at.y + 24 };           // several: fanned out
       }
