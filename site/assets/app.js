@@ -1008,6 +1008,8 @@ async function renderSheets(r) {
   warm.innerHTML = chapters.map(c => RB.chapterHtml(c, ctx)).join("");
   document.body.append(warm);
   await Promise.all([...warm.querySelectorAll("img")].map(i => i.decode().catch(() => {})));
+  // the pages' fonts before any measure (the book view may use an installed Consolas and never ask for them)
+  await Promise.all(["35px Inconsolata", "bold 35px Inconsolata", "35px 'EB Garamond'"].map(f => document.fonts.load(f).catch(() => {})));
   await document.fonts.ready;
   warm.remove();
   if (parseHash().name !== "rules" || parseHash().arg !== "print") return;
