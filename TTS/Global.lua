@@ -52,8 +52,8 @@ end
 -- Card details. Hover a card: a strip at the bottom of your screen explains its timing tags, types and the status
 -- effects it names. Right-click a card > Card details: everything about it, in a panel with Rules buttons that open the
 -- rulebook PDF at the chapter. Each player sees only their own; "Card info" turns the strip off. Data: the website's
--- data/tts.json and TTS/Rulebook/pages.json, fetched when the save loads. No Lua patterns over long text (MoonSharp's
--- are limited): plain finds only.
+-- data/tts.json and TTS/Rulebook/pages.json, fetched a moment after the save loads. No Lua patterns over long text
+-- (MoonSharp's are limited): plain finds only.
 local DETAILS_URL = "https://michaeljsr.github.io/TTSCardMaker/data/tts.json"
 local PAGES_URL = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/TTS/Rulebook/pages.json"
 local RAW_PREFIX = "https://raw.githubusercontent.com/"
@@ -115,22 +115,24 @@ local function addMenu(obj)
 end
 
 function loadCardDetails()
-    buildPanels()
-    for _, obj in ipairs(getObjects()) do addMenu(obj) end
-    WebRequest.get(DETAILS_URL, function(r)
-        local data = not r.is_error and decode(r.text)
-        if not (data and data.cards) then log("Card details: not loaded (" .. tostring(r.error) .. ")") return end
-        for tag in pairs(data.tags or {}) do tagCase[tag:upper()] = tag end
-        details = data
-    end)
-    WebRequest.get(PAGES_URL, function(r)
-        local book = not r.is_error and decode(r.text)
-        for i, page in ipairs(book and book.pages or {}) do
-            local num = tonumber(page.num)
-            if num and num == math.floor(num) and chapterPage[num] == nil then chapterPage[num] = i - 1 end
-            if page.name and pageOfTitle[page.name] == nil then pageOfTitle[page.name] = i - 1 end
-        end
-    end)
+    Wait.time(function()                               -- a moment after the load: the save never waits on it
+        buildPanels()
+        for _, obj in ipairs(getObjects()) do addMenu(obj) end
+        WebRequest.get(DETAILS_URL, function(r)
+            local data = not r.is_error and decode(r.text)
+            if not (data and data.cards) then log("Card details: not loaded (" .. tostring(r.error) .. ")") return end
+            for tag in pairs(data.tags or {}) do tagCase[tag:upper()] = tag end
+            details = data
+        end)
+        WebRequest.get(PAGES_URL, function(r)
+            local book = not r.is_error and decode(r.text)
+            for i, page in ipairs(book and book.pages or {}) do
+                local num = tonumber(page.num)
+                if num and num == math.floor(num) and chapterPage[num] == nil then chapterPage[num] = i - 1 end
+                if page.name and pageOfTitle[page.name] == nil then pageOfTitle[page.name] = i - 1 end
+            end
+        end)
+    end, 3)
 end
 
 function onObjectSpawn(obj) addMenu(obj) end
