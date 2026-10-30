@@ -74,16 +74,18 @@ local function decode(text)
     return ok and type(data) == "table" and data or nil
 end
 
+local BUTTON = "#c7d2fe|#e0e7ff|#a5b4fc|#c7d2fe80"     -- light lavender (normal|hover|pressed|disabled), dark text
+local SPAWN = "#bbf7d0|#dcfce7|#86efac|#bbf7d080"      -- the spawn buttons: light green
 local function button(id, label, onClick, attrs)
-    local a = {id = id, onClick = onClick, fontSize = 13, textColor = "#e2e8f0", colors = "#334155|#475569|#1e293b|#33415580"}
+    local a = {id = id, onClick = onClick, fontSize = 13, textColor = "#0f172a", colors = BUTTON}
     for k, v in pairs(attrs or {}) do a[k] = v end
     return {tag = "Button", attributes = a, value = label}
 end
 
-local function row(id, prefix, n, onClick)
+local function row(id, prefix, n, onClick, colors)
     local r = {tag = "HorizontalLayout", attributes = {id = id, rectAlignment = "LowerLeft", height = ROW_H, spacing = 6,
         childForceExpandWidth = false, childAlignment = "MiddleLeft", active = false}, children = {}}
-    for i = 1, n do table.insert(r.children, button(prefix .. i, "", onClick, {preferredWidth = 120, active = false})) end
+    for i = 1, n do table.insert(r.children, button(prefix .. i, "", onClick, {preferredWidth = 120, active = false, colors = colors or BUTTON})) end
     return r
 end
 
@@ -106,7 +108,7 @@ local function detailsPanel(c)
                 {tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
                     alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}}}},
         row(id .. "_rules", id .. "_r", RULE_BUTTONS, "openRules"),
-        row(id .. "_cards", id .. "_c", CARD_BUTTONS, "spawnNamed")}}
+        row(id .. "_cards", id .. "_c", CARD_BUTTONS, "spawnNamed", SPAWN)}}
 end
 
 -- one seat's rulebook panel: a search box, then the chapters (or the pages a search finds) as buttons
