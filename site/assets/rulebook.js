@@ -525,8 +525,9 @@ async function rawText(repo, sha, path) {
   const r = await fetch(`https://raw.githubusercontent.com/${repo}/${sha}/${path.split("/").map(encodeURIComponent).join("/")}`);
   return r.ok ? r.text() : null;
 }
-/** The history viewer in modal: path's commits on the left, the chosen one's diff on the right */
-export async function openHistory({ repo, branch, path, title, modal, closeModal, dateText = d => new Date(d).toLocaleString() }) {
+/** The history viewer in modal: path's commits on the left, the chosen one's diff on the right; revert (editors, app.js):
+ *  an earlier version's Revert calls it with the commit and the file's text then, true once committed (the viewer closes) */
+export async function openHistory({ repo, branch, path, title, modal, closeModal, dateText = d => new Date(d).toLocaleString(), revert = null }) {
   const gh = `https://github.com/${repo}/commits/${branch}/${path.split("/").map(encodeURIComponent).join("/")}`;
   modal.innerHTML = `<div class="dialog rbh" role="dialog" aria-modal="true" aria-label="History of ${esc(title)}">
     <header class="rbe-top"><h2>History: ${esc(title)}</h2><span class="rbe-state muted"><code>${esc(path)}</code></span>
@@ -542,7 +543,9 @@ export async function openHistory({ repo, branch, path, title, modal, closeModal
   if (!commits.length) { list.innerHTML = `<p class="muted">No commits yet.</p>`; return; }
   list.innerHTML = commits.map((c, k) => `<button type="button" class="rbh-item${k ? "" : " on"}" data-k="${k}"><b>${esc(c.commit.message.split("\n")[0])}</b>
     <span class="muted">${esc(c.commit.author?.name || c.author?.login || "")} · ${esc(dateText(c.commit.committer?.date || c.commit.author?.date))}</span></button>`).join("");
+  let shown = 0;                                       // the version picked last: a slower earlier pick never draws over it
   const show = async k => {
+    shown = k;
     for (const b of list.querySelectorAll(".rbh-item")) b.classList.toggle("on", +b.dataset.k === k);
     const c = commits[k], parent = c.parents?.[0]?.sha;
     pane.innerHTML = `<p class="muted">Loading…</p>`;
@@ -551,10 +554,17 @@ export async function openHistory({ repo, branch, path, title, modal, closeModal
       try { const f = (await getJson(`${API}${repo}/commits/${c.sha}`)).files?.find(x => x.filename === path); if (f?.previous_filename) { from = f.previous_filename; before = await rawText(repo, parent, from); } }
       catch { /* the rest still shows */ }
     }
-    const after = (await rawText(repo, c.sha, path)) ?? "";
+    const text = await rawText(repo, c.sha, path), after = text ?? "";
+    if (shown !== k) return;
     pane.innerHTML = `<div class="rbh-head"><b>${esc(c.commit.message.split("\n")[0])}</b><span class="muted">${esc(c.commit.author?.name || "")} · ${esc(dateText(c.commit.committer?.date || c.commit.author?.date))} ·
-      <a href="${esc(c.html_url)}" target="_blank" rel="noopener"><code>${esc(c.sha.slice(0, 8))}</code></a>${from !== path ? ` · renamed from <code>${esc(from)}</code>` : ""}${before === null || !parent ? " · new file" : ""}</span></div>
+      <a href="${esc(c.html_url)}" target="_blank" rel="noopener"><code>${esc(c.sha.slice(0, 8))}</code></a>${from !== path ? ` · renamed from <code>${esc(from)}</code>` : ""}${before === null || !parent ? " · new file" : ""}</span>
+      ${k && revert && text !== null ? `<button type="button" class="ver-revert" data-rbh="revert" title="Make this version the current one (one commit)">Revert to this version</button>` : ""}</div>
       ${diffHtml(before ?? "", after)}`;
+    pane.querySelector('[data-rbh="revert"]')?.addEventListener("click", async e => {
+      const b = e.currentTarget;
+      b.disabled = true;
+      try { if (await revert(c, text)) closeModal(); } finally { b.disabled = false; }
+    });
   };
   list.addEventListener("click", e => { const b = e.target.closest(".rbh-item"); if (b) show(+b.dataset.k); });
   show(0);

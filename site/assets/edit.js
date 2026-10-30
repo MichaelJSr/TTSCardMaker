@@ -10,6 +10,7 @@ import * as draft from "./drafts.js";
 import { current as ratingNow } from "./ratings.js";
 import { soon } from "./fresh.js";
 import * as P from "./parts.js";
+import { date, dayOf, pictureNumber } from "./history.js";
 
 const API = "https://api.github.com";
 // last: the login a password last signed in
@@ -340,8 +341,9 @@ export function createEditor(app) {
     try { return await gh(`/repos/${S.data.repo}/contents/${repoPath(path)}?ref=${ref}`, { raw: true }); }
     catch (e) { if (e.status === 404) return null; throw e; }
   }
-  // files: {path: oldText => newText | null (leave it) | false (delete it)}, or the new content itself: text, false, or
-  // {base64} (a picture: never read first); retried on top if someone pushed meanwhile
+  // files: {path: oldText => newText | null (leave it) | false (delete it)}, or the new content itself: text, false,
+  // {base64} (a picture: never read first) or {sha} (a blob the repo has: an old version's file, nothing uploaded);
+  // retried on top if someone pushed meanwhile
   async function commitFiles(edits, message, got = {}) {   // got.date: the commit's date (GitHub's clock)
     const repo = S.data.repo, branch = S.data.branch;
     for (let attempt = 0; ; attempt++) {
@@ -350,8 +352,8 @@ export function createEditor(app) {
       const tree = [];
       for (const [path, edit] of Object.entries(edits)) {
         if (edit && typeof edit === "object") {        // a picture: its blob first
-          const blob = await gh(`/repos/${repo}/git/blobs`, { method: "POST", body: { content: edit.base64, encoding: "base64" } });
-          tree.push({ path, mode: "100644", type: "blob", sha: blob.sha }); continue;
+          const sha = edit.sha || (await gh(`/repos/${repo}/git/blobs`, { method: "POST", body: { content: edit.base64, encoding: "base64" } })).sha;
+          tree.push({ path, mode: "100644", type: "blob", sha }); continue;
         }
         const old = typeof edit === "function" || edit === false ? await readFile(path, head) : undefined, next = typeof edit === "function" ? edit(old) : edit;
         if (next === false) { if (old != null) tree.push({ path, mode: "100644", type: "blob", sha: null }); }
@@ -1668,6 +1670,53 @@ export function createEditor(app) {
     return sha;
   }
 
+  // ---- revert (app.js "card-revert": a History or Image versions "Revert to this version"): a card's files as they were
+  // at a version's commit, at today's paths, as one commit of tree entries pointed at the old blobs (nothing uploaded).
+  // Its PSD and the PNGs printed from it (its own, its variants', its numbered duplicates'), or a picture-only duplicate's
+  // PNG. then: its PNG's path at that commit (Image versions follow renames); the PSD then is beside it, under its name
+  // then. A file that version lacks stays, and so does Card Edits.json (its edits still show over the files).
+  async function revertCard(c, { ref, ts, then = c.png }) {
+    const repo = S.data.repo, branch = S.data.branch, lists = new Map();
+    const dirOf = p => p.slice(0, Math.max(0, p.lastIndexOf("/")));
+    const listing = (dir, at) => {                     // a folder's files at a commit: path -> blob
+      const k = `${at} ${dir}`;
+      if (!lists.has(k)) lists.set(k, gh(`/repos/${repo}/contents/${repoPath(dir)}?ref=${encodeURIComponent(at)}`)
+        .then(xs => new Map((Array.isArray(xs) ? xs : []).filter(x => x.type === "file").map(x => [x.path, x.sha])), e => (e.status === 404 ? new Map() : Promise.reject(e))));
+      return lists.get(k);
+    };
+    const blob = async (path, at) => (path ? (await listing(dirOf(path), at)).get(path) : undefined);
+    const pngsOf = (psd, files) => {                   // number -> path ("" its own); NameN.png beside a NameN.psd is that one's
+      const low = new Set([...files.keys()].map(p => p.toLowerCase()));
+      return new Map([...files.keys()].map(p => [pictureNumber(psd, p), p]).filter(([n, p]) => n !== null && !(n && low.has(p.toLowerCase().replace(/\.png$/, ".psd")))));
+    };
+    const now = c.psd ? await listing(dirOf(c.psd), branch) : new Map();
+    const pngs = now.has(c.psd) ? pngsOf(c.psd, now) : new Map(), n = [...pngs.keys()].find(k => pngs.get(k) === c.png);
+    let files;                                         // [today's path, its path then]
+    if (n === undefined) files = c.png ? [[c.png, (await blob(then, ref)) ? then : c.png]] : [];
+    else {
+      const cut = then.lastIndexOf("/") + 1, name = then.slice(cut).replace(/\.[^.]*$/, ""), ext = c.psd.slice(c.psd.lastIndexOf("."));
+      const guess = `${then.slice(0, cut)}${n && name.endsWith(n) ? name.slice(0, -n.length) : name}${ext}`, psd = (await blob(guess, ref)) ? guess : c.psd;
+      const was = pngsOf(psd, await listing(dirOf(psd), ref));
+      files = [[c.psd, psd], ...[...pngs].map(([k, p]) => [p, was.get(k) || null])];
+    }
+    const plan = [], newer = [];
+    for (const [path, old] of files) {
+      const b = await blob(old, ref);
+      if (!b) newer.push(path); else if (b !== (await blob(path, branch))) plan.push({ path, old, b });
+    }
+    if (!plan.length) { app.toast(newer.length === files.length ? `That version has none of ${c.name}'s files` : `Nothing to revert: ${c.name}'s files are the same in that version`); return null; }
+    const kept = (c.edited || []).filter(isPsd).map(f => LABEL[f]);
+    const lines = [`Revert ${c.name} to its ${date(ts)} version?`, "", `These files go back to how they were then (commit ${ref.slice(0, 12)}):`,
+      ...plan.map(f => (f.old === f.path ? f.path : `${f.path} (then ${f.old})`))];
+    if (newer.length) lines.push("", `Not in that version, so they stay: ${newer.join(", ")}`);
+    if (kept.length) lines.push("", `Its website edits stay and still show: ${kept.join(", ")}.`);
+    if (!confirm(lines.join("\n"))) return null;
+    const sha = await commitFiles(Object.fromEntries(plan.map(f => [f.path, { sha: f.b }])), `${c.name} reverted to its ${dayOf(ts)} version`);
+    if (sha) soon();                                   // reloads when its build is live (fresh.js)
+    app.toast(sha ? "Reverted: the site rebuilds in a few minutes" : "Nothing changed");
+    return sha;
+  }
+
   // ---- batch tray and hub
   // the batch bar: every pending edit as a sentence, each with a revert; one line (ellipsised) when long, with a toggle
   let barOpen = false;
@@ -1906,8 +1955,9 @@ export function createEditor(app) {
     addBucket,
     // image previews (preview.js): GitHub calls with the token, its scopes, and what the PSD prints of a card's fields
     github: (path, opts) => gh(path, opts), get scopes() { return scopes; },
-    // the rulebook editor (rulebook-edit.js): its chapters and pictures as one commit (commitFiles)
+    // the rulebook editor (rulebook-edit.js) and the rulebook History's Revert (app.js): files as one commit (commitFiles)
     commit: (edits, message, got) => commitFiles(edits, message, got), readFile: (path, ref) => readFile(path, ref),
+    revertCard,                                    // a History or Image versions Revert (app.js "card-revert")
     psdOf: id => { const c = find(id); return c ? Object.fromEntries(Object.keys(FROM).filter(isPsd).map(f => [f, psdVal(baseOf(c), f)])) : null; },
     // the fields the card's Card Edits.json entry would hold once published: the built ones, the published-not-built and
     // the staged ops' (or op: the open form's, relative to the published card)

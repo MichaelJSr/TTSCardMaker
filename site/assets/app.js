@@ -6,7 +6,7 @@ import { tipController, wireTips } from "./tip.js";
 import * as decks from "./decks.js";
 import * as pick from "./pick.js";
 import * as changes from "./changes.js";
-import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
+import { date, month, TZ, textAt, textChanged, historyHtml, stampOf, pictureNumber } from "./history.js";
 import { deckPasses, SEALED } from "./login.js";
 import * as ratings from "./ratings.js";
 import * as fresh from "./fresh.js";
@@ -816,7 +816,7 @@ function openCard(id, showDetails = false) {
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions, "Cards its ability text names")}${strip("Mentioned by", mentionedBy, "Cards whose ability text names this card")}${strip("Similar stats", similar(c), "The 8 cards of the same kind nearest in HP, DEF, ATK and SPD, star level weighed in")}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
-          <div id="history-slot">${historyHtml(c, S.data.repo, S.history?._shas)}</div>
+          <div id="history-slot">${historyHtml(c, S.data.repo, S.history?._shas, canRevert(c))}</div>
           <div id="versions-slot">${versionsHtml(c)}</div>
           ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
         </div>
@@ -831,7 +831,7 @@ function openCard(id, showDetails = false) {
     const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
-  if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c, S.data.repo, S.history?._shas); fillBalance(); }, () => {});
+  if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c, S.data.repo, S.history?._shas, canRevert(c)); fillBalance(); }, () => {});
   else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) loadHistory().then(fillBalance, () => {});   // its original's texts
   if (hasBalance(c) && !S.analytics) loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; });
   if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c); }, () => {});
@@ -880,10 +880,15 @@ function showVersion(c, i) {
   const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}${link(v)}<br><span class="muted">${esc(v.subject || "")}</span>`;
   box.innerHTML = i === 0
     ? `<figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
-    : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img class="ver-old" src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}</figcaption></figure>
+    : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img class="ver-old" src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}${editing() ? `<br><button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(v.sha)}" data-ts="${v.ts}" data-path="${esc(v.path)}">Revert to this version</button>` : ""}</figcaption></figure>
       <figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
       ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
 }
+// ---- revert (editors): a History or Image versions "Revert to this version", the card's files as they were at that
+// version's commit (edit.js revertCard). A picture-only duplicate's texts are its original's PSD's: no Revert there
+const canRevert = c => editing() && (!c.dup || !!c.variantOf || pictureNumber(c.psd, c.png) !== null);
+/** c's PNG path at commit ref (time ts): its image version there or the newest before it (renames followed), else today's */
+const pngAt = (c, ref, ts) => { const vs = versionList(c); return (vs.find(v => v.sha.startsWith(ref)) || vs.find(v => v.ts <= ts) || vs[vs.length - 1])?.path || c.png; };
 // ---- balance: the card's standing among its star level and its recorded changes (balance.js)
 const balanceOf = c => (c.dup ? S.byId.get(c.dup) || c : c);         // a duplicate shows its original's
 const ratedOf = c => (c.variantOf ? c : balanceOf(c));                // a variant picture keeps its own ratings
@@ -1428,11 +1433,47 @@ function openBookEditor(id, line = null) {
     published: sent => { localStorage.setItem(RB_SENT, JSON.stringify(sent)); bookChapters(); rerender(); },
   })).catch(e => toast(`Couldn't open the rulebook editor (${e.message})`)));
 }
+// the rulebook History's Revert (rulebook.js openHistory): editors revert a chapter, admins the ban list; that version's
+// text as one commit, shown at once as their editors' Publish does (RB_SENT; the ban list in S.data)
+const bookDate = d => new Date(d).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" });
+function bookRevert(path, title) {
+  const ban = path === S.data.files.banlist;
+  if (!editing() || (ban && !editor.me.admin)) return null;
+  return async (c, text) => {
+    const when = c.commit.committer?.date || c.commit.author?.date, what = ban ? "the constructed ban list" : `the chapter “${title}”`;
+    if (!confirm(`Revert ${what} to its version of ${bookDate(when)} (commit ${c.sha.slice(0, 8)})?\n\nIts current text is replaced by that version's. The later versions stay in its history.`)) return false;
+    try {
+      const sha = await editor.commit({ [path]: () => text }, `${ban ? "Website edit: constructed ban list" : `Rulebook: ${title}`} reverted to ${stampOf(Date.parse(when) / 1000)}`);
+      if (!sha) { toast("Nothing to revert: the current text is that version's"); return false; }
+      if (ban) S.data.banlist = banList(text);
+      else {
+        const file = path.slice(path.lastIndexOf("/") + 1);
+        localStorage.setItem(RB_SENT, JSON.stringify({ at: Date.now(), sha, images: S.book.sent?.images || [],
+          chapters: S.book.chapters.map(({ ast: _a, text: _t, ...x }) => (x.file === file ? { ...x, source: text, title: RB.parse(text).title.trim() || x.title } : x)) }));
+        bookChapters();
+      }
+      rerender();
+      toast("Reverted: the site rebuilds in a few minutes");
+      return true;
+    } catch (e) { toast(`Couldn't revert (${e.message})`); return false; }
+  };
+}
+// the ban list's text as build_site.py parse_banlist reads it: notes, then "Group:" lines, each card "Name - reason"
+function banList(text) {
+  const out = { notes: [], groups: [] }, find = n => cardByName(n) || cardByName(n.replace(/\(.*?\)/g, ""));
+  for (const line of text.split("\n").map(l => l.trim()).filter(Boolean)) {
+    const g = out.groups[out.groups.length - 1];
+    if (line.endsWith(":")) out.groups.push({ title: line.replace(/:+$/, ""), entries: [] });
+    else if (!g) out.notes.push(line);
+    else { const [name, ...why] = line.split(" - "); g.entries.push({ name: name.trim(), reason: why.join(" - ").trim(), id: find(name.trim())?.id || null }); }
+  }
+  return out;
+}
 const actions = {
   "rb-edit": el => openBookEditor(el.dataset.id, el.dataset.line != null ? +el.dataset.line : null),
   "rb-new": () => openBookEditor(""),
   "rb-history": el => RB.openHistory({ repo: S.data.repo, branch: S.data.branch || "main", path: el.dataset.path, title: el.dataset.title, modal,
-    closeModal, dateText: d => new Date(d).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" }) }),
+    closeModal, dateText: bookDate, revert: bookRevert(el.dataset.path, el.dataset.title) }),
   "rb-bans": () => {                                     // the constructed ban list's editor (admins; rulebook-edit.js openBans)
     if (!editing()) { act("edit-hub"); return; }
     withEditor(ed => {
@@ -1509,6 +1550,11 @@ const actions = {
     el.textContent = on ? "Chart" : "Table"; $(".view-chart", box).hidden = on; $(".view-table", box).hidden = !on; },
   "stats-filter": el => setParams({ [el.dataset.key]: el.value }),
   "dist-page": el => distPage(el.closest(".dist-panel"), +el.dataset.step),
+  "card-revert": el => { const c = S.byId.get(el.dataset.id), ts = +el.dataset.ts, ref = el.dataset.sha;
+    if (!c || !editing()) return;
+    el.disabled = true;
+    (c.iv ? loadVersions().catch(() => {}) : Promise.resolve()).then(() => editor.revertCard(c, { ref, ts, then: el.dataset.path || pngAt(c, ref, ts) }))
+      .catch(e => toast(`Couldn't revert (${e.message})`)).finally(() => { el.disabled = false; }); },
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
   "select-mode": () => { S.selecting = !S.selecting; if (!S.selecting) S.selected.clear(); rerender(); },

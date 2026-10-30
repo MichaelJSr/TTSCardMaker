@@ -188,6 +188,9 @@ mark { background: color-mix(in srgb, var(--warn) 45%, transparent); color: inhe
 .commit-link { color: var(--muted); font-size: 12px; text-decoration: underline dotted; text-underline-offset: 2px; }
 .commit-link:hover { color: var(--accent); }
 .commit-at { white-space: nowrap; }
+/* Revert to this version (editors: history.js, app.js showVersion, rulebook.js openHistory) */
+button.ver-revert { padding: 2px 8px; font-size: 12px; color: var(--ink-2); }
+.history .ver-revert { margin-left: 4px; } .rbh-head .ver-revert { align-self: flex-start; margin-top: 4px; } figcaption .ver-revert { margin-top: 6px; }
 ins { background: color-mix(in srgb, var(--good) 30%, transparent); text-decoration: none; border-radius: 3px; }
 del { background: color-mix(in srgb, var(--danger) 30%, transparent); border-radius: 3px; }
 .kbd { font: 12px ui-monospace, monospace; padding: 1px 6px; border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 5px; }

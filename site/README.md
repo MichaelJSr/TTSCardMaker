@@ -35,7 +35,11 @@ data), on a push of site code, daily, and on demand (Actions → Card browser �
 text or image, links its commit when it is known), and the artwork sources when set. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
   that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history; a
-  variant picture (one PSD's picture 2, 3...: a duplicate of picture 1) its own.
+  variant picture (one PSD's picture 2, 3...: a duplicate of picture 1) its own. Signed in, each earlier text with a
+  commit and each earlier image version has **Revert to this version**: after a confirm listing the files, one commit
+  ("<card> reverted to its <day> version") puts the card's PSD and the PNGs printed from it (its variants' and numbered
+  duplicates' too; a picture-only duplicate: its PNG) back as they were at that commit, at today's paths (renames
+  followed); a file that version lacks stays, and `Card Edits.json` is left as it is (its edits still show).
   Every date on the site is Pacific time, the bot's, whatever the viewer's time zone, and commits are dated when they
   landed (committer time), as the bot dates versions.
   A creature's or minion's **Balance** line compares its total stats (HP + DEF + ATK + SPD) with the others of its star
@@ -65,7 +69,9 @@ text or image, links its commit when it is known), and the artwork sources when 
   cards; the syntax is at the top of `rulebook.js` and behind the editor's Syntax button. The contents follow the
   reading; search shows only the passages that match; each chapter's History (the ban list's too) lists its commits and
   shows each one as a git-style diff (old and new line numbers, removed and added lines, the changed words marked; a
-  renumbered chapter's rename followed), from GitHub's API without a sign-in. Each chapter has an Edit
+  renumbered chapter's rename followed), from GitHub's API without a sign-in; signed in, an earlier version has
+  **Revert to this version** (the ban list's: admins), one commit ("Rulebook: Death reverted to 2026-10-30 10:22")
+  making that version's text the current one. Each chapter has an Edit
   button, each section a ✎ (signed in), and the contents a New chapter button: the text beside the page as it will look
   (or as its TTS pages), linked both ways (click the page to reach its line; the cursor shows its block). Pictures, card
   rows and mascots are dragged to move them on the page: dropped on blank space a picture stays where it lands (snapped
