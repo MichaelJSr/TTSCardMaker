@@ -34,15 +34,20 @@ export function open(api) {
   const key = ch ? ch.id : "new", draft = readDrafts()[key];
   const nextNum = String(Math.max(0, ...book.chapters.map(c => Number(c.num) || 0)) + 1).padStart(2, "0");
   const base = ch ? ch.source : NEW_TEXT;
-  M = { api, ch, key, base, uploads: new Map(), source: draft?.source ?? base, num: draft?.num ?? (ch ? ch.num : nextNum), restored: !!draft && draft.source !== base };
+  M = { api, ch, key, base, uploads: new Map(), source: draft?.source ?? base, num: draft?.num ?? (ch ? ch.num : nextNum), restored: !!draft && draft.source !== base, selLine: null };
+  M.hist = { list: [{ text: M.source, caret: 0, kind: "open", at: 0 }], i: 0 };
   api.modal.innerHTML = html();
   api.modal.hidden = false; document.body.style.overflow = "hidden";
-  const ta = api.modal.querySelector("#rbe-text");
+  const ta = textBox();
   ta.value = M.source;
-  ta.addEventListener("input", () => { M.source = ta.value; saveDraft(); preview(); });
+  ta.addEventListener("input", () => { M.source = ta.value; M.selLine = null; remember(M.nextKind || "type", ta.selectionStart); M.nextKind = null; saveDraft(); preview(); });
+  ta.addEventListener("beforeinput", e => {            // the browser's own Undo (Edit menu): this editor's steps instead
+    if (e.inputType === "historyUndo" || e.inputType === "historyRedo") { e.preventDefault(); travel(e.inputType === "historyUndo" ? -1 : 1); }
+  });
   api.modal.querySelector("#rbe-num").addEventListener("input", e => { M.num = e.target.value.replace(/\D/g, "").slice(0, 2); saveDraft(); });
   api.modal.querySelector("#rbe-file").addEventListener("change", e => upload([...e.target.files]).finally(() => { e.target.value = ""; }));
   api.modal.addEventListener("click", onClick);
+  api.modal.querySelector(".rbe").addEventListener("keydown", onKey, true);
   ta.addEventListener("drop", e => { const f = [...(e.dataTransfer?.files || [])].filter(x => x.type.startsWith("image/")); if (f.length) { e.preventDefault(); upload(f); } });
   ta.addEventListener("paste", e => { const f = [...(e.clipboardData?.files || [])].filter(x => x.type.startsWith("image/")); if (f.length) { e.preventDefault(); upload(f); } });
   ta.addEventListener("keydown", e => {                // Ctrl/Cmd+B bold, +I italic, +S publish
@@ -56,9 +61,10 @@ export function open(api) {
     if (e.target.closest(".rbe-pictools, .rbe-resize")) return;
     e.preventDefault();
     if (clickGone) return;
-    const el = e.target.closest("[data-line]");
-    if (el) jump(+el.dataset.line);
+    const el = e.target.closest("[data-line]"), pic = PICTURE_KINDS.includes(el?.dataset.kind);
+    if (el) jump(+el.dataset.line, !pic);
     select(el);
+    if (pic) pane.focus({ preventScroll: true });     // the keys move and size it
   }, true);
   wireDrag(pane);
   const pick = api.modal.querySelector("#rbe-card");
@@ -68,28 +74,91 @@ export function open(api) {
     insert(e.shiftKey ? `[[${pick.value.trim()}]]` : `![[${pick.value.trim()}]]`);
     pick.value = "";
   });
-  preview();
+  render();
+  undoState();
   if (line != null) jump(line); else ta.focus();
+}
+
+const textBox = () => M.api.modal.querySelector("#rbe-text");
+
+// ---- undo and redo: this editor's own steps (the text and every change made on the page alike). A burst of typing, a
+// run of arrow-key nudges or of size steps is one step; Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z or Ctrl+Y, the ↶ ↷ buttons
+function remember(kind, caret) {
+  const h = M.hist, top = h.list[h.i], now = Date.now();
+  if (top.text === M.source) return;
+  h.list.length = h.i + 1;                             // a new step drops what was undone
+  if (kind !== "edit" && top.kind === kind && now - top.at < 1200) Object.assign(top, { text: M.source, caret, at: now });
+  else {
+    h.list.push({ text: M.source, caret, kind, at: now });
+    if (h.list.length > 300) h.list.shift();
+    h.i = h.list.length - 1;
+  }
+  undoState();
+}
+function travel(d) {
+  const h = M.hist, j = h.i + d;
+  if (j < 0 || j >= h.list.length) return;
+  const caret = (d < 0 ? h.list[h.i] : h.list[j]).caret ?? 0;   // where the step undone or redone happened
+  h.i = j;
+  const s = h.list[j];
+  s.at = 0;                                            // the next edit is a step of its own
+  const ta = textBox(), top = ta.scrollTop;
+  ta.value = M.source = s.text;
+  ta.scrollTop = top;
+  ta.setSelectionRange(Math.min(caret, s.text.length), Math.min(caret, s.text.length));
+  M.selLine = null;
+  saveDraft(); render(); undoState();
+}
+function undoState() {
+  const h = M.hist, u = M.api.modal.querySelector("#rbe-undo"), r = M.api.modal.querySelector("#rbe-redo");
+  if (u) u.disabled = h.i === 0;
+  if (r) r.disabled = h.i === h.list.length - 1;
+}
+// keys: undo and redo anywhere but the small fields; a selected picture: arrows move a placed one (Shift: 5%), + and −
+// size it, Delete or Backspace takes it out, Esc lets it go
+function onKey(e) {
+  if (!M) return;
+  const mod = (e.ctrlKey || e.metaKey) && !e.altKey, field = e.target.matches?.("input, select");
+  if (mod && !field && /^[zy]$/i.test(e.key)) { e.preventDefault(); e.stopPropagation(); travel(e.key.toLowerCase() === "y" || e.shiftKey ? 1 : -1); return; }
+  const el = M.selected;
+  if (!el || mod || e.altKey || e.target.closest?.("textarea, input, select")) return;
+  const line = +el.dataset.line, kind = el.dataset.kind, k = e.key;
+  const done = () => { e.preventDefault(); e.stopPropagation(); };
+  if (k === "Escape") { done(); M.selLine = null; tools(null); return; }
+  if (k === "Delete" || k === "Backspace") { done(); takeOut(el, line, kind); return; }
+  const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[k];
+  if (d && kind === "img") { done(); nudge(line, d[0] * (e.shiftKey ? 5 : 0.5), d[1] * (e.shiftKey ? 5 : 0.5)); return; }
+  if (["+", "=", "-", "_"].includes(k) && kind !== "say") { done(); resizeBy(el, line, k === "+" || k === "=" ? 1 : -1); }
 }
 
 // ---- pictures on the page. A picture is dragged anywhere: it is placed at that spot ({.free x= y= width=}, in % of the
 // panel it was dropped in, so it moves with that panel when the text reflows; dropped between panels: the nearest
-// one; no panel: the chapter). New pictures from the picture panel or from the computer are placed where they are
-// dropped. Card rows and mascots are dragged between blocks. A click gives a picture its tools; a placed picture has a
-// resize handle. Each edit rewrites the chapter's text (one undo step: Ctrl/Cmd+Z), so the text stays the one source.
+// one; no panel: the chapter). A picture that is a row's column is dragged between the row's columns instead (its
+// width in "::: row 3 1" goes with it; Alt: placed anywhere). New pictures from the picture panel or from the computer
+// are placed where they are dropped. Card rows and mascots are dragged between blocks. A click gives a picture its
+// tools and the keys; a picture has a resize handle. Each edit rewrites the chapter's text (one step of Undo), so the
+// text stays the one source; the page is patched, not redrawn, so nothing flashes.
 const REORDER_KINDS = ["cards", "say"];                // moved between blocks (HTML5 drag)
 const PICTURE_KINDS = ["img", ...REORDER_KINDS];       // blocks with tools
 const CONTAINERS = ["panel", "box", "stack", "small", "center", "note", "row"];   // fences a picture may be placed in
+const SIDES = ["left", "right", "end", "free"];
 const PICTURE_LINE = /^(\s*)!\[([^\]]*)\]\(([^)\s]+)\)\s*(\{[^{}]*\})?\s*$/;
 let drag = null;                                       // HTML5: {from, end} a block's lines, {pic, mascot} from the panel
 let P = null;                                          // a picture's pointer drag or resize
 let clickGone = false;                                 // the click after a drag is not a click
-function setText(text, caret) {                        // the whole text replaced as one undoable edit
-  const ta = M.api.modal.querySelector("#rbe-text");
-  ta.focus(); ta.select();
-  if (!document.execCommand?.("insertText", false, text)) ta.value = text;
+// the whole text replaced as one step; caret: the cursor's offset; sel: the line whose block is selected afterwards
+function setText(text, caret, sel = null, kind = "edit") {
+  const ta = textBox();
+  M.selLine = sel;
+  if (text !== M.source) {
+    const top = ta.scrollTop;
+    ta.value = M.source = text;
+    ta.scrollTop = top;
+    remember(kind, caret ?? 0);
+    saveDraft();
+  }
   if (caret != null) ta.setSelectionRange(caret, caret);
-  M.source = ta.value; saveDraft(); preview();
+  render();
 }
 const offsetOf = (lines, n) => lines.slice(0, n).reduce((sum, l) => sum + l.length + 1, 0);
 // the source lines a moved block takes: a picture or a card row its line, a callout its "> " lines
@@ -102,99 +171,205 @@ function extent(lines, from, kind) {
 const page = () => M.api.modal.querySelector("#rbe-page");
 const isContainer = n => n.dataset?.kind === "section" || (n.dataset?.kind === "fence" && CONTAINERS.includes(n.dataset.fence));
 const boxOf = el => (el === page() ? el : el.querySelector(":scope > .rb-panel") || el);   // where % are measured
-// the container a point lands in: the one under it, else the nearest by height, else the chapter
-function anchorAt(x, y, skip = null) {
-  const pg = page();
-  for (const e of document.elementsFromPoint(x, y)) {
-    if (!pg.contains(e) || skip?.contains(e)) continue;
-    for (let n = e; n && n !== pg; n = n.parentElement) if (isContainer(n)) return n;
-    break;
+// the containers' boxes (measured once per drag, again after a scroll)
+function boxes(skip = null) {
+  return [...page().querySelectorAll("[data-kind]")].filter(n => isContainer(n) && !skip?.contains(n)).map(n => ({ n, r: boxOf(n).getBoundingClientRect() }));
+}
+// the container a point lands in: the innermost one around it, else the nearest by height, else the chapter
+function anchorAt(x, y, skip = null, list = boxes(skip)) {
+  let inner = null, near = null, dist = Infinity;
+  for (const b of list) {
+    const { r } = b;
+    if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) { if (!inner || r.width * r.height < inner.r.width * inner.r.height) inner = b; continue; }
+    const d = y < r.top ? r.top - y : y - r.bottom;
+    if (d < dist && x >= r.left - 40 && x <= r.right + 40) { near = b; dist = d; }
   }
-  let best = null, dist = Infinity;
-  for (const n of pg.querySelectorAll("[data-kind]")) {
-    if (!isContainer(n) || skip?.contains(n)) continue;
-    const r = boxOf(n).getBoundingClientRect(), d = y < r.top ? r.top - y : y > r.bottom ? y - r.bottom : 0;
-    if (d < dist && x >= r.left - 40 && x <= r.right + 40) { best = n; dist = d; }
-  }
-  return best || pg;
+  return (inner || near)?.n || page();
 }
 // the source line a picture placed in a container goes on: a section's end, before a fence's close, after the title
 function lineFor(anchor, lines) {
   if (anchor === page()) { const h = lines.findIndex(l => /^#\s/.test(l)); return h + 1; }
   return anchor.dataset.kind === "section" ? +anchor.dataset.end : +anchor.dataset.close;
 }
-const round = v => Math.round(v * 2) / 2;
-// a picture placed at (x, y) (its top left, screen px) and w px wide: from its old line (moved) or new (alt, src)
-function placeAt({ from = null, alt = "", src }, x, y, w, skip = null) {
-  const lines = M.source.split("\n"), anchor = anchorAt(x + 8, y + 8, skip), r = boxOf(anchor).getBoundingClientRect();
+const round = v => Math.round(v * 2) / 2;               // widths: to 0.5%
+const pos = v => Math.min(150, Math.max(-50, Math.round(v * 10) / 10));   // places: to 0.1%, within the stretch allowed
+// a block that is a row's column: {row, cols, index}
+function colOf(el) {
+  const col = el?.parentElement, row = col?.parentElement;
+  if (!col?.classList.contains("rb-col") || row?.dataset.fence !== "row" || col.firstElementChild !== el) return null;
+  const cols = [...row.children].filter(c => c.classList.contains("rb-col"));
+  return { row, cols, index: cols.indexOf(col) };
+}
+// a row's widths ("::: row 3 1", 1 for a column without one) changed by fn; even widths or one column: none written
+const ROW_HEAD = /^(\s*:{3,}\s*row\b)([\d.\s:]*?)(\s*(?:["{].*)?)$/i;
+function ratios(lines, rowLine, n, fn) {
+  const m = ROW_HEAD.exec(lines[rowLine] || "");
+  if (!m) return;
+  const w = m[2].split(/[\s:]+/).map(Number).filter(v => v > 0);
+  if (!w.length) return;
+  while (w.length < n) w.push(1);
+  fn(w);
+  lines[rowLine] = `${m[1]}${w.every(v => v === 1) ? "" : ` ${w.join(" ")}`}${m[3]}`;
+}
+// a picture placed at (x, y) (its top left, screen px) and w px wide: from its old line (moved; col: the row column it
+// was) or new (alt, src). % of the container's inside (where CSS measures them), so it lands where it was dropped
+function placeAt({ from = null, alt = "", src, col = null }, x, y, w, skip = null) {
+  const lines = M.source.split("\n"), anchor = anchorAt(x + 8, y + 8, skip), box = boxOf(anchor), r = box.getBoundingClientRect();
+  const left = r.left + box.clientLeft, top = r.top + box.clientTop, W = box.clientWidth || 1, H = box.clientHeight || 1;
   let attrs = { cls: [] }, at = lineFor(anchor, lines);
   if (from != null) {
     const m = PICTURE_LINE.exec(lines[from] || "");
-    if (!m) return;
+    if (!m) return render();
     [alt, src] = [m[2], m[3]];
     attrs = M.api.RB.splitAttrs(m[4] || "").attrs;
     lines.splice(from, 1);
+    if (col) ratios(lines, +col.row.dataset.line, col.cols.length, v => v.splice(col.index, 1));
     if (at > from) at--;
   }
-  attrs.cls = [...attrs.cls.filter(c => !["left", "right", "end", "free"].includes(c)), "free"];
-  const clamp = v => Math.min(150, Math.max(-50, v));
-  attrs.x = String(clamp(round(((x - r.left) / (r.width || 1)) * 100)));
-  attrs.y = String(clamp(round(((y - r.top) / (r.height || 1)) * 100)));
-  attrs.width = String(Math.min(100, Math.max(3, round((w / (r.width || 1)) * 100))));
+  attrs.cls = [...attrs.cls.filter(c => !SIDES.includes(c)), "free"];
+  attrs.x = String(pos(((x - left) / W) * 100));
+  attrs.y = String(pos(((y - top) / H) * 100));
+  attrs.width = String(Math.min(100, Math.max(3, round((w / W) * 100))));
   delete attrs.height;
   lines.splice(at, 0, `![${alt}](${src}) ${M.api.RB.attrsText(attrs)}`);
-  setText(lines.join("\n"), offsetOf(lines, at));
+  setText(lines.join("\n"), offsetOf(lines, at), at);
+  settle(at, x, y);
+}
+// after the redraw its container may be taller or shorter (the picture left that container's flow): its place measured
+// again so it stays where it was dropped (the same Undo step)
+function settle(line, x, y) {
+  const f = page().querySelector(`[data-line="${line}"]`), box = f?.offsetParent;
+  if (!box) return;
+  const r = f.getBoundingClientRect(), lines = M.source.split("\n"), m = PICTURE_LINE.exec(lines[line] || "");
+  if (!m || (Math.abs(r.left - x) < 1.5 && Math.abs(r.top - y) < 1.5)) return;
+  const b = box.getBoundingClientRect(), a = M.api.RB.splitAttrs(m[4] || "").attrs;
+  a.x = String(pos(((x - b.left - box.clientLeft) / (box.clientWidth || 1)) * 100));
+  a.y = String(pos(((y - b.top - box.clientTop) / (box.clientHeight || 1)) * 100));
+  lines[line] = `${m[1]}![${m[2]}](${m[3]}) ${M.api.RB.attrsText(a)}`;
+  const text = lines.join("\n"), ta = textBox(), top = ta.scrollTop, caret = ta.selectionStart;
+  if (text === M.source) return;
+  ta.value = M.source = M.hist.list[M.hist.i].text = text;
+  ta.scrollTop = top; ta.setSelectionRange(caret, caret);
+  saveDraft(); render();
+}
+// a row's column moved to another place in the row (slot: before that column; the count: after the last)
+function moveInRow(p) {
+  const { row, cols, index } = p.col, slot = p.slot;
+  if (slot === index || slot === index + 1) { M.selLine = p.line; return render(); }   // where it was
+  const lines = M.source.split("\n");
+  let at = slot < cols.length ? +cols[slot].firstElementChild.dataset.line : +row.dataset.close;
+  const [moved] = lines.splice(p.line, 1);
+  if (at > p.line) at--;
+  lines.splice(at, 0, moved);
+  const to = slot > index ? slot - 1 : slot;
+  ratios(lines, +row.dataset.line, cols.length, w => w.splice(to, 0, ...w.splice(index, 1)));
+  setText(lines.join("\n"), offsetOf(lines, at), at);
+}
+// a picture's or card row's {attrs} changed by fn (false: no change)
+function editPicture(line, fn, kind = "edit") {
+  const lines = M.source.split("\n"), m = /^(\s*)(.*?)(\s*\{[^{}]*\})?\s*$/.exec(lines[line] ?? ""), a = M.api.RB.splitAttrs(m[3] || "").attrs;
+  if (fn(a) === false) return;
+  const attrs = M.api.RB.attrsText(a);
+  lines[line] = `${m[1]}${m[2]}${attrs ? ` ${attrs}` : ""}`;
+  setText(lines.join("\n"), offsetOf(lines, line), line, kind);
+}
+function nudge(line, dx, dy) {                         // a placed picture moved by dx, dy (%)
+  editPicture(line, a => {
+    if (!a.cls.includes("free")) return false;
+    const v = (k, d) => String(pos((parseFloat(a[k]) || 0) + d));
+    a.x = v("x", dx); a.y = v("y", dy);
+  }, "nudge");
+}
+function resizeBy(el, line, d) {                       // 5% a step; cards: small or not
+  editPicture(line, a => {
+    if (el.dataset.kind === "cards") { a.cls = d < 0 ? [...new Set([...a.cls, "small"])] : a.cls.filter(c => c !== "small"); return; }
+    const parent = (a.cls.includes("free") ? el.offsetParent : el.parentElement)?.clientWidth || 1;
+    const now = /^\d+(\.\d+)?$/.test(a.width || "") ? +a.width : Math.round((el.getBoundingClientRect().width / parent) * 100);
+    a.width = String(Math.min(100, Math.max(5, Math.round(now / 5) * 5 + 5 * d)));
+  }, "size");
+}
+function takeOut(el, line, kind) {                     // a row's column takes its width with it
+  const lines = M.source.split("\n"), [from, end] = extent(lines, line, kind), col = colOf(el);
+  lines.splice(from, end - from);
+  if (col) ratios(lines, +col.row.dataset.line, col.cols.length, w => w.splice(col.index, 1));
+  setText(lines.join("\n"), offsetOf(lines, from), null);
 }
 function wireDrag(pane) {
   const marker = Object.assign(document.createElement("div"), { className: "rbe-drop", hidden: true });
-  pane.append(marker);
+  const colBar = Object.assign(document.createElement("div"), { className: "rbe-colbar", hidden: true });
+  pane.append(marker, colBar);
   let lit = null;                                      // the container a drop would go in
   const light = el => { if (lit !== el) { lit?.classList.remove("rbe-anchor"); lit = el; el?.classList.add("rbe-anchor"); } };
-  // pictures: pointer drag anywhere (and the resize handle)
+  const inside = (el, x, y) => { const r = el.getBoundingClientRect(); return x >= r.left - 8 && x <= r.right + 8 && y >= r.top - 8 && y <= r.bottom + 8; };
+  const slotAt = (col, x) => { const k = col.cols.findIndex(c => { const r = c.getBoundingClientRect(); return x < r.left + r.width / 2; }); return k < 0 ? col.cols.length : k; };
+  const bar = (col, slot) => {                         // where a row's column would go
+    if (!col) { colBar.hidden = true; return; }
+    const rr = col.row.getBoundingClientRect(), p = pane.getBoundingClientRect(), cs = col.cols.map(c => c.getBoundingClientRect());
+    const x = slot < cs.length ? (slot ? (cs[slot - 1].right + cs[slot].left) / 2 : cs[0].left - 6) : cs[cs.length - 1].right + 6;
+    Object.assign(colBar.style, { left: `${x - p.left - 2}px`, top: `${rr.top - p.top + pane.scrollTop}px`, height: `${rr.height}px` });
+    colBar.hidden = false;
+  };
+  // pictures: pointer drag anywhere (and the resize handle), drawn once a frame
+  let frame = 0, last = null;
   pane.addEventListener("pointerdown", e => {
     if (M.tts || e.button !== 0) return;
     const handle = e.target.closest(".rbe-resize"), fig = handle ? M.selected : e.target.closest('[data-kind="img"]');
     if (!fig || !page().contains(fig)) return;
     e.preventDefault();
+    pane.focus({ preventScroll: true });
     const r = fig.getBoundingClientRect();
-    P = { fig, handle: !!handle, line: +fig.dataset.line, x0: e.clientX, y0: e.clientY, gx: e.clientX - r.left, gy: e.clientY - r.top, w: r.width, moved: false };
+    P = { fig, handle, line: +fig.dataset.line, x0: e.clientX, y0: e.clientY, gx: e.clientX - r.left, gy: e.clientY - r.top, w: r.width, moved: false, col: handle ? null : colOf(fig) };
     try { pane.setPointerCapture(e.pointerId); } catch { /* a pointer the browser doesn't track */ }
   });
-  pane.addEventListener("pointermove", e => {
-    if (!P) return;
-    const dx = e.clientX - P.x0, dy = e.clientY - P.y0;
-    if (!P.moved && Math.hypot(dx, dy) < 4) return;
-    if (!P.moved) {
-      P.moved = true; tools(null);
-      if (!P.handle) {
-        P.ghost = P.fig.cloneNode(true);
-        Object.assign(P.ghost.style, { position: "fixed", width: `${P.w}px`, left: "0", top: "0", margin: "0", zIndex: 90, pointerEvents: "none", opacity: ".85" });
-        P.ghost.className += " rbe-ghost";
-        document.body.append(P.ghost);
-        P.fig.classList.add("rbe-moving");
-      }
+  pane.addEventListener("pointermove", e => { if (P) { last = e; frame ||= requestAnimationFrame(draw); } });
+  pane.addEventListener("scroll", () => { if (P?.boxes) P.boxes = boxes(P.fig); }, { passive: true });
+  function begin() {
+    P.moved = true;
+    if (P.handle) {                                    // resizing: the handle follows the corner and shows the width
+      pane.querySelector(".rbe-pictools")?.remove();
+      P.base = (P.fig.classList.contains("rb-free") ? P.fig.offsetParent : P.fig.parentElement)?.clientWidth || 1;
+      return;
     }
-    if (P.handle) { P.fig.style.width = `${Math.max(20, P.w + dx)}px`; return; }
-    P.ghost.style.transform = `translate(${e.clientX - P.gx}px, ${e.clientY - P.gy}px)`;
-    light(anchorAt(e.clientX - P.gx + 8, e.clientY - P.gy + 8, P.fig));
-  });
+    tools(null);
+    P.boxes = boxes(P.fig);
+    P.ghost = P.fig.cloneNode(true);
+    Object.assign(P.ghost.style, { position: "fixed", width: `${P.w}px`, left: "0", top: "0", margin: "0", zIndex: 90, pointerEvents: "none", opacity: ".85" });
+    P.ghost.className += " rbe-ghost";
+    document.body.append(P.ghost);
+    P.fig.classList.add("rbe-moving");
+  }
+  function draw() {
+    frame = 0;
+    const e = last;
+    if (!P || !e) return;
+    const dx = e.clientX - P.x0, dy = e.clientY - P.y0;
+    if (!P.moved) { if (Math.hypot(dx, dy) < 4) return; begin(); }
+    if (P.handle) {
+      const w = Math.max(20, P.w + dx);
+      P.fig.style.width = `${w}px`;
+      P.pct = Math.min(100, Math.max(3, round((w / P.base) * 100)));
+      const r = P.fig.getBoundingClientRect(), p = pane.getBoundingClientRect();
+      Object.assign(P.handle.style, { left: `${r.right - p.left - 9}px`, top: `${r.bottom - p.top + pane.scrollTop - 9}px` });
+      P.handle.dataset.size = `${P.pct}%`;
+      return;
+    }
+    const x = e.clientX - P.gx, y = e.clientY - P.gy;
+    P.ghost.style.transform = `translate(${x}px, ${y}px)`;
+    P.slot = P.col && !e.altKey && inside(P.col.row, e.clientX, e.clientY) ? slotAt(P.col, e.clientX) : null;
+    if (P.slot != null) { light(P.col.row); bar(P.col, P.slot); } else { bar(null); light(anchorAt(x + 8, y + 8, P.fig, P.boxes)); }
+  }
   const end = e => {
     if (!P) return;
+    cancelAnimationFrame(frame); frame = 0; last = null;
     const p = P; P = null;
-    p.ghost?.remove(); p.fig.classList.remove("rbe-moving"); light(null);
+    p.ghost?.remove(); p.fig.classList.remove("rbe-moving"); light(null); bar(null);
     if (!p.moved) return;                              // a click: the click handler gives its tools
     clickGone = true; setTimeout(() => { clickGone = false; }, 0);
-    if (e.type === "pointercancel") return preview();
-    if (p.handle) {                                    // resized: its width in % of what it is measured against
-      const lines = M.source.split("\n"), m = PICTURE_LINE.exec(lines[p.line] || "");
-      if (!m) return preview();
-      const a = M.api.RB.splitAttrs(m[4] || "").attrs, base = (a.cls.includes("free") ? p.fig.offsetParent : p.fig.parentElement)?.clientWidth || 1;
-      a.width = String(Math.min(100, Math.max(3, round((p.fig.getBoundingClientRect().width / base) * 100))));
-      lines[p.line] = `${m[1]}![${m[2]}](${m[3]}) ${M.api.RB.attrsText(a)}`;
-      setText(lines.join("\n"), offsetOf(lines, p.line));
-      return setTimeout(() => select(page().querySelector(`[data-line="${p.line}"]`)), 250);
-    }
-    placeAt({ from: p.line }, e.clientX - p.gx, e.clientY - p.gy, p.w, p.fig);
+    if (e.type === "pointercancel") { M.selLine = null; return render(); }
+    if (p.handle) return editPicture(p.line, a => { a.width = String(p.pct); });
+    p.slot = p.col && !e.altKey && inside(p.col.row, e.clientX, e.clientY) ? slotAt(p.col, e.clientX) : null;
+    if (p.slot != null) return moveInRow(p);
+    placeAt({ from: p.line, col: p.col }, e.clientX - p.gx, e.clientY - p.gy, p.w, p.fig);
   };
   pane.addEventListener("pointerup", end);
   pane.addEventListener("pointercancel", end);
@@ -209,14 +384,14 @@ function wireDrag(pane) {
     const el = e.target.closest?.("[data-line]");
     if (!el || !REORDER_KINDS.includes(el.dataset.kind)) return;
     const lines = M.source.split("\n"), [from, end] = extent(lines, +el.dataset.line, el.dataset.kind);
-    drag = { el, from, end };
+    drag = { el, from, end, boxes: boxes() };
     e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", lines.slice(from, end).join("\n"));
     tools(null);
   });
   M.api.modal.querySelector(".rbe-pic-grid").addEventListener("dragstart", e => {   // a picture (or, with Alt, its mascot) from the panel
     const b = e.target.closest("[data-pic]");
     if (!b) return;
-    drag = { pic: b.dataset.pic, mascot: e.altKey };
+    drag = { pic: b.dataset.pic, mascot: e.altKey, boxes: boxes() };
     e.dataTransfer.effectAllowed = "copy"; e.dataTransfer.setData("text/plain", b.dataset.pic);
   });
   const files = e => !drag && [...(e.dataTransfer?.types || [])].includes("Files");   // image files from this computer
@@ -224,7 +399,7 @@ function wireDrag(pane) {
   pane.addEventListener("dragover", e => {
     if (!drag && !files(e)) return;
     e.preventDefault();
-    if (free(e)) { marker.hidden = true; light(anchorAt(e.clientX, e.clientY)); return; }
+    if (free(e)) { marker.hidden = true; light(anchorAt(e.clientX, e.clientY, null, drag?.boxes)); return; }
     const t = target(e);
     if (!t) { marker.hidden = true; return; }
     const p = pane.getBoundingClientRect();
@@ -238,8 +413,8 @@ function wireDrag(pane) {
     if (!drag) return;
     e.preventDefault();
     if (drag.pic && !drag.mascot) {                    // placed where it lands, a quarter of the panel wide
-      const r = boxOf(anchorAt(e.clientX, e.clientY)).getBoundingClientRect();
-      placeAt({ src: drag.pic }, e.clientX, e.clientY, r.width * 0.25);
+      const box = boxOf(anchorAt(e.clientX, e.clientY));
+      placeAt({ src: drag.pic }, e.clientX, e.clientY, box.clientWidth * 0.25);
       drag = null; return;
     }
     const t = target(e);
@@ -255,12 +430,12 @@ function wireDrag(pane) {
     while (moved.length && !moved[moved.length - 1].trim()) moved.pop();
     lines.splice(at, 0, ...moved);
     drag = null;
-    setText(lines.join("\n"), offsetOf(lines, at));
+    setText(lines.join("\n"), offsetOf(lines, at), at);
   });
   pane.addEventListener("dragend", () => { marker.hidden = true; light(null); drag = null; });
 }
-// the selected picture: its tools, and a placed one's resize handle
-function select(el) { tools(PICTURE_KINDS.includes(el?.dataset.kind) ? el : null); }
+// the selected picture: its tools, and a picture's resize handle
+function select(el) { M.selLine = PICTURE_KINDS.includes(el?.dataset.kind) ? +el.dataset.line : null; tools(M.selLine != null ? el : null); }
 // a clicked picture's tools: side (left, centre, right, the corner), size, delete
 function tools(el) {
   const pane = M.api.modal.querySelector(".rbe-preview");
@@ -270,13 +445,14 @@ function tools(el) {
   if (!el) return;
   el.classList.add("rbe-selected");
   const kind = el.dataset.kind, line = +el.dataset.line, box = document.createElement("div");
+  const hint = kind !== "img" ? "" : colOf(el) ? "Drag it between the row's columns (Alt: anywhere)" : el.classList.contains("rb-free") ? "Drag it, or arrow keys" : "Drag it anywhere";
   box.className = "rbe-pictools";
-  box.innerHTML = (kind === "img" ? `<span class="muted">Drag it anywhere ·</span><button type="button" data-side="left" title="Text flows on its right">Left</button><button type="button" data-side="" title="On a line of its own">Center</button>
+  box.innerHTML = (kind === "img" ? `<span class="muted">${hint} ·</span><button type="button" data-side="left" title="Text flows on its right">Left</button><button type="button" data-side="" title="On a line of its own">Center</button>
     <button type="button" data-side="right" title="Text flows on its left">Right</button><button type="button" data-side="end" title="At the bottom right">Corner</button>
-    <button type="button" data-size="-1" title="Smaller">−</button><button type="button" data-size="1" title="Bigger">+</button>`
+    <button type="button" data-size="-2" title="Smaller (−)">−</button><button type="button" data-size="2" title="Bigger (+)">+</button>`
     : kind === "cards" ? `<button type="button" data-size="-1" title="Smaller cards">−</button><button type="button" data-size="1" title="Bigger cards">+</button>`
       : `<button type="button" data-say="top" title="The mascot above the bubble">Top</button><button type="button" data-say="" title="The mascot beside it">Side</button>`)
-    + `<button type="button" data-del title="Take it out">Delete</button>`;
+    + `<button type="button" data-del title="Take it out (Delete)">Delete</button>`;
   const r = el.getBoundingClientRect(), p = pane.getBoundingClientRect();
   pane.append(box);
   if (kind === "img") {                                // drag the corner to resize
@@ -290,45 +466,24 @@ function tools(el) {
     const b = e.target.closest("button");
     if (!b) return;
     e.preventDefault(); e.stopPropagation();
-    const lines = M.source.split("\n"), text = lines[line] ?? "";
-    if (b.dataset.del != null) {
-      const [from, end] = extent(lines, line, kind);
-      lines.splice(from, end - from);
-      tools(null);
-      return setText(lines.join("\n"), offsetOf(lines, from));
+    if (b.dataset.del != null) return takeOut(el, line, kind);
+    if (b.dataset.size) return resizeBy(el, line, +b.dataset.size);
+    if (b.dataset.side != null) {                      // back in the flow: placement gone
+      return editPicture(line, a => { a.cls = a.cls.filter(c => !SIDES.includes(c)); if (b.dataset.side) a.cls.push(b.dataset.side); delete a.x; delete a.y; });
     }
-    if (kind === "say") {                              // > [!name opts] text
-      lines[line] = text.replace(/^>\s*\[!([\w-]+)((?:\s+[\w-]+)*)\]/, (_, who, opts) => {
-        const keep = opts.trim().split(/\s+/).filter(o => o && o !== "top");
-        return `> [!${[who, ...(b.dataset.say ? [b.dataset.say] : []), ...keep].join(" ")}]`;
-      });
-    } else {
-      const m = /^(\s*)(.*?)(\s*\{[^{}]*\})?\s*$/.exec(text), a = M.api.RB.splitAttrs(m[3] || "").attrs;
-      if (b.dataset.side != null) {                    // back in the flow: placement gone
-        a.cls = a.cls.filter(c => !["left", "right", "end", "free"].includes(c)); if (b.dataset.side) a.cls.push(b.dataset.side);
-        delete a.x; delete a.y;
-      }
-      if (b.dataset.size) {
-        if (kind === "cards") a.cls = +b.dataset.size < 0 ? [...new Set([...a.cls, "small"])] : a.cls.filter(c => c !== "small");
-        else {
-          const parent = (a.cls.includes("free") ? el.offsetParent : el.parentElement)?.getBoundingClientRect().width || 1;
-          const now = /^\d+$/.test(a.width || "") ? +a.width : Math.round((el.getBoundingClientRect().width / parent) * 100);
-          a.width = String(Math.min(100, Math.max(5, Math.round(now / 5) * 5 + 10 * +b.dataset.size)));
-        }
-      }
-      const attrs = M.api.RB.attrsText(a);
-      lines[line] = `${m[1]}${m[2]}${attrs ? ` ${attrs}` : ""}`;
-    }
-    setText(lines.join("\n"), offsetOf(lines, line));
-    setTimeout(() => select(M.api.modal.querySelector(`.rbe-preview [data-line="${line}"]`)), 250);   // after the redraw
+    const lines = M.source.split("\n");                // a mascot: > [!name opts] text
+    lines[line] = (lines[line] ?? "").replace(/^>\s*\[!([\w-]+)((?:\s+[\w-]+)*)\]/, (_, who, opts) => {
+      const keep = opts.trim().split(/\s+/).filter(o => o && o !== "top");
+      return `> [!${[who, ...(b.dataset.say ? [b.dataset.say] : []), ...keep].join(" ")}]`;
+    });
+    setText(lines.join("\n"), offsetOf(lines, line), line);
   });
 }
 
-// the text's line n at the top of the box, the cursor at its start
-function jump(n) {
-  const ta = M.api.modal.querySelector("#rbe-text"), lines = ta.value.split("\n");
-  const at = lines.slice(0, n).reduce((sum, l) => sum + l.length + 1, 0);
-  ta.focus();
+// the text's line n at the top of the box, the cursor at its start (focus: the text box takes the keys)
+function jump(n, focus = true) {
+  const ta = textBox(), at = offsetOf(ta.value.split("\n"), n);
+  if (focus) ta.focus();
   ta.setSelectionRange(at, at);
   const lh = parseFloat(getComputedStyle(ta).lineHeight) || 20;
   ta.scrollTop = Math.max(0, n * lh - 2 * lh);           // wrapped lines make it approximate: the caret stays in view
@@ -337,7 +492,7 @@ function jump(n) {
 // the block under the cursor brought into view on the page, marked a moment
 let followed = null;
 function follow() {
-  const ta = M.api.modal.querySelector("#rbe-text"), pane = M.api.modal.querySelector(".rbe-preview");
+  const ta = textBox(), pane = M.api.modal.querySelector(".rbe-preview");
   if (!ta || !pane || M.tts) return;
   const n = ta.value.slice(0, ta.selectionStart).split("\n").length - 1;
   let best = null;
@@ -356,6 +511,8 @@ function html() {
     <header class="rbe-top"><h2>${ch ? `Edit “${esc(ch.title)}”` : "New chapter"}</h2>
       <label class="rbe-num" title="The chapter's number: the book's order">No. <input id="rbe-num" inputmode="numeric" value="${esc(num)}" maxlength="2"></label>
       <span class="rbe-state muted" id="rbe-state">${restored ? "Your unpublished draft is back." : ""}</span>
+      <button type="button" class="ghost icon" id="rbe-undo" data-rbe="undo" title="Undo (Ctrl/Cmd+Z)" aria-label="Undo" disabled>↶</button>
+      <button type="button" class="ghost icon" id="rbe-redo" data-rbe="redo" title="Redo (Ctrl/Cmd+Shift+Z)" aria-label="Redo" disabled>↷</button>
       <button type="button" class="primary" data-rbe="publish">Publish</button>
       ${ch ? `<button type="button" class="ghost" data-rbe="discard" title="Back to the published text">Discard draft</button><button type="button" class="ghost danger" data-rbe="delete">Delete chapter</button>` : ""}
       <button type="button" class="ghost icon" data-rbe="close" aria-label="Close (your draft stays)">✕</button></header>
@@ -375,37 +532,69 @@ function html() {
       <details class="rbe-help"><summary class="ghost button">Syntax</summary><table class="help-table">${HELP.map(([k, d]) => `<tr><td><code>${esc(k)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>
         <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
         Click anything on the page to go to its line. Drag a picture anywhere on the page to place it there (it stays with the panel you drop it in);
-        drag its corner to resize; click it for Left / Center / Right / Corner (back in the flow). Rows of cards and mascots drag between blocks.
-        Drop image files from your computer, or pictures from the panel, anywhere on the page. Your draft is kept in this browser until you publish (Ctrl/Cmd+S); Ctrl/Cmd+Z undoes.</p></details>
+        a picture that is a row's column drags between the row's columns (hold Alt to place it anywhere instead). Drag its corner to resize. Click a
+        picture, then: arrow keys move a placed one (Shift: further), + and − size it, Delete takes it out, Esc lets it go; Left / Center / Right /
+        Corner put it back in the flow. Rows of cards and mascots drag between blocks. Drop image files from your computer, or pictures from the panel,
+        anywhere on the page. ↶ ↷ (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z) undo and redo everything, typing and the page alike. Your draft is kept in this
+        browser until you publish (Ctrl/Cmd+S).</p></details>
     </div>
     <div class="rbe-cols"><textarea id="rbe-text" spellcheck="true" data-tokens aria-label="The chapter's text"></textarea>
-      <div class="rbe-preview"><div class="rb rb-book"><article class="rb-chapter" id="rbe-page"></article></div><div class="rbe-sheets" hidden></div></div></div></div>`;
+      <div class="rbe-preview" tabindex="-1"><div class="rb rb-book"><article class="rb-chapter" id="rbe-page"></article></div><div class="rbe-sheets" hidden></div></div></div></div>`;
 }
 
+// the page drawn again: patched in place (morph), so unchanged pictures stay and nothing flashes; typing waits a moment
 let timer = 0;
-function preview() {
+function preview() { clearTimeout(timer); timer = setTimeout(render, 120); }
+function render() {
   clearTimeout(timer);
-  timer = setTimeout(() => {
-    const { api } = M, page = api.modal.querySelector("#rbe-page"), sheets = api.modal.querySelector(".rbe-sheets");
-    if (!page) return;
-    const base = api.ctx();
-    const ctx = { ...base, lines: true, eager: true, imgUrl: f => { const up = [...M.uploads.keys()].find(k => k === f || k.replace(/\.\w+$/, "") === f); return up ? M.uploads.get(up).url : base.imgUrl(f); },
-      size: f => (M.uploads.get(f)?.size || base.size(f)) };
-    const chapter = { id: M.ch ? M.ch.id : "new", num: M.num, title: "", source: M.source };
-    page.parentElement.hidden = !!M.tts; sheets.hidden = !M.tts;
-    if (M.tts) {                                       // its TTS pages, cut as Card sync's export cuts them (pictures still loading: approximate)
-      sheets.className = "rbe-sheets";
-      api.RB.paginate(sheets, [chapter], { ...ctx, lines: false });
-      sheets.className = "rbe-sheets rb-sheets";
-    } else {
-      page.innerHTML = api.RB.chapterHtml(chapter, ctx);
-      for (const el of page.querySelectorAll("[data-line]")) if (REORDER_KINDS.includes(el.dataset.kind)) el.draggable = true;
-      M.selected = null;
-      for (const im of page.querySelectorAll("img")) im.draggable = false;   // the block moves, not the image file
-      followed = null;
-      follow();                                        // the cursor's block in view again
-    }
-  }, 150);
+  if (!M) return;
+  const { api } = M, page = api.modal.querySelector("#rbe-page"), sheets = api.modal.querySelector(".rbe-sheets");
+  if (!page) return;
+  const base = api.ctx();
+  const ctx = { ...base, lines: true, eager: true, imgUrl: f => { const up = [...M.uploads.keys()].find(k => k === f || k.replace(/\.\w+$/, "") === f); return up ? M.uploads.get(up).url : base.imgUrl(f); },
+    size: f => (M.uploads.get(f)?.size || base.size(f)) };
+  const chapter = { id: M.ch ? M.ch.id : "new", num: M.num, title: "", source: M.source };
+  page.parentElement.hidden = !!M.tts; sheets.hidden = !M.tts;
+  if (M.tts) {                                         // its TTS pages, cut as Card sync's export cuts them (pictures still loading: approximate)
+    sheets.className = "rbe-sheets";
+    api.RB.paginate(sheets, [chapter], { ...ctx, lines: false });
+    sheets.className = "rbe-sheets rb-sheets";
+    return;
+  }
+  morph(page, api.RB.chapterHtml(chapter, ctx));
+  for (const el of page.querySelectorAll("[data-line]")) if (REORDER_KINDS.includes(el.dataset.kind)) el.draggable = true;
+  for (const im of page.querySelectorAll("img")) im.draggable = false;   // the block moves, not the image file
+  M.selected = null;
+  const sel = M.selLine != null ? page.querySelector(`[data-line="${M.selLine}"]`) : null;
+  tools(sel && PICTURE_KINDS.includes(sel.dataset.kind) ? sel : null);
+  followed = null;
+  if (!sel) follow();                                  // the cursor's block in view again
+}
+// root's children made like html's: nodes kept where they match (tag; an image also its src), so pictures don't reload
+const same = (a, b) => a.nodeType === b.nodeType && (a.nodeType !== 1 || (a.nodeName === b.nodeName && (a.nodeName !== "IMG" || a.getAttribute("src") === b.getAttribute("src"))));
+function morph(root, html) {
+  const t = document.createElement("template");
+  t.innerHTML = html;
+  patchKids(root, t.content);
+}
+function patchKids(el, src) {
+  let a = el.firstChild, b = src.firstChild;
+  while (b) {
+    const next = b.nextSibling;
+    if (a && same(a, b)) { patch(a, b); a = a.nextSibling; }
+    else if (a?.nextSibling && same(a.nextSibling, b)) { const gone = a; a = a.nextSibling; gone.remove(); patch(a, b); a = a.nextSibling; }   // one taken out
+    else if (a && next && same(a, next)) el.insertBefore(b, a);   // one put in
+    else if (a) { el.replaceChild(b, a); a = b.nextSibling; }
+    else el.appendChild(b);
+    b = next;
+  }
+  while (a) { const n = a.nextSibling; a.remove(); a = n; }
+}
+function patch(a, b) {
+  if (a.nodeType !== 1) { if (a.nodeValue !== b.nodeValue) a.nodeValue = b.nodeValue; return; }
+  for (const { name } of [...a.attributes]) if (!b.hasAttribute(name)) a.removeAttribute(name);
+  for (const { name, value } of b.attributes) if (a.getAttribute(name) !== value) a.setAttribute(name, value);
+  patchKids(a, b);
 }
 
 function saveDraft() {
@@ -420,17 +609,17 @@ const SNIPPET = {
   ability: () => "\n::: ability\n1. (OYT) Ability text.\n:::\n", card: () => "![[Card name]]", link: () => "[[Card name]]", page: () => "\n=== page ===\n",
 };
 function insert(kind) {
-  const ta = M.api.modal.querySelector("#rbe-text"), a = ta.selectionStart, b = ta.selectionEnd, sel = ta.value.slice(a, b);
+  const ta = textBox(), a = ta.selectionStart, b = ta.selectionEnd, sel = ta.value.slice(a, b);
   const wrap = { bold: ["**", "**"], italic: ["*", "*"], red: ["[", "]{.red}"] }[kind];
   const text = wrap ? `${wrap[0]}${sel || "text"}${wrap[1]}` : SNIPPET[kind]?.() ?? kind;
   ta.setRangeText(text, a, b, wrap && !sel ? "select" : "end");
   if (wrap && !sel) ta.setSelectionRange(a + wrap[0].length, a + wrap[0].length + 4);
-  ta.focus(); ta.dispatchEvent(new Event("input"));
+  ta.focus(); M.nextKind = "edit"; ta.dispatchEvent(new Event("input"));
 }
 
 function onClick(e) {
   const t = e.target.closest("[data-rbe], [data-ins], [data-pic]");
-  if (!t) return;
+  if (!t || !M) return;
   e.preventDefault(); e.stopPropagation();
   if (t.dataset.ins) return insert(t.dataset.ins);
   if (t.dataset.pic) {
@@ -439,14 +628,15 @@ function onClick(e) {
     return insert(e.altKey ? `\n> [!${stem}] ` : `![](${name})`);
   }
   const act = t.dataset.rbe;
-  if (act === "tts") { M.tts = !M.tts; t.setAttribute("aria-pressed", String(M.tts)); t.classList.toggle("on", M.tts); preview(); return; }
+  if (act === "undo" || act === "redo") return travel(act === "undo" ? -1 : 1);
+  if (act === "tts") { M.tts = !M.tts; t.setAttribute("aria-pressed", String(M.tts)); t.classList.toggle("on", M.tts); render(); return; }
   if (act === "close") return close();
   if (act === "discard") { if (confirm("Throw away your draft of this chapter?")) { writeDraft(M.key, null); open({ ...M.api }); } return; }
   if (act === "delete") return remove();
   if (act === "publish") return publish();
 }
 
-function close() { const { api } = M; clearTimeout(timer); api.modal.removeEventListener("click", onClick); M = null; api.closeModal(); }
+function close() { const { api } = M; clearTimeout(timer); api.modal.removeEventListener("click", onClick); P = drag = M = null; api.closeModal(); }
 
 // a picture: resized to MAX_W at most, WebP (PNG kept for pixel art), a name of its own in img/
 // pictures added from this computer (the Add picture button, a paste, files dropped on the page or the text): resized to

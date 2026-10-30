@@ -237,8 +237,8 @@ export function inline(text, ctx) {
 }
 const stars = html => html.replace(/★+/g, s => `<span class="rb-stars">${s}</span>`);
 
-// width=40 (per cent of the line) or width=6em; height=2em
-const sizeStyle = a => [a.width && `width:${/^\d+$/.test(a.width) ? `${a.width}%` : a.width}`, a.height && `height:${a.height}`].filter(Boolean).join(";").replace(/[^\w%.:;-]/g, "");
+// width=40 or 37.5 (per cent of the line) or width=6em; height=2em
+const sizeStyle = a => [a.width && `width:${/^\d+(\.\d+)?$/.test(a.width) ? `${a.width}%` : a.width}`, a.height && `height:${a.height}`].filter(Boolean).join(";").replace(/[^\w%.:;-]/g, "");
 function imgHtml(b, ctx, inLine = false) {
   const a = b.attrs || { cls: [] }, size = ctx.size?.(b.src), url = ctx.imgUrl ? ctx.imgUrl(b.src) : IMG_DIR + b.src, style = inLine ? sizeStyle(a) : "";
   const dims = size ? ` width="${size[0]}" height="${size[1]}"` : "";
