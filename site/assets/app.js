@@ -932,6 +932,7 @@ function bookCtx(extra = {}) {
     size: f => imgs[bookFile(f)]?.slice(0, 2) || null, chapters: S.book.chapters, ...extra,
   };
 }
+const pdfUrl = () => `https://github.com/${S.data.repo}/blob/${S.data.branch || "main"}/TTS/Rulebook/Rulebook.pdf`;   // AutoCroissant rulebook_pages
 const fileUrl = ch => `https://github.com/${S.data.repo}/commits/${S.data.branch || "main"}/site/rulebook/${encodeURIComponent(ch.file)}`;
 let rulesAt = "", spy = null;                            // the rulebook hash last scrolled to: a re-render stays put
 function renderRules(r) {
@@ -958,7 +959,7 @@ function renderRules(r) {
     <nav class="toc" aria-label="Rulebook chapters"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
       ${chapters.map(c => `<a href="#/rules/${c.id}" data-scroll="${c.id}" data-toc="${c.id}">${label(c)}</a><div class="subs" data-subs="${c.id}" hidden>${RB.sectionsOf(c).map(x => `<a class="sub" href="#/rules/${c.id}/${x.anchor.slice(c.id.length + 2)}" data-scroll="${x.anchor}">${esc(x.title)}</a>`).join("")}</div>`).join("")}
       <a href="#/rules" data-scroll="glossary" data-toc="glossary">Timing tags</a><a href="#/rules" data-scroll="banlist" data-toc="banlist">Constructed ban list</a>
-      <div class="toc-tools"><a class="ghost" href="#/rules/print" title="The pages the Tabletop Simulator save shows">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
+      <div class="toc-tools"><a class="ghost" href="${esc(pdfUrl())}" target="_blank" rel="noopener" title="The rulebook as a PDF (the Tabletop Simulator save's)">PDF</a><a class="ghost" href="#/rules/print" title="The PDF's pages, as the next save update prints them">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
         <button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button></div></nav>
     <div class="rb rb-book">
       ${q ? `<p class="muted">${shown.length} chapter${shown.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}" alt="Impossibility Simulator" width="260" height="462">`}
@@ -1005,7 +1006,7 @@ function watchToc() {
 async function renderSheets(r) {
   const shot = r.params.get("sheet"), solo = shot !== null && shot !== "";
   document.body.classList.toggle("rb-shot", solo);
-  view.innerHTML = `<p class="rb-print-bar muted">The rulebook's pages as the Tabletop Simulator save shows them (1080×1920; the next save update takes them). <a href="#/rules">Back to the rulebook</a></p><div class="rb-measure"></div>`;
+  view.innerHTML = `<p class="rb-print-bar muted">The rulebook's pages as the Tabletop Simulator save's PDF shows them (1080×1920; the next save update prints them). <a href="${esc(pdfUrl())}" target="_blank" rel="noopener">The PDF</a> · <a href="#/rules">Back to the rulebook</a></p><div class="rb-measure"></div>`;
   const host = $(".rb-measure", view), ctx = bookCtx({ eager: true }), chapters = S.book.chapters;
   const warm = document.createElement("div");             // every picture loaded first: the pages measure them
   warm.className = "rb"; warm.style.cssText = "position:absolute;left:-20000px;top:0;width:1080px";
@@ -1017,9 +1018,10 @@ async function renderSheets(r) {
   await document.fonts.ready;
   warm.remove();
   if (parseHash().name !== "rules" || parseHash().arg !== "print") return;
-  let sheets = RB.paginate(host, chapters, ctx);          // measured at full size, then shown small
+  const cover = { cover: ctx.imgUrl("cover") };           // the PDF's first page
+  let sheets = RB.paginate(host, chapters, ctx, cover);   // measured at full size, then shown small
   await Promise.all([...host.querySelectorAll("img")].map(i => i.decode().catch(() => {})));
-  if ([...host.querySelectorAll(".rb-body")].some(b => b.scrollHeight > b.clientHeight + 1)) sheets = RB.paginate(host, chapters, ctx);   // a picture late: cut again
+  if ([...host.querySelectorAll(".rb-body")].some(b => b.scrollHeight > b.clientHeight + 1)) sheets = RB.paginate(host, chapters, ctx, cover);   // a picture late: cut again
   host.className = "rb-sheets";
   if (solo) sheets.forEach((x, i) => x.el.classList.toggle("rb-shown", i === +shot));
   const list = Object.assign(document.createElement("script"), { type: "application/json", id: "rb-sheet-list" });

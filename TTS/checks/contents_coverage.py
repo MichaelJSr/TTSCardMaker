@@ -2,8 +2,8 @@
 
     python contents_coverage.py [save.json]
 Fails: a website card missing from the save or from every complete rule; a complete-rule card not on the website;
-the Rulebooks bag not exactly its rule's pages (one each, back = own face; its rule's old pages, kept, in the bag
-rule.old names inside it). Notes: repo PNGs nowhere in the save
+the Rulebooks bag not exactly its rule's pages (one each, back = own face) or, with rule.pdf, not one PDF object linking
+it; its rule's old pages, kept, in the bag rule.old names inside it. Notes: repo PNGs nowhere in the save
 (by folder), links to files gone from the repo (D5: report only).
 """
 import os
@@ -77,6 +77,14 @@ for guid, bag in (rules.get("bags") or {}).items():
             kept = Counter(face(c) for c in nested[0].get("ContainedObjects") or [])
             for p in sorted(set(rule_cards(old, pngs)) - set(kept)):
                 r.fail(f"bag {old.get('bag')!r}: page missing {p}")
+    if rule.get("pdf"):                                 # the rulebook as one Custom_PDF object (AutoCroissant tts_save._rulebook)
+        found = [o for o in inside if o.get("Name") == "Custom_PDF"
+                 and (m := LINK.fullmatch((o.get("CustomPDF") or {}).get("PDFUrl") or "")) and unquote(m.group(2)) == rule["pdf"]]
+        if len(found) != 1:
+            r.fail(f"bag {bag.get('name')!r}: {len(found)} PDF objects linking {rule['pdf']}")
+        if rule["pdf"] not in files:
+            r.fail(f"bag {bag.get('name')!r}: {rule['pdf']} not in the repo")
+        continue
     held = Counter(face(c) for c in inside if c.get("Name") in CARD_NAMES)
     want = set(rule_cards(rule, pngs))
     for p in sorted(want - set(held)):

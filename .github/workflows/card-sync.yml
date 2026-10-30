@@ -882,10 +882,11 @@ jobs:
           fi
           exit "$code"
 
-      # The rulebook's TTS pages (AutoCroissant commands/rulebook_pages): the website's #/rules/print drawn by the runner's
-      # Chrome into TTS/Rulebook, when the website shows main's chapters (it has had the 30-minute window to build them);
-      # the save below puts them in the Rulebooks bag and M takes them. A failure leaves the pages as they were.
-      - name: Rulebook pages
+      # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
+      # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), when the website shows main's
+      # chapters (it has had the 30-minute window to build them); the save below puts it in the Rulebooks bag and M takes
+      # it. A failure leaves the PDF as it was.
+      - name: Rulebook PDF
         id: pages
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
         continue-on-error: true
@@ -966,9 +967,9 @@ jobs:
             git update-index --add --cacheinfo "${mode:-100644},$(git hash-object -w -- "$save"),$save"
             parts+=("TTS save updated")
           fi
-          if [ "$PAGES" = true ]; then           # the rulebook's TTS pages: new, redrawn and gone files
+          if [ "$PAGES" = true ]; then           # the rulebook's PDF and pages.json (old page images removed)
             git add -A -- TTS/Rulebook
-            parts+=("rulebook pages drawn")
+            parts+=("rulebook PDF printed")
           fi
           tree=$(git write-tree --missing-ok)
           unset GIT_INDEX_FILE
@@ -1007,7 +1008,7 @@ jobs:
               || echo "::warning::the new run was not dispatched: the next run with work does it"
             exit 0
           fi
-          pngs=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$m" -- ':(icase)*.png' | { grep -c . || true; })   # the pages' too
+          pngs=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$m" -- ':(icase)*.png' ':(icase)*.pdf' | { grep -c . || true; })   # the rulebook PDF too
           { echo "pushed=true"; echo "m=$m"; echo "baked=$([ "$head" != "$MAIN" ] && echo true || echo false)"
             echo "pngs=$([ "$pngs" -gt 0 ] && echo true || echo false)"; } >> "$GITHUB_OUTPUT"
           echo "Main commit \`${m:0:8}\`: Card sync: ${subject%, }." >> "$GITHUB_STEP_SUMMARY"

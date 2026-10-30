@@ -355,7 +355,14 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
   border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--ink); tab-size: 2; }
 .rbe-preview { overflow: auto; border-radius: 12px; }
 .rbe-preview .rb { font-size: 15px; }
+.rbe-preview { position: relative; }
 .rbe-preview [data-line] { cursor: text; }
+.rbe-preview [draggable="true"] { cursor: grab; }
+.rbe-preview [draggable="true"]:hover { outline: 2px dashed color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }
+.rbe-drop { position: absolute; height: 4px; border-radius: 2px; background: var(--accent); pointer-events: none; z-index: 3; box-shadow: 0 0 0 2px #fff8; }
+.rbe-pictools { position: absolute; z-index: 4; display: flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border-strong); box-shadow: var(--shadow); }
+.rbe-pictools button { padding: 2px 8px; font: 12px system-ui, sans-serif; }
+.rbe-pic-grid button[draggable="true"] { cursor: grab; }
 .rbe-preview .rbe-here { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 .rbe-sheets.rb-sheets { gap: 10px; padding: 4px; }
 .rbe-bar .rbe-card { width: 13em; padding: 3px 8px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--ink); }
@@ -378,7 +385,7 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rb-sheet .rb-card img { box-shadow: none; }
 .rb-sheet .rb-row > .rb-col > .rb-cards .rb-card { width: min(6.8em, 100%); }
 .rb-sheet a { color: inherit; text-decoration: none; }
-.rb-sheet.rb-cover { padding: 0; } .rb-sheet.rb-cover .rb-body { padding: 0; } .rb-sheet.rb-cover .rb-body img { width: 100%; height: 100%; object-fit: cover; }
+.rb-sheet.rb-cover-sheet { padding: 0; } .rb-sheet.rb-cover-sheet .rb-body { padding: 0; } .rb-sheet.rb-cover-sheet .rb-body img { display: block; width: 100%; height: 100%; object-fit: cover; }
 body.rb-shot { margin: 0; background: #fff; overflow: hidden; } body.rb-shot > :not(main) { display: none !important; } body.rb-shot main { padding: 0 !important; margin: 0 !important; max-width: none !important; }
 body.rb-shot .rb-sheets { display: block; } body.rb-shot .rb-sheets .rb-sheet { zoom: 1; box-shadow: none; } body.rb-shot .rb-sheets .rb-sheet:not(.rb-shown) { display: none; }
 body.rb-shot .rb-print-bar { display: none; }

@@ -2222,17 +2222,12 @@
         1.1
       ],
       "holds": {
-        "CardCustom": 77,
+        "Custom_PDF": 1,
         "Custom_Model_Bag": 1
       },
       "rule": {
         "kind": "rulebook",
-        "folders": [
-          "TTS/Rulebook/*.png"
-        ],
-        "loose_cards": true,
-        "nickname": "Page N: Title",
-        "pages": "TTS/Rulebook/pages.json",
+        "pdf": "TTS/Rulebook/Rulebook.pdf",
         "old": {
           "bag": "Old Rulebook (Photoshop pages)",
           "folders": [

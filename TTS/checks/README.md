@@ -44,7 +44,7 @@ history clone. `card_sync_steps.py` needs git 2.37+, bash and `jq`.
 | `contents_decks.py` | Complete decks hold exactly their rule's PNGs at the rule's counts (an empty one fails); hand-picked decks stay inside their rule, and with `add_new_since` hold every rule card the save at that commit lacked |
 | `contents_names.py` | Card Nicknames = the website's names (Card Edits.json first); rulebook pages are "Page N: Title" (`TTS/Rulebook/07-02.png`: Page 7.2); Descriptions are not judged (the team's) |
 | `contents_backs.py` | Each deck has its rule's back; backs by card type |
-| `contents_coverage.py` | Every website card is in the save and in a complete rule; the Rulebooks bag holds its pages (`TTS/Rulebook`) once each, and the Photoshop pages in its "Old Rulebook (Photoshop pages)" bag |
+| `contents_coverage.py` | Every website card is in the save and in a complete rule; the Rulebooks bag holds the rulebook's PDF (`TTS/Rulebook/Rulebook.pdf`) as one Custom_PDF object, and the Photoshop pages in its "Old Rulebook (Photoshop pages)" bag |
 | `contents_resize.py` | The Lua `resizeTargets` rows = the Nicknames of the `Auxiliary/Creatures` cards |
 | `verify_rules_snapshot.py` | `decks.json` agrees with the save: `card_list` of hand-picked decks (an `add_new_since` deck may hold more: a note), and no rule matching a PNG that is not a card (no PSD, not on the website, like a back) |
 | `scripts_lua_syntax.py` | Every script compiles as Lua 5.2 and uses nothing MoonSharp lacks (lupa) |

@@ -63,15 +63,20 @@ text or image, links its commit when it is known), and the artwork sources when 
   `rulebook.js` draws them in the book's look: lavender panels with italic tabs, the dark ability boxes, mascots saying
   the in-jokes, real card pictures (`![[Card]]`, from the card data, so they follow the cards), badges and icons as on
   cards; the syntax is at the top of `rulebook.js` and behind the editor's Syntax button. The contents follow the
-  reading; search shows only the passages that match; each chapter links its history on GitHub. Signed in, each chapter
-  has an Edit button (and the contents a New chapter button): the text beside the page as it will look, a toolbar,
-  pictures uploaded or pasted (resized to 1080 px, WebP), a draft kept in the browser until Publish, which commits the
-  chapter (and its new pictures) straight to main. **TTS pages** (`#/rules/print`) cut the same chapters into 1080×1920
-  pages ("STATS", "STATS 2"... numbered 7, 7.2), as the Photoshop pages were; `=== page ===` starts a new one. Card
-  sync's main lane draws them into `TTS/Rulebook/` (`07-02.png`, `pages.json`; AutoCroissant `commands.rulebook_pages`,
-  once the website shows main's chapters) and the save's Rulebooks bag takes them; the Photoshop pages sit in the bag's
-  own "Old Rulebook (Photoshop pages)" bag. A chapter push starts Card sync (the bot's `db/rulebook.json` at once, the
-  pages after its 30-minute window).
+  reading; search shows only the passages that match; each chapter links its history on GitHub. Each chapter has an Edit
+  button, each section a ✎ (signed in), and the contents a New chapter button: the text beside the page as it will look
+  (or as its TTS pages), linked both ways (click the page to reach its line; the cursor shows its block). Pictures, card
+  rows and mascots are dragged to move them on the page; a click on a picture sets its side (left, centre, right, the
+  corner) and size; pictures come from the picture panel (drag or click) or from the computer (Add picture, paste, or
+  drop image files on the page: resized to 1080 px, WebP, published with the chapter). A card box picks cards by name.
+  Ctrl/Cmd+B, I, Z and S (publish). A draft stays in the browser until Publish, which commits the chapter (and its new
+  pictures) straight to main. **TTS pages** (`#/rules/print`) cut the same chapters into 1080×1920
+  pages (the cover, then "STATS", "STATS 2"... numbered 7, 7.2), as the Photoshop pages were; `=== page ===` starts a new
+  one. Card sync's main lane prints them to `TTS/Rulebook/Rulebook.pdf` (real text: searchable, selectable, bookmarks;
+  `pages.json` keeps each page's pixel hash so it is printed again only when a page changes; AutoCroissant
+  `commands.rulebook_pages`, once the website shows main's chapters), and the save's Rulebooks bag holds it as one PDF
+  object; the Photoshop pages sit in the bag's own "Old Rulebook (Photoshop pages)" bag. The contents' PDF button opens
+  it. A chapter push starts Card sync (the bot's `db/rulebook.json` at once, the PDF after its 30-minute window).
   Also the badge colors, the timing-tag glossary and the constructed ban list. Old page links
   (`#/rules/07-stats3`, `#/rules?q=07 Stats3`) open their chapter.
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,

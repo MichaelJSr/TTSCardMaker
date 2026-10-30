@@ -30,6 +30,8 @@ const ATTRS = /\s*\{([^{}]*)\}\s*$/;
 const PICTURE = /^!\[([^\]]*)\]\(([^)\s]+)\)\s*(\{[^}]*\})?\s*$/;          // a line that is only a picture: a block of its own
 
 /** "text {.a .b k=v}" -> {text, attrs: {cls: [a, b], k: v}} */
+/** {cls, k: v} back to "{.a .b k=v}" ("" when empty) */
+export const attrsText = a => { const parts = [...(a.cls || []).map(c => `.${c}`), ...Object.entries(a).filter(([k]) => k !== "cls").map(([k, v]) => `${k}=${v}`)]; return parts.length ? `{${parts.join(" ")}}` : ""; };
 export function splitAttrs(s) {
   const m = ATTRS.exec(s || ""), attrs = { cls: [] };
   if (!m) return { text: (s || "").trim(), attrs };
@@ -88,6 +90,7 @@ function parseBlocks(lines, inRow = false, base = 0) {
     for (i++; i < lines.length && lines[i].trim() && !startsBlock(lines[i]); i++) para.push(lines[i]);
     push(paragraph(para.join("\n")));
   }
+  out.forEach((b, k) => { b.end = k + 1 < out.length ? out[k + 1].line : base + lines.length; });   // up to the next block (blank lines too)
   return group(out, inRow);
 }
 
@@ -101,7 +104,7 @@ function group(list, inRow = false) {
   let sec = null;
   for (const b of list) {
     if (inRow && sec && column(b)) sec = null;
-    if (b.t === "h2") { sec = { t: "section", title: b.text, attrs: b.attrs, children: [], line: b.line }; res.push(sec); continue; }
+    if (b.t === "h2") { sec = { t: "section", title: b.text, attrs: b.attrs, children: [], line: b.line, end: b.end }; res.push(sec); continue; }
     if (b.t === "h1" || b.t === "hr" || b.t === "page") { sec = null; if (b.t !== "hr") res.push(b); continue; }
     if (holdsSection(b)) { sec = null; res.push(b); continue; }   // a fence holding sections (a row of them): its own
     (sec ? sec.children : res).push(b);
@@ -252,7 +255,7 @@ const kidsHtml = (list, ctx) => list.map(b => blockHtml(b, ctx)).join("");
 /** HTML for one block (draw and the paginator); ctx.lines: each block's element carries data-line (the editor's preview) */
 export function blockHtml(b, ctx) {
   const html = blockInner(b, ctx);
-  return ctx.lines && b.line != null && !b.cont ? html.replace(/^<([a-z][a-z0-9]*)/, `<$1 data-line="${b.line}"`) : html;
+  return ctx.lines && b.line != null && !b.cont ? html.replace(/^<([a-z][a-z0-9]*)/, `<$1 data-line="${b.line}" data-end="${b.end ?? b.line + 1}" data-kind="${b.t}"`) : html;
 }
 function blockInner(b, ctx) {
   switch (b.t) {
@@ -331,7 +334,7 @@ export const titleText = t => plainText({ blocks: [{ t: "p", text: String(t || "
 export function paginate(host, chapters, ctx, { cover = "" } = {}) {
   host.innerHTML = "";
   const sheets = [];
-  if (cover) { const el = sheetEl(""); el.classList.add("rb-cover"); el.querySelector(".rb-body").innerHTML = `<img src="${esc(cover)}" alt="">`; el.querySelector(".rb-head").remove(); host.append(el); sheets.push({ name: "Cover", num: "", el }); }
+  if (cover) { const el = sheetEl(""); el.classList.add("rb-cover-sheet"); el.querySelector(".rb-body").innerHTML = `<img src="${esc(cover)}" alt="">`; el.querySelector(".rb-head").remove(); host.append(el); sheets.push({ name: "Cover", num: "", el }); }
   for (const ch of chapters) {
     const ast = ch.ast || parse(ch.source), title = ast.title || ch.title, c = { ...ctx, id: "" };
     let n = 0, body = null;

@@ -1,5 +1,6 @@
 // The rulebook editor (app.js openBookEditor): one chapter's text beside its page as the site draws it (or as its TTS
-// pages), the two linked (a click on the page goes to its line; the cursor brings its block into view), a toolbar for
+// pages), the two linked (a click on the page goes to its line; the cursor brings its block into view), pictures moved
+// on the page by dragging (and dragged in from the picture panel; a click gives side and size), a toolbar for
 // the syntax (rulebook.js) and a card picker, pictures uploaded as WebP into site/rulebook/img, a draft kept in this
 // browser until published, and Publish (Ctrl/Cmd+S): the chapter (renamed when its number changes, removed by Delete)
 // and its new pictures as one commit.
@@ -42,6 +43,7 @@ export function open(api) {
   api.modal.querySelector("#rbe-num").addEventListener("input", e => { M.num = e.target.value.replace(/\D/g, "").slice(0, 2); saveDraft(); });
   api.modal.querySelector("#rbe-file").addEventListener("change", e => upload([...e.target.files]).finally(() => { e.target.value = ""; }));
   api.modal.addEventListener("click", onClick);
+  ta.addEventListener("drop", e => { const f = [...(e.dataTransfer?.files || [])].filter(x => x.type.startsWith("image/")); if (f.length) { e.preventDefault(); upload(f); } });
   ta.addEventListener("paste", e => { const f = [...(e.clipboardData?.files || [])].filter(x => x.type.startsWith("image/")); if (f.length) { e.preventDefault(); upload(f); } });
   ta.addEventListener("keydown", e => {                // Ctrl/Cmd+B bold, +I italic, +S publish
     if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
@@ -49,11 +51,15 @@ export function open(api) {
     if (act) { e.preventDefault(); act(); }
   });
   for (const ev of ["click", "keyup"]) ta.addEventListener(ev, follow);
-  api.modal.querySelector(".rbe-preview").addEventListener("click", e => {   // a click on the page: its line in the text
+  const pane = api.modal.querySelector(".rbe-preview");
+  pane.addEventListener("click", e => {               // a click on the page: its line in the text; a picture: its tools too
+    if (e.target.closest(".rbe-pictools")) return;
     const el = e.target.closest("[data-line]");
     e.preventDefault();
     if (el) jump(+el.dataset.line);
+    tools(PICTURE_KINDS.includes(el?.dataset.kind) ? el : null);
   }, true);
+  wireDrag(pane);
   const pick = api.modal.querySelector("#rbe-card");
   pick.addEventListener("keydown", e => {
     if (e.key !== "Enter" || !pick.value.trim()) return;
@@ -63,6 +69,137 @@ export function open(api) {
   });
   preview();
   if (line != null) jump(line); else ta.focus();
+}
+
+// ---- pictures on the page: drag to move (or drag one in from the picture panel), click for side and size. Each edit
+// rewrites the chapter's text (one undo step: Ctrl/Cmd+Z), so the text stays the one source.
+const PICTURE_KINDS = ["img", "cards", "say"];         // rulebook.js block kinds a drag moves
+let drag = null;                                       // {from, end} moving a block's lines, or {text} a new picture
+function setText(text, caret) {                        // the whole text replaced as one undoable edit
+  const ta = M.api.modal.querySelector("#rbe-text");
+  ta.focus(); ta.select();
+  if (!document.execCommand?.("insertText", false, text)) ta.value = text;
+  if (caret != null) ta.setSelectionRange(caret, caret);
+  M.source = ta.value; saveDraft(); preview();
+}
+const offsetOf = (lines, n) => lines.slice(0, n).reduce((sum, l) => sum + l.length + 1, 0);
+// the source lines a moved block takes: a picture or a card row its line, a callout its "> " lines
+function extent(lines, from, kind) {
+  if (kind !== "say") return [from, from + 1];
+  let end = from + 1;
+  while (end < lines.length && /^>/.test(lines[end])) end++;
+  return [from, end];
+}
+function wireDrag(pane) {
+  const marker = Object.assign(document.createElement("div"), { className: "rbe-drop", hidden: true });
+  pane.append(marker);
+  const target = e => {                                // the block the pointer is over and the side it is on
+    const el = e.target.closest?.("[data-line]");
+    if (!el || !pane.contains(el) || (drag?.el && (drag.el === el || drag.el.contains(el)))) return null;
+    const r = el.getBoundingClientRect(), after = e.clientY > r.top + r.height / 2;
+    return { el, after, line: after ? +el.dataset.end : +el.dataset.line, y: after ? r.bottom : r.top, x: r.left, w: r.width };
+  };
+  pane.addEventListener("dragstart", e => {
+    const el = e.target.closest?.("[data-line]");
+    if (!el || !PICTURE_KINDS.includes(el.dataset.kind)) return;
+    const lines = M.source.split("\n"), [from, end] = extent(lines, +el.dataset.line, el.dataset.kind);
+    drag = { el, from, end };
+    e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", lines.slice(from, end).join("\n"));
+    tools(null);
+  });
+  M.api.modal.querySelector(".rbe-pic-grid").addEventListener("dragstart", e => {   // a new picture from the panel
+    const b = e.target.closest("[data-pic]");
+    if (!b) return;
+    drag = { text: e.altKey ? `> [!${b.dataset.pic.replace(/\.\w+$/, "")}] Text.` : `![](${b.dataset.pic})` };
+    e.dataTransfer.effectAllowed = "copy"; e.dataTransfer.setData("text/plain", drag.text);
+  });
+  const files = e => !drag && [...(e.dataTransfer?.types || [])].includes("Files");   // image files from this computer
+  pane.addEventListener("dragover", e => {
+    if (!drag && !files(e)) return;
+    const t = target(e);
+    if (!t) { marker.hidden = true; return; }
+    e.preventDefault();
+    const p = pane.getBoundingClientRect();
+    Object.assign(marker.style, { top: `${t.y - p.top + pane.scrollTop - 2}px`, left: `${t.x - p.left}px`, width: `${t.w}px` });
+    marker.hidden = false;
+  });
+  pane.addEventListener("dragleave", e => { if (!pane.contains(e.relatedTarget)) marker.hidden = true; });
+  pane.addEventListener("drop", e => {
+    if (files(e)) {                                    // a new picture at the drop (the end when it misses a block)
+      e.preventDefault(); marker.hidden = true;
+      const t = target(e);
+      upload([...e.dataTransfer.files], t ? t.line : M.source.split("\n").length);
+      return;
+    }
+    const t = drag && target(e);
+    marker.hidden = true;
+    if (!t) { drag = null; return; }
+    e.preventDefault();
+    const lines = M.source.split("\n");
+    let at = t.line, moved;
+    if (drag.text) moved = [drag.text];
+    else {
+      if (at >= drag.from && at <= drag.end) { drag = null; return; }   // dropped where it is
+      moved = lines.splice(drag.from, drag.end - drag.from);
+      if (at > drag.from) at -= moved.length;
+    }
+    while (moved.length && !moved[moved.length - 1].trim()) moved.pop();
+    lines.splice(at, 0, ...moved);
+    drag = null;
+    setText(lines.join("\n"), offsetOf(lines, at));
+  });
+  pane.addEventListener("dragend", () => { marker.hidden = true; drag = null; });
+}
+// a clicked picture's tools: side (left, centre, right, the corner), size, delete
+function tools(el) {
+  const pane = M.api.modal.querySelector(".rbe-preview");
+  pane.querySelector(".rbe-pictools")?.remove();
+  if (!el) return;
+  const kind = el.dataset.kind, line = +el.dataset.line, box = document.createElement("div");
+  box.className = "rbe-pictools";
+  box.innerHTML = (kind === "img" ? `<button type="button" data-side="left" title="Text flows on its right">Left</button><button type="button" data-side="" title="On a line of its own">Center</button>
+    <button type="button" data-side="right" title="Text flows on its left">Right</button><button type="button" data-side="end" title="At the bottom right">Corner</button>
+    <button type="button" data-size="-1" title="Smaller">−</button><button type="button" data-size="1" title="Bigger">+</button>`
+    : kind === "cards" ? `<button type="button" data-size="-1" title="Smaller cards">−</button><button type="button" data-size="1" title="Bigger cards">+</button>`
+      : `<button type="button" data-say="top" title="The mascot above the bubble">Top</button><button type="button" data-say="" title="The mascot beside it">Side</button>`)
+    + `<button type="button" data-del title="Take it out">Delete</button>`;
+  const r = el.getBoundingClientRect(), p = pane.getBoundingClientRect();
+  pane.append(box);
+  const left = Math.min(r.left - p.left + 4, pane.clientWidth - box.offsetWidth - 6);   // inside the pane
+  Object.assign(box.style, { top: `${r.top - p.top + pane.scrollTop + 4}px`, left: `${Math.max(4, left)}px` });
+  box.addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    e.preventDefault(); e.stopPropagation();
+    const lines = M.source.split("\n"), text = lines[line] ?? "";
+    if (b.dataset.del != null) {
+      const [from, end] = extent(lines, line, kind);
+      lines.splice(from, end - from);
+      tools(null);
+      return setText(lines.join("\n"), offsetOf(lines, from));
+    }
+    if (kind === "say") {                              // > [!name opts] text
+      lines[line] = text.replace(/^>\s*\[!([\w-]+)((?:\s+[\w-]+)*)\]/, (_, who, opts) => {
+        const keep = opts.trim().split(/\s+/).filter(o => o && o !== "top");
+        return `> [!${[who, ...(b.dataset.say ? [b.dataset.say] : []), ...keep].join(" ")}]`;
+      });
+    } else {
+      const m = /^(\s*)(.*?)(\s*\{[^{}]*\})?\s*$/.exec(text), a = M.api.RB.splitAttrs(m[3] || "").attrs;
+      if (b.dataset.side != null) { a.cls = a.cls.filter(c => !["left", "right", "end"].includes(c)); if (b.dataset.side) a.cls.push(b.dataset.side); }
+      if (b.dataset.size) {
+        if (kind === "cards") a.cls = +b.dataset.size < 0 ? [...new Set([...a.cls, "small"])] : a.cls.filter(c => c !== "small");
+        else {
+          const parent = el.parentElement.getBoundingClientRect().width || 1;
+          const now = /^\d+$/.test(a.width || "") ? +a.width : Math.round((el.getBoundingClientRect().width / parent) * 100);
+          a.width = String(Math.min(100, Math.max(5, Math.round(now / 5) * 5 + 10 * +b.dataset.size)));
+        }
+      }
+      const attrs = M.api.RB.attrsText(a);
+      lines[line] = `${m[1]}${m[2]}${attrs ? ` ${attrs}` : ""}`;
+    }
+    setText(lines.join("\n"), offsetOf(lines, line));
+    setTimeout(() => tools(M.api.modal.querySelector(`.rbe-preview [data-line="${line}"]`)), 250);   // after the redraw
+  });
 }
 
 // the text's line n at the top of the box, the cursor at its start
@@ -109,13 +246,14 @@ function html() {
       <button type="button" class="ghost" data-ins="bold"><b>B</b></button><button type="button" class="ghost" data-ins="italic"><i>I</i></button>
       <button type="button" class="ghost" data-ins="red" title="Colour the selection">Colour</button>
       <button type="button" class="ghost" data-ins="page" title="Start a new TTS page here">TTS page break</button>
-      <label class="ghost button" title="Upload a picture (or paste one)">Upload picture<input id="rbe-file" type="file" accept="image/*" multiple hidden></label>
-      <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
-        <p class="muted">Click: a picture. Alt-click: the mascot says something (&gt; [!name]).</p></details>
+      <label class="ghost button" title="Add pictures from this computer (or drop image files on the page or the text, or paste one)">Add picture<input id="rbe-file" type="file" accept="image/*" multiple hidden></label>
+      <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
+        <p class="muted">Click: a picture at the cursor; drag one onto the page to put it there. Alt: the mascot says something (&gt; [!name]).</p></details>
       <button type="button" class="ghost" data-rbe="tts" aria-pressed="false" title="Show the chapter as its TTS pages (1080x1920)">TTS pages</button>
       <details class="rbe-help"><summary class="ghost button">Syntax</summary><table class="help-table">${HELP.map(([k, d]) => `<tr><td><code>${esc(k)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>
         <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
-        Click anything on the page to go to its line. Your draft is kept in this browser until you publish (Ctrl/Cmd+S).</p></details>
+        Click anything on the page to go to its line. Drag a picture, a row of cards or a mascot on the page to move it; click a picture for its side
+        and size. Drop image files from your computer onto the page to add them there. Your draft is kept in this browser until you publish (Ctrl/Cmd+S); Ctrl/Cmd+Z undoes.</p></details>
     </div>
     <div class="rbe-cols"><textarea id="rbe-text" spellcheck="true" data-tokens aria-label="The chapter's text"></textarea>
       <div class="rbe-preview"><div class="rb rb-book"><article class="rb-chapter" id="rbe-page"></article></div><div class="rbe-sheets" hidden></div></div></div></div>`;
@@ -138,6 +276,8 @@ function preview() {
       sheets.className = "rbe-sheets rb-sheets";
     } else {
       page.innerHTML = api.RB.chapterHtml(chapter, ctx);
+      for (const el of page.querySelectorAll("[data-line]")) if (PICTURE_KINDS.includes(el.dataset.kind)) el.draggable = true;
+      for (const im of page.querySelectorAll("img")) im.draggable = false;   // the block moves, not the image file
       followed = null;
       follow();                                        // the cursor's block in view again
     }
@@ -185,7 +325,9 @@ function onClick(e) {
 function close() { const { api } = M; clearTimeout(timer); api.modal.removeEventListener("click", onClick); M = null; api.closeModal(); }
 
 // a picture: resized to MAX_W at most, WebP (PNG kept for pixel art), a name of its own in img/
-async function upload(files) {
+// pictures added from this computer (the Add picture button, a paste, files dropped on the page or the text): resized to
+// MAX_W, WebP, named after the file, put at the drop's line (else the cursor), and in the picture panel for reuse
+async function upload(files, at = null) {
   for (const f of files.filter(x => x.type.startsWith("image/"))) {
     try {
       const bmp = await createImageBitmap(f), scale = Math.min(1, MAX_W / bmp.width);
@@ -197,8 +339,11 @@ async function upload(files) {
       let stem = f.name.replace(/\.\w+$/, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "picture", name = `${stem}.webp`;
       for (let n = 2; taken.has(name); n++) name = `${stem}-${n}.webp`;
       const base64 = await new Promise(ok => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.readAsDataURL(blob); });
-      M.uploads.set(name, { base64, url: URL.createObjectURL(blob), size: [w, h] });
-      insert(`![](${name})`);
+      const url = URL.createObjectURL(blob);
+      M.uploads.set(name, { base64, url, size: [w, h] });
+      if (at == null) insert(`![](${name})`);
+      else { const lines = M.source.split("\n"); lines.splice(at, 0, `![](${name})`); setText(lines.join("\n"), offsetOf(lines, at)); at++; }
+      M.api.modal.querySelector(".rbe-pic-grid")?.insertAdjacentHTML("afterbegin", `<button type="button" class="ghost" data-pic="${esc(name)}" title="${esc(name)} (new)" draggable="true"><img src="${esc(url)}" alt=""><span>${esc(name.replace(/\.\w+$/, ""))}</span></button>`);
       M.api.toast(`${name} (${Math.round(blob.size / 1024)} KB) goes up with Publish`);
     } catch (err) { M.api.toast(`Couldn't read ${f.name} (${err.message})`); }
   }
