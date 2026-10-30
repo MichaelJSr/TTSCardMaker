@@ -189,9 +189,9 @@ export function withoutItem(op, item, name, fields = null) {
   return o;
 }
 /** The review lines of an op against its published base b: [{item, text, short, psd}]; text is the review dialog's line,
- *  short the batch bar's ("SPD 4 → 5"), psd marks fields printed on the card image. rule: a rulebook page. */
-export function describeItems(op, b = {}, { byId, rule = false } = {}) {
-  const src = k => (rule ? "the page" : FROM[k] ? `the ${FROM[k]}` : "the default");
+ *  short the batch bar's ("SPD 4 → 5"), psd marks fields printed on the card image. */
+export function describeItems(op, b = {}, { byId } = {}) {
+  const src = k => (FROM[k] ? `the ${FROM[k]}` : "the default");
   const items = Object.entries(op.set).filter(([k]) => k !== "parts").map(([k, v]) => { const from = show(value(b, k, byId)), to = show(v);
     return { item: k, text: `${LABEL[k]}: ${from} → ${to}`, short: `${LABEL[k]} ${clip(from)} → ${clip(to)}` }; });
   const boxes = Object.keys(op.set.parts || {}).length, back = (op.unset || []).filter(k => k.startsWith(P.PART)).length;
@@ -319,7 +319,7 @@ export function createEditor(app) {
   let pristineBan = null;
   const files = () => S.data.files;
   const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
-  const find = id => S.byId.get(id) || (S.rules || []).find(r => r.id === id);
+  const find = id => S.byId.get(id);
 
   // ---- GitHub API
   async function gh(path, { method = "GET", body, raw = false, full = false, anon = false } = {}) {     // anon: no token (signed out)
@@ -340,7 +340,8 @@ export function createEditor(app) {
     try { return await gh(`/repos/${S.data.repo}/contents/${repoPath(path)}?ref=${ref}`, { raw: true }); }
     catch (e) { if (e.status === 404) return null; throw e; }
   }
-  // files: {path: oldText => newText | null (leave it) | false (delete it)}; retried on top if someone pushed meanwhile
+  // files: {path: oldText => newText | null (leave it) | false (delete it)}, or the new content itself: text, false, or
+  // {base64} (a picture: never read first); retried on top if someone pushed meanwhile
   async function commitFiles(edits, message, got = {}) {   // got.date: the commit's date (GitHub's clock)
     const repo = S.data.repo, branch = S.data.branch;
     for (let attempt = 0; ; attempt++) {
@@ -348,7 +349,11 @@ export function createEditor(app) {
       const base = await gh(`/repos/${repo}/git/commits/${head}`);
       const tree = [];
       for (const [path, edit] of Object.entries(edits)) {
-        const old = await readFile(path, head), next = edit(old);
+        if (edit && typeof edit === "object") {        // a picture: its blob first
+          const blob = await gh(`/repos/${repo}/git/blobs`, { method: "POST", body: { content: edit.base64, encoding: "base64" } });
+          tree.push({ path, mode: "100644", type: "blob", sha: blob.sha }); continue;
+        }
+        const old = typeof edit === "function" || edit === false ? await readFile(path, head) : undefined, next = typeof edit === "function" ? edit(old) : edit;
         if (next === false) { if (old != null) tree.push({ path, mode: "100644", type: "blob", sha: null }); }
         else if (next != null && next !== old) tree.push({ path, mode: "100644", type: "blob", content: next });
       }
@@ -642,7 +647,6 @@ export function createEditor(app) {
     try { sessionStorage.setItem(K.buckets, JSON.stringify(buckets)); } catch { /* storage full: kept for this page */ }
     return { name: r.name, existed: false, note: "" };
   }
-  const isRule = c => (S.rules || []).includes(c);
   // ---- the parts editor (PARTS_EDITOR.md §5): one box per PSD text layer when the card's details record has parts
   const recs = new Map();                          // card id -> its details record (null: none or unreadable)
   const groupOf = c => { const first = (c.variantOf && S.byId.get(c.variantOf)) || c;     // one PSD's pictures, variant 1 first
@@ -667,7 +671,7 @@ export function createEditor(app) {
       for (const k of o.unset.filter(k => k.startsWith(P.PART)).map(k => k.slice(P.PART.length))) { delete rec.partEdits[k]; delete rec.partState[k]; }
       for (const [k, v] of Object.entries(o.set.parts || {})) { rec.partEdits[k] = v; rec.partState[k] = "pending"; }
     }
-    const list = P.boxes(rec, isRule(c)), so = stage.cards[first.id];
+    const list = P.boxes(rec), so = stage.cards[first.id];
     let added = P.addedEdit(rec);
     if (has(so)) {                                 // the boxes open with the batch's text; readForm compares with the published
       for (const b of list) {
@@ -678,13 +682,13 @@ export function createEditor(app) {
       if (so.set.parts?.[P.ADD]) added = { text: so.set.parts[P.ADD].text, state: "pending" };
       else if (so.unset.includes(P.PART + P.ADD)) added = null;
     }
-    return list.length ? { rec, list, added, rule: isRule(c), picture: built.picture || null } : null;
+    return list.length ? { rec, list, added, picture: built.picture || null } : null;
   }
   // the title drawn into the picture: no title layer, no text in the title region (of the Text group): a new title is
   // website only (the bot's psd_edit.title_in_picture; TITLE_REGION is psd_parser.TITLE_REGION_RATIO)
   const TITLE_REGION = 0.12;
   function titleInPicture(view) {
-    if (!view || view.rule || view.list.some(b => b.kind === "title")) return false;
+    if (!view || view.list.some(b => b.kind === "title")) return false;
     const texts = (Array.isArray(view.rec.text) ? view.rec.text : []).filter(t => t && typeof t.layer === "string"), h = view.rec.canvas?.h;
     if (!h) return false;
     const grouped = texts.some(t => t.layer.startsWith("Text/"));
@@ -718,7 +722,7 @@ export function createEditor(app) {
     return list.map(b => boxHtml(b, view, many)).join("");
   }
   function addHtml(view, c) {                      // + Add an ability: a card with no Ability layer (never a rule page)
-    if (view.rule || view.list.some(b => b.kind === "ability")) return "";
+    if (view.list.some(b => b.kind === "ability")) return "";
     const t = view.rec.template, was = view.added, file = t?.file ? t.file.split("/").pop().replace(/\.psd$/i, "") : "its kind's template";
     return `<div class="part-box part-add" data-part-box="${P.ADD}"${was ? "" : " hidden"}><div class="part-head"><label for="ef-part:${P.ADD}">New ability</label><button type="button" class="ghost" data-part-add-remove>Remove</button></div>
       <textarea id="ef-part:${P.ADD}" class="part-text" rows="3" spellcheck="true" data-tokens data-part="${P.ADD}">${esc(was?.text || "")}</textarea>
@@ -795,27 +799,6 @@ export function createEditor(app) {
     }
     return [...out.values()];
   }
-  function ruleBoxesHtml(view, c) {                // a rule page: a jump list, the page with the focused block marked, one box per block
-    const blocks = view.list, cw = view.rec.canvas?.w, ch = view.rec.canvas?.h;
-    return `<div class="part-rule"><nav class="part-jump" aria-label="Blocks">${blocks.map(b => `<button type="button" class="ghost" data-part-jump="${esc(b.key)}">${esc(b.label)}</button>`).join("")}</nav>
-      <div class="part-rule-cols"><div class="part-page"${cw && ch ? ` data-w="${cw}" data-h="${ch}" style="aspect-ratio:${cw}/${ch}"` : ""}><img src="${esc(app.imageOf(c, 720))}" alt=""><i class="part-hl" hidden></i></div>
-      <div class="part-list">${boxesHtml(view, "block")}</div></div></div>`;
-  }
-  function ruleFormHtml(c) {
-    const b = baseOf(c), view = partsView(c);
-    const reset = f => { const p = psdVal(b, f); return same(val(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="Back to what the page says">↺ Page: ${esc(show(p))}</button>`; };
-    const row = (f, label, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${label}</label><div class="ein">${input}${reset(f)}</div></div>`;
-    return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
-      <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
-      <h2>Edit rulebook page</h2><p class="muted">Goes into your batch. <span class="kbd">${esc(c.key)}</span></p>
-      <form id="edit-form" class="edit-form" autocomplete="off"><fieldset><legend>Page</legend>
-        ${row("name", "Title", `<input id="ef-name" value="${esc(c.name)}">`)}
-        ${view ? `${partsTop(view, c)}<div class="erow" data-row="ability"><span class="elabel">Text</span><div class="ein parts"><p class="muted part-note">One box per text block on the page (Title and Note are database only).</p>${ruleBoxesHtml(view, c)}<p class="muted part-join">On the site:</p><div class="ability preview" id="ef-preview"></div></div></div>`
-          : row("ability", "Text", `<textarea id="ef-ability" rows="14" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea><div class="ability preview" id="ef-preview"></div>`)}
-        ${row("note", "Note", `<textarea id="ef-note" rows="2" placeholder="Shown under the page" data-tokens>${esc(c.note || "")}</textarea>`)}
-      </fieldset><div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
-      <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div></form></div>`;
-  }
   /** "Also rename the card's files" under the name (off by default): a card with its own PSD, its first picture. */
   function renameRow(c, b) {
     if (b.dup || (c.variant || 1) > 1 || !c.psd) return "";
@@ -823,7 +806,6 @@ export function createEditor(app) {
       <p class="muted part-note">With a new name: the PSD and its pictures take it when the card image is updated.</p></div></div>`;
   }
   function formHtml(c) {
-    if (isRule(c)) return ruleFormHtml(c);
     const b = baseOf(c), isDup = follows(b), ban = banOf(c.id), admin = me?.admin, view = partsView(c);
     const kinds = Object.entries(app.KIND_LABEL).filter(([k]) => k !== "unknown" || k === c.type);
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
@@ -989,7 +971,7 @@ export function createEditor(app) {
     return op;
   }
   let lastRead = null;                             // readForm's parts reading (texts, derived), for routeOps
-  const items = op => { const c = find(op.id); return describeItems(op, c ? baseOf(c) : {}, { byId: S.byId, rule: isRule(c) }); };
+  const items = op => { const c = find(op.id); return describeItems(op, c ? baseOf(c) : {}, { byId: S.byId }); };
   const describe = op => items(op).map(x => x.text);
   // ---- single fields, staged in place (inline.js): merged into the card's op, so the form and the bar see one batch
   const opFor = c => (stage.cards[c.id] ? structuredClone(stage.cards[c.id]) : { id: c.id, key: c.key, name: baseOf(c).name, set: {}, unset: [] });
@@ -1006,8 +988,8 @@ export function createEditor(app) {
     const c = find(id); if (!c || !(f in FIELDS)) return null;
     const b = baseOf(c);
     const one = (f === "name" || f === "ability") && !(c.siteOnly || []).includes(f) && partsView(c), n = one ? one.list.filter(x => x.field === f).length : 0;
-    if (one && !one.rule && n === 1) return stagePart(c, one, f, v, defer);
-    if (one && (f === "ability" || !one.rule)) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
+    if (one && n === 1) return stagePart(c, one, f, v, defer);
+    if (one) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
     let x = fromInput(f, v, b.name);
     if (ART_FIELDS.includes(f) && x != null) { x = x.replace(/\s+/g, " "); if (artError(f, x)) { if (!defer) app.toast(artError(f, x)); return null; } }
     if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, c.id)) === undefined) return null;
@@ -1185,8 +1167,8 @@ export function createEditor(app) {
     app.modal.innerHTML = formHtml(c);
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
     const form = app.modal.querySelector("#edit-form"), ta = document.getElementById("ef-ability");
-    const first = () => (focus && view ? (/^\d+$/.test(focus) ? partEl(focus) : form.querySelector(`.part-box[data-kind="${focus === "name" ? "title" : focus === "ability" ? "ability" : "block"}"] [data-part]`)) : null)
-      || [document.getElementById(isRule(c) ? "ef-ability" : "ef-name")].find(el => el && !el.closest("[hidden]")) || form.querySelector("[data-part]");
+    const first = () => (focus && view ? (/^\d+$/.test(focus) ? partEl(focus) : form.querySelector(`.part-box[data-kind="${focus === "name" ? "title" : "ability"}"] [data-part]`)) : null)
+      || [document.getElementById("ef-name")].find(el => el && !el.closest("[hidden]")) || form.querySelector("[data-part]");
     const siteOn = f => !!document.getElementById(`ef-site-${f}`)?.checked;
     const paintSite = () => {                      // a website-only field edited as boxes: the plain input, the boxes greyed
       for (const wrap of form.querySelectorAll("[data-site-of]")) {
@@ -1195,20 +1177,11 @@ export function createEditor(app) {
         for (const el of wrap.querySelectorAll(".site-boxes textarea, .site-boxes button")) el.disabled = on;
       }
     };
-    const paintBoxes = () => {                     // the deleted boxes, the added one, the rule page's mark
+    const paintBoxes = () => {                     // the deleted boxes, the added one
       if (!partForm) return;
       for (const el of form.querySelectorAll(".part-box[data-part-box]")) el.classList.toggle("deleted", partForm.deleted.has(el.dataset.partBox));
       const add = form.querySelector(".part-add"); if (add) { add.hidden = !partForm.added; form.querySelector("[data-part-add]").hidden = partForm.added; }
       for (const el of form.querySelectorAll("[data-part-gone]")) el.classList.toggle("dropped", partForm.drops.has(el.dataset.partGone));
-    };
-    const mark = key => {                          // a rule page: the focused block's box on the page
-      const page = form.querySelector(".part-page"), hl = page?.querySelector(".part-hl"), part = view?.list.find(x => x.key === key)?.part;
-      if (!hl) return;
-      const w = +page.dataset.w, h = +page.dataset.h;
-      if (!part?.box || !w || !h) { hl.hidden = true; return; }
-      const [x0, y0, x1, y1] = part.box;
-      Object.assign(hl.style, { left: `${(x0 / w) * 100}%`, top: `${(y0 / h) * 100}%`, width: `${((x1 - x0) / w) * 100}%`, height: `${((y1 - y0) / h) * 100}%` });
-      hl.hidden = false;
     };
     const update = () => {
       paintSite();
@@ -1260,7 +1233,7 @@ export function createEditor(app) {
       if (box) box.rows = rowsOf(box.value);      // the box grows with its lines
       update(); typing();
     });
-    form.addEventListener("focusin", e => { const box = e.target.closest?.("[data-part]"); if (box && partForm) { partForm.last = box; mark(box.dataset.part); } });
+    form.addEventListener("focusin", e => { const box = e.target.closest?.("[data-part]"); if (box && partForm) partForm.last = box; });
     form.addEventListener("change", e => {
       const box = e.target.closest?.("[data-site]"), f = box?.dataset.site, el = f && document.getElementById(`ef-${f}`);
       if (box?.checked && el && form.querySelector(`[data-site-of="${f}"]`) && lastRead?.derived?.[f] != null) el.value = lastRead.derived[f];   // the boxes' text to start from
@@ -1280,11 +1253,10 @@ export function createEditor(app) {
         first()?.focus();
         return;
       }
-      const pb = partForm && e.target.closest("[data-part-del], [data-part-undo], [data-part-ps], [data-part-redo], [data-part-skipped], [data-part-add], [data-part-add-remove], [data-part-drop], [data-part-pic], [data-part-jump]");
+      const pb = partForm && e.target.closest("[data-part-del], [data-part-undo], [data-part-ps], [data-part-redo], [data-part-skipped], [data-part-add], [data-part-add-remove], [data-part-drop], [data-part-pic]");
       if (pb) {
         const d = pb.dataset, box = k => view.list.find(x => x.key === k), set = (k, t) => { const el = partEl(k); if (el) { el.value = t; el.rows = rowsOf(t); el.focus(); } };
         if (d.partPic) { if (d.partPic !== c.id) { autosave.flush(); openForm(d.partPic); } return; }
-        if (d.partJump) { const el = partEl(d.partJump); el?.scrollIntoView({ block: "nearest" }); el?.focus(); return; }
         if (d.partDel) partForm.deleted.add(d.partDel);
         else if (d.partUndo) { partForm.deleted.delete(d.partUndo); partEl(d.partUndo)?.focus(); }
         else if (d.partPs) { partForm.drops.add(d.partPs); set(d.partPs, box(d.partPs).part.text); pb.closest(".part-warn")?.remove(); }
@@ -1315,10 +1287,10 @@ export function createEditor(app) {
       for (const [x, o] of routed) { if (opEmpty(o)) delete stage.cards[x.id]; else stage.cards[x.id] = o; }
       save();
       app.toast(routed.every(([, o]) => opEmpty(o)) ? "No changes" : `Added to the batch: ${count()} unpublished`);
-      if (isRule(c)) { app.closeModal(); app.rerender(); } else app.goCard(c.id);
+      app.goCard(c.id);
     });
     update();
-    if (!isRule(c)) app.formOpened?.({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)
+    app.formOpened?.({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)
     if (partForm) paintBoxes();
     first()?.focus();
     if (restored) autosave.run();
@@ -1922,6 +1894,8 @@ export function createEditor(app) {
     addBucket,
     // image previews (preview.js): GitHub calls with the token, its scopes, and what the PSD prints of a card's fields
     github: (path, opts) => gh(path, opts), get scopes() { return scopes; },
+    // the rulebook editor (rulebook-edit.js): its chapters and pictures as one commit (commitFiles)
+    commit: (edits, message, got) => commitFiles(edits, message, got), readFile: (path, ref) => readFile(path, ref),
     psdOf: id => { const c = find(id); return c ? Object.fromEntries(Object.keys(FROM).filter(isPsd).map(f => [f, psdVal(baseOf(c), f)])) : null; },
     // the fields the card's Card Edits.json entry would hold once published: the built ones, the published-not-built and
     // the staged ops' (or op: the open form's, relative to the published card)
@@ -1933,7 +1907,7 @@ export function createEditor(app) {
     stageRating,
     // the parts editor: a card's boxes per field once its record is loaded ({title, ability, rule} or null: no parts), and
     // the parts its Card Edits.json entry (its PSD's: variant 1's) would hold once published, for the previews
-    partsFor: c => new Promise(ok => withRecs(c, () => { const v = partsView(c); ok(v && { rule: v.rule, title: v.list.filter(x => x.kind === "title").length, ability: v.list.filter(x => x.kind === "ability").length }); })),
+    partsFor: c => new Promise(ok => withRecs(c, () => { const v = partsView(c); ok(v && { title: v.list.filter(x => x.kind === "title").length, ability: v.list.filter(x => x.kind === "ability").length }); })),
     partsLoaded: c => [c, ...groupOf(c)].every(x => !x.details || recs.has(x.id) || !app.loadDetails),
     loadParts: c => new Promise(ok => withRecs(c, ok, true)),        // the previews: the records entryParts reads
     entryParts(id, op = null) {

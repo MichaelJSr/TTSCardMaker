@@ -174,10 +174,10 @@ export function makeRenderer({ cards, icons, variants = {} }) {
     return { pieces, links };
   }
 
-  /** HTML for ability text. */
-  function render(text, selfName = "") {
+  /** HTML for ability text; links: false leaves card names as text (the rulebook links its own) */
+  function render(text, selfName = "", { links: linked = true } = {}) {
     if (!text) return "";
-    const { pieces, links } = parse(text, selfName);
+    const { pieces, links: found } = parse(text, selfName), links = linked ? found : [];
     const out = [];
     let last = 0;
     for (const [i, n, x] of [...pieces, ...links].sort((a, b) => a[0] - b[0])) {

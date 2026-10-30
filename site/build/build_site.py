@@ -8,7 +8,7 @@ Where the data comes from:
     `git worktree add /tmp/carddata origin/data`, then CARD_DATA_DIR=/tmp/carddata/db). PSDs are never parsed here.
     The records are read into stand-ins of the bot's classes (load_card_data); a field the site reads that the cards
     lack, or one it doesn't know, is a warning. The PSDs' structure (fonts, text layers, effects, stat rows, layer
-    tree) comes from its psd_details.json, keyed by PSD blob sha; a card or rulebook page with a record gets
+    tree) comes from its psd_details.json, keyed by PSD blob sha; a card with a record gets
     data/details/<id>.json for its Details dropdown. Aliases come from site/Card Edits.json.
   * Images: card PNGs in this repo, turned into three AVIF sizes (240 px and 360 px for the grid at 1x/2x, 720 px
     for the card view; AVIF only, no WebP copies). They are cached by git blob hash and encode settings (thumb_tag, in
@@ -23,7 +23,9 @@ Where the data comes from:
     drawn by the font build's own icon_art (build_stoogedings.py, which needs its requirements.txt: without them,
     a warning and no variant pictures), cached by blob in site/.cache/icons; cards.json iconVariants holds how far each
     reaches past the icon (text.js sizes them).
-  * Deck rules: the rulebook pages; banned cards from site/Constructed Ban List.txt.
+  * The rulebook: site/rulebook, one text file per chapter (NN-slug.md, written on the website or by hand; syntax at
+    the top of site/assets/rulebook.js), its pictures in img/ and its web fonts in fonts/ (dist/rulebook gets both); the Photoshop
+    pages in Auxiliary/Rulebook are not read. Banned cards from site/Constructed Ban List.txt.
   * Authors: site/Card Authors.txt ([people] git name = shown name, [cards] Card Name = person) wins over the bot's
     author, the same rule the card data build applies.
   * Corrections: site/Card Edits.json (the website's Edit button); the bot applies it too.
@@ -53,9 +55,9 @@ Where the data comes from:
 PSDs in the repo that the bot hasn't parsed yet are still listed, image only; a PNG whose Card Edits dup_of names its
 original is a duplicate (the card data's duplicate_of).
 
-Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json, data/history.json, data/users.json,
+Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json (the rulebook's chapters and its pictures' sizes), data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
-changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's or rulebook page's Details dropdown),
+changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's Details dropdown),
 data/cardfonts.json (the grid's Font filter: each card's Details fonts, loaded on the filter's first use),
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json; a WOFF2 copy in fonts/, cached in site/.cache/woff2), images, icons,
@@ -63,7 +65,7 @@ assets (with esbuild: one bundle, assets/app.js, and its source map; else the mo
 index.html carries the plain grid's first tiles (first_screen, checked against grid.js in node). Asset and data URLs carry a version (?v=...) so a deploy never mixes old scripts with new data: each asset's from its
 content and its imports' (the bundle's from its code and map), the data's from its content without the build time; build.txt digests the whole site (which build is live),
 then the page's stamp (<meta name="page">), which open pages poll for (fresh.js).
-game.txt: every visible card and rulebook page, the timing tags and the ban list as plain text (game_text), linked from the Rulebook.
+game.txt: every visible card and rulebook chapter, the timing tags and the ban list as plain text (game_text), linked from the Rulebook.
 
 The build fails (exit 1, nothing deployed) when the bot's card data can't be downloaded or looks truncated, or when
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
@@ -388,7 +390,7 @@ def join_details(cards, records, tree, edits=None):
     """
     The record of each card's PSD: by its blob at HEAD, else the blob the bot parsed, else the newest record for its path.
 
-    Flags the card (details: true in cards.json or rules.json) and returns {card id: record + id and name} for data/details/<id>.json.
+    Flags the card (details: true in cards.json) and returns {card id: record + id and name} for data/details/<id>.json.
     A duplicate (same PSD) gets its original's record. A VERSION 2 record's parts come as details_parts() gives them; the
     part edits live in the PSD's entry (variant 1's).
     """
@@ -2214,27 +2216,24 @@ def commit_keys(row, people, by_login, row_of=None):
     return [key] if key else []
 
 
-def mass_passes(found, by_png=None, skip=()):
-    """{sha} of the commits in more than MASS_PASS cards' image versions (by_png: a PNG with only skip's ids, a rulebook
-    page, doesn't count)."""
-    rule = lambda png: bool(by_png and by_png.get(png)) and all(e["id"] in skip for e in by_png[png])
-    size = Counter(sha for png, vs in found.items() if not rule(png) for (sha, *_), _ in vs)
+def mass_passes(found):
+    """{sha} of the commits in more than MASS_PASS cards' image versions."""
+    size = Counter(sha for vs in found.values() for (sha, *_), _ in vs)
     return {sha for sha, n in size.items() if n > MASS_PASS}
 
 
-def card_revisions(found, by_png, commits, people, by_login, skip=(), row_of=None):
+def card_revisions(found, by_png, commits, people, by_login, row_of=None):
     """{card id: {credited name: image changes after its first upload}} (found: image_versions, newest first, so its last
     row is the upload): mass passes left out, credited by commit_keys(); every card id of the PNG gets the counts (a
-    duplicate's are its original's), skip's (rulebook pages) none. None without history."""
+    duplicate's are its original's). None without history."""
     if found is None:
         return None
-    mass, rows, out = mass_passes(found, by_png, skip), {c[0]: c for c in commits or ()}, {}
+    mass, rows, out = mass_passes(found), {c[0]: c for c in commits or ()}, {}
     for png, vs in found.items():
         got = Counter(k for (sha, *_), _ in vs[:-1] if sha not in mass and sha in rows for k in commit_keys(rows[sha], people, by_login, row_of))
         if got:
             for e in by_png.get(png, ()):
-                if e["id"] not in skip:
-                    out[e["id"]] = dict(sorted(got.items(), key=lambda kv: (-kv[1], kv[0].lower())))
+                out[e["id"]] = dict(sorted(got.items(), key=lambda kv: (-kv[1], kv[0].lower())))
     return out
 
 
@@ -3024,13 +3023,79 @@ def game_words(text, icons):
     return "\n".join(line.rstrip() for line in text.strip().splitlines())
 
 
+RULEBOOK = os.path.join(SITE, "rulebook")      # the rulebook's chapters (NN-slug.md), img/ and fonts/
+RULE_FILE = re.compile(r"^(\d{2})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$")
+
+
+def rulebook_chapters(src=RULEBOOK):
+    """The rulebook's chapters in file order, [{id, num, title, file, source}] (id: the slug after the number, so a
+    renumbered chapter keeps its links), and its pictures, {file: [width, height, stamp]}."""
+    chapters, ids = [], set()
+    for name in sorted(os.listdir(src)) if os.path.isdir(src) else []:
+        m = RULE_FILE.match(name)
+        if not m:
+            if name.endswith(".md") and name != "README.md":
+                warn(f"rulebook: {name} is not named NN-slug.md: left out")
+            continue
+        with open(os.path.join(src, name), encoding="utf-8") as fh:
+            text = fh.read().replace("\r\n", "\n")
+        heads = [line[2:] for line in text.splitlines() if line.startswith("# ")]
+        title = re.sub(r"\s*\{[^{}]*\}\s*$", "", heads[0]).strip() if heads else m.group(2).replace("-", " ").title()
+        cid = m.group(2)
+        if cid in ids:
+            warn(f"rulebook: two chapters named {cid}: {name} is {cid}-{m.group(1)}")
+            cid = f"{cid}-{m.group(1)}"
+        ids.add(cid)
+        chapters.append({"id": cid, "num": m.group(1), "title": title, "file": name, "source": text})
+    images, folder = {}, os.path.join(src, "img")
+    for name in sorted(os.listdir(folder)) if os.path.isdir(folder) else []:
+        path = os.path.join(folder, name)
+        try:
+            with Image.open(path) as im:
+                size = im.size
+        except Exception as e:                # not a picture: not listed (and not copied)
+            warn(f"rulebook: img/{name} is not a picture ({type(e).__name__})")
+            continue
+        with open(path, "rb") as fh:
+            images[name] = [size[0], size[1], stamp_of(fh.read())]
+    return chapters, images
+
+
+def rulebook_text(source):
+    """A chapter's words without markup (rulebook.js plainText): pictures and fences dropped, card pictures and links as
+    their names, list markers as typed."""
+    out = []
+    for line in str(source or "").replace("\r\n", "\n").split("\n"):
+        t = line.strip()
+        if re.match(r"^:{3,}", t) or re.match(r"^=+\s*page\s*=+$", t, re.I) or re.match(r"^(?:-{3,}|\*{3,})$", t) \
+                or re.match(r"^\{[^}]*\}$", t) or re.match(r"^\|[\s|:-]+\|$", t) and "-" in t:
+            continue
+        t = re.sub(r"^#{1,3}\s+", "", t)
+        t = re.sub(r"^>\s?", "", t)
+        t = re.sub(r"^\[![\w-]+(?:\s+[\w-]+)*\]\s*", "", t)
+        t = re.sub(r"\s*\{[^{}]*\}$", "", t) if not re.search(r"\]\{[^{}]*\}$", t) else t
+        t = re.sub(r"!\[\[([^\]|]+)(?:\|[^\]]*)?\]\]", r"\1", t)
+        t = re.sub(r"\[\[([^\]|]+)(?:\|([^\]]+))?\]\]", lambda m: m.group(2) or m.group(1), t)
+        t = re.sub(r"!\[[^\]]*\]\([^)]*\)(?:\{[^}]*\})?", "", t)
+        t = re.sub(r"\[([^\[\]]+)\]\{[^}]*\}", r"\1", t)
+        t = re.sub(r"\[([^\[\]]+)\]\((?:https?:|#|mailto:)[^)]*\)", r"\1", t)
+        t = re.sub(r"\*\*\*(.+?)\*\*\*", r"\1", t)
+        t = re.sub(r"\*\*(.+?)\*\*", r"\1", t)
+        t = re.sub(r"\*([^*\s](?:[^*]*[^*\s])?)\*", r"\1", t)
+        t = re.sub(r"\\([\\*\[\]{}()!_`|])", r"\1", t)
+        if t.startswith("|"):
+            t = " | ".join(c.strip() for c in t.strip("|").split("|"))
+        out.append(t.strip())
+    return re.sub(r"\n{3,}", "\n\n", "\n".join(out)).strip()
+
+
 def game_text(cards, rules, banlist, icons, manifest):
-    """game.txt: a header, the rulebook pages in book order, the timing tags, the ban list, then every visible card by
+    """game.txt: a header, the rulebook chapters in book order, the timing tags, the ban list, then every visible card by
     kind and series; a duplicate as its own card, its text only when it differs. Stats as printed (bars). Dated by
     the card data, so a no-change build keeps the file. ’ as '."""
     shown = [c for c in cards if not c.get("hidden")]
     by_id, m = {c["id"]: c for c in shown if c.get("id")}, manifest or {}     # a hidden original: the duplicate keeps its text
-    out = [f"{SITE_NAME}: every card and rulebook page as plain text.", f"{len(shown)} cards, {len(rules)} rulebook pages."
+    out = [f"{SITE_NAME}: every card and rulebook chapter as plain text.", f"{len(shown)} cards, {len(rules)} rulebook chapters."
            + (f" Card data built {m['built_at']} from card commit {m['card_commit'][:12]}." if m.get("built_at") and m.get("card_commit") else "")
            + (f" {SITE_URL}/" if SITE_URL else ""),
            "Card lines: name | kind | stars | types | HP DEF ATK SPD (one set per creature) | series, then on a duplicate"
@@ -3402,7 +3467,7 @@ def main():
         if path.lower().endswith(".png") and path.startswith(CARD_FOLDERS) and not any(p in SKIP_PARTS for p in path.split("/")):
             png_by_name.setdefault(os.path.basename(path).lower(), path)
 
-    cards, rules, used_slugs = [], [], set()
+    cards, used_slugs = [], set()
     into = renamed_into(old_stats if isinstance(old_stats, dict) else {}, stats)
     history_of = lambda name: [v for n in into.get(name, ()) for v in old_stats.get(n) or []] + list(old_stats.get(name) or [])
 
@@ -3424,6 +3489,8 @@ def main():
     seen_pngs, bot_dup_names, bot_dups = set(), {}, []
     for name, c in sorted(stats.items(), key=lambda kv: kv[0].lower()):
         path = getattr(c, "path", "") or ""
+        if getattr(c, "card_type", "") == "rulebook" or "/Rulebook/" in path:
+            continue                              # the Photoshop rule pages: the rulebook is site/rulebook now
         if getattr(c, "duplicate_of", None) and not getattr(c, "variant_of", None):     # the bot's duplicate: made below
             if getattr(c, "display_name", None):
                 bot_dup_names[name.replace(" ", "_").lower() + ".png"] = c.display_name
@@ -3433,13 +3500,12 @@ def main():
         png = png_for(path, name, variant)
         if png:
             seen_pngs.add(png)
-        is_rule = getattr(c, "card_type", "") == "rulebook" or "/Rulebook/" in path
         # the printed title the bot read (since 2026-10-21): shown instead of the file name; a Card Edits.json name wins below
         parsed = getattr(c, "parsed_values", None) or {}
         title = parsed["name"] if "name" in parsed else getattr(c, "display_name", None)
         shown = title or name
         entry = {
-            "id": unique_slug(name), "name": (title if not is_rule else None) or name, "type": getattr(c, "card_type", "unknown"),
+            "id": unique_slug(name), "name": title or name, "type": getattr(c, "card_type", "unknown"),
             "subtype": getattr(c, "subtype", None), "series": getattr(c, "series", None), "subseries": None,   # from edits only
             "stars": getattr(c, "stars", None), "types": list(getattr(c, "types", []) or []),
             "hp": stat(c, "hp"), "def": stat(c, "defense"), "atk": stat(c, "attack"), "spd": stat(c, "speed"),
@@ -3461,7 +3527,7 @@ def main():
         if isinstance(variant, int) and not isinstance(variant, bool) and variant >= 1:
             entry["variant"] = variant            # one picture of a PSD with several (" #N" layers); variantOf/variants below
             entry["_variantOf"] = getattr(c, "variant_of", None) or name
-        (rules if is_rule else cards).append(entry)
+        cards.append(entry)
     link_variants(cards)
 
     # duplicates: more PNGs exported from one card's PSD (A_Snack.psd -> A_Snack2.png "Breakfast", A_Snack3.png
@@ -3498,7 +3564,7 @@ def main():
     log(f"duplicates: {sum(1 for c in cards if c.get('dup'))} PNGs share another card's PSD")
 
     # PSDs the bot hasn't parsed yet: list them, image only
-    known = {norm(c[k]) for c in cards + rules for k in ("name", "key")}     # a shown title differs from the file name
+    known = {norm(c[k]) for c in cards for k in ("name", "key")}     # a shown title differs from the file name
     for path in sorted(tree):
         low = path.lower()
         if not path.startswith(CARD_FOLDERS) or any(p in SKIP_PARTS for p in path.split("/")):
@@ -3586,7 +3652,7 @@ def main():
     # images (cached by blob hash; only new or changed PNGs are fetched and encoded)
     if not features.check("avif"):
         raise SystemExit("error: this Pillow can't write AVIF (the card images); pip install -r site/build/requirements.txt")
-    jobs = [e for e in cards + rules if e["png"] and e["png"] in tree]
+    jobs = [e for e in cards if e["png"] and e["png"] in tree]
     failed, later, meta = [], [], load_image_meta()
     deadline = time.time() + IMAGE_BUDGET if IMAGE_BUDGET > 0 else None
     def images(e):
@@ -3635,7 +3701,7 @@ def main():
 
     # image versions: commits table + per card [[commit index, path then if it differs], ...], newest first
     by_png = {}
-    for e in cards + rules:
+    for e in cards:
         if e.get("png") and e["png"] in tree:
             by_png.setdefault(e["png"], []).append(e)
     last, renamed = {}, {}
@@ -3646,7 +3712,6 @@ def main():
             e["pin"] = pin(e["png"])
     found = image_versions(list(by_png), commits, renamed)
     versions = {"available": found is not None, "repo": CARD_REPO, "commits": [], "cards": {}}
-    rule_ids = {e["id"] for e in rules}
     if found:
         index = {}
         for png, vs in found.items():
@@ -3657,7 +3722,7 @@ def main():
                     versions["commits"].append([sha, ts, person(people, author), subject])
                 rows.append([index[sha]] + ([path] if path != png else []))
             for e in by_png[png]:                 # fs: first upload (the oldest row): created's fallback (apply_created)
-                if rows and e["id"] not in rule_ids:
+                if rows:
                     e["fs"] = min(ts for (_, ts, _, _), _ in vs)
             if len(rows) > 1:                     # one version = nothing to compare
                 for e in by_png[png]:
@@ -3669,11 +3734,11 @@ def main():
             f"from {len(versions['commits'])} commits, since {datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}")
 
     apply_created(cards, parse_created())         # after fs: a card's first upload can be the earlier evidence
-    detail_files = join_details(cards + rules, records, tree, edits)      # rulebook pages too: the bot reads their PSDs
-    for e in cards + rules:
+    detail_files = join_details(cards, records, tree, edits)
+    for e in cards:
         e.pop("_blob", None)
     if records:
-        log(f"PSD details: {len(detail_files)} cards and rulebook pages have a record ({len(records)} in {DETAILS_JSON})")
+        log(f"PSD details: {len(detail_files)} cards have a record ({len(records)} in {DETAILS_JSON})")
     font_use = card_fonts(cards, detail_files)    # the Font filter (data/cardfonts.json)
     log(f"font filter: {len(font_use['fonts'])} fonts on {len(font_use['cards'])} cards")
     fonts = web_fonts(tree, record_fonts(detail_files.values())) if detail_files else {}     # the mock-up's web fonts (data/fonts.json)
@@ -3700,7 +3765,7 @@ def main():
             e["balance"] = True                   # its Balance block loads data/analytics.json
 
     history, shas = {}, {}                    # shas: commit -> index in history.json _shas
-    for e in cards + rules:
+    for e in cards:
         older, current = text_commits(e, lineage)
         if e.get("history"):                  # loaded on demand: the first screen only needs the count
             for v, sha in zip(e["history"], older):
@@ -3713,7 +3778,6 @@ def main():
         for k in [k for k, v in e.items() if v in (None, [], "") or (k == "parsed" and v is True)]:
             del e[k]                          # drop empty fields to keep the JSON small
     history["_shas"] = list(shas)             # card ids never start with _
-    rules.sort(key=lambda r: r["name"].lower())
     id_of = lambda name: (by_key.get(card_key(name)) or {}).get("id") if isinstance(name, str) and name else None
     archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats, people=people, credited=credited,
                              author_of=lambda name: (by_key.get(card_key(name)) or {}).get("author"))
@@ -3746,10 +3810,10 @@ def main():
         warn(f"{line}, {len(rated['unmatched'])} names match no card: {', '.join(rated['unmatched'][:10])}")
     elif rated["entries"]:
         log(line)
-    revs = card_revisions(found, by_png, commits, people, by_login, skip=rule_ids, row_of=row_of)
+    revs = card_revisions(found, by_png, commits, people, by_login, row_of=row_of)
     if revs is not None:
         log(f"revisions: {sum(n for v in revs.values() for n in v.values())} card image changes on {len(revs)} cards "
-            f"({len(mass_passes(found, by_png, rule_ids))} mass-pass commits left out)")
+            f"({len(mass_passes(found))} mass-pass commits left out)")
 
     # the Changes page's Changelog and Database edits tabs: the card sync's events, the edit batches, archived cards
     since = int(time.time()) - CHANGELOG_DAYS * 86400
@@ -3793,7 +3857,8 @@ def main():
         logins = []
     data["passwords"] = len(logins)
     os.makedirs(os.path.join(DIST, "data"))
-    files = {"cards.json": data, "rules.json": {"rules": rules}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
+    chapters, rule_images = rulebook_chapters()
+    files = {"cards.json": data, "rules.json": {"chapters": chapters, "images": rule_images}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, "changelog.json": changelog, CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
@@ -3811,9 +3876,17 @@ def main():
         for name, blob in details.items():
             with open(os.path.join(DIST, "data", "details", name), "wb") as fh:
                 fh.write(blob)
-    log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), rulebook pages: {len(rules)}, "
+    for part in ("img", "fonts"):             # the rulebook's pictures (the listed ones) and web fonts
+        src = os.path.join(RULEBOOK, part)
+        if os.path.isdir(src):
+            os.makedirs(os.path.join(DIST, "rulebook", part))
+            for name in os.listdir(src):
+                if part == "fonts" or name in rule_images:
+                    shutil.copyfile(os.path.join(src, name), os.path.join(DIST, "rulebook", part, name))
+    log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), rulebook: {len(chapters)} chapters, {len(rule_images)} pictures, "
         f"icons: {len(set(i['file'] for i in icons.values()))}, banned: {sum(len(g['entries']) for g in banlist['groups'])}")
-    game = game_text(cards, rules, banlist, icons, manifest)
+    game = game_text(cards, [{"name": f"{int(c['num'])}. {c['title']}" if int(c["num"]) else c["title"], "ability": rulebook_text(c["source"])}
+                             for c in chapters], banlist, icons, manifest)
     with open(os.path.join(DIST, GAME_TXT), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(game)
     log(f"{GAME_TXT}: {len(game.encode())} bytes, about {round(len(game.split()) * 1.3)} tokens")

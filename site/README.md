@@ -56,11 +56,20 @@ text or image, links its commit when it is known), and the artwork sources when 
   "Decks using this card" lists the public published decks that hold it (the first six, then a link to all of them).
   Every card has a shareable link (`/c/<card>/`, the address bar's URL; `c` copies it) that shows a rich preview in Discord.
 - **Ratings**: each card's favorability and power, 1 to 10, over time, on its card page; signed-in editors add theirs.
-- **Rulebook**: every page with search and highlighting, the badge colors (one line per color, as on page 02
-  Abbreviations), the timing-tag glossary (the cooldown and uses tags, and the
-  old tags the rulebook pages still use), and the constructed ban list. Each
-  page has the same Details dropdown (the bot reads the rulebook PSDs too), always closed when the page loads, without
-  the card-only sections (stat rows, status-word layers, template).
+- **Rulebook**: written on the website, no Photoshop. One text file per chapter in `site/rulebook/` (`NN-slug.md`: the
+  number is the book's order, the slug the chapter's link, `#/rules/<slug>` and `#/rules/<slug>/<section>`), its
+  pictures in `site/rulebook/img/` (the mascots, the table and reaction diagrams, taken from the Photoshop pages) and
+  its two web fonts in `site/rulebook/fonts/` (Inconsolata for Consolas, EB Garamond for the ability boxes; OFL).
+  `rulebook.js` draws them in the book's look: lavender panels with italic tabs, the dark ability boxes, mascots saying
+  the in-jokes, real card pictures (`![[Card]]`, from the card data, so they follow the cards), badges and icons as on
+  cards; the syntax is at the top of `rulebook.js` and behind the editor's Syntax button. The contents follow the
+  reading; search shows only the passages that match; each chapter links its history on GitHub. Signed in, each chapter
+  has an Edit button (and the contents a New chapter button): the text beside the page as it will look, a toolbar,
+  pictures uploaded or pasted (resized to 1080 px, WebP), a draft kept in the browser until Publish, which commits the
+  chapter (and its new pictures) straight to main. **TTS pages** (`#/rules/print`) cut the same chapters into 1080×1920
+  pages ("STATS", "STATS 2"... numbered 7, 7.2), as the Photoshop pages were; `=== page ===` starts a new one.
+  Also the badge colors, the timing-tag glossary and the constructed ban list. Old page links
+  (`#/rules/07-stats3`, `#/rules?q=07 Stats3`) open their chapter.
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,
   optional starting field), with live checks, several saved decks, share links, text import/export, random fill,
   printable proxies, and a Tabletop Simulator saved-object download. Signed in, **Publish…** on a saved hand makes it a
@@ -236,7 +245,7 @@ until the image is regenerated) are told apart from **database only** ones, whic
 only as edits (kind, item type, series, subseries, note, aliases, author, duplicate of, checks, constructed ban,
 hidden, artwork source, ability artwork source). An image field ticked **Website only (don't change the card image)**
 is shown on the website and by the bot but never baked (a quiet "Website only" tag). **Also rename the card's files**
-(under a name edit) has the bake rename the PSD and PNGs to the new name; links to the old page redirect. Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a
+(under a name edit) has the bake rename the PSD and PNGs to the new name; links to the old page redirect. Rulebook chapters have their own editor (Rulebook, above), published on its own. "Split into creatures" gives a
 card several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own
 bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
