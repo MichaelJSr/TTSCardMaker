@@ -53,8 +53,8 @@ end
 -- title bar, A- / A+
 -- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
 -- (status effects and others) spawn beside the card with a click. Data: the website's data/tts.json and
--- TTS/Rulebook/pages.json, fetched a moment after the save loads. No Lua patterns over long text (MoonSharp's are
--- limited): plain finds only.
+-- TTS/Rulebook/pages.json, fetched a moment after the save loads and read on first use; a player's panels are built
+-- the first time they open one. No Lua patterns over long text (MoonSharp's are limited): plain finds only.
 local DETAILS_URL = "https://michaeljsr.github.io/TTSCardMaker/data/tts.json"
 local PAGES_URL = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/TTS/Rulebook/pages.json"
 local RAW_PREFIX = "https://raw.githubusercontent.com/"
@@ -136,13 +136,47 @@ local function rulebookPanel(c)
             horizontalScrollbarVisibility = "AutoHideAndExpandViewport", verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {list}}}}
 end
 
-local function buildPanels()
-    local xml = UI.getXmlTable() or {}
+-- A player's panels are built the first time they need one: TTS sets the whole UI at once, so building every seat's
+-- (1,100 elements) stalled the game. A build keeps the save's own UI and the panels of everyone who has used them;
+-- the panels open at the time are drawn again after it (a dragged one back at its place).
+local baseXml, built, rbOpen, restoring, ensurePanels = nil, {}, {}, false, nil
+local function rebuild()
+    baseXml = baseXml or UI.getXmlTable() or {}
+    local xml = {}
+    for _, e in ipairs(baseXml) do table.insert(xml, e) end
     for _, c in ipairs(SEATS) do
-        for k = 1, DETAILS_PANELS do table.insert(xml, detailsPanel(c, k)) end
-        table.insert(xml, rulebookPanel(c))
+        if built[c] then
+            for k = 1, DETAILS_PANELS do table.insert(xml, detailsPanel(c, k)) end
+            table.insert(xml, rulebookPanel(c))
+        end
     end
     UI.setXmlTable(xml)
+end
+
+-- the fetched data, decoded the first time it is needed (no work at load)
+local detailsRaw, pagesRaw = nil, nil
+local function ensureData()
+    if detailsRaw then
+        local data = decode(detailsRaw)
+        detailsRaw = nil
+        if data and data.cards then
+            for tag in pairs(data.tags or {}) do tagCase[tag:upper()] = tag end
+            details = data
+        else
+            log("Card details: data/tts.json not readable")
+        end
+    end
+    if pagesRaw then
+        local book = decode(pagesRaw)
+        pagesRaw = nil
+        for i, page in ipairs(book and book.pages or {}) do
+            local num = tonumber(page.num)
+            if num and num == math.floor(num) and chapterPage[num] == nil then chapterPage[num] = i - 1 end
+            if page.name and pageOfTitle[page.name] == nil then pageOfTitle[page.name] = i - 1 end
+            table.insert(bookPages, {name = page.name or "", num = page.num or "", page = i - 1, text = page.t or "", low = (page.t or ""):lower(),
+                chapter = num and num == math.floor(num) or page.name == "Table of Contents"})
+        end
+    end
 end
 
 -- right-click > Card details on every card (loose ones at load, others as they come out of decks and bags)
@@ -158,25 +192,13 @@ local function addMenu(obj)
 end
 
 function loadCardDetails()
-    Wait.time(function()                               -- a moment after the load: the save never waits on it
-        buildPanels()
+    Wait.time(function()                               -- a moment after the load: the menus and the downloads only
+        baseXml = UI.getXmlTable() or {}
         for _, obj in ipairs(getObjects()) do addMenu(obj) end
         WebRequest.get(DETAILS_URL, function(r)
-            local data = not r.is_error and decode(r.text)
-            if not (data and data.cards) then log("Card details: not loaded (" .. tostring(r.error) .. ")") return end
-            for tag in pairs(data.tags or {}) do tagCase[tag:upper()] = tag end
-            details = data
+            if r.is_error then log("Card details: not loaded (" .. tostring(r.error) .. ")") else detailsRaw = r.text end
         end)
-        WebRequest.get(PAGES_URL, function(r)
-            local book = not r.is_error and decode(r.text)
-            for i, page in ipairs(book and book.pages or {}) do
-                local num = tonumber(page.num)
-                if num and num == math.floor(num) and chapterPage[num] == nil then chapterPage[num] = i - 1 end
-                if page.name and pageOfTitle[page.name] == nil then pageOfTitle[page.name] = i - 1 end
-                table.insert(bookPages, {name = page.name or "", num = page.num or "", page = i - 1, text = page.t or "", low = (page.t or ""):lower(),
-                    chapter = num and num == math.floor(num) or page.name == "Table of Contents"})
-            end
-        end)
+        WebRequest.get(PAGES_URL, function(r) if not r.is_error then pagesRaw = r.text end end)
     end, 3)
 end
 
@@ -380,22 +402,25 @@ end
 
 -- in the panel already showing this card, else a closed one, else the one opened longest ago
 function showDetails(color, obj)
+    ensureData()
     if not details then broadcastToColor("Card details are still loading.", color, {1, 0.6, 0.6}) return end
     local path = cardPath(obj, color)
     local card = path and details.cards[path]
     if not card then broadcastToColor("No details for this card.", color, {1, 0.6, 0.6}) return end
-    local mine = shown[color] or {}
-    shown[color] = mine
-    local k
-    for i = 1, DETAILS_PANELS do if mine[i] and mine[i].card == card then k = i break end end
-    if not k then for i = 1, DETAILS_PANELS do if not mine[i] then k = i break end end end
-    if not k then
-        k = 1
-        for i = 2, DETAILS_PANELS do if mine[i].at < mine[k].at then k = i end end
-    end
-    opened = opened + 1
-    mine[k] = {card = card, obj = obj, at = opened, size = mine[k] and mine[k].size or sizeOf[color] or 2}
-    layout(color, k)
+    ensurePanels(color, function()
+        local mine = shown[color] or {}
+        shown[color] = mine
+        local k
+        for i = 1, DETAILS_PANELS do if mine[i] and mine[i].card == card then k = i break end end
+        if not k then for i = 1, DETAILS_PANELS do if not mine[i] then k = i break end end end
+        if not k then
+            k = 1
+            for i = 2, DETAILS_PANELS do if mine[i].at < mine[k].at then k = i end end
+        end
+        opened = opened + 1
+        mine[k] = {card = card, obj = obj, at = opened, size = mine[k] and mine[k].size or sizeOf[color] or 2}
+        layout(color, k)
+    end)
 end
 
 function closeDetails(player, _, id)
@@ -559,15 +584,49 @@ local function listPages(color, query)
 end
 
 function openRulebook(color)
+    ensureData()
     if #bookPages == 0 then broadcastToColor("The rulebook's pages are still loading.", color, {1, 0.6, 0.6}) return end
-    listPages(color, "")
-    UI.setAttribute(color .. "_rb_q", "text", "")
-    UI.setAttribute(color .. "_rb", "active", "true")
+    ensurePanels(color, function()
+        rbOpen[color] = ""
+        listPages(color, "")
+        UI.setAttribute(color .. "_rb_q", "text", "")
+        UI.setAttribute(color .. "_rb", "active", "true")
+    end)
 end
 
-function closeRulebook(player) UI.setAttribute(player.color .. "_rb", "active", "false") end
+function closeRulebook(player)
+    rbOpen[player.color] = nil
+    UI.setAttribute(player.color .. "_rb", "active", "false")
+end
 
-function rulebookSearch(player, value) listPages(player.color, value) end
+function rulebookSearch(player, value)
+    rbOpen[player.color] = value or ""
+    listPages(player.color, value)
+end
+
+-- a player's panels built if they aren't yet, then done(); after a build every panel open before it is drawn again
+ensurePanels = function(color, done)
+    if not built[color] then
+        built[color] = true
+        restoring = true
+        rebuild()
+    end
+    if not restoring and not UI.loading then return done() end
+    Wait.frames(function()
+        Wait.condition(function()
+            if restoring then
+                restoring = false
+                for c, mine in pairs(shown) do for k in pairs(mine) do layout(c, k) end end
+                for c, q in pairs(rbOpen) do
+                    listPages(c, q)
+                    UI.setAttribute(c .. "_rb_q", "text", q)
+                    UI.setAttribute(c .. "_rb", "active", "true")
+                end
+            end
+            done()
+        end, function() return not UI.loading end, 10, function() log("Card details: the UI did not finish loading") end)
+    end, 2)
+end
 
 function rulebookGo(player, _, id)
     local color = player.color
