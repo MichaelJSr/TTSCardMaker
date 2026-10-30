@@ -183,9 +183,9 @@ export function ttsSave(deck, byId, raw, pins = {}) {
   const items = cards.filter(c => c.type !== "creature").sort((a, b) => b.stars - a.stars);
   const field = byId.get(deck.field);
   const objects = [];
-  if (creatures.length) objects.push(ttsPile(`${deck.name} — creatures`, creatures, 1, raw, backUrl("MDW/cardback.png"), -4));
-  if (items.length) objects.push(ttsPile(`${deck.name} — items`, items, 101, raw, backUrl("MDW/cardback_item.png"), 0));
-  if (field && field.png) objects.push(ttsCard(field, 201, raw, backUrl("MDW/cardback_item.png"), 4));
+  if (creatures.length) objects.push(ttsPile(`${deck.name} — creatures`, creatures, 1, raw, backUrl("MDW/Assets/cardback.png"), -4));
+  if (items.length) objects.push(ttsPile(`${deck.name} — items`, items, 101, raw, backUrl("MDW/Assets/cardback_item.png"), 0));
+  if (field && field.png) objects.push(ttsCard(field, 201, raw, backUrl("MDW/Assets/cardback_item.png"), 4));
   return {
     SaveName: deck.name, GameMode: "", Gravity: 0.5, PlayArea: 0.5, Date: new Date().toLocaleString(), Table: "", Sky: "",
     Note: "", Rules: "", XmlUI: "", LuaScript: "", LuaScriptState: "", ObjectStates: objects, TabStates: {}, VersionNumber: "",

@@ -49,7 +49,7 @@ def main():
         r = e.get("rule")
         if r:
             for p in rule_cards(r, pngs):
-                if p not in site and (p[:-4] + ".psd") not in fileset and not p.startswith(("Auxiliary/Rulebook/", "Auxiliary/Markers/")):
+                if p not in site and (p[:-4] + ".psd") not in fileset and not p.startswith(("MDW/Old Rules/", "MDW/Assets/Markers/")):
                     fails.append(f"{g} rule matches {p}: not a card (no PSD, not on the website)")
     lc = rules.get("large_cards") or {}
     if "current_keys" in lc:

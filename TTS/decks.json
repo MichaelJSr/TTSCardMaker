@@ -23,7 +23,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Cuphead/5 Stars/Chef_Saltbaker.png",
         "Creatures/Fnaf/5 Stars/The_Man_Behind_The_Slaughter.png",
@@ -62,7 +62,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Crypt/4 Stars/Grief.png",
         "Creatures/Everhood/4 Stars/Green_Mage.png",
@@ -101,7 +101,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Hollow Knight/3 Stars/Markoth.png",
         "Creatures/Hollow Knight/3 Stars/The_Beast.png",
@@ -147,7 +147,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Crypt/2 Stars/Pot_Full_of_Spiders!.png",
         "Creatures/FTL/2 Stars/Zoltan.png",
@@ -190,7 +190,7 @@
       "copies": [
         "f05d89"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "cde2bc": {
       "name": "★★★★",
@@ -213,7 +213,7 @@
       "copies": [
         "8dc131"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "6ae2a9": {
       "name": "★★★",
@@ -236,7 +236,7 @@
       "copies": [
         "ac2a14"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "e8e1b6": {
       "name": "★★",
@@ -262,7 +262,7 @@
       "copies": [
         "fa254e"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "df0c17": {
       "name": "★★★★",
@@ -285,7 +285,7 @@
       "copies": [
         "9c4f0c"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "213c84": {
       "name": "★★★",
@@ -308,7 +308,7 @@
       "copies": [
         "abb81f"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Attack/3 Stars/Big_Bomb.png": 3,
         "Items/Attack/3 Stars/Blood_Bomb.png": 2,
@@ -351,7 +351,7 @@
       "copies": [
         "7cdb04"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Attack/2 Stars/Bomb.png": 3,
         "Items/Attack/2 Stars/Firebomb.png": 2,
@@ -397,7 +397,7 @@
       "copies": [
         "42909d"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Counter/1 Stars/Poison_Trap.png": 1,
         "Items/Equip/1 Stars/Boko_Club.png": 1,
@@ -429,7 +429,7 @@
       "copies": [
         "444f1f"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "888cba": {
       "name": "",
@@ -451,7 +451,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Everhood/4 Stars/Rasta_Beast.png",
         "Creatures/Fnaf/4 Stars/Old_Bonnie.png",
@@ -500,7 +500,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Hollow Knight/3 Stars/Dung_Defender.png",
         "Creatures/Hollow Knight/3 Stars/Uumuu.png",
@@ -547,7 +547,7 @@
       "copies": [
         "36ee4c"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "97edb2": {
       "name": "★★★",
@@ -570,7 +570,7 @@
       "copies": [
         "f16501"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "4e992d": {
       "name": "★★",
@@ -593,7 +593,7 @@
       "copies": [
         "b14958"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "b25a54": {
       "name": "★",
@@ -616,7 +616,7 @@
       "copies": [
         "769f68"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "c8333f": {
       "name": "Status Effects⭐⭐⭐⭐⭐⭐⭐⭐⭐",
@@ -639,7 +639,7 @@
         "ee3c0c",
         "abd26b"
       ],
-      "back": "MDW/cardback_statuseffect.png"
+      "back": "MDW/Assets/cardback_statuseffect.png"
     },
     "ee3c0c": {
       "name": "Status Effects⭐⭐⭐⭐⭐⭐⭐⭐⭐",
@@ -662,7 +662,7 @@
         "c8333f",
         "abd26b"
       ],
-      "back": "MDW/cardback_statuseffect.png"
+      "back": "MDW/Assets/cardback_statuseffect.png"
     },
     "0b410c": {
       "name": "Auxiliary Items",
@@ -698,7 +698,7 @@
         "ac4725",
         "883c04"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "ac4725": {
       "name": "Auxiliary Items",
@@ -734,7 +734,7 @@
         "0b410c",
         "883c04"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "ed587f": {
       "name": "Minions",
@@ -760,7 +760,7 @@
         "6e935f",
         "f8df22"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "6e935f": {
       "name": "Minions",
@@ -786,7 +786,7 @@
         "ed587f",
         "f8df22"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "444f1f": {
       "name": "N.M.E. Deck",
@@ -807,7 +807,7 @@
       "copies": [
         "d3995a"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "883c04": {
       "name": "Auxiliary Items",
@@ -843,7 +843,7 @@
         "ac4725",
         "0b410c"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "f8df22": {
       "name": "Minions",
@@ -869,7 +869,7 @@
         "6e935f",
         "ed587f"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "abd26b": {
       "name": "Status Effects⭐⭐⭐⭐⭐⭐⭐⭐⭐",
@@ -892,7 +892,7 @@
         "c8333f",
         "ee3c0c"
       ],
-      "back": "MDW/cardback_statuseffect.png"
+      "back": "MDW/Assets/cardback_statuseffect.png"
     },
     "769f68": {
       "name": "★",
@@ -915,7 +915,7 @@
       "copies": [
         "b25a54"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "b14958": {
       "name": "★★",
@@ -938,7 +938,7 @@
       "copies": [
         "4e992d"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "f16501": {
       "name": "★★★",
@@ -961,7 +961,7 @@
       "copies": [
         "97edb2"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "36ee4c": {
       "name": "★★★★",
@@ -984,7 +984,7 @@
       "copies": [
         "b53bbf"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "42909d": {
       "name": "★",
@@ -1007,7 +1007,7 @@
       "copies": [
         "8fb88d"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Counter/1 Stars/Poison_Trap.png": 1,
         "Items/Equip/1 Stars/Boko_Club.png": 1,
@@ -1041,7 +1041,7 @@
       "copies": [
         "a7e1aa"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Attack/2 Stars/Bomb.png": 3,
         "Items/Attack/2 Stars/Firebomb.png": 2,
@@ -1087,7 +1087,7 @@
       "copies": [
         "213c84"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Attack/3 Stars/Big_Bomb.png": 3,
         "Items/Attack/3 Stars/Blood_Bomb.png": 2,
@@ -1130,7 +1130,7 @@
       "copies": [
         "df0c17"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "6dbf7e": {
       "name": "★",
@@ -1152,7 +1152,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "card_list": [
         "Items/Attack/1 Stars/Bleach.png",
         "Items/Attack/1 Stars/Mighty_Pebble.png",
@@ -1202,7 +1202,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "card_list": [
         "Items/Attack/2 Stars/Bomb.png",
         "Items/Attack/2 Stars/Firebomb.png",
@@ -1296,7 +1296,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "card_list": [
         "Items/Active/3 Stars/Black_Light_Bulb.png",
         "Items/Active/3 Stars/Star_Cannon.png",
@@ -1388,7 +1388,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "card_list": [
         "Items/Active/4 Stars/Pandamonium.png",
         "Items/Attack/4 Stars/Dynamite.png",
@@ -1429,7 +1429,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Bug Fables/2 Stars/Spuder.png",
         "Creatures/DST/2 Stars/Wilson.png",
@@ -1470,7 +1470,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/DST/3 Stars/WX-78.png",
         "Creatures/DST/3 Stars/Wigfrid.png",
@@ -1541,7 +1541,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/BTD/4 Stars/Avatar_Of_Wrath.png",
         "Creatures/DST/4 Stars/Wolfgang.png",
@@ -1607,7 +1607,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Bug Fables/5 Stars/Tanjerin.png",
         "Creatures/DST/5 Stars/Ancient_Fuelweaver.png",
@@ -1661,7 +1661,7 @@
       "copies": [
         "e8e1b6"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "ac2a14": {
       "name": "★★★",
@@ -1684,7 +1684,7 @@
       "copies": [
         "6ae2a9"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "8dc131": {
       "name": "★★★★",
@@ -1707,7 +1707,7 @@
       "copies": [
         "cde2bc"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "f05d89": {
       "name": "★★★★★",
@@ -1730,7 +1730,7 @@
       "copies": [
         "bc1e3f"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "493fc7": {
       "name": "3 Star Equips",
@@ -1752,7 +1752,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "79fd59": {
       "name": "Deck of Rejects",
@@ -1775,7 +1775,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "MDW/The Morgue/Developper.png",
         "MDW/The Morgue/Fire_Guardian's_Stronghold.png",
@@ -1807,7 +1807,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "b1cb91": {
       "name": "4 Star Attack Items",
@@ -1829,7 +1829,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "280637": {
       "name": "2 Star Healing Items",
@@ -1851,7 +1851,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "886307": {
       "name": "4 Star Equips",
@@ -1873,7 +1873,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "82d617": {
       "name": "2 Star Equips",
@@ -1895,7 +1895,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "452af0": {
       "name": "2 Star Attack Items",
@@ -1917,7 +1917,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     }
   },
   "bags": {
@@ -1955,7 +1955,7 @@
         [
           "Custom_Tile",
           "",
-          "Auxiliary/Markers/Green.png, Auxiliary/Markers/Red.png"
+          "MDW/Assets/Markers/Green.png, MDW/Assets/Markers/Red.png"
         ]
       ]
     },
@@ -1974,7 +1974,7 @@
         [
           "CardCustom",
           "HP",
-          "Auxiliary/Markers/health_marker.png, Auxiliary/Markers/minus_health_marker.png"
+          "MDW/Assets/Markers/health_marker.png, MDW/Assets/Markers/minus_health_marker.png"
         ]
       ]
     },
@@ -1993,7 +1993,7 @@
         [
           "CardCustom",
           "DEF",
-          "Auxiliary/Markers/defense_marker.png, Auxiliary/Markers/minus_defense_marker.png"
+          "MDW/Assets/Markers/defense_marker.png, MDW/Assets/Markers/minus_defense_marker.png"
         ]
       ]
     },
@@ -2012,7 +2012,7 @@
         [
           "CardCustom",
           "ATK",
-          "Auxiliary/Markers/attack_marker.png, Auxiliary/Markers/minus_attack_marker.png"
+          "MDW/Assets/Markers/attack_marker.png, MDW/Assets/Markers/minus_attack_marker.png"
         ]
       ]
     },
@@ -2031,7 +2031,7 @@
         [
           "CardCustom",
           "SPD",
-          "Auxiliary/Markers/minus_speed_marker.png, Auxiliary/Markers/speed_marker.png"
+          "MDW/Assets/Markers/minus_speed_marker.png, MDW/Assets/Markers/speed_marker.png"
         ]
       ]
     },
@@ -2050,7 +2050,7 @@
         [
           "CardCustom",
           "SPD",
-          "Auxiliary/Markers/minus_speed_marker.png, Auxiliary/Markers/speed_marker.png"
+          "MDW/Assets/Markers/minus_speed_marker.png, MDW/Assets/Markers/speed_marker.png"
         ]
       ]
     },
@@ -2069,7 +2069,7 @@
         [
           "Custom_Tile",
           "",
-          "Auxiliary/Markers/Green.png, Auxiliary/Markers/Red.png"
+          "MDW/Assets/Markers/Green.png, MDW/Assets/Markers/Red.png"
         ]
       ]
     },
@@ -2107,7 +2107,7 @@
         [
           "CardCustom",
           "HP",
-          "Auxiliary/Markers/health_marker.png, Auxiliary/Markers/minus_health_marker.png"
+          "MDW/Assets/Markers/health_marker.png, MDW/Assets/Markers/minus_health_marker.png"
         ]
       ]
     },
@@ -2126,7 +2126,7 @@
         [
           "CardCustom",
           "DEF",
-          "Auxiliary/Markers/defense_marker.png, Auxiliary/Markers/minus_defense_marker.png"
+          "MDW/Assets/Markers/defense_marker.png, MDW/Assets/Markers/minus_defense_marker.png"
         ]
       ]
     },
@@ -2145,7 +2145,7 @@
         [
           "CardCustom",
           "ATK",
-          "Auxiliary/Markers/attack_marker.png, Auxiliary/Markers/minus_attack_marker.png"
+          "MDW/Assets/Markers/attack_marker.png, MDW/Assets/Markers/minus_attack_marker.png"
         ]
       ]
     },
@@ -2229,7 +2229,7 @@
         "pdf": "TTS/Rulebook/Rulebook.pdf"
       },
       "back": "own face",
-      "texture": "MDW/Book_Cover.png"
+      "texture": "MDW/Assets/Book_Cover.png"
     }
   },
   "objects": {
@@ -2284,7 +2284,7 @@
         "bd69bd"
       ]
     },
-    "MDW/cardback.png": {
+    "MDW/Assets/cardback.png": {
       "in_git": true,
       "used_by": {
         "Chinese_Checkers_Piece 'Flex Table Control'": 1
@@ -2339,7 +2339,7 @@
         "5af8f2"
       ]
     },
-    "Auxiliary/Markers/Green.png": {
+    "MDW/Assets/Markers/Green.png": {
       "in_git": true,
       "used_by": {
         "Custom_Tile '' in .5": 2,
@@ -2389,7 +2389,7 @@
         "229a99"
       ]
     },
-    "Auxiliary/Markers/Red.png": {
+    "MDW/Assets/Markers/Red.png": {
       "in_git": true,
       "used_by": {
         "Custom_Tile '' in .5": 2,
@@ -2439,7 +2439,7 @@
         "229a99"
       ]
     },
-    "Auxiliary/Markers/health_marker.png": {
+    "MDW/Assets/Markers/health_marker.png": {
       "in_git": true,
       "used_by": {
         "CardCustom 'HP' in Max HP": 2
@@ -2451,7 +2451,7 @@
         "609586"
       ]
     },
-    "Auxiliary/Markers/minus_health_marker.png": {
+    "MDW/Assets/Markers/minus_health_marker.png": {
       "in_git": true,
       "used_by": {
         "CardCustom 'HP' in Max HP": 2
@@ -2463,7 +2463,7 @@
         "609586"
       ]
     },
-    "Auxiliary/Markers/defense_marker.png": {
+    "MDW/Assets/Markers/defense_marker.png": {
       "in_git": true,
       "used_by": {
         "CardCustom 'DEF' in DEF": 2
@@ -2475,7 +2475,7 @@
         "09ba04"
       ]
     },
-    "Auxiliary/Markers/minus_defense_marker.png": {
+    "MDW/Assets/Markers/minus_defense_marker.png": {
       "in_git": true,
       "used_by": {
         "CardCustom 'DEF' in DEF": 2
@@ -2487,7 +2487,7 @@
         "09ba04"
       ]
     },
-    "Auxiliary/Markers/attack_marker.png": {
+    "MDW/Assets/Markers/attack_marker.png": {
       "in_git": true,
       "used_by": {
         "CardCustom 'ATK' in ATK": 2
@@ -2499,7 +2499,7 @@
         "304516"
       ]
     },
-    "Auxiliary/Markers/minus_attack_marker.png": {
+    "MDW/Assets/Markers/minus_attack_marker.png": {
       "in_git": true,
       "used_by": {
         "CardCustom 'ATK' in ATK": 2
@@ -2511,7 +2511,7 @@
         "304516"
       ]
     },
-    "Auxiliary/Markers/speed_marker.png": {
+    "MDW/Assets/Markers/speed_marker.png": {
       "in_git": true,
       "used_by": {
         "CardCustom 'SPD' in SPD": 2
@@ -2523,7 +2523,7 @@
         "e6f324"
       ]
     },
-    "Auxiliary/Markers/minus_speed_marker.png": {
+    "MDW/Assets/Markers/minus_speed_marker.png": {
       "in_git": true,
       "used_by": {
         "CardCustom 'SPD' in SPD": 2

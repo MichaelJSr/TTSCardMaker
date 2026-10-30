@@ -2,7 +2,8 @@
 """Drift of a TTS save against a baseline: anything beyond the updater's own edits fails.
 
 python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref 0d33adc8, the last hand edit of the save)
-Allowed: repo link refs, card Nicknames, card CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck, cards added to or
+Allowed: repo link refs, links to a moved file (the old path gone from main, the new one on it), card Nicknames, card
+CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck, cards added to or
 removed from decks, the Rulebooks bag's contents, the resizeTargets rows, and the global script and UI as TTS/Global.lua
 and TTS/Global.xml hold them (since 2026-10-30 the updater writes them; a mismatch fails). Everything else is listed and
 fails: a card's Description, GMNotes, Memo, Tags and scripts are the team's (2026-10-22).
@@ -24,6 +25,7 @@ LINK = re.compile(r"(https://raw\.githubusercontent\.com/MichaelJSr/TTSCardMaker
 CARDS = ("Card", "CardCustom")
 CARD_FREE = {"Nickname", "CardID", "CustomDeck"}
 DECK_FREE = {"DeckIDs", "CustomDeck", "ContainedObjects"}
+PATHS = re.compile(r"https://raw\.githubusercontent\.com/MichaelJSr/TTSCardMaker/REF/([^\"\\\s]+)")   # in norm()'s text
 LUA_TABLE = re.compile(r"(resizeTargets\s*=\s*\{\n)(.*?)(\n\})", re.S)
 RULEBOOKS = "Rulebooks"     # tts_save fills this bag with the rulebook's pages (AutoCroissant tts_save._rulebook)
 
@@ -48,6 +50,16 @@ def norm(v):
     if isinstance(v, str):
         return LINK.sub(r"\1REF/", v)
     return v
+
+
+def relinked(x, y):
+    """x and y differ only in repo links whose old file is gone from main and whose new one is on it: the updater
+    follows moved files (tts_save._pin_links)."""
+    sx, sy = (json.dumps(norm(v), ensure_ascii=False) for v in (x, y))
+    px, py = PATHS.findall(sx), PATHS.findall(sy)
+    pairs = [(p, q) for p, q in zip(px, py) if p != q]
+    return (len(px) == len(py) and bool(pairs) and PATHS.sub("", sx) == PATHS.sub("", sy)
+            and all(unquote(p) not in tree() and unquote(q) in tree() for p, q in pairs))
 
 
 def load_base(arg):
@@ -77,7 +89,7 @@ def compare(a, b, where, stats):
         ea, eb = (norm(next(iter((x.get("CustomDeck") or {}).values()), {})) for x in (a, b))
         for k in set(ea) | set(eb):
             if k != "FaceURL" and ea.get(k) != eb.get(k):
-                fails.append(f"{where}: CustomDeck field {k} {ea.get(k)!r} -> {eb.get(k)!r}")
+                (notes if relinked(ea.get(k), eb.get(k)) else fails).append(f"{where}: CustomDeck field {k} {ea.get(k)!r} -> {eb.get(k)!r}")
     elif a.get("Name") == "Deck":
         free = DECK_FREE
     elif "ContainedObjects" in a:
@@ -88,7 +100,7 @@ def compare(a, b, where, stats):
         elif k not in a:
             fails.append(f"{where}: key {k} added")
         elif norm(a[k]) != norm(b[k]):
-            fails.append(f"{where}: {k} changed: {str(norm(a[k]))[:120]} -> {str(norm(b[k]))[:120]}")
+            (notes if relinked(a[k], b[k]) else fails).append(f"{where}: {k} changed: {str(norm(a[k]))[:120]} -> {str(norm(b[k]))[:120]}")
     if "ContainedObjects" in a or "ContainedObjects" in b:
         kids(a.get("ContainedObjects") or [], b.get("ContainedObjects") or [], where, stats, a.get("Name") == "Deck",
              a.get("Nickname") == RULEBOOKS)
