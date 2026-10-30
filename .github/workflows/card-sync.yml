@@ -1,7 +1,7 @@
 # Card sync (AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md section 6): builds the card data (db/ JSON on the orphan
 # branch `data`) and writes the changelog posts, bakes the website's pending PSD edits and updates the TTS save on main.
 # Every stage is the bot's code, checked out from bobberlington/AutoCroissant at the builder ref: card_data, changelog
-# post, card_bake --local, tts_save --names. Two lanes (owner, 2026-10-25: only main's writes wait):
+# post, card_bake --local, rulebook_pages, tts_save --names. Two lanes (owner, 2026-10-25: only main's writes wait):
 # - data (Card data): at once on every run but a retry: re-reads main's head, one commit on `data`, the posts, the site.
 # - main (Bake and save): the bake and the save as one commit M on main (fast-forward only), then the baked PNGs' save
 #   links re-pinned (a second commit). A card push's waits out a fixed 30-minute window (owner, 2026-10-24): the first
@@ -43,6 +43,7 @@ on:
       - "site/Card Creation Dates.json"
       - "TTS/decks.json"
       - "TTS/Impossibility Simulator.json"
+      - "site/rulebook/**"   # the rulebook's chapters: db/rulebook.json, and the TTS pages after the window
   schedule:
     - cron: "17 * * * *"     # the safety net (owner, 2026-10-25): off the top of the hour, GitHub's busiest
   workflow_dispatch:
@@ -139,6 +140,7 @@ jobs:
             /site/Card Creation Dates.json
             /MDW/Fonts/stoogedings-src/stoogedings.json
             /TTS/
+            /site/rulebook/*.md
 
       # The builder: exactly card_data.SPARSE_FILES (tests/test_card_data.py runs --help on the three CLIs with this list).
       # Never psd_analyzer, query_card or utils (discord, pandas); no config.py: the token comes from the environment.
@@ -173,6 +175,8 @@ jobs:
             /commands/tts_save.py
             /commands/ability_place.py
             /commands/ability_index.json
+            /commands/rulebook.py
+            /commands/rulebook_pages.py
 
       # The data branch (restore rewrites a bad one; a lost branch is pushed back by hand from a clone)
       - &data-checkout
@@ -248,7 +252,8 @@ jobs:
           db=carddata/db
           manifest=$db/manifest.json
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
-                  'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json')    # the builder's lower-cased extensions
+                  'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json'
+                  ':(glob)site/rulebook/*.md')    # the builder's lower-cased extensions
           why=()
           if [ -n "$AFTER" ]; then why+=("the bake's main commit ${AFTER:0:8} to re-read"); fi
           rec=$RUNNER_TEMP/records-in
@@ -738,7 +743,7 @@ jobs:
           { echo "main=$main"; echo "start=$(date +%s)"; } >> "$GITHUB_OUTPUT"
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
                   'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json'
-                  'TTS/Impossibility Simulator.json')
+                  'TTS/Impossibility Simulator.json' ':(glob)site/rulebook/*.md')
           why=()
           event=$GITHUB_EVENT_NAME
           if [ -n "$CHAIN" ]; then event=schedule; fi      # a chained run gates as the schedule
@@ -877,6 +882,27 @@ jobs:
           fi
           exit "$code"
 
+      # The rulebook's TTS pages (AutoCroissant commands/rulebook_pages): the website's #/rules/print drawn by the runner's
+      # Chrome into TTS/Rulebook, when the website shows main's chapters (it has had the 30-minute window to build them);
+      # the save below puts them in the Rulebooks bag and M takes them. A failure leaves the pages as they were.
+      - name: Rulebook pages
+        id: pages
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
+        continue-on-error: true
+        timeout-minutes: 10
+        working-directory: bot
+        run: |
+          if ! fc-list | grep -qi 'color emoji'; then        # the chapters' 🕐 and ⏳
+            sudo apt-get -qq update && sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null || echo "::warning::no emoji font"
+          fi
+          CHROME=$(command -v google-chrome || command -v chromium || true) \
+            "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" | tee "$RUNNER_TEMP/pages.md"
+          if [ -n "$(git -C "$GITHUB_WORKSPACE" status --porcelain -- TTS/Rulebook)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
       # The save on the checkout (B's Card Edits.json and decks), names from the data branch's head (Card Edits.json's
       # first); with no data, the website's cards.json.
       - name: TTS save
@@ -909,7 +935,7 @@ jobs:
       # its window, a pending one). The retry is marked by inputs.retry, runs only this lane and starts no other.
       - name: Commit main
         id: main
-        if: ${{ !cancelled() && env.GO == 'true' && env.DRY_RUN != 'true' && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true') }}
+        if: ${{ !cancelled() && env.GO == 'true' && env.DRY_RUN != 'true' && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true' || steps.pages.outputs.changed == 'true') }}
         timeout-minutes: 10
         env:
           GH_TOKEN: ${{ github.token }}
@@ -917,6 +943,7 @@ jobs:
           MAIN: ${{ steps.gate.outputs.main }}
           START: ${{ steps.gate.outputs.start }}
           SAVED: ${{ steps.save.outputs.changed }}
+          PAGES: ${{ steps.pages.outputs.changed }}
           B: ${{ steps.bake.outputs.b }}
           RETRY: ${{ inputs.retry && 'true' || 'false' }}
           INPUTS: ${{ toJSON(inputs) }}
@@ -938,6 +965,10 @@ jobs:
             mode=$(git ls-tree "$head" -- "$save" | cut -d' ' -f1)
             git update-index --add --cacheinfo "${mode:-100644},$(git hash-object -w -- "$save"),$save"
             parts+=("TTS save updated")
+          fi
+          if [ "$PAGES" = true ]; then           # the rulebook's TTS pages: new, redrawn and gone files
+            git add -A -- TTS/Rulebook
+            parts+=("rulebook pages drawn")
           fi
           tree=$(git write-tree --missing-ok)
           unset GIT_INDEX_FILE
@@ -976,7 +1007,7 @@ jobs:
               || echo "::warning::the new run was not dispatched: the next run with work does it"
             exit 0
           fi
-          pngs=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$head" -- ':(icase)*.png' | { grep -c . || true; })
+          pngs=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$m" -- ':(icase)*.png' | { grep -c . || true; })   # the pages' too
           { echo "pushed=true"; echo "m=$m"; echo "baked=$([ "$head" != "$MAIN" ] && echo true || echo false)"
             echo "pngs=$([ "$pngs" -gt 0 ] && echo true || echo false)"; } >> "$GITHUB_OUTPUT"
           echo "Main commit \`${m:0:8}\`: Card sync: ${subject%, }." >> "$GITHUB_STEP_SUMMARY"
@@ -1091,7 +1122,7 @@ jobs:
           out=$RUNNER_TEMP/card-sync
           mkdir -p "$out"
           if [ -d "$RUNNER_TEMP/card-bake" ]; then cp -R "$RUNNER_TEMP/card-bake" "$out/bake"; fi
-          for f in bake.md save.md repin.md main-message.txt main.txt; do
+          for f in bake.md pages.md save.md repin.md main-message.txt main.txt; do
             if [ -f "$RUNNER_TEMP/$f" ]; then cp "$RUNNER_TEMP/$f" "$out/"; fi
           done
           for f in TTS/*.report.md TTS/*.message.txt; do

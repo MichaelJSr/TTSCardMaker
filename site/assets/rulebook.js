@@ -318,7 +318,7 @@ export const titleText = t => plainText({ blocks: [{ t: "p", text: String(t || "
 // takes the rest of its page (up to the next "=== page ===") with it when the page's text a little smaller (to 80%)
 // fits them all, else is kept whole that way (to 88%), else split between its children (a section's blocks, a
 // list's items, a table's rows), else drawn smaller (to 70%: a row or a picture), else moved on; one taller than a whole
-// page is shrunk to fit. Returns [{name, num, el}].
+// page is shrunk to fit. Returns [{name, num, ch (the chapter's number as in its file), n (its page), el}].
 export function paginate(host, chapters, ctx, { cover = "" } = {}) {
   host.innerHTML = "";
   const sheets = [];
@@ -332,7 +332,7 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
       host.append(el); body = el.querySelector(".rb-body");
       const h2 = el.querySelector("h2");                 // one line: a long title is drawn smaller
       for (let f = 3.1; f > 1.6 && h2.scrollWidth > h2.clientWidth + 1; f -= 0.1) h2.style.fontSize = `${f.toFixed(1)}em`;
-      sheets.push({ name: `${title}${n > 1 ? ` ${n}` : ""}`, num: Number(ch.num) > 0 ? `${Number(ch.num)}${n > 1 ? `.${n}` : ""}` : "", el });
+      sheets.push({ name: `${title}${n > 1 ? ` ${n}` : ""}`, num: Number(ch.num) > 0 ? `${Number(ch.num)}${n > 1 ? `.${n}` : ""}` : "", ch: ch.num, n, el });
     };
     fresh();
     const over = () => body.scrollHeight > body.clientHeight + 1;

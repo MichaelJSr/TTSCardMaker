@@ -2222,19 +2222,27 @@
         1.1
       ],
       "holds": {
-        "CardCustom": 46
+        "CardCustom": 77,
+        "Custom_Model_Bag": 1
       },
       "rule": {
         "kind": "rulebook",
         "folders": [
-          "Auxiliary/Rulebook/*.png"
-        ],
-        "exclude": [
-          "Auxiliary/Rulebook/0000_Cover.png",
-          "Auxiliary/Rulebook/0000_Cover_Book.png"
+          "TTS/Rulebook/*.png"
         ],
         "loose_cards": true,
-        "nickname": "Page N: Title"
+        "nickname": "Page N: Title",
+        "pages": "TTS/Rulebook/pages.json",
+        "old": {
+          "bag": "Old Rulebook (Photoshop pages)",
+          "folders": [
+            "Auxiliary/Rulebook/*.png"
+          ],
+          "exclude": [
+            "Auxiliary/Rulebook/0000_Cover.png",
+            "Auxiliary/Rulebook/0000_Cover_Book.png"
+          ]
+        }
       },
       "back": "own face",
       "texture": "Auxiliary/Rulebook/0000_Cover_Book.png"

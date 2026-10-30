@@ -3,7 +3,7 @@
 
 python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref 0d33adc8, the last hand edit of the save)
 Allowed: repo link refs, card Nicknames, card CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck, cards added to or
-removed from decks, the resizeTargets rows. Everything else is listed and fails: a card's Description, GMNotes, Memo,
+removed from decks, the Rulebooks bag's pages (and its Photoshop pages moved into a bag inside it), the resizeTargets rows. Everything else is listed and fails: a card's Description, GMNotes, Memo,
 Tags and scripts are the team's (2026-10-22), and the global Lua outside resizeTargets.
 """
 import json
@@ -24,6 +24,7 @@ CARDS = ("Card", "CardCustom")
 CARD_FREE = {"Nickname", "CardID", "CustomDeck"}
 DECK_FREE = {"DeckIDs", "CustomDeck", "ContainedObjects"}
 LUA_TABLE = re.compile(r"(resizeTargets\s*=\s*\{\n)(.*?)(\n\})", re.S)
+RULEBOOKS = "Rulebooks"     # tts_save fills this bag with the rulebook's pages (AutoCroissant tts_save._rulebook)
 
 fails, notes = [], []
 _tree = []
@@ -88,10 +89,12 @@ def compare(a, b, where, stats):
         elif norm(a[k]) != norm(b[k]):
             fails.append(f"{where}: {k} changed: {str(norm(a[k]))[:120]} -> {str(norm(b[k]))[:120]}")
     if "ContainedObjects" in a or "ContainedObjects" in b:
-        kids(a.get("ContainedObjects") or [], b.get("ContainedObjects") or [], where, stats, a.get("Name") == "Deck")
+        kids(a.get("ContainedObjects") or [], b.get("ContainedObjects") or [], where, stats, a.get("Name") == "Deck",
+             a.get("Nickname") == RULEBOOKS)
 
 
-def kids(la, lb, where, stats, deck):
+def kids(la, lb, where, stats, deck, pages=False):
+    """pages: the Rulebooks bag (objects in and out are the updater's, in any place)."""
     by = defaultdict(list)
     for i, o in enumerate(lb):
         by[o.get("GUID")].append(o)
@@ -113,11 +116,11 @@ def kids(la, lb, where, stats, deck):
         fails.append(f"{where}: kept objects reordered")
     for o in gone:
         msg = f"{where}: {o.get('Name')} {o.get('GUID')} {o.get('Nickname')!r} removed"
-        (notes if deck else fails).append(msg)
+        (notes if deck or pages else fails).append(msg)
         stats["removed"] += 1
     for o in added:
         msg = f"{where}: {o.get('Name')} {o.get('GUID')} {o.get('Nickname')!r} added ({face(o).rsplit('/', 1)[-1]})"
-        (notes if deck else fails).append(msg)
+        (notes if deck or pages else fails).append(msg)
         stats["added"] += 1
         if deck and lb.index(o) < len(lb) - len(added):
             fails.append(f"{where}: added card {o.get('GUID')} not at the bottom")

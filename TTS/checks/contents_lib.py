@@ -12,7 +12,7 @@ from checks_env import REF, REPO as TC, save_arg, site_cards  # noqa: E402
 RAW = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/"
 LINK = re.compile(re.escape(RAW) + r"(refs/heads/main|main|[0-9a-f]{7,40})/([^\s\"\\<>]+)")
 CARD_NAMES = ("Card", "CardCustom")
-HAND_NAMED = ("Auxiliary/Rulebook/", "Auxiliary/Markers/")
+HAND_NAMED = ("Auxiliary/Rulebook/", "Auxiliary/Markers/", "TTS/Rulebook/")
 LARGE = "Auxiliary/Creatures/"
 
 

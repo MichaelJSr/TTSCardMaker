@@ -996,7 +996,8 @@ function watchToc() {
   for (const el of $$(".rb-chapter", view)) spy.observe(el);
 }
 // #/rules/print: the TTS pages (rulebook.js paginate), all of them small; ?sheet=N alone at full size, nothing else on the
-// page, for the export's screenshots (AutoCroissant commands/rulebook_pages.py)
+// page. #rb-sheet-list holds the pages and the chapters they were cut from: the TTS export (AutoCroissant
+// commands/rulebook_pages.py) checks those against main's before it screenshots the pages
 async function renderSheets(r) {
   const shot = r.params.get("sheet"), solo = shot !== null && shot !== "";
   document.body.classList.toggle("rb-shot", solo);
@@ -1014,7 +1015,7 @@ async function renderSheets(r) {
   host.className = "rb-sheets";
   if (solo) sheets.forEach((x, i) => x.el.classList.toggle("rb-shown", i === +shot));
   const list = Object.assign(document.createElement("script"), { type: "application/json", id: "rb-sheet-list" });
-  list.textContent = JSON.stringify(sheets.map(x => ({ name: x.name, num: x.num })));
+  list.textContent = JSON.stringify({ sheets: sheets.map(x => ({ name: x.name, num: x.num, ch: x.ch, n: x.n })), chapters: chapters.map(c => [c.file, c.source]) });
   view.append(list);
   document.body.dataset.sheets = String(sheets.length);    // the export waits for this
 }

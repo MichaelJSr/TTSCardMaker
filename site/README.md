@@ -67,7 +67,11 @@ text or image, links its commit when it is known), and the artwork sources when 
   has an Edit button (and the contents a New chapter button): the text beside the page as it will look, a toolbar,
   pictures uploaded or pasted (resized to 1080 px, WebP), a draft kept in the browser until Publish, which commits the
   chapter (and its new pictures) straight to main. **TTS pages** (`#/rules/print`) cut the same chapters into 1080×1920
-  pages ("STATS", "STATS 2"... numbered 7, 7.2), as the Photoshop pages were; `=== page ===` starts a new one.
+  pages ("STATS", "STATS 2"... numbered 7, 7.2), as the Photoshop pages were; `=== page ===` starts a new one. Card
+  sync's main lane draws them into `TTS/Rulebook/` (`07-02.png`, `pages.json`; AutoCroissant `commands.rulebook_pages`,
+  once the website shows main's chapters) and the save's Rulebooks bag takes them; the Photoshop pages sit in the bag's
+  own "Old Rulebook (Photoshop pages)" bag. A chapter push starts Card sync (the bot's `db/rulebook.json` at once, the
+  pages after its 30-minute window).
   Also the badge colors, the timing-tag glossary and the constructed ban list. Old page links
   (`#/rules/07-stats3`, `#/rules?q=07 Stats3`) open their chapter.
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,

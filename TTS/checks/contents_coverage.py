@@ -2,7 +2,8 @@
 
     python contents_coverage.py [save.json]
 Fails: a website card missing from the save or from every complete rule; a complete-rule card not on the website;
-the Rulebooks bag not exactly its rule's pages (one each, back = own face). Notes: repo PNGs nowhere in the save
+the Rulebooks bag not exactly its rule's pages (one each, back = own face; its rule's old pages, kept, in the bag
+rule.old names inside it). Notes: repo PNGs nowhere in the save
 (by folder), links to files gone from the repo (D5: report only).
 """
 import os
@@ -66,7 +67,17 @@ for guid, bag in (rules.get("bags") or {}).items():
             r.fail(f"bag {bag.get('name')!r}: tokens differ: {set(have.items()) ^ set(bag['tokens'].items())}")
     if not rule or rule.get("kind") != "rulebook":
         continue
-    held = Counter(face(c) for c in objs[0].get("ContainedObjects") or [])
+    inside = objs[0].get("ContainedObjects") or []
+    old = rule.get("old") or {}
+    if old:                                             # the Photoshop pages, kept in a bag of their own inside it
+        nested = [o for o in inside if o.get("Nickname") == old.get("bag")]
+        if len(nested) != 1:
+            r.fail(f"bag {bag.get('name')!r}: {len(nested)} bags named {old.get('bag')!r} inside")
+        else:
+            kept = Counter(face(c) for c in nested[0].get("ContainedObjects") or [])
+            for p in sorted(set(rule_cards(old, pngs)) - set(kept)):
+                r.fail(f"bag {old.get('bag')!r}: page missing {p}")
+    held = Counter(face(c) for c in inside if c.get("Name") in CARD_NAMES)
     want = set(rule_cards(rule, pngs))
     for p in sorted(want - set(held)):
         r.fail(f"bag {bag.get('name')!r}: page missing {p}")
