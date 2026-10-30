@@ -3146,7 +3146,7 @@ def game_text(cards, rules, banlist, icons, manifest):
     return "\n".join(out).replace("’", "'")
 
 
-# ---- data/tts.json: the TTS save's card details (TTS/Global.lua fetches it on load: hover strip, details) ----------
+# ---- data/tts.json: the TTS save's card details (TTS/Global.lua fetches it on load: Card details, Find a card) -----
 TTS_JSON = "tts.json"
 TAG_FIXED = {"OYT": ("turn", "On your turn"), "AAT": ("any", "At any time"), "BOT": ("forced", "Beginning of turn (forced)"),
              "ENDT": ("forced", "End of turn (forced)"), "BOGT": ("forced", "Beginning of global turn (forced)"),

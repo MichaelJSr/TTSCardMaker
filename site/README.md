@@ -68,10 +68,16 @@ text or image, links its commit when it is known), and the artwork sources when 
   renumbered chapter's rename followed), from GitHub's API without a sign-in. Each chapter has an Edit
   button, each section a ✎ (signed in), and the contents a New chapter button: the text beside the page as it will look
   (or as its TTS pages), linked both ways (click the page to reach its line; the cursor shows its block). Pictures, card
-  rows and mascots are dragged to move them on the page; a click on a picture sets its side (left, centre, right, the
-  corner) and size; pictures come from the picture panel (drag or click) or from the computer (Add picture, paste, or
-  drop image files on the page: resized to 1080 px, WebP, published with the chapter). A card box picks cards by name.
-  Ctrl/Cmd+B, I, Z and S (publish). A draft stays in the browser until Publish, which commits the chapter (and its new
+  rows and mascots are dragged to move them on the page: dropped on blank space a picture stays where it lands (snapped
+  to its panel's edges and centre, with guides); a picked section, panel, box or row (click it, again for its parent)
+  takes the drops landing in it; with **Make space** on, drops go into the text, which makes room (a row gains a
+  column; on blank space, between the sections). A selected picture gets a tools bar above the page: the 3×3 anchor
+  grid (a row's picture in its column, a placed one in its panel, one in the text at the top, middle or end of its
+  panel and left, on its own line or right), size, delete and Make space; arrow keys nudge it (with Make space, through
+  the text). Pictures come from the Pictures menu (search; Add as Picture or Mascot says) or from the computer (Add
+  picture, paste, or drop image files on the page: resized to 1080 px, WebP, published with the chapter); the Insert
+  and Colour menus add blocks and colour the selection. A card box picks cards by name. Undo and redo (↶ ↷, Ctrl/Cmd+Z,
+  Shift+Z or Y); Ctrl/Cmd+B, I and S (publish). A draft stays in the browser until Publish, which commits the chapter (and its new
   pictures) straight to main. **TTS pages** (`#/rules/print`) cut the same chapters into 1080×1920
   pages (the cover, then "STATS", "STATS 2"... numbered 7, 7.2), as the Photoshop pages were; `=== page ===` starts a new
   one. Card sync's main lane prints them to `TTS/Rulebook/Rulebook.pdf` (real text: searchable, selectable, bookmarks;
@@ -199,7 +205,8 @@ computed by `site/build/analytics.py` from the same bot data) loads when the Sta
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
 People tab is opened; `changelog.json` when the Changelog, Archive or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
-when a card's or rulebook page's Details dropdown is first opened. Script, style and data URLs
+when a card's or rulebook page's Details dropdown is first opened. `tts.json` is the TTS save's: its global script
+(`TTS/Global.lua`) fetches it for the Card details, Find a card and Rules buttons (`build_site.py` `tts_details`). Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The Action ships the scripts as
 one minified bundle, `assets/app.js`, with its source map `assets/app.js.map` (the modules' own text: browser devtools
 show and debug them); the editor, the Stats page (and the cards' Balance blocks) and the People pages are chunks of their
