@@ -1,4 +1,5 @@
--- Impossibility Simulator: seat teams, large cards resized out of containers, card details, turn markers.
+-- Impossibility Simulator: seat teams, hand zones shared on a side, large cards resized out of containers, card details,
+-- turn markers.
 -- The save's global script: edit this file (TTS/Global.lua), never the save; Card sync writes it into the save.
 
 -- Seat -> TTS team; other seats get "None"
@@ -20,7 +21,42 @@ local resizeTargets = {
     ["Shadow Queen"]                 = true,
 }
 
+-- Hand zones shared on a side: a zone belongs to its own seat's colour while someone sits there; a free seat's zones go
+-- to the first seated teammate on its side (TEAMS order: Red, Orange, Green / Blue, Purple, Pink), so a player alone on
+-- a side keeps cards in every hand zone there. Run on load and on every seat change; a zone's own colour is its owner in
+-- the save the first time, kept in the script's saved state after.
+local SIDE_ORDER = {Hearts = {"Red", "Orange", "Green"}, Clubs = {"Blue", "Purple", "Pink"}}
+local zoneHome, zoneOwner = {}, {}                     -- hand zone GUID -> its own colour / its owner now
+
+local function shareHands()
+    local seated = {}
+    for _, c in ipairs(getSeatedPlayers()) do seated[c] = true end
+    local gained = {}                                  -- colour -> the seats whose zones it now holds
+    for _, zone in ipairs(Hands.getHands()) do
+        local guid = zone.getGUID()
+        if not zoneOwner[guid] then zoneOwner[guid] = zone.getData().FogColor end
+        zoneHome[guid] = zoneHome[guid] or zoneOwner[guid]
+        local home = zoneHome[guid]
+        local owner = home
+        if TEAMS[home] and not seated[home] then
+            for _, c in ipairs(SIDE_ORDER[TEAMS[home]]) do if seated[c] then owner = c break end end
+        end
+        if owner ~= zoneOwner[guid] then
+            zone.setValue(owner)
+            zoneOwner[guid] = owner
+            if owner ~= home then gained[owner] = gained[owner] or {}; gained[owner][home] = true end
+        end
+    end
+    for c, homes in pairs(gained) do
+        local list = {}
+        for h in pairs(homes) do table.insert(list, h) end
+        table.sort(list)
+        broadcastToColor("You hold " .. table.concat(list, " and ") .. "'s hand zones too (their seats are free).", c, {1, 1, 1})
+    end
+end
+
 function onPlayerChangeColor(color)
+    Wait.frames(shareHands, 2)                         -- any seat change, leaving one included
     if color == "Grey" or color == "Black" then return end
     local player = Player[color]
     if not player or not player.seated then return end
@@ -31,12 +67,19 @@ function onPlayerChangeColor(color)
     end
 end
 
-function onLoad()
+function onPlayerDisconnect() Wait.frames(shareHands, 2) end
+
+function onSave() return JSON.encode({zoneHome = zoneHome}) end
+
+function onLoad(saved)
+    local ok, state = pcall(JSON.decode, saved or "")
+    if ok and type(state) == "table" and type(state.zoneHome) == "table" then zoneHome = state.zoneHome end
     -- players already seated, once the load settles
     Wait.time(function()
         for _, color in ipairs(getSeatedPlayers()) do
             onPlayerChangeColor(color)
         end
+        shareHands()
     end, 1)
     loadCardDetails()
 end
