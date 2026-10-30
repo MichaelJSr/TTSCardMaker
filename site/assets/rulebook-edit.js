@@ -1,6 +1,8 @@
-// The rulebook editor (app.js openBookEditor): one chapter's text beside its page as the site draws it, a toolbar for the
-// syntax (rulebook.js), pictures uploaded as WebP into site/rulebook/img, a draft kept in this browser until published,
-// and Publish: the chapter (renamed when its number changes, removed by Delete) and its new pictures as one commit.
+// The rulebook editor (app.js openBookEditor): one chapter's text beside its page as the site draws it (or as its TTS
+// pages), the two linked (a click on the page goes to its line; the cursor brings its block into view), a toolbar for
+// the syntax (rulebook.js) and a card picker, pictures uploaded as WebP into site/rulebook/img, a draft kept in this
+// browser until published, and Publish (Ctrl/Cmd+S): the chapter (renamed when its number changes, removed by Delete)
+// and its new pictures as one commit.
 import { esc } from "./text.js";
 
 const DRAFTS = "rulebook-drafts";                  // {chapter id or "new": {source, num, base, at}}
@@ -20,12 +22,12 @@ const HELP = [
   ["![what it shows](file.webp){.right width=30}", "a picture: .left / .right float it, .end puts it at the right edge, width in % of the line"],
   ["![[Card name]]", "the card's picture (several on one line make a row; -> between them draws an arrow)"], ["[[Card name]]", "a link to the card"],
   ["[text]{.red}", "colours: red green blue yellow orange purple grey; .u underline, .big, .secret (hidden in the panel)"],
-  ["**bold**  *italic*  ***both***", ""], ["- item / 1. item / 1) item", "lists keep the numbers you type"], ["| a | b |", "a table (|:-:| centres; {.grid cols=-,red,green} under it)"],
+  ["**bold**  *italic*  ***both***", "Ctrl/Cmd+B, Ctrl/Cmd+I"], ["- item / 1. item / 1) item", "lists keep the numbers you type"], ["| a | b |", "a table (|:-:| centres; {.grid cols=-,red,green} under it)"],
   ["[“SHOPS”](#/rules/shops)", "a link to a chapter (or #/rules/stats/health for a section)"], ["=== page ===", "starts a new TTS page here (the site ignores it)"],
 ];
 
 export function open(api) {
-  const { id, book } = api;
+  const { id, book, line = null } = api;
   const ch = id ? book.chapters.find(c => c.id === id) : null;
   if (id && !ch) { api.toast("That chapter is gone"); return; }
   const key = ch ? ch.id : "new", draft = readDrafts()[key];
@@ -41,8 +43,52 @@ export function open(api) {
   api.modal.querySelector("#rbe-file").addEventListener("change", e => upload([...e.target.files]).finally(() => { e.target.value = ""; }));
   api.modal.addEventListener("click", onClick);
   ta.addEventListener("paste", e => { const f = [...(e.clipboardData?.files || [])].filter(x => x.type.startsWith("image/")); if (f.length) { e.preventDefault(); upload(f); } });
+  ta.addEventListener("keydown", e => {                // Ctrl/Cmd+B bold, +I italic, +S publish
+    if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+    const k = e.key.toLowerCase(), act = { b: () => insert("bold"), i: () => insert("italic"), s: () => publish() }[k];
+    if (act) { e.preventDefault(); act(); }
+  });
+  for (const ev of ["click", "keyup"]) ta.addEventListener(ev, follow);
+  api.modal.querySelector(".rbe-preview").addEventListener("click", e => {   // a click on the page: its line in the text
+    const el = e.target.closest("[data-line]");
+    e.preventDefault();
+    if (el) jump(+el.dataset.line);
+  }, true);
+  const pick = api.modal.querySelector("#rbe-card");
+  pick.addEventListener("keydown", e => {
+    if (e.key !== "Enter" || !pick.value.trim()) return;
+    e.preventDefault();
+    insert(e.shiftKey ? `[[${pick.value.trim()}]]` : `![[${pick.value.trim()}]]`);
+    pick.value = "";
+  });
   preview();
+  if (line != null) jump(line); else ta.focus();
+}
+
+// the text's line n at the top of the box, the cursor at its start
+function jump(n) {
+  const ta = M.api.modal.querySelector("#rbe-text"), lines = ta.value.split("\n");
+  const at = lines.slice(0, n).reduce((sum, l) => sum + l.length + 1, 0);
   ta.focus();
+  ta.setSelectionRange(at, at);
+  const lh = parseFloat(getComputedStyle(ta).lineHeight) || 20;
+  ta.scrollTop = Math.max(0, n * lh - 2 * lh);           // wrapped lines make it approximate: the caret stays in view
+  follow();
+}
+// the block under the cursor brought into view on the page, marked a moment
+let followed = null;
+function follow() {
+  const ta = M.api.modal.querySelector("#rbe-text"), pane = M.api.modal.querySelector(".rbe-preview");
+  if (!ta || !pane || M.tts) return;
+  const n = ta.value.slice(0, ta.selectionStart).split("\n").length - 1;
+  let best = null;
+  for (const el of pane.querySelectorAll("[data-line]")) if (+el.dataset.line <= n && (!best || +el.dataset.line >= +best.dataset.line)) best = el;
+  if (!best || best === followed) return;
+  followed?.classList.remove("rbe-here");
+  followed = best;
+  best.classList.add("rbe-here");
+  const r = best.getBoundingClientRect(), p = pane.getBoundingClientRect();
+  if (r.top < p.top || r.bottom > p.bottom) pane.scrollTop += r.top - p.top - 40;
 }
 
 function html() {
@@ -58,31 +104,43 @@ function html() {
       <button type="button" class="ghost" data-ins="section" title="A tabbed panel">Section</button>
       <button type="button" class="ghost" data-ins="panel">Panel</button><button type="button" class="ghost" data-ins="row" title="Side by side">Row</button>
       <button type="button" class="ghost" data-ins="ability" title="A card's ability box">Ability box</button>
-      <button type="button" class="ghost" data-ins="card" title="A card's picture">Card</button><button type="button" class="ghost" data-ins="link" title="A link to a card">Card link</button>
+      <input id="rbe-card" class="rbe-card" list="rbe-cards" placeholder="Card…" title="Type a card's name; Enter: its picture, Shift+Enter: a link to it" autocomplete="off">
+      <datalist id="rbe-cards">${(M.api.cards?.() || []).map(n => `<option value="${esc(n)}">`).join("")}</datalist>
       <button type="button" class="ghost" data-ins="bold"><b>B</b></button><button type="button" class="ghost" data-ins="italic"><i>I</i></button>
       <button type="button" class="ghost" data-ins="red" title="Colour the selection">Colour</button>
       <button type="button" class="ghost" data-ins="page" title="Start a new TTS page here">TTS page break</button>
       <label class="ghost button" title="Upload a picture (or paste one)">Upload picture<input id="rbe-file" type="file" accept="image/*" multiple hidden></label>
       <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
         <p class="muted">Click: a picture. Alt-click: the mascot says something (&gt; [!name]).</p></details>
+      <button type="button" class="ghost" data-rbe="tts" aria-pressed="false" title="Show the chapter as its TTS pages (1080x1920)">TTS pages</button>
       <details class="rbe-help"><summary class="ghost button">Syntax</summary><table class="help-table">${HELP.map(([k, d]) => `<tr><td><code>${esc(k)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>
-        <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons, card names link. Type "[" or "(" for the picker.</p></details>
+        <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
+        Click anything on the page to go to its line. Your draft is kept in this browser until you publish (Ctrl/Cmd+S).</p></details>
     </div>
     <div class="rbe-cols"><textarea id="rbe-text" spellcheck="true" data-tokens aria-label="The chapter's text"></textarea>
-      <div class="rbe-preview"><div class="rb rb-book"><article class="rb-chapter" id="rbe-page"></article></div></div></div></div>`;
+      <div class="rbe-preview"><div class="rb rb-book"><article class="rb-chapter" id="rbe-page"></article></div><div class="rbe-sheets" hidden></div></div></div></div>`;
 }
 
 let timer = 0;
 function preview() {
   clearTimeout(timer);
   timer = setTimeout(() => {
-    const { api } = M, page = api.modal.querySelector("#rbe-page");
+    const { api } = M, page = api.modal.querySelector("#rbe-page"), sheets = api.modal.querySelector(".rbe-sheets");
     if (!page) return;
     const base = api.ctx();
-    const ctx = { ...base, imgUrl: f => { const up = [...M.uploads.keys()].find(k => k === f || k.replace(/\.\w+$/, "") === f); return up ? M.uploads.get(up).url : base.imgUrl(f); },
+    const ctx = { ...base, lines: true, eager: true, imgUrl: f => { const up = [...M.uploads.keys()].find(k => k === f || k.replace(/\.\w+$/, "") === f); return up ? M.uploads.get(up).url : base.imgUrl(f); },
       size: f => (M.uploads.get(f)?.size || base.size(f)) };
-    const id = M.ch ? M.ch.id : "new";
-    page.innerHTML = api.RB.chapterHtml({ id, num: M.num, title: "", source: M.source }, ctx);
+    const chapter = { id: M.ch ? M.ch.id : "new", num: M.num, title: "", source: M.source };
+    page.parentElement.hidden = !!M.tts; sheets.hidden = !M.tts;
+    if (M.tts) {                                       // its TTS pages, cut as Card sync's export cuts them (pictures still loading: approximate)
+      sheets.className = "rbe-sheets";
+      api.RB.paginate(sheets, [chapter], { ...ctx, lines: false });
+      sheets.className = "rbe-sheets rb-sheets";
+    } else {
+      page.innerHTML = api.RB.chapterHtml(chapter, ctx);
+      followed = null;
+      follow();                                        // the cursor's block in view again
+    }
   }, 150);
 }
 
@@ -117,6 +175,7 @@ function onClick(e) {
     return insert(e.altKey ? `\n> [!${stem}] ` : `![](${name})`);
   }
   const act = t.dataset.rbe;
+  if (act === "tts") { M.tts = !M.tts; t.setAttribute("aria-pressed", String(M.tts)); t.classList.toggle("on", M.tts); preview(); return; }
   if (act === "close") return close();
   if (act === "discard") { if (confirm("Throw away your draft of this chapter?")) { writeDraft(M.key, null); open({ ...M.api }); } return; }
   if (act === "delete") return remove();

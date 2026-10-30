@@ -53,18 +53,21 @@ export function parse(src) {
   return { title: h1?.text || "", attrs: h1?.attrs || { cls: [] }, blocks: blocks.filter(b => b !== h1) };
 }
 
-function parseBlocks(lines, inRow = false) {
+function parseBlocks(lines, inRow = false, base = 0) {
   const out = [];
   let i = 0;
+  const push = b => out.push(Object.assign(b, { line: base + start }));   // the source line a block starts on (the editor)
+  let start = 0;
   while (i < lines.length) {
     const line = lines[i];
+    start = i;
     if (!line.trim() || CLOSE.test(line)) { i++; continue; }      // a stray closing fence: nothing
     let m;
     if ((m = FENCE.exec(line))) {
       let depth = 1, j = i + 1;
       for (; j < lines.length; j++) { if (FENCE.test(lines[j])) depth++; else if (CLOSE.test(lines[j]) && !--depth) break; }
       const { text, attrs } = splitAttrs(m[2]);
-      out.push({ t: "fence", kind: m[1].toLowerCase(), arg: unquote(text), attrs, children: parseBlocks(lines.slice(i + 1, j), m[1].toLowerCase() === "row") });
+      push({ t: "fence", kind: m[1].toLowerCase(), arg: unquote(text), attrs, children: parseBlocks(lines.slice(i + 1, j), m[1].toLowerCase() === "row", base + i + 1) });
       i = j + 1; continue;
     }
     if (/^>/.test(line)) {
@@ -72,18 +75,18 @@ function parseBlocks(lines, inRow = false) {
       while (i < lines.length && /^>/.test(lines[i])) body.push(lines[i++].replace(/^> ?/, ""));
       const w = /^\[!([\w-]+)((?:\s+[\w-]+)*)\]\s*(.*)$/.exec(body[0] || "");
       if (w) body[0] = w[3];
-      out.push({ t: "say", who: w ? w[1].toLowerCase() : "", opts: w ? w[2].trim().split(/\s+/).filter(Boolean) : [], children: parseBlocks(body) });
+      push({ t: "say", who: w ? w[1].toLowerCase() : "", opts: w ? w[2].trim().split(/\s+/).filter(Boolean) : [], children: parseBlocks(body, false, base + start) });
       continue;
     }
-    if ((m = HEAD.exec(line))) { const { text, attrs } = splitAttrs(m[2]); out.push({ t: `h${m[1].length}`, text, attrs }); i++; continue; }
-    if (RULE.test(line)) { out.push({ t: "hr" }); i++; continue; }
-    if (PAGE.test(line)) { out.push({ t: "page" }); i++; continue; }
-    if (/^\s*\|/.test(line)) { const r = parseTable(lines, i); out.push(r.block); i = r.next; continue; }
-    if (LIST.test(line) && indentOf(line) < 2) { const r = parseList(lines, i); out.push(r.block); i = r.next; continue; }
-    if (PICTURE.test(line.trim()) || CARDS.test(line)) { out.push(paragraph(line)); i++; continue; }
+    if ((m = HEAD.exec(line))) { const { text, attrs } = splitAttrs(m[2]); push({ t: `h${m[1].length}`, text, attrs }); i++; continue; }
+    if (RULE.test(line)) { push({ t: "hr" }); i++; continue; }
+    if (PAGE.test(line)) { push({ t: "page" }); i++; continue; }
+    if (/^\s*\|/.test(line)) { const r = parseTable(lines, i); push(r.block); i = r.next; continue; }
+    if (LIST.test(line) && indentOf(line) < 2) { const r = parseList(lines, i); push(r.block); i = r.next; continue; }
+    if (PICTURE.test(line.trim()) || CARDS.test(line)) { push(paragraph(line)); i++; continue; }
     const para = [line];
     for (i++; i < lines.length && lines[i].trim() && !startsBlock(lines[i]); i++) para.push(lines[i]);
-    out.push(paragraph(para.join("\n")));
+    push(paragraph(para.join("\n")));
   }
   return group(out, inRow);
 }
@@ -92,14 +95,15 @@ function parseBlocks(lines, inRow = false) {
 // to the next column: a fence, a callout, card pictures or a picture that doesn't float
 const FLOATS = ["left", "right", "end"];
 const column = b => b.t === "fence" || b.t === "say" || b.t === "cards" || (b.t === "img" && !b.attrs.cls.some(c => FLOATS.includes(c)));
+const holdsSection = b => b.t === "fence" && b.children.some(c => c.t === "section" || holdsSection(c));
 function group(list, inRow = false) {
   const res = [];
   let sec = null;
   for (const b of list) {
     if (inRow && sec && column(b)) sec = null;
-    if (b.t === "h2") { sec = { t: "section", title: b.text, attrs: b.attrs, children: [] }; res.push(sec); continue; }
+    if (b.t === "h2") { sec = { t: "section", title: b.text, attrs: b.attrs, children: [], line: b.line }; res.push(sec); continue; }
     if (b.t === "h1" || b.t === "hr" || b.t === "page") { sec = null; if (b.t !== "hr") res.push(b); continue; }
-    if (b.t === "fence" && b.children.some(c => c.t === "section")) { sec = null; res.push(b); continue; }   // a row of sections: its own
+    if (holdsSection(b)) { sec = null; res.push(b); continue; }   // a fence holding sections (a row of them): its own
     (sec ? sec.children : res).push(b);
   }
   return res;
@@ -245,15 +249,20 @@ function cardHtml(name, label, ctx, cls = "") {
 const lazy = ctx => (ctx.eager ? "" : ' loading="lazy" decoding="async"');   // the TTS pages: every picture at once
 const kidsHtml = (list, ctx) => list.map(b => blockHtml(b, ctx)).join("");
 
-/** HTML for one block (draw and the paginator) */
+/** HTML for one block (draw and the paginator); ctx.lines: each block's element carries data-line (the editor's preview) */
 export function blockHtml(b, ctx) {
+  const html = blockInner(b, ctx);
+  return ctx.lines && b.line != null && !b.cont ? html.replace(/^<([a-z][a-z0-9]*)/, `<$1 data-line="${b.line}"`) : html;
+}
+function blockInner(b, ctx) {
   switch (b.t) {
     case "p": return `<p>${inline(b.text, ctx)}</p>`;
     case "h3": return `<h4 class="rb-sub ${clsOf(b.attrs)}">${inline(b.text, ctx)}</h4>`;
     case "section": {
       const id = ctx.id ? ` id="${esc(ctx.id)}--${slugify(titleText(b.title))}"` : "";
       const icon = b.attrs?.icon && !b.cont ? ctx.icon?.(b.attrs.icon) : "";
-      return `<section class="rb-sec ${clsOf(b.attrs)}${b.cont ? " rb-cont" : ""}${icon ? " rb-has-icon" : ""}"${b.cont ? "" : id}>${icon ? `<span class="rb-sec-icon">${icon}</span>` : ""}${b.cont ? "" : `<h3 class="rb-tab">${inline(b.title, ctx)}</h3>`}<div class="rb-panel">${kidsHtml(b.children, ctx)}</div></section>`;
+      const pen = ctx.editable && ctx.id && b.line != null ? ` <button type="button" class="rb-sec-edit" data-action="rb-edit" data-id="${esc(ctx.id)}" data-line="${b.line}" title="Edit this section" aria-label="Edit this section">✎</button>` : "";
+      return `<section class="rb-sec ${clsOf(b.attrs)}${b.cont ? " rb-cont" : ""}${icon ? " rb-has-icon" : ""}"${b.cont ? "" : id}>${icon ? `<span class="rb-sec-icon">${icon}</span>` : ""}${b.cont ? "" : `<h3 class="rb-tab">${inline(b.title, ctx)}${pen}</h3>`}<div class="rb-panel">${kidsHtml(b.children, ctx)}</div></section>`;
     }
     case "fence": return fenceHtml(b, ctx);
     case "say": {

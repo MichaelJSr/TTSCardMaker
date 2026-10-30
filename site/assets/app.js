@@ -944,7 +944,7 @@ function renderRules(r) {
   document.body.classList.remove("rb-shot");
   const q = (r.params.get("q") || "").trim().toLowerCase();
   if (document.activeElement !== qInput) qInput.value = "";
-  const chapters = S.book.chapters, ctx = bookCtx(), shown = q ? chapters.filter(c => c.text.includes(q)) : chapters;
+  const chapters = S.book.chapters, ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => c.text.includes(q)) : chapters;
   // a Photoshop page's old link (#/rules/07-stats3, the changelog's #/rules?q=07 Stats3): its chapter by number
   const was = t => { const m = /^(\d{2})[-_ ]/.exec(t || ""); return m && chapters.find(c => c.num === m[1]); };
   const gone = r.arg && !chapters.some(c => c.id === r.arg.split("/")[0]) ? was(r.arg) : q && !shown.length ? was(q) : null;
@@ -957,19 +957,23 @@ function renderRules(r) {
   view.innerHTML = `<div class="rules">
     <nav class="toc" aria-label="Rulebook chapters"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
       ${chapters.map(c => `<a href="#/rules/${c.id}" data-scroll="${c.id}" data-toc="${c.id}">${label(c)}</a><div class="subs" data-subs="${c.id}" hidden>${RB.sectionsOf(c).map(x => `<a class="sub" href="#/rules/${c.id}/${x.anchor.slice(c.id.length + 2)}" data-scroll="${x.anchor}">${esc(x.title)}</a>`).join("")}</div>`).join("")}
-      <a href="#/rules" data-scroll="glossary">Timing tags</a><a href="#/rules" data-scroll="banlist">Constructed ban list</a>
+      <a href="#/rules" data-scroll="glossary" data-toc="glossary">Timing tags</a><a href="#/rules" data-scroll="banlist" data-toc="banlist">Constructed ban list</a>
       <div class="toc-tools"><a class="ghost" href="#/rules/print" title="The pages the Tabletop Simulator save shows">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
-        ${can ? `<button type="button" class="ghost" data-action="rb-new">New chapter</button>` : ""}</div></nav>
+        <button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button></div></nav>
     <div class="rb rb-book">
       ${q ? `<p class="muted">${shown.length} chapter${shown.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}" alt="Impossibility Simulator" width="260" height="462">`}
       ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
-      ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools">${can ? `<button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}">Edit</button>` : ""}<a class="ghost" href="${esc(fileUrl(c))}" target="_blank" rel="noopener" title="This chapter's changes on GitHub">History</a></div>${RB.chapterHtml(c, ctx)}</article>`).join("")
+      ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button><a class="ghost" href="${esc(fileUrl(c))}" target="_blank" rel="noopener" title="This chapter's changes on GitHub">History</a></div>${RB.chapterHtml(c, ctx)}</article>`).join("")
         || `<div class="empty">No rulebook chapter mentions that.</div>`}
-      ${!q ? `<section class="rb-extra" id="glossary"><h3>Timing tags</h3><p class="muted">X can be any number; the first number of a pair such as (1/2CD) can also be 0 or −1. Hover or tap a badge for its meaning.</p>${legendHtml()}
-        ${Object.entries(GROUP_NAMES).map(([g, l]) => `<h4>${esc(l)}</h4>${gloss(tags.filter(t => tagInfo(t).group === g && !tagInfo(t).old))}`).join("")}
-        <h4>Old system (rulebook pages)</h4>${gloss(tags.filter(t => tagInfo(t).old))}</section>
-      <section class="rb-extra" id="banlist"><h3>Constructed ban list</h3>${banned.notes.map(n => `<p class="muted">${esc(n)}</p>`).join("")}
-        ${banned.groups.map(g => `<h4>${esc(g.title)}</h4><ul>${g.entries.map(e => `<li>${e.id ? `<a class="card-ref" href="#/card/${e.id}" data-card="${e.id}">${esc(e.name)}</a>` : esc(e.name)} <span class="muted">— ${esc(e.reason)}</span></li>`).join("")}</ul>`).join("")}</section>` : ""}
+      ${!q ? `<article class="rb-chapter rb-extra" id="glossary"><header class="rb-head"><h2>Timing tags</h2></header>
+        <div class="rb-panel rb-solo"><p>X can be any number; the first number of a pair such as (1/2CD) can also be 0 or −1. Hover or tap a badge for its meaning.</p>${legendHtml()}</div>
+        ${[...Object.entries(GROUP_NAMES).map(([g, l]) => [l, tags.filter(t => tagInfo(t).group === g && !tagInfo(t).old)]), ["Old system (rulebook pictures)", tags.filter(t => tagInfo(t).old)]]
+          .filter(([, list]) => list.length).map(([l, list]) => `<section class="rb-sec"><h3 class="rb-tab">${esc(l)}</h3><div class="rb-panel"><div class="rb-gloss">${list.map(t => `<span class="rb-gloss-tag">${badgeHtml(t)}</span><span>${esc(tagInfo(t).meaning.replace(/^Old system: /, ""))}</span>`).join("")}</div></div></section>`).join("")}</article>
+      <article class="rb-chapter rb-extra" id="banlist"><header class="rb-head"><h2>Constructed ban list</h2></header>
+        <div class="rb-panel rb-solo">${banned.notes.map(n => `<p>${esc(n)}</p>`).join("")}</div>
+        ${banned.groups.map(g => `<section class="rb-sec"><h3 class="rb-tab">${esc(g.title)}</h3><div class="rb-panel"><div class="rb-bans">${g.entries.map(e => { const c = e.id && S.byId.get(e.id);
+          return `<div class="rb-ban">${c ? `<a class="rb-card" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}" title="${esc(c.name)}"><img src="${esc(img(c, 240))}" alt="${esc(c.name)}" loading="lazy" decoding="async"></a>` : ""}
+            <b>${c ? `<a class="card-ref" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}">${esc(e.name)}</a>` : esc(e.name)}</b>${e.reason ? `<i>${esc(e.reason)}</i>` : ""}</div>`; }).join("")}</div></div></section>`).join("")}</article>` : ""}
     </div></div>`;
   if (q) {                                               // only the blocks that hold it, highlighted
     for (const el of $$(".rb-chapter > :not(.rb-head):not(.rb-tools)", view)) if (!el.textContent.toLowerCase().includes(q)) el.classList.add("rb-hit-none");
@@ -1013,7 +1017,9 @@ async function renderSheets(r) {
   await document.fonts.ready;
   warm.remove();
   if (parseHash().name !== "rules" || parseHash().arg !== "print") return;
-  const sheets = RB.paginate(host, chapters, ctx);          // measured at full size, then shown small
+  let sheets = RB.paginate(host, chapters, ctx);          // measured at full size, then shown small
+  await Promise.all([...host.querySelectorAll("img")].map(i => i.decode().catch(() => {})));
+  if ([...host.querySelectorAll(".rb-body")].some(b => b.scrollHeight > b.clientHeight + 1)) sheets = RB.paginate(host, chapters, ctx);   // a picture late: cut again
   host.className = "rb-sheets";
   if (solo) sheets.forEach((x, i) => x.el.classList.toggle("rb-shown", i === +shot));
   const list = Object.assign(document.createElement("script"), { type: "application/json", id: "rb-sheet-list" });
@@ -1419,15 +1425,16 @@ function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="d
 
 // the rulebook editor (rulebook-edit.js): a chapter's text beside its page, published as one commit
 let rbEditP = null;
-function openBookEditor(id) {
+function openBookEditor(id, line = null) {
   if (!editing()) { act("edit-hub"); return; }
   withEditor(ed => (rbEditP ||= (early("rulebook-edit.js"), import("./rulebook-edit.js")).catch(e => { rbEditP = null; throw e; })).then(m => m.open({
-    id, RB, book: S.book, ctx: bookCtx, editor: ed, repo: S.data.repo, branch: S.data.branch || "main", modal, toast, closeModal,
+    id, line, RB, book: S.book, ctx: bookCtx, editor: ed, repo: S.data.repo, branch: S.data.branch || "main", modal, toast, closeModal,
+    cards: () => S.all.filter(c => !c.hidden).map(c => c.name),
     published: sent => { localStorage.setItem(RB_SENT, JSON.stringify(sent)); bookChapters(); rerender(); },
   })).catch(e => toast(`Couldn't open the rulebook editor (${e.message})`)));
 }
 const actions = {
-  "rb-edit": el => openBookEditor(el.dataset.id),
+  "rb-edit": el => openBookEditor(el.dataset.id, el.dataset.line != null ? +el.dataset.line : null),
   "rb-new": () => openBookEditor(""),
   "close": () => { if ($("#edit-form", modal)) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
   "toggle-param": (el, exclude = false) => { const p = parseHash().params, k = el.dataset.key, cur = vals(p, k), v = el.dataset.value;

@@ -5,6 +5,8 @@
 - If a status effect deals DMG or Heals, then by default it procs in phase 4, after (ENDT) effects. Otherwise, the status effect takes effect immediately.
 - The duration of any status effect counts down in phase 4.
 
+---
+
 ::: panel
 ::: row 4 3
 ![Panda with 2 turns of Softened and 2 turns of Smouldering: its counters and markers](status-panda.webp)

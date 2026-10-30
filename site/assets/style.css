@@ -321,7 +321,17 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rb-break { display: none; }
 .rb mark { background: #ffe066; color: inherit; border-radius: 3px; }
 .rb-hit-none { display: none; }
-.rb-extra { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+/* the Timing tags and Constructed ban list chapters (app.js renderRules): the book's look, drawn from text.js and the ban list file */
+.rb-gloss { display: grid; grid-template-columns: max-content 1fr; gap: .45em 1em; align-items: center; }
+.rb-gloss-tag { text-align: center; min-width: 5.2em; }
+.rb .rb-gloss .badge { font-size: .95em; }
+.rb .badge-legend { font-size: 1em; line-height: 1.9; margin: .4em 0 0; }
+.rb .badge-legend li { color: var(--rb-ink); }
+.rb-bans { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5em, 1fr)); gap: .9em .7em; }
+.rb-ban { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .25em; line-height: 1.25; }
+.rb-ban .rb-card { width: 6.5em; }
+.rb-ban b { font-size: .92em; }
+.rb-ban i { font-size: .8em; opacity: .8; }
 /* the rulebook editor (rulebook-edit.js): the text beside the page */
 .dialog.rbe { width: min(1500px, 100%); height: calc(100vh - 32px); display: flex; flex-direction: column; padding: 12px; gap: 8px; }
 .rbe-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -345,6 +355,13 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
   border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--ink); tab-size: 2; }
 .rbe-preview { overflow: auto; border-radius: 12px; }
 .rbe-preview .rb { font-size: 15px; }
+.rbe-preview [data-line] { cursor: text; }
+.rbe-preview .rbe-here { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.rbe-sheets.rb-sheets { gap: 10px; padding: 4px; }
+.rbe-bar .rbe-card { width: 13em; padding: 3px 8px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--ink); }
+.rbe-bar button.on { border-color: var(--accent); color: var(--accent); }
+.rb-sec-edit { margin-left: .5em; padding: 0 .35em; border: 0; background: none; color: var(--rb-ink); opacity: .35; font: 15px system-ui, sans-serif; cursor: pointer; vertical-align: .15em; }
+.rb-sec:hover .rb-sec-edit, .rb-sec-edit:focus-visible { opacity: .9; }
 @media (max-width: 900px) { .rbe-cols { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; } }
 /* the TTS sheets (#/rules/print): 1080x1920 pages; the export screenshots one at a time (?sheet=N) */
 .rb-sheets { display: flex; flex-wrap: wrap; gap: 16px; }
