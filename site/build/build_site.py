@@ -25,7 +25,7 @@ Where the data comes from:
     reaches past the icon (text.js sizes them).
   * The rulebook: site/rulebook, one text file per chapter (NN-slug.md, written on the website or by hand; syntax at
     the top of site/assets/rulebook.js), its pictures in img/ and its web fonts in fonts/ (dist/rulebook gets both); the Photoshop
-    pages in Auxiliary/Rulebook are not read. Banned cards from site/Constructed Ban List.txt.
+    pages (MDW/Old Rules/Rulebook since 2026-10-30) are not read. Banned cards from site/Constructed Ban List.txt.
   * Authors: site/Card Authors.txt ([people] git name = shown name, [cards] Card Name = person) wins over the bot's
     author, the same rule the card data build applies.
   * Corrections: site/Card Edits.json (the website's Edit button); the bot applies it too.
