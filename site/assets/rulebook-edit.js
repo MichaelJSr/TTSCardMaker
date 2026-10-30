@@ -23,7 +23,7 @@ const HELP = [
   ["> [!kirby] text", "a mascot says it (any picture's name: eggman, sonic, kirby-sleepy…); [!eggman top] puts it on top, [!kirby right] floats it"],
   ["![what it shows](file.webp){.right width=30}", "a picture: .left / .right float it, .end puts it at the right edge, width in % of the line; dx=10 dy=-5 shift it (% of its size)"],
   ["![[Card name]]", "the card's picture (several on one line make a row; -> between them draws an arrow)"], ["[[Card name]]", "a link to the card"],
-  ["[text]{.red}", "colours: red green blue yellow orange purple grey; .u underline, .big, .secret (hidden in the panel)"],
+  ["[text]{.red}", "colours (the Colour menu): red green blue yellow orange purple grey white; .u underline, .big, .small, .caps, .nowrap (one line), .secret (hidden in the panel)"],
   ["**bold**  *italic*  ***both***", "Ctrl/Cmd+B, Ctrl/Cmd+I"], ["- item / 1. item / 1) item", "lists keep the numbers you type"], ["| a | b |", "a table (|:-:| centres; {.grid cols=-,red,green} under it)"],
   ["[“SHOPS”](#/rules/shops)", "a link to a chapter (or #/rules/stats/health for a section)"], ["=== page ===", "starts a new TTS page here (the site ignores it)"],
 ];
@@ -592,7 +592,10 @@ function html() {
       <input id="rbe-card" class="rbe-card" list="rbe-cards" placeholder="Card…" title="Type a card's name; Enter: its picture, Shift+Enter: a link to it" autocomplete="off">
       <datalist id="rbe-cards">${(M.api.cards?.() || []).map(n => `<option value="${esc(n)}">`).join("")}</datalist>
       <button type="button" class="ghost" data-ins="bold"><b>B</b></button><button type="button" class="ghost" data-ins="italic"><i>I</i></button>
-      <button type="button" class="ghost" data-ins="red" title="Colour the selection">Colour</button>
+      <details class="rbe-colours"><summary class="ghost button" title="Colour or style the selected words">Colour</summary><div class="rbe-menu">
+        <div class="rbe-swatches">${COLOUR_NAMES.map(c => `<button type="button" class="rbe-swatch rb-${c}" data-colour="${c}">${c[0].toUpperCase() + c.slice(1)}</button>`).join("")}</div>
+        <div class="rbe-swatches">${STYLES.map(([c, label, tip]) => `<button type="button" class="ghost rb-${c}" data-colour="${c}" title="${esc(tip)}">${label}</button>`).join("")}<button type="button" class="ghost" data-colour="" title="Colours and styles taken off">Plain</button></div>
+        <p class="muted">Select words in the text (or put the cursor in coloured words), then pick. The same colour again takes it off; styles add to a colour.</p></div></details>
       <button type="button" class="ghost" data-ins="page" title="Start a new TTS page here">TTS page break</button>
       <label class="ghost button" title="Add pictures from this computer (or drop image files on the page or the text, or paste one)">Add picture<input id="rbe-file" type="file" accept="image/*" multiple hidden></label>
       <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-menu"><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
@@ -674,6 +677,29 @@ function saveDraft() {
   const st = M.api.modal.querySelector("#rbe-state"); if (st) st.textContent = same ? "" : "Draft kept in this browser.";
 }
 
+// the Colour menu: the selected words (or the [words]{.colour} the cursor is in) given a colour, or a style added or taken
+// off; Plain: back to plain words. The words stay selected, so another pick changes them
+const COLOUR_NAMES = ["red", "green", "blue", "yellow", "orange", "purple", "grey", "white"];
+const STYLES = [["u", "Underline", "Underlined"], ["big", "Big", "Bigger letters"], ["small", "Small", "Smaller letters"], ["caps", "Caps", "In capitals"],
+  ["nowrap", "One line", "Never broken across lines"], ["secret", "Secret", "In the panel's colour: hidden until selected"]];
+const SPAN = /\[([^[\]\n]*)\]\{([^{}\n]*)\}/g;
+function colour(name) {
+  const ta = textBox(), v = ta.value, a = ta.selectionStart, b = ta.selectionEnd;
+  const hit = [...v.matchAll(SPAN)].find(m => m.index <= a && m.index + m[0].length >= b);
+  const start = hit ? hit.index : a, end = hit ? hit.index + hit[0].length : b, words = hit ? hit[1] : v.slice(a, b) || "text";
+  const attrs = hit ? M.api.RB.splitAttrs(`{${hit[2]}}`).attrs : { cls: [] };
+  let cls = attrs.cls;
+  if (!name) cls = [];
+  else if (cls.includes(name)) cls = cls.filter(c => c !== name);
+  else cls = [...cls.filter(c => !(COLOUR_NAMES.includes(name) && COLOUR_NAMES.includes(c))), name];   // one colour at a time
+  attrs.cls = cls;
+  const tail = M.api.RB.attrsText(attrs);
+  ta.setRangeText(tail ? `[${words}]${tail}` : words, start, end, "end");
+  const at = start + (tail ? 1 : 0);
+  ta.focus(); ta.setSelectionRange(at, at + words.length);
+  M.nextKind = "edit"; ta.dispatchEvent(new Event("input"));
+}
+
 // toolbar: what each button puts in (around the selection when it has one)
 const SNIPPET = {
   section: () => "\n## SECTION\n", panel: () => "\n::: panel\n\n:::\n", row: () => "\n::: row\n![](picture.webp)\n\n::: panel\nText beside it.\n:::\n:::\n",
@@ -681,7 +707,7 @@ const SNIPPET = {
 };
 function insert(kind) {
   const ta = textBox(), a = ta.selectionStart, b = ta.selectionEnd, sel = ta.value.slice(a, b);
-  const wrap = { bold: ["**", "**"], italic: ["*", "*"], red: ["[", "]{.red}"] }[kind];
+  const wrap = { bold: ["**", "**"], italic: ["*", "*"] }[kind];
   const text = wrap ? `${wrap[0]}${sel || "text"}${wrap[1]}` : SNIPPET[kind]?.() ?? kind;
   ta.setRangeText(text, a, b, wrap && !sel ? "select" : "end");
   if (wrap && !sel) ta.setSelectionRange(a + wrap[0].length, a + wrap[0].length + 4);
@@ -689,10 +715,11 @@ function insert(kind) {
 }
 
 function onClick(e) {
-  const t = e.target.closest("[data-rbe], [data-ins], [data-pic]");
+  const t = e.target.closest("[data-rbe], [data-ins], [data-pic], [data-colour]");
   if (!t || !M) return;
   e.preventDefault(); e.stopPropagation();
   if (t.dataset.ins) return insert(t.dataset.ins);
+  if (t.dataset.colour != null) { t.closest("details").open = false; return colour(t.dataset.colour); }
   if (t.dataset.pic) {
     const name = t.dataset.pic, stem = name.replace(/\.\w+$/, "");
     t.closest("details").open = false;

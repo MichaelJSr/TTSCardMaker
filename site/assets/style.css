@@ -350,6 +350,11 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rbe-bar .rbe-menu { position: absolute; z-index: 8; left: 0; top: 100%; margin-top: 4px; width: min(560px, calc(100vw - 16px)); max-height: 70vh; overflow: auto;
   background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px; box-shadow: var(--shadow); }
 .rbe-bar .rbe-menu > p { margin: 8px 0 0; }
+.rbe-bar .rbe-colours .rbe-menu { width: min(420px, calc(100vw - 16px)); }
+.rbe-swatches { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.rbe-bar .rbe-swatch { padding: 3px 10px; font-weight: 700; background: #d9dcff; border: 1px solid var(--border-strong); border-radius: 8px; }
+.rbe-bar .rbe-swatch.rb-white { background: #555; }
+.rbe-bar .rbe-swatches .rb-big { font-size: 15px; } .rbe-bar .rbe-swatches .rb-small { font-size: 11px; } .rbe-bar .rbe-swatches .rb-secret { color: inherit; font-style: italic; }
 .rbe-pic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; }
 .rbe-pic-grid button { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px; font-size: 11px; }
 .rbe-pic-grid img { width: 64px; height: 48px; object-fit: contain; }
