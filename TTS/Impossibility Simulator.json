@@ -21553,7 +21553,7 @@
               "Type": 0
             },
             "1662": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Items/Equip/2%20Stars/Soul_of_Eden.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3a66cfd672c883de863888e51ce0f60befcc577b/Items/Equip/2%20Stars/Eden's_Soul.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -22361,7 +22361,7 @@
                 "scaleY": 1.0,
                 "scaleZ": 2.0
               },
-              "Nickname": "Soul of Eden",
+              "Nickname": "Eden's Soul",
               "Description": "",
               "GMNotes": "",
               "AltLookAngle": {
@@ -22392,7 +22392,7 @@
               "SidewaysCard": false,
               "CustomDeck": {
                 "1662": {
-                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Items/Equip/2%20Stars/Soul_of_Eden.png",
+                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3a66cfd672c883de863888e51ce0f60befcc577b/Items/Equip/2%20Stars/Eden's_Soul.png",
                   "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
                   "NumWidth": 1,
                   "NumHeight": 1,
@@ -29373,7 +29373,7 @@
           "HideWhenFaceDown": false,
           "Hands": false,
           "CustomPDF": {
-            "PDFUrl": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/TTS/Rulebook/Rulebook.pdf",
+            "PDFUrl": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3a66cfd672c883de863888e51ce0f60befcc577b/TTS/Rulebook/Rulebook.pdf",
             "PDFPassword": "",
             "PDFPage": 0,
             "PDFPageOffset": 0
@@ -52999,7 +52999,7 @@
           "Type": 0
         },
         "844": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Items/Equip/2%20Stars/Soul_of_Eden.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3a66cfd672c883de863888e51ce0f60befcc577b/Items/Equip/2%20Stars/Eden's_Soul.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -56254,7 +56254,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Soul of Eden",
+          "Nickname": "Eden's Soul",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -56285,7 +56285,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "844": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Items/Equip/2%20Stars/Soul_of_Eden.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3a66cfd672c883de863888e51ce0f60befcc577b/Items/Equip/2%20Stars/Eden's_Soul.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -126740,7 +126740,7 @@
           "Type": 0
         },
         "844": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Items/Equip/2%20Stars/Soul_of_Eden.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3a66cfd672c883de863888e51ce0f60befcc577b/Items/Equip/2%20Stars/Eden's_Soul.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -129995,7 +129995,7 @@
             "scaleY": 1.0,
             "scaleZ": 2.0
           },
-          "Nickname": "Soul of Eden",
+          "Nickname": "Eden's Soul",
           "Description": "",
           "GMNotes": "",
           "AltLookAngle": {
@@ -130026,7 +130026,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "844": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Items/Equip/2%20Stars/Soul_of_Eden.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3a66cfd672c883de863888e51ce0f60befcc577b/Items/Equip/2%20Stars/Eden's_Soul.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d66630ae5e6ea0f7e5ece65c300530f2301b4185/MDW/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
