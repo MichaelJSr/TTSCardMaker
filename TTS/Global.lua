@@ -42,6 +42,7 @@ function onLoad()
 end
 
 function onObjectLeaveContainer(container, obj)
+    cardMenu(obj)                                      -- Card details on a card taken out of a deck or bag
     if obj.type ~= "Card" or not resizeTargets[obj.getName()] then return end
     -- after the take has placed it
     Wait.frames(function()
@@ -49,7 +50,8 @@ function onObjectLeaveContainer(container, obj)
     end, 3)
 end
 
--- Card details: right-click a card > Card details (right-click the table > Find a card: any card, spawned there). Panels only that player sees (up to three at once): drag one by its
+-- Card details: right-click a card > Card details, in hand too (right-click the table > Find a card: any card). Cards
+-- spawned from the panels go into the player's hand. Panels only that player sees (up to three at once): drag one by its
 -- title bar, A- / A+
 -- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
 -- (status effects and others) spawn beside the card with a click. Data: the website's data/tts.json and
@@ -227,6 +229,8 @@ function loadCardDetails()
 end
 
 function onObjectSpawn(obj) addMenu(obj) end
+function cardMenu(obj) addMenu(obj) end                -- for the handlers above this section
+function onObjectEnterZone(zone, obj) if zone.type == "Hand" then addMenu(obj) end end   -- cards drawn into a hand
 
 -- %XX escapes decoded (no patterns)
 local function unescape(s)
@@ -544,8 +548,14 @@ local function madeCard(path, card)
             BackIsHidden = true, UniqueBack = false, Type = 0}}}
 end
 
--- a card (its path) spawned at pos facing spin: a copy of the save's own when there is one, else made; at its played size
-local function spawnCard(path, name, pos, spin)
+-- a card (its path) spawned: into the player's hand, face down on the way in (nobody else sees it), else at pos facing
+-- spin (a player without a hand); a copy of the save's own when there is one, else made; at its played size
+local function spawnCard(path, name, pos, spin, color)
+    local hand = color and Player[color] and Player[color].getHandTransform()
+    if hand then
+        pos = {hand.position.x, hand.position.y + 1, hand.position.z}
+        spin = hand.rotation.y + 180
+    end
     if not cardIndex then indexCards() end
     local known = cardIndex[path]
     local data = known and known.data or madeCard(path, details.cards[path] or {n = name})
@@ -553,7 +563,7 @@ local function spawnCard(path, name, pos, spin)
     if not face.BackURL then for _, v in pairs(data.CustomDeck or {}) do face = v break end end
     local scale = known and known.scale or scaleOfBack[pathOf(face.BackURL) or ""] or {1, 1, 1}
     data.GUID = nil
-    spawnObjectData({data = data, position = pos, rotation = {0, spin or 0, 0}, scale = scale,
+    spawnObjectData({data = data, position = pos, rotation = {0, spin or 0, hand and 180 or 0}, scale = scale,
         callback_function = function(o)
             if resizeTargets[o.getName()] then o.setScale(LARGE_CARD_SCALE) end
         end})
@@ -567,7 +577,7 @@ function spawnNamed(player, _, id)                     -- beside the card the pa
     local from = open.obj and not open.obj.isDestroyed() and open.obj
     local at = from and from.getPosition() or Player[color].getHandTransform().position
     open.spawned = (open.spawned or 0) + 1
-    spawnCard(item[2], item[1], {at.x + 2.6 * open.spawned, at.y + 1.5, at.z}, from and from.getRotation().y or 0)
+    spawnCard(item[2], item[1], {at.x + 2.6 * open.spawned, at.y + 1.5, at.z}, from and from.getRotation().y or 0, color)
 end
 
 -- the rulebook panel: its chapters, or the pages holding every word searched (a snippet of each); a click turns the PDF there
@@ -708,7 +718,7 @@ function finderGo(player, _, id)
     if not path then return end
     local at = f.at or Player[color].getHandTransform().position
     local spin = (Player[color].getHandTransform() or {}).rotation
-    spawnCard(path, details.cards[path].n, {at.x + 2.6 * f.spawned, at.y + 1.5, at.z}, spin and spin.y + 180 or 0)
+    spawnCard(path, details.cards[path].n, {at.x + 2.6 * f.spawned, at.y + 1.5, at.z}, spin and spin.y + 180 or 0, color)
     f.spawned = f.spawned + 1
 end
 
