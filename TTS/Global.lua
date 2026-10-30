@@ -49,7 +49,8 @@ function onObjectLeaveContainer(container, obj)
     end, 3)
 end
 
--- Card details: right-click a card > Card details. A panel only that player sees: drag it by its title bar, A- / A+
+-- Card details: right-click a card > Card details. Panels only that player sees (up to three at once): drag one by its
+-- title bar, A- / A+
 -- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
 -- (status effects and others) spawn beside the card with a click. Data: the website's data/tts.json and
 -- TTS/Rulebook/pages.json, fetched a moment after the save loads. No Lua patterns over long text (MoonSharp's are
@@ -63,11 +64,12 @@ local BADGE = {turn = "#60a5fa", any = "#a78bfa", forced = "#f87171", trigger = 
 local DIM, HEAD = "#94a3b8", "#7dd3fc"
 local SIZES = {{w = 440, h = 540, f = 14}, {w = 540, h = 660, f = 16}, {w = 660, h = 800, f = 18}}
 local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 4, 6, 40, 30
+local DETAILS_PANELS = 3                               -- a player's card details open at once (one more replaces the oldest)
 local BACKS = {{"Buff", "MDW/Assets/cardback_statuseffect.png"}, {"Debuff", "MDW/Assets/cardback_statuseffect.png"},
     {"Creature", "MDW/Assets/cardback.png"}, {"Minion", "MDW/Assets/cardback.png"}, {"Auxiliary creature", "MDW/Assets/cardback.png"}}
 
 local details, tagCase, chapterPage, pageOfTitle, bookPages = nil, {}, {}, {}, {}
-local sizeOf, shown, menued, cardIndex = {}, {}, setmetatable({}, {__mode = "k"}), nil
+local sizeOf, shown, opened, menued, cardIndex = {}, {}, 0, setmetatable({}, {__mode = "k"}), nil
 
 local function decode(text)
     local ok, data = pcall(JSON.decode, text or "")
@@ -89,11 +91,11 @@ local function row(id, prefix, n, onClick, colors)
     return r
 end
 
--- one seat's panel (its children placed by size(), below)
-local function detailsPanel(c)
-    local id = c .. "_d"
+-- one of a seat's details panels, k (its children placed by layout(), below); each a little further in than the last
+local function detailsPanel(c, k)
+    local id = c .. "_d" .. k
     return {tag = "Panel", attributes = {id = id, visibility = c, active = false, allowDragging = true,
-        returnToOriginalPositionWhenReleased = false, rectAlignment = "MiddleRight", offsetXY = "-60 0", width = 540, height = 660,
+        returnToOriginalPositionWhenReleased = false, rectAlignment = "MiddleRight", offsetXY = (-60 - 50 * (k - 1)) .. " " .. (-40 * (k - 1)), width = 540, height = 660,
         color = "#0f1729F2", outline = "#3b4b6b", outlineSize = "2 -2"}, children = {
         {tag = "Panel", attributes = {id = id .. "_head", rectAlignment = "UpperCenter", height = TITLE_H, color = "#1b2740"}, children = {
             {tag = "Text", attributes = {id = id .. "_title", rectAlignment = "MiddleLeft", offsetXY = "12 0", height = TITLE_H,
@@ -136,7 +138,10 @@ end
 
 local function buildPanels()
     local xml = UI.getXmlTable() or {}
-    for _, c in ipairs(SEATS) do table.insert(xml, detailsPanel(c)); table.insert(xml, rulebookPanel(c)) end
+    for _, c in ipairs(SEATS) do
+        for k = 1, DETAILS_PANELS do table.insert(xml, detailsPanel(c, k)) end
+        table.insert(xml, rulebookPanel(c))
+    end
     UI.setXmlTable(xml)
 end
 
@@ -316,11 +321,11 @@ local function detailsText(card)
     return table.concat(out, "\n")
 end
 
--- a seat's panel laid out at its size, for its card: the text's height measured, the Rules and spawn rows filled
-local function layout(color)
-    local open = shown[color]
+-- a seat's panel k laid out at its size, for its card: the text's height measured, the Rules and spawn rows filled
+local function layout(color, k)
+    local open = (shown[color] or {})[k]
     if not open then return end
-    local id, sz = color .. "_d", SIZES[sizeOf[color] or 2]
+    local id, sz = color .. "_d" .. k, SIZES[open.size]
     local rules, named = chaptersOf(open.card), namedOf(open.card)
     local function fill(prefix, list, n, label)
         local any = false
@@ -366,25 +371,46 @@ local function layout(color)
     UI.setAttribute(id, "active", "true")
 end
 
+-- the panel a button is in: "<color>_d2_close" -> 2
+local function panelOf(color, id)
+    local rest = id:sub(#color + 3)
+    local us = rest:find("_", 1, true)
+    return tonumber(us and rest:sub(1, us - 1) or rest)
+end
+
+-- in the panel already showing this card, else a closed one, else the one opened longest ago
 function showDetails(color, obj)
     if not details then broadcastToColor("Card details are still loading.", color, {1, 0.6, 0.6}) return end
     local path = cardPath(obj, color)
     local card = path and details.cards[path]
     if not card then broadcastToColor("No details for this card.", color, {1, 0.6, 0.6}) return end
-    shown[color] = {card = card, obj = obj}
-    layout(color)
+    local mine = shown[color] or {}
+    shown[color] = mine
+    local k
+    for i = 1, DETAILS_PANELS do if mine[i] and mine[i].card == card then k = i break end end
+    if not k then for i = 1, DETAILS_PANELS do if not mine[i] then k = i break end end end
+    if not k then
+        k = 1
+        for i = 2, DETAILS_PANELS do if mine[i].at < mine[k].at then k = i end end
+    end
+    opened = opened + 1
+    mine[k] = {card = card, obj = obj, at = opened, size = mine[k] and mine[k].size or sizeOf[color] or 2}
+    layout(color, k)
 end
 
-function closeDetails(player)
-    shown[player.color] = nil
-    UI.setAttribute(player.color .. "_d", "active", "false")
+function closeDetails(player, _, id)
+    local k = panelOf(player.color, id)
+    if shown[player.color] then shown[player.color][k] = nil end
+    UI.setAttribute(player.color .. "_d" .. k, "active", "false")
 end
 
-function detailsSize(player, _, id)
-    local color = player.color
-    local step = id:sub(-7) == "_bigger" and 1 or -1
-    sizeOf[color] = math.max(1, math.min(#SIZES, (sizeOf[color] or 2) + step))
-    layout(color)
+function detailsSize(player, _, id)                    -- this panel's size, and the size the next ones open at
+    local color, k = player.color, panelOf(player.color, id)
+    local open = (shown[color] or {})[k]
+    if not open then return end
+    open.size = math.max(1, math.min(#SIZES, open.size + (id:sub(-7) == "_bigger" and 1 or -1)))
+    sizeOf[color] = open.size
+    layout(color, k)
 end
 
 -- the rulebook PDF on the table, else taken out of the Rulebooks bag to where the player points
@@ -408,7 +434,7 @@ end
 
 function openRules(player, _, id)
     local color = player.color
-    local open, n = shown[color], tonumber(id:sub(-1))    -- "<color>_d_r2": the 2nd button
+    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_r2": the 2nd button
     local chapter = open and n and open.rules and details.chapters[open.rules[n]]
     if not chapter then return end
     local page = chapterPage[tonumber(chapter.num)] or pageOfTitle[chapter.title]
@@ -450,7 +476,7 @@ end
 
 function spawnNamed(player, _, id)
     local color = player.color
-    local open, n = shown[color], tonumber(id:sub(-1))    -- "<color>_d_c3": the 3rd card it names
+    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_c3": the 3rd card it names
     local item = open and n and open.named and open.named[n]
     if not item then return end
     if not cardIndex then indexCards() end
