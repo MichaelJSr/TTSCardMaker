@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Drift of a TTS save against a baseline: anything beyond the updater's own edits fails.
 
-python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref e30c8c61, the last hand edit of the save)
+python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref 0ee01372, the last hand edit of the save)
 Allowed: repo link refs, links to a moved file (the old path gone from main, the new one on it), card Nicknames, card
 CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck, cards added to or
 removed from decks, the Rulebooks bag's contents, the resizeTargets rows, and the global script and UI as TTS/Global.lua
@@ -19,7 +19,7 @@ from urllib.parse import unquote
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from checks_env import REF, REPO, save_arg  # noqa: E402
 
-BASELINE = "e30c8c61"       # re-baseline here after a deliberate hand edit of the save (10-30: MDW/Assets, outside links in the repo)
+BASELINE = "0ee01372"       # re-baseline here after a deliberate hand edit of the save (10-30: the turn markers' scripts removed)
 SAVE = "TTS/Impossibility Simulator.json"
 LINK = re.compile(r"(https://raw\.githubusercontent\.com/MichaelJSr/TTSCardMaker/)(?:refs/heads/main|main|[0-9a-f]{7,40})/")
 CARDS = ("Card", "CardCustom")
