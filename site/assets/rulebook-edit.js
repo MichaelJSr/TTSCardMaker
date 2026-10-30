@@ -68,6 +68,7 @@ export function open(api) {
   for (const ev of ["click", "keyup"]) ta.addEventListener(ev, follow);
   const pane = api.modal.querySelector(".rbe-preview");
   pane.addEventListener("click", e => {               // a click on the page: its line in the text; a picture: its tools too
+    flush();
     if (e.target.closest(".rbe-pictools, .rbe-resize")) return;
     e.preventDefault();
     if (clickGone) return;
@@ -322,6 +323,25 @@ function plan(x, y, d = {}) {
   return { kind: "flow", into, ...flowSpot(into, y, d.fig) };
 }
 const sideAt = (into, cx) => { const b = boxOf(into).getBoundingClientRect(), rel = (cx - b.left) / (b.width || 1); return rel < 1 / 3 ? "left" : rel > 2 / 3 ? "right" : ""; };
+// a placed picture (x, y its top left, w × h) snapped: its edges and middle catch its container's and the other placed
+// pictures' in it within SNAP px; {x, y, gx, gy (the guides' screen positions, or null), box}
+const SNAP = 6;
+function snap(into, x, y, w, h, skip = null) {
+  const box = boxOf(into), r = box.getBoundingClientRect(), L = r.left + box.clientLeft, T = r.top + box.clientTop, W = box.clientWidth, H = box.clientHeight;
+  const xs = [L, L + W / 2, L + W], ys = [T, T + H / 2, T + H];
+  for (const f of box.querySelectorAll(":scope > .rb-fig.rb-free")) {
+    if (f === skip) continue;
+    const q = f.getBoundingClientRect();
+    xs.push(q.left, q.left + q.width / 2, q.right); ys.push(q.top, q.top + q.height / 2, q.bottom);
+  }
+  const catchAt = (lines, a, size) => {
+    let d = null, at = null;
+    for (const l of lines) for (const edge of [a, a + size / 2, a + size]) if (Math.abs(l - edge) <= SNAP && (d == null || Math.abs(l - edge) < Math.abs(d))) { d = l - edge; at = l; }
+    return [d ?? 0, at];
+  };
+  const [dx, gx] = catchAt(xs, x, w), [dy, gy] = catchAt(ys, y, h);
+  return { x: x + dx, y: y + dy, gx, gy, box: { L, T, W, H } };
+}
 function nameOf(c) {                                   // a container for the bar and the label
   if (!c || c === page()) return "the chapter";
   const tab = c.querySelector(":scope > .rb-tab")?.textContent.trim();
@@ -437,7 +457,15 @@ function takeOut(el, line, kind) {                     // a row's column takes i
 function wireDrag(pane) {
   const marker = Object.assign(document.createElement("div"), { className: "rbe-drop", hidden: true });
   const colBar = Object.assign(document.createElement("div"), { className: "rbe-colbar", hidden: true });
-  pane.append(marker, colBar);
+  const guideV = Object.assign(document.createElement("div"), { className: "rbe-guide", hidden: true });
+  const guideH = Object.assign(document.createElement("div"), { className: "rbe-guide", hidden: true });
+  pane.append(marker, colBar, guideV, guideH);
+  const guides = s => {                                // the lines a placed picture snapped to
+    const p = pane.getBoundingClientRect();
+    guideV.hidden = s?.gx == null; guideH.hidden = s?.gy == null;
+    if (s?.gx != null) Object.assign(guideV.style, { left: `${s.gx - p.left}px`, top: `${s.box.T - p.top + pane.scrollTop}px`, width: "1px", height: `${s.box.H}px` });
+    if (s?.gy != null) Object.assign(guideH.style, { left: `${s.box.L - p.left}px`, top: `${s.gy - p.top + pane.scrollTop}px`, width: `${s.box.W}px`, height: "1px" });
+  };
   let lit = null;                                      // the container a drop would go in
   const light = el => { if (lit !== el) { lit?.classList.remove("rbe-anchor"); lit = el; el?.classList.add("rbe-anchor"); } };
   const bar = (row, cols, slot) => {                   // where a row's column would go
@@ -468,6 +496,7 @@ function wireDrag(pane) {
   let frame = 0, last = null;
   pane.addEventListener("pointerdown", e => {
     if (M.tts || e.button !== 0) return;
+    flush();
     const handle = e.target.closest(".rbe-resize"), fig = handle ? M.selected : e.target.closest('[data-kind="img"]');
     if (!fig || !page().contains(fig)) return;
     e.preventDefault();
@@ -518,10 +547,13 @@ function wireDrag(pane) {
       P.handle.dataset.size = `${P.pct}%`;
       return;
     }
-    const x = e.clientX - P.gx, y = e.clientY - P.gy;
-    P.ghost.style.transform = `translate(${x}px, ${y}px)`;
+    let x = e.clientX - P.gx, y = e.clientY - P.gy;
     P.cx = x + P.w / 2;
     const pl = plan(e.clientX, e.clientY, P);
+    const sn = pl.kind === "place" ? snap(pl.into, x, y, P.w, P.rect.height, P.fig) : null;
+    if (sn) ({ x, y } = sn);
+    guides(sn);
+    P.ghost.style.transform = `translate(${x}px, ${y}px)`;
     P.mode.textContent = show(pl, P) + (P.col && pl.kind !== "shift" && pl.kind !== "reorder" ? " (out of the row)" : "");
     P.mode.style.transform = `translate(${e.clientX + 16}px, ${e.clientY + 18}px)`;
   }
@@ -529,12 +561,14 @@ function wireDrag(pane) {
     if (!P) return;
     cancelAnimationFrame(frame); frame = 0; last = null;
     const p = P; P = null;
-    p.ghost?.remove(); p.mode?.remove(); p.fig.classList.remove("rbe-moving"); show(null);
+    p.ghost?.remove(); p.mode?.remove(); p.fig.classList.remove("rbe-moving"); show(null); guides(null);
     if (!p.moved) return;                              // a click: the click handler gives its tools
     clickGone = true; setTimeout(() => { clickGone = false; }, 0);
     if (e.type === "pointercancel") { M.selLine = null; return render(); }
     if (p.handle) return p.colEl ? sizeColumn(p.fig, p.line, p.px) : editPicture(p.line, a => { a.width = String(p.pct); });
-    const x = e.clientX - p.gx, y = e.clientY - p.gy, pl = plan(e.clientX, e.clientY, p);
+    let x = e.clientX - p.gx, y = e.clientY - p.gy;
+    const pl = plan(e.clientX, e.clientY, p);
+    if (pl.kind === "place") ({ x, y } = snap(pl.into, x, y, p.w, p.rect.height, p.fig));
     if (pl.kind === "shift") return shiftTo(p.line, p.rect, x, y);
     if (pl.kind === "reorder") { p.slot = pl.slot; return moveInRow(p); }
     drop({ from: p.line, col: p.col }, pl, x, y, p.w, p.fig);
@@ -549,6 +583,7 @@ function wireDrag(pane) {
     return { el, after, line: after ? +el.dataset.end : +el.dataset.line, y: after ? r.bottom : r.top, x: r.left, w: r.width };
   };
   pane.addEventListener("dragstart", e => {
+    flush();
     const el = e.target.closest?.("[data-line]");
     if (!el || !REORDER_KINDS.includes(el.dataset.kind)) return;
     const lines = M.source.split("\n"), [from, end] = extent(lines, +el.dataset.line, el.dataset.kind);
@@ -557,6 +592,7 @@ function wireDrag(pane) {
     tools(null);
   });
   M.api.modal.querySelector(".rbe-pic-grid").addEventListener("dragstart", e => {   // a picture (or its mascot: Add as) from the panel
+    flush();
     const b = e.target.closest("[data-pic]");
     if (!b) return;
     drag = { pic: b.dataset.pic, mascot: M.addAs === "say", boxes: boxes() };
@@ -723,9 +759,7 @@ function html() {
       ${ch ? `<button type="button" class="ghost" data-rbe="discard" title="Back to the published text">Discard draft</button><button type="button" class="ghost danger" data-rbe="delete">Delete chapter</button>` : ""}
       <button type="button" class="ghost icon" data-rbe="close" aria-label="Close (your draft stays)">✕</button></header>
     <div class="rbe-bar" role="toolbar" aria-label="Insert">
-      <button type="button" class="ghost" data-ins="section" title="A tabbed panel">Section</button>
-      <button type="button" class="ghost" data-ins="panel">Panel</button><button type="button" class="ghost" data-ins="row" title="Side by side">Row</button>
-      <button type="button" class="ghost" data-ins="ability" title="A card's ability box">Ability box</button>
+      <details class="rbe-insert"><summary class="ghost button" title="Put a block in at the cursor">Insert</summary><div class="rbe-menu rbe-list">${INSERTS.map(([k, label, what]) => `<button type="button" class="ghost" data-ins="${k}"><b>${label}</b><span class="muted">${what}</span></button>`).join("")}</div></details>
       <input id="rbe-card" class="rbe-card" list="rbe-cards" placeholder="Card…" title="Type a card's name; Enter: its picture, Shift+Enter: a link to it" autocomplete="off">
       <datalist id="rbe-cards">${(M.api.cards?.() || []).map(n => `<option value="${esc(n)}">`).join("")}</datalist>
       <button type="button" class="ghost" data-ins="bold"><b>B</b></button><button type="button" class="ghost" data-ins="italic"><i>I</i></button>
@@ -733,7 +767,6 @@ function html() {
         <div class="rbe-swatches">${COLOUR_NAMES.map(c => `<button type="button" class="rbe-swatch rb-${c}" data-colour="${c}">${c[0].toUpperCase() + c.slice(1)}</button>`).join("")}</div>
         <div class="rbe-swatches">${STYLES.map(([c, label, tip]) => `<button type="button" class="ghost rb-${c}" data-colour="${c}" title="${esc(tip)}">${label}</button>`).join("")}<button type="button" class="ghost" data-colour="" title="Colours and styles taken off">Plain</button></div>
         <p class="muted">Select words in the text (or put the cursor in coloured words), then pick. The same colour again takes it off; styles add to a colour.</p></div></details>
-      <button type="button" class="ghost" data-ins="page" title="Start a new TTS page here">TTS page break</button>
       <label class="ghost button" title="Add pictures from this computer (or drop image files on the page or the text, or paste one)">Add picture<input id="rbe-file" type="file" accept="image/*" multiple hidden></label>
       <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-menu">
         <div class="rbe-addas" role="group" aria-label="Add as">Add as <button type="button" class="on" data-addas="pic">Picture</button><button type="button" data-addas="say" title="The mascot says something (&gt; [!name])">Mascot says</button></div><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
@@ -743,7 +776,7 @@ function html() {
         <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
         Click anything on the page to go to its line. Drag a picture anywhere on the page to place it over the page there; with Make space on (in
         the bar) it goes into the page instead and the text and rows beside it make room (onto a row: a new column). Click a section, panel or row
-        first to put pictures into it. A row's picture stays in its row: drag it inside its column to shift it, onto another column to swap them;
+        first to put pictures into it. A placed picture snaps to its panel's edges and middle and to other placed pictures (a pink line shows it). A row's picture stays in its row: drag it inside its column to shift it, onto another column to swap them;
         dropped well above or below the row it leaves (the label beside the pointer says what a drop does). Drag a picture's corner to resize (Make
         space: a row's picture takes its column with it). Click a picture for its tools: the anchor grid puts it in a corner, on an edge or in the
         middle (of its column in a row, of its panel when placed; in the text: left, right or a line of its own); arrow keys move it (Shift:
@@ -757,8 +790,10 @@ function html() {
 // the page drawn again: patched in place (morph), so unchanged pictures stay and nothing flashes; typing waits a moment
 let timer = 0;
 function preview() { clearTimeout(timer); timer = setTimeout(render, 120); }
+// a redraw still waiting on typing done now: anything acting on the page reads its lines fresh
+function flush() { if (timer) render(); }
 function render() {
-  clearTimeout(timer);
+  clearTimeout(timer); timer = 0;
   if (!M) return;
   const { api } = M, page = api.modal.querySelector("#rbe-page"), sheets = api.modal.querySelector(".rbe-sheets");
   if (!page) return;
@@ -865,6 +900,9 @@ function insertBlock(text) {
   setText(lines.join("\n"), offsetOf(lines, at) + text.length, at);
 }
 
+// the Insert menu's blocks, put in at the cursor
+const INSERTS = [["section", "Section", "a tabbed panel (## SECTION)"], ["panel", "Panel", "a panel without a tab (::: panel)"],
+  ["row", "Row", "things side by side (::: row)"], ["ability", "Ability box", "a card's ability box (::: ability)"], ["page", "TTS page break", "a new TTS page starts here (=== page ===)"]];
 // toolbar: what each button puts in (around the selection when it has one)
 const SNIPPET = {
   section: () => "\n## SECTION\n", panel: () => "\n::: panel\n\n:::\n", row: () => "\n::: row\n![](picture.webp)\n\n::: panel\nText beside it.\n:::\n:::\n",
@@ -883,7 +921,7 @@ function onClick(e) {
   const t = e.target.closest("[data-rbe], [data-ins], [data-pic], [data-colour], [data-addas]");
   if (!t || !M) return;
   e.preventDefault(); e.stopPropagation();
-  if (t.dataset.ins) return insert(t.dataset.ins);
+  if (t.dataset.ins) { t.closest("details")?.removeAttribute("open"); return insert(t.dataset.ins); }
   if (t.dataset.colour != null) { t.closest("details").open = false; return colour(t.dataset.colour); }
   if (t.dataset.addas) { M.addAs = t.dataset.addas; for (const b of t.parentElement.querySelectorAll("button")) b.classList.toggle("on", b === t); return; }
   if (t.dataset.pic) {

@@ -382,6 +382,11 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rbe-ghost { box-shadow: 0 6px 22px #0006; will-change: transform; }
 .rbe-mode { position: fixed; left: 0; top: 0; z-index: 91; padding: 2px 8px; border-radius: 6px; background: var(--accent); color: #fff; font: 600 12px/1.6 system-ui, sans-serif; white-space: nowrap; pointer-events: none; box-shadow: 0 2px 8px #0005; will-change: transform; }
 .rbe-preview:focus { outline: none; }
+.rbe-guide { position: absolute; z-index: 6; background: #ff2fb3; box-shadow: 0 0 0 1px #fff8; pointer-events: none; }
+.rbe-bar .rbe-insert .rbe-menu { width: min(320px, calc(100vw - 16px)); }
+.rbe-list { display: flex; flex-direction: column; gap: 2px; }
+.rbe-list button { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 6px 8px; text-align: left; border-radius: 8px; }
+.rbe-list button .muted { font-size: 12px; }
 .rbe-colbar { position: absolute; z-index: 6; width: 4px; border-radius: 2px; background: var(--accent); box-shadow: 0 0 0 2px #fff9; pointer-events: none; }
 .rbe-resize[data-size]::after { content: attr(data-size); position: absolute; left: 18px; top: -6px; padding: 1px 6px; border-radius: 6px; background: var(--accent); color: #fff; font: 600 12px/1.6 system-ui, sans-serif; white-space: nowrap; pointer-events: none; }
 .rbe-preview [draggable="true"]:hover { outline: 2px dashed color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }
