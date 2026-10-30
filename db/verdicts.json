@@ -1,3 +1,4 @@
 {"schema":1,"cards":{
+"eden's soul":{"at":"2026-10-30T06:01:06Z","for":{"parts":{"327":{"field":"name","layer":"Text/Name","psd":"35f52e7d","sha":"50625702","text":"Eden's Soul","was":"Soul of Eden"}}},"parts":{"327":"baked"},"psd":"10f36217","reason":"title 'Soul of Eden' -> \"Eden's Soul\", renamed: Soul of Eden -> Eden's Soul","renamed":"Eden's Soul","state":"baked"},
 "pod11zomg":{"at":"2026-10-23T18:29:01Z","for":{"name":"Z.O.M.G."},"psd":"9b87525a","reason":"name 'Z.O.M.G' -> 'Z.O.M.G.'","state":"baked"}
 }}
