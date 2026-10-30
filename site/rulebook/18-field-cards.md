@@ -14,6 +14,7 @@ These are cards that when on the playing field have a constant effect.
 - You may take these out of play and put them in your hand.
 - If you want to put a field card from your hand into play, it'll cost star points equal to the card's star level, just like a regular item.
 - You may have only 1 of these out at a time.
+- Field cards cannot be sold, and items cannot be used on them.
 
 ![A tree from Terraria](tree.webp){width=70}
 :::

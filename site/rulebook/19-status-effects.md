@@ -19,6 +19,7 @@ This [[Panda]] was just inflicted with both 2 turns of [[Softened]] (-0.5 DEF), 
 - DMG dealing status effects count as one instance of damage per unique stack. (5 stacks of [[Poison]] is one instance of 5 damage.)
 - Per unique status effect in phase 4, the owner of the creature chooses the order in which to resolve these effects. (May choose if Regeneration heals before Smouldering does damage first)
 - If a status effect deals DMG it is piercing, and doesn't count as an attack.
+- If multiple debuffs have conflicting effects, the effect of the debuff with the highest star level takes precedence.
 - If a creature started the global turn with a status effect and the global turn ends without the creature having ended its turn, then the effect ticks at the end of the global turn, even if the creature is in hand.
 
 === page ===

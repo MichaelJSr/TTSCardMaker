@@ -75,7 +75,7 @@ text or image, links its commit when it is known), and the artwork sources when 
   one. Card sync's main lane prints them to `TTS/Rulebook/Rulebook.pdf` (real text: searchable, selectable, bookmarks;
   `pages.json` keeps each page's pixel hash so it is printed again only when a page changes; AutoCroissant
   `commands.rulebook_pages`, once the website shows main's chapters), and the save's Rulebooks bag holds it as one PDF
-  object; the Photoshop pages sit in the bag's own "Old Rulebook (Photoshop pages)" bag. The contents' PDF button opens
+  object (the Photoshop pages are out of the save since 10-30; their files stay in `Auxiliary/Rulebook`). The contents' PDF button opens
   it. A chapter push starts Card sync (the bot's `db/rulebook.json` at once, the PDF after its 30-minute window).
   Also the badge colors, the timing-tag glossary and the constructed ban list. Old page links
   (`#/rules/07-stats3`, `#/rules?q=07 Stats3`) open their chapter.

@@ -30,7 +30,7 @@ Once both players stop reactively using items, they then resolve and all the eff
 
 Although reactions happen in reverse order, anything that deals damage resolves *last*. Meaning all other effects take place before damage is dealt.
 1. The Mighty Pebble is thrown by the enemy (5 DMG).
-2. Toy Bonnie uses it's ability to give itself 5 stacks of hardened, giving it 3 defense.
+2. Toy Bonnie uses it's ability to give itself 6 stacks of hardened, giving it 3 defense.
 3. The enemy throws a [[Bomb|bomb]] (7 DMG).
 4. Toy Bonnie is equipped with [[Metal Shield|metal sheild]]. (+1.5 DEF).
 
@@ -71,4 +71,5 @@ Resolve Order: 5>4>2>3>1
 - Items may be reactively unequipped and re-equipped to another creature if it is your turn.
 
 ## CLARIFICATION
+- A chain of reactions must resolve before a new one begins.
 - You may react to time based \[such as (BOGT)\] effects with any (AAT) effects or facedown items.

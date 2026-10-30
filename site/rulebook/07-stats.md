@@ -123,6 +123,7 @@ Increases to SPD are indicated with these markers. For increments of 0.5, use a 
 
 - When calculating stat changes or damage dealt, Additives are applied first and multiplicatives second.
 - Multiplicative effects are applied additively i.e. Chilled (-25% SPD) + [[Paralyzed]] (-50% SPD) = -75% SPD
+- SPD can't go below 1. ATK and DEF can't go below 0. MAX HP can't be reduced below 1 bar (2 HP).
 
 ---
 

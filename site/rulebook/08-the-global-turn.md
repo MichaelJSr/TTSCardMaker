@@ -81,3 +81,7 @@ LANE 3: Both creatures have the same speed and no health missing, so the creatur
 ## TURN MANIPULATION
 Turn order may be manipulated through speed changes by (AAT) abilities and facedown items when deciding which *lane* goes next.
 When a slots turn is about to start, the creature may swap out for 2 points. This may change turn order within the lane.
+If a change of turn order occurs while a creature is in the middle of its turn, that creature gets to finish its turn regardless.
+
+## NO STALLING
+During a full global turn, if none of a team's creatures attack, those creatures take 1 TRUE DAMAGE at the end of the global turn.

@@ -2222,22 +2222,11 @@
         1.1
       ],
       "holds": {
-        "Custom_PDF": 1,
-        "Custom_Model_Bag": 1
+        "Custom_PDF": 1
       },
       "rule": {
         "kind": "rulebook",
-        "pdf": "TTS/Rulebook/Rulebook.pdf",
-        "old": {
-          "bag": "Old Rulebook (Photoshop pages)",
-          "folders": [
-            "Auxiliary/Rulebook/*.png"
-          ],
-          "exclude": [
-            "Auxiliary/Rulebook/0000_Cover.png",
-            "Auxiliary/Rulebook/0000_Cover_Book.png"
-          ]
-        }
+        "pdf": "TTS/Rulebook/Rulebook.pdf"
       },
       "back": "own face",
       "texture": "Auxiliary/Rulebook/0000_Cover_Book.png"

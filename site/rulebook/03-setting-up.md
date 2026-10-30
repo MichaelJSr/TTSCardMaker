@@ -23,7 +23,7 @@ Each team starts with:
 **Three 2-star items**
 ★★ ★★ ★★
 **Two 1-star items**
-★★ ★★
+★ ★
 :::
 :::
 

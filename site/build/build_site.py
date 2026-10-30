@@ -3061,6 +3061,22 @@ def rulebook_chapters(src=RULEBOOK):
     return chapters, images
 
 
+TAG_ROW = re.compile(r"^\|\s*\((-?[0-9A-Za-z/]{2,6})\)\s*\|\s*(.+?)\s*\|\s*$")
+
+
+def tag_meanings(chapters):
+    """{tag: meaning} from the Timing Tags chapter's table rows ("| (OYT) | On your turn |"; "(XCD)" stands for a
+    family): text.js setTagMeanings, the badges' tooltips everywhere on the site."""
+    found = {}
+    for c in chapters:
+        if c["id"] == "timing-tags":
+            for line in c["source"].splitlines():
+                m = TAG_ROW.match(line.strip())
+                if m and m.group(1).lower() != "tag":
+                    found[m.group(1)] = rulebook_text(m.group(2))
+    return found
+
+
 def rulebook_text(source):
     """A chapter's words without markup (rulebook.js plainText): pictures and fences dropped, card pictures and links as
     their names, list markers as typed."""
@@ -3788,7 +3804,7 @@ def main():
         "source": source_time(),              # edit.js: a publish is live once this reaches its commit's date
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
         "pins": {p: pin(p) for p in CARD_BACKS if pin(p)},    # deck.js: the card backs' pinned links
-        "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist,
+        "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist, "tagMeanings": tag_meanings(rulebook_chapters()[0]),
         "thumbs": {w: thumb_tag(w) for w in IMAGE_SIZES},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,

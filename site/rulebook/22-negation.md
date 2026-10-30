@@ -8,6 +8,7 @@ If an attack is negated it does not happen. No damage is dealt, no on-hit effect
 - When a creature is negated it is unable to use any of its own abilities (unless otherwise stated), but may still use the abilities of any equipped items or minions, and can still use actions.
 - Cooldown abilities such as (2CD) still count down even while they are negated.
 - Minions/Items/Stats/Counters summoned/gained by an ability remain even if the ability that summoned them is negated or if the creature that summoned them dies.
+- If 2 creatures/sources attempt to negate each other simultaneously, they are both negated.
 
 [Immunity:]{.u}
 - **5+ star creatures are immune to negation**.

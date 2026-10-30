@@ -31,10 +31,22 @@ const canon = tag => { const up = String(tag).toUpperCase(); return CANON[up] ??
 const times = n => (n === "X" ? "X times" : n === "1" ? "once" : `${n} times`);
 const count = (n, one, many = one + "s") => `${n} ${n === "1" || n === "-1" ? one : many}`;
 const old = (group, meaning, multi = false) => ({ group, meaning: `Old system: ${meaning}`, multi, old: true });
-/** {tag (canonical case), group, meaning, multi, old} or null */
+/** {tag (canonical case), group, meaning, multi, old} or null. The meaning is the Timing Tags chapter's when it lists
+ *  the tag, or its family with X ("XCD" for (3CD): X is 3, "turn(s)" agrees); else the one below. */
 export function tagInfo(typed) {
   const tag = canon(typed), info = tagMeaning(tag);
-  return info && { tag, ...info };
+  if (!info) return null;
+  const own = chapterMeaning(tag);
+  return { tag, ...info, ...(own ? { meaning: info.old && !/^old system/i.test(own) ? `Old system: ${own}` : own } : {}) };
+}
+let CHAPTER = {};                                  // the Timing Tags chapter's table (build_site.py tag_meanings: cards.json tagMeanings)
+export const setTagMeanings = m => { CHAPTER = Object.fromEntries(Object.entries(m || {}).map(([k, v]) => [canon(k), String(v)])); };
+function chapterMeaning(tag) {
+  if (CHAPTER[tag]) return CHAPTER[tag];
+  const m = /^(-?[0-9]+)(?!\/)/.exec(tag.replace(/^(E|FTE)(?=\d)/, "")), n = m?.[1];
+  if (!n || tag.includes("/")) return "";
+  const family = tag.replace(n, "X"), text = CHAPTER[family];
+  return text ? text.replace(/\bX\b/g, n).replace(/\b(-?\d+) (\w+)\(s\)/g, (_, k, w) => `${k} ${k === "1" || k === "-1" ? w : `${w}s`}`) : "";
 }
 function tagMeaning(tag) {
   if (FIXED[tag]) return { group: FIXED[tag][0], meaning: FIXED[tag][1], multi: false };

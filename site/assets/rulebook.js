@@ -69,7 +69,7 @@ function parseBlocks(lines, inRow = false, base = 0) {
       let depth = 1, j = i + 1;
       for (; j < lines.length; j++) { if (FENCE.test(lines[j])) depth++; else if (CLOSE.test(lines[j]) && !--depth) break; }
       const { text, attrs } = splitAttrs(m[2]);
-      push({ t: "fence", kind: m[1].toLowerCase(), arg: unquote(text), attrs, children: parseBlocks(lines.slice(i + 1, j), m[1].toLowerCase() === "row", base + i + 1) });
+      push({ t: "fence", kind: m[1].toLowerCase(), arg: unquote(text), attrs, close: base + Math.min(j, lines.length), children: parseBlocks(lines.slice(i + 1, j), m[1].toLowerCase() === "row", base + i + 1) });
       i = j + 1; continue;
     }
     if (/^>/.test(line)) {
@@ -97,7 +97,8 @@ function parseBlocks(lines, inRow = false, base = 0) {
 // "## Title" opens a section (a tabbed panel) that holds what follows up to the next heading or "---"; in a row, also up
 // to the next column: a fence, a callout, card pictures or a picture that doesn't float
 const FLOATS = ["left", "right", "end"];
-const column = b => b.t === "fence" || b.t === "say" || b.t === "cards" || (b.t === "img" && !b.attrs.cls.some(c => FLOATS.includes(c)));
+const placed = b => b.t === "img" && b.attrs.cls.includes("free");   // a picture placed anywhere: out of the flow
+const column = b => b.t === "fence" || b.t === "say" || b.t === "cards" || (b.t === "img" && !placed(b) && !b.attrs.cls.some(c => FLOATS.includes(c)));
 const holdsSection = b => b.t === "fence" && b.children.some(c => c.t === "section" || holdsSection(c));
 function group(list, inRow = false) {
   const res = [];
@@ -109,6 +110,7 @@ function group(list, inRow = false) {
     if (holdsSection(b)) { sec = null; res.push(b); continue; }   // a fence holding sections (a row of them): its own
     (sec ? sec.children : res).push(b);
   }
+  for (const b of res) if (b.t === "section" && b.children.length) b.end = b.children[b.children.length - 1].end ?? b.end;
   return res;
 }
 
@@ -255,7 +257,7 @@ const kidsHtml = (list, ctx) => list.map(b => blockHtml(b, ctx)).join("");
 /** HTML for one block (draw and the paginator); ctx.lines: each block's element carries data-line (the editor's preview) */
 export function blockHtml(b, ctx) {
   const html = blockInner(b, ctx);
-  return ctx.lines && b.line != null && !b.cont ? html.replace(/^<([a-z][a-z0-9]*)/, `<$1 data-line="${b.line}" data-end="${b.end ?? b.line + 1}" data-kind="${b.t}"`) : html;
+  return ctx.lines && b.line != null && !b.cont ? html.replace(/^<([a-z][a-z0-9]*)/, `<$1 data-line="${b.line}" data-end="${b.end ?? b.line + 1}" data-kind="${b.t}"${b.t === "fence" ? ` data-fence="${b.kind}" data-close="${b.close}"` : ""}`) : html;
 }
 function blockInner(b, ctx) {
   switch (b.t) {
@@ -273,7 +275,11 @@ function blockInner(b, ctx) {
       const opts = b.opts.filter(o => /^[\w-]+$/.test(o)).map(o => `rb-say-${o}`).join(" ");
       return `<aside class="rb-say ${opts}">${pic}<div class="rb-bubble">${kidsHtml(b.children, ctx)}</div></aside>`;
     }
-    case "img": { const st = sizeStyle(b.attrs); return `<figure class="rb-fig ${clsOf(b.attrs)}"${st ? ` style="${st}"` : ""}>${imgHtml(b, ctx)}</figure>`; }
+    case "img": {                                     // {.free x=40 y=10 width=25}: placed at x% / y% of its container
+      const at = placed(b) ? ["x", "y"].map((k, i) => (/^-?\d+(\.\d+)?$/.test(b.attrs[k] || "") ? `${i ? "top" : "left"}:${b.attrs[k]}%` : "")).filter(Boolean).join(";") : "";
+      const st = [sizeStyle(b.attrs), at].filter(Boolean).join(";");
+      return `<figure class="rb-fig ${clsOf(b.attrs)}"${st ? ` style="${st}"` : ""}>${imgHtml(b, ctx)}</figure>`;
+    }
     case "cards": return `<div class="rb-cards ${clsOf(b.attrs)}">${b.names.map(n => (n.arrow ? `<span class="rb-arrow" aria-hidden="true">→</span>` : cardHtml(n.name, n.label, ctx))).join("")}</div>`;
     case "list": {
       const tag = b.type === "ul" ? "ul" : "ol";
@@ -297,7 +303,8 @@ function fenceHtml(b, ctx) {
   switch (b.kind) {
     case "row": {
       const w = (b.arg || "").split(/[\s:]+/).map(Number).filter(n => n > 0);
-      return `<div class="rb-row ${cls}">${b.children.filter(c => c.t !== "page").map((c, k) => `<div class="rb-col"${w[k] ? ` style="flex:${w[k]} 1 0"` : ""}>${blockHtml(c, ctx)}</div>`).join("")}</div>`;
+      const cols = b.children.filter(c => c.t !== "page" && !placed(c));
+      return `<div class="rb-row ${cls}">${cols.map((c, k) => `<div class="rb-col"${w[k] ? ` style="flex:${w[k]} 1 0"` : ""}>${blockHtml(c, ctx)}</div>`).join("")}${b.children.filter(placed).map(c => blockHtml(c, ctx)).join("")}</div>`;
     }
     case "ability": {                                  // a card's ability box: centred lines, "1." a numbered bubble
       const lines = b.children.flatMap(c => (c.t === "p" ? c.text.split("\n") : c.t === "list" ? c.items.map(it => (c.type === "1" ? `${it.n}. ${it.text}` : it.text)) : []));

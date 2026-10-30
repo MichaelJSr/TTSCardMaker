@@ -4,6 +4,7 @@
 - Attacks occur when creatures use an action to perform an attack, when an attack item is used, or an ability deals damage (DMG) separate from the ATK stat of a creature.
 - Attacks deal ATK - DEF in damage.
 - Attacks can only hit the PRIMARY FIELD by defualt. (See: [FIELDS](#/rules/the-field))
+- Attacks from abilities cannot trigger counter damage or counter items.
 
 ## COMBO DAMAGE
 If an attacking creature has TWICE THE SPEED VALUE of the creature being attacked, then the final damage is multiplied by 1.5. If an attacking creature has TRIPLE THE SPEED VALUE, then the final damage is doubled.

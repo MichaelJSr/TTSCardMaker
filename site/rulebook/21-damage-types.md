@@ -1,8 +1,10 @@
 # Damage Types
 
+Multiple damage types can be applied to an instance of damage, combining their effects.
+
 ## NORMAL
-Reduced by half of the defense of the target.
-DMG - (1/2*DEF)
+Reduced by the defense of the target.
+DMG - DEF
 
 ## PIERCING
 Ignores DEF.
@@ -18,3 +20,6 @@ Deals damage to all enemy targets on the primary field aside from the original t
 
 ## TRUE DAMAGE
 Ignores DEF, and cannot be negated, redirected, or reduced by any means.
+
+## OVERKILL
+Only applies when a card says so. Damage beyond what kills the target carries over to the next target the card names, and is reduced by that target's DEF. This does not count as an attack, and other effects of the attack (such as status effects) do not proc on overkill.
