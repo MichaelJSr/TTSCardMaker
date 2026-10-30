@@ -8,7 +8,8 @@
 //   :::                          side; "::: row 3 1" sets the widths), stack, box, small, center, ability (a card's ability
 //                                box, "1." a numbered bubble), contents (the chapters' list)
 //   > [!kirby top] text          a mascot (any picture in img/) says it; top: above the bubble, right: floated
-//   ![alt](file.webp){.right width=30}   a picture: .left .right float it, .end puts it at the right edge, width in %
+//   ![alt](file.webp){.right width=30}   a picture: .left .right float it, .end puts it at the right edge, width in %;
+//                                        dx=10 dy=-5 shift it (% of its size), .free x= y= place it anywhere
 //   ![[Card]]  ![[A]] -> ![[B]]  the card's picture (a line of them is a row; -> an arrow); [[Card|label]] a link to it
 //   [text]{.red}                 red green blue yellow orange purple grey white, .u .big .caps .nowrap .secret
 //   **bold** *italic* ***both***, - lists, 1. / 1) / A. lists (numbers kept as typed), | tables | ({.grid cols=-,red}
@@ -275,9 +276,11 @@ function blockInner(b, ctx) {
       const opts = b.opts.filter(o => /^[\w-]+$/.test(o)).map(o => `rb-say-${o}`).join(" ");
       return `<aside class="rb-say ${opts}">${pic}<div class="rb-bubble">${kidsHtml(b.children, ctx)}</div></aside>`;
     }
-    case "img": {                                     // {.free x=40 y=10 width=25}: placed at x% / y% of its container
-      const at = placed(b) ? ["x", "y"].map((k, i) => (/^-?\d+(\.\d+)?$/.test(b.attrs[k] || "") ? `${i ? "top" : "left"}:${b.attrs[k]}%` : "")).filter(Boolean).join(";") : "";
-      const st = [sizeStyle(b.attrs), at].filter(Boolean).join(";");
+    case "img": {                                     // {.free x=40 y=10 width=25}: placed at x% / y% of its container;
+      const num = v => /^-?\d+(\.\d+)?$/.test(v || "");   // {dx=10 dy=-5}: in the flow, shifted by % of its own size
+      const at = placed(b) ? ["x", "y"].map((k, i) => (num(b.attrs[k]) ? `${i ? "top" : "left"}:${b.attrs[k]}%` : "")).filter(Boolean).join(";") : "";
+      const shift = !placed(b) && (num(b.attrs.dx) || num(b.attrs.dy)) ? `transform:translate(${num(b.attrs.dx) ? b.attrs.dx : 0}%,${num(b.attrs.dy) ? b.attrs.dy : 0}%)` : "";
+      const st = [sizeStyle(b.attrs), at, shift].filter(Boolean).join(";");
       return `<figure class="rb-fig ${clsOf(b.attrs)}"${st ? ` style="${st}"` : ""}>${imgHtml(b, ctx)}</figure>`;
     }
     case "cards": return `<div class="rb-cards ${clsOf(b.attrs)}">${b.names.map(n => (n.arrow ? `<span class="rb-arrow" aria-hidden="true">→</span>` : cardHtml(n.name, n.label, ctx))).join("")}</div>`;
