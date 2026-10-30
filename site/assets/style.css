@@ -263,7 +263,7 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
 .rb-small.rb-right { text-align: right; }
 .rb-box { background: var(--rb-panel); border-radius: .4em; padding: .7em .5em; text-align: center; font-size: 1.15em; line-height: 1.3; }
 .rb-box p { margin: .55em 0; }
-.rb-row { display: flex; gap: .9em; align-items: flex-start; margin: 1em 0; }
+.rb-row { display: flex; gap: .9em; align-items: flex-start; margin: 1em 0; min-width: min(100%, 18em); }   /* beside a floated picture: never squeezed away (below it instead) */
 .rb-row > .rb-col { flex: 1 1 0; min-width: 0; }
 .rb-row > .rb-col > :first-child { margin-top: 0; } .rb-row > .rb-col > :last-child { margin-bottom: 0; }
 .rb-row > .rb-col > .rb-fig { margin: 0 auto; }
@@ -402,8 +402,8 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rbe-pictools .muted { min-width: 0; margin-left: 8px; font: 12px system-ui, sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rbe-pictools:not(.on) .muted { margin-left: 2px; }
 .rbe-pictools button.on { background: var(--accent); color: #fff; }
-.rbe-pictools .rbe-grid { flex: none; display: inline-grid; grid-template-columns: repeat(3, 12px); grid-template-rows: repeat(3, 8px); gap: 2px; padding: 2px; border: 1px solid var(--border-strong); border-radius: 5px; }
-.rbe-pictools .rbe-grid button { padding: 0; width: 12px; height: 8px; border-radius: 2px; border: 1px solid var(--border-strong); background: transparent; }
+.rbe-pictools .rbe-grid { flex: none; display: inline-grid; grid-template-columns: repeat(3, 18px); grid-template-rows: repeat(3, 12px); gap: 3px; padding: 3px; border: 1px solid var(--border-strong); border-radius: 6px; }
+.rbe-pictools .rbe-grid button { padding: 0; width: 18px; height: 12px; border-radius: 3px; border: 1px solid var(--border-strong); background: transparent; cursor: pointer; }
 .rbe-pictools .rbe-grid button:hover { background: color-mix(in srgb, var(--accent) 45%, transparent); }
 .rbe-pictools .rbe-grid button.on { background: var(--accent); border-color: var(--accent); }
 .rbe-pictools .rbe-space { margin-left: auto; }

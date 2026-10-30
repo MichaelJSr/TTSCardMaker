@@ -87,6 +87,7 @@ export function open(api) {
     if (b.dataset.space != null) {                     // remembered in this browser
       M.makeSpace = !M.makeSpace;
       try { localStorage.setItem(MAKE_SPACE, M.makeSpace ? "1" : "0"); } catch { /* private mode */ }
+      if (M.makeSpace && M.selected?.classList.contains("rb-free")) return toFlow(M.selected);   // the text wraps it at once
       return tools(M.selected);
     }
     if (b.dataset.untarget != null) { M.targetEl = null; return aim(null); }
@@ -141,7 +142,9 @@ function undoState() {
   if (r) r.disabled = h.i === h.list.length - 1;
 }
 // keys: undo and redo anywhere but the small fields; a selected picture: arrows move a placed one (Shift: 5%) or shift
-// one in the flow (1%, Shift: 10% of its size), + and − size it, Delete or Backspace takes it out, Esc lets it go
+// one in the flow (1%, Shift: 10% of its size); with Make space they move it through the text (up, down: past the
+// block before or after; left, right: its side; in a row: across the columns, up and down its column); + and − size
+// it, Delete or Backspace takes it out, Esc lets it go
 function onKey(e) {
   if (!M) return;
   const mod = (e.ctrlKey || e.metaKey) && !e.altKey, field = e.target.matches?.("input, select");
@@ -154,7 +157,7 @@ function onKey(e) {
   if (k === "Escape") { done(); M.selLine = null; tools(null); return; }
   if (k === "Delete" || k === "Backspace") { done(); takeOut(el, line, kind); return; }
   const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[k];
-  if (d && kind === "img") { done(); nudge(el, line, d[0], d[1], e.shiftKey); return; }
+  if (d && kind === "img") { done(); if (M.makeSpace) moveInFlow(el, line, d[0], d[1]); else nudge(el, line, d[0], d[1], e.shiftKey); return; }
   if (["+", "=", "-", "_"].includes(k) && kind !== "say") { done(); resizeBy(el, line, k === "+" || k === "=" ? 1 : -1); }
 }
 
@@ -171,6 +174,13 @@ const REORDER_KINDS = ["cards", "say"];                // moved between blocks (
 const PICTURE_KINDS = ["img", ...REORDER_KINDS];       // blocks with tools
 const CONTAINERS = ["panel", "box", "stack", "small", "center", "note", "row"];   // fences a picture may be placed in
 const SIDES = ["left", "right", "end", "free"];
+const FLOAT_MAX = 50;                                  // a floated picture's widest (% of its panel): room beside it for text and rows
+// a picture floated left or right kept at most FLOAT_MAX wide (no width: its drawn width, if it would be wider)
+function floatWidth(a, el) {
+  if (!a.cls.includes("left") && !a.cls.includes("right")) return;
+  const now = /^\d+(\.\d+)?$/.test(a.width || "") ? +a.width : el ? Math.round((el.getBoundingClientRect().width / ((el.parentElement?.clientWidth) || 1)) * 100) : 100;
+  if (now > FLOAT_MAX) a.width = String(FLOAT_MAX);
+}
 const ANCHORS = ["top-left", "top", "top-right", "left", "center", "right", "bottom-left", "bottom", "bottom-right"];
 const FLOW_GONE = ["x", "y", "dx", "dy", "anchor", "height"];   // what a picture put back into the flow loses
 const PICTURE_LINE = /^(\s*)!\[([^\]]*)\]\(([^)\s]+)\)\s*(\{[^{}]*\})?\s*$/;
@@ -375,7 +385,7 @@ function drop(pic, pl, x, y, w, skip = null) {
   } else {                                             // into the flow: floated by the side it was dropped on
     const side = sideAt(pl.into, x + w / 2);
     if (side) attrs.cls.push(side);
-    attrs.width = String(Math.min(100, Math.max(3, round((w / (boxOf(pl.into).clientWidth || 1)) * 100))));
+    attrs.width = String(Math.min(side ? FLOAT_MAX : 100, Math.max(3, round((w / (boxOf(pl.into).clientWidth || 1)) * 100))));
   }
   lines.splice(at, 0, `![${alt}](${src}) ${M.api.RB.attrsText(attrs)}`);
   setText(lines.join("\n"), offsetOf(lines, at), at);
@@ -402,13 +412,77 @@ function shiftTo(line, rect, x, y) {
     if (dy) a.dy = String(dy); else delete a.dy;
   });
 }
-// a picture's or card row's {attrs} changed by fn (false: no change)
-function editPicture(line, fn, kind = "edit") {
+// a picture's or card row's {attrs} changed by fn (false: no change); to: {el, v} moves it to the top (v 0), the middle
+// (0.5) or the end (1) of its panel too (a picture in the text)
+function editPicture(line, fn, kind = "edit", to = null) {
   const lines = M.source.split("\n"), m = /^(\s*)(.*?)(\s*\{[^{}]*\})?\s*$/.exec(lines[line] ?? ""), a = M.api.RB.splitAttrs(m[3] || "").attrs;
   if (fn(a) === false) return;
   const attrs = M.api.RB.attrsText(a);
+  let at = line;
   lines[line] = `${m[1]}${m[2]}${attrs ? ` ${attrs}` : ""}`;
-  setText(lines.join("\n"), offsetOf(lines, line), line, kind);
+  if (to && !to.el.classList.contains("rb-free") && !colOf(to.el)) {
+    const box = containerOf(to.el), kids = [...boxOf(box).children].filter(n => n !== to.el && n.dataset?.line != null && !n.classList.contains("rb-free"));
+    const mid = kids[Math.floor(kids.length / 2)];
+    at = to.v === 0 ? topLine(box, lines) : to.v === 1 || !mid ? endLine(box, lines) : +mid.dataset.line;
+    const [moved] = lines.splice(line, 1);
+    if (at > line) at--;
+    lines.splice(at, 0, moved);
+  }
+  setText(lines.join("\n"), offsetOf(lines, at), at, kind);
+}
+// a block's neighbour in its container (d -1: before it, 1: after it), placed pictures skipped
+function sibling(el, d) {
+  let s = d < 0 ? el.previousElementSibling : el.nextElementSibling;
+  while (s && (s.dataset?.line == null || s.classList.contains("rb-free"))) s = d < 0 ? s.previousElementSibling : s.nextElementSibling;
+  return s;
+}
+// the section, panel or box a block is in (a row aside), else the chapter; its first line inside and its end
+function containerOf(el) {
+  const pg = page();
+  for (let n = el.parentElement; n && n !== pg; n = n.parentElement) if (isContainer(n) && n.dataset.fence !== "row") return n;
+  return pg;
+}
+const topLine = (c, lines) => (c === page() ? lineFor(c, lines) : +c.dataset.line + 1);
+const endLine = (c, lines) => (c === page() ? lines.length : lineFor(c, lines));
+// a placed picture put into the text where it is (Make space): the text around it makes room
+function toFlow(el) {
+  const r = el.getBoundingClientRect(), into = containerOf(el);
+  drop({ from: +el.dataset.line }, { kind: "flow", into, ...flowSpot(into, r.top + r.height / 2, el) }, r.left, r.top, r.width, el);
+}
+// an arrow key with Make space: the picture moves through the text, which reflows around it
+function moveInFlow(el, line, dx, dy) {
+  if (el.classList.contains("rb-free")) return toFlow(el);
+  const col = colOf(el);
+  if (col && dx) {                                     // across the row's columns
+    const slot = col.index + (dx < 0 ? -1 : 2);
+    return slot < 0 || slot > col.cols.length ? undefined : moveInRow({ col, slot, line });
+  }
+  if (col) {                                           // up and down its column
+    return editPicture(line, a => {
+      const now = a.anchor || "top", side = /left$/.test(now) ? "left" : /right$/.test(now) ? "right" : "";
+      const v = Math.max(0, Math.min(2, (/^top/.test(now) ? 0 : /^bottom/.test(now) ? 2 : 1) + dy));
+      const k = [["top", "", "bottom"][v], side].filter(Boolean).join("-") || "center";
+      if (k === now) return false;
+      if (k === "top") delete a.anchor; else a.anchor = k;
+    }, "move");
+  }
+  if (dx) {                                            // left, a line of its own, right
+    return editPicture(line, a => {
+      const i = a.cls.includes("left") ? 0 : a.cls.includes("right") || a.cls.includes("end") ? 2 : 1, j = Math.max(0, Math.min(2, i + dx));
+      if (i === j) return false;
+      a.cls = a.cls.filter(c => !SIDES.includes(c));
+      if (j !== 1) a.cls.push(j ? "right" : "left");
+      delete a.dx; delete a.dy;
+      floatWidth(a, el);
+    }, "move");
+  }
+  const other = sibling(el, dy);                       // past the block before or after it, inside its panel
+  if (!other) return;
+  const lines = M.source.split("\n"), [moved] = lines.splice(line, 1);
+  let at = dy < 0 ? +other.dataset.line : +other.dataset.end;
+  if (at > line) at--;
+  lines.splice(at, 0, moved);
+  setText(lines.join("\n"), offsetOf(lines, at), at, "move");
 }
 function nudge(el, line, dx, dy, far) {               // a placed picture moved (% of its container), one in the flow shifted (% of its size)
   editPicture(line, a => {
@@ -687,13 +761,16 @@ function tools(el) {
   }
 }
 // the anchor grid: a row's picture at that spot of its column; a placed one snapped to that spot of its panel; one in
-// the text floated left (the left cells), right (the right cells), on a line of its own (the middle) or in the corner
+// the text: the top row puts it at the top of its panel, the middle row in its middle, the bottom row at its end, the left
+// and right columns float it there (the middle: a line of its own); the bottom right is the corner
 function grid(el, line) {
   const m = PICTURE_LINE.exec(M.source.split("\n")[line] || ""), a = M.api.RB.splitAttrs(m?.[4] || "").attrs;
   const free = a.cls.includes("free"), col = !free && colOf(el), say = k => k.replace("-", " ");
-  const now = free ? "" : col ? a.anchor || "top" : a.cls.includes("end") ? "bottom-right" : a.cls.includes("left") ? "left" : a.cls.includes("right") ? "right" : "center";
-  const tip = k => (free ? `To the ${say(k)} of its panel` : col ? `At the ${say(k)} of its column` : k === "bottom-right" ? "In the bottom right corner"
-    : /left$/.test(k) ? "On the left: text flows on its right" : /right$/.test(k) ? "On the right: text flows on its left" : "On a line of its own");
+  const vt = !sibling(el, -1) ? "top" : !sibling(el, 1) ? "bottom" : "", hz = a.cls.includes("left") ? "left" : a.cls.includes("right") ? "right" : "";
+  const now = free ? "" : col ? a.anchor || "top" : a.cls.includes("end") ? "bottom-right" : [vt, hz].filter(Boolean).join("-") || "center";
+  const flowTip = k => (k === "bottom-right" ? "In the bottom right corner of its panel"
+    : `${/^top/.test(k) ? "At the top of its panel" : /^bottom/.test(k) ? "At the end of its panel" : "In the middle of its panel"}, ${/left$/.test(k) ? "on the left (text flows on its right)" : /right$/.test(k) ? "on the right (text flows on its left)" : "on a line of its own"}`);
+  const tip = k => (free ? `To the ${say(k)} of its panel` : col ? `At the ${say(k)} of its column` : flowTip(k));
   return `<span class="rbe-grid" role="group" aria-label="Anchor">${ANCHORS.map(k => `<button type="button" data-anchor="${k}" class="${k === now ? "on" : ""}" title="${tip(k)}" aria-label="${tip(k)}"></button>`).join("")}</span>`;
 }
 function anchorTo(el, line, k) {
@@ -709,7 +786,8 @@ function anchorTo(el, line, k) {
     if (colOf(el)) { if (k === "top") delete a.anchor; else a.anchor = k; return; }
     delete a.anchor;
     if (k === "bottom-right") a.cls.push("end"); else if (h === 0) a.cls.push("left"); else if (h === 1) a.cls.push("right");
-  });
+    floatWidth(a, el);
+  }, "edit", { el, v });
 }
 function toolClick(b, el) {
   const kind = el.dataset.kind, line = +el.dataset.line;
@@ -782,7 +860,7 @@ function html() {
         first to put pictures into it. A placed picture snaps to its panel's edges and middle and to other placed pictures (a pink line shows it). A row's picture stays in its row: drag it inside its column to shift it, onto another column to swap them;
         dropped well above or below the row it leaves (the label beside the pointer says what a drop does). Drag a picture's corner to resize (Make
         space: a row's picture takes its column with it). Click a picture for its tools: the anchor grid puts it in a corner, on an edge or in the
-        middle (of its column in a row, of its panel when placed; in the text: left, right or a line of its own); arrow keys move it (Shift:
+        middle (of its column in a row, of its panel when placed; in the text: the top, middle or end of its panel, and left, right or a line of its own); with Make space arrow keys move it through the text, else they move it (Shift:
         further), + and − size it, Delete takes it out, Esc lets it go. Rows of cards and mascots drag between blocks. ↶ ↷ (Ctrl/Cmd+Z,
         Ctrl/Cmd+Shift+Z) undo and redo everything. Your draft is kept in this browser until you publish (Ctrl/Cmd+S).</p></div></details>
     </div>
