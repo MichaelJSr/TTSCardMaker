@@ -49,10 +49,12 @@ export function open(api) {
   api.modal.querySelector("#rbe-file").addEventListener("change", e => upload([...e.target.files]).finally(() => { e.target.value = ""; }));
   api.modal.addEventListener("click", onClick);
   api.modal.querySelector(".rbe").addEventListener("keydown", onKey, true);
+  api.modal.querySelector("#rbe-picq").addEventListener("input", filterPics);
   const menus = [...api.modal.querySelectorAll(".rbe-bar details")];
   for (const d of menus) d.addEventListener("toggle", () => {     // one open at a time, kept on screen
     if (!d.open) return;
     for (const o of menus) if (o !== d) o.open = false;
+    d.querySelector("#rbe-picq")?.focus();
     const menu = d.querySelector(".rbe-menu"), room = document.documentElement.clientWidth - 8;
     menu.style.left = "0px";
     const r = menu.getBoundingClientRect();
@@ -769,7 +771,8 @@ function html() {
         <p class="muted">Select words in the text (or put the cursor in coloured words), then pick. The same colour again takes it off; styles add to a colour.</p></div></details>
       <label class="ghost button" title="Add pictures from this computer (or drop image files on the page or the text, or paste one)">Add picture<input id="rbe-file" type="file" accept="image/*" multiple hidden></label>
       <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-menu">
-        <div class="rbe-addas" role="group" aria-label="Add as">Add as <button type="button" class="on" data-addas="pic">Picture</button><button type="button" data-addas="say" title="The mascot says something (&gt; [!name])">Mascot says</button></div><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
+        <div class="rbe-addas" role="group" aria-label="Add as">Add as <button type="button" class="on" data-addas="pic">Picture</button><button type="button" data-addas="say" title="The mascot says something (&gt; [!name])">Mascot says</button></div>
+        <input id="rbe-picq" class="rbe-picq" type="search" placeholder="Search the pictures..." autocomplete="off" aria-label="Search the pictures"><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
         <p class="muted">Click: added under the cursor's paragraph (or into the picked section or row), ready to drag; or drag one onto the page.</p></div></details>
       <button type="button" class="ghost" data-rbe="tts" aria-pressed="false" title="Show the chapter as its TTS pages (1080x1920)">TTS pages</button>
       <details class="rbe-help"><summary class="ghost button">Syntax</summary><div class="rbe-menu"><table class="help-table">${HELP.map(([k, d]) => `<tr><td><code>${esc(k)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>
@@ -900,6 +903,11 @@ function insertBlock(text) {
   setText(lines.join("\n"), offsetOf(lines, at) + text.length, at);
 }
 
+// the Pictures menu's search: every word in a picture's name (dashes as spaces)
+function filterPics() {
+  const words = (M.api.modal.querySelector("#rbe-picq")?.value || "").toLowerCase().split(/\s+/).filter(Boolean);
+  for (const b of M.api.modal.querySelectorAll(".rbe-pic-grid [data-pic]")) b.hidden = !words.every(w => b.dataset.pic.toLowerCase().replace(/[-_]/g, " ").includes(w));
+}
 // the Insert menu's blocks, put in at the cursor
 const INSERTS = [["section", "Section", "a tabbed panel (## SECTION)"], ["panel", "Panel", "a panel without a tab (::: panel)"],
   ["row", "Row", "things side by side (::: row)"], ["ability", "Ability box", "a card's ability box (::: ability)"], ["page", "TTS page break", "a new TTS page starts here (=== page ===)"]];
@@ -963,6 +971,7 @@ async function upload(files, at = null) {
         drop({ src: name }, pl, at.x, at.y, wide);
         at = { x: at.x + 24, y: at.y + 24 };           // several: fanned out
       }
+      setTimeout(filterPics);                        // a search under way covers the new one too
       M.api.modal.querySelector(".rbe-pic-grid")?.insertAdjacentHTML("afterbegin", `<button type="button" class="ghost" data-pic="${esc(name)}" title="${esc(name)} (new)" draggable="true"><img src="${esc(url)}" alt=""><span>${esc(name.replace(/\.\w+$/, ""))}</span></button>`);
       M.api.toast(`${name} (${Math.round(blob.size / 1024)} KB) goes up with Publish`);
     } catch (err) { M.api.toast(`Couldn't read ${f.name} (${err.message})`); }

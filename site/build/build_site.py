@@ -3233,11 +3233,16 @@ def type_meanings(chapters, icons):
     return found
 
 
+RULE_WORDS = (("damage-types", r"piercing|true damage|life ?steal|shockwave|overkill|counter damage"),   # a card's text -> a chapter
+              ("negation", r"negat(?:e|es|ed|ing|ion)"), ("reactions", r"react(?:s|ion|ions)?"))
+
+
 def tts_details(cards, chapters, icons, tag_table):
     """data/tts.json for the TTS save's script, cards keyed by their PNG's path (the save's card links): name, kind,
     stars, stats, ability (icons as words), types, timing tags, the status effects the ability names and the other cards
-    it names (m: their paths, exact names); with the types', tags' and statuses' meanings (a status's path: p) and the
-    chapters (their numbers find the PDF's pages). Hidden cards left out."""
+    it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions);
+    with the types', tags' and statuses' meanings (a status's path: p) and the chapters (their numbers find the PDF's
+    pages). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
     types, statuses = type_meanings(chapters, icons), {}
     for c in shown:
@@ -3252,6 +3257,8 @@ def tts_details(cards, chapters, icons, tag_table):
             by_name.setdefault(c["name"], c["png"])
     names = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(by_name, key=len, reverse=True)) + r")(?:['’]s|e?s)?(?![\w'’])") if by_name else None   # plurals too, as text.js
     out_cards, used_tags = {}, {}
+    ids = {c["id"] for c in chapters}
+    rule_words = [(cid, re.compile(rf"\b(?:{words})\b", re.I)) for cid, words in RULE_WORDS if cid in ids]
     for c in shown:
         if not c.get("png"):
             continue
@@ -3272,6 +3279,7 @@ def tts_details(cards, chapters, icons, tag_table):
             "st": c.get("stars"), "s": "; ".join(bars) or None, "a": game_words(text, icons) or None,
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
             "x": [n for i, n in enumerate(hits) if n not in hits[:i] and n != c["name"]] or None, "m": mentioned or None,
+            "r": [cid for cid, words in rule_words if words.search(text)] or None,
             "by": c.get("author")}.items() if v}
     return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
             "tags": dict(sorted(used_tags.items())), "statuses": dict(sorted(statuses.items())), "cards": out_cards}

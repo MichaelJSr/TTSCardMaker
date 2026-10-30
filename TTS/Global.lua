@@ -49,7 +49,7 @@ function onObjectLeaveContainer(container, obj)
     end, 3)
 end
 
--- Card details: right-click a card > Card details. Panels only that player sees (up to three at once): drag one by its
+-- Card details: right-click a card > Card details (right-click the table > Find a card: any card, spawned there). Panels only that player sees (up to three at once): drag one by its
 -- title bar, A- / A+
 -- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
 -- (status effects and others) spawn beside the card with a click. Data: the website's data/tts.json and
@@ -136,6 +136,28 @@ local function rulebookPanel(c)
             horizontalScrollbarVisibility = "AutoHideAndExpandViewport", verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {list}}}}
 end
 
+-- one seat's card finder: a search box (name, kind, type, timing tag), then the cards found as buttons
+local function finderPanel(c)
+    local id = c .. "_fc"
+    local list = {tag = "VerticalLayout", attributes = {id = id .. "_list", height = 100, spacing = 3, padding = "6 10 4 4",
+        childForceExpandHeight = false, childAlignment = "UpperLeft"}, children = {}}
+    for i = 1, RESULTS do
+        table.insert(list.children, button(id .. "_g" .. i, "", "finderGo", {preferredHeight = 30, fontSize = 14, textAlignment = "MiddleLeft", active = false}))
+    end
+    return {tag = "Panel", attributes = {id = id, visibility = c, active = false, allowDragging = true,
+        returnToOriginalPositionWhenReleased = false, rectAlignment = "MiddleLeft", offsetXY = "110 -30", width = 460, height = 640,
+        color = "#0f1729F2", outline = "#3b4b6b", outlineSize = "2 -2"}, children = {
+        {tag = "Panel", attributes = {rectAlignment = "UpperCenter", height = TITLE_H, color = "#1b2740"}, children = {
+            {tag = "Text", attributes = {id = id .. "_title", rectAlignment = "MiddleLeft", offsetXY = "12 0", width = 360, height = TITLE_H,
+                fontSize = 17, fontStyle = "Bold", color = "#ffffff", alignment = "MiddleLeft"}, value = "Find a card"},
+            button(id .. "_close", "X", "closeFinder", {rectAlignment = "MiddleRight", offsetXY = "-4 0", width = 36, height = 28})}},
+        {tag = "InputField", attributes = {id = id .. "_q", rectAlignment = "UpperCenter", offsetXY = "0 -" .. (TITLE_H + 8), width = 436,
+            height = 34, fontSize = 15, placeholder = "Name, kind, stars, type or tag...", onValueChanged = "finderSearch"}},
+        {tag = "VerticalScrollView", attributes = {id = id .. "_scroll", rectAlignment = "UpperCenter", offsetXY = "0 -" .. (TITLE_H + 50),
+            width = 452, height = 640 - TITLE_H - 58, color = "#00000000", scrollSensitivity = 30,
+            horizontalScrollbarVisibility = "AutoHideAndExpandViewport", verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {list}}}}
+end
+
 -- A player's panels are built the first time they need one: TTS sets the whole UI at once, so building every seat's
 -- (1,100 elements) stalled the game. A build keeps the save's own UI and the panels of everyone who has used them;
 -- the panels open at the time are drawn again after it (a dragged one back at its place).
@@ -148,6 +170,7 @@ local function rebuild()
         if built[c] then
             for k = 1, DETAILS_PANELS do table.insert(xml, detailsPanel(c, k)) end
             table.insert(xml, rulebookPanel(c))
+            table.insert(xml, finderPanel(c))
         end
     end
     UI.setXmlTable(xml)
@@ -195,6 +218,7 @@ function loadCardDetails()
     Wait.time(function()                               -- a moment after the load: the menus and the downloads only
         baseXml = UI.getXmlTable() or {}
         for _, obj in ipairs(getObjects()) do addMenu(obj) end
+        addContextMenuItem("Find a card", function(color, at) openFinder(color, at) end)   -- right-click the table
         WebRequest.get(DETAILS_URL, function(r)
             if r.is_error then log("Card details: not loaded (" .. tostring(r.error) .. ")") else detailsRaw = r.text end
         end)
@@ -298,6 +322,7 @@ local function chaptersOf(card)
     if card.g then add("timing-tags") end
     for _, t in ipairs(card.t or {}) do add((details.types[t] or {}).c) end
     if card.x then add("status-effects") end
+    for _, id in ipairs(card.r or {}) do add(id) end   -- damage types, negation, reactions named in its text
     return out
 end
 
@@ -519,26 +544,30 @@ local function madeCard(path, card)
             BackIsHidden = true, UniqueBack = false, Type = 0}}}
 end
 
-function spawnNamed(player, _, id)
-    local color = player.color
-    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_c3": the 3rd card it names
-    local item = open and n and open.named and open.named[n]
-    if not item then return end
+-- a card (its path) spawned at pos facing spin: a copy of the save's own when there is one, else made; at its played size
+local function spawnCard(path, name, pos, spin)
     if not cardIndex then indexCards() end
-    local known = cardIndex[item[2]]
-    local data = known and known.data or madeCard(item[2], details.cards[item[2]] or {n = item[1]})
+    local known = cardIndex[path]
+    local data = known and known.data or madeCard(path, details.cards[path] or {n = name})
     local face = data.CustomDeck and data.CustomDeck[tostring(math.floor((data.CardID or 0) / 100))] or {}
     if not face.BackURL then for _, v in pairs(data.CustomDeck or {}) do face = v break end end
     local scale = known and known.scale or scaleOfBack[pathOf(face.BackURL) or ""] or {1, 1, 1}
     data.GUID = nil
-    local from = open.obj and not open.obj.isDestroyed() and open.obj
-    local at = from and from.getPosition() or Player[color].getHandTransform().position
-    open.spawned = (open.spawned or 0) + 1
-    local pos = {at.x + 2.6 * open.spawned, at.y + 1.5, at.z}
-    spawnObjectData({data = data, position = pos, rotation = {0, from and from.getRotation().y or 0, 0}, scale = scale,
+    spawnObjectData({data = data, position = pos, rotation = {0, spin or 0, 0}, scale = scale,
         callback_function = function(o)
             if resizeTargets[o.getName()] then o.setScale(LARGE_CARD_SCALE) end
         end})
+end
+
+function spawnNamed(player, _, id)                     -- beside the card the panel is about, fanned out
+    local color = player.color
+    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_c3": the 3rd card it names
+    local item = open and n and open.named and open.named[n]
+    if not item then return end
+    local from = open.obj and not open.obj.isDestroyed() and open.obj
+    local at = from and from.getPosition() or Player[color].getHandTransform().position
+    open.spawned = (open.spawned or 0) + 1
+    spawnCard(item[2], item[1], {at.x + 2.6 * open.spawned, at.y + 1.5, at.z}, from and from.getRotation().y or 0)
 end
 
 -- the rulebook panel: its chapters, or the pages holding every word searched (a snippet of each); a click turns the PDF there
@@ -604,6 +633,85 @@ function rulebookSearch(player, value)
     listPages(player.color, value)
 end
 
+-- the card finder: every word must be in a card's name, kind, stars ("5" or "5★"), types or timing tags; names that start with the search
+-- come first; a click spawns the card where the table was right-clicked (several: side by side)
+local fcOpen, fcFound, searchOf = {}, {}, nil
+local function listCards(color, query)
+    if not searchOf then                               -- each card's words, once
+        searchOf = {}
+        for path, c in pairs(details.cards) do
+            local bits = {c.n or "", c.k or "", c.st and (math.floor(c.st) .. "★ " .. math.floor(c.st) .. " star") or ""}
+            for _, t in ipairs(c.t or {}) do table.insert(bits, (details.types[t] or {}).n or t) end
+            for _, g in ipairs(c.g or {}) do table.insert(bits, "(" .. g .. ")") end
+            searchOf[path] = {name = (c.n or ""):lower(), all = table.concat(bits, " "):lower()}
+        end
+    end
+    local id, q, words = color .. "_fc", (query or ""):lower(), {}
+    local start = 1
+    while start <= #q do
+        local sp = q:find(" ", start, true) or #q + 1
+        if sp > start then table.insert(words, q:sub(start, sp - 1)) end
+        start = sp + 1
+    end
+    local first, rest = {}, {}
+    if #words > 0 then
+        for path, w in pairs(searchOf) do
+            local ok = true
+            for _, word in ipairs(words) do if not w.all:find(word, 1, true) then ok = false break end end
+            if ok then table.insert(w.name:find(words[1], 1, true) == 1 and first or rest, path) end
+        end
+    end
+    local byName = function(a, b) return searchOf[a].name < searchOf[b].name end
+    table.sort(first, byName); table.sort(rest, byName)
+    for _, p in ipairs(rest) do table.insert(first, p) end
+    fcFound[color] = first
+    for i = 1, RESULTS do
+        local path = first[i]
+        UI.setAttribute(id .. "_g" .. i, "active", path and "true" or "false")
+        if path then
+            local c = details.cards[path]
+            UI.setAttribute(id .. "_g" .. i, "text", c.n .. "   " .. (c.k or "") .. (c.st and (" " .. math.floor(c.st) .. "★") or ""))
+        end
+    end
+    UI.setAttribute(id .. "_list", "height", math.max(40, math.min(#first, RESULTS) * 33 + 10))
+    UI.setValue(id .. "_title", #words == 0 and "Find a card" or (#first == 0 and "No card found"
+        or (#first .. (#first == 1 and " card" or " cards") .. (#first > RESULTS and (" (the first " .. RESULTS .. ")") or ""))))
+end
+
+function openFinder(color, at)
+    ensureData()
+    if not details then broadcastToColor("Card details are still loading.", color, {1, 0.6, 0.6}) return end
+    ensurePanels(color, function()
+        local was = fcOpen[color]
+        fcOpen[color] = {query = was and was.query or "", at = at or (was and was.at), spawned = 0}
+        listCards(color, fcOpen[color].query)
+        UI.setAttribute(color .. "_fc_q", "text", fcOpen[color].query)
+        UI.setAttribute(color .. "_fc", "active", "true")
+    end)
+end
+
+function closeFinder(player)
+    fcOpen[player.color] = nil
+    UI.setAttribute(player.color .. "_fc", "active", "false")
+end
+
+function finderSearch(player, value)
+    local f = fcOpen[player.color]
+    if f then f.query = value or "" end
+    listCards(player.color, value)
+end
+
+function finderGo(player, _, id)
+    local color = player.color
+    local f, n = fcOpen[color], tonumber(id:sub(#color + 6))   -- "<color>_fc_g7": the 7th card
+    local path = f and n and (fcFound[color] or {})[n]
+    if not path then return end
+    local at = f.at or Player[color].getHandTransform().position
+    local spin = (Player[color].getHandTransform() or {}).rotation
+    spawnCard(path, details.cards[path].n, {at.x + 2.6 * f.spawned, at.y + 1.5, at.z}, spin and spin.y + 180 or 0)
+    f.spawned = f.spawned + 1
+end
+
 -- a player's panels built if they aren't yet, then done(); after a build every panel open before it is drawn again
 ensurePanels = function(color, done)
     if not built[color] then
@@ -621,6 +729,11 @@ ensurePanels = function(color, done)
                     listPages(c, q)
                     UI.setAttribute(c .. "_rb_q", "text", q)
                     UI.setAttribute(c .. "_rb", "active", "true")
+                end
+                for c, f in pairs(fcOpen) do
+                    listCards(c, f.query)
+                    UI.setAttribute(c .. "_fc_q", "text", f.query)
+                    UI.setAttribute(c .. "_fc", "active", "true")
                 end
             end
             done()
