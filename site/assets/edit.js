@@ -834,7 +834,7 @@ export function createEditor(app) {
             <p class="muted part-join" id="ef-name-join"></p></div>${plain("name", `<input id="ef-name" value="${esc(c.name)}">`)}</div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
           ${titleInPicture(view) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
           ${renameRow(c, b)}
-          ${row("stars", num("stars"))}${view ? `<p class="muted part-note" id="ef-stars-note"></p>` : ""}
+          ${row("stars", num("stars"))}<p class="muted part-note" id="ef-stars-note"></p>
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
             return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-type="${esc(t)}" aria-pressed="${on}" data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>`)}
           ${view && !(psdVal(b, "types") || []).length ? `<p class="muted part-note">No type icon yet: the first goes at ${esc(view.rec.template?.file ? view.rec.template.file.split("/").pop().replace(/\.psd$/i, "") : "the template")}'s spot (flagged).</p>` : ""}
@@ -1198,11 +1198,12 @@ export function createEditor(app) {
       paintSite();
       const op = readForm(c), lines = describe(op), text = partForm && !siteOn("ability") ? lastRead?.derived.ability || "" : ta.value;
       document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text, c.name) : `<span class="muted">No ability text.</span>`;
+      const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");   // a stars edit moves the card (the bake's plan_move)
+      const mv = sn && st && !siteOn("stars") ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
+      if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${partForm?.view.rec.header?.stars ? " and redraws the printed stars" : ""}. Tick Website only to keep the card where it is.`
+        : st && siteOn("stars") && P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) ? "Website only: the card stays in its folder." : "";
       if (partForm) {
         const join = document.getElementById("ef-name-join"); if (join) join.textContent = `Name on the site: “${lastRead?.derived.name || ""}”`;
-        const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");
-        const mv = sn && st ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
-        if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${partForm.view.rec.header?.stars ? " and redraws the printed stars" : ""}.` : "";
         paintBoxes();
       }
       const notes = lastRead?.notes || [];
