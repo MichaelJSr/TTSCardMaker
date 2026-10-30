@@ -373,6 +373,7 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rbe-preview .rbe-selected { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rbe-resize { position: absolute; z-index: 5; width: 16px; height: 16px; border-radius: 4px; background: var(--accent); border: 2px solid #fff; cursor: nwse-resize; touch-action: none; }
 .rbe-ghost { box-shadow: 0 6px 22px #0006; will-change: transform; }
+.rbe-mode { position: fixed; left: 0; top: 0; z-index: 91; padding: 2px 8px; border-radius: 6px; background: var(--accent); color: #fff; font: 600 12px/1.6 system-ui, sans-serif; white-space: nowrap; pointer-events: none; box-shadow: 0 2px 8px #0005; will-change: transform; }
 .rbe-preview:focus { outline: none; }
 .rbe-colbar { position: absolute; z-index: 6; width: 4px; border-radius: 2px; background: var(--accent); box-shadow: 0 0 0 2px #fff9; pointer-events: none; }
 .rbe-resize[data-size]::after { content: attr(data-size); position: absolute; left: 18px; top: -6px; padding: 1px 6px; border-radius: 6px; background: var(--accent); color: #fff; font: 600 12px/1.6 system-ui, sans-serif; white-space: nowrap; pointer-events: none; }

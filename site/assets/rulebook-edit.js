@@ -356,7 +356,8 @@ function wireDrag(pane) {
   pane.append(marker, colBar);
   let lit = null;                                      // the container a drop would go in
   const light = el => { if (lit !== el) { lit?.classList.remove("rbe-anchor"); lit = el; el?.classList.add("rbe-anchor"); } };
-  const inside = (el, x, y) => { const r = el.getBoundingClientRect(); return x >= r.left - 8 && x <= r.right + 8 && y >= r.top - 8 && y <= r.bottom + 8; };
+  // a row's picture stays in its row unless dropped well above or below it (its height may be the row's) or with Alt
+  const inRow = (p, x, y) => { const r = p.col.row.getBoundingClientRect(), m = Math.max(80, p.rect.height * 0.6); return x >= r.left - 8 && x <= r.right + 8 && y >= r.top - m && y <= r.bottom + m; };
   const slotAt = (col, x) => { const k = col.cols.findIndex(c => { const r = c.getBoundingClientRect(); return x < r.left + r.width / 2; }); return k < 0 ? col.cols.length : k; };
   const bar = (col, slot) => {                         // where a row's column would go
     if (!col) { colBar.hidden = true; return; }
@@ -392,7 +393,8 @@ function wireDrag(pane) {
     P.ghost = P.fig.cloneNode(true);
     Object.assign(P.ghost.style, { position: "fixed", width: `${P.w}px`, left: "0", top: "0", margin: "0", zIndex: 90, pointerEvents: "none", opacity: ".85" });
     P.ghost.className += " rbe-ghost";
-    document.body.append(P.ghost);
+    P.mode = Object.assign(document.createElement("div"), { className: "rbe-mode" });   // what a drop here does
+    document.body.append(P.ghost, P.mode);
     P.fig.classList.add("rbe-moving");
   }
   function draw() {
@@ -420,21 +422,24 @@ function wireDrag(pane) {
     }
     const x = e.clientX - P.gx, y = e.clientY - P.gy;
     P.ghost.style.transform = `translate(${x}px, ${y}px)`;
-    P.slot = P.col && !e.altKey && inside(P.col.row, e.clientX, e.clientY) ? slotAt(P.col, e.clientX) : null;
-    if (P.slot != null && ownSlot(P)) { bar(null); light(P.col.cols[P.col.index]); }   // shifted inside its column
+    P.slot = P.col && !e.altKey && inRow(P, e.clientX, e.clientY) ? slotAt(P.col, e.clientX) : null;
+    const own = P.slot != null && ownSlot(P);
+    if (own) { bar(null); light(P.col.cols[P.col.index]); }   // shifted inside its column
     else if (P.slot != null) { light(P.col.row); bar(P.col, P.slot); }
     else { bar(null); light(anchorAt(x + 8, y + 8, P.fig, P.boxes)); }
+    P.mode.textContent = own ? "Shift it in its column" : P.slot != null ? "Move it here in the row" : P.col ? "Place it here (out of the row)" : "Place it here";
+    P.mode.style.transform = `translate(${e.clientX + 16}px, ${e.clientY + 18}px)`;
   }
   const end = e => {
     if (!P) return;
     cancelAnimationFrame(frame); frame = 0; last = null;
     const p = P; P = null;
-    p.ghost?.remove(); p.fig.classList.remove("rbe-moving"); light(null); bar(null);
+    p.ghost?.remove(); p.mode?.remove(); p.fig.classList.remove("rbe-moving"); light(null); bar(null);
     if (!p.moved) return;                              // a click: the click handler gives its tools
     clickGone = true; setTimeout(() => { clickGone = false; }, 0);
     if (e.type === "pointercancel") { M.selLine = null; return render(); }
     if (p.handle) return p.colEl ? sizeColumn(p.fig, p.line, p.px) : editPicture(p.line, a => { a.width = String(p.pct); });
-    p.slot = p.col && !e.altKey && inside(p.col.row, e.clientX, e.clientY) ? slotAt(p.col, e.clientX) : null;
+    p.slot = p.col && !e.altKey && inRow(p, e.clientX, e.clientY) ? slotAt(p.col, e.clientX) : null;
     if (p.slot != null) return moveInRow(p, e.clientX - p.gx, e.clientY - p.gy);
     placeAt({ from: p.line, col: p.col }, e.clientX - p.gx, e.clientY - p.gy, p.w, p.fig);
   };
@@ -599,13 +604,13 @@ function html() {
       <button type="button" class="ghost" data-ins="page" title="Start a new TTS page here">TTS page break</button>
       <label class="ghost button" title="Add pictures from this computer (or drop image files on the page or the text, or paste one)">Add picture<input id="rbe-file" type="file" accept="image/*" multiple hidden></label>
       <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-menu"><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
-        <p class="muted">Click: a picture at the cursor; drag one anywhere on the page to place it there. Alt-drag or Alt-click: the mascot says something (&gt; [!name]).</p></div></details>
+        <p class="muted">Click: the picture under the cursor's paragraph, ready to drag; or drag one anywhere on the page to place it there. Alt-drag or Alt-click: the mascot says something (&gt; [!name]).</p></div></details>
       <button type="button" class="ghost" data-rbe="tts" aria-pressed="false" title="Show the chapter as its TTS pages (1080x1920)">TTS pages</button>
       <details class="rbe-help"><summary class="ghost button">Syntax</summary><div class="rbe-menu"><table class="help-table">${HELP.map(([k, d]) => `<tr><td><code>${esc(k)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>
         <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
         Click anything on the page to go to its line. Drag a picture anywhere on the page to place it there (it stays with the panel you drop it in);
-        a picture that is a row's column stays in the row: drag it inside its column to shift it there, onto another column to swap them (hold Alt to
-        place it anywhere instead). Drag its corner to resize; with Row adjusts on (in its tools) a row's picture takes its column with it and the
+        a picture that is a row's column stays in the row: drag it inside its column to shift it there, onto another column to swap them; it leaves
+        the row only when dropped well above or below it, or with Alt held (the label beside the pointer says which). Drag its corner to resize; with Row adjusts on (in its tools) a row's picture takes its column with it and the
         rest of the row adjusts around it. Click a picture for its tools in the bar above the page, then: arrow keys move it
         (Shift: further), + and − size it, Delete takes it out, Esc lets it go; Left / Center / Right / Corner put it back in the flow. Rows of cards and mascots drag between blocks. Drop image files from your computer, or pictures from the panel,
         anywhere on the page. ↶ ↷ (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z) undo and redo everything, typing and the page alike. Your draft is kept in this
@@ -641,6 +646,10 @@ function render() {
   M.selected = null;
   const sel = M.selLine != null ? page.querySelector(`[data-line="${M.selLine}"]`) : null;
   tools(sel && PICTURE_KINDS.includes(sel.dataset.kind) ? sel : null);
+  if (sel) {                                           // in view (a picture just added below the fold)
+    const pane = page.closest(".rbe-preview"), r = sel.getBoundingClientRect(), p = pane.getBoundingClientRect();
+    if (r.bottom < p.top + 40 || r.top > p.bottom - 40) pane.scrollTop += r.top - p.top - p.height / 3;
+  }
   followed = null;
   if (!sel) follow();                                  // the cursor's block in view again
 }
@@ -700,6 +709,22 @@ function colour(name) {
   M.nextKind = "edit"; ta.dispatchEvent(new Event("input"));
 }
 
+// a picture or a mascot from the panel (or from this computer) as a block of its own, so it is a picture to drag, not
+// an icon in the words: on the cursor's line when that is empty, else after the paragraph, list, table or callout the
+// cursor is in; selected on the page
+const LIST_LINE = /^\s*(?:[-*+]|\d+[.)]|[A-Za-z][.)])\s/, BLOCK_START = /^(?::::|#{1,6}\s|>|---|===|!\[|\|)/;
+function insertBlock(text) {
+  const ta = textBox(), lines = ta.value.split("\n"), n = ta.value.slice(0, ta.selectionStart).split("\n").length - 1, here = lines[n] ?? "";
+  let at = n;
+  if (here.trim()) {
+    const t = here.trim(), more = t.startsWith(">") ? l => l.startsWith(">") : t.startsWith("|") ? l => /^(\||\{[^{}]*\}$)/.test(l)
+      : LIST_LINE.test(here) ? l => LIST_LINE.test(l) || /^\s{2,}\S/.test(l) : BLOCK_START.test(t) ? () => false : l => !BLOCK_START.test(l) && !LIST_LINE.test(l);
+    for (at = n + 1; at < lines.length && lines[at].trim() && more(LIST_LINE.test(here) ? lines[at] : lines[at].trim()); at++);
+    lines.splice(at, 0, text);
+  } else lines[at] = text;
+  setText(lines.join("\n"), offsetOf(lines, at) + text.length, at);
+}
+
 // toolbar: what each button puts in (around the selection when it has one)
 const SNIPPET = {
   section: () => "\n## SECTION\n", panel: () => "\n::: panel\n\n:::\n", row: () => "\n::: row\n![](picture.webp)\n\n::: panel\nText beside it.\n:::\n:::\n",
@@ -723,7 +748,7 @@ function onClick(e) {
   if (t.dataset.pic) {
     const name = t.dataset.pic, stem = name.replace(/\.\w+$/, "");
     t.closest("details").open = false;
-    return insert(e.altKey ? `\n> [!${stem}] ` : `![](${name})`);
+    return insertBlock(e.altKey ? `> [!${stem}] Text.` : `![](${name})`);
   }
   const act = t.dataset.rbe;
   if (act === "undo" || act === "redo") return travel(act === "undo" ? -1 : 1);
@@ -753,7 +778,7 @@ async function upload(files, drop = null) {
       const base64 = await new Promise(ok => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.readAsDataURL(blob); });
       const url = URL.createObjectURL(blob);
       M.uploads.set(name, { base64, url, size: [w, h] });
-      if (!drop) insert(`![](${name})`);
+      if (!drop) insertBlock(`![](${name})`);
       else {                                           // dropped on the page: placed there, at most a third of its panel
         const r = boxOf(anchorAt(drop.x, drop.y)).getBoundingClientRect();
         placeAt({ src: name }, drop.x, drop.y, Math.min(w, r.width / 3));
