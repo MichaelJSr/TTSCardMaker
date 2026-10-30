@@ -1,0 +1,425 @@
+{
+ "about": "The rulebook's TTS pages, drawn from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. tts_save puts them in the save's Rulebooks bag, in this order.",
+ "pages": [
+  {
+   "file": "00-01.png",
+   "name": "Table of Contents",
+   "num": ""
+  },
+  {
+   "file": "01-01.png",
+   "name": "Getting Started",
+   "num": "1"
+  },
+  {
+   "file": "01-02.png",
+   "name": "Getting Started 2",
+   "num": "1.2"
+  },
+  {
+   "file": "02-01.png",
+   "name": "Abbreviations",
+   "num": "2"
+  },
+  {
+   "file": "02-02.png",
+   "name": "Abbreviations 2",
+   "num": "2.2"
+  },
+  {
+   "file": "03-01.png",
+   "name": "Setting Up",
+   "num": "3"
+  },
+  {
+   "file": "03-02.png",
+   "name": "Setting Up 2",
+   "num": "3.2"
+  },
+  {
+   "file": "04-01.png",
+   "name": "Table",
+   "num": "4"
+  },
+  {
+   "file": "04-02.png",
+   "name": "Table 2",
+   "num": "4.2"
+  },
+  {
+   "file": "04-03.png",
+   "name": "Table 3",
+   "num": "4.3"
+  },
+  {
+   "file": "04-04.png",
+   "name": "Table 4",
+   "num": "4.4"
+  },
+  {
+   "file": "04-05.png",
+   "name": "Table 5",
+   "num": "4.5"
+  },
+  {
+   "file": "04-06.png",
+   "name": "Table 6",
+   "num": "4.6"
+  },
+  {
+   "file": "04-07.png",
+   "name": "Table 7",
+   "num": "4.7"
+  },
+  {
+   "file": "04-08.png",
+   "name": "Table 8",
+   "num": "4.8"
+  },
+  {
+   "file": "04-09.png",
+   "name": "Table 9",
+   "num": "4.9"
+  },
+  {
+   "file": "04-10.png",
+   "name": "Table 10",
+   "num": "4.10"
+  },
+  {
+   "file": "05-01.png",
+   "name": "Shops",
+   "num": "5"
+  },
+  {
+   "file": "05-02.png",
+   "name": "Shops 2",
+   "num": "5.2"
+  },
+  {
+   "file": "06-01.png",
+   "name": "Reading Cards",
+   "num": "6"
+  },
+  {
+   "file": "06-02.png",
+   "name": "Reading Cards 2",
+   "num": "6.2"
+  },
+  {
+   "file": "06-03.png",
+   "name": "Reading Cards 3",
+   "num": "6.3"
+  },
+  {
+   "file": "07-01.png",
+   "name": "Stats",
+   "num": "7"
+  },
+  {
+   "file": "07-02.png",
+   "name": "Stats 2",
+   "num": "7.2"
+  },
+  {
+   "file": "07-03.png",
+   "name": "Stats 3",
+   "num": "7.3"
+  },
+  {
+   "file": "07-04.png",
+   "name": "Stats 4",
+   "num": "7.4"
+  },
+  {
+   "file": "07-05.png",
+   "name": "Stats 5",
+   "num": "7.5"
+  },
+  {
+   "file": "07-06.png",
+   "name": "Stats 6",
+   "num": "7.6"
+  },
+  {
+   "file": "07-07.png",
+   "name": "Stats 7",
+   "num": "7.7"
+  },
+  {
+   "file": "07-08.png",
+   "name": "Stats 8",
+   "num": "7.8"
+  },
+  {
+   "file": "07-09.png",
+   "name": "Stats 9",
+   "num": "7.9"
+  },
+  {
+   "file": "08-01.png",
+   "name": "The Global Turn",
+   "num": "8"
+  },
+  {
+   "file": "08-02.png",
+   "name": "The Global Turn 2",
+   "num": "8.2"
+  },
+  {
+   "file": "08-03.png",
+   "name": "The Global Turn 3",
+   "num": "8.3"
+  },
+  {
+   "file": "09-01.png",
+   "name": "Taking Your Turn",
+   "num": "9"
+  },
+  {
+   "file": "09-02.png",
+   "name": "Taking Your Turn 2",
+   "num": "9.2"
+  },
+  {
+   "file": "10-01.png",
+   "name": "Attacking",
+   "num": "10"
+  },
+  {
+   "file": "10-02.png",
+   "name": "Attacking 2",
+   "num": "10.2"
+  },
+  {
+   "file": "10-03.png",
+   "name": "Attacking 3",
+   "num": "10.3"
+  },
+  {
+   "file": "10-04.png",
+   "name": "Attacking 4",
+   "num": "10.4"
+  },
+  {
+   "file": "11-01.png",
+   "name": "Abilities",
+   "num": "11"
+  },
+  {
+   "file": "11-02.png",
+   "name": "Abilities 2",
+   "num": "11.2"
+  },
+  {
+   "file": "11-03.png",
+   "name": "Abilities 3",
+   "num": "11.3"
+  },
+  {
+   "file": "11-04.png",
+   "name": "Abilities 4",
+   "num": "11.4"
+  },
+  {
+   "file": "11-05.png",
+   "name": "Abilities 5",
+   "num": "11.5"
+  },
+  {
+   "file": "11-06.png",
+   "name": "Abilities 6",
+   "num": "11.6"
+  },
+  {
+   "file": "11-07.png",
+   "name": "Abilities 7",
+   "num": "11.7"
+  },
+  {
+   "file": "11-08.png",
+   "name": "Abilities 8",
+   "num": "11.8"
+  },
+  {
+   "file": "11-09.png",
+   "name": "Abilities 9",
+   "num": "11.9"
+  },
+  {
+   "file": "11-10.png",
+   "name": "Abilities 10",
+   "num": "11.10"
+  },
+  {
+   "file": "11-11.png",
+   "name": "Abilities 11",
+   "num": "11.11"
+  },
+  {
+   "file": "12-01.png",
+   "name": "Reactions",
+   "num": "12"
+  },
+  {
+   "file": "12-02.png",
+   "name": "Reactions 2",
+   "num": "12.2"
+  },
+  {
+   "file": "12-03.png",
+   "name": "Reactions 3",
+   "num": "12.3"
+  },
+  {
+   "file": "12-04.png",
+   "name": "Reactions 4",
+   "num": "12.4"
+  },
+  {
+   "file": "12-05.png",
+   "name": "Reactions 5",
+   "num": "12.5"
+  },
+  {
+   "file": "12-06.png",
+   "name": "Reactions 6",
+   "num": "12.6"
+  },
+  {
+   "file": "12-07.png",
+   "name": "Reactions 7",
+   "num": "12.7"
+  },
+  {
+   "file": "12-08.png",
+   "name": "Reactions 8",
+   "num": "12.8"
+  },
+  {
+   "file": "13-01.png",
+   "name": "Items",
+   "num": "13"
+  },
+  {
+   "file": "13-02.png",
+   "name": "Items 2",
+   "num": "13.2"
+  },
+  {
+   "file": "14-01.png",
+   "name": "Item Types",
+   "num": "14"
+  },
+  {
+   "file": "14-02.png",
+   "name": "Item Types 2",
+   "num": "14.2"
+  },
+  {
+   "file": "14-03.png",
+   "name": "Item Types 3",
+   "num": "14.3"
+  },
+  {
+   "file": "14-04.png",
+   "name": "Item Types 4",
+   "num": "14.4"
+  },
+  {
+   "file": "15-01.png",
+   "name": "Minions",
+   "num": "15"
+  },
+  {
+   "file": "15-02.png",
+   "name": "Minions 2",
+   "num": "15.2"
+  },
+  {
+   "file": "16-01.png",
+   "name": "The Field",
+   "num": "16"
+  },
+  {
+   "file": "16-02.png",
+   "name": "The Field 2",
+   "num": "16.2"
+  },
+  {
+   "file": "16-03.png",
+   "name": "The Field 3",
+   "num": "16.3"
+  },
+  {
+   "file": "16-04.png",
+   "name": "The Field 4",
+   "num": "16.4"
+  },
+  {
+   "file": "17-01.png",
+   "name": "Death",
+   "num": "17"
+  },
+  {
+   "file": "17-02.png",
+   "name": "Death 2",
+   "num": "17.2"
+  },
+  {
+   "file": "18-01.png",
+   "name": "Field Cards",
+   "num": "18"
+  },
+  {
+   "file": "18-02.png",
+   "name": "Field Cards 2",
+   "num": "18.2"
+  },
+  {
+   "file": "19-01.png",
+   "name": "Status Effects",
+   "num": "19"
+  },
+  {
+   "file": "19-02.png",
+   "name": "Status Effects 2",
+   "num": "19.2"
+  },
+  {
+   "file": "19-03.png",
+   "name": "Status Effects 3",
+   "num": "19.3"
+  },
+  {
+   "file": "19-04.png",
+   "name": "Status Effects 4",
+   "num": "19.4"
+  },
+  {
+   "file": "20-01.png",
+   "name": "Creature Types",
+   "num": "20"
+  },
+  {
+   "file": "20-02.png",
+   "name": "Creature Types 2",
+   "num": "20.2"
+  },
+  {
+   "file": "21-01.png",
+   "name": "Damage Types",
+   "num": "21"
+  },
+  {
+   "file": "22-01.png",
+   "name": "Negation",
+   "num": "22"
+  },
+  {
+   "file": "22-02.png",
+   "name": "Negation 2",
+   "num": "22.2"
+  }
+ ]
+}
