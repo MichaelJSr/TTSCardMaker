@@ -397,7 +397,7 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rbe-resize[data-size]::after { content: attr(data-size); position: absolute; left: 18px; top: -6px; padding: 1px 6px; border-radius: 6px; background: var(--accent); color: #fff; font: 600 12px/1.6 system-ui, sans-serif; white-space: nowrap; pointer-events: none; }
 .rbe-preview [draggable="true"]:hover { outline: 2px dashed color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }
 .rbe-drop { position: absolute; height: 4px; border-radius: 2px; background: var(--accent); pointer-events: none; z-index: 3; box-shadow: 0 0 0 2px #fff8; }
-.rbe-pictools { position: sticky; top: 0; z-index: 7; display: flex; align-items: center; gap: 2px; min-height: 34px; padding: 3px 6px; margin-bottom: 8px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border-strong); box-shadow: var(--shadow); overflow: hidden; }
+.rbe-pictools { position: sticky; top: 0; z-index: 7; display: flex; align-items: center; gap: 2px; height: 52px; box-sizing: border-box; flex: none; padding: 3px 6px; margin-bottom: 8px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border-strong); box-shadow: var(--shadow); overflow: hidden; }
 .rbe-pictools button { flex: none; padding: 2px 8px; font: 12px system-ui, sans-serif; }
 .rbe-pictools .muted { min-width: 0; margin-left: 8px; font: 12px system-ui, sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rbe-pictools:not(.on) .muted { margin-left: 2px; }

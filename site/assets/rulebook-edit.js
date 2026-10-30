@@ -233,7 +233,7 @@ function lineFor(anchor, lines) {
   return anchor.dataset.kind === "section" ? +anchor.dataset.end : +anchor.dataset.close;
 }
 const round = v => Math.round(v * 2) / 2;               // widths: to 0.5%
-const pos = v => Math.min(150, Math.max(-50, Math.round(v * 10) / 10));   // places: to 0.1%, within the stretch allowed
+const pos = v => Math.min(200, Math.max(-100, Math.round(v * 10) / 10));   // places: to 0.1%, within the stretch allowed
 // a block that is a row's column: {row, cols, index}
 function colOf(el) {
   const col = el?.parentElement, row = col?.parentElement;
@@ -303,6 +303,16 @@ const colsOf = row => [...row.children].filter(c => c.classList.contains("rb-col
 const slotAt = (cols, x) => { const k = cols.findIndex(c => { const r = c.getBoundingClientRect(); return x < r.left + r.width / 2; }); return k < 0 ? cols.length : k; };
 // a row's picture stays in its row unless dropped well above or below it (its height may be the row's)
 const inRow = (p, x, y) => { const r = p.col.row.getBoundingClientRect(), m = Math.max(80, p.rect.height * 0.3); return x >= r.left - 8 && x <= r.right + 8 && y >= r.top - m && y <= r.bottom + m; };
+// the text, picture or callout under a point (placed pictures and the dragged one looked through), or null: blank space
+function blockAt(x, y, skip = null) {
+  const pg = page();
+  for (const e of document.elementsFromPoint(x, y)) {
+    if (e === pg || !pg.contains(e) || skip?.contains(e)) continue;
+    const b = e.closest("[data-line]");
+    if (b && pg.contains(b) && !b.classList.contains("rb-free") && !skip?.contains(b)) return b;
+  }
+  return null;
+}
 // the innermost section, panel, box or row around a point, else the chapter
 function containerAt(x, y, skip = null) {
   let inner = null;
@@ -324,13 +334,16 @@ function flowSpot(into, y, skip = null) {
   return { line: before ? +best.dataset.line : +best.dataset.end, y: before ? r.top : r.bottom, x: r.left, w: r.width };
 }
 // what a drop at (x, y) does (d: the dragged picture, if any: fig, col, rect): shifted in its column, moved in its row,
-// a new column of a row or into the flow (Make space), or placed over the page; into the picked container when there is one
+// a new column of a row or into the flow (Make space), or placed over the page; blank space (no section, panel, row or
+// text under the point) always places it right there; a picked container takes the drops landing in it
 function plan(x, y, d = {}) {
-  const t = M.targetEl;
-  if (d.col && (!t || t === d.col.row) && inRow(d, x, y)) { const slot = slotAt(d.col.cols, x); return { kind: slot === d.col.index || slot === d.col.index + 1 ? "shift" : "reorder", slot }; }
-  let into = t || (M.makeSpace ? containerAt(x, y, d.fig) : anchorAt(x + 8, y + 8, d.fig, d.boxes));
+  const t = M.targetEl, under = containerAt(x, y, d.fig);
+  const caught = t && (t === under || t.contains(under));      // a picked container takes what lands in it, nothing else
+  if (d.col && !(caught && t !== d.col.row) && inRow(d, x, y)) { const slot = slotAt(d.col.cols, x); return { kind: slot === d.col.index || slot === d.col.index + 1 ? "shift" : "reorder", slot }; }
+  if (under === page() && !caught && !blockAt(x, y, d.fig)) return { kind: "place", into: page(), free: true };   // blank space: right where it is dropped
+  let into = caught ? t : under;
   if (!M.makeSpace) return { kind: "place", into };
-  if (!t) into = into.closest?.('[data-fence="row"]') || into;   // anywhere over a row: a new column (a box in it: pick the box)
+  if (!caught) into = into.closest?.('[data-fence="row"]') || into;   // anywhere over a row: a new column (a box in it: pick the box)
   if (into.dataset?.fence === "row") { const cols = colsOf(into); return { kind: "column", into, cols, slot: slotAt(cols, x) }; }
   return { kind: "flow", into, ...flowSpot(into, y, d.fig) };
 }
@@ -566,7 +579,7 @@ function wireDrag(pane) {
     const into = pl.into && M.targetEl ? ` into ${nameOf(pl.into)}` : "";
     return pl.kind === "shift" ? "Shift it in its column" : pl.kind === "reorder" ? "Move it here in the row"
       : pl.kind === "column" ? `Into the row here: the row makes room` : pl.kind === "flow" ? `Into the page${into}: ${({ left: "on the left", right: "on the right" })[sideAt(pl.into, d.cx)] || "on a line of its own"}, the rest makes room`
-        : `Place it here${into}`;
+        : `Place it here${pl.free ? " (free)" : into}`;
   };
   // pictures: pointer drag anywhere (and the resize handle), drawn once a frame
   let frame = 0, last = null;
@@ -591,7 +604,8 @@ function wireDrag(pane) {
       if (col) { P.colEl = col.cols[col.index]; P.avail = col.cols.reduce((sum, c) => sum + c.getBoundingClientRect().width, 0); P.fig.style.width = "100%"; }
       return;
     }
-    tools(null);
+    P.fig.classList.remove("rbe-selected");            // the bar stays as it is: nothing on the page moves
+    pane.querySelector(".rbe-resize")?.remove();
     P.boxes = boxes(P.fig);
     P.ghost = P.fig.cloneNode(true);
     Object.assign(P.ghost.style, { position: "fixed", width: `${P.w}px`, left: "0", top: "0", margin: "0", zIndex: 90, pointerEvents: "none", opacity: ".85" });
@@ -857,7 +871,7 @@ function html() {
         <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
         Click anything on the page to go to its line. Drag a picture anywhere on the page to place it over the page there; with Make space on (in
         the bar) it goes into the page instead and the text and rows beside it make room (onto a row: a new column). Click a section, panel or row
-        first to put pictures into it. A placed picture snaps to its panel's edges and middle and to other placed pictures (a pink line shows it). A row's picture stays in its row: drag it inside its column to shift it, onto another column to swap them;
+        first to put pictures into it; dropped on blank space a picture always stays right where it is dropped. A placed picture snaps to its panel's edges and middle and to other placed pictures (a pink line shows it). A row's picture stays in its row: drag it inside its column to shift it, onto another column to swap them;
         dropped well above or below the row it leaves (the label beside the pointer says what a drop does). Drag a picture's corner to resize (Make
         space: a row's picture takes its column with it). Click a picture for its tools: the anchor grid puts it in a corner, on an edge or in the
         middle (of its column in a row, of its panel when placed; in the text: the top, middle or end of its panel, and left, right or a line of its own); with Make space arrow keys move it through the text, else they move it (Shift:
