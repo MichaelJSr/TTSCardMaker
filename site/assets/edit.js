@@ -799,10 +799,13 @@ export function createEditor(app) {
     }
     return [...out.values()];
   }
-  /** "Also rename the card's files" under the name (off by default): a card with its own PSD, its first picture. */
+  /** "Also rename the card's files" under the name: a card with its own PSD, its first picture. Ticked by default (owner
+   *  2026-10-30) for a card with no published name edit; else as published (or as staged). */
+  const canRename = (c, b) => !b.dup && (c.variant || 1) === 1 && !!c.psd;
   function renameRow(c, b) {
-    if (b.dup || (c.variant || 1) > 1 || !c.psd) return "";
-    return `<div class="erow" data-row="rename"><span class="elabel"></span><div class="ein"><label class="check"><input id="ef-rename" type="checkbox"${c.renameFiles ? " checked" : ""}> ${RENAME_LABEL}</label>
+    if (!canRename(c, b)) return "";
+    const staged = stage.cards[c.id]?.rename, on = staged === false ? false : !!c.renameFiles || !b.edited?.includes("name");
+    return `<div class="erow" data-row="rename"><span class="elabel"></span><div class="ein"><label class="check"><input id="ef-rename" type="checkbox"${on ? " checked" : ""}> ${RENAME_LABEL}</label>
       <p class="muted part-note">With a new name: the PSD and its pictures take it when the card image is updated.</p></div></div>`;
   }
   function formHtml(c) {
@@ -993,11 +996,18 @@ export function createEditor(app) {
     let x = fromInput(f, v, b.name);
     if (ART_FIELDS.includes(f) && x != null) { x = x.replace(/\s+/g, " "); if (artError(f, x)) { if (!defer) app.toast(artError(f, x)); return null; } }
     if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, c.id)) === undefined) return null;
-    const op = mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x);
+    const op = autoRename(c, b, mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x));
     put(c.id, op); if (!defer) save();
     return op;
   }
   // an inline edit of a card's one title or ability layer, as a part edit (the parts format whenever the record has parts)
+  // a new name edited in place renames the card's files too (the form's box, ticked by default; not a website-only name)
+  function autoRename(c, b, op) {
+    if (op.rename === undefined && op.set?.name != null && !b.edited?.includes("name") && canRename(c, b)
+        && !op.site?.name && !(b.siteOnly || []).includes("name")) op.rename = true;
+    else if (op.rename === true && op.set?.name == null && !b.edited?.includes("name")) delete op.rename;   // the name put back
+    return op;
+  }
   function stagePart(c, view, f, v, defer) {
     const box = view.list.find(x => x.field === f), b = baseOf(c), text = (f === "name" ? P.keepBreaks(box.start, P.tidyText(String(v ?? "").replace(/\s+/g, " "))) : P.tidyText(v)) || (f === "name" ? box.start : "");
     const r = P.readParts(view.rec, view.list, { values: { [box.key]: text } });
@@ -1012,6 +1022,7 @@ export function createEditor(app) {
     const stillPart = r.set[box.key] || (view.rec.partEdits?.[box.key] && !r.unset.includes(box.key));
     op = stillPart ? mergeField(op, { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, now || null)
       : { ...op, set: Object.fromEntries(Object.entries(op.set).filter(([k]) => k !== f)), unset: [...new Set([...op.unset.filter(k => k !== f), ...(b.edited?.includes(f) ? [f] : [])])] };
+    if (f === "name") op = autoRename(c, b, op);
     for (const [x, o] of routeOps(c, op, { texts: { [box.key]: r.texts[box.key] } })) put(x.id, o);
     if (!defer) save();
     return op;
