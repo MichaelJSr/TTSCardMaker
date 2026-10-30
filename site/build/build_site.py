@@ -3250,7 +3250,7 @@ def tts_details(cards, chapters, icons, tag_table):
     for c in shown:
         if c.get("png") and not c.get("dup") and len(c["name"]) >= 3 and c["name"] not in statuses:
             by_name.setdefault(c["name"], c["png"])
-    names = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(by_name, key=len, reverse=True)) + r")(?![\w'’])") if by_name else None
+    names = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(by_name, key=len, reverse=True)) + r")(?:['’]s|e?s)?(?![\w'’])") if by_name else None   # plurals too, as text.js
     out_cards, used_tags = {}, {}
     for c in shown:
         if not c.get("png"):
