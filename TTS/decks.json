@@ -2229,7 +2229,7 @@
         "pdf": "TTS/Rulebook/Rulebook.pdf"
       },
       "back": "own face",
-      "texture": "TTS/Rulebook/Book_Cover.png"
+      "texture": "MDW/Book_Cover.png"
     }
   },
   "objects": {
