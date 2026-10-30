@@ -114,7 +114,7 @@ local function detailsPanel(c, k)
 end
 
 -- one seat's rulebook panel: a search box, then the chapters (or the pages a search finds) as buttons
-local RESULTS = 30
+local RESULTS = 24                                   -- the contents (23 chapters and the contents page) fit; a search shows that many
 local function rulebookPanel(c)
     local id = c .. "_rb"
     local list = {tag = "VerticalLayout", attributes = {id = id .. "_list", height = 100, spacing = 3, padding = "6 10 4 4",
@@ -445,21 +445,41 @@ function openRules(player, _, id)
     end)
 end
 
--- the save's own cards by their pictures (a spawned copy keeps the team's description and all), read on first use
+-- the save's own cards by their pictures (a spawned copy keeps the team's description and all) and the size each is
+-- played at (a card in a deck: the deck's), read on first use; and per card back the size most of its cards have
+local scaleOfBack = {}
+local function scaleOf(t) t = t or {} return {t.scaleX or 1, t.scaleY or 1, t.scaleZ or 1} end
 local function indexCards()
     cardIndex = {}
-    local function add(d)
+    local tally = {}                                   -- back -> "x y z" -> count
+    local function add(d, scale)
         if d.Name == "Card" or d.Name == "CardCustom" then
             local deck = d.CustomDeck or {}
             local face = deck[tostring(math.floor((d.CardID or 0) / 100))]
             if not face then for _, v in pairs(deck) do face = v break end end
-            local p = face and pathOf(face.FaceURL)
-            if p and not cardIndex[p] then cardIndex[p] = d end
+            local p, back = face and pathOf(face.FaceURL), face and pathOf(face.BackURL)
+            if p and not cardIndex[p] then cardIndex[p] = {data = d, scale = scale} end
+            if back then
+                local key = table.concat(scale, " ")
+                tally[back] = tally[back] or {}
+                local seen = tally[back][key] or {n = 0, scale = scale}
+                seen.n = seen.n + 1
+                tally[back][key] = seen
+            end
         end
-        for _, k in ipairs(d.ContainedObjects or {}) do add(k) end
+        local kids = d.Name == "Deck" or d.Name == "DeckCustom"   -- a deck's cards are drawn at the deck's size
+        for _, k in ipairs(d.ContainedObjects or {}) do add(k, kids and scale or scaleOf(k.Transform)) end
     end
     for _, o in ipairs(getObjects()) do
-        if o.type == "Deck" or o.type == "Bag" or o.type == "Infinite" or o.type == "Card" then add(o.getData()) end
+        if o.type == "Deck" or o.type == "Bag" or o.type == "Infinite" or o.type == "Card" then
+            local d = o.getData()
+            add(d, scaleOf(d.Transform))
+        end
+    end
+    for back, sizes in pairs(tally) do
+        local best = nil
+        for _, seen in pairs(sizes) do if not best or seen.n > best.n then best = seen end end
+        scaleOfBack[back] = best.scale
     end
 end
 
@@ -480,13 +500,17 @@ function spawnNamed(player, _, id)
     local item = open and n and open.named and open.named[n]
     if not item then return end
     if not cardIndex then indexCards() end
-    local data = cardIndex[item[2]] or madeCard(item[2], details.cards[item[2]] or {n = item[1]})
+    local known = cardIndex[item[2]]
+    local data = known and known.data or madeCard(item[2], details.cards[item[2]] or {n = item[1]})
+    local face = data.CustomDeck and data.CustomDeck[tostring(math.floor((data.CardID or 0) / 100))] or {}
+    if not face.BackURL then for _, v in pairs(data.CustomDeck or {}) do face = v break end end
+    local scale = known and known.scale or scaleOfBack[pathOf(face.BackURL) or ""] or {1, 1, 1}
     data.GUID = nil
     local from = open.obj and not open.obj.isDestroyed() and open.obj
     local at = from and from.getPosition() or Player[color].getHandTransform().position
     open.spawned = (open.spawned or 0) + 1
     local pos = {at.x + 2.6 * open.spawned, at.y + 1.5, at.z}
-    spawnObjectData({data = data, position = pos, rotation = {0, from and from.getRotation().y or 0, 0},
+    spawnObjectData({data = data, position = pos, rotation = {0, from and from.getRotation().y or 0, 0}, scale = scale,
         callback_function = function(o)
             if resizeTargets[o.getName()] then o.setScale(LARGE_CARD_SCALE) end
         end})
