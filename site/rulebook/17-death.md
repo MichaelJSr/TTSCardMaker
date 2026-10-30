@@ -24,7 +24,7 @@
 ::: stack
 
 :::
-![A gravestone with a skull](gravestone.webp) {.free width=39.5 x=55.5 y=17}
+![A gravestone with a skull](gravestone.webp) {.free width=15.5 x=62.3 y=19.5}
 :::
 
 > [!sonic top] *“If you die outside your game, you DON'T regenerate!"*
