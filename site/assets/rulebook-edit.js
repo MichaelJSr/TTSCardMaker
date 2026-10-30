@@ -335,17 +335,20 @@ function flowSpot(into, y, skip = null) {
 }
 // what a drop at (x, y) does (d: the dragged picture, if any: fig, col, rect): shifted in its column, moved in its row,
 // a new column of a row or into the flow (Make space), or placed over the page; blank space (no section, panel, row or
-// text under the point) always places it right there; a picked container takes the drops landing in it
+// text under the point) places it right there, or with Make space puts it into the page between the sections there
+// (they make room); a picked container takes the drops landing in it
 function plan(x, y, d = {}) {
   const t = M.targetEl, under = containerAt(x, y, d.fig);
   const caught = t && (t === under || t.contains(under));      // a picked container takes what lands in it, nothing else
   if (d.col && !(caught && t !== d.col.row) && inRow(d, x, y)) { const slot = slotAt(d.col.cols, x); return { kind: slot === d.col.index || slot === d.col.index + 1 ? "shift" : "reorder", slot }; }
-  if (under === page() && !caught && !blockAt(x, y, d.fig)) return { kind: "place", into: page(), free: true };   // blank space: right where it is dropped
+  if (under === page() && !caught && !blockAt(x, y, d.fig)) {   // blank space: right where it is dropped; Make space: into the page there, the sections around it making room
+    return M.makeSpace ? { kind: "flow", into: page(), cx: x, ...flowSpot(page(), y, d.fig) } : { kind: "place", into: page(), free: true };
+  }
   let into = caught ? t : under;
   if (!M.makeSpace) return { kind: "place", into };
   if (!caught) into = into.closest?.('[data-fence="row"]') || into;   // anywhere over a row: a new column (a box in it: pick the box)
   if (into.dataset?.fence === "row") { const cols = colsOf(into); return { kind: "column", into, cols, slot: slotAt(cols, x) }; }
-  return { kind: "flow", into, ...flowSpot(into, y, d.fig) };
+  return { kind: "flow", into, cx: x, ...flowSpot(into, y, d.fig) };   // cx: the pointer, which side it floats on
 }
 const sideAt = (into, cx) => { const b = boxOf(into).getBoundingClientRect(), rel = (cx - b.left) / (b.width || 1); return rel < 1 / 3 ? "left" : rel > 2 / 3 ? "right" : ""; };
 // a placed picture (x, y its top left, w × h) snapped: its edges and middle catch its container's and the other placed
@@ -396,7 +399,7 @@ function drop(pic, pl, x, y, w, skip = null) {
     ratios(lines, head, pl.cols.length, v => { const sum = v.reduce((a, b) => a + b, 0); v.splice(pl.slot, 0, Math.max(0.05, +((want * sum) / (avail - want)).toFixed(2))); }, true);
     attrs.width = "100";
   } else {                                             // into the flow: floated by the side it was dropped on
-    const side = sideAt(pl.into, x + w / 2);
+    const side = sideAt(pl.into, pl.cx ?? x + w / 2);
     if (side) attrs.cls.push(side);
     attrs.width = String(Math.min(side ? FLOAT_MAX : 100, Math.max(3, round((w / (boxOf(pl.into).clientWidth || 1)) * 100))));
   }
@@ -576,9 +579,9 @@ function wireDrag(pane) {
     bar(pl?.kind === "reorder" ? d.col.row : pl?.kind === "column" ? pl.into : null, pl?.kind === "reorder" ? d.col.cols : pl?.cols || [], pl?.slot);
     light(!pl ? null : pl.kind === "shift" ? d.col.cols[d.col.index] : pl.kind === "reorder" ? d.col.row : pl.into);
     if (!pl) return "";
-    const into = pl.into && M.targetEl ? ` into ${nameOf(pl.into)}` : "";
+    const into = pl.into && pl.into === M.targetEl ? ` into ${nameOf(pl.into)}` : "";   // only the picked container is named
     return pl.kind === "shift" ? "Shift it in its column" : pl.kind === "reorder" ? "Move it here in the row"
-      : pl.kind === "column" ? `Into the row here: the row makes room` : pl.kind === "flow" ? `Into the page${into}: ${({ left: "on the left", right: "on the right" })[sideAt(pl.into, d.cx)] || "on a line of its own"}, the rest makes room`
+      : pl.kind === "column" ? `Into the row here: the row makes room` : pl.kind === "flow" ? `Into the page${into}: ${({ left: "on the left", right: "on the right" })[sideAt(pl.into, pl.cx ?? d.cx)] || "on a line of its own"}, the rest makes room`
         : `Place it here${pl.free ? " (free)" : into}`;
   };
   // pictures: pointer drag anywhere (and the resize handle), drawn once a frame
@@ -871,7 +874,7 @@ function html() {
         <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
         Click anything on the page to go to its line. Drag a picture anywhere on the page to place it over the page there; with Make space on (in
         the bar) it goes into the page instead and the text and rows beside it make room (onto a row: a new column). Click a section, panel or row
-        first to put pictures into it; dropped on blank space a picture always stays right where it is dropped. A placed picture snaps to its panel's edges and middle and to other placed pictures (a pink line shows it). A row's picture stays in its row: drag it inside its column to shift it, onto another column to swap them;
+        first to put pictures into it; dropped on blank space a picture stays right where it is dropped (Make space: it goes in between the sections there and they make room). A placed picture snaps to its panel's edges and middle and to other placed pictures (a pink line shows it). A row's picture stays in its row: drag it inside its column to shift it, onto another column to swap them;
         dropped well above or below the row it leaves (the label beside the pointer says what a drop does). Drag a picture's corner to resize (Make
         space: a row's picture takes its column with it). Click a picture for its tools: the anchor grid puts it in a corner, on an edge or in the
         middle (of its column in a row, of its panel when placed; in the text: the top, middle or end of its panel, and left, right or a line of its own); with Make space arrow keys move it through the text, else they move it (Shift:

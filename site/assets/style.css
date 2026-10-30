@@ -234,7 +234,7 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
 .rb-tab { display: inline-block; min-width: min(11em, 60%); margin: 0 0 0 1.6em; padding: .2em 1.2em .1em .7em; border-radius: .35em .35em 0 0; background: var(--rb-tab);
   font-size: 1.4em; font-weight: 400; font-style: italic; letter-spacing: .04em; text-transform: uppercase; line-height: 1.25; color: var(--rb-ink); }
 .rb-tab img.tok { width: 1.3em; height: 1.3em; vertical-align: -.25em; margin-right: .2em; }
-.rb-panel { display: flow-root; background: var(--rb-panel); border-radius: .4em; padding: .65em .9em; }
+.rb-panel { display: flow-root; background: var(--rb-panel); border-radius: .4em; padding: .65em .9em; min-width: min(100%, 14em); }   /* beside a floated picture: narrower, never squeezed away */
 .rb-sec > .rb-panel { position: relative; }
 .rb-cont > .rb-panel { margin-top: 0; }
 .rb-solo { margin: 1em 0; }
