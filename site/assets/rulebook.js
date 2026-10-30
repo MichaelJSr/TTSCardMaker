@@ -9,7 +9,8 @@
 //                                box, "1." a numbered bubble), contents (the chapters' list)
 //   > [!kirby top] text          a mascot (any picture in img/) says it; top: above the bubble, right: floated
 //   ![alt](file.webp){.right width=30}   a picture: .left .right float it, .end puts it at the right edge, width in %;
-//                                        dx=10 dy=-5 shift it (% of its size), .free x= y= place it anywhere
+//                                        dx=10 dy=-5 shift it (% of its size), .free x= y= place it anywhere;
+//                                        in a row, anchor=bottom-left (top, center, right…) puts it there in its column
 //   ![[Card]]  ![[A]] -> ![[B]]  the card's picture (a line of them is a row; -> an arrow); [[Card|label]] a link to it
 //   [text]{.red}                 red green blue yellow orange purple grey white, .u .big .caps .nowrap .secret
 //   **bold** *italic* ***both***, - lists, 1. / 1) / A. lists (numbers kept as typed), | tables | ({.grid cols=-,red}
@@ -99,6 +100,7 @@ function parseBlocks(lines, inRow = false, base = 0) {
 // to the next column: a fence, a callout, card pictures or a picture that doesn't float
 const FLOATS = ["left", "right", "end"];
 const placed = b => b.t === "img" && b.attrs.cls.includes("free");   // a picture placed anywhere: out of the flow
+const ANCHORS = new Set(["top-left", "top", "top-right", "left", "center", "right", "bottom-left", "bottom", "bottom-right"]);   // a row's picture in its column
 const column = b => b.t === "fence" || b.t === "say" || b.t === "cards" || (b.t === "img" && !placed(b) && !b.attrs.cls.some(c => FLOATS.includes(c)));
 const holdsSection = b => b.t === "fence" && b.children.some(c => c.t === "section" || holdsSection(c));
 function group(list, inRow = false) {
@@ -307,7 +309,8 @@ function fenceHtml(b, ctx) {
     case "row": {
       const w = (b.arg || "").split(/[\s:]+/).map(Number).filter(n => n > 0);
       const cols = b.children.filter(c => c.t !== "page" && !placed(c));
-      return `<div class="rb-row ${cls}">${cols.map((c, k) => `<div class="rb-col"${w[k] ? ` style="flex:${w[k]} 1 0"` : ""}>${blockHtml(c, ctx)}</div>`).join("")}${b.children.filter(placed).map(c => blockHtml(c, ctx)).join("")}</div>`;
+      const at = c => (c.t === "img" && ANCHORS.has(c.attrs?.anchor) ? ` rb-col-at rb-at-${c.attrs.anchor}` : "");   // {anchor=bottom-left}: where in its column
+      return `<div class="rb-row ${cls}">${cols.map((c, k) => `<div class="rb-col${at(c)}"${w[k] ? ` style="flex:${w[k]} 1 0"` : ""}>${blockHtml(c, ctx)}</div>`).join("")}${b.children.filter(placed).map(c => blockHtml(c, ctx)).join("")}</div>`;
     }
     case "ability": {                                  // a card's ability box: centred lines, "1." a numbered bubble
       const lines = b.children.flatMap(c => (c.t === "p" ? c.text.split("\n") : c.t === "list" ? c.items.map(it => (c.type === "1" ? `${it.n}. ${it.text}` : it.text)) : []));

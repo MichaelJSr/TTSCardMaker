@@ -7,7 +7,7 @@
 import { esc } from "./text.js";
 
 const DRAFTS = "rulebook-drafts";                  // {chapter id or "new": {source, num, base, at}}
-const ROW_ADJUSTS = "rulebook-row-adjusts";         // "1": sizing a row's picture sizes its column (the row adjusts around it)
+const MAKE_SPACE = "rulebook-make-space";           // "1": a picture dropped goes into the page and what's around it makes room
 const MAX_W = 1080;                                // an uploaded picture's widest (a TTS page's width)
 let M = null;                                      // the open editor's state
 
@@ -21,7 +21,7 @@ const HELP = [
   ["::: row … :::", "what's inside side by side (\"::: row 3 1\" sets their widths); fences nest"],
   ["::: ability … :::", "a card's ability box: (OYT) badges, [fire] icons, \"1.\" a numbered bubble"],
   ["> [!kirby] text", "a mascot says it (any picture's name: eggman, sonic, kirby-sleepy…); [!eggman top] puts it on top, [!kirby right] floats it"],
-  ["![what it shows](file.webp){.right width=30}", "a picture: .left / .right float it, .end puts it at the right edge, width in % of the line; dx=10 dy=-5 shift it (% of its size)"],
+  ["![what it shows](file.webp){.right width=30}", "a picture: .left / .right float it, .end puts it at the right edge, width in % of the line; dx=10 dy=-5 shift it (% of its size); in a row, anchor=bottom-left places it in its column"],
   ["![[Card name]]", "the card's picture (several on one line make a row; -> between them draws an arrow)"], ["[[Card name]]", "a link to the card"],
   ["[text]{.red}", "colours (the Colour menu): red green blue yellow orange purple grey white; .u underline, .big, .small, .caps, .nowrap (one line), .secret (hidden in the panel)"],
   ["**bold**  *italic*  ***both***", "Ctrl/Cmd+B, Ctrl/Cmd+I"], ["- item / 1. item / 1) item", "lists keep the numbers you type"], ["| a | b |", "a table (|:-:| centres; {.grid cols=-,red,green} under it)"],
@@ -35,7 +35,7 @@ export function open(api) {
   const key = ch ? ch.id : "new", draft = readDrafts()[key];
   const nextNum = String(Math.max(0, ...book.chapters.map(c => Number(c.num) || 0)) + 1).padStart(2, "0");
   const base = ch ? ch.source : NEW_TEXT;
-  M = { api, ch, key, base, uploads: new Map(), source: draft?.source ?? base, num: draft?.num ?? (ch ? ch.num : nextNum), restored: !!draft && draft.source !== base, selLine: null, rowAdjusts: localStorage.getItem(ROW_ADJUSTS) === "1" };
+  M = { api, ch, key, base, uploads: new Map(), source: draft?.source ?? base, num: draft?.num ?? (ch ? ch.num : nextNum), restored: !!draft && draft.source !== base, selLine: null, makeSpace: localStorage.getItem(MAKE_SPACE) === "1", targetEl: null, addAs: "pic" };
   M.hist = { list: [{ text: M.source, caret: 0, kind: "open", at: 0 }], i: 0 };
   api.modal.innerHTML = html();
   api.modal.hidden = false; document.body.style.overflow = "hidden";
@@ -73,14 +73,21 @@ export function open(api) {
     if (clickGone) return;
     const el = e.target.closest("[data-line]"), pic = PICTURE_KINDS.includes(el?.dataset.kind);
     if (el) jump(+el.dataset.line, !pic);
-    select(el);
-    if (pic) pane.focus({ preventScroll: true });     // the keys move and size it
+    if (pic) { select(el); pane.focus({ preventScroll: true }); return; }   // the keys move and size it
+    M.selLine = null;
+    aim(el);
   }, true);
   pane.querySelector(".rbe-pictools").addEventListener("click", e => {
     const b = e.target.closest("button");
-    if (!b || !M.selected) return;
+    if (!b) return;
     e.preventDefault(); e.stopPropagation();
-    toolClick(b, M.selected);
+    if (b.dataset.space != null) {                     // remembered in this browser
+      M.makeSpace = !M.makeSpace;
+      try { localStorage.setItem(MAKE_SPACE, M.makeSpace ? "1" : "0"); } catch { /* private mode */ }
+      return tools(M.selected);
+    }
+    if (b.dataset.untarget != null) { M.targetEl = null; return aim(null); }
+    if (M.selected) toolClick(b, M.selected);
   });
   wireDrag(pane);
   const pick = api.modal.querySelector("#rbe-card");
@@ -137,6 +144,7 @@ function onKey(e) {
   const mod = (e.ctrlKey || e.metaKey) && !e.altKey, field = e.target.matches?.("input, select");
   if (mod && !field && /^[zy]$/i.test(e.key)) { e.preventDefault(); e.stopPropagation(); travel(e.key.toLowerCase() === "y" || e.shiftKey ? 1 : -1); return; }
   const el = M.selected;
+  if (!el && e.key === "Escape" && M.targetEl && !e.target.closest?.("textarea, input, select")) { e.preventDefault(); e.stopPropagation(); M.targetEl = null; aim(null); return; }
   if (!el || mod || e.altKey || e.target.closest?.("textarea, input, select")) return;
   const line = +el.dataset.line, kind = el.dataset.kind, k = e.key;
   const done = () => { e.preventDefault(); e.stopPropagation(); };
@@ -147,18 +155,21 @@ function onKey(e) {
   if (["+", "=", "-", "_"].includes(k) && kind !== "say") { done(); resizeBy(el, line, k === "+" || k === "=" ? 1 : -1); }
 }
 
-// ---- pictures on the page. A picture is dragged anywhere: it is placed at that spot ({.free x= y= width=}, in % of the
-// panel it was dropped in, so it moves with that panel when the text reflows; dropped between panels: the nearest
-// one; no panel: the chapter). A picture that is a row's column stays in the row: dragged inside its column it is
-// shifted there ({dx= dy=}), onto another column it swaps places (its width in "::: row 3 1" goes with it); Alt: placed
-// anywhere. New pictures from the picture panel or from the computer
-// are placed where they are dropped. Card rows and mascots are dragged between blocks. A click gives a picture its
-// tools (in the bar at the top of the page, never over it) and the keys; a picture has a resize handle. Each edit rewrites the chapter's text (one step of Undo), so the
+// ---- pictures on the page. A picture is dragged anywhere: it is placed over the page at that spot ({.free x= y=
+// width=}, in % of the panel it was dropped in); with Make space on it goes into the page there instead (floated left
+// or right, or a line of its own, so the text and rows beside it make room; onto a row: a new column, the row making
+// room). A click on a section, panel, box or row picks it: pictures dragged, dropped or added go into it. A picture
+// that is a row's column stays in the row: dragged inside its column it is shifted there ({dx= dy=}), onto another
+// column it swaps places (its width in "::: row 3 1" goes with it), dropped well away it leaves. Card rows and mascots
+// are dragged between blocks. A click gives a picture its tools (the bar at the top of the page: the anchor grid, size,
+// delete) and the keys; a picture has a resize handle. Each edit rewrites the chapter's text (one step of Undo), so the
 // text stays the one source; the page is patched, not redrawn, so nothing flashes.
 const REORDER_KINDS = ["cards", "say"];                // moved between blocks (HTML5 drag)
 const PICTURE_KINDS = ["img", ...REORDER_KINDS];       // blocks with tools
 const CONTAINERS = ["panel", "box", "stack", "small", "center", "note", "row"];   // fences a picture may be placed in
 const SIDES = ["left", "right", "end", "free"];
+const ANCHORS = ["top-left", "top", "top-right", "left", "center", "right", "bottom-left", "bottom", "bottom-right"];
+const FLOW_GONE = ["x", "y", "dx", "dy", "anchor", "height"];   // what a picture put back into the flow loses
 const PICTURE_LINE = /^(\s*)!\[([^\]]*)\]\(([^)\s]+)\)\s*(\{[^{}]*\})?\s*$/;
 let drag = null;                                       // HTML5: {from, end} a block's lines, {pic, mascot} from the panel
 let P = null;                                          // a picture's pointer drag or resize
@@ -231,9 +242,13 @@ function ratios(lines, rowLine, n, fn, all = false) {
 }
 // a picture placed at (x, y) (its top left, screen px) and w px wide: from its old line (moved; col: the row column it
 // was) or new (alt, src). % of the container's inside (where CSS measures them), so it lands where it was dropped
-function placeAt({ from = null, alt = "", src, col = null }, x, y, w, skip = null) {
-  const lines = M.source.split("\n"), anchor = anchorAt(x + 8, y + 8, skip), box = boxOf(anchor), r = box.getBoundingClientRect();
+function placeAt({ from = null, alt = "", src, col = null }, x, y, w, skip = null, into = null) {
+  const lines = M.source.split("\n"), anchor = into || anchorAt(x + 8, y + 8, skip), box = boxOf(anchor), r = box.getBoundingClientRect();
   const left = r.left + box.clientLeft, top = r.top + box.clientTop, W = box.clientWidth || 1, H = box.clientHeight || 1;
+  if (into && into === M.targetEl) {                   // the picked container: kept inside it
+    x = Math.min(Math.max(x, left), left + Math.max(0, W - w));
+    y = Math.min(Math.max(y, top), top + Math.max(0, H - 24));
+  }
   let attrs = { cls: [] }, at = lineFor(anchor, lines);
   if (from != null) {
     const m = PICTURE_LINE.exec(lines[from] || "");
@@ -245,7 +260,7 @@ function placeAt({ from = null, alt = "", src, col = null }, x, y, w, skip = nul
     if (at > from) at--;
   }
   attrs.cls = [...attrs.cls.filter(c => !SIDES.includes(c)), "free"];
-  delete attrs.dx; delete attrs.dy;
+  delete attrs.dx; delete attrs.dy; delete attrs.anchor;
   attrs.x = String(pos(((x - left) / W) * 100));
   attrs.y = String(pos(((y - top) / H) * 100));
   attrs.width = String(Math.min(100, Math.max(3, round((w / W) * 100))));
@@ -271,12 +286,81 @@ function settle(line, x, y) {
   ta.scrollTop = top; ta.setSelectionRange(caret, caret);
   saveDraft(); render();
 }
-// a row's column moved to another place in the row (slot: before that column; the count: after the last); dropped in
-// its own column: shifted to where it was dropped (x, y its top left)
-const ownSlot = p => p.slot === p.col.index || p.slot === p.col.index + 1;
-function moveInRow(p, x, y) {
+const colsOf = row => [...row.children].filter(c => c.classList.contains("rb-col"));
+const slotAt = (cols, x) => { const k = cols.findIndex(c => { const r = c.getBoundingClientRect(); return x < r.left + r.width / 2; }); return k < 0 ? cols.length : k; };
+// a row's picture stays in its row unless dropped well above or below it (its height may be the row's)
+const inRow = (p, x, y) => { const r = p.col.row.getBoundingClientRect(), m = Math.max(80, p.rect.height * 0.3); return x >= r.left - 8 && x <= r.right + 8 && y >= r.top - m && y <= r.bottom + m; };
+// the innermost section, panel, box or row around a point, else the chapter
+function containerAt(x, y, skip = null) {
+  let inner = null;
+  for (const b of boxes(skip)) { const r = b.r; if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom && (!inner || r.width * r.height < inner.r.width * inner.r.height)) inner = b; }
+  return inner?.n || page();
+}
+// where in a container's flow a picture goes (Make space): before or after the block nearest the point; an empty
+// container: its top or its end
+function flowSpot(into, y, skip = null) {
+  const box = boxOf(into), lines = M.source.split("\n");
+  let best = null, dist = Infinity;
+  for (const n of box.children) {
+    if (n.dataset?.line == null || n.classList.contains("rb-free") || skip?.contains(n)) continue;
+    const r = n.getBoundingClientRect(), d = y < r.top ? r.top - y : y > r.bottom ? y - r.bottom : 0;
+    if (d < dist) { best = n; dist = d; }
+  }
+  if (!best) { const r = box.getBoundingClientRect(), top = into !== page() && y < r.top + r.height / 2; return { line: top ? +into.dataset.line + 1 : lineFor(into, lines), y: top ? r.top : r.bottom, x: r.left, w: r.width }; }
+  const r = best.getBoundingClientRect(), before = y < r.top + r.height / 2;
+  return { line: before ? +best.dataset.line : +best.dataset.end, y: before ? r.top : r.bottom, x: r.left, w: r.width };
+}
+// what a drop at (x, y) does (d: the dragged picture, if any: fig, col, rect): shifted in its column, moved in its row,
+// a new column of a row or into the flow (Make space), or placed over the page; into the picked container when there is one
+function plan(x, y, d = {}) {
+  const t = M.targetEl;
+  if (d.col && (!t || t === d.col.row) && inRow(d, x, y)) { const slot = slotAt(d.col.cols, x); return { kind: slot === d.col.index || slot === d.col.index + 1 ? "shift" : "reorder", slot }; }
+  let into = t || (M.makeSpace ? containerAt(x, y, d.fig) : anchorAt(x + 8, y + 8, d.fig, d.boxes));
+  if (!M.makeSpace) return { kind: "place", into };
+  if (!t) into = into.closest?.('[data-fence="row"]') || into;   // anywhere over a row: a new column (a box in it: pick the box)
+  if (into.dataset?.fence === "row") { const cols = colsOf(into); return { kind: "column", into, cols, slot: slotAt(cols, x) }; }
+  return { kind: "flow", into, ...flowSpot(into, y, d.fig) };
+}
+const sideAt = (into, cx) => { const b = boxOf(into).getBoundingClientRect(), rel = (cx - b.left) / (b.width || 1); return rel < 1 / 3 ? "left" : rel > 2 / 3 ? "right" : ""; };
+function nameOf(c) {                                   // a container for the bar and the label
+  if (!c || c === page()) return "the chapter";
+  const tab = c.querySelector(":scope > .rb-tab")?.textContent.trim();
+  return tab ? `“${tab}”` : `the ${c.dataset.fence || "section"}`;
+}
+// the dragged or new picture put where a plan says (pic: {from, col} a moved one, else {alt, src}; x, y its top left)
+function drop(pic, pl, x, y, w, skip = null) {
+  if (pl.kind === "place") return placeAt(pic, x, y, w, skip, pl.into);
+  const lines = M.source.split("\n");
+  let { from = null, alt = "", src, col = null } = pic, attrs = { cls: [] };
+  let at = pl.kind === "column" ? (pl.slot < pl.cols.length ? +pl.cols[pl.slot].firstElementChild.dataset.line : +pl.into.dataset.close) : pl.line;
+  let head = pl.kind === "column" ? +pl.into.dataset.line : -1;
+  if (from != null) {
+    const m = PICTURE_LINE.exec(lines[from] || "");
+    if (!m) return render();
+    [alt, src] = [m[2], m[3]];
+    attrs = M.api.RB.splitAttrs(m[4] || "").attrs;
+    if (col) ratios(lines, +col.row.dataset.line, col.cols.length, v => v.splice(col.index, 1));
+    lines.splice(from, 1);
+    if (at > from) at--;
+    if (head > from) head--;
+  }
+  attrs.cls = attrs.cls.filter(c => !SIDES.includes(c));
+  for (const k of FLOW_GONE) delete attrs[k];
+  if (pl.kind === "column") {                          // a new column as wide as the picture; the row makes room
+    const avail = pl.cols.reduce((sum, c) => sum + c.getBoundingClientRect().width, 0), want = Math.min(avail * 0.5, Math.max(avail * 0.1, w));
+    ratios(lines, head, pl.cols.length, v => { const sum = v.reduce((a, b) => a + b, 0); v.splice(pl.slot, 0, Math.max(0.05, +((want * sum) / (avail - want)).toFixed(2))); }, true);
+    attrs.width = "100";
+  } else {                                             // into the flow: floated by the side it was dropped on
+    const side = sideAt(pl.into, x + w / 2);
+    if (side) attrs.cls.push(side);
+    attrs.width = String(Math.min(100, Math.max(3, round((w / (boxOf(pl.into).clientWidth || 1)) * 100))));
+  }
+  lines.splice(at, 0, `![${alt}](${src}) ${M.api.RB.attrsText(attrs)}`);
+  setText(lines.join("\n"), offsetOf(lines, at), at);
+}
+// a row's column moved to another place in the row (slot: before that column; the count: after the last)
+function moveInRow(p) {
   const { row, cols, index } = p.col, slot = p.slot;
-  if (ownSlot(p)) return shiftTo(p.line, p.rect, x, y);
   const lines = M.source.split("\n");
   let at = slot < cols.length ? +cols[slot].firstElementChild.dataset.line : +row.dataset.close;
   const [moved] = lines.splice(p.line, 1);
@@ -333,8 +417,8 @@ function sizeColumn(el, line, px) {
   lines[line] = `${m[1]}${m[2]} ${M.api.RB.attrsText(a)}`;
   setText(lines.join("\n"), offsetOf(lines, line), line, "size");
 }
-const adjusts = el => M.rowAdjusts && el.dataset.kind === "img" && !el.classList.contains("rb-free") && colOf(el);
-function resizeBy(el, line, d) {                       // 5% a step; cards: small or not; Row adjusts: the column 5% of the row
+const adjusts = el => M.makeSpace && el.dataset.kind === "img" && !el.classList.contains("rb-free") && colOf(el);
+function resizeBy(el, line, d) {                       // 5% a step; cards: small or not; Make space: a row's picture sizes its column
   const col = adjusts(el);
   if (col) return sizeColumn(el, line, el.getBoundingClientRect().width + 0.05 * d * col.cols.reduce((sum, c) => sum + c.getBoundingClientRect().width, 0));
   editPicture(line, a => {
@@ -356,15 +440,29 @@ function wireDrag(pane) {
   pane.append(marker, colBar);
   let lit = null;                                      // the container a drop would go in
   const light = el => { if (lit !== el) { lit?.classList.remove("rbe-anchor"); lit = el; el?.classList.add("rbe-anchor"); } };
-  // a row's picture stays in its row unless dropped well above or below it (its height may be the row's) or with Alt
-  const inRow = (p, x, y) => { const r = p.col.row.getBoundingClientRect(), m = Math.max(80, p.rect.height * 0.6); return x >= r.left - 8 && x <= r.right + 8 && y >= r.top - m && y <= r.bottom + m; };
-  const slotAt = (col, x) => { const k = col.cols.findIndex(c => { const r = c.getBoundingClientRect(); return x < r.left + r.width / 2; }); return k < 0 ? col.cols.length : k; };
-  const bar = (col, slot) => {                         // where a row's column would go
-    if (!col) { colBar.hidden = true; return; }
-    const rr = col.row.getBoundingClientRect(), p = pane.getBoundingClientRect(), cs = col.cols.map(c => c.getBoundingClientRect());
-    const x = slot < cs.length ? (slot ? (cs[slot - 1].right + cs[slot].left) / 2 : cs[0].left - 6) : cs[cs.length - 1].right + 6;
+  const bar = (row, cols, slot) => {                   // where a row's column would go
+    if (!row) { colBar.hidden = true; return; }
+    const rr = row.getBoundingClientRect(), p = pane.getBoundingClientRect(), cs = cols.map(c => c.getBoundingClientRect());
+    const x = !cs.length ? rr.left : slot < cs.length ? (slot ? (cs[slot - 1].right + cs[slot].left) / 2 : cs[0].left - 6) : cs[cs.length - 1].right + 6;
     Object.assign(colBar.style, { left: `${x - p.left - 2}px`, top: `${rr.top - p.top + pane.scrollTop}px`, height: `${rr.height}px` });
     colBar.hidden = false;
+  };
+  const line = t => {                                  // where a picture would go into the flow
+    if (!t) { marker.hidden = true; return; }
+    const p = pane.getBoundingClientRect();
+    Object.assign(marker.style, { top: `${t.y - p.top + pane.scrollTop - 2}px`, left: `${t.x - p.left}px`, width: `${t.w}px` });
+    marker.hidden = false;
+  };
+  // a plan drawn: the container lit, the row's slot or the flow's line shown; its words for the label
+  const show = (pl, d = {}) => {
+    line(pl?.kind === "flow" ? pl : null);
+    bar(pl?.kind === "reorder" ? d.col.row : pl?.kind === "column" ? pl.into : null, pl?.kind === "reorder" ? d.col.cols : pl?.cols || [], pl?.slot);
+    light(!pl ? null : pl.kind === "shift" ? d.col.cols[d.col.index] : pl.kind === "reorder" ? d.col.row : pl.into);
+    if (!pl) return "";
+    const into = pl.into && M.targetEl ? ` into ${nameOf(pl.into)}` : "";
+    return pl.kind === "shift" ? "Shift it in its column" : pl.kind === "reorder" ? "Move it here in the row"
+      : pl.kind === "column" ? `Into the row here: the row makes room` : pl.kind === "flow" ? `Into the page${into}: ${({ left: "on the left", right: "on the right" })[sideAt(pl.into, d.cx)] || "on a line of its own"}, the rest makes room`
+        : `Place it here${into}`;
   };
   // pictures: pointer drag anywhere (and the resize handle), drawn once a frame
   let frame = 0, last = null;
@@ -384,7 +482,7 @@ function wireDrag(pane) {
     P.moved = true;
     if (P.handle) {                                    // resizing: the handle follows the corner and shows the width
       P.base = (P.fig.classList.contains("rb-free") ? P.fig.offsetParent : P.fig.parentElement)?.clientWidth || 1;
-      const col = adjusts(P.fig);                      // Row adjusts: its column follows, the row reflows around it
+      const col = adjusts(P.fig);                      // Make space: its column follows, the row reflows around it
       if (col) { P.colEl = col.cols[col.index]; P.avail = col.cols.reduce((sum, c) => sum + c.getBoundingClientRect().width, 0); P.fig.style.width = "100%"; }
       return;
     }
@@ -422,26 +520,24 @@ function wireDrag(pane) {
     }
     const x = e.clientX - P.gx, y = e.clientY - P.gy;
     P.ghost.style.transform = `translate(${x}px, ${y}px)`;
-    P.slot = P.col && !e.altKey && inRow(P, e.clientX, e.clientY) ? slotAt(P.col, e.clientX) : null;
-    const own = P.slot != null && ownSlot(P);
-    if (own) { bar(null); light(P.col.cols[P.col.index]); }   // shifted inside its column
-    else if (P.slot != null) { light(P.col.row); bar(P.col, P.slot); }
-    else { bar(null); light(anchorAt(x + 8, y + 8, P.fig, P.boxes)); }
-    P.mode.textContent = own ? "Shift it in its column" : P.slot != null ? "Move it here in the row" : P.col ? "Place it here (out of the row)" : "Place it here";
+    P.cx = x + P.w / 2;
+    const pl = plan(e.clientX, e.clientY, P);
+    P.mode.textContent = show(pl, P) + (P.col && pl.kind !== "shift" && pl.kind !== "reorder" ? " (out of the row)" : "");
     P.mode.style.transform = `translate(${e.clientX + 16}px, ${e.clientY + 18}px)`;
   }
   const end = e => {
     if (!P) return;
     cancelAnimationFrame(frame); frame = 0; last = null;
     const p = P; P = null;
-    p.ghost?.remove(); p.mode?.remove(); p.fig.classList.remove("rbe-moving"); light(null); bar(null);
+    p.ghost?.remove(); p.mode?.remove(); p.fig.classList.remove("rbe-moving"); show(null);
     if (!p.moved) return;                              // a click: the click handler gives its tools
     clickGone = true; setTimeout(() => { clickGone = false; }, 0);
     if (e.type === "pointercancel") { M.selLine = null; return render(); }
     if (p.handle) return p.colEl ? sizeColumn(p.fig, p.line, p.px) : editPicture(p.line, a => { a.width = String(p.pct); });
-    p.slot = p.col && !e.altKey && inRow(p, e.clientX, e.clientY) ? slotAt(p.col, e.clientX) : null;
-    if (p.slot != null) return moveInRow(p, e.clientX - p.gx, e.clientY - p.gy);
-    placeAt({ from: p.line, col: p.col }, e.clientX - p.gx, e.clientY - p.gy, p.w, p.fig);
+    const x = e.clientX - p.gx, y = e.clientY - p.gy, pl = plan(e.clientX, e.clientY, p);
+    if (pl.kind === "shift") return shiftTo(p.line, p.rect, x, y);
+    if (pl.kind === "reorder") { p.slot = pl.slot; return moveInRow(p); }
+    drop({ from: p.line, col: p.col }, pl, x, y, p.w, p.fig);
   };
   pane.addEventListener("pointerup", end);
   pane.addEventListener("pointercancel", end);
@@ -460,10 +556,10 @@ function wireDrag(pane) {
     e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", lines.slice(from, end).join("\n"));
     tools(null);
   });
-  M.api.modal.querySelector(".rbe-pic-grid").addEventListener("dragstart", e => {   // a picture (or, with Alt, its mascot) from the panel
+  M.api.modal.querySelector(".rbe-pic-grid").addEventListener("dragstart", e => {   // a picture (or its mascot: Add as) from the panel
     const b = e.target.closest("[data-pic]");
     if (!b) return;
-    drag = { pic: b.dataset.pic, mascot: e.altKey, boxes: boxes() };
+    drag = { pic: b.dataset.pic, mascot: M.addAs === "say", boxes: boxes() };
     e.dataTransfer.effectAllowed = "copy"; e.dataTransfer.setData("text/plain", b.dataset.pic);
   });
   const files = e => !drag && [...(e.dataTransfer?.types || [])].includes("Files");   // image files from this computer
@@ -471,22 +567,22 @@ function wireDrag(pane) {
   pane.addEventListener("dragover", e => {
     if (!drag && !files(e)) return;
     e.preventDefault();
-    if (free(e)) { marker.hidden = true; light(anchorAt(e.clientX, e.clientY, null, drag?.boxes)); return; }
+    if (free(e)) { show(plan(e.clientX, e.clientY, { boxes: drag?.boxes }), { cx: e.clientX }); return; }
     const t = target(e);
     if (!t) { marker.hidden = true; return; }
     const p = pane.getBoundingClientRect();
     Object.assign(marker.style, { top: `${t.y - p.top + pane.scrollTop - 2}px`, left: `${t.x - p.left}px`, width: `${t.w}px` });
     marker.hidden = false;
   });
-  pane.addEventListener("dragleave", e => { if (!pane.contains(e.relatedTarget)) { marker.hidden = true; light(null); } });
+  pane.addEventListener("dragleave", e => { if (!pane.contains(e.relatedTarget)) show(null); });
   pane.addEventListener("drop", e => {
-    marker.hidden = true; light(null);
+    show(null);
     if (files(e)) { e.preventDefault(); upload([...e.dataTransfer.files], { x: e.clientX, y: e.clientY }); return; }
     if (!drag) return;
     e.preventDefault();
-    if (drag.pic && !drag.mascot) {                    // placed where it lands, a quarter of the panel wide
-      const box = boxOf(anchorAt(e.clientX, e.clientY));
-      placeAt({ src: drag.pic }, e.clientX, e.clientY, box.clientWidth * 0.25);
+    if (drag.pic && !drag.mascot) {                    // where it lands, a quarter of its container wide
+      const pl = plan(e.clientX, e.clientY), w = boxOf(pl.into || page()).clientWidth * 0.25;
+      drop({ src: drag.pic }, pl, e.clientX - w / 2, e.clientY, w);
       drag = null; return;
     }
     const t = target(e);
@@ -504,29 +600,47 @@ function wireDrag(pane) {
     drag = null;
     setText(lines.join("\n"), offsetOf(lines, at), at);
   });
-  pane.addEventListener("dragend", () => { marker.hidden = true; light(null); drag = null; });
+  pane.addEventListener("dragend", () => { show(null); drag = null; });
 }
 // the selected picture: its tools, and a picture's resize handle
 function select(el) { M.selLine = PICTURE_KINDS.includes(el?.dataset.kind) ? +el.dataset.line : null; tools(M.selLine != null ? el : null); }
-// the selected picture's tools in the bar at the top of the page (it never covers the page): side (left, centre, right,
-// the corner), size, delete; and its resize handle
+// the container pictures go into: the section, panel, box or row clicked (clicked again: the one around it; none outside
+// any); the bar's ✕ or Esc lets it go
+function aim(el) {
+  const pg = page();
+  let c = el;
+  while (c && c !== pg && !isContainer(c)) c = c.parentElement;
+  if (c && c === M.targetEl) { c = c.parentElement; while (c && c !== pg && !isContainer(c)) c = c.parentElement; }
+  M.targetEl = c && c !== pg ? c : null;
+  mark();
+  tools(null);
+}
+function mark() {                                      // the picked container outlined
+  for (const n of page().querySelectorAll(".rbe-target")) n.classList.remove("rbe-target");
+  if (M.targetEl && !(M.targetEl.isConnected && isContainer(M.targetEl))) M.targetEl = null;
+  M.targetEl?.classList.add("rbe-target");
+}
+// the bar at the top of the page (never over it): a selected picture's anchor grid, size and delete; else the picked
+// container; Make space always
 function tools(el) {
   const pane = M.api.modal.querySelector(".rbe-preview"), bar = pane.querySelector(".rbe-pictools");
   pane.querySelector(".rbe-resize")?.remove();
   M.selected?.classList.remove("rbe-selected");
   M.selected = el;
-  if (!el) { bar.classList.remove("on"); bar.innerHTML = `<span class="muted">Click a picture for its tools · drag pictures to move them · ↶ ↷ undo and redo</span>`; return; }
+  const space = `<button type="button" class="rbe-space${M.makeSpace ? " on" : ""}" data-space aria-pressed="${M.makeSpace}" title="On: a picture dropped goes into the page there (on the left, the right or a line of its own; onto a row: a new column) and what's beside it makes room; sizing a row's picture sizes its column. Off: it is placed over the page">Make space</button>`;
+  if (!el) {
+    bar.classList.remove("on");
+    bar.innerHTML = (M.targetEl ? `<span class="rbe-into">Pictures go into ${esc(nameOf(M.targetEl))}</span><button type="button" data-untarget title="Let it go (Esc)">✕</button><span class="muted">click inside it again for the one around it</span>`
+      : `<span class="muted">Click a section, panel or row to put pictures into it · click a picture for its tools</span>`) + space;
+    return;
+  }
   el.classList.add("rbe-selected");
-  const kind = el.dataset.kind;
-  const hint = kind !== "img" ? "" : el.classList.contains("rb-free") ? "Placed: drag it anywhere, or the arrow keys"
-    : colOf(el) ? `In a row: drag it inside its column to shift it, onto another to swap (Alt: anywhere); arrow keys shift it${M.rowAdjusts ? "; sizing it sizes its column" : ""}` : "Drag it to place it anywhere; arrow keys shift it";
+  const kind = el.dataset.kind, line = +el.dataset.line;
   bar.classList.add("on");
-  bar.innerHTML = (kind === "img" ? `<button type="button" data-side="left" title="Text flows on its right">Left</button><button type="button" data-side="" title="On a line of its own (its shift goes)">Center</button>
-    <button type="button" data-side="right" title="Text flows on its left">Right</button><button type="button" data-side="end" title="At the bottom right">Corner</button><span class="sep"></span>
-    <button type="button" data-size="-2" title="Smaller (−)">−</button><button type="button" data-size="2" title="Bigger (+)">+</button>${colOf(el) && !el.classList.contains("rb-free") ? `<button type="button" data-adjust aria-pressed="${M.rowAdjusts}" class="${M.rowAdjusts ? "on" : ""}" title="On: sizing this picture sizes its column and the rest of the row adjusts around it. Off: it sizes inside its column">Row adjusts</button>` : ""}`
+  bar.innerHTML = (kind === "img" ? `${grid(el, line)}<span class="sep"></span><button type="button" data-size="-2" title="Smaller (−)">−</button><button type="button" data-size="2" title="Bigger (+)">+</button>`
     : kind === "cards" ? `<button type="button" data-size="-1" title="Smaller cards">−</button><button type="button" data-size="1" title="Bigger cards">+</button>`
       : `<button type="button" data-say="top" title="The mascot above the bubble">Top</button><button type="button" data-say="" title="The mascot beside it">Side</button>`)
-    + `<span class="sep"></span><button type="button" data-del title="Take it out (Delete)">Delete</button>${hint ? `<span class="muted" title="${esc(hint)}">${hint}</span>` : ""}`;
+    + `<span class="sep"></span><button type="button" data-del title="Take it out (Delete)">Delete</button>` + (kind === "img" ? space : "");
   if (kind === "img") {                                // drag the corner to resize
     const r = el.getBoundingClientRect(), p = pane.getBoundingClientRect();
     const h = Object.assign(document.createElement("div"), { className: "rbe-resize", title: "Drag to resize" });
@@ -534,18 +648,36 @@ function tools(el) {
     pane.append(h);
   }
 }
+// the anchor grid: a row's picture at that spot of its column; a placed one snapped to that spot of its panel; one in
+// the text floated left (the left cells), right (the right cells), on a line of its own (the middle) or in the corner
+function grid(el, line) {
+  const m = PICTURE_LINE.exec(M.source.split("\n")[line] || ""), a = M.api.RB.splitAttrs(m?.[4] || "").attrs;
+  const free = a.cls.includes("free"), col = !free && colOf(el), say = k => k.replace("-", " ");
+  const now = free ? "" : col ? a.anchor || "top" : a.cls.includes("end") ? "bottom-right" : a.cls.includes("left") ? "left" : a.cls.includes("right") ? "right" : "center";
+  const tip = k => (free ? `To the ${say(k)} of its panel` : col ? `At the ${say(k)} of its column` : k === "bottom-right" ? "In the bottom right corner"
+    : /left$/.test(k) ? "On the left: text flows on its right" : /right$/.test(k) ? "On the right: text flows on its left" : "On a line of its own");
+  return `<span class="rbe-grid" role="group" aria-label="Anchor">${ANCHORS.map(k => `<button type="button" data-anchor="${k}" class="${k === now ? "on" : ""}" title="${tip(k)}" aria-label="${tip(k)}"></button>`).join("")}</span>`;
+}
+function anchorTo(el, line, k) {
+  const h = /left$/.test(k) ? 0 : /right$/.test(k) ? 1 : 0.5, v = /^top/.test(k) ? 0 : /^bottom/.test(k) ? 1 : 0.5;
+  editPicture(line, a => {
+    if (a.cls.includes("free")) {                      // snapped to that spot of its panel
+      const box = el.offsetParent, r = el.getBoundingClientRect(), W = box?.clientWidth || 1, H = box?.clientHeight || 1;
+      a.x = String(pos((((W - r.width) * h) / W) * 100)); a.y = String(pos((((H - r.height) * v) / H) * 100));
+      return;
+    }
+    delete a.dx; delete a.dy;
+    a.cls = a.cls.filter(c => !SIDES.includes(c));
+    if (colOf(el)) { if (k === "top") delete a.anchor; else a.anchor = k; return; }
+    delete a.anchor;
+    if (k === "bottom-right") a.cls.push("end"); else if (h === 0) a.cls.push("left"); else if (h === 1) a.cls.push("right");
+  });
+}
 function toolClick(b, el) {
   const kind = el.dataset.kind, line = +el.dataset.line;
-  if (b.dataset.adjust != null) {                      // remembered in this browser
-    M.rowAdjusts = !M.rowAdjusts;
-    try { localStorage.setItem(ROW_ADJUSTS, M.rowAdjusts ? "1" : "0"); } catch { /* private mode */ }
-    return tools(el);
-  }
+  if (b.dataset.anchor) return anchorTo(el, line, b.dataset.anchor);
   if (b.dataset.del != null) return takeOut(el, line, kind);
   if (b.dataset.size) return resizeBy(el, line, +b.dataset.size);
-  if (b.dataset.side != null) {                        // back in the flow: placement and shift gone
-    return editPicture(line, a => { a.cls = a.cls.filter(c => !SIDES.includes(c)); if (b.dataset.side) a.cls.push(b.dataset.side); delete a.x; delete a.y; delete a.dx; delete a.dy; });
-  }
   const lines = M.source.split("\n");                  // a mascot: > [!name opts] text
   lines[line] = (lines[line] ?? "").replace(/^>\s*\[!([\w-]+)((?:\s+[\w-]+)*)\]/, (_, who, opts) => {
     const keep = opts.trim().split(/\s+/).filter(o => o && o !== "top");
@@ -603,18 +735,20 @@ function html() {
         <p class="muted">Select words in the text (or put the cursor in coloured words), then pick. The same colour again takes it off; styles add to a colour.</p></div></details>
       <button type="button" class="ghost" data-ins="page" title="Start a new TTS page here">TTS page break</button>
       <label class="ghost button" title="Add pictures from this computer (or drop image files on the page or the text, or paste one)">Add picture<input id="rbe-file" type="file" accept="image/*" multiple hidden></label>
-      <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-menu"><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
-        <p class="muted">Click: the picture under the cursor's paragraph, ready to drag; or drag one anywhere on the page to place it there. Alt-drag or Alt-click: the mascot says something (&gt; [!name]).</p></div></details>
+      <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-menu">
+        <div class="rbe-addas" role="group" aria-label="Add as">Add as <button type="button" class="on" data-addas="pic">Picture</button><button type="button" data-addas="say" title="The mascot says something (&gt; [!name])">Mascot says</button></div><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
+        <p class="muted">Click: added under the cursor's paragraph (or into the picked section or row), ready to drag; or drag one onto the page.</p></div></details>
       <button type="button" class="ghost" data-rbe="tts" aria-pressed="false" title="Show the chapter as its TTS pages (1080x1920)">TTS pages</button>
       <details class="rbe-help"><summary class="ghost button">Syntax</summary><div class="rbe-menu"><table class="help-table">${HELP.map(([k, d]) => `<tr><td><code>${esc(k)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>
         <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
-        Click anything on the page to go to its line. Drag a picture anywhere on the page to place it there (it stays with the panel you drop it in);
-        a picture that is a row's column stays in the row: drag it inside its column to shift it there, onto another column to swap them; it leaves
-        the row only when dropped well above or below it, or with Alt held (the label beside the pointer says which). Drag its corner to resize; with Row adjusts on (in its tools) a row's picture takes its column with it and the
-        rest of the row adjusts around it. Click a picture for its tools in the bar above the page, then: arrow keys move it
-        (Shift: further), + and − size it, Delete takes it out, Esc lets it go; Left / Center / Right / Corner put it back in the flow. Rows of cards and mascots drag between blocks. Drop image files from your computer, or pictures from the panel,
-        anywhere on the page. ↶ ↷ (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z) undo and redo everything, typing and the page alike. Your draft is kept in this
-        browser until you publish (Ctrl/Cmd+S).</p></div></details>
+        Click anything on the page to go to its line. Drag a picture anywhere on the page to place it over the page there; with Make space on (in
+        the bar) it goes into the page instead and the text and rows beside it make room (onto a row: a new column). Click a section, panel or row
+        first to put pictures into it. A row's picture stays in its row: drag it inside its column to shift it, onto another column to swap them;
+        dropped well above or below the row it leaves (the label beside the pointer says what a drop does). Drag a picture's corner to resize (Make
+        space: a row's picture takes its column with it). Click a picture for its tools: the anchor grid puts it in a corner, on an edge or in the
+        middle (of its column in a row, of its panel when placed; in the text: left, right or a line of its own); arrow keys move it (Shift:
+        further), + and − size it, Delete takes it out, Esc lets it go. Rows of cards and mascots drag between blocks. ↶ ↷ (Ctrl/Cmd+Z,
+        Ctrl/Cmd+Shift+Z) undo and redo everything. Your draft is kept in this browser until you publish (Ctrl/Cmd+S).</p></div></details>
     </div>
     <div class="rbe-cols"><textarea id="rbe-text" spellcheck="true" data-tokens aria-label="The chapter's text"></textarea>
       <div class="rbe-preview" tabindex="-1"><div class="rbe-pictools" role="toolbar" aria-label="The selected picture"></div><div class="rb rb-book"><article class="rb-chapter" id="rbe-page"></article></div><div class="rbe-sheets" hidden></div></div></div></div>`;
@@ -644,6 +778,7 @@ function render() {
   for (const el of page.querySelectorAll("[data-line]")) if (REORDER_KINDS.includes(el.dataset.kind)) el.draggable = true;
   for (const im of page.querySelectorAll("img")) im.draggable = false;   // the block moves, not the image file
   M.selected = null;
+  mark();
   const sel = M.selLine != null ? page.querySelector(`[data-line="${M.selLine}"]`) : null;
   tools(sel && PICTURE_KINDS.includes(sel.dataset.kind) ? sel : null);
   if (sel) {                                           // in view (a picture just added below the fold)
@@ -714,6 +849,11 @@ function colour(name) {
 // cursor is in; selected on the page
 const LIST_LINE = /^\s*(?:[-*+]|\d+[.)]|[A-Za-z][.)])\s/, BLOCK_START = /^(?::::|#{1,6}\s|>|---|===|!\[|\|)/;
 function insertBlock(text) {
+  const t = M.targetEl;
+  if (t && text.startsWith("![")) {                    // into the picked container: a row's new column, else at its end
+    const src = PICTURE_LINE.exec(text)?.[3], box = boxOf(t), w = box.clientWidth * 0.25, cols = t.dataset.fence === "row" ? colsOf(t) : null;
+    return drop({ src }, cols ? { kind: "column", into: t, cols, slot: cols.length } : { kind: "flow", into: t, line: lineFor(t, M.source.split("\n")) }, box.getBoundingClientRect().left + box.clientWidth / 2 - w / 2, 0, w);
+  }
   const ta = textBox(), lines = ta.value.split("\n"), n = ta.value.slice(0, ta.selectionStart).split("\n").length - 1, here = lines[n] ?? "";
   let at = n;
   if (here.trim()) {
@@ -740,15 +880,16 @@ function insert(kind) {
 }
 
 function onClick(e) {
-  const t = e.target.closest("[data-rbe], [data-ins], [data-pic], [data-colour]");
+  const t = e.target.closest("[data-rbe], [data-ins], [data-pic], [data-colour], [data-addas]");
   if (!t || !M) return;
   e.preventDefault(); e.stopPropagation();
   if (t.dataset.ins) return insert(t.dataset.ins);
   if (t.dataset.colour != null) { t.closest("details").open = false; return colour(t.dataset.colour); }
+  if (t.dataset.addas) { M.addAs = t.dataset.addas; for (const b of t.parentElement.querySelectorAll("button")) b.classList.toggle("on", b === t); return; }
   if (t.dataset.pic) {
     const name = t.dataset.pic, stem = name.replace(/\.\w+$/, "");
     t.closest("details").open = false;
-    return insertBlock(e.altKey ? `> [!${stem}] Text.` : `![](${name})`);
+    return insertBlock(M.addAs === "say" ? `> [!${stem}] Text.` : `![](${name})`);
   }
   const act = t.dataset.rbe;
   if (act === "undo" || act === "redo") return travel(act === "undo" ? -1 : 1);
@@ -764,7 +905,7 @@ function close() { const { api } = M; clearTimeout(timer); api.modal.removeEvent
 // a picture: resized to MAX_W at most, WebP (PNG kept for pixel art), a name of its own in img/
 // pictures added from this computer (the Add picture button, a paste, files dropped on the page or the text): resized to
 // MAX_W, WebP, named after the file, put at the drop's line (else the cursor), and in the picture panel for reuse
-async function upload(files, drop = null) {
+async function upload(files, at = null) {
   for (const f of files.filter(x => x.type.startsWith("image/"))) {
     try {
       const bmp = await createImageBitmap(f), scale = Math.min(1, MAX_W / bmp.width);
@@ -778,11 +919,11 @@ async function upload(files, drop = null) {
       const base64 = await new Promise(ok => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.readAsDataURL(blob); });
       const url = URL.createObjectURL(blob);
       M.uploads.set(name, { base64, url, size: [w, h] });
-      if (!drop) insertBlock(`![](${name})`);
-      else {                                           // dropped on the page: placed there, at most a third of its panel
-        const r = boxOf(anchorAt(drop.x, drop.y)).getBoundingClientRect();
-        placeAt({ src: name }, drop.x, drop.y, Math.min(w, r.width / 3));
-        drop = { x: drop.x + 24, y: drop.y + 24 };     // several: fanned out
+      if (!at) insertBlock(`![](${name})`);
+      else {                                           // dropped on the page: put there, at most a third of its container
+        const pl = plan(at.x, at.y), wide = Math.min(w, boxOf(pl.into || page()).clientWidth / 3);
+        drop({ src: name }, pl, at.x, at.y, wide);
+        at = { x: at.x + 24, y: at.y + 24 };           // several: fanned out
       }
       M.api.modal.querySelector(".rbe-pic-grid")?.insertAdjacentHTML("afterbegin", `<button type="button" class="ghost" data-pic="${esc(name)}" title="${esc(name)} (new)" draggable="true"><img src="${esc(url)}" alt=""><span>${esc(name.replace(/\.\w+$/, ""))}</span></button>`);
       M.api.toast(`${name} (${Math.round(blob.size / 1024)} KB) goes up with Publish`);
