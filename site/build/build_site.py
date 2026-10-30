@@ -58,6 +58,7 @@ original is a duplicate (the card data's duplicate_of).
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json (the rulebook's chapters and its pictures' sizes), data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
 changes feed, the People tab, the published decks, the Stats page or a card's Balance block, or the Changelog and Database edits tabs are opened; analytics.py makes analytics.json), data/details/<id>.json (a card's Details dropdown),
+data/tts.json (the TTS save's card details: TTS/Global.lua fetches it on load),
 data/cardfonts.json (the grid's Font filter: each card's Details fonts, loaded on the filter's first use),
 data/logins/<login>.json (the password sign-in's fallback copy), data/fonts.json (the edit mock-up's web fonts: PSD font name ->
 its MDW/Fonts file, face names cached by blob in site/.cache/fonts.json; a WOFF2 copy in fonts/, cached in site/.cache/woff2), images, icons,
@@ -3145,6 +3146,128 @@ def game_text(cards, rules, banlist, icons, manifest):
     return "\n".join(out).replace("’", "'")
 
 
+# ---- data/tts.json: the TTS save's card details (TTS/Global.lua fetches it on load: hover strip, details) ----------
+TTS_JSON = "tts.json"
+TAG_FIXED = {"OYT": ("turn", "On your turn"), "AAT": ("any", "At any time"), "BOT": ("forced", "Beginning of turn (forced)"),
+             "ENDT": ("forced", "End of turn (forced)"), "BOGT": ("forced", "Beginning of global turn (forced)"),
+             "ENDGT": ("forced", "End of global turn (forced)"), "OFS": ("trigger", "On first summon"),
+             "OS": ("trigger", "On summon"), "OD": ("trigger", "On death"), "WOF": ("trigger", "While on field"),
+             "Action": ("neutral", "Costs the creature's action")}           # text.js FIXED
+TAG_CANON = {k.upper(): k for k in TAG_FIXED}
+TAG_IN_TEXT = re.compile(r"\((-?[0-9A-Za-z/]{2,6})\)")                     # text.js TAG
+
+
+def _count(n, one):
+    return f"{n} {one if n in ('1', '-1') else one + 's'}"
+
+
+def _tag_base(tag):
+    """text.js tagMeaning: (group, meaning, old) or None."""
+    if tag in TAG_FIXED:
+        return (*TAG_FIXED[tag], False)
+    times = lambda n: "X times" if n == "X" else "once" if n == "1" else f"{n} times"
+    rules = ((r"([1-9X])CD", lambda m: ("turn", f"Cooldown: {_count(m[1], 'turn')}", False)),
+             (r"([1-9X])GCD", lambda m: ("any", f"Global cooldown: {_count(m[1], 'global turn')}", False)),
+             (r"(-1|[0-9X])/([1-9X])CD", lambda m: ("turn", f"Cooldown: {_count(m[1], 'turn')}, then {m[2]}", False)),
+             (r"(-1|[0-9X])/([1-9X])GCD", lambda m: ("any", f"Global cooldown: {_count(m[1], 'global turn')}, then {m[2]}", False)),
+             (r"([1-9X])U", lambda m: ("trigger", _count(m[1], "use"), False)),
+             (r"([1-9X])PG", lambda m: ("trigger", f"Can only be activated {times(m[1])} per game", False)),
+             (r"([1-9X])PGT", lambda m: ("any", f"Old system: usable {times(m[1])} per global turn (at any time)", True)),
+             (r"([1-9X])PT", lambda m: ("turn", f"Old system: usable {times(m[1])} per turn (on your turn)", True)),
+             (r"FTE([1-9X])T", lambda m: ("turn", f"Old system: every {m[1]} turns, starting on your 1st turn (multi-turn)", True)),
+             (r"E([1-9X])GT", lambda m: ("any", f"Old system: every {m[1]} global turns (at any time, multi-turn)", True)),
+             (r"E([1-9X])T", lambda m: ("turn", f"Old system: every {m[1]} turns, starting on turn {m[1]} (multi-turn)", True)))
+    for pattern, make in rules:
+        if m := re.fullmatch(pattern, tag):
+            return make(m)
+    return None
+
+
+def tag_info(typed, table):
+    """text.js tagInfo: (tag, group, meaning) or None; table: tag_meanings' {tag: meaning}, whose own line (or its X
+    family's: "XCD" for (3CD), "turn(s)" agreeing) wins."""
+    tag = TAG_CANON.get(typed.upper(), typed.upper())
+    base = _tag_base(tag)
+    if not base:
+        return None
+    table = {TAG_CANON.get(k.upper(), k.upper()): v for k, v in table.items()}
+    own = table.get(tag, "")
+    m = re.match(r"(-?[0-9]+)(?!/)", re.sub(r"^(E|FTE)(?=\d)", "", tag))
+    if not own and m and "/" not in tag and (text := table.get(tag.replace(m[1], "X", 1))):
+        own = re.sub(r"\b(-?\d+) (\w+)\(s\)", lambda k: f"{k[1]} {k[2] if k[1] in ('1', '-1') else k[2] + 's'}",
+                     re.sub(r"\bX\b", m[1], text))
+    if own and base[2] and not own.lower().startswith("old system"):
+        own = f"Old system: {own}"
+    return tag, base[0], own or base[1]
+
+
+def type_meanings(chapters, icons):
+    """{type token (norm): {"n": name, "x": text, "c": chapter id}} from the chapters: a heading naming its icon
+    ("## FIRE {icon=fire}", "## [food] HEALING": its section to the next heading or page), a "[token]:text" line, or a
+    line ending in tokens ("... creature. [buff] [debuff]"). Icons only; the first one found wins; secret text and
+    "(See: ...)" left out."""
+    found = {}
+
+    def put(token, name, text, cid):
+        text = game_words(re.sub(r"\s*\(See:[^)]*\)", "", text), icons).strip()
+        if norm(token) in icons and norm(token) not in found and text:
+            found[norm(token)] = {"n": name, "x": text, "c": cid}
+    for c in chapters:
+        lines = re.sub(r"\s*\[[^\[\]]*\]\{\.secret\}", "", c["source"].replace("\r\n", "\n")).split("\n")
+        for i, line in enumerate(lines):
+            t = line.strip()
+            if h := re.match(r"^#{2,3}\s+(.+)$", t):
+                tokens = re.findall(r"\{icon=([\w ]+)\}", h[1]) + re.findall(r"\[([\w ]+)\]", h[1])
+                name = re.sub(r"\s+", " ", re.sub(r"\{[^}]*\}|\[[^\]]*\]", "", h[1])).strip().title()
+                if tokens and name:
+                    end = next((k for k in range(i + 1, len(lines))
+                                if re.match(r"^#{1,3}\s|^=+\s*page\s*=+$", lines[k].strip(), re.I)), len(lines))
+                    text = re.sub(r"\n{2,}", "\n", rulebook_text("\n".join(lines[i + 1:end])).strip())
+                    for token in tokens:
+                        put(token, name, text, c["id"])
+            elif m := re.match(r"^\[([\w ]+)\]\s*:\s*(.+)$", t):
+                put(m[1], m[1].replace("_", " ").title(), rulebook_text(m[2]), c["id"])
+            elif m := re.match(r"^(.*[.!?:])\s*((?:\[[\w ]+\]\s*)+)$", t):
+                for token in re.findall(r"\[([\w ]+)\]", m[2]):
+                    put(token, token.replace("_", " ").title(), rulebook_text(m[1]), c["id"])
+    return found
+
+
+def tts_details(cards, chapters, icons, tag_table):
+    """data/tts.json for the TTS save's script, cards keyed by their PNG's path (the save's card links): name, kind,
+    stars, stats, ability (icons as words), types, timing tags and the status effects the ability names; with the
+    types', tags' and statuses' meanings and the chapters (their numbers find the PDF's pages). Hidden cards left out."""
+    shown = [c for c in cards if not c.get("hidden")]
+    types, statuses = type_meanings(chapters, icons), {}
+    for c in shown:
+        if c.get("type") in ("buff", "debuff") and c.get("ability") and not c.get("dup"):
+            statuses.setdefault(c["name"], {"x": game_words(c["ability"], icons), "k": c["type"]})
+    named = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(statuses, key=len, reverse=True)) + r")(?![\w'’])", re.I) \
+        if statuses else None
+    lower = {n.lower(): n for n in statuses}
+    out_cards, used_tags = {}, {}
+    for c in shown:
+        if not c.get("png"):
+            continue
+        text = c.get("ability") or ""
+        tags = []
+        for m in TAG_IN_TEXT.finditer(text):
+            info = tag_info(m[1], tag_table)
+            if info and info[0] not in tags:
+                tags.append(info[0])
+                used_tags[info[0]] = {"g": info[1], "m": info[2]}
+        hits = [] if not named else [lower[m[1].lower()] for m in named.finditer(text)]
+        bars = [" ".join(f"{k.upper()} {'?' if s.get(k) is None else s[k]}" for k in STAT_KEYS) for s in c.get("creatures") or [c]
+                if any(s.get(k) is not None for k in STAT_KEYS)]
+        out_cards[c["png"]] = {k: v for k, v in {
+            "n": c["name"], "k": KIND_LABEL.get(c.get("type"), c.get("type") or "") + (f" ({c['subtype']})" if c.get("subtype") else ""),
+            "st": c.get("stars"), "s": "; ".join(bars) or None, "a": game_words(text, icons) or None,
+            "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
+            "x": [n for i, n in enumerate(hits) if n not in hits[:i] and n != c["name"]] or None, "by": c.get("author")}.items() if v}
+    return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
+            "tags": dict(sorted(used_tags.items())), "statuses": dict(sorted(statuses.items())), "cards": out_cards}
+
+
 # ---- main ------------------------------------------------------------------------------------------
 # ---- build versions (?v=) ------------------------------------------------------------------------------
 IMPORT_RE = re.compile(r'((?:from\s+|import\()"\./([\w-]+\.js))"')   # a module's imports (static, dynamic), as they are stamped
@@ -3906,6 +4029,10 @@ def main():
     with open(os.path.join(DIST, GAME_TXT), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(game)
     log(f"{GAME_TXT}: {len(game.encode())} bytes, about {round(len(game.split()) * 1.3)} tokens")
+    tts = json.dumps(tts_details(cards, chapters, icons, tag_meanings(chapters)), ensure_ascii=False, separators=(",", ":"))
+    with open(os.path.join(DIST, "data", TTS_JSON), "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(tts)
+    log(f"{TTS_JSON}: {len(tts.encode())} bytes")
 
     # static files, stamped so browsers never mix an old script with new data: each asset by its content (and its imports'),
     # the data by its content without the build's clock, so a deploy that changed nothing keeps every URL (and the caches)
