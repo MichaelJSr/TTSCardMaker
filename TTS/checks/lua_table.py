@@ -41,7 +41,7 @@ def names_for(repo):
     names.repo, names.source = repo, "local"
     names.site = {c["png"]: c["name"] for c in site_cards() if c.get("png") and c.get("name")}
     try:
-        text = subprocess.run(["git", "-C", CARDS, "show", f"{REF}:{ts.EDITS_PATHS[0]}"], check=True,
+        text = subprocess.run(["git", "-C", CARDS, "show", f"{REF}:{ts.EDITS_PATH}"], check=True,
                               capture_output=True).stdout.decode("utf-8")
         names.edits = {CardAuthors.key(k): v for k, v in (json.loads(text).get("cards") or {}).items()
                        if isinstance(v, dict)}

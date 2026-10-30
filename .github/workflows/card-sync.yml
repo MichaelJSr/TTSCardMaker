@@ -44,6 +44,8 @@ on:
       - "TTS/decks.json"
       - "TTS/Impossibility Simulator.json"
       - "site/rulebook/**"   # the rulebook's chapters: db/rulebook.json, and the TTS pages after the window
+      - "TTS/Global.lua"     # the save's global script and UI (tts_save writes them into the save)
+      - "TTS/Global.xml"
   schedule:
     - cron: "17 * * * *"     # the safety net (owner, 2026-10-25): off the top of the hour, GitHub's busiest
   workflow_dispatch:
@@ -743,7 +745,7 @@ jobs:
           { echo "main=$main"; echo "start=$(date +%s)"; } >> "$GITHUB_OUTPUT"
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
                   'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json'
-                  'TTS/Impossibility Simulator.json' ':(glob)site/rulebook/*.md')
+                  'TTS/Impossibility Simulator.json' ':(glob)site/rulebook/*.md' 'TTS/Global.lua' 'TTS/Global.xml')
           why=()
           event=$GITHUB_EVENT_NAME
           if [ -n "$CHAIN" ]; then event=schedule; fi      # a chained run gates as the schedule

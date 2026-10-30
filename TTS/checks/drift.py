@@ -3,8 +3,9 @@
 
 python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref 0d33adc8, the last hand edit of the save)
 Allowed: repo link refs, card Nicknames, card CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck, cards added to or
-removed from decks, the Rulebooks bag's pages (and its Photoshop pages moved into a bag inside it), the resizeTargets rows. Everything else is listed and fails: a card's Description, GMNotes, Memo,
-Tags and scripts are the team's (2026-10-22), and the global Lua outside resizeTargets.
+removed from decks, the Rulebooks bag's contents, the resizeTargets rows, and the global script and UI as TTS/Global.lua
+and TTS/Global.xml hold them (since 2026-10-30 the updater writes them; a mismatch fails). Everything else is listed and
+fails: a card's Description, GMNotes, Memo, Tags and scripts are the team's (2026-10-22).
 """
 import json
 import os
@@ -130,9 +131,24 @@ def lua_rest(text):
     return LUA_TABLE.sub(r"\1\3", text or "")
 
 
+def from_file(name):
+    """TTS/<name> at REF, or None"""
+    out = subprocess.run(["git", "-C", REPO, "show", f"{REF}:TTS/{name}"], capture_output=True)
+    return out.stdout.decode("utf-8").replace("\r\n", "\n") if out.returncode == 0 else None
+
+
 def main(path, base_arg):
     cur = json.load(open(path, encoding="utf-8"))
     base = load_base(base_arg)
+    lua, xml = from_file("Global.lua"), from_file("Global.xml")
+    if lua is not None:                           # the updater writes the script: the file is the baseline
+        if norm(lua_rest(lua)) != norm(lua_rest(cur.get("LuaScript"))):
+            fails.append("LuaScript differs from TTS/Global.lua outside resizeTargets (the next save update writes it)")
+        base["LuaScript"] = cur.get("LuaScript")
+    if xml is not None:
+        if xml != (cur.get("XmlUI") or ""):
+            fails.append("XmlUI differs from TTS/Global.xml (the next save update writes it)")
+        base["XmlUI"] = cur.get("XmlUI")
     for k in (set(base) | set(cur)) - {"ObjectStates", "LuaScript"}:
         if norm(base.get(k)) != norm(cur.get(k)):
             fails.append(f"top-level {k}: {str(base.get(k))[:100]} -> {str(cur.get(k))[:100]}")
