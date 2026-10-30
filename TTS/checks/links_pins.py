@@ -1,4 +1,5 @@
 """Repo link pins: sha known, on main, path there, blob == main's, pin == last commit that changed it; canonical %-encoding.
+The global script's links are live data on main (TTS/Global.lua; links_http.py loads them), not pinned.
 
     python links_pins.py [save.json] [history clone] [ref]   (defaults: $TTS_HISTORY, main)
 The clone is made (bare, blobless, full history) or fetched; the checkout is shallow, don't use it.
@@ -88,6 +89,8 @@ def main():
     links = {}                                  # (ref, enc) -> [where]
     others = {}
     for where, s in strings(data):
+        if where == "/LuaScript":               # the global script: live data on main
+            continue
         for m in LINK.finditer(s):
             links.setdefault(m.groups(), []).append(where)
         for m in ANY_URL.finditer(s):

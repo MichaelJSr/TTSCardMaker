@@ -12,12 +12,10 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import BOT as AC, REF, REPO as TC, ensure_history, save_arg  # noqa: E402
+from checks_env import REF, REPO as TC, UPDATER_INPUTS, copy_bot, ensure_history, save_arg  # noqa: E402
 
 PY = sys.executable
 SRC_CLONE = ensure_history()
-MODULES = ["commands/tts_save.py", "commands/repo_history.py", "commands/card_models.py", "commands/card_edits.py",
-           "commands/github_api.py", "commands/git_commit.py", "global_config.py"]
 RAW = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/"
 
 save = save_arg()
@@ -26,14 +24,13 @@ failures = []
 clone = os.path.join(work, "history.git")
 shutil.copytree(SRC_CLONE, clone)
 local = os.path.join(work, "local")
-for sub, path in (("TTS", "TTS/decks.json"), ("site", "site/Card Edits.json")):
-    os.makedirs(os.path.join(local, sub), exist_ok=True)
-    data = subprocess.run(["git", "-C", TC, "show", f"{REF}:{path}"], capture_output=True, check=True).stdout
-    open(os.path.join(local, path), "wb").write(data)
+for path in UPDATER_INPUTS:
+    os.makedirs(os.path.dirname(os.path.join(local, path)), exist_ok=True)
+    r = subprocess.run(["git", "-C", TC, "show", f"{REF}:{path}"], capture_output=True)
+    if r.returncode == 0:
+        open(os.path.join(local, path), "wb").write(r.stdout)
 bot = os.path.join(work, "bot")
-for m in MODULES:
-    os.makedirs(os.path.dirname(os.path.join(bot, m)), exist_ok=True)
-    shutil.copy(os.path.join(AC, m), os.path.join(bot, m))
+copy_bot(bot)
 env = {**os.environ, "AUTOCROISSANT_LOCAL_DIR": local, "AUTOCROISSANT_HISTORY_CLONE": clone}
 
 

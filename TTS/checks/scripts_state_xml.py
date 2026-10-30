@@ -53,7 +53,7 @@ def main(path):
                 ET.fromstring('<root>' + xml + '</root>')     # XmlUI may have several top-level elements
             except ET.ParseError as e:
                 fails.append(f'{name}: XmlUI not well-formed: {e}')
-            if not re.search(r'<\s*[A-Za-z]', xml):
+            if not re.search(r'<\s*[A-Za-z]', xml) and o is not save:    # the global UI: panels built at run time
                 warns.append(f'{name}: XmlUI has no elements (comment only)')
     for w in warns:
         print('WARN', w)

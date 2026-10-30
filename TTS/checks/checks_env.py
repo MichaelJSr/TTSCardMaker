@@ -1,6 +1,8 @@
 """Paths and interpreters the TTS save checks share; each can be set from the environment (see README.md)."""
+import glob
 import json
 import os
+import shutil
 import subprocess
 import sys
 from urllib.request import urlopen
@@ -14,6 +16,8 @@ BOT = os.path.expanduser(os.environ.get("AUTOCROISSANT", "~/Desktop/AutoCroissan
 LUA_PYTHONS = (os.environ.get("LUA_PYTHON", ""), "~/.venvs/tts-checks/bin/python")
 CARD_REPO_URL = "https://github.com/MichaelJSr/TTSCardMaker.git"
 SITE_URL = "https://michaeljsr.github.io/TTSCardMaker"
+# the card repo files the updater reads (a missing Global.lua, Global.xml or pages.json leaves that part of the save alone)
+UPDATER_INPUTS = ("TTS/decks.json", "site/Card Edits.json", "TTS/Global.lua", "TTS/Global.xml", "TTS/Rulebook/pages.json")
 
 
 def save_arg(i: int = 1) -> str:
@@ -49,6 +53,16 @@ def use_bot() -> None:
     if not os.path.exists(os.path.join(BOT, "commands", "tts_save.py")):
         sys.exit(f"no updater at {BOT} (set AUTOCROISSANT)")
     sys.path.insert(0, BOT)
+
+
+def copy_bot(dest: str) -> None:
+    """The updater's code copied to dest: global_config.py and every commands/*.py (whatever tts_save imports)."""
+    if not os.path.exists(os.path.join(BOT, "commands", "tts_save.py")):
+        sys.exit(f"no updater at {BOT} (set AUTOCROISSANT)")
+    os.makedirs(os.path.join(dest, "commands"), exist_ok=True)
+    shutil.copy(os.path.join(BOT, "global_config.py"), dest)
+    for path in glob.glob(os.path.join(BOT, "commands", "*.py")):
+        shutil.copy(path, os.path.join(dest, "commands"))
 
 
 def lua_python() -> str:

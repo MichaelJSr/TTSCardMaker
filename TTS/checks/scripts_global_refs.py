@@ -68,17 +68,27 @@ def main(path):
                 fails.append(f'{name}: Player["{c}"] is not a TTS colour')
     g = code_only(save.get('LuaScript') or '')
     teams = table(g, 'TEAMS')
+    seen = {}                                   # seat -> its team
     if teams is not None:
-        seen = {}
-        for team, body in re.findall(r'\[?\s*["\']?(\w+)["\']?\s*\]?\s*=\s*\{([^}]*)\}', teams):
+        pairs = re.findall(r'\[?\s*["\']?(\w+)["\']?\s*\]?\s*=\s*["\'](\w+)["\']', teams)   # Seat = "Team"
+        for team, body in re.findall(r'\[?\s*["\']?(\w+)["\']?\s*\]?\s*=\s*\{([^}]*)\}', teams):   # Team = {seats} (before 10-30)
+            pairs += [(c, team) for c in re.findall(r'["\'](\w+)["\']', body)]
+        for c, team in pairs:
             if team not in TEAMS - {'None'}:
                 fails.append(f'TEAMS: "{team}" is not a TTS team')
-            for c in re.findall(r'["\'](\w+)["\']', body):
-                if c not in SEATS:
-                    fails.append(f'TEAMS[{team}]: "{c}" is not a seat colour')
-                if c in seen:
-                    fails.append(f'TEAMS: {c} in {seen[c]} and {team}')
-                seen[c] = team
+            if c not in SEATS:
+                fails.append(f'TEAMS: "{c}" is not a seat colour')
+            if c in seen:
+                fails.append(f'TEAMS: {c} in {seen[c]} and {team}')
+            seen[c] = team
+    side = re.search(r'SIDE_ORDER\s*=\s*\{(.*?\})\s*\}', g, re.S)   # the seats a side's free hand zones go to, in order
+    if side:
+        order = {t: re.findall(r'["\'](\w+)["\']', body)
+                 for t, body in re.findall(r'(\w+)\s*=\s*\{([^}]*)\}', side.group(1))}
+        for team in sorted(set(seen.values()) | set(order)):
+            want = sorted(c for c, t in seen.items() if t == team)
+            if sorted(order.get(team, [])) != want:
+                fails.append(f'SIDE_ORDER[{team}] {order.get(team)} is not the seats TEAMS puts on {team} {want}')
     for tname in ('ALL_SEAT_COLORS',):
         body = table(g, tname)
         if body is not None:
@@ -93,7 +103,7 @@ def main(path):
             elif max(abs(float(x) - y) for x, y in zip((r, gg, b), RGB[c])) > 0.01:
                 warns.append(f'SEAT_COLOR_RGB.{c} = ({r}, {gg}, {b}) but TTS {c} is {RGB[c]}')
     hands = {o['GUID']: o for o, p in objs if o.get('Name') == 'HandTrigger'}
-    if teams is not None:
+    if seen:
         for k, o in hands.items():
             if o.get('FogColor') in SEATS and o.get('FogColor') not in seen:
                 warns.append(f'HandTrigger {k}: owner {o.get("FogColor")} is on no team')
