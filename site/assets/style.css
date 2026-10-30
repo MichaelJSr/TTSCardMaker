@@ -390,6 +390,25 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .bans input.unknown { border-color: var(--warn); }
 .rb-table.rb-tags td:first-child { text-align: center; white-space: nowrap; }
 .rb-table.rb-tags { width: 100%; } .rb-table.rb-tags th { text-align: left; } .rb-table.rb-tags th:first-child { width: 7em; text-align: center; }
+/* the history viewer (rulebook.js openHistory): commits on the left, a git-style diff on the right */
+.dialog.rbh { width: min(1400px, 100%); height: calc(100vh - 32px); display: flex; flex-direction: column; padding: 12px; gap: 8px; }
+.rbh-cols { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(200px, 300px) minmax(0, 1fr); gap: 10px; }
+.rbh-list { overflow: auto; display: flex; flex-direction: column; gap: 4px; }
+.rbh-item { text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--ink); font-size: 13px; cursor: pointer; }
+.rbh-item.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.rbh-item .muted { font-size: 12px; }
+.rbh-diff { overflow: auto; border: 1px solid var(--border); border-radius: 10px; }
+.rbh-head { position: sticky; top: 0; z-index: 1; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; background: var(--surface-2); border-bottom: 1px solid var(--border); font-size: 13px; }
+.rb-diff { width: 100%; border-collapse: collapse; font: 12.5px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.rb-diff td { padding: 0 8px; vertical-align: top; white-space: pre-wrap; word-break: break-word; }
+.rb-diff td.ln { width: 1%; min-width: 3.2em; text-align: right; color: var(--muted); user-select: none; padding: 0 6px; }
+.rb-diff td.sg { width: 1%; user-select: none; padding: 0 2px 0 6px; }
+.rb-diff tr.dh td { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); color: var(--muted); padding: 3px 8px; }
+.rb-diff tr.dd td { background: color-mix(in srgb, #e5534b 16%, transparent); }
+.rb-diff tr.da td { background: color-mix(in srgb, #2ea043 16%, transparent); }
+.rb-diff tr.dd del { background: color-mix(in srgb, #e5534b 45%, transparent); text-decoration: none; border-radius: 2px; }
+.rb-diff tr.da ins { background: color-mix(in srgb, #2ea043 45%, transparent); text-decoration: none; border-radius: 2px; }
+@media (max-width: 760px) { .rbh-cols { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } .rbh-list { max-height: 30vh; } }
 /* the TTS sheets (#/rules/print): 1080x1920 pages; the export screenshots one at a time (?sheet=N) */
 .rb-sheets { display: flex; flex-wrap: wrap; gap: 16px; }
 .rb-sheets .rb-sheet { zoom: .3; box-shadow: 0 2px 18px #0006; }

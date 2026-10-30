@@ -430,3 +430,118 @@ function withKids(b, kids, cont = false) {
 function shrink(el, over) {
   for (let z = 0.95; z > 0.3 && over(); z -= 0.05) el.style.zoom = z.toFixed(2);
 }
+
+// ---- history (app.js "rb-history"): a file's commits on GitHub, each as a git-style diff against its parent (renames
+// followed), changed words marked. GitHub's API without a sign-in (60 requests an hour), the texts from raw.
+const API = "https://api.github.com/repos/";
+const CONTEXT = 3;                                     // unchanged lines around each change
+/** The line diff of two texts: [{t: "=" | "-" | "+", a, b, text}] (a, b: 1-based line numbers; LCS) */
+export function lineDiff(before, after) {
+  const A = before === "" ? [] : before.replace(/\n$/, "").split("\n"), B = after === "" ? [] : after.replace(/\n$/, "").split("\n");
+  const n = A.length, m = B.length, dp = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i][j] = A[i] === B[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const out = [];
+  let i = 0, j = 0;
+  while (i < n || j < m) {
+    if (i < n && j < m && A[i] === B[j]) { out.push({ t: "=", a: ++i, b: ++j, text: A[i - 1] }); }
+    else if (i < n && (j >= m || dp[i + 1][j] >= dp[i][j + 1])) { out.push({ t: "-", a: ++i, text: A[i - 1] }); }   // - before +, as git
+    else { out.push({ t: "+", b: ++j, text: B[j - 1] }); }
+  }
+  return out;
+}
+/** The changes in hunks of CONTEXT lines: [{head: "@@ -a,n +b,m @@", lines}] */
+export function hunks(ops) {
+  const keep = ops.map((o, k) => o.t !== "=" || ops.slice(Math.max(0, k - CONTEXT), k + CONTEXT + 1).some(x => x.t !== "="));
+  const out = [];
+  let cur = null;
+  ops.forEach((o, k) => {
+    if (!keep[k]) { cur = null; return; }
+    if (!cur) { cur = { lines: [] }; out.push(cur); }
+    cur.lines.push(o);
+  });
+  for (const h of out) {
+    const a = h.lines.filter(o => o.t !== "+"), b = h.lines.filter(o => o.t !== "-");
+    const a0 = a[0]?.a ?? (h.lines[0].b - 1 + 0), b0 = b[0]?.b ?? 0;
+    h.head = `@@ -${a.length ? a0 : Math.max(0, a0)},${a.length} +${b.length ? b0 : 0},${b.length} @@`;
+  }
+  return out;
+}
+// two lines' changed words: [old html, new html]
+function wordPair(x, y) {
+  const a = x.split(/(\s+)/), b = y.split(/(\s+)/), n = a.length, m = b.length;
+  if (n * m > 60000) return [esc(x), esc(y)];
+  const dp = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  let i = 0, j = 0, l = "", r = "";
+  while (i < n || j < m) {
+    if (i < n && j < m && a[i] === b[j]) { l += esc(a[i]); r += esc(b[j]); i++; j++; }
+    else if (j < m && (i >= n || dp[i][j + 1] >= dp[i + 1][j])) r += `<ins>${esc(b[j++])}</ins>`;
+    else l += `<del>${esc(a[i++])}</del>`;
+  }
+  return [l, r];
+}
+/** A diff as git shows it: hunk heads, old and new line numbers, - and + lines (a changed line's words marked) */
+export function diffHtml(before, after) {
+  const hs = hunks(lineDiff(before, after));
+  if (!hs.length) return `<p class="muted">No change to the text.</p>`;
+  const row = (o, html) => `<tr class="d${o.t === "=" ? "c" : o.t === "-" ? "d" : "a"}"><td class="ln">${o.a ?? ""}</td><td class="ln">${o.b ?? ""}</td><td class="sg">${o.t === "=" ? " " : o.t}</td><td class="tx">${html}</td></tr>`;
+  return `<table class="rb-diff">${hs.map(h => {
+    const rows = [], L = h.lines;
+    for (let k = 0; k < L.length; k++) {
+      const o = L[k];
+      if (o.t === "-") {                               // a run of - then + lines: pair them for the words
+        let e = k; while (e < L.length && L[e].t === "-") e++;
+        let f = e; while (f < L.length && L[f].t === "+") f++;
+        const dels = L.slice(k, e), adds = L.slice(e, f), pairs = Math.min(dels.length, adds.length);
+        const html = dels.map((d, q) => (q < pairs ? wordPair(d.text, adds[q].text) : [esc(d.text)]));
+        dels.forEach((d, q) => rows.push(row(d, html[q][0])));
+        adds.forEach((a, q) => rows.push(row(a, q < pairs ? html[q][1] : esc(a.text))));
+        k = f - 1;
+      } else rows.push(row(o, esc(o.text)));
+    }
+    return `<tbody><tr class="dh"><td colspan="3"></td><td>${esc(h.head)}</td></tr>${rows.join("")}</tbody>`;
+  }).join("")}</table>`;
+}
+async function getJson(url) {
+  const r = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
+  if (!r.ok) throw new Error(r.status === 403 || r.status === 429 ? "GitHub's hourly limit for visitors is reached: try again later, or open it on GitHub" : `GitHub ${r.status}`);
+  return r.json();
+}
+async function rawText(repo, sha, path) {
+  const r = await fetch(`https://raw.githubusercontent.com/${repo}/${sha}/${path.split("/").map(encodeURIComponent).join("/")}`);
+  return r.ok ? r.text() : null;
+}
+/** The history viewer in modal: path's commits on the left, the chosen one's diff on the right */
+export async function openHistory({ repo, branch, path, title, modal, closeModal, dateText = d => new Date(d).toLocaleString() }) {
+  const gh = `https://github.com/${repo}/commits/${branch}/${path.split("/").map(encodeURIComponent).join("/")}`;
+  modal.innerHTML = `<div class="dialog rbh" role="dialog" aria-modal="true" aria-label="History of ${esc(title)}">
+    <header class="rbe-top"><h2>History: ${esc(title)}</h2><span class="rbe-state muted"><code>${esc(path)}</code></span>
+      <a class="ghost button" href="${esc(gh)}" target="_blank" rel="noopener">On GitHub</a><button type="button" class="ghost icon" data-rbh="close" aria-label="Close">✕</button></header>
+    <div class="rbh-cols"><nav class="rbh-list"><p class="muted">Loading the commits…</p></nav><div class="rbh-diff"></div></div></div>`;
+  modal.hidden = false; document.body.style.overflow = "hidden";
+  const list = modal.querySelector(".rbh-list"), pane = modal.querySelector(".rbh-diff");
+  modal.querySelector('[data-rbh="close"]').addEventListener("click", () => closeModal());
+  let commits;
+  const url = sha => `${API}${repo}/commits?${sha ? `sha=${encodeURIComponent(sha)}&` : ""}path=${encodeURIComponent(path)}&per_page=60`;
+  try { commits = await getJson(url(branch)).catch(e => (/ 404$/.test(e.message) ? getJson(url("")) : Promise.reject(e))); }   // a branch GitHub lacks: the default
+  catch (e) { list.innerHTML = `<p class="muted">${esc(e.message)}.</p>`; return; }
+  if (!commits.length) { list.innerHTML = `<p class="muted">No commits yet.</p>`; return; }
+  list.innerHTML = commits.map((c, k) => `<button type="button" class="rbh-item${k ? "" : " on"}" data-k="${k}"><b>${esc(c.commit.message.split("\n")[0])}</b>
+    <span class="muted">${esc(c.commit.author?.name || c.author?.login || "")} · ${esc(dateText(c.commit.committer?.date || c.commit.author?.date))}</span></button>`).join("");
+  const show = async k => {
+    for (const b of list.querySelectorAll(".rbh-item")) b.classList.toggle("on", +b.dataset.k === k);
+    const c = commits[k], parent = c.parents?.[0]?.sha;
+    pane.innerHTML = `<p class="muted">Loading…</p>`;
+    let before = parent ? await rawText(repo, parent, path) : "", from = path;
+    if (before === null && parent) {                   // renamed in this commit (a chapter renumbered): its old name
+      try { const f = (await getJson(`${API}${repo}/commits/${c.sha}`)).files?.find(x => x.filename === path); if (f?.previous_filename) { from = f.previous_filename; before = await rawText(repo, parent, from); } }
+      catch { /* the rest still shows */ }
+    }
+    const after = (await rawText(repo, c.sha, path)) ?? "";
+    pane.innerHTML = `<div class="rbh-head"><b>${esc(c.commit.message.split("\n")[0])}</b><span class="muted">${esc(c.commit.author?.name || "")} · ${esc(dateText(c.commit.committer?.date || c.commit.author?.date))} ·
+      <a href="${esc(c.html_url)}" target="_blank" rel="noopener"><code>${esc(c.sha.slice(0, 8))}</code></a>${from !== path ? ` · renamed from <code>${esc(from)}</code>` : ""}${before === null || !parent ? " · new file" : ""}</span></div>
+      ${diffHtml(before ?? "", after)}`;
+  };
+  list.addEventListener("click", e => { const b = e.target.closest(".rbh-item"); if (b) show(+b.dataset.k); });
+  show(0);
+}

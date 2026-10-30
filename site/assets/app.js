@@ -934,7 +934,6 @@ function bookCtx(extra = {}) {
   };
 }
 const pdfUrl = () => `https://github.com/${S.data.repo}/blob/${S.data.branch || "main"}/TTS/Rulebook/Rulebook.pdf`;   // AutoCroissant rulebook_pages
-const fileUrl = ch => `https://github.com/${S.data.repo}/commits/${S.data.branch || "main"}/site/rulebook/${encodeURIComponent(ch.file)}`;
 let rulesAt = "", spy = null;                            // the rulebook hash last scrolled to: a re-render stays put
 function renderRules(r) {
   if (!S.book) {
@@ -962,9 +961,9 @@ function renderRules(r) {
     <div class="rb rb-book">
       ${q ? `<p class="muted">${shown.length} chapter${shown.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}" alt="Impossibility Simulator" width="260" height="462">`}
       ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
-      ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button><a class="ghost" href="${esc(fileUrl(c))}" target="_blank" rel="noopener" title="This chapter's changes on GitHub">History</a></div>${RB.chapterHtml(c, ctx)}</article>`).join("")
+      ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${RB.chapterHtml(c, ctx)}</article>`).join("")
         || `<div class="empty">No rulebook chapter mentions that.</div>`}
-      ${!q ? `<article class="rb-chapter rb-extra" id="banlist"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-bans" title="${editor.me?.admin ? "Edit the ban list" : "Admins edit the ban list (sign in)"}">Edit</button><a class="ghost" href="https://github.com/${esc(S.data.repo)}/commits/${esc(S.data.branch || "main")}/${S.data.files.banlist.split("/").map(encodeURIComponent).join("/")}" target="_blank" rel="noopener" title="The ban list's changes on GitHub">History</a></div><header class="rb-head"><h2>Constructed ban list</h2></header>
+      ${!q ? `<article class="rb-chapter rb-extra" id="banlist"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-bans" title="${editor.me?.admin ? "Edit the ban list" : "Admins edit the ban list (sign in)"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="${esc(S.data.files.banlist)}" data-title="Constructed ban list" title="Every change to the ban list, as a diff">History</button></div><header class="rb-head"><h2>Constructed ban list</h2></header>
         <div class="rb-panel rb-solo">${banned.notes.map(n => `<p>${esc(n)}</p>`).join("")}</div>
         ${banned.groups.map(g => `<section class="rb-sec"><h3 class="rb-tab">${esc(g.title)}</h3><div class="rb-panel"><div class="rb-bans">${g.entries.map(e => { const c = e.id && S.byId.get(e.id);
           return `<div class="rb-ban">${c ? `<a class="rb-card" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}" title="${esc(c.name)}"><img src="${esc(img(c, 240))}" alt="${esc(c.name)}" loading="lazy" decoding="async"></a>` : ""}
@@ -1432,6 +1431,8 @@ function openBookEditor(id, line = null) {
 const actions = {
   "rb-edit": el => openBookEditor(el.dataset.id, el.dataset.line != null ? +el.dataset.line : null),
   "rb-new": () => openBookEditor(""),
+  "rb-history": el => RB.openHistory({ repo: S.data.repo, branch: S.data.branch || "main", path: el.dataset.path, title: el.dataset.title, modal,
+    closeModal, dateText: d => new Date(d).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" }) }),
   "rb-bans": () => {                                     // the constructed ban list's editor (admins; rulebook-edit.js openBans)
     if (!editing()) { act("edit-hub"); return; }
     withEditor(ed => {

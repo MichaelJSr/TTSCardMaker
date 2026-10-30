@@ -63,7 +63,9 @@ text or image, links its commit when it is known), and the artwork sources when 
   `rulebook.js` draws them in the book's look: lavender panels with italic tabs, the dark ability boxes, mascots saying
   the in-jokes, real card pictures (`![[Card]]`, from the card data, so they follow the cards), badges and icons as on
   cards; the syntax is at the top of `rulebook.js` and behind the editor's Syntax button. The contents follow the
-  reading; search shows only the passages that match; each chapter links its history on GitHub. Each chapter has an Edit
+  reading; search shows only the passages that match; each chapter's History (the ban list's too) lists its commits and
+  shows each one as a git-style diff (old and new line numbers, removed and added lines, the changed words marked; a
+  renumbered chapter's rename followed), from GitHub's API without a sign-in. Each chapter has an Edit
   button, each section a ✎ (signed in), and the contents a New chapter button: the text beside the page as it will look
   (or as its TTS pages), linked both ways (click the page to reach its line; the cursor shows its block). Pictures, card
   rows and mascots are dragged to move them on the page; a click on a picture sets its side (left, centre, right, the
