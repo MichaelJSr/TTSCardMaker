@@ -1,4 +1,5 @@
 # Death
+![A fox lying defeated among swords and arrows](fox-dead.webp) {.free width=17.5 x=71.4 y=17.2}
 
 ## ON DEATH
 - When a friendly creature's HP reaches 0 it dies, and goes to the graveyard on your side of the field.
@@ -21,10 +22,9 @@
 ![](kirby-sleepy.webp){.end width=16}
 :::
 ::: stack
-![A fox lying defeated among swords and arrows](fox-dead.webp){width=80}
 
-![A gravestone with a skull](gravestone.webp){width=85}
 :::
+![A gravestone with a skull](gravestone.webp) {.free width=39.5 x=55.5 y=17}
 :::
 
 > [!sonic top] *“If you die outside your game, you DON'T regenerate!"*
