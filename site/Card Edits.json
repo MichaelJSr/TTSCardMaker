@@ -591,7 +591,7 @@
     "SOMETHING": {"series":"OMORI","_by":"AutoCroissant","_at":"2026-10-22T22:02:11Z"},
     "Sonic": {"series":"Sonic the Hedgehog","allow_high_stats":true,"_by":"AutoCroissant","_at":"2026-10-21T13:31:38Z"},
     "Soul Master": {"series":"Hollow Knight","subseries":"Hollow Knight","_bot":["series"],"_by":"Zomoroko","_at":"2026-10-26T08:04:26Z"},
-    "Soul of Eden": {"series":"The Binding of Isaac","art":"https://www.newgrounds.com/art/view/rebirth-vectorized/binding-of-isaac-vectorized-24","aliases":["edens soul"],"_bot":["series","aliases"],"_by":"Zomoroko","_at":"2026-10-26T10:12:41Z"},
+    "Soul of Eden": {"name":"Eden's Soul","series":"The Binding of Isaac","parts":{"327":{"field":"name","text":"Eden's Soul","was":"Soul of Eden","sha":"50625702","psd":"35f52e7d","layer":"Text/Name"}},"art":"https://www.newgrounds.com/art/view/rebirth-vectorized/binding-of-isaac-vectorized-24","aliases":["edens soul"],"_bot":["series","aliases"],"_by":"MichaelJSr","_at":"2026-10-30T05:20:30Z"},
     "Soul Sanctum": {"series":"Hollow Knight","subseries":"Hollow Knight","_bot":["series"],"_by":"Zomoroko","_at":"2026-10-26T08:04:26Z"},
     "Spaghetti": {"series":"Undertale","_by":"AutoCroissant","_at":"2026-10-22T22:02:11Z"},
     "Spamton Neo": {"series":"Deltarune","_by":"AutoCroissant","_at":"2026-10-22T22:02:11Z"},
