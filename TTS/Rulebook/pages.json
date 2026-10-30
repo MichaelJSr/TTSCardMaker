@@ -10,7 +10,7 @@
   {
    "name": "Table of Contents",
    "num": "",
-   "sha": "86fe27c2d04566ac85ea238acb63068a1f4466ce622998f02c901a76eec97073"
+   "sha": "6bd377b8623f9160bdbc28969ac60f912721eea0c5c9489c4a3522f8adae464e"
   },
   {
    "name": "Getting Started",
@@ -35,7 +35,7 @@
   {
    "name": "Setting Up",
    "num": "3",
-   "sha": "a792efa916fee69cdf6822b7486145fb30fddd07b192a434bd605b6fd97ff9d1"
+   "sha": "c5e65156b72bb0c18b227e96128568156cc6a98dbf83e0f06e2efdc21bdb6154"
   },
   {
    "name": "Setting Up 2",
@@ -155,12 +155,12 @@
   {
    "name": "Stats 8",
    "num": "7.8",
-   "sha": "e3cc2502def93f28f3d40eb3e18b2f9f15e294de14364af03d49fd10c5e82076"
+   "sha": "7eaf24a41a51681b27dc4e96e9418350946dd85659ddd1beabb639b369c1dfa9"
   },
   {
    "name": "Stats 9",
    "num": "7.9",
-   "sha": "8039a6ae52622f01ef8289ad866547815635fe48f0083e1350e6a167fdc3bd44"
+   "sha": "9cfc91efa12dd087054370da98dc00c80ca32c3df62afb80ffa99dc65b015d74"
   },
   {
    "name": "The Global Turn",
@@ -175,7 +175,7 @@
   {
    "name": "The Global Turn 3",
    "num": "8.3",
-   "sha": "2fb84f119455246906743eda7199213d4573f124a15c07e7c536e59de9d3471b"
+   "sha": "406d515cd0f3dc386c43cb8e871e7701ce5c35c2690aa0dd935863b90da2ac34"
   },
   {
    "name": "Taking Your Turn",
@@ -190,7 +190,7 @@
   {
    "name": "Attacking",
    "num": "10",
-   "sha": "65f34ff09614d526e86f3483bd4e819da06efa0e8a5de0e7c633104a06d2293e"
+   "sha": "e13d22a332d04fccfe2f4cee9b3dfaae96aee4dc99b6e15776165fb2438347a6"
   },
   {
    "name": "Attacking 2",
@@ -280,7 +280,7 @@
   {
    "name": "Reactions 4",
    "num": "12.4",
-   "sha": "a27d96d839140408e232ec38c0f0d973d2f03972b624e4a19d8e85ae703aeb2f"
+   "sha": "0bf20e95bd5413248c36d3ea3f2505cd79021fff48ea2c37420f07233cb56ade"
   },
   {
    "name": "Reactions 5",
@@ -300,12 +300,12 @@
   {
    "name": "Reactions 8",
    "num": "12.8",
-   "sha": "c7b52c2b3cd61bd6b4416f9cb958e23d97b9ee23e2d0e9d5336d2a3dc0b5997b"
+   "sha": "ea84acafd0e0befca816ca9862d1254fd1da97fd988a4bc231b6b708d7c2143c"
   },
   {
    "name": "Items",
    "num": "13",
-   "sha": "74f10ead3d672d89c72bad7c9a4722f3552a13a1870c432f4130f006185369cc"
+   "sha": "e02ca0687679ad0549534694387545065ebb8fc72e88a796fa59b40d5eb4388f"
   },
   {
    "name": "Items 2",
@@ -370,12 +370,12 @@
   {
    "name": "Death 2",
    "num": "17.2",
-   "sha": "2cb277d2f90a1d27761bfd92017fbd1b29c31cf2e84d51985729c6806a14025b"
+   "sha": "e9a63385ffa64e6a900671ad9ac4bd16ebf8330f0819146d99a442649df999bd"
   },
   {
    "name": "Field Cards",
    "num": "18",
-   "sha": "13f6d49edf3e060820378a75fdc51960d99fe8438cfe02f52ec65e8bbd6e8dc6"
+   "sha": "7a352009ecc2e6e4c19715d2671f8ae853e2ce4bb81071b1f0938200e2a9bcb3"
   },
   {
    "name": "Field Cards 2",
@@ -390,7 +390,7 @@
   {
    "name": "Status Effects 2",
    "num": "19.2",
-   "sha": "77733bead22af4c04ed1504365d1ec0869358003316c3d022a54533612b1badc"
+   "sha": "b7a5788603b47c31939f10b139e6540557ca3e3d2d212336f49d32b804d64288"
   },
   {
    "name": "Status Effects 3",
@@ -415,17 +415,42 @@
   {
    "name": "Damage Types",
    "num": "21",
-   "sha": "377b351e880efa5dd168fec6105280f729b138e64721f4d750a7fff221cdb1c9"
+   "sha": "00851e0d6319e5f435ab6e40ceab0b41089a8a3ae1499c27ecd8ba55c18fb462"
+  },
+  {
+   "name": "Damage Types 2",
+   "num": "21.2",
+   "sha": "362d4e6bd22ae066ea7231fa57291f5c696c69d47edf36bab56ba60963f3b58d"
   },
   {
    "name": "Negation",
    "num": "22",
-   "sha": "c4e86c7622e4413e2324fbb3b05142eb32b938d04af64ced6a43d8d32340880f"
+   "sha": "c6af6ee7c39737509934c54043adcefee139272956252e5b723280e6c4b0d574"
   },
   {
    "name": "Negation 2",
    "num": "22.2",
-   "sha": "bbdbe9f8c2ca647d894cef488057a38f00a95cd6269930f338b8606279dfc728"
+   "sha": "0b5a34698bdb8b715214172c449753b3302ef74581b7b1298da2073dda3c12ad"
+  },
+  {
+   "name": "Negation 3",
+   "num": "22.3",
+   "sha": "2e0b31cb4c114512c17d9691559151f5b1a85d1a0f8c2c6f5a8921b9fcbe70fb"
+  },
+  {
+   "name": "Timing Tags",
+   "num": "23",
+   "sha": "cd79a61b599cecd4a9c5bac91741c64cada952de4468f86c5e52d668404f4b5c"
+  },
+  {
+   "name": "Timing Tags 2",
+   "num": "23.2",
+   "sha": "3bb9949d1b85f4e98cfed8577476b0526b1f89a6f373577d96e9439d0e82dc34"
+  },
+  {
+   "name": "Timing Tags 3",
+   "num": "23.3",
+   "sha": "71fe4d07d536efaea675d52caa8420bdd298610fb6c6a6a438d7bc9ae7aa1428"
   }
  ]
 }
