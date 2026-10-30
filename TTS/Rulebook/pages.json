@@ -1,425 +1,431 @@
 {
- "about": "The rulebook's TTS pages, drawn from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. tts_save puts them in the save's Rulebooks bag, in this order.",
+ "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
+ "pdf": "Rulebook.pdf",
  "pages": [
   {
-   "file": "00-01.png",
+   "name": "Cover",
+   "num": "",
+   "sha": "5df82c6970a6dc431d898730da66d823e901f74cdae761b1c34da98464b6ceff"
+  },
+  {
    "name": "Table of Contents",
-   "num": ""
+   "num": "",
+   "sha": "86fe27c2d04566ac85ea238acb63068a1f4466ce622998f02c901a76eec97073"
   },
   {
-   "file": "01-01.png",
    "name": "Getting Started",
-   "num": "1"
+   "num": "1",
+   "sha": "0ff412836da5bf5056afeacbac9e6116c7c9adbc72e86b612f702a7a08db2fe1"
   },
   {
-   "file": "01-02.png",
    "name": "Getting Started 2",
-   "num": "1.2"
+   "num": "1.2",
+   "sha": "e89c10ff2fb59fb59bc02100a04f77aac52d0b793711b40e7e3ee02f3e0a58d1"
   },
   {
-   "file": "02-01.png",
    "name": "Abbreviations",
-   "num": "2"
+   "num": "2",
+   "sha": "b3ac6e70d9e6c37f8e9d1fbbf17b9575dd33b75139b2c2ada0bcfc4d7bd07a05"
   },
   {
-   "file": "02-02.png",
    "name": "Abbreviations 2",
-   "num": "2.2"
+   "num": "2.2",
+   "sha": "e798e30f2ea44686ef4188d94f6e11d1aede4014c06166c239bff3ff11d4bf99"
   },
   {
-   "file": "03-01.png",
    "name": "Setting Up",
-   "num": "3"
+   "num": "3",
+   "sha": "a792efa916fee69cdf6822b7486145fb30fddd07b192a434bd605b6fd97ff9d1"
   },
   {
-   "file": "03-02.png",
    "name": "Setting Up 2",
-   "num": "3.2"
+   "num": "3.2",
+   "sha": "2c275c85a10c0c1466665396466ae5bdcb1f643c2216a886d9b7693f6aa8770c"
   },
   {
-   "file": "04-01.png",
    "name": "Table",
-   "num": "4"
+   "num": "4",
+   "sha": "16caaaf4345c8647c998db25cc398c3b0f36886eb45221ce440e97453631d429"
   },
   {
-   "file": "04-02.png",
    "name": "Table 2",
-   "num": "4.2"
+   "num": "4.2",
+   "sha": "9d43fa93f105078ce05e54c3c445d3b956beea0650f562d615c5a5177d2d6502"
   },
   {
-   "file": "04-03.png",
    "name": "Table 3",
-   "num": "4.3"
+   "num": "4.3",
+   "sha": "910bd554c81d2015608ceb69a9086d6febc6846359fe51487f0d9e9e9ccbe65c"
   },
   {
-   "file": "04-04.png",
    "name": "Table 4",
-   "num": "4.4"
+   "num": "4.4",
+   "sha": "b76f36f103c1fbcf95b8f8b1669df8ad851e6f5259edbdbce79ae66cf477649c"
   },
   {
-   "file": "04-05.png",
    "name": "Table 5",
-   "num": "4.5"
+   "num": "4.5",
+   "sha": "b0d6088a39f566347c8a7fe7de092bc24749454121e1cb7cab7c004003838c9e"
   },
   {
-   "file": "04-06.png",
    "name": "Table 6",
-   "num": "4.6"
+   "num": "4.6",
+   "sha": "4eed83ed9645de4667be59b6430eb394b941ea2949520f728440209b389e0f47"
   },
   {
-   "file": "04-07.png",
    "name": "Table 7",
-   "num": "4.7"
+   "num": "4.7",
+   "sha": "2aaf38cdc7acdc1ae818d8814f5ad8190a89464a458f926a58073cf9c08006df"
   },
   {
-   "file": "04-08.png",
    "name": "Table 8",
-   "num": "4.8"
+   "num": "4.8",
+   "sha": "03be53b2bd0eea102caeeef0f43f3f60b361796c6d45daa9b8d2370ae21cce60"
   },
   {
-   "file": "04-09.png",
    "name": "Table 9",
-   "num": "4.9"
+   "num": "4.9",
+   "sha": "0eef31ba8be10bd57f65fe116a231ca17e8f180c62db4fc934624c0dc1e187f1"
   },
   {
-   "file": "04-10.png",
    "name": "Table 10",
-   "num": "4.10"
+   "num": "4.10",
+   "sha": "7821481cd2d128d3f7b91f02fc18673fa29d6f834476c013afa614cac081db9a"
   },
   {
-   "file": "05-01.png",
    "name": "Shops",
-   "num": "5"
+   "num": "5",
+   "sha": "816955e8479d25f686eb8810f61de995cd2669279d36b85625646cd70fd32b7a"
   },
   {
-   "file": "05-02.png",
    "name": "Shops 2",
-   "num": "5.2"
+   "num": "5.2",
+   "sha": "088aaa6c9701f14b91ef1acfae0151da902d0e2e432256b86596bc5e8b9d6cd1"
   },
   {
-   "file": "06-01.png",
    "name": "Reading Cards",
-   "num": "6"
+   "num": "6",
+   "sha": "e95875bbb714594c94d3beede7b51161cea1f440b669332a6f1214aa65224cd4"
   },
   {
-   "file": "06-02.png",
    "name": "Reading Cards 2",
-   "num": "6.2"
+   "num": "6.2",
+   "sha": "94922b8b75bd8a37e3818504189d02a62d6e188b3cfc98f6366a50aab29fc403"
   },
   {
-   "file": "06-03.png",
    "name": "Reading Cards 3",
-   "num": "6.3"
+   "num": "6.3",
+   "sha": "26c5c3e24b2a1e7e0f92d2a5f556d52a003139cf325d201c7b606e380e6c89b2"
   },
   {
-   "file": "07-01.png",
    "name": "Stats",
-   "num": "7"
+   "num": "7",
+   "sha": "d03e51230029f8aedfe040ebf209f3b6609e0980dcaa0a81e6729d02ebcffd3f"
   },
   {
-   "file": "07-02.png",
    "name": "Stats 2",
-   "num": "7.2"
+   "num": "7.2",
+   "sha": "689e1e0009fa04790ffc02f9a552ccbafd36772a81e56f34e178ed6080bb8300"
   },
   {
-   "file": "07-03.png",
    "name": "Stats 3",
-   "num": "7.3"
+   "num": "7.3",
+   "sha": "04104b71a7333255f5f2770b96d868319f1b0508d9731a7895afc0c74c1427d1"
   },
   {
-   "file": "07-04.png",
    "name": "Stats 4",
-   "num": "7.4"
+   "num": "7.4",
+   "sha": "b9945df154e3de2178cbbba47786d116f127d42078644c2cb13718ddd4971f37"
   },
   {
-   "file": "07-05.png",
    "name": "Stats 5",
-   "num": "7.5"
+   "num": "7.5",
+   "sha": "a9e5b66fe7567c1d0feffcd13470ee6e8018c6eb96bb1b0fdd306e529345b4d1"
   },
   {
-   "file": "07-06.png",
    "name": "Stats 6",
-   "num": "7.6"
+   "num": "7.6",
+   "sha": "f2686b0c2eaf2f25c8e82aa65af3856f6b224f26610e921f67523abee8d1ccb6"
   },
   {
-   "file": "07-07.png",
    "name": "Stats 7",
-   "num": "7.7"
+   "num": "7.7",
+   "sha": "189302985114be72eb76f84a76f3287ec74ccd46d56c992733903bee1fb2fc7e"
   },
   {
-   "file": "07-08.png",
    "name": "Stats 8",
-   "num": "7.8"
+   "num": "7.8",
+   "sha": "e3cc2502def93f28f3d40eb3e18b2f9f15e294de14364af03d49fd10c5e82076"
   },
   {
-   "file": "07-09.png",
    "name": "Stats 9",
-   "num": "7.9"
+   "num": "7.9",
+   "sha": "8039a6ae52622f01ef8289ad866547815635fe48f0083e1350e6a167fdc3bd44"
   },
   {
-   "file": "08-01.png",
    "name": "The Global Turn",
-   "num": "8"
+   "num": "8",
+   "sha": "ff97bd3e813f633392aa2c1a2a8d8e3b6c592164c7165c66351a762db621e8cc"
   },
   {
-   "file": "08-02.png",
    "name": "The Global Turn 2",
-   "num": "8.2"
+   "num": "8.2",
+   "sha": "37bdb2c698e71c6e1ae370f5c3c7fd277ca802b93f56856e403e3925e54f7105"
   },
   {
-   "file": "08-03.png",
    "name": "The Global Turn 3",
-   "num": "8.3"
+   "num": "8.3",
+   "sha": "2fb84f119455246906743eda7199213d4573f124a15c07e7c536e59de9d3471b"
   },
   {
-   "file": "09-01.png",
    "name": "Taking Your Turn",
-   "num": "9"
+   "num": "9",
+   "sha": "fffc32f3f37347ddca80db6e8ee439aabc75ad58cff7900eb96f32b7c6aec17f"
   },
   {
-   "file": "09-02.png",
    "name": "Taking Your Turn 2",
-   "num": "9.2"
+   "num": "9.2",
+   "sha": "17acf09f3e7b185f820608b90c409dd8b7d72ffdce123de80ca40f1faecce8c9"
   },
   {
-   "file": "10-01.png",
    "name": "Attacking",
-   "num": "10"
+   "num": "10",
+   "sha": "65f34ff09614d526e86f3483bd4e819da06efa0e8a5de0e7c633104a06d2293e"
   },
   {
-   "file": "10-02.png",
    "name": "Attacking 2",
-   "num": "10.2"
+   "num": "10.2",
+   "sha": "6b3c0d97da76cf5dd5338f4d97d4e54defb1b0ebfc3f5403b3093fde5a93eb5f"
   },
   {
-   "file": "10-03.png",
    "name": "Attacking 3",
-   "num": "10.3"
+   "num": "10.3",
+   "sha": "4fdc2ed008eeca9ef4cc07620810c84645e47f087ee5126d27f77728d2f6a75f"
   },
   {
-   "file": "10-04.png",
    "name": "Attacking 4",
-   "num": "10.4"
+   "num": "10.4",
+   "sha": "c7581988c02c0f5566f7b0d65f453f372be029bfe8b87805f6aad0e4e4faac5a"
   },
   {
-   "file": "11-01.png",
    "name": "Abilities",
-   "num": "11"
+   "num": "11",
+   "sha": "b1163175a5f7913b27b3a1344b3c2f37bf05d5f044f3634e45c6d43592932abf"
   },
   {
-   "file": "11-02.png",
    "name": "Abilities 2",
-   "num": "11.2"
+   "num": "11.2",
+   "sha": "14927e03ac06be1a9a0b2c1deb91cbb86764de7d4779a7215f5c16f4a6f408c8"
   },
   {
-   "file": "11-03.png",
    "name": "Abilities 3",
-   "num": "11.3"
+   "num": "11.3",
+   "sha": "fb197ebd8475da0a3def2953da98ab2d259df5f3c7a6de1d7bd0ada020d224f4"
   },
   {
-   "file": "11-04.png",
    "name": "Abilities 4",
-   "num": "11.4"
+   "num": "11.4",
+   "sha": "2843afd188be063530d9e5f23abe63bf95401322e806cbeadbb6c55d6fc0e3e3"
   },
   {
-   "file": "11-05.png",
    "name": "Abilities 5",
-   "num": "11.5"
+   "num": "11.5",
+   "sha": "072eaf4ff80668946692ab7429a5bd705fc9bc20dd171a3f92060c861f7d33b4"
   },
   {
-   "file": "11-06.png",
    "name": "Abilities 6",
-   "num": "11.6"
+   "num": "11.6",
+   "sha": "da19423731ddb36f8827a9d0b2c7b441dcede555ad74b8457992bc8569465cff"
   },
   {
-   "file": "11-07.png",
    "name": "Abilities 7",
-   "num": "11.7"
+   "num": "11.7",
+   "sha": "74453812950bc32d949c268296372b297425c9b392cf718a1b4bcd71bc41ac4c"
   },
   {
-   "file": "11-08.png",
    "name": "Abilities 8",
-   "num": "11.8"
+   "num": "11.8",
+   "sha": "5772e94a61a5e979643fe7ad877d9708134c56bb76d405536dcbf73775c8a682"
   },
   {
-   "file": "11-09.png",
    "name": "Abilities 9",
-   "num": "11.9"
+   "num": "11.9",
+   "sha": "224c25bbe82bbec09edfc9f00a356a9fb848d9752788540fc36b63607284189b"
   },
   {
-   "file": "11-10.png",
    "name": "Abilities 10",
-   "num": "11.10"
+   "num": "11.10",
+   "sha": "d5babffd170a0d93ffbfc72e0502b14b25b4535bc5490563b3b090a553f2c711"
   },
   {
-   "file": "11-11.png",
    "name": "Abilities 11",
-   "num": "11.11"
+   "num": "11.11",
+   "sha": "7f6cde33c1f6608d97ba6ee3a356f9a4913c1563be0d6c617bf5f0fdee91ca44"
   },
   {
-   "file": "12-01.png",
    "name": "Reactions",
-   "num": "12"
+   "num": "12",
+   "sha": "dbdae690001dedd53786217873969c11ba52743d7d6da2f5115b5d66cc85d940"
   },
   {
-   "file": "12-02.png",
    "name": "Reactions 2",
-   "num": "12.2"
+   "num": "12.2",
+   "sha": "3a9af966712474644f7fc739138ae814f4df9d5014c412054dd72d4aff805f18"
   },
   {
-   "file": "12-03.png",
    "name": "Reactions 3",
-   "num": "12.3"
+   "num": "12.3",
+   "sha": "deb89cceeaecbe78a7a4d67d63f1c85beca3b31c86bb4b491961b8f8d53b729e"
   },
   {
-   "file": "12-04.png",
    "name": "Reactions 4",
-   "num": "12.4"
+   "num": "12.4",
+   "sha": "a27d96d839140408e232ec38c0f0d973d2f03972b624e4a19d8e85ae703aeb2f"
   },
   {
-   "file": "12-05.png",
    "name": "Reactions 5",
-   "num": "12.5"
+   "num": "12.5",
+   "sha": "20680aa32e48c93c8b9c40031ed805e411b804e4973981a932081f7ee97a6b8e"
   },
   {
-   "file": "12-06.png",
    "name": "Reactions 6",
-   "num": "12.6"
+   "num": "12.6",
+   "sha": "45cfd7caaccf547373f481062da62dfec674cdf8cb6325cebf2ebffc7a1bae39"
   },
   {
-   "file": "12-07.png",
    "name": "Reactions 7",
-   "num": "12.7"
+   "num": "12.7",
+   "sha": "5489316b16d9c9c3f80b0107d0480c89f3b241768dd7f2b084d242fe4f6e59ad"
   },
   {
-   "file": "12-08.png",
    "name": "Reactions 8",
-   "num": "12.8"
+   "num": "12.8",
+   "sha": "c7b52c2b3cd61bd6b4416f9cb958e23d97b9ee23e2d0e9d5336d2a3dc0b5997b"
   },
   {
-   "file": "13-01.png",
    "name": "Items",
-   "num": "13"
+   "num": "13",
+   "sha": "74f10ead3d672d89c72bad7c9a4722f3552a13a1870c432f4130f006185369cc"
   },
   {
-   "file": "13-02.png",
    "name": "Items 2",
-   "num": "13.2"
+   "num": "13.2",
+   "sha": "a4a56500662e3cb7defd847e84a6ad1016166734546b7075a8e7bf1d3b361f0d"
   },
   {
-   "file": "14-01.png",
    "name": "Item Types",
-   "num": "14"
+   "num": "14",
+   "sha": "352f97891f9ab9410374ec4273280ea709de2df5042c6d4d9956281c470eaab8"
   },
   {
-   "file": "14-02.png",
    "name": "Item Types 2",
-   "num": "14.2"
+   "num": "14.2",
+   "sha": "e6a9b11e3db6ae7198aef0191d583860f43a229ed5d12269cafb363d77d4a1d9"
   },
   {
-   "file": "14-03.png",
    "name": "Item Types 3",
-   "num": "14.3"
+   "num": "14.3",
+   "sha": "19aea3fc6e1ebfe73498029d85d3d9c8c95a28513d5b54e73b48c7236cf67a4d"
   },
   {
-   "file": "14-04.png",
    "name": "Item Types 4",
-   "num": "14.4"
+   "num": "14.4",
+   "sha": "7412bf51abd8c2ed38b8ade9433b8b2445ddf9edaf86d6fb8a1811f3df34984c"
   },
   {
-   "file": "15-01.png",
    "name": "Minions",
-   "num": "15"
+   "num": "15",
+   "sha": "87f67f8d960a395c5104b216ad2c147d699284e49dd44cb0972e44e7e141be09"
   },
   {
-   "file": "15-02.png",
    "name": "Minions 2",
-   "num": "15.2"
+   "num": "15.2",
+   "sha": "792b3fb2ea71458f1988b8cc0faadb5d89f44d3ce6b20a0cdee231977aa1648c"
   },
   {
-   "file": "16-01.png",
    "name": "The Field",
-   "num": "16"
+   "num": "16",
+   "sha": "49a602155784a3a3aa526d57a3052f4e20ad33f98191e9e9585fc120cc93d6ac"
   },
   {
-   "file": "16-02.png",
    "name": "The Field 2",
-   "num": "16.2"
+   "num": "16.2",
+   "sha": "f9f2a1d433c11309265198fae4b0ad7ba2e78e71bc12737ce50086c4d10ab7f2"
   },
   {
-   "file": "16-03.png",
    "name": "The Field 3",
-   "num": "16.3"
+   "num": "16.3",
+   "sha": "8d1c0f90ff90daaf8c9cd16090b41203d4a36db4e69781f16f8cb503cacad1d1"
   },
   {
-   "file": "16-04.png",
    "name": "The Field 4",
-   "num": "16.4"
+   "num": "16.4",
+   "sha": "3b4fad98b8b67664942f5efe81a3fa0dd6a384e7bd1f4519dd6653f85db6f8e6"
   },
   {
-   "file": "17-01.png",
    "name": "Death",
-   "num": "17"
+   "num": "17",
+   "sha": "20e47c6b77d4e8a3dacebc4a31733942402d7947baa3c219616c757241b4a889"
   },
   {
-   "file": "17-02.png",
    "name": "Death 2",
-   "num": "17.2"
+   "num": "17.2",
+   "sha": "2cb277d2f90a1d27761bfd92017fbd1b29c31cf2e84d51985729c6806a14025b"
   },
   {
-   "file": "18-01.png",
    "name": "Field Cards",
-   "num": "18"
+   "num": "18",
+   "sha": "13f6d49edf3e060820378a75fdc51960d99fe8438cfe02f52ec65e8bbd6e8dc6"
   },
   {
-   "file": "18-02.png",
    "name": "Field Cards 2",
-   "num": "18.2"
+   "num": "18.2",
+   "sha": "77d07b6b76de536cfc6c632ae48067ffdc21aeedf40a527379fcc4eddce7b9fd"
   },
   {
-   "file": "19-01.png",
    "name": "Status Effects",
-   "num": "19"
+   "num": "19",
+   "sha": "60f7f572fb39cd1a9429491e4aeb9905bcc02481d9f188e944946cc53a9a0e04"
   },
   {
-   "file": "19-02.png",
    "name": "Status Effects 2",
-   "num": "19.2"
+   "num": "19.2",
+   "sha": "77733bead22af4c04ed1504365d1ec0869358003316c3d022a54533612b1badc"
   },
   {
-   "file": "19-03.png",
    "name": "Status Effects 3",
-   "num": "19.3"
+   "num": "19.3",
+   "sha": "2f17793c24385f54d181b3ac5e39be46351fa8a60d29074d93be0b360c9b4091"
   },
   {
-   "file": "19-04.png",
    "name": "Status Effects 4",
-   "num": "19.4"
+   "num": "19.4",
+   "sha": "bacfee6a626007b26762b5bf4102cf1441a8aa45976067d508bdefa1c85f94fd"
   },
   {
-   "file": "20-01.png",
    "name": "Creature Types",
-   "num": "20"
+   "num": "20",
+   "sha": "7e9f46948e3920b732d1bfdcf5b05017a2b11e65488063299e0a5d7a6f8d10f1"
   },
   {
-   "file": "20-02.png",
    "name": "Creature Types 2",
-   "num": "20.2"
+   "num": "20.2",
+   "sha": "9b4e56020ef56ba47cf48aaa8631fe0ff3bf3c4994d37e176bc8f5c95130d8f0"
   },
   {
-   "file": "21-01.png",
    "name": "Damage Types",
-   "num": "21"
+   "num": "21",
+   "sha": "377b351e880efa5dd168fec6105280f729b138e64721f4d750a7fff221cdb1c9"
   },
   {
-   "file": "22-01.png",
    "name": "Negation",
-   "num": "22"
+   "num": "22",
+   "sha": "c4e86c7622e4413e2324fbb3b05142eb32b938d04af64ced6a43d8d32340880f"
   },
   {
-   "file": "22-02.png",
    "name": "Negation 2",
-   "num": "22.2"
+   "num": "22.2",
+   "sha": "bbdbe9f8c2ca647d894cef488057a38f00a95cd6269930f338b8606279dfc728"
   }
  ]
 }
