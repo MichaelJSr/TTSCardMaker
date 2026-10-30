@@ -50,12 +50,13 @@ function onObjectLeaveContainer(container, obj)
 end
 
 -- Card details. Hover a card: a strip at the bottom of your screen explains its timing tags, types and the status
--- effects it names. Hold the "Card details (hold)" key (Options > Game Keys; Left Alt also zooms) for everything.
--- Rules buttons open the rulebook PDF at the chapter. Each player sees only their own; "Card info" turns the strip
--- off. Data: the website's data/tts.json (fetched on load); pages: TTS/Rulebook/pages.json.
+-- effects it names. Right-click a card > Card details: everything about it, in a panel with Rules buttons that open the
+-- rulebook PDF at the chapter. Each player sees only their own; "Card info" turns the strip off. Data: the website's
+-- data/tts.json and TTS/Rulebook/pages.json, fetched when the save loads. No Lua patterns over long text (MoonSharp's
+-- are limited): plain finds only.
 local DETAILS_URL = "https://michaeljsr.github.io/TTSCardMaker/data/tts.json"
 local PAGES_URL = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/TTS/Rulebook/pages.json"
-local RAW_PATH = "^https://raw%.githubusercontent%.com/[^/]+/[^/]+/[^/]+/(.+)$"
+local RAW_PREFIX = "https://raw.githubusercontent.com/"
 local SEATS = {"White", "Brown", "Red", "Orange", "Yellow", "Green", "Teal", "Blue", "Purple", "Pink", "Grey", "Black"}
 local BADGE = {turn = "#60a5fa", any = "#a78bfa", forced = "#f87171", trigger = "#fbbf24", neutral = "#cbd5e1"}
 local DIM = "#94a3b8"
@@ -63,7 +64,7 @@ local STRIP_W, DETAILS_W, FONT = 760, 480, 14
 local RULE_BUTTONS = 4
 
 local details, tagCase, chapterPage, pageOfTitle = nil, {}, {}, {}
-local stripOff, pinned, holding, keyUsed, hideToken, rulesFor = {}, {}, {}, {}, {}, {}
+local stripOff, pinned, open, hideToken, rulesFor, menued = {}, {}, {}, {}, {}, setmetatable({}, {__mode = "k"})
 
 local function decode(text)
     local ok, data = pcall(JSON.decode, text or "")
@@ -80,15 +81,19 @@ local function rulesRow(prefix)
     return row
 end
 
-local function panel(id, color, align, pivot, offset, width, extra)
+local function panel(id, color, align, pivot, offset, width, strip)
+    local kids = {
+        {tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperCenter", offsetXY = "0 -8", width = width - 20,
+            height = 44, fontSize = FONT, color = "#f1f5f9", alignment = "UpperLeft", horizontalOverflow = "Wrap",
+            verticalOverflow = "Truncate"}, value = ""},
+        rulesRow(id)}
+    if not strip then                                  -- the details panel closes with its button
+        table.insert(kids, {tag = "Button", attributes = {id = id .. "_close", rectAlignment = "UpperRight", offsetXY = "-6 -6",
+            width = 26, height = 26, fontSize = 14, onClick = "closeDetails"}, value = "X"})
+    end
     return {tag = "Panel", attributes = {id = id, visibility = color, active = false, rectAlignment = align, pivot = pivot,
         offsetXY = offset, width = width, height = 60, color = "#0b1220E6", raycastTarget = true,
-        onMouseEnter = extra and "stripEnter" or nil, onMouseExit = extra and "stripExit" or nil},
-        children = {
-            {tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperCenter", offsetXY = "0 -8", width = width - 20,
-                height = 44, fontSize = FONT, color = "#f1f5f9", alignment = "UpperLeft", horizontalOverflow = "Wrap",
-                verticalOverflow = "Truncate"}, value = ""},
-            rulesRow(id)}}
+        onMouseEnter = strip and "stripEnter" or nil, onMouseExit = strip and "stripExit" or nil}, children = kids}
 end
 
 local function buildPanels()
@@ -102,9 +107,16 @@ local function buildPanels()
     UI.setXmlTable(xml)
 end
 
+-- right-click > Card details on every card (loose ones at load, others as they come out of decks and bags)
+local function addMenu(obj)
+    if obj == nil or obj.type ~= "Card" or menued[obj] then return end
+    menued[obj] = true
+    obj.addContextMenuItem("Card details", function(color) showDetails(color, obj) end)
+end
+
 function loadCardDetails()
     buildPanels()
-    addHotkey("Card details (hold)", detailsKey, true)
+    for _, obj in ipairs(getObjects()) do addMenu(obj) end
     WebRequest.get(DETAILS_URL, function(r)
         local data = not r.is_error and decode(r.text)
         if not (data and data.cards) then log("Card details: not loaded (" .. tostring(r.error) .. ")") return end
@@ -114,14 +126,31 @@ function loadCardDetails()
     WebRequest.get(PAGES_URL, function(r)
         local book = not r.is_error and decode(r.text)
         for i, page in ipairs(book and book.pages or {}) do
-            local num = tonumber((page.num or ""):match("^(%d+)$"))
-            if num and chapterPage[num] == nil then chapterPage[num] = i - 1 end
+            local num = tonumber(page.num)
+            if num and num == math.floor(num) and chapterPage[num] == nil then chapterPage[num] = i - 1 end
             if page.name and pageOfTitle[page.name] == nil then pageOfTitle[page.name] = i - 1 end
         end
     end)
 end
 
--- the card's PNG path in the card repo, or nil (not a card, or hidden from this player)
+function onObjectSpawn(obj) addMenu(obj) end
+
+-- %XX escapes decoded (no patterns)
+local function unescape(s)
+    local out, i = {}, 1
+    while true do
+        local j = s:find("%", i, true)
+        if not j then table.insert(out, s:sub(i)) break end
+        table.insert(out, s:sub(i, j - 1))
+        local code = tonumber(s:sub(j + 1, j + 2), 16)
+        table.insert(out, code and string.char(code) or "%")
+        i = code and j + 3 or j + 1
+    end
+    return table.concat(out)
+end
+
+-- the card's PNG path in the card repo (raw.githubusercontent.com/owner/repo/ref/<path>), or nil (not a card, or
+-- hidden from this player)
 local function cardPath(obj, color)
     if obj == nil or obj.isDestroyed() or obj.type ~= "Card" or obj.is_face_down then return nil end
     for _, other in ipairs(getSeatedPlayers()) do
@@ -135,8 +164,14 @@ local function cardPath(obj, color)
     if not url then
         for _, deck in pairs(obj.getData().CustomDeck or {}) do url = deck.FaceURL break end
     end
-    local path = url and url:match(RAW_PATH)
-    return path and (path:gsub("%%(%x%x)", function(h) return string.char(tonumber(h, 16)) end))
+    if not url or url:sub(1, #RAW_PREFIX) ~= RAW_PREFIX then return nil end
+    local at = #RAW_PREFIX + 1
+    for _ = 1, 3 do                                    -- past the owner, the repo and the commit
+        local slash = url:find("/", at, true)
+        if not slash then return nil end
+        at = slash + 1
+    end
+    return unescape(url:sub(at))
 end
 
 local function badge(tag)
@@ -144,17 +179,34 @@ local function badge(tag)
     return "<color=" .. (BADGE[t and t.g] or BADGE.neutral) .. "><b>(" .. tag .. ")</b></color>"
 end
 
+-- (1CD)-style tags coloured: each "(" with a known tag of up to 6 letters, digits, "/" or "-" before its ")"
 local function withBadges(text)
-    return (text:gsub("%((%-?[%w/]+)%)", function(t)
-        local tag = tagCase[t:upper()]
-        return tag and badge(tag) or nil
-    end))
+    local out, i = {}, 1
+    while true do
+        local open = text:find("(", i, true)
+        if not open then table.insert(out, text:sub(i)) break end
+        local close = text:find(")", open + 1, true)
+        local tag = close and close - open <= 8 and tagCase[text:sub(open + 1, close - 1):upper()]
+        if tag then
+            table.insert(out, text:sub(i, open - 1)); table.insert(out, badge(tag)); i = close + 1
+        else
+            table.insert(out, text:sub(i, open)); i = open + 1
+        end
+    end
+    return table.concat(out)
 end
 
-local function lead(text, limit)
-    local first = text:match("^[^\n]*")
+local function firstLine(text)
+    local nl = text:find("\n", 1, true)
+    return nl and text:sub(1, nl - 1) or text
+end
+
+local function lead(text, limit)                       -- the first line, cut at a space before limit
+    local first = firstLine(text)
     if #first <= limit then return first end
-    return (first:sub(1, limit):match("^(.*)%s") or first:sub(1, limit)) .. "..."
+    local cut = limit
+    while cut > limit / 2 and first:byte(cut) ~= 32 do cut = cut - 1 end
+    return first:sub(1, cut > limit / 2 and cut - 1 or limit) .. "..."
 end
 
 local function kindLine(card)
@@ -173,10 +225,24 @@ local function chaptersOf(card)
     return out
 end
 
+local function visibleLength(line)                     -- without <tags>
+    local n, i = 0, 1
+    while true do
+        local lt = line:find("<", i, true)
+        if not lt then return n + #line - i + 1 end
+        local gt = line:find(">", lt + 1, true)
+        n = n + lt - i
+        if not gt then return n + #line - lt + 1 end
+        i = gt + 1
+    end
+end
+
 local function lines(text, perLine)
-    local n = 0
-    for line in (text .. "\n"):gmatch("(.-)\n") do
-        n = n + math.max(1, math.ceil(#line:gsub("<[^>]+>", "") / perLine))
+    local n, i = 0, 1
+    while i <= #text + 1 do
+        local nl = text:find("\n", i, true) or #text + 1
+        n = n + math.max(1, math.ceil(visibleLength(text:sub(i, nl - 1)) / perLine))
+        i = nl + 1
     end
     return n
 end
@@ -198,7 +264,7 @@ end
 
 local function hide(id) UI.setAttribute(id, "active", "false") end
 
-local function stripText(card, color)
+local function stripText(card)
     local out = {"<b>" .. card.n .. "</b>  <color=" .. DIM .. ">" .. kindLine(card) .. "</color>"}
     for _, tag in ipairs(card.g or {}) do table.insert(out, badge(tag) .. " " .. details.tags[tag].m) end
     for _, t in ipairs(card.t or {}) do
@@ -210,9 +276,7 @@ local function stripText(card, color)
         if s then table.insert(out, "<b>" .. name .. "</b>  " .. lead(withBadges(s.x), 110)) end
     end
     if #out == 1 then return nil end
-    if not keyUsed[color] then
-        table.insert(out, "<color=" .. DIM .. "><i>Hold your Card details key for everything (Options > Game Keys; Left Alt also zooms)</i></color>")
-    end
+    table.insert(out, "<color=" .. DIM .. "><i>Right-click the card > Card details for everything</i></color>")
     return table.concat(out, "\n")
 end
 
@@ -250,10 +314,10 @@ local function hideLater(color)
 end
 
 function onObjectHover(color, obj)
-    if not details or holding[color] then return end
+    if not details or open[color] then return end
     local path = cardPath(obj, color)
     local card = path and details.cards[path]
-    local text = card and not stripOff[color] and stripText(card, color)
+    local text = card and not stripOff[color] and stripText(card)
     if text then
         hideToken[color] = nil
         show(color .. "_strip", color, text, STRIP_W, card)
@@ -262,19 +326,19 @@ function onObjectHover(color, obj)
     end
 end
 
-function detailsKey(color, obj, _, keyUp)
-    keyUsed[color] = true
-    if keyUp then
-        holding[color] = nil
-        hide(color .. "_details")
-        return
-    end
-    local path = details and cardPath(obj, color)
+function showDetails(color, obj)
+    if not details then broadcastToColor("Card details are still loading.", color, {1, 0.6, 0.6}) return end
+    local path = cardPath(obj, color)
     local card = path and details.cards[path]
-    if not card then return end
-    holding[color] = path
+    if not card then broadcastToColor("No details for this card.", color, {1, 0.6, 0.6}) return end
+    open[color] = true
     hide(color .. "_strip")
     show(color .. "_details", color, detailsText(card), DETAILS_W, card)
+end
+
+function closeDetails(player)
+    open[player.color] = nil
+    hide(player.color .. "_details")
 end
 
 function stripEnter(player) pinned[player.color] = true end
@@ -312,7 +376,8 @@ end
 
 function openRules(player, _, id)
     local color = player.color
-    local chapter = details and details.chapters[(rulesFor[color] or {})[tonumber(id:match("_r(%d+)$"))]]
+    local n = tonumber(id:sub(-1))                     -- "<color>_strip_r2": the 2nd button
+    local chapter = details and n and details.chapters[(rulesFor[color] or {})[n]]
     if not chapter then return end
     local page = chapterPage[tonumber(chapter.num)] or pageOfTitle[chapter.title]
     if not page then
