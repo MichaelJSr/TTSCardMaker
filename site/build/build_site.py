@@ -3233,6 +3233,78 @@ def type_meanings(chapters, icons):
     return found
 
 
+NAME_LEAD = re.compile(r"(?:Summon|Resummon|Equip|Create|Cleanse|Inflict|Draw|Acquire|Revive|Gain|Give|Steal|Copy|Become|Remove|"
+                       r"Destroy|Discard|Use|Play|Return|Swap|Choose|Target|If|When|Whenever|While|Once|Until|Unless|After|"
+                       r"Before|Then|And|Or|A|An|The|This|That|These|Each|Every|Any|Your|Its)")      # text.js LEAD
+_STATUS_VERB = re.compile(r"\b(?:inflict|cleanse|stacks? of)(?:[^\S\n]+[\dX]+T[\dX]+(?:\([^)\n]*\))?)?[^\S\n]+$", re.I)
+NAME_VERB = {"buff": _STATUS_VERB, "debuff": _STATUS_VERB,                                         # text.js VERB
+             "minion": re.compile(r"\b(?:summon|resummon|revive)(?:[^\S\n]+(?:a|an|the|\d+))?[^\S\n]+$", re.I)}
+
+
+def name_links(cards, icons, tag_table):
+    """text.js makeRenderer's card links, for the build: links(text, self_name) -> the cards the text names, as the site
+    links them ("summon a silithid": a lowercase one-word name after its verb)."""
+    fold = lambda s: re.sub(r"\s+", " ", str(s or "").strip().lower().replace("‘", "'").replace("’", "'"))
+    one_word = lambda s: not re.search(r"\s", str(s or "").strip())
+    by_name = {}
+
+    def add(n, c):
+        if len(k := fold(n)) >= 3:
+            by_name.setdefault(k, c)
+    for c in cards:
+        add(c["name"], c)
+    for c in cards:
+        if not one_word(c.get("key")) or one_word(c["name"]):
+            add(c.get("key"), c)
+    for c in cards:
+        add(re.sub(r"[!?.]+$", "", c["name"].strip()), c)
+    for c in cards:
+        if not one_word(c["name"]) and re.search(r"[^siu]s$", c["name"].strip(), re.I):
+            add(c["name"].strip()[:-1], c)
+    if not by_name:
+        return lambda text, self_name="": []
+    pat = lambda k: re.escape(k).replace("'", "['‘’]").replace(r"\ ", "[ \t]+")
+    names = re.compile(r"(?<![\w'‘’])(" + "|".join(pat(k) for k in sorted(by_name, key=len, reverse=True)) + r")"
+                       r"((?:['‘’]s|(?<=s)['‘’]|e?s)(?![\w'‘’]))?(?![\w'‘’])", re.I)
+
+    def piece(m):
+        if m[1] is None:
+            return bool(tag_info(m[2], tag_table))
+        base, colon, v = m[1].partition(":")
+        return norm(base) in icons and (not colon or v.lower() in VARIANT_IMAGES + ("no",))
+
+    def is_ref(m, text, card):
+        t, spelt = m[1], [card["name"].strip(), str(card.get("key") or "").strip()]
+        if t == t.upper() and t != t.lower() and t not in spelt:       # a heading ("PANDA")
+            return False
+        if re.search(r"\s", t):
+            return True
+        after, before = text[m.end():], text[:m.start()]
+        if after[:1] == ":" or re.match(r"[^\S\n]+(?:\d|X\b)", after):  # a label or a verb ("Heal 2 HP")
+            return False
+        if not (t in spelt and not m[2]) and not t[0].isupper():
+            return bool((verb := NAME_VERB.get(card.get("type"))) and verb.search(before))
+        w = re.search(r"(?:^|[\s(“\"‘'])([^\W\d_][\w'’-]*)[^\S\n]+$", before)
+        if w and w[1][0].isupper():
+            return bool(NAME_LEAD.fullmatch(w[1])) or fold(w[1]) in by_name
+        return not (re.search(r"(?:^|[\n.!?:)])[^\S\n]*$", before)
+                    and re.match(r"[^\S\n]+(?:to|the|a|an|your|its|all|any|each|it|this|that)\b", after))
+
+    def links(text, self_name=""):
+        flat = spaced = text or ""
+        for m in re.finditer(r"\[([^\[\]\n]{1,52})\]|" + TAG_IN_TEXT.pattern, flat):
+            if piece(m):
+                i, n = m.start(), len(m[0])
+                flat, spaced = flat[:i] + "\0" * n + flat[i + n:], spaced[:i] + " " * n + spaced[i + n:]
+        out = []
+        for m in names.finditer(flat):
+            card = by_name[fold(m[1])]
+            if card["name"] != self_name and is_ref(m, spaced, card):
+                out.append(card)
+        return out
+    return links
+
+
 RULE_WORDS = (("damage-types", r"piercing|true damage|life ?steal|shockwave|overkill|counter damage"),   # a card's text -> a chapter
               ("negation", r"negat(?:e|es|ed|ing|ion)"), ("reactions", r"react(?:s|ion|ions)?"))
 
@@ -3251,11 +3323,8 @@ def tts_details(cards, chapters, icons, tag_table):
     named = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(statuses, key=len, reverse=True)) + r")(?![\w'’])", re.I) \
         if statuses else None
     lower = {n.lower(): n for n in statuses}
-    by_name = {}                                      # a card's name -> its PNG (the first, no duplicate)
-    for c in shown:
-        if c.get("png") and not c.get("dup") and len(c["name"]) >= 3 and c["name"] not in statuses:
-            by_name.setdefault(c["name"], c["png"])
-    names = re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in sorted(by_name, key=len, reverse=True)) + r")(?:['’]s|e?s)?(?![\w'’])") if by_name else None   # plurals too, as text.js
+    links = name_links(shown, icons, tag_table)       # the cards a text names, as the site links them
+    originals = {c["id"]: c for c in shown if c.get("id")}   # a duplicate -> its original
     out_cards, used_tags = {}, {}
     ids = {c["id"] for c in chapters}
     rule_words = [(cid, re.compile(rf"\b(?:{words})\b", re.I)) for cid, words in RULE_WORDS if cid in ids]
@@ -3270,7 +3339,9 @@ def tts_details(cards, chapters, icons, tag_table):
                 tags.append(info[0])
                 used_tags[info[0]] = {"g": info[1], "m": info[2]}
         hits = [] if not named else [lower[m[1].lower()] for m in named.finditer(text)]
-        named_cards = [] if not names else [by_name[m[1]] for m in names.finditer(text)]
+        named_cards = [(originals.get(q["dup"], q) if q.get("dup") else q).get("png") for q in links(text, c["name"])
+                       if q["name"] not in statuses]
+        named_cards = [q for q in named_cards if q]
         mentioned = [q for i, q in enumerate(named_cards) if q not in named_cards[:i] and q != c["png"]][:6]
         bars = [" ".join(f"{k.upper()} {'?' if s.get(k) is None else s[k]}" for k in STAT_KEYS) for s in c.get("creatures") or [c]
                 if any(s.get(k) is not None for k in STAT_KEYS)]
