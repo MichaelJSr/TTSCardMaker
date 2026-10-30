@@ -990,7 +990,14 @@ jobs:
             exit 1
           fi
           ok=true
-          git push --no-thin origin "$m:refs/heads/main" || ok=false     # a thin pack would want the old blobs as delta bases
+          if ! git push --no-thin origin "$m:refs/heads/main"; then     # a thin pack would want the old blobs as delta bases
+            if [ "$(git ls-remote origin refs/heads/main | cut -f1)" = "$MAIN" ]; then   # main still there: git wanted an old blob
+              echo "::warning::the push needed objects this blobless checkout lacks: once more with fetching allowed"
+              GIT_NO_LAZY_FETCH=0 git push --no-thin origin "$m:refs/heads/main" || ok=false
+            else
+              ok=false
+            fi
+          fi
           now=$m
           if [ "$ok" = false ]; then now=$(git ls-remote origin refs/heads/main | cut -f1); fi
           if [ "$ok" = false ] && [ "$now" = "$m" ]; then echo "::warning::git push failed, but main is at M: pushed"; fi
