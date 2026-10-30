@@ -9,8 +9,8 @@ per frame; loading does nothing by itself and builds no UI; teams Red/Orange/Gre
 other seats None, Grey/Black untouched; hand zones shared on a side (a free seat's zones go to its first seated
 teammate and come back when someone sits there, kept through a save and load; other seats' zones never move); large
 cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on a flip only; card details, the
-rulebook panel and the card finder on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (panels built
-on a player's first use, the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
+rulebook panel and the card finder on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (the seated
+players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
 face down, Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden).
 Data: $TTS_DETAILS (a tts.json file), else the live website. Exits 1 on a failure.
 """
@@ -676,11 +676,13 @@ def main():
     w.run(menu["Card details"], "Red", what="Card details before the data")
     check(("Red", "Card details are still loading.") in w.told and not w.ui.builds, "before the data: 'still loading'")
     w.respond(details_raw, pages_text)
+    ui = w.ui
+    check(len(ui.builds) == 1 and "Red_d1" in ui.ids and "Blue_d1" in ui.ids and not any(i.startswith("Orange_") for i in ui.ids),
+          f"the data in: the seated players' panels built, no one else's ({len(ui.builds)} builds)")
     red = w.players["Red"]
     w.told.clear()
     w.run(menu["Card details"], "Red", what="Card details")
-    ui = w.ui
-    check(len(ui.builds) == 1, f"the first use builds the player's panels ({len(ui.builds)} builds)")
+    check(len(ui.builds) == 1, f"a first right-click builds nothing ({len(ui.builds)} builds)")
     if not ui.builds:
         return
     xml = ui.builds[-1]
@@ -747,8 +749,11 @@ def main():
     w.run(w.g.showDetails, "Red", secret, what="card in Blue's hand")
     check(("Red", "No details for this card.") in w.told, "a card in another player's hand: no details")
     w.run(w.g.showDetails, "Blue", secret, what="Blue's own card")
-    check(len(ui.builds) == 2 and ui.on("Blue_d1") and ui.on("Red_d1") and ui.on("Red_d3") and not ui.on("Red_d2"),
-          "Blue's first use builds Blue's panels; Red's open ones are drawn again")
+    check(len(ui.builds) == 1 and ui.on("Blue_d1"), "Blue's panels were built with the data: none on use")
+    w.seat("Red", "Blue", "Teal")
+    w.call("onPlayerChangeColor", "Teal")
+    check(len(ui.builds) == 2 and "Teal_d1" in ui.ids and ui.on("Blue_d1") and ui.on("Red_d1") and ui.on("Red_d3")
+          and not ui.on("Red_d2"), "Teal seated later: Teal's panels built; the open ones are drawn again")
 
     # ---- rulebook panel ----
     w.call("openRulebook", "Red")

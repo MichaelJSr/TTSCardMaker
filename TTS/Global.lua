@@ -57,6 +57,7 @@ end
 
 function onPlayerChangeColor(color)
     Wait.frames(shareHands, 2)                         -- any seat change, leaving one included
+    seatPanels(color)
     if color == "Grey" or color == "Black" then return end
     local player = Player[color]
     if not player or not player.seated then return end
@@ -98,8 +99,9 @@ end
 -- title bar, A- / A+
 -- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
 -- (status effects and others) spawn beside the card with a click. Data: the website's data/tts.json and
--- TTS/Rulebook/pages.json, fetched a moment after the save loads and read on first use; a player's panels are built
--- the first time they open one. No Lua patterns over long text (MoonSharp's are limited): plain finds only.
+-- TTS/Rulebook/pages.json, fetched a moment after the save loads; once tts.json is in, it is decoded and the seated
+-- players' panels are built (a player seated later: a moment after sitting). No Lua patterns over long text (MoonSharp's
+-- are limited): plain finds only.
 local DETAILS_URL = "https://michaeljsr.github.io/TTSCardMaker/data/tts.json"
 local PAGES_URL = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/TTS/Rulebook/pages.json"
 local RAW_PREFIX = "https://raw.githubusercontent.com/"
@@ -203,9 +205,9 @@ local function finderPanel(c)
             horizontalScrollbarVisibility = "AutoHideAndExpandViewport", verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {list}}}}
 end
 
--- A player's panels are built the first time they need one: TTS sets the whole UI at once, so building every seat's
--- (1,100 elements) stalled the game. A build keeps the save's own UI and the panels of everyone who has used them;
--- the panels open at the time are drawn again after it (a dragged one back at its place).
+-- Panels are built for seated players only: TTS sets the whole UI at once, so building every seat's (1,100 elements)
+-- stalled the game. A build keeps the save's own UI and the panels already built; the panels open at the time are drawn
+-- again after it (a dragged one back at its place).
 local baseXml, built, rbOpen, restoring, ensurePanels = nil, {}, {}, false, nil
 local function rebuild()
     baseXml = baseXml or UI.getXmlTable() or {}
@@ -221,7 +223,7 @@ local function rebuild()
     UI.setXmlTable(xml)
 end
 
--- the fetched data, decoded the first time it is needed (no work at load)
+-- the fetched data, decoded once it is in (prepare) or when first needed
 local detailsRaw, pagesRaw = nil, nil
 local function ensureData()
     if detailsRaw then
@@ -265,10 +267,24 @@ function loadCardDetails()
         for _, obj in ipairs(getObjects()) do addMenu(obj) end
         addContextMenuItem("Find a card", function(color, at) openFinder(color, at) end)   -- right-click the table
         WebRequest.get(DETAILS_URL, function(r)
-            if r.is_error then log("Card details: not loaded (" .. tostring(r.error) .. ")") else detailsRaw = r.text end
+            if r.is_error then log("Card details: not loaded (" .. tostring(r.error) .. ")") return end
+            detailsRaw = r.text
+            Wait.time(prepare, 2)
         end)
         WebRequest.get(PAGES_URL, function(r) if not r.is_error then pagesRaw = r.text end end)
     end, 3)
+end
+
+-- the GUI a moment after the load, so a first right-click doesn't wait: the data decoded, the seated players' panels built
+function prepare()
+    ensureData()
+    if details then ensurePanels(getSeatedPlayers()) end
+end
+
+function seatPanels(color)                             -- a player seated after that: theirs a moment later
+    if details and color ~= "Grey" and not built[color] then
+        Wait.time(function() if Player[color] and Player[color].seated then ensurePanels(color) end end, 2)
+    end
 end
 
 function onObjectSpawn(obj) addMenu(obj) end
@@ -766,9 +782,13 @@ function finderGo(player, _, id)
 end
 
 -- a player's panels built if they aren't yet, then done(); after a build every panel open before it is drawn again
-ensurePanels = function(color, done)
-    if not built[color] then
-        built[color] = true
+ensurePanels = function(colors, done)                  -- a color or a list of them
+    done = done or function() end
+    local new = false
+    for _, c in ipairs(type(colors) == "table" and colors or {colors}) do
+        if not built[c] then built[c], new = true, true end
+    end
+    if new then
         restoring = true
         rebuild()
     end
