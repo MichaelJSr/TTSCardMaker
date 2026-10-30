@@ -347,9 +347,9 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rbe-bar label.button { cursor: pointer; display: inline-block; border: 1px solid var(--border-strong); border-radius: 8px; }
 .rbe-bar details { position: relative; }
 .rbe-bar details > summary { list-style: none; cursor: pointer; border: 1px solid var(--border-strong); border-radius: 8px; }
-.rbe-bar details[open] > :not(summary) { position: absolute; z-index: 5; left: 0; top: 100%; margin-top: 4px; width: min(560px, 90vw); max-height: 60vh; overflow: auto;
+.rbe-bar .rbe-menu { position: absolute; z-index: 8; left: 0; top: 100%; margin-top: 4px; width: min(560px, calc(100vw - 16px)); max-height: 70vh; overflow: auto;
   background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px; box-shadow: var(--shadow); }
-.rbe-bar details.rbe-pics[open] > p { top: auto; position: static; box-shadow: none; border: 0; width: auto; }
+.rbe-bar .rbe-menu > p { margin: 8px 0 0; }
 .rbe-pic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; }
 .rbe-pic-grid button { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px; font-size: 11px; }
 .rbe-pic-grid img { width: 64px; height: 48px; object-fit: contain; }

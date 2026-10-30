@@ -49,6 +49,15 @@ export function open(api) {
   api.modal.querySelector("#rbe-file").addEventListener("change", e => upload([...e.target.files]).finally(() => { e.target.value = ""; }));
   api.modal.addEventListener("click", onClick);
   api.modal.querySelector(".rbe").addEventListener("keydown", onKey, true);
+  const menus = [...api.modal.querySelectorAll(".rbe-bar details")];
+  for (const d of menus) d.addEventListener("toggle", () => {     // one open at a time, kept on screen
+    if (!d.open) return;
+    for (const o of menus) if (o !== d) o.open = false;
+    const menu = d.querySelector(".rbe-menu"), room = document.documentElement.clientWidth - 8;
+    menu.style.left = "0px";
+    const r = menu.getBoundingClientRect();
+    if (r.right > room) menu.style.left = `${Math.max(8 - d.getBoundingClientRect().left, room - r.right)}px`;
+  });
   ta.addEventListener("drop", e => { const f = [...(e.dataTransfer?.files || [])].filter(x => x.type.startsWith("image/")); if (f.length) { e.preventDefault(); upload(f); } });
   ta.addEventListener("paste", e => { const f = [...(e.clipboardData?.files || [])].filter(x => x.type.startsWith("image/")); if (f.length) { e.preventDefault(); upload(f); } });
   ta.addEventListener("keydown", e => {                // Ctrl/Cmd+B bold, +I italic, +S publish
@@ -586,10 +595,10 @@ function html() {
       <button type="button" class="ghost" data-ins="red" title="Colour the selection">Colour</button>
       <button type="button" class="ghost" data-ins="page" title="Start a new TTS page here">TTS page break</button>
       <label class="ghost button" title="Add pictures from this computer (or drop image files on the page or the text, or paste one)">Add picture<input id="rbe-file" type="file" accept="image/*" multiple hidden></label>
-      <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
-        <p class="muted">Click: a picture at the cursor; drag one anywhere on the page to place it there. Alt-drag or Alt-click: the mascot says something (&gt; [!name]).</p></details>
+      <details class="rbe-pics"><summary class="ghost button">Pictures and mascots</summary><div class="rbe-menu"><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
+        <p class="muted">Click: a picture at the cursor; drag one anywhere on the page to place it there. Alt-drag or Alt-click: the mascot says something (&gt; [!name]).</p></div></details>
       <button type="button" class="ghost" data-rbe="tts" aria-pressed="false" title="Show the chapter as its TTS pages (1080x1920)">TTS pages</button>
-      <details class="rbe-help"><summary class="ghost button">Syntax</summary><table class="help-table">${HELP.map(([k, d]) => `<tr><td><code>${esc(k)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>
+      <details class="rbe-help"><summary class="ghost button">Syntax</summary><div class="rbe-menu"><table class="help-table">${HELP.map(([k, d]) => `<tr><td><code>${esc(k)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>
         <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
         Click anything on the page to go to its line. Drag a picture anywhere on the page to place it there (it stays with the panel you drop it in);
         a picture that is a row's column stays in the row: drag it inside its column to shift it there, onto another column to swap them (hold Alt to
@@ -597,7 +606,7 @@ function html() {
         rest of the row adjusts around it. Click a picture for its tools in the bar above the page, then: arrow keys move it
         (Shift: further), + and − size it, Delete takes it out, Esc lets it go; Left / Center / Right / Corner put it back in the flow. Rows of cards and mascots drag between blocks. Drop image files from your computer, or pictures from the panel,
         anywhere on the page. ↶ ↷ (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z) undo and redo everything, typing and the page alike. Your draft is kept in this
-        browser until you publish (Ctrl/Cmd+S).</p></details>
+        browser until you publish (Ctrl/Cmd+S).</p></div></details>
     </div>
     <div class="rbe-cols"><textarea id="rbe-text" spellcheck="true" data-tokens aria-label="The chapter's text"></textarea>
       <div class="rbe-preview" tabindex="-1"><div class="rbe-pictools" role="toolbar" aria-label="The selected picture"></div><div class="rb rb-book"><article class="rb-chapter" id="rbe-page"></article></div><div class="rbe-sheets" hidden></div></div></div></div>`;
