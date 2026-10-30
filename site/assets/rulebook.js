@@ -288,7 +288,8 @@ function blockInner(b, ctx) {
     case "cards": return `<div class="rb-cards ${clsOf(b.attrs)}">${b.names.map(n => (n.arrow ? `<span class="rb-arrow" aria-hidden="true">→</span>` : cardHtml(n.name, n.label, ctx))).join("")}</div>`;
     case "list": {
       const tag = b.type === "ul" ? "ul" : "ol";
-      const attr = tag === "ol" ? `${b.type !== "1" ? ` type="${b.type}"` : ""}${b.delim === ")" ? ' data-delim=")"' : ""}` : "";
+      const digits = Math.max(1, ...b.items.map(it => String(it.n ?? "").length));   // the numbers' room: "10." needs more than "9."
+      const attr = tag === "ol" ? `${b.type !== "1" ? ` type="${b.type}"` : ""}${b.delim === ")" ? ' data-delim=")"' : ""}${digits > 1 ? ` style="--digits:${digits}"` : ""}` : "";
       return `<${tag} class="rb-list"${attr}>${b.items.map(it => `<li${tag === "ol" ? ` value="${it.n}"` : ""}>${inline(it.text, ctx)}${kidsHtml(it.children, ctx)}</li>`).join("")}</${tag}>`;
     }
     case "table": {
@@ -419,6 +420,13 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
       fresh();
     }
     if (!body.children.length) { body.closest(".rb-sheet").remove(); sheets.pop(); }   // a trailing empty page
+  }
+  // the contents' page numbers (the PDF's, 1 the first page), for flipping to a chapter in TTS
+  const first = {};
+  sheets.forEach((s, k) => { if (s.ch != null && s.n === 1 && first[Number(s.ch)] == null) first[Number(s.ch)] = k + 1; });
+  for (const li of host.querySelectorAll(".rb-contents li[value]")) {
+    const page = first[Number(li.getAttribute("value"))];
+    if (page) li.insertAdjacentHTML("beforeend", `<span class="rb-toc-page">${page}</span>`);
   }
   return sheets;
 }

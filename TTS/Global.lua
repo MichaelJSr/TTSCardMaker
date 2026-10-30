@@ -66,7 +66,7 @@ local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 4, 6, 40, 30
 local BACKS = {{"Buff", "MDW/Assets/cardback_statuseffect.png"}, {"Debuff", "MDW/Assets/cardback_statuseffect.png"},
     {"Creature", "MDW/Assets/cardback.png"}, {"Minion", "MDW/Assets/cardback.png"}, {"Auxiliary creature", "MDW/Assets/cardback.png"}}
 
-local details, tagCase, chapterPage, pageOfTitle = nil, {}, {}, {}
+local details, tagCase, chapterPage, pageOfTitle, bookPages = nil, {}, {}, {}, {}
 local sizeOf, shown, menued, cardIndex = {}, {}, setmetatable({}, {__mode = "k"}), nil
 
 local function decode(text)
@@ -109,17 +109,45 @@ local function detailsPanel(c)
         row(id .. "_cards", id .. "_c", CARD_BUTTONS, "spawnNamed")}}
 end
 
+-- one seat's rulebook panel: a search box, then the chapters (or the pages a search finds) as buttons
+local RESULTS = 30
+local function rulebookPanel(c)
+    local id = c .. "_rb"
+    local list = {tag = "VerticalLayout", attributes = {id = id .. "_list", height = 100, spacing = 3, padding = "6 10 4 4",
+        childForceExpandHeight = false, childAlignment = "UpperLeft"}, children = {}}
+    for i = 1, RESULTS do
+        table.insert(list.children, button(id .. "_g" .. i, "", "rulebookGo", {preferredHeight = 30, fontSize = 14, textAlignment = "MiddleLeft", active = false}))
+    end
+    return {tag = "Panel", attributes = {id = id, visibility = c, active = false, allowDragging = true,
+        returnToOriginalPositionWhenReleased = false, rectAlignment = "MiddleLeft", offsetXY = "60 0", width = 460, height = 640,
+        color = "#0f1729F2", outline = "#3b4b6b", outlineSize = "2 -2"}, children = {
+        {tag = "Panel", attributes = {rectAlignment = "UpperCenter", height = TITLE_H, color = "#1b2740"}, children = {
+            {tag = "Text", attributes = {id = id .. "_title", rectAlignment = "MiddleLeft", offsetXY = "12 0", width = 360, height = TITLE_H,
+                fontSize = 17, fontStyle = "Bold", color = "#ffffff", alignment = "MiddleLeft"}, value = "Rulebook"},
+            button(id .. "_close", "X", "closeRulebook", {rectAlignment = "MiddleRight", offsetXY = "-4 0", width = 36, height = 28})}},
+        {tag = "InputField", attributes = {id = id .. "_q", rectAlignment = "UpperCenter", offsetXY = "0 -" .. (TITLE_H + 8), width = 436,
+            height = 34, fontSize = 15, placeholder = "Search the rulebook...", onValueChanged = "rulebookSearch"}},
+        {tag = "VerticalScrollView", attributes = {id = id .. "_scroll", rectAlignment = "UpperCenter", offsetXY = "0 -" .. (TITLE_H + 50),
+            width = 452, height = 640 - TITLE_H - 58, color = "#00000000", scrollSensitivity = 30,
+            horizontalScrollbarVisibility = "AutoHideAndExpandViewport", verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {list}}}}
+end
+
 local function buildPanels()
     local xml = UI.getXmlTable() or {}
-    for _, c in ipairs(SEATS) do table.insert(xml, detailsPanel(c)) end
+    for _, c in ipairs(SEATS) do table.insert(xml, detailsPanel(c)); table.insert(xml, rulebookPanel(c)) end
     UI.setXmlTable(xml)
 end
 
 -- right-click > Card details on every card (loose ones at load, others as they come out of decks and bags)
 local function addMenu(obj)
-    if obj == nil or obj.type ~= "Card" or menued[obj] then return end
-    menued[obj] = true
-    obj.addContextMenuItem("Card details", function(color) showDetails(color, obj) end)
+    if obj == nil or menued[obj] then return end
+    if obj.type == "Card" then
+        menued[obj] = true
+        obj.addContextMenuItem("Card details", function(color) showDetails(color, obj) end)
+    elseif (obj.name == "Custom_PDF" and obj.getName() == "Rulebook") or (obj.type == "Bag" and obj.getName() == "Rulebooks") then
+        menued[obj] = true
+        obj.addContextMenuItem("Contents and search", function(color) openRulebook(color) end)
+    end
 end
 
 function loadCardDetails()
@@ -138,6 +166,8 @@ function loadCardDetails()
                 local num = tonumber(page.num)
                 if num and num == math.floor(num) and chapterPage[num] == nil then chapterPage[num] = i - 1 end
                 if page.name and pageOfTitle[page.name] == nil then pageOfTitle[page.name] = i - 1 end
+                table.insert(bookPages, {name = page.name or "", num = page.num or "", page = i - 1, text = page.t or "", low = (page.t or ""):lower(),
+                    chapter = num and num == math.floor(num) or page.name == "Table of Contents"})
             end
         end)
     end, 3)
@@ -432,6 +462,67 @@ function spawnNamed(player, _, id)
         callback_function = function(o)
             if resizeTargets[o.getName()] then o.setScale(LARGE_CARD_SCALE) end
         end})
+end
+
+-- the rulebook panel: its chapters, or the pages holding every word searched (a snippet of each); a click turns the PDF there
+local found = {}                                       -- color -> the pages its buttons go to
+local function listPages(color, query)
+    local id, list, q = color .. "_rb", {}, (query or ""):lower()
+    local words = {}
+    local start = 1
+    while start <= #q do                               -- the query's words (spaces between them)
+        local sp = q:find(" ", start, true) or #q + 1
+        if sp > start then table.insert(words, q:sub(start, sp - 1)) end
+        start = sp + 1
+    end
+    for _, p in ipairs(bookPages) do
+        if #words == 0 then
+            if p.chapter then table.insert(list, {p.page, (p.num ~= "" and (p.num .. ".  ") or "") .. p.name .. "   p. " .. (p.page + 1)}) end
+        else
+            local at = nil
+            for _, w in ipairs(words) do
+                local hit = p.low:find(w, 1, true)
+                if not hit then at = nil break end
+                at = at or hit
+            end
+            if at then
+                local from, to = math.max(1, at - 28), at + 44     -- the snippet on whole words
+                local sp = from > 1 and p.text:find(" ", from, true)
+                if sp and sp < at then from = sp + 1 end
+                local stop = p.text:find(" ", to, true)
+                local snippet = p.text:sub(from, stop and stop - 1 or #p.text)
+                table.insert(list, {p.page, "p. " .. (p.page + 1) .. "  " .. p.name .. ":  " .. (from > 1 and "..." or "") .. snippet .. (stop and "..." or "")})
+            end
+        end
+        if #list >= RESULTS then break end
+    end
+    found[color] = list
+    for i = 1, RESULTS do
+        local item = list[i]
+        UI.setAttribute(id .. "_g" .. i, "active", item and "true" or "false")
+        if item then UI.setAttribute(id .. "_g" .. i, "text", item[2]) end
+    end
+    UI.setAttribute(id .. "_list", "height", math.max(40, #list * 33 + 10))
+    UI.setValue(id .. "_title", #words == 0 and "Rulebook: contents" or (#list == 0 and "Nothing found" or ("Rulebook: " .. #list .. (#list >= RESULTS and "+" or "") .. (#list == 1 and " page" or " pages"))))
+end
+
+function openRulebook(color)
+    if #bookPages == 0 then broadcastToColor("The rulebook's pages are still loading.", color, {1, 0.6, 0.6}) return end
+    listPages(color, "")
+    UI.setAttribute(color .. "_rb_q", "text", "")
+    UI.setAttribute(color .. "_rb", "active", "true")
+end
+
+function closeRulebook(player) UI.setAttribute(player.color .. "_rb", "active", "false") end
+
+function rulebookSearch(player, value) listPages(player.color, value) end
+
+function rulebookGo(player, _, id)
+    local color = player.color
+    local n = tonumber(id:sub(#color + 6))             -- "<color>_rb_g12": the 12th line
+    local item = n and (found[color] or {})[n]
+    if not item then return end
+    withRulebook(color, function(book) book.Book.setPage(item[1]) end)
 end
 
 -- The turn markers: flipped by a player, they go green "Has not taken its turn" -> yellow "Is taking its turn" -> red
