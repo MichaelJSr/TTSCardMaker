@@ -255,6 +255,14 @@
    "png_blob": "bbdd5bb37a4e65abf9a5b1d0cd98be00cdbbcd58",
    "psd_blob": "792e8f6ab17053cd9943a855f0440b2617f44650",
    "state": "baked"
+  },
+  "zomoroko-mvw1c0yx-ic5n": {
+   "at": "2026-10-31T06:44:07Z",
+   "card": "Lil Spood",
+   "path": "Auxiliary/Minions/Lil_Spood.psd",
+   "png_blob": "8c41a4e44ac249de00f47694e1c9cae3cbea5c0d",
+   "psd_blob": "77ef8b53e2ab81337ea52d231e1aff79b3e96844",
+   "state": "baked"
   }
  },
  "v": 1

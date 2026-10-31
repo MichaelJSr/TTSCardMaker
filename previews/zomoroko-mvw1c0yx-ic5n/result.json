@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw1c0yx-ic5n",
+ "card": "Lil Spood",
+ "path": "Auxiliary/Minions/Lil_Spood.psd",
+ "png": "Auxiliary/Minions/Lil_Spood.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "ca6f235287d9806c24af131466226103618d6275",
+  "psd_blob": "77ef8b53e2ab81337ea52d231e1aff79b3e96844",
+  "png_blob": "8c41a4e44ac249de00f47694e1c9cae3cbea5c0d"
+ },
+ "edit": {
+  "ability": "Attacks inflict 3T1 Poison.\nOverkill damage carries over to another Lil Spood in this slot.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Attacks inflict 3T1 Poison.\nOverkill damage carries over to another Lil Spood in this slot.",
+    "was": "Attacks inflict 3T1 Poison.\nOverkill damage carries from one Spood to the next.",
+    "sha": "29f67c5f",
+    "psd": "77ef8b53",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'carries from one Spood to the next.' -> 'carries over to another Lil Spood in thi'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Attacks inflict 3T1 Poison.\nOverkill damage carries from one Spood to the next.",
+   "new": "Attacks inflict 3T1 Poison.\nOverkill damage carries over to another Lil Spood in this slot."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.165,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  1779,
+  1173,
+  2198
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41177775180",
+ "took_s": 8.6,
+ "at": "2026-10-31T06:44:07Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1226793,
+  "webp": 47026,
+  "before": 45588
+ },
+ "recompressed": false
+}
