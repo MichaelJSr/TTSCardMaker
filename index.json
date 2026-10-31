@@ -119,6 +119,14 @@
    "png_blob": "2a90d41ed66984a92c01b14935e803427dc4b549",
    "psd_blob": "92ca35f3d30b3616200254b41e84e1d61f9bd91c",
    "state": "baked"
+  },
+  "zomoroko-mvvyr7em-w8u4": {
+   "at": "2026-10-31T05:32:06Z",
+   "card": "Earth Totem",
+   "path": "Auxiliary/Items/Earth_Totem.psd",
+   "png_blob": "2d829b8dcec1be83e71a0de0cf631a19699a5d82",
+   "psd_blob": "006c0d59802da1ac2f8780eecdf93455062d1b7e",
+   "state": "baked"
   }
  },
  "v": 1
