@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw4m5we-otkv",
+ "card": "Fawful",
+ "path": "Creatures/Mario/4 Stars/Fawful.psd",
+ "png": "Creatures/Mario/4 Stars/Fawful.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "09a590d58049d448e1eac4943ac27b676941b30b",
+  "psd_blob": "6a5c3a9772ee02d77751ef84081d0f8d7c0f4260",
+  "png_blob": "8350a5ad20d78e5f6b1e525da1355a68bbac6103"
+ },
+ "edit": {
+  "ability": "(OFS) Summon Jetpack.\n(1GCD) When attacked, this gains +2 DEF until (ENDGT).\n(OYT)(3 points) Resummon Jetpack.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OFS) Summon Jetpack.\n(1GCD) When attacked, this gains +2 DEF until (ENDGT).\n(OYT)(3 points) Resummon Jetpack.",
+    "was": "(OFS) Summon Jetpack.\n(1GCD) When attacked, this gains +2 DEF until (ENDGT).\n(OYT)(3 points) Revive the jetpack if it is destroyed.",
+    "sha": "14427fab",
+    "psd": "6a5c3a97",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'points) Revive the jetpack if it is dest' -> 'points) Resummon Jetpack.'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(OFS) Summon Jetpack.\n(1GCD) When attacked, this gains +2 DEF until (ENDGT).\n(OYT)(3 points) Revive the jetpack if it is destroyed.",
+   "new": "(OFS) Summon Jetpack.\n(1GCD) When attacked, this gains +2 DEF until (ENDGT).\n(OYT)(3 points) Resummon Jetpack."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.643,
+   "max": 3.0
+  }
+ },
+ "region": [
+  49,
+  1796,
+  1149,
+  2201
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41183854582",
+ "took_s": 11.7,
+ "at": "2026-10-31T08:16:02Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3072902,
+  "webp": 102388,
+  "before": 105378
+ },
+ "recompressed": false
+}

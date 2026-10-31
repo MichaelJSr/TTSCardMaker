@@ -327,6 +327,14 @@
    "png_blob": "eff26d76fe9ff09a50c3110e8d23edaa01405824",
    "psd_blob": "49146bb224cdf6db97ca601c6521ad28f023eb74",
    "state": "baked"
+  },
+  "zomoroko-mvw4m5we-otkv": {
+   "at": "2026-10-31T08:16:02Z",
+   "card": "Fawful",
+   "path": "Creatures/Mario/4 Stars/Fawful.psd",
+   "png_blob": "8350a5ad20d78e5f6b1e525da1355a68bbac6103",
+   "psd_blob": "6a5c3a9772ee02d77751ef84081d0f8d7c0f4260",
+   "state": "baked"
   }
  },
  "v": 1
