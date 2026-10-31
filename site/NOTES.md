@@ -1380,8 +1380,8 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 
 - Stats page, after Status effects mentioned (stats.js `seasonsCard`): every card in scope (Kind and Series) by the season
   its `art` field names (`spongeOf`: `SpongeBob SquarePants Season N Ep. NNx "Title"`, or a SpongeBob movie), stacked by
-  kind with a fixed colour each (`SPONGE_KINDS`: Buffs, Debuffs, Items with auxiliary and N.M.E. items, Creatures with
-  minions and auxiliary creatures, Other cards), every season from 1 (an empty one has no column button), the Movie
+  kind with a fixed colour each (`SPONGE_KINDS`, style.css `--s1`…`--s8`, owner 10-31: no grey: Buffs, Debuffs, Items,
+  Creatures with minions and auxiliary creatures, Auxiliary items, Field cards, N.M.E. items, Other kinds), every season from 1 (an empty one has no column button), the Movie
   between seasons 3 and 4 (owner 10-31).
 - A season's column (a button, app.js action `season`) shows its episodes below in place: per episode a block per card
   and their names (card links); the pick is kept for the session (`S.season`), else the biggest season. The table view

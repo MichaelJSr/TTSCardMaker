@@ -320,9 +320,11 @@ function cardCharts(pool, creatures, L) {
 // ---- the dashboard ---------------------------------------------------------------------------------
 // ---- cards by the SpongeBob season of their art (the art field) ----------------------------------------------------
 const EPISODE = /SpongeBob SquarePants Season (\d+) Ep\. (\d+)([a-z]?)\s+"([^"]+)"/i, MOVIE = /SpongeBob.*Movie/i;
-// the stack's groups by kind, a fixed colour each (the rest: Other)
-const SPONGE_KINDS = [["buff", "Buffs", "var(--s1)"], ["debuff", "Debuffs", "var(--s2)"], ["item", "Items", "var(--s3)"], ["creature", "Creatures", "var(--s4)"], ["other", "Other cards", "var(--deemph)"]];
-const SPONGE_GROUP = { buff: "buff", debuff: "debuff", item: "item", "aux item": "item", nme: "item", creature: "creature", creatures: "creature", minion: "creature" };
+// the stack's groups by kind, a fixed colour each (the eight validated slots, owner 10-31: no grey); minions and
+// auxiliary creatures with creatures
+const SPONGE_KINDS = [["buff", "Buffs", "var(--s1)"], ["debuff", "Debuffs", "var(--s2)"], ["item", "Items", "var(--s3)"], ["creature", "Creatures", "var(--s4)"],
+  ["aux item", "Auxiliary items", "var(--s5)"], ["field", "Field cards", "var(--s6)"], ["nme", "N.M.E. items", "var(--s7)"], ["other", "Other kinds", "var(--s8)"]];
+const SPONGE_GROUP = { buff: "buff", debuff: "debuff", item: "item", creature: "creature", creatures: "creature", minion: "creature", "aux item": "aux item", field: "field", nme: "nme" };
 const spongeGroup = c => SPONGE_GROUP[c.type] || "other", groupAt = g => SPONGE_KINDS.findIndex(([k]) => k === g);
 /** a card's SpongeBob source: {season: "3" or "Movie", ep (sort key), label}, else null */
 export function spongeOf(art) {

@@ -6,7 +6,7 @@ html { scrollbar-gutter: stable; }   /* a scrollbar that appears (the grid fills
   --border: rgba(255,255,255,0.10); --border-strong: rgba(255,255,255,0.18);
   --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781; --grid: #2c2c2a; --axis: #383835;
   --accent: #3987e5; --accent-ink: #fff; --danger: #e66767; --good: #0ca30c; --warn: #fab219;
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --deemph: #4a4a46;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767; --deemph: #4a4a46;
   --seq-100: #104281; --seq-700: #86b6ef;
   --shadow: 0 10px 40px rgba(0,0,0,.55);
 }
@@ -16,7 +16,7 @@ html { scrollbar-gutter: stable; }   /* a scrollbar that appears (the grid fills
   --border: rgba(11,11,11,0.10); --border-strong: rgba(11,11,11,0.20);
   --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781; --grid: #e1e0d9; --axis: #c3c2b7;
   --accent: #2a78d6; --accent-ink: #fff; --danger: #d03b3b; --good: #006300; --warn: #b07800;
-  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --deemph: #c3c2b7;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #6250d6; --s8: #e34948; --deemph: #c3c2b7;
   --seq-100: #cde2fb; --seq-700: #0d366b;
   --shadow: 0 10px 40px rgba(0,0,0,.18);
 }
