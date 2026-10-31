@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw46749-jz4a",
+ "card": "Doctor Zomboss",
+ "path": "Creatures/Other/5 Stars/Doctor_Zomboss.psd",
+ "png": "Creatures/Other/5 Stars/Doctor_Zomboss.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "09a590d58049d448e1eac4943ac27b676941b30b",
+  "psd_blob": "49146bb224cdf6db97ca601c6521ad28f023eb74",
+  "png_blob": "eff26d76fe9ff09a50c3110e8d23edaa01405824"
+ },
+ "edit": {
+  "ability": "(1/2CD) Gain +2 ATK for this attack and inflict either 2T Blazing or 2T Frostbite.\n(2CD) Summon a Polevaulter Zombie or a Jack-In-The-Box Zombie.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1/2CD) Gain +2 ATK for this attack and inflict either 2T Blazing or 2T Frostbite.\n(2CD) Summon a Polevaulter Zombie or a Jack-In-The-Box Zombie.",
+    "was": "(1/2CD) Gain +2 ATK for this attack and inflict either 2T Blazing or 2T Frostbite.\n(2CD) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+    "sha": "5c903fad",
+    "psd": "49146bb2",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'a polevaulter zombie or a jack-in-the-bo' -> 'a Polevaulter Zombie or a Jack-In-The-Bo'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1/2CD) Gain +2 ATK for this attack and inflict either 2T Blazing or 2T Frostbite.\n(2CD) Summon a polevaulter zombie or a jack-in-the-box zombie.",
+   "new": "(1/2CD) Gain +2 ATK for this attack and inflict either 2T Blazing or 2T Frostbite.\n(2CD) Summon a Polevaulter Zombie or a Jack-In-The-Box Zombie."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.078,
+   "max": 3.0
+  }
+ },
+ "region": [
+  12,
+  1749,
+  1186,
+  2235
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41183002634",
+ "took_s": 13.1,
+ "at": "2026-10-31T08:03:42Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3152732,
+  "webp": 102306,
+  "before": 101900
+ },
+ "recompressed": false
+}
