@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvv5w08-fns8",
+ "card": "ABBI",
+ "path": "Creatures/Omori/5 Stars/ABBI.psd",
+ "png": "Creatures/Omori/5 Stars/Abbi.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "9f2eca0810ee7cf6c741e9d8ad3817abb2e66784",
+  "psd_blob": "601616dcee6253acf83f56154427e448f608728a",
+  "png_blob": "f4da05e789673789d6d243b90408e5ce9da3947a"
+ },
+ "edit": {
+  "ability": "Starts with 2 Dark Tentacle minions.\nAttacks inflict 2T Afraid.\n(Action) Give this creature and all living Dark Tentacle minions 1 ATK permanently.\n(Action) Summon a new Dark Tentacle minion.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Starts with 2 Dark Tentacle minions.\nAttacks inflict 2T Afraid.\n(Action) Give this creature and all living Dark Tentacle minions 1 ATK permanently.\n(Action) Summon a new Dark Tentacle minion.",
+    "was": "Starts with 2 Dark Tentacles.\nAttacks inflict 2T Afraid.\n(Action) Give this creature and all living Dark Tentacles 1 ATK permanently.\n(Action) Summon a new Dark Tentacle.",
+    "sha": "3bf14a88",
+    "psd": "601616dc",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Dark Tentacles. Attacks inflict 2T Afrai' -> 'Dark Tentacle minions. Attacks inflict 2'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Starts with 2 Dark Tentacles.\nAttacks inflict 2T Afraid.\n(Action) Give this creature and all living Dark Tentacles 1 ATK permanently.\n(Action) Summon a new Dark Tentacle.",
+   "new": "Starts with 2 Dark Tentacle minions.\nAttacks inflict 2T Afraid.\n(Action) Give this creature and all living Dark Tentacle minions 1 ATK permanently.\n(Action) Summon a new Dark Tentacle minion."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.003,
+   "max": 2.0
+  }
+ },
+ "region": [
+  67,
+  1787,
+  1124,
+  2386
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41166108051",
+ "took_s": 10.0,
+ "at": "2026-10-31T03:51:29Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 683767,
+  "webp": 48184,
+  "before": 46644
+ },
+ "recompressed": false
+}

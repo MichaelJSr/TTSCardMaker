@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "michaeljsr-mvuivbxn-05a4",
+ "card": "Soul of Eden",
+ "path": "Items/Equip/2 Stars/Soul_of_Eden.psd",
+ "png": "Items/Equip/2 Stars/Soul_of_Eden.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "e850449db7d505537551e8775b12dcc4c8fc56b3",
+  "psd_blob": "35f52e7db1ee1a360a301bade9151b97163136a8",
+  "png_blob": "ed0e7ac49eaf136cc1b25a943493445a16e4a5b0"
+ },
+ "edit": {
+  "name": "Eden's Soul",
+  "parts": {
+   "327": {
+    "field": "name",
+    "text": "Eden's Soul",
+    "was": "Soul of Eden",
+    "sha": "50625702",
+    "psd": "35f52e7d",
+    "layer": "Text/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'Soul of Eden' -> \"Eden's Soul\"",
+ "changes": [
+  {
+   "field": "name",
+   "old": "Soul of Eden",
+   "new": "Eden's Soul"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.021,
+   "max": 2.0
+  }
+ },
+ "region": [
+  331,
+  54,
+  874,
+  138
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41007756850",
+ "took_s": 6.8,
+ "at": "2026-10-30T05:19:29Z",
+ "variant": null,
+ "parts": {
+  "327": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1739746,
+  "webp": 63566,
+  "before": 63810
+ },
+ "recompressed": false
+}
