@@ -866,6 +866,7 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
 .pv-ribbon { position: absolute; top: 32%; left: 8px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: .06em;
   text-transform: uppercase; background: #fab219; color: #1a1300; box-shadow: 0 1px 4px rgba(0,0,0,.4); pointer-events: none; }
 .pv-state { margin: 0 0 6px; font-size: 13.5px; }
+.pv-discard { padding: 2px 5px; margin-left: 4px; vertical-align: -3px; line-height: 0; } .pv-discard:hover { color: var(--danger); }
 .pv-stale { background: color-mix(in srgb, var(--warn) 18%, transparent); border-radius: 8px; padding: 6px 8px; font-size: 13px; margin: 0 0 8px; }
 .pv-stale button { margin-left: 6px; padding: 1px 8px; font-size: 12px; }
 .pv-notes { font-size: 13px; margin: 6px 0 0; padding-left: 18px; color: var(--ink-2); }
