@@ -895,8 +895,9 @@ jobs:
         timeout-minutes: 10
         working-directory: bot
         run: |
-          if ! fc-list | grep -qi 'color emoji'; then        # the chapters' 🕐 and ⏳
-            sudo apt-get -qq update && sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null || echo "::warning::no emoji font"
+          if ! fc-list | grep -qi 'color emoji'; then        # the chapters' 🕐 and ⏳; apt-get update only when the image's lists fail
+            sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null 2>&1 \
+              || { sudo apt-get -qq update && sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null; } || echo "::warning::no emoji font"
           fi
           CHROME=$(command -v google-chrome || command -v chromium || true) \
             "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" | tee "$RUNNER_TEMP/pages.md"
