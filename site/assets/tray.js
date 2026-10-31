@@ -83,7 +83,8 @@ const trayEl = () => A.view.querySelector(".browse > section > .tray");
 let sized = null;                                  // a ResizeObserver, made on first use (node imports the helpers above)
 function padTop() {
   const t = trayEl(), cs = t && getComputedStyle(t);
-  t?.parentElement.style.setProperty("--tray-pad", cs.position === "sticky" ? `${Math.ceil(parseFloat(cs.top) + t.offsetHeight) + 8}px` : "0px");
+  if (!t) { A.view.querySelector(".browse > section")?.style.removeProperty("--tray-pad"); return; }   // unpinned in place: none
+  t.parentElement.style.setProperty("--tray-pad", cs.position === "sticky" ? `${Math.ceil(parseFloat(cs.top) + t.offsetHeight) + 8}px` : "0px");
 }
 const restore = () => {
   const t = trayEl(); if (t && t.scrollTop !== trayTop) t.scrollTop = trayTop;

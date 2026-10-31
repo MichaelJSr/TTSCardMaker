@@ -1000,7 +1000,9 @@ table.people .face { display: inline-block; width: 20px; margin-right: 8px; vert
   .tray .bucket.add { align-items: center; justify-content: center; }
   .tray .pin-form { min-height: 48px; }
 }
-.browse > section > .tray ~ *, .browse > section > .tray ~ * * { scroll-margin-top: var(--tray-pad, 0px); }   /* tray.js padTop: focus scrolls clear of the sticky tray */
+/* tray.js padTop: focus scrolls clear of the sticky tray (--tray-pad on the section while it's there, the tray itself 0);
+   not ".tray ~ * *", whose matching walked every earlier tile or row for each element */
+.browse > section * { scroll-margin-top: var(--tray-pad, 0px); } .browse > section > .tray { --tray-pad: 0px; }
 .tray-skip { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }   /* past nine boxes: shown on focus */
 .tray-skip:focus { position: static; grid-column: 1 / -1; justify-self: start; width: auto; height: auto; overflow: visible; clip-path: none; }
 .bucket-wrap { position: relative; display: flex; min-width: 0; }
