@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvv9hin-88tv",
+ "card": "Astr Meiana",
+ "path": "Creatures/Other/4 Stars/Astr_Meiana.psd",
+ "png": "Creatures/Other/4 Stars/Astr_Meiana.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "9f2eca0810ee7cf6c741e9d8ad3817abb2e66784",
+  "psd_blob": "c007641c877a9e24e86a35398bc6dc79300592ae",
+  "png_blob": "9121dce937701da9cda66b070c9ac7235b46f6c7"
+ },
+ "edit": {
+  "ability": "+5 ATK against creatures with Empowered. Attacks cleanse Empowered on creatures.\nAfter attacking, inflict the target with 2T2 Empowered.\n(Action) Summon an Astr Mionion minion.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "+5 ATK against creatures with Empowered. Attacks cleanse Empowered on creatures.\nAfter attacking, inflict the target with 2T2 Empowered.\n(Action) Summon an Astr Mionion minion.",
+    "was": "+5 ATK against creatures with Empowered. Attacks cleanse Empowered on creatures.\nAfter attacking, inflict the target with 2T2 Empowered.\n(Action) Summon an Astr Mionion.",
+    "sha": "dd5130b1",
+    "psd": "c007641c",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Astr Mionion.' -> 'Astr Mionion minion.'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "+5 ATK against creatures with Empowered. Attacks cleanse Empowered on creatures.\nAfter attacking, inflict the target with 2T2 Empowered.\n(Action) Summon an Astr Mionion.",
+   "new": "+5 ATK against creatures with Empowered. Attacks cleanse Empowered on creatures.\nAfter attacking, inflict the target with 2T2 Empowered.\n(Action) Summon an Astr Mionion minion."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.008,
+   "max": 2.0
+  }
+ },
+ "region": [
+  11,
+  1734,
+  1181,
+  2058
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41166294210",
+ "took_s": 9.4,
+ "at": "2026-10-31T03:54:10Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2214707,
+  "webp": 64882,
+  "before": 64336
+ },
+ "recompressed": false
+}
