@@ -1141,6 +1141,7 @@ function renderStatsView(r) {
   }
   const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
   St.stats.renderStats(view, { cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage, season: S.season }, r.params);
+  St.stats.foldTall(view);
   const ctx = { cards: S.cards };
   const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
   const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History go in with it
@@ -1150,6 +1151,7 @@ function renderStatsView(r) {
     if (A) put("stats-balance", St.balance.statsHtml(A, { cards: S.cards, byId: S.byId }, now.params));
     put("stats-ratings", St.insights.ratingsHtml(ctx, now.params));
     put("stats-history", St.insights.historyHtml(ctx, now.params));
+    St.stats.foldTall(view);
   };
   const job = ++statsJob, slot = $("#stats-balance", view);
   if (S.analytics) {                                     // below the first screen, at the top of the page: after it has painted
@@ -1558,9 +1560,12 @@ const actions = {
   "compare-clear": () => { S.compare = []; location.hash = "#/cards"; },
   "share-compare": () => copy(new URL(`#/compare/${parseHash().arg || S.compare.join(",")}`, document.baseURI).href, "comparison link"),
   "toggle-table": el => { const box = $(`#chart-${el.dataset.target}`); const on = el.getAttribute("aria-pressed") !== "true"; el.setAttribute("aria-pressed", on);
-    el.textContent = on ? "Chart" : "Table"; $(".view-chart", box).hidden = on; $(".view-table", box).hidden = !on; },
+    el.textContent = on ? "Chart" : "Table"; $(".view-chart", box).hidden = on; $(".view-table", box).hidden = !on; if (St) St.stats.foldTall(box); },
   "stats-filter": el => setParams({ [el.dataset.key]: el.value }),
   "dist-page": el => distPage(el.closest(".dist-panel"), +el.dataset.step),
+  fold: el => { const v = el.previousElementSibling, open = !v.classList.contains("open");     // a tall chart's Show all (stats.js foldTall)
+    v.classList.toggle("open", open); el.setAttribute("aria-expanded", String(open)); el.textContent = open ? "Show less" : "Show all";
+    if (!open) el.closest(".chart")?.scrollIntoView({ block: "nearest" }); },
   season: el => { const box = el.closest(".chart"), s = S.season = el.dataset.season;     // its episodes (stats.js seasonsCard)
     for (const a of $$("a.season", box)) { const on = a.dataset.season === s; a.classList.toggle("on", on); a.setAttribute("aria-pressed", on); }
     for (const p of $$(".ep-panel", box)) p.hidden = p.dataset.season !== s; },

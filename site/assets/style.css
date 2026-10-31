@@ -550,6 +550,12 @@ table.data tr.sub td { color: var(--ink-2); font-size: 12.5px; } table.data tr.s
 .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: var(--ink-2); margin: 0 0 8px; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
 .table-wrap { max-height: 360px; overflow: auto; } .table-wrap table.data th { top: 0; }
+/* a tall chart or table folded (stats.js foldTall): its top, faded, and Show all */
+.chart .fold { position: relative; max-height: 460px; overflow: hidden; }
+.chart .fold::after { content: ""; position: absolute; inset: auto 0 0 0; height: 64px; background: linear-gradient(to bottom, transparent, var(--surface)); pointer-events: none; }
+.chart .fold.open { max-height: none; } .chart .fold.open::after { content: none; }
+.chart .fold-btn { display: block; margin: 6px auto 0; }
+.chart .view-chart[hidden] + .fold-btn, .chart .view-table[hidden] + .fold-btn { display: none; }
 .heat td { text-align: center !important; color: var(--ink); }
 .filters-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
 

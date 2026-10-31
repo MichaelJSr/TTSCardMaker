@@ -189,13 +189,13 @@ function heatTable(head, rows, { numericFrom = 1, shade = null, all = false, hre
     <tbody>${rows.map((r, k) => `<tr>${r.map((v, i) => cell(v, i, k)).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
-/** A chart card; startTable: open on its table (the Chart button shows the chart); tip: the title's note */
-function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "", startTable = false, tip = "" } = {}) {
+/** A chart card; startTable: open on its table (the Chart button shows the chart); tip: the title's note; fold: false, never folded (foldTall) */
+function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "", startTable = false, tip = "", fold = true } = {}) {
   const t = !!(startTable && tableHtml);
   return `<section class="chart${wide ? " wide" : ""}" id="chart-${id}">
     <header><h3>${noted(title, tip)}</h3>${tableHtml ? `<button type="button" class="ghost" data-action="toggle-table" data-target="${id}" aria-pressed="${t}">${t ? "Chart" : "Table"}</button>` : ""}</header>
     ${sub ? `<p class="sub">${esc(sub)}</p>` : ""}${legend}
-    <div class="view-chart"${t ? " hidden" : ""}>${chartHtml}</div>${tableHtml ? `<div class="view-table"${t ? "" : " hidden"}>${tableHtml}</div>` : ""}</section>`;
+    <div class="view-chart"${t ? " hidden" : ""}${fold ? "" : ' data-fold="no"'}>${chartHtml}</div>${tableHtml ? `<div class="view-table"${t ? "" : " hidden"}>${tableHtml}</div>` : ""}</section>`;
 }
 
 // ---- stat distributions: page 0 is 0–10, page k is 10k+1 … 10k+10; one y scale per stat, counts over pages above 0 ---
@@ -377,7 +377,7 @@ function seasonsCard(pool, cur) {
   const tableRows = seasons.flatMap(s => episodes(s).map(([label, rs]) => [seasonName(s), label, rs.map(r => r.c.name).join(", "), rs.length]));
   return card("seasons", "Cards by SpongeBob season", `${plural(rows.length, "card")} with SpongeBob art. Click a season for its episodes.`,
     svg + seasons.filter(s => of.get(s).length).map(panel).join(""), table(["Season", "Episode", "Cards", "Count"], tableRows, 3),
-    { wide: true, legend, tip: "Cards by the SpongeBob episode or movie their artwork source names" });
+    { wide: true, legend, tip: "Cards by the SpongeBob episode or movie their artwork source names", fold: false });   // its episodes stay whole
 }
 
 export function renderStats(root, ctx, params) {
@@ -551,6 +551,19 @@ export function renderStats(root, ctx, params) {
     <div class="kpis">${kpis.map(([l, v, tip]) => `<div class="kpi"><div class="label">${noted(l, tip)}</div><div class="value${typeof v === "number" ? "" : " text"}">${esc(typeof v === "number" ? v.toLocaleString() : v)}</div></div>`).join("")}</div>
     <div class="charts">${charts.join("")}</div>
     <div id="stats-balance"></div><div id="stats-ratings"></div><div id="stats-history"></div>`;
+}
+
+// tall charts and tables start folded (owner 10-31): a shown view taller than FOLD_OVER px shows style.css .fold's height,
+// with "Show all" under it (app.js action "fold")
+const FOLD_OVER = 760;
+/** Fold each shown chart or table view under root that is taller than FOLD_OVER, once (data-fold marks those checked). */
+export function foldTall(root) {
+  const views = [...root.querySelectorAll(".chart > .view-chart:not([hidden]):not([data-fold]), .chart > .view-table:not([hidden]):not([data-fold])")];
+  const tall = new Set(views.filter(v => v.scrollHeight > FOLD_OVER));     // every read before any write
+  for (const v of views) {
+    v.dataset.fold = tall.has(v) ? "on" : "no";
+    if (tall.has(v)) { v.classList.add("fold"); v.insertAdjacentHTML("afterend", `<button type="button" class="ghost fold-btn" data-action="fold" aria-expanded="false">Show all</button>`); }
+  }
 }
 
 export { columns, card as chartCard, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole };   // profile.js's activity chart, balance.js, insights.js
