@@ -135,6 +135,14 @@
    "png_blob": "d0dd649fe38c52f3742e7d19561c686c1566ea60",
    "psd_blob": "2a46de9a35b7c05b52e6d775613024a1c6ea7db0",
    "state": "baked"
+  },
+  "zomoroko-mvvywepz-ngpn": {
+   "at": "2026-10-31T05:36:05Z",
+   "card": "Clot Blood",
+   "path": "Auxiliary/Minions/Clot_Blood.psd",
+   "png_blob": "7d4b7a543c7c3b7c6a53ed30561ad52d4b196c87",
+   "psd_blob": "0b04bfbed917e5453ca60f6c893c69ae5768df3b",
+   "state": "baked"
   }
  },
  "v": 1

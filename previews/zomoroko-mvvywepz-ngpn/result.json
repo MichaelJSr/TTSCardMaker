@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvywepz-ngpn",
+ "card": "Clot Blood",
+ "path": "Auxiliary/Minions/Clot_Blood.psd",
+ "png": "Auxiliary/Minions/Clot_Blood.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "0b04bfbed917e5453ca60f6c893c69ae5768df3b",
+  "png_blob": "7d4b7a543c7c3b7c6a53ed30561ad52d4b196c87"
+ },
+ "edit": {
+  "ability": "Overkill damage carries over to another Clot in this slot, then parent creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Overkill damage carries over to another Clot in this slot, then parent creature.",
+    "was": "Overkill damage carries over to the next minion then parent creature.",
+    "sha": "014d7cdc",
+    "psd": "0b04bfbe",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next minion then' -> 'to another Clot in this slot, then'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Overkill damage carries over to the next minion then parent creature.",
+   "new": "Overkill damage carries over to another Clot in this slot, then parent creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.474,
+   "max": 2.0
+  }
+ },
+ "region": [
+  36,
+  1782,
+  1159,
+  1952
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41173216516",
+ "took_s": 8.8,
+ "at": "2026-10-31T05:36:05Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1111025,
+  "webp": 47860,
+  "before": 46808
+ },
+ "recompressed": false
+}
