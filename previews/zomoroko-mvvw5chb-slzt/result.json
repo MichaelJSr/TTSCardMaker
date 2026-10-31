@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvw5chb-slzt",
+ "card": "PoD10BFB",
+ "path": "Auxiliary/Minions/PoD10BFB.psd",
+ "png": "Auxiliary/Minions/PoD10BFB.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "9f2eca0810ee7cf6c741e9d8ad3817abb2e66784",
+  "psd_blob": "b10688c66767e57afd634d50dea583c23872f2eb",
+  "png_blob": "a12cdba7a912f33a2b15f30e8e5e18c15f348302"
+ },
+ "edit": {
+  "ability": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Black Bloon or White Bloon minion on the same field as this creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Black Bloon or White Bloon minion on the same field as this creature.",
+    "was": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Black or White Bloon on the same field as this creature.",
+    "sha": "99deb595",
+    "psd": "b10688c6",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Black or White Bloon on' -> 'Black Bloon or White Bloon minion on'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Black or White Bloon on the same field as this creature.",
+   "new": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Black Bloon or White Bloon minion on the same field as this creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.105,
+   "max": 2.0
+  }
+ },
+ "region": [
+  16,
+  1787,
+  1185,
+  2210
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41168028033",
+ "took_s": 9.3,
+ "at": "2026-10-31T04:18:58Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1647050,
+  "webp": 72942,
+  "before": 70998
+ },
+ "recompressed": false
+}
