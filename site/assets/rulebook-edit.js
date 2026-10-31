@@ -320,19 +320,42 @@ function containerAt(x, y, skip = null) {
   for (const b of boxes(skip)) { const r = b.r; if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom && (!inner || r.width * r.height < inner.r.width * inner.r.height)) inner = b; }
   return inner?.n || page();
 }
-// where in a container's flow a picture goes (Make space): before or after the block nearest the point; an empty
-// container: its top or its end
-function flowSpot(into, y, skip = null) {
-  const box = boxOf(into), lines = M.source.split("\n");
-  let best = null, dist = Infinity;
-  for (const n of box.children) {
-    if (n.dataset?.line == null || n.classList.contains("rb-free") || skip?.contains(n)) continue;
-    const r = n.getBoundingClientRect(), d = y < r.top ? r.top - y : y > r.bottom ? y - r.bottom : 0;
-    if (d < dist) { best = n; dist = d; }
+const indentOf = line => (line || "").match(/^\s*/)[0].replace(/\t/g, "  ").length;
+const isText = n => n?.dataset.kind === "p" || n?.dataset.kind === "list";
+// inside a list or paragraph, where a picture can go: before each item but the first (the list splits, its numbers kept
+// as typed) or each line but the first; [{y, line}]
+function within(n, lines) {
+  const at = +n.dataset.line, end = +n.dataset.end, out = [];
+  if (n.dataset.kind === "list") {
+    const ind = indentOf(lines[at]), starts = [], items = [...n.children].filter(c => c.tagName === "LI");
+    for (let k = at; k < end; k++) if (M.api.RB.LIST.test(lines[k] || "") && indentOf(lines[k]) === ind) starts.push(k);
+    if (starts.length === items.length) items.forEach((li, i) => { if (i) out.push({ y: li.getBoundingClientRect().top, line: starts[i] }); });
+  } else if (n.dataset.kind === "p") {
+    const brs = [...n.querySelectorAll("br")];
+    if (brs.length === end - at - 1) brs.forEach((br, i) => { const rg = document.createRange(); rg.selectNode(br); out.push({ y: rg.getBoundingClientRect().bottom, line: at + i + 1 }); });
   }
-  if (!best) { const r = box.getBoundingClientRect(), top = into !== page() && y < r.top + r.height / 2; return { line: top ? +into.dataset.line + 1 : lineFor(into, lines), y: top ? r.top : r.bottom, x: r.left, w: r.width }; }
-  const r = best.getBoundingClientRect(), before = y < r.top + r.height / 2;
-  return { line: before ? +best.dataset.line : +best.dataset.end, y: before ? r.top : r.bottom, x: r.left, w: r.width };
+  return out;
+}
+// where a picture can go in a container's flow (Make space), top to bottom: before and after each block, and inside its
+// lists and paragraphs (within), so the text after it wraps around it; amid: text on both sides
+function spots(into, skip = null) {
+  const lines = M.source.split("\n"), out = [];
+  const kids = [...boxOf(into).children].filter(n => n.dataset?.line != null && !n.classList.contains("rb-free") && !skip?.contains(n));
+  kids.forEach((n, i) => {
+    const r = n.getBoundingClientRect();
+    out.push({ y: r.top, line: +n.dataset.line, el: n, amid: isText(n) && isText(kids[i - 1]) });
+    for (const s of within(n, lines)) out.push({ ...s, el: n, amid: true });
+    out.push({ y: r.bottom, line: +n.dataset.end, el: n, amid: isText(n) && isText(kids[i + 1]) });
+  });
+  return out;
+}
+// where in a container's flow a picture goes (Make space): the spot nearest the point; an empty container: its top or
+// its end
+function flowSpot(into, y, skip = null) {
+  const box = boxOf(into), all = spots(into, skip);
+  if (!all.length) { const r = box.getBoundingClientRect(), top = into !== page() && y < r.top + r.height / 2; return { line: top ? +into.dataset.line + 1 : lineFor(into, M.source.split("\n")), y: top ? r.top : r.bottom, x: r.left, w: r.width }; }
+  const best = all.reduce((a, s) => (Math.abs(s.y - y) < Math.abs(a.y - y) ? s : a)), r = best.el.getBoundingClientRect();
+  return { line: best.line, y: best.y, x: r.left, w: r.width, amid: best.amid };
 }
 // what a drop at (x, y) does (d: the dragged picture, if any: fig, col, rect): shifted in its column, moved in its row,
 // a new column of a row or into the flow (Make space), or placed over the page; blank space (no section, panel, row or
@@ -352,6 +375,9 @@ function plan(x, y, d = {}) {
   return { kind: "flow", into, cx: x, ...flowSpot(into, y, d.fig) };   // cx: the pointer, which side it floats on
 }
 const sideAt = (into, cx) => { const b = boxOf(into).getBoundingClientRect(), rel = (cx - b.left) / (b.width || 1); return rel < 1 / 3 ? "left" : rel > 2 / 3 ? "right" : ""; };
+// the side a picture going into the flow floats on: by the pointer's third; amid text, never a line of its own (the
+// nearer half), so the text wraps around it
+const sideFor = (into, cx, amid) => { const s = sideAt(into, cx); if (s || !amid) return s; const b = boxOf(into).getBoundingClientRect(); return cx < b.left + b.width / 2 ? "left" : "right"; };
 // a placed picture (x, y its top left, w × h) snapped: its edges and middle catch its container's and the other placed
 // pictures' in it within SNAP px; {x, y, gx, gy (the guides' screen positions, or null), box}
 const SNAP = 6;
@@ -400,7 +426,7 @@ function drop(pic, pl, x, y, w, skip = null) {
     ratios(lines, head, pl.cols.length, v => { const sum = v.reduce((a, b) => a + b, 0); v.splice(pl.slot, 0, Math.max(0.05, +((want * sum) / (avail - want)).toFixed(2))); }, true);
     attrs.width = "100";
   } else {                                             // into the flow: floated by the side it was dropped on
-    const side = sideAt(pl.into, pl.cx ?? x + w / 2);
+    const side = sideFor(pl.into, pl.cx ?? x + w / 2, pl.amid);
     if (side) attrs.cls.push(side);
     attrs.width = String(Math.min(side ? FLOAT_MAX : 100, Math.max(3, round((w / (boxOf(pl.into).clientWidth || 1)) * 100))));
   }
@@ -493,10 +519,12 @@ function moveInFlow(el, line, dx, dy) {
       floatWidth(a, el);
     }, "move");
   }
-  const other = sibling(el, dy);                       // past the block before or after it, inside its panel
-  if (!other) return;
-  const lines = M.source.split("\n"), [moved] = lines.splice(line, 1);
-  let at = dy < 0 ? +other.dataset.line : +other.dataset.end;
+  const src = M.source.split("\n"), all = spots(containerOf(el), el);   // to the next spot up or down its panel: past a block, an item or a line
+  const past = (a, b) => src.slice(a, b).some(l => l.trim());              // text between: a real move, not over blank lines
+  const to = dy < 0 ? all.filter(s => s.line < line && past(s.line, line)).pop() : all.find(s => s.line > line + 1 && past(line + 1, s.line));
+  if (!to) return;
+  const lines = src, [moved] = lines.splice(line, 1);
+  let at = to.line;
   if (at > line) at--;
   lines.splice(at, 0, moved);
   setText(lines.join("\n"), offsetOf(lines, at), at, "move");
@@ -582,7 +610,7 @@ function wireDrag(pane) {
     if (!pl) return "";
     const into = pl.into && pl.into === M.targetEl ? ` into ${nameOf(pl.into)}` : "";   // only the picked container is named
     return pl.kind === "shift" ? "Shift it in its column" : pl.kind === "reorder" ? "Move it here in the row"
-      : pl.kind === "column" ? `Into the row here: the row makes room` : pl.kind === "flow" ? `Into the page${into}: ${({ left: "on the left", right: "on the right" })[sideAt(pl.into, pl.cx ?? d.cx)] || "on a line of its own"}, the rest makes room`
+      : pl.kind === "column" ? `Into the row here: the row makes room` : pl.kind === "flow" ? `Into the page${into}: ${({ left: "on the left", right: "on the right" })[sideFor(pl.into, pl.cx ?? d.cx, pl.amid)] || "on a line of its own"}, the rest makes room`
         : `Place it here${pl.free ? " (free)" : into}`;
   };
   // pictures: pointer drag anywhere (and the resize handle), drawn once a frame
@@ -757,7 +785,7 @@ function tools(el) {
   pane.querySelector(".rbe-resize")?.remove();
   M.selected?.classList.remove("rbe-selected");
   M.selected = el;
-  const space = `<button type="button" class="rbe-space${M.makeSpace ? " on" : ""}" data-space aria-pressed="${M.makeSpace}" title="On: a picture dropped goes into the page there (on the left, the right or a line of its own; onto a row: a new column) and what's beside it makes room; sizing a row's picture sizes its column. Off: it is placed over the page">Make space</button>`;
+  const space = `<button type="button" class="rbe-space${M.makeSpace ? " on" : ""}" data-space aria-pressed="${M.makeSpace}" title="On: a picture dropped goes into the page there (on the left, the right or a line of its own; amid text, between the lines or list items it was dropped on, with the text wrapping around it; onto a row: a new column) and what's beside it makes room; sizing a row's picture sizes its column. Off: it is placed over the page">Make space</button>`;
   if (!el) {
     bar.classList.remove("on");
     bar.innerHTML = (M.targetEl ? `<span class="rbe-into">Pictures go into ${esc(nameOf(M.targetEl))}</span><button type="button" data-untarget title="Let it go (Esc)">✕</button><span class="muted">click inside it again for the one around it</span>`
@@ -874,7 +902,7 @@ function html() {
       <details class="rbe-help"><summary class="ghost button">Syntax</summary><div class="rbe-menu"><table class="help-table">${HELP.map(([k, d]) => `<tr><td><code>${esc(k)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>
         <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
         Click anything on the page to go to its line. Drag a picture anywhere on the page to place it over the page there; with Make space on (in
-        the bar) it goes into the page instead and the text and rows beside it make room (onto a row: a new column). Click a section, panel or row
+        the bar) it goes into the page instead and the text and rows beside it make room (amid text: between the lines or list items it is dropped on, on the left or the right, the text wrapping around it and, for a see-through picture, to its edges; onto a row: a new column). Click a section, panel or row
         first to put pictures into it; dropped on blank space a picture stays right where it is dropped (Make space: it goes in between the sections there and they make room). A placed picture snaps to its panel's edges and middle and to other placed pictures (a pink line shows it). A row's picture stays in its row: drag it inside its column to shift it, onto another column to swap them;
         dropped well above or below the row it leaves (the label beside the pointer says what a drop does). Drag a picture's corner to resize (Make
         space: a row's picture takes its column with it). Click a picture for its tools: the anchor grid puts it in a corner, on an edge or in the

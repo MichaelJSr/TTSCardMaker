@@ -3028,9 +3028,38 @@ RULEBOOK = os.path.join(SITE, "rulebook")      # the rulebook's chapters (NN-slu
 RULE_FILE = re.compile(r"^(\d{2})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$")
 
 
+OUTLINE_BANDS = 32                             # a transparent rulebook picture's outline: its opaque extent per band
+
+
+def picture_outline(im):
+    """A transparent picture's outline, for text to wrap to its edges (rulebook.js: a floated picture's shape-outside):
+    its opaque extent (alpha past half) in OUTLINE_BANDS bands, down its right side and up its left, as polygon points
+    in % ("98% 0%, 98% 3.1%, ..."); "" without transparency or when every band spans it."""
+    if "A" not in im.getbands() and "transparency" not in im.info:
+        return ""
+    alpha, (w, h) = im.convert("RGBA").getchannel("A").point(lambda v: 255 if v > 127 else 0), im.size
+    pct = lambda v, of: f"{round(v / of * 100, 1):g}%"
+    right, left, full = [], [], True
+    for b in range(OUTLINE_BANDS):
+        y0, y1 = b * h // OUTLINE_BANDS, (b + 1) * h // OUTLINE_BANDS
+        box = alpha.crop((0, y0, w, y1)).getbbox() if y1 > y0 else None
+        if not box:
+            continue
+        full = full and box[0] <= w * 0.01 and box[2] >= w * 0.99
+        right += [(pct(box[2], w), pct(y0, h)), (pct(box[2], w), pct(y1, h))]
+        left[:0] = [(pct(box[0], w), pct(y1, h)), (pct(box[0], w), pct(y0, h))]
+    if full or not right:
+        return ""
+    points = right + left
+    kept = [q for i, q in enumerate(points)              # a point between two of its own x dropped: the same line
+            if not (0 < i < len(points) - 1 and points[i - 1][0] == q[0] == points[i + 1][0])]
+    return ", ".join(f"{x} {y}" for x, y in kept)
+
+
 def rulebook_chapters(src=RULEBOOK):
     """The rulebook's chapters in file order, [{id, num, title, file, source}] (id: the slug after the number, so a
-    renumbered chapter keeps its links), and its pictures, {file: [width, height, stamp]}."""
+    renumbered chapter keeps its links), and its pictures, {file: [width, height, stamp]} (a transparent one's outline
+    after them: picture_outline)."""
     chapters, ids = [], set()
     for name in sorted(os.listdir(src)) if os.path.isdir(src) else []:
         m = RULE_FILE.match(name)
@@ -3053,12 +3082,12 @@ def rulebook_chapters(src=RULEBOOK):
         path = os.path.join(folder, name)
         try:
             with Image.open(path) as im:
-                size = im.size
+                size, outline = im.size, picture_outline(im)
         except Exception as e:                # not a picture: not listed (and not copied)
             warn(f"rulebook: img/{name} is not a picture ({type(e).__name__})")
             continue
         with open(path, "rb") as fh:
-            images[name] = [size[0], size[1], stamp_of(fh.read())]
+            images[name] = [size[0], size[1], stamp_of(fh.read())] + ([outline] if outline else [])
     return chapters, images
 
 

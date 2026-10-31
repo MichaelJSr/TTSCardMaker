@@ -8,7 +8,8 @@
 //   :::                          side; "::: row 3 1" sets the widths), stack, box, small, center, ability (a card's ability
 //                                box, "1." a numbered bubble), contents (the chapters' list)
 //   > [!kirby top] text          a mascot (any picture in img/) says it; top: above the bubble, right: floated
-//   ![alt](file.webp){.right width=30}   a picture: .left .right float it, .end puts it at the right edge, width in %;
+//   ![alt](file.webp){.right width=30}   a picture: .left .right float it (text wraps around it: a see-through one's
+//                                        edges, its outline from build_site), .end puts it at the right edge, width in %;
 //                                        dx=10 dy=-5 shift it (% of its size), .free x= y= place it anywhere;
 //                                        in a row, anchor=bottom-left (top, center, right…) puts it there in its column
 //   ![[Card]]  ![[A]] -> ![[B]]  the card's picture (a line of them is a row; -> an arrow); [[Card|label]] a link to it
@@ -24,7 +25,7 @@ export const SHEET = { w: 1080, h: 1920 };       // a TTS page, as the Photoshop
 // ---- parse --------------------------------------------------------------------------------------------------------
 const FENCE = /^\s*:{3,}\s*([a-z][\w-]*)\s*(.*)$/i;
 const CLOSE = /^\s*:{3,}\s*$/;
-const LIST = /^(\s*)([-*•]|\d{1,3}[.)]|[A-Za-z][.)])\s+(.*)$/;
+export const LIST = /^(\s*)([-*•]|\d{1,3}[.)]|[A-Za-z][.)])\s+(.*)$/;   // a list item's line (the editor finds items by it)
 const HEAD = /^(#{1,3})\s+(.*)$/;
 const RULE = /^\s{0,3}(?:-{3,}|\*{3,})\s*$/;
 const PAGE = /^\s*=+\s*page\s*=+\s*$/i;
@@ -201,7 +202,8 @@ export const slugify = s => String(s || "").toLowerCase().normalize("NFKD").repl
 
 // ---- draw ---------------------------------------------------------------------------------------------------------
 // ctx: {render(text) -> html (the site's renderer: icons, badges, card names), card(name) -> card or null,
-// cardImg(card) -> url, imgUrl(file) -> url, size(file) -> [w, h] or null, id: the chapter's id (section anchors)}
+// cardImg(card) -> url, imgUrl(file) -> url, size(file) -> [w, h] or null, shape(file) -> a transparent picture's outline
+// (polygon points in %, build_site picture_outline) or null, id: the chapter's id (section anchors)}
 const COLOURS = new Set(["red", "green", "blue", "yellow", "orange", "purple", "grey", "white", "hp", "def", "atk", "spd", "u", "big", "small", "caps", "nowrap", "secret"]);
 const clsOf = (attrs, keep = null) => (attrs?.cls || []).filter(c => /^[\w-]+$/.test(c) && (!keep || keep.has(c))).map(c => `rb-${c}`).join(" ");
 const safeUrl = u => (/^(https?:|#|mailto:)/i.test(u) ? u : "#");
@@ -282,7 +284,9 @@ function blockInner(b, ctx) {
       const num = v => /^-?\d+(\.\d+)?$/.test(v || "");   // {dx=10 dy=-5}: in the flow, shifted by % of its own size
       const at = placed(b) ? ["x", "y"].map((k, i) => (num(b.attrs[k]) ? `${i ? "top" : "left"}:${b.attrs[k]}%` : "")).filter(Boolean).join(";") : "";
       const shift = !placed(b) && (num(b.attrs.dx) || num(b.attrs.dy)) ? `transform:translate(${num(b.attrs.dx) ? b.attrs.dx : 0}%,${num(b.attrs.dy) ? b.attrs.dy : 0}%)` : "";
-      const st = [sizeStyle(b.attrs), at, shift].filter(Boolean).join(";");
+      const outline = !placed(b) && b.attrs.cls.some(c => c === "left" || c === "right") ? ctx.shape?.(b.src) : null;   // floated: text to its edges
+      const shape = /^[\d.% ,-]+$/.test(outline || "") ? `shape-outside:polygon(${outline}) content-box` : "";
+      const st = [sizeStyle(b.attrs), at, shift, shape].filter(Boolean).join(";");
       return `<figure class="rb-fig ${clsOf(b.attrs)}"${st ? ` style="${st}"` : ""}>${imgHtml(b, ctx)}</figure>`;
     }
     case "cards": return `<div class="rb-cards ${clsOf(b.attrs)}">${b.names.map(n => (n.arrow ? `<span class="rb-arrow" aria-hidden="true">→</span>` : cardHtml(n.name, n.label, ctx))).join("")}</div>`;

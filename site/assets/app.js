@@ -935,7 +935,7 @@ function bookCtx(extra = {}) {
     render: t => S.renderer.render(t, "", { links: false }), icon: t => S.renderer.icon(t), card: cardByName, cardImg: c => img(c, 360),
     imgUrl: f => { const k = bookFile(f); return imgs[k] ? `${RB.IMG_DIR}${encodeURIComponent(k)}?v=${imgs[k][2]}`
       : sent?.images?.includes(k) ? `https://raw.githubusercontent.com/${S.data.repo}/${sent.sha}/site/rulebook/img/${encodeURIComponent(k)}` : RB.IMG_DIR + encodeURIComponent(k); },
-    size: f => imgs[bookFile(f)]?.slice(0, 2) || null, chapters: S.book.chapters, ...extra,
+    size: f => imgs[bookFile(f)]?.slice(0, 2) || null, shape: f => imgs[bookFile(f)]?.[3] || null, chapters: S.book.chapters, ...extra,
   };
 }
 const pdfUrl = () => `https://github.com/${S.data.repo}/blob/${S.data.branch || "main"}/TTS/Rulebook/Rulebook.pdf`;   // AutoCroissant rulebook_pages

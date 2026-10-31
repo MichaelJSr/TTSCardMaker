@@ -257,6 +257,7 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
 .rb-sub { margin: .8em 0 .3em; font-size: 1.05em; font-weight: 700; color: var(--rb-ink); }
 .rb-sub.rb-banner { margin: 1em 0 .2em; text-align: center; font-size: 2.15em; letter-spacing: .09em; text-transform: uppercase; }
 .rb-list { margin: .3em 0; padding-left: 1.7em; display: flow-root; }
+:is(.rb-fig.rb-left, .rb-fig.rb-right) + .rb-list { display: block; }   /* after a floated picture: wraps around it, as text does */
 ol.rb-list[style*="--digits"] { padding-left: calc(var(--digits) * .62em + 1.1em); }   /* "10." needs more room than "9." */
 .rb-contents { padding-left: 2.6em; }
 .rb-contents li { margin: .15em 0; }
@@ -286,9 +287,11 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
 .rb-stack > * + * { margin-top: .9em; }
 .rb-fig { margin: .7em auto; text-align: center; max-width: 100%; }
 .rb-fig img { display: block; width: 100%; height: auto; margin: 0 auto; border-radius: .25em; }
-.rb-fig:not([style]) img { width: auto; max-width: 100%; }
-.rb-chapter .rb-fig:not([style]) img { width: calc(var(--w) * var(--rb-px)); }   /* its own size in the page's px (--w unknown: auto) */
+.rb-fig:not([style*="width"]) img { width: auto; max-width: 100%; }
+.rb-chapter .rb-fig:not([style*="width"]) img { width: calc(var(--w) * var(--rb-px)); }   /* its own size in the page's px (--w unknown: auto) */
 .rb-fig.rb-left { float: left; margin: .2em .9em .4em 0; }
+.rb-fig.rb-left, .rb-fig.rb-right { shape-margin: .9em; }   /* a transparent one's outline (shape-outside): text that far from its edges */
+.rb-fig.rb-left:has(+ ul.rb-list) { margin-right: 2em; shape-margin: 2em; } .rb-fig.rb-left:has(+ ol.rb-list) { margin-right: 2.8em; shape-margin: 2.8em; }   /* room for the list's markers beside it */
 .rb-fig.rb-right { float: right; margin: .2em 0 .4em .9em; }
 .rb-fig.rb-end { margin: .3em 0 0 auto; }
 .rb-fig.rb-free { position: absolute; margin: 0; z-index: 2; pointer-events: none; }        /* placed anywhere: over the page, out of the flow */
