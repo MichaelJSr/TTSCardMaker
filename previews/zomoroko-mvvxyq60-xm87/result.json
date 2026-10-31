@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvxyq60-xm87",
+ "card": "Blooper Tentacle",
+ "path": "Auxiliary/Minions/Blooper_Tentacle.psd",
+ "png": "Auxiliary/Minions/Blooper_Tentacle.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "8268f54847bcf4e5b9d7b0066b7075cfb318f80a",
+  "png_blob": "248440a2c0e56881f40834d05204000e8b1c14f9"
+ },
+ "edit": {
+  "ability": "Overkill damage carries over to the next Blooper Tentacle. Attacks inflict 1T1 Softened.",
+  "parts": {
+   "546": {
+    "field": "ability",
+    "text": "Overkill damage carries over to the next Blooper Tentacle. Attacks inflict 1T1 Softened.",
+    "was": "Overkill damage carries over to the next tentacle. Attacks inflict 1T1 Softened.",
+    "sha": "7e5beee0",
+    "psd": "8268f548",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'next tentacle. Attacks' -> 'next Blooper Tentacle. Attacks'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Overkill damage carries over to the next tentacle. Attacks inflict 1T1 Softened.",
+   "new": "Overkill damage carries over to the next Blooper Tentacle. Attacks inflict 1T1 Softened."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.193,
+   "max": 3.0
+  }
+ },
+ "region": [
+  28,
+  1773,
+  1175,
+  2039
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41171443605",
+ "took_s": 10.7,
+ "at": "2026-10-31T05:09:51Z",
+ "variant": null,
+ "parts": {
+  "546": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2697951,
+  "webp": 74092,
+  "before": 73050
+ },
+ "recompressed": false
+}
