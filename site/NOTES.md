@@ -1315,7 +1315,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   (grid.js `ONE`: a comma is part of the name). grid.js `X_TESTS` and `dropExcluded` drop the cards; an excluded chip
   shows "−n", the cards it removes. AutoCroissant `tests/test_site_exclude.py`.
 - **Missing filter** (bdcda57a): sidebar options for cards lacking a value (grid.js `MISSING`: series, subseries, types,
-  ability, author, stars, stats, item type, ratings, artwork source, ability artwork source); `missing=` keeps cards
+  ability, author, stars, stats, item type, ratings, artwork source); `missing=` keeps cards
   missing all the picked ones; an option no card lacks is hidden. Every sort puts cards lacking the sorted value last,
   ascending or descending (grid.js's comparator). AutoCroissant `tests/test_site_missing.py`.
 - **My filters** (cf412892): saved searches, in this browser only (localStorage `custom-filters`, at most 50, 300
@@ -1376,3 +1376,13 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 - A season's column (a button, app.js action `season`) shows its episodes below in place: per episode a block per card
   and their names (card links); the pick is kept for the session (`S.season`), else the biggest season. The table view
   lists every episode. Cards whose art names no SpongeBob source are left out.
+
+## 44. Artwork sources #1, #2, … (2026-10-31, owner: "instead of specifying artwork source and ability artwork source, can you make it artwork source #1, source #2, etc., and we can add or remove sources as we see fit? Make it default 1")
+
+- Card Edits.json `art` is a list of sources (one string in older entries); the retired `ability_art` reads as the last
+  source. Every reader folds both (art.js `artList`, build_site `art_list`/`fold_art`, the bot's `card_edits.art_list`/
+  `fold_art`), so history diffs, the changelog and `/query` see the same list either way; publishing an `art` edit drops
+  an entry's `ability_art`.
+- The form: one row per source, "Artwork source #1" first (one empty row by default), ✕ removes one (the last one left
+  is emptied), "+ Add a source" adds one. The card page: "Artwork source" alone, else "#1", "#2", …, each line edited in
+  place (inline.js `art:<n>`), "+ artwork source" adds the next. The Missing filter's "No ability artwork source" is gone.

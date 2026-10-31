@@ -267,7 +267,7 @@ shows all its cards (the Series select narrows them), and renaming it renames it
 (name, stars, types, stats, ability text; the form groups them and the bar marks them, and they show as "PSD pending"
 until the image is regenerated) are told apart from **database only** ones, which come from the card's folder or exist
 only as edits (kind, item type, series, subseries, note, aliases, author, duplicate of, checks, constructed ban,
-hidden, artwork source, ability artwork source). An image field ticked **Website only (don't change the card image)**
+hidden, artwork sources: #1, #2, … added and removed in the form). An image field ticked **Website only (don't change the card image)**
 is shown on the website and by the bot but never baked (a quiet "Website only" tag). **Also rename the card's files**
 (under a name edit) has the bake rename the PSD and PNGs to the new name; links to the old page redirect. Rulebook chapters have their own editor (Rulebook, above), published on its own. "Split into creatures" gives a
 card several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own

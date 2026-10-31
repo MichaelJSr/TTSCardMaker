@@ -1,6 +1,7 @@
 // The cards grid's tiles, toolbar and Name order: DOM-free, so the build renders them in node to check the first screen it
 // writes into index.html (build_site.py first_screen, check_first.mjs).
 import { esc, norm } from "./text.js";
+import { artList } from "./art.js";
 
 export const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
@@ -72,8 +73,7 @@ export const MISSING = [
   ["stats", "No stats", "Creatures and minions missing HP, DEF, ATK or SPD", c => ["creature", "minion", "creatures"].includes(c.type) && STATS.some(k => c[k] == null)],
   ["itemtype", "No item type", "Items without an item type", c => c.type === "item" && !c.subtype],
   ["ratings", "No ratings", "Not rated for power or favorability", c => !rated(c).ratings?.length],
-  ["art", "No artwork source", "", c => !c.art?.trim()],
-  ["abilityart", "No ability artwork source", "", c => !c.ability_art?.trim()],
+  ["art", "No artwork source", "", c => !artList(c).length],
 ];
 
 // exclusions (a right-click or long press in the sidebar): x<key> params drop the cards that match any of their values;

@@ -10,14 +10,18 @@ import { typeVocab, mountPalette, rowHtml } from "./palette.js";
 import { rawOf, restorable, offerHtml, later, movedSince } from "./drafts.js";
 import { renameButton } from "./edit.js";
 import { straighten } from "./parts.js";
-import { ART } from "./art.js";
+import { artList, artLabel } from "./art.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 const SLIDERS = [...STATS, "stars"];                // a row of cells: click one, or arrows and Enter
-const ART_KEYS = ART.map(([k]) => k);               // the artwork sources: one line each, under the note
-const TEXT = ["name", "ability", "note", ...ART_KEYS, "series", "subseries", "author"];   // the fields with a text control
-const LABEL = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", series: "Series", subseries: "Subseries", author: "Author", note: "Note", stars: "Stars", types: "Types",
-  ...Object.fromEntries(ART) };
+// the artwork sources: one line each, under the note, edited as "art:<number>" (the list's art field staged whole)
+export const isArt = f => /^art:\d+$/.test(f);
+const artNo = f => +f.slice(4);
+/** The sources with source n set to v ("" removes it; one past the end adds it). */
+export const withSource = (list, n, v) => { const out = [...list]; out[n - 1] = v.replace(/\s+/g, " ").trim(); return out.filter(Boolean); };
+const TEXT = ["name", "ability", "note", "series", "subseries", "author"];   // the fields with a text control (and isArt)
+const LABEL = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", series: "Series", subseries: "Subseries", author: "Author", note: "Note", stars: "Stars", types: "Types" };
+const labelOf = f => (isArt(f) ? artLabel(artNo(f)) : LABEL[f]);
 const IMAGE = "on the card image";                 // the form's "On the card image" marker (PSD fields); the rest is database only
 
 /** A click on stat cell `cell` (1-based) of a row showing `current`: that value, or one less for the top lit cell (so 0 is reachable). */
@@ -34,11 +38,11 @@ export const rangeIds = (order, anchor, id) => { const a = order.indexOf(anchor)
  *  only closes it. */
 export function control(f, v, fresh = false) {
   const label = f === "name" ? "Name, Enter to save, Esc to cancel" : f === "ability" ? "Ability text, Ctrl+Enter to save, Esc to cancel"
-    : `${fresh ? `New ${LABEL[f].toLowerCase()}` : LABEL[f]}, Enter to save, Esc to cancel`;
+    : `${fresh ? `New ${LABEL[f].toLowerCase()}` : labelOf(f)}, Enter to save, Esc to cancel`;
   if (f === "name") return `<input class="inline-name" aria-label="${label}" value="${esc(v)}">`;
   if (f === "ability") return `<textarea class="inline-ability" rows="${fit(v)}" spellcheck="true" aria-label="${label}" data-tokens>${esc(v)}</textarea>`;
   const named = f === "series" || f === "subseries" || f === "author";
-  return `<input class="inline-fact${f === "note" || ART_KEYS.includes(f) ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${named ? ` data-suggest="${f}" autocomplete="off"` : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${LABEL[f].toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">`;
+  return `<input class="inline-fact${f === "note" || isArt(f) ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${named ? ` data-suggest="${f}" autocomplete="off"` : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${labelOf(f).toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">`;
 }
 /** The bucket options a filter select gets: those it lacks, as "X (no cards yet)", selected when picked. have: its
  *  option values; list: [name]. */
@@ -97,11 +101,10 @@ export function mountCard(modal, c, api = A) {
   const note = detail.querySelector(":scope > div:nth-child(2) > .note");
   if (note) mark(note, "note", "Click to edit the note");
   else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="note" data-empty aria-label="Add a note">+ note</button>`);
-  for (const [k, label] of ART) {                  // every entry its own, duplicates and variant pictures too
-    const el = detail.querySelector(`:scope > div:nth-child(2) > .art-src[data-art="${k}"]`);
-    if (el) mark(el, k, `Click to edit the ${label.toLowerCase()}`);
-    else facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="${k}" data-empty aria-label="Add the ${label.toLowerCase()}">+ ${label.toLowerCase()}</button>`);
-  }
+  const arts = artList(c);                         // every entry its own, duplicates and variant pictures too
+  for (const el of detail.querySelectorAll(":scope > div:nth-child(2) > .art-src[data-art]"))
+    mark(el, `art:${el.dataset.art}`, `Click to edit the ${artLabel(+el.dataset.art, arts.length).toLowerCase()}`);
+  facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="art:${arts.length + 1}" data-empty aria-label="Add an artwork source">+ artwork source</button>`);
   const starChip = chips.find(a => hrefOf(a).startsWith("#/cards?stars="));      // stars: a slider in its place
   if (c.stars > 10) { if (starChip) starChip.dataset.tip = "Use All fields"; }
   else if (starChip) starChip.outerHTML = starsHtml(c.stars);
@@ -130,7 +133,7 @@ function answer(restore) {
   if (!o) return;
   if (!restore) { drafts().drop(o.c.id); A.toast("Unsaved edit discarded"); return; }
   const keys = Object.keys(o.fields), [f] = keys, el = keys.length === 1 && spot(f);   // one field: its own editor, else All fields
-  if (el && TEXT.includes(f)) openText(el, f, o.fields[f]);
+  if (el && (TEXT.includes(f) || isArt(f))) openText(el, f, o.fields[f]);
   else if (el && f === "types") openTypes(el, o.fields.types);
   else A.editor.open(o.c.id, { draft: o.fields });
 }
@@ -145,7 +148,7 @@ function open(el, f, text = null) {               // text: a restored draft
   if (pal) pal.ctl.close(true);
   if (!el.isConnected || !card) return;
   A.hideTip?.();                                   // its "Click to edit" goes with the data-tip
-  const c = card, v = f === "author" ? (c.author || "") : String(A.editor.value(c, f) ?? "");
+  const c = card, v = f === "author" ? (c.author || "") : isArt(f) ? (artList(c)[artNo(f) - 1] ?? "") : String(A.editor.value(c, f) ?? "");
   const swap = el.tagName === "A" || el.tagName === "BUTTON";     // a link would still navigate, a button can't hold an input
   let host = el;
   if (swap) { host = document.createElement("span"); host.className = el.className; host.dataset.inline = f; el.replaceWith(host); }
@@ -171,7 +174,9 @@ function commit(kbd) {                            // kbd: from the keyboard, so 
   const was = cur, { c, f, ctl, v } = cur, next = ctl.value.replace(/\r/g, "");
   if (next.trim() === v.replace(/\r/g, "").trim()) { cancel(kbd); return true; }
   cur = null;
-  if (!(f === "author" ? A.editor.stageAuthor(c.id, next) : A.editor.stageField(c.id, f, next))) {   // refused, with a toast (a name too long):
+  const staged = f === "author" ? A.editor.stageAuthor(c.id, next)
+    : isArt(f) ? A.editor.stageField(c.id, "art", withSource(artList(c), artNo(f), next)) : A.editor.stageField(c.id, f, next);
+  if (!staged) {   // refused, with a toast (a name too long):
     if (was.host.isConnected) cur = was;           // the input and its text stay, as in the filter bar
     return false;
   }
@@ -247,7 +252,7 @@ function onClick(e) {
     const sp = A.modal.querySelector(".detail .star-pick"); if (sp) { sp.dataset.fresh = ""; sp.focus(); } return;   // fresh: nothing chosen puts "+ stars" back
   }
   if (f === "name" || SLIDERS.includes(f)) return;                          // the name on double-click, rows by cell or key
-  if ((f === "ability" || f === "note" || ART_KEYS.includes(f)) && e.target.closest("a, .badge, img")) return;   // links in the text still open (the card, the source)
+  if ((f === "ability" || f === "note" || isArt(f)) && e.target.closest("a, .badge, img")) return;   // links in the text still open (the card, the source)
   if (e.ctrlKey || e.metaKey || e.shiftKey) return;                          // a chip's link still opens in a new tab
   e.preventDefault(); e.stopPropagation();
   if (f === "types") openTypes(el); else openText(el, f);

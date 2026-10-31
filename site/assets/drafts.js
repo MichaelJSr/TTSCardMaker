@@ -1,6 +1,7 @@
 // Drafts: what the editors hold before it goes into the batch, kept per card id and field in localStorage, offered
 // back when the card opens again. NOTES.md §21.
 import { esc } from "./text.js";
+import { artList, artLabel } from "./art.js";
 
 export const DRAFT_KEY = "edit-drafts";
 export const DELAY = 400;                          // ms after the last key
@@ -8,7 +9,7 @@ const STATS = ["hp", "def", "atk", "spd"];
 const CHECKS = new Set(["hidden", "allow_high_stats", "problems_ok", "banned"]);
 // the offer's words for the form's keys (edit.js LABEL, plus the ban row's three inputs)
 const NAMES = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP",
-  def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", art: "Artwork source", ability_art: "Ability artwork source", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
+  def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
   problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", banned: "Ban", "ban-group": "Ban", "ban-reason": "Ban",
   creatures: "Creatures", "rate-favorability": "Favorability", "rate-power": "Power", rename: "Rename files" };
 
@@ -24,6 +25,8 @@ export function rawOf(c, f, dupKey = "") {
   if (f.startsWith("rate-")) return text(c._rate?.[f.slice(5)]);         // the staged rating (edit.js applyOp)
   if (CHECKS.has(f)) return !!c[f];
   if (f === "rename") return !!c.renameFiles;           // edit.js renameRow
+  if (f === "art") return artList(c);                   // the form's list
+  if (/^art:\d+$/.test(f)) return text(artList(c)[+f.slice(4) - 1] ?? "");   // one line, inline (inline.js isArt)
   return text(c[f]);
 }
 /** Two raw values alike: text compared trimmed and without \r (what the form and the inline editors save). */
@@ -38,7 +41,7 @@ export const changed = (now, start) => Object.fromEntries(Object.entries(now).fi
 export const restorable = (fields, current) => Object.fromEntries(Object.entries(fields || {}).filter(([f, v]) => !(f in current) || !sameRaw(v, current[f])));
 /** The offer's words for the fields: "Ability, HP" (each name once). */
 export const fieldNames = fields => { const at = Object.keys(NAMES), rank = f => (at.includes(f) ? at.indexOf(f) : at.length);
-  return [...new Set(Object.keys(fields).sort((a, b) => rank(a) - rank(b)).map(f => NAMES[f] || (f.startsWith("part:") ? "Text boxes" : f)))].join(", "); };   // the form's order; part:<layer id>: a box of the parts editor
+  return [...new Set(Object.keys(fields).sort((a, b) => rank(a) - rank(b)).map(f => NAMES[f] || (f.startsWith("part:") ? "Text boxes" : /^art:\d+$/.test(f) ? artLabel(+f.slice(4)) : f)))].join(", "); };   // the form's order; part:<layer id>: a box of the parts editor
 /** When, roughly: "just now", "5 min ago", "3 h ago", "2 days ago". */
 export function ago(at, now = Date.now()) {
   const m = Math.max(0, Math.round((now - at) / 60000));
@@ -128,16 +131,20 @@ export function readValues(form) {
   }
   const types = form.querySelector("#ef-types");
   if (types) out.types = [...types.querySelectorAll("[data-type]")].filter(b => b.classList.contains("on")).map(b => b.dataset.type).sort();
+  const art = form.querySelector("#ef-art");     // the sources typed, empty rows left out
+  if (art) out.art = [...art.querySelectorAll("[data-art-src]")].map(i => text(i.value).replace(/\s+/g, " ").trim()).filter(Boolean);
   const box = form.querySelector("#ef-creatures-box");
   if (box) out.creatures = box.hidden ? null : [...form.querySelectorAll("#ef-creatures tr")].map(tr => [...tr.querySelectorAll("[data-ck]")].map(i => text(i.value)));
   return out;
 }
-/** Put fields into the form. creatures(rows): edit.js shows the creature table with those rows (null: the single stats). */
-export function fillValues(form, fields, { creatures = null } = {}) {
+/** Put fields into the form. creatures(rows): edit.js shows the creature table with those rows (null: the single stats);
+ *  art(list): its source rows. */
+export function fillValues(form, fields, { creatures = null, art = null } = {}) {
   for (const [f, v] of Object.entries(fields)) {
     if (f === "types") {
       for (const b of form.querySelectorAll("#ef-types [data-type]")) { const on = Array.isArray(v) && v.includes(b.dataset.type); b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); }
     } else if (f === "creatures") creatures?.(v);
+    else if (f === "art") art?.(Array.isArray(v) ? v : artList({ art: v }));
     else {
       const el = form.querySelector(/^[\w-]+$/.test(f) ? `#ef-${f}` : `[id="ef-${String(f).replace(/["\\]/g, "\\$&")}"]`);     // part:<layer id> has a colon
       if (!el) continue;

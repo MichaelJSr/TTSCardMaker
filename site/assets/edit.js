@@ -11,25 +11,23 @@ import { current as ratingNow } from "./ratings.js";
 import { soon } from "./fresh.js";
 import * as P from "./parts.js";
 import { date, dayOf, pictureNumber } from "./history.js";
+import { artList, artError, artLabel } from "./art.js";
 
 const API = "https://api.github.com";
 // last: the login a password last signed in
 const K = { stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login", drafts: draft.DRAFT_KEY };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
-  atk: "int", spd: "int", ability: "str", parts: "parts", note: "str", art: "str", ability_art: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
+  atk: "int", spd: "int", ability: "str", parts: "parts", note: "str", art: "sources", ability_art: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
   creatures: "creatures" };
 const ORDER = Object.keys(FIELDS);
 const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the bot's _by (changes.js BOT)
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
-  atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", note: "Note", art: "Artwork source", ability_art: "Ability artwork source", aliases: "Aliases",
+  atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases",
   dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures",
   "rate-favorability": "Favorability", "rate-power": "Power" };
-// artwork sources (main, ability): free text, each entry its own (build_site.py ART_MAX, the bot's card_edits.ART_MAX)
-export const ART_FIELDS = ["art", "ability_art"], ART_MAX = 500;
-/** An artwork source's error ("" when fine): at most ART_MAX characters, an emoji counts one (Python's len). */
-export const artError = (f, v) => (ART_FIELDS.includes(f) && typeof v === "string" && [...v].length > ART_MAX ? `${LABEL[f]}: at most ${ART_MAX} characters` : "");
+// art: the artwork sources, a list (art.js; ability_art: the retired second field, read as the last source, never offered)
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
 const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. Read by the website and the card sync.";
@@ -80,7 +78,7 @@ const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length 
 const clip = s => (s.length > 48 ? `${s.slice(0, 45).trimEnd()}…` : s);
 /** A duplicate whose author and ratings are its original's; a variant picture keeps its own. */
 const follows = c => !!c.dup && !c.variantOf;
-const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : f === "dup_of" ? v || ""
+const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : FIELDS[f] === "sources" ? (artList({ art: v }).length ? artList({ art: v }) : null) : f === "dup_of" ? v || ""
   : f === "creatures" ? (v?.length > 1 ? v.map(x => Object.fromEntries(STATS.map(k => [k, x[k] ?? null]))) : null) : v ?? null);
 /** A card's value of field f as the form shows it (byId resolves dup_of to the original's key). */
 export function value(c, f, byId) {
@@ -237,6 +235,7 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json", onCo
     const { parts, ...set } = op.set, unsetParts = op.unset.filter(f => f.startsWith(P.PART)).map(f => f.slice(P.PART.length));
     for (const f of op.unset) if (!f.startsWith(P.PART)) delete cur[f];
     Object.assign(cur, set);
+    if ("art" in set || op.unset.includes("art")) delete cur.ability_art;   // the sources hold it now (art.js artList)
     if (parts || unsetParts.length) { const m = P.mergeParts(cur.parts, parts, unsetParts); if (m) cur.parts = m; else delete cur.parts; }   // per layer
     const site = new Set(Array.isArray(cur[SITE]) ? cur[SITE] : []);       // website-only fields: ticked, unticked; one without a value goes
     for (const [f, on] of Object.entries(op.site || {})) if (on) site.add(f); else site.delete(f);
@@ -823,6 +822,7 @@ export function createEditor(app) {
     const siteBox = f => `<label class="check site-box"><input id="ef-site-${f}" type="checkbox" data-site="${f}"${on(f) ? " checked" : ""}> ${SITE_LABEL}</label>`;
     // a field edited as boxes (one per PSD layer): website only, one plain input instead, the boxes greyed
     const plain = (f, input) => `<div class="site-plain"${on(f) ? "" : " hidden"}>${input}<p class="muted part-note">The card image keeps its text.</p></div>${siteBox(f)}`;
+    const artBox = list => `<div id="ef-art" class="art-box" data-row="art"><div class="art-rows">${(list.length ? list : [""]).map(artRow).join("")}</div><div class="erow"><span></span><div class="ein"><button type="button" class="ghost" data-art-add>+ Add a source</button>${reset("art")}</div></div></div>`;
     const row = (f, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${LABEL[f]}${psdNote(f)}</label><div class="ein">${input}${reset(f)}${SITE_FIELDS.includes(f) ? siteBox(f) : ""}</div></div>`;
     const num = f => `<input id="ef-${f}" type="number" min="0" max="99" step="1" value="${c[f] ?? ""}" placeholder="—">`;
     return `<div class="dialog edit-dialog has-preview" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
@@ -871,7 +871,7 @@ export function createEditor(app) {
         </fieldset>
         <fieldset><legend>Notes, names and credit</legend>
           ${row("note", `<textarea id="ef-note" rows="2" placeholder="Rulings or errata, shown on the card page" data-tokens>${esc(c.note || "")}</textarea>`)}
-          ${ART_FIELDS.map(k => row(k, `<input id="ef-${k}" value="${esc(c[k] || "")}" placeholder="${k === "art" ? "the card's artwork: a link, an artist or a game" : "the ability's artwork"}">`)).join("")}
+          ${artBox(artList(c))}
           ${row("aliases", `<input id="ef-aliases" value="${esc((c.webAliases || []).join(", "))}" placeholder="comma separated">${(c.aliases || []).filter(a => !(c.webAliases || []).includes(a)).length ? `<span class="muted">Bot aliases: ${esc(c.aliases.filter(a => !(c.webAliases || []).includes(a)).join(", "))}</span>` : ""}`)}
           <div class="erow" data-row="author"><label for="ef-author">Author</label><div class="ein">${isDup ? `<span class="muted">Same as the original</span>` : `<input id="ef-author" data-suggest="author" autocomplete="off" value="${esc(c.author || "")}">`}</div></div>
           ${row("dup_of", `<input id="ef-dup_of" list="dl-cards" value="${esc(val(c, "dup_of"))}" placeholder="${c.variantOf ? esc(S.byId.get(c.variantOf)?.key || "") : "not a duplicate"}"><datalist id="dl-cards">${S.all.filter(x => x.id !== c.id && !x.dup).map(x => `<option value="${esc(x.key)}">${esc(x.name)}</option>`).join("")}</datalist>`)}
@@ -894,6 +894,16 @@ export function createEditor(app) {
         <div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
         <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div>
       </form>${live.paneHtml(previewOpen, { viewer: app.imageOf(c, 720), ar: c.tw && c.th ? `${c.tw}/${c.th}` : "" })}</div></div>`;
+  }
+  // the artwork sources (#ef-art): a numbered row each; ✕ removes one (the last one left is emptied), + adds one
+  const artRow = (v, i) => `<div class="erow art-row"><label for="efa-${i}">${artLabel(i + 1)}</label><div class="ein"><input id="efa-${i}" data-art-src value="${esc(v)}" placeholder="${i ? "another source" : "the card's artwork: a link, an artist or a game"}"><button type="button" class="ghost icon" data-art-remove aria-label="Remove ${artLabel(i + 1).toLowerCase()}" title="Remove this source">✕</button></div></div>`;
+  function setArt(list) { const rows = document.querySelector("#ef-art .art-rows"); if (rows) rows.innerHTML = (list.length ? list : [""]).map(artRow).join(""); }
+  function artAction(remove) {                     // remove: its ✕, else add a row
+    const rows = document.querySelector("#ef-art .art-rows"); if (!rows) return;
+    const vals = [...rows.querySelectorAll("[data-art-src]")].map(i => i.value), at = remove ? [...rows.children].indexOf(remove.closest(".art-row")) : vals.length;
+    if (remove) vals.splice(at, 1); else vals.push("");
+    setArt(vals);
+    rows.querySelectorAll("[data-art-src]")[Math.min(at, Math.max(0, vals.length - 1))]?.focus();
   }
   const creatureRow = (x, i) => `<tr><th>${i + 1}</th>${STATS.map(k => `<td><input type="number" min="0" max="99" data-ck="${k}" value="${x[k] ?? ""}" placeholder="—" aria-label="Creature ${i + 1} ${LABEL[k]}"></td>`).join("")}</tr>`;
   function creatureAction(kind) {
@@ -927,7 +937,7 @@ export function createEditor(app) {
       types: () => [...document.querySelectorAll("#ef-types .on")].map(x => x.dataset.type),
       ...Object.fromEntries(STATS.map(s => [s, () => int(s)])),
       ability: () => f("ability").value.replace(/\r/g, "").trim() || null, note: () => f("note").value.trim() || null,
-      ...Object.fromEntries(ART_FIELDS.map(k => [k, () => { const v = f(k).value.replace(/\s+/g, " ").trim() || null; error ||= artError(k, v); return v; }])),
+      art: () => { const list = artList({ art: [...document.querySelectorAll("#ef-art [data-art-src]")].map(i => i.value) }); error ||= artError(list); return list.length ? list : null; },
       aliases: () => f("aliases").value.split(",").map(s => s.trim()).filter(Boolean),
       dup_of: () => { const v = f("dup_of").value.trim(); return v ? (byKey(v)?.key || v) : ""; },
       hidden: () => f("hidden").checked, allow_high_stats: () => f("allow_high_stats").checked, problems_ok: () => f("problems_ok").checked,
@@ -999,7 +1009,7 @@ export function createEditor(app) {
     if (one && n === 1) return stagePart(c, one, f, v, defer);
     if (one) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
     let x = fromInput(f, v, b.name);
-    if (ART_FIELDS.includes(f) && x != null) { x = x.replace(/\s+/g, " "); if (artError(f, x)) { if (!defer) app.toast(artError(f, x)); return null; } }
+    if (f === "art" && x != null) { x = artList({ art: x }); if (artError(x)) { if (!defer) app.toast(artError(x)); return null; } x = x.length ? x : null; }
     if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, c.id)) === undefined) return null;
     const op = autoRename(c, b, mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x));
     put(c.id, op); if (!defer) save();
@@ -1240,7 +1250,7 @@ export function createEditor(app) {
     if (joined?.length && restored) restored = Object.fromEntries(Object.entries(restored).filter(([f]) => !joined.includes(f)));
     if (joined?.length) { cardDrafts.drop(c.id, joined); app.toast(`An older unsaved ${joined.map(f => LABEL[f]).join(" and ")} edit can't go into the boxes: dropped`); }   // a joined draft of a card of several layers
     const older = !restored && cardDrafts.get(c.id), offered = older && draft.restorable(older.fields, start);
-    if (restored) draft.fillValues(form, restored, { creatures: setCreatures });
+    if (restored) draft.fillValues(form, restored, { creatures: setCreatures, art: setArt });
     else if (offered && Object.keys(offered).length) { form.insertAdjacentHTML("afterbegin", draft.offerHtml(offered, older.at, Date.now(), draft.movedSince(older, start))); keepOld = older; }
     else if (older) cardDrafts.drop(c.id);                                 // the batch has it already
     let found = cardDrafts.snap(c.id);              // the draft as the dialog found it: Cancel puts it back (only Discard, a save or a publish lose it)
@@ -1266,11 +1276,13 @@ export function createEditor(app) {
       const ans = e.target.closest(".draft-offer [data-draft]");
       if (ans) {
         form.querySelector(".draft-offer").remove(); keepOld = null;
-        if (ans.dataset.draft === "restore") { draft.fillValues(form, offered, { creatures: setCreatures }); form.dispatchEvent(new Event("input", { bubbles: true })); }   // as typed: the image previews follow too
+        if (ans.dataset.draft === "restore") { draft.fillValues(form, offered, { creatures: setCreatures, art: setArt }); form.dispatchEvent(new Event("input", { bubbles: true })); }   // as typed: the image previews follow too
         else { autosave.cancel(); found = null; cardDrafts.drop(c.id); autosave.run(); app.toast("Unsaved edit discarded"); }   // what was typed meanwhile stays a draft
         first()?.focus();
         return;
       }
+      const artBtn = e.target.closest("[data-art-add], [data-art-remove]");
+      if (artBtn) { artAction(artBtn.hasAttribute("data-art-remove") ? artBtn : null); update(); typing(); return; }
       const pb = partForm && e.target.closest("[data-part-del], [data-part-undo], [data-part-ps], [data-part-redo], [data-part-skipped], [data-part-add], [data-part-add-remove], [data-part-drop], [data-part-pic]");
       if (pb) {
         const d = pb.dataset, box = k => view.list.find(x => x.key === k), set = (k, t) => { const el = partEl(k); if (el) { el.value = t; el.rows = rowsOf(t); el.focus(); } };
@@ -1318,6 +1330,7 @@ export function createEditor(app) {
     const p = psdVal(baseOf(c), f), el = document.getElementById(`ef-${f}`);
     if (f === "types") { for (const t of document.querySelectorAll("#ef-types [data-type]")) { const on = (p || []).includes(t.dataset.type); t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); } return; }
     if (f === "creatures") { document.getElementById("ef-creatures").innerHTML = (p || []).map(creatureRow).join(""); if (!p) creatureAction("remove"); return; }
+    if (f === "art") { setArt(p || []); return; }
     if (!el) return;
     if (el.type === "checkbox") el.checked = !!p;
     else el.value = Array.isArray(p) ? p.join(", ") : p ?? "";

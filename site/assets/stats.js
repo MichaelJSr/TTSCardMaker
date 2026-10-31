@@ -4,6 +4,7 @@ import { esc, tagInfo, badgeHtml, TAG, plain, noted, headHtml } from "./text.js"
 import { total } from "./search.js";
 import { HAND } from "./deck.js";
 import { date } from "./history.js";
+import { artList } from "./art.js";
 
 // the game's names (rulebook "04 Table")
 const KIND_LABEL = { creature: "Creatures", item: "Items", field: "Field cards", minion: "Minions", nme: "N.M.E. items", "aux item": "Auxiliary items",
@@ -334,7 +335,7 @@ const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 /** Cards per season (stacked by kind, every season from 1); a season's column shows its episodes below
     (app.js "season" action; cur: the season picked this session, else the biggest) */
 function seasonsCard(pool, cur) {
-  const rows = pool.map(c => ({ c, s: spongeOf(c.art), g: spongeGroup(c) })).filter(r => r.s);
+  const rows = pool.map(c => ({ c, s: artList(c).map(spongeOf).find(Boolean), g: spongeGroup(c) })).filter(r => r.s);   // its first SpongeBob source
   if (!rows.length) return "";
   const last = Math.max(0, ...rows.map(r => +r.s.season).filter(Number.isFinite));
   const seasons = Array.from({ length: last }, (_, i) => String(i + 1));

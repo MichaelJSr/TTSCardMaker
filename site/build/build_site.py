@@ -158,11 +158,25 @@ DECKS_DIR = "site/decks"                      # <owner>/<slug>.json per hand pub
 LOGINS_DIR = "site/logins"                    # <login>.json: a token sealed with its owner's password (password sign-in)
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits (subseries: database only, never from the folder)
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
-               "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "art": str, "ability_art": str,
+               "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "art": list, "ability_art": str,
                "aliases": list, "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list}
 EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", "spd", "art", "ability_art"}      # may be null
-# artwork sources (main, ability): free text, each entry its own (a duplicate's never its original's); the bot's card_edits.ART_MAX
+# artwork sources: art, a list of free text (one string in older entries), each entry its own (a duplicate's never its
+# original's); the retired ability_art is read as the last source (art_list); the bot's card_edits.ART_MAX
 ART_FIELDS, ART_MAX = ("art", "ability_art"), 500
+
+
+def art_list(art, ability_art=None):
+    """The artwork sources, in order: art (a list, or one string) then a legacy ability_art; whitespace collapsed, empty ones left out."""
+    items = (art if isinstance(art, list) else [art]) + [ability_art]
+    return [t for t in (" ".join(str(x).split()) for x in items if isinstance(x, str)) if t]
+
+
+def fold_art(fields):
+    """fields with art as art_list's list (None when empty) and no ability_art, when either is there."""
+    if "art" in fields or "ability_art" in fields:
+        fields["art"] = art_list(fields.get("art"), fields.pop("ability_art", None)) or None
+    return fields
 # printed on the card image, so an edit waits for the pipeline ("PSD pending"). The same set lives in edit.js FROM, app.js
 # FIELD_LABEL, the bot's CardEdits.KIND ("psd") and psd_edit STAT_FIELDS + TEXT_FIELDS + NOT_YET. creatures is database-only
 PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability"}
@@ -1274,10 +1288,10 @@ def valid_edit(field, value):
     if field == "creatures":                     # [{"hp": 7, "def": 4, "atk": 5, "spd": 6}, ...]
         return isinstance(value, list) and all(isinstance(c, dict) and all(k in STAT_KEYS and (v is None or valid_edit("hp", v))
                                                                            for k, v in c.items()) for c in value)
+    if field in ART_FIELDS:                      # a source, or (art) a list of them
+        return all(isinstance(x, str) and len(x) <= ART_MAX for x in (value if field == "art" and isinstance(value, list) else [value]))
     if kind is list:
         return isinstance(value, list) and all(isinstance(x, str) for x in value)
-    if field in ART_FIELDS:
-        return isinstance(value, str) and len(value) <= ART_MAX
     return isinstance(value, kind)
 
 
@@ -1349,6 +1363,7 @@ def parse_edits():
                 good[field] = value
             else:
                 log(f"warning: {EDITS_PATH}: {name}: {field} = {value!r} isn't a known field or has the wrong type, skipped")
+        fold_art(good)
         meta = {k: fields[k] for k in ("_by", "_at") if isinstance(fields.get(k), str)}
         if parts:
             meta["parts"] = parts
@@ -2378,8 +2393,8 @@ def edits_entries(text):
         return {}
     if not isinstance(cards, dict):
         return {}
-    return {card_key(name): (name, {f: v for f, v in fields.items() if not f.startswith("_") and f != "parts"}, (fields.get("_by"), fields.get("_at")))
-            for name, fields in cards.items() if isinstance(fields, dict)}
+    return {card_key(name): (name, fold_art({f: v for f, v in fields.items() if not f.startswith("_") and f != "parts"}), (fields.get("_by"), fields.get("_at")))
+            for name, fields in cards.items() if isinstance(fields, dict)}   # art folded: an older string reads as its list
 
 
 def edit_changes(before, after):
