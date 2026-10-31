@@ -26630,7 +26630,7 @@
           "HideWhenFaceDown": false,
           "Hands": false,
           "CustomPDF": {
-            "PDFUrl": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/05add25ffcc75f25b35b7eb42ad22b84a2ab2567/TTS/Rulebook/Rulebook.pdf",
+            "PDFUrl": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e6d653b811374ff4c52130f25747cc5b174441f3/TTS/Rulebook/Rulebook.pdf",
             "PDFPassword": "",
             "PDFPage": 0,
             "PDFPageOffset": 0
