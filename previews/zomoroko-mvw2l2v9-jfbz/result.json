@@ -1,0 +1,88 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw2l2v9-jfbz",
+ "card": "Mini Auto Croissant",
+ "path": "Auxiliary/Minions/Mini_Auto_Croissant.psd",
+ "png": "Auxiliary/Minions/Mini_Auto_Croissant.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "1acb310f7e20f4b82a2c548dfca3b086c02437e5",
+  "psd_blob": "2b6ad7c2f7e33c569be3905cbcb9b6e2074ee360",
+  "png_blob": "b4247ea21a835399ecfa654f9b564d106eeb6c80"
+ },
+ "edit": {
+  "ability": "This minion persists.\nOverkill DMG carries over to another Mini Auto Croissant in this slot, then parent creature.\n(2CD) Summon a Mini Auto Croissant.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "This minion persists.\nOverkill DMG carries over to another Mini Auto Croissant in this slot, then parent creature.\n(2CD) Summon a Mini Auto Croissant.",
+    "was": "This minion persists.\nOverkill DMG goes to the next Mini (or not Mini) Auto Croissant.\n(2CD) Summon a Mini Auto Croissant.",
+    "sha": "e4e106af",
+    "psd": "2b6ad7c2",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'DMG goes to the next Mini (or not Mini) ' -> 'DMG carries over to another Mini Auto Cr'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "This minion persists.\nOverkill DMG goes to the next Mini (or not Mini) Auto Croissant.\n(2CD) Summon a Mini Auto Croissant.",
+   "new": "This minion persists.\nOverkill DMG carries over to another Mini Auto Croissant in this slot, then parent creature.\n(2CD) Summon a Mini Auto Croissant."
+  }
+ ],
+ "notes": [
+  "overflow: ability: set at 88% of its size to stay on its panel"
+ ],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.198,
+   "max": 2.0
+  }
+ },
+ "region": [
+  30,
+  1764,
+  1172,
+  2318
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41180095896",
+ "took_s": 13.6,
+ "at": "2026-10-31T07:19:18Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2316249,
+  "webp": 95016,
+  "before": 93294
+ },
+ "recompressed": false
+}

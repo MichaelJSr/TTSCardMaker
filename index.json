@@ -271,6 +271,14 @@
    "png_blob": "231ff1e9dcf64c0dd23033da74d8db4ceac24e16",
    "psd_blob": "dc8be26878fb607729e28a1db85804c966170b95",
    "state": "baked"
+  },
+  "zomoroko-mvw2l2v9-jfbz": {
+   "at": "2026-10-31T07:19:18Z",
+   "card": "Mini Auto Croissant",
+   "path": "Auxiliary/Minions/Mini_Auto_Croissant.psd",
+   "png_blob": "b4247ea21a835399ecfa654f9b564d106eeb6c80",
+   "psd_blob": "2b6ad7c2f7e33c569be3905cbcb9b6e2074ee360",
+   "state": "baked"
   }
  },
  "v": 1
