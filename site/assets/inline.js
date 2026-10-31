@@ -317,6 +317,7 @@ export function reflect(view, selected) {
 export function markTiles(root, selected) {
   for (const t of root.querySelectorAll(".tile[data-open]")) {
     t.draggable = true; t.querySelector("img")?.setAttribute("draggable", "false");
+    if (t.hasAttribute("href")) { t.removeAttribute("href"); t.tabIndex = 0; }   // a card drag, never a link drag; still focusable
     t.toggleAttribute("data-selected", selected.has(t.dataset.open));
   }
 }

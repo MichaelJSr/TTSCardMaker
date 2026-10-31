@@ -1,5 +1,5 @@
 {
-  "about": "Card ratings, 1 to 10. favorability: how much players like the card; power: 1 weak, 5.5 balanced, 10 too strong. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.",
+  "about": "Card ratings, whole numbers 1 to 10. favorability: how much players like the card; power: 1 weak, 10 too strong; the middle (5.5) is balanced. Keyed by card file name; entries oldest first. by: \"group\" (a TTS session) or a GitHub login. Read by the website only.",
   "cards": {
     "ABBI": [{"date":"2023-04-28","scale":"favorability","value":8,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":6,"by":"group","source":"TTS session"},{"date":"2025-03-02","scale":"power","value":6,"by":"group","source":"TTS session"},{"date":"2025-04-28","scale":"favorability","value":7,"by":"group","source":"TTS session"}],
     "Abigail": [{"date":"2025-04-28","scale":"favorability","value":3,"by":"group","source":"TTS session"}],
@@ -82,6 +82,7 @@
     "Dyna Blade": [{"date":"2023-04-28","scale":"favorability","value":6,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":6,"by":"group","source":"TTS session"},{"date":"2025-03-02","scale":"power","value":6,"by":"group","source":"TTS session"},{"date":"2025-04-28","scale":"favorability","value":7,"by":"group","source":"TTS session"}],
     "Dynamite": [{"date":"2023-04-28","scale":"favorability","value":7,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":6,"by":"group","source":"TTS session"}],
     "Ech": [{"date":"2025-03-02","scale":"power","value":4,"by":"group","source":"TTS session"},{"date":"2025-04-28","scale":"favorability","value":10,"by":"group","source":"TTS session"}],
+    "Eden's Soul": [{"date":"2023-04-28","scale":"favorability","value":6,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":5,"by":"group","source":"TTS session"}],
     "Elmadan": [{"date":"2025-03-02","scale":"power","value":4,"by":"group","source":"TTS session"},{"date":"2025-04-28","scale":"favorability","value":7,"by":"group","source":"TTS session"}],
     "Energy Ritual": [{"date":"2023-04-28","scale":"favorability","value":10,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":6,"by":"group","source":"TTS session"}],
     "Erasure": [{"date":"2023-04-28","scale":"favorability","value":5,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":5,"by":"group","source":"TTS session"}],
@@ -287,7 +288,6 @@
     "SOMETHING": [{"date":"2023-04-28","scale":"favorability","value":5,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":8,"by":"group","source":"TTS session"},{"date":"2025-03-02","scale":"power","value":6,"by":"group","source":"TTS session"},{"date":"2025-04-28","scale":"favorability","value":6,"by":"group","source":"TTS session"}],
     "Sonic": [{"date":"2025-03-02","scale":"power","value":7,"by":"group","source":"TTS session"},{"date":"2025-04-28","scale":"favorability","value":6,"by":"group","source":"TTS session"}],
     "Soul Master": [{"date":"2023-04-28","scale":"favorability","value":7,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":6,"by":"group","source":"TTS session"},{"date":"2025-03-02","scale":"power","value":6,"by":"group","source":"TTS session"},{"date":"2025-04-28","scale":"favorability","value":6,"by":"group","source":"TTS session"}],
-    "Soul of Eden": [{"date":"2023-04-28","scale":"favorability","value":6,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":5,"by":"group","source":"TTS session"}],
     "Spamton Neo": [{"date":"2025-03-02","scale":"power","value":5,"by":"group","source":"TTS session"},{"date":"2025-04-28","scale":"favorability","value":8,"by":"group","source":"TTS session"}],
     "Spice": [{"date":"2023-04-28","scale":"favorability","value":8,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":6,"by":"group","source":"TTS session"}],
     "Spinni": [{"date":"2023-04-28","scale":"favorability","value":8,"by":"group","source":"TTS session"},{"date":"2023-04-28","scale":"power","value":7,"by":"group","source":"TTS session"},{"date":"2025-03-02","scale":"power","value":6,"by":"group","source":"TTS session"},{"date":"2025-04-28","scale":"favorability","value":8,"by":"group","source":"TTS session"}],

@@ -1,6 +1,6 @@
 """Runs every check on a save: one line each, the tail of a failing one, exit 1 if any fails.
 
-    python run_all.py [save.json]       (default the repo's save; outputs in /tmp/tts-checks/out/)
+    python run_all.py [save.json]       (default the repo's save; outputs in /tmp/tts-checks/out/; about 4 minutes)
 """
 import os
 import subprocess

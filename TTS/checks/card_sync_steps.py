@@ -30,12 +30,12 @@
    schedule (now) or a push (wait: card-sync-quiet, the window from its dispatch); its main Gate is the schedule's.
 7. Tell Discord on faked runs: once per failing streak of its lane (the newest other live run where the lane ended;
    runs that skipped it, and dry runs, passed over), once a lane per run (after sees data's failure).
-8. The verdicts (AutoCroissant docs/Future/CARD_SYNC_VERDICTS.md): Bake records keeps M's part only when M landed (the
+8. The verdicts (AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md): Bake records keeps M's part only when M landed (the
    baked events get M), records nothing on a dry run; every data job looks for unmerged records; the data gate goes for
    records alone; Build passes them on and lists them in bake-records.json; Guard
    events finds a guards commit's guard-events.json through its Guarded-push run (faked gh), skips one naming another
    commit, and warns for one not found.
-9. The chain (faked gh): Leftover edits counts the due and held website edits (an older builder: none); Chain
+9. The chain (faked gh): Leftover edits counts the due and held website edits; Chain
    dispatches at once for cards still to re-parse, unmerged bake records or due edits, through the window for held
    edits; none when nothing is left, a lane failed, another live run's lane reads it (queued, waiting), after
    CHAIN_IDLE runs without progress or CHAIN_MAX runs (said in the summary), or on a dry run. A run whose main lane
@@ -777,16 +777,13 @@ def bake_cases(flow: dict) -> None:
             check(code == 0 and ("--pending" in args) == want and "--card" not in args and "baked" not in out,
                   f"bake: {event}{' retry of ' + retry if retry else ''} bake={card} -> --pending {'yes' if want else 'no'}"
                   + ("" if code == 0 else f"\n{text}"))
-        for has in (False, True):                       # the data's verdicts, for a builder that reads them
-            if has:
-                write(os.path.join(ws, "bot", "commands", "card_bake.py"), 'parser.add_argument("--verdicts")\n')
-            code, text, out = run_step(flow["jobs"]["main"], "bake", os.path.join(ws, "bot"),
-                                       {"GITHUB_WORKSPACE": ws, "MAIN": main, "CARD": "all", "RETRY_OF": "",
-                                        "GITHUB_EVENT_NAME": "schedule", "DRY_RUN": "true"}, tmp)
-            args = open(os.path.join(tmp, "bake.args")).read().split("\n")
-            got = args[args.index("--verdicts") + 1] if "--verdicts" in args else None
-            check(code == 0 and got == (os.path.join(ws, "carddata/db/verdicts.json") if has else None),
-                  f"bake: --verdicts {got} ({'a builder with' if has else 'an older builder without'} it)" + ("" if code == 0 else f"\n{text}"))
+        code, text, out = run_step(flow["jobs"]["main"], "bake", os.path.join(ws, "bot"),
+                                   {"GITHUB_WORKSPACE": ws, "MAIN": main, "CARD": "all", "RETRY_OF": "",
+                                    "GITHUB_EVENT_NAME": "schedule", "DRY_RUN": "true"}, tmp)
+        args = open(os.path.join(tmp, "bake.args")).read().split("\n")
+        got = args[args.index("--verdicts") + 1] if "--verdicts" in args else None
+        check(code == 0 and got == os.path.join(ws, "carddata/db/verdicts.json"),
+              f"bake: --verdicts {got} (the data's)" + ("" if code == 0 else f"\n{text}"))
 
 
 def main_cases(flow: dict) -> None:
@@ -947,7 +944,7 @@ def build_cases(flow: dict) -> None:
         commit(work, {"Cards/One.psd": "psd 3"}, "Card sync: by hand", "bob")
         git(work, "push", "-q", "origin", "main")
         ws = checkout(tmp, bare)
-        write(os.path.join(ws, "bot", "commands", "card_data.py"), 'add_argument("--verdicts")\n')
+        os.makedirs(os.path.join(ws, "bot"))
         python = os.path.join(tmp, "runner", "venv", "bin", "python")
         write(python, f'#!/bin/bash\nprintf "%s\\n" "$@" > "{os.path.join(tmp, "build.args")}"\n')
         os.chmod(python, 0o755)
@@ -1068,16 +1065,12 @@ def chain_cases(flow: dict) -> None:
         bot = os.path.join(tmp, "ws", "bot")
         write(os.path.join(tmp, "runner", "venv", "bin", "python"), '#!/bin/bash\ncat > /dev/null; echo "$FAKE_LEFT"\n')
         os.chmod(os.path.join(tmp, "runner", "venv", "bin", "python"), 0o755)
-        write(os.path.join(bot, "commands", "card_db.py"), "def merge_verdicts(folder, incoming):\n")
+        os.makedirs(bot)
         subprocess.run(["git", "init", "-q", os.path.dirname(bot)], check=True)
         git(os.path.dirname(bot), "commit", "-q", "--allow-empty", "-m", "head")
-        for builder, left, want in (("def due(repository, head, local, verdicts):\n", "1 2", ("1", "2")),
-                                    ("def due(repository, head, local):\n", "1 2", (None, None))):
-            write(os.path.join(bot, "commands", "card_bake.py"), builder)
-            code, text, out = run_step(main, "left", bot, {"GITHUB_WORKSPACE": os.path.dirname(bot), "FAKE_LEFT": left}, tmp)
-            check(code == 0 and (out.get("due"), out.get("held")) == want,
-                  f"Leftover edits: due={out.get('due')} held={out.get('held')} ({'a builder with due(verdicts)' if want[0] else 'an older builder'})"
-                  + ("" if code == 0 else f"\n{text}"))
+        code, text, out = run_step(main, "left", bot, {"GITHUB_WORKSPACE": os.path.dirname(bot), "FAKE_LEFT": "1 2"}, tmp)
+        check(code == 0 and (out.get("due"), out.get("held")) == ("1", "2"),
+              f"Leftover edits: due={out.get('due')} held={out.get('held')}" + ("" if code == 0 else f"\n{text}"))
 
         fake = os.path.join(tmp, "bin")
         sent = os.path.join(tmp, "dispatched")

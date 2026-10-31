@@ -118,6 +118,13 @@ export function patch(store, request, changes) {
   for (const [id, list] of Object.entries(store)) if (list.some(e => e.request === request)) out[id] = list.map(e => (e.request === request ? { ...e, ...changes } : e));
   return out;
 }
+/** store without the entry of that request (Discard: thrown away in this browser; the branch's copy expires on its own). */
+export function discard(store, request) {
+  const out = {};
+  for (const [id, list] of Object.entries(store)) { const left = list.filter(e => e.request !== request); if (left.length) out[id] = left; }
+  return out;
+}
+const TRASH = `<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4h11M6 4V2.6h4V4M4 4l.7 9.4h6.6L12 4M6.6 6.6v4.6M9.4 6.6v4.6"/></svg>`;
 /** The entries still waiting for their result. */
 export const waiting = store => Object.values(store).flat().filter(e => e.state === "running");
 /** The store with old entries settled: a start the page left half done is an error, a result or timeout past SHOW_MS is
@@ -233,7 +240,8 @@ export function renderedParts(e, v) {
   }
   const r = e.result || {}, stale = DONE.includes(e.state) ? staleWhy(e, v.card, v.hash) : [];
   const staleText = stale.length ? `<p class="pv-stale" role="note">Out of date: ${stale.map(w => (w === "edit" ? "the edit changed since" : "the card changed since")).join(" and ")}. ${button("Preview again", "ghost")}</p>` : "";
-  const head = `<p class="pv-state" data-state="${esc(e.state)}"><b>${esc(STATE_TEXT[e.state] || e.state)}</b> · ${esc(fieldsLine(e.edit || {}))} · <span class="muted">${esc(ago(v.now - e.at))}</span></p>`;
+  const trash = e.state === "starting" || e.state === "running" ? "" : ` <button type="button" class="ghost icon pv-discard" data-pv="discard" title="Discard this preview" aria-label="Discard this preview">${TRASH}</button>`;
+  const head = `<p class="pv-state" data-state="${esc(e.state)}"><b>${esc(STATE_TEXT[e.state] || e.state)}</b> · ${esc(fieldsLine(e.edit || {}))} · <span class="muted">${esc(ago(v.now - e.at))}</span>${trash}</p>`;
   const outcomes = (r.fields && Object.keys(r.fields).length ? `<p class="pv-fields">${esc(outcomesLine(r.fields))}</p>` : "")
     + (r.parts && Object.keys(r.parts).length ? `<p class="pv-fields">${esc(partsLine(r.parts))}</p>` : "");
   const notes = r.notes?.length ? `<ul class="pv-notes">${r.notes.map(x => `<li>${esc(plainNote(x))}</li>`).join("")}</ul>` : "";
@@ -247,7 +255,7 @@ export function renderedParts(e, v) {
   const shot = alt => {                               // the preview in the stage; Diff swaps in the red differences
     const [src, full] = v.images, diff = v.diff && !!v.current;
     return { dim: false,
-      stage: `<a href="${esc(full || src)}" target="_blank" rel="noopener" title="Full size"${diff ? " hidden" : ""}><img src="${esc(src)}" alt="${esc(v.card.name)}, ${esc(alt)}" crossorigin="anonymous" data-pv-img="preview" data-fallback="${esc(full || "")}"></a>
+      stage: `<a href="${esc(full || src)}" target="_blank" rel="noopener" title="Full size"${diff ? " hidden" : ""}><img src="${esc(src)}" alt="${esc(v.card.name)}, ${esc(alt)}" crossorigin="anonymous" data-pv-img="preview"></a>
         ${v.current ? `<img src="${esc(v.current)}" alt="" crossorigin="anonymous" data-pv-img="current" hidden><canvas data-pv-diff role="img" aria-label="Differences between the current image and the preview, in red"${diff ? "" : " hidden"}></canvas>` : ""}`,
       tools: `<div class="actions">${v.current ? `<button type="button" class="ghost" data-pv="diff" aria-pressed="${diff}">Diff</button>` : ""}${full ? `<a class="fact" href="${esc(full)}" target="_blank" rel="noopener">Full size</a>` : ""}${again}</div>${diff ? `<p class="muted pv-note">Differences in red <span data-pv-changed></span>${v.mixed ? ". An older preview: compared with the site's image, another format, so faint red outlines show where nothing changed" : ""}</p>` : ""}` };
   };
@@ -266,7 +274,6 @@ export function renderedParts(e, v) {
   return { ...state, caption: `${head}<p class="err">${esc(why)}</p>${r.transient ? `<p class="muted">Usually passing: try again.</p>` : ""}${notes}${runLink ? `<p>${runLink}</p>` : ""}${e.error ? scopeNote : ""}${errStale || `<div class="actions">${button("Try again", "ghost")}</div>`}` };
 }
 /** renderedParts as one piece of markup. */
-export const renderedHtml = (e, v) => { const p = renderedParts(e, v); return p.stage + p.caption; };
 export const TABS = [["original", "Original"], ["mockup", "Mock-up"], ["rendered", "Rendered"]];
 /** The viewer's tabs: a tablist, the mode's tab selected (roving tabindex), "New" on Rendered while a result waits unseen. */
 export const tabsHtml = (mode, { news = false } = {}) => `<div class="iv-tabs" role="tablist" aria-label="Card image">${TABS.map(([m, label]) =>
@@ -502,6 +509,10 @@ export function createPreviews(app) {
       const act = t("[data-pv]")?.dataset.pv;
       if (act === "start") { views.set(c.id, { ...views.get(c.id), mode: "rendered", shown: 0 }); start(c, getV().edit); }
       else if (act === "diff") { const st = views.get(c.id) || {}; views.set(c.id, { ...st, diff: !st.diff }); paint(); }
+      else if (act === "discard") {                   // the preview shown, thrown away here; the next one (or none) shows
+        const st = views.get(c.id) || {}, list = store[c.id] || [], e = list[Math.min(st.shown || 0, Math.max(0, list.length - 1))];
+        if (e) { set(discard(store, e.request)); views.set(c.id, { ...st, shown: 0, diff: false }); notify(c.id); }
+      }
       else if (act === "recheck") { const e = (store[c.id] || [])[0]; if (e) { set(patch(store, e.request, { state: "running", wait: Date.now() - e.at + MORE_WAIT_MS })); notify(c.id); poll(store[c.id][0]).then(() => notify(c.id)); schedule(); } }
     };
     tabs.onkeydown = ev => {                          // arrows, Home, End move between the tabs (not to the next card)
@@ -555,11 +566,9 @@ export function createPreviews(app) {
     const t = setTimeout(() => { drawn = true; go(null); }, 150);
     app.loadDetails(c).then(r => { recs.set(c.id, r); clearTimeout(t); if (!drawn || canvas._run === run) go(r); }, () => { recs.set(c.id, null); });
   }
-  function wireShot(alt, cap, e) {                    // the preview's fallback to the PNG, and the diff while it shows
+  function wireShot(alt, cap, e) {                    // a preview gone from the branch, and the diff while it shows
     const prev = alt.querySelector('[data-pv-img="preview"]');
     prev?.addEventListener("error", () => {
-      const f = prev.dataset.fallback;
-      if (f && prev.src !== f) { prev.dataset.fallback = ""; prev.src = f; prev.closest("a").href = f; return; }
       if (e && Date.now() - e.at > LATE_MS) { set(patch(store, e.request, { state: "expired", seen: true })); notify(e.card); }   // the branch dropped it (the contract: a 404 after a day)
     });
     const canvas = alt.querySelector("[data-pv-diff]");

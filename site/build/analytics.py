@@ -453,11 +453,10 @@ def build(cards, stats, old_stats, now=None, history=True, psd_commits=None, lin
         sha = r.pop("_c", None)
         if sha:
             r["c"] = table.setdefault(sha, len(table))
-    first = min((when(v) for vs in old_stats.values() for v in vs or [] if isinstance(getattr(v, "timestamp", None), (int, float))), default=None)
     counts = Counter(e.get("type") for e, _, _ in members)
-    return {"cohorts": cohorts, "cards": out_cards, "counts": dict(counts), "versions": versions, "since": int(first) if first else None,
+    return {"cohorts": cohorts, "cards": out_cards, "counts": dict(counts), "versions": versions,
             "time": over_time(cards, stats, old_stats, sizes, now) if history else {"months": [], "series": {}},
-            "minCohort": MIN_COHORT, "offScale": OFF_SCALE, "commits": list(table)}
+            "minCohort": MIN_COHORT, "commits": list(table)}
 
 
 def summary(data):

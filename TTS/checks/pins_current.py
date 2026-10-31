@@ -1,6 +1,8 @@
 """Every repo link in the save must serve main's current file: pinned sha's blob == main's blob (git's own view,
 independent of the updater's history walk). A failed pin's line names git log's last change of the file.
+The global script's links are live data on main (TTS/Global.lua), not pinned.
 Usage: pins_current.py [save.json]   (history: $TTS_HISTORY, made or fetched)"""
+import json
 import os
 import re
 import subprocess
@@ -31,7 +33,10 @@ def tree(commit, paths):
     return found
 
 
-text = open(save_arg(), encoding="utf-8").read()
+with open(save_arg(), encoding="utf-8") as f:
+    data = json.load(f)
+data["LuaScript"] = ""                                       # the global script: live data on main
+text = json.dumps(data, ensure_ascii=False)
 links = {}
 for m in LINK.finditer(text):
     links[(m.group(1), unquote(m.group(2)))] = links.get((m.group(1), unquote(m.group(2))), 0) + 1

@@ -1,6 +1,6 @@
 // Stats dashboard. Marks follow the dataviz method: thin bars with 4px rounded data-ends, hairline grid,
 // values at bar tips, legends for multi-series, hover tooltips, and a table view for every chart.
-import { esc, tagInfo, badgeHtml, TAG, plain } from "./text.js";
+import { esc, tagInfo, badgeHtml, TAG, plain, noted, headHtml } from "./text.js";
 import { total } from "./search.js";
 import { HAND } from "./deck.js";
 import { date } from "./history.js";
@@ -132,7 +132,7 @@ function scatter(points, { xLabel, yLabel, xTicks, height = 300, xTickLabel = t 
 }
 
 function table(head, rows, numericFrom = 1) {
-  return `<div class="table-wrap"><table class="data"><thead><tr>${head.map((h, i) => `<th class="${i >= numericFrom ? "num" : ""}">${esc(h)}</th>`).join("")}</tr></thead>
+  return `<div class="table-wrap"><table class="data"><thead><tr>${head.map((h, i) => `<th class="${i >= numericFrom ? "num" : ""}">${headHtml(h)}</th>`).join("")}</tr></thead>
     <tbody>${rows.map(r => `<tr${r.sub ? ' class="sub"' : ""}>${r.map((v, i) => `<td class="${i >= numericFrom ? "num" : ""}">${typeof v === "number" ? esc(fmt(v)) : esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
@@ -172,7 +172,7 @@ function heatScale() {
   return heat;
 }
 
-/** A heat table: head [text | {html}], rows of cells (a number shaded, null "—", text as is); shade: the columns shaded
+/** A heat table: head [text | {html} | {label | html, tip}], rows of cells (a number shaded, null "—", text as is); shade: the columns shaded
     (default every one from numericFrom), each on its own range, or all on one (all); href(row, col): a cell's cards */
 function heatTable(head, rows, { numericFrom = 1, shade = null, all = false, href = () => null } = {}) {
   const cols = shade || head.map((_, i) => i).filter(i => i >= numericFrom), heat = heatScale();
@@ -184,15 +184,15 @@ function heatTable(head, rows, { numericFrom = 1, shade = null, all = false, hre
     const text = v == null ? "—" : esc(typeof v === "number" ? fmt(v) : v), to = v == null || v === "" ? null : href(k, i);
     return `<td${i >= numericFrom ? ' class="num"' : ""}${st}>${to ? `<a class="go" href="${esc(to)}" data-tip="Show these cards">${text}</a>` : text}</td>`;
   };
-  return `<div class="table-wrap"><table class="data heat"><thead><tr>${head.map((h, i) => `<th${i >= numericFrom ? ' class="num"' : ""}>${typeof h === "object" ? h.html : esc(h)}</th>`).join("")}</tr></thead>
+  return `<div class="table-wrap"><table class="data heat"><thead><tr>${head.map((h, i) => `<th${i >= numericFrom ? ' class="num"' : ""}>${headHtml(h)}</th>`).join("")}</tr></thead>
     <tbody>${rows.map((r, k) => `<tr>${r.map((v, i) => cell(v, i, k)).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
-/** A chart card; startTable: open on its table (the Chart button shows the chart) */
-function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "", startTable = false } = {}) {
+/** A chart card; startTable: open on its table (the Chart button shows the chart); tip: the title's note */
+function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "", startTable = false, tip = "" } = {}) {
   const t = !!(startTable && tableHtml);
   return `<section class="chart${wide ? " wide" : ""}" id="chart-${id}">
-    <header><h3>${esc(title)}</h3>${tableHtml ? `<button type="button" class="ghost" data-action="toggle-table" data-target="${id}" aria-pressed="${t}">${t ? "Chart" : "Table"}</button>` : ""}</header>
+    <header><h3>${noted(title, tip)}</h3>${tableHtml ? `<button type="button" class="ghost" data-action="toggle-table" data-target="${id}" aria-pressed="${t}">${t ? "Chart" : "Table"}</button>` : ""}</header>
     ${sub ? `<p class="sub">${esc(sub)}</p>` : ""}${legend}
     <div class="view-chart"${t ? " hidden" : ""}>${chartHtml}</div>${tableHtml ? `<div class="view-table"${t ? "" : " hidden"}>${tableHtml}</div>` : ""}</section>`;
 }
@@ -220,6 +220,7 @@ const USES = /^(\d)U$/;                                       // (2U) 2
 const CD_COLS = [["1CD", "CD", 1], ["2CD", "CD", 2], ["3CD", "CD", 3], ["1GCD", "GCD", 1], ["2GCD", "GCD", 2],
   ["1U", "U", 1], ["2U", "U", 2], ["3U", "U", 3]];          // 3CD: 3+, 2GCD: 2+, 3U: 3+
 const CD_PLUS = new Set([2, 4, 7]);
+const CD_PLUS_TIP = { "3CD": "Cooldowns of 3 turns or more", "2GCD": "Global cooldowns of 2 global turns or more", "3U": "3 or more uses" };
 const CD_KEYS = CD_COLS.map(([tag], i) => `${tag}${CD_PLUS.has(i) ? "+" : ""}`);   // app.js cd=
 const WORD_KINDS = [["Creatures", ["creature", "creatures"]], ["Minions", ["minion"]], ["Items", ["item"]], ["Auxiliary items", ["aux item"]],
   ["Field cards", ["field"]], ["Debuffs", ["debuff"]], ["N.M.E. items", ["nme"]]];
@@ -258,7 +259,7 @@ function cardCharts(pool, creatures, L) {
   for (const c of creatures) { const k = shapeOf(c); if (k) shapes.set(k, shapes.get(k) + 1); }
   const shapeRows = [...shapes].map(([k, value]) => ({ label: k === "tied" ? "Tied" : k.toUpperCase(), value, href: value ? L({ kind: MINIONS, shape: k }) : null }));
   if (shapeRows.some(r => r.value)) out.push(card("shapes", "Stat shapes", "Creatures and minions by their highest stat.", hbar(shapeRows, { labelWidth: 80 }),
-    table(["Highest stat", "Cards"], shapeRows.map(r => [r.label, r.value]))));
+    table(["Highest stat", "Cards"], shapeRows.map(r => [r.label, r.value])), { tip: "Creatures and minions with all four stats, by their highest stat; Tied: a shared top" }));
   // S15 cooldowns and uses by star level: each ability's cooldown or uses tag, by its number
   const cd = new Map();
   for (const c of pool) {
@@ -271,11 +272,13 @@ function cardCharts(pool, creatures, L) {
   }
   if (cd.size) {
     const stars = [...cd.keys()].sort((a, b) => a - b), plus = i => (CD_PLUS.has(i) ? "+" : ""), avg = r => (r.k ? r.sum / r.k : null);
-    const head = ["Stars", ...CD_COLS.map(([tag], i) => ({ html: `${badgeHtml(tag)}${plus(i)}` })), "Avg turns"];
+    const plusTip = i => CD_PLUS_TIP[CD_COLS[i][0]], avgHead = { label: "Avg turns", tip: "Mean recurring number of the cooldown and global cooldown tags; uses tags left out" };
+    const head = ["Stars", ...CD_COLS.map(([tag], i) => (plus(i) ? { html: `${badgeHtml(tag, false)}+`, tip: plusTip(i) } : { html: badgeHtml(tag) })), avgHead];
     out.push(card("cooldowns", "Cooldowns and uses by star level", "Abilities per cooldown or uses, by star level.",
       heatTable(head, stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n.map(v => v || ""), r.k ? String(fmt(avg(r))) : null]; }), { shade: CD_COLS.map((_, i) => i + 1), all: true,
         href: (k, i) => (i >= 1 && i <= CD_COLS.length ? L({ stars: stars[k], cd: CD_KEYS[i - 1] }) : null) }),
-      table(["Stars", ...CD_COLS.map(([tag], i) => `(${tag})${plus(i)}`), "Avg turns"], stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n, avg(r)]; }))));
+      table(["Stars", ...CD_COLS.map(([tag], i) => (plus(i) ? { label: `(${tag})+`, tip: plusTip(i) } : `(${tag})`)), avgHead], stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n, avg(r)]; })),
+      { tip: "Cooldown and uses tags with a number, each time one appears; cards with a star level only" }));
   }
   // S16 ability length: median words (timing tags left out) per star level and kind; under 3 cards: —
   const words = new Map();
@@ -292,9 +295,11 @@ function cardCharts(pool, creatures, L) {
     const cell = (st, i) => { const v = words.get(`${st}|${i}`); return v && v.length >= 3 ? median(v) : null; };
     const rows = stars.map(st => [`${st}★`, ...kinds.map(([, i]) => cell(st, i))]).filter(r => r.slice(1).some(v => v != null));
     const rowStars = stars.filter(st => kinds.some(([, i]) => cell(st, i) != null));
+    const wordHead = ["Stars", ...kinds.map(([[l]]) => (l === "Creatures" ? { label: l, tip: "Creature cards and auxiliary creatures together" } : l))];
     out.push(card("words", "Ability length", "Median words per ability; — under 3 cards.",
-      heatTable(["Stars", ...kinds.map(([[l]]) => l)], rows, { all: true, href: (k, i) => (i ? L({ stars: rowStars[k], kind: kinds[i - 1][0][1] }) : null) }),
-      table(["Stars", ...kinds.map(([[l]]) => l)], rows.map(r => r.map(v => (v == null ? "—" : v))))));
+      heatTable(wordHead, rows, { all: true, href: (k, i) => (i ? L({ stars: rowStars[k], kind: kinds[i - 1][0][1] }) : null) }),
+      table(wordHead, rows.map(r => r.map(v => (v == null ? "—" : v)))),
+      { tip: "Median words per ability: icons count as words, short (…) tags like (1CD) don't" }));
   }
   // S19 items by type and stars; rows read "Support", as in the rulebook
   const items = pool.filter(c => c.type === "item" && c.subtype && c.stars);
@@ -312,6 +317,61 @@ function cardCharts(pool, creatures, L) {
 }
 
 // ---- the dashboard ---------------------------------------------------------------------------------
+// ---- status effects by the SpongeBob season of their art (the art field) -------------------------------------------
+const EPISODE = /SpongeBob SquarePants Season (\d+) Ep\. (\d+)([a-z]?)\s+"([^"]+)"/i, MOVIE = /SpongeBob.*Movie/i;
+const SPONGE_KINDS = [["buff", "Buffs", "var(--s1)"], ["debuff", "Debuffs", "var(--s2)"]];
+/** a card's SpongeBob source: {season: "3" or "Movie", ep (sort key), label}, else null */
+export function spongeOf(art) {
+  const m = EPISODE.exec(art || "");
+  if (m) return { season: m[1], ep: +m[2] + (m[3] ? (m[3].charCodeAt(0) - 96) / 10 : 0), label: `Ep. ${m[2]}${m[3]} “${m[4]}”` };
+  return MOVIE.test(art || "") ? { season: "Movie", ep: 0, label: art.replace(/\s*\(Edit\)\s*$/i, "").trim() } : null;
+}
+const seasonName = s => (s === "Movie" ? "Movie" : `Season ${s}`);
+const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+/** Status effects per season (stacked buffs/debuffs, every season from 1); a season's column shows its episodes below
+    (app.js "season" action; cur: the season picked this session, else the biggest) */
+function seasonsCard(pool, cur) {
+  const rows = pool.filter(c => c.type === "buff" || c.type === "debuff").map(c => ({ c, s: spongeOf(c.art) })).filter(r => r.s);
+  if (!rows.length) return "";
+  const last = Math.max(0, ...rows.map(r => +r.s.season).filter(Number.isFinite));
+  const seasons = [...Array.from({ length: last }, (_, i) => String(i + 1)), ...(rows.some(r => r.s.season === "Movie") ? ["Movie"] : [])];
+  const of = new Map(seasons.map(s => [s, rows.filter(r => r.s.season === s).sort((a, b) => a.s.ep - b.s.ep || a.c.type.localeCompare(b.c.type) || a.c.name.localeCompare(b.c.name))]));
+  const pick = seasons.includes(cur) && of.get(cur).length ? cur : seasons.reduce((a, b) => (of.get(b).length > of.get(a).length ? b : a));
+  const kinds = SPONGE_KINDS.filter(([k]) => rows.some(r => r.c.type === k)), n = (s, k) => of.get(s).filter(r => r.c.type === k).length;
+  // the columns: each a button that shows its season's episodes
+  const W = 1000, height = 220, padL = 36, padB = 26, plotH = height - padB, gap = 2;
+  const max = niceMax(Math.max(1, ...seasons.map(s => of.get(s).length))), band = (W - padL) / seasons.length, bw = Math.min(28, band * 0.6);
+  const ticks = [0, max / 2, max].map(t => { const y = plotH - (t / max) * plotH;
+    return `<line class="gridline" x1="${padL}" x2="${W}" y1="${y}" y2="${y}"/><text x="${padL - 6}" y="${y + 4}" text-anchor="end">${fmt(t)}</text>`; }).join("");
+  const cols = seasons.map((s, i) => {
+    const x = padL + i * band + (band - bw) / 2, total = of.get(s).length, l = `${seasonName(s)}: ${kinds.map(([k, kl]) => `${kl} ${n(s, k)}`).join(" · ")}`;
+    let y = plotH;
+    const segs = kinds.map(([k, kl, color], j) => {
+      const v = n(s, k); if (!v) return "";
+      const h = (v / max) * plotH, top = kinds.slice(j + 1).every(([k2]) => !n(s, k2));
+      y -= h;
+      const d = top ? roundedTop(x, y, bw, Math.max(0, h - gap)) : `M${x},${y + gap}h${bw}v${Math.max(0, h - gap)}h${-bw}Z`;
+      return `<path class="mark" d="${d}" fill="${color}" data-v="${v} ${kl.toLowerCase()}" data-l="${esc(seasonName(s))}"/>`;
+    }).join("");
+    const tick = `<text x="${x + bw / 2}" y="${height - 8}" text-anchor="middle">${s === "Movie" ? "Movie" : `S${s}`}</text>`;
+    if (!total) return `<g class="col">${tick}</g>`;
+    return `<a href="#/stats" class="season${s === pick ? " on" : ""}" role="button" aria-pressed="${s === pick}" data-action="season" data-season="${esc(s)}" aria-label="${esc(`${l}: show its episodes`)}"><g class="col">
+      <rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${height}" data-v="${plural(total, "status effect")}" data-l="${esc(l)}"/>${segs}${tick}</g></a>`;
+  }).join("");
+  const svg = `<svg viewBox="0 0 ${W} ${height}">${ticks}<line class="axis" x1="${padL}" x2="${W}" y1="${plotH}" y2="${plotH}"/>${cols}</svg>`;
+  // a season's episodes: one row each, a block per status effect and their names
+  const episodes = s => { const m = new Map(); for (const r of of.get(s)) { if (!m.has(r.s.label)) m.set(r.s.label, []); m.get(r.s.label).push(r.c); } return [...m]; };
+  const panel = s => { const eps = episodes(s), total = of.get(s).length;
+    return `<div class="ep-panel" data-season="${esc(s)}"${s === pick ? "" : " hidden"}><h4>${esc(seasonName(s))} <span class="muted">${plural(total, "status effect")}${s === "Movie" ? "" : ` in ${plural(eps.length, "episode")}`}</span></h4>
+      <div class="ep-rows">${eps.map(([label, cs]) => `<span class="ep-name">${esc(label)}</span><span class="ep-units" aria-hidden="true">${cs.map(c => `<i class="${c.type}"></i>`).join("")}<b>${cs.length}</b></span>
+        <span class="ep-cards">${cs.map(c => `<a class="card-ref" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}">${esc(c.name)}</a>`).join(", ")}</span>`).join("")}</div></div>`; };
+  const legend = `<div class="legend">${kinds.map(([, kl, color]) => `<span><i style="background:${color}"></i>${kl}</span>`).join("")}</div>`;
+  const tableRows = seasons.flatMap(s => episodes(s).map(([label, cs]) => [seasonName(s), label, cs.map(c => c.name).join(", "), cs.length]));
+  return card("seasons", "Status effects by SpongeBob season", `${plural(rows.length, "status effect")} with SpongeBob art. Click a season for its episodes.`,
+    svg + seasons.filter(s => of.get(s).length).map(panel).join(""), table(["Season", "Episode", "Status effects", "Count"], tableRows, 3),
+    { wide: true, legend, tip: "Buffs and debuffs by the SpongeBob episode or movie their artwork source names" });
+}
+
 export function renderStats(root, ctx, params) {
   const { cards, banned, icons } = ctx;
   const kind = params.get("kind") || "", series = params.get("series") || "";
@@ -329,10 +389,15 @@ export function renderStats(root, ctx, params) {
   // KPI tiles
   const latest = pool.reduce((m, c) => Math.max(m, c.ts || 0), 0);
   const kpis = [
-    ["Cards", pool.length], ["Creatures", pool.filter(c => c.type === "creature").length], ["Items", pool.filter(c => c.type === "item").length],
-    ["Series", new Set(pool.map(c => c.series).filter(Boolean)).size], ...(subCount ? [[kind ? "Subseries" : "Creature subseries", subCount]] : []), ["Authors", new Set(pool.map(c => c.author).filter(Boolean)).size],
+    ["Cards", pool.length, "Cards in scope (Kind and Series above); a card's duplicate pictures count once"],
+    ["Creatures", pool.filter(c => c.type === "creature").length, "Creature cards only; minions and auxiliary creatures aren't counted"],
+    ["Items", pool.filter(c => c.type === "item").length, "Item cards only; auxiliary items and N.M.E. items aren't counted"],
+    ["Series", new Set(pool.map(c => c.series).filter(Boolean)).size],
+    ...(subCount ? [kind ? ["Subseries", subCount, "Different subseries among these cards; a name in two series counts once"]
+      : ["Creature subseries", subCount, "Different subseries among the creature cards in scope; a name in two series counts once"]] : []),
+    ["Authors", new Set(pool.map(c => c.author).filter(Boolean)).size],
     ["Banned (constructed)", pool.filter(c => banned.has(c.id)).length],
-    ["Last card update", latest ? date(latest) : "—"],
+    ["Last card update", latest ? date(latest) : "—", "When a card in scope last had its PSD committed (Pacific time)"],
   ];
   const charts = [];
   let at = -1;                                 // where the cards-only charts go: after the average stats, else after the star-level block
@@ -377,7 +442,10 @@ export function renderStats(root, ctx, params) {
     const rows = handRows.map(r => ({ label: `${r.label} · hand needs ${r.need}`, value: r.value, href: r.value ? L({ kind: r.g, stars: r.st, legal: 1 }) : null, html: `<span>${esc(r.label)}</span><span class="muted">needs ${r.need}</span>` }));
     charts.push(card("hand", "Starting-hand choices", "Legal cards per star level vs the hand's need.",
       hbar(rows, { labelWidth: 190, unit: "legal cards" }),
-      table(["Star level", "Hand needs", "Legal cards", "Banned", "Choices per pick"], handRows.map(r => [r.label, r.need, r.value, r.bannedN, Math.round(r.per * 10) / 10]))));
+      table(["Star level", { label: "Hand needs", tip: "How many cards of this star level a constructed starting hand takes" },
+        { label: "Legal cards", tip: "Cards of this kind and star level not banned in constructed; image-only cards left out" },
+        { label: "Banned", tip: "Cards of this kind and star level banned in constructed; image-only cards left out" },
+        { label: "Choices per pick", tip: "Legal cards divided by how many the hand takes, to one decimal" }], handRows.map(r => [r.label, r.need, r.value, r.bannedN, Math.round(r.per * 10) / 10]))));
   }
 
   // 4 average stats by star tier (heat table)
@@ -388,9 +456,11 @@ export function renderStats(root, ctx, params) {
     const keys = STAT_KEYS;
     const avg = (arr, f) => { const v = arr.map(f).filter(x => x != null); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
     const rows = tiers.map(t => { const g = creatures.filter(c => c.stars === t); return [t, g.length, ...keys.map(([k]) => avg(g, c => c[k])), avg(g, total)]; });
-    const heat = heatTable(["Stars", "Cards", ...keys.map(([, l]) => l), "Total"], rows.map(r => [`${r[0]}★`, String(r[1]), ...r.slice(2)]), { shade: [2, 3, 4, 5, 6], href: (k, i) => (i < 2 ? L({ kind: MINIONS, stars: rows[k][0], hp: "0-99" }) : null) });
+    const totalHead = { label: "Total", tip: "Mean of HP + DEF + ATK + SPD, a missing stat counted as 0" };
+    const heat = heatTable(["Stars", "Cards", ...keys.map(([, l]) => l), totalHead], rows.map(r => [`${r[0]}★`, String(r[1]), ...r.slice(2)]), { shade: [2, 3, 4, 5, 6], href: (k, i) => (i < 2 ? L({ kind: MINIONS, stars: rows[k][0], hp: "0-99" }) : null) });
     charts.push(card("tiers", "Average stats by star level", "Creatures and minions, shaded per column.", heat,
-      table(["Stars", "Cards", "HP", "DEF", "ATK", "SPD", "Total"], rows.map(r => [`${r[0]}★`, ...r.slice(1).map(v => (v == null ? "—" : v))]))));
+      table(["Stars", "Cards", "HP", "DEF", "ATK", "SPD", totalHead], rows.map(r => [`${r[0]}★`, ...r.slice(1).map(v => (v == null ? "—" : v))])),
+      { tip: "Means over the creatures and minions of each star level; a stat over the cards that have it" }));
     at = charts.length;
 
     // 5 distributions (small multiples): 0–10, and a pager on a stat with higher values (Sonic's speed is 20)
@@ -422,8 +492,9 @@ export function renderStats(root, ctx, params) {
     if (pts.length > 3) {
       charts.push(card("outliers", "Total stats vs star level", "Highlighted: far from their star level's average.",
         scatter(pts, { xLabel: "star level", yLabel: "HP + DEF + ATK + SPD", xTicks: tiers }),
-        table(["Card", "Stars", "Total", "vs tier avg (σ)"], [...pts.filter(p => p.hot).sort((a, b) => b.z - a.z).map(p => [p.label, `${p.x}★`, p.y, Math.round(p.z * 10) / 10]),
-          ...offChart.map(c => [c.name, `${c.stars}★`, total(c), "off the chart"])], 1), { wide: true }));
+        table(["Card", "Stars", "Total", { label: "vs tier avg (σ)", tip: "Standard deviations between its total and its star level's average total" }], [...pts.filter(p => p.hot).sort((a, b) => b.z - a.z).map(p => [p.label, `${p.x}★`, p.y, Math.round(p.z * 10) / 10]),
+          ...offChart.map(c => [c.name, `${c.stars}★`, total(c), "off the chart"])], 1),
+        { wide: true, tip: "Highlighted: totals 1.5 or more standard deviations from their star level's average" }));
     }
   }
 
@@ -443,18 +514,22 @@ export function renderStats(root, ctx, params) {
   for (const c of pool) for (const t of tagsOf(c)) tags.set(t, (tags.get(t) || 0) + 1);     // counted under the canonical case
   const tagRows = desc(tags).slice(0, 18).map(([t, v]) => ({ label: `(${t}) ${tagInfo(t).meaning}`, value: v, href: L({ tag: t }), html: badgeHtml(t) }));
   if (tagRows.length) charts.push(card("tags", "Timing tags", "Abilities using each tag.", hbar(tagRows, { labelWidth: 110, unit: "uses" }),
-    table(["Tag", "Meaning", "Uses"], desc(tags).map(([t, v]) => [`(${t})`, tagInfo(t).meaning, v]), 2)));
+    table(["Tag", "Meaning", { label: "Uses", tip: "Times the tag appears in the abilities of cards in scope" }], desc(tags).map(([t, v]) => [`(${t})`, tagInfo(t).meaning, v]), 2),
+    { tip: "Times each timing tag appears in these cards' abilities; (Action) isn't counted" }));
 
   // 9 status effects + 10 most referenced
   const refCount = new Map(), statusIds = new Set(cards.filter(c => c.type === "debuff" || c.type === "buff").map(c => c.id));
   for (const c of pool) for (const id of ctx.mentions.get(c.id) || []) refCount.set(id, (refCount.get(id) || 0) + 1);
   const byId = ctx.byId;
   const statusRows = desc(new Map([...refCount].filter(([id]) => statusIds.has(id)))).slice(0, 15).map(([id, v]) => ({ label: byId.get(id).name, value: v, href: L({ mentions: id }) }));
-  const unused = cards.filter(c => c._unused && (!series || c.series === series)).sort((a, b) => a.name.localeCompare(b.name));
-  const unusedHtml = unused.length ? `<p class="muted">On no card (${unused.length}): ${unused.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}</p>` : "";
-  if (statusRows.length) charts.push(card("status", "Status effects mentioned", "Cards naming each one.", hbar(statusRows) + unusedHtml, table(["Status effect", "Cards"], statusRows.map(r => [r.label, r.value]))));
+  const unused = cards.filter(c => c._unused && (c.type === "buff" || c.type === "debuff") && (!series || c.series === series)).sort((a, b) => a.name.localeCompare(b.name));
+  const unusedHtml = unused.length ? `<p class="muted">${noted("On no card", "Buffs and debuffs that no card names in its ability, or only Unused cards do")} (${unused.length}): ${unused.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}</p>` : "";
+  if (statusRows.length) charts.push(card("status", "Status effects mentioned", "Cards naming each one.", hbar(statusRows) + unusedHtml, table(["Status effect", "Cards"], statusRows.map(r => [r.label, r.value])),
+    { tip: "Cards in scope whose ability names each buff or debuff; the top 15" }));
+  const seasons = seasonsCard(pool, ctx.season);
+  if (seasons) charts.push(seasons);
   const refRows = desc(new Map([...refCount].filter(([id]) => !statusIds.has(id)))).slice(0, 12).map(([id, v]) => ({ label: byId.get(id).name, value: v, href: L({ mentions: id }) }));
-  if (refRows.length) charts.push(card("refs", "Most referenced cards", "Cards naming them.", hbar(refRows, { labelWidth: 180 }), table(["Card", "Mentioned by"], refRows.map(r => [r.label, r.value]))));
+  if (refRows.length) charts.push(card("refs", "Most referenced cards", "Cards naming them.", hbar(refRows, { labelWidth: 180 }), table(["Card", { label: "Mentioned by", tip: "Cards in scope whose ability names this card" }], refRows.map(r => [r.label, r.value]))));
 
   // 11 authors
   const authors = desc(count(pool, c => c.author)).map(([k, v]) => ({ label: k, value: v, href: L({ author: k }) }));
@@ -465,7 +540,7 @@ export function renderStats(root, ctx, params) {
       <label>Series <select data-action="stats-filter" data-key="series"><option value="">All series</option>${allSeries.map(s => `<option${s === series ? " selected" : ""}>${esc(s)}</option>`).join("")}</select></label>
       <span class="muted">${pool.length} cards in scope</span>
       <nav class="stats-jump" aria-label="Sections"><a href="#/stats" data-scroll="stats-balance">Balance</a>${cards.some(c => (c.ratings || []).some(e => !e._staged && !e._sent)) ? `<a href="#/stats" data-scroll="stats-ratings">Ratings</a>` : ""}<a href="#/stats" data-scroll="stats-history">History</a></nav></div>
-    <div class="kpis">${kpis.map(([l, v]) => `<div class="kpi"><div class="label">${esc(l)}</div><div class="value${typeof v === "number" ? "" : " text"}">${esc(typeof v === "number" ? v.toLocaleString() : v)}</div></div>`).join("")}</div>
+    <div class="kpis">${kpis.map(([l, v, tip]) => `<div class="kpi"><div class="label">${noted(l, tip)}</div><div class="value${typeof v === "number" ? "" : " text"}">${esc(typeof v === "number" ? v.toLocaleString() : v)}</div></div>`).join("")}</div>
     <div class="charts">${charts.join("")}</div>
     <div id="stats-balance"></div><div id="stats-ratings"></div><div id="stats-history"></div>`;
 }

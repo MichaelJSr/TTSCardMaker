@@ -102,7 +102,7 @@ export function editedTip(c) {
     mouse click hands it none, so no focus ring */
 export function keepsTabFocus(el) {
   if (!el?.closest?.(".change-tabs")) return false;
-  try { return el.matches(":focus-visible"); } catch { return true; }   // a browser without :focus-visible: as before
+  return el.matches(":focus-visible");
 }
 /** A name as written, or a person page link */
 const personLink = name => (isLogin(name) && !isBot(name) ? `<a href="#/u/${encodeURIComponent(name)}">${esc(name)}</a>` : esc(name));

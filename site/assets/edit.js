@@ -10,10 +10,11 @@ import * as draft from "./drafts.js";
 import { current as ratingNow } from "./ratings.js";
 import { soon } from "./fresh.js";
 import * as P from "./parts.js";
+import { date, dayOf, pictureNumber } from "./history.js";
 
 const API = "https://api.github.com";
-// token: the plain-text token before 2026-10-23 (sealed on the next load); last: the login a password last signed in
-const K = { token: "edit-token", stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login", drafts: draft.DRAFT_KEY };
+// last: the login a password last signed in
+const K = { stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login", drafts: draft.DRAFT_KEY };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
   atk: "int", spd: "int", ability: "str", parts: "parts", note: "str", art: "str", ability_art: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
@@ -126,11 +127,11 @@ export function canonName(kind, raw, known = []) {
 /** The toast when a typed name is a known one. */
 export const sameName = (kind, typed, name) => (kind === "author" ? (typed === name ? `“${name}” is already an author` : `“${typed}” is shown as ${name}`)
   : typed === name ? `“${name}” is already a ${kind}` : `“${typed}” is already the ${kind} ${name}`);
-/** sessionStorage's buckets, checked: {series: [name], subseries: [name], author: [name]} (an older tab's [series, name]: its name). */
+/** sessionStorage's buckets, checked: {series: [name], subseries: [name], author: [name]}. */
 export function readBuckets(text) {
   let b; try { b = JSON.parse(text); } catch { b = null; }
   const strs = a => (Array.isArray(a) ? a.filter(x => typeof x === "string" && x) : []);
-  const subs = Array.isArray(b?.subseries) ? b.subseries.map(x => (Array.isArray(x) ? x[1] : x)) : [];
+  const subs = Array.isArray(b?.subseries) ? b.subseries : [];
   return { series: strs(b?.series), author: strs(b?.author), subseries: [...new Set(strs(subs))] };
 }
 
@@ -189,9 +190,9 @@ export function withoutItem(op, item, name, fields = null) {
   return o;
 }
 /** The review lines of an op against its published base b: [{item, text, short, psd}]; text is the review dialog's line,
- *  short the batch bar's ("SPD 4 → 5"), psd marks fields printed on the card image. rule: a rulebook page. */
-export function describeItems(op, b = {}, { byId, rule = false } = {}) {
-  const src = k => (rule ? "the page" : FROM[k] ? `the ${FROM[k]}` : "the default");
+ *  short the batch bar's ("SPD 4 → 5"), psd marks fields printed on the card image. */
+export function describeItems(op, b = {}, { byId } = {}) {
+  const src = k => (FROM[k] ? `the ${FROM[k]}` : "the default");
   const items = Object.entries(op.set).filter(([k]) => k !== "parts").map(([k, v]) => { const from = show(value(b, k, byId)), to = show(v);
     return { item: k, text: `${LABEL[k]}: ${from} → ${to}`, short: `${LABEL[k]} ${clip(from)} → ${clip(to)}` }; });
   const boxes = Object.keys(op.set.parts || {}).length, back = (op.unset || []).filter(k => k.startsWith(P.PART)).length;
@@ -290,7 +291,7 @@ export function ratingsFile(text, ops, day, by, path = "site/Card Ratings.json")
 }
 
 /** The profile page's form state (what its inputs hold) for a profile; validateProfile({login, ...state}) gives the profile back. */
-export const profileState = p => ({ author: p.author || "", motto: p.motto || "", series: p.series || "", ...Object.fromEntries(PICKS.map(([k]) => [k, p[k] || ""])),
+export const profileState = p => ({ author: p.author || "", motto: p.motto || "", series: p.series || "", subseries: p.subseries || "", ...Object.fromEntries(PICKS.map(([k]) => [k, p[k] || ""])),
   deck: p.deck || "", facts: (p.facts || []).map(f => ({ label: f.label, value: f.value })) });
 /** The deck builder's saved hands as the profile page offers them: [{id, name, n (cards, the field card included)}]. */
 export const savedHands = decks => decks.map(d => ({ id: d.id, name: d.name, n: d.cards.length + (d.field ? 1 : 0) }));
@@ -299,7 +300,6 @@ export function createEditor(app) {
   const { S } = app;
   // the token: in memory; kept sealed under this browser's device key (login.js vault), never in plain text
   const device = auth.vault();
-  const legacy = () => localStorage.getItem(K.token) || sessionStorage.getItem(K.token) || "";
   let token = "";
   let me = null;                                   // { login, admin, push }
   let scopes = null;                               // the token's classic scopes (x-oauth-scopes); null: unknown (fine-grained)
@@ -318,9 +318,9 @@ export function createEditor(app) {
   const pristine = new Map();                      // id -> card as built
   const based = new Map();                         // id -> card with published-but-not-built edits
   let pristineBan = null;
-  const files = () => ({ edits: "site/Card Edits.json", authors: "site/Card Authors.txt", banlist: "site/Constructed Ban List.txt", admins: "site/Website Admins.txt", profiles: "site/profiles", decks: "site/decks", logins: "site/logins", ratings: "site/Card Ratings.json", ...S.data.files });
+  const files = () => S.data.files;
   const isAdmin = login => (S.data.admins || []).some(a => a.toLowerCase() === login.toLowerCase());
-  const find = id => S.byId.get(id) || (S.rules || []).find(r => r.id === id);
+  const find = id => S.byId.get(id);
 
   // ---- GitHub API
   async function gh(path, { method = "GET", body, raw = false, full = false, anon = false } = {}) {     // anon: no token (signed out)
@@ -341,15 +341,21 @@ export function createEditor(app) {
     try { return await gh(`/repos/${S.data.repo}/contents/${repoPath(path)}?ref=${ref}`, { raw: true }); }
     catch (e) { if (e.status === 404) return null; throw e; }
   }
-  // files: {path: oldText => newText | null (leave it) | false (delete it)}; retried on top if someone pushed meanwhile
+  // files: {path: oldText => newText | null (leave it) | false (delete it)}, or the new content itself: text, false,
+  // {base64} (a picture: never read first) or {sha} (a blob the repo has: an old version's file, nothing uploaded);
+  // retried on top if someone pushed meanwhile
   async function commitFiles(edits, message, got = {}) {   // got.date: the commit's date (GitHub's clock)
-    const repo = S.data.repo, branch = S.data.branch || "main";
+    const repo = S.data.repo, branch = S.data.branch;
     for (let attempt = 0; ; attempt++) {
       const head = (await gh(`/repos/${repo}/git/ref/heads/${branch}`)).object.sha;
       const base = await gh(`/repos/${repo}/git/commits/${head}`);
       const tree = [];
       for (const [path, edit] of Object.entries(edits)) {
-        const old = await readFile(path, head), next = edit(old);
+        if (edit && typeof edit === "object") {        // a picture: its blob first
+          const sha = edit.sha || (await gh(`/repos/${repo}/git/blobs`, { method: "POST", body: { content: edit.base64, encoding: "base64" } })).sha;
+          tree.push({ path, mode: "100644", type: "blob", sha }); continue;
+        }
+        const old = typeof edit === "function" || edit === false ? await readFile(path, head) : undefined, next = typeof edit === "function" ? edit(old) : edit;
         if (next === false) { if (old != null) tree.push({ path, mode: "100644", type: "blob", sha: null }); }
         else if (next != null && next !== old) tree.push({ path, mode: "100644", type: "blob", content: next });
       }
@@ -377,24 +383,20 @@ export function createEditor(app) {
     if (store) await remember(keep);
     app.onAuth();
   }
-  async function remember(keep) {                  // seal the token on this browser; the plain-text one of before goes
-    localStorage.removeItem(K.token); sessionStorage.removeItem(K.token);
+  async function remember(keep) {                  // seal the token on this browser
     try { await device.save(token, keep); }
     catch { keptHere = false; if (keep) app.toast("This browser can't keep you signed in safely: you'll sign in again next time"); }
   }
-  let offerOnBoot = false;                         // a plain-text token was sealed on this load: offer a password once
   async function restore() {                       // the boot's silent sign-in
-    const old = legacy(), kept = old ? null : await device.load();
-    if (!old && !kept) return;
-    const keep = old ? !!localStorage.getItem(K.token) : kept.keep;
-    token = old ? old.trim() : kept.token;
-    if (old) { await remember(keep); offerOnBoot = true; }
-    try { await signIn(token, keep, { store: false }); }
+    const kept = await device.load();
+    if (!kept) return;
+    token = kept.token;
+    try { await signIn(token, kept.keep, { store: false }); }
     catch (e) { if (e.status === 401) await device.clear(); throw e; }      // a revoked token isn't kept
   }
   function signOut() {
     token = ""; me = null; scopes = null; pwKnown = null; keptHere = false;
-    localStorage.removeItem(K.last); localStorage.removeItem(K.token); sessionStorage.removeItem(K.token); device.clear().catch(() => {});
+    localStorage.removeItem(K.last); device.clear().catch(() => {});
     sessionStorage.removeItem(K.buckets); buckets = readBuckets(null); app.onAuth();
   }
 
@@ -404,7 +406,7 @@ export function createEditor(app) {
   let pwKnown = null;                              // {login, file | null}: the signed-in login's published file
   async function ownPassword(fresh = false) {      // the file, null when none, {damaged} when unreadable
     if (!fresh && pwKnown?.login === me.login) return pwKnown.file;
-    const text = await readFile(loginPath(me.login), S.data.branch || "main");
+    const text = await readFile(loginPath(me.login), S.data.branch);
     let file = null;
     if (text != null) { try { file = auth.checkFile(JSON.parse(text), me.login).file || { damaged: true }; } catch { file = { damaged: true }; } }
     pwKnown = { login: me.login, file };
@@ -415,7 +417,7 @@ export function createEditor(app) {
    *  several when files differ only in case (the build publishes none of them); stale: the site's copy was used. */
   async function fetchPassword(typed) {
     if (!LOGIN_RE.test(typed)) throw new Error("That isn't a GitHub login.");
-    const lower = typed.toLowerCase(), repo = S.data.repo, ref = S.data.branch || "main", dir = files().logins;
+    const lower = typed.toLowerCase(), repo = S.data.repo, ref = S.data.branch, dir = files().logins;
     let built = null;
     try { const r = await fetch(`data/logins/${encodeURIComponent(lower)}.json`, { cache: "no-cache" }); if (r.ok) built = await r.json(); } catch { /* not built */ }
     const api = n => gh(`/repos/${repo}/contents/${repoPath(`${dir}/${n}.json`)}?ref=${ref}`, { raw: true, anon: true }).catch(e => (e.status === 404 ? null : Promise.reject(e)));
@@ -501,7 +503,7 @@ export function createEditor(app) {
     if (!el) return;
     el.textContent = "Loading…";
     try {
-      const list = await gh(`/repos/${S.data.repo}/contents/${repoPath(files().logins)}?ref=${S.data.branch || "main"}`).catch(e => (e.status === 404 ? [] : Promise.reject(e)));
+      const list = await gh(`/repos/${S.data.repo}/contents/${repoPath(files().logins)}?ref=${S.data.branch}`).catch(e => (e.status === 404 ? [] : Promise.reject(e)));
       const logins = (Array.isArray(list) ? list : []).map(x => String(x.name)).filter(n => n.endsWith(".json")).map(n => n.slice(0, -5));
       el.innerHTML = logins.length ? `<ul class="pw-files">${logins.map(l => `<li><a href="#/u/${encodeURIComponent(l)}">${esc(l)}</a> <button type="button" class="ghost danger" data-action="pw-remove" data-login="${esc(l)}">Remove</button></li>`).join("")}</ul>` : `<p class="muted">Nobody has a password.</p>`;
     } catch (err) { el.textContent = `Couldn't list them: ${err.message}`; }
@@ -569,8 +571,8 @@ export function createEditor(app) {
   function sentRecord() {                          // {at, committed, sha, ops, profiles, decks, deckNames}: published, until the site has rebuilt with it
     const sent = load(K.sent, null);
     if (!sent) return null;
-    // built from its commit or a later one (commit dates, GitHub's); before 2026-10-25: the build's clock
-    if (S.data.source && sent.committed ? Date.parse(S.data.source) >= Date.parse(sent.committed) : new Date(S.data.generated) > new Date(sent.at)) { localStorage.removeItem(K.sent); app.toast("Live now: your published edits are on the site"); return null; }
+    // built from its commit or a later one (commit dates, GitHub's)
+    if (S.data.source && sent.committed && Date.parse(S.data.source) >= Date.parse(sent.committed)) { localStorage.removeItem(K.sent); app.toast("Live now: your published edits are on the site"); return null; }
     return sent;
   }
   const sentOps = () => sentRecord()?.ops || [];
@@ -606,8 +608,13 @@ export function createEditor(app) {
   const seriesList = () => [...new Set([...uniq(c => c.series), ...buckets.series])].sort((a, b) => a.localeCompare(b));
   const authorList = () => [...new Set([...(S.data.people || []), ...S.all.map(c => c.author).filter(Boolean), ...buckets.author])].sort((a, b) => a.localeCompare(b));
   // the name autofill's entries (tokens.js suggestNames): [{value, n (cards), note, kind}]
-  function nameEntries(kind) {
+  function nameEntries(kind, el) {                 // el: the field; the profile's subseries offers its series' (data-series-from)
     const cards = n => (n ? `${n} card${n === 1 ? "" : "s"}` : "no cards yet"), count = new Map();
+    if (kind === "subseries" && el?.dataset.seriesFrom) {   // shown cards only, as validateProfile checks; no buckets
+      const series = document.getElementById(el.dataset.seriesFrom)?.value || "";
+      for (const c of S.cards) if (c.subseries && (!series || c.series === series)) count.set(c.subseries, (count.get(c.subseries) || 0) + 1);
+      return [...count].map(([value, n]) => ({ value, n, kind, note: cards(n) }));
+    }
     if (kind === "subtype") {                      // the Items/ folders
       for (const c of S.all) if (c.subtype) count.set(c.subtype, (count.get(c.subtype) || 0) + 1);
       return ITEM_TYPES.map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
@@ -642,7 +649,6 @@ export function createEditor(app) {
     try { sessionStorage.setItem(K.buckets, JSON.stringify(buckets)); } catch { /* storage full: kept for this page */ }
     return { name: r.name, existed: false, note: "" };
   }
-  const isRule = c => (S.rules || []).includes(c);
   // ---- the parts editor (PARTS_EDITOR.md §5): one box per PSD text layer when the card's details record has parts
   const recs = new Map();                          // card id -> its details record (null: none or unreadable)
   const groupOf = c => { const first = (c.variantOf && S.byId.get(c.variantOf)) || c;     // one PSD's pictures, variant 1 first
@@ -667,7 +673,7 @@ export function createEditor(app) {
       for (const k of o.unset.filter(k => k.startsWith(P.PART)).map(k => k.slice(P.PART.length))) { delete rec.partEdits[k]; delete rec.partState[k]; }
       for (const [k, v] of Object.entries(o.set.parts || {})) { rec.partEdits[k] = v; rec.partState[k] = "pending"; }
     }
-    const list = P.boxes(rec, isRule(c)), so = stage.cards[first.id];
+    const list = P.boxes(rec), so = stage.cards[first.id];
     let added = P.addedEdit(rec);
     if (has(so)) {                                 // the boxes open with the batch's text; readForm compares with the published
       for (const b of list) {
@@ -678,7 +684,18 @@ export function createEditor(app) {
       if (so.set.parts?.[P.ADD]) added = { text: so.set.parts[P.ADD].text, state: "pending" };
       else if (so.unset.includes(P.PART + P.ADD)) added = null;
     }
-    return list.length ? { rec, list, added, rule: isRule(c), picture: built.picture || null } : null;
+    return list.length ? { rec, list, added, picture: built.picture || null } : null;
+  }
+  // the title drawn into the picture: no title layer, no text in the title region (of the Text group): a new title is
+  // website only (the bot's psd_edit.title_in_picture; TITLE_REGION is psd_parser.TITLE_REGION_RATIO)
+  const TITLE_REGION = 0.12;
+  function titleInPicture(view) {
+    if (!view || view.list.some(b => b.kind === "title")) return false;
+    const texts = (Array.isArray(view.rec.text) ? view.rec.text : []).filter(t => t && typeof t.layer === "string"), h = view.rec.canvas?.h;
+    if (!h) return false;
+    const grouped = texts.some(t => t.layer.startsWith("Text/"));
+    return !texts.some(t => t.visible && (t.text || "").trim() && Array.isArray(t.box) && t.box[1] < h * TITLE_REGION
+      && (!grouped || t.layer.startsWith("Text/")) && !t.layer.includes(" FX: ") && t.layer.split("/").pop().trim().toLowerCase() !== "ability");
   }
   let partForm = null;                             // the open dialog's box state: {c, view, deleted, drops, added (shown), last (focused box)}
   const partEl = key => document.getElementById(`ef-part:${key}`);
@@ -707,7 +724,7 @@ export function createEditor(app) {
     return list.map(b => boxHtml(b, view, many)).join("");
   }
   function addHtml(view, c) {                      // + Add an ability: a card with no Ability layer (never a rule page)
-    if (view.rule || view.list.some(b => b.kind === "ability")) return "";
+    if (view.list.some(b => b.kind === "ability")) return "";
     const t = view.rec.template, was = view.added, file = t?.file ? t.file.split("/").pop().replace(/\.psd$/i, "") : "its kind's template";
     return `<div class="part-box part-add" data-part-box="${P.ADD}"${was ? "" : " hidden"}><div class="part-head"><label for="ef-part:${P.ADD}">New ability</label><button type="button" class="ghost" data-part-add-remove>Remove</button></div>
       <textarea id="ef-part:${P.ADD}" class="part-text" rows="3" spellcheck="true" data-tokens data-part="${P.ADD}">${esc(was?.text || "")}</textarea>
@@ -784,39 +801,22 @@ export function createEditor(app) {
     }
     return [...out.values()];
   }
-  function ruleBoxesHtml(view, c) {                // a rule page: a jump list, the page with the focused block marked, one box per block
-    const blocks = view.list, cw = view.rec.canvas?.w, ch = view.rec.canvas?.h;
-    return `<div class="part-rule"><nav class="part-jump" aria-label="Blocks">${blocks.map(b => `<button type="button" class="ghost" data-part-jump="${esc(b.key)}">${esc(b.label)}</button>`).join("")}</nav>
-      <div class="part-rule-cols"><div class="part-page"${cw && ch ? ` data-w="${cw}" data-h="${ch}" style="aspect-ratio:${cw}/${ch}"` : ""}><img src="${esc(app.imageOf(c, 720))}" alt=""><i class="part-hl" hidden></i></div>
-      <div class="part-list">${boxesHtml(view, "block")}</div></div></div>`;
-  }
-  function ruleFormHtml(c) {
-    const b = baseOf(c), view = partsView(c);
-    const reset = f => { const p = psdVal(b, f); return same(val(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="Back to what the page says">↺ Page: ${esc(show(p))}</button>`; };
-    const row = (f, label, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${label}</label><div class="ein">${input}${reset(f)}</div></div>`;
-    return `<div class="dialog edit-dialog" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
-      <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
-      <h2>Edit rulebook page</h2><p class="muted">Goes into your batch. <span class="kbd">${esc(c.key)}</span></p>
-      <form id="edit-form" class="edit-form" autocomplete="off"><fieldset><legend>Page</legend>
-        ${row("name", "Title", `<input id="ef-name" value="${esc(c.name)}">`)}
-        ${view ? `${partsTop(view, c)}<div class="erow" data-row="ability"><span class="elabel">Text</span><div class="ein parts"><p class="muted part-note">One box per text block on the page (Title and Note are database only).</p>${ruleBoxesHtml(view, c)}<p class="muted part-join">On the site:</p><div class="ability preview" id="ef-preview"></div></div></div>`
-          : row("ability", "Text", `<textarea id="ef-ability" rows="14" spellcheck="true" data-tokens>${esc(c.ability || "")}</textarea><div class="ability preview" id="ef-preview"></div>`)}
-        ${row("note", "Note", `<textarea id="ef-note" rows="2" placeholder="Shown under the page" data-tokens>${esc(c.note || "")}</textarea>`)}
-      </fieldset><div class="edit-summary muted" id="ef-summary" aria-live="polite"></div>
-      <div class="actions"><button type="submit" class="primary">Add to batch</button><button type="button" data-action="edit-cancel">Cancel</button></div></form></div>`;
-  }
-  /** "Also rename the card's files" under the name (off by default): a card with its own PSD, its first picture. */
+  /** "Also rename the card's files" under the name: a card with its own PSD, its first picture. Ticked by default (owner
+   *  2026-10-30) for a card with no published name edit; else as published (or as staged). */
+  const canRename = (c, b) => !b.dup && (c.variant || 1) === 1 && !!c.psd;
   function renameRow(c, b) {
-    if (b.dup || (c.variant || 1) > 1 || !c.psd) return "";
-    return `<div class="erow" data-row="rename"><span class="elabel"></span><div class="ein"><label class="check"><input id="ef-rename" type="checkbox"${c.renameFiles ? " checked" : ""}> ${RENAME_LABEL}</label>
+    if (!canRename(c, b)) return "";
+    const staged = stage.cards[c.id]?.rename, on = staged === false ? false : !!c.renameFiles || !b.edited?.includes("name");
+    return `<div class="erow" data-row="rename"><span class="elabel"></span><div class="ein"><label class="check"><input id="ef-rename" type="checkbox"${on ? " checked" : ""}> ${RENAME_LABEL}</label>
       <p class="muted part-note">With a new name: the PSD and its pictures take it when the card image is updated.</p></div></div>`;
   }
   function formHtml(c) {
-    if (isRule(c)) return ruleFormHtml(c);
     const b = baseOf(c), isDup = follows(b), ban = banOf(c.id), admin = me?.admin, view = partsView(c);
     const kinds = Object.entries(app.KIND_LABEL).filter(([k]) => k !== "unknown" || k === c.type);
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
     const typeNames = [...new Set(Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name))].sort();
+    // the card's names side by side (Z!!!!! 10-30): the site's now, its file's (the key edits are filed under is the file's name)
+    const namesLine = x => `<p class="muted part-note ef-names">On the site now: “${esc(x.name)}” · File: <span class="kbd">${esc((x.psd || x.png || "").split("/").pop())}</span></p>`;
     const reset = f => { const p = psdVal(b, f), src = FROM[f]; return same(val(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="${src ? `Back to what the ${src} says` : "Remove the edit"}">↺ ${src ? src[0].toUpperCase() + src.slice(1) : "Default"}: ${esc(show(p))}</button>`; };
     const on = f => (c.siteOnly || []).includes(f);
     const psdNote = f => (b.pending?.includes(f) && !on(f) ? `<span class="fact pending" data-tip="${app.PSD_TIP}">PSD pending</span>` : "");   // website only: its ticked box says so
@@ -828,7 +828,7 @@ export function createEditor(app) {
     return `<div class="dialog edit-dialog has-preview" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
       <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
       <h2>Edit ${esc(c.name)}</h2>
-      <p class="muted">Changes go into your batch; publish the batch when you're done. <span class="kbd">${esc(c.key)}</span></p>
+      <p class="muted">Changes go into your batch; publish the batch when you're done.</p>
       <div class="edit-cols">
       <form id="edit-form" class="edit-form" autocomplete="off">
         <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD; an edit shows as “PSD pending” until the card image is regenerated, unless it's website only.${b.refused ? ` The last image update was refused: ${esc(b.refused)}.` : ""}</p>
@@ -836,8 +836,10 @@ export function createEditor(app) {
         <fieldset><legend>Card</legend>
           ${view?.list.some(x => x.kind === "title") ? `<div class="erow" data-row="name"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
             <p class="muted part-join" id="ef-name-join"></p></div>${plain("name", `<input id="ef-name" value="${esc(c.name)}">`)}</div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
+          ${namesLine(c)}
+          ${titleInPicture(view) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
           ${renameRow(c, b)}
-          ${row("stars", num("stars"))}${view ? `<p class="muted part-note" id="ef-stars-note"></p>` : ""}
+          ${row("stars", num("stars"))}<p class="muted part-note" id="ef-stars-note"></p>
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
             return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-type="${esc(t)}" aria-pressed="${on}" data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>`)}
           ${view && !(psdVal(b, "types") || []).length ? `<p class="muted part-note">No type icon yet: the first goes at ${esc(view.rec.template?.file ? view.rec.template.file.split("/").pop().replace(/\.psd$/i, "") : "the template")}'s spot (flagged).</p>` : ""}
@@ -935,7 +937,7 @@ export function createEditor(app) {
     if (box) {
       want.creatures = box.hidden ? null : [...document.querySelectorAll("#ef-creatures tr")].map(tr =>
         Object.fromEntries([...tr.querySelectorAll("[data-ck]")].map(i => [i.dataset.ck, i.value === "" ? null : Math.max(0, Math.round(+i.value))])));
-      if (!box.hidden) for (const k of STATS) delete want[k];          // creature 1 is the card's stats
+      if (!box.hidden) for (const k of STATS) want[k] = want.creatures[0]?.[k] ?? null;   // creature 1 is the card's stats: a change bakes
       want.creatures = tidy("creatures", want.creatures);
     }
     const siteOn = k => !!f(`site-${k}`)?.checked, site = SITE_FIELDS.filter(siteOn);
@@ -977,7 +979,7 @@ export function createEditor(app) {
     return op;
   }
   let lastRead = null;                             // readForm's parts reading (texts, derived), for routeOps
-  const items = op => { const c = find(op.id); return describeItems(op, c ? baseOf(c) : {}, { byId: S.byId, rule: isRule(c) }); };
+  const items = op => { const c = find(op.id); return describeItems(op, c ? baseOf(c) : {}, { byId: S.byId }); };
   const describe = op => items(op).map(x => x.text);
   // ---- single fields, staged in place (inline.js): merged into the card's op, so the form and the bar see one batch
   const opFor = c => (stage.cards[c.id] ? structuredClone(stage.cards[c.id]) : { id: c.id, key: c.key, name: baseOf(c).name, set: {}, unset: [] });
@@ -994,16 +996,23 @@ export function createEditor(app) {
     const c = find(id); if (!c || !(f in FIELDS)) return null;
     const b = baseOf(c);
     const one = (f === "name" || f === "ability") && !(c.siteOnly || []).includes(f) && partsView(c), n = one ? one.list.filter(x => x.field === f).length : 0;
-    if (one && !one.rule && n === 1) return stagePart(c, one, f, v, defer);
-    if (one && (f === "ability" || !one.rule)) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
+    if (one && n === 1) return stagePart(c, one, f, v, defer);
+    if (one) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
     let x = fromInput(f, v, b.name);
     if (ART_FIELDS.includes(f) && x != null) { x = x.replace(/\s+/g, " "); if (artError(f, x)) { if (!defer) app.toast(artError(f, x)); return null; } }
     if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, c.id)) === undefined) return null;
-    const op = mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x);
+    const op = autoRename(c, b, mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x));
     put(c.id, op); if (!defer) save();
     return op;
   }
   // an inline edit of a card's one title or ability layer, as a part edit (the parts format whenever the record has parts)
+  // a new name edited in place renames the card's files too (the form's box, ticked by default; not a website-only name)
+  function autoRename(c, b, op) {
+    if (op.rename === undefined && op.set?.name != null && !b.edited?.includes("name") && canRename(c, b)
+        && !op.site?.name && !(b.siteOnly || []).includes("name")) op.rename = true;
+    else if (op.rename === true && op.set?.name == null && !b.edited?.includes("name")) delete op.rename;   // the name put back
+    return op;
+  }
   function stagePart(c, view, f, v, defer) {
     const box = view.list.find(x => x.field === f), b = baseOf(c), text = (f === "name" ? P.keepBreaks(box.start, P.tidyText(String(v ?? "").replace(/\s+/g, " "))) : P.tidyText(v)) || (f === "name" ? box.start : "");
     const r = P.readParts(view.rec, view.list, { values: { [box.key]: text } });
@@ -1018,6 +1027,7 @@ export function createEditor(app) {
     const stillPart = r.set[box.key] || (view.rec.partEdits?.[box.key] && !r.unset.includes(box.key));
     op = stillPart ? mergeField(op, { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, now || null)
       : { ...op, set: Object.fromEntries(Object.entries(op.set).filter(([k]) => k !== f)), unset: [...new Set([...op.unset.filter(k => k !== f), ...(b.edited?.includes(f) ? [f] : [])])] };
+    if (f === "name") op = autoRename(c, b, op);
     for (const [x, o] of routeOps(c, op, { texts: { [box.key]: r.texts[box.key] } })) put(x.id, o);
     if (!defer) save();
     return op;
@@ -1155,7 +1165,7 @@ export function createEditor(app) {
     input.focus(); input.select();
   }
   // the live preview: the card as it will look once published, from the form's op (live.js)
-  const previewCtx = { render: (t, n) => app.render(t, n), statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
+  const previewCtx = { render: t => app.render(t), statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
   function paintPreview(c, op) {
     const body = app.modal.querySelector("#lp-body"); if (!body) return;
     const b = baseOf(c), values = { ...op.set, ...Object.fromEntries((op.unset || []).map(f => [f, psdVal(b, f)])) };
@@ -1173,8 +1183,8 @@ export function createEditor(app) {
     app.modal.innerHTML = formHtml(c);
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
     const form = app.modal.querySelector("#edit-form"), ta = document.getElementById("ef-ability");
-    const first = () => (focus && view ? (/^\d+$/.test(focus) ? partEl(focus) : form.querySelector(`.part-box[data-kind="${focus === "name" ? "title" : focus === "ability" ? "ability" : "block"}"] [data-part]`)) : null)
-      || [document.getElementById(isRule(c) ? "ef-ability" : "ef-name")].find(el => el && !el.closest("[hidden]")) || form.querySelector("[data-part]");
+    const first = () => (focus && view ? (/^\d+$/.test(focus) ? partEl(focus) : form.querySelector(`.part-box[data-kind="${focus === "name" ? "title" : "ability"}"] [data-part]`)) : null)
+      || [document.getElementById("ef-name")].find(el => el && !el.closest("[hidden]")) || form.querySelector("[data-part]");
     const siteOn = f => !!document.getElementById(`ef-site-${f}`)?.checked;
     const paintSite = () => {                      // a website-only field edited as boxes: the plain input, the boxes greyed
       for (const wrap of form.querySelectorAll("[data-site-of]")) {
@@ -1183,30 +1193,23 @@ export function createEditor(app) {
         for (const el of wrap.querySelectorAll(".site-boxes textarea, .site-boxes button")) el.disabled = on;
       }
     };
-    const paintBoxes = () => {                     // the deleted boxes, the added one, the rule page's mark
+    const paintBoxes = () => {                     // the deleted boxes, the added one
       if (!partForm) return;
       for (const el of form.querySelectorAll(".part-box[data-part-box]")) el.classList.toggle("deleted", partForm.deleted.has(el.dataset.partBox));
       const add = form.querySelector(".part-add"); if (add) { add.hidden = !partForm.added; form.querySelector("[data-part-add]").hidden = partForm.added; }
       for (const el of form.querySelectorAll("[data-part-gone]")) el.classList.toggle("dropped", partForm.drops.has(el.dataset.partGone));
     };
-    const mark = key => {                          // a rule page: the focused block's box on the page
-      const page = form.querySelector(".part-page"), hl = page?.querySelector(".part-hl"), part = view?.list.find(x => x.key === key)?.part;
-      if (!hl) return;
-      const w = +page.dataset.w, h = +page.dataset.h;
-      if (!part?.box || !w || !h) { hl.hidden = true; return; }
-      const [x0, y0, x1, y1] = part.box;
-      Object.assign(hl.style, { left: `${(x0 / w) * 100}%`, top: `${(y0 / h) * 100}%`, width: `${((x1 - x0) / w) * 100}%`, height: `${((y1 - y0) / h) * 100}%` });
-      hl.hidden = false;
-    };
     const update = () => {
       paintSite();
       const op = readForm(c), lines = describe(op), text = partForm && !siteOn("ability") ? lastRead?.derived.ability || "" : ta.value;
-      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text, c.name) : `<span class="muted">No ability text.</span>`;
+      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text) : `<span class="muted">No ability text.</span>`;
+      const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");   // a stars edit moves the card (the bake's plan_move)
+      const mv = sn && st && !siteOn("stars") ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
+      if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${partForm?.view.rec.header?.stars ? " and redraws the printed stars" : ""}. Tick Website only to keep the card where it is.`
+        : st && siteOn("stars") && P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) ? "Website only: the card stays in its folder." : "";
       if (partForm) {
-        const join = document.getElementById("ef-name-join"); if (join) join.textContent = `Name on the site: “${lastRead?.derived.name || ""}”`;
-        const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");
-        const mv = sn && st ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
-        if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${partForm.view.rec.header?.stars ? " and redraws the printed stars" : ""}.` : "";
+        const join = document.getElementById("ef-name-join"), made = lastRead?.derived.name || "";   // the boxes joined: the site's name once a title edit is published
+        if (join) join.textContent = `These boxes make: “${made}”${made && made !== c.name ? " (the name on the site once a title edit is published)" : ""}`;
         paintBoxes();
       }
       const notes = lastRead?.notes || [];
@@ -1248,7 +1251,7 @@ export function createEditor(app) {
       if (box) box.rows = rowsOf(box.value);      // the box grows with its lines
       update(); typing();
     });
-    form.addEventListener("focusin", e => { const box = e.target.closest?.("[data-part]"); if (box && partForm) { partForm.last = box; mark(box.dataset.part); } });
+    form.addEventListener("focusin", e => { const box = e.target.closest?.("[data-part]"); if (box && partForm) partForm.last = box; });
     form.addEventListener("change", e => {
       const box = e.target.closest?.("[data-site]"), f = box?.dataset.site, el = f && document.getElementById(`ef-${f}`);
       if (box?.checked && el && form.querySelector(`[data-site-of="${f}"]`) && lastRead?.derived?.[f] != null) el.value = lastRead.derived[f];   // the boxes' text to start from
@@ -1268,11 +1271,10 @@ export function createEditor(app) {
         first()?.focus();
         return;
       }
-      const pb = partForm && e.target.closest("[data-part-del], [data-part-undo], [data-part-ps], [data-part-redo], [data-part-skipped], [data-part-add], [data-part-add-remove], [data-part-drop], [data-part-pic], [data-part-jump]");
+      const pb = partForm && e.target.closest("[data-part-del], [data-part-undo], [data-part-ps], [data-part-redo], [data-part-skipped], [data-part-add], [data-part-add-remove], [data-part-drop], [data-part-pic]");
       if (pb) {
         const d = pb.dataset, box = k => view.list.find(x => x.key === k), set = (k, t) => { const el = partEl(k); if (el) { el.value = t; el.rows = rowsOf(t); el.focus(); } };
         if (d.partPic) { if (d.partPic !== c.id) { autosave.flush(); openForm(d.partPic); } return; }
-        if (d.partJump) { const el = partEl(d.partJump); el?.scrollIntoView({ block: "nearest" }); el?.focus(); return; }
         if (d.partDel) partForm.deleted.add(d.partDel);
         else if (d.partUndo) { partForm.deleted.delete(d.partUndo); partEl(d.partUndo)?.focus(); }
         else if (d.partPs) { partForm.drops.add(d.partPs); set(d.partPs, box(d.partPs).part.text); pb.closest(".part-warn")?.remove(); }
@@ -1303,10 +1305,10 @@ export function createEditor(app) {
       for (const [x, o] of routed) { if (opEmpty(o)) delete stage.cards[x.id]; else stage.cards[x.id] = o; }
       save();
       app.toast(routed.every(([, o]) => opEmpty(o)) ? "No changes" : `Added to the batch: ${count()} unpublished`);
-      if (isRule(c)) { app.closeModal(); app.rerender(); } else app.goCard(c.id);
+      app.goCard(c.id);
     });
     update();
-    if (!isRule(c)) app.formOpened?.({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)
+    app.formOpened?.({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)
     if (partForm) paintBoxes();
     first()?.focus();
     if (restored) autosave.run();
@@ -1324,8 +1326,12 @@ export function createEditor(app) {
   // ---- profiles: site/profiles/<login>.json, one more file in the batch (your own; admins anyone's), edited on the page
   // #/u/<login>/edit: the form left, a live preview of the profile right. The draft stays in memory per login while the page
   // is loaded; the browser asks before leaving while it's dirty (the card dialog too).
-  const PLABEL = { author: "Cards as", motto: "Motto", series: "Series", ...Object.fromEntries(PICKS), deck: "Featured hand", facts: "Pairs" };
-  const profileCtx = () => ({ cards: new Map(S.cards.map(c => [c.id, c])), series: new Set(S.cards.map(c => c.series).filter(Boolean)), people: S.data.people || [] });
+  const PLABEL = { author: "Cards as", motto: "Motto", series: "Series", subseries: "Subseries", ...Object.fromEntries(PICKS), deck: "Featured hand", facts: "Pairs" };
+  const profileCtx = () => {
+    const subseries = new Map();                   // name -> the series its cards are in
+    for (const c of S.cards) if (c.subseries) subseries.set(c.subseries, (subseries.get(c.subseries) || new Set()).add(c.series));
+    return { cards: new Map(S.cards.map(c => [c.id, c])), series: new Set(S.cards.map(c => c.series).filter(Boolean)), subseries, people: S.data.people || [] };
+  };
   const mine = login => login.toLowerCase() === me.login.toLowerCase();
   const findKey = (obj, login) => Object.keys(obj).find(k => k.toLowerCase() === login.toLowerCase());
   const drafts = new Map();                        // login (lower) -> form state, while the form differs from the profile
@@ -1338,7 +1344,7 @@ export function createEditor(app) {
     carry = { key: form.dataset.login.toLowerCase(), link: form.querySelector("#pf-deck-link").value,
       slot: panel.hidden ? "" : panel.dataset.slot || "", picker: panel.hidden ? null : pick.read(panel) };
   }
-  let booting = device.has() || !!legacy();        // the kept token's sign-in hasn't settled yet
+  let booting = device.has();                      // the kept token's sign-in hasn't settled yet
   let pageRun = 0;                                 // profilePage calls: a newer one aborts the older
   window.addEventListener("beforeunload", e => { if (document.querySelector('#edit-form[data-dirty="1"]')) { e.preventDefault(); e.returnValue = ""; } });
   function profileOf(login) {                      // unpublished state: {profile | null (removed), state: "staged" | "sent"}, or null
@@ -1390,6 +1396,7 @@ export function createEditor(app) {
           ${row("author", "Cards as", `<input id="pf-author" data-suggest="author" autocomplete="off" value="${esc(st.author)}" placeholder="the name on your cards"><span class="muted">Links the profile to your cards (the name in Card Authors.txt).</span>`)}
           ${row("motto", "Motto", `<input id="pf-motto" maxlength="${LIMITS.motto}" value="${esc(st.motto)}" placeholder="one line">`)}
           ${row("series", "Series", `<select id="pf-series"><option value="">—</option>${opts(series.map(x => [x, x]), st.series)}</select>`)}
+          ${row("subseries", "Subseries", `<input id="pf-subseries" data-suggest="subseries" data-series-from="pf-series" autocomplete="off" spellcheck="false" value="${esc(st.subseries)}" placeholder="—">`)}
         </fieldset>
         <fieldset><legend>Cards</legend>
           <div class="pslots">${PICKS.map(x => slotHtml(x, st[x[0]])).join("")}</div>
@@ -1413,7 +1420,7 @@ export function createEditor(app) {
   }
   function readState(form) {                       // the form -> profileState's shape (the pasted link moves into #pf-deck once it decodes)
     const v = id => form.querySelector(`#pf-${id}`).value;
-    return { author: v("author"), motto: v("motto"), series: v("series"), ...Object.fromEntries(PICKS.map(([k]) => [k, v(k)])), deck: v("deck"),
+    return { author: v("author"), motto: v("motto"), series: v("series"), subseries: v("subseries"), ...Object.fromEntries(PICKS.map(([k]) => [k, v(k)])), deck: v("deck"),
       facts: [...form.querySelectorAll("#pf-facts .frow")].map(r => ({ label: r.querySelector("[data-fl]").value, value: r.querySelector("[data-fv]").value })) };
   }
   async function profilePage(login) {              // the route #/u/<login>/edit
@@ -1667,6 +1674,53 @@ export function createEditor(app) {
     return sha;
   }
 
+  // ---- revert (app.js "card-revert": a History or Image versions "Revert to this version"): a card's files as they were
+  // at a version's commit, at today's paths, as one commit of tree entries pointed at the old blobs (nothing uploaded).
+  // Its PSD and the PNGs printed from it (its own, its variants', its numbered duplicates'), or a picture-only duplicate's
+  // PNG. then: its PNG's path at that commit (Image versions follow renames); the PSD then is beside it, under its name
+  // then. A file that version lacks stays, and so does Card Edits.json (its edits still show over the files).
+  async function revertCard(c, { ref, ts, then = c.png }) {
+    const repo = S.data.repo, branch = S.data.branch, lists = new Map();
+    const dirOf = p => p.slice(0, Math.max(0, p.lastIndexOf("/")));
+    const listing = (dir, at) => {                     // a folder's files at a commit: path -> blob
+      const k = `${at} ${dir}`;
+      if (!lists.has(k)) lists.set(k, gh(`/repos/${repo}/contents/${repoPath(dir)}?ref=${encodeURIComponent(at)}`)
+        .then(xs => new Map((Array.isArray(xs) ? xs : []).filter(x => x.type === "file").map(x => [x.path, x.sha])), e => (e.status === 404 ? new Map() : Promise.reject(e))));
+      return lists.get(k);
+    };
+    const blob = async (path, at) => (path ? (await listing(dirOf(path), at)).get(path) : undefined);
+    const pngsOf = (psd, files) => {                   // number -> path ("" its own); NameN.png beside a NameN.psd is that one's
+      const low = new Set([...files.keys()].map(p => p.toLowerCase()));
+      return new Map([...files.keys()].map(p => [pictureNumber(psd, p), p]).filter(([n, p]) => n !== null && !(n && low.has(p.toLowerCase().replace(/\.png$/, ".psd")))));
+    };
+    const now = c.psd ? await listing(dirOf(c.psd), branch) : new Map();
+    const pngs = now.has(c.psd) ? pngsOf(c.psd, now) : new Map(), n = [...pngs.keys()].find(k => pngs.get(k) === c.png);
+    let files;                                         // [today's path, its path then]
+    if (n === undefined) files = c.png ? [[c.png, (await blob(then, ref)) ? then : c.png]] : [];
+    else {
+      const cut = then.lastIndexOf("/") + 1, name = then.slice(cut).replace(/\.[^.]*$/, ""), ext = c.psd.slice(c.psd.lastIndexOf("."));
+      const guess = `${then.slice(0, cut)}${n && name.endsWith(n) ? name.slice(0, -n.length) : name}${ext}`, psd = (await blob(guess, ref)) ? guess : c.psd;
+      const was = pngsOf(psd, await listing(dirOf(psd), ref));
+      files = [[c.psd, psd], ...[...pngs].map(([k, p]) => [p, was.get(k) || null])];
+    }
+    const plan = [], newer = [];
+    for (const [path, old] of files) {
+      const b = await blob(old, ref);
+      if (!b) newer.push(path); else if (b !== (await blob(path, branch))) plan.push({ path, old, b });
+    }
+    if (!plan.length) { app.toast(newer.length === files.length ? `That version has none of ${c.name}'s files` : `Nothing to revert: ${c.name}'s files are the same in that version`); return null; }
+    const kept = (c.edited || []).filter(isPsd).map(f => LABEL[f]);
+    const lines = [`Revert ${c.name} to its ${date(ts)} version?`, "", `These files go back to how they were then (commit ${ref.slice(0, 12)}):`,
+      ...plan.map(f => (f.old === f.path ? f.path : `${f.path} (then ${f.old})`))];
+    if (newer.length) lines.push("", `Not in that version, so they stay: ${newer.join(", ")}`);
+    if (kept.length) lines.push("", `Its website edits stay and still show: ${kept.join(", ")}.`);
+    if (!confirm(lines.join("\n"))) return null;
+    const sha = await commitFiles(Object.fromEntries(plan.map(f => [f.path, { sha: f.b }])), `${c.name} reverted to its ${dayOf(ts)} version`);
+    if (sha) soon();                                   // reloads when its build is live (fresh.js)
+    app.toast(sha ? "Reverted: the site rebuilds in a few minutes" : "Nothing changed");
+    return sha;
+  }
+
   // ---- batch tray and hub
   // the batch bar: every pending edit as a sentence, each with a revert; one line (ellipsised) when long, with a toggle
   let barOpen = false;
@@ -1708,7 +1762,7 @@ export function createEditor(app) {
         <div class="actions"><button type="button" class="ghost" data-action="edit-discard-deck" data-key="${esc(key)}">Discard</button></div></div>`; }).join("")}
       ${count() ? `<label class="muted" for="edit-msg">Commit message (optional)</label><input id="edit-msg" class="wide" placeholder="Website edits">
         <div class="actions"><button type="button" class="primary" data-action="edit-publish">Publish ${count()} change${count() > 1 ? "s" : ""}</button></div>
-        <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch || "main")}). The site rebuilds in a few minutes; the card sync brings it to the bot within minutes and to the PSDs within about 30 minutes.</p>` : `<p class="muted">Nothing to publish.</p>`}
+        <p class="muted">One commit to ${esc(S.data.repo)} (${esc(S.data.branch)}). The site rebuilds in a few minutes; the card sync brings it to the bot within minutes and to the PSDs within about 30 minutes.</p>` : `<p class="muted">Nothing to publish.</p>`}
       <p class="muted" id="edit-status" aria-live="polite">${esc(note)}</p>`;
   }
   let forgot = false;                              // Forgot password: after the token sign-in, set a new one
@@ -1726,8 +1780,8 @@ export function createEditor(app) {
         <h4>Admins</h4><p class="muted">GitHub logins, one per line. The repo owner is always an admin.</p>
         <form id="admins-form"><textarea id="admins-list" class="wide" rows="4">${esc((stage.admins || S.data.admins || []).join("\n"))}</textarea><div class="actions"><button type="submit">Add to batch</button></div></form>
         <h4>Password files</h4><p class="muted">Admins may remove anyone's (${esc(files().logins)}/).</p><div class="actions"><button type="button" class="ghost" data-action="pw-list">Show them</button></div><div id="pw-list"></div>` : ""}
-      <p class="muted"><a href="https://github.com/${esc(S.data.repo)}/commits/${esc(S.data.branch || "main")}/${esc(files().edits)}" target="_blank" rel="noopener">Edit history</a> ·
-        <a href="https://github.com/${esc(S.data.repo)}/blob/${esc(S.data.branch || "main")}/${esc(files().edits)}" target="_blank" rel="noopener">${esc(files().edits)}</a></p>
+      <p class="muted"><a href="https://github.com/${esc(S.data.repo)}/commits/${esc(S.data.branch)}/${esc(files().edits)}" target="_blank" rel="noopener">Edit history</a> ·
+        <a href="https://github.com/${esc(S.data.repo)}/blob/${esc(S.data.branch)}/${esc(files().edits)}" target="_blank" rel="noopener">${esc(files().edits)}</a></p>
       <div class="actions"><button type="button" class="ghost" data-action="edit-signout">Sign out</button></div>`;
   }
   function peopleRows() {
@@ -1812,14 +1866,6 @@ export function createEditor(app) {
     });
   }
 
-  async function offerAfterBoot() {                // a plain-text token was sealed on this load: offer a password once
-    offerOnBoot = false;
-    const file = await ownPassword().catch(() => undefined);
-    if (file !== null || !me) return;
-    if (app.modal.hidden && !document.getElementById("edit-form")) openPassword("set", { offer: true });
-    else app.toast("Your sign-in is now kept encrypted. Set a password in the Sign in menu (top right)");
-  }
-
   const actions = {
     "edit-hub": () => openHub(),
     "edit-card": el => openForm(el.dataset.id || app.currentCard()),
@@ -1898,7 +1944,7 @@ export function createEditor(app) {
       S.showHidden = !!localStorage.getItem(K.hidden);
       preview();
       const sent = sentRecord(); if (sent) soon(Date.parse(sent.at));   // still waiting for its build
-      if (booting) restore().then(() => app.derive(), () => { token = ""; me = null; }).finally(() => { booting = false; app.rerender(); if (offerOnBoot && me) offerAfterBoot(); });
+      if (booting) restore().then(() => app.derive(), () => { token = ""; me = null; }).finally(() => { booting = false; app.rerender(); });
     },
     open: openForm,
     refresh: preview,
@@ -1913,6 +1959,9 @@ export function createEditor(app) {
     addBucket,
     // image previews (preview.js): GitHub calls with the token, its scopes, and what the PSD prints of a card's fields
     github: (path, opts) => gh(path, opts), get scopes() { return scopes; },
+    // the rulebook editor (rulebook-edit.js) and the rulebook History's Revert (app.js): files as one commit (commitFiles)
+    commit: (edits, message, got) => commitFiles(edits, message, got), readFile: (path, ref) => readFile(path, ref),
+    revertCard,                                    // a History or Image versions Revert (app.js "card-revert")
     psdOf: id => { const c = find(id); return c ? Object.fromEntries(Object.keys(FROM).filter(isPsd).map(f => [f, psdVal(baseOf(c), f)])) : null; },
     // the fields the card's Card Edits.json entry would hold once published: the built ones, the published-not-built and
     // the staged ops' (or op: the open form's, relative to the published card)
@@ -1924,7 +1973,7 @@ export function createEditor(app) {
     stageRating,
     // the parts editor: a card's boxes per field once its record is loaded ({title, ability, rule} or null: no parts), and
     // the parts its Card Edits.json entry (its PSD's: variant 1's) would hold once published, for the previews
-    partsFor: c => new Promise(ok => withRecs(c, () => { const v = partsView(c); ok(v && { rule: v.rule, title: v.list.filter(x => x.kind === "title").length, ability: v.list.filter(x => x.kind === "ability").length }); })),
+    partsFor: c => new Promise(ok => withRecs(c, () => { const v = partsView(c); ok(v && { title: v.list.filter(x => x.kind === "title").length, ability: v.list.filter(x => x.kind === "ability").length }); })),
     partsLoaded: c => [c, ...groupOf(c)].every(x => !x.details || recs.has(x.id) || !app.loadDetails),
     loadParts: c => new Promise(ok => withRecs(c, ok, true)),        // the previews: the records entryParts reads
     entryParts(id, op = null) {

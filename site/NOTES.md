@@ -22,7 +22,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - `getJson(name)` app.js:~58: `fetch("data/"+name+"?v=<build>")` relative to `<base>`; ordinary HTTP cache keyed by the `?v=` build hash. `cards.json` is preloaded in index.html:12 and awaited in `init()` before first render.
 - Files (dist/data/, sizes from the 2026-10-20 build):
   - cards.json 409 KB: `{generated, repo:"MichaelJSr/TTSCardMaker", botRepo:"bobberlington/AutoCroissant", raw:"https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/main/", cards[], icons{}, banlist{notes[], groups[{title, entries[{name, reason, id}]}]}, branch:"main", files{edits,authors,banlist,admins,profiles,decks}, admins[logins], people[], peopleMap{git:shown}, decks{public,private}}`. icons = `{normalizedName: {file:"icons/x.webp", name, kind:"type"|...}}`.
-  - rules.json 67 KB `{rules:[{id, name, type:"rulebook", ability, ...}]}` (lazy: rulebook tab). history.json 48 KB `{cardId: [{ts, ability}]}` (lazy: changes tab / card with `hv`). versions.json `{available, repo, commits[[sha,ts,author,subject]], cards{id:[[commitIdx, path]]}}`; currently `available:false`, empty (76 bytes).
+  - rules.json `{chapters:[{id, num, title, file, source}], images:{file:[w, h, stamp]}}` (lazy: rulebook tab; since 2026-10-29 the chapters of site/rulebook, drawn by rulebook.js; the Photoshop pages are no longer on the site). history.json 48 KB `{cardId: [{ts, ability}]}` (lazy: changes tab / card with `hv`). versions.json `{available, repo, commits[[sha,ts,author,subject]], cards{id:[[commitIdx, path]]}}`; currently `available:false`, empty (76 bytes).
   - details/<id>.json (2026-10-21; 0.9-16.7 KB each, median 3.7 KB, one per card or rulebook page with `details: true`; lazy: the card or rulebook page's Details dropdown, `loadDetails` memoised per card id in app.js): the bot's psd_details.json record `{id, name, path, at, parser, canvas{w,h,mode,depth,icc}, fonts{font:{layers[], supplied}}, text[{layer,text,font,size,color,visible}], effects{layer:[names]}, smart_objects[], icons, stats{hp,def,atk,spd}, fx[], overlays[], template{name_layer, ability_layers, deviations}, tree[[name, kind, visible, children?]]}`; a section the bot couldn't read is a short string. Section 11.
   - decks.json (2026-10-21; lazy: `#/decks`, a deck page, a person's Decks panel): `{generated, decks: [{owner, slug, name, description, cards[visible ids], dropped, field|null, updated, n}], private: [{owner, slug, kdf{name,hash,iter,salt}, iv, data, updated}]}`, both newest first. cards.json carries the counts as `decks: {public, private}` and `files.decks = "site/decks"`. Section 12.
   - analytics.json (2026-10-22; 105 KB, 13 KB gzipped; lazy: the Stats page's Balance section, a card with `balance: true`): section 14.
@@ -44,7 +44,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   Retry re-applies the pure transform to fresh content, which is exactly the "merge with concurrent bot updates" pattern needed. Repo/branch come from `S.data.repo` / `S.data.branch` ("MichaelJSr/TTSCardMaker", "main"). Rate: authenticated; each attempt = 3 + N reads + 3 writes.
   Commit message: `message || (what.length > 3 ? "Website edits: N changes" : "Website edit: A, B, C")` where what = card/page names (+ "people", "admins"). User may type a custom message.
   After commit: stores sent-ops, clears stage, `save()`, dialog "Published" with commit link `https://github.com/{repo}/commit/{sha}`; site rebuild takes minutes (workflow); the card sync brings it to the bot within minutes and to the PSDs within about 30 minutes (card-sync.yml: the data lane at once on a card push, the bake 30 minutes after the first card push of a burst).
-- Files written (paths from `files()` edit.js:32 = defaults overridden by `S.data.files`): `MDW/Card Edits.json` (`editsFile`: JSON `{about, cards:{key:{fields..., _by, _at}}}`, keys sorted, fixed field ORDER, hand-formatted one-line-per-card), `MDW/Card Authors.txt` (`authorsFile`: INI-ish `[people]`/`[cards]` with `# --- credited to X (n) ---` groups), `MDW/Constructed Ban List.txt` (`banFile`: `Group:` headings, `Name - reason` lines), `MDW/Website Admins.txt` (admins, `#` comment lines preserved). Rulebook pages are edited as cards with type "rulebook" (ids from rules.json), their field changes also go into Card Edits.json (not separate files; `ruleFormHtml` edit.js:162 edits name/ability/note).
+- Files written (paths from `files()` edit.js:32 = defaults overridden by `S.data.files`): `MDW/Card Edits.json` (`editsFile`: JSON `{about, cards:{key:{fields..., _by, _at}}}`, keys sorted, fixed field ORDER, hand-formatted one-line-per-card), `MDW/Card Authors.txt` (`authorsFile`: INI-ish `[people]`/`[cards]` with `# --- credited to X (n) ---` groups), `MDW/Constructed Ban List.txt` (`banFile`: `Group:` headings, `Name - reason` lines), `MDW/Website Admins.txt` (admins, `#` comment lines preserved). Rulebook chapters (since 2026-10-29) have their own editor, rulebook-edit.js: a chapter's file under site/rulebook (and its new pictures) in one commit through the editor's `commit` (commitFiles; a picture as `{base64}`, its blob made first); the Photoshop pages' Edit form is gone.
 - Image previews (2026-10-23, section 22): the Edit dialog's `openForm` calls `app.formOpened({form, card, read, base})`
   (not for rulebook pages), and the editor's API gains `github(path, opts)` (its `gh`, with the token), `scopes` (the
   token's classic scopes from sign-in, null for a fine-grained one), `psdOf(id)` (what the PSD prints of each PSD field)
@@ -70,11 +70,12 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 
 ## 7. Profiles (2026-10-21)
 - Files: `site/profiles/<login>.json` (format: `site/profiles/README.md`). Opt-in; one file per GitHub login; the login field must match the file name exactly (the editor reads, replaces and removes the file by that spelling, and keeps it when the signed-in login differs in case; `#/u/<login>` is matched without case and the address bar is rewritten to the file's spelling).
-- Module `assets/profile.js`: pure `validateProfile(raw, ctx)` -> `{profile, errors}` (ctx = cards Map, series Set, people list; the same rules as `clean_profile` in build_site.py: LIMITS, PICKS, ITEM_KINDS), `profileFile(p)` (sorted keys, 2-space indent, trailing newline = Python `json.dumps(sort_keys=True, indent=2, ensure_ascii=False)`; the editor's unchanged-form check compares these texts, since the build writes keys in another order), `deckCode(text)` (share link or code -> code), `mergeUsers(published, pending)`, `cardsBy(author, cards)`; and the profile page `profileHtml(x)` (everything through `esc`, links only to `#/…` routes). The users table `usersHtml` became the People table (section 8).
+- Module `assets/profile.js`: pure `validateProfile(raw, ctx)` -> `{profile, errors}` (ctx = cards Map, series Set, subseries Map name -> its cards' series, people list; the same rules as `clean_profile` in build_site.py: LIMITS, PICKS, ITEM_KINDS), `profileFile(p)` (sorted keys, 2-space indent, trailing newline = Python `json.dumps(sort_keys=True, indent=2, ensure_ascii=False)`; the editor's unchanged-form check compares these texts, since the build writes keys in another order), `deckCode(text)` (share link or code -> code), `mergeUsers(published, pending)`, `cardsBy(author, cards)`; and the profile page `profileHtml(x)` (everything through `esc`, links only to `#/…` routes). The users table `usersHtml` became the People table (section 8).
 - Routes (app.js): `#/u/<login>` (view `u`, tab highlight `users`) and `#/users`; `parseHash` recognises the static paths `c/<id>/` and `u/<login>/` (STATIC_PAGES) when the address bar has no hash, `syncUrl` rewrites `#/u/<login>` to `u/<login>/`, and `hashOf(r)` supplies the hash `route()`/`rerender()` need when the URL has none. `data/users.json` loads lazily (`loadUsers`, like rules.json) together with `contributions.json` (section 8). Key `6` = People (the tab was labelled Users until 2026-10-21, a label decision for the owner to confirm; `data-tab`, routes and pages kept their names, so it is one word in index.html to undo).
 - Editor (edit.js): `stage.profiles = {login: profile | null}` (null = remove the file), counted and reviewed with the batch; `openProfile(login)` (own profile, or anyone's for admins; `publish()` refuses a batch holding someone else's profile unless the signed-in user is an admin) goes to the editor page (section 9; until 2026-10-21 a dialog), whose form reads back through `validateProfile`; publish adds `edits["site/profiles/<login>.json"] = t => profileFile({...p, updated: at})` (or `false` to delete: `commitFiles` turns `false` into a tree entry with `sha: null`) to the same single commit; the sent record (`edit-sent`) carries `profiles` too, so the page shows "Publishing…" until the site rebuilds. Public API additions: `profileOf(login)`, `pendingProfiles()`, `profilePage(login)`; `openHub(note, then)` takes a callback now. `app.onAuth()` updates `#account` on sign-in/out; `app.users()`, `app.goUser()` are the other new hooks; the editor page's are `app.view`, `app.route()`, `app.tile(card)`, `app.kinds`, `app.kindOf`, `app.savedDecks()` and `app.goEdit(login)` (section 9).
 - Build (build_site.py): `read_profiles(cards, people)` -> `data/users.json` (`{"users": [...]}`, sorted by login; added to `files`, so hashed into the build version) and `u/<login>/index.html` via `share_page` (the card pages use it too) with Open Graph tags (`profile_text`; image = the favourite card's og.jpg, else og.jpg). Never fails the build: bad file skipped, bad field dropped, each with a `warning:` line; 16 KB cap per file. `data.files.profiles = "site/profiles"`.
 - Avatar, GitHub link, Share, counter (2026-10-21): `avatarHtml(login, px)` / `githubUrl(login)` (profile.js) build `https://avatars.githubusercontent.com/<login>?s=<2×px>` (lazy, `alt="<login> on GitHub"`, no referrer) and `https://github.com/<login>` only when the value passes `LOGIN_RE`, else ""; the login is the profile's (`profile.login`, People row `githubOf(r)`) or the person's `github` from contributions.json (section 8), never profile text or a git name. Person page: 48 px in the `h2.person-name` plus a "GitHub: <login>" fact; People table: 20 px `a.face` before the name (an empty `span.face` keeps the column aligned). The page's Copy link became **Share** (`share-user`): app.js `openUserShare(name)` shows `shareDialogHtml` (profile.js: link + Copy link, the Discord embed with the build's preview text `contributions.json previews[name]`, the favourite card's 360 thumb or og.jpg, Copy as Discord message, Copy plain text, Share… when `navigator.share`); `personDiscord` is the name as a `<…>` link (no preview) + `contribLine` + `cardsLine` (the JS twins of `contrib_text` / `cards_text`, byte-equal on today's build), no motto or pairs, so it carries no link from profile text; Copy plain text and Share… use `personText` (the same without markdown or the link; Share… without the name), not the preview, since the preview holds the motto and Discord auto-links URLs in pasted text; a staged or just-published profile gets a note that the preview is the published page's. `personAt(name)` resolves profile and person as the person page does. Counter: `#people-count` (index.html, the deck counter's `.count`) from cards.json `peopleCount` (build `people_count`, = `peopleRows(...).length`: contributors plus profiles no row takes) at boot, then `rows.length` whenever the table renders (pending profiles included).
+- Subseries (2026-10-26, owner: his "Don't Starve Gourmet Expansion" is Don't Starve with the subseries Gourmet Expansion): an optional `subseries`, checked like the series (`clean_profile`, `validateProfile`: a subseries shown cards use; with a series, one of that series' cards uses it; a bad one dropped with a warning). The page shows one chip "Don't Starve › Gourmet Expansion" to `#/cards?series=…&subseries=…` (`seriesFact`); the link preview says the same. The editor's field is `data-suggest="subseries" data-series-from="pf-series"`: app.js passes the field to edit.js `nameEntries(kind, el)`, which then lists the shown cards' subseries of the picked series (all of them with none), no buckets.
 
 ## 8. People: contributions (2026-10-21)
 - Build (build_site.py): one `git log --raw --no-renames --no-abbrev --format=%x01%H%x09%ct%x09%aN%x09%aE%x09%s -- *.png *.PNG *.psd *.PSD 'MDW/Card Edits.json' 'site/Card Edits.json'` in `git_history()` (runs in `HISTORY_REPO`, = REPO; a test wrapper points it at a full-history `--filter=blob:none --no-checkout` clone), parsed once by `parse_history(text)` into `(sha, ts, name, email, subject, [(status, old blob, new blob, path)])` newest first; None in a shallow clone. `image_versions(paths, commits)` consumes the PNG entries exactly as before (same output: checked byte-equal against the previous implementation on the full clone); `contributions(cards, people, profiles, edits, commits)` consumes the rest. Measured on the 547-commit clone: 500 commits in the walk, 1.45 MB of text, 0.1 s; parsing + counting 0.02 s; contributions.json 4.1 KB.
@@ -1101,7 +1102,8 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
   (`tileHtml(c, {link: true})`: no flag, no deck button), so a tap before the script opens the card's page. The filters
   column is empty until app.js's first render fills it. That render keeps the tiles in the page (`adoptFirst`, §36):
   each link tile that is its card's tile as app.js draws it now (`isEqualNode` with `tileHtml(c, {link: true})`) gets
-  its flag, deck button, `data-open` and `tabindex` in place and loses its href (a tile like the others); any other (a
+  its flag, deck button and `data-open` in place, keeping its href (every tile is a link, §41; edit mode's `markTiles`
+  drops it); any other (a
   staged edit, Show hidden) is replaced. Removed 10-25 evening when Safari kept flashing, back the same night: the flash
   was edit mode's redraw after a kept sign-in (§36), with or without the first screen.
 - **Parity** (`check_first.mjs`, node on a temp copy of site/assets as an ES module package): the default list as app.js
@@ -1298,7 +1300,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   are chips (any of them: "Cards with any of them."); right-click or long press excludes ("not Perpetua"), as Kind.
 - URL: `font=` and `xfont=`, repeated, one font each (myfilters.js `vals`). A link loads the data first ("Loading…").
 - A card's fonts are its Details panel's: the record's `fonts` keys (build_site.py `card_fonts`); variant pictures their
-  PSD's, PNG-only duplicates none. Names as stored (PostScript).
+  PSD's, PNG-only duplicates their original's (§41). Names as stored (PostScript).
 - Data: `data/cardfonts.json` `{fonts: [name, most used first], cards: {id: [index]}}`, fetched on the box's first focus
   (with tokens.js, now its own chunk, which edit mode shares: one install, app.js `useTokens`). Inlined in cards.json it
   cost +3.6% gzipped (111,661 -> 115,709 B); the file is 18,967 B (7,844 gzipped). app.js +2.5 KB (+0.9 KB gzipped).
@@ -1320,3 +1322,53 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   language (`compile`). Params `cf=` (keep the cards it matches) and `xcf=` (drop them), one param per search, repeated,
   never a comma list (`MULTI`, app.js `setParams`), so any search round-trips; a link applies them for anyone, and its
   chips offer Save. AutoCroissant `tests/test_site_custom_filters.py`.
+
+## 40. Stat notes (2026-10-26, owner: "for tables where appropriate ... a very small footnote ... on hover that explains what the stat is")
+- One short sentence per number or column that needs it, through the site's `data-tip` (tip.js: hover, tap on touch), on
+  the column header or the stat's label, never on each cell. text.js `noteHtml`/`noted` wrap the label in `.qn` (cursor
+  help, a faint dotted underline); `headHtml` takes `{label | html, tip}` heads (stats.js `table`, `heatTable`), and
+  `chartCard`'s `tip` option notes a chart's title. Fact chips keep their own look: their note is the chip's `data-tip`.
+- A note says exactly what the code computes (scope, filters, rounding, which cards count); change it with the code.
+- One target per head: a badge inside a noted head drops its own tip (`badgeHtml(tag, false)`, the cooldown table's
+  "3CD+"). A note in a `<summary>` gets a wider tap area and a tap on it doesn't toggle the section (tip.js). A note
+  that depends on a picker follows it (Star levels: the picked kind on both sides).
+
+## 41. Picture-only duplicates, font chips off, first-screen links (2026-10-26, owner's rulings)
+- **Picture-only duplicates** (a PNG with no PSD whose Card Edits.json entry names its original in `dup_of`: Stubborn
+  Queen, Gust of Trees): build_site makes them from the card data's `duplicate_of` record as it makes every duplicate
+  (`add_dup`): the original's data, author, PSD, history and fonts; its own name (aliases, else its file name), picture,
+  artwork sources and Card Edits entry; counted once. Before, they were image only under "Not parsed yet". The bake never
+  redraws their picture, so they never show the original's bake state (PSD pending, refused, baked); Re-parse pending
+  they do (`add_dup(export=False)`). AutoCroissant
+  `tests/test_site_build.py::test_a_picture_only_duplicate_is_its_originals_card`.
+- **Missing: No ratings** reads the ratings a card's page shows (grid.js `ratedBy`, app.js `ratedOf`): a duplicate's
+  are its original's, a variant picture's its own.
+- **Font chips**: a click on a picked font turns it off and keeps it listed (like Kind); a click turns it on again; its ✕
+  forgets it; the active-filter bar's ✕ forgets it too. Off states leave the address, as every filter's do (Kind, My
+  filters), so an off font is kept for this page only (`S.fontKept`); Clear all filters forgets them.
+- **First screen**: an adopted tile keeps its href, so middle-click, Cmd/Ctrl/Shift-click and Open in new tab open its
+  page; a plain click opens the dialog. Edit mode's `markTiles` drops the href (a card drag, never a link drag).
+- **Every tile a link** (owner 10-26): grid.js `tileHtml` draws each card tile as `<a class="tile" href="c/<id>/"
+  data-open>` (the grid, person pages, Parser notes; a picker's choices stay `<article>`: `href: false`), so hover shows
+  the address and the browser's link menu works on every card; a plain click or Enter opens the dialog. In edit mode
+  `markTiles` drops the href and sets `tabindex` 0 (sign-out remakes the tiles); adopted tiles get no `tabindex` now.
+
+## 42. Art that hangs out (2026-10-31, owner: "for sumo panda (and any future cards that have transparency) ... make their transparent portions hang off the gui and overflow ... a specific list of cards")
+
+- **The list**: build_site `OVERHANG` (card names; Sumo Panda only). For each, `card_body` measures the card's own box in
+  its 720 px picture (columns solid in 90% of rows, then rows solid in 90% of those) as cards.json `hang` [left, top,
+  right, bottom] in fractions; a listed card without a see-through edge gets a build warning and no `hang`.
+- **The website**: grid.js `hangVars` sizes the picture so the card fills its frame (tiles, card page) and the rest
+  hangs out over the gap, the next tile or the dialog's edge; a clip-path rounds the card's own corners like every
+  tile's. Tiles stay cut off below, as every tile is. The card page's Mock-up and Rendered layers take the same box.
+  Plain picture elsewhere (table, deck slots, Compare, versions, the editor's preview pane). Phones cut the overhang at the
+  screen's edge. Test: `tests/test_site_build.py::test_overhang_card_body`.
+
+## 43. Status effects by SpongeBob season (2026-10-31, owner: "status effects per spongebob season, and then if you click on a specific season then it will show you the status effects breakdown per episode")
+
+- Stats page, after Status effects mentioned (stats.js `seasonsCard`): buffs and debuffs by the season their `art` field
+  names (`spongeOf`: `SpongeBob SquarePants Season N Ep. NNx "Title"`, or a SpongeBob movie), stacked buffs/debuffs, every
+  season from 1 (an empty one has no column button), the Movie last.
+- A season's column (a button, app.js action `season`) shows its episodes below in place: per episode a block per
+  status effect and their names (card links); the pick is kept for the session (`S.season`), else the biggest season.
+  The table view lists every episode. Cards whose art names no SpongeBob source are left out.

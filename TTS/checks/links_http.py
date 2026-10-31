@@ -1,8 +1,10 @@
 """Every URL in the save loads: HTTP status, content type, image decodes (PIL), bytes match the pinned blob.
 
     python links_http.py [save.json] [checkout] [history clone]     (defaults: this repo, $TTS_HISTORY)
-Repo links: ranged GET of the first 64 KB, compared with the blob at the pin (size from Content-Range); the blob
-itself is decoded with PIL. Other hosts: full GET, decoded or magic-checked. 8 requests at a time. Exit 1 on a defect.
+Repo links: ranged GET of the first 64 KB, uncompressed, compared with the blob at the pin (size from Content-Range or
+Content-Length); the blob itself is decoded with PIL. Other hosts: full GET, decoded or magic-checked. The global
+script's links are live data (TTS/Global.lua): each loads, a .json one parses; a bare prefix is skipped. 8 requests at
+a time. Exit 1 on a defect.
 """
 import json
 import os
@@ -29,6 +31,7 @@ UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like 
 FORMATS = {".png": "PNG", ".jpg": "JPEG", ".jpeg": "JPEG"}
 REQUIRED = ("FaceURL", "BackURL", "ImageURL", "MeshURL", "DiffuseURL", "AssetbundleURL", "PDFUrl")
 DOC_ONLY = ("https://api.tabletopsimulator.com/",)      # links in comments: status only
+TEXT_FIELDS = ("/Description", "/GMNotes", "/Memo", "/XmlUI")   # links for people to open: status only
 
 
 def strings(v, where=""):
@@ -74,7 +77,8 @@ def check_repo(url, sha, enc, checkout, clone, session):
     path = unquote(enc)
     out = {"url": url, "fail": [], "note": []}
     blob, data = blob_bytes(checkout, clone, sha, path)
-    r = session.get(url, headers={"Range": f"bytes=0-{PREFIX - 1}"}, timeout=60, stream=True)
+    r = session.get(url, headers={"Range": f"bytes=0-{PREFIX - 1}", "Accept-Encoding": "identity"}, timeout=60,
+                    stream=True)                        # gzip (text files: .obj) would report the compressed size
     body = r.raw.read(PREFIX + 1, decode_content=True)
     r.close()
     out["status"], out["type"] = r.status_code, r.headers.get("Content-Type", "")
@@ -104,7 +108,22 @@ def check_repo(url, sha, enc, checkout, clone, session):
     return out
 
 
-def check_other(url, session):
+def check_live(url, session):
+    """A global script link: loads; a .json file parses."""
+    out = {"url": url, "fail": [], "note": ["live data (the global script)"]}
+    r = session.get(url, timeout=60)
+    out["status"], out["type"], out["size"] = r.status_code, r.headers.get("Content-Type", ""), len(r.content)
+    if r.status_code != 200:
+        out["fail"].append(f"HTTP {r.status_code}")
+    elif url.endswith(".json"):
+        try:
+            json.loads(r.content)
+        except ValueError as e:
+            out["fail"].append(f"not JSON: {e}")
+    return out
+
+
+def check_other(url, session, status_only=False):
     out = {"url": url, "fail": [], "note": []}
     if url.startswith("http://"):
         out["note"].append("plain http")
@@ -113,7 +132,7 @@ def check_other(url, session):
     if r.status_code != 200:
         out["fail"].append(f"HTTP {r.status_code}")
         return out
-    if url.startswith(DOC_ONLY):
+    if status_only or url.startswith(DOC_ONLY):
         return out
     data = r.content
     if data[:7] == b"UnityFS":
@@ -134,9 +153,15 @@ def main():
     clone = ensure_history(expanduser(sys.argv[3] if len(sys.argv) > 3 else HISTORY))
     data = json.load(open(save, encoding="utf-8"))
     urls = {}
+    live = set()                                        # the global script's links
     for where, s in strings(data):
         for m in ANY_URL.finditer(s):
             urls.setdefault(m.group(0), set()).add(where)
+            if where == "/LuaScript":
+                live.add(m.group(0))
+    for url in [u for u in live if u.endswith("/")]:    # a prefix the script builds links from
+        if urls[url] == {"/LuaScript"}:
+            del urls[url]
     empty = []                                          # required link fields left blank
     def blanks(v, where=""):
         if isinstance(v, dict):
@@ -154,12 +179,14 @@ def main():
 
     def one(url):
         try:
+            if urls[url] == {"/LuaScript"}:
+                return check_live(url, session)
             m = LINK.fullmatch(url)
             if m:
                 return check_repo(url, m.group(1), m.group(2), checkout, clone, session)
             if url.startswith(RAW):
                 return {"url": url, "fail": ["repo link not pinned to a full sha"], "note": []}
-            return check_other(url, session)
+            return check_other(url, session, all(w.endswith(TEXT_FIELDS) for w in urls[url]))
         except Exception as e:
             return {"url": url, "fail": [f"{type(e).__name__}: {e}"], "note": []}
 

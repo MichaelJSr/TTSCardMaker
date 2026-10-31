@@ -1,5 +1,5 @@
 {
-  "about": "Rules for the TTS save (TTS/Impossibility Simulator.json), written by audit.py. A deck's cards are the repo PNGs matched by rule.folders (globs: * stays inside one folder) plus rule.include, minus rule.exclude. partial: a hand-picked subset (only its own cards are refreshed; card_list = its distinct cards); with add_new_since (a commit) it also gains every rule card the save at that commit lacked (renames followed; a card moved to other stars moves to that add_new_since deck; nothing is recorded, so a card taken out by hand comes back unless the rule excludes it). count: the usual copies per card; odd_counts (per deck): cards at another count. rule null: needs a decision (see AUDIT.md).",
+  "about": "Rules for the TTS save (TTS/Impossibility Simulator.json), first written by the TTS audit (generated), edited by hand since. A deck's cards are the repo PNGs matched by rule.folders (globs: * stays inside one folder) plus rule.include, minus rule.exclude. partial: a hand-picked subset (only its own cards are refreshed; card_list = its distinct cards); with add_new_since (a commit) it also gains every rule card the save at that commit lacked (renames followed; a card moved to other stars moves to that add_new_since deck; nothing is recorded, so a card taken out by hand comes back unless the rule excludes it). count: the usual copies per card; odd_counts (per deck): cards at another count. rule null: needs a decision.",
   "generated": "2026-10-20T10:39:56",
   "decks": {
     "f33bd9": {
@@ -23,7 +23,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Cuphead/5 Stars/Chef_Saltbaker.png",
         "Creatures/Fnaf/5 Stars/The_Man_Behind_The_Slaughter.png",
@@ -62,7 +62,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Crypt/4 Stars/Grief.png",
         "Creatures/Everhood/4 Stars/Green_Mage.png",
@@ -101,7 +101,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Hollow Knight/3 Stars/Markoth.png",
         "Creatures/Hollow Knight/3 Stars/The_Beast.png",
@@ -147,7 +147,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Crypt/2 Stars/Pot_Full_of_Spiders!.png",
         "Creatures/FTL/2 Stars/Zoltan.png",
@@ -190,7 +190,7 @@
       "copies": [
         "f05d89"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "cde2bc": {
       "name": "★★★★",
@@ -213,7 +213,7 @@
       "copies": [
         "8dc131"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "6ae2a9": {
       "name": "★★★",
@@ -236,7 +236,7 @@
       "copies": [
         "ac2a14"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "e8e1b6": {
       "name": "★★",
@@ -262,7 +262,7 @@
       "copies": [
         "fa254e"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "df0c17": {
       "name": "★★★★",
@@ -285,7 +285,7 @@
       "copies": [
         "9c4f0c"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "213c84": {
       "name": "★★★",
@@ -308,7 +308,7 @@
       "copies": [
         "abb81f"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Attack/3 Stars/Big_Bomb.png": 3,
         "Items/Attack/3 Stars/Blood_Bomb.png": 2,
@@ -351,7 +351,7 @@
       "copies": [
         "7cdb04"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Attack/2 Stars/Bomb.png": 3,
         "Items/Attack/2 Stars/Firebomb.png": 2,
@@ -397,7 +397,7 @@
       "copies": [
         "42909d"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Counter/1 Stars/Poison_Trap.png": 1,
         "Items/Equip/1 Stars/Boko_Club.png": 1,
@@ -429,7 +429,7 @@
       "copies": [
         "444f1f"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "888cba": {
       "name": "",
@@ -451,7 +451,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Everhood/4 Stars/Rasta_Beast.png",
         "Creatures/Fnaf/4 Stars/Old_Bonnie.png",
@@ -500,7 +500,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Hollow Knight/3 Stars/Dung_Defender.png",
         "Creatures/Hollow Knight/3 Stars/Uumuu.png",
@@ -547,7 +547,7 @@
       "copies": [
         "36ee4c"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "97edb2": {
       "name": "★★★",
@@ -570,7 +570,7 @@
       "copies": [
         "f16501"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "4e992d": {
       "name": "★★",
@@ -593,7 +593,7 @@
       "copies": [
         "b14958"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "b25a54": {
       "name": "★",
@@ -616,7 +616,7 @@
       "copies": [
         "769f68"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "c8333f": {
       "name": "Status Effects⭐⭐⭐⭐⭐⭐⭐⭐⭐",
@@ -639,7 +639,7 @@
         "ee3c0c",
         "abd26b"
       ],
-      "back": "MDW/cardback_statuseffect.png"
+      "back": "MDW/Assets/cardback_statuseffect.png"
     },
     "ee3c0c": {
       "name": "Status Effects⭐⭐⭐⭐⭐⭐⭐⭐⭐",
@@ -662,7 +662,7 @@
         "c8333f",
         "abd26b"
       ],
-      "back": "MDW/cardback_statuseffect.png"
+      "back": "MDW/Assets/cardback_statuseffect.png"
     },
     "0b410c": {
       "name": "Auxiliary Items",
@@ -698,7 +698,7 @@
         "ac4725",
         "883c04"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "ac4725": {
       "name": "Auxiliary Items",
@@ -734,7 +734,7 @@
         "0b410c",
         "883c04"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "ed587f": {
       "name": "Minions",
@@ -760,7 +760,7 @@
         "6e935f",
         "f8df22"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "6e935f": {
       "name": "Minions",
@@ -786,7 +786,7 @@
         "ed587f",
         "f8df22"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "444f1f": {
       "name": "N.M.E. Deck",
@@ -807,7 +807,7 @@
       "copies": [
         "d3995a"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "883c04": {
       "name": "Auxiliary Items",
@@ -843,7 +843,7 @@
         "ac4725",
         "0b410c"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "f8df22": {
       "name": "Minions",
@@ -869,7 +869,7 @@
         "6e935f",
         "ed587f"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "abd26b": {
       "name": "Status Effects⭐⭐⭐⭐⭐⭐⭐⭐⭐",
@@ -892,7 +892,7 @@
         "c8333f",
         "ee3c0c"
       ],
-      "back": "MDW/cardback_statuseffect.png"
+      "back": "MDW/Assets/cardback_statuseffect.png"
     },
     "769f68": {
       "name": "★",
@@ -915,7 +915,7 @@
       "copies": [
         "b25a54"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "b14958": {
       "name": "★★",
@@ -938,7 +938,7 @@
       "copies": [
         "4e992d"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "f16501": {
       "name": "★★★",
@@ -961,7 +961,7 @@
       "copies": [
         "97edb2"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "36ee4c": {
       "name": "★★★★",
@@ -984,7 +984,7 @@
       "copies": [
         "b53bbf"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "42909d": {
       "name": "★",
@@ -1007,7 +1007,7 @@
       "copies": [
         "8fb88d"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Counter/1 Stars/Poison_Trap.png": 1,
         "Items/Equip/1 Stars/Boko_Club.png": 1,
@@ -1041,7 +1041,7 @@
       "copies": [
         "a7e1aa"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Attack/2 Stars/Bomb.png": 3,
         "Items/Attack/2 Stars/Firebomb.png": 2,
@@ -1087,7 +1087,7 @@
       "copies": [
         "213c84"
       ],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "odd_counts": {
         "Items/Attack/3 Stars/Big_Bomb.png": 3,
         "Items/Attack/3 Stars/Blood_Bomb.png": 2,
@@ -1130,7 +1130,7 @@
       "copies": [
         "df0c17"
       ],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "6dbf7e": {
       "name": "★",
@@ -1152,7 +1152,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "card_list": [
         "Items/Attack/1 Stars/Bleach.png",
         "Items/Attack/1 Stars/Mighty_Pebble.png",
@@ -1202,7 +1202,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "card_list": [
         "Items/Attack/2 Stars/Bomb.png",
         "Items/Attack/2 Stars/Firebomb.png",
@@ -1296,7 +1296,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "card_list": [
         "Items/Active/3 Stars/Black_Light_Bulb.png",
         "Items/Active/3 Stars/Star_Cannon.png",
@@ -1388,7 +1388,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback_item.png",
+      "back": "MDW/Assets/cardback_item.png",
       "card_list": [
         "Items/Active/4 Stars/Pandamonium.png",
         "Items/Attack/4 Stars/Dynamite.png",
@@ -1429,7 +1429,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Bug Fables/2 Stars/Spuder.png",
         "Creatures/DST/2 Stars/Wilson.png",
@@ -1470,7 +1470,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/DST/3 Stars/WX-78.png",
         "Creatures/DST/3 Stars/Wigfrid.png",
@@ -1541,7 +1541,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/BTD/4 Stars/Avatar_Of_Wrath.png",
         "Creatures/DST/4 Stars/Wolfgang.png",
@@ -1607,7 +1607,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "Creatures/Bug Fables/5 Stars/Tanjerin.png",
         "Creatures/DST/5 Stars/Ancient_Fuelweaver.png",
@@ -1661,7 +1661,7 @@
       "copies": [
         "e8e1b6"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "ac2a14": {
       "name": "★★★",
@@ -1684,7 +1684,7 @@
       "copies": [
         "6ae2a9"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "8dc131": {
       "name": "★★★★",
@@ -1707,7 +1707,7 @@
       "copies": [
         "cde2bc"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "f05d89": {
       "name": "★★★★★",
@@ -1730,7 +1730,7 @@
       "copies": [
         "bc1e3f"
       ],
-      "back": "MDW/cardback.png"
+      "back": "MDW/Assets/cardback.png"
     },
     "493fc7": {
       "name": "3 Star Equips",
@@ -1752,7 +1752,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "79fd59": {
       "name": "Deck of Rejects",
@@ -1775,7 +1775,7 @@
       },
       "confidence": "medium",
       "copies": [],
-      "back": "MDW/cardback.png",
+      "back": "MDW/Assets/cardback.png",
       "card_list": [
         "MDW/The Morgue/Developper.png",
         "MDW/The Morgue/Fire_Guardian's_Stronghold.png",
@@ -1807,7 +1807,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "b1cb91": {
       "name": "4 Star Attack Items",
@@ -1829,7 +1829,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "280637": {
       "name": "2 Star Healing Items",
@@ -1851,7 +1851,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "886307": {
       "name": "4 Star Equips",
@@ -1873,7 +1873,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "82d617": {
       "name": "2 Star Equips",
@@ -1895,7 +1895,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     },
     "452af0": {
       "name": "2 Star Attack Items",
@@ -1917,7 +1917,7 @@
       },
       "confidence": "high",
       "copies": [],
-      "back": "MDW/cardback_item.png"
+      "back": "MDW/Assets/cardback_item.png"
     }
   },
   "bags": {
@@ -1955,7 +1955,7 @@
         [
           "Custom_Tile",
           "",
-          "Auxiliary/Markers/Green.png, Auxiliary/Markers/Red.png"
+          "MDW/Assets/Markers/Green.png, MDW/Assets/Markers/Red.png"
         ]
       ]
     },
@@ -1974,7 +1974,7 @@
         [
           "CardCustom",
           "HP",
-          "Auxiliary/Markers/health_marker.png, Auxiliary/Markers/minus_health_marker.png"
+          "MDW/Assets/Markers/health_marker.png, MDW/Assets/Markers/minus_health_marker.png"
         ]
       ]
     },
@@ -1993,7 +1993,7 @@
         [
           "CardCustom",
           "DEF",
-          "Auxiliary/Markers/defense_marker.png, Auxiliary/Markers/minus_defense_marker.png"
+          "MDW/Assets/Markers/defense_marker.png, MDW/Assets/Markers/minus_defense_marker.png"
         ]
       ]
     },
@@ -2012,7 +2012,7 @@
         [
           "CardCustom",
           "ATK",
-          "Auxiliary/Markers/attack_marker.png, Auxiliary/Markers/minus_attack_marker.png"
+          "MDW/Assets/Markers/attack_marker.png, MDW/Assets/Markers/minus_attack_marker.png"
         ]
       ]
     },
@@ -2031,7 +2031,7 @@
         [
           "CardCustom",
           "SPD",
-          "Auxiliary/Markers/minus_speed_marker.png, Auxiliary/Markers/speed_marker.png"
+          "MDW/Assets/Markers/minus_speed_marker.png, MDW/Assets/Markers/speed_marker.png"
         ]
       ]
     },
@@ -2050,7 +2050,7 @@
         [
           "CardCustom",
           "SPD",
-          "Auxiliary/Markers/minus_speed_marker.png, Auxiliary/Markers/speed_marker.png"
+          "MDW/Assets/Markers/minus_speed_marker.png, MDW/Assets/Markers/speed_marker.png"
         ]
       ]
     },
@@ -2069,7 +2069,7 @@
         [
           "Custom_Tile",
           "",
-          "Auxiliary/Markers/Green.png, Auxiliary/Markers/Red.png"
+          "MDW/Assets/Markers/Green.png, MDW/Assets/Markers/Red.png"
         ]
       ]
     },
@@ -2107,7 +2107,7 @@
         [
           "CardCustom",
           "HP",
-          "Auxiliary/Markers/health_marker.png, Auxiliary/Markers/minus_health_marker.png"
+          "MDW/Assets/Markers/health_marker.png, MDW/Assets/Markers/minus_health_marker.png"
         ]
       ]
     },
@@ -2126,7 +2126,7 @@
         [
           "CardCustom",
           "DEF",
-          "Auxiliary/Markers/defense_marker.png, Auxiliary/Markers/minus_defense_marker.png"
+          "MDW/Assets/Markers/defense_marker.png, MDW/Assets/Markers/minus_defense_marker.png"
         ]
       ]
     },
@@ -2145,7 +2145,7 @@
         [
           "CardCustom",
           "ATK",
-          "Auxiliary/Markers/attack_marker.png, Auxiliary/Markers/minus_attack_marker.png"
+          "MDW/Assets/Markers/attack_marker.png, MDW/Assets/Markers/minus_attack_marker.png"
         ]
       ]
     },
@@ -2222,833 +2222,14 @@
         1.1
       ],
       "holds": {
-        "CardCustom": 46
+        "Custom_PDF": 1
       },
       "rule": {
         "kind": "rulebook",
-        "folders": [
-          "Auxiliary/Rulebook/*.png"
-        ],
-        "exclude": [
-          "Auxiliary/Rulebook/0000_Cover.png",
-          "Auxiliary/Rulebook/0000_Cover_Book.png"
-        ],
-        "loose_cards": true,
-        "nickname": "Page N: Title"
+        "pdf": "TTS/Rulebook/Rulebook.pdf"
       },
       "back": "own face",
-      "texture": "Auxiliary/Rulebook/0000_Cover_Book.png"
-    }
-  },
-  "objects": {
-    "https://steamusercontent-a.akamaihd.net/ugc/879750610978795929/723C50F43FAB3DE3DC12CB8460536E8CB34B60A3/": {
-      "in_git": null,
-      "used_by": {
-        "Custom_Assetbundle ''": 4
-      },
-      "fields": [
-        "AssetbundleURL"
-      ],
-      "guids": [
-        "afc863",
-        "c8edca",
-        "393bf7",
-        "12c65e"
-      ]
-    },
-    "https://i.imgur.com/eHXDjyy.jpg": {
-      "in_git": null,
-      "used_by": {
-        "Chinese_Checkers_Piece 'Flex Table Control'": 1
-      },
-      "fields": [
-        "LuaScriptState (embedded)"
-      ],
-      "guids": [
-        "bd69bd"
-      ]
-    },
-    "https://i.imgur.com/DbPelDi.jpg": {
-      "in_git": null,
-      "used_by": {
-        "Chinese_Checkers_Piece 'Flex Table Control'": 1
-      },
-      "fields": [
-        "LuaScriptState (embedded)"
-      ],
-      "guids": [
-        "bd69bd"
-      ]
-    },
-    "https://i.imgur.com/N0O6aqj.jpg": {
-      "in_git": null,
-      "used_by": {
-        "Chinese_Checkers_Piece 'Flex Table Control'": 1
-      },
-      "fields": [
-        "LuaScriptState (embedded)"
-      ],
-      "guids": [
-        "bd69bd"
-      ]
-    },
-    "MDW/cardback.png": {
-      "in_git": true,
-      "used_by": {
-        "Chinese_Checkers_Piece 'Flex Table Control'": 1
-      },
-      "fields": [
-        "LuaScriptState (embedded)"
-      ],
-      "guids": [
-        "bd69bd"
-      ]
-    },
-    "MDW/Holders/.5 Holder.jpg": {
-      "in_git": true,
-      "used_by": {
-        "Chinese_Checkers_Piece 'Flex Table Control'": 1,
-        "Custom_Tile 'All Status Effects'": 2,
-        "Custom_Tile 'Auxiliary Items'": 2,
-        "Custom_Tile 'Minions'": 2,
-        "Custom_Tile 'Status Effects Copy'": 1,
-        "Custom_Tile 'Minions Copy'": 1,
-        "Custom_Tile 'Auxiliary Items Copy'": 1
-      },
-      "fields": [
-        "ImageURL",
-        "LuaScriptState (embedded)"
-      ],
-      "guids": [
-        "bd69bd",
-        "11a690",
-        "ebb374",
-        "47a97f",
-        "4d6e3a",
-        "263eac",
-        "63f85f",
-        "92c42c",
-        "8b65b4",
-        "75ca31"
-      ]
-    },
-    "https://steamusercontent-a.akamaihd.net/ugc/879750610978796471/14ED0DBD593370733A0309B0950004F33EB9FACA/": {
-      "in_git": null,
-      "used_by": {
-        "Custom_Assetbundle ''": 4
-      },
-      "fields": [
-        "AssetbundleURL"
-      ],
-      "guids": [
-        "f938a2",
-        "9f95fd",
-        "35b95f",
-        "5af8f2"
-      ]
-    },
-    "Auxiliary/Markers/Green.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile '' in .5": 2,
-        "Custom_Tile ''": 36
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "18518b",
-        "4cfbbb",
-        "72e0bf",
-        "945690",
-        "4e91dc",
-        "2f4080",
-        "140fc4",
-        "f9e58f",
-        "132c36",
-        "da60f2",
-        "fc489f",
-        "231e98",
-        "455540",
-        "51d791",
-        "ebd730",
-        "d7e5be",
-        "b0763b",
-        "64a664",
-        "e50ad1",
-        "dff174",
-        "2ac097",
-        "f542d3",
-        "065615",
-        "4caeb4",
-        "757bc5",
-        "7bd483",
-        "28d701",
-        "d05754",
-        "50553a",
-        "cc486f",
-        "f4eb4e",
-        "189d00",
-        "20da95",
-        "f26191",
-        "1bea33",
-        "045d6c",
-        "64107f",
-        "229a99"
-      ]
-    },
-    "Auxiliary/Markers/Red.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile '' in .5": 2,
-        "Custom_Tile ''": 36
-      },
-      "fields": [
-        "ImageSecondaryURL"
-      ],
-      "guids": [
-        "18518b",
-        "4cfbbb",
-        "72e0bf",
-        "945690",
-        "4e91dc",
-        "2f4080",
-        "140fc4",
-        "f9e58f",
-        "132c36",
-        "da60f2",
-        "fc489f",
-        "231e98",
-        "455540",
-        "51d791",
-        "ebd730",
-        "d7e5be",
-        "b0763b",
-        "64a664",
-        "e50ad1",
-        "dff174",
-        "2ac097",
-        "f542d3",
-        "065615",
-        "4caeb4",
-        "757bc5",
-        "7bd483",
-        "28d701",
-        "d05754",
-        "50553a",
-        "cc486f",
-        "f4eb4e",
-        "189d00",
-        "20da95",
-        "f26191",
-        "1bea33",
-        "045d6c",
-        "64107f",
-        "229a99"
-      ]
-    },
-    "Auxiliary/Markers/health_marker.png": {
-      "in_git": true,
-      "used_by": {
-        "CardCustom 'HP' in Max HP": 2
-      },
-      "fields": [
-        "FaceURL"
-      ],
-      "guids": [
-        "609586"
-      ]
-    },
-    "Auxiliary/Markers/minus_health_marker.png": {
-      "in_git": true,
-      "used_by": {
-        "CardCustom 'HP' in Max HP": 2
-      },
-      "fields": [
-        "BackURL"
-      ],
-      "guids": [
-        "609586"
-      ]
-    },
-    "Auxiliary/Markers/defense_marker.png": {
-      "in_git": true,
-      "used_by": {
-        "CardCustom 'DEF' in DEF": 2
-      },
-      "fields": [
-        "FaceURL"
-      ],
-      "guids": [
-        "09ba04"
-      ]
-    },
-    "Auxiliary/Markers/minus_defense_marker.png": {
-      "in_git": true,
-      "used_by": {
-        "CardCustom 'DEF' in DEF": 2
-      },
-      "fields": [
-        "BackURL"
-      ],
-      "guids": [
-        "09ba04"
-      ]
-    },
-    "Auxiliary/Markers/attack_marker.png": {
-      "in_git": true,
-      "used_by": {
-        "CardCustom 'ATK' in ATK": 2
-      },
-      "fields": [
-        "FaceURL"
-      ],
-      "guids": [
-        "304516"
-      ]
-    },
-    "Auxiliary/Markers/minus_attack_marker.png": {
-      "in_git": true,
-      "used_by": {
-        "CardCustom 'ATK' in ATK": 2
-      },
-      "fields": [
-        "BackURL"
-      ],
-      "guids": [
-        "304516"
-      ]
-    },
-    "Auxiliary/Markers/speed_marker.png": {
-      "in_git": true,
-      "used_by": {
-        "CardCustom 'SPD' in SPD": 2
-      },
-      "fields": [
-        "FaceURL"
-      ],
-      "guids": [
-        "e6f324"
-      ]
-    },
-    "Auxiliary/Markers/minus_speed_marker.png": {
-      "in_git": true,
-      "used_by": {
-        "CardCustom 'SPD' in SPD": 2
-      },
-      "fields": [
-        "BackURL"
-      ],
-      "guids": [
-        "e6f324"
-      ]
-    },
-    "MDW/Holders/Discard.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Discard Pile'": 1,
-        "Custom_Tile 'Penalty Box Items'": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "1d95fd",
-        "850ffc"
-      ]
-    },
-    "MDW/Holders/Field.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Field Item Holder'": 2
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "1f4935",
-        "0942e7"
-      ]
-    },
-    "MDW/Holders/Item.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Item Holder'": 12,
-        "Custom_Tile 'N.M.E Items'": 1,
-        "Custom_Tile 'N.M.E. Items Copy'": 1
-      },
-      "fields": [
-        "ImageSecondaryURL",
-        "ImageURL"
-      ],
-      "guids": [
-        "63184a",
-        "df0c90",
-        "9ac85f",
-        "b1d394",
-        "e368b0",
-        "2a0826",
-        "ba1014",
-        "dab142"
-      ]
-    },
-    "MDW/Holders/Graveyard.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Graveyard'": 2,
-        "Custom_Tile 'Penalty Box Creatures'": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "34bc4e",
-        "c42228",
-        "8287a7"
-      ]
-    },
-    "MDW/Holders/Creature_Deck.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Creatures'": 1,
-        "Custom_Tile 'Creatures Copy'": 1,
-        "Custom_Tile 'Creatures Developer Version'": 1,
-        "Custom_Tile 'Baseline Creatures'": 1,
-        "Custom_Tile 'Creatures Simple Version'": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "b33868",
-        "afcd09",
-        "d69f21",
-        "6991bf",
-        "1b9629"
-      ]
-    },
-    "MDW/Holders/Field_Deck.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Field Items'": 1,
-        "Custom_Tile 'Field Items Copy'": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "1c6e7f",
-        "b83429"
-      ]
-    },
-    "MDW/Holders/Item_Deck.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Items'": 1,
-        "Custom_Tile 'Items Copy'": 1,
-        "Custom_Tile 'Items Simple Version'": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "8c4449",
-        "cec004",
-        "266bbc"
-      ]
-    },
-    "MDW/Raid_Boss_Table_Top.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Board ''": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "bfee49"
-      ]
-    },
-    "MDW/Holders/Active.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Active Holder'": 2
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "749baf",
-        "54c3c3"
-      ]
-    },
-    "Types/Offensive_Minion.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Offensive Minion' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "f9e27e"
-      ]
-    },
-    "Types/Defensive_Minion.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Defensive Minion' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "c1bae5"
-      ]
-    },
-    "Types/machine.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Machine' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "1a95e3"
-      ]
-    },
-    "Types/Wind.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Wind' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "3d8131"
-      ]
-    },
-    "Types/rock.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Rock' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "983396"
-      ]
-    },
-    "Types/panda.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Panda' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "002cc1"
-      ]
-    },
-    "Types/fire.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Fire' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "65d71f"
-      ]
-    },
-    "Types/ice.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Ice' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "3246d4"
-      ]
-    },
-    "Types/water.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Water' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "14a1e7"
-      ]
-    },
-    "Types/electric.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Electric' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "87ba92"
-      ]
-    },
-    "Types/undead.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Undead' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "76b426"
-      ]
-    },
-    "Types/dark.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Dark' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "c72d83"
-      ]
-    },
-    "Types/lightshadow.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Light' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "e00c90"
-      ]
-    },
-    "Types/darkmatter.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Dark Matter' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "0bf0fc"
-      ]
-    },
-    "Types/unknown.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Unknown' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "826f8b"
-      ]
-    },
-    "Types/Girl.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Girl' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "517a18"
-      ]
-    },
-    "Types/null.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'No Type' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "2de25e"
-      ]
-    },
-    "Types/Stars/star.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'Star' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "1da2ff"
-      ]
-    },
-    "Types/Stars/Null Star.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Token 'No Star' in Creature Types": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "b8ece3"
-      ]
-    },
-    "MDW/Holders/Creature_Full.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Creature Holder'": 6
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "540ba5",
-        "bd7724",
-        "2dad99",
-        "e1d292",
-        "1c8283",
-        "6c8214"
-      ]
-    },
-    "MDW/Holders/Minion_Full.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Minion Holder'": 2
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "eeaca0",
-        "1fe8f8"
-      ]
-    },
-    "MDW/Holders/Shop_Item.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Item Shop'": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "b1eb7c"
-      ]
-    },
-    "MDW/Holders/Shop_Field.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'Field Shop'": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "404685"
-      ]
-    },
-    "MDW/Holders/Shop_NME.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'N.M.E. Shop'": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "c90b9a"
-      ]
-    },
-    "MDW/Holders/NME.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Tile 'N.M.E Items'": 1,
-        "Custom_Tile 'N.M.E. Items Copy'": 1
-      },
-      "fields": [
-        "ImageURL"
-      ],
-      "guids": [
-        "ba1014",
-        "dab142"
-      ]
-    },
-    "http://pastebin.com/raw/mFbw0N0K": {
-      "in_git": null,
-      "used_by": {
-        "Custom_Model_Bag 'Rulebooks'": 1
-      },
-      "fields": [
-        "MeshURL"
-      ],
-      "guids": [
-        "b7abdb"
-      ]
-    },
-    "Auxiliary/Rulebook/0000_Cover_Book.png": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Model_Bag 'Rulebooks'": 1
-      },
-      "fields": [
-        "DiffuseURL"
-      ],
-      "guids": [
-        "b7abdb"
-      ]
-    },
-    "https://steamusercontent-a.akamaihd.net/ugc/879750610978796176/4A5A65543B98BCFBF57E910D06EC984208223D38/": {
-      "in_git": null,
-      "used_by": {
-        "Custom_Model ''": 1
-      },
-      "fields": [
-        "MeshURL"
-      ],
-      "guids": [
-        "4ee1f2"
-      ]
-    },
-    "MDW/DbPelDi.jpeg": {
-      "in_git": true,
-      "used_by": {
-        "Custom_Model ''": 1
-      },
-      "fields": [
-        "DiffuseURL"
-      ],
-      "guids": [
-        "4ee1f2"
-      ]
-    },
-    "https://api.tabletopsimulator.com/ui/introUI/": {
-      "in_git": null,
-      "used_by": {
-        "Global ''": 1
-      },
-      "fields": [
-        "global script (embedded)"
-      ],
-      "guids": [
-        "-1"
-      ]
+      "texture": "MDW/Assets/Book_Cover.png"
     }
   },
   "large_cards": {

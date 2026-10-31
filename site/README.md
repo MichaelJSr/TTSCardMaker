@@ -35,7 +35,11 @@ data), on a push of site code, daily, and on demand (Actions → Card browser �
 text or image, links its commit when it is known), and the artwork sources when set. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
   that kept the text (the "updated" date). A duplicate (another PNG of the same PSD) shows its original's history; a
-  variant picture (one PSD's picture 2, 3...: a duplicate of picture 1) its own.
+  variant picture (one PSD's picture 2, 3...: a duplicate of picture 1) its own. Signed in, each earlier text with a
+  commit and each earlier image version has **Revert to this version**: after a confirm listing the files, one commit
+  ("<card> reverted to its <day> version") puts the card's PSD and the PNGs printed from it (its variants' and numbered
+  duplicates' too; a picture-only duplicate: its PNG) back as they were at that commit, at today's paths (renames
+  followed); a file that version lacks stays, and `Card Edits.json` is left as it is (its edits still show).
   Every date on the site is Pacific time, the bot's, whatever the viewer's time zone, and commits are dated when they
   landed (committer time), as the bot dates versions.
   A creature's or minion's **Balance** line compares its total stats (HP + DEF + ATK + SPD) with the others of its star
@@ -56,11 +60,39 @@ text or image, links its commit when it is known), and the artwork sources when 
   "Decks using this card" lists the public published decks that hold it (the first six, then a link to all of them).
   Every card has a shareable link (`/c/<card>/`, the address bar's URL; `c` copies it) that shows a rich preview in Discord.
 - **Ratings**: each card's favorability and power, 1 to 10, over time, on its card page; signed-in editors add theirs.
-- **Rulebook**: every page with search and highlighting, the badge colors (one line per color, as on page 02
-  Abbreviations), the timing-tag glossary (the cooldown and uses tags, and the
-  old tags the rulebook pages still use), and the constructed ban list. Each
-  page has the same Details dropdown (the bot reads the rulebook PSDs too), always closed when the page loads, without
-  the card-only sections (stat rows, status-word layers, template).
+- **Rulebook**: written on the website, no Photoshop. One text file per chapter in `site/rulebook/` (`NN-slug.md`: the
+  number is the book's order, the slug the chapter's link, `#/rules/<slug>` and `#/rules/<slug>/<section>`), its
+  pictures in `site/rulebook/img/` (the mascots, the table and reaction diagrams, taken from the Photoshop pages) and
+  its two web fonts in `site/rulebook/fonts/` (Inconsolata for Consolas, EB Garamond for the ability boxes; OFL).
+  `rulebook.js` draws them in the book's look: lavender panels with italic tabs, the dark ability boxes, mascots saying
+  the in-jokes, real card pictures (`![[Card]]`, from the card data, so they follow the cards), badges and icons as on
+  cards; the syntax is at the top of `rulebook.js` and behind the editor's Syntax button. The contents follow the
+  reading; search shows only the passages that match; each chapter's History (the ban list's too) lists its commits and
+  shows each one as a git-style diff (old and new line numbers, removed and added lines, the changed words marked; a
+  renumbered chapter's rename followed), from GitHub's API without a sign-in; signed in, an earlier version has
+  **Revert to this version** (the ban list's: admins), one commit ("Rulebook: Death reverted to 2026-10-30 10:22")
+  making that version's text the current one. Each chapter has an Edit
+  button, each section a ✎ (signed in), and the contents a New chapter button: the text beside the page as it will look
+  (or as its TTS pages), linked both ways (click the page to reach its line; the cursor shows its block). Pictures, card
+  rows and mascots are dragged to move them on the page: dropped on blank space a picture stays where it lands (snapped
+  to its panel's edges and centre, with guides); a picked section, panel, box or row (click it, again for its parent)
+  takes the drops landing in it; with **Make space** on, drops go into the text, which makes room (a row gains a
+  column; on blank space, between the sections). A selected picture gets a tools bar above the page: the 3×3 anchor
+  grid (a row's picture in its column, a placed one in its panel, one in the text at the top, middle or end of its
+  panel and left, on its own line or right), size, delete and Make space; arrow keys nudge it (with Make space, through
+  the text). Pictures come from the Pictures menu (search; Add as Picture or Mascot says) or from the computer (Add
+  picture, paste, or drop image files on the page: resized to 1080 px, WebP, published with the chapter); the Insert
+  and Colour menus add blocks and colour the selection. A card box picks cards by name. Undo and redo (↶ ↷, Ctrl/Cmd+Z,
+  Shift+Z or Y); Ctrl/Cmd+B, I and S (publish). A draft stays in the browser until Publish, which commits the chapter (and its new
+  pictures) straight to main. **TTS pages** (`#/rules/print`) cut the same chapters into 1080×1920
+  pages (the cover, then "STATS", "STATS 2"... numbered 7, 7.2), as the Photoshop pages were; `=== page ===` starts a new
+  one. Card sync's main lane prints them to `TTS/Rulebook/Rulebook.pdf` (real text: searchable, selectable, bookmarks;
+  `pages.json` keeps each page's pixel hash so it is printed again only when a page changes; AutoCroissant
+  `commands.rulebook_pages`, once the website shows main's chapters), and the save's Rulebooks bag holds it as one PDF
+  object (the Photoshop pages are out of the save since 10-30; their files are in `MDW/Old Rules/Rulebook`). The contents' PDF button opens
+  it. A chapter push starts Card sync (the bot's `db/rulebook.json` at once, the PDF after its 30-minute window).
+  Also the badge colors, the timing-tag glossary and the constructed ban list. Old page links
+  (`#/rules/07-stats3`, `#/rules?q=07 Stats3`) open their chapter.
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,
   optional starting field), with live checks, several saved decks, share links, text import/export, random fill,
   printable proxies, and a Tabletop Simulator saved-object download. Signed in, **Publish…** on a saved hand makes it a
@@ -179,7 +211,8 @@ computed by `site/build/analytics.py` from the same bot data) loads when the Sta
 with recorded changes is opened; `rules.json`, `history.json`,
 `versions.json`, `users.json` and `contributions.json` load when the rulebook, a card's history, the changes feed or the
 People tab is opened; `changelog.json` when the Changelog, Archive or Database edits tab is opened; `decks.json` when the published decks, a deck page or a person's decks are opened; `details/<id>.json`
-when a card's or rulebook page's Details dropdown is first opened. Script, style and data URLs
+when a card's or rulebook page's Details dropdown is first opened. `tts.json` is the TTS save's: its global script
+(`TTS/Global.lua`) fetches it for the Card details, Find a card and Rules buttons (`build_site.py` `tts_details`). Script, style and data URLs
 carry a build version (`?v=...`), so a deploy never mixes old scripts with new data. The Action ships the scripts as
 one minified bundle, `assets/app.js`, with its source map `assets/app.js.map` (the modules' own text: browser devtools
 show and debug them); the editor, the Stats page (and the cards' Balance blocks) and the People pages are chunks of their
@@ -236,7 +269,7 @@ until the image is regenerated) are told apart from **database only** ones, whic
 only as edits (kind, item type, series, subseries, note, aliases, author, duplicate of, checks, constructed ban,
 hidden, artwork source, ability artwork source). An image field ticked **Website only (don't change the card image)**
 is shown on the website and by the bot but never baked (a quiet "Website only" tag). **Also rename the card's files**
-(under a name edit) has the bake rename the PSD and PNGs to the new name; links to the old page redirect. Rulebook pages have an Edit button too (title, text, note), saved the same way. "Split into creatures" gives a
+(under a name edit) has the bake rename the PSD and PNGs to the new name; links to the old page redirect. Rulebook chapters have their own editor (Rulebook, above), published on its own. "Split into creatures" gives a
 card several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own
 bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
@@ -327,7 +360,8 @@ Opt-in: nobody has a profile until they make one (sign in → **Edit profile**, 
 `site/profiles/<login>.json` (format in `site/profiles/README.md`), staged in the same batch as card edits and
 published in the same commit; you can edit your own, admins anyone's, and a profile can be removed again. Everything in
 it is optional: the name on your cards (from `Card Authors.txt`, so the page links "N cards by …" to the author filter),
-a one-line motto, a series, favourite and hated card and item, a featured hand and up to 12 label/value pairs.
+a one-line motto, a series and subseries (the subseries field suggests the picked series' own), favourite and hated
+card and item, a featured hand and up to 12 label/value pairs.
 The editor is a page of its own, `#/u/<login>/edit` (Edit profile on the hub, the person page or the review dialog;
 signed out, it asks for the token first and comes back): the form on the left, a live preview of the profile on the
 right (one column on narrow screens). Each card slot shows the chosen card's tile with **Pick** and **Clear**; Pick opens

@@ -1,10 +1,11 @@
 // Card ratings: favorability and power, whole numbers 1 to 10 (their means keep one decimal), dated (site/Card
 // Ratings.json, as cards.json `ratings`). Pure helpers for the card page, Stats and People; build_site.py rating_now and
 // tier_of are the Python twins. NOTES.md §25.
-import { esc } from "./text.js";
+import { esc, noted, noteHtml } from "./text.js";
 
-export const SCALES = [["favorability", "Favorability", "How much players like this card, 1 to 10"],
-  ["power", "Power", "How strong players find it: 1 weak, 10 too strong; the middle (5.5) is balanced"]];
+export const SCALES = [["favorability", "Favorability", "How much players like this card, 1 to 10: each rater's latest rating, averaged"],
+  ["power", "Power", "How strong players find it (1 weak, 10 too strong, 5.5 balanced): each rater's latest, averaged"]];
+const BAND_TIP = "Its band by the average: 1–2.4, 2.5–4.4, 4.5–6.4, 6.5–8.4 or 8.5–10";   // tierOf's edges
 // the TTS boards' category labels (the import matches the saves' own, "Plz buff :(" included)
 export const TIERS = { power: ["Plz buff", "Below Average", "Balens", "Above Average", "Too Stronk"],
   favorability: ["Pain", "Dislike", "Bogstandard", "Like", "Nut on you"] };
@@ -63,10 +64,10 @@ export function chartSvg(list, scale) {
 
 function panelHtml(list, [scale, label, tip]) {
   const cur = current(list, scale);
-  if (!cur) return `<div class="rate-panel"><div class="rate-head" data-tip="${esc(tip)}"><span>${label}</span></div><p class="muted">Not rated yet.</p></div>`;
+  if (!cur) return `<div class="rate-panel"><div class="rate-head"><span>${noteHtml(label, tip)}</span></div><p class="muted">Not rated yet.</p></div>`;
   const one = cur.raters === 1 ? [...latestBy(list, scale).values()][0] : null;
   const sub = one ? `${one.by === "group" ? "group" : one._staged || one._sent ? "you" : one.by} · ${dayLabel(cur.date)}` : `${cur.raters} raters · latest ${dayLabel(cur.date)}`;
-  return `<div class="rate-panel"><div class="rate-head" data-tip="${esc(tip)}"><span>${label}</span> <b>${cur.value}</b><span class="muted">/10 · ${esc(TIERS[scale][tierOf(cur.value)])}</span></div>
+  return `<div class="rate-panel"><div class="rate-head"><span>${noteHtml(label, tip)}</span> <b>${cur.value}</b><span class="muted">/10 · ${noted(TIERS[scale][tierOf(cur.value)], BAND_TIP)}</span></div>
     <div class="muted rate-sub">${esc(sub)}</div>${chartSvg(list, scale)}</div>`;
 }
 /** The card page's Ratings block: "" when the card has none and nobody signed in may add one. editing: the Rate it row,

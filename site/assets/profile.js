@@ -2,11 +2,10 @@
 // build_site.py into data/users.json) and contributions (data/contributions.json: cards credited, edit batches published
 // and card commits per person, from build_site.py contributions()). Pure functions, plus the person page and the People
 // table. All profile text is user-written: everything is escaped and only internal routes are linked.
-import { esc, tagInfo, badgeHtml, TAG, dateFmt, LOGIN_RE } from "./text.js";
+import { esc, tagInfo, badgeHtml, TAG, dateFmt, LOGIN_RE, noted } from "./text.js";
 import { editorFields, archiveTag, archiveTagHtml, fieldName } from "./changes.js";
 import { decode } from "./deck.js";
 import { columns, chartCard } from "./stats.js";
-import { TIERS } from "./ratings.js";
 
 export const RECENT_CARDS = 24;                                             // the person page's newest cards
 
@@ -17,7 +16,8 @@ export const ITEM_KINDS = new Set(["item", "aux item", "nme"]);
 const line = s => String(s ?? "").split(/\s+/).filter(Boolean).join(" ");   // one line, single spaces
 
 /** The profile's fields checked against the site's data: {profile (known fields only, cleaned), errors[]}.
- *  ctx = {cards: Map id -> card, series: Set, people: [author names]}. build_site.py clean_profile applies the same rules. */
+ *  ctx = {cards: Map id -> card, series: Set, subseries: Map name -> Set of its cards' series, people: [author names]}.
+ *  build_site.py clean_profile applies the same rules. */
 export function validateProfile(raw, ctx) {
   raw = raw && typeof raw === "object" ? raw : {};
   const errors = [], p = { login: String(raw.login ?? "") };
@@ -31,6 +31,8 @@ export function validateProfile(raw, ctx) {
   if (motto.length > LIMITS.motto) errors.push(`Motto: at most ${LIMITS.motto} characters`); else if (motto) p.motto = motto;
   const series = line(raw.series);
   if (series) { if (ctx.series.has(series)) p.series = series; else errors.push(`Series: “${series}” isn't a known series`); }
+  const sub = line(raw.subseries), within = ctx.subseries?.get(sub);     // one name across series; with a series, one its cards use
+  if (sub) { if (!within) errors.push(`Subseries: “${sub}” isn't a known subseries`); else if (p.series && !within.has(p.series)) errors.push(`Subseries: “${sub}” has no cards in ${p.series}`); else p.subseries = sub; }
   for (const [k, label] of PICKS) {
     const id = line(raw[k]);
     if (!id) continue;
@@ -96,6 +98,11 @@ export const githubUrl = login => (LOGIN_RE.test(login || "") ? `https://github.
 export const avatarHtml = (login, px) => (LOGIN_RE.test(login || "")
   ? `<img class="avatar" src="https://avatars.githubusercontent.com/${encodeURIComponent(login)}?s=${px * 2}" width="${px}" height="${px}" loading="lazy" decoding="async" referrerpolicy="no-referrer" alt="${esc(login)} on GitHub">` : "");
 const githubFact = login => (githubUrl(login) ? `<a class="fact" href="${githubUrl(login)}" target="_blank" rel="noopener">GitHub: ${esc(login)}</a>` : "");
+/** The favourite series and subseries as one chip ("Don't Starve › Gourmet Expansion"), linked to those cards. */
+const seriesFact = p => {
+  const parts = [["series", p.series], ["subseries", p.subseries]].filter(([, v]) => v);
+  return parts.length ? `<a class="fact" href="#/cards?${parts.map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&")}" data-tip="${p.subseries ? (p.series ? "Series › subseries" : "Subseries") : "Series"}">${esc(parts.map(([, v]) => v).join(" › "))}</a>` : "";
+};
 const authorLink = (p, cards) => { const n = cardsBy(p.author, cards); return `<a class="fact" href="#/cards?author=${encodeURIComponent(p.author)}">${n} card${n === 1 ? "" : "s"} by ${esc(p.author)}</a>`; };
 
 /** x = {login, profile | null, state, removed, own, canEdit, byId, cards, tile(card), preview?}; preview: the editor's live
@@ -117,7 +124,7 @@ export function profileHtml(x) {
     <div class="facts">
       ${githubFact(p.login)}
       ${p.author ? authorLink(p, x.cards) : ""}
-      ${p.series ? `<a class="fact" href="#/cards?series=${encodeURIComponent(p.series)}" data-tip="Series">${esc(p.series)}</a>` : ""}
+      ${seriesFact(p)}
       ${p.updated ? `<span class="fact" data-tip="Profile last changed">updated ${esc(p.updated.slice(0, 10))}</span>` : ""}
       ${x.preview ? "" : stateFact(x.state)}
     </div>
@@ -183,12 +190,12 @@ export function contributionsHtml(p, x) {
   const facts = [
     p.cards ? `<a class="fact" href="#/cards?author=${encodeURIComponent(p.key)}">${plural(p.cards, "card")} by ${esc(p.key)}</a>` : "",
     p.edits ? `<span class="fact" data-tip="Commits to Card Edits.json: batches published on the website, or by hand">${plural(p.edits, "edit")}</span>` : "",
-    p.commits ? `<span class="fact" data-tip="Commits that added or changed a card's PSD or PNG; moves and rulebook pages don't count">${plural(p.commits, "card commit")}${p.first ? ` since ${esc(x.date(p.first))}` : ""}</span>` : "",
+    p.commits ? `<span class="fact" data-tip="Commits that added or changed a card's PSD or PNG${p.first ? "; since: their first commit or edit batch" : "; moves and rulebook pages don't count"}">${plural(p.commits, "card commit")}${p.first ? ` since ${esc(x.date(p.first))}` : ""}</span>` : "",
     titleChips(p.key, x.titles),
-    ...(x.people?.length > 1 ? ranksOf(p, x.people, wordiness(x.cards)) : []).map(([label, rank, of]) => `<span class="fact" data-tip="Among ${of} people">#${rank} of ${of} by ${label}</span>`),
+    ...(x.people?.length > 1 ? ranksOf(p, x.people, wordiness(x.cards)) : []).map(([label, rank, of]) => `<span class="fact" data-tip="${esc(RANK_TIP[label]?.(of) || `Among ${of} people`)}">#${rank} of ${of} by ${label}</span>`),
   ].join("");
   const fields = (p.editFields || []).slice(0, 6).map(([f, n]) => `${esc(fieldName(f))} ${n}`).join(" · ");
-  return `<div class="facts">${facts}</div>${fields ? `<p class="muted p-edited">Edited: ${fields}</p>` : ""}
+  return `<div class="facts">${facts}</div>${fields ? `<p class="muted p-edited">${noted("Edited", "Fields they edited, once per card per batch; rating: their ratings on the website")}: ${fields}</p>` : ""}
     ${x.available ? "" : `<p class="muted">Commits aren't in this build; edits are counted from Card Edits.json, which keeps one batch per card.</p>`}
     ${edits.length ? `<div class="related"><h3>Recently edited cards</h3><ul>${edits.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${esc(editorFields(c).join(", "))}${c.editAt ? ` · ${esc(c.editAt.slice(0, 10))}` : ""}</span></li>`).join("")}</ul></div>` : ""}
     ${p.recentEdits?.length ? `<div class="related"><h3>Recent edit batches</h3><ul>${p.recentEdits.map(([ts, subject, sha]) => `<li>${commitLink(x.repo, sha, x.date(ts))} <span class="muted">· ${esc(subject)}</span></li>`).join("")}</ul></div>` : ""}
@@ -226,7 +233,7 @@ export function activityHtml(p, x = {}) {
   const table = `<div class="table-wrap"><table class="data"><thead><tr><th>Month</th>${kinds.map(([, name]) => `<th class="num">${esc(name)}</th>`).join("")}</tr></thead>
     <tbody>${range.filter(([, r]) => r).map(([k, r]) => `<tr><td>${esc(label(k))}</td>${kinds.map(([, , , , i]) => `<td class="num">${r[i] || 0}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
   const sub = "Each row on its own scale.";
-  return `<div class="profile">${chartCard("activity", "Contributions by month", sub, rows, table)}</div>`;
+  return `<div class="profile">${chartCard("activity", "Contributions by month", sub, rows, table, { tip: "Per month (Pacific time): cards by creation date, edit batches and card commits" })}</div>`;
 }
 
 /** The Cards panel: the person's cards by kind (chips to the Cards tab), their biggest series, the newest card (by its
@@ -245,11 +252,11 @@ export function cardsPanelHtml(p, x) {
     <div class="chips">${f.kinds.map(([k, n]) => `<a class="chip" href="#/cards?${by}&kind=${encodeURIComponent(k)}">${esc(label(k))}<span class="n">${n}</span></a>`).join("")}</div>
     <div class="facts">
       ${f.series.length ? `<span class="fact">Mostly ${f.series.map(([s, n]) => `<a href="#/cards?${by}&series=${encodeURIComponent(s)}">${esc(s)}</a> <span class="muted">${n}</span>`).join(", ")}</span>` : ""}
-      ${f.newest ? `<span class="fact" data-tip="Its first Discord post or first upload">Newest card: <a href="#/card/${f.newest.id}">${esc(f.newest.name)}</a> · ${esc(x.month(createdTs(f.newest)))}</span>` : ""}
-      ${career ? `<span class="fact" data-tip="By creation date">${yearOf(career.first)}${yearOf(career.last) !== yearOf(career.first) ? `–${yearOf(career.last)}` : ""}${career.years.length > 1 ? ` · best year ${career.best[0]} (${career.best[1]})` : ""}</span>` : ""}
-      ${series.n ? `<span class="fact"${series.leads.length ? ` data-tip="${esc(`Top author of ${series.leads.slice(0, 10).join(", ")}${series.leads.length > 10 ? ", …" : ""}`)}"` : ""}>${series.n} series${series.leads.length ? ` · top author in ${series.leads.length}` : ""}</span>` : ""}
+      ${f.newest ? `<span class="fact" data-tip="By creation date: its first Discord post or first upload, unless set by hand">Newest card: <a href="#/card/${f.newest.id}">${esc(f.newest.name)}</a> · ${esc(x.month(createdTs(f.newest)))}</span>` : ""}
+      ${career ? `<span class="fact" data-tip="Years of their first and newest cards, by creation date; best year: the most cards created">${yearOf(career.first)}${yearOf(career.last) !== yearOf(career.first) ? `–${yearOf(career.last)}` : ""}${career.years.length > 1 ? ` · best year ${career.best[0]} (${career.best[1]})` : ""}</span>` : ""}
+      ${series.n ? `<span class="fact"${series.leads.length ? ` data-tip="${esc(`Series where nobody has more cards than them (ties count): ${series.leads.slice(0, 3).join(", ")}${series.leads.length > 3 ? ", …" : ""}`)}"` : ""}>${series.n} series${series.leads.length ? ` · top author in ${series.leads.length}` : ""}</span>` : ""}
       ${banned ? `<a class="fact banned" href="#/cards?${by}&flags=banned" data-tip="In the constructed ban list">${banned} banned</a>` : ""}
-      ${ref ? `<span class="fact">Most referenced: <a href="#/card/${ref[0].id}">${esc(ref[0].name)}</a> · named by ${ref[1]} cards</span>` : ""}
+      ${ref ? `<span class="fact" data-tip="Their card whose name appears in the most other cards' ability text">Most referenced: <a href="#/card/${ref[0].id}">${esc(ref[0].name)}</a> · named by ${ref[1]} cards</span>` : ""}
     </div>
     <div class="grid" style="--tile:120px">${f.recent.map(x.tile).join("")}</div>
     <p><a href="#/cards?${by}&sort=created">All ${plural(own.length, "card")}</a></p></div></div>`;
@@ -354,6 +361,8 @@ export const wordiness = all => memoOf(all, "words", () => {
   for (const c of all) if (c.author && !c.dup && !c.hidden && c.ability) { const w = m.get(c.author) || { sum: 0, n: 0 }; w.sum += wordCount(c); w.n++; m.set(c.author, w); }
   return new Map([...m].map(([k, w]) => [k, { words: w.sum / w.n, n: w.n }]));
 });
+const RANK_TIP = { strength: n => `Among ${n} people with 5+ creatures and minions, by average total stats vs their kind and star level`,
+  "words per ability": n => `Among ${n} people with 5+ cards with ability text; the wordiest ranks first` };
 export const RANKS = [["cards", "cards"], ["commits", "card commits"], ["edits", "edits"], ["strength", "strength"], ["words", "words per ability"]];
 /** P18: [[label, rank, of]]: competition ranking (1, 1, 3) among the people rows with a value (two or more): cards, card
  *  commits, edits, strength (power.z, at power.n >= 5), words per ability (at 5 abilities). words: wordiness(). */
@@ -394,35 +403,34 @@ function strengthStrip(power, x) {
 export function balancePanelHtml(p, x) {
   const pw = p.power, b = p.bal;
   if (!pw && !b) return "";
-  const facts = pw ? `<div class="facts"><span class="fact" data-tip="Total stats vs their star level's average, in standard deviations. Creatures and minions.">Average ${sign(pw.z, 2)} vs their star level</span>
-    ${pw.top ? `<span class="fact">${pw.top} in the top 10%</span>` : ""}${pw.bottom ? `<span class="fact">${pw.bottom} in the bottom 10%</span>` : ""}</div>` : "";
+  const facts = pw ? `<div class="facts"><span class="fact" data-tip="Mean over their creatures and minions of total stats vs their kind and star level, in standard deviations">Average ${sign(pw.z, 2)} vs their star level</span>
+    ${pw.top ? `<span class="fact" data-tip="Their creatures and minions in the top 10% by total stats of their kind and star level (whole kind if under 5)">${pw.top} in the top 10%</span>` : ""}${pw.bottom ? `<span class="fact" data-tip="Their creatures and minions in the bottom 10% by total stats of their kind and star level (whole kind if under 5)">${pw.bottom} in the bottom 10%</span>` : ""}</div>` : "";
   const legend = pw ? `<div class="legend"><span><i style="background:var(--s1)"></i>top 10%</span><span><i style="background:var(--s2)"></i>bottom 10%</span><span><i style="background:var(--deemph)"></i>others</span></div>` : "";
   let bal = "";
   if (b) {
     const n = b.buff + b.nerf, made = [b.madeNerf ? plural(b.madeNerf, "nerf") : "", b.madeBuff ? plural(b.madeBuff, "buff") : ""].filter(Boolean).join(", ");
     const bar = n ? twoBar([plural(b.buff, "buff"), b.buff, "up"], [plural(b.nerf, "nerf"), b.nerf, "down"]) : "";
     const rows = (b.recent || []).map(([id, kind, d, ts]) => `<li>${cardA(x, id)} · <span class="${kind === "buff" ? "diff-up" : "diff-down"}">${kind} ${sign(d, 0)}</span> <span class="muted">· ${esc(x.month ? x.month(ts) : "")}</span></li>`).join("");
-    const sw = b.swing, swing = sw ? `<p>Biggest swing: ${cardA(x, sw[0])} <span class="${sw[1] > 0 ? "diff-up" : "diff-down"}">${sign(sw[1], 0)}</span> <span class="muted">· ${esc(x.month ? x.month(sw[2]) : "")}</span></p>` : "";
-    bal = `<h4>Buffs and nerfs</h4>${n ? `${bar}${swing}<ul class="p-list">${rows}</ul>` : `<p class="muted">No buffs or nerfs recorded yet.</p>`}
-      ${made ? `<p>Made: ${made} to others' cards</p>` : ""}`;
+    const sw = b.swing, swing = sw ? `<p>${noted("Biggest swing", "Their card's largest single change in total stats")}: ${cardA(x, sw[0])} <span class="${sw[1] > 0 ? "diff-up" : "diff-down"}">${sign(sw[1], 0)}</span> <span class="muted">· ${esc(x.month ? x.month(sw[2]) : "")}</span></p>` : "";
+    bal = `<h4>${noted("Buffs and nerfs", "Recorded changes to their cards' total stats: a buff raised it, a nerf lowered it")}</h4>${n ? `${bar}${swing}<ul class="p-list">${rows}</ul>` : `<p class="muted">No buffs or nerfs recorded yet.</p>`}
+      ${made ? `<p>${noted("Made", "Buffs and nerfs to other people's cards in commits credited to them")}: ${made} to others' cards</p>` : ""}`;
   }
   return panel("Balance", `${facts}${pw ? `${legend}${strengthStrip(pw, x)}` : ""}${bal}`);
 }
-const RATE_TIP = "Each rater's latest rating; the group's are from game nights";
+const RATE_TIP = scale => `Mean over their cards of others' ${scale}: each rater's latest, theirs left out`;
 /** Ratings (P4; P5, P7, P8 only with per-person ratings). x = {byId, tile(card)} */
 export function ratingsPanelHtml(p, x) {
   const r = p.ratings, sb = p.selfBias, rt = p.rater, pv = p.powerVsStats;
   if (!r && !sb && !rt && !pv) return "";
-  const bands = `${TIERS.power.map((t, i) => `${2 * i + 1}–${2 * i + 2} ${t}`).join(" · ")}`;
-  const facts = r ? `<div class="facts">${r.fav != null ? `<span class="fact" data-tip="${RATE_TIP}">Favorability ${r.fav} · ${plural(r.favN, "card")}</span>` : ""}
-    ${r.power != null ? `<span class="fact" data-tip="${esc(`${RATE_TIP}. ${bands}`)}">Power ${r.power} · ${plural(r.powerN, "card")}</span>` : ""}</div>` : "";
-  const tiles = (label, list) => { const cs = (list || []).map(([id]) => x.byId?.get(id)).filter(Boolean); return cs.length ? `<div><div class="pick-label">${label}</div><div class="strip">${cs.map(x.tile).join("")}</div></div>` : ""; };
-  const picks = r ? `${tiles("Most liked", r.best)}${tiles("Least liked", r.worst)}` : "";
+  const facts = r ? `<div class="facts">${r.fav != null ? `<span class="fact" data-tip="${esc(RATE_TIP("favorability"))}">Favorability ${r.fav} · ${plural(r.favN, "card")}</span>` : ""}
+    ${r.power != null ? `<span class="fact" data-tip="${esc(RATE_TIP("power ratings"))}">Power ${r.power} · ${plural(r.powerN, "card")}</span>` : ""}</div>` : "";
+  const tiles = (label, list, tip) => { const cs = (list || []).map(([id]) => x.byId?.get(id)).filter(Boolean); return cs.length ? `<div><div class="pick-label">${noted(label, tip)}</div><div class="strip">${cs.map(x.tile).join("")}</div></div>` : ""; };
+  const picks = r ? `${tiles("Most liked", r.best, "Their cards others rate highest on favorability, up to 3")}${tiles("Least liked", r.worst, "Their cards others rate lowest on favorability, up to 3, below the most liked")}` : "";
   const lines = [
-    sb && (sb.fav != null || sb.power != null) ? `Own cards vs others: ${[sb.fav != null ? `favorability ${sign(sb.fav)} (${sb.n})` : "",
+    sb && (sb.fav != null || sb.power != null) ? `${noted("Own cards vs others", "Their rating of their own cards minus others' average, on average; (n): cards compared")}: ${[sb.fav != null ? `favorability ${sign(sb.fav)} (${sb.n})` : "",
       sb.power != null ? `power ${sign(sb.power)} (${sb.powerN})` : ""].filter(Boolean).join(" · ")}` : "",
-    rt ? `As a rater: ${sign(rt.harsh)} vs others${rt.agree != null ? ` · agreement ${rt.agree.toFixed(2)}` : ""}${rt.twin ? ` · taste twin: ${personA(rt.twin[0])}` : ""}` : "",
-    pv ? `<span data-tip="Correlation, −1 to 1">Power ratings vs stats: ${pv.r.toFixed(2)} (${plural(pv.n, "card")})</span>` : "",
+    rt ? `${noted("As a rater", "Favorability they give minus others' average on the same cards; agreement: correlation, −1 to 1")}: ${sign(rt.harsh)} vs others${rt.agree != null ? ` · agreement ${rt.agree.toFixed(2)}` : ""}${rt.twin ? ` · ${noted("taste twin", "The rater whose favorability ratings best match theirs (5+ cards rated by both)")}: ${personA(rt.twin[0])}` : ""}` : "",
+    pv ? `${noted("Power ratings vs stats", "Correlation (−1 to 1) of their power ratings with the cards' total stats vs their kind and star level")}: ${pv.r.toFixed(2)} (${plural(pv.n, "card")})` : "",
   ].filter(Boolean);
   return panel("Ratings", `${facts}${picks ? `<div class="p-picks">${picks}</div>` : ""}${lines.length ? `<ul class="p-list">${lines.map(l => `<li>${l}</li>`).join("")}</ul>` : ""}`);
 }
@@ -432,41 +440,50 @@ export function revisionsPanelHtml(p, x) {
   if (!v && !w) return "";
   const all = v ? v.self + v.others : 0;
   const bar = all ? twoBar([`By them ${v.self}`, v.self, "me"], [`by others ${v.others}`, v.others, "them"]) : "";
-  const chips = v ? [v.top?.length ? `<div class="facts"><span class="fact">Most by: ${v.top.map(([k, n]) => `${personA(k)} ${n}`).join(", ")}</span></div>` : "",
-    v.theirs?.length ? `<div class="facts"><span class="fact">They revise: ${v.theirs.map(([k, n]) => `${personA(k)}'s ${n}`).join(", ")}</span></div>` : ""].join("") : "";
+  const chips = v ? [v.top?.length ? `<div class="facts"><span class="fact" data-tip="Others who changed their cards' images most">Most by: ${v.top.map(([k, n]) => `${personA(k)} ${n}`).join(", ")}</span></div>` : "",
+    v.theirs?.length ? `<div class="facts"><span class="fact" data-tip="Whose cards' images they changed most (their own cards not counted)">They revise: ${v.theirs.map(([k, n]) => `${personA(k)}'s ${n}`).join(", ")}</span></div>` : ""].join("") : "";
   const of = w?.of ?? null;
   const facts = [
-    v?.most ? `<span class="fact">Most revised: ${cardA(x, v.most[0])} · ${v.most[1]}</span>` : "",
-    v && (v.untouched || v.oldest) ? `<span class="fact" data-tip="No image change after the first upload">Untouched: ${v.untouched}${of ? ` of ${of}` : ""}${v.oldest ? ` · oldest: ${cardA(x, v.oldest)}` : ""}</span>` : "",
-    w ? `<span class="fact" data-tip="Wording, stats, stars, kind or types changed">Reworked: ${w.n} (${pct(w.n / w.of)})</span>` : "",
-    w?.most ? `<span class="fact">Most reworked: ${cardA(x, w.most[0])} · ${w.most[1]}</span>` : "",
+    v?.most ? `<span class="fact" data-tip="Their card whose image changed most often after the first upload">Most revised: ${cardA(x, v.most[0])} · ${v.most[1]}</span>` : "",
+    v && (v.untouched || v.oldest) ? `<span class="fact" data-tip="${v.oldest ? "Their cards with no image change after the first upload; oldest: the earliest created" : "Their cards with no image change after the first upload"}">Untouched: ${v.untouched}${of ? ` of ${of}` : ""}${v.oldest ? ` · oldest: ${cardA(x, v.oldest)}` : ""}</span>` : "",
+    w ? `<span class="fact" data-tip="Their cards whose wording, stats, star level, kind, item type, types or creatures changed">Reworked: ${w.n} (${pct(w.n / w.of)})</span>` : "",
+    w?.most ? `<span class="fact" data-tip="Their card with the most changes to how it plays">Most reworked: ${cardA(x, w.most[0])} · ${w.most[1]}</span>` : "",
   ].join("");
   return panel("Revisions", `${v ? `<p class="muted">Image changes after the first upload; passes over 20 cards left out.</p>` : ""}${bar}${chips}${facts ? `<div class="facts">${facts}</div>` : ""}`);
 }
+const STYLE_TIP = { Types: "Types 1.5× or more as common on their cards as on all cards (3+ cards); × is the ratio",
+  "Status effects": "Status effects their cards name 1.5× or more as often as all cards do (3+ cards); × is the ratio",
+  "Timing tags": "Timing tags their cards use 1.5× or more as often as all cards do (3+ cards); × is the ratio" };
 const mixRows = (rows, label) => rows.map(([k, mine, all]) => `<div class="p-mix"><span>${esc(label(k))}</span><span class="p-track"><i style="width:${(mine * 100).toFixed(1)}%"></i><b style="left:${(all * 100).toFixed(1)}%"></b></span><span class="muted">${pct(mine)} · all ${pct(all)}</span></div>`).join("");
 const starRows = rows => mixRows(rows, k => `${k}★`);
+/** The Star levels note; l: the picked kind's label (both sides narrowed to it), "" = all cards */
+const starTip = l => { const k = l && (l.startsWith("N.M.E.") ? l : l[0].toLowerCase() + l.slice(1));
+  return k ? `Their ${k}' share at each star level vs all ${k}' share; only ones with a star level` : "Their cards' share at each star level vs all cards' share; only cards with a star level"; };
 /** The Star levels block; stars = {key (the person), kinds: starKinds(), kind (picked, "" = all)}: a kind picker past one kind. */
 function starsHtml(rows, stars, label) {
   const kinds = stars?.kinds || [], on = stars?.kind || "";
   const pick = kinds.length > 1 ? `<div class="chips p-star-kinds" role="group" aria-label="Star levels of">${[["", "All"], ...kinds.map(k => [k, label(k)])]
     .map(([k, l]) => `<button type="button" class="chip${k === on ? " on" : ""}" data-action="person-stars" data-kind="${esc(k)}" aria-pressed="${k === on}">${esc(l)}</button>`).join("")}</div>` : "";
-  return `<div class="p-stars" data-person="${esc(stars?.key || "")}" data-kind="${esc(on)}"><div class="pick-label">Star levels</div>${pick}<div class="p-stars-rows">${starRows(rows)}</div></div>`;
+  return `<div class="p-stars" data-person="${esc(stars?.key || "")}" data-kind="${esc(on)}"><div class="pick-label">${noted("Star levels", starTip(on && label(on)))}</div>${pick}<div class="p-stars-rows">${starRows(rows)}</div></div>`;
 }
 /** A kind picked on the Star levels block: its rows and buttons redrawn in place (nothing else on the page). */
 export function showStars(box, kind, cards, kindOf) {
   box.querySelector(".p-stars-rows").innerHTML = starRows(mixOf(cardsOf(box.dataset.person, cards), cards, kindOf, kind).stars);
   box.dataset.kind = kind;
-  for (const b of box.querySelectorAll(".p-star-kinds button")) { const on = b.dataset.kind === kind; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); }
+  for (const b of box.querySelectorAll(".p-star-kinds button")) {
+    const on = b.dataset.kind === kind; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on));
+    if (on) box.querySelector(".pick-label .qn")?.setAttribute("data-tip", starTip(kind && b.textContent));   // the note follows the kind
+  }
 }
 /** Style (P6, P10). s = styleOf(), mix = mixOf(); x = {byId, kinds}; stars: starsHtml's */
 export function stylePanelHtml(s, mix, x, n, stars = null) {
   const chip = (html, [, k, ratio, share]) => `<span class="chip" data-tip="${esc(`${k} of their cards (${pct(k / n)}) vs ${pct(share)} of all cards`)}">${html} ×${ratio}</span>`;
-  const row = (label, list, html) => (list.length ? `<div class="p-style"><span class="pick-label">${label}</span><div class="chips">${list.map(r => chip(html(r[0]), r)).join("")}</div></div>` : "");
+  const row = (label, list, html) => (list.length ? `<div class="p-style"><span class="pick-label">${noted(label, STYLE_TIP[label])}</span><div class="chips">${list.map(r => chip(html(r[0]), r)).join("")}</div></div>` : "");
   const chips = s ? row("Types", s.types, t => esc(t.replace(/_/g, " "))) + row("Status effects", s.status, id => esc(x.byId?.get(id)?.name || id)) + row("Timing tags", s.tags, badgeHtml) : "";
-  const words = s?.words != null ? `<p>Words per ability: ${s.words} <span class="muted">· all cards ${s.siteWords}</span></p>` : "";
+  const words = s?.words != null ? `<p>${noted("Words per ability", "Mean words in their cards' ability text vs all cards' (cards with no text left out)")}: ${s.words} <span class="muted">· all cards ${s.siteWords}</span></p>` : "";
   const label = k => (x.kinds || []).find(([key]) => key === k)?.[1] || k;
   const mixes = mix && (mix.stars.length || mix.kinds.length) ? `<div class="p-mixes">${mix.stars.length ? starsHtml(mix.stars, stars, label) : ""}
-    ${mix.kinds.length ? `<div><div class="pick-label">Kinds</div>${mixRows(mix.kinds, label)}</div>` : ""}</div>` : "";
+    ${mix.kinds.length ? `<div><div class="pick-label">${noted("Kinds", "Their share of each kind of card vs all cards' share; duplicates and hidden cards left out")}</div>${mixRows(mix.kinds, label)}</div>` : ""}</div>` : "";
   if (!chips && !words && !mixes) return "";
   return panel("Style", `${chips}${words}${mixes}`);
 }
@@ -515,11 +532,11 @@ export function peopleHtml(rows, x) {
   const row = r => `<tr><td>${face(r)}<a href="#/u/${encodeURIComponent(link(r))}">${esc(link(r))}</a>${r.person && link(r) !== r.key ? ` <span class="muted">${esc(r.key)}</span>` : ""} ${stateFact(r.state)}</td>
     <td class="num">${r.person?.cards || ""}</td><td class="num">${r.person?.edits || ""}</td><td class="num">${r.person?.commits || ""}</td><td class="num">${deckCount(r, decks) || ""}</td>
     <td>${titleChips(r.key, x.titles)}</td><td class="muted">${esc(r.profile?.motto || "")}</td></tr>`;
-  const scope = x.available ? (x.since ? ` · since ${esc(x.date(x.since))}` : "") : ` · <span class="muted" data-tip="This build has no git history, so card commits are missing and edits are counted from Card Edits.json">commits not in this build</span>`;
+  const scope = x.available ? (x.since ? ` · ${noted(`since ${x.date(x.since)}`, "Date of the earliest card commit or edit batch in the card repo's history")}` : "") : ` · <span class="muted" data-tip="This build has no git history, so card commits are missing and edits are counted from Card Edits.json">commits not in this build</span>`;
   return `<div class="profile">
     <div class="toolbar"><span class="result-count">${n} ${n === 1 ? "person" : "people"}${scope}</span>
       ${x.me ? (x.hasOwn ? "" : `<button type="button" class="primary" data-action="profile-edit">Make your profile</button>`) : `<span class="muted">Sign in (top right) to make your profile.</span>`}</div>
-    ${n ? `<div class="scroll-x"><table class="data people"><thead><tr><th>Person</th><th class="num">Cards</th><th class="num">Edits</th><th class="num">Card commits</th><th class="num">Decks</th><th>Titles</th><th>Motto</th></tr></thead><tbody>${rows.map(row).join("")}</tbody></table></div>`
+    ${n ? `<div class="scroll-x"><table class="data people"><thead><tr><th>Person</th><th class="num">Cards</th><th class="num">${noted("Edits", x.available ? "Commits to Card Edits.json: batches published on the website, or by hand" : "Edit batches in Card Edits.json, which keeps each card's last one")}</th><th class="num">${noted("Card commits", "Commits that added or changed a card's PSD or PNG; moves and rulebook pages don't count")}</th><th class="num">${noted("Decks", "Their public decks in the deck browser; private ones aren't counted")}</th><th>Titles</th><th>Motto</th></tr></thead><tbody>${rows.map(row).join("")}</tbody></table></div>`
       : `<div class="empty">Nobody yet.</div>`}
     <p class="muted">Cards credited · edits: Card Edits batches · card commits: PSD/PNG changes · decks: public ones.</p></div>`;
 }

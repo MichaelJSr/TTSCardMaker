@@ -2,8 +2,8 @@
 // (edit.js stages it with the batch; build_site.py reads the folder into data/decks.json). A public file holds the hand in
 // clear; a private one is AES-GCM ciphertext made here, opened on the deck page with its passphrase. DOM-free at import:
 // app.js renders the HTML below and wires it. Every string is user-written and goes through esc.
-import { esc, LOGIN_RE } from "./text.js";
-import { HAND } from "./deck.js";
+import { esc, LOGIN_RE, noted } from "./text.js";
+import { HAND, CHECK_TIP } from "./deck.js";
 
 export const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,59}$/;
 export const LIMITS = { name: 80, description: 500, cards: 40, slug: 60, passphrase: 8, file: 16 * 1024 };
@@ -219,7 +219,7 @@ export function browserHtml(list, p = {}, ctx = {}) {
 export function usingHtml(list, id, ctx = {}, limit = 6) {
   const using = sortDecks((Array.isArray(list) ? list : []).filter(d => usesCard(d, id)));
   if (!using.length) return "";
-  return `<h3>Decks using this card <span class="muted">${using.length}</span></h3>${tilesHtml(using.slice(0, limit), ctx)}
+  return `<h3>${noted("Decks using this card", "Public decks with this card in the hand or as the field card")} <span class="muted">${using.length}</span></h3>${tilesHtml(using.slice(0, limit), ctx)}
     ${using.length > limit ? `<p><a href="#/decks?card=${encodeURIComponent(id)}">All ${using.length} decks using this card</a></p>` : ""}`;
 }
 /** The Cards tab's line for a search: how many public decks the deck browser finds for q, with a link there; "" for none. */
@@ -236,9 +236,9 @@ export function handHtml(d, ctx, bad = new Set()) {
   const cards = d.cards.map(id => cardOf(ctx, id)).filter(Boolean);
   const gone = d.cards.filter(id => !cardOf(ctx, id)).length;
   const slot = c => `<div class="slot filled${bad.has(c.id) ? " bad" : ""}" data-open="${esc(c.id)}" title="${esc(c.name)}">${c.img ? `<img loading="lazy" decoding="async" src="${esc(ctx.img(c, 240))}" alt="${esc(c.name)}">` : ""}<span class="slot-name">${esc(c.name)}</span></div>`;
-  const group = (title, list, of) => (list.length ? `<div class="tier-title"><span>${esc(title)}</span><span class="muted">${list.length}${of ? ` / ${of}` : ""}</span></div><div class="slots">${list.map(slot).join("")}</div>` : "");
+  const group = (title, list, of, tip = "") => (list.length ? `<div class="tier-title"><span>${esc(title)}</span><span class="muted">${noted(`${list.length}${of ? ` / ${of}` : ""}`, tip)}</span></div><div class="slots">${list.map(slot).join("")}</div>` : "");
   const f = cardOf(ctx, d.field), stray = cards.filter(c => !HAND.some(g => g.kind === c.type)).sort(byStars);
-  return `${HAND.map(g => group(g.label, cards.filter(c => c.type === g.kind).sort(byStars), g.tiers.reduce((s, [, n]) => s + n, 0))).join("")}
+  return `${HAND.map(g => group(g.label, cards.filter(c => c.type === g.kind).sort(byStars), g.tiers.reduce((s, [, n]) => s + n, 0), "Cards of this kind in the hand, of the number a starting hand holds")).join("")}
     ${f ? group("Field card", [f], 1) : ""}${group("Not allowed in a hand", stray)}
     ${gone ? `<p class="muted">${plural(gone, "card")} of this deck no longer exist.</p>` : ""}`;
 }
@@ -268,7 +268,7 @@ export function deckPageHtml(d, ctx = {}) {
       ${handHtml(d, ctx, v.badCards)}
     </div></section>
     <aside>
-      <div class="panel"><h3>${v.complete ? "✅ Legal hand" : `Checks · ${v.count}/${v.slots} cards`}</h3><ul class="checks">${v.checks.map(c => `<li class="${c.ok ? "ok" : "err"}">${c.ok ? "✓" : "✗"} ${esc(c.text)}</li>`).join("")}</ul></div>
+      <div class="panel"><h3>${v.complete ? "✅ Legal hand" : `Checks · ${noted(`${v.count}/${v.slots} cards`, CHECK_TIP)}`}</h3><ul class="checks">${v.checks.map(c => `<li class="${c.ok ? "ok" : "err"}">${c.ok ? "✓" : "✗"} ${esc(c.text)}</li>`).join("")}</ul></div>
       <div class="panel"><h3>Use it</h3><div class="actions">
         <button type="button" class="primary" data-action="deck-save-copy">Save a copy to my decks</button>
         <button type="button" data-action="deck-page-share" title="The deck builder's share link">Share link</button>

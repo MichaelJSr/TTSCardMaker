@@ -15,6 +15,17 @@ const days = new Map();   // by UTC hour: Pacific days start on the hour, so one
 export const dayOf = ts => { const h = Math.floor(ts / 3600); let k = days.get(h); if (k === undefined) { const p = Object.fromEntries(ymd.formatToParts(new Date(ts * 1000)).map(x => [x.type, x.value])); days.set(h, k = `${p.year}-${p.month}-${p.day}`); } return k; };
 /** "2026" in Pacific time */
 export const yearOf = ts => dayOf(ts).slice(0, 4);
+const hm = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: TZ });
+/** "2026-10-30 10:22" in Pacific time (a revert's commit message) */
+export const stampOf = ts => `${dayOf(ts)} ${hm.format(new Date(ts * 1000))}`;
+/** png's number when the PSD prints it, as the bake finds a PSD's PNGs (AutoCroissant card_bake png_for): in its folder,
+ *  the PSD's name ("") or the name and a number ("2"); null when not (a picture-only duplicate's) */
+export function pictureNumber(psd, png) {
+  const cut = p => [p.slice(0, p.lastIndexOf("/") + 1), p.slice(p.lastIndexOf("/") + 1).replace(/\.[^.]*$/, "").toLowerCase()];
+  if (!psd || !png || !/\.png$/i.test(png)) return null;
+  const [dir, name] = cut(psd), [at, base] = cut(png), n = base.slice(name.length);
+  return at === dir && base.startsWith(name) && /^\d*$/.test(n) ? n : null;
+}
 
 /** When the current text started (build_site since: the bot's carried start), else the last PSD commit (ts) */
 export const textSince = c => c.since ?? c.ts;
@@ -28,13 +39,15 @@ export function textAt(c, ts) {
   return then.length ? then[then.length - 1].ability : null;
 }
 /** The History block: each text, newest first, its changes from the one before highlighted ("" with one text or none);
- * a text's commit link from shas (history.json _shas: a text's c, the current text's n on the newest older one) and repo */
-export function historyHtml(c, repo = "", shas = []) {
+ * a text's commit link from shas (history.json _shas: a text's c, the current text's n on the newest older one) and repo;
+ * revert: an earlier text with a commit gets Revert (app.js "card-revert") */
+export function historyHtml(c, repo = "", shas = [], revert = false) {
   const sha = v => shas?.[v.current ? c.history?.[c.history.length - 1]?.n : v.c];
   if (!c.hv) return "";
   if (!c.history) return `<h3>History</h3><p class="muted">Loading ${c.hv} earlier version${c.hv > 1 ? "s" : ""}…</p>`;
   const versions = textsOf(c);
   if (versions.length < 2) return "";
-  return `<h3>History</h3><div class="history">${versions.slice().reverse().map((v, k, arr) => `<div class="ver"><div class="muted">${v.current ? "Current" : "Earlier"}${v.ts ? ` · ${date(v.ts)}` : ""}${v.ts ? commitAfter(repo, sha(v), `Commit for the ${date(v.ts)} version`) : ""}</div>
+  const button = v => (revert && !v.current && v.ts && sha(v) ? ` <button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(sha(v))}" data-ts="${v.ts}">Revert to this version</button>` : "");
+  return `<h3>History</h3><div class="history">${versions.slice().reverse().map((v, k, arr) => `<div class="ver"><div class="muted">${v.current ? "Current" : "Earlier"}${v.ts ? ` · ${date(v.ts)}` : ""}${v.ts ? commitAfter(repo, sha(v), `Commit for the ${date(v.ts)} version`) : ""}${button(v)}</div>
     <div>${k < arr.length - 1 ? diffWords(arr[k + 1].ability, v.ability) : esc(v.ability).replace(/\n/g, "<br>")}</div></div>`).join("")}</div>`;
 }

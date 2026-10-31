@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-30T04:58:50Z",
+  "ct": "ARxKPmReqJfNJT/T+Lwdcoe6dP/JPT4GdSEH5I5wFOShKANTg/SpCtk6tAUMc4JS5p1uk8DYIZk=",
+  "iterations": 2000000,
+  "iv": "r8ncP92MJ84wcK1U",
+  "kdf": "PBKDF2-SHA-256",
+  "login": "Croissant2",
+  "salt": "K2o52W7zYxozZhtJznrFDA==",
+  "v": 1
+}

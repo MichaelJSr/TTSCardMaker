@@ -12,12 +12,10 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import BOT as AC, REF, REPO as TC, ensure_history, save_arg  # noqa: E402
+from checks_env import REF, REPO as TC, UPDATER_INPUTS, copy_bot, ensure_history, save_arg  # noqa: E402
 
 PY = sys.executable
 CLONE = ensure_history()
-MODULES = ["commands/tts_save.py", "commands/repo_history.py", "commands/card_models.py", "commands/card_edits.py",
-           "commands/github_api.py", "commands/git_commit.py", "global_config.py"]
 OK_SECTIONS = ("Nicknames kept (not on the website)", "Decks left alone")   # informational, no change
 
 save = save_arg()
@@ -31,18 +29,17 @@ def origin(path):
 
 def setup():
     local = os.path.join(work, "local")
-    os.makedirs(os.path.join(local, "TTS"))
-    os.makedirs(os.path.join(local, "site"))
-    beside = os.path.join(os.path.dirname(save), "decks.json")
-    edits = os.path.join(os.path.dirname(os.path.dirname(save)), "site", "Card Edits.json")
-    rules = open(beside, "rb").read() if os.path.exists(beside) else origin("TTS/decks.json")
-    eds = open(edits, "rb").read() if os.path.exists(edits) else origin("site/Card Edits.json")
-    open(os.path.join(local, "TTS", "decks.json"), "wb").write(rules)
-    open(os.path.join(local, "site", "Card Edits.json"), "wb").write(eds)
+    repo = os.path.dirname(os.path.dirname(save))          # the save's checkout: its files beside it, else REF's
+    for path in UPDATER_INPUTS:
+        os.makedirs(os.path.dirname(os.path.join(local, path)), exist_ok=True)
+        mine = os.path.join(repo, path)
+        try:
+            data = open(mine, "rb").read() if os.path.exists(mine) else origin(path)
+        except subprocess.CalledProcessError:
+            continue
+        open(os.path.join(local, path), "wb").write(data)
     bot = os.path.join(work, "bot")
-    for m in MODULES:
-        os.makedirs(os.path.dirname(os.path.join(bot, m)), exist_ok=True)
-        shutil.copy(os.path.join(AC, m), os.path.join(bot, m))
+    copy_bot(bot)
     return local, bot
 
 

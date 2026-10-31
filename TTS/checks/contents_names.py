@@ -1,10 +1,9 @@
 """Card Nicknames = the website's names (Card Edits.json > cards.json), as tts_save._fix_cards sets them.
 
     python contents_names.py [save.json]    (TTS_CARDS: a cards.json, default the live website)
-Rulebook pages are 'Page N: Title' with N from the file; markers keep their names; cards the website lacks are notes.
+Markers keep their names; cards the website lacks are notes.
 """
 import os
-import re
 import sys
 from collections import Counter, defaultdict
 
@@ -24,11 +23,6 @@ for card, _ in walk(save.get("ObjectStates")):
         r.fail(f"{card.get('GUID')} {nick!r}: face is not a repo link")
         continue
     same[nick].add(p)
-    if p.startswith("Auxiliary/Rulebook/"):
-        m = re.match(r"(\d+)_", os.path.basename(p))
-        if not m or not re.fullmatch(rf"Page {int(m.group(1))}: \S.*", nick):
-            r.fail(f"{p}: rulebook Nickname {nick!r}")
-        continue
     if p.startswith(HAND_NAMED):
         continue
     known = names.known(p)

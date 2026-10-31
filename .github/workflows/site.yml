@@ -13,6 +13,7 @@ on:
       - "!site/Card Authors.txt"
       - "!site/Card Creation Dates.json"
       - "!site/**.md"
+      - "site/rulebook/**"           # the rulebook's chapters are .md too (after the exclusion: it wins)
       - ".mailmap"
       - "MDW/Fonts/stoogedings-src/build_stoogedings.py"
       - "MDW/Fonts/stoogedings-src/requirements.txt"

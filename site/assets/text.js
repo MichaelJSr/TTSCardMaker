@@ -7,6 +7,11 @@ export const dateFmt = opts => { let f = null; return d => (f ||= new Intl.DateT
 export const commitLink = (repo, sha, label) => (repo && sha ? `<a class="commit-link" href="https://github.com/${esc(repo)}/commit/${esc(sha)}" target="_blank" rel="noopener" aria-label="${esc(label)}">commit</a>` : "");
 /** " · commit" after a date, the dot kept with the link when the line wraps ("" without one) */
 export const commitAfter = (repo, sha, label) => { const a = commitLink(repo, sha, label); return a && ` <span class="commit-at">· ${a}</span>`; };
+/** html with a short note in its tooltip (a column header or a stat's label, never each cell): the faint dotted cue (.qn) */
+export const noteHtml = (html, note) => (note ? `<span class="qn" data-tip="${esc(note)}">${html}</span>` : html);
+export const noted = (label, note) => noteHtml(esc(label), note);
+/** a table head cell's content: text, {html}, or either with a note ({label | html, tip}) */
+export const headHtml = h => (h && typeof h === "object" ? noteHtml(h.html ?? esc(h.label), h.tip) : esc(h));
 export const LOGIN_RE = /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/;              // a GitHub login (here: login.js and decks.js need it without profile.js)
 export const norm = s => String(s || "").toLowerCase().replace(/[\s_\-.'’]+/g, "");
 
@@ -26,10 +31,22 @@ const canon = tag => { const up = String(tag).toUpperCase(); return CANON[up] ??
 const times = n => (n === "X" ? "X times" : n === "1" ? "once" : `${n} times`);
 const count = (n, one, many = one + "s") => `${n} ${n === "1" || n === "-1" ? one : many}`;
 const old = (group, meaning, multi = false) => ({ group, meaning: `Old system: ${meaning}`, multi, old: true });
-/** {tag (canonical case), group, meaning, multi, old} or null */
+/** {tag (canonical case), group, meaning, multi, old} or null. The meaning is the Timing Tags chapter's when it lists
+ *  the tag, or its family with X ("XCD" for (3CD): X is 3, "turn(s)" agrees); else the one below. */
 export function tagInfo(typed) {
   const tag = canon(typed), info = tagMeaning(tag);
-  return info && { tag, ...info };
+  if (!info) return null;
+  const own = chapterMeaning(tag);
+  return { tag, ...info, ...(own ? { meaning: info.old && !/^old system/i.test(own) ? `Old system: ${own}` : own } : {}) };
+}
+let CHAPTER = {};                                  // the Timing Tags chapter's table (build_site.py tag_meanings: cards.json tagMeanings)
+export const setTagMeanings = m => { CHAPTER = Object.fromEntries(Object.entries(m || {}).map(([k, v]) => [canon(k), String(v)])); };
+function chapterMeaning(tag) {
+  if (CHAPTER[tag]) return CHAPTER[tag];
+  const m = /^(-?[0-9]+)(?!\/)/.exec(tag.replace(/^(E|FTE)(?=\d)/, "")), n = m?.[1];
+  if (!n || tag.includes("/")) return "";
+  const family = tag.replace(n, "X"), text = CHAPTER[family];
+  return text ? text.replace(/\bX\b/g, n).replace(/\b(-?\d+) (\w+)\(s\)/g, (_, k, w) => `${k} ${k === "1" || k === "-1" ? w : `${w}s`}`) : "";
 }
 function tagMeaning(tag) {
   if (FIXED[tag]) return { group: FIXED[tag][0], meaning: FIXED[tag][1], multi: false };
@@ -48,9 +65,9 @@ function tagMeaning(tag) {
   return null;
 }
 export const GROUP_NAMES = { turn: "On your turn", any: "At any time", forced: "Forced", trigger: "Per game & triggers", neutral: "Other tags" };
-export const badgeHtml = tag => {
+export const badgeHtml = (tag, tip = true) => {   // tip false: the note is the parent's (a "3CD+" head)
   const t = tagInfo(tag);
-  return t ? `<span class="badge ${t.group}" data-tip="${esc(`(${t.tag}) ${t.meaning}`)}">${esc(t.tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
+  return t ? `<span class="badge ${t.group}"${tip ? ` data-tip="${esc(`(${t.tag}) ${t.meaning}`)}"` : ""}>${esc(t.tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
 };
 
 // badge colour legend, one line per colour: the text of rulebook page 02 Abbreviations; colours come from tagInfo's groups
@@ -84,14 +101,19 @@ export function splitToken(token) {
 /** The variant's image of an icon entry: icons/fire.<stamp>.webp -> icons/fire.<stamp>.glow.webp (the stamp covers the variants) */
 export const variantFile = (ic, v) => ic.file.replace(/\.webp$/, `.${v}.webp`);
 
+// TEMPORARY (owner 2026-10-30, back to false 10-31): a card name links (and counts as a mention) only typed in its own
+// letter case: "Silithid", never "silithid"
+const EXACT_CASE = true;
+
 /** Build the renderer once per data load: knows icons (and their variants' reach, cards.json iconVariants) and which
  *  card names to link. */
 export function makeRenderer({ cards, icons, variants = {} }) {
   // card names of 3+ characters by printed title or file name: any case, either apostrophe, trailing !?. optional, a
   // plural or possessive ending kept in the link ("Copper Swords", "Grodus X's")
   const fold = s => String(s || "").trim().toLowerCase().replace(/[‘’]/g, "'").replace(/\s+/g, " ");
-  const byName = new Map();
-  const add = (n, c) => { const k = fold(n); if (k.length >= 3 && !byName.has(k)) byName.set(k, c); };
+  const same = s => String(s || "").trim().replace(/[‘’]/g, "'").replace(/\s+/g, " ");   // fold, letter case kept
+  const byName = new Map(), spelt = new Map();         // spelt: fold -> the spellings in their own case (EXACT_CASE)
+  const add = (n, c) => { const k = fold(n); if (k.length < 3) return; if (!byName.has(k)) byName.set(k, c); (spelt.get(k) || spelt.set(k, new Set()).get(k)).add(same(n)); };
   const oneWord = s => !/\s/.test(String(s || "").trim());
   for (const c of cards) add(c.name, c);
   for (const c of cards) if (!oneWord(c.key) || oneWord(c.name)) add(c.key, c);   // not "Blockade" for The Wall By Ech
@@ -142,7 +164,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   // icons and badges as [index, length, html]; links as [index, length, card], judged over the whole text with each
   // icon or badge read as a space, so render and mentions agree
   // (html false: the pieces' places only, for mentions)
-  function parse(text, selfName, html_ = true) {
+  function parse(text, html_ = true) {
     const pieces = [];
     for (const m of text.matchAll(PIECE)) {
       const html = !html_ ? (m[1] !== undefined ? hasIcon(m[1]) : !!tagInfo(m[2])) || null
@@ -164,15 +186,16 @@ export function makeRenderer({ cards, icons, variants = {} }) {
       if (!m) continue;
       end = m.index + m[0].length;
       const card = byName.get(fold(m[1]));
-      if (card && card.name !== selfName && isRef(m, spaced, card)) links.push([m.index, m[0].length, card]);
+      if (EXACT_CASE && !spelt.get(fold(m[1]))?.has(same(m[1]))) continue;
+      if (card && isRef(m, spaced, card)) links.push([m.index, m[0].length, card]);   // its own name too (owner 10-30)
     }
     return { pieces, links };
   }
 
-  /** HTML for ability text. */
-  function render(text, selfName = "") {
+  /** HTML for ability text; links: false leaves card names as text (the rulebook links its own) */
+  function render(text, { links: linked = true } = {}) {
     if (!text) return "";
-    const { pieces, links } = parse(text, selfName);
+    const { pieces, links: found } = parse(text), links = linked ? found : [];
     const out = [];
     let last = 0;
     for (const [i, n, x] of [...pieces, ...links].sort((a, b) => a[0] - b[0])) {
@@ -184,8 +207,8 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   }
 
   /** Cards whose names appear in a text (for "mentions" / "mentioned by"). */
-  function mentions(text, selfName = "") {
-    return new Set(text ? parse(text, selfName, false).links.map(l => l[2].id) : []);
+  function mentions(text) {
+    return new Set(text ? parse(text, false).links.map(l => l[2].id) : []);
   }
   return { render, mentions, icon };
 }

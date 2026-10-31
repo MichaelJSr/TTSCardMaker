@@ -125,7 +125,7 @@ export function checkPassword(pw, login = "", token = "") {
 
 // ---- this device: secrets sealed under keys that can't leave IndexedDB ---------------------------------------
 export const SEALED = "edit-token-sealed";        // {v, iv, ct}: localStorage (kept) or sessionStorage (this tab only)
-export const PASS_SEALED = "deckPassSealed:", PASS_PLAIN = "deckPass:";   // + "<owner lowercase>/<slug>": a remembered deck passphrase (the plain one: before 2026-10-23)
+export const PASS_SEALED = "deckPassSealed:";   // + "<owner lowercase>/<slug>": a remembered deck passphrase
 const DB = "ttscardmaker-signin", STORE = "keys", KEY_ID = "device", DEVICE_AAD = "device:token", DECKS_ID = "decks";
 /** Keys in IndexedDB `ttscardmaker-signin`/`keys`, one per id, each a non-extractable AES-GCM key made on first use. */
 function keyring({ idb, subtle, random }) {
@@ -206,7 +206,7 @@ export function deckPasses(env) {
   let saving = 0, removing = null;
   const api = {
     /** Whether one is remembered (sync). */
-    has: deck => !!(get(PASS_SEALED + deck) || get(PASS_PLAIN + deck)),
+    has: deck => !!get(PASS_SEALED + deck),
     /** Remembers it (-> false when Forget ran meanwhile); throws when this browser can't keep it sealed (then nothing is stored). */
     async save(deck, pass) {
       if (!local) throw new Error("no localStorage");
@@ -216,14 +216,12 @@ export function deckPasses(env) {
         await removing;
         const blob = await keys.seal(DECKS_ID, aad(deck), pass);
         if ((forgets.get(deck) || 0) !== n) return false;
-        local.setItem(PASS_SEALED + deck, blob); del(PASS_PLAIN + deck);
+        local.setItem(PASS_SEALED + deck, blob);
         return true;
       } finally { saving--; }
     },
-    /** The passphrase, or null; a sealed one that can't be opened is dropped. An old plain one wins (as migrate) and is sealed. */
+    /** The passphrase, or null; a sealed one that can't be opened is dropped. */
     async load(deck) {
-      const plain = get(PASS_PLAIN + deck);
-      if (plain != null) { await api.migrate([deck]); return plain; }
       const blob = get(PASS_SEALED + deck);
       if (blob) { try { return await keys.open(DECKS_ID, aad(deck), blob); } catch { del(PASS_SEALED + deck); } }
       return null;
@@ -231,20 +229,9 @@ export function deckPasses(env) {
     /** Drops it; the last one also deletes the `decks` key (resolves once that's done). */
     forget(deck) {
       forgets.set(deck, (forgets.get(deck) || 0) + 1);
-      del(PASS_SEALED + deck); del(PASS_PLAIN + deck);
+      del(PASS_SEALED + deck);
       if (saving || removing || listed(PASS_SEALED).length) return removing || Promise.resolve();
       return (removing = keys.remove(DECKS_ID).finally(() => { removing = null; }));
-    },
-    /** Seals the plain ones (each deck, or all in localStorage): -> how many. One this browser can't seal (no IndexedDB,
-     *  no crypto, IndexedDB failing) is dropped: nothing is kept in plain text. */
-    async migrate(decks = null) {
-      let n = 0;
-      for (const deck of decks || listed(PASS_PLAIN)) {
-        const plain = get(PASS_PLAIN + deck);
-        if (plain == null) continue;
-        try { if (await api.save(deck, plain)) n++; } catch { del(PASS_PLAIN + deck); }
-      }
-      return n;
     },
   };
   return api;

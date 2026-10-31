@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Drift of a TTS save against a baseline: anything beyond the updater's own edits fails.
 
-python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref 0d33adc8, the last hand edit of the save)
-Allowed: repo link refs, card Nicknames, card CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck, cards added to or
-removed from decks, the resizeTargets rows. Everything else is listed and fails: a card's Description, GMNotes, Memo,
-Tags and scripts are the team's (2026-10-22), and the global Lua outside resizeTargets.
+python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref 0ee01372, the last hand edit of the save)
+Allowed: repo link refs, links to a moved file (the old path gone from main, the new one on it), card Nicknames, card
+CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck, cards added to or
+removed from decks, the Rulebooks bag's contents, the resizeTargets rows, and the global script and UI as TTS/Global.lua
+and TTS/Global.xml hold them (since 2026-10-30 the updater writes them; a mismatch fails). Everything else is listed and
+fails: a card's Description, GMNotes, Memo, Tags and scripts are the team's (2026-10-22).
 """
 import json
 import os
@@ -17,13 +19,15 @@ from urllib.parse import unquote
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from checks_env import REF, REPO, save_arg  # noqa: E402
 
-BASELINE = "0d33adc8"       # re-baseline here after a deliberate hand edit of the save
+BASELINE = "0ee01372"       # re-baseline here after a deliberate hand edit of the save (10-30: the turn markers' scripts removed)
 SAVE = "TTS/Impossibility Simulator.json"
 LINK = re.compile(r"(https://raw\.githubusercontent\.com/MichaelJSr/TTSCardMaker/)(?:refs/heads/main|main|[0-9a-f]{7,40})/")
 CARDS = ("Card", "CardCustom")
 CARD_FREE = {"Nickname", "CardID", "CustomDeck"}
 DECK_FREE = {"DeckIDs", "CustomDeck", "ContainedObjects"}
+PATHS = re.compile(r"https://raw\.githubusercontent\.com/MichaelJSr/TTSCardMaker/REF/([^\"\\\s]+)")   # in norm()'s text
 LUA_TABLE = re.compile(r"(resizeTargets\s*=\s*\{\n)(.*?)(\n\})", re.S)
+RULEBOOKS = "Rulebooks"     # tts_save fills this bag with the rulebook's pages (AutoCroissant tts_save._rulebook)
 
 fails, notes = [], []
 _tree = []
@@ -46,6 +50,16 @@ def norm(v):
     if isinstance(v, str):
         return LINK.sub(r"\1REF/", v)
     return v
+
+
+def relinked(x, y):
+    """x and y differ only in repo links whose old file is gone from main and whose new one is on it: the updater
+    follows moved files (tts_save._pin_links)."""
+    sx, sy = (json.dumps(norm(v), ensure_ascii=False) for v in (x, y))
+    px, py = PATHS.findall(sx), PATHS.findall(sy)
+    pairs = [(p, q) for p, q in zip(px, py) if p != q]
+    return (len(px) == len(py) and bool(pairs) and PATHS.sub("", sx) == PATHS.sub("", sy)
+            and all(unquote(p) not in tree() and unquote(q) in tree() for p, q in pairs))
 
 
 def load_base(arg):
@@ -75,7 +89,7 @@ def compare(a, b, where, stats):
         ea, eb = (norm(next(iter((x.get("CustomDeck") or {}).values()), {})) for x in (a, b))
         for k in set(ea) | set(eb):
             if k != "FaceURL" and ea.get(k) != eb.get(k):
-                fails.append(f"{where}: CustomDeck field {k} {ea.get(k)!r} -> {eb.get(k)!r}")
+                (notes if relinked(ea.get(k), eb.get(k)) else fails).append(f"{where}: CustomDeck field {k} {ea.get(k)!r} -> {eb.get(k)!r}")
     elif a.get("Name") == "Deck":
         free = DECK_FREE
     elif "ContainedObjects" in a:
@@ -86,12 +100,14 @@ def compare(a, b, where, stats):
         elif k not in a:
             fails.append(f"{where}: key {k} added")
         elif norm(a[k]) != norm(b[k]):
-            fails.append(f"{where}: {k} changed: {str(norm(a[k]))[:120]} -> {str(norm(b[k]))[:120]}")
+            (notes if relinked(a[k], b[k]) else fails).append(f"{where}: {k} changed: {str(norm(a[k]))[:120]} -> {str(norm(b[k]))[:120]}")
     if "ContainedObjects" in a or "ContainedObjects" in b:
-        kids(a.get("ContainedObjects") or [], b.get("ContainedObjects") or [], where, stats, a.get("Name") == "Deck")
+        kids(a.get("ContainedObjects") or [], b.get("ContainedObjects") or [], where, stats, a.get("Name") == "Deck",
+             a.get("Nickname") == RULEBOOKS)
 
 
-def kids(la, lb, where, stats, deck):
+def kids(la, lb, where, stats, deck, pages=False):
+    """pages: the Rulebooks bag (objects in and out are the updater's, in any place)."""
     by = defaultdict(list)
     for i, o in enumerate(lb):
         by[o.get("GUID")].append(o)
@@ -113,11 +129,11 @@ def kids(la, lb, where, stats, deck):
         fails.append(f"{where}: kept objects reordered")
     for o in gone:
         msg = f"{where}: {o.get('Name')} {o.get('GUID')} {o.get('Nickname')!r} removed"
-        (notes if deck else fails).append(msg)
+        (notes if deck or pages else fails).append(msg)
         stats["removed"] += 1
     for o in added:
         msg = f"{where}: {o.get('Name')} {o.get('GUID')} {o.get('Nickname')!r} added ({face(o).rsplit('/', 1)[-1]})"
-        (notes if deck else fails).append(msg)
+        (notes if deck or pages else fails).append(msg)
         stats["added"] += 1
         if deck and lb.index(o) < len(lb) - len(added):
             fails.append(f"{where}: added card {o.get('GUID')} not at the bottom")
@@ -127,9 +143,24 @@ def lua_rest(text):
     return LUA_TABLE.sub(r"\1\3", text or "")
 
 
+def from_file(name):
+    """TTS/<name> at REF, or None"""
+    out = subprocess.run(["git", "-C", REPO, "show", f"{REF}:TTS/{name}"], capture_output=True)
+    return out.stdout.decode("utf-8").replace("\r\n", "\n") if out.returncode == 0 else None
+
+
 def main(path, base_arg):
     cur = json.load(open(path, encoding="utf-8"))
     base = load_base(base_arg)
+    lua, xml = from_file("Global.lua"), from_file("Global.xml")
+    if lua is not None:                           # the updater writes the script: the file is the baseline
+        if norm(lua_rest(lua)) != norm(lua_rest(cur.get("LuaScript"))):
+            fails.append("LuaScript differs from TTS/Global.lua outside resizeTargets (the next save update writes it)")
+        base["LuaScript"] = cur.get("LuaScript")
+    if xml is not None:
+        if xml != (cur.get("XmlUI") or ""):
+            fails.append("XmlUI differs from TTS/Global.xml (the next save update writes it)")
+        base["XmlUI"] = cur.get("XmlUI")
     for k in (set(base) | set(cur)) - {"ObjectStates", "LuaScript"}:
         if norm(base.get(k)) != norm(cur.get(k)):
             fails.append(f"top-level {k}: {str(base.get(k))[:100]} -> {str(cur.get(k))[:100]}")

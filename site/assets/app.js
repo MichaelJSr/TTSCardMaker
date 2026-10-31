@@ -1,18 +1,18 @@
 import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
-import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, GROUP_NAMES, legendHtml, hasBadges, commitAfter } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, legendHtml, hasBadges, commitAfter, noted, setTagMeanings } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
 import * as decks from "./decks.js";
 import * as pick from "./pick.js";
 import * as changes from "./changes.js";
-import { date, month, TZ, textAt, textChanged, historyHtml } from "./history.js";
+import { date, month, TZ, textAt, textChanged, historyHtml, stampOf, pictureNumber } from "./history.js";
 import { deckPasses, SEALED } from "./login.js";
 import * as ratings from "./ratings.js";
 import * as fresh from "./fresh.js";
 import * as G from "./grid.js";
 import * as CF from "./myfilters.js";
-import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc } from "./grid.js";
+import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc, AUX_KINDS, unusedTip } from "./grid.js";
 import { artHtml } from "./art.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
@@ -30,16 +30,18 @@ const S = {
   renderedHash: null, listHash: "#/cards", shared: null, rev: 0,   // rev: bumped by derive()
   selected: new Set(),                                     // tiles picked in the cards grid (edit mode: drag them onto a series or author)
   distPage: {},                                            // the Stats distributions' page per stat (this session)
+  season: "",                                              // the Stats SpongeBob chart's picked season (this session)
   selecting: false,                                        // the Select toggle (phones): a tap on a tile selects it
   toTop: false,                                            // a Stats chart link was followed: the grid opens at its top
   notPick: new Set(),                                      // series, subseries, author: ≠ pressed with nothing picked yet
   fontUse: null,                                           // card id -> its fonts (data/cardfonts.json), once the Font filter loads it
+  fontKept: [],                                            // the Font chips listed, in order: picked, excluded, or clicked off (this page only)
 };
 // The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
   ["aux item", "Auxiliary items"], ["status", "Status effects"], ["creatures", "Auxiliary creatures"]];
 const KIND_PLURAL = { debuff: "Debuffs", buff: "Buffs", unknown: "Other" };   // kind= values the chips don't have (the Stats links)
-const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
+const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused (no card in play names it)"], ["edited", "Edited on the website"],
   ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"],
   ["banned", "Banned (constructed)"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
@@ -86,12 +88,15 @@ async function getJson(name) {
   if (!r.ok) throw new Error(`${name}: HTTP ${r.status}`);
   return r.json();
 }
-// loaded on demand: the rulebook pages, and older versions of card text
-let rulesP = null, historyP = null, versionsP = null;
-// the pages' staged edits (a full re-derive only when one of them has one)
-const loadRules = () => (rulesP ||= getJson("rules.json").then(d => { S.rules = d.rules; if (editor.touches(new Set(d.rules.map(p => p.id)))) editor.refresh(); }).catch(e => { rulesP = null; throw e; }));
+// loaded on demand: the rulebook (data/rules.json: its chapters' text and its pictures' sizes; rulebook.js draws them), and
+// older versions of card text
+let historyP = null, versionsP = null, RB = null, bookP = null;
+const loadBook = () => (bookP ||= Promise.all([getJson("rules.json"), (early("rulebook.js"), import("./rulebook.js"))]).then(([d, m]) => {
+  RB = m; S.book = { images: d.images || {}, built: d.chapters || [] };
+  bookChapters();
+}).catch(e => { bookP = null; throw e; }));
 const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
-  for (const c of [...S.cards, ...(S.rules || [])]) if (h[c.id]) c.history = h[c.id];
+  for (const c of S.cards) if (h[c.id]) c.history = h[c.id];
   S.history = h;
 }).catch(e => { historyP = null; throw e; }));
 const loadVersions = () => (versionsP ||= getJson("versions.json").then(d => { S.versions = d; }).catch(e => { versionsP = null; throw e; }));
@@ -129,7 +134,7 @@ const fontsOf = c => S.fontUse?.get(c.id) || [];
 const needsFonts = p => p.has("font") || p.has("xfont");
 // the name list under a data-suggest field (tokens.js): the Font box for everyone, the editor's name fields in edit mode
 const tokenApi = { vocab: () => [], icon: (t, o) => S.renderer?.icon(t, o) ?? null,
-  names: el => (el.dataset.suggest === "font" ? fontEntries() : editor.names?.(el.dataset.suggest) || []) };
+  names: el => (el.dataset.suggest === "font" ? fontEntries() : editor.names?.(el.dataset.suggest, el) || []) };
 let tokensMod = null, tokensP = null;
 const useTokens = m => { if (!tokensMod) { tokensMod = m; m.install(tokenApi); } return m; };   // once: the editor imports the same module
 const loadTokens = () => (tokensP ||= (early("tokens.js"), import("./tokens.js")).then(useTokens).catch(e => { tokensP = null; throw e; }));
@@ -152,7 +157,8 @@ async function init() {
     view.innerHTML = `<div class="empty">Couldn't load card data (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`;
     return;
   }
-  S.all = S.data.cards; S.rules = null; S.icons = S.data.icons;
+  S.all = S.data.cards; S.icons = S.data.icons;
+  setTagMeanings(S.data.tagMeanings);                     // the Timing Tags chapter's meanings: every badge's tooltip
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
   for (const [old, id] of Object.entries(S.data.moved || {})) if (!S.byId.has(old) && S.byId.has(id)) S.byId.set(old, S.byId.get(id));   // a renamed card's old id: links, picks, share codes
@@ -172,7 +178,7 @@ async function init() {
 // everything computed from the cards; re-run after an edit
 function derive() {
   S.rev++;
-  for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; }
+  for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; delete c._unusedBy; }
   S.cards = S.all.filter(c => !c.hidden || S.showHidden);
   // stats can pass 10 (Sonic's speed is 20)
   S.statMax = Object.fromEntries(["hp", "def", "atk", "spd"].map(k => [k, Math.max(10, ...S.cards.map(c => c[k] ?? 0))]));
@@ -185,12 +191,19 @@ function derive() {
   S.renderer = makeRenderer({ cards: S.cards, icons: S.icons, variants: S.data.iconVariants });
   S.mentions = new Map(); S.mentionedBy = new Map();
   for (const c of S.cards) {
-    const m = S.renderer.mentions(c.ability, c.name);
+    const m = S.renderer.mentions(c.ability);
     S.mentions.set(c.id, m);
     if (c.dup) continue;                                   // a duplicate counts once
     for (const id of m) { if (!S.mentionedBy.has(id)) S.mentionedBy.set(id, new Set()); S.mentionedBy.get(id).add(c.id); }
   }
-  for (const c of S.cards) if ((c.type === "debuff" || c.type === "buff") && !S.mentionedBy.get(c.id)?.size) c._unused = true;
+  // Unused: an Auxiliary card no chain of mentions reaches from a card played on its own (creatures, items, field cards,
+  // N.M.E. items): named by no other card, or only by Unused ones (Z.O.M.G. -> Rainbow Bloon -> Black Bloon)
+  const reached = new Set(), todo = S.cards.filter(c => !c.dup && !AUX_KINDS.includes(c.type)).map(c => c.id);
+  while (todo.length) for (const id of S.mentions.get(todo.pop()) || []) if (!reached.has(id)) { reached.add(id); todo.push(id); }
+  for (const c of S.cards) if (AUX_KINDS.includes(c.type) && !c.dup && !reached.has(c.id)) {
+    c._unused = true;
+    c._unusedBy = [...(S.mentionedBy.get(c.id) || [])].filter(id => id !== c.id).map(id => S.byId.get(id)?.name).filter(Boolean);
+  }
 }
 const currentCard = () => (parseHash().name === "card" && !modal.hidden ? parseHash().arg : "");
 const goCard = id => { if (parseHash().name === "card" && parseHash().arg === id) openCard(id); else location.hash = `#/card/${id}`; };
@@ -210,7 +223,7 @@ let editor = IDLE, previews = null, inline = null, tray = null, editorP = null;
 const editing = () => !!editor.me;                      // edit mode = signed in: the card dialog and the grid edit in place
 const kept = k => { try { return localStorage.getItem(k) || sessionStorage.getItem(k) || ""; } catch { return ""; } };
 const holds = s => { try { const v = JSON.parse(s); return !!v && Object.values(v).some(x => x && (typeof x !== "object" || Object.keys(x).length)); } catch { return !!s; } };
-const wantsEditor = () => !!(kept(SEALED) || kept("edit-token") || kept("edit-sent") || kept("edit-show-hidden")) || holds(kept("edit-stage")) || holds(kept("card-previews"));
+const wantsEditor = () => !!(kept(SEALED) || kept("edit-sent") || kept("edit-show-hidden")) || holds(kept("edit-stage")) || holds(kept("card-previews"));
 function loadEditor(say = false) {                       // say: "Loading…" while it comes (a click)
   const note = "Loading the editor…";
   if (!editorP && say) toast(note);
@@ -227,10 +240,10 @@ function startEditor(M) {
     S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
     openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
     statBars: c => statBars(c), imageOf: (c, w = 360) => img(c, w),   // the form's live preview; 720: the Edit viewer
-    iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
+    iconFor: n => iconFor(n), render: t => S.renderer.render(t),
     users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
     // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
-    view, route: () => parseHash(), tile: c => tileHtml(c, { small: true }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
+    view, route: () => parseHash(), tile: (c, o) => tileHtml(c, { small: true, ...o }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
     decks: () => loadDecks().then(() => deckList()),         // the published decks (with the pending ones): the publish dialog's "replaces"
     formOpened: x => previews.mountForm(x),                  // the Edit dialog's image previews
     loadDetails: c => loadDetails(c),                        // the parts editor's boxes (details/<id>.json)
@@ -420,11 +433,14 @@ function sortCards(list, sort = "name", dir = "") {
   }
   return list.sort(G.byKey(key, desc));
 }
-// xs: the excluded values (red, struck through, the count = the cards they remove: removes(key, v))
-function chipList(key, options, selected, counts, xs = [], removes = null) {
+// xs: the excluded values (red, struck through, the count = the cards they remove: removes(key, v)); del: a ✕ after each
+function chipList(key, options, selected, counts, xs = [], removes = null, del = null) {
   return `<div class="chips">${options.map(([v, label]) => { const x = xs.includes(String(v)), n = x ? removes(key, String(v)) : counts?.get(String(v)) || 0;
-    return `<button type="button" class="chip${x ? " x" : selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : ""}>${esc(label)}${counts ? `<span class="n">${x ? `−${n}` : n}</span>` : ""}</button>`; }).join("")}</div>`;
+    return `${del ? `<span class="chip-wrap">` : ""}<button type="button" class="chip${x ? " x" : selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : ""}>${esc(label)}${counts ? `<span class="n">${x ? `−${n}` : n}</span>` : ""}</button>${del ? `${del(v, label)}</span>` : ""}`; }).join("")}</div>`;
 }
+// the Font chips: chipList's, each with a ✕ that forgets it (a click turns it off and on, like Kind)
+const fontChips = (...a) => chipList("font", S.fontKept.map(f => [f, f]), ...a,
+  v => `<button type="button" class="ghost font-del" data-action="font-forget" data-value="${esc(v)}" title="Remove this font" aria-label="Remove the font ${esc(v)}">✕</button>`);
 const XABLE = new Set(["kind", "stars", "sub", "types", "flags", "missing", "cf", "font"]);   // a right-click (long press) excludes
 const NOT_KEYS = ["series", "subseries", "author"];                              // a select with a ≠ toggle
 /** a sidebar control a right-click or long press on `t` excludes with, or null */
@@ -462,6 +478,7 @@ function renderCards(r) {
   const cfRemoves = v => { const q = new URLSearchParams(p); q.delete("xcf"); for (const x of cfOut) if (x !== v) q.append("xcf", x); return Math.max(0, filterCards(q).length - list.length); };
   const cfSave = v => (mine.includes(v) ? "" : `<button type="button" class="chip cf-save" data-action="cf-save" data-value="${esc(v)}" title="Save to My filters">Save</button>`);   // from a link
   const fontIn = vals(p, "font"), fontOut = vals(p, "xfont"), fontCounts = S.fontUse ? count(base, fontsOf) : null;   // the Font filter
+  for (const f of [...fontIn, ...fontOut]) if (!S.fontKept.includes(f)) S.fontKept.push(f);   // a font off stays listed (owner 10-26), not in the address
   const fontRemoves = (k, v) => { const q = new URLSearchParams(p); q.delete("xfont"); for (const x of fontOut) if (x !== v) q.append("xfont", x); return Math.max(0, filterCards(q).length - list.length); };
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
   const active = [];
@@ -508,7 +525,7 @@ function renderCards(r) {
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
       <h3>Author</h3>${notSel("author", `<select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === pickOf("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>`)}
       <h3>Font</h3><input type="text" class="font-box" data-suggest="font" autocomplete="off" spellcheck="false" placeholder="Type a font…" title="Cards using any picked font" aria-label="Font: cards using any picked font">
-      ${fontIn.length || fontOut.length ? `${chipList("font", [...fontIn, ...fontOut].map(f => [f, f]), fontIn, fontCounts, fontOut, fontRemoves)}${fontIn.length > 1 ? `<p class="muted font-any">Cards with any of them.</p>` : ""}` : ""}
+      ${S.fontKept.length ? `${fontChips(fontIn, fontCounts, fontOut, fontRemoves)}${fontIn.length > 1 ? `<p class="muted font-any">Cards with any of them.</p>` : ""}` : ""}
       <h3>Flags</h3>${FLAGS
         .map(([f, l]) => { const x = xs("flags").includes(f);
           return `<label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="flags" data-value="${f}"${!x && csv(p, "flags").includes(f) ? " checked" : ""}${x ? ` aria-label="${l}: excluded"` : ""}> ${l}${x ? `<span class="n">−${removes("flags", f)}</span>` : ""}</label>`; }).join("")}
@@ -646,8 +663,9 @@ function longestRun(seq) {
   return run;
 }
 // index.html's first screen (build_site first_screen): link tiles whose pictures are already in. The first render makes
-// each one that is its card's tile as the site draws it now the grid's tile in place: the flag and deck button added, no
-// href (a tile like the others: no link drag in edit mode). Any other (a staged edit, say) fillGrid replaces.
+// each one that is its card's tile as the site draws it now the grid's tile in place: the flag, deck button and data-open
+// added (every tile links to its card's page: owner 10-26; edit mode's markTiles drops the href). Any other (a staged
+// edit, say) fillGrid replaces.
 function adoptFirst(grid, css) {
   for (const a of grid.querySelectorAll(":scope > a.tile:not([data-open])")) {
     const c = S.byId.get(decodeURIComponent((a.getAttribute("href") || "").slice(2, -1))), t = document.createElement("template");
@@ -657,7 +675,7 @@ function adoptFirst(grid, css) {
     const html = tileHtml(c, { css }), meta = $(".meta", a);
     t.innerHTML = html;
     for (const el of [...t.content.firstElementChild.children]) if (!el.matches(".art, .meta")) a.insertBefore(el, meta);
-    a.removeAttribute("href"); a.dataset.open = c.id; a.tabIndex = 0;
+    a.dataset.open = c.id;
     gridTiles.set(c.id, { html, el: a, ed: false, css });
   }
 }
@@ -745,8 +763,8 @@ function dupsOf(c) {      // the other cards printed from the same PSD
   const original = c.dup ? S.byId.get(c.dup) : c;
   return original ? [original, ...(original.dups || []).map(x => S.byId.get(x))].filter(x => x && x.id !== c.id) : [];
 }
-function strip(title, cards) {
-  return cards.length ? `<h3><span class="muted">${cards.length}</span> ${esc(title)}</h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
+function strip(title, cards, tip = "") {
+  return cards.length ? `<h3><span class="muted">${cards.length}</span> ${noted(title, tip)}</h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
 }
 function openCard(id, showDetails = false) {
   const c = S.byId.get(id);
@@ -756,7 +774,7 @@ function openCard(id, showDetails = false) {
   if (!c) { toast("That card doesn't exist (anymore)."); history.replaceState(null, "", S.listHash); return; }
   const pool = S.list.length && S.list.some(x => x.id === id) ? S.list : S.cards;
   const i = pool.findIndex(x => x.id === id), prev = pool[(i - 1 + pool.length) % pool.length], next = pool[(i + 1) % pool.length];
-  const inDeck = deckHas(c.id);
+  const inDeck = deckHas(c.id), hang = c.png && G.hangs(c);       // hang: the art hangs out of the frame (grid.js hangVars)
   const mentions = [...(S.mentions.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
   const mentionedBy = [...(S.mentionedBy.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
   const inSub = x => x.subseries === c.subseries;                // any series
@@ -765,7 +783,7 @@ function openCard(id, showDetails = false) {
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
-      <div class="image-wrap"><div class="iv"><div class="iv-stage"><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${placeholderOf(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
+      <div class="image-wrap"><div class="iv"><div class="iv-stage${hang ? " hang" : ""}"${hang ? ` style="${G.hangVars(c)}"` : ""}><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${placeholderOf(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
         <div class="actions card-actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
@@ -786,7 +804,7 @@ function openCard(id, showDetails = false) {
           ${c.created ? `<span class="fact" data-tip="${esc(createdTip(c))}">created ${createdText(c)}</span>` : ""}
           ${c.ts ? `<span class="fact" data-tip="Last PSD commit (Pacific time)">updated ${date(c.ts)}</span>` : ""}
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
-          ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
+          ${c._unused ? `<span class="fact unused" data-tip="${unusedTip(c)}">Unused</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="The same card, counted once">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
           ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(changes.editedTip(c))}">Edited</span>` : ""}
           ${psdBadges(c)}
@@ -794,8 +812,8 @@ function openCard(id, showDetails = false) {
         </div>
         ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, "")}</a>`).join("")}</div>` : ""}
         ${statBars(c)}
-        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, c.name)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
-        ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, c.name)}</div>` : ""}
+        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
+        ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note)}</div>` : ""}
         ${artHtml(c)}
         ${hasBadges(c.ability) || hasBadges(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml()}</details>` : ""}
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
@@ -803,10 +821,10 @@ function openCard(id, showDetails = false) {
         <div class="related">
           <div id="card-balance">${balanceHtml(c)}</div>
           <div id="card-ratings">${ratings.blockHtml(ratedOf(c), { editing: editing(), mine: editor.myRating(ratedOf(c).id) })}</div>
-          ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions)}${strip("Mentioned by", mentionedBy)}${strip("Similar stats", similar(c))}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
+          ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions, "Cards its ability text names")}${strip("Mentioned by", mentionedBy, "Cards whose ability text names this card")}${strip("Similar stats", similar(c), "The 8 cards of the same kind nearest in HP, DEF, ATK and SPD, star level weighed in")}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
-          <div id="history-slot">${historyHtml(c, S.data.repo, S.history?._shas)}</div>
+          <div id="history-slot">${historyHtml(c, S.data.repo, S.history?._shas, canRevert(c))}</div>
           <div id="versions-slot">${versionsHtml(c)}</div>
           ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
         </div>
@@ -821,7 +839,7 @@ function openCard(id, showDetails = false) {
     const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
-  if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c, S.data.repo, S.history?._shas); fillBalance(); }, () => {});
+  if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c, S.data.repo, S.history?._shas, canRevert(c)); fillBalance(); }, () => {});
   else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) loadHistory().then(fillBalance, () => {});   // its original's texts
   if (hasBalance(c) && !S.analytics) loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; });
   if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c); }, () => {});
@@ -846,9 +864,7 @@ const versionList = c => {
   if (!rows) return [];
   return rows.map(([ci, path]) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png }; });
 };
-const versionUrl = (v, cdn = false) => cdn
-  ? `https://cdn.jsdelivr.net/gh/${S.versions.repo}@${v.sha}/${urlPath(v.path)}`
-  : `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
+const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
 function versionsHtml(c) {
   if (!c.iv) return "";
   if (!S.versions) return `<h3>Image versions</h3><p class="muted">Loading ${c.iv} versions…</p>`;
@@ -872,15 +888,19 @@ function showVersion(c, i) {
   const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}${link(v)}<br><span class="muted">${esc(v.subject || "")}</span>`;
   box.innerHTML = i === 0
     ? `<figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
-    : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img class="ver-old" src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}</figcaption></figure>
+    : `<div class="ver-pair"><figure><a href="${esc(versionUrl(v))}" target="_blank" rel="noopener"><img class="ver-old" src="${esc(versionUrl(v))}" alt="${esc(c.name)}, version from ${date(v.ts)}" loading="lazy"></a><figcaption>${caption}${editing() ? `<br><button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(v.sha)}" data-ts="${v.ts}" data-path="${esc(v.path)}">Revert to this version</button>` : ""}</figcaption></figure>
       <figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>Current<br><span class="muted">${date(vs[0].ts)}${link(vs[0])}</span></figcaption></figure></div>
       ${then && then !== c.ability ? `<div class="ver-text"><div class="muted">Text then (changes highlighted)</div><div>${diffWords(then, c.ability)}</div></div>` : ""}`;
-  const old = $(".ver-old", box);
-  if (old) old.addEventListener("error", () => { if (!old.dataset.cdn) { old.dataset.cdn = "1"; old.src = versionUrl(v, true); } }, { once: false });
 }
+// ---- revert (editors): a History or Image versions "Revert to this version", the card's files as they were at that
+// version's commit (edit.js revertCard). A picture-only duplicate's texts are its original's PSD's: no Revert there
+const canRevert = c => editing() && (!c.dup || !!c.variantOf || pictureNumber(c.psd, c.png) !== null);
+/** c's PNG path at commit ref (time ts): its image version there or the newest before it (renames followed), else today's */
+const pngAt = (c, ref, ts) => { const vs = versionList(c); return (vs.find(v => v.sha.startsWith(ref)) || vs.find(v => v.ts <= ts) || vs[vs.length - 1])?.path || c.png; };
 // ---- balance: the card's standing among its star level and its recorded changes (balance.js)
 const balanceOf = c => (c.dup ? S.byId.get(c.dup) || c : c);         // a duplicate shows its original's
 const ratedOf = c => (c.variantOf ? c : balanceOf(c));                // a variant picture keeps its own ratings
+G.ratedBy(ratedOf);                                                   // the Missing filter's No ratings, as the page shows them
 const hasBalance = c => !!balanceOf(c).balance;
 function balanceHtml(c, part = "balance") {          // part: "balance" (the line) or "changes" (the recorded changes)
   if (!hasBalance(c)) return "";
@@ -896,47 +916,124 @@ function closeModal() {
 }
 
 // ---- rulebook --------------------------------------------------------------------------------------
-let rulesAt = "";                                        // the rulebook hash last scrolled to: a re-render stays put
+// site/rulebook's chapters, drawn by rulebook.js. A chapter just published from the rulebook editor (rulebook-edit.js)
+// shows its sent text until the build has it (RB_SENT, for an hour); its new pictures come from the commit meanwhile.
+const RB_SENT = "rulebook-sent";
+function bookChapters() {
+  let sent = null;
+  try { sent = JSON.parse(localStorage.getItem(RB_SENT) || "null"); } catch { /* none */ }
+  const same = sent && sent.chapters.length === S.book.built.length && sent.chapters.every((c, i) => c.file === S.book.built[i].file && c.source === S.book.built[i].source);
+  if (sent && (same || Date.now() - sent.at > 3600e3)) { localStorage.removeItem(RB_SENT); sent = null; }   // built, or stale
+  S.book.sent = sent;
+  S.book.chapters = (sent ? sent.chapters : S.book.built).map(c => ({ ...c, ast: RB.parse(c.source) }));
+  for (const c of S.book.chapters) c.text = `${c.title}\n${RB.plainText(c.ast)}`.toLowerCase();
+  return S.book.chapters;
+}
+let cardNames = null;                                    // ![[Card]] and [[Card]]: printed title or file name, any case
+const cardByName = name => {
+  if (!cardNames) { cardNames = new Map(); for (const c of S.all) for (const k of [c.name, c.key]) if (k && !cardNames.has(norm(k))) cardNames.set(norm(k), c); }
+  return cardNames.get(norm(name)) || null;
+};
+/** a rulebook picture's file by name, with or without its extension ("kirby-sleepy" for a mascot) */
+const bookFile = f => (S.book.images[f] || S.book.sent?.images?.includes(f) ? f
+  : Object.keys(S.book.images).find(k => k.replace(/\.\w+$/, "") === f.replace(/\.\w+$/, "")) || S.book.sent?.images?.find(k => k.replace(/\.\w+$/, "") === f) || f);
+function bookCtx(extra = {}) {
+  const imgs = S.book.images, sent = S.book.sent;
+  return {
+    render: t => S.renderer.render(t, { links: false }), icon: t => S.renderer.icon(t), card: cardByName, cardImg: c => img(c, 360),
+    imgUrl: f => { const k = bookFile(f); return imgs[k] ? `${RB.IMG_DIR}${encodeURIComponent(k)}?v=${imgs[k][2]}`
+      : sent?.images?.includes(k) ? `https://raw.githubusercontent.com/${S.data.repo}/${sent.sha}/site/rulebook/img/${encodeURIComponent(k)}` : RB.IMG_DIR + encodeURIComponent(k); },
+    size: f => imgs[bookFile(f)]?.slice(0, 2) || null, shape: f => imgs[bookFile(f)]?.[3] || null, chapters: S.book.chapters, ...extra,
+  };
+}
+const pdfUrl = () => `https://github.com/${S.data.repo}/blob/${S.data.branch || "main"}/TTS/Rulebook/Rulebook.pdf`;   // AutoCroissant rulebook_pages
+let rulesAt = "", spy = null;                            // the rulebook hash last scrolled to: a re-render stays put
 function renderRules(r) {
-  if (!S.rules) {
+  if (!S.book) {
     view.innerHTML = `<div class="loading">Loading the rulebook…</div>`;
-    whenLoaded(loadRules(), "the rulebook", () => { if (parseHash().name === "rules") renderRules(parseHash()); });
+    whenLoaded(loadBook(), "the rulebook", () => { if (parseHash().name === "rules") renderRules(parseHash()); });
     return;
   }
+  if (r.arg === "print") { renderSheets(r); return; }
+  document.body.classList.remove("rb-shot");
   const q = (r.params.get("q") || "").trim().toLowerCase();
   if (document.activeElement !== qInput) qInput.value = "";
-  const pages = S.rules.filter(p => !q || (p.ability || "").toLowerCase().includes(q) || p.name.toLowerCase().includes(q));
-  const tags = ["OYT", "1CD", "1/2CD", "AAT", "1GCD", "1/2GCD", "BOT", "ENDT", "BOGT", "ENDGT", "OFS", "OS", "OD", "WOF", "1PG", "2U", "Action",
-    "1PT", "E2T", "FTE2T", "1PGT", "E2GT"];   // old system last
-  const gloss = list => `<div class="glossary">${list.map(t => `<div>${badgeHtml(t)} ${esc(tagInfo(t).meaning)}</div>`).join("")}</div>`;
-  const banned = S.data.banlist;
+  const chapters = S.book.chapters, ctx = bookCtx({ editable: editing() }), shown = q ? chapters.filter(c => c.text.includes(q)) : chapters;
+  // a Photoshop page's old link (#/rules/07-stats3, the changelog's #/rules?q=07 Stats3): its chapter by number
+  const was = t => { const m = /^(\d{2})[-_ ]/.exec(t || ""); return m && chapters.find(c => c.num === m[1]); };
+  const gone = r.arg && !chapters.some(c => c.id === r.arg.split("/")[0]) ? was(r.arg) : q && !shown.length ? was(q) : null;
+  if (gone) { location.replace(`#/rules/${gone.id}`); return; }
+  const banned = S.data.banlist, can = editing();
+  const label = c => `${Number(c.num) ? `${Number(c.num)}. ` : ""}${esc(c.title)}`;
   view.innerHTML = `<div class="rules">
-    <nav class="toc" aria-label="Rulebook pages"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
-      <a href="#/rules" data-scroll="badge-colors">Badge colors</a><a href="#/rules" data-scroll="glossary">Timing tags</a><a href="#/rules" data-scroll="banlist">Constructed ban list</a>
-      ${S.rules.map(p => `<a href="#/rules/${p.id}" data-scroll="page-${p.id}">${esc(p.name)}</a>`).join("")}</nav>
-    <div>
-      ${q ? `<p class="muted">${pages.length} page${pages.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : ""}
-      ${!q ? `<p class="muted">The whole game in one text file: <a href="game.txt" target="_blank" rel="noopener">game.txt</a> (every card and rulebook page).</p>` : ""}
-      ${!q ? `<section class="panel" id="badge-colors"><h3>Badge colors</h3>${legendHtml()}</section>
-      <section class="panel" id="glossary"><h3>Timing tags</h3><p class="muted">X can be any number; the first number of a pair such as (1/2CD) can also be 0 or −1. Hover or tap a badge for its meaning.</p>
-        ${Object.entries(GROUP_NAMES).map(([g, label]) => `<h4>${esc(label)}</h4>${gloss(tags.filter(t => tagInfo(t).group === g && !tagInfo(t).old))}`).join("")}
-        <h4>Old system (rulebook pages)</h4>${gloss(tags.filter(t => tagInfo(t).old))}</section>
-      <section class="panel" id="banlist"><h3>Constructed ban list</h3>${banned.notes.map(n => `<p class="muted">${esc(n)}</p>`).join("")}
-        ${banned.groups.map(g => `<h4>${esc(g.title)}</h4><ul>${g.entries.map(e => `<li>${e.id ? `<a class="card-ref" href="#/card/${e.id}" data-card="${e.id}">${esc(e.name)}</a>` : esc(e.name)} <span class="muted">— ${esc(e.reason)}</span></li>`).join("")}</ul>`).join("")}</section>` : ""}
-      ${pages.map(p => `<article class="page" id="page-${p.id}">${p.img ? `<a href="${esc(fullUrl(p))}" target="_blank" rel="noopener" title="Full-size page"><img loading="lazy" decoding="async" ${imgAttrs(p, 220, true)} alt="${esc(p.name)}"></a>` : "<div></div>"}
-        <div><h3>${esc(p.name)} <a class="page-link" href="#/rules/${p.id}" data-scroll="page-${p.id}" data-tip="Link to this page">#</a>${p._staged ? ` <span class="fact staged">Unpublished edit</span>` : ""} <button type="button" class="ghost" data-action="edit-card" data-id="${p.id}" title="Edit this page">Edit</button></h3>
-          <div class="ability">${S.renderer.render(p.ability || "")}</div>${p.note ? `<div class="note"><b>Note</b> ${S.renderer.render(p.note)}</div>` : ""}
-          ${p.details ? details.detailsHtml(details.readState(store), false) : ""}</div></article>`).join("") || `<div class="empty">No rulebook page mentions that.</div>`}
+    <nav class="toc" aria-label="Rulebook chapters"><input type="search" id="rules-q" placeholder="Search the rulebook…" value="${esc(r.params.get("q") || "")}" style="width:100%;margin-bottom:8px;padding:7px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface)">
+      ${chapters.map(c => `<a href="#/rules/${c.id}" data-scroll="${c.id}" data-toc="${c.id}">${label(c)}</a><div class="subs" data-subs="${c.id}" hidden>${RB.sectionsOf(c).map(x => `<a class="sub" href="#/rules/${c.id}/${x.anchor.slice(c.id.length + 2)}" data-scroll="${x.anchor}">${esc(x.title)}</a>`).join("")}</div>`).join("")}
+      <a href="#/rules" data-scroll="banlist" data-toc="banlist">Constructed ban list</a>
+      <div class="toc-tools"><a class="ghost" href="${esc(pdfUrl())}" target="_blank" rel="noopener" title="The rulebook as a PDF (the Tabletop Simulator save's)">PDF</a><a class="ghost" href="#/rules/print" title="The PDF's pages, as the next save update prints them">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
+        <button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button></div></nav>
+    <div class="rb rb-book">
+      ${q ? `<p class="muted">${shown.length} chapter${shown.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}" alt="Impossibility Simulator" width="260" height="462">`}
+      ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
+      ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${RB.chapterHtml(c, ctx)}</article>`).join("")
+        || `<div class="empty">No rulebook chapter mentions that.</div>`}
+      ${!q ? `<article class="rb-chapter rb-extra" id="banlist"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-bans" title="${editor.me?.admin ? "Edit the ban list" : "Admins edit the ban list (sign in)"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="${esc(S.data.files.banlist)}" data-title="Constructed ban list" title="Every change to the ban list, as a diff">History</button></div><header class="rb-head"><h2>Constructed ban list</h2></header>
+        <div class="rb-panel rb-solo">${banned.notes.map(n => `<p>${esc(n)}</p>`).join("")}</div>
+        ${banned.groups.map(g => `<section class="rb-sec"><h3 class="rb-tab">${esc(g.title)}</h3><div class="rb-panel"><div class="rb-bans">${g.entries.map(e => { const c = e.id && S.byId.get(e.id);
+          return `<div class="rb-ban">${c ? `<a class="rb-card" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}" title="${esc(c.name)}"><img src="${esc(img(c, 240))}" alt="${esc(c.name)}" loading="lazy" decoding="async"></a>` : ""}
+            <b>${c ? `<a class="card-ref" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}">${esc(e.name)}</a>` : esc(e.name)}</b>${e.reason ? `<i>${esc(e.reason)}</i>` : ""}</div>`; }).join("")}</div></div></section>`).join("")}</article>` : ""}
     </div></div>`;
-  if (q) highlight($$(".page .ability, .page h3", view), q);
-  for (const p of pages) {                               // one Details dropdown per page, always closed at first
-    const dd = p.details && document.getElementById(`page-${p.id}`)?.querySelector(".psd-details");
-    if (dd) details.mount(dd, { card: p, load: () => loadDetails(p), storage: store, extras: { badges: psdBadges(p), labels: FIELD_LABEL, page: true }, outer: false });
+  if (q) {                                               // only the blocks that hold it, highlighted
+    for (const el of $$(".rb-chapter > :not(.rb-head):not(.rb-tools)", view)) if (!el.textContent.toLowerCase().includes(q)) el.classList.add("rb-hit-none");
+    highlight($$(".rb-chapter", view), q);
   }
-  if (r.arg && !q && rulesAt !== location.hash) document.getElementById(`page-${r.arg}`)?.scrollIntoView();   // #/rules/<id>: that page
+  watchToc();
+  const [ch, sec] = (r.arg || "").split("/");
+  if (ch && !q && rulesAt !== location.hash) document.getElementById(sec ? `${ch}--${sec}` : ch)?.scrollIntoView();   // #/rules/<chapter>[/<section>]
   rulesAt = location.hash;
   const input = $("#rules-q");
   input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#rules-q"); i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }, 200));
+}
+// the contents follow the reading: the chapter in view is marked and shows its sections
+function watchToc() {
+  spy?.disconnect();
+  const seen = new Map();
+  spy = new IntersectionObserver(es => {
+    for (const e of es) seen.set(e.target.id, e.isIntersecting ? e.intersectionRect.height : 0);
+    const best = [...seen].sort((a, b) => b[1] - a[1])[0];
+    if (!best?.[1]) return;
+    for (const a of $$(".toc [data-toc]", view)) a.classList.toggle("on", a.dataset.toc === best[0]);
+    for (const d of $$(".toc [data-subs]", view)) d.hidden = d.dataset.subs !== best[0];
+  }, { rootMargin: "-80px 0px -40% 0px", threshold: [0, .1, .3, .6, 1] });
+  for (const el of $$(".rb-chapter", view)) spy.observe(el);
+}
+// #/rules/print: the TTS pages (rulebook.js paginate), all of them small; ?sheet=N alone at full size, nothing else on the
+// page. #rb-sheet-list holds the pages and the chapters they were cut from: the TTS export (AutoCroissant
+// commands/rulebook_pages.py) checks those against main's before it screenshots the pages
+async function renderSheets(r) {
+  const shot = r.params.get("sheet"), solo = shot !== null && shot !== "";
+  document.body.classList.toggle("rb-shot", solo);
+  view.innerHTML = `<p class="rb-print-bar muted">The rulebook's pages as the Tabletop Simulator save's PDF shows them (1080×1920; the next save update prints them). <a href="${esc(pdfUrl())}" target="_blank" rel="noopener">The PDF</a> · <a href="#/rules">Back to the rulebook</a></p><div class="rb-measure"></div>`;
+  const host = $(".rb-measure", view), ctx = bookCtx({ eager: true }), chapters = S.book.chapters;
+  const warm = document.createElement("div");             // every picture loaded first: the pages measure them
+  warm.className = "rb"; warm.style.cssText = "position:absolute;left:-20000px;top:0;width:1080px";
+  warm.innerHTML = chapters.map(c => RB.chapterHtml(c, ctx)).join("");
+  document.body.append(warm);
+  await Promise.all([...warm.querySelectorAll("img")].map(i => i.decode().catch(() => {})));
+  // the pages' fonts before any measure (the book view may use an installed Consolas and never ask for them)
+  await Promise.all(["35px Inconsolata", "bold 35px Inconsolata", "35px 'EB Garamond'"].map(f => document.fonts.load(f).catch(() => {})));
+  await document.fonts.ready;
+  warm.remove();
+  if (parseHash().name !== "rules" || parseHash().arg !== "print") return;
+  const cover = { cover: ctx.imgUrl("cover") };           // the PDF's first page
+  let sheets = RB.paginate(host, chapters, ctx, cover);   // measured at full size, then shown small
+  await Promise.all([...host.querySelectorAll("img")].map(i => i.decode().catch(() => {})));
+  if ([...host.querySelectorAll(".rb-body")].some(b => b.scrollHeight > b.clientHeight + 1)) sheets = RB.paginate(host, chapters, ctx, cover);   // a picture late: cut again
+  host.className = "rb-sheets";
+  if (solo) sheets.forEach((x, i) => x.el.classList.toggle("rb-shown", i === +shot));
+  const list = Object.assign(document.createElement("script"), { type: "application/json", id: "rb-sheet-list" });
+  list.textContent = JSON.stringify({ sheets: sheets.map(x => ({ name: x.name, num: x.num, ch: x.ch, n: x.n })), chapters: chapters.map(c => [c.file, c.source]) });
+  view.append(list);
+  document.body.dataset.sheets = String(sheets.length);    // the export waits for this
 }
 function highlight(els, q) {
   for (const el of els) {
@@ -985,7 +1082,7 @@ function renderDeck(r) {
   const counts = { banned: cards.filter(c => S.banned.has(c.id)).length };
   view.innerHTML = `<div class="deck">
     <section>
-      ${readOnly ? `<div class="panel"><b>Shared hand: ${esc(d.name)}</b> · ${v.count}/${v.slots} cards <button type="button" class="primary" data-action="save-shared">Save a copy to my decks</button></div>` : ""}
+      ${readOnly ? `<div class="panel"><b>Shared hand: ${esc(d.name)}</b> · ${noted(`${v.count}/${v.slots} cards`, D.CHECK_TIP)} <button type="button" class="primary" data-action="save-shared">Save a copy to my decks</button></div>` : ""}
       <div class="panel"><h3>${readOnly ? "" : `<input id="deck-name" value="${esc(d.name)}" aria-label="Deck name" style="font:inherit;font-weight:700;background:transparent;border:0;color:inherit;width:100%">`}</h3>
         <p class="muted">7 creatures and 10 items, one of each, none banned, plus an optional field card (≤${D.FIELD_MAX_STARS}★) for the shop.</p>
         ${groups}
@@ -995,8 +1092,8 @@ function renderDeck(r) {
       </div>
     </section>
     <aside>
-      <div class="panel"><h3>${v.complete ? "✅ Legal hand" : `Checks · ${v.count}/${v.slots} cards`}</h3><ul class="checks">${v.checks.map(c => `<li class="${c.ok ? "ok" : "err"}">${c.ok ? "✓" : "✗"} ${esc(c.text)}</li>`).join("")}</ul>
-        ${cards.length ? `<p class="muted">Average total stats: ${(cards.filter(c => c.hp != null).reduce((s, c) => s + total(c), 0) / Math.max(1, cards.filter(c => c.hp != null).length)).toFixed(1)} · banned: ${counts.banned}</p>` : ""}</div>
+      <div class="panel"><h3>${v.complete ? "✅ Legal hand" : `Checks · ${noted(`${v.count}/${v.slots} cards`, D.CHECK_TIP)}`}</h3><ul class="checks">${v.checks.map(c => `<li class="${c.ok ? "ok" : "err"}">${c.ok ? "✓" : "✗"} ${esc(c.text)}</li>`).join("")}</ul>
+        ${cards.length ? `<p class="muted">${noted("Average total stats", "Mean HP + DEF + ATK + SPD of the hand's cards with stats; field card left out")}: ${(cards.filter(c => c.hp != null).reduce((s, c) => s + total(c), 0) / Math.max(1, cards.filter(c => c.hp != null).length)).toFixed(1)} · banned: ${counts.banned}</p>` : ""}</div>
       ${readOnly ? "" : `<div class="panel"><h3>Build</h3><div class="actions">
         <button type="button" data-action="deck-random" title="Fill the rest of the hand with random legal cards">Fill randomly</button>
         <button type="button" class="danger" data-action="deck-clear">Clear</button></div></div>`}
@@ -1027,7 +1124,7 @@ function openPicker(tier) {                              // the shared picker (p
     <p class="muted">Banned cards are marked: they make the hand illegal.</p><div id="picker-body"></div></div>`;
   modal.hidden = false; document.body.style.overflow = "hidden";
   pick.mount($("#picker-body"), { cards: () => S.cards, filter: c => fits(c) && c.parsed && !deckHas(c.id), kinds: KINDS, kindOf,
-    tile: c => tileHtml(c, { small: true, constructed: true }),
+    tile: (c, o) => tileHtml(c, { small: true, constructed: true, ...o }),
     onChoose: id => { const err = D.addCard(deck(), S.byId.get(id), S.byId); if (err) toast(err); else { D.saveDecks(S.decks); updateDeckCount(); closeModal(); renderDeck(parseHash()); } } });
 }
 
@@ -1040,7 +1137,7 @@ function renderStatsView(r) {
     return;
   }
   const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
-  St.stats.renderStats(view, { cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage }, r.params);
+  St.stats.renderStats(view, { cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage, season: S.season }, r.params);
   const ctx = { cards: S.cards };
   const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
   const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History go in with it
@@ -1131,7 +1228,7 @@ function renderCompare(r) {
       <h3><a href="#/card/${c.id}">${esc(c.name)}</a></h3><p class="muted">${esc(KIND_LABEL[c.type] || c.type)} ${c.stars ? `· ${c.stars}★` : ""} ${c.series ? `· ${esc(c.series)}` : ""} ${c.subseries ? `· ${esc(c.subseries)}` : ""}</p>
       ${["hp", "def", "atk", "spd"].map(k => c[k] != null ? `<div>${k.toUpperCase()} <b>${c[k]}</b>${delta(c, k)}</div>` : "").join("")}
       ${c.hp != null ? `<div>Total <b>${total(c)}</b>${c === first || first.hp == null ? "" : (d => d ? ` <span class="${d > 0 ? "diff-up" : "diff-down"}">${d > 0 ? "+" : ""}${d}</span>` : "")(total(c) - total(first))}</div>` : ""}
-      ${c.ability ? `<div class="ability" style="margin-top:8px">${S.renderer.render(c.ability, c.name)}</div>` : ""}
+      ${c.ability ? `<div class="ability" style="margin-top:8px">${S.renderer.render(c.ability)}</div>` : ""}
       <p><button type="button" class="ghost" data-action="compare-remove" data-id="${c.id}">Remove</button></p></div>`).join("")}</div>`;
 }
 
@@ -1334,7 +1431,67 @@ function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTi
 async function copy(text, what) { try { await navigator.clipboard.writeText(text); toast(`Copied ${what}`); } catch { prompt("Copy:", text); } }
 function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`; modal.hidden = false; }
 
+// the rulebook editor (rulebook-edit.js): a chapter's text beside its page, published as one commit
+let rbEditP = null;
+function openBookEditor(id, line = null) {
+  if (!editing()) { act("edit-hub"); return; }
+  withEditor(ed => (rbEditP ||= (early("rulebook-edit.js"), import("./rulebook-edit.js")).catch(e => { rbEditP = null; throw e; })).then(m => m.open({
+    id, line, RB, book: S.book, ctx: bookCtx, editor: ed, repo: S.data.repo, branch: S.data.branch || "main", modal, toast, closeModal,
+    cards: () => S.all.filter(c => !c.hidden).map(c => c.name),
+    published: sent => { localStorage.setItem(RB_SENT, JSON.stringify(sent)); bookChapters(); rerender(); },
+  })).catch(e => toast(`Couldn't open the rulebook editor (${e.message})`)));
+}
+// the rulebook History's Revert (rulebook.js openHistory): editors revert a chapter, admins the ban list; that version's
+// text as one commit, shown at once as their editors' Publish does (RB_SENT; the ban list in S.data)
+const bookDate = d => new Date(d).toLocaleString(undefined, { timeZone: TZ, dateStyle: "medium", timeStyle: "short" });
+function bookRevert(path, title) {
+  const ban = path === S.data.files.banlist;
+  if (!editing() || (ban && !editor.me.admin)) return null;
+  return async (c, text) => {
+    const when = c.commit.committer?.date || c.commit.author?.date, what = ban ? "the constructed ban list" : `the chapter “${title}”`;
+    if (!confirm(`Revert ${what} to its version of ${bookDate(when)} (commit ${c.sha.slice(0, 8)})?\n\nIts current text is replaced by that version's. The later versions stay in its history.`)) return false;
+    try {
+      const sha = await editor.commit({ [path]: () => text }, `${ban ? "Website edit: constructed ban list" : `Rulebook: ${title}`} reverted to ${stampOf(Date.parse(when) / 1000)}`);
+      if (!sha) { toast("Nothing to revert: the current text is that version's"); return false; }
+      if (ban) S.data.banlist = banList(text);
+      else {
+        const file = path.slice(path.lastIndexOf("/") + 1);
+        localStorage.setItem(RB_SENT, JSON.stringify({ at: Date.now(), sha, images: S.book.sent?.images || [],
+          chapters: S.book.chapters.map(({ ast: _a, text: _t, ...x }) => (x.file === file ? { ...x, source: text, title: RB.parse(text).title.trim() || x.title } : x)) }));
+        bookChapters();
+      }
+      rerender();
+      toast("Reverted: the site rebuilds in a few minutes");
+      return true;
+    } catch (e) { toast(`Couldn't revert (${e.message})`); return false; }
+  };
+}
+// the ban list's text as build_site.py parse_banlist reads it: notes, then "Group:" lines, each card "Name - reason"
+function banList(text) {
+  const out = { notes: [], groups: [] }, find = n => cardByName(n) || cardByName(n.replace(/\(.*?\)/g, ""));
+  for (const line of text.split("\n").map(l => l.trim()).filter(Boolean)) {
+    const g = out.groups[out.groups.length - 1];
+    if (line.endsWith(":")) out.groups.push({ title: line.replace(/:+$/, ""), entries: [] });
+    else if (!g) out.notes.push(line);
+    else { const [name, ...why] = line.split(" - "); g.entries.push({ name: name.trim(), reason: why.join(" - ").trim(), id: find(name.trim())?.id || null }); }
+  }
+  return out;
+}
 const actions = {
+  "rb-edit": el => openBookEditor(el.dataset.id, el.dataset.line != null ? +el.dataset.line : null),
+  "rb-new": () => openBookEditor(""),
+  "rb-history": el => RB.openHistory({ repo: S.data.repo, branch: S.data.branch || "main", path: el.dataset.path, title: el.dataset.title, modal,
+    closeModal, dateText: bookDate, revert: bookRevert(el.dataset.path, el.dataset.title) }),
+  "rb-bans": () => {                                     // the constructed ban list's editor (admins; rulebook-edit.js openBans)
+    if (!editing()) { act("edit-hub"); return; }
+    withEditor(ed => {
+      if (!ed.me?.admin) { toast("Only admins edit the ban list"); return; }
+      (rbEditP ||= (early("rulebook-edit.js"), import("./rulebook-edit.js")).catch(e => { rbEditP = null; throw e; })).then(m => m.openBans({
+        banlist: S.data.banlist, path: S.data.files.banlist, editor: ed, modal, toast, closeModal, cards: () => S.all.filter(c => !c.hidden),
+        published: list => { S.data.banlist = list; rerender(); },
+      })).catch(e => toast(`Couldn't open the ban list editor (${e.message})`));
+    });
+  },
   "close": () => { if ($("#edit-form", modal)) { actions["edit-cancel"](); return; } if (parseHash().name === "card") location.hash = S.listHash; else closeModal(); },
   "toggle-param": (el, exclude = false) => { const p = parseHash().params, k = el.dataset.key, cur = vals(p, k), v = el.dataset.value;
     if (!XABLE.has(k) || !el.closest(".browse .filters")) { setParams({ [k]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }); return; }
@@ -1348,8 +1505,11 @@ const actions = {
     if (!inc && !exc) { S.notPick[S.notPick.has(k) ? "delete" : "add"](k); rerender(); return; }
     if (inc) S.notPick.add(k); else S.notPick.delete(k);
     setParams({ [k]: exc, [`x${k}`]: inc }); },
-  "remove-param": el => { const p = parseHash().params; if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: vals(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "" }); if (el.dataset.key === "q") qInput.value = ""; },
-  "clear-filters": () => { qInput.value = ""; S.notPick.clear(); const fb = $(".browse .font-box", view); if (fb) fb.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
+  "font-forget": el => { const v = el.dataset.value, p = parseHash().params; S.fontKept = S.fontKept.filter(f => f !== v);
+    if (vals(p, "font").includes(v) || vals(p, "xfont").includes(v)) setParams({ font: vals(p, "font").filter(f => f !== v), xfont: vals(p, "xfont").filter(f => f !== v) }); else rerender(); },
+  "remove-param": el => { const p = parseHash().params; if (el.dataset.key === "font" || el.dataset.key === "xfont") S.fontKept = S.fontKept.filter(f => f !== el.dataset.value);   // the bar's ✕: gone, as before
+    if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: vals(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "" }); if (el.dataset.key === "q") qInput.value = ""; },
+  "clear-filters": () => { qInput.value = ""; S.notPick.clear(); S.fontKept = []; const fb = $(".browse .font-box", view); if (fb) fb.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
   "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(sortOf(p), p.get("dir")) ? "asc" : "desc" }); },
@@ -1398,6 +1558,14 @@ const actions = {
     el.textContent = on ? "Chart" : "Table"; $(".view-chart", box).hidden = on; $(".view-table", box).hidden = !on; },
   "stats-filter": el => setParams({ [el.dataset.key]: el.value }),
   "dist-page": el => distPage(el.closest(".dist-panel"), +el.dataset.step),
+  season: el => { const box = el.closest(".chart"), s = S.season = el.dataset.season;     // its episodes (stats.js seasonsCard)
+    for (const a of $$("a.season", box)) { const on = a.dataset.season === s; a.classList.toggle("on", on); a.setAttribute("aria-pressed", on); }
+    for (const p of $$(".ep-panel", box)) p.hidden = p.dataset.season !== s; },
+  "card-revert": el => { const c = S.byId.get(el.dataset.id), ts = +el.dataset.ts, ref = el.dataset.sha;
+    if (!c || !editing()) return;
+    el.disabled = true;
+    (c.iv ? loadVersions().catch(() => {}) : Promise.resolve()).then(() => editor.revertCard(c, { ref, ts, then: el.dataset.path || pngAt(c, ref, ts) }))
+      .catch(e => toast(`Couldn't revert (${e.message})`)).finally(() => { el.disabled = false; }); },
   "version-pick": el => { const id = parseHash().arg, c = S.byId.get(id); if (c) { showVersion(c, +el.dataset.i); if (c.hv && !c.history) loadHistory().then(() => showVersion(c, +el.dataset.i), () => {}); } },
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
   "select-mode": () => { S.selecting = !S.selecting; if (!S.selecting) S.selected.clear(); rerender(); },
@@ -1420,6 +1588,7 @@ document.addEventListener("click", e => {
   if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); act(a.dataset.action, a); return; }
   const open = e.target.closest("[data-open], .chart [data-card]");
   if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey || S.selecting) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
+  if (open?.matches("a[href]") && (e.metaKey || e.ctrlKey || e.shiftKey || e.button)) return;   // a tile's link: the browser opens its page
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
   const go = e.target.closest(".chart a.go");             // a Stats chart's cards: the grid from its top
   if (go && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) { e.preventDefault(); S.toTop = true; location.hash = go.getAttribute("href"); return; }
@@ -1541,6 +1710,6 @@ wireTips(document, tips, (cx, cy) => {
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
 }, { match: xTarget, run: el => actions["toggle-param"](el, true) });
 
+try { for (const k of Object.keys(localStorage)) if (k === "edit-token" || k.startsWith("deckPass:")) localStorage.removeItem(k); } catch {}   // plain-text secrets of before 2026-10-23
 if (wantsEditor()) loadEditor().catch(() => {});          // at once, beside cards.json
 init().finally(fresh.watch);                            // a new deploy reloads the page (fresh.js)
-passes.migrate().catch(() => {});                       // passphrases remembered in plain text before 2026-10-23: sealed now

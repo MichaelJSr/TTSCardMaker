@@ -6,6 +6,7 @@ export const HAND = [
   { kind: "item", label: "Items", tiers: [[4, 2], [3, 3], [2, 3], [1, 2]] },
 ];
 export const FIELD_MAX_STARS = 3;
+export const CHECK_TIP = "Cards in the hand, field card not counted, of the 17 a starting hand holds";   // the Checks' count (validate)
 const SLOTS = HAND.reduce((n, g) => n + g.tiers.reduce((m, [, k]) => m + k, 0), 0);
 
 // ---- storage -------------------------------------------------------------------------------------
@@ -182,9 +183,9 @@ export function ttsSave(deck, byId, raw, pins = {}) {
   const items = cards.filter(c => c.type !== "creature").sort((a, b) => b.stars - a.stars);
   const field = byId.get(deck.field);
   const objects = [];
-  if (creatures.length) objects.push(ttsPile(`${deck.name} — creatures`, creatures, 1, raw, backUrl("MDW/cardback.png"), -4));
-  if (items.length) objects.push(ttsPile(`${deck.name} — items`, items, 101, raw, backUrl("MDW/cardback_item.png"), 0));
-  if (field && field.png) objects.push(ttsCard(field, 201, raw, backUrl("MDW/cardback_item.png"), 4));
+  if (creatures.length) objects.push(ttsPile(`${deck.name} — creatures`, creatures, 1, raw, backUrl("MDW/Assets/cardback.png"), -4));
+  if (items.length) objects.push(ttsPile(`${deck.name} — items`, items, 101, raw, backUrl("MDW/Assets/cardback_item.png"), 0));
+  if (field && field.png) objects.push(ttsCard(field, 201, raw, backUrl("MDW/Assets/cardback_item.png"), 4));
   return {
     SaveName: deck.name, GameMode: "", Gravity: 0.5, PlayArea: 0.5, Date: new Date().toLocaleString(), Table: "", Sky: "",
     Note: "", Rules: "", XmlUI: "", LuaScript: "", LuaScriptState: "", ObjectStates: objects, TabStates: {}, VersionNumber: "",
