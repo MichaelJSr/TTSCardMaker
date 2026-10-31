@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvyntqc-dkn7",
+ "card": "Air Totem",
+ "path": "Auxiliary/Items/Air_Totem.psd",
+ "png": "Auxiliary/Items/Air_Totem.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "a4373e3cd35ca75df8d1bf901850e581d67c43dd",
+  "png_blob": "cc7a3151345aaea814ea3726a798815035a6ae5a"
+ },
+ "edit": {
+  "ability": "(1GCD) Inflict a friendly creature with 1T3 Peppy.\nOverkill damage carries over to another friendly Totem.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "(1GCD) Inflict a friendly creature with 1T3 Peppy.\nOverkill damage carries over to another friendly Totem.",
+    "was": "(1GCD) Inflict a friendly creature with 1T3 Peppy.\nOverkill damage carries over to the next friendly Totem.",
+    "sha": "cb97e982",
+    "psd": "a4373e3c",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next friendly' -> 'to another friendly'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD) Inflict a friendly creature with 1T3 Peppy.\nOverkill damage carries over to the next friendly Totem.",
+   "new": "(1GCD) Inflict a friendly creature with 1T3 Peppy.\nOverkill damage carries over to another friendly Totem."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.19,
+   "max": 2.0
+  }
+ },
+ "region": [
+  37,
+  1368,
+  1163,
+  1780
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41172753639",
+ "took_s": 7.6,
+ "at": "2026-10-31T05:29:18Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 2938065,
+  "webp": 69620,
+  "before": 69792
+ },
+ "recompressed": false
+}

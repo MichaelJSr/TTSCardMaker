@@ -95,6 +95,14 @@
    "png_blob": "248440a2c0e56881f40834d05204000e8b1c14f9",
    "psd_blob": "8268f54847bcf4e5b9d7b0066b7075cfb318f80a",
    "state": "baked"
+  },
+  "zomoroko-mvvyntqc-dkn7": {
+   "at": "2026-10-31T05:29:18Z",
+   "card": "Air Totem",
+   "path": "Auxiliary/Items/Air_Totem.psd",
+   "png_blob": "cc7a3151345aaea814ea3726a798815035a6ae5a",
+   "psd_blob": "a4373e3cd35ca75df8d1bf901850e581d67c43dd",
+   "state": "baked"
   }
  },
  "v": 1
