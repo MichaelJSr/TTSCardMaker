@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw5id5u-2nac",
+ "card": "The Maelstrom",
+ "path": "Field/4 Stars/The_Maelstrom.psd",
+ "png": "Field/4 Stars/The_Maelstrom.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "098bd28a678e6484e2a98d7785b66196c803cc38",
+  "psd_blob": "51b6c590d61c6dea2b1e94259bd2d17afbc83f79",
+  "png_blob": "c807e4ce2807950864994e051f5d417334f49855"
+ },
+ "edit": {
+  "ability": "After 6 stars worth of friendly creatures (including minions) have died while this is in play, draw a random \"discarded emotion\" item (Love, Motivation, or Regret).",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "After 6 stars worth of friendly creatures (including minions) have died while this is in play, draw a random \"discarded emotion\" item (Love, Motivation, or Regret).",
+    "was": "After 6 stars worth of friendly creatures (including minions) have died while this is in play, draw a random \"discarded emotion\" item (love, motivation, or regret).",
+    "sha": "41dd3c60",
+    "psd": "51b6c590",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'item (love, motivation, or regret).' -> 'item (Love, Motivation, or Regret).'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "After 6 stars worth of friendly creatures (including minions) have died while this is in play, draw a random \"discarded emotion\" item (love, motivation, or regret).",
+   "new": "After 6 stars worth of friendly creatures (including minions) have died while this is in play, draw a random \"discarded emotion\" item (Love, Motivation, or Regret)."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.003,
+   "max": 1.0
+  }
+ },
+ "region": [
+  11,
+  1344,
+  1200,
+  1778
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41185566592",
+ "took_s": 6.7,
+ "at": "2026-10-31T08:41:00Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1086346,
+  "webp": 53022,
+  "before": 53140
+ },
+ "recompressed": false
+}
