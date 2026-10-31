@@ -334,7 +334,8 @@ function seasonsCard(pool, cur) {
   const rows = pool.filter(c => c.type === "buff" || c.type === "debuff").map(c => ({ c, s: spongeOf(c.art) })).filter(r => r.s);
   if (!rows.length) return "";
   const last = Math.max(0, ...rows.map(r => +r.s.season).filter(Number.isFinite));
-  const seasons = [...Array.from({ length: last }, (_, i) => String(i + 1)), ...(rows.some(r => r.s.season === "Movie") ? ["Movie"] : [])];
+  const seasons = Array.from({ length: last }, (_, i) => String(i + 1));
+  if (rows.some(r => r.s.season === "Movie")) seasons.splice(Math.min(3, last), 0, "Movie");     // between seasons 3 and 4, as released
   const of = new Map(seasons.map(s => [s, rows.filter(r => r.s.season === s).sort((a, b) => a.s.ep - b.s.ep || a.c.type.localeCompare(b.c.type) || a.c.name.localeCompare(b.c.name))]));
   const pick = seasons.includes(cur) && of.get(cur).length ? cur : seasons.reduce((a, b) => (of.get(b).length > of.get(a).length ? b : a));
   const kinds = SPONGE_KINDS.filter(([k]) => rows.some(r => r.c.type === k)), n = (s, k) => of.get(s).filter(r => r.c.type === k).length;

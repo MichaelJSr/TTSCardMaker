@@ -1368,7 +1368,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 
 - Stats page, after Status effects mentioned (stats.js `seasonsCard`): buffs and debuffs by the season their `art` field
   names (`spongeOf`: `SpongeBob SquarePants Season N Ep. NNx "Title"`, or a SpongeBob movie), stacked buffs/debuffs, every
-  season from 1 (an empty one has no column button), the Movie last.
+  season from 1 (an empty one has no column button), the Movie between seasons 3 and 4 (owner 10-31).
 - A season's column (a button, app.js action `season`) shows its episodes below in place: per episode a block per
   status effect and their names (card links); the pick is kept for the session (`S.season`), else the biggest season.
   The table view lists every episode. Cards whose art names no SpongeBob source are left out.
