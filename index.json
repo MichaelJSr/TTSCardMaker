@@ -111,6 +111,14 @@
    "png_blob": "d191961b03d461d8e21ef302eb0bf928d5a0aad9",
    "psd_blob": "4f97e3a7828e4a55b79cbbed2f08a8bd4b0b3222",
    "state": "baked"
+  },
+  "zomoroko-mvvyoq1g-ti8o": {
+   "at": "2026-10-31T05:30:08Z",
+   "card": "Water Totem",
+   "path": "Auxiliary/Items/Water_Totem.psd",
+   "png_blob": "2a90d41ed66984a92c01b14935e803427dc4b549",
+   "psd_blob": "92ca35f3d30b3616200254b41e84e1d61f9bd91c",
+   "state": "baked"
   }
  },
  "v": 1

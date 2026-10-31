@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvyoq1g-ti8o",
+ "card": "Water Totem",
+ "path": "Auxiliary/Items/Water_Totem.psd",
+ "png": "Auxiliary/Items/Water_Totem.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "92ca35f3d30b3616200254b41e84e1d61f9bd91c",
+  "png_blob": "2a90d41ed66984a92c01b14935e803427dc4b549"
+ },
+ "edit": {
+  "ability": "(1GCD)(OYT) Heal a friendly creature by 3 HP.\nOverkill damage carries over to another friendly Totem.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "(1GCD)(OYT) Heal a friendly creature by 3 HP.\nOverkill damage carries over to another friendly Totem.",
+    "was": "(1GCD)(OYT) Heal a friendly creature by 3 HP.\nOverkill damage carries over to the next friendly Totem.",
+    "sha": "63ea4ea7",
+    "psd": "92ca35f3",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next friendly' -> 'to another friendly'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD)(OYT) Heal a friendly creature by 3 HP.\nOverkill damage carries over to the next friendly Totem.",
+   "new": "(1GCD)(OYT) Heal a friendly creature by 3 HP.\nOverkill damage carries over to another friendly Totem."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.214,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  1374,
+  1200,
+  1791
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41172797201",
+ "took_s": 9.7,
+ "at": "2026-10-31T05:30:08Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 3578269,
+  "webp": 121292,
+  "before": 121084
+ },
+ "recompressed": false
+}
