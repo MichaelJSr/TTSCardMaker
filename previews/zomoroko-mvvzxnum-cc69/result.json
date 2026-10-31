@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvzxnum-cc69",
+ "card": "Smorg",
+ "path": "Creatures/Mario/4 Stars/Smorg.psd",
+ "png": "Creatures/Mario/4 Stars/Smorg.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "78d1b07989eba365275d961b66be42780dfb2bf6",
+  "png_blob": "c63c2f8470e7ae1581174357f8fb4ea0a9d5bd03"
+ },
+ "edit": {
+  "ability": "(OFS) Summon a Smorg Miasma\n(1CD) Summon a Smorg Miasma.\n(1CD) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Smorg Miasmas.\nCannot have more than one Smorg Claw.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OFS) Summon a Smorg Miasma\n(1CD) Summon a Smorg Miasma.\n(1CD) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Smorg Miasmas.\nCannot have more than one Smorg Claw.",
+    "was": "(OFS) Summon a Smorg Miasma\n(1CD) Summon a Smorg Miasma.\n(1CD) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Miasmas.\nCannot have more than one Claw.",
+    "sha": "8e64e6e7",
+    "psd": "78d1b079",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'summon Miasmas. Cannot have more than on' -> 'summon Smorg Miasmas. Cannot have more t'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(OFS) Summon a Smorg Miasma\n(1CD) Summon a Smorg Miasma.\n(1CD) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Miasmas.\nCannot have more than one Claw.",
+   "new": "(OFS) Summon a Smorg Miasma\n(1CD) Summon a Smorg Miasma.\n(1CD) If this card is at or below 50% HP it can summon a Smorg Claw, and it can no longer summon Smorg Miasmas.\nCannot have more than one Smorg Claw."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.013,
+   "max": 3.0
+  }
+ },
+ "region": [
+  49,
+  1769,
+  1150,
+  2336
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41175092452",
+ "took_s": 12.5,
+ "at": "2026-10-31T06:05:02Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3946172,
+  "webp": 139772,
+  "before": 138216
+ },
+ "recompressed": false
+}
