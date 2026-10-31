@@ -159,6 +159,14 @@
    "png_blob": "484207942e0a594d4c4360c6e0b0ed66810302d2",
    "psd_blob": "a12426703057920ddf0bec7e6cc2f96326db6d2d",
    "state": "baked"
+  },
+  "zomoroko-mvvyxgsv-gv9m": {
+   "at": "2026-10-31T05:36:50Z",
+   "card": "Clot White",
+   "path": "Auxiliary/Minions/Clot_White.psd",
+   "png_blob": "378153bea6d683bde6016c4e39d86aea89a93860",
+   "psd_blob": "11a425452dd6f08b6027e921017e73eac73efe6f",
+   "state": "baked"
   }
  },
  "v": 1

@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvyxgsv-gv9m",
+ "card": "Clot White",
+ "path": "Auxiliary/Minions/Clot_White.psd",
+ "png": "Auxiliary/Minions/Clot_White.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "11a425452dd6f08b6027e921017e73eac73efe6f",
+  "png_blob": "378153bea6d683bde6016c4e39d86aea89a93860"
+ },
+ "edit": {
+  "ability": "Overkill damage carries over to another Clot in this slot, then parent creature.\nCan attack any field and can ignore intercepts.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Overkill damage carries over to another Clot in this slot, then parent creature.\nCan attack any field and can ignore intercepts.",
+    "was": "Overkill damage carries over to the next minion then parent creature.\nCan attack any field and can ignore intercepts.",
+    "sha": "93722a67",
+    "psd": "11a42545",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next minion then' -> 'to another Clot in this slot, then'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Overkill damage carries over to the next minion then parent creature.\nCan attack any field and can ignore intercepts.",
+   "new": "Overkill damage carries over to another Clot in this slot, then parent creature.\nCan attack any field and can ignore intercepts."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 1.069,
+   "max": 6.0
+  }
+ },
+ "region": [
+  36,
+  1782,
+  1159,
+  2128
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41173271529",
+ "took_s": 9.8,
+ "at": "2026-10-31T05:36:50Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1151926,
+  "webp": 53062,
+  "before": 51832
+ },
+ "recompressed": false
+}
