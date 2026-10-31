@@ -215,6 +215,14 @@
    "png_blob": "a6db73143a94cfea9cfe224dde96adbd2aea8db5",
    "psd_blob": "3a629386ed15243b94f3681451bc89bb60bb86da",
    "state": "baked"
+  },
+  "zomoroko-mvw0mgf9-nhv7": {
+   "at": "2026-10-31T06:24:31Z",
+   "card": "Drone",
+   "path": "Auxiliary/Minions/Drone.psd",
+   "png_blob": "ce94a9312e3dbba8373936b9fa2bed0f42c1ddf7",
+   "psd_blob": "60ed1d547bb0e792521a229364899973b3dfb5fc",
+   "state": "baked"
   }
  },
  "v": 1

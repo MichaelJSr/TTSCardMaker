@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw0mgf9-nhv7",
+ "card": "Drone",
+ "path": "Auxiliary/Minions/Drone.psd",
+ "png": "Auxiliary/Minions/Drone.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "60ed1d547bb0e792521a229364899973b3dfb5fc",
+  "png_blob": "ce94a9312e3dbba8373936b9fa2bed0f42c1ddf7"
+ },
+ "edit": {
+  "ability": "Has no innate actions. \nOverkill damage carries over to another Drone in this slot, then parent creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Has no innate actions. \nOverkill damage carries over to another Drone in this slot, then parent creature.",
+    "was": "Has no innate actions. \nOverkill damage carries over to the next drone, or to the parent creature if there are no drones left.",
+    "sha": "afe52a9d",
+    "psd": "60ed1d54",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next drone, or to the parent crea' -> 'to another Drone in this slot, then pare'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Has no innate actions. \nOverkill damage carries over to the next drone, or to the parent creature if there are no drones left.",
+   "new": "Has no innate actions. \nOverkill damage carries over to another Drone in this slot, then parent creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.108,
+   "max": 3.0
+  }
+ },
+ "region": [
+  46,
+  1789,
+  1157,
+  2134
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41176427077",
+ "took_s": 10.5,
+ "at": "2026-10-31T06:24:31Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 924588,
+  "webp": 47444,
+  "before": 49692
+ },
+ "recompressed": false
+}
