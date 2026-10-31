@@ -375,6 +375,14 @@
    "png_blob": "fabf87356bf1ac76136fbb4fabac634c47f78a6c",
    "psd_blob": "cb3a6e7305106a409dab79486b472954de86bb83",
    "state": "baked"
+  },
+  "zomoroko-mvw5m44b-c6nw": {
+   "at": "2026-10-31T08:44:07Z",
+   "card": "Papa Chip",
+   "path": "Creatures/Omori/3 Stars/Papa_Chip.psd",
+   "png_blob": "b1d6cb6a8104a20a1e849eacbc78e30a3778cd0a",
+   "psd_blob": "8ac5bac9a9b57bdcf31c7071b56c7c6a50b19fa1",
+   "state": "baked"
   }
  },
  "v": 1

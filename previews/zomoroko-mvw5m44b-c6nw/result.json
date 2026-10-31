@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw5m44b-c6nw",
+ "card": "Papa Chip",
+ "path": "Creatures/Omori/3 Stars/Papa_Chip.psd",
+ "png": "Creatures/Omori/3 Stars/Papa_Chip.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "098bd28a678e6484e2a98d7785b66196c803cc38",
+  "psd_blob": "8ac5bac9a9b57bdcf31c7071b56c7c6a50b19fa1",
+  "png_blob": "b1d6cb6a8104a20a1e849eacbc78e30a3778cd0a"
+ },
+ "edit": {
+  "ability": "Your team's healing items heal for 2 more HP.\n(1CD)(2 points) Bake a Papa's Cookie.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Your team's healing items heal for 2 more HP.\n(1CD)(2 points) Bake a Papa's Cookie.",
+    "was": "Your team's healing items heal for 2 more HP.\n(1CD)(2 points) Bake a papa's cookie.",
+    "sha": "409e0855",
+    "psd": "8ac5bac9",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability \"a papa's cookie.\" -> \"a Papa's Cookie.\"",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Your team's healing items heal for 2 more HP.\n(1CD)(2 points) Bake a papa's cookie.",
+   "new": "Your team's healing items heal for 2 more HP.\n(1CD)(2 points) Bake a Papa's Cookie."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.573,
+   "max": 2.0
+  }
+ },
+ "region": [
+  5,
+  1773,
+  1196,
+  2130
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41185760545",
+ "took_s": 11.4,
+ "at": "2026-10-31T08:44:07Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2193065,
+  "webp": 130610,
+  "before": 130232
+ },
+ "recompressed": false
+}
