@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw5vkce-4mkp",
+ "card": "Warcraftian Shaman",
+ "path": "Creatures/World Of Warcraft/4 Stars/Warcraftian_Shaman.psd",
+ "png": "Creatures/World Of Warcraft/4 Stars/Warcraftian_Shaman.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "098bd28a678e6484e2a98d7785b66196c803cc38",
+  "psd_blob": "b461123ca82e13beef58c2b07457a69935554daf",
+  "png_blob": "f8afc6c698e725cff85d170916723512e83735e4"
+ },
+ "edit": {
+  "ability": "(1CD) Summon one of four totems on this: Water Totem, Earth Totem, Fire Totem, and Air Totem.\nOnly one of each totem can exist per side.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1CD) Summon one of four totems on this: Water Totem, Earth Totem, Fire Totem, and Air Totem.\nOnly one of each totem can exist per side.",
+    "was": "(1CD) Summon one of four totems on this: Water, Earth, Fire, and Air.\nOnly one of each totem can exist per side.",
+    "sha": "3108b235",
+    "psd": "b461123c",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'this: Water, Earth, Fire, and Air. Only' -> 'this: Water Totem, Earth Totem, Fire Tot'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1CD) Summon one of four totems on this: Water, Earth, Fire, and Air.\nOnly one of each totem can exist per side.",
+   "new": "(1CD) Summon one of four totems on this: Water Totem, Earth Totem, Fire Totem, and Air Totem.\nOnly one of each totem can exist per side."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.191,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  1775,
+  1200,
+  2095
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41186252467",
+ "took_s": 14.4,
+ "at": "2026-10-31T08:51:24Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 4248678,
+  "webp": 128122,
+  "before": 124462
+ },
+ "recompressed": false
+}

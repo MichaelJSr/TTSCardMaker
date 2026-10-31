@@ -415,6 +415,14 @@
    "png_blob": "739bb97f44549d6d421caee450d70a7f2c733d18",
    "psd_blob": "7735db8f9a9aacda0c77f08452141cf41d2ba484",
    "state": "baked"
+  },
+  "zomoroko-mvw5vkce-4mkp": {
+   "at": "2026-10-31T08:51:24Z",
+   "card": "Warcraftian Shaman",
+   "path": "Creatures/World Of Warcraft/4 Stars/Warcraftian_Shaman.psd",
+   "png_blob": "f8afc6c698e725cff85d170916723512e83735e4",
+   "psd_blob": "b461123ca82e13beef58c2b07457a69935554daf",
+   "state": "baked"
   }
  },
  "v": 1
