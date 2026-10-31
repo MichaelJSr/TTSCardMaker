@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvyw585-uu3r",
+ "card": "Clot Black",
+ "path": "Auxiliary/Minions/Clot_Black.psd",
+ "png": "Auxiliary/Minions/Clot_Black.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "2a46de9a35b7c05b52e6d775613024a1c6ea7db0",
+  "png_blob": "d0dd649fe38c52f3742e7d19561c686c1566ea60"
+ },
+ "edit": {
+  "ability": "Overkill damage carries over to another Clot in this slot, then parent creature.\nAttacks inflict 1T Afraid.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Overkill damage carries over to another Clot in this slot, then parent creature.\nAttacks inflict 1T Afraid.",
+    "was": "Overkill damage carries over to the next minion then parent creature.\nAttacks inflict 1T Afraid.",
+    "sha": "c21a3496",
+    "psd": "2a46de9a",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next minion then' -> 'to another Clot in this slot, then'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Overkill damage carries over to the next minion then parent creature.\nAttacks inflict 1T Afraid.",
+   "new": "Overkill damage carries over to another Clot in this slot, then parent creature.\nAttacks inflict 1T Afraid."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.519,
+   "max": 2.0
+  }
+ },
+ "region": [
+  36,
+  1782,
+  1159,
+  2029
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41173202256",
+ "took_s": 7.2,
+ "at": "2026-10-31T05:35:48Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1121185,
+  "webp": 46242,
+  "before": 45162
+ },
+ "recompressed": false
+}
