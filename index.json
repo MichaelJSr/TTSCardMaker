@@ -239,6 +239,14 @@
    "png_blob": "34787321d4f8735065e7853c4b4fff53153172d4",
    "psd_blob": "696b8f4b8aebbcf51b9f116b5dcb7ac49d74fa34",
    "state": "baked"
+  },
+  "zomoroko-mvw13e00-scys": {
+   "at": "2026-10-31T06:37:28Z",
+   "card": "Gulka",
+   "path": "Auxiliary/Minions/Gulka.psd",
+   "png_blob": "888f76b7651e726620453f375aa2cc8d5cc4658a",
+   "psd_blob": "baeb56de4100ceecdcc46615d630fda57ceeeceb",
+   "state": "baked"
   }
  },
  "v": 1

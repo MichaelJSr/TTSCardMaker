@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw13e00-scys",
+ "card": "Gulka",
+ "path": "Auxiliary/Minions/Gulka.psd",
+ "png": "Auxiliary/Minions/Gulka.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "baeb56de4100ceecdcc46615d630fda57ceeeceb",
+  "png_blob": "888f76b7651e726620453f375aa2cc8d5cc4658a"
+ },
+ "edit": {
+  "ability": "Overkill damage carries over to another Gulka or Fool Eater in this slot, then parent creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Overkill damage carries over to another Gulka or Fool Eater in this slot, then parent creature.",
+    "was": "Overkill damage goes to the next minion then parent creature.",
+    "sha": "3e686175",
+    "psd": "baeb56de",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'damage goes to the next minion then' -> 'damage carries over to another Gulka or '",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Overkill damage goes to the next minion then parent creature.",
+   "new": "Overkill damage carries over to another Gulka or Fool Eater in this slot, then parent creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.867,
+   "max": 2.0
+  }
+ },
+ "region": [
+  34,
+  1787,
+  1165,
+  2098
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41177341910",
+ "took_s": 12.0,
+ "at": "2026-10-31T06:37:28Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2048587,
+  "webp": 57298,
+  "before": 53114
+ },
+ "recompressed": false
+}
