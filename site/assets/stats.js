@@ -317,6 +317,61 @@ function cardCharts(pool, creatures, L) {
 }
 
 // ---- the dashboard ---------------------------------------------------------------------------------
+// ---- status effects by the SpongeBob season of their art (the art field) -------------------------------------------
+const EPISODE = /SpongeBob SquarePants Season (\d+) Ep\. (\d+)([a-z]?)\s+"([^"]+)"/i, MOVIE = /SpongeBob.*Movie/i;
+const SPONGE_KINDS = [["buff", "Buffs", "var(--s1)"], ["debuff", "Debuffs", "var(--s2)"]];
+/** a card's SpongeBob source: {season: "3" or "Movie", ep (sort key), label}, else null */
+export function spongeOf(art) {
+  const m = EPISODE.exec(art || "");
+  if (m) return { season: m[1], ep: +m[2] + (m[3] ? (m[3].charCodeAt(0) - 96) / 10 : 0), label: `Ep. ${m[2]}${m[3]} “${m[4]}”` };
+  return MOVIE.test(art || "") ? { season: "Movie", ep: 0, label: art.replace(/\s*\(Edit\)\s*$/i, "").trim() } : null;
+}
+const seasonName = s => (s === "Movie" ? "Movie" : `Season ${s}`);
+const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+/** Status effects per season (stacked buffs/debuffs, every season from 1); a season's column shows its episodes below
+    (app.js "season" action; cur: the season picked this session, else the biggest) */
+function seasonsCard(pool, cur) {
+  const rows = pool.filter(c => c.type === "buff" || c.type === "debuff").map(c => ({ c, s: spongeOf(c.art) })).filter(r => r.s);
+  if (!rows.length) return "";
+  const last = Math.max(0, ...rows.map(r => +r.s.season).filter(Number.isFinite));
+  const seasons = [...Array.from({ length: last }, (_, i) => String(i + 1)), ...(rows.some(r => r.s.season === "Movie") ? ["Movie"] : [])];
+  const of = new Map(seasons.map(s => [s, rows.filter(r => r.s.season === s).sort((a, b) => a.s.ep - b.s.ep || a.c.type.localeCompare(b.c.type) || a.c.name.localeCompare(b.c.name))]));
+  const pick = seasons.includes(cur) && of.get(cur).length ? cur : seasons.reduce((a, b) => (of.get(b).length > of.get(a).length ? b : a));
+  const kinds = SPONGE_KINDS.filter(([k]) => rows.some(r => r.c.type === k)), n = (s, k) => of.get(s).filter(r => r.c.type === k).length;
+  // the columns: each a button that shows its season's episodes
+  const W = 1000, height = 220, padL = 36, padB = 26, plotH = height - padB, gap = 2;
+  const max = niceMax(Math.max(1, ...seasons.map(s => of.get(s).length))), band = (W - padL) / seasons.length, bw = Math.min(28, band * 0.6);
+  const ticks = [0, max / 2, max].map(t => { const y = plotH - (t / max) * plotH;
+    return `<line class="gridline" x1="${padL}" x2="${W}" y1="${y}" y2="${y}"/><text x="${padL - 6}" y="${y + 4}" text-anchor="end">${fmt(t)}</text>`; }).join("");
+  const cols = seasons.map((s, i) => {
+    const x = padL + i * band + (band - bw) / 2, total = of.get(s).length, l = `${seasonName(s)}: ${kinds.map(([k, kl]) => `${kl} ${n(s, k)}`).join(" · ")}`;
+    let y = plotH;
+    const segs = kinds.map(([k, kl, color], j) => {
+      const v = n(s, k); if (!v) return "";
+      const h = (v / max) * plotH, top = kinds.slice(j + 1).every(([k2]) => !n(s, k2));
+      y -= h;
+      const d = top ? roundedTop(x, y, bw, Math.max(0, h - gap)) : `M${x},${y + gap}h${bw}v${Math.max(0, h - gap)}h${-bw}Z`;
+      return `<path class="mark" d="${d}" fill="${color}" data-v="${v} ${kl.toLowerCase()}" data-l="${esc(seasonName(s))}"/>`;
+    }).join("");
+    const tick = `<text x="${x + bw / 2}" y="${height - 8}" text-anchor="middle">${s === "Movie" ? "Movie" : `S${s}`}</text>`;
+    if (!total) return `<g class="col">${tick}</g>`;
+    return `<a href="#/stats" class="season${s === pick ? " on" : ""}" role="button" aria-pressed="${s === pick}" data-action="season" data-season="${esc(s)}" aria-label="${esc(`${l}: show its episodes`)}"><g class="col">
+      <rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${height}" data-v="${plural(total, "status effect")}" data-l="${esc(l)}"/>${segs}${tick}</g></a>`;
+  }).join("");
+  const svg = `<svg viewBox="0 0 ${W} ${height}">${ticks}<line class="axis" x1="${padL}" x2="${W}" y1="${plotH}" y2="${plotH}"/>${cols}</svg>`;
+  // a season's episodes: one row each, a block per status effect and their names
+  const episodes = s => { const m = new Map(); for (const r of of.get(s)) { if (!m.has(r.s.label)) m.set(r.s.label, []); m.get(r.s.label).push(r.c); } return [...m]; };
+  const panel = s => { const eps = episodes(s), total = of.get(s).length;
+    return `<div class="ep-panel" data-season="${esc(s)}"${s === pick ? "" : " hidden"}><h4>${esc(seasonName(s))} <span class="muted">${plural(total, "status effect")}${s === "Movie" ? "" : ` in ${plural(eps.length, "episode")}`}</span></h4>
+      <div class="ep-rows">${eps.map(([label, cs]) => `<span class="ep-name">${esc(label)}</span><span class="ep-units" aria-hidden="true">${cs.map(c => `<i class="${c.type}"></i>`).join("")}<b>${cs.length}</b></span>
+        <span class="ep-cards">${cs.map(c => `<a class="card-ref" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}">${esc(c.name)}</a>`).join(", ")}</span>`).join("")}</div></div>`; };
+  const legend = `<div class="legend">${kinds.map(([, kl, color]) => `<span><i style="background:${color}"></i>${kl}</span>`).join("")}</div>`;
+  const tableRows = seasons.flatMap(s => episodes(s).map(([label, cs]) => [seasonName(s), label, cs.map(c => c.name).join(", "), cs.length]));
+  return card("seasons", "Status effects by SpongeBob season", `${plural(rows.length, "status effect")} with SpongeBob art. Click a season for its episodes.`,
+    svg + seasons.filter(s => of.get(s).length).map(panel).join(""), table(["Season", "Episode", "Status effects", "Count"], tableRows, 3),
+    { wide: true, legend, tip: "Buffs and debuffs by the SpongeBob episode or movie their artwork source names" });
+}
+
 export function renderStats(root, ctx, params) {
   const { cards, banned, icons } = ctx;
   const kind = params.get("kind") || "", series = params.get("series") || "";
@@ -471,6 +526,8 @@ export function renderStats(root, ctx, params) {
   const unusedHtml = unused.length ? `<p class="muted">${noted("On no card", "Buffs and debuffs that no card names in its ability, or only Unused cards do")} (${unused.length}): ${unused.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}</p>` : "";
   if (statusRows.length) charts.push(card("status", "Status effects mentioned", "Cards naming each one.", hbar(statusRows) + unusedHtml, table(["Status effect", "Cards"], statusRows.map(r => [r.label, r.value])),
     { tip: "Cards in scope whose ability names each buff or debuff; the top 15" }));
+  const seasons = seasonsCard(pool, ctx.season);
+  if (seasons) charts.push(seasons);
   const refRows = desc(new Map([...refCount].filter(([id]) => !statusIds.has(id)))).slice(0, 12).map(([id, v]) => ({ label: byId.get(id).name, value: v, href: L({ mentions: id }) }));
   if (refRows.length) charts.push(card("refs", "Most referenced cards", "Cards naming them.", hbar(refRows, { labelWidth: 180 }), table(["Card", { label: "Mentioned by", tip: "Cards in scope whose ability names this card" }], refRows.map(r => [r.label, r.value]))));
 

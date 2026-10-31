@@ -30,6 +30,7 @@ const S = {
   renderedHash: null, listHash: "#/cards", shared: null, rev: 0,   // rev: bumped by derive()
   selected: new Set(),                                     // tiles picked in the cards grid (edit mode: drag them onto a series or author)
   distPage: {},                                            // the Stats distributions' page per stat (this session)
+  season: "",                                              // the Stats SpongeBob chart's picked season (this session)
   selecting: false,                                        // the Select toggle (phones): a tap on a tile selects it
   toTop: false,                                            // a Stats chart link was followed: the grid opens at its top
   notPick: new Set(),                                      // series, subseries, author: ≠ pressed with nothing picked yet
@@ -1136,7 +1137,7 @@ function renderStatsView(r) {
     return;
   }
   const top = scrollY === 0 && !S.restoring, vh = innerHeight;           // before the view goes (see renderCards)
-  St.stats.renderStats(view, { cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage }, r.params);
+  St.stats.renderStats(view, { cards: S.cards, banned: S.banned, icons: S.icons, mentions: S.mentions, byId: S.byId, distPage: S.distPage, season: S.season }, r.params);
   const ctx = { cards: S.cards };
   const onStats = () => parseHash(S.renderedHash).name === "stats";   // a card dialog over Stats: fill it anyway
   const fill = (A = S.analytics) => {                    // Balance needs analytics.json; Ratings and History go in with it
@@ -1557,6 +1558,9 @@ const actions = {
     el.textContent = on ? "Chart" : "Table"; $(".view-chart", box).hidden = on; $(".view-table", box).hidden = !on; },
   "stats-filter": el => setParams({ [el.dataset.key]: el.value }),
   "dist-page": el => distPage(el.closest(".dist-panel"), +el.dataset.step),
+  season: el => { const box = el.closest(".chart"), s = S.season = el.dataset.season;     // its episodes (stats.js seasonsCard)
+    for (const a of $$("a.season", box)) { const on = a.dataset.season === s; a.classList.toggle("on", on); a.setAttribute("aria-pressed", on); }
+    for (const p of $$(".ep-panel", box)) p.hidden = p.dataset.season !== s; },
   "card-revert": el => { const c = S.byId.get(el.dataset.id), ts = +el.dataset.ts, ref = el.dataset.sha;
     if (!c || !editing()) return;
     el.disabled = true;
