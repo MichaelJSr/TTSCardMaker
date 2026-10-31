@@ -101,6 +101,9 @@ function parseBlocks(lines, inRow = false, base = 0) {
 // to the next column: a fence, a callout, card pictures or a picture that doesn't float
 const FLOATS = ["left", "right", "end"];
 const placed = b => b.t === "img" && b.attrs.cls.includes("free");   // a picture placed anywhere: out of the flow
+// a panel holds its floated pictures when one is solid (no outline: a screenshot, a diagram); see-through ones alone
+// hang out of it, its height its text's, as on the Photoshop pages
+const holds = (kids, ctx) => kids.some(c => c.t === "img" && !placed(c) && c.attrs.cls.some(k => k === "left" || k === "right") && !ctx.shape?.(c.src));
 const ANCHORS = new Set(["top-left", "top", "top-right", "left", "center", "right", "bottom-left", "bottom", "bottom-right"]);   // a row's picture in its column
 const column = b => b.t === "fence" || b.t === "say" || b.t === "cards" || (b.t === "img" && !placed(b) && !b.attrs.cls.some(c => FLOATS.includes(c)));
 const holdsSection = b => b.t === "fence" && b.children.some(c => c.t === "section" || holdsSection(c));
@@ -272,7 +275,7 @@ function blockInner(b, ctx) {
       const id = ctx.id ? ` id="${esc(ctx.id)}--${slugify(titleText(b.title))}"` : "";
       const icon = b.attrs?.icon && !b.cont ? ctx.icon?.(b.attrs.icon) : "";
       const pen = ctx.editable && ctx.id && b.line != null ? ` <button type="button" class="rb-sec-edit" data-action="rb-edit" data-id="${esc(ctx.id)}" data-line="${b.line}" title="Edit this section" aria-label="Edit this section">✎</button>` : "";
-      return `<section class="rb-sec ${clsOf(b.attrs)}${b.cont ? " rb-cont" : ""}${icon ? " rb-has-icon" : ""}"${b.cont ? "" : id}>${icon ? `<span class="rb-sec-icon">${icon}</span>` : ""}${b.cont ? "" : `<h3 class="rb-tab">${inline(b.title, ctx)}${pen}</h3>`}<div class="rb-panel">${kidsHtml(b.children, ctx)}</div></section>`;
+      return `<section class="rb-sec ${clsOf(b.attrs)}${b.cont ? " rb-cont" : ""}${icon ? " rb-has-icon" : ""}"${b.cont ? "" : id}>${icon ? `<span class="rb-sec-icon">${icon}</span>` : ""}${b.cont ? "" : `<h3 class="rb-tab">${inline(b.title, ctx)}${pen}</h3>`}<div class="rb-panel${holds(b.children, ctx) ? " rb-holds" : ""}">${kidsHtml(b.children, ctx)}</div></section>`;
     }
     case "fence": return fenceHtml(b, ctx);
     case "say": {
@@ -321,7 +324,7 @@ function fenceHtml(b, ctx) {
       const lines = b.children.flatMap(c => (c.t === "p" ? c.text.split("\n") : c.t === "list" ? c.items.map(it => (c.type === "1" ? `${it.n}. ${it.text}` : it.text)) : []));
       return `<div class="rb-ability ${cls}">${lines.map(l => { const n = /^(\d+)\.\s+(.*)$/.exec(l); return `<p>${n ? `<span class="rb-num-bubble">${n[1]}</span>` : ""}${inline(n ? n[2] : l, ctx)}</p>`; }).join("")}</div>`;
     }
-    case "panel": return b.arg ? blockHtml({ t: "section", title: b.arg, attrs: b.attrs, children: b.children }, ctx) : `<div class="rb-panel rb-solo ${cls}">${inner}</div>`;
+    case "panel": return b.arg ? blockHtml({ t: "section", title: b.arg, attrs: b.attrs, children: b.children }, ctx) : `<div class="rb-solo-wrap"><div class="rb-panel rb-solo${holds(b.children, ctx) ? " rb-holds" : ""} ${cls}">${inner}</div></div>`;
     case "box": return `<div class="rb-box ${cls}">${inner}</div>`;
     case "contents": return `<ol class="rb-contents ${cls}">${(ctx.chapters || []).filter(c => Number(c.num) > 0).map(c => `<li value="${Number(c.num)}"><a href="#/rules/${esc(c.id)}" data-scroll="${esc(c.id)}">${esc(c.title)}</a></li>`).join("")}</ol>${inner}`;
     case "small": case "center": case "note": return `<div class="rb-${b.kind} ${cls}">${inner}</div>`;

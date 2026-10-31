@@ -238,14 +238,16 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
 .rb-num, .rb-pnum { flex: none; display: grid; place-items: center; min-width: 1.9em; height: 1.9em; padding: 0 .3em; border-radius: 999px; background: var(--rb-pnum); font-weight: 700; }
 .rb p { margin: .35em 0; }
 .rb > p, .rb-chapter > p { margin: .5em .3em; }
-.rb-sec { margin: 1.1em 0; position: relative; }
+.rb-sec { margin: 1.1em 0; position: relative; display: flow-root; min-width: min(100%, 14em); }   /* holds what hangs out of its panel; beside a floated picture: narrower, never squeezed away */
 .rb-tab { display: inline-block; min-width: min(11em, 60%); margin: 0 0 0 1.6em; padding: .2em 1.2em .1em .7em; border-radius: .35em .35em 0 0; background: var(--rb-tab);
   font-size: 1.4em; font-weight: 400; font-style: italic; letter-spacing: .04em; text-transform: uppercase; line-height: 1.25; color: var(--rb-ink); }
 .rb-tab img.tok { width: 1.3em; height: 1.3em; vertical-align: -.25em; margin-right: .2em; }
-.rb-panel { display: flow-root; background: var(--rb-panel); border-radius: .4em; padding: .65em .9em; min-width: min(100%, 14em); }   /* beside a floated picture: narrower, never squeezed away */
+.rb-panel { background: var(--rb-panel); border-radius: .4em; padding: .65em .9em; }   /* as tall as its text: a see-through picture floated in it hangs out below, as on the Photoshop pages */
+.rb-panel.rb-holds { display: flow-root; }   /* a solid one (rulebook.js holds): inside it, the panel grows to fit */
 .rb-sec > .rb-panel { position: relative; }
 .rb-cont > .rb-panel { margin-top: 0; }
 .rb-solo { margin: 1em 0; }
+.rb-solo-wrap { display: flow-root; margin: 1em 0; min-width: min(100%, 14em); } .rb-solo-wrap > .rb-solo { margin: 0; }   /* a panel without a tab: as .rb-sec */
 .rb-solo.rb-light { background: var(--rb-tab); }
 .rb-sec.rb-hp > .rb-tab { background: #98ffba; } .rb-sec.rb-hp2 > .rb-tab { background: #60d988; }
 .rb-sec.rb-def > .rb-tab { background: #1a0fff; color: #8196fc; } .rb-sec.rb-atk > .rb-tab { background: #f16c6c; } .rb-sec.rb-spd > .rb-tab { background: #f1ff5a; }
