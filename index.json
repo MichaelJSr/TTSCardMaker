@@ -303,6 +303,14 @@
    "png_blob": "d420b0759db134337b49b16d4afa2e6458cd4976",
    "psd_blob": "6e7bc779b852bfda4d9506d64b26d9b35556a5e0",
    "state": "baked"
+  },
+  "zomoroko-mvw3oqnc-ckd6": {
+   "at": "2026-10-31T07:50:14Z",
+   "card": "Chef Saltbaker",
+   "path": "Creatures/Cuphead/5 Stars/Chef_Saltbaker.psd",
+   "png_blob": "6e736ec491f73e32a0b734e00ea332c071e1391d",
+   "psd_blob": "6708e56cf40fc4f2e9cf4bc6bf5075ab97122d5c",
+   "state": "baked"
   }
  },
  "v": 1
