@@ -367,6 +367,14 @@
    "png_blob": "c807e4ce2807950864994e051f5d417334f49855",
    "psd_blob": "51b6c590d61c6dea2b1e94259bd2d17afbc83f79",
    "state": "baked"
+  },
+  "zomoroko-mvw5kb6j-sy81": {
+   "at": "2026-10-31T08:42:43Z",
+   "card": "The Kestrel",
+   "path": "Creatures/FTL/4 Stars/The_Kestrel.psd",
+   "png_blob": "fabf87356bf1ac76136fbb4fabac634c47f78a6c",
+   "psd_blob": "cb3a6e7305106a409dab79486b472954de86bb83",
+   "state": "baked"
   }
  },
  "v": 1
