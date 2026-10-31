@@ -10,11 +10,11 @@ Items are your main resource besides creatures. You start with only 10 of them, 
 - Once an item is played, the item is put into the discard pile after it resolves; unless it's a multi-use item, then it goes back facedown or to the hand.
 - You have 3 “facedown” slots. Items in these slots can be played at any time!
 - You may only swap items between your hand and the facedown slots on your turn. Plan carefully!
+![A fox pointing with its sword](fox-pointing.webp) {.right width=16.5}
 - You cannot use items on creatures in the hand.
 
 ## SELLING ITEMS
 ![Mr. Krabs](mr-krabs.webp){.left width=14}
-![A fox pointing with its sword](fox-pointing.webp){.right width=18}
 During your turn you can sell items for points equal to their star level. You can also sell items that are facedown at any time.
 You cannot sell an item that has previously been used. (Equips Included)
 
