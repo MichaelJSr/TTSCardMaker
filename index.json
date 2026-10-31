@@ -63,6 +63,14 @@
    "png_blob": "248440a2c0e56881f40834d05204000e8b1c14f9",
    "psd_blob": "8268f54847bcf4e5b9d7b0066b7075cfb318f80a",
    "state": "baked"
+  },
+  "zomoroko-mvvxx9sd-v27f": {
+   "at": "2026-10-31T05:08:45Z",
+   "card": "PoD10BFB",
+   "path": "Auxiliary/Minions/PoD10BFB.psd",
+   "png_blob": "a12cdba7a912f33a2b15f30e8e5e18c15f348302",
+   "psd_blob": "b10688c66767e57afd634d50dea583c23872f2eb",
+   "state": "baked"
   }
  },
  "v": 1

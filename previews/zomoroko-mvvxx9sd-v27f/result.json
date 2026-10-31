@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvxx9sd-v27f",
+ "card": "PoD10BFB",
+ "path": "Auxiliary/Minions/PoD10BFB.psd",
+ "png": "Auxiliary/Minions/PoD10BFB.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "10e916f5d92f8c5d8758379838ed8cb627524ce6",
+  "psd_blob": "b10688c66767e57afd634d50dea583c23872f2eb",
+  "png_blob": "a12cdba7a912f33a2b15f30e8e5e18c15f348302"
+ },
+ "edit": {
+  "ability": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Black Bloon or White Bloon on the same field as this creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Black Bloon or White Bloon on the same field as this creature.",
+    "was": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Black or White Bloon on the same field as this creature.",
+    "sha": "99deb595",
+    "psd": "b10688c6",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Black or' -> 'Black Bloon or'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Black or White Bloon on the same field as this creature.",
+   "new": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Black Bloon or White Bloon on the same field as this creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.129,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  1787,
+  1200,
+  2122
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41171367784",
+ "took_s": 11.0,
+ "at": "2026-10-31T05:08:45Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1646963,
+  "webp": 71904,
+  "before": 70998
+ },
+ "recompressed": false
+}
