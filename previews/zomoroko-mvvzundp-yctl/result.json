@@ -1,0 +1,88 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvzundp-yctl",
+ "card": "Miasma",
+ "path": "Auxiliary/Minions/Miasma.psd",
+ "png": "Auxiliary/Minions/Miasma.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "9f171f88e3815b247c7051c27ce3e7e5d5711261",
+  "png_blob": "1a54c3b1c79ec947c8d6d582f758bdf71ebbc5ee"
+ },
+ "edit": {
+  "ability": "Overkill damage carries over to another Miasma or Claw in this slot.",
+  "parts": {
+   "2068": {
+    "field": "ability",
+    "text": "Overkill damage carries over to another Miasma or Claw in this slot.",
+    "was": "Overkill damage carries through the next Miasma or Claw on the same creature.",
+    "sha": "6826985d",
+    "psd": "9f171f88",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'carries through the next Miasma or Claw ' -> 'carries over to another Miasma or Claw i'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Overkill damage carries through the next Miasma or Claw on the same creature.",
+   "new": "Overkill damage carries over to another Miasma or Claw in this slot."
+  }
+ ],
+ "notes": [
+  "overflow: ability: the new text runs past 'MagentaSmorg' clipped to it (31417 px)"
+ ],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.203,
+   "max": 1.0
+  }
+ },
+ "region": [
+  22,
+  1791,
+  1174,
+  2221
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41174934934",
+ "took_s": 15.2,
+ "at": "2026-10-31T06:02:46Z",
+ "variant": null,
+ "parts": {
+  "2068": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2807022,
+  "webp": 118296,
+  "before": 121524
+ },
+ "recompressed": false
+}
