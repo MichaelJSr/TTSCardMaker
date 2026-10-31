@@ -106,22 +106,23 @@ export function ratingsHtml({ cards }, params) {
 export function historyHtml({ cards }, params) {
   const pool = poolOf(cards, params), charts = [], L = p => cardsHref(p, params);
 
-  // S11 cards created per year, by author: the pool's top 4, the rest as Others
+  // S11 cards created per year, by author (owner 10-31: every author): a colour each by their rank over all cards, so a
+  // filter never repaints one; past the eight colours, the rest as Others
   const made = pool.filter(c => c.created);
   if (made.length) {
-    const byAuthor = new Map(), counts = new Map();
-    for (const c of made) add(byAuthor, c.author || "");
-    const top = topKeys(new Map([...byAuthor].filter(([a]) => a)), 4);
+    const all = new Map(), counts = new Map();
+    for (const c of cards) if (!c.dup && c.author) add(all, c.author);
+    const ranked = topKeys(all, 8), here = new Set(made.map(c => c.author)), top = ranked.filter(a => here.has(a));
     for (const c of made) add(counts, `${c.created.slice(0, 4)}\u0001${top.includes(c.author) ? c.author : ""}`);
     const ys = made.map(c => +c.created.slice(0, 4)), years = [];
     for (let y = Math.min(...ys); y <= Math.max(...ys); y++) years.push(String(y));
-    const series = [...top.map((a, i) => ({ key: a, label: a, color: `var(--s${i + 1})` })),
+    const series = [...top.map(a => ({ key: a, label: a, color: `var(--s${ranked.indexOf(a) + 1})` })),
       ...(made.some(c => !top.includes(c.author)) ? [{ key: "", label: "Others", color: "var(--deemph)" }] : [])];
     const get = (y, k) => counts.get(`${y}\u0001${k}`) || 0;
     const href = (y, k) => (k === "" ? null : L({ q: `created==${y}`, author: k }));     // Others: no filter
-    charts.push(card("hist-created", "Cards created per year", "By author; the rest as Others.", stacked(years, series, get, { width: 560, href }),
+    charts.push(card("hist-created", "Cards created per year", "By author.", stacked(years, series, get, { width: 560, href }),
       table(["Year", ...series.map(s => s.label), "All"], years.map(y => [y, ...series.map(s => get(y, s.key)), series.reduce((n, s) => n + get(y, s.key), 0)])),
-      { tip: "Cards by the year they were created, as on their card pages; the top 4 authors, the rest Others", legend: legend(series.map(s => [s.color, s.label, "", s.key ? L({ author: s.key }) : null])) }));
+      { tip: "Cards by the year they were created, as on their card pages; each author a colour of their own", legend: legend(series.map(s => [s.color, s.label, "", s.key ? L({ author: s.key }) : null])) }));
   }
 
   // S13 text freshness: the year a card's ability last changed (its current text's start), else its creation

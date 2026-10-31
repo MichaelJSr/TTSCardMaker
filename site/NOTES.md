@@ -882,7 +882,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   Charts that need analytics.json (`rat-power`, `rat-nerfed`) are left out without it.
 - History (`historyHtml(A, {cards}, params)`): `hist-who` (card author x who changed the image, top 7 each and Others,
   from analytics.json `revisions`), `hist-revised` (image changes per card), both "Needs a full-history build." when
-  `revisions.available` is false; `hist-created` (cards per year of `created`, the top 4 authors and Others),
+  `revisions.available` is false; `hist-created` (cards per year of `created`, every author a colour by their rank over all cards (owner 10-31; past eight, Others)),
   `hist-fresh` (the year a card's text last changed: `since` when it has history, else its creation), `hist-archive`
   (retired and deleted per year archived from analytics.json `archived`, renames left out; median life = archived minus
   `created`). history.js gained `dayOf`, `yearOf` (Pacific, one cached formatter). app.js fills `#stats-ratings` and
