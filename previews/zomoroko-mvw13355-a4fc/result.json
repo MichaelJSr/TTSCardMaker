@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw13355-a4fc",
+ "card": "Fool Eater",
+ "path": "Auxiliary/Minions/Fool_Eater.psd",
+ "png": "Auxiliary/Minions/Fool_Eater.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "696b8f4b8aebbcf51b9f116b5dcb7ac49d74fa34",
+  "png_blob": "34787321d4f8735065e7853c4b4fff53153172d4"
+ },
+ "edit": {
+  "ability": "Attackers take CDMG equal to how much damage this takes.\nOverkill damage carries over to another Gulka or Fool Eater in this slot, then parent creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Attackers take CDMG equal to how much damage this takes.\nOverkill damage carries over to another Gulka or Fool Eater in this slot, then parent creature.",
+    "was": "Attackers take CDMG equal to how much damage this takes.\nOverkill damage goes to the next minion then parent creature.",
+    "sha": "5423052f",
+    "psd": "696b8f4b",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'damage goes to the next minion then' -> 'damage carries over to another Gulka or '",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Attackers take CDMG equal to how much damage this takes.\nOverkill damage goes to the next minion then parent creature.",
+   "new": "Attackers take CDMG equal to how much damage this takes.\nOverkill damage carries over to another Gulka or Fool Eater in this slot, then parent creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.354,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  1759,
+  1200,
+  2278
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41177325477",
+ "took_s": 15.3,
+ "at": "2026-10-31T06:37:24Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2109123,
+  "webp": 71648,
+  "before": 67664
+ },
+ "recompressed": false
+}

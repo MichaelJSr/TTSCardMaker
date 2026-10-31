@@ -231,6 +231,14 @@
    "png_blob": "6cbfcba2e9c493de7447e3fe459eb9400e4d1e14",
    "psd_blob": "cf492ac7ba3f50e7aef6d3f805b0131190018791",
    "state": "baked"
+  },
+  "zomoroko-mvw13355-a4fc": {
+   "at": "2026-10-31T06:37:24Z",
+   "card": "Fool Eater",
+   "path": "Auxiliary/Minions/Fool_Eater.psd",
+   "png_blob": "34787321d4f8735065e7853c4b4fff53153172d4",
+   "psd_blob": "696b8f4b8aebbcf51b9f116b5dcb7ac49d74fa34",
+   "state": "baked"
   }
  },
  "v": 1
