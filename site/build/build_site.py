@@ -3135,23 +3135,30 @@ COVER, COVER_SIZES = "cover.webp", {540: 60, 800: 55}   # the rulebook cover's c
 def cover_copies(images, src=RULEBOOK):
     """The rulebook cover's smaller AVIF copies for the book view, which shows it 260 px wide at most (style.css .rb-cover;
     the 1080 px file was the Rulebook tab's largest download): ([[width, file]], {file: bytes}), files under
-    rulebook/img named by the source and the settings. The TTS pages keep the full file. No cover or a failure: none."""
+    rulebook/img named by the source and the settings, cached in CACHE/cover (others pruned). The TTS pages keep the
+    full file. No cover or a failure: none."""
     if COVER not in images:
         return [], {}
+    cache_dir = os.path.join(CACHE, "cover")
     try:
         with open(os.path.join(src, "img", COVER), "rb") as fh:
             data = fh.read()
-        sizes, files = [], {}
-        with Image.open(io.BytesIO(data)) as im:
-            im = im.convert("RGB")
-            for w, q in sorted(COVER_SIZES.items()):
-                if w >= im.width:
-                    continue
-                out = io.BytesIO()
-                im.resize((w, round(im.height * w / im.width)), Image.LANCZOS).save(out, "AVIF", quality=q, icc_profile=None, **AVIF)
-                name = f"cover-{w}.{stamp_of(data + json.dumps([w, q, AVIF], sort_keys=True).encode())}.avif"
-                sizes.append([w, name])
-                files[name] = out.getvalue()
+        os.makedirs(cache_dir, exist_ok=True)
+        sizes, files, im = [], {}, None
+        for w, q in sorted(COVER_SIZES.items()):
+            if w >= images[COVER][0]:
+                continue
+            name = f"cover-{w}.{stamp_of(data + json.dumps([w, q, AVIF], sort_keys=True).encode())}.avif"
+            path = os.path.join(cache_dir, name)
+            if not os.path.exists(path):      # about 0.5 s each
+                im = im or Image.open(io.BytesIO(data)).convert("RGB")
+                im.resize((w, round(im.height * w / im.width)), Image.LANCZOS).save(path + ".tmp", "AVIF", quality=q, icc_profile=None, **AVIF)
+                os.replace(path + ".tmp", path)
+            with open(path, "rb") as fh:
+                files[name] = fh.read()
+            sizes.append([w, name])
+        for name in set(os.listdir(cache_dir)) - set(files):
+            os.remove(os.path.join(cache_dir, name))
         return sizes, files
     except Exception as e:                    # never a failed build: the book view shows the full file
         warn(f"rulebook: no smaller cover ({type(e).__name__}: {e})")
