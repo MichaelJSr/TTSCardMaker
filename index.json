@@ -191,6 +191,14 @@
    "png_blob": "1a54c3b1c79ec947c8d6d582f758bdf71ebbc5ee",
    "psd_blob": "9f171f88e3815b247c7051c27ce3e7e5d5711261",
    "state": "baked"
+  },
+  "zomoroko-mvvzx20r-h1sv": {
+   "at": "2026-10-31T06:04:35Z",
+   "card": "Claw",
+   "path": "Auxiliary/Minions/Claw.psd",
+   "png_blob": "35c37332d95ff7b2479cf777957b10ae882ec413",
+   "psd_blob": "a6f4cf66c252def032e0b21707db5a97c8abc9cd",
+   "state": "baked"
   }
  },
  "v": 1
