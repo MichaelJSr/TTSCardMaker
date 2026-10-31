@@ -407,6 +407,14 @@
    "png_blob": "06ee3d11df59e272a88cc553d5971225fc53e5eb",
    "psd_blob": "0c9f62077edb62443b6cbb99cec16244b7a87c6a",
    "state": "baked"
+  },
+  "zomoroko-mvw5rseh-tony": {
+   "at": "2026-10-31T08:48:28Z",
+   "card": "The Gates of Ahn'Qiraj",
+   "path": "Field/4 Stars/The_Gates_of_Ahn'Qiraj.psd",
+   "png_blob": "739bb97f44549d6d421caee450d70a7f2c733d18",
+   "psd_blob": "7735db8f9a9aacda0c77f08452141cf41d2ba484",
+   "state": "baked"
   }
  },
  "v": 1

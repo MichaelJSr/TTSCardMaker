@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw5rseh-tony",
+ "card": "The Gates of Ahn'Qiraj",
+ "path": "Field/4 Stars/The_Gates_of_Ahn'Qiraj.psd",
+ "png": "Field/4 Stars/The_Gates_of_Ahn'Qiraj.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "098bd28a678e6484e2a98d7785b66196c803cc38",
+  "psd_blob": "7735db8f9a9aacda0c77f08452141cf41d2ba484",
+  "png_blob": "739bb97f44549d6d421caee450d70a7f2c733d18"
+ },
+ "edit": {
+  "ability": "(2GCD)(OYT) summon a Silithid on any slot.\nMay donate 8 SP, 8 points, and 8 bricks total to the war effort over the course of the game to open the gates, summoning one Anubisath Guardian on every friendly slot and replacing this item with “The Temple of Ahn'Qiraj”.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "(2GCD)(OYT) summon a Silithid on any slot.\nMay donate 8 SP, 8 points, and 8 bricks total to the war effort over the course of the game to open the gates, summoning one Anubisath Guardian on every friendly slot and replacing this item with “The Temple of Ahn'Qiraj”.",
+    "was": "(2GCD)(OYT) summon a silithid on any slot.\nMay donate 8 SP, 8 points, and 8 bricks total to the war effort over the course of the game to open the gates, summoning one Anubisath Guardian on every friendly slot and replacing this item with “The Temple of Ahn'Qiraj”.",
+    "sha": "22a8cd42",
+    "psd": "7735db8f",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'a silithid on' -> 'a Silithid on'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(2GCD)(OYT) summon a silithid on any slot.\nMay donate 8 SP, 8 points, and 8 bricks total to the war effort over the course of the game to open the gates, summoning one Anubisath Guardian on every friendly slot and replacing this item with “The Temple of Ahn'Qiraj”.",
+   "new": "(2GCD)(OYT) summon a Silithid on any slot.\nMay donate 8 SP, 8 points, and 8 bricks total to the war effort over the course of the game to open the gates, summoning one Anubisath Guardian on every friendly slot and replacing this item with “The Temple of Ahn'Qiraj”."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.05,
+   "max": 1.0
+  }
+ },
+ "region": [
+  0,
+  1202,
+  1156,
+  1771
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41186054715",
+ "took_s": 11.4,
+ "at": "2026-10-31T08:48:28Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1683433,
+  "webp": 69758,
+  "before": 69778
+ },
+ "recompressed": false
+}
