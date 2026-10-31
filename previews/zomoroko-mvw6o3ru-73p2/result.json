@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw6o3ru-73p2",
+ "card": "Monkey D Vour",
+ "path": "Creatures/Monkey D Folder/4 Stars/Monkey_D_Vour.psd",
+ "png": "Creatures/Monkey D Folder/4 Stars/Monkey_D_Vour.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "ba1d5ac1d15996d550bedae1fd427b944633e2d1",
+  "psd_blob": "41799294a9df8bdcf769e71d56b11d60b8889495",
+  "png_blob": "32835f078d56fb280bc253fec4b38d83e243bb23"
+ },
+ "edit": {
+  "ability": "(OFS) both players draw 2 copies of Grapes.\nCan always eat food.\nWhenever the opponent uses a healing item, a copy of it is also used on this creature.\nImmune to the negative effects of healing items.\nGain +0.5 ATK for every healing item used on this creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OFS) both players draw 2 copies of Grapes.\nCan always eat food.\nWhenever the opponent uses a healing item, a copy of it is also used on this creature.\nImmune to the negative effects of healing items.\nGain +0.5 ATK for every healing item used on this creature.",
+    "was": "(OFS) both players draw 2 copies of grapes.\nCan always eat food.\nWhenever the opponent uses a healing item, a copy of it is also used on this creature.\nImmune to the negative effects of healing items.\nGain +0.5 ATK for every healing item used on this creature.",
+    "sha": "134b409f",
+    "psd": "41799294",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'of grapes. Can' -> 'of Grapes. Can'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(OFS) both players draw 2 copies of grapes.\nCan always eat food.\nWhenever the opponent uses a healing item, a copy of it is also used on this creature.\nImmune to the negative effects of healing items.\nGain +0.5 ATK for every healing item used on this creature.",
+   "new": "(OFS) both players draw 2 copies of Grapes.\nCan always eat food.\nWhenever the opponent uses a healing item, a copy of it is also used on this creature.\nImmune to the negative effects of healing items.\nGain +0.5 ATK for every healing item used on this creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.14,
+   "max": 3.0
+  }
+ },
+ "region": [
+  8,
+  1739,
+  1190,
+  2300
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41187775343",
+ "took_s": 11.0,
+ "at": "2026-10-31T09:13:30Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2455419,
+  "webp": 104332,
+  "before": 104512
+ },
+ "recompressed": false
+}

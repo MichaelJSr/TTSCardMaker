@@ -439,6 +439,14 @@
    "png_blob": "50c52eec8e36ed2c9935b8818274aadd3e43ab3e",
    "psd_blob": "7c65fbf1f95fec215f9ee67c29f7ec11b6c2f622",
    "state": "baked"
+  },
+  "zomoroko-mvw6o3ru-73p2": {
+   "at": "2026-10-31T09:13:30Z",
+   "card": "Monkey D Vour",
+   "path": "Creatures/Monkey D Folder/4 Stars/Monkey_D_Vour.psd",
+   "png_blob": "32835f078d56fb280bc253fec4b38d83e243bb23",
+   "psd_blob": "41799294a9df8bdcf769e71d56b11d60b8889495",
+   "state": "baked"
   }
  },
  "v": 1
