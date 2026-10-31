@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw4rcro-8y84",
+ "card": "Funky D Luffy",
+ "path": "Creatures/Monkey D Folder/4 Stars/Funky_D_Luffy.psd",
+ "png": "Creatures/Monkey D Folder/4 Stars/Funky_D_Luffy.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "09a590d58049d448e1eac4943ac27b676941b30b",
+  "psd_blob": "a009c7c170ebccc2ee61ad6eb54a6742cf3965e8",
+  "png_blob": "2f3d2450ec73677faa60b638434e08e8cb47b841"
+ },
+ "edit": {
+  "ability": "(OFS) acquire and play the \"Party!\" field card and give it 2 types to affect (including typeless) and 2 stat bars to boost for those types. Cannot give duplicate types.\n(1CD) Give the \"Party!\" field card either another type to affect, or another stat bar to boost.\nIf the \"Party!\" field card is destroyed, this gains +3 ATK.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OFS) acquire and play the \"Party!\" field card and give it 2 types to affect (including typeless) and 2 stat bars to boost for those types. Cannot give duplicate types.\n(1CD) Give the \"Party!\" field card either another type to affect, or another stat bar to boost.\nIf the \"Party!\" field card is destroyed, this gains +3 ATK.",
+    "was": "(OFS) acquire and play the \"Party\" field card and give it 2 types to affect (including typeless) and 2 stat bars to boost for those types. Cannot give duplicate types.\n(1CD) Give the \"Party\" field card either another type to affect, or another stat bar to boost.\nIf the \"Party\" field card is destroyed, this gains +3 ATK.",
+    "sha": "2498ee7e",
+    "psd": "a009c7c1",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'the \"Party\" field card and give it 2 typ' -> 'the \"Party!\" field card and give it 2 ty'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(OFS) acquire and play the \"Party\" field card and give it 2 types to affect (including typeless) and 2 stat bars to boost for those types. Cannot give duplicate types.\n(1CD) Give the \"Party\" field card either another type to affect, or another stat bar to boost.\nIf the \"Party\" field card is destroyed, this gains +3 ATK.",
+   "new": "(OFS) acquire and play the \"Party!\" field card and give it 2 types to affect (including typeless) and 2 stat bars to boost for those types. Cannot give duplicate types.\n(1CD) Give the \"Party!\" field card either another type to affect, or another stat bar to boost.\nIf the \"Party!\" field card is destroyed, this gains +3 ATK."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.136,
+   "max": 3.0
+  }
+ },
+ "region": [
+  0,
+  1739,
+  1200,
+  2382
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41184134056",
+ "took_s": 12.8,
+ "at": "2026-10-31T08:20:06Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2611558,
+  "webp": 118158,
+  "before": 118488
+ },
+ "recompressed": false
+}

@@ -335,6 +335,14 @@
    "png_blob": "8350a5ad20d78e5f6b1e525da1355a68bbac6103",
    "psd_blob": "6a5c3a9772ee02d77751ef84081d0f8d7c0f4260",
    "state": "baked"
+  },
+  "zomoroko-mvw4rcro-8y84": {
+   "at": "2026-10-31T08:20:06Z",
+   "card": "Funky D Luffy",
+   "path": "Creatures/Monkey D Folder/4 Stars/Funky_D_Luffy.psd",
+   "png_blob": "2f3d2450ec73677faa60b638434e08e8cb47b841",
+   "psd_blob": "a009c7c170ebccc2ee61ad6eb54a6742cf3965e8",
+   "state": "baked"
   }
  },
  "v": 1
