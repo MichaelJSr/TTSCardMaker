@@ -343,6 +343,14 @@
    "png_blob": "2f3d2450ec73677faa60b638434e08e8cb47b841",
    "psd_blob": "a009c7c170ebccc2ee61ad6eb54a6742cf3965e8",
    "state": "baked"
+  },
+  "zomoroko-mvw4v25x-qo4m": {
+   "at": "2026-10-31T08:22:56Z",
+   "card": "Gooper Blooper",
+   "path": "Creatures/Mario/2 Stars/Gooper_Blooper.psd",
+   "png_blob": "40d591b3a26398ab2eb7fce1477af4be7cdfc392",
+   "psd_blob": "45ad74e239b5e194fe48b9f29264edcbc037f773",
+   "state": "baked"
   }
  },
  "v": 1

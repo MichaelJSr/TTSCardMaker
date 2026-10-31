@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw4v25x-qo4m",
+ "card": "Gooper Blooper",
+ "path": "Creatures/Mario/2 Stars/Gooper_Blooper.psd",
+ "png": "Creatures/Mario/2 Stars/Gooper_Blooper.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "09a590d58049d448e1eac4943ac27b676941b30b",
+  "psd_blob": "45ad74e239b5e194fe48b9f29264edcbc037f773",
+  "png_blob": "40d591b3a26398ab2eb7fce1477af4be7cdfc392"
+ },
+ "edit": {
+  "ability": "This creature starts with 2 Blooper Tentacles, and its attacks inflict 2T Blindness.\nIf this creature takes damage while the Blooper Tentacles are in the secondary field, it and the Blooper Tentacles swap fields.",
+  "parts": {
+   "546": {
+    "field": "ability",
+    "text": "This creature starts with 2 Blooper Tentacles, and its attacks inflict 2T Blindness.\nIf this creature takes damage while the Blooper Tentacles are in the secondary field, it and the Blooper Tentacles swap fields.",
+    "was": "This creature starts with 2 Blooper Tentacles, and its attacks inflict 2T Blindness.\nIf this creature takes damage while the tentacles are in the secondary field, it and the tentacles swap fields.",
+    "sha": "76e81158",
+    "psd": "45ad74e2",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'the tentacles are in the secondary field' -> 'the Blooper Tentacles are in the seconda'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "This creature starts with 2 Blooper Tentacles, and its attacks inflict 2T Blindness.\nIf this creature takes damage while the tentacles are in the secondary field, it and the tentacles swap fields.",
+   "new": "This creature starts with 2 Blooper Tentacles, and its attacks inflict 2T Blindness.\nIf this creature takes damage while the Blooper Tentacles are in the secondary field, it and the Blooper Tentacles swap fields."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.305,
+   "max": 3.0
+  }
+ },
+ "region": [
+  9,
+  1767,
+  1191,
+  2332
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41184343995",
+ "took_s": 10.1,
+ "at": "2026-10-31T08:22:56Z",
+ "variant": null,
+ "parts": {
+  "546": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3242938,
+  "webp": 97032,
+  "before": 95062
+ },
+ "recompressed": false
+}
