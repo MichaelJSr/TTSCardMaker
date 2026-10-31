@@ -78,6 +78,7 @@ import importlib.util
 import io
 import json
 import os
+import posixpath
 import re
 import shutil
 import subprocess
@@ -3594,6 +3595,9 @@ def inline_css(page, css):
     if not link or "</style" in css.lower():
         warn("index.html: style.css not inlined")
         return page
+    # url()s are relative to assets/; inlined, to the page (../rulebook/fonts/x went outside the site)
+    rebase = lambda m: m[0] if re.match(r"[a-z][\w+.-]*:|/|#", m[2], re.I) else f"url({m[1]}{posixpath.normpath('assets/' + m[2])}{m[1]})"
+    css = re.sub(r"""url\(\s*(["']?)([^"')]+)\1\s*\)""", rebase, css)
     return page[:link.start()] + f"<style>{css}</style>" + page[link.end():]
 
 
