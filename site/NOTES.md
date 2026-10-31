@@ -959,6 +959,16 @@ relies on:
   time (`steady`: `generated`, `since`). A build that changed nothing keeps every URL.
 - Deploys: site.yml runs on pushes that touch what the build reads (`paths`). `build.txt` digests the whole site
   without the build time (`dist_digest`); a run whose build equals the live one (its build.txt) doesn't deploy (§28).
+- Second pass (2026-10-31, scratch perf2: trace.mjs, interact.mjs, firstload.mjs, lh-ab.sh). No sibling combinator before
+  a descendant one in a rule that reaches tiles or rows: `.tray ~ * *` walked every earlier tile or row for each element
+  (Table on a 4x phone: style 195 -> 60 ms; a sort 270-390 -> 160-180 ms). The tray's scroll margin is the inherited
+  `--tray-pad` (tray.js `padTop` sets it on the section while the tray is there and clears it when the tray goes).
+- Share pages (c/, u/, decks/) preload the chunk app.js imports (`page_hints`; card page LCP slow 4G -140 ms, fast -170);
+  index.html doesn't (§33). A link to the Rulebook or Stats starts `loadBook` / `loadAnalytics` beside cards.json (app.js,
+  after `wantsEditor`): those loaders must not read `S.cards` (loadHistory does, so it isn't started early).
+- Rulebook cover: `cover_copies` (540 and 800 px AVIF, `COVER_SIZES`, cached in .cache/cover) in rules.json `cover`, the
+  book view's srcset (`coverSet`); the TTS pages keep cover.webp. index.html's inlined style.css has its url()s rebased
+  from assets/ to the page (`inline_css`: `../rulebook/fonts/...` had left the site, 404s).
 
 ## 28. Pictures: AVIF, the deploy gate (2026-10-24, owner's decisions)
 
