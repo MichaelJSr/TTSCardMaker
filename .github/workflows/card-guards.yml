@@ -22,7 +22,7 @@
 # ("Fixes to land"); that push's Card sync run skips its main lane, and Follow up starts Card sync once Land is done,
 # landed or not.
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
-# wheel cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
+# venv cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
 #
 # Three jobs (2026-10-24): `check` runs the two checks and the guards' check and comments, then ends; `post` lands and
 # posts after the quiet window, 30 minutes from the push: the environment card-guards-quiet's wait timer holds it (a

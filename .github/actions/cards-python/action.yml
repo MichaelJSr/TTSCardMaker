@@ -1,14 +1,14 @@
 # The card workflows' one Python setup: Python 3.14 and AutoCroissant requirements-cards.txt (the psd-tools fork's one
-# pin) as wheels cached per its requirement lines (comments don't count), runner and Python (one entry for every card
-# job). A hit installs offline with uv (~1 s); a miss builds the wheels with pip (uv has no `pip wheel`) and saves them.
-# The oxipng CLI (the lossless PNG recompression, AutoCroissant png_export) is the release binary, its sha256 pinned.
-# The bot checkout is at bot/.
+# pin) in a venv cached whole per its requirement lines (comments don't count), runner and Python (one entry for every
+# card job): a hit restores it (an import checks it). A miss installs it offline with uv from the wheels, cached
+# the same way (a miss builds them with pip: uv has no `pip wheel`), and saves both. The oxipng CLI (the lossless PNG
+# recompression, AutoCroissant png_export) is the release binary, its sha256 pinned. The bot checkout is at bot/.
 name: Card Python
-description: Python 3.14 with the card packages from the shared wheel cache
+description: Python 3.14 with the card packages from the shared venv and wheel caches
 
 inputs:
   venv:
-    description: "Install into a new venv here (no pip in it); empty: into setup-python's own"
+    description: "The venv's path (no pip in it); empty: runner.temp/venv, first on PATH (`python` is it)"
     default: ""
   oxipng:
     description: "Install the oxipng CLI (false: the PNGs written are not recompressed)"
@@ -19,7 +19,7 @@ inputs:
 
 outputs:
   wheels:
-    description: "built when the cache missed (a new entry was saved)"
+    description: "built when the wheel cache missed (a new entry was saved)"
     value: ${{ steps.install.outputs.wheels }}
 
 runs:
@@ -28,31 +28,58 @@ runs:
     - uses: actions/setup-python@v7
       id: python
       with:
-        python-version: "3.14"     # no `cache: pip`: the wheels below hold every package
+        python-version: "3.14"     # no `cache: pip`: the caches below hold every package
 
     - id: reqs     # pip's comment rule: a # at the start or after whitespace
       shell: bash
+      env:
+        VENV: ${{ inputs.venv || format('{0}/venv', runner.temp) }}
       run: |
         sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' bot/requirements-cards.txt | sha256sum | cut -d' ' -f1)
         echo "sha=$sha" >> "$GITHUB_OUTPUT"
+        echo "venv=$VENV" >> "$GITHUB_OUTPUT"
+
+    - id: env     # the path is part of the entry: card-sync's venv and the default are one
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ steps.reqs.outputs.venv }}
+        key: cards-venv-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+
+    - id: check     # a restored venv that can't import its packages is installed again
+      shell: bash
+      env:
+        HIT: ${{ steps.env.outputs.cache-hit }}
+        VENV: ${{ steps.reqs.outputs.venv }}
+      run: |
+        if [ "$HIT" = true ]; then
+          if "$VENV/bin/python" -c 'import psd_tools.composite.text, fontTools.ttLib, requests'; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "::warning::the cached venv failed its import check: installed again"
+          rm -rf "$VENV"
+        fi
+        echo "ok=false" >> "$GITHUB_OUTPUT"
 
     - id: wheels
+      if: steps.check.outputs.ok != 'true'
       uses: actions/cache/restore@v6
       with:
         path: ~/.cache/card-wheels
         key: cards-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
 
-    - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
+    - if: steps.check.outputs.ok != 'true'
+      uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
       with:
         version: "0.13.5"
         enable-cache: false
 
     - id: install
+      if: steps.check.outputs.ok != 'true'
       shell: bash
       env:
         HIT: ${{ steps.wheels.outputs.cache-hit }}
-        VENV: ${{ inputs.venv }}
-        HELP: ${{ inputs.help }}
+        VENV: ${{ steps.reqs.outputs.venv }}
         PYTHON: ${{ steps.python.outputs.python-path }}
         UV_COMPILE_BYTECODE: "1"
       run: |
@@ -62,18 +89,29 @@ runs:
           echo "wheels=built" >> "$GITHUB_OUTPUT"
         fi
         sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
-        if [ -n "$VENV" ]; then
-          python -m venv "$VENV" --without-pip
-          PYTHON=$VENV/bin/python
-        fi
-        UV_PYTHON=$PYTHON uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
-        for module in $HELP; do (cd bot && "$PYTHON" -m "commands.$module" --help > /dev/null); done
+        "$PYTHON" -m venv "$VENV" --without-pip
+        UV_PYTHON=$VENV/bin/python uv pip install -q --no-index -f ~/.cache/card-wheels -r "$RUNNER_TEMP/cards.txt"
 
-    - if: steps.wheels.outputs.cache-hit != 'true'     # only once they installed
+    - if: steps.check.outputs.ok != 'true' && steps.wheels.outputs.cache-hit != 'true'     # only once they installed
       uses: actions/cache/save@v6
       with:
         path: ~/.cache/card-wheels
         key: ${{ steps.wheels.outputs.cache-primary-key }}
+
+    - if: steps.check.outputs.ok != 'true'     # only once it installed
+      uses: actions/cache/save@v6
+      with:
+        path: ${{ steps.reqs.outputs.venv }}
+        key: ${{ steps.env.outputs.cache-primary-key }}
+
+    - shell: bash
+      env:
+        OWN: ${{ inputs.venv }}
+        VENV: ${{ steps.reqs.outputs.venv }}
+        HELP: ${{ inputs.help }}
+      run: |
+        if [ -z "$OWN" ]; then echo "$VENV/bin" >> "$GITHUB_PATH"; fi
+        for module in $HELP; do (cd bot && "$VENV/bin/python" -m "commands.$module" --help > /dev/null); done
 
     - if: inputs.oxipng == 'true'     # AutoCroissant docs/Future/SMALLER_PNG_PUSHES.md
       shell: bash

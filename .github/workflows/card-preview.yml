@@ -3,7 +3,7 @@
 # (previews/<request>/, index.json), one commit per run, rewritten past 200 previews or 7 days; contract: site/NOTES.md
 # section 19. No Discord. The preview job's token is read-only; only the publish job writes (stdlib, no install).
 # Inputs reach the shell only through env and a file. The card packages (AutoCroissant requirements-cards.txt, the
-# psd-tools fork's one pin) install from wheels cached per that file (~25 s a preview saved).
+# psd-tools fork's one pin) come in a venv cached per that file (.github/actions/cards-python).
 name: Card preview
 run-name: Card preview ${{ inputs.request }}
 
