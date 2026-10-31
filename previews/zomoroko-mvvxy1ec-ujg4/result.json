@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvxy1ec-ujg4",
+ "card": "Balloon Boy",
+ "path": "Creatures/Fnaf/3 Stars/Balloon_Boy.psd",
+ "png": "Creatures/Fnaf/3 Stars/Balloon_Boy.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "ce18225362a4e7acd459272a05d938bd486b8822",
+  "png_blob": "ff41f737a394e2d9bb3f3a1057d794f9e86a6049"
+ },
+ "edit": {
+  "ability": "Turn 1 summon a Red Bloon on any creature.\nTurn 2 summon a Black Bloon or White Bloon on any creature.\nTurn 3 summon a Zebra Bloon on any creature.\nAfter turn 3, reset to turn 1.",
+  "parts": {
+   "321": {
+    "field": "ability",
+    "text": "Turn 1 summon a Red Bloon on any creature.\nTurn 2 summon a Black Bloon or White Bloon on any creature.\nTurn 3 summon a Zebra Bloon on any creature.\nAfter turn 3, reset to turn 1.",
+    "was": "Turn 1 summon a Red Bloon on any creature.\nTurn 2 summon a Black or White Bloon on any creature.\nTurn 3 summon a Zebra Bloon on any creature.\nAfter turn 3, reset to turn 1.",
+    "sha": "ff52983d",
+    "psd": "ce182253",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Black or' -> 'Black Bloon or'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Turn 1 summon a Red Bloon on any creature.\nTurn 2 summon a Black or White Bloon on any creature.\nTurn 3 summon a Zebra Bloon on any creature.\nAfter turn 3, reset to turn 1.",
+   "new": "Turn 1 summon a Red Bloon on any creature.\nTurn 2 summon a Black Bloon or White Bloon on any creature.\nTurn 3 summon a Zebra Bloon on any creature.\nAfter turn 3, reset to turn 1."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.017,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  1728,
+  1199,
+  2194
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41171407108",
+ "took_s": 10.8,
+ "at": "2026-10-31T05:09:23Z",
+ "variant": null,
+ "parts": {
+  "321": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1419878,
+  "webp": 54402,
+  "before": 53880
+ },
+ "recompressed": false
+}
