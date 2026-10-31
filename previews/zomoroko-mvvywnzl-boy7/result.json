@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvywnzl-boy7",
+ "card": "Clot Bone",
+ "path": "Auxiliary/Minions/Clot_Bone.psd",
+ "png": "Auxiliary/Minions/Clot_Bone.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "11fc13b50fe76c3350f7d096b30859f1a6a18564",
+  "png_blob": "305a5ba14fa5fdfcf742320dd7c6254406cc46ee"
+ },
+ "edit": {
+  "ability": "Overkill damage carries over to another Clot in this slot, then parent creature.\nAttacks do 2 piercing shockwave damage.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Overkill damage carries over to another Clot in this slot, then parent creature.\nAttacks do 2 piercing shockwave damage.",
+    "was": "Overkill damage carries over to the next minion then parent creature.\nAttacks do 2 piercing shockwave damage.",
+    "sha": "217ca679",
+    "psd": "11fc13b5",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next minion then' -> 'to another Clot in this slot, then'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Overkill damage carries over to the next minion then parent creature.\nAttacks do 2 piercing shockwave damage.",
+   "new": "Overkill damage carries over to another Clot in this slot, then parent creature.\nAttacks do 2 piercing shockwave damage."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.48,
+   "max": 3.0
+  }
+ },
+ "region": [
+  36,
+  1782,
+  1159,
+  2040
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41173228971",
+ "took_s": 7.6,
+ "at": "2026-10-31T05:36:10Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1142288,
+  "webp": 59862,
+  "before": 59092
+ },
+ "recompressed": false
+}
