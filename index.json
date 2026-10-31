@@ -279,6 +279,14 @@
    "png_blob": "b4247ea21a835399ecfa654f9b564d106eeb6c80",
    "psd_blob": "2b6ad7c2f7e33c569be3905cbcb9b6e2074ee360",
    "state": "baked"
+  },
+  "zomoroko-mvw2p3iz-z66s": {
+   "at": "2026-10-31T07:22:29Z",
+   "card": "Minion Dematerializer",
+   "path": "N.M.E/Minion_Dematerializer.psd",
+   "png_blob": "b772bcc8efd25cedaecec822c3da9725197da887",
+   "psd_blob": "ffc69bfa295de6c848ae51b147c922bb38fee430",
+   "state": "baked"
   }
  },
  "v": 1

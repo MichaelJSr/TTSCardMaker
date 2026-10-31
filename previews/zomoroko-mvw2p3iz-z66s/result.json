@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw2p3iz-z66s",
+ "card": "Minion Dematerializer",
+ "path": "N.M.E/Minion_Dematerializer.psd",
+ "png": "N.M.E/Minion_Dematerializer.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "1acb310f7e20f4b82a2c548dfca3b086c02437e5",
+  "psd_blob": "ffc69bfa295de6c848ae51b147c922bb38fee430",
+  "png_blob": "b772bcc8efd25cedaecec822c3da9725197da887"
+ },
+ "edit": {
+  "ability": "Purchase Cost: 4 Points\n+0.5 ATK \n+2 ATK against minions.\nOverkill damage to minions carries over to another minion in that slot, then parent creature.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "Purchase Cost: 4 Points\n+0.5 ATK \n+2 ATK against minions.\nOverkill damage to minions carries over to another minion in that slot, then parent creature.",
+    "was": "Purchase Cost: 4 Points\n+0.5 ATK \n+2 ATK against minions.\nOverkill damages to minions carries over to other minions and then the parent creature.",
+    "sha": "f5040c13",
+    "psd": "ffc69bfa",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Overkill damages to minions carries over' -> 'Overkill damage to minions carries over '",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Purchase Cost: 4 Points\n+0.5 ATK \n+2 ATK against minions.\nOverkill damages to minions carries over to other minions and then the parent creature.",
+   "new": "Purchase Cost: 4 Points\n+0.5 ATK \n+2 ATK against minions.\nOverkill damage to minions carries over to another minion in that slot, then parent creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.054,
+   "max": 2.0
+  }
+ },
+ "region": [
+  22,
+  1191,
+  1200,
+  1778
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41180308974",
+ "took_s": 11.8,
+ "at": "2026-10-31T07:22:29Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1788933,
+  "webp": 69488,
+  "before": 68924
+ },
+ "recompressed": false
+}
