@@ -101,14 +101,19 @@ export function splitToken(token) {
 /** The variant's image of an icon entry: icons/fire.<stamp>.webp -> icons/fire.<stamp>.glow.webp (the stamp covers the variants) */
 export const variantFile = (ic, v) => ic.file.replace(/\.webp$/, `.${v}.webp`);
 
+// TEMPORARY (owner 2026-10-30, back to false 10-31): a card name links (and counts as a mention) only typed in its own
+// letter case: "Silithid", never "silithid"
+const EXACT_CASE = true;
+
 /** Build the renderer once per data load: knows icons (and their variants' reach, cards.json iconVariants) and which
  *  card names to link. */
 export function makeRenderer({ cards, icons, variants = {} }) {
   // card names of 3+ characters by printed title or file name: any case, either apostrophe, trailing !?. optional, a
   // plural or possessive ending kept in the link ("Copper Swords", "Grodus X's")
   const fold = s => String(s || "").trim().toLowerCase().replace(/[‘’]/g, "'").replace(/\s+/g, " ");
-  const byName = new Map();
-  const add = (n, c) => { const k = fold(n); if (k.length >= 3 && !byName.has(k)) byName.set(k, c); };
+  const same = s => String(s || "").trim().replace(/[‘’]/g, "'").replace(/\s+/g, " ");   // fold, letter case kept
+  const byName = new Map(), spelt = new Map();         // spelt: fold -> the spellings in their own case (EXACT_CASE)
+  const add = (n, c) => { const k = fold(n); if (k.length < 3) return; if (!byName.has(k)) byName.set(k, c); (spelt.get(k) || spelt.set(k, new Set()).get(k)).add(same(n)); };
   const oneWord = s => !/\s/.test(String(s || "").trim());
   for (const c of cards) add(c.name, c);
   for (const c of cards) if (!oneWord(c.key) || oneWord(c.name)) add(c.key, c);   // not "Blockade" for The Wall By Ech
@@ -181,6 +186,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
       if (!m) continue;
       end = m.index + m[0].length;
       const card = byName.get(fold(m[1]));
+      if (EXACT_CASE && !spelt.get(fold(m[1]))?.has(same(m[1]))) continue;
       if (card && card.name !== selfName && isRef(m, spaced, card)) links.push([m.index, m[0].length, card]);
     }
     return { pieces, links };
