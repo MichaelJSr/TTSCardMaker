@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw20dlq-kyw5",
+ "card": "Jetpack",
+ "path": "Auxiliary/Minions/Jetpack.psd",
+ "png": "Auxiliary/Minions/Jetpack.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "05fe0a075b669cb3e60846deec90ca66d303fa97",
+  "psd_blob": "dc8be26878fb607729e28a1db85804c966170b95",
+  "png_blob": "231ff1e9dcf64c0dd23033da74d8db4ceac24e16"
+ },
+ "edit": {
+  "ability": "(1GCD) May either negate the damage of an attack (not towards itself) or (OYT) negate an ability until (ENDGT).\nOverkill DMG carries over to parent creature.",
+  "parts": {
+   "2049": {
+    "field": "ability",
+    "text": "(1GCD) May either negate the damage of an attack (not towards itself) or (OYT) negate an ability until (ENDGT).\nOverkill DMG carries over to parent creature.",
+    "was": "(1GCD) May either negate the damage of an attack (not towards itself) or (OYT) negate an ability until (ENDGT).\nOverkill Dmg travels to a creature in this slot.",
+    "sha": "59fb9e28",
+    "psd": "dc8be268",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Overkill Dmg travels to a creature in th' -> 'Overkill DMG carries over to parent crea'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD) May either negate the damage of an attack (not towards itself) or (OYT) negate an ability until (ENDGT).\nOverkill Dmg travels to a creature in this slot.",
+   "new": "(1GCD) May either negate the damage of an attack (not towards itself) or (OYT) negate an ability until (ENDGT).\nOverkill DMG carries over to parent creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.039,
+   "max": 2.0
+  }
+ },
+ "region": [
+  71,
+  1782,
+  1129,
+  2277
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41179005184",
+ "took_s": 11.8,
+ "at": "2026-10-31T07:03:08Z",
+ "variant": null,
+ "parts": {
+  "2049": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2563678,
+  "webp": 138996,
+  "before": 139174
+ },
+ "recompressed": false
+}
