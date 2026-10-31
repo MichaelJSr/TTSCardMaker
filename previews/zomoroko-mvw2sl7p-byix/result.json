@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw2sl7p-byix",
+ "card": "Mosling",
+ "path": "Auxiliary/Minions/Mosling.psd",
+ "png": "Auxiliary/Minions/Mosling.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "09a590d58049d448e1eac4943ac27b676941b30b",
+  "psd_blob": "9ac7cf9f995c8f0c01e2c0108423284cf642baa1",
+  "png_blob": "51f8a8c41672e0f70a83000653903f24b9cb6946"
+ },
+ "edit": {
+  "ability": "Overkill damage carries over to another Mosling in this slot.\nPersists on the field.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Overkill damage carries over to another Mosling in this slot.\nPersists on the field.",
+    "was": "Overkill damage carries over to the next minion.\nPersists on the field.",
+    "sha": "d7688465",
+    "psd": "9ac7cf9f",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next minion. Persists' -> 'to another Mosling in this slot. Persist'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Overkill damage carries over to the next minion.\nPersists on the field.",
+   "new": "Overkill damage carries over to another Mosling in this slot.\nPersists on the field."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.151,
+   "max": 2.0
+  }
+ },
+ "region": [
+  22,
+  1801,
+  1179,
+  2105
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41180485444",
+ "took_s": 18.5,
+ "at": "2026-10-31T07:25:13Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1815434,
+  "webp": 71538,
+  "before": 69886
+ },
+ "recompressed": false
+}
