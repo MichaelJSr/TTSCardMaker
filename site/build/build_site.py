@@ -3129,6 +3129,35 @@ def rulebook_chapters(src=RULEBOOK):
     return chapters, images
 
 
+COVER, COVER_SIZES = "cover.webp", {540: 60, 800: 55}   # the rulebook cover's copies: width -> AVIF quality
+
+
+def cover_copies(images, src=RULEBOOK):
+    """The rulebook cover's smaller AVIF copies for the book view, which shows it 260 px wide at most (style.css .rb-cover;
+    the 1080 px file was the Rulebook tab's largest download): ([[width, file]], {file: bytes}), files under
+    rulebook/img named by the source and the settings. The TTS pages keep the full file. No cover or a failure: none."""
+    if COVER not in images:
+        return [], {}
+    try:
+        with open(os.path.join(src, "img", COVER), "rb") as fh:
+            data = fh.read()
+        sizes, files = [], {}
+        with Image.open(io.BytesIO(data)) as im:
+            im = im.convert("RGB")
+            for w, q in sorted(COVER_SIZES.items()):
+                if w >= im.width:
+                    continue
+                out = io.BytesIO()
+                im.resize((w, round(im.height * w / im.width)), Image.LANCZOS).save(out, "AVIF", quality=q, icc_profile=None, **AVIF)
+                name = f"cover-{w}.{stamp_of(data + json.dumps([w, q, AVIF], sort_keys=True).encode())}.avif"
+                sizes.append([w, name])
+                files[name] = out.getvalue()
+        return sizes, files
+    except Exception as e:                    # never a failed build: the book view shows the full file
+        warn(f"rulebook: no smaller cover ({type(e).__name__}: {e})")
+        return [], {}
+
+
 TAG_ROW = re.compile(r"^\|\s*\((-?[0-9A-Za-z/]{2,6})\)\s*\|\s*(.+?)\s*\|\s*$")
 
 
@@ -4167,7 +4196,8 @@ def main():
     data["passwords"] = len(logins)
     os.makedirs(os.path.join(DIST, "data"))
     chapters, rule_images = rulebook_chapters()
-    files = {"cards.json": data, "rules.json": {"chapters": chapters, "images": rule_images}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
+    cover_sizes, cover_files = cover_copies(rule_images)
+    files = {"cards.json": data, "rules.json": {"chapters": chapters, "images": rule_images, **({"cover": cover_sizes} if cover_sizes else {})}, "history.json": history, "versions.json": versions, "users.json": {"users": profiles},
              "contributions.json": contrib, "decks.json": {"generated": data["generated"], "decks": public_decks, "private": private_decks},
              "analytics.json": balance, "changelog.json": changelog, CARD_FONTS: font_use, **({"fonts.json": {"fonts": fonts}} if fonts else {})}
     blobs = {name: json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode("utf-8") for name, obj in files.items()}
@@ -4192,6 +4222,9 @@ def main():
             for name in os.listdir(src):
                 if part == "fonts" or name in rule_images:
                     shutil.copyfile(os.path.join(src, name), os.path.join(DIST, "rulebook", part, name))
+            for name, blob in cover_files.items() if part == "img" else ():
+                with open(os.path.join(DIST, "rulebook", part, name), "wb") as fh:
+                    fh.write(blob)
     log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), rulebook: {len(chapters)} chapters, {len(rule_images)} pictures, "
         f"icons: {len(set(i['file'] for i in icons.values()))}, banned: {sum(len(g['entries']) for g in banlist['groups'])}")
     game = game_text(cards, [{"name": f"{int(c['num'])}. {c['title']}" if int(c["num"]) else c["title"], "ability": rulebook_text(c["source"])}

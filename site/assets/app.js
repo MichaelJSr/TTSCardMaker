@@ -92,7 +92,7 @@ async function getJson(name) {
 // older versions of card text
 let historyP = null, versionsP = null, RB = null, bookP = null;
 const loadBook = () => (bookP ||= Promise.all([getJson("rules.json"), (early("rulebook.js"), import("./rulebook.js"))]).then(([d, m]) => {
-  RB = m; S.book = { images: d.images || {}, built: d.chapters || [] };
+  RB = m; S.book = { images: d.images || {}, built: d.chapters || [], cover: d.cover || [] };
   bookChapters();
 }).catch(e => { bookP = null; throw e; }));
 const loadHistory = () => (historyP ||= getJson("history.json").then(h => {
@@ -946,6 +946,9 @@ function bookCtx(extra = {}) {
     size: f => imgs[bookFile(f)]?.slice(0, 2) || null, shape: f => imgs[bookFile(f)]?.[3] || null, chapters: S.book.chapters, ...extra,
   };
 }
+// the built cover's smaller copies (build_site cover_copies), for its 260 px in the book view
+const coverSet = ctx => { const k = bookFile("cover"), im = S.book.images[k];
+  return im && S.book.cover.length ? ` srcset="${S.book.cover.map(([w, f]) => `${RB.IMG_DIR}${encodeURIComponent(f)} ${w}w`).join(", ")}, ${esc(ctx.imgUrl(k))} ${im[0]}w" sizes="260px"` : ""; };
 const pdfUrl = () => `https://github.com/${S.data.repo}/blob/${S.data.branch || "main"}/TTS/Rulebook/Rulebook.pdf`;   // AutoCroissant rulebook_pages
 let rulesAt = "", spy = null;                            // the rulebook hash last scrolled to: a re-render stays put
 function renderRules(r) {
@@ -972,7 +975,7 @@ function renderRules(r) {
       <div class="toc-tools"><a class="ghost" href="${esc(pdfUrl())}" target="_blank" rel="noopener" title="The rulebook as a PDF (the Tabletop Simulator save's)">PDF</a><a class="ghost" href="#/rules/print" title="The PDF's pages, as the next save update prints them">TTS pages</a><a class="ghost" href="game.txt" target="_blank" rel="noopener" title="Every card and rulebook chapter as one text file">game.txt</a>
         <button type="button" class="ghost" data-action="rb-new" title="${can ? "Write a new chapter" : "Sign in to write a chapter"}">New chapter</button></div></nav>
     <div class="rb rb-book">
-      ${q ? `<p class="muted">${shown.length} chapter${shown.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}" alt="Impossibility Simulator" width="260" height="462">`}
+      ${q ? `<p class="muted">${shown.length} chapter${shown.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
       ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
       ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${RB.chapterHtml(c, ctx)}</article>`).join("")
         || `<div class="empty">No rulebook chapter mentions that.</div>`}
