@@ -1,0 +1,88 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvw4oir-r8b2",
+ "card": "PoD12BAD",
+ "path": "Auxiliary/Minions/PoD12BAD.psd",
+ "png": "Auxiliary/Minions/PoD12BAD.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "9f2eca0810ee7cf6c741e9d8ad3817abb2e66784",
+  "psd_blob": "ad4dae27fd0b2f41d62975aac1f25fd3fc3cd749",
+  "png_blob": "190333745cd7cf985e85398d697042f46f80b480"
+ },
+ "edit": {
+  "ability": "This creature's SPD cannot be reduced.\n(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a M.O.A.B. minion on the same field as this creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "This creature's SPD cannot be reduced.\n(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a M.O.A.B. minion on the same field as this creature.",
+    "was": "This creature's SPD cannot be reduced.\n(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a M.O.A.B. on the same field as this creature.",
+    "sha": "e5fe6111",
+    "psd": "ad4dae27",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'M.O.A.B. on' -> 'M.O.A.B. minion on'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "This creature's SPD cannot be reduced.\n(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a M.O.A.B. on the same field as this creature.",
+   "new": "This creature's SPD cannot be reduced.\n(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a M.O.A.B. minion on the same field as this creature."
+  }
+ ],
+ "notes": [
+  "overflow: ability: set at 94% of its size to stay on its panel"
+ ],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.045,
+   "max": 2.0
+  }
+ },
+ "region": [
+  60,
+  1781,
+  1142,
+  2359
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41167992161",
+ "took_s": 16.3,
+ "at": "2026-10-31T04:18:35Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1814000,
+  "webp": 78720,
+  "before": 79342
+ },
+ "recompressed": false
+}
