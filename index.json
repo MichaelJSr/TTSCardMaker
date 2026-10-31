@@ -423,6 +423,14 @@
    "png_blob": "f8afc6c698e725cff85d170916723512e83735e4",
    "psd_blob": "b461123ca82e13beef58c2b07457a69935554daf",
    "state": "baked"
+  },
+  "zomoroko-mvw6efl7-orrn": {
+   "at": "2026-10-31T09:06:03Z",
+   "card": "X Fists",
+   "path": "Auxiliary/Minions/X_Fists.psd",
+   "png_blob": "14755e28ce44a746ffde95532f0814985e8158e5",
+   "psd_blob": "25b8d49a2693acbc2c4fdcc74a1f280eff3eee8f",
+   "state": "baked"
   }
  },
  "v": 1

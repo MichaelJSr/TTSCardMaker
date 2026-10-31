@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw6efl7-orrn",
+ "card": "X Fists",
+ "path": "Auxiliary/Minions/X_Fists.psd",
+ "png": "Auxiliary/Minions/X_Fists.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "ba1d5ac1d15996d550bedae1fd427b944633e2d1",
+  "psd_blob": "25b8d49a2693acbc2c4fdcc74a1f280eff3eee8f",
+  "png_blob": "14755e28ce44a746ffde95532f0814985e8158e5"
+ },
+ "edit": {
+  "name": "X-Fist",
+  "parts": {
+   "422": {
+    "field": "name",
+    "text": "X-Fist",
+    "was": "X Fists",
+    "sha": "372effef",
+    "psd": "25b8d49a",
+    "layer": "Text/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'X Fists' -> 'X-Fist'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "X Fists",
+   "new": "X-Fist"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.269,
+   "max": 2.0
+  }
+ },
+ "region": [
+  415,
+  40,
+  826,
+  145
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41187242266",
+ "took_s": 8.2,
+ "at": "2026-10-31T09:06:03Z",
+ "variant": null,
+ "parts": {
+  "422": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1979973,
+  "webp": 73588,
+  "before": 73652
+ },
+ "recompressed": false
+}
