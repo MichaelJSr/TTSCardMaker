@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvywzcq-cppk",
+ "card": "Clot Gold",
+ "path": "Auxiliary/Minions/Clot_Gold.psd",
+ "png": "Auxiliary/Minions/Clot_Gold.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "a12426703057920ddf0bec7e6cc2f96326db6d2d",
+  "png_blob": "484207942e0a594d4c4360c6e0b0ed66810302d2"
+ },
+ "edit": {
+  "ability": "Overkill damage carries over to another Clot in this slot, then parent creature.\nAttacks inflict 2T1 Become Back Money.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Overkill damage carries over to another Clot in this slot, then parent creature.\nAttacks inflict 2T1 Become Back Money.",
+    "was": "Overkill damage carries over to the next minion then parent creature.\nAttacks inflict 2T1 Become Back Money.",
+    "sha": "f4cb2fb4",
+    "psd": "a1242670",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next minion then' -> 'to another Clot in this slot, then'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Overkill damage carries over to the next minion then parent creature.\nAttacks inflict 2T1 Become Back Money.",
+   "new": "Overkill damage carries over to another Clot in this slot, then parent creature.\nAttacks inflict 2T1 Become Back Money."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.483,
+   "max": 3.0
+  }
+ },
+ "region": [
+  36,
+  1782,
+  1159,
+  2040
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41173244671",
+ "took_s": 10.5,
+ "at": "2026-10-31T05:36:41Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1036847,
+  "webp": 68410,
+  "before": 67644
+ },
+ "recompressed": false
+}
