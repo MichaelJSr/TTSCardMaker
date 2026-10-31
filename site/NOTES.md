@@ -1352,3 +1352,14 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   data-open>` (the grid, person pages, Parser notes; a picker's choices stay `<article>`: `href: false`), so hover shows
   the address and the browser's link menu works on every card; a plain click or Enter opens the dialog. In edit mode
   `markTiles` drops the href and sets `tabindex` 0 (sign-out remakes the tiles); adopted tiles get no `tabindex` now.
+
+## 42. Art that hangs out (2026-10-31, owner: "for sumo panda (and any future cards that have transparency) ... make their transparent portions hang off the gui and overflow ... a specific list of cards")
+
+- **The list**: build_site `OVERHANG` (card names; Sumo Panda only). For each, `card_body` measures the card's own box in
+  its 720 px picture (columns solid in 90% of rows, then rows solid in 90% of those) as cards.json `hang` [left, top,
+  right, bottom] in fractions; a listed card without a see-through edge gets a build warning and no `hang`.
+- **The website**: grid.js `hangVars` sizes the picture so the card fills its frame (tiles, card page) and the rest
+  hangs out over the gap, the next tile or the dialog's edge; a clip-path rounds the card's own corners like every
+  tile's. Tiles stay cut off below, as every tile is. The card page's Mock-up and Rendered layers take the same box.
+  Plain picture elsewhere (table, deck slots, Compare, versions, the editor's preview pane). Phones cut the overhang at the
+  screen's edge. Test: `tests/test_site_build.py::test_overhang_card_body`.

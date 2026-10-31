@@ -127,6 +127,9 @@ VARIANT_VERSION = "1"                        # in the cached variant images' nam
 FONT_BUILD = "MDW/Fonts/stoogedings-src/build_stoogedings.py"   # its icon_art draws them (needs its requirements.txt)
 IMAGE_META = "images.json"                   # in CACHE: each card image's size and accent color, by PNG blob sha
 IMAGE_META_VERSION = f"3:{IMAGE_WIDTH}"       # bump the 3 when accent_color or the resize changes
+# cards whose art spills past the card into the PNG's see-through edge (by name): the card fills its frame on the website
+# and the art hangs out of it (card_body; cards.json hang)
+OVERHANG = ("Sumo Panda",)
 OG_WIDTH = 480                               # link-preview image (Discord shows ≤ 300 px tall)
 OG_DECK_CARDS = 6                            # cards in a deck page's link-preview montage
 CREATOR_CARDS = ("Croissant", "Michael", "Bobberlington", "The Forbidden One", "Kyle", "Tyler", "Z!!!!!")   # the site's preview fan (owner 2026-10-25; alternating warm and dark, Z!!!!! shown whole), by file key; Kyle is hdckighfkvhvgmk's
@@ -843,6 +846,25 @@ def make_images(path, sha, known=None):
     if known:
         return (sha[:16], *known)
     return sha[:16], *sized[IMAGE_WIDTH].size, accent_color(sized[240])   # the colour from the PNG: no codec noise
+
+
+def card_body(file):
+    """The card's own box in a card picture with see-through edges, as [left, top, right, bottom] in fractions of its
+    size: the columns solid in 90% of the rows, then the rows solid in 90% of those columns. None when that is the
+    whole picture."""
+    with Image.open(file) as im:
+        if "A" not in im.getbands():
+            return None
+        solid = im.getchannel("A").point(lambda v: 255 if v >= 128 else 0)
+    w, h = solid.size
+    xs = [x for x, v in enumerate(solid.resize((w, 1), Image.BOX).tobytes()) if v >= 230]      # a column's mean
+    if not xs:
+        return None
+    left, right = xs[0], xs[-1] + 1
+    ys = [y for y, v in enumerate(solid.crop((left, 0, right, h)).resize((1, h), Image.BOX).tobytes()) if v >= 230]
+    if not ys or (left, ys[0], right, ys[-1] + 1) == (0, 0, w, h):
+        return None
+    return [round(left / w, 4), round(ys[0] / h, 4), round(right / w, 4), round((ys[-1] + 1) / h, 4)]
 
 
 def load_image_meta():
@@ -3945,6 +3967,18 @@ def main():
     save_image_meta({tree[e["png"]]: [e["tw"], e["th"], e["color"]] for e in jobs if e.get("img")})
     made = len(os.listdir(cache_dir)) - cached_before + len(pruned)
     log(f"images: {len(jobs)} cards, {made} new files, {len(pruned)} unused pruned, {len(failed)} failed")
+    overhang = {card_key(n) for n in OVERHANG}
+    for e in jobs:
+        if e.get("img") and overhang & {card_key(e["key"]), card_key(e["name"])}:
+            try:
+                body = card_body(os.path.join(cache_dir, image_names(tree[e["png"]])[720]))
+            except Exception as err:
+                warn(f"overhang: {e['name']}: {type(err).__name__}: {err}")
+                continue
+            if body:
+                e["hang"] = body
+            else:
+                warn(f"overhang: {e['name']} has no see-through edge to hang out")
 
     icons, icon_variants = build_icons(tree)
     by_norm = {}

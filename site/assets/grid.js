@@ -23,6 +23,24 @@ export const thumb = (thumbs, c, w) => (c.img ? `thumbs/${c.img}-${w}-${thumbs[w
 /** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 (or 720) px by screen density */
 export const imgAttrs = (thumbs, c, css, big = false) => { const u = w => thumb(thumbs, c, w);
   return `src="${u(360)}" srcset="${u(240)} 240w, ${u(360)} 360w${big ? `, ${u(720)} 720w` : ""}" sizes="${css}px"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""}`; };
+const TILE_ART = 8 / 5;                      // a tile's picture box, height / width (style.css .tile .art); its corners 11 px round (.tile's 12 less its border)
+/** A card whose art hangs out of its see-through edge (cards.json hang: the card's own box in the picture, [left, top,
+ *  right, bottom] in fractions; build_site OVERHANG): style.css's --hw, --hm, --ha, --hc, the picture's width, margins,
+ *  aspect ratio and clip that make the card fill its frame. tall: the frame's height / width (the picture cut off below
+ *  it, as object-fit cuts every tile's), else the whole card shows. Percent margins are of the frame's width. The clip
+ *  rounds the card's corners (radius: the frame's) where they are the picture's own, leaving the art that hangs out. */
+export function hangVars(c, tall = 0, radius = 12) {
+  const [l, t, r, b] = c.hang, w = r - l, k = c.th / c.tw / w, p = n => `${+(n * 100).toFixed(3)}%`;   // k: the picture's height per frame width
+  const at = (x, y, dx = 0, dy = 0) => `calc(${p(x)} + ${+dx.toFixed(2)}px) calc(${p(y)} + ${+dy.toFixed(2)}px)`;
+  // a corner's arc around (x, y) + (cx, cy) px, a quarter turn from q quarter turns (y down)
+  const arc = (x, y, cx, cy, q) => Array.from({ length: 9 }, (_, i) => { const a = (q + i / 8) * Math.PI / 2;
+    return at(x, y, cx + radius * Math.cos(a), cy + radius * Math.sin(a)); });
+  const R = radius, top = t ? [] : [at(l, 0), ...arc(l, 0, R, R, 2), ...arc(r, 0, -R, R, 3), at(r, 0)];
+  const bottom = tall || b < 1 ? [] : [at(r, 1), ...arc(r, 1, -R, -R, 0), ...arc(l, 1, R, -R, 1), at(l, 1)];
+  return `--hw:${p(1 / w)};--hm:${p(-t * k)} 0 ${tall ? 0 : p(-(1 - b) * k)} ${p(-l / w)};--ha:${tall ? `${+(1 / w).toFixed(4)} / ${+(tall + t * k).toFixed(4)}` : `${c.tw} / ${c.th}`}` +
+    `;--hc:polygon(0% 0%, ${[...top, "100% 0%", "100% 100%", ...bottom, "0% 100%"].join(", ")})`;
+}
+export const hangs = c => !!(c.hang && c.tw && c.th);
 export const iconImg = (icons, name, cls = "tok") => { const ic = icons[norm(name)];
   return ic ? `<img class="${cls}" loading="lazy" src="${esc(ic.file)}" alt="${esc(name)}" data-tip="${esc(name.replace(/_/g, " "))}">` : ""; };
 
@@ -97,8 +115,9 @@ export function flip(inc, exc, v, exclude = false) {
  *  carries before the script runs); href false: no link (a picker's choice) */
 export function tileHtml(c, { small = false, eager = false, css = 190, constructed = false, link = false, href = true } = {}, env) {
   const inDeck = !link && env.inDeck(c.id), url = `c/${encodeURIComponent(c.id)}/`, label = `aria-label="${esc(c.name)}"`;
-  return `${link ? `<a class="tile" href="${url}" ${label}>` : href ? `<a class="tile" href="${url}" data-open="${c.id}" ${label}>` : `<article class="tile" data-open="${c.id}" tabindex="0" ${label}>`}
-    ${c.img ? `<img class="art" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(env.thumbs, c, small ? 120 : css)} alt="">` : `<div class="art"></div>`}
+  const hang = c.img && hangs(c), cls = `tile${hang ? " hang" : ""}`;
+  return `${link ? `<a class="${cls}" href="${url}" ${label}>` : href ? `<a class="${cls}" href="${url}" data-open="${c.id}" ${label}>` : `<article class="${cls}" data-open="${c.id}" tabindex="0" ${label}>`}
+    ${c.img ? `<img class="art" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(env.thumbs, c, small ? 120 : css)}${hang ? ` style="${hangVars(c, TILE_ART, 11)}"` : ""} alt="">` : `<div class="art"></div>`}
     ${link ? "" : constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>`
       : c._staged ? `<span class="flag staged" data-tip="Changed in your unpublished batch">Unpublished</span>`
       : c.hidden ? `<span class="flag" data-tip="Hidden from the website">Hidden</span>`
