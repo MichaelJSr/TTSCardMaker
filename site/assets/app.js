@@ -190,12 +190,12 @@ function derive() {
   S.renderer = makeRenderer({ cards: S.cards, icons: S.icons, variants: S.data.iconVariants });
   S.mentions = new Map(); S.mentionedBy = new Map();
   for (const c of S.cards) {
-    const m = S.renderer.mentions(c.ability, c.name);
+    const m = S.renderer.mentions(c.ability);
     S.mentions.set(c.id, m);
     if (c.dup) continue;                                   // a duplicate counts once
     for (const id of m) { if (!S.mentionedBy.has(id)) S.mentionedBy.set(id, new Set()); S.mentionedBy.get(id).add(c.id); }
   }
-  for (const c of S.cards) if ((c.type === "debuff" || c.type === "buff") && !S.mentionedBy.get(c.id)?.size) c._unused = true;
+  for (const c of S.cards) if ((c.type === "debuff" || c.type === "buff") && ![...(S.mentionedBy.get(c.id) || [])].some(id => id !== c.id)) c._unused = true;   // named by no other card
 }
 const currentCard = () => (parseHash().name === "card" && !modal.hidden ? parseHash().arg : "");
 const goCard = id => { if (parseHash().name === "card" && parseHash().arg === id) openCard(id); else location.hash = `#/card/${id}`; };
@@ -232,7 +232,7 @@ function startEditor(M) {
     S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
     openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
     statBars: c => statBars(c), imageOf: (c, w = 360) => img(c, w),   // the form's live preview; 720: the Edit viewer
-    iconFor: n => iconFor(n), render: (t, n) => S.renderer.render(t, n),
+    iconFor: n => iconFor(n), render: t => S.renderer.render(t),
     users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
     // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
     view, route: () => parseHash(), tile: (c, o) => tileHtml(c, { small: true, ...o }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
@@ -804,8 +804,8 @@ function openCard(id, showDetails = false) {
         </div>
         ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, "")}</a>`).join("")}</div>` : ""}
         ${statBars(c)}
-        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, c.name)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
-        ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, c.name)}</div>` : ""}
+        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
+        ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note)}</div>` : ""}
         ${artHtml(c)}
         ${hasBadges(c.ability) || hasBadges(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml()}</details>` : ""}
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
@@ -932,7 +932,7 @@ const bookFile = f => (S.book.images[f] || S.book.sent?.images?.includes(f) ? f
 function bookCtx(extra = {}) {
   const imgs = S.book.images, sent = S.book.sent;
   return {
-    render: t => S.renderer.render(t, "", { links: false }), icon: t => S.renderer.icon(t), card: cardByName, cardImg: c => img(c, 360),
+    render: t => S.renderer.render(t, { links: false }), icon: t => S.renderer.icon(t), card: cardByName, cardImg: c => img(c, 360),
     imgUrl: f => { const k = bookFile(f); return imgs[k] ? `${RB.IMG_DIR}${encodeURIComponent(k)}?v=${imgs[k][2]}`
       : sent?.images?.includes(k) ? `https://raw.githubusercontent.com/${S.data.repo}/${sent.sha}/site/rulebook/img/${encodeURIComponent(k)}` : RB.IMG_DIR + encodeURIComponent(k); },
     size: f => imgs[bookFile(f)]?.slice(0, 2) || null, shape: f => imgs[bookFile(f)]?.[3] || null, chapters: S.book.chapters, ...extra,
@@ -1220,7 +1220,7 @@ function renderCompare(r) {
       <h3><a href="#/card/${c.id}">${esc(c.name)}</a></h3><p class="muted">${esc(KIND_LABEL[c.type] || c.type)} ${c.stars ? `· ${c.stars}★` : ""} ${c.series ? `· ${esc(c.series)}` : ""} ${c.subseries ? `· ${esc(c.subseries)}` : ""}</p>
       ${["hp", "def", "atk", "spd"].map(k => c[k] != null ? `<div>${k.toUpperCase()} <b>${c[k]}</b>${delta(c, k)}</div>` : "").join("")}
       ${c.hp != null ? `<div>Total <b>${total(c)}</b>${c === first || first.hp == null ? "" : (d => d ? ` <span class="${d > 0 ? "diff-up" : "diff-down"}">${d > 0 ? "+" : ""}${d}</span>` : "")(total(c) - total(first))}</div>` : ""}
-      ${c.ability ? `<div class="ability" style="margin-top:8px">${S.renderer.render(c.ability, c.name)}</div>` : ""}
+      ${c.ability ? `<div class="ability" style="margin-top:8px">${S.renderer.render(c.ability)}</div>` : ""}
       <p><button type="button" class="ghost" data-action="compare-remove" data-id="${c.id}">Remove</button></p></div>`).join("")}</div>`;
 }
 

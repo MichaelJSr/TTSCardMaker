@@ -164,7 +164,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   // icons and badges as [index, length, html]; links as [index, length, card], judged over the whole text with each
   // icon or badge read as a space, so render and mentions agree
   // (html false: the pieces' places only, for mentions)
-  function parse(text, selfName, html_ = true) {
+  function parse(text, html_ = true) {
     const pieces = [];
     for (const m of text.matchAll(PIECE)) {
       const html = !html_ ? (m[1] !== undefined ? hasIcon(m[1]) : !!tagInfo(m[2])) || null
@@ -187,15 +187,15 @@ export function makeRenderer({ cards, icons, variants = {} }) {
       end = m.index + m[0].length;
       const card = byName.get(fold(m[1]));
       if (EXACT_CASE && !spelt.get(fold(m[1]))?.has(same(m[1]))) continue;
-      if (card && card.name !== selfName && isRef(m, spaced, card)) links.push([m.index, m[0].length, card]);
+      if (card && isRef(m, spaced, card)) links.push([m.index, m[0].length, card]);   // its own name too (owner 10-30)
     }
     return { pieces, links };
   }
 
   /** HTML for ability text; links: false leaves card names as text (the rulebook links its own) */
-  function render(text, selfName = "", { links: linked = true } = {}) {
+  function render(text, { links: linked = true } = {}) {
     if (!text) return "";
-    const { pieces, links: found } = parse(text, selfName), links = linked ? found : [];
+    const { pieces, links: found } = parse(text), links = linked ? found : [];
     const out = [];
     let last = 0;
     for (const [i, n, x] of [...pieces, ...links].sort((a, b) => a[0] - b[0])) {
@@ -207,8 +207,8 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   }
 
   /** Cards whose names appear in a text (for "mentions" / "mentioned by"). */
-  function mentions(text, selfName = "") {
-    return new Set(text ? parse(text, selfName, false).links.map(l => l[2].id) : []);
+  function mentions(text) {
+    return new Set(text ? parse(text, false).links.map(l => l[2].id) : []);
   }
   return { render, mentions, icon };
 }

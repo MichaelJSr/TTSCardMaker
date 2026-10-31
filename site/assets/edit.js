@@ -1165,7 +1165,7 @@ export function createEditor(app) {
     input.focus(); input.select();
   }
   // the live preview: the card as it will look once published, from the form's op (live.js)
-  const previewCtx = { render: (t, n) => app.render(t, n), statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
+  const previewCtx = { render: t => app.render(t), statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
   function paintPreview(c, op) {
     const body = app.modal.querySelector("#lp-body"); if (!body) return;
     const b = baseOf(c), values = { ...op.set, ...Object.fromEntries((op.unset || []).map(f => [f, psdVal(b, f)])) };
@@ -1202,7 +1202,7 @@ export function createEditor(app) {
     const update = () => {
       paintSite();
       const op = readForm(c), lines = describe(op), text = partForm && !siteOn("ability") ? lastRead?.derived.ability || "" : ta.value;
-      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text, c.name) : `<span class="muted">No ability text.</span>`;
+      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text) : `<span class="muted">No ability text.</span>`;
       const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");   // a stars edit moves the card (the bake's plan_move)
       const mv = sn && st && !siteOn("stars") ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
       if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${partForm?.view.rec.header?.stars ? " and redraws the printed stars" : ""}. Tick Website only to keep the card where it is.`

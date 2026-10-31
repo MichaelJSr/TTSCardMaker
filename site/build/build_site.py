@@ -3271,8 +3271,8 @@ NAME_VERB = {"buff": _STATUS_VERB, "debuff": _STATUS_VERB,                      
 
 
 def name_links(cards, icons, tag_table):
-    """text.js makeRenderer's card links, for the build: links(text, self_name) -> the cards the text names, as the site
-    links them ("summon a silithid": a lowercase one-word name after its verb)."""
+    """text.js makeRenderer's card links, for the build: links(text) -> the cards the text names, as the site links them
+    ("summon a silithid": a lowercase one-word name after its verb; its own name too)."""
     fold = lambda s: re.sub(r"\s+", " ", str(s or "").strip().lower().replace("‘", "'").replace("’", "'"))
     one_word = lambda s: not re.search(r"\s", str(s or "").strip())
     by_name = {}
@@ -3291,7 +3291,7 @@ def name_links(cards, icons, tag_table):
         if not one_word(c["name"]) and re.search(r"[^siu]s$", c["name"].strip(), re.I):
             add(c["name"].strip()[:-1], c)
     if not by_name:
-        return lambda text, self_name="": []
+        return lambda text: []
     pat = lambda k: re.escape(k).replace("'", "['‘’]").replace(r"\ ", "[ \t]+")
     names = re.compile(r"(?<![\w'‘’])(" + "|".join(pat(k) for k in sorted(by_name, key=len, reverse=True)) + r")"
                        r"((?:['‘’]s|(?<=s)['‘’]|e?s)(?![\w'‘’]))?(?![\w'‘’])", re.I)
@@ -3319,7 +3319,7 @@ def name_links(cards, icons, tag_table):
         return not (re.search(r"(?:^|[\n.!?:)])[^\S\n]*$", before)
                     and re.match(r"[^\S\n]+(?:to|the|a|an|your|its|all|any|each|it|this|that)\b", after))
 
-    def links(text, self_name=""):
+    def links(text):
         flat = spaced = text or ""
         for m in re.finditer(r"\[([^\[\]\n]{1,52})\]|" + TAG_IN_TEXT.pattern, flat):
             if piece(m):
@@ -3328,7 +3328,7 @@ def name_links(cards, icons, tag_table):
         out = []
         for m in names.finditer(flat):
             card = by_name[fold(m[1])]
-            if card["name"] != self_name and is_ref(m, spaced, card):
+            if is_ref(m, spaced, card):
                 out.append(card)
         return out
     return links
@@ -3368,17 +3368,17 @@ def tts_details(cards, chapters, icons, tag_table):
                 tags.append(info[0])
                 used_tags[info[0]] = {"g": info[1], "m": info[2]}
         hits = [] if not named else [lower[m[1].lower()] for m in named.finditer(text)]
-        named_cards = [(originals.get(q["dup"], q) if q.get("dup") else q).get("png") for q in links(text, c["name"])
+        named_cards = [(originals.get(q["dup"], q) if q.get("dup") else q).get("png") for q in links(text)   # itself too (owner 10-30)
                        if q["name"] not in statuses]
         named_cards = [q for q in named_cards if q]
-        mentioned = [q for i, q in enumerate(named_cards) if q not in named_cards[:i] and q != c["png"]][:6]
+        mentioned = [q for i, q in enumerate(named_cards) if q not in named_cards[:i]][:6]
         bars = [" ".join(f"{k.upper()} {'?' if s.get(k) is None else s[k]}" for k in STAT_KEYS) for s in c.get("creatures") or [c]
                 if any(s.get(k) is not None for k in STAT_KEYS)]
         out_cards[c["png"]] = {k: v for k, v in {
             "n": c["name"], "k": KIND_LABEL.get(c.get("type"), c.get("type") or "") + (f" ({c['subtype']})" if c.get("subtype") else ""),
             "st": c.get("stars"), "s": "; ".join(bars) or None, "a": game_words(text, icons) or None,
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
-            "x": [n for i, n in enumerate(hits) if n not in hits[:i] and n != c["name"]] or None, "m": mentioned or None,
+            "x": [n for i, n in enumerate(hits) if n not in hits[:i]] or None, "m": mentioned or None,
             "r": [cid for cid, words in rule_words if words.search(text)] or None,
             "by": c.get("author")}.items() if v}
     return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
