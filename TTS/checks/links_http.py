@@ -4,8 +4,10 @@
 Repo links: ranged GET of the first 64 KB, uncompressed, compared with the blob at the pin (size from Content-Range or
 Content-Length); the blob itself is decoded with PIL. Other hosts: full GET, decoded or magic-checked. The global
 script's links are live data (TTS/Global.lua): each loads, a .json one parses; a bare prefix is skipped. 8 requests at
-a time. Exit 1 on a defect.
+a time. Pinned blobs the checkout lacks are fetched first, in a few batches: a blobless repo would fetch each one on the
+spot, one fetch and one pack per blob. Exit 1 on a defect.
 """
+import functools
 import json
 import os
 import re
@@ -55,9 +57,53 @@ def git(repo, *args, text=True):
     return out.decode() if text else out
 
 
+@functools.cache
+def blob_id(clone, sha, path):
+    """The blob a pinned link names. Reads trees only (the blobless clone has them all): nothing is downloaded."""
+    return git(clone, "ls-tree", sha, "--", path).split()[2]
+
+
+def local_objects(repo):
+    return set(git(repo, "cat-file", "--batch-all-objects", "--batch-check=%(objectname)").split())
+
+
+def promisor_remote(repo):
+    """The remote a blobless repo fetches missing objects from; None for a repo that has every blob."""
+    out = subprocess.run(["git", "-C", repo, "config", "--get-regexp", r"^remote\..+\.promisor$"], capture_output=True,
+                         text=True).stdout
+    for line in out.splitlines():
+        key, _, value = line.partition(" ")
+        if value.strip() == "true":
+            return key[len("remote."):-len(".promisor")]
+    return None
+
+
+def prefetch(checkout, clone, blobs, pool, batches=4):
+    """Fetches the blobs blob_bytes would find missing into the repo it reads them from (the checkout if it's blobless,
+    else the history clone): up to 4 batches side by side, no blob in two, a pack each. A blob a failed batch leaves
+    out is fetched on demand, as before."""
+    repo = checkout if promisor_remote(checkout) else clone
+    missing = blobs - local_objects(checkout)
+    if repo == clone:
+        missing -= local_objects(clone)
+    remote = promisor_remote(repo)
+    if not missing or not remote:
+        return
+    ids = sorted(missing)
+    size = max(50, -(-len(ids) // batches))
+
+    def fetch(chunk):
+        subprocess.run(["git", "-C", repo, "-c", "fetch.negotiationAlgorithm=noop", "fetch", "-q", "--no-tags",
+                        "--no-write-fetch-head", "--recurse-submodules=no", "--filter=blob:none", "--stdin", remote],
+                       input="\n".join(chunk).encode(), capture_output=True)
+    list(pool.map(fetch, [ids[i:i + size] for i in range(0, len(ids), size)]))
+    left = len(missing - local_objects(repo))
+    print(f"fetched {len(missing) - left} pinned blobs into {repo} before the checks" +
+          (f"; {left} failed, fetched on demand" if left else ""))
+
+
 def blob_bytes(checkout, clone, sha, path):
-    meta = git(clone, "ls-tree", sha, "--", path).split()
-    blob = meta[2]
+    blob = blob_id(clone, sha, path)
     for repo in (checkout, clone):
         try:
             return blob, git(repo, "cat-file", "blob", blob, text=False)
@@ -190,7 +236,23 @@ def main():
         except Exception as e:
             return {"url": url, "fail": [f"{type(e).__name__}: {e}"], "note": []}
 
+    pins = []                                           # the repo links check_repo reads a blob for
+    for url in urls:
+        m = LINK.fullmatch(url)
+        if m and urls[url] != {"/LuaScript"}:
+            pins.append((m.group(1), unquote(m.group(2))))
+
+    def pinned_blob(pin):
+        try:
+            return blob_id(clone, *pin)
+        except Exception:                               # check_repo reports it
+            return None
+
     with ThreadPoolExecutor(8) as pool:
+        try:
+            prefetch(checkout, clone, set(pool.map(pinned_blob, pins)) - {None}, pool)
+        except Exception as e:                          # only a speed-up: the checks fetch on demand without it
+            print(f"note: no prefetch ({type(e).__name__}: {e})")
         results = list(pool.map(one, sorted(urls)))
     fails = [r for r in results if r["fail"]]
     types = {}
