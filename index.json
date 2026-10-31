@@ -351,6 +351,14 @@
    "png_blob": "40d591b3a26398ab2eb7fce1477af4be7cdfc392",
    "psd_blob": "45ad74e239b5e194fe48b9f29264edcbc037f773",
    "state": "baked"
+  },
+  "zomoroko-mvw5dpdl-yxm2": {
+   "at": "2026-10-31T08:37:33Z",
+   "card": "Leeroy Jenkins",
+   "path": "Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.psd",
+   "png_blob": "c05e4af028de3e73a06a30cb79428ee227b928aa",
+   "psd_blob": "a8e3c23b4b46ca0db71e869699798e2f0c2154ba",
+   "state": "baked"
   }
  },
  "v": 1
