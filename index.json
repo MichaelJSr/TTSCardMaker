@@ -319,6 +319,14 @@
    "png_blob": "eff26d76fe9ff09a50c3110e8d23edaa01405824",
    "psd_blob": "49146bb224cdf6db97ca601c6521ad28f023eb74",
    "state": "baked"
+  },
+  "zomoroko-mvw48108-ddvx": {
+   "at": "2026-10-31T08:05:05Z",
+   "card": "Doctor Zomboss",
+   "path": "Creatures/Other/5 Stars/Doctor_Zomboss.psd",
+   "png_blob": "eff26d76fe9ff09a50c3110e8d23edaa01405824",
+   "psd_blob": "49146bb224cdf6db97ca601c6521ad28f023eb74",
+   "state": "baked"
   }
  },
  "v": 1
