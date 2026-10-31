@@ -21,7 +21,7 @@ const HELP = [
   ["::: row … :::", "what's inside side by side (\"::: row 3 1\" sets their widths); fences nest"],
   ["::: ability … :::", "a card's ability box: (OYT) badges, [fire] icons, \"1.\" a numbered bubble"],
   ["> [!kirby] text", "a mascot says it (any picture's name: eggman, sonic, kirby-sleepy…); [!eggman top] puts it on top, [!kirby right] floats it"],
-  ["![what it shows](file.webp){.right width=30}", "a picture: .left / .right float it, .end puts it at the right edge, width in % of the line; dx=10 dy=-5 shift it (% of its size); in a row, anchor=bottom-left places it in its column"],
+  ["![what it shows](file.webp){.right width=30}", "a picture: .left / .right float it (out=45: that % of it hangs out of its panel's side), .end puts it at the right edge, width in % of the line; dx=10 dy=-5 shift it (% of its size); in a row, anchor=bottom-left places it in its column"],
   ["![[Card name]]", "the card's picture (several on one line make a row; -> between them draws an arrow)"], ["[[Card name]]", "a link to the card"],
   ["[text]{.red}", "colours (the Colour menu): red green blue yellow orange purple grey white; .u underline, .big, .small, .caps, .nowrap (one line), .secret (hidden in the panel)"],
   ["**bold**  *italic*  ***both***", "Ctrl/Cmd+B, Ctrl/Cmd+I"], ["- item / 1. item / 1) item", "lists keep the numbers you type"], ["| a | b |", "a table (|:-:| centres; {.grid cols=-,red,green} under it)"],
@@ -182,7 +182,7 @@ function floatWidth(a, el) {
   if (now > FLOAT_MAX) a.width = String(FLOAT_MAX);
 }
 const ANCHORS = ["top-left", "top", "top-right", "left", "center", "right", "bottom-left", "bottom", "bottom-right"];
-const FLOW_GONE = ["x", "y", "dx", "dy", "anchor", "height"];   // what a picture put back into the flow loses
+const FLOW_GONE = ["x", "y", "dx", "dy", "anchor", "height", "out"];   // what a picture put back into the flow loses
 const PICTURE_LINE = /^(\s*)!\[([^\]]*)\]\(([^)\s]+)\)\s*(\{[^{}]*\})?\s*$/;
 let drag = null;                                       // HTML5: {from, end} a block's lines, {pic, mascot} from the panel
 let P = null;                                          // a picture's pointer drag or resize

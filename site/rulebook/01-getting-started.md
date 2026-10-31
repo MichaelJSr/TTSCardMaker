@@ -1,7 +1,7 @@
 # Getting Started
 
 ::: panel
-![Kirby riding a Warp Star](kirby-star.webp){.left width=40}
+![Kirby riding a Warp Star](kirby-star.webp){.left width=30 out=62 dy=-6}
 WELCOME TO IMPOSSIBILITY SIM!
 Thank you so much for playing! We're very happy to have you with us today.
 This handy little book will run through the rules to get you started with our little card game. We hope you have fun!

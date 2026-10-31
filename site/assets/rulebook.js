@@ -9,7 +9,8 @@
 //                                box, "1." a numbered bubble), contents (the chapters' list)
 //   > [!kirby top] text          a mascot (any picture in img/) says it; top: above the bubble, right: floated
 //   ![alt](file.webp){.right width=30}   a picture: .left .right float it (text wraps around it: a see-through one's
-//                                        edges, its outline from build_site), .end puts it at the right edge, width in %;
+//                                        edges, its outline from build_site; out=45: that % of it hangs out of its
+//                                        panel's side), .end puts it at the right edge, width in %;
 //                                        dx=10 dy=-5 shift it (% of its size), .free x= y= place it anywhere;
 //                                        in a row, anchor=bottom-left (top, center, right…) puts it there in its column
 //   ![[Card]]  ![[A]] -> ![[B]]  the card's picture (a line of them is a row; -> an arrow); [[Card|label]] a link to it
@@ -103,6 +104,17 @@ const FLOATS = ["left", "right", "end"];
 const placed = b => b.t === "img" && b.attrs.cls.includes("free");   // a picture placed anywhere: out of the flow
 // a panel holds its floated pictures when one is solid (no outline: a screenshot, a diagram); see-through ones alone
 // hang out of it, its height its text's, as on the Photoshop pages
+const isNum = v => /^-?\d+(\.\d+)?$/.test(v || "");
+const sideOf = b => (b.attrs.cls.includes("left") ? "left" : b.attrs.cls.includes("right") ? "right" : "");
+// {.left width=28 out=45}: that % of a floated picture hangs out of its panel's side; the panel moves in on that side
+// by as much (hangOf), so the picture stays on the page, as Kirby on the Getting Started page did
+const outOf = b => (b.t === "img" && !placed(b) && sideOf(b) && isNum(b.attrs.out) && isNum(b.attrs.width) ? Math.max(0, Math.min(90, +b.attrs.out)) * +b.attrs.width / 1e4 : 0);
+function hangOf(kids) {                               // the panel's style: in by the part of its picture that hangs out
+  const c = kids.find(outOf);
+  if (!c) return "";
+  const k = outOf(c);                                 // that part / the panel's text width; the panel's padding .9em a side
+  return `margin-${sideOf(c)}:calc((100% - 1.8em) * ${+(k / (1 + k)).toFixed(4)})`;
+}
 const holds = (kids, ctx) => kids.some(c => c.t === "img" && !placed(c) && c.attrs.cls.some(k => k === "left" || k === "right") && !ctx.shape?.(c.src));
 const ANCHORS = new Set(["top-left", "top", "top-right", "left", "center", "right", "bottom-left", "bottom", "bottom-right"]);   // a row's picture in its column
 const column = b => b.t === "fence" || b.t === "say" || b.t === "cards" || (b.t === "img" && !placed(b) && !b.attrs.cls.some(c => FLOATS.includes(c)));
@@ -275,7 +287,7 @@ function blockInner(b, ctx) {
       const id = ctx.id ? ` id="${esc(ctx.id)}--${slugify(titleText(b.title))}"` : "";
       const icon = b.attrs?.icon && !b.cont ? ctx.icon?.(b.attrs.icon) : "";
       const pen = ctx.editable && ctx.id && b.line != null ? ` <button type="button" class="rb-sec-edit" data-action="rb-edit" data-id="${esc(ctx.id)}" data-line="${b.line}" title="Edit this section" aria-label="Edit this section">✎</button>` : "";
-      return `<section class="rb-sec ${clsOf(b.attrs)}${b.cont ? " rb-cont" : ""}${icon ? " rb-has-icon" : ""}"${b.cont ? "" : id}>${icon ? `<span class="rb-sec-icon">${icon}</span>` : ""}${b.cont ? "" : `<h3 class="rb-tab">${inline(b.title, ctx)}${pen}</h3>`}<div class="rb-panel${holds(b.children, ctx) ? " rb-holds" : ""}">${kidsHtml(b.children, ctx)}</div></section>`;
+      return `<section class="rb-sec ${clsOf(b.attrs)}${b.cont ? " rb-cont" : ""}${icon ? " rb-has-icon" : ""}"${b.cont ? "" : id}>${icon ? `<span class="rb-sec-icon">${icon}</span>` : ""}${b.cont ? "" : `<h3 class="rb-tab">${inline(b.title, ctx)}${pen}</h3>`}<div class="rb-panel${holds(b.children, ctx) ? " rb-holds" : ""}"${hangOf(b.children) ? ` style="${hangOf(b.children)}"` : ""}>${kidsHtml(b.children, ctx)}</div></section>`;
     }
     case "fence": return fenceHtml(b, ctx);
     case "say": {
@@ -289,7 +301,8 @@ function blockInner(b, ctx) {
       const shift = !placed(b) && (num(b.attrs.dx) || num(b.attrs.dy)) ? `transform:translate(${num(b.attrs.dx) ? b.attrs.dx : 0}%,${num(b.attrs.dy) ? b.attrs.dy : 0}%)` : "";
       const outline = !placed(b) && b.attrs.cls.some(c => c === "left" || c === "right") ? ctx.shape?.(b.src) : null;   // floated: text to its edges
       const shape = /^[\d.% ,-]+$/.test(outline || "") ? `shape-outside:polygon(${outline}) content-box` : "";
-      const st = [sizeStyle(b.attrs), at, shift, shape].filter(Boolean).join(";");
+      const out = outOf(b) ? `margin-${sideOf(b)}:calc(${-+(outOf(b) * 100).toFixed(3)}% - .9em)` : "";   // out=: past its panel's padding and edge
+      const st = [sizeStyle(b.attrs), at, shift, shape, out].filter(Boolean).join(";");
       return `<figure class="rb-fig ${clsOf(b.attrs)}"${st ? ` style="${st}"` : ""}>${imgHtml(b, ctx)}</figure>`;
     }
     case "cards": return `<div class="rb-cards ${clsOf(b.attrs)}">${b.names.map(n => (n.arrow ? `<span class="rb-arrow" aria-hidden="true">→</span>` : cardHtml(n.name, n.label, ctx))).join("")}</div>`;
@@ -324,7 +337,7 @@ function fenceHtml(b, ctx) {
       const lines = b.children.flatMap(c => (c.t === "p" ? c.text.split("\n") : c.t === "list" ? c.items.map(it => (c.type === "1" ? `${it.n}. ${it.text}` : it.text)) : []));
       return `<div class="rb-ability ${cls}">${lines.map(l => { const n = /^(\d+)\.\s+(.*)$/.exec(l); return `<p>${n ? `<span class="rb-num-bubble">${n[1]}</span>` : ""}${inline(n ? n[2] : l, ctx)}</p>`; }).join("")}</div>`;
     }
-    case "panel": return b.arg ? blockHtml({ t: "section", title: b.arg, attrs: b.attrs, children: b.children }, ctx) : `<div class="rb-solo-wrap"><div class="rb-panel rb-solo${holds(b.children, ctx) ? " rb-holds" : ""} ${cls}">${inner}</div></div>`;
+    case "panel": return b.arg ? blockHtml({ t: "section", title: b.arg, attrs: b.attrs, children: b.children }, ctx) : `<div class="rb-solo-wrap"><div class="rb-panel rb-solo${holds(b.children, ctx) ? " rb-holds" : ""} ${cls}"${hangOf(b.children) ? ` style="${hangOf(b.children)}"` : ""}>${inner}</div></div>`;
     case "box": return `<div class="rb-box ${cls}">${inner}</div>`;
     case "contents": return `<ol class="rb-contents ${cls}">${(ctx.chapters || []).filter(c => Number(c.num) > 0).map(c => `<li value="${Number(c.num)}"><a href="#/rules/${esc(c.id)}" data-scroll="${esc(c.id)}">${esc(c.title)}</a></li>`).join("")}</ol>${inner}`;
     case "small": case "center": case "note": return `<div class="rb-${b.kind} ${cls}">${inner}</div>`;
