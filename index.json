@@ -399,6 +399,14 @@
    "png_blob": "fa8f3ff67f5b20f1cdac9e757313a5b549957ec3",
    "psd_blob": "cd20efa9b6cc597cd1f4c52c3d99f32f439806ea",
    "state": "baked"
+  },
+  "zomoroko-mvw5pq8m-vtbx": {
+   "at": "2026-10-31T08:46:53Z",
+   "card": "Moose Goose",
+   "path": "Creatures/DST/3 Stars/Moose_Goose.psd",
+   "png_blob": "06ee3d11df59e272a88cc553d5971225fc53e5eb",
+   "psd_blob": "0c9f62077edb62443b6cbb99cec16244b7a87c6a",
+   "state": "baked"
   }
  },
  "v": 1
