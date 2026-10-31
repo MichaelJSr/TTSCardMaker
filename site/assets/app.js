@@ -820,13 +820,13 @@ function openCard(id, showDetails = false) {
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
           <div id="card-balance">${balanceHtml(c)}</div>
-          <div id="card-ratings">${ratings.blockHtml(ratedOf(c), { editing: editing(), mine: editor.myRating(ratedOf(c).id) })}</div>
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions, "Cards its ability text names")}${strip("Mentioned by", mentionedBy, "Cards whose ability text names this card")}${strip("Similar stats", similar(c), "The 8 cards of the same kind nearest in HP, DEF, ATK and SPD, star level weighed in")}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
           <div id="history-slot">${historyHtml(c, S.data.repo, S.history?._shas, canRevert(c))}</div>
           <div id="versions-slot">${versionsHtml(c)}</div>
           ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
+          <div id="card-ratings">${ratings.blockHtml(ratedOf(c), { editing: editing(), mine: editor.myRating(ratedOf(c).id) })}</div>
         </div>
       </div>
     </div></div>`;
