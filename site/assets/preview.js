@@ -21,9 +21,10 @@ export const CONTRACT = {
 export const KEY = "card-previews";                   // localStorage: {card id: [entry, newest first]}
 export const LOCK_KEY = "card-previews-poll";         // localStorage: {tab, until}: the tab that checks for all of them
 export const KEEP = 3, MAX_EDIT = 16384;              // MAX_EDIT: card_preview's, UTF-8 bytes of the edit's JSON
-// the contract's checks: every 10 s for 3 minutes, then every 30 s, giving up at 16 (the jobs' timeouts add up to 14);
-// "Check again" waits 10 more
-export const POLL_FAST = 10000, POLL_SLOW = 30000, FAST_FOR = 3 * 60000, MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
+// the contract's checks: none in the first 25 s (a run takes 40-65 s), every 3 s until 2 minutes, every 10 s until 3,
+// then every 30 s, giving up at 16 (the jobs' timeouts add up to 14); "Check again" waits 10 more
+export const FIRST_MS = 25000, POLL_FAST = 3000, FAST_FOR = 2 * 60000, POLL_MID = 10000, MID_FOR = 3 * 60000, POLL_SLOW = 30000;
+export const MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
 // the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404
 // more than a day after the press means it never comes; entries go after 30 days
 export const SHOW_MS = 6 * 864e5, LATE_MS = 864e5, DROP_MS = 30 * 864e5;
@@ -149,8 +150,14 @@ export function missed(e, now = Date.now()) {
   if (e.state === "running" && now - e.at > (e.wait || MAX_WAIT_MS)) return { state: "timeout" };
   return null;
 }
-/** ms to the next check (null: nothing running): POLL_FAST while one started under FAST_FOR ago, else POLL_SLOW. */
-export const pollDelay = (store, now = Date.now()) => { const w = waiting(store); return !w.length ? null : w.some(e => now - e.at < FAST_FOR) ? POLL_FAST : POLL_SLOW; };
+/** ms to the next check (null: nothing running): when the oldest reaches FIRST_MS, then POLL_FAST while one started
+ *  under FAST_FOR ago, POLL_MID under MID_FOR, else POLL_SLOW. */
+export const pollDelay = (store, now = Date.now()) => {
+  const ages = waiting(store).map(e => now - e.at);
+  if (!ages.length) return null;
+  if (ages.every(a => a < FIRST_MS)) return FIRST_MS - Math.max(...ages);
+  return ages.some(a => a < FAST_FOR) ? POLL_FAST : ages.some(a => a < MID_FOR) ? POLL_MID : POLL_SLOW;
+};
 /** One tab checks for all (the others see the results through the storage event): this tab (id `tab`) may check when it
  *  holds the lock (stored text) or the lock lapsed. -> the lock to store, or null (another tab has it). */
 export function takeLock(lockText, tab, now = Date.now(), ttl = 2 * POLL_SLOW + 15000) {
@@ -432,6 +439,7 @@ export function createPreviews(app) {
     try {
       set(expire(store));
       for (const e of only ? [only] : due(store, Date.now(), look)) {
+        if (!only && e.state === "running" && Date.now() - e.at < FIRST_MS) continue;   // too soon to be done
         let raw = null;
         try { raw = await fetchResult(e); } catch { continue; }                 // GitHub unreachable: next time
         if (raw != null) {

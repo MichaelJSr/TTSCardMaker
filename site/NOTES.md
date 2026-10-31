@@ -279,8 +279,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - **Result**: poll
   `GET https://api.github.com/repos/MichaelJSr/TTSCardMaker/contents/previews/<request>/result.json?ref=previews` with
   `Accept: application/vnd.github.raw+json` and `cache: "no-store"`: 404 until it is published (also before the branch
-  exists). Every 10 s for 3 minutes, then every 30 s; give up at 16 minutes (the jobs' timeouts add up to 14) with "no
-  result: see the run". The run: `GET .../actions/workflows/card-preview.yml/runs?event=workflow_dispatch&per_page=20`,
+  exists). None in the first 25 s (a run takes 40-65 s: 2026-10-31), then every 3 s until 2 minutes, every 10 s until
+  3, then every 30 s; give up at 16 minutes (the jobs' timeouts add up to 14) with "no result: see the run". The run:
+  `GET .../actions/workflows/card-preview.yml/runs?event=workflow_dispatch&per_page=20`,
   the one whose `display_title` is `Card preview <request>`; when it is `completed` and result.json still 404s a minute
   later, it ended without publishing (a bad request, or the publish job failed): stop polling and link the run. Never
   poll raw.githubusercontent.com for it: raw caches 5 minutes (`max-age=300`), a 404 too.
@@ -624,7 +625,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     `{card, key, name, request, edit, hash, base: {ts, img} at the dispatch, at, state, result?, run?, seen?}`;
     `readStore` drops anything malformed; another tab's writes arrive through the `storage` event.
   - Background check: while any entry is running and someone is signed in, from any page, at the contract's pace
-    (`pollDelay`: every 10 s while one started under 3 minutes ago, then every 30 s), `GET .../contents/previews/
+    (`pollDelay`: the first check when the oldest started `FIRST_MS` (25 s) ago, a younger one skipped; then every 3 s
+    while one started under 2 minutes ago, every 10 s under 3, then every 30 s), `GET .../contents/previews/
     <request>/result.json?ref=previews` (raw, through the editor's `gh`: never raw.githubusercontent, which caches a 404);
     404 = not yet. Also the run, by `display_title` containing the request (the workflow's run-name "Card preview
     <request>"), for a link, and an error when it ended without a result (seen twice). Only a check that finds nothing
