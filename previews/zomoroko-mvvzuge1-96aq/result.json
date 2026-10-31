@@ -1,0 +1,88 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvzuge1-96aq",
+ "card": "Claw",
+ "path": "Auxiliary/Minions/Claw.psd",
+ "png": "Auxiliary/Minions/Claw.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "a6f4cf66c252def032e0b21707db5a97c8abc9cd",
+  "png_blob": "35c37332d95ff7b2479cf777957b10ae882ec413"
+ },
+ "edit": {
+  "ability": "Overkill damage carries over to another Miasma or Claw in this slot.",
+  "parts": {
+   "2068": {
+    "field": "ability",
+    "text": "Overkill damage carries over to another Miasma or Claw in this slot.",
+    "was": "Overkill damage carries through the next Miasma or Claw on the same creature.",
+    "sha": "6826985d",
+    "psd": "a6f4cf66",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'carries through the next Miasma or Claw ' -> 'carries over to another Miasma or Claw i'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Overkill damage carries through the next Miasma or Claw on the same creature.",
+   "new": "Overkill damage carries over to another Miasma or Claw in this slot."
+  }
+ ],
+ "notes": [
+  "overflow: ability: the new text runs past 'MagentaSmorg' clipped to it (31586 px)"
+ ],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.011,
+   "max": 1.0
+  }
+ },
+ "region": [
+  15,
+  1792,
+  1170,
+  2221
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41174924855",
+ "took_s": 9.3,
+ "at": "2026-10-31T06:02:28Z",
+ "variant": null,
+ "parts": {
+  "2068": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2797588,
+  "webp": 145914,
+  "before": 150452
+ },
+ "recompressed": false
+}
