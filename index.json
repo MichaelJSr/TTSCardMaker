@@ -103,6 +103,14 @@
    "png_blob": "cc7a3151345aaea814ea3726a798815035a6ae5a",
    "psd_blob": "a4373e3cd35ca75df8d1bf901850e581d67c43dd",
    "state": "baked"
+  },
+  "zomoroko-mvvyogaf-mpbv": {
+   "at": "2026-10-31T05:29:51Z",
+   "card": "Fire Totem",
+   "path": "Auxiliary/Items/Fire_Totem.psd",
+   "png_blob": "d191961b03d461d8e21ef302eb0bf928d5a0aad9",
+   "psd_blob": "4f97e3a7828e4a55b79cbbed2f08a8bd4b0b3222",
+   "state": "baked"
   }
  },
  "v": 1

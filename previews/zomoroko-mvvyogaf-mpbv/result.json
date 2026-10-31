@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvyogaf-mpbv",
+ "card": "Fire Totem",
+ "path": "Auxiliary/Items/Fire_Totem.psd",
+ "png": "Auxiliary/Items/Fire_Totem.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "4f97e3a7828e4a55b79cbbed2f08a8bd4b0b3222",
+  "png_blob": "d191961b03d461d8e21ef302eb0bf928d5a0aad9"
+ },
+ "edit": {
+  "ability": "(1GCD) Increase a friendly creature's ATK by 1.\nOverkill damage carries over to another friendly Totem.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "(1GCD) Increase a friendly creature's ATK by 1.\nOverkill damage carries over to another friendly Totem.",
+    "was": "(1GCD) Increase a friendly creature's ATK by 1.\nOverkill damage carries over to the next friendly Totem.",
+    "sha": "0d0c8f24",
+    "psd": "4f97e3a7",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next friendly' -> 'to another friendly'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD) Increase a friendly creature's ATK by 1.\nOverkill damage carries over to the next friendly Totem.",
+   "new": "(1GCD) Increase a friendly creature's ATK by 1.\nOverkill damage carries over to another friendly Totem."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.213,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  1374,
+  1200,
+  1791
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41172783900",
+ "took_s": 9.4,
+ "at": "2026-10-31T05:29:51Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 3289901,
+  "webp": 105102,
+  "before": 105362
+ },
+ "recompressed": false
+}
