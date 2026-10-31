@@ -260,6 +260,7 @@ class UI:
     def __init__(self, world, base):
         self._w, self.base, self.builds, self.ids, self.attrs, self.values, self.unknown = world, base, [], {}, {}, {}, []
         self._busy = 0
+        self.calls = 0                                      # setAttribute(s) and setValue calls: what crosses into the game
 
     @property
     def loading(self):                                      # busy for a few reads after a build, as TTS loads it
@@ -288,11 +289,18 @@ class UI:
         if id not in self.ids:
             self.unknown.append(f"setAttribute({id!r}, {key!r})")
         self.attrs.setdefault(id, {})[key] = str(value)
+        self.calls += 1
+
+    def setAttributes(self, id, data):
+        for key, value in self._w.from_lua(data).items():
+            self.setAttribute(id, key, value)
+        self.calls += 1 - len(self._w.from_lua(data))
 
     def setValue(self, id, value):
         if id not in self.ids:
             self.unknown.append(f"setValue({id!r})")
         self.values[id] = value
+        self.calls += 1
 
     def on(self, id):
         return self.attrs.get(id, {}).get("active") == "true"
@@ -697,31 +705,37 @@ def main():
     check(ui.on("Red_d1") and ui.values.get("Red_d1_title") == card["n"] and ui.values.get("Red_d1_text"),
           f"Card details: panel 1 shows {card['n']!r}")
     rules, named = chapters_of(card, details), named_of(card, details)
-    def slot(kind, i, rows):                                # the button of item i ("Red_d1_c2_3"), in whichever row it went
-        return next((f"Red_d1_{kind}{r}_{i}" for r in range(1, rows + 1) if ui.on(f"Red_d1_{kind}{r}_{i}")), None)
-    shown_rules = [ui.text(b) for b in (slot("r", i, 4) for i in range(1, 5)) if b]
+    def slot(kind, i):                                      # the button of item i ("Red_d1_r2_3"), in whichever row it went
+        return next((f"Red_d1_{kind}{r}_{i}" for r in range(1, 3) if ui.on(f"Red_d1_{kind}{r}_{i}")), None)
+    shown_rules = [ui.text(b) for b in (slot("r", i) for i in range(1, 5)) if b]
     check(shown_rules == [f"Rules: {details['chapters'][r]['title']}" for r in rules[:4]], f"Rules buttons {shown_rules}")
-    shown_cards = [ui.text(b) for b in (slot("c", i, 6) for i in range(1, 7)) if b]
+    shown_cards = [ui.attrs[b].get("tooltip") or ui.text(b) for b in (slot("c", i) for i in range(1, 7)) if b]   # a shortened one's name on hover
     check(shown_cards == [f"+ {n}" for n, _ in named[:6]], f"spawn buttons {shown_cards}")
+    before = ui.calls
+    w.run(w.g.showDetails, "Red", target, what="Card details again")
+    check(ui.calls == before, f"the same card again sends nothing to the game ({ui.calls - before} calls)")
     width = lambda: ui.attrs.get("Red_d1", {}).get("width")
     w.call("detailsSize", red, None, "Red_d1_bigger")
     big = width()
     for _ in range(3):
         w.call("detailsSize", red, None, "Red_d1_smaller")
     check((big, width()) == ("660", "440"), f"A+ / A- size the panel ({big}, {width()})")
-    over = []                                               # at the smallest size, every row of buttons fits its width
-    for kind, n in (("rules", 4), ("cards", 6)):
-        for r in range(1, n + 1):
+    over, cut = [], []                                      # at the smallest size, each row of buttons fits its width
+    for kind, n, rows in (("rules", 4, 2), ("cards", 6, 2)):
+        for r in range(1, rows + 1):
             row = f"Red_d1_{kind}{r}"
             if not ui.on(row):
                 continue
-            ws = [int(ui.attrs[b]["preferredWidth"]) for b in (f"Red_d1_{kind[0]}{r}_{i}" for i in range(r, n + 1)) if ui.on(b)]
+            bs = [b for b in (f"Red_d1_{kind[0]}{r}_{i}" for i in range(r, n + 1)) if ui.on(b)]
+            ws = [int(ui.attrs[b]["preferredWidth"]) for b in bs]
             if sum(ws) + 6 * (len(ws) - 1) > int(ui.attrs[row]["width"]):
                 over.append((row, ws))
-    check(not over, f"buttons wrap onto rows, none past its row's width {over}")
+            cut += [(ui.text(b), ui.attrs[b].get("tooltip")) for b in bs if ui.text(b).endswith("...")]
+    check(not over and all(tip and tip.startswith(text[:-3]) for text, tip in cut) and not any(t.startswith("Rules") for t, _ in cut),
+          f"a row's buttons fit it (Rules wrap, never shortened; a long name shortened with '...', whole on hover) {over or cut}")
     if rules:
         w.log.clear()
-        w.call("openRules", red, None, slot("r", 1, 4))
+        w.call("openRules", red, None, slot("r", 1))
         turned = [e[1] for e in w.log if e[0] == "page"]
         ch = details["chapters"][rules[0]]
         ok = turned and 0 <= turned[0] < len(pages) and (pages[turned[0]].get("num") == str(int(ch["num"]))
@@ -729,12 +743,12 @@ def main():
         check(bool(ok) and ("take", "3a33a8") in w.log, f"Rules: {ch['title']} takes the PDF out of its bag and turns to "
               f"its page {turned}")
         w.log.clear()
-        w.call("openRules", red, None, slot("r", 1, 4))
+        w.call("openRules", red, None, slot("r", 1))
         check(not any(e[0] == "take" for e in w.log) and any(e[0] == "page" for e in w.log),
               "Rules again: the PDF already on the table")
     if named:
         w.spawns.clear()
-        w.call("spawnNamed", red, None, slot("c", 1, 6))
+        w.call("spawnNamed", red, None, slot("c", 1))
         sp = w.spawns[0] if w.spawns else {}
         hand = red.getHandTransform()
         ok = sp and face_path(sp["data"]) == named[0][1] and sp["rotation"][2] == 180 and \

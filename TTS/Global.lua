@@ -111,6 +111,7 @@ local BADGE = {turn = "#60a5fa", any = "#a78bfa", forced = "#f87171", trigger = 
 local DIM, HEAD = "#94a3b8", "#7dd3fc"
 local SIZES = {{w = 440, h = 540, f = 14}, {w = 540, h = 660, f = 16}, {w = 660, h = 800, f = 18}}
 local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 4, 6, 40, 30
+local RULE_ROWS, CARD_ROWS = 2, 2                      -- rows the buttons may take (more than fit: names shortened)
 local DETAILS_PANELS = 3                               -- a player's card details open at once (one more replaces the oldest)
 local BACKS = {{"Buff", "MDW/Assets/cardback_statuseffect.png"}, {"Debuff", "MDW/Assets/cardback_statuseffect.png"},
     {"Creature", "MDW/Assets/cardback.png"}, {"Minion", "MDW/Assets/cardback.png"}, {"Auxiliary creature", "MDW/Assets/cardback.png"}}
@@ -131,11 +132,11 @@ local function button(id, label, onClick, attrs)
     return {tag = "Button", attributes = a, value = label}
 end
 
--- n buttons wrapping onto rows "<id>1".."<id>n" (a long name never cut off): button i goes in row i at the latest, so row
--- r holds slots "<prefix><r>_<i>" for i = r..n; layout puts each button in one of them
-local function rows(id, prefix, n, onClick, colors)
+-- n buttons on up to count rows "<id>1".."<id><count>": button i goes in row i at the latest, so row r holds slots
+-- "<prefix><r>_<i>" for i = r..n (layout puts each button in one of them)
+local function rows(id, prefix, n, count, onClick, colors)
     local out = {}
-    for r = 1, n do
+    for r = 1, count do
         local row = {tag = "HorizontalLayout", attributes = {id = id .. r, rectAlignment = "LowerLeft", height = ROW_H, spacing = 6,
             childForceExpandWidth = false, childAlignment = "MiddleLeft", active = false}, children = {}}
         for i = r, n do table.insert(row.children, button(prefix .. r .. "_" .. i, "", onClick, {preferredWidth = 120, active = false, colors = colors or BUTTON})) end
@@ -161,10 +162,9 @@ local function detailsPanel(c, k)
             verticalScrollbarVisibility = "AutoHideAndExpandViewport"}, children = {
             {tag = "Panel", attributes = {id = id .. "_page", height = 100}, children = {
                 {tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
-                    alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}}}},
-    }}
-    for _, r in ipairs(rows(id .. "_rules", id .. "_r", RULE_BUTTONS, "openRules")) do table.insert(panel.children, r) end
-    for _, r in ipairs(rows(id .. "_cards", id .. "_c", CARD_BUTTONS, "spawnNamed", SPAWN)) do table.insert(panel.children, r) end
+                    alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}}}}}}
+    for _, r in ipairs(rows(id .. "_rules", id .. "_r", RULE_BUTTONS, RULE_ROWS, "openRules")) do table.insert(panel.children, r) end
+    for _, r in ipairs(rows(id .. "_cards", id .. "_c", CARD_BUTTONS, CARD_ROWS, "spawnNamed", SPAWN)) do table.insert(panel.children, r) end
     return panel
 end
 
@@ -217,7 +217,27 @@ end
 -- stalled the game. A build keeps the save's own UI and the panels already built; the panels open at the time are drawn
 -- again after it (a dragged one back at its place).
 local baseXml, built, rbOpen, restoring, ensurePanels = nil, {}, {}, false, nil
+
+-- the panels' attributes and values as last set: set() sends only what changed, an element's changes in one call (each
+-- call crosses into the game); a rebuild starts the panels afresh. The search boxes' text is the player's: set directly
+local uiNow = {}
+local function set(id, attrs)
+    local now, changed = uiNow[id], nil
+    if not now then now = {} uiNow[id] = now end
+    for k, v in pairs(attrs) do
+        v = tostring(v)
+        if now[k] ~= v then now[k] = v changed = changed or {} changed[k] = v end
+    end
+    if changed then UI.setAttributes(id, changed) end
+end
+local function setValue(id, v)
+    local now = uiNow[id]
+    if not now then now = {} uiNow[id] = now end
+    if now["@value"] ~= v then now["@value"] = v UI.setValue(id, v) end
+end
+
 local function rebuild()
+    uiNow = {}
     baseXml = baseXml or UI.getXmlTable() or {}
     local xml = {}
     for _, e in ipairs(baseXml) do table.insert(xml, e) end
@@ -286,7 +306,10 @@ end
 -- the GUI a moment after the load, so a first right-click doesn't wait: the data decoded, the seated players' panels built
 function prepare()
     ensureData()
-    if details then ensurePanels(getSeatedPlayers()) end
+    if details then
+        ensurePanels(getSeatedPlayers())
+        Wait.time(indexLater, 1)                       -- then the save's cards, for the spawn buttons
+    end
 end
 
 function seatPanels(color)                             -- a player seated after that: theirs a moment later
@@ -439,6 +462,17 @@ local function detailsText(card)
     return table.concat(out, "\n")
 end
 
+-- a button's width for its text at font size f (a little more than the text: never cut off)
+local function widthOf(text, f) return math.floor(#text * (f + 2) * 0.55 + 22) end
+
+-- text cut to fit width w at font size f, ending in "..." (never inside a UTF-8 character, no space before the dots)
+local function shorten(text, w, f)
+    local k = math.max(1, math.floor((w - 22) / ((f + 2) * 0.55)) - 3)
+    while k > 1 and (text:byte(k + 1) or 0) >= 128 and (text:byte(k + 1) or 0) < 192 do k = k - 1 end
+    while k > 1 and text:sub(k, k) == " " do k = k - 1 end
+    return text:sub(1, k) .. "..."
+end
+
 -- a seat's panel k laid out at its size, for its card: the text's height measured, the Rules and spawn rows filled
 local function layout(color, k)
     local open = (shown[color] or {})[k]
@@ -446,59 +480,68 @@ local function layout(color, k)
     local id, sz = color .. "_d" .. k, SIZES[open.size]
     local rules, named = chaptersOf(open.card), namedOf(open.card)
     local rowW = sz.w - 20
-    -- list's buttons left to right, a new row when the next would pass the row's width (a name wider than a whole row
-    -- in a smaller font); returns the rows used
-    local function pack(rowsId, prefix, list, n, label)
-        local at, used, x = {}, 0, 0
-        for i = 1, n do
-            local item = list[i]
-            if item then
-                local text, f = label(item), sz.f - 2
-                local w = math.floor(#text * (f + 2) * 0.55 + 22)            -- a little more than the text: never cut off
-                if w > rowW then f = math.max(8, math.floor((rowW - 22) / (#text * 0.55)) - 2) w = rowW end
-                if used == 0 or x + 6 + w > rowW then used, x = used + 1, w else x = x + 6 + w end
-                at[i] = {row = used, text = text, w = w, f = f}
-            end
+    -- list's buttons left to right on up to count rows, a new row when the next would pass the row's width; when they
+    -- overflow the last row they are spread evenly over the rows instead, and a row still too wide has its widest names
+    -- shortened to one width that fits, ending in "...", the whole name on hover (11 of 772 cards' spawn buttons
+    -- overflow one row at the default size); returns the rows used
+    local function pack(rowsId, prefix, list, n, count, label)
+        local f, items, byRow, used, x = sz.f - 2, {}, {}, 0, 0
+        for i = 1, math.min(n, #list) do
+            local text = label(list[i])
+            items[i] = {i = i, text = text, w = widthOf(text, f)}
+            if used == 0 or (x + 6 + items[i].w > rowW and used < count) then used, x = used + 1, items[i].w else x = x + 6 + items[i].w end
+            items[i].row = used
         end
-        for r = 1, n do
-            UI.setAttribute(rowsId .. r, "active", r <= used and "true" or "false")
-            UI.setAttribute(rowsId .. r, "width", rowW)
+        if x > rowW and used > 1 then                  -- the last row overflows: evenly instead (row r still holds i >= r)
+            local per = math.ceil(#items / used)
+            for i, it in ipairs(items) do it.row = math.ceil(i / per) end
+        end
+        for _, it in ipairs(items) do byRow[it.row] = byRow[it.row] or {} table.insert(byRow[it.row], it) end
+        for r = 1, count do
+            local items, cap, at = byRow[r] or {}, nil, {}
+            local rest = rowW - 6 * (#items - 1)
+            for _, it in ipairs(items) do rest = rest - it.w at[it.i] = it end
+            if rest < 0 then                           -- the k widest at width cap, the rest as they are
+                local ws = {}
+                for j, it in ipairs(items) do ws[j] = it.w end
+                table.sort(ws, function(a, b) return a > b end)
+                for k = 1, #ws do
+                    rest = rest + ws[k]
+                    cap = math.floor(rest / k)
+                    if k == #ws or cap >= ws[k + 1] then break end
+                end
+            end
+            set(rowsId .. r, {active = #items > 0 and "true" or "false", width = rowW})
             for i = r, n do
-                local b, p = prefix .. r .. "_" .. i, at[i]
-                UI.setAttribute(b, "active", p and p.row == r and "true" or "false")
-                if p and p.row == r then
-                    UI.setAttribute(b, "text", p.text)
-                    UI.setAttribute(b, "preferredWidth", p.w)
-                    UI.setAttribute(b, "fontSize", p.f)
+                local it = at[i]
+                if it then
+                    local short = cap and it.w > cap
+                    set(prefix .. r .. "_" .. i, {active = "true", text = short and shorten(it.text, cap, f) or it.text,
+                        tooltip = short and it.text or "", preferredWidth = short and cap or it.w, fontSize = f})
+                else
+                    set(prefix .. r .. "_" .. i, {active = "false"})
                 end
             end
         end
         return used
     end
-    local ruleRows = pack(id .. "_rules", id .. "_r", rules, RULE_BUTTONS, function(ch) return "Rules: " .. details.chapters[ch].title end)
-    local cardRows = pack(id .. "_cards", id .. "_c", named, CARD_BUTTONS, function(n) return "+ " .. n[1] end)
+    local ruleRows = pack(id .. "_rules", id .. "_r", rules, RULE_BUTTONS, RULE_ROWS, function(ch) return "Rules: " .. details.chapters[ch].title end)
+    local cardRows = pack(id .. "_cards", id .. "_c", named, CARD_BUTTONS, CARD_ROWS, function(n) return "+ " .. n[1] end)
     open.rules, open.named = rules, named
     local foot = (ruleRows + cardRows) * (ROW_H + 8) + 8
-    for r = 1, CARD_BUTTONS do UI.setAttribute(id .. "_cards" .. r, "offsetXY", "10 " .. (8 + (cardRows - r) * (ROW_H + 8))) end
-    for r = 1, RULE_BUTTONS do UI.setAttribute(id .. "_rules" .. r, "offsetXY", "10 " .. (8 + (cardRows + ruleRows - r) * (ROW_H + 8))) end
+    for r = 1, CARD_ROWS do set(id .. "_cards" .. r, {offsetXY = "10 " .. (8 + (cardRows - r) * (ROW_H + 8))}) end
+    for r = 1, RULE_ROWS do set(id .. "_rules" .. r, {offsetXY = "10 " .. (8 + (cardRows + ruleRows - r) * (ROW_H + 8))}) end
     local text = detailsText(open.card)
     local textW = sz.w - 44
     local textH = lines(text, math.floor(textW / (sz.f * 0.52))) * math.ceil(sz.f * 1.32) + 12
-    UI.setAttribute(id, "width", sz.w)
-    UI.setAttribute(id, "height", sz.h)
-    UI.setAttribute(id .. "_head", "width", sz.w)
-    UI.setAttribute(id .. "_title", "width", sz.w - 140)
-    UI.setAttribute(id .. "_title", "fontSize", sz.f + 3)
-    UI.setValue(id .. "_title", open.card.n)
-    UI.setAttribute(id .. "_scroll", "width", sz.w - 8)
-    UI.setAttribute(id .. "_scroll", "height", sz.h - TITLE_H - 4 - foot)
-    UI.setAttribute(id .. "_page", "width", sz.w - 24)
-    UI.setAttribute(id .. "_page", "height", textH)
-    UI.setAttribute(id .. "_text", "width", textW)
-    UI.setAttribute(id .. "_text", "height", textH)
-    UI.setAttribute(id .. "_text", "fontSize", sz.f)
-    UI.setValue(id .. "_text", text)
-    UI.setAttribute(id, "active", "true")
+    set(id .. "_head", {width = sz.w})
+    set(id .. "_title", {width = sz.w - 140, fontSize = sz.f + 3})
+    setValue(id .. "_title", open.card.n)
+    set(id .. "_scroll", {width = sz.w - 8, height = sz.h - TITLE_H - 4 - foot})
+    set(id .. "_page", {width = sz.w - 24, height = textH})
+    set(id .. "_text", {width = textW, height = textH, fontSize = sz.f})
+    setValue(id .. "_text", text)
+    set(id, {width = sz.w, height = sz.h, active = "true"})
 end
 
 -- the panel a button is in: "<color>_d2_close" -> 2
@@ -534,7 +577,7 @@ end
 function closeDetails(player, _, id)
     local k = panelOf(player.color, id)
     if shown[player.color] then shown[player.color][k] = nil end
-    UI.setAttribute(player.color .. "_d" .. k, "active", "false")
+    set(player.color .. "_d" .. k, {active = "false"})
 end
 
 function detailsSize(player, _, id)                    -- this panel's size, and the size the next ones open at
@@ -579,41 +622,58 @@ function openRules(player, _, id)
 end
 
 -- the save's own cards by their pictures (a spawned copy keeps the team's description and all) and the size each is
--- played at (a card in a deck: the deck's), read on first use; and per card back the size most of its cards have
-local scaleOfBack = {}
+-- played at (a card in a deck: the deck's), and per card back the size most of its cards have: read a few containers a
+-- frame once the panels are built (indexLater), so the first spawn doesn't stall; a spawn before that ends finishes it
+local scaleOfBack, indexQueue, tally = {}, nil, {}    -- tally: back -> "x y z" -> count
+local INDEX_PER_FRAME = 3
 local function scaleOf(t) t = t or {} return {t.scaleX or 1, t.scaleY or 1, t.scaleZ or 1} end
-local function indexCards()
-    cardIndex = {}
-    local tally = {}                                   -- back -> "x y z" -> count
-    local function add(d, scale)
-        if d.Name == "Card" or d.Name == "CardCustom" then
-            local deck = d.CustomDeck or {}
-            local face = deck[tostring(math.floor((d.CardID or 0) / 100))]
-            if not face then for _, v in pairs(deck) do face = v break end end
-            local p, back = face and pathOf(face.FaceURL), face and pathOf(face.BackURL)
-            if p and not cardIndex[p] then cardIndex[p] = {data = d, scale = scale} end
-            if back then
-                local key = table.concat(scale, " ")
-                tally[back] = tally[back] or {}
-                local seen = tally[back][key] or {n = 0, scale = scale}
-                seen.n = seen.n + 1
-                tally[back][key] = seen
-            end
+local function indexAdd(d, scale)
+    if d.Name == "Card" or d.Name == "CardCustom" then
+        local deck = d.CustomDeck or {}
+        local face = deck[tostring(math.floor((d.CardID or 0) / 100))]
+        if not face then for _, v in pairs(deck) do face = v break end end
+        local p, back = face and pathOf(face.FaceURL), face and pathOf(face.BackURL)
+        if p and not cardIndex[p] then cardIndex[p] = {data = d, scale = scale} end
+        if back then
+            local key = table.concat(scale, " ")
+            tally[back] = tally[back] or {}
+            local seen = tally[back][key] or {n = 0, scale = scale}
+            seen.n = seen.n + 1
+            tally[back][key] = seen
         end
-        local kids = d.Name == "Deck" or d.Name == "DeckCustom"   -- a deck's cards are drawn at the deck's size
-        for _, k in ipairs(d.ContainedObjects or {}) do add(k, kids and scale or scaleOf(k.Transform)) end
     end
-    for _, o in ipairs(getObjects()) do
-        if o.type == "Deck" or o.type == "Bag" or o.type == "Infinite" or o.type == "Card" then
+    local kids = d.Name == "Deck" or d.Name == "DeckCustom"   -- a deck's cards are drawn at the deck's size
+    for _, k in ipairs(d.ContainedObjects or {}) do indexAdd(k, kids and scale or scaleOf(k.Transform)) end
+end
+
+-- reads up to n of the queued containers (nil: all); true once the index is whole
+local function indexSome(n)
+    if not indexQueue then                             -- the containers on the table, read later
+        cardIndex, tally, indexQueue = {}, {}, {}
+        for _, o in ipairs(getObjects()) do
+            if o.type == "Deck" or o.type == "Bag" or o.type == "Infinite" or o.type == "Card" then table.insert(indexQueue, o) end
+        end
+    end
+    while #indexQueue > 0 and (n == nil or n > 0) do
+        local o = table.remove(indexQueue)
+        if not o.isDestroyed() then
             local d = o.getData()
-            add(d, scaleOf(d.Transform))
+            indexAdd(d, scaleOf(d.Transform))
         end
+        n = n and n - 1
     end
+    if #indexQueue > 0 or indexQueue.done then return indexQueue.done end
     for back, sizes in pairs(tally) do
         local best = nil
         for _, seen in pairs(sizes) do if not best or seen.n > best.n then best = seen end end
         scaleOfBack[back] = best.scale
     end
+    indexQueue.done = true
+    return true
+end
+
+function indexLater()                                  -- a few containers a frame until the index is whole
+    if not indexSome(INDEX_PER_FRAME) then Wait.frames(indexLater, 1) end
 end
 
 -- a card the save lacks, made from its picture and its kind's back
@@ -635,7 +695,7 @@ local function spawnCard(path, name, pos, spin, color)
         pos = {hand.position.x, hand.position.y + 1, hand.position.z}
         spin = hand.rotation.y + 180
     end
-    if not cardIndex then indexCards() end
+    indexSome()                                        -- what the background read hasn't reached yet, now
     local known = cardIndex[path]
     local data = known and known.data or madeCard(path, details.cards[path] or {n = name})
     local face = data.CustomDeck and data.CustomDeck[tostring(math.floor((data.CardID or 0) / 100))] or {}
@@ -650,7 +710,7 @@ end
 
 function spawnNamed(player, _, id)                     -- beside the card the panel is about, fanned out
     local color = player.color
-    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_c2_3": the 3rd card it names (in row 2)
+    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_c1_3": the 3rd card it names
     local item = open and n and open.named and open.named[n]
     if not item then return end
     local from = open.obj and not open.obj.isDestroyed() and open.obj
@@ -694,11 +754,10 @@ local function listPages(color, query)
     found[color] = list
     for i = 1, RESULTS do
         local item = list[i]
-        UI.setAttribute(id .. "_g" .. i, "active", item and "true" or "false")
-        if item then UI.setAttribute(id .. "_g" .. i, "text", item[2]) end
+        set(id .. "_g" .. i, item and {active = "true", text = item[2]} or {active = "false"})
     end
-    UI.setAttribute(id .. "_list", "height", math.max(40, #list * 33 + 10))
-    UI.setValue(id .. "_title", #words == 0 and "Rulebook: contents" or (#list == 0 and "Nothing found" or ("Rulebook: " .. #list .. (#list >= RESULTS and "+" or "") .. (#list == 1 and " page" or " pages"))))
+    set(id .. "_list", {height = math.max(40, #list * 33 + 10)})
+    setValue(id .. "_title", #words == 0 and "Rulebook: contents" or (#list == 0 and "Nothing found" or ("Rulebook: " .. #list .. (#list >= RESULTS and "+" or "") .. (#list == 1 and " page" or " pages"))))
 end
 
 function openRulebook(color)
@@ -708,13 +767,13 @@ function openRulebook(color)
         rbOpen[color] = ""
         listPages(color, "")
         UI.setAttribute(color .. "_rb_q", "text", "")
-        UI.setAttribute(color .. "_rb", "active", "true")
+        set(color .. "_rb", {active = "true"})
     end)
 end
 
 function closeRulebook(player)
     rbOpen[player.color] = nil
-    UI.setAttribute(player.color .. "_rb", "active", "false")
+    set(player.color .. "_rb", {active = "false"})
 end
 
 function rulebookSearch(player, value)
@@ -724,16 +783,17 @@ end
 
 -- the card finder: every word must be in a card's name, kind, stars ("5" or "5★"), types or timing tags; names that start with the search
 -- come first; a click spawns the card where the table was right-clicked (several: side by side)
-local fcOpen, fcFound, searchOf = {}, {}, nil
+local fcOpen, fcFound, searchList = {}, {}, nil
 local function listCards(color, query)
-    if not searchOf then                               -- each card's words, once
-        searchOf = {}
+    if not searchList then                             -- each card's words, once, in name order (no sort per keystroke)
+        searchList = {}
         for path, c in pairs(details.cards) do
             local bits = {c.n or "", c.k or "", c.st and (math.floor(c.st) .. "★ " .. math.floor(c.st) .. " star") or ""}
             for _, t in ipairs(c.t or {}) do table.insert(bits, (details.types[t] or {}).n or t) end
             for _, g in ipairs(c.g or {}) do table.insert(bits, "(" .. g .. ")") end
-            searchOf[path] = {name = (c.n or ""):lower(), all = table.concat(bits, " "):lower()}
+            table.insert(searchList, {path = path, name = (c.n or ""):lower(), all = table.concat(bits, " "):lower()})
         end
+        table.sort(searchList, function(a, b) return a.name < b.name end)
     end
     local id, q, words = color .. "_fc", (query or ""):lower(), {}
     local start = 1
@@ -744,26 +804,22 @@ local function listCards(color, query)
     end
     local first, rest = {}, {}
     if #words > 0 then
-        for path, w in pairs(searchOf) do
+        for _, w in ipairs(searchList) do
             local ok = true
             for _, word in ipairs(words) do if not w.all:find(word, 1, true) then ok = false break end end
-            if ok then table.insert(w.name:find(words[1], 1, true) == 1 and first or rest, path) end
+            if ok then table.insert(w.name:find(words[1], 1, true) == 1 and first or rest, w.path) end
         end
     end
-    local byName = function(a, b) return searchOf[a].name < searchOf[b].name end
-    table.sort(first, byName); table.sort(rest, byName)
     for _, p in ipairs(rest) do table.insert(first, p) end
     fcFound[color] = first
     for i = 1, RESULTS do
         local path = first[i]
-        UI.setAttribute(id .. "_g" .. i, "active", path and "true" or "false")
-        if path then
-            local c = details.cards[path]
-            UI.setAttribute(id .. "_g" .. i, "text", c.n .. "   " .. (c.k or "") .. (c.st and (" " .. math.floor(c.st) .. "★") or ""))
-        end
+        local c = path and details.cards[path]
+        set(id .. "_g" .. i, c and {active = "true", text = c.n .. "   " .. (c.k or "") .. (c.st and (" " .. math.floor(c.st) .. "★") or "")}
+            or {active = "false"})
     end
-    UI.setAttribute(id .. "_list", "height", math.max(40, math.min(#first, RESULTS) * 33 + 10))
-    UI.setValue(id .. "_title", #words == 0 and "Find a card" or (#first == 0 and "No card found"
+    set(id .. "_list", {height = math.max(40, math.min(#first, RESULTS) * 33 + 10)})
+    setValue(id .. "_title", #words == 0 and "Find a card" or (#first == 0 and "No card found"
         or (#first .. (#first == 1 and " card" or " cards") .. (#first > RESULTS and (" (the first " .. RESULTS .. ")") or ""))))
 end
 
@@ -775,13 +831,13 @@ function openFinder(color, at)
         fcOpen[color] = {query = was and was.query or "", at = at or (was and was.at), spawned = 0}
         listCards(color, fcOpen[color].query)
         UI.setAttribute(color .. "_fc_q", "text", fcOpen[color].query)
-        UI.setAttribute(color .. "_fc", "active", "true")
+        set(color .. "_fc", {active = "true"})
     end)
 end
 
 function closeFinder(player)
     fcOpen[player.color] = nil
-    UI.setAttribute(player.color .. "_fc", "active", "false")
+    set(player.color .. "_fc", {active = "false"})
 end
 
 function finderSearch(player, value)
@@ -821,12 +877,12 @@ ensurePanels = function(colors, done)                  -- a color or a list of t
                 for c, q in pairs(rbOpen) do
                     listPages(c, q)
                     UI.setAttribute(c .. "_rb_q", "text", q)
-                    UI.setAttribute(c .. "_rb", "active", "true")
+                    set(c .. "_rb", {active = "true"})
                 end
                 for c, f in pairs(fcOpen) do
                     listCards(c, f.query)
                     UI.setAttribute(c .. "_fc_q", "text", f.query)
-                    UI.setAttribute(c .. "_fc", "active", "true")
+                    set(c .. "_fc", {active = "true"})
                 end
             end
             done()
