@@ -815,6 +815,8 @@ export function createEditor(app) {
     const kinds = Object.entries(app.KIND_LABEL).filter(([k]) => k !== "unknown" || k === c.type);
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
     const typeNames = [...new Set(Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name))].sort();
+    // the card's names side by side (Z!!!!! 10-30): the site's now, its file's (the key edits are filed under is the file's name)
+    const namesLine = x => `<p class="muted part-note ef-names">On the site now: “${esc(x.name)}” · File: <span class="kbd">${esc((x.psd || x.png || "").split("/").pop())}</span></p>`;
     const reset = f => { const p = psdVal(b, f), src = FROM[f]; return same(val(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="${src ? `Back to what the ${src} says` : "Remove the edit"}">↺ ${src ? src[0].toUpperCase() + src.slice(1) : "Default"}: ${esc(show(p))}</button>`; };
     const on = f => (c.siteOnly || []).includes(f);
     const psdNote = f => (b.pending?.includes(f) && !on(f) ? `<span class="fact pending" data-tip="${app.PSD_TIP}">PSD pending</span>` : "");   // website only: its ticked box says so
@@ -826,7 +828,7 @@ export function createEditor(app) {
     return `<div class="dialog edit-dialog has-preview" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
       <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
       <h2>Edit ${esc(c.name)}</h2>
-      <p class="muted">Changes go into your batch; publish the batch when you're done. <span class="kbd">${esc(c.key)}</span></p>
+      <p class="muted">Changes go into your batch; publish the batch when you're done.</p>
       <div class="edit-cols">
       <form id="edit-form" class="edit-form" autocomplete="off">
         <h3 class="egroup">On the card image</h3><p class="muted egroup-note">Printed on the card, read from the PSD; an edit shows as “PSD pending” until the card image is regenerated, unless it's website only.${b.refused ? ` The last image update was refused: ${esc(b.refused)}.` : ""}</p>
@@ -834,6 +836,7 @@ export function createEditor(app) {
         <fieldset><legend>Card</legend>
           ${view?.list.some(x => x.kind === "title") ? `<div class="erow" data-row="name"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
             <p class="muted part-join" id="ef-name-join"></p></div>${plain("name", `<input id="ef-name" value="${esc(c.name)}">`)}</div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
+          ${namesLine(c)}
           ${titleInPicture(view) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
           ${renameRow(c, b)}
           ${row("stars", num("stars"))}<p class="muted part-note" id="ef-stars-note"></p>
@@ -1205,7 +1208,8 @@ export function createEditor(app) {
       if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${partForm?.view.rec.header?.stars ? " and redraws the printed stars" : ""}. Tick Website only to keep the card where it is.`
         : st && siteOn("stars") && P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) ? "Website only: the card stays in its folder." : "";
       if (partForm) {
-        const join = document.getElementById("ef-name-join"); if (join) join.textContent = `Name on the site: “${lastRead?.derived.name || ""}”`;
+        const join = document.getElementById("ef-name-join"), made = lastRead?.derived.name || "";   // the boxes joined: the site's name once a title edit is published
+        if (join) join.textContent = `These boxes make: “${made}”${made && made !== c.name ? " (the name on the site once a title edit is published)" : ""}`;
         paintBoxes();
       }
       const notes = lastRead?.notes || [];
