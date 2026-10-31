@@ -467,7 +467,7 @@ export function renderStats(root, ctx, params) {
   for (const c of pool) for (const id of ctx.mentions.get(c.id) || []) refCount.set(id, (refCount.get(id) || 0) + 1);
   const byId = ctx.byId;
   const statusRows = desc(new Map([...refCount].filter(([id]) => statusIds.has(id)))).slice(0, 15).map(([id, v]) => ({ label: byId.get(id).name, value: v, href: L({ mentions: id }) }));
-  const unused = cards.filter(c => c._unused && (!series || c.series === series)).sort((a, b) => a.name.localeCompare(b.name));
+  const unused = cards.filter(c => c._unused && (c.type === "buff" || c.type === "debuff") && (!series || c.series === series)).sort((a, b) => a.name.localeCompare(b.name));
   const unusedHtml = unused.length ? `<p class="muted">${noted("On no card", "Buffs and debuffs that no card on the site names in its ability")} (${unused.length}): ${unused.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}</p>` : "";
   if (statusRows.length) charts.push(card("status", "Status effects mentioned", "Cards naming each one.", hbar(statusRows) + unusedHtml, table(["Status effect", "Cards"], statusRows.map(r => [r.label, r.value])),
     { tip: "Cards in scope whose ability names each buff or debuff; the top 15" }));

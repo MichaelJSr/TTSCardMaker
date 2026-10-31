@@ -4,6 +4,10 @@ import { esc, norm } from "./text.js";
 
 export const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
+// the kinds that come into play only through other cards (Auxiliary/): Unused when no other card names one (app.js init)
+export const AUX_KINDS = ["buff", "debuff", "minion", "aux item", "creatures"];
+const AUX_WORD = { buff: "status effect", debuff: "status effect", minion: "minion", "aux item": "auxiliary item", creatures: "auxiliary creature" };
+export const unusedTip = c => `No other card names this ${AUX_WORD[c.type] || "card"}`;
 // edits the pipeline bakes into the card image (build_site.py PSD_FIELDS): pending, refused, or baked but not re-parsed yet
 export const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability" };
 export const PSD_TIP = "The card image is being regenerated with this edit";     // the one tip for a pending PSD field (edit.js too)
@@ -100,7 +104,7 @@ export function tileHtml(c, { small = false, eager = false, css = 190, construct
       : c.pending?.length ? `<span class="flag pending" data-tip="${PSD_TIP}: ${esc(pendingList(c))}">PSD pending</span>`
       : c.reparsePending ? `<span class="flag" data-tip="The PSD changed since the card data was built">Re-parse pending</span>`
       : !c.parsed ? `<span class="flag" data-tip="Not in the card data yet">New</span>`
-      : c._unused ? `<span class="flag unused" data-tip="No card names this status effect">Unused</span>`
+      : c._unused ? `<span class="flag unused" data-tip="${unusedTip(c)}">Unused</span>`
       : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(env.dupName(c.dup) || "")}: the same card, counted once">Duplicate</span>` : ""}
     ${small || link ? "" : `<button type="button" class="add${inDeck ? " in" : ""}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "✓ In deck" : "+ Deck"}</button>`}
     <div class="meta"><div class="name">${esc(c.name)}</div>

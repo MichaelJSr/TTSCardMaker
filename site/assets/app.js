@@ -12,7 +12,7 @@ import * as ratings from "./ratings.js";
 import * as fresh from "./fresh.js";
 import * as G from "./grid.js";
 import * as CF from "./myfilters.js";
-import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc } from "./grid.js";
+import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc, AUX_KINDS, unusedTip } from "./grid.js";
 import { artHtml } from "./art.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
@@ -40,7 +40,7 @@ const S = {
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
   ["aux item", "Auxiliary items"], ["status", "Status effects"], ["creatures", "Auxiliary creatures"]];
 const KIND_PLURAL = { debuff: "Debuffs", buff: "Buffs", unknown: "Other" };   // kind= values the chips don't have (the Stats links)
-const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused status effects"], ["edited", "Edited on the website"],
+const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused (no other card names it)"], ["edited", "Edited on the website"],
   ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"],
   ["banned", "Banned (constructed)"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
@@ -195,7 +195,7 @@ function derive() {
     if (c.dup) continue;                                   // a duplicate counts once
     for (const id of m) { if (!S.mentionedBy.has(id)) S.mentionedBy.set(id, new Set()); S.mentionedBy.get(id).add(c.id); }
   }
-  for (const c of S.cards) if ((c.type === "debuff" || c.type === "buff") && ![...(S.mentionedBy.get(c.id) || [])].some(id => id !== c.id)) c._unused = true;   // named by no other card
+  for (const c of S.cards) if (AUX_KINDS.includes(c.type) && !c.dup && ![...(S.mentionedBy.get(c.id) || [])].some(id => id !== c.id)) c._unused = true;   // named by no other card
 }
 const currentCard = () => (parseHash().name === "card" && !modal.hidden ? parseHash().arg : "");
 const goCard = id => { if (parseHash().name === "card" && parseHash().arg === id) openCard(id); else location.hash = `#/card/${id}`; };
@@ -796,7 +796,7 @@ function openCard(id, showDetails = false) {
           ${c.created ? `<span class="fact" data-tip="${esc(createdTip(c))}">created ${createdText(c)}</span>` : ""}
           ${c.ts ? `<span class="fact" data-tip="Last PSD commit (Pacific time)">updated ${date(c.ts)}</span>` : ""}
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
-          ${c._unused ? `<span class="fact unused" data-tip="No card names this status effect">Unused: on no card</span>` : ""}
+          ${c._unused ? `<span class="fact unused" data-tip="${unusedTip(c)}">Unused: on no card</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="The same card, counted once">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
           ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(changes.editedTip(c))}">Edited</span>` : ""}
           ${psdBadges(c)}
