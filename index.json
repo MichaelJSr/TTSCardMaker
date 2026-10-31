@@ -471,6 +471,14 @@
    "png_blob": "32835f078d56fb280bc253fec4b38d83e243bb23",
    "psd_blob": "41799294a9df8bdcf769e71d56b11d60b8889495",
    "state": "baked"
+  },
+  "zomoroko-mvwb2y5k-warg": {
+   "at": "2026-10-31T11:16:58Z",
+   "card": "PoD11ZOMG",
+   "path": "Auxiliary/Minions/PoD11ZOMG.psd",
+   "png_blob": "e99f4f408931eab66fe3218231ba1bf4fe897c1d",
+   "psd_blob": "f8268a4417de330f86fc38eef28ddc7e01315558",
+   "state": "baked"
   }
  },
  "v": 1

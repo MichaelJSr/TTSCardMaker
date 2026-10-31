@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvwb2y5k-warg",
+ "card": "PoD11ZOMG",
+ "path": "Auxiliary/Minions/PoD11ZOMG.psd",
+ "png": "Auxiliary/Minions/PoD11ZOMG.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "ec5286d1d90df310c318095613ab696921d2cdcf",
+  "psd_blob": "f8268a4417de330f86fc38eef28ddc7e01315558",
+  "png_blob": "e99f4f408931eab66fe3218231ba1bf4fe897c1d"
+ },
+ "edit": {
+  "ability": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Ceramic Bloon or Rainbow Bloon on the same field as this creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Ceramic Bloon or Rainbow Bloon on the same field as this creature.",
+    "was": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+    "sha": "fb884096",
+    "psd": "f8268a44",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Ceramic or' -> 'Ceramic Bloon or'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Ceramic or Rainbow Bloon on the same field as this creature.",
+   "new": "(1GCD)(2U) May intercept an attack to the parent creature.\n(2CD) Summon a Ceramic Bloon or Rainbow Bloon on the same field as this creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.144,
+   "max": 7.0
+  }
+ },
+ "region": [
+  15,
+  1778,
+  1186,
+  2254
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41196174862",
+ "took_s": 11.4,
+ "at": "2026-10-31T11:16:58Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1703579,
+  "webp": 85552,
+  "before": 84614
+ },
+ "recompressed": false
+}
