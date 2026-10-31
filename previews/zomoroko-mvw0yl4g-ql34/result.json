@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw0yl4g-ql34",
+ "card": "Overseer",
+ "path": "Creatures/Other/3 Stars/Overseer.psd",
+ "png": "Creatures/Other/3 Stars/Overseer.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "cf492ac7ba3f50e7aef6d3f805b0131190018791",
+  "png_blob": "6cbfcba2e9c493de7447e3fe459eb9400e4d1e14"
+ },
+ "edit": {
+  "ability": "Cannot be negated.\n(BOT) Summon 2 Drones.\nWhen this creature declares an attack, every Drone in this creature's slot attacks the same targeted creature this does.\n(1GCD) A Drone may intercept an attack or infliction towards this creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Cannot be negated.\n(BOT) Summon 2 Drones.\nWhen this creature declares an attack, every Drone in this creature's slot attacks the same targeted creature this does.\n(1GCD) A Drone may intercept an attack or infliction towards this creature.",
+    "was": "Cannot be negated.\n(BOT) Summon 2 drones.\nWhen this creature declares an attack, every drone in this creature's slot attacks the same targeted creature this does.\n(1GCD) A drone may intercept an attack or infliction towards this creature.",
+    "sha": "b7d25baf",
+    "psd": "cf492ac7",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '2 drones. When this creature declares an' -> '2 Drones. When this creature declares an'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Cannot be negated.\n(BOT) Summon 2 drones.\nWhen this creature declares an attack, every drone in this creature's slot attacks the same targeted creature this does.\n(1GCD) A drone may intercept an attack or infliction towards this creature.",
+   "new": "Cannot be negated.\n(BOT) Summon 2 Drones.\nWhen this creature declares an attack, every Drone in this creature's slot attacks the same targeted creature this does.\n(1GCD) A Drone may intercept an attack or infliction towards this creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.163,
+   "max": 3.0
+  }
+ },
+ "region": [
+  23,
+  1767,
+  1177,
+  2247
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41177086281",
+ "took_s": 6.8,
+ "at": "2026-10-31T06:33:37Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 897261,
+  "webp": 62512,
+  "before": 62624
+ },
+ "recompressed": false
+}

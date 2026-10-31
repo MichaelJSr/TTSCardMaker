@@ -223,6 +223,14 @@
    "png_blob": "ce94a9312e3dbba8373936b9fa2bed0f42c1ddf7",
    "psd_blob": "60ed1d547bb0e792521a229364899973b3dfb5fc",
    "state": "baked"
+  },
+  "zomoroko-mvw0yl4g-ql34": {
+   "at": "2026-10-31T06:33:37Z",
+   "card": "Overseer",
+   "path": "Creatures/Other/3 Stars/Overseer.psd",
+   "png_blob": "6cbfcba2e9c493de7447e3fe459eb9400e4d1e14",
+   "psd_blob": "cf492ac7ba3f50e7aef6d3f805b0131190018791",
+   "state": "baked"
   }
  },
  "v": 1
