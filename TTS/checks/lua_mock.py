@@ -697,9 +697,11 @@ def main():
     check(ui.on("Red_d1") and ui.values.get("Red_d1_title") == card["n"] and ui.values.get("Red_d1_text"),
           f"Card details: panel 1 shows {card['n']!r}")
     rules, named = chapters_of(card, details), named_of(card, details)
-    shown_rules = [ui.text(f"Red_d1_r{i}") for i in range(1, 5) if ui.on(f"Red_d1_r{i}")]
+    def slot(kind, i, rows):                                # the button of item i ("Red_d1_c2_3"), in whichever row it went
+        return next((f"Red_d1_{kind}{r}_{i}" for r in range(1, rows + 1) if ui.on(f"Red_d1_{kind}{r}_{i}")), None)
+    shown_rules = [ui.text(b) for b in (slot("r", i, 4) for i in range(1, 5)) if b]
     check(shown_rules == [f"Rules: {details['chapters'][r]['title']}" for r in rules[:4]], f"Rules buttons {shown_rules}")
-    shown_cards = [ui.text(f"Red_d1_c{i}") for i in range(1, 7) if ui.on(f"Red_d1_c{i}")]
+    shown_cards = [ui.text(b) for b in (slot("c", i, 6) for i in range(1, 7)) if b]
     check(shown_cards == [f"+ {n}" for n, _ in named[:6]], f"spawn buttons {shown_cards}")
     width = lambda: ui.attrs.get("Red_d1", {}).get("width")
     w.call("detailsSize", red, None, "Red_d1_bigger")
@@ -707,9 +709,19 @@ def main():
     for _ in range(3):
         w.call("detailsSize", red, None, "Red_d1_smaller")
     check((big, width()) == ("660", "440"), f"A+ / A- size the panel ({big}, {width()})")
+    over = []                                               # at the smallest size, every row of buttons fits its width
+    for kind, n in (("rules", 4), ("cards", 6)):
+        for r in range(1, n + 1):
+            row = f"Red_d1_{kind}{r}"
+            if not ui.on(row):
+                continue
+            ws = [int(ui.attrs[b]["preferredWidth"]) for b in (f"Red_d1_{kind[0]}{r}_{i}" for i in range(r, n + 1)) if ui.on(b)]
+            if sum(ws) + 6 * (len(ws) - 1) > int(ui.attrs[row]["width"]):
+                over.append((row, ws))
+    check(not over, f"buttons wrap onto rows, none past its row's width {over}")
     if rules:
         w.log.clear()
-        w.call("openRules", red, None, "Red_d1_r1")
+        w.call("openRules", red, None, slot("r", 1, 4))
         turned = [e[1] for e in w.log if e[0] == "page"]
         ch = details["chapters"][rules[0]]
         ok = turned and 0 <= turned[0] < len(pages) and (pages[turned[0]].get("num") == str(int(ch["num"]))
@@ -717,12 +729,12 @@ def main():
         check(bool(ok) and ("take", "3a33a8") in w.log, f"Rules: {ch['title']} takes the PDF out of its bag and turns to "
               f"its page {turned}")
         w.log.clear()
-        w.call("openRules", red, None, "Red_d1_r1")
+        w.call("openRules", red, None, slot("r", 1, 4))
         check(not any(e[0] == "take" for e in w.log) and any(e[0] == "page" for e in w.log),
               "Rules again: the PDF already on the table")
     if named:
         w.spawns.clear()
-        w.call("spawnNamed", red, None, "Red_d1_c1")
+        w.call("spawnNamed", red, None, slot("c", 1, 6))
         sp = w.spawns[0] if w.spawns else {}
         hand = red.getHandTransform()
         ok = sp and face_path(sp["data"]) == named[0][1] and sp["rotation"][2] == 180 and \

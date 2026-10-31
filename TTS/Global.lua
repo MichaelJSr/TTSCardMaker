@@ -131,17 +131,23 @@ local function button(id, label, onClick, attrs)
     return {tag = "Button", attributes = a, value = label}
 end
 
-local function row(id, prefix, n, onClick, colors)
-    local r = {tag = "HorizontalLayout", attributes = {id = id, rectAlignment = "LowerLeft", height = ROW_H, spacing = 6,
-        childForceExpandWidth = false, childAlignment = "MiddleLeft", active = false}, children = {}}
-    for i = 1, n do table.insert(r.children, button(prefix .. i, "", onClick, {preferredWidth = 120, active = false, colors = colors or BUTTON})) end
-    return r
+-- n buttons wrapping onto rows "<id>1".."<id>n" (a long name never cut off): button i goes in row i at the latest, so row
+-- r holds slots "<prefix><r>_<i>" for i = r..n; layout puts each button in one of them
+local function rows(id, prefix, n, onClick, colors)
+    local out = {}
+    for r = 1, n do
+        local row = {tag = "HorizontalLayout", attributes = {id = id .. r, rectAlignment = "LowerLeft", height = ROW_H, spacing = 6,
+            childForceExpandWidth = false, childAlignment = "MiddleLeft", active = false}, children = {}}
+        for i = r, n do table.insert(row.children, button(prefix .. r .. "_" .. i, "", onClick, {preferredWidth = 120, active = false, colors = colors or BUTTON})) end
+        table.insert(out, row)
+    end
+    return out
 end
 
 -- one of a seat's details panels, k (its children placed by layout(), below); each a little further in than the last
 local function detailsPanel(c, k)
     local id = c .. "_d" .. k
-    return {tag = "Panel", attributes = {id = id, visibility = c, active = false, allowDragging = true,
+    local panel = {tag = "Panel", attributes = {id = id, visibility = c, active = false, allowDragging = true,
         returnToOriginalPositionWhenReleased = false, rectAlignment = "MiddleRight", offsetXY = (-60 - 50 * (k - 1)) .. " " .. (-40 * (k - 1)), width = 540, height = 660,
         color = "#0f1729F2", outline = "#3b4b6b", outlineSize = "2 -2"}, children = {
         {tag = "Panel", attributes = {id = id .. "_head", rectAlignment = "UpperCenter", height = TITLE_H, color = "#1b2740"}, children = {
@@ -156,8 +162,10 @@ local function detailsPanel(c, k)
             {tag = "Panel", attributes = {id = id .. "_page", height = 100}, children = {
                 {tag = "Text", attributes = {id = id .. "_text", rectAlignment = "UpperLeft", offsetXY = "14 -6", color = "#e8edf5",
                     alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}}}},
-        row(id .. "_rules", id .. "_r", RULE_BUTTONS, "openRules"),
-        row(id .. "_cards", id .. "_c", CARD_BUTTONS, "spawnNamed", SPAWN)}}
+    }}
+    for _, r in ipairs(rows(id .. "_rules", id .. "_r", RULE_BUTTONS, "openRules")) do table.insert(panel.children, r) end
+    for _, r in ipairs(rows(id .. "_cards", id .. "_c", CARD_BUTTONS, "spawnNamed", SPAWN)) do table.insert(panel.children, r) end
+    return panel
 end
 
 -- one seat's rulebook panel: a search box, then the chapters (or the pages a search finds) as buttons
@@ -437,30 +445,42 @@ local function layout(color, k)
     if not open then return end
     local id, sz = color .. "_d" .. k, SIZES[open.size]
     local rules, named = chaptersOf(open.card), namedOf(open.card)
-    local function fill(prefix, list, n, label)
-        local any = false
+    local rowW = sz.w - 20
+    -- list's buttons left to right, a new row when the next would pass the row's width (a name wider than a whole row
+    -- in a smaller font); returns the rows used
+    local function pack(rowsId, prefix, list, n, label)
+        local at, used, x = {}, 0, 0
         for i = 1, n do
             local item = list[i]
-            UI.setAttribute(prefix .. i, "active", item and "true" or "false")
             if item then
-                local text = label(item)
-                any = true
-                UI.setAttribute(prefix .. i, "text", text)
-                UI.setAttribute(prefix .. i, "preferredWidth", math.floor(#text * sz.f * 0.55 + 22))
-                UI.setAttribute(prefix .. i, "fontSize", sz.f - 2)
+                local text, f = label(item), sz.f - 2
+                local w = math.floor(#text * (f + 2) * 0.55 + 22)            -- a little more than the text: never cut off
+                if w > rowW then f = math.max(8, math.floor((rowW - 22) / (#text * 0.55)) - 2) w = rowW end
+                if used == 0 or x + 6 + w > rowW then used, x = used + 1, w else x = x + 6 + w end
+                at[i] = {row = used, text = text, w = w, f = f}
             end
         end
-        return any
+        for r = 1, n do
+            UI.setAttribute(rowsId .. r, "active", r <= used and "true" or "false")
+            UI.setAttribute(rowsId .. r, "width", rowW)
+            for i = r, n do
+                local b, p = prefix .. r .. "_" .. i, at[i]
+                UI.setAttribute(b, "active", p and p.row == r and "true" or "false")
+                if p and p.row == r then
+                    UI.setAttribute(b, "text", p.text)
+                    UI.setAttribute(b, "preferredWidth", p.w)
+                    UI.setAttribute(b, "fontSize", p.f)
+                end
+            end
+        end
+        return used
     end
-    local hasRules = fill(id .. "_r", rules, RULE_BUTTONS, function(ch) return "Rules: " .. details.chapters[ch].title end)
-    local hasCards = fill(id .. "_c", named, CARD_BUTTONS, function(n) return "+ " .. n[1] end)
+    local ruleRows = pack(id .. "_rules", id .. "_r", rules, RULE_BUTTONS, function(ch) return "Rules: " .. details.chapters[ch].title end)
+    local cardRows = pack(id .. "_cards", id .. "_c", named, CARD_BUTTONS, function(n) return "+ " .. n[1] end)
     open.rules, open.named = rules, named
-    local foot = (hasRules and ROW_H + 8 or 0) + (hasCards and ROW_H + 8 or 0) + 8
-    UI.setAttribute(id .. "_rules", "active", hasRules and "true" or "false")
-    UI.setAttribute(id .. "_cards", "active", hasCards and "true" or "false")
-    UI.setAttribute(id .. "_rules", "offsetXY", "10 " .. (hasCards and ROW_H + 16 or 8))
-    UI.setAttribute(id .. "_cards", "offsetXY", "10 8")
-    for _, r in ipairs({id .. "_rules", id .. "_cards"}) do UI.setAttribute(r, "width", sz.w - 20) end
+    local foot = (ruleRows + cardRows) * (ROW_H + 8) + 8
+    for r = 1, CARD_BUTTONS do UI.setAttribute(id .. "_cards" .. r, "offsetXY", "10 " .. (8 + (cardRows - r) * (ROW_H + 8))) end
+    for r = 1, RULE_BUTTONS do UI.setAttribute(id .. "_rules" .. r, "offsetXY", "10 " .. (8 + (cardRows + ruleRows - r) * (ROW_H + 8))) end
     local text = detailsText(open.card)
     local textW = sz.w - 44
     local textH = lines(text, math.floor(textW / (sz.f * 0.52))) * math.ceil(sz.f * 1.32) + 12
@@ -547,7 +567,7 @@ end
 
 function openRules(player, _, id)
     local color = player.color
-    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_r2": the 2nd button
+    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_r1_2": the 2nd button (in row 1)
     local chapter = open and n and open.rules and details.chapters[open.rules[n]]
     if not chapter then return end
     local page = chapterPage[tonumber(chapter.num)] or pageOfTitle[chapter.title]
@@ -630,7 +650,7 @@ end
 
 function spawnNamed(player, _, id)                     -- beside the card the panel is about, fanned out
     local color = player.color
-    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_c3": the 3rd card it names
+    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_c2_3": the 3rd card it names (in row 2)
     local item = open and n and open.named and open.named[n]
     if not item then return end
     local from = open.obj and not open.obj.isDestroyed() and open.obj
