@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw5mql4-2hee",
+ "card": "Nefarious Chip",
+ "path": "Creatures/Omori/3 Stars/Nefarious_Chip.psd",
+ "png": "Creatures/Omori/3 Stars/Nefarious_Chip.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "098bd28a678e6484e2a98d7785b66196c803cc38",
+  "psd_blob": "f1606c0a19d8ca51ecd83924f6c54e75326cb230",
+  "png_blob": "3e37907b2a92eb3c5dc325512e3408ff540e7249"
+ },
+ "edit": {
+  "ability": "The Opposing team's healing items heal for 2 less HP.\n(1CD)(1.5 points) Bake an Evil Cookie.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "The Opposing team's healing items heal for 2 less HP.\n(1CD)(1.5 points) Bake an Evil Cookie.",
+    "was": "The Opposing team's healing items heal for 2 less HP.\n(1CD)(1.5 points) Bake an evil cookie.",
+    "sha": "2056b087",
+    "psd": "f1606c0a",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'an evil cookie.' -> 'an Evil Cookie.'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "The Opposing team's healing items heal for 2 less HP.\n(1CD)(1.5 points) Bake an evil cookie.",
+   "new": "The Opposing team's healing items heal for 2 less HP.\n(1CD)(1.5 points) Bake an Evil Cookie."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.547,
+   "max": 2.0
+  }
+ },
+ "region": [
+  3,
+  1778,
+  1181,
+  2135
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41185790117",
+ "took_s": 10.0,
+ "at": "2026-10-31T08:44:27Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2592891,
+  "webp": 158112,
+  "before": 158096
+ },
+ "recompressed": false
+}
