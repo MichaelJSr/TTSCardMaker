@@ -247,6 +247,14 @@
    "png_blob": "888f76b7651e726620453f375aa2cc8d5cc4658a",
    "psd_blob": "baeb56de4100ceecdcc46615d630fda57ceeeceb",
    "state": "baked"
+  },
+  "zomoroko-mvw174ja-na27": {
+   "at": "2026-10-31T06:40:18Z",
+   "card": "Grodus X",
+   "path": "Auxiliary/Minions/Grodus_X.psd",
+   "png_blob": "bbdd5bb37a4e65abf9a5b1d0cd98be00cdbbcd58",
+   "psd_blob": "792e8f6ab17053cd9943a855f0440b2617f44650",
+   "state": "baked"
   }
  },
  "v": 1

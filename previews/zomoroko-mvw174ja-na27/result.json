@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw174ja-na27",
+ "card": "Grodus X",
+ "path": "Auxiliary/Minions/Grodus_X.psd",
+ "png": "Auxiliary/Minions/Grodus_X.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "385dedf29ea0797e638e15c85c50d157fb5166f5",
+  "psd_blob": "792e8f6ab17053cd9943a855f0440b2617f44650",
+  "png_blob": "bbdd5bb37a4e65abf9a5b1d0cd98be00cdbbcd58"
+ },
+ "edit": {
+  "ability": "(WOF)+1 DEF to parent creature.\nOverkill damage carries over to another Grodus X in this slot. \n(action)If there are at least 4 Grodus Xs, destroy all Grodus Xs and deal their combined ATK as damage.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(WOF)+1 DEF to parent creature.\nOverkill damage carries over to another Grodus X in this slot. \n(action)If there are at least 4 Grodus Xs, destroy all Grodus Xs and deal their combined ATK as damage.",
+    "was": "(WOF)+1 DEF to parent creature.\nOverkill damage carries over to the next Grodus X in this slot. \n(action)If there are at least 4 Grodus Xs, destroy all Grodus Xs and deal their combined ATK as damage.",
+    "sha": "2f467f72",
+    "psd": "792e8f6a",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to the next Grodus' -> 'to another Grodus'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(WOF)+1 DEF to parent creature.\nOverkill damage carries over to the next Grodus X in this slot. \n(action)If there are at least 4 Grodus Xs, destroy all Grodus Xs and deal their combined ATK as damage.",
+   "new": "(WOF)+1 DEF to parent creature.\nOverkill damage carries over to another Grodus X in this slot. \n(action)If there are at least 4 Grodus Xs, destroy all Grodus Xs and deal their combined ATK as damage."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.151,
+   "max": 2.0
+  }
+ },
+ "region": [
+  68,
+  1765,
+  1138,
+  2235
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41177530439",
+ "took_s": 8.5,
+ "at": "2026-10-31T06:40:18Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2181365,
+  "webp": 71450,
+  "before": 71598
+ },
+ "recompressed": false
+}
