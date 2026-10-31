@@ -55,6 +55,14 @@
    "png_blob": "ff41f737a394e2d9bb3f3a1057d794f9e86a6049",
    "psd_blob": "ce18225362a4e7acd459272a05d938bd486b8822",
    "state": "baked"
+  },
+  "zomoroko-mvvw8mw6-597p": {
+   "at": "2026-10-31T04:21:32Z",
+   "card": "Blooper Tentacle",
+   "path": "Auxiliary/Minions/Blooper_Tentacle.psd",
+   "png_blob": "248440a2c0e56881f40834d05204000e8b1c14f9",
+   "psd_blob": "8268f54847bcf4e5b9d7b0066b7075cfb318f80a",
+   "state": "baked"
   }
  },
  "v": 1
