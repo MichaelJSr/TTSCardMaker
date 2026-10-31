@@ -40,7 +40,7 @@ const S = {
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
   ["aux item", "Auxiliary items"], ["status", "Status effects"], ["creatures", "Auxiliary creatures"]];
 const KIND_PLURAL = { debuff: "Debuffs", buff: "Buffs", unknown: "Other" };   // kind= values the chips don't have (the Stats links)
-const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused (no other card names it)"], ["edited", "Edited on the website"],
+const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused (no card in play names it)"], ["edited", "Edited on the website"],
   ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"],
   ["banned", "Banned (constructed)"]];
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
@@ -177,7 +177,7 @@ async function init() {
 // everything computed from the cards; re-run after an edit
 function derive() {
   S.rev++;
-  for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; }
+  for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; delete c._unusedBy; }
   S.cards = S.all.filter(c => !c.hidden || S.showHidden);
   // stats can pass 10 (Sonic's speed is 20)
   S.statMax = Object.fromEntries(["hp", "def", "atk", "spd"].map(k => [k, Math.max(10, ...S.cards.map(c => c[k] ?? 0))]));
@@ -195,7 +195,14 @@ function derive() {
     if (c.dup) continue;                                   // a duplicate counts once
     for (const id of m) { if (!S.mentionedBy.has(id)) S.mentionedBy.set(id, new Set()); S.mentionedBy.get(id).add(c.id); }
   }
-  for (const c of S.cards) if (AUX_KINDS.includes(c.type) && !c.dup && ![...(S.mentionedBy.get(c.id) || [])].some(id => id !== c.id)) c._unused = true;   // named by no other card
+  // Unused: an Auxiliary card no chain of mentions reaches from a card played on its own (creatures, items, field cards,
+  // N.M.E. items): named by no other card, or only by Unused ones (Z.O.M.G. -> Rainbow Bloon -> Black Bloon)
+  const reached = new Set(), todo = S.cards.filter(c => !c.dup && !AUX_KINDS.includes(c.type)).map(c => c.id);
+  while (todo.length) for (const id of S.mentions.get(todo.pop()) || []) if (!reached.has(id)) { reached.add(id); todo.push(id); }
+  for (const c of S.cards) if (AUX_KINDS.includes(c.type) && !c.dup && !reached.has(c.id)) {
+    c._unused = true;
+    c._unusedBy = [...(S.mentionedBy.get(c.id) || [])].filter(id => id !== c.id).map(id => S.byId.get(id)?.name).filter(Boolean);
+  }
 }
 const currentCard = () => (parseHash().name === "card" && !modal.hidden ? parseHash().arg : "");
 const goCard = id => { if (parseHash().name === "card" && parseHash().arg === id) openCard(id); else location.hash = `#/card/${id}`; };
@@ -796,7 +803,7 @@ function openCard(id, showDetails = false) {
           ${c.created ? `<span class="fact" data-tip="${esc(createdTip(c))}">created ${createdText(c)}</span>` : ""}
           ${c.ts ? `<span class="fact" data-tip="Last PSD commit (Pacific time)">updated ${date(c.ts)}</span>` : ""}
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
-          ${c._unused ? `<span class="fact unused" data-tip="${unusedTip(c)}">Unused: on no card</span>` : ""}
+          ${c._unused ? `<span class="fact unused" data-tip="${unusedTip(c)}">Unused</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="The same card, counted once">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
           ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(changes.editedTip(c))}">Edited</span>` : ""}
           ${psdBadges(c)}

@@ -4,10 +4,12 @@ import { esc, norm } from "./text.js";
 
 export const KIND_LABEL = { creature: "Creature", item: "Item", field: "Field card", minion: "Minion", nme: "N.M.E. item", "aux item": "Auxiliary item",
   debuff: "Debuff", buff: "Buff", creatures: "Auxiliary creature", unknown: "Other" };
-// the kinds that come into play only through other cards (Auxiliary/): Unused when no other card names one (app.js init)
+// the kinds that come into play only through other cards (Auxiliary/): Unused when no chain of mentions reaches one
+// from a card played on its own (app.js init)
 export const AUX_KINDS = ["buff", "debuff", "minion", "aux item", "creatures"];
 const AUX_WORD = { buff: "status effect", debuff: "status effect", minion: "minion", "aux item": "auxiliary item", creatures: "auxiliary creature" };
-export const unusedTip = c => `No other card names this ${AUX_WORD[c.type] || "card"}`;
+export const unusedTip = c => (c._unusedBy?.length ? `Only Unused cards name this ${AUX_WORD[c.type] || "card"}: ${esc(c._unusedBy.join(", "))}`
+  : `No other card names this ${AUX_WORD[c.type] || "card"}`);
 // edits the pipeline bakes into the card image (build_site.py PSD_FIELDS): pending, refused, or baked but not re-parsed yet
 export const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability" };
 export const PSD_TIP = "The card image is being regenerated with this edit";     // the one tip for a pending PSD field (edit.js too)
