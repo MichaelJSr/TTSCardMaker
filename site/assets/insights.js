@@ -19,6 +19,9 @@ const poolOf = (cards, params) => {
 /** top n keys of a Map by value, then name */
 const topKeys = (m, n) => [...m].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]))).slice(0, n).map(([k]) => k);
 const add = (m, k, n = 1) => m.set(k, (m.get(k) || 0) + n);
+// S11's author colours: pinned ones, then --s1…--s4 by rank, then these (purple, light green, brick red: chosen far
+// from those four and the pink, in both themes)
+const AUTHOR_COLOUR = { Zomoroko: "#ffa9e2" }, AUTHOR_EXTRA = ["#9c27b0", "#aed581", "#a52a2a"];
 /** S13: when a card's ability last changed (its current text's start), else its creation; null without an ability */
 const freshTs = c => (!c.ability ? null : (c.hv ? c.since ?? c.ts : c.created ? Date.parse(`${c.created}T12:00:00Z`) / 1000 : c.fs ?? c.ts) || null);
 /** its year (app.js fresh=) */
@@ -106,17 +109,19 @@ export function ratingsHtml({ cards }, params) {
 export function historyHtml({ cards }, params) {
   const pool = poolOf(cards, params), charts = [], L = p => cardsHref(p, params);
 
-  // S11 cards created per year, by author (owner 10-31: every author): a colour each by their rank over all cards, so a
-  // filter never repaints one; past the eight colours, the rest as Others
+  // S11 cards created per year, by author (owner 10-31: every author, none too alike, Zomoroko #ffa9e2): colours by rank
+  // over all cards, so a filter never repaints one; past the eight, the rest as Others
   const made = pool.filter(c => c.created);
   if (made.length) {
     const all = new Map(), counts = new Map();
     for (const c of cards) if (!c.dup && c.author) add(all, c.author);
     const ranked = topKeys(all, 8), here = new Set(made.map(c => c.author)), top = ranked.filter(a => here.has(a));
+    const free = [...[1, 2, 3, 4].map(i => `var(--s${i})`), ...AUTHOR_EXTRA], colour = new Map();
+    for (const a of ranked) colour.set(a, AUTHOR_COLOUR[a] || free.shift());
     for (const c of made) add(counts, `${c.created.slice(0, 4)}\u0001${top.includes(c.author) ? c.author : ""}`);
     const ys = made.map(c => +c.created.slice(0, 4)), years = [];
     for (let y = Math.min(...ys); y <= Math.max(...ys); y++) years.push(String(y));
-    const series = [...top.map(a => ({ key: a, label: a, color: `var(--s${ranked.indexOf(a) + 1})` })),
+    const series = [...top.map(a => ({ key: a, label: a, color: colour.get(a) })),
       ...(made.some(c => !top.includes(c.author)) ? [{ key: "", label: "Others", color: "var(--deemph)" }] : [])];
     const get = (y, k) => counts.get(`${y}\u0001${k}`) || 0;
     const href = (y, k) => (k === "" ? null : L({ q: `created==${y}`, author: k }));     // Others: no filter

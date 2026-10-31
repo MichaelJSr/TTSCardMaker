@@ -882,7 +882,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   Charts that need analytics.json (`rat-power`, `rat-nerfed`) are left out without it.
 - History (`historyHtml(A, {cards}, params)`): `hist-who` (card author x who changed the image, top 7 each and Others,
   from analytics.json `revisions`), `hist-revised` (image changes per card), both "Needs a full-history build." when
-  `revisions.available` is false; `hist-created` (cards per year of `created`, every author a colour by their rank over all cards (owner 10-31; past eight, Others)),
+  `revisions.available` is false; `hist-created` (cards per year of `created`, every author a colour by their rank over all cards (owner 10-31; Zomoroko #ffa9e2; insights.js AUTHOR_COLOUR, AUTHOR_EXTRA; past eight, Others)),
   `hist-fresh` (the year a card's text last changed: `since` when it has history, else its creation), `hist-archive`
   (retired and deleted per year archived from analytics.json `archived`, renames left out; median life = archived minus
   `created`). history.js gained `dayOf`, `yearOf` (Pacific, one cached formatter). app.js fills `#stats-ratings` and
@@ -1396,3 +1396,10 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 - The form: one row per source, "Artwork source #1" first (one empty row by default), ✕ removes one (the last one left
   is emptied), "+ Add a source" adds one. The card page: "Artwork source" alone, else "#1", "#2", …, each line edited in
   place (inline.js `art:<n>`), "+ artwork source" adds the next. The Missing filter's "No ability artwork source" is gone.
+
+## 45. Small asks (2026-10-31, owner)
+
+- Stars: the slider and the form's Stars box go up to the most stars any card has (edit.js `maxStars`: Sigil of
+  Divinity's 7 today), not 10; the form clamps a typed value to it.
+- Item types: the filter takes any card with that item type; auxiliary items have none until one is set (All fields >
+  Item type, database only). Missing > "No item type" counts auxiliary items too, to find them.

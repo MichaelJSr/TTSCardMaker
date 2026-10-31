@@ -839,7 +839,7 @@ export function createEditor(app) {
           ${namesLine(c)}
           ${titleInPicture(view) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
           ${renameRow(c, b)}
-          ${row("stars", num("stars"))}<p class="muted part-note" id="ef-stars-note"></p>
+          ${row("stars", `<input id="ef-stars" type="number" min="0" max="${maxStars()}" step="1" value="${c.stars ?? ""}" placeholder="—">`)}<p class="muted part-note" id="ef-stars-note"></p>
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
             return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-type="${esc(t)}" aria-pressed="${on}" data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>`)}
           ${view && !(psdVal(b, "types") || []).length ? `<p class="muted part-note">No type icon yet: the first goes at ${esc(view.rec.template?.file ? view.rec.template.file.split("/").pop().replace(/\.psd$/i, "") : "the template")}'s spot (flagged).</p>` : ""}
@@ -897,6 +897,8 @@ export function createEditor(app) {
   }
   // the artwork sources (#ef-art): a numbered row each; ✕ removes one (the last one left is emptied), + adds one
   const artRow = (v, i) => `<div class="erow art-row"><label for="efa-${i}">${artLabel(i + 1)}</label><div class="ein"><input id="efa-${i}" data-art-src value="${esc(v)}" placeholder="${i ? "another source" : "the card's artwork: a link, an artist or a game"}"><button type="button" class="ghost icon" data-art-remove aria-label="Remove ${artLabel(i + 1).toLowerCase()}" title="Remove this source">✕</button></div></div>`;
+  /** The most stars any card has (Sigil of Divinity's 7, 10-31): the stars a card can be given here (owner 10-31). */
+  const maxStars = () => Math.max(1, ...S.all.map(x => x.stars || 0));
   function setArt(list) { const rows = document.querySelector("#ef-art .art-rows"); if (rows) rows.innerHTML = (list.length ? list : [""]).map(artRow).join(""); }
   function artAction(remove) {                     // remove: its ✕, else add a row
     const rows = document.querySelector("#ef-art .art-rows"); if (!rows) return;
@@ -933,7 +935,7 @@ export function createEditor(app) {
       return r ? r.name : null;
     };
     const all = {
-      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: () => named("series"), subseries: () => named("subseries"), stars: () => int("stars"),
+      name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: () => named("series"), subseries: () => named("subseries"), stars: () => { const v = int("stars"); return v == null ? null : Math.min(v, maxStars()); },
       types: () => [...document.querySelectorAll("#ef-types .on")].map(x => x.dataset.type),
       ...Object.fromEntries(STATS.map(s => [s, () => int(s)])),
       ability: () => f("ability").value.replace(/\r/g, "").trim() || null, note: () => f("note").value.trim() || null,
@@ -1966,7 +1968,7 @@ export function createEditor(app) {
     // published decks: the publish dialog for a saved hand, and the staged or just-published files for the pages
     publishDeck: id => openPublish(id), deckOf, pendingDecks,
     // inline editing (inline.js): single fields into the same batch, and the known values for its lists; the drafts
-    stageField, stageAuthor, stageMany, value: val, drafts: cardDrafts,
+    stageField, stageAuthor, stageMany, value: val, drafts: cardDrafts, maxStars,
     // new series, subseries and authors from the filter bar (buckets: pending = no card carries it yet)
     options: () => ({ series: seriesList(), subseries: subseriesList(), authors: authorList(), buckets: pending() }),
     addBucket,

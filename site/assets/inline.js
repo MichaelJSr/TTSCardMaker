@@ -22,6 +22,7 @@ export const withSource = (list, n, v) => { const out = [...list]; out[n - 1] = 
 const TEXT = ["name", "ability", "note", "series", "subseries", "author"];   // the fields with a text control (and isArt)
 const LABEL = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", series: "Series", subseries: "Subseries", author: "Author", note: "Note", stars: "Stars", types: "Types" };
 const labelOf = f => (isArt(f) ? artLabel(artNo(f)) : LABEL[f]);
+const starMax = () => A?.editor?.maxStars?.() ?? 10;      // the stars slider's top: the most any card has (edit.js maxStars)
 const IMAGE = "on the card image";                 // the form's "On the card image" marker (PSD fields); the rest is database only
 
 /** A click on stat cell `cell` (1-based) of a row showing `current`: that value, or one less for the top lit cell (so 0 is reachable). */
@@ -106,8 +107,8 @@ export function mountCard(modal, c, api = A) {
     mark(el, `art:${el.dataset.art}`, `Click to edit the ${artLabel(+el.dataset.art, arts.length).toLowerCase()}`);
   facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="art:${arts.length + 1}" data-empty aria-label="Add an artwork source">+ artwork source</button>`);
   const starChip = chips.find(a => hrefOf(a).startsWith("#/cards?stars="));      // stars: a slider in its place
-  if (c.stars > 10) { if (starChip) starChip.dataset.tip = "Use All fields"; }
-  else if (starChip) starChip.outerHTML = starsHtml(c.stars);
+  if (c.stars > starMax()) { if (starChip) starChip.dataset.tip = "Use All fields"; }
+  else if (starChip) starChip.outerHTML = starsHtml(c.stars, starMax());
   else facts.insertAdjacentHTML("beforeend", ghost("stars"));
   const typeRow = detail.querySelector(":scope > div:nth-child(2) > .ctypes");     // types: the row opens the palette
   if (typeRow) {
@@ -202,7 +203,7 @@ function commitStat(kbd) {
 }
 function statKey(row, k, e) {
   const now = +row.getAttribute("aria-valuenow"), v0 = prov?.row === row ? prov.v0 : now;
-  const v = stepValue(now, e.key, 10);
+  const v = stepValue(now, e.key, k === "stars" ? starMax() : 10);
   if (e.key === "Escape" && row.hasAttribute("data-fresh") && now === 0) { e.preventDefault(); e.stopPropagation(); unfresh(row, true); return; }
   if (v !== null) { e.preventDefault(); e.stopPropagation(); prov = { row, k, v0 }; paint(row, v); return; }
   if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); commitStat(true); return; }
@@ -248,7 +249,7 @@ function onClick(e) {
   if (!el || !A.modal.contains(el)) return;
   const f = el.dataset.inline;
   if (f === "stars" && el.hasAttribute("data-empty")) {                     // "+ stars": the slider, at none
-    e.preventDefault(); e.stopPropagation(); el.outerHTML = starsHtml(0);
+    e.preventDefault(); e.stopPropagation(); el.outerHTML = starsHtml(0, starMax());
     const sp = A.modal.querySelector(".detail .star-pick"); if (sp) { sp.dataset.fresh = ""; sp.focus(); } return;   // fresh: nothing chosen puts "+ stars" back
   }
   if (f === "name" || SLIDERS.includes(f)) return;                          // the name on double-click, rows by cell or key
