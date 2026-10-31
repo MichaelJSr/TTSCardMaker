@@ -1715,4 +1715,5 @@ wireTips(document, tips, (cx, cy) => {
 
 try { for (const k of Object.keys(localStorage)) if (k === "edit-token" || k.startsWith("deckPass:")) localStorage.removeItem(k); } catch {}   // plain-text secrets of before 2026-10-23
 if (wantsEditor()) loadEditor().catch(() => {});          // at once, beside cards.json
+{ const r = parseHash(); if (r.name === "rules") loadBook().catch(() => {}); else if (r.name === "stats") loadAnalytics().catch(() => {}); }   // a link to them too
 init().finally(fresh.watch);                            // a new deploy reloads the page (fresh.js)
