@@ -317,9 +317,12 @@ function cardCharts(pool, creatures, L) {
 }
 
 // ---- the dashboard ---------------------------------------------------------------------------------
-// ---- status effects by the SpongeBob season of their art (the art field) -------------------------------------------
+// ---- cards by the SpongeBob season of their art (the art field) ----------------------------------------------------
 const EPISODE = /SpongeBob SquarePants Season (\d+) Ep\. (\d+)([a-z]?)\s+"([^"]+)"/i, MOVIE = /SpongeBob.*Movie/i;
-const SPONGE_KINDS = [["buff", "Buffs", "var(--s1)"], ["debuff", "Debuffs", "var(--s2)"]];
+// the stack's groups by kind, a fixed colour each (the rest: Other)
+const SPONGE_KINDS = [["buff", "Buffs", "var(--s1)"], ["debuff", "Debuffs", "var(--s2)"], ["item", "Items", "var(--s3)"], ["creature", "Creatures", "var(--s4)"], ["other", "Other cards", "var(--deemph)"]];
+const SPONGE_GROUP = { buff: "buff", debuff: "debuff", item: "item", "aux item": "item", nme: "item", creature: "creature", creatures: "creature", minion: "creature" };
+const spongeGroup = c => SPONGE_GROUP[c.type] || "other", groupAt = g => SPONGE_KINDS.findIndex(([k]) => k === g);
 /** a card's SpongeBob source: {season: "3" or "Movie", ep (sort key), label}, else null */
 export function spongeOf(art) {
   const m = EPISODE.exec(art || "");
@@ -328,16 +331,17 @@ export function spongeOf(art) {
 }
 const seasonName = s => (s === "Movie" ? "Movie" : `Season ${s}`);
 const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
-/** Status effects per season (stacked buffs/debuffs, every season from 1); a season's column shows its episodes below
+/** Cards per season (stacked by kind, every season from 1); a season's column shows its episodes below
     (app.js "season" action; cur: the season picked this session, else the biggest) */
 function seasonsCard(pool, cur) {
-  const rows = pool.filter(c => c.type === "buff" || c.type === "debuff").map(c => ({ c, s: spongeOf(c.art) })).filter(r => r.s);
+  const rows = pool.map(c => ({ c, s: spongeOf(c.art), g: spongeGroup(c) })).filter(r => r.s);
   if (!rows.length) return "";
   const last = Math.max(0, ...rows.map(r => +r.s.season).filter(Number.isFinite));
-  const seasons = [...Array.from({ length: last }, (_, i) => String(i + 1)), ...(rows.some(r => r.s.season === "Movie") ? ["Movie"] : [])];
-  const of = new Map(seasons.map(s => [s, rows.filter(r => r.s.season === s).sort((a, b) => a.s.ep - b.s.ep || a.c.type.localeCompare(b.c.type) || a.c.name.localeCompare(b.c.name))]));
+  const seasons = Array.from({ length: last }, (_, i) => String(i + 1));
+  if (rows.some(r => r.s.season === "Movie")) seasons.splice(Math.min(3, last), 0, "Movie");     // between seasons 3 and 4, as released
+  const of = new Map(seasons.map(s => [s, rows.filter(r => r.s.season === s).sort((a, b) => a.s.ep - b.s.ep || groupAt(a.g) - groupAt(b.g) || a.c.name.localeCompare(b.c.name))]));
   const pick = seasons.includes(cur) && of.get(cur).length ? cur : seasons.reduce((a, b) => (of.get(b).length > of.get(a).length ? b : a));
-  const kinds = SPONGE_KINDS.filter(([k]) => rows.some(r => r.c.type === k)), n = (s, k) => of.get(s).filter(r => r.c.type === k).length;
+  const kinds = SPONGE_KINDS.filter(([k]) => rows.some(r => r.g === k)), n = (s, k) => of.get(s).filter(r => r.g === k).length;
   // the columns: each a button that shows its season's episodes
   const W = 1000, height = 220, padL = 36, padB = 26, plotH = height - padB, gap = 2;
   const max = niceMax(Math.max(1, ...seasons.map(s => of.get(s).length))), band = (W - padL) / seasons.length, bw = Math.min(28, band * 0.6);
@@ -356,20 +360,21 @@ function seasonsCard(pool, cur) {
     const tick = `<text x="${x + bw / 2}" y="${height - 8}" text-anchor="middle">${s === "Movie" ? "Movie" : `S${s}`}</text>`;
     if (!total) return `<g class="col">${tick}</g>`;
     return `<a href="#/stats" class="season${s === pick ? " on" : ""}" role="button" aria-pressed="${s === pick}" data-action="season" data-season="${esc(s)}" aria-label="${esc(`${l}: show its episodes`)}"><g class="col">
-      <rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${height}" data-v="${plural(total, "status effect")}" data-l="${esc(l)}"/>${segs}${tick}</g></a>`;
+      <rect class="hit" x="${padL + i * band}" y="0" width="${band}" height="${height}" data-v="${plural(total, "card")}" data-l="${esc(l)}"/>${segs}${tick}</g></a>`;
   }).join("");
   const svg = `<svg viewBox="0 0 ${W} ${height}">${ticks}<line class="axis" x1="${padL}" x2="${W}" y1="${plotH}" y2="${plotH}"/>${cols}</svg>`;
-  // a season's episodes: one row each, a block per status effect and their names
-  const episodes = s => { const m = new Map(); for (const r of of.get(s)) { if (!m.has(r.s.label)) m.set(r.s.label, []); m.get(r.s.label).push(r.c); } return [...m]; };
+  // a season's episodes: one row each, a block per card and their names
+  const color = new Map(SPONGE_KINDS.map(([k, , c]) => [k, c]));
+  const episodes = s => { const m = new Map(); for (const r of of.get(s)) { if (!m.has(r.s.label)) m.set(r.s.label, []); m.get(r.s.label).push(r); } return [...m]; };
   const panel = s => { const eps = episodes(s), total = of.get(s).length;
-    return `<div class="ep-panel" data-season="${esc(s)}"${s === pick ? "" : " hidden"}><h4>${esc(seasonName(s))} <span class="muted">${plural(total, "status effect")}${s === "Movie" ? "" : ` in ${plural(eps.length, "episode")}`}</span></h4>
-      <div class="ep-rows">${eps.map(([label, cs]) => `<span class="ep-name">${esc(label)}</span><span class="ep-units" aria-hidden="true">${cs.map(c => `<i class="${c.type}"></i>`).join("")}<b>${cs.length}</b></span>
-        <span class="ep-cards">${cs.map(c => `<a class="card-ref" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}">${esc(c.name)}</a>`).join(", ")}</span>`).join("")}</div></div>`; };
+    return `<div class="ep-panel" data-season="${esc(s)}"${s === pick ? "" : " hidden"}><h4>${esc(seasonName(s))} <span class="muted">${plural(total, "card")}${s === "Movie" ? "" : ` in ${plural(eps.length, "episode")}`}</span></h4>
+      <div class="ep-rows">${eps.map(([label, rs]) => `<span class="ep-name">${esc(label)}</span><span class="ep-units" aria-hidden="true">${rs.map(r => `<i style="background:${color.get(r.g)}"></i>`).join("")}<b>${rs.length}</b></span>
+        <span class="ep-cards">${rs.map(({ c }) => `<a class="card-ref" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}">${esc(c.name)}</a>`).join(", ")}</span>`).join("")}</div></div>`; };
   const legend = `<div class="legend">${kinds.map(([, kl, color]) => `<span><i style="background:${color}"></i>${kl}</span>`).join("")}</div>`;
-  const tableRows = seasons.flatMap(s => episodes(s).map(([label, cs]) => [seasonName(s), label, cs.map(c => c.name).join(", "), cs.length]));
-  return card("seasons", "Status effects by SpongeBob season", `${plural(rows.length, "status effect")} with SpongeBob art. Click a season for its episodes.`,
-    svg + seasons.filter(s => of.get(s).length).map(panel).join(""), table(["Season", "Episode", "Status effects", "Count"], tableRows, 3),
-    { wide: true, legend, tip: "Buffs and debuffs by the SpongeBob episode or movie their artwork source names" });
+  const tableRows = seasons.flatMap(s => episodes(s).map(([label, rs]) => [seasonName(s), label, rs.map(r => r.c.name).join(", "), rs.length]));
+  return card("seasons", "Cards by SpongeBob season", `${plural(rows.length, "card")} with SpongeBob art. Click a season for its episodes.`,
+    svg + seasons.filter(s => of.get(s).length).map(panel).join(""), table(["Season", "Episode", "Cards", "Count"], tableRows, 3),
+    { wide: true, legend, tip: "Cards by the SpongeBob episode or movie their artwork source names" });
 }
 
 export function renderStats(root, ctx, params) {
