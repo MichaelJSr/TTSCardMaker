@@ -536,13 +536,13 @@ textarea { width: 100%; min-height: 120px; border-radius: 8px; border: 1px solid
 .chart a.go, .chart [data-card] { cursor: pointer; }   /* a Stats link to its cards in the grid, a card */
 .chart g.row:hover .mark, .chart g.col:hover .mark, .chart a.go:hover .mark, .chart a.go:focus-visible .mark { opacity: .8; }
 .chart svg text.lbl.sub { fill: var(--muted); font-size: 11px; } .chart path.mark.sub { fill-opacity: .55; }   /* a subseries under its series */
-/* SpongeBob seasons (stats.js seasonsCard): the picked season, its episodes */
+/* cards by SpongeBob season (stats.js seasonsCard): the picked season, its episodes */
 .chart a.season.on .hit { fill: color-mix(in srgb, var(--ink) 7%, transparent); } .chart a.season.on text { fill: var(--ink); font-weight: 700; }
 .ep-panel h4 { margin: 14px 0 8px; font-size: 14px; } .ep-panel h4 .muted { font-weight: 400; margin-left: 6px; }
 .ep-rows { display: grid; grid-template-columns: max-content max-content minmax(0, 1fr); gap: 7px 14px; align-items: center; font-size: 13px; }
 .ep-name { color: var(--ink-2); } .ep-cards { line-height: 1.4; }
 .ep-units { display: flex; align-items: center; gap: 2px; } .ep-units i { width: 12px; height: 12px; border-radius: 3px; }
-.ep-units i.buff { background: var(--s1); } .ep-units i.debuff { background: var(--s2); } .ep-units b { margin-left: 6px; font-weight: 600; }
+.ep-units b { margin-left: 6px; font-weight: 600; }
 @media (max-width: 640px) { .ep-rows { grid-template-columns: minmax(0, 1fr) max-content; } .ep-cards { grid-column: 1 / -1; margin: -4px 0 4px; } }
 table.data tr.sub td { color: var(--ink-2); font-size: 12.5px; } table.data tr.sub td:first-child { padding-left: 18px; }
 .chart table.heat a.go { color: inherit; display: block; } .chart table.heat a.go:hover { text-decoration: underline; }
