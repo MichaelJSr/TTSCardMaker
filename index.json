@@ -8,6 +8,14 @@
    "psd_blob": "082dfcca2a0d051360b81564f7a5b43fb525f2c3",
    "state": "baked"
   },
+  "8795153e-e1dc-4a4c-8a04-fddc42c21f4d": {
+   "at": "2026-10-31T10:34:55Z",
+   "card": "Sumo Panda",
+   "path": "Creatures/Pandas/3 Stars/Sumo_Panda.psd",
+   "png_blob": "993674795223aea7fe7bccea1dcb9a6e0514a833",
+   "psd_blob": "082dfcca2a0d051360b81564f7a5b43fb525f2c3",
+   "state": "baked"
+  },
   "b320f872-4103-4976-8d89-6a0d44c2ef8b": {
    "at": "2026-10-31T10:32:56Z",
    "card": "Sumo Panda",
