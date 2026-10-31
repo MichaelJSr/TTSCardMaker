@@ -189,13 +189,13 @@ function heatTable(head, rows, { numericFrom = 1, shade = null, all = false, hre
     <tbody>${rows.map((r, k) => `<tr>${r.map((v, i) => cell(v, i, k)).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
-/** A chart card; startTable: open on its table (the Chart button shows the chart); tip: the title's note; fold: false, never folded (foldTall) */
-function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "", startTable = false, tip = "", fold = true } = {}) {
+/** A chart card; startTable: open on its table (the Chart button shows the chart); tip: the title's note */
+function card(id, title, sub, chartHtml, tableHtml, { wide = false, legend = "", startTable = false, tip = "" } = {}) {
   const t = !!(startTable && tableHtml);
   return `<section class="chart${wide ? " wide" : ""}" id="chart-${id}">
     <header><h3>${noted(title, tip)}</h3>${tableHtml ? `<button type="button" class="ghost" data-action="toggle-table" data-target="${id}" aria-pressed="${t}">${t ? "Chart" : "Table"}</button>` : ""}</header>
     ${sub ? `<p class="sub">${esc(sub)}</p>` : ""}${legend}
-    <div class="view-chart"${t ? " hidden" : ""}${fold ? "" : ' data-fold="no"'}>${chartHtml}</div>${tableHtml ? `<div class="view-table"${t ? "" : " hidden"}>${tableHtml}</div>` : ""}</section>`;
+    <div class="view-chart"${t ? " hidden" : ""}>${chartHtml}</div>${tableHtml ? `<div class="view-table"${t ? "" : " hidden"}>${tableHtml}</div>` : ""}</section>`;
 }
 
 // ---- stat distributions: page 0 is 0–10, page k is 10k+1 … 10k+10; one y scale per stat, counts over pages above 0 ---
@@ -377,7 +377,7 @@ function seasonsCard(pool, cur) {
   const tableRows = seasons.flatMap(s => episodes(s).map(([label, rs]) => [seasonName(s), label, rs.map(r => r.c.name).join(", "), rs.length]));
   return card("seasons", "Cards by SpongeBob season", `${plural(rows.length, "card")} with SpongeBob art. Click a season for its episodes.`,
     svg + seasons.filter(s => of.get(s).length).map(panel).join(""), table(["Season", "Episode", "Cards", "Count"], tableRows, 3),
-    { wide: true, legend, tip: "Cards by the SpongeBob episode or movie their artwork source names", fold: false });   // its episodes stay whole
+    { wide: true, legend, tip: "Cards by the SpongeBob episode or movie their artwork source names" });
 }
 
 export function renderStats(root, ctx, params) {
@@ -415,25 +415,23 @@ export function renderStats(root, ctx, params) {
   const byKind = desc(count(pool, c => c.type)).map(([k, v]) => ({ label: KIND_LABEL[k] || k, value: v, href: L({ kind: k }) }));
   charts.push(card("kinds", "Cards by kind", `${pool.length} cards`, hbar(byKind), table(["Kind", "Cards"], byKind.map(r => [r.label, r.value]))));
 
-  // 2 series, each with its subseries under it (cards without one: "No subseries"; a subseries in several series: under
-  //   each); cards with a subseries but no series: under "No series", last
-  const ser = desc(count(mine, c => c.series)), what = KIND_LABEL[sk] || sk, noSer = mine.filter(c => !c.series);
-  const subsOf = (s, of = mine.filter(c => c.series === s), f = { series: s }) => { const rows = desc(count(of, c => c.subseries));
-    const none = rows.length ? of.filter(c => !c.subseries).length : 0;
-    return [...rows.map(([sub, v]) => ({ label: sub, value: v, sub: true, tip: `${s} › ${sub}`, href: L({ kind: sk, ...f, subseries: sub }) })),
-      ...(none ? [{ label: "No subseries", value: none, sub: true, tip: `${s}: no subseries` }] : [])]; };
-  const rowsOf = (k, v, subs) => [[k, v], ...subs.map(r => Object.assign([`↳ ${r.label}`, r.value], { sub: true }))];
-  const top = ser.slice(0, 15).flatMap(([k, v]) => [{ label: k, value: v, href: L({ kind: sk, series: k }) }, ...subsOf(k)]);
-  const rest = ser.slice(15).reduce((s, [, v]) => s + v, 0);
-  if (rest) top.push({ label: `Other (${ser.length - 15} series)`, value: rest });
-  const serRows = ser.flatMap(([k, v]) => rowsOf(k, v, subsOf(k)));
-  if (noSer.some(c => c.subseries)) {
-    const subs = subsOf("No series", noSer, { missing: "series" });
-    top.push({ label: "No series", value: noSer.length, href: L({ kind: sk, missing: "series" }) }, ...subs);
-    serRows.push(...rowsOf("No series", noSer.length, subs));
+  // 2 series or subseries (owner 10-31: a toggle, series first; each list whole, in a box that scrolls); cards with no
+  //   series: "No series"; a subseries in two series: one row, both in its tip
+  const ser = desc(count(mine, c => c.series)), what = KIND_LABEL[sk] || sk, noSer = mine.filter(c => !c.series).length;
+  const serRows = [...ser.map(([k, v]) => ({ label: k, value: v, href: L({ kind: sk, series: k }) })),
+    ...(noSer ? [{ label: "No series", value: noSer, href: L({ kind: sk, missing: "series" }) }] : [])];
+  const seriesOf = new Map();
+  for (const c of mine) if (c.subseries) { if (!seriesOf.has(c.subseries)) seriesOf.set(c.subseries, new Set()); if (c.series) seriesOf.get(c.subseries).add(c.series); }
+  const subRows = desc(count(mine, c => c.subseries)).map(([k, v]) => ({ label: k, value: v, tip: `${[...seriesOf.get(k)].join(", ") || "No series"} › ${k}`, href: L({ kind: sk, subseries: k }) }));
+  if (serRows.length) {
+    const mode = ctx.seriesMode === "subseries" && subRows.length ? "subseries" : "series", views = [["series", "Series", serRows], ...(subRows.length ? [["subseries", "Subseries", subRows]] : [])];
+    const shown = m => (m === mode ? "" : " hidden");
+    const toggle = subRows.length > 0 ? `<div class="chart-tools"><span class="seg" role="group" aria-label="Show">${views.map(([m, l]) =>
+      `<button type="button" class="${m === mode ? "on" : ""}" data-action="series-mode" data-mode="${m}" aria-pressed="${m === mode}">${l}</button>`).join("")}</span></div>` : "";
+    charts.push(card("series", `${what} by series`, `${ser.length} series${subRows.length ? `, ${subRows.length} subseries` : ""}.`,
+      views.map(([m, , rows]) => `<div class="scroll-box" data-show="${m}"${shown(m)}>${hbar(rows, { labelWidth: 230, chars: 32 })}</div>`).join(""),
+      views.map(([m, l, rows]) => `<div data-show="${m}"${shown(m)}>${table([l, what], rows.map(r => [r.label, r.value]))}</div>`).join(""), { legend: toggle }));
   }
-  if (top.length) charts.push(card("series", `${what} by series`, `${ser.length > 15 ? `Top 15 of ${ser.length} series` : `${ser.length} series`}${subCount ? ", with their subseries" : ""}.`,
-    hbar(top, { labelWidth: 230, chars: 32 }), table(["Series", what], serRows)));
 
   // 3 starting-hand depth: for each star level the constructed hand uses (rulebook "03 Setting Up"), how many legal
   //   cards there are to pick from. Not banned, parsed by the bot; the same pool the deck builder offers.
@@ -551,19 +549,6 @@ export function renderStats(root, ctx, params) {
     <div class="kpis">${kpis.map(([l, v, tip]) => `<div class="kpi"><div class="label">${noted(l, tip)}</div><div class="value${typeof v === "number" ? "" : " text"}">${esc(typeof v === "number" ? v.toLocaleString() : v)}</div></div>`).join("")}</div>
     <div class="charts">${charts.join("")}</div>
     <div id="stats-balance"></div><div id="stats-ratings"></div><div id="stats-history"></div>`;
-}
-
-// tall charts and tables start folded (owner 10-31): a shown view taller than FOLD_OVER px shows style.css .fold's height,
-// with "Show all" under it (app.js action "fold")
-const FOLD_OVER = 760;
-/** Fold each shown chart or table view under root that is taller than FOLD_OVER, once (data-fold marks those checked). */
-export function foldTall(root) {
-  const views = [...root.querySelectorAll(".chart > .view-chart:not([hidden]):not([data-fold]), .chart > .view-table:not([hidden]):not([data-fold])")];
-  const tall = new Set(views.filter(v => v.scrollHeight > FOLD_OVER));     // every read before any write
-  for (const v of views) {
-    v.dataset.fold = tall.has(v) ? "on" : "no";
-    if (tall.has(v)) { v.classList.add("fold"); v.insertAdjacentHTML("afterend", `<button type="button" class="ghost fold-btn" data-action="fold" aria-expanded="false">Show all</button>`); }
-  }
 }
 
 export { columns, card as chartCard, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole };   // profile.js's activity chart, balance.js, insights.js

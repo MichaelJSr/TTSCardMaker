@@ -1403,6 +1403,6 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   Divinity's 7 today), not 10; the form clamps a typed value to it.
 - Item types: the filter takes any card with that item type; auxiliary items have none until one is set (All fields >
   Item type, database only). Missing > "No item type" counts auxiliary items too, to find them.
-- Tall charts start folded (owner 10-31): stats.js `foldTall` folds a shown chart or table view taller than 760 px to
-  460 px with a fade and "Show all" / "Show less" (app.js action `fold`), after the Stats page draws, after its later
-  sections, and on Table/Chart; `card(..., { fold: false })` never folds (the SpongeBob chart, its episodes whole).
+- Creatures by series (owner 10-31): a Series / Subseries toggle (series first; app.js action `series-mode`, kept for the
+  session), each list whole in a box that scrolls (style.css `.scroll-box`), the table following the toggle. No other
+  chart folds or scrolls (a folding pass over every tall chart was tried and reverted the same day).
