@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvvvthwb-vev4",
+ "card": "Auto Croissant",
+ "path": "Creatures/Other/2 Stars/Auto_Croissant.psd",
+ "png": "Creatures/Other/2 Stars/Auto_Croissant.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "9f2eca0810ee7cf6c741e9d8ad3817abb2e66784",
+  "psd_blob": "3837ed3aa8f44378ff1d4a8b14d97613406a4abe",
+  "png_blob": "cda339035e695426082862d870c12d38fc29f057"
+ },
+ "edit": {
+  "ability": "(1/2CD) Summon a Mini Auto Croissant minion.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1/2CD) Summon a Mini Auto Croissant minion.",
+    "was": "(1/2CD) Summon a Mini Auto Croissant.",
+    "sha": "9cbc6438",
+    "psd": "3837ed3a",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Auto Croissant.' -> 'Auto Croissant minion.'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1/2CD) Summon a Mini Auto Croissant.",
+   "new": "(1/2CD) Summon a Mini Auto Croissant minion."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.148,
+   "max": 3.0
+  }
+ },
+ "region": [
+  96,
+  1770,
+  1103,
+  2015
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41167369563",
+ "took_s": 8.3,
+ "at": "2026-10-31T04:09:48Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2315148,
+  "webp": 85174,
+  "before": 84128
+ },
+ "recompressed": false
+}

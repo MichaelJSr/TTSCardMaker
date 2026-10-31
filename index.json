@@ -23,6 +23,14 @@
    "png_blob": "9121dce937701da9cda66b070c9ac7235b46f6c7",
    "psd_blob": "c007641c877a9e24e86a35398bc6dc79300592ae",
    "state": "baked"
+  },
+  "zomoroko-mvvvthwb-vev4": {
+   "at": "2026-10-31T04:09:48Z",
+   "card": "Auto Croissant",
+   "path": "Creatures/Other/2 Stars/Auto_Croissant.psd",
+   "png_blob": "cda339035e695426082862d870c12d38fc29f057",
+   "psd_blob": "3837ed3aa8f44378ff1d4a8b14d97613406a4abe",
+   "state": "baked"
   }
  },
  "v": 1
