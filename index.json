@@ -391,6 +391,14 @@
    "png_blob": "3e37907b2a92eb3c5dc325512e3408ff540e7249",
    "psd_blob": "f1606c0a19d8ca51ecd83924f6c54e75326cb230",
    "state": "baked"
+  },
+  "zomoroko-mvw5ogia-vgy0": {
+   "at": "2026-10-31T08:45:46Z",
+   "card": "Mettaton",
+   "path": "Creatures/Undertale/4 Stars/Mettaton.psd",
+   "png_blob": "fa8f3ff67f5b20f1cdac9e757313a5b549957ec3",
+   "psd_blob": "cd20efa9b6cc597cd1f4c52c3d99f32f439806ea",
+   "state": "baked"
   }
  },
  "v": 1
