@@ -58,7 +58,7 @@ Creature D takes
 :::
 
 ## SNEAK ATTACKS
-Creatures have the option to perform a "sneak attack" in place of a normal attack, which is an attack that deals piercing damage equal to 25% of their attack stat +1, and has the same on-hit effects as a normal attack. This is so creatures with high defense don't become unkillable in certain circumstances. Minion sneak attacks are only 25% of their attack stat, without the +1.
+Creatures have the option to perform a "sneak attack" in place of a normal attack, which is an attack that deals piercing damage equal to 25% of their attack stat, plus 1, and has the same on-hit effects as a normal attack. This is so creatures with high defense don't become unkillable in certain circumstances. Minion sneak attacks are only 25% of their attack stat, without the +1.
 
 ![Ninja Kirby](kirby-ninja.webp){.end width=10}
 

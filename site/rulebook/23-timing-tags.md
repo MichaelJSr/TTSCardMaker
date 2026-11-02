@@ -6,7 +6,7 @@ The cards' timing tags. ***X*** can be any number. In a pair such as (1/2CD), th
 **Blue:** on your turn ((1CD), (1/2CD), (OYT)).
 **Purple:** at any time ((1GCD), (AAT)).
 **Red:** forced ((BOT), (ENDT), (BOGT), (ENDGT)).
-**Orange:** per game and triggers ((1PG), (2U), (OFS), (OS), (OD), (WOF)).
+**Orange:** per game, uses and triggers ((1PG), (2U), (OFS), (OS), (OD), (WOF)).
 **Grey:** costs the creature's action ((Action)).
 :::
 
@@ -45,6 +45,11 @@ The cards' timing tags. ***X*** can be any number. In a pair such as (1/2CD), th
 | (OD) | On death |
 | (WOF) | While on field |
 | (XPG) | Can only be activated X time(s) per game |
+{.tags}
+
+## USES
+| Tag | Meaning |
+|:---:|---|
 | (XU) | X use(s) per full charge |
 {.tags}
 

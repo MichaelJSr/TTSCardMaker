@@ -46,6 +46,8 @@ CDMG = Counter damage.
 ::: stack
 ## PER GAME
 (XPG) = Ability can only be activated ***X*** time(s) per game.
+
+## USES
 (XU) = ***X*** use(s) per full charge.
 
 ---
@@ -63,5 +65,5 @@ Time based abilities with a cooldown become usable again once they are fully cha
 > [!kirby-sleepy] **Blue:** on your turn ((1CD), (1/2CD), (OYT)).
 > **Purple:** at any time ((1GCD), (AAT)).
 > **Red:** forced ((BOT), (ENDT), (BOGT), (ENDGT)).
-> **Orange:** per game and triggers ((1PG), (2U), (OFS), (OS), (OD), (WOF)).
+> **Orange:** per game, uses and triggers ((1PG), (2U), (OFS), (OS), (OD), (WOF)).
 > **Grey:** costs the creature's action ((Action)).
