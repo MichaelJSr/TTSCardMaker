@@ -3978,7 +3978,7 @@
         "scaleY": 1.0,
         "scaleZ": 3.0
       },
-      "Nickname": "Field Item Holder",
+      "Nickname": "Field Card Holder",
       "Description": "Holds 1 card",
       "GMNotes": "",
       "AltLookAngle": {
@@ -4052,7 +4052,7 @@
         "scaleY": 1.0,
         "scaleZ": 3.0
       },
-      "Nickname": "Field Item Holder",
+      "Nickname": "Field Card Holder",
       "Description": "Holds 1 card",
       "GMNotes": "",
       "AltLookAngle": {
@@ -4800,7 +4800,7 @@
         "scaleY": 1.0,
         "scaleZ": 3.315335
       },
-      "Nickname": "Field Items",
+      "Nickname": "Field Cards",
       "Description": "",
       "GMNotes": "",
       "AltLookAngle": {
@@ -18542,7 +18542,7 @@
         "scaleY": 1.0,
         "scaleZ": 3.315335
       },
-      "Nickname": "Field Items Copy",
+      "Nickname": "Field Cards Copy",
       "Description": "",
       "GMNotes": "",
       "AltLookAngle": {

@@ -528,7 +528,7 @@
     },
     "b53bbf": {
       "name": "★★★★",
-      "where": "near 'Field Items'",
+      "where": "near 'Field Cards'",
       "position": [
         -76.9,
         9.9
@@ -551,7 +551,7 @@
     },
     "97edb2": {
       "name": "★★★",
-      "where": "near 'Field Items'",
+      "where": "near 'Field Cards'",
       "position": [
         -76.9,
         14.3
@@ -574,7 +574,7 @@
     },
     "4e992d": {
       "name": "★★",
-      "where": "near 'Field Items'",
+      "where": "near 'Field Cards'",
       "position": [
         -76.9,
         18.7
@@ -597,7 +597,7 @@
     },
     "b25a54": {
       "name": "★",
-      "where": "near 'Field Items'",
+      "where": "near 'Field Cards'",
       "position": [
         -76.9,
         23.1
@@ -896,7 +896,7 @@
     },
     "769f68": {
       "name": "★",
-      "where": "near 'Field Items Copy'",
+      "where": "near 'Field Cards Copy'",
       "position": [
         115.1,
         13.3
@@ -919,7 +919,7 @@
     },
     "b14958": {
       "name": "★★",
-      "where": "near 'Field Items Copy'",
+      "where": "near 'Field Cards Copy'",
       "position": [
         115.1,
         17.7
@@ -942,7 +942,7 @@
     },
     "f16501": {
       "name": "★★★",
-      "where": "near 'Field Items Copy'",
+      "where": "near 'Field Cards Copy'",
       "position": [
         115.1,
         22.2
@@ -965,7 +965,7 @@
     },
     "36ee4c": {
       "name": "★★★★",
-      "where": "near 'Field Items Copy'",
+      "where": "near 'Field Cards Copy'",
       "position": [
         115.1,
         26.6
