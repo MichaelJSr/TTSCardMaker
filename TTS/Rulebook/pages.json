@@ -10,8 +10,8 @@
   {
    "name": "Table of Contents",
    "num": "",
-   "sha": "9cc7d5aa6a1deb4cea65cf1783155e9c5bb013287b9431c603b407422c5fa7e9",
-   "t": "TABLE OF CONTENTS Getting Started 3 Abbreviations 4 Setting Up 6 Table 8 Shops 17 Reading Cards 19 Stats 22 The Global Turn 31 Taking Your Turn 33 Attacking 35 Abilities 39 Reactions 49 Items 55 Item Types 57 Minions 60 The Field 61 Death 65 Field Cards 67 Status Effects 69 Creature Types 73 Damage Types 75 Negation 77 Timing Tags 79 If you see sleepy Kirby, that means the textbox or card is explaining more technical rules. Don't worry about understanding them too much; just refer to them if it comes up."
+   "sha": "87cd044e646e90582ef249072b35c9c4363f4e2abd732b1bd9f7c66077fb47f8",
+   "t": "TABLE OF CONTENTS Getting Started 3 Abbreviations 4 Setting Up 6 Table 8 Shops 17 Reading Cards 19 Stats 22 The Global Turn 31 Taking Your Turn 33 Attacking 35 Abilities 39 Reactions 49 Items 56 Item Types 58 Minions 61 The Field 63 Death 67 Field Cards 69 Status Effects 71 Creature Types 75 Damage Types 77 Negation 79 Timing Tags 81 If you see sleepy Kirby, that means the textbox or card is explaining more technical rules. Don't worry about understanding them too much; just refer to them if it comes up."
   },
   {
    "name": "Getting Started",
@@ -22,14 +22,14 @@
   {
    "name": "Abbreviations",
    "num": "2",
-   "sha": "44f6be526a1aa4832e678873b43face5c0fa43b43ac3cd8610f333b16d1552a6",
-   "t": "ABBREVIATIONS “X” is a variable that can represent any number! GENERAL SP = Star Points. DMG = Damage. HP = Health stat. ATK = Attack stat. DEF = Defense stat. SPD = Speed stat. TIME FRAME OYT = On your turn. AAT = At any time. GENERAL PF = Primary field. CDMG = Counter damage. 🕐ON YOUR TURN These imply OYT. XPT = X time(s) per turn. EXT = Every X turns (starting on the Xth turn).⏳ FTEXT = Every X turns (starting on the 1st turn).⏳ 🕐AT ANY TIME These imply AAT. XPGT = X time(s) per global turn. EXGT = Every X global turns.⏳ 🕐FORCED All of these must happen automatically. BOT = Beginning of turn. ENDT = End of turn. BOGT = Beginning of global turn. ENDGT = End of global turn. 2"
+   "sha": "8051d7af2a8a2cfb67b1c2f96acb4f407aac074ed4676777834fdc580a2d95fb",
+   "t": "ABBREVIATIONS “X” is a variable that can represent any number! GENERAL SP = Star Points. DMG = Damage. HP = Health stat. ATK = Attack stat. DEF = Defense stat. SPD = Speed stat. TIME FRAME OYT = On your turn. AAT = At any time. GENERAL PF = Primary field. CDMG = Counter damage. 🕐ON YOUR TURN These imply OYT. XCD = Cooldown: needs X turn(s) of charge. (Y/XCD) = Starts with Y turn(s) of charge. 🕐AT ANY TIME These imply AAT. XGCD = Global cooldown: needs X turn(s) of charge. (Y/XGCD) = Starts with Y turn(s) of charge. 🕐FORCED All of these must happen automatically. BOT = Beginning of turn. ENDT = End of turn. BOGT = Beginning of global turn. ENDGT = End of global turn. 2"
   },
   {
    "name": "Abbreviations 2",
    "num": "2.2",
-   "sha": "0c3ce96f39ef702bc355e91ad4502559531657363c937e59aee70b4621316747",
-   "t": "ABBREVIATIONS 2 FORCED OFS = On first summon. OS = On summon. OD = On death. WOF = While on field. PER GAME XPG = Ability can only be activated X time(s) per game. Abilities marked with ⏳ are considered \"multi turn\" abilities. Abilites marked with 🕐 are considered \"time based\". Time based abilities are considered \"refreshed\" and become usable again in the specified timeframe. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). 2.2"
+   "sha": "37c48ee7257bbe5d53e2e118ec63466538f44c67c5c6d58b7937c89332264909",
+   "t": "ABBREVIATIONS 2 FORCED OFS = On first summon. OS = On summon. OD = On death. WOF = While on field. PER GAME XPG = Ability can only be activated X time(s) per game. XU = X use(s) per full charge. ⏳ XCD, (Y/XCD), XGCD and (Y/XGCD) abilities with X of 2 or more are considered \"multi turn\" abilities. Abilites marked with 🕐 are considered \"time based\". Time based abilities with a cooldown become usable again once they are fully charged. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). 2.2"
   },
   {
    "name": "Setting Up",
@@ -58,8 +58,8 @@
   {
    "name": "Table 3",
    "num": "4.3",
-   "sha": "44254027585aa0e75a441c8d7cb5355e9adee0f2e181d38e0fefb750637283fe",
-   "t": "TABLE 3 The Global Turn counter. Starts at 1, and ticks up by 1 once every filled slot on the field has taken a turn. (See: “THE GLOBAL TURN”) Star Point counter. At the beginning of each global turn, this is set to 7. These are spent in order to play items. Items cost their star value in star points in order to play them. (See: “ITEMS”) BRICKS counter. BRICKS are used to buy Field cards. Field cards cost 2x their star level in BRICKS. BRICKS are obtained when creatures spend an action to mine, gaining BRICKS equal to their star level. 1 BRICK is awarded to each team at the end of every global turn. (See: “FIELD CARDS”) Points counter. Each team starts the game with 2 points. You gain points equal to your creature's star level when it dies. Points are spent on abilities, and buying items from the item shop for 4x cost their star level. The Item shop. (See: “SHOPS”) The Field Card shop (See: “SHOPS”) The N.M.E. shop (See: “SHOPS”) Trying to understand all of the mechanics at once can get overwhelming. Take it slow and ask your opponent for help! 4.3"
+   "sha": "ac44ef0bd387819551ecc07c47d72957197bc5cad53c12ffb4524593d1db3385",
+   "t": "TABLE 3 The Global Turn counter. Starts at 1, and ticks up by 1 once every filled slot on the field has taken a turn. (See: “THE GLOBAL TURN”) Star Point counter. At the beginning of each global turn, this is set to 7. These are spent in order to play items. Items cost their star value in star points in order to play them. (See: “ITEMS”) BRICKS counter. BRICKS are used to buy Field cards. Field cards cost 2x their star level in BRICKS. BRICKS are obtained when creatures spend an action to mine, gaining BRICKS equal to their star level. 1 BRICK is awarded to each team at the end of every global turn. (See: “FIELD CARDS”) Points counter. Each team starts the game with 2 points. You gain points equal to your creature's star level when it is defeated. Points are spent on abilities, and buying items from the item shop for 4x cost their star level. The Item shop. (See: “SHOPS”) The Field Card shop (See: “SHOPS”) The N.M.E. shop (See: “SHOPS”) Trying to understand all of the mechanics at once can get overwhelming. Take it slow and ask your opponent for help! 4.3"
   },
   {
    "name": "Table 4",
@@ -70,8 +70,8 @@
   {
    "name": "Table 5",
    "num": "4.5",
-   "sha": "486c71c60b96550d9dc103377d9418d967a62cc8c56124a7229101534b226a82",
-   "t": "TABLE 5 STATUS EFFECT MARKERS. (See: “STATUS EFFECTS”) The GRAVEYARD. Your perished creatures go in the graveyard on your side of the playing field. (See: “DEATH”) The DISCARD PILE. Used items go here. FIELD CARD SLOTS. (See “FIELD CARDS”). TIP: Mousing over anything will tell you what it is. Useful for if you forget! 4.5"
+   "sha": "c446ad435a0f72689e53a5a892ffa5f592dc4667fe32965794b64ec3711c27c0",
+   "t": "TABLE 5 STATUS EFFECT MARKERS. (See: “STATUS EFFECTS”) The GRAVEYARD. Your defeated creatures go in the graveyard on your side of the playing field. (See: “DEATH”) The DISCARD PILE. Used items go here. FIELD CARD SLOTS. (See “FIELD CARDS”). TIP: Mousing over anything will tell you what it is. Useful for if you forget! 4.5"
   },
   {
    "name": "Table 6",
@@ -130,8 +130,8 @@
   {
    "name": "Stats",
    "num": "7",
-   "sha": "206669a10b47caa321b576e3b5d93a17cdf4889d8ba191ee316d9e0ee7210e41",
-   "t": "STATS HEALTH Each bar of health represents 2 HP. For example, this creature with 8 bars of health has 16 HP. When attacked, HP goes down by ATK value after DEF. When a creature's HP reaches 0, it dies and goes to the graveyard. (See: “ATTACKING”) A creature's MAX HP is the HP a creature starts with. They cannot be healed above this amount naturally. An increase to the MAX HP of a creature increases their current HP by the same amount (This counts as healing). For instance, if a Mushroom (+3.5 HP) is used on this creature, the MAX and current HP would go both from 16 HP to 19.5 HP. Then, if it's later damaged, it can be healed back up to 19.5 HP through regular means of healing. If a creature's current HP becomes greater than its MAX HP, but its MAX HP is not increased, regular healing cannot go above MAX. 7"
+   "sha": "611ad54c48f915b114eb37dc40a902abafa48f494f94551e390fb9478077da12",
+   "t": "STATS HEALTH Each bar of health represents 2 HP. For example, this creature with 8 bars of health has 16 HP. When attacked, HP goes down by ATK value after DEF. When a creature's HP reaches 0, it dies and, unless it is revived on the spot, goes to the graveyard. (See: “ATTACKING”) A creature's MAX HP is the HP a creature starts with. They cannot be healed above this amount naturally. An increase to the MAX HP of a creature increases their current HP by the same amount (This counts as healing). For instance, if a Mushroom (+3.5 HP) is used on this creature, the MAX and current HP would go both from 16 HP to 19.5 HP. Then, if it's later damaged, it can be healed back up to 19.5 HP through regular means of healing. If a creature's current HP becomes greater than its MAX HP, but its MAX HP is not increased, regular healing cannot go above MAX. 7"
   },
   {
    "name": "Stats 2",
@@ -142,8 +142,8 @@
   {
    "name": "Stats 3",
    "num": "7.3",
-   "sha": "21d808b2bb6aff71df5164662a07d946dfd1a2c564f986a2336b75bde493f949",
-   "t": "STATS 3 HEALTH REDUCTION A decrease to the MAX HP of a creature does not decrease their current HP, unless if their current HP would become greater than their Max HP (in which case it is set to Max HP). For instance, A stat stealing creature steals 1 bar (2 MAX HP) of HP. This creature would fall from 16 HP to 14 HP. If the creature was damaged and only at 10 HP, it would not lose HP, but would not be able to heal past 14. A decrease to the Max HP of a creature does not count as damage. 1 Bar of HP is 2 MAX HP Decreases to MAX HP are indicated with these markers. 7.3"
+   "sha": "967252be894aef9c73276256794276d9153cdd2a904bcdf1286433607c6525cb",
+   "t": "STATS 3 HEALTH REDUCTION A decrease to the MAX HP of a creature does not decrease their current HP, unless if their current HP would become greater than their Max HP (in which case it is set to Max HP). If its current HP was already greater than its Max HP, the decrease lowers its current HP by the same amount. For instance, A stat stealing creature steals 1 bar (2 MAX HP) of HP. This creature would fall from 16 HP to 14 HP. If the creature was damaged and only at 10 HP, it would not lose HP, but would not be able to heal past 14. A decrease to the Max HP of a creature does not count as damage. 1 Bar of HP is 2 MAX HP Decreases to MAX HP are indicated with these markers. 7.3"
   },
   {
    "name": "Stats 4",
@@ -172,32 +172,32 @@
   {
    "name": "Stats 8",
    "num": "7.8",
-   "sha": "5f7af607b6e55b6808779a9047bdb71a999b7debdaba3ebffd164cc9f39fdac3",
-   "t": "STATS 8 ROUNDING + STAT CHANGES Stats are rounded to the nearest half in the positive direction, after reductions or gains are applied. For example, inflicting Chilled (-25% SPD) on a 5 SPD creature (5 SPD - 1.25 SPD = 3.75 SPD) rounds to 4 SPD, and inflicting Enraged on a 5 ATK creature (5 ATK + 1.25 ATK = 6.25 ATK) rounds to 6.5 ATK. When calculating stat changes or damage dealt, Additives are applied first and multiplicatives second. Multiplicative effects are applied additively i.e. Chilled (-25% SPD) + Paralyzed (-50% SPD) = -75% SPD SPD can't go below 1. ATK and DEF can't go below 0. MAX HP can't be reduced below 1 bar (2 HP). ±0% -25% -50% -75% +25% +50% +75% 0.5 0.5 0.5 0 0.5 1 1 1 1 0.5 0.5 1.5 1.5 2 1.5 1 1 0.5 2 2.5 2.5 2 1.5 1 0.5 2.5 3 3.5 2.5 2 1.5 0.5 3 4 4.5 3 2.5 1.5 1 4 4.5 5.5 3.5 2.5 2 1 4.5 5.5 6 4 3 2 1 5 6 7 7.8"
+   "sha": "ce1888eb8d8ea7ac7ae29c9707f9329fd925052e434a9d39f2b142197b95b834",
+   "t": "STATS 8 ROUNDING + STAT CHANGES A creature's base stats are the stats printed on its card, before any changes. Stat changes affect its current stats, not its base stats, unless an effect says it changes a base stat. Stats are rounded to the nearest half in the positive direction, after reductions or gains are applied. For example, inflicting Chilled (-25% SPD) on a 5 SPD creature (5 SPD - 1.25 SPD = 3.75 SPD) rounds to 4 SPD, and inflicting Enraged on a 5 ATK creature (5 ATK + 1.25 ATK = 6.25 ATK) rounds to 6.5 ATK. When calculating stat changes or damage dealt, Additives are applied first and multiplicatives second. Multiplicative effects are applied additively i.e. Chilled (-25% SPD) + Paralyzed (-50% SPD) = -75% SPD SPD can't go below 1. ATK and DEF can't go below 0. MAX HP can't be reduced below 1 bar (2 HP). ±0% -25% -50% -75% +25% +50% +75% 0.5 0.5 0.5 0 0.5 1 1 1 1 0.5 0.5 1.5 1.5 2 1.5 1 1 0.5 2 2.5 2.5 2 1.5 1 0.5 2.5 3 3.5 2.5 2 1.5 0.5 3 4 4.5 3 2.5 1.5 1 4 4.5 5.5 7.8"
   },
   {
    "name": "Stats 9",
    "num": "7.9",
-   "sha": "069ec970f52302f435fd84faf18280bf1a0d4d862c336f95009878d07ba3fc7d",
-   "t": "STATS 9 ±0% -25% -50% -75% +25% +50% +75% 4.5 3.5 2.5 1 5.5 7 8 5 4 2.5 1.5 6.5 7.5 9 5.5 4 3 1.5 7 8.5 9.5 6 4.5 3 1.5 7.5 9 10.5 6.5 5 3.5 1.5 8 10 11.5 7 5.5 3.5 2 9 10.5 12.5 7.5 5.5 4 2 9.5 11.5 13 8 6 4 2 10 12 14 8.5 6.5 4.5 2 10.5 13 15 9 7 4.5 2.5 11.5 13.5 16 9.5 7 5 2.5 12 14.5 16.5 10 7.5 5 2.5 12.5 15 17.5 7.9"
+   "sha": "2871aec9ce20a761f20572040ebe2f87d9bbb12b8b0ef1efd0b5da3c07a179a1",
+   "t": "STATS 9 ±0% -25% -50% -75% +25% +50% +75% 3.5 2.5 2 1 4.5 5.5 6 4 3 2 1 5 6 7 4.5 3.5 2.5 1 5.5 7 8 5 4 2.5 1.5 6.5 7.5 9 5.5 4 3 1.5 7 8.5 9.5 6 4.5 3 1.5 7.5 9 10.5 6.5 5 3.5 1.5 8 10 11.5 7 5.5 3.5 2 9 10.5 12.5 7.5 5.5 4 2 9.5 11.5 13 8 6 4 2 10 12 14 8.5 6.5 4.5 2 10.5 13 15 9 7 4.5 2.5 11.5 13.5 16 9.5 7 5 2.5 12 14.5 16.5 10 7.5 5 2.5 12.5 15 17.5 7.9"
   },
   {
    "name": "The Global Turn",
    "num": "8",
-   "sha": "66b47726f35118bebe07268bafc66eb0a7cd46d11c0ce5113b05e74b1ebe66ed",
-   "t": "THE GLOBAL TURN Each slot on the playing field takes it's turn one at a time. When every slot has taken its turn once, that is called a GLOBAL TURN. When the global turn resets, each team is set to 7 Star points. At the end of each GLOBAL TURN, each team gains 1 BRICK. TURN ORDER Turns are taken lane by lane. This means that both creatures in a lane must have taken their turn before the next lane can go. Turn order of lanes is determined by first adding up the TOTAL SPEED of the fastest creature of each side in each lane. The lane with the most total speed goes first. (Only takes into account the PRIMARY FIELD) If the total speed is tied, then the lane with the least HEALTH LOST (MAX HEALTH - CURRENT HEALTH) goes first. If the TOTAL HEALTH LOST is tied, then the creature with the highest STAR LEVEL goes first. If the HIGHEST STAR LEVEL is tied, then flip a dice, or roll a coin. The slot within each lane that goes first is determined the same way - first by looking for the most speed, then for the least amount of health lost, and then by highest star level, then by RNG. MOST SPEED > LEAST HEALTH LOST > HIGHEST STAR LEVEL > RNG 8"
+   "sha": "03e6f22476210e6fa7b01fef26aea9ed8ecfb5c4b20dec8478a370fd1a20ebbd",
+   "t": "THE GLOBAL TURN Each slot on the playing field takes it's turn one at a time. When every slot has taken its turn once, that is called a GLOBAL TURN. When the global turn resets, each team is set to 7 Star points. At the end of each GLOBAL TURN, each team gains 1 BRICK. TURN ORDER Turns are taken in pair turns: a slot from one team, then a slot from the opposing team. The fastest creature goes first, then the opposing team's fastest creature. Then the next fastest creature, then the opposing team's next fastest creature. Then the fastest remaining creature, then the opposing team's fastest remaining creature. Only the PRIMARY FIELD counts. A slot's speed is its fastest creature's. If the speed is tied, then the slot with the least HEALTH LOST (MAX HEALTH - CURRENT HEALTH) goes first. If the HEALTH LOST is tied, then the creature with the highest STAR LEVEL goes first. If the HIGHEST STAR LEVEL is tied, then flip a dice, or roll a coin. MOST SPEED > LEAST HEALTH LOST > HIGHEST STAR LEVEL > RNG 8"
   },
   {
    "name": "The Global Turn 2",
    "num": "8.2",
-   "sha": "e3e94f6827bd9972d32ec316fe3d0ff302b8dad61b948f3b0661753f49e43b00",
-   "t": "THE GLOBAL TURN 2 A HP: 8/10 SPD: 5 : 3 L1 B HP: 8/9 SPD: 5 : 5 C HP: 8/8 SPD: 6 : 4 L2 D HP: 6/6 SPD: 4 : 4 E HP: 7/7 SPD: 3 : 5 L3 F HP: 8/8 SPD: 3 : 3 In the example to the left, both Lane 1 and Lane 2 have a total of 10 Speed, while Lane 3 has a total of 6 Speed. Lane 1 is missing 3 HP, while Lane 2 is missing 0 HP. Therefore, Lane 2 goes first, then Lane 1, then Lane 3. LANE 2: Creature C has more speed than Creature D, so the Global Turn begins with C's turn, then D takes its turn. LANE 1: Both creatures have equal speed, but B has less health missing. Therefore, B goes before A. LANE 3: Both creatures have the same speed and no health missing, so the creature with the highest star level goes first (Creature E). C > D > B > A > E > F TURN MANIPULATION Turn order may be manipulated through speed changes by AAT abilities and facedown items when deciding which lane goes next. When a slots turn is about to start, the creature may swap out for 2 points. This may change turn order within the lane. If a change of turn order occurs while a creature is in the middle of its turn, that creature gets to finish its turn regardless. NO STALLING During a full global turn, if none of a team's creatures attack, those creatures take 1 TRUE DAMAGE at the end of the global turn. 8.2"
+   "sha": "7d8dd2599f1d9adae41d081d53e9c3c03a614c0aedd69cd7dd554efcceb016e9",
+   "t": "THE GLOBAL TURN 2 A HP: 8/10 SPD: 5 : 3 L1 B HP: 8/9 SPD: 5 : 5 C HP: 8/8 SPD: 6 : 4 L2 D HP: 6/6 SPD: 4 : 4 E HP: 7/7 SPD: 3 : 5 L3 F HP: 8/8 SPD: 3 : 3 In the example to the left, A, C and E are one team, while B, D and F are the other. Creature C has the most speed, so the Global Turn begins with C's turn, then the opposing team's fastest, B. Next, A is the fastest creature remaining, then the opposing team's fastest remaining, D. Last, E and F have the same speed and no health missing, so the creature with the highest star level goes first (Creature E), then F. C > B > A > D > E > F TURN MANIPULATION Turn order may be manipulated through speed changes by AAT abilities and facedown items when deciding which slot goes next. When a slots turn is about to start, the creature may swap out for 2 points. This cannot change turn order. If a change of turn order occurs while a creature is in the middle of its turn, that creature gets to finish its turn regardless. NO STALLING During a full global turn, if none of a team's creatures attack, those creatures take 1 TRUE DAMAGE at the end of the global turn. 8.2"
   },
   {
    "name": "Taking Your Turn",
    "num": "9",
-   "sha": "697e660ccd573dd7e9fe3bf88d5f0267f46c49b1d7fb0c4c84c5a68900e6bfad",
-   "t": "TAKING YOUR TURN It's time to put your creatures to use! Every creature gets one ACTION when their turn starts. The action can be used to ATTACK, MINE, or to put the creature into DEFENSE MODE. ATTACK A creature can choose any creature on the playing field to ATTACK. Attacking removes HP from the chosen creature equal to the ATTACK VALUE of the attacking creature, minus the DEFENSE VALUE of the creature being attacked. (See “ATTACKING” for more info) MINING A creature can choose to MINE, generating BRICKS equal to its STAR LEVEL for the player (see FIELD CARDS for more) DEFENSE MODE A creature can use its action to go into DEFENSE MODE, doubling its defense while it is in this state. It goes out of defense mode at the beginning of its next turn. This state is singified by turning the creature 90 degrees. TURN PHASES 9"
+   "sha": "b1163d0f505cfaeac14256b6b111b8d61653f3d8b80759e99dd90d8ab1374307",
+   "t": "TAKING YOUR TURN It's time to put your creatures to use! Every creature gets one ACTION when their turn starts. The action can be used to ATTACK, MINE, or to put the creature into DEFENSE MODE. Actions can only be used OYT. ATTACK A creature can choose any creature on the playing field to ATTACK. Attacking removes HP from the chosen creature equal to the ATTACK VALUE of the attacking creature, minus the DEFENSE VALUE of the creature being attacked. (See “ATTACKING” for more info) MINING A creature can choose to MINE, generating BRICKS equal to its STAR LEVEL for the player (see FIELD CARDS for more) DEFENSE MODE A creature can use its action to go into DEFENSE MODE, doubling its defense while it is in this state. It goes out of defense mode at the beginning of its next turn. This state is singified by turning the creature 90 degrees. TURN PHASES 9"
   },
   {
    "name": "Taking Your Turn 2",
@@ -208,26 +208,26 @@
   {
    "name": "Attacking",
    "num": "10",
-   "sha": "e37a208ddf172e357263bda301f7fade866f3604c98b499d7fb67a44623bf05e",
-   "t": "ATTACKING ATTACKS Attacks occur when creatures use an action to perform an attack, when an attack item is used, or an ability deals damage (DMG) separate from the ATK stat of a creature. Attacks deal ATK - DEF in damage. Attacks can only hit the PRIMARY FIELD by defualt. (See: FIELDS) Attacks from abilities cannot trigger counter damage or counter items. COMBO DAMAGE If an attacking creature has TWICE THE SPEED VALUE of the creature being attacked, then the final damage is multiplied by 1.5. If an attacking creature has TRIPLE THE SPEED VALUE, then the final damage is doubled. A HP: 10/10 DEF: 2 ATK: 7 SPD: 4 L1 B HP: 10/10 DEF: 1 ATK: 6 SPD: 4 Creature A attacks Creature B. What happens? Creature B takes 7 minus 1 Damage, for a total of 6. Their HP is reduced to 10 minus 6: they have 4 HP left. C HP: 10/10 DEF: 2 ATK: 7 SPD: 6 L1 D HP: 10/10 DEF: 1 ATK: 6 SPD: 3 Creature C attacks Creature D. What happens? Creature D takes 7 minus 1 Damage, for a total of 6. However, Creature C's speed is DOUBLE that of Creature D's! The final damage value is therefore multiplied by 1.5, resulting in 9 total damage, leaving them at 1 HP. 10"
+   "sha": "4ee6013ddf31ae67666f4eaa73dbf613f9456f8b9f7b617aea6a42dc4f0c2812",
+   "t": "ATTACKING ATTACKS Attacks occur when creatures use an action to perform an attack, when an attack item is used, or an ability deals damage (DMG) separate from the ATK stat of a creature. Attacks deal ATK - DEF in damage. Attacks can only hit the PRIMARY FIELD by defualt. (See: FIELDS) Damage from abilities and item effects cannot trigger counter damage as retaliation. Attacks from abilities cannot trigger counter items. Creatures with 0 ATK cannot declare an attack (of any type). COMBO DAMAGE If an attacking creature has TWICE THE SPEED VALUE of the creature being attacked, then the final damage is multiplied by 1.5. If an attacking creature has TRIPLE THE SPEED VALUE, then the final damage is doubled. 10"
   },
   {
    "name": "Attacking 2",
    "num": "10.2",
-   "sha": "9ad9cd8ae5d3e5dc5dabc11dfabadd449ba21dd4b6fd35f5025daa2d43d87370",
-   "t": "ATTACKING 2 SNEAK ATTACKS Creatures have the option to perform a \"sneak attack\" in place of a normal attack, which is an attack that deals piercing damage equal to 25% of their attack stat +1, and has the same on-hit effects as a normal attack. This is so creatures with high defense don't become unkillable in certain circumstances. 10.2"
+   "sha": "181cba921bed6f520f8c6237222873815d5094c6bdf9b29a3e4d04bf1ee44f17",
+   "t": "ATTACKING 2 A HP: 10/10 DEF: 2 ATK: 7 SPD: 4 L1 B HP: 10/10 DEF: 1 ATK: 6 SPD: 4 Creature A attacks Creature B. What happens? Creature B takes 7 minus 1 Damage, for a total of 6. Their HP is reduced to 10 minus 6: they have 4 HP left. C HP: 10/10 DEF: 2 ATK: 7 SPD: 6 L1 D HP: 10/10 DEF: 1 ATK: 6 SPD: 3 Creature C attacks Creature D. What happens? Creature D takes 7 minus 1 Damage, for a total of 6. However, Creature C's speed is DOUBLE that of Creature D's! The final damage value is therefore multiplied by 1.5, resulting in 9 total damage, leaving them at 1 HP. SNEAK ATTACKS Creatures have the option to perform a \"sneak attack\" in place of a normal attack, which is an attack that deals piercing damage equal to 25% of their attack stat +1, and has the same on-hit effects as a normal attack. This is so creatures with high defense don't become unkillable in certain circumstances. Minion sneak attacks are only 25% of their attack stat, without the +1. 10.2"
   },
   {
    "name": "Attacking 3",
    "num": "10.3",
-   "sha": "984966e730b12048d92ed64674ab9c592da7c4343b477b9d1268be976568c70f",
-   "t": "ATTACKING 3 MULTI-HIT ATTACKS Multi-hit attacks count as seperate attacks for each hit, and each instance may be reacted to seperately. When a creature uses an ability or item to attack multiple enemy creatures at once, the attacks happen left-to-right from the attacker's perspective and counter damage or on death effects both happen after all instances of the attack are resolved. REDIRECTIONS Redirections & Interceptions, are instances where an attack's target may be forecfully changed. Redirections change the attack's target to a creature of choice. Interceptions change the target of an attack to be the creature which is intercepting. When a creature moves to intercept an attack, it cancels (and stays out of) defense mode first. INFLICTIONS If a creature attacks or is attacked, any debuffs or stat changes inflicted on offense or defense are inflicted before the attack strikes, allowing those effects to alter the result of the attack. 10.3"
+   "sha": "535b4d2200507bdca75787b32adc889819a2e8fa112489f548970e24427381a7",
+   "t": "ATTACKING 3 MULTI-HIT ATTACKS Multi-hit attacks do not count as separate attacks. Each instance of damage cannot be reacted to on its own, only the entire attack can. (Impassable Obstruction would negate the entire thing.) To make 3 separate attacks, a creature must attack 3 separate times. When a creature uses an ability or item to attack multiple enemy creatures at once, the attacks happen left-to-right from the attacker's perspective and on death effects happen after all instances of the attack are resolved. REDIRECTIONS Redirections & Interceptions, are instances where an attack's target may be forecfully changed. Redirections change the attack's target to a creature of choice. Interceptions change the target of an attack to be the creature which is intercepting. When a creature moves to intercept an attack, it cancels (and stays out of) defense mode first. 10.3"
   },
   {
    "name": "Attacking 4",
    "num": "10.4",
-   "sha": "e99987798148ed88dcbdb1e79bff67b3a7f790ffd0ffc98a7e8b4d89f28b65b0",
-   "t": "ATTACKING 4 Inflictions that occur from a creatures' attack cannot be separated from the attack itself, and cannot be independently Negated/Reflected/Redirected/Intercepted whereas separate inflictions (from items and non-on attack abilities) can be. Only attack actions can proc any “on attack” effects. ROUNDING In the case that damage isn't a .5 multiple, damage rounds up, for example 3.25 DMG rounds to 3.5 DMG 10.4"
+   "sha": "3a3a386e1a72b7bb5de3d5c1af8d98a8e56120321614b2a4e619c394f5edc956",
+   "t": "ATTACKING 4 INFLICTIONS If a creature attacks or is attacked, any debuffs or stat changes inflicted on offense or defense are inflicted before the attack strikes, allowing those effects to alter the result of the attack. Inflictions that occur from a creatures' attack cannot be separated from the attack itself, and cannot be independently Negated/Reflected/Redirected/Intercepted whereas separate inflictions (from items and non-on attack abilities) can be. Only attack actions can proc any “on attack” effects. ROUNDING In the case that damage isn't a .5 multiple, damage rounds up, for example 3.25 DMG rounds to 3.5 DMG 10.4"
   },
   {
    "name": "Abilities",
@@ -238,26 +238,26 @@
   {
    "name": "Abilities 2",
    "num": "11.2",
-   "sha": "6ca625ddef28bf1785eb62282763559c7122dc6aba3b3419380c7cd61c914996",
-   "t": "ABILITIES 2 BASIC ABILITES 11PT Summon a Mini Bee. 22PGT Heal a creature by 2 HP. 3AAT3PG Spend 7 points to deal 10 piercing damage. XPT “X Per Turn” is the most common ability type. XPT implies OYT “On your turn”. X in this case is 1. So this ability may be performed once on each turn the creature takes. XPGT “X Per Global Turn” implies AAT “At any time”. So this creature can heal twice at any point during the global turn. This ability can be used to heal a creature that is about to die from an attack reactively, two times per global turn. XPG “X Per Game” means the creature can perform this ability X times, ever. In this case it's 3 times per game. This kind of ability is always either AAT or OYT. Here it is AAT, so it can be done at any point during the game. “1PGAAT Kill an enemy creature” 11.2"
+   "sha": "1217525b1ed1571786c6012e215fb4fbd64194097fdb26056cc8faf4a06ce7a0",
+   "t": "ABILITIES 2 BASIC ABILITES 11CD Summon a Mini Bee. 21GCD2U Heal a creature by 2 HP. 3AAT3PG Spend 7 points to deal 10 piercing damage. XCD “Cooldown” is the most common ability type. XCD implies OYT “On your turn”. X is how many turns of charge the ability needs to be used (it can't go over X). Abilities start with no charge. 1 turn of charge is gained at any point during phases 1-3 of the creature's turn, if the ability hasn't gained charge yet that turn and hasn't been fully charged at any point during that turn. X in this case is 1. So this ability may be performed once on each turn the creature takes. XGCD “Global Cooldown” implies AAT “At any time”, and gains charge at any point during the global turn, under the same conditions. XU is how many uses the ability has when charged. If even one use is spent the ability can gain charge again; charged again without spending every use, it only goes back up to X uses. No XU: 1 use per full charge. So this creature can heal twice per full charge, at any point in the global turn. This ability can be used to heal a creature that is about to die from an attack reactively, two times per global turn. XPG “X Per Game” means the creature can perform this ability X times, ever. In this case it's 3 times per game. This kind of ability is always either AAT or OYT. Here it is AAT, so it can be done at any point during the game. 11.2"
   },
   {
    "name": "Abilities 3",
    "num": "11.3",
-   "sha": "f8a2cae86f357756a79d992afeb1b0cbd0dd1f68b99694114c187617026af0ea",
-   "t": "ABILITIES 3 AUTOMATIC 1BOGT +1 SPD 2BOT +1 ATK 3ENDT +5 DEF until ENDGT These abilities are non-optional and assumed to happen automatically. BOGT “Beginning of Global turn” abilities happen before anything else in the global turn. This creature gains SPD, which will likely effect turn order. BOT “Beginning of Turn: abilities happen when a creature begins taking it's turn, before it does anything else. Here, gains an ATK, so it's strengthened right before every turn it takes. ENDT “End of Turn” Effects happen when a creature finishes its turn, after everything else it can do. Here, this effect lasts until “End of Global Turn”, meaning once the global turn finishes, the gained DEF goes away. The SPD from the earlier ability means it'll get this ability earlier and earlier into the global turn, meaning it'll have it's defense for longer and longer. Don't give this ability to sonic. 11.3"
+   "sha": "00d09a3c2b17db0318cd5e460f7f2e9e2372b8d2db314f2aa41d9457ea815e37",
+   "t": "ABILITIES 3 “1PGAAT Kill an enemy creature” 11.3"
   },
   {
    "name": "Abilities 4",
    "num": "11.4",
-   "sha": "09c32a9ff50fd4d7010515af5585a1a1fc7b2d23dcb7f04a43c58027dc319bf7",
-   "t": "ABILITIES 4 MULTI-TURN 1E2T Summon a Mega Bee. 2FTE2T Summon Brombus. 3E2GT Deal 3 piercing damage. EXT “Every X Turns” abilities are refreshed on the creature's Xth turn after either the start of the game or the last time the ability was used. Here, the creature can summon a Mega Bee on its second turn, and every 2 turns after that. (Turns 4, 6, etc.) (It's implied these abilities can only be used OYT “on your turn”.) FTEXT Brombus may be summoned on the first turn, then every 2 turns after. (Turns 3, 5, etc.) This ability happens on turns where the above doesn't. E2GT “Every X Global Turns”. This works the same, but ability is “at any time” AAT, and is refreshed when the global turn starts. 11.4"
+   "sha": "e40230a21b90559bbe72de06d5b0b30e7d828ccc361861c6e65ac9af971ec435",
+   "t": "ABILITIES 4 AUTOMATIC 1BOGT +1 SPD 2BOT +1 ATK 3ENDT +5 DEF until ENDGT These abilities are non-optional and assumed to happen automatically. BOGT “Beginning of Global turn” abilities happen before anything else in the global turn. This creature gains SPD, which will likely effect turn order. BOT “Beginning of Turn: abilities happen when a creature begins taking it's turn, before it does anything else. Here, gains an ATK, so it's strengthened right before every turn it takes. ENDT “End of Turn” Effects happen when a creature finishes its turn, after everything else it can do. Here, this effect lasts until “End of Global Turn”, meaning once the global turn finishes, the gained DEF goes away. The SPD from the earlier ability means it'll get this ability earlier and earlier into the global turn, meaning it'll have it's defense for longer and longer. Don't give this ability to sonic. 11.4"
   },
   {
    "name": "Abilities 5",
    "num": "11.5",
-   "sha": "d1e62339a2943a340ee6b2f8deaf37ece96f39af7d7837d28ab09867065c7e18",
-   "t": "ABILITIES 5 If you forget to use your time based ability, it's saved so you can use it on the next turn, but its cooldown doesn't reset until it's used! Abilties do not count time passing while in the hand. 11.5"
+   "sha": "342cc3df74c084f2e0cdde0b835e9fafb3a52d2fd5139198388651e95b91d189",
+   "t": "ABILITIES 5 MULTI-TURN 12CD Summon a Mega Bee. 21/2CD Summon Brombus. 32GCD Deal 3 piercing damage. 2CD The ability needs 2 turns of charge, so the creature can summon a Mega Bee on its second turn, and every 2 turns after that. (Turns 4, 6, etc.) (These can only be used OYT “on your turn”.) (Y/XCD) Appears when an ability starts with an unusual amount of charge. Y is the charge it starts with. Brombus starts with 1 of 2 turns of charge, so it may be summoned on the first turn, then every 2 turns after. (Turns 3, 5, etc.) This ability happens on turns where the above doesn't. 2GCD This works the same, but the ability is “at any time” AAT, gaining charge during the global turn. If you forget to use your time based ability, it's saved so you can use it on the next turn, but its cooldown doesn't reset until it's used! Abilties do not count time passing while in the hand. 11.5"
   },
   {
    "name": "Abilities 6",
@@ -280,8 +280,8 @@
   {
    "name": "Abilities 9",
    "num": "11.9",
-   "sha": "42b9258b2b015138ba288528b2069483f9919b422a7a5f46006a10f2d7e4968c",
-   "t": "ABILITIES 9 Here are some specfic common abilities in the game and some specifics about them. ABILITY COPYING/STEALING/SWAPPING Stolen/Swapped abilities refresh as brand new per creature, if the creature loses that ability then gains it back, it's not reset but instead incremented by a turn. If a creature gains an on first summon ability (or if this is the first opportunity that an OFS ability can be procced), proc it now. If a healing item is used to deal DMG, it is instead treated as an attack item, and vice versa. MISC Abilities that count damage dealt to creatures do not count overkill damage. 11.9"
+   "sha": "56dabb37b54b5d2c94c4e3ede67c113216d8b52a00ecdec07e3e59b2020ba296",
+   "t": "ABILITIES 9 Here are some specfic common abilities in the game and some specifics about them. ABILITY COPYING/STEALING/SWAPPING Stolen/Swapped abilities start as brand new per creature, if the creature loses that ability then gains it back, it's not reset but instead gains 1 turn of charge. The first time a creature gains an on first summon ability (or if this is the first opportunity that an OFS ability can be procced), proc it now. If a healing item is used to deal DMG, it is instead treated as an attack item, and vice versa. MISC Abilities that count damage dealt to creatures do not count overkill damage. If a healing item deals DMG instead of healing (such as with Chef Saltbaker), effects that increase healing (such as Toy Chica) increase that damage. 11.9"
   },
   {
    "name": "Abilities 10",
@@ -322,86 +322,98 @@
   {
    "name": "Reactions 6",
    "num": "12.6",
-   "sha": "fd51f8ccd71b73679554cac3fd7f97dcf5dc0bdf3228a5b8bdf9bad851e940c5",
-   "t": "REACTIONS 6 Other things to note about reactions: SPENDING Star points are used immediately upon an item being played rather than when they are being resolved. If a reaction prevents a creature from being targeted by an item, (i.e forcibly switched out/effect preventing targeting/killed beforehand), when the item is suppose to resolve, the item is not used, returns to it's origin and its star points are regained. If a reaction leads to a creature dying before an attack is resolved, then the attacker gets back the resource, whether it's an item/action/ability. NO TAKE BACKS A decision to attack or use an ability/item cannot be retracted if your opponent reacts to it in some way. DURING REACTIONS Items may be played from your hand reactively only if it's currently your turn. While a reaction is occuring, nothing can be purchased from any shops. Items may be reactively unequipped and re-equipped to another creature if it is your turn. CLARIFICATION A chain of reactions must resolve before a new one begins. You may react to time based [such as BOGT] effects with any AAT effects or facedown items. 12.6"
+   "sha": "08c971909af9a8d09c74eb98990efde9be69866f3d9caa296361688a83de6ad6",
+   "t": "REACTIONS 6 Other things to note about reactions: SPENDING Star points are used immediately upon an item being played rather than when they are being resolved. If a reaction prevents a creature from being targeted by an item, (i.e forcibly switched out/effect preventing targeting/killed beforehand), when the item is suppose to resolve, the item is not used, returns to it's origin and its star points are regained. If a reaction leads to a creature dying before an attack is resolved, then the attacker gets back the resource, whether it's an item/action/ability. NO TAKE BACKS A decision to attack or use an ability/item cannot be retracted if your opponent reacts to it in some way. DURING REACTIONS Items may be played from your hand reactively only if it's currently your turn. While a reaction is occuring, nothing can be purchased from any shops. Items may be reactively unequipped and re-equipped to another creature if it is your turn. 12.6"
+  },
+  {
+   "name": "Reactions 7",
+   "num": "12.7",
+   "sha": "159558ae98f557f9220590c8a9102b54c5038515b53834f979333c763cfe9c7b",
+   "t": "REACTIONS 7 CLARIFICATION A chain of reactions must resolve before a new one begins. You may react to time based [such as BOGT] effects with any AAT effects or facedown items. If something is targeted for negation (or destruction, in the case of field cards), its owner cannot reactively activate any AAT effects on that card. (See: “NEGATION”) 12.7"
   },
   {
    "name": "Items",
    "num": "13",
-   "sha": "7412f0a023024f21a75bf449a6dd21b8d5fb8684cec84f547d20ebb95616c337",
-   "t": "ITEMS FUNCTION Items are your main resource besides creatures. You start with only 10 of them, spend them well! Items are what your Star Points are for. In order to play an item, you must spend Star Points equal to the star level of an item. The stars are in the top right of an item. For example, A 3 star item costs 3 star points to play. At the start of every global turn, you are set to 7 Star Points. Once an item is played, the item is put into the discard pile after it resolves; unless it's a multi-use item, then it goes back facedown or to the hand. You have 3 “facedown” slots. Items in these slots can be played at any time! You may only swap items between your hand and the facedown slots on your turn. Plan carefully! You cannot use items on creatures in the hand. SELLING ITEMS During your turn you can sell items for points equal to their star level. You can also sell items that are facedown at any time. You cannot sell an item that has previously been used. (Equips Included) 13"
+   "sha": "75622b20ebc0b9f7aa254fce912203f67db01b4eda0221a25b288c4b645d2faa",
+   "t": "ITEMS FUNCTION Items are your main resource besides creatures. You start with only 10 of them, spend them well! Items are what your Star Points are for. In order to play an item, you must spend Star Points equal to the star level of an item. The stars are in the top right of an item. For example, A 3 star item costs 3 star points to play. At the start of every global turn, you are set to 7 Star Points. Once an item is played, the item is put into the discard pile after it resolves; unless it's a multi-use item, then it goes back facedown or to the hand. You have 3 “facedown” slots. Items in these slots can be played at any time! You may only swap items between your hand and the facedown slots on your turn. Plan carefully! You cannot use items on creatures in the hand or graveyard. You can still unequip items from creatures in the hand. SELLING ITEMS During your turn you can sell items for points equal to their star level. You can also sell items that are facedown at any time. You cannot sell an item that has previously been used. (Equips Included) 13"
   },
   {
    "name": "Items 2",
    "num": "13.2",
-   "sha": "c69c8d5f3814e257a191614071374b52c000f5661077db217150599299274807",
+   "sha": "1ad68268002ebc63097eef2462ab0360b1a8091fb75666763d40acc2204ddf25",
    "t": "ITEMS 2 MISC Some effects require you to draw a random item. In this case, draw from a copy of the full deck until an eligible item is found. After the eligible item is drawn, do not replace it in the copy deck, and set aside the copy deck for next time a random item is drawn from this effect. If the entire deck is drawn and no eligible items were found, make a new copy of the full deck, or if there cannot possibly be any eligible items, this effect does nothing. “I have come here to steal the flames of disaster from you! And to take the miracle gems that are the key to its' secret, The Chaos Emerald!” Refer to “ITEM TYPES” to understand how each type of item works. 13.2"
   },
   {
    "name": "Item Types",
    "num": "14",
-   "sha": "5830d616717a0fbcd7907e92e28a79efd2ed860e294e40bda2d2aeece4879439",
+   "sha": "9d8fbbfd68ae56690d118f2a77cb4b1ae64281f73b2768f952f9e17c6685dac5",
    "t": "ITEM TYPES Item types are the symbol are the top left of an item that dictate how the items work. These items types cannot be manipulated. The item types displayed here are items that by default are discarded after being played. HEALING Also referred to as “food” these items heal creatures. May not be used on . ATTACK These items do damage, and count as an attack when used. (See: “ATTACKING”) NEGATION These items “Negate” something, taking it out of play. (See: “ABILITIES”,“ITEMS”, “ATTACKING”) SUPPORT These items are general use items with various effects. if you find this text dont delete it COUNTER These items can only be activated under certain conditions. These can only be used reactively. These items tend to have multiple uses and are only discarded when all uses have been used. INFLICTION These items inflict a status effect and count as an infliction. 14"
   },
   {
    "name": "Item Types 2",
    "num": "14.2",
-   "sha": "18da9c9144219a985be0f58913dcc0cfda9cce00f4a39f6f530aef938f0291e9",
-   "t": "ITEM TYPES 2 These item types do not get discarded immediately after played. EQUIP These items you may equip onto your own creatures and grant a passive effect to the creature they are on which is lost when unequipped. May be unequipped and returned to your hand during your turn. If an equip has a negative effect, cannot be unequipped until the start of the global turn after it was equipped. If equipped creature dies, return equip to your hand. Equip items stay equipped onto creatures swapped into the hand, and may be unequipped from creatures in your hand on your turn. Equip items may be equipped to an enemy if they have no negative effects, but the enemy would then own the item. An equip can be “Forcibly” unequipped by an effect at any time regardless of if the item has negative effects or is on cooldown. (Unless specified that it cannot be unequipped). FRAGILE EQUIP These items are same as equips but cannot be unequipped by any means and are discarded when the creature they are on dies. ACTIVE These items stay on the field with a constant effect until they are destroyed. They have health and defense, although they are not creatures, cannot have items equipped to them, cannot have healing items used on them and cannot be inflicted with status effects. When HP reaches zero, they are discarded. 14.2"
+   "sha": "3086a8d2ed63393571c8711be02fae432e25dedb2d35c608e252f00af27bcf80",
+   "t": "ITEM TYPES 2 These item types do not get discarded immediately after played. EQUIP These items you may equip onto your own creatures and grant a passive effect to the creature they are on which is lost when unequipped. Creatures do not inherit the abilities of equip items, they are only affected by them. May be unequipped and returned to your hand during your turn. If an equip has a negative effect, cannot be unequipped until the start of the global turn after it was equipped. If equipped creature dies, return equip to your hand. Equip items stay equipped onto creatures swapped into the hand, and may be unequipped from creatures in your hand on your turn. Equip items may be equipped to an enemy if they have no negative effects, but the enemy would then own the item. An equip can be “Forcibly” unequipped by an effect at any time regardless of if the item has negative effects or is on cooldown. (Unless specified that it cannot be unequipped). FRAGILE EQUIP These items are same as equips but cannot be unequipped by any means and are discarded when the creature they are on dies. 14.2"
   },
   {
    "name": "Item Types 3",
    "num": "14.3",
-   "sha": "a28f87ad2060178c6b3be286ed7bfcfbbd5fecfd6094642a393ca5d5af1a7b68",
-   "t": "ITEM TYPES 3 DEPLOY These items stay on a chosen slot (doesn't count as being used on the creature in that slot) with a constant effect. They cannot be attacked, but wear off through other means. 14.3"
+   "sha": "27cfbba68037bfc519ae9b7e355def96a8332fe2d1511d1e6ef4637248d7c642",
+   "t": "ITEM TYPES 3 ACTIVE These items are placed in a slot and stay there on the field with a constant effect until they are destroyed, whether or not they affect that slot. They are considered on the primary field. They have health and defense, although they are not creatures, cannot have items equipped to them, cannot have healing items used on them and cannot be inflicted with status effects. When HP reaches zero, they are discarded. DEPLOY These items stay on a chosen slot (doesn't count as being used on the creature in that slot) with a constant effect. They cannot be attacked, but wear off through other means. 14.3"
   },
   {
    "name": "Minions",
    "num": "15",
-   "sha": "0bd1bdfb9c95a2df795f194cb169912c8ec3fe03d18ca05e24bfcdae2270b965",
-   "t": "MINIONS INTRODUCTION Minions are small creatures that when summoned are attached onto a parent prime creature. Minions are always attached to their parent creature, and stick with them even if the parent creature is moved or swapped into the hand. For most purposes, Minions are considered creatures, and have their own action, but they do not yield points on death. They do go to the graveyard on death. Every minion and parent creature in the primary field may use their actions (See: “THE FIELD”) in whatever order the player choses. Minions cannot mine for BRICKS. If Parent creature dies, all minions in the slot die (excluding persistent minions) TYPES :Offensive minions occupy the same field as the summoner. (See: “FIELDS”) :Protective Minions always occupy whatever field the parent creature and offensive minions are not in. When summoned, these push the parent creature (and the offensive minions attached to it) back to the secondary field, and are placed in the primary field. As a creature can only act in the primary field, This typically cannot act on the same turn as a parent creature, as they can never both occupy the primary field. (See: “THE FIELD”) If a protective minion is summoned after a parent creature has already used an action that turn, it does not gain an action for that turn. PERSISTENT If a minion is “persistent”, when its parent creature dies, it will be attached to the next prime creature that gets placed into the slot. If there is no creature to fill the slot, it occupies the slot alone, and must be killed for the game to be won by the opponent. 15"
+   "sha": "b6705a3893c5d47a4d1cffb0b2e2da2bb1a63028d837681d71c6b78f06303317",
+   "t": "MINIONS INTRODUCTION Minions are small creatures that when summoned are attached onto a parent prime creature. Minions are always attached to their parent creature, and stick with them even if the parent creature is moved or swapped into the hand. For most purposes, Minions are considered creatures, and have their own action, but they do not yield points when defeated. They do go to the graveyard when defeated. Every minion and parent creature in the primary field may use their actions (See: “THE FIELD”) in whatever order the player choses. Minions cannot mine for BRICKS. If Parent creature is defeated, all minions in the slot die (excluding persistent minions) 5 star minions cannot be targeted by minion effects. If something just says “summon”, it means onto the creature that the ability is from. TYPES :Offensive minions occupy the same field as the summoner. (See: “FIELDS”) :Protective Minions always occupy whatever field the parent creature and offensive minions are not in. When summoned, these push the parent creature (and the offensive minions attached to it) back to the secondary field, and are placed in the primary field. As a creature can only act in the primary field, This typically cannot act on the same turn as a parent creature, as they can never both occupy the primary field. (See: “THE FIELD”) If a protective minion is summoned after a parent creature has already used an action that turn, it does not gain an action for that turn. 15"
+  },
+  {
+   "name": "Minions 2",
+   "num": "15.2",
+   "sha": "8f2b1b48da2da1e376a80d889770ad6c5a5fd80d9e851961503e61abe9d789e2",
+   "t": "MINIONS 2 PERSISTENT If a minion is “persistent”, when its parent creature is defeated, it will be attached to the next prime creature that gets placed into the slot. If there is no creature to fill the slot, it occupies the slot alone, and must be killed for the game to be won by the opponent. 15.2"
   },
   {
    "name": "The Field",
    "num": "16",
-   "sha": "59cc00a7d5943c8dafdc2edb6b5ee6c9fac2b4f49ed3719442a19572e57c02e8",
-   "t": "THE FIELD THE FIELD The place that creatures are placed on is called the field, which is organized into 6 slots, 3 for each team. Every slot must be filled if possible. You must immediately summon a creature into an empty slot if possible. Each slot containing creature(s) takes one turn during each global turn. Each slot is split into two fields, the PRIMARY FIELD and the SECONDARY FIELD If an entire slot/lane of creatures is dead, then skip over that slot/lane, but count time as if that slot/lane had gone. PRIMARY FIELD By default, creatures are placed onto the primary field. This is the only field that can be targeted by default, and the only field creatures can act in. Usually, this is the only field to exist in a slot. If something targets “everything in the Primary Field”, it is referring to all 3 slots. 16"
+   "sha": "1d68a1ddf9ecf644f8c19ea574076f5598ae8fb076a05dae1537f8c765e54cde",
+   "t": "THE FIELD THE FIELD The place that creatures are placed on is called the field, which is organized into 6 slots, 3 for each team. Prime creatures are the creatures that fill the slots: every creature that isn't a minion. A card with several forms or made of multiple creatures (like Mantis Lords) is one prime creature. Prime creatures yield points when defeated. (See: “DEATH”) Every slot must be filled if possible. You must immediately summon a creature into an empty slot if possible. Each slot containing creature(s) takes one turn during each global turn. Each slot is split into two fields, the PRIMARY FIELD and the SECONDARY FIELD If an entire slot of creatures is dead, then skip over that slot, but count time as if that slot had gone. PRIMARY FIELD By default, creatures are placed onto the primary field. This is the only field opponents can target by default, and the only field creatures can act in. Usually, this is the only field to exist in a slot. If something targets “everything in the Primary Field”, it is referring to all 3 slots. Active items are on the primary field, so something that hits everything on the PF hits them too. Something that hits all enemy creatures on the PF does not. (See: “ITEM TYPES”) 16"
   },
   {
    "name": "The Field 2",
    "num": "16.2",
-   "sha": "fb7dc3fd2bd88d72919afe7f98c03c27ef65f794250a61bb1402731beb660c2f",
-   "t": "THE FIELD 2 SECONDARY FIELD Behind the primary field is the secondary field. This is created by something pushing a creature back into it, either a protective minion or a protective active item designated by this symbol: By default this field cannot be targeted. Once you kill everything in the primary field, anything in this field is brought back to the primary field. A creature in this field, cannot use actions, but can use abilities. A parent creature can swap fields with its protective minions once during its turn, but only if no actions have been used in the slot yet. The Parent creature, in the secondary field. May not use actions, may use abilities, cannot be targeted. 2./3. Protective minions; can use actions, can be targeted, can use abilities. He pissed on my fucking wife 16.2"
+   "sha": "f32698d4a2b67bec7ec03d1aee62433b9ae77d79d0ca2a497d60f741ce4a434f",
+   "t": "THE FIELD 2 SECONDARY FIELD Behind the primary field is the secondary field. This is created by something pushing a creature back into it, either a protective minion or a protective active item designated by this symbol: By default this field cannot be targeted by opponents. Once there are no protective minions or protective active items left in the primary field, anything in this field is brought back to the primary field. A creature in this field, cannot use actions, but can use abilities. A parent creature can swap fields with its protective minions once during its turn, but only if no actions have been used in the slot yet. The Parent creature, in the secondary field. May not use actions, may use abilities, cannot be targeted by opponents. 2./3. Protective minions; can use actions, can be targeted, can use abilities. He pissed on my fucking wife 16.2"
   },
   {
    "name": "The Field 3",
    "num": "16.3",
-   "sha": "5a4253b3dda79623d198001bf19b026fd03f451ba91b930d29f426dca862b715",
+   "sha": "4f7984d5fae8a6892d1a40b48b452466e627d3948d22950c47315fd67b65633c",
    "t": "THE FIELD 3 DIFFERENT TYPES OF MINIONS AT ONCE Offensive minions are always in the same slot as the parent creature. All protectors in a field together, which is the field that the parent creature is not in regardless of summoner. Minions that are summoned by other minions are automatically attached to the parent prime creature of the slot. Protective minions are placed in the same field as other protective minions, and offensive minions are placed in the same field as the parent creature, regardless of summon origin. 16.3"
   },
   {
    "name": "The Field 4",
    "num": "16.4",
-   "sha": "a7913683330a6835454197c29e5ec30b97a22dae50984d6c71683882eda0c565",
+   "sha": "fcdedbc96b4a6d0c88677af035971049e83868756b17012cd22ea6d6f9e008e6",
    "t": "THE FIELD 4 Primary Field Secondary Field Parent creature in the secondary field. [Cannot use actions] Offensive minion attached to the parent creature by an outside source in the secondary field. [Cannot use actions] Protective minion summoned by the parent creature in the PRIMARY FIELD. [Can use actions] Protective minion summoned by the protective minion on the left in the PRIMARY FIELD. [Can use actions] *If there was a protective active item here, it would be in the primary field alongside the protective minions. 16.4"
   },
   {
    "name": "Death",
    "num": "17",
-   "sha": "57927cc39a8bbd52ff515ff150829759d35313cf88f33f5bef09f5919132fda5",
-   "t": "DEATH ON DEATH When a friendly creature's HP reaches 0 it dies, and goes to the graveyard on your side of the field. When this happens, your team gains points equal to that creatures star level. When a creature dies, it's “On Death” effects proc. (Does not apply to creatures not on the field) 17"
+   "sha": "2285517e1bdab19ead8a2c627eef53388aa5fa2e1e3b18e56d404813c2691a7b",
+   "t": "DEATH ON DEATH When a friendly creature's HP reaches 0 it dies: its “On Death” effects proc (does not apply to creatures not on the field), it loses all status effects and all of its items are unequipped. If something revives it on the spot (such as a Life Shroom, or an OD ability that revives it or switches it to its next form), it is not defeated. DEFEAT A creature that dies and isn't revived on the spot is defeated, and goes to the graveyard on your side of the field. When a prime creature is defeated: your team gains points equal to that creature's star level, all non-persistent minions in that slot die, and the slot is empty so a new prime creature can be placed in it. Outside of “On Death” effects, anything that says a prime creature “dies” means it is defeated. 17"
   },
   {
    "name": "Death 2",
    "num": "17.2",
-   "sha": "19d9d89e97edc7b545dd48b2ee83b452303398096dc90a89a73e71fd6ed7e997",
-   "t": "DEATH 2 REVIVES Creatures that are revived from “On Death” effects only yield Points when they are fully killed. For creatures revived by other means, Points are kept from it dying, but killing the revived version awards 0 Points. When a creature dies and is revived, its HP and all of its stats, abilities, turn timers and counters are reset to their base, unless otherwise specified. SPECIFICS Creatures composed of multiple targets only award points when all targets are killed. A creature being “destroyed” instantly by any effect, causes it to take enough damage to kill it. (regardless of healing or any possible factors) If a creature that has used an action dies mid-turn, the creature that replaces it can't use actions, but may use an ability. “If you die outside your game, you DON'T regenerate!\" 17.2"
+   "sha": "9dfd30f08d0a84da34cd4c33d359c7a242b81b52a080ea9821e38f6700d9146a",
+   "t": "DEATH 2 REVIVES Creatures that are revived from “On Death” effects only yield Points when they are defeated. For creatures revived by other means, Points are kept from it being defeated, but defeating the revived version awards 0 Points. When a creature dies and is revived, its HP and all of its stats, abilities, charge and counters are reset to their base, unless otherwise specified. SPECIFICS Creatures composed of multiple targets only award points when all targets are defeated. A creature being “destroyed” instantly by any effect takes true damage equal to its current HP. If a creature that has used an action is defeated mid-turn, the creature that replaces it can't use actions, but may use an ability. “If you die outside your game, you DON'T regenerate!\" 17.2"
   },
   {
    "name": "Field Cards",
    "num": "18",
-   "sha": "9a638832e672d3ea37bccb5941a11ee721304412720e46ca845bb1da00f38434",
-   "t": "FIELD CARDS These are cards that when on the playing field have a constant effect. OBTAINING Field cards are cards that can be obtained from the Field shop, purchased with BRICKS. (See: “SHOPS”) Prime creatures may spend an action to MINE, to generate an amount of BRICKS equal to their star level. PLAYING When these are obtained, they may immediately be put into play on your teams field card slot, for no extra cost. You may take these out of play and put them in your hand. If you want to put a field card from your hand into play, it'll cost star points equal to the card's star level, just like a regular item. You may have only 1 of these out at a time. Field cards cannot be sold, and items cannot be used on them. 18"
+   "sha": "7c284d528f8d343bd67f7f62cfd72d6715721c93b8ca297d190d53ce626e53b4",
+   "t": "FIELD CARDS These are cards that when on the playing field have a constant effect. OBTAINING Field cards are cards that can be obtained from the Field shop, purchased with BRICKS. (See: “SHOPS”) Prime creatures may spend an action to MINE, to generate an amount of BRICKS equal to their star level. PLAYING When these are obtained, they may immediately be put into play on your teams field card slot, for no extra cost. You may take these out of play and put them in your hand. If you want to put a field card from your hand into play, it'll cost star points equal to the card's star level, just like a regular item. You may have only 1 of these out at a time. Field cards cannot be sold, and items cannot be used on them. Outside of using star points to play them from the hand, field cards do not behave like items in any way. Anything meant for items cannot be used for field cards (such as Stopwatch or facedown slots). 18"
   },
   {
    "name": "Field Cards 2",
@@ -412,44 +424,44 @@
   {
    "name": "Status Effects",
    "num": "19",
-   "sha": "f8763ee8f976a8a6e46ccdb433862493bcc60962526cd657225fcb2dcf2d73aa",
+   "sha": "08ea4cff4f1ae8793b39fb09cbf797b8713d77de5337482d3f2335d95136a3dd",
    "t": "STATUS EFFECTS STATUS EFFECTS A status effect, is either a buff or debuff that has an effect on a creature, represented by Mr. Krabs either suffering or thriving. If a status effect deals DMG or Heals, then by default it procs in phase 4, after ENDT effects. Otherwise, the status effect takes effect immediately. The duration of any status effect counts down in phase 4. This Panda was just inflicted with both 2 turns of Softened (-0.5 DEF), and 2 turns of Smouldering (2 DMG). Instantly, the DEF reduction takes effect. When Panda ends its next turn, it takes 2 damage from smouldering, and the duration for both of the debuffs goes from 2 to 1. 19"
   },
   {
    "name": "Status Effects 2",
    "num": "19.2",
-   "sha": "0cbb59a2803684a0d76ecc55963bd2d6a993bb4e6737f066c82a72e47ecd9163",
+   "sha": "46dd2dddaf637cff761fc163643e9a86516f7b4f320da2e8a259d86a1feb1933",
    "t": "STATUS EFFECTS 2 SPECIFICS DMG dealing status effects count as one instance of damage per unique stack. (5 stacks of Poison is one instance of 5 damage.) Per unique status effect in phase 4, the owner of the creature chooses the order in which to resolve these effects. (May choose if Regeneration heals before Smouldering does damage first) If a status effect deals DMG it is piercing, and doesn't count as an attack. If multiple debuffs have conflicting effects, the effect of the debuff with the highest star level takes precedence. If a creature started the global turn with a status effect and the global turn ends without the creature having ended its turn, then the effect ticks at the end of the global turn, even if the creature is in hand. 19.2"
   },
   {
    "name": "Status Effects 3",
    "num": "19.3",
-   "sha": "e9c4c8d36c9a8d11f9f69e333a3d0670991838786dfa3aeeba946af977fac7a3",
+   "sha": "a5452e527941df114ef99f36131c6a29b4ec0702660bcc8a05ff6587b0249185",
    "t": "STATUS EFFECTS 3 SYNTAX Statuses are formatted like \"[X]T[Y] [Status]\", where X is duration and Y is stacks. For example, \"5T1 Poison\" means 5 turns of 1 stack of Poison. TYPES Standard status effects can only have one instance of themselves applied to a single creature. Stacking status effects can have any number of themselves applied. This buff can be applied many times to gain as many stacks of it to gain alot of speed. 10 stacks = +10 SPD. This debuff cannot be applied more than once. DURATION When a status effect is stacked/upgraded/reapplied, set the duration to the longest lasting of the applications. 19.3"
   },
   {
    "name": "Status Effects 4",
    "num": "19.4",
-   "sha": "10568c21e3e667e122333cc66faa06d977d95e9b56189fd5387456aaabd1de7d",
+   "sha": "bf8c2e58a2d4a3cf4de238d728c6d382b1cb4eb1465ebc6e61772411ac18ffa1",
    "t": "STATUS EFFECTS 4 UPGRADABLE Certain status effects upgrade themselves when applied, Ex: Smouldering + Smouldering -> Burning Smouldering/Burning + Burning -> Blazing Chilled + Chilled -> Frostbite Chilled/Frostbite + Frostbite -> 1 turn of Frozen Sickness + Sickness -> Plague A creature already inflicted by Frozen/Blazing/Plague can't have the prior debuffs reapplied onto them, except to refresh the duration (need to upgrade to refresh duration). → → → → → 19.4"
   },
   {
    "name": "Creature Types",
    "num": "20",
-   "sha": "bb1671e6000076919d315d262e5b2ce7e87918c5f9a6aa5bf703a1224646896b",
+   "sha": "9bfb58507d11c33e64d5a1de8bd188d66b12ec94f0382b928189038e596b4006",
    "t": "CREATURE TYPES Every type has a unique function, typically an immunity to a debuff. MACHINE Cannot have food items be used on them Immune to Sickness, Plague, Poison WIND Can swap out/in for 1 less point ROCK +1 Brick when mining for Bricks PANDA Immune to Stuffed, Engorged FIRE Immune to Smoldering, Burning, Blazing ICE Immune to Chilled, Frostbite, Frozen WATER Immune to Suffocation ELECTRIC Immune to Paralyzed 20"
   },
   {
    "name": "Creature Types 2",
    "num": "20.2",
-   "sha": "9286456724a59ce3131107348b1e6abe3fe333c21440f62438172f2f806c4d17",
+   "sha": "f09eef6c705f11fef4f2892d2f81067ace6f733778aa5fb43da89ed342cb8d95",
    "t": "CREATURE TYPES 2 UNDEAD Immune to Sickness, Plague DARK Immune to Afraid LIGHT Immune to Blindness DARK MATTER Immune to Corruption UNKNOWN Once per game on your turn may permanently change this type into other creature type. GIRL Gain 1 additional point OD This may only be an innate type in special cases, but may still be added to creatures through effects. 20.2"
   },
   {
    "name": "Damage Types",
    "num": "21",
-   "sha": "28abb0d1526e12025dc6b8b501bd129b2d3adcd7cb529346ac3c3c93e8e4baa5",
-   "t": "DAMAGE TYPES Multiple damage types can be applied to an instance of damage, combining their effects. NORMAL Reduced by the defense of the target. DMG - DEF PIERCING Ignores DEF. COUNTER Can only be dealt as retaliation to an attack. Does not count as an attack, and can bypass abilities and protective minions as a result. LIFE STEAL DMG dealt after DEF is healed before the attack resolves, with a percent scalar where 100% is 1:1, 50% is 1:2, 200% is 2:1, etc. SHOCKWAVE Deals damage to all enemy targets on the primary field aside from the original target, and also the secondary field slot behind the main target (This does not count as an attack). 21"
+   "sha": "c0c2e0342512315633540a493e93ebe42c4f4a1ef8bf1e215d1510df910b1016",
+   "t": "DAMAGE TYPES Multiple damage types can be applied to an instance of damage, combining their effects. NORMAL Reduced by the defense of the target. DMG - DEF PIERCING Ignores DEF. COUNTER Can only be dealt as retaliation to an attack, or by something that deals damage when it dies. Does not count as an attack, and can bypass abilities and protective minions as a result. Damage from abilities and item effects cannot trigger counter damage as retaliation. LIFE STEAL DMG dealt after DEF is healed before the attack resolves, with a percent scalar where 100% is 1:1, 50% is 1:2, 200% is 2:1, etc. SHOCKWAVE Deals damage to all enemy targets on the primary field aside from the original target, and also the secondary field slot behind the main target (This does not count as an attack). 21"
   },
   {
    "name": "Damage Types 2",
@@ -460,32 +472,32 @@
   {
    "name": "Negation",
    "num": "22",
-   "sha": "13b8e07a399c9198f829e9e4acd850f74771e1db00cd376be6092207988ab0a7",
-   "t": "NEGATION ATTACKS If an attack is negated it does not happen. No damage is dealt, no on-hit effects occur, the creature does not get its action back, you do not pass go. CREATURES When a creature is negated it is unable to use any of its own abilities (unless otherwise stated), but may still use the abilities of any equipped items or minions, and can still use actions. Cooldown abilities such as 2CD still count down even while they are negated. Minions/Items/Stats/Counters summoned/gained by an ability remain even if the ability that summoned them is negated or if the creature that summoned them dies. If 2 creatures/sources attempt to negate each other simultaneously, they are both negated. Immunity: 5+ star creatures are immune to negation. True Negation: Negation that can negate negation-immune creatures. True Negation Immunity: Complete immunity to any possible sources of negation, including true negation. OFS abilities have true negation immunity. If an item/ability does something upon being negated, the “upon being negated” effect itself has true negation immunity. 22"
+   "sha": "5798c1baa27f75d704011073f9c0745b487ed84b5a6b02b27bd295dd3e8951af",
+   "t": "NEGATION ATTACKS If an attack is negated it does not happen. No damage is dealt, no on-hit effects occur, the creature does not get its action back, you do not pass go. CREATURES When a creature is negated it is unable to use any of its own abilities (unless otherwise stated), but may still use the abilities of any equipped items or minions, and can still use actions. Cooldown abilities such as 2CD still gain charge even while they are negated. Minions/Items/Stats/Counters summoned/gained by an ability remain even if the ability that summoned them is negated or if the creature that summoned them dies. If 2 creatures/sources attempt to negate each other simultaneously, they are both negated. Immunity: 5+ star creatures are immune to negation. True Negation: Negation that can negate negation-immune creatures. True Negation Immunity: Complete immunity to any possible sources of negation, including true negation. OFS abilities have true negation immunity. If an item/ability does something upon being negated, the “upon being negated” effect itself has true negation immunity. 22"
   },
   {
    "name": "Negation 2",
    "num": "22.2",
-   "sha": "d8a9eff243779b56fcac07fa74cd712dd68d7b2bbc4f36ce0ee50026e3c96e98",
-   "t": "NEGATION 2 ITEMS If an item is negated, it means it cannot be played or is taken out of play, and it returns to where it was before being played (such as the hand or facedown slot). If an item is negated or destroyed during use, the star points expended to use it are not regained. Items that are currently negated cannot be sold, or used for any other purpose until the negation ends. Equip, Active, and Deploy items can be negated after their activation while they are still in effect; this sends them back to the hand, requiring star points to be used again to reactivate them. FIELD CARDS At the beginning of the global turn, or on your turn, you may spend 1x the star level of a field card in BRICKS to negate it until the end of the global turn (field card stays on the field and can be swapped out, but loses its effect temporarily). Field cards cannot be negated on the same turn that they are played. Field cards cannot be negated 2 turns in a row. At the beginning of the global turn, or on your turn, you may spend 3x the star level of a field card in BRICKS to destroy it. 22.2"
+   "sha": "be06ce0032ba8dadb33bfb2f7ffff660d228de937ee0cbc861cb895338ad3026",
+   "t": "NEGATION 2 ITEMS If an item is negated, it means it cannot be played or is taken out of play, and it returns to where it was before being played (such as the hand or facedown slot). If an item is negated or destroyed during use, the star points expended to use it are not regained. Items that are currently negated cannot be sold, or used for any other purpose until the negation ends. Equip, Active, and Deploy items can be negated after their activation while they are still in effect; this sends them back to the hand, requiring star points to be used again to reactivate them. FIELD CARDS At the beginning of the global turn, or on your turn, you may spend 1x the star level of a field card in BRICKS to negate it until the end of the global turn (field card stays on the field and can be swapped out, but loses its effect temporarily). Field cards cannot be negated on the same turn that they are played. Field cards cannot be negated 2 turns in a row. At the beginning of the global turn, or on your turn, you may spend 3x the star level of a field card in BRICKS to destroy it. REACTING TO NEGATION If something is targeted for negation (or destruction, in the case of field cards), its owner cannot reactively activate any AAT effects on that card. 22.2"
   },
   {
    "name": "Timing Tags",
    "num": "23",
-   "sha": "e44d9c3ff13174dba1f20080feab0df4b7729c64103c79cd1bffdf7c99e3c4a5",
-   "t": "TIMING TAGS The cards' timing tags. X can be any number; the first number of a pair such as 1/2CD can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). ON YOUR TURN Tag Meaning OYT On your turn XCD Cooldown: X turn(s) 1/2CD Cooldown: 1 turn, then 2 AT ANY TIME Tag Meaning AAT At any time XGCD Global cooldown: X global turn(s) 1/2GCD Global cooldown: 1 global turn, then 2 23"
+   "sha": "c22afa137bde1b21477cd3a1ac7156d059dac3aadf6e9a808c86f7b7b501774f",
+   "t": "TIMING TAGS The cards' timing tags. X can be any number. In a pair such as 1/2CD, the first number is the charge the ability starts with: it can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). ON YOUR TURN Tag Meaning OYT On your turn XCD Cooldown: needs X turn(s) of charge 1/2CD Cooldown: starts with 1 of 2 turns of charge −1/1CD Cooldown: starts with -1 of 1 turn of charge AT ANY TIME Tag Meaning AAT At any time XGCD Global cooldown: needs X turn(s) of charge 1/2GCD Global cooldown: starts with 1 of 2 turns of charge −1/1GCD Global cooldown: starts with -1 of 1 turn of charge 23"
   },
   {
    "name": "Timing Tags 2",
    "num": "23.2",
-   "sha": "7a2761d8a90bd821196917a3f9d32bebb287bc5d4b7ef50dd61623d9ce8da1d7",
-   "t": "TIMING TAGS 2 FORCED Tag Meaning BOT Beginning of turn (forced) ENDT End of turn (forced) BOGT Beginning of global turn (forced) ENDGT End of global turn (forced) PER GAME & TRIGGERS Tag Meaning OFS On first summon OS On summon OD On death WOF While on field XPG Can only be activated X time(s) per game XU X use(s) OTHER TAGS Tag Meaning Action Costs the creature's action 23.2"
+   "sha": "2eec7d0e6e3fb358a2ed98dfe1954c7ef63ec28ef5735d0aadb772352044be1a",
+   "t": "TIMING TAGS 2 FORCED Tag Meaning BOT Beginning of turn (forced) ENDT End of turn (forced) BOGT Beginning of global turn (forced) ENDGT End of global turn (forced) PER GAME & TRIGGERS Tag Meaning OFS On first summon OS On summon OD On death WOF While on field XPG Can only be activated X time(s) per game XU X use(s) per full charge OTHER TAGS Tag Meaning Action Costs the creature's action 23.2"
   },
   {
    "name": "Timing Tags 3",
    "num": "23.3",
-   "sha": "b1039fb1f70aa586c69a5fbbc8a561c7cf2bb342fed7438d83dce8edae95c590",
-   "t": "TIMING TAGS 3 OLD SYSTEM Older cards and the rulebook's examples still use these. (See: “ABBREVIATIONS”) Tag Meaning XPT Usable X time(s) per turn (on your turn) EXT Every X turns, starting on turn X (multi-turn) FTEXT Every X turns, starting on your 1st turn (multi-turn) XPGT Usable X time(s) per global turn (at any time) EXGT Every X global turns (at any time, multi-turn) 23.3"
+   "sha": "a1ff330ac52f8b360fbb0b31efdeafc08b1176c5ce0c18abc5f89c6fc0fb3c8a",
+   "t": "TIMING TAGS 3 OLD SYSTEM These were replaced by cooldowns. Tag Meaning 1PT Now 1CD E2T Now 2CD EXT Now XCD 2PT Now 1CD2U XPT Now 1CDXU 1PGT Now 1GCD E2GT Now 2GCD EXGT Now XGCD 2PGT Now 1GCD2U XPGT Now 1GCDXU FTE2T Now 1/2CD FGTE2GT Now 1/2GCD 1PT except first turn Now −1/1CD 23.3"
   }
  ]
 }
