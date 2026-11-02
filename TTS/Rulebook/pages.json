@@ -22,14 +22,14 @@
   {
    "name": "Abbreviations",
    "num": "2",
-   "sha": "8051d7af2a8a2cfb67b1c2f96acb4f407aac074ed4676777834fdc580a2d95fb",
-   "t": "ABBREVIATIONS “X” is a variable that can represent any number! GENERAL SP = Star Points. DMG = Damage. HP = Health stat. ATK = Attack stat. DEF = Defense stat. SPD = Speed stat. TIME FRAME OYT = On your turn. AAT = At any time. GENERAL PF = Primary field. CDMG = Counter damage. 🕐ON YOUR TURN These imply OYT. XCD = Cooldown: needs X turn(s) of charge. (Y/XCD) = Starts with Y turn(s) of charge. 🕐AT ANY TIME These imply AAT. XGCD = Global cooldown: needs X turn(s) of charge. (Y/XGCD) = Starts with Y turn(s) of charge. 🕐FORCED All of these must happen automatically. BOT = Beginning of turn. ENDT = End of turn. BOGT = Beginning of global turn. ENDGT = End of global turn. 2"
+   "sha": "b6c3ace10dec9b7cc352395432ac17712f1e0fa07ebbfb33c9bb7a027d2e0ab7",
+   "t": "ABBREVIATIONS “X” and “Y” are variables that can represent any number! GENERAL SP = Star Points. DMG = Damage. HP = Health stat. ATK = Attack stat. DEF = Defense stat. SPD = Speed stat. PF = Primary field. CDMG = Counter damage. TIME FRAME OYT = On your turn. AAT = At any time. 🕐ON YOUR TURN These imply OYT. XCD = Cooldown: needs X turn(s) of charge. Y/XCD = Starts with Y turn(s) of charge. 🕐AT ANY TIME These imply AAT. XGCD = Global cooldown: needs X turn(s) of charge. Y/XGCD = Starts with Y turn(s) of charge. USES XU = X use(s) per full charge. PER GAME XPG = Ability can only be activated X time(s) per game. 2"
   },
   {
    "name": "Abbreviations 2",
    "num": "2.2",
-   "sha": "1b5c8413d4f5627c5db3761a7acf9d6fc431daf85b52b10b41871b66bda43480",
-   "t": "ABBREVIATIONS 2 FORCED OFS = On first summon. OS = On summon. OD = On death. WOF = While on field. PER GAME XPG = Ability can only be activated X time(s) per game. USES XU = X use(s) per full charge. ⏳ XCD, (Y/XCD), XGCD and (Y/XGCD) abilities with X of 2 or more are considered \"multi turn\" abilities. Abilites marked with 🕐 are considered \"time based\". Time based abilities with a cooldown become usable again once they are fully charged. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game, uses and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). 2.2"
+   "sha": "d433e43f14604285d9da277bc5c14ba41a007cbff72e25a24d952117c5e076c4",
+   "t": "ABBREVIATIONS 2 🕐FORCED All of these must happen automatically. BOT = Beginning of turn. ENDT = End of turn. BOGT = Beginning of global turn. ENDGT = End of global turn. FORCED OFS = On first summon. OS = On summon. OD = On death. WOF = While on field. ⏳ XCD, Y/XCD, XGCD and Y/XGCD abilities with X of 2 or more are considered \"multi turn\" abilities. Abilites marked with 🕐 are considered \"time based\". Time based abilities with a cooldown become usable again once they are fully charged. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game, uses and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). 2.2"
   },
   {
    "name": "Setting Up",
@@ -256,8 +256,8 @@
   {
    "name": "Abilities 5",
    "num": "11.5",
-   "sha": "342cc3df74c084f2e0cdde0b835e9fafb3a52d2fd5139198388651e95b91d189",
-   "t": "ABILITIES 5 MULTI-TURN 12CD Summon a Mega Bee. 21/2CD Summon Brombus. 32GCD Deal 3 piercing damage. 2CD The ability needs 2 turns of charge, so the creature can summon a Mega Bee on its second turn, and every 2 turns after that. (Turns 4, 6, etc.) (These can only be used OYT “on your turn”.) (Y/XCD) Appears when an ability starts with an unusual amount of charge. Y is the charge it starts with. Brombus starts with 1 of 2 turns of charge, so it may be summoned on the first turn, then every 2 turns after. (Turns 3, 5, etc.) This ability happens on turns where the above doesn't. 2GCD This works the same, but the ability is “at any time” AAT, gaining charge during the global turn. If you forget to use your time based ability, it's saved so you can use it on the next turn, but its cooldown doesn't reset until it's used! Abilties do not count time passing while in the hand. 11.5"
+   "sha": "4457fbf55bb560513eafa754d3f0a86f75a3e7a45a387f35e6bc302187a9a9b4",
+   "t": "ABILITIES 5 MULTI-TURN 12CD Summon a Mega Bee. 21/2CD Summon Brombus. 32GCD Deal 3 piercing damage. 2CD The ability needs 2 turns of charge, so the creature can summon a Mega Bee on its second turn, and every 2 turns after that. (Turns 4, 6, etc.) (These can only be used OYT “on your turn”.) Y/XCD Appears when an ability starts with an unusual amount of charge. Y is the charge it starts with. Brombus starts with 1 of 2 turns of charge, so it may be summoned on the first turn, then every 2 turns after. (Turns 3, 5, etc.) This ability happens on turns where the above doesn't. 2GCD This works the same, but the ability is “at any time” AAT, gaining charge during the global turn. If you forget to use your time based ability, it's saved so you can use it on the next turn, but its cooldown doesn't reset until it's used! Abilties do not count time passing while in the hand. 11.5"
   },
   {
    "name": "Abilities 6",
@@ -490,8 +490,8 @@
   {
    "name": "Timing Tags",
    "num": "23",
-   "sha": "4de58a3ac90acda920739b95aa1f508e28b5394624ff52352230996241c5b2c3",
-   "t": "TIMING TAGS The cards' timing tags. X can be any number. In a pair such as 1/2CD, the first number is the charge the ability starts with: it can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game, uses and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). ON YOUR TURN Tag Meaning OYT On your turn XCD Cooldown: needs X turn(s) of charge 1/2CD Cooldown: starts with 1 of 2 turns of charge −1/1CD Cooldown: starts with -1 of 1 turn of charge AT ANY TIME Tag Meaning AAT At any time XGCD Global cooldown: needs X turn(s) of charge 1/2GCD Global cooldown: starts with 1 of 2 turns of charge −1/1GCD Global cooldown: starts with -1 of 1 turn of charge 23"
+   "sha": "e87aea47cd629435947b5c9f71b56ecaa9911fed81799aa72a71df233526fcab",
+   "t": "TIMING TAGS The cards' timing tags. X can be any number. In a pair such as 1/2CD, the first number is the charge the ability starts with: it can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game, uses and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). ON YOUR TURN Tag Meaning OYT On your turn XCD Cooldown: needs X turn(s) of charge Y/XCD Cooldown: starts with Y of X turns of charge 1/2CD Cooldown: starts with 1 of 2 turns of charge −1/1CD Cooldown: starts with -1 of 1 turn of charge AT ANY TIME Tag Meaning AAT At any time XGCD Global cooldown: needs X turn(s) of charge Y/XGCD Global cooldown: starts with Y of X turns of charge 1/2GCD Global cooldown: starts with 1 of 2 turns of charge −1/1GCD Global cooldown: starts with -1 of 1 turn of charge 23"
   },
   {
    "name": "Timing Tags 2",
