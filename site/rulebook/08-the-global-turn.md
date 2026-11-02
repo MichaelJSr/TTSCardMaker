@@ -6,16 +6,17 @@ At the end of each GLOBAL TURN, each team gains 1 BRICK.
 :::
 
 ## TURN ORDER
-Turns are taken *lane by lane*. This means that both creatures in a lane must have taken their turn before the next lane can go.
+Turns are taken in *pair turns*: a slot from one team, then a slot from the opposing team.
+- The fastest creature goes first, then the opposing team's fastest creature.
+- Then the next fastest creature, then the opposing team's next fastest creature.
+- Then the fastest remaining creature, then the opposing team's fastest remaining creature.
 
-Turn order of lanes is determined by first adding up the TOTAL SPEED of the fastest creature of each side in each lane. The lane with the most total speed goes first. (Only takes into account the PRIMARY FIELD)
+Only the PRIMARY FIELD counts. A slot's speed is its fastest creature's.
 
-If the total speed is tied, then the lane with the least HEALTH LOST (MAX HEALTH - CURRENT HEALTH) goes first.
-If the TOTAL HEALTH LOST is tied, then the creature with the highest STAR LEVEL goes first.
+If the speed is tied, then the slot with the least HEALTH LOST (MAX HEALTH - CURRENT HEALTH) goes first.
+If the HEALTH LOST is tied, then the creature with the highest STAR LEVEL goes first.
 
 If the HIGHEST STAR LEVEL is tied, then flip a dice, or roll a coin.
-
-The slot within each lane that goes first is determined the same way - first by looking for the most speed, then for the least amount of health lost, and then by highest star level, then by RNG.
 
 ---
 
@@ -64,23 +65,23 @@ SPD: 3
 [star:tint]: 3
 :::
 ::: small
-In the example to the left, both Lane 1 and Lane 2 have a total of 10 Speed, while Lane 3 has a total of 6 Speed. Lane 1 is missing 3 HP, while Lane 2 is missing 0 HP. Therefore, Lane 2 goes first, then Lane 1, then Lane 3.
+In the example to the left, A, C and E are one team, while B, D and F are the other.
 
-LANE 2: Creature C has more speed than Creature D, so the Global Turn begins with C's turn, then D takes its turn.
+Creature C has the most speed, so the Global Turn begins with C's turn, then the opposing team's fastest, B.
 
-LANE 1: Both creatures have equal speed, but B has less health missing. Therefore, B goes before A.
+Next, A is the fastest creature remaining, then the opposing team's fastest remaining, D.
 
-LANE 3: Both creatures have the same speed and no health missing, so the creature with the highest star level goes first (Creature E).
+Last, E and F have the same speed and no health missing, so the creature with the highest star level goes first (Creature E), then F.
 :::
 :::
 
 ::: center
-[*C > D > B > A > E > F*]{.big}
+[*C > B > A > D > E > F*]{.big}
 :::
 
 ## TURN MANIPULATION
-Turn order may be manipulated through speed changes by (AAT) abilities and facedown items when deciding which *lane* goes next.
-When a slots turn is about to start, the creature may swap out for 2 points. This may change turn order within the lane.
+Turn order may be manipulated through speed changes by (AAT) abilities and facedown items when deciding which *slot* goes next.
+When a slots turn is about to start, the creature may swap out for 2 points. This cannot change turn order.
 If a change of turn order occurs while a creature is in the middle of its turn, that creature gets to finish its turn regardless.
 
 ## NO STALLING

@@ -31,6 +31,7 @@ These item types do not get discarded immediately after played.
 
 ## [equip] EQUIP
 - These items you may equip onto your own creatures and grant a passive effect to the creature they are on which is lost when unequipped.
+- Creatures do not inherit the abilities of equip items, they are only affected by them.
 - May be unequipped and returned to your hand during your turn.
 - If an equip has a negative effect, cannot be unequipped until the start of the global turn after it was equipped.
 - If equipped creature dies, return equip to your hand.
@@ -43,7 +44,7 @@ Equip items stay equipped onto creatures swapped into the hand, and may be unequ
 These items are same as equips but cannot be unequipped by any means and are discarded when the creature they are on dies.
 
 ## [active] ACTIVE
-These items stay on the field with a constant effect until they are destroyed. They have health and defense, although they are not creatures, cannot have items equipped to them, cannot have healing items used on them and cannot be inflicted with status effects. When HP reaches zero, they are discarded.
+These items are placed in a slot and stay there on the field with a constant effect until they are destroyed, whether or not they affect that slot. They are considered on the primary field. They have health and defense, although they are not creatures, cannot have items equipped to them, cannot have healing items used on them and cannot be inflicted with status effects. When HP reaches zero, they are discarded.
 
 ## [deploy] DEPLOY
 These items stay on a chosen slot (doesn't count as being used on the creature in that slot) with a constant effect. They cannot be attacked, but wear off through other means.

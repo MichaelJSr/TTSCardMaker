@@ -11,7 +11,7 @@ Items are your main resource besides creatures. You start with only 10 of them, 
 - You have 3 “facedown” slots. Items in these slots can be played at any time!
 - You may only swap items between your hand and the facedown slots on your turn. Plan carefully!
 ![A fox pointing with its sword](fox-pointing.webp) {.right width=16.5}
-- You cannot use items on creatures in the hand.
+- You cannot use items on creatures in the hand or graveyard. You can still unequip items from creatures in the hand.
 
 ## SELLING ITEMS
 ![Mr. Krabs](mr-krabs.webp){.left width=14}

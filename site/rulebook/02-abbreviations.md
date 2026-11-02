@@ -19,15 +19,14 @@ CDMG = Counter damage.
 ## 🕐ON YOUR TURN
 > [!kirby right] These imply (OYT).
 
-(XPT) = ***X*** time(s) per turn.
-(EXT) = Every ***X*** turns (starting on the ***X***th turn).⏳
-(FTEXT) = Every ***X*** turns (starting on the 1st turn).⏳
+(XCD) = Cooldown: needs ***X*** turn(s) of charge.
+(Y/XCD) = Starts with ***Y*** turn(s) of charge.
 
 ## 🕐AT ANY TIME
 > [!kirby right] These imply (AAT).
 
-(XPGT) = ***X*** time(s) per global turn.
-(EXGT) = Every **X** global turns.⏳
+(XGCD) = Global cooldown: needs ***X*** turn(s) of charge.
+(Y/XGCD) = Starts with ***Y*** turn(s) of charge.
 
 ## 🕐FORCED
 > [!kirby right] All of these must happen automatically.
@@ -47,13 +46,14 @@ CDMG = Counter damage.
 ::: stack
 ## PER GAME
 (XPG) = Ability can only be activated ***X*** time(s) per game.
+(XU) = ***X*** use(s) per full charge.
 
 ---
 
 ::: small {.center}
-Abilities marked with ⏳ are considered "multi turn" abilities.
+⏳ (XCD), (Y/XCD), (XGCD) and (Y/XGCD) abilities with ***X*** of 2 or more are considered "multi turn" abilities.
 Abilites marked with 🕐 are considered "time based".
-Time based abilities are considered "refreshed" and become usable again in the specified timeframe.
+Time based abilities with a cooldown become usable again once they are fully charged.
 :::
 :::
 :::

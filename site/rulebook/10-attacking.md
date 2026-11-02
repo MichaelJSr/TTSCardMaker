@@ -4,7 +4,8 @@
 - Attacks occur when creatures use an action to perform an attack, when an attack item is used, or an ability deals damage (DMG) separate from the ATK stat of a creature.
 - Attacks deal ATK - DEF in damage.
 - Attacks can only hit the PRIMARY FIELD by defualt. (See: [FIELDS](#/rules/the-field))
-- Attacks from abilities cannot trigger counter damage or counter items.
+- Damage from abilities and item effects cannot trigger counter damage as retaliation. Attacks from abilities cannot trigger counter items.
+- Creatures with 0 ATK cannot declare an attack (of any type).
 
 ## COMBO DAMAGE
 If an attacking creature has TWICE THE SPEED VALUE of the creature being attacked, then the final damage is multiplied by 1.5. If an attacking creature has TRIPLE THE SPEED VALUE, then the final damage is doubled.
@@ -57,15 +58,16 @@ Creature D takes
 :::
 
 ## SNEAK ATTACKS
-Creatures have the option to perform a "sneak attack" in place of a normal attack, which is an attack that deals piercing damage equal to 25% of their attack stat +1, and has the same on-hit effects as a normal attack. This is so creatures with high defense don't become unkillable in certain circumstances.
+Creatures have the option to perform a "sneak attack" in place of a normal attack, which is an attack that deals piercing damage equal to 25% of their attack stat +1, and has the same on-hit effects as a normal attack. This is so creatures with high defense don't become unkillable in certain circumstances. Minion sneak attacks are only 25% of their attack stat, without the +1.
 
 ![Ninja Kirby](kirby-ninja.webp){.end width=10}
 
 === page ===
 
 ## MULTI-HIT ATTACKS
-- Multi-hit attacks count as seperate attacks for each hit, and each instance may be reacted to seperately.
-- When a creature uses an ability or item to attack multiple enemy creatures at once, the attacks happen left-to-right from the attacker's perspective and counter damage or on death effects both happen after all instances of the attack are resolved.
+- Multi-hit attacks do not count as separate attacks. Each instance of damage cannot be reacted to on its own, only the entire attack can. ([[Impassable Obstruction]] would negate the entire thing.)
+- To make 3 separate attacks, a creature must attack 3 separate times.
+- When a creature uses an ability or item to attack multiple enemy creatures at once, the attacks happen left-to-right from the attacker's perspective and on death effects happen after all instances of the attack are resolved.
 
 ## REDIRECTIONS
 - Redirections & Interceptions, are instances where an attack's target may be forecfully changed.

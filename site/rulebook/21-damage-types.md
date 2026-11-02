@@ -10,7 +10,8 @@ DMG - DEF
 Ignores DEF.
 
 ## COUNTER
-Can only be dealt as retaliation to an attack. Does not count as an attack, and can bypass abilities and protective minions as a result.
+Can only be dealt as retaliation to an attack, or by something that deals damage when it dies. Does not count as an attack, and can bypass abilities and protective minions as a result.
+Damage from abilities and item effects cannot trigger counter damage as retaliation.
 
 ## LIFE STEAL
 DMG dealt after DEF is healed before the attack resolves, with a percent scalar where 100% is 1:1, 50% is 1:2, 200% is 2:1, etc.

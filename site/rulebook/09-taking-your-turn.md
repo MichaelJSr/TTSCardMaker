@@ -2,6 +2,7 @@
 
 It's time to put your creatures to use!
 Every creature gets one ACTION when their turn starts. The action can be used to ATTACK, MINE, or to put the creature into DEFENSE MODE.
+Actions can only be used (OYT).
 
 ## ATTACK
 ![A fox dashing with its sword](fox-dash.webp){.right width=15}

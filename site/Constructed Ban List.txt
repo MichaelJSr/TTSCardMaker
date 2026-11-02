@@ -1,7 +1,7 @@
 Constructed format is where you can choose whatever cards you want out of the entire deck for your hand.
 Here is a ban list for what cards you cannot choose for this to avoid unfun playstyles and overly broken combos.
 You may also only have one of each item in your hand.
-Each player can also choose one 3 star or lower field item to be active in the shop at the start of the game (besides banned ones, obviously)
+Each player can also choose one 3 star or lower field card to be active in the shop at the start of the game (besides banned ones, obviously)
 
 5 star creatures:
 The Radiance - creature/ability copying
@@ -68,7 +68,7 @@ Berserk - too easy to build combos
 1 star items:
 NME stock - simply too strong
 
-Field Items:
+Field Cards:
 The Bank - too easy to build combos
 E. Gadd's Garage - too easy to build combos
 Cave of the Past - too powerful of a counter

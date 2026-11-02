@@ -73,3 +73,4 @@ Resolve Order: 5>4>2>3>1
 ## CLARIFICATION
 - A chain of reactions must resolve before a new one begins.
 - You may react to time based \[such as (BOGT)\] effects with any (AAT) effects or facedown items.
+- If something is targeted for negation (or destruction, in the case of field cards), its owner cannot reactively activate any (AAT) effects on that card. (See: [“NEGATION”](#/rules/negation))

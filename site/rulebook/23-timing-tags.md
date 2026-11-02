@@ -1,7 +1,7 @@
 # Timing Tags
 
 ::: panel
-The cards' timing tags. ***X*** can be any number; the first number of a pair such as (1/2CD) can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card.
+The cards' timing tags. ***X*** can be any number. In a pair such as (1/2CD), the first number is the charge the ability starts with: it can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card.
 
 **Blue:** on your turn ((1CD), (1/2CD), (OYT)).
 **Purple:** at any time ((1GCD), (AAT)).
@@ -14,16 +14,18 @@ The cards' timing tags. ***X*** can be any number; the first number of a pair su
 | Tag | Meaning |
 |:---:|---|
 | (OYT) | On your turn |
-| (XCD) | Cooldown: X turn(s) |
-| (1/2CD) | Cooldown: 1 turn, then 2 |
+| (XCD) | Cooldown: needs X turn(s) of charge |
+| (1/2CD) | Cooldown: starts with 1 of 2 turns of charge |
+| (-1/1CD) | Cooldown: starts with -1 of 1 turn of charge |
 {.tags}
 
 ## AT ANY TIME
 | Tag | Meaning |
 |:---:|---|
 | (AAT) | At any time |
-| (XGCD) | Global cooldown: X global turn(s) |
-| (1/2GCD) | Global cooldown: 1 global turn, then 2 |
+| (XGCD) | Global cooldown: needs X turn(s) of charge |
+| (1/2GCD) | Global cooldown: starts with 1 of 2 turns of charge |
+| (-1/1GCD) | Global cooldown: starts with -1 of 1 turn of charge |
 {.tags}
 
 ## FORCED
@@ -43,7 +45,7 @@ The cards' timing tags. ***X*** can be any number; the first number of a pair su
 | (OD) | On death |
 | (WOF) | While on field |
 | (XPG) | Can only be activated X time(s) per game |
-| (XU) | X use(s) |
+| (XU) | X use(s) per full charge |
 {.tags}
 
 ## OTHER TAGS
@@ -53,13 +55,21 @@ The cards' timing tags. ***X*** can be any number; the first number of a pair su
 {.tags}
 
 ## OLD SYSTEM
-> [!kirby-sleepy] Older cards and the rulebook's examples still use these. (See: [“ABBREVIATIONS”](#/rules/abbreviations))
+> [!kirby-sleepy] These were replaced by cooldowns.
 
 | Tag | Meaning |
 |:---:|---|
-| (XPT) | Usable X time(s) per turn (on your turn) |
-| (EXT) | Every X turns, starting on turn X (multi-turn) |
-| (FTEXT) | Every X turns, starting on your 1st turn (multi-turn) |
-| (XPGT) | Usable X time(s) per global turn (at any time) |
-| (EXGT) | Every X global turns (at any time, multi-turn) |
+| (1PT) | Now (1CD) |
+| (E2T) | Now (2CD) |
+| (EXT) | Now (XCD) |
+| (2PT) | Now (1CD)(2U) |
+| (XPT) | Now (1CD)(XU) |
+| (1PGT) | Now (1GCD) |
+| (E2GT) | Now (2GCD) |
+| (EXGT) | Now (XGCD) |
+| (2PGT) | Now (1GCD)(2U) |
+| (XPGT) | Now (1GCD)(XU) |
+| (FTE2T) | Now (1/2CD) |
+| FGTE2GT | Now (1/2GCD) |
+| 1PT except first turn | Now (-1/1CD) |
 {.tags}

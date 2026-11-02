@@ -2,19 +2,21 @@
 
 ## THE FIELD
 - The place that creatures are placed on is called the field, which is organized into 6 slots, 3 for each team.
+- **Prime creatures** are the creatures that fill the slots: every creature that isn't a minion. A card with several forms or made of multiple creatures (like [[Mantis Lords]]) is one prime creature. Prime creatures yield points when defeated. (See: [“DEATH”](#/rules/death))
 - Every slot must be filled if possible. You must immediately summon a creature into an empty slot if possible.
 - Each slot containing creature(s) takes one turn during each global turn.
 - Each slot is split into two fields, the PRIMARY FIELD and the SECONDARY FIELD
-- If an entire slot/lane of creatures is dead, then skip over that slot/lane, but count time as if that slot/lane had gone.
+- If an entire slot of creatures is dead, then skip over that slot, but count time as if that slot had gone.
 
 ## PRIMARY FIELD
-- By default, creatures are placed onto the primary field. This is the only field that can be targeted by default, and the only field creatures can act in. Usually, this is the only field to exist in a slot.
+- By default, creatures are placed onto the primary field. This is the only field opponents can target by default, and the only field creatures can act in. Usually, this is the only field to exist in a slot.
 - If something targets “everything in the Primary Field”, it is referring to all 3 slots.
+- Active items are on the primary field, so something that hits everything on the PF hits them too. Something that hits all enemy creatures on the PF does not. (See: [“ITEM TYPES”](#/rules/item-types))
 
 ## SECONDARY FIELD
 - Behind the primary field is the secondary field. This is created by something pushing a creature back into it, either a protective minion or a protective active item designated by this symbol: [defensive_minion]
-- By default this field cannot be targeted.
-- Once you kill everything in the primary field, anything in this field is brought back to the primary field.
+- By default this field cannot be targeted by opponents.
+- Once there are no protective minions or protective active items left in the primary field, anything in this field is brought back to the primary field.
 - A creature in this field, cannot use actions, but can use abilities.
 - A parent creature can swap fields with its protective minions once during its turn, but only if no actions have been used in the slot yet.
 
@@ -23,7 +25,7 @@
 ::: row 3 2
 ::: panel
 ![A parent creature in the secondary field behind its two protective minions, numbered](field-example.webp){.left width=46}
-1. The Parent creature, in the secondary field. May not use actions, may use abilities, cannot be targeted.
+1. The Parent creature, in the secondary field. May not use actions, may use abilities, cannot be targeted by opponents.
 
 2./3. Protective minions; can use actions, can be targeted, can use abilities.
 :::

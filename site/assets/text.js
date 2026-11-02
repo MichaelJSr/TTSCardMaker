@@ -15,8 +15,7 @@ export const headHtml = h => (h && typeof h === "object" ? noteHtml(h.html ?? es
 export const LOGIN_RE = /^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/;              // a GitHub login (here: login.js and decks.js need it without profile.js)
 export const norm = s => String(s || "").toLowerCase().replace(/[\s_\-.'’]+/g, "");
 
-// Timing tags. Colors match the stoogedings font badges. Cooldowns and uses replaced the older tags on the cards
-// (2026-10-21); the rulebook pages still use the old ones.
+// Timing tags. Colors match the stoogedings font badges. Cooldowns and uses replaced the older tags (2026-10-21).
 const FIXED = {
   OYT: ["turn", "On your turn"], AAT: ["any", "At any time"],
   BOT: ["forced", "Beginning of turn (forced)"], ENDT: ["forced", "End of turn (forced)"],

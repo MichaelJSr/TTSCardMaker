@@ -3035,19 +3035,19 @@ def parse_banlist(by_norm):
 GAME_TXT = "game.txt"
 GAME_KINDS = ("creature", "item", "field", "minion", "nme", "aux item", "buff", "debuff", "creatures")   # app.js KINDS order
 GAME_TAGS = (                                 # the rulebook's Timing tags panel (app.js renderRules, text.js tagInfo)
-    ("On your turn", (("OYT", "On your turn"), ("1CD", "Cooldown: 1 turn"), ("1/2CD", "Cooldown: 1 turn, then 2"))),
-    ("At any time", (("AAT", "At any time"), ("1GCD", "Global cooldown: 1 global turn"),
-                     ("1/2GCD", "Global cooldown: 1 global turn, then 2"))),
+    ("On your turn", (("OYT", "On your turn"), ("1CD", "Cooldown: needs 1 turn of charge"), ("1/2CD", "Cooldown: starts with 1 of 2 turns of charge"))),
+    ("At any time", (("AAT", "At any time"), ("1GCD", "Global cooldown: needs 1 turn of charge"),
+                     ("1/2GCD", "Global cooldown: starts with 1 of 2 turns of charge"))),
     ("Forced", (("BOT", "Beginning of turn (forced)"), ("ENDT", "End of turn (forced)"),
                 ("BOGT", "Beginning of global turn (forced)"), ("ENDGT", "End of global turn (forced)"))),
     ("Per game & triggers", (("OFS", "On first summon"), ("OS", "On summon"), ("OD", "On death"), ("WOF", "While on field"),
-                             ("1PG", "Can only be activated once per game"), ("2U", "2 uses"))),
+                             ("1PG", "Can only be activated once per game"), ("2U", "2 uses per full charge"))),
     ("Other tags", (("Action", "Costs the creature's action"),)),
-    ("Old system (rulebook pages)", (("1PT", "usable once per turn (on your turn)"),
-                                     ("E2T", "every 2 turns, starting on turn 2 (multi-turn)"),
-                                     ("FTE2T", "every 2 turns, starting on your 1st turn (multi-turn)"),
-                                     ("1PGT", "usable once per global turn (at any time)"),
-                                     ("E2GT", "every 2 global turns (at any time, multi-turn)"))),
+    ("Old system", (("1PT", "now (1CD)"),
+                                     ("E2T", "now (2CD)"),
+                                     ("FTE2T", "now (1/2CD)"),
+                                     ("1PGT", "now (1GCD)"),
+                                     ("E2GT", "now (2GCD)"))),
 )
 
 
@@ -3222,7 +3222,7 @@ def game_text(cards, rules, banlist, icons, manifest):
            " | duplicate of its original. - is an empty field. The ability follows.", "", "# Rulebook", ""]
     for p in rules:
         out += [f"## {p['name']}", game_words(p.get("ability"), icons), ""]
-    out += ["# Timing tags", "X can be any number; the first number of a pair such as (1/2CD) can also be 0 or -1.", ""]
+    out += ["# Timing tags", "X can be any number. In a pair such as (1/2CD), the first number is the charge the ability starts with: it can also be 0 or -1.", ""]
     for group, tags in GAME_TAGS:
         out += [f"## {group}", *(f"({t}) {('Old system: ' if group.startswith('Old') else '') + meaning}" for t, meaning in tags), ""]
     out += ["# Constructed ban list", *banlist["notes"], ""]

@@ -21,13 +21,13 @@ Although (OYT) and (AAT) do not often appear on their own, they are the basis of
 
 ## BASIC ABILITES
 ::: ability
-1. (1PT) Summon a Mini Bee.
-2. [(2PGT) Heal a creature by]{.yellow} [2 HP]{.green}[.]{.yellow}
+1. (1CD) Summon a Mini Bee.
+2. [(1GCD)(2U) Heal a creature by]{.yellow} [2 HP]{.green}[.]{.yellow}
 3. (AAT)(3PG)  Spend 7 points to deal 10 piercing damage.
 :::
 
-1. (XPT) “***X*** Per Turn” is the most common  ability type. (XPT) implies (OYT) “On your turn”. ***X*** in this case is 1. So this ability may be performed once on each turn the creature takes.
-2. (XPGT) “***X*** Per Global Turn” implies (AAT) “At any time”. So this creature can heal twice at any point during the global turn. This ability can be used to heal a creature that is about to die from an attack reactively, two times per global turn.
+1. (XCD) “Cooldown” is the most common  ability type. (XCD) implies (OYT) “On your turn”. ***X*** is how many turns of charge the ability needs to be used (it can't go over ***X***). Abilities start with no charge. 1 turn of charge is gained at any point during phases 1-3 of the creature's turn, if the ability hasn't gained charge yet that turn and hasn't been fully charged at any point during that turn. ***X*** in this case is 1. So this ability may be performed once on each turn the creature takes.
+2. (XGCD) “Global Cooldown” implies (AAT) “At any time”, and gains charge at any point during the global turn, under the same conditions. (XU) is how many uses the ability has when charged. If even one use is spent the ability can gain charge again; charged again without spending every use, it only goes back up to ***X*** uses. No (XU): 1 use per full charge. So this creature can heal twice per full charge, at any point in the global turn. This ability can be used to heal a creature that is about to die from an attack reactively, two times per global turn.
 3. (XPG) “***X*** Per Game” means the creature can perform this ability ***X*** times, ever. In this case it's 3 times per game. This kind of ability is always either (AAT) or (OYT). Here it is (AAT), so it can be done at any point during the game.
 
 ---
@@ -64,14 +64,14 @@ These abilities are non-optional and assumed to happen automatically.
 
 ## MULTI-TURN
 ::: ability
-1. (E2T) Summon a Mega Bee.
-2. [(FTE2T) Summon Brombus.]{.yellow}
-3. (E2GT) Deal  3 piercing damage.
+1. (2CD) Summon a Mega Bee.
+2. [(1/2CD) Summon Brombus.]{.yellow}
+3. (2GCD) Deal  3 piercing damage.
 :::
 
-1. (EXT) “Every ***X*** Turns” abilities are refreshed on the creature's ***X***th turn after either the start of the game or the last time the ability was used. Here, the creature can summon a Mega Bee on its  second turn, and every 2 turns after that. (Turns 4, 6, etc.) (It's implied these abilities can only be used (OYT) “on your turn”.)
-2. (FTEXT) Brombus may be summoned on the first turn, then every 2 turns after. (Turns 3, 5, etc.) This ability happens on turns where the above doesn't.
-3. (E2GT) “Every ***X*** Global Turns”. This works the same, but ability is “at any time” (AAT), and is refreshed when the global turn starts.
+1. (2CD) The ability needs 2 turns of charge, so the creature can summon a Mega Bee on its  second turn, and every 2 turns after that. (Turns 4, 6, etc.) (These can only be used (OYT) “on your turn”.)
+2. (Y/XCD) Appears when an ability starts with an unusual amount of charge. ***Y*** is the charge it starts with. Brombus starts with 1 of 2 turns of charge, so it may be summoned on the first turn, then every 2 turns after. (Turns 3, 5, etc.) This ability happens on turns where the above doesn't.
+3. (2GCD) This works the same, but the ability is “at any time” (AAT), gaining charge during the global turn.
 
 ---
 
@@ -135,14 +135,15 @@ These abilities are non-optional and assumed to happen automatically.
 > [!kirby-sleepy] Here are some specfic common abilities in the game and some specifics about them.
 
 ## ABILITY COPYING/STEALING/SWAPPING
-- Stolen/Swapped abilities refresh as brand new per creature, if the creature loses that ability then gains it back, it's not reset but instead incremented by a turn.
-- If a creature gains an on first summon ability (or if this is the first opportunity that an OFS ability can be procced), proc it now.
+- Stolen/Swapped abilities start as brand new per creature, if the creature loses that ability then gains it back, it's not reset but instead gains 1 turn of charge.
+- The first time a creature gains an on first summon ability (or if this is the first opportunity that an OFS ability can be procced), proc it now.
 
 ::: row 1 3
 > [!professor top] *If a healing item is used to deal DMG, it is instead treated as an attack item, and vice versa.*
 
 ## MISC
 - Abilities that count damage dealt to creatures do not count overkill damage.
+- If a healing item deals DMG instead of healing (such as with [[Chef Saltbaker]]), effects that increase healing (such as [[Toy Chica]]) increase that damage.
 :::
 
 ## PASSIVES

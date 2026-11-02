@@ -3,7 +3,7 @@
 ## HEALTH {.hp}
 ![The stat bars, health lit: 8 bars, 16 HP](bars-hp.webp)
 - Each bar of health represents 2 HP. For example, this creature with 8 bars of health has 16 HP.
-- When attacked, HP goes down by ATK value after DEF. When a creature's HP reaches 0, it dies and goes to the graveyard. (See: [“ATTACKING”](#/rules/attacking))
+- When attacked, HP goes down by ATK value after DEF. When a creature's HP reaches 0, it dies and, unless it is revived on the spot, goes to the graveyard. (See: [“ATTACKING”](#/rules/attacking))
 
 - A creature's MAX HP is the HP a creature starts with. They cannot be healed above this amount naturally.
 - An increase to the MAX HP of a creature increases their current HP by the same amount (This counts as healing). For instance, if a [[Mushroom]] (+3.5 HP) is used on this creature, the MAX and current HP would go both from 16 HP to 19.5 HP. Then, if it's later damaged, it can be healed back up to 19.5 HP through regular means of healing.
@@ -29,7 +29,7 @@ If this goes below 16, it can only heal up to 16 again with regular healing, as 
 
 ## HEALTH REDUCTION {.hp2}
 ![The stat bars, health lit](bars-hp.webp)
-- A decrease to the MAX HP of a creature does not decrease their current HP, unless if their current HP would become greater than their Max HP (in which case it is set to Max HP).
+- A decrease to the MAX HP of a creature does not decrease their current HP, unless if their current HP would become greater than their Max HP (in which case it is set to Max HP). If its current HP was already greater than its Max HP, the decrease lowers its current HP by the same amount.
 
 For instance, A stat stealing creature steals 1 bar (2 MAX HP) of HP. This creature would fall from 16 HP to 14 HP. If the creature was damaged and only at 10 HP, it would not lose HP, but would not be able to heal past 14.
 - A decrease to the Max HP of a creature does not count as damage.
@@ -119,6 +119,7 @@ Increases to SPD are indicated with these markers. For increments of 0.5, use a 
 === page ===
 
 ## ROUNDING + STAT CHANGES
+- A creature's base stats are the stats printed on its card, before any changes. Stat changes affect its current stats, not its base stats, unless an effect says it changes a base stat.
 - Stats are rounded to the nearest half in the positive direction, *after* reductions or gains are applied. For example, inflicting [[Chilled]] (-25% SPD) on a 5 SPD creature (5 SPD - 1.25 SPD = 3.75 SPD) rounds to 4 SPD, and inflicting [[Enraged]] on a 5 ATK creature (5 ATK + 1.25 ATK = 6.25 ATK) rounds to 6.5 ATK.
 
 - When calculating stat changes or damage dealt, Additives are applied first and multiplicatives second.

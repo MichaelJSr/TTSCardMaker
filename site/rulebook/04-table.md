@@ -22,7 +22,7 @@
 1. The Global Turn counter. Starts at 1, and ticks up by 1 once every filled slot on the field has taken a turn. (See: [“THE GLOBAL TURN”](#/rules/the-global-turn))
 2. Star Point counter. At the beginning of each global turn, this is set to 7. These are spent in order to play items. Items cost their star value in star points in order to play them. (See: [“ITEMS”](#/rules/items))
 3. BRICKS counter. BRICKS are used to buy Field cards. Field cards cost 2x their star level in BRICKS. BRICKS are obtained when creatures spend an action to mine, gaining BRICKS equal to their star level. 1 BRICK is awarded to each team at the end of every global turn. (See: [“FIELD CARDS”](#/rules/field-cards))
-4. Points counter. Each team starts the game with 2 points. You gain points equal to your creature's star level when it dies. Points are spent on abilities, and buying items from the item shop for 4x cost their star level.
+4. Points counter. Each team starts the game with 2 points. You gain points equal to your creature's star level when it is defeated. Points are spent on abilities, and buying items from the item shop for 4x cost their star level.
 5. The Item shop. (See: [“SHOPS”](#/rules/shops))
 6. The Field Card shop (See: [“SHOPS”](#/rules/shops))
 7. The N.M.E. shop (See: [“SHOPS”](#/rules/shops))
@@ -45,7 +45,7 @@
 ::: panel
 4. STATUS EFFECT MARKERS. (See: [“STATUS EFFECTS”](#/rules/status-effects))
 
-5. The GRAVEYARD. Your perished creatures go in the graveyard on your side of the playing field. (See: [“DEATH”](#/rules/death))
+5. The GRAVEYARD. Your defeated creatures go in the graveyard on your side of the playing field. (See: [“DEATH”](#/rules/death))
 
 6. The DISCARD PILE. Used items go here.
 
