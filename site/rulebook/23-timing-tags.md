@@ -15,6 +15,7 @@ The cards' timing tags. ***X*** can be any number. In a pair such as (1/2CD), th
 |:---:|---|
 | (OYT) | On your turn |
 | (XCD) | Cooldown: needs X turn(s) of charge |
+| (Y/XCD) | Cooldown: starts with Y of X turns of charge |
 | (1/2CD) | Cooldown: starts with 1 of 2 turns of charge |
 | (-1/1CD) | Cooldown: starts with -1 of 1 turn of charge |
 {.tags}
@@ -24,6 +25,7 @@ The cards' timing tags. ***X*** can be any number. In a pair such as (1/2CD), th
 |:---:|---|
 | (AAT) | At any time |
 | (XGCD) | Global cooldown: needs X turn(s) of charge |
+| (Y/XGCD) | Global cooldown: starts with Y of X turns of charge |
 | (1/2GCD) | Global cooldown: starts with 1 of 2 turns of charge |
 | (-1/1GCD) | Global cooldown: starts with -1 of 1 turn of charge |
 {.tags}

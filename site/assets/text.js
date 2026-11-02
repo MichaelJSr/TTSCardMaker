@@ -52,8 +52,8 @@ function tagMeaning(tag) {
   let m;
   if ((m = /^([1-9X])CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: ${count(m[1], "turn")}` };
   if ((m = /^([1-9X])GCD$/.exec(tag))) return { group: "any", meaning: `Global cooldown: ${count(m[1], "global turn")}` };
-  if ((m = /^(-1|[0-9X])\/([1-9X])CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: ${count(m[1], "turn")}, then ${m[2]}` };
-  if ((m = /^(-1|[0-9X])\/([1-9X])GCD$/.exec(tag))) return { group: "any", meaning: `Global cooldown: ${count(m[1], "global turn")}, then ${m[2]}` };
+  if ((m = /^(-1|[0-9XY])\/([1-9X])CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: starts with ${m[1]} of ${count(m[2], "turn")} of charge` };
+  if ((m = /^(-1|[0-9XY])\/([1-9X])GCD$/.exec(tag))) return { group: "any", meaning: `Global cooldown: starts with ${m[1]} of ${count(m[2], "turn")} of charge` };
   if ((m = /^([1-9X])U$/.exec(tag))) return { group: "trigger", meaning: count(m[1], "use") };
   if ((m = /^([1-9X])PG$/.exec(tag))) return { group: "trigger", meaning: `Can only be activated ${times(m[1])} per game` };
   if ((m = /^([1-9X])PGT$/.exec(tag))) return old("any", `usable ${times(m[1])} per global turn (at any time)`);

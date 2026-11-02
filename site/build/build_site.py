@@ -3272,8 +3272,8 @@ def _tag_base(tag):
     times = lambda n: "X times" if n == "X" else "once" if n == "1" else f"{n} times"
     rules = ((r"([1-9X])CD", lambda m: ("turn", f"Cooldown: {_count(m[1], 'turn')}", False)),
              (r"([1-9X])GCD", lambda m: ("any", f"Global cooldown: {_count(m[1], 'global turn')}", False)),
-             (r"(-1|[0-9X])/([1-9X])CD", lambda m: ("turn", f"Cooldown: {_count(m[1], 'turn')}, then {m[2]}", False)),
-             (r"(-1|[0-9X])/([1-9X])GCD", lambda m: ("any", f"Global cooldown: {_count(m[1], 'global turn')}, then {m[2]}", False)),
+             (r"(-1|[0-9XY])/([1-9X])CD", lambda m: ("turn", f"Cooldown: starts with {m[1]} of {_count(m[2], 'turn')} of charge", False)),
+             (r"(-1|[0-9XY])/([1-9X])GCD", lambda m: ("any", f"Global cooldown: starts with {m[1]} of {_count(m[2], 'turn')} of charge", False)),
              (r"([1-9X])U", lambda m: ("trigger", _count(m[1], "use"), False)),
              (r"([1-9X])PG", lambda m: ("trigger", f"Can only be activated {times(m[1])} per game", False)),
              (r"([1-9X])PGT", lambda m: ("any", f"Old system: usable {times(m[1])} per global turn (at any time)", True)),
