@@ -100,9 +100,8 @@ export function splitToken(token) {
 /** The variant's image of an icon entry: icons/fire.<stamp>.webp -> icons/fire.<stamp>.glow.webp (the stamp covers the variants) */
 export const variantFile = (ic, v) => ic.file.replace(/\.webp$/, `.${v}.webp`);
 
-// TEMPORARY (owner 2026-10-30, back to false 10-31): a card name links (and counts as a mention) only typed in its own
-// letter case: "Silithid", never "silithid"
-const EXACT_CASE = true;
+// true: a card name links (and counts as a mention) only typed in its own letter case (on 2026-10-30, off 11-01)
+const EXACT_CASE = false;
 
 /** Build the renderer once per data load: knows icons (and their variants' reach, cards.json iconVariants) and which
  *  card names to link. */
