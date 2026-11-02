@@ -12,7 +12,7 @@
 - If something just says “summon”, it means onto the creature that the ability is from.
 
 ## TYPES
-[offensive_minion]:Offensive minions occupy the same field as the summoner. (See: [“FIELDS”](#/rules/the-field))
+[offensive_minion]:Offensive minions occupy the same field as their parent creature. (See: [“FIELDS”](#/rules/the-field))
 [defensive_minion]:Protective Minions always occupy whatever field the parent creature and offensive minions are not in. When summoned, these push the parent creature (and the offensive minions attached to it) back to the secondary field, and are placed in the primary field. As a creature can only act in the primary field, This typically cannot act on the same turn as a parent creature, as they can never both occupy the primary field. (See: [“THE FIELD”](#/rules/the-field))
 - If a protective minion is summoned after a parent creature has already used an action that turn, it does not gain an action for that turn.
 
