@@ -10,8 +10,8 @@
   {
    "name": "Table of Contents",
    "num": "",
-   "sha": "87cd044e646e90582ef249072b35c9c4363f4e2abd732b1bd9f7c66077fb47f8",
-   "t": "TABLE OF CONTENTS Getting Started 3 Abbreviations 4 Setting Up 6 Table 8 Shops 17 Reading Cards 19 Stats 22 The Global Turn 31 Taking Your Turn 33 Attacking 35 Abilities 39 Reactions 49 Items 56 Item Types 58 Minions 61 The Field 63 Death 67 Field Cards 69 Status Effects 71 Creature Types 75 Damage Types 77 Negation 79 Timing Tags 81 If you see sleepy Kirby, that means the textbox or card is explaining more technical rules. Don't worry about understanding them too much; just refer to them if it comes up."
+   "sha": "85b5ceb44b40aab4fe704fc2145d17a90f7a38079d5b03c3f78a8a22a9c815e8",
+   "t": "TABLE OF CONTENTS Getting Started 3 Abbreviations 4 Setting Up 6 Table 8 Shops 17 Reading Cards 19 Stats 22 The Global Turn 31 Taking Your Turn 33 Attacking 35 Abilities 39 Reactions 49 Items 56 Item Types 58 Minions 61 The Field 63 Death 67 Field Cards 69 Status Effects 71 Creature Types 75 Damage Types 77 Negation 79 Timing Tags 82 If you see sleepy Kirby, that means the textbox or card is explaining more technical rules. Don't worry about understanding them too much; just refer to them if it comes up."
   },
   {
    "name": "Getting Started",
@@ -28,8 +28,8 @@
   {
    "name": "Abbreviations 2",
    "num": "2.2",
-   "sha": "37c48ee7257bbe5d53e2e118ec63466538f44c67c5c6d58b7937c89332264909",
-   "t": "ABBREVIATIONS 2 FORCED OFS = On first summon. OS = On summon. OD = On death. WOF = While on field. PER GAME XPG = Ability can only be activated X time(s) per game. XU = X use(s) per full charge. ⏳ XCD, (Y/XCD), XGCD and (Y/XGCD) abilities with X of 2 or more are considered \"multi turn\" abilities. Abilites marked with 🕐 are considered \"time based\". Time based abilities with a cooldown become usable again once they are fully charged. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). 2.2"
+   "sha": "1b5c8413d4f5627c5db3761a7acf9d6fc431daf85b52b10b41871b66bda43480",
+   "t": "ABBREVIATIONS 2 FORCED OFS = On first summon. OS = On summon. OD = On death. WOF = While on field. PER GAME XPG = Ability can only be activated X time(s) per game. USES XU = X use(s) per full charge. ⏳ XCD, (Y/XCD), XGCD and (Y/XGCD) abilities with X of 2 or more are considered \"multi turn\" abilities. Abilites marked with 🕐 are considered \"time based\". Time based abilities with a cooldown become usable again once they are fully charged. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game, uses and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). 2.2"
   },
   {
    "name": "Setting Up",
@@ -214,8 +214,8 @@
   {
    "name": "Attacking 2",
    "num": "10.2",
-   "sha": "181cba921bed6f520f8c6237222873815d5094c6bdf9b29a3e4d04bf1ee44f17",
-   "t": "ATTACKING 2 A HP: 10/10 DEF: 2 ATK: 7 SPD: 4 L1 B HP: 10/10 DEF: 1 ATK: 6 SPD: 4 Creature A attacks Creature B. What happens? Creature B takes 7 minus 1 Damage, for a total of 6. Their HP is reduced to 10 minus 6: they have 4 HP left. C HP: 10/10 DEF: 2 ATK: 7 SPD: 6 L1 D HP: 10/10 DEF: 1 ATK: 6 SPD: 3 Creature C attacks Creature D. What happens? Creature D takes 7 minus 1 Damage, for a total of 6. However, Creature C's speed is DOUBLE that of Creature D's! The final damage value is therefore multiplied by 1.5, resulting in 9 total damage, leaving them at 1 HP. SNEAK ATTACKS Creatures have the option to perform a \"sneak attack\" in place of a normal attack, which is an attack that deals piercing damage equal to 25% of their attack stat +1, and has the same on-hit effects as a normal attack. This is so creatures with high defense don't become unkillable in certain circumstances. Minion sneak attacks are only 25% of their attack stat, without the +1. 10.2"
+   "sha": "061e65b02aa02dcbc7a971b9db9321a9d2189fdd39dece05e3d1a44ec3047694",
+   "t": "ATTACKING 2 A HP: 10/10 DEF: 2 ATK: 7 SPD: 4 L1 B HP: 10/10 DEF: 1 ATK: 6 SPD: 4 Creature A attacks Creature B. What happens? Creature B takes 7 minus 1 Damage, for a total of 6. Their HP is reduced to 10 minus 6: they have 4 HP left. C HP: 10/10 DEF: 2 ATK: 7 SPD: 6 L1 D HP: 10/10 DEF: 1 ATK: 6 SPD: 3 Creature C attacks Creature D. What happens? Creature D takes 7 minus 1 Damage, for a total of 6. However, Creature C's speed is DOUBLE that of Creature D's! The final damage value is therefore multiplied by 1.5, resulting in 9 total damage, leaving them at 1 HP. SNEAK ATTACKS Creatures have the option to perform a \"sneak attack\" in place of a normal attack, which is an attack that deals piercing damage equal to 25% of their attack stat, plus 1, and has the same on-hit effects as a normal attack. This is so creatures with high defense don't become unkillable in certain circumstances. Minion sneak attacks are only 25% of their attack stat, without the +1. 10.2"
   },
   {
    "name": "Attacking 3",
@@ -352,8 +352,8 @@
   {
    "name": "Item Types 2",
    "num": "14.2",
-   "sha": "3086a8d2ed63393571c8711be02fae432e25dedb2d35c608e252f00af27bcf80",
-   "t": "ITEM TYPES 2 These item types do not get discarded immediately after played. EQUIP These items you may equip onto your own creatures and grant a passive effect to the creature they are on which is lost when unequipped. Creatures do not inherit the abilities of equip items, they are only affected by them. May be unequipped and returned to your hand during your turn. If an equip has a negative effect, cannot be unequipped until the start of the global turn after it was equipped. If equipped creature dies, return equip to your hand. Equip items stay equipped onto creatures swapped into the hand, and may be unequipped from creatures in your hand on your turn. Equip items may be equipped to an enemy if they have no negative effects, but the enemy would then own the item. An equip can be “Forcibly” unequipped by an effect at any time regardless of if the item has negative effects or is on cooldown. (Unless specified that it cannot be unequipped). FRAGILE EQUIP These items are same as equips but cannot be unequipped by any means and are discarded when the creature they are on dies. 14.2"
+   "sha": "c5ce886e15f14e73e3a302a3658dc75ab89e949399b4b8ae9f8b114b5844c244",
+   "t": "ITEM TYPES 2 These item types do not get discarded immediately after played. EQUIP These items you may equip onto your own creatures and grant a passive effect to the creature they are on which is lost when unequipped. Creatures do not inherit the abilities of equip items, they are only affected by them. A creature's innate abilities and its equip's abilities are separate: a creature with Sword of Aeons equipped does not have innate lifesteal, the equip grants lifesteal to whatever it is equipped to. May be unequipped and returned to your hand during your turn. If an equip has a negative effect, cannot be unequipped until the start of the global turn after it was equipped. If equipped creature dies, return equip to your hand. Equip items stay equipped onto creatures swapped into the hand, and may be unequipped from creatures in your hand on your turn. Equip items may be equipped to an enemy if they have no negative effects, but the enemy would then own the item. An equip can be “Forcibly” unequipped by an effect at any time regardless of if the item has negative effects or is on cooldown. (Unless specified that it cannot be unequipped). FRAGILE EQUIP These items are same as equips but cannot be unequipped by any means and are discarded when the creature they are on dies. 14.2"
   },
   {
    "name": "Item Types 3",
@@ -364,14 +364,14 @@
   {
    "name": "Minions",
    "num": "15",
-   "sha": "b6705a3893c5d47a4d1cffb0b2e2da2bb1a63028d837681d71c6b78f06303317",
-   "t": "MINIONS INTRODUCTION Minions are small creatures that when summoned are attached onto a parent prime creature. Minions are always attached to their parent creature, and stick with them even if the parent creature is moved or swapped into the hand. For most purposes, Minions are considered creatures, and have their own action, but they do not yield points when defeated. They do go to the graveyard when defeated. Every minion and parent creature in the primary field may use their actions (See: “THE FIELD”) in whatever order the player choses. Minions cannot mine for BRICKS. If Parent creature is defeated, all minions in the slot die (excluding persistent minions) 5 star minions cannot be targeted by minion effects. If something just says “summon”, it means onto the creature that the ability is from. TYPES :Offensive minions occupy the same field as the summoner. (See: “FIELDS”) :Protective Minions always occupy whatever field the parent creature and offensive minions are not in. When summoned, these push the parent creature (and the offensive minions attached to it) back to the secondary field, and are placed in the primary field. As a creature can only act in the primary field, This typically cannot act on the same turn as a parent creature, as they can never both occupy the primary field. (See: “THE FIELD”) If a protective minion is summoned after a parent creature has already used an action that turn, it does not gain an action for that turn. 15"
+   "sha": "4e16f4b9037897fc84a39754234cf645374221e811dd8f06072cde0c7f858d27",
+   "t": "MINIONS INTRODUCTION Minions are small creatures that when summoned are attached onto a parent prime creature. Minions are always attached to their parent creature, and stick with them even if the parent creature is moved or swapped into the hand. A minion's parent creature is the creature it is on, not always its summoner: a summoner can occasionally summon minions onto other creatures. Minions are tied to their parent creature, not their summoner. For most purposes, Minions are considered creatures, and have their own action, but they do not yield points when defeated. They do go to the graveyard when defeated. Every minion and parent creature in the primary field may use their actions (See: “THE FIELD”) in whatever order the player choses. Minions cannot mine for BRICKS. If Parent creature is defeated, all minions in the slot die (excluding persistent minions) 5 star minions cannot be targeted by minion effects. If something just says “summon”, it means onto the creature that the ability is from. 15"
   },
   {
    "name": "Minions 2",
    "num": "15.2",
-   "sha": "8f2b1b48da2da1e376a80d889770ad6c5a5fd80d9e851961503e61abe9d789e2",
-   "t": "MINIONS 2 PERSISTENT If a minion is “persistent”, when its parent creature is defeated, it will be attached to the next prime creature that gets placed into the slot. If there is no creature to fill the slot, it occupies the slot alone, and must be killed for the game to be won by the opponent. 15.2"
+   "sha": "a06d2e744e98d64d0279194b0f90930f064ee14d47524f0ba9374401c3baf6bf",
+   "t": "MINIONS 2 TYPES :Offensive minions occupy the same field as the summoner. (See: “FIELDS”) :Protective Minions always occupy whatever field the parent creature and offensive minions are not in. When summoned, these push the parent creature (and the offensive minions attached to it) back to the secondary field, and are placed in the primary field. As a creature can only act in the primary field, This typically cannot act on the same turn as a parent creature, as they can never both occupy the primary field. (See: “THE FIELD”) If a protective minion is summoned after a parent creature has already used an action that turn, it does not gain an action for that turn. PERSISTENT If a minion is “persistent”, when its parent creature is defeated, it will be attached to the next prime creature that gets placed into the slot. If there is no creature to fill the slot, it occupies the slot alone, and must be killed for the game to be won by the opponent. 15.2"
   },
   {
    "name": "The Field",
@@ -472,31 +472,37 @@
   {
    "name": "Negation",
    "num": "22",
-   "sha": "5798c1baa27f75d704011073f9c0745b487ed84b5a6b02b27bd295dd3e8951af",
-   "t": "NEGATION ATTACKS If an attack is negated it does not happen. No damage is dealt, no on-hit effects occur, the creature does not get its action back, you do not pass go. CREATURES When a creature is negated it is unable to use any of its own abilities (unless otherwise stated), but may still use the abilities of any equipped items or minions, and can still use actions. Cooldown abilities such as 2CD still gain charge even while they are negated. Minions/Items/Stats/Counters summoned/gained by an ability remain even if the ability that summoned them is negated or if the creature that summoned them dies. If 2 creatures/sources attempt to negate each other simultaneously, they are both negated. Immunity: 5+ star creatures are immune to negation. True Negation: Negation that can negate negation-immune creatures. True Negation Immunity: Complete immunity to any possible sources of negation, including true negation. OFS abilities have true negation immunity. If an item/ability does something upon being negated, the “upon being negated” effect itself has true negation immunity. 22"
+   "sha": "610636365dc233d22031d447d1e3e6c51146fa2a27b77b1355979ce05d6f80e9",
+   "t": "NEGATION ATTACKS If an attack is negated it does not happen. No damage is dealt, no on-hit effects occur, the creature does not get its action back, you do not pass go. CREATURES When a creature is negated it is unable to use any of its own abilities (unless otherwise stated), but may still use the abilities of any equipped items or minions, and can still use actions. Negating a creature does not negate its equipped items: they are separate. Cooldown abilities such as 2CD still gain charge even while they are negated. Minions/Items/Stats/Counters summoned/gained by an ability remain even if the ability that summoned them is negated or if the creature that summoned them dies. (Minions are tied to their parent creature, not their summoner: if their parent creature is defeated, they die unless they are persistent. See: “MINIONS”) If 2 creatures/sources attempt to negate each other simultaneously, they are both negated. Immunity: 22"
   },
   {
    "name": "Negation 2",
    "num": "22.2",
-   "sha": "be06ce0032ba8dadb33bfb2f7ffff660d228de937ee0cbc861cb895338ad3026",
-   "t": "NEGATION 2 ITEMS If an item is negated, it means it cannot be played or is taken out of play, and it returns to where it was before being played (such as the hand or facedown slot). If an item is negated or destroyed during use, the star points expended to use it are not regained. Items that are currently negated cannot be sold, or used for any other purpose until the negation ends. Equip, Active, and Deploy items can be negated after their activation while they are still in effect; this sends them back to the hand, requiring star points to be used again to reactivate them. FIELD CARDS At the beginning of the global turn, or on your turn, you may spend 1x the star level of a field card in BRICKS to negate it until the end of the global turn (field card stays on the field and can be swapped out, but loses its effect temporarily). Field cards cannot be negated on the same turn that they are played. Field cards cannot be negated 2 turns in a row. At the beginning of the global turn, or on your turn, you may spend 3x the star level of a field card in BRICKS to destroy it. REACTING TO NEGATION If something is targeted for negation (or destruction, in the case of field cards), its owner cannot reactively activate any AAT effects on that card. 22.2"
+   "sha": "de56050333ccb3efb47af608c0660488a79e6b85da90d176fae5feecc4b89153",
+   "t": "NEGATION 2 5+ star creatures are immune to negation. True Negation: Negation that can negate negation-immune creatures. True Negation Immunity: Complete immunity to any possible sources of negation, including true negation. OFS abilities have true negation immunity. If an item/ability does something upon being negated, the “upon being negated” effect itself has true negation immunity. ITEMS If an item is negated, it means it cannot be played or is taken out of play, and it returns to where it was before being played (such as the hand or facedown slot). If an item is negated or destroyed during use, the star points expended to use it are not regained. Items that are currently negated cannot be sold, or used for any other purpose until the negation ends. Equip, Active, and Deploy items can be negated after their activation while they are still in effect; this sends them back to the hand, requiring star points to be used again to reactivate them. 22.2"
+  },
+  {
+   "name": "Negation 3",
+   "num": "22.3",
+   "sha": "9ce973b27f199d68cb6b347fbf5f9ba33c3ac6a594cf0a8ea5536beef600010b",
+   "t": "NEGATION 3 FIELD CARDS At the beginning of the global turn, or on your turn, you may spend 1x the star level of a field card in BRICKS to negate it until the end of the global turn (field card stays on the field and can be swapped out, but loses its effect temporarily). Field cards cannot be negated on the same turn that they are played. Field cards cannot be negated 2 turns in a row. At the beginning of the global turn, or on your turn, you may spend 3x the star level of a field card in BRICKS to destroy it. REACTING TO NEGATION If something is targeted for negation (or destruction, in the case of field cards), its owner cannot reactively activate any AAT effects on that card. 22.3"
   },
   {
    "name": "Timing Tags",
    "num": "23",
-   "sha": "c22afa137bde1b21477cd3a1ac7156d059dac3aadf6e9a808c86f7b7b501774f",
-   "t": "TIMING TAGS The cards' timing tags. X can be any number. In a pair such as 1/2CD, the first number is the charge the ability starts with: it can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). ON YOUR TURN Tag Meaning OYT On your turn XCD Cooldown: needs X turn(s) of charge 1/2CD Cooldown: starts with 1 of 2 turns of charge −1/1CD Cooldown: starts with -1 of 1 turn of charge AT ANY TIME Tag Meaning AAT At any time XGCD Global cooldown: needs X turn(s) of charge 1/2GCD Global cooldown: starts with 1 of 2 turns of charge −1/1GCD Global cooldown: starts with -1 of 1 turn of charge 23"
+   "sha": "4de58a3ac90acda920739b95aa1f508e28b5394624ff52352230996241c5b2c3",
+   "t": "TIMING TAGS The cards' timing tags. X can be any number. In a pair such as 1/2CD, the first number is the charge the ability starts with: it can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game, uses and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). ON YOUR TURN Tag Meaning OYT On your turn XCD Cooldown: needs X turn(s) of charge 1/2CD Cooldown: starts with 1 of 2 turns of charge −1/1CD Cooldown: starts with -1 of 1 turn of charge AT ANY TIME Tag Meaning AAT At any time XGCD Global cooldown: needs X turn(s) of charge 1/2GCD Global cooldown: starts with 1 of 2 turns of charge −1/1GCD Global cooldown: starts with -1 of 1 turn of charge 23"
   },
   {
    "name": "Timing Tags 2",
    "num": "23.2",
-   "sha": "2eec7d0e6e3fb358a2ed98dfe1954c7ef63ec28ef5735d0aadb772352044be1a",
-   "t": "TIMING TAGS 2 FORCED Tag Meaning BOT Beginning of turn (forced) ENDT End of turn (forced) BOGT Beginning of global turn (forced) ENDGT End of global turn (forced) PER GAME & TRIGGERS Tag Meaning OFS On first summon OS On summon OD On death WOF While on field XPG Can only be activated X time(s) per game XU X use(s) per full charge OTHER TAGS Tag Meaning Action Costs the creature's action 23.2"
+   "sha": "727e3966e6809d49fb85568cc0b5a676472d5da007c8d95c904ce5f72bca1378",
+   "t": "TIMING TAGS 2 FORCED Tag Meaning BOT Beginning of turn (forced) ENDT End of turn (forced) BOGT Beginning of global turn (forced) ENDGT End of global turn (forced) PER GAME & TRIGGERS Tag Meaning OFS On first summon OS On summon OD On death WOF While on field XPG Can only be activated X time(s) per game USES Tag Meaning XU X use(s) per full charge OTHER TAGS Tag Meaning Action Costs the creature's action 23.2"
   },
   {
    "name": "Timing Tags 3",
    "num": "23.3",
-   "sha": "a1ff330ac52f8b360fbb0b31efdeafc08b1176c5ce0c18abc5f89c6fc0fb3c8a",
+   "sha": "2e83eebbecc2d23cdba7a42ac03fd16a223ef95f639e4bc1ca0cdcfe03662c4f",
    "t": "TIMING TAGS 3 OLD SYSTEM These were replaced by cooldowns. Tag Meaning 1PT Now 1CD E2T Now 2CD EXT Now XCD 2PT Now 1CD2U XPT Now 1CDXU 1PGT Now 1GCD E2GT Now 2GCD EXGT Now XGCD 2PGT Now 1GCD2U XPGT Now 1GCDXU FTE2T Now 1/2CD FGTE2GT Now 1/2GCD 1PT except first turn Now −1/1CD 23.3"
   }
  ]
