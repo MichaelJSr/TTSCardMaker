@@ -5,9 +5,9 @@
 If an attack is negated it does not happen. No damage is dealt, no on-hit effects occur, the creature does not get its action back, you do not pass go.
 
 ## CREATURES
-- When a creature is negated it is unable to use any of its own abilities (unless otherwise stated), but may still use the abilities of any equipped items or minions, and can still use actions.
+- When a creature is negated it is unable to use any of its own abilities (unless otherwise stated), but may still use the abilities of any equipped items or minions, and can still use actions. Negating a creature does not negate its equipped items: they are separate.
 - Cooldown abilities such as (2CD) still gain charge even while they are negated.
-- Minions/Items/Stats/Counters summoned/gained by an ability remain even if the ability that summoned them is negated or if the creature that summoned them dies.
+- Minions/Items/Stats/Counters summoned/gained by an ability remain even if the ability that summoned them is negated or if the creature that summoned them dies. (Minions are tied to their parent creature, not their summoner: if their parent creature is defeated, they die unless they are persistent. See: [“MINIONS”](#/rules/minions))
 - If 2 creatures/sources attempt to negate each other simultaneously, they are both negated.
 
 [Immunity:]{.u}

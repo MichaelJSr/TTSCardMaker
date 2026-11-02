@@ -31,7 +31,7 @@ These item types do not get discarded immediately after played.
 
 ## [equip] EQUIP
 - These items you may equip onto your own creatures and grant a passive effect to the creature they are on which is lost when unequipped.
-- Creatures do not inherit the abilities of equip items, they are only affected by them.
+- Creatures do not inherit the abilities of equip items, they are only affected by them. A creature's innate abilities and its equip's abilities are separate: a creature with [[Sword of Aeons]] equipped does not have innate lifesteal, the equip grants lifesteal to whatever it is equipped to.
 - May be unequipped and returned to your hand during your turn.
 - If an equip has a negative effect, cannot be unequipped until the start of the global turn after it was equipped.
 - If equipped creature dies, return equip to your hand.

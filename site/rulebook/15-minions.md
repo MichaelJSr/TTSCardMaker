@@ -3,6 +3,7 @@
 ## INTRODUCTION
 - Minions are small creatures that when summoned are attached onto a parent prime creature.
 - Minions are always attached to their parent creature, and stick with them even if the parent creature is moved or swapped into the hand.
+- A minion's parent creature is the creature it is on, not always its summoner: a summoner can occasionally summon minions onto other creatures. Minions are tied to their parent creature, not their summoner.
 - For most purposes, Minions are considered creatures, and have their own action, but they do not yield points when defeated. They do go to the graveyard when defeated.
 - Every minion and parent creature in the primary field may use their actions (See: [“THE FIELD”](#/rules/the-field)) in whatever order the player choses.
 - Minions cannot mine for BRICKS.
