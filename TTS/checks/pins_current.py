@@ -1,6 +1,7 @@
 """Every repo link in the save must serve main's current file: pinned sha's blob == main's blob (git's own view,
 independent of the updater's history walk). A failed pin's line names git log's last change of the file.
-The global script's links are live data on main (TTS/Global.lua), not pinned.
+The global script's links are live data on main (TTS/Global.lua), skipped (its pages.json link goes with the
+Rulebooks PDF's commit: lua_mock.py checks it).
 Usage: pins_current.py [save.json]   (history: $TTS_HISTORY, made or fetched)"""
 import json
 import os

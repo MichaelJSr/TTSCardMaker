@@ -16,7 +16,7 @@
 # Runs are live (dry_run off by default). The bot dispatches only its admins' re-parses (/update_stats force_update or
 # cards). Leftover work chains (owner, 2026-10-25): a live run that ends with work left dispatches the next run itself
 # (job chain): at once for a re-parse in progress, unmerged bake records and edits over the bake's cap. The hourly
-# safety cron (GitHub starts it late or not at all)
+# safety cron (GitHub starts it late or not at all: every 4-10 h)
 # catches what the chain leaves: unposted events, a lane that failed, a chain that stopped.
 # One main lane per guarded push (owner, 2026-10-25, P-2): a push's main lane skips itself when that push's guards have
 # fixes to land (card-guards.yml's "Fixes to land"); their Follow up starts Card sync once they land (or land nothing),
@@ -47,7 +47,7 @@ on:
       - "TTS/Global.lua"     # the save's global script and UI (tts_save writes them into the save)
       - "TTS/Global.xml"
   schedule:
-    - cron: "17 * * * *"     # the safety net (owner, 2026-10-25): off the top of the hour, GitHub's busiest
+    - cron: "17 * * * *"     # the hourly safety net (owner, 2026-10-25; GitHub starts it every 4-10 h): off the top of the hour, GitHub's busiest
   workflow_dispatch:
     inputs:
       dry_run:
@@ -111,7 +111,7 @@ jobs:
     name: Card data
     if: ${{ !inputs.retry }}
     concurrency:
-      group: card-data
+      group: ${{ inputs.dry_run && format('card-data-dry-{0}', github.run_id) || 'card-data' }}   # a dry run: a lock of its own
       cancel-in-progress: false   # a running build is never cut off
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -194,6 +194,7 @@ jobs:
       # verdicts.json (a later verdict wins) and events.json. Any data job merges them, so an after job lost (replaced
       # while pending in card-data, cancelled, failed, a gate) loses nothing: the next data job takes its records. The
       # main job reads them too (its Unmerged verdicts step). A failed download stops there: the rest wait, in order.
+      # Only this repo's runs' artifacts (a fork's pull request run's are never read).
       - &records-in
         name: Earlier bake records
         id: records-in
@@ -207,7 +208,8 @@ jobs:
           rm -rf "$out" && mkdir -p "$out"
           if [ -n "$RESTORE" ] && [ -z "$RECORDS" ]; then echo "A restore merges no bake records."; exit 0; fi
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=bake-records&per_page=100" \
-            --jq '[.artifacts[] | select(.expired | not) | {id: (.id | tostring), run: .workflow_run.id}] | sort_by(.id | tonumber)' \
+            --jq '[.artifacts[] | select((.expired | not) and .workflow_run.head_repository_id == .workflow_run.repository_id)
+              | {id: (.id | tostring), run: .workflow_run.id}] | sort_by(.id | tonumber)' \
             > "$out/listed.json"
           seen=$(jq -c '.merged // {}' carddata/db/bake-records.json 2> /dev/null || echo '{}')
           jq -c --argjson seen "$seen" '.[] | select($seen[.id] == null)' "$out/listed.json" | head -20 > "$out/new.jsonl"
@@ -488,7 +490,8 @@ jobs:
             if [ "$silent" != true ]; then sleep 1; fi
           done
 
-      # db/ and the cursor as one commit on data, never forced; a rejected push fails the job (gate G6's case).
+      # db/ and the cursor as one commit on data, never forced; a rejected push fails the job (gate G6's case). Tried 3
+      # times (a dropped connection), unless it landed after all.
       - name: Commit data
         id: data-commit
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && steps.build.outcome == 'success' }}
@@ -499,7 +502,12 @@ jobs:
           if git diff --cached --quiet; then echo "db/ unchanged: no data commit."; exit 0; fi
           if [ ! -s "$RUNNER_TEMP/message.txt" ]; then echo "Card data: posted cursor moved" > "$RUNNER_TEMP/message.txt"; fi
           git -c user.name=AutoCroissant -c user.email=autocroissant@gmail.com commit -q -F "$RUNNER_TEMP/message.txt"
-          git push origin HEAD:refs/heads/data
+          for i in 1 2 3; do
+            git push origin HEAD:refs/heads/data && break
+            [ "$(git ls-remote origin refs/heads/data | cut -f1)" = "$(git rev-parse HEAD)" ] && break
+            echo "::warning::data push failed (try $i)"
+            [ "$i" = 3 ] && exit 1
+          done
           echo "committed=true" >> "$GITHUB_OUTPUT"
           git log -1 --format="Data commit \`%h\`: %s." | tee -a "$GITHUB_STEP_SUMMARY"
 
@@ -523,6 +531,7 @@ jobs:
           path: ${{ runner.temp }}/card-data
           if-no-files-found: ignore
           retention-days: 14
+          overwrite: true     # a re-run replaces attempt 1's
 
       # A GITHUB_TOKEN push triggers no workflow, so the site build is dispatched after a data commit and after the bake
       # (its PNGs), whatever the data did. Card pushes start no site build of their own (site.yml): this is theirs.
@@ -697,7 +706,7 @@ jobs:
     needs: [timer, quiet]
     if: ${{ !cancelled() && (github.event_name == 'push' && needs.quiet.result != 'skipped' || github.event_name != 'push' && !needs.timer.outputs.other) && !needs.timer.outputs.guards && !needs.quiet.outputs.guards }}
     concurrency:
-      group: card-main
+      group: ${{ inputs.dry_run && format('card-main-dry-{0}', github.run_id) || 'card-main' }}   # a dry run: a lock of its own
       cancel-in-progress: false   # a running lane is never cut off
     runs-on: ubuntu-latest
     timeout-minutes: 90     # Commit main pushes M only before minute 60: the 30 left cover the caps of it and every later step
@@ -732,7 +741,8 @@ jobs:
           { echo "main=$main"; echo "start=$(date +%s)"; } >> "$GITHUB_OUTPUT"
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
                   'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json'
-                  'TTS/Impossibility Simulator.json' ':(glob)site/rulebook/*.md' 'TTS/Global.lua' 'TTS/Global.xml')
+                  'TTS/Impossibility Simulator.json' ':(glob)site/rulebook/*.md' 'TTS/Global.lua' 'TTS/Global.xml'
+                  'site/assets/' 'site/build/')    # the site code draws the rulebook PDF
           why=()
           event=$GITHUB_EVENT_NAME
           if [ -n "$CHAIN" ]; then event=schedule; fi      # a chained run gates as the schedule
@@ -873,7 +883,7 @@ jobs:
 
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
       # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), when the website shows main's
-      # chapters (it waits up to 15 minutes for the website's build of them); the save below puts it in the Rulebooks bag and M takes
+      # chapters (it waits up to 8 minutes for the website's build of them); the save below puts it in the Rulebooks bag and M takes
       # it. A failure leaves the PDF as it was.
       - name: Rulebook PDF
         id: pages
@@ -1002,9 +1012,13 @@ jobs:
               --jq "map(select(.status != \"completed\" and .databaseId != ${GITHUB_RUN_ID:-0} and .displayTitle != \"Card sync (dry run)\")) | length") \
               || waiting=0
             if [ "${waiting:-0}" -gt 0 ]; then echo "Another Card sync run is unfinished (a push's in its window, or pending): it does the work."; exit 0; fi
-            gh workflow run card-sync.yml --ref main -R "$GITHUB_REPOSITORY" -f dry_run=false -f force=true -f "retry=$GITHUB_EVENT_NAME" \
-              -f "builder_ref=$(git -C bot rev-parse HEAD)" -f "bake=$(jq -r '.bake // "all"' <<< "$INPUTS")" \
-              || echo "::warning::the new run was not dispatched: the next run with work does it"
+            again=(-f dry_run=false -f force=true -f "retry=$GITHUB_EVENT_NAME" -f "builder_ref=$(git -C bot rev-parse HEAD)"
+                   -f "bake=$(jq -r '.bake // "all"' <<< "$INPUTS")")
+            for wait in 0 10 30; do               # tried 3 times
+              sleep "$wait"
+              if gh workflow run card-sync.yml --ref main -R "$GITHUB_REPOSITORY" "${again[@]}"; then exit 0; fi
+            done
+            echo "::warning::the new run was not dispatched: the next run with work does it"
             exit 0
           fi
           pngs=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$m" -- ':(icase)*.png' ':(icase)*.pdf' | { grep -c . || true; })   # the rulebook PDF too
@@ -1042,6 +1056,7 @@ jobs:
           path: ${{ runner.temp }}/bake-records
           if-no-files-found: ignore
           retention-days: 14
+          overwrite: true     # a re-run replaces attempt 1's bake records (unmerged ones too; the verdicts heal)
 
       # The website edits left for the chain: card_bake.pending at this run's end (B, or main's head) with this run's
       # verdicts on the data's (over the cap, main moved under a card). Not after a rejected M: its retry or another run
@@ -1139,6 +1154,7 @@ jobs:
           path: ${{ runner.temp }}/card-sync
           if-no-files-found: ignore
           retention-days: 14
+          overwrite: true     # a re-run replaces attempt 1's
 
       - name: Tell Discord
         if: failure() && env.DRY_RUN != 'true'
@@ -1158,7 +1174,7 @@ jobs:
     needs: main
     if: ${{ !cancelled() && (needs.main.outputs.baked == 'true' || needs.main.outputs.records == 'true') }}
     concurrency:
-      group: card-data
+      group: ${{ inputs.dry_run && format('card-data-dry-{0}', github.run_id) || 'card-data' }}
       cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -1230,7 +1246,8 @@ jobs:
             || merged=""
           if [ -z "$merged" ]; then merged='{}'; fi
           if ! records=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=bake-records&per_page=100" \
-              | jq --argjson seen "$merged" '[.artifacts[] | select((.expired | not) and $seen[(.id | tostring)] == null)] | length'); then
+              | jq --argjson seen "$merged" '[.artifacts[] | select((.expired | not) and $seen[(.id | tostring)] == null
+                and .workflow_run.head_repository_id == .workflow_run.repository_id)] | length'); then
             echo "::warning::the bake records were not listed"
             records=0
           fi
@@ -1266,7 +1283,12 @@ jobs:
           if [ "$runs" -ge "$CHAIN_MAX" ]; then say "Chain stopped after $runs runs; the safety schedule picks it up."; exit 0; fi
           args=(-f dry_run=false -f bake=pending -f "chain=now $runs $idle")
           if [ -n "$BUILDER" ]; then args+=(-f "builder_ref=$BUILDER"); fi
-          if ! gh workflow run card-sync.yml --ref main -R "$GITHUB_REPOSITORY" "${args[@]}"; then
+          started=""
+          for wait in 0 10 30; do               # tried 3 times
+            sleep "$wait"
+            if gh workflow run card-sync.yml --ref main -R "$GITHUB_REPOSITORY" "${args[@]}"; then started=true; break; fi
+          done
+          if [ -z "$started" ]; then
             echo "::warning::the next run was not dispatched: the safety schedule picks it up"
             exit 0
           fi

@@ -22,10 +22,8 @@ on:
     - cron: "0 12 * * *"     # daily fallback: Card sync dispatches a build after each data commit
   workflow_dispatch:
 
-permissions:
+permissions:         # each job its own (below)
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
   # A newer run (Card sync's dispatch after its data commit, a later push) replaces a build still running: it builds
@@ -34,6 +32,9 @@ jobs:
     concurrency:
       group: pages-build
       cancel-in-progress: true
+    permissions:
+      contents: read
+      pages: read          # configure-pages only reads the Pages settings
     runs-on: ubuntu-latest
     timeout-minutes: 45       # the first run downloads every card PNG (~1.6 GB); later runs reuse cached images
     outputs:
@@ -191,6 +192,9 @@ jobs:
     concurrency:
       group: pages
       cancel-in-progress: false   # never cut a deployment off halfway; the newest waiting one follows it
+    permissions:
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:

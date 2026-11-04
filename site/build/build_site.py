@@ -3204,14 +3204,12 @@ def rulebook_text(source):
     return re.sub(r"\n{3,}", "\n\n", "\n".join(out)).strip()
 
 
-def game_text(cards, rules, banlist, icons, manifest):
+def game_text(cards, rules, banlist, icons):
     """game.txt: a header, the rulebook chapters in book order, the timing tags, the ban list, then every visible card by
-    kind and series; a duplicate as its own card, its text only when it differs. Stats as printed (bars). Dated by
-    the card data, so a no-change build keeps the file. ’ as '."""
+    kind and series; a duplicate as its own card, its text only when it differs. Stats as printed (bars). ’ as '."""
     shown = [c for c in cards if not c.get("hidden")]
-    by_id, m = {c["id"]: c for c in shown if c.get("id")}, manifest or {}     # a hidden original: the duplicate keeps its text
+    by_id = {c["id"]: c for c in shown if c.get("id")}     # a hidden original: the duplicate keeps its text
     out = [f"{SITE_NAME}: every card and rulebook chapter as plain text.", f"{len(shown)} cards, {len(rules)} rulebook chapters."
-           + (f" Card data built {m['built_at']} from card commit {m['card_commit'][:12]}." if m.get("built_at") and m.get("card_commit") else "")
            + (f" {SITE_URL}/" if SITE_URL else ""),
            "Card lines: name | kind | stars | types | HP DEF ATK SPD (one set per creature) | series, then on a duplicate"
            " | duplicate of its original. - is an empty field. The ability follows.", "", "# Rulebook", ""]
@@ -3467,7 +3465,9 @@ def tts_details(cards, chapters, icons, tag_table):
 # ---- main ------------------------------------------------------------------------------------------
 # ---- build versions (?v=) ------------------------------------------------------------------------------
 IMPORT_RE = re.compile(r'((?:from\s+|import\()"\./([\w-]+\.js))"')   # a module's imports (static, dynamic), as they are stamped
-VOLATILE = {"cards.json": ("generated", "source"), "decks.json": ("generated",), "changelog.json": ("since",)}   # the build's clock
+# the build's clock and facts (changelog.json's source: the data's build, run): a data commit that changes only them
+# deploys nothing
+VOLATILE = {"cards.json": ("generated", "source"), "decks.json": ("generated",), "changelog.json": ("since", "source")}
 
 
 def stamp_of(data):
@@ -3636,9 +3636,10 @@ def inline_css(page, css):
     if not link or "</style" in css.lower():
         warn("index.html: style.css not inlined")
         return page
-    # url()s are relative to assets/; inlined, to the page (../rulebook/fonts/x went outside the site)
+    # url()s are relative to assets/; inlined, to the page (../rulebook/fonts/x went outside the site). A quoted one is
+    # read to its closing quote: an SVG data URI's own url(%23g) is no file (it became url(assets/%23g))
     rebase = lambda m: m[0] if re.match(r"[a-z][\w+.-]*:|/|#", m[2], re.I) else f"url({m[1]}{posixpath.normpath('assets/' + m[2])}{m[1]})"
-    css = re.sub(r"""url\(\s*(["']?)([^"')]+)\1\s*\)""", rebase, css)
+    css = re.sub(r"""url\(\s*(["']?)((?<=")[^"]*|(?<=')[^']*|(?<!["'])[^"')\s]+)\1\s*\)""", rebase, css)
     return page[:link.start()] + f"<style>{css}</style>" + page[link.end():]
 
 
@@ -4240,7 +4241,7 @@ def main():
     log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), rulebook: {len(chapters)} chapters, {len(rule_images)} pictures, "
         f"icons: {len(set(i['file'] for i in icons.values()))}, banned: {sum(len(g['entries']) for g in banlist['groups'])}")
     game = game_text(cards, [{"name": f"{int(c['num'])}. {c['title']}" if int(c["num"]) else c["title"], "ability": rulebook_text(c["source"])}
-                             for c in chapters], banlist, icons, manifest)
+                             for c in chapters], banlist, icons)
     with open(os.path.join(DIST, GAME_TXT), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(game)
     log(f"{GAME_TXT}: {len(game.encode())} bytes, about {round(len(game.split()) * 1.3)} tokens")

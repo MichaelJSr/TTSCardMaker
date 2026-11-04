@@ -9,7 +9,8 @@ per frame; loading does nothing by itself and builds no UI; teams Red/Orange/Gre
 other seats None, Grey/Black untouched; hand zones shared on a side (a free seat's zones go to its first seated
 teammate and come back when someone sits there, kept through a save and load; other seats' zones never move); large
 cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on a flip only; card details, the
-rulebook panel and the card finder on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (the seated
+rulebook panel and the card finder on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or
+pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
 face down, Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden).
 Data: $TTS_DETAILS (a tts.json file), else the live website. Exits 1 on a failure.
@@ -47,6 +48,8 @@ LUA_TABLE = re.compile(r"(resizeTargets\s*=\s*\{\n)(.*?)(\n\})", re.DOTALL)     
 LUA_ROW = re.compile(r'^(\s*)\[\s*"((?:[^"\\]|\\.)*)"\s*\]\s*=\s*(.*?)\s*,?\s*$', re.MULTILINE)
 RAW = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/"
 LINK = re.compile(re.escape(RAW) + r"[^/]+/(.+)")
+REF = re.compile(re.escape(RAW) + r"([^/]+)/")
+PAGES_LINK = re.compile(re.escape(RAW) + r"(main|[0-9a-f]{40})/TTS/Rulebook/pages\.json")
 NOT_52 = [(r"//", "integer division"), (r"\bgoto\b", "goto"), (r"::", "label"), (r"&", "bitwise and"),
           (r"\|", "bitwise or"), (r"~(?!=)", "bitwise not/xor"), (r"<<|>>", "shift"), (r"\butf8\.", "utf8 lib"),
           (r"\bmath\.(type|tointeger|ult)\b", "5.3 math"), (r"\bstring\.(pack|unpack|packsize)\b", "5.3 string"),
@@ -106,6 +109,17 @@ def walk(objs):
     for o in objs or []:
         yield o
         yield from walk(o.get("ContainedObjects"))
+
+
+def pdf_ref(save):
+    """The ref of the Rulebooks bag's PDF link (its Custom_PDF's PDFUrl), or None."""
+    for bag in save.get("ObjectStates") or []:
+        if bag.get("Nickname") == "Rulebooks" and str(bag.get("Name", "")).endswith("Bag"):
+            for o in bag.get("ContainedObjects") or []:
+                m = REF.match((o.get("CustomPDF") or {}).get("PDFUrl") or "") if o.get("Name") == "Custom_PDF" else None
+                if m:
+                    return m.group(1)
+    return None
 
 
 def face_path(d):
@@ -547,8 +561,10 @@ def main():
           and told.get("Blue") == "You hold Pink and Purple's hand zones too (their seats are free).",
           f"onLoad: players told which zones they hold {w.told}")
     check(not w.ui.builds, "loading builds no panels")
-    check(sorted(u for u, _ in w.web) == sorted([f"{SITE_URL}/data/tts.json", RAW + "main/TTS/Rulebook/pages.json"]),
-          f"fetches tts.json and pages.json {[u for u, _ in w.web]}")
+    urls, pdf = [u for u, _ in w.web], pdf_ref(save)
+    refs = [m.group(1) for u in urls if (m := PAGES_LINK.fullmatch(u))]
+    check(len(urls) == 2 and f"{SITE_URL}/data/tts.json" in urls and len(refs) == 1 and refs[0] in ("main", pdf),
+          f"fetches tts.json and pages.json, at main or pinned with the Rulebooks PDF ({pdf}): {urls}")
     check("Find a card" in w.table_menu, "right-click the table: Find a card")
     bag = next((o for o in w.objects if o.type == "Bag" and o.getName() == "Rulebooks"), None)
     check(bag is not None and [x[0] for x in w.menus.get(bag, [])] == ["Contents and search"],

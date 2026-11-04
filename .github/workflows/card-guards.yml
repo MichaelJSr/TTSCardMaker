@@ -62,7 +62,7 @@ on:
         type: boolean
         default: false
 
-permissions:
+permissions:          # the post job's; check and finish have their own
   contents: write     # the commit comment and the bot commit
   actions: write      # gh workflow run card-sync.yml after a commit (a GITHUB_TOKEN push triggers no workflow)
 
@@ -78,6 +78,9 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.all && 150 || 40 }}    # finish's alert reads 40; the quiet window is the post job's
+    permissions:
+      contents: write     # the commit comment
+      actions: read       # gh run list
     env:
       # the comment's mark that this push's one Discord post went out (a re-run checks it)
       TOLD: "<!-- card-guards: told on Discord -->"
@@ -624,6 +627,9 @@ jobs:
     if: always() && needs.check.outputs.mode != 'off'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read      # the commit comments
+      actions: read       # the runs, their jobs and artifacts
     env:
       TOLD: "<!-- card-guards: told on Discord -->"
       # artifact: this push run told Discord it failed (or stayed quiet in a told streak)

@@ -1,5 +1,6 @@
 """Repo link pins: sha known, on main, path there, blob == main's, pin == last commit that changed it; canonical %-encoding.
-The global script's links are live data on main (TTS/Global.lua; links_http.py loads them), not pinned.
+The global script's links are live data on main (TTS/Global.lua; links_http.py loads them), not pinned here (its
+pages.json link goes with the Rulebooks PDF's commit: lua_mock.py checks it).
 
     python links_pins.py [save.json] [history clone] [ref]   (defaults: $TTS_HISTORY, main)
 The clone is made (bare, blobless, full history) or fetched; the checkout is shallow, don't use it.
