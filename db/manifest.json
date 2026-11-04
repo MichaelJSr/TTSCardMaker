@@ -1,15 +1,15 @@
 {
  "builder": {
-  "commit": "a77c719da3317a7f60a34dfc70978103ef9c64be",
+  "commit": "0fad316aeddc055e54a89cb45845bec1445a4e95",
   "parser_version": 5,
   "psd_tools": "1.26.0+cards",
   "python": "3.14",
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-04T03:49:57Z",
- "card_commit": "a8ec8a1bca62545dc31e9b1da4ad95b43146ea46",
- "card_commit_at": 1793764151.0,
+ "built_at": "2026-11-04T07:27:16Z",
+ "card_commit": "3cabfe124cf5c69936367181016ec1b33d747f3e",
+ "card_commit_at": 1793777208.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 94,
@@ -19,20 +19,20 @@
   "details": 769,
   "failed": 0,
   "new": 0,
-  "versions": 1599
+  "versions": 1690
  },
  "files": {
-  "old_stats.json": "742f9638c3573512a1d28af6090e451a82e4dfeecab7a3f32d48d961cd613201",
+  "old_stats.json": "0a82dc0cf2aa0160902cc80a54e9a001b7d3f574480ef7be3b331555c926f19a",
   "psd_details.json": "ae7028129495a97f1dcc512ac1ca20b6d1c7046105fe04d554f83d3d7574bd42",
   "rulebook.json": "2ed4037b7ab2de445409fe87102bb5fd5c985e57c4e4919cde636146b5add143",
-  "stats.json": "852aa0f15b1cf38827f604c42890c5facb1788f40c77ea22f0c59e1b9abad70b"
+  "stats.json": "cbd72c963a729f4c47f9705c262cd3c3632d7672cb9e82020097b8d3c627c296"
  },
  "gates": {},
  "inputs": {
   "authors_blob": "e09b279f3d8cac9fab89862cd7f9d89c37a7c382",
   "created_blob": "9842ba8781aaa486ab624b1fd1b612d8de84b443",
   "decks_blob": "431e4319b76d12626d4cacd9c21b470a7c5a8641",
-  "edits_blob": "b32c7ae426e3a5258a7c9317d7591f45e93f41e6",
+  "edits_blob": "217a8b7d0da7947dd7ad52e568c7f4be6e381e63",
   "fonts_tree": "e70af324a80bc25a7d5e39cac36b52dfa264b33a",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "87993ef69e369ea8006616af4dd4ba961a0525ae"
@@ -46,6 +46,6 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41769464840",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41792330823",
  "schema": 1
 }
