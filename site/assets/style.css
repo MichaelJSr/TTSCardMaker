@@ -252,19 +252,17 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
 @media (max-width: 980px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-ratings, #stats-history { scroll-margin-top: 117px; } }   /* two-row bar */
 @media (max-width: 640px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-ratings, #stats-history { scroll-margin-top: 184px; } }   /* three-row bar */
 .rb { --rb-ink: #102175; --rb-panel: #cfcfff; --rb-tab: #e4e4ff; --rb-pnum: #adadf8; --rb-paper: #fff;
-  font-family: Inconsolata, Consolas, ui-monospace, Menlo, monospace; font-size: 17px; line-height: 1.36; color: var(--rb-ink); }
-/* a chapter is a TTS page drawn to scale (owner 2026-11-03: "page width"): the 1080px page's width, its 35px text and
-   line height, its font (Inconsolata, the web font: the same letters on every computer), so a line, a panel and a
-   picture placed in it come out on the website, in the editor and in the PDF alike; all in it in em or --rb-px (the
-   page's px), so it lays out the same at any zoom or width; 780px wide at most (25px text), 9px text at the least
-   (the preview: none); a phone's 17px, the page flowing */
-.rb-book { display: grid; gap: 22px; min-width: 0; width: 100%; max-width: 780px; justify-self: center; container-type: inline-size; }
+  font-family: Consolas, Inconsolata, ui-monospace, Menlo, monospace; font-size: 17px; line-height: 1.45; color: var(--rb-ink); }
+/* a chapter is a page drawn to scale, as a PDF's: its text 17px on a 1108px page (a 1400px window; 1300px at most), all
+   in it in em or --rb-px (that px), so it lays out the same at any zoom or width, the editor's preview and the TTS sheets
+   too (.rb-sheet: this page at 1080px); its text 9px at the least (the preview: none); a phone's 17px as ever, the page flowing */
+.rb-book { display: grid; gap: 22px; min-width: 0; width: 100%; max-width: 1300px; justify-self: center; container-type: inline-size; }
 @property --rb-px { syntax: "<length>"; inherits: true; initial-value: 1px; }
-.rb-chapter { font-size: max(var(--rb-least, 9px), 100cqw * 35 / 1080); --rb-px: calc(1em / 35); -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+.rb-chapter { font-size: max(var(--rb-least, 9px), 100cqw * 17 / 1108); --rb-px: calc(1em / 17); -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
   background: var(--rb-paper); border-radius: calc(14 * var(--rb-px)); padding: calc(14 * var(--rb-px)) calc(16 * var(--rb-px)) calc(18 * var(--rb-px)); position: relative; }
 :root[data-theme="dark"] .rb-chapter { box-shadow: 0 0 0 1px #ffffff14; }
-.rb-chapter > .rb-tools { position: absolute; top: calc(40 * var(--rb-px)); right: calc(48 * var(--rb-px)); display: flex; gap: calc(12 * var(--rb-px)); z-index: 1; }
-.rb-chapter > .rb-tools button, .rb-chapter > .rb-tools a { font: max(11px, 26 * var(--rb-px)) system-ui, sans-serif; padding: .46em .92em; border-radius: .62em; }
+.rb-chapter > .rb-tools { position: absolute; top: calc(20 * var(--rb-px)); right: calc(24 * var(--rb-px)); display: flex; gap: calc(6 * var(--rb-px)); z-index: 1; }
+.rb-chapter > .rb-tools button, .rb-chapter > .rb-tools a { font: max(10px, 13 * var(--rb-px)) system-ui, sans-serif; padding: .46em .92em; border-radius: .62em; }
 .rb-cover { display: block; width: min(260px, 60%); margin: 4px auto 14px; border-radius: 10px; }
 .rb-head { display: flex; align-items: center; gap: .6em; background: var(--rb-panel); border-radius: .45em; padding: .55em .8em; margin: 0 0 1.1em; }
 .rb-head h2 { flex: 1; margin: 0; text-align: center; font-size: 2.15em; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; line-height: 1.15; color: var(--rb-ink); }
@@ -468,13 +466,13 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rbe-preview .rb-book { position: relative; }
 .rbe-measure { position: fixed; left: -20000px; top: 0; visibility: hidden; pointer-events: none; }
 .rbe-cuts { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
-.rbe-cut { position: absolute; left: -6px; right: -6px; border-top: 2px dashed #e11d48; }
-.rbe-cut > span { position: absolute; right: 0; top: -1px; transform: translateY(-100%); background: #e11d48; color: #fff;
+.rbe-cut { position: absolute; left: 0; right: 0; border-top: 2px dashed #e11d48; }
+.rbe-cut > span { position: absolute; right: 4px; top: -1px; transform: translateY(-100%); background: #e11d48; color: #fff;
   font: 600 11px/1.5 system-ui, sans-serif; padding: 0 6px; border-radius: 4px 4px 0 0; white-space: nowrap; }
 .rbe-cut.rbe-cut-shrunk > span { background: #b45309; }
 .rbe-bar .rbe-card { width: 13em; padding: 3px 8px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--ink); }
 .rbe-bar button.on { border-color: var(--accent); color: var(--accent); }
-.rb-sec-edit { margin-left: .5em; padding: 0 .35em; border: 0; background: none; color: var(--rb-ink); opacity: .35; font: calc(30 * var(--rb-px)) system-ui, sans-serif; cursor: pointer; vertical-align: .15em; }
+.rb-sec-edit { margin-left: .5em; padding: 0 .35em; border: 0; background: none; color: var(--rb-ink); opacity: .35; font: calc(15 * var(--rb-px)) system-ui, sans-serif; cursor: pointer; vertical-align: .15em; }
 .rb-sec:hover .rb-sec-edit, .rb-sec-edit:focus-visible { opacity: .9; }
 @media (max-width: 900px) { .rbe-cols { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; } }
 /* the ban list editor (rulebook-edit.js openBans) */
@@ -506,22 +504,31 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rb-diff tr.dd del { background: color-mix(in srgb, #e5534b 45%, transparent); text-decoration: none; border-radius: 2px; }
 .rb-diff tr.da ins { background: color-mix(in srgb, #2ea043 45%, transparent); text-decoration: none; border-radius: 2px; }
 @media (max-width: 760px) { .rbh-cols { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } .rbh-list { max-height: 30vh; } }
-/* the TTS sheets (#/rules/print): 1080x1920 pages; the export screenshots one at a time (?sheet=N) */
+/* the TTS sheets (#/rules/print): 1080x1920 pages; the export screenshots one at a time (?sheet=N). A sheet's page
+   (.rb-page) is the chapter's page as the website draws it (.rb-chapter at 1108px: 17px text, --rb-px 1px, its padding,
+   font and line height) shrunk to the sheet's 1080px, so every line, panel and placed picture comes out as on the
+   website; the heading above, the page number in the foot */
 .rb-sheets { display: flex; flex-wrap: wrap; gap: 16px; }
 .rb-sheets .rb-sheet { zoom: .3; box-shadow: 0 2px 18px #0006; }
-.rb-sheet { position: relative; display: flex; flex-direction: column; width: 1080px; height: 1920px; padding: 14px 14px 72px; box-sizing: border-box; overflow: hidden;
-  background: #fff; font-family: Inconsolata, Consolas, monospace; font-size: 35px; line-height: 1.36; }
-.rb-sheet .rb-head { flex: none; min-height: 184px; margin-bottom: 22px; padding: 0 .5em; }
+.rb-sheet { position: relative; width: 1080px; height: 1920px; box-sizing: border-box; overflow: hidden; background: #fff; --rb-px: 1px; }
+.rb-sheet > .rb-page { position: relative; display: flex; flex-direction: column; box-sizing: border-box; width: 1108px; height: calc(1920px * 1108 / 1080);
+  padding: 14px 16px 68px; transform: scale(calc(1080 / 1108)); transform-origin: 0 0; }
+.rb-sheet .rb-head { flex: none; min-height: 5.25em; margin-bottom: .65em; padding: 0 .5em; }
 .rb-sheet .rb-head h2 { font-size: 3.1em; letter-spacing: .1em; white-space: nowrap; overflow: hidden; }
-.rb-sheet .rb-body { flex: 1; min-height: 0; overflow: hidden; padding: 0 2px; }
-.rb-sheet .rb-body > :first-child { margin-top: 0; }
-.rb-sheet .rb-panel p, .rb-sheet .rb-list li, .rb-chapter .rb-panel p, .rb-chapter .rb-list li { text-align: justify; }
-.rb-sheet .rb-pnum { position: absolute; right: 8px; bottom: 6px; width: 57px; height: 57px; min-width: 0; padding: 0; font-size: 26px; }
-.rb-sheet .rb-cards .rb-card, .rb-chapter .rb-cards .rb-card { width: 6.8em; }
+/* clipped at the page's edge (a picture moved up at its top: into the gap under the heading), its text as wide as the chapter's */
+.rb-sheet .rb-body { flex: 1; min-height: 0; overflow: hidden; margin: -.65em -16px 0; padding: .65em 16px 0; }
+.rb-sheet .rb-body > :first-child:not(.rb-left, .rb-right, .rb-say-right) { margin-top: 0; }
+/* the page's last block: its bottom margin falls off the page (as at a break), not a line's room */
+.rb-sheet .rb-body > :last-child:not(.rb-left, .rb-right, .rb-say-right), .rb-sheet .rb-body > :is(.rb-small, .rb-center, .rb-note):last-child > :last-child { margin-bottom: 0; }
+/* a floated picture opening a page or a part carried over: the block beside it without its top margin, so the two sit
+   as on the website (where that margin falls above both) */
+.rb-sheet :is(.rb-body, .rb-cont > .rb-panel) > :is(.rb-left, .rb-right, .rb-say-right):first-child + * { margin-top: 0; }
+.rb-sheet .rb-body > p { margin: .5em .3em; }                                                   /* as .rb-chapter > p */
+.rb-sheet .rb-fig:not([style*="width"]) img { width: calc(var(--w) * var(--rb-px)); }           /* as .rb-chapter's */
+.rb-sheet .rb-pnum { position: absolute; right: 16px; bottom: 14px; box-sizing: border-box; min-width: 2.2em; height: 2.2em; padding: 0 .3em; font-size: 1.15em; }   /* "10.2": a pill */
 .rb-sheet .rb-card img { box-shadow: none; }
-.rb-sheet .rb-row > .rb-col > .rb-cards .rb-card, .rb-chapter .rb-row > .rb-col > .rb-cards .rb-card { width: min(6.8em, 100%); }
 .rb-sheet a { color: inherit; text-decoration: none; }
-.rb-sheet.rb-cover-sheet { padding: 0; } .rb-sheet.rb-cover-sheet .rb-body { padding: 0; } .rb-sheet.rb-cover-sheet .rb-body img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.rb-sheet.rb-cover-sheet > .rb-page { padding: 0; } .rb-sheet.rb-cover-sheet .rb-body { margin: 0; padding: 0; } .rb-sheet.rb-cover-sheet .rb-body img { display: block; width: 100%; height: 100%; object-fit: cover; }
 body.rb-shot { margin: 0; background: #fff; overflow: hidden; } body.rb-shot > :not(main) { display: none !important; } body.rb-shot main { padding: 0 !important; margin: 0 !important; max-width: none !important; }
 body.rb-shot .rb-sheets { display: block; } body.rb-shot .rb-sheets .rb-sheet { zoom: 1; box-shadow: none; } body.rb-shot .rb-sheets .rb-sheet:not(.rb-shown) { display: none; }
 body.rb-shot .rb-print-bar { display: none; }

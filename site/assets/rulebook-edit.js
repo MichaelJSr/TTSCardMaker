@@ -923,26 +923,33 @@ let timer = 0;
 function preview() { clearTimeout(timer); timer = setTimeout(render, 120); }
 
 // ---- the TTS page cuts: the chapter cut into TTS pages off screen (rulebook.js paginate, as Card sync's export cuts
-// it), then a dashed line over the page where each page after the first starts (its first line, or the list item it
-// starts at), labelled with the page's number; one drawn smaller (a block taller than a page) says so. Typing waits.
-let cutTimer = 0;
+// it; a TTS page is this page at the website's proportions, so its lines are these), then a dashed line over the page
+// where each page after the first starts (its first block, list item or table row), labelled with the page's number;
+// one drawn smaller (a block taller than a page) says so. Typing waits; a picture still loading: cut again once it is in.
+let cutTimer = 0, cutRun = 0;
 function cutsSoon() { clearTimeout(cutTimer); cutTimer = setTimeout(cuts, 400); }
-function cuts() {
+async function cuts() {
   if (!M?.view) return;
-  const pane = M.api.modal.querySelector(".rbe-preview");
+  const pane = M.api.modal.querySelector(".rbe-preview"), run = ++cutRun, { chapter, ctx } = M.view, RB = M.api.RB;
   if (!pane) return;
+  await RB.fontsIn();                                  // the book's fonts (a web font on some computers) before measuring
+  if (run !== cutRun || M?.view?.chapter !== chapter) return;
   let host = pane.querySelector(".rbe-measure");
   if (!host) { host = Object.assign(document.createElement("div"), { className: "rbe-measure" }); host.setAttribute("aria-hidden", "true"); pane.append(host); }
-  const sheets = M.api.RB.paginate(host, [M.view.chapter], { ...M.view.ctx, lines: false });
+  let sheets = RB.paginate(host, [chapter], { ...ctx, lines: false });
+  await Promise.all([...host.querySelectorAll("img")].map(i => i.decode().catch(() => {})));
+  if (run !== cutRun || M?.view?.chapter !== chapter) return;   // typed on, or closed: a later cut draws
+  if ([...host.querySelectorAll(".rb-body")].some(b => b.scrollHeight > b.clientHeight + 1)) sheets = RB.paginate(host, [chapter], { ...ctx, lines: false });
   M.cuts = sheets.map((x, k) => ({ num: x.num || String(x.n), start: x.start, shrunk: !!x.shrunk, first: k === 0 }));
   host.innerHTML = "";
   placeCuts();
 }
-// the element a page starts at on the editor's page: its block, or that list's item
+// the element a page starts at on the editor's page: its block, or that list's item, that table's row
 function startEl(start) {
   const el = start && page()?.querySelector(`[data-line="${start.line}"]`);
   if (!el || !start.item) return el;
-  return [...el.children].filter(n => n.tagName === "LI")[start.item] || el;
+  const parts = el.matches("ul, ol") ? [...el.children].filter(n => n.tagName === "LI") : [...el.querySelectorAll("tbody > tr")];
+  return parts[start.item] || el;
 }
 function placeCuts() {
   if (!M) return;
@@ -957,7 +964,7 @@ function placeCuts() {
     const tip = c.shrunk ? " (drawn smaller: too tall for a page)" : "";
     if (c.first) return c.shrunk ? `<div class="rbe-cut rbe-cut-shrunk" style="top:0"><span>TTS page ${esc(c.num)}${tip}</span></div>` : "";
     if (!el) return "";
-    return `<div class="rbe-cut${c.shrunk ? " rbe-cut-shrunk" : ""}" style="top:${Math.round(el.getBoundingClientRect().top - top - 3)}px"><span>TTS page ${esc(c.num)}${tip}</span></div>`;
+    return `<div class="rbe-cut${c.shrunk ? " rbe-cut-shrunk" : ""}" style="top:${(el.getBoundingClientRect().top - top - 2).toFixed(1)}px"><span>TTS page ${esc(c.num)}${tip}</span></div>`;   // the line just above its first block
   }).join("");
   const n = list.length, st = M.api.modal.querySelector("#rbe-pages");
   if (st) st.textContent = n ? `${n} TTS page${n > 1 ? "s" : ""}` : "";

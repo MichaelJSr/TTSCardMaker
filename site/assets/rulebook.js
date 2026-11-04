@@ -360,14 +360,30 @@ export const titleText = t => plainText({ blocks: [{ t: "p", text: String(t || "
 // ---- TTS sheets ---------------------------------------------------------------------------------------------------
 // The book cut into 1080x1920 pages in a host element (laid out, so it can measure): each chapter starts a page; its
 // first page reads "STATS", the next "STATS 2", as the Photoshop pages did, numbered 7, 7.2...; "=== page ===" starts a
-// new one. Every page has the same text size (2026-11-03: the website, the editor and the PDF look alike, so a design
-// holds): a block that doesn't fit is split between its children (a section's blocks, a list's items, a table's rows)
-// when what fits here is at least SPLIT_LEAST of the page, else it starts the next page; a panel with a placed picture
-// moves whole (the picture is placed in % of its panel). Only a block taller than a whole page is drawn smaller (shrunk).
+// new one. A page is the website's chapter page at its proportions (style.css .rb-page), so its lines are the website's
+// and every page has the same text size (2026-11-03/04: the website, the editor and the PDF alike, so a design holds):
+// a block that doesn't fit is split between its children (a section's blocks, a list's items, a table's rows) when what
+// fits here is at least SPLIT_LEAST of the page, else it starts the next page; a panel with a placed picture moves whole
+// (the picture is placed in % of its panel), and a page never ends beside a floated picture (what follows it wraps
+// around it on the website). Only a block taller than a whole page is drawn smaller (shrunk).
 // Returns [{name, num, ch (the chapter's number as in its file), n (its page), el, start: {line, item} (the source line
 // the page starts at, item: a list's first item on it), shrunk}].
 const SPLIT_LEAST = 0.15;                             // a split's first part takes at least this share of a page
+// the book's fonts (style.css .rb's: an installed Consolas, else the Inconsolata web font; the PDF printer's own) in before anything measures
+export const fontsIn = () => Promise.all(["17px Consolas", "bold 17px Consolas", "italic 17px Consolas", "italic bold 17px Consolas", "17px Inconsolata",
+  "bold 17px Inconsolata", "17px 'EB Garamond'"].map(f => document.fonts.load(f).catch(() => {}))).then(() => document.fonts.ready);
 const hasPlaced = b => placed(b) || (kidsOf(b) || []).some(k => typeof k === "object" && hasPlaced(k));
+// a picture floated in box reaching below its last block: on the website what comes next wraps around it
+function hangs(box) {
+  const flow = [...box.children].filter(n => { const s = getComputedStyle(n); return s.float === "none" && s.position !== "absolute" && s.display !== "none"; });
+  const end = flow.length ? flow[flow.length - 1].getBoundingClientRect().bottom : box.getBoundingClientRect().top;   // none: all of it
+  return [...box.querySelectorAll(".rb-fig, .rb-say")].some(f => {
+    if (getComputedStyle(f).float === "none") return false;
+    const r = f.getBoundingClientRect();                // the page drawn shrunk: its margin too
+    return r.bottom + parseFloat(getComputedStyle(f).marginBottom) * (r.width / (f.offsetWidth || 1)) > end + 0.5;
+  });
+}
+const holderOf = el => el.querySelector(":scope > .rb-panel") || el;   // where a block's children are drawn
 // where a block drawn first on a page starts in the source: its line, or for a part carried over, its first child's
 const startOf = b => (!b ? null : !b.cont ? (b.line != null ? { line: b.line } : null)
   : b.t === "list" || b.t === "table" ? { line: b.line, item: b.off || 0 } : startOf(kidsOf(b)?.[0]) || (b.line != null ? { line: b.line } : null));
@@ -377,9 +393,9 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
   if (cover) { const el = sheetEl(""); el.classList.add("rb-cover-sheet"); el.querySelector(".rb-body").innerHTML = `<img src="${esc(cover)}" alt="">`; el.querySelector(".rb-head").remove(); host.append(el); sheets.push({ name: "Cover", num: "", el }); }
   for (const ch of chapters) {
     const ast = ch.ast || parse(ch.source), title = ast.title || ch.title, c = { ...ctx, id: "" };
-    let n = 0, body = null;
+    let n = 0, body = null, onPage = [];
     const fresh = () => {
-      n++;
+      n++; onPage = [];
       const el = sheetEl(`${inline(title, c)}${n > 1 ? ` ${n}` : ""}`, Number(ch.num) > 0 ? `${Number(ch.num)}${n > 1 ? `.${n}` : ""}` : "");
       host.append(el); body = el.querySelector(".rb-body");
       const h2 = el.querySelector("h2");                 // one line: a long title is drawn smaller
@@ -391,16 +407,19 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
     const draw = b => { const t = document.createElement("template"); t.innerHTML = blockHtml(b, c).trim(); return t.content.firstElementChild || document.createElement("div"); };
     const mark = b => { const s = sheets[sheets.length - 1]; if (!body.children.length && b.t !== "page") s.start = startOf(b); };
     const tryPut = b => { const first = !body.children.length, el = draw(b); body.append(el); if (!over()) { if (first) sheets[sheets.length - 1].start = startOf(b); return true; } el.remove(); return false; };
+    // a split's head whose floated picture the tail would wrap around (depth 2: in its first child)
+    const cutHangs = (part, depth = 1) => { const el = draw(part); body.append(el); let box = holderOf(el); if (depth > 1) box = holderOf(box.firstElementChild || box); const h = hangs(box); el.remove(); return h; };
     // the largest head of b that fits ([head, tail]), or null
     const split = b => {
       const kids = kidsOf(b);
       if (!kids || kids.length < 2 && !(kids.length === 1 && kidsOf(kids[0]))) return null;
       let k = 0;
       while (k < kids.length && tryPut(withKids(b, kids.slice(0, k + 1)))) { body.lastElementChild.remove(); k++; }
-      if (k === 0) {                                   // not even its first child: split that one
-        const inner = split1(kids[0], b);
-        return inner;
-      }
+      if (k === 0) return split1(kids[0], b);          // not even its first child: split that one
+      const fit = k;
+      while (k > 0 && cutHangs(withKids(b, kids.slice(0, k)))) k--;   // a floated picture goes on with what wraps around it
+      if (k === 0 && !body.children.length) k = fit;   // a page of its own: cut where it fits all the same
+      if (k === 0) return null;
       return [withKids(b, kids.slice(0, k)), k < kids.length ? withKids(b, kids.slice(k), true, (b.off || 0) + k) : null];
     };
     const split1 = (kid, parent) => {
@@ -408,6 +427,9 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
       if (!sub || sub.length < 2) return null;
       let k = 0;
       while (k < sub.length && tryPut(withKids(parent, [withKids(kid, sub.slice(0, k + 1))]))) { body.lastElementChild.remove(); k++; }
+      const fit = k;
+      while (k > 0 && cutHangs(withKids(parent, [withKids(kid, sub.slice(0, k))]), 2)) k--;
+      if (k === 0 && !body.children.length) k = fit;
       if (k === 0) return null;
       return [withKids(parent, [withKids(kid, sub.slice(0, k))]), withKids(parent, [withKids(kid, sub.slice(k), true, (kid.off || 0) + k), ...kidsOf(parent).slice(1)], true)];
     };
@@ -416,18 +438,25 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
     while (queue.length && guard++ < 5000) {
       const b = queue.shift();
       if (b.t === "page") { if (body.children.length) fresh(); continue; }
-      if (tryPut(b)) continue;
+      if (tryPut(b)) { onPage.push(b); continue; }
       const empty = !body.children.length, parts = empty || !hasPlaced(b) ? split(b) : null;
       if (parts) {
         const first = draw(parts[0]);
         mark(parts[0]); body.append(first);
-        if (empty || first.getBoundingClientRect().height >= SPLIT_LEAST * body.clientHeight) {
+        if (empty || first.offsetHeight >= SPLIT_LEAST * body.clientHeight && !hangs(body)) {
           if (parts[1]) queue.unshift(parts[1]);
           fresh(); continue;
         }
         first.remove();                                 // a sliver at the page's foot: the whole block on the next page
       }
-      if (!empty) { fresh(); queue.unshift(b); continue; }
+      if (!empty) {                                     // the next page; a floated picture what's left wraps around goes too
+        queue.unshift(b);
+        const gone = [];
+        while (gone.length < onPage.length && body.children.length > 1 && hangs(body)) { const el = body.lastElementChild; el.remove(); gone.unshift(el); }
+        if (gone.length && hangs(body)) body.append(...gone);   // the picture opens the page: as it was
+        else if (gone.length) queue.unshift(...onPage.slice(onPage.length - gone.length));
+        fresh(); continue;
+      }
       const el = draw(b); mark(b); body.append(el); shrink(el, over);   // taller than a page on its own
       sheets[sheets.length - 1].shrunk = true;
       fresh();
@@ -445,7 +474,7 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
 }
 function sheetEl(title, num = "") {
   const t = document.createElement("template");
-  t.innerHTML = `<div class="rb rb-sheet"><header class="rb-head"><h2>${title}</h2></header><div class="rb-body"></div>${num ? `<span class="rb-pnum">${esc(num)}</span>` : ""}</div>`;
+  t.innerHTML = `<div class="rb rb-sheet"><div class="rb-page"><header class="rb-head"><h2>${title}</h2></header><div class="rb-body"></div>${num ? `<span class="rb-pnum">${esc(num)}</span>` : ""}</div></div>`;
   return t.content.firstElementChild;
 }
 const kidsOf = b => (b.t === "section" || b.t === "fence" && ["panel", "box", "small", "center", "note"].includes(b.kind) ? b.children : b.t === "list" ? b.items : b.t === "table" ? b.rows : null);
