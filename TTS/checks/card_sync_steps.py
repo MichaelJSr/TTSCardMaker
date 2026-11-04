@@ -40,7 +40,8 @@
    edits; none when nothing is left, a lane failed, another live run's lane reads it (queued, waiting), after
    CHAIN_IDLE runs without progress or CHAIN_MAX runs (said in the summary), or on a dry run. A run whose main lane
    waits a window also looks after its data lane (Chain after the data, the same step), so a re-parse goes on at once.
-10. One main lane per guarded push (P-2; faked gh): Guards' fixes skips a push's main lane when its own guards run has
+10. One main lane per guarded push (P-2; faked gh): Guards' fixes waits for the push's own guards' check job, then skips
+   the push's main lane when that guards run has
    fixes to land (card-guards.yml's "Fixes to land"; unfinished, or done with Follow up started), the schedule's and a
    chain's while any guards run with fixes is unfinished; it goes when the guards have nothing to land, failed to start
    Card sync, were cancelled, are absent or unreadable. card-guards.yml's side: the names Card sync reads, Plan's fixes
@@ -526,10 +527,10 @@ def timer_cases(flow: dict) -> None:
                                                                      ("schedule", t("success")), ("workflow_dispatch", t("skipped")))]
     check(got == [True, False, True, False, False, False],
           f"quiet: a push's run waits unless another window runs (a failed look waits too); nothing else waits ({got})")
-    check("environment" not in quiet and not any("sleep" in (st.get("run") or "") for st in quiet["steps"])
+    check("environment" not in quiet and not any("sleep" in (st.get("run") or "") for st in quiet["steps"] if st.get("id") != "guards")
           and quiet.get("name") == "Quiet window" and "concurrency" not in quiet and "concurrency" not in timer
           and step(timer, "other")["env"]["QUIET"] == quiet["name"] and step(main, "gate")["env"]["LANE"] == main["name"] == LANE,
-          "quiet: no environment, no sleep, in no group; Another timer looks for its name, the main Gate for main's")
+          "quiet: no environment, no fixed sleep (only the guards' wait for their check), in no group; Another timer looks for its name, the main Gate for main's")
     q = lambda result: {"result": result, "outputs": {}}  # noqa: E731
     want = [(("push", t("success"), q("success")), True), (("push", t("failure"), q("failure")), True),
             (("push", t("success", "41"), q("skipped")), False), (("push", t("skipped"), q("skipped")), False),
@@ -1219,7 +1220,8 @@ def lane_cases(flow: dict) -> None:
                          (53, [check_job(False), {"name": "post", "status": "waiting"}]),                   # report, or no writes
                          (54, [check_job(True), {"name": "post", "status": "completed", "steps": [st("Land", "success"), st("Follow up", "success")]}]),
                          (55, [check_job(True), {"name": "post", "status": "completed", "steps": [st("Land", "failure"), st("Follow up", "failure")]}]),
-                         (56, [check_job(True), {"name": "post", "status": "completed", "conclusion": "cancelled", "steps": []}])):
+                         (56, [check_job(True), {"name": "post", "status": "completed", "conclusion": "cancelled", "steps": []}]),
+                         (57, [{"name": "check", "status": "in_progress", "steps": [st("Plan for the post job", None)]}])):  # still checking
             write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": doc}))
         stamp = lambda minutes: time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() - minutes * 60))  # noqa: E731
         run = lambda rid, status, minutes=31: {"id": rid, "status": status, "created_at": stamp(minutes)}  # noqa: E731
@@ -1232,6 +1234,7 @@ def lane_cases(flow: dict) -> None:
             (sha, [run(55, "completed")], "", "the push's guards failed to start Card sync: goes (no bake lost)"),
             (sha, [run(56, "completed")], "", "the push's guards cancelled before Follow up: goes"),
             (sha, [], "", "no guards run for the push (CARD_GUARDS off): goes"),
+            (sha, [run(57, "in_progress")], "", "the push's guards still checking: waits for the check (then, never done: goes)"),
             ("", [run(54, "completed"), run(51, "in_progress")], "51", "the schedule: an unfinished guards run with fixes: skipped"),
             ("", [run(54, "completed")], "", "the schedule: finished guards runs are passed over: goes"),
             ("", [run(51, "in_progress", 150)], "", "the schedule: a guards run over two hours old is passed over: goes"),
@@ -1246,6 +1249,7 @@ def lane_cases(flow: dict) -> None:
             code, text, out = run_step(timer, "guards", tmp, env, tmp)
             asked = open(calls).read() if os.path.exists(calls) else ""
             ok = code == 0 and out.get("run", "") == want and ((f"head_sha={want_sha}" in asked) == bool(want_sha))
+            ok = ok and (asked.count("/runs/57/jobs") > 50) == ("57" in str(runs))     # the wait asked its check job again and again
             check(ok, f"Guards' fixes: {what} -> {out.get('run') or 'none'}" + ("" if ok else f"\n{text}\n{asked}"))
         code, text, out = run_step(timer, "guards", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
         check(code == 0 and "run" not in out and "were not read" in text, "Guards' fixes: runs not read -> none (the main lane goes on)")

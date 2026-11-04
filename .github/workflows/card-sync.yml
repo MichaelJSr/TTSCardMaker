@@ -646,6 +646,15 @@ jobs:
           while read -r id status; do
             [ -n "$id" ] || continue
             if [ -z "$SHA" ] && [ "$status" = completed ]; then continue; fi     # another push's: unfinished only
+            if [ -n "$SHA" ]; then      # this push's: its check job's last step (Fixes to land) decides; wait for it, 11 min at most
+              for _ in $(seq 60); do
+                [ "$status" = completed ] && break
+                done_=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq '[.jobs[] | select(.name == "check" and .status == "completed")] | length') || done_=0
+                [ "${done_:-0}" -gt 0 ] && break
+                sleep 10
+                status=$(gh api "$q" --jq ".workflow_runs[] | select(.id == $id) | .status") || status=""
+              done
+            fi
             hold=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[].steps // [] | .[]] as \$s
               | (\$s | any(.name == \"$FIXES\" and .conclusion == \"success\"))
                 and (\"$status\" != \"completed\" or (\$s | any(.name == \"$FOLLOW\" and .conclusion == \"success\")))") || hold=false
@@ -658,15 +667,15 @@ jobs:
           done <<< "$runs"
           echo "No guards run with fixes to land: the main lane goes on." | tee -a "$GITHUB_STEP_SUMMARY"
 
-  # A push's run, and a chained wait's: this push's guards (no wait: the 30-minute window and its environment
-  # card-sync-quiet are gone, owner 2026-11-03), then the main lane on main's head as it is then. The job keeps its name,
-  # which the other runs read.
+  # A push's run, and a chained wait's: this push's guards (their check job, then whether they land fixes; no fixed wait:
+  # the 30-minute window and its environment card-sync-quiet are gone, owner 2026-11-03), then the main lane on main's
+  # head as it is then. The job keeps its name, which the other runs read.
   quiet:
     name: Quiet window
     needs: timer
     if: ${{ !cancelled() && (github.event_name == 'push' || startsWith(inputs.chain, 'wait')) && needs.timer.result != 'skipped' && !needs.timer.outputs.other && !needs.timer.outputs.guards }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15    # this push's guards' check (11 min at most), then the step
     defaults:
       run:
         shell: bash
@@ -972,7 +981,9 @@ jobs:
             exit 1
           fi
           ok=true
-          if ! git push --no-thin origin "$m:refs/heads/main"; then     # a thin pack would want the old blobs as delta bases
+          # no delta search (pack.window=0): over HTTPS the pack is thin whatever --no-thin says, and its deltas would want
+          # the old blobs this blobless checkout lacks (every bake's first push failed so, 5 s a card to fetch them)
+          if ! git -c pack.window=0 push --no-thin origin "$m:refs/heads/main"; then
             if [ "$(git ls-remote origin refs/heads/main | cut -f1)" = "$MAIN" ]; then   # main still there: git wanted an old blob
               echo "::warning::the push needed objects this blobless checkout lacks: once more with fetching allowed"
               GIT_NO_LAZY_FETCH=0 git push --no-thin origin "$m:refs/heads/main" || ok=false
@@ -1111,7 +1122,9 @@ jobs:
         run: |
           out=$RUNNER_TEMP/card-sync
           mkdir -p "$out"
-          if [ -d "$RUNNER_TEMP/card-bake" ]; then cp -R "$RUNNER_TEMP/card-bake" "$out/bake"; fi
+          if [ -d "$RUNNER_TEMP/card-bake" ]; then     # not the PSDs (both sides are in git once M lands; 1.4 GB for 40)
+            rsync -a --exclude='*.psd' --exclude='*.PSD' "$RUNNER_TEMP/card-bake/" "$out/bake/"
+          fi
           for f in bake.md pages.md save.md repin.md main-message.txt main.txt; do
             if [ -f "$RUNNER_TEMP/$f" ]; then cp "$RUNNER_TEMP/$f" "$out/"; fi
           done

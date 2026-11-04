@@ -21,9 +21,9 @@ export const CONTRACT = {
 export const KEY = "card-previews";                   // localStorage: {card id: [entry, newest first]}
 export const LOCK_KEY = "card-previews-poll";         // localStorage: {tab, until}: the tab that checks for all of them
 export const KEEP = 3, MAX_EDIT = 16384;              // MAX_EDIT: card_preview's, UTF-8 bytes of the edit's JSON
-// the contract's checks: none in the first 25 s (a run takes 40-65 s), every 5 s until 2 minutes, every 10 s until 3,
-// then every 30 s, giving up at 16 (the jobs' timeouts add up to 14); "Check again" waits 10 more
-export const FIRST_MS = 25000, POLL_FAST = 5000, FAST_FOR = 2 * 60000, POLL_MID = 10000, MID_FOR = 3 * 60000, POLL_SLOW = 30000;
+// the contract's checks: none in the first 20 s (a run takes 30-55 s), every 3 s until 2 minutes, every 10 s until 3,
+// then every 30 s, giving up at 16 (the publish job's timeout is 14); "Check again" waits 10 more
+export const FIRST_MS = 20000, POLL_FAST = 3000, FAST_FOR = 2 * 60000, POLL_MID = 10000, MID_FOR = 3 * 60000, POLL_SLOW = 30000;
 export const MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
 // the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404
 // more than a day after the press means it never comes; entries go after 30 days

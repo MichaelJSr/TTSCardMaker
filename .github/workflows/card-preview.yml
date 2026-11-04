@@ -1,7 +1,8 @@
 # Card previews for the website (AutoCroissant commands/card_preview.py; design section 16): one card's PSD-kind edit
 # baked as Card sync would, nothing committed to main. The result goes to the orphan branch `previews`
 # (previews/<request>/, index.json), one commit per run, rewritten past 200 previews or 7 days; contract: site/NOTES.md
-# section 19. No Discord. The preview job's token is read-only; only the publish job writes (stdlib, no install).
+# section 19. No Discord. The preview job's token is read-only; only the publish job writes (stdlib, no install; it starts
+# beside the preview and waits for its hand-over).
 # Inputs reach the shell only through env and a file. The card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) come in a venv cached per that file (.github/actions/cards-python).
 name: Card preview
@@ -141,14 +142,15 @@ jobs:
           if-no-files-found: ignore
           retention-days: 1
 
-  # The only job that writes: one commit on previews. Runs after a failed preview too (published as try again).
+  # The only job that writes: one commit on previews. It starts beside the preview (its checkouts and Python ready
+  # while the bake runs; the bake still on its own read-only runner) and publishes once the preview hands over, or ends
+  # (a failed preview: published as try again; one that never validated: nothing).
   publish:
-    needs: preview
-    if: ${{ !cancelled() && needs.preview.outputs.ok == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 14       # the preview's 11, then the publish
     permissions:
       contents: write
+      actions: read           # the preview job and its hand-over
     steps:
       # A git dir to push from (no file contents).
       - uses: actions/checkout@v7
@@ -173,7 +175,30 @@ jobs:
         with:
           python-version: "3.14"
 
+      - name: Wait for the preview
+        id: wait
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          runs="repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          for k in $(seq 240); do                   # 12 minutes at most; about 11 API calls a preview (the token's 1000/h)
+            if gh api "$runs/artifacts" --jq '.artifacts[].name' 2> /dev/null | grep -qx card-preview; then
+              echo "go=true" >> "$GITHUB_OUTPUT"; exit 0
+            fi
+            if [ $((k % 5)) = 0 ]; then             # the job, every 15 s: ended without a hand-over?
+              job=$(gh api "$runs/jobs" --jq '.jobs[] | select(.name == "preview") | "\(.status) \([.steps[] | select(.name == "Validate") | .conclusion][0])"' 2> /dev/null) || job=""
+              case $job in
+                "completed success") echo "go=true" >> "$GITHUB_OUTPUT"; exit 0 ;;   # validated: published as try again
+                completed*) echo "The request never validated: nothing to publish."; exit 0 ;;
+              esac
+            fi
+            sleep 3
+          done
+          echo "::warning::the preview did not end in 12 minutes: nothing published"
+
       - name: Take over
+        if: steps.wait.outputs.go == 'true'
         continue-on-error: true
         uses: actions/download-artifact@v4
         with:
@@ -181,6 +206,7 @@ jobs:
           path: ${{ runner.temp }}/preview
 
       - name: Publish
+        if: steps.wait.outputs.go == 'true'
         working-directory: bot
         shell: bash
         env:

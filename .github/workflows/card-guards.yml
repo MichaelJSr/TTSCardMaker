@@ -385,7 +385,7 @@ jobs:
       - name: Fixes to land
         if: always() && steps.plan.outputs.fixes == 'true'   # a failed Comment step too: Plan and Follow up run anyway
         shell: bash
-        run: echo "This push's fixes land after the quiet window; Follow up then starts Card sync's main lane."
+        run: echo "This push's fixes land in the post job; Follow up then starts Card sync's main lane."
 
   # Right after the check (owner, 2026-11-03: the 30-minute quiet window and its environment card-guards-quiet are gone):
   # Land, Follow up, Tell Discord. Only when the check found something to land or tell (report or on). Land goes on the

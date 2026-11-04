@@ -279,8 +279,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - **Result**: poll
   `GET https://api.github.com/repos/MichaelJSr/TTSCardMaker/contents/previews/<request>/result.json?ref=previews` with
   `Accept: application/vnd.github.raw+json` and `cache: "no-store"`: 404 until it is published (also before the branch
-  exists). None in the first 25 s (a run takes 40-65 s: 2026-10-31), then every 5 s until 2 minutes, every 10 s until
-  3, then every 30 s; give up at 16 minutes (the jobs' timeouts add up to 14) with "no result: see the run". The run:
+  exists). None in the first 20 s (a run takes 30-55 s since 2026-11-04: the publish job starts beside the preview), then
+  every 3 s until 2 minutes, every 10 s until 3, then every 30 s; give up at 16 minutes (the publish job's timeout is 14) with "no result: see the run". The run:
   `GET .../actions/workflows/card-preview.yml/runs?event=workflow_dispatch&per_page=20`,
   the one whose `display_title` is `Card preview <request>`; when it is `completed` and result.json still 404s a minute
   later, it ended without publishing (a bad request, or the publish job failed): stop polling and link the run. Never
