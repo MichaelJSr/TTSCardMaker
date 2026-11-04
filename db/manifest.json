@@ -1,15 +1,15 @@
 {
  "builder": {
-  "commit": "0fad316aeddc055e54a89cb45845bec1445a4e95",
+  "commit": "af52f78a4c16d610d89d0fd6970c2df3730d2903",
   "parser_version": 5,
   "psd_tools": "1.26.0+cards",
   "python": "3.14",
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-04T08:29:38Z",
- "card_commit": "bb66fa2a921c99f4d83af462c8c74c26004c614e",
- "card_commit_at": 1793780929.0,
+ "built_at": "2026-11-04T09:52:59Z",
+ "card_commit": "f26dcd9cf9ce6ae5b427c732f31ab87eb848bd85",
+ "card_commit_at": 1793785170.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 94,
@@ -23,9 +23,9 @@
  },
  "files": {
   "old_stats.json": "3d2d3d0ecc4d4d07303ca14509f8f19c54d7802323f12385507eae91e90c062b",
-  "psd_details.json": "38897d551060b22dbe7958cf74bf09c382452eea2d64ce6185edfe60d5b0eb21",
-  "rulebook.json": "2ed4037b7ab2de445409fe87102bb5fd5c985e57c4e4919cde636146b5add143",
-  "stats.json": "3b94ed5e773a8cdc8bf2af4fc9a80652d513f677955ec507c1cc8e06bced244c"
+  "psd_details.json": "bf0113e6d5aec365b16f2f9ee2f310cc0a4c5d394fde7d5c3e3863dccd5b72fb",
+  "rulebook.json": "44dd5b5a6ea4a5b7bafdb736e925176ff62d1345e8623173de329332f6b5db88",
+  "stats.json": "4996f9c95d357263e2399f6c17d58d2a65ad7637891d5ae2650a804e0bd2c077"
  },
  "gates": {},
  "inputs": {
@@ -33,7 +33,7 @@
   "created_blob": "9842ba8781aaa486ab624b1fd1b612d8de84b443",
   "decks_blob": "431e4319b76d12626d4cacd9c21b470a7c5a8641",
   "edits_blob": "5ec6b81f152815b6116f874a8657b12391ab4fe1",
-  "fonts_tree": "e70af324a80bc25a7d5e39cac36b52dfa264b33a",
+  "fonts_tree": "b0134190b1d465dfcf7eaf96e503f154d90b0d8a",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "87993ef69e369ea8006616af4dd4ba961a0525ae"
  },
@@ -44,8 +44,16 @@
   "repin": [],
   "stale": []
  },
- "problems": [],
+ "problems": [
+  {
+   "card": "Computer Virus",
+   "notes": [
+    "NO STATS FOUND: no HP, DEF, ATK or SPD bars read on this creature"
+   ],
+   "path": "Creatures/Kirby/3 Stars/Computer_Virus.psd"
+  }
+ ],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41799275694",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41810420853",
  "schema": 1
 }
