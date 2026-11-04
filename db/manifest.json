@@ -7,32 +7,32 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-04T07:27:16Z",
- "card_commit": "3cabfe124cf5c69936367181016ec1b33d747f3e",
- "card_commit_at": 1793777208.0,
+ "built_at": "2026-11-04T08:10:01Z",
+ "card_commit": "5446ce47e1fc5d47a19573c317440fe0d3e888f3",
+ "card_commit_at": 1793779684.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 94,
   "baked": 0,
   "cards": 772,
-  "changed": 0,
+  "changed": 1,
   "details": 769,
   "failed": 0,
   "new": 0,
-  "versions": 1690
+  "versions": 1691
  },
  "files": {
-  "old_stats.json": "0a82dc0cf2aa0160902cc80a54e9a001b7d3f574480ef7be3b331555c926f19a",
-  "psd_details.json": "ae7028129495a97f1dcc512ac1ca20b6d1c7046105fe04d554f83d3d7574bd42",
+  "old_stats.json": "1657de786cb01890372c9c1d170b07f3b71cb1a2f62c8831e437f0fc5807a9fe",
+  "psd_details.json": "63da6c381bb9bb6a1fcf6ecbe6f5ab35ec948ebecf6bb071cfb3c3814e183952",
   "rulebook.json": "2ed4037b7ab2de445409fe87102bb5fd5c985e57c4e4919cde636146b5add143",
-  "stats.json": "cbd72c963a729f4c47f9705c262cd3c3632d7672cb9e82020097b8d3c627c296"
+  "stats.json": "8d2188f31a17d4794550e046696b55878cb812ee246d05eb0a1787ac1ac222f3"
  },
  "gates": {},
  "inputs": {
   "authors_blob": "e09b279f3d8cac9fab89862cd7f9d89c37a7c382",
   "created_blob": "9842ba8781aaa486ab624b1fd1b612d8de84b443",
   "decks_blob": "431e4319b76d12626d4cacd9c21b470a7c5a8641",
-  "edits_blob": "217a8b7d0da7947dd7ad52e568c7f4be6e381e63",
+  "edits_blob": "890b04711000467bb8933c827917373889fb069b",
   "fonts_tree": "e70af324a80bc25a7d5e39cac36b52dfa264b33a",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "87993ef69e369ea8006616af4dd4ba961a0525ae"
