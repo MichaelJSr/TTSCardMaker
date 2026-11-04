@@ -22,13 +22,13 @@
   {
    "name": "Abbreviations",
    "num": "2",
-   "sha": "b6c3ace10dec9b7cc352395432ac17712f1e0fa07ebbfb33c9bb7a027d2e0ab7",
+   "sha": "58b2b70bda992540fc72192cc16fe749b33d25ededa9eacd220880e5e8ae9276",
    "t": "ABBREVIATIONS “X” and “Y” are variables that can represent any number! GENERAL SP = Star Points. DMG = Damage. HP = Health stat. ATK = Attack stat. DEF = Defense stat. SPD = Speed stat. PF = Primary field. CDMG = Counter damage. TIME FRAME OYT = On your turn. AAT = At any time. 🕐ON YOUR TURN These imply OYT. XCD = Cooldown: needs X turn(s) of charge. Y/XCD = Starts with Y turn(s) of charge. 🕐AT ANY TIME These imply AAT. XGCD = Global cooldown: needs X turn(s) of charge. Y/XGCD = Starts with Y turn(s) of charge. USES XU = X use(s) per full charge. PER GAME XPG = Ability can only be activated X time(s) per game. 2"
   },
   {
    "name": "Abbreviations 2",
    "num": "2.2",
-   "sha": "d433e43f14604285d9da277bc5c14ba41a007cbff72e25a24d952117c5e076c4",
+   "sha": "8e17d460f2a5f30526eb2db85c6fb468251c380bd129c79dc9b527914fd692f0",
    "t": "ABBREVIATIONS 2 🕐FORCED All of these must happen automatically. BOT = Beginning of turn. ENDT = End of turn. BOGT = Beginning of global turn. ENDGT = End of global turn. FORCED OFS = On first summon. OS = On summon. OD = On death. WOF = While on field. ⏳ XCD, Y/XCD, XGCD and Y/XGCD abilities with X of 2 or more are considered \"multi turn\" abilities. Abilites marked with 🕐 are considered \"time based\". Time based abilities with a cooldown become usable again once they are fully charged. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game, uses and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). 2.2"
   },
   {
@@ -190,19 +190,19 @@
   {
    "name": "The Global Turn 2",
    "num": "8.2",
-   "sha": "7d8dd2599f1d9adae41d081d53e9c3c03a614c0aedd69cd7dd554efcceb016e9",
+   "sha": "4f4f0cc2b37d4f48266ab8f01cdc5a7ff4d18a7b689405206a631ddefa0ebbf8",
    "t": "THE GLOBAL TURN 2 A HP: 8/10 SPD: 5 : 3 L1 B HP: 8/9 SPD: 5 : 5 C HP: 8/8 SPD: 6 : 4 L2 D HP: 6/6 SPD: 4 : 4 E HP: 7/7 SPD: 3 : 5 L3 F HP: 8/8 SPD: 3 : 3 In the example to the left, A, C and E are one team, while B, D and F are the other. Creature C has the most speed, so the Global Turn begins with C's turn, then the opposing team's fastest, B. Next, A is the fastest creature remaining, then the opposing team's fastest remaining, D. Last, E and F have the same speed and no health missing, so the creature with the highest star level goes first (Creature E), then F. C > B > A > D > E > F TURN MANIPULATION Turn order may be manipulated through speed changes by AAT abilities and facedown items when deciding which slot goes next. When a slots turn is about to start, the creature may swap out for 2 points. This cannot change turn order. If a change of turn order occurs while a creature is in the middle of its turn, that creature gets to finish its turn regardless. NO STALLING During a full global turn, if none of a team's creatures attack, those creatures take 1 TRUE DAMAGE at the end of the global turn. 8.2"
   },
   {
    "name": "Taking Your Turn",
    "num": "9",
-   "sha": "b1163d0f505cfaeac14256b6b111b8d61653f3d8b80759e99dd90d8ab1374307",
+   "sha": "ab9ff0f518da94726ef7036b19d5e87dafe3bef366177c3e7cb65a11d76ce84b",
    "t": "TAKING YOUR TURN It's time to put your creatures to use! Every creature gets one ACTION when their turn starts. The action can be used to ATTACK, MINE, or to put the creature into DEFENSE MODE. Actions can only be used OYT. ATTACK A creature can choose any creature on the playing field to ATTACK. Attacking removes HP from the chosen creature equal to the ATTACK VALUE of the attacking creature, minus the DEFENSE VALUE of the creature being attacked. (See “ATTACKING” for more info) MINING A creature can choose to MINE, generating BRICKS equal to its STAR LEVEL for the player (see FIELD CARDS for more) DEFENSE MODE A creature can use its action to go into DEFENSE MODE, doubling its defense while it is in this state. It goes out of defense mode at the beginning of its next turn. This state is singified by turning the creature 90 degrees. TURN PHASES 9"
   },
   {
    "name": "Taking Your Turn 2",
    "num": "9.2",
-   "sha": "687f570aa42fcdc82ee7693c060527d7e36edf483a15aa64398023fcb4655399",
+   "sha": "ecf68f6adbcd2f51ef5bb9d520f54d28bbdfe995f5be49b02860d904f50f7982",
    "t": "TAKING YOUR TURN 2 PHASE 1 After it has been decided which slot's turn it is, (see: “The Global Turn”), the slots turn begins and BOT effects Activate. PHASE 2 This is the main part of a turn. May use OYT abilities. May now use items from the hand. May now swap facedowns to and from the hand. May now buy from the shops, and shuffle the item shop. May use actions. May swap primary and secondary fields if no actions have been used. (See: “THE FIELD”) PHASE 3 ENDT effects activate. Can no longer do anything you could in phase 2. PHASE 4 The turn is now over. Status Effects deal damage/heal, duration ticks down by 1. 9.2"
   },
   {
@@ -232,43 +232,43 @@
   {
    "name": "Abilities",
    "num": "11",
-   "sha": "c71a70b29ae544085de100dc4b8ffe24e6a03615e066feda08056aff59edc985",
+   "sha": "b2a862ded137072229e2c638ee1a1587bc4bf4db0fffe7ffa267b39e90e77afa",
    "t": "ABILITIES INTRODUCTION A card's ability is the main chunk of text at the bottom half of a creature that describes the unique function of the card past its basic actions. Most abilities are unique, but how and when they can be activated are held together and defined by abbrviations. (See: “Abbrviations”) A creature's ability is only active while on the field. WHEN ABILITES CAN BE USED 1OYT Spend 3 points to cure a tier 2 debuff. 2AAT Spend a point to heal this creature by 1 HP. Although OYT and AAT do not often appear on their own, they are the basis of when an ability can activate. This ability can activate “on your turn” OYT. Meaning you have to wait until the creature with this ability's turn to use it. This ability can be used “at any time” meaning at any point you may use this. These are able to be use reactivley (See: REACTIONS). This ability can be used to heal a creature that is about to die from an attack reactively . 11"
   },
   {
    "name": "Abilities 2",
    "num": "11.2",
-   "sha": "1217525b1ed1571786c6012e215fb4fbd64194097fdb26056cc8faf4a06ce7a0",
-   "t": "ABILITIES 2 BASIC ABILITES 11CD Summon a Mini Bee. 21GCD2U Heal a creature by 2 HP. 3AAT3PG Spend 7 points to deal 10 piercing damage. XCD “Cooldown” is the most common ability type. XCD implies OYT “On your turn”. X is how many turns of charge the ability needs to be used (it can't go over X). Abilities start with no charge. 1 turn of charge is gained at any point during phases 1-3 of the creature's turn, if the ability hasn't gained charge yet that turn and hasn't been fully charged at any point during that turn. X in this case is 1. So this ability may be performed once on each turn the creature takes. XGCD “Global Cooldown” implies AAT “At any time”, and gains charge at any point during the global turn, under the same conditions. XU is how many uses the ability has when charged. If even one use is spent the ability can gain charge again; charged again without spending every use, it only goes back up to X uses. No XU: 1 use per full charge. So this creature can heal twice per full charge, at any point in the global turn. This ability can be used to heal a creature that is about to die from an attack reactively, two times per global turn. XPG “X Per Game” means the creature can perform this ability X times, ever. In this case it's 3 times per game. This kind of ability is always either AAT or OYT. Here it is AAT, so it can be done at any point during the game. 11.2"
+   "sha": "3798703cf04d3ce1f3365f038097855e314d4c53a932047adf86fbb1eda10757",
+   "t": "ABILITIES 2 BASIC ABILITES 11CD Summon a Mini Bee. 21GCD2U Heal a creature by 2 HP. 3AAT3PG Spend 7 points to deal 10 piercing damage. 11.2"
   },
   {
    "name": "Abilities 3",
    "num": "11.3",
-   "sha": "00d09a3c2b17db0318cd5e460f7f2e9e2372b8d2db314f2aa41d9457ea815e37",
-   "t": "ABILITIES 3 “1PGAAT Kill an enemy creature” 11.3"
+   "sha": "343588d46726bc52dc354d524bcb817983b3f108568c3b44c10698a8eea8c75e",
+   "t": "ABILITIES 3 XCD “Cooldown” is the most common ability type. XCD implies OYT “On your turn”. X is how many turns of charge the ability needs to be used (it can't go over X). Abilities start with no charge. 1 turn of charge is gained at any point during phases 1-3 of the creature's turn, if the ability hasn't gained charge yet that turn and hasn't been fully charged at any point during that turn. X in this case is 1. So this ability may be performed once on each turn the creature takes. XGCD “Global Cooldown” implies AAT “At any time”, and gains charge at any point during the global turn, under the same conditions. XU is how many uses the ability has when charged. If even one use is spent the ability can gain charge again; charged again without spending every use, it only goes back up to X uses. No XU: 1 use per full charge. So this creature can heal twice per full charge, at any point in the global turn. This ability can be used to heal a creature that is about to die from an attack reactively, two times per global turn. XPG “X Per Game” means the creature can perform this ability X times, ever. In this case it's 3 times per game. This kind of ability is always either AAT or OYT. Here it is AAT, so it can be done at any point during the game. “1PGAAT Kill an enemy creature” 11.3"
   },
   {
    "name": "Abilities 4",
    "num": "11.4",
-   "sha": "e40230a21b90559bbe72de06d5b0b30e7d828ccc361861c6e65ac9af971ec435",
+   "sha": "9d1142bb489eb66abfd5bd43cc5e858e2a3926f9dc64b8547812443578ffacff",
    "t": "ABILITIES 4 AUTOMATIC 1BOGT +1 SPD 2BOT +1 ATK 3ENDT +5 DEF until ENDGT These abilities are non-optional and assumed to happen automatically. BOGT “Beginning of Global turn” abilities happen before anything else in the global turn. This creature gains SPD, which will likely effect turn order. BOT “Beginning of Turn: abilities happen when a creature begins taking it's turn, before it does anything else. Here, gains an ATK, so it's strengthened right before every turn it takes. ENDT “End of Turn” Effects happen when a creature finishes its turn, after everything else it can do. Here, this effect lasts until “End of Global Turn”, meaning once the global turn finishes, the gained DEF goes away. The SPD from the earlier ability means it'll get this ability earlier and earlier into the global turn, meaning it'll have it's defense for longer and longer. Don't give this ability to sonic. 11.4"
   },
   {
    "name": "Abilities 5",
    "num": "11.5",
-   "sha": "4457fbf55bb560513eafa754d3f0a86f75a3e7a45a387f35e6bc302187a9a9b4",
+   "sha": "4e8635ef936f0ecbdca1732e02805587e69e978f28a5c34cab38ca8846af2e3e",
    "t": "ABILITIES 5 MULTI-TURN 12CD Summon a Mega Bee. 21/2CD Summon Brombus. 32GCD Deal 3 piercing damage. 2CD The ability needs 2 turns of charge, so the creature can summon a Mega Bee on its second turn, and every 2 turns after that. (Turns 4, 6, etc.) (These can only be used OYT “on your turn”.) Y/XCD Appears when an ability starts with an unusual amount of charge. Y is the charge it starts with. Brombus starts with 1 of 2 turns of charge, so it may be summoned on the first turn, then every 2 turns after. (Turns 3, 5, etc.) This ability happens on turns where the above doesn't. 2GCD This works the same, but the ability is “at any time” AAT, gaining charge during the global turn. If you forget to use your time based ability, it's saved so you can use it on the next turn, but its cooldown doesn't reset until it's used! Abilties do not count time passing while in the hand. 11.5"
   },
   {
    "name": "Abilities 6",
    "num": "11.6",
-   "sha": "1a68d659eff94e1113861b8c3fe6a76929b7febb0edf7e581814f39c77fdea40",
+   "sha": "9902750c1fbf6ba835031145f9c0e357cc50018abc3d2023aadfbba649dc73c3",
    "t": "ABILITIES 6 LIFE AND DEATH 1OFS Summon a Koopa. 2BOGT/OS Declare which slot this creature will be attacking and it will attack all targets in that lane. 3OD Deal 5 damage to everything on the PF. OFS “On First Summon” abilities activate when a creature first comes out of the hand onto the field. These abilities cannot be negated or true negated, and are forced to happen. They also inherently count as 1PG abilities. OS “On Summon” abilities happen whenever a creature is summoned onto the field, and can happen an unlimited number of times. Like in the example, it is typically used to supplement BOGT “Beginning Of Global Turn” abilities that put the creature in a certain state, to ensure it can enter that state even if it was not on the field at the beginning of the global turn. OD “On Death” abilities activate when a creature dies. This is also forced. Summon me any time! 11.6"
   },
   {
    "name": "Abilities 7",
    "num": "11.7",
-   "sha": "4a56781deb88d060e98bdafb4b0d5cc4e507e5964c212d83cebf906f7a6cd2aa",
+   "sha": "329a49f6af33794dded15efc97b9a360581fbd3e1905bcf704cac12bcbc30d57",
    "t": "ABILITIES 7 In rare cases some abilities can conflict. If you happen to run into these, here's what to do. SAME TIME When multiple effects happen simultaneously, such as BOGT/ENDGT/conditional effects, the creature with higher SPD takes precedence. After conflicting creature effects go, the team with the highest cumulative SPD's active items go, field cards are determined in the same way. In case of a tie for any of these, use turn order tie breakers. If one team has conflicting active item or field card effects on its own side, owner chooses order. (active items still go first). If multiple abilities conflict on a singular creature(such as multiple on death abilities), the owner may choose the order/which abilities activate. CONFLICTION If both teams can set the value of the same thing, (such as setting the value of RNG outcomes), it remains random. 11.7"
   },
   {
@@ -286,7 +286,7 @@
   {
    "name": "Abilities 10",
    "num": "11.10",
-   "sha": "08009eddd6ecb1b8b62d7978b9d3c9580cad4c30fbbb1925e7ccc8e9df106be4",
+   "sha": "6b9ed3a6e74766aec963fc4b1417881765f8d81ae5001cf0519324928cb5fc24",
    "t": "ABILITIES 10 PASSIVES WOF Friendly creatures gain +1 DEF. This creature attacks inflict Burning. This creature is immune to Poison. This creature has 2 innate actions. Passive abilities are abilites that happen automatically, without the player actively choosing to use it. Most of these are in constant effect WOF “while the creature is on the field”. “WOF” is often only included when the ability effects other creatures as to signfy that it goes away when the creature exits the field. 11.10"
   },
   {
@@ -328,7 +328,7 @@
   {
    "name": "Reactions 7",
    "num": "12.7",
-   "sha": "159558ae98f557f9220590c8a9102b54c5038515b53834f979333c763cfe9c7b",
+   "sha": "78921f390b229f71b7a39f8af5dc4ddb36fae0b5361a5f38a0b02e8540be561d",
    "t": "REACTIONS 7 CLARIFICATION A chain of reactions must resolve before a new one begins. You may react to time based [such as BOGT] effects with any AAT effects or facedown items. If something is targeted for negation (or destruction, in the case of field cards), its owner cannot reactively activate any AAT effects on that card. (See: “NEGATION”) 12.7"
   },
   {
@@ -400,7 +400,7 @@
   {
    "name": "Death",
    "num": "17",
-   "sha": "2285517e1bdab19ead8a2c627eef53388aa5fa2e1e3b18e56d404813c2691a7b",
+   "sha": "23698053230d292d1289d6db1b0c0089e8a7413dfdca57dd9f69c462e0467364",
    "t": "DEATH ON DEATH When a friendly creature's HP reaches 0 it dies: its “On Death” effects proc (does not apply to creatures not on the field), it loses all status effects and all of its items are unequipped. If something revives it on the spot (such as a Life Shroom, or an OD ability that revives it or switches it to its next form), it is not defeated. DEFEAT A creature that dies and isn't revived on the spot is defeated, and goes to the graveyard on your side of the field. When a prime creature is defeated: your team gains points equal to that creature's star level, all non-persistent minions in that slot die, and the slot is empty so a new prime creature can be placed in it. Outside of “On Death” effects, anything that says a prime creature “dies” means it is defeated. 17"
   },
   {
@@ -424,7 +424,7 @@
   {
    "name": "Status Effects",
    "num": "19",
-   "sha": "08ea4cff4f1ae8793b39fb09cbf797b8713d77de5337482d3f2335d95136a3dd",
+   "sha": "dd60a4acbe8c15bc34c84359ee2ed758537d8d5f25906b905dc97b78c6a926ee",
    "t": "STATUS EFFECTS STATUS EFFECTS A status effect, is either a buff or debuff that has an effect on a creature, represented by Mr. Krabs either suffering or thriving. If a status effect deals DMG or Heals, then by default it procs in phase 4, after ENDT effects. Otherwise, the status effect takes effect immediately. The duration of any status effect counts down in phase 4. This Panda was just inflicted with both 2 turns of Softened (-0.5 DEF), and 2 turns of Smouldering (2 DMG). Instantly, the DEF reduction takes effect. When Panda ends its next turn, it takes 2 damage from smouldering, and the duration for both of the debuffs goes from 2 to 1. 19"
   },
   {
@@ -454,7 +454,7 @@
   {
    "name": "Creature Types 2",
    "num": "20.2",
-   "sha": "f09eef6c705f11fef4f2892d2f81067ace6f733778aa5fb43da89ed342cb8d95",
+   "sha": "f2beac192c3e4e0a36ffd2e4695a32d166e2ed029220904fb1027f9401a27adb",
    "t": "CREATURE TYPES 2 UNDEAD Immune to Sickness, Plague DARK Immune to Afraid LIGHT Immune to Blindness DARK MATTER Immune to Corruption UNKNOWN Once per game on your turn may permanently change this type into other creature type. GIRL Gain 1 additional point OD This may only be an innate type in special cases, but may still be added to creatures through effects. 20.2"
   },
   {
@@ -472,38 +472,38 @@
   {
    "name": "Negation",
    "num": "22",
-   "sha": "610636365dc233d22031d447d1e3e6c51146fa2a27b77b1355979ce05d6f80e9",
+   "sha": "8d40d19539fc1f84d5253778e44361cc87521e948edd1a555e628b74fa41f543",
    "t": "NEGATION ATTACKS If an attack is negated it does not happen. No damage is dealt, no on-hit effects occur, the creature does not get its action back, you do not pass go. CREATURES When a creature is negated it is unable to use any of its own abilities (unless otherwise stated), but may still use the abilities of any equipped items or minions, and can still use actions. Negating a creature does not negate its equipped items: they are separate. Cooldown abilities such as 2CD still gain charge even while they are negated. Minions/Items/Stats/Counters summoned/gained by an ability remain even if the ability that summoned them is negated or if the creature that summoned them dies. (Minions are tied to their parent creature, not their summoner: if their parent creature is defeated, they die unless they are persistent. See: “MINIONS”) If 2 creatures/sources attempt to negate each other simultaneously, they are both negated. Immunity: 22"
   },
   {
    "name": "Negation 2",
    "num": "22.2",
-   "sha": "de56050333ccb3efb47af608c0660488a79e6b85da90d176fae5feecc4b89153",
+   "sha": "f9349cf335cacc25d720cb451822f15f7190864eede4a0c32cbd5cbe9ecc3ad5",
    "t": "NEGATION 2 5+ star creatures are immune to negation. True Negation: Negation that can negate negation-immune creatures. True Negation Immunity: Complete immunity to any possible sources of negation, including true negation. OFS abilities have true negation immunity. If an item/ability does something upon being negated, the “upon being negated” effect itself has true negation immunity. ITEMS If an item is negated, it means it cannot be played or is taken out of play, and it returns to where it was before being played (such as the hand or facedown slot). If an item is negated or destroyed during use, the star points expended to use it are not regained. Items that are currently negated cannot be sold, or used for any other purpose until the negation ends. Equip, Active, and Deploy items can be negated after their activation while they are still in effect; this sends them back to the hand, requiring star points to be used again to reactivate them. 22.2"
   },
   {
    "name": "Negation 3",
    "num": "22.3",
-   "sha": "9ce973b27f199d68cb6b347fbf5f9ba33c3ac6a594cf0a8ea5536beef600010b",
+   "sha": "3e440aa00a49900fe721dd74010ffd608d465a31ea01e3c85dae786e2a56370e",
    "t": "NEGATION 3 FIELD CARDS At the beginning of the global turn, or on your turn, you may spend 1x the star level of a field card in BRICKS to negate it until the end of the global turn (field card stays on the field and can be swapped out, but loses its effect temporarily). Field cards cannot be negated on the same turn that they are played. Field cards cannot be negated 2 turns in a row. At the beginning of the global turn, or on your turn, you may spend 3x the star level of a field card in BRICKS to destroy it. REACTING TO NEGATION If something is targeted for negation (or destruction, in the case of field cards), its owner cannot reactively activate any AAT effects on that card. 22.3"
   },
   {
    "name": "Timing Tags",
    "num": "23",
-   "sha": "e87aea47cd629435947b5c9f71b56ecaa9911fed81799aa72a71df233526fcab",
-   "t": "TIMING TAGS The cards' timing tags. X can be any number. In a pair such as 1/2CD, the first number is the charge the ability starts with: it can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game, uses and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). ON YOUR TURN Tag Meaning OYT On your turn XCD Cooldown: needs X turn(s) of charge Y/XCD Cooldown: starts with Y of X turns of charge 1/2CD Cooldown: starts with 1 of 2 turns of charge −1/1CD Cooldown: starts with -1 of 1 turn of charge AT ANY TIME Tag Meaning AAT At any time XGCD Global cooldown: needs X turn(s) of charge Y/XGCD Global cooldown: starts with Y of X turns of charge 1/2GCD Global cooldown: starts with 1 of 2 turns of charge −1/1GCD Global cooldown: starts with -1 of 1 turn of charge 23"
+   "sha": "48cf9d152aa8d36a7ef3d01f720044ba89605407549c823f815a84c77c820e52",
+   "t": "TIMING TAGS The cards' timing tags. X can be any number. In a pair such as 1/2CD, the first number is the charge the ability starts with: it can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card. Blue: on your turn (1CD, 1/2CD, OYT). Purple: at any time (1GCD, AAT). Red: forced (BOT, ENDT, BOGT, ENDGT). Orange: per game, uses and triggers (1PG, 2U, OFS, OS, OD, WOF). Grey: costs the creature's action (Action). ON YOUR TURN Tag Meaning OYT On your turn XCD Cooldown: needs X turn(s) of charge Y/XCD Cooldown: starts with Y of X turns of charge 1/2CD Cooldown: starts with 1 of 2 turns of charge −1/1CD Cooldown: starts with -1 of 1 turn of charge 23"
   },
   {
    "name": "Timing Tags 2",
    "num": "23.2",
-   "sha": "727e3966e6809d49fb85568cc0b5a676472d5da007c8d95c904ce5f72bca1378",
-   "t": "TIMING TAGS 2 FORCED Tag Meaning BOT Beginning of turn (forced) ENDT End of turn (forced) BOGT Beginning of global turn (forced) ENDGT End of global turn (forced) PER GAME & TRIGGERS Tag Meaning OFS On first summon OS On summon OD On death WOF While on field XPG Can only be activated X time(s) per game USES Tag Meaning XU X use(s) per full charge OTHER TAGS Tag Meaning Action Costs the creature's action 23.2"
+   "sha": "4c7ae1306deef1b3e459c35f981fc115644d4c56f3ea23f6d0e2af17399ffc61",
+   "t": "TIMING TAGS 2 AT ANY TIME Tag Meaning AAT At any time XGCD Global cooldown: needs X turn(s) of charge Y/XGCD Global cooldown: starts with Y of X turns of charge 1/2GCD Global cooldown: starts with 1 of 2 turns of charge −1/1GCD Global cooldown: starts with -1 of 1 turn of charge FORCED Tag Meaning BOT Beginning of turn (forced) ENDT End of turn (forced) BOGT Beginning of global turn (forced) ENDGT End of global turn (forced) PER GAME & TRIGGERS Tag Meaning OFS On first summon OS On summon OD On death WOF While on field XPG Can only be activated X time(s) per game 23.2"
   },
   {
    "name": "Timing Tags 3",
    "num": "23.3",
-   "sha": "2e83eebbecc2d23cdba7a42ac03fd16a223ef95f639e4bc1ca0cdcfe03662c4f",
-   "t": "TIMING TAGS 3 OLD SYSTEM These were replaced by cooldowns. Tag Meaning 1PT Now 1CD E2T Now 2CD EXT Now XCD 2PT Now 1CD2U XPT Now 1CDXU 1PGT Now 1GCD E2GT Now 2GCD EXGT Now XGCD 2PGT Now 1GCD2U XPGT Now 1GCDXU FTE2T Now 1/2CD FGTE2GT Now 1/2GCD 1PT except first turn Now −1/1CD 23.3"
+   "sha": "5839bd382e963e3c98e7a35a53d035e664b0f25b5ca3fa844154d08f49528c3a",
+   "t": "TIMING TAGS 3 USES Tag Meaning XU X use(s) per full charge OTHER TAGS Tag Meaning Action Costs the creature's action OLD SYSTEM These were replaced by cooldowns. Tag Meaning 1PT Now 1CD E2T Now 2CD EXT Now XCD 2PT Now 1CD2U XPT Now 1CDXU 1PGT Now 1GCD E2GT Now 2GCD EXGT Now XGCD 2PGT Now 1GCD2U XPGT Now 1GCDXU FTE2T Now 1/2CD FGTE2GT Now 1/2GCD 1PT except first turn Now −1/1CD 23.3"
   }
  ]
 }
