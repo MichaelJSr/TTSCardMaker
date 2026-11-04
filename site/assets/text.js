@@ -72,7 +72,8 @@ export const badgeHtml = (tag, tip = true) => {   // tip false: the note is the 
 // Costs in parentheses, drawn by the site only (the font has no such badge): "(2 points)", "(1 point)", "(1.5 points)",
 // "(X bricks)" (the team's points and BRICKS, rulebook 04 Table), "(4 souls)", "(3 counters)" (a card's own currency).
 // html[data-costs="icons"] (the Badges panel's switch, localStorage "costs") draws points as a coin, bricks as a brick.
-export const COST = /\(((?:\d+(?:\.\d+)?|[Xx])[^\S\n]+(?:points?|bricks?|souls?|(?:[A-Za-z][\w'’-]*[^\S\n]+)?counters?))\)/i;
+// Right after a number or word it is a multiplier, not a cost: Warcraftian Rogue's "Deal 2(x counters) DMG".
+export const COST = /(?<![\w.])\(((?:\d+(?:\.\d+)?|[Xx])[^\S\n]+(?:points?|bricks?|souls?|(?:[A-Za-z][\w'’-]*[^\S\n]+)?counters?))\)/i;
 const COST_TIP = { points: "your team's points (earned when enemy prime creatures are defeated, spent on abilities and the item shop)",
   bricks: "your team's BRICKS (mined by creatures, spent on field cards)", own: "a currency of this card's own" };
 /** {n, unit (as typed), kind: points | bricks | own} of a cost's text ("2 points"), or null */
