@@ -161,10 +161,10 @@ span.tokv { position: relative; display: inline-block; }
 .badge.own { background: #0f766e; }
 :root[data-costs="icons"] .badge:is(.points, .bricks) { display: inline-flex; align-items: center; justify-content: center; line-height: 1; padding: 0 .38em; }
 :root[data-costs="icons"] .badge:is(.points, .bricks) .cost-u { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-:root[data-costs="icons"] .badge.points { min-width: 1.5em; height: 1.5em; vertical-align: -.2em; color: #5c3b00; text-shadow: 0 1px 0 #ffeaa0;
+:root[data-costs="icons"] .badge.points { min-width: 1.5em; height: 1.5em; vertical-align: .085em; color: #5c3b00; text-shadow: 0 1px 0 #ffeaa0;
   background: radial-gradient(circle at 35% 30%, #fff6c4 0, #ffd84d 30%, #f0b400 62%, #b27a00 100%);
   box-shadow: inset 0 0 0 .1em #a86f00, inset 0 0 0 .2em #ffe17a, 0 .06em .12em rgba(0,0,0,.45); }
-:root[data-costs="icons"] .badge.bricks { min-width: 2.15em; height: 1.35em; vertical-align: -.14em; border-radius: .16em; text-shadow: 0 1px 1px rgba(0,0,0,.6);
+:root[data-costs="icons"] .badge.bricks { min-width: 2.15em; height: 1.35em; vertical-align: .085em; border-radius: .16em; text-shadow: 0 1px 1px rgba(0,0,0,.6);
   background: linear-gradient(180deg, #d0643f 0, #b44a2a 45%, #8c3519 100%);
   box-shadow: inset 0 .12em 0 rgba(255,255,255,.28), inset 0 -.14em 0 rgba(0,0,0,.35), 0 0 0 .07em #4a1a0b, 0 .06em .12em rgba(0,0,0,.4); }
 .badge-legend .cost-switch { margin-top: 4px; }
