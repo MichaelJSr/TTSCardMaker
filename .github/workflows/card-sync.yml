@@ -87,7 +87,7 @@ on:
         type: string
         default: ""
       chain:
-        description: "Set by Card sync for leftover work: 'now|wait <runs> <idle>' (wait: as a push's run)"
+        description: "Set by Card sync for leftover work: 'now <runs> <idle>'"
         type: string
         default: ""
 
@@ -667,24 +667,24 @@ jobs:
           done <<< "$runs"
           echo "No guards run with fixes to land: the main lane goes on." | tee -a "$GITHUB_STEP_SUMMARY"
 
-  # A push's run, and a chained wait's: this push's guards (their check job, then whether they land fixes; no fixed wait:
+  # A push's run: this push's guards (their check job, then whether they land fixes; no fixed wait:
   # the 30-minute window and its environment card-sync-quiet are gone, owner 2026-11-03), then the main lane on main's
   # head as it is then. The job keeps its name, which the other runs read.
   quiet:
     name: Quiet window
     needs: timer
-    if: ${{ !cancelled() && (github.event_name == 'push' || startsWith(inputs.chain, 'wait')) && needs.timer.result != 'skipped' && !needs.timer.outputs.other && !needs.timer.outputs.guards }}
+    if: ${{ !cancelled() && github.event_name == 'push' && needs.timer.result != 'skipped' && !needs.timer.outputs.other && !needs.timer.outputs.guards }}
     runs-on: ubuntu-latest
     timeout-minutes: 15    # this push's guards' check (11 min at most), then the step
     defaults:
       run:
         shell: bash
     permissions:
-      actions: read         # a chained run's start; the guards' runs
+      actions: read         # the guards' runs
     outputs:
       guards: ${{ steps.guards.outputs.run }}
     steps:
-      # This push's guards (a chained wait: any unfinished guards run)
+      # This push's guards
       - *guards
 
   # The main lane: a push's at once (after its Quiet window job: its guards), the schedule's and a chained run's when no
@@ -707,7 +707,6 @@ jobs:
       baked: ${{ steps.main.outputs.baked }}
       records: ${{ steps.records.outputs.records }}
       due: ${{ steps.left.outputs.due }}
-      held: ${{ steps.left.outputs.held }}
     defaults:
       run:
         shell: bash
@@ -718,8 +717,8 @@ jobs:
 
       # Go for a push, a dispatch or a retry; the schedule's and a chained run's when a card input or
       # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished, or
-      # none of the last 30 runs did; else (g) a website edit the bake put off (recent, capped) may be past its grace: the
-      # Pending edits step. GO and EDITS in the env.
+      # none of the last 30 runs did; else (g) a website edit the bake put off (capped, main moved): the Pending edits
+      # step. GO and EDITS in the env.
       - name: Gate
         id: gate
         env:
@@ -797,7 +796,7 @@ jobs:
           print(f"Verdicts not on data yet: {', '.join(keys) or 'none new'}.")
           PY
 
-      # (g): the bake's put-off edits (card_bake.due: pending; no grace since 2026-11-03) start the lane.
+      # (g): the bake's put-off edits (card_bake.pending) start the lane.
       - name: Pending edits
         id: edits
         if: env.EDITS == 'true' && env.GO != 'true' && steps.venv.outcome == 'success'
@@ -808,17 +807,17 @@ jobs:
           GIT_NO_LAZY_FETCH: "1"
           MAIN: ${{ steps.gate.outputs.main }}
         run: |
-          if ! "$RUNNER_TEMP/venv/bin/python" -c 'import sys; from commands.card_bake import due; print(*due(*sys.argv[1:]), sep="\n")' \
-              "$GITHUB_REPOSITORY" "$MAIN" "$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/carddata/db/verdicts.json" > "$RUNNER_TEMP/due.txt"; then
+          if ! "$RUNNER_TEMP/venv/bin/python" -c 'import sys; from commands.card_bake import pending; print(*pending(*sys.argv[1:]), sep="\n")' \
+              "$GITHUB_REPOSITORY" "$MAIN" "$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/carddata/db/verdicts.json" > "$RUNNER_TEMP/pending.txt"; then
             echo "::warning::the pending website edits were not read: the next run looks again"
             exit 0
           fi
-          names=$(grep . "$RUNNER_TEMP/due.txt" | paste -sd, - | sed 's/,/, /g' || true)
+          names=$(grep . "$RUNNER_TEMP/pending.txt" | paste -sd, - | sed 's/,/, /g' || true)
           if [ -n "$names" ]; then
             echo "- website edits to bake: $names" | tee -a "$GITHUB_STEP_SUMMARY"
             echo "GO=true" >> "$GITHUB_ENV"
           else
-            echo "No website edit past its grace." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "No website edit pending." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
       - *fonts
@@ -1045,8 +1044,8 @@ jobs:
           retention-days: 14
 
       # The website edits left for the chain: card_bake.pending at this run's end (B, or main's head) with this run's
-      # verdicts on the data's; due ones can go now (over the cap, main moved under a card), the rest are held by a push
-      # in the last 30 minutes (or pushes that can't be told). Not after a rejected M: its retry or another run does them.
+      # verdicts on the data's (over the cap, main moved under a card). Not after a rejected M: its retry or another run
+      # does them.
       - name: Leftover edits
         id: left
         if: env.DRY_RUN != 'true' && steps.venv.outcome == 'success' && steps.main.outputs.rejected != 'true'
@@ -1060,23 +1059,22 @@ jobs:
           if ! "$RUNNER_TEMP/venv/bin/python" - "$GITHUB_REPOSITORY" "$(git -C "$GITHUB_WORKSPACE" rev-parse HEAD)" \
               "$GITHUB_WORKSPACE" "$GITHUB_WORKSPACE/carddata/db" "$RUNNER_TEMP/bake-records/verdicts.json" > "$RUNNER_TEMP/left.txt" <<'PY'
           import json, os, sys
-          from commands.card_bake import due, pending
+          from commands.card_bake import pending
           from commands.card_db import merge_verdicts
           repo, head, local, db, run = sys.argv[1:]
           if os.path.exists(run):                    # this run's verdicts, as its data job merges them
               with open(run, encoding="utf-8") as fh:
                   merge_verdicts(db, json.load(fh)["cards"])
           at = {"repository": repo, "head": head, "local": local, "verdicts": os.path.join(db, "verdicts.json")}
-          now = due(**at)
-          print(len(now), len(pending(**at)) - len(now))
+          print(len(pending(**at)))
           PY
           then
             echo "::warning::the website edits left were not counted: the safety schedule looks again"
             exit 0
           fi
-          read -r due held < "$RUNNER_TEMP/left.txt"
-          { echo "due=$due"; echo "held=$held"; } >> "$GITHUB_OUTPUT"
-          echo "Website edits left: $due to bake now, $held held by a recent push." | tee -a "$GITHUB_STEP_SUMMARY"
+          read -r due < "$RUNNER_TEMP/left.txt"
+          echo "due=$due" >> "$GITHUB_OUTPUT"
+          echo "Website edits left: $due to bake now." | tee -a "$GITHUB_STEP_SUMMARY"
 
       # The baked PNGs' save links: the save above pinned main before M, so it runs again on M and any change is a second
       # commit on M (the save alone), fast-forward only. Main moved meanwhile: a warning; the next lane's save pins them.
@@ -1175,17 +1173,16 @@ jobs:
     steps: *data-steps
 
   # Leftover work (owner, 2026-10-25: the chain and a safety schedule): a live run's last job dispatches the next run when
-  # work is left. chain=now (at once): cards still to re-parse (manifest pending.stale), bake records no data commit
-  # merged, website edits due but not baked. chain=wait (through card-sync-quiet's 30 minutes): website edits held by a
-  # push in the last 30 minutes. None when nothing is left, a lane failed (Discord was told), another live run's lane
-  # will read it (unfinished: its own chain looks again), after CHAIN_IDLE runs in a row without a data or main commit or
-  # CHAIN_MAX runs (the safety schedule picks it up); never from a dry run. The chain input carries the count. A run
-  # whose main lane waits a window (a push's, a chained wait's) also looks once its data lane is done, for the data's
-  # leftovers, so a re-parse goes on at once.
+  # work is left, at once (chain=now): cards still to re-parse (manifest pending.stale), bake records no data commit
+  # merged, website edits not baked (chain=wait, for edits held by a recent push, went on 2026-11-04). None when nothing
+  # is left, a lane failed (Discord was told), another live run's lane will read it (unfinished: its own chain looks
+  # again), after CHAIN_IDLE runs in a row without a data or main commit or CHAIN_MAX runs (the safety schedule picks it
+  # up); never from a dry run. The chain input carries the count. A push's run (its main lane waits for its guards) also
+  # looks once its data lane is done, for the data's leftovers, so a re-parse goes on at once.
   chain-data:
     name: Chain after the data
     needs: [data, timer]
-    if: ${{ !cancelled() && !inputs.dry_run && needs.timer.result == 'success' && !needs.timer.outputs.other && !needs.timer.outputs.guards && (github.event_name == 'push' || startsWith(inputs.chain, 'wait')) }}
+    if: ${{ !cancelled() && !inputs.dry_run && needs.timer.result == 'success' && !needs.timer.outputs.other && !needs.timer.outputs.guards && github.event_name == 'push' }}
     concurrency:
       group: card-chain
       cancel-in-progress: false
@@ -1202,7 +1199,6 @@ jobs:
       LANES: "data=${{ needs.data.result }}"
       PROGRESS: ${{ needs.data.outputs.committed == 'true' && 'true' || 'false' }}
       DUE: ""
-      HELD: ""
     steps:
       - &chain
         name: Leftover work
@@ -1238,14 +1234,13 @@ jobs:
             echo "::warning::the bake records were not listed"
             records=0
           fi
-          now=() later=()
+          now=()
           if [ "${stale:-0}" -gt 0 ]; then now+=("$stale cards still to re-parse"); fi
           if [ "${records:-0}" -gt 0 ]; then now+=("$records bake records not merged"); fi
           data=${#now[@]}
           if [ "${DUE:-0}" -gt 0 ]; then now+=("$DUE website edits to bake"); fi
-          if [ "${HELD:-0}" -gt 0 ]; then later+=("$HELD website edits held by a push in the last 30 minutes"); fi
-          if [ ${#now[@]} -eq 0 ] && [ ${#later[@]} -eq 0 ]; then say "Nothing left: no chain."; exit 0; fi
-          printf -- '- %s\n' "${now[@]}" "${later[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ ${#now[@]} -eq 0 ]; then say "Nothing left: no chain."; exit 0; fi
+          printf -- '- %s\n' "${now[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
           # Another live run that will read it: queued, or its lane not finished (its own chain looks again at its end)
           data_by="" main_by=""
           others=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --limit 20 --json databaseId,status,displayTitle \
@@ -1260,23 +1255,23 @@ jobs:
             if [[ " $open " == *" data "* ]]; then data_by=${data_by:-$id}; fi
             if [[ " $open " == *" main "* ]]; then main_by=${main_by:-$id}; fi
           done <<< "$others"
-          mode=""
-          if { [ "$data" -gt 0 ] && [ -z "$data_by" ]; } || { [ "${DUE:-0}" -gt 0 ] && [ -z "$main_by" ]; }; then mode="now"
-          elif [ "${HELD:-0}" -gt 0 ] && [ -z "$main_by" ]; then mode="wait"; fi
-          if [ -z "$mode" ]; then say "No chain: run ${data_by:-$main_by} is unfinished and reads it."; exit 0; fi
+          if ! { [ "$data" -gt 0 ] && [ -z "$data_by" ]; } && ! { [ "${DUE:-0}" -gt 0 ] && [ -z "$main_by" ]; }; then
+            say "No chain: run ${data_by:-$main_by} is unfinished and reads it."
+            exit 0
+          fi
           if [ "$idle" -ge "$CHAIN_IDLE" ]; then
             say "Chain stopped: $idle runs in a row made no data or main commit; the safety schedule picks it up."
             exit 0
           fi
           if [ "$runs" -ge "$CHAIN_MAX" ]; then say "Chain stopped after $runs runs; the safety schedule picks it up."; exit 0; fi
-          args=(-f dry_run=false -f bake=pending -f "chain=$mode $runs $idle")
+          args=(-f dry_run=false -f bake=pending -f "chain=now $runs $idle")
           if [ -n "$BUILDER" ]; then args+=(-f "builder_ref=$BUILDER"); fi
           if ! gh workflow run card-sync.yml --ref main -R "$GITHUB_REPOSITORY" "${args[@]}"; then
             echo "::warning::the next run was not dispatched: the safety schedule picks it up"
             exit 0
           fi
-          echo "dispatched=$mode" >> "$GITHUB_OUTPUT"
-          say "Next run dispatched: $([ "$mode" = now ] && echo "at once" || echo "after the 30-minute window") (run $runs of the chain, $idle without progress)."
+          echo "dispatched=now" >> "$GITHUB_OUTPUT"
+          say "Next run dispatched: at once (run $runs of the chain, $idle without progress)."
           sleep 10                              # the next chain job (group card-chain) sees it listed
 
   chain:
@@ -1299,7 +1294,6 @@ jobs:
       LANES: "data=${{ needs.data.result }} main=${{ needs.main.result }} after=${{ needs.after.result }}"
       PROGRESS: ${{ (needs.data.outputs.committed == 'true' || needs.after.outputs.committed == 'true' || needs.main.outputs.m) && 'true' || 'false' }}
       DUE: ${{ needs.main.outputs.due }}
-      HELD: ${{ needs.main.outputs.held }}
     steps:
       - *chain
 

@@ -78,7 +78,6 @@ function tagMeaning(tag) {
   if ((m = /^E([1-9X])T$/.exec(tag))) return old("turn", `every ${m[1]} turns, starting on turn ${m[1]} (multi-turn)`, true);
   return null;
 }
-export const GROUP_NAMES = { turn: "On your turn", any: "At any time", forced: "Forced", trigger: "Per game, uses & triggers", neutral: "Other tags" };
 export const badgeHtml = (tag, tip = true) => {   // tip false: the note is the parent's (a "3CD+" head)
   const t = tagInfo(tag);
   return t ? `<span class="badge ${t.group}"${tip ? ` data-tip="${esc(`(${t.tag}) ${t.meaning}`)}"` : ""}>${esc(t.tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
@@ -148,18 +147,14 @@ export function splitToken(token) {
 /** The variant's image of an icon entry: icons/fire.<stamp>.webp -> icons/fire.<stamp>.glow.webp (the stamp covers the variants) */
 export const variantFile = (ic, v) => ic.file.replace(/\.webp$/, `.${v}.webp`);
 
-// true: a card name links (and counts as a mention) only typed in its own letter case (on 2026-10-30, off 11-01)
-const EXACT_CASE = false;
-
 /** Build the renderer once per data load: knows icons (and their variants' reach, cards.json iconVariants) and which
  *  card names to link. */
 export function makeRenderer({ cards, icons, variants = {} }) {
   // card names of 3+ characters by printed title or file name: any case, either apostrophe, trailing !?. optional, a
   // plural or possessive ending kept in the link ("Copper Swords", "Grodus X's")
   const fold = s => String(s || "").trim().toLowerCase().replace(/[‘’]/g, "'").replace(/\s+/g, " ");
-  const same = s => String(s || "").trim().replace(/[‘’]/g, "'").replace(/\s+/g, " ");   // fold, letter case kept
-  const byName = new Map(), spelt = new Map();         // spelt: fold -> the spellings in their own case (EXACT_CASE)
-  const add = (n, c) => { const k = fold(n); if (k.length < 3) return; if (!byName.has(k)) byName.set(k, c); (spelt.get(k) || spelt.set(k, new Set()).get(k)).add(same(n)); };
+  const byName = new Map();
+  const add = (n, c) => { const k = fold(n); if (k.length < 3) return; if (!byName.has(k)) byName.set(k, c); };
   const oneWord = s => !/\s/.test(String(s || "").trim());
   for (const c of cards) add(c.name, c);
   for (const c of cards) if (!oneWord(c.key) || oneWord(c.name)) add(c.key, c);   // not "Blockade" for The Wall By Ech
@@ -230,7 +225,6 @@ export function makeRenderer({ cards, icons, variants = {} }) {
       if (!m) continue;
       end = m.index + m[0].length;
       const card = byName.get(fold(m[1]));
-      if (EXACT_CASE && !spelt.get(fold(m[1]))?.has(same(m[1]))) continue;
       if (card && isRef(m, spaced, card)) links.push([m.index, m[0].length, card]);   // its own name too (owner 10-30)
     }
     return { pieces, links };

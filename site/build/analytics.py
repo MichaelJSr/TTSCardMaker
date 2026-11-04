@@ -156,7 +156,7 @@ def make_cohorts(members):
     return {k: cohorts[k] for k in sorted(cohorts, key=order)}, groups, sizes
 
 
-def card_balance(e, line, key, groups, cohort):
+def card_balance(line, key, groups, cohort):
     rows = groups[key]
     columns = {k: sorted(sum(l) if k == "total" else l[i] for _, l in rows) for i, k in enumerate(KEYS)}
     values = dict(zip(KEYS, (*line, sum(line))))
@@ -433,7 +433,7 @@ def build(cards, stats, old_stats, now=None, history=True, psd_commits=None, lin
     out_cards = {}
     for e, line, kind in members:
         key = cohort_key(kind, e.get("stars") if e.get("type") != AUX else None, sizes)
-        out_cards[e["id"]] = card_balance(e, line, key, groups, cohorts[key])
+        out_cards[e["id"]] = card_balance(line, key, groups, cohorts[key])
     versions = 0
     for e in cards:
         if e.get("dup") or e.get("key") not in stats:

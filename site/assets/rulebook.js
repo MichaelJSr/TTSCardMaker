@@ -21,7 +21,6 @@
 import { esc } from "./text.js";
 
 export const IMG_DIR = "rulebook/img/";          // dist path of site/rulebook/img
-export const SHEET = { w: 1080, h: 1920 };       // a TTS page, as the Photoshop pages were
 
 // ---- parse --------------------------------------------------------------------------------------------------------
 const FENCE = /^\s*:{3,}\s*([a-z][\w-]*)\s*(.*)$/i;
@@ -359,7 +358,7 @@ export const sectionsOf = ch => (ch.ast || parse(ch.source)).blocks.flatMap(b =>
 export const titleText = t => plainText({ blocks: [{ t: "p", text: String(t || "").replace(/\[[^[\]\n]{1,52}\](?![({])/g, "") }] }).replace(/\s+/g, " ").trim();
 
 // ---- TTS sheets ---------------------------------------------------------------------------------------------------
-// The book cut into SHEET-sized pages in a host element (laid out, so it can measure): each chapter starts a page; its
+// The book cut into 1080x1920 pages in a host element (laid out, so it can measure): each chapter starts a page; its
 // first page reads "STATS", the next "STATS 2", as the Photoshop pages did, numbered 7, 7.2...; "=== page ===" starts a
 // new one. Every page has the same text size (2026-11-03: the website, the editor and the PDF look alike, so a design
 // holds): a block that doesn't fit is split between its children (a section's blocks, a list's items, a table's rows)

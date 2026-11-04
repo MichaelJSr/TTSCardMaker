@@ -1,6 +1,6 @@
 // Card ratings: favorability and power, whole numbers 1 to 10 (their means keep one decimal), dated (site/Card
-// Ratings.json, as cards.json `ratings`). Pure helpers for the card page, Stats and People; build_site.py rating_now and
-// tier_of are the Python twins. NOTES.md §25.
+// Ratings.json, as cards.json `ratings`). Pure helpers for the card page, Stats and People; build_site.py rating_now is
+// the Python twin. NOTES.md §25.
 import { esc, noted, noteHtml } from "./text.js";
 
 export const SCALES = [["favorability", "Favorability", "How much players like this card, 1 to 10: each rater's latest rating, averaged"],

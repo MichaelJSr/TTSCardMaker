@@ -527,7 +527,6 @@ body.rb-shot .rb-print-bar { display: none; }
 .badge-help > summary::after { content: " ⓘ"; text-transform: none; }
 .badge-help[open] > summary { color: var(--ink-2); }
 .badge-help .badge-legend { background: var(--surface-2); border-radius: 12px; padding: 8px 14px; margin-top: 4px; }
-.glossary { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 18px; margin: 8px 0 18px; font-size: 14px; }
 
 /* ---- deck builder ---- */
 .deck { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }

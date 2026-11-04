@@ -65,8 +65,6 @@ export function countsOf(group) {
   for (const [kind, word] of COUNT_WORDS) { const n = group.filter(e => e.kind === kind).length; if (n) counts.set(word, (counts.get(word) || 0) + n); }
   return [...counts].map(([word, n]) => `${n} ${word}`).join(", ");
 }
-/** "Zomoroko, Oct 22 14:05: 1 new, 2 changed": the post's title */
-export function titleOf(group) { const [who, at] = whoOf(group); return `${who}, ${when(at)}: ${countsOf(group)}`; }
 /** The push's compare view (before...after), its commit without a before, else the build's run (link_of()) */
 export function linkOf(group, repo) {
   const push = group[0].push;
@@ -131,7 +129,7 @@ export function fieldsHtml(fields) {
 const VERDICT = { buff: ["diff-up", "buff"], nerf: ["diff-down", "nerf"], mixed: ["muted", "buffs and nerfs"] };
 const verdictHtml = e => { const v = VERDICT[e.verdict]; const why = [...(e.buffs || []), ...(e.nerfs || [])].join("; "); return v ? ` <span class="${v[0]}"${why ? ` data-tip="${esc(why)}"` : ""}>(${v[1]})</span>` : ""; };
 const folder = p => String(p || "").split("/").slice(0, -1).join("/");
-// an archived card's tag: [key, label] (build_site ARCHIVE_TAGS)
+// an archived card's tag: [key, label] (build_site archive_tag)
 export const ARCHIVE_TAGS = [["renamed", "Renamed"], ["retired", "Retired"], ["unfinished", "Unfinished"], ["deleted", "Deleted"]];
 /** The tag's key: the build's, else from the fields (renamed_to, moved_to: its PSD moved into MDW) */
 export const archiveTag = r => (ARCHIVE_TAGS.some(([k]) => k === r.tag) ? r.tag : r.renamed_to ? "renamed"

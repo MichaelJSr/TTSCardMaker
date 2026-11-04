@@ -1502,24 +1502,19 @@ def parse_ratings():
     return out
 
 
-def rating_now(entries, scale, day=None, skip=None):
-    """ratings.js current(): the mean of each rater's latest entry of scale (on or before day; skip: a rater, or raters,
-    left out; "group" counts as one) -> {"value" (1 decimal), "raters", "date" (the newest)}, or None."""
+def rating_now(entries, scale, skip=None):
+    """ratings.js current(): the mean of each rater's latest entry of scale (skip: a rater, or raters, left out;
+    "group" counts as one) -> {"value" (1 decimal), "raters", "date" (the newest)}, or None."""
     skip = {skip} if isinstance(skip, str) else set(skip or ())
     latest = {}
     for e in entries or ():                       # oldest first: a later one replaces
-        if e.get("scale") == scale and (day is None or e["date"] <= day) and e["by"] not in skip:
+        if e.get("scale") == scale and e["by"] not in skip:
             if e["by"] not in latest or e["date"] >= latest[e["by"]]["date"]:
                 latest[e["by"]] = e
     if not latest:
         return None
     values = [e["value"] for e in latest.values()]
     return {"value": rating_number(sum(values) / len(values)), "raters": len(latest), "date": max(e["date"] for e in latest.values())}
-
-
-def tier_of(v):
-    """A rating's category 0-4 (edges 2.5, 4.5, 6.5, 8.5; ratings.js tierOf, AutoCroissant tts_ratings.tier_of)."""
-    return max(0, min(4, int((v - 0.5) // 2)))
 
 
 def rater_shown(e, people, by_login, row_of=None):
@@ -2520,7 +2515,6 @@ def edit_batches(commits, people, by_login, edits, id_of, name_of, since, fields
     return {"available": True, "batches": out}
 
 
-ARCHIVE_TAGS = ("renamed", "retired", "deleted")   # changes.js ARCHIVE_TAGS
 ARCHIVED_PERSON = ("card", "title", "tag", "renamed_to", "renamedId", "moved_to", "at", "created")       # contributions.json people[].archived
 
 
