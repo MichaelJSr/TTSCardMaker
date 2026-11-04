@@ -523,7 +523,7 @@ jobs:
             if [ -f "$RUNNER_TEMP/$f" ]; then cp "$RUNNER_TEMP/$f" "$out/"; fi
           done
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always() && env.GO == 'true'
         timeout-minutes: 5
         with:
@@ -540,7 +540,13 @@ jobs:
         timeout-minutes: 2
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY"
+        run: |   # 3 tries (a brief API error); a lasting one fails the job
+          for wait in 0 10 30; do
+            sleep "$wait"
+            gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY" && exit 0
+          done
+          echo "::error::the site build was not dispatched after 3 tries"
+          exit 1
 
       # A failed live job (a push's, scheduled, a retry, a dispatch) tells Discord once per failing streak of its lane
       # (data: Card data and after the bake; main: Bake and save): the streak is the lane's outcome in the
@@ -1048,7 +1054,7 @@ jobs:
           echo "Bake records: $n verdicts, $e events$([ "$LANDED" = true ] || echo " (M did not land: its part left out)")." | tee -a "$GITHUB_STEP_SUMMARY"
           if [ "$((n + e))" -gt 0 ] && [ "$DRY_RUN" != true ]; then echo "records=true" >> "$GITHUB_OUTPUT"; fi
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() && (steps.records.outputs.records == 'true' || env.DRY_RUN == 'true' && steps.records.outcome == 'success') }}
         timeout-minutes: 1
         with:
@@ -1146,7 +1152,7 @@ jobs:
           done
           git diff -- "TTS/Impossibility Simulator.json" > "$out/save.diff" || true
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always() && env.GO == 'true'
         timeout-minutes: 5
         with:

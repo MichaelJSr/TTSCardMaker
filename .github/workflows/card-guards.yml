@@ -207,6 +207,28 @@ jobs:
             echo "ok=false" >> "$GITHUB_OUTPUT"
           fi
 
+      # A push's PSD and PNG blobs (both sides) in one fetch, as git's own lazy fetch asks: the checks and the guards read
+      # the clone first, so ~3 REST reads per card become none. One that fails or times out leaves them to the REST reads.
+      - name: Pushed blobs
+        if: github.event_name == 'push'
+        continue-on-error: true
+        timeout-minutes: 5
+        shell: bash
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          case "$BEFORE" in ''|*[!0]*) ;; *) echo "a new branch: nothing to fetch"; exit 0;; esac
+          [ -n "$BEFORE" ] || exit 0
+          list=$RUNNER_TEMP/blobs
+          GIT_NO_LAZY_FETCH=1 git diff-tree -r --no-renames "$BEFORE" "$GITHUB_SHA" -- '*.psd' '*.PSD' '*.png' '*.PNG' \
+            | awk '{print $3; print $4}' | grep -v '^0*$' | sort -u > "$list" || true
+          [ -s "$list" ] || { echo "no card blobs pushed"; exit 0; }
+          GIT_NO_LAZY_FETCH=1 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags --no-write-fetch-head \
+            --recurse-submodules=no --filter=blob:none --stdin origin < "$list"
+          have=$(GIT_NO_LAZY_FETCH=1 git cat-file --batch-check < "$list" | grep -vc ' missing$' || true)
+          echo "$have of $(wc -l < "$list") pushed blobs in the clone"
+          [ "$have" -eq "$(wc -l < "$list")" ] || echo "::warning::$have of $(wc -l < "$list") pushed blobs fetched: the rest by REST"
+
       # The two checks, at once (before the guards' check, so their posts are not held up). A push: the PSDs changed
       # between its two heads; a dispatch: `sha`'s (or main's head's) own, or with `all` every card PSD of the tree.
       # Each exits 0 on findings (an unreadable PSD or a failed API call is one line in its report); one that breaks
@@ -365,7 +387,7 @@ jobs:
           echo "card_errors=$(jq '.card_errors // 0' "$OUT/summary.json")" >> "$GITHUB_OUTPUT"
 
       # overwrite: a re-run replaces its earlier attempt's (one name per run); the post job adds what Land settled
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always() && env.MODE != 'off'
         with:
           name: card-guards
@@ -402,7 +424,7 @@ jobs:
         run: echo "OUT=$RUNNER_TEMP/guards" >> "$GITHUB_ENV"
 
       # The check job's plan.json, report.md, summary.json and the files its writes carry.
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: card-guards
           path: ${{ runner.temp }}/guards
@@ -505,7 +527,7 @@ jobs:
       # The landed commit's changelog events (guard-events.json: re-made or recompressed PNGs and the fixes, never the
       # Single-line Composer) for the card sync's data job, which finds this run by the push and reads them (the Changes
       # page shows them, Discord never: AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md). Before Follow up starts it.
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always() && steps.land.outputs.sha != ''
         with:
           name: guard-events
@@ -613,7 +635,7 @@ jobs:
             || echo "::warning::the comment's told mark could not be set: a re-run would post again"
 
       # overwrite: the check job's plan with what Land settled (landed.json, report-landed.md, discord-final.json)
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: card-guards
@@ -726,7 +748,7 @@ jobs:
           fi
 
       # The streak's mark for the next push run and a re-run.
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always() && steps.alert.outputs.streak == 'true'
         with:
           name: ${{ env.STREAK }}

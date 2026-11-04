@@ -205,6 +205,7 @@ jobs:
         uses: actions/deploy-pages@v5
         with:
           reporting_interval: 1000    # ms between status checks (5000): a quick deploy is seen done sooner
+          error_count: 15             # HTTP errors before it gives up (10): about 50 s at 1 s checks
 
   # Each save above is a new entry (card images ~150 MB): the older ones go. Beside the deploy, not before it.
   caches:
