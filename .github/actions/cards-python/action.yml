@@ -1,7 +1,8 @@
 # The card workflows' one Python setup: Python 3.14 and AutoCroissant requirements-cards.txt (the psd-tools fork's one
-# pin) in a venv cached whole per its requirement lines (comments don't count), runner and Python (one entry for every
-# card job): a hit restores it (its packages' metadata checked). A miss installs it offline with uv from the wheels, cached
-# the same way (a miss builds them with pip: uv has no `pip wheel`), and saves both. The oxipng CLI (the lossless PNG
+# pin) in a venv cached whole per its requirement lines (comments don't count), runner and Python patch version (its
+# interpreter's path; one entry for every card job): a hit restores it (its packages' metadata checked). A miss installs
+# it offline with uv from the wheels, cached per Python minor version (cp314 wheels fit every 3.14.x: a runner image's
+# new patch rebuilds only the venv; a miss builds them with pip: uv has no `pip wheel`), and saves both. The oxipng CLI (the lossless PNG
 # recompression, AutoCroissant png_export) is the release binary, its sha256 pinned. The bot checkout is at bot/.
 name: Card Python
 description: Python 3.14 with the card packages from the shared venv and wheel caches
@@ -38,12 +39,13 @@ runs:
         sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' bot/requirements-cards.txt | sha256sum | cut -d' ' -f1)
         echo "sha=$sha" >> "$GITHUB_OUTPUT"
         echo "venv=$VENV" >> "$GITHUB_OUTPUT"
+        echo "minor=$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')" >> "$GITHUB_OUTPUT"
 
     - id: env     # the path is part of the entry: card-sync's venv and the default are one
       uses: actions/cache/restore@v6
       with:
         path: ${{ steps.reqs.outputs.venv }}
-        key: cards-venv-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+        key: card-venv-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
 
     - id: check     # a restored venv missing its packages is installed again
       shell: bash
@@ -66,7 +68,7 @@ runs:
       uses: actions/cache/restore@v6
       with:
         path: ~/.cache/card-wheels
-        key: cards-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+        key: card-wheels-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.reqs.outputs.minor }}
 
     - if: steps.check.outputs.ok != 'true'
       uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
