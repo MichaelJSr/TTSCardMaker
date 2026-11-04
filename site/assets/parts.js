@@ -1,5 +1,5 @@
 // The parts editor (AutoCroissant docs/Finished/session-2026-10-26/PARTS_EDITOR.md §3, §5): one text box per PSD layer the parser reads as a
-// title, ability or rule-page block, from data/details/<id>.json's VERSION 2 `parts` (build_site details_parts). Edits
+// title or ability, from data/details/<id>.json's VERSION 2 `parts` (build_site details_parts). Edits
 // publish per layer to Card Edits.json's `parts` (keyed by layer id, or +ability) with the derived name/ability. A card
 // whose record has no parts edits as before. Pure: edit.js draws the boxes.
 import { esc } from "./text.js";
@@ -18,12 +18,12 @@ export function straighten(box) {
   return true;
 }
 
-/** The record's parts when it has boxes ({title, ability, blocks, follow}), else null (the editor works as before). */
+/** The record's parts when it has boxes ({title, ability, follow}), else null (the editor works as before). */
 export function partsOf(d) {
   const p = d?.parts;
   if (!p || typeof p !== "object" || Array.isArray(p)) return null;
-  const out = { title: arr(p.title), ability: arr(p.ability), blocks: arr(p.blocks), follow: arr(p.follow) };
-  return out.title.length || out.ability.length || out.blocks.length ? out : null;
+  const out = { title: arr(p.title), ability: arr(p.ability), follow: arr(p.follow) };
+  return out.title.length || out.ability.length ? out : null;
 }
 /** The card's name from its title boxes: each line break read as a space (the name stays one line). */
 export const joinTitle = texts => texts.map(t => String(t).split("\n").map(s => s.trim()).filter(Boolean).join(" ")).filter(Boolean).join(" ");
@@ -45,17 +45,16 @@ export function keepBreaks(was, now) {
 /** The ability from its boxes, in reading order (the parser's join, without its type and padding clean-up). */
 export const joinAbility = texts => texts.map(t => String(t).trim()).filter(Boolean).join("\n");
 const baseName = layer => String(layer || "").split("/").pop().replace(/ #\d{1,2}(,\d{1,2})*$/, "").trim();
-/** A box's label: "Title"; "Title 1/2 · Text/Name", "2/2 · Text/Druid  (not named Name)"; "Ability 3/5"; a block's role or layer. */
+/** A box's label: "Title"; "Title 1/2 · Text/Name", "2/2 · Text/Druid  (not named Name)"; "Ability 3/5". */
 export function labelOf(kind, i, n, part) {
-  if (kind === "block") return part.role === "header" ? "Header" : part.role === "page" ? "Page number" : baseName(part.layer) || `Block ${i + 1}`;
   if (kind === "ability") return n > 1 ? `Ability ${i + 1}/${n}` : "Ability";
   if (n === 1) return `Title${part.named === false ? `  (not named Name: ${part.layer})` : ""}`;
   return `${i ? "" : "Title "}${i + 1}/${n} · ${part.layer}${part.named === false ? "  (not named Name)" : ""}`;
 }
-/** The boxes of a dialog: [{key, kind (title | ability | block), field (name | ability), label, part, start (the box's
- *  text when it opens: a pending edit's, else the PSD's), deleted (a pending delete), state (pending | stale | null), edit
- *  (Card Edits.json's part edit), skipped (_psd.skipped's)}]. rule: a rulebook page (its blocks only). */
-export function boxes(d, rule = false) {
+/** The boxes of a dialog: [{key, kind (title | ability), field (name | ability), label, part, start (the box's text when
+ *  it opens: a pending edit's, else the PSD's), deleted (a pending delete), state (pending | stale | null), edit (Card
+ *  Edits.json's part edit), skipped (_psd.skipped's)}]. */
+export function boxes(d) {
   const p = partsOf(d);
   if (!p) return [];
   const st = d.partState || {}, ed = d.partEdits || {}, sk = d.skipped || {}, out = [];
@@ -64,8 +63,7 @@ export function boxes(d, rule = false) {
     out.push({ key, kind, field: kind === "title" ? "name" : "ability", label: labelOf(kind, i, list.length, part), part,
       start: pending && !e.delete ? e.text : part.text, deleted: !!(pending && e.delete), state, edit: e, skipped: sk[key] || null });
   });
-  if (rule) add("block", p.blocks);
-  else { add("title", p.title); add("ability", p.ability); }
+  add("title", p.title); add("ability", p.ability);
   return out;
 }
 /** The part edits waiting for a layer that's gone from the PSD (partState gone): [{key, edit}]. */
@@ -78,7 +76,7 @@ export const addedEdit = d => (d?.partEdits?.[ADD] ? { text: d.partEdits[ADD].te
  * added: text | null (the + Add an ability box), drops: Set (gone or stale edits to remove)}.
  * -> {set: {key: part edit}, unset: [key], texts: {key: text | null (deleted)}, added, error, notes}. A box back at the
  * PSD's text drops its edit; an emptied ability box deletes its layer (the last one too: the card then has no ability,
- * flagged); a title or rule-page box can't be emptied.
+ * flagged); a title box can't be emptied.
  */
 export function readParts(d, list, { values = {}, deleted = new Set(), added = null, drops = new Set() } = {}) {
   const set = {}, unset = [], texts = {}, notes = [], psd = String(d?.psdBlob || "").slice(0, 8);
@@ -88,8 +86,7 @@ export function readParts(d, list, { values = {}, deleted = new Set(), added = n
     if (typed === tidyText(b.start)) typed = b.start.trim();                // untouched: as it opened (its curly apostrophes too)
     const empty = typed === "" && b.part.text !== "";                         // an empty layer's box left empty: no edit
     let del = deleted.has(b.key) || (empty && b.kind === "ability");
-    if (empty && !del) error = b.kind === "title" ? "A title box can't be empty: type the title, or delete the box" : "A rule page's text box can't be empty";
-    if (del && b.kind === "block") del = false;
+    if (empty && !del) error = "A title box can't be empty: type the title, or delete the box";
     const now = del ? null : empty ? b.part.text : typed;
     texts[b.key] = now;
     const pub = b.state === "pending" && b.edit ? (b.edit.delete ? null : b.edit.text) : b.part.text;
@@ -114,7 +111,7 @@ export function readParts(d, list, { values = {}, deleted = new Set(), added = n
 export function derived(list, texts, added = null) {
   const pick = kind => list.filter(b => b.kind === kind && texts[b.key] != null).map(b => texts[b.key]);
   const titles = pick("title");
-  return { name: titles.length ? joinTitle(titles) : null, ability: joinAbility([...pick("ability"), ...pick("block"), ...(added ? [added] : [])]) || null };
+  return { name: titles.length ? joinTitle(titles) : null, ability: joinAbility([...pick("ability"), ...(added ? [added] : [])]) || null };
 }
 /** A sibling picture's texts with the edited layers' texts (by layer id) put in. */
 export const viewTexts = (list, texts) => Object.fromEntries(list.map(b => [b.key, b.key in texts ? texts[b.key] : b.deleted ? null : b.start]));
