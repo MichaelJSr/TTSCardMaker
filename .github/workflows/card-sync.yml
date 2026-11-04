@@ -4,9 +4,9 @@
 # post, card_bake --local, rulebook_pages, tts_save --names. Two lanes (owner, 2026-10-25: only main's writes wait):
 # - data (Card data): at once on every run but a retry: re-reads main's head, one commit on `data`, the posts, the site.
 # - main (Bake and save): the bake and the save as one commit M on main (fast-forward only), then the baked PNGs' save
-#   links re-pinned (a second commit). A card push's waits out a fixed 30-minute window (owner, 2026-10-24): the first
-#   push to main touching a card input starts it, pushes while it runs ride along (their data still at once), and when
-#   it is up the lane syncs main's head. After M the after job re-reads the baked cards into `data` (no wait).
+#   links re-pinned (a second commit). A card push's goes at once (owner, 2026-11-03: no 30-minute window any more): it
+#   syncs main's head, one lane at a time (card-main; a newer pending one replaces an older one), and a push made while
+#   another push's lane is starting rides along. After M the after job re-reads the baked cards into `data` (no wait).
 # The bake's verdicts and events live on `data` (AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md): the main job records
 # them (bake-records), the first data job after it (the after job, else the next) merges them in its data commit
 # (verdicts.json; baked, bake-refused; the merged artifacts in bake-records.json), so a refusal makes no main commit of
@@ -15,8 +15,8 @@
 # guard-fix) come from its run's guard-events artifact and show on the Changes page only, never in a post.
 # Runs are live (dry_run off by default). The bot dispatches only its admins' re-parses (/update_stats force_update or
 # cards). Leftover work chains (owner, 2026-10-25): a live run that ends with work left dispatches the next run itself
-# (job chain): at once for a re-parse in progress, unmerged bake records and edits over the bake's cap; through the
-# 30-minute window for website edits held by a recent push. The hourly safety cron (GitHub starts it late or not at all)
+# (job chain): at once for a re-parse in progress, unmerged bake records and edits over the bake's cap. The hourly
+# safety cron (GitHub starts it late or not at all)
 # catches what the chain leaves: unposted events, a lane that failed, a chain that stopped.
 # One main lane per guarded push (owner, 2026-10-25, P-2): a push's main lane skips itself when that push's guards have
 # fixes to land (card-guards.yml's "Fixes to land"); their Follow up starts Card sync once they land (or land nothing),
@@ -43,7 +43,7 @@ on:
       - "site/Card Creation Dates.json"
       - "TTS/decks.json"
       - "TTS/Impossibility Simulator.json"
-      - "site/rulebook/**"   # the rulebook's chapters: db/rulebook.json, and the TTS pages after the window
+      - "site/rulebook/**"   # the rulebook's chapters: db/rulebook.json, and the TTS pages once the website shows them
       - "TTS/Global.lua"     # the save's global script and UI (tts_save writes them into the save)
       - "TTS/Global.xml"
   schedule:
@@ -87,7 +87,7 @@ on:
         type: string
         default: ""
       chain:
-        description: "Set by Card sync for leftover work: 'now|wait <runs> <idle>' (wait: through the 30-minute window)"
+        description: "Set by Card sync for leftover work: 'now|wait <runs> <idle>' (wait: as a push's run)"
         type: string
         default: ""
 
@@ -573,11 +573,10 @@ jobs:
             | curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @- "$WEBHOOK" \
             || echo "::warning::the Discord webhook call failed"
 
-  # The main lane's 30-minute window (owner, 2026-10-24: a fixed window, not restarted by later pushes). A push's run, the
-  # schedule's and a chained one first look for a push run still in its window (waiting, or its Quiet window job
-  # unfinished; one pushed over 40 minutes ago is stuck and holds nothing). One there syncs main's head when its 30
-  # minutes are up, this push's included, so this run's main lane rides along (skipped; its data lane ran at once). Else
-  # a push's run and a chained wait run wait (Quiet window); the schedule's and a chained now run's main lane goes now.
+  # The main lane goes at once (owner, 2026-11-03: the 30-minute window of 2026-10-24 is gone). A push's run, the
+  # schedule's and a chained one first look for a push run whose Quiet window job (no wait now: its guards check) is
+  # unfinished (one pushed over 40 minutes ago is stuck and holds nothing). One there syncs main's head, this push's
+  # included, so this run's main lane rides along (skipped; its data lane ran at once). Else the main lane goes.
   # Runs that cannot be read count as none (this run goes on); two near-simultaneous pushes may both wait: the second
   # main lane finds nothing to commit. Other dispatches and retries skip both jobs. No job here is in a group, so a lane
   # running never holds a window.
@@ -615,17 +614,17 @@ jobs:
             fi
             if [ "${n:-0}" -gt 0 ]; then
               echo "run=$id" >> "$GITHUB_OUTPUT"
-              echo "Push run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id is in its 30-minute window: it bakes and saves main's head when its time is up (this run's work too)." \
+              echo "Push run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id is about to bake and save main's head (this run's work too)." \
                 | tee -a "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
           done <<< "$runs"
-          echo "No push run in its window: $([ "$GITHUB_EVENT_NAME" = push ] && echo "this push starts one" || echo "the main lane goes on")." \
+          echo "No push run starting: the main lane goes on." \
             | tee -a "$GITHUB_STEP_SUMMARY"
 
       # The guards' fixes (P-2): a guards push run with fixes to land (its check job's step "Fixes to land") starts Card
-      # sync once they land, landed or not (its Follow up). A push's run looks for its own push's at the window's end
-      # (Quiet window): unfinished, or finished with Follow up done. The schedule's and a chained run's look here for any
+      # sync once they land, landed or not (its Follow up). A push's run looks for its own push's (Quiet window):
+      # unfinished, or finished with Follow up done. The schedule's and a chained run's look here for any
       # unfinished one (two hours back). One found: this run's main lane is skipped (its data lane ran). Runs that cannot
       # be read count as none (the main lane goes on).
       - &guards
@@ -659,17 +658,15 @@ jobs:
           done <<< "$runs"
           echo "No guards run with fixes to land: the main lane goes on." | tee -a "$GITHUB_STEP_SUMMARY"
 
-  # A push's first attempt, and a chained wait's, waits in the environment card-sync-quiet (its 30-minute wait timer, the
-  # owner's setting; no runner is held). Without the timer, and on a re-run, Quiet sleeps out what is left of the window
-  # from the push (pushed_at; a chained run's from its dispatch), so a re-run does not wait again. Then the main lane, on
-  # main's head as it is then.
+  # A push's run, and a chained wait's: this push's guards (no wait: the 30-minute window and its environment
+  # card-sync-quiet are gone, owner 2026-11-03), then the main lane on main's head as it is then. The job keeps its name,
+  # which the other runs read.
   quiet:
     name: Quiet window
     needs: timer
     if: ${{ !cancelled() && (github.event_name == 'push' || startsWith(inputs.chain, 'wait')) && needs.timer.result != 'skipped' && !needs.timer.outputs.other && !needs.timer.outputs.guards }}
-    environment: ${{ github.run_attempt == '1' && 'card-sync-quiet' || '' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35     # the whole window without the timer
+    timeout-minutes: 5
     defaults:
       run:
         shell: bash
@@ -678,30 +675,11 @@ jobs:
     outputs:
       guards: ${{ steps.guards.outputs.run }}
     steps:
-      - name: Quiet
-        env:
-          PUSHED_AT: ${{ github.event_name == 'push' && github.event.repository.pushed_at || '' }}
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          now=$(date +%s)
-          from=$now                              # a push event's pushed_at is Unix seconds; an ISO time is taken too
-          if [ -z "$PUSHED_AT" ] && [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then     # a chained run: from its dispatch
-            PUSHED_AT=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" --jq .created_at) || PUSHED_AT=""
-          fi
-          if [[ "$PUSHED_AT" =~ ^[0-9]+$ ]]; then from=$PUSHED_AT
-          elif [[ "$PUSHED_AT" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$ ]]; then from=$(jq -nr --arg t "$PUSHED_AT" '$t | fromdate')
-          else echo "::warning::no start time: the window counts from now"; fi
-          left=$((from + 30 * 60 - now))
-          if [ "$left" -gt 0 ]; then
-            echo "Quiet window: $((left / 60)) min left (no wait timer, or a re-run)."
-            sleep "$left"
-          fi
-
-      # This push's guards (a chained wait: any unfinished guards run), now the window is up
+      # This push's guards (a chained wait: any unfinished guards run)
       - *guards
 
-  # The main lane: a push's after its window (a failed one goes on), the schedule's and a chained run's when no window
-  # runs (a chained wait's after its own), another dispatch's and a retry's at once; none while guards' fixes are to land
+  # The main lane: a push's at once (after its Quiet window job: its guards), the schedule's and a chained run's when no
+  # push run is starting one, another dispatch's and a retry's at once; none while guards' fixes are to land
   # (the run their Follow up starts is the one). One at a time (card-main); a newer
   # pending one replaces an older one (a retry is dispatched only when no other run is unfinished). It writes only main;
   # db/ is read for the save's names.
@@ -729,7 +707,7 @@ jobs:
       - *builder
       - *data-checkout
 
-      # Go for a push (its window is up), a dispatch or a retry; the schedule's and a chained run's when a card input or
+      # Go for a push, a dispatch or a retry; the schedule's and a chained run's when a card input or
       # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished, or
       # none of the last 30 runs did; else (g) a website edit the bake put off (recent, capped) may be past its grace: the
       # Pending edits step. GO and EDITS in the env.
@@ -751,7 +729,7 @@ jobs:
           event=$GITHUB_EVENT_NAME
           if [ -n "$CHAIN" ]; then event=schedule; fi      # a chained run gates as the schedule
           case $event in
-            push) why+=("the push's 30-minute window is up") ;;
+            push) why+=("a push") ;;
             schedule)
               synced=""
               if runs=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --status completed --limit 30 \
@@ -810,7 +788,7 @@ jobs:
           print(f"Verdicts not on data yet: {', '.join(keys) or 'none new'}.")
           PY
 
-      # (g): the bake's put-off edits (card_bake.due: pending, PSD and PNG past the 30-minute grace) start the lane.
+      # (g): the bake's put-off edits (card_bake.due: pending; no grace since 2026-11-03) start the lane.
       - name: Pending edits
         id: edits
         if: env.EDITS == 'true' && env.GO != 'true' && steps.venv.outcome == 'success'
@@ -887,7 +865,7 @@ jobs:
 
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
       # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), when the website shows main's
-      # chapters (it has had the 30-minute window to build them); the save below puts it in the Rulebooks bag and M takes
+      # chapters (it waits up to 15 minutes for the website's build of them); the save below puts it in the Rulebooks bag and M takes
       # it. A failure leaves the PDF as it was.
       - name: Rulebook PDF
         id: pages

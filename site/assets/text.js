@@ -23,7 +23,22 @@ const FIXED = {
   OFS: ["trigger", "On first summon"], OS: ["trigger", "On summon"], OD: ["trigger", "On death"], WOF: ["trigger", "While on field"],
   Action: ["neutral", "Costs the creature's action"],   // not a timing tag
 };
-export const TAG = /\((-?[0-9A-Za-z/]{2,6})\)/;   // candidates, any case; tagInfo decides. Not /g: copy it to iterate
+export const TAG = /\((-?[0-9A-Za-z/]{2,8})\)/;   // candidates, any case; tagInfo decides. Not /g: copy it to iterate
+const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => String(a + i));
+/** Every timing tag the stoogedings font draws (build_stoogedings.badge_tags), the cards' own first, then the old
+ *  system's: n 1-20 or X (owner 2026-11-03; the old system 1-9), a/b with a from -9 up to b (and the first -1 to 9 with
+ *  any b up to 9). */
+export const BADGE_TAGS = (() => {
+  const old = [...range(1, 9), "X"], counts = [...range(1, 20), "X"], firsts = [...range(-9, 20), "X"];
+  const now = new Set(Object.keys(FIXED));
+  for (const n of counts) for (const k of ["CD", "GCD", "U", "PG"]) now.add(n + k);
+  for (const cd of ["CD", "GCD"]) {
+    for (const a of ["-1", ...range(0, 9), "X"]) for (const b of old) now.add(`${a}/${b}${cd}`);
+    for (const b of counts) for (const a of firsts) if (a === "X" || b === "X" || +a <= +b) now.add(`${a}/${b}${cd}`);
+  }
+  return [...now, ...old.flatMap(n => [`${n}PT`, `E${n}T`, `FTE${n}T`, `${n}PGT`, `E${n}GT`])];
+})();
+const KNOWN = new Set([...BADGE_TAGS.map(t => t.toUpperCase()), "Y/XCD", "Y/XGCD"]);   // + the Timing Tags chapter's family rows
 // any letter case is the same tag, as in the font: "(1cd)" is (1CD), "(action)" is (Action)
 const CANON = Object.fromEntries(Object.keys(FIXED).map(k => [k.toUpperCase(), k]));
 const canon = tag => { const up = String(tag).toUpperCase(); return CANON[up] ?? up; };
@@ -33,7 +48,7 @@ const old = (group, meaning, multi = false) => ({ group, meaning: `Old system: $
 /** {tag (canonical case), group, meaning, multi, old} or null. The meaning is the Timing Tags chapter's when it lists
  *  the tag, or its family with X ("XCD" for (3CD): X is 3, "turn(s)" agrees); else the one below. */
 export function tagInfo(typed) {
-  const tag = canon(typed), info = tagMeaning(tag);
+  const tag = canon(typed), info = KNOWN.has(tag.toUpperCase()) && tagMeaning(tag);
   if (!info) return null;
   const own = chapterMeaning(tag);
   return { tag, ...info, ...(own ? { meaning: info.old && !/^old system/i.test(own) ? `Old system: ${own}` : own } : {}) };
@@ -50,12 +65,12 @@ function chapterMeaning(tag) {
 function tagMeaning(tag) {
   if (FIXED[tag]) return { group: FIXED[tag][0], meaning: FIXED[tag][1], multi: false };
   let m;
-  if ((m = /^([1-9X])CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: ${count(m[1], "turn")}` };
-  if ((m = /^([1-9X])GCD$/.exec(tag))) return { group: "any", meaning: `Global cooldown: ${count(m[1], "global turn")}` };
-  if ((m = /^(-1|[0-9XY])\/([1-9X])CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: starts with ${m[1]} of ${count(m[2], "turn")} of charge` };
-  if ((m = /^(-1|[0-9XY])\/([1-9X])GCD$/.exec(tag))) return { group: "any", meaning: `Global cooldown: starts with ${m[1]} of ${count(m[2], "turn")} of charge` };
-  if ((m = /^([1-9X])U$/.exec(tag))) return { group: "trigger", meaning: count(m[1], "use") };
-  if ((m = /^([1-9X])PG$/.exec(tag))) return { group: "trigger", meaning: `Can only be activated ${times(m[1])} per game` };
+  if ((m = /^(\d+|X)CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: ${count(m[1], "turn")}` };
+  if ((m = /^(\d+|X)GCD$/.exec(tag))) return { group: "any", meaning: `Global cooldown: ${count(m[1], "global turn")}` };
+  if ((m = /^(-?\d+|X|Y)\/(\d+|X)CD$/.exec(tag))) return { group: "turn", meaning: `Cooldown: starts with ${m[1]} of ${count(m[2], "turn")} of charge` };
+  if ((m = /^(-?\d+|X|Y)\/(\d+|X)GCD$/.exec(tag))) return { group: "any", meaning: `Global cooldown: starts with ${m[1]} of ${count(m[2], "turn")} of charge` };
+  if ((m = /^(\d+|X)U$/.exec(tag))) return { group: "trigger", meaning: count(m[1], "use") };
+  if ((m = /^(\d+|X)PG$/.exec(tag))) return { group: "trigger", meaning: `Can only be activated ${times(m[1])} per game` };
   if ((m = /^([1-9X])PGT$/.exec(tag))) return old("any", `usable ${times(m[1])} per global turn (at any time)`);
   if ((m = /^([1-9X])PT$/.exec(tag))) return old("turn", `usable ${times(m[1])} per turn (on your turn)`);
   if ((m = /^FTE([1-9X])T$/.exec(tag))) return old("turn", `every ${m[1]} turns, starting on your 1st turn (multi-turn)`, true);
@@ -69,31 +84,34 @@ export const badgeHtml = (tag, tip = true) => {   // tip false: the note is the 
   return t ? `<span class="badge ${t.group}"${tip ? ` data-tip="${esc(`(${t.tag}) ${t.meaning}`)}"` : ""}>${esc(t.tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
 };
 
-// Costs in parentheses, drawn by the site only (the font has no such badge): "(2 points)", "(1 point)", "(1.5 points)",
-// "(X bricks)", "(2 SP)", "(1 star point)" (the team's points, BRICKS and star points, rulebook 04 Table), "(4 souls)",
-// "(3 counters)" (a card's own currency).
-// html[data-costs="icons"] (the Badges panel's switch, localStorage "costs") draws points as a coin, bricks as a brick.
-// Right after a number or word it is a multiplier, not a cost: Warcraftian Rogue's "Deal 2(x counters) DMG".
-export const COST = /(?<![\w.])\(((?:\d+(?:\.\d+)?|[Xx])[^\S\n]+(?:points?|bricks?|SP|star[^\S\n]+points?|souls?|(?:[A-Za-z][\w'’-]*[^\S\n]+)?counters?))\)/i;
+// Costs in parentheses, as the stoogedings font draws them (build_stoogedings.cost_badges, owner 2026-11-03): "(2 points)"
+// a green coin with the number on it and "Points", "(2 bricks)" a brown brick, "(2 SP)" or "(2 star points)" a yellow
+// star and "SP" (the TTS table's counters), "(4 souls)" and "(3 counters)" (a card's own currency) a teal pill; numbers
+// 0-50, halves to 9.5 and X, one space, any case. Right after a number or word it is a multiplier, not a cost (the
+// font's GLUED rule): Warcraftian Rogue's "Deal 2(x counters) DMG".
+export const COST = /(?<![\w.])\(((?:\d{1,2}(?:\.5)?|[Xx]) (?:points?|bricks?|SP|star points?|souls?|counters?))\)/i;
+export const COST_NUMBERS = new Set([...range(0, 50), ...range(0, 9).map(n => `${n}.5`), "X"]);
+const COST_KIND = { point: "points", brick: "bricks", sp: "sp", "star point": "sp", soul: "souls", counter: "counters" };
+const COST_WORD = { points: ["Point", "Points"], bricks: ["Brick", "Bricks"], sp: ["SP", "SP"], souls: ["Soul", "Souls"], counters: ["Counter", "Counters"] };
 const COST_TIP = { points: "your team's points (earned when enemy prime creatures are defeated, spent on abilities and the item shop)",
   bricks: "your team's BRICKS (mined by creatures, spent on field cards)",
-  sp: "your team's star points (set to 7 each global turn, spent to play items)", own: "a currency of this card's own" };
-/** {n, unit (as typed), kind: points | bricks | own} of a cost's text ("2 points"), or null */
+  sp: "your team's SP, star points (set to 7 each global turn, spent to play items)", souls: "a currency of this card's own",
+  counters: "a currency of this card's own" };
+/** {n, kind: points | bricks | sp | souls | counters, word (the badge's: "Points", "SP")} of a cost's text ("2 points"), or null */
 export function costInfo(typed) {
-  const m = /^((?:\d+(?:\.\d+)?|[Xx]))[^\S\n]+(.+)$/.exec(String(typed).trim());
+  const m = /^(\S+) (.+)$/.exec(String(typed));
   if (!m || !COST.test(`(${typed})`)) return null;
-  const unit = m[2].replace(/\s+/g, " "), kind = /^points?$/i.test(unit) ? "points" : /^bricks?$/i.test(unit) ? "bricks"
-    : /^(?:sp|star points?)$/i.test(unit) ? "sp" : "own";
-  return { n: m[1].toUpperCase(), unit, kind };
+  const n = m[1].toUpperCase(), unit = m[2].toLowerCase(), kind = COST_KIND[unit.replace(/s$/, "")];
+  if (!COST_NUMBERS.has(n) || !kind) return null;
+  return { n, kind, word: COST_WORD[kind][n === "1" ? 0 : 1] };
 }
 export const costHtml = typed => {
   const c = costInfo(typed);
   if (!c) return esc(`(${typed})`);
-  const unit = c.kind === "sp" && /^sp$/i.test(c.unit) ? "SP" : c.unit.replace(/(^|\s)\p{Ll}/gu, x => x.toUpperCase());   // "2 Points", "3 Ritual Counters"
-  return `<span class="badge cost ${c.kind}" data-tip="${esc(`${c.n} ${c.unit.toLowerCase()}: ${COST_TIP[c.kind]}`)}"><span class="cost-n">${esc(c.n)}</span><span class="cost-u"> ${esc(unit)}</span></span>`;
+  const own = c.kind === "souls" || c.kind === "counters";
+  const n = c.kind === "sp" && c.n.length > 1 ? `<span class="cost-n long"><i>${esc(c.n)}</i></span>` : `<span class="cost-n">${esc(c.n)}</span>`;
+  return `<span class="badge cost ${own ? "own" : c.kind}" data-tip="${esc(`${c.n} ${c.kind === "sp" ? "SP" : c.word.toLowerCase()}: ${COST_TIP[c.kind]}`)}">${n}<span class="cost-u"> ${esc(c.word)}</span></span>`;
 };
-export const COST_STYLES = [["text", "Text"], ["icons", "Coins and bricks"]];
-export const costStyle = () => (document.documentElement.dataset.costs === "icons" ? "icons" : "text");
 
 // badge colour legend, one line per colour: the text of rulebook page 02 Abbreviations; colours come from tagInfo's groups
 const COLOUR = { turn: "Blue", any: "Purple", forced: "Red", trigger: "Orange", neutral: "Grey" };
@@ -101,10 +119,11 @@ export const LEGEND = [
   ["on your turn", ["1CD", "1/2CD", "OYT"]], ["at any time", ["1GCD", "AAT"]], ["forced", ["BOT", "ENDT", "BOGT", "ENDGT"]],
   ["per game, uses and triggers", ["1PG", "2U", "OFS", "OS", "OD", "WOF"]], ["costs the creature's action", ["Action"]],
 ].map(([what, tags]) => ({ group: tagInfo(tags[0]).group, colour: COLOUR[tagInfo(tags[0]).group], what, tags }));
-const COSTS = [["Gold", "points", "2 points", "#f2c230"], ["Brown", "BRICKS", "2 bricks", "#8a4b2a"], ["Teal", "a card's own currency", "4 souls", "#0f766e"]];   // style.css colours
-/** costs: the cost lines too, with the Text / Coins and bricks switch (data-action="cost-style") */
+const COSTS = [["Green", "points", "2 points", "#00ffae"], ["Brown", "BRICKS", "2 bricks", "#a0522d"], ["Yellow", "SP (star points)", "2 SP", "#ffff00"],
+  ["Teal", "a card's own currency", "4 souls", "#0f766e"]];   // style.css colours: the TTS table's counters
+/** costs: the cost lines too */
 export const legendHtml = (costs = false) => `<ul class="badge-legend">${LEGEND.map(l => `<li><span class="badge ${l.group} swatch" aria-hidden="true"></span><b>${l.colour}:</b> ${esc(l.what)} ${l.tags.map((t, i) => `<span class="nw">${i ? "" : "("}${badgeHtml(t)}${i < l.tags.length - 1 ? "," : ")."}</span>`).join(" ")}</li>`).join("")}${costs
-  ? `${COSTS.map(([colour, what, eg, bg]) => `<li><span class="badge swatch" style="background:${bg}" aria-hidden="true"></span><b>${colour}:</b> ${esc(what)} <span class="nw">(${costHtml(eg)}).</span></li>`).join("")}<li class="cost-switch">Points and bricks as ${COST_STYLES.map(([v, l]) => `<button type="button" class="chip${costStyle() === v ? " on" : ""}" data-action="cost-style" data-value="${v}" aria-pressed="${costStyle() === v}">${l}</button>`).join(" ")}</li>` : ""}</ul>`;
+  ? `${COSTS.map(([colour, what, eg, bg]) => `<li><span class="badge swatch" style="background:${bg}" aria-hidden="true"></span><b>${colour}:</b> ${esc(what)} <span class="nw">(${costHtml(eg)}).</span></li>`).join("")}` : ""}</ul>`;
 /** Does a text draw any timing badge? */
 export const hasBadges = text => [...String(text || "").matchAll(new RegExp(TAG.source, "g"))].some(m => tagInfo(m[1]));
 /** Does a text draw any cost badge? */
@@ -242,7 +261,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
 let iconOf = null;                                   // the last renderer's icon(): diffs draw tokens with it
 /** One piece of text as HTML: its timing tags as badges and its [tokens] as icons (a diff's words) */
 export function inlineHtml(text) {
-  return String(text ?? "").replace(/\[([^\[\]\n]{1,52})\]|\((-?[0-9A-Za-z/]{2,6})\)|[^[(]+|[[(]/g, (all, token, tag) =>
+  return String(text ?? "").replace(/\[([^\[\]\n]{1,52})\]|\((-?[0-9A-Za-z/]{2,8})\)|[^[(]+|[[(]/g, (all, token, tag) =>
     token !== undefined ? (iconOf?.(token) ?? esc(all)) : tag !== undefined && tagInfo(tag) ? badgeHtml(tag) : esc(all));
 }
 

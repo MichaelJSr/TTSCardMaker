@@ -33,8 +33,6 @@
 > [!eggman top] He pissed on my fucking wife
 :::
 
-=== page ===
-
 ## DIFFERENT TYPES OF MINIONS AT ONCE
 - Offensive minions are always in the same slot as the parent creature.
 - All protectors in a field together, which is the field that the parent creature is not in regardless of summoner.

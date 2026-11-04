@@ -360,11 +360,18 @@ export const titleText = t => plainText({ blocks: [{ t: "p", text: String(t || "
 
 // ---- TTS sheets ---------------------------------------------------------------------------------------------------
 // The book cut into SHEET-sized pages in a host element (laid out, so it can measure): each chapter starts a page; its
-// first page reads "STATS", the next "STATS 2", as the Photoshop pages did, numbered 7, 7.2...; a block that overflows
-// takes the rest of its page (up to the next "=== page ===") with it when the page's text a little smaller (to 80%)
-// fits them all, else is kept whole that way (to 88%), else split between its children (a section's blocks, a
-// list's items, a table's rows), else drawn smaller (to 70%: a row or a picture), else moved on; one taller than a whole
-// page is shrunk to fit. Returns [{name, num, ch (the chapter's number as in its file), n (its page), el}].
+// first page reads "STATS", the next "STATS 2", as the Photoshop pages did, numbered 7, 7.2...; "=== page ===" starts a
+// new one. Every page has the same text size (2026-11-03: the website, the editor and the PDF look alike, so a design
+// holds): a block that doesn't fit is split between its children (a section's blocks, a list's items, a table's rows)
+// when what fits here is at least SPLIT_LEAST of the page, else it starts the next page; a panel with a placed picture
+// moves whole (the picture is placed in % of its panel). Only a block taller than a whole page is drawn smaller (shrunk).
+// Returns [{name, num, ch (the chapter's number as in its file), n (its page), el, start: {line, item} (the source line
+// the page starts at, item: a list's first item on it), shrunk}].
+const SPLIT_LEAST = 0.15;                             // a split's first part takes at least this share of a page
+const hasPlaced = b => placed(b) || (kidsOf(b) || []).some(k => typeof k === "object" && hasPlaced(k));
+// where a block drawn first on a page starts in the source: its line, or for a part carried over, its first child's
+const startOf = b => (!b ? null : !b.cont ? (b.line != null ? { line: b.line } : null)
+  : b.t === "list" || b.t === "table" ? { line: b.line, item: b.off || 0 } : startOf(kidsOf(b)?.[0]) || (b.line != null ? { line: b.line } : null));
 export function paginate(host, chapters, ctx, { cover = "" } = {}) {
   host.innerHTML = "";
   const sheets = [];
@@ -383,7 +390,8 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
     fresh();
     const over = () => body.scrollHeight > body.clientHeight + 1;
     const draw = b => { const t = document.createElement("template"); t.innerHTML = blockHtml(b, c).trim(); return t.content.firstElementChild || document.createElement("div"); };
-    const tryPut = b => { const el = draw(b); body.append(el); if (!over()) return true; el.remove(); return false; };
+    const mark = b => { const s = sheets[sheets.length - 1]; if (!body.children.length && b.t !== "page") s.start = startOf(b); };
+    const tryPut = b => { const first = !body.children.length, el = draw(b); body.append(el); if (!over()) { if (first) sheets[sheets.length - 1].start = startOf(b); return true; } el.remove(); return false; };
     // the largest head of b that fits ([head, tail]), or null
     const split = b => {
       const kids = kidsOf(b);
@@ -394,7 +402,7 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
         const inner = split1(kids[0], b);
         return inner;
       }
-      return [withKids(b, kids.slice(0, k)), k < kids.length ? withKids(b, kids.slice(k), true) : null];
+      return [withKids(b, kids.slice(0, k)), k < kids.length ? withKids(b, kids.slice(k), true, (b.off || 0) + k) : null];
     };
     const split1 = (kid, parent) => {
       const sub = kidsOf(kid);
@@ -402,26 +410,7 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
       let k = 0;
       while (k < sub.length && tryPut(withKids(parent, [withKids(kid, sub.slice(0, k + 1))]))) { body.lastElementChild.remove(); k++; }
       if (k === 0) return null;
-      return [withKids(parent, [withKids(kid, sub.slice(0, k))]), withKids(parent, [withKids(kid, sub.slice(k), true), ...kidsOf(parent).slice(1)], true)];
-    };
-    // blocks whole on this page with the page's text a little smaller (to least): true when they fit
-    const tight = (list, least) => {
-      const base = parseFloat(getComputedStyle(body.parentElement).fontSize), now = parseFloat(getComputedStyle(body).fontSize) / base, was = body.style.fontSize;
-      for (const f of [0.96, 0.92, 0.88, 0.84, 0.8].filter(x => x < now - 0.001 && x >= least)) {
-        body.style.fontSize = `${(base * f).toFixed(1)}px`;
-        const els = list.map(x => { const el = draw(x); body.append(el); return el; });
-        if (!over()) return true;
-        for (const el of els) el.remove();
-      }
-      body.style.fontSize = was; return false;
-    };
-    const rest = b => { const seg = [b]; for (const x of queue) { if (x.t === "page") break; seg.push(x); } return seg; };
-    // a row, picture or callout drawn smaller to fit
-    const squeeze = b => {
-      if (kidsOf(b) || b.t === "p") return false;
-      const el = draw(b); body.append(el);
-      for (let z = 0.95; z > 0.69; z -= 0.05) { el.style.zoom = z.toFixed(2); if (!over()) return true; }
-      el.remove(); return false;
+      return [withKids(parent, [withKids(kid, sub.slice(0, k))]), withKids(parent, [withKids(kid, sub.slice(k), true, (kid.off || 0) + k), ...kidsOf(parent).slice(1)], true)];
     };
     const queue = [...ast.blocks];
     let guard = 0;
@@ -429,14 +418,19 @@ export function paginate(host, chapters, ctx, { cover = "" } = {}) {
       const b = queue.shift();
       if (b.t === "page") { if (body.children.length) fresh(); continue; }
       if (tryPut(b)) continue;
-      const seg = rest(b);
-      if (seg.length > 1 && tight(seg, 0.8)) { queue.splice(0, seg.length - 1); continue; }
-      if (tight([b], 0.88)) continue;
-      const parts = split(b);
-      if (parts) { body.append(draw(parts[0])); if (parts[1]) queue.unshift(parts[1]); fresh(); continue; }
-      if (squeeze(b)) continue;
-      if (body.children.length) { fresh(); queue.unshift(b); continue; }
-      const el = draw(b); body.append(el); shrink(el, over);   // taller than a page on its own
+      const empty = !body.children.length, parts = empty || !hasPlaced(b) ? split(b) : null;
+      if (parts) {
+        const first = draw(parts[0]);
+        mark(parts[0]); body.append(first);
+        if (empty || first.getBoundingClientRect().height >= SPLIT_LEAST * body.clientHeight) {
+          if (parts[1]) queue.unshift(parts[1]);
+          fresh(); continue;
+        }
+        first.remove();                                 // a sliver at the page's foot: the whole block on the next page
+      }
+      if (!empty) { fresh(); queue.unshift(b); continue; }
+      const el = draw(b); mark(b); body.append(el); shrink(el, over);   // taller than a page on its own
+      sheets[sheets.length - 1].shrunk = true;
       fresh();
     }
     if (!body.children.length) { body.closest(".rb-sheet").remove(); sheets.pop(); }   // a trailing empty page
@@ -456,10 +450,10 @@ function sheetEl(title, num = "") {
   return t.content.firstElementChild;
 }
 const kidsOf = b => (b.t === "section" || b.t === "fence" && ["panel", "box", "small", "center", "note"].includes(b.kind) ? b.children : b.t === "list" ? b.items : b.t === "table" ? b.rows : null);
-function withKids(b, kids, cont = false) {
-  if (b.t === "list") return { ...b, items: kids };
-  if (b.t === "table") return { ...b, rows: kids };
-  return { ...b, children: kids, cont: cont || b.cont };
+function withKids(b, kids, cont = false, off = b.off) {   // off: its first child's place in the whole block
+  if (b.t === "list") return { ...b, items: kids, cont: cont || b.cont, off };
+  if (b.t === "table") return { ...b, rows: kids, cont: cont || b.cont, off };
+  return { ...b, children: kids, cont: cont || b.cont, off };
 }
 function shrink(el, over) {
   for (let z = 0.95; z > 0.3 && over(); z -= 0.05) el.style.zoom = z.toFixed(2);

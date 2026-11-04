@@ -8,10 +8,12 @@
 // tokens as icons and timing tags as badges. When no block fits the old text (text over art, a stylised title), the new
 // text goes in a dark box over the template's area instead ("box"), never over a half-erased old one. Everything above
 // `draw` is pure (node checks run it on plain pixel arrays).
-import { norm, splitToken, tagInfo, TAG, variantFile } from "./text.js";
+import { norm, splitToken, tagInfo, TAG, COST, costInfo, variantFile } from "./text.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
-export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569" };   // style.css --b-*, as the font's badges
+export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // style.css --b-*, as the font's badges
+  points: "#055e45", bricks: "#4f260f", sp: "#20397f", own: "#0f766e" };                                     // and its costs' pills
+const COST_ICON = { points: ["#00ffae", "#00603f", "#003d29"], bricks: ["#a0522d", "#3d1a08", "#ffffff"], sp: ["#ffff00", "#6e6200", "#3b3300"] };   // fill, edge, number
 const STATS = ["hp", "def", "atk", "spd"];
 export const LINE = 1.22;                            // line pitch in ems
 // fractions of the image [x0, y0, x1, y1]: where a template prints the name and the text; its stat bars (one row per stat,
@@ -303,14 +305,17 @@ export function textColours(masked, bg) {
 
 /** Ability text as paragraphs of chunks (no break inside a chunk), each piece {text}, {icon, no, sticker} (an icon token
  *  the site has, "[fire]", "[fire:no]", "[fire:sticker]" with its masks; another bracket or variant stays text) or {badge,
- *  group} (a timing tag, "(1CD)", as text.js reads it; another parenthesis stays text). */
+ *  group} (a timing tag, "(1CD)", as text.js reads it; a cost, "(2 points)", with cost {n, word, kind}; another
+ *  parenthesis stays text). */
 export function tokenize(text, icons = {}) {
-  const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}`, "g");
-  return String(text ?? "").replace(/\r/g, "").split("\n").map(line => line.split(/[ \t]+/).filter(Boolean).map(chunk => {
+  const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}|\u0001(\\d+)\u0002`, "g"), costs = [];
+  const held = line => line.replace(new RegExp(COST.source, "gi"), (all, inner) => (costInfo(inner) ? `\u0001${costs.push(costInfo(inner)) - 1}\u0002` : all));
+  return String(text ?? "").replace(/\r/g, "").split("\n").map(line => held(line).split(/[ \t]+/).filter(Boolean).map(chunk => {
     const out = []; let at = 0;
     for (const m of chunk.matchAll(PIECE)) {
       let piece = null;
       if (m[1] != null) { const t = splitToken(m[1]), ic = t && icons[norm(t.base)]; if (ic) piece = { icon: ic.file, name: t.base, no: t.v === "no", sticker: t.v === "sticker" && ["tint", "sticker"].every(v => ic.v?.includes(v)) ? { tint: variantFile(ic, "tint"), outline: variantFile(ic, "sticker") } : null }; }
+      else if (m[3] != null) { const c = costs[+m[3]], own = c.kind === "souls" || c.kind === "counters"; piece = { badge: `${c.n} ${c.word}`, group: own ? "own" : c.kind, cost: own ? null : c }; }
       else { const t = tagInfo(m[2]); if (t) piece = { badge: t.tag.replace("-", "\u2212"), group: t.group }; }
       if (!piece) continue;
       if (m.index > at) out.push({ text: chunk.slice(at, m.index) });
@@ -343,7 +348,7 @@ export function badgeFit(z, cap) {
 const pieceW = (p, size, measure) => {
   if (!p.badge) return p.icon ? ICON_EM * size : measure(p.text, size);
   const { k } = badgeFit(size, measure.cap?.(size));
-  return measure(p.badge, size * BADGE_EM * k) * 1.1 + size * 0.75 * k;
+  return measure(p.badge, size * BADGE_EM * k) * 1.1 + size * (p.cost ? 1.1 : 0.75) * k;   // a cost: its icon beside
 };
 /** Lines of paragraphs at font size `size` within maxW: [{pieces: [{text | icon, w}], w}] (a space between chunks);
  *  measure(text, size) -> px. An empty paragraph is an empty line. */
@@ -743,6 +748,18 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, fill, stroke, imgs, o
           ctx.lineJoin = "round";
           if (stroke) { ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(2, z * 0.21); ctx.stroke(); ctx.lineWidth = Math.max(1.5, z * 0.16); ctx.strokeText(p.badge, lx, ly); }
           ctx.strokeStyle = rgb(fill); ctx.lineWidth = Math.max(1, z * 0.05); ctx.stroke(); ctx.fillStyle = rgb(fill); ctx.fillText(p.badge, lx, ly);
+        } else if (p.cost) {                          // the font's cost: the number on its icon, the word beside
+          ctx.fillStyle = BADGE[p.group]; ctx.fill();
+          const [ink, edge, num] = COST_ICON[p.cost.kind], ih = h * 0.86, iy = top + (h - ih) / 2;
+          const iw = Math.max(p.cost.kind === "points" ? ih : ih * 1.5, ctx.measureText(p.cost.n).width + ih * 0.5), ix = x0 + h * 0.07;
+          ctx.beginPath();
+          if (p.cost.kind === "sp") { const cx = ix + ih * 0.6, cy = top + h / 2, R = ih * 0.68; for (let i = 0; i < 10; i++) { const a = Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? R / 2 : R; ctx.lineTo(cx + rr * Math.cos(a), cy - rr * Math.sin(a)); } ctx.closePath(); }
+          else if (p.cost.kind === "points") ctx.roundRect(ix, iy, iw, ih, ih / 2);
+          else ctx.roundRect(ix, iy + ih * 0.08, iw, ih * 0.84, ih * 0.08);
+          ctx.fillStyle = ink; ctx.fill(); ctx.lineWidth = Math.max(1, z * 0.05); ctx.strokeStyle = edge; ctx.stroke();
+          const iwide = p.cost.kind === "sp" ? ih * 1.2 : iw;
+          ctx.fillStyle = num; ctx.fillText(p.cost.n, ix + iwide / 2, ly);
+          ctx.textAlign = "left"; ctx.fillStyle = "#fff"; ctx.fillText(p.cost.word, ix + iwide + h * 0.12, ly);
         } else {
           ctx.fillStyle = BADGE[p.group] || BADGE.neutral; ctx.fill(); ctx.lineWidth = Math.max(1, z * 0.07); ctx.strokeStyle = "rgba(255,255,255,.85)"; ctx.stroke();
           ctx.fillStyle = "#fff"; ctx.fillText(p.badge, lx, ly);

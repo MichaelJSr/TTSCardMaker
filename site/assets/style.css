@@ -156,21 +156,24 @@ span.tokv { position: relative; display: inline-block; }
 .badge.turn { background: var(--b-turn); } .badge.any { background: var(--b-any); }
 .badge.forced { background: var(--b-forced); } .badge.trigger { background: var(--b-trigger); }
 .badge.neutral { background: var(--b-neutral); }
-/* costs (text.js COST): points gold, bricks brown, a card's own currency teal; html[data-costs="icons"]: a coin and a brick */
+/* costs (text.js COST) as the stoogedings font draws them (owner 2026-11-03): the number on a coin (points), a brick
+   (BRICKS) or a star (SP), the word beside, in a pill; the TTS table's counter colours (#00ffae, #a0522d, #ffff00); a card's
+   own currency a teal text pill. The icon sits on the baseline, so the pill stays level with the timing badges. */
 .badge.cost { letter-spacing: 0; }
-.badge.points { background: #f2c230; color: #3d2a00; }
-.badge.bricks { background: #8a4b2a; }
-.badge.own { background: #0f766e; }
-.badge.sp { background: #1e3a8a; }
-:root[data-costs="icons"] .badge:is(.points, .bricks) { display: inline-flex; align-items: center; justify-content: center; line-height: 1; padding: 0 .38em; }
-:root[data-costs="icons"] .badge:is(.points, .bricks) .cost-u { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-:root[data-costs="icons"] .badge.points { min-width: 1.5em; height: 1.5em; vertical-align: .085em; color: #5c3b00; text-shadow: 0 1px 0 #ffeaa0;
-  background: radial-gradient(circle at 35% 30%, #fff6c4 0, #ffd84d 30%, #f0b400 62%, #b27a00 100%);
-  box-shadow: inset 0 0 0 .1em #a86f00, inset 0 0 0 .2em #ffe17a, 0 .06em .12em rgba(0,0,0,.45); }
-:root[data-costs="icons"] .badge.bricks { min-width: 2.15em; height: 1.35em; vertical-align: .085em; border-radius: .16em; text-shadow: 0 1px 1px rgba(0,0,0,.6);
-  background: linear-gradient(180deg, #d0643f 0, #b44a2a 45%, #8c3519 100%);
-  box-shadow: inset 0 .12em 0 rgba(255,255,255,.28), inset 0 -.14em 0 rgba(0,0,0,.35), 0 0 0 .07em #4a1a0b, 0 .06em .12em rgba(0,0,0,.4); }
-.badge-legend .cost-switch { margin-top: 4px; }
+.badge.cost:not(.own) .cost-n { vertical-align: baseline; display: inline-flex; align-items: center; justify-content: center; line-height: 1; margin-right: .05em; }
+.badge.cost.points { padding: 0 .55em 0 .1em; background: linear-gradient(180deg, #08785a, #034532); color: #effff9; }
+.badge.cost.points .cost-n { min-width: 1.32em; height: 1.32em; padding: 0 .3em; border-radius: 999px; color: #003d29; text-shadow: 0 1px 0 #b8ffe6;
+  background: radial-gradient(circle at 35% 30%, #e8fff7 0, #6dffd0 30%, #00ffae 58%, #00a36c 100%);
+  box-shadow: inset 0 0 0 .07em #00603f, inset 0 0 0 .14em #2affbd, inset 0 0 0 .19em #00c98a, 0 .05em .1em rgba(0,0,0,.45); }
+.badge.cost.bricks { padding: 0 .55em 0 .27em; background: linear-gradient(180deg, #5e3019, #3f1d0c); color: #ffe6d6; }   /* the brick inside the round end */
+.badge.cost.bricks .cost-n { min-width: 1.9em; height: 1.2em; padding: 0 .3em; border-radius: .14em; color: #fff; text-shadow: 0 1px 1px rgba(61,26,8,.9);
+  background: linear-gradient(180deg, #c97b52 0, #a0522d 45%, #7a3a1c 100%);
+  box-shadow: inset 0 .1em 0 rgba(255,255,255,.3), inset 0 -.12em 0 rgba(0,0,0,.22), 0 0 0 .07em #3d1a08; }
+.badge.cost.sp { padding: 0 .55em 0 .05em; background: linear-gradient(180deg, #2a4a9e, #172a63); color: #eef2ff; }
+.badge.cost.sp .cost-n { min-width: 1.9em; height: 1.9em; padding-top: .2em; margin: -.3em -.03em -.3em -.1em; font-size: .9em; font-weight: 900;
+  color: #3b3300; text-shadow: 0 0 2px #ffffb0, 0 1px 0 #ffffb0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.38' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23ffffe8'/%3E%3Cstop offset='.3' stop-color='%23ffff70'/%3E%3Cstop offset='.55' stop-color='%23ffff00'/%3E%3Cstop offset='.85' stop-color='%23d9c800'/%3E%3Cstop offset='1' stop-color='%23a69400'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M12 1.4l3.15 6.5 7.15 1.05-5.17 5.05 1.22 7.12L12 17.75l-6.35 3.37 1.22-7.12L1.7 8.95l7.15-1.05z' fill='url(%23g)' stroke='%236e6200' stroke-width='1.1' stroke-linejoin='round'/%3E%3Cpath d='M8.7 8.1l1.9-2.2' stroke='%23fff' stroke-width='1.3' stroke-linecap='round' opacity='.8'/%3E%3C/svg%3E") center / contain no-repeat; }
+.badge.cost.sp .cost-n.long > i { transform: scale(.66); }   /* "12", "0.5": smaller onto the star, by scale (a smaller font would move the star's baseline) */
+.badge.cost.own { background: linear-gradient(180deg, #149488, #0f766e); }
 a.card-ref { color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; cursor: pointer; }
 @media (pointer: coarse) { a.card-ref { -webkit-touch-callout: none; } }   /* a long press shows its preview (tip.js) */
 mark { background: color-mix(in srgb, var(--warn) 45%, transparent); color: inherit; border-radius: 3px; }
@@ -243,17 +246,19 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
 @media (max-width: 980px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-ratings, #stats-history { scroll-margin-top: 117px; } }   /* two-row bar */
 @media (max-width: 640px) { .rb-chapter, .rb-extra, .rb-sec, #stats-balance, #stats-ratings, #stats-history { scroll-margin-top: 184px; } }   /* three-row bar */
 .rb { --rb-ink: #102175; --rb-panel: #cfcfff; --rb-tab: #e4e4ff; --rb-pnum: #adadf8; --rb-paper: #fff;
-  font-family: Consolas, Inconsolata, ui-monospace, Menlo, monospace; font-size: 17px; line-height: 1.45; color: var(--rb-ink); }
-/* a chapter is a page drawn to scale, as a PDF's: its text 17px on a 1108px page (a 1400px window; 1300px at most), all
-   in it in em or --rb-px (that px), so it lays out the same at any zoom or width, the editor's preview too; its text 9px
-   at the least (the preview: none); a phone's 17px as ever, the page flowing */
-.rb-book { display: grid; gap: 22px; min-width: 0; width: 100%; max-width: 1300px; justify-self: center; container-type: inline-size; }
+  font-family: Inconsolata, Consolas, ui-monospace, Menlo, monospace; font-size: 17px; line-height: 1.36; color: var(--rb-ink); }
+/* a chapter is a TTS page drawn to scale (owner 2026-11-03: "page width"): the 1080px page's width, its 35px text and
+   line height, its font (Inconsolata, the web font: the same letters on every computer), so a line, a panel and a
+   picture placed in it come out on the website, in the editor and in the PDF alike; all in it in em or --rb-px (the
+   page's px), so it lays out the same at any zoom or width; 780px wide at most (25px text), 9px text at the least
+   (the preview: none); a phone's 17px, the page flowing */
+.rb-book { display: grid; gap: 22px; min-width: 0; width: 100%; max-width: 780px; justify-self: center; container-type: inline-size; }
 @property --rb-px { syntax: "<length>"; inherits: true; initial-value: 1px; }
-.rb-chapter { font-size: max(var(--rb-least, 9px), 100cqw * 17 / 1108); --rb-px: calc(1em / 17); -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+.rb-chapter { font-size: max(var(--rb-least, 9px), 100cqw * 35 / 1080); --rb-px: calc(1em / 35); -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
   background: var(--rb-paper); border-radius: calc(14 * var(--rb-px)); padding: calc(14 * var(--rb-px)) calc(16 * var(--rb-px)) calc(18 * var(--rb-px)); position: relative; }
 :root[data-theme="dark"] .rb-chapter { box-shadow: 0 0 0 1px #ffffff14; }
-.rb-chapter > .rb-tools { position: absolute; top: calc(20 * var(--rb-px)); right: calc(24 * var(--rb-px)); display: flex; gap: calc(6 * var(--rb-px)); z-index: 1; }
-.rb-chapter > .rb-tools button, .rb-chapter > .rb-tools a { font: max(10px, 13 * var(--rb-px)) system-ui, sans-serif; padding: .46em .92em; border-radius: .62em; }
+.rb-chapter > .rb-tools { position: absolute; top: calc(40 * var(--rb-px)); right: calc(48 * var(--rb-px)); display: flex; gap: calc(12 * var(--rb-px)); z-index: 1; }
+.rb-chapter > .rb-tools button, .rb-chapter > .rb-tools a { font: max(11px, 26 * var(--rb-px)) system-ui, sans-serif; padding: .46em .92em; border-radius: .62em; }
 .rb-cover { display: block; width: min(260px, 60%); margin: 4px auto 14px; border-radius: 10px; }
 .rb-head { display: flex; align-items: center; gap: .6em; background: var(--rb-panel); border-radius: .45em; padding: .55em .8em; margin: 0 0 1.1em; }
 .rb-head h2 { flex: 1; margin: 0; text-align: center; font-size: 2.15em; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; line-height: 1.15; color: var(--rb-ink); }
@@ -453,9 +458,17 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rbe-pic-grid button[draggable="true"] { cursor: grab; }
 .rbe-preview .rbe-here { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 .rbe-sheets.rb-sheets { gap: 10px; padding: 4px; }
+/* the editor's TTS page cuts (rulebook-edit.js cuts): where each TTS page after the first starts, over the page */
+.rbe-preview .rb-book { position: relative; }
+.rbe-measure { position: fixed; left: -20000px; top: 0; visibility: hidden; pointer-events: none; }
+.rbe-cuts { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.rbe-cut { position: absolute; left: -6px; right: -6px; border-top: 2px dashed #e11d48; }
+.rbe-cut > span { position: absolute; right: 0; top: -1px; transform: translateY(-100%); background: #e11d48; color: #fff;
+  font: 600 11px/1.5 system-ui, sans-serif; padding: 0 6px; border-radius: 4px 4px 0 0; white-space: nowrap; }
+.rbe-cut.rbe-cut-shrunk > span { background: #b45309; }
 .rbe-bar .rbe-card { width: 13em; padding: 3px 8px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--ink); }
 .rbe-bar button.on { border-color: var(--accent); color: var(--accent); }
-.rb-sec-edit { margin-left: .5em; padding: 0 .35em; border: 0; background: none; color: var(--rb-ink); opacity: .35; font: calc(15 * var(--rb-px)) system-ui, sans-serif; cursor: pointer; vertical-align: .15em; }
+.rb-sec-edit { margin-left: .5em; padding: 0 .35em; border: 0; background: none; color: var(--rb-ink); opacity: .35; font: calc(30 * var(--rb-px)) system-ui, sans-serif; cursor: pointer; vertical-align: .15em; }
 .rb-sec:hover .rb-sec-edit, .rb-sec-edit:focus-visible { opacity: .9; }
 @media (max-width: 900px) { .rbe-cols { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; } }
 /* the ban list editor (rulebook-edit.js openBans) */
@@ -496,11 +509,11 @@ span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { col
 .rb-sheet .rb-head h2 { font-size: 3.1em; letter-spacing: .1em; white-space: nowrap; overflow: hidden; }
 .rb-sheet .rb-body { flex: 1; min-height: 0; overflow: hidden; padding: 0 2px; }
 .rb-sheet .rb-body > :first-child { margin-top: 0; }
-.rb-sheet .rb-panel p, .rb-sheet .rb-list li { text-align: justify; }
+.rb-sheet .rb-panel p, .rb-sheet .rb-list li, .rb-chapter .rb-panel p, .rb-chapter .rb-list li { text-align: justify; }
 .rb-sheet .rb-pnum { position: absolute; right: 8px; bottom: 6px; width: 57px; height: 57px; min-width: 0; padding: 0; font-size: 26px; }
-.rb-sheet .rb-cards .rb-card { width: 6.8em; }
+.rb-sheet .rb-cards .rb-card, .rb-chapter .rb-cards .rb-card { width: 6.8em; }
 .rb-sheet .rb-card img { box-shadow: none; }
-.rb-sheet .rb-row > .rb-col > .rb-cards .rb-card { width: min(6.8em, 100%); }
+.rb-sheet .rb-row > .rb-col > .rb-cards .rb-card, .rb-chapter .rb-row > .rb-col > .rb-cards .rb-card { width: min(6.8em, 100%); }
 .rb-sheet a { color: inherit; text-decoration: none; }
 .rb-sheet.rb-cover-sheet { padding: 0; } .rb-sheet.rb-cover-sheet .rb-body { padding: 0; } .rb-sheet.rb-cover-sheet .rb-body img { display: block; width: 100%; height: 100%; object-fit: cover; }
 body.rb-shot { margin: 0; background: #fff; overflow: hidden; } body.rb-shot > :not(main) { display: none !important; } body.rb-shot main { padding: 0 !important; margin: 0 !important; max-width: none !important; }

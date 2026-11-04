@@ -17,8 +17,6 @@ Although (OYT) and (AAT) do not often appear on their own, they are the basis of
 
 ![A fox pointing with its sword](fox-pointing.webp){.end width=20}
 
-=== page ===
-
 ## BASIC ABILITES
 ::: ability
 1. (1CD) Summon a Mini Bee.
@@ -37,8 +35,6 @@ Although (OYT) and (AAT) do not often appear on their own, they are the basis of
 
 ![A fox reading a long list](fox-reading.webp){width=80}
 :::
-
-=== page ===
 
 ## AUTOMATIC
 ::: ability
@@ -59,8 +55,6 @@ These abilities are non-optional and assumed to happen automatically.
 
 ![A puzzled fox](fox-thinking.webp){width=60}
 :::
-
-=== page ===
 
 ## MULTI-TURN
 ::: ability
@@ -84,8 +78,6 @@ These abilities are non-optional and assumed to happen automatically.
 ![A confused fox](fox-confused.webp){width=80}
 :::
 
-=== page ===
-
 ## LIFE AND DEATH
 ::: ability
 1. (OFS) Summon a Koopa.
@@ -104,8 +96,6 @@ These abilities are non-optional and assumed to happen automatically.
 
 ![Mettaton](mettaton.webp){width=60}
 :::
-
-=== page ===
 
 > [!kirby-sleepy] In rare cases some abilities can conflict. If you happen to run into these, here's what to do.
 
@@ -129,8 +119,6 @@ These abilities are non-optional and assumed to happen automatically.
 
 - If two simultaneous effects have directly conflicting effects, such as reviving in your base form or a distinct revive form at the same time, the player can choose.
   Example: Azamoth with lifeshroom can revive as [[Azamoth the Possessed Vessel|Azamoth The Possessed]], or in it's base form as [[Azamoth the Forgotten King|The Forgotten king]], but it it chooses it's baseform the life shroom will be wasted.
-
-=== page ===
 
 > [!kirby-sleepy] Here are some specfic common abilities in the game and some specifics about them.
 

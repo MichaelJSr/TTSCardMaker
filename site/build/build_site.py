@@ -3166,7 +3166,7 @@ def cover_copies(images, src=RULEBOOK):
         return [], {}
 
 
-TAG_ROW = re.compile(r"^\|\s*\((-?[0-9A-Za-z/]{2,6})\)\s*\|\s*(.+?)\s*\|\s*$")
+TAG_ROW = re.compile(r"^\|\s*\((-?[0-9A-Za-z/]{2,8})\)\s*\|\s*(.+?)\s*\|\s*$")
 
 
 def tag_meanings(chapters):
@@ -3223,7 +3223,7 @@ def game_text(cards, rules, banlist, icons, manifest):
            " | duplicate of its original. - is an empty field. The ability follows.", "", "# Rulebook", ""]
     for p in rules:
         out += [f"## {p['name']}", game_words(p.get("ability"), icons), ""]
-    out += ["# Timing tags", "X can be any number. In a pair such as (1/2CD), the first number is the charge the ability starts with: it can also be 0 or -1.", ""]
+    out += ["# Timing tags", "X can be any number up to 20. In a pair such as (1/2CD), the first number is the charge the ability starts with: from -9 up to the second number.", ""]
     for group, tags in GAME_TAGS:
         out += [f"## {group}", *(f"({t}) {('Old system: ' if group.startswith('Old') else '') + meaning}" for t, meaning in tags), ""]
     out += ["# Constructed ban list", *banlist["notes"], ""]
@@ -3258,7 +3258,21 @@ TAG_FIXED = {"OYT": ("turn", "On your turn"), "AAT": ("any", "At any time"), "BO
              "OS": ("trigger", "On summon"), "OD": ("trigger", "On death"), "WOF": ("trigger", "While on field"),
              "Action": ("neutral", "Costs the creature's action")}           # text.js FIXED
 TAG_CANON = {k.upper(): k for k in TAG_FIXED}
-TAG_IN_TEXT = re.compile(r"\((-?[0-9A-Za-z/]{2,6})\)")                     # text.js TAG
+TAG_IN_TEXT = re.compile(r"\((-?[0-9A-Za-z/]{2,8})\)")                     # text.js TAG
+
+
+def _badge_tags():
+    """text.js BADGE_TAGS (build_stoogedings.badge_tags), upper case: n 1-20 or X, a/b with a from -9 up to b, the
+    first -1 to 9 with any b to 9; the old system 1-9 or X."""
+    old, counts, firsts = [*map(str, range(1, 10)), "X"], [*map(str, range(1, 21)), "X"], [*map(str, range(-9, 21)), "X"]
+    out = {t.upper() for t in TAG_FIXED} | {f"{n}{k}" for n in counts for k in ("CD", "GCD", "U", "PG")}
+    for cd in ("CD", "GCD"):
+        out |= {f"{a}/{b}{cd}" for a in ["-1", *map(str, range(10)), "X"] for b in old}
+        out |= {f"{a}/{b}{cd}" for b in counts for a in firsts if "X" in (a, b) or int(a) <= int(b)}
+    return out | {t for n in old for t in (f"{n}PT", f"E{n}T", f"FTE{n}T", f"{n}PGT", f"E{n}GT")}
+
+
+BADGE_TAGS = _badge_tags()
 
 
 def _count(n, one):
@@ -3269,13 +3283,15 @@ def _tag_base(tag):
     """text.js tagMeaning: (group, meaning, old) or None."""
     if tag in TAG_FIXED:
         return (*TAG_FIXED[tag], False)
+    if tag.upper() not in BADGE_TAGS and tag.upper() not in ("Y/XCD", "Y/XGCD"):   # + the chapter's family rows
+        return None
     times = lambda n: "X times" if n == "X" else "once" if n == "1" else f"{n} times"
-    rules = ((r"([1-9X])CD", lambda m: ("turn", f"Cooldown: {_count(m[1], 'turn')}", False)),
-             (r"([1-9X])GCD", lambda m: ("any", f"Global cooldown: {_count(m[1], 'global turn')}", False)),
-             (r"(-1|[0-9XY])/([1-9X])CD", lambda m: ("turn", f"Cooldown: starts with {m[1]} of {_count(m[2], 'turn')} of charge", False)),
-             (r"(-1|[0-9XY])/([1-9X])GCD", lambda m: ("any", f"Global cooldown: starts with {m[1]} of {_count(m[2], 'turn')} of charge", False)),
-             (r"([1-9X])U", lambda m: ("trigger", _count(m[1], "use"), False)),
-             (r"([1-9X])PG", lambda m: ("trigger", f"Can only be activated {times(m[1])} per game", False)),
+    rules = ((r"(\d+|X)CD", lambda m: ("turn", f"Cooldown: {_count(m[1], 'turn')}", False)),
+             (r"(\d+|X)GCD", lambda m: ("any", f"Global cooldown: {_count(m[1], 'global turn')}", False)),
+             (r"(-?\d+|X|Y)/(\d+|X)CD", lambda m: ("turn", f"Cooldown: starts with {m[1]} of {_count(m[2], 'turn')} of charge", False)),
+             (r"(-?\d+|X|Y)/(\d+|X)GCD", lambda m: ("any", f"Global cooldown: starts with {m[1]} of {_count(m[2], 'turn')} of charge", False)),
+             (r"(\d+|X)U", lambda m: ("trigger", _count(m[1], "use"), False)),
+             (r"(\d+|X)PG", lambda m: ("trigger", f"Can only be activated {times(m[1])} per game", False)),
              (r"([1-9X])PGT", lambda m: ("any", f"Old system: usable {times(m[1])} per global turn (at any time)", True)),
              (r"([1-9X])PT", lambda m: ("turn", f"Old system: usable {times(m[1])} per turn (on your turn)", True)),
              (r"FTE([1-9X])T", lambda m: ("turn", f"Old system: every {m[1]} turns, starting on your 1st turn (multi-turn)", True)),

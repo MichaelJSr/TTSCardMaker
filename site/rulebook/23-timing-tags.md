@@ -1,13 +1,15 @@
 # Timing Tags
 
 ::: panel
-The cards' timing tags. ***X*** can be any number. In a pair such as (1/2CD), the first number is the charge the ability starts with: it can also be 0 or −1. Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card.
+The cards' timing tags. ***X*** can be any number up to 20. In a pair such as (1/2CD), the first number is the charge the ability starts with: from −9 up to the second number, as in (-2/1CD). Hover or tap a badge for its meaning: the meanings below are the ones the website shows on every card.
 
 **Blue:** on your turn ((1CD), (1/2CD), (OYT)).
 **Purple:** at any time ((1GCD), (AAT)).
 **Red:** forced ((BOT), (ENDT), (BOGT), (ENDGT)).
 **Orange:** per game, uses and triggers ((1PG), (2U), (OFS), (OS), (OD), (WOF)).
 **Grey:** costs the creature's action ((Action)).
+
+Costs in parentheses are badges too, in the colours of the table's counters: (2 points), (2 bricks), (2 SP). A card's own currency is teal: (4 souls), (3 counters).
 :::
 
 ## ON YOUR TURN
@@ -59,6 +61,18 @@ The cards' timing tags. ***X*** can be any number. In a pair such as (1/2CD), th
 | Tag | Meaning |
 |:---:|---|
 | (Action) | Costs the creature's action |
+{.tags}
+
+## COSTS
+Any number from 0 to 50, a half up to 9.5, or X.
+
+| Cost | Meaning |
+|:---:|---|
+| (2 points) | Costs 2 of your team's points |
+| (2 bricks) | Costs 2 of your team's BRICKS |
+| (2 SP) | Costs 2 of your team's SP |
+| (4 souls) | Costs 4 of the card's own souls |
+| (3 counters) | Costs 3 of the card's own counters |
 {.tags}
 
 ## OLD SYSTEM

@@ -10,8 +10,6 @@ When a play occours, a player may choose to react to it with one of their items 
 Since Toy Bonnie reacted with it's ability, it gains it's defense first, and then it takes the damage from Mighty Pebble, resulting in it doing only 2 damage instead.
 :::
 
-=== page ===
-
 ::: panel
 ![Mighty Pebble, Toy Bonnie, Metronome and Stopwatch, numbered](reactions-2.webp){.left width=52}
 Here, the order of events are listed by number that they're played in, which is the reverse of the order they actually happen, and nothing happens until plays stop being made reactively.
@@ -22,8 +20,6 @@ Here, the order of events are listed by number that they're played in, which is 
 
 Once both players stop reactively using items, they then resolve and all the effects take place. So here, the order of events is 4>3>2>1. Resulting in the Pebble only doing 2 damage.
 :::
-
-=== page ===
 
 ::: panel
 ![Mighty Pebble, Toy Bonnie, a Bomb and Metal Shield, numbered](reactions-3.webp)
@@ -37,8 +33,6 @@ Although reactions happen in reverse order, anything that deals damage resolves 
 Now, the reaction chain is over. If there were no attacks, the order the plays resolve in would be 4>3>2>1, however since 2 of these do damage, the order of is actually 4>2>3>1.
 So Toy Bonnie gains 4.5 defense from the sheild and hardened, then the Bomb deals 2.5 damage, lastly the Mighty Pebble does 0.5 damage. So Toy Bonnie takes 3 damage total.
 :::
-
-=== page ===
 
 ::: panel
 ![Whispy Woods attacks Toy Bonnie; a Bomb, Pep Drink and Amy Rose's Hammer join the chain, numbered](reactions-4.webp)
@@ -58,8 +52,8 @@ Resolve Order: 5>4>2>3>1
 > [!kirby-sleepy] Other things to note about reactions:
 
 ## SPENDING
-- Star points are used immediately upon an item being played rather than when they are being resolved.
-- If a reaction prevents a creature from being targeted by an item, (i.e forcibly switched out/effect preventing targeting/killed beforehand), when the item is suppose to resolve, the item is not used, returns to it's origin and its star points are regained.
+- SP are used immediately upon an item being played rather than when they are being resolved.
+- If a reaction prevents a creature from being targeted by an item, (i.e forcibly switched out/effect preventing targeting/killed beforehand), when the item is suppose to resolve, the item is not used, returns to it's origin and its SP are regained.
 - If a reaction leads to a creature dying before an attack is resolved, then the attacker gets back the resource, whether it's an item/action/ability.
 
 ## NO TAKE BACKS

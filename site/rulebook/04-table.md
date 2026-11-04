@@ -1,5 +1,18 @@
 # Table
 
+![The whole table from above, its areas numbered](table-map.webp){width=100}
+
+::: panel
+1. The MAIN DECKS and the DEVELOPER DECKS.
+2. The COUNTERS and the SHOPS.
+3. The PLAYING FIELD: the slots and the face-down items.
+4. The status effect markers, the GRAVEYARD, the DISCARD PILE and the field card slots.
+5. The auxiliary decks, the minion card holder, the dice, the 0.5 chips, the counters, the stat markers and the active item holder.
+6. The simple version's decks and the extra stuff, beside the table.
+
+Each coloured strip is a player's hand.
+:::
+
 ![The table: the main decks and the developer decks, numbered](table-main.webp)
 
 ## MAIN DECK
@@ -14,13 +27,11 @@
 
 ![](kirby-sleepy.webp){.end width=8}
 
-=== page ===
-
 ![The counters and the shops, numbered](table-counters.webp)
 
 ::: panel
 1. The Global Turn counter. Starts at 1, and ticks up by 1 once every filled slot on the field has taken a turn. (See: [“THE GLOBAL TURN”](#/rules/the-global-turn))
-2. Star Point counter. At the beginning of each global turn, this is set to 7. These are spent in order to play items. Items cost their star value in star points in order to play them. (See: [“ITEMS”](#/rules/items))
+2. SP (star points) counter. At the beginning of each global turn, this is set to 7. These are spent in order to play items. Items cost their star value in SP in order to play them. (See: [“ITEMS”](#/rules/items))
 3. BRICKS counter. BRICKS are used to buy Field cards. Field cards cost 2x their star level in BRICKS. BRICKS are obtained when creatures spend an action to mine, gaining BRICKS equal to their star level. 1 BRICK is awarded to each team at the end of every global turn. (See: [“FIELD CARDS”](#/rules/field-cards))
 4. Points counter. Each team starts the game with 2 points. You gain points equal to your creature's star level when it is defeated. Points are spent on abilities, and buying items from the item shop for 4x cost their star level.
 5. The Item shop. (See: [“SHOPS”](#/rules/shops))
@@ -55,8 +66,6 @@
 
 > [!kirby] TIP: Mousing over anything will tell you what it is.
 > Useful for if you forget!
-
-=== page ===
 
 ![The auxiliary decks and the minion card holder, numbered](table-aux.webp)
 

@@ -22,7 +22,7 @@ SPEED: Determines the order that creatures take their turn in (More about turn o
 ## READING ITEMS
 ![An item card, numbered](reading-items.webp){width=45}
 1. TYPES: Dictate how the item functions. (See: [“ITEM TYPES”](#/rules/item-types))
-2. STAR LEVEL: An items star level. The more stars means the item is more powerful. The star level is how much the item costs to play in star points. (See: [“ITEMS”](#/rules/items))
+2. STAR LEVEL: An items star level. The more stars means the item is more powerful. The star level is how much the item costs to play in SP. (See: [“ITEMS”](#/rules/items))
 3. EFFECTS: Text explaining the effect the item has when it is played.
 
 ![](kirby-reading.webp){.end width=9}

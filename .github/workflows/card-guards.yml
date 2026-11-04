@@ -15,7 +15,8 @@
 #      pings the card makers' role, owner 2026-10-23; the card check's pings nobody). Never a gate.
 # The guards' report (1-3), one per push: the job summary, a comment on the commit, and ONE Discord post to the
 # standards channel ("<login> pushed <card> with these issues: ..."; nobody pinged, no link previews). The post, the
-# PNGs and the fixes wait for the 30-minute quiet window: a PNG the author pushed meanwhile withdraws its refusal, a
+# PNGs and the fixes land right after the check (owner, 2026-11-03; a 30-minute quiet window before): a PNG the author
+# pushed meanwhile withdraws its refusal, a
 # card pushed again is left to that push's run, a write that did not land is told (in report mode, the PNG the bot would
 # make). It never reverts or rejects a push. A run that fails tells the standards channel once per failure streak (a
 # cancel by hand does not). One main lane per guarded push (P-2): a push with fixes to land (on) marks its check job
@@ -25,14 +26,12 @@
 # venv cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
 #
 # Three jobs (2026-10-24): `check` runs the two checks and the guards' check and comments, then ends; `post` lands and
-# posts after the quiet window, 30 minutes from the push: the environment card-guards-quiet's wait timer holds it (a
-# push's first attempt; no runner waits; about 25 minutes, counted from the check's end), Land sleeps out the rest. Without
-# the environment's timer (it is the owner's setting), Land sleeps out the whole window as before.
+# posts right after it (the 30-minute quiet window and its environment card-guards-quiet went on 2026-11-03).
 #
 # Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = the guards skipped, the two checks still
 # run; report = check, comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry
 # run (job summary and artifacts only); CARD_GUARDS does not bind it, and one that lands refuses while a push run of its
-# commit is still in the quiet window.
+# commit is still unfinished.
 name: Card guards
 
 on:
@@ -388,19 +387,16 @@ jobs:
         shell: bash
         run: echo "This push's fixes land after the quiet window; Follow up then starts Card sync's main lane."
 
-  # After the quiet window: Land, Follow up, Tell Discord. Only when the check found something to land or tell (report or
-  # on). A push's first attempt waits in the environment card-guards-quiet (its wait timer, the owner's setting, about 25
-  # minutes from the check's end; no runner is held), then Land sleeps to 30 minutes after the push (at most a minute under a
-  # 30-minute timer); a dispatch and a re-run take no environment (a re-run waits from the push and counts later pushes
-  # from now, so a late one lands at once on the blob check, as before).
+  # Right after the check (owner, 2026-11-03: the 30-minute quiet window and its environment card-guards-quiet are gone):
+  # Land, Follow up, Tell Discord. Only when the check found something to land or tell (report or on). Land goes on the
+  # blob check: a write a later push touched, or whose blobs moved, is left out.
   post:
     needs: check
     if: >-
       !cancelled() && needs.check.outputs.checked == 'success' && needs.check.outputs.land == 'true' &&
       (needs.check.outputs.mode == 'report' || needs.check.outputs.mode == 'on')
-    environment: ${{ (github.event_name == 'push' && github.run_attempt == '1') && 'card-guards-quiet' || '' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 75     # Land (60: the window's rest, all of it without the timer, and the commit), then the post
+    timeout-minutes: 30     # Land and its commit, then the post
     env:
       TOLD: "<!-- card-guards: told on Discord -->"
       MODE: ${{ needs.check.outputs.mode }}
@@ -487,8 +483,7 @@ jobs:
       - timeout-minutes: 10
         uses: ./.github/actions/cards-python
 
-      # 30 minutes after the push (the environment's wait timer held this job; Land sleeps out what is left: up to the
-      # check's length under a 25-minute timer, all of the window without the timer), then (CARD_GUARDS=on) leave out every write a later push touched or whose blobs moved
+      # At once (CARD_GUARDS=on): leave out every write a later push touched or whose blobs moved
       # and commit the rest once (git_commit: the API with GITHUB_TOKEN, retried on a moved head), and settle the one
       # Discord post (discord-final.json) and the comment's new body (report-landed.md). Report mode: --dry-run (its
       # writes are told as lines, never made). Exit 1: the commit failed (both files
@@ -497,7 +492,7 @@ jobs:
       # earlier run may have landed the writes, so a branch that cannot be read tells none of them as not made.
       - name: Land
         id: land
-        timeout-minutes: 60
+        timeout-minutes: 20
         working-directory: bot
         shell: bash
         env:
@@ -682,7 +677,7 @@ jobs:
               --jq '[.jobs[] | select(.conclusion == "cancelled" and .started_at and .completed_at)
                      | {(.name): ((.completed_at | fromdate) - (.started_at | fromdate))}] | add // {}') || ran=""
             if [ -n "$ran" ]; then
-              timed_out=$(jq -r --argjson limit '{"check": 40, "post": 75}' \
+              timed_out=$(jq -r --argjson limit '{"check": 40, "post": 30}' \
                 'to_entries | map(select(.value >= ($limit[.key] // 0) * 60 - 120)) | length' <<< "$ran")
             else                                # no job list: the old rule, from the check's Start
               timed_out=$(( $(date +%s) - ${STARTED:-$(date +%s)} >= 2280 ))

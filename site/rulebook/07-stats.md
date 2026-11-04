@@ -49,8 +49,6 @@ Decreases to MAX HP are indicated with these markers.
 :::
 :::
 
-=== page ===
-
 ## DEFENSE {.def}
 ![The stat bars, defense lit: 4 bars, 2 DEF](bars-def.webp)
 - Each bar of Defense represents 0.5 DEF. 4 Bars = 2 DEF.
@@ -75,8 +73,6 @@ Decreases to DEF are indicated with these markers. For increments of 0.5, use a 
 ![A fox with a sword and shield](fox-shield.webp)
 ![Link blocking with his shield](link.webp)
 :::
-
-=== page ===
 
 ## ATTACK {.atk}
 ![The stat bars, attack lit: 4 bars, 4 ATK](bars-atk.webp)

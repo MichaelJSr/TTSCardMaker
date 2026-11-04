@@ -1,5 +1,6 @@
 // The rulebook editor (app.js openBookEditor): one chapter's text beside its page as the site draws it (or as its TTS
-// pages), the two linked (a click on the page goes to its line; the cursor brings its block into view), pictures moved
+// pages), the two linked (a click on the page goes to its line; the cursor brings its block into view), the TTS page
+// cuts marked on the page (a dashed line where each page after the first starts, as the PDF cuts it), pictures moved
 // on the page by dragging (and dragged in from the picture panel; a click gives side and size), a toolbar for
 // the syntax (rulebook.js) and a card picker, pictures uploaded as WebP into site/rulebook/img, a draft kept in this
 // browser until published, and Publish (Ctrl/Cmd+S): the chapter (renamed when its number changes, removed by Delete)
@@ -68,6 +69,9 @@ export function open(api) {
     if (act) { e.preventDefault(); act(); }
   });
   for (const ev of ["click", "keyup"]) ta.addEventListener(ev, follow);
+  M.sized = new ResizeObserver(() => placeCuts());
+  M.sized.observe(api.modal.querySelector("#rbe-page"));
+  document.fonts?.ready.then(() => cutsSoon());
   const pane = api.modal.querySelector(".rbe-preview");
   pane.addEventListener("click", e => {               // a click on the page: its line in the text; a picture: its tools too
     flush();
@@ -898,7 +902,7 @@ function html() {
         <div class="rbe-addas" role="group" aria-label="Add as">Add as <button type="button" class="on" data-addas="pic">Picture</button><button type="button" data-addas="say" title="The mascot says something (&gt; [!name])">Mascot says</button></div>
         <input id="rbe-picq" class="rbe-picq" type="search" placeholder="Search the pictures..." autocomplete="off" aria-label="Search the pictures"><div class="rbe-pic-grid">${pics.map(p => `<button type="button" class="ghost" data-pic="${esc(p)}" title="${esc(p)}" draggable="true"><img src="${esc(M.api.ctx().imgUrl(p))}" alt="" loading="lazy"><span>${esc(p.replace(/\.\w+$/, ""))}</span></button>`).join("")}</div>
         <p class="muted">Click: added under the cursor's paragraph (or into the picked section or row), ready to drag; or drag one onto the page.</p></div></details>
-      <button type="button" class="ghost" data-rbe="tts" aria-pressed="false" title="Show the chapter as its TTS pages (1080x1920)">TTS pages</button>
+      <button type="button" class="ghost" data-rbe="tts" aria-pressed="false" title="Show the chapter as its TTS pages (1080x1920). The dashed lines on the page mark where each TTS page starts; Insert > TTS page break starts one where you want">TTS pages</button><span class="muted" id="rbe-pages"></span>
       <details class="rbe-help"><summary class="ghost button">Syntax</summary><div class="rbe-menu"><table class="help-table">${HELP.map(([k, d]) => `<tr><td><code>${esc(k)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>
         <p class="muted">Card text works as on cards: (OYT) badges, [fire] icons (type "[" or "(" for the picker); card names link only as [[Card]].
         Click anything on the page to go to its line. Drag a picture anywhere on the page to place it over the page there; with Make space on (in
@@ -917,6 +921,47 @@ function html() {
 // the page drawn again: patched in place (morph), so unchanged pictures stay and nothing flashes; typing waits a moment
 let timer = 0;
 function preview() { clearTimeout(timer); timer = setTimeout(render, 120); }
+
+// ---- the TTS page cuts: the chapter cut into TTS pages off screen (rulebook.js paginate, as Card sync's export cuts
+// it), then a dashed line over the page where each page after the first starts (its first line, or the list item it
+// starts at), labelled with the page's number; one drawn smaller (a block taller than a page) says so. Typing waits.
+let cutTimer = 0;
+function cutsSoon() { clearTimeout(cutTimer); cutTimer = setTimeout(cuts, 400); }
+function cuts() {
+  if (!M?.view) return;
+  const pane = M.api.modal.querySelector(".rbe-preview");
+  if (!pane) return;
+  let host = pane.querySelector(".rbe-measure");
+  if (!host) { host = Object.assign(document.createElement("div"), { className: "rbe-measure" }); host.setAttribute("aria-hidden", "true"); pane.append(host); }
+  const sheets = M.api.RB.paginate(host, [M.view.chapter], { ...M.view.ctx, lines: false });
+  M.cuts = sheets.map((x, k) => ({ num: x.num || String(x.n), start: x.start, shrunk: !!x.shrunk, first: k === 0 }));
+  host.innerHTML = "";
+  placeCuts();
+}
+// the element a page starts at on the editor's page: its block, or that list's item
+function startEl(start) {
+  const el = start && page()?.querySelector(`[data-line="${start.line}"]`);
+  if (!el || !start.item) return el;
+  return [...el.children].filter(n => n.tagName === "LI")[start.item] || el;
+}
+function placeCuts() {
+  if (!M) return;
+  const pg = page(), book = pg?.parentElement;
+  if (!book) return;
+  let layer = book.querySelector(":scope > .rbe-cuts");
+  if (!layer) { layer = Object.assign(document.createElement("div"), { className: "rbe-cuts" }); layer.setAttribute("aria-hidden", "true"); book.append(layer); }
+  if (M.tts) { layer.innerHTML = ""; return; }
+  const top = book.getBoundingClientRect().top, list = M.cuts || [];
+  layer.innerHTML = list.map(c => {
+    const el = c.first ? null : startEl(c.start);
+    const tip = c.shrunk ? " (drawn smaller: too tall for a page)" : "";
+    if (c.first) return c.shrunk ? `<div class="rbe-cut rbe-cut-shrunk" style="top:0"><span>TTS page ${esc(c.num)}${tip}</span></div>` : "";
+    if (!el) return "";
+    return `<div class="rbe-cut${c.shrunk ? " rbe-cut-shrunk" : ""}" style="top:${Math.round(el.getBoundingClientRect().top - top - 3)}px"><span>TTS page ${esc(c.num)}${tip}</span></div>`;
+  }).join("");
+  const n = list.length, st = M.api.modal.querySelector("#rbe-pages");
+  if (st) st.textContent = n ? `${n} TTS page${n > 1 ? "s" : ""}` : "";
+}
 // a redraw still waiting on typing done now: anything acting on the page reads its lines fresh
 function flush() { if (timer) render(); }
 function render() {
@@ -934,9 +979,12 @@ function render() {
     api.RB.paginate(sheets, [chapter], { ...ctx, lines: false });
     sheets.className = "rbe-sheets rb-sheets";
     tools(null);
+    placeCuts();
     return;
   }
   morph(page, api.RB.chapterHtml(chapter, ctx));
+  M.view = { chapter, ctx };
+  cutsSoon();
   for (const el of page.querySelectorAll("[data-line]")) if (REORDER_KINDS.includes(el.dataset.kind)) el.draggable = true;
   for (const im of page.querySelectorAll("img")) im.draggable = false;   // the block moves, not the image file
   M.selected = null;
@@ -1070,7 +1118,7 @@ function onClick(e) {
   if (act === "publish") return publish();
 }
 
-function close() { const { api } = M; clearTimeout(timer); api.modal.removeEventListener("click", onClick); P = drag = M = null; api.closeModal(); }
+function close() { const { api } = M; clearTimeout(timer); clearTimeout(cutTimer); M.sized?.disconnect(); api.modal.removeEventListener("click", onClick); P = drag = M = null; api.closeModal(); }
 
 // a picture: resized to MAX_W at most, WebP (PNG kept for pixel art), a name of its own in img/
 // pictures added from this computer (the Add picture button, a paste, files dropped on the page or the text): resized to

@@ -1,7 +1,7 @@
 # The Global Turn
 
 ::: panel {.light}
-Each slot on the playing field takes it's turn one at a time. When every slot has taken its turn once, that is called a GLOBAL TURN. When the global turn resets, each team is set to 7 Star points.
+Each slot on the playing field takes it's turn one at a time. When every slot has taken its turn once, that is called a GLOBAL TURN. When the global turn resets, each team is set to 7 SP.
 At the end of each GLOBAL TURN, each team gains 1 BRICK.
 :::
 

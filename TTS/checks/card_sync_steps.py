@@ -24,10 +24,10 @@
    run again on M, a change is a second commit on M; none when the links were current or main moved.
 6. The timer (a fixed window): a push's and the schedule's run look for a push run in its window (Another timer: one
    waiting, or with its Quiet window job unfinished; not itself, not one stuck 40 minutes; unreadable runs count as
-   none) and skip their main lane when there is one (no cancel: the data lane ran); else a push's waits (card-sync-quiet
-   on its first attempt, in no group) and the schedule's goes; a dispatch's at once; Quiet sleeps out what is left of
-   the window from the push time. The data lane runs at once on every event but a retry. A chained run looks like the
-   schedule (now) or a push (wait: card-sync-quiet, the window from its dispatch); its main Gate is the schedule's.
+   none) and skip their main lane when there is one (no cancel: the data lane ran); else a push's goes after its Quiet
+   window job (its guards, no wait since 2026-11-03: no environment, no sleep) and the schedule's goes; a dispatch's at
+   once. The data lane runs at once on every event but a retry. A chained run looks like the schedule (now) or a push
+   (wait); its main Gate is the schedule's.
 7. Tell Discord on faked runs: once per failing streak of its lane (the newest other live run where the lane ended;
    runs that skipped it, and dry runs, passed over), once a lane per run (after sees data's failure).
 8. The verdicts (AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md): Bake records keeps M's part only when M landed (the
@@ -526,10 +526,10 @@ def timer_cases(flow: dict) -> None:
                                                                      ("schedule", t("success")), ("workflow_dispatch", t("skipped")))]
     check(got == [True, False, True, False, False, False],
           f"quiet: a push's run waits unless another window runs (a failed look waits too); nothing else waits ({got})")
-    check([evaluate(quiet["environment"], ctx("push", attempt=a)) for a in ("1", "2")] == ["card-sync-quiet", ""]
+    check("environment" not in quiet and not any("sleep" in (st.get("run") or "") for st in quiet["steps"])
           and quiet.get("name") == "Quiet window" and "concurrency" not in quiet and "concurrency" not in timer
           and step(timer, "other")["env"]["QUIET"] == quiet["name"] and step(main, "gate")["env"]["LANE"] == main["name"] == LANE,
-          "quiet: card-sync-quiet on the first attempt only, in no group; Another timer looks for its name, the main Gate for main's")
+          "quiet: no environment, no sleep, in no group; Another timer looks for its name, the main Gate for main's")
     q = lambda result: {"result": result, "outputs": {}}  # noqa: E731
     want = [(("push", t("success"), q("success")), True), (("push", t("failure"), q("failure")), True),
             (("push", t("success", "41"), q("skipped")), False), (("push", t("skipped"), q("skipped")), False),
@@ -595,27 +595,6 @@ def timer_cases(flow: dict) -> None:
                   + ("" if code == 0 else f"\n{text}"))
         code, text, out = run_step(timer, "other", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
         check(code == 0 and "run" not in out and "were not read" in text, "Another timer: runs not read -> none (this run goes on)")
-
-        now = int(time.time())
-        for pushed, low, high, what in ((str(now - 31 * 60), None, None, "past the window (the timer held it)"),
-                                        (str(now - 10 * 60), 1190, 1200, "10 minutes ago (no timer)"),
-                                        (time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(now - 20 * 60)), 590, 600, "an ISO time"),
-                                        ("", 1790, 1800, "no push time")):
-            if os.path.exists(os.path.join(tmp, "slept")):
-                os.remove(os.path.join(tmp, "slept"))
-            code, text, _ = run_step(quiet, "Quiet", tmp, {"PUSHED_AT": pushed, "PATH": f"{fake}:{os.environ['PATH']}"}, tmp)
-            slept = int(open(os.path.join(tmp, "slept")).read()) if os.path.exists(os.path.join(tmp, "slept")) else None
-            check(code == 0 and (slept is None if low is None else low <= slept <= high),
-                  f"quiet: pushed {what} -> sleeps {slept}" + ("" if code == 0 else f"\n{text}"))
-        for minutes, low, high in ((31, None, None), (5, 1490, 1500)):     # a chained wait: from its dispatch
-            if os.path.exists(os.path.join(tmp, "slept")):
-                os.remove(os.path.join(tmp, "slept"))
-            code, text, _ = run_step(quiet, "Quiet", tmp, {"PUSHED_AT": "", "GITHUB_EVENT_NAME": "workflow_dispatch", "GITHUB_RUN_ID": "99",
-                                                           "FAKE_CREATED": stamp(minutes), "PATH": f"{fake}:{os.environ['PATH']}"}, tmp)
-            slept = int(open(os.path.join(tmp, "slept")).read()) if os.path.exists(os.path.join(tmp, "slept")) else None
-            check(code == 0 and (slept is None if low is None else low <= slept <= high),
-                  f"quiet: a chained wait dispatched {minutes} minutes ago (the timer held it or not) -> sleeps {slept}"
-                  + ("" if code == 0 else f"\n{text}"))
 
 
 def _bot(ws: str) -> None:

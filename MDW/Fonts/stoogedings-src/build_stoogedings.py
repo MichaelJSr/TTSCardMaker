@@ -10,9 +10,12 @@ Every icon also has a fixed Private Use Area codepoint (stable across rebuilds),
 
 Timing tags become badges: "(1CD)" set in this font draws a pill in the tag's color group (on your turn / at any
 time / forced / per game and triggers). Cooldowns (nCD, a/bCD, nGCD, a/bGCD), uses (nU) and the rulebook's older
-tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-9 or X. "(Action)" gets a grey badge. Any letter case
-works and draws the same badge: "(1cd)" is (1CD), "(action)" and "(ACTION)" are (Action). The text is unchanged, so
-parsers and searches see the same thing as before.
+tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-20 or X (the old tags 1-9), and in a/b the first number
+-9 up to the second. "(Action)" gets a grey badge. Costs become badges too: "(2 points)" a green coin with the number
+on it and "Points" in a pill, "(2 bricks)" a brown brick, "(2 SP)" and "(2 star points)" a yellow star with "SP"
+(the TTS table's counter colours), "(4 souls)" and "(3 counters)" a teal pill; numbers 0-50, halves to 9.5 and X.
+Any letter case works and draws the same badge: "(1cd)" is (1CD), "(action)" and "(ACTION)" are (Action). The text
+is unchanged, so parsers and searches see the same thing as before.
 Under a Color/Gradient/Pattern Overlay a colour badge or :sticker is a blob (the overlay repaints every pixel), so
 Stylistic Alternates (salt) swap them for one-colour shapes in the text color: a badge becomes a pill outline with solid
 letters, a :sticker a thin outline around the :tint icon. The text is unchanged.
@@ -312,8 +315,24 @@ BADGE_SIDE = 40
 BADGE_LINE = 50                        # salt badge: pill outline thickness (same advance as the badge)
 
 
+COUNTS = [*map(str, range(1, 21)), "X"]     # n of nCD, nGCD, nU, nPG and b of a/b (owner 2026-11-03: was 1-9)
+FIRSTS = [*map(str, range(-9, 21)), "X"]    # a of a/b, the charge it starts with: up to b (was -1 to 9, any b)
+
+
 def badge_tags():
-    """Every timing tag, with n as 1-9 or X, plus Action: [(tag, group)]. The old ones stay for the rulebook pages."""
+    """Every timing tag plus Action: [(tag, group)]. The first 341 (n 1-9 or X, a/b with a from -1 to 9) keep their
+    order and glyphs; the wider range (owner 2026-11-03: n up to 20, a from -9 up to b) follows them."""
+    tags = _first_tags()
+    seen = {t for t, _ in tags}
+    more = [(f"{n}{kind}", group) for n in COUNTS
+            for kind, group in (("CD", "turn"), ("GCD", "any"), ("U", "trigger"), ("PG", "trigger"))]
+    for cd, group in (("CD", "turn"), ("GCD", "any")):
+        more += [(f"{a}/{b}{cd}", group) for b in COUNTS for a in FIRSTS if "X" in (a, b) or int(a) <= int(b)]
+    return tags + [t for t in more if t[0] not in seen and not seen.add(t[0])]
+
+
+def _first_tags():
+    """The 341 tags of 2026-10-22, in their glyph order."""
     nums, firsts = "123456789X", ["-1", *"0123456789", "X"]
     tags = [("OYT", "turn"), ("AAT", "any")]
     tags += [(t, "forced") for t in ("BOT", "ENDT", "BOGT", "ENDGT")]
@@ -350,14 +369,188 @@ def capsule(x0, y0, w, h, n=24):
     return pts
 
 
+def rounded(x0, y0, w, h, r, n=6):
+    """Clockwise rounded rectangle (y up)."""
+    pts = []
+    for cx, cy, a0 in ((x0 + w - r, y0 + h - r, 90), (x0 + w - r, y0 + r, 0), (x0 + r, y0 + r, -90), (x0 + r, y0 + h - r, 180)):
+        pts += [(round(cx + r * math.cos(math.radians(a0 - 90 * i / n))), round(cy + r * math.sin(math.radians(a0 - 90 * i / n))))
+                for i in range(n + 1)]
+    return pts
+
+
+def star(cx, cy, r, inner=0.5):
+    """Clockwise five-pointed star (y up), a point up; inner: the inner corners' share of r."""
+    return [(round(cx + (r if i % 2 == 0 else r * inner) * math.cos(math.radians(90 - 36 * i))),
+             round(cy + (r if i % 2 == 0 else r * inner) * math.sin(math.radians(90 - 36 * i)))) for i in range(10)]
+
+
+# ---- cost badges (owner 2026-11-03): the TTS table's counters' colours ------------------------
+COST_NUMBERS = [*map(str, range(51)), *(f"{n}.5" for n in range(10)), "X"]
+COSTS = {   # kind: (spellings in canonical case, label word (one, more), pill (top, bottom, border), word colour)
+    "points": (("point", "points"), ("Point", "Points"), ("#08785a", "#034532", "#012419"), "#effff9"),
+    "bricks": (("brick", "bricks"), ("Brick", "Bricks"), ("#5e3019", "#3f1d0c", "#241005"), "#ffe6d6"),
+    "sp": (("SP", "star point", "star points"), ("SP", "SP"), ("#2a4a9e", "#172a63", "#0b1740"), "#eef2ff"),
+    "souls": (("soul", "souls"), ("Soul", "Souls"), ("#149488", "#0f766e", "#0b4f4a"), "#ffffff"),
+    "counters": (("counter", "counters"), ("Counter", "Counters"), ("#149488", "#0f766e", "#0b4f4a"), "#ffffff"),
+}
+COIN = "#00ffae"           # the Points counter (TTS save, ColorDiffuse 0, 1, 0.682)
+BRICK = "#a0522d"          # the Bricks counter (0.627, 0.322, 0.176), brown (owner 2026-11-03)
+STAR = "#ffff00"           # the Star Points counter (1, 1, 0)
+ICON_INSET = 60            # the coin from the pill's left end (round in its round end)
+BRICK_INSET = 150          # the brick's: its corners inside the round end
+ICON_GAP = 80              # icon to word
+COIN_H, BRICK_H = 830, 700
+STAR_R = 600               # the star's points reach past the pill, as on the website
+NUM_CAPS = 440             # the number on the icon
+ICON_LINE = 34
+
+
+def cost_badges():
+    """[(glyph name, kind, number, [spellings])] for every cost: points, bricks, SP, souls, counters."""
+    out = []
+    for kind, (spellings, _, _, _) in COSTS.items():
+        for n in COST_NUMBERS:
+            out.append((f"badge_cost_{kind}_{n.replace('.', 'p')}", kind, n, [f"{n} {s}" for s in spellings]))
+    return out
+
+
+def badge_spellings():
+    """Every typed tag the font draws as a badge, in its canonical case: the timing tags and the costs' spellings."""
+    return [t for t, _ in badge_tags()] + [s for *_, spellings in cost_badges() for s in spellings]
+
+
+def _label(glyphs, cmap, text, x, baseline, caps_scale, tracking=BADGE_TRACKING):
+    """(svg path, RecordingPen y up, width) of text in the label font from x on baseline."""
+    pen, rec, x0 = SVGPathPen(glyphs, ntos=num), RecordingPen(), x
+    for ch in text:
+        g = cmap[ord(BADGE_LABEL.get(ch, ch))]
+        glyphs[g].draw(TransformPen(pen, (caps_scale, 0, 0, -caps_scale, x, -baseline)))
+        glyphs[g].draw(TransformPen(rec, (caps_scale, 0, 0, caps_scale, x, baseline)))
+        x += glyphs[g].width * caps_scale + tracking
+    return pen.getCommands(), rec, x - x0 - tracking
+
+
+def _width(glyphs, cmap, text, caps_scale, tracking=BADGE_TRACKING):
+    return sum(glyphs[cmap[ord(BADGE_LABEL.get(ch, ch))]].width * caps_scale for ch in text) + tracking * (len(text) - 1)
+
+
+def _ring(outer, inner):
+    return [outer, inner[::-1]]
+
+
+def cost_badge(glyphs, cmap, cap_height, kind, n):
+    """(plain outline, svg body, advance, (salt outline, salt label)) of one cost badge."""
+    _, words, (top, bottom, border), ink = COSTS[kind]
+    word = words[0] if n == "1" else words[1]
+    height, mid = BADGE_TOP - BADGE_BOTTOM, (BADGE_TOP + BADGE_BOTTOM) / 2
+    scale, nscale = BADGE_CAPS / cap_height, NUM_CAPS / cap_height
+    left = BADGE_SIDE
+    defs = (f'<linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{top}"/>'
+            f'<stop offset="1" stop-color="{bottom}"/></linearGradient>')
+    art, salt = "", []
+    if kind in ("souls", "counters"):                     # a card's own currency: a text pill, like a timing tag
+        text = f"{n} {word}"
+        w = _width(glyphs, cmap, text, scale)
+        width = max(height, w + 2 * BADGE_PAD)
+        d, rec, _ = _label(glyphs, cmap, text, left + (width - w) / 2, mid - BADGE_CAPS / 2, scale)
+        art, labels = f'<path d="{d}" fill="{ink}"/>', [rec]
+    else:
+        nw = _width(glyphs, cmap, n, nscale, 10)
+        if kind == "sp":
+            r = STAR_R
+            cx, cy = left + 20 + r * math.sin(math.radians(72)), mid + 40
+            k = min(1, 0.88 * r / nw)                     # long numbers shrink onto the star
+            icon_w = 2 * r * math.sin(math.radians(72)) + 20
+            pts = star(cx, cy, r)
+            svg = lambda ps: " ".join(f"{x},{-y}" for x, y in ps)
+            defs += (f'<radialGradient id="i" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#ffffe8"/>'
+                     f'<stop offset=".3" stop-color="#ffff70"/><stop offset=".55" stop-color="{STAR}"/>'
+                     f'<stop offset=".85" stop-color="#d9c800"/><stop offset="1" stop-color="#a69400"/></radialGradient>')
+            art = (f'<polygon points="{svg(pts)}" fill="#6e6200"/>'          # its edge: the star under a smaller one
+                   f'<polygon points="{svg(star(cx, cy, r - 1.8 * ICON_LINE))}" fill="url(#i)"/>'
+                   f'<ellipse cx="{num(cx - 0.24 * r)}" cy="{num(-(cy + 0.24 * r))}" rx="{num(0.1 * r)}" ry="{num(0.06 * r)}" '
+                   f'fill="#ffffff" opacity="0.75"/>')
+            ncol, nshadow = "#3b3300", None
+            ring = _ring(pts, star(cx, cy, r - 2.2 * ICON_LINE))
+            ncx, ncy = cx, cy - 0.06 * r
+        else:
+            coin = kind == "points"
+            h = COIN_H if coin else BRICK_H
+            icon_w = max(h if coin else 1060, nw + 2 * (190 if coin else 200))
+            x0, y0 = left + (ICON_INSET if coin else BRICK_INSET), mid - h / 2
+            rx = h / 2 if coin else 70
+            if coin:
+                grad = (f'<radialGradient id="i" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#e8fff7"/>'
+                        f'<stop offset=".3" stop-color="#6dffd0"/><stop offset=".58" stop-color="{COIN}"/>'
+                        f'<stop offset="1" stop-color="#00a36c"/></radialGradient>')
+                inset = 105
+                art = (f'<rect x="{num(x0)}" y="{num(-(y0 + h))}" width="{num(icon_w)}" height="{h}" rx="{num(rx)}" '
+                       f'fill="url(#i)" stroke="#00603f" stroke-width="{ICON_LINE}"/>'
+                       f'<rect x="{num(x0 + inset)}" y="{num(-(y0 + h - inset))}" width="{num(icon_w - 2 * inset)}" '
+                       f'height="{h - 2 * inset}" rx="{num(rx - inset)}" fill="none" stroke="#00c98a" stroke-width="30"/>'
+                       f'<ellipse cx="{num(x0 + 0.3 * h)}" cy="{num(-(y0 + 0.74 * h))}" rx="{num(0.13 * h)}" '
+                       f'ry="{num(0.075 * h)}" fill="#ffffff" opacity="0.6"/>')
+                ncol, nshadow = "#003d29", None
+            else:
+                grad = (f'<linearGradient id="i" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c97b52"/>'
+                        f'<stop offset=".45" stop-color="{BRICK}"/><stop offset="1" stop-color="#7a3a1c"/></linearGradient>')
+                art = (f'<rect x="{num(x0)}" y="{num(-(y0 + h))}" width="{num(icon_w)}" height="{h}" rx="{rx}" '
+                       f'fill="url(#i)" stroke="#3d1a08" stroke-width="{ICON_LINE}"/>'
+                       f'<rect x="{num(x0 + 70)}" y="{num(-(y0 + h - 50))}" width="{num(icon_w - 140)}" height="44" rx="22" '
+                       f'fill="#ffffff" opacity="0.35"/>'
+                       f'<rect x="{num(x0 + 70)}" y="{num(-(y0 + 94))}" width="{num(icon_w - 140)}" height="44" rx="22" '
+                       f'fill="#000000" opacity="0.22"/>')
+                ncol, nshadow = "#ffffff", "#3d1a08"
+            defs += grad
+            k = 1
+            outer = (capsule(round(x0), round(y0), round(icon_w), h) if coin
+                     else rounded(round(x0), round(y0), round(icon_w), h, rx))
+            t = 2 * ICON_LINE
+            inner = (capsule(round(x0 + t), round(y0 + t), round(icon_w - 2 * t), h - 2 * t) if coin
+                     else rounded(round(x0 + t), round(y0 + t), round(icon_w - 2 * t), h - 2 * t, max(rx - t, 10)))
+            ring = _ring(outer, inner)
+            ncx, ncy = x0 + icon_w / 2, mid
+            icon_w += ICON_INSET if coin else BRICK_INSET
+        nd, nrec, _ = _label(glyphs, cmap, n, ncx - nw * k / 2, ncy - NUM_CAPS * k / 2, nscale * k, 10 * k)
+        if nshadow:
+            sd, _, _ = _label(glyphs, cmap, n, ncx - nw * k / 2, ncy - NUM_CAPS * k / 2 - 28, nscale * k, 10 * k)
+            art += f'<path d="{sd}" fill="{nshadow}" opacity="0.7"/>'
+        art += f'<path d="{nd}" fill="{ncol}"/>'
+        ww = _width(glyphs, cmap, word, scale)
+        width = icon_w + ICON_GAP + ww + 210
+        wd, wrec, _ = _label(glyphs, cmap, word, left + icon_w + ICON_GAP, mid - BADGE_CAPS / 2, scale)
+        art += f'<path d="{wd}" fill="{ink}"/>'
+        salt, labels = ring, [nrec, wrec]
+    width = round(width)
+    body = (f'<defs>{defs}</defs><rect x="{left}" y="{-BADGE_TOP}" width="{width}" height="{height}" '
+            f'rx="{height / 2:.0f}" ry="{height / 2:.0f}" fill="url(#g)" stroke="{border}" stroke-width="{BADGE_BORDER}"/>'
+            + art)
+    outline = [capsule(left, BADGE_BOTTOM, width, height)]
+    t = BADGE_LINE
+    ring = outline + [capsule(left + t, BADGE_BOTTOM + t, width - 2 * t, height - 2 * t)[::-1]] + salt
+    letters = RecordingPen()
+    for rec in labels:
+        rec.replay(letters)
+    return outline, body, width + 2 * BADGE_SIDE, (ring, letters)
+
+
 def build_badges(label_font_path):
-    """[(tag, glyph name, plain outline, svg body, advance, (salt outline, salt label))] for every timing tag."""
+    """[(spellings, glyph name, plain outline, svg body, advance, (salt outline, salt label), first)] for every timing
+    tag and cost; first: one of the 341 of 2026-10-22 (their glyphs keep their place)."""
     label = TTFont(label_font_path)
     glyphs, cmap = label.getGlyphSet(), label.getBestCmap()
-    scale = BADGE_CAPS / label["OS/2"].sCapHeight
+    out = []
+    for name, kind, n, spellings in cost_badges():
+        outline, body, advance, alt = cost_badge(glyphs, cmap, label["OS/2"].sCapHeight, kind, n)
+        out.append((spellings, name, outline, body, advance, alt, False))
+    return _tag_badges(glyphs, cmap, label["OS/2"].sCapHeight) + out
+
+
+def _tag_badges(glyphs, cmap, cap_height):
+    scale = BADGE_CAPS / cap_height
     height = BADGE_TOP - BADGE_BOTTOM
     baseline = (BADGE_TOP + BADGE_BOTTOM) / 2 - BADGE_CAPS / 2
-    out, tags = [], badge_tags()
+    out, tags, first = [], badge_tags(), {t for t, _ in _first_tags()}
     assert len({badge_glyph(t) for t, _ in tags}) == len(tags), "duplicate badge"
     for tag, group in tags:
         top, bottom, border = BADGE_GROUPS[group]
@@ -381,7 +574,7 @@ def build_badges(label_font_path):
         outline = [capsule(BADGE_SIDE, BADGE_BOTTOM, round(width), height)]
         t = BADGE_LINE
         ring = outline + [capsule(BADGE_SIDE + t, BADGE_BOTTOM + t, round(width) - 2 * t, height - 2 * t)[::-1]]
-        out.append((tag, badge_glyph(tag), outline, body, round(width) + 2 * BADGE_SIDE, (ring, letters)))
+        out.append(([tag], badge_glyph(tag), outline, body, round(width) + 2 * BADGE_SIDE, (ring, letters), tag in first))
     return out
 
 
@@ -514,11 +707,14 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                         continue
                     ligatures[text] = (comps, g)
 
-    badge_ligatures, badge_alts = [], []
-    for tag, name, outline, body, advance, alt in build_badges(os.path.join(repo, "MDW/Fonts/Changa One.ttf")):
-        add_glyph(name, outline, advance)
+    badge_ligatures, badge_alts, later = [], [], []
+    for typed, name, outline, body, advance, alt, first in build_badges(os.path.join(repo, "MDW/Fonts/Changa One.ttf")):
+        if first:
+            add_glyph(name, outline, advance)
+        else:                                   # the wider range and the costs (2026-11-03) go last: older ids kept
+            later.append((name, outline, advance))
         svg_docs.append((name, body))
-        badge_ligatures.append(([char_glyph[ord(c)] for c in f"({tag})"], name))
+        badge_ligatures += [([char_glyph[ord(c)] for c in f"({t})"], name) for t in typed]
         badge_alts.append((name, advance, alt))
 
     font.setGlyphOrder(order)
@@ -563,8 +759,10 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
             svg_docs.append((g_bg, body))
             add_glyph(g, halo_polys, adv + 2 * (GLOW_SIZE - SIDE))     # only seen if LAYERS doesn't run
             glow_multiples.append((g, [g_bg, base, glow_space]))
-    # salt (one-colour) badges and stickers last: older glyph ids unchanged
-    for name, advance, (polys, label) in badge_alts:
+    # salt (one-colour) badges and stickers last: older glyph ids unchanged; then the badges of 2026-11-03 and theirs
+    late = {name for name, _, _ in later}
+
+    def salt_glyph(name, advance, polys, label):
         pen = TTGlyphPen(None)
         for p in polys:
             pen.moveTo(p[0])
@@ -578,8 +776,23 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         hmtx[name + ".salt"] = (advance, g.xMin)
         if name + ".salt" not in order:
             order.append(name + ".salt")
+    for name, advance, (polys, label) in badge_alts:
+        if name not in late:
+            salt_glyph(name, advance, polys, label)
     for _, name, polys, advance in sticker_alts:
         add_glyph(name, polys, advance)
+    for name, outline, advance in later:
+        add_glyph(name, outline, advance)
+    for name, advance, (polys, label) in badge_alts:
+        if name in late:
+            salt_glyph(name, advance, polys, label)
+    paren_glued = char_glyph[ord("(")] + ".glued"           # GLUED's "(": the same outline, no badge starts with it
+    pen = TTGlyphPen(font.getGlyphSet())
+    pen.addComponent(char_glyph[ord("(")], (1, 0, 0, 1, 0, 0))
+    glyf[paren_glued] = pen.glyph()
+    hmtx[paren_glued] = hmtx[char_glyph[ord("(")]]
+    if paren_glued not in order:
+        order.append(paren_glued)
     font.setGlyphOrder(order)
 
     gid = {n: i for i, n in enumerate(font.getGlyphOrder())}
@@ -605,7 +818,7 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     mult = [f"  sub {src} by {' '.join(dst)};" for src, dst in multiples]
     glow_mult = [f"  sub {src} by {' '.join(dst)};" for src, dst in glow_multiples]
     badges = [f"  sub {' '.join(comps)} by {g};" for comps, g in sorted(badge_ligatures, key=lambda x: -len(x[0]))]
-    tags = [t for t, _ in badge_tags()]
+    tags = badge_spellings()
     assert len({t.upper() for t in tags}) == len(tags), "badges that differ only in case"
     gn = lambda c: char_glyph[ord(c)]
     folds = {k: sorted({c for t in tags for c in t if test(c)}) for k, test in (("UP", str.isupper), ("LOW", str.islower))}
@@ -616,7 +829,13 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     # one rule per subtable, so each is Format 3 like MARK's (feaLib would merge them into one Format 2)
     case = "\n  subtable;\n".join(f"  sub {gn('(')} {' '.join(map(pos, t))} {gn(')')};"
                                   for t in sorted(tags, key=len, reverse=True))
-    lookups = " ".join(f"lookup {n};" for n in ("MARK", "TOKENS", "LAYERS", "CASE", "BADGES", "GLOW_TOKENS",
+    # a cost glued to a word or number before it is a multiplier, "2(x counters)": its "(" becomes a look-alike the
+    # badges don't start with (the website's COST lookbehind); costs only: no timing tag holds a space
+    nums = " ".join(gn(c) for c in "0123456789Xx")
+    word = " ".join(sorted({gn(c) for c in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._"}))
+    glued = [f"  sub [{word}] {gn('(')}' lookup GLUE [{nums}] {' '.join(f'[{nums}]' for _ in range(k))}{mid} {gn(' ')};"
+             for k in range(3) for mid in ("", f" {gn('.')} [{nums}]")]
+    lookups = " ".join(f"lookup {n};" for n in ("MARK", "TOKENS", "LAYERS", "GLUED", "CASE", "BADGES", "GLOW_TOKENS",
                                                 "GLOW_LAYERS"))
     salt_badges = [f"  sub {n} by {n}.salt;" for n, _, _ in badge_alts]
     salt_stickers = [f"  sub {' '.join(seq)} by {g};" for seq, g, _, _ in sticker_alts]
@@ -631,6 +850,8 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                      "lookup TOKENS {", *liga, "} TOKENS;",
                      "lookup LAYERS {", *mult, "} LAYERS;",
                      *fold,
+                     f"lookup GLUE {{ sub {gn('(')} by {paren_glued}; }} GLUE;",
+                     "lookup GLUED {", *glued, "} GLUED;",
                      "lookup CASE {", case, "} CASE;",
                      "lookup BADGES {", *badges, "} BADGES;",
                      "lookup GLOW_TOKENS {", *glow_liga, "} GLOW_TOKENS;",
@@ -654,7 +875,7 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         1: family, 2: "Regular", 3: f"{ps};1.0", 4: family, 5: "Version 1.000", 6: ps,
         10: "Type [fire], [fire:tint], [fire:sticker], [fire:no], [fire:glow] or [fire:darkglow] in this font to get "
             "the icon. Case-insensitive; space, underscore and hyphen are interchangeable. "
-            "Timing tags such as (1CD) become badges.",
+            "Timing tags such as (1CD) and costs such as (2 points) become badges.",
     }
     for nid, val in entries.items():
         name.setName(val, nid, 3, 1, 0x409)

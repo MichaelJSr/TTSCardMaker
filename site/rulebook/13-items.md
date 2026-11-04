@@ -5,8 +5,8 @@
 ::: center
 Items are your main resource besides creatures. You start with only 10 of them, spend them well!
 :::
-- Items are what your **Star Points** are for. In order to play an item, you must spend Star Points equal to the star level of an item. The stars are in the top right of an item. For example, A 3 star item costs 3 star points to play.
-- At the start of every global turn, you are set to 7 Star Points.
+- Items are what your **SP** are for. In order to play an item, you must spend SP equal to the star level of an item. The stars are in the top right of an item. For example, A 3 star item costs 3 SP to play.
+- At the start of every global turn, you are set to 7 SP.
 - Once an item is played, the item is put into the discard pile after it resolves; unless it's a multi-use item, then it goes back facedown or to the hand.
 - You have 3 “facedown” slots. Items in these slots can be played at any time!
 - You may only swap items between your hand and the facedown slots on your turn. Plan carefully!

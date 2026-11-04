@@ -12,10 +12,10 @@ These are cards that when on the playing field have a constant effect.
 ## PLAYING
 - When these are obtained, they may immediately be put into play on your teams field card slot, for no extra cost.
 - You may take these out of play and put them in your hand.
-- If you want to put a field card from your hand into play, it'll cost star points equal to the card's star level, just like a regular item.
+- If you want to put a field card from your hand into play, it'll cost SP equal to the card's star level, just like a regular item.
 - You may have only 1 of these out at a time.
 - Field cards cannot be sold, and items cannot be used on them.
-- Outside of using star points to play them from the hand, field cards do not behave like items in any way. Anything meant for items cannot be used for field cards (such as [[Stopwatch]] or facedown slots).
+- Outside of using SP to play them from the hand, field cards do not behave like items in any way. Anything meant for items cannot be used for field cards (such as [[Stopwatch]] or facedown slots).
 
 ![A tree from Terraria](tree.webp){width=70}
 :::

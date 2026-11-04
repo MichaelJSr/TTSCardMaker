@@ -4,22 +4,16 @@
 // the text fields marked data-tokens (edit.js, inline.js). The same list suggests known names in the fields marked
 // data-suggest="series|subseries|author|font" (suggestNames), whose whole value is the query; a pick fires "suggest-pick".
 // Edit mode loads it (editing.js); the grid's Font box loads it for everyone (app.js loadTokens): one install either way.
-import { esc, norm, tagInfo, badgeHtml, VARIANT_NAMES, variantFile } from "./text.js";
+import { esc, norm, tagInfo, badgeHtml, BADGE_TAGS, VARIANT_NAMES, variantFile } from "./text.js";
 
 export const MAX_TOKEN = 52;                     // text.js PIECE: [thunderfury blessed blade of the starseeker:darkglow]
 export const VARIANTS = ["tint", "sticker", "no", "glow", "darkglow"];   // the font's (AutoCroissant ICON_VARIANTS)
 export const ROWS = 8;                           // rows shown at once; more scroll
 const LIMIT = 120;                               // rows at most (91 icons, an exact one's variants)
 
-// Every timing tag the font draws (build_stoogedings.badge_tags): the cards' own first, then the rulebook's old ones
-const NUMS = [..."123456789X"], FIRSTS = ["-1", ..."0123456789", "X"];
-export const TAGS = (() => {
-  const now = ["OYT", "AAT", "BOT", "ENDT", "BOGT", "ENDGT", "OFS", "OS", "OD", "WOF", "Action"];
-  for (const n of NUMS) now.push(`${n}CD`, `${n}GCD`, `${n}U`, `${n}PG`);
-  for (const cd of ["CD", "GCD"]) for (const a of FIRSTS) for (const b of NUMS) now.push(`${a}/${b}${cd}`);
-  const old = NUMS.flatMap(n => [`${n}PT`, `E${n}T`, `FTE${n}T`, `${n}PGT`, `E${n}GT`]);
-  return [...now, ...old].filter(t => tagInfo(t));
-})();
+// Every timing tag the font draws (text.js BADGE_TAGS, build_stoogedings.badge_tags): the cards' own first, then the
+// rulebook's old ones
+export const TAGS = BADGE_TAGS.filter(t => tagInfo(t));
 
 /** The icons as one entry each, from cards.json icons ({normalized spelling: {file, name, kind, v}}): [{name, kind,
  *  file, v, keys, uses}], keys = its other spellings (aliases), normalized; uses = its tokens in texts (the cards'). */
@@ -37,7 +31,7 @@ export function vocabulary(icons, texts = []) {
 }
 
 const NAME = /^[\p{L}\p{N} _\-.'’]*$/u;          // a token's name as typed (norm drops the separators)
-const TAG_TEXT = /^-?[0-9A-Za-z/]{0,6}$/;         // text.js TAG: (-1/2GCD) is the longest
+const TAG_TEXT = /^-?[0-9A-Za-z/]{0,8}$/;         // text.js TAG: (-9/20GCD) is the longest
 const REST_ICON = /^[\p{L}\p{N} _\-.'’:]*\]/u, REST_TAG = /^[-0-9A-Za-z/]*\)/;
 /** The token being typed at the caret, or null. {type: "icon", start, end, close, base, variant, tail} (variant null
  *  before a ":") or {type: "tag", start, end, close, text}; start: its "[" or "(", end: the caret, close: where a

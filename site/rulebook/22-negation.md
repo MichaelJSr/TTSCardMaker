@@ -22,9 +22,9 @@ If an attack is negated it does not happen. No damage is dealt, no on-hit effect
 ## ITEMS
 ![A bullet with a gun](bullet.webp){.right width=17}
 - If an item is negated, it means it cannot be played or is taken out of play, and it returns to where it was before being played (such as the hand or facedown slot).
-- If an item is negated or destroyed during use, the star points expended to use it are not regained.
+- If an item is negated or destroyed during use, the SP expended to use it are not regained.
 - Items that are currently negated cannot be sold, or used for any other purpose until the negation ends.
-- Equip, Active, and Deploy items can be negated after their activation while they are still in effect; this sends them back to the hand, requiring star points to be used again to reactivate them.
+- Equip, Active, and Deploy items can be negated after their activation while they are still in effect; this sends them back to the hand, requiring SP to be used again to reactivate them.
 
 ## FIELD CARDS
 - At the beginning of the global turn, or on your turn, you may spend 1x the star level of a field card in BRICKS to negate it until the end of the global turn (field card stays on the field and can be swapped out, but loses its effect temporarily).

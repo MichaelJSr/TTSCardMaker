@@ -216,8 +216,8 @@ function distPanel({ k, l, counts, pages, yMax, cur, href }) {
 }
 
 // ---- cards-only charts after the average stats: stat shapes, cooldowns, ability length, item types ----------------
-const COOLDOWN = /^(?:(?:-1|\d|X)\/)?(\d)(G?)CD$/;          // the recurring number: (1CD) 1, (0/2CD) 2; (XCD) none
-const USES = /^(\d)U$/;                                       // (2U) 2
+const COOLDOWN = /^(?:(?:-?\d+|X)\/)?(\d+)(G?)CD$/;          // the recurring number: (1CD) 1, (0/2CD) 2; (XCD) none
+const USES = /^(\d+)U$/;                                       // (2U) 2
 const CD_COLS = [["1CD", "CD", 1], ["2CD", "CD", 2], ["3CD", "CD", 3], ["1GCD", "GCD", 1], ["2GCD", "GCD", 2],
   ["1U", "U", 1], ["2U", "U", 2], ["3U", "U", 3]];          // 3CD: 3+, 2GCD: 2+, 3U: 3+
 const CD_PLUS = new Set([2, 4, 7]);

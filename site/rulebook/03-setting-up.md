@@ -31,7 +31,7 @@ Each team starts with:
 :::
 
 ::: stack
-> [!sonic top] Each team starts with 2 points, and 7 star points.
+> [!sonic top] Each team starts with 2 points, and 7 SP.
 
 ::: box
 Refer to [“SHOPS”](#/rules/shops) for setting up the shops!

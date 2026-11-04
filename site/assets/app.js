@@ -1588,10 +1588,6 @@ const actions = {
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
   "select-mode": () => { S.selecting = !S.selecting; if (!S.selecting) S.selected.clear(); rerender(); },
   // My filters: a link's search saved; ✕ forgets one (and drops it from the address), Undo puts both back
-  "cost-style": el => {                                   // points and bricks as text or as a coin and a brick (text.js COST)
-    const v = el.dataset.value === "icons" ? "icons" : "text";
-    document.documentElement.dataset.costs = v; localStorage.setItem("costs", v);
-    for (const b of $$('[data-action="cost-style"]')) { const on = b.dataset.value === v; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); } },
   "cf-save": el => { const v = el.dataset.value, had = CF.add(v); toast(had ? `Already in My filters as “${had}”` : `Saved “${v}” to My filters`); rerender(); },
   "cf-delete": el => { const v = el.dataset.value, p = parseHash().params, was = { cf: vals(p, "cf").includes(v), xcf: vals(p, "xcf").includes(v) }, at = CF.remove(v);
     if (was.cf || was.xcf) setParams({ cf: vals(p, "cf").filter(x => x !== v), xcf: vals(p, "xcf").filter(x => x !== v) }); else rerender();
