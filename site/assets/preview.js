@@ -126,6 +126,11 @@ export function discard(store, request) {
   return out;
 }
 const TRASH = `<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4h11M6 4V2.6h4V4M4 4l.7 9.4h6.6L12 4M6.6 6.6v4.6M9.4 6.6v4.6"/></svg>`;
+/** store with only the entries still on their way (Trash all: every finished preview thrown away in this browser). */
+export const trashAll = store => Object.fromEntries(Object.entries(store).map(([id, list]) => [id, list.filter(e => e.state === "starting" || e.state === "running")])
+  .filter(([, list]) => list.length));
+/** The entries Trash all throws away. */
+export const finishedCount = store => Object.values(store).flat().filter(e => e.state !== "starting" && e.state !== "running").length;
 /** The entries still waiting for their result. */
 export const waiting = store => Object.values(store).flat().filter(e => e.state === "running");
 /** The store with old entries settled: a start the page left half done is an error, a result or timeout past SHOW_MS is
@@ -285,9 +290,9 @@ export const TABS = [["original", "Original"], ["mockup", "Mock-up"], ["rendered
 /** The viewer's tabs: a tablist, the mode's tab selected (roving tabindex), "New" on Rendered while a result waits unseen. */
 export const tabsHtml = (mode, { news = false } = {}) => `<div class="iv-tabs" role="tablist" aria-label="Card image">${TABS.map(([m, label]) =>
   `<button type="button" role="tab" data-iv-tab="${m}" aria-selected="${m === mode}" tabindex="${m === mode ? 0 : -1}">${label}${m === "rendered" && news ? ` <span class="pv-badge inline">New</span>` : ""}</button>`).join("")}</div>`;
-/** The tab a viewer opens on: the card page Rendered while the newest preview's result is unseen, else Original; the Edit
- *  dialog Mock-up while the form changes the image (n fields), else Original. */
-export const defaultMode = ({ where, n, entry }) => (where === "card" ? (entry && DONE.includes(entry.state) && !entry.seen ? "rendered" : "original") : n ? "mockup" : "original");
+/** The tab a viewer opens on: Rendered whenever the card has a preview (owner 2026-11-03), else the Edit dialog's
+ *  Mock-up while the form changes the image (n fields), else Original. */
+export const defaultMode = ({ where, n, entry }) => (entry ? "rendered" : where !== "card" && n ? "mockup" : "original");
 // the bake's refusals (AutoCroissant psd_edit plan_stars / plan_types) in plain words, first match; else the text without
 // its field, boxes and ledger codes
 const LEDGER = /\s*\([^)]*\bledger [A-Z]\d+\)/g;
@@ -601,5 +606,8 @@ export function createPreviews(app) {
     refresh: id => notify(id),
     onAuth() { if (app.editor.me) soon(); },
     hasNews: id => hasNews(store, id), entries: id => store[id] || [],
+    /** how many finished previews Trash all would throw away; trashAll() does it and says how many */
+    finished: () => finishedCount(store),
+    trashAll() { const n = finishedCount(store); set(trashAll(store)); notify(null); return n; },
   };
 }

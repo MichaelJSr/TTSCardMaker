@@ -70,23 +70,26 @@ export const badgeHtml = (tag, tip = true) => {   // tip false: the note is the 
 };
 
 // Costs in parentheses, drawn by the site only (the font has no such badge): "(2 points)", "(1 point)", "(1.5 points)",
-// "(X bricks)" (the team's points and BRICKS, rulebook 04 Table), "(4 souls)", "(3 counters)" (a card's own currency).
+// "(X bricks)", "(2 SP)", "(1 star point)" (the team's points, BRICKS and star points, rulebook 04 Table), "(4 souls)",
+// "(3 counters)" (a card's own currency).
 // html[data-costs="icons"] (the Badges panel's switch, localStorage "costs") draws points as a coin, bricks as a brick.
 // Right after a number or word it is a multiplier, not a cost: Warcraftian Rogue's "Deal 2(x counters) DMG".
-export const COST = /(?<![\w.])\(((?:\d+(?:\.\d+)?|[Xx])[^\S\n]+(?:points?|bricks?|souls?|(?:[A-Za-z][\w'’-]*[^\S\n]+)?counters?))\)/i;
+export const COST = /(?<![\w.])\(((?:\d+(?:\.\d+)?|[Xx])[^\S\n]+(?:points?|bricks?|SP|star[^\S\n]+points?|souls?|(?:[A-Za-z][\w'’-]*[^\S\n]+)?counters?))\)/i;
 const COST_TIP = { points: "your team's points (earned when enemy prime creatures are defeated, spent on abilities and the item shop)",
-  bricks: "your team's BRICKS (mined by creatures, spent on field cards)", own: "a currency of this card's own" };
+  bricks: "your team's BRICKS (mined by creatures, spent on field cards)",
+  sp: "your team's star points (set to 7 each global turn, spent to play items)", own: "a currency of this card's own" };
 /** {n, unit (as typed), kind: points | bricks | own} of a cost's text ("2 points"), or null */
 export function costInfo(typed) {
   const m = /^((?:\d+(?:\.\d+)?|[Xx]))[^\S\n]+(.+)$/.exec(String(typed).trim());
   if (!m || !COST.test(`(${typed})`)) return null;
-  const unit = m[2].replace(/\s+/g, " "), kind = /^points?$/i.test(unit) ? "points" : /^bricks?$/i.test(unit) ? "bricks" : "own";
+  const unit = m[2].replace(/\s+/g, " "), kind = /^points?$/i.test(unit) ? "points" : /^bricks?$/i.test(unit) ? "bricks"
+    : /^(?:sp|star points?)$/i.test(unit) ? "sp" : "own";
   return { n: m[1].toUpperCase(), unit, kind };
 }
 export const costHtml = typed => {
   const c = costInfo(typed);
   if (!c) return esc(`(${typed})`);
-  const unit = c.unit.replace(/(^|\s)\p{Ll}/gu, x => x.toUpperCase());          // "2 Points", "3 Ritual Counters"
+  const unit = c.kind === "sp" && /^sp$/i.test(c.unit) ? "SP" : c.unit.replace(/(^|\s)\p{Ll}/gu, x => x.toUpperCase());   // "2 Points", "3 Ritual Counters"
   return `<span class="badge cost ${c.kind}" data-tip="${esc(`${c.n} ${c.unit.toLowerCase()}: ${COST_TIP[c.kind]}`)}"><span class="cost-n">${esc(c.n)}</span><span class="cost-u"> ${esc(unit)}</span></span>`;
 };
 export const COST_STYLES = [["text", "Text"], ["icons", "Coins and bricks"]];

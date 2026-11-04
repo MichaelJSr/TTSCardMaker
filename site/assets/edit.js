@@ -1787,6 +1787,7 @@ export function createEditor(app) {
     return `<h3>Editing as ${esc(me.login)} <span class="fact">${me.admin ? "Admin" : "Editor"}</span></h3>${note ? `<p>${esc(note)}</p>` : ""}
       <p class="muted">Open a card and change it in place, or press All fields (e). Changes wait in your batch until you publish them.</p>
       <div class="actions"><button type="button" data-action="edit-review"${count() ? "" : " disabled"}>Review batch (${count()})</button>
+        <button type="button" class="ghost" data-action="pv-trash-all"${app.previewCount() ? "" : " disabled"} title="Throw away every finished card image preview in this browser">Trash all previews (${app.previewCount()})</button>
         <label class="check"><input type="checkbox" data-action="edit-show-hidden"${S.showHidden ? " checked" : ""}> show hidden cards</label></div>
       <h4>Profile</h4><p class="muted">Your page, u/${esc(me.login)}/, shows your cards, edits and card commits; a profile adds the name on your cards, a motto, favourite cards and a featured hand.</p>
       <div class="actions"><button type="button" data-action="profile-edit">Edit profile</button><a class="fact" href="#/u/${encodeURIComponent(me.login)}">Your profile</a><a class="fact" href="#/users">All people</a></div>
@@ -1883,6 +1884,11 @@ export function createEditor(app) {
 
   const actions = {
     "edit-hub": () => openHub(),
+    "pv-trash-all": () => {
+      const n = app.previewCount();
+      if (!n || !confirm(`Trash all ${n} card image preview${n > 1 ? "s" : ""}?`)) return;
+      app.trashPreviews(); app.toast(`Trashed ${n} preview${n > 1 ? "s" : ""}`); openHub();
+    },
     "edit-card": el => openForm(el.dataset.id || app.currentCard()),
     "edit-cancel": () => {                       // the card dialog's form, else the profile page's
       const form = app.modal.querySelector("#edit-form") || document.getElementById("edit-form");

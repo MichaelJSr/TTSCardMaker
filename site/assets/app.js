@@ -250,6 +250,7 @@ function startEditor(M) {
     view, route: () => parseHash(), tile: (c, o) => tileHtml(c, { small: true, ...o }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
     decks: () => loadDecks().then(() => deckList()),         // the published decks (with the pending ones): the publish dialog's "replaces"
     formOpened: x => previews.mountForm(x),                  // the Edit dialog's image previews
+    previewCount: () => previews?.finished() ?? 0, trashPreviews: () => previews?.trashAll() ?? 0,   // the hub's Trash all previews
     loadDetails: c => loadDetails(c),                        // the parts editor's boxes (details/<id>.json)
     setParams: u => setParams(u),                            // Rename everywhere: a filter on the old name follows it
   });

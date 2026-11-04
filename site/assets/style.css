@@ -151,6 +151,8 @@ span.tokv { position: relative; display: inline-block; }
 .tokv > img { position: absolute; inset: calc(1.35em * var(--r, 0)); width: 1.35em; height: 1.35em; object-fit: contain; }
 .badge { display: inline-block; padding: 0 .6em; border-radius: 999px; font-size: .92em; font-weight: 800; letter-spacing: .03em; color: #fff;
   vertical-align: .02em; line-height: 1.45; cursor: help; white-space: nowrap; box-shadow: inset 0 0 0 1.5px rgba(0,0,0,.25); }
+.badge, .badge * { -webkit-text-fill-color: currentColor; -webkit-text-stroke: 0; text-shadow: none; font-style: normal; }   /* itself in styled text: no inherited outline or gradient fill */
+.badge { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
 .badge.turn { background: var(--b-turn); } .badge.any { background: var(--b-any); }
 .badge.forced { background: var(--b-forced); } .badge.trigger { background: var(--b-trigger); }
 .badge.neutral { background: var(--b-neutral); }
@@ -159,6 +161,7 @@ span.tokv { position: relative; display: inline-block; }
 .badge.points { background: #f2c230; color: #3d2a00; }
 .badge.bricks { background: #8a4b2a; }
 .badge.own { background: #0f766e; }
+.badge.sp { background: #1e3a8a; }
 :root[data-costs="icons"] .badge:is(.points, .bricks) { display: inline-flex; align-items: center; justify-content: center; line-height: 1; padding: 0 .38em; }
 :root[data-costs="icons"] .badge:is(.points, .bricks) .cost-u { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 :root[data-costs="icons"] .badge.points { min-width: 1.5em; height: 1.5em; vertical-align: .085em; color: #5c3b00; text-shadow: 0 1px 0 #ffeaa0;
