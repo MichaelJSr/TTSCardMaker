@@ -164,6 +164,7 @@ jobs:
             /commands/psd_parser.py
             /commands/psd_details.py
             /commands/psd_parts.py
+            /commands/text_align.py
             /commands/psd_regions.py
             /commands/font_check.py
             /commands/github_api.py
