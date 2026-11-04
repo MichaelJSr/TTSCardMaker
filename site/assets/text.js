@@ -69,18 +69,43 @@ export const badgeHtml = (tag, tip = true) => {   // tip false: the note is the 
   return t ? `<span class="badge ${t.group}"${tip ? ` data-tip="${esc(`(${t.tag}) ${t.meaning}`)}"` : ""}>${esc(t.tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
 };
 
+// Costs in parentheses, drawn by the site only (the font has no such badge): "(2 points)", "(1 point)", "(1.5 points)",
+// "(X bricks)" (the team's points and BRICKS, rulebook 04 Table), "(4 souls)", "(3 counters)" (a card's own currency).
+// html[data-costs="icons"] (the Badges panel's switch, localStorage "costs") draws points as a coin, bricks as a brick.
+export const COST = /\(((?:\d+(?:\.\d+)?|[Xx])[^\S\n]+(?:points?|bricks?|souls?|(?:[A-Za-z][\w'’-]*[^\S\n]+)?counters?))\)/i;
+const COST_TIP = { points: "your team's points (earned when enemy prime creatures are defeated, spent on abilities and the item shop)",
+  bricks: "your team's BRICKS (mined by creatures, spent on field cards)", own: "a currency of this card's own" };
+/** {n, unit (as typed), kind: points | bricks | own} of a cost's text ("2 points"), or null */
+export function costInfo(typed) {
+  const m = /^((?:\d+(?:\.\d+)?|[Xx]))[^\S\n]+(.+)$/.exec(String(typed).trim());
+  if (!m || !COST.test(`(${typed})`)) return null;
+  const unit = m[2].replace(/\s+/g, " "), kind = /^points?$/i.test(unit) ? "points" : /^bricks?$/i.test(unit) ? "bricks" : "own";
+  return { n: m[1].toUpperCase(), unit, kind };
+}
+export const costHtml = typed => {
+  const c = costInfo(typed);
+  if (!c) return esc(`(${typed})`);
+  const unit = c.unit.replace(/(^|\s)\p{Ll}/gu, x => x.toUpperCase());          // "2 Points", "3 Ritual Counters"
+  return `<span class="badge cost ${c.kind}" data-tip="${esc(`${c.n} ${c.unit.toLowerCase()}: ${COST_TIP[c.kind]}`)}"><span class="cost-n">${esc(c.n)}</span><span class="cost-u"> ${esc(unit)}</span></span>`;
+};
+export const COST_STYLES = [["text", "Text"], ["icons", "Coins and bricks"]];
+export const costStyle = () => (document.documentElement.dataset.costs === "icons" ? "icons" : "text");
+
 // badge colour legend, one line per colour: the text of rulebook page 02 Abbreviations; colours come from tagInfo's groups
 const COLOUR = { turn: "Blue", any: "Purple", forced: "Red", trigger: "Orange", neutral: "Grey" };
 export const LEGEND = [
   ["on your turn", ["1CD", "1/2CD", "OYT"]], ["at any time", ["1GCD", "AAT"]], ["forced", ["BOT", "ENDT", "BOGT", "ENDGT"]],
   ["per game, uses and triggers", ["1PG", "2U", "OFS", "OS", "OD", "WOF"]], ["costs the creature's action", ["Action"]],
 ].map(([what, tags]) => ({ group: tagInfo(tags[0]).group, colour: COLOUR[tagInfo(tags[0]).group], what, tags }));
-export const legendHtml = () => `<ul class="badge-legend">${LEGEND.map(l => `<li><span class="badge ${l.group} swatch" aria-hidden="true"></span><b>${l.colour}:</b> ${esc(l.what)} ${l.tags.map((t, i) => `<span class="nw">${i ? "" : "("}${badgeHtml(t)}${i < l.tags.length - 1 ? "," : ")."}</span>`).join(" ")}</li>`).join("")}</ul>`;
-/** Does a text draw any badge? */
+const COSTS = [["Gold", "points", "2 points", "#f2c230"], ["Brown", "BRICKS", "2 bricks", "#8a4b2a"], ["Teal", "a card's own currency", "4 souls", "#0f766e"]];   // style.css colours
+/** costs: the cost lines too, with the Text / Coins and bricks switch (data-action="cost-style") */
+export const legendHtml = (costs = false) => `<ul class="badge-legend">${LEGEND.map(l => `<li><span class="badge ${l.group} swatch" aria-hidden="true"></span><b>${l.colour}:</b> ${esc(l.what)} ${l.tags.map((t, i) => `<span class="nw">${i ? "" : "("}${badgeHtml(t)}${i < l.tags.length - 1 ? "," : ")."}</span>`).join(" ")}</li>`).join("")}${costs
+  ? `${COSTS.map(([colour, what, eg, bg]) => `<li><span class="badge swatch" style="background:${bg}" aria-hidden="true"></span><b>${colour}:</b> ${esc(what)} <span class="nw">(${costHtml(eg)}).</span></li>`).join("")}<li class="cost-switch">Points and bricks as ${COST_STYLES.map(([v, l]) => `<button type="button" class="chip${costStyle() === v ? " on" : ""}" data-action="cost-style" data-value="${v}" aria-pressed="${costStyle() === v}">${l}</button>`).join(" ")}</li>` : ""}</ul>`;
+/** Does a text draw any timing badge? */
 export const hasBadges = text => [...String(text || "").matchAll(new RegExp(TAG.source, "g"))].some(m => tagInfo(m[1]));
+/** Does a text draw any cost badge? */
+export const hasCosts = text => new RegExp(COST.source, "i").test(String(text || ""));
 
-// words a one-word name may follow: verbs and little words ("Summon Jetpack", "If Gasoline"; "Evil Quote" is something else)
-const LEAD = /^(?:Summon|Resummon|Equip|Create|Cleanse|Inflict|Draw|Acquire|Revive|Gain|Give|Steal|Copy|Become|Remove|Destroy|Discard|Use|Play|Return|Swap|Choose|Target|If|When|Whenever|While|Once|Until|Unless|After|Before|Then|And|Or|A|An|The|This|That|These|Each|Every|Any|Your|Its)$/;
 // a lowercase one-word name after its own verb: "inflict 1T1 smeckeldorfed", "stacks of hardened", "summon a silithid"
 const AMOUNT = "(?:[^\\S\\n]+[\\dX]+T[\\dX]+(?:\\([^)\\n]*\\))?)?";
 const status = new RegExp(`\\b(?:inflict|cleanse|stacks? of)${AMOUNT}[^\\S\\n]+$`, "i");
@@ -121,13 +146,11 @@ export function makeRenderer({ cards, icons, variants = {} }) {
     const t = m[1], spelt = [card.name.trim(), String(card.key || "").trim()];
     if (t === t.toUpperCase() && t !== t.toLowerCase() && !spelt.includes(t)) return false;   // capitals it doesn't print: a heading ("PANDA")
     if (/\s/.test(t)) return true;
-    // one word: as spelt, capitalized ("Springtrap", never "stay") or after its VERB; not a label ("Cat: +2 SPD") or
-    // a verb ("Heal 2 HP"); after a LEAD word or a card
+    // one word: as spelt, capitalized ("Springtrap", never "stay") or after its VERB, whatever word comes before it
+    // ("Au Dreamshield" as "bb Dreamshield"); not a label ("Cat: +2 SPD") or a verb ("Heal 2 HP")
     const after = text.slice(m.index + m[0].length), before = text.slice(0, m.index);
     if (after[0] === ":" || /^[^\S\n]+(?:\d|X\b)/.test(after)) return false;
     if (!(spelt.includes(t) && !m[2]) && !/^\p{Lu}/u.test(t)) return !!VERB[card.type]?.test(before);
-    const w = /(?:^|[\s(“"‘'])(\p{Lu}[\p{L}\p{N}_'’-]*)[^\S\n]+$/u.exec(before);
-    if (w) return LEAD.test(w[1]) || byName.has(fold(w[1]));
     // opening a clause and followed by to/the/a…: a verb ("(BOGT) Flip to the other creature")
     return !(/(?:^|[\n.!?:)])[^\S\n]*$/.test(before) && /^[^\S\n]+(?:to|the|a|an|your|its|all|any|each|it|this|that)\b/.test(after));
   };
@@ -137,7 +160,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   const groups = new Map();
   for (const k of [...byName.keys()].sort((a, b) => b.length - a.length)) { const h = k.match(WORD)?.[0] ?? k; groups.set(h, [...(groups.get(h) || []), pat(k)]); }
   for (const [h, ps] of groups) groups.set(h, new RegExp(`(${ps.join("|")})${END}`, "iy"));
-  const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}`, "g");
+  const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}|${COST.source}`, "gi");
 
   /** HTML for a token's text ("fire", "fire:glow"), null for no icon or a variant the font lacks; tip: false leaves out
    *  the tooltip */
@@ -165,8 +188,8 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   function parse(text, html_ = true) {
     const pieces = [];
     for (const m of text.matchAll(PIECE)) {
-      const html = !html_ ? (m[1] !== undefined ? hasIcon(m[1]) : !!tagInfo(m[2])) || null
-        : m[1] !== undefined ? icon(m[1]) : (tagInfo(m[2]) ? badgeHtml(m[2]) : null);
+      const html = !html_ ? (m[1] !== undefined ? hasIcon(m[1]) : m[3] !== undefined || !!tagInfo(m[2])) || null
+        : m[1] !== undefined ? icon(m[1]) : m[3] !== undefined ? costHtml(m[3]) : (tagInfo(m[2]) ? badgeHtml(m[2]) : null);
       if (html !== null) pieces.push([m.index, m[0].length, html]);
     }
     const links = [];
@@ -208,7 +231,15 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   function mentions(text) {
     return new Set(text ? parse(text, false).links.map(l => l[2].id) : []);
   }
+  iconOf = icon;
   return { render, mentions, icon };
+}
+
+let iconOf = null;                                   // the last renderer's icon(): diffs draw tokens with it
+/** One piece of text as HTML: its timing tags as badges and its [tokens] as icons (a diff's words) */
+export function inlineHtml(text) {
+  return String(text ?? "").replace(/\[([^\[\]\n]{1,52})\]|\((-?[0-9A-Za-z/]{2,6})\)|[^[(]+|[[(]/g, (all, token, tag) =>
+    token !== undefined ? (iconOf?.(token) ?? esc(all)) : tag !== undefined && tagInfo(tag) ? badgeHtml(tag) : esc(all));
 }
 
 /** Plain text (tokens as words), e.g. for copying. */
@@ -216,11 +247,11 @@ export function plain(text) {
   return String(text || "").replace(/\[([^\]:\n]+)(:no)?(:[a-z]+)?\]/gi, (_, n, no) => `${no ? "non-" : ""}${n.replace(/_/g, " ")}`);
 }
 
-/** Word-level diff (LCS) as HTML with <ins>/<del>. */
+/** Word-level diff (LCS) as HTML with <ins>/<del>, badges and icons drawn (inlineHtml). */
 export function diffWords(before, after) {
-  const a = String(before || "").split(/(\s+)/), b = String(after || "").split(/(\s+)/);
+  const a = String(before || "").split(/(\s+)/), b = String(after || "").split(/(\s+)/), esc = inlineHtml;
   const n = a.length, m = b.length;
-  if (n * m > 400000) return esc(after);
+  if (n * m > 400000) return esc(after).replace(/\n/g, "<br>");
   const dp = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
   for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
     dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);

@@ -1,5 +1,5 @@
 import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
-import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, legendHtml, hasBadges, commitAfter, noted, setTagMeanings } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
@@ -42,9 +42,12 @@ const S = {
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
   ["aux item", "Auxiliary items"], ["status", "Status effects"], ["creatures", "Auxiliary creatures"]];
 const KIND_PLURAL = { debuff: "Debuffs", buff: "Buffs", unknown: "Other" };   // kind= values the chips don't have (the Stats links)
-const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused (no card in play names it)"], ["edited", "Edited on the website"],
-  ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"],
+const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused (no card in play names it)"],
+  ["mentions", "Mentions another card"], ["mentioned", "Mentioned by another card"], ["edited", "Edited on the website"],
+  ["unpublished", "Has unpublished edits"], ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"],
   ["banned", "Banned (constructed)"]];
+const EDIT_FLAGS = new Set(["unpublished"]);              // listed in edit mode (or when in the address)
+const others = (ids, c) => { for (const id of ids || []) if (id !== c.id) return true; return false; };   // a card naming itself doesn't count
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
 const sortOf = p => (p.get("sort") === "created" && !S.created ? "" : p.get("sort")) || "name";   // a shallow build: Name
 
@@ -179,7 +182,7 @@ async function init() {
 // everything computed from the cards; re-run after an edit
 function derive() {
   S.rev++;
-  for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; delete c._unusedBy; }
+  for (const c of S.all) { c.parsed = c.parsed !== false; delete c._banned; delete c._unused; delete c._unusedBy; delete c._hay; }   // _hay: search.js haystack, made again from edited text
   S.cards = S.all.filter(c => !c.hidden || S.showHidden);
   // stats can pass 10 (Sonic's speed is 20)
   S.statMax = Object.fromEntries(["hp", "def", "atk", "spd"].map(k => [k, Math.max(10, ...S.cards.map(c => c[k] ?? 0))]));
@@ -388,7 +391,8 @@ function filterCards(p, { facets = true } = {}) {
   if (author) list = list.filter(c => c.author === author);
   for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => c[k] != null && c[k] >= r[0] && c[k] <= r[1]); }
   const flagFns = { history: c => !!c.hv, unparsed: c => !c.parsed, problems: c => !!(c.problems && c.problems.length), alias: c => !!(c.aliases && c.aliases.length),
-    dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(webEdited(c) || c._staged || c._sent),
+    dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(webEdited(c) || c._staged || c._sent), unpublished: c => !!c._staged,
+    mentions: c => others(S.mentions.get(c.id), c), mentioned: c => others(S.mentionedBy.get(c.id), c),
     pending: c => !!((c.pending && c.pending.length) || c.refused),
     banned: c => !!c._banned };
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
@@ -527,7 +531,7 @@ function renderCards(r) {
       <h3>Author</h3>${notSel("author", `<select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === pickOf("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>`)}
       <h3>Font</h3><input type="text" class="font-box" data-suggest="font" autocomplete="off" spellcheck="false" placeholder="Type a font…" title="Cards using any picked font" aria-label="Font: cards using any picked font">
       ${S.fontKept.length ? `${fontChips(fontIn, fontCounts, fontOut, fontRemoves)}${fontIn.length > 1 ? `<p class="muted font-any">Cards with any of them.</p>` : ""}` : ""}
-      <h3>Flags</h3>${FLAGS
+      <h3>Flags</h3>${FLAGS.filter(([f]) => !EDIT_FLAGS.has(f) || editing() || csv(p, "flags").includes(f) || xs("flags").includes(f))
         .map(([f, l]) => { const x = xs("flags").includes(f);
           return `<label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="flags" data-value="${f}"${!x && csv(p, "flags").includes(f) ? " checked" : ""}${x ? ` aria-label="${l}: excluded"` : ""}> ${l}${x ? `<span class="n">−${removes("flags", f)}</span>` : ""}</label>`; }).join("")}
       ${missOpts.length ? `<h3>Missing</h3>${missOpts.map(([k, l, tip]) => { const x = xmiss.includes(k);
@@ -781,6 +785,12 @@ function openCard(id, showDetails = false) {
   const inSub = x => x.subseries === c.subseries;                // any series
   const sameSub = c.subseries ? S.cards.filter(x => inSub(x) && x.id !== c.id) : [];
   const sameSeries = c.series ? S.cards.filter(x => x.series === c.series && x.id !== c.id && !(c.subseries && inSub(x))) : [];
+  // the series strip without the card's subseries is named for what it holds (Bench, subseries Hollow Knight: "More
+  // from Hollow Knight: Silksong", not a second "More from Hollow Knight")
+  const otherSubs = [...new Set(sameSeries.map(x => x.subseries || ""))];
+  const seriesTitle = !c.subseries ? `More from ${c.series || ""}` : otherSubs.length === 1 && otherSubs[0] ? `More from ${otherSubs[0]}`
+    : `More from ${c.series || ""}, outside ${c.subseries}`;
+  const seriesTip = c.subseries ? `Cards of the series ${c.series} in another subseries${otherSubs.includes("") ? " or none" : ""}` : "";
   modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
@@ -816,12 +826,12 @@ function openCard(id, showDetails = false) {
         ${c.ability ? `<div class="ability">${S.renderer.render(c.ability)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
         ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note)}</div>` : ""}
         ${artHtml(c)}
-        ${hasBadges(c.ability) || hasBadges(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml()}</details>` : ""}
+        ${hasBadges(c.ability) || hasBadges(c.note) || hasCosts(c.ability) || hasCosts(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml(hasCosts(c.ability) || hasCosts(c.note))}</details>` : ""}
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}
         ${c.problems && c.problems.length ? `<p class="muted">Parser notes: ${c.problems.map(esc).join(" · ")}</p>` : ""}
         <div class="related">
           <div id="card-balance">${balanceHtml(c)}</div>
-          ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions, "Cards its ability text names")}${strip("Mentioned by", mentionedBy, "Cards whose ability text names this card")}${strip("Similar stats", similar(c), "The 8 cards of the same kind nearest in HP, DEF, ATK and SPD, star level weighed in")}${strip(`More from ${c.subseries || ""}`, sameSub)}${strip(`More from ${c.series || ""}`, sameSeries)}
+          ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions, "Cards its ability text names")}${strip("Mentioned by", mentionedBy, "Cards whose ability text names this card")}${strip("Similar stats", similar(c), "The 8 cards of the same kind nearest in HP, DEF, ATK and SPD, star level weighed in")}${strip(`More from ${c.subseries || ""}`, sameSub, c.subseries && c.subseries === c.series ? `The subseries ${c.subseries}` : "")}${strip(seriesTitle, sameSeries, seriesTip)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
           <div id="history-slot">${historyHtml(c, S.data.repo, S.history?._shas, canRevert(c))}</div>
@@ -1577,6 +1587,10 @@ const actions = {
   "toggle-filters": () => { S.filtersOpen = !S.filtersOpen; $(".filters")?.classList.toggle("open", S.filtersOpen); },
   "select-mode": () => { S.selecting = !S.selecting; if (!S.selecting) S.selected.clear(); rerender(); },
   // My filters: a link's search saved; ✕ forgets one (and drops it from the address), Undo puts both back
+  "cost-style": el => {                                   // points and bricks as text or as a coin and a brick (text.js COST)
+    const v = el.dataset.value === "icons" ? "icons" : "text";
+    document.documentElement.dataset.costs = v; localStorage.setItem("costs", v);
+    for (const b of $$('[data-action="cost-style"]')) { const on = b.dataset.value === v; b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); } },
   "cf-save": el => { const v = el.dataset.value, had = CF.add(v); toast(had ? `Already in My filters as “${had}”` : `Saved “${v}” to My filters`); rerender(); },
   "cf-delete": el => { const v = el.dataset.value, p = parseHash().params, was = { cf: vals(p, "cf").includes(v), xcf: vals(p, "xcf").includes(v) }, at = CF.remove(v);
     if (was.cf || was.xcf) setParams({ cf: vals(p, "cf").filter(x => x !== v), xcf: vals(p, "xcf").filter(x => x !== v) }); else rerender();

@@ -3337,9 +3337,6 @@ def type_meanings(chapters, icons):
     return found
 
 
-NAME_LEAD = re.compile(r"(?:Summon|Resummon|Equip|Create|Cleanse|Inflict|Draw|Acquire|Revive|Gain|Give|Steal|Copy|Become|Remove|"
-                       r"Destroy|Discard|Use|Play|Return|Swap|Choose|Target|If|When|Whenever|While|Once|Until|Unless|After|"
-                       r"Before|Then|And|Or|A|An|The|This|That|These|Each|Every|Any|Your|Its)")      # text.js LEAD
 _STATUS_VERB = re.compile(r"\b(?:inflict|cleanse|stacks? of)(?:[^\S\n]+[\dX]+T[\dX]+(?:\([^)\n]*\))?)?[^\S\n]+$", re.I)
 NAME_VERB = {"buff": _STATUS_VERB, "debuff": _STATUS_VERB,                                         # text.js VERB
              "minion": re.compile(r"\b(?:summon|resummon|revive)(?:[^\S\n]+(?:a|an|the|\d+))?[^\S\n]+$", re.I)}
@@ -3388,9 +3385,6 @@ def name_links(cards, icons, tag_table):
             return False
         if not (t in spelt and not m[2]) and not t[0].isupper():
             return bool((verb := NAME_VERB.get(card.get("type"))) and verb.search(before))
-        w = re.search(r"(?:^|[\s(“\"‘'])([^\W\d_][\w'’-]*)[^\S\n]+$", before)
-        if w and w[1][0].isupper():
-            return bool(NAME_LEAD.fullmatch(w[1])) or fold(w[1]) in by_name
         return not (re.search(r"(?:^|[\n.!?:)])[^\S\n]*$", before)
                     and re.match(r"[^\S\n]+(?:to|the|a|an|your|its|all|any|each|it|this|that)\b", after))
 
