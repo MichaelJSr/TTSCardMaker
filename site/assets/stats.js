@@ -1,6 +1,6 @@
 // Stats dashboard. Marks follow the dataviz method: thin bars with 4px rounded data-ends, hairline grid,
 // values at bar tips, legends for multi-series, hover tooltips, and a table view for every chart.
-import { esc, tagInfo, badgeHtml, TAG, plain, noted, headHtml } from "./text.js";
+import { esc, tagInfo, tagHtml, TAG, plain, noted, headHtml } from "./text.js";
 import { total } from "./search.js";
 import { HAND } from "./deck.js";
 import { date } from "./history.js";
@@ -274,7 +274,7 @@ function cardCharts(pool, creatures, L) {
   if (cd.size) {
     const stars = [...cd.keys()].sort((a, b) => a - b), plus = i => (CD_PLUS.has(i) ? "+" : ""), avg = r => (r.k ? r.sum / r.k : null);
     const plusTip = i => CD_PLUS_TIP[CD_COLS[i][0]], avgHead = { label: "Avg turns", tip: "Mean recurring number of the cooldown and global cooldown tags; uses tags left out" };
-    const head = ["Stars", ...CD_COLS.map(([tag], i) => (plus(i) ? { html: `${badgeHtml(tag, false)}+`, tip: plusTip(i) } : { html: badgeHtml(tag) })), avgHead];
+    const head = ["Stars", ...CD_COLS.map(([tag], i) => (plus(i) ? { html: `${tagHtml(tag, false)}+`, tip: plusTip(i) } : { html: tagHtml(tag) })), avgHead];
     out.push(card("cooldowns", "Cooldowns and uses by star level", "Abilities per cooldown or uses, by star level.",
       heatTable(head, stars.map(st => { const r = cd.get(st); return [`${st}★`, ...r.n.map(v => v || ""), r.k ? String(fmt(avg(r))) : null]; }), { shade: CD_COLS.map((_, i) => i + 1), all: true,
         href: (k, i) => (i >= 1 && i <= CD_COLS.length ? L({ stars: stars[k], cd: CD_KEYS[i - 1] }) : null) }),
@@ -518,7 +518,7 @@ export function renderStats(root, ctx, params) {
   // 8 timing tags (not neutral ones such as Action)
   const tags = new Map();
   for (const c of pool) for (const t of tagsOf(c)) tags.set(t, (tags.get(t) || 0) + 1);     // counted under the canonical case
-  const tagRows = desc(tags).slice(0, 18).map(([t, v]) => ({ label: `(${t}) ${tagInfo(t).meaning}`, value: v, href: L({ tag: t }), html: badgeHtml(t) }));
+  const tagRows = desc(tags).slice(0, 18).map(([t, v]) => ({ label: `(${t}) ${tagInfo(t).meaning}`, value: v, href: L({ tag: t }), html: tagHtml(t) }));
   if (tagRows.length) charts.push(card("tags", "Timing tags", "Abilities using each tag.", hbar(tagRows, { labelWidth: 110, unit: "uses" }),
     table(["Tag", "Meaning", { label: "Uses", tip: "Times the tag appears in the abilities of cards in scope" }], desc(tags).map(([t, v]) => [`(${t})`, tagInfo(t).meaning, v]), 2),
     { tip: "Times each timing tag appears in these cards' abilities; (Action) isn't counted" }));

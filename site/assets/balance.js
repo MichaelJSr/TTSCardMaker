@@ -1,7 +1,7 @@
 // Balance: the Stats page's Balance section and each card's Balance block, from data/analytics.json (build/analytics.py).
 // Charts follow stats.js (dataviz method): thin marks, hairline grid, legends for two series, a table view for each.
 // DOM-free: every function returns HTML, every string goes through esc.
-import { esc, diffWords, badgeHtml, dateFmt, commitLink, noted } from "./text.js";
+import { esc, diffWords, tagHtml, dateFmt, commitLink, noted } from "./text.js";
 import { chartCard as card, hbar, table, stacked, fmt, trunc, cardsHref, go, svgRole } from "./stats.js";
 
 const KINDS = { creature: "creatures", minion: "minions" };
@@ -66,7 +66,7 @@ export const monthName = monthLabel;                 // app.js month= chip
 /** changes to how a card plays (analytics.py reworked): not a series, spacing or timing-tag rename alone */
 export const isRework = r => !!(r.words || r.stats || r.stars || r.kind || r.sub || r.types || r.lines);
 const runTags = run => [...run.matchAll(/\(([^()]+)\)/g)].map(m => m[1]);
-const runHtml = run => runTags(run).map(t => badgeHtml(t)).join("") || `<span class="muted">none</span>`;
+const runHtml = run => runTags(run).map(t => tagHtml(t)).join("") || `<span class="muted">none</span>`;
 
 // ---- chart pieces -------------------------------------------------------------------------------------------------
 /** items [color, label, shape?, href?]: an entry with href links to its cards */

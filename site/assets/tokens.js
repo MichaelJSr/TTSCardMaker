@@ -4,7 +4,7 @@
 // the text fields marked data-tokens (edit.js, inline.js). The same list suggests known names in the fields marked
 // data-suggest="series|subseries|author|font" (suggestNames), whose whole value is the query; a pick fires "suggest-pick".
 // Edit mode loads it (editing.js); the grid's Font box loads it for everyone (app.js loadTokens): one install either way.
-import { esc, norm, tagInfo, badgeHtml, BADGE_TAGS, VARIANT_NAMES, variantFile } from "./text.js";
+import { esc, norm, tagInfo, tagHtml, BADGE_TAGS, VARIANT_NAMES, variantFile } from "./text.js";
 
 export const MAX_TOKEN = 52;                     // text.js PIECE: [thunderfury blessed blade of the starseeker:darkglow]
 export const VARIANTS = ["tint", "sticker", "no", "glow", "darkglow"];   // the font's (AutoCroissant ICON_VARIANTS)
@@ -215,7 +215,7 @@ function place() {
   list.style.top = `${up ? at.top - h - 4 : at.bottom + 4}px`;
 }
 function rowHtml(it, i) {
-  const pic = it.plain ? "" : it.tag ? badgeHtml(it.tag).replace(/ data-tip="[^"]*"/, "") : (A.icon(it.token.slice(1, -1), { tip: false }) || "");
+  const pic = it.plain ? "" : it.tag ? tagHtml(it.tag, false) : (A.icon(it.token.slice(1, -1), { tip: false }) || "");
   const sub = it.plain ? it.note : it.note ? `${it.label} · ${it.note}` : it.label;
   return `<li id="tok-pick-${i}" role="option" aria-selected="${i === active}" data-i="${i}"${i === active ? ' class="on"' : ""}>`
     + `<span class="tp-pic" aria-hidden="true">${pic.replace(/<img /g, '<img loading="lazy" ')}</span>`

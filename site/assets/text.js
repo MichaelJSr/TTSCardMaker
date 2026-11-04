@@ -83,6 +83,68 @@ export const badgeHtml = (tag, tip = true) => {   // tip false: the note is the 
   return t ? `<span class="badge ${t.group}"${tip ? ` data-tip="${esc(`(${t.tag}) ${t.meaning}`)}"` : ""}>${esc(t.tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
 };
 
+// ---- cooldown rings (owner 2026-11-04): beside each cooldown badge, (2CD), (1/2CD), (-1/1GCD), in card and rulebook
+// text (the website's: the cards print the badge alone). X segments, zero at the top: the charge it starts with clockwise
+// in green, a start below zero counter-clockwise in red (each turn moves it one segment clockwise: the red unwinds, then
+// the green fills), each lap below zero past the first a thin red arc outside; more than 8 segments: arcs by share. In
+// the middle the turns until its first full charge (X - Y): green, red when it starts below zero; it glows when that is
+// 0 or 1 (ready on its first turn: charge comes in as a turn begins). X is dashed. Its tip says it in words.
+const RING_RIM = { turn: "#5b8ff9", any: "#a274ff" }, RING_GREEN = "#22c55e", RING_RED = "#ef4444", RING_BODY = "#1c2030", RING_LINE = "#e5e7eb";
+const arc = (r0, r1, a0, a1) => {                          // an annular sector in the ring's 22-unit box, clockwise, 0 = up
+  if (a1 - a0 > 359) return arc(r0, r1, a0, a0 + 180) + arc(r0, r1, a0 + 180, a0 + 360);
+  const P = (r, a) => `${(11 + r * Math.sin(a * Math.PI / 180)).toFixed(2)} ${(11 - r * Math.cos(a * Math.PI / 180)).toFixed(2)}`, big = a1 - a0 > 180 ? 1 : 0;
+  return `M${P(r1, a0)}A${r1} ${r1} 0 ${big} 1 ${P(r1, a1)}L${P(r0, a1)}A${r0} ${r0} 0 ${big} 0 ${P(r0, a0)}Z`;
+};
+/** The cooldown's numbers: {cap (X), start (Y), global} or null; "X" where the tag says X. */
+export function cooldownOf(typed) {
+  const t = tagInfo(typed)?.tag, m = t && (/^(-?\d+|X|Y)\/(\d+|X)(G?)CD$/.exec(t) || /^()(\d+|X)(G?)CD$/.exec(t));
+  if (!m) return null;
+  const n = v => (/^-?\d+$/.test(v) ? +v : "X");          // the chapter's family rows (Y/XCD): X
+  return { cap: n(m[2]), start: m[1] === "" ? 0 : n(m[1]), global: !!m[3] };
+}
+/** The ring in words: its tip. */
+export function ringWords({ cap, start, global }) {
+  const turn = k => `${k} ${global ? "global turn" : "turn"}${k === 1 ? "" : "s"}`, every = k => (k === 1 ? `every ${global ? "global turn" : "turn"}` : `every ${turn(k)}`);
+  if (cap === "X") return "Cooldown: X turns";
+  if (start === "X") return `Starts with X of ${turn(cap)} of charge`;
+  const wait = Math.max(0, cap - start);
+  if (wait === 0) return `Fully charged from the start, then recharges in ${turn(cap)}`;
+  if (wait === 1) return `Fully charged as its first ${global ? "global turn" : "turn"} begins, then ${every(cap)}`;
+  if (start < 0) return `Starts ${-start} below zero: first fully charged after ${turn(wait)}, then ${every(cap)}`;
+  return `First fully charged after ${turn(wait)}, then ${every(cap)}`;
+}
+/** A cooldown badge's ring (HTML), or "" for any other tag (tip false: the note is the parent's). */
+export function ringHtml(typed, tip = true) {
+  const c = cooldownOf(typed);
+  if (!c) return "";
+  const { cap, start } = c, R = 9.4, IN = 5.6, rim = RING_RIM[tagInfo(typed).group] || RING_LINE;
+  const unknown = cap === "X" || start === "X", debt = unknown ? 0 : Math.max(0, -start), have = unknown ? 0 : Math.max(0, Math.min(start, cap));
+  const wait = unknown ? "X" : Math.max(0, cap - start), red = !unknown && start < 0;
+  const open = (d, dashed = false) => `<path d="${d}" fill="none" stroke="${RING_LINE}" stroke-opacity=".85" stroke-width=".9"${dashed ? ' stroke-dasharray="1.4 1.2"' : ""}/>`;
+  let body = `<circle cx="11" cy="11" r="10.3" fill="${RING_BODY}" stroke="${rim}" stroke-width="1.3"/>`;
+  if (cap === "X") body += open(arc(IN, R, 0, 360), true);
+  else if (cap <= 8) {
+    const depth = k => (debt > k ? Math.floor((debt - 1 - k) / cap) + 1 : 0);   // laps below zero over the k-th segment counter-clockwise
+    for (let i = 0; i < cap; i++) {
+      const a0 = i * 360 / cap + 3.5, a1 = (i + 1) * 360 / cap - 3.5, d = arc(IN, R, a0, a1), deep = depth(cap - 1 - i);
+      body += start === "X" ? open(d, true) : i < have ? `<path d="${d}" fill="${RING_GREEN}"/>` : deep ? `<path d="${d}" fill="${RING_RED}"/>` : open(d);
+      for (let lap = 2; lap <= deep; lap++) body += `<path d="${arc(10.9 + (lap - 2) * 1.7, 12.15 + (lap - 2) * 1.7, a0, a1)}" fill="${RING_RED}"/>`;
+    }
+  } else {
+    body += [R, IN].map(r => `<circle cx="11" cy="11" r="${r}" fill="none" stroke="${RING_LINE}" stroke-opacity=".75" stroke-width=".8"/>`).join("");
+    if (have) body += `<path d="${arc(IN, R, 0, have / cap * 360)}" fill="${RING_GREEN}"/>`;
+    if (debt) body += `<path d="${arc(IN, R, 360 - Math.min(debt, cap) / cap * 360, 360)}" fill="${RING_RED}"/>`;
+    for (let lap = 2, left = debt - cap; left > 0; lap++, left -= cap)
+      body += `<path d="${arc(10.9 + (lap - 2) * 1.7, 12.15 + (lap - 2) * 1.7, 360 - Math.min(left, cap) / cap * 360, 360)}" fill="${RING_RED}"/>`;
+  }
+  const t = String(wait), size = t.length > 1 ? 6.9 : 8.6;
+  body += `<text x="11" y="${(11.2 + size * .36).toFixed(2)}" text-anchor="middle" font-family="system-ui,-apple-system,'Segoe UI',sans-serif" font-weight="900" font-size="${size}"${t.length > 1 ? ' letter-spacing="-.45"' : ""} fill="${red ? "#ff6b6b" : "#4ade80"}" stroke="#05070b" stroke-width="${(size * .2).toFixed(2)}" stroke-linejoin="round" paint-order="stroke">${t}</text>`;
+  const glow = !unknown && wait <= 1 ? " glow" : "";
+  return `<span class="ring${glow}"${tip ? ` data-tip="${esc(ringWords(c))}"` : ""}><svg viewBox="0 0 22 22" aria-hidden="true">${body}</svg></span>`;
+}
+/** A badge as card text draws it: a cooldown with its ring, the two kept together. */
+export const tagHtml = (typed, tip = true) => { const ring = ringHtml(typed, tip); return ring ? `<span class="cd">${ring}${badgeHtml(typed, tip)}</span>` : badgeHtml(typed, tip); };
+
 // Costs in parentheses, as the stoogedings font draws them (build_stoogedings.cost_badges, owner 2026-11-03): "(2 points)"
 // a green coin with the number on it and "Points", "(2 bricks)" a brown brick, "(2 SP)" or "(2 star points)" a yellow
 // star and "SP" (the TTS table's counters), "(4 souls)" and "(3 counters)" (a card's own currency) a teal pill; numbers
@@ -207,7 +269,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
     const pieces = [];
     for (const m of text.matchAll(PIECE)) {
       const html = !html_ ? (m[1] !== undefined ? hasIcon(m[1]) : m[3] !== undefined || !!tagInfo(m[2])) || null
-        : m[1] !== undefined ? icon(m[1]) : m[3] !== undefined ? costHtml(m[3]) : (tagInfo(m[2]) ? badgeHtml(m[2]) : null);
+        : m[1] !== undefined ? icon(m[1]) : m[3] !== undefined ? costHtml(m[3]) : (tagInfo(m[2]) ? tagHtml(m[2]) : null);
       if (html !== null) pieces.push([m.index, m[0].length, html]);
     }
     const links = [];
@@ -256,7 +318,7 @@ let iconOf = null;                                   // the last renderer's icon
 /** One piece of text as HTML: its timing tags as badges and its [tokens] as icons (a diff's words) */
 export function inlineHtml(text) {
   return String(text ?? "").replace(/\[([^\[\]\n]{1,52})\]|\((-?[0-9A-Za-z/]{2,8})\)|[^[(]+|[[(]/g, (all, token, tag) =>
-    token !== undefined ? (iconOf?.(token) ?? esc(all)) : tag !== undefined && tagInfo(tag) ? badgeHtml(tag) : esc(all));
+    token !== undefined ? (iconOf?.(token) ?? esc(all)) : tag !== undefined && tagInfo(tag) ? tagHtml(tag) : esc(all));
 }
 
 /** Plain text (tokens as words), e.g. for copying. */

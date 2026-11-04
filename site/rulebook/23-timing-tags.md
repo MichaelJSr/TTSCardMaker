@@ -32,6 +32,16 @@ Costs in parentheses are badges too, in the colours of the table's counters: (2 
 | (-1/1GCD) | Global cooldown: starts with -1 of 1 turn of charge |
 {.tags}
 
+## READING THE RING
+::: panel
+On the website and in this book, every cooldown badge has a ring on its left: one segment per turn of charge the ability needs. Zero is at the top. The cards print the badge alone.
+- **Green**, clockwise from the top: the charge it starts with, as in (1/2CD).
+- **Red**, counter-clockwise from the top: a start below zero, as in (-1/2CD). Each thin red arc outside the ring is one more lap below zero, as in (-5/2CD).
+- **Hollow:** charge still to come, as in (2CD).
+
+Each turn of charge moves the ring one segment clockwise: the red empties first, then the green fills. The number in the middle is the turns until its first full charge, red when it starts below zero. A glowing ring is fully charged on the ability's first turn: (1CD), (1/2CD), (2/2CD). Past 8 segments the ring fills by share, as in (4/12CD). Hover or tap a ring for it in words.
+:::
+
 ## FORCED
 | Tag | Meaning |
 |:---:|---|
