@@ -32,7 +32,8 @@ export function read(container) {
   return { query: root.querySelector(".pick-q").value, kinds: on("kind"), stars: on("star").map(Number) };
 }
 
-/** Render the picker into `container` (replacing its contents) and focus the search box (unless `focus` is false).
+/** Render the picker into `container` (replacing its contents) and focus the search box (unless `focus` is false; touch
+ *  screens scroll to it instead, as the keyboard would cover the cards).
  *  {cards (or a function returning them: read on each search), filter(card), onChoose(id), placeholder, tile(card, {href: false}) -> tile HTML (app.js tileHtml), kinds ([[kind, label]]), kindOf,
  *  initial: {query, kinds, stars} (read() of an earlier panel)} */
 export function mount(container, { cards, filter = null, onChoose, placeholder = "Search… (the search box's syntax)", tile, kinds = [], kindOf = c => c.type, initial = null, focus = true }) {
@@ -71,5 +72,5 @@ export function mount(container, { cards, filter = null, onChoose, placeholder =
     if (chosen) { e.preventDefault(); onChoose(chosen.dataset.choose); } else if (e.target === input) e.preventDefault();   // not the form's submit
   });
   render();
-  if (focus) input.focus();
+  if (focus) matchMedia("(pointer: coarse)").matches ? input.scrollIntoView({ block: "center" }) : input.focus();
 }
