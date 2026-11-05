@@ -68,7 +68,7 @@ export function mergeUsers(published, pending) {
   for (const [k, v] of pending) out.set(k, v);
   return [...out.values()].filter(x => x.profile).sort((a, b) => a.profile.login.localeCompare(b.profile.login, undefined, { sensitivity: "base" }));
 }
-/** The cards credited to a name, as the Author filter counts them: a duplicate counts once, hidden cards don't. */
+/** The cards credited to a name, as Stats counts them: a duplicate counts once, hidden cards don't. */
 export const cardsOf = (author, cards) => (author ? cards.filter(c => c.author === author && !c.dup && !c.hidden) : []);
 export const cardsBy = (author, cards) => cardsOf(author, cards).length;
 /** A card's creation date as epoch seconds (noon UTC of its created day), else its first upload (fs), else 0. */
@@ -103,7 +103,7 @@ const seriesFact = p => {
   const parts = [["series", p.series], ["subseries", p.subseries]].filter(([, v]) => v);
   return parts.length ? `<a class="fact" href="#/cards?${parts.map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&")}" data-tip="${p.subseries ? (p.series ? "Series › subseries" : "Subseries") : "Series"}">${esc(parts.map(([, v]) => v).join(" › "))}</a>` : "";
 };
-const authorLink = (p, cards) => { const n = cardsBy(p.author, cards); return `<a class="fact" href="#/cards?author=${encodeURIComponent(p.author)}">${n} card${n === 1 ? "" : "s"} by ${esc(p.author)}</a>`; };
+const authorLink = (p, cards) => { const n = cardsBy(p.author, cards); return `<a class="fact" href="#/cards?author=${encodeURIComponent(p.author)}&nodup=1">${n} card${n === 1 ? "" : "s"} by ${esc(p.author)}</a>`; };
 
 /** x = {login, profile | null, state, removed, own, canEdit, byId, cards, tile(card), preview?}; preview: the editor's live
  *  preview, without the buttons and the unpublished state. */
@@ -188,7 +188,7 @@ const titleChips = (key, titles) => (titles.get(key) || []).map(t => `<span clas
 export function contributionsHtml(p, x) {
   const edits = x.cards.filter(c => c.editBy && hasLogin(p, c.editBy) && editorFields(c).length).sort((a, b) => (b.editAt || "").localeCompare(a.editAt || "")).slice(0, 10);
   const facts = [
-    p.cards ? `<a class="fact" href="#/cards?author=${encodeURIComponent(p.key)}">${plural(p.cards, "card")} by ${esc(p.key)}</a>` : "",
+    p.cards ? `<a class="fact" href="#/cards?author=${encodeURIComponent(p.key)}&nodup=1">${plural(p.cards, "card")} by ${esc(p.key)}</a>` : "",
     p.edits ? `<span class="fact" data-tip="Commits to Card Edits.json: batches published on the website, or by hand">${plural(p.edits, "edit")}</span>` : "",
     p.commits ? `<span class="fact" data-tip="Commits that added or changed a card's PSD or PNG${p.first ? "; since: their first commit or edit batch" : "; moves and rulebook pages don't count"}">${plural(p.commits, "card commit")}${p.first ? ` since ${esc(x.date(p.first))}` : ""}</span>` : "",
     titleChips(p.key, x.titles),
@@ -245,7 +245,7 @@ export function cardsPanelHtml(p, x) {
   if (!own.length) return "";
   const f = cardFacts(own, { kindOf: x.kindOf, kinds: x.kinds });
   const label = k => (x.kinds.find(([key]) => key === k) || [k, k])[1];
-  const by = `author=${encodeURIComponent(p.key)}`;
+  const by = `author=${encodeURIComponent(p.key)}&nodup=1`;
   const career = careerOf(own), series = seriesOf(p.key, own, x.cards), ref = mostReferenced(own, x.mentionedBy);
   const banned = own.filter(c => x.banned?.has(c.id)).length;
   return `<div class="profile"><div class="panel"><h3>Cards <span class="muted">${own.length}</span></h3>
