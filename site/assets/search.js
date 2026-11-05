@@ -71,7 +71,8 @@ export function compile(query) {
     return c => (get(c) || "").toString().toLowerCase().includes(v);
   }
   if (q.length > 1 && q.startsWith('"') && q.endsWith('"')) {
-    const re = new RegExp(`(?:^|\\s|\\b)${escapeRe(lower.slice(1, -1))}(?:$|\\s|\\b)`);
+    const t = lower.slice(1, -1), edge = ch => (ch && /\w/.test(ch) ? "\\b" : "");   // a word's edge; a tag's ( and ) are their own
+    const re = new RegExp(`${edge(t[0])}${escapeRe(t)}${edge(t.slice(-1))}`);
     return c => re.test(haystack(c));
   }
   return c => haystack(c).includes(lower);
