@@ -113,6 +113,7 @@ a.tile { display: block; color: inherit; text-decoration: none; }   /* a tile li
   background: rgba(0,0,0,.65); color: #fff; border-color: transparent; }
 .tile:hover .add, .tile:focus-within .add, .tile .add.in { opacity: 1; }
 .tile .add.in { background: var(--accent); }
+@media (hover: none) { .tile .add:not(.in) { display: none; } }   /* touch: no unseen corner button */
 .tile .flag { position: absolute; top: 6px; left: 6px; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: rgba(0,0,0,.7); color: #fff; }
 .tile .flag.banned { background: #9b1c1c; }
 .tile .flag.unused, .fact.unused { background: #5b4a00; color: #ffe9a3; }
@@ -129,7 +130,7 @@ table.data th { color: var(--muted); font-weight: 600; position: sticky; top: 56
 table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; }
 table.data tr.row { cursor: pointer; } table.data tr.row:hover td { background: var(--surface-2); }
 table.data td img.tok { width: 18px; height: 18px; }
-table.data .thumb { width: 30px; height: 42px; object-fit: cover; border-radius: 4px; vertical-align: middle; }
+table.data .thumb { width: 30px; height: 42px; max-width: none; object-fit: cover; border-radius: 4px; vertical-align: middle; }
 
 /* ---- ability text ---- */
 .ability { white-space: normal; line-height: 1.55; }
@@ -254,6 +255,7 @@ button.ver-revert { padding: 2px 8px; font-size: 12px; color: var(--ink-2); }
 ins { background: color-mix(in srgb, var(--good) 30%, transparent); text-decoration: none; border-radius: 3px; }
 del { background: color-mix(in srgb, var(--danger) 30%, transparent); border-radius: 3px; }
 .kbd { font: 12px ui-monospace, monospace; padding: 1px 6px; border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 5px; }
+@media (pointer: coarse) { .card-actions .kbd, .bucket .kbd, #keys { display: none; } }   /* shortcut hints */
 .help-table td { padding: 4px 10px 4px 0; vertical-align: top; } .help-table code { font-size: 13px; }
 
 /* ---- tooltip / toast ---- */
@@ -285,7 +287,7 @@ summary .qn { padding: 6px 8px; margin: 0 -8px; }   /* a bigger tap target, same
 /* a chapter is a page drawn to scale, as a PDF's: its text 17px on a 1108px page (a 1400px window; 1300px at most), all
    in it in em or --rb-px (that px), so it lays out the same at any zoom or width, the editor's preview and the TTS sheets
    too (.rb-sheet: this page at 1080px); its text 9px at the least (the preview: none); a phone's 17px as ever, the page flowing */
-.rb-book { display: grid; gap: 22px; min-width: 0; width: 100%; max-width: 1300px; justify-self: center; container-type: inline-size; }
+.rb-book { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; min-width: 0; width: 100%; max-width: 1300px; justify-self: center; container-type: inline-size; }
 @property --rb-px { syntax: "<length>"; inherits: true; initial-value: 1px; }
 .rb-chapter { font-size: max(var(--rb-least, 9px), 100cqw * 17 / 1108); --rb-px: calc(1em / 17); -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
   background: var(--rb-paper); border-radius: calc(14 * var(--rb-px)); padding: calc(14 * var(--rb-px)) calc(16 * var(--rb-px)) calc(18 * var(--rb-px)); position: relative; }
@@ -345,7 +347,8 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
 .rb-col.rb-at-top-left, .rb-col.rb-at-left, .rb-col.rb-at-bottom-left { align-items: flex-start; }
 .rb-col.rb-at-top, .rb-col.rb-at-center, .rb-col.rb-at-bottom { align-items: center; }
 .rb-col.rb-at-top-right, .rb-col.rb-at-right, .rb-col.rb-at-bottom-right { align-items: flex-end; }
-@media (pointer: coarse) and (max-width: 640px) { .rb-chapter { font-size: 17px; } .rb:not(.rb-sheet) .rb-row { flex-direction: column; align-items: stretch; } .rb:not(.rb-sheet) .rb-row > .rb-col > .rb-fig { max-width: min(100%, 300px); } }   /* a phone */
+@media (pointer: coarse) and (max-width: 640px) { .rb-chapter { font-size: 17px; overflow-wrap: anywhere; } .rb-table { overflow-wrap: normal; } .rb-head h2 { font-size: 1.6em; }
+  .rb-chapter > .rb-tools { position: static; justify-content: flex-end; margin-bottom: 6px; } .rb:not(.rb-sheet) .rb-row { flex-direction: column; align-items: stretch; } .rb:not(.rb-sheet) .rb-row > .rb-col > .rb-fig { max-width: min(100%, 300px); } }   /* a phone */
 .rb-stack > * + * { margin-top: .9em; }
 .rb-fig { margin: .7em auto; text-align: center; max-width: 100%; }
 .rb-fig img { display: block; width: 100%; height: auto; margin: 0 auto; border-radius: .25em; }
@@ -399,7 +402,7 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
 .rb-table.rb-grid td { border-left: .3em solid #000; border-right: .3em solid #000; }
 .rb-table.rb-grid tbody tr:first-child td { padding-top: .5em; } .rb-table.rb-grid tbody tr:last-child td { padding-bottom: .5em; }
 .rb-table.rb-grid tbody { border-top: .3em solid #000; border-bottom: .3em solid #000; }
-.rb-red { color: #ae0000; } .rb-green { color: #00a510; } .rb-blue { color: #1a0fff; } .rb-yellow { color: #a08a00; } .rb-orange { color: #c46a00; }
+.rb-red { color: #ae0000; } .rb-green { color: #006b0a; } .rb-blue { color: #1a0fff; } .rb-yellow { color: #a08a00; } .rb-orange { color: #c46a00; }
 .rb-purple { color: #6a1fd0; } .rb-grey { color: #555; } .rb-white { color: #fff; }
 span.rb-hp { color: #10a040; } span.rb-def { color: #1a0fff; } span.rb-atk { color: #c02020; } span.rb-spd { color: #8a7a00; }
 .rb-u { text-decoration: underline; } .rb-big { font-size: 1.6em; } .rb-caps { text-transform: uppercase; } .rb-nowrap { white-space: nowrap; }
@@ -663,7 +666,7 @@ ol.bal-changes { list-style: none; padding: 0; margin: 6px 0; }
 .cl-push h3 { margin: 0 0 6px; font-size: 15px; } .cl-push h3 a { color: inherit; }
 .cl-sec h4 { margin: 10px 0 2px; font-size: 13px; color: var(--muted); font-weight: 600; }
 .cl-sec summary { cursor: pointer; color: var(--accent); font-size: 13px; margin-top: 10px; }
-ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0; font-size: 14px; }
+ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0; font-size: 14px; overflow-wrap: anywhere; }
 .cl-diff { margin: 4px 0 6px; background: var(--surface-2); border-radius: 8px; padding: 6px 10px; font-size: 14px; }
 
 @media print {
@@ -1135,7 +1138,7 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 .font-del { flex: none; width: 22px; height: 22px; padding: 0; font-size: 11px; color: var(--muted); }
 @media (pointer: coarse) { .font-del { width: 36px; height: 36px; } }
 .filters .font-any { font-size: 12px; margin: 4px 0 0; }
-@media (max-width: 860px) { .filters .font-box { font-size: 16px; } }   /* no zoom on focus (iOS) */
+@media (max-width: 860px) { input:not([type=checkbox], [type=radio], [type=range]), select, textarea { font-size: max(16px, 1em); } }   /* no zoom on focus (iOS) */
 .sel-row.x select option { color: var(--ink); text-decoration: none; }
 /* My filters: saved searches (myfilters.js); Save as filter shows while the search box has text */
 #save-filter { flex: none; white-space: nowrap; padding: 6px 10px; border-color: var(--border-strong); }
