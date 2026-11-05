@@ -243,7 +243,7 @@ export function inline(text, ctx) {
     if (g.esc) out += esc(g.esc.slice(1));
     else if (g.card !== undefined) {
       const name = g.card.trim(), c = ctx.card?.(name), label = (g.label || "").trim() || name;
-      out += g.pic ? cardHtml(name, "", ctx, "rb-card-inline") : c ? `<a class="card-ref" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}">${esc(label)}</a>` : esc(label);
+      out += g.pic ? cardHtml(name, "", ctx, "rb-card-inline") : c ? `<a class="card-ref" href="c/${encodeURIComponent(c.id)}/" data-card="${esc(c.id)}">${esc(label)}</a>` : esc(label);
     } else if (g.src !== undefined) out += imgHtml({ alt: g.alt, src: g.src, attrs: splitAttrs(g.iattrs || "").attrs }, ctx, true);
     else if (g.span !== undefined) out += `<span class="${clsOf(splitAttrs(`{${g.cls}}`).attrs, COLOURS)}">${inline(g.span, ctx)}</span>`;
     else if (g.ltext !== undefined) out += `<a href="${esc(safeUrl(g.href))}"${/^https?:/i.test(g.href) ? ' target="_blank" rel="noopener"' : ""}${g.href.startsWith("#/rules/") ? ` data-scroll="${esc(g.href.slice(8).replace(/\//g, "--"))}"` : ""}>${inline(g.ltext, ctx)}</a>`;
