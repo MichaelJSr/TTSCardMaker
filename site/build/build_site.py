@@ -3281,6 +3281,13 @@ def _badge_tags():
 
 
 BADGE_TAGS = _badge_tags()
+BADGE_FONT = "rulebook/fonts/roboto-black.woff2"   # style.css's @font-face "Roboto" url from the site root, no ?v=
+COST_RE = re.compile(r"(?<![\w.])\(((?:\d{1,2}(?:\.5)?|[Xx]) (?:points?|bricks?|SP|star points?|souls?|counters?))\)", re.I)   # text.js COST
+
+
+def has_badges(text):
+    """Whether card text draws a badge (text.js: a timing tag or a cost in parentheses): its page preloads BADGE_FONT."""
+    return bool(COST_RE.search(text)) or any(tag_info(t, {}) for t in re.findall(r"\((-?[0-9A-Za-z/]{2,8})\)", text))
 
 
 def _count(n, one):
@@ -4386,6 +4393,7 @@ def main():
         share_page(("c", c["id"]), [
             f'<meta name="card" content="{c["id"]}">',
             *([f'<link rel="preload" as="image" href="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" fetchpriority="high">'] if c.get("img") else []),   # the dialog's picture (app.js placeholderOf)
+            *([f'<link rel="preload" as="font" type="font/woff2" href="{BADGE_FONT}" crossorigin>'] if has_badges(c.get("ability") or "") else []),   # its badges' labels
             og_tags(c["name"], desc, f"{SITE_URL}/c/{c['id']}/" if SITE_URL else "", image, size, f"{c['name']} card"),
             f'<meta name="theme-color" content="{c.get("color") or "#3987e5"}">',
             f'<meta name="description" content="{html.escape(desc)}">',
