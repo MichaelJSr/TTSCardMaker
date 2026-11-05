@@ -403,7 +403,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
     const out = [];
     let last = 0;
     for (const [i, n, x] of [...pieces, ...links].sort((a, b) => a[0] - b[0])) {
-      out.push(esc(text.slice(last, i)), typeof x === "string" ? x : `<a class="card-ref" href="#/card/${x.id}" data-card="${x.id}">${esc(text.slice(i, i + n))}</a>`);
+      out.push(esc(text.slice(last, i)), typeof x === "string" ? x : `<a class="card-ref" href="c/${encodeURIComponent(x.id)}/" data-card="${x.id}">${esc(text.slice(i, i + n))}</a>`);
       last = i + n;
     }
     out.push(esc(text.slice(last)));

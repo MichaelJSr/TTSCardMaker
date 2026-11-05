@@ -372,7 +372,7 @@ function seasonsCard(pool, cur) {
   const panel = s => { const eps = episodes(s), total = of.get(s).length;
     return `<div class="ep-panel" data-season="${esc(s)}"${s === pick ? "" : " hidden"}><h4>${esc(seasonName(s))} <span class="muted">${plural(total, "card")}${s === "Movie" ? "" : ` in ${plural(eps.length, "episode")}`}</span></h4>
       <div class="ep-rows">${eps.map(([label, rs]) => `<span class="ep-name">${esc(label)}</span><span class="ep-units" aria-hidden="true">${rs.map(r => `<i style="background:${color.get(r.g)}"></i>`).join("")}<b>${rs.length}</b></span>
-        <span class="ep-cards">${rs.map(({ c }) => `<a class="card-ref" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}">${esc(c.name)}</a>`).join(", ")}</span>`).join("")}</div></div>`; };
+        <span class="ep-cards">${rs.map(({ c }) => `<a class="card-ref" href="c/${encodeURIComponent(c.id)}/" data-card="${esc(c.id)}">${esc(c.name)}</a>`).join(", ")}</span>`).join("")}</div></div>`; };
   const legend = `<div class="legend">${kinds.map(([, kl, color]) => `<span><i style="background:${color}"></i>${kl}</span>`).join("")}</div>`;
   const tableRows = seasons.flatMap(s => episodes(s).map(([label, rs]) => [seasonName(s), label, rs.map(r => r.c.name).join(", "), rs.length]));
   return card("seasons", "Cards by SpongeBob season", `${plural(rows.length, "card")} with SpongeBob art. Click a season for its episodes.`,

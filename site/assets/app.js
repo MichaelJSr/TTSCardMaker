@@ -784,7 +784,7 @@ function fillTable(tbody) {
   };
   if (rest.length) setTimeout(step);
 }
-const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td><a class="row-name" href="#/card/${c.id}" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
+const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
       <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td></tr>`;
@@ -1041,7 +1041,7 @@ function renderRules(r) {
         <div class="rb-panel rb-solo">${banned.notes.map(n => `<p>${esc(n)}</p>`).join("")}</div>
         ${banned.groups.map(g => `<section class="rb-sec"><h3 class="rb-tab">${esc(g.title)}</h3><div class="rb-panel"><div class="rb-bans">${g.entries.map(e => { const c = e.id && S.byId.get(e.id);
           return `<div class="rb-ban">${c ? `<a class="rb-card" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}" title="${esc(c.name)}"><img src="${esc(img(c, 240))}" alt="${esc(c.name)}" loading="lazy" decoding="async"></a>` : ""}
-            <b>${c ? `<a class="card-ref" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}">${esc(e.name)}</a>` : esc(e.name)}</b>${e.reason ? `<i>${esc(e.reason)}</i>` : ""}</div>`; }).join("")}</div></div></section>`).join("")}</article>` : ""}
+            <b>${c ? `<a class="card-ref" href="c/${encodeURIComponent(c.id)}/" data-card="${esc(c.id)}">${esc(e.name)}</a>` : esc(e.name)}</b>${e.reason ? `<i>${esc(e.reason)}</i>` : ""}</div>`; }).join("")}</div></div></section>`).join("")}</article>` : ""}
     </div></div>`;
   if (q) {                                               // only the blocks that hold it, highlighted
     for (const el of $$(".rb-chapter > :not(.rb-head):not(.rb-tools)", view)) if (!el.textContent.toLowerCase().includes(q)) el.classList.add("rb-hit-none");
@@ -1667,7 +1667,7 @@ document.addEventListener("click", e => {
   const go = e.target.closest(".chart a.go");             // a Stats chart's cards: the grid from its top
   if (go && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) { e.preventDefault(); S.toTop = true; location.hash = go.getAttribute("href"); return; }
   const ref = e.target.closest("a.card-ref");
-  if (ref) { e.preventDefault(); location.hash = `#/card/${ref.dataset.card}`; return; }
+  if (ref) { if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; e.preventDefault(); location.hash = `#/card/${ref.dataset.card}`; return; }   // a modifier: the browser opens its page
   const scroll = e.target.closest("[data-scroll]");
   if (scroll) {                                          // a rulebook page's link: its #/rules/<id> in the address bar too
     e.preventDefault(); document.getElementById(scroll.dataset.scroll)?.scrollIntoView({ behavior: "smooth" });

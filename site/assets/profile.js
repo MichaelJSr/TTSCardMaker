@@ -381,7 +381,7 @@ export function ranksOf(person, people, words = new Map()) {
 // ---- person stats: panels (each "" without its data, so an old contributions.json renders as before) -------------
 const sign = (v, dp = 1) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v).toFixed(dp)}`;
 const pct = v => `${Math.round(v * 100)}%`;
-const cardA = (x, id) => { const c = x.byId?.get(id); return c ? `<a class="card-ref" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}">${esc(c.name)}</a>` : esc(id); };
+const cardA = (x, id) => { const c = x.byId?.get(id); return c ? `<a class="card-ref" href="c/${encodeURIComponent(c.id)}/" data-card="${esc(c.id)}">${esc(c.name)}</a>` : esc(id); };
 const personA = name => `<a href="#/u/${encodeURIComponent(name)}">${esc(name)}</a>`;
 const panel = (h, body) => `<div class="profile"><div class="panel"><h3>${h}</h3>${body}</div></div>`;
 const STRIP_MAX = 3;
