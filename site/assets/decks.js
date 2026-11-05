@@ -235,7 +235,7 @@ export function handHtml(d, ctx, bad = new Set()) {
   d = hand(d); ctx = obj(ctx); bad = bad instanceof Set ? bad : new Set();
   const cards = d.cards.map(id => cardOf(ctx, id)).filter(Boolean);
   const gone = d.cards.filter(id => !cardOf(ctx, id)).length;
-  const slot = c => `<div class="slot filled${bad.has(c.id) ? " bad" : ""}" data-open="${esc(c.id)}" title="${esc(c.name)}">${c.img ? `<img loading="lazy" decoding="async" src="${esc(ctx.img(c, 240))}" alt="${esc(c.name)}">` : ""}<span class="slot-name">${esc(c.name)}</span></div>`;
+  const slot = c => `<div class="slot filled${bad.has(c.id) ? " bad" : ""}" data-open="${esc(c.id)}" title="${esc(c.name)}">${c.img ? `<img loading="lazy" decoding="async" src="${esc(ctx.img(c, 240))}" alt="${esc(c.name)}">` : ""}<a class="slot-name" href="c/${encodeURIComponent(c.id)}/" data-open="${esc(c.id)}">${esc(c.name)}</a></div>`;
   const group = (title, list, of, tip = "") => (list.length ? `<div class="tier-title"><span>${esc(title)}</span><span class="muted">${noted(`${list.length}${of ? ` / ${of}` : ""}`, tip)}</span></div><div class="slots">${list.map(slot).join("")}</div>` : "");
   const f = cardOf(ctx, d.field), stray = cards.filter(c => !HAND.some(g => g.kind === c.type)).sort(byStars);
   return `${HAND.map(g => group(g.label, cards.filter(c => c.type === g.kind).sort(byStars), g.tiers.reduce((s, [, n]) => s + n, 0), "Cards of this kind in the hand, of the number a starting hand holds")).join("")}

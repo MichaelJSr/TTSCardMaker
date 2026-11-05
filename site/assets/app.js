@@ -1132,7 +1132,7 @@ function renderDeck(r) {
   const readOnly = !!S.shared;
   const v = D.validate(d, S.byId, S.banned);
   const slot = (c, label, tier) => c
-    ? `<div class="slot filled${v.badCards.has(c.id) ? " bad" : ""}" data-open="${c.id}" title="${esc(c.name)}">${c.img ? `<img loading="lazy" decoding="async" ${imgAttrs(c, 130)} alt="${esc(c.name)}">` : ""}<span class="slot-name">${esc(c.name)}</span>${readOnly ? "" : `<button type="button" class="x" data-action="deck-remove" data-id="${c.id}" aria-label="Remove ${esc(c.name)}">✕</button>`}</div>`
+    ? `<div class="slot filled${v.badCards.has(c.id) ? " bad" : ""}" data-open="${c.id}" title="${esc(c.name)}">${c.img ? `<img loading="lazy" decoding="async" ${imgAttrs(c, 130)} alt="${esc(c.name)}">` : ""}<a class="slot-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${readOnly ? "" : `<button type="button" class="x" data-action="deck-remove" data-id="${c.id}" aria-label="Remove ${esc(c.name)}">✕</button>`}</div>`
     : `<button type="button" class="slot" data-action="pick" data-tier="${tier}" ${readOnly ? "disabled" : ""}>+ ${esc(label)}</button>`;
   const cards = d.cards.map(id => S.byId.get(id)).filter(Boolean);
   const groups = D.HAND.map(g => `<div class="tier-title"><span>${g.label}</span><span class="muted">${cards.filter(c => c.type === g.kind).length} / ${g.tiers.reduce((s, [, n]) => s + n, 0)}</span></div>
