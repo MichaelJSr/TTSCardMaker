@@ -1,7 +1,7 @@
 {
  "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
  "pdf": "Rulebook.pdf",
- "key": "43ef631b1f5f56c49f374800359d54f11718bf98a69daf6b602c3e5e4293eaf0",
+ "key": "ffcc639e6140a3caaddac3d76792be4cee0e8b29cb00acfb3cf40750a89a5733",
  "pages": [
   {
    "name": "Cover",
@@ -17,7 +17,7 @@
   {
    "name": "Getting Started",
    "num": "1",
-   "sha": "5d188643c260bc505119e0e861f221ae663bd1adf3c881a88d24e83c59ceca7f",
+   "sha": "f9fbf469977bc57c97bb1e37cb15226613f36fad9d5cb8d773e772cace34d2b6",
    "t": "GETTING STARTED WELCOME TO IMPOSSIBILITY SIM! Thank you so much for playing! We're very happy to have you with us today. This handy little book will run through the rules to get you started with our little card game. We hope you have fun! TO WIN: Defeat all of your opponent's creatures, while making sure they don't defeat all of yours! Players accomplish this by using their own CREATURES and ITEMS to attack and protect. CREATURES: This game lives and breathes by them. Defeat your opponent's while protecting your own. Above all else, make sure to follow the “Don't be stupid” rule! While reading is helpful, this card game can often seem like it gets complicated, fast. Rather than trying to memorize all of the mechanics and concepts before your first game, it is both encouraged and expected to jump straight into a test match against an experienced player. Make sure to ask questions about mechanics and interactions that are unclear. This game is still in beta and is always being tested, so your feedback is highly appreciated! 1"
   },
   {
@@ -239,7 +239,7 @@
   {
    "name": "Status Effects 2",
    "num": "19.2",
-   "sha": "f004ea3ba32fae89231214493982d2221be78ea50533c3eee2a0c351fad55e46",
+   "sha": "4483b73429e8e5057fd69f795378a3bfb0c858633020ca4d5750b1586c22e5e0",
    "t": "STATUS EFFECTS 2 SYNTAX Statuses are formatted like \"[X]T[Y] [Status]\", where X is duration and Y is stacks. For example, \"5T1 Poison\" means 5 turns of 1 stack of Poison. TYPES Standard status effects can only have one instance of themselves applied to a single creature. Stacking status effects can have any number of themselves applied. This buff can be applied many times to gain as many stacks of it to gain alot of speed. 10 stacks = +10 SPD. This debuff cannot be applied more than once. DURATION When a status effect is stacked/upgraded/reapplied, set the duration to the longest lasting of the applications. UPGRADABLE Certain status effects upgrade themselves when applied, Ex: Smouldering + Smouldering -> Burning Smouldering/Burning + Burning -> Blazing Chilled + Chilled -> Frostbite Chilled/Frostbite + Frostbite -> 1 turn of Frozen Sickness + Sickness -> Plague A creature already inflicted by Frozen/Blazing/Plague can't have the prior debuffs reapplied onto them, except to refresh the duration (need to upgrade to refresh duration). → → → → → 19.2"
   },
   {

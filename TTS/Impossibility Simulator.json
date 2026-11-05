@@ -5702,7 +5702,7 @@
           "Type": 0
         },
         "564": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -5747,7 +5747,7 @@
           "Type": 0
         },
         "596": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -6389,7 +6389,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "564": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -6679,7 +6679,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "596": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -19862,7 +19862,7 @@
               "Type": 0
             },
             "1630": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Items/Equip/3%20Stars/Deep_Focus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/3%20Stars/Deep_Focus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -20314,7 +20314,7 @@
               "SidewaysCard": false,
               "CustomDeck": {
                 "1630": {
-                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Items/Equip/3%20Stars/Deep_Focus.png",
+                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/3%20Stars/Deep_Focus.png",
                   "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
                   "NumWidth": 1,
                   "NumHeight": 1,
@@ -21580,7 +21580,7 @@
               "Type": 0
             },
             "1665": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -22566,7 +22566,7 @@
               "SidewaysCard": false,
               "CustomDeck": {
                 "1665": {
-                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
                   "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
                   "NumWidth": 1,
                   "NumHeight": 1,
@@ -26722,7 +26722,7 @@
           "Type": 0
         },
         "1061": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Items/Negation/4%20Stars/Golden_Metronome.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Negation/4%20Stars/Golden_Metronome.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -26812,7 +26812,7 @@
           "Type": 0
         },
         "603": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Items/Active/4%20Stars/Pandamonium.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Active/4%20Stars/Pandamonium.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -27022,7 +27022,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1061": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Items/Negation/4%20Stars/Golden_Metronome.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Negation/4%20Stars/Golden_Metronome.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -27602,7 +27602,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "603": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Items/Active/4%20Stars/Pandamonium.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Active/4%20Stars/Pandamonium.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -28080,7 +28080,7 @@
           "Type": 0
         },
         "314": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/4%20Stars/Mari.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -28260,7 +28260,7 @@
           "Type": 0
         },
         "266": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -28341,7 +28341,7 @@
           "Type": 0
         },
         "258": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -28359,7 +28359,7 @@
           "Type": 0
         },
         "267": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Meta_Knight.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Meta_Knight.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -28703,7 +28703,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "314": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/4%20Stars/Mari.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -29863,7 +29863,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "266": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -30385,7 +30385,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "258": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -30501,7 +30501,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "267": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Meta_Knight.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Meta_Knight.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -30954,7 +30954,7 @@
           "Type": 0
         },
         "320": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/5%20Stars/Omori.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/5%20Stars/Omori.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -31026,7 +31026,7 @@
           "Type": 0
         },
         "278": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -31053,7 +31053,7 @@
           "Type": 0
         },
         "284": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/5%20Stars/Zero_Two.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Zero_Two.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -31335,7 +31335,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "320": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/5%20Stars/Omori.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/5%20Stars/Omori.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -31799,7 +31799,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "278": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -31973,7 +31973,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "284": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/5%20Stars/Zero_Two.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Zero_Two.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -33183,7 +33183,7 @@
           "Type": 0
         },
         "1107": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -37181,7 +37181,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1107": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -37239,7 +37239,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1107": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -41020,7 +41020,7 @@
           "Type": 0
         },
         "564": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -41065,7 +41065,7 @@
           "Type": 0
         },
         "596": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -41707,7 +41707,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "564": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -41997,7 +41997,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "596": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -45437,7 +45437,7 @@
           "Type": 0
         },
         "564": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -45482,7 +45482,7 @@
           "Type": 0
         },
         "596": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -46124,7 +46124,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "564": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Withering.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -46414,7 +46414,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "596": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -50418,7 +50418,7 @@
           "Type": 0
         },
         "1107": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -55340,7 +55340,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1107": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -55398,7 +55398,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1107": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -59227,7 +59227,7 @@
           "Type": 0
         },
         "873": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Items/Equip/3%20Stars/Deep_Focus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/3%20Stars/Deep_Focus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -63106,7 +63106,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "873": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Items/Equip/3%20Stars/Deep_Focus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/3%20Stars/Deep_Focus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -64705,7 +64705,7 @@
       ],
       "CustomDeck": {
         "603": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Items/Active/4%20Stars/Pandamonium.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Active/4%20Stars/Pandamonium.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -64885,7 +64885,7 @@
           "Type": 0
         },
         "1061": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Items/Negation/4%20Stars/Golden_Metronome.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Negation/4%20Stars/Golden_Metronome.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -65024,7 +65024,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "603": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Items/Active/4%20Stars/Pandamonium.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Active/4%20Stars/Pandamonium.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -66184,7 +66184,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1061": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Items/Negation/4%20Stars/Golden_Metronome.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Negation/4%20Stars/Golden_Metronome.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -66820,7 +66820,7 @@
           "Type": 0
         },
         "1054": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/N.M.E/The_Claw.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/N.M.E/The_Claw.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -67250,7 +67250,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1054": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/N.M.E/The_Claw.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/N.M.E/The_Claw.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -68678,7 +68678,7 @@
           "Type": 0
         },
         "1569": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69258,7 +69258,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1569": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -69340,7 +69340,7 @@
           "Type": 0
         },
         "181": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7460688bb9eb5979fdf78631550a9de7d9048e92/Field/3%20Stars/Nebulous_Precipice.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/3%20Stars/Nebulous_Precipice.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69546,7 +69546,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "181": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7460688bb9eb5979fdf78631550a9de7d9048e92/Field/3%20Stars/Nebulous_Precipice.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/3%20Stars/Nebulous_Precipice.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -70205,7 +70205,7 @@
       ],
       "CustomDeck": {
         "756": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/2%20Stars/Hooktail_Castle.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/2%20Stars/Hooktail_Castle.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70349,7 +70349,7 @@
           "Type": 0
         },
         "1496": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/The_Core.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/2%20Stars/The_Core.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70416,7 +70416,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "756": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/2%20Stars/Hooktail_Castle.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/2%20Stars/Hooktail_Castle.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -71344,7 +71344,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1496": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/The_Core.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/2%20Stars/The_Core.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -72343,7 +72343,7 @@
           "Type": 0
         },
         "833": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Isaac/2%20Stars/Tainted_Lost.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Isaac/2%20Stars/Tainted_Lost.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -72514,7 +72514,7 @@
           "Type": 0
         },
         "1426": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Mario/2%20Stars/Ms_Mowz.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/2%20Stars/Ms_Mowz.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -73728,7 +73728,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "833": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Isaac/2%20Stars/Tainted_Lost.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Isaac/2%20Stars/Tainted_Lost.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -74830,7 +74830,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1426": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Mario/2%20Stars/Ms_Mowz.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/2%20Stars/Ms_Mowz.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75275,7 +75275,7 @@
           "Type": 0
         },
         "1426": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Mario/2%20Stars/Ms_Mowz.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/2%20Stars/Ms_Mowz.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -75584,7 +75584,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1426": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Mario/2%20Stars/Ms_Mowz.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/2%20Stars/Ms_Mowz.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -76618,7 +76618,7 @@
       ],
       "CustomDeck": {
         "779": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1cb63d11095aca6e34393d1e5da01e7861790621/Creatures/Kirby/3%20Stars/Taranza.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Taranza.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76654,7 +76654,7 @@
           "Type": 0
         },
         "192": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/DST/3%20Stars/Wigfrid.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76663,7 +76663,7 @@
           "Type": 0
         },
         "232": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/3%20Stars/Computer_Virus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Computer_Virus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76672,7 +76672,7 @@
           "Type": 0
         },
         "307": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76735,7 +76735,7 @@
           "Type": 0
         },
         "253": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/3%20Stars/Skullord.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Skullord.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76780,7 +76780,7 @@
           "Type": 0
         },
         "190": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b9ab34c781687debffea9d4cdde38d1e8b75e21d/Creatures/DST/3%20Stars/Waxwell.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Waxwell.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76807,7 +76807,7 @@
           "Type": 0
         },
         "245": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/3%20Stars/Kracko.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Kracko.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76978,7 +76978,7 @@
           "Type": 0
         },
         "204": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Fnaf/3%20Stars/Mangle.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Fnaf/3%20Stars/Mangle.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77032,7 +77032,7 @@
           "Type": 0
         },
         "219": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Creatures/Hollow%20Knight/3%20Stars/Mantis_Lords.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/3%20Stars/Mantis_Lords.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77095,7 +77095,7 @@
           "Type": 0
         },
         "357": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Undertale/3%20Stars/Papyrus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/3%20Stars/Papyrus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77158,7 +77158,7 @@
           "Type": 0
         },
         "239": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77185,7 +77185,7 @@
           "Type": 0
         },
         "205": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Fnaf/3%20Stars/Toy_Bonnie.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Fnaf/3%20Stars/Toy_Bonnie.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77221,7 +77221,7 @@
           "Type": 0
         },
         "888": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/DST/3%20Stars/Moose_Goose.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/DST/3%20Stars/Moose_Goose.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77284,7 +77284,7 @@
           "Type": 0
         },
         "958": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Other/3%20Stars/Elmadan.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/3%20Stars/Elmadan.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77428,7 +77428,7 @@
           "Type": 0
         },
         "349": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77446,7 +77446,7 @@
           "Type": 0
         },
         "1432": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77500,7 +77500,7 @@
           "Type": 0
         },
         "1513": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Creatures/DST/3%20Stars/WX-78.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/DST/3%20Stars/WX-78.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77594,7 +77594,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "779": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1cb63d11095aca6e34393d1e5da01e7861790621/Creatures/Kirby/3%20Stars/Taranza.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Taranza.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -77826,7 +77826,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "192": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/DST/3%20Stars/Wigfrid.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -77884,7 +77884,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "232": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/3%20Stars/Computer_Virus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Computer_Virus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -77942,7 +77942,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "307": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -78348,7 +78348,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "253": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/3%20Stars/Skullord.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Skullord.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -78638,7 +78638,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "190": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b9ab34c781687debffea9d4cdde38d1e8b75e21d/Creatures/DST/3%20Stars/Waxwell.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Waxwell.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -78812,7 +78812,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "245": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/3%20Stars/Kracko.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Kracko.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -79914,7 +79914,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "204": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Fnaf/3%20Stars/Mangle.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Fnaf/3%20Stars/Mangle.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -80262,7 +80262,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "219": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Creatures/Hollow%20Knight/3%20Stars/Mantis_Lords.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/3%20Stars/Mantis_Lords.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -80668,7 +80668,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "357": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Undertale/3%20Stars/Papyrus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/3%20Stars/Papyrus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -81074,7 +81074,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "239": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -81248,7 +81248,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "205": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Fnaf/3%20Stars/Toy_Bonnie.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Fnaf/3%20Stars/Toy_Bonnie.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -81480,7 +81480,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "888": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/DST/3%20Stars/Moose_Goose.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/DST/3%20Stars/Moose_Goose.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -81886,7 +81886,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "958": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Other/3%20Stars/Elmadan.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/3%20Stars/Elmadan.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -82814,7 +82814,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "349": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -82930,7 +82930,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1432": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83278,7 +83278,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1513": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Creatures/DST/3%20Stars/WX-78.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/DST/3%20Stars/WX-78.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83601,7 +83601,7 @@
           "Type": 0
         },
         "1432": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -83700,7 +83700,7 @@
           "Type": 0
         },
         "958": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Other/3%20Stars/Elmadan.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/3%20Stars/Elmadan.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -83888,7 +83888,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1432": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -84526,7 +84526,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "958": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Other/3%20Stars/Elmadan.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/3%20Stars/Elmadan.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -85100,7 +85100,7 @@
           "Type": 0
         },
         "239": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -85208,7 +85208,7 @@
           "Type": 0
         },
         "245": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/3%20Stars/Kracko.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Kracko.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -85494,7 +85494,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "239": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -86190,7 +86190,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "245": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/3%20Stars/Kracko.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Kracko.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -86746,7 +86746,7 @@
           "Type": 0
         },
         "267": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Meta_Knight.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Meta_Knight.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -86755,7 +86755,7 @@
           "Type": 0
         },
         "266": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -86800,7 +86800,7 @@
           "Type": 0
         },
         "258": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -86971,7 +86971,7 @@
           "Type": 0
         },
         "225": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Creatures/Hollow%20Knight/4%20Stars/Soul_Master.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/4%20Stars/Soul_Master.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -86998,7 +86998,7 @@
           "Type": 0
         },
         "259": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/4%20Stars/Dark_Mind.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Mind.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -87142,7 +87142,7 @@
           "Type": 0
         },
         "316": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/4%20Stars/Thalassophobia.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Thalassophobia.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -87160,7 +87160,7 @@
           "Type": 0
         },
         "314": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/4%20Stars/Mari.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -87214,7 +87214,7 @@
           "Type": 0
         },
         "296": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Mario/4%20Stars/Crystal_King.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -87926,7 +87926,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "267": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Meta_Knight.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Meta_Knight.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -87984,7 +87984,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "266": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -88274,7 +88274,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "258": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -89376,7 +89376,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "225": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Creatures/Hollow%20Knight/4%20Stars/Soul_Master.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/4%20Stars/Soul_Master.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -89550,7 +89550,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "259": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/4%20Stars/Dark_Mind.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Mind.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -90478,7 +90478,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "316": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/4%20Stars/Thalassophobia.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Thalassophobia.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -90594,7 +90594,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "314": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/4%20Stars/Mari.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -90942,7 +90942,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "296": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Mario/4%20Stars/Crystal_King.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -94049,7 +94049,7 @@
           "Type": 0
         },
         "296": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Mario/4%20Stars/Crystal_King.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -94175,7 +94175,7 @@
           "Type": 0
         },
         "258": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -94568,7 +94568,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "296": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Mario/4%20Stars/Crystal_King.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -95380,7 +95380,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "258": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -95823,7 +95823,7 @@
           "Type": 0
         },
         "284": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/5%20Stars/Zero_Two.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Zero_Two.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -95868,7 +95868,7 @@
           "Type": 0
         },
         "278": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -95877,7 +95877,7 @@
           "Type": 0
         },
         "277": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/383fd2edfcce3b233eb4f876aaa4601a47b9bf93/Creatures/Kirby/5%20Stars/Marx.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Marx.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -96030,7 +96030,7 @@
           "Type": 0
         },
         "320": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/5%20Stars/Omori.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/5%20Stars/Omori.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -96174,7 +96174,7 @@
           "Type": 0
         },
         "960": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Other/5%20Stars/Leshy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/5%20Stars/Leshy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -96192,7 +96192,7 @@
           "Type": 0
         },
         "1028": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -96228,7 +96228,7 @@
           "Type": 0
         },
         "898": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Undertale/5%20Stars/Sans.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/5%20Stars/Sans.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -96572,7 +96572,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "284": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/5%20Stars/Zero_Two.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Zero_Two.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -96862,7 +96862,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "278": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -96920,7 +96920,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "277": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/383fd2edfcce3b233eb4f876aaa4601a47b9bf93/Creatures/Kirby/5%20Stars/Marx.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Marx.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -97906,7 +97906,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "320": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/5%20Stars/Omori.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/5%20Stars/Omori.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -98834,7 +98834,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "960": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Other/5%20Stars/Leshy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/5%20Stars/Leshy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -98950,7 +98950,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1028": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -99182,7 +99182,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "898": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Undertale/5%20Stars/Sans.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/5%20Stars/Sans.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -99632,7 +99632,7 @@
           "Type": 0
         },
         "898": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Undertale/5%20Stars/Sans.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/5%20Stars/Sans.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -99641,7 +99641,7 @@
           "Type": 0
         },
         "1028": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -99659,7 +99659,7 @@
           "Type": 0
         },
         "960": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Other/5%20Stars/Leshy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/5%20Stars/Leshy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -99704,7 +99704,7 @@
           "Type": 0
         },
         "277": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/383fd2edfcce3b233eb4f876aaa4601a47b9bf93/Creatures/Kirby/5%20Stars/Marx.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Marx.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -99954,7 +99954,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "898": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Undertale/5%20Stars/Sans.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/5%20Stars/Sans.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100012,7 +100012,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1028": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100128,7 +100128,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "960": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Other/5%20Stars/Leshy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/5%20Stars/Leshy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100418,7 +100418,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "277": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/383fd2edfcce3b233eb4f876aaa4601a47b9bf93/Creatures/Kirby/5%20Stars/Marx.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Marx.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100811,7 +100811,7 @@
           "Type": 0
         },
         "833": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Isaac/2%20Stars/Tainted_Lost.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Isaac/2%20Stars/Tainted_Lost.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -100982,7 +100982,7 @@
           "Type": 0
         },
         "1426": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Mario/2%20Stars/Ms_Mowz.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/2%20Stars/Ms_Mowz.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -102196,7 +102196,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "833": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Isaac/2%20Stars/Tainted_Lost.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Isaac/2%20Stars/Tainted_Lost.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -103298,7 +103298,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1426": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Mario/2%20Stars/Ms_Mowz.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/2%20Stars/Ms_Mowz.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -103810,7 +103810,7 @@
       ],
       "CustomDeck": {
         "779": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1cb63d11095aca6e34393d1e5da01e7861790621/Creatures/Kirby/3%20Stars/Taranza.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Taranza.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -103846,7 +103846,7 @@
           "Type": 0
         },
         "192": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/DST/3%20Stars/Wigfrid.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -103855,7 +103855,7 @@
           "Type": 0
         },
         "232": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/3%20Stars/Computer_Virus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Computer_Virus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -103864,7 +103864,7 @@
           "Type": 0
         },
         "307": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -103927,7 +103927,7 @@
           "Type": 0
         },
         "253": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/3%20Stars/Skullord.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Skullord.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -103972,7 +103972,7 @@
           "Type": 0
         },
         "190": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b9ab34c781687debffea9d4cdde38d1e8b75e21d/Creatures/DST/3%20Stars/Waxwell.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Waxwell.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -103999,7 +103999,7 @@
           "Type": 0
         },
         "245": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/3%20Stars/Kracko.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Kracko.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104170,7 +104170,7 @@
           "Type": 0
         },
         "204": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Fnaf/3%20Stars/Mangle.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Fnaf/3%20Stars/Mangle.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104224,7 +104224,7 @@
           "Type": 0
         },
         "219": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Creatures/Hollow%20Knight/3%20Stars/Mantis_Lords.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/3%20Stars/Mantis_Lords.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104287,7 +104287,7 @@
           "Type": 0
         },
         "357": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Undertale/3%20Stars/Papyrus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/3%20Stars/Papyrus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104350,7 +104350,7 @@
           "Type": 0
         },
         "239": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104377,7 +104377,7 @@
           "Type": 0
         },
         "205": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Fnaf/3%20Stars/Toy_Bonnie.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Fnaf/3%20Stars/Toy_Bonnie.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104413,7 +104413,7 @@
           "Type": 0
         },
         "888": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/DST/3%20Stars/Moose_Goose.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/DST/3%20Stars/Moose_Goose.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104476,7 +104476,7 @@
           "Type": 0
         },
         "958": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Other/3%20Stars/Elmadan.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/3%20Stars/Elmadan.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104620,7 +104620,7 @@
           "Type": 0
         },
         "349": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104638,7 +104638,7 @@
           "Type": 0
         },
         "1432": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104692,7 +104692,7 @@
           "Type": 0
         },
         "1513": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Creatures/DST/3%20Stars/WX-78.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/DST/3%20Stars/WX-78.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104786,7 +104786,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "779": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1cb63d11095aca6e34393d1e5da01e7861790621/Creatures/Kirby/3%20Stars/Taranza.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Taranza.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -105018,7 +105018,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "192": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/DST/3%20Stars/Wigfrid.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -105076,7 +105076,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "232": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/3%20Stars/Computer_Virus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Computer_Virus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -105134,7 +105134,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "307": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -105540,7 +105540,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "253": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/3%20Stars/Skullord.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Skullord.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -105830,7 +105830,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "190": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b9ab34c781687debffea9d4cdde38d1e8b75e21d/Creatures/DST/3%20Stars/Waxwell.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Waxwell.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -106004,7 +106004,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "245": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/3%20Stars/Kracko.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Kracko.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107106,7 +107106,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "204": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Fnaf/3%20Stars/Mangle.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Fnaf/3%20Stars/Mangle.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107454,7 +107454,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "219": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Creatures/Hollow%20Knight/3%20Stars/Mantis_Lords.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/3%20Stars/Mantis_Lords.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107860,7 +107860,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "357": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Undertale/3%20Stars/Papyrus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/3%20Stars/Papyrus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108266,7 +108266,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "239": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108440,7 +108440,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "205": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Fnaf/3%20Stars/Toy_Bonnie.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Fnaf/3%20Stars/Toy_Bonnie.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108672,7 +108672,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "888": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/DST/3%20Stars/Moose_Goose.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/DST/3%20Stars/Moose_Goose.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -109078,7 +109078,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "958": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Other/3%20Stars/Elmadan.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/3%20Stars/Elmadan.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -110006,7 +110006,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "349": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -110122,7 +110122,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1432": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/3%20Stars/The_Beast.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -110470,7 +110470,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1513": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Creatures/DST/3%20Stars/WX-78.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/DST/3%20Stars/WX-78.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -110910,7 +110910,7 @@
           "Type": 0
         },
         "267": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Meta_Knight.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Meta_Knight.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110919,7 +110919,7 @@
           "Type": 0
         },
         "266": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110964,7 +110964,7 @@
           "Type": 0
         },
         "258": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -111135,7 +111135,7 @@
           "Type": 0
         },
         "225": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Creatures/Hollow%20Knight/4%20Stars/Soul_Master.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/4%20Stars/Soul_Master.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -111162,7 +111162,7 @@
           "Type": 0
         },
         "259": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/4%20Stars/Dark_Mind.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Mind.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -111306,7 +111306,7 @@
           "Type": 0
         },
         "316": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/4%20Stars/Thalassophobia.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Thalassophobia.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -111324,7 +111324,7 @@
           "Type": 0
         },
         "314": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/4%20Stars/Mari.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -111378,7 +111378,7 @@
           "Type": 0
         },
         "296": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Mario/4%20Stars/Crystal_King.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -112090,7 +112090,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "267": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Meta_Knight.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Meta_Knight.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -112148,7 +112148,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "266": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Lor_Starcutter.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -112438,7 +112438,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "258": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Daroach.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -113540,7 +113540,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "225": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Creatures/Hollow%20Knight/4%20Stars/Soul_Master.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Hollow%20Knight/4%20Stars/Soul_Master.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -113714,7 +113714,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "259": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/4%20Stars/Dark_Mind.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/4%20Stars/Dark_Mind.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -114642,7 +114642,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "316": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/4%20Stars/Thalassophobia.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Thalassophobia.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -114758,7 +114758,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "314": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/4%20Stars/Mari.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -115106,7 +115106,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "296": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Creatures/Mario/4%20Stars/Crystal_King.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -117231,7 +117231,7 @@
           "Type": 0
         },
         "284": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/5%20Stars/Zero_Two.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Zero_Two.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -117276,7 +117276,7 @@
           "Type": 0
         },
         "278": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -117285,7 +117285,7 @@
           "Type": 0
         },
         "277": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/383fd2edfcce3b233eb4f876aaa4601a47b9bf93/Creatures/Kirby/5%20Stars/Marx.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Marx.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -117438,7 +117438,7 @@
           "Type": 0
         },
         "320": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/5%20Stars/Omori.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/5%20Stars/Omori.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -117582,7 +117582,7 @@
           "Type": 0
         },
         "960": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Other/5%20Stars/Leshy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/5%20Stars/Leshy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -117600,7 +117600,7 @@
           "Type": 0
         },
         "1028": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -117636,7 +117636,7 @@
           "Type": 0
         },
         "898": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Undertale/5%20Stars/Sans.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/5%20Stars/Sans.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -117980,7 +117980,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "284": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/5%20Stars/Zero_Two.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Zero_Two.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -118270,7 +118270,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "278": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Masked_Dedede.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -118328,7 +118328,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "277": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/383fd2edfcce3b233eb4f876aaa4601a47b9bf93/Creatures/Kirby/5%20Stars/Marx.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/5%20Stars/Marx.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -119314,7 +119314,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "320": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/5%20Stars/Omori.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/5%20Stars/Omori.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -120242,7 +120242,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "960": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Creatures/Other/5%20Stars/Leshy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/5%20Stars/Leshy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -120358,7 +120358,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1028": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Cuphead/5%20Stars/Chef_Saltbaker.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -120590,7 +120590,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "898": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Undertale/5%20Stars/Sans.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/5%20Stars/Sans.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -124159,7 +124159,7 @@
           "Type": 0
         },
         "1107": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -129081,7 +129081,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1107": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -129139,7 +129139,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1107": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/32039569e4f7e74e0560cceb5a6f1a15c593d881/Items/Equip/2%20Stars/Tomorrow_I'll.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/2%20Stars/Tomorrow_I'll.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -130390,7 +130390,7 @@
           "Type": 0
         },
         "873": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Items/Equip/3%20Stars/Deep_Focus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/3%20Stars/Deep_Focus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -134269,7 +134269,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "873": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Items/Equip/3%20Stars/Deep_Focus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/3%20Stars/Deep_Focus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -135868,7 +135868,7 @@
       ],
       "CustomDeck": {
         "603": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Items/Active/4%20Stars/Pandamonium.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Active/4%20Stars/Pandamonium.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -136048,7 +136048,7 @@
           "Type": 0
         },
         "1061": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Items/Negation/4%20Stars/Golden_Metronome.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Negation/4%20Stars/Golden_Metronome.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -136187,7 +136187,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "603": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/218a122dff17949c6c2c86f04e7fb10d82c1b975/Items/Active/4%20Stars/Pandamonium.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Active/4%20Stars/Pandamonium.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -137347,7 +137347,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1061": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Items/Negation/4%20Stars/Golden_Metronome.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Negation/4%20Stars/Golden_Metronome.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -137983,7 +137983,7 @@
           "Type": 0
         },
         "1054": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/N.M.E/The_Claw.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/N.M.E/The_Claw.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -138413,7 +138413,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1054": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/N.M.E/The_Claw.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/N.M.E/The_Claw.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -140432,7 +140432,7 @@
       ],
       "CustomDeck": {
         "756": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/2%20Stars/Hooktail_Castle.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/2%20Stars/Hooktail_Castle.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -140576,7 +140576,7 @@
           "Type": 0
         },
         "1496": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/The_Core.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/2%20Stars/The_Core.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -140643,7 +140643,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "756": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Field/2%20Stars/Hooktail_Castle.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/2%20Stars/Hooktail_Castle.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -141571,7 +141571,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1496": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f5bbcd45d46dada1b0fbf79925c680c969396fd0/Field/2%20Stars/The_Core.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/2%20Stars/The_Core.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -141711,7 +141711,7 @@
           "Type": 0
         },
         "181": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7460688bb9eb5979fdf78631550a9de7d9048e92/Field/3%20Stars/Nebulous_Precipice.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/3%20Stars/Nebulous_Precipice.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -141917,7 +141917,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "181": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7460688bb9eb5979fdf78631550a9de7d9048e92/Field/3%20Stars/Nebulous_Precipice.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/3%20Stars/Nebulous_Precipice.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -142649,7 +142649,7 @@
           "Type": 0
         },
         "1569": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -143229,7 +143229,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1569": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Field/4%20Stars/The_Gates_of_Ahn'Qiraj.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -143521,7 +143521,7 @@
           "Type": 0
         },
         "967": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/6778c592b86892b44c5ef0a6acc4498f81d3e23f/Auxiliary/Items/Humphrey's_Belly.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Items/Humphrey's_Belly.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -145041,7 +145041,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "967": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/6778c592b86892b44c5ef0a6acc4498f81d3e23f/Auxiliary/Items/Humphrey's_Belly.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Items/Humphrey's_Belly.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -147653,7 +147653,7 @@
           "Type": 0
         },
         "967": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/6778c592b86892b44c5ef0a6acc4498f81d3e23f/Auxiliary/Items/Humphrey's_Belly.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Items/Humphrey's_Belly.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -149173,7 +149173,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "967": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/6778c592b86892b44c5ef0a6acc4498f81d3e23f/Auxiliary/Items/Humphrey's_Belly.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Items/Humphrey's_Belly.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -151785,7 +151785,7 @@
           "Type": 0
         },
         "967": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/6778c592b86892b44c5ef0a6acc4498f81d3e23f/Auxiliary/Items/Humphrey's_Belly.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Items/Humphrey's_Belly.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -153305,7 +153305,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "967": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/6778c592b86892b44c5ef0a6acc4498f81d3e23f/Auxiliary/Items/Humphrey's_Belly.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Items/Humphrey's_Belly.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -156199,7 +156199,7 @@
           "Type": 0
         },
         "131": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Auxiliary/Minions/PoD12BAD.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/PoD12BAD.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156208,7 +156208,7 @@
           "Type": 0
         },
         "727": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Minions/Grimmchild.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Grimmchild.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156469,7 +156469,7 @@
           "Type": 0
         },
         "1425": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Mini_Auto_Croissant.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Mini_Auto_Croissant.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156523,7 +156523,7 @@
           "Type": 0
         },
         "1439": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156577,7 +156577,7 @@
           "Type": 0
         },
         "1494": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156604,7 +156604,7 @@
           "Type": 0
         },
         "1493": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Creatures/Morpho_Knight.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Morpho_Knight.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -159393,7 +159393,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "131": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Auxiliary/Minions/PoD12BAD.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/PoD12BAD.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -159451,7 +159451,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "727": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Minions/Grimmchild.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Grimmchild.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -161133,7 +161133,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1425": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Mini_Auto_Croissant.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Mini_Auto_Croissant.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -161481,7 +161481,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1439": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -161829,7 +161829,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1494": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -162003,7 +162003,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1493": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Creatures/Morpho_Knight.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Morpho_Knight.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -162983,7 +162983,7 @@
           "Type": 0
         },
         "131": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Auxiliary/Minions/PoD12BAD.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/PoD12BAD.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -162992,7 +162992,7 @@
           "Type": 0
         },
         "727": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Minions/Grimmchild.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Grimmchild.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -163253,7 +163253,7 @@
           "Type": 0
         },
         "1425": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Mini_Auto_Croissant.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Mini_Auto_Croissant.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -163307,7 +163307,7 @@
           "Type": 0
         },
         "1439": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -163361,7 +163361,7 @@
           "Type": 0
         },
         "1494": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -163388,7 +163388,7 @@
           "Type": 0
         },
         "1493": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Creatures/Morpho_Knight.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Morpho_Knight.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -166177,7 +166177,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "131": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Auxiliary/Minions/PoD12BAD.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/PoD12BAD.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -166235,7 +166235,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "727": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Minions/Grimmchild.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Grimmchild.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -167917,7 +167917,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1425": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Mini_Auto_Croissant.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Mini_Auto_Croissant.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -168265,7 +168265,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1439": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -168613,7 +168613,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1494": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -168787,7 +168787,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1493": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Creatures/Morpho_Knight.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Morpho_Knight.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -169767,7 +169767,7 @@
           "Type": 0
         },
         "131": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Auxiliary/Minions/PoD12BAD.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/PoD12BAD.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169776,7 +169776,7 @@
           "Type": 0
         },
         "727": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Minions/Grimmchild.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Grimmchild.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -170037,7 +170037,7 @@
           "Type": 0
         },
         "1425": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Mini_Auto_Croissant.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Mini_Auto_Croissant.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -170091,7 +170091,7 @@
           "Type": 0
         },
         "1439": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -170145,7 +170145,7 @@
           "Type": 0
         },
         "1494": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -170172,7 +170172,7 @@
           "Type": 0
         },
         "1493": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Creatures/Morpho_Knight.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Morpho_Knight.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -172961,7 +172961,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "131": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Auxiliary/Minions/PoD12BAD.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/PoD12BAD.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -173019,7 +173019,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "727": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Auxiliary/Minions/Grimmchild.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Grimmchild.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -174701,7 +174701,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1425": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Mini_Auto_Croissant.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Mini_Auto_Croissant.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -175049,7 +175049,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1439": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Minions/Spawn_of_the_Forbidden_One.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -175397,7 +175397,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1494": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/ab85122afbd2c2248d158eff339e3c69ad2ef809/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -175571,7 +175571,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1493": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Auxiliary/Creatures/Morpho_Knight.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Creatures/Morpho_Knight.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -176103,7 +176103,7 @@
           "Type": 0
         },
         "239": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -176292,7 +176292,7 @@
           "Type": 0
         },
         "245": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/3%20Stars/Kracko.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Kracko.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -176319,7 +176319,7 @@
           "Type": 0
         },
         "253": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/3%20Stars/Skullord.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Skullord.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -176382,7 +176382,7 @@
           "Type": 0
         },
         "958": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Other/3%20Stars/Elmadan.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/3%20Stars/Elmadan.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -176409,7 +176409,7 @@
           "Type": 0
         },
         "192": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/DST/3%20Stars/Wigfrid.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -176418,7 +176418,7 @@
           "Type": 0
         },
         "307": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -176436,7 +176436,7 @@
           "Type": 0
         },
         "357": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Undertale/3%20Stars/Papyrus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/3%20Stars/Papyrus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -176499,7 +176499,7 @@
           "Type": 0
         },
         "1545": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Creatures/DST/3%20Stars/WX-78.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/DST/3%20Stars/WX-78.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -176673,7 +176673,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "239": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/34aa82c45117abcf9eeed954e68de27a88f3beab/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Final_Dark_Mind_Eye.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -177891,7 +177891,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "245": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Kirby/3%20Stars/Kracko.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Kracko.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -178065,7 +178065,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "253": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Kirby/3%20Stars/Skullord.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Kirby/3%20Stars/Skullord.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -178471,7 +178471,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "958": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Other/3%20Stars/Elmadan.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Other/3%20Stars/Elmadan.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -178645,7 +178645,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "192": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/DST/3%20Stars/Wigfrid.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -178703,7 +178703,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "307": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4c03ef727770f80705e9f1e37b21bcf1d4fe2698/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -178819,7 +178819,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "357": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Creatures/Undertale/3%20Stars/Papyrus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Undertale/3%20Stars/Papyrus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -179225,7 +179225,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1545": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/48f4b32616da01e2d760ab7a81996badbec6093a/Creatures/DST/3%20Stars/WX-78.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/DST/3%20Stars/WX-78.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -179435,7 +179435,7 @@
           "Type": 0
         },
         "873": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Items/Equip/3%20Stars/Deep_Focus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/3%20Stars/Deep_Focus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -180433,7 +180433,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "873": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0a7db1c3bef090ff01a529ea220b750c05fa9fa3/Items/Equip/3%20Stars/Deep_Focus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Items/Equip/3%20Stars/Deep_Focus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
