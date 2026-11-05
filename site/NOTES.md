@@ -23,6 +23,18 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   (`hover: none`) a tile's unseen "+ Deck" corner button is gone ("✓ In deck" stays), on `pointer: coarse` the dialog's
   and the tray's shortcut keys and `#keys` are hidden (only those: `.kbd` also shows deck slugs and file names). Phone
   chapters fit the screen (`.rb-book` a `minmax(0, 1fr)` column; long words break; Edit/History above the title).
+- Screen readers (2026-11-04): `#page-h1` and `#sr-status` (`.sr-only`, outside `#view`, so no draw wipes them).
+  `setTitle` (renderView) puts the page's name in the h1 (a card from a link: "Cards"); a search on the cards route
+  copies the result count into the status when it changes (not "…"). `markTab`: `aria-current="page"` on the section's
+  tab only. Filter chips (app.js, changes.js) have `aria-pressed` and, with counts, "Creatures, 298 cards" (`.n` hidden);
+  the Series, Subseries and Author selects aria-labels. Table view: the name is `a.row-name` (`#/card/<id>`, data-open):
+  Tab reaches every row, Cmd/middle-click opens a tab (the sizer's copies are `visibility: collapse`, never focused).
+- Search box: `onsubmit="return false"` (Enter before app.js no longer reloads); init searches text typed before the
+  scripts (read before route(), which empties an unfocused box). Enter runs a pending search first (`runSearch.flush`,
+  cards and rules), so a single result opens and stays open; on `pointer: coarse` the box then blurs (the keyboard goes).
+- Browser bar (`meta[name=theme-color]`): index.html's theme script sets #f9f9f7 when light (the default #0d0d0d meta
+  only: share pages keep the card's); `tint()` (renderView, the theme button) sets `--page` once per theme, so a card
+  page keeps its card's colour until the view first draws.
 
 ## 2. Data loading
 - `getJson(name)` app.js:~58: `fetch("data/"+name+"?v=<build>")` relative to `<base>`; ordinary HTTP cache keyed by the `?v=` build hash. `cards.json` is preloaded in index.html:12 and awaited in `init()` before first render.

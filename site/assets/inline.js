@@ -338,7 +338,7 @@ export function mountGrid(view, p, api = A) {
   const grid = view.querySelector(".browse .grid"), opts = api.editor.options(), b = opts.buckets;
   const sel = key => filters.querySelector(`select[data-key="${key}"]`);
   const at = key => sel(key)?.closest(".sel-row") || sel(key);            // after the select's ≠ toggle
-  if (!sel("subseries")) at("series")?.insertAdjacentHTML("afterend", `<h3>Subseries</h3><select data-action="select-param" data-key="subseries"><option value="">All subseries</option></select>`);
+  if (!sel("subseries")) at("series")?.insertAdjacentHTML("afterend", `<h3>Subseries</h3><select data-action="select-param" data-key="subseries" aria-label="Subseries"><option value="">All subseries</option></select>`);
   for (const key of ["series", "subseries", "author"]) {
     const el = sel(key); if (!el) continue;
     el.insertAdjacentHTML("beforeend", bucketOptions(new Set([...el.options].map(o => o.value)), b[key], p.get(key) || "") + newOption(key));

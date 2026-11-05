@@ -21,7 +21,7 @@ if (baseEl) baseEl.setAttribute("href", new URL(baseEl.getAttribute("href"), loc
 const ROOT = new URL("./", document.baseURI).href;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-const view = $("#view"), modal = $("#modal"), tip = $("#tooltip"), toastEl = $("#toast"), qInput = $("#q");
+const view = $("#view"), modal = $("#modal"), tip = $("#tooltip"), toastEl = $("#toast"), qInput = $("#q"), pageH1 = $("#page-h1"), srStatus = $("#sr-status");
 const store = (() => { try { return sessionStorage; } catch { return null; } })();   // storage blocked: the Details dropdown just forgets its state
 
 const S = {
@@ -177,7 +177,9 @@ async function init() {
   window.addEventListener("hashchange", route);
   window.addEventListener("popstate", route);
   renderAccount();
+  const typed = qInput.value;                            // typed before the scripts ran (route() clears an unfocused box)
   route();
+  if (typed.trim() && typed !== (parseHash().params.get("q") || "")) { qInput.value = typed; runSearch(); }
   restoreAt();                                           // a reload: the reader's place
 }
 
@@ -330,17 +332,17 @@ function route(e) {
     if (!S.renderedHash && !S.byId.has(r.arg)) renderView(parseHash(S.listHash), S.listHash);   // a dead link: the grid, then the toast
     else if (!S.renderedHash) {                          // from a link: the grid (and its pictures) when the dialog closes
       S.list = listOf(new URLSearchParams()); view.replaceChildren();
-      $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === "cards"));
+      markTab("cards"); if (pageH1) pageH1.textContent = pageName({ name: "cards" });
     }
     openCard(r.arg, r.params.has("details"));
     return;
   }
   const hash = location.hash || hashOf(r);
-  if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig && !$(".loading", view)) { closeModal(); document.title = S.title = titleOf(r); return; }   // nothing changed (and nothing still loading): the view under it stays
+  if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig && !$(".loading", view)) { closeModal(); setTitle(r); return; }   // nothing changed (and nothing still loading): the view under it stays
   const was = S.renderedHash ? parseHash(S.renderedHash) : null, q = p => p.get("q") || "";
   if (r.name === "rules" && r.arg !== "print" && was?.name === "rules" && was.arg !== "print" && q(was.params) === q(r.params) && viewSig() === S.viewSig
     && view.firstElementChild?.matches(".rules") && !$(".loading", view) && (!r.arg || S.book.chapters.some(c => c.id === r.arg.split("/")[0]))) {
-    closeModal(); S.title = document.title = titleOf(r);   // another chapter of the book drawn: scroll, no redraw (an old numbered id: renderRules)
+    closeModal(); setTitle(r);   // another chapter of the book drawn: scroll, no redraw (an old numbered id: renderRules)
     const [ch, sec] = r.arg.split("/");
     if (!S.restoring && ch && !q(r.params) && rulesAt !== location.hash) document.getElementById(sec ? `${ch}--${sec}` : ch)?.scrollIntoView();
     rulesAt = S.renderedHash = S.listHash = hash;
@@ -354,19 +356,30 @@ function renderView(r, hash) {
   S.renderedHash = hash; S.listHash = hash;
   if (r.name !== "cards") { S.selected.clear(); S.selecting = false; }
   if (!(r.name === "u" && r.edit)) editor.leave();
-  const tab = { compare: "cards", u: "users", decks: "deck" }[r.name] || r.name;
-  $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === tab));
+  markTab({ compare: "cards", u: "users", decks: "deck" }[r.name] || r.name);
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
   const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare, users: renderUsers, u: renderUser, decks: renderDecks };
   if (S.toTop) { S.toTop = false; scrollTo(0, 0); }       // before the view draws: it draws for the top
   (views[r.name] || renderCards)(r);
-  S.title = document.title = titleOf(r);
+  setTitle(r); tint();
   S.viewSig = viewSig();
 }
-function titleOf(r) {
+// the section's tab: marked, and aria-current on it alone
+const markTab = tab => $$(".tabs a").forEach(a => { const on = a.dataset.tab === tab; a.classList.toggle("active", on); if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+function pageName(r) {
   const titles = { cards: "Cards", rules: "Rulebook", deck: "Deck builder", stats: "Stats", changes: "Changes", compare: "Compare", users: "People", u: r.edit ? "Edit profile" : r.arg || "People",
     decks: r.arg ? S.deckTitle || "Deck" : "Published decks" };
-  return `${titles[r.name] || "Cards"} · Impossibility Simulator`;
+  return titles[r.name] || "Cards";
+}
+const titleOf = r => `${pageName(r)} · Impossibility Simulator`;
+function setTitle(r) { S.title = document.title = titleOf(r); if (pageH1) pageH1.textContent = pageName(r); }   // the page's h1 (screen readers)
+// the browser bar's colour: the page's (a card page keeps its card's until the view first draws)
+let tinted = "";
+function tint() {
+  const t = document.documentElement.dataset.theme;
+  if (t === tinted) return;
+  tinted = t;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", getComputedStyle(document.documentElement).getPropertyValue("--page").trim());
 }
 // what a card dialog can change under it (edits, hands, the comparison, sign-in, the theme): a dialog closes without a redraw while this holds
 function viewSig() { return `${S.rev}|${S.compare.join(",")}|${JSON.stringify(S.decks)}|${editor.me?.login || ""}|${document.documentElement.dataset.theme}`; }
@@ -453,8 +466,8 @@ function sortCards(list, sort = "name", dir = "") {
 }
 // xs: the excluded values (red, struck through, the count = the cards they remove: removes(key, v)); del: a ✕ after each
 function chipList(key, options, selected, counts, xs = [], removes = null, del = null) {
-  return `<div class="chips">${options.map(([v, label]) => { const x = xs.includes(String(v)), n = x ? removes(key, String(v)) : counts?.get(String(v)) || 0;
-    return `${del ? `<span class="chip-wrap">` : ""}<button type="button" class="chip${x ? " x" : selected.includes(String(v)) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : ""}>${esc(label)}${counts ? `<span class="n">${x ? `−${n}` : n}</span>` : ""}</button>${del ? `${del(v, label)}</span>` : ""}`; }).join("")}</div>`;
+  return `<div class="chips">${options.map(([v, label]) => { const x = xs.includes(String(v)), n = x ? removes(key, String(v)) : counts?.get(String(v)) || 0, on = !x && selected.includes(String(v));
+    return `${del ? `<span class="chip-wrap">` : ""}<button type="button" class="chip${x ? " x" : on ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}" aria-pressed="${on}"${x ? ` aria-label="${esc(label)}: excluded, removes ${n}"` : counts ? ` aria-label="${esc(label)}, ${n} card${n === 1 ? "" : "s"}"` : ""}>${esc(label)}${counts ? `<span class="n" aria-hidden="true">${x ? `−${n}` : n}</span>` : ""}</button>${del ? `${del(v, label)}</span>` : ""}`; }).join("")}</div>`;
 }
 // the Font chips: chipList's, each with a ✕ that forgets it (a click turns it off and on, like Kind)
 const fontChips = (...a) => chipList("font", S.fontKept.map(f => [f, f]), ...a,
@@ -538,10 +551,10 @@ function renderCards(r) {
       ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts, xs("sub"), removes)}` : ""}
       ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t), x = xs("types").includes(t), on = !x && csv(p, "types").includes(t), name = t.replace(/_/g, " ");
         return `<button type="button" class="icon-toggle${on ? " on" : ""}${x ? " x" : ""}" data-action="toggle-param" data-key="types" data-value="${esc(t)}" data-tip="${esc(x ? `not ${name} (removes ${removes("types", t)})` : `${name} (${typeCounts.get(t)})`)}" aria-pressed="${on}"${x ? ` aria-label="${esc(name)}: excluded"` : ""}>${ic ? `<img loading="lazy" src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>` : ""}
-      <h3>Series</h3>${notSel("series", `<select data-action="select-param" data-key="series"><option value="">All series</option>${series.map(s => `<option${s === pickOf("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}
-      ${subseries.length || pickOf("subseries") ? `<h3>Subseries</h3>${notSel("subseries", `<select data-action="select-param" data-key="subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(pickOf("subseries"))}</option>` : ""}${subseries.map(s => `<option${s === pickOf("subseries") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}` : ""}
+      <h3>Series</h3>${notSel("series", `<select data-action="select-param" data-key="series" aria-label="Series"><option value="">All series</option>${series.map(s => `<option${s === pickOf("series") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}
+      ${subseries.length || pickOf("subseries") ? `<h3>Subseries</h3>${notSel("subseries", `<select data-action="select-param" data-key="subseries" aria-label="Subseries"><option value="">All subseries</option>${subPicked ? `<option selected>${esc(pickOf("subseries"))}</option>` : ""}${subseries.map(s => `<option${s === pickOf("subseries") ? " selected" : ""}>${esc(s)}</option>`).join("")}</select>`)}` : ""}
       <h3>Stats</h3>${["hp", "def", "atk", "spd"].map(k => `<div class="range-row"><span class="muted">${k.toUpperCase()}</span>${rangeSel(k, 0)}${rangeSel(k, 1)}</div>`).join("")}
-      <h3>Author</h3>${notSel("author", `<select data-action="select-param" data-key="author"><option value="">Anyone</option>${authors.map(a => `<option${a === pickOf("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>`)}
+      <h3>Author</h3>${notSel("author", `<select data-action="select-param" data-key="author" aria-label="Author"><option value="">Anyone</option>${authors.map(a => `<option${a === pickOf("author") ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>`)}
       <h3>Font</h3><input type="text" class="font-box" data-suggest="font" autocomplete="off" spellcheck="false" placeholder="Type a font…" title="Cards using any picked font" aria-label="Font: cards using any picked font">
       ${S.fontKept.length ? `${fontChips(fontIn, fontCounts, fontOut, fontRemoves)}${fontIn.length > 1 ? `<p class="muted font-any">Cards with any of them.</p>` : ""}` : ""}
       <h3>Flags</h3>${FLAGS.filter(([f]) => !EDIT_FLAGS.has(f) || editing() || csv(p, "flags").includes(f) || xs("flags").includes(f))
@@ -763,7 +776,7 @@ function fillTable(tbody) {
   };
   if (rest.length) setTimeout(step);
 }
-const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td>${esc(c.name)}${psdChips(c)}</td>
+const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td><a class="row-name" href="#/card/${c.id}" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
       <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td></tr>`;
@@ -1462,7 +1475,7 @@ function toastUndo(msg, undo) {
   const b = Object.assign(document.createElement("button"), { type: "button", className: "toast-undo", textContent: "Undo" });
   b.addEventListener("click", () => { toastEl.hidden = true; undo(); }, { once: true }); toastEl.append(" ", b);
 }
-function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+function debounce(fn, ms) { let t = 0; const d = (...a) => { clearTimeout(t); t = setTimeout(() => { t = 0; fn(...a); }, ms); }; d.flush = () => { if (t) { clearTimeout(t); t = 0; fn(); } }; return d; }
 async function copy(text, what) { try { await navigator.clipboard.writeText(text); toast(`Copied ${what}`); } catch { prompt("Copy:", text); } }
 function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`; modal.hidden = false; }
 
@@ -1653,6 +1666,8 @@ const runSearch = debounce(() => {
   if (name === "rules") { setParams({ q: qInput.value }); return; }
   if (name !== "cards") { location.hash = `#/cards?q=${encodeURIComponent(qInput.value)}`; return; }
   setParams({ q: qInput.value });
+  const n = $(".result-count", view)?.textContent;      // spoken: #sr-status
+  if (srStatus && n && n !== "…" && n !== srStatus.textContent) srStatus.textContent = n;
 }, 160);
 qInput.addEventListener("input", runSearch);
 $("#save-filter")?.addEventListener("click", () => {   // the search box's text as a filter in My filters (CSS shows it while there's text)
@@ -1661,11 +1676,13 @@ $("#save-filter")?.addEventListener("click", () => {   // the search box's text 
   toast(had ? `Already in My filters as “${had}”` : `Saved “${q}” to My filters`);
   const r = parseHash(); if (r.name === "cards" || r.name === "rules") setParams({ q: "" });
 });
-$("#search-form").addEventListener("submit", e => { e.preventDefault(); const ex = exactOf(qInput.value, S.cards), l = ex.length === 1 ? ex : S.list; if (l.length === 1) location.hash = `#/card/${l[0].id}`; });   // one exact name, else one result
+$("#search-form").addEventListener("submit", e => { e.preventDefault(); if (S.ready && ["cards", "rules"].includes(parseHash().name)) runSearch.flush();   // a pending search first: S.list is its list
+  const ex = exactOf(qInput.value, S.cards), l = ex.length === 1 ? ex : S.list; if (l.length === 1) location.hash = `#/card/${l[0].id}`;
+  if (matchMedia("(pointer: coarse)").matches) qInput.blur(); });   // one exact name, else one result; a phone's Search key closes its keyboard
 $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax</h3><p class="muted">The bot's /query_ability syntax, plus names and aliases.</p>
   <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
 $("#random").addEventListener("click", () => actions["random-from-list"]());
-$("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); });
+$("#theme").addEventListener("click", () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; localStorage.setItem("theme", t); if (parseHash().name === "stats") renderView(parseHash(), location.hash); tint(); });
 const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help-table">${[["/", "Search"], ["Esc", "Close / clear"], ["← →", "Previous / next card (Changes tabs: next tab; a stat distribution: more values)"], ["d", "Add to / remove from deck"],
   ["c", "Copy card link"], ["x", "Add to comparison"], ["e", editing() ? "Edit the card (all fields)" : "Edit the card"], ["↑ ↓", "Move through image versions"], ["r", "Random card"], ["1–6", "Cards · Rulebook · Deck · Stats · Changes · People"],
   ...(editing() ? [["1–9", "With cards selected: drop them on that pinned box (the first nine)"]] : []), ["?", "This help"]].map(([k, d]) => `<tr><td><span class="kbd">${k}</span></td><td>${d}</td></tr>`).join("")}</table>`);

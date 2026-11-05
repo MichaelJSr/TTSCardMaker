@@ -27,7 +27,8 @@
 <link rel="modulepreload" href="assets/grid.js">
 <link rel="modulepreload" href="assets/myfilters.js">
 <link rel="stylesheet" href="assets/style.css">
-<script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";</script>
+<script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+if (document.documentElement.dataset.theme === "light") document.querySelector('meta[name="theme-color"][content="#0d0d0d"]')?.setAttribute("content", "#f9f9f7");</script>
 <script type="module" src="assets/app.js"></script>
 </head>
 <body>
@@ -45,7 +46,7 @@
     <a href="#/changes" data-tab="changes">Changes</a>
     <a href="#/users" data-tab="users">People <span class="count" id="people-count"></span></a>
   </nav>
-  <form class="search" id="search-form" role="search">
+  <form class="search" id="search-form" role="search" onsubmit="return false">
     <input id="q" type="search" placeholder="Search cards…  (press /)" autocomplete="off" spellcheck="false" aria-label="Search cards">
     <button type="button" class="ghost" id="save-filter" title="Save this search to My filters">Save as filter</button>
     <button type="button" class="ghost icon" id="search-help" aria-label="Search syntax" title="Search syntax">?</button>
@@ -57,6 +58,8 @@
     <button type="button" class="ghost icon" id="keys" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts"><svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><path d="M6 10h.01M9.5 10h.01M13 10h.01M16.5 10h.01M7.5 14h9"/></svg></button>
   </div>
 </header>
+<h1 id="page-h1" class="sr-only"></h1>
+<p id="sr-status" class="sr-only" role="status"></p>
 <main id="view" tabindex="-1"><div class="loading">Loading cards…</div></main>
 <div id="modal" class="modal" hidden></div>
 <div id="tooltip" class="tooltip" role="tooltip" hidden></div>

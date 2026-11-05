@@ -191,7 +191,8 @@ function daysHtml(groups, repo, kinds) {
   }
   return out;
 }
-const chips = (options, selected, counts, key) => `<div class="chips">${options.map(([v, label]) => `<button type="button" class="chip${selected.includes(v) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}">${esc(label)}<span class="n">${counts.get(v) || 0}</span></button>`).join("")}</div>`;
+const CHIP_NOUN = { kind: ["change"], tag: ["card"], via: ["batch", "batches"] };   // what a chip's count counts
+const chips = (options, selected, counts, key) => `<div class="chips">${options.map(([v, label]) => `<button type="button" class="chip${selected.includes(v) ? " on" : ""}" data-action="toggle-param" data-key="${key}" data-value="${esc(v)}" aria-pressed="${selected.includes(v)}" aria-label="${esc(label)}, ${plural(counts.get(v) || 0, ...CHIP_NOUN[key])}">${esc(label)}<span class="n" aria-hidden="true">${counts.get(v) || 0}</span></button>`).join("")}</div>`;
 const csv = (p, k) => (p?.get(k) ? p.get(k).split(",").filter(Boolean) : []);
 /** "Card data built … from TTSCardMaker@abc12345 (run)" */
 function sourceHtml(C) {
