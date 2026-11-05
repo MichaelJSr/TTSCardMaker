@@ -20,8 +20,6 @@ html { scrollbar-gutter: stable; }   /* a scrollbar that appears (the grid fills
   --seq-100: #cde2fb; --seq-700: #0d366b;
   --shadow: 0 10px 40px rgba(0,0,0,.18);
 }
-/* timing-tag badge groups (same colors as the stoogedings font) */
-:root { --b-turn: #2563eb; --b-any: #7c3aed; --b-forced: #dc2626; --b-trigger: #b45309; --b-neutral: #475569; }
 
 * { box-sizing: border-box; }
 :where(img[width][height]) { height: auto; }   /* width/height attributes reserve space; CSS sizes still win */
@@ -149,37 +147,66 @@ img.tok { width: 1.35em; height: 1.35em; object-fit: contain; vertical-align: -0
 span.tokv { position: relative; display: inline-block; }
 .tokv > .tokm { position: absolute; inset: 0; width: auto; height: auto; margin: 0; }
 .tokv > img { position: absolute; inset: calc(1.35em * var(--r, 0)); width: 1.35em; height: 1.35em; object-fit: contain; }
-.badge { display: inline-block; padding: 0 .6em; border-radius: 999px; font-size: .92em; font-weight: 800; letter-spacing: .03em; color: #fff;
-  vertical-align: .02em; line-height: 1.45; cursor: help; white-space: nowrap; box-shadow: inset 0 0 0 1.5px rgba(0,0,0,.25); }
+/* badges in the font's letters and proportions (build_stoogedings _tag_badges; owner 2026-11-04): Roboto Black, unkerned,
+   capitals 540/950 of the pill's height (font-size-adjust: the letters only, em and the 1.45 pill as before; a browser
+   without its cap-height, before 2023, draws them smaller), 26/950 between letters, the label 200/950 from the pill's ends,
+   at least as wide as tall, its ink centred (--ink: text.js inkShift), 40/950 beside it; shaded top to bottom (BADGE_GROUPS: --bt, --bb), its edge 30/950 in the
+   group's border colour (--be) astride the pill's edge, the inner half (::after) over a ring. The label (.bl, text.js) is
+   trimmed to its capitals (text-box) and centred in the 1.45em pill at any size, its baseline the badge's: the pill's
+   middle on the text's capitals (vertical-align). The woff2's own metrics centre an untrimmed line (badge_web_font.py). */
+@font-face { font-family: "Roboto"; src: url("../rulebook/fonts/roboto-black.woff2") format("woff2"); font-weight: 900; font-display: swap; }
+.badge { position: relative; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 1.45em;
+  min-width: 1.45em; margin: 0 .0611em; padding: 0 calc(.2656em - var(--ink, 0em)) 0 calc(.3053em + var(--ink, 0em));
+  border-radius: 999px; font-size: .92em; font-weight: 900; font-size-adjust: cap-height .8242; letter-spacing: .0397em; font-kerning: none;
+  text-align: center; color: #fff; vertical-align: -.02em; line-height: 1.45; cursor: help; white-space: nowrap;
+  background: linear-gradient(180deg, var(--bt, #64748b), var(--bb, #475569)); box-shadow: 0 0 0 .0229em var(--be, #1e293b);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact; }   /* printed in its colours (inherited: the ring, the icons) */
+.badge > .bl, .badge.cost:not(.own) .cost-u, .badge.cost .cost-n > i { text-box: trim-both cap alphabetic; }
+.badge::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 .0229em var(--be, #1e293b); pointer-events: none; }
 .badge, .badge * { -webkit-text-fill-color: currentColor; -webkit-text-stroke: 0; text-shadow: none; font-style: normal; }   /* itself in styled text: no inherited outline or gradient fill */
-.badge { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
-.badge.turn { background: var(--b-turn); } .badge.any { background: var(--b-any); }
-.badge.forced { background: var(--b-forced); } .badge.trigger { background: var(--b-trigger); }
-.badge.neutral { background: var(--b-neutral); }
-/* costs (text.js COST) as the stoogedings font draws them (owner 2026-11-03): the number on a coin (points), a brick
-   (BRICKS) or a star (SP), the word beside, in a pill; the TTS table's counter colours (#00ffae, #a0522d, #ffff00); a card's
-   own currency a teal text pill. The icon sits on the baseline, so the pill stays level with the timing badges. */
-.badge.cost { letter-spacing: 0; }
-.badge.cost:not(.own) .cost-n { vertical-align: baseline; display: inline-flex; align-items: center; justify-content: center; line-height: 1; margin-right: .05em; }
-.badge.cost.points { padding: 0 .55em 0 .1em; background: linear-gradient(180deg, #08785a, #034532); color: #effff9; }
-.badge.cost.points .cost-n { min-width: 1.32em; height: 1.32em; padding: 0 .3em; border-radius: 999px; color: #003d29; text-shadow: 0 1px 0 #b8ffe6;
-  background: radial-gradient(circle at 35% 30%, #e8fff7 0, #6dffd0 30%, #00ffae 58%, #00a36c 100%);
-  box-shadow: inset 0 0 0 .07em #00603f, inset 0 0 0 .14em #2affbd, inset 0 0 0 .19em #00c98a, 0 .05em .1em rgba(0,0,0,.45); }
-.badge.cost.bricks { padding: 0 .55em 0 .27em; background: linear-gradient(180deg, #5e3019, #3f1d0c); color: #ffe6d6; }   /* the brick inside the round end */
-.badge.cost.bricks .cost-n { min-width: 1.9em; height: 1.2em; padding: 0 .3em; border-radius: .14em; color: #fff; text-shadow: 0 1px 1px rgba(61,26,8,.9);
-  background: linear-gradient(180deg, #c97b52 0, #a0522d 45%, #7a3a1c 100%);
-  box-shadow: inset 0 .1em 0 rgba(255,255,255,.3), inset 0 -.12em 0 rgba(0,0,0,.22), 0 0 0 .07em #3d1a08; }
-.badge.cost.sp { padding: 0 .55em 0 .05em; background: linear-gradient(180deg, #2a4a9e, #172a63); color: #eef2ff; }
-.badge.cost.sp .cost-n { min-width: 1.9em; height: 1.9em; padding-top: .2em; margin: -.3em -.03em -.3em -.1em; font-size: .9em; font-weight: 900;
-  color: #3b3300; text-shadow: 0 0 2px #ffffb0, 0 1px 0 #ffffb0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.38' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23ffffe8'/%3E%3Cstop offset='.3' stop-color='%23ffff70'/%3E%3Cstop offset='.55' stop-color='%23ffff00'/%3E%3Cstop offset='.85' stop-color='%23d9c800'/%3E%3Cstop offset='1' stop-color='%23a69400'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M12 1.4l3.15 6.5 7.15 1.05-5.17 5.05 1.22 7.12L12 17.75l-6.35 3.37 1.22-7.12L1.7 8.95l7.15-1.05z' fill='url(%23g)' stroke='%236e6200' stroke-width='1.1' stroke-linejoin='round'/%3E%3Cpath d='M8.7 8.1l1.9-2.2' stroke='%23fff' stroke-width='1.3' stroke-linecap='round' opacity='.8'/%3E%3C/svg%3E") center / contain no-repeat; }
-.badge.cost.sp .cost-n.long > i { transform: scale(.66); }   /* "12", "0.5": smaller onto the star, by scale (a smaller font would move the star's baseline) */
-.badge.cost.own { background: linear-gradient(180deg, #149488, #0f766e); }
-/* a cooldown's ring (text.js ringHtml), left of its badge, the two never split across lines; it glows when the ability
-   is ready on its first turn; the red arcs of a deep negative start reach past its box */
-.cd { white-space: nowrap; }
-.ring { display: inline-block; width: 1.22em; height: 1.22em; vertical-align: -.26em; margin-right: .12em; cursor: help; }
-.ring svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.ring.glow svg { filter: drop-shadow(0 0 .07em #22c55e) drop-shadow(0 0 .14em #22c55e); }
+.badge { font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif; }
+.badge.turn { --bt: #4f86f7; --bb: #2563eb; --be: #1e3a8a; } .badge.any { --bt: #9f67ff; --bb: #7c3aed; --be: #4c1d95; }
+.badge.forced { --bt: #ef5050; --bb: #dc2626; --be: #7f1d1d; } .badge.trigger { --bt: #e08a1e; --bb: #b45309; --be: #78350f; }
+.badge.neutral { --bt: #64748b; --bb: #475569; --be: #1e293b; }
+/* costs (text.js COST) as the font draws them (build_stoogedings cost_badge, owner 2026-11-03), in its units (950: the
+   pill's 1.45em): the number (capitals 440, 10 between figures, its ink centred: --nx) on a coin (points: 830 tall, 60 in),
+   a brick (BRICKS: 700 by at least 1060, 150 in) or a star (SP: radius 600, 40 above the middle, its points past the pill;
+   a long number shrunk: --k), 80 to the word, 210 after it; the TTS table's counter colours. The icon (its margin box
+   1.45em) and the word centred in the pill, the number trimmed to its capitals and centred on the icon (the star's: 93
+   below its box's middle, padding-top). A card's own currency: a teal text pill. */
+.badge.cost { min-width: 0; text-align: left; justify-content: flex-start; }
+.badge.cost:not(.own) { padding: 0 .2809em 0 0; vertical-align: .0563em; }   /* 210 after the word, its last letter's 26 aside; its baseline the number's (capitals 440, not 540) */
+.badge.cost:not(.own) .cost-n { position: relative; z-index: 1; isolation: isolate; display: flex; align-items: center; justify-content: center; box-sizing: border-box;
+  text-align: center; font-size-adjust: cap-height .6716; letter-spacing: .0153em; }
+.badge.cost .cost-n > i { display: inline-block; margin-right: -.0153em; transform-origin: calc(50% - .0076em) 50%;
+  transform: translateX(var(--nx, 0)) scale(var(--k, 1)); }   /* its last figure's spacing aside */
+.badge.cost.points { --bt: #08785a; --bb: #034532; --be: #012419; color: #effff9; }
+.badge.cost.points .cost-n { min-width: 1.2668em; height: 1.2668em; line-height: 1.2668em; margin: .0916em .1221em .0916em .0916em; padding: 0 .29em;
+  border-radius: 999px; color: #003d29; box-shadow: inset 0 0 0 .0259em #00603f, 0 0 0 .0259em #00603f;
+  background: radial-gradient(.1647em .095em at .38em .3294em, rgba(255,255,255,.6) 97%, transparent 100%),
+    radial-gradient(80% 80% at 35% 30%, #e8fff7 0, #6dffd0 30%, #00ffae 58%, #00a36c 100%); }
+.badge.cost.points .cost-n::before { content: ""; position: absolute; z-index: -1; inset: .1374em; border: .0458em solid #00c98a; border-radius: inherit; }
+.badge.cost.bricks { --bt: #5e3019; --bb: #3f1d0c; --be: #241005; color: #ffe6d6; }
+.badge.cost.bricks .cost-n { min-width: 1.6179em; height: 1.0684em; line-height: 1.0684em; margin: .1908em .1221em .1908em .2289em; padding: 0 .3053em;
+  border-radius: .1068em; color: #fff; box-shadow: inset 0 0 0 .0259em #3d1a08, 0 0 0 .0259em #3d1a08;
+  background: linear-gradient(180deg, #c97b52 0, #a0522d 45%, #7a3a1c 100%); }
+.badge.cost.bricks .cost-n > i { text-shadow: 0 .0427em 0 rgba(61,26,8,.7); }
+.badge.cost.bricks .cost-n::before, .badge.cost.bricks .cost-n::after { content: ""; position: absolute; z-index: -1; left: .1068em; right: .1068em;
+  height: .0672em; border-radius: .0336em; }
+.badge.cost.bricks .cost-n::before { top: .0763em; background: rgba(255,255,255,.35); }
+.badge.cost.bricks .cost-n::after { bottom: .0763em; background: rgba(0,0,0,.22); }
+.badge.cost.sp { --bt: #2a4a9e; --bb: #172a63; --be: #0b1740; color: #eef2ff; }
+.badge.cost.sp .cost-n { width: 1.7419em; height: 1.6567em; line-height: 1.9415em; margin: -.2518em .1221em .0452em .0305em; padding-top: .2848em; color: #3b3300;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1141.3 1085.4'%3E%3Cdefs%3E%3CradialGradient id='i' cx='.38' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23ffffe8'/%3E%3Cstop offset='.3' stop-color='%23ffff70'/%3E%3Cstop offset='.55' stop-color='%23ffff00'/%3E%3Cstop offset='.85' stop-color='%23d9c800'/%3E%3Cstop offset='1' stop-color='%23a69400'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpolygon points='570.6,0.0 747.0,357.3 1141.3,414.6 856.0,692.7 923.3,1085.4 570.6,900.0 218.0,1085.4 285.3,692.7 -0.0,414.6 394.3,357.3' fill='%236e6200'/%3E%3Cpolygon points='570.6,61.2 729.0,382.1 1083.1,433.5 826.8,683.2 887.3,1035.9 570.6,869.4 253.9,1035.9 314.4,683.2 58.2,433.5 412.3,382.1' fill='url(%23i)'/%3E%3Cellipse cx='426.6' cy='456.0' rx='60' ry='36' fill='%23fff' opacity='.75'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat; }
+.badge.cost.own { --bt: #149488; --bb: #0f766e; --be: #0b4f4a; }
+/* a cooldown's ring (text.js ringHtml) is its badge's round left end, as tall as the pill: the rim a disc shaded as the
+   pill (build_stoogedings RING_RIM) under the ring's body, the pill's edge over its outside; the label after it placed by
+   its ink as the font places it (RING_GAP, RING_ENDS: 87/950 after the ring, 173/950 to the pill's end; --ink) */
+.badge.ringed { padding-left: calc(1.5828em + var(--ink, 0em)); padding-right: calc(.2244em - var(--ink, 0em)); }
+.ring { position: absolute; left: 0; top: 0; width: 1.45em; height: 1.45em; border-radius: 50%; cursor: help;
+  -webkit-mask: radial-gradient(closest-side, #000 96.9%, transparent 97.1%); mask: radial-gradient(closest-side, #000 96.9%, transparent 97.1%); }   /* the rim to RING_RIM_R (10.66 of 11) */
+.badge.turn .ring { background: linear-gradient(180deg, #92b4fa, #5b8ff9); } .badge.any .ring { background: linear-gradient(180deg, #c7a6ff, #a274ff); }
+.ring svg { display: block; width: 100%; height: 100%; }
 a.card-ref { color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; cursor: pointer; }
 @media (pointer: coarse) { a.card-ref { -webkit-touch-callout: none; } }   /* a long press shows its preview (tip.js) */
 mark { background: color-mix(in srgb, var(--warn) 45%, transparent); color: inherit; border-radius: 3px; }
@@ -355,7 +382,8 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
     var(--rb-px) var(--rb-px) 0 #000, 0 0 calc(4 * var(--rb-px)) #000; }
 .rb-ability p { margin: .25em 0; }
 .rb-ability.rb-small { font-size: 1.05em; padding: .6em .5em; }
-.rb-ability .badge { font-family: system-ui, sans-serif; font-size: .7em; vertical-align: .15em; text-shadow: none; box-shadow: 0 0 0 .12em #000; }
+.rb-ability .badge { font-family: "Roboto", system-ui, sans-serif; font-size: .7em; vertical-align: -.02em; text-shadow: none;
+  box-shadow: 0 0 0 .0229em var(--be), 0 0 0 .1429em #000; }   /* on the capitals as in text (costs: .badge.cost:not(.own)'s); its edge, then black */
 .rb-ability a.card-ref { color: inherit; }
 .rb-ability .rb-yellow { color: #fff88b; } .rb-ability .rb-green { color: #0bff22; } .rb-ability .rb-red { color: #ff2a2a; }
 .rb-ability .rb-blue { color: #3c5ff4; } .rb-ability .rb-orange { color: #db923d; }
@@ -534,7 +562,7 @@ body.rb-shot .rb-sheets { display: block; } body.rb-shot .rb-sheets .rb-sheet { 
 body.rb-shot .rb-print-bar { display: none; }
 .badge-legend { list-style: none; margin: 8px 0; padding: 0; font-size: 14px; line-height: 1.9; }
 .badge-legend .nw { white-space: nowrap; }   /* "(" and "," stay with their badge */
-.badge-legend .swatch { width: .8em; height: .8em; padding: 0; margin-right: 6px; vertical-align: -.05em; cursor: default; }
+.badge-legend .swatch { width: .8em; min-width: 0; height: .8em; padding: 0; margin: 0 6px 0 0; vertical-align: -.05em; cursor: default; }
 .badge-help { margin: 8px 0; font-size: 14px; }
 .badge-help > summary { cursor: pointer; width: fit-content; color: var(--muted); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; padding: 2px 0; }
 .badge-help > summary::after { content: " ⓘ"; text-transform: none; }
@@ -643,7 +671,7 @@ ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0;
 .svg-label { display: flex; align-items: center; justify-content: flex-end; gap: 6px; height: 26px; font-size: 12px; color: var(--ink-2);
   white-space: nowrap; overflow: hidden; }
 .svg-label img { width: 18px; height: 18px; object-fit: contain; }
-.svg-label .badge { font-size: 11px; }
+.svg-label .badge { font-size: 14px; }   /* the chart's SVG is scaled down (0.79 at 1400 px): its ring's number legible */
 
 /* image versions (card page) */
 .versions { display: grid; grid-template-columns: minmax(180px, 240px) minmax(0, 1fr); gap: 14px; align-items: start; }

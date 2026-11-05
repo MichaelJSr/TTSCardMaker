@@ -2,7 +2,7 @@
 // build_site.py into data/users.json) and contributions (data/contributions.json: cards credited, edit batches published
 // and card commits per person, from build_site.py contributions()). Pure functions, plus the person page and the People
 // table. All profile text is user-written: everything is escaped and only internal routes are linked.
-import { esc, tagInfo, badgeHtml, TAG, dateFmt, LOGIN_RE, noted } from "./text.js";
+import { esc, tagInfo, tagHtml, TAG, dateFmt, LOGIN_RE, noted } from "./text.js";
 import { editorFields, archiveTag, archiveTagHtml, fieldName } from "./changes.js";
 import { decode } from "./deck.js";
 import { columns, chartCard } from "./stats.js";
@@ -479,7 +479,7 @@ export function showStars(box, kind, cards, kindOf) {
 export function stylePanelHtml(s, mix, x, n, stars = null) {
   const chip = (html, [, k, ratio, share]) => `<span class="chip" data-tip="${esc(`${k} of their cards (${pct(k / n)}) vs ${pct(share)} of all cards`)}">${html} ×${ratio}</span>`;
   const row = (label, list, html) => (list.length ? `<div class="p-style"><span class="pick-label">${noted(label, STYLE_TIP[label])}</span><div class="chips">${list.map(r => chip(html(r[0]), r)).join("")}</div></div>` : "");
-  const chips = s ? row("Types", s.types, t => esc(t.replace(/_/g, " "))) + row("Status effects", s.status, id => esc(x.byId?.get(id)?.name || id)) + row("Timing tags", s.tags, badgeHtml) : "";
+  const chips = s ? row("Types", s.types, t => esc(t.replace(/_/g, " "))) + row("Status effects", s.status, id => esc(x.byId?.get(id)?.name || id)) + row("Timing tags", s.tags, t => tagHtml(t)) : "";
   const words = s?.words != null ? `<p>${noted("Words per ability", "Mean words in their cards' ability text vs all cards' (cards with no text left out)")}: ${s.words} <span class="muted">· all cards ${s.siteWords}</span></p>` : "";
   const label = k => (x.kinds || []).find(([key]) => key === k)?.[1] || k;
   const mixes = mix && (mix.stars.length || mix.kinds.length) ? `<div class="p-mixes">${mix.stars.length ? starsHtml(mix.stars, stars, label) : ""}

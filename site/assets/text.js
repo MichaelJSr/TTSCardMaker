@@ -78,72 +78,162 @@ function tagMeaning(tag) {
   if ((m = /^E([1-9X])T$/.exec(tag))) return old("turn", `every ${m[1]} turns, starting on turn ${m[1]} (multi-turn)`, true);
   return null;
 }
-export const badgeHtml = (tag, tip = true) => {   // tip false: the note is the parent's (a "3CD+" head)
+export const badgeHtml = (tag, tip = true, ring = "") => {   // tip false: the note is the parent's (a "3CD+" head); ring: its left end
   const t = tagInfo(tag);
-  return t ? `<span class="badge ${t.group}"${tip ? ` data-tip="${esc(`(${t.tag}) ${t.meaning}`)}"` : ""}>${esc(t.tag.replace("-", "\u2212"))}</span>` : esc(`(${tag})`);
+  const label = t?.tag.replace("-", "\u2212");
+  return t ? `<span class="badge ${t.group}${ring ? " ringed" : ""}" style="--ink:${inkShift(label)}"${tip ? ` data-tip="${esc(`(${t.tag}) ${t.meaning}`)}"` : ""}>${ring}<span class="bl">${esc(label)}</span></span>` : esc(`(${tag})`);
 };
 
-// ---- cooldown rings (owner 2026-11-04): beside each cooldown badge, (2CD), (1/2CD), (-1/1GCD), in card and rulebook
-// text (the website's: the cards print the badge alone). X segments, zero at the top: the charge it starts with clockwise
-// in green, a start below zero counter-clockwise in red (each turn moves it one segment clockwise: the red unwinds, then
-// the green fills), each lap below zero past the first a thin red arc outside; more than 8 segments: arcs by share. In
-// the middle the turns until its first full charge (X - Y): green, red when it starts below zero; it glows when that is
-// 0 or 1 (ready on its first turn: charge comes in as a turn begins). X is dashed. Its tip says it in words.
-const RING_RIM = { turn: "#5b8ff9", any: "#a274ff" }, RING_GREEN = "#22c55e", RING_RED = "#ef4444", RING_BODY = "#1c2030", RING_LINE = "#e5e7eb";
-const arc = (r0, r1, a0, a1) => {                          // an annular sector in the ring's 22-unit box, clockwise, 0 = up
-  if (a1 - a0 > 359) return arc(r0, r1, a0, a0 + 180) + arc(r0, r1, a0 + 180, a0 + 360);
-  const P = (r, a) => `${(11 + r * Math.sin(a * Math.PI / 180)).toFixed(2)} ${(11 - r * Math.cos(a * Math.PI / 180)).toFixed(2)}`, big = a1 - a0 > 180 ? 1 : 0;
-  return `M${P(r1, a0)}A${r1} ${r1} 0 ${big} 1 ${P(r1, a1)}L${P(r0, a1)}A${r0} ${r0} 0 ${big} 0 ${P(r0, a0)}Z`;
+// ---- cooldown rings (owner 2026-11-04, design B): each cooldown badge's round left end, (2CD), (1/2CD), (-1/1GCD), in
+// card and rulebook text, the same drawing as the cards' (build_stoogedings ring_parts) and the mock-up's (ringParts). X
+// segments, zero at the top, parallel-sided slots between them: the charge it starts with clockwise in green, a start
+// below zero counter-clockwise in red (each turn moves it one segment clockwise: the red unwinds, then the green fills; a
+// whole ring or more below zero is all red; more than a whole ring: the band thinner, DEEP_IN, and inside it a thin red
+// lap ring per further ring over the segments that deep, up to 2, LAPS), the rest hollow (outlined inside its own
+// footprint); more than 8 segments: arcs by share; X two dashed circles (green when full: (X/XCD)). In the middle the
+// turns until its first full charge (X - Y), in Roboto Black's figures as on the cards, its ink centred (a 1 optically:
+// ONE): green when that is 0 or 1 (ready on its first turn: charge comes in as a turn begins), red when it starts below
+// zero ((-1/XCD) too), else light grey (X too). No glow (owner 2026-11-04). Nothing reaches past the pill. Its tip says
+// it in words. The rim (top, bottom: style.css .ring's gradient too) shades as the pill does.
+const RING_RIM = { turn: ["#92b4fa", "#5b8ff9"], any: ["#c7a6ff", "#a274ff"] }, RING_GREEN = "#4ade80", RING_RED = "#ef4444", RING_BODY = "#1c2030";
+const RING_HOLLOW = "#c7c9cf", RING_FAINT = "#b3b5bc", RING_NUMBER = ["#4ade80", "#ff6b6b", "#e5e7eb"];
+const IN = 6.2, OUT = 9.4, SALT_OUT = 9.0, SLOT = 1.1, W = 0.9, SALT_BAND = 1.4, DASH = [2.6, 0.54], ONE = [-0.3, -0.15];
+const DEEP_IN = 7.25, LAPS = [[6.1, 6.7], [5.18, 5.65]];   // more than a whole ring below zero (build_stoogedings RING_DEEP_IN, RING_LAPS)
+const LINE = 50 * 22 / 950, DIV = [22 - LINE, 22 + 16 * 22 / 950];   // the salt outline; its divider's sides (build_stoogedings SALT_DIVIDER)
+/** x to move a number by so that a leading 1 sits optically centred, at capitals caps tall (build_stoogedings
+ *  _one_nudge: the ring's lone 1 0.3 box units, a leading one 0.15, at their capitals 7.8 and 5.7). */
+const oneNudge = (t, caps) => (t[0] === "1" ? ONE[+(t.length > 1)] / (t.length > 1 ? 5.7 : 7.8) * caps : 0);
+/** Roboto Black's figures and X as badges set them (build_stoogedings ring_number, LABEL_METRICS: its 1 and X re-spaced;
+ *  MDW/Fonts/stoogedings-src/badge_web_font.py prints this): [advance, ink x0, y0, x1, y1, outline], font units, y down
+ *  from the baseline; RING_CAP its capital height. */
+const RING_CAP = 1456;
+const RING_DIGITS = {"0":[1187,86,-1476,1101,20,"M1101 -861V-595Q1101 -438 1064.5 -322Q1028 -206 960.5 -130Q893 -54 800 -17Q707 20 595 20Q505 20 427 -3.5Q349 -27 286.5 -75.5Q224 -124 179 -197Q134 -270 110 -369.5Q86 -469 86 -595V-861Q86 -1019 122.5 -1134.5Q159 -1250 227 -1326Q295 -1402 388 -1439Q481 -1476 593 -1476Q683 -1476 760.5 -1452.5Q838 -1429 901 -1380.5Q964 -1332 1008.5 -1259Q1053 -1186 1077 -1086.5Q1101 -987 1101 -861ZM764 -554V-904Q764 -974 756.5 -1026Q749 -1078 734.5 -1114Q720 -1150 699 -1172.5Q678 -1195 651.5 -1205.5Q625 -1216 593 -1216Q553 -1216 521.5 -1199.5Q490 -1183 468 -1147Q446 -1111 434.5 -1051Q423 -991 423 -904V-554Q423 -483 430.5 -430.5Q438 -378 452.5 -341.5Q467 -305 488 -282.5Q509 -260 536 -250Q563 -240 595 -240Q634 -240 665 -256Q696 -272 718.5 -308.5Q741 -345 752.5 -405.5Q764 -466 764 -554Z"],"1":[880,100,-1456,769,0,"M769 -1456V0H432V-1076L100 -979V-1235L738 -1456Z"],"2":[1187,60,-1477,1106,0,"M1106 -260V0H90V-220L558 -712Q620 -783 658 -839.5Q696 -896 713.5 -942Q731 -988 731 -1025Q731 -1088 712.5 -1130.5Q694 -1173 658.5 -1195Q623 -1217 571 -1217Q519 -1217 480 -1187Q441 -1157 419.5 -1105Q398 -1053 398 -988H60Q60 -1122 125.5 -1233Q191 -1344 308 -1410.5Q425 -1477 579 -1477Q740 -1477 849 -1427Q958 -1377 1013.5 -1282.5Q1069 -1188 1069 -1055Q1069 -979 1045 -909Q1021 -839 976 -770.5Q931 -702 866.5 -630Q802 -558 720 -477L532 -260Z"],"3":[1187,48,-1477,1106,20,"M397 -869H561Q624 -869 664.5 -891.5Q705 -914 725 -955.5Q745 -997 745 -1054Q745 -1098 726.5 -1135Q708 -1172 670 -1194.5Q632 -1217 573 -1217Q533 -1217 495 -1200.5Q457 -1184 432.5 -1154Q408 -1124 408 -1081H70Q70 -1205 138.5 -1293.5Q207 -1382 319.5 -1429.5Q432 -1477 562 -1477Q717 -1477 834 -1429.5Q951 -1382 1016.5 -1289.5Q1082 -1197 1082 -1061Q1082 -986 1047 -920Q1012 -854 949 -804Q908.2 -771.6 858.3 -748.2Q921.8 -725.3 971 -689Q1036 -641 1071 -570.5Q1106 -500 1106 -409Q1106 -307 1065 -227Q1024 -147 950 -92Q876 -37 777 -8.5Q678 20 562 20Q471 20 380 -4.5Q289 -29 214 -80.5Q139 -132 93.5 -212.5Q48 -293 48 -405H386Q386 -359 411.5 -321.5Q437 -284 480 -262Q523 -240 573 -240Q635 -240 678.5 -263.5Q722 -287 745 -327Q768 -367 768 -416Q768 -490 743.5 -534Q719 -578 672.5 -598Q626 -618 561 -618H397Z"],"4":[1187,59,-1456,1127,0,"M1127 -569V-309H980V0H643V-309H79L59 -515L643 -1454.4V-1456H980V-569ZM643 -569V-1019L621 -983L381 -569H643Z"],"5":[1187,81,-1456,1099,20,"M378 -649 110 -712 198 -1456H1049V-1194H473L440 -905Q464 -919 521.5 -938.5Q579 -958 649 -958Q757 -958 840.5 -925.5Q924 -893 982 -830.5Q1040 -768 1069.5 -677Q1099 -586 1099 -469Q1099 -375 1068.5 -287.5Q1038 -200 975.5 -130.5Q913 -61 818 -20.5Q723 20 593 20Q496 20 404 -10Q312 -40 238.5 -96.5Q165 -153 122.5 -233.5Q80 -314 81 -414H420Q423 -361 445 -322Q467 -283 504.5 -261.5Q542 -240 591 -240Q641 -240 674 -260Q707 -280 726 -315Q745 -350 753 -395.5Q761 -441 761 -492Q761 -546 749.5 -589Q738 -632 713 -662.5Q688 -693 648.5 -709Q609 -725 554 -725Q481 -725 439 -700Q397 -675 378 -649Z"],"6":[1187,84,-1477,1129,20,"M849 -1477H903V-1212H885Q788 -1212 703.5 -1185Q619 -1158 555.5 -1103.5Q492 -1049 456.5 -966Q437.8 -922.3 428.9 -870.5Q476 -917.6 543 -948Q618 -982 717 -982Q817 -982 893.5 -944Q970 -906 1022.5 -838Q1075 -770 1102 -679Q1129 -588 1129 -482Q1129 -375 1091.5 -283.5Q1054 -192 986 -124Q918 -56 825 -18Q732 20 620 20Q505 20 407.5 -19.5Q310 -59 237.5 -134.5Q165 -210 124.5 -319Q84 -428 84 -566V-689Q84 -876 145.5 -1022Q207 -1168 313.5 -1269.5Q420 -1371 558 -1424Q696 -1477 849 -1477ZM421 -618V-516Q421 -446 433 -394Q445 -342 469 -308Q493 -274 528.5 -257Q564 -240 611 -240Q650 -240 683 -258Q716 -276 740.5 -309Q765 -342 778 -386Q791 -430 791 -482Q791 -538 777 -583Q763 -628 737.5 -659.5Q712 -691 676.5 -707.5Q641 -724 599 -724Q535 -724 490.5 -695.5Q446 -667 423.5 -623Q422.2 -620.5 421 -618Z"],"7":[1187,52,-1456,1102,0,"M1102 -1456V-1276L558 0H202L747 -1196H52V-1456Z"],"8":[1187,85,-1477,1101,20,"M1101 -401Q1101 -262 1035.5 -168Q970 -74 855.5 -27Q741 20 595 20Q450 20 334.5 -27Q219 -74 152 -168Q85 -262 85 -401Q85 -496 123.5 -571.5Q162 -647 231 -700Q268.9 -729.1 313.9 -750.7Q229.1 -795.7 177.5 -867.5Q116 -953 116 -1067Q116 -1201 177.5 -1292Q239 -1383 347 -1430Q455 -1477 593 -1477Q733 -1477 841 -1430Q949 -1383 1010 -1292Q1071 -1201 1071 -1067Q1071 -953 1010.5 -867.5Q959.4 -795.2 874.6 -750.1Q975 -701.7 1035 -619Q1101 -528 1101 -401ZM762 -428Q762 -488 741 -529.5Q720 -571 682 -593Q644 -615 593 -615Q543 -615 504.5 -593Q466 -571 444.5 -529.5Q423 -488 423 -428Q423 -370 445 -327.5Q467 -285 505.5 -262.5Q544 -240 595 -240Q646 -240 683.5 -262.5Q721 -285 741.5 -327.5Q762 -370 762 -428ZM734 -1049Q734 -1101 718 -1138.5Q702 -1176 671 -1196.5Q640 -1217 593 -1217Q548 -1217 517 -1197Q486 -1177 470 -1139.5Q454 -1102 454 -1049Q454 -997 470 -958Q486 -919 517.5 -897Q549 -875 595 -875Q642 -875 672.5 -897Q703 -919 718.5 -958Q734 -997 734 -1049Z"],"9":[1187,80,-1477,1096,20,"M303 -250H323Q423 -250 503 -272Q583 -294 640 -340.5Q697 -387 727.5 -461.5Q745.8 -506.3 753.1 -562.4Q707.1 -521 649.5 -495Q583 -465 509 -465Q410 -465 330.5 -500Q251 -535 195 -600Q139 -665 109.5 -755.5Q80 -846 80 -957Q80 -1064 117 -1158Q154 -1252 222 -1323.5Q290 -1395 383 -1436Q476 -1477 587 -1477Q692 -1477 784 -1437.5Q876 -1398 946 -1322Q1016 -1246 1056 -1135Q1096 -1024 1096 -881V-765Q1096 -610 1058 -485Q1020 -360 950 -265.5Q880 -171 784.5 -107.5Q689 -44 573.5 -12Q458 20 329 20H303ZM758 -802.6V-943Q758 -1013 746 -1064.5Q734 -1116 711 -1150Q688 -1184 656 -1200.5Q624 -1217 584 -1217Q544 -1217 513.5 -1194.5Q483 -1172 461.5 -1134.5Q440 -1097 429 -1050.5Q418 -1004 418 -957Q418 -904 429.5 -858.5Q441 -813 463.5 -779.5Q486 -746 520.5 -727Q555 -708 601 -708Q647 -708 680.5 -724.5Q714 -741 736 -768.5Q749 -784.8 758 -802.6Z"],"X":[1404,70,-1456,1369,0,"M482 -1456 720 -972 958 -1456H1358L952 -734L1369 0H965L720 -493L475 0H70L488 -734L81 -1456Z"]};
+const deg = Math.PI / 180, P = (r, a) => `${(11 + r * Math.sin(a * deg)).toFixed(3)} ${(11 - r * Math.cos(a * deg)).toFixed(3)}`;   // 3 places: a half ring's arc keeps the font's centre
+const side = (r, a, d) => a + Math.asin(d / r) / deg;          // the line d from the radial at a, parallel to it, at radius r
+const A = (r, a0, a1) => `A${r} ${r} 0 ${Math.abs(a1 - a0) > 180 ? 1 : 0} ${a1 > a0 ? 1 : 0} ${P(r, a1)}`;
+/** An annular sector in the ring's 22-unit box, clockwise from a0 to a1 (0 = up), its sides d inside the radials and
+ *  parallel to them: SVG path data. */
+const seg = (r0, r1, a0, a1, d = 0) => {
+  if (!d && a1 - a0 > 359) return seg(r0, r1, a0, a0 + 180) + seg(r0, r1, a0 + 180, a0 + 360);
+  const b0 = side(r1, a0, d), b1 = side(r1, a1, -d), c0 = side(r0, a0, d), c1 = side(r0, a1, -d);
+  return `M${P(r1, b0)}${A(r1, b0, b1)}L${P(r0, c1)}${A(r0, c1, c0)}Z`;
 };
-/** The cooldown's numbers: {cap (X), start (Y), global} or null; "X" where the tag says X. */
+const hollow = (r0, r1, a0, a1, d) => {                    // seg's outline, W wide inside it
+  const q0 = r0 + W, q1 = r1 - W, e = d + W, b0 = side(q1, a0, e), b1 = side(q1, a1, -e), c0 = side(q0, a0, e), c1 = side(q0, a1, -e);
+  return seg(r0, r1, a0, a1, d) + `M${P(q1, b1)}${A(q1, b1, b0)}L${P(q0, c0)}${A(q0, c0, c1)}Z`;
+};
+const annulus = (r0, r1) => `M${P(r1, 0)}${A(r1, 0, 180)}${A(r1, 180, 360)}ZM${P(r0, 0)}${A(r0, 360, 180)}${A(r0, 180, 0)}Z`;
+const dashN = r => 2 * Math.max(1, Math.round(2 * Math.PI * r / DASH[0] / 2));
+const dashCircle = (r, w) => {                             // dashes evenly round, a gap centred at the top
+  const n = dashN(r), lit = DASH[1] * 180 / n;
+  return Array.from({ length: n }, (_, k) => seg(r - w / 2, r + w / 2, (k + 0.5) * 360 / n - lit, (k + 0.5) * 360 / n + lit)).join("");
+};
+const poly = pts => {                                      // clockwise, as seg: overlapping pieces add up under nonzero (build _clockwise)
+  if (pts.reduce((s, [x, y], i) => s + x * pts[(i + 1) % pts.length][1] - pts[(i + 1) % pts.length][0] * y, 0) < 0) pts = [...pts].reverse();
+  return `M${pts.map(([x, y]) => `${x.toFixed(3)} ${y.toFixed(3)}`).join("L")}Z`;
+};
+const dashSeg = (r0, r1, a0, a1, d) => {                   // a start-X segment: its outline dashed, a dash centred on each corner
+  const h = W / 2, R1 = r1 - h, R0 = r0 + h, e = d + h, xy = (r, a) => [11 + r * Math.sin(a * deg), 11 - r * Math.cos(a * deg)];
+  const b0 = side(R1, a0, e), b1 = side(R1, a1, -e), c0 = side(R0, a0, e), c1 = side(R0, a1, -e);
+  let out = "";
+  for (const [r, f0, f1] of [[R1, b0, b1], [R0, c1, c0]]) {
+    const n = Math.max(1, Math.round(Math.abs((f1 - f0) * deg) * r / DASH[0])), lit = DASH[1] / 2 * (f1 - f0) / n;
+    for (let k = 0; k <= n; k++) {
+      const m = f0 + k * (f1 - f0) / n, u = Math.max(Math.min(m - lit, m + lit), Math.min(f0, f1)), v = Math.min(Math.max(m - lit, m + lit), Math.max(f0, f1));
+      out += seg(r - h, r + h, u, v);
+    }
+  }
+  for (const [p, q] of [[xy(R1, b1), xy(R0, c1)], [xy(R0, c0), xy(R1, b0)]]) {
+    const L = Math.hypot(q[0] - p[0], q[1] - p[1]), tx = (q[0] - p[0]) / L, ty = (q[1] - p[1]) / L, n = Math.max(1, Math.round(L / DASH[0])), lit = DASH[1] / 2 * L / n;
+    const at = s => [p[0] + tx * s, p[1] + ty * s];
+    for (let k = 0; k <= n; k++) {
+      const a = at(Math.max(0, k * L / n - lit)), b = at(Math.min(L, k * L / n + lit));
+      out += poly([[a[0] - ty * h, a[1] + tx * h], [b[0] - ty * h, b[1] + tx * h], [b[0] + ty * h, b[1] - tx * h], [a[0] + ty * h, a[1] - tx * h]]);
+    }
+    for (const [cx, cy] of [p, q]) out += poly([[1, 1], [1, -1], [-1, -1], [-1, 1]].map(([sx, sy]) => [cx + h * (sx * tx - sy * ty), cy + h * (sx * ty + sy * tx)]));
+  }
+  return out;
+};
+/** The cooldown's numbers: {cap (X), start (Y), global, y (the chapter's Y/X family row)} or null; "X" where the tag says
+ *  X (or Y). */
 export function cooldownOf(typed) {
   const t = tagInfo(typed)?.tag, m = t && (/^(-?\d+|X|Y)\/(\d+|X)(G?)CD$/.exec(t) || /^()(\d+|X)(G?)CD$/.exec(t));
   if (!m) return null;
   const n = v => (/^-?\d+$/.test(v) ? +v : "X");          // the chapter's family rows (Y/XCD): X
-  return { cap: n(m[2]), start: m[1] === "" ? 0 : n(m[1]), global: !!m[3] };
+  return { cap: n(m[2]), start: m[1] === "" ? 0 : n(m[1]), global: !!m[3], y: m[1] === "Y" };
 }
-/** The ring in words: its tip. */
-export function ringWords({ cap, start, global }) {
-  const turn = k => `${k} ${global ? "global turn" : "turn"}${k === 1 ? "" : "s"}`, every = k => (k === 1 ? `every ${global ? "global turn" : "turn"}` : `every ${turn(k)}`);
-  if (cap === "X") return "Cooldown: X turns";
-  if (start === "X") return `Starts with X of ${turn(cap)} of charge`;
+/** The ring of a cooldown ({cap, start}: cooldownOf) as {parts: [[paint, SVG path data]] in drawing order in its 22-unit
+ *  box (paint body, rim, green, red, hollow, faint, or one (salt): ink), number: [[path, x, y, k]] (Roboto Black outlines,
+ *  each at its origin and scale), colour (the number's), ready}; one: the salt drawing, in one colour inside the pill's
+ *  outline, no body or rim (build_stoogedings ring_parts, ring_number). The web draws the body and rim as circles. */
+export function ringParts({ cap, start, y }, one = false) {
+  const full = cap === "X" && start === "X" && !y, unknown = (cap === "X" || start === "X") && !full;   // (X/XCD): fully charged, a green 0
+  const debt = unknown || full ? 0 : Math.max(0, -start), have = unknown || full ? 0 : Math.max(0, Math.min(start, cap));
+  const wait = unknown ? "X" : full ? 0 : Math.max(0, cap - start), ready = !unknown && wait <= 1, r0 = cap !== "X" && debt > cap ? DEEP_IN : IN, r1 = one ? SALT_OUT : OUT, d = SLOT / 2;
+  const ink = p => (one ? "ink" : p), parts = [];
+  if (cap === "X") parts.push([ink(full ? "green" : "hollow"), dashCircle(r1 - W / 2, W) + dashCircle(r0 + W / 2, W)]);
+  else if (cap <= 8) {
+    for (let i = 0; i < cap; i++) {
+      const a0 = i * 360 / cap, a1 = (i + 1) * 360 / cap;
+      if (start === "X") parts.push([ink("hollow"), dashSeg(r0, r1, a0, a1, d)]);
+      else if (i < have) parts.push([ink("green"), seg(r0, r1, a0, a1, d)]);
+      else if (debt > cap - 1 - i) {                      // counter-clockwise from the top; salt: a band along the inside
+        parts.push(one ? ["ink", seg(r0, r0 + SALT_BAND, a0, a1, d)] : ["red", seg(r0, r1, a0, a1, d)]);
+        for (const lap of LAPS.slice(0, Math.floor((debt - cap + i) / cap))) parts.push([ink("red"), seg(...lap, a0, a1, d)]);   // its further rings below zero
+      }
+      else parts.push([ink("hollow"), hollow(r0, r1, a0, a1, d)]);
+    }
+  } else {
+    const due = 360 - Math.min(debt, cap) / cap * 360;      // below zero from here round to the top; salt: no outer edge over it
+    parts.push(one && debt ? ["ink", annulus(r0, r0 + 0.8) + (due > 0 ? seg(r1 - 0.8, r1, 0, due) : "")] : [ink("faint"), annulus(r1 - 0.8, r1) + annulus(r0, r0 + 0.8)]);
+    if (have) parts.push([ink("green"), seg(r0, r1, 0, have / cap * 360)]);
+    if (debt) parts.push([ink("red"), seg(r0, one ? r0 + SALT_BAND : r1, due, 360)]);
+    LAPS.forEach((lap, j) => { if (debt > (j + 1) * cap) parts.push([ink("red"), seg(...lap, 360 - Math.min(debt - (j + 1) * cap, cap) / cap * 360, 360)]); });   // by share
+  }
+  if (one) parts.push(["ink", poly([[DIV[0], LINE], [DIV[1], LINE], [DIV[1], 22 - LINE], [DIV[0], 22 - LINE]])]);   // salt: a divider after the ring, the outline mirrored
+  const t = String(wait), k = (t.length > 1 ? 5.7 : 7.8) / RING_CAP, track = t.length > 1 ? -0.45 : 0, g = [...t].map(c => RING_DIGITS[c]), xs = [];
+  let x = 0;
+  for (const c of g) { xs.push(x); x += c[0] * k + track; }
+  const x0 = xs[0] + g[0][1] * k, x1 = xs[xs.length - 1] + g[g.length - 1][3] * k, y0 = Math.min(...g.map(c => c[2])) * k, y1 = Math.max(...g.map(c => c[4])) * k;
+  const dx = 11 - (x0 + x1) / 2 + oneNudge(t, t.length > 1 ? 5.7 : 7.8), base = 11 - (y0 + y1) / 2;      // the ink box centred in the ring
+  const number = g.map((c, i) => [c[5], dx + xs[i], base, k]);
+  return { parts, number, colour: ready ? RING_NUMBER[0] : start !== "X" && start < 0 ? RING_NUMBER[1] : RING_NUMBER[2], ready };
+}
+export const RING_PAINT = { body: RING_BODY, green: RING_GREEN, red: RING_RED, hollow: RING_HOLLOW, faint: RING_FAINT, rim: RING_RIM };
+/** The ring in words: its tip. The turn its first full charge comes on, as the rulebook counts it ((2CD): its 2nd). */
+export function ringWords({ cap, start, global, y }) {
+  const unit = global ? "global turn" : "turn", turns = k => `${k} ${unit}${k === 1 ? "" : "s"}`, every = k => (k === 1 ? `every ${unit}` : `every ${turns(k)}`);
+  const nth = k => `${k}${k % 100 > 10 && k % 100 < 14 ? "th" : ["th", "st", "nd", "rd"][k % 10] || "th"} ${unit}`;
+  if (cap === "X" && start === "X" && !y) return `Fully charged from the start, then every X ${unit}s: a number the card sets`;
+  if (cap === "X") return start === 0 ? `Charge needed: X ${unit}s, a number the card sets` : y ? `Starts with Y of X ${unit}s: numbers the card sets`
+    : start < 0 ? `Starts ${-start} below zero, X a number the card sets` : `Starts with ${start} of X ${unit}s, X a number the card sets`;
+  if (start === "X") return `Starts with X of ${turns(cap)}: a number the card sets`;
   const wait = Math.max(0, cap - start);
-  if (wait === 0) return `Fully charged from the start, then recharges in ${turn(cap)}`;
-  if (wait === 1) return `Fully charged as its first ${global ? "global turn" : "turn"} begins, then ${every(cap)}`;
-  if (start < 0) return `Starts ${-start} below zero: first fully charged after ${turn(wait)}, then ${every(cap)}`;
-  return `First fully charged after ${turn(wait)}, then ${every(cap)}`;
+  if (wait === 0) return `Fully charged from the start, then ${every(cap)}`;
+  if (wait === 1) return `Fully charged as its first ${unit} begins, then ${every(cap)}`;
+  if (start < 0) return `Starts ${-start} below zero: first fully charged on its ${nth(wait)}, then ${every(cap)}`;
+  return `First fully charged on its ${nth(wait)}, then ${every(cap)}`;
 }
 /** A cooldown badge's ring (HTML), or "" for any other tag (tip false: the note is the parent's). */
 export function ringHtml(typed, tip = true) {
   const c = cooldownOf(typed);
   if (!c) return "";
-  const { cap, start } = c, R = 9.4, IN = 5.6, rim = RING_RIM[tagInfo(typed).group] || RING_LINE;
-  const unknown = cap === "X" || start === "X", debt = unknown ? 0 : Math.max(0, -start), have = unknown ? 0 : Math.max(0, Math.min(start, cap));
-  const wait = unknown ? "X" : Math.max(0, cap - start), red = !unknown && start < 0;
-  const open = (d, dashed = false) => `<path d="${d}" fill="none" stroke="${RING_LINE}" stroke-opacity=".85" stroke-width=".9"${dashed ? ' stroke-dasharray="1.4 1.2"' : ""}/>`;
-  let body = `<circle cx="11" cy="11" r="10.3" fill="${RING_BODY}" stroke="${rim}" stroke-width="1.3"/>`;
-  if (cap === "X") body += open(arc(IN, R, 0, 360), true);
-  else if (cap <= 8) {
-    const depth = k => (debt > k ? Math.floor((debt - 1 - k) / cap) + 1 : 0);   // laps below zero over the k-th segment counter-clockwise
-    for (let i = 0; i < cap; i++) {
-      const a0 = i * 360 / cap + 3.5, a1 = (i + 1) * 360 / cap - 3.5, d = arc(IN, R, a0, a1), deep = depth(cap - 1 - i);
-      body += start === "X" ? open(d, true) : i < have ? `<path d="${d}" fill="${RING_GREEN}"/>` : deep ? `<path d="${d}" fill="${RING_RED}"/>` : open(d);
-      for (let lap = 2; lap <= deep; lap++) body += `<path d="${arc(10.9 + (lap - 2) * 1.7, 12.15 + (lap - 2) * 1.7, a0, a1)}" fill="${RING_RED}"/>`;
-    }
-  } else {
-    body += [R, IN].map(r => `<circle cx="11" cy="11" r="${r}" fill="none" stroke="${RING_LINE}" stroke-opacity=".75" stroke-width=".8"/>`).join("");
-    if (have) body += `<path d="${arc(IN, R, 0, have / cap * 360)}" fill="${RING_GREEN}"/>`;
-    if (debt) body += `<path d="${arc(IN, R, 360 - Math.min(debt, cap) / cap * 360, 360)}" fill="${RING_RED}"/>`;
-    for (let lap = 2, left = debt - cap; left > 0; lap++, left -= cap)
-      body += `<path d="${arc(10.9 + (lap - 2) * 1.7, 12.15 + (lap - 2) * 1.7, 360 - Math.min(left, cap) / cap * 360, 360)}" fill="${RING_RED}"/>`;
-  }
-  const t = String(wait), size = t.length > 1 ? 6.9 : 8.6;
-  body += `<text x="11" y="${(11.2 + size * .36).toFixed(2)}" text-anchor="middle" font-family="system-ui,-apple-system,'Segoe UI',sans-serif" font-weight="900" font-size="${size}"${t.length > 1 ? ' letter-spacing="-.45"' : ""} fill="${red ? "#ff6b6b" : "#4ade80"}" stroke="#05070b" stroke-width="${(size * .2).toFixed(2)}" stroke-linejoin="round" paint-order="stroke">${t}</text>`;
-  const glow = !unknown && wait <= 1 ? " glow" : "";
-  return `<span class="ring${glow}"${tip ? ` data-tip="${esc(ringWords(c))}"` : ""}><svg viewBox="0 0 22 22" aria-hidden="true">${body}</svg></span>`;
+  const { parts, number, colour } = ringParts(c);   // the rim: .ring's gradient disc, the pill's edge over its outside
+  let body = `<circle cx="11" cy="11" r="9.9" fill="${RING_BODY}"/>`;
+  body += parts.map(([p, d]) => `<path d="${d}" fill="${RING_PAINT[p]}"/>`).join("");
+  body += `<g fill="${colour}">${number.map(([d, x, y, k]) => `<path transform="translate(${x.toFixed(3)} ${y.toFixed(3)}) scale(${k.toFixed(6)})" d="${d}"/>`).join("")}</g>`;
+  return `<span class="ring"${tip ? ` data-tip="${esc(ringWords(c))}"` : ""}><svg viewBox="0 0 22 22" aria-hidden="true">${body}</svg></span>`;
 }
-/** A badge as card text draws it: a cooldown with its ring, the two kept together. */
-export const tagHtml = (typed, tip = true) => { const ring = ringHtml(typed, tip); return ring ? `<span class="cd">${ring}${badgeHtml(typed, tip)}</span>` : badgeHtml(typed, tip); };
+/** A badge as card text draws it: a cooldown's with its ring as its left end. */
+export const tagHtml = (typed, tip = true) => badgeHtml(typed, tip, ringHtml(typed, tip));
+// a label's ink centred as the font centres it (_tag_badges, cost_badge's own currency): (its last character's right
+// side-bearing - its first's left) / 2, Roboto Black units at 540/1456 of the 950-unit pill (1.45em); style.css .badge
+// and .badge.ringed take --ink. LSB, RSB: the characters badge labels start and end with, as badges set them
+// (badge_web_font.py prints them).
+const LSB = {"0":86,"1":100,"2":60,"3":48,"4":59,"5":81,"6":84,"7":52,"8":85,"9":80,"A":-4,"B":111,"E":111,"F":111,"O":70,"W":22,"X":70,"Y":-4,"\u2212":135};
+const RSB = {"D":71,"F":35,"G":94,"S":70,"T":38,"U":109,"l":112,"n":92,"r":21,"s":62};
+const INK_EM = 540 / 1456 * 1.45 / 950;
+const inkShift = label => `${(((RSB[label.at(-1)] ?? 0) - (LSB[label[0]] ?? 0)) / 2 * INK_EM).toFixed(4)}em`;
 
 // Costs in parentheses, as the stoogedings font draws them (build_stoogedings.cost_badges, owner 2026-11-03): "(2 points)"
 // a green coin with the number on it and "Points", "(2 bricks)" a brown brick, "(2 SP)" or "(2 star points)" a yellow
@@ -166,12 +256,19 @@ export function costInfo(typed) {
   if (!COST_NUMBERS.has(n) || !kind) return null;
   return { n, kind, word: COST_WORD[kind][n === "1" ? 0 : 1] };
 }
+// an icon's number: its ink centred on the icon as the font centres it (--nx; a 1 optically), on the star a long one shrunk to 0.88 of its
+// radius (--k); Roboto Black figures (RING_DIGITS) and point at capitals 440/950 of the pill, 10/950 between them
+const NUM_U = 440 / 1456, U_EM = 1.45 / 950, POINT = [620, 117, 0, 489], fig = ch => (ch === "." ? POINT : RING_DIGITS[ch]);
 export const costHtml = typed => {
   const c = costInfo(typed);
   if (!c) return esc(`(${typed})`);
   const own = c.kind === "souls" || c.kind === "counters";
-  const n = c.kind === "sp" && c.n.length > 1 ? `<span class="cost-n long"><i>${esc(c.n)}</i></span>` : `<span class="cost-n">${esc(c.n)}</span>`;
-  return `<span class="badge cost ${own ? "own" : c.kind}" data-tip="${esc(`${c.n} ${c.kind === "sp" ? "SP" : c.word.toLowerCase()}: ${COST_TIP[c.kind]}`)}">${n}<span class="cost-u"> ${esc(c.word)}</span></span>`;
+  const tip = ` data-tip="${esc(`${c.n} ${c.kind === "sp" ? "SP" : c.word.toLowerCase()}: ${COST_TIP[c.kind]}`)}"`;
+  if (own) return `<span class="badge cost own" style="--ink:${inkShift(`${c.n} ${c.word}`)}"${tip}><span class="bl"><span class="cost-n">${esc(c.n)}</span><span class="cost-u"> ${esc(c.word)}</span></span></span>`;
+  const f = [...c.n].map(fig), nw = f.reduce((w, g) => w + g[0], 0) * NUM_U + 10 * (f.length - 1);
+  const k = c.kind === "sp" ? Math.min(1, 528 / nw) : 1, nx = ((f.at(-1)[0] - f.at(-1)[3] - f[0][1]) / 2 * NUM_U + oneNudge(c.n, 440)) * k * U_EM;
+  const look = `--nx:${nx.toFixed(4)}em${k < 1 ? `;--k:${k.toFixed(4)}` : ""}`;
+  return `<span class="badge cost ${c.kind}"${tip}><span class="cost-n"><i style="${look}">${esc(c.n)}</i></span><span class="cost-u">${esc(c.word)}</span></span>`;
 };
 
 // badge colour legend, one line per colour: the text of rulebook page 02 Abbreviations; colours come from tagInfo's groups
@@ -183,8 +280,9 @@ export const LEGEND = [
 const COSTS = [["Green", "points", "2 points", "#00ffae"], ["Brown", "BRICKS", "2 bricks", "#a0522d"], ["Yellow", "SP (star points)", "2 SP", "#ffff00"],
   ["Teal", "a card's own currency", "4 souls", "#0f766e"]];   // style.css colours: the TTS table's counters
 /** costs: the cost lines too */
-export const legendHtml = (costs = false) => `<ul class="badge-legend">${LEGEND.map(l => `<li><span class="badge ${l.group} swatch" aria-hidden="true"></span><b>${l.colour}:</b> ${esc(l.what)} ${l.tags.map((t, i) => `<span class="nw">${i ? "" : "("}${badgeHtml(t)}${i < l.tags.length - 1 ? "," : ")."}</span>`).join(" ")}</li>`).join("")}${costs
-  ? `${COSTS.map(([colour, what, eg, bg]) => `<li><span class="badge swatch" style="background:${bg}" aria-hidden="true"></span><b>${colour}:</b> ${esc(what)} <span class="nw">(${costHtml(eg)}).</span></li>`).join("")}` : ""}</ul>`;
+export const legendHtml = (costs = false) => `<ul class="badge-legend">${LEGEND.map(l => `<li><span class="badge ${l.group} swatch" aria-hidden="true"></span><b>${l.colour}:</b> ${esc(l.what)} ${l.tags.map((t, i) => `<span class="nw">${i ? "" : "("}${tagHtml(t)}${i < l.tags.length - 1 ? "," : ")."}</span>`).join(" ")}</li>`).join("")}${costs
+  ? `${COSTS.map(([colour, what, eg, bg]) => `<li><span class="badge swatch" style="background:${bg}" aria-hidden="true"></span><b>${colour}:</b> ${esc(what)} <span class="nw">(${costHtml(eg)}).</span></li>`).join("")}` : ""}${RING_LINE}</ul>`;
+const RING_LINE = `<li><b>Cooldowns:</b> the ring counts the charge (<a href="#/rules/timing-tags/reading-the-ring">Reading the ring</a>).</li>`;
 /** Does a text draw any timing badge? */
 export const hasBadges = text => [...String(text || "").matchAll(new RegExp(TAG.source, "g"))].some(m => tagInfo(m[1]));
 /** Does a text draw any cost badge? */

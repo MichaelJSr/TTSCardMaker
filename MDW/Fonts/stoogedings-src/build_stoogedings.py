@@ -15,7 +15,11 @@ tags (nPT, EnT, FTEnT, nPGT, EnGT) all work; n can be 1-20 or X (the old tags 1-
 on it and "Points" in a pill, "(2 bricks)" a brown brick, "(2 SP)" and "(2 star points)" a yellow star with "SP"
 (the TTS table's counter colours), "(4 souls)" and "(3 counters)" a teal pill; numbers 0-50, halves to 9.5 and X.
 Any letter case works and draws the same badge: "(1cd)" is (1CD), "(action)" and "(ACTION)" are (Action). The text
-is unchanged, so parsers and searches see the same thing as before.
+is unchanged, so parsers and searches see the same thing as before. Badge letters and numbers are Roboto Black outlines
+(MDW/Fonts/Roboto Black.ttf, OFL; owner 2026-11-04: was Changa One), at Changa One's old capital height.
+A cooldown badge's left end is a ring, the website's (site/assets/text.js ringHtml): a segment per turn of charge,
+the start's charge green, a start below zero red, the turns until its first full charge in the middle (green when
+ready, red below zero, else light grey). No glow anywhere (owner 2026-11-04).
 Under a Color/Gradient/Pattern Overlay a colour badge or :sticker is a blob (the overlay repaints every pixel), so
 Stylistic Alternates (salt) swap them for one-colour shapes in the text color: a badge becomes a pill outline with solid
 letters, a :sticker a thin outline around the :tint icon. The text is unchanged.
@@ -38,7 +42,7 @@ Rebuilds MDW/Fonts/stoogedings.ttf from Types/ and Types/Stars/ of the repo this
 adding or changing icons, then commit stoogedings.ttf and stoogedings.json together with the PNGs.
 stoogedings.json (token names, aliases, codepoints, per-icon tint modes) is updated in place: new PNGs get the
 next free codepoint and existing codepoints never move.
-needs: pip install -r requirements.txt   (fonttools, opencv-python-headless, numpy, pillow)
+needs: pip install -r requirements.txt   (fonttools, skia-pathops, opencv-python-headless, numpy, pillow)
 """
 import base64
 import io
@@ -53,7 +57,8 @@ import numpy as np
 from PIL import Image
 from fontTools import subset
 from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
-from fontTools.pens.recordingPen import RecordingPen
+from fontTools.pens.boundsPen import BoundsPen
+from fontTools.pens.recordingPen import DecomposingRecordingPen, RecordingPen
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
 from fontTools.pens.ttGlyphPen import TTGlyphPen
@@ -307,7 +312,14 @@ BADGE_GROUPS = {   # rulebook "02 Abbreviations": color (top, bottom, border) pe
 }
 BADGE_LABEL = {"-": "\u2212"}     # drawn as a minus sign
 BADGE_BOTTOM, BADGE_TOP = -130, 820    # pill about as tall as the icons (0.95 em), centred on the capitals
-BADGE_CAPS = 540                       # label capital height: close to the body text's own capitals
+BADGE_CAPS = 540                       # label capital height: close to the body text's own capitals (Changa One's, kept)
+LABEL_FONT = "MDW/Fonts/Roboto Black.ttf"   # the badges' letters and numbers (owner 2026-11-04: was Changa One)
+LABEL_METRICS = {   # badges set these unlike the label font: (lsb, rsb), its ink kept, or an advance (badge_web_font.py too)
+    "1": (100, 111),                   # Roboto's tabular 1 (167, 351): "1CD" read "1 CD"; a stem's side-bearings
+    "/": (100, 80),                    # its steep slash (-30, 11) fused with the figure before it: "1/2CD" read "V2CD"
+    "X": (70, 35),                     # its X (4, 5) ran into a slash: "1/XCD", "X/2CD"
+    " ": 310,                          # its word space (510): "4 Souls" as Changa One spaced it
+}
 BADGE_PAD = 200                        # space between label and pill ends
 BADGE_TRACKING = 26                    # extra space between label letters
 BADGE_BORDER = 30
@@ -400,7 +412,7 @@ ICON_INSET = 60            # the coin from the pill's left end (round in its rou
 BRICK_INSET = 150          # the brick's: its corners inside the round end
 ICON_GAP = 80              # icon to word
 COIN_H, BRICK_H = 830, 700
-STAR_R = 600               # the star's points reach past the pill, as on the website
+STAR_R = 600               # its points reach past the pill (the owner's 11-03 design), in its plain outline too
 NUM_CAPS = 440             # the number on the icon
 ICON_LINE = 34
 
@@ -419,19 +431,76 @@ def badge_spellings():
     return [t for t, _ in badge_tags()] + [s for *_, spellings in cost_badges() for s in spellings]
 
 
-def _label(glyphs, cmap, text, x, baseline, caps_scale, tracking=BADGE_TRACKING):
-    """(svg path, RecordingPen y up, width) of text in the label font from x on baseline."""
-    pen, rec, x0 = SVGPathPen(glyphs, ntos=num), RecordingPen(), x
+def _set(glyphs, cmap, ch):
+    """(glyph, advance, dx): a label-font character as badges set it, its outline moved dx (LABEL_METRICS)."""
+    g, m = glyphs[cmap[ord(ch)]], LABEL_METRICS.get(ch)
+    if m is None:
+        return g, g.width, 0
+    if not isinstance(m, tuple):
+        return g, m, 0
+    x0, _, x1, _ = _ink(glyphs, cmap, ch)
+    return g, m[0] + x1 - x0 + m[1], m[0] - x0
+
+
+def _set_ink(glyphs, cmap, ch):
+    """(xMin, yMin, xMax, yMax, advance) of a character as badges set it (_set)."""
+    _, adv, dx = _set(glyphs, cmap, ch)
+    x0, y0, x1, y1 = _ink(glyphs, cmap, ch)
+    return x0 + dx, y0, x1 + dx, y1, adv
+
+
+def _merged(glyphs, draws):
+    """RecordingPen (y up) of [(glyph, transform)] as one outline, its overlaps removed: Roboto Black's static instance
+    keeps the variable font's overlapping contours (a T's stem and bar share its top edge), which the fork and FreeType
+    count twice on a shared edge (a bright seam Photoshop doesn't draw)."""
+    import pathops                                     # skia-pathops: only the badges' build needs it
+    path = pathops.Path()
+    for g, t in draws:
+        rec = DecomposingRecordingPen(glyphs)
+        g.draw(rec)
+        rec.replay(TransformPen(path.getPen(), t))
+    path.simplify(fix_winding=True, keep_starting_points=True, clockwise=True)
+    out = RecordingPen()
+    path.draw(out)
+    return out
+
+
+def _svg_d(rec):
+    """SVG path data (y down) of a RecordingPen's outline (y up)."""
+    pen = SVGPathPen(None, ntos=num)
+    rec.replay(TransformPen(pen, (1, 0, 0, -1, 0, 0)))
+    return pen.getCommands()
+
+
+def _label(glyphs, cmap, text, x, baseline, caps_scale, tracking=BADGE_TRACKING, nudge=0.0):
+    """(svg path, RecordingPen y up, width) of text in the label font from x on baseline (nudge: moved by it, the
+    width as without)."""
+    draws, x0 = [], x
     for ch in text:
-        g = cmap[ord(BADGE_LABEL.get(ch, ch))]
-        glyphs[g].draw(TransformPen(pen, (caps_scale, 0, 0, -caps_scale, x, -baseline)))
-        glyphs[g].draw(TransformPen(rec, (caps_scale, 0, 0, caps_scale, x, baseline)))
-        x += glyphs[g].width * caps_scale + tracking
-    return pen.getCommands(), rec, x - x0 - tracking
+        g, adv, dx = _set(glyphs, cmap, BADGE_LABEL.get(ch, ch))
+        draws.append((g, (caps_scale, 0, 0, caps_scale, x + nudge + dx * caps_scale, baseline)))
+        x += adv * caps_scale + tracking
+    rec = _merged(glyphs, draws)
+    return _svg_d(rec), rec, x - x0 - tracking
+
+
+def _one_nudge(text, caps):
+    """x to move a number by so that a leading 1 sits optically centred (its flag pulls its ink box left of its weight:
+    the ring's lone 1 0.3 box units, a leading one 0.15, at their capitals), for capitals caps tall."""
+    if not text.startswith("1"):
+        return 0.0
+    two = len(text) > 1
+    return RING_ONE[two] / RING_CAPS[two] * caps
 
 
 def _width(glyphs, cmap, text, caps_scale, tracking=BADGE_TRACKING):
-    return sum(glyphs[cmap[ord(BADGE_LABEL.get(ch, ch))]].width * caps_scale for ch in text) + tracking * (len(text) - 1)
+    return sum(_set(glyphs, cmap, BADGE_LABEL.get(ch, ch))[1] * caps_scale for ch in text) + tracking * (len(text) - 1)
+
+
+def _sides(glyphs, cmap, text, caps_scale):
+    """(left, right) side-bearings of text as badges set it: its first character's, its last's, scaled."""
+    first, last = (_set_ink(glyphs, cmap, BADGE_LABEL.get(c, c)) for c in (text[0], text[-1]))
+    return first[0] * caps_scale, (last[4] - last[2]) * caps_scale
 
 
 def _ring(outer, inner):
@@ -452,7 +521,8 @@ def cost_badge(glyphs, cmap, cap_height, kind, n):
         text = f"{n} {word}"
         w = _width(glyphs, cmap, text, scale)
         width = max(height, w + 2 * BADGE_PAD)
-        d, rec, _ = _label(glyphs, cmap, text, left + (width - w) / 2, mid - BADGE_CAPS / 2, scale)
+        lsb, rsb = _sides(glyphs, cmap, text, scale)       # its ink centred, as a timing tag's
+        d, rec, _ = _label(glyphs, cmap, text, left + (width - (w - lsb - rsb)) / 2 - lsb, mid - BADGE_CAPS / 2, scale)
         art, labels = f'<path d="{d}" fill="{ink}"/>', [rec]
     else:
         nw = _width(glyphs, cmap, n, nscale, 10)
@@ -462,12 +532,12 @@ def cost_badge(glyphs, cmap, cap_height, kind, n):
             k = min(1, 0.88 * r / nw)                     # long numbers shrink onto the star
             icon_w = 2 * r * math.sin(math.radians(72)) + 20
             pts = star(cx, cy, r)
-            svg = lambda ps: " ".join(f"{x},{-y}" for x, y in ps)
+            svg = lambda ps: "M" + " L".join(f"{x} {-y}" for x, y in ps) + " Z"    # paths: the fork leaves a polygon open
             defs += (f'<radialGradient id="i" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#ffffe8"/>'
                      f'<stop offset=".3" stop-color="#ffff70"/><stop offset=".55" stop-color="{STAR}"/>'
                      f'<stop offset=".85" stop-color="#d9c800"/><stop offset="1" stop-color="#a69400"/></radialGradient>')
-            art = (f'<polygon points="{svg(pts)}" fill="#6e6200"/>'          # its edge: the star under a smaller one
-                   f'<polygon points="{svg(star(cx, cy, r - 1.8 * ICON_LINE))}" fill="url(#i)"/>'
+            art = (f'<path d="{svg(pts)}" fill="#6e6200"/>'                  # its edge: the star under a smaller one
+                   f'<path d="{svg(star(cx, cy, r - 1.8 * ICON_LINE))}" fill="url(#i)"/>'
                    f'<ellipse cx="{num(cx - 0.24 * r)}" cy="{num(-(cy + 0.24 * r))}" rx="{num(0.1 * r)}" ry="{num(0.06 * r)}" '
                    f'fill="#ffffff" opacity="0.75"/>')
             ncol, nshadow = "#3b3300", None
@@ -511,9 +581,12 @@ def cost_badge(glyphs, cmap, cap_height, kind, n):
             ring = _ring(outer, inner)
             ncx, ncy = x0 + icon_w / 2, mid
             icon_w += ICON_INSET if coin else BRICK_INSET
-        nd, nrec, _ = _label(glyphs, cmap, n, ncx - nw * k / 2, ncy - NUM_CAPS * k / 2, nscale * k, 10 * k)
+        nl, nr = _sides(glyphs, cmap, n, nscale)
+        nx = ncx - (nw - nl - nr) * k / 2 - nl * k            # its ink centred on the icon, as the ring's number (a 1
+        nudge = _one_nudge(n, NUM_CAPS * k)                   # optically)
+        nd, nrec, _ = _label(glyphs, cmap, n, nx, ncy - NUM_CAPS * k / 2, nscale * k, 10 * k, nudge)
         if nshadow:
-            sd, _, _ = _label(glyphs, cmap, n, ncx - nw * k / 2, ncy - NUM_CAPS * k / 2 - 28, nscale * k, 10 * k)
+            sd, _, _ = _label(glyphs, cmap, n, nx, ncy - NUM_CAPS * k / 2 - 28, nscale * k, 10 * k, nudge)
             art += f'<path d="{sd}" fill="{nshadow}" opacity="0.7"/>'
         art += f'<path d="{nd}" fill="{ncol}"/>'
         ww = _width(glyphs, cmap, word, scale)
@@ -528,10 +601,17 @@ def cost_badge(glyphs, cmap, cap_height, kind, n):
     outline = [capsule(left, BADGE_BOTTOM, width, height)]
     t = BADGE_LINE
     ring = outline + [capsule(left + t, BADGE_BOTTOM + t, width - 2 * t, height - 2 * t)[::-1]] + salt
+    if kind == "sp":                   # the plain outline holds the star's points too: Photoshop clips the SVG to its box
+        outline = outline + [pts]
     letters = RecordingPen()
     for rec in labels:
         rec.replay(letters)
     return outline, body, width + 2 * BADGE_SIDE, (ring, letters)
+
+
+def cap_height(glyphs, cmap):
+    """The label font's capital height: the top of its H's ink (a flat top), font units."""
+    return _ink(glyphs, cmap, "H")[3]
 
 
 def build_badges(label_font_path):
@@ -539,11 +619,324 @@ def build_badges(label_font_path):
     tag and cost; first: one of the 341 of 2026-10-22 (their glyphs keep their place)."""
     label = TTFont(label_font_path)
     glyphs, cmap = label.getGlyphSet(), label.getBestCmap()
-    out = []
+    caps, out = cap_height(glyphs, cmap), []
     for name, kind, n, spellings in cost_badges():
-        outline, body, advance, alt = cost_badge(glyphs, cmap, label["OS/2"].sCapHeight, kind, n)
+        outline, body, advance, alt = cost_badge(glyphs, cmap, caps, kind, n)
         out.append((spellings, name, outline, body, advance, alt, False))
-    return _tag_badges(glyphs, cmap, label["OS/2"].sCapHeight) + out
+    return _tag_badges(glyphs, cmap, caps) + out
+
+
+# ---- cooldown rings (owner 2026-11-04, design B): site/assets/text.js ringHtml, the cooldown badge's left end ------
+# Its 22-unit box is the pill's height, on the pill's left cap, RING_S font units a unit: a dark body; a rim in the
+# group's colour, lighter than the pill and shaded top to bottom like it, inside the pill's border (drawn over the
+# ring); X segments (the charge needed) from the top, parallel-sided slots between them: the charge it starts with
+# clockwise in green, a start below zero counter-clockwise in red (a whole ring or more below zero: all red), the rest
+# hollow, outlined inside its own footprint; more than a whole ring below zero (owner 2026-11-04, "C2"): the red band
+# thinner (RING_DEEP_IN) and inside it a thin red lap ring per further ring, up to 2 (RING_LAPS), over the segments that
+# deep, slotted as the band; past 8 segments arcs by share; X two dashed circles (green for (X/XCD), full). In the
+# middle the turns until its first full charge, its ink box centred in the ring (a 1 optically: RING_ONE), clear of the
+# lap rings: green when that is 0 or 1 (ready on its first turn; (X/XCD) a 0), red below zero ((-1/XCD) a red X), else
+# light grey (X too). No glow, in or outside the pill (owner 2026-11-04: layer strokes and shadows traced a halo into a lump).
+# Nothing inks past the pill, so a layer's stroke or shadow traces the plain capsule.
+# The label after it, centred by its ink between the rim and the pill's end (RING_ENDS). The fork's SVG renderer strokes
+# rects only and blends opacity in linear light: every line is a filled outline in an opaque colour, the number Roboto
+# Black outlines.
+# Under salt: in the text colour inside the ordinary pill outline, no body or rim; charge solid, a start below zero a
+# thin band along the inside with no outer edge (past 8 segments too), lap rings as in colour, charge to come
+# outlined; a divider after the ring (SALT_DIVIDER), the ring centred between it and the outline, closes it off from
+# the label (a thin layer stroke left art showing between).
+RING_D = BADGE_TOP - BADGE_BOTTOM                  # the box: the pill's height
+RING_GAP = 60                                      # with RING_D - BADGE_PAD: the 810 units the ring adds
+RING_S = RING_D / 22                               # font units per box unit
+RING_MID = (BADGE_TOP + BADGE_BOTTOM) / 2          # centred on the pill
+RING_IN, RING_OUT = 6.2, 9.4                       # the segments' radii (box units)
+RING_DEEP_IN = 7.25                                # more than a whole ring below zero: the band's inner radius
+RING_LAPS = ((6.1, 6.7), (5.18, 5.65))             # its lap rings inside the band, the 1st further ring, the 2nd (thinner:
+                                                   # the number 0.37 clear, the 7 of (-6/1CD); 5.05 left it 0.24)
+RING_SLOT = 1.1                                    # between segments: a channel this wide
+RING_W = 0.9                                       # a hollow segment's outline, inside its footprint
+RING_BODY_R = 10.45
+RING_RIM_R = (9.9, 11 - BADGE_BORDER / 2 / RING_S)    # the rim: to the pill border's inside edge
+RING_RIM = {"turn": ("#92b4fa", "#5b8ff9"), "any": ("#c7a6ff", "#a274ff")}    # top, bottom (the pill's, lifted)
+RING_GREEN, RING_RED, RING_BODY = "#4ade80", "#ef4444", "#1c2030"    # red: the website's and the picked preview's
+RING_HOLLOW, RING_FAINT = "#c7c9cf", "#b3b5bc"     # #e5e7eb at .85 / .75 over the body, opaque
+RING_NUMBER = ("#4ade80", "#ff6b6b", "#e5e7eb")    # ready, below zero, else
+RING_CAPS = (7.8, 5.7)                             # the number's capital height: one character, two
+RING_NUM_MID, RING_TRACK = 11, -0.45               # its ink box's middle: the ring's; two characters'
+RING_ONE = (-0.3, -0.15)                           # a lone 1 moved this far, a leading 1 this: its flag pulls its ink box
+                                                   # left of its weight (centroid +0.62 / +0.33 off the box's middle)
+RING_ENDS = 86                                     # label: right ink gap less the left in the pill's box, so that the
+                                                   # visible walls (the rim's edge, the border's inner edge, both 15 in
+                                                   # and r 460) leave it even: their round ends' curve, 2 x 27.9, + 2 x 15
+RING_DASH = (2.6, 0.54)                            # dashes: about this period, this share of it lit
+SALT_OUT = 9.0                                     # salt: the segments' outer radius, clear of the pill outline
+SALT_BAND = 1.4                                    # salt: a start below zero, a band this wide along the inside
+SALT_LINE = BADGE_LINE / RING_S                    # salt: the pill outline, and the divider closing the ring off from the
+                                                   # label (thin layer strokes left art between)
+SALT_DIVIDER = (22 - SALT_LINE, 22 + 16 / RING_S)  # salt: the divider's sides (box units): the outline mirrored (the ring
+                                                   # centred in its compartment), to where the label's gap to it stays as
+                                                   # before RING_ENDS moved the label 16 left (wider, a layer stroke leaves
+                                                   # art beside a 1's stem: Papa Chip's hole 21 -> 41 px)
+
+
+def cooldown_of(tag):
+    """(cap, start) of a cooldown tag, "X" where it says X: (2CD) (2, 0), (-1/1GCD) (1, -1); None for another tag
+    (text.js cooldownOf)."""
+    m = re.fullmatch(r"(?:(-?\d+|X)/)?(\d+|X)G?CD", tag)
+    if not m:
+        return None
+    n = lambda v: v if v == "X" else int(v)
+    return n(m[2]), 0 if m[1] is None else n(m[1])
+
+
+def _rpt(r, a):
+    """Box point at radius r, angle a (degrees clockwise from up), y down."""
+    return 11 + r * math.sin(math.radians(a)), 11 - r * math.cos(math.radians(a))
+
+
+def _side(r, a, d):
+    """The angle at radius r of the line d from the radial at a, parallel to it (d > 0: clockwise of it)."""
+    return a + math.degrees(math.asin(d / r))
+
+
+def _seg(r0, r1, a0, a1, d=0.0):
+    """text.js seg(): an annular sector r0..r1, a0 to a1, its sides d inside the radials at a0 and a1 and parallel to
+    them, clockwise, as contours of ("M" | "L", x, y) and ("A", r, from, to)."""
+    if not d and a1 - a0 > 359:
+        return _seg(r0, r1, a0, a0 + 180) + _seg(r0, r1, a0 + 180, a0 + 360)
+    b0, b1, c0, c1 = _side(r1, a0, d), _side(r1, a1, -d), _side(r0, a0, d), _side(r0, a1, -d)
+    return [[("M", *_rpt(r1, b0)), ("A", r1, b0, b1), ("L", *_rpt(r0, c1)), ("A", r0, c1, c0)]]
+
+
+def _hollow(r0, r1, a0, a1, d):
+    """_seg's outline, RING_W wide inside it: the footprint clockwise, the hole counter."""
+    w = RING_W
+    q0, q1, e = r0 + w, r1 - w, d + w
+    b0, b1, c0, c1 = _side(q1, a0, e), _side(q1, a1, -e), _side(q0, a0, e), _side(q0, a1, -e)
+    return _seg(r0, r1, a0, a1, d) + [[("M", *_rpt(q1, b1)), ("A", q1, b1, b0), ("L", *_rpt(q0, c0)), ("A", q0, c0, c1)]]
+
+
+def _annulus(r0, r1):
+    return [[("M", *_rpt(r1, 0)), ("A", r1, 0, 360)], [("M", *_rpt(r0, 0)), ("A", r0, 360, 0)]]
+
+
+def _clockwise(pts):
+    s = sum(x0 * y1 - x1 * y0 for (x0, y0), (x1, y1) in zip(pts, pts[1:] + pts[:1]))
+    return pts if s > 0 else pts[::-1]                 # y down: a positive area is clockwise
+
+
+def _dash_n(r):
+    """Dashes round a circle of radius r: an even count, about RING_DASH[0] apart."""
+    return 2 * max(1, round(2 * math.pi * r / RING_DASH[0] / 2))
+
+
+def _dash_circle(r, w):
+    """text.js dashCircle(): a circle's dashes, w wide, evenly round it, a gap centred at the top (mirror-symmetric)."""
+    n, lit = _dash_n(r), RING_DASH[1] * 180 / _dash_n(r)
+    return [c for k in range(n) for c in _seg(r - w / 2, r + w / 2, (k + 0.5) * 360 / n - lit, (k + 0.5) * 360 / n + lit)]
+
+
+def _dash_sides(r0, r1, a0, a1, d):
+    """A start-X segment's sides along its hollow outline's middle: [("arc", r, from, to) | ("line", p, q)] clockwise."""
+    h = RING_W / 2
+    R1, R0, e = r1 - h, r0 + h, d + h
+    b0, b1, c0, c1 = _side(R1, a0, e), _side(R1, a1, -e), _side(R0, a0, e), _side(R0, a1, -e)
+    return [("arc", R1, b0, b1), ("line", _rpt(R1, b1), _rpt(R0, c1)), ("arc", R0, c1, c0), ("line", _rpt(R0, c0), _rpt(R1, b0))]
+
+
+def _dash_seg(r0, r1, a0, a1, d):
+    """text.js dashSeg(): a start-X segment, its hollow outline dashed: each side's dashes spread evenly with one centred
+    on every corner (a square there joins its two halves)."""
+    h, out = RING_W / 2, []
+    for kind, p, q, *rest in _dash_sides(r0, r1, a0, a1, d):
+        if kind == "arc":
+            r, f0, f1 = p, q, rest[0]
+            n = max(1, round(abs(math.radians(f1 - f0)) * r / RING_DASH[0]))
+            lit = RING_DASH[1] / 2 * (f1 - f0) / n
+            for k in range(n + 1):
+                u, v = sorted((f0 + k * (f1 - f0) / n - lit, f0 + k * (f1 - f0) / n + lit))
+                u, v = max(u, min(f0, f1)), min(v, max(f0, f1))
+                out += _seg(r - h, r + h, u, v)
+            continue
+        (x0, y0), (x1, y1) = p, q
+        L = math.dist(p, q)
+        tx, ty = (x1 - x0) / L, (y1 - y0) / L
+        n = max(1, round(L / RING_DASH[0]))
+        lit = RING_DASH[1] / 2 * L / n
+        for k in range(n + 1):
+            u, v = max(0, k * L / n - lit), min(L, k * L / n + lit)
+            a, b = (x0 + tx * u, y0 + ty * u), (x0 + tx * v, y0 + ty * v)
+            pts = [(a[0] - ty * h, a[1] + tx * h), (b[0] - ty * h, b[1] + tx * h), (b[0] + ty * h, b[1] - tx * h),
+                   (a[0] + ty * h, a[1] - tx * h)]
+            pts = _clockwise(pts)
+            out.append([("M", *pts[0])] + [("L", *pt) for pt in pts[1:]])
+        for cx, cy in (p, q):                          # the corners: squares along the side
+            pts = _clockwise([(cx + h * (sx * tx - sy * ty), cy + h * (sx * ty + sy * tx)) for sx, sy in ((1, 1), (1, -1), (-1, -1), (-1, 1))])
+            out.append([("M", *pts[0])] + [("L", *pt) for pt in pts[1:]])
+    return out
+
+
+def ring_parts(cap, start, one=False):
+    """The ring of a cooldown (cooldown_of) as [(paint, contours)] in drawing order, box units: paint body, rim, green,
+    red, hollow, faint (past 8 segments: the band's edges) or, one (salt), ink; and (number text, colour, ready)."""
+    unknown = "X" in (cap, start) and cap != start      # (X/XCD): fully charged, a green 0
+    debt = 0 if unknown or cap == "X" else max(0, -start)
+    have = 0 if unknown or cap == "X" else max(0, min(start, cap))
+    wait = "X" if unknown else 0 if cap == "X" else max(0, cap - start)
+    ready = not unknown and wait <= 1
+    r0, r1, d = RING_DEEP_IN if cap != "X" and debt > cap else RING_IN, SALT_OUT if one else RING_OUT, RING_SLOT / 2
+    ink = (lambda p: "ink") if one else (lambda p: p)
+    parts = [] if one else [("body", _annulus(0, RING_BODY_R)[:1]), ("rim", _annulus(*RING_RIM_R))]
+    if cap == "X":                                     # (X/XCD): full, its dashes green
+        parts.append((ink("green" if start == "X" else "hollow"),
+                      _dash_circle(r1 - RING_W / 2, RING_W) + _dash_circle(r0 + RING_W / 2, RING_W)))
+    elif cap <= 8:
+        for i in range(cap):
+            a0, a1 = i * 360 / cap, (i + 1) * 360 / cap
+            if start == "X":
+                parts.append((ink("hollow"), _dash_seg(r0, r1, a0, a1, d)))
+            elif i < have:
+                parts.append((ink("green"), _seg(r0, r1, a0, a1, d)))
+            elif debt > cap - 1 - i:                   # counter-clockwise from the top
+                parts.append(("ink", _seg(r0, r0 + SALT_BAND, a0, a1, d)) if one else ("red", _seg(r0, r1, a0, a1, d)))
+                for lap in RING_LAPS[:(debt - cap + i) // cap]:   # its further rings below zero
+                    parts.append((ink("red"), _seg(*lap, a0, a1, d)))
+            else:
+                parts.append((ink("hollow"), _hollow(r0, r1, a0, a1, d)))
+    else:
+        due = 360 - min(debt, cap) / cap * 360         # below zero from here round to the top
+        if one and debt:                               # salt: no outer edge over the below-zero arc, as up to 8
+            parts.append(("ink", _annulus(r0, r0 + 0.8) + (_seg(r1 - 0.8, r1, 0, due) if due > 0 else [])))
+        else:
+            parts.append((ink("faint"), _annulus(r1 - 0.8, r1) + _annulus(r0, r0 + 0.8)))
+        if have:
+            parts.append((ink("green"), _seg(r0, r1, 0, have / cap * 360)))
+        if debt:
+            parts.append((ink("red"), _seg(r0, r0 + SALT_BAND if one else r1, due, 360)))
+        for j, lap in enumerate(RING_LAPS):            # further rings below zero, by share
+            if debt > (j + 1) * cap:
+                parts.append((ink("red"), _seg(*lap, 360 - min(debt - (j + 1) * cap, cap) / cap * 360, 360)))
+    if one:                                            # salt: a divider after the ring (SALT_DIVIDER)
+        (x0, x1), y0, y1 = SALT_DIVIDER, SALT_LINE, 22 - SALT_LINE
+        parts.append(("ink", [[("M", x0, y0), ("L", x1, y0), ("L", x1, y1), ("L", x0, y1)]]))
+    merged = []                                        # one path per paint run
+    for paint, cs in parts:
+        if merged and merged[-1][0] == paint:
+            merged[-1][1].extend(cs)
+        else:
+            merged.append((paint, list(cs)))
+    colour = RING_NUMBER[0] if ready else RING_NUMBER[1] if start != "X" and start < 0 else RING_NUMBER[2]   # (-1/XCD) too
+    return merged, (str(wait), colour, ready)
+
+
+def _ring_xy(x, y):
+    """Box point -> font units, y down (SVG)."""
+    return BADGE_SIDE + x * RING_S, -RING_MID + (y - 11) * RING_S
+
+
+def _ring_d(contours):
+    """SVG path data of contours, arcs as cubics of 90 degrees at most."""
+    out = []
+    for c in contours:
+        for op in c:
+            if op[0] != "A":
+                x, y = _ring_xy(op[1], op[2])
+                out.append(f"{op[0]}{num(x)} {num(y)}")
+                continue
+            _, r, a0, a1 = op
+            n = max(1, math.ceil(abs(a1 - a0) / 90 - 1e-9))
+            step = (a1 - a0) / n
+            k = 4 / 3 * math.tan(math.radians(step) / 4) * r
+            for i in range(n):
+                b0, b1 = math.radians(a0 + i * step), math.radians(a0 + (i + 1) * step)
+                (x0, y0), (x1, y1) = _rpt(r, math.degrees(b0)), _rpt(r, math.degrees(b1))
+                pts = [(x0 + k * math.cos(b0), y0 + k * math.sin(b0)), (x1 - k * math.cos(b1), y1 - k * math.sin(b1)), (x1, y1)]
+                out.append("C" + " ".join(f"{num(px)} {num(py)}" for px, py in map(lambda p: _ring_xy(*p), pts)))
+        out.append("Z")
+    return "".join(out)
+
+
+def _ring_polys(contours):
+    """TrueType contours of contours (font units, y up), arcs in steps of 3 degrees at most."""
+    polys = []
+    for c in contours:
+        pts = []
+        for op in c:
+            if op[0] != "A":
+                pts.append(_ring_xy(op[1], op[2]))
+                continue
+            _, r, a0, a1 = op
+            n = max(1, math.ceil(abs(a1 - a0) / 3))
+            pts += [_ring_xy(*_rpt(r, a0 + (a1 - a0) * i / n)) for i in range(1, n + 1)]
+        p = []
+        for x, y in pts:
+            q = (round(x), round(-y))
+            if not p or q != p[-1]:
+                p.append(q)
+        while len(p) > 1 and p[0] == p[-1]:
+            p.pop()
+        if len(p) >= 3:
+            polys.append(p)
+    return polys
+
+
+def _ink(glyphs, cmap, ch):
+    """(xMin, yMin, xMax, yMax) of a label-font character's outline."""
+    pen = BoundsPen(glyphs)
+    glyphs[cmap[ord(ch)]].draw(pen)
+    return pen.bounds
+
+
+def ring_number(glyphs, cmap, cap_height, text):
+    """[(character, x, y, k)]: the ring's number in the label font, each character's origin (box units, y down) and
+    scale (box units per font unit), its ink box centred at (11, RING_NUM_MID) (text.js RING_DIGITS: these outlines, as
+    badges set them: _set)."""
+    k = RING_CAPS[len(text) > 1] / cap_height
+    track = RING_TRACK if len(text) > 1 else 0
+    xs, x = [], 0
+    for c in text:
+        xs.append(x)
+        x += _set(glyphs, cmap, c)[1] * k + track
+    boxes = [_set_ink(glyphs, cmap, c) for c in text]
+    x0, x1 = xs[0] + boxes[0][0] * k, xs[-1] + boxes[-1][2] * k
+    y0, y1 = min(b[1] for b in boxes) * k, max(b[3] for b in boxes) * k
+    dx, base = 11 - (x0 + x1) / 2 + _one_nudge(text, RING_CAPS[len(text) > 1]), RING_NUM_MID + (y0 + y1) / 2
+    return [(c, dx + x, base, k) for c, x in zip(text, xs)]
+
+
+def _ring_number(glyphs, cmap, cap_height, text, pen, flip):
+    """ring_number drawn into pen, its overlaps removed (_merged): SVG units (flip: y down) or glyf units (y up)."""
+    draws = []
+    for c, x, y, k in ring_number(glyphs, cmap, cap_height, text):
+        g, _, dx = _set(glyphs, cmap, c)
+        X, Y = _ring_xy(x + dx * k, y)
+        draws.append((g, (k * RING_S, 0, 0, k * RING_S, X, -Y)))
+    _merged(glyphs, draws).replay(TransformPen(pen, (1, 0, 0, -1, 0, 0)) if flip else pen)
+
+
+def ring_art(glyphs, cmap, cap_height, cooldown, group):
+    """(svg defs, svg of the ring over the pill, salt contours, salt number pen) of a cooldown's ring; all of it inside
+    the pill (the glyph's plain outline)."""
+    top, bottom = RING_RIM[group]
+    paint = {"body": f'fill="{RING_BODY}"', "rim": 'fill="url(#h)"', "green": f'fill="{RING_GREEN}"',
+             "red": f'fill="{RING_RED}"', "hollow": f'fill="{RING_HOLLOW}"', "faint": f'fill="{RING_FAINT}"'}
+    parts, (text, colour, _) = ring_parts(*cooldown)
+    assert max(op[1] if op[0] == "A" else math.dist(op[1:], (11, 11)) for _, cs in parts for c in cs for op in c) <= 11
+    R, half = RING_RIM_R[1], RING_D / 2 / RING_S      # the rim's gradient over the pill's height, as the pill's
+    defs = (f'<linearGradient id="h" x1="0" y1="{num4((R - half) / (2 * R))}" x2="0" y2="{num4((R + half) / (2 * R))}">'
+            f'<stop offset="0" stop-color="{top}"/><stop offset="1" stop-color="{bottom}"/></linearGradient>')
+    body = "".join(f'<path d="{_ring_d(cs)}" {paint[p]}/>' for p, cs in parts)
+    pen = SVGPathPen(glyphs, ntos=num)
+    _ring_number(glyphs, cmap, cap_height, text, pen, True)
+    body += f'<path d="{pen.getCommands()}" fill="{colour}"/>'
+    salt, _ = ring_parts(*cooldown, one=True)
+    letters = RecordingPen()
+    _ring_number(glyphs, cmap, cap_height, text, letters, False)
+    return defs, body, _ring_polys([c for _, cs in salt for c in cs]), letters
+
+
+def num4(v):
+    return f"{v:.4f}".rstrip("0").rstrip(".")
 
 
 def _tag_badges(glyphs, cmap, cap_height):
@@ -554,27 +947,34 @@ def _tag_badges(glyphs, cmap, cap_height):
     assert len({badge_glyph(t) for t, _ in tags}) == len(tags), "duplicate badge"
     for tag, group in tags:
         top, bottom, border = BADGE_GROUPS[group]
-        chars = [BADGE_LABEL.get(ch, ch) for ch in tag]
-        label_width = sum(glyphs[cmap[ord(ch)]].width * scale for ch in chars) + BADGE_TRACKING * (len(chars) - 1)
+        label_width = _width(glyphs, cmap, tag, scale)
         width = max(height, label_width + 2 * BADGE_PAD)
-        pen = SVGPathPen(glyphs, ntos=num)
-        letters = RecordingPen()                              # label as outlines, y up
-        x = BADGE_SIDE + (width - label_width) / 2            # label centred in the pill
-        for ch in chars:
-            g = cmap[ord(ch)]
-            glyphs[g].draw(TransformPen(pen, (scale, 0, 0, -scale, x, -baseline)))
-            glyphs[g].draw(TransformPen(letters, (scale, 0, 0, scale, x, baseline)))
-            x += glyphs[g].width * scale + BADGE_TRACKING
-        text = pen.getCommands()
-        body = (f'<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{top}"/>'
-                f'<stop offset="1" stop-color="{bottom}"/></linearGradient></defs>'
-                f'<rect x="{BADGE_SIDE}" y="{-BADGE_TOP}" width="{width:.0f}" height="{height}" rx="{height / 2:.0f}" '
-                f'ry="{height / 2:.0f}" fill="url(#g)" stroke="{border}" stroke-width="{BADGE_BORDER}"/>'
-                f'<path d="{text}" fill="#ffffff"/>')
-        outline = [capsule(BADGE_SIDE, BADGE_BOTTOM, round(width), height)]
+        cooldown = cooldown_of(tag)
+        left = BADGE_SIDE
+        lsb, rsb = _sides(glyphs, cmap, tag, scale)
+        x = left + (width - (label_width - lsb - rsb)) / 2 - lsb    # label centred in the pill by its ink
+        if cooldown:                                          # the ring is the pill's left end, the label after it,
+            width = RING_D + RING_GAP + label_width + BADGE_PAD   # its ink centred in the rest
+            x = left + RING_D + (width - RING_D - (label_width - lsb - rsb) - RING_ENDS) / 2 - lsb
+        text, letters, _ = _label(glyphs, cmap, tag, x, baseline, scale)    # letters: the label as outlines, y up
+        pill = (f'<rect x="{left}" y="{-BADGE_TOP}" width="{width:.0f}" height="{height}" rx="{height / 2:.0f}" '
+                f'ry="{height / 2:.0f}"')
+        stroke = f'stroke="{border}" stroke-width="{BADGE_BORDER}"/>'
+        grad = (f'<linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{top}"/>'
+                f'<stop offset="1" stop-color="{bottom}"/></linearGradient>')
+        salt = []
+        if cooldown:                                          # the pill, the ring, the pill's border over it
+            defs, art, salt, number = ring_art(glyphs, cmap, cap_height, cooldown, group)
+            number.replay(letters)
+            body = (f'<defs>{grad}{defs}</defs>{pill} fill="url(#g)"/>{art}{pill} fill="none" {stroke}'
+                    f'<path d="{text}" fill="#ffffff"/>')
+        else:
+            body = f'<defs>{grad}</defs>{pill} fill="url(#g)" {stroke}<path d="{text}" fill="#ffffff"/>'
+        outline = [capsule(left, BADGE_BOTTOM, round(width), height)]
         t = BADGE_LINE
-        ring = outline + [capsule(BADGE_SIDE + t, BADGE_BOTTOM + t, round(width) - 2 * t, height - 2 * t)[::-1]]
-        out.append(([tag], badge_glyph(tag), outline, body, round(width) + 2 * BADGE_SIDE, (ring, letters), tag in first))
+        ring = outline + [capsule(left + t, BADGE_BOTTOM + t, round(width) - 2 * t, height - 2 * t)[::-1]] + salt
+        out.append(([tag], badge_glyph(tag), outline, body, round(width) + left + BADGE_SIDE, (ring, letters),
+                    tag in first))
     return out
 
 
@@ -708,7 +1108,7 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                     ligatures[text] = (comps, g)
 
     badge_ligatures, badge_alts, later = [], [], []
-    for typed, name, outline, body, advance, alt, first in build_badges(os.path.join(repo, "MDW/Fonts/Changa One.ttf")):
+    for typed, name, outline, body, advance, alt, first in build_badges(os.path.join(repo, LABEL_FONT)):
         if first:
             add_glyph(name, outline, advance)
         else:                                   # the wider range and the costs (2026-11-03) go last: older ids kept
@@ -863,15 +1263,17 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                      "feature salt { lookup SALT_BADGES; lookup SALT_STICKERS; } salt;"])
     addOpenTypeFeaturesFromString(font, fea)
 
-    # names: keep the OFL copyright + license for the Bree Serif letters, drop its trademark/vendor info
+    # names: keep the OFL copyright + license for the Bree Serif letters (and the badges' Roboto), drop trademark/vendor info
     name = font["name"]
     bree_copyright = name.getDebugName(0)
+    roboto_copyright = TTFont(os.path.join(repo, LABEL_FONT))["name"].getDebugName(0)
     for nid in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 17, 21, 22):
         name.removeNames(nameID=nid)
     family = FAMILY
     ps = re.sub(r"[^A-Za-z0-9-]", "", family.replace(" ", "-")) + "-Regular"
     entries = {
-        0: f"Letters: {bree_copyright} Icons: Impossibility Simulator card art (TTSCardMaker/Types).",
+        0: f"Letters: {bree_copyright.rstrip('.')}. Badge letters: {roboto_copyright.rstrip('.')}. "
+           "Icons: Impossibility Simulator card art (TTSCardMaker/Types).",
         1: family, 2: "Regular", 3: f"{ps};1.0", 4: family, 5: "Version 1.000", 6: ps,
         10: "Type [fire], [fire:tint], [fire:sticker], [fire:no], [fire:glow] or [fire:darkglow] in this font to get "
             "the icon. Case-insensitive; space, underscore and hyphen are interchangeable. "

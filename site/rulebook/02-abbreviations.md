@@ -68,3 +68,4 @@ Time based abilities with a cooldown become usable again once they are fully cha
 > **Red:** forced ((BOT), (ENDT), (BOGT), (ENDGT)).
 > **Orange:** per game, uses and triggers ((1PG), (2U), (OFS), (OS), (OD), (WOF)).
 > **Grey:** costs the creature's action ((Action)).
+> **Cooldowns:** the ring counts the charge ([Reading the ring](#/rules/timing-tags/reading-the-ring)).

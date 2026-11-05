@@ -1,4 +1,6 @@
 fonttools
+skia-pathops
 opencv-python-headless
 numpy
 pillow
+brotli

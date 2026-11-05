@@ -34,12 +34,13 @@ Costs in parentheses are badges too, in the colours of the table's counters: (2 
 
 ## READING THE RING
 ::: panel
-On the website and in this book, every cooldown badge has a ring on its left: one segment per turn of charge the ability needs. Zero is at the top. The cards print the badge alone.
+On the cards, the website and in this book, a cooldown badge's left end is a ring: one segment per turn of charge the ability needs. Zero is at the top.
 - **Green**, clockwise from the top: the charge it starts with, as in (1/2CD).
-- **Red**, counter-clockwise from the top: a start below zero, as in (-1/2CD). Each thin red arc outside the ring is one more lap below zero, as in (-5/2CD).
+- **Red**, counter-clockwise from the top: a start below zero, as in (-1/2CD). A start a whole ring or more below zero is all red, as in (-2/2CD); a start more than a whole ring below zero also shows a thin red ring inside for each further ring, up to two, as in (-5/2CD).
 - **Hollow:** charge still to come, as in (2CD).
+- **Dashed:** a number the card sets: X turns, as in (XCD), or a start of X, as in (X/2CD); green when it starts fully charged, as in (X/XCD).
 
-Each turn of charge moves the ring one segment clockwise: the red empties first, then the green fills. The number in the middle is the turns until its first full charge, red when it starts below zero. A glowing ring is fully charged on the ability's first turn: (1CD), (1/2CD), (2/2CD). Past 8 segments the ring fills by share, as in (4/12CD). Hover or tap a ring for it in words.
+Each turn of charge moves the ring one segment clockwise: the red empties first, then the green fills. The number in the middle is the turns until its first full charge (it comes on its 2nd turn for (2CD)): green when it is fully charged on the ability's first turn, as in (1CD), (1/2CD), (2/2CD), (X/XCD); red when it starts below zero, counting the turns back to zero too (7 in (-5/2CD)); light grey otherwise, as in (2CD) and (XCD). Past 8 segments the ring fills by share, as in (4/12CD). On text in one colour (under an overlay) the ring is too: charge solid, a start below zero a thin band along the inside, charge to come outlined, a line between it and the label. Hover or tap a ring for it in words.
 :::
 
 ## FORCED

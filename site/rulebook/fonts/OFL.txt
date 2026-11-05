@@ -1,7 +1,10 @@
-Inconsolata (inconsolata-*.woff2) and EB Garamond (eb-garamond-*.woff2), from @fontsource 5.3.0; both under the SIL Open Font License 1.1:
+Inconsolata (inconsolata-*.woff2) and EB Garamond (eb-garamond-*.woff2), from @fontsource 5.3.0, and Roboto Black
+(roboto-black.woff2: MDW/Fonts/Roboto Black.ttf, Roboto 3.015 at weight 900, cut to the badges' characters, its 1
+and word space re-spaced as the badges set them); all under the SIL Open Font License 1.1:
 
 Copyright 2006 The Inconsolata Project Authors (https://github.com/cyrealtype/Inconsolata)
 Copyright 2017 The EB Garamond Project Authors (https://github.com/octaviopardo/EBGaramond12)
+Copyright 2011 The Roboto Project Authors (https://github.com/googlefonts/roboto-classic)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

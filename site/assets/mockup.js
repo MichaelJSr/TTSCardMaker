@@ -8,12 +8,11 @@
 // tokens as icons and timing tags as badges. When no block fits the old text (text over art, a stylised title), the new
 // text goes in a dark box over the template's area instead ("box"), never over a half-erased old one. Everything above
 // `draw` is pure (node checks run it on plain pixel arrays).
-import { norm, splitToken, tagInfo, TAG, COST, costInfo, variantFile } from "./text.js";
+import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
-export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // style.css --b-*, as the font's badges
+export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
   points: "#055e45", bricks: "#4f260f", sp: "#20397f", own: "#0f766e" };                                     // and its costs' pills
-const COST_ICON = { points: ["#00ffae", "#00603f", "#003d29"], bricks: ["#a0522d", "#3d1a08", "#ffffff"], sp: ["#ffff00", "#6e6200", "#3b3300"] };   // fill, edge, number
 const STATS = ["hp", "def", "atk", "spd"];
 export const LINE = 1.22;                            // line pitch in ems
 // fractions of the image [x0, y0, x1, y1]: where a template prints the name and the text; its stat bars (one row per stat,
@@ -316,7 +315,7 @@ export function tokenize(text, icons = {}) {
       let piece = null;
       if (m[1] != null) { const t = splitToken(m[1]), ic = t && icons[norm(t.base)]; if (ic) piece = { icon: ic.file, name: t.base, no: t.v === "no", sticker: t.v === "sticker" && ["tint", "sticker"].every(v => ic.v?.includes(v)) ? { tint: variantFile(ic, "tint"), outline: variantFile(ic, "sticker") } : null }; }
       else if (m[3] != null) { const c = costs[+m[3]], own = c.kind === "souls" || c.kind === "counters"; piece = { badge: `${c.n} ${c.word}`, group: own ? "own" : c.kind, cost: own ? null : c }; }
-      else { const t = tagInfo(m[2]); if (t) piece = { badge: t.tag.replace("-", "\u2212"), group: t.group }; }
+      else { const t = tagInfo(m[2]); if (t) piece = { badge: t.tag.replace("-", "\u2212"), group: t.group, ring: cooldownOf(m[2]) }; }
       if (!piece) continue;
       if (m.index > at) out.push({ text: chunk.slice(at, m.index) });
       out.push(piece);
@@ -344,12 +343,156 @@ export function badgeFit(z, cap) {
   return { h, top: mid + h / 2, k: h / (BADGE_H * z) };
 }
 /** A piece's width at size: an icon ICON_EM, a badge its letters (bold, BADGE_EM) and its pill's ends at its fitted
- *  scale (measure.cap: capOf), else the text. */
+ *  scale (measure.cap: capOf), a cooldown's ring end too, else the text. */
 const pieceW = (p, size, measure) => {
   if (!p.badge) return p.icon ? ICON_EM * size : measure(p.text, size);
-  const { k } = badgeFit(size, measure.cap?.(size));
-  return measure(p.badge, size * BADGE_EM * k) * 1.1 + size * (p.cost ? 1.1 : 0.75) * k;   // a cost: its icon beside
+  const { k, h } = badgeFit(size, measure.cap?.(size)), em = h / PILL_EM;
+  const set = measure.label?.(em);
+  if (set && !p.cost) {                               // the label font loaded: the font's own widths
+    const w = set.width(p.badge);
+    return p.ring ? w + 1.29 * em : Math.max(PILL_EM * em, w + 0.4 * em) + 0.08 * em;
+  }
+  if (set) return costGeom(p.cost, h, set).w + 0.08 * em;
+  const tw = set ? set.text(p.badge, size * BADGE_EM * k) : measure(p.badge, size * BADGE_EM * k);
+  return tw * 1.1 + size * (p.cost ? 1.1 : 0.75) * k + (p.ring ? RING_W * h : 0);   // a cost: its icon beside
 };
+// ---- timing badges as the font draws them (build_stoogedings _tag_badges): ems of the badge glyph; the pill 0.95 em
+const PILL_EM = 0.95;
+const PILL = { turn: ["#4f86f7", "#2563eb", "#1e3a8a"], any: ["#9f67ff", "#7c3aed", "#4c1d95"], forced: ["#ef5050", "#dc2626", "#7f1d1d"],   // BADGE_GROUPS: top, bottom, border
+  trigger: ["#e08a1e", "#b45309", "#78350f"], neutral: ["#64748b", "#475569", "#1e293b"],
+  points: ["#08785a", "#034532", "#012419"], bricks: ["#5e3019", "#3f1d0c", "#241005"], sp: ["#2a4a9e", "#172a63", "#0b1740"],   // COSTS
+  own: ["#149488", "#0f766e", "#0b4f4a"] };
+const COST_WORD = { points: "#effff9", bricks: "#ffe6d6", sp: "#eef2ff" };
+const COST_ART = {   // the font's icons (build_stoogedings cost_badge): fill stops, edge, number
+  points: [[[0, "#e8fff7"], [0.3, "#6dffd0"], [0.58, "#00ffae"], [1, "#00a36c"]], "#00603f", "#003d29"],
+  bricks: [[[0, "#c97b52"], [0.45, "#a0522d"], [1, "#7a3a1c"]], "#3d1a08", "#ffffff"],
+  sp: [[[0, "#ffffe8"], [0.3, "#ffff70"], [0.55, "#ffff00"], [0.85, "#d9c800"], [1, "#a69400"]], "#6e6200", "#3b3300"] };
+const SIN72 = Math.sin(0.4 * Math.PI);
+/** A cost badge laid out as the font lays it (build_stoogedings cost_badge), px of its pill's height h (u: a font unit,
+ *  h / 950) from the pill's left end and top: {u, icon {x, y, w, h, r} (the coin, the brick) or star {cx, cy, r}, num {x
+ *  (origin), y (baseline), set}, word {x, y, set}, w (the pill)}; set: labelSet's (its sized: the number's capitals 440,
+ *  10 between figures, the word's 540 and 26; a long number on the star shrunk to 0.88 of its radius). */
+const costGeom = (c, h, set) => {
+  const u = h / 950, word = set.sized(0.54, 0.026), ww = word.width(c.word);
+  let num = set.sized(0.44, 0.010), nw = num.width(c.n), icon = null, star = null, nx, ny = 475 * u, w0;
+  if (c.kind === "sp") {
+    const k = Math.min(1, 528 * u / nw);
+    if (k < 1) { num = set.sized(0.44 * k, 0.010 * k); nw = num.width(c.n); }
+    star = { cx: (20 + 600 * SIN72) * u, cy: 435 * u, r: 600 * u };
+    [nx, ny, w0] = [star.cx, ny - 4 * u, (1200 * SIN72 + 20) * u];   // its capitals' middle 36 below the star's centre
+  } else {
+    const coin = c.kind === "points", ih = (coin ? 830 : 700) * u, iw = Math.max(coin ? ih : 1060 * u, nw + (coin ? 380 : 400) * u);
+    icon = { x: (coin ? 60 : 150) * u, y: (950 * u - ih) / 2, w: iw, h: ih, r: coin ? ih / 2 : 70 * u };
+    [nx, w0] = [icon.x + iw / 2, icon.x + iw];
+  }
+  const [a, b] = num.ink(c.n), caps = num.caps, one = c.n[0] === "1" ? (c.n.length > 1 ? -0.15 / 5.7 : -0.3 / 7.8) * caps : 0;   // a 1 optically (_one_nudge)
+  return { u, icon, star, w: w0 + 80 * u + ww + 210 * u, num: { x: nx - (a + b) / 2 + one, y: ny + caps / 2, set: num },
+    word: { x: w0 + 80 * u, y: 475 * u + word.caps / 2, set: word } };
+};
+/** A badge's label as the font sets it in fam (Roboto Black, its capitals 1456 of 2048: capitals 0.54 em, 0.026 em
+ *  between letters, no kerning) at em px: {width(t), ink(t): [left, right] of its origin, draw(t, x, y, how(ch, x, y)),
+ *  font(px): the CSS font, caps: its capital height, sized(caps, track): the same at other capitals and spacing (ems)}. */
+export const LABEL_FONT = "Roboto";                   // style.css's @font-face: MDW/Fonts/Roboto Black.ttf, weight 900
+export function labelSet(ctx, fam, em) {
+  const css = px => `900 ${px}px "${fam}"`;
+  const sized = (capsEm, trackEm) => {
+    const font = css(capsEm * 2048 / 1456 * em), track = trackEm * em;
+    const adv = t => { ctx.font = font; ctx.textAlign = "left"; return [...t].map(c => ctx.measureText(c).width); };
+    return {
+      font, caps: capsEm * em,
+      width: t => adv(t).reduce((a, v) => a + v, 0) + track * ([...t].length - 1),
+      ink: t => {
+        const cs = [...t], a = adv(t), f = ctx.measureText(cs[0]), l = ctx.measureText(cs[cs.length - 1]);
+        return [-f.actualBoundingBoxLeft, a.slice(0, -1).reduce((x, v) => x + v + track, 0) + l.actualBoundingBoxRight];
+      },
+      draw: (t, x, y, how) => { const a = adv(t); [...t].forEach((c, i) => { how(c, x, y); x += a[i] + track; }); },
+    };
+  };
+  return { ...sized(0.54, 0.026), font: css, sized };
+}
+const starPath = (cx, cy, r) => { const s = new Path2D(); for (let i = 0; i < 10; i++) { const a = (90 - 36 * i) * Math.PI / 180, rr = i % 2 ? r / 2 : r; s.lineTo(cx + rr * Math.cos(a), cy - rr * Math.sin(a)); } s.closePath(); return s; };
+const roundPath = (x, y, w, h, r) => { const s = new Path2D(); s.roundRect(x, y, w, h, Math.max(0, r)); return s; };
+/** A shape filled with an SVG objectBoundingBox gradient (x, y, w, h its box; radial: [cx, cy, r] of the box, else top to bottom). */
+function boxFill(ctx, shape, [x, y, w, h], stops, radial = null) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(w, h);
+  const g = radial ? ctx.createRadialGradient(radial[0], radial[1], 0, radial[0], radial[1], radial[2]) : ctx.createLinearGradient(0, 0, 0, 1);
+  for (const [o, c] of stops) g.addColorStop(o, c);
+  const box = new Path2D(); box.addPath(shape, new DOMMatrix([1 / w, 0, 0, 1 / h, -x / w, -y / h]));   // the shape where it was
+  ctx.fillStyle = g; ctx.fill(box); ctx.restore();
+}
+/** A cost badge (costGeom G, its pill from x0, top, h) as the font draws it; one ({fill, stroke, z}): as its salt glyph,
+ *  in one colour, the outline stroke first: the pill's and the icon's outlines (68 units inside the icon's edge), the
+ *  number and the word. */
+function paintCost(ctx, G, c, x0, top, h, pill, one = null) {
+  const { u } = G, [stops, edge, numColour] = COST_ART[c.kind], at = (dx, dy) => [x0 + dx, top + dy];
+  const outer = G.star ? starPath(...at(G.star.cx, G.star.cy), G.star.r) : roundPath(...at(G.icon.x, G.icon.y), G.icon.w, G.icon.h, G.icon.r);
+  const text = (part, t, how) => part.set.draw(t, x0 + part.x, top + part.y, how);
+  if (one) {
+    const t = 68 * u, ring = new Path2D(outer);
+    ring.addPath(G.star ? starPath(...at(G.star.cx, G.star.cy), G.star.r - 74.8 * u)
+      : roundPath(...at(G.icon.x + t, G.icon.y + t), G.icon.w - 2 * t, G.icon.h - 2 * t, Math.max(G.icon.r - t, 10 * u)));
+    ctx.lineJoin = "round";
+    if (one.stroke) {
+      ctx.strokeStyle = rgb(one.stroke); ctx.lineWidth = Math.max(2, one.z * 0.21); pill(); ctx.stroke(); ctx.stroke(outer);
+      ctx.lineWidth = Math.max(1.5, one.z * 0.16); ctx.font = G.num.set.font; text(G.num, c.n, (ch, a, b) => ctx.strokeText(ch, a, b));
+      ctx.font = G.word.set.font; text(G.word, c.word, (ch, a, b) => ctx.strokeText(ch, a, b));
+    }
+    const lw = Math.max(1, h * 50 / 950);              // BADGE_LINE inside the pill, as the salt glyph
+    ctx.fillStyle = ctx.strokeStyle = rgb(one.fill); pill(lw / 2); ctx.lineWidth = lw; ctx.stroke(); ctx.fill(ring, "evenodd");
+    text(G.num, c.n, (ch, a, b) => ctx.fillText(ch, a, b)); text(G.word, c.word, (ch, a, b) => ctx.fillText(ch, a, b));
+    return;
+  }
+  const [c0, c1, border] = PILL[c.kind];
+  const bg = ctx.createLinearGradient(0, top, 0, top + h); bg.addColorStop(0, c0); bg.addColorStop(1, c1);
+  pill(); ctx.fillStyle = bg; ctx.fill(); ctx.lineWidth = 30 * u; ctx.strokeStyle = border; ctx.stroke();   // the pill's border under the icon
+  if (G.star) {
+    const { cx, cy, r } = G.star, inner = starPath(...at(cx, cy), r - 61.2 * u), box = [x0 + cx - SIN72 * (r - 61.2 * u), top + cy - (r - 61.2 * u), 2 * SIN72 * (r - 61.2 * u), (r - 61.2 * u) * (1 + Math.cos(Math.PI / 5))];
+    ctx.fillStyle = edge; ctx.fill(outer); boxFill(ctx, inner, box, stops, [0.38, 0.3, 0.8]);
+    ctx.fillStyle = "rgba(255,255,255,.75)"; ctx.beginPath(); ctx.ellipse(x0 + cx - 0.24 * r, top + cy - 0.24 * r, 0.1 * r, 0.06 * r, 0, 0, 2 * Math.PI); ctx.fill();
+  } else {
+    const { x, y, w, h: ih, r } = G.icon, [X, Y] = at(x, y);
+    boxFill(ctx, outer, [X, Y, w, ih], stops, c.kind === "points" ? [0.35, 0.3, 0.8] : null);
+    ctx.lineWidth = 34 * u; ctx.strokeStyle = edge; ctx.stroke(outer);
+    if (c.kind === "points") {
+      ctx.lineWidth = 30 * u; ctx.strokeStyle = "#00c98a"; ctx.stroke(roundPath(X + 105 * u, Y + 105 * u, w - 210 * u, ih - 210 * u, r - 105 * u));
+      ctx.fillStyle = "rgba(255,255,255,.6)"; ctx.beginPath(); ctx.ellipse(X + 0.3 * ih, Y + 0.26 * ih, 0.13 * ih, 0.075 * ih, 0, 0, 2 * Math.PI); ctx.fill();
+    } else {
+      ctx.fillStyle = "rgba(255,255,255,.35)"; ctx.fill(roundPath(X + 70 * u, Y + 50 * u, w - 140 * u, 44 * u, 22 * u));
+      ctx.fillStyle = "rgba(0,0,0,.22)"; ctx.fill(roundPath(X + 70 * u, Y + ih - 94 * u, w - 140 * u, 44 * u, 22 * u));
+    }
+  }
+  ctx.font = G.num.set.font;
+  if (c.kind === "bricks") { ctx.fillStyle = "rgba(61,26,8,.7)"; G.num.set.draw(c.n, x0 + G.num.x, top + G.num.y + 28 * u, (ch, a, b) => ctx.fillText(ch, a, b)); }
+  ctx.fillStyle = numColour; text(G.num, c.n, (ch, a, b) => ctx.fillText(ch, a, b));
+  ctx.fillStyle = COST_WORD[c.kind]; text(G.word, c.word, (ch, a, b) => ctx.fillText(ch, a, b));
+}
+
+// ---- cooldown rings, as the font draws them (build_stoogedings ring_parts; text.js ringParts, the same shapes): the
+// pill's left end, all of it inside the pill
+export const RING_W = 810 / 950;                      // build_stoogedings RING_D + RING_GAP - BADGE_PAD over the pill's height: the width it adds
+/** A cooldown's ring ({cap, start}: text.js cooldownOf; group: its badge's) centred at cx, cy, u px a unit of its 22-unit
+ *  box (the pill's height over 22), over the pill's left end. one ({fill, stroke, width}: [r, g, b], stroke may be null,
+ *  width its px): the salt glyph, all in fill (outlined in stroke first) inside the pill's outline (paintLines draws it),
+ *  no body or rim. */
+export function drawRing(ctx, ring, group, cx, cy, u, one = null) {
+  const { parts, number, colour } = ringParts(ring, !!one);
+  const shapes = [...parts.map(([p, d]) => [p, new Path2D(d)]), ...number.map(([d, x, y, k]) => { const m = new Path2D(); m.addPath(new Path2D(d), new DOMMatrix([k, 0, 0, k, x, y])); return ["number", m]; })];
+  ctx.save(); ctx.translate(cx - 11 * u, cy - 11 * u); ctx.scale(u, u);
+  if (one) {
+    for (const [c, extra] of [[one.stroke, (one.width || 0) / u], [one.fill, 0]]) {
+      if (!c) continue;
+      ctx.fillStyle = ctx.strokeStyle = rgb(c); ctx.lineWidth = extra; ctx.lineJoin = "round";
+      for (const [, s] of shapes) { ctx.fill(s); if (extra) ctx.stroke(s); }
+    }
+  } else {
+    ctx.fillStyle = RING_PAINT.body; ctx.beginPath(); ctx.arc(11, 11, 10.45, 0, 2 * Math.PI); ctx.fill();   // no glow (owner 2026-11-04)
+    const [r0, r1] = RING_PAINT.rim[group] || [RING_PAINT.hollow, RING_PAINT.hollow], rim = ctx.createLinearGradient(0, 0, 0, 22);   // shaded over the pill's height
+    rim.addColorStop(0, r0); rim.addColorStop(1, r1);
+    ctx.strokeStyle = rim; ctx.lineWidth = 0.75; ctx.beginPath(); ctx.arc(11, 11, 10.275, 0, 2 * Math.PI); ctx.stroke();
+    for (const [p, s] of shapes) { ctx.fillStyle = p === "number" ? colour : RING_PAINT[p]; ctx.fill(s); }
+  }
+  ctx.restore();
+}
 /** Lines of paragraphs at font size `size` within maxW: [{pieces: [{text | icon, w}], w}] (a space between chunks);
  *  measure(text, size) -> px. An empty paragraph is an empty line. */
 export function layout(paras, maxW, size, measure) {
@@ -556,6 +699,12 @@ const fontFaces = new Map();                          // font name -> Promise<fa
 let fontsP = null;                                    // data/fonts.json
 /** The family to draw a PSD font in: a FontFace from MDW/Fonts when data/fonts.json maps it (loaded once), else "".
  *  Its WOFF2 copy on the site first, the TTF/OTF from raw when that copy fails (fontSrc). */
+/** The badges' letters: LABEL_FONT's family once style.css's @font-face for it has loaded, else "". */
+let labelP = null;
+export function labelFont() {
+  if (typeof document === "undefined" || !document.fonts?.load) return Promise.resolve("");
+  return (labelP ||= document.fonts.load(`900 16px "${LABEL_FONT}"`, "0").then(f => (f.length ? LABEL_FONT : ""), () => ""));
+}
 export function loadFont(name, { getFonts, raw }) {
   if (!name || typeof FontFace === "undefined") return Promise.resolve("");
   if (!fontFaces.has(name)) {
@@ -615,6 +764,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (name) out.fonts[name] = fam; else out.standIn.push(label);
     return { fam: fam ? `"${fam}", ${STAND_IN}` : STAND_IN, layer };
   };
+  const badgeFont = labelFont();
+  let bfam = await Promise.race([badgeFont, new Promise(r => setTimeout(() => r(null), 60))]);
+  if (bfam === null) { badgeFont.then(f => { if (f) onFont?.(); }); bfam = ""; }
   const scaled = b => b.map((v, i) => v * (i % 2 ? H : W));
   const bars = barRows(shape, W, H, card, rec).filter(r => isBar(L, W, H, r.box));   // the rows drawn on
   const rows = barRows(shape, W, H, card, null), seen = rows.filter(r => isBar(L, W, H, r.box)), lowest = seen.length ? seen : rows;
@@ -628,6 +780,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const { fam, layer } = await family(role, label, path);
     const measure = (t, z) => { ctx.font = `${z}px ${fam}`; return ctx.measureText(t).width; };
     measure.cap = z => capOf(ctx, fam, z);
+    measure.label = bfam ? em => labelSet(ctx, bfam, em) : null;   // badges' labels: the font's (Roboto Black), once loaded
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, boxed: true }); out.boxed.push(label); continue; }
@@ -723,9 +876,10 @@ function paintMask(ctx, im, [x, y, w, h], colour, inset = 0) {
   g.globalCompositeOperation = "source-in"; g.fillStyle = rgb(colour); g.fillRect(0, 0, c.width, c.height);
   ctx.drawImage(c, x, y, w, h);
 }
-/** Lines of pieces from x at baseline base, z px: text with an outline, icons, badges as pills. one (an overlay on the
- *  ability): badges as outlined pills and stickers as an outline round the one-colour icon, in the text's fill. */
-function paintLines(ctx, lines, { at, base, pitch, z, fam, fill, stroke, imgs, one = false }) {
+/** Lines of pieces from x at baseline base, z px: text with an outline, icons, badges as pills (a cooldown's ring its
+ *  left end). one (an overlay on the ability): badges as outlined pills, rings in one colour and stickers as an outline
+ *  round the one-colour icon, in the text's fill. */
+function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, imgs, one = false }) {
   ctx.textBaseline = "alphabetic";
   lines.forEach((line, n) => {
     let x = at(line), y = base + n * pitch;
@@ -739,32 +893,36 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, fill, stroke, imgs, o
         if (im) ctx.drawImage(im, x + (p.w - s) / 2, y - s * 0.82, s, s);
         if (p.no) { ctx.save(); ctx.strokeStyle = "#e11"; ctx.lineWidth = Math.max(2, z * 0.12); ctx.beginPath(); ctx.moveTo(x + p.w * 0.1, y - s * 0.75); ctx.lineTo(x + p.w * 0.9, y + s * 0.1); ctx.stroke(); ctx.restore(); }
       } else if (p.badge) {
-        const fitted = badgeFit(z, capOf(ctx, fam, z)), h = fitted.h, k = fitted.k, top = y - fitted.top, r = h / 2;
-        const x0 = x + z * 0.06 * k, x1 = x + p.w - z * 0.06 * k;
-        ctx.save(); ctx.beginPath(); ctx.moveTo(x0 + r, top); ctx.arcTo(x1, top, x1, top + h, r); ctx.arcTo(x1, top + h, x0, top + h, r); ctx.arcTo(x0, top + h, x0, top, r); ctx.arcTo(x0, top, x1, top, r); ctx.closePath();
-        ctx.font = `800 ${z * BADGE_EM * k}px ${fam}`; ctx.textAlign = "center";
-        const lx = (x0 + x1) / 2, ly = top + h * 0.5 + z * BADGE_EM * k * 0.36;
-        if (one) {                                    // the font's Stylistic Alternates: a pill outline and solid letters
+        const fitted = badgeFit(z, capOf(ctx, fam, z)), h = fitted.h, k = fitted.k, top = y - fitted.top, r = h / 2, em = h / PILL_EM;
+        const lab = label ? label(em) : null, set = p.cost ? null : lab, side = lab ? 0.04 * em : z * 0.06 * k;
+        const x0 = x + side, x1 = x + p.w - side;     // a cooldown's ring: the pill's left end, its label after it
+        const pill = (d = 0) => { ctx.beginPath(); ctx.moveTo(x0 + r, top + d); ctx.arcTo(x1 - d, top + d, x1 - d, top + h - d, r - d); ctx.arcTo(x1 - d, top + h - d, x0 + d, top + h - d, r - d); ctx.arcTo(x0 + d, top + h - d, x0 + d, top + d, r - d); ctx.arcTo(x0 + d, top + d, x1 - d, top + d, r - d); ctx.closePath(); };   // d: inset
+        ctx.save(); pill();
+        ctx.font = lab ? lab.font(z * BADGE_EM * k) : `800 ${z * BADGE_EM * k}px ${fam}`; ctx.textAlign = "center";
+        let lx = (x0 + (p.ring ? RING_W * h : 0) + x1) / 2, ly = top + h * 0.5 + z * BADGE_EM * k * 0.36;
+        const letters = how => {                      // the label, centred by its ink as the font centres it
+          if (!set) return how(p.badge, lx, ly);
+          const [a, b] = set.ink(p.badge);
+          const from = (p.ring ? (x0 + h + x1) / 2 - 0.043 * em : (x0 + x1) / 2) - (a + b) / 2;   // a ring's: in the rest, the round ends' curve allowed (RING_ENDS)
+          set.draw(p.badge, from, top + h / 2 + 0.27 * em, how);
+        };
+        const G = p.cost && lab ? costGeom(p.cost, h, lab) : null;
+        if (G) paintCost(ctx, G, p.cost, x0, top, h, pill, one ? { fill, stroke, z } : null);   // the number on its icon, the word beside
+        else if (one) {                               // the font's Stylistic Alternates: a pill outline and solid letters
           ctx.lineJoin = "round";
-          if (stroke) { ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(2, z * 0.21); ctx.stroke(); ctx.lineWidth = Math.max(1.5, z * 0.16); ctx.strokeText(p.badge, lx, ly); }
-          ctx.strokeStyle = rgb(fill); ctx.lineWidth = Math.max(1, z * 0.05); ctx.stroke(); ctx.fillStyle = rgb(fill); ctx.fillText(p.badge, lx, ly);
-        } else if (p.cost) {                          // the font's cost: the number on its icon, the word beside
-          ctx.fillStyle = BADGE[p.group]; ctx.fill();
-          const [ink, edge, num] = COST_ICON[p.cost.kind], ih = h * 0.86, iy = top + (h - ih) / 2;
-          const iw = Math.max(p.cost.kind === "points" ? ih : ih * 1.5, ctx.measureText(p.cost.n).width + ih * 0.5), ix = x0 + h * 0.07;
-          ctx.beginPath();
-          if (p.cost.kind === "sp") { const cx = ix + ih * 0.6, cy = top + h / 2, R = ih * 0.68; for (let i = 0; i < 10; i++) { const a = Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? R / 2 : R; ctx.lineTo(cx + rr * Math.cos(a), cy - rr * Math.sin(a)); } ctx.closePath(); }
-          else if (p.cost.kind === "points") ctx.roundRect(ix, iy, iw, ih, ih / 2);
-          else ctx.roundRect(ix, iy + ih * 0.08, iw, ih * 0.84, ih * 0.08);
-          ctx.fillStyle = ink; ctx.fill(); ctx.lineWidth = Math.max(1, z * 0.05); ctx.strokeStyle = edge; ctx.stroke();
-          const iwide = p.cost.kind === "sp" ? ih * 1.2 : iw;
-          ctx.fillStyle = num; ctx.fillText(p.cost.n, ix + iwide / 2, ly);
-          ctx.textAlign = "left"; ctx.fillStyle = "#fff"; ctx.fillText(p.cost.word, ix + iwide + h * 0.12, ly);
-        } else {
-          ctx.fillStyle = BADGE[p.group] || BADGE.neutral; ctx.fill(); ctx.lineWidth = Math.max(1, z * 0.07); ctx.strokeStyle = "rgba(255,255,255,.85)"; ctx.stroke();
-          ctx.fillStyle = "#fff"; ctx.fillText(p.badge, lx, ly);
+          if (stroke) { ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(2, z * 0.21); ctx.stroke(); ctx.lineWidth = Math.max(1.5, z * 0.16); letters((t, a, b) => ctx.strokeText(t, a, b)); }
+          const lw = Math.max(1, h * 50 / 950); pill(lw / 2); ctx.strokeStyle = rgb(fill); ctx.lineWidth = lw; ctx.stroke(); ctx.fillStyle = rgb(fill); letters((t, a, b) => ctx.fillText(t, a, b));   // BADGE_LINE inside the pill
+        } else if (p.cost) {                          // the label font not loaded: a plain pill
+          ctx.fillStyle = BADGE[p.group]; ctx.fill(); ctx.fillStyle = "#fff"; letters((t, a, b) => ctx.fillText(t, a, b));
+        } else {                                      // the font's pill: shaded top to bottom, its border over the ring
+          const [c0, c1, edge] = PILL[p.group] || PILL.neutral, g = ctx.createLinearGradient(0, top, 0, top + h);
+          g.addColorStop(0, c0); g.addColorStop(1, c1); ctx.fillStyle = g; ctx.fill();
+          if (p.ring) drawRing(ctx, p.ring, p.group, x0 + r, top + r, h / 22);
+          pill(); ctx.lineWidth = h * 30 / 950; ctx.strokeStyle = edge; ctx.stroke();
+          ctx.fillStyle = "#fff"; letters((t, a, b) => ctx.fillText(t, a, b));
         }
         ctx.restore();
+        if (p.ring && one) drawRing(ctx, p.ring, p.group, x0 + r, top + r, h / 22, { fill, stroke, width: Math.max(1.5, z * 0.16) });
       } else if (p.text.trim()) {
         ctx.font = `${z}px ${fam}`;
         if (stroke) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(1.5, z * 0.16); ctx.strokeText(p.text, x, y); }
@@ -791,7 +949,7 @@ function drawText(ctx, { role, text, area, found, size, colours, fam, layer, mea
   }
   const pitch = pitch0 * (z / size), base = top + z * 0.8;
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base, pitch, z, fam, fill, stroke, imgs, one });
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base, pitch, z, fam, label: measure.label, fill, stroke, imgs, one });
   return over;
 }
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the
@@ -806,7 +964,7 @@ function drawBox(ctx, { role, text, area, fam, measure, icons, one }, imgs, W, H
   ctx.save(); ctx.beginPath(); ctx.moveTo(b[0] + rad, b[1]); ctx.arcTo(b[2], b[1], b[2], b[3], rad); ctx.arcTo(b[2], b[3], b[0], b[3], rad); ctx.arcTo(b[0], b[3], b[0], b[1], rad); ctx.arcTo(b[0], b[1], b[2], b[1], rad); ctx.closePath();
   ctx.fillStyle = "rgb(16,16,22)"; ctx.fill(); ctx.lineWidth = Math.max(1.5, W * 0.003); ctx.strokeStyle = "rgba(255,255,255,.4)"; ctx.setLineDash([W * 0.012, W * 0.008]); ctx.stroke(); ctx.restore();
   const pitch = z * LINE, base = (b[1] + b[3]) / 2 - (lines.length * pitch) / 2 + z * 0.9, mid = (b[0] + b[2]) / 2;
-  paintLines(ctx, lines, { at: l => mid - l.w / 2, base, pitch, z, fam, fill: [255, 255, 255], stroke: [0, 0, 0], imgs, one });
+  paintLines(ctx, lines, { at: l => mid - l.w / 2, base, pitch, z, fam, label: measure.label, fill: [255, 255, 255], stroke: [0, 0, 0], imgs, one });
   return over;
 }
 function paintCells(data, W, H, row, from, to) {
