@@ -4,7 +4,7 @@
 const PAGE = globalThis.document?.querySelector('meta[name="page"]')?.content || "";   // none: a dev copy (or node), no checks
 const EVERY = 180e3, FAST = 15e3, FAST_FOR = 15 * 60e3;   // after a publish: every 15 s for 15 min
 const TRIED = "fresh-tried";                               // the stamp a reload went for: never twice (a stale CDN copy)
-let fastUntil = 0, timer = 0;
+let fastUntil = 0, timer = 0, keep = () => {};           // keep: app.js saves the reader's place before a reload
 
 /** The live page's stamp, "" when unknown (offline, an old build.txt). */
 export async function liveStamp() {
@@ -20,6 +20,7 @@ const busy = () => !!document.querySelector('[data-dirty="1"], .editing, #modal:
 async function reload() {
   // the HTML is cached for 10 minutes too: refetch it, then reload (which revalidates it anyway)
   try { await fetch(location.href.split("#")[0], { cache: "reload" }); } catch { /* the reload still asks */ }
+  keep();
   location.reload();
 }
 function offer() {
@@ -42,8 +43,9 @@ function tick() {
   clearTimeout(timer);
   timer = setTimeout(() => check().finally(tick), Date.now() < fastUntil ? FAST : EVERY);
 }
-/** Start checking (app.js, once the data is in). */
-export function watch() {
+/** Start checking (app.js, once the data is in); save() runs right before a reload. */
+export function watch(save) {
+  if (save) keep = save;
   if (!PAGE) return;
   check();
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") check(); });

@@ -178,6 +178,7 @@ async function init() {
   window.addEventListener("popstate", route);
   renderAccount();
   route();
+  restoreAt();                                           // a reload: the reader's place
 }
 
 // everything computed from the cards; re-run after an edit
@@ -336,6 +337,16 @@ function route(e) {
   }
   const hash = location.hash || hashOf(r);
   if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig && !$(".loading", view)) { closeModal(); document.title = S.title = titleOf(r); return; }   // nothing changed (and nothing still loading): the view under it stays
+  const was = S.renderedHash ? parseHash(S.renderedHash) : null, q = p => p.get("q") || "";
+  if (r.name === "rules" && r.arg !== "print" && was?.name === "rules" && was.arg !== "print" && q(was.params) === q(r.params) && viewSig() === S.viewSig
+    && view.firstElementChild?.matches(".rules") && !$(".loading", view) && (!r.arg || S.book.chapters.some(c => c.id === r.arg.split("/")[0]))) {
+    closeModal(); S.title = document.title = titleOf(r);   // another chapter of the book drawn: scroll, no redraw (an old numbered id: renderRules)
+    const [ch, sec] = r.arg.split("/");
+    if (!S.restoring && ch && !q(r.params) && rulesAt !== location.hash) document.getElementById(sec ? `${ch}--${sec}` : ch)?.scrollIntoView();
+    rulesAt = S.renderedHash = S.listHash = hash;
+    return;
+  }
+  if (!S.restoring && was && was.name !== r.name) S.toTop = true;   // another section opens at its top
   closeModal();
   renderView(r, hash);
 }
@@ -347,8 +358,8 @@ function renderView(r, hash) {
   $$(".tabs a").forEach(a => a.classList.toggle("active", a.dataset.tab === tab));
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
   const views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare, users: renderUsers, u: renderUser, decks: renderDecks };
+  if (S.toTop) { S.toTop = false; scrollTo(0, 0); }       // before the view draws: it draws for the top
   (views[r.name] || renderCards)(r);
-  if (S.toTop) { S.toTop = false; scrollTo(0, 0); }
   S.title = document.title = titleOf(r);
   S.viewSig = viewSig();
 }
@@ -605,6 +616,15 @@ function morph(el, to) {
 const gridTiles = new Map();
 const GRID_FIRST = 96, GRID_CHUNK = 120, GRID_EAGER = 8;
 let gridJob = 0;
+// the grid's first tile, drawn: its height is the undrawn tiles' (--tile-h), so the page is about its true height.
+// Content box (the border box grew it each frame); on #view (keepGrid resets the grid's style); a new width forgets it.
+let tileW = innerWidth;
+const tileSizer = new ResizeObserver(([e]) => {
+  if (!e.target.firstElementChild?.checkVisibility?.({ contentVisibilityAuto: true })) return;   // skipped: its placeholder
+  const h = e.contentBoxSize[0].blockSize;
+  if (h) view.style.setProperty("--tile-h", `${h}px`);
+});
+addEventListener("resize", () => { if (innerWidth !== tileW) { tileW = innerWidth; view.style.removeProperty("--tile-h"); } });
 // The grid's children become the list's tiles in place: a tile still shown keeps its element, and its place unless the
 // order changed around it (the longest run already in the list's order stays, the others move); gone tiles leave first,
 // new ones go in. The tiles that cover the window are placed now, the rest in later tasks (a newer render stops them;
@@ -647,6 +667,7 @@ function fillGrid(grid, list, { css, win }) {
   // tiles are 200 px tall or more and 144 px wide or more (with the gap): enough to keep the scroll position
   const first = win.all ? list.length : Math.max(GRID_FIRST, (Math.floor(win.w / 144) + 1) * Math.ceil((win.y + 2 * win.h) / 200));
   put(0, first);
+  tileSizer.disconnect(); if (grid.firstElementChild) tileSizer.observe(grid.firstElementChild);
   if (first >= list.length) return;
   let k = first;
   const step = () => {
@@ -1624,6 +1645,7 @@ document.addEventListener("change", e => {
   const a = e.target.closest("[data-action]");
   if (a && (a.tagName === "SELECT" || a.type === "checkbox")) act(a.dataset.action, a);
 });
+$(".skip")?.addEventListener("click", e => { e.preventDefault(); view.focus({ preventScroll: true }); });   // not #view: a route (or, under <base>, the site root)
 
 // search box
 const runSearch = debounce(() => {
@@ -1727,7 +1749,47 @@ wireTips(document, tips, (cx, cy) => {
   tip.style.left = `${x}px`; tip.style.top = `${y}px`;
 }, { match: xTarget, run: el => actions["toggle-param"](el, true) });
 
+// The reader's place across a reload (a deploy's, fresh.js, or their own): sessionStorage "at" = the address, scrollY and
+// the tile or rulebook section at the window's top with its offset; restoreAt puts it back once the view is drawn.
+let atKept = -1e9;                                       // fresh.js saved it just before its reload: pagehide keeps that one
+function saveAt() {
+  let pick = null;                                       // the deepest one across the top, else the first below it
+  for (const e of view.querySelectorAll("[data-open], .rb-chapter[id], .rb-chapter [id*='--']")) {
+    const b = e.getBoundingClientRect();
+    if (b.bottom <= 0 || !b.height) continue;
+    if (pick && !pick.contains(e)) break;
+    pick = e;
+  }
+  const at = !pick ? "" : pick.dataset.open ? `[data-open="${CSS.escape(pick.dataset.open)}"]` : `#${CSS.escape(pick.id)}`;
+  try { store?.setItem("at", JSON.stringify({ u: location.href, y: Math.round(scrollY), at, off: pick ? pick.getBoundingClientRect().top : 0 })); } catch {}
+}
+const keepAt = () => { saveAt(); atKept = performance.now(); };
+addEventListener("pagehide", () => { if (performance.now() - atKept > 2000) saveAt(); });
+function restoreAt() {
+  let a = null;
+  try { a = JSON.parse(store?.getItem("at") || "null"); store?.removeItem("at"); } catch {}
+  if (!a || a.u !== location.href || performance.getEntriesByType("navigation")[0]?.type !== "reload" || parseHash().name === "card") return;
+  const STOP = ["wheel", "touchstart", "keydown", "pointerdown"], t0 = performance.now();
+  let done = false, ready = 0, drawn = 0, ok = 0;
+  const stop = () => { done = true; for (const k of STOP) removeEventListener(k, stop, true); };
+  for (const k of STOP) addEventListener(k, stop, { capture: true, passive: true });   // the reader moved: theirs
+  const tick = () => {
+    if (done) return;
+    const now = performance.now(), el = a.at ? $(a.at, view) : null;
+    if (!drawn) {                                        // the view drawn and the anchor in it (else, after 1.5 s, scrollY)
+      if (!ready && view.firstElementChild && !$(".loading", view)) ready = now;
+      if (!ready || (a.at && !el && now - ready < 1500)) { if (now - t0 < 8000) requestAnimationFrame(tick); else stop(); return; }
+      drawn = now;
+    }
+    const off = el ? el.getBoundingClientRect().top - a.off : scrollY - a.y;
+    if (Math.abs(off) < 1) { if (++ok >= 2) { stop(); return; } }   // two frames in place: the rows have settled
+    else { ok = 0; if (el) scrollBy(0, off); else scrollTo(0, a.y); }
+    if (now - drawn < 1000) requestAnimationFrame(tick); else stop();
+  };
+  requestAnimationFrame(tick);
+}
+
 try { for (const k of Object.keys(localStorage)) if (k === "edit-token" || k.startsWith("deckPass:")) localStorage.removeItem(k); } catch {}   // plain-text secrets of before 2026-10-23
 if (wantsEditor()) loadEditor().catch(() => {});          // at once, beside cards.json
 { const r = parseHash(); if (r.name === "rules") loadBook().catch(() => {}); else if (r.name === "stats") loadAnalytics().catch(() => {}); }   // a link to them too (neither loader reads S.cards)
-init().finally(fresh.watch);                            // a new deploy reloads the page (fresh.js)
+init().finally(() => fresh.watch(keepAt));              // a new deploy reloads the page (fresh.js), keeping the place

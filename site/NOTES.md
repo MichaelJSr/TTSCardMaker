@@ -11,6 +11,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - Tabs are static `<a data-tab>` links in index.html:30-37: cards, rules, deck, stats, changes, users (plus hidden routes `compare`, `u` = a profile, `card` = modal). Header buttons: random, theme, account (`#account`: "Sign in" or the login, opens the editor hub; the pencil until 2026-10-21), keys.
 - Routing = hash routing, no registry. `parseHash()` app.js:~119 -> `{name, arg, params}` from `#/name/arg?query`. `route()` (app.js:~138) on `hashchange`/`popstate`; `renderView(r, hash)` (app.js:~150) holds the table `views = { cards: renderCards, rules: renderRules, deck: renderDeck, stats: renderStatsView, changes: renderChanges, compare: renderCompare }`, toggles `.tabs a.active` by `data-tab === r.name`, and sets document.title from a second name map (same line block). Unknown names fall back to renderCards.
   Build copies every file in site/assets/ automatically (build_site.py:1249, as of 2026-10-21), rewrites `from "./x.js"` imports to `?v=<hash>` for cache busting (each asset's stamp from its content and its imports' stamps, `asset_stamps`; the data's from its content without the build time, `data_stamp`; §27), so a new assets/table.js needs no build change. index.html `preload`/`modulepreload` hints are only hints; `?v=` is added by regex only for `assets/*.js|css` and `data/cards.json` (build_site.py:1255).
+- "Skip to content" focuses `#view` (app.js): its `#view` href was a route (the grid), on share pages the site root.
 - Views produce HTML as template-literal strings assigned to `view.innerHTML` (`#view` = `<main>`); every dynamic string goes through `esc()` (text.js:3). No DOM builders/templates. Handlers are NOT attached per element: one delegated `document` click listener (app.js:709) dispatches `[data-action="name"]` to `actions[name](el)` (object at app.js:662; editor's actions merged via `...editor.actions`), `change` listener (app.js:722) for SELECT/checkbox actions. Also `[data-open=cardId]` -> opens card modal `#/card/<id>`; `[data-pick]` for the deck picker. Per-view one-off listeners are added after innerHTML (e.g. deck name input app.js:529, rules search 451).
 - Async views: show `<div class="loading">`, call `whenLoaded(promise, what, rerender)` (app.js:~66) which re-renders or shows an error; lazy loaders are memoised promises (`rulesP ||= getJson(...)`, reset to null on failure).
 - Dialogs: `#modal` (hidden attr) with `.dialog` content; `showDialog(html)` (app.js:660, small dialog with close button), `closeModal()`, `toast(msg)`, `copy(text, what)`, `debounce`. Tooltips: any `[data-tip]` attr. Keyboard: global keydown app.js:745 (ignores typing in INPUT/TEXTAREA/SELECT).
@@ -931,6 +932,11 @@ relies on:
   set its change again after every render (edit mode: `mountGrid`'s draggable, `reflect`, `mountTiles`). Each render
   places the tiles that cover the window (`GRID_FIRST` or more) and the rest in `GRID_CHUNK` tasks (`gridJob` stops
   them); in edit mode the ones that come in there get their marks first (inline.js `markTiles`, `mountTiles`).
+- Undrawn tiles (`content-visibility`) take `--tile-h` (`.browse .grid > .tile` only; the picker and strips keep 300 px):
+  the grid's first tile's content box once drawn (`tileSizer`, a ResizeObserver; ignored while that tile is skipped,
+  dropped on a new width; on #view, as keepGrid resets the grid's style; the border box grew 2 px a frame). The page is
+  about its true height from the first screen (1400 px: 60,864 vs 60,898; was 49,727, growing while scrolling), so Back
+  from another tab lands on the same cards (was ~60 cards further at 1400, ~12 on a phone).
 - Back and Forward draw everything at once (`S.restoring`: the entry's `history.state.drawn`, stamped by `syncUrl`;
   `setParams` keeps it), so the browser's scroll restoration finds the page long enough: grid, table and Stats alike.
 - Table view: `tableHtml` writes the rows that cover the window (at least `TABLE_FIRST`, 30 px a row at most, so the
@@ -940,6 +946,9 @@ relies on:
   subseries' 12 px, words split at spaces and after a hyphen; numbers by length; Types by icon count; rows with PSD chips
   always; thumbnails left out, they shrink to fit), so the columns keep their final widths from the first frame. A new
   column or font size in `rowHtml` needs its line in `sizerRows`' `cols`.
+- Rulebook Back/Forward, or a #/rules link, while the same book shows (`route`: not the print view, the same `q` and
+  `viewSig`, a chapter that exists) only scrolls (renderRules' id rule, not on Back/Forward); an old numbered id goes on
+  to renderRules' redirect; a publish's `rerender()` still redraws. Phones at 4x CPU: no ~120 ms task per Back.
 - Rulebook: rules.json re-derives (`editor.refresh`) only when a staged or published-not-built edit is on a rulebook
   page (`editor.touches`). No `content-visibility` on its pages: the TOC's smooth jumps landed off target (the pages'
   estimated heights change as they render on the way).
@@ -1040,7 +1049,7 @@ relies on:
 - `build.txt` has a 2nd line, the page's stamp: a hash of index.html's template once its `?v=` stamps and the data's
   are in (`<meta name="page">`; every page shares it). site.yml's gate compares the whole file, so nothing changes
   there.
-- `assets/fresh.js` (app.js `init().finally(fresh.watch)`): fetches `build.txt?t=<now>` with `cache: "no-store"` on
+- `assets/fresh.js` (app.js `init().finally(() => fresh.watch(keepAt))`): fetches `build.txt?t=<now>` with `cache: "no-store"` on
   load, when the tab shows again (`visibilitychange`) and every 3 minutes; another stamp reloads the page
   (`fetch(page, {cache: "reload"})`, then `location.reload()`: Chrome revalidates the HTML on reload anyway). With
   something typed or open (`[data-dirty="1"]`, `.editing`, a form or text field in the dialog, a focused text field) it
@@ -1060,6 +1069,12 @@ relies on:
   13 (Live now toast, record cleared); typing in the search box: the bar at 5.2, its Refresh 0.1 s after the click.
   The race (a build of an earlier commit landing first, run_race.sh): 719375bb cleared the record on it with "Live now"
   and never showed the real build by 120 s; now the record stays on it and clears on the real build, 14 s after.
+- The reader's place (app.js `saveAt`, `restoreAt`): `watch(save)` runs it right before fresh.js's reload (on phones
+  pagehide's layout is off in the overflowing rulebook), pagehide too (a plain reload). sessionStorage `at`: the
+  address, scrollY, the tile (`[data-open]`) or rulebook section at the window's top and its offset. A reload of the
+  same address (not a card dialog): once #view has no `.loading` and the anchor is in (else scrollY after 1.5 s; 8 s
+  at most), back to the offset, corrected each frame until two agree (1 s at most); a wheel, touch, key or pointer
+  stops it. Rulebook, grid, Stats and Changes kept at 1400 and 390 (were 30605 -> 0, 19891 -> 1055, 4395 -> 0, 4524 -> 0).
 
 ## 30. Stats pruned, subseries in the series chart, charts link to the grid (2026-10-25, owner's rulings)
 - Removed (UI, data, code): Constructed ban reasons, Last change by month, Top subseries / "<series> by subseries"
@@ -1096,7 +1111,9 @@ relies on:
   shape (stats.js `shapeOf`), cd (`cooldownCols`), tag (`tagsOf`), mentions (`S.mentionedBy`), fresh (insights.js
   `freshYear`), bal (balance.js `flagged`), cohort (`inCohort`), nodup ("Duplicates hidden"), each a removable chip; month and change go through balance.js `changedAs`
   (Pacific months, `CHANGE_LABEL` chips). bal/cohort/month/change need analytics.json: the grid says "Loading the
-  recorded changes…" (count "…") and draws again when it is in. A followed chart link sets `S.toTop` (the grid opens at its top); Back
+  recorded changes…" (count "…") and draws again when it is in. A followed chart link, or another section opened
+  (`route`: a view of another name, not Back/Forward), sets `S.toTop`: renderView scrolls to the top before the view
+  draws, so it draws for the top (the grid's first 96 tiles; Stats' lower sections after the first paint); Back
   restores the Stats scroll (drawn state). The tooltip adds "Show these cards" under a linked element's value; the
   cursor is a pointer only on links and cards (`.chart .hit` lost its pointer).
 - Counts: a link opens the cards its element counts (nodup); Types on cards counts a type once per card (Pandora lists
