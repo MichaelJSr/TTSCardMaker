@@ -1484,7 +1484,7 @@ function toastUndo(msg, undo) {
   const b = Object.assign(document.createElement("button"), { type: "button", className: "toast-undo", textContent: "Undo" });
   b.addEventListener("click", () => { toastEl.hidden = true; undo(); }, { once: true }); toastEl.append(" ", b);
 }
-function debounce(fn, ms) { let t = 0; const d = (...a) => { clearTimeout(t); t = setTimeout(() => { t = 0; fn(...a); }, ms); }; d.flush = () => { if (t) { clearTimeout(t); t = 0; fn(); } }; return d; }
+function debounce(fn, ms) { let t = 0; const d = (...a) => { clearTimeout(t); t = setTimeout(() => { t = 0; fn(...a); }, ms); }; d.flush = () => { if (t) { clearTimeout(t); t = 0; fn(); } }; d.cancel = () => { clearTimeout(t); t = 0; }; return d; }
 async function copy(text, what) { try { await navigator.clipboard.writeText(text); toast(`Copied ${what}`); } catch { prompt("Copy:", text); } }
 function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`; modal.hidden = false; }
 
@@ -1685,9 +1685,9 @@ $("#save-filter")?.addEventListener("click", () => {   // the search box's text 
   toast(had ? `Already in My filters as “${had}”` : `Saved “${q}” to My filters`);
   const r = parseHash(); if (r.name === "cards" || r.name === "rules") setParams({ q: "" });
 });
-$("#search-form").addEventListener("submit", e => { e.preventDefault(); if (S.ready && ["cards", "rules"].includes(parseHash().name)) runSearch.flush();   // a pending search first: S.list is its list
-  const ex = exactOf(qInput.value, S.cards), l = ex.length === 1 ? ex : S.list; if (l.length === 1) location.hash = `#/card/${l[0].id}`;
-  if (matchMedia("(pointer: coarse)").matches) qInput.blur(); });   // one exact name, else one result; a phone's Search key closes its keyboard
+$("#search-form").addEventListener("submit", e => { e.preventDefault(); if (S.ready && ["cards", "rules"].includes(parseHash().name)) runSearch.flush();   // a pending search first: on Cards, S.list is then its list
+  const ex = exactOf(qInput.value, S.cards), l = ex.length === 1 ? ex : parseHash().name === "cards" ? S.list : []; if (l.length === 1) { runSearch.cancel(); location.hash = `#/card/${l[0].id}`; }   // elsewhere the pending search would close it
+  if (matchMedia("(pointer: coarse)").matches) qInput.blur(); });   // one exact name, else (on Cards) one result; a phone's Search key closes its keyboard
 $("#search-help").addEventListener("click", () => showDialog(`<h3>Search syntax</h3><p class="muted">The bot's /query_ability syntax, plus names and aliases.</p>
   <table class="help-table">${SEARCH_HELP.map(([q, d]) => `<tr><td><code>${esc(q)}</code></td><td>${esc(d)}</td></tr>`).join("")}</table>`));
 $("#random").addEventListener("click", () => actions["random-from-list"]());
@@ -1787,7 +1787,8 @@ function saveAt() {
     pick = e;
   }
   const at = !pick ? "" : pick.dataset.open ? `[data-open="${CSS.escape(pick.dataset.open)}"]` : `#${CSS.escape(pick.id)}`;
-  try { store?.setItem("at", JSON.stringify({ u: location.href, y: Math.round(scrollY), at, off: pick ? pick.getBoundingClientRect().top : 0 })); } catch {}
+  const el = at ? $(at, view) : null;                    // the one restoreAt finds: a table row, not its name link
+  try { store?.setItem("at", JSON.stringify({ u: location.href, y: Math.round(scrollY), at, off: el ? el.getBoundingClientRect().top : 0 })); } catch {}
 }
 const keepAt = () => { saveAt(); atKept = performance.now(); };
 addEventListener("pagehide", () => { if (performance.now() - atKept > 2000) saveAt(); });
@@ -1819,10 +1820,11 @@ try { for (const k of Object.keys(localStorage)) if (k === "edit-token" || k.sta
 if (wantsEditor()) loadEditor().catch(() => {});          // at once, beside cards.json
 { const r = parseHash(); if (r.name === "rules") loadBook().catch(() => {}); else if (r.name === "stats") loadAnalytics().catch(() => {}); }   // a link to them too (neither loader reads S.cards)
 init().finally(() => fresh.watch(keepAt));              // a new deploy reloads the page (fresh.js), keeping the place
-// back online: failed pictures load again (srcset or src set anew; i.src = i.src would make the src absolute), and a
-// section that couldn't load tries again (the card data: init again)
+// back online: failed pictures load again (srcset or src set anew; i.src = i.src would make the src absolute), the grid's
+// kept tiles too (another section shown), and a section that couldn't load tries again (the card data: init again)
 addEventListener("online", () => {
-  for (const i of document.images) if (i.complete && !i.naturalWidth && (i.getAttribute("src") || i.srcset)) {
+  const kept = [...gridTiles.values()].filter(t => !t.el.isConnected).flatMap(t => [...t.el.querySelectorAll("img")]);
+  for (const i of [...document.images, ...kept]) if (i.complete && !i.naturalWidth && (i.getAttribute("src") || i.srcset)) {
     const set = i.getAttribute("srcset");
     if (set) { i.removeAttribute("srcset"); i.setAttribute("srcset", set); } else i.setAttribute("src", i.getAttribute("src"));
   }

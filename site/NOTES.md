@@ -32,7 +32,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   Tab reaches every row, Cmd/middle-click opens a tab (the sizer's copies are `visibility: collapse`, never focused).
 - Search box: `onsubmit="return false"` (Enter before app.js no longer reloads); init searches text typed before the
   scripts (read before route(), which empties an unfocused box). Enter runs a pending search first (`runSearch.flush`,
-  cards and rules), so a single result opens and stays open; on `pointer: coarse` the box then blurs (the keyboard goes).
+  cards and rules), so a single result opens and stays open (on Cards only: elsewhere `S.list` is an old search's; an
+  exact name opens from any section, the pending search cancelled); on `pointer: coarse` the box then blurs.
 - Browser bar (`meta[name=theme-color]`): index.html's theme script sets #f9f9f7 when light (the default #0d0d0d meta
   only: share pages keep the card's); `tint()` (renderView, the theme button) sets `--page` once per theme, so a card
   page keeps its card's colour until the view first draws.
@@ -51,7 +52,7 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   (`navigator.onLine === false`): "Couldn't load the Stats page: no connection. It will try again when you're back
   online."; else plain, getJson's HTTP status kept (its error's `http`). A failed import's TypeError is also a chunk a
   deploy removed, so it never says offline. On `online`: failed pictures set their srcset (else src) again (`i.src =
-  i.src` would make it absolute), a failed decks.json is dropped, a `.load-error` view routes again (no card data: init
+  i.src` would make it absolute), the kept grid tiles' too (`gridTiles`, another section shown), a failed decks.json is dropped, a `.load-error` view routes again (no card data: init
   again; under a card dialog: when it closes, route's no-redraw check skips a failed view).
 
 ## 3. Editor (assets/edit.js, 557 lines)
@@ -1100,7 +1101,8 @@ relies on:
   and never showed the real build by 120 s; now the record stays on it and clears on the real build, 14 s after.
 - The reader's place (app.js `saveAt`, `restoreAt`): `watch(save)` runs it right before fresh.js's reload (on phones
   pagehide's layout is off in the overflowing rulebook), pagehide too (a plain reload). sessionStorage `at`: the
-  address, scrollY, the tile (`[data-open]`) or rulebook section at the window's top and its offset. A reload of the
+  address, scrollY, the tile (`[data-open]`) or rulebook section at the window's top and the offset of the element
+  restoreAt finds (a table row, not its name link: 25 px off before). A reload of the
   same address (not a card dialog): once #view has no `.loading` and the anchor is in (else scrollY after 1.5 s; 8 s
   at most), back to the offset, corrected each frame until two agree (1 s at most); a wheel, touch, key or pointer
   stops it. Rulebook, grid, Stats and Changes kept at 1400 and 390 (were 30605 -> 0, 19891 -> 1055, 4395 -> 0, 4524 -> 0).
