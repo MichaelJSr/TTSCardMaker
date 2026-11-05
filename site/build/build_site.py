@@ -959,20 +959,26 @@ def share_text(c):
 GRID_PRELOADS = 4                            # the cards grid's first pictures that index.html preloads
 
 
-def grid_preload(cards, ids=None):
+def grid_preload(cards, ids=None, version="", lazy=None):
     """index.html's preload hints for the grid's first pictures (grid.js tileHtml: srcset 240w/360w, sizes = the tile size),
     added by a script only when the page opens on the plain grid (no filters, sort or table view) at the saved tile size.
-    ids: the grid's first cards in order (first_screen), else Name order."""
+    ids: the grid's first cards in order (first_screen), else Name order. A link to the Rulebook starts app.js loadBook's
+    files instead: rules.json at getJson's URL (version: the data's stamp) and the rulebook's chunks (lazy: bundle()'s)."""
     by_id = {c["id"]: c for c in cards}
     order = [by_id[i] for i in ids] if ids else sorted((c for c in cards if not c.get("hidden")), key=lambda c: c["name"].lower())
     first = [c["img"] for c in order if c.get("img")][:GRID_PRELOADS]
-    if not first:
-        return ""
-    return ("<script>(() => { try { if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
-            "  const w = { s: 160, l: 270 }[localStorage.getItem(\"size\")] || 200;\n"
-            f"  for (const id of {json.dumps(first)}) {{ const l = document.createElement(\"link\"); l.rel = \"preload\"; l.as = \"image\"; l.href = `thumbs/${{id}}-360-{thumb_tag(360)}.avif`;\n"
-            f"    l.imageSrcset = `thumbs/${{id}}-240-{thumb_tag(240)}.avif 240w, thumbs/${{id}}-360-{thumb_tag(360)}.avif 360w`; l.imageSizes = `${{w}}px`; l.fetchPriority = \"high\"; document.head.append(l); }}\n"
-            "} catch { /* storage blocked: no hints */ } })();</script>")
+    book = [["preload", f"data/rules.json{f'?v={version}' if re.fullmatch(r'[0-9a-f]+', version or '') else ''}"]]   # app.js V
+    book += [["modulepreload", f"assets/{n}"] for n in (lazy or {}).get("rulebook.js", [])]    # the meta chunks' names, no ?v=
+    return ("<script>(() => { try { if (/^#\\/?rules(\\/|\\?|$)/.test(location.hash)) {\n"
+            f"    for (const [r, h] of {json.dumps(book)}) {{ const l = document.createElement(\"link\"); l.rel = r; l.href = h;\n"
+            "      if (r === \"preload\") { l.as = \"fetch\"; l.crossOrigin = \"\"; } document.head.append(l); }\n"
+            "    return; }\n"
+            + ("  if (!/^(#\\/?(cards)?)?$/.test(location.hash) || localStorage.getItem(\"view\") === \"table\") return;\n"
+               "  const w = { s: 160, l: 270 }[localStorage.getItem(\"size\")] || 200;\n"
+               f"  for (const id of {json.dumps(first)}) {{ const l = document.createElement(\"link\"); l.rel = \"preload\"; l.as = \"image\"; l.href = `thumbs/${{id}}-360-{thumb_tag(360)}.avif`;\n"
+               f"    l.imageSrcset = `thumbs/${{id}}-240-{thumb_tag(240)}.avif 240w, thumbs/${{id}}-360-{thumb_tag(360)}.avif 360w`; l.imageSizes = `${{w}}px`; l.fetchPriority = \"high\"; document.head.append(l); }}\n"
+               if first else "")
+            + "} catch { /* storage blocked: no hints */ } })();</script>")
 
 
 def fan(cards, path):
@@ -3644,6 +3650,7 @@ def inline_css(page, css):
 
 
 FIRST_TILES, FIRST_EAGER = 8, 4               # index.html's pre-written grid: tiles, and of them loaded eagerly
+BLANK_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"   # 1x1, see-through
 FIRST_CHECK = os.path.join(os.path.dirname(os.path.abspath(__file__)), "check_first.mjs")
 # grid.js's, for the first screen (check_first.mjs fails the build on any difference)
 TILE_KIND = {**KIND_LABEL, "unknown": "Other"}
@@ -3700,8 +3707,9 @@ def toolbar_html(count, created):
 def first_screen(cards, icons):
     """index.html's first screen: the plain grid's toolbar and first FIRST_TILES tiles as links to the cards' pages, in a
     <template> a script puts in the view when the page opens on the plain grid (grid_preload's rule) at the saved tile
-    size; app.js redraws the view when it runs. The cards and the markup are checked against the site's own code in node
-    (check_first.mjs): a difference fails the build. (html, ids), or None without node."""
+    size; app.js redraws the view when it runs. Lazy tiles below the window get a blank picture there, so theirs don't
+    hold up the scripts (app.js draws them). The cards and the markup are checked against the site's own code in
+    node (check_first.mjs): a difference fails the build. (html, ids), or None without node."""
     exe = os.environ.get("NODE") or shutil.which("node")
     if not exe:
         log("first screen: no node to check it with, index.html goes without")
@@ -3735,9 +3743,31 @@ def first_screen(cards, icons):
             "  if (t) { f.querySelector(\".grid\").style.setProperty(\"--tile\", t[0]); for (const i of f.querySelectorAll(\"img.art\")) i.sizes = `${t[1]}px`;\n"
             "    for (const b of f.querySelectorAll('[data-key=\"size\"]')) b.className = b.dataset.value === z ? \"on\" : \"\"; }\n"
             "  document.getElementById(\"view\").replaceChildren(f);\n"
+            "  const far = [...document.querySelectorAll('#view .grid img.art[loading=\"lazy\"]')].filter(i => i.getBoundingClientRect().top > innerHeight);\n"
+            f"  for (const i of far) {{ i.removeAttribute(\"srcset\"); i.src = \"{BLANK_GIF}\"; }}\n"   # no src at all draws a broken-picture icon
             "} catch { /* storage blocked: app.js draws the view */ } })();</script>")
     log(f"first screen: {len(tiles)} tiles, the same as grid.js draws them")
     return page, got["ids"]
+
+
+EMPTY_MODAL = '<div id="modal" class="modal" hidden></div>'   # index.html's
+
+
+def card_frame(c):
+    """A c/<id>/ page's #modal: app.js openCard's dialog with only its picture (the 720 px one the page preloads, as
+    placeholderOf picks it) and name, so the card shows before the scripts; openCard's markup, so nothing moves when
+    it draws the dialog over it. "" without a picture, or when the art hangs out (grid.js hangs)."""
+    if not (c.get("img") and c.get("png")) or (c.get("hang") and c.get("tw") and c.get("th")):
+        return ""
+    name = js_esc(c["name"])
+    full = js_esc(RAW + "/".join(quote(p, safe="!~*'()") for p in c["png"].split("/")))   # fullUrl (urlPath)
+    dims = f' width="{c["tw"]}" height="{c["th"]}"' if c.get("tw") else ""
+    ratio = f'{c["tw"]}/{c["th"]}' if c.get("tw") and c.get("th") else "2/3"
+    return (f'<div id="modal" class="modal"><div class="dialog" role="dialog" aria-modal="true" aria-label="{name}"><div class="detail">'
+            '<div class="image-wrap"><div class="iv"><div class="iv-stage"><div class="iv-orig">'
+            f'<a href="{full}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" '
+            f'src="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" alt="{name}"{dims} style="aspect-ratio:{ratio}"></a>'
+            f'</div></div></div></div><div><h2>{name}</h2></div></div></div></div>')
 
 
 def steady(files, blobs):
@@ -4266,8 +4296,9 @@ def main():
         assets = {name: v for name, v in assets.items() if not name.endswith(".js")}
     served = minify({name: text for name, (_, text) in assets.items()}) or {name: text.encode("utf-8") for name, (_, text) in assets.items()}
     stamps = {name: stamp for name, (stamp, _) in assets.items()}
+    hints, lazy = [], {}
     if packed:
-        files, stamps[BUNDLE], _, lazy = packed
+        files, stamps[BUNDLE], hints, lazy = packed
         served.update(files)
     for name, blob in served.items():           # stamps hash the source (the bundle: its code and map): same source, same URL
         with open(os.path.join(DIST, "assets", name), "wb") as fh:
@@ -4288,6 +4319,9 @@ def main():
             warn("index.html: no modulepreload for the bundle, so no chunks list: a first open loads chunk after chunk")
     page = stamp_of(template.encode("utf-8"))  # the page's stamp: build.txt's 2nd line (fresh.js)
     template = template.replace("<!--PAGE-->", page)
+    share = template                          # share pages and d/: with the chunks app.js imports (not index.html: §33)
+    if hints and tag in template:             # no ?v=: the URL app.js imports
+        share = template.replace(tag, tag + "".join(f'\n<link rel="modulepreload" href="assets/{h}">' for h in hints), 1)
     banner = site_banner(cards, os.path.join(DIST, "og.jpg"))
     with open(os.path.join(DIST, "og.jpg"), "rb") as fh:        # link previews cache the image by URL: a new image, a new URL
         og_url = f"{SITE_URL}/og.jpg?v={stamp_of(fh.read())}" if SITE_URL else ""
@@ -4308,20 +4342,24 @@ def main():
     site_og = og_tags(f"{SITE_NAME} · Card Browser", site_desc, f"{SITE_URL}/" if SITE_URL else "", og_url, (1200, 630))
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
         first = first_screen(cards, icons)
-        index = inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards, first and first[1]))
+        index = inline_css(template, served["style.css"].decode("utf-8")).replace("<!--HEAD-->", '<base href="./">\n' + site_og + "\n" + grid_preload(cards, first and first[1], version, lazy))
         fh.write(index.replace("</main>\n", f"</main>\n{first[0]}\n", 1) if first else index)
     with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as fh:
         fh.write(template.replace("<!--HEAD-->", f'<base href="{SITE_URL}/">\n' + site_og))   # absolute: the 404 page can be served at any depth
     os.makedirs(os.path.join(DIST, "d"))                # shared hands: d/#/deck/<code>
     with open(os.path.join(DIST, "d", "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(template.replace("<!--HEAD-->", '<base href="../">\n' + og_tags(f"Shared starting hand · {SITE_NAME}",
+        fh.write(share.replace("<!--HEAD-->", '<base href="../">\n' + og_tags(f"Shared starting hand · {SITE_NAME}",
                  "Open to see the hand, check it and save a copy.", f"{SITE_URL}/d/" if SITE_URL else "", og_url, (1200, 630))))
     default_meta = ('<meta name="theme-color" content="#0d0d0d">', '<meta name="description" content="Every Impossibility Simulator card, the rulebook and a starting-hand builder.">')
-    def share_page(parts, head):
-        """DIST/<parts>/index.html: the app with its own <head> (<base> climbs back to the site root)."""
-        page = template.replace("<!--HEAD-->", "\n".join([f'<base href="{"../" * len(parts)}">'] + head)).replace("<title>Impossibility Simulator · Card Browser</title>", "")
+    if EMPTY_MODAL not in share:
+        warn("index.html: no empty #modal, so card pages go without their picture (card_frame)")
+    def share_page(parts, head, modal=""):
+        """DIST/<parts>/index.html: the app with its own <head> (<base> climbs back to the site root); modal: #modal's markup."""
+        page = share.replace("<!--HEAD-->", "\n".join([f'<base href="{"../" * len(parts)}">'] + head)).replace("<title>Impossibility Simulator · Card Browser</title>", "")
         for tag in default_meta:
             page = page.replace(tag, "")
+        if modal:
+            page = page.replace(EMPTY_MODAL, modal, 1)
         os.makedirs(os.path.join(DIST, *parts), exist_ok=True)
         with open(os.path.join(DIST, *parts, "index.html"), "w", encoding="utf-8") as fh:
             fh.write(page)
@@ -4341,7 +4379,7 @@ def main():
             f'<meta name="theme-color" content="{c.get("color") or "#3987e5"}">',
             f'<meta name="description" content="{html.escape(desc)}">',
             f'<title>{html.escape(c["name"])} · {SITE_NAME}</title>',
-        ])
+        ], card_frame(c))
     for slug, target in moved.items():
         os.makedirs(os.path.join(DIST, "c", slug), exist_ok=True)
         with open(os.path.join(DIST, "c", slug, "index.html"), "w", encoding="utf-8") as fh:

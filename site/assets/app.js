@@ -158,6 +158,7 @@ async function init() {
   try {
     S.data = await getJson("cards.json");
   } catch (e) {
+    modal.hidden = true;                                  // a card page's picture (build_site card_frame)
     view.innerHTML = `<div class="empty">Couldn't load card data (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`;
     return;
   }
@@ -777,7 +778,7 @@ function openCard(id, showDetails = false) {
   const was = $(".psd-details", modal);                  // a re-render keeps it open
   showDetails ||= !modal.hidden && !!was?.open && was.dataset.id === id;
   const wasB = $(".badge-help", modal), keepBadges = !modal.hidden && !!wasB?.open && wasB.dataset.id === id;
-  if (!c) { toast("That card doesn't exist (anymore)."); history.replaceState(null, "", S.listHash); return; }
+  if (!c) { closeModal(); document.title = S.title || document.title; toast("That card doesn't exist (anymore)."); history.replaceState(null, "", S.listHash); return; }
   const pool = S.list.length && S.list.some(x => x.id === id) ? S.list : S.cards;
   const i = pool.findIndex(x => x.id === id), prev = pool[(i - 1 + pool.length) % pool.length], next = pool[(i + 1) % pool.length];
   const inDeck = deckHas(c.id), hang = c.png && G.hangs(c);       // hang: the art hangs out of the frame (grid.js hangVars)

@@ -952,7 +952,11 @@ relies on:
   the grid comes when the dialog closes, or when something draws the view under the dialog (`rerender` with no card
   dialog showing). A link to a missing card draws the grid at once (then the toast). The dialog's first picture is the
   grid tile's when it has loaded (`placeholderOf`), else the 720 px one a share page preloads, else the 360 px one.
-- Build: index.html gets `grid_preload(cards, ids)`: a script that preloads the first `GRID_PRELOADS` pictures of the
+- c/<id>/ pages carry that picture and the name in `#modal` (`card_frame`: openCard's markup, not for a hanging card),
+  so the card shows before the scripts (fast 4G ~0.4 s sooner, slow 4G ~0.9 s; no scripts: the card, not "Loading
+  cards…"); openCard draws the dialog over it in place. A failed cards.json or a missing card hides it. Card dialogs keep
+  the scrollbar's gutter (`.modal:has(> .dialog > .detail)`): with classic scrollbars the picture moved 8 px.
+- Build: index.html gets `grid_preload(cards, ids, version, lazy)`: a script that preloads the first `GRID_PRELOADS` pictures of the
   first screen's cards (§31; Name order without node) with grid.js's srcset and the saved tile size, only for the plain
   grid. c/<id>/ pages preload the 720 px picture. grid.js `thumb`, `imgAttrs` and `TILE_SIZES` must match these.
 - Stamps (`?v=`): an asset's is its served text's hash with its imports' stamps in it (`asset_stamps`; an import cycle:
@@ -964,9 +968,12 @@ relies on:
   a descendant one in a rule that reaches tiles or rows: `.tray ~ * *` walked every earlier tile or row for each element
   (Table on a 4x phone: style 195 -> 60 ms; a sort 270-390 -> 160-180 ms). The tray's scroll margin is the inherited
   `--tray-pad` (tray.js `padTop` sets it on the section while the tray is there and clears it when the tray goes).
-- Share pages (c/, u/, decks/) preload the chunk app.js imports (`page_hints`; card page LCP slow 4G -140 ms, fast -170);
-  index.html doesn't (§33). A link to the Rulebook or Stats starts `loadBook` / `loadAnalytics` beside cards.json (app.js,
-  after `wantsEditor`): those loaders must not read `S.cards` (loadHistory does, so it isn't started early).
+- Share pages (c/, u/, decks/, d/) preload the chunks app.js imports (`share` in main: bundle()'s hints, no `?v=`, the
+  URL app.js imports; card dialog fast 4G -80 ms, slow 4G -40, u/ fast 4G -130); index.html and 404.html don't (§33). A
+  link to the Rulebook or Stats starts `loadBook` / `loadAnalytics` beside cards.json (app.js, after `wantsEditor`):
+  those loaders must not read `S.cards` (loadHistory does, so it isn't started early). For `#/rules…` index.html's head
+  script (`grid_preload`) starts rules.json and the rulebook's chunks with app.js, at getJson's URL and the meta chunks'
+  names (slow 4G rulebook -0.44 s, fast -50 ms; app.js and cards.json end ~0.25 s later on slow 4G).
 - Rulebook cover: `cover_copies` (540 and 800 px AVIF, `COVER_SIZES`, cached in .cache/cover) in rules.json `cover`, the
   book view's srcset (`coverSet`); the TTS pages keep cover.webp. index.html's inlined style.css has its url()s rebased
   from assets/ to the page (`inline_css`: `../rulebook/fonts/...` had left the site, 404s; a quoted url() is read to
@@ -1112,7 +1119,9 @@ view's first 8 tiles in index.html, and a parity check in node that fails the bu
   the first `FIRST_EAGER` (4) loaded eagerly, in a `<template id="first">` after `<main>`. An inline script puts it in
   `#view` when the page opens on the plain grid (no hash parameters, saved view not Table: `grid_preload`'s rule), at the
   saved tile size (S, L: `--tile`, the pictures' `sizes`, the S/M/L button); else "Loading cards…" stays and app.js draws
-  the visitor's own view (sort, filters, Table). The tiles are plain links, `<a class="tile" href="c/<id>/">`
+  the visitor's own view (sort, filters, Table). Lazy tiles below the window get a blank picture (`BLANK_GIF`; no src
+  drew a broken-picture icon) so they don't hold up app.js's chunk (phones: tiles 5-8; slow 4G grid -0.42 s); app.js
+  redraws them (they differ, so `adoptFirst` leaves them). The tiles are plain links, `<a class="tile" href="c/<id>/">`
   (`tileHtml(c, {link: true})`: no flag, no deck button), so a tap before the script opens the card's page. The filters
   column is empty until app.js's first render fills it. That render keeps the tiles in the page (`adoptFirst`, §36):
   each link tile that is its card's tile as app.js draws it now (`isEqualNode` with `tileHtml(c, {link: true})`) gets
@@ -1185,7 +1194,8 @@ Owner, 10-25 ~15:20: "Load editor/Stats on demand" (S-3 in the optimization plan
   `chunk-<hash>.js`, the code shared by several), with its map beside it and its `sourceMappingURL` stamped by its code
   and map. `shared_once` ends each `import()`ed module, in esbuild's copy only, with a bare import of every module the
   page loads: a chunk holds the code one set of entries shares, so the page's modules would otherwise make three chunks
-  (each a request beside the first screen's pictures); now app.js imports one. No modulepreload for it: under the
+  (each a request beside the first screen's pictures); now app.js imports one. No modulepreload for it in index.html
+  (share pages have one, §27): under the
   harness's 4G emulation every request beside the pictures delays them (with the hint: LCP +80 ms slow 4G, +45 ms fast,
   for DOMContentLoaded -0.5 s / -0.14 s more), so app.js fetches it once it runs. `<meta name="chunks">` (every page)
   lists each `import()`'s chunks the page lacks; app.js's `early()` preloads them together before the `import()`, so a
