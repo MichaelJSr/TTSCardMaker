@@ -595,6 +595,11 @@ export function createEditor(app) {
     renderBar();
   }
   const save = () => { localStorage.setItem(K.stage, JSON.stringify(stage)); preview(); };
+  addEventListener("storage", e => {                   // another tab's batch: never saved over; the view drawn again, unless a form is open
+    if (e.key !== K.stage) return;
+    stage = { ...emptyStage(), ...load(K.stage, {}) };
+    if (S.ready) { preview(); if (!document.querySelector("#edit-form, #rename-form, #people-form, #admins-form")) app.rerender(); }
+  });
   const count = () => Object.keys(stage.cards).length + Object.keys(stage.people).length + (stage.admins ? 1 : 0) + Object.keys(stage.profiles).length + Object.keys(stage.decks).length;
 
   // ---- the edit form

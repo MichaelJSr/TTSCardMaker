@@ -182,6 +182,7 @@ async function init() {
   updatePeopleCount();
   window.addEventListener("hashchange", route);
   window.addEventListener("popstate", route);
+  addEventListener("storage", e => { if (e.key !== "decks" && e.key !== "activeDeck") return; S.decks = D.loadDecks().map(d => D.canon(d, S.byId)); updateDeckCount(); refresh(); });   // another tab's hands: never saved over, never shown stale
   renderAccount();
   const typed = qInput.value;                            // typed before the scripts ran (route() clears an unfocused box)
   route();
@@ -1174,7 +1175,11 @@ function renderDeck(r) {
       <p class="muted">Published decks${publishedCount()} · <a href="#/decks">Browse</a></p>
     </aside></div>`;
   const nameInput = $("#deck-name");
-  if (nameInput) nameInput.addEventListener("change", () => { d.name = nameInput.value.trim() || "Untitled hand"; D.saveDecks(S.decks); renderDeck(parseHash()); });
+  if (nameInput) nameInput.addEventListener("change", () => {   // by id: another tab's hand change reloads S.decks
+    const h = S.decks.find(x => x.id === d.id);
+    if (h) { h.name = nameInput.value.trim() || "Untitled hand"; D.saveDecks(S.decks); }
+    renderDeck(parseHash());
+  });
 }
 function openPicker(tier) {                              // the shared picker (pick.js) on one tier, in a dialog
   const [kind, st] = tier.split(":");
@@ -1473,12 +1478,18 @@ function deckDiscord(d) {
 }
 
 // ---- interactions ----------------------------------------------------------------------------------
+// card id's deck marks, or every card's (another tab's hand): its tile's button, kept tiles too, changed in place with
+// the tile's markup; then the open card's button in place (its scroll and an Edit form stay) or the hand again (another
+// tab's hand: not while its name is typed or its Import box holds text)
 function refresh(id) {
-  const inDeck = deckHas(id), t = gridTiles.get(id), c = S.byId.get(id);
-  for (const b of $$(".add[data-id]")) if (b.dataset.id === id) { b.classList.toggle("in", inDeck); b.textContent = inDeck ? "✓ In deck" : "+ Deck"; }
-  if (t?.el.isConnected && c) t.html = tileHtml(c, { css: t.css }); else gridTiles.delete(id);   // its tile, changed in place, stays
-  if (!modal.hidden && parseHash().name === "card") openCard(parseHash().arg);
-  else if (parseHash().name === "deck") renderDeck(parseHash());
+  for (const [k, t] of id ? [[id, gridTiles.get(id)]] : gridTiles) {
+    const b = t && $(".add", t.el), c = S.byId.get(k), inDeck = deckHas(k);
+    if (!b || !c || b.classList.contains("in") === inDeck) continue;
+    b.classList.toggle("in", inDeck); b.textContent = inDeck ? "✓ In deck" : "+ Deck"; t.html = tileHtml(c, { css: t.css });
+  }
+  const h = parseHash(), b = !modal.hidden && h.name === "card" && $(".card-actions [data-action=deck-toggle]", modal);
+  if (b) { const inDeck = deckHas(b.dataset.id); b.classList.toggle("primary", !inDeck); b.firstChild.data = inDeck ? "Remove from deck " : "Add to deck "; }
+  else if (h.name === "deck" && (id || !$("input:focus, textarea:focus", view) && !$("#deck-import")?.value)) renderDeck(h);
 }
 function toast(msg) { toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (toastEl.hidden = true), 2600); }
 /** a toast with an Undo button, up a little longer */
