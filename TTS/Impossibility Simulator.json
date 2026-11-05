@@ -19880,7 +19880,7 @@
               "Type": 0
             },
             "1632": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Items/Equip/3%20Stars/Fragile_Heart.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Heart.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -19889,7 +19889,7 @@
               "Type": 0
             },
             "1633": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Items/Equip/3%20Stars/Fragile_Strength.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Strength.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -20430,7 +20430,7 @@
               "SidewaysCard": false,
               "CustomDeck": {
                 "1632": {
-                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Items/Equip/3%20Stars/Fragile_Heart.png",
+                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Heart.png",
                   "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
                   "NumWidth": 1,
                   "NumHeight": 1,
@@ -20488,7 +20488,7 @@
               "SidewaysCard": false,
               "CustomDeck": {
                 "1633": {
-                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Items/Equip/3%20Stars/Fragile_Strength.png",
+                  "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Strength.png",
                   "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
                   "NumWidth": 1,
                   "NumHeight": 1,
@@ -39882,7 +39882,7 @@
           "Type": 0
         },
         "286": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -40770,7 +40770,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "286": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -59101,7 +59101,7 @@
           "Type": 0
         },
         "645": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Items/Equip/3%20Stars/Fragile_Heart.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Heart.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -59110,7 +59110,7 @@
           "Type": 0
         },
         "646": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Items/Equip/3%20Stars/Fragile_Strength.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Strength.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -62178,7 +62178,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "645": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Items/Equip/3%20Stars/Fragile_Heart.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Heart.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -62236,7 +62236,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "646": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Items/Equip/3%20Stars/Fragile_Strength.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Strength.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -72217,7 +72217,7 @@
           "Type": 0
         },
         "286": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -72916,7 +72916,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "286": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -76654,7 +76654,7 @@
           "Type": 0
         },
         "192": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/DST/3%20Stars/Wigfrid.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77826,7 +77826,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "192": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/DST/3%20Stars/Wigfrid.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100685,7 +100685,7 @@
           "Type": 0
         },
         "286": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -101384,7 +101384,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "286": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/Mario/2%20Stars/Gold_Fuzzy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -103846,7 +103846,7 @@
           "Type": 0
         },
         "192": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/DST/3%20Stars/Wigfrid.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -105018,7 +105018,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "192": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/DST/3%20Stars/Wigfrid.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -130264,7 +130264,7 @@
           "Type": 0
         },
         "645": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Items/Equip/3%20Stars/Fragile_Heart.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Heart.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -130273,7 +130273,7 @@
           "Type": 0
         },
         "646": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Items/Equip/3%20Stars/Fragile_Strength.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Strength.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -133341,7 +133341,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "645": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Items/Equip/3%20Stars/Fragile_Heart.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Heart.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -133399,7 +133399,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "646": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Items/Equip/3%20Stars/Fragile_Strength.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Strength.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -176409,7 +176409,7 @@
           "Type": 0
         },
         "192": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/DST/3%20Stars/Wigfrid.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -178645,7 +178645,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "192": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/DST/3%20Stars/Wigfrid.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Creatures/DST/3%20Stars/Wigfrid.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -179516,7 +179516,7 @@
           "Type": 0
         },
         "646": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Items/Equip/3%20Stars/Fragile_Strength.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Strength.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -179525,7 +179525,7 @@
           "Type": 0
         },
         "645": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Items/Equip/3%20Stars/Fragile_Heart.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Heart.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -181071,7 +181071,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "646": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Items/Equip/3%20Stars/Fragile_Strength.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Strength.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -181129,7 +181129,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "645": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Items/Equip/3%20Stars/Fragile_Heart.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/a495a0a828bf90a74478d3a0a2b7808191433e66/Items/Equip/3%20Stars/Fragile_Heart.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
