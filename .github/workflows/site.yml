@@ -42,8 +42,8 @@ jobs:
       saved: ${{ steps.cache.outputs.cache-hit != 'true' || steps.og-save.outcome == 'success' || steps.partial.outcome == 'success' }}
     steps:
       # The repo history is ~25 GB of PSDs, so check out only what the build reads (site/ also holds the hand-kept
-      # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs are
-      # downloaded on demand and their resized images cached between runs. fetch-depth 0 + blob:none brings every
+      # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs and uncached
+      # icons (Types/) are downloaded on demand and their resized images cached between runs. fetch-depth 0 + blob:none brings every
       # commit and tree (about 25 MB, no file contents) for the image-version history.
       - uses: actions/checkout@v7
         with:
@@ -53,7 +53,6 @@ jobs:
           sparse-checkout: |
             /.mailmap
             /site/
-            /Types/
             /MDW/Fonts/stoogedings-src/stoogedings.json
             /MDW/Fonts/stoogedings-src/build_stoogedings.py
             /MDW/Fonts/stoogedings-src/requirements.txt
