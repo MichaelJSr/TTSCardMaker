@@ -1472,7 +1472,7 @@ function deckDiscord(d) {
   const v = D.validate(d, S.byId, S.banned), cards = d.cards.map(id => S.byId.get(id)).filter(Boolean), field = S.byId.get(d.field);
   const build = link => [`**${md(d.name)}** · ${v.count}/${v.slots} cards · ${v.complete ? "✅ legal" : "not legal yet"}`,
     ...D.HAND.map(g => { const cs = cards.filter(c => c.type === g.kind).sort((a, b) => a.stars - b.stars); return cs.length ? `**${g.label}:** ${cs.map(link).join(", ")}` : ""; }),
-    field ? `**Field:** ${link(field)}` : "", `[Open the hand](${deckUrl(d)})`].filter(Boolean).join("\n");
+    field ? `**Field:** ${link(field)}` : "", `[Open the hand](<${deckUrl(d)}>)`].filter(Boolean).join("\n");
   const text = build(mdLink);
   return text.length <= 2000 ? text : build(c => md(c.name));        // Discord's limit
 }
