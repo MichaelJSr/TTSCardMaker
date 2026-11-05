@@ -2241,6 +2241,16 @@ def image_versions(paths, commits, renamed=None):
     return versions
 
 
+HEAVY_PSDS = 45                               # card PSDs in a commit from which GitHub's commit page fails (503 after ~10 s)
+
+
+def heavy_commits(commits):
+    """12-char shas of the commits changing HEAVY_PSDS card PSDs or more (cards.json heavy: text.js commitLink links the
+    card's history from there instead); [] without history."""
+    return sorted(sha[:12] for sha, _, _, _, _, entries, _ in commits or ()
+                  if sum(path.lower().endswith(".psd") and is_card_file(path) for _, _, _, path in entries) >= HEAVY_PSDS)
+
+
 # ---- revisions (the person pages: image changes after the upload) -------------------------------------------------
 MASS_PASS = 20                                # a commit changing more card images than this is a mass pass (a template or token pass)
 
@@ -4169,6 +4179,7 @@ def main():
         "source": source_time(),              # edit.js: a publish is live once this reaches its commit's date
         "repo": CARD_REPO, "botRepo": BOT_REPO, "raw": RAW,
         "pins": {p: pin(p) for p in CARD_BACKS if pin(p)},    # deck.js: the card backs' pinned links
+        "heavy": heavy_commits(commits),      # commit links: the commits GitHub can't show
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist, "tagMeanings": tag_meanings(rulebook_chapters()[0]),
         "thumbs": {w: thumb_tag(w) for w in IMAGE_SIZES},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
         # for the editor

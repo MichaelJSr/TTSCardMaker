@@ -46,6 +46,12 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   - analytics.json (2026-10-22; 105 KB, 13 KB gzipped; lazy: the Stats page's Balance section, a card with `balance: true`): section 14.
 - Card record (cards.json, empty fields dropped; 773 cards; types: creature 298, item 189, minion 91, debuff 52, field 50, aux item 48, nme 26, buff 12, creatures 7). Fields: `id` (slug, e.g. "a-snack"), `name`, `type` (kind), `subtype` (item type e.g. heal), `series`, `stars` (int), `types[]` (icon names), `hp def atk spd`, `ability` (text with `[type]` tokens and \n), `author`, `ts` (last PSD commit, epoch s), `psd`, `png` (repo path of full PNG), `key` (card file key used in Card Edits.json/Authors), `dups[]` (ids that are copies of this card; on the copy: `dup` = original id; since 2026-10-25 a variant picture 2+ is also `dup` of picture 1, `variantOf` / `variants` naming the PSD's pictures), `art`, `ability_art` (artwork sources, 2026-10-25), `aliases[]`, `authorListed`, `img` (hash for thumbs), `tw`,`th` (360-wide thumb dims), `color` (accent hex), `hv` (history count), `iv` (image versions, only over 1), `fs` (first upload of the image, epoch s, from the git history: full-history builds only, every card with a history row), `created` (the creation date "YYYY-MM-DD": the earlier of `site/Card Creation Dates.json`'s first Discord post and `fs`, a hand-set date winning; `createdFrom` "discord" | "git" | "hand", `createdAbout: true` while provisional; build_site `apply_created`, 2026-10-23), `problems[]`, `creatures[]` (list of per-creature stat objects when a card has several), `ratings[]` (dated 1-10 ratings, oldest first: section 25), `parsed:false` (only when not parsed), plus editor-only fields at runtime: `edited`, `orig`, `editAt`, `webAliases`, `hidden`, `note`, `problems_ok`, `allow_high_stats`, `_staged`, `_sent`, `_banned`, `_unused`. Cards have NO sha/GUID or TTS ids (`details: true`, 2026-10-21, only says `data/details/<id>.json` exists; the record is joined by blob sha at build time). Note `c.type` of a field card = "field", status effects "debuff"/"buff".
 - Images: thumbnails `thumbs/<img>-{240|360|720}-<tag>.avif` (AVIF since 2026-10-24, §28; the tags in cards.json `thumbs`) (app.js:~44 `img(c,w)`, `imgAttrs(c, cssPx)` gives src+srcset+width/height); full-size PNG = `S.data.raw + urlPath(c.png)` (raw.githubusercontent.com, `fullUrl(c)` app.js:~49; this is what TTS FaceURL uses in deck.js:156); card back images `raw + "MDW/cardback.png"` and `MDW/cardback_item.png` (deck.js:181-183). Icons `icons/<name>.<stamp>.webp` (§28). Name lookup helpers: `S.byId`, `norm(name)` (text.js:4: lowercase, strips spaces/_-.'), search `compile(query)` (search.js:35) returns predicate; matches names + aliases; `suggest(q, cards)`.
+- Load errors (2026-11-04): app.js `failText` / `failBox` (`.load-error`, the Reload link kept). Offline
+  (`navigator.onLine === false`): "Couldn't load the Stats page: no connection. It will try again when you're back
+  online."; else plain, getJson's HTTP status kept (its error's `http`). A failed import's TypeError is also a chunk a
+  deploy removed, so it never says offline. On `online`: failed pictures set their srcset (else src) again (`i.src =
+  i.src` would make it absolute), a failed decks.json is dropped, a `.load-error` view routes again (no card data: init
+  again; under a card dialog: when it closes, route's no-redraw check skips a failed view).
 
 ## 3. Editor (assets/edit.js, 557 lines)
 - `createEditor(app)` (edit.js:24) is a closure; app.js:~110 instantiates `editor` with `{S, KIND_LABEL, derive, rerender, goCard, currentCard, toast, modal, openCard, closeModal, showDialog, iconFor, render}`. Returned public API (edit.js:545-556) is ONLY: `actions`, `get me`, `staged(id)`, `init()`, `open(id)` (card form), `refresh` (=preview). Everything below is private and must be exported/added for a new feature: `gh`, `readFile`, `commitFiles`, `signIn`, `token`, `stage`, `save`, `count`, `publish`, `renderBar`, `reviewHtml`.
@@ -1003,6 +1009,10 @@ relies on:
   book view's srcset (`coverSet`); the TTS pages keep cover.webp. index.html's inlined style.css has its url()s rebased
   from assets/ to the page (`inline_css`: `../rulebook/fonts/...` had left the site, 404s; a quoted url() is read to
   its closing quote, so an SVG data URI's own `url(%23g)` stays, 2026-11-04).
+- `diffWords` keeps its HTML (2026-11-04: a Map by before + "\0" + after, the oldest dropped past 2000; ~1,000 pairs
+  exist; makeRenderer and setTagMeanings clear it): Changelog chip toggles at 4x CPU, script ~256 -> ~46 ms.
+- Recently updated pictures have `imgAttrs(c, 64)` (width/height, srcset; still the 240 px file): a 1400 px first
+  screen loads ~26 of the 60 (was all), CLS 0.15 -> 0.
 
 ## 28. Pictures: AVIF, the deploy gate (2026-10-24, owner's decisions)
 
@@ -1347,6 +1357,12 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   bytes on the card's path or an older name of it, but 4 move commits on rows that changed kind or stars; 38 texts
   link a commit before their shown date (the bot dates renamed cards from the rename, pickle-era versions from the
   path's last commit). history.json +5.2% (+8.9% gzipped), analytics.json +5.7% (+10.2% gzipped).
+- Heavy commits (2026-11-04): GitHub's commit page fails (503 after ~10 s) on commits of many card PSDs. build_site
+  `heavy_commits`: commits of `HEAVY_PSDS` (45) card PSDs or more, cards.json `heavy` (12-char shas, text.js
+  `setHeavy`). `commitLink(repo, sha, label, path)` links them to `commits/<sha>/<the PNG's path then>` (the card's
+  history from there, <1 s), or not at all without a path: Image versions pass `v.path`, History and Recorded changes
+  `pngAt` (drawn again once versions.json is in). Never the PSD's path made a PNG (ABBI.psd, Abbi.png). The changelog,
+  Archive, edit batches and person pages keep their commit links.
 
 ## 38. The Font filter (2026-10-25, owner: "can you allow filtering by font? have a text box for entering a font with autofill")
 - Sidebar, after Author: a Font box. Typing suggests the fonts the searched cards use with their card counts ("Perpetua,

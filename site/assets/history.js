@@ -40,14 +40,14 @@ export function textAt(c, ts) {
 }
 /** The History block: each text, newest first, its changes from the one before highlighted ("" with one text or none);
  * a text's commit link from shas (history.json _shas: a text's c, the current text's n on the newest older one) and repo;
- * revert: an earlier text with a commit gets Revert (app.js "card-revert") */
-export function historyHtml(c, repo = "", shas = [], revert = false) {
+ * revert: an earlier text with a commit gets Revert (app.js "card-revert"); pathAt(sha, ts): the PNG's path then (a heavy commit's link) */
+export function historyHtml(c, repo = "", shas = [], revert = false, pathAt = null) {
   const sha = v => shas?.[v.current ? c.history?.[c.history.length - 1]?.n : v.c];
   if (!c.hv) return "";
   if (!c.history) return `<h3>History</h3><p class="muted">Loading ${c.hv} earlier version${c.hv > 1 ? "s" : ""}…</p>`;
   const versions = textsOf(c);
   if (versions.length < 2) return "";
   const button = v => (revert && !v.current && v.ts && sha(v) ? ` <button type="button" class="ver-revert" data-action="card-revert" data-id="${esc(c.id)}" data-sha="${esc(sha(v))}" data-ts="${v.ts}">Revert to this version</button>` : "");
-  return `<h3>History</h3><div class="history">${versions.slice().reverse().map((v, k, arr) => `<div class="ver"><div class="muted">${v.current ? "Current" : "Earlier"}${v.ts ? ` · ${date(v.ts)}` : ""}${v.ts ? commitAfter(repo, sha(v), `Commit for the ${date(v.ts)} version`) : ""}${button(v)}</div>
+  return `<h3>History</h3><div class="history">${versions.slice().reverse().map((v, k, arr) => `<div class="ver"><div class="muted">${v.current ? "Current" : "Earlier"}${v.ts ? ` · ${date(v.ts)}` : ""}${v.ts ? commitAfter(repo, sha(v), `Commit for the ${date(v.ts)} version`, sha(v) && pathAt?.(sha(v), v.ts)) : ""}${button(v)}</div>
     <div>${k < arr.length - 1 ? diffWords(arr[k + 1].ability, v.ability) : inlineHtml(v.ability).replace(/\n/g, "<br>")}</div></div>`).join("")}</div>`;
 }

@@ -3,10 +3,16 @@
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 /** toLocaleDateString(undefined, opts) as a function, its Intl.DateTimeFormat made once on first use (one per call was a hotspot) */
 export const dateFmt = opts => { let f = null; return d => (f ||= new Intl.DateTimeFormat(undefined, opts)).format(d); };
-/** A quiet link to a card version's commit on GitHub ("" without one); label: its accessible name */
-export const commitLink = (repo, sha, label) => (repo && sha ? `<a class="commit-link" href="https://github.com/${esc(repo)}/commit/${esc(sha)}" target="_blank" rel="noopener" aria-label="${esc(label)}">commit</a>` : "");
+let HEAVY = new Set();                               // commits GitHub's page can't show (cards.json heavy, 12-char shas)
+export const setHeavy = shas => { HEAVY = new Set(shas || []); };
+/** A quiet link to a card version's commit on GitHub ("" without one); label: its accessible name. A heavy commit links
+ *  the card's history from it (path: its PNG then), or nothing without a path */
+export const commitLink = (repo, sha, label, path) => {
+  const href = !sha ? "" : !HEAVY.has(String(sha).slice(0, 12)) ? `commit/${esc(sha)}` : path ? `commits/${esc(sha)}/${esc(path.split("/").map(encodeURIComponent).join("/"))}` : "";
+  return repo && href ? `<a class="commit-link" href="https://github.com/${esc(repo)}/${href}" target="_blank" rel="noopener" aria-label="${esc(label)}">commit</a>` : "";
+};
 /** " · commit" after a date, the dot kept with the link when the line wraps ("" without one) */
-export const commitAfter = (repo, sha, label) => { const a = commitLink(repo, sha, label); return a && ` <span class="commit-at">· ${a}</span>`; };
+export const commitAfter = (repo, sha, label, path) => { const a = commitLink(repo, sha, label, path); return a && ` <span class="commit-at">· ${a}</span>`; };
 /** html with a short note in its tooltip (a column header or a stat's label, never each cell): the faint dotted cue (.qn) */
 export const noteHtml = (html, note) => (note ? `<span class="qn" data-tip="${esc(note)}">${html}</span>` : html);
 export const noted = (label, note) => noteHtml(esc(label), note);
@@ -54,7 +60,7 @@ export function tagInfo(typed) {
   return { tag, ...info, ...(own ? { meaning: info.old && !/^old system/i.test(own) ? `Old system: ${own}` : own } : {}) };
 }
 let CHAPTER = {};                                  // the Timing Tags chapter's table (build_site.py tag_meanings: cards.json tagMeanings)
-export const setTagMeanings = m => { CHAPTER = Object.fromEntries(Object.entries(m || {}).map(([k, v]) => [canon(k), String(v)])); };
+export const setTagMeanings = m => { CHAPTER = Object.fromEntries(Object.entries(m || {}).map(([k, v]) => [canon(k), String(v)])); DIFFS.clear(); };
 function chapterMeaning(tag) {
   if (CHAPTER[tag]) return CHAPTER[tag];
   const m = /^(-?[0-9]+)(?!\/)/.exec(tag.replace(/^(E|FTE)(?=\d)/, "")), n = m?.[1];
@@ -408,7 +414,7 @@ export function makeRenderer({ cards, icons, variants = {} }) {
   function mentions(text) {
     return new Set(text ? parse(text, false).links.map(l => l[2].id) : []);
   }
-  iconOf = icon;
+  iconOf = icon; DIFFS.clear();                      // diffs drawn with the old icons
   return { render, mentions, icon };
 }
 
@@ -424,8 +430,15 @@ export function plain(text) {
   return String(text || "").replace(/\[([^\]:\n]+)(:no)?(:[a-z]+)?\]/gi, (_, n, no) => `${no ? "non-" : ""}${n.replace(/_/g, " ")}`);
 }
 
-/** Word-level diff (LCS) as HTML with <ins>/<del>, badges and icons drawn (inlineHtml). */
+const DIFFS = new Map();                             // diffWords' HTML by before + "\0" + after (the oldest goes past 2000)
+/** Word-level diff (LCS) as HTML with <ins>/<del>, badges and icons drawn (inlineHtml); remembered between redraws. */
 export function diffWords(before, after) {
+  const k = String(before || "") + "\u0000" + String(after || "");
+  let v = DIFFS.get(k);
+  if (v === undefined) { v = diffOnce(before, after); DIFFS.set(k, v); if (DIFFS.size > 2000) DIFFS.delete(DIFFS.keys().next().value); }
+  return v;
+}
+function diffOnce(before, after) {
   const a = String(before || "").split(/(\s+)/), b = String(after || "").split(/(\s+)/), esc = inlineHtml;
   const n = a.length, m = b.length;
   if (n * m > 400000) return esc(after).replace(/\n/g, "<br>");

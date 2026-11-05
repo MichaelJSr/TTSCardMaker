@@ -1,5 +1,5 @@
 import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
-import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
@@ -89,9 +89,14 @@ const psdChips = c => { const b = psdBadges(c); return b && b + detailsLink(c); 
 // ---- boot ------------------------------------------------------------------------------------------
 async function getJson(name) {
   const r = await fetch(`data/${name}${V}`);
-  if (!r.ok) throw new Error(`${name}: HTTP ${r.status}`);
+  if (!r.ok) throw Object.assign(new Error(`${name}: HTTP ${r.status}`), { http: r.status });
   return r.json();
 }
+/** a failed load in plain words: offline (then: what happens next), else only an HTTP error's status (a failed import's
+ *  TypeError is also a deploy's removed chunk, so not "no connection") */
+const failText = (what, e, then = " It will try again when you're back online.") =>
+  (navigator.onLine === false ? `Couldn't load ${what}: no connection.${then}` : `Couldn't load ${what}${e?.http ? ` (${e.message})` : ""}.`);
+const failBox = (what, e) => `<div class="empty load-error">${esc(failText(what, e))} <a href="javascript:location.reload()">Reload</a></div>`;
 // loaded on demand: the rulebook (data/rules.json: its chapters' text and its pictures' sizes; rulebook.js draws them), and
 // older versions of card text
 let historyP = null, versionsP = null, RB = null, bookP = null;
@@ -125,7 +130,7 @@ const loadContrib = () => (contribP ||= Promise.all([getJson("contributions.json
 // empty set with the reason (the browser says so; person pages just show no decks) instead of breaking the page.
 let decksP = null;
 const loadDecks = () => (decksP ||= getJson("decks.json").then(d => { S.decksData = decks.normalizeData(d, S.byId); })
-  .catch(e => { decksP = null; S.decksData = { generated: "", decks: [], private: [], error: e.message }; }));
+  .catch(e => { decksP = null; S.decksData = { generated: "", decks: [], private: [], error: failText("the published decks", e) }; }));
 // the Details dropdown on a card page: data/details/<id>.json, fetched on first open and kept for the session
 const detailsP = new Map();
 const loadDetails = c => detailsP.get(c.id) || detailsP.set(c.id, getJson(`details/${encodeURIComponent(c.id)}.json`).catch(e => { detailsP.delete(c.id); throw e; })).get(c.id);
@@ -151,7 +156,7 @@ function fontEntries() {
   return [...n].map(([value, k]) => ({ value, n: k, note: `${k} card${k === 1 ? "" : "s"}${on.has(value) ? ", picked" : off.has(value) ? ", excluded" : ""}` }));
 }
 function whenLoaded(promise, what, rerender) {
-  promise.then(rerender, e => { view.innerHTML = `<div class="empty">Couldn't load ${esc(what)} (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`; });
+  promise.then(rerender, e => { view.innerHTML = failBox(what, e); });
 }
 
 async function init() {
@@ -159,11 +164,12 @@ async function init() {
     S.data = await getJson("cards.json");
   } catch (e) {
     modal.hidden = true;                                  // a card page's picture (build_site card_frame)
-    view.innerHTML = `<div class="empty">Couldn't load card data (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`;
+    view.innerHTML = failBox("card data", e);
     return;
   }
   S.all = S.data.cards; S.icons = S.data.icons;
   setTagMeanings(S.data.tagMeanings);                     // the Timing Tags chapter's meanings: every badge's tooltip
+  setHeavy(S.data.heavy);                                 // commits too big for GitHub's page: commit links go to the card's history
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
   for (const [old, id] of Object.entries(S.data.moved || {})) if (!S.byId.has(old) && S.byId.has(id)) S.byId.set(old, S.byId.get(id));   // a renamed card's old id: links, picks, share codes
@@ -240,7 +246,7 @@ function loadEditor(say = false) {                       // say: "Loading…" wh
     if (S.ready) { ed.init(); previews.init(); }          // else init() does
     if (toastEl.textContent === note) toastEl.hidden = true;
     return ed;
-  }).catch(e => { editorP = null; toast(`Couldn't load the editor (${e.message})`); throw e; }));
+  }).catch(e => { editorP = null; toast(failText("the editor", e, "") + (navigator.onLine === false ? "" : " Reload the page to try again.")); throw e; }));
 }
 const withEditor = fn => loadEditor(true).then(fn, () => {});
 function startEditor(M) {
@@ -338,7 +344,7 @@ function route(e) {
     return;
   }
   const hash = location.hash || hashOf(r);
-  if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig && !$(".loading", view)) { closeModal(); setTitle(r); return; }   // nothing changed (and nothing still loading): the view under it stays
+  if (hash === S.renderedHash && !modal.hidden && viewSig() === S.viewSig && !$(".loading, .load-error", view)) { closeModal(); setTitle(r); return; }   // nothing changed (and nothing still loading or failed): the view under it stays
   const was = S.renderedHash ? parseHash(S.renderedHash) : null, q = p => p.get("q") || "";
   if (r.name === "rules" && r.arg !== "print" && was?.name === "rules" && was.arg !== "print" && q(was.params) === q(r.params) && viewSig() === S.viewSig
     && view.firstElementChild?.matches(".rules") && !$(".loading", view) && (!r.arg || S.book.chapters.some(c => c.id === r.arg.split("/")[0]))) {
@@ -870,7 +876,7 @@ function openCard(id, showDetails = false) {
           ${strip("Duplicates", dupsOf(c))}${strip("Mentions", mentions, "Cards its ability text names")}${strip("Mentioned by", mentionedBy, "Cards whose ability text names this card")}${strip("Similar stats", similar(c), "The 8 cards of the same kind nearest in HP, DEF, ATK and SPD, star level weighed in")}${strip(`More from ${c.subseries || ""}`, sameSub, c.subseries && c.subseries === c.series ? `The subseries ${c.subseries}` : "")}${strip(seriesTitle, sameSeries, seriesTip)}
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
-          <div id="history-slot">${historyHtml(c, S.data.repo, S.history?._shas, canRevert(c))}</div>
+          <div id="history-slot">${historyOf(c)}</div>
           <div id="versions-slot">${versionsHtml(c)}</div>
           ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
           <div id="card-ratings">${ratings.blockHtml(ratedOf(c), { editing: editing(), mine: editor.myRating(ratedOf(c).id) })}</div>
@@ -886,10 +892,12 @@ function openCard(id, showDetails = false) {
     const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
-  if (c.hv && !c.history) loadHistory().then(() => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyHtml(c, S.data.repo, S.history?._shas, canRevert(c)); fillBalance(); }, () => {});
+  const fillHistory = () => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyOf(c); };
+  if (c.hv && !c.history) loadHistory().then(() => { fillHistory(); fillBalance(); }, () => {});
   else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) loadHistory().then(fillBalance, () => {});   // its original's texts
   if (hasBalance(c) && !S.analytics) loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; });
-  if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c); }, () => {});
+  if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c);
+    if (S.data.heavy?.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
   const dd = $(".psd-details", modal);
   if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
   if (editing()) inline.mountCard(modal, c);
@@ -931,7 +939,7 @@ function showVersion(c, i) {
   // text at that time, when the bot's text history lines up with the commit (the latest text at or before it; the
   // current one from when it started, not from the last PSD commit)
   const then = textAt(c, v.ts);
-  const link = w => commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`);
+  const link = w => commitAfter(S.versions.repo, w.sha, `Commit for the ${date(w.ts)} image version`, w.path);
   const caption = `${date(v.ts)}${v.author ? ` · ${esc(v.author)}` : ""}${link(v)}<br><span class="muted">${esc(v.subject || "")}</span>`;
   box.innerHTML = i === 0
     ? `<figure><img src="${img(c, 720)}" alt="${esc(c.name)}, current version"><figcaption>${caption}<br>Current version</figcaption></figure>`
@@ -944,6 +952,7 @@ function showVersion(c, i) {
 const canRevert = c => editing() && (!c.dup || !!c.variantOf || pictureNumber(c.psd, c.png) !== null);
 /** c's PNG path at commit ref (time ts): its image version there or the newest before it (renames followed), else today's */
 const pngAt = (c, ref, ts) => { const vs = versionList(c); return (vs.find(v => v.sha.startsWith(ref)) || vs.find(v => v.ts <= ts) || vs[vs.length - 1])?.path || c.png; };
+const historyOf = c => historyHtml(c, S.data.repo, S.history?._shas, canRevert(c), (ref, ts) => pngAt(c, ref, ts));
 // ---- balance: the card's standing among its star level and its recorded changes (balance.js)
 const balanceOf = c => (c.dup ? S.byId.get(c.dup) || c : c);         // a duplicate shows its original's
 const ratedOf = c => (c.variantOf ? c : balanceOf(c));                // a variant picture keeps its own ratings
@@ -954,7 +963,7 @@ function balanceHtml(c, part = "balance") {          // part: "balance" (the lin
   if (!S.analytics) return part === "balance" ? `<h3>Balance</h3><p class="muted">Loading…</p>` : "";
   const o = balanceOf(c);
   const texts = o.hv && !o.history ? null : (o.history || []).map(v => v.ability).concat(o.ability || "");
-  return (part === "balance" ? St.balance.balanceBlock : St.balance.changesBlock)(c, S.analytics, { byId: S.byId, texts, repo: S.data.repo });
+  return (part === "balance" ? St.balance.balanceBlock : St.balance.changesBlock)(c, S.analytics, { byId: S.byId, texts, repo: S.data.repo, pathAt: (ref, ts) => pngAt(o, ref, ts) });
 }
 function closeModal() {
   if (modal.hidden) return;
@@ -1202,7 +1211,7 @@ function renderStatsView(r) {
     else fill();
   } else {
     $("#stats-balance", view).innerHTML = `<p class="loading">Loading the balance section…</p>`;
-    loadAnalytics().then(() => fill(), e => { const slot = $("#stats-balance", view); if (slot && onStats()) slot.innerHTML = `<p class="muted">Couldn't load the balance section (${esc(e.message)}).</p>`; fill(null); });
+    loadAnalytics().then(() => fill(), e => { const slot = $("#stats-balance", view); if (slot && onStats()) slot.innerHTML = `<p class="muted load-error">${esc(failText("the balance section", e))}</p>`; fill(null); });
   }
 }
 function distPage(panel, step) {          // a stat distribution's pager: the next or previous page of values (stats.js)
@@ -1236,7 +1245,7 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   const again = () => { const now = here(); if (now) renderChanges(now, held); };
   if (NEEDS[tab] === "changelog" && !S.changelog) {
     page(`<div class="loading">Loading the changelog…</div>`);
-    loadChangelog().then(again, e => { if (here()) page(`<div class="empty">Couldn't load the changelog (${esc(e.message)}). <a href="javascript:location.reload()">Reload</a></div>`); });
+    loadChangelog().then(again, e => { if (here()) page(failBox("the changelog", e)); });
     return;
   }
   if (NEEDS[tab] === "history" && (!historyP || !S.history)) {
@@ -1251,7 +1260,7 @@ function renderChanges(r = parseHash(), held = null) {   // held: the tab a load
   if (tab === "parser") { page(parserNotesHtml() + updated); return; }
   const item = (c, diff = true) => {          // diff: the text change since the last earlier text
     const last = diff && c.history && c.history.length ? c.history[c.history.length - 1] : null;
-    return `<div class="item">${c.img ? `<img loading="lazy" decoding="async" src="${img(c, 240)}" alt="" data-open="${c.id}">` : "<div></div>"}<div>
+    return `<div class="item">${c.img ? `<img loading="lazy" decoding="async" ${imgAttrs(c, 64)} alt="" data-open="${c.id}">` : "<div></div>"}<div>
       <a href="#/card/${c.id}"><b>${esc(c.name)}</b></a> <span class="muted">${esc(KIND_LABEL[c.type] || c.type)}${c.stars ? ` · ${c.stars}★` : ""}${c.ts ? ` · ${date(c.ts)}` : ""}${c.author ? ` · ${esc(c.author)}` : ""}</span>
       ${last && c.ability ? `<div class="ability" style="margin-top:4px;font-size:14px">${diffWords(last.ability, c.ability)}</div>` : ""}</div></div>`;
   };
@@ -1810,3 +1819,15 @@ try { for (const k of Object.keys(localStorage)) if (k === "edit-token" || k.sta
 if (wantsEditor()) loadEditor().catch(() => {});          // at once, beside cards.json
 { const r = parseHash(); if (r.name === "rules") loadBook().catch(() => {}); else if (r.name === "stats") loadAnalytics().catch(() => {}); }   // a link to them too (neither loader reads S.cards)
 init().finally(() => fresh.watch(keepAt));              // a new deploy reloads the page (fresh.js), keeping the place
+// back online: failed pictures load again (srcset or src set anew; i.src = i.src would make the src absolute), and a
+// section that couldn't load tries again (the card data: init again)
+addEventListener("online", () => {
+  for (const i of document.images) if (i.complete && !i.naturalWidth && (i.getAttribute("src") || i.srcset)) {
+    const set = i.getAttribute("srcset");
+    if (set) { i.removeAttribute("srcset"); i.setAttribute("srcset", set); } else i.setAttribute("src", i.getAttribute("src"));
+  }
+  if (S.decksData?.error) S.decksData = null;            // loaded again on next use
+  if (!$(".load-error", view)) return;
+  if (!S.ready) { view.innerHTML = `<div class="loading">Loading cards…</div>`; init(); }
+  else if (modal.hidden) route();                       // under a card dialog: when it closes (route)
+});

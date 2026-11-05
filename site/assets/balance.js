@@ -253,14 +253,14 @@ export function balanceBlock(c, A, { byId } = {}) {
 }
 
 /** The card's recorded changes, newest first: stats (buff, nerf), stars, kind, types, series, timing tags, wording */
-export function changesBlock(c, A, { byId, texts = null, repo = "" } = {}) {
+export function changesBlock(c, A, { byId, texts = null, repo = "", pathAt = null } = {}) {
   const a = cardData(A, c, byId), out = [];
   if (a?.changes?.length) {
     const items = a.changes.map(r => {
       const parts = changeParts(r);
       const [i, j] = r.text || [];
       const diff = r.words && texts && texts[i] != null && texts[j] != null ? `<details class="bal-diff"><summary>Show the change</summary><div>${diffWords(texts[i], texts[j])}</div></details>` : "";
-      const link = commitLink(repo, A.commits[r.c], `Commit for the ${day(r.ts)} change`);        // r.c: index in commits
+      const sha = A.commits[r.c], link = commitLink(repo, sha, `Commit for the ${day(r.ts)} change`, sha && pathAt?.(sha, r.ts));   // r.c: index in commits
       const when = (r.approx ? `${esc(day(r.ts))}<br><small>date approximate</small>` : esc(day(r.ts))) + (link && `<br>${link}`);
       return `<li><span class="when">${when}</span><div>${parts.join("<br>")}${diff}</div></li>`;
     }).join("");

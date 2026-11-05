@@ -208,7 +208,7 @@ export function browserHtml(list, p = {}, ctx = {}) {
       <label class="check"><input type="checkbox" data-action="toggle-param" data-key="complete" data-value="1"${p.complete ? " checked" : ""}> complete hands only</label>
       <a class="fact" href="#/deck">Deck builder</a></div>
     ${p.card ? `<div class="active-filters"><button type="button" class="chip" data-action="remove-param" data-key="card">Using ${esc(cardOf(ctx, str(p.card))?.name || p.card)} ✕</button></div>` : ""}
-    ${ctx.error ? `<p class="muted">Couldn't load the published decks (${esc(ctx.error)}). <a href="javascript:location.reload()">Reload</a></p>` : ""}
+    ${ctx.error ? `<p class="muted load-error">${esc(ctx.error)} <a href="javascript:location.reload()">Reload</a></p>` : ""}
     ${!list.length ? `<div class="empty">No deck is published yet. Build a hand in the <a href="#/deck">deck builder</a> and press Publish.</div>`
       : !shown.length ? `<div class="empty">No deck matches.</div>`
       : tilesHtml(shown, ctx)}
