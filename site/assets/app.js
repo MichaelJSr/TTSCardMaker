@@ -350,7 +350,7 @@ function route(e) {
     && view.firstElementChild?.matches(".rules") && !$(".loading", view) && (!r.arg || S.book.chapters.some(c => c.id === r.arg.split("/")[0]))) {
     closeModal(); setTitle(r);   // another chapter of the book drawn: scroll, no redraw (an old numbered id: renderRules)
     const [ch, sec] = r.arg.split("/");
-    if (!S.restoring && ch && !q(r.params) && rulesAt !== location.hash) document.getElementById(sec ? `${ch}--${sec}` : ch)?.scrollIntoView();
+    if (ch && !q(r.params) && rulesAt !== location.hash) document.getElementById(sec ? `${ch}--${sec}` : ch)?.scrollIntoView();   // Back/Forward too: a contents link's smooth scroll may still run
     rulesAt = S.renderedHash = S.listHash = hash;
     return;
   }
@@ -360,7 +360,7 @@ function route(e) {
 }
 function renderView(r, hash) {
   S.renderedHash = hash; S.listHash = hash;
-  if (r.name !== "cards") { S.selected.clear(); S.selecting = false; }
+  if (r.name !== "cards") { S.selected.clear(); S.selecting = false; if (srStatus) srStatus.textContent = ""; }   // a count again later: spoken again
   if (!(r.name === "u" && r.edit)) editor.leave();
   markTab({ compare: "cards", u: "users", decks: "deck" }[r.name] || r.name);
   if (r.name !== "cards" && qInput.value && document.activeElement !== qInput) qInput.value = "";
@@ -1670,13 +1670,13 @@ document.addEventListener("change", e => {
 $(".skip")?.addEventListener("click", e => { e.preventDefault(); view.focus({ preventScroll: true }); });   // not #view: a route (or, under <base>, the site root)
 
 // search box
+const speak = () => { const n = $(".result-count", view)?.textContent; if (srStatus && n && n !== "…" && n !== srStatus.textContent) srStatus.textContent = n; };   // the count: #sr-status
 const runSearch = debounce(() => {
   const name = parseHash().name;
   if (name === "rules") { setParams({ q: qInput.value }); return; }
-  if (name !== "cards") { location.hash = `#/cards?q=${encodeURIComponent(qInput.value)}`; return; }
+  if (name !== "cards") { addEventListener("hashchange", speak, { once: true }); location.hash = `#/cards?q=${encodeURIComponent(qInput.value)}`; return; }   // after route()'s listener: the count is drawn
   setParams({ q: qInput.value });
-  const n = $(".result-count", view)?.textContent;      // spoken: #sr-status
-  if (srStatus && n && n !== "…" && n !== srStatus.textContent) srStatus.textContent = n;
+  speak();
 }, 160);
 qInput.addEventListener("input", runSearch);
 $("#save-filter")?.addEventListener("click", () => {   // the search box's text as a filter in My filters (CSS shows it while there's text)
@@ -1722,7 +1722,7 @@ document.addEventListener("keydown", e => {
   if (e.key === "Enter" && ae?.dataset?.open && (modal.hidden || modal.contains(ae)) && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
   if ($("#edit-form")) return;                                                         // no single-key shortcuts while a form (card dialog, profile editor) is up
   if (modal.hidden && editing() && S.selected.size && parseHash().name === "cards" && $(".tray", view) && tray.dropKey(e.key)) { e.preventDefault(); return; }   // 1-9: onto a pinned box on screen
-  const inCard = !modal.hidden && parseHash().name === "card", id = parseHash().arg;
+  const inCard = S.ready && !modal.hidden && parseHash().name === "card", id = parseHash().arg;   // not the picture shown before cards.json
   if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }
   else if (e.key === "?") showKeys();
   else if (e.key === "r") actions["random-from-list"]();

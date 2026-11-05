@@ -24,8 +24,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   and the tray's shortcut keys and `#keys` are hidden (only those: `.kbd` also shows deck slugs and file names). Phone
   chapters fit the screen (`.rb-book` a `minmax(0, 1fr)` column; long words break; Edit/History above the title).
 - Screen readers (2026-11-04): `#page-h1` and `#sr-status` (`.sr-only`, outside `#view`, so no draw wipes them).
-  `setTitle` (renderView) puts the page's name in the h1 (a card from a link: "Cards"); a search on the cards route
-  copies the result count into the status when it changes (not "…"). `markTab`: `aria-current="page"` on the section's
+  `setTitle` (renderView) puts the page's name in the h1 (a card from a link: "Cards"); a search (`speak`; from another
+  section after route() draws, on hashchange) copies the result count into the status when it changes (not "…"); a
+  view of another name empties it, so the same count is read out again. `markTab`: `aria-current="page"` on the section's
   tab only. Filter chips (app.js, changes.js) have `aria-pressed` and, with counts, "Creatures, 298 cards" (`.n` hidden);
   the Series, Subseries and Author selects aria-labels. Table view: the name is `a.row-name` (`#/card/<id>`, data-open):
   Tab reaches every row, Cmd/middle-click opens a tab (the sizer's copies are `visibility: collapse`, never focused).
@@ -969,7 +970,8 @@ relies on:
   always; thumbnails left out: the drawn rows' 30 px ones hold their column, `max-width: none`), so the columns keep
   their final widths from the first frame. A new column or font size in `rowHtml` needs its line in `sizerRows`' `cols`.
 - Rulebook Back/Forward, or a #/rules link, while the same book shows (`route`: not the print view, the same `q` and
-  `viewSig`, a chapter that exists) only scrolls (renderRules' id rule, not on Back/Forward); an old numbered id goes on
+  `viewSig`, a chapter that exists) only scrolls (renderRules' id rule, Back/Forward too: a contents link's smooth scroll
+  may still run, and Back mid-scroll landed on the later chapter); an old numbered id goes on
   to renderRules' redirect; a publish's `rerender()` still redraws. Phones at 4x CPU: no ~120 ms task per Back.
 - Rulebook: rules.json re-derives (`editor.refresh`) only when a staged or published-not-built edit is on a rulebook
   page (`editor.touches`). No `content-visibility` on its pages: the TOC's smooth jumps landed off target (the pages'
@@ -985,7 +987,8 @@ relies on:
   grid tile's when it has loaded (`placeholderOf`), else the 720 px one a share page preloads, else the 360 px one.
 - c/<id>/ pages carry that picture and the name in `#modal` (`card_frame`: openCard's markup, not for a hanging card),
   so the card shows before the scripts (fast 4G ~0.4 s sooner, slow 4G ~0.9 s; no scripts: the card, not "Loading
-  cards…"); openCard draws the dialog over it in place. A failed cards.json or a missing card hides it. Card dialogs keep
+  cards…"); openCard draws the dialog over it in place. A failed cards.json or a missing card hides it. The card keys
+  (d, c, x, e, arrows) wait for `S.ready` (x before the data: the grid and "doesn't exist"). Card dialogs keep
   the scrollbar's gutter (`.modal:has(> .dialog > .detail)`): with classic scrollbars the picture moved 8 px.
 - Build: index.html gets `grid_preload(cards, ids, version, lazy)`: a script that preloads the first `GRID_PRELOADS` pictures of the
   first screen's cards (§31; Name order without node) with grid.js's srcset and the saved tile size, only for the plain
