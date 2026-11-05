@@ -581,6 +581,7 @@ body.rb-shot .rb-print-bar { display: none; }
 .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
 .panel h3 { margin: 0 0 10px; font-size: 16px; }
 .slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+@media (max-width: 435px) { .slots { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; } }   /* phones: 3 columns, the checks and buttons nearer */
 .slot { border: 2px dashed var(--border-strong); border-radius: 10px; aspect-ratio: 2 / 3; display: flex; align-items: center; justify-content: center;
   color: var(--muted); font-size: 13px; text-align: center; padding: 6px; position: relative; overflow: hidden; background: var(--surface-2); }
 .slot.filled { border-style: solid; border-color: var(--border); padding: 0; cursor: pointer; }
