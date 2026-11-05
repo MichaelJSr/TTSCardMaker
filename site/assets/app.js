@@ -1423,7 +1423,7 @@ function renderUser(r) {
   const profile = pending ? pending.profile : published;
   if (!person && profile) person = Pf.personOf(profile, people);
   const login = pending?.profile?.login || published?.login || person?.key || r.arg;    // the file's spelling: u/<login>/ exists only for it
-  if (login !== r.arg) { const to = { name: "u", arg: login, params: r.params }; S.renderedHash = S.listHash = hashOf(to); syncUrl(to); }
+  if (login !== r.arg) { const to = { name: "u", arg: login, params: r.params }; S.renderedHash = S.listHash = hashOf(to); syncUrl(to); r.arg = login; setTitle(r); }
   const own = !!me && (me.login.toLowerCase() === login.toLowerCase() || !!person?.logins.some(l => l.toLowerCase() === me.login.toLowerCase()));
   const owners = new Set([login, person?.github, ...(person?.logins || [])].filter(Boolean).map(s => s.toLowerCase())), theirs = deckList().filter(d => owners.has(d.owner.toLowerCase()));
   view.innerHTML = Pf.personHtml({ login, profile, person, state: pending?.state || "", removed: !!pending && !pending.profile,
