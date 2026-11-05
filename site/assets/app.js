@@ -177,7 +177,7 @@ async function init() {
   if (editor !== IDLE) { editor.init(); previews.init(); }  // applies staged edits, then derive()
   else derive();
   S.ready = true;
-  S.decks = D.loadDecks();
+  S.decks = D.loadDecks().map(d => D.canon(d, S.byId));
   updateDeckCount();
   updatePeopleCount();
   window.addEventListener("hashchange", route);
@@ -202,6 +202,7 @@ function derive() {
     S.banned.set(e.id, e.reason || "banned");
     const c = S.byId.get(e.id); if (c) c._banned = e.reason || "banned";
   }
+  for (const c of S.all) if (c.dup && S.banned.has(c.dup) && !S.banned.has(c.id)) { S.banned.set(c.id, S.banned.get(c.dup)); c._banned = S.banned.get(c.dup); }   // a duplicate picture: its card's ban
   S.renderer = makeRenderer({ cards: S.cards, icons: S.icons, variants: S.data.iconVariants });
   S.mentions = new Map(); S.mentionedBy = new Map();
   for (const c of S.cards) {
@@ -1123,7 +1124,9 @@ function toggleDeck(id) {
   D.saveDecks(S.decks); updateDeckCount(); refresh(id);
 }
 function renderDeck(r) {
-  if (r.arg) { const shared = D.decode(r.arg); S.shared = shared; } else S.shared = null;
+  S.shared = r.arg ? D.decode(r.arg) : null;
+  if (r.arg && !S.shared) { toast("That hand's share link is broken or cut short, so here is your own hand"); S.renderedHash = S.listHash = "#/deck"; history.replaceState(history.state, "", `${ROOT}#/deck`); }   // never the shared hand
+  else if (S.shared) D.canon(S.shared, S.byId);
   const d = S.shared || deck();
   const readOnly = !!S.shared;
   const v = D.validate(d, S.byId, S.banned);

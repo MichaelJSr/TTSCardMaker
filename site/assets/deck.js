@@ -23,6 +23,12 @@ export function activeDeck(decks) {
   return decks.find(d => d.id === id) || decks[0];
 }
 export function setActive(deck) { localStorage.setItem("activeDeck", deck.id); }
+/** A renamed card's old id as its new one (cards.json moved), each card once. */
+export function canon(d, byId) {
+  const id = x => byId.get(x)?.id || x;
+  d.cards = [...new Set(d.cards.map(id))]; if (d.field) d.field = id(d.field);
+  return d;
+}
 export function newDeck(decks, name = "New hand", cards = [], field = null) {
   const d = { id: uid(), name, cards, field };
   decks.push(d); saveDecks(decks); setActive(d);
@@ -43,6 +49,7 @@ export function decode(code) {
 }
 
 // ---- rules ---------------------------------------------------------------------------------------
+const one = (id, byId) => { const c = byId.get(id); return c ? c.dup || c.id : id; };   // a duplicate picture is its card (Breakfast: A snack)
 export function groupOf(card) { return HAND.find(g => g.kind === card.type) || null; }
 export function need(kind, stars) {
   const g = HAND.find(x => x.kind === kind);
@@ -52,7 +59,8 @@ export function need(kind, stars) {
 
 /** Try to add a card. Returns an error message, or "" on success. */
 export function addCard(deck, card, byId) {
-  if (deck.cards.includes(card.id) || deck.field === card.id) return `${card.name} is already in this hand.`;
+  const had = byId.get([...deck.cards, deck.field].find(id => id && one(id, byId) === one(card.id, byId)));
+  if (had) return had.name === card.name ? `${card.name} is already in this hand.` : `${had.name} is already in this hand (the same card as ${card.name}).`;
   if (card.type === "field") {
     if ((card.stars || 0) > FIELD_MAX_STARS) return `Only a field card of ${FIELD_MAX_STARS}★ or less can start in the shop.`;
     deck.field = card.id; return "";
@@ -86,6 +94,9 @@ export function validate(deck, byId, banned) {
       else { out.push({ ok: false, text: `${label}: ${have.length - n} too many` }); have.slice(n).forEach(c => badCards.add(c.id)); }
     }
   }
+  const first = c => cards.find(x => one(x.id, byId) === one(c.id, byId)), twice = cards.filter((c, i) => cards.indexOf(first(c)) !== i);
+  twice.forEach(c => badCards.add(c.id));
+  if (twice.length) out.push({ ok: false, text: `The same card twice: ${twice.map(c => (first(c).name === c.name ? c.name : `${c.name} (${first(c).name})`)).join(", ")}` });
   const stray = cards.filter(c => !groupOf(c) || !need(c.type, c.stars));
   stray.forEach(c => badCards.add(c.id));
   if (stray.length) out.push({ ok: false, text: `Not allowed in a hand: ${stray.map(c => c.name).join(", ")}` });
@@ -102,10 +113,10 @@ export function validate(deck, byId, banned) {
 
 /** Fill the rest of the hand with random legal, unbanned cards. */
 export function randomFill(deck, cards, banned) {
-  const inHand = new Set(deck.cards);
+  const inHand = new Set(deck.cards.map(id => cards.find(c => c.id === id)?.dup || id));   // by card: no duplicate pictures
   for (const g of HAND) for (const [stars, n] of g.tiers) {
     let have = deck.cards.filter(id => cards.find(c => c.id === id && c.type === g.kind && c.stars === stars)).length;
-    const pool = cards.filter(c => c.type === g.kind && c.stars === stars && c.parsed !== false && !banned.has(c.id) && !inHand.has(c.id));
+    const pool = cards.filter(c => c.type === g.kind && c.stars === stars && c.parsed !== false && !c.dup && !banned.has(c.id) && !inHand.has(c.id));
     while (have < n && pool.length) {
       const c = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
       deck.cards.push(c.id); inHand.add(c.id); have++;
@@ -132,7 +143,7 @@ export function toText(deck, byId) {
 }
 export function fromText(text, cards) {
   const lookup = new Map();
-  for (const c of cards) { lookup.set(norm(c.name), c); for (const a of c.aliases || []) if (!lookup.has(norm(a))) lookup.set(norm(a), c); }
+  for (const c of cards) { if (!c.dup || !lookup.has(norm(c.name))) lookup.set(norm(c.name), c); for (const a of c.aliases || []) if (!lookup.has(norm(a))) lookup.set(norm(a), c); }
   const deck = { name: "Imported hand", cards: [], field: null }, unknown = [];
   for (let line of text.split(/\r?\n/)) {
     line = line.trim();
