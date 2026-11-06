@@ -24,6 +24,14 @@
    "psd_blob": "082dfcca2a0d051360b81564f7a5b43fb525f2c3",
    "state": "baked"
   },
+  "breakstheslime-mw4vyhur-qeaf": {
+   "at": "2026-11-06T11:23:33Z",
+   "card": "Avatar Of Wrath",
+   "path": "Creatures/BTD/4 Stars/Avatar_Of_Wrath.psd",
+   "png_blob": "7ec28b4187ed041651e6ec1c19308646a94b3d87",
+   "psd_blob": "9408d445ad2cf72ab2dc52c32832fdeb7f3090af",
+   "state": "baked"
+  },
   "check-align-1103": {
    "at": "2026-11-04T04:44:49Z",
    "card": "Pot Full of Spiders!",
