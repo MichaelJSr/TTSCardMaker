@@ -158,7 +158,9 @@ class Player:
         self._team = value
         self._w.log.append(("team", self.color, value))
 
-    def getHandObjects(self):
+    def getHandObjects(self):                               # a seat with no hand zone: the worst case, an error
+        if self.color not in self._w.hands and self.color not in {z.owner for z in self._w.zones}:
+            raise RuntimeError("Object reference not set to an instance of an object")
         return self._w.lua.table_from(self._w.hands.get(self.color, []))
 
     def getPointerPosition(self):
@@ -824,11 +826,15 @@ def main():
         kids = d.get("ContainedObjects") or []
         paths = sorted(face_path(k) for k in kids)
         expect = sorted(p for p in details["cards"] if p.startswith("Items/") and "/4 Stars/" in p)
-        ok = d.get("Name") == "Deck" and paths == expect and len(d.get("DeckIDs") or []) == len(kids) and \
-            all(str(k["CardID"] // 100) in d["CustomDeck"] and k["CardID"] == i for k, i in zip(kids, d["DeckIDs"])) and \
-            len({k["CardID"] // 100 for k in kids}) == len(kids) and sp["rotation"][2] == 180 and \
+        ok = d.get("Name") == "Deck" and paths == expect and d.get("DeckIDs") == [k["CardID"] for k in kids] and \
+            all(str(int(k["CardID"]) // 100) in d["CustomDeck"] for k in kids) and sp["rotation"][2] == 180 and \
             sp["position"][1] == 3 and min(sp["scale"]) > 0
         check(bool(ok), f"+ 4★ Items: one shuffled deck of every Items/*/4 Stars card ({len(paths)} of {len(expect)}), face down beside the card")
+        every = lambda names: set.intersection(*(set(x) for x in walk(save.get("ObjectStates")) if x.get("Name") in names))
+        saved_deck, saved_card = every({"Deck"}), every({"Card", "CardCustom"})   # the fields every saved one has
+        lacks = lambda have, model: sorted(set(model) - {"GUID"} - set(have))
+        check(not lacks(d, saved_deck) and not any(lacks(k, saved_card) for k in kids) and d.get("Nickname") == "4★ Items",
+              f"the deck has a saved deck's fields, named '4★ Items' ({d.get('Nickname')!r}; lacks {lacks(d, saved_deck)})")
         w.spawns.clear()
         w.hands["Teal"] = [o]
         w.call("spawnDeck", teal, None, btn[1])
@@ -836,7 +842,32 @@ def main():
         n1 = len([p for p in details["cards"] if p.startswith("Items/Equip/") and "/1 Stars/" in p])
         check(bool(sp) and len(sp["data"]["ContainedObjects"]) == n1 and sp["position"][0] > 4 and sp["position"][2] == 4,
               f"+ 1★ Equips from a card in hand: {n1} cards where the player points, not into the hand")
-        w.hands["Teal"] = []
+        del w.hands["Teal"]
+        # a card the save lacks: made, in a saved card's fields (another table, without one 4★ item)
+        drop = expect[0]
+        save2 = json.loads(json.dumps(save))
+        def strip(objs):
+            kept = [x for x in objs or [] if face_path(x) != drop]
+            for x in kept:
+                if x.get("ContainedObjects"):
+                    x["ContainedObjects"] = strip(x["ContainedObjects"])
+            return kept
+        save2["ObjectStates"] = strip(save2["ObjectStates"])
+        w2 = World(script, save2, zones, saved_ui)
+        w2.seat("Teal")
+        w2.g.onLoad("")
+        w2.wait.flush()
+        w2.respond(details_raw, pages_text)
+        w2.run(w2.g.showDetails, "Teal", Obj.of(w2, o._data), what="Card details: Tainted Eden (second table)")
+        b8 = next((f"Teal_d1_k{r}_8" for r in range(1, 4) if w2.ui.on(f"Teal_d1_k{r}_8")), None)
+        w2.call("spawnDeck", w2.players["Teal"], None, b8)
+        kids2 = w2.spawns[0]["data"]["ContainedObjects"] if len(w2.spawns) == 1 else []
+        made = [k for k in kids2 if face_path(k) == drop]
+        ok = len(kids2) == len(expect) and len(made) == 1 and not lacks(made[0], saved_card) and \
+            made[0].get("Nickname") == details["cards"][drop]["n"] and int(made[0]["CardID"]) // 100 > 1727 and \
+            str(int(made[0]["CardID"]) // 100) in w2.spawns[0]["data"]["CustomDeck"]
+        check(ok, f"a card the save lacks ({drop}) is made in a saved card's fields, its own CustomDeck key {made and made[0].get('CardID')}")
+        check(not w2.told or all("failed" not in m for _, m in w2.told), f"no deck button errors {w2.told}")
 
     # ---- rulebook panel ----
     w.call("openRulebook", "Red")

@@ -352,12 +352,17 @@ local function pathOf(url)
     return unescape(url:sub(at))
 end
 
+local function handOf(c)                               -- a seat's hand objects ({} for a seat without a hand zone)
+    local ok, objs = pcall(function() return Player[c].getHandObjects() end)
+    return ok and objs or {}
+end
+
 -- the card's PNG path, or nil (not a card, or hidden from this player: face down or in another player's hand)
 local function cardPath(obj, color)
     if obj == nil or obj.isDestroyed() or obj.type ~= "Card" or obj.is_face_down then return nil end
     for _, other in ipairs(getSeatedPlayers()) do
         if other ~= color then
-            for _, o in ipairs(Player[other].getHandObjects() or {}) do
+            for _, o in ipairs(handOf(other)) do
                 if o == obj then return nil end
             end
         end
@@ -669,8 +674,11 @@ end
 local scaleOfBack, indexQueue, tally = {}, nil, {}    -- tally: back -> "x y z" -> count
 local INDEX_PER_FRAME = 3
 local function scaleOf(t) t = t or {} return {t.scaleX or 1, t.scaleY or 1, t.scaleZ or 1} end
+local cardTemplate, deckTemplate = nil, nil           -- a saved card's and deck's data: every field TTS expects
 local function indexAdd(d, scale)
+    if (d.Name == "Deck" or d.Name == "DeckCustom") and not deckTemplate then deckTemplate = d end
     if d.Name == "Card" or d.Name == "CardCustom" then
+        cardTemplate = cardTemplate or d
         local deck = d.CustomDeck or {}
         local face = deck[tostring(math.floor((d.CardID or 0) / 100))]
         if not face then for _, v in pairs(deck) do face = v break end end
@@ -718,22 +726,43 @@ function indexLater()                                  -- a few containers a fra
     if not indexSome(INDEX_PER_FRAME) then Wait.frames(indexLater, 1) end
 end
 
+local function at0() return {posX = 0, posY = 0, posZ = 0, rotX = 0, rotY = 0, rotZ = 0, scaleX = 1, scaleY = 1, scaleZ = 1} end
+
+-- a template's fields (its team fields blank), then these
+local SKIP = {GUID = true, ContainedObjects = true, DeckIDs = true, CustomDeck = true, States = true, Tags = true, Memo = true}
+local function like(template, fields)
+    local out = {}
+    for k, v in pairs(template or {}) do if not SKIP[k] then out[k] = v end end
+    out.Description, out.GMNotes, out.LuaScript, out.LuaScriptState, out.XmlUI, out.Locked = "", "", "", "", "", false
+    out.ColorDiffuse = out.ColorDiffuse or {r = 0.713235259, g = 0.713235259, b = 0.713235259}
+    for k, v in pairs(fields) do out[k] = v end
+    return out
+end
+
+local madeKey = 9000                                   -- the save's CustomDeck keys stay below (47-1727)
+local function newKey()                                -- the next free key, of the type the save's keys have
+    madeKey = madeKey + 1
+    for k in pairs(cardTemplate and cardTemplate.CustomDeck or {}) do return type(k) == "number" and madeKey or tostring(madeKey) end
+    return tostring(madeKey)
+end
+
 -- a card the save lacks, made from its picture and its kind's back
 local function madeCard(path, card)
     local back = "MDW/Assets/cardback_item.png"
     for _, kb in ipairs(BACKS) do if (card.k or ""):find(kb[1], 1, true) == 1 then back = kb[2] end end
     local enc = function(p) return (p:gsub(" ", "%%20")) end
-    return {Name = "CardCustom", Nickname = card.n, CardID = 100,
-        Transform = {posX = 0, posY = 0, posZ = 0, rotX = 0, rotY = 0, rotZ = 0, scaleX = 1, scaleY = 1, scaleZ = 1},
-        CustomDeck = {["1"] = {FaceURL = RAW_MAIN .. enc(path), BackURL = RAW_MAIN .. enc(back), NumWidth = 1, NumHeight = 1,
-            BackIsHidden = true, UniqueBack = false, Type = 0}}}
+    local key = newKey()
+    return like(cardTemplate, {Name = "CardCustom", Nickname = card.n, CardID = madeKey * 100, Transform = at0(),
+        CustomDeck = {[key] = {FaceURL = RAW_MAIN .. enc(path), BackURL = RAW_MAIN .. enc(back), NumWidth = 1, NumHeight = 1,
+            BackIsHidden = true, UniqueBack = false, Type = 0}}})
 end
 
 -- a card (its path) spawned: into the player's hand, face down on the way in (nobody else sees it), else at pos facing
 -- spin (a player without a hand); a copy of the save's own when there is one, else made; at its played size
 local function faceOf(data)                            -- a card's CustomDeck entry: under CardID / 100, else the first
-    local face = data.CustomDeck and data.CustomDeck[tostring(math.floor((data.CardID or 0) / 100))] or {}
-    if not face.BackURL then for _, v in pairs(data.CustomDeck or {}) do face = v break end end
+    local cd, id = data.CustomDeck or {}, math.floor((data.CardID or 0) / 100)
+    local face = cd[id] or cd[tostring(id)] or {}
+    if not face.BackURL then for _, v in pairs(cd) do face = v break end end
     return face
 end
 
@@ -767,33 +796,33 @@ function spawnNamed(player, _, id)                     -- beside the card the pa
 end
 
 -- a deck of these cards, shuffled, face down at pos: each a copy of the save's own card when it has one, else made
-local function deckOf(paths, pos, spin)
+-- a deck of these cards, shuffled, face down at pos, named name: the save's own cards (their CustomDeck keys are unique
+-- in the save) or made ones, in a saved deck's fields
+local function deckOf(paths, name, pos, spin)
     indexSome()
     for i = #paths, 2, -1 do
         local j = math.random(i)
         paths[i], paths[j] = paths[j], paths[i]
     end
-    local function at0() return {posX = 0, posY = 0, posZ = 0, rotX = 0, rotY = 0, rotZ = 0, scaleX = 1, scaleY = 1, scaleZ = 1} end
-    local deck = {Name = "Deck", Transform = at0(), DeckIDs = {}, CustomDeck = {}, ContainedObjects = {}}
+    local deck = like(deckTemplate, {Name = "Deck", Nickname = name, Transform = at0(), DeckIDs = {}, CustomDeck = {}, ContainedObjects = {}})
     local scale
-    for i, path in ipairs(paths) do
+    for _, path in ipairs(paths) do
         local known = cardIndex[path]
         local data = known and known.data or madeCard(path, details.cards[path])
         local card = {}
         for k, v in pairs(data) do card[k] = v end     -- a copy: the index keeps its own
-        local face, id = faceOf(data), i * 100 + (data.CardID or 0) % 100
-        card.GUID, card.CardID, card.CustomDeck, card.Transform = nil, id, {[tostring(i)] = face}, at0()
-        deck.CustomDeck[tostring(i)] = face
-        table.insert(deck.DeckIDs, id)
+        card.GUID, card.Transform = nil, at0()
+        for k, v in pairs(card.CustomDeck or {}) do deck.CustomDeck[k] = v end
+        table.insert(deck.DeckIDs, card.CardID)
         table.insert(deck.ContainedObjects, card)
-        scale = scale or known and known.scale or scaleOfBack[pathOf(face.BackURL) or ""]
+        scale = scale or known and known.scale or scaleOfBack[pathOf(faceOf(card).BackURL) or ""]
     end
     spawnObjectData({data = deck, position = pos, rotation = {0, spin or 0, 180}, scale = scale or {1, 1, 1}})
 end
 
 local function inHand(obj)
     for _, c in ipairs(getSeatedPlayers()) do
-        for _, o in ipairs(Player[c].getHandObjects() or {}) do if o == obj then return true end end
+        for _, o in ipairs(handOf(c)) do if o == obj then return true end end
     end
     return false
 end
@@ -803,13 +832,19 @@ function spawnDeck(player, _, id)                      -- beside the card on the
     local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_k2_4": its 4th deck
     local deck = open and n and open.decks and open.decks[n]
     if not deck then return end
-    local paths = deckPaths(deck)
-    if #paths == 0 then broadcastToColor("No cards found for " .. deck[1] .. ".", color, {1, 0.6, 0.6}) return end
-    local from = open.obj and not open.obj.isDestroyed() and not inHand(open.obj) and open.obj
-    local at = from and from.getPosition() or Player[color].getPointerPosition() or {x = 0, y = 1, z = 0}
-    open.spawned = (open.spawned or 0) + 1
-    deckOf(paths, {at.x + 2.6 * open.spawned, at.y + 2, at.z}, from and from.getRotation().y or 0)
-    broadcastToColor(deck[1] .. ": " .. #paths .. " cards, shuffled.", color, {1, 1, 1})
+    local ok, err = pcall(function()
+        local paths = deckPaths(deck)
+        if #paths == 0 then broadcastToColor("No cards found for " .. deck[1] .. ".", color, {1, 0.6, 0.6}) return end
+        local from = open.obj and not open.obj.isDestroyed() and not inHand(open.obj) and open.obj
+        local at = from and from.getPosition() or Player[color].getPointerPosition() or {x = 0, y = 1, z = 0}
+        open.spawned = (open.spawned or 0) + 1
+        deckOf(paths, deck[1], {at.x + 2.6 * open.spawned, at.y + 2, at.z}, from and from.getRotation().y or 0)
+        broadcastToColor(deck[1] .. ": " .. #paths .. " cards, shuffled.", color, {1, 1, 1})
+    end)
+    if not ok then
+        log("Deck button: " .. tostring(err))
+        broadcastToColor("Deck button failed: " .. tostring(err), color, {1, 0.6, 0.6})
+    end
 end
 
 -- the rulebook panel: its chapters, or the pages holding every word searched (a snippet of each); a click turns the PDF there
