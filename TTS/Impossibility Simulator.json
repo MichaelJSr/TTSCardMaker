@@ -20658,7 +20658,7 @@
           "Type": 0
         },
         "299": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/4%20Stars/Macho_Grubba.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Macho_Grubba.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20667,7 +20667,7 @@
           "Type": 0
         },
         "313": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Arachnophobia.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Arachnophobia.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20676,7 +20676,7 @@
           "Type": 0
         },
         "314": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Mari.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20964,7 +20964,7 @@
           "Type": 0
         },
         "301": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/4%20Stars/Smorg.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Smorg.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20982,7 +20982,7 @@
           "Type": 0
         },
         "295": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/Cortez.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Cortez.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -21183,7 +21183,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "299": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/4%20Stars/Macho_Grubba.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Macho_Grubba.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -21241,7 +21241,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "313": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Arachnophobia.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Arachnophobia.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -21299,7 +21299,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "314": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Mari.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -23155,7 +23155,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "301": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/4%20Stars/Smorg.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Smorg.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -23271,7 +23271,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "295": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/Cortez.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Cortez.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -23541,7 +23541,7 @@
           "Type": 0
         },
         "302": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Mario/5%20Stars/The_Master.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/5%20Stars/The_Master.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -23559,7 +23559,7 @@
           "Type": 0
         },
         "321": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -23748,7 +23748,7 @@
           "Type": 0
         },
         "318": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/5%20Stars/Abbi.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/Abbi.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -23873,7 +23873,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "302": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Mario/5%20Stars/The_Master.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/5%20Stars/The_Master.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -23989,7 +23989,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "321": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -25207,7 +25207,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "318": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/5%20Stars/Abbi.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/Abbi.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -32424,7 +32424,7 @@
           "Type": 0
         },
         "303": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Omori/2%20Stars/The_Maverick.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/2%20Stars/The_Maverick.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -33018,7 +33018,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "303": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Omori/2%20Stars/The_Maverick.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/2%20Stars/The_Maverick.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -64849,7 +64849,7 @@
           "Type": 0
         },
         "303": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Omori/2%20Stars/The_Maverick.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/2%20Stars/The_Maverick.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -64858,7 +64858,7 @@
           "Type": 0
         },
         "322": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Other/2%20Stars/Barry_The_Barrel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Barry_The_Barrel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -65029,7 +65029,7 @@
           "Type": 0
         },
         "1031": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Other/2%20Stars/Auto_Croissant.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Auto_Croissant.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -65083,7 +65083,7 @@
           "Type": 0
         },
         "1407": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -65092,7 +65092,7 @@
           "Type": 0
         },
         "1397": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -65155,7 +65155,7 @@
           "Type": 0
         },
         "1553": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Other/2%20Stars/Future_Niiue.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Future_Niiue.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -65164,7 +65164,7 @@
           "Type": 0
         },
         "1561": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -65744,7 +65744,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "303": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Omori/2%20Stars/The_Maverick.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/2%20Stars/The_Maverick.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -65802,7 +65802,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "322": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Other/2%20Stars/Barry_The_Barrel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Barry_The_Barrel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -66904,7 +66904,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1031": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Other/2%20Stars/Auto_Croissant.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Auto_Croissant.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -67252,7 +67252,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1407": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -67310,7 +67310,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1397": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -67716,7 +67716,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1553": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Other/2%20Stars/Future_Niiue.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Future_Niiue.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -67774,7 +67774,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1561": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -67889,7 +67889,7 @@
           "Type": 0
         },
         "1397": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -67898,7 +67898,7 @@
           "Type": 0
         },
         "1407": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -67925,7 +67925,7 @@
           "Type": 0
         },
         "1031": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Other/2%20Stars/Auto_Croissant.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Auto_Croissant.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -67997,7 +67997,7 @@
           "Type": 0
         },
         "1553": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Other/2%20Stars/Future_Niiue.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Future_Niiue.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -68006,7 +68006,7 @@
           "Type": 0
         },
         "1561": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -68296,7 +68296,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1397": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -68354,7 +68354,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1407": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -68528,7 +68528,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1031": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Other/2%20Stars/Auto_Croissant.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Auto_Croissant.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -68992,7 +68992,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1553": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Other/2%20Stars/Future_Niiue.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Future_Niiue.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -69050,7 +69050,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1561": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -69269,7 +69269,7 @@
           "Type": 0
         },
         "307": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69305,7 +69305,7 @@
           "Type": 0
         },
         "304": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69395,7 +69395,7 @@
           "Type": 0
         },
         "292": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c0a34a4048a198b6aca65ab91479637276cce158/Creatures/Mario/3%20Stars/Marilyn.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Marilyn.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69503,7 +69503,7 @@
           "Type": 0
         },
         "291": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Lord_Crump.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Lord_Crump.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69512,7 +69512,7 @@
           "Type": 0
         },
         "294": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Mario/3%20Stars/Tutankoopa.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Tutankoopa.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69530,7 +69530,7 @@
           "Type": 0
         },
         "306": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Omori/3%20Stars/Mr_Jawsum.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Mr_Jawsum.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69638,7 +69638,7 @@
           "Type": 0
         },
         "293": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Raw_Cock.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Raw_Cock.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69656,7 +69656,7 @@
           "Type": 0
         },
         "310": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/3%20Stars/Snow_Angel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Snow_Angel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69665,7 +69665,7 @@
           "Type": 0
         },
         "305": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d4bce24e4b40aa238b020624f256d184dd5cae3/Creatures/Omori/3%20Stars/Kel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Kel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69701,7 +69701,7 @@
           "Type": 0
         },
         "309": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/72774d193b0a6a92a932c4b1943442e10c963d6a/Creatures/Omori/3%20Stars/SOMETHING.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/SOMETHING.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69728,7 +69728,7 @@
           "Type": 0
         },
         "311": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Omori/3%20Stars/Sweetheart.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Sweetheart.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69791,7 +69791,7 @@
           "Type": 0
         },
         "308": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Papa_Chip.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Papa_Chip.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69962,7 +69962,7 @@
           "Type": 0
         },
         "1144": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69971,7 +69971,7 @@
           "Type": 0
         },
         "1167": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/3%20Stars/Sniffle_Thwomp.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Sniffle_Thwomp.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69989,7 +69989,7 @@
           "Type": 0
         },
         "961": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Mario/3%20Stars/Vivian.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Vivian.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70007,7 +70007,7 @@
           "Type": 0
         },
         "1394": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Omori/3%20Stars/Shattered_Omori.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Shattered_Omori.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70016,7 +70016,7 @@
           "Type": 0
         },
         "1413": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70106,7 +70106,7 @@
           "Type": 0
         },
         "1562": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70548,7 +70548,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "307": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -70780,7 +70780,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "304": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -71360,7 +71360,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "292": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c0a34a4048a198b6aca65ab91479637276cce158/Creatures/Mario/3%20Stars/Marilyn.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Marilyn.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -72056,7 +72056,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "291": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Lord_Crump.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Lord_Crump.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -72114,7 +72114,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "294": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Mario/3%20Stars/Tutankoopa.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Tutankoopa.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -72230,7 +72230,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "306": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Omori/3%20Stars/Mr_Jawsum.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Mr_Jawsum.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -72926,7 +72926,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "293": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Raw_Cock.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Raw_Cock.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -73042,7 +73042,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "310": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/3%20Stars/Snow_Angel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Snow_Angel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -73100,7 +73100,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "305": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d4bce24e4b40aa238b020624f256d184dd5cae3/Creatures/Omori/3%20Stars/Kel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Kel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -73332,7 +73332,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "309": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/72774d193b0a6a92a932c4b1943442e10c963d6a/Creatures/Omori/3%20Stars/SOMETHING.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/SOMETHING.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -73506,7 +73506,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "311": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Omori/3%20Stars/Sweetheart.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Sweetheart.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -73912,7 +73912,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "308": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Papa_Chip.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Papa_Chip.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75014,7 +75014,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1144": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75072,7 +75072,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1167": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/3%20Stars/Sniffle_Thwomp.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Sniffle_Thwomp.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75188,7 +75188,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "961": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Mario/3%20Stars/Vivian.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Vivian.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75304,7 +75304,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1394": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Omori/3%20Stars/Shattered_Omori.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Shattered_Omori.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75362,7 +75362,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1413": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75942,7 +75942,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1562": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -76284,7 +76284,7 @@
           "Type": 0
         },
         "1413": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76293,7 +76293,7 @@
           "Type": 0
         },
         "1394": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Omori/3%20Stars/Shattered_Omori.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Shattered_Omori.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76320,7 +76320,7 @@
           "Type": 0
         },
         "1144": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76410,7 +76410,7 @@
           "Type": 0
         },
         "1562": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -76678,7 +76678,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1413": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -76736,7 +76736,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1394": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Omori/3%20Stars/Shattered_Omori.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Shattered_Omori.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -76910,7 +76910,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1144": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -77490,7 +77490,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1562": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -77904,7 +77904,7 @@
           "Type": 0
         },
         "291": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Lord_Crump.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Lord_Crump.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -78690,7 +78690,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "291": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Lord_Crump.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Lord_Crump.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -79866,7 +79866,7 @@
           "Type": 0
         },
         "317": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/4%20Stars/Unbread_Twins.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Unbread_Twins.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79875,7 +79875,7 @@
           "Type": 0
         },
         "316": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Thalassophobia.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Thalassophobia.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79884,7 +79884,7 @@
           "Type": 0
         },
         "315": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Stranger.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Stranger.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79893,7 +79893,7 @@
           "Type": 0
         },
         "314": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Mari.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79902,7 +79902,7 @@
           "Type": 0
         },
         "313": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Arachnophobia.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Arachnophobia.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79911,7 +79911,7 @@
           "Type": 0
         },
         "312": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Acrophobia.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Acrophobia.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79920,7 +79920,7 @@
           "Type": 0
         },
         "301": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/4%20Stars/Smorg.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Smorg.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79929,7 +79929,7 @@
           "Type": 0
         },
         "300": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/4%20Stars/Sir_Grodus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Sir_Grodus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79938,7 +79938,7 @@
           "Type": 0
         },
         "297": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/DooPliss.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/DooPliss.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79947,7 +79947,7 @@
           "Type": 0
         },
         "296": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Crystal_King.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79956,7 +79956,7 @@
           "Type": 0
         },
         "295": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/Cortez.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Cortez.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79974,7 +79974,7 @@
           "Type": 0
         },
         "298": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Mario/4%20Stars/Fawful.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Fawful.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79983,7 +79983,7 @@
           "Type": 0
         },
         "299": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/4%20Stars/Macho_Grubba.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Macho_Grubba.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -80190,7 +80190,7 @@
           "Type": 0
         },
         "1398": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -80208,7 +80208,7 @@
           "Type": 0
         },
         "1412": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -80226,7 +80226,7 @@
           "Type": 0
         },
         "1528": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -83162,7 +83162,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "317": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/4%20Stars/Unbread_Twins.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Unbread_Twins.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83220,7 +83220,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "316": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Thalassophobia.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Thalassophobia.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83278,7 +83278,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "315": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Stranger.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Stranger.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83336,7 +83336,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "314": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Mari.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83394,7 +83394,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "313": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Arachnophobia.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Arachnophobia.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83452,7 +83452,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "312": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Acrophobia.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Acrophobia.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83510,7 +83510,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "301": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/4%20Stars/Smorg.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Smorg.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83568,7 +83568,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "300": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/4%20Stars/Sir_Grodus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Sir_Grodus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83626,7 +83626,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "297": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/DooPliss.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/DooPliss.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83684,7 +83684,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "296": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Crystal_King.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83742,7 +83742,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "295": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/Cortez.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Cortez.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83858,7 +83858,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "298": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Mario/4%20Stars/Fawful.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Fawful.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83916,7 +83916,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "299": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/4%20Stars/Macho_Grubba.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Macho_Grubba.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -85250,7 +85250,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1398": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -85366,7 +85366,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1412": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -85482,7 +85482,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1528": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -85799,7 +85799,7 @@
           "Type": 0
         },
         "1412": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -85817,7 +85817,7 @@
           "Type": 0
         },
         "1398": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -85871,7 +85871,7 @@
           "Type": 0
         },
         "312": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Acrophobia.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Acrophobia.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -85898,7 +85898,7 @@
           "Type": 0
         },
         "1528": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -86032,7 +86032,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1412": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -86148,7 +86148,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1398": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -86496,7 +86496,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "312": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Acrophobia.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Acrophobia.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -86670,7 +86670,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1528": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -86890,7 +86890,7 @@
           "Type": 0
         },
         "299": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/4%20Stars/Macho_Grubba.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Macho_Grubba.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -86908,7 +86908,7 @@
           "Type": 0
         },
         "295": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/Cortez.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Cortez.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -86917,7 +86917,7 @@
           "Type": 0
         },
         "296": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Crystal_King.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -86926,7 +86926,7 @@
           "Type": 0
         },
         "297": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/DooPliss.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/DooPliss.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -87262,7 +87262,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "299": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/4%20Stars/Macho_Grubba.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Macho_Grubba.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -87378,7 +87378,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "295": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/Cortez.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Cortez.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -87436,7 +87436,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "296": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Crystal_King.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -87494,7 +87494,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "297": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/DooPliss.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/DooPliss.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -88890,7 +88890,7 @@
           "Type": 0
         },
         "321": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -88908,7 +88908,7 @@
           "Type": 0
         },
         "318": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/5%20Stars/Abbi.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/Abbi.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -88926,7 +88926,7 @@
           "Type": 0
         },
         "319": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Omori/5%20Stars/Humphrey.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/Humphrey.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -88935,7 +88935,7 @@
           "Type": 0
         },
         "302": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Mario/5%20Stars/The_Master.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/5%20Stars/The_Master.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -90726,7 +90726,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "321": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -90842,7 +90842,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "318": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/5%20Stars/Abbi.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/Abbi.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -90958,7 +90958,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "319": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Omori/5%20Stars/Humphrey.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/Humphrey.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -91016,7 +91016,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "302": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Mario/5%20Stars/The_Master.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/5%20Stars/The_Master.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -93725,7 +93725,7 @@
           "Type": 0
         },
         "303": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Omori/2%20Stars/The_Maverick.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/2%20Stars/The_Maverick.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -93734,7 +93734,7 @@
           "Type": 0
         },
         "322": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Other/2%20Stars/Barry_The_Barrel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Barry_The_Barrel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -93905,7 +93905,7 @@
           "Type": 0
         },
         "1031": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Other/2%20Stars/Auto_Croissant.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Auto_Croissant.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -93959,7 +93959,7 @@
           "Type": 0
         },
         "1407": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -93968,7 +93968,7 @@
           "Type": 0
         },
         "1397": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -94031,7 +94031,7 @@
           "Type": 0
         },
         "1553": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Other/2%20Stars/Future_Niiue.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Future_Niiue.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -94040,7 +94040,7 @@
           "Type": 0
         },
         "1561": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -94620,7 +94620,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "303": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Omori/2%20Stars/The_Maverick.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/2%20Stars/The_Maverick.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -94678,7 +94678,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "322": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Other/2%20Stars/Barry_The_Barrel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Barry_The_Barrel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -95780,7 +95780,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1031": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Other/2%20Stars/Auto_Croissant.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Auto_Croissant.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -96128,7 +96128,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1407": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Monkey_D_Pression.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -96186,7 +96186,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1397": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Whippy_D_Cream.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -96592,7 +96592,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1553": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Other/2%20Stars/Future_Niiue.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Other/2%20Stars/Future_Niiue.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -96650,7 +96650,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1561": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/2%20Stars/Mol_D_Truffy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -96869,7 +96869,7 @@
           "Type": 0
         },
         "307": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -96905,7 +96905,7 @@
           "Type": 0
         },
         "304": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -96995,7 +96995,7 @@
           "Type": 0
         },
         "292": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c0a34a4048a198b6aca65ab91479637276cce158/Creatures/Mario/3%20Stars/Marilyn.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Marilyn.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97103,7 +97103,7 @@
           "Type": 0
         },
         "291": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Lord_Crump.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Lord_Crump.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97112,7 +97112,7 @@
           "Type": 0
         },
         "294": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Mario/3%20Stars/Tutankoopa.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Tutankoopa.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97130,7 +97130,7 @@
           "Type": 0
         },
         "306": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Omori/3%20Stars/Mr_Jawsum.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Mr_Jawsum.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97238,7 +97238,7 @@
           "Type": 0
         },
         "293": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Raw_Cock.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Raw_Cock.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97256,7 +97256,7 @@
           "Type": 0
         },
         "310": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/3%20Stars/Snow_Angel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Snow_Angel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97265,7 +97265,7 @@
           "Type": 0
         },
         "305": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d4bce24e4b40aa238b020624f256d184dd5cae3/Creatures/Omori/3%20Stars/Kel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Kel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97301,7 +97301,7 @@
           "Type": 0
         },
         "309": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/72774d193b0a6a92a932c4b1943442e10c963d6a/Creatures/Omori/3%20Stars/SOMETHING.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/SOMETHING.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97328,7 +97328,7 @@
           "Type": 0
         },
         "311": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Omori/3%20Stars/Sweetheart.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Sweetheart.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97391,7 +97391,7 @@
           "Type": 0
         },
         "308": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Papa_Chip.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Papa_Chip.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97562,7 +97562,7 @@
           "Type": 0
         },
         "1144": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97571,7 +97571,7 @@
           "Type": 0
         },
         "1167": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/3%20Stars/Sniffle_Thwomp.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Sniffle_Thwomp.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97589,7 +97589,7 @@
           "Type": 0
         },
         "961": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Mario/3%20Stars/Vivian.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Vivian.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97607,7 +97607,7 @@
           "Type": 0
         },
         "1394": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Omori/3%20Stars/Shattered_Omori.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Shattered_Omori.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97616,7 +97616,7 @@
           "Type": 0
         },
         "1413": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97706,7 +97706,7 @@
           "Type": 0
         },
         "1562": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -98148,7 +98148,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "307": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -98380,7 +98380,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "304": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -98960,7 +98960,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "292": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/c0a34a4048a198b6aca65ab91479637276cce158/Creatures/Mario/3%20Stars/Marilyn.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Marilyn.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -99656,7 +99656,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "291": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Lord_Crump.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Lord_Crump.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -99714,7 +99714,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "294": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Mario/3%20Stars/Tutankoopa.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Tutankoopa.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -99830,7 +99830,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "306": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Omori/3%20Stars/Mr_Jawsum.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Mr_Jawsum.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100526,7 +100526,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "293": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Raw_Cock.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Raw_Cock.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100642,7 +100642,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "310": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/3%20Stars/Snow_Angel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Snow_Angel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100700,7 +100700,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "305": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d4bce24e4b40aa238b020624f256d184dd5cae3/Creatures/Omori/3%20Stars/Kel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Kel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100932,7 +100932,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "309": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/72774d193b0a6a92a932c4b1943442e10c963d6a/Creatures/Omori/3%20Stars/SOMETHING.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/SOMETHING.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -101106,7 +101106,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "311": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Omori/3%20Stars/Sweetheart.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Sweetheart.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -101512,7 +101512,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "308": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Papa_Chip.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Papa_Chip.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -102614,7 +102614,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1144": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Wokey_D_pronouns.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -102672,7 +102672,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1167": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/3%20Stars/Sniffle_Thwomp.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Sniffle_Thwomp.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -102788,7 +102788,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "961": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Mario/3%20Stars/Vivian.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Vivian.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -102904,7 +102904,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1394": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Omori/3%20Stars/Shattered_Omori.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Shattered_Omori.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -102962,7 +102962,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1413": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Monkey_D_Letion.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -103542,7 +103542,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1562": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/3%20Stars/Pan_D_Luffy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -104370,7 +104370,7 @@
           "Type": 0
         },
         "317": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/4%20Stars/Unbread_Twins.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Unbread_Twins.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104379,7 +104379,7 @@
           "Type": 0
         },
         "316": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Thalassophobia.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Thalassophobia.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104388,7 +104388,7 @@
           "Type": 0
         },
         "315": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Stranger.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Stranger.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104397,7 +104397,7 @@
           "Type": 0
         },
         "314": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Mari.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104406,7 +104406,7 @@
           "Type": 0
         },
         "313": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Arachnophobia.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Arachnophobia.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104415,7 +104415,7 @@
           "Type": 0
         },
         "312": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Acrophobia.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Acrophobia.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104424,7 +104424,7 @@
           "Type": 0
         },
         "301": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/4%20Stars/Smorg.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Smorg.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104433,7 +104433,7 @@
           "Type": 0
         },
         "300": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/4%20Stars/Sir_Grodus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Sir_Grodus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104442,7 +104442,7 @@
           "Type": 0
         },
         "297": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/DooPliss.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/DooPliss.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104451,7 +104451,7 @@
           "Type": 0
         },
         "296": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Crystal_King.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104460,7 +104460,7 @@
           "Type": 0
         },
         "295": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/Cortez.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Cortez.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104478,7 +104478,7 @@
           "Type": 0
         },
         "298": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Mario/4%20Stars/Fawful.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Fawful.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104487,7 +104487,7 @@
           "Type": 0
         },
         "299": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/4%20Stars/Macho_Grubba.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Macho_Grubba.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104694,7 +104694,7 @@
           "Type": 0
         },
         "1398": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104712,7 +104712,7 @@
           "Type": 0
         },
         "1412": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104730,7 +104730,7 @@
           "Type": 0
         },
         "1528": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -107666,7 +107666,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "317": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/4%20Stars/Unbread_Twins.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Unbread_Twins.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107724,7 +107724,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "316": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Thalassophobia.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Thalassophobia.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107782,7 +107782,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "315": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Stranger.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Stranger.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107840,7 +107840,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "314": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Omori/4%20Stars/Mari.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Mari.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107898,7 +107898,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "313": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Arachnophobia.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Arachnophobia.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107956,7 +107956,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "312": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Omori/4%20Stars/Acrophobia.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/4%20Stars/Acrophobia.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108014,7 +108014,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "301": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/4%20Stars/Smorg.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Smorg.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108072,7 +108072,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "300": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Mario/4%20Stars/Sir_Grodus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Sir_Grodus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108130,7 +108130,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "297": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/DooPliss.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/DooPliss.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108188,7 +108188,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "296": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Creatures/Mario/4%20Stars/Crystal_King.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Crystal_King.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108246,7 +108246,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "295": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Mario/4%20Stars/Cortez.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Cortez.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108362,7 +108362,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "298": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Mario/4%20Stars/Fawful.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Fawful.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108420,7 +108420,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "299": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/4%20Stars/Macho_Grubba.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/4%20Stars/Macho_Grubba.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -109754,7 +109754,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1398": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Vour.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -109870,7 +109870,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1412": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Funky_D_Luffy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -109986,7 +109986,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1528": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Monkey%20D%20Folder/4%20Stars/Monkey_D_Goofy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -110570,7 +110570,7 @@
           "Type": 0
         },
         "321": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110588,7 +110588,7 @@
           "Type": 0
         },
         "318": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/5%20Stars/Abbi.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/Abbi.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110606,7 +110606,7 @@
           "Type": 0
         },
         "319": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Omori/5%20Stars/Humphrey.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/Humphrey.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110615,7 +110615,7 @@
           "Type": 0
         },
         "302": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Mario/5%20Stars/The_Master.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/5%20Stars/The_Master.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -112406,7 +112406,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "321": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/4557a03c440d29c0abf506df178b82d17e2861ba/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/The_Big_Yellow_Cat.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -112522,7 +112522,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "318": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/5%20Stars/Abbi.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/Abbi.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -112638,7 +112638,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "319": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Omori/5%20Stars/Humphrey.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/5%20Stars/Humphrey.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -112696,7 +112696,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "302": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Mario/5%20Stars/The_Master.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/5%20Stars/The_Master.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -169497,7 +169497,7 @@
       ],
       "CustomDeck": {
         "309": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/72774d193b0a6a92a932c4b1943442e10c963d6a/Creatures/Omori/3%20Stars/SOMETHING.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/SOMETHING.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169506,7 +169506,7 @@
           "Type": 0
         },
         "311": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Omori/3%20Stars/Sweetheart.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Sweetheart.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169569,7 +169569,7 @@
           "Type": 0
         },
         "305": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d4bce24e4b40aa238b020624f256d184dd5cae3/Creatures/Omori/3%20Stars/Kel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Kel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169578,7 +169578,7 @@
           "Type": 0
         },
         "310": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/3%20Stars/Snow_Angel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Snow_Angel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169632,7 +169632,7 @@
           "Type": 0
         },
         "291": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Lord_Crump.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Lord_Crump.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169767,7 +169767,7 @@
           "Type": 0
         },
         "304": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169830,7 +169830,7 @@
           "Type": 0
         },
         "307": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169866,7 +169866,7 @@
           "Type": 0
         },
         "308": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Papa_Chip.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Papa_Chip.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169969,7 +169969,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "309": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/72774d193b0a6a92a932c4b1943442e10c963d6a/Creatures/Omori/3%20Stars/SOMETHING.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/SOMETHING.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -170027,7 +170027,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "311": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Creatures/Omori/3%20Stars/Sweetheart.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Sweetheart.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -170433,7 +170433,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "305": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d4bce24e4b40aa238b020624f256d184dd5cae3/Creatures/Omori/3%20Stars/Kel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Kel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -170491,7 +170491,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "310": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/2330d7b0c5349c961a4e2b2817e7b86deb1dca08/Creatures/Omori/3%20Stars/Snow_Angel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Snow_Angel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -170839,7 +170839,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "291": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Mario/3%20Stars/Lord_Crump.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Mario/3%20Stars/Lord_Crump.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -171709,7 +171709,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "304": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Captain_Spaceboy.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -172115,7 +172115,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "307": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/7d5782caea53a416ca10d68e75110e31d7277793/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Nefarious_Chip.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -172347,7 +172347,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "308": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Omori/3%20Stars/Papa_Chip.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d1a8e80c6ba53952b512f3961d8fdbbcae3746d6/Creatures/Omori/3%20Stars/Papa_Chip.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
