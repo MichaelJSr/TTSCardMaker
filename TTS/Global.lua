@@ -455,6 +455,7 @@ local DECKS = {
     ["Mystery Gift"] = {items(1)},
     ["Tainted Eden"] = {equips(1), equips(2), equips(3), equips(4), items(1), items(2), items(3), items(4)},
     ["Tainted Lost"] = {items(2), items(3)},
+    ["Tainted Cain"] = {items(1), items(2), items(3), items(4)},
 }
 
 -- a deck's cards (paths): "Items/" + 2 is every Items/*/2 Stars/ card
