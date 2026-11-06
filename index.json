@@ -48,6 +48,14 @@
    "psd_blob": "2237e2391e38efc070fe975ff2a9e79cca31b958",
    "state": "baked"
   },
+  "breakstheslime-mw4wcjxp-jtba": {
+   "at": "2026-11-06T11:34:29Z",
+   "card": "Beldam",
+   "path": "Creatures/Mario/3 Stars/Beldam.psd",
+   "png_blob": "834aaa8b5d0e859302c2221f8b0b7f3d10e9b702",
+   "psd_blob": "65e8f47b5a16e63b6cd0d5d4ec808930d9f3ddb7",
+   "state": "baked"
+  },
   "check-align-1103": {
    "at": "2026-11-04T04:44:49Z",
    "card": "Pot Full of Spiders!",

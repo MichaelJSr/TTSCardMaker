@@ -1,0 +1,75 @@
+{
+ "v": 2,
+ "request": "breakstheslime-mw4wcjxp-jtba",
+ "card": "Beldam",
+ "path": "Creatures/Mario/3 Stars/Beldam.psd",
+ "png": "Creatures/Mario/3 Stars/Beldam.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "113e3a41856f0f24576ee17e6dbba4e0e85ac53a",
+  "psd_blob": "65e8f47b5a16e63b6cd0d5d4ec808930d9f3ddb7",
+  "png_blob": "834aaa8b5d0e859302c2221f8b0b7f3d10e9b702"
+ },
+ "edit": {
+  "stars": 6
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "stars": "baked"
+ },
+ "reason": "stars 3 -> 6 (moved to 6 Stars; created the folder 'Creatures/Mario/6 Stars')",
+ "changes": [
+  {
+   "field": "stars",
+   "old": 3,
+   "new": 6
+  }
+ ],
+ "notes": [
+  "stars: rows of two"
+ ],
+ "parity": {
+  "stars": {
+   "bad_pct": 0.0,
+   "mean": 0.023,
+   "max": 1.0
+  }
+ },
+ "region": [
+  932,
+  30,
+  1180,
+  323
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42211216137",
+ "took_s": 6.7,
+ "at": "2026-11-06T11:34:29Z",
+ "variant": null,
+ "parts": {},
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3115304,
+  "webp": 96732,
+  "before": 95026
+ },
+ "recompressed": false
+}
