@@ -1,7 +1,7 @@
 {
  "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
  "pdf": "Rulebook.pdf",
- "key": "77c66b146c5328a6b9d8ac18a0e98387a5800b70e9b81cde828e50b6bc86b894",
+ "key": "45788fcf53fc7b7307ecae79d33f2496eed3739a58b15d4a176418cbfcd40769",
  "pages": [
   {
    "name": "Cover",
@@ -59,8 +59,8 @@
   {
    "name": "Table 5",
    "num": "4.5",
-   "sha": "398d559c1c3b083739c629fb6543e184403baf0135d75977a1ee6769ded94051",
-   "t": "TABLE 5 This is the simple version of the game. New players will draw their creatures and items from here. More complex creatures an items are removed from these decks, so it's easier to get used to the general rules and how to play. This version of the game does not included Field Cards, or N.M.E. items. However if new players wish to play with those, they can set them up using the main deck, though it's not recommended for learning the game. EXTRA STUFF This is a copy of the deck, kept around for various reasons. In case of accidental deletion of a card, if players want to look at the full deck and discuss the game, or for certain abilities that require you to draw from a copy of the deck. This bag contains specific sorted decks of items for certain abilities that draw from specific item pools. This bag contains tokens for each creature type, to signify if a creature type changes. 4.5"
+   "sha": "4caf9cf91ec3c46a7cf136bb6fa5ce839a709bfdc8a33ad5e7068b570fa9eaee",
+   "t": "TABLE 5 This is the simple version of the game. New players will draw their creatures and items from here. More complex creatures an items are removed from these decks, so it's easier to get used to the general rules and how to play. This version of the game does not included Field Cards, or N.M.E. items. However if new players wish to play with those, they can set them up using the main deck, though it's not recommended for learning the game. EXTRA STUFF This is a copy of the deck, kept around for various reasons. In case of accidental deletion of a card, if players want to look at the full deck and discuss the game, or for certain abilities that require you to draw from a copy of the deck. This bag contains tokens for each creature type, to signify if a creature type changes. 4.5"
   },
   {
    "name": "Shops",
