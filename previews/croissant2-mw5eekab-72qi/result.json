@@ -1,0 +1,73 @@
+{
+ "v": 2,
+ "request": "croissant2-mw5eekab-72qi",
+ "card": "Peter Panda",
+ "path": "Creatures/Pandas/2 Stars/Peter_Panda.psd",
+ "png": "Creatures/Pandas/2 Stars/Peter_Panda.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "d460db0e36f414dde15c2e0f8bb46b733fc8f9e7",
+  "psd_blob": "e7d5c1ad6760501e7ca5af4864c9578c54edb892",
+  "png_blob": "a35f859454612a9bd699368ec45d66cdfb010dba"
+ },
+ "edit": {
+  "atk": 20
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "atk": "baked"
+ },
+ "reason": "atk 3 -> 20",
+ "changes": [
+  {
+   "field": "atk",
+   "old": 3,
+   "new": 20
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "atk": {
+   "bad_pct": 0.0,
+   "mean": 0.006,
+   "max": 1.0
+  }
+ },
+ "region": [
+  359,
+  1325,
+  1174,
+  1411
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42284445325",
+ "took_s": 7.6,
+ "at": "2026-11-06T20:00:05Z",
+ "variant": null,
+ "parts": {},
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3829759,
+  "webp": 145808,
+  "before": 145532
+ },
+ "recompressed": false
+}

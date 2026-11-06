@@ -80,6 +80,14 @@
    "psd_blob": "563305eb6b447292756cd81704836903bfd4a8d1",
    "state": "baked"
   },
+  "croissant2-mw5eekab-72qi": {
+   "at": "2026-11-06T20:00:05Z",
+   "card": "Peter Panda",
+   "path": "Creatures/Pandas/2 Stars/Peter_Panda.psd",
+   "png_blob": "a35f859454612a9bd699368ec45d66cdfb010dba",
+   "psd_blob": "e7d5c1ad6760501e7ca5af4864c9578c54edb892",
+   "state": "baked"
+  },
   "michaeljsr-mw4w43df-bzee": {
    "at": "2026-11-06T11:27:51Z",
    "card": "Abyss Watcher",
