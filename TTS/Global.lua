@@ -820,14 +820,29 @@ local function deckOf(paths, name, pos, spin)
     spawnObjectData({data = deck, position = pos, rotation = {0, spin or 0, 180}, scale = scale or {1, 1, 1}})
 end
 
-local function inHand(obj)
-    for _, c in ipairs(getSeatedPlayers()) do
-        for _, o in ipairs(handOf(c)) do if o == obj then return true end end
+-- pos moved toward the table's middle (z 0; the hand zones line the long sides) until it is clear of every hand zone:
+-- a deck dropped in one is dealt into that hand
+local HAND_MARGIN = 2
+local function clearOfHands(pos)
+    local zones = Hands.getHands() or {}
+    local function inside(x, z)
+        for _, h in ipairs(zones) do
+            local p, s, r = h.getPosition(), h.getScale(), math.rad(h.getRotation().y)
+            local dx, dz = x - p.x, z - p.z
+            local lx, lz = dx * math.cos(r) - dz * math.sin(r), dx * math.sin(r) + dz * math.cos(r)
+            if math.abs(lx) <= s.x / 2 + HAND_MARGIN and math.abs(lz) <= s.z / 2 + HAND_MARGIN then return true end
+        end
+        return false
     end
-    return false
+    local x, z, step = pos[1], pos[3], pos[3] > 0 and -0.5 or 0.5
+    for _ = 1, 200 do
+        if not inside(x, z) then break end
+        z = z + step
+    end
+    return {x, pos[2], z}
 end
 
-function spawnDeck(player, _, id)                      -- beside the card on the table, else where the player points
+function spawnDeck(player, _, id)                      -- beside the card, clear of the hand zones
     local color = player.color
     local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_k2_4": its 4th deck
     local deck = open and n and open.decks and open.decks[n]
@@ -835,10 +850,10 @@ function spawnDeck(player, _, id)                      -- beside the card on the
     local ok, err = pcall(function()
         local paths = deckPaths(deck)
         if #paths == 0 then broadcastToColor("No cards found for " .. deck[1] .. ".", color, {1, 0.6, 0.6}) return end
-        local from = open.obj and not open.obj.isDestroyed() and not inHand(open.obj) and open.obj
+        local from = open.obj and not open.obj.isDestroyed() and open.obj
         local at = from and from.getPosition() or Player[color].getPointerPosition() or {x = 0, y = 1, z = 0}
         open.spawned = (open.spawned or 0) + 1
-        deckOf(paths, deck[1], {at.x + 2.6 * open.spawned, at.y + 2, at.z}, from and from.getRotation().y or 0)
+        deckOf(paths, deck[1], clearOfHands({at.x + 2.6 * open.spawned, at.y + 2, at.z}), from and from.getRotation().y or 0)
         broadcastToColor(deck[1] .. ": " .. #paths .. " cards, shuffled.", color, {1, 1, 1})
     end)
     if not ok then

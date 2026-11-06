@@ -185,6 +185,7 @@ class Obj:
     def __init__(self, world, name, nickname="", guid="", data=None):
         self._w, self.name, self.type, self._name, self._guid = world, name, kind(name), nickname, guid
         self._data, self.destroyed, self.is_face_down, self.Book = data or {}, False, False, None
+        self.pos = (1, 1, 1)
         if name == "Custom_PDF":
             self.Book = Book(world)
 
@@ -229,7 +230,7 @@ class Obj:
         return self._w.to_lua(self._data)
 
     def getPosition(self):
-        return self._w.vec(1, 1, 1)
+        return self._w.vec(*self.pos)
 
     def getRotation(self):
         return self._w.vec(0, 180, 0)
@@ -252,9 +253,16 @@ class Obj:
 
 
 class Zone(Obj):
-    def __init__(self, world, guid, owner):
+    def __init__(self, world, guid, owner, transform=None):
         super().__init__(world, "HandTrigger", "", guid)
-        self.owner = owner
+        self.owner, self._t = owner, transform or {}
+        self.pos = (self._t.get("posX", 0), self._t.get("posY", 0), self._t.get("posZ", 0))
+
+    def getRotation(self):
+        return self._w.vec(0, self._t.get("rotY", 0), 0)
+
+    def getScale(self):
+        return self._w.vec(self._t.get("scaleX", 1), self._t.get("scaleY", 1), self._t.get("scaleZ", 1))
 
     def getData(self):
         return self._w.to_lua({"FogColor": self.owner})
@@ -371,7 +379,8 @@ class World:
         self.wait, self.ui = Wait(self), UI(self, list(base_ui))
         self.players = {c: Player(self, c) for c in SEATS + ["Grey", "Black"]}
         self.objects = [Obj.of(self, d) for d in save.get("ObjectStates") or [] if d.get("Name") != "HandTrigger"]
-        self.zones = [Zone(self, guid, owner) for guid, owner in zones]
+        where = {o.get("GUID"): o.get("Transform") for o in walk(save.get("ObjectStates")) if o.get("Name") == "HandTrigger"}
+        self.zones = [Zone(self, guid, owner, where.get(guid)) for guid, owner in zones]
         g.Player = self.lua.table_from(self.players)
         g.Wait, g.UI, g.Hands = self.wait, self.ui, Hands(self)
         g.JSON = self.lua.table_from({"decode": lambda s: self.to_lua(json.loads(s)),
@@ -835,14 +844,18 @@ def main():
         lacks = lambda have, model: sorted(set(model) - {"GUID"} - set(have))
         check(not lacks(d, saved_deck) and not any(lacks(k, saved_card) for k in kids) and d.get("Nickname") == "4★ Items",
               f"the deck has a saved deck's fields, named '4★ Items' ({d.get('Nickname')!r}; lacks {lacks(d, saved_deck)})")
-        w.spawns.clear()
-        w.hands["Teal"] = [o]
-        w.call("spawnDeck", teal, None, btn[1])
-        sp = w.spawns[0] if len(w.spawns) == 1 else {}
-        n1 = len([p for p in details["cards"] if p.startswith("Items/Equip/") and "/1 Stars/" in p])
-        check(bool(sp) and len(sp["data"]["ContainedObjects"]) == n1 and sp["position"][0] > 4 and sp["position"][2] == 4,
-              f"+ 1★ Equips from a card in hand: {n1} cards where the player points, not into the hand")
-        del w.hands["Teal"]
+        hand = next(z for z in w.zones if z._t.get("scaleX", 0) > 10)    # a card in a big hand zone, then in a small one
+        clear = lambda x, z: all(abs(x - h.pos[0]) > h._t["scaleX"] / 2 + 1.9 or abs(z - h.pos[2]) > h._t["scaleZ"] / 2 + 1.9
+                                 for h in w.zones if h._t)
+        for zone in (hand, next(z for z in w.zones if 0 < z._t.get("scaleX", 0) < 10)):
+            o.pos = zone.pos
+            w.spawns.clear()
+            w.call("spawnDeck", teal, None, btn[1])
+            sp = w.spawns[0] if len(w.spawns) == 1 else {}
+            x, y, z = sp["position"] if sp else (0, 0, 0)
+            check(bool(sp) and clear(x, z) and abs(x - zone.pos[0]) < 15 and abs(z - zone.pos[2]) < 12,
+                  f"+ 1★ Equips from a card in hand zone {zone.getGUID()} at {zone.pos}: beside it, clear of every hand zone ({x:.1f}, {z:.1f})")
+        o.pos = (1, 1, 1)
         # a card the save lacks: made, in a saved card's fields (another table, without one 4★ item)
         drop = expect[0]
         save2 = json.loads(json.dumps(save))
