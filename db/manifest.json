@@ -7,15 +7,15 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-06T06:16:05Z",
- "card_commit": "0b05a47c10011404f397da3a17ddf5500dbb9788",
- "card_commit_at": 1793945724.0,
+ "built_at": "2026-11-06T06:17:30Z",
+ "card_commit": "9d5a662546ae80da4cb2799b78baf6ee14d5c97f",
+ "card_commit_at": 1793945820.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 94,
   "baked": 0,
   "cards": 775,
-  "changed": 1,
+  "changed": 0,
   "details": 772,
   "failed": 0,
   "new": 0,
@@ -44,16 +44,8 @@
   "repin": [],
   "stale": []
  },
- "problems": [
-  {
-   "card": "Computer Virus",
-   "notes": [
-    "SEVERAL CREATURES: check each one's stats on the website"
-   ],
-   "path": "Creatures/Kirby/3 Stars/Computer_Virus.psd"
-  }
- ],
+ "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42173305206",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42173452976",
  "schema": 1
 }
