@@ -40,6 +40,14 @@
    "psd_blob": "9408d445ad2cf72ab2dc52c32832fdeb7f3090af",
    "state": "baked"
   },
+  "breakstheslime-mw4w52hm-bygj": {
+   "at": "2026-11-06T11:28:39Z",
+   "card": "Blazing",
+   "path": "Auxiliary/Status Effects/Debuffs/2 Stars/Blazing.psd",
+   "png_blob": "69ab34343f46158d809721056ded095f1c10a5ab",
+   "psd_blob": "2237e2391e38efc070fe975ff2a9e79cca31b958",
+   "state": "baked"
+  },
   "check-align-1103": {
    "at": "2026-11-04T04:44:49Z",
    "card": "Pot Full of Spiders!",
