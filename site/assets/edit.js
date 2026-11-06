@@ -25,7 +25,7 @@ const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
   atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases",
-  dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 10 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures",
+  dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures",
   "rate-favorability": "Favorability", "rate-power": "Power" };
 // art: the artwork sources, a list (art.js; ability_art: the retired second field, read as the last source, never offered)
 // item types: the Items/ folders (fixed; a new one needs its folder first)
@@ -887,7 +887,7 @@ export function createEditor(app) {
           <p class="muted">Adds your dated rating; empty adds none.</p>
         </fieldset>`}
         <fieldset><legend>Checks</legend>
-          ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 10 is intended</label>`)}
+          ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 20 is intended</label>`)}
           ${c.problems?.length || c.problems_ok ? row("problems_ok", `<label class="check"><input id="ef-problems_ok" type="checkbox"${c.problems_ok ? " checked" : ""}> checked, hide them</label> <span class="muted">${esc((b.problems || []).join(" · "))}</span>`) : ""}
         </fieldset>
         <fieldset${admin ? "" : " disabled"}><legend>Admin${admin ? "" : " (admins only)"}</legend>

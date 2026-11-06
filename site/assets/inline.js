@@ -26,7 +26,15 @@ const starMax = () => A?.editor?.maxStars?.() ?? 10;      // the stars slider's 
 const IMAGE = "on the card image";                 // the form's "On the card image" marker (PSD fields); the rest is database only
 
 /** A click on stat cell `cell` (1-based) of a row showing `current`: that value, or one less for the top lit cell (so 0 is reachable). */
-export const cellValue = (current, cell) => (cell === current ? cell - 1 : cell);
+export const cellValue = (current, cell) => Math.min(STAT_TOP, cell === current ? cell - 1 : cell);
+const STAT_TOP = 99;                               // the most a stat slider sets (card_history STAT_CAP: no card prints 3 digits)
+/** The cells a stat row shows at v while editing: its rows of 10, and an empty one more once they are full (10 opens 11-20). */
+export const statCells = v => Math.min(STAT_TOP + 1, 10 * (Math.floor(v / 10) + 1));
+const sizeRow = (row, v) => {                      // a stat row's cells for v: rows added or taken off
+  const n = statCells(v);
+  while (row.children.length < n) row.insertAdjacentHTML("beforeend", "<i></i>");
+  while (row.children.length > n) row.lastElementChild.remove();
+};
 /** Rows for a textarea holding `text`: one more than its lines, 2 to 14. */
 export const fit = text => Math.min(14, Math.max(2, String(text ?? "").split("\n").length + 1));
 /** The ids a drag carries: the selection when the dragged tile is in it, else that tile alone. */
@@ -83,9 +91,9 @@ export function mountCard(modal, c, api = A) {
   const rows = c.creatures?.length > 1 ? [] : STATS.filter(k => c[k] != null);
   detail.querySelectorAll(".statbars .segs").forEach((seg, i) => {
     const k = rows[i], v = k && c[k];
-    if (!k || v > 10) { seg.dataset.tip = "Use All fields"; return; }
-    seg.setAttribute("role", "slider"); seg.tabIndex = 0; seg.dataset.inline = k;
-    seg.setAttribute("aria-valuemin", "0"); seg.setAttribute("aria-valuemax", "10"); seg.setAttribute("aria-valuenow", String(v));
+    if (!k) { seg.dataset.tip = "Use All fields"; return; }
+    sizeRow(seg, v); seg.setAttribute("role", "slider"); seg.tabIndex = 0; seg.dataset.inline = k;
+    seg.setAttribute("aria-valuemin", "0"); seg.setAttribute("aria-valuemax", String(STAT_TOP)); seg.setAttribute("aria-valuenow", String(v));
     seg.setAttribute("aria-label", `${LABEL[k]} ${v}, arrows to change, Enter to save`); seg.dataset.tip = `Click a cell to set ${LABEL[k]} · ${IMAGE}`;
   });
   const chips = [...facts.querySelectorAll("a.fact")], hrefOf = a => a.getAttribute("href") || "";
@@ -194,7 +202,7 @@ function refresh(c, f, kbd) {                      // the dialog again (as the f
   if (kbd) A.modal.querySelector(`[data-inline="${f}"]`)?.focus();
 }
 const paint = (row, v) => { if (row.classList.contains("star-pick")) { paintStars(row, v); return; }
-  [...row.children].forEach((i, n) => i.classList.toggle("on", n < v)); row.setAttribute("aria-valuenow", String(v)); if (row.nextElementSibling?.classList.contains("num")) row.nextElementSibling.textContent = String(v); };
+  sizeRow(row, v); [...row.children].forEach((i, n) => i.classList.toggle("on", n < v)); row.setAttribute("aria-valuenow", String(v)); if (row.nextElementSibling?.classList.contains("num")) row.nextElementSibling.textContent = String(v); };
 function setStat(k, v, kbd) { if (!card) return; A.editor.stageField(card.id, k, v); refresh(card, k, kbd); }
 function commitStat(kbd) {
   if (!prov) return;
@@ -203,7 +211,7 @@ function commitStat(kbd) {
 }
 function statKey(row, k, e) {
   const now = +row.getAttribute("aria-valuenow"), v0 = prov?.row === row ? prov.v0 : now;
-  const v = stepValue(now, e.key, k === "stars" ? starMax() : 10);
+  const v = stepValue(now, e.key, k === "stars" ? starMax() : Math.min(STAT_TOP, row.children.length));   // End: the rows' end (a row more each time)
   if (e.key === "Escape" && row.hasAttribute("data-fresh") && now === 0) { e.preventDefault(); e.stopPropagation(); unfresh(row, true); return; }
   if (v !== null) { e.preventDefault(); e.stopPropagation(); prov = { row, k, v0 }; paint(row, v); return; }
   if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); commitStat(true); return; }

@@ -228,7 +228,8 @@ downloaded or looks truncated, or if many images fail.
 
 Anyone with write access to this repo can fix card data on the site: **Sign in** (top right) takes a GitHub token
 (classic, `public_repo` scope); signed in, the card browser is the editor. On a card page, click a stat cell to set that
-stat (the top lit cell steps it down, so 0 is reachable; above 10 and per-creature stats go through All fields), click
+stat (the top lit cell steps it down, so 0 is reachable; a full row opens an empty one below, 10 opens 11-20, up to
+99; per-creature stats go through All fields), click
 the ability text to edit it in place (Ctrl/Cmd+Enter or a click elsewhere saves, Esc cancels; the card links in the text
 still work), double-click the name to rename, and click the series, subseries or author chip, or the note, to type a new
 value (series, subseries and author list the known names as you type, in the token picker's list, with their card
