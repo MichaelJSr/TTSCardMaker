@@ -19,7 +19,7 @@ from urllib.parse import unquote
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from checks_env import REF, REPO, save_arg  # noqa: E402
 
-BASELINE = "0a7db1c3"       # re-baseline here after a deliberate hand edit of the save (11-03: the table mirrored, SP and Bricks counters)
+BASELINE = "befdf769"       # re-baseline here after a deliberate hand edit of the save (11-06: Specific Item Decks bag removed)
 SAVE = "TTS/Impossibility Simulator.json"
 LINK = re.compile(r"(https://raw\.githubusercontent\.com/MichaelJSr/TTSCardMaker/)(?:refs/heads/main|main|[0-9a-f]{7,40})/")
 CARDS = ("Card", "CardCustom")
