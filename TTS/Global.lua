@@ -98,7 +98,8 @@ end
 -- spawned from the panels go into the player's hand. Panels only that player sees (up to three at once): drag one by its
 -- title bar, A- / A+
 -- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
--- (status effects and others) spawn beside the card with a click. Data: the website's data/tts.json and
+-- (status effects and others) spawn beside the card with a click; cards that draw from a kind of deck (DECKS) get a
+-- button per deck that spawns a shuffled copy beside the card. Data: the website's data/tts.json and
 -- TTS/Rulebook/pages.json, fetched a moment after the save loads; once tts.json is in, it is decoded and the seated
 -- players' panels are built (a player seated later: a moment after sitting). No Lua patterns over long text (MoonSharp's
 -- are limited): plain finds only.
@@ -112,6 +113,7 @@ local DIM, HEAD = "#94a3b8", "#7dd3fc"
 local SIZES = {{w = 440, h = 540, f = 14}, {w = 540, h = 660, f = 16}, {w = 660, h = 800, f = 18}}
 local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 4, 6, 40, 30
 local RULE_ROWS, CARD_ROWS = 2, 2                      -- rows the buttons may take (more than fit: names shortened)
+local DECK_BUTTONS, DECK_ROWS = 8, 3
 local DETAILS_PANELS = 3                               -- a player's card details open at once (one more replaces the oldest)
 local BACKS = {{"Buff", "MDW/Assets/cardback_statuseffect.png"}, {"Debuff", "MDW/Assets/cardback_statuseffect.png"},
     {"Creature", "MDW/Assets/cardback.png"}, {"Minion", "MDW/Assets/cardback.png"}, {"Auxiliary creature", "MDW/Assets/cardback.png"}}
@@ -126,6 +128,7 @@ end
 
 local BUTTON = "#c7d2fe|#e0e7ff|#a5b4fc|#c7d2fe80"     -- light lavender (normal|hover|pressed|disabled), dark text
 local SPAWN = "#bbf7d0|#dcfce7|#86efac|#bbf7d080"      -- the spawn buttons: light green
+local DECK = "#fde68a|#fef3c7|#fcd34d|#fde68a80"       -- the deck buttons: light amber
 local function button(id, label, onClick, attrs)
     local a = {id = id, onClick = onClick, fontSize = 13, textColor = "#0f172a", colors = BUTTON}
     for k, v in pairs(attrs or {}) do a[k] = v end
@@ -165,6 +168,7 @@ local function detailsPanel(c, k)
                     alignment = "UpperLeft", horizontalOverflow = "Wrap", verticalOverflow = "Overflow"}, value = ""}}}}}}}
     for _, r in ipairs(rows(id .. "_rules", id .. "_r", RULE_BUTTONS, RULE_ROWS, "openRules")) do table.insert(panel.children, r) end
     for _, r in ipairs(rows(id .. "_cards", id .. "_c", CARD_BUTTONS, CARD_ROWS, "spawnNamed", SPAWN)) do table.insert(panel.children, r) end
+    for _, r in ipairs(rows(id .. "_decks", id .. "_k", DECK_BUTTONS, DECK_ROWS, "spawnDeck", DECK)) do table.insert(panel.children, r) end
     return panel
 end
 
@@ -434,6 +438,40 @@ local function namedOf(card)
     return out
 end
 
+-- the decks a card's text draws from, by card name (owner 2026-11-06; they replace the Specific Item Decks bag), one
+-- button each: {label, {folder, stars}, ...}, every card of tts.json in those folders once (several: one merged deck)
+local function items(n) return {n .. "★ Items", {"Items/", n}} end
+local function equips(n) return {n .. "★ Equips", {"Items/Equip/", n}} end
+local DECKS = {
+    ["Butterfly"] = {{"5★ Creatures", {"Creatures/", 5}}},
+    ["The Puppet"] = {items(1), items(2), items(3)},
+    ["Gandhi"] = {{"4★ Attack Items", {"Items/Attack/", 4}}, {"2★ Attack Items", {"Items/Attack/", 2}}},
+    ["Tainted Isaac"] = {{"1-3★ Items", {"Items/", 1}, {"Items/", 2}, {"Items/", 3}}},
+    ["Nuclear Proliferation"] = {{"2★ Attack Items", {"Items/Attack/", 2}}, {"3★ Attack Items", {"Items/Attack/", 3}}},
+    ["Tyler"] = {items(1), items(2), items(3)},
+    ["Tainted Bethany"] = {{"3-4★ Items", {"Items/", 3}, {"Items/", 4}}},
+    ["Binge Eater"] = {{"2★ Healing Items", {"Items/Heal/", 2}}},
+    ["Eden's Soul"] = {items(3)},
+    ["Mystery Gift"] = {items(1)},
+    ["Tainted Eden"] = {equips(1), equips(2), equips(3), equips(4), items(1), items(2), items(3), items(4)},
+    ["Tainted Lost"] = {items(2), items(3)},
+}
+
+-- a deck's cards (paths): "Items/" + 2 is every Items/*/2 Stars/ card
+local function deckPaths(deck)
+    local out = {}
+    for path in pairs(details.cards) do
+        for i = 2, #deck do
+            local folder, stars = deck[i][1], deck[i][2]
+            if path:sub(1, #folder) == folder and path:find("/" .. stars .. " Stars/", #folder, true) then
+                table.insert(out, path)
+                break
+            end
+        end
+    end
+    return out
+end
+
 local function detailsText(card)
     local bits = {card.k}
     if card.st then table.insert(bits, math.floor(card.st) .. "★") end
@@ -527,10 +565,13 @@ local function layout(color, k)
     end
     local ruleRows = pack(id .. "_rules", id .. "_r", rules, RULE_BUTTONS, RULE_ROWS, function(ch) return "Rules: " .. details.chapters[ch].title end)
     local cardRows = pack(id .. "_cards", id .. "_c", named, CARD_BUTTONS, CARD_ROWS, function(n) return "+ " .. n[1] end)
-    open.rules, open.named = rules, named
-    local foot = (ruleRows + cardRows) * (ROW_H + 8) + 8
+    local decks = DECKS[open.card.n] or {}
+    local deckRows = pack(id .. "_decks", id .. "_k", decks, DECK_BUTTONS, DECK_ROWS, function(d) return "+ " .. d[1] end)
+    open.rules, open.named, open.decks = rules, named, decks
+    local foot = (ruleRows + deckRows + cardRows) * (ROW_H + 8) + 8
     for r = 1, CARD_ROWS do set(id .. "_cards" .. r, {offsetXY = "10 " .. (8 + (cardRows - r) * (ROW_H + 8))}) end
-    for r = 1, RULE_ROWS do set(id .. "_rules" .. r, {offsetXY = "10 " .. (8 + (cardRows + ruleRows - r) * (ROW_H + 8))}) end
+    for r = 1, DECK_ROWS do set(id .. "_decks" .. r, {offsetXY = "10 " .. (8 + (cardRows + deckRows - r) * (ROW_H + 8))}) end
+    for r = 1, RULE_ROWS do set(id .. "_rules" .. r, {offsetXY = "10 " .. (8 + (cardRows + deckRows + ruleRows - r) * (ROW_H + 8))}) end
     local text = detailsText(open.card)
     local textW = sz.w - 44
     local textH = lines(text, math.floor(textW / (sz.f * 0.52))) * math.ceil(sz.f * 1.32) + 12
@@ -689,6 +730,12 @@ end
 
 -- a card (its path) spawned: into the player's hand, face down on the way in (nobody else sees it), else at pos facing
 -- spin (a player without a hand); a copy of the save's own when there is one, else made; at its played size
+local function faceOf(data)                            -- a card's CustomDeck entry: under CardID / 100, else the first
+    local face = data.CustomDeck and data.CustomDeck[tostring(math.floor((data.CardID or 0) / 100))] or {}
+    if not face.BackURL then for _, v in pairs(data.CustomDeck or {}) do face = v break end end
+    return face
+end
+
 local function spawnCard(path, name, pos, spin, color)
     local hand = color and Player[color] and Player[color].getHandTransform()
     if hand then
@@ -698,8 +745,7 @@ local function spawnCard(path, name, pos, spin, color)
     indexSome()                                        -- what the background read hasn't reached yet, now
     local known = cardIndex[path]
     local data = known and known.data or madeCard(path, details.cards[path] or {n = name})
-    local face = data.CustomDeck and data.CustomDeck[tostring(math.floor((data.CardID or 0) / 100))] or {}
-    if not face.BackURL then for _, v in pairs(data.CustomDeck or {}) do face = v break end end
+    local face = faceOf(data)
     local scale = known and known.scale or scaleOfBack[pathOf(face.BackURL) or ""] or {1, 1, 1}
     data.GUID = nil
     spawnObjectData({data = data, position = pos, rotation = {0, spin or 0, hand and 180 or 0}, scale = scale,
@@ -717,6 +763,52 @@ function spawnNamed(player, _, id)                     -- beside the card the pa
     local at = from and from.getPosition() or Player[color].getHandTransform().position
     open.spawned = (open.spawned or 0) + 1
     spawnCard(item[2], item[1], {at.x + 2.6 * open.spawned, at.y + 1.5, at.z}, from and from.getRotation().y or 0, color)
+end
+
+-- a deck of these cards, shuffled, face down at pos: each a copy of the save's own card when it has one, else made
+local function deckOf(paths, pos, spin)
+    indexSome()
+    for i = #paths, 2, -1 do
+        local j = math.random(i)
+        paths[i], paths[j] = paths[j], paths[i]
+    end
+    local function at0() return {posX = 0, posY = 0, posZ = 0, rotX = 0, rotY = 0, rotZ = 0, scaleX = 1, scaleY = 1, scaleZ = 1} end
+    local deck = {Name = "Deck", Transform = at0(), DeckIDs = {}, CustomDeck = {}, ContainedObjects = {}}
+    local scale
+    for i, path in ipairs(paths) do
+        local known = cardIndex[path]
+        local data = known and known.data or madeCard(path, details.cards[path])
+        local card = {}
+        for k, v in pairs(data) do card[k] = v end     -- a copy: the index keeps its own
+        local face, id = faceOf(data), i * 100 + (data.CardID or 0) % 100
+        card.GUID, card.CardID, card.CustomDeck, card.Transform = nil, id, {[tostring(i)] = face}, at0()
+        deck.CustomDeck[tostring(i)] = face
+        table.insert(deck.DeckIDs, id)
+        table.insert(deck.ContainedObjects, card)
+        scale = scale or known and known.scale or scaleOfBack[pathOf(face.BackURL) or ""]
+    end
+    spawnObjectData({data = deck, position = pos, rotation = {0, spin or 0, 180}, scale = scale or {1, 1, 1}})
+end
+
+local function inHand(obj)
+    for _, c in ipairs(getSeatedPlayers()) do
+        for _, o in ipairs(Player[c].getHandObjects() or {}) do if o == obj then return true end end
+    end
+    return false
+end
+
+function spawnDeck(player, _, id)                      -- beside the card on the table, else where the player points
+    local color = player.color
+    local open, n = (shown[color] or {})[panelOf(color, id)], tonumber(id:sub(-1))   -- "<color>_d1_k2_4": its 4th deck
+    local deck = open and n and open.decks and open.decks[n]
+    if not deck then return end
+    local paths = deckPaths(deck)
+    if #paths == 0 then broadcastToColor("No cards found for " .. deck[1] .. ".", color, {1, 0.6, 0.6}) return end
+    local from = open.obj and not open.obj.isDestroyed() and not inHand(open.obj) and open.obj
+    local at = from and from.getPosition() or Player[color].getPointerPosition() or {x = 0, y = 1, z = 0}
+    open.spawned = (open.spawned or 0) + 1
+    deckOf(paths, {at.x + 2.6 * open.spawned, at.y + 2, at.z}, from and from.getRotation().y or 0)
+    broadcastToColor(deck[1] .. ": " .. #paths .. " cards, shuffled.", color, {1, 1, 1})
 end
 
 -- the rulebook panel: its chapters, or the pages holding every word searched (a snippet of each); a click turns the PDF there

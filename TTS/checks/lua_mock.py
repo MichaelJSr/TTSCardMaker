@@ -797,6 +797,47 @@ def main():
     check(len(ui.builds) == 2 and "Teal_d1" in ui.ids and ui.on("Blue_d1") and ui.on("Red_d1") and ui.on("Red_d3")
           and not ui.on("Red_d2"), "Teal seated later: Teal's panels built; the open ones are drawn again")
 
+    # ---- deck buttons ----
+    block = re.search(r"\nlocal DECKS = \{\n(.*?)\n\}", script, re.DOTALL)
+    listed = re.findall(r'^\s*\["((?:[^"\\]|\\.)*)"\]\s*=', block.group(1), re.MULTILINE) if block else []
+    by_name = {c["n"]: p for p, c in details["cards"].items()}
+    check(listed and all(n in by_name for n in listed), f"DECKS: every card named is in tts.json {[n for n in listed if n not in by_name]}")
+    eden = by_name.get("Tainted Eden")
+    if eden:
+        teal = w.players["Teal"]
+        url = RAW + "main/" + eden.replace(" ", "%20")
+        o = Obj.of(w, {"Name": "CardCustom", "Nickname": "Tainted Eden", "GUID": "te0001", "CardID": 100,
+                       "CustomDeck": {"1": {"FaceURL": url, "BackURL": RAW + "main/MDW/Assets/cardback.png"}}})
+        w.run(w.g.showDetails, "Teal", o, what="Card details: Tainted Eden")
+        for _ in range(3):
+            w.call("detailsSize", teal, None, "Teal_d1_smaller")
+        btn = {i: next((f"Teal_d1_k{r}_{i}" for r in range(1, 4) if ui.on(f"Teal_d1_k{r}_{i}")), None) for i in range(1, 9)}
+        labels = [ui.text(b) if b else None for b in btn.values()]
+        want = [f"+ {n}★ Equips" for n in range(1, 5)] + [f"+ {n}★ Items" for n in range(1, 5)]
+        over = [r for r in range(1, 4) if ui.on(f"Teal_d1_decks{r}") and sum(int(ui.attrs[b]["preferredWidth"]) + 6 for b in btn.values()
+                if b and b.startswith(f"Teal_d1_k{r}_")) - 6 > int(ui.attrs[f"Teal_d1_decks{r}"]["width"])]
+        check(labels == want and not over, f"Tainted Eden: 8 deck buttons, unshortened at the smallest size {labels} {over}")
+        w.spawns.clear()
+        w.call("spawnDeck", teal, None, btn[8])
+        sp = w.spawns[0] if len(w.spawns) == 1 else {}
+        d = sp.get("data") or {}
+        kids = d.get("ContainedObjects") or []
+        paths = sorted(face_path(k) for k in kids)
+        expect = sorted(p for p in details["cards"] if p.startswith("Items/") and "/4 Stars/" in p)
+        ok = d.get("Name") == "Deck" and paths == expect and len(d.get("DeckIDs") or []) == len(kids) and \
+            all(str(k["CardID"] // 100) in d["CustomDeck"] and k["CardID"] == i for k, i in zip(kids, d["DeckIDs"])) and \
+            len({k["CardID"] // 100 for k in kids}) == len(kids) and sp["rotation"][2] == 180 and \
+            sp["position"][1] == 3 and min(sp["scale"]) > 0
+        check(bool(ok), f"+ 4★ Items: one shuffled deck of every Items/*/4 Stars card ({len(paths)} of {len(expect)}), face down beside the card")
+        w.spawns.clear()
+        w.hands["Teal"] = [o]
+        w.call("spawnDeck", teal, None, btn[1])
+        sp = w.spawns[0] if len(w.spawns) == 1 else {}
+        n1 = len([p for p in details["cards"] if p.startswith("Items/Equip/") and "/1 Stars/" in p])
+        check(bool(sp) and len(sp["data"]["ContainedObjects"]) == n1 and sp["position"][0] > 4 and sp["position"][2] == 4,
+              f"+ 1★ Equips from a card in hand: {n1} cards where the player points, not into the hand")
+        w.hands["Teal"] = []
+
     # ---- rulebook panel ----
     w.call("openRulebook", "Red")
     chapters = [p for p in pages if (p.get("num", "").isdigit()) or p.get("name") == "Table of Contents"]
