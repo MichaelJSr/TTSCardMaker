@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-06T08:51:49Z",
+  "ct": "7SAprsTaG1Q+l/MO392Idh9tXfLKhD1w1vkBQZeoDbjiGdp201fULJnqqQTIFoqoh6zuoGdKXKI=",
+  "iterations": 2000000,
+  "iv": "MHwggdl0Uo/uv9f+",
+  "kdf": "PBKDF2-SHA-256",
+  "login": "BreakstheSlime",
+  "salt": "0WKeaaOySG5TZCTfVCRxEA==",
+  "v": 1
+}
