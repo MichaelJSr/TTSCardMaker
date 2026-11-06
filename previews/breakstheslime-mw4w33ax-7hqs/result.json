@@ -1,0 +1,108 @@
+{
+ "v": 2,
+ "request": "breakstheslime-mw4w33ax-7hqs",
+ "card": "Avatar Of Wrath",
+ "path": "Creatures/BTD/4 Stars/Avatar_Of_Wrath.psd",
+ "png": "Creatures/BTD/4 Stars/Avatar_Of_Wrath.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "113e3a41856f0f24576ee17e6dbba4e0e85ac53a",
+  "psd_blob": "9408d445ad2cf72ab2dc52c32832fdeb7f3090af",
+  "png_blob": "7ec28b4187ed041651e6ec1c19308646a94b3d87"
+ },
+ "edit": {
+  "types": [
+   "active",
+   "fire"
+  ],
+  "ability": "For the current sum of star levels of all enemy prime creatures on the field:\n+2 ATK +1 SPD per star above 10.\n-1 ATK -0.5 SPD per star below 10.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "For the current sum of star levels of all enemy prime creatures on the field:\n+2 ATK +1 SPD per star above 10.\n-1 ATK -0.5 SPD per star below 10.",
+    "was": "Total an enemy team's prime creatures' stars on the PF.\n+2 ATK +1 SPD per stars above 10.\n-1 ATK -0.5 SPD per star below 10.",
+    "sha": "0ffcde7f",
+    "psd": "9408d445",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "types": "baked",
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability \"Total an enemy team's prime creatures' s\" -> 'For the current sum of star levels of al', types fire -> active, fire",
+ "changes": [
+  {
+   "field": "types",
+   "old": [
+    "fire"
+   ],
+   "new": [
+    "active",
+    "fire"
+   ]
+  },
+  {
+   "field": "ability",
+   "old": "Total an enemy team's prime creatures' stars on the PF.\n+2 ATK +1 SPD per stars above 10.\n-1 ATK -0.5 SPD per star below 10.",
+   "new": "For the current sum of star levels of all enemy prime creatures on the field:\n+2 ATK +1 SPD per star above 10.\n-1 ATK -0.5 SPD per star below 10."
+  }
+ ],
+ "notes": [
+  "types: 1 made from Types/"
+ ],
+ "parity": {
+  "types": {
+   "bad_pct": 0.0,
+   "mean": 0.0,
+   "max": 0.0
+  },
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.01,
+   "max": 2.0
+  }
+ },
+ "region": [
+  6,
+  184,
+  1193,
+  2302
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42210301499",
+ "took_s": 12.8,
+ "at": "2026-11-06T11:27:16Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2019117,
+  "webp": 80854,
+  "before": 77060
+ },
+ "recompressed": false
+}
