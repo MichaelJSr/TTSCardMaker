@@ -1,7 +1,7 @@
 {
  "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
  "pdf": "Rulebook.pdf",
- "key": "ffcc639e6140a3caaddac3d76792be4cee0e8b29cb00acfb3cf40750a89a5733",
+ "key": "c63279e184c76e2e68d604cefb367e8da6974316de03a12faa3e048ce56afa9f",
  "pages": [
   {
    "name": "Cover",
@@ -17,7 +17,7 @@
   {
    "name": "Getting Started",
    "num": "1",
-   "sha": "f9fbf469977bc57c97bb1e37cb15226613f36fad9d5cb8d773e772cace34d2b6",
+   "sha": "b42557dba2ec49f4ef2b151d96a7b6059a59cb8c5309bf6ea8b2fda859466b0b",
    "t": "GETTING STARTED WELCOME TO IMPOSSIBILITY SIM! Thank you so much for playing! We're very happy to have you with us today. This handy little book will run through the rules to get you started with our little card game. We hope you have fun! TO WIN: Defeat all of your opponent's creatures, while making sure they don't defeat all of yours! Players accomplish this by using their own CREATURES and ITEMS to attack and protect. CREATURES: This game lives and breathes by them. Defeat your opponent's while protecting your own. Above all else, make sure to follow the “Don't be stupid” rule! While reading is helpful, this card game can often seem like it gets complicated, fast. Rather than trying to memorize all of the mechanics and concepts before your first game, it is both encouraged and expected to jump straight into a test match against an experienced player. Make sure to ask questions about mechanics and interactions that are unclear. This game is still in beta and is always being tested, so your feedback is highly appreciated! 1"
   },
   {
