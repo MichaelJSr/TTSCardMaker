@@ -1,0 +1,88 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ryxvr-9vi3",
+ "card": "Monkey D Letion",
+ "path": "Creatures/Monkey D Folder/3 Stars/Monkey_D_Letion.psd",
+ "png": "Creatures/Monkey D Folder/3 Stars/Monkey_D_Letion.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "d155ab38576a48d333f88ca5e2a569634a65b68c",
+  "png_blob": "d2969ba19600343a26d8ff95717d80c7d5004570"
+ },
+ "edit": {
+  "ability": "Upon defeating an enemy creature, points cannot be gained from that kill and the creature does not go to the graveyard (also not counting as being \"dead\").\n(WOF) All items that would otherwise be discarded are instead deleted and do not go to the discard pile.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Upon defeating an enemy creature, points cannot be gained from that kill and the creature does not go to the graveyard (also not counting as being \"dead\").\n(WOF) All items that would otherwise be discarded are instead deleted and do not go to the discard pile.",
+    "was": "Upon defeating an enemy creature, points cannot be gained from that kill and the creature does not go to the graveyard (also not counting as being \"dead\").\nAll items that would otherwise be discarded while this is on the field are instead deleted and do not go to the discard pile.",
+    "sha": "32e24da2",
+    "psd": "d155ab38",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '\"dead\"). All items that would otherwise ' -> '\"dead\"). (WOF) All items that would othe'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Upon defeating an enemy creature, points cannot be gained from that kill and the creature does not go to the graveyard (also not counting as being \"dead\").\nAll items that would otherwise be discarded while this is on the field are instead deleted and do not go to the discard pile.",
+   "new": "Upon defeating an enemy creature, points cannot be gained from that kill and the creature does not go to the graveyard (also not counting as being \"dead\").\n(WOF) All items that would otherwise be discarded are instead deleted and do not go to the discard pile."
+  }
+ ],
+ "notes": [
+  "ability redrawn whole, its lines laid out again: bad 7.10%, mean 9.63, max 255"
+ ],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.134,
+   "max": 3.0
+  }
+ },
+ "region": [
+  0,
+  1746,
+  1200,
+  2317
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41790162156",
+ "took_s": 7.2,
+ "at": "2026-11-04T07:08:37Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 800017,
+  "webp": 72202,
+  "before": 73138
+ },
+ "recompressed": false
+}

@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw5dpdl-yxm2",
+ "card": "Leeroy Jenkins",
+ "path": "Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.psd",
+ "png": "Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "098bd28a678e6484e2a98d7785b66196c803cc38",
+  "psd_blob": "a8e3c23b4b46ca0db71e869699798e2f0c2154ba",
+  "png_blob": "c05e4af028de3e73a06a30cb79428ee227b928aa"
+ },
+ "edit": {
+  "ability": "(1PG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, and initiate a special turn for this slot, where it cannot be targeted by items.\nAfter their turn ends, 2 Whelps are summoned for the opponent across from this creature, and creature that was previously taking its turn resumes its turn.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1PG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, and initiate a special turn for this slot, where it cannot be targeted by items.\nAfter their turn ends, 2 Whelps are summoned for the opponent across from this creature, and creature that was previously taking its turn resumes its turn.",
+    "was": "(1PG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, and initiate a special turn for this slot, where it cannot be targeted by items.\nAfter their turn ends, 2 whelps are summoned for the opponent across from this creature, and creature that was previously taking its turn resumes its turn.",
+    "sha": "6f105f81",
+    "psd": "a8e3c23b",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '2 whelps are' -> '2 Whelps are'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1PG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, and initiate a special turn for this slot, where it cannot be targeted by items.\nAfter their turn ends, 2 whelps are summoned for the opponent across from this creature, and creature that was previously taking its turn resumes its turn.",
+   "new": "(1PG)(AAT) If this creature is in your hand, then you may swap with one friendly creature on the PF with no point cost, and initiate a special turn for this slot, where it cannot be targeted by items.\nAfter their turn ends, 2 Whelps are summoned for the opponent across from this creature, and creature that was previously taking its turn resumes its turn."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.322,
+   "max": 3.0
+  }
+ },
+ "region": [
+  0,
+  1765,
+  1200,
+  2354
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41185331925",
+ "took_s": 12.0,
+ "at": "2026-10-31T08:37:33Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3026870,
+  "webp": 128370,
+  "before": 128306
+ },
+ "recompressed": false
+}

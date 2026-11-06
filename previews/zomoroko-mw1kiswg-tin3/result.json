@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1kiswg-tin3",
+ "card": "Elmadan",
+ "path": "Creatures/Other/3 Stars/Elmadan.psd",
+ "png": "Creatures/Other/3 Stars/Elmadan.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "7ec5f659863865359362ccf6278f83a4f35a60ea",
+  "png_blob": "3d63ac1d3f3f03c14a6583fadfad9fa0f909ff32"
+ },
+ "edit": {
+  "ability": "(OFS) Build a Regenerative Shield on this slot.\n(Action)(2 points) Rebuild the Regenerative Shield on this slot if one does not currently exist on this side of the field.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OFS) Build a Regenerative Shield on this slot.\n(Action)(2 points) Rebuild the Regenerative Shield on this slot if one does not currently exist on this side of the field.",
+    "was": "Starts with a Regenerative Shield.\n(Action)(2 points) Resummon the Regenerative Shield on this creature if one does not currently exist on this side of the field.",
+    "sha": "ec16587a",
+    "psd": "7ec5f659",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Starts with a Regenerative Shield. (Acti' -> '(OFS) Build a Regenerative Shield on thi'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Starts with a Regenerative Shield.\n(Action)(2 points) Resummon the Regenerative Shield on this creature if one does not currently exist on this side of the field.",
+   "new": "(OFS) Build a Regenerative Shield on this slot.\n(Action)(2 points) Rebuild the Regenerative Shield on this slot if one does not currently exist on this side of the field."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.107,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  1757,
+  1200,
+  2400
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41768492401",
+ "took_s": 12.9,
+ "at": "2026-11-04T03:40:09Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 861792,
+  "webp": 63304,
+  "before": 62782
+ },
+ "recompressed": false
+}

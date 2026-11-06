@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw3oqnc-ckd6",
+ "card": "Chef Saltbaker",
+ "path": "Creatures/Cuphead/5 Stars/Chef_Saltbaker.psd",
+ "png": "Creatures/Cuphead/5 Stars/Chef_Saltbaker.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "09a590d58049d448e1eac4943ac27b676941b30b",
+  "psd_blob": "6708e56cf40fc4f2e9cf4bc6bf5075ab97122d5c",
+  "png_blob": "6e736ec491f73e32a0b734e00ea332c071e1391d"
+ },
+ "edit": {
+  "ability": "+1 Healing to all healing items.\nMay choose to make your healing items do damage instead of healing.\n(1CD)(2U) Draw one ingredient:\nGnome Berries\nDesert Limes\n(2 points) Icy Sugar Cubes\n(2 points) Pineapple Mint\n(4 points) Distillery Dough",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "+1 Healing to all healing items.\nMay choose to make your healing items do damage instead of healing.\n(1CD)(2U) Draw one ingredient:\nGnome Berries\nDesert Limes\n(2 points) Icy Sugar Cubes\n(2 points) Pineapple Mint\n(4 points) Distillery Dough",
+    "was": "+1 Healing to all healing items.\nMay choose to make your healing items do damage instead of healing.\n(1CD)(2U) Draw one ingredient:\nGnome Berries\nDesert Limes\n(2 points) Icy Sugar Cubes\n(2 points) Pinapple Mint\n(4 points) Distillery Dough",
+    "sha": "0824b9ac",
+    "psd": "6708e56c",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'points) Pinapple Mint' -> 'points) Pineapple Mint'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "+1 Healing to all healing items.\nMay choose to make your healing items do damage instead of healing.\n(1CD)(2U) Draw one ingredient:\nGnome Berries\nDesert Limes\n(2 points) Icy Sugar Cubes\n(2 points) Pinapple Mint\n(4 points) Distillery Dough",
+   "new": "+1 Healing to all healing items.\nMay choose to make your healing items do damage instead of healing.\n(1CD)(2U) Draw one ingredient:\nGnome Berries\nDesert Limes\n(2 points) Icy Sugar Cubes\n(2 points) Pineapple Mint\n(4 points) Distillery Dough"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.131,
+   "max": 2.0
+  }
+ },
+ "region": [
+  14,
+  1759,
+  1188,
+  2373
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41182115595",
+ "took_s": 16.1,
+ "at": "2026-10-31T07:50:14Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2009840,
+  "webp": 104406,
+  "before": 104350
+ },
+ "recompressed": false
+}

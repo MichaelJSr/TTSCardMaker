@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw6ewcz-3kfy",
+ "card": "Magnus Von Grapple",
+ "path": "Creatures/Mario/2 Stars/Magnus_Von_Grapple.psd",
+ "png": "Creatures/Mario/2 Stars/Magnus_Von_Grapple.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "ba1d5ac1d15996d550bedae1fd427b944633e2d1",
+  "psd_blob": "7c65fbf1f95fec215f9ee67c29f7ec11b6c2f622",
+  "png_blob": "50c52eec8e36ed2c9935b8818274aadd3e43ab3e"
+ },
+ "edit": {
+  "ability": "(Action) Summon an X-Fist. \n(Action) Attack each enemy creature on the PF, with -2 ATK for those attacks.",
+  "parts": {
+   "546": {
+    "field": "ability",
+    "text": "(Action) Summon an X-Fist. \n(Action) Attack each enemy creature on the PF, with -2 ATK for those attacks.",
+    "was": "(Action) Summon an X Fist. \n(Action) Attack each enemy creature on the PF, with -2 ATK for those attacks.",
+    "sha": "6541c37f",
+    "psd": "7c65fbf1",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'an X Fist. (Action)' -> 'an X-Fist. (Action)'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(Action) Summon an X Fist. \n(Action) Attack each enemy creature on the PF, with -2 ATK for those attacks.",
+   "new": "(Action) Summon an X-Fist. \n(Action) Attack each enemy creature on the PF, with -2 ATK for those attacks."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.161,
+   "max": 3.0
+  }
+ },
+ "region": [
+  38,
+  1793,
+  1168,
+  2140
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41187267355",
+ "took_s": 10.7,
+ "at": "2026-10-31T09:06:29Z",
+ "variant": null,
+ "parts": {
+  "546": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3373063,
+  "webp": 116568,
+  "before": 116394
+ },
+ "recompressed": false
+}

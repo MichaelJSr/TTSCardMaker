@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1n3mym-pyi4",
+ "card": "omori",
+ "path": "Creatures/Omori/5 Stars/omori.psd",
+ "png": "Creatures/Omori/5 Stars/Omori.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "4b69743399aa1e07411e50cd6b51b49e3d3ff753",
+  "png_blob": "e674eb858b029cb7f4c734dc56bf67dc510d0af9"
+ },
+ "edit": {
+  "ability": "After this creature's health reaches 0. Gain a death counter, heal to 6 HP.\n1+ death counter(s): Decreases DEF of attacked creatures by 1.\n2+ death counters: +1 SPD, (1/2CD) Attacks inflict 2T Afraid.\n3+ death counters: Defeat this creature.\n(OYT) \"Stab\" yourself and bring HP to 0.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "After this creature's health reaches 0. Gain a death counter, heal to 6 HP.\n1+ death counter(s): Decreases DEF of attacked creatures by 1.\n2+ death counters: +1 SPD, (1/2CD) Attacks inflict 2T Afraid.\n3+ death counters: Defeat this creature.\n(OYT) \"Stab\" yourself and bring HP to 0.",
+    "was": "After this creature's health reaches 0. Gain a death counter, heal to 6 HP.\n1+ death counter(s): Decreases DEF of attacked creatures by 1.\n2+ death counters: +1 SPD, (1/2CD) Attacks inflict 2T Afraid.\n3+ death counters: Defeat this creature.\n(OYT) “Stab” yourself and bring HP to 0.",
+    "sha": "13983b44",
+    "psd": "4b697433",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(OYT) “Stab” yourself' -> '(OYT) \"Stab\" yourself'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "After this creature's health reaches 0. Gain a death counter, heal to 6 HP.\n1+ death counter(s): Decreases DEF of attacked creatures by 1.\n2+ death counters: +1 SPD, (1/2CD) Attacks inflict 2T Afraid.\n3+ death counters: Defeat this creature.\n(OYT) “Stab” yourself and bring HP to 0.",
+   "new": "After this creature's health reaches 0. Gain a death counter, heal to 6 HP.\n1+ death counter(s): Decreases DEF of attacked creatures by 1.\n2+ death counters: +1 SPD, (1/2CD) Attacks inflict 2T Afraid.\n3+ death counters: Defeat this creature.\n(OYT) \"Stab\" yourself and bring HP to 0."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 1.074,
+   "max": 2.0
+  }
+ },
+ "region": [
+  12,
+  1766,
+  1188,
+  2353
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41775743753",
+ "took_s": 8.0,
+ "at": "2026-11-04T04:52:21Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2104364,
+  "webp": 122336,
+  "before": 122342
+ },
+ "recompressed": false
+}

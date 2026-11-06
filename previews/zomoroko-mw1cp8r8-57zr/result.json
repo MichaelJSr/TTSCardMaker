@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1cp8r8-57zr",
+ "card": "Buzzo",
+ "path": "Creatures/Lisa/4 Stars/Buzzo.psd",
+ "png": "Creatures/Lisa/4 Stars/Buzzo.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "2bb1c69500448626cf0c897ac5cd9b3eb654a2d5",
+  "png_blob": "77dc22df3bbf58db0eb95cdae5d9691a35626cdc"
+ },
+ "edit": {
+  "ability": "(2PG)(OYT) May reduce the current and max HP by 4 and attack by 2 of another friendly creature to generate a Joy.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(2PG)(OYT) May reduce the current and max HP by 4 and attack by 2 of another friendly creature to generate a Joy.",
+    "was": "(2PG)(OYT) May reduce the current and max HP by 4 and attack by 2 of another friendly creature to add a “Joy” item to your hand.",
+    "sha": "ad6a8ff6",
+    "psd": "2bb1c695",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to add a “Joy” item to your hand.' -> 'to generate a Joy.'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(2PG)(OYT) May reduce the current and max HP by 4 and attack by 2 of another friendly creature to add a “Joy” item to your hand.",
+   "new": "(2PG)(OYT) May reduce the current and max HP by 4 and attack by 2 of another friendly creature to generate a Joy."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.127,
+   "max": 2.0
+  }
+ },
+ "region": [
+  3,
+  1772,
+  1189,
+  2161
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41743569969",
+ "took_s": 7.2,
+ "at": "2026-11-04T00:01:09Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1480428,
+  "webp": 89912,
+  "before": 92708
+ },
+ "recompressed": false
+}

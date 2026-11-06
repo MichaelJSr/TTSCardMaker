@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1m45bi-xj1p",
+ "card": "Fragile Strength",
+ "path": "Items/Equip/3 Stars/Fragile_Strength.psd",
+ "png": "Items/Equip/3 Stars/Fragile_Strength.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "f155d58b31b79eb45b82f9630be244eee8da8e86",
+  "psd_blob": "7c4db90d409b374476179e445265c156710f63e0",
+  "png_blob": "5d734dd6a8b17e2fd55ff47c2d4065d0606c1b2b"
+ },
+ "edit": {
+  "ability": "+33% ATK\n(OYT)(4 points) Transform this into Unbreakable Strength.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "+33% ATK\n(OYT)(4 points) Transform this into Unbreakable Strength.",
+    "was": "+33% ATK\n(OYT)(4 points) Convert this item into Unbreakable Strength.",
+    "sha": "05d08e59",
+    "psd": "7c4db90d",
+    "layer": "Types/Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'points) Convert this item into' -> 'points) Transform this into'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "+33% ATK\n(OYT)(4 points) Convert this item into Unbreakable Strength.",
+   "new": "+33% ATK\n(OYT)(4 points) Transform this into Unbreakable Strength."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.299,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  1531,
+  1200,
+  1780
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41772991689",
+ "took_s": 8.0,
+ "at": "2026-11-04T04:24:44Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1585503,
+  "webp": 52364,
+  "before": 52828
+ },
+ "recompressed": false
+}

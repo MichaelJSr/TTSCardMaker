@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1n27bu-pu84",
+ "card": "Kalecgos",
+ "path": "Creatures/World Of Warcraft/4 Stars/Kalecgos.psd",
+ "png": "Creatures/World Of Warcraft/4 Stars/Kalecgos.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "d17f3a6231ccfe01df009cbff651c63a3fb87125",
+  "png_blob": "2975837a8172656ba2ea36de61556f91773cb4ca"
+ },
+ "edit": {
+  "ability": "This takes 50% less DMG from all sources as long as its Corruptor lives.\n(OFS) Summon a Corruptor. \n(1GCD) Move a Corruptor onto any creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "This takes 50% less DMG from all sources as long as its Corruptor lives.\n(OFS) Summon a Corruptor. \n(1GCD) Move a Corruptor onto any creature.",
+    "was": "This takes 50% less DMG from all sources as long as its “Corruptor” lives.\n(OFS) Summon a Corruptor. \n(1GCD) Pick a slot, and move a Corruptor onto that slot.",
+    "sha": "0a84542e",
+    "psd": "d17f3a62",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'its “Corruptor” lives. (OFS) Summon a Co' -> 'its Corruptor lives. (OFS) Summon a Corr'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "This takes 50% less DMG from all sources as long as its “Corruptor” lives.\n(OFS) Summon a Corruptor. \n(1GCD) Pick a slot, and move a Corruptor onto that slot.",
+   "new": "This takes 50% less DMG from all sources as long as its Corruptor lives.\n(OFS) Summon a Corruptor. \n(1GCD) Move a Corruptor onto any creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.177,
+   "max": 3.0
+  }
+ },
+ "region": [
+  48,
+  1771,
+  1151,
+  2217
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41775634555",
+ "took_s": 11.0,
+ "at": "2026-11-04T04:51:09Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3515472,
+  "webp": 98500,
+  "before": 99870
+ },
+ "recompressed": false
+}

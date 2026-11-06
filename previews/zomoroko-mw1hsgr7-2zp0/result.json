@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1hsgr7-2zp0",
+ "card": "Springtrap",
+ "path": "Auxiliary/Minions/Springtrap.psd",
+ "png": "Auxiliary/Minions/Springtrap.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "5d5a6c50696297258f185aad70f19d181e2d0352",
+  "png_blob": "5e7c98d524b6f5778c8eb78b5b345f2c1d352747"
+ },
+ "edit": {
+  "ability": "(OD) At the end of the next global turn, resummon this minion onto any creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OD) At the end of the next global turn, resummon this minion onto any creature.",
+    "was": "(OD) At the end of the next global turn, resummon this minion on a slot of your choosing.",
+    "sha": "5e4dd5de",
+    "psd": "5d5a6c50",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'minion on a slot of your choosing.' -> 'minion onto any creature.'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(OD) At the end of the next global turn, resummon this minion on a slot of your choosing.",
+   "new": "(OD) At the end of the next global turn, resummon this minion onto any creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.141,
+   "max": 3.0
+  }
+ },
+ "region": [
+  4,
+  1772,
+  1193,
+  2060
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41760400719",
+ "took_s": 8.5,
+ "at": "2026-11-04T02:23:41Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1861384,
+  "webp": 81726,
+  "before": 82806
+ },
+ "recompressed": false
+}

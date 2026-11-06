@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ilcaj-9841",
+ "card": "The Man Behind The Slaughter",
+ "path": "Creatures/Fnaf/5 Stars/The_Man_Behind_The_Slaughter.psd",
+ "png": "Creatures/Fnaf/5 Stars/The_Man_Behind_The_Slaughter.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "9d83381ffd4cd6521e8a914d775a33daf26bd8b0",
+  "png_blob": "fed2e2930d802f7e38f91128c47e35c632495cf7"
+ },
+ "edit": {
+  "ability": "(1PG) If one of your undamaged prime creatures declares an attack and this has not yet entered the field, you may swap it with this creature and attack the target with +3 ATK.\n(OD) Summon Springtrap at (ENDGT) onto any creature.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1PG) If one of your undamaged prime creatures declares an attack and this has not yet entered the field, you may swap it with this creature and attack the target with +3 ATK.\n(OD) Summon Springtrap at (ENDGT) onto any creature.",
+    "was": "(1PG) If one of your undamaged prime creatures declares an attack and this has not yet entered the field, you may swap it with this creature and attack the target with +3 ATK.\n(OD) Summon Springtrap at (ENDGT) on a slot of your choice.",
+    "sha": "bc39a77f",
+    "psd": "9d83381f",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(ENDGT) on a slot of your choice.' -> '(ENDGT) onto any creature.'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1PG) If one of your undamaged prime creatures declares an attack and this has not yet entered the field, you may swap it with this creature and attack the target with +3 ATK.\n(OD) Summon Springtrap at (ENDGT) on a slot of your choice.",
+   "new": "(1PG) If one of your undamaged prime creatures declares an attack and this has not yet entered the field, you may swap it with this creature and attack the target with +3 ATK.\n(OD) Summon Springtrap at (ENDGT) onto any creature."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.149,
+   "max": 3.0
+  }
+ },
+ "region": [
+  35,
+  1753,
+  1162,
+  2370
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41762823211",
+ "took_s": 7.3,
+ "at": "2026-11-04T02:46:01Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1694156,
+  "webp": 81296,
+  "before": 81618
+ },
+ "recompressed": false
+}

@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1n4tte-h5mk",
+ "card": "Sans",
+ "path": "Creatures/Undertale/5 Stars/Sans.psd",
+ "png": "Creatures/Undertale/5 Stars/Sans.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "6dcf324c728feb71b3ff422becb95bdfeaf96f9f",
+  "png_blob": "29c31b3865a8535e73cb1dcb0354126c735c25ba"
+ },
+ "edit": {
+  "ability": "this creature has no innate actions, cannot have its stats changed, items equipped to it, is immune to CDMG, and has true negation immunity. no other creature can have this ability.\nattacks are piercing and inflict 1T1 smeckeldorfed.\n(OFS) this creature gains 7 stamina counters.\ncan spend a stamina counter to \"dodge\" (negate) an attack or infliction.\n(1CD) you may spend a stamina counter to gain an action. \nthis creature can attack 5 times per action.\nif this creature has no stamina counters, it gains 1 (BOT).",
+  "parts": {
+   "303": {
+    "field": "ability",
+    "text": "this creature has no innate actions, cannot have its stats changed, items equipped to it, is immune to CDMG, and has true negation immunity. no other creature can have this ability.\nattacks are piercing and inflict 1T1 smeckeldorfed.\n(OFS) this creature gains 7 stamina counters.\ncan spend a stamina counter to \"dodge\" (negate) an attack or infliction.\n(1CD) you may spend a stamina counter to gain an action. \nthis creature can attack 5 times per action.\nif this creature has no stamina counters, it gains 1 (BOT).",
+    "was": "this creature has no innate actions, cannot have its stats changed, items equipped to it, is immune to CDMG, and has true negation immunity. no other creature can have this ability.\nattacks are piercing and inflict 1T1 smeckeldorfed.\n(OFS) this creature gains 7 stamina counters.\ncan spend a stamina counter to “dodge” (negate) an attack or infliction.\n(1CD) you may spend a stamina counter to gain an action. \nthis creature can attack 5 times per action.\nif this creature has no stamina counters, it gains 1 (BOT).",
+    "sha": "89759886",
+    "psd": "6dcf324c",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to “dodge” (negate)' -> 'to \"dodge\" (negate)'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "this creature has no innate actions, cannot have its stats changed, items equipped to it, is immune to CDMG, and has true negation immunity. no other creature can have this ability.\nattacks are piercing and inflict 1T1 smeckeldorfed.\n(OFS) this creature gains 7 stamina counters.\ncan spend a stamina counter to “dodge” (negate) an attack or infliction.\n(1CD) you may spend a stamina counter to gain an action. \nthis creature can attack 5 times per action.\nif this creature has no stamina counters, it gains 1 (BOT).",
+   "new": "this creature has no innate actions, cannot have its stats changed, items equipped to it, is immune to CDMG, and has true negation immunity. no other creature can have this ability.\nattacks are piercing and inflict 1T1 smeckeldorfed.\n(OFS) this creature gains 7 stamina counters.\ncan spend a stamina counter to \"dodge\" (negate) an attack or infliction.\n(1CD) you may spend a stamina counter to gain an action. \nthis creature can attack 5 times per action.\nif this creature has no stamina counters, it gains 1 (BOT)."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.209,
+   "max": 2.0
+  }
+ },
+ "region": [
+  69,
+  1722,
+  1193,
+  2367
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41775833656",
+ "took_s": 10.9,
+ "at": "2026-11-04T04:53:18Z",
+ "variant": null,
+ "parts": {
+  "303": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2120942,
+  "webp": 108492,
+  "before": 108606
+ },
+ "recompressed": false
+}

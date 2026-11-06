@@ -1,0 +1,88 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1l26ng-775y",
+ "card": "Wendy",
+ "path": "Creatures/DST/3 Stars/Wendy.psd",
+ "png": "Creatures/DST/3 Stars/Wendy.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "a8ec8a1bca62545dc31e9b1da4ad95b43146ea46",
+  "psd_blob": "8d3fc4b065f3357660c04578f4c00eb562258b08",
+  "png_blob": "7b7f97a3c1ace18200102766cca116829ce00f16"
+ },
+ "edit": {
+  "ability": "(OFS) Summon Abigail.\n(2CD)(3 points) Resummon Abigail.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OFS) Summon Abigail.\n(2CD)(3 points) Resummon Abigail.",
+    "was": "Starts with Abigail.\n(2CD)(3 points) Resummon Abigail.",
+    "sha": "f4d5b8ce",
+    "psd": "8d3fc4b0",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Starts with Abigail.' -> '(OFS) Summon Abigail.'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Starts with Abigail.\n(2CD)(3 points) Resummon Abigail.",
+   "new": "(OFS) Summon Abigail.\n(2CD)(3 points) Resummon Abigail."
+  }
+ ],
+ "notes": [
+  "ability redrawn whole, its lines laid out again: bad 15.15%, mean 27.08, max 255"
+ ],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.661,
+   "max": 4.0
+  }
+ },
+ "region": [
+  75,
+  1777,
+  1129,
+  1963
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41769982216",
+ "took_s": 9.2,
+ "at": "2026-11-04T03:55:08Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2307492,
+  "webp": 89898,
+  "before": 89500
+ },
+ "recompressed": false
+}

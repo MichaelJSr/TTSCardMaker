@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1nmv8o-xy3d",
+ "card": "Igor Robotowski",
+ "path": "Creatures/Other/2 Stars/Igor_Robotowski.psd",
+ "png": "Creatures/Other/2 Stars/Igor_Robotowski.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "218e3fadf9c681e3cc3a4a6997492145e6cda388",
+  "png_blob": "83d3771b876e8b6b0a8d667ac82cfaa538d3a034"
+ },
+ "edit": {
+  "ability": "(ENDT) Lose 2 SPD.\n(2CD) Spend 4 Bricks to transform this into Igor Roballtowski (reset HP).",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(ENDT) Lose 2 SPD.\n(2CD) Spend 4 Bricks to transform this into Igor Roballtowski (reset HP).",
+    "was": "(ENDT) lose 2 SPD.\n(2CD) spend 4 Bricks to replace this with Igor Roballtowski (reset HP).",
+    "sha": "83e0e7f0",
+    "psd": "218e3fad",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(ENDT) lose 2 SPD. (2CD) spend 4 Bricks ' -> '(ENDT) Lose 2 SPD. (2CD) Spend 4 Bricks '",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(ENDT) lose 2 SPD.\n(2CD) spend 4 Bricks to replace this with Igor Roballtowski (reset HP).",
+   "new": "(ENDT) Lose 2 SPD.\n(2CD) Spend 4 Bricks to transform this into Igor Roballtowski (reset HP)."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.124,
+   "max": 3.0
+  }
+ },
+ "region": [
+  64,
+  1757,
+  1132,
+  2136
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41777232426",
+ "took_s": 7.2,
+ "at": "2026-11-04T05:07:15Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1719961,
+  "webp": 61412,
+  "before": 60738
+ },
+ "recompressed": false
+}

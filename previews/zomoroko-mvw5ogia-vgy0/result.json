@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw5ogia-vgy0",
+ "card": "Mettaton",
+ "path": "Creatures/Undertale/4 Stars/Mettaton.psd",
+ "png": "Creatures/Undertale/4 Stars/Mettaton.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "098bd28a678e6484e2a98d7785b66196c803cc38",
+  "psd_blob": "cd20efa9b6cc597cd1f4c52c3d99f32f439806ea",
+  "png_blob": "fa8f3ff67f5b20f1cdac9e757313a5b549957ec3"
+ },
+ "edit": {
+  "ability": "(WOF) If a friendly creature dies, this permanently becomes Mettaton NEO.\n(WOF) If 9 stars of items are used, this permanently becomes Mettaton EX.",
+  "parts": {
+   "303": {
+    "field": "ability",
+    "text": "(WOF) If a friendly creature dies, this permanently becomes Mettaton NEO.\n(WOF) If 9 stars of items are used, this permanently becomes Mettaton EX.",
+    "was": "(WOF) If a friendly creature dies, this permanently becomes Mettaton Neo.\n(WOF) If 9 stars of items are used, this permanently becomes Mettaton EX.",
+    "sha": "a558c7db",
+    "psd": "cd20efa9",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Mettaton Neo. (WOF)' -> 'Mettaton NEO. (WOF)'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(WOF) If a friendly creature dies, this permanently becomes Mettaton Neo.\n(WOF) If 9 stars of items are used, this permanently becomes Mettaton EX.",
+   "new": "(WOF) If a friendly creature dies, this permanently becomes Mettaton NEO.\n(WOF) If 9 stars of items are used, this permanently becomes Mettaton EX."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.062,
+   "max": 2.0
+  }
+ },
+ "region": [
+  109,
+  1790,
+  1152,
+  2123
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41185880525",
+ "took_s": 8.3,
+ "at": "2026-10-31T08:45:46Z",
+ "variant": null,
+ "parts": {
+  "303": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1701885,
+  "webp": 82100,
+  "before": 82132
+ },
+ "recompressed": false
+}

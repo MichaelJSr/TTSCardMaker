@@ -1,0 +1,85 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ccwan-srsv",
+ "card": "Azamoth the Possessed Vessel",
+ "path": "Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.psd",
+ "png": "Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "3a2f3cbbdef3344bf3c5e3e1cc24153e61bcaaa0",
+  "png_blob": "711eba47dfef427e2288cf95073557612427edf9"
+ },
+ "edit": {
+  "hp": 1,
+  "spd": 1
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "hp": "baked",
+  "spd": "baked"
+ },
+ "reason": "hp 0 -> 1, spd 0 -> 1",
+ "changes": [
+  {
+   "field": "hp",
+   "old": 0,
+   "new": 1
+  },
+  {
+   "field": "spd",
+   "old": 0,
+   "new": 1
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "hp": {
+   "bad_pct": 0.0,
+   "mean": 0.066,
+   "max": 2.0
+  },
+  "spd": {
+   "bad_pct": 0.0,
+   "mean": 0.067,
+   "max": 2.0
+  }
+ },
+ "region": [
+  359,
+  1199,
+  1174,
+  1663
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41742364143",
+ "took_s": 6.3,
+ "at": "2026-11-03T23:51:30Z",
+ "variant": null,
+ "parts": {},
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2762199,
+  "webp": 91700,
+  "before": 91344
+ },
+ "recompressed": false
+}

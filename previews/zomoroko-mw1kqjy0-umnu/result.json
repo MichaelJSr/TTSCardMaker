@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1kqjy0-umnu",
+ "card": "Papyrus",
+ "path": "Creatures/Undertale/3 Stars/Papyrus.psd",
+ "png": "Creatures/Undertale/3 Stars/Papyrus.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "6ce7e011e7e598c6ee337b8b0a0c238ee70c2f5c",
+  "png_blob": "dc207c8fb82917a2bfca39c013a9ebd09e425d6c"
+ },
+ "edit": {
+  "ability": "(1CD)(2 points) Generate Spaghetti",
+  "parts": {
+   "303": {
+    "field": "ability",
+    "text": "(1CD)(2 points) Generate Spaghetti",
+    "was": "(1CD)(2 points) Create Spaghetti",
+    "sha": "ae89c319",
+    "psd": "6ce7e011",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'points) Create Spaghetti' -> 'points) Generate Spaghetti'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1CD)(2 points) Create Spaghetti",
+   "new": "(1CD)(2 points) Generate Spaghetti"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.285,
+   "max": 2.0
+  }
+ },
+ "region": [
+  128,
+  1837,
+  892,
+  2057
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41769089081",
+ "took_s": 6.6,
+ "at": "2026-11-04T03:46:04Z",
+ "variant": null,
+ "parts": {
+  "303": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3954560,
+  "webp": 143774,
+  "before": 143536
+ },
+ "recompressed": false
+}

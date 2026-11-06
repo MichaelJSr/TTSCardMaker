@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ox327-qevz",
+ "card": "Chef Saltbaker",
+ "path": "Creatures/Cuphead/5 Stars/Chef_Saltbaker.psd",
+ "png": "Creatures/Cuphead/5 Stars/Chef_Saltbaker.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "96f426478dd6aa6d04e41239e9f141f5c439b458",
+  "png_blob": "b9e545b73a39525dc19f245afa0acc5ec6bb91ff"
+ },
+ "edit": {
+  "ability": "(WOF) +1 Healing to all healing items.\nMay choose to make your healing items do damage instead of healing.\n(1CD)(2U) Generate one ingredient:\nGnome Berries\nDesert Limes\n(2 points) Icy Sugar Cubes\n(2 points) Pineapple Mint\n(4 points) Distillery Dough",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(WOF) +1 Healing to all healing items.\nMay choose to make your healing items do damage instead of healing.\n(1CD)(2U) Generate one ingredient:\nGnome Berries\nDesert Limes\n(2 points) Icy Sugar Cubes\n(2 points) Pineapple Mint\n(4 points) Distillery Dough",
+    "was": "+1 Healing to all healing items.\nMay choose to make your healing items do damage instead of healing.\n(1CD)(2U) Draw one ingredient:\nGnome Berries\nDesert Limes\n(2 points) Icy Sugar Cubes\n(2 points) Pineapple Mint\n(4 points) Distillery Dough",
+    "sha": "49c87da4",
+    "psd": "96f42647",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '+1 Healing to all healing items. May cho' -> '(WOF) +1 Healing to all healing items. M'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "+1 Healing to all healing items.\nMay choose to make your healing items do damage instead of healing.\n(1CD)(2U) Draw one ingredient:\nGnome Berries\nDesert Limes\n(2 points) Icy Sugar Cubes\n(2 points) Pineapple Mint\n(4 points) Distillery Dough",
+   "new": "(WOF) +1 Healing to all healing items.\nMay choose to make your healing items do damage instead of healing.\n(1CD)(2U) Generate one ingredient:\nGnome Berries\nDesert Limes\n(2 points) Icy Sugar Cubes\n(2 points) Pineapple Mint\n(4 points) Distillery Dough"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.131,
+   "max": 2.0
+  }
+ },
+ "region": [
+  14,
+  1752,
+  1188,
+  2374
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41780915128",
+ "took_s": 11.6,
+ "at": "2026-11-04T05:43:15Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2007894,
+  "webp": 105570,
+  "before": 104406
+ },
+ "recompressed": false
+}

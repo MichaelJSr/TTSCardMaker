@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw5pq8m-vtbx",
+ "card": "Moose Goose",
+ "path": "Creatures/DST/3 Stars/Moose_Goose.psd",
+ "png": "Creatures/DST/3 Stars/Moose_Goose.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "098bd28a678e6484e2a98d7785b66196c803cc38",
+  "psd_blob": "0c9f62077edb62443b6cbb99cec16244b7a87c6a",
+  "png_blob": "06ee3d11df59e272a88cc553d5971225fc53e5eb"
+ },
+ "edit": {
+  "ability": "(1CD) Lay an egg.\n(2CD) Can sacrifice -2 ATK for 1 turn for attacks to inflict 1T2 Enfeebled.\n(OD) or on its 3rd+ turn, all eggs hatch into Moslings.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1CD) Lay an egg.\n(2CD) Can sacrifice -2 ATK for 1 turn for attacks to inflict 1T2 Enfeebled.\n(OD) or on its 3rd+ turn, all eggs hatch into Moslings.",
+    "was": "(1CD) Lay an egg.\n(2CD) Can sacrifice -2 ATK for 1 turn for attacks to inflict 1T2 Enfeebled.\n(OD) or on its 3rd+ turn, all eggs hatch into moslings.",
+    "sha": "645e15ca",
+    "psd": "0c9f6207",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'into moslings.' -> 'into Moslings.'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1CD) Lay an egg.\n(2CD) Can sacrifice -2 ATK for 1 turn for attacks to inflict 1T2 Enfeebled.\n(OD) or on its 3rd+ turn, all eggs hatch into moslings.",
+   "new": "(1CD) Lay an egg.\n(2CD) Can sacrifice -2 ATK for 1 turn for attacks to inflict 1T2 Enfeebled.\n(OD) or on its 3rd+ turn, all eggs hatch into Moslings."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.119,
+   "max": 2.0
+  }
+ },
+ "region": [
+  8,
+  1768,
+  1192,
+  2200
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41185948273",
+ "took_s": 17.2,
+ "at": "2026-10-31T08:46:53Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2571369,
+  "webp": 78030,
+  "before": 77854
+ },
+ "recompressed": false
+}

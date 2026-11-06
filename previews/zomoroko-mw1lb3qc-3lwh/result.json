@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1lb3qc-3lwh",
+ "card": "Pot Full of Spiders!",
+ "path": "Creatures/Crypt/2 Stars/Pot_Full_of_Spiders!.psd",
+ "png": "Creatures/Crypt/2 Stars/Pot_Full_of_Spiders!.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "3247ff32271c7f6dc98626b4d855487236a039dc",
+  "psd_blob": "7c0181a4222ab5d0b7cd7550cc3e8aa016dda3df",
+  "png_blob": "49d03e8b52dc45045ed435d34950fb7d5097c2b3"
+ },
+ "edit": {
+  "ability": "(OFS)/(BOT) Gain 2 spider counters.\nWhen damaged, spend all spider counters to summon an equal amount of Lil Spoods.\nIf it has 4 or more spider counters, it can convert any additional spider counters into Lil Spoods immediately .",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OFS)/(BOT) Gain 2 spider counters.\nWhen damaged, spend all spider counters to summon an equal amount of Lil Spoods.\nIf it has 4 or more spider counters, it can convert any additional spider counters into Lil Spoods immediately .",
+    "was": "This creature starts with 2 spider counters and gains 2 spider counters per turn. \nWhen damaged, it converts each of its spider counters into Lil Spoods.\nIf it has 4 or more spider counters, it can convert any additional spider counters into Lil Spoods immediately .",
+    "sha": "3532cb98",
+    "psd": "7c0181a4",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'This creature starts with 2 spider count' -> '(OFS)/(BOT) Gain 2 spider counters. When'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "This creature starts with 2 spider counters and gains 2 spider counters per turn. \nWhen damaged, it converts each of its spider counters into Lil Spoods.\nIf it has 4 or more spider counters, it can convert any additional spider counters into Lil Spoods immediately .",
+   "new": "(OFS)/(BOT) Gain 2 spider counters.\nWhen damaged, spend all spider counters to summon an equal amount of Lil Spoods.\nIf it has 4 or more spider counters, it can convert any additional spider counters into Lil Spoods immediately ."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.065,
+   "max": 2.0
+  }
+ },
+ "region": [
+  0,
+  1748,
+  1200,
+  2395
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41770667604",
+ "took_s": 12.0,
+ "at": "2026-11-04T04:02:08Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2533218,
+  "webp": 79020,
+  "before": 83116
+ },
+ "recompressed": false
+}

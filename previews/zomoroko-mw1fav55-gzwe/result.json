@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1fav55-gzwe",
+ "card": "Landia",
+ "path": "Creatures/Kirby/5 Stars/Landia.psd",
+ "png": "Creatures/Kirby/5 Stars/Landia.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "d09ad082569efff8a25cecaab622005a345d1d6f",
+  "png_blob": "10c4fbfe7a9af63c65c95f3fc10939bef5258fe5"
+ },
+ "edit": {
+  "ability": "Attacks inflict 2T Smoldering.\n(1GCD) This creature can decrease its ATK by 4 to attack 3 times per action (these do not give Smoldering).\n(OD) Auto-equip a Dragon Mount to all other friendly creatures currently on the field.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Attacks inflict 2T Smoldering.\n(1GCD) This creature can decrease its ATK by 4 to attack 3 times per action (these do not give Smoldering).\n(OD) Auto-equip a Dragon Mount to all other friendly creatures currently on the field.",
+    "was": "Attacks inflict 2T Smoldering.\n(1GCD) This creature can decrease its ATK by 4 to attack 3 times per action (these do not give Smoldering).\n(OD) Equip a Dragon Mount to all other friendly creatures currently on the field.",
+    "sha": "0a590b78",
+    "psd": "d09ad082",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(OD) Equip a' -> '(OD) Auto-equip a'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Attacks inflict 2T Smoldering.\n(1GCD) This creature can decrease its ATK by 4 to attack 3 times per action (these do not give Smoldering).\n(OD) Equip a Dragon Mount to all other friendly creatures currently on the field.",
+   "new": "Attacks inflict 2T Smoldering.\n(1GCD) This creature can decrease its ATK by 4 to attack 3 times per action (these do not give Smoldering).\n(OD) Auto-equip a Dragon Mount to all other friendly creatures currently on the field."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.297,
+   "max": 3.0
+  }
+ },
+ "region": [
+  5,
+  1758,
+  1192,
+  2368
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41752552043",
+ "took_s": 10.8,
+ "at": "2026-11-04T01:13:56Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2548574,
+  "webp": 92938,
+  "before": 91690
+ },
+ "recompressed": false
+}

@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1k8fah-fdq7",
+ "card": "Old Chica",
+ "path": "Creatures/Fnaf/4 Stars/Old_Chica.psd",
+ "png": "Creatures/Fnaf/4 Stars/Old_Chica.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "df799881bf2c3b4e5f67283e3a7c6d3129f44ba3",
+  "png_blob": "645e2cc9971f507d1daeb9d625989d853e2cfa65"
+ },
+ "edit": {
+  "ability": "(OFS) Generate 2 Pepperoni Pizzas.\nThis creature can eat Pepperoni Pizza without being inflicted with Stuffed.\nIf this attacks something on the right side of the field, its ATK is increased by 2 for that attack.",
+  "parts": {
+   "321": {
+    "field": "ability",
+    "text": "(OFS) Generate 2 Pepperoni Pizzas.\nThis creature can eat Pepperoni Pizza without being inflicted with Stuffed.\nIf this attacks something on the right side of the field, its ATK is increased by 2 for that attack.",
+    "was": "(OFS) Acquire 2 Pepperoni Pizzas.\nThis creature can eat Pepperoni Pizza without being inflicted with Stuffed.\nIf this attacks something on the right side of the field, its ATK is increased by 2 for that attack.",
+    "sha": "74fb93ea",
+    "psd": "df799881",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(OFS) Acquire 2' -> '(OFS) Generate 2'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(OFS) Acquire 2 Pepperoni Pizzas.\nThis creature can eat Pepperoni Pizza without being inflicted with Stuffed.\nIf this attacks something on the right side of the field, its ATK is increased by 2 for that attack.",
+   "new": "(OFS) Generate 2 Pepperoni Pizzas.\nThis creature can eat Pepperoni Pizza without being inflicted with Stuffed.\nIf this attacks something on the right side of the field, its ATK is increased by 2 for that attack."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.014,
+   "max": 2.0
+  }
+ },
+ "region": [
+  16,
+  1729,
+  1193,
+  2252
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41767661545",
+ "took_s": 6.8,
+ "at": "2026-11-04T03:32:01Z",
+ "variant": null,
+ "parts": {
+  "321": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2591661,
+  "webp": 127532,
+  "before": 127444
+ },
+ "recompressed": false
+}

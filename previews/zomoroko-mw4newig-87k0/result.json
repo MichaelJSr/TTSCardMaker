@@ -1,0 +1,39 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw4newig-87k0",
+ "card": "Tainted Forgotten",
+ "path": "Creatures/Isaac/3 Stars/Tainted_Forgotten.psd",
+ "png": "Creatures/Isaac/3 Stars/Tainted_Forgotten.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "fceb07d0e3b494e15f5b2431c0f18f882b2430c9",
+  "psd_blob": "17b3636fe7a711b59572568c2fe9a4483d22673f",
+  "png_blob": "0ddef15456c9e6f3ada2b20ce710380dce819df5"
+ },
+ "edit": {
+  "stars": 4
+ },
+ "state": "error",
+ "transient": false,
+ "fields": {
+  "stars": "error"
+ },
+ "reason": "error: the bake did nothing with the edit",
+ "changes": [],
+ "notes": [],
+ "parity": {},
+ "region": null,
+ "image": null,
+ "files": {},
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42180606108",
+ "took_s": 2.3,
+ "at": "2026-11-06T07:24:14Z",
+ "variant": null,
+ "parts": {}
+}

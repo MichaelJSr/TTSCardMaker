@@ -1,0 +1,73 @@
+{
+ "v": 2,
+ "request": "6b8c28e6-c2e5-4b0c-8ad5-92a9e0a68b6a",
+ "card": "Sumo Panda",
+ "path": "Creatures/Pandas/3 Stars/Sumo_Panda.psd",
+ "png": "Creatures/Pandas/3 Stars/Sumo_Panda.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "17f3d390f2faa57a4febe681d97a76e24a13de5b",
+  "psd_blob": "082dfcca2a0d051360b81564f7a5b43fb525f2c3",
+  "png_blob": "993674795223aea7fe7bccea1dcb9a6e0514a833"
+ },
+ "edit": {
+  "hp": 8
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "hp": "baked"
+ },
+ "reason": "hp 7 -> 8",
+ "changes": [
+  {
+   "field": "hp",
+   "old": 7,
+   "new": 8
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "hp": {
+   "bad_pct": 0.0,
+   "mean": 0.451,
+   "max": 2.0
+  }
+ },
+ "region": [
+  914,
+  1199,
+  1161,
+  1285
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41193099944",
+ "took_s": 4.4,
+ "at": "2026-10-31T10:32:02Z",
+ "variant": null,
+ "parts": {},
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1364296,
+  "webp": 79598,
+  "before": 79454
+ },
+ "recompressed": false
+}

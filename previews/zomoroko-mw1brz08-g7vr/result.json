@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1brz08-g7vr",
+ "card": "NME Salesman",
+ "path": "Creatures/Kirby/4 Stars/NME_Salesman.psd",
+ "png": "Creatures/Kirby/4 Stars/NME_Salesman.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "9a344b782ae42fbea8c8ca11f53e7c18b1361761",
+  "png_blob": "8508d07e9b5a26eaa37e30943e66f3ced9a7b7c3"
+ },
+ "edit": {
+  "ability": "(1GCD)(Activates before items can hit this creature) Summon one:\n-(1 point) Bugzzy\n-(2 points) Ice Dragon\n-(1PG)(3 points) Masher\nAt least 3 pair turns must end before another minion can be summoned.\nIf this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\nThis ability cannot be negated or copied.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1GCD)(Activates before items can hit this creature) Summon one:\n-(1 point) Bugzzy\n-(2 points) Ice Dragon\n-(1PG)(3 points) Masher\nAt least 3 pair turns must end before another minion can be summoned.\nIf this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\nThis ability cannot be negated or copied.",
+    "was": "(1GCD)(Activates before items can hit this creature) Summon one:\n-(1 point) Bugzzy\n-(2 points) Ice Dragon\n-(1PG)(3 points) Masher\nAt least 3 lanes' turns must end before another minion can be summoned.\nIf this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\nThis ability cannot be negated or copied.",
+    "sha": "c9b50116",
+    "psd": "9a344b78",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability \"3 lanes' turns\" -> '3 pair turns'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD)(Activates before items can hit this creature) Summon one:\n-(1 point) Bugzzy\n-(2 points) Ice Dragon\n-(1PG)(3 points) Masher\nAt least 3 lanes' turns must end before another minion can be summoned.\nIf this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\nThis ability cannot be negated or copied.",
+   "new": "(1GCD)(Activates before items can hit this creature) Summon one:\n-(1 point) Bugzzy\n-(2 points) Ice Dragon\n-(1PG)(3 points) Masher\nAt least 3 pair turns must end before another minion can be summoned.\nIf this creature is at full health and were to die from an attack, it will survive with 0.5 HP instead.\nThis ability cannot be negated or copied."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.052,
+   "max": 3.0
+  }
+ },
+ "region": [
+  3,
+  1759,
+  1195,
+  2342
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41740276670",
+ "took_s": 6.2,
+ "at": "2026-11-03T23:35:15Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1601574,
+  "webp": 80626,
+  "before": 80622
+ },
+ "recompressed": false
+}

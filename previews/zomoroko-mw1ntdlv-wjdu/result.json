@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ntdlv-wjdu",
+ "card": "Heavy Mole",
+ "path": "Creatures/Kirby/3 Stars/Heavy_Mole.psd",
+ "png": "Creatures/Kirby/3 Stars/Heavy_Mole.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "6460d21ae5ea44a517372e48399e77e499daca5c",
+  "png_blob": "724b24dc67b1a7ea863631804d9ca03ccb14ef6d"
+ },
+ "edit": {
+  "ability": "(1CD) Summon a Mini Drill.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1CD) Summon a Mini Drill.",
+    "was": "(1CD) This creature can summon a Mini Drill.",
+    "sha": "a756bd46",
+    "psd": "6460d21a",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(1CD) This creature can summon a' -> '(1CD) Summon a'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1CD) This creature can summon a Mini Drill.",
+   "new": "(1CD) Summon a Mini Drill."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.235,
+   "max": 3.0
+  }
+ },
+ "region": [
+  10,
+  1783,
+  1185,
+  2002
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41777762595",
+ "took_s": 9.0,
+ "at": "2026-11-04T05:12:21Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2778806,
+  "webp": 115412,
+  "before": 118878
+ },
+ "recompressed": false
+}

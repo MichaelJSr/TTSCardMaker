@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1f6kl0-o3ca",
+ "card": "Ze'mer",
+ "path": "Creatures/Hollow Knight/5 Stars/Ze'mer.psd",
+ "png": "Creatures/Hollow Knight/5 Stars/Ze'mer.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "5cc4aa3fee115e933b50fae014ea9afc735ce97b",
+  "png_blob": "03cb1ba5dc8cd797019db1f828ac938565554694"
+ },
+ "edit": {
+  "ability": "(1CD) Auto-equip Delicate Flower to a friendly creature.\nWhen a friendly prime creature is defeated, gain +1 ATK +0.5 DEF.\n(1GCD) Intercept an attack or infliction.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1CD) Auto-equip Delicate Flower to a friendly creature.\nWhen a friendly prime creature is defeated, gain +1 ATK +0.5 DEF.\n(1GCD) Intercept an attack or infliction.",
+    "was": "(1CD) Equip Delicate Flower to a friendly creature.\nWhen a friendly prime creature is defeated, gain +1 ATK +0.5 DEF.\n(1GCD) Intercept an attack or infliction.",
+    "sha": "16c39c3e",
+    "psd": "5cc4aa3f",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(1CD) Equip Delicate' -> '(1CD) Auto-equip Delicate'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1CD) Equip Delicate Flower to a friendly creature.\nWhen a friendly prime creature is defeated, gain +1 ATK +0.5 DEF.\n(1GCD) Intercept an attack or infliction.",
+   "new": "(1CD) Auto-equip Delicate Flower to a friendly creature.\nWhen a friendly prime creature is defeated, gain +1 ATK +0.5 DEF.\n(1GCD) Intercept an attack or infliction."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.144,
+   "max": 3.0
+  }
+ },
+ "region": [
+  58,
+  1777,
+  1143,
+  2316
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41752162546",
+ "took_s": 10.8,
+ "at": "2026-11-04T01:10:46Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3189780,
+  "webp": 156328,
+  "before": 155548
+ },
+ "recompressed": false
+}

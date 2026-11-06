@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1mx35o-mjz1",
+ "card": "Flip",
+ "path": "Items/Support/4 Stars/Flip.psd",
+ "png": "Items/Support/4 Stars/Flip.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "e4f1586c359c56fc3ace5f4e507808fe0800b1ad",
+  "png_blob": "94c16c2962d49f1a5cb7f80fe4e6e0fcfc86d2df"
+ },
+ "edit": {
+  "ability": "\"Invert\" a base stat of a targeted creature by subracting the base value of the stat from 10. Lasts for 3 turns on Friendly creatures and 1 turn on enemy creatures. Cannot affect enemy HP.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "\"Invert\" a base stat of a targeted creature by subracting the base value of the stat from 10. Lasts for 3 turns on Friendly creatures and 1 turn on enemy creatures. Cannot affect enemy HP.",
+    "was": "“Invert” a base stat of a targeted creature by subracting the base value of the stat from 10. Lasts for 3 turns on Friendly creatures and 1 turn on enemy creatures. Cannot affect enemy HP.",
+    "sha": "fc98904f",
+    "psd": "e4f1586c",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '“Invert” a' -> '\"Invert\" a'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "“Invert” a base stat of a targeted creature by subracting the base value of the stat from 10. Lasts for 3 turns on Friendly creatures and 1 turn on enemy creatures. Cannot affect enemy HP.",
+   "new": "\"Invert\" a base stat of a targeted creature by subracting the base value of the stat from 10. Lasts for 3 turns on Friendly creatures and 1 turn on enemy creatures. Cannot affect enemy HP."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.018,
+   "max": 2.0
+  }
+ },
+ "region": [
+  54,
+  1191,
+  1145,
+  1637
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41775241335",
+ "took_s": 6.7,
+ "at": "2026-11-04T04:47:12Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1758024,
+  "webp": 67118,
+  "before": 67180
+ },
+ "recompressed": false
+}

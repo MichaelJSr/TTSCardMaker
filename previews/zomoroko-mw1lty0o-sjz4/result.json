@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1lty0o-sjz4",
+ "card": "The Kestrel",
+ "path": "Creatures/FTL/4 Stars/The_Kestrel.psd",
+ "png": "Creatures/FTL/4 Stars/The_Kestrel.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "cd918712413a996617544cd444cce0439cac865e",
+  "psd_blob": "54cb31f1d80a7c699f371c9ebfa6229554cfa9a2",
+  "png_blob": "46843dce2fb05ac0926618191ed4ae657964f6e1"
+ },
+ "edit": {
+  "ability": "(OFS) Summon Heavy Ion, Burst Laser II, Artemis Missiles, and Pike Beam.\nMay not be in defense mode.\nWhen this is damaged, the opponent may either reduce this creature's defense by half the amount of damage dealt or deal that amount of damage to one of the weapon minions.\n(1CD) Choose to repair, either restoring a weapon minion to full HP or replenish 1.5 DEF lost from this ability (cannot exceed base DEF).\n(2 points) Refresh the previous ability.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OFS) Summon Heavy Ion, Burst Laser II, Artemis Missiles, and Pike Beam.\nMay not be in defense mode.\nWhen this is damaged, the opponent may either reduce this creature's defense by half the amount of damage dealt or deal that amount of damage to one of the weapon minions.\n(1CD) Choose to repair, either restoring a weapon minion to full HP or replenish 1.5 DEF lost from this ability (cannot exceed base DEF).\n(2 points) Refresh the previous ability.",
+    "was": "Starts with a Heavy Ion, Burst Laser II, Artemis Missiles, and Pike Beam.\nMay not be in defense mode.\nWhen this is damaged, the opponent may either reduce this creature's defense by half the amount of damage dealt or deal that amount of damage to one of the weapon minions.\n(1CD) Choose to repair, either restoring a weapon minion to full HP or replenish 1.5 DEF lost from this ability (cannot exceed base DEF).\n(2 points) Refresh the previous ability.",
+    "sha": "55558ded",
+    "psd": "54cb31f1",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Starts with a Heavy' -> '(OFS) Summon Heavy'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Starts with a Heavy Ion, Burst Laser II, Artemis Missiles, and Pike Beam.\nMay not be in defense mode.\nWhen this is damaged, the opponent may either reduce this creature's defense by half the amount of damage dealt or deal that amount of damage to one of the weapon minions.\n(1CD) Choose to repair, either restoring a weapon minion to full HP or replenish 1.5 DEF lost from this ability (cannot exceed base DEF).\n(2 points) Refresh the previous ability.",
+   "new": "(OFS) Summon Heavy Ion, Burst Laser II, Artemis Missiles, and Pike Beam.\nMay not be in defense mode.\nWhen this is damaged, the opponent may either reduce this creature's defense by half the amount of damage dealt or deal that amount of damage to one of the weapon minions.\n(1CD) Choose to repair, either restoring a weapon minion to full HP or replenish 1.5 DEF lost from this ability (cannot exceed base DEF).\n(2 points) Refresh the previous ability."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.346,
+   "max": 3.0
+  }
+ },
+ "region": [
+  14,
+  1756,
+  1177,
+  2342
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41772186281",
+ "took_s": 9.9,
+ "at": "2026-11-04T04:16:50Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2935638,
+  "webp": 114780,
+  "before": 113210
+ },
+ "recompressed": false
+}

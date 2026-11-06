@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1phjlc-uphz",
+ "card": "Gandhi",
+ "path": "Creatures/Other/5 Stars/Gandhi.psd",
+ "png": "Creatures/Other/5 Stars/Gandhi.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "c2daf02e30e21e66cd2cc09072797b94b4fc5ec2",
+  "png_blob": "33c55909892ad2cc8902b342c50b133f4c545168"
+ },
+ "edit": {
+  "ability": "(OFS) Draw a random 4 star attack item from a copy of the deck.\n(-1/1CD)(2 points) Draw a random 2 star attack item from a copy of the deck so long as this creature has not used any of its stored items.\nItems that this creature has drawn can only be used on this creature's turn but for no SP cost.\n(OD) The stored items are destroyed.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OFS) Draw a random 4 star attack item from a copy of the deck.\n(-1/1CD)(2 points) Draw a random 2 star attack item from a copy of the deck so long as this creature has not used any of its stored items.\nItems that this creature has drawn can only be used on this creature's turn but for no SP cost.\n(OD) The stored items are destroyed.",
+    "was": "(OFS) Draw a random 4 star attack item from a copy of the deck.\n(1CD)(2 points) Every turn after this creature's first, draw a random 2 star attack item from a copy of the deck so long as this creature has not used any of its stored items.\nItems that this creature has drawn can only be used on this creature's turn but for no SP cost.\n(OD) The stored items are destroyed.",
+    "sha": "67a7315c",
+    "psd": "c2daf02e",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'deck. (1CD)(2 points) Every turn after t' -> 'deck. (-1/1CD)(2 points) Draw a'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(OFS) Draw a random 4 star attack item from a copy of the deck.\n(1CD)(2 points) Every turn after this creature's first, draw a random 2 star attack item from a copy of the deck so long as this creature has not used any of its stored items.\nItems that this creature has drawn can only be used on this creature's turn but for no SP cost.\n(OD) The stored items are destroyed.",
+   "new": "(OFS) Draw a random 4 star attack item from a copy of the deck.\n(-1/1CD)(2 points) Draw a random 2 star attack item from a copy of the deck so long as this creature has not used any of its stored items.\nItems that this creature has drawn can only be used on this creature's turn but for no SP cost.\n(OD) The stored items are destroyed."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.8,
+   "max": 4.0
+  }
+ },
+ "region": [
+  0,
+  1732,
+  1200,
+  2400
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41782512322",
+ "took_s": 10.0,
+ "at": "2026-11-04T05:59:04Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2586600,
+  "webp": 118276,
+  "before": 121590
+ },
+ "recompressed": false
+}

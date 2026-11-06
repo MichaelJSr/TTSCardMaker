@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1guv8k-lcif",
+ "card": "King Bob-omb",
+ "path": "Creatures/Mario/3 Stars/King_Bob-omb.psd",
+ "png": "Creatures/Mario/3 Stars/King_Bob-omb.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "3c4debb6832a61b7b56f7c7e39ae88d5ea4714a7",
+  "png_blob": "c5f3419c61eb4cbb0a8197f6e46356a69ec3126d"
+ },
+ "edit": {
+  "ability": "Attacks do no damage, and instead, generate a Lit Bob-omb when attacking.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Attacks do no damage, and instead, generate a Lit Bob-omb when attacking.",
+    "was": "Attacks do no damage, and instead, you draw a Lit Bob-omb when attacking.",
+    "sha": "cefce440",
+    "psd": "3c4debb6",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'instead, you draw a' -> 'instead, generate a'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Attacks do no damage, and instead, you draw a Lit Bob-omb when attacking.",
+   "new": "Attacks do no damage, and instead, generate a Lit Bob-omb when attacking."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.421,
+   "max": 3.0
+  }
+ },
+ "region": [
+  0,
+  1768,
+  1200,
+  2048
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41757494397",
+ "took_s": 4.9,
+ "at": "2026-11-04T01:57:27Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1704935,
+  "webp": 80118,
+  "before": 79834
+ },
+ "recompressed": false
+}

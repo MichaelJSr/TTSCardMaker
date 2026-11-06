@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1hhgh1-zght",
+ "card": "Isma",
+ "path": "Creatures/Hollow Knight/4 Stars/Isma.psd",
+ "png": "Creatures/Hollow Knight/4 Stars/Isma.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "32c2511e6719ec2e85d4219754e5f7c16a9ef5ef",
+  "png_blob": "fee0c04bfe084899df0a2475fe6bf151f4ee7cd7"
+ },
+ "edit": {
+  "ability": "May attack while not on the PF.\n(1CD) Summon a Gulka onto any creature.\n(1/2CD)(1 point) Summon a Fool Eater onto any creature.\n(Action) Inflict a creature with 2T4 Poison.\nThis creature is immune to Poison.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "May attack while not on the PF.\n(1CD) Summon a Gulka onto any creature.\n(1/2CD)(1 point) Summon a Fool Eater onto any creature.\n(Action) Inflict a creature with 2T4 Poison.\nThis creature is immune to Poison.",
+    "was": "May attack while not on the PF.\n(1CD) Summon a Gulka onto a creature.\n(1/2CD)(1 point) Summon a Fool Eater onto a creature.\n(Action) Inflict a creature with 2T4 Poison.\nThis creature is immune to Poison.",
+    "sha": "7b40d4ec",
+    "psd": "32c2511e",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'onto a creature. (1/2CD)(1 point) Summon' -> 'onto any creature. (1/2CD)(1 point) Summ'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "May attack while not on the PF.\n(1CD) Summon a Gulka onto a creature.\n(1/2CD)(1 point) Summon a Fool Eater onto a creature.\n(Action) Inflict a creature with 2T4 Poison.\nThis creature is immune to Poison.",
+   "new": "May attack while not on the PF.\n(1CD) Summon a Gulka onto any creature.\n(1/2CD)(1 point) Summon a Fool Eater onto any creature.\n(Action) Inflict a creature with 2T4 Poison.\nThis creature is immune to Poison."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.33,
+   "max": 2.0
+  }
+ },
+ "region": [
+  7,
+  1750,
+  1194,
+  2229
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41759447015",
+ "took_s": 10.6,
+ "at": "2026-11-04T02:15:09Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2281756,
+  "webp": 92644,
+  "before": 92102
+ },
+ "recompressed": false
+}

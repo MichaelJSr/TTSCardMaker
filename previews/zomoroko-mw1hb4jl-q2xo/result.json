@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1hb4jl-q2xo",
+ "card": "Prince Of Darkness",
+ "path": "Creatures/BTD/5 Stars/Prince_Of_Darkness.psd",
+ "png": "Creatures/BTD/5 Stars/Prince_Of_Darkness.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "955e0168d0640a3718f2acc636436aaa949b2677",
+  "png_blob": "cf262ded1b1fc448423485b7ddb2b1eb28b2fc93"
+ },
+ "edit": {
+  "ability": "When any creature dies, gain souls equal to their max HP.\n(1CD)(2U) May use souls to summon non-soul yielding minions onto any creature:\n(4 souls) Red Bloon\n(12 souls) Ceramic Bloon\n(24 souls) M.O.A.B.\n(36 souls) B.F.B.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "When any creature dies, gain souls equal to their max HP.\n(1CD)(2U) May use souls to summon non-soul yielding minions onto any creature:\n(4 souls) Red Bloon\n(12 souls) Ceramic Bloon\n(24 souls) M.O.A.B.\n(36 souls) B.F.B.",
+    "was": "When any creature dies, gain souls equal to their max HP.\n(1CD)(2U) May use souls to summon non-soul yielding minions on any creature:\n(4 souls) Red Bloon\n(12 souls) Ceramic Bloon\n(24 souls) M.O.A.B.\n(36 souls) B.F.B.",
+    "sha": "432abe72",
+    "psd": "955e0168",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'minions on any' -> 'minions onto any'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "When any creature dies, gain souls equal to their max HP.\n(1CD)(2U) May use souls to summon non-soul yielding minions on any creature:\n(4 souls) Red Bloon\n(12 souls) Ceramic Bloon\n(24 souls) M.O.A.B.\n(36 souls) B.F.B.",
+   "new": "When any creature dies, gain souls equal to their max HP.\n(1CD)(2U) May use souls to summon non-soul yielding minions onto any creature:\n(4 souls) Red Bloon\n(12 souls) Ceramic Bloon\n(24 souls) M.O.A.B.\n(36 souls) B.F.B."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.012,
+   "max": 1.0
+  }
+ },
+ "region": [
+  17,
+  1760,
+  1185,
+  2320
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41758898970",
+ "took_s": 10.0,
+ "at": "2026-11-04T02:10:13Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2250204,
+  "webp": 104298,
+  "before": 104010
+ },
+ "recompressed": false
+}

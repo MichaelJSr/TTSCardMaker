@@ -1,0 +1,1141 @@
+{
+ "previews": {
+  "6b8c28e6-c2e5-4b0c-8ad5-92a9e0a68b6a": {
+   "at": "2026-10-31T10:32:02Z",
+   "card": "Sumo Panda",
+   "path": "Creatures/Pandas/3 Stars/Sumo_Panda.psd",
+   "png_blob": "993674795223aea7fe7bccea1dcb9a6e0514a833",
+   "psd_blob": "082dfcca2a0d051360b81564f7a5b43fb525f2c3",
+   "state": "baked"
+  },
+  "8795153e-e1dc-4a4c-8a04-fddc42c21f4d": {
+   "at": "2026-10-31T10:34:55Z",
+   "card": "Sumo Panda",
+   "path": "Creatures/Pandas/3 Stars/Sumo_Panda.psd",
+   "png_blob": "993674795223aea7fe7bccea1dcb9a6e0514a833",
+   "psd_blob": "082dfcca2a0d051360b81564f7a5b43fb525f2c3",
+   "state": "baked"
+  },
+  "b320f872-4103-4976-8d89-6a0d44c2ef8b": {
+   "at": "2026-10-31T10:32:56Z",
+   "card": "Sumo Panda",
+   "path": "Creatures/Pandas/3 Stars/Sumo_Panda.psd",
+   "png_blob": "993674795223aea7fe7bccea1dcb9a6e0514a833",
+   "psd_blob": "082dfcca2a0d051360b81564f7a5b43fb525f2c3",
+   "state": "baked"
+  },
+  "check-align-1103": {
+   "at": "2026-11-04T04:44:49Z",
+   "card": "Pot Full of Spiders!",
+   "path": "Creatures/Crypt/2 Stars/Pot_Full_of_Spiders!.psd",
+   "png_blob": "49d03e8b52dc45045ed435d34950fb7d5097c2b3",
+   "psd_blob": "7c0181a4222ab5d0b7cd7550cc3e8aa016dda3df",
+   "state": "baked"
+  },
+  "check-opt-1104": {
+   "at": "2026-11-04T12:31:51Z",
+   "card": "Mini Doomer",
+   "path": "Auxiliary/Minions/Mini_Doomer.psd",
+   "png_blob": "8213e418639f89430dcc44464be6aae5deeee9be",
+   "psd_blob": "563305eb6b447292756cd81704836903bfd4a8d1",
+   "state": "baked"
+  },
+  "check-opt-1104b": {
+   "at": "2026-11-04T12:33:34Z",
+   "card": "Mini Doomer",
+   "path": "Auxiliary/Minions/Mini_Doomer.psd",
+   "png_blob": "8213e418639f89430dcc44464be6aae5deeee9be",
+   "psd_blob": "563305eb6b447292756cd81704836903bfd4a8d1",
+   "state": "baked"
+  },
+  "zomoroko-mvw2sl7p-byix": {
+   "at": "2026-10-31T07:25:13Z",
+   "card": "Mosling",
+   "path": "Auxiliary/Minions/Mosling.psd",
+   "png_blob": "51f8a8c41672e0f70a83000653903f24b9cb6946",
+   "psd_blob": "9ac7cf9f995c8f0c01e2c0108423284cf642baa1",
+   "state": "baked"
+  },
+  "zomoroko-mvw35u5m-amgu": {
+   "at": "2026-10-31T07:35:20Z",
+   "card": "Barry The Barrel",
+   "path": "Creatures/Other/2 Stars/Barry_The_Barrel.psd",
+   "png_blob": "d420b0759db134337b49b16d4afa2e6458cd4976",
+   "psd_blob": "6e7bc779b852bfda4d9506d64b26d9b35556a5e0",
+   "state": "baked"
+  },
+  "zomoroko-mvw3oqnc-ckd6": {
+   "at": "2026-10-31T07:50:14Z",
+   "card": "Chef Saltbaker",
+   "path": "Creatures/Cuphead/5 Stars/Chef_Saltbaker.psd",
+   "png_blob": "6e736ec491f73e32a0b734e00ea332c071e1391d",
+   "psd_blob": "6708e56cf40fc4f2e9cf4bc6bf5075ab97122d5c",
+   "state": "baked"
+  },
+  "zomoroko-mvw46749-jz4a": {
+   "at": "2026-10-31T08:03:42Z",
+   "card": "Doctor Zomboss",
+   "path": "Creatures/Other/5 Stars/Doctor_Zomboss.psd",
+   "png_blob": "eff26d76fe9ff09a50c3110e8d23edaa01405824",
+   "psd_blob": "49146bb224cdf6db97ca601c6521ad28f023eb74",
+   "state": "baked"
+  },
+  "zomoroko-mvw48108-ddvx": {
+   "at": "2026-10-31T08:05:05Z",
+   "card": "Doctor Zomboss",
+   "path": "Creatures/Other/5 Stars/Doctor_Zomboss.psd",
+   "png_blob": "eff26d76fe9ff09a50c3110e8d23edaa01405824",
+   "psd_blob": "49146bb224cdf6db97ca601c6521ad28f023eb74",
+   "state": "baked"
+  },
+  "zomoroko-mvw4m5we-otkv": {
+   "at": "2026-10-31T08:16:02Z",
+   "card": "Fawful",
+   "path": "Creatures/Mario/4 Stars/Fawful.psd",
+   "png_blob": "8350a5ad20d78e5f6b1e525da1355a68bbac6103",
+   "psd_blob": "6a5c3a9772ee02d77751ef84081d0f8d7c0f4260",
+   "state": "baked"
+  },
+  "zomoroko-mvw4rcro-8y84": {
+   "at": "2026-10-31T08:20:06Z",
+   "card": "Funky D Luffy",
+   "path": "Creatures/Monkey D Folder/4 Stars/Funky_D_Luffy.psd",
+   "png_blob": "2f3d2450ec73677faa60b638434e08e8cb47b841",
+   "psd_blob": "a009c7c170ebccc2ee61ad6eb54a6742cf3965e8",
+   "state": "baked"
+  },
+  "zomoroko-mvw4v25x-qo4m": {
+   "at": "2026-10-31T08:22:56Z",
+   "card": "Gooper Blooper",
+   "path": "Creatures/Mario/2 Stars/Gooper_Blooper.psd",
+   "png_blob": "40d591b3a26398ab2eb7fce1477af4be7cdfc392",
+   "psd_blob": "45ad74e239b5e194fe48b9f29264edcbc037f773",
+   "state": "baked"
+  },
+  "zomoroko-mvw5dpdl-yxm2": {
+   "at": "2026-10-31T08:37:33Z",
+   "card": "Leeroy Jenkins",
+   "path": "Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.psd",
+   "png_blob": "c05e4af028de3e73a06a30cb79428ee227b928aa",
+   "psd_blob": "a8e3c23b4b46ca0db71e869699798e2f0c2154ba",
+   "state": "baked"
+  },
+  "zomoroko-mvw5id5u-2nac": {
+   "at": "2026-10-31T08:41:00Z",
+   "card": "The Maelstrom",
+   "path": "Field/4 Stars/The_Maelstrom.psd",
+   "png_blob": "c807e4ce2807950864994e051f5d417334f49855",
+   "psd_blob": "51b6c590d61c6dea2b1e94259bd2d17afbc83f79",
+   "state": "baked"
+  },
+  "zomoroko-mvw5kb6j-sy81": {
+   "at": "2026-10-31T08:42:43Z",
+   "card": "The Kestrel",
+   "path": "Creatures/FTL/4 Stars/The_Kestrel.psd",
+   "png_blob": "fabf87356bf1ac76136fbb4fabac634c47f78a6c",
+   "psd_blob": "cb3a6e7305106a409dab79486b472954de86bb83",
+   "state": "baked"
+  },
+  "zomoroko-mvw5m44b-c6nw": {
+   "at": "2026-10-31T08:44:07Z",
+   "card": "Papa Chip",
+   "path": "Creatures/Omori/3 Stars/Papa_Chip.psd",
+   "png_blob": "b1d6cb6a8104a20a1e849eacbc78e30a3778cd0a",
+   "psd_blob": "8ac5bac9a9b57bdcf31c7071b56c7c6a50b19fa1",
+   "state": "baked"
+  },
+  "zomoroko-mvw5mql4-2hee": {
+   "at": "2026-10-31T08:44:27Z",
+   "card": "Nefarious Chip",
+   "path": "Creatures/Omori/3 Stars/Nefarious_Chip.psd",
+   "png_blob": "3e37907b2a92eb3c5dc325512e3408ff540e7249",
+   "psd_blob": "f1606c0a19d8ca51ecd83924f6c54e75326cb230",
+   "state": "baked"
+  },
+  "zomoroko-mvw5ogia-vgy0": {
+   "at": "2026-10-31T08:45:46Z",
+   "card": "Mettaton",
+   "path": "Creatures/Undertale/4 Stars/Mettaton.psd",
+   "png_blob": "fa8f3ff67f5b20f1cdac9e757313a5b549957ec3",
+   "psd_blob": "cd20efa9b6cc597cd1f4c52c3d99f32f439806ea",
+   "state": "baked"
+  },
+  "zomoroko-mvw5pq8m-vtbx": {
+   "at": "2026-10-31T08:46:53Z",
+   "card": "Moose Goose",
+   "path": "Creatures/DST/3 Stars/Moose_Goose.psd",
+   "png_blob": "06ee3d11df59e272a88cc553d5971225fc53e5eb",
+   "psd_blob": "0c9f62077edb62443b6cbb99cec16244b7a87c6a",
+   "state": "baked"
+  },
+  "zomoroko-mvw5rseh-tony": {
+   "at": "2026-10-31T08:48:28Z",
+   "card": "The Gates of Ahn'Qiraj",
+   "path": "Field/4 Stars/The_Gates_of_Ahn'Qiraj.psd",
+   "png_blob": "739bb97f44549d6d421caee450d70a7f2c733d18",
+   "psd_blob": "7735db8f9a9aacda0c77f08452141cf41d2ba484",
+   "state": "baked"
+  },
+  "zomoroko-mvw5vkce-4mkp": {
+   "at": "2026-10-31T08:51:24Z",
+   "card": "Warcraftian Shaman",
+   "path": "Creatures/World Of Warcraft/4 Stars/Warcraftian_Shaman.psd",
+   "png_blob": "f8afc6c698e725cff85d170916723512e83735e4",
+   "psd_blob": "b461123ca82e13beef58c2b07457a69935554daf",
+   "state": "baked"
+  },
+  "zomoroko-mvw6efl7-orrn": {
+   "at": "2026-10-31T09:06:03Z",
+   "card": "X Fists",
+   "path": "Auxiliary/Minions/X_Fists.psd",
+   "png_blob": "14755e28ce44a746ffde95532f0814985e8158e5",
+   "psd_blob": "25b8d49a2693acbc2c4fdcc74a1f280eff3eee8f",
+   "state": "baked"
+  },
+  "zomoroko-mvw6ewcz-3kfy": {
+   "at": "2026-10-31T09:06:29Z",
+   "card": "Magnus Von Grapple",
+   "path": "Creatures/Mario/2 Stars/Magnus_Von_Grapple.psd",
+   "png_blob": "50c52eec8e36ed2c9935b8818274aadd3e43ab3e",
+   "psd_blob": "7c65fbf1f95fec215f9ee67c29f7ec11b6c2f622",
+   "state": "baked"
+  },
+  "zomoroko-mvw6o3ru-73p2": {
+   "at": "2026-10-31T09:13:30Z",
+   "card": "Monkey D Vour",
+   "path": "Creatures/Monkey D Folder/4 Stars/Monkey_D_Vour.psd",
+   "png_blob": "32835f078d56fb280bc253fec4b38d83e243bb23",
+   "psd_blob": "41799294a9df8bdcf769e71d56b11d60b8889495",
+   "state": "baked"
+  },
+  "zomoroko-mvwb2y5k-warg": {
+   "at": "2026-10-31T11:16:58Z",
+   "card": "PoD11ZOMG",
+   "path": "Auxiliary/Minions/PoD11ZOMG.psd",
+   "png_blob": "e99f4f408931eab66fe3218231ba1bf4fe897c1d",
+   "psd_blob": "f8268a4417de330f86fc38eef28ddc7e01315558",
+   "state": "baked"
+  },
+  "zomoroko-mw1b2d4w-del9": {
+   "at": "2026-11-03T23:16:07Z",
+   "card": "ABBI",
+   "path": "Creatures/Omori/5 Stars/ABBI.psd",
+   "png_blob": "f4da05e789673789d6d243b90408e5ce9da3947a",
+   "psd_blob": "601616dcee6253acf83f56154427e448f608728a",
+   "state": "baked"
+  },
+  "zomoroko-mw1bdjgp-613o": {
+   "at": "2026-11-03T23:24:29Z",
+   "card": "Amazing Mirror",
+   "path": "Items/Support/4 Stars/Amazing_Mirror.psd",
+   "png_blob": "a7ae28626a35d411b77d1c0a1e591fb769b1295a",
+   "psd_blob": "8371f7fb4f5642152801144ecdbdf9a1e6539310",
+   "state": "baked"
+  },
+  "zomoroko-mw1bhib5-aqd7": {
+   "at": "2026-11-03T23:27:07Z",
+   "card": "Asteroid Field",
+   "path": "Field/2 Stars/Asteroid_Field.psd",
+   "png_blob": "42ab8b162e35825ade9009805b9cebd0d4128753",
+   "psd_blob": "d37d2f32dfc17d4533ec0a77cb0c7eebcd0dfea7",
+   "state": "baked"
+  },
+  "zomoroko-mw1bp366-gaiz": {
+   "at": "2026-11-03T23:32:55Z",
+   "card": "Delicate Flower",
+   "path": "Auxiliary/Items/Delicate_Flower.psd",
+   "png_blob": "cc54f646902424aaccabbaeb6e5b3b129d19e78d",
+   "psd_blob": "5b74b53f191408554bbf8d38c2644d953dac5fec",
+   "state": "baked"
+  },
+  "zomoroko-mw1bq1d3-gjfx": {
+   "at": "2026-11-03T23:33:43Z",
+   "card": "Forget Me Now",
+   "path": "Items/Support/3 Stars/Forget_Me_Now.psd",
+   "png_blob": "77b4952ad60389b6e5aff37209cba7f87c6d64db",
+   "psd_blob": "3d0350392abdec74629001e1ec05faec530caf18",
+   "state": "baked"
+  },
+  "zomoroko-mw1brz08-g7vr": {
+   "at": "2026-11-03T23:35:15Z",
+   "card": "NME Salesman",
+   "path": "Creatures/Kirby/4 Stars/NME_Salesman.psd",
+   "png_blob": "8508d07e9b5a26eaa37e30943e66f3ced9a7b7c3",
+   "psd_blob": "9a344b782ae42fbea8c8ca11f53e7c18b1361761",
+   "state": "baked"
+  },
+  "zomoroko-mw1bswib-16dl": {
+   "at": "2026-11-03T23:35:59Z",
+   "card": "The Last Cabbage Merchant",
+   "path": "Creatures/Other/3 Stars/The_Last_Cabbage_Merchant.psd",
+   "png_blob": "1424a57b3ce5091a4e51c2086a19c1116dc9928f",
+   "psd_blob": "dcb5e4ba17108702b4ea6b4f3f22279bd5348f89",
+   "state": "baked"
+  },
+  "zomoroko-mw1bxphk-ol3i": {
+   "at": "2026-11-03T23:39:44Z",
+   "card": "Time Riddle",
+   "path": "Items/Equip/4 Stars/Time_Riddle.psd",
+   "png_blob": "727340f11b4494f760722c66568ff31a75708088",
+   "psd_blob": "59c279c0993324ad130b327baae8707278abee21",
+   "state": "baked"
+  },
+  "zomoroko-mw1caihj-m6rs": {
+   "at": "2026-11-03T23:49:41Z",
+   "card": "Azamoth the Forgotten King",
+   "path": "Creatures/ROTMG/5 Stars/Azamoth_the_Forgotten_King.psd",
+   "png_blob": "5ac43028eba8b8d5155a5fbd790c79e4166fcef5",
+   "psd_blob": "43f1e8dd6eeb6193bd9224b521b8246e005e2cab",
+   "state": "baked"
+  },
+  "zomoroko-mw1ccwan-srsv": {
+   "at": "2026-11-03T23:51:30Z",
+   "card": "Azamoth the Possessed Vessel",
+   "path": "Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.psd",
+   "png_blob": "711eba47dfef427e2288cf95073557612427edf9",
+   "psd_blob": "3a2f3cbbdef3344bf3c5e3e1cc24153e61bcaaa0",
+   "state": "baked"
+  },
+  "zomoroko-mw1cg1s5-t81m": {
+   "at": "2026-11-03T23:54:01Z",
+   "card": "Azamoth the Possessed Vessel",
+   "path": "Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.psd",
+   "png_blob": "711eba47dfef427e2288cf95073557612427edf9",
+   "psd_blob": "3a2f3cbbdef3344bf3c5e3e1cc24153e61bcaaa0",
+   "state": "baked"
+  },
+  "zomoroko-mw1cp8r8-57zr": {
+   "at": "2026-11-04T00:01:09Z",
+   "card": "Buzzo",
+   "path": "Creatures/Lisa/4 Stars/Buzzo.psd",
+   "png_blob": "77dc22df3bbf58db0eb95cdae5d9691a35626cdc",
+   "psd_blob": "2bb1c69500448626cf0c897ac5cd9b3eb654a2d5",
+   "state": "baked"
+  },
+  "zomoroko-mw1d8ahf-fuxl": {
+   "at": "2026-11-04T00:16:02Z",
+   "card": "Alex YIIK",
+   "path": "Creatures/Other/5 Stars/Alex_YIIK.psd",
+   "png_blob": "b79daf7f1c4ea56f36898c59d5b05250fcaf2484",
+   "psd_blob": "c5fc62a74eec323318d656463d1326aa4fd39be7",
+   "state": "baked"
+  },
+  "zomoroko-mw1dhg8d-8eim": {
+   "at": "2026-11-04T00:23:04Z",
+   "card": "Croissant",
+   "path": "Creatures/Other/5 Stars/Croissant.psd",
+   "png_blob": "778644e15f65de46e0b8bb2bfa173d2414e13fb5",
+   "psd_blob": "cecae1147dc7115eed43de820054bf0fc4d2f472",
+   "state": "baked"
+  },
+  "zomoroko-mw1dk51q-fg0l": {
+   "at": "2026-11-04T00:25:09Z",
+   "card": "Double Pain",
+   "path": "N.M.E/Double_Pain.psd",
+   "png_blob": "0bcb0993c18597ef6915e8a286d9b8fa5b676143",
+   "psd_blob": "56d880e9dc809a1d3a8ace5e65d8685b7c2a4748",
+   "state": "baked"
+  },
+  "zomoroko-mw1dl94v-j7np": {
+   "at": "2026-11-04T00:26:02Z",
+   "card": "Ipsilon",
+   "path": "Auxiliary/Minions/Ipsilon.psd",
+   "png_blob": "d237563385930806d45741eadada77467422dd5e",
+   "psd_blob": "394a37404e51dd015dbda39ed50df6236c914b5b",
+   "state": "baked"
+  },
+  "zomoroko-mw1dm8hm-c0cj": {
+   "at": "2026-11-04T00:27:27Z",
+   "card": "Nightmare King Grimm",
+   "path": "Creatures/Hollow Knight/5 Stars/Nightmare_King_Grimm.psd",
+   "png_blob": "5cbf17eb40f86b5e6cbf66c5d5cad829514dc935",
+   "psd_blob": "20c8dc91e4ff5a137409b94165280b83260bad62",
+   "state": "baked"
+  },
+  "zomoroko-mw1dorbq-v4i6": {
+   "at": "2026-11-04T00:28:51Z",
+   "card": "Tainted Bethany",
+   "path": "Creatures/Isaac/4 Stars/Tainted_Bethany.psd",
+   "png_blob": "e6153bbe101108556d7c7bb86cb51adf9b367fba",
+   "psd_blob": "052287911e1a1e89ab3bd5ece489376430772e1c",
+   "state": "baked"
+  },
+  "zomoroko-mw1dp9mp-hf53": {
+   "at": "2026-11-04T00:29:13Z",
+   "card": "Tainted Keeper",
+   "path": "Creatures/Isaac/4 Stars/Tainted_Keeper.psd",
+   "png_blob": "6ca31f55da00d49be80984c4d3d0fe0dec42a468",
+   "psd_blob": "3958ee5e8423c5ec2e50f791884ac6066aca499d",
+   "state": "baked"
+  },
+  "zomoroko-mw1dwmak-nrep": {
+   "at": "2026-11-04T00:34:51Z",
+   "card": "Warcraftian Shaman",
+   "path": "Creatures/World Of Warcraft/4 Stars/Warcraftian_Shaman.psd",
+   "png_blob": "0cca1287ab6eec3282040a4cbe8c73690dd552e5",
+   "psd_blob": "c8ac6a5cc44d1e571b7a57b62e97c45b380e9694",
+   "state": "baked"
+  },
+  "zomoroko-mw1ef9wg-7ilz": {
+   "at": "2026-11-04T00:49:24Z",
+   "card": "Tainted Bethany",
+   "path": "Creatures/Isaac/4 Stars/Tainted_Bethany.psd",
+   "png_blob": "e6153bbe101108556d7c7bb86cb51adf9b367fba",
+   "psd_blob": "052287911e1a1e89ab3bd5ece489376430772e1c",
+   "state": "baked"
+  },
+  "zomoroko-mw1egivo-brfd": {
+   "at": "2026-11-04T00:50:30Z",
+   "card": "Monkey D Goofy",
+   "path": "Creatures/Monkey D Folder/4 Stars/Monkey_D_Goofy.psd",
+   "png_blob": "6bb7932be44b2ad0dc23f394c3b648c563f99bb3",
+   "psd_blob": "a75456a858e4c5f02dae7cc67254ea8c765546d2",
+   "state": "baked"
+  },
+  "zomoroko-mw1ehxlk-tzfg": {
+   "at": "2026-11-04T00:51:36Z",
+   "card": "Bobberlington",
+   "path": "Creatures/Other/5 Stars/Bobberlington.psd",
+   "png_blob": "f6fcf876a7c1bd94812340da829e24ec8b2b3f3d",
+   "psd_blob": "f013358a7523f88c2383ae68112aa15254397e45",
+   "state": "baked"
+  },
+  "zomoroko-mw1eiddw-5ybd": {
+   "at": "2026-11-04T00:51:49Z",
+   "card": "Morshu",
+   "path": "Creatures/Other/4 Stars/Morshu.psd",
+   "png_blob": "494eb15f15dc4732e0ef4fcbf86fe51a296c94ac",
+   "psd_blob": "51f343023d1de76ed0f96737cf81358ae97a37eb",
+   "state": "baked"
+  },
+  "zomoroko-mw1eog2f-54su": {
+   "at": "2026-11-04T00:56:34Z",
+   "card": "The Last Cabbage Merchant",
+   "path": "Creatures/Other/3 Stars/The_Last_Cabbage_Merchant.psd",
+   "png_blob": "1424a57b3ce5091a4e51c2086a19c1116dc9928f",
+   "psd_blob": "dcb5e4ba17108702b4ea6b4f3f22279bd5348f89",
+   "state": "baked"
+  },
+  "zomoroko-mw1ey0bk-7nn1": {
+   "at": "2026-11-04T01:04:08Z",
+   "card": "Pile Of Swords",
+   "path": "Items/Support/4 Stars/Pile_Of_Swords.psd",
+   "png_blob": "ea8138f976d652c311db1f8ff232ff4c5e1c767a",
+   "psd_blob": "03c3e501324158ce375824445ac2efc08c34ae59",
+   "state": "baked"
+  },
+  "zomoroko-mw1f1rby-r592": {
+   "at": "2026-11-04T01:07:05Z",
+   "card": "Crystal King",
+   "path": "Creatures/Mario/4 Stars/Crystal_King.psd",
+   "png_blob": "3d46ab6285b4f269bdf8b54da29f1be9624c69ae",
+   "psd_blob": "6c415571d748ee2604ccd48321b2b91023720353",
+   "state": "baked"
+  },
+  "zomoroko-mw1f6kl0-o3ca": {
+   "at": "2026-11-04T01:10:46Z",
+   "card": "Ze'mer",
+   "path": "Creatures/Hollow Knight/5 Stars/Ze'mer.psd",
+   "png_blob": "03cb1ba5dc8cd797019db1f828ac938565554694",
+   "psd_blob": "5cc4aa3fee115e933b50fae014ea9afc735ce97b",
+   "state": "baked"
+  },
+  "zomoroko-mw1f8vij-mziz": {
+   "at": "2026-11-04T01:12:27Z",
+   "card": "Chef Saltbaker",
+   "path": "Creatures/Cuphead/5 Stars/Chef_Saltbaker.psd",
+   "png_blob": "b9e545b73a39525dc19f245afa0acc5ec6bb91ff",
+   "psd_blob": "96f426478dd6aa6d04e41239e9f141f5c439b458",
+   "state": "baked"
+  },
+  "zomoroko-mw1fav55-gzwe": {
+   "at": "2026-11-04T01:13:56Z",
+   "card": "Landia",
+   "path": "Creatures/Kirby/5 Stars/Landia.psd",
+   "png_blob": "10c4fbfe7a9af63c65c95f3fc10939bef5258fe5",
+   "psd_blob": "d09ad082569efff8a25cecaab622005a345d1d6f",
+   "state": "baked"
+  },
+  "zomoroko-mw1fchzp-ym1i": {
+   "at": "2026-11-04T01:15:12Z",
+   "card": "Markoth",
+   "path": "Creatures/Hollow Knight/3 Stars/Markoth.psd",
+   "png_blob": "3e53aeaf729f7e427c9a1c29ce470c5533a1c7e7",
+   "psd_blob": "6d68b5c2477b13bc54f992d1bf8b3935a7cbd4a5",
+   "state": "baked"
+  },
+  "zomoroko-mw1fg6tp-2300": {
+   "at": "2026-11-04T01:18:07Z",
+   "card": "Earth Totem",
+   "path": "Auxiliary/Items/Earth_Totem.psd",
+   "png_blob": "1f4a55209741755765e28abe412911faaee4f462",
+   "psd_blob": "98a950cccb365354f8887936401679097fbcbf7e",
+   "state": "baked"
+  },
+  "zomoroko-mw1fnwma-8wmb": {
+   "at": "2026-11-04T01:24:08Z",
+   "card": "Papa Chip",
+   "path": "Creatures/Omori/3 Stars/Papa_Chip.psd",
+   "png_blob": "1cc61ece84c6ea03d25a822f0322cbbfbe2eb770",
+   "psd_blob": "3734b59a8807ddd7bc2564d40a7a5e9ea16131c1",
+   "state": "baked"
+  },
+  "zomoroko-mw1fo8ie-20fo": {
+   "at": "2026-11-04T01:24:23Z",
+   "card": "Nefarious Chip",
+   "path": "Creatures/Omori/3 Stars/Nefarious_Chip.psd",
+   "png_blob": "a0d2d746cbb11e7ac98606b85c5bd389202d37a4",
+   "psd_blob": "fa1e6f271bade27ea084d5b6735deb22df39a615",
+   "state": "baked"
+  },
+  "zomoroko-mw1fuxqv-4v90": {
+   "at": "2026-11-04T01:29:40Z",
+   "card": "Dark Daroach",
+   "path": "Creatures/Kirby/4 Stars/Dark_Daroach.psd",
+   "png_blob": "fba02e973310d9839cb969f9438377ad80e87d25",
+   "psd_blob": "4dfdf9c692fa7b2e6a44ec5075abd246879bcced",
+   "state": "baked"
+  },
+  "zomoroko-mw1fw6ku-30dr": {
+   "at": "2026-11-04T01:30:30Z",
+   "card": "The Lich King",
+   "path": "Creatures/World Of Warcraft/5 Stars/The_Lich_King.psd",
+   "png_blob": "fcc1aca5df7ae8a21cfe7d3c01db280d83ab448b",
+   "psd_blob": "079a181bb1354de67934178051b03d775412b06b",
+   "state": "baked"
+  },
+  "zomoroko-mw1g7dos-frf1": {
+   "at": "2026-11-04T01:39:15Z",
+   "card": "Monkey D Vour",
+   "path": "Creatures/Monkey D Folder/4 Stars/Monkey_D_Vour.psd",
+   "png_blob": "8ba12d6ee31a02dd0afb79eae1fe2467af0dab57",
+   "psd_blob": "a060822d734a9c4a738ecdacc89624884836fa8f",
+   "state": "baked"
+  },
+  "zomoroko-mw1gmos1-vuux": {
+   "at": "2026-11-04T01:51:11Z",
+   "card": "Future Niiue",
+   "path": "Creatures/Other/2 Stars/Future_Niiue.psd",
+   "png_blob": "0b3b7dcd16652107a7508abef379ccce2466d5a2",
+   "psd_blob": "dce68be68f5f90f43279a83bacdff12dab7ab7df",
+   "state": "baked"
+  },
+  "zomoroko-mw1go9yv-2yxj": {
+   "at": "2026-11-04T01:52:23Z",
+   "card": "Tainted Lost",
+   "path": "Creatures/Isaac/2 Stars/Tainted_Lost.psd",
+   "png_blob": "4c487a17671c4270d332ce4d4d401f04de64839d",
+   "psd_blob": "0634ebfd7c0af8da70a73a87961654dc63153cd6",
+   "state": "baked"
+  },
+  "zomoroko-mw1gpgrl-9w9i": {
+   "at": "2026-11-04T01:53:19Z",
+   "card": "Raw Cock",
+   "path": "Creatures/Mario/3 Stars/Raw_Cock.psd",
+   "png_blob": "f7625dca5f677c3f64ef15a041066eda902dee92",
+   "psd_blob": "614afb330b75865c019145b7388dd9119ba3a0b7",
+   "state": "baked"
+  },
+  "zomoroko-mw1grun3-2bar": {
+   "at": "2026-11-04T01:55:14Z",
+   "card": "Dogma",
+   "path": "Creatures/Isaac/4 Stars/Dogma.psd",
+   "png_blob": "4649eb12a45d1173affd70a3b74f1b900887d623",
+   "psd_blob": "2811461496e61a4896ca74f6db958099a70294d2",
+   "state": "baked"
+  },
+  "zomoroko-mw1gtb5c-wcxm": {
+   "at": "2026-11-04T01:56:28Z",
+   "card": "The Shade",
+   "path": "Creatures/In Sound Mind/3 Stars/The_Shade.psd",
+   "png_blob": "b494275fd26d293e3aa55851360649961a5dcf6e",
+   "psd_blob": "ab8d0320d0bfb0830cd0ca899acf29612e540585",
+   "state": "baked"
+  },
+  "zomoroko-mw1guv8k-lcif": {
+   "at": "2026-11-04T01:57:27Z",
+   "card": "King Bob-omb",
+   "path": "Creatures/Mario/3 Stars/King_Bob-omb.psd",
+   "png_blob": "c5f3419c61eb4cbb0a8197f6e46356a69ec3126d",
+   "psd_blob": "3c4debb6832a61b7b56f7c7e39ae88d5ea4714a7",
+   "state": "baked"
+  },
+  "zomoroko-mw1gvtoc-og5m": {
+   "at": "2026-11-04T01:58:12Z",
+   "card": "The Maelstrom",
+   "path": "Field/4 Stars/The_Maelstrom.psd",
+   "png_blob": "8ada899d70fd72c2a298701c02059ca07bdb1d1d",
+   "psd_blob": "440ebf83589870cfc84fbf8aac21b15cda9d22ed",
+   "state": "baked"
+  },
+  "zomoroko-mw1gxdmm-e55o": {
+   "at": "2026-11-04T01:59:31Z",
+   "card": "Niko",
+   "path": "Creatures/Other/3 Stars/Niko.psd",
+   "png_blob": "204be3142a5b9e54c8e30b760affedc15da4e453",
+   "psd_blob": "408d49a0dd7ceb11459b1852ed010e7d154713bb",
+   "state": "baked"
+  },
+  "zomoroko-mw1gzqjs-hevt": {
+   "at": "2026-11-04T02:01:19Z",
+   "card": "Drawcia",
+   "path": "Creatures/Kirby/3 Stars/Drawcia.psd",
+   "png_blob": "6f3847630334d3a72f7f4f1ac1f559c1630c54fe",
+   "psd_blob": "b6aea40636a9de76d5133a216e3af8fdf53f3634",
+   "state": "baked"
+  },
+  "zomoroko-mw1h63pk-iyx8": {
+   "at": "2026-11-04T02:06:12Z",
+   "card": "Balloon Boy",
+   "path": "Creatures/Fnaf/3 Stars/Balloon_Boy.psd",
+   "png_blob": "e9fd1dcf74dfe3cb78020a4642cadaf56811b97a",
+   "psd_blob": "8bdd5dfdf67aac76aadc7f869b0ea41569b7aafc",
+   "state": "baked"
+  },
+  "zomoroko-mw1h9t2k-qexg": {
+   "at": "2026-11-04T02:09:12Z",
+   "card": "Greenpath",
+   "path": "Field/2 Stars/Greenpath.psd",
+   "png_blob": "1d28f5593652593413b23d1e4e5b85b02c6d077f",
+   "psd_blob": "ce9d0225bbc38b6ce8e3c1c2d1fd1381ec02337f",
+   "state": "baked"
+  },
+  "zomoroko-mw1hb4jl-q2xo": {
+   "at": "2026-11-04T02:10:13Z",
+   "card": "Prince Of Darkness",
+   "path": "Creatures/BTD/5 Stars/Prince_Of_Darkness.psd",
+   "png_blob": "cf262ded1b1fc448423485b7ddb2b1eb28b2fc93",
+   "psd_blob": "955e0168d0640a3718f2acc636436aaa949b2677",
+   "state": "baked"
+  },
+  "zomoroko-mw1hc224-680z": {
+   "at": "2026-11-04T02:10:54Z",
+   "card": "Waxwell",
+   "path": "Creatures/DST/3 Stars/Waxwell.psd",
+   "png_blob": "878569206a9930096fe6b75a49ead233966cf481",
+   "psd_blob": "e3da070cae77fe1e1969f34e3684c72ba0049ea4",
+   "state": "baked"
+  },
+  "zomoroko-mw1heq4x-2w2o": {
+   "at": "2026-11-04T02:13:03Z",
+   "card": "Godskin Noble",
+   "path": "Creatures/Souls/4 Stars/Godskin_Noble.psd",
+   "png_blob": "70e65660356e6af631834802e77d98954b6d70f9",
+   "psd_blob": "f1391534448a3fa3128c0043a499f3b2aa5a8171",
+   "state": "baked"
+  },
+  "zomoroko-mw1hgf75-k8nm": {
+   "at": "2026-11-04T02:14:19Z",
+   "card": "Holo Defense API",
+   "path": "Creatures/Kirby/3 Stars/Holo_Defense_API.psd",
+   "png_blob": "902246f9ac45e1ee95b61cc14a7e46e87b6ddafd",
+   "psd_blob": "5c512fdaf73e0e25cf914f801fb1932a6f1406a2",
+   "state": "baked"
+  },
+  "zomoroko-mw1hhgh1-zght": {
+   "at": "2026-11-04T02:15:09Z",
+   "card": "Isma",
+   "path": "Creatures/Hollow Knight/4 Stars/Isma.psd",
+   "png_blob": "fee0c04bfe084899df0a2475fe6bf151f4ee7cd7",
+   "psd_blob": "32c2511e6719ec2e85d4219754e5f7c16a9ef5ef",
+   "state": "baked"
+  },
+  "zomoroko-mw1hodn5-rnvv": {
+   "at": "2026-11-04T02:20:32Z",
+   "card": "Leeroy Jenkins",
+   "path": "Creatures/World Of Warcraft/3 Stars/Leeroy_Jenkins.psd",
+   "png_blob": "2bfc094519bcb2213d9130154e4ad3530adf17e2",
+   "psd_blob": "6a6dcfa29a8454cd9a6ea0f7242bb295fbaf60c5",
+   "state": "baked"
+  },
+  "zomoroko-mw1hsgr7-2zp0": {
+   "at": "2026-11-04T02:23:41Z",
+   "card": "Springtrap",
+   "path": "Auxiliary/Minions/Springtrap.psd",
+   "png_blob": "5e7c98d524b6f5778c8eb78b5b345f2c1d352747",
+   "psd_blob": "5d5a6c50696297258f185aad70f19d181e2d0352",
+   "state": "baked"
+  },
+  "zomoroko-mw1hub0f-hju9": {
+   "at": "2026-11-04T02:25:02Z",
+   "card": "The Forbidden One",
+   "path": "Creatures/Other/5 Stars/The_Forbidden_One.psd",
+   "png_blob": "18346b10982467650fd878924f404f8efeb3f396",
+   "psd_blob": "d51961ebbe3bcc2d462bc7ec0fe69fd8fe32800d",
+   "state": "baked"
+  },
+  "zomoroko-mw1i09gf-chr3": {
+   "at": "2026-11-04T02:29:37Z",
+   "card": "The Gates of Ahn'Qiraj",
+   "path": "Field/4 Stars/The_Gates_of_Ahn'Qiraj.psd",
+   "png_blob": "e58110c885ea62718fe9a43221d614399a8f3eb9",
+   "psd_blob": "f1f37e8d9443b0c67a9bfccdb4ce28f7ddfd0d47",
+   "state": "baked"
+  },
+  "zomoroko-mw1i8htr-wc29": {
+   "at": "2026-11-04T02:36:06Z",
+   "card": "The Temple of Ahn'Qiraj",
+   "path": "Auxiliary/Items/The_Temple_of_Ahn'Qiraj.psd",
+   "png_blob": "127727194a94c6b8491c8dc63d380efa0f58e4f0",
+   "psd_blob": "aa43cf4ee7b6f158cdf3b22ece7aea5e999baacb",
+   "state": "baked"
+  },
+  "zomoroko-mw1if3l0-xnew": {
+   "at": "2026-11-04T02:41:12Z",
+   "card": "The Lich King",
+   "path": "Creatures/World Of Warcraft/5 Stars/The_Lich_King.psd",
+   "png_blob": "fcc1aca5df7ae8a21cfe7d3c01db280d83ab448b",
+   "psd_blob": "079a181bb1354de67934178051b03d775412b06b",
+   "state": "baked"
+  },
+  "zomoroko-mw1ig0zd-57a3": {
+   "at": "2026-11-04T02:41:59Z",
+   "card": "The Thin Man",
+   "path": "Creatures/Other/5 Stars/The_Thin_Man.psd",
+   "png_blob": "dc4b01dbaafd5127794f799574dd10ffbb67a648",
+   "psd_blob": "d74d6fd05c99dbad880af451284ed9e6d481b003",
+   "state": "baked"
+  },
+  "zomoroko-mw1ihxjj-z0p2": {
+   "at": "2026-11-04T02:43:29Z",
+   "card": "The Lich King",
+   "path": "Creatures/World Of Warcraft/5 Stars/The_Lich_King.psd",
+   "png_blob": "fcc1aca5df7ae8a21cfe7d3c01db280d83ab448b",
+   "psd_blob": "079a181bb1354de67934178051b03d775412b06b",
+   "state": "baked"
+  },
+  "zomoroko-mw1ik7jk-6smv": {
+   "at": "2026-11-04T02:45:08Z",
+   "card": "The Gates of Ahn'Qiraj",
+   "path": "Field/4 Stars/The_Gates_of_Ahn'Qiraj.psd",
+   "png_blob": "e58110c885ea62718fe9a43221d614399a8f3eb9",
+   "psd_blob": "f1f37e8d9443b0c67a9bfccdb4ce28f7ddfd0d47",
+   "state": "baked"
+  },
+  "zomoroko-mw1ilcaj-9841": {
+   "at": "2026-11-04T02:46:01Z",
+   "card": "The Man Behind The Slaughter",
+   "path": "Creatures/Fnaf/5 Stars/The_Man_Behind_The_Slaughter.psd",
+   "png_blob": "fed2e2930d802f7e38f91128c47e35c632495cf7",
+   "psd_blob": "9d83381ffd4cd6521e8a914d775a33daf26bd8b0",
+   "state": "baked"
+  },
+  "zomoroko-mw1is8iv-62lw": {
+   "at": "2026-11-04T02:51:26Z",
+   "card": "The Queen",
+   "path": "Creatures/Other/5 Stars/The_Queen.psd",
+   "png_blob": "c6828677bf44a2abe924fea1c8952a3becebedbf",
+   "psd_blob": "a3ec1e0f85ad7e83bbaced69819b0d78cf04246c",
+   "state": "baked"
+  },
+  "zomoroko-mw1ixl7k-l017": {
+   "at": "2026-11-04T02:55:35Z",
+   "card": "The Queen",
+   "path": "Creatures/Other/5 Stars/The_Queen.psd",
+   "png_blob": "c6828677bf44a2abe924fea1c8952a3becebedbf",
+   "psd_blob": "a3ec1e0f85ad7e83bbaced69819b0d78cf04246c",
+   "state": "baked"
+  },
+  "zomoroko-mw1jf9wy-ashj": {
+   "at": "2026-11-04T03:09:35Z",
+   "card": "Wickerbottom",
+   "path": "Creatures/DST/3 Stars/Wickerbottom.psd",
+   "png_blob": "6977838304d118223b9005bf05ab314405bfd8c7",
+   "psd_blob": "2f89595541f1bcc18672715ae8b27cce08b9f46f",
+   "state": "baked"
+  },
+  "zomoroko-mw1jms18-u9xl": {
+   "at": "2026-11-04T03:15:16Z",
+   "card": "The Forbidden One",
+   "path": "Creatures/Other/5 Stars/The_Forbidden_One.psd",
+   "png_blob": "18346b10982467650fd878924f404f8efeb3f396",
+   "psd_blob": "d51961ebbe3bcc2d462bc7ec0fe69fd8fe32800d",
+   "state": "baked"
+  },
+  "zomoroko-mw1jn12g-5acv": {
+   "at": "2026-11-04T03:15:30Z",
+   "card": "Wickerbottom",
+   "path": "Creatures/DST/3 Stars/Wickerbottom.psd",
+   "png_blob": "6977838304d118223b9005bf05ab314405bfd8c7",
+   "psd_blob": "2f89595541f1bcc18672715ae8b27cce08b9f46f",
+   "state": "baked"
+  },
+  "zomoroko-mw1jpimp-07mi": {
+   "at": "2026-11-04T03:17:21Z",
+   "card": "The Queen",
+   "path": "Creatures/Other/5 Stars/The_Queen.psd",
+   "png_blob": "c6828677bf44a2abe924fea1c8952a3becebedbf",
+   "psd_blob": "a3ec1e0f85ad7e83bbaced69819b0d78cf04246c",
+   "state": "baked"
+  },
+  "zomoroko-mw1k6j74-5knf": {
+   "at": "2026-11-04T03:30:38Z",
+   "card": "Party!",
+   "path": "Auxiliary/Items/Party!.psd",
+   "png_blob": "ac7b3476092372025259303639c9bcbb68c825e9",
+   "psd_blob": "d35cf54276cd304bac7be7b0551e7e11dd6defbf",
+   "state": "baked"
+  },
+  "zomoroko-mw1k8fah-fdq7": {
+   "at": "2026-11-04T03:32:01Z",
+   "card": "Old Chica",
+   "path": "Creatures/Fnaf/4 Stars/Old_Chica.psd",
+   "png_blob": "645e2cc9971f507d1daeb9d625989d853e2cfa65",
+   "psd_blob": "df799881bf2c3b4e5f67283e3a7c6d3129f44ba3",
+   "state": "baked"
+  },
+  "zomoroko-mw1k9w0t-oylj": {
+   "at": "2026-11-04T03:33:06Z",
+   "card": "Supreme Jeh'Oul",
+   "path": "Creatures/Other/3 Stars/Supreme_Jeh'Oul.psd",
+   "png_blob": "0ec24c6ea87587c829ac14b35f907d01873b9f84",
+   "psd_blob": "64cdd7c1ffacca2c8c564527115cf41d2a8948bb",
+   "state": "baked"
+  },
+  "zomoroko-mw1kfdyx-2iz7": {
+   "at": "2026-11-04T03:37:35Z",
+   "card": "Quote",
+   "path": "Creatures/Other/4 Stars/Quote.psd",
+   "png_blob": "2dd1640dde1a179cd6f5f4a617ba4113d238675d",
+   "psd_blob": "ed75f895cf22f6f63ce70aaa44578d166db7f72c",
+   "state": "baked"
+  },
+  "zomoroko-mw1kiswg-tin3": {
+   "at": "2026-11-04T03:40:09Z",
+   "card": "Elmadan",
+   "path": "Creatures/Other/3 Stars/Elmadan.psd",
+   "png_blob": "3d63ac1d3f3f03c14a6583fadfad9fa0f909ff32",
+   "psd_blob": "7ec5f659863865359362ccf6278f83a4f35a60ea",
+   "state": "baked"
+  },
+  "zomoroko-mw1km5m9-p1vn": {
+   "at": "2026-11-04T03:42:48Z",
+   "card": "Koops",
+   "path": "Creatures/Mario/2 Stars/Koops.psd",
+   "png_blob": "0bd8e961c53589be51423cfb528c7d463a1c3f78",
+   "psd_blob": "260075dd9f738d2ac33c13051a65bb71a1840f58",
+   "state": "baked"
+  },
+  "zomoroko-mw1kqjy0-umnu": {
+   "at": "2026-11-04T03:46:04Z",
+   "card": "Papyrus",
+   "path": "Creatures/Undertale/3 Stars/Papyrus.psd",
+   "png_blob": "dc207c8fb82917a2bfca39c013a9ebd09e425d6c",
+   "psd_blob": "6ce7e011e7e598c6ee337b8b0a0c238ee70c2f5c",
+   "state": "baked"
+  },
+  "zomoroko-mw1ktnws-h9xm": {
+   "at": "2026-11-04T03:48:30Z",
+   "card": "Hornet",
+   "path": "Creatures/Hollow Knight/4 Stars/Hornet.psd",
+   "png_blob": "3cf92565da073e7f4cb6d174ede76f1df7facf40",
+   "psd_blob": "b04c7c0e2e16906bf2bd012db0a55e2c20bed285",
+   "state": "baked"
+  },
+  "zomoroko-mw1kwbuv-4k0d": {
+   "at": "2026-11-04T03:50:38Z",
+   "card": "Supreme Jeh'Oul",
+   "path": "Creatures/Other/3 Stars/Supreme_Jeh'Oul.psd",
+   "png_blob": "0ec24c6ea87587c829ac14b35f907d01873b9f84",
+   "psd_blob": "64cdd7c1ffacca2c8c564527115cf41d2a8948bb",
+   "state": "baked"
+  },
+  "zomoroko-mw1kx2hg-9b0m": {
+   "at": "2026-11-04T03:51:13Z",
+   "card": "The Shade",
+   "path": "Creatures/In Sound Mind/3 Stars/The_Shade.psd",
+   "png_blob": "b494275fd26d293e3aa55851360649961a5dcf6e",
+   "psd_blob": "ab8d0320d0bfb0830cd0ca899acf29612e540585",
+   "state": "baked"
+  },
+  "zomoroko-mw1kxei5-76ez": {
+   "at": "2026-11-04T03:51:24Z",
+   "card": "Hornet",
+   "path": "Creatures/Hollow Knight/4 Stars/Hornet.psd",
+   "png_blob": "3cf92565da073e7f4cb6d174ede76f1df7facf40",
+   "psd_blob": "b04c7c0e2e16906bf2bd012db0a55e2c20bed285",
+   "state": "baked"
+  },
+  "zomoroko-mw1l26ng-775y": {
+   "at": "2026-11-04T03:55:08Z",
+   "card": "Wendy",
+   "path": "Creatures/DST/3 Stars/Wendy.psd",
+   "png_blob": "7b7f97a3c1ace18200102766cca116829ce00f16",
+   "psd_blob": "8d3fc4b065f3357660c04578f4c00eb562258b08",
+   "state": "baked"
+  },
+  "zomoroko-mw1l3t4p-8w1a": {
+   "at": "2026-11-04T03:56:29Z",
+   "card": "Gold Fuzzy",
+   "path": "Creatures/Mario/2 Stars/Gold_Fuzzy.psd",
+   "png_blob": "3e74d7991e51c5c954975423c6d8d38ca7214504",
+   "psd_blob": "f1aaf5d0dd6efbcfcc60e0be99a87bd64be4cce1",
+   "state": "baked"
+  },
+  "zomoroko-mw1l6tdq-6z41": {
+   "at": "2026-11-04T03:58:47Z",
+   "card": "Gooper Blooper",
+   "path": "Creatures/Mario/2 Stars/Gooper_Blooper.psd",
+   "png_blob": "b6dd86ced297a7ae91e8816561894f121b3ee284",
+   "psd_blob": "b6acfa9b734c4062d3c9a0f9a412f75f2b8244e8",
+   "state": "baked"
+  },
+  "zomoroko-mw1l8vhq-7ei7": {
+   "at": "2026-11-04T04:00:24Z",
+   "card": "Pot Full of Spiders!",
+   "path": "Creatures/Crypt/2 Stars/Pot_Full_of_Spiders!.psd",
+   "png_blob": "49d03e8b52dc45045ed435d34950fb7d5097c2b3",
+   "psd_blob": "7c0181a4222ab5d0b7cd7550cc3e8aa016dda3df",
+   "state": "baked"
+  },
+  "zomoroko-mw1lb3qc-3lwh": {
+   "at": "2026-11-04T04:02:08Z",
+   "card": "Pot Full of Spiders!",
+   "path": "Creatures/Crypt/2 Stars/Pot_Full_of_Spiders!.psd",
+   "png_blob": "49d03e8b52dc45045ed435d34950fb7d5097c2b3",
+   "psd_blob": "7c0181a4222ab5d0b7cd7550cc3e8aa016dda3df",
+   "state": "baked"
+  },
+  "zomoroko-mw1legs3-lbl6": {
+   "at": "2026-11-04T04:04:51Z",
+   "card": "Pot Full of Spiders!",
+   "path": "Creatures/Crypt/2 Stars/Pot_Full_of_Spiders!.psd",
+   "png_blob": "49d03e8b52dc45045ed435d34950fb7d5097c2b3",
+   "psd_blob": "7c0181a4222ab5d0b7cd7550cc3e8aa016dda3df",
+   "state": "baked"
+  },
+  "zomoroko-mw1lq30q-56pp": {
+   "at": "2026-11-04T04:13:45Z",
+   "card": "Pot Full of Spiders!",
+   "path": "Creatures/Crypt/2 Stars/Pot_Full_of_Spiders!.psd",
+   "png_blob": "49d03e8b52dc45045ed435d34950fb7d5097c2b3",
+   "psd_blob": "7c0181a4222ab5d0b7cd7550cc3e8aa016dda3df",
+   "state": "baked"
+  },
+  "zomoroko-mw1lty0o-sjz4": {
+   "at": "2026-11-04T04:16:50Z",
+   "card": "The Kestrel",
+   "path": "Creatures/FTL/4 Stars/The_Kestrel.psd",
+   "png_blob": "46843dce2fb05ac0926618191ed4ae657964f6e1",
+   "psd_blob": "54cb31f1d80a7c699f371c9ebfa6229554cfa9a2",
+   "state": "baked"
+  },
+  "zomoroko-mw1m2amz-xx1w": {
+   "at": "2026-11-04T04:23:18Z",
+   "card": "Fragile Heart",
+   "path": "Items/Equip/3 Stars/Fragile_Heart.psd",
+   "png_blob": "7fa7f34019715b82e2b6bc4951374a73ec121dcd",
+   "psd_blob": "baf9a8d6bed3c9b8beb5cfe82cbc4b89fe75d43e",
+   "state": "baked"
+  },
+  "zomoroko-mw1m45bi-xj1p": {
+   "at": "2026-11-04T04:24:44Z",
+   "card": "Fragile Strength",
+   "path": "Items/Equip/3 Stars/Fragile_Strength.psd",
+   "png_blob": "5d734dd6a8b17e2fd55ff47c2d4065d0606c1b2b",
+   "psd_blob": "7c4db90d409b374476179e445265c156710f63e0",
+   "state": "baked"
+  },
+  "zomoroko-mw1md6wh-6vm1": {
+   "at": "2026-11-04T04:31:39Z",
+   "card": "Wendy",
+   "path": "Creatures/DST/3 Stars/Wendy.psd",
+   "png_blob": "7b7f97a3c1ace18200102766cca116829ce00f16",
+   "psd_blob": "8d3fc4b065f3357660c04578f4c00eb562258b08",
+   "state": "baked"
+  },
+  "zomoroko-mw1mmzf9-bcd4": {
+   "at": "2026-11-04T04:39:19Z",
+   "card": "The Gates of Ahn'Qiraj",
+   "path": "Field/4 Stars/The_Gates_of_Ahn'Qiraj.psd",
+   "png_blob": "e58110c885ea62718fe9a43221d614399a8f3eb9",
+   "psd_blob": "f1f37e8d9443b0c67a9bfccdb4ce28f7ddfd0d47",
+   "state": "baked"
+  },
+  "zomoroko-mw1mpvw0-vq0w": {
+   "at": "2026-11-04T04:41:37Z",
+   "card": "Funky D Luffy",
+   "path": "Creatures/Monkey D Folder/4 Stars/Funky_D_Luffy.psd",
+   "png_blob": "9d2f3e44901c59564aba6859883fa76a42f23abe",
+   "psd_blob": "33a26988bae6023e1eb05ab11a98e6bcdb6104b7",
+   "state": "baked"
+  },
+  "zomoroko-mw1msoxg-lqdd": {
+   "at": "2026-11-04T04:43:42Z",
+   "card": "Nefarious Chip",
+   "path": "Creatures/Omori/3 Stars/Nefarious_Chip.psd",
+   "png_blob": "a0d2d746cbb11e7ac98606b85c5bd389202d37a4",
+   "psd_blob": "fa1e6f271bade27ea084d5b6735deb22df39a615",
+   "state": "baked"
+  },
+  "zomoroko-mw1muau4-r2un": {
+   "at": "2026-11-04T04:44:59Z",
+   "card": "Papa Chip",
+   "path": "Creatures/Omori/3 Stars/Papa_Chip.psd",
+   "png_blob": "1cc61ece84c6ea03d25a822f0322cbbfbe2eb770",
+   "psd_blob": "3734b59a8807ddd7bc2564d40a7a5e9ea16131c1",
+   "state": "baked"
+  },
+  "zomoroko-mw1mx35o-mjz1": {
+   "at": "2026-11-04T04:47:12Z",
+   "card": "Flip",
+   "path": "Items/Support/4 Stars/Flip.psd",
+   "png_blob": "94c16c2962d49f1a5cb7f80fe4e6e0fcfc86d2df",
+   "psd_blob": "e4f1586c359c56fc3ace5f4e507808fe0800b1ad",
+   "state": "baked"
+  },
+  "zomoroko-mw1n27bu-pu84": {
+   "at": "2026-11-04T04:51:09Z",
+   "card": "Kalecgos",
+   "path": "Creatures/World Of Warcraft/4 Stars/Kalecgos.psd",
+   "png_blob": "2975837a8172656ba2ea36de61556f91773cb4ca",
+   "psd_blob": "d17f3a6231ccfe01df009cbff651c63a3fb87125",
+   "state": "baked"
+  },
+  "zomoroko-mw1n304j-bfpt": {
+   "at": "2026-11-04T04:51:46Z",
+   "card": "Mystery Gift",
+   "path": "Items/Infliction/3 Stars/Mystery_Gift.psd",
+   "png_blob": "774fb16d833025482c6e32c2682c85fde753f62f",
+   "psd_blob": "e4fe66aaae2b80606853fab1ef3b837c06c3e060",
+   "state": "baked"
+  },
+  "zomoroko-mw1n3mym-pyi4": {
+   "at": "2026-11-04T04:52:21Z",
+   "card": "omori",
+   "path": "Creatures/Omori/5 Stars/omori.psd",
+   "png_blob": "e674eb858b029cb7f4c734dc56bf67dc510d0af9",
+   "psd_blob": "4b69743399aa1e07411e50cd6b51b49e3d3ff753",
+   "state": "baked"
+  },
+  "zomoroko-mw1n4tte-h5mk": {
+   "at": "2026-11-04T04:53:18Z",
+   "card": "Sans",
+   "path": "Creatures/Undertale/5 Stars/Sans.psd",
+   "png_blob": "29c31b3865a8535e73cb1dcb0354126c735c25ba",
+   "psd_blob": "6dcf324c728feb71b3ff422becb95bdfeaf96f9f",
+   "state": "baked"
+  },
+  "zomoroko-mw1n5kky-arkh": {
+   "at": "2026-11-04T04:53:43Z",
+   "card": "Vivian",
+   "path": "Creatures/Mario/3 Stars/Vivian.psd",
+   "png_blob": "6c51cec5d134fb2746e2dfda37e61ed23c789900",
+   "psd_blob": "78633e80cfa644de7fb05abadf5ee87fbb133a21",
+   "state": "baked"
+  },
+  "zomoroko-mw1nmv8o-xy3d": {
+   "at": "2026-11-04T05:07:15Z",
+   "card": "Igor Robotowski",
+   "path": "Creatures/Other/2 Stars/Igor_Robotowski.psd",
+   "png_blob": "83d3771b876e8b6b0a8d667ac82cfaa538d3a034",
+   "psd_blob": "218e3fadf9c681e3cc3a4a6997492145e6cda388",
+   "state": "baked"
+  },
+  "zomoroko-mw1no0y7-qdca": {
+   "at": "2026-11-04T05:08:15Z",
+   "card": "Mettaton",
+   "path": "Creatures/Undertale/4 Stars/Mettaton.psd",
+   "png_blob": "90ea858c48b96d807738619ec889f5f9f951d003",
+   "psd_blob": "a61b3b1e5115a5ab7f95e90248b2785fbd9c4570",
+   "state": "baked"
+  },
+  "zomoroko-mw1ntdlv-wjdu": {
+   "at": "2026-11-04T05:12:21Z",
+   "card": "Heavy Mole",
+   "path": "Creatures/Kirby/3 Stars/Heavy_Mole.psd",
+   "png_blob": "724b24dc67b1a7ea863631804d9ca03ccb14ef6d",
+   "psd_blob": "6460d21ae5ea44a517372e48399e77e499daca5c",
+   "state": "baked"
+  },
+  "zomoroko-mw1ob3fs-50i1": {
+   "at": "2026-11-04T05:26:09Z",
+   "card": "Moose Goose",
+   "path": "Creatures/DST/3 Stars/Moose_Goose.psd",
+   "png_blob": "a5958d31f97bb5d3fd9c06ccf0f460c5c4a7a045",
+   "psd_blob": "03328b35628ddc1c3bb7514112603f15889194c1",
+   "state": "baked"
+  },
+  "zomoroko-mw1ox327-qevz": {
+   "at": "2026-11-04T05:43:15Z",
+   "card": "Chef Saltbaker",
+   "path": "Creatures/Cuphead/5 Stars/Chef_Saltbaker.psd",
+   "png_blob": "b9e545b73a39525dc19f245afa0acc5ec6bb91ff",
+   "psd_blob": "96f426478dd6aa6d04e41239e9f141f5c439b458",
+   "state": "baked"
+  },
+  "zomoroko-mw1pf889-7wel": {
+   "at": "2026-11-04T05:57:15Z",
+   "card": "Croissant",
+   "path": "Creatures/Other/5 Stars/Croissant.psd",
+   "png_blob": "778644e15f65de46e0b8bb2bfa173d2414e13fb5",
+   "psd_blob": "cecae1147dc7115eed43de820054bf0fc4d2f472",
+   "state": "baked"
+  },
+  "zomoroko-mw1phjlc-uphz": {
+   "at": "2026-11-04T05:59:04Z",
+   "card": "Gandhi",
+   "path": "Creatures/Other/5 Stars/Gandhi.psd",
+   "png_blob": "33c55909892ad2cc8902b342c50b133f4c545168",
+   "psd_blob": "c2daf02e30e21e66cd2cc09072797b94b4fc5ec2",
+   "state": "baked"
+  },
+  "zomoroko-mw1ptpkh-ppyt": {
+   "at": "2026-11-04T06:08:32Z",
+   "card": "Grief",
+   "path": "Creatures/Crypt/4 Stars/Grief.psd",
+   "png_blob": "ae116f2f7f3a851da227f9e4591b539fa7aaa1ca",
+   "psd_blob": "90bdbc8866b40ee635275384608bb9bb0a2f8f8c",
+   "state": "baked"
+  },
+  "zomoroko-mw1pxxin-nbio": {
+   "at": "2026-11-04T06:11:57Z",
+   "card": "Kyle",
+   "path": "Creatures/Other/5 Stars/Kyle.psd",
+   "png_blob": "aac87645bb048ad0706af3d0fa875bd7ecef1386",
+   "psd_blob": "c8d7c7eac38864564261ddab23d75ab56c8dcfb0",
+   "state": "baked"
+  },
+  "zomoroko-mw1qngfe-wqbm": {
+   "at": "2026-11-04T06:31:40Z",
+   "card": "Lord Crump",
+   "path": "Creatures/Mario/3 Stars/Lord_Crump.psd",
+   "png_blob": "3b9581b2f62d6c12d6091398c9dc19cc1ca75e04",
+   "psd_blob": "aa6bba48e9f1b51bae721c333f6aebc92d418d14",
+   "state": "baked"
+  },
+  "zomoroko-mw1r14e7-qkmi": {
+   "at": "2026-11-04T06:42:18Z",
+   "card": "Miracle Matter",
+   "path": "Creatures/Kirby/3 Stars/Miracle_Matter.psd",
+   "png_blob": "1ed306308592fd770505684eee74322f92b7e607",
+   "psd_blob": "233e29c4eb8a5df4971aa0b50c2881bc05f6abc9",
+   "state": "baked"
+  },
+  "zomoroko-mw1ryxvr-9vi3": {
+   "at": "2026-11-04T07:08:37Z",
+   "card": "Monkey D Letion",
+   "path": "Creatures/Monkey D Folder/3 Stars/Monkey_D_Letion.psd",
+   "png_blob": "d2969ba19600343a26d8ff95717d80c7d5004570",
+   "psd_blob": "d155ab38576a48d333f88ca5e2a569634a65b68c",
+   "state": "baked"
+  },
+  "zomoroko-mw1sipuv-0lqk": {
+   "at": "2026-11-04T07:24:07Z",
+   "card": "Kyle",
+   "path": "Creatures/Other/5 Stars/Kyle.psd",
+   "png_blob": "aac87645bb048ad0706af3d0fa875bd7ecef1386",
+   "psd_blob": "c8d7c7eac38864564261ddab23d75ab56c8dcfb0",
+   "state": "baked"
+  },
+  "zomoroko-mw4newig-87k0": {
+   "at": "2026-11-06T07:24:14Z",
+   "card": "Tainted Forgotten",
+   "path": "Creatures/Isaac/3 Stars/Tainted_Forgotten.psd",
+   "png_blob": "0ddef15456c9e6f3ada2b20ce710380dce819df5",
+   "psd_blob": "17b3636fe7a711b59572568c2fe9a4483d22673f",
+   "state": "error"
+  }
+ },
+ "v": 1
+}

@@ -1,0 +1,107 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1pxxin-nbio",
+ "card": "Kyle",
+ "path": "Creatures/Other/5 Stars/Kyle.psd",
+ "png": "Creatures/Other/5 Stars/Kyle.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "c8d7c7eac38864564261ddab23d75ab56c8dcfb0",
+  "png_blob": "aac87645bb048ad0706af3d0fa875bd7ecef1386"
+ },
+ "edit": {
+  "types": [
+   "unknown"
+  ],
+  "ability": "(WOF) The opponent chooses the result of all coin flips and dice rolls.\n(1CD) Generate a Salt.\n(AAT) If any attack, ability usage, or infliction fails to hit the targeted creature, is negated, or an immunity prevents it from occurring, generate a Salt.\n(AAT) If a friendly prime creature is defeated before it takes its first turn, generate 3 Salt.\n(WOF) All enemy creatures cannot have their stats increased by more than 2 bars above the value written on the card.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(WOF) The opponent chooses the result of all coin flips and dice rolls.\n(1CD) Generate a Salt.\n(AAT) If any attack, ability usage, or infliction fails to hit the targeted creature, is negated, or an immunity prevents it from occurring, generate a Salt.\n(AAT) If a friendly prime creature is defeated before it takes its first turn, generate 3 Salt.\n(WOF) All enemy creatures cannot have their stats increased by more than 2 bars above the value written on the card.",
+    "was": "The opponent chooses the result of all coin flips and dice rolls.\n(1CD) Generate a Salt.\n(AAT) If any attack, ability usage, or infliction fails to hit the targeted creature, is negated, or an immunity prevents it from occurring, generate a Salt.\n(AAT) If a friendly prime creature is defeated before it takes its first turn, generate 3 Salt.\n(WOF) All enemy creatures cannot have their stats increased by more than 2 bars above the value written on the card.",
+    "sha": "be09d6a3",
+    "psd": "c8d7c7ea",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "types": "baked",
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'The' -> '(WOF) The', types unknown, unknown -> unknown",
+ "changes": [
+  {
+   "field": "types",
+   "old": [
+    "unknown",
+    "unknown"
+   ],
+   "new": [
+    "unknown"
+   ]
+  },
+  {
+   "field": "ability",
+   "old": "The opponent chooses the result of all coin flips and dice rolls.\n(1CD) Generate a Salt.\n(AAT) If any attack, ability usage, or infliction fails to hit the targeted creature, is negated, or an immunity prevents it from occurring, generate a Salt.\n(AAT) If a friendly prime creature is defeated before it takes its first turn, generate 3 Salt.\n(WOF) All enemy creatures cannot have their stats increased by more than 2 bars above the value written on the card.",
+   "new": "(WOF) The opponent chooses the result of all coin flips and dice rolls.\n(1CD) Generate a Salt.\n(AAT) If any attack, ability usage, or infliction fails to hit the targeted creature, is negated, or an immunity prevents it from occurring, generate a Salt.\n(AAT) If a friendly prime creature is defeated before it takes its first turn, generate 3 Salt.\n(WOF) All enemy creatures cannot have their stats increased by more than 2 bars above the value written on the card."
+  }
+ ],
+ "notes": [
+  "types: 1 hidden"
+ ],
+ "parity": {
+  "types": {
+   "bad_pct": 0.0,
+   "mean": 0.012,
+   "max": 1.0
+  },
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.088,
+   "max": 13.0
+  }
+ },
+ "region": [
+  4,
+  140,
+  1193,
+  2366
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41783881433",
+ "took_s": 13.4,
+ "at": "2026-11-04T06:11:57Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1315371,
+  "webp": 132482,
+  "before": 136380
+ },
+ "recompressed": false
+}

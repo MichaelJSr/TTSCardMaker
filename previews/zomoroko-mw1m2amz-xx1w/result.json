@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1m2amz-xx1w",
+ "card": "Fragile Heart",
+ "path": "Items/Equip/3 Stars/Fragile_Heart.psd",
+ "png": "Items/Equip/3 Stars/Fragile_Heart.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "f155d58b31b79eb45b82f9630be244eee8da8e86",
+  "psd_blob": "baf9a8d6bed3c9b8beb5cfe82cbc4b89fe75d43e",
+  "png_blob": "7fa7f34019715b82e2b6bc4951374a73ec121dcd"
+ },
+ "edit": {
+  "ability": "+5 Max HP\n(OYT)(4 points) Transform this into Unbreakable Heart.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "+5 Max HP\n(OYT)(4 points) Transform this into Unbreakable Heart.",
+    "was": "+5 Max HP\n(OYT)(4 points) Convert this card into Unbreakable Heart.",
+    "sha": "05029a5d",
+    "psd": "baf9a8d6",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'points) Convert this card into' -> 'points) Transform this into'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "+5 Max HP\n(OYT)(4 points) Convert this card into Unbreakable Heart.",
+   "new": "+5 Max HP\n(OYT)(4 points) Transform this into Unbreakable Heart."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.196,
+   "max": 2.0
+  }
+ },
+ "region": [
+  7,
+  1530,
+  1200,
+  1739
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41772844996",
+ "took_s": 10.9,
+ "at": "2026-11-04T04:23:18Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1587107,
+  "webp": 54986,
+  "before": 55354
+ },
+ "recompressed": false
+}

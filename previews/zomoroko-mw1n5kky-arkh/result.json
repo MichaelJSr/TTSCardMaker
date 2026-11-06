@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1n5kky-arkh",
+ "card": "Vivian",
+ "path": "Creatures/Mario/3 Stars/Vivian.psd",
+ "png": "Creatures/Mario/3 Stars/Vivian.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "78633e80cfa644de7fb05abadf5ee87fbb133a21",
+  "png_blob": "6c51cec5d134fb2746e2dfda37e61ed23c789900"
+ },
+ "edit": {
+  "ability": "Attacks inflict 2T Smoldering. \n(1/2CD) This creature can \"infatuate\" an enemy, making it unable to attack this creature for 1 turn.\n(2CD)(4 points) Attack all enemies on the PF with piercing damage.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Attacks inflict 2T Smoldering. \n(1/2CD) This creature can \"infatuate\" an enemy, making it unable to attack this creature for 1 turn.\n(2CD)(4 points) Attack all enemies on the PF with piercing damage.",
+    "was": "Attacks inflict 2T Smoldering. \n(1/2CD) This creature can “infatuate” an enemy, making it unable to attack this creature for 1 turn.\n(2CD)(4 points) Attack all enemies on the PF with piercing damage.",
+    "sha": "707b698f",
+    "psd": "78633e80",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'can “infatuate” an' -> 'can \"infatuate\" an'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Attacks inflict 2T Smoldering. \n(1/2CD) This creature can “infatuate” an enemy, making it unable to attack this creature for 1 turn.\n(2CD)(4 points) Attack all enemies on the PF with piercing damage.",
+   "new": "Attacks inflict 2T Smoldering. \n(1/2CD) This creature can \"infatuate\" an enemy, making it unable to attack this creature for 1 turn.\n(2CD)(4 points) Attack all enemies on the PF with piercing damage."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.219,
+   "max": 3.0
+  }
+ },
+ "region": [
+  53,
+  1755,
+  1145,
+  2197
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41775887811",
+ "took_s": 9.2,
+ "at": "2026-11-04T04:53:43Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2627454,
+  "webp": 105990,
+  "before": 105938
+ },
+ "recompressed": false
+}

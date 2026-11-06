@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ef9wg-7ilz",
+ "card": "Tainted Bethany",
+ "path": "Creatures/Isaac/4 Stars/Tainted_Bethany.psd",
+ "png": "Creatures/Isaac/4 Stars/Tainted_Bethany.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "052287911e1a1e89ab3bd5ece489376430772e1c",
+  "png_blob": "e6153bbe101108556d7c7bb86cb51adf9b367fba"
+ },
+ "edit": {
+  "ability": "(1CD) Draw from a merge of the 3 & 4 star item decks until you get an equip item. Equip drawn item (no SP cost). Equips obtained this way become built as active items on this slot with 3 HP that have the effect of the equip and are returned to their origin when destroyed.\n(OD) All active items built from this ability are destroyed.\nAny form of healing given to this creature turns into 1 point per 1 HP instead of healing the creature.\n(1CD)(4 points) Refresh the first ability.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1CD) Draw from a merge of the 3 & 4 star item decks until you get an equip item. Equip drawn item (no SP cost). Equips obtained this way become built as active items on this slot with 3 HP that have the effect of the equip and are returned to their origin when destroyed.\n(OD) All active items built from this ability are destroyed.\nAny form of healing given to this creature turns into 1 point per 1 HP instead of healing the creature.\n(1CD)(4 points) Refresh the first ability.",
+    "was": "(1CD) Draw from a merge of the 3 & 4 star item decks until you get an equip item. Equip drawn item (no SP cost). Equips obtained this way become active items in this slot with 3 HP that have the effect of the equip and are returned to their origin when destroyed.\n(OD) All active items generated from this ability are destroyed.\nAny form of healing given to this creature turns into 1 point per 1 HP instead of healing the creature.\n(1CD)(4 points) Refresh the first ability.",
+    "sha": "10dbe688",
+    "psd": "05228791",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'become active items in this slot with 3 ' -> 'become built as active items on this slo'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1CD) Draw from a merge of the 3 & 4 star item decks until you get an equip item. Equip drawn item (no SP cost). Equips obtained this way become active items in this slot with 3 HP that have the effect of the equip and are returned to their origin when destroyed.\n(OD) All active items generated from this ability are destroyed.\nAny form of healing given to this creature turns into 1 point per 1 HP instead of healing the creature.\n(1CD)(4 points) Refresh the first ability.",
+   "new": "(1CD) Draw from a merge of the 3 & 4 star item decks until you get an equip item. Equip drawn item (no SP cost). Equips obtained this way become built as active items on this slot with 3 HP that have the effect of the equip and are returned to their origin when destroyed.\n(OD) All active items built from this ability are destroyed.\nAny form of healing given to this creature turns into 1 point per 1 HP instead of healing the creature.\n(1CD)(4 points) Refresh the first ability."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.05,
+   "max": 15.0
+  }
+ },
+ "region": [
+  0,
+  1748,
+  1200,
+  2366
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41749625685",
+ "took_s": 10.0,
+ "at": "2026-11-04T00:49:24Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2013676,
+  "webp": 116302,
+  "before": 116442
+ },
+ "recompressed": false
+}

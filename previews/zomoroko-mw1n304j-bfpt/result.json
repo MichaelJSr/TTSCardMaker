@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1n304j-bfpt",
+ "card": "Mystery Gift",
+ "path": "Items/Infliction/3 Stars/Mystery_Gift.psd",
+ "png": "Items/Infliction/3 Stars/Mystery_Gift.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "e4fe66aaae2b80606853fab1ef3b837c06c3e060",
+  "png_blob": "774fb16d833025482c6e32c2682c85fde753f62f"
+ },
+ "edit": {
+  "ability": "Must be used (OYT).\nDraw a random 1 star item, and \"use the ribbon\" to inflict an enemy creature with 1T1 Restrained.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "Must be used (OYT).\nDraw a random 1 star item, and \"use the ribbon\" to inflict an enemy creature with 1T1 Restrained.",
+    "was": "Must be used (OYT).\nDraw a random 1 star item, and “use the ribbon” to inflict an enemy creature with 1T1 Restrained.",
+    "sha": "5765b86f",
+    "psd": "e4fe66aa",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'and “use the ribbon” to' -> 'and \"use the ribbon\" to'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Must be used (OYT).\nDraw a random 1 star item, and “use the ribbon” to inflict an enemy creature with 1T1 Restrained.",
+   "new": "Must be used (OYT).\nDraw a random 1 star item, and \"use the ribbon\" to inflict an enemy creature with 1T1 Restrained."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.015,
+   "max": 2.0
+  }
+ },
+ "region": [
+  115,
+  1228,
+  1084,
+  1721
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41775696334",
+ "took_s": 6.7,
+ "at": "2026-11-04T04:51:46Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1421975,
+  "webp": 59624,
+  "before": 59648
+ },
+ "recompressed": false
+}

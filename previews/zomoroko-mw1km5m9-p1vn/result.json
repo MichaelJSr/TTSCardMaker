@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1km5m9-p1vn",
+ "card": "Koops",
+ "path": "Creatures/Mario/2 Stars/Koops.psd",
+ "png": "Creatures/Mario/2 Stars/Koops.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "260075dd9f738d2ac33c13051a65bb71a1840f58",
+  "png_blob": "0bd8e961c53589be51423cfb528c7d463a1c3f78"
+ },
+ "edit": {
+  "ability": "Immune to CDMG. \n(1/2CD)(3 points) Make next attack hit all enemies on PF. \n(2CD)(4 points) Build a Shell Shield on any slot.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Immune to CDMG. \n(1/2CD)(3 points) Make next attack hit all enemies on PF. \n(2CD)(4 points) Build a Shell Shield on any slot.",
+    "was": "Immune to CDMG. \n(1/2CD)(3 points) Make next attack hit all enemies on PF. \n(2CD)(4 points) Place a Shell Shield on a friendly creature.",
+    "sha": "0a38804e",
+    "psd": "260075dd",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'points) Place a Shell Shield on a friend' -> 'points) Build a Shell Shield on any slot'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Immune to CDMG. \n(1/2CD)(3 points) Make next attack hit all enemies on PF. \n(2CD)(4 points) Place a Shell Shield on a friendly creature.",
+   "new": "Immune to CDMG. \n(1/2CD)(3 points) Make next attack hit all enemies on PF. \n(2CD)(4 points) Build a Shell Shield on any slot."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.074,
+   "max": 2.0
+  }
+ },
+ "region": [
+  87,
+  1773,
+  1112,
+  2191
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41768752612",
+ "took_s": 10.6,
+ "at": "2026-11-04T03:42:48Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2295625,
+  "webp": 75258,
+  "before": 77320
+ },
+ "recompressed": false
+}

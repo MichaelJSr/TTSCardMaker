@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ob3fs-50i1",
+ "card": "Moose Goose",
+ "path": "Creatures/DST/3 Stars/Moose_Goose.psd",
+ "png": "Creatures/DST/3 Stars/Moose_Goose.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "03328b35628ddc1c3bb7514112603f15889194c1",
+  "png_blob": "a5958d31f97bb5d3fd9c06ccf0f460c5c4a7a045"
+ },
+ "edit": {
+  "ability": "(1CD) Gain an egg counter.\n(2CD) Can sacrifice -2 ATK for 1 turn for attacks to inflict 1T2 Enfeebled.\n(OD) or (-2/1CD)(BOT), spend all egg counters to summon an equal amount of Moslings.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1CD) Gain an egg counter.\n(2CD) Can sacrifice -2 ATK for 1 turn for attacks to inflict 1T2 Enfeebled.\n(OD) or (-2/1CD)(BOT), spend all egg counters to summon an equal amount of Moslings.",
+    "was": "(1CD) Lay an egg.\n(2CD) Can sacrifice -2 ATK for 1 turn for attacks to inflict 1T2 Enfeebled.\n(OD) or on its 3rd+ turn, all eggs hatch into Moslings.",
+    "sha": "f64487fa",
+    "psd": "03328b35",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(1CD) Lay an egg. (2CD) Can sacrifice -2' -> '(1CD) Gain an egg counter. (2CD) Can sac'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1CD) Lay an egg.\n(2CD) Can sacrifice -2 ATK for 1 turn for attacks to inflict 1T2 Enfeebled.\n(OD) or on its 3rd+ turn, all eggs hatch into Moslings.",
+   "new": "(1CD) Gain an egg counter.\n(2CD) Can sacrifice -2 ATK for 1 turn for attacks to inflict 1T2 Enfeebled.\n(OD) or (-2/1CD)(BOT), spend all egg counters to summon an equal amount of Moslings."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.118,
+   "max": 2.0
+  }
+ },
+ "region": [
+  8,
+  1768,
+  1192,
+  2200
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41779182073",
+ "took_s": 16.5,
+ "at": "2026-11-04T05:26:09Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2549918,
+  "webp": 83324,
+  "before": 78030
+ },
+ "recompressed": false
+}

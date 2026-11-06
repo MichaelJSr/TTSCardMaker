@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ig0zd-57a3",
+ "card": "The Thin Man",
+ "path": "Creatures/Other/5 Stars/The_Thin_Man.psd",
+ "png": "Creatures/Other/5 Stars/The_Thin_Man.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "d74d6fd05c99dbad880af451284ed9e6d481b003",
+  "png_blob": "dc4b01dbaafd5127794f799574dd10ffbb67a648"
+ },
+ "edit": {
+  "ability": "(WOF) All enemy creatures have their SPD reduced by 25%.\nIf a creature attacks, or is attacked by this creature, its SPD is decreased by a further 25% during that attack.\nIf this card kills a creature, it summons an offensive minion with the stats of that killed creature but with -1 ATK -1 SPD.\nMinions cannot act the turn they are created.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(WOF) All enemy creatures have their SPD reduced by 25%.\nIf a creature attacks, or is attacked by this creature, its SPD is decreased by a further 25% during that attack.\nIf this card kills a creature, it summons an offensive minion with the stats of that killed creature but with -1 ATK -1 SPD.\nMinions cannot act the turn they are created.",
+    "was": "(WOF) All enemy creatures have their SPD reduced by 25%.\nIf a creature attacks, or is attacked by this creature, its SPD is decreased by a further 25% during that attack.\nIf this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with -1 ATK -1 SPD.\nMinions cannot act the turn they are created.",
+    "sha": "4c928b5a",
+    "psd": "d74d6fd0",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'it creates a non-protective minion' -> 'it summons an offensive minion'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(WOF) All enemy creatures have their SPD reduced by 25%.\nIf a creature attacks, or is attacked by this creature, its SPD is decreased by a further 25% during that attack.\nIf this card kills a creature, it creates a non-protective minion with the stats of that killed creature but with -1 ATK -1 SPD.\nMinions cannot act the turn they are created.",
+   "new": "(WOF) All enemy creatures have their SPD reduced by 25%.\nIf a creature attacks, or is attacked by this creature, its SPD is decreased by a further 25% during that attack.\nIf this card kills a creature, it summons an offensive minion with the stats of that killed creature but with -1 ATK -1 SPD.\nMinions cannot act the turn they are created."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.035,
+   "max": 2.0
+  }
+ },
+ "region": [
+  39,
+  1777,
+  1160,
+  2398
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41762389768",
+ "took_s": 9.0,
+ "at": "2026-11-04T02:41:59Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2424904,
+  "webp": 77572,
+  "before": 77608
+ },
+ "recompressed": false
+}

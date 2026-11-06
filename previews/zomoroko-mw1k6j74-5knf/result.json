@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1k6j74-5knf",
+ "card": "Party!",
+ "path": "Auxiliary/Items/Party!.psd",
+ "png": "Auxiliary/Items/Party!.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "d35cf54276cd304bac7be7b0551e7e11dd6defbf",
+  "png_blob": "ac7b3476092372025259303639c9bcbb68c825e9"
+ },
+ "edit": {
+  "ability": "Effect determined by creature\n(BOGT) If the creature that played this field card is not active on any field, choose 1 stat bar boost to remove. If there are no stat bar boosts, destroy this field card.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "Effect determined by creature\n(BOGT) If the creature that played this field card is not active on any field, choose 1 stat bar boost to remove. If there are no stat bar boosts, destroy this field card.",
+    "was": "Effect determined by creature\n(BOGT) If the creature that generated this field card is not active on any field, choose 1 stat bar boost to remove. If there are no stat bar boosts, destroy this field card.",
+    "sha": "4fb5a592",
+    "psd": "d35cf542",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'that generated this' -> 'that played this'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Effect determined by creature\n(BOGT) If the creature that generated this field card is not active on any field, choose 1 stat bar boost to remove. If there are no stat bar boosts, destroy this field card.",
+   "new": "Effect determined by creature\n(BOGT) If the creature that played this field card is not active on any field, choose 1 stat bar boost to remove. If there are no stat bar boosts, destroy this field card."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.054,
+   "max": 2.0
+  }
+ },
+ "region": [
+  1,
+  1432,
+  1200,
+  1783
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41767503429",
+ "took_s": 9.5,
+ "at": "2026-11-04T03:30:38Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1953871,
+  "webp": 84350,
+  "before": 84728
+ },
+ "recompressed": false
+}

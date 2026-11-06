@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1l3t4p-8w1a",
+ "card": "Gold Fuzzy",
+ "path": "Creatures/Mario/2 Stars/Gold_Fuzzy.psd",
+ "png": "Creatures/Mario/2 Stars/Gold_Fuzzy.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "a8ec8a1bca62545dc31e9b1da4ad95b43146ea46",
+  "psd_blob": "f1aaf5d0dd6efbcfcc60e0be99a87bd64be4cce1",
+  "png_blob": "3e74d7991e51c5c954975423c6d8d38ca7214504"
+ },
+ "edit": {
+  "ability": "(OFS) Summon a Fuzzy Horde.\n(1CD) Summon a Fuzzy Horde, max 1 on field.",
+  "parts": {
+   "546": {
+    "field": "ability",
+    "text": "(OFS) Summon a Fuzzy Horde.\n(1CD) Summon a Fuzzy Horde, max 1 on field.",
+    "was": "Starts with a Fuzzy Horde.\n(1CD) Summon a Fuzzy Horde, max 1 on field.",
+    "sha": "23586470",
+    "psd": "f1aaf5d0",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Starts with a' -> '(OFS) Summon a'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Starts with a Fuzzy Horde.\n(1CD) Summon a Fuzzy Horde, max 1 on field.",
+   "new": "(OFS) Summon a Fuzzy Horde.\n(1CD) Summon a Fuzzy Horde, max 1 on field."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.055,
+   "max": 2.0
+  }
+ },
+ "region": [
+  29,
+  1794,
+  1171,
+  2169
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41770107056",
+ "took_s": 10.7,
+ "at": "2026-11-04T03:56:29Z",
+ "variant": null,
+ "parts": {
+  "546": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2428853,
+  "webp": 133188,
+  "before": 133572
+ },
+ "recompressed": false
+}

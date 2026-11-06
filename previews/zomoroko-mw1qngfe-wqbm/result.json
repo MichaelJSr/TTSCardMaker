@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1qngfe-wqbm",
+ "card": "Lord Crump",
+ "path": "Creatures/Mario/3 Stars/Lord_Crump.psd",
+ "png": "Creatures/Mario/3 Stars/Lord_Crump.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "aa6bba48e9f1b51bae721c333f6aebc92d418d14",
+  "png_blob": "3b9581b2f62d6c12d6091398c9dc19cc1ca75e04"
+ },
+ "edit": {
+  "ability": "(1GCD) Assume a form:\nBarricade: 2 creatures of your choice gain +1 DEF until (ENDGT).\nAcrobat: Gain 1 extra action.\nX Ball: +2 ATK +1 SPD and this creature takes 2 less damage from creatures with less speed than him.",
+  "parts": {
+   "546": {
+    "field": "ability",
+    "text": "(1GCD) Assume a form:\nBarricade: 2 creatures of your choice gain +1 DEF until (ENDGT).\nAcrobat: Gain 1 extra action.\nX Ball: +2 ATK +1 SPD and this creature takes 2 less damage from creatures with less speed than him.",
+    "was": "(1GCD) This creature may have the benefits of one of the following forms:\nBarricade: 2 creatures of your choice gain +1 DEF until (ENDGT).\nAcrobat: Gain 1 extra action.\nX Ball: +2 ATK +1 SPD and this creature takes 2 less damage from creatures with less speed than him.",
+    "sha": "81a95862",
+    "psd": "aa6bba48",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(1GCD) This creature may have the benefi' -> '(1GCD) Assume a form: Barricade:'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD) This creature may have the benefits of one of the following forms:\nBarricade: 2 creatures of your choice gain +1 DEF until (ENDGT).\nAcrobat: Gain 1 extra action.\nX Ball: +2 ATK +1 SPD and this creature takes 2 less damage from creatures with less speed than him.",
+   "new": "(1GCD) Assume a form:\nBarricade: 2 creatures of your choice gain +1 DEF until (ENDGT).\nAcrobat: Gain 1 extra action.\nX Ball: +2 ATK +1 SPD and this creature takes 2 less damage from creatures with less speed than him."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.165,
+   "max": 3.0
+  }
+ },
+ "region": [
+  28,
+  1820,
+  1173,
+  2313
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41786065400",
+ "took_s": 11.2,
+ "at": "2026-11-04T06:31:40Z",
+ "variant": null,
+ "parts": {
+  "546": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2784511,
+  "webp": 126124,
+  "before": 132586
+ },
+ "recompressed": false
+}

@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1fuxqv-4v90",
+ "card": "Dark Daroach",
+ "path": "Creatures/Kirby/4 Stars/Dark_Daroach.psd",
+ "png": "Creatures/Kirby/4 Stars/Dark_Daroach.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "4dfdf9c692fa7b2e6a44ec5075abd246879bcced",
+  "png_blob": "fba02e973310d9839cb969f9438377ad80e87d25"
+ },
+ "edit": {
+  "ability": "(1/2CD) First attack inflicts 1T Frozen.\n(2CD) Auto-equip a Flame Bomb.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1/2CD) First attack inflicts 1T Frozen.\n(2CD) Auto-equip a Flame Bomb.",
+    "was": "(1/2CD) First attack inflicts 1T Frozen.\n(2CD) Equip a Flame Bomb.",
+    "sha": "30f8f282",
+    "psd": "4dfdf9c6",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(2CD) Equip a' -> '(2CD) Auto-equip a'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1/2CD) First attack inflicts 1T Frozen.\n(2CD) Equip a Flame Bomb.",
+   "new": "(1/2CD) First attack inflicts 1T Frozen.\n(2CD) Auto-equip a Flame Bomb."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.766,
+   "max": 22.0
+  }
+ },
+ "region": [
+  12,
+  1748,
+  1182,
+  2217
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41754366991",
+ "took_s": 11.4,
+ "at": "2026-11-04T01:29:40Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2464384,
+  "webp": 70656,
+  "before": 69752
+ },
+ "recompressed": false
+}

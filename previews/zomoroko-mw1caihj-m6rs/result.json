@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1caihj-m6rs",
+ "card": "Azamoth the Forgotten King",
+ "path": "Creatures/ROTMG/5 Stars/Azamoth_the_Forgotten_King.psd",
+ "png": "Creatures/ROTMG/5 Stars/Azamoth_the_Forgotten_King.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "43f1e8dd6eeb6193bd9224b521b8246e005e2cab",
+  "png_blob": "5ac43028eba8b8d5155a5fbd790c79e4166fcef5"
+ },
+ "edit": {
+  "ability": "This has true negation immunity.\n(OFS) Gain 15 Void counters.\nGain 4 Void counters when attacking.\n(AAT) Destroy this creature.\n(OD)Revive as Azamoth The Possessed Vessel, Void counters persist to revival.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "This has true negation immunity.\n(OFS) Gain 15 Void counters.\nGain 4 Void counters when attacking.\n(AAT) Destroy this creature.\n(OD)Revive as Azamoth The Possessed Vessel, Void counters persist to revival.",
+    "was": "This has true negation immunity.\nStart with 15 Void counters and gain 4 when attacking.\n(AAT) Destroy this creature.\n(OD)Revive as Azamoth The Possessed Vessel, Void counters persist to revival.",
+    "sha": "58da5eff",
+    "psd": "43f1e8dd",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'immunity. Start with 15 Void counters an' -> 'immunity. (OFS) Gain 15 Void counters. G'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "This has true negation immunity.\nStart with 15 Void counters and gain 4 when attacking.\n(AAT) Destroy this creature.\n(OD)Revive as Azamoth The Possessed Vessel, Void counters persist to revival.",
+   "new": "This has true negation immunity.\n(OFS) Gain 15 Void counters.\nGain 4 Void counters when attacking.\n(AAT) Destroy this creature.\n(OD)Revive as Azamoth The Possessed Vessel, Void counters persist to revival."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.491,
+   "max": 3.0
+  }
+ },
+ "region": [
+  0,
+  1758,
+  1200,
+  2291
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41742128368",
+ "took_s": 10.5,
+ "at": "2026-11-03T23:49:41Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3160996,
+  "webp": 101918,
+  "before": 101394
+ },
+ "recompressed": false
+}

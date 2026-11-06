@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1no0y7-qdca",
+ "card": "Mettaton",
+ "path": "Creatures/Undertale/4 Stars/Mettaton.psd",
+ "png": "Creatures/Undertale/4 Stars/Mettaton.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "a61b3b1e5115a5ab7f95e90248b2785fbd9c4570",
+  "png_blob": "90ea858c48b96d807738619ec889f5f9f951d003"
+ },
+ "edit": {
+  "ability": "(WOF) If a friendly creature dies, this transforms into Mettaton NEO.\n(WOF) If 9 stars of items are used, this transforms into Mettaton EX.",
+  "parts": {
+   "303": {
+    "field": "ability",
+    "text": "(WOF) If a friendly creature dies, this transforms into Mettaton NEO.\n(WOF) If 9 stars of items are used, this transforms into Mettaton EX.",
+    "was": "(WOF) If a friendly creature dies, this permanently becomes Mettaton NEO.\n(WOF) If 9 stars of items are used, this permanently becomes Mettaton EX.",
+    "sha": "176dc96d",
+    "psd": "a61b3b1e",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'this permanently becomes Mettaton NEO. (' -> 'this transforms into Mettaton NEO. (WOF)'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(WOF) If a friendly creature dies, this permanently becomes Mettaton NEO.\n(WOF) If 9 stars of items are used, this permanently becomes Mettaton EX.",
+   "new": "(WOF) If a friendly creature dies, this transforms into Mettaton NEO.\n(WOF) If 9 stars of items are used, this transforms into Mettaton EX."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.061,
+   "max": 2.0
+  }
+ },
+ "region": [
+  108,
+  1790,
+  1152,
+  2123
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41777327392",
+ "took_s": 9.0,
+ "at": "2026-11-04T05:08:15Z",
+ "variant": null,
+ "parts": {
+  "303": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1704853,
+  "webp": 80948,
+  "before": 82100
+ },
+ "recompressed": false
+}

@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1gpgrl-9w9i",
+ "card": "Raw Cock",
+ "path": "Creatures/Mario/3 Stars/Raw_Cock.psd",
+ "png": "Creatures/Mario/3 Stars/Raw_Cock.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "614afb330b75865c019145b7388dd9119ba3a0b7",
+  "png_blob": "f7625dca5f677c3f64ef15a041066eda902dee92"
+ },
+ "edit": {
+  "ability": "(WOF) All healing items used on enemy creatures inflict 5T1 Poison.\n(1CD)(2 points) Generate an Inconspicuous Cake.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(WOF) All healing items used on enemy creatures inflict 5T1 Poison.\n(1CD)(2 points) Generate an Inconspicuous Cake.",
+    "was": "(WOF) All healing items used on enemy creatures inflict 5T1 Poison.\n(1CD)(2 points) Create an Inconspicuous Cake.",
+    "sha": "472019d0",
+    "psd": "614afb33",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'points) Create an' -> 'points) Generate an'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(WOF) All healing items used on enemy creatures inflict 5T1 Poison.\n(1CD)(2 points) Create an Inconspicuous Cake.",
+   "new": "(WOF) All healing items used on enemy creatures inflict 5T1 Poison.\n(1CD)(2 points) Generate an Inconspicuous Cake."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.022,
+   "max": 2.0
+  }
+ },
+ "region": [
+  83,
+  1758,
+  1117,
+  2168
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41757035768",
+ "took_s": 6.8,
+ "at": "2026-11-04T01:53:19Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2147461,
+  "webp": 84256,
+  "before": 83300
+ },
+ "recompressed": false
+}

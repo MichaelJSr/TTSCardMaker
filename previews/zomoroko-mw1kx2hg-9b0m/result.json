@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1kx2hg-9b0m",
+ "card": "The Shade",
+ "path": "Creatures/In Sound Mind/3 Stars/The_Shade.psd",
+ "png": "Creatures/In Sound Mind/3 Stars/The_Shade.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "a8ec8a1bca62545dc31e9b1da4ad95b43146ea46",
+  "psd_blob": "ab8d0320d0bfb0830cd0ca899acf29612e540585",
+  "png_blob": "b494275fd26d293e3aa55851360649961a5dcf6e"
+ },
+ "edit": {
+  "ability": "(2CD) One attack deploys an Inkhole on attacked slot.\nEach time this creature is attacked it gains 1.5 DEF until the end of its next turn.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(2CD) One attack deploys an Inkhole on attacked slot.\nEach time this creature is attacked it gains 1.5 DEF until the end of its next turn.",
+    "was": "(2CD) One attack applies an Inkhole onto attacked slot.\nEach time this creature is attacked it gains 1.5 DEF until the end of its next turn.",
+    "sha": "7d92add7",
+    "psd": "ab8d0320",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'attack applies an Inkhole onto attacked' -> 'attack deploys an Inkhole on attacked'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(2CD) One attack applies an Inkhole onto attacked slot.\nEach time this creature is attacked it gains 1.5 DEF until the end of its next turn.",
+   "new": "(2CD) One attack deploys an Inkhole on attacked slot.\nEach time this creature is attacked it gains 1.5 DEF until the end of its next turn."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.028,
+   "max": 2.0
+  }
+ },
+ "region": [
+  36,
+  1776,
+  1149,
+  2196
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41769594489",
+ "took_s": 9.3,
+ "at": "2026-11-04T03:51:13Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1961431,
+  "webp": 57544,
+  "before": 57738
+ },
+ "recompressed": false
+}

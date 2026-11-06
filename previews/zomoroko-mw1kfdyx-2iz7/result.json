@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1kfdyx-2iz7",
+ "card": "Quote",
+ "path": "Creatures/Other/4 Stars/Quote.psd",
+ "png": "Creatures/Other/4 Stars/Quote.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "ed75f895cf22f6f63ce70aaa44578d166db7f72c",
+  "png_blob": "2dd1640dde1a179cd6f5f4a617ba4113d238675d"
+ },
+ "edit": {
+  "ability": "(OFS) Auto-equip Polar Star.\n(WOF) Every time a prime creature is defeated, gain Dorito Counters equal to the star level of the killed creature. \nWhenever this creature is attacked, it loses a Dorito Counter for each 2 HP lost.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(OFS) Auto-equip Polar Star.\n(WOF) Every time a prime creature is defeated, gain Dorito Counters equal to the star level of the killed creature. \nWhenever this creature is attacked, it loses a Dorito Counter for each 2 HP lost.",
+    "was": "Starts with the Polar Star equipped.\n(WOF)Every time a prime creature is defeated, gain Dorito Counters equal to the star level of the killed creature. \nWhenever this creature is attacked, it loses a Dorito Counter for each 2 HP lost.",
+    "sha": "c43a0ec8",
+    "psd": "ed75f895",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Starts with the Polar Star equipped. (WO' -> '(OFS) Auto-equip Polar Star. (WOF) Every'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Starts with the Polar Star equipped.\n(WOF)Every time a prime creature is defeated, gain Dorito Counters equal to the star level of the killed creature. \nWhenever this creature is attacked, it loses a Dorito Counter for each 2 HP lost.",
+   "new": "(OFS) Auto-equip Polar Star.\n(WOF) Every time a prime creature is defeated, gain Dorito Counters equal to the star level of the killed creature. \nWhenever this creature is attacked, it loses a Dorito Counter for each 2 HP lost."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.181,
+   "max": 3.0
+  }
+ },
+ "region": [
+  10,
+  1798,
+  1186,
+  2263
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41768226902",
+ "took_s": 16.3,
+ "at": "2026-11-04T03:37:35Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2275513,
+  "webp": 94618,
+  "before": 95120
+ },
+ "recompressed": false
+}

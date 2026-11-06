@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mvw35u5m-amgu",
+ "card": "Barry The Barrel",
+ "path": "Creatures/Other/2 Stars/Barry_The_Barrel.psd",
+ "png": "Creatures/Other/2 Stars/Barry_The_Barrel.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "09a590d58049d448e1eac4943ac27b676941b30b",
+  "psd_blob": "6e7bc779b852bfda4d9506d64b26d9b35556a5e0",
+  "png_blob": "d420b0759db134337b49b16d4afa2e6458cd4976"
+ },
+ "edit": {
+  "ability": "(OS)/(BOGT), Copy a random creature's base, unmodified stats and type.\nMay choose to randomly select from either your field or enemy field.\n(Cannot copy itself). \nHP and [unknown] type persists between stat changes.",
+  "parts": {
+   "303": {
+    "field": "ability",
+    "text": "(OS)/(BOGT), Copy a random creature's base, unmodified stats and type.\nMay choose to randomly select from either your field or enemy field.\n(Cannot copy itself). \nHP and [unknown] type persists between stat changes.",
+    "was": "(OS)/(BOGT), Copy a random creature's base, unmodified stats and type.\nMay choose to randomly select from either your field or enemy field.\n(Cannot copy itself). \nHP and Error type persists between stat changes.",
+    "sha": "bae7bdf2",
+    "psd": "6e7bc779",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'and Error type' -> 'and [unknown] type'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(OS)/(BOGT), Copy a random creature's base, unmodified stats and type.\nMay choose to randomly select from either your field or enemy field.\n(Cannot copy itself). \nHP and Error type persists between stat changes.",
+   "new": "(OS)/(BOGT), Copy a random creature's base, unmodified stats and type.\nMay choose to randomly select from either your field or enemy field.\n(Cannot copy itself). \nHP and [unknown] type persists between stat changes."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.039,
+   "max": 3.0
+  }
+ },
+ "region": [
+  18,
+  1742,
+  1188,
+  2312
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41181171241",
+ "took_s": 11.3,
+ "at": "2026-10-31T07:35:20Z",
+ "variant": null,
+ "parts": {
+  "303": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2191630,
+  "webp": 134880,
+  "before": 135230
+ },
+ "recompressed": false
+}

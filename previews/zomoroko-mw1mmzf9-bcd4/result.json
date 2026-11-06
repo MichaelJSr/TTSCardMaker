@@ -1,0 +1,88 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1mmzf9-bcd4",
+ "card": "The Gates of Ahn'Qiraj",
+ "path": "Field/4 Stars/The_Gates_of_Ahn'Qiraj.psd",
+ "png": "Field/4 Stars/The_Gates_of_Ahn'Qiraj.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "f155d58b31b79eb45b82f9630be244eee8da8e86",
+  "psd_blob": "f1f37e8d9443b0c67a9bfccdb4ce28f7ddfd0d47",
+  "png_blob": "e58110c885ea62718fe9a43221d614399a8f3eb9"
+ },
+ "edit": {
+  "ability": "(2GCD)(OYT) Summon a Silithid onto any creature.\n(OYT) May donate 8 SP, 8 points, and 8 bricks total to the war effort over the course of the game to open the gates, summoning one Anubisath Guardian onto every friendly prime creature and transforming this into The Temple of Ahn'Qiraj.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "(2GCD)(OYT) Summon a Silithid onto any creature.\n(OYT) May donate 8 SP, 8 points, and 8 bricks total to the war effort over the course of the game to open the gates, summoning one Anubisath Guardian onto every friendly prime creature and transforming this into The Temple of Ahn'Qiraj.",
+    "was": "(2GCD)(OYT) summon a Silithid on any slot.\nMay donate 8 SP, 8 points, and 8 bricks total to the war effort over the course of the game to open the gates, summoning one Anubisath Guardian on every friendly slot and replacing this item with “The Temple of Ahn'Qiraj”.",
+    "sha": "97c200ff",
+    "psd": "f1f37e8d",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(2GCD)(OYT) summon a Silithid on any slo' -> '(2GCD)(OYT) Summon a Silithid onto any c'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(2GCD)(OYT) summon a Silithid on any slot.\nMay donate 8 SP, 8 points, and 8 bricks total to the war effort over the course of the game to open the gates, summoning one Anubisath Guardian on every friendly slot and replacing this item with “The Temple of Ahn'Qiraj”.",
+   "new": "(2GCD)(OYT) Summon a Silithid onto any creature.\n(OYT) May donate 8 SP, 8 points, and 8 bricks total to the war effort over the course of the game to open the gates, summoning one Anubisath Guardian onto every friendly prime creature and transforming this into The Temple of Ahn'Qiraj."
+  }
+ ],
+ "notes": [
+  "overflow: ability: set at 88% of its size to stay on its panel"
+ ],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.05,
+   "max": 1.0
+  }
+ },
+ "region": [
+  0,
+  1202,
+  1200,
+  1771
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41774473239",
+ "took_s": 11.5,
+ "at": "2026-11-04T04:39:19Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1668261,
+  "webp": 68588,
+  "before": 69758
+ },
+ "recompressed": false
+}

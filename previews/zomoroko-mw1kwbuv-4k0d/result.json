@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1kwbuv-4k0d",
+ "card": "Supreme Jeh'Oul",
+ "path": "Creatures/Other/3 Stars/Supreme_Jeh'Oul.psd",
+ "png": "Creatures/Other/3 Stars/Supreme_Jeh'Oul.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "a8ec8a1bca62545dc31e9b1da4ad95b43146ea46",
+  "psd_blob": "64cdd7c1ffacca2c8c564527115cf41d2a8948bb",
+  "png_blob": "0ec24c6ea87587c829ac14b35f907d01873b9f84"
+ },
+ "edit": {
+  "ability": "(1CD) Deploy a Poison Circle on any slot.\nWhen this creature falls to 50% HP or below, this ability becomes and stays (1CD)(2U).",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1CD) Deploy a Poison Circle on any slot.\nWhen this creature falls to 50% HP or below, this ability becomes and stays (1CD)(2U).",
+    "was": "(1CD) Create a Poison Circle on a slot of your choice.\nWhen this creature falls to 50% HP or below, this ability becomes and stays (1CD)(2U).",
+    "sha": "f6033cd2",
+    "psd": "64cdd7c1",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(1CD) Create a Poison Circle on a slot o' -> '(1CD) Deploy a Poison Circle on any slot'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1CD) Create a Poison Circle on a slot of your choice.\nWhen this creature falls to 50% HP or below, this ability becomes and stays (1CD)(2U).",
+   "new": "(1CD) Deploy a Poison Circle on any slot.\nWhen this creature falls to 50% HP or below, this ability becomes and stays (1CD)(2U)."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.444,
+   "max": 3.0
+  }
+ },
+ "region": [
+  5,
+  1798,
+  1192,
+  2254
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41769536018",
+ "took_s": 10.0,
+ "at": "2026-11-04T03:50:38Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2739642,
+  "webp": 87998,
+  "before": 90090
+ },
+ "recompressed": false
+}

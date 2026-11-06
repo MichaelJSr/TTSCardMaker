@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1bp366-gaiz",
+ "card": "Delicate Flower",
+ "path": "Auxiliary/Items/Delicate_Flower.psd",
+ "png": "Auxiliary/Items/Delicate_Flower.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "5b74b53f191408554bbf8d38c2644d953dac5fec",
+  "png_blob": "cc54f646902424aaccabbaeb6e5b3b129d19e78d"
+ },
+ "edit": {
+  "ability": "Destroyed when equipped creature takes DMG.\nIf not destroyed after 3 pair turns have ended, equipped creature gains 6 Max HP, then this is destroyed.",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "Destroyed when equipped creature takes DMG.\nIf not destroyed after 3 pair turns have ended, equipped creature gains 6 Max HP, then this is destroyed.",
+    "was": "Destroyed when equipped creature takes DMG.\nIf not destroyed after 3 lane turns have ended, equipped creature gains 6 Max HP, then this is destroyed.",
+    "sha": "9cd48922",
+    "psd": "5b74b53f",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '3 lane turns' -> '3 pair turns'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Destroyed when equipped creature takes DMG.\nIf not destroyed after 3 lane turns have ended, equipped creature gains 6 Max HP, then this is destroyed.",
+   "new": "Destroyed when equipped creature takes DMG.\nIf not destroyed after 3 pair turns have ended, equipped creature gains 6 Max HP, then this is destroyed."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.07,
+   "max": 2.0
+  }
+ },
+ "region": [
+  12,
+  1541,
+  1195,
+  1783
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41739973468",
+ "took_s": 4.0,
+ "at": "2026-11-03T23:32:55Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1783242,
+  "webp": 60006,
+  "before": 59850
+ },
+ "recompressed": false
+}

@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1eog2f-54su",
+ "card": "The Last Cabbage Merchant",
+ "path": "Creatures/Other/3 Stars/The_Last_Cabbage_Merchant.psd",
+ "png": "Creatures/Other/3 Stars/The_Last_Cabbage_Merchant.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "dcb5e4ba17108702b4ea6b4f3f22279bd5348f89",
+  "png_blob": "1424a57b3ce5091a4e51c2086a19c1116dc9928f"
+ },
+ "edit": {
+  "ability": "Gains a cabbage counter each time a pair turn ends, and loses a cabbage counter for each 3 damage taken.\n(Action) Spend all cabbage counters to generate an equal amount of Cabbages.\nAfter losing 5 total counters from taking damage, gain 5 ATK.",
+  "parts": {
+   "3650": {
+    "field": "ability",
+    "text": "Gains a cabbage counter each time a pair turn ends, and loses a cabbage counter for each 3 damage taken.\n(Action) Spend all cabbage counters to generate an equal amount of Cabbages.\nAfter losing 5 total counters from taking damage, gain 5 ATK.",
+    "was": "Gains a cabbage counter each time a lane turn ends, and loses a cabbage counter for each 3 damage taken.\n(Action) Convert all cabbage counters into Cabbages.\nAfter losing 5 total counters from taking damage, gain 5 ATK.",
+    "sha": "2591abf1",
+    "psd": "dcb5e4ba",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'a lane turn ends, and loses a cabbage co' -> 'a pair turn ends, and loses a cabbage co'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Gains a cabbage counter each time a lane turn ends, and loses a cabbage counter for each 3 damage taken.\n(Action) Convert all cabbage counters into Cabbages.\nAfter losing 5 total counters from taking damage, gain 5 ATK.",
+   "new": "Gains a cabbage counter each time a pair turn ends, and loses a cabbage counter for each 3 damage taken.\n(Action) Spend all cabbage counters to generate an equal amount of Cabbages.\nAfter losing 5 total counters from taking damage, gain 5 ATK."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.141,
+   "max": 3.0
+  }
+ },
+ "region": [
+  76,
+  1749,
+  1126,
+  2262
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41750476177",
+ "took_s": 10.1,
+ "at": "2026-11-04T00:56:34Z",
+ "variant": null,
+ "parts": {
+  "3650": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 4890418,
+  "webp": 214522,
+  "before": 211804
+ },
+ "recompressed": false
+}

@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ptpkh-ppyt",
+ "card": "Grief",
+ "path": "Creatures/Crypt/4 Stars/Grief.psd",
+ "png": "Creatures/Crypt/4 Stars/Grief.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "90bdbc8866b40ee635275384608bb9bb0a2f8f8c",
+  "png_blob": "ae116f2f7f3a851da227f9e4591b539fa7aaa1ca"
+ },
+ "edit": {
+  "ability": "Attacks inflict 2T1 Burdened.\nWhen combo attacking, deals twice as much bonus damage.\n(WOF) Whenever a prime creature is defeated, all creatures on the PF of that team are inflicted with 2T Chilled.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Attacks inflict 2T1 Burdened.\nWhen combo attacking, deals twice as much bonus damage.\n(WOF) Whenever a prime creature is defeated, all creatures on the PF of that team are inflicted with 2T Chilled.",
+    "was": "Attacks inflict 2T1 Burdened.\nWhen combo attacking, deals twice as much bonus damage.\nWhenever a prime creature is defeated, all creatures on the PF of that team are inflicted with 2T Chilled.",
+    "sha": "7daa1209",
+    "psd": "90bdbc88",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'damage. Whenever' -> 'damage. (WOF) Whenever'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Attacks inflict 2T1 Burdened.\nWhen combo attacking, deals twice as much bonus damage.\nWhenever a prime creature is defeated, all creatures on the PF of that team are inflicted with 2T Chilled.",
+   "new": "Attacks inflict 2T1 Burdened.\nWhen combo attacking, deals twice as much bonus damage.\n(WOF) Whenever a prime creature is defeated, all creatures on the PF of that team are inflicted with 2T Chilled."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.129,
+   "max": 3.0
+  }
+ },
+ "region": [
+  14,
+  1753,
+  1186,
+  2378
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41783523068",
+ "took_s": 6.5,
+ "at": "2026-11-04T06:08:32Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1640234,
+  "webp": 61618,
+  "before": 60754
+ },
+ "recompressed": false
+}

@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1r14e7-qkmi",
+ "card": "Miracle Matter",
+ "path": "Creatures/Kirby/3 Stars/Miracle_Matter.psd",
+ "png": "Creatures/Kirby/3 Stars/Miracle_Matter.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "233e29c4eb8a5df4971aa0b50c2881bc05f6abc9",
+  "png_blob": "1ed306308592fd770505684eee74322f92b7e607"
+ },
+ "edit": {
+  "ability": "(1GCD) Assume a form:\nFire: 5/5/8/7\nEarth: 5/8/6/5 and heal 2 HP\nIce: 5/6/7/6 and heal 1 HP\nThis creature gains the type of whatever form it is in until the end of the turn.",
+  "parts": {
+   "1367": {
+    "field": "ability",
+    "text": "(1GCD) Assume a form:",
+    "was": "(1GCD) You may choose one of the following forms:",
+    "sha": "855a83b2",
+    "psd": "233e29c4",
+    "layer": "Text/Stat Txt/ability/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability (1st layer) '(1GCD) You may choose one of the followi' -> '(1GCD) Assume a form:'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD) You may choose one of the following forms:",
+   "new": "(1GCD) Assume a form:"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.228,
+   "max": 3.0
+  }
+ },
+ "region": [
+  6,
+  1750,
+  1086,
+  1903
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41787250944",
+ "took_s": 9.2,
+ "at": "2026-11-04T06:42:18Z",
+ "variant": null,
+ "parts": {
+  "1367": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1545988,
+  "webp": 77640,
+  "before": 80658
+ },
+ "recompressed": false
+}

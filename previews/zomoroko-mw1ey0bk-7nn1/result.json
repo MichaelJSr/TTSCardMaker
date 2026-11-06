@@ -1,0 +1,89 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ey0bk-7nn1",
+ "card": "Pile Of Swords",
+ "path": "Items/Support/4 Stars/Pile_Of_Swords.psd",
+ "png": "Items/Support/4 Stars/Pile_Of_Swords.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "03c3e501324158ce375824445ac2efc08c34ae59",
+  "png_blob": "ea8138f976d652c311db1f8ff232ff4c5e1c767a"
+ },
+ "edit": {
+  "ability": "Auto-equip 6 Copper Swords onto any creatures. \nA single creature cannot hold more than 4 Copper Swords from this item. \nCopper Swords from this item are discarded when unequipped. \nThis counts as a single item usage.    Uses: ∞",
+  "parts": {
+   "320": {
+    "field": "ability",
+    "text": "Auto-equip 6 Copper Swords onto any creatures. \nA single creature cannot hold more than 4 Copper Swords from this item. \nCopper Swords from this item are discarded when unequipped. \nThis counts as a single item usage.    Uses: ∞",
+    "was": "Equip 6 free Copper Swords onto any creatures. \nA single creature cannot hold more than 4 Copper Swords from this item. \nCopper Swords from this item are discarded when unequipped. \nThis counts as a single item usage.    Uses: ∞",
+    "sha": "7c6c93e5",
+    "psd": "03c3e501",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'Equip 6 free Copper' -> 'Auto-equip 6 Copper'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Equip 6 free Copper Swords onto any creatures. \nA single creature cannot hold more than 4 Copper Swords from this item. \nCopper Swords from this item are discarded when unequipped. \nThis counts as a single item usage.    Uses: ∞",
+   "new": "Auto-equip 6 Copper Swords onto any creatures. \nA single creature cannot hold more than 4 Copper Swords from this item. \nCopper Swords from this item are discarded when unequipped. \nThis counts as a single item usage.    Uses: ∞"
+  }
+ ],
+ "notes": [
+  "ability redrawn whole, its lines laid out again: bad 0.52%, mean 0.51, max 96",
+  "overflow: ability: set at 94% of its size to stay on its panel"
+ ],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.018,
+   "max": 2.0
+  }
+ },
+ "region": [
+  20,
+  1344,
+  1187,
+  1791
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41751357864",
+ "took_s": 13.4,
+ "at": "2026-11-04T01:04:08Z",
+ "variant": null,
+ "parts": {
+  "320": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 2332540,
+  "webp": 93742,
+  "before": 96838
+ },
+ "recompressed": false
+}

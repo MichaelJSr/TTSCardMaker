@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1pf889-7wel",
+ "card": "Croissant",
+ "path": "Creatures/Other/5 Stars/Croissant.psd",
+ "png": "Creatures/Other/5 Stars/Croissant.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "82c7eded2e317300894b9701abcb9f1311224ff6",
+  "psd_blob": "cecae1147dc7115eed43de820054bf0fc4d2f472",
+  "png_blob": "778644e15f65de46e0b8bb2bfa173d2414e13fb5"
+ },
+ "edit": {
+  "ability": "(1CD) You may increase the lowest stat of any other friendly creature by 1 bar.\n(OYT) You may consume 10 Bricks to generate a Magnum Opus.\n(Action) Gain 7 bricks.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "(1CD) You may increase the lowest stat of any other friendly creature by 1 bar.\n(OYT) You may consume 10 Bricks to generate a Magnum Opus.\n(Action) Gain 7 bricks.",
+    "was": "(1CD) You may increase the lowest stat of any other friendly creature by 1 bar.\n(OYT) You may consume 10 Bricks to create a Magnum Opus.\n(Action) Generate 7 bricks.",
+    "sha": "0ffcd3c5",
+    "psd": "cecae114",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability 'to create a Magnum Opus. (Action) Genera' -> 'to generate a Magnum Opus. (Action) Gain'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1CD) You may increase the lowest stat of any other friendly creature by 1 bar.\n(OYT) You may consume 10 Bricks to create a Magnum Opus.\n(Action) Generate 7 bricks.",
+   "new": "(1CD) You may increase the lowest stat of any other friendly creature by 1 bar.\n(OYT) You may consume 10 Bricks to generate a Magnum Opus.\n(Action) Gain 7 bricks."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.158,
+   "max": 3.0
+  }
+ },
+ "region": [
+  35,
+  1758,
+  1164,
+  2215
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41782338625",
+ "took_s": 9.1,
+ "at": "2026-11-04T05:57:15Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1759948,
+  "webp": 107190,
+  "before": 107248
+ },
+ "recompressed": false
+}

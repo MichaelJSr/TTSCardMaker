@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1ehxlk-tzfg",
+ "card": "Bobberlington",
+ "path": "Creatures/Other/5 Stars/Bobberlington.psd",
+ "png": "Creatures/Other/5 Stars/Bobberlington.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "521d4939eb9479b17eeb5e051654fa10359b8e07",
+  "psd_blob": "f013358a7523f88c2383ae68112aa15254397e45",
+  "png_blob": "f6fcf876a7c1bd94812340da829e24ec8b2b3f3d"
+ },
+ "edit": {
+  "ability": "(1CD) Inflict 3 stacks of 2T Smeckeldorfed distributed across any creatures.\n(WOF) When a status effect is inflicted, double it if possible, if non-stackable, double the duration.\nThis creature takes no damage from debuffs.\n(OD) Generate a Gasoline, Rope, and Bomb.",
+  "parts": {
+   "3178": {
+    "field": "ability",
+    "text": "(1CD) Inflict 3 stacks of 2T Smeckeldorfed distributed across any creatures.\n(WOF) When a status effect is inflicted, double it if possible, if non-stackable, double the duration.\nThis creature takes no damage from debuffs.\n(OD) Generate a Gasoline, Rope, and Bomb.",
+    "was": "(1CD) Inflict 3 stacks of 2T Smeckeldorfed distributed across any creatures.\n(WOF) When a status effect is inflicted, double it if possible, if non-stackable, double the duration.\nThis creature takes no damage from debuffs.\n(OD) Draw a Gasoline, Rope, and Bomb.",
+    "sha": "a13d2212",
+    "psd": "f013358a",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(OD) Draw a' -> '(OD) Generate a'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1CD) Inflict 3 stacks of 2T Smeckeldorfed distributed across any creatures.\n(WOF) When a status effect is inflicted, double it if possible, if non-stackable, double the duration.\nThis creature takes no damage from debuffs.\n(OD) Draw a Gasoline, Rope, and Bomb.",
+   "new": "(1CD) Inflict 3 stacks of 2T Smeckeldorfed distributed across any creatures.\n(WOF) When a status effect is inflicted, double it if possible, if non-stackable, double the duration.\nThis creature takes no damage from debuffs.\n(OD) Generate a Gasoline, Rope, and Bomb."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.085,
+   "max": 3.0
+  }
+ },
+ "region": [
+  14,
+  1746,
+  1186,
+  2126
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41749876277",
+ "took_s": 14.3,
+ "at": "2026-11-04T00:51:36Z",
+ "variant": null,
+ "parts": {
+  "3178": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3009026,
+  "webp": 132018,
+  "before": 131538
+ },
+ "recompressed": false
+}

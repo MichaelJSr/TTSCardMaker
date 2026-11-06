@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw1kxei5-76ez",
+ "card": "Hornet",
+ "path": "Creatures/Hollow Knight/4 Stars/Hornet.psd",
+ "png": "Creatures/Hollow Knight/4 Stars/Hornet.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "a8ec8a1bca62545dc31e9b1da4ad95b43146ea46",
+  "psd_blob": "b04c7c0e2e16906bf2bd012db0a55e2c20bed285",
+  "png_blob": "3cf92565da073e7f4cb6d174ede76f1df7facf40"
+ },
+ "edit": {
+  "ability": "Can deal no less than 4 DMG when attacking.\n(1CD) Deploy a Sting Shard on any slot.",
+  "parts": {
+   "417": {
+    "field": "ability",
+    "text": "Can deal no less than 4 DMG when attacking.\n(1CD) Deploy a Sting Shard on any slot.",
+    "was": "Can deal no less than 4 DMG when attacking.\n(1CD) Equip a Sting Shard to a friendly creature.",
+    "sha": "2dac144f",
+    "psd": "b04c7c0e",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability '(1CD) Equip a Sting Shard to a friendly ' -> '(1CD) Deploy a Sting Shard on any slot.'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "Can deal no less than 4 DMG when attacking.\n(1CD) Equip a Sting Shard to a friendly creature.",
+   "new": "Can deal no less than 4 DMG when attacking.\n(1CD) Deploy a Sting Shard on any slot."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.332,
+   "max": 3.0
+  }
+ },
+ "region": [
+  16,
+  1790,
+  1184,
+  2211
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/41769620702",
+ "took_s": 6.8,
+ "at": "2026-11-04T03:51:24Z",
+ "variant": null,
+ "parts": {
+  "417": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1856045,
+  "webp": 56568,
+  "before": 58114
+ },
+ "recompressed": false
+}
