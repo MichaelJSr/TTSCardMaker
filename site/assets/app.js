@@ -1675,6 +1675,8 @@ document.addEventListener("click", e => {
     if (to?.startsWith("#/rules/") && to !== location.hash) { rulesAt = to; history.pushState(null, "", to); syncUrl(parseHash()); S.renderedHash = S.listHash = to; }
     return;
   }
+  const hashLink = e.target.closest('a[href^="#/"]');     // under <base>, on c/<id>/ the browser would load the site root afresh (a card's arrows lost the filters)
+  if (hashLink && !hashLink.target && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button)) { e.preventDefault(); location.hash = hashLink.getAttribute("href"); return; }
   if (e.target === modal) actions.close();
 });
 document.addEventListener("change", e => {
