@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-06T03:43:31Z",
+  "ct": "N4zGLOZ618RVffqihj6YEmwSoR3JQE/wvY2snJS9sXbhOy6o9XVAsXycOt1fgPjbGefW+f2lWXw=",
+  "iterations": 2000000,
+  "iv": "V2kOF8VASQBWLmBv",
+  "kdf": "PBKDF2-SHA-256",
+  "login": "netverk",
+  "salt": "WjWXZ9AM9vEWYxWmd8GBzw==",
+  "v": 1
+}
