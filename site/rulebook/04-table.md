@@ -98,7 +98,6 @@ Each coloured strip is a player's hand.
 
 ## EXTRA STUFF
 2. This is a copy of the deck, kept around for various reasons. In case of accidental deletion of a card, if players want to look at the full deck and discuss the game, or for certain abilities that require you to draw from a copy of the deck.
-3. This bag contains specific sorted decks of items  for certain abilities that draw from specific item pools.
-4. This bag contains tokens for each creature type, to signify if a creature type changes.
+3. This bag contains tokens for each creature type, to signify if a creature type changes.
 
 ![](kirby-sleepy.webp){.end width=8}
