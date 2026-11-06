@@ -1,0 +1,91 @@
+{
+ "v": 2,
+ "request": "michaeljsr-mw4w43df-bzee",
+ "card": "Abyss Watcher",
+ "path": "Auxiliary/Minions/Abyss_Watcher.psd",
+ "png": "Auxiliary/Minions/Abyss_Watcher.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "113e3a41856f0f24576ee17e6dbba4e0e85ac53a",
+  "psd_blob": "8e231c931f951f88435954811ba3d0475eab6f6f",
+  "png_blob": "0ecb32382f5960096d8bfb74d75f3838c4e8c653"
+ },
+ "edit": {
+  "types": [
+   "active",
+   "attack",
+   "fire",
+   "offensive_minion",
+   "undead"
+  ]
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "types": "baked"
+ },
+ "reason": "types fire, offensive_minion, undead -> active, attack, fire, offensive_minion, undead",
+ "changes": [
+  {
+   "field": "types",
+   "old": [
+    "fire",
+    "offensive_minion",
+    "undead"
+   ],
+   "new": [
+    "active",
+    "attack",
+    "fire",
+    "offensive_minion",
+    "undead"
+   ]
+  }
+ ],
+ "notes": [
+  "types: 2 made from Types/"
+ ],
+ "parity": {
+  "types": {
+   "bad_pct": 0.0,
+   "mean": 0.057,
+   "max": 1.0
+  }
+ },
+ "region": [
+  32,
+  423,
+  113,
+  647
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42210388792",
+ "took_s": 7.5,
+ "at": "2026-11-06T11:27:51Z",
+ "variant": null,
+ "parts": {},
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 2337801,
+  "webp": 58220,
+  "before": 57180
+ },
+ "recompressed": false
+}

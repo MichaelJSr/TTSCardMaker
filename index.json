@@ -64,6 +64,14 @@
    "psd_blob": "563305eb6b447292756cd81704836903bfd4a8d1",
    "state": "baked"
   },
+  "michaeljsr-mw4w43df-bzee": {
+   "at": "2026-11-06T11:27:51Z",
+   "card": "Abyss Watcher",
+   "path": "Auxiliary/Minions/Abyss_Watcher.psd",
+   "png_blob": "0ecb32382f5960096d8bfb74d75f3838c4e8c653",
+   "psd_blob": "8e231c931f951f88435954811ba3d0475eab6f6f",
+   "state": "baked"
+  },
   "zomoroko-mvw2sl7p-byix": {
    "at": "2026-10-31T07:25:13Z",
    "card": "Mosling",
