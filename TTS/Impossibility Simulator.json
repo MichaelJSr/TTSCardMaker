@@ -76615,7 +76615,6 @@
         156300,
         157000,
         157100,
-        172300,
         172400
       ],
       "CustomDeck": {
@@ -77539,15 +77538,6 @@
         },
         "1571": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Other/3%20Stars/John_Ward.png",
-          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
-          "NumWidth": 1,
-          "NumHeight": 1,
-          "BackIsHidden": true,
-          "UniqueBack": false,
-          "Type": 0
-        },
-        "1723": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/8a7b9cb15c1219ae2d5558a861cde73d80d4eb39/Creatures/Isaac/3%20Stars/Tainted_Forgotten.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -83544,64 +83534,6 @@
           "XmlUI": ""
         },
         {
-          "GUID": "a41abe",
-          "Name": "CardCustom",
-          "Transform": {
-            "posX": -93.4125443,
-            "posY": 2.84836078,
-            "posZ": 19.0147915,
-            "rotX": 0.08018933,
-            "rotY": 90.00961,
-            "rotZ": 359.9841,
-            "scaleX": 3.0,
-            "scaleY": 1.0,
-            "scaleZ": 3.0
-          },
-          "Nickname": "Tainted Forgotten",
-          "Description": "",
-          "GMNotes": "",
-          "AltLookAngle": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "ColorDiffuse": {
-            "r": 0.713235259,
-            "g": 0.713235259,
-            "b": 0.713235259
-          },
-          "LayoutGroupSortIndex": 0,
-          "Value": 0,
-          "Locked": false,
-          "Grid": true,
-          "Snap": true,
-          "IgnoreFoW": false,
-          "MeasureMovement": false,
-          "DragSelectable": true,
-          "Autoraise": true,
-          "Sticky": true,
-          "Tooltip": true,
-          "GridProjection": false,
-          "HideWhenFaceDown": true,
-          "Hands": true,
-          "CardID": 172300,
-          "SidewaysCard": false,
-          "CustomDeck": {
-            "1723": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/8a7b9cb15c1219ae2d5558a861cde73d80d4eb39/Creatures/Isaac/3%20Stars/Tainted_Forgotten.png",
-              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
-              "NumWidth": 1,
-              "NumHeight": 1,
-              "BackIsHidden": true,
-              "UniqueBack": false,
-              "Type": 0
-            }
-          },
-          "LuaScript": "",
-          "LuaScriptState": "",
-          "XmlUI": ""
-        },
-        {
           "GUID": "a08faa",
           "Name": "CardCustom",
           "Transform": {
@@ -83725,7 +83657,6 @@
         156300,
         172000,
         172100,
-        172300,
         172400
       ],
       "CustomDeck": {
@@ -83911,15 +83842,6 @@
         },
         "1721": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Other/3%20Stars/John_Ward.png",
-          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
-          "NumWidth": 1,
-          "NumHeight": 1,
-          "BackIsHidden": true,
-          "UniqueBack": false,
-          "Type": 0
-        },
-        "1723": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/8a7b9cb15c1219ae2d5558a861cde73d80d4eb39/Creatures/Isaac/3%20Stars/Tainted_Forgotten.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -85147,64 +85069,6 @@
           "CustomDeck": {
             "1721": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Other/3%20Stars/John_Ward.png",
-              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
-              "NumWidth": 1,
-              "NumHeight": 1,
-              "BackIsHidden": true,
-              "UniqueBack": false,
-              "Type": 0
-            }
-          },
-          "LuaScript": "",
-          "LuaScriptState": "",
-          "XmlUI": ""
-        },
-        {
-          "GUID": "6bb2a7",
-          "Name": "CardCustom",
-          "Transform": {
-            "posX": -93.4757156,
-            "posY": 2.04703641,
-            "posZ": -15.5978785,
-            "rotX": 0.07854018,
-            "rotY": 90.0097961,
-            "rotZ": 359.88205,
-            "scaleX": 3.0,
-            "scaleY": 1.0,
-            "scaleZ": 3.0
-          },
-          "Nickname": "Tainted Forgotten",
-          "Description": "",
-          "GMNotes": "",
-          "AltLookAngle": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "ColorDiffuse": {
-            "r": 0.713235259,
-            "g": 0.713235259,
-            "b": 0.713235259
-          },
-          "LayoutGroupSortIndex": 0,
-          "Value": 0,
-          "Locked": false,
-          "Grid": true,
-          "Snap": true,
-          "IgnoreFoW": false,
-          "MeasureMovement": false,
-          "DragSelectable": true,
-          "Autoraise": true,
-          "Sticky": true,
-          "Tooltip": true,
-          "GridProjection": false,
-          "HideWhenFaceDown": true,
-          "Hands": true,
-          "CardID": 172300,
-          "SidewaysCard": false,
-          "CustomDeck": {
-            "1723": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/8a7b9cb15c1219ae2d5558a861cde73d80d4eb39/Creatures/Isaac/3%20Stars/Tainted_Forgotten.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -86960,7 +86824,8 @@
         152800,
         152900,
         153800,
-        157200
+        157200,
+        172700
       ],
       "CustomDeck": {
         "781": {
@@ -87793,6 +87658,15 @@
         },
         "1572": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Other/4%20Stars/Militron.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1727": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d34a06f15975eb59d23a467227dc0eeb1b2c5d57/Creatures/Isaac/4%20Stars/Tainted_Forgotten.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -93198,6 +93072,64 @@
           "LuaScript": "",
           "LuaScriptState": "",
           "XmlUI": ""
+        },
+        {
+          "GUID": "79fdfc",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -93.41334,
+            "posY": 2.7506814,
+            "posZ": 14.0945215,
+            "rotX": 0.07856189,
+            "rotY": 89.9996643,
+            "rotZ": 359.961273,
+            "scaleX": 3.0,
+            "scaleY": 1.0,
+            "scaleZ": 3.0
+          },
+          "Nickname": "Tainted Forgotten",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 172700,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1727": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d34a06f15975eb59d23a467227dc0eeb1b2c5d57/Creatures/Isaac/4%20Stars/Tainted_Forgotten.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
         }
       ]
     },
@@ -93257,7 +93189,8 @@
         19900,
         26300,
         152800,
-        153800
+        153800,
+        172300
       ],
       "CustomDeck": {
         "1442": {
@@ -93379,6 +93312,15 @@
         },
         "1538": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bd0a4a61e4602f5e0cb768f26e4442ef088fabc5/Creatures/Hollow%20Knight%20Silksong/4%20Stars/Shakra.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1723": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d34a06f15975eb59d23a467227dc0eeb1b2c5d57/Creatures/Isaac/4%20Stars/Tainted_Forgotten.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -94191,6 +94133,64 @@
           "CustomDeck": {
             "1538": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/bd0a4a61e4602f5e0cb768f26e4442ef088fabc5/Creatures/Hollow%20Knight%20Silksong/4%20Stars/Shakra.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "6bb2a7",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -73.3001,
+            "posY": 1.773999,
+            "posZ": -4.63250875,
+            "rotX": 0.082120806,
+            "rotY": 90.00238,
+            "rotZ": 359.978851,
+            "scaleX": 3.0,
+            "scaleY": 1.0,
+            "scaleZ": 3.0
+          },
+          "Nickname": "Tainted Forgotten",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 172300,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1723": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d34a06f15975eb59d23a467227dc0eeb1b2c5d57/Creatures/Isaac/4%20Stars/Tainted_Forgotten.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -104215,7 +104215,6 @@
         156300,
         157000,
         157100,
-        172300,
         172400
       ],
       "CustomDeck": {
@@ -105139,15 +105138,6 @@
         },
         "1571": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/3b76c75e9ae3be242eaed34e850a545f8cd782a6/Creatures/Other/3%20Stars/John_Ward.png",
-          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
-          "NumWidth": 1,
-          "NumHeight": 1,
-          "BackIsHidden": true,
-          "UniqueBack": false,
-          "Type": 0
-        },
-        "1723": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/8a7b9cb15c1219ae2d5558a861cde73d80d4eb39/Creatures/Isaac/3%20Stars/Tainted_Forgotten.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -111144,64 +111134,6 @@
           "XmlUI": ""
         },
         {
-          "GUID": "f0085e",
-          "Name": "CardCustom",
-          "Transform": {
-            "posX": -93.4125443,
-            "posY": 2.84836078,
-            "posZ": 19.0147915,
-            "rotX": 0.08018933,
-            "rotY": 90.00961,
-            "rotZ": 359.9841,
-            "scaleX": 3.0,
-            "scaleY": 1.0,
-            "scaleZ": 3.0
-          },
-          "Nickname": "Tainted Forgotten",
-          "Description": "",
-          "GMNotes": "",
-          "AltLookAngle": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "ColorDiffuse": {
-            "r": 0.713235259,
-            "g": 0.713235259,
-            "b": 0.713235259
-          },
-          "LayoutGroupSortIndex": 0,
-          "Value": 0,
-          "Locked": false,
-          "Grid": true,
-          "Snap": true,
-          "IgnoreFoW": false,
-          "MeasureMovement": false,
-          "DragSelectable": true,
-          "Autoraise": true,
-          "Sticky": true,
-          "Tooltip": true,
-          "GridProjection": false,
-          "HideWhenFaceDown": true,
-          "Hands": true,
-          "CardID": 172300,
-          "SidewaysCard": false,
-          "CustomDeck": {
-            "1723": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/8a7b9cb15c1219ae2d5558a861cde73d80d4eb39/Creatures/Isaac/3%20Stars/Tainted_Forgotten.png",
-              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
-              "NumWidth": 1,
-              "NumHeight": 1,
-              "BackIsHidden": true,
-              "UniqueBack": false,
-              "Type": 0
-            }
-          },
-          "LuaScript": "",
-          "LuaScriptState": "",
-          "XmlUI": ""
-        },
-        {
           "GUID": "65e816",
           "Name": "CardCustom",
           "Transform": {
@@ -111396,7 +111328,8 @@
         152800,
         152900,
         153800,
-        157200
+        157200,
+        172700
       ],
       "CustomDeck": {
         "781": {
@@ -112229,6 +112162,15 @@
         },
         "1572": {
           "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Other/4%20Stars/Militron.png",
+          "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false,
+          "Type": 0
+        },
+        "1727": {
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d34a06f15975eb59d23a467227dc0eeb1b2c5d57/Creatures/Isaac/4%20Stars/Tainted_Forgotten.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -117623,6 +117565,64 @@
           "CustomDeck": {
             "1572": {
               "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Creatures/Other/4%20Stars/Militron.png",
+              "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
+              "NumWidth": 1,
+              "NumHeight": 1,
+              "BackIsHidden": true,
+              "UniqueBack": false,
+              "Type": 0
+            }
+          },
+          "LuaScript": "",
+          "LuaScriptState": "",
+          "XmlUI": ""
+        },
+        {
+          "GUID": "434e96",
+          "Name": "CardCustom",
+          "Transform": {
+            "posX": -73.6184845,
+            "posY": 2.686689,
+            "posZ": -3.19089818,
+            "rotX": 0.172976524,
+            "rotY": 90.0242844,
+            "rotZ": 0.492688924,
+            "scaleX": 3.0,
+            "scaleY": 1.0,
+            "scaleZ": 3.0
+          },
+          "Nickname": "Tainted Forgotten",
+          "Description": "",
+          "GMNotes": "",
+          "AltLookAngle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "ColorDiffuse": {
+            "r": 0.713235259,
+            "g": 0.713235259,
+            "b": 0.713235259
+          },
+          "LayoutGroupSortIndex": 0,
+          "Value": 0,
+          "Locked": false,
+          "Grid": true,
+          "Snap": true,
+          "IgnoreFoW": false,
+          "MeasureMovement": false,
+          "DragSelectable": true,
+          "Autoraise": true,
+          "Sticky": true,
+          "Tooltip": true,
+          "GridProjection": false,
+          "HideWhenFaceDown": true,
+          "Hands": true,
+          "CardID": 172700,
+          "SidewaysCard": false,
+          "CustomDeck": {
+            "1727": {
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d34a06f15975eb59d23a467227dc0eeb1b2c5d57/Creatures/Isaac/4%20Stars/Tainted_Forgotten.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
