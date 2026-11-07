@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5q0x1q-e66d",
+ "card": "Ice Staff",
+ "path": "Items/Equip/2 Stars/Ice_Staff.psd",
+ "png": "Items/Equip/2 Stars/Ice_Staff.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "69274d06bf99858ab57ab1121c1c41f1beb2a9c8",
+  "png_blob": "2593b0cf1e9d51cc04bd57f13f9cd9d22bf407be"
+ },
+ "edit": {
+  "name": "Ice Staff",
+  "parts": {
+   "327": {
+    "field": "name",
+    "text": "Ice Staff",
+    "was": "ICE Staff",
+    "sha": "38712323",
+    "psd": "69274d06",
+    "layer": "Text/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'ICE Staff' -> 'Ice Staff'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "ICE Staff",
+   "new": "Ice Staff"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.086,
+   "max": 1.0
+  }
+ },
+ "region": [
+  281,
+  8,
+  920,
+  182
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42323931232",
+ "took_s": 5.0,
+ "at": "2026-11-07T01:25:09Z",
+ "variant": null,
+ "parts": {
+  "327": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1939074,
+  "webp": 55066,
+  "before": 54866
+ },
+ "recompressed": false
+}

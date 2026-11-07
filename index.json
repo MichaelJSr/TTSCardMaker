@@ -1207,6 +1207,14 @@
    "png_blob": "f66c8634fb23d9a528c273def49bc7a4c03be675",
    "psd_blob": "95ff960b92d9a767ab0430df7ccf490e75e7c192",
    "state": "baked"
+  },
+  "zomoroko-mw5q0x1q-e66d": {
+   "at": "2026-11-07T01:25:09Z",
+   "card": "Ice Staff",
+   "path": "Items/Equip/2 Stars/Ice_Staff.psd",
+   "png_blob": "2593b0cf1e9d51cc04bd57f13f9cd9d22bf407be",
+   "psd_blob": "69274d06bf99858ab57ab1121c1c41f1beb2a9c8",
+   "state": "baked"
   }
  },
  "v": 1
