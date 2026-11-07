@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5tsmxc-35ca",
+ "card": "Warcraftian Druid",
+ "path": "Creatures/World Of Warcraft/4 Stars/Warcraftian_Druid.psd",
+ "png": "Creatures/World Of Warcraft/4 Stars/Warcraftian_Druid.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "60c53f0d6cd132f8c92be786011c9c08ce08cac4",
+  "psd_blob": "d1b89bcd700d93abc49dcb3441ea1332c23144e4",
+  "png_blob": "37da525d5a21659f06b453930421b08d5e5dd7f1"
+ },
+ "edit": {
+  "ability": "(1GCD)(2U) Assume a form. Forms carry over between turns.\nSwitching into a form more than once does not refresh abilities.\nBear: +1 DEF, (1GCD) Intercept an attack or infliction.\nCat: +2 SPD, may attack twice per action.\nMoonkin: +2 ATK, (1GCD) Gain 1 SP.\nTree: +0.5 DEF, (1CD) Heal a friendly creature by 4 HP.",
+  "parts": {
+   "1247": {
+    "field": "ability",
+    "text": "(1GCD)(2U) Assume a form. Forms carry over between turns.\nSwitching into a form more than once does not refresh abilities.",
+    "was": "(1GCD)(2U) Change forms. Forms carry over between turns.\nSwitching into a form more than once does not refresh abilities.",
+    "sha": "14622298",
+    "psd": "d1b89bcd",
+    "layer": "Text/Ability"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "ability": "refused",
+  "parts": "baked"
+ },
+ "reason": "ability (1st layer) '(1GCD)(2U) Change forms. Forms' -> '(1GCD)(2U) Assume a form. Forms'",
+ "changes": [
+  {
+   "field": "ability",
+   "old": "(1GCD)(2U) Change forms. Forms carry over between turns.\nSwitching into a form more than once does not refresh abilities.",
+   "new": "(1GCD)(2U) Assume a form. Forms carry over between turns.\nSwitching into a form more than once does not refresh abilities."
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "ability": {
+   "bad_pct": 0.0,
+   "mean": 0.125,
+   "max": 3.0
+  }
+ },
+ "region": [
+  67,
+  1769,
+  1131,
+  1894
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42332743440",
+ "took_s": 5.8,
+ "at": "2026-11-07T03:10:44Z",
+ "variant": null,
+ "parts": {
+  "1247": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3660429,
+  "webp": 122194,
+  "before": 122116
+ },
+ "recompressed": false
+}

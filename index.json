@@ -1287,6 +1287,14 @@
    "png_blob": "50785f751d0018244b44c58fbfb6788d8a480d9e",
    "psd_blob": "88480d5c1171b51c33073432860ed0bdc01b79b5",
    "state": "baked"
+  },
+  "zomoroko-mw5tsmxc-35ca": {
+   "at": "2026-11-07T03:10:44Z",
+   "card": "Warcraftian Druid",
+   "path": "Creatures/World Of Warcraft/4 Stars/Warcraftian_Druid.psd",
+   "png_blob": "37da525d5a21659f06b453930421b08d5e5dd7f1",
+   "psd_blob": "d1b89bcd700d93abc49dcb3441ea1332c23144e4",
+   "state": "baked"
   }
  },
  "v": 1
