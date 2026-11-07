@@ -583,7 +583,7 @@ function renderCards(r) {
     <section>
       ${editing() && view_ === "grid" ? tray.html(S.selecting) : ""}
       ${G.toolbarHtml({ count: list.length, waiting, active: active.length, sort: sortOf(p), dir: p.get("dir"), created: S.created, view: view_, size,
-        needs: csv(p, "flags").includes("flagged") ? 0 : needCounts.get("flagged"), tail: `${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
+        needs: csv(p, "flags").includes("flagged") ? 0 : S.cards.filter(flagged).length, tail: `${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
           <button type="button" class="ghost" data-action="select-mode" aria-pressed="${S.selecting}">${S.selecting ? "Done" : "Select"}</button>` : ""}
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}` })}
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v, x, more = ""]) => `<button type="button" class="chip${x ? " x" : ""}" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>${more}`).join("")}</div>` : ""}
