@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5qp6i1-xk2v",
+ "card": "Polar Star",
+ "path": "Auxiliary/Items/Polar_Star.psd",
+ "png": "Auxiliary/Items/Polar_Star.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "be6ae0684cf2ed6f517822960917a4c637d2f021",
+  "png_blob": "eb2530dcce9791ee7485ef834fcbdbb8a6dd033d"
+ },
+ "edit": {
+  "name": "Polar Star",
+  "parts": {
+   "2012": {
+    "field": "name",
+    "text": "Polar\nStar",
+    "was": "POLAR\nSTAR",
+    "sha": "b01b44af",
+    "psd": "be6ae068",
+    "layer": "Text/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'POLAR STAR' -> 'Polar Star'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "POLAR\nSTAR",
+   "new": "Polar\nStar"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.06,
+   "max": 1.0
+  }
+ },
+ "region": [
+  320,
+  2,
+  900,
+  243
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42325602410",
+ "took_s": 5.6,
+ "at": "2026-11-07T01:43:59Z",
+ "variant": null,
+ "parts": {
+  "2012": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1045600,
+  "webp": 48616,
+  "before": 48980
+ },
+ "recompressed": false
+}

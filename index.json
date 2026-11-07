@@ -1263,6 +1263,14 @@
    "png_blob": "17e2404525cda5016ef636f43cb42843bf7f3e82",
    "psd_blob": "3a30ada6d9a53f3049143cb750602f10dd9936d0",
    "state": "baked"
+  },
+  "zomoroko-mw5qp6i1-xk2v": {
+   "at": "2026-11-07T01:43:59Z",
+   "card": "Polar Star",
+   "path": "Auxiliary/Items/Polar_Star.psd",
+   "png_blob": "eb2530dcce9791ee7485ef834fcbdbb8a6dd033d",
+   "psd_blob": "be6ae0684cf2ed6f517822960917a4c637d2f021",
+   "state": "baked"
   }
  },
  "v": 1
