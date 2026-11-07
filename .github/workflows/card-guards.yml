@@ -13,6 +13,10 @@
 #      prints) and commands/font_check.py (fonts MDW/Fonts does not supply). Each reports AT ONCE, as before: the job
 #      summary, its own comment on the commit and its own Discord message in the standards channel (the font check's
 #      pings the card makers' role, owner 2026-10-23; the card check's pings nobody). Never a gate.
+#   5. silent conversions (owner 2026-11-07; AutoCroissant commands/psd_links.py): a pushed PSD (cards, MDW/Templates,
+#      MDW/Unfinished) with an embedded picture, sub or superscript text, a merged image or a link to repair is
+#      converted (pictures linked to Types/ and MDW/Linked/); unused MDW/Linked files go, duplicates are merged. Decided
+#      comes before the conversion, so Card sync's wait does not hold for it. No comment, no Discord.
 # The guards' report (1-3), one per push: the job summary, a comment on the commit, and ONE Discord post to the
 # standards channel ("<login> pushed <card> with these issues: ..."; nobody pinged, no link previews). The post, the
 # PNGs and the fixes land right after the check (owner, 2026-11-03; a 30-minute quiet window before): a PNG the author
@@ -44,6 +48,8 @@ on:
       - "**/*.png"
       - "**/*.PNG"
       - "MDW/Fonts/*"         # the font check: a font added
+      - "Types/**"            # linked files: duplicates and unused ones
+      - "MDW/Linked/**"
   workflow_dispatch:
     inputs:
       dry_run:
@@ -322,14 +328,20 @@ jobs:
 
       # What the post job needs: whether there is anything to land or tell (none: no wait, no post job), and the plan with
       # its files (the artifact). summary.json's told, writes and card errors. fixes: a push's writes to land (on).
+      # normalise: the PSDs the Normalise step converts (on and dry only; never `all`), counted as writes.
       - name: Plan for the post job
         id: plan
         if: always() && steps.check.outcome == 'success'
         shell: bash
+        env:
+          ALL: ${{ inputs.all }}
         run: |
-          jq -e --arg mode "$MODE" '.told + (if $mode == "on" then .writes else 0 end) > 0' "$OUT/summary.json" > /dev/null \
-            && echo "land=true" >> "$GITHUB_OUTPUT"
-          if [ "$GITHUB_EVENT_NAME" = push ] && [ "$MODE" = on ] && jq -e '.writes > 0' "$OUT/summary.json" > /dev/null; then
+          n=$(jq '.normalise // 0' "$OUT/summary.json")
+          if [ "$ALL" = true ] || { [ "$MODE" != on ] && [ "$MODE" != dry ]; }; then n=0; fi
+          echo "normalise=$n" >> "$GITHUB_OUTPUT"
+          jq -e --arg mode "$MODE" --argjson n "$n" '.told + (if $mode == "on" then .writes + $n else 0 end) > 0' \
+            "$OUT/summary.json" > /dev/null && echo "land=true" >> "$GITHUB_OUTPUT"
+          if [ "$GITHUB_EVENT_NAME" = push ] && [ "$MODE" = on ] && jq -e --argjson n "$n" '.writes + $n > 0' "$OUT/summary.json" > /dev/null; then
             echo "fixes=true" >> "$GITHUB_OUTPUT"
           fi
           echo "card_errors=$(jq '.card_errors // 0' "$OUT/summary.json")" >> "$GITHUB_OUTPUT"
@@ -346,6 +358,40 @@ jobs:
         if: always()
         shell: bash
         run: "true"
+
+      # The conversion's Types/ pixels (92 files, one fetch). The cached fonts sit outside the patterns: kept.
+      - name: Types for the conversion
+        id: types
+        if: ${{ !cancelled() && steps.plan.outputs.normalise > 0 }}
+        continue-on-error: true   # no conversion this push: the PSDs stay as pushed
+        timeout-minutes: 5
+        shell: bash
+        env:
+          GIT_NO_LAZY_FETCH: "0"
+        run: |
+          git config sparse.expectFilesOutsideOfPatterns true
+          git sparse-checkout add /Types/
+
+      # The conversions into plan.json and summary.json (writes, files), silent. No card starts past minute 28 of the job;
+      # one not started, or a broken step, stays as pushed: its next push converts it.
+      - name: Normalise
+        id: normalise
+        if: ${{ !cancelled() && steps.types.outcome == 'success' }}
+        continue-on-error: true
+        timeout-minutes: 30
+        working-directory: bot
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STARTED: ${{ steps.start.outputs.started }}
+        run: |
+          left=$((STARTED + 36 * 60 - $(date +%s)))   # killed by minute 36: the comment and the artifact fit the job's 40
+          [ "$left" -ge 60 ] || { echo "Minute 35 of the job passed: the pushed PSDs stay as pushed."; exit 0; }
+          if ! timeout "$left" python -m commands.card_guards normalise --out "$OUT" --clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" \
+              --deadline "$((STARTED + 28 * 60))" | tee -a "$GITHUB_STEP_SUMMARY"; then
+            echo "::warning::the conversion broke: the pushed PSDs stay as pushed"
+            exit 1
+          fi
 
       # The report as a comment on the pushed commit, when it says more than "nothing to do" (summary.json's "comment":
       # told, written, a card's error, or comment-only lines such as R10). A re-run edits the oldest guards comment, and
@@ -567,6 +613,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT: ${{ github.event_name }}
+          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git   # git_commit's git path: past ~40 files
         run: |
           echo "ran=true" >> "$GITHUB_OUTPUT"
           args=(--plan "$OUT/plan.json" --repo "$GITHUB_REPOSITORY")

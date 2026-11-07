@@ -1,12 +1,15 @@
 # Card sync (AutoCroissant docs/Campaigns/DATA_BUILD_ACTION.md section 6): builds the card data (db/ JSON on the orphan
 # branch `data`) and writes the changelog posts, bakes the website's pending PSD edits and updates the TTS save on main.
 # Every stage is the bot's code, checked out from bobberlington/AutoCroissant at the builder ref: card_data, changelog
-# post, card_bake --local, rulebook_pages, tts_save --names. Two lanes (owner, 2026-10-25: only main's writes wait):
+# post, card_bake --local, rulebook_pages, tts_save --names, psd_links redraw. Two lanes (owner, 2026-10-25: only
+# main's writes wait):
 # - data (Card data): at once on every run but a retry: re-reads main's head, one commit on `data`, the posts, the site.
 # - main (Bake and save): the bake and the save as one commit M on main (fast-forward only), then the baked PNGs' save
 #   links re-pinned (a second commit). A card push's goes at once (owner, 2026-11-03: no 30-minute window any more): it
 #   syncs main's head, one lane at a time (card-main; a newer pending one replaces an older one), and a push made while
 #   another push's lane is starting rides along. After M the after job re-reads the baked cards into `data` (no wait).
+#   A linked file (Types/, MDW/Linked/) changed since its users' pictures were drawn: the Linked redraw redraws those
+#   layers and their PNGs as commit R on M, in M's push (silent; capped, Leftover work chains the rest).
 # The bake's verdicts and events live on `data` (AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md): the main job records
 # them (bake-records), the first data job after it (the after job, else the next) merges them in its data commit
 # (verdicts.json; baked, bake-refused; the merged artifacts in bake-records.json), so a refusal makes no main commit of
@@ -36,6 +39,7 @@ on:
       - "**.[pP][sS][dD]"
       - "**.[pP][nN][gG]"
       - "Types/**"
+      - "MDW/Linked/**"      # linked pictures: the Linked redraw
       - "MDW/Fonts/*"
       - "MDW/Fonts/stoogedings-src/stoogedings.json"
       - "site/Card Edits.json"
@@ -122,7 +126,7 @@ jobs:
       run:
         shell: bash
     env:
-      AFTER: ""               # the after job: the bake's main commit M
+      AFTER: ""               # the after job: the main lane's last commit (M, or R on it)
       RECORDS: ""             # the after job: its dispatch inputs are the data job's (the records come from any run)
     steps: &data-steps
       # Main's head (not github.sha): every commit and tree, no file contents but the small files the stages read. The
@@ -258,11 +262,11 @@ jobs:
           fi
           db=carddata/db
           manifest=$db/manifest.json
-          inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
+          inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' 'MDW/Linked/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
                   'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json'
                   ':(glob)site/rulebook/*.md')    # the builder's lower-cased extensions
           why=()
-          if [ -n "$AFTER" ]; then why+=("the bake's main commit ${AFTER:0:8} to re-read"); fi
+          if [ -n "$AFTER" ]; then why+=("the main lane's commit ${AFTER:0:8} to re-read"); fi
           rec=$RUNNER_TEMP/records-in
           n=$( { jq '.cards | length' "$rec/verdicts.json" 2> /dev/null || echo 0; } | head -1)
           e=$( { jq 'length' "$rec/events.json" 2> /dev/null || echo 0; } | head -1)
@@ -350,7 +354,7 @@ jobs:
       - &venv
         name: Python environment
         id: venv
-        if: env.GO == 'true' || env.EDITS == 'true'
+        if: env.GO == 'true' || env.EDITS == 'true' || env.LINKED == 'true'
         timeout-minutes: 15
         uses: ./.github/actions/cards-python
         with:
@@ -740,9 +744,12 @@ jobs:
     outputs:
       saved: ${{ steps.venv.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
       m: ${{ steps.main.outputs.m }}
+      top: ${{ steps.main.outputs.top }}        # the lane's last commit pushed: R, else M
       baked: ${{ steps.main.outputs.baked }}
+      redrawn: ${{ steps.main.outputs.redrawn }}
       records: ${{ steps.records.outputs.records }}
       due: ${{ steps.left.outputs.due }}
+      redraw_due: ${{ steps.redraw.outputs.due }}
     defaults:
       run:
         shell: bash
@@ -754,7 +761,7 @@ jobs:
       # Go for a push, a dispatch or a retry; the schedule's and a chained run's when a card input or
       # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished, or
       # none of the last 30 runs did; else (g) a website edit the bake put off (capped, main moved): the Pending edits
-      # step. GO and EDITS in the env.
+      # step; else (h) linked pictures not redrawn yet: the Linked due step. GO, EDITS and LINKED in the env.
       - name: Gate
         id: gate
         env:
@@ -769,7 +776,7 @@ jobs:
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
                   'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json'
                   'TTS/Impossibility Simulator.json' ':(glob)site/rulebook/*.md' 'TTS/Global.lua' 'TTS/Global.xml'
-                  'site/assets/' 'site/build/')    # the site code draws the rulebook PDF
+                  'site/assets/' 'site/build/' 'MDW/Linked/')    # the site code draws the rulebook PDF
           why=()
           event=$GITHUB_EVENT_NAME
           if [ -n "$CHAIN" ]; then event=schedule; fi      # a chained run gates as the schedule
@@ -802,8 +809,10 @@ jobs:
               "site/Card Edits.json")
           fi
           edits=$([ "$edits" -gt 0 ] && echo true || echo false)
+          linked=false                          # (h): the Linked due step reads the links
+          if [ "$go" = false ] && [ -f carddata/db/links.json ]; then linked=true; fi
           { echo "go=$go"; echo "edits=$edits"; } >> "$GITHUB_OUTPUT"
-          { echo "GO=$go"; echo "EDITS=$edits"; } >> "$GITHUB_ENV"
+          { echo "GO=$go"; echo "EDITS=$edits"; echo "LINKED=$linked"; } >> "$GITHUB_ENV"
           {
             echo "## Bake and save$([ "$DRY_RUN" = true ] && echo " (dry run)")"
             echo
@@ -855,6 +864,30 @@ jobs:
             echo "GO=true" >> "$GITHUB_ENV"
           else
             echo "No website edit pending." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # (h): linked pictures the redraw has not done yet (a capped run, a chain that stopped) start the lane. `due`
+      # prints how many cards: one REST call and the data's links.json.
+      - name: Linked due
+        if: env.LINKED == 'true' && env.GO != 'true' && steps.venv.outcome == 'success'
+        timeout-minutes: 5
+        working-directory: bot
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GIT_NO_LAZY_FETCH: "1"
+          MAIN: ${{ steps.gate.outputs.main }}
+        run: |
+          [ -f commands/psd_links.py ] || { echo "The builder has no psd_links: nothing to redraw."; exit 0; }
+          if ! n=$("$RUNNER_TEMP/venv/bin/python" -m commands.psd_links due --repo "$GITHUB_REPOSITORY" --head "$MAIN" \
+              --clone "$GITHUB_WORKSPACE" --db "$GITHUB_WORKSPACE/carddata/db"); then
+            echo "::warning::the linked pictures due were not read: the next run looks again"
+            exit 0
+          fi
+          if [ "${n:-0}" -gt 0 ] 2> /dev/null; then
+            echo "- linked pictures to redraw: $n cards" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "GO=true" >> "$GITHUB_ENV"
+          else
+            echo "No linked picture due." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
       - *fonts
@@ -956,14 +989,66 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      # One commit M on main's head with B's files and the save, fast-forward only. A temp index and
-      # --missing-ok keep git from fetching the tree's blobs. Past minute 60 M is not pushed (red): the 30 minutes left
-      # cover this step's cap and every later one's, and the next run does the work. Main moved meanwhile: M is dropped
-      # and the lane starts over once from the new head, unless another run is unfinished (it does the work: a push's in
-      # its window, a pending one). The retry is marked by inputs.retry, runs only this lane and starts no other.
+      # Linked files changed since their users' pictures were drawn (AutoCroissant psd_links redraw, read from main's tree
+      # and the data's links.json): those layers redrawn on the checkout's HEAD (B's version of a baked card) and their
+      # PNGs re-exported past 2 levels, as one local commit R ("Card sync: linked pictures redrawn", Card-sweep: linked,
+      # silent) that Commit main puts on M, in M's push. No card starts past minute 45 of the lane; R's bytes stay under
+      # 1.5 GB less M's. Blobs come in the guards' chunks. due: cards left (Leftover work chains on it). A dry run: no R.
+      - name: Linked redraw
+        id: redraw
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
+        timeout-minutes: 50
+        working-directory: bot
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GIT_NO_LAZY_FETCH: "1"
+          PSD_TOOLS_FONT_DIRS: ${{ github.workspace }}/MDW/Fonts
+          MAIN: ${{ steps.gate.outputs.main }}
+          START: ${{ steps.gate.outputs.start }}
+          SAVED: ${{ steps.save.outputs.changed }}
+          PAGES: ${{ steps.pages.outputs.changed }}
+        run: |
+          [ -f commands/psd_links.py ] || { echo "The builder has no psd_links: nothing to redraw."; exit 0; }
+          ws=$GITHUB_WORKSPACE
+          [ -f "$ws/carddata/db/links.json" ] || { echo "No db/links.json on data yet: nothing to redraw."; exit 0; }
+          left=$((START + 55 * 60 - $(date +%s)))   # killed by minute 55: Commit main still pushes M before minute 60
+          [ "$left" -ge 60 ] || { echo "Minute 54 of the lane passed: no redraw this run."; exit 0; }
+          head=$(git -C "$ws" rev-parse HEAD)
+          m=0                                   # M's bytes: the bake's new blobs, the save, the rulebook's pages
+          if [ "$head" != "$MAIN" ]; then
+            m=$(git -C "$ws" diff-tree -r --no-renames "$MAIN" "$head" | awk '$4 !~ /^0+$/ {print $4}' \
+              | git -C "$ws" cat-file --batch-check='%(objectsize)' | awk '$1 ~ /^[0-9]+$/ {s += $1} END {print s + 0}')
+          fi
+          if [ "$SAVED" = true ]; then m=$((m + $(stat -c %s "$ws/TTS/Impossibility Simulator.json"))); fi
+          if [ "$PAGES" = true ]; then m=$((m + $(du -sb "$ws/TTS/Rulebook" | cut -f1))); fi
+          args=(--repo "$GITHUB_REPOSITORY" --head "$head" --local "$ws" --db "$ws/carddata/db" --out "$RUNNER_TEMP/linked"
+                --deadline "$((START + 45 * 60))" --bytes "$((1500000000 - m))")
+          if [ "$DRY_RUN" = true ]; then args+=(--dry-run); fi
+          set +e
+          timeout "$left" "$RUNNER_TEMP/venv/bin/python" -m commands.psd_links redraw "${args[@]}" > "$RUNNER_TEMP/redraw.md"
+          code=$?
+          set -e
+          cat "$RUNNER_TEMP/redraw.md"
+          cat "$RUNNER_TEMP/redraw.md" >> "$GITHUB_STEP_SUMMARY"
+          echo "due=$(jq '.due // 0' "$RUNNER_TEMP/linked/redraw.json" 2> /dev/null || echo 0)" >> "$GITHUB_OUTPUT"
+          now=$(git -C "$ws" rev-parse HEAD)
+          if [ "$now" != "$head" ]; then
+            if [ "$(git -C "$ws" rev-parse "$now^")" != "$head" ]; then
+              echo "::error::The checkout's HEAD ${now:0:8} is not a commit on ${head:0:8}"
+              exit 1
+            fi
+            echo "r=$now" >> "$GITHUB_OUTPUT"
+          fi
+          exit "$code"
+
+      # One commit M on main's head with B's files and the save, then the redraw's R on M, fast-forward only. A temp index
+      # and --missing-ok keep git from fetching the tree's blobs. Past minute 60 nothing is pushed (red): the 30 minutes left
+      # cover this step's cap and every later one's, and the next run does the work. Main moved meanwhile: M and R are
+      # dropped and the lane starts over once from the new head, unless another run is unfinished (it does the work: a
+      # push's in its window, a pending one). The retry is marked by inputs.retry, runs only this lane and starts no other.
       - name: Commit main
         id: main
-        if: ${{ !cancelled() && env.GO == 'true' && env.DRY_RUN != 'true' && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true' || steps.pages.outputs.changed == 'true') }}
+        if: ${{ !cancelled() && env.GO == 'true' && env.DRY_RUN != 'true' && (steps.bake.outputs.baked == 'true' || steps.save.outputs.changed == 'true' || steps.pages.outputs.changed == 'true' || steps.redraw.outputs.r != '') }}
         timeout-minutes: 10
         env:
           GH_TOKEN: ${{ github.token }}
@@ -973,13 +1058,14 @@ jobs:
           SAVED: ${{ steps.save.outputs.changed }}
           PAGES: ${{ steps.pages.outputs.changed }}
           B: ${{ steps.bake.outputs.b }}
+          R: ${{ steps.redraw.outputs.r }}
           RETRY: ${{ inputs.retry && 'true' || 'false' }}
           INPUTS: ${{ toJSON(inputs) }}
         run: |
           save="TTS/Impossibility Simulator.json"
           head=${B:-$MAIN}                      # the bake's commit, not HEAD: a timed-out bake can leave B unreported
-          if [ "$(git rev-parse HEAD)" != "$head" ]; then
-            echo "::error::The checkout's HEAD is not the commit the lane made (${head:0:8}): nothing for main"
+          if [ "$(git rev-parse HEAD)" != "${R:-$head}" ] || { [ -n "$R" ] && [ "$(git rev-parse "$R^")" != "$head" ]; }; then
+            echo "::error::The checkout's HEAD is not the commit the lane made (${R:-$head}): nothing for main"
             exit 1
           fi
           parts=()
@@ -1000,40 +1086,59 @@ jobs:
           fi
           tree=$(git write-tree --missing-ok)
           unset GIT_INDEX_FILE
-          if [ "$tree" = "$(git rev-parse "$MAIN^{tree}")" ]; then echo "Nothing for main."; exit 0; fi
-          subject=$(printf '%s, ' "${parts[@]}")
-          {
-            echo "Card sync: ${subject%, }"
-            if [ "$SAVED" = true ]; then echo; head -1 "TTS/Impossibility Simulator.message.txt" 2> /dev/null || true; fi
-            if [ "$head" != "$MAIN" ]; then echo; git log -1 --format=%B "$head"; fi
-          } | git stripspace > "$RUNNER_TEMP/main-message.txt"
-          m=$(GIT_AUTHOR_NAME=AutoCroissant GIT_AUTHOR_EMAIL=autocroissant@gmail.com \
-              GIT_COMMITTER_NAME=AutoCroissant GIT_COMMITTER_EMAIL=autocroissant@gmail.com \
-              git commit-tree "$tree" -p "$MAIN" -F "$RUNNER_TEMP/main-message.txt")
-          git show --no-renames --name-status --format='%H%n%B' "$m" | tee "$RUNNER_TEMP/main.txt"
+          me=(GIT_AUTHOR_NAME=AutoCroissant GIT_AUTHOR_EMAIL=autocroissant@gmail.com
+              GIT_COMMITTER_NAME=AutoCroissant GIT_COMMITTER_EMAIL=autocroissant@gmail.com)
+          m="" r="" subject=""
+          : > "$RUNNER_TEMP/main.txt"
+          if [ "$tree" != "$(git rev-parse "$MAIN^{tree}")" ]; then
+            subject=$(printf '%s, ' "${parts[@]}")
+            {
+              echo "Card sync: ${subject%, }"
+              if [ "$SAVED" = true ]; then echo; head -1 "TTS/Impossibility Simulator.message.txt" 2> /dev/null || true; fi
+              if [ "$head" != "$MAIN" ]; then echo; git log -1 --format=%B "$head"; fi
+            } | git stripspace > "$RUNNER_TEMP/main-message.txt"
+            m=$(env "${me[@]}" git commit-tree "$tree" -p "$MAIN" -F "$RUNNER_TEMP/main-message.txt")
+            git show --no-renames --name-status --format='%H%n%B' "$m" | tee -a "$RUNNER_TEMP/main.txt"
+          fi
+          if [ -n "$R" ]; then                   # R's files on M (or main's head), its message kept
+            export GIT_INDEX_FILE=$RUNNER_TEMP/redraw.index
+            git read-tree "${m:-$MAIN}"
+            git diff-tree -z -r --no-renames "$head" "$R" | while IFS= read -r -d '' meta && IFS= read -r -d '' path; do
+              read -r _ mode _ sha status <<< "$meta"
+              if [ "$status" = D ]; then mode=0; fi
+              printf '%s %s\t%s\0' "$mode" "$sha" "$path"
+            done | git update-index -z --index-info
+            rtree=$(git write-tree --missing-ok)
+            unset GIT_INDEX_FILE
+            git log -1 --format=%B "$R" > "$RUNNER_TEMP/redraw-message.txt"
+            r=$(env "${me[@]}" git commit-tree "$rtree" -p "${m:-$MAIN}" -F "$RUNNER_TEMP/redraw-message.txt")
+            git show --no-renames --name-status --format='%H%n%B' "$r" | tee -a "$RUNNER_TEMP/main.txt"
+          fi
+          top=${r:-$m}
+          if [ -z "$top" ]; then echo "Nothing for main."; exit 0; fi
           late=$(( (90 - 30) * 60 ))            # the job's timeout-minutes less the caps of this step and the later ones (seconds)
           if [ -n "$START" ] && [ $(( $(date +%s) - START )) -gt "$late" ]; then
-            echo "::error::$(( ($(date +%s) - START) / 60 )) minutes into the lane: M is not pushed; the next run does it"
+            echo "::error::$(( ($(date +%s) - START) / 60 )) minutes into the lane: nothing is pushed; the next run does it"
             exit 1
           fi
           ok=true
           # no delta search (pack.window=0): over HTTPS the pack is thin whatever --no-thin says, and its deltas would want
           # the old blobs this blobless checkout lacks (every bake's first push failed so, 5 s a card to fetch them)
-          if ! git -c pack.window=0 push --no-thin origin "$m:refs/heads/main"; then
+          if ! git -c pack.window=0 push --no-thin origin "$top:refs/heads/main"; then
             if [ "$(git ls-remote origin refs/heads/main | cut -f1)" = "$MAIN" ]; then   # main still there: GitHub refused, or git wanted a blob
               echo "::warning::the push failed with main unmoved (its error is above): once more"
-              GIT_NO_LAZY_FETCH=0 git -c pack.window=0 push --no-thin origin "$m:refs/heads/main" || ok=false
+              GIT_NO_LAZY_FETCH=0 git -c pack.window=0 push --no-thin origin "$top:refs/heads/main" || ok=false
             else
               ok=false
             fi
           fi
-          now=$m
+          now=$top
           if [ "$ok" = false ]; then now=$(git ls-remote origin refs/heads/main | cut -f1); fi
-          if [ "$ok" = false ] && [ "$now" = "$m" ]; then echo "::warning::git push failed, but main is at M: pushed"; fi
-          if [ "$now" != "$m" ]; then
+          if [ "$ok" = false ] && [ "$now" = "$top" ]; then echo "::warning::git push failed, but main is at ${top:0:8}: pushed"; fi
+          if [ "$now" != "$top" ]; then
             if [ -z "$now" ] || [ "$now" = "$MAIN" ]; then exit 1; fi
             echo "rejected=true" >> "$GITHUB_OUTPUT"
-            echo "::warning::main moved during the lane (now ${now:0:8}): M is dropped"
+            echo "::warning::main moved during the lane (now ${now:0:8}): the lane's commits are dropped"
             if [ "$RETRY" = true ]; then echo "This run was the retry: the next run with work does it."; exit 0; fi
             waiting=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --limit 20 --json databaseId,status,displayTitle \
               --jq "map(select(.status != \"completed\" and .databaseId != ${GITHUB_RUN_ID:-0} and .displayTitle != \"Card sync (dry run)\")) | length") \
@@ -1048,10 +1153,12 @@ jobs:
             echo "::warning::the new run was not dispatched: the next run with work does it"
             exit 0
           fi
-          pngs=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$m" -- ':(icase)*.png' ':(icase)*.pdf' | { grep -c . || true; })   # the rulebook PDF too
-          { echo "pushed=true"; echo "m=$m"; echo "baked=$([ "$head" != "$MAIN" ] && echo true || echo false)"
+          pngs=$(git diff-tree --no-commit-id -r --name-only "$MAIN" "$top" -- ':(icase)*.png' ':(icase)*.pdf' | { grep -c . || true; })   # the rulebook PDF too
+          { echo "pushed=true"; echo "m=$m"; echo "top=$top"; echo "baked=$([ "$head" != "$MAIN" ] && echo true || echo false)"
+            echo "redrawn=$([ -n "$r" ] && echo true || echo false)"
             echo "pngs=$([ "$pngs" -gt 0 ] && echo true || echo false)"; } >> "$GITHUB_OUTPUT"
-          echo "Main commit \`${m:0:8}\`: Card sync: ${subject%, }." >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$m" ]; then echo "Main commit \`${m:0:8}\`: Card sync: ${subject%, }." >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ -n "$r" ]; then echo "Main commit \`${r:0:8}\`: $(head -1 "$RUNNER_TEMP/redraw-message.txt")." >> "$GITHUB_STEP_SUMMARY"; fi
 
       # The bake's records for the data lane (bake-records): the refusals' verdicts and events always (no main commit),
       # the landed part (the verdicts the dropped entries held, the baked events, their commit M) only when M landed.
@@ -1118,9 +1225,10 @@ jobs:
           echo "due=$due" >> "$GITHUB_OUTPUT"
           echo "Website edits left: $due to bake now." | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # The baked PNGs' save links: the save above pinned main before M, so it runs again on M and any change is a second
-      # commit on M (the save alone), fast-forward only. A failed push with main still at M goes once more (the Gate skips
-      # the lane's commits: no run would come for it). Main moved meanwhile: a warning; the next lane's save pins them.
+      # The baked PNGs' save links: the save above pinned main before M, so it runs again on the lane's last commit (R,
+      # else M; $M below) and any change is a commit on it (the save alone), fast-forward only. A failed push with main
+      # still there goes once more (the Gate skips the lane's commits: no run would come for it). Main moved meanwhile: a
+      # warning; the next lane's save pins them.
       - name: Re-pin
         id: repin
         if: ${{ !cancelled() && steps.main.outputs.pngs == 'true' }}
@@ -1130,7 +1238,7 @@ jobs:
           AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
           AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
           GIT_NO_LAZY_FETCH: "1"
-          M: ${{ steps.main.outputs.m }}
+          M: ${{ steps.main.outputs.top }}
         run: |
           save="TTS/Impossibility Simulator.json"
           names=()
@@ -1174,7 +1282,10 @@ jobs:
           if [ -d "$RUNNER_TEMP/card-bake" ]; then     # not the PSDs (both sides are in git once M lands; 1.4 GB for 40)
             rsync -a --exclude='*.psd' --exclude='*.PSD' "$RUNNER_TEMP/card-bake/" "$out/bake/"
           fi
-          for f in bake.md pages.md save.md repin.md main-message.txt main.txt; do
+          if [ -d "$RUNNER_TEMP/linked" ]; then         # the redraw's report (not its PSDs)
+            rsync -a --exclude='*.psd' --exclude='*.PSD' --exclude='*.psb' "$RUNNER_TEMP/linked/" "$out/linked/"
+          fi
+          for f in bake.md pages.md save.md redraw.md repin.md main-message.txt redraw-message.txt main.txt; do
             if [ -f "$RUNNER_TEMP/$f" ]; then cp "$RUNNER_TEMP/$f" "$out/"; fi
           done
           for f in TTS/*.report.md TTS/*.message.txt; do
@@ -1198,17 +1309,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
-          OUTCOMES: "gate=${{ steps.gate.outcome }} bake=${{ steps.bake.outcome }} save=${{ steps.save.outcome }} main=${{ steps.main.outcome }} repin=${{ steps.repin.outcome }}"
+          OUTCOMES: "gate=${{ steps.gate.outcome }} bake=${{ steps.bake.outcome }} save=${{ steps.save.outcome }} redraw=${{ steps.redraw.outcome }} main=${{ steps.main.outcome }} repin=${{ steps.repin.outcome }}"
         run: *tell
 
-  # After M (it brought the bake's card files) or a bake that only recorded verdicts: the data lane again, on main's head
-  # then, no wait, without the dispatch's inputs (full, cards, restore, allow_archive: the data job's), with the bake's
-  # records merged in its data commit. Its site build shows the baked PNGs. Replaced while pending (card-data), or lost,
+  # After M (it brought the bake's card files), R (the redrawn cards) or a bake that only recorded verdicts: the data lane
+  # again, on main's head then, no wait, without the dispatch's inputs (full, cards, restore, allow_archive: the data
+  # job's), with the bake's records merged in its data commit. Its site build shows the baked PNGs. Replaced while pending (card-data), or lost,
   # the next data job merges the records.
   after:
     name: Card data after the bake
     needs: main
-    if: ${{ !cancelled() && (needs.main.outputs.baked == 'true' || needs.main.outputs.records == 'true') }}
+    if: ${{ !cancelled() && (needs.main.outputs.baked == 'true' || needs.main.outputs.redrawn == 'true' || needs.main.outputs.records == 'true') }}
     concurrency:
       group: ${{ inputs.dry_run && format('card-data-dry-{0}', github.run_id) || 'card-data' }}
       cancel-in-progress: false
@@ -1220,13 +1331,14 @@ jobs:
       run:
         shell: bash
     env:
-      AFTER: ${{ needs.main.outputs.baked == 'true' && needs.main.outputs.m || '' }}
+      AFTER: ${{ (needs.main.outputs.baked == 'true' || needs.main.outputs.redrawn == 'true') && needs.main.outputs.top || '' }}
       RECORDS: "true"
     steps: *data-steps
 
   # Leftover work (owner, 2026-10-25: the chain and a safety schedule): a live run's last job dispatches the next run when
   # work is left, at once (chain=now): cards still to re-parse (manifest pending.stale), bake records no data commit
-  # merged, website edits not baked (chain=wait, for edits held by a recent push, went on 2026-11-04). None when nothing
+  # merged, website edits not baked (chain=wait, for edits held by a recent push, went on 2026-11-04), linked pictures
+  # the redraw's caps left (its Linked due step starts the next lane). None when nothing
   # is left, a lane failed (Discord was told), another live run's lane will read it (unfinished: its own chain looks
   # again), after CHAIN_IDLE runs in a row without a data or main commit or CHAIN_MAX runs (the safety schedule picks it
   # up); never from a dry run. The chain input carries the count. A push's run (its main lane waits for its guards) also
@@ -1251,6 +1363,7 @@ jobs:
       LANES: "data=${{ needs.data.result }}"
       PROGRESS: ${{ needs.data.outputs.committed == 'true' && 'true' || 'false' }}
       DUE: ""
+      REDRAW: ""
     steps:
       - &chain
         name: Leftover work
@@ -1292,6 +1405,8 @@ jobs:
           if [ "${records:-0}" -gt 0 ]; then now+=("$records bake records not merged"); fi
           data=${#now[@]}
           if [ "${DUE:-0}" -gt 0 ]; then now+=("$DUE website edits to bake"); fi
+          if [ "${REDRAW:-0}" -gt 0 ]; then now+=("$REDRAW cards' linked pictures to redraw"); fi
+          main=$(( ${DUE:-0} + ${REDRAW:-0} ))  # the main lane's work
           if [ ${#now[@]} -eq 0 ]; then say "Nothing left: no chain."; exit 0; fi
           printf -- '- %s\n' "${now[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
           # Another live run that will read it: queued, or its lane not finished (its own chain looks again at its end)
@@ -1308,7 +1423,7 @@ jobs:
             if [[ " $open " == *" data "* ]]; then data_by=${data_by:-$id}; fi
             if [[ " $open " == *" main "* ]]; then main_by=${main_by:-$id}; fi
           done <<< "$others"
-          if ! { [ "$data" -gt 0 ] && [ -z "$data_by" ]; } && ! { [ "${DUE:-0}" -gt 0 ] && [ -z "$main_by" ]; }; then
+          if ! { [ "$data" -gt 0 ] && [ -z "$data_by" ]; } && ! { [ "$main" -gt 0 ] && [ -z "$main_by" ]; }; then
             say "No chain: run ${data_by:-$main_by} is unfinished and reads it."
             exit 0
           fi
@@ -1350,8 +1465,9 @@ jobs:
     env:
       TITLE: Chain
       LANES: "data=${{ needs.data.result }} main=${{ needs.main.result }} after=${{ needs.after.result }}"
-      PROGRESS: ${{ (needs.data.outputs.committed == 'true' || needs.after.outputs.committed == 'true' || needs.main.outputs.m) && 'true' || 'false' }}
+      PROGRESS: ${{ (needs.data.outputs.committed == 'true' || needs.after.outputs.committed == 'true' || needs.main.outputs.top) && 'true' || 'false' }}
       DUE: ${{ needs.main.outputs.due }}
+      REDRAW: ${{ needs.main.outputs.redraw_due }}
     steps:
       - *chain
 
