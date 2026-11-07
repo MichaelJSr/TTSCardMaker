@@ -3771,6 +3771,2106 @@
    }
   ]
  },
+ "Auxiliary/Minions/Lil_Spood.psd": {
+  "blob": "70264186fb8e028c42d4f372e225dbe877b3a5ea",
+  "links": [
+   {
+    "drawn": "cb5fa0ef961707a9f30feafebccb8bc348a07e89",
+    "name": "Lil_Spood - GWuzWBYXgAAYdMS.jpg",
+    "path": "MDW/Linked/Lil_Spood - GWuzWBYXgAAYdMS.jpg",
+    "size": 521035
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "name": "Defensive_Minion.png",
+    "path": "Types/Defensive_Minion.png",
+    "size": 25788
+   }
+  ]
+ },
+ "Auxiliary/Minions/Living_Bread.psd": {
+  "blob": "39cb77010f0fcc525ef8c848436d93c119a95389",
+  "links": [
+   {
+    "drawn": "7d6c9adbbea7c2b3e64ee0152e33eb55f94148cd",
+    "name": "Living_Bread - Layer 1.psb",
+    "path": "MDW/Linked/Living_Bread - Layer 1.psb",
+    "size": 2172402
+   },
+   {
+    "drawn": "31801c6ce1bc9ca715f58473db5b7d4f5b98f988",
+    "name": "Living_Bread - oasis.jpg",
+    "path": "MDW/Linked/Living_Bread - oasis.jpg",
+    "size": 272404
+   },
+   {
+    "drawn": "f2c30930023e63583fbef6ec3f4a394798acf624",
+    "name": "Living_Bread - Living_Bread__28Neutral_29.png",
+    "path": "MDW/Linked/Living_Bread - Living_Bread__28Neutral_29.png",
+    "size": 16532
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+    "name": "fire.png",
+    "path": "Types/fire.png",
+    "size": 568963
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Lorian.psd": {
+  "blob": "d2820991f911205aeb64a938a283c262beafed0b",
+  "links": [
+   {
+    "drawn": "d15e245870c01d633fe67a8d3df1335b3da2a314",
+    "name": "Lorian - barazoku-art-5.jpg",
+    "path": "MDW/Linked/Lorian - barazoku-art-5.jpg",
+    "size": 1370856
+   },
+   {
+    "drawn": "26084d775d551716235612d5026079fc857e8a9d",
+    "name": "Lorian - TpX01cD.jpg",
+    "path": "MDW/Linked/Lorian - TpX01cD.jpg",
+    "size": 140909
+   },
+   {
+    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+    "name": "Solar Sun.png",
+    "path": "Types/Stars/Solar Sun.png",
+    "size": 1374450
+   },
+   {
+    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+    "name": "Solar Sun.png",
+    "path": "Types/Stars/Solar Sun.png",
+    "size": 1374450
+   },
+   {
+    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+    "name": "Solar Sun.png",
+    "path": "Types/Stars/Solar Sun.png",
+    "size": 1374450
+   },
+   {
+    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+    "name": "Solar Sun.png",
+    "path": "Types/Stars/Solar Sun.png",
+    "size": 1374450
+   },
+   {
+    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+    "name": "Solar Sun.png",
+    "path": "Types/Stars/Solar Sun.png",
+    "size": 1374450
+   },
+   {
+    "drawn": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+    "name": "fire.png",
+    "path": "Types/fire.png",
+    "size": 568963
+   },
+   {
+    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "name": "Defensive_Minion.png",
+    "path": "Types/Defensive_Minion.png",
+    "size": 25788
+   }
+  ]
+ },
+ "Auxiliary/Minions/Masher.psd": {
+  "blob": "93487b02fa02349e1f1164a4d787c9811d9cc365",
+  "links": [
+   {
+    "drawn": "064525ab45098812e04a1f85f3b4f8edfd4d3b0a",
+    "name": "Masher - Masher-0.webp",
+    "path": "MDW/Linked/Masher - Masher-0.webp",
+    "size": 42040
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   },
+   {
+    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "name": "dark.png",
+    "path": "Types/dark.png",
+    "size": 25732
+   },
+   {
+    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "name": "Defensive_Minion.png",
+    "path": "Types/Defensive_Minion.png",
+    "size": 25788
+   }
+  ]
+ },
+ "Auxiliary/Minions/Massive_Moss_Charger.psd": {
+  "blob": "6e0f99aad162cb84c48750cc628843be86aaf2ff",
+  "links": [
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "79846cdbe4365538fe2b880dec520e414b83e903",
+    "name": "Massive_Moss_Charger - Massive_Moss_Charger.webp",
+    "path": "MDW/Linked/Massive_Moss_Charger - Massive_Moss_Charger.webp",
+    "size": 44112
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Matterling.psd": {
+  "blob": "995a9d9b76bd307cdd7bafba328d8627b1affb98",
+  "links": [
+   {
+    "drawn": "bf02ea7f0e702b2eceff7bebd9cd82f38d3fe6b6",
+    "name": "Matterling - E5ACDe5XwAEc0J4.jpg",
+    "path": "MDW/Linked/Matterling - E5ACDe5XwAEc0J4.jpg",
+    "size": 145265
+   },
+   {
+    "drawn": "7bce3270adea13c48ca9f9233617f60d91925363",
+    "name": "Nebula Star.png",
+    "path": "Types/Stars/Nebula Star.png",
+    "size": 253389
+   },
+   {
+    "drawn": "9842d409283e819405890ffd7f7e3bc7775145fd",
+    "name": "darkmatter.png",
+    "path": "Types/darkmatter.png",
+    "size": 220675
+   },
+   {
+    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "name": "Defensive_Minion.png",
+    "path": "Types/Defensive_Minion.png",
+    "size": 25788
+   },
+   {
+    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "name": "dark.png",
+    "path": "Types/dark.png",
+    "size": 25732
+   }
+  ]
+ },
+ "Auxiliary/Minions/Miasma.psd": {
+  "blob": "f329ec8a1944b9a1b091acd1b5aba37e10bba157",
+  "links": [
+   {
+    "drawn": "fe1f3450941a301906fd1eede011e166f34161d9",
+    "name": "Claw - Layer 3.psb",
+    "path": "MDW/Linked/Claw - Layer 3.psb",
+    "size": 3012944
+   },
+   {
+    "drawn": "35c838cb2a80a5bdc8ae0c2f9fb0e19424ed68a1",
+    "name": "Garnet_Star.png",
+    "path": "Types/Stars/Garnet_Star.png",
+    "size": 2093
+   },
+   {
+    "drawn": "35c838cb2a80a5bdc8ae0c2f9fb0e19424ed68a1",
+    "name": "Garnet_Star.png",
+    "path": "Types/Stars/Garnet_Star.png",
+    "size": 2093
+   },
+   {
+    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "name": "Defensive_Minion.png",
+    "path": "Types/Defensive_Minion.png",
+    "size": 25788
+   },
+   {
+    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "name": "dark.png",
+    "path": "Types/dark.png",
+    "size": 25732
+   }
+  ]
+ },
+ "Auxiliary/Minions/Mini_Auto_Croissant.psd": {
+  "blob": "839af4f06a1d167abbb4f135c32e2f0e722eb6b2",
+  "links": [
+   {
+    "drawn": "c106c639ecf7cf72f678b4e693fff736b7865c91",
+    "name": "Mini_Auto_Croissant - Invasion of the Croissants.png",
+    "path": "MDW/Linked/Mini_Auto_Croissant - Invasion of the Croissants.png",
+    "size": 1163447
+   },
+   {
+    "drawn": "d001676cae71286b2de2ce1c272f44b8050797e6",
+    "name": "Mini_Auto_Croissant - Hollow Robots.png",
+    "path": "MDW/Linked/Mini_Auto_Croissant - Hollow Robots.png",
+    "size": 1668025
+   },
+   {
+    "drawn": "fe86cc88909355d589417102f9058871b8e10fea",
+    "name": "Mini_Auto_Croissant - autocroissant.png",
+    "path": "MDW/Linked/Mini_Auto_Croissant - autocroissant.png",
+    "size": 214910
+   },
+   {
+    "drawn": "34f5a6f58d252c99b888f374970d7d3afd2b9e59",
+    "name": "Magnum_Opus - Croissant-PNG-Clipart.png",
+    "path": "MDW/Linked/Magnum_Opus - Croissant-PNG-Clipart.png",
+    "size": 904697
+   },
+   {
+    "drawn": "34f5a6f58d252c99b888f374970d7d3afd2b9e59",
+    "name": "Magnum_Opus - Croissant-PNG-Clipart.png",
+    "path": "MDW/Linked/Magnum_Opus - Croissant-PNG-Clipart.png",
+    "size": 904697
+   },
+   {
+    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Mini_Bee.psd": {
+  "blob": "6157242a8aea6bb10a948d0be77d12c10c650284",
+  "links": [
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Mini_Doomer.psd": {
+  "blob": "19c95f0dab933c0f874279fd56bbd40e3d29f473",
+  "links": [
+   {
+    "drawn": "9c5678bff7f940efb17dd2f367833b1c4529fdc6",
+    "name": "Mini_Doomer - Background (1).jpg",
+    "path": "MDW/Linked/Mini_Doomer - Background (1).jpg",
+    "size": 249205
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "name": "Defensive_Minion.png",
+    "path": "Types/Defensive_Minion.png",
+    "size": 25788
+   },
+   {
+    "drawn": "dafb015388a0bc6eb5a5e3510d50a7f8a6352244",
+    "name": "light.png",
+    "path": "Types/light.png",
+    "size": 474151
+   }
+  ]
+ },
+ "Auxiliary/Minions/Mini_Drill.psd": {
+  "blob": "1fbbdaad15c6875505222245b7892596d93340d3",
+  "links": [
+   {
+    "drawn": "1cc7b58c84a683c365e2cb315898ae7479f58c74",
+    "name": "Mini_Drill - Layer 4.psb",
+    "path": "MDW/Linked/Mini_Drill - Layer 4.psb",
+    "size": 3657238
+   },
+   {
+    "drawn": "33d80c364295ff50934db492a7ef389bbb5833f1",
+    "name": "Mini_Drill - Layer 5.psb",
+    "path": "MDW/Linked/Mini_Drill - Layer 5.psb",
+    "size": 2582480
+   },
+   {
+    "drawn": "db4c4cfd7fdc8cac2e601fd137a475daf2433f84",
+    "name": "Mini_Drill - Layer 3.psb",
+    "path": "MDW/Linked/Mini_Drill - Layer 3.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   },
+   {
+    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "name": "Defensive_Minion.png",
+    "path": "Types/Defensive_Minion.png",
+    "size": 25788
+   }
+  ]
+ },
+ "Auxiliary/Minions/Mosling.psd": {
+  "blob": "1a641a7e36f7dce33b2f5f23c7f04d56f7a3cf1f",
+  "links": [
+   {
+    "drawn": "8b5c1e161c9d7de4e57066bd4027dc70d9f26419",
+    "name": "Mosling - Mosling_Angry_Winter%27s_Feast copy.webp",
+    "path": "MDW/Linked/Mosling - Mosling_Angry_Winter%27s_Feast copy.webp",
+    "size": 60840
+   },
+   {
+    "drawn": "be2a964552d0a0a61d22f804f13f839477fd02cb",
+    "name": "Mosling - Goose_Winter%27s_Feast.webp",
+    "path": "MDW/Linked/Mosling - Goose_Winter%27s_Feast.webp",
+    "size": 231482
+   },
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": "00007617b6c9850309e6c3a145e338efa55eded3",
+    "name": "electric.png",
+    "path": "Types/electric.png",
+    "size": 106279
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Moss_Charger.psd": {
+  "blob": "e285973546d8bc4dc228fba7fe842279cc57fb10",
+  "links": [
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "79846cdbe4365538fe2b880dec520e414b83e903",
+    "name": "Massive_Moss_Charger - Massive_Moss_Charger.webp",
+    "path": "MDW/Linked/Massive_Moss_Charger - Massive_Moss_Charger.webp",
+    "size": 44112
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Paint_Warrior.psd": {
+  "blob": "8115cc0723eeb7db5bd7a41b733368300c285493",
+  "links": [
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "name": "Paint_Bomb - pngwing.com copy 2.png",
+    "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
+    "size": 1254229
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "name": "Paint_Bomb - pngwing.com copy 2.png",
+    "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
+    "size": 1254229
+   },
+   {
+    "drawn": "99d8299f475b915a691170c03c5a2c0fe0110589",
+    "name": "water.png",
+    "path": "Types/water.png",
+    "size": 121376
+   },
+   {
+    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "name": "Defensive_Minion.png",
+    "path": "Types/Defensive_Minion.png",
+    "size": 25788
+   },
+   {
+    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "name": "Paint_Bomb - pngwing.com copy 2.png",
+    "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
+    "size": 1254229
+   },
+   {
+    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "name": "Paint_Bomb - pngwing.com copy 2.png",
+    "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
+    "size": 1254229
+   },
+   {
+    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "name": "Paint_Bomb - pngwing.com copy 2.png",
+    "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
+    "size": 1254229
+   },
+   {
+    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "name": "Paint_Bomb - pngwing.com copy 2.png",
+    "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
+    "size": 1254229
+   }
+  ]
+ },
+ "Auxiliary/Minions/Pike_Beam.psd": {
+  "blob": "dfc3305d63b527297c39fd291543bb5e1f68a651",
+  "links": [
+   {
+    "drawn": "84237e4b22982a9dd8306fa2ce86961d7a282f41",
+    "name": "Artemis_Missiles - The_Kestrel_Ability_BG.jpg",
+    "path": "MDW/Linked/Artemis_Missiles - The_Kestrel_Ability_BG.jpg",
+    "size": 64560
+   },
+   {
+    "drawn": "51f4ca65e2d2667f2668a0261e9c75b285c4ac32",
+    "name": "Artemis_Missiles - ftltitlescreen.webp",
+    "path": "MDW/Linked/Artemis_Missiles - ftltitlescreen.webp",
+    "size": 187362
+   },
+   {
+    "drawn": "f8dd8efec4cf3fa0f01048db2d65b802c0e35f0a",
+    "name": "Pike_Beam - Pike_Beam.webp",
+    "path": "MDW/Linked/Pike_Beam - Pike_Beam.webp",
+    "size": 1258
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   },
+   {
+    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD01Red_Bloon.psd": {
+  "blob": "6e186eb5971bf71b731c7180178424429af2a41f",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD02Black_Bloon.psd": {
+  "blob": "206c891f4d8c29f911187760610a4927f705abaa",
+  "links": [
+   {
+    "drawn": "619c8b52cccdd8010c759f3c9fd58f1ff8999a8e",
+    "name": "PoD02Black_Bloon - Layer 2 (2).png",
+    "path": "MDW/Linked/PoD02Black_Bloon - Layer 2 (2).png",
+    "size": 2030321
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD03White_Bloon.psd": {
+  "blob": "91ed041b2b00b5dd0c5b0a9d5ee1c7fafcf69738",
+  "links": [
+   {
+    "drawn": "378f75b1f39ce71b2badeab1466bea30a88d07f9",
+    "name": "PoD03White_Bloon - White_Bloon (1).png",
+    "path": "MDW/Linked/PoD03White_Bloon - White_Bloon (1).png",
+    "size": 123898
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD04Zebra_Bloon.psd": {
+  "blob": "258a344ffb771d2c5b454454893aa8916840a44d",
+  "links": [
+   {
+    "drawn": "24a5fcc08d1ada21b43688d630a73bacc60f5ceb",
+    "name": "PoD04Zebra_Bloon - 128100 (1).png",
+    "path": "MDW/Linked/PoD04Zebra_Bloon - 128100 (1).png",
+    "size": 297232
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD05Lead_Bloon.psd": {
+  "blob": "8cbdc7816d9e5932f51a7a02871fd725e644cf92",
+  "links": [
+   {
+    "drawn": "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb",
+    "name": "PoD05Lead_Bloon - 128133.png",
+    "path": "MDW/Linked/PoD05Lead_Bloon - 128133.png",
+    "size": 21386
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   },
+   {
+    "drawn": "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb",
+    "name": "PoD05Lead_Bloon - 128133.png",
+    "path": "MDW/Linked/PoD05Lead_Bloon - 128133.png",
+    "size": 21386
+   },
+   {
+    "drawn": "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb",
+    "name": "PoD05Lead_Bloon - 128133.png",
+    "path": "MDW/Linked/PoD05Lead_Bloon - 128133.png",
+    "size": 21386
+   },
+   {
+    "drawn": "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb",
+    "name": "PoD05Lead_Bloon - 128133.png",
+    "path": "MDW/Linked/PoD05Lead_Bloon - 128133.png",
+    "size": 21386
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD06Rainbow_Bloon.psd": {
+  "blob": "89715a20d884224fde0410c98ca7870b6943f4b1",
+  "links": [
+   {
+    "drawn": "daad93a47ba57cd9ac16806b74f4ec115cf11a03",
+    "name": "PoD06Rainbow_Bloon - 128131.png",
+    "path": "MDW/Linked/PoD06Rainbow_Bloon - 128131.png",
+    "size": 21355
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD07Ceramic_Bloon.psd": {
+  "blob": "6807370ba30b0484cdc343f0c0da329ced4d8393",
+  "links": [
+   {
+    "drawn": "76d2882abcf37cdf4f8fd1ab1c4eeae9a3fd2092",
+    "name": "PoD07Ceramic_Bloon - 128098 (1).png",
+    "path": "MDW/Linked/PoD07Ceramic_Bloon - 128098 (1).png",
+    "size": 441928
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD08MOAB.psd": {
+  "blob": "78ea2986692854f5f64b784a3d6fe573431b174f",
+  "links": [
+   {
+    "drawn": "ffef364caac1bf8a7ff5d399b72561b3bf28ea74",
+    "name": "PoD08MOAB - ech2.png",
+    "path": "MDW/Linked/PoD08MOAB - ech2.png",
+    "size": 156351
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD09DDT.psd": {
+  "blob": "5b2e1f51f1e553cc083831e1a5ef48517c4db6c0",
+  "links": [
+   {
+    "drawn": "9024a31e2e47e1b585945d66dcafe4cbebcab2cf",
+    "name": "PoD09DDT - ech2.png",
+    "path": "MDW/Linked/PoD09DDT - ech2.png",
+    "size": 102053
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD10BFB.psd": {
+  "blob": "5e74ceea2eafcb2fc0a67302eb8cb81b5a242092",
+  "links": [
+   {
+    "drawn": "bdd34572f1257682d78347293e7e30cf735e5899",
+    "name": "PoD10BFB - ech2.png",
+    "path": "MDW/Linked/PoD10BFB - ech2.png",
+    "size": 173418
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD11ZOMG.psd": {
+  "blob": "ff9f0593a46ee7ca4ef77be5793dec7189d2d609",
+  "links": [
+   {
+    "drawn": "fbe1f6d3603e28979e23542ab60c354e47b89254",
+    "name": "PoD11ZOMG - ech2.png",
+    "path": "MDW/Linked/PoD11ZOMG - ech2.png",
+    "size": 187703
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/PoD12BAD.psd": {
+  "blob": "6a7b2bac36ac155bd4ff561057087ba42472763a",
+  "links": [
+   {
+    "drawn": "751025d5bd0727241e8e5ab0345dbb5f25804204",
+    "name": "PoD12BAD - ech2.png",
+    "path": "MDW/Linked/PoD12BAD - ech2.png",
+    "size": 174835
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Polevaulter_Zombie.psd": {
+  "blob": "683d45bddcf58ab4a722a6b7e995ab75b511426e",
+  "links": [
+   {
+    "drawn": "23d109968e9bd030377693191b73b47a27c68320",
+    "name": "Jack-In-The-Box_Zombie - Layer 1 copy.psb",
+    "path": "MDW/Linked/Jack-In-The-Box_Zombie - Layer 1 copy.psb",
+    "size": 3960930
+   },
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Primal_Aspid.psd": {
+  "blob": "da35ba7918fcc71b6bdc4773ea0e64622a0e7ab3",
+  "links": [
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Qiraji_Soldier.psd": {
+  "blob": "b623e9b3fc284c6781c9b43349205403ef895dc4",
+  "links": [
+   {
+    "drawn": "21c25ff5557ac6312eafb8f891b7a043a5404e9e",
+    "name": "Anubisath_Guardian - the-gates-of-ahnqiraj-world-of-warcraft-blizzard-entertainment.png",
+    "path": "MDW/Linked/Anubisath_Guardian - the-gates-of-ahnqiraj-world-of-warcraft-blizzard-entertainment.png",
+    "size": 2786593
+   },
+   {
+    "drawn": "5317ace13b38970c2918e8e09d2f0c999bd2a72e",
+    "name": "Qiraji_Soldier - Qiraji_Soldier_pic.png",
+    "path": "MDW/Linked/Qiraji_Soldier - Qiraji_Soldier_pic.png",
+    "size": 551262
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Rapier.psd": {
+  "blob": "b3738c7a998f0cf788e5e6f3f66f1dec18c69f93",
+  "links": [
+   {
+    "drawn": "fe1f3450941a301906fd1eede011e166f34161d9",
+    "name": "Claw - Layer 3.psb",
+    "path": "MDW/Linked/Claw - Layer 3.psb",
+    "size": 3012944
+   },
+   {
+    "drawn": "6d4296f519e95946edf7de87079b522443bd8cb7",
+    "name": "Hook - 9d77f5d3ca175c306ad805fb251fefe5.png",
+    "path": "MDW/Linked/Hook - 9d77f5d3ca175c306ad805fb251fefe5.png",
+    "size": 3380365
+   },
+   {
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
+   },
+   {
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
+   },
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Sabre.psd": {
+  "blob": "c2b1e9c6d4746c3d5c3b5a9dd9e0bf80452997d4",
+  "links": [
+   {
+    "drawn": "fe1f3450941a301906fd1eede011e166f34161d9",
+    "name": "Claw - Layer 3.psb",
+    "path": "MDW/Linked/Claw - Layer 3.psb",
+    "size": 3012944
+   },
+   {
+    "drawn": "6d4296f519e95946edf7de87079b522443bd8cb7",
+    "name": "Hook - 9d77f5d3ca175c306ad805fb251fefe5.png",
+    "path": "MDW/Linked/Hook - 9d77f5d3ca175c306ad805fb251fefe5.png",
+    "size": 3380365
+   },
+   {
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
+   },
+   {
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
+   },
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Shadow_Chopper.psd": {
+  "blob": "dc0ec81b86b5503ce37191eaed856b9c9c5700f6",
+  "links": [
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "name": "dark.png",
+    "path": "Types/dark.png",
+    "size": 25732
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Shadow_Duelist.psd": {
+  "blob": "b1a06a583e50762946702c4ad42974cff4c83fc5",
+  "links": [
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "name": "dark.png",
+    "path": "Types/dark.png",
+    "size": 25732
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Shadow_Miner.psd": {
+  "blob": "dde5c35c311ad677b2178368cf7bf72063d34f31",
+  "links": [
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "name": "dark.png",
+    "path": "Types/dark.png",
+    "size": 25732
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Sharp_Baldur.psd": {
+  "blob": "f2d2a824b130c7464af11e4469d099bc4029495b",
+  "links": [
+   {
+    "drawn": "d383bba71767af59d6da35c9864e6ad563eeb70c",
+    "name": "Armored_Squit - Engs_q8WEAEozyG.jpg",
+    "path": "MDW/Linked/Armored_Squit - Engs_q8WEAEozyG.jpg",
+    "size": 266668
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "5a7ca1d430460f3782aa73ccaa11906faf6d7d60",
+    "name": "Shadow_Queen - Darkmatter.png",
+    "path": "MDW/Linked/Shadow_Queen - Darkmatter.png",
+    "size": 12660
+   },
+   {
+    "drawn": "b95adab71e6a7ee177fd072cc029890793d5d660",
+    "name": "Armored_Squit - dark.png",
+    "path": "MDW/Linked/Armored_Squit - dark.png",
+    "size": 1866
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Sigma.psd": {
+  "blob": "efd9bfb3e89fec66a451bbf77b069214ced72520",
+  "links": [
+   {
+    "drawn": "54034fc6210a87783ec27ed6c91fad62006738f6",
+    "name": "Delta - The_Queen_bg.png",
+    "path": "MDW/Linked/Delta - The_Queen_bg.png",
+    "size": 28687
+   },
+   {
+    "drawn": "54034fc6210a87783ec27ed6c91fad62006738f6",
+    "name": "Delta - The_Queen_bg.png",
+    "path": "MDW/Linked/Delta - The_Queen_bg.png",
+    "size": 28687
+   },
+   {
+    "drawn": "ca30565b4f5b996e4d9b9da582d34f61c94a2d33",
+    "name": "Sigma - Sigma_sprite.psb",
+    "path": "MDW/Linked/Sigma - Sigma_sprite.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "f21f2877886482116ec5cbb3a6934eaf02e7d2ff",
+    "name": "Star of beth.png",
+    "path": "Types/Stars/Star of beth.png",
+    "size": 2247
+   },
+   {
+    "drawn": "f21f2877886482116ec5cbb3a6934eaf02e7d2ff",
+    "name": "Star of beth.png",
+    "path": "Types/Stars/Star of beth.png",
+    "size": 2247
+   },
+   {
+    "drawn": "f21f2877886482116ec5cbb3a6934eaf02e7d2ff",
+    "name": "Star of beth.png",
+    "path": "Types/Stars/Star of beth.png",
+    "size": 2247
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Silithid.psd": {
+  "blob": "b7d80cda91adb047b98a7d45d3476a2823e21f76",
+  "links": [
+   {
+    "drawn": "8d2bd54fe7667a888297b0d472f419548e2277af",
+    "name": "Silithid - Silithid_pic.jpg",
+    "path": "MDW/Linked/Silithid - Silithid_pic.jpg",
+    "size": 37073
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Skeleton_Mate.psd": {
+  "blob": "3c27bdd140614b60068669328c19d4bc6226ec65",
+  "links": [
+   {
+    "drawn": "016ba23edefa3f8f2382bc787eb18b98ed17c387",
+    "name": "Skeleton_Mate - Layer 4.psb",
+    "path": "MDW/Linked/Skeleton_Mate - Layer 4.psb",
+    "size": 89260
+   },
+   {
+    "drawn": "d530c7b666dbbd0fe132d966bf88ba29fd4f284c",
+    "name": "Drone - Protective.png",
+    "path": "MDW/Linked/Drone - Protective.png",
+    "size": 366004
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   },
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
+    "name": "Skeleton_Mate - 1.png",
+    "path": "MDW/Linked/Skeleton_Mate - 1.png",
+    "size": 4771
+   },
+   {
+    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
+    "name": "Skeleton_Mate - 2.png",
+    "path": "MDW/Linked/Skeleton_Mate - 2.png",
+    "size": 4779
+   },
+   {
+    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
+    "name": "Skeleton_Mate - 3.png",
+    "path": "MDW/Linked/Skeleton_Mate - 3.png",
+    "size": 4827
+   },
+   {
+    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
+    "name": "Skeleton_Mate - 4.png",
+    "path": "MDW/Linked/Skeleton_Mate - 4.png",
+    "size": 4758
+   },
+   {
+    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
+    "name": "Skeleton_Mate - 5.png",
+    "path": "MDW/Linked/Skeleton_Mate - 5.png",
+    "size": 4784
+   },
+   {
+    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
+    "name": "Skeleton_Mate - 6.png",
+    "path": "MDW/Linked/Skeleton_Mate - 6.png",
+    "size": 4802
+   },
+   {
+    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
+    "name": "Skeleton_Mate - 7.png",
+    "path": "MDW/Linked/Skeleton_Mate - 7.png",
+    "size": 4826
+   },
+   {
+    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
+    "name": "Skeleton_Mate - 8.png",
+    "path": "MDW/Linked/Skeleton_Mate - 8.png",
+    "size": 4823
+   },
+   {
+    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
+    "name": "Skeleton_Mate - 9.png",
+    "path": "MDW/Linked/Skeleton_Mate - 9.png",
+    "size": 4769
+   },
+   {
+    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
+    "name": "Skeleton_Mate - 1.png",
+    "path": "MDW/Linked/Skeleton_Mate - 1.png",
+    "size": 4771
+   },
+   {
+    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
+    "name": "Skeleton_Mate - 1.png",
+    "path": "MDW/Linked/Skeleton_Mate - 1.png",
+    "size": 4771
+   },
+   {
+    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
+    "name": "Skeleton_Mate - 2.png",
+    "path": "MDW/Linked/Skeleton_Mate - 2.png",
+    "size": 4779
+   },
+   {
+    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
+    "name": "Skeleton_Mate - 3.png",
+    "path": "MDW/Linked/Skeleton_Mate - 3.png",
+    "size": 4827
+   },
+   {
+    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
+    "name": "Skeleton_Mate - 4.png",
+    "path": "MDW/Linked/Skeleton_Mate - 4.png",
+    "size": 4758
+   },
+   {
+    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
+    "name": "Skeleton_Mate - 5.png",
+    "path": "MDW/Linked/Skeleton_Mate - 5.png",
+    "size": 4784
+   },
+   {
+    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
+    "name": "Skeleton_Mate - 6.png",
+    "path": "MDW/Linked/Skeleton_Mate - 6.png",
+    "size": 4802
+   },
+   {
+    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
+    "name": "Skeleton_Mate - 7.png",
+    "path": "MDW/Linked/Skeleton_Mate - 7.png",
+    "size": 4826
+   },
+   {
+    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
+    "name": "Skeleton_Mate - 8.png",
+    "path": "MDW/Linked/Skeleton_Mate - 8.png",
+    "size": 4823
+   },
+   {
+    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
+    "name": "Skeleton_Mate - 9.png",
+    "path": "MDW/Linked/Skeleton_Mate - 9.png",
+    "size": 4769
+   },
+   {
+    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
+    "name": "Skeleton_Mate - 1.png",
+    "path": "MDW/Linked/Skeleton_Mate - 1.png",
+    "size": 4771
+   },
+   {
+    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
+    "name": "Skeleton_Mate - 1.png",
+    "path": "MDW/Linked/Skeleton_Mate - 1.png",
+    "size": 4771
+   },
+   {
+    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
+    "name": "Skeleton_Mate - 2.png",
+    "path": "MDW/Linked/Skeleton_Mate - 2.png",
+    "size": 4779
+   },
+   {
+    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
+    "name": "Skeleton_Mate - 3.png",
+    "path": "MDW/Linked/Skeleton_Mate - 3.png",
+    "size": 4827
+   },
+   {
+    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
+    "name": "Skeleton_Mate - 4.png",
+    "path": "MDW/Linked/Skeleton_Mate - 4.png",
+    "size": 4758
+   },
+   {
+    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
+    "name": "Skeleton_Mate - 5.png",
+    "path": "MDW/Linked/Skeleton_Mate - 5.png",
+    "size": 4784
+   },
+   {
+    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
+    "name": "Skeleton_Mate - 6.png",
+    "path": "MDW/Linked/Skeleton_Mate - 6.png",
+    "size": 4802
+   },
+   {
+    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
+    "name": "Skeleton_Mate - 7.png",
+    "path": "MDW/Linked/Skeleton_Mate - 7.png",
+    "size": 4826
+   },
+   {
+    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
+    "name": "Skeleton_Mate - 8.png",
+    "path": "MDW/Linked/Skeleton_Mate - 8.png",
+    "size": 4823
+   },
+   {
+    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
+    "name": "Skeleton_Mate - 9.png",
+    "path": "MDW/Linked/Skeleton_Mate - 9.png",
+    "size": 4769
+   },
+   {
+    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
+    "name": "Skeleton_Mate - 1.png",
+    "path": "MDW/Linked/Skeleton_Mate - 1.png",
+    "size": 4771
+   },
+   {
+    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
+    "name": "Skeleton_Mate - 1.png",
+    "path": "MDW/Linked/Skeleton_Mate - 1.png",
+    "size": 4771
+   },
+   {
+    "drawn": "d00f6b9aac210f9db184fc8b43c423c2e428c75b",
+    "name": "Skeleton_Mate - 2.png",
+    "path": "MDW/Linked/Skeleton_Mate - 2.png",
+    "size": 4779
+   },
+   {
+    "drawn": "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5",
+    "name": "Skeleton_Mate - 3.png",
+    "path": "MDW/Linked/Skeleton_Mate - 3.png",
+    "size": 4827
+   },
+   {
+    "drawn": "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e",
+    "name": "Skeleton_Mate - 4.png",
+    "path": "MDW/Linked/Skeleton_Mate - 4.png",
+    "size": 4758
+   },
+   {
+    "drawn": "cbee2036415637851e7b9a2b71b34a0f86430aac",
+    "name": "Skeleton_Mate - 5.png",
+    "path": "MDW/Linked/Skeleton_Mate - 5.png",
+    "size": 4784
+   },
+   {
+    "drawn": "9cb412fd576d5f26ba62fa2a55716a86a6b22eee",
+    "name": "Skeleton_Mate - 6.png",
+    "path": "MDW/Linked/Skeleton_Mate - 6.png",
+    "size": 4802
+   },
+   {
+    "drawn": "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf",
+    "name": "Skeleton_Mate - 7.png",
+    "path": "MDW/Linked/Skeleton_Mate - 7.png",
+    "size": 4826
+   },
+   {
+    "drawn": "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6",
+    "name": "Skeleton_Mate - 8.png",
+    "path": "MDW/Linked/Skeleton_Mate - 8.png",
+    "size": 4823
+   },
+   {
+    "drawn": "56306f571480fa2ed0c91f6222e1025620255eb5",
+    "name": "Skeleton_Mate - 9.png",
+    "path": "MDW/Linked/Skeleton_Mate - 9.png",
+    "size": 4769
+   },
+   {
+    "drawn": "c03a3d637499808441b21c2fdb16742adcc736c4",
+    "name": "Skeleton_Mate - 1.png",
+    "path": "MDW/Linked/Skeleton_Mate - 1.png",
+    "size": 4771
+   }
+  ]
+ },
+ "Auxiliary/Minions/Spawn_of_the_Forbidden_One.psd": {
+  "blob": "067003514d155c2007f90269d9e4f55bb4432f28",
+  "links": [
+   {
+    "drawn": "21b6e7aa1b091993fb15b073019f1281eda16914",
+    "name": "Spawn_of_the_Forbidden_One - BOYKISSER_YCH_for_Chestnut_King.png",
+    "path": "MDW/Linked/Spawn_of_the_Forbidden_One - BOYKISSER_YCH_for_Chestnut_King.png",
+    "size": 258947
+   },
+   {
+    "drawn": "8ce7613d2c945b94095a3a56c5f517c6de505d4b",
+    "name": "Spawn_of_the_Forbidden_One - cardback copy.png",
+    "path": "MDW/Linked/Spawn_of_the_Forbidden_One - cardback copy.png",
+    "size": 797829
+   },
+   {
+    "drawn": "8e4e3eaf677aacc2c322487a1c6a007f5736d34d",
+    "name": "Spawn_of_the_Forbidden_One - 1.jpg",
+    "path": "MDW/Linked/Spawn_of_the_Forbidden_One - 1.jpg",
+    "size": 37591
+   },
+   {
+    "drawn": "8e4e3eaf677aacc2c322487a1c6a007f5736d34d",
+    "name": "Spawn_of_the_Forbidden_One - 1.jpg",
+    "path": "MDW/Linked/Spawn_of_the_Forbidden_One - 1.jpg",
+    "size": 37591
+   },
+   {
+    "drawn": "8e4e3eaf677aacc2c322487a1c6a007f5736d34d",
+    "name": "Spawn_of_the_Forbidden_One - 1.jpg",
+    "path": "MDW/Linked/Spawn_of_the_Forbidden_One - 1.jpg",
+    "size": 37591
+   },
+   {
+    "drawn": "8e4e3eaf677aacc2c322487a1c6a007f5736d34d",
+    "name": "Spawn_of_the_Forbidden_One - 1.jpg",
+    "path": "MDW/Linked/Spawn_of_the_Forbidden_One - 1.jpg",
+    "size": 37591
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Springtrap.psd": {
+  "blob": "1555a43d9234d0792c87a2a28e9f5241a9518fbb",
+  "links": [
+   {
+    "drawn": "baad3fd41c1a5ef07b4a29ca1c8e631291ebb655",
+    "name": "Springtrap - Springtrap_pic.png",
+    "path": "MDW/Linked/Springtrap - Springtrap_pic.png",
+    "size": 475468
+   },
+   {
+    "drawn": "94749aa7abbc1f117d592cea00e7b24570babbdd",
+    "name": "Springtrap - Layer 1.psb",
+    "path": "MDW/Linked/Springtrap - Layer 1.psb",
+    "size": 2798048
+   },
+   {
+    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
+    "name": "Springtrap - Gold_Star.svg.psb",
+    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
+    "name": "Springtrap - Gold_Star.svg.psb",
+    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
+    "name": "Springtrap - Gold_Star.svg.psb",
+    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
+    "name": "Springtrap - Gold_Star.svg.psb",
+    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
+    "name": "Springtrap - Gold_Star.svg.psb",
+    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+    "name": "fire.png",
+    "path": "Types/fire.png",
+    "size": 568963
+   },
+   {
+    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Sword.psd": {
+  "blob": "6adee0828df80886040eeddf78837ef532cb52ca",
+  "links": [
+   {
+    "drawn": "fe1f3450941a301906fd1eede011e166f34161d9",
+    "name": "Claw - Layer 3.psb",
+    "path": "MDW/Linked/Claw - Layer 3.psb",
+    "size": 3012944
+   },
+   {
+    "drawn": "6d4296f519e95946edf7de87079b522443bd8cb7",
+    "name": "Hook - 9d77f5d3ca175c306ad805fb251fefe5.png",
+    "path": "MDW/Linked/Hook - 9d77f5d3ca175c306ad805fb251fefe5.png",
+    "size": 3380365
+   },
+   {
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
+   },
+   {
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
+   },
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Sword_Knight.psd": {
+  "blob": "270f3fca2971f5df0300d920a537227cbd224f28",
+  "links": [
+   {
+    "drawn": "8a01e64f260b82df3713f3c2af98e9f0fcec6668",
+    "name": "Sword_Knight - swreal (1).png",
+    "path": "MDW/Linked/Sword_Knight - swreal (1).png",
+    "size": 405276
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   }
+  ]
+ },
+ "Auxiliary/Minions/Tainted_Soul.psd": {
+  "blob": "6d522f2099898598fb4d105ef2feb31ec6b321da",
+  "links": [
+   {
+    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "size": 134581
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
+    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
+    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
+    "size": 192
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Tentacle.psd": {
+  "blob": "ff4908207fa20a01e4b34e8ce0953d65a3959219",
+  "links": [
+   {
+    "drawn": "10b1714ea72ed92bd3d5aaa79b8bc9fe9fcba9fc",
+    "name": "Tentacle - d80532a-8860e1da-3210-479a-9bf5-13e98ea2fbb3.jpg",
+    "path": "MDW/Linked/Tentacle - d80532a-8860e1da-3210-479a-9bf5-13e98ea2fbb3.jpg",
+    "size": 297466
+   },
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Turtle.psd": {
+  "blob": "a4f6374390480647db6126c5f5476c8cca1cbdfb",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "99d8299f475b915a691170c03c5a2c0fe0110589",
+    "name": "water.png",
+    "path": "Types/water.png",
+    "size": 121376
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Voidwalker.psd": {
+  "blob": "d22195afe18442014d299cca46d1042cee448a10",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "name": "dark.png",
+    "path": "Types/dark.png",
+    "size": 25732
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Warrior_Dee.psd": {
+  "blob": "bbb1cca554cd809872aa3de06d8cf52a038c45ac",
+  "links": [
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "name": "Defensive_Minion.png",
+    "path": "Types/Defensive_Minion.png",
+    "size": 25788
+   }
+  ]
+ },
  "MDW/Assets/Holders/Active.psd": {
   "blob": "bbe038a827060f72a4253ccceaaa66507e6021cb",
   "links": []
@@ -3979,8 +6079,24 @@
   "blob": "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f",
   "links": []
  },
+ "MDW/Linked/Living_Bread - Layer 1.psb": {
+  "blob": "7d6c9adbbea7c2b3e64ee0152e33eb55f94148cd",
+  "links": []
+ },
  "MDW/Linked/Magnum_Opus - field.psb": {
   "blob": "87a12d64e04abd67a45e028ebe3c8426aa38339f",
+  "links": []
+ },
+ "MDW/Linked/Mini_Drill - Layer 3.psb": {
+  "blob": "db4c4cfd7fdc8cac2e601fd137a475daf2433f84",
+  "links": []
+ },
+ "MDW/Linked/Mini_Drill - Layer 4.psb": {
+  "blob": "1cc7b58c84a683c365e2cb315898ae7479f58c74",
+  "links": []
+ },
+ "MDW/Linked/Mini_Drill - Layer 5.psb": {
+  "blob": "33d80c364295ff50934db492a7ef389bbb5833f1",
   "links": []
  },
  "MDW/Linked/Salt - Layer 1.psb": {
@@ -3999,8 +6115,24 @@
   "blob": "48e1257d9b07bf8d60c2f4cce57981d6a9b0add7",
   "links": []
  },
+ "MDW/Linked/Sigma - Sigma_sprite.psb": {
+  "blob": "ca30565b4f5b996e4d9b9da582d34f61c94a2d33",
+  "links": []
+ },
+ "MDW/Linked/Skeleton_Mate - Layer 4.psb": {
+  "blob": "016ba23edefa3f8f2382bc787eb18b98ed17c387",
+  "links": []
+ },
  "MDW/Linked/Spaghetti - Layer 1.psb": {
   "blob": "82ca0a125399b6ecf76dde366c86211bdb4ca735",
+  "links": []
+ },
+ "MDW/Linked/Springtrap - Gold_Star.svg.psb": {
+  "blob": "37fbd99c3db7c085010672fe02813398c73dab9d",
+  "links": []
+ },
+ "MDW/Linked/Springtrap - Layer 1.psb": {
+  "blob": "94749aa7abbc1f117d592cea00e7b24570babbdd",
   "links": []
  },
  "MDW/Linked/Unbreakable_heart - Layer 1.psb": {
@@ -5113,8 +7245,26 @@
   "MDW/Linked/Layer 1.psb": {
    "b176541146b53dd486aa7b3e986782f2b4db6469": 1999834
   },
+  "MDW/Linked/Lil_Spood - GWuzWBYXgAAYdMS.jpg": {
+   "cb5fa0ef961707a9f30feafebccb8bc348a07e89": 521035
+  },
   "MDW/Linked/Lit_Bob-omb - bottom.psb": {
    "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f": 1048576
+  },
+  "MDW/Linked/Living_Bread - Layer 1.psb": {
+   "7d6c9adbbea7c2b3e64ee0152e33eb55f94148cd": 2172402
+  },
+  "MDW/Linked/Living_Bread - Living_Bread__28Neutral_29.png": {
+   "f2c30930023e63583fbef6ec3f4a394798acf624": 16532
+  },
+  "MDW/Linked/Living_Bread - oasis.jpg": {
+   "31801c6ce1bc9ca715f58473db5b7d4f5b98f988": 272404
+  },
+  "MDW/Linked/Lorian - TpX01cD.jpg": {
+   "26084d775d551716235612d5026079fc857e8a9d": 140909
+  },
+  "MDW/Linked/Lorian - barazoku-art-5.jpg": {
+   "d15e245870c01d633fe67a8d3df1335b3da2a314": 1370856
   },
   "MDW/Linked/Love - Love_bg.jpg": {
    "a2d1202bf8dbee09ae69a1f173c3aff83291e315": 58464
@@ -5134,6 +7284,15 @@
   "MDW/Linked/Magnum_Opus - question-634903_1280.png": {
    "d189d573cc12593c2a8fda9b27c9eb32b1c8d4f6": 163977
   },
+  "MDW/Linked/Masher - Masher-0.webp": {
+   "064525ab45098812e04a1f85f3b4f8edfd4d3b0a": 42040
+  },
+  "MDW/Linked/Massive_Moss_Charger - Massive_Moss_Charger.webp": {
+   "79846cdbe4365538fe2b880dec520e414b83e903": 44112
+  },
+  "MDW/Linked/Matterling - E5ACDe5XwAEc0J4.jpg": {
+   "bf02ea7f0e702b2eceff7bebd9cd82f38d3fe6b6": 145265
+  },
   "MDW/Linked/Mettaton_EX - __frisk_and_mettaton_ex_undertale_drawn_by_palidoozy_art__sample-fb89e94acf19577b2494bbde01775b9b (1).jpg": {
    "0fc775dea4155b0e39165ae3e3a7821a2a01af09": 497092
   },
@@ -5148,6 +7307,33 @@
   },
   "MDW/Linked/Militron_(No_Armor) - Warpstar.png": {
    "5f41b136c0a1d6de391c0461734d8cdbc79f26d1": 256210
+  },
+  "MDW/Linked/Mini_Auto_Croissant - Hollow Robots.png": {
+   "d001676cae71286b2de2ce1c272f44b8050797e6": 1668025
+  },
+  "MDW/Linked/Mini_Auto_Croissant - Invasion of the Croissants.png": {
+   "c106c639ecf7cf72f678b4e693fff736b7865c91": 1163447
+  },
+  "MDW/Linked/Mini_Auto_Croissant - autocroissant.png": {
+   "fe86cc88909355d589417102f9058871b8e10fea": 214910
+  },
+  "MDW/Linked/Mini_Doomer - Background (1).jpg": {
+   "9c5678bff7f940efb17dd2f367833b1c4529fdc6": 249205
+  },
+  "MDW/Linked/Mini_Drill - Layer 3.psb": {
+   "db4c4cfd7fdc8cac2e601fd137a475daf2433f84": 1048576
+  },
+  "MDW/Linked/Mini_Drill - Layer 4.psb": {
+   "1cc7b58c84a683c365e2cb315898ae7479f58c74": 3657238
+  },
+  "MDW/Linked/Mini_Drill - Layer 5.psb": {
+   "33d80c364295ff50934db492a7ef389bbb5833f1": 2582480
+  },
+  "MDW/Linked/Mosling - Goose_Winter%27s_Feast.webp": {
+   "be2a964552d0a0a61d22f804f13f839477fd02cb": 231482
+  },
+  "MDW/Linked/Mosling - Mosling_Angry_Winter%27s_Feast copy.webp": {
+   "8b5c1e161c9d7de4e57066bd4027dc70d9f26419": 60840
   },
   "MDW/Linked/Paint_Bomb - Bulky_Bob-omb.webp": {
    "b813ef29ccc775713c928a254ee241725ba2a6db": 28296
@@ -5164,11 +7350,50 @@
   "MDW/Linked/Party! - Party_pic.jpg": {
    "573b78d6c38f8ce4892ac4cf448bfdc709579432": 83382
   },
+  "MDW/Linked/Pike_Beam - Pike_Beam.webp": {
+   "f8dd8efec4cf3fa0f01048db2d65b802c0e35f0a": 1258
+  },
+  "MDW/Linked/PoD02Black_Bloon - Layer 2 (2).png": {
+   "619c8b52cccdd8010c759f3c9fd58f1ff8999a8e": 2030321
+  },
+  "MDW/Linked/PoD03White_Bloon - White_Bloon (1).png": {
+   "378f75b1f39ce71b2badeab1466bea30a88d07f9": 123898
+  },
+  "MDW/Linked/PoD04Zebra_Bloon - 128100 (1).png": {
+   "24a5fcc08d1ada21b43688d630a73bacc60f5ceb": 297232
+  },
+  "MDW/Linked/PoD05Lead_Bloon - 128133.png": {
+   "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb": 21386
+  },
+  "MDW/Linked/PoD06Rainbow_Bloon - 128131.png": {
+   "daad93a47ba57cd9ac16806b74f4ec115cf11a03": 21355
+  },
+  "MDW/Linked/PoD07Ceramic_Bloon - 128098 (1).png": {
+   "76d2882abcf37cdf4f8fd1ab1c4eeae9a3fd2092": 441928
+  },
+  "MDW/Linked/PoD08MOAB - ech2.png": {
+   "ffef364caac1bf8a7ff5d399b72561b3bf28ea74": 156351
+  },
+  "MDW/Linked/PoD09DDT - ech2.png": {
+   "9024a31e2e47e1b585945d66dcafe4cbebcab2cf": 102053
+  },
+  "MDW/Linked/PoD10BFB - ech2.png": {
+   "bdd34572f1257682d78347293e7e30cf735e5899": 173418
+  },
+  "MDW/Linked/PoD11ZOMG - ech2.png": {
+   "fbe1f6d3603e28979e23542ab60c354e47b89254": 187703
+  },
+  "MDW/Linked/PoD12BAD - ech2.png": {
+   "751025d5bd0727241e8e5ab0345dbb5f25804204": 174835
+  },
   "MDW/Linked/Polar_Star - tvddlfk0.png": {
    "f4682242a1d87a47ab721d4af2aefdc2e3207831": 6819
   },
   "MDW/Linked/Poorly_Drawn_Cabbage - The_Poorly_Drawn_Barnstar.png": {
    "479dd1079f724607033d2b69eea7d9e54dba9bcb": 3489
+  },
+  "MDW/Linked/Qiraji_Soldier - Qiraji_Soldier_pic.png": {
+   "5317ace13b38970c2918e8e09d2f0c999bd2a72e": 551262
   },
   "MDW/Linked/Regret - Regret_bg.jpg": {
    "463994ba914e85c9fac466e5f52f1520d2279888": 171469
@@ -5215,11 +7440,65 @@
   "MDW/Linked/Shell_Shield - original_95630e33b92130ac5eae62940421822b.jpg": {
    "7e255c618226ca4dedae971ead5617114dd2eae0": 68087
   },
+  "MDW/Linked/Sigma - Sigma_sprite.psb": {
+   "ca30565b4f5b996e4d9b9da582d34f61c94a2d33": 1048576
+  },
+  "MDW/Linked/Silithid - Silithid_pic.jpg": {
+   "8d2bd54fe7667a888297b0d472f419548e2277af": 37073
+  },
+  "MDW/Linked/Skeleton_Mate - 1.png": {
+   "c03a3d637499808441b21c2fdb16742adcc736c4": 4771
+  },
+  "MDW/Linked/Skeleton_Mate - 2.png": {
+   "d00f6b9aac210f9db184fc8b43c423c2e428c75b": 4779
+  },
+  "MDW/Linked/Skeleton_Mate - 3.png": {
+   "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5": 4827
+  },
+  "MDW/Linked/Skeleton_Mate - 4.png": {
+   "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e": 4758
+  },
+  "MDW/Linked/Skeleton_Mate - 5.png": {
+   "cbee2036415637851e7b9a2b71b34a0f86430aac": 4784
+  },
+  "MDW/Linked/Skeleton_Mate - 6.png": {
+   "9cb412fd576d5f26ba62fa2a55716a86a6b22eee": 4802
+  },
+  "MDW/Linked/Skeleton_Mate - 7.png": {
+   "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf": 4826
+  },
+  "MDW/Linked/Skeleton_Mate - 8.png": {
+   "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6": 4823
+  },
+  "MDW/Linked/Skeleton_Mate - 9.png": {
+   "56306f571480fa2ed0c91f6222e1025620255eb5": 4769
+  },
+  "MDW/Linked/Skeleton_Mate - Layer 4.psb": {
+   "016ba23edefa3f8f2382bc787eb18b98ed17c387": 89260
+  },
   "MDW/Linked/Snake - xv9xr0ij.png": {
    "4b75e7f841090da751c621d07030ee5ebc7828bb": 6663
   },
   "MDW/Linked/Spaghetti - Layer 1.psb": {
    "82ca0a125399b6ecf76dde366c86211bdb4ca735": 7481852
+  },
+  "MDW/Linked/Spawn_of_the_Forbidden_One - 1.jpg": {
+   "8e4e3eaf677aacc2c322487a1c6a007f5736d34d": 37591
+  },
+  "MDW/Linked/Spawn_of_the_Forbidden_One - BOYKISSER_YCH_for_Chestnut_King.png": {
+   "21b6e7aa1b091993fb15b073019f1281eda16914": 258947
+  },
+  "MDW/Linked/Spawn_of_the_Forbidden_One - cardback copy.png": {
+   "8ce7613d2c945b94095a3a56c5f517c6de505d4b": 797829
+  },
+  "MDW/Linked/Springtrap - Gold_Star.svg.psb": {
+   "37fbd99c3db7c085010672fe02813398c73dab9d": 1048576
+  },
+  "MDW/Linked/Springtrap - Layer 1.psb": {
+   "94749aa7abbc1f117d592cea00e7b24570babbdd": 2798048
+  },
+  "MDW/Linked/Springtrap - Springtrap_pic.png": {
+   "baad3fd41c1a5ef07b4a29ca1c8e631291ebb655": 475468
   },
   "MDW/Linked/Spur - id3w2icp.png": {
    "7ca22bfa256dce5531131a23ab7b90dcaba1c36a": 6519
@@ -5229,6 +7508,12 @@
   },
   "MDW/Linked/Sting_Shard - dcuz4n6-00c6ae30-53f4-4b3c-9ec7-61083b2299e5.jpg": {
    "3edb891b373333a754f52156a2da01da2ce13594": 305075
+  },
+  "MDW/Linked/Sword_Knight - swreal (1).png": {
+   "8a01e64f260b82df3713f3c2af98e9f0fcec6668": 405276
+  },
+  "MDW/Linked/Tentacle - d80532a-8860e1da-3210-479a-9bf5-13e98ea2fbb3.jpg": {
+   "10b1714ea72ed92bd3d5aaa79b8bc9fe9fcba9fc": 297466
   },
   "MDW/Linked/The_Temple_of_Ahn'Qiraj - The_Temple_of_Ahn'Qiraj_pic.jpg": {
    "4ffac8d877205e0a52a30efb40648a470ddb7845": 117477
@@ -5634,31 +7919,44 @@
  },
  "pixels": {
   "00df9808f5318daa0cdc19c9cea49234c375d3b0": "b9d1a1181feb569288e83f2abf1f400f69423f4c",
+  "016ba23edefa3f8f2382bc787eb18b98ed17c387": "fdf9f5117cb45a3c9a3e08f2084751c4dda315fd",
+  "064525ab45098812e04a1f85f3b4f8edfd4d3b0a": "6f2f7fc3e525e604a4d9acc3bd6e098427f27a15",
   "0c4648c0747cc699aaf24fc2f9da5938daf6300d": "2c354e1db53c7df145a14f8bafca86f12046b043",
   "0e1477072e950b593633263ed8b43fbc0c8cd649": "8178c1467b92896acdb478336c008035acf3fcd2",
   "0fc775dea4155b0e39165ae3e3a7821a2a01af09": "eaa1ab06fc737c8590dd4574ad10f245f6431f73",
   "103fe775a0060f13f1e6d9b8eb969127cb120ca1": "1ac617146fb50c260152d4fec95c426fffd7e6b7",
   "108db7fcd4aaf1baea7661ca3f81308763a6300e": "51fff977efd3c1f0154c70678a99785e4dd4f646",
+  "10b1714ea72ed92bd3d5aaa79b8bc9fe9fcba9fc": "ee9288c5fa9581a1ba02eda1cae3099d298e1198",
   "119a8037e96650a0fc90c9212672aa52f83e7e07": "3eb08c53ee1c4d314799a1525cad465578019534",
   "143b78f2cf80938397ac9bc9988f3844788e20c4": "dee18f82beab7d7b61c34832d563e1b10e5db669",
   "156e6cf611e7af358081e762d1ee6a39fccf955d": "af50183df9181c2657ed85f9a61ee7c1f881c3e6",
   "1941d8a633ca7dcd5c5c508e5fbb588d5e2ef445": "c663ec524e4072d603123c3baa137e4fb2e38c44",
   "1a5087c563d0fdc09a3b6cd5dd8c815508f0a13a": "45a0dc762ca9ecb91a95f51b5acbf1bdda3f1062",
   "1b98c60de929bb05900cb1e4b312e98c0e862172": "7b1e749e8bdea1c228b6f2a91597337b46b1b197",
+  "1cc7b58c84a683c365e2cb315898ae7479f58c74": "a0337741f0460aff8280da2c8d6f41b4eb4ec601",
   "1e1470e8b6f4db287c7db7988a33d51f25b5f775": "53a33449dfcc2d6d9a549389f2248a23c7982c81",
   "1f184df06c3ce32076cb27e88a81b83dbe5cb503": "981c04d1687bf7eecf26e857e155384d511765b8",
+  "21b6e7aa1b091993fb15b073019f1281eda16914": "68cc0fdc7fa9a685522155a8006042332398252b",
   "21c25ff5557ac6312eafb8f891b7a043a5404e9e": "10c40d65a6a02f2fd174e4a9656691705b4274f0",
   "22560c1027429efee7b61740cdf8870d67e0e87d": "d0afc47c1ec79511c31a2d3ee22e94bd830396b6",
   "23d109968e9bd030377693191b73b47a27c68320": "5041a5598365f70489e9ba24a2c48614eb3c886c",
+  "24a5fcc08d1ada21b43688d630a73bacc60f5ceb": "8fb09aff20aad9fc43f01338dc4818876d8c8c8b",
   "25558174ea3abc0f8e90df9e48e02a85dbf045e2": "5595d21bda51e66e99c53b79e684552d25ec2d31",
+  "26084d775d551716235612d5026079fc857e8a9d": "2f98e28523aff9c144e7e9d17b4018e118c6940e",
   "2c08ac0300b545c4d895489831c4371d6cc2e067": "8282db2148acac525cba61b661c867911aee404c",
   "2e5451bac311e5834b8db9f06cc9991d0f7c0669": "376f9fa9687d33b878a11079f92a1338d53b0f9a",
   "2e72ac90cab2285fb6fafd909e1a5aec92956439": "73e519fdb6d4cb6a350fb8073219ee5cdb2fcacb",
+  "31801c6ce1bc9ca715f58473db5b7d4f5b98f988": "4f788b4c110fd9e7dbd9100a78f79cc91beb6d91",
   "31e3afb2b7f6a112eb4639f95e94891d2f748b08": "c8609ca3f760e11e182093e5c837aed108fe0cc3",
   "339ce8499d258a1b57f5bbd37ae0080c60e05568": "e4412564a533f95359abe70771a5c8447e9b66f7",
+  "33d80c364295ff50934db492a7ef389bbb5833f1": "74ecdc1d649382da6bc1569c35074c478eec4924",
   "34f5a6f58d252c99b888f374970d7d3afd2b9e59": "b1c24f666b2357b0654179c1df9a4d93a874dd0f",
   "376bfd4b0b0a50d1189ebe51ed3dfa26c8c27909": "28a37f22c56bc7fa6f4e75c0e74a742e0d852f3e",
+  "378f75b1f39ce71b2badeab1466bea30a88d07f9": "1240e05d51a48647c630bd4984f268af9919e88f",
   "37b067fa0f94746c154376f3aa39d05de61669e9": "ad79d8fa999afb6fd8358e71a8d0112f518e85e0",
+  "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e": "488063d4ef8e4942d0156d5f2b23defa7b1ecf7a",
+  "37fbd99c3db7c085010672fe02813398c73dab9d": "7d545a799c25c318031692b862a0c76be4531ea9",
+  "3cd0f9f0dfe8b8d831049d94fb5f214e1794bdd6": "fcee250ae29d3d1b0add19c6347c1944dec84b2a",
   "3d93454899ee1ee3e1c288711b3f5faac040b390": "bff5335fc00669bb2a12954f5e061bc9abad2902",
   "3da10d325ca53650af78a986d93837f6af5a4ab3": "59d3c0d65243f2d49c2427bb05786563b7700955",
   "3edb891b373333a754f52156a2da01da2ce13594": "4085cf1b23b8d7ef86535dd4f75eb0c5da3bc3ba",
@@ -5681,14 +7979,17 @@
   "51f4ca65e2d2667f2668a0261e9c75b285c4ac32": "6abb1b587245eaff49924418a82a7dc39b2a9521",
   "522bb8b8ca06a0e1c53168059aef4ded109e5141": "7dadf5cae5d76e4d70b544bfcd03fb1e7007b3d0",
   "52862c147973562955a86091fceabc9dfc1b9625": "d5c0106e06e738850c2a3adc1ff8729a0a93abb9",
+  "5317ace13b38970c2918e8e09d2f0c999bd2a72e": "7418fe14ef9bdc357896f5e6f81a9c6d1f1b1c23",
   "54034fc6210a87783ec27ed6c91fad62006738f6": "829c437a18c9a2ec831d153d7d5bb246eb7e6b84",
   "553dc3310dc8a99315877dc4c33d96d35a73fe15": "f96bac89e8f559f6cee5c6d9f06f0c2a97fe652f",
+  "56306f571480fa2ed0c91f6222e1025620255eb5": "be31d50c7c2335614d842ab0742db5b18c06520e",
   "56a9d98f586565bf927650a6fb3b0fe66b0d6554": "89e6ae5eeb2850d70b27641273058d3cd16aad96",
   "573b78d6c38f8ce4892ac4cf448bfdc709579432": "2aa62c9d0941ebab374301636be7faa0e0683e0c",
   "5a7ca1d430460f3782aa73ccaa11906faf6d7d60": "467d4adf0d0a2a5dad833a7c9ee8b44b3b1b8868",
   "5d5c323b4befa0e624de674da25248959a36315b": "f00dd4937219543e87d69b70c92ad6bf5846e2c2",
   "5f41b136c0a1d6de391c0461734d8cdbc79f26d1": "e75fcf09a81f44015be9c4728f34944ff4875832",
   "6029c9b0ff9b8b2666bb599dee8d1e2b8287ef0c": "a48e45cd3b0da59c184a6a53946a4c5a3cc6f79f",
+  "619c8b52cccdd8010c759f3c9fd58f1ff8999a8e": "e757bdd25f25e478e4dd0e585f99b0e30a37b400",
   "65dd8ec69d1b4ca8832d062c02e67b4fa142d576": "05f7d16375307aae0b86c946dcca859aff2ea704",
   "67871f155a2c04feae714813c1d6d2bc69d57ba0": "36eb491dca58dffd10f6fa592937ce8c3f915116",
   "67a80bfd62a5a41decba132b486e88c6d2eb7e2f": "e235efc7edf7a26faa91f79010d6d722438a9783",
@@ -5699,16 +8000,21 @@
   "6f896b9ac86551432696b7adeaf4f4cdd31a50ba": "59a5d64c6aded91b12eeb88770cbad7e65e87f8a",
   "709f4b8a84d926c87aa7a844595abe1e98bf24a6": "3bda9545a332086250b6b100d969f681056093cb",
   "71a64483df379c585779a9498c97156f29ad597a": "3fe65bd6792511346c7c80327563dbd7b203421c",
+  "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb": "fafc964970e35853a8ab5c8b585045263e2b487f",
   "7411e48582d39bbe6164bb03eb11abd94388bd56": "3e03a70730b59eca248c93b1991d2cdd9cb85b71",
   "74f287c956cdf731cec0e248e08d3ae7c2fb680a": "49250c222966c58b8931fafe2361fcadd1b132c7",
+  "751025d5bd0727241e8e5ab0345dbb5f25804204": "159b78d58c56ca0cadc16074f70c39570b70b92c",
   "7528411a10c4884f78934599f1c14364ba559464": "91f859c0f6aae104f089ef58145da0e8b52d0413",
   "75a6e84677c51338150bcaab4ad189697fdc76a5": "0159da0863c80a8cae19103b8f590eba2d91d90f",
+  "76d2882abcf37cdf4f8fd1ab1c4eeae9a3fd2092": "c688c4d2f87ea8c482d934becede0fa17deace7e",
+  "79846cdbe4365538fe2b880dec520e414b83e903": "bad0956c3c7ae5441a83183c2ff60449c568fb76",
   "7a1b10bd8e5bc2752967672fa37350e0f2b96ba6": "0cf14bef3af8aa0304d13d36481fb0d071b069b0",
   "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f": "170df30389319116a536a5ccabdf9c9547f49731",
   "7bfc2fb6b51bc97d1799e4d09f78a66eaf647efe": "41d90180c442350007ed7b1273089ef4df59104c",
   "7c16930dc2be7eea37e8df342ad4ee7a40cd482d": "3746ec3b25733f2502758a94f5b112ee18e32d0f",
   "7ca22bfa256dce5531131a23ab7b90dcaba1c36a": "8371d1da4947671d6b0cf1486982b650d54da196",
   "7d5eb61323fac669bdca7d290866869947394879": "1fe9c3a760cabfe020db50c924e555cbe638ac52",
+  "7d6c9adbbea7c2b3e64ee0152e33eb55f94148cd": "cf8313593eecdf73102253e09a000d9d9d7cb43b",
   "7e255c618226ca4dedae971ead5617114dd2eae0": "73833cc1ad6f52cee100732afec8e73c99118cd7",
   "806d50d897068c86df0fb7d412cd25f291351523": "ca3e8c5b1d4bae452bce9752b0bd60488bf5a22a",
   "82ca0a125399b6ecf76dde366c86211bdb4ca735": "ad5eeec8c47ce2199f6e2c42a1f79100754705bd",
@@ -5717,10 +8023,21 @@
   "87a12d64e04abd67a45e028ebe3c8426aa38339f": "770db16b938c858757af5d39786fc796aa443333",
   "88b1e268d84f77fe887d3040c2b78030dc7265ff": "df54787c972b3ad37ff60f5d36b8b53e550647c7",
   "897bf3bdf3b7d87852e25770168d64acbe3d5bab": "56561345e76ce3f2acca6736ce9566f455a0f4fd",
+  "8a01e64f260b82df3713f3c2af98e9f0fcec6668": "c1a038e6f1c4cca6efa19cd2ab8174f932b8a1c5",
+  "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf": "a357ee9d2f244486bc131d8c1be17f0e886616cd",
+  "8b5c1e161c9d7de4e57066bd4027dc70d9f26419": "8d10e4d2f4b882f438233a6679bdf5847b587486",
+  "8ce7613d2c945b94095a3a56c5f517c6de505d4b": "7bbf9f00b9ee92a26f4faf1559449f0b7bca52fa",
+  "8d2bd54fe7667a888297b0d472f419548e2277af": "1436c3545b80f08953385e663c574b10d2e99ef1",
+  "8e4e3eaf677aacc2c322487a1c6a007f5736d34d": "ae83183ec128464c38f071561ee06ffd8c1da5e2",
   "8ec31da3ca912f8d660bab3a40cd5768ac6177ba": "6a69ca09c44bf2d173bfaa45e26b48a5b456f9eb",
   "8ffa1d4a2c9d268a979d595cef45c2ccdb9deaa8": "5057384cb4208e2ea1be61f0b1393f26251ac97d",
+  "9024a31e2e47e1b585945d66dcafe4cbebcab2cf": "dab2f71f417f5766948f2ffb61b18584fcb8cfda",
+  "94749aa7abbc1f117d592cea00e7b24570babbdd": "d77c1e5ce146d59c23aaa86345889914452f5737",
   "974f584c9e970a05faf55d73d638259c16b51766": "4b9faf80ae45c94b8e37916b5ef726adbd249383",
+  "98d7be7d710a32b3248bf702ea5f6cfe24f5f2e5": "5796e2adee4acb57c2904057bb68d491d2150679",
   "9c0a2e4e6c48422c2360ee3bf7a19445a3edc4ed": "ca69c3d63d009c1eef766c806320e345c04be1c1",
+  "9c5678bff7f940efb17dd2f367833b1c4529fdc6": "23564a841136eadf3887431b48c587c3fa993264",
+  "9cb412fd576d5f26ba62fa2a55716a86a6b22eee": "db25934590c7feb9cef7ab15b2225475898f967c",
   "9fcdf8ae6b083091fad483ce78e6e24e731991d5": "2d65d356eeac8402923081030566dbd1d2b70826",
   "a0ada347a5a1ea6f846eb829c5cf4debea589a4f": "86cbf8410aa9b0492d890eef680d7808b1b137a3",
   "a234f6d6c25424c740844761bc7e101d8da45556": "00647f98b4e2fa9c7b751c0fb5fb13ff987ac9fd",
@@ -5741,38 +8058,57 @@
   "b95adab71e6a7ee177fd072cc029890793d5d660": "70704917e3899ec03962dc87b577f6a8aa3f3085",
   "b98af2413520fe1127b8c69877e2aacef97f024c": "742d358aa3eacd04fd5091a269143a72b5e4b471",
   "ba5b5f87ebd5560cca78b564a18a7e2b7f67781f": "f2228bc364e68517caf221ea7691de804b242a13",
+  "baad3fd41c1a5ef07b4a29ca1c8e631291ebb655": "f135039bdbc3d2218744f9d9e0b0dcdd510c9a68",
   "bad963b3e2ef11469e7ddb7f8d947e658d797ccc": "3525e7fd2ebeb021335841908f361e3d198eeb4c",
   "bd6a04ab11149fb18fad5303636d5444cc60964b": "da06cbf105225d5f9e3b5b8dbdd4d171cd78e070",
+  "bdd34572f1257682d78347293e7e30cf735e5899": "265f637eb247be88c034c2f73398f9f58c7d27ca",
   "bdd59a805b6ec2c93c42a17bdcbe545a8fec0381": "efcb4521853c03f9b313c03313298f95002b2dee",
+  "be2a964552d0a0a61d22f804f13f839477fd02cb": "f837e370daa57b00507f76fe4eb51bde7e7fa62d",
+  "bf02ea7f0e702b2eceff7bebd9cd82f38d3fe6b6": "4bd796581acdedbd841f8522a903e0718a576773",
+  "c03a3d637499808441b21c2fdb16742adcc736c4": "066af00421d3b3a6982d66d7813e4d9a925607df",
   "c0f6823ebd8b318dbbb78656bec80dd8ccc20993": "9cfec0f1f9c24b743d2353e804ea5d994a6fdc6e",
+  "c106c639ecf7cf72f678b4e693fff736b7865c91": "339f5644b945793918b9d249d391d272a26a9a35",
   "c39ddbc872bfb1d1b122f822297a1de7f217dc86": "9c99caf1db19e661c7a1d92fbfd183a77b9ab4ff",
   "c447d344fe6e0a6c03871bd527062ac8b849f9f8": "a79456f6a40c253e0486bb1c02c1ab9e11ddc53d",
   "c4ad83c5077298220fab895fa4caeaa2229afab3": "b5c0721449a7337ce43aa871e9eb757e9f7e9d1f",
   "c6bc1f3f64f9cd4c24442c27b6e9934ff3eb5e95": "290681cdc9bef3830e92c35ba0a41268cc195e92",
   "c7fa436350e05008d81516bc8de140796aa039ee": "a884777c9c93e36bca6a9fede1827361a539c736",
   "c9794cb2813a856542da095481a09a68bccacba9": "fd76d6dc532369ea6ba144088b496d847f258f0d",
+  "ca30565b4f5b996e4d9b9da582d34f61c94a2d33": "8a1a9eb30d90129dd1363718912a210358f269b2",
+  "cb5fa0ef961707a9f30feafebccb8bc348a07e89": "29ef5bacc3f0b74d411df9f14b147d9830a842c4",
+  "cbee2036415637851e7b9a2b71b34a0f86430aac": "2f509f58cd67d1f13095c2bef4a2c47b9a8ee632",
   "cc2f901ed82cd8795d725843c43d42e3ae9e0f86": "fabfdf8771d2281b09d5b0595915675c6eb9d84d",
   "cf9bcf086f5c0c6a38403bd1e1255eaaa6d3fcdb": "a9d6e2d2096a83fc25bc692a74a46f0c328ff702",
   "cfc0193cb39482cedd74028cbb7da7ae7f5f9dff": "c10c3798ab54248f930a37f3fd9ac4bbb0ccb3d9",
+  "d001676cae71286b2de2ce1c272f44b8050797e6": "f1496fd2aed80544f9e758ddcdfc62bbf61830fd",
+  "d00f6b9aac210f9db184fc8b43c423c2e428c75b": "33ee5934efea6c3967a0bf64fb8180cc3608b8f5",
+  "d15e245870c01d633fe67a8d3df1335b3da2a314": "c5e222a16baa504244799893e9c8d09d74499b24",
   "d189d573cc12593c2a8fda9b27c9eb32b1c8d4f6": "aaa7425ccf7e7b93dd36054cc86fbf0cd43b9efe",
   "d383bba71767af59d6da35c9864e6ad563eeb70c": "03d809e1c8f1627f57d23d61c16584dce6b913b5",
   "d3b2c5ea498bc34684017451f8634c70c4379ff3": "537c7a5b39dbea01f8578f3fe3aa1a8f3d8ec9b0",
   "d530c7b666dbbd0fe132d966bf88ba29fd4f284c": "5612401c695cb8b5cecc24b10a05c61a06d52a1d",
   "d5bb629b62d4af428d5b23e5dafff9ec30c4ac5a": "d32b547b299a48b657140aaf898b46e4309fdfb0",
+  "daad93a47ba57cd9ac16806b74f4ec115cf11a03": "58c015b68066282bab084d292f9cfab16c6adade",
+  "db4c4cfd7fdc8cac2e601fd137a475daf2433f84": "3df2a4bfd25e03700ce4d3b376f414716fa60a62",
   "e3844a8f6ec0d5fa83a7a5dbf2a7a79a6a0cbdc6": "955a7a27e1052bf82085a76dfa44ecf8109cfb84",
   "e66aa78af73095c9944d4b0fbe5f738621844012": "bd3aabc45ceac4d32822e0c41bb6104cdd75f2c7",
   "e81fa760134c022f978b5e38273fa40448e2f4a3": "0fab3c8955d364e630a08217087af38606d8a4af",
   "eb99c7c1eae0df72eeda38c3bfb9082164aee35b": "01d6b2836f912954e5021aa02d2f17320303cf85",
   "ee499239dacfbe892205f841b828ab35cf894046": "75284302c32da4f37434462bf6a0db94cf9e90a7",
+  "f2c30930023e63583fbef6ec3f4a394798acf624": "193cf0673e9a26f8ba2aedb4b2158df4ee4e8761",
   "f363fa3f2e582576921410387f402fd065722127": "d43789d00a21b1909107f42a683fe50688f93cc2",
   "f42ee110f20f60d333363d7f2b522e26e2860cb3": "846dd4156c6cd04f30c625d7a78d380d939a2c1b",
   "f45a8c6a33d95fefa174150b4303a45ee440c451": "71b0611ee0cd4e3faaf9e89c04c8a0232f35cc48",
   "f4682242a1d87a47ab721d4af2aefdc2e3207831": "5a1f7cf74635775e5171589899694aa06303f876",
   "f7441c3c1c67903d8985eeba6478de73590038b4": "05ea9edf1444cce07df079ca9df328ca8a15fee0",
+  "f8dd8efec4cf3fa0f01048db2d65b802c0e35f0a": "3a01d3831cbdc233bfd9335b1385b3b900106b0a",
   "fabfedd7ca9e76e4abbda20523ebc9f6acf50842": "c3e6d240171e6fc7ada6372b2416e5dbd2f2b129",
+  "fbe1f6d3603e28979e23542ab60c354e47b89254": "c58413f06d942ceeb47e7826462e5b9467a97b6a",
   "fc33212e1473542cdb6ee3d32cdba111dfe4c453": "dc0a946bca879ab9c31ccc43982a4c54105176e4",
   "fd3deab39085697e0d4f28828f47115b47372054": "0ed8a30bb07dad968add3fc72d6a6f15db57e46c",
   "fe1f3450941a301906fd1eede011e166f34161d9": "f6ccf18b0774d5a09477ec3a4b5ab021ffbaac58",
-  "ffc34353d50039c04f3a6473ad5ab1a9a2f2db9d": "d935fa55d1b2d02e719d89cf23c02af3ec4b3832"
+  "fe86cc88909355d589417102f9058871b8e10fea": "f075ce3942fc5ad89a75618ff07c572cdb659f62",
+  "ffc34353d50039c04f3a6473ad5ab1a9a2f2db9d": "d935fa55d1b2d02e719d89cf23c02af3ec4b3832",
+  "ffef364caac1bf8a7ff5d399b72561b3bf28ea74": "b79a595a1b3259091e9cf56b23ee9e60fab1703a"
  }
 }
