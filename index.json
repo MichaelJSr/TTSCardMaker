@@ -1255,6 +1255,14 @@
    "png_blob": "b8d30382bbd31a411a6a57c36875e9903930fee2",
    "psd_blob": "6d4a5ccc20183faf5b13b5a0ac8bee655167507c",
    "state": "baked"
+  },
+  "zomoroko-mw5qnc4k-mko0": {
+   "at": "2026-11-07T01:42:34Z",
+   "card": "NME Salesman",
+   "path": "Creatures/Kirby/4 Stars/NME_Salesman.psd",
+   "png_blob": "17e2404525cda5016ef636f43cb42843bf7f3e82",
+   "psd_blob": "3a30ada6d9a53f3049143cb750602f10dd9936d0",
+   "state": "baked"
   }
  },
  "v": 1

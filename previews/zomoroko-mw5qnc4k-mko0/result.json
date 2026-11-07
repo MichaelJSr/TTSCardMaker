@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5qnc4k-mko0",
+ "card": "NME Salesman",
+ "path": "Creatures/Kirby/4 Stars/NME_Salesman.psd",
+ "png": "Creatures/Kirby/4 Stars/NME_Salesman.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "3a30ada6d9a53f3049143cb750602f10dd9936d0",
+  "png_blob": "17e2404525cda5016ef636f43cb42843bf7f3e82"
+ },
+ "edit": {
+  "name": "NME Salesman",
+  "parts": {
+   "422": {
+    "field": "name",
+    "text": "NME Salesman",
+    "was": "NME SALESMAN",
+    "sha": "217b3a9b",
+    "psd": "3a30ada6",
+    "layer": "Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'NME SALESMAN' -> 'NME Salesman'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "NME SALESMAN",
+   "new": "NME Salesman"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.054,
+   "max": 2.0
+  }
+ },
+ "region": [
+  235,
+  6,
+  986,
+  129
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42325484359",
+ "took_s": 6.0,
+ "at": "2026-11-07T01:42:34Z",
+ "variant": null,
+ "parts": {
+  "422": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1604504,
+  "webp": 78636,
+  "before": 79958
+ },
+ "recompressed": false
+}
