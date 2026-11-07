@@ -70,6 +70,8 @@ jobs:
       # card_checks.SPARSE_FILES
       - &builder
         uses: actions/checkout@v7
+        env:
+          GIT_NO_LAZY_FETCH: "0"
         with:
           repository: ${{ env.BOT_REPO }}
           ref: ${{ env.BUILDER_REF }}
@@ -104,6 +106,8 @@ jobs:
 
       - &data-checkout
         uses: actions/checkout@v7
+        env:
+          GIT_NO_LAZY_FETCH: "0"
         with:
           ref: data
           path: carddata
