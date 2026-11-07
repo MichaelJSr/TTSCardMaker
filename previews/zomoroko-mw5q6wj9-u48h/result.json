@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5q6wj9-u48h",
+ "card": "Magnus Von Grapple",
+ "path": "Creatures/Mario/2 Stars/Magnus_Von_Grapple.psd",
+ "png": "Creatures/Mario/2 Stars/Magnus_Von_Grapple.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "af8beee48d72c7e9185d200fb947cef4124bfd9c",
+  "png_blob": "255d05f3b82c609a2fb2ad1727b9290e9a8b11c4"
+ },
+ "edit": {
+  "name": "Magnus von Grapple",
+  "parts": {
+   "552": {
+    "field": "name",
+    "text": "Magnus von Grapple",
+    "was": "Magnus Von Grapple",
+    "sha": "69917952",
+    "psd": "af8beee4",
+    "layer": "Text/Magnus Von Grapple"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'Magnus Von Grapple' -> 'Magnus von Grapple'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "Magnus Von Grapple",
+   "new": "Magnus von Grapple"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.068,
+   "max": 2.0
+  }
+ },
+ "region": [
+  201,
+  18,
+  999,
+  110
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42324333524",
+ "took_s": 5.4,
+ "at": "2026-11-07T01:29:46Z",
+ "variant": null,
+ "parts": {
+  "552": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 3377539,
+  "webp": 116316,
+  "before": 116354
+ },
+ "recompressed": false
+}

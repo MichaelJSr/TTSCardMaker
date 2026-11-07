@@ -1231,6 +1231,14 @@
    "png_blob": "c17f0934eda31f236869ddfc40197b7d1ac5dff4",
    "psd_blob": "cb9bc6e0faf3700d4e0c7bcdaadb0f43ba23805e",
    "state": "baked"
+  },
+  "zomoroko-mw5q6wj9-u48h": {
+   "at": "2026-11-07T01:29:46Z",
+   "card": "Magnus Von Grapple",
+   "path": "Creatures/Mario/2 Stars/Magnus_Von_Grapple.psd",
+   "png_blob": "255d05f3b82c609a2fb2ad1727b9290e9a8b11c4",
+   "psd_blob": "af8beee48d72c7e9185d200fb947cef4124bfd9c",
+   "state": "baked"
   }
  },
  "v": 1
