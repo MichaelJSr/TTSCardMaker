@@ -1,0 +1,3544 @@
+{
+ "Auxiliary/Creatures/Azamoth_the_Possessed_Vessel.psd": {
+  "blob": "c9e43d0533b9764a0f5da752ca61c486f2aaba86",
+  "links": [
+   {
+    "drawn": "108db7fcd4aaf1baea7661ca3f81308763a6300e",
+    "name": "Azamoth_the_Possessed_Vessel - chatchawan-keawtangkhuen-realmofthemadgod-sf-finalrelease.jpg",
+    "path": "MDW/Linked/Azamoth_the_Possessed_Vessel - chatchawan-keawtangkhuen-realmofthemadgod-sf-finalrelease.jpg",
+    "size": 1164568
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "9842d409283e819405890ffd7f7e3bc7775145fd",
+    "name": "darkmatter.png",
+    "path": "Types/darkmatter.png",
+    "size": 220675
+   },
+   {
+    "drawn": "459cdddf4c0054f24a59c7b08ec0c54fd15c7fc3",
+    "name": "Azamoth_the_Possessed_Vessel - Magic.png",
+    "path": "MDW/Linked/Azamoth_the_Possessed_Vessel - Magic.png",
+    "size": 60344
+   }
+  ]
+ },
+ "Auxiliary/Creatures/Igor_Roballtowski.psd": {
+  "blob": "49bf7ad4e92c9b7fe6f931fb0b598053d609de13",
+  "links": [
+   {
+    "drawn": "46be553b2576e599df68b6c6bf2861fdeb689351",
+    "name": "Igor_Roballtowski - Level 3.png",
+    "path": "MDW/Linked/Igor_Roballtowski - Level 3.png",
+    "size": 1779287
+   }
+  ]
+ },
+ "Auxiliary/Creatures/Mettaton_EX.psd": {
+  "blob": "35a48db930bb1b5f012952faedfd68cbe3970401",
+  "links": [
+   {
+    "drawn": "0fc775dea4155b0e39165ae3e3a7821a2a01af09",
+    "name": "Mettaton_EX - __frisk_and_mettaton_ex_undertale_drawn_by_palidoozy_art__sample-fb89e94acf19577b2494bbde01775b9b (1).jpg",
+    "path": "MDW/Linked/Mettaton_EX - __frisk_and_mettaton_ex_undertale_drawn_by_palidoozy_art__sample-fb89e94acf19577b2494bbde01775b9b (1).jpg",
+    "size": 497092
+   },
+   {
+    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   }
+  ]
+ },
+ "Auxiliary/Creatures/Mettaton_NEO.psd": {
+  "blob": "171b32e71da0eb9a40f80ced571ceeb2480e32bd",
+  "links": [
+   {
+    "drawn": "67871f155a2c04feae714813c1d6d2bc69d57ba0",
+    "name": "Mettaton_NEO - neo_by_walkingmelonsaaa_d9l6od2-fullview.jpg",
+    "path": "MDW/Linked/Mettaton_NEO - neo_by_walkingmelonsaaa_d9l6od2-fullview.jpg",
+    "size": 225072
+   },
+   {
+    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   }
+  ]
+ },
+ "Auxiliary/Creatures/Militron_(No_Armor).psd": {
+  "blob": "f20536f009052b18af1506dd2efdbc6ab9d6dab9",
+  "links": [
+   {
+    "drawn": "b5235b3a93adf8d6714d7bd166171b54a0368a33",
+    "name": "Militron_(No_Armor) - Link- The Faces of Evil - Cutscene - Militron's Humiliation 0-5 screenshot.png",
+    "path": "MDW/Linked/Militron_(No_Armor) - Link- The Faces of Evil - Cutscene - Militron's Humiliation 0-5 screenshot.png",
+    "size": 378236
+   },
+   {
+    "drawn": "b5235b3a93adf8d6714d7bd166171b54a0368a33",
+    "name": "Militron_(No_Armor) - Link- The Faces of Evil - Cutscene - Militron's Humiliation 0-5 screenshot.png",
+    "path": "MDW/Linked/Militron_(No_Armor) - Link- The Faces of Evil - Cutscene - Militron's Humiliation 0-5 screenshot.png",
+    "size": 378236
+   },
+   {
+    "drawn": "709f4b8a84d926c87aa7a844595abe1e98bf24a6",
+    "name": "Militron_(No_Armor) - Vrai_Militron.webp",
+    "path": "MDW/Linked/Militron_(No_Armor) - Vrai_Militron.webp",
+    "size": 1260
+   },
+   {
+    "drawn": "5f41b136c0a1d6de391c0461734d8cdbc79f26d1",
+    "name": "Militron_(No_Armor) - Warpstar.png",
+    "path": "MDW/Linked/Militron_(No_Armor) - Warpstar.png",
+    "size": 256210
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "unknown.png",
+    "path": "Types/unknown.png",
+    "size": 132191
+   }
+  ]
+ },
+ "Auxiliary/Creatures/Morpho_Knight.psd": {
+  "blob": "f9bf249cd5430d13b6b2771e0bc9dadce8c41213",
+  "links": [
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+    "name": "fire.png",
+    "path": "Types/fire.png",
+    "size": 568963
+   }
+  ]
+ },
+ "Auxiliary/Creatures/Shadow_Queen.psd": {
+  "blob": "99c26d654df41f7dcfb283dbd80946a271fc6832",
+  "links": [
+   {
+    "drawn": "c659c492806f52480508f989cb55a426afe1aac5",
+    "name": "bFables.png",
+    "path": "Types/Stars/bFables.png",
+    "size": 368729
+   },
+   {
+    "drawn": "75d7fb1062f4f81eb510a6cb441f85819eae9617",
+    "name": "Fallen_Star.png",
+    "path": "Types/Stars/Fallen_Star.png",
+    "size": 2480
+   },
+   {
+    "drawn": "42202bbec256fcd7533b9262b980906a0c142b27",
+    "name": "Shadow_Queen - Vi1.png",
+    "path": "MDW/Linked/Shadow_Queen - Vi1.png",
+    "size": 367
+   },
+   {
+    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+    "name": "Starstorm.png",
+    "path": "Types/Stars/Starstorm.png",
+    "size": 324
+   },
+   {
+    "drawn": "010244477dc99d755153a0ac5ba94322b35f37e9",
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
+   },
+   {
+    "drawn": "27e828a4b0084d24fe092bb1807253c468cca9b2",
+    "name": "Scrap.png",
+    "path": "Types/Stars/Scrap.png",
+    "size": 27348
+   },
+   {
+    "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
+    "name": "Patrick Star.png",
+    "path": "Types/Stars/Patrick Star.png",
+    "size": 152994
+   },
+   {
+    "drawn": "ca1bbfb03595f64e2268a57aca0b510b2e52af4e",
+    "name": "YinYangUltra.png",
+    "path": "Types/Stars/YinYangUltra.png",
+    "size": 1137393
+   },
+   {
+    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+    "name": "Solar Sun.png",
+    "path": "Types/Stars/Solar Sun.png",
+    "size": 1374450
+   },
+   {
+    "drawn": "f21f2877886482116ec5cbb3a6934eaf02e7d2ff",
+    "name": "Star of beth.png",
+    "path": "Types/Stars/Star of beth.png",
+    "size": 2247
+   },
+   {
+    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "name": "Nether_Star.png",
+    "path": "Types/Stars/Nether_Star.png",
+    "size": 10708
+   },
+   {
+    "drawn": "7bce3270adea13c48ca9f9233617f60d91925363",
+    "name": "Nebula Star.png",
+    "path": "Types/Stars/Nebula Star.png",
+    "size": 253389
+   },
+   {
+    "drawn": "6a79e1709a529b3353886f2e415702bbe68bed17",
+    "name": "Lol star.png",
+    "path": "Types/Stars/Lol star.png",
+    "size": 97082
+   },
+   {
+    "drawn": "85d77d7d27e05776d8d725f0802dccc9e34f3bea",
+    "name": "Triforce.png",
+    "path": "Types/Stars/Triforce.png",
+    "size": 1712857
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": "6c9df83521a4b44ee2fd840d1b40e21be2a8eb32",
+    "name": "Crystal_Star.png",
+    "path": "Types/Stars/Crystal_Star.png",
+    "size": 5027
+   },
+   {
+    "drawn": "c51a965abbf8c0c5de3ca2e57f915507396f1c77",
+    "name": "Diamond_Star.png",
+    "path": "Types/Stars/Diamond_Star.png",
+    "size": 2255
+   },
+   {
+    "drawn": "4085c54d4656fcf7b0d0de6c215bc81ba5175aa5",
+    "name": "Shadow_Queen - Emerald_Star.png",
+    "path": "MDW/Linked/Shadow_Queen - Emerald_Star.png",
+    "size": 588
+   },
+   {
+    "drawn": "37b067fa0f94746c154376f3aa39d05de61669e9",
+    "name": "Shadow_Queen - Garnet_Star.png",
+    "path": "MDW/Linked/Shadow_Queen - Garnet_Star.png",
+    "size": 659
+   },
+   {
+    "drawn": "127ac246e772f9b0113d5c83be4db5aa7f20d0d1",
+    "name": "Gold_Star.png",
+    "path": "Types/Stars/Gold_Star.png",
+    "size": 2010
+   },
+   {
+    "drawn": "4b06eff55921e822dc8cef08c97d441e55940274",
+    "name": "Ruby_Star.png",
+    "path": "Types/Stars/Ruby_Star.png",
+    "size": 4718
+   },
+   {
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "8ec31da3ca912f8d660bab3a40cd5768ac6177ba",
+    "name": "Shadow_Queen - Defensive_Minion.psb",
+    "path": "MDW/Linked/Shadow_Queen - Defensive_Minion.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "8ec31da3ca912f8d660bab3a40cd5768ac6177ba",
+    "name": "Shadow_Queen - Defensive_Minion.psb",
+    "path": "MDW/Linked/Shadow_Queen - Defensive_Minion.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "bdd59a805b6ec2c93c42a17bdcbe545a8fec0381",
+    "name": "Shadow_Queen - Offensive_Minion.psb",
+    "path": "MDW/Linked/Shadow_Queen - Offensive_Minion.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "aa9f767fc58d2dcdff419edbce9cb97b963e5950",
+    "name": "Shadow_Queen - Unknown.png",
+    "path": "MDW/Linked/Shadow_Queen - Unknown.png",
+    "size": 1308
+   },
+   {
+    "drawn": "c6bc1f3f64f9cd4c24442c27b6e9934ff3eb5e95",
+    "name": "Shadow_Queen - Panda.png",
+    "path": "MDW/Linked/Shadow_Queen - Panda.png",
+    "size": 127266
+   },
+   {
+    "drawn": "5a7ca1d430460f3782aa73ccaa11906faf6d7d60",
+    "name": "Shadow_Queen - Darkmatter.png",
+    "path": "MDW/Linked/Shadow_Queen - Darkmatter.png",
+    "size": 12660
+   },
+   {
+    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "name": "dark.png",
+    "path": "Types/dark.png",
+    "size": 25732
+   },
+   {
+    "drawn": "b587fa8759caf9570a8288de23675fb01e905d88",
+    "name": "Shadow_Queen - Light.png",
+    "path": "MDW/Linked/Shadow_Queen - Light.png",
+    "size": 4021783
+   },
+   {
+    "drawn": "48e1257d9b07bf8d60c2f4cce57981d6a9b0add7",
+    "name": "Shadow_Queen - Wind.psb",
+    "path": "MDW/Linked/Shadow_Queen - Wind.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   },
+   {
+    "drawn": "25679413e008ecd225af8cc6a9769810b48ae7e7",
+    "name": "rock.png",
+    "path": "Types/rock.png",
+    "size": 197965
+   },
+   {
+    "drawn": "00007617b6c9850309e6c3a145e338efa55eded3",
+    "name": "electric.png",
+    "path": "Types/electric.png",
+    "size": 106279
+   },
+   {
+    "drawn": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+    "name": "fire.png",
+    "path": "Types/fire.png",
+    "size": 568963
+   },
+   {
+    "drawn": "4bd977fdb629fc66b4f845db264accb62fc0123f",
+    "name": "Shadow_Queen - Ice.png",
+    "path": "MDW/Linked/Shadow_Queen - Ice.png",
+    "size": 272855
+   },
+   {
+    "drawn": "755a458e1afd8c0059d30f9b9ee3c72717a2ad88",
+    "name": "ice.png",
+    "path": "Types/ice.png",
+    "size": 753294
+   },
+   {
+    "drawn": "99d8299f475b915a691170c03c5a2c0fe0110589",
+    "name": "water.png",
+    "path": "Types/water.png",
+    "size": 121376
+   }
+  ]
+ },
+ "Auxiliary/Items/Air_Totem.psd": {
+  "blob": "14c442ef0061471fc4cd41619140b67c9b94b177",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "0c472adf6c2a168dfd54ea21ef9c3a4f944b666e",
+    "name": "active.png",
+    "path": "Types/active.png",
+    "size": 50758
+   },
+   {
+    "drawn": "897bf3bdf3b7d87852e25770168d64acbe3d5bab",
+    "name": "Air_Totem - asdasd_auto_x2 copy.jpg",
+    "path": "MDW/Linked/Air_Totem - asdasd_auto_x2 copy.jpg",
+    "size": 1479461
+   },
+   {
+    "drawn": "897bf3bdf3b7d87852e25770168d64acbe3d5bab",
+    "name": "Air_Totem - asdasd_auto_x2 copy.jpg",
+    "path": "MDW/Linked/Air_Totem - asdasd_auto_x2 copy.jpg",
+    "size": 1479461
+   },
+   {
+    "drawn": "897bf3bdf3b7d87852e25770168d64acbe3d5bab",
+    "name": "Air_Totem - asdasd_auto_x2 copy.jpg",
+    "path": "MDW/Linked/Air_Totem - asdasd_auto_x2 copy.jpg",
+    "size": 1479461
+   },
+   {
+    "drawn": "897bf3bdf3b7d87852e25770168d64acbe3d5bab",
+    "name": "Air_Totem - asdasd_auto_x2 copy.jpg",
+    "path": "MDW/Linked/Air_Totem - asdasd_auto_x2 copy.jpg",
+    "size": 1479461
+   }
+  ]
+ },
+ "Auxiliary/Items/Autopsy_Report.psd": {
+  "blob": "4def6f00e69a283a61cde2f1da478aedffa3db4d",
+  "links": [
+   {
+    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "name": "Attack.png",
+    "path": "Types/Attack.png",
+    "size": 819546
+   }
+  ]
+ },
+ "Auxiliary/Items/Battle_Helmet.psd": {
+  "blob": "0425a7df6dd6c2e8e946de75d1e891a3aa963c37",
+  "links": [
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Auxiliary/Items/Battle_Spear.psd": {
+  "blob": "0ddce85d5791a5769fa6576afccbc4e890bc9abe",
+  "links": [
+   {
+    "drawn": "4850c5905c25ec1014dc6451d8600bb5fa2181e4",
+    "name": "Battle_Spear - battle (1).png",
+    "path": "MDW/Linked/Battle_Spear - battle (1).png",
+    "size": 261549
+   },
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Auxiliary/Items/Cabbage.psd": {
+  "blob": "3b1a6f778819e1086ef985f6e774c048da7eeac8",
+  "links": [
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Auxiliary/Items/Crystal_Bits.psd": {
+  "blob": "47c66862ff0690b5b47b2c8070cbad35f893ee19",
+  "links": [
+   {
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
+   },
+   {
+    "drawn": "0c472adf6c2a168dfd54ea21ef9c3a4f944b666e",
+    "name": "active.png",
+    "path": "Types/active.png",
+    "size": 50758
+   }
+  ]
+ },
+ "Auxiliary/Items/Delicate_Flower.psd": {
+  "blob": "a959afb3c1466eafb4c2d2519ff5adc341bd4cbb",
+  "links": [
+   {
+    "drawn": "fabfedd7ca9e76e4abbda20523ebc9f6acf50842",
+    "name": "Delicate_Flower - Grey-Mourner-D098D0B3D180D18B-The-Knight-HK-7143416 (1).jpg",
+    "path": "MDW/Linked/Delicate_Flower - Grey-Mourner-D098D0B3D180D18B-The-Knight-HK-7143416 (1).jpg",
+    "size": 189154
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Auxiliary/Items/Dragon_Mount.psd": {
+  "blob": "18b61003feec89de3bd6cd0d71fb68ccb309b98a",
+  "links": [
+   {
+    "drawn": "b57f61dbc4f10310ac80f51ae2121ca3229c7168",
+    "name": "Dragon_Mount - h0smhfg5pgw71.png",
+    "path": "MDW/Linked/Dragon_Mount - h0smhfg5pgw71.png",
+    "size": 15459342
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Auxiliary/Items/Dreamshield.psd": {
+  "blob": "0fd2eade9e06e37c4027065cee1857707d19829d",
+  "links": [
+   {
+    "drawn": "6a9797e74e1b9399a5df90d1b4e812505f500e3d",
+    "name": "Dreamshield - Hollow Knight 2024.02.03 - 21.12.33.22.DVR - frame at 0m27s.jpg",
+    "path": "MDW/Linked/Dreamshield - Hollow Knight 2024.02.03 - 21.12.33.22.DVR - frame at 0m27s.jpg",
+    "size": 134300
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Auxiliary/Items/Dull_Knife.psd": {
+  "blob": "c26a8da48c221c3246810bedd727d3a2f1c1386c",
+  "links": [
+   {
+    "drawn": "143b78f2cf80938397ac9bc9988f3844788e20c4",
+    "name": "Dull_Knife - Shiny knife bg.png",
+    "path": "MDW/Linked/Dull_Knife - Shiny knife bg.png",
+    "size": 55325
+   },
+   {
+    "drawn": "22560c1027429efee7b61740cdf8870d67e0e87d",
+    "name": "Dull_Knife - dull_knife_image.png",
+    "path": "MDW/Linked/Dull_Knife - dull_knife_image.png",
+    "size": 5033
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Auxiliary/Items/Earth_Totem.psd": {
+  "blob": "dc5e77d58ecfbb888e7447ab78423a40da0c0212",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "0c472adf6c2a168dfd54ea21ef9c3a4f944b666e",
+    "name": "active.png",
+    "path": "Types/active.png",
+    "size": 50758
+   }
+  ]
+ },
+ "Auxiliary/Items/Evil_Cookie.psd": {
+  "blob": "8adf48a8007144c9cd130dfe2d306cfe376c18da",
+  "links": [
+   {
+    "drawn": "88b1e268d84f77fe887d3040c2b78030dc7265ff",
+    "name": "Evil_Cookie - Layer 6.psb",
+    "path": "MDW/Linked/Evil_Cookie - Layer 6.psb",
+    "size": 3146214
+   },
+   {
+    "drawn": "5d5c323b4befa0e624de674da25248959a36315b",
+    "name": "Evil_Cookie - 418958-Omori-pixel-art-ultrawide-universe-sky-stars-planet.png",
+    "path": "MDW/Linked/Evil_Cookie - 418958-Omori-pixel-art-ultrawide-universe-sky-stars-planet.png",
+    "size": 64167
+   },
+   {
+    "drawn": "974f584c9e970a05faf55d73d638259c16b51766",
+    "name": "Evil_Cookie - Evil_Cookie_pic (1).png",
+    "path": "MDW/Linked/Evil_Cookie - Evil_Cookie_pic (1).png",
+    "size": 8668669
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "name": "Infliction.png",
+    "path": "Types/Infliction.png",
+    "size": 78460
+   }
+  ]
+ },
+ "Auxiliary/Items/Fire_Totem.psd": {
+  "blob": "a885561aafbaeaf4209ef1318996d93f5e12bdde",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "0c472adf6c2a168dfd54ea21ef9c3a4f944b666e",
+    "name": "active.png",
+    "path": "Types/active.png",
+    "size": 50758
+   }
+  ]
+ },
+ "Auxiliary/Items/Flame_Bomb.psd": {
+  "blob": "bb0f95a4ae869db2d869b3e5f87637574fe4cb23",
+  "links": [
+   {
+    "drawn": "3da10d325ca53650af78a986d93837f6af5a4ab3",
+    "name": "Flame_Bomb - Layer 1.psb",
+    "path": "MDW/Linked/Flame_Bomb - Layer 1.psb",
+    "size": 8171288
+   },
+   {
+    "drawn": null,
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Auxiliary/Items/Frostmourne.psd": {
+  "blob": "62dbec4c6ebf8c1a694564daced6d8343e8a6507",
+  "links": [
+   {
+    "drawn": "6ae1199aa795702395f991659d2a3fc74296153f",
+    "name": "Frostmourne - d35qrzf-6de2ba93-8f56-421b-b9e2-c15c2f96c090-transformed.jpg",
+    "path": "MDW/Linked/Frostmourne - d35qrzf-6de2ba93-8f56-421b-b9e2-c15c2f96c090-transformed.jpg",
+    "size": 238643
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Auxiliary/Items/Hero_Cap.psd": {
+  "blob": "be8c8475d7d891575d69b5701892fb6498ce3193",
+  "links": [
+   {
+    "drawn": "7528411a10c4884f78934599f1c14364ba559464",
+    "name": "Hero_Cap - Niiue_bg.png",
+    "path": "MDW/Linked/Hero_Cap - Niiue_bg.png",
+    "size": 9334
+   },
+   {
+    "drawn": "c0f6823ebd8b318dbbb78656bec80dd8ccc20993",
+    "name": "Hero_Cap - Hero_Cap_Pic.png",
+    "path": "MDW/Linked/Hero_Cap - Hero_Cap_Pic.png",
+    "size": 902385
+   },
+   {
+    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+    "name": "Starstorm.png",
+    "path": "Types/Stars/Starstorm.png",
+    "size": 324
+   },
+   {
+    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+    "name": "Starstorm.png",
+    "path": "Types/Stars/Starstorm.png",
+    "size": 324
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+    "name": "Starstorm.png",
+    "path": "Types/Stars/Starstorm.png",
+    "size": 324
+   },
+   {
+    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "name": "field.png",
+    "path": "Types/field.png",
+    "size": 20013
+   },
+   {
+    "drawn": "31e3afb2b7f6a112eb4639f95e94891d2f748b08",
+    "name": "Hero_Cap - Deploy.psb",
+    "path": "MDW/Linked/Hero_Cap - Deploy.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   },
+   {
+    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "name": "Infliction.png",
+    "path": "Types/Infliction.png",
+    "size": 78460
+   },
+   {
+    "drawn": "c9794cb2813a856542da095481a09a68bccacba9",
+    "name": "Hero_Cap - Negation.png",
+    "path": "MDW/Linked/Hero_Cap - Negation.png",
+    "size": 29391
+   },
+   {
+    "drawn": "a6dfaa63017446c87785ab0d7c39298b91eadba0",
+    "name": "Hero_Cap - Offense.png",
+    "path": "MDW/Linked/Hero_Cap - Offense.png",
+    "size": 1078694
+   },
+   {
+    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "name": "support.png",
+    "path": "Types/support.png",
+    "size": 632862
+   },
+   {
+    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "name": "Attack.png",
+    "path": "Types/Attack.png",
+    "size": 819546
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   },
+   {
+    "drawn": "4fb6b1d8b6485fabd2b86fa08d37ff1b69a398f7",
+    "name": "NME.png",
+    "path": "Types/NME.png",
+    "size": 757779
+   }
+  ]
+ },
+ "Auxiliary/Items/Humphrey's_Belly.psd": {
+  "blob": "56096838cdbbfad72fdf887127cab45e20f6d9d9",
+  "links": [
+   {
+    "drawn": "cf9bcf086f5c0c6a38403bd1e1255eaaa6d3fcdb",
+    "name": "Humphrey's_Belly - Humphrey_bg.png",
+    "path": "MDW/Linked/Humphrey's_Belly - Humphrey_bg.png",
+    "size": 61750
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "name": "field.png",
+    "path": "Types/field.png",
+    "size": 20013
+   },
+   {
+    "drawn": "7bfc2fb6b51bc97d1799e4d09f78a66eaf647efe",
+    "name": "Humphrey's_Belly - Humphrey_field_pic.png",
+    "path": "MDW/Linked/Humphrey's_Belly - Humphrey_field_pic.png",
+    "size": 46693
+   }
+  ]
+ },
+ "Auxiliary/Items/Inconspicuous_Cake.psd": {
+  "blob": "35310b565863241a915ef1ab4b9246d2cdcefe79",
+  "links": [
+   {
+    "drawn": "b84a8eacbea01a1fedf352b85e66256f5b4234b6",
+    "name": "Inconspicuous_Cake - Cake_TTYD_poisoned.png",
+    "path": "MDW/Linked/Inconspicuous_Cake - Cake_TTYD_poisoned.png",
+    "size": 1319
+   },
+   {
+    "drawn": "127ac246e772f9b0113d5c83be4db5aa7f20d0d1",
+    "name": "Gold_Star.png",
+    "path": "Types/Stars/Gold_Star.png",
+    "size": 2010
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   },
+   {
+    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "name": "Infliction.png",
+    "path": "Types/Infliction.png",
+    "size": 78460
+   }
+  ]
+ },
+ "Auxiliary/Items/Indoctrination.psd": {
+  "blob": "10bed571c510d64a17a4cbee91bb47b318c9f492",
+  "links": [
+   {
+    "drawn": "6029c9b0ff9b8b2666bb599dee8d1e2b8287ef0c",
+    "name": "Indoctrination - dogma_by_chopangigante_deida83-fullview.jpg",
+    "path": "MDW/Linked/Indoctrination - dogma_by_chopangigante_deida83-fullview.jpg",
+    "size": 213733
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Auxiliary/Items/Ingredient_Wondertart.psd": {
+  "blob": "9dfda01245bff923165f7fead7468d352c2df319",
+  "links": [
+   {
+    "drawn": "806d50d897068c86df0fb7d412cd25f291351523",
+    "name": "Ingredient_Wondertart - Chef_Saltbaker_(17).webp",
+    "path": "MDW/Linked/Ingredient_Wondertart - Chef_Saltbaker_(17).webp",
+    "size": 79646
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "6b086f1c5ea0ef7348f1c94a4828db115018ce06",
+    "name": "Ingredient_Wondertart - ingredient_starburst_shine_0007.png",
+    "path": "MDW/Linked/Ingredient_Wondertart - ingredient_starburst_shine_0007.png",
+    "size": 322858
+   },
+   {
+    "drawn": "a0ada347a5a1ea6f846eb829c5cf4debea589a4f",
+    "name": "Ingredient_Wondertart - ingredient_starburst_back_0001.png",
+    "path": "MDW/Linked/Ingredient_Wondertart - ingredient_starburst_back_0001.png",
+    "size": 1005066
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Auxiliary/Items/Inkhole.psd": {
+  "blob": "02ab159fa815fbb76889e429c1600419ebea5548",
+  "links": [
+   {
+    "drawn": "e3844a8f6ec0d5fa83a7a5dbf2a7a79a6a0cbdc6",
+    "name": "Inkhole - Allen.webp",
+    "path": "MDW/Linked/Inkhole - Allen.webp",
+    "size": 70824
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "1824bab6e2a8ad4ed9dcf895a1785b6bd97a6064",
+    "name": "Deploy.png",
+    "path": "Types/Deploy.png",
+    "size": 24318
+   }
+  ]
+ },
+ "Auxiliary/Items/Joy.psd": {
+  "blob": "97f8c887ecfd7f400219d6dc6b9e1e95b3d5abbc",
+  "links": [
+   {
+    "drawn": "f363fa3f2e582576921410387f402fd065722127",
+    "name": "Joy - Joy.webp",
+    "path": "MDW/Linked/Joy - Joy.webp",
+    "size": 108
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Auxiliary/Items/Krabby_Patty.psd": {
+  "blob": "fd40112377a2f4ab8acd6f771b36b7dc274b0577",
+  "links": [
+   {
+    "drawn": "9c0a2e4e6c48422c2360ee3bf7a19445a3edc4ed",
+    "name": "Krabby_Patty - 1857119-tumblr_lhwja1zy1z1qgrp5p-transformed.jpg",
+    "path": "MDW/Linked/Krabby_Patty - 1857119-tumblr_lhwja1zy1z1qgrp5p-transformed.jpg",
+    "size": 1161701
+   },
+   {
+    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "name": "field.png",
+    "path": "Types/field.png",
+    "size": 20013
+   },
+   {
+    "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
+    "name": "Patrick Star.png",
+    "path": "Types/Stars/Patrick Star.png",
+    "size": 152994
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Auxiliary/Items/Lit_Bob-omb.psd": {
+  "blob": "532c12105d0fdb37030168cdffd1cf246b5cf148",
+  "links": [
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f",
+    "name": "Lit_Bob-omb - bottom.psb",
+    "path": "MDW/Linked/Lit_Bob-omb - bottom.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f",
+    "name": "Lit_Bob-omb - bottom.psb",
+    "path": "MDW/Linked/Lit_Bob-omb - bottom.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "name": "Attack.png",
+    "path": "Types/Attack.png",
+    "size": 819546
+   }
+  ]
+ },
+ "Auxiliary/Items/Love.psd": {
+  "blob": "dd24b3489f0a6e77531ab9a9dae6cc6da96b0931",
+  "links": [
+   {
+    "drawn": "a2d1202bf8dbee09ae69a1f173c3aff83291e315",
+    "name": "Love - Love_bg.jpg",
+    "path": "MDW/Linked/Love - Love_bg.jpg",
+    "size": 58464
+   },
+   {
+    "drawn": "ffc34353d50039c04f3a6473ad5ab1a9a2f2db9d",
+    "name": "Love - Love_pic.png",
+    "path": "MDW/Linked/Love - Love_pic.png",
+    "size": 332554
+   },
+   {
+    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+    "name": "Starstorm.png",
+    "path": "Types/Stars/Starstorm.png",
+    "size": 324
+   },
+   {
+    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "name": "field.png",
+    "path": "Types/field.png",
+    "size": 20013
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Auxiliary/Items/Machine_Gun.psd": {
+  "blob": "751f42c95e3b28372d29ce462bfe8431d3cae5fc",
+  "links": [
+   {
+    "drawn": "9fcdf8ae6b083091fad483ce78e6e24e731991d5",
+    "name": "Machine_Gun - d8qsfox6.png",
+    "path": "MDW/Linked/Machine_Gun - d8qsfox6.png",
+    "size": 6850
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Auxiliary/Items/Magnum_Opus.psd": {
+  "blob": "cd2430c3917c0358629b053de5484205da043a97",
+  "links": [
+   {
+    "drawn": "34f5a6f58d252c99b888f374970d7d3afd2b9e59",
+    "name": "Magnum_Opus - Croissant-PNG-Clipart.png",
+    "path": "MDW/Linked/Magnum_Opus - Croissant-PNG-Clipart.png",
+    "size": 904697
+   },
+   {
+    "drawn": "34f5a6f58d252c99b888f374970d7d3afd2b9e59",
+    "name": "Magnum_Opus - Croissant-PNG-Clipart.png",
+    "path": "MDW/Linked/Magnum_Opus - Croissant-PNG-Clipart.png",
+    "size": 904697
+   },
+   {
+    "drawn": "34f5a6f58d252c99b888f374970d7d3afd2b9e59",
+    "name": "Magnum_Opus - Croissant-PNG-Clipart.png",
+    "path": "MDW/Linked/Magnum_Opus - Croissant-PNG-Clipart.png",
+    "size": 904697
+   },
+   {
+    "drawn": "34f5a6f58d252c99b888f374970d7d3afd2b9e59",
+    "name": "Magnum_Opus - Croissant-PNG-Clipart.png",
+    "path": "MDW/Linked/Magnum_Opus - Croissant-PNG-Clipart.png",
+    "size": 904697
+   },
+   {
+    "drawn": "34f5a6f58d252c99b888f374970d7d3afd2b9e59",
+    "name": "Magnum_Opus - Croissant-PNG-Clipart.png",
+    "path": "MDW/Linked/Magnum_Opus - Croissant-PNG-Clipart.png",
+    "size": 904697
+   },
+   {
+    "drawn": "0c472adf6c2a168dfd54ea21ef9c3a4f944b666e",
+    "name": "active.png",
+    "path": "Types/active.png",
+    "size": 50758
+   },
+   {
+    "drawn": "87a12d64e04abd67a45e028ebe3c8426aa38339f",
+    "name": "Magnum_Opus - field.psb",
+    "path": "MDW/Linked/Magnum_Opus - field.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "d189d573cc12593c2a8fda9b27c9eb32b1c8d4f6",
+    "name": "Magnum_Opus - question-634903_1280.png",
+    "path": "MDW/Linked/Magnum_Opus - question-634903_1280.png",
+    "size": 163977
+   }
+  ]
+ },
+ "Auxiliary/Items/Motivation.psd": {
+  "blob": "ad52cf9038e63a030a979774c26b2f5a422f6a7a",
+  "links": [
+   {
+    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+    "name": "Starstorm.png",
+    "path": "Types/Stars/Starstorm.png",
+    "size": 324
+   },
+   {
+    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "name": "support.png",
+    "path": "Types/support.png",
+    "size": 632862
+   }
+  ]
+ },
+ "Auxiliary/Items/Nasty_Patty.psd": {
+  "blob": "b286768cfaf5b3ed1517a5c53ee7952c1631f3d6",
+  "links": [
+   {
+    "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
+    "name": "Patrick Star.png",
+    "path": "Types/Stars/Patrick Star.png",
+    "size": 152994
+   },
+   {
+    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "name": "Infliction.png",
+    "path": "Types/Infliction.png",
+    "size": 78460
+   }
+  ]
+ },
+ "Auxiliary/Items/Paint_Bomb.psd": {
+  "blob": "bffedf66eeadf03369307fc223479bd314deb31a",
+  "links": [
+   {
+    "drawn": "b813ef29ccc775713c928a254ee241725ba2a6db",
+    "name": "Paint_Bomb - Bulky_Bob-omb.webp",
+    "path": "MDW/Linked/Paint_Bomb - Bulky_Bob-omb.webp",
+    "size": 28296
+   },
+   {
+    "drawn": "1a5087c563d0fdc09a3b6cd5dd8c815508f0a13a",
+    "name": "Paint_Bomb - pngwing.com (1).png",
+    "path": "MDW/Linked/Paint_Bomb - pngwing.com (1).png",
+    "size": 728733
+   },
+   {
+    "drawn": "1a5087c563d0fdc09a3b6cd5dd8c815508f0a13a",
+    "name": "Paint_Bomb - pngwing.com (1).png",
+    "path": "MDW/Linked/Paint_Bomb - pngwing.com (1).png",
+    "size": 728733
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "name": "Paint_Bomb - pngwing.com copy 2.png",
+    "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
+    "size": 1254229
+   },
+   {
+    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "name": "Attack.png",
+    "path": "Types/Attack.png",
+    "size": 819546
+   }
+  ]
+ },
+ "Auxiliary/Items/Papa's_Cookie.psd": {
+  "blob": "248eeeff8db1ec52270f8c67c22eb289e5dbce7d",
+  "links": [
+   {
+    "drawn": "5d5c323b4befa0e624de674da25248959a36315b",
+    "name": "Evil_Cookie - 418958-Omori-pixel-art-ultrawide-universe-sky-stars-planet.png",
+    "path": "MDW/Linked/Evil_Cookie - 418958-Omori-pixel-art-ultrawide-universe-sky-stars-planet.png",
+    "size": 64167
+   },
+   {
+    "drawn": "a2beef7632c8d3a2773eb143b1d55843a4125b6c",
+    "name": "Papa's_Cookie - PerfectCookie (1).png",
+    "path": "MDW/Linked/Papa's_Cookie - PerfectCookie (1).png",
+    "size": 1162981
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Auxiliary/Items/Party!.psd": {
+  "blob": "650dadfe0977082d45ab8423bfcea00922a46a57",
+  "links": [
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "573b78d6c38f8ce4892ac4cf448bfdc709579432",
+    "name": "Party! - Party_pic.jpg",
+    "path": "MDW/Linked/Party! - Party_pic.jpg",
+    "size": 83382
+   },
+   {
+    "drawn": "502b7b20c5dd504ecd6f9dabc49c611f84824c87",
+    "name": "Monkey_D_Star.png",
+    "path": "Types/Stars/Monkey_D_Star.png",
+    "size": 166697
+   },
+   {
+    "drawn": "502b7b20c5dd504ecd6f9dabc49c611f84824c87",
+    "name": "Monkey_D_Star.png",
+    "path": "Types/Stars/Monkey_D_Star.png",
+    "size": 166697
+   },
+   {
+    "drawn": "502b7b20c5dd504ecd6f9dabc49c611f84824c87",
+    "name": "Monkey_D_Star.png",
+    "path": "Types/Stars/Monkey_D_Star.png",
+    "size": 166697
+   },
+   {
+    "drawn": "502b7b20c5dd504ecd6f9dabc49c611f84824c87",
+    "name": "Monkey_D_Star.png",
+    "path": "Types/Stars/Monkey_D_Star.png",
+    "size": 166697
+   },
+   {
+    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "name": "field.png",
+    "path": "Types/field.png",
+    "size": 20013
+   }
+  ]
+ },
+ "Auxiliary/Items/Polar_Star.psd": {
+  "blob": "04001fd33809203ed66711e9446b8712ce7dbaf2",
+  "links": [
+   {
+    "drawn": "f4682242a1d87a47ab721d4af2aefdc2e3207831",
+    "name": "Polar_Star - tvddlfk0.png",
+    "path": "MDW/Linked/Polar_Star - tvddlfk0.png",
+    "size": 6819
+   },
+   {
+    "drawn": "c659c492806f52480508f989cb55a426afe1aac5",
+    "name": "bFables.png",
+    "path": "Types/Stars/bFables.png",
+    "size": 368729
+   },
+   {
+    "drawn": "75d7fb1062f4f81eb510a6cb441f85819eae9617",
+    "name": "Fallen_Star.png",
+    "path": "Types/Stars/Fallen_Star.png",
+    "size": 2480
+   },
+   {
+    "drawn": "42202bbec256fcd7533b9262b980906a0c142b27",
+    "name": "Shadow_Queen - Vi1.png",
+    "path": "MDW/Linked/Shadow_Queen - Vi1.png",
+    "size": 367
+   },
+   {
+    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+    "name": "Starstorm.png",
+    "path": "Types/Stars/Starstorm.png",
+    "size": 324
+   },
+   {
+    "drawn": "010244477dc99d755153a0ac5ba94322b35f37e9",
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
+   },
+   {
+    "drawn": "27e828a4b0084d24fe092bb1807253c468cca9b2",
+    "name": "Scrap.png",
+    "path": "Types/Stars/Scrap.png",
+    "size": 27348
+   },
+   {
+    "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
+    "name": "Patrick Star.png",
+    "path": "Types/Stars/Patrick Star.png",
+    "size": 152994
+   },
+   {
+    "drawn": "ca1bbfb03595f64e2268a57aca0b510b2e52af4e",
+    "name": "YinYangUltra.png",
+    "path": "Types/Stars/YinYangUltra.png",
+    "size": 1137393
+   },
+   {
+    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+    "name": "Solar Sun.png",
+    "path": "Types/Stars/Solar Sun.png",
+    "size": 1374450
+   },
+   {
+    "drawn": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
+    "name": "Elden Stars.png",
+    "path": "Types/Stars/Elden Stars.png",
+    "size": 1194210
+   },
+   {
+    "drawn": "f21f2877886482116ec5cbb3a6934eaf02e7d2ff",
+    "name": "Star of beth.png",
+    "path": "Types/Stars/Star of beth.png",
+    "size": 2247
+   },
+   {
+    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+    "name": "Nether_Star.png",
+    "path": "Types/Stars/Nether_Star.png",
+    "size": 10708
+   },
+   {
+    "drawn": "7bce3270adea13c48ca9f9233617f60d91925363",
+    "name": "Nebula Star.png",
+    "path": "Types/Stars/Nebula Star.png",
+    "size": 253389
+   },
+   {
+    "drawn": "6a79e1709a529b3353886f2e415702bbe68bed17",
+    "name": "Lol star.png",
+    "path": "Types/Stars/Lol star.png",
+    "size": 97082
+   },
+   {
+    "drawn": "85d77d7d27e05776d8d725f0802dccc9e34f3bea",
+    "name": "Triforce.png",
+    "path": "Types/Stars/Triforce.png",
+    "size": 1712857
+   },
+   {
+    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "name": "field.png",
+    "path": "Types/field.png",
+    "size": 20013
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   },
+   {
+    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "name": "Infliction.png",
+    "path": "Types/Infliction.png",
+    "size": 78460
+   },
+   {
+    "drawn": "c9794cb2813a856542da095481a09a68bccacba9",
+    "name": "Hero_Cap - Negation.png",
+    "path": "MDW/Linked/Hero_Cap - Negation.png",
+    "size": 29391
+   },
+   {
+    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "name": "support.png",
+    "path": "Types/support.png",
+    "size": 632862
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Auxiliary/Items/Poorly_Drawn_Cabbage.psd": {
+  "blob": "81a05fe9a65be1cd5e860c370727f656fa926555",
+  "links": [
+   {
+    "drawn": "f3c52a3886e575db85a6a24506a7a6ffae925927",
+    "name": "The_Poorly_Drawn_Barnstar.png",
+    "path": "Types/Stars/The_Poorly_Drawn_Barnstar.png",
+    "size": 6921
+   },
+   {
+    "drawn": "f3c52a3886e575db85a6a24506a7a6ffae925927",
+    "name": "The_Poorly_Drawn_Barnstar.png",
+    "path": "Types/Stars/The_Poorly_Drawn_Barnstar.png",
+    "size": 6921
+   },
+   {
+    "drawn": "479dd1079f724607033d2b69eea7d9e54dba9bcb",
+    "name": "Poorly_Drawn_Cabbage - The_Poorly_Drawn_Barnstar.png",
+    "path": "MDW/Linked/Poorly_Drawn_Cabbage - The_Poorly_Drawn_Barnstar.png",
+    "size": 3489
+   }
+  ]
+ },
+ "Auxiliary/Items/Red_Knife.psd": {
+  "blob": "d69662e122c7ee981b3c77b4f8f07e09650c993c",
+  "links": [
+   {
+    "drawn": "143b78f2cf80938397ac9bc9988f3844788e20c4",
+    "name": "Dull_Knife - Shiny knife bg.png",
+    "path": "MDW/Linked/Dull_Knife - Shiny knife bg.png",
+    "size": 55325
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Auxiliary/Items/Regenerative_Shield.psd": {
+  "blob": "0bee1bfb6fa54b0a37811e2b36b6abfd546a8ae5",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "0c472adf6c2a168dfd54ea21ef9c3a4f944b666e",
+    "name": "active.png",
+    "path": "Types/active.png",
+    "size": 50758
+   }
+  ]
+ },
+ "Auxiliary/Items/Regret.psd": {
+  "blob": "92e897082285bb5a47ace6b4ea64bf00690f7274",
+  "links": [
+   {
+    "drawn": "463994ba914e85c9fac466e5f52f1520d2279888",
+    "name": "Regret - Regret_bg.jpg",
+    "path": "MDW/Linked/Regret - Regret_bg.jpg",
+    "size": 171469
+   },
+   {
+    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+    "name": "Starstorm.png",
+    "path": "Types/Stars/Starstorm.png",
+    "size": 324
+   },
+   {
+    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "name": "Infliction.png",
+    "path": "Types/Infliction.png",
+    "size": 78460
+   }
+  ]
+ },
+ "Auxiliary/Items/Rusty_Knife.psd": {
+  "blob": "fa09e696e8b761090957ad662413a83c11e2424a",
+  "links": [
+   {
+    "drawn": "143b78f2cf80938397ac9bc9988f3844788e20c4",
+    "name": "Dull_Knife - Shiny knife bg.png",
+    "path": "MDW/Linked/Dull_Knife - Shiny knife bg.png",
+    "size": 55325
+   },
+   {
+    "drawn": "48772475b9882b3d131d8e01afa5cb0c28a94de0",
+    "name": "Rusty_Knife - rusty_knife_image.png",
+    "path": "MDW/Linked/Rusty_Knife - rusty_knife_image.png",
+    "size": 5041
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Auxiliary/Items/Salt.psd": {
+  "blob": "fb33e4101b7d79c93cd955802f007d2af38d9e4c",
+  "links": [
+   {
+    "drawn": "d3b2c5ea498bc34684017451f8634c70c4379ff3",
+    "name": "Salt - Layer 1.psb",
+    "path": "MDW/Linked/Salt - Layer 1.psb",
+    "size": 3626502
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   },
+   {
+    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "name": "Infliction.png",
+    "path": "Types/Infliction.png",
+    "size": 78460
+   }
+  ]
+ },
+ "Auxiliary/Items/Shell_Shield.psd": {
+  "blob": "626f8483ebf7bb83faf08daf4dc31438679ca128",
+  "links": [
+   {
+    "drawn": "7e255c618226ca4dedae971ead5617114dd2eae0",
+    "name": "Shell_Shield - original_95630e33b92130ac5eae62940421822b.jpg",
+    "path": "MDW/Linked/Shell_Shield - original_95630e33b92130ac5eae62940421822b.jpg",
+    "size": 68087
+   },
+   {
+    "drawn": "a4c373803a920ed5d04093d88cba8b6f40454c3c",
+    "name": "Emerald_Star.png",
+    "path": "Types/Stars/Emerald_Star.png",
+    "size": 2162
+   },
+   {
+    "drawn": "0c472adf6c2a168dfd54ea21ef9c3a4f944b666e",
+    "name": "active.png",
+    "path": "Types/active.png",
+    "size": 50758
+   }
+  ]
+ },
+ "Auxiliary/Items/Snake.psd": {
+  "blob": "84ce17c48d99b648a81036ce5c3a8881875e8980",
+  "links": [
+   {
+    "drawn": "4b75e7f841090da751c621d07030ee5ebc7828bb",
+    "name": "Snake - xv9xr0ij.png",
+    "path": "MDW/Linked/Snake - xv9xr0ij.png",
+    "size": 6663
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "MDW/Assets/Holders/Active.psd": {
+  "blob": "bbe038a827060f72a4253ccceaaa66507e6021cb",
+  "links": []
+ },
+ "MDW/Assets/Holders/Creature.psd": {
+  "blob": "9e987d59a903f5d89250ba1af14127bba919f349",
+  "links": []
+ },
+ "MDW/Assets/Holders/Creature_Deck.psd": {
+  "blob": "a515ccdd8145ca6c296f6573f983af3de91c1d50",
+  "links": []
+ },
+ "MDW/Assets/Holders/Creature_Full.psd": {
+  "blob": "008e89aa5375da43b6a9bdbcc712f9636281b179",
+  "links": []
+ },
+ "MDW/Assets/Holders/Discard.psd": {
+  "blob": "72e688e250cc1b12f64d56f7cb87772cb2354296",
+  "links": []
+ },
+ "MDW/Assets/Holders/Field.psd": {
+  "blob": "f304ea139c645d1caa5fb8e859360ae35460ea79",
+  "links": []
+ },
+ "MDW/Assets/Holders/Field_Deck.psd": {
+  "blob": "e6084f3e6828012aab973545c097eb6bdff92e7d",
+  "links": []
+ },
+ "MDW/Assets/Holders/Graveyard.psd": {
+  "blob": "f0cc0aa0866bf91c4dcb1f3fae3dfab9ed459fcd",
+  "links": []
+ },
+ "MDW/Assets/Holders/Item.psd": {
+  "blob": "282512e65953259234108bb415428ca1d3302348",
+  "links": []
+ },
+ "MDW/Assets/Holders/Item_Deck.psd": {
+  "blob": "4459da0ec226c7c5ada5691db34e699d734f2df0",
+  "links": []
+ },
+ "MDW/Assets/Holders/Minion_Full.psd": {
+  "blob": "d1c70a01adf6c113b8ccec79e4cc57e7d401788b",
+  "links": []
+ },
+ "MDW/Assets/Holders/NME.psd": {
+  "blob": "57b6202289409f7f94cbde864bc0e36c0e37385f",
+  "links": []
+ },
+ "MDW/Assets/Holders/Raid_Boss_Deck.psd": {
+  "blob": "dfe114a84936b3b60a08124a5a0a5b6004f4efb0",
+  "links": []
+ },
+ "MDW/Assets/Holders/Raid_Boss_Full.psd": {
+  "blob": "567825b98ff05a36f98089f5c84751d870a5795e",
+  "links": []
+ },
+ "MDW/Assets/Holders/Shop_Filed.psd": {
+  "blob": "82bf1bbabcec641a7e5f0a814f57a10e11b57cee",
+  "links": []
+ },
+ "MDW/Assets/Holders/Shop_Item.psd": {
+  "blob": "57587875a6d0b5dcfe397d5a08e16e0b05f78e0e",
+  "links": []
+ },
+ "MDW/Assets/Holders/Shop_NME.psd": {
+  "blob": "f2d619549754d3bb13f2f5ad177a1cd67933b547",
+  "links": []
+ },
+ "MDW/Assets/Markers/Green and red.psd": {
+  "blob": "68457d9233f1c3bf89cbb504e8a3b172cb01a089",
+  "links": []
+ },
+ "MDW/Assets/cardback.psd": {
+  "blob": "17b5ff5d454f1c33c381826a4a2b2a5ce862b1f4",
+  "links": []
+ },
+ "MDW/Assets/cardback_item.psd": {
+  "blob": "6c3b2a3fa673282b8cc3552d17632d95771760fb",
+  "links": []
+ },
+ "MDW/Assets/cardback_statuseffect.psd": {
+  "blob": "02ccc470221ac29f565dfddefbd0a4e60051ce0d",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/Customer_Service_Art.psd": {
+  "blob": "035a31f60dd2a2846b18adab0b7b4faf8d952419",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/Jar_of_BB_Star_Bonus-1.psd": {
+  "blob": "fbe0035912890a41abf0cd8a4ec0f3a3436cf4a4",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/Lincdolt.psd": {
+  "blob": "c9a110b592c8595436facbfd894e89c961763067",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/Pixel_Cube.psd": {
+  "blob": "ea1388537f2a529812e03e309e0b8b1875fbd454",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/Satus Effect Colors.psd": {
+  "blob": "98a6b65a67bca5b3e1fbf420c5c3287d6da3ea3e",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/THE HAT.psd": {
+  "blob": "848764ccf8b124a23588b0ad913602fee10f9049",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/ancient basin.psd": {
+  "blob": "98be0e925103e673903f010131a1574b94718152",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/chicory.psd": {
+  "blob": "dfbd686fb25a70bac9e30f6003af723e36872092",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/chicory2.psd": {
+  "blob": "d093835011af1cee5d9a8ef234c543483913f2e4",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/dogma.psd": {
+  "blob": "ee30096198a3e9418a1bf0d7d73498a019a0f3dd",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/kyle cube.psd": {
+  "blob": "0223bdd6830d5f8e1191cadb058f22c62d7d06a4",
+  "links": []
+ },
+ "MDW/Croissant's Special Folder/tained eden.psd": {
+  "blob": "fb8f622f274d36ba21ca10d253d33a61aa1bc201",
+  "links": []
+ },
+ "MDW/Linked/Evil_Cookie - Layer 6.psb": {
+  "blob": "88b1e268d84f77fe887d3040c2b78030dc7265ff",
+  "links": []
+ },
+ "MDW/Linked/Flame_Bomb - Layer 1.psb": {
+  "blob": "3da10d325ca53650af78a986d93837f6af5a4ab3",
+  "links": []
+ },
+ "MDW/Linked/Hero_Cap - Deploy.psb": {
+  "blob": "31e3afb2b7f6a112eb4639f95e94891d2f748b08",
+  "links": []
+ },
+ "MDW/Linked/Layer 1.psb": {
+  "blob": "b176541146b53dd486aa7b3e986782f2b4db6469",
+  "links": []
+ },
+ "MDW/Linked/Lit_Bob-omb - bottom.psb": {
+  "blob": "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f",
+  "links": []
+ },
+ "MDW/Linked/Magnum_Opus - field.psb": {
+  "blob": "87a12d64e04abd67a45e028ebe3c8426aa38339f",
+  "links": []
+ },
+ "MDW/Linked/Salt - Layer 1.psb": {
+  "blob": "d3b2c5ea498bc34684017451f8634c70c4379ff3",
+  "links": []
+ },
+ "MDW/Linked/Shadow_Queen - Defensive_Minion.psb": {
+  "blob": "8ec31da3ca912f8d660bab3a40cd5768ac6177ba",
+  "links": []
+ },
+ "MDW/Linked/Shadow_Queen - Offensive_Minion.psb": {
+  "blob": "bdd59a805b6ec2c93c42a17bdcbe545a8fec0381",
+  "links": []
+ },
+ "MDW/Linked/Shadow_Queen - Wind.psb": {
+  "blob": "48e1257d9b07bf8d60c2f4cce57981d6a9b0add7",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/0000_Cover.psd": {
+  "blob": "405315be98b9b278f233ae1496dfbdd4182a5ffc",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/0000_Cover_Book.psd": {
+  "blob": "16cbb8635fdd673c9a90cbfabb814cf0ef1b5193",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/00_Table_of_Contents.psd": {
+  "blob": "a24c92506b59db01f3ffe0eb714b5b03e98cfb16",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/01_Getting_Started.psd": {
+  "blob": "a0be44611b82ee64de490fbb780b22eb17ad7340",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/02_Abbreviations.psd": {
+  "blob": "5afc4b927abb2c6f9b07023fe1bf01a38dc7e23a",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/03_Setting_Up.psd": {
+  "blob": "accb847d478fa4c9eb447f6626c7098e49649291",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/04_Table.psd": {
+  "blob": "8fb43ad7c33d2b882ac171bd59bc8c2c52468a2e",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/04_Table2.psd": {
+  "blob": "17810dc967775ad56b6dbcfd64cfcad746b155cf",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/04_Table3.psd": {
+  "blob": "ac17794893e5d4c390945bc6fad4df9635916ece",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/04_Table4.psd": {
+  "blob": "e087ac1859901a49cf072685f057d850c3f5bd1c",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/04_Table5.psd": {
+  "blob": "c8e04eb5625df9667f42c4a14945c0e7cbc7123c",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/05_Shops.psd": {
+  "blob": "084ec9f5c752519cbe3d6ffdc68b5d9d9f2084b4",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/06_Reading_Cards.psd": {
+  "blob": "e238b68c8e442295354c6dc895da96d5407cc09d",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/06_Reading_Cards2.psd": {
+  "blob": "5003d9b8b99d20627eaaecee5b5f54ebafa22210",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/07_Stats1.psd": {
+  "blob": "f350b56de421d65c85f6652c3058872f80f3bfd7",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/07_Stats2.psd": {
+  "blob": "30b457ef3c19b32e1fe53e945319469424af7acc",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/07_Stats3.psd": {
+  "blob": "ff6d63270388a30432b01aaf0dd360110d8b7a6c",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/07_Stats4.psd": {
+  "blob": "e2904db109e6446d305f0780b608b90634147c02",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/07_Stats5.psd": {
+  "blob": "16239ed1b7eff0b2c478a0c742b736baae38c85c",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/08_Global_Turn.psd": {
+  "blob": "1aff8b8da79ab029fbcc5c6d06aa864cab1dc808",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/09_TakingYourTurn.psd": {
+  "blob": "7db4dfa3b6af099a802de911f4e1a02293400b16",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/10_Attacking.psd": {
+  "blob": "51b5430a2e9360693b83bb4d4918a2ee4ca2b515",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/10_Attacking2.psd": {
+  "blob": "57a954df6e646d52422b65c062504fce7d1b31df",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/11_Abilities.psd": {
+  "blob": "351411fb077c15222c7f48a7c1d8183e510bb28c",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/11_Abilities2.psd": {
+  "blob": "3bb35443c71218e14d6b59ea64965a1580c9a7c1",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/11_Abilities3.psd": {
+  "blob": "0b47ef9f97e556f5ebc2fe70e283e6c32437b719",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/11_Abilities4.psd": {
+  "blob": "a7a38a1adf6908c2da0f3d656ba2e8b51f423027",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/11_Abilities5.psd": {
+  "blob": "4ca1c57c7b6c97bdbf3a6ff7d0625da90e023ab1",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/11_Abilities6.psd": {
+  "blob": "7a2a95c2ff20c578860730b447bc2a40521f1375",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/11_Abilities7.psd": {
+  "blob": "e10f06489d74d083624a3859150ebfbe77126fab",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/12_Reactions.psd": {
+  "blob": "054dfa7b7398612dd24cbe1502e274d8f2f10ecf",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/12_Reactions2.psd": {
+  "blob": "fb61bd4daf45d3ebedc7cb7882fc81ce32f3ad4b",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/12_Reactions3.psd": {
+  "blob": "8cbf86ec9f444e4c4c7ccbac2d1d64e89eb3c2e0",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/12_Reactions4.psd": {
+  "blob": "e05c7af29d8f3de071e65c1b29e050609f294adc",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/12_Reactions5.psd": {
+  "blob": "1f6cd532ed53bd6290b38b31604bb8e240ca57d0",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/13_Items.psd": {
+  "blob": "74b93711765a9122fc5c55ab074140b5d0c8aaf0",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/14_Item_Types.psd": {
+  "blob": "988d2e88090f9a27e2e8a0856ac3c0c9df054f87",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/14_Item_Types2.psd": {
+  "blob": "ea766ad9c2adf7e1500ae634e2ce0bebeed53ccd",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/15_Minions.psd": {
+  "blob": "2cc28034de16626a8c83476c4b1beba08b9e82af",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/16_The_Field.psd": {
+  "blob": "8a951fcc018799e07a871fb6452995fea16e26d8",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/16_The_Field2.psd": {
+  "blob": "0db836d7c08ecc342fee4db6ff943354e24d47e5",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/17_Death.psd": {
+  "blob": "e04b375ac2eb14ea47ee045e60d65180e3cfcdad",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/18_Field_Cards.psd": {
+  "blob": "7476dc0b15b294b40289c4afb876a221ce952d3b",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/19_Status_Effects.psd": {
+  "blob": "97d96ab10d07f7e80040a345339d9963b14a38c1",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/19_Status_Effects2.psd": {
+  "blob": "a136ce02dc644f16a238837754d80910aa7fc051",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/20_Creature_Types.psd": {
+  "blob": "dcbd75061a62afb8eb8a67b20fd654fb7358ab66",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/21_Damage_Types.psd": {
+  "blob": "25d2d792620e87404926d59ade53756539577928",
+  "links": []
+ },
+ "MDW/Old Rules/Rulebook/22_Negation.psd": {
+  "blob": "61fd723c2e35b63713582db23111773a1eda5350",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/01_Start_of_the_Game.psd": {
+  "blob": "831267c7f312d3b3eeaccee9814809c0b0bd67b0",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/02_Setting_Up.psd": {
+  "blob": "98a7b262d652a17e3b3f801c3cee748440043543",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/03_The_Field.psd": {
+  "blob": "245b8b4f05911d1f4f26a83d90284b1eb9b96529",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/04_Creatures.psd": {
+  "blob": "8ee5e096c8b9fa4285d86435334ee1e3478c7d13",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/05_Stats.psd": {
+  "blob": "981828cfcce7f8b3dcf7f923352ff66af370b93d",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/06_Turns.psd": {
+  "blob": "cb71bb07701ecc56f90f37aa92bf03a3fc006813",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/07_Attacking.psd": {
+  "blob": "58b050a3e293d2ef72da063924719446501d59ff",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/08_Items.psd": {
+  "blob": "1de41d04bc86e6349c26baf3fcb254ca75553e5a",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/09_Abilities.psd": {
+  "blob": "ac1d9b37d39614bc5a22e54aac02509f24bbc21c",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/10_Turn_Phases.psd": {
+  "blob": "cc4e5e738fa5bde5e9a102ca1e4dacd7fdff2f82",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/11_Reactions.psd": {
+  "blob": "8ed93aee050c60724bdd0e51ae0ee5511e6836fa",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/12_Status_Effects.psd": {
+  "blob": "5391b649ec7250f222f60fc45b90bbcc7601e2c1",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/13_Minions.psd": {
+  "blob": "b0767cab9a311482094cb9cda0021a1dd44f4556",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/14_Field_Items.psd": {
+  "blob": "53832ae904190b12f28d705cef06d6914297fd20",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/15_Creature_Types.psd": {
+  "blob": "97c56c43c14774a1a475c49704534addc5dfb11f",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/16_Item_Types.psd": {
+  "blob": "cb604e4f6657ebfa6980e6c628ae7d857d2731d2",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/17_Damage_Types.psd": {
+  "blob": "461f5abed2054bfd5ed588b953778e7c35c18d36",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/18_Abbreviations.psd": {
+  "blob": "906f636a6cc272f98c01ff26c8f5ce2ce0b05ddd",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/19_Rare_Rulings.psd": {
+  "blob": "8854e3d174198610b8073a0a61f24623cae9b999",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/20_ATK_SPD_Sheet.psd": {
+  "blob": "2250c6db9c980c5678a2aa4b019bd8a3213870f5",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/21_DEF_Sheet.psd": {
+  "blob": "ee77f86d061d399e5e644a6c57f27688c46ceca7",
+  "links": []
+ },
+ "MDW/Old Rules/Very Old Rulebook/Field_Image.psd": {
+  "blob": "53fc6123ef5a41f333c013ec6c533121d5040758",
+  "links": []
+ },
+ "MDW/Templates/2_Creature_Template.psd": {
+  "blob": "03aa189be7367cf39388ba3a1a7bad2c812261d6",
+  "links": []
+ },
+ "MDW/Templates/3_Creature_Template.psd": {
+  "blob": "7d338c889c262c1297c742386f14da099894726d",
+  "links": []
+ },
+ "MDW/Templates/ActiveItem_Template.psd": {
+  "blob": "1377a2350ba05e1335a0739334624e9da667f054",
+  "links": []
+ },
+ "MDW/Templates/Creature_Template.psd": {
+  "blob": "0ecdec913dc6ef2f71064113174b9de8e5531553",
+  "links": [
+   {
+    "drawn": null,
+    "name": "cain.jpeg",
+    "path": "MDW/Linked/cain.jpeg",
+    "size": 165470
+   },
+   {
+    "drawn": null,
+    "name": "bFables.png",
+    "path": "Types/Stars/bFables.png",
+    "size": 368729
+   },
+   {
+    "drawn": null,
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   },
+   {
+    "drawn": null,
+    "name": "Elden Ring.png",
+    "path": "Types/Stars/Elden Ring.png",
+    "size": 469152
+   },
+   {
+    "drawn": null,
+    "name": "Elden Stars.png",
+    "path": "Types/Stars/Elden Stars.png",
+    "size": 1194210
+   },
+   {
+    "drawn": null,
+    "name": "Faith.png",
+    "path": "Types/Stars/Faith.png",
+    "size": 2616
+   },
+   {
+    "drawn": null,
+    "name": "Feather.png",
+    "path": "Types/Stars/Feather.png",
+    "size": 1685
+   },
+   {
+    "drawn": null,
+    "name": "Greed.png",
+    "path": "Types/Stars/Greed.png",
+    "size": 887
+   },
+   {
+    "drawn": null,
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": null,
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": null,
+    "name": "Lol star.png",
+    "path": "Types/Stars/Lol star.png",
+    "size": 97082
+   },
+   {
+    "drawn": null,
+    "name": "Mario Star.png",
+    "path": "Types/Stars/Mario Star.png",
+    "size": 523657
+   },
+   {
+    "drawn": null,
+    "name": "Monkey_D_Star.png",
+    "path": "Types/Stars/Monkey_D_Star.png",
+    "size": 166697
+   },
+   {
+    "drawn": null,
+    "name": "Nebula Star.png",
+    "path": "Types/Stars/Nebula Star.png",
+    "size": 253389
+   },
+   {
+    "drawn": null,
+    "name": "Ninja Star.png",
+    "path": "Types/Stars/Ninja Star.png",
+    "size": 14188
+   },
+   {
+    "drawn": null,
+    "name": "nuke.png",
+    "path": "Types/Stars/nuke.png",
+    "size": 499009
+   },
+   {
+    "drawn": null,
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": null,
+    "name": "Patrick Star.png",
+    "path": "Types/Stars/Patrick Star.png",
+    "size": 152994
+   },
+   {
+    "drawn": null,
+    "name": "REPO Orb.png",
+    "path": "Types/Stars/REPO Orb.png",
+    "size": 28265
+   },
+   {
+    "drawn": null,
+    "name": "Silksong star.png",
+    "path": "Types/Stars/Silksong star.png",
+    "size": 25356
+   },
+   {
+    "drawn": null,
+    "name": "Solar Sun.png",
+    "path": "Types/Stars/Solar Sun.png",
+    "size": 1374450
+   },
+   {
+    "drawn": null,
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": null,
+    "name": "The_Poorly_Drawn_Barnstar.png",
+    "path": "Types/Stars/The_Poorly_Drawn_Barnstar.png",
+    "size": 6921
+   },
+   {
+    "drawn": null,
+    "name": "Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "path": "Types/Stars/Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "size": 61378
+   },
+   {
+    "drawn": null,
+    "name": "Triforce.png",
+    "path": "Types/Stars/Triforce.png",
+    "size": 1712857
+   },
+   {
+    "drawn": null,
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
+   },
+   {
+    "drawn": null,
+    "name": "YinYangUltra.png",
+    "path": "Types/Stars/YinYangUltra.png",
+    "size": 1137393
+   },
+   {
+    "drawn": null,
+    "name": "Crystal_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Crystal_Star_PMTTYDNS_icon.png",
+    "size": 7721
+   },
+   {
+    "drawn": null,
+    "name": "Diamond_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Diamond_Star_PMTTYDNS_icon.png",
+    "size": 4054
+   },
+   {
+    "drawn": null,
+    "name": "Emerald_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Emerald_Star_PMTTYDNS_icon.png",
+    "size": 6073
+   },
+   {
+    "drawn": null,
+    "name": "Garnet_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Garnet_Star_PMTTYDNS_icon.png",
+    "size": 6124
+   },
+   {
+    "drawn": null,
+    "name": "Gold_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Gold_Star_PMTTYDNS_icon.png",
+    "size": 5811
+   },
+   {
+    "drawn": null,
+    "name": "Ruby_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Ruby_Star_PMTTYDNS_icon.png",
+    "size": 6200
+   },
+   {
+    "drawn": null,
+    "name": "Sapphire_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Sapphire_Star_PMTTYDNS_icon.png",
+    "size": 6143
+   },
+   {
+    "drawn": null,
+    "name": "Fallen_Star.png",
+    "path": "Types/Stars/Fallen_Star.png",
+    "size": 2480
+   },
+   {
+    "drawn": null,
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
+   },
+   {
+    "drawn": null,
+    "name": "Isaac_No_Circle.png",
+    "path": "Types/Stars/Isaac_No_Circle.png",
+    "size": 2617
+   },
+   {
+    "drawn": null,
+    "name": "Nether_Star.png",
+    "path": "Types/Stars/Nether_Star.png",
+    "size": 10708
+   },
+   {
+    "drawn": null,
+    "name": "Scrap.webp",
+    "path": "Types/Stars/Scrap.webp",
+    "size": 3348
+   },
+   {
+    "drawn": null,
+    "name": "Star of beth.png",
+    "path": "Types/Stars/Star of beth.png",
+    "size": 2247
+   },
+   {
+    "drawn": null,
+    "name": "Starstorm.png",
+    "path": "Types/Stars/Starstorm.png",
+    "size": 324
+   },
+   {
+    "drawn": null,
+    "name": "Stuffed_Star.png",
+    "path": "Types/Stars/Stuffed_Star.png",
+    "size": 710
+   },
+   {
+    "drawn": null,
+    "name": "undertale.png",
+    "path": "Types/Stars/undertale.png",
+    "size": 28256
+   },
+   {
+    "drawn": null,
+    "name": "Defensive_Minion.png",
+    "path": "Types/Defensive_Minion.png",
+    "size": 25788
+   },
+   {
+    "drawn": null,
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   },
+   {
+    "drawn": null,
+    "name": "water.png",
+    "path": "Types/water.png",
+    "size": 121376
+   },
+   {
+    "drawn": null,
+    "name": "unknown.png",
+    "path": "Types/unknown.png",
+    "size": 132191
+   },
+   {
+    "drawn": null,
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": null,
+    "name": "support.png",
+    "path": "Types/support.png",
+    "size": 632862
+   },
+   {
+    "drawn": null,
+    "name": "rock.png",
+    "path": "Types/rock.png",
+    "size": 197965
+   },
+   {
+    "drawn": null,
+    "name": "panda.png",
+    "path": "Types/panda.png",
+    "size": 1073019
+   },
+   {
+    "drawn": null,
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   },
+   {
+    "drawn": null,
+    "name": "light.png",
+    "path": "Types/light.png",
+    "size": 474151
+   },
+   {
+    "drawn": null,
+    "name": "ice.png",
+    "path": "Types/ice.png",
+    "size": 753294
+   },
+   {
+    "drawn": null,
+    "name": "Girl.png",
+    "path": "Types/Girl.png",
+    "size": 28865
+   },
+   {
+    "drawn": null,
+    "name": "fire.png",
+    "path": "Types/fire.png",
+    "size": 568963
+   },
+   {
+    "drawn": null,
+    "name": "electric.png",
+    "path": "Types/electric.png",
+    "size": 106279
+   },
+   {
+    "drawn": null,
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   },
+   {
+    "drawn": null,
+    "name": "darkmatter.png",
+    "path": "Types/darkmatter.png",
+    "size": 220675
+   },
+   {
+    "drawn": null,
+    "name": "dark.png",
+    "path": "Types/dark.png",
+    "size": 25732
+   }
+  ]
+ },
+ "MDW/Templates/Item_Template.psd": {
+  "blob": "afd67921551bf8a7ce3af1eb7005d25d01e6690c",
+  "links": []
+ },
+ "MDW/Templates/Raid_Boss_Template.psd": {
+  "blob": "bdb095fc91339081770170c280bd8b1ab565ae63",
+  "links": []
+ },
+ "MDW/Templates/Status_Effect_Template.psd": {
+  "blob": "f19a2ecc41cc7fd352506ee806beb54beb2b00f5",
+  "links": []
+ },
+ "MDW/Templates/Tile Bars.psd": {
+  "blob": "b096d87cc47a6e0e65a1dbff70237a3aa18af4bd",
+  "links": []
+ },
+ "MDW/The Morgue/Cho'Gath.psd": {
+  "blob": "bf3db7d97d9ffeae4a8735731783bb40f69fd16c",
+  "links": []
+ },
+ "MDW/The Morgue/Developper.psd": {
+  "blob": "98cbbdb1d52639a233e486b98a39bccaa99c69ee",
+  "links": []
+ },
+ "MDW/The Morgue/Ech.psd": {
+  "blob": "3cda5b940eb2f7154f7e9f7074b44bf95b0a200c",
+  "links": []
+ },
+ "MDW/The Morgue/Fire_Guardian's_Stronghold.psd": {
+  "blob": "8cfb7fc81e7d7130e7032e25c4ed4c5a381cbf42",
+  "links": []
+ },
+ "MDW/The Morgue/Grandfather_Clock.psd": {
+  "blob": "9b4dac50e6e85142af4b413d7300b68afd85ff22",
+  "links": []
+ },
+ "MDW/The Morgue/Pandeity_Old.psd": {
+  "blob": "7e66b5adb9232c9e372f294f9d2eb458e434da61",
+  "links": []
+ },
+ "MDW/The Morgue/Poison_Incantation.psd": {
+  "blob": "8a8f5564b0499b96f7615e0092b109375f2a8064",
+  "links": []
+ },
+ "MDW/The Morgue/Satou.psd": {
+  "blob": "bea4fb10a39bfedbb234995bf0d137ea6def1209",
+  "links": []
+ },
+ "MDW/The Morgue/Satou_Matsustaka.psd": {
+  "blob": "c8a17e149742abf76a13a090c9d7a916bcaf5700",
+  "links": []
+ },
+ "MDW/The Morgue/The_Missile.psd": {
+  "blob": "d968c22423124d4baa06213a6611cfcbecf09d85",
+  "links": []
+ },
+ "MDW/The Morgue/Warcraftian_Rouge.psd": {
+  "blob": "75f37a30f2d833502f771baf0043a1afcd920637",
+  "links": []
+ },
+ "MDW/The Morgue/White_Palace.psd": {
+  "blob": "a66ef4f0f26aaf6818b10a9023fc69dfd411eb5d",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/Bill_Cipher.psd": {
+  "blob": "d0f5cb833124c030a49a4f86a32916ae1b02bd91",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/Giegue.psd": {
+  "blob": "1ffe8d2e832954c0853e83113b0362847097075c",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/Giegue_Old.psd": {
+  "blob": "2b9a192bed03266ac1852efa5523fc34c22fc7f3",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/Insanity_Wisp.psd": {
+  "blob": "f98326f161d0012cb090f96a87fb25e266a4795e",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/Magolor_Soul.psd": {
+  "blob": "29c82cb765d7767f2cd71ccd4ca6991d4c8444c2",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/Marx's_Wrath.psd": {
+  "blob": "5e426da758d59d33452e1c55e754e804f62b1e95",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/Marx_Soul.psd": {
+  "blob": "33724321d934fe8127a5a8aa6110c61e43e674b2",
+  "links": [
+   {
+    "drawn": null,
+    "name": "1653304_mister-fool_karl-marx-soul.png",
+    "path": "MDW/Linked/1653304_mister-fool_karl-marx-soul.png",
+    "size": 13491147
+   },
+   {
+    "drawn": null,
+    "name": "bronze.png",
+    "path": "Types/Stars/bronze.png",
+    "size": 32409
+   },
+   {
+    "drawn": null,
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
+   },
+   {
+    "drawn": null,
+    "name": "light.png",
+    "path": "Types/light.png",
+    "size": 474151
+   }
+  ]
+ },
+ "MDW/Unfinished/6 Stars/Oryx_The_Mad_God.psd": {
+  "blob": "5c010b4997470e7a6007f0096e73b166ce78a773",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/Pandeity.psd": {
+  "blob": "13d5ec0818d35ae8d686ed8d839e1fc2ae6b43fd",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/Star_Dream_Nova.psd": {
+  "blob": "13645c53f5b687daf1f718170045164e47ef071f",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/The_One_Who_Rhymes.psd": {
+  "blob": "300a09d41a86d00722cbfda0d3e77a9c717c8dfd",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/The_One_Who_Rhymes2.psd": {
+  "blob": "9af306bf24c2486a0aad298fdd88078967fd59cc",
+  "links": []
+ },
+ "MDW/Unfinished/6 Stars/Zero_Two's_Revenge.psd": {
+  "blob": "99486f27101dc07aeae43f8084eb85adcc0271bc",
+  "links": []
+ },
+ "MDW/Unfinished/Overridden.psd": {
+  "blob": "37db18b958175ff66704957d67d434b218fc8673",
+  "links": []
+ },
+ "MDW/Unfinished/Puppeteered.psd": {
+  "blob": "804425fedcbf6803088ee62bf5499c9b8884b0d9",
+  "links": []
+ },
+ "MDW/Unfinished/Tylord.psd": {
+  "blob": "73284c28e5c9bf17c797c74503ae90b07eb0410f",
+  "links": []
+ },
+ "MDW/Unfinished/Uncle_Frank_and_Cousin_Louie_and_Bob_and_Joe_and_Walter_and_Bill_and_Jim_and_Ed_and_Bernie_and_Steve.psd": {
+  "blob": "e20ccf150d85f9ff465bb9e4790bd88555f5b446",
+  "links": []
+ },
+ "files": {
+  "MDW/Linked/1653304_mister-fool_karl-marx-soul.png": {
+   "156e6cf611e7af358081e762d1ee6a39fccf955d": 13491147
+  },
+  "MDW/Linked/Air_Totem - asdasd_auto_x2 copy.jpg": {
+   "897bf3bdf3b7d87852e25770168d64acbe3d5bab": 1479461
+  },
+  "MDW/Linked/Azamoth_the_Possessed_Vessel - Magic.png": {
+   "459cdddf4c0054f24a59c7b08ec0c54fd15c7fc3": 60344
+  },
+  "MDW/Linked/Azamoth_the_Possessed_Vessel - chatchawan-keawtangkhuen-realmofthemadgod-sf-finalrelease.jpg": {
+   "108db7fcd4aaf1baea7661ca3f81308763a6300e": 1164568
+  },
+  "MDW/Linked/Battle_Spear - battle (1).png": {
+   "4850c5905c25ec1014dc6451d8600bb5fa2181e4": 261549
+  },
+  "MDW/Linked/Delicate_Flower - Grey-Mourner-D098D0B3D180D18B-The-Knight-HK-7143416 (1).jpg": {
+   "fabfedd7ca9e76e4abbda20523ebc9f6acf50842": 189154
+  },
+  "MDW/Linked/Dragon_Mount - h0smhfg5pgw71.png": {
+   "b57f61dbc4f10310ac80f51ae2121ca3229c7168": 15459342
+  },
+  "MDW/Linked/Dreamshield - Hollow Knight 2024.02.03 - 21.12.33.22.DVR - frame at 0m27s.jpg": {
+   "6a9797e74e1b9399a5df90d1b4e812505f500e3d": 134300
+  },
+  "MDW/Linked/Dull_Knife - Shiny knife bg.png": {
+   "143b78f2cf80938397ac9bc9988f3844788e20c4": 55325
+  },
+  "MDW/Linked/Dull_Knife - dull_knife_image.png": {
+   "22560c1027429efee7b61740cdf8870d67e0e87d": 5033
+  },
+  "MDW/Linked/Evil_Cookie - 418958-Omori-pixel-art-ultrawide-universe-sky-stars-planet.png": {
+   "5d5c323b4befa0e624de674da25248959a36315b": 64167
+  },
+  "MDW/Linked/Evil_Cookie - Evil_Cookie_pic (1).png": {
+   "974f584c9e970a05faf55d73d638259c16b51766": 8668669
+  },
+  "MDW/Linked/Evil_Cookie - Layer 6.psb": {
+   "88b1e268d84f77fe887d3040c2b78030dc7265ff": 3146214
+  },
+  "MDW/Linked/Flame_Bomb - Layer 1.psb": {
+   "3da10d325ca53650af78a986d93837f6af5a4ab3": 8171288
+  },
+  "MDW/Linked/Frostmourne - Daco_35508.png": {
+   "56a9d98f586565bf927650a6fb3b0fe66b0d6554": 307074
+  },
+  "MDW/Linked/Frostmourne - d35qrzf-6de2ba93-8f56-421b-b9e2-c15c2f96c090-transformed.jpg": {
+   "6ae1199aa795702395f991659d2a3fc74296153f": 238643
+  },
+  "MDW/Linked/Hero_Cap - Deploy.psb": {
+   "31e3afb2b7f6a112eb4639f95e94891d2f748b08": 1048576
+  },
+  "MDW/Linked/Hero_Cap - Hero_Cap_Pic.png": {
+   "c0f6823ebd8b318dbbb78656bec80dd8ccc20993": 902385
+  },
+  "MDW/Linked/Hero_Cap - Negation.png": {
+   "c9794cb2813a856542da095481a09a68bccacba9": 29391
+  },
+  "MDW/Linked/Hero_Cap - Niiue_bg.png": {
+   "7528411a10c4884f78934599f1c14364ba559464": 9334
+  },
+  "MDW/Linked/Hero_Cap - Offense.png": {
+   "a6dfaa63017446c87785ab0d7c39298b91eadba0": 1078694
+  },
+  "MDW/Linked/Humphrey's_Belly - Humphrey_bg.png": {
+   "cf9bcf086f5c0c6a38403bd1e1255eaaa6d3fcdb": 61750
+  },
+  "MDW/Linked/Humphrey's_Belly - Humphrey_field_pic.png": {
+   "7bfc2fb6b51bc97d1799e4d09f78a66eaf647efe": 46693
+  },
+  "MDW/Linked/Igor_Roballtowski - Level 3.png": {
+   "46be553b2576e599df68b6c6bf2861fdeb689351": 1779287
+  },
+  "MDW/Linked/Inconspicuous_Cake - Cake_TTYD_poisoned.png": {
+   "b84a8eacbea01a1fedf352b85e66256f5b4234b6": 1319
+  },
+  "MDW/Linked/Indoctrination - dogma_by_chopangigante_deida83-fullview.jpg": {
+   "6029c9b0ff9b8b2666bb599dee8d1e2b8287ef0c": 213733
+  },
+  "MDW/Linked/Ingredient_Wondertart - Chef_Saltbaker_(17).webp": {
+   "806d50d897068c86df0fb7d412cd25f291351523": 79646
+  },
+  "MDW/Linked/Ingredient_Wondertart - ingredient_starburst_back_0001.png": {
+   "a0ada347a5a1ea6f846eb829c5cf4debea589a4f": 1005066
+  },
+  "MDW/Linked/Ingredient_Wondertart - ingredient_starburst_shine_0007.png": {
+   "6b086f1c5ea0ef7348f1c94a4828db115018ce06": 322858
+  },
+  "MDW/Linked/Inkhole - Allen.webp": {
+   "e3844a8f6ec0d5fa83a7a5dbf2a7a79a6a0cbdc6": 70824
+  },
+  "MDW/Linked/Joy - Joy.webp": {
+   "f363fa3f2e582576921410387f402fd065722127": 108
+  },
+  "MDW/Linked/Krabby_Patty - 1857119-tumblr_lhwja1zy1z1qgrp5p-transformed.jpg": {
+   "9c0a2e4e6c48422c2360ee3bf7a19445a3edc4ed": 1161701
+  },
+  "MDW/Linked/Layer 1.psb": {
+   "b176541146b53dd486aa7b3e986782f2b4db6469": 1999834
+  },
+  "MDW/Linked/Lit_Bob-omb - bottom.psb": {
+   "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f": 1048576
+  },
+  "MDW/Linked/Love - Love_bg.jpg": {
+   "a2d1202bf8dbee09ae69a1f173c3aff83291e315": 58464
+  },
+  "MDW/Linked/Love - Love_pic.png": {
+   "ffc34353d50039c04f3a6473ad5ab1a9a2f2db9d": 332554
+  },
+  "MDW/Linked/Machine_Gun - d8qsfox6.png": {
+   "9fcdf8ae6b083091fad483ce78e6e24e731991d5": 6850
+  },
+  "MDW/Linked/Magnum_Opus - Croissant-PNG-Clipart.png": {
+   "34f5a6f58d252c99b888f374970d7d3afd2b9e59": 904697
+  },
+  "MDW/Linked/Magnum_Opus - field.psb": {
+   "87a12d64e04abd67a45e028ebe3c8426aa38339f": 1048576
+  },
+  "MDW/Linked/Magnum_Opus - question-634903_1280.png": {
+   "d189d573cc12593c2a8fda9b27c9eb32b1c8d4f6": 163977
+  },
+  "MDW/Linked/Mettaton_EX - __frisk_and_mettaton_ex_undertale_drawn_by_palidoozy_art__sample-fb89e94acf19577b2494bbde01775b9b (1).jpg": {
+   "0fc775dea4155b0e39165ae3e3a7821a2a01af09": 497092
+  },
+  "MDW/Linked/Mettaton_NEO - neo_by_walkingmelonsaaa_d9l6od2-fullview.jpg": {
+   "67871f155a2c04feae714813c1d6d2bc69d57ba0": 225072
+  },
+  "MDW/Linked/Militron_(No_Armor) - Link- The Faces of Evil - Cutscene - Militron's Humiliation 0-5 screenshot.png": {
+   "b5235b3a93adf8d6714d7bd166171b54a0368a33": 378236
+  },
+  "MDW/Linked/Militron_(No_Armor) - Vrai_Militron.webp": {
+   "709f4b8a84d926c87aa7a844595abe1e98bf24a6": 1260
+  },
+  "MDW/Linked/Militron_(No_Armor) - Warpstar.png": {
+   "5f41b136c0a1d6de391c0461734d8cdbc79f26d1": 256210
+  },
+  "MDW/Linked/Paint_Bomb - Bulky_Bob-omb.webp": {
+   "b813ef29ccc775713c928a254ee241725ba2a6db": 28296
+  },
+  "MDW/Linked/Paint_Bomb - pngwing.com (1).png": {
+   "1a5087c563d0fdc09a3b6cd5dd8c815508f0a13a": 728733
+  },
+  "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png": {
+   "c39ddbc872bfb1d1b122f822297a1de7f217dc86": 1254229
+  },
+  "MDW/Linked/Papa's_Cookie - PerfectCookie (1).png": {
+   "a2beef7632c8d3a2773eb143b1d55843a4125b6c": 1162981
+  },
+  "MDW/Linked/Party! - Party_pic.jpg": {
+   "573b78d6c38f8ce4892ac4cf448bfdc709579432": 83382
+  },
+  "MDW/Linked/Polar_Star - tvddlfk0.png": {
+   "f4682242a1d87a47ab721d4af2aefdc2e3207831": 6819
+  },
+  "MDW/Linked/Poorly_Drawn_Cabbage - The_Poorly_Drawn_Barnstar.png": {
+   "479dd1079f724607033d2b69eea7d9e54dba9bcb": 3489
+  },
+  "MDW/Linked/Regret - Regret_bg.jpg": {
+   "463994ba914e85c9fac466e5f52f1520d2279888": 171469
+  },
+  "MDW/Linked/Rusty_Knife - rusty_knife_image.png": {
+   "48772475b9882b3d131d8e01afa5cb0c28a94de0": 5041
+  },
+  "MDW/Linked/Salt - Layer 1.psb": {
+   "d3b2c5ea498bc34684017451f8634c70c4379ff3": 3626502
+  },
+  "MDW/Linked/Shadow_Queen - Darkmatter.png": {
+   "5a7ca1d430460f3782aa73ccaa11906faf6d7d60": 12660
+  },
+  "MDW/Linked/Shadow_Queen - Defensive_Minion.psb": {
+   "8ec31da3ca912f8d660bab3a40cd5768ac6177ba": 1048576
+  },
+  "MDW/Linked/Shadow_Queen - Emerald_Star.png": {
+   "4085c54d4656fcf7b0d0de6c215bc81ba5175aa5": 588
+  },
+  "MDW/Linked/Shadow_Queen - Garnet_Star.png": {
+   "37b067fa0f94746c154376f3aa39d05de61669e9": 659
+  },
+  "MDW/Linked/Shadow_Queen - Ice.png": {
+   "4bd977fdb629fc66b4f845db264accb62fc0123f": 272855
+  },
+  "MDW/Linked/Shadow_Queen - Light.png": {
+   "b587fa8759caf9570a8288de23675fb01e905d88": 4021783
+  },
+  "MDW/Linked/Shadow_Queen - Offensive_Minion.psb": {
+   "bdd59a805b6ec2c93c42a17bdcbe545a8fec0381": 1048576
+  },
+  "MDW/Linked/Shadow_Queen - Panda.png": {
+   "c6bc1f3f64f9cd4c24442c27b6e9934ff3eb5e95": 127266
+  },
+  "MDW/Linked/Shadow_Queen - Unknown.png": {
+   "aa9f767fc58d2dcdff419edbce9cb97b963e5950": 1308
+  },
+  "MDW/Linked/Shadow_Queen - Vi1.png": {
+   "42202bbec256fcd7533b9262b980906a0c142b27": 367
+  },
+  "MDW/Linked/Shadow_Queen - Wind.psb": {
+   "48e1257d9b07bf8d60c2f4cce57981d6a9b0add7": 1048576
+  },
+  "MDW/Linked/Shell_Shield - original_95630e33b92130ac5eae62940421822b.jpg": {
+   "7e255c618226ca4dedae971ead5617114dd2eae0": 68087
+  },
+  "MDW/Linked/Snake - xv9xr0ij.png": {
+   "4b75e7f841090da751c621d07030ee5ebc7828bb": 6663
+  },
+  "MDW/Linked/cain.jpeg": {
+   "00df9808f5318daa0cdc19c9cea49234c375d3b0": 165470
+  },
+  "Types/Attack.png": {
+   "62c9171b90f432e49f091fee1e6526859d9f3a56": 819546
+  },
+  "Types/Attributes/Brainwashed.png": {
+   "3ad07c64fa8b8c02ceb250de2ac55288a4593ad0": null
+  },
+  "Types/Attributes/Brute.png": {
+   "568fd92a256dc4f8a5d361908b68ef79d0f9ea8c": null
+  },
+  "Types/Attributes/Business.png": {
+   "b434331a8bc611fe4222f4e128ffaad593eef0ba": null
+  },
+  "Types/Attributes/Creator.png": {
+   "a0c263db0cebb2309ccad3f593ec6ffa503b0acb": null
+  },
+  "Types/Attributes/Demon.png": {
+   "7c214357b1849c4e3af46216785f584ff342651a": null
+  },
+  "Types/Attributes/Engineer.png": {
+   "5561de1199c2130a7affe743c11a1574a61b5909": null
+  },
+  "Types/Attributes/Explorer.png": {
+   "282276bb64cb9829bf97d7661590a79475c7ba8c": null
+  },
+  "Types/Attributes/Ghostly.png": {
+   "e2c5c07b021fc97001c117b5092f55c8c0b275f3": null
+  },
+  "Types/Attributes/God.png": {
+   "12b9687b80fa5982e60520e1401eed69d2f59340": null
+  },
+  "Types/Attributes/Higher Being.png": {
+   "7c5e38a8b682538602439676b141bb21d62c9fbc": null
+  },
+  "Types/Attributes/Hivemind.png": {
+   "a6ea5d4cd9add6c07a3a5b7fd72f8141e20cd258": null
+  },
+  "Types/Attributes/Industrial.png": {
+   "31e431eea417de50e1796cb24dff6d5de216ef9a": null
+  },
+  "Types/Attributes/Leadership.png": {
+   "9d4beac669dd181af82b188968fd342c71583817": null
+  },
+  "Types/Attributes/Mage.png": {
+   "5ea6f11a1cc0b05c39ce6428a3892a92fcf05d2e": null
+  },
+  "Types/Attributes/Martial Artist.png": {
+   "0d73b911be9470668b354ee0c05ee6f1926bad8a": null
+  },
+  "Types/Attributes/Military.png": {
+   "a36f47773890beb6d9844fc292671ce6667fb73d": null
+  },
+  "Types/Attributes/Mythical.png": {
+   "5b95280d6b5fcb99c7b7cfd4589d78b4ea88bc4a": null
+  },
+  "Types/Attributes/Nature.png": {
+   "fb7d87f89a7a8b2d7793dda4ec1465d2d1b063af": null
+  },
+  "Types/Attributes/No Attribute.png": {
+   "ba164da64237d7e7de882ad58afe14018710f734": null
+  },
+  "Types/Attributes/Performer.png": {
+   "15e1004516a02db668ee34807bb0decfadb17a6d": null
+  },
+  "Types/Attributes/Rogue.png": {
+   "ad5e8f4278e3d3b922916b83f044a7f3cef99ff2": null
+  },
+  "Types/Attributes/Royalty.png": {
+   "18cc0a20437ad695f51ce14a6cce433a3b07ed42": null
+  },
+  "Types/Attributes/Spiritual.png": {
+   "e1aa524b217c682bdbd42594d5796ea6877ec668": null
+  },
+  "Types/Attributes/Trickster.png": {
+   "b5216d1b881e882df77246529458c0f675dcc4b6": null
+  },
+  "Types/Counter.png": {
+   "23bf9264064724f83faf67776362102cbfaaa57f": 58570
+  },
+  "Types/Defensive_Minion.png": {
+   "b79573053a0600ec75bea7c45542c6636828d5eb": 25788
+  },
+  "Types/Deploy.png": {
+   "1824bab6e2a8ad4ed9dcf895a1785b6bd97a6064": 24318
+  },
+  "Types/Equip.png": {
+   "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000": 83059,
+   "64809a45f159d2f268c2e2b547fae9ff9f8a474a": null,
+   "7ed27411c3da0b03a44763e04f2b6d84a5932652": null
+  },
+  "Types/Food.png": {
+   "25a2fc3de2ec082d54d5b1ec1dedba07da96306a": 139337
+  },
+  "Types/Fragile Equip.png": {
+   "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5": 23023,
+   "7319c4476dfbe171528d6fba59f7918f3db5e4c8": null
+  },
+  "Types/Girl.png": {
+   "d05ee990099fe33cfe9ea1b1c771328e9ff35d3f": 28865
+  },
+  "Types/IceTransparent.png": {
+   "4bd977fdb629fc66b4f845db264accb62fc0123f": null
+  },
+  "Types/Infliction.png": {
+   "7777b7b0d7dc2a12753d2e0e36498650fbfc145f": 78460,
+   "d71053986eaacfb5e7818392944b795296949f3f": null
+  },
+  "Types/NME.png": {
+   "4fb6b1d8b6485fabd2b86fa08d37ff1b69a398f7": 757779
+  },
+  "Types/Negation.png": {
+   "77824ad3eb394b38fdb0a92d3672c90688794242": 243500
+  },
+  "Types/Null Type.png": {
+   "dbeaecdfec5e6adcf1ce7bcaf5525553c264ba7e": null
+  },
+  "Types/Offensive_Minion.png": {
+   "7f7a05324e921eebc21961d8b55005a17a4a7620": 4451016
+  },
+  "Types/Protective.png": {
+   "d530c7b666dbbd0fe132d966bf88ba29fd4f284c": null
+  },
+  "Types/Stars/6star.png": {
+   "c2829efda0d3aa1f50fc136160a331e3a185ad47": 83477
+  },
+  "Types/Stars/7star.png": {
+   "d400becfbca34494e79e45ea28c847798956604a": 78570
+  },
+  "Types/Stars/8star.png": {
+   "87e668e4084489b781839437d6fd0e01929173b6": 80771
+  },
+  "Types/Stars/Crystal_Star.png": {
+   "6c9df83521a4b44ee2fd840d1b40e21be2a8eb32": 5027
+  },
+  "Types/Stars/Crystal_Star_PMTTYDNS_icon.png": {
+   "3df7509818ce47caccb4dde5c0e5487e79d8852b": 7721,
+   "8a7eb8c1746dfbc6c1820a89115faf35f756c20c": null
+  },
+  "Types/Stars/Diamond_Star.png": {
+   "c51a965abbf8c0c5de3ca2e57f915507396f1c77": 2255
+  },
+  "Types/Stars/Diamond_Star_PMTTYDNS_icon.png": {
+   "f0d79262d55228d8daa9c00e12439a8b7a5459e3": null,
+   "fcef173debd6998a8ede2c7cd15010807cc0992a": 4054
+  },
+  "Types/Stars/Dst Star.png": {
+   "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d": 112511
+  },
+  "Types/Stars/Elden Ring.png": {
+   "955a29d258c6a88097ec44efef4dc66207753b11": 469152
+  },
+  "Types/Stars/Elden Stars.png": {
+   "1f16ab98ff9fed96c503486aa559d0ce220b64fc": null,
+   "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d": 1194210
+  },
+  "Types/Stars/Emerald_Star.png": {
+   "a4c373803a920ed5d04093d88cba8b6f40454c3c": 2162
+  },
+  "Types/Stars/Emerald_Star_PMTTYDNS_icon.png": {
+   "1ad93f2abae08710fbad0936f8a6cdee7322f8a3": 6073,
+   "891ac969dc58b2d116084841d2f62c107edeff8a": null
+  },
+  "Types/Stars/Faith.png": {
+   "626adcea81d1e5f0ec05f99eb49fd4446e7e52c9": 2616
+  },
+  "Types/Stars/Fallen_Star.png": {
+   "75d7fb1062f4f81eb510a6cb441f85819eae9617": 2480
+  },
+  "Types/Stars/Feather.png": {
+   "47dfc416bf37e78d80e021e517425dd2cd6974b9": 1685
+  },
+  "Types/Stars/Garnet_Star.png": {
+   "35c838cb2a80a5bdc8ae0c2f9fb0e19424ed68a1": 2093
+  },
+  "Types/Stars/Garnet_Star_PMTTYDNS_icon.png": {
+   "040f70a0877b7f647502120685e9508b180dcf33": 6124,
+   "ca543caf920d9c690fdbe3f1e6983666b443efbd": null
+  },
+  "Types/Stars/Gold_Star.png": {
+   "127ac246e772f9b0113d5c83be4db5aa7f20d0d1": 2010
+  },
+  "Types/Stars/Gold_Star_PMTTYDNS_icon.png": {
+   "0fd436bdb62a6d97cb65248ace445e3db0c24d17": 5811,
+   "f00ced2d84f8545ea6fe15931d530f1f0cba17c6": null
+  },
+  "Types/Stars/Greed.png": {
+   "3fa89b94381b4636b7e9d5b167e6afff4db68de1": 887
+  },
+  "Types/Stars/Guild Seal.png": {
+   "13234434173d2d3d19e1cf09bdb303d17e73d6ab": 1880154
+  },
+  "Types/Stars/Hk star.png": {
+   "79d016ea795b75b8d6bc82368dc96558083457c8": 332571
+  },
+  "Types/Stars/Isaac_No_Circle.png": {
+   "273c33abd5eb7d4ed130a50147f41960f1d7866c": 2617
+  },
+  "Types/Stars/Lol star.png": {
+   "6a79e1709a529b3353886f2e415702bbe68bed17": 97082
+  },
+  "Types/Stars/Mario Star.png": {
+   "dd637fac2dfd2d7029340cac8471156b36b09a03": 523657
+  },
+  "Types/Stars/Monkey_D_Star.png": {
+   "502b7b20c5dd504ecd6f9dabc49c611f84824c87": 166697
+  },
+  "Types/Stars/Nebula Star.png": {
+   "7bce3270adea13c48ca9f9233617f60d91925363": 253389
+  },
+  "Types/Stars/Nether_Star.png": {
+   "75c46b243a8e2086eb4ccf5f7a60ff6bc3637108": null,
+   "845c506a66ac79c396bad2b9c1dfe82ee34199fa": 10708
+  },
+  "Types/Stars/Ninja Star.png": {
+   "010244477dc99d755153a0ac5ba94322b35f37e9": 14188
+  },
+  "Types/Stars/Null Star.png": {
+   "231c8f18162b20d5c8207dd24dbd7ba5b39a1f2a": 213855
+  },
+  "Types/Stars/Omori star.png": {
+   "a69ecf5f55fa73fdf72dde855aa81a55073a6645": 114793
+  },
+  "Types/Stars/Patrick Star.png": {
+   "4842329744e9640e657c0e5909400f10099b0d0e": 152994
+  },
+  "Types/Stars/REPO Orb.png": {
+   "cc7cc261a755e1b167c10ef29071bd8a8401a087": 28265
+  },
+  "Types/Stars/Ruby_Star.png": {
+   "4b06eff55921e822dc8cef08c97d441e55940274": 4718
+  },
+  "Types/Stars/Ruby_Star_PMTTYDNS_icon.png": {
+   "129443b4bdff4fddf84275e73ed4cdc21e14d26f": 6200,
+   "24131abbcb4c673c152f6487374cf5c268c4c202": null
+  },
+  "Types/Stars/Sapphire_Star_PMTTYDNS_icon.png": {
+   "ee915ddc16794f6ccb5e8f3a473c62dd95d2c0b8": 6143,
+   "f648d2c48b2eb4b4010b2f2549fb4cc0ecdf131c": null
+  },
+  "Types/Stars/Sapphire_Starold.png": {
+   "c77036b67ad4b698f374ea9f7df97689df163c38": 3871
+  },
+  "Types/Stars/Scrap.png": {
+   "27e828a4b0084d24fe092bb1807253c468cca9b2": 27348
+  },
+  "Types/Stars/Scrap.webp": {
+   "052c683e9488a6e6f71839596c049b9c21f62fa0": 3348
+  },
+  "Types/Stars/Silksong star.png": {
+   "8038cdedc1967f19a82a5dc34503341f4a32ff8b": 25356
+  },
+  "Types/Stars/Solar Sun.png": {
+   "caccf7ff8ce472def5d14779dbc70484aab6b684": 1374450
+  },
+  "Types/Stars/Star of beth.png": {
+   "b01dc873e9753d1f672738dab4d98b80e868f698": null,
+   "f21f2877886482116ec5cbb3a6934eaf02e7d2ff": 2247
+  },
+  "Types/Stars/Starstorm.png": {
+   "702f3b83c2cf4e53bf8878e95025734703611ea7": 324
+  },
+  "Types/Stars/Stuffed_Star.png": {
+   "1c50b498609fd74af1cbf664c833b48c7b3e7407": 710
+  },
+  "Types/Stars/The_Poorly_Drawn_Barnstar.png": {
+   "f3c52a3886e575db85a6a24506a7a6ffae925927": 6921
+  },
+  "Types/Stars/Thunderfury_Blessed_Blade_Of_The_Starseeker.png": {
+   "724fa4733ac659f94e42fc03076fb749b39f34e2": null,
+   "f1a477caf6c4d00c252f50d65bd8ac0fc6f09afd": 61378
+  },
+  "Types/Stars/Triforce.png": {
+   "85d77d7d27e05776d8d725f0802dccc9e34f3bea": 1712857
+  },
+  "Types/Stars/Warpstar.png": {
+   "6c8489028d204e602845cfc07299b9857b139682": null,
+   "9fe63b84281a9cf50100f3ab8cdba553dca442c5": 648064
+  },
+  "Types/Stars/YinYangUltra.png": {
+   "ca1bbfb03595f64e2268a57aca0b510b2e52af4e": 1137393
+  },
+  "Types/Stars/bFables.png": {
+   "c659c492806f52480508f989cb55a426afe1aac5": 368729
+  },
+  "Types/Stars/bgold.png": {
+   "2a3fc29e8f0e24c43616ba9881dcd77a87b3a100": 31203
+  },
+  "Types/Stars/bronze.png": {
+   "ec7a7fafdcd4dbd9c9bad9b18f8aea4354f4e68a": 32409
+  },
+  "Types/Stars/isaac.png": {
+   "3b1e49004b030a450210a0ba04921acf5d5ec001": 1181
+  },
+  "Types/Stars/nuke.png": {
+   "be52da8e66fbe240bd4ef8962d8ce199d64b2f67": 499009
+  },
+  "Types/Stars/silver.png": {
+   "2553f5b8466a130bcbc76265bc5388aecbf657b5": 30204
+  },
+  "Types/Stars/star.png": {
+   "6f0b0a85deaf14a6fef9b15b9a610116a1b48460": 36858
+  },
+  "Types/Stars/undertale.png": {
+   "4ff81e3ba710b79c678abc9af0ae970f060836ef": 28256,
+   "7910b16d8d7bb24eb52656fc0b4bd8856df7ed36": null
+  },
+  "Types/Wind.png": {
+   "3b0b1825d07f4691ce8ec1d21afb38699a16062b": 430775,
+   "580a387cbf060258ecd8bb951d9a0dddb2dd0556": null
+  },
+  "Types/active.png": {
+   "0c472adf6c2a168dfd54ea21ef9c3a4f944b666e": 50758
+  },
+  "Types/buff.png": {
+   "07193d4230ed008b9deb385c545c824f0f3c213b": null,
+   "c034a83976c3a94a1ab6c139064e545ca5123cb4": 5354
+  },
+  "Types/buffstack.png": {
+   "843a0c81dba14d1dbaf0f06f2170113f9ba15332": 8494
+  },
+  "Types/dark.png": {
+   "3a454e390d2223704a2399316dcd27e0b7f1a0ab": 25732
+  },
+  "Types/darkmatter.png": {
+   "9842d409283e819405890ffd7f7e3bc7775145fd": 220675
+  },
+  "Types/debuff.png": {
+   "b18b1f484228b7e9a9db82a2513df6845c287a2b": 5869,
+   "da1399101e71121e1a9dac7168616e7e6e90b318": null
+  },
+  "Types/debuffstack.png": {
+   "11eee7735674b549186c25fb856a75e90980eabb": 7489
+  },
+  "Types/debuffupgrade.png": {
+   "05743c388b1f000c234cf96adff71de82c775df9": 9594,
+   "7cf611247c5143834573e1ce6deac160e7b321ff": null
+  },
+  "Types/electric.png": {
+   "00007617b6c9850309e6c3a145e338efa55eded3": 106279
+  },
+  "Types/field.png": {
+   "e8ecd9d6802b48c18236a79b70eddb5e446de455": 20013
+  },
+  "Types/fire.png": {
+   "a7bed579eddd8ee70a2eaec47153db47fd9f5e79": 568963
+  },
+  "Types/ice.png": {
+   "755a458e1afd8c0059d30f9b9ee3c72717a2ad88": 753294
+  },
+  "Types/light.png": {
+   "dafb015388a0bc6eb5a5e3510d50a7f8a6352244": 474151
+  },
+  "Types/lightshadow.png": {
+   "4f4983d9a7e7716d072518e3be8a42c3baee8b04": 478943
+  },
+  "Types/machine.png": {
+   "daefe5017731fce2dd331be9fc6988efbe3ed4ea": 303679
+  },
+  "Types/null.png": {
+   "dbeaecdfec5e6adcf1ce7bcaf5525553c264ba7e": 71674
+  },
+  "Types/offense.png": {
+   "77824ad3eb394b38fdb0a92d3672c90688794242": null
+  },
+  "Types/panda.png": {
+   "502228f334cd9f6bd2d7652eccff5e9164295238": 1073019,
+   "8ff38a47b98970858459d420dc15a7347866cdf1": null
+  },
+  "Types/rock.png": {
+   "25679413e008ecd225af8cc6a9769810b48ae7e7": 197965,
+   "39fffd5b10b59f888a0f2666dfd7f69ab404c7ad": null
+  },
+  "Types/support.png": {
+   "bdda87910f4788d9535ee54b70256f2cf3cc3097": 632862
+  },
+  "Types/undead.png": {
+   "8f8f39717df01c6be18898c9d5bb095c4b2812b9": 195840
+  },
+  "Types/undread.png": {
+   "8f8f39717df01c6be18898c9d5bb095c4b2812b9": null
+  },
+  "Types/unknown.png": {
+   "0900dd1f51647a4f88c3181e44ae2ea7e938266e": 132191
+  },
+  "Types/water.png": {
+   "99d8299f475b915a691170c03c5a2c0fe0110589": 121376
+  }
+ },
+ "pixels": {
+  "00df9808f5318daa0cdc19c9cea49234c375d3b0": "b9d1a1181feb569288e83f2abf1f400f69423f4c",
+  "0fc775dea4155b0e39165ae3e3a7821a2a01af09": "eaa1ab06fc737c8590dd4574ad10f245f6431f73",
+  "108db7fcd4aaf1baea7661ca3f81308763a6300e": "51fff977efd3c1f0154c70678a99785e4dd4f646",
+  "143b78f2cf80938397ac9bc9988f3844788e20c4": "dee18f82beab7d7b61c34832d563e1b10e5db669",
+  "156e6cf611e7af358081e762d1ee6a39fccf955d": "af50183df9181c2657ed85f9a61ee7c1f881c3e6",
+  "1a5087c563d0fdc09a3b6cd5dd8c815508f0a13a": "45a0dc762ca9ecb91a95f51b5acbf1bdda3f1062",
+  "22560c1027429efee7b61740cdf8870d67e0e87d": "d0afc47c1ec79511c31a2d3ee22e94bd830396b6",
+  "31e3afb2b7f6a112eb4639f95e94891d2f748b08": "c8609ca3f760e11e182093e5c837aed108fe0cc3",
+  "34f5a6f58d252c99b888f374970d7d3afd2b9e59": "b1c24f666b2357b0654179c1df9a4d93a874dd0f",
+  "37b067fa0f94746c154376f3aa39d05de61669e9": "ad79d8fa999afb6fd8358e71a8d0112f518e85e0",
+  "3da10d325ca53650af78a986d93837f6af5a4ab3": "59d3c0d65243f2d49c2427bb05786563b7700955",
+  "4085c54d4656fcf7b0d0de6c215bc81ba5175aa5": "6421e4493bd37fa08fa3d79262e04c8ec7f72f3c",
+  "42202bbec256fcd7533b9262b980906a0c142b27": "fe7c2c517e7d0b720d9cd4c864b96f8cd4cd1ed0",
+  "459cdddf4c0054f24a59c7b08ec0c54fd15c7fc3": "7132192fc14c90b5687f940a0c1ea534f202e081",
+  "463994ba914e85c9fac466e5f52f1520d2279888": "e3d3fa3dbec0940109df5feb6f08df15d70e6161",
+  "46be553b2576e599df68b6c6bf2861fdeb689351": "7dd0ab9825032b98ce5b9142dc78fa291d7836a8",
+  "479dd1079f724607033d2b69eea7d9e54dba9bcb": "624c808796218f30ec671b693e113949d2d5d124",
+  "4850c5905c25ec1014dc6451d8600bb5fa2181e4": "2ac6559970703adc6408d4f9c10c02c52b0b09db",
+  "48772475b9882b3d131d8e01afa5cb0c28a94de0": "23fdea7731c86ac589264e953fa30e5372256a4d",
+  "48e1257d9b07bf8d60c2f4cce57981d6a9b0add7": "22b0007fe5ec4594bbde4aa8797e294e96759e86",
+  "4b75e7f841090da751c621d07030ee5ebc7828bb": "ad6aefcd063c639aec7bcf573b94e9032686c17f",
+  "4bd977fdb629fc66b4f845db264accb62fc0123f": "9a0474f30c3767d267feefb30e15a250aa727fa8",
+  "56a9d98f586565bf927650a6fb3b0fe66b0d6554": "89e6ae5eeb2850d70b27641273058d3cd16aad96",
+  "573b78d6c38f8ce4892ac4cf448bfdc709579432": "2aa62c9d0941ebab374301636be7faa0e0683e0c",
+  "5a7ca1d430460f3782aa73ccaa11906faf6d7d60": "467d4adf0d0a2a5dad833a7c9ee8b44b3b1b8868",
+  "5d5c323b4befa0e624de674da25248959a36315b": "f00dd4937219543e87d69b70c92ad6bf5846e2c2",
+  "5f41b136c0a1d6de391c0461734d8cdbc79f26d1": "e75fcf09a81f44015be9c4728f34944ff4875832",
+  "6029c9b0ff9b8b2666bb599dee8d1e2b8287ef0c": "a48e45cd3b0da59c184a6a53946a4c5a3cc6f79f",
+  "67871f155a2c04feae714813c1d6d2bc69d57ba0": "36eb491dca58dffd10f6fa592937ce8c3f915116",
+  "6a9797e74e1b9399a5df90d1b4e812505f500e3d": "2241d7535937cd37acfd26e72ba269f503e2ea8b",
+  "6ae1199aa795702395f991659d2a3fc74296153f": "fa8c7bc7e784451fed309946e0f7843ba8ef89e7",
+  "6b086f1c5ea0ef7348f1c94a4828db115018ce06": "31824a61b128e919fd1ecfdeb64491d588a2ed93",
+  "709f4b8a84d926c87aa7a844595abe1e98bf24a6": "3bda9545a332086250b6b100d969f681056093cb",
+  "7528411a10c4884f78934599f1c14364ba559464": "91f859c0f6aae104f089ef58145da0e8b52d0413",
+  "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f": "170df30389319116a536a5ccabdf9c9547f49731",
+  "7bfc2fb6b51bc97d1799e4d09f78a66eaf647efe": "41d90180c442350007ed7b1273089ef4df59104c",
+  "7e255c618226ca4dedae971ead5617114dd2eae0": "73833cc1ad6f52cee100732afec8e73c99118cd7",
+  "806d50d897068c86df0fb7d412cd25f291351523": "ca3e8c5b1d4bae452bce9752b0bd60488bf5a22a",
+  "87a12d64e04abd67a45e028ebe3c8426aa38339f": "770db16b938c858757af5d39786fc796aa443333",
+  "88b1e268d84f77fe887d3040c2b78030dc7265ff": "df54787c972b3ad37ff60f5d36b8b53e550647c7",
+  "897bf3bdf3b7d87852e25770168d64acbe3d5bab": "56561345e76ce3f2acca6736ce9566f455a0f4fd",
+  "8ec31da3ca912f8d660bab3a40cd5768ac6177ba": "6a69ca09c44bf2d173bfaa45e26b48a5b456f9eb",
+  "974f584c9e970a05faf55d73d638259c16b51766": "4b9faf80ae45c94b8e37916b5ef726adbd249383",
+  "9c0a2e4e6c48422c2360ee3bf7a19445a3edc4ed": "ca69c3d63d009c1eef766c806320e345c04be1c1",
+  "9fcdf8ae6b083091fad483ce78e6e24e731991d5": "2d65d356eeac8402923081030566dbd1d2b70826",
+  "a0ada347a5a1ea6f846eb829c5cf4debea589a4f": "86cbf8410aa9b0492d890eef680d7808b1b137a3",
+  "a2beef7632c8d3a2773eb143b1d55843a4125b6c": "c2e57e4e96db9077c386c9013d8eee5dea366626",
+  "a2d1202bf8dbee09ae69a1f173c3aff83291e315": "edc3247ed107da8c60e2605517c4154f16d48afb",
+  "a6dfaa63017446c87785ab0d7c39298b91eadba0": "320fdff2ccccc1855ecee614f735b62c97a473ae",
+  "aa9f767fc58d2dcdff419edbce9cb97b963e5950": "8a6693b5e49bb58b2432204fb6590c9d994e85cc",
+  "b176541146b53dd486aa7b3e986782f2b4db6469": "39a50672327c4206ac4ceb9d044836d6c4a8781c",
+  "b5235b3a93adf8d6714d7bd166171b54a0368a33": "2eb578b15625d006f7316c34997556a01c3fdfc2",
+  "b57f61dbc4f10310ac80f51ae2121ca3229c7168": "0e8173b15d6fa43224cf22598a58c0cf1fee1559",
+  "b587fa8759caf9570a8288de23675fb01e905d88": "52e2abc2655c16ed2ff951a5f5d6461589e399d6",
+  "b813ef29ccc775713c928a254ee241725ba2a6db": "fdfef65c7e889544a132db87dc990f897481eafe",
+  "b84a8eacbea01a1fedf352b85e66256f5b4234b6": "de7e53eb1a439a57428441833fe6d3ec848f1d21",
+  "bdd59a805b6ec2c93c42a17bdcbe545a8fec0381": "efcb4521853c03f9b313c03313298f95002b2dee",
+  "c0f6823ebd8b318dbbb78656bec80dd8ccc20993": "9cfec0f1f9c24b743d2353e804ea5d994a6fdc6e",
+  "c39ddbc872bfb1d1b122f822297a1de7f217dc86": "9c99caf1db19e661c7a1d92fbfd183a77b9ab4ff",
+  "c6bc1f3f64f9cd4c24442c27b6e9934ff3eb5e95": "290681cdc9bef3830e92c35ba0a41268cc195e92",
+  "c9794cb2813a856542da095481a09a68bccacba9": "fd76d6dc532369ea6ba144088b496d847f258f0d",
+  "cf9bcf086f5c0c6a38403bd1e1255eaaa6d3fcdb": "a9d6e2d2096a83fc25bc692a74a46f0c328ff702",
+  "d189d573cc12593c2a8fda9b27c9eb32b1c8d4f6": "aaa7425ccf7e7b93dd36054cc86fbf0cd43b9efe",
+  "d3b2c5ea498bc34684017451f8634c70c4379ff3": "537c7a5b39dbea01f8578f3fe3aa1a8f3d8ec9b0",
+  "e3844a8f6ec0d5fa83a7a5dbf2a7a79a6a0cbdc6": "955a7a27e1052bf82085a76dfa44ecf8109cfb84",
+  "f363fa3f2e582576921410387f402fd065722127": "d43789d00a21b1909107f42a683fe50688f93cc2",
+  "f4682242a1d87a47ab721d4af2aefdc2e3207831": "5a1f7cf74635775e5171589899694aa06303f876",
+  "fabfedd7ca9e76e4abbda20523ebc9f6acf50842": "c3e6d240171e6fc7ada6372b2416e5dbd2f2b129",
+  "ffc34353d50039c04f3a6473ad5ab1a9a2f2db9d": "d935fa55d1b2d02e719d89cf23c02af3ec4b3832"
+ }
+}
