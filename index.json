@@ -1191,6 +1191,14 @@
    "png_blob": "2df3c44549b05fb65b7c783a5c7aa7548520b8d3",
    "psd_blob": "fe050f0d1161a78a5f912515d7ab98fa6d89f820",
    "state": "baked"
+  },
+  "zomoroko-mw5ps3mp-150a": {
+   "at": "2026-11-07T01:18:16Z",
+   "card": "Delta",
+   "path": "Auxiliary/Minions/Delta.psd",
+   "png_blob": "ca94e2c93573d2d7c98a257e12427cf37c7ab167",
+   "psd_blob": "9bc8b3842e96914d4117102e20b23867b0bb9628",
+   "state": "baked"
   }
  },
  "v": 1

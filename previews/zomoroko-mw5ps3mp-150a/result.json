@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5ps3mp-150a",
+ "card": "Delta",
+ "path": "Auxiliary/Minions/Delta.psd",
+ "png": "Auxiliary/Minions/Delta.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "9bc8b3842e96914d4117102e20b23867b0bb9628",
+  "png_blob": "ca94e2c93573d2d7c98a257e12427cf37c7ab167"
+ },
+ "edit": {
+  "name": "Delta",
+  "parts": {
+   "422": {
+    "field": "name",
+    "text": "Delta",
+    "was": "DELTA",
+    "sha": "54fffdf2",
+    "psd": "9bc8b384",
+    "layer": "Text/Stat Text and Name/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'DELTA' -> 'Delta'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "DELTA",
+   "new": "Delta"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.0,
+   "max": 0.0
+  }
+ },
+ "region": [
+  362,
+  48,
+  830,
+  184
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42323297326",
+ "took_s": 5.8,
+ "at": "2026-11-07T01:18:16Z",
+ "variant": null,
+ "parts": {
+  "422": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 168551,
+  "webp": 38042,
+  "before": 38504
+ },
+ "recompressed": false
+}
