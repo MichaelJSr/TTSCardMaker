@@ -6,7 +6,7 @@ import { esc, noted } from "./text.js";
 
 const STATE_KEY = "psd-details";                         // sessionStorage: {details: open?, <section>: open?, "font:<name>": open?}
 const STATS = [["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"]];
-const ROWS = { template: "template digit row", "two-row": "Top + Bottom rows", pixel: "drawn bars, no digit rows", other: "something else", none: "none" };
+const ROWS = { template: "template row", "two-row": "Top + Bottom rows", pixel: "drawn bars, no digit rows", other: "something else", none: "none" };
 const ICONS = { images: "image layers (Types/ names)", tokens: "icon-font tokens in the text", mixed: "image layers and tokens", none: "none" };
 const TREE_DEPTH = 12;                                   // the record stops at 8; never recurse without end
 const HEX = /^#[0-9a-f]{6}$/i;

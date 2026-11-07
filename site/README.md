@@ -53,7 +53,7 @@ text or image, links its commit when it is known), and the artwork sources when 
   fonts, for the session) shows the PSD's structure as the bot read it: fonts (each expandable to its layers; one that
   `MDW/Fonts` lacks is flagged "missing from MDW/Fonts", "not checked" when the bot had no font index), every text
   layer (text, font, size, colour, visible), layer effects, smart objects, canvas (size, mode, depth, ICC profile),
-  how the type icons are made (image layers or icon-font tokens), how each stat row is built (template digit row,
+  how the type icons are made (image layers or icon-font tokens), how each stat row is built (template row,
   Top + Bottom rows, drawn bars), status-word layers (FX layers and overlay words), the template check (Name and
   Ability layers, deviations), the parser's notes with the PSD-vs-edited values, and the layer tree (rendered when
   its section opens).
