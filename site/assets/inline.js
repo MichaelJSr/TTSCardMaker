@@ -8,12 +8,14 @@ import { esc } from "./text.js";
 import { starsHtml, paintStars, stepValue } from "./stars.js";
 import { typeVocab, mountPalette, rowHtml } from "./palette.js";
 import { rawOf, restorable, offerHtml, later, movedSince } from "./drafts.js";
-import { renameButton } from "./edit.js";
+import { renameButton, creaturesWith } from "./edit.js";
 import { straighten } from "./parts.js";
 import { artList, artLabel } from "./art.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 const SLIDERS = [...STATS, "stars"];                // a row of cells: click one, or arrows and Enter
+const creatureStat = f => /^(\d+):(hp|def|atk|spd)$/.exec(f);      // "2:def": creature 2's DEF row, on a bar per creature
+const isSlider = f => SLIDERS.includes(f) || !!creatureStat(f);
 // the artwork sources: one line each, under the note, edited as "art:<number>" (the list's art field staged whole)
 export const isArt = f => /^art:\d+$/.test(f);
 const artNo = f => +f.slice(4);
@@ -88,13 +90,15 @@ export function mountCard(modal, c, api = A) {
   mark(detail.querySelector("h2"), "name", `Double-click to rename · ${IMAGE}`);
   const abilityEl = detail.querySelector(":scope > div:nth-child(2) > .ability") || [...detail.querySelectorAll(":scope > div:nth-child(2) > p.muted")].find(p => p.textContent === "No ability text.");
   mark(abilityEl, "ability", `Click to edit · ${IMAGE}`);
-  const rows = c.creatures?.length > 1 ? [] : STATS.filter(k => c[k] != null);
+  const statRows = (x, f, who) => STATS.filter(k => x[k] != null).map(k => ({ f: f(k), v: x[k], label: `${who}${LABEL[k]}` }));
+  const rows = !(c.creatures?.length > 1) ? statRows(c, k => k, "")     // several: a row each on a bar per creature
+    : c.creatureBars ? c.creatures.flatMap((x, n) => statRows(x, k => `${n + 1}:${k}`, `Creature ${n + 1} `)) : [];
   detail.querySelectorAll(".statbars .segs").forEach((seg, i) => {
-    const k = rows[i], v = k && c[k];
-    if (!k) { seg.dataset.tip = "Use All fields"; return; }
-    sizeRow(seg, v); seg.setAttribute("role", "slider"); seg.tabIndex = 0; seg.dataset.inline = k;
+    if (!rows[i]) { seg.dataset.tip = "Use All fields"; return; }
+    const { f, v, label } = rows[i];
+    sizeRow(seg, v); seg.setAttribute("role", "slider"); seg.tabIndex = 0; seg.dataset.inline = f;
     seg.setAttribute("aria-valuemin", "0"); seg.setAttribute("aria-valuemax", String(STAT_TOP)); seg.setAttribute("aria-valuenow", String(v));
-    seg.setAttribute("aria-label", `${LABEL[k]} ${v}, arrows to change, Enter to save`); seg.dataset.tip = `Click a cell to set ${LABEL[k]} · ${IMAGE}`;
+    seg.setAttribute("aria-label", `${label} ${v}, arrows to change, Enter to save`); seg.dataset.tip = `Click a cell to set ${label} · ${IMAGE}`;
   });
   const chips = [...facts.querySelectorAll("a.fact")], hrefOf = a => a.getAttribute("href") || "";
   const chip = { series: chips.find(a => hrefOf(a).startsWith("#/cards?series=") && !hrefOf(a).includes("subseries=")),
@@ -203,7 +207,13 @@ function refresh(c, f, kbd) {                      // the dialog again (as the f
 }
 const paint = (row, v) => { if (row.classList.contains("star-pick")) { paintStars(row, v); return; }
   sizeRow(row, v); [...row.children].forEach((i, n) => i.classList.toggle("on", n < v)); row.setAttribute("aria-valuenow", String(v)); if (row.nextElementSibling?.classList.contains("num")) row.nextElementSibling.textContent = String(v); };
-function setStat(k, v, kbd) { if (!card) return; A.editor.stageField(card.id, k, v); refresh(card, k, kbd); }
+function setStat(f, v, kbd) {
+  if (!card) return;
+  const m = creatureStat(f);
+  if (m) A.editor.stageField(card.id, "creatures", creaturesWith(card.creatures, m[1] - 1, m[2], v, card.creatureBars?.shared));
+  else A.editor.stageField(card.id, f, v);
+  refresh(card, f, kbd);
+}
 function commitStat(kbd) {
   if (!prov) return;
   const { row, k, v0 } = prov, v = +row.getAttribute("aria-valuenow"); prov = null;
@@ -260,7 +270,7 @@ function onClick(e) {
     e.preventDefault(); e.stopPropagation(); el.outerHTML = starsHtml(0, starMax());
     const sp = A.modal.querySelector(".detail .star-pick"); if (sp) { sp.dataset.fresh = ""; sp.focus(); } return;   // fresh: nothing chosen puts "+ stars" back
   }
-  if (f === "name" || SLIDERS.includes(f)) return;                          // the name on double-click, rows by cell or key
+  if (f === "name" || isSlider(f)) return;                                  // the name on double-click, rows by cell or key
   if ((f === "ability" || f === "note" || isArt(f)) && e.target.closest("a, .badge, img")) return;   // links in the text still open (the card, the source)
   if (e.ctrlKey || e.metaKey || e.shiftKey) return;                          // a chip's link still opens in a new tab
   e.preventDefault(); e.stopPropagation();
@@ -292,7 +302,7 @@ function onKey(e) {
   const el = e.target.closest?.("[data-inline]");
   if (!el || !A.modal.contains(el)) return;
   const f = el.dataset.inline;
-  if (SLIDERS.includes(f) && !el.hasAttribute("data-empty")) { statKey(el, f, e); return; }
+  if (isSlider(f) && !el.hasAttribute("data-empty")) { statKey(el, f, e); return; }
   if ((e.key === "Enter" || (e.key === " " && f === "types")) && el.tagName !== "A" && el.tagName !== "BUTTON") { e.preventDefault(); e.stopPropagation(); if (f === "types") openTypes(el); else openText(el, f); }   // links and buttons click themselves; the type row is a button
 }
 function onFocusOut(e) {                          // Tab to another control keeps the focus in the dialog; a click doesn't

@@ -53,7 +53,7 @@ text or image, links its commit when it is known), and the artwork sources when 
   fonts, for the session) shows the PSD's structure as the bot read it: fonts (each expandable to its layers; one that
   `MDW/Fonts` lacks is flagged "missing from MDW/Fonts", "not checked" when the bot had no font index), every text
   layer (text, font, size, colour, visible), layer effects, smart objects, canvas (size, mode, depth, ICC profile),
-  how the type icons are made (image layers or icon-font tokens), how each stat row is built (template digit row,
+  how the type icons are made (image layers or icon-font tokens), how each stat row is built (template row, a bar per creature,
   Top + Bottom rows, drawn bars), status-word layers (FX layers and overlay words), the template check (Name and
   Ability layers, deviations), the parser's notes with the PSD-vs-edited values, and the layer tree (rendered when
   its section opens).
@@ -229,7 +229,7 @@ downloaded or looks truncated, or if many images fail.
 Anyone with write access to this repo can fix card data on the site: **Sign in** (top right) takes a GitHub token
 (classic, `public_repo` scope); signed in, the card browser is the editor. On a card page, click a stat cell to set that
 stat (the top lit cell steps it down, so 0 is reachable; a full row opens an empty one below, 10 opens 11-20, up to
-99; per-creature stats go through All fields), click
+99; per-creature stats go through All fields, but on a bar per creature each one has its rows), click
 the ability text to edit it in place (Ctrl/Cmd+Enter or a click elsewhere saves, Esc cancels; the card links in the text
 still work), double-click the name to rename, and click the series, subseries or author chip, or the note, to type a new
 value (series, subseries and author list the known names as you type, in the token picker's list, with their card
@@ -272,7 +272,8 @@ hidden, artwork sources: #1, #2, … added and removed in the form). An image fi
 is shown on the website and by the bot but never baked (a quiet "Website only" tag). **Also rename the card's files**
 (under a name edit) has the bake rename the PSD and PNGs to the new name; links to the old page redirect. Rulebook chapters have their own editor (Rulebook, above), published on its own. "Split into creatures" gives a
 card several stat lines (`creatures` in `Card Edits.json`; creature 1 is the card's own stats), each shown with its own
-bars. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
+bars. On the 2 and 3 creature templates' bars each creature's stats print on the card, and a shared HP bar moves every
+creature; on any other card the bake leaves the list website only. Admins are the repo owner plus the GitHub logins in `site/Website Admins.txt`; they can also ban, hide cards,
 rename people, edit the admin list and edit anyone's profile (all committed with the batch). Remove a card's entry from
 `Card Edits.json` to go back to the PSD.
 

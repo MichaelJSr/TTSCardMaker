@@ -28,8 +28,8 @@ export const MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
 // the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404
 // more than a day after the press means it never comes; entries go after 30 days
 export const SHOW_MS = 6 * 864e5, LATE_MS = 864e5, DROP_MS = 30 * 864e5;
-export const PSD_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability"];   // printed on the card (edit.js FROM "PSD")
-export const ENTRY_FIELDS = [...PSD_FIELDS, "creatures", "parts"];                         // what the edit carries (creatures gates a stat bake; parts: per layer)
+export const PSD_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures"];   // printed on the card (edit.js FROM "PSD")
+export const ENTRY_FIELDS = [...PSD_FIELDS, "parts"];                                      // what the edit carries (parts: per layer)
 export const DONE = ["baked", "redundant", "refused", "error"];                            // result.json states
 const REQUEST_RE = /^[A-Za-z0-9-]{8,64}$/;            // card-preview.yml's check
 const STATS = ["hp", "def", "atk", "spd"];

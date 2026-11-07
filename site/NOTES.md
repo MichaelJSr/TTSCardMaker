@@ -1472,3 +1472,9 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 - Creatures by series (owner 10-31): a Series / Subseries toggle (series first; app.js action `series-mode`, kept for the
   session), each list whole in a box that scrolls (style.css `.scroll-box`), the table following the toggle. No other
   chart folds or scrolls (a folding pass over every tall chart was tried and reverted the same day).
+
+## Creatures on the card (2026-11-07)
+
+- `creatures` is a PSD field. The bake prints it on a bar per creature (`Darks > Creature n`, the 2 and 3 creature templates); any other card's list goes to `_site` at the next bake, like a stat past its rows.
+- The record's `creature_bars` ({count, shared}) reaches cards.json as `creatureBars`. Inline, such a card gets a slider per creature and stat (`data-inline` "2:def", inline.js `creatureStat`, edit.js `creaturesWith`); in All fields, a shared stat's cells move together. Other several-creature cards keep "Use All fields".
+- The mock-up draws no bars on these cards ("creatures" rows, as "two-row"): Rendered shows them.
