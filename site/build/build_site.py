@@ -3708,14 +3708,15 @@ def tile_html(c, eager, icons):
             f'{"".join(icon(t) for t in (c.get("types") or [])[:3])}</div></div></a>')
 
 
-def toolbar_html(count, created):
-    """grid.js toolbarHtml for the default grid: Name, Grid, M"""
+def toolbar_html(count, created, needs=0):
+    """grid.js toolbarHtml for the default grid: Name, Grid, M; needs: the flagged cards"""
     opts = "".join(f'<option value="{v}"{f" data-dir={json.dumps(d[0])}" if d else ""}{" selected" if v == "name" and not d else ""}>{label}</option>'
                    for v, label, *d in SORTS if v != "created" or created)
     seg = lambda key, pairs, on, extra="": "".join(f'<button type="button" class="{"on" if v == on else ""}" data-action="set-pref" data-key="{key}" '
                                                    f'data-value="{v}"{extra}>{label}</button>' for v, label in pairs)
+    link = f'<a class="mobile-only needs-link" href="#/cards?flags=flagged">Needs handling ({needs})</a>' if needs else ""
     return ('<div class="toolbar">\n'
-            f'        <span class="result-count">{count:,} card{"" if count == 1 else "s"}</span>\n'
+            f'        <span class="result-count">{count:,} card{"" if count == 1 else "s"}</span>{link}\n'
             '        <button type="button" class="mobile-only" data-action="toggle-filters">Filters</button>\n'
             f'        <label class="muted">Sort <select data-action="select-param" data-key="sort">{opts}</select></label>\n'
             '        <button type="button" class="ghost icon" data-action="flip-dir" title="Reverse order" aria-label="Reverse order">⇅</button>\n'
@@ -3752,7 +3753,8 @@ def first_screen(cards, icons):
         raise SystemExit(f"error: the first screen's check didn't run: {getattr(e, 'stderr', '') or e}")
     by_id = {c["id"]: c for c in cards}
     tiles = [tile_html(by_id[i], k < FIRST_EAGER, icons) for k, i in enumerate(got["ids"])]
-    toolbar = toolbar_html(sum(1 for c in cards if not c.get("hidden")), any(c.get("created") for c in cards))
+    shown = [c for c in cards if not c.get("hidden")]
+    toolbar = toolbar_html(len(shown), any(c.get("created") for c in cards), sum(1 for c in shown if c.get("flags")))
     for what, mine, theirs in [*((f"tile {i}", t, j) for i, t, j in zip(got["ids"], tiles, got["tiles"])), ("toolbar", toolbar, got["toolbar"])]:
         if mine != theirs:
             at = next((k for k, (a, b) in enumerate(zip(mine, theirs)) if a != b), min(len(mine), len(theirs)))
