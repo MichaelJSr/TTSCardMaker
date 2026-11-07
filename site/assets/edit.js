@@ -237,6 +237,7 @@ export function editsFile(text, ops, at, by, path = "site/Card Edits.json", onCo
     const { parts, ...set } = op.set, unsetParts = op.unset.filter(f => f.startsWith(P.PART)).map(f => f.slice(P.PART.length));
     for (const f of op.unset) if (!f.startsWith(P.PART)) delete cur[f];
     Object.assign(cur, set);
+    if (cur.flags === null) delete cur.flags;      // cleared before the site rebuilt: no null in the file
     if ("art" in set || op.unset.includes("art")) delete cur.ability_art;   // the sources hold it now (art.js artList)
     if (parts || unsetParts.length) { const m = P.mergeParts(cur.parts, parts, unsetParts); if (m) cur.parts = m; else delete cur.parts; }   // per layer
     const site = new Set(Array.isArray(cur[SITE]) ? cur[SITE] : []);       // website-only fields: ticked, unticked; one without a value goes
