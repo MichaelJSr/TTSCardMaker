@@ -1271,6 +1271,14 @@
    "png_blob": "eb2530dcce9791ee7485ef834fcbdbb8a6dd033d",
    "psd_blob": "be6ae0684cf2ed6f517822960917a4c637d2f021",
    "state": "baked"
+  },
+  "zomoroko-mw5qpm8x-1t07": {
+   "at": "2026-11-07T01:44:17Z",
+   "card": "Poorly Drawn Cabbage",
+   "path": "Auxiliary/Items/Poorly_Drawn_Cabbage.psd",
+   "png_blob": "c5d031ee67efc15ef03a29eef81bc130acdd70cc",
+   "psd_blob": "240fe0b3e78896db053966dcbdcbaddde1b96577",
+   "state": "baked"
   }
  },
  "v": 1
