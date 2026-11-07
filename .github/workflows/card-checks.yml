@@ -55,6 +55,8 @@ jobs:
       # main's head: its tree, no file contents but the small files the checks read
       - &checkout-main
         uses: actions/checkout@v7
+        env:
+          GIT_NO_LAZY_FETCH: ""
         with:
           ref: main
           fetch-depth: 1
