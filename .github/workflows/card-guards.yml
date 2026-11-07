@@ -207,8 +207,10 @@ jobs:
             echo "ok=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # A push's PSD and PNG blobs (both sides) in one fetch, as git's own lazy fetch asks: the checks and the guards read
-      # the clone first, so ~3 REST reads per card become none. One that fails or times out leaves them to the REST reads.
+      # A push's PSD and PNG blobs (both sides), as git's own lazy fetch asks: the checks and the guards read the clone
+      # first, so ~3 REST reads per card become none. One that fails or times out leaves them to the REST reads.
+      # 8 to a fetch, 4 at a time, in diff order: GitHub's delta search is what takes the time, and small packs barely
+      # need one; a card's two sides stay together, so the deltas still shrink the transfer.
       - name: Pushed blobs
         if: github.event_name == 'push'
         continue-on-error: true
@@ -221,10 +223,10 @@ jobs:
           [ -n "$BEFORE" ] || exit 0
           list=$RUNNER_TEMP/blobs
           GIT_NO_LAZY_FETCH=1 git diff-tree -r --no-renames "$BEFORE" "$GITHUB_SHA" -- '*.psd' '*.PSD' '*.png' '*.PNG' \
-            | awk '{print $3; print $4}' | grep -v '^0*$' | sort -u > "$list" || true
+            | awk '{print $3; print $4}' | grep -v '^0*$' | awk '!seen[$0]++' > "$list" || true
           [ -s "$list" ] || { echo "no card blobs pushed"; exit 0; }
-          GIT_NO_LAZY_FETCH=1 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags --no-write-fetch-head \
-            --recurse-submodules=no --filter=blob:none --stdin origin < "$list"
+          GIT_NO_LAZY_FETCH=1 xargs -P 4 -n 8 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags --no-write-fetch-head \
+            --recurse-submodules=no --filter=blob:none origin < "$list"
           have=$(GIT_NO_LAZY_FETCH=1 git cat-file --batch-check < "$list" | grep -vc ' missing$' || true)
           echo "$have of $(wc -l < "$list") pushed blobs in the clone"
           [ "$have" -eq "$(wc -l < "$list")" ] || echo "::warning::$have of $(wc -l < "$list") pushed blobs fetched: the rest by REST"
