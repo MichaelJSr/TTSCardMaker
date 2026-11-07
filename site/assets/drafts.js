@@ -2,7 +2,7 @@
 // back when the card opens again. NOTES.md §21.
 import { esc } from "./text.js";
 import { artList, artLabel } from "./art.js";
-import { CARD_FLAGS, hasFlag } from "./flags.js";
+import { CARD_FLAGS, ownFlag } from "./flags.js";
 
 export const DRAFT_KEY = "edit-drafts";
 export const DELAY = 400;                          // ms after the last key
@@ -29,7 +29,7 @@ export function rawOf(c, f, dupKey = "") {
   if (f === "rename") return !!c.renameFiles;           // edit.js renameRow
   if (f === "art") return artList(c);                   // the form's list
   if (/^art:\d+$/.test(f)) return text(artList(c)[+f.slice(4) - 1] ?? "");   // one line, inline (inline.js isArt)
-  if (f.startsWith("flag-")) return hasFlag(c, f.slice(5));                  // the Edit dialog's tick
+  if (f.startsWith("flag-")) return ownFlag(c, f.slice(5));                  // the Edit dialog's tick
   if (f.startsWith("flag:")) return text(c.flags?.[f.slice(5)]);             // its reason (inline.js isFlag)
   return text(c[f]);
 }

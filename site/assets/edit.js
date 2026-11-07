@@ -12,7 +12,7 @@ import { soon } from "./fresh.js";
 import * as P from "./parts.js";
 import { date, dayOf, pictureNumber } from "./history.js";
 import { artList, artError, artLabel } from "./art.js";
-import { CARD_FLAGS, cleanFlags, flagError, flagsChange, flagsText, hasFlag } from "./flags.js";
+import { CARD_FLAGS, cleanFlags, flagError, flagsChange, flagsText, ownFlag } from "./flags.js";
 
 const API = "https://api.github.com";
 // last: the login a password last signed in
@@ -890,7 +890,7 @@ export function createEditor(app) {
           <p class="muted">Adds your dated rating; empty adds none.</p>
         </fieldset>`}
         <fieldset id="ef-flags"><legend>Flags</legend>
-          ${CARD_FLAGS.map(([k, l]) => `<div class="erow" data-row="flag-${k}"><label for="ef-flag-${k}">${esc(l)}</label><div class="ein"><input id="ef-flag-${k}" type="checkbox"${hasFlag(c, k) ? " checked" : ""}>
+          ${CARD_FLAGS.map(([k, l]) => `<div class="erow" data-row="flag-${k}"><label for="ef-flag-${k}">${esc(l)}</label><div class="ein"><input id="ef-flag-${k}" type="checkbox"${ownFlag(c, k) ? " checked" : ""}>
             <input id="ef-flag:${k}" data-flag-why="${k}" value="${esc(c.flags?.[k] ?? "")}" placeholder="reason (optional)" aria-label="${esc(l)}: reason"></div></div>`).join("")}
         </fieldset>
         <fieldset><legend>Checks</legend>
@@ -954,7 +954,7 @@ export function createEditor(app) {
       art: () => { const list = artList({ art: [...document.querySelectorAll("#ef-art [data-art-src]")].map(i => i.value) }); error ||= artError(list); return list.length ? list : null; },
       aliases: () => f("aliases").value.split(",").map(s => s.trim()).filter(Boolean),
       dup_of: () => { const v = f("dup_of").value.trim(); return v ? (byKey(v)?.key || v) : ""; },
-      flags: () => { const v = cleanFlags(Object.fromEntries(CARD_FLAGS.filter(([k]) => f(`flag-${k}`).checked).map(([k]) => [k, f(`flag:${k}`).value]))); error ||= flagError(v); return v; },
+      flags: () => { const v = cleanFlags({ ...Object.fromEntries(CARD_FLAGS.filter(([k]) => f(`flag-${k}`).checked).map(([k]) => [k, f(`flag:${k}`).value])), psd: c.blob }); error ||= flagError(v); return flagsChange(c.flags, v) ? v : c.flags ?? null; },   // unchanged: its PSD stays the one it was set on
       hidden: () => f("hidden").checked, allow_high_stats: () => f("allow_high_stats").checked, problems_ok: () => f("problems_ok").checked,
     };
     const want = Object.fromEntries(Object.entries(all).filter(([k]) => f(k === "types" ? "types" : k)).map(([k, get]) => [k, get()]));

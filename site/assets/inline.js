@@ -11,7 +11,7 @@ import { rawOf, restorable, offerHtml, later, movedSince } from "./drafts.js";
 import { renameButton } from "./edit.js";
 import { straighten } from "./parts.js";
 import { artList, artLabel } from "./art.js";
-import { CARD_FLAGS, flagLabel, hasFlag, withFlag } from "./flags.js";
+import { CARD_FLAGS, flagLabel, ownFlag, withFlag } from "./flags.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 const SLIDERS = [...STATS, "stars"];                // a row of cells: click one, or arrows and Enter
@@ -124,7 +124,7 @@ export function mountCard(modal, c, api = A) {
     if (!el.textContent) { el.toggleAttribute("data-empty", true); el.textContent = "+ reason"; }
     el.insertAdjacentHTML("afterend", `<button type="button" class="ghost flag-clear" data-flag-clear="${k}" aria-label="${esc(`Clear ${flagLabel(k)}`)}" title="Clear this flag">✕</button>`);
   }
-  for (const [k, l] of CARD_FLAGS) if (!hasFlag(c, k)) facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="flag:${k}" data-empty aria-label="${esc(`Flag: ${l}`)}">+ ${esc(l.toLowerCase())}</button>`);
+  for (const [k, l] of CARD_FLAGS) if (!ownFlag(c, k)) facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="flag:${k}" data-empty aria-label="${esc(`Flag: ${l}`)}">+ ${esc(l.toLowerCase())}</button>`);
   const starChip = chips.find(a => hrefOf(a).startsWith("#/cards?stars="));      // stars: a slider in its place
   if (c.stars > starMax()) { if (starChip) starChip.dataset.tip = "Use All fields"; }
   else if (starChip) starChip.outerHTML = starsHtml(c.stars, starMax());
@@ -196,7 +196,7 @@ function commit(kbd) {                            // kbd: from the keyboard, so 
   cur = null;
   const staged = f === "author" ? A.editor.stageAuthor(c.id, next)
     : isArt(f) ? A.editor.stageField(c.id, "art", withSource(artList(c), artNo(f), next))
-    : isFlag(f) ? A.editor.stageField(c.id, "flags", withFlag(c.flags, flagKey(f), next)) : A.editor.stageField(c.id, f, next);
+    : isFlag(f) ? A.editor.stageField(c.id, "flags", withFlag(c.flags, flagKey(f), next, c.blob)) : A.editor.stageField(c.id, f, next);
   if (!staged) {   // refused, with a toast (a name too long):
     if (was.host.isConnected) cur = was;           // the input and its text stay, as in the filter bar
     return false;
@@ -261,7 +261,7 @@ function onClick(e) {
   const answerBtn = e.target.closest(".detail .draft-offer [data-draft]");
   if (answerBtn) { e.preventDefault(); e.stopPropagation(); answer(answerBtn.dataset.draft === "restore"); return; }
   const clear = e.target.closest("[data-flag-clear]");
-  if (clear && card) { e.preventDefault(); e.stopPropagation(); A.editor.stageField(card.id, "flags", withFlag(card.flags, clear.dataset.flagClear, null)); refresh(card, "", false); return; }
+  if (clear && card) { e.preventDefault(); e.stopPropagation(); A.editor.stageField(card.id, "flags", withFlag(card.flags, clear.dataset.flagClear, null, card.blob)); refresh(card, "", false); return; }
   const cell = e.target.closest(".segs[data-inline] > i, .star-pick > i");
   if (cell) {                                                                // relative to the saved value, not a keyboard change not yet saved
     e.stopPropagation(); const row = cell.parentElement, v = prov?.row === row ? prov.v0 : +row.getAttribute("aria-valuenow"); prov = null;
@@ -276,7 +276,7 @@ function onClick(e) {
   }
   if (isFlag(f) && el.hasAttribute("data-empty") && el.tagName === "BUTTON") {  // "+ needs doing by hand": flagged at once, its reason open
     e.preventDefault(); e.stopPropagation();
-    if (A.editor.stageField(card.id, "flags", withFlag(card.flags, flagKey(f), ""))) { refresh(card, f, false); const why = spot(f); if (why) open(why, f); }
+    if (A.editor.stageField(card.id, "flags", withFlag(card.flags, flagKey(f), "", card.blob))) { refresh(card, f, false); const why = spot(f); if (why) open(why, f); }
     return;
   }
   if (f === "name" || SLIDERS.includes(f)) return;                          // the name on double-click, rows by cell or key

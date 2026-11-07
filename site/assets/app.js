@@ -526,6 +526,7 @@ function renderCards(r) {
   for (const f of [...fontIn, ...fontOut]) if (!S.fontKept.includes(f)) S.fontKept.push(f);   // a font off stays listed (owner 10-26), not in the address
   const fontRemoves = (k, v) => { const q = new URLSearchParams(p); q.delete("xfont"); for (const x of fontOut) if (x !== v) q.append("xfont", x); return Math.max(0, filterCards(q).length - list.length); };
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
+  const handling = csv(p, "flags").some(f => HANDLING.some(([k]) => k === f));   // Needs handling: a list with each card's notes
   const active = [];
   if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
   for (const v of cfIn) active.push(["cf", v, v, false, cfSave(v)]);
@@ -589,13 +590,14 @@ function renderCards(r) {
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v, x, more = ""]) => `<button type="button" class="chip${x ? " x" : ""}" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>${more}`).join("")}</div>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
       ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
+        : handling ? needsHtml(list)
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
     </section></div>`;
   const filters = $(".browse .filters", view), filtersTop = filters?.scrollTop || 0;   // a click there redraws it: keep its place
   const grid = keepGrid(browse) || (view.innerHTML = browse, $(GRID, view));
   if (filtersTop && $(".browse .filters", view) !== filters) $(".browse .filters", view).scrollTop = filtersTop;
   if (grid) fillGrid(grid, list, { css: (G.TILE_SIZES[size] || G.TILE_SIZES.m)[1], win });
-  else if (list.length && view_ === "table") fillTable($(".browse table.data tbody", view));
+  else if (list.length && view_ === "table" && !handling) fillTable($(".browse table.data tbody", view));
   if (editing()) inline.mountGrid(view, p);
   if (editing()) previews.mountTiles(view);
 }
@@ -791,6 +793,9 @@ function fillTable(tbody) {
   };
   if (rest.length) setTimeout(step);
 }
+// the Needs handling view: a list to scan, each card's flags and notes beside it
+const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}
+  <div><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${flagsHtml(c)}</div></li>`).join("")}</ul>`;
 const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>

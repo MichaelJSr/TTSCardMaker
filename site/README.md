@@ -227,12 +227,18 @@ downloaded or looks truncated, or if many images fail.
 
 ## Flags
 
-A card can carry two flags, each with an optional reason: **Needs doing by hand** and **Special stat bars**. They replace
-the problem cards CSV. The card page shows them under the name; **Needs handling** at the top of the Cards filters lists
-them (All, or one flag; `flags=flagged`, `flags=hand`, `flags=bars`, excluded with `xflags=`; on a phone a link in the
-toolbar too); search `flag:hand`, `flag:bars`, `flag:any`. Any editor sets, clears and words them: `+ needs doing by
-hand` on the card page, click the reason, ✕ to clear, or Flags in All fields. They go through the batch and Publish,
-live in `site/Card Edits.json` (`"flags": {"hand": "reason", "bars": ""}`) and are never baked.
+A card can carry two flags, each with a note: **Needs doing by hand** and **Special stat bars**. They replace the problem
+cards CSV, and they are automatic: the bot's checks (AutoCroissant `commands/card_checks.py`, the Card checks workflow) set
+and clear them, each with a short note on what the issue is. `hand`: the picture says other than the data, old-style bars,
+a website edit that cannot bake. `bars`: bars that do not read like the template. The checks read only PSDs without a
+result, so a fixed card clears on its next push; a whole-tree pass is a dispatch of Card checks with `all`. Nothing is
+told to Discord or a commit, and nothing is blocked. The card page shows the notes under the name; **Needs handling** at
+the top of the Cards filters opens a list of the cards with their notes (All, or one flag; `flags=flagged`, `flags=hand`,
+`flags=bars`, excluded with `xflags=`; on a phone a link in the toolbar too); search `flag:hand`, `flag:bars`, `flag:any`.
+
+Any editor can add one by hand too: `+ needs doing by hand` on the card page, click the reason, ✕ to clear, or Flags in
+All fields. Those go through the batch and Publish, live in `site/Card Edits.json` (`"flags": {"hand": "reason", "bars": "",
+"psd": "1a2b3c4d"}`, the PSD blob they were set on), are never baked, and go once the PSD changes and the checks are clean.
 
 ## Editing
 
