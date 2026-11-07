@@ -739,10 +739,10 @@ ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0;
 @media (pointer: coarse) { .tok-picker li { min-height: 46px; } }
 .tok-status, .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
-.edit-summary { min-height: 1.4em; margin: 4px 0 8px; }
+.edit-summary { min-height: 1.4em; margin: 4px 0 8px; overflow-wrap: anywhere; }
 .wide { width: 100%; display: block; margin: 4px 0 8px; }
 .people .erow { grid-template-columns: 160px 1fr; }
-.review-item { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.review-item { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
 .review-item ul { margin: 4px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 14px; }
 /* the batch bar: one line (the sentences ellipsised) or, open, a list with a revert per line */
 .edit-bar { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 40; display: flex; flex-direction: column; gap: 2px;
