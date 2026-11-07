@@ -7,9 +7,9 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-07T23:05:08Z",
- "card_commit": "52d8c0ec560006b9983f367722ba7a6ef27b9564",
- "card_commit_at": 1794092426.0,
+ "built_at": "2026-11-07T23:42:36Z",
+ "card_commit": "ef63bc4396d1629cb662b8a553631a4dd6c67c98",
+ "card_commit_at": 1794094342.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 98,
@@ -23,16 +23,16 @@
  },
  "files": {
   "old_stats.json": "06bcdd4bcfde3b16e85e81c5f6f7df28c9024565536619176fd6ee114cd69c2c",
-  "psd_details.json": "ce528c956fa80b16cb3b1a35c521bfafbb8040cb474d7fcc7685f36c1230168d",
+  "psd_details.json": "261a39a4897e71ba63c41b588ebde60fb6d950789969a087a58491c2e35befa8",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "a0935b9de6006f13e4edd47657e34aa6269bff569e6bb6a9bf4f974824709826"
+  "stats.json": "49f35154e79bd0422b06429c4ee3d179414210542f6747b230ad73f209c3db42"
  },
  "gates": {},
  "inputs": {
   "authors_blob": "86fe200df28b110de8fe0dab2b3e98208a0ffc91",
   "created_blob": "b6f027d7726fe9ef21243d12e7c138d21880b8ac",
   "decks_blob": "e027cb226a8bf3bc04cb04000de92640367ae2ad",
-  "edits_blob": "e8f69d44b6fc192afe67ba297235b42d9f915653",
+  "edits_blob": "6ad40d8a0dcbcb3c7a922b45d08554b182150e2d",
   "fonts_tree": "72dc22fe852c4fb886c755e3a08d078c9be33080",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "57b028f86b5a52598b4cf606bb53b0c16ae426c7"
@@ -44,16 +44,8 @@
   "repin": [],
   "stale": []
  },
- "problems": [
-  {
-   "card": "Computer Virus",
-   "notes": [
-    "SEVERAL CREATURES: check each one's stats on the website"
-   ],
-   "path": "Creatures/Kirby/3 Stars/Computer_Virus.psd"
-  }
- ],
+ "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42423524359",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42426381687",
  "schema": 1
 }
