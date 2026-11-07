@@ -650,6 +650,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ github.event_name == 'push' && github.sha || '' }}
           FIXES: Fixes to land        # card-guards.yml's check-job step
+          DECIDED: Decided            # its check-job step after Fixes to land
           FOLLOW: Follow up           # card-guards.yml's post-job step that dispatches Card sync
         run: |
           q="repos/$GITHUB_REPOSITORY/actions/workflows/card-guards.yml/runs?event=push&per_page=30"
@@ -661,13 +662,16 @@ jobs:
           while read -r id status; do
             [ -n "$id" ] || continue
             if [ -z "$SHA" ] && [ "$status" = completed ]; then continue; fi     # another push's: unfinished only
-            if [ -n "$SHA" ]; then      # this push's: its check job's last step (Fixes to land) decides; wait for it, 11 min at most
-              for _ in $(seq 60); do
+            if [ -n "$SHA" ]; then      # this push's: its check job's Decided step (or its end) settles Fixes to land; 12 min at most
+              for k in $(seq 200); do
                 [ "$status" = completed ] && break
-                done_=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq '[.jobs[] | select(.name == "check" and .status == "completed")] | length') || done_=0
+                done_=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[] | select(.name == \"check\" and (.status == \"completed\"
+                  or any(.steps[]?; .name == \"$DECIDED\" and .status == \"completed\")))] | length") || done_=0
                 [ "${done_:-0}" -gt 0 ] && break
-                sleep 10
-                status=$(gh api "$q" --jq ".workflow_runs[] | select(.id == $id) | .status") || status=""
+                sleep 3
+                if [ $((k % 5)) = 0 ]; then       # the run, every 15 s: ended with no check job?
+                  status=$(gh api "$q" --jq ".workflow_runs[] | select(.id == $id) | .status") || status=""
+                fi
               done
             fi
             hold=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[].steps // [] | .[]] as \$s
@@ -690,7 +694,7 @@ jobs:
     needs: timer
     if: ${{ !cancelled() && github.event_name == 'push' && needs.timer.result != 'skipped' && !needs.timer.outputs.other && !needs.timer.outputs.guards }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15    # this push's guards' check (11 min at most), then the step
+    timeout-minutes: 15    # this push's guards' check (12 min at most), then the step
     defaults:
       run:
         shell: bash

@@ -318,6 +318,33 @@ jobs:
           [ "$ALL" = "true" ] && args+=(--whole-tree)
           python -m commands.card_guards check "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
+      # What the post job needs: whether there is anything to land or tell (none: no wait, no post job), and the plan with
+      # its files (the artifact). summary.json's told, writes and card errors. fixes: a push's writes to land (on).
+      - name: Plan for the post job
+        id: plan
+        if: always() && steps.check.outcome == 'success'
+        shell: bash
+        run: |
+          jq -e --arg mode "$MODE" '.told + (if $mode == "on" then .writes else 0 end) > 0' "$OUT/summary.json" > /dev/null \
+            && echo "land=true" >> "$GITHUB_OUTPUT"
+          if [ "$GITHUB_EVENT_NAME" = push ] && [ "$MODE" = on ] && jq -e '.writes > 0' "$OUT/summary.json" > /dev/null; then
+            echo "fixes=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "card_errors=$(jq '.card_errors // 0' "$OUT/summary.json")" >> "$GITHUB_OUTPUT"
+
+      # The mark Card sync reads (its step "Guards' fixes", by this name): this push's main lane waits for the post job,
+      # whose Follow up then starts the one main lane (landed or not).
+      - name: Fixes to land
+        if: always() && steps.plan.outputs.fixes == 'true'
+        shell: bash
+        run: echo "This push's fixes land in the post job; Follow up then starts Card sync's main lane."
+
+      # The verdict is in: Card sync's wait ends here (by this name), not at the job's end. Keep it after Fixes to land.
+      - name: Decided
+        if: always()
+        shell: bash
+        run: "true"
+
       # The report as a comment on the pushed commit, when it says more than "nothing to do" (summary.json's "comment":
       # told, written, a card's error, or comment-only lines such as R10). A re-run edits the oldest guards comment, and
       # once any of them carries the TOLD mark it does not post again. The lookup is tried 3 times; a re-run or a dispatch
@@ -369,20 +396,6 @@ jobs:
             echo "id=$id" >> "$GITHUB_OUTPUT"
           fi
 
-      # What the post job needs: whether there is anything to land or tell (none: no wait, no post job), and the plan with
-      # its files (the artifact). summary.json's told, writes and card errors. fixes: a push's writes to land (on).
-      - name: Plan for the post job
-        id: plan
-        if: always() && steps.check.outcome == 'success'
-        shell: bash
-        run: |
-          jq -e --arg mode "$MODE" '.told + (if $mode == "on" then .writes else 0 end) > 0' "$OUT/summary.json" > /dev/null \
-            && echo "land=true" >> "$GITHUB_OUTPUT"
-          if [ "$GITHUB_EVENT_NAME" = push ] && [ "$MODE" = on ] && jq -e '.writes > 0' "$OUT/summary.json" > /dev/null; then
-            echo "fixes=true" >> "$GITHUB_OUTPUT"
-          fi
-          echo "card_errors=$(jq '.card_errors // 0' "$OUT/summary.json")" >> "$GITHUB_OUTPUT"
-
       # overwrite: a re-run replaces its earlier attempt's (one name per run); the post job adds what Land settled
       - uses: actions/upload-artifact@v7
         if: always() && env.MODE != 'off'
@@ -391,13 +404,6 @@ jobs:
           path: ${{ runner.temp }}/guards
           if-no-files-found: ignore
           overwrite: true
-
-      # The mark Card sync reads (its step "Guards' fixes", by this name): this push's main lane waits for the post job,
-      # whose Follow up then starts the one main lane (landed or not).
-      - name: Fixes to land
-        if: always() && steps.plan.outputs.fixes == 'true'   # a failed Comment step too: Plan and Follow up run anyway
-        shell: bash
-        run: echo "This push's fixes land in the post job; Follow up then starts Card sync's main lane."
 
   # A push's card check and font check, beside `check`: Card sync's Quiet window and the post job wait for that one alone.
   # Never a gate, whatever CARD_GUARDS says. `check` saves the font cache; finish's alert reads this job's result too.
