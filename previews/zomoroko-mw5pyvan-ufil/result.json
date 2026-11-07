@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5pyvan-ufil",
+ "card": "Grimora",
+ "path": "Creatures/Other/3 Stars/Grimora.psd",
+ "png": "Creatures/Other/3 Stars/Grimora.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "95ff960b92d9a767ab0430df7ccf490e75e7c192",
+  "png_blob": "f66c8634fb23d9a528c273def49bc7a4c03be675"
+ },
+ "edit": {
+  "name": "Grimora",
+  "parts": {
+   "422": {
+    "field": "name",
+    "text": "Grimora",
+    "was": "GRIMORA",
+    "sha": "f653fdf7",
+    "psd": "95ff960b",
+    "layer": "Text/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'GRIMORA' -> 'Grimora'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "GRIMORA",
+   "new": "Grimora"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.035,
+   "max": 3.0
+  }
+ },
+ "region": [
+  217,
+  169,
+  965,
+  306
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42323790972",
+ "took_s": 4.4,
+ "at": "2026-11-07T01:23:32Z",
+ "variant": null,
+ "parts": {
+  "422": "baked"
+ },
+ "size": [
+  1200,
+  2400
+ ],
+ "webp_size": [
+  720,
+  1440
+ ],
+ "bytes": {
+  "png": 1348666,
+  "webp": 45610,
+  "before": 45856
+ },
+ "recompressed": false
+}
