@@ -47,7 +47,7 @@ export function renameTick(op, b, ticked) {
   return op;
 }
 // an entry's website-only fields (build_site.py SITE_KEY, the bot's card_edits.SITE): differ from the card image on purpose, never baked
-export const SITE = "_site", SITE_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability"];
+export const SITE = "_site", SITE_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures"];
 const SITE_LABEL = "Website only (don't change the card image)";
 /** The website-only fields after an op's ticks (op.site: {field: true | false}) over the published ones. */
 export function siteAfter(op, b = {}) {
@@ -71,9 +71,9 @@ const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 export const sameField = (f, a, b) => (f === "types" && Array.isArray(a) && Array.isArray(b) ? same([...a].sort(), [...b].sort()) : same(a, b));
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
 // where a field's unedited value comes from: the PSD (the set also in build_site.py PSD_FIELDS, app.js FIELD_LABEL, the bot's
-// CardEdits.KIND and psd_edit STAT_FIELDS/TEXT_FIELDS/NOT_YET), the card's folder, or nowhere (a database-only default; creatures too)
+// CardEdits.KIND and psd_edit STAT_FIELDS/TEXT_FIELDS/NOT_YET), the card's folder, or nowhere (a database-only default)
 const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", atk: "PSD", spd: "PSD", ability: "PSD", parts: "PSD",
-  type: "folder", subtype: "folder", series: "folder" };
+  creatures: "PSD", type: "folder", subtype: "folder", series: "folder" };
 const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
   : typeof v === "boolean" ? (v ? "yes" : "no") : typeof v === "object" ? flagsText(v) : String(v));
 const clip = s => (s.length > 48 ? `${s.slice(0, 45).trimEnd()}…` : s);
@@ -90,6 +90,8 @@ export function value(c, f, byId) {
 /** What the PSD (or folder) says: the pre-edit value when the field was edited, else the value itself. */
 export const psdValue = (b, f, byId) => tidy(f, b.edited?.includes(f) ? (f === "aliases" ? [] : b.orig?.[f]) : value(b, f, byId));
 export const isPsd = f => FROM[f] === "PSD";
+/** The creatures list with creature n's (0-based) stat k at v; a stat on a shared bar moves every creature (the bot's set_creatures). */
+export const creaturesWith = (list, n, k, v, shared = []) => list.map((x, i) => (i === n || shared.includes(k) ? { ...x, [k]: v } : x));
 export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && !Object.keys(op.site || {}).length && op.author === undefined && !op.ban && !op.rate && op.rename === undefined;
 
 // ---- single-field ops (inline editing; the same rule readForm applies to the whole form)
@@ -855,7 +857,7 @@ export function createEditor(app) {
         <fieldset><legend>Stats</legend>
           <div class="estats" id="ef-single"${c.creatures?.length > 1 ? " hidden" : ""}>${STATS.map(f => row(f, num(f))).join("")}</div>
           <div id="ef-creatures-box"${c.creatures?.length > 1 ? "" : " hidden"}><table class="creature-table"><thead><tr><th></th>${STATS.map(k => `<th>${LABEL[k]}</th>`).join("")}</tr></thead>
-            <tbody id="ef-creatures">${(c.creatures?.length > 1 ? c.creatures : []).map((x, i) => creatureRow(x, i)).join("")}</tbody></table>${reset("creatures")}</div>
+            <tbody id="ef-creatures">${(c.creatures?.length > 1 ? c.creatures : []).map((x, i) => creatureRow(x, i)).join("")}</tbody></table>${psdNote("creatures")}${reset("creatures")}${siteBox("creatures")}</div>
           <div class="actions"><button type="button" class="ghost" data-creature="split" ${c.creatures?.length > 1 ? "hidden" : ""}>Split into creatures</button>
             <button type="button" class="ghost" data-creature="add" ${c.creatures?.length > 1 ? "" : "hidden"}>+ Creature</button>
             <button type="button" class="ghost" data-creature="remove" ${c.creatures?.length > 1 ? "" : "hidden"}>− Creature</button></div>
@@ -1276,6 +1278,8 @@ export function createEditor(app) {
       if (!e.isComposing && e.target.matches?.("[data-part], [data-flag-why], #ef-name, #ef-ability, #ef-note")) P.straighten(e.target);   // straight apostrophes as typed or pasted (owner 10-25)
       if (e.target.dataset?.flagWhy && e.target.value.trim()) document.getElementById(`ef-flag-${e.target.dataset.flagWhy}`).checked = true;   // a reason sets its flag
       if (box) box.rows = rowsOf(box.value);      // the box grows with its lines
+      const k = e.target.dataset?.ck;              // a shared bar: every creature's cell
+      if (c.creatureBars?.shared?.includes(k)) for (const i of form.querySelectorAll(`#ef-creatures [data-ck="${k}"]`)) i.value = e.target.value;
       update(); typing();
     });
     form.addEventListener("focusin", e => { const box = e.target.closest?.("[data-part]"); if (box && partForm) partForm.last = box; });

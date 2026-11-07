@@ -184,12 +184,13 @@ def fold_art(fields):
         fields["art"] = art_list(fields.get("art"), fields.pop("ability_art", None)) or None
     return fields
 # printed on the card image, so an edit waits for the pipeline ("PSD pending"). The same set lives in edit.js FROM, app.js
-# FIELD_LABEL, the bot's CardEdits.KIND ("psd") and psd_edit STAT_FIELDS + TEXT_FIELDS + NOT_YET. creatures is database-only
-PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability"}
+# FIELD_LABEL, the bot's CardEdits.KIND ("psd") and psd_edit STAT_FIELDS + TEXT_FIELDS + NOT_YET. creatures: on a bar per
+# creature; the bake makes any other list website only
+PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures"}
 # true beside a name: the bake renames the card's files to it (owner 2026-10-25; edit.js RENAME, the bot's card_edits.RENAME)
 RENAME_KEY = "_rename"
 # an entry's website-only fields: printed differently on purpose, never baked (edit.js SITE, the bot's card_edits.SITE)
-SITE_KEY, SITE_FIELDS = "_site", ("name", "stars", "types", "hp", "def", "atk", "spd", "ability")
+SITE_KEY, SITE_FIELDS = "_site", ("name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures")
 DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
@@ -455,6 +456,8 @@ def join_details(cards, records, tree, edits=None):
         plain = e.pop("_plain", None)             # apply_edits' pending without the part edits' fields
         if rec:
             e["details"] = True
+            if isinstance(rec.get("creature_bars"), dict):
+                e["creatureBars"] = rec["creature_bars"]    # a bar per creature: each one's stats bake
             out[e["id"]] = {**rec, "id": e["id"], "name": e["name"]}      # the card's id and shown name win
             if e.get("dup") and not e.get("variantOf") and by_id.get(e["dup"], {}).get("psd") == path:
                 out[e["id"]].pop("parts", None)   # a numbered PNG of the PSD: not its first picture's boxes (§4.1: tag the variant layers)

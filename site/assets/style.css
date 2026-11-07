@@ -715,6 +715,7 @@ ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0;
 .ein > input[type=number] { flex: 0 0 90px; }
 .ein .icon-toggles { flex: 1 1 100%; }
 .estats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); column-gap: 14px; }
+.estats[hidden] { display: none; }
 .estats .erow { grid-template-columns: 44px 1fr; }
 .token-bar { display: flex; flex-wrap: wrap; gap: 2px; width: 100%; }
 .token-bar button { padding: 2px; width: 28px; height: 28px; }

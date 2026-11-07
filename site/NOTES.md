@@ -1486,3 +1486,9 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 - **Build**: `load_checks`, `merge_flags` (by the tree's PSD blob): `checks: {hand, bars}` on the card, beside `flags` (a person's, the editable field). `blob` on every card (8 hex): what a person's flag remembers (`flags.psd`). A card without a result yet shows no automatic flag.
 - **A person's flag goes**: the checks' save step marks it in `cleared` (`{PSD path: flags.psd}`) once its PSD differs and `hand` and `bars` are clean; `merge_flags` leaves it out. Its entry stays in Card Edits.json, inert: only main's writers could remove it, and the mark keeps it gone though the checks speak again. A new flag has another `psd` and starts over.
 - **Site**: `hasFlag` is either, `ownFlag` a person's (the Edit dialog's tick, `+ needs doing by hand`, drafts). `flagsHtml`: the note (`.flag-note`), then a person's reason (`data-flag`, editable). An automatic flag has no ✕: it clears by the checks. A Needs handling filter draws `needsHtml` (`.needs-list`) in place of the grid or table.
+
+## 48. Creatures on the card (2026-11-07)
+
+- `creatures` is a PSD field. The bake prints it on a bar per creature (`Darks > Creature n`, the 2 and 3 creature templates); any other card's list goes to `_site` at the next bake, like a stat past its rows.
+- The record's `creature_bars` ({count, shared}) reaches cards.json as `creatureBars`. Inline, such a card gets a slider per creature and stat (`data-inline` "2:def", inline.js `creatureStat`, edit.js `creaturesWith`); in All fields, a shared stat's cells move together. Other several-creature cards keep "Use All fields".
+- The mock-up draws no bars on these cards ("creatures" rows, as "two-row"): Rendered shows them.

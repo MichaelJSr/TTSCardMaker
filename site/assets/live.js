@@ -4,8 +4,8 @@ import { esc } from "./text.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 // printed on the card image (edit.js FROM "PSD", build_site.py PSD_FIELDS): an edit there waits for the image ("PSD pending")
-export const PSD_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability"];
-const LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability" };
+export const PSD_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures"];
+const LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", creatures: "Creatures" };
 const typeKey = t => String(t).toLowerCase().replace(/[\s_]+/g, "");
 const sameValue = (f, a, b) => (f === "types" ? JSON.stringify([...(a || [])].map(typeKey).sort()) === JSON.stringify([...(b || [])].map(typeKey).sort())
   : f === "ability" ? String(a ?? "").replace(/\r/g, "").trim() === String(b ?? "").replace(/\r/g, "").trim() : JSON.stringify(a ?? null) === JSON.stringify(b ?? null));
