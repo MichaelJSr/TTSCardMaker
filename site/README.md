@@ -236,8 +236,8 @@ told to Discord or a commit, and nothing is blocked. The card page shows the not
 the top of the Cards filters opens a list of the cards with their notes (All, or one flag; `flags=flagged`, `flags=hand`,
 `flags=bars`, excluded with `xflags=`; on a phone a link in the toolbar too); search `flag:hand`, `flag:bars`, `flag:any`.
 
-Any editor can add one by hand too: `+ needs doing by hand` on the card page, click the reason, ✕ to clear, or Flags in
-All fields. Those go through the batch and Publish, live in `site/Card Edits.json` (`"flags": {"hand": "reason", "bars": "",
+Any editor can add one by hand too: `+ needs doing by hand` on the card page, typing what the issue is (it needs a reason),
+click the reason, ✕ to clear, or Flags in All fields. Those go through the batch and Publish, live in `site/Card Edits.json` (`"flags": {"hand": "reason", "bars": "",
 "psd": "1a2b3c4d"}`, the PSD blob they were set on), are never baked, and go once the PSD changes and the checks are clean.
 
 ## Editing

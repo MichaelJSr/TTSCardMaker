@@ -3,8 +3,8 @@
 # results stay on the data branch by PSD blob (db/card_checks.json); the website shows them. No Discord, no commit
 # comment, no block. Card sync starts it after a data commit: only PSDs (or PNGs) without a result are read, so a fixed
 # card clears on its next push. A dispatch with `all` reads the whole tree in six shards, each its share of the blobs.
-# One writer beside Card sync's data lane: its commits touch db/card_checks.json alone, and each lane goes on top of the
-# other when a push is rejected (card-sync.yml's Commit data).
+# One writer beside Card sync's data lane: its commits touch db/card_checks.json alone, gate G6 lets them by, and each lane
+# goes on top of the other when a push is rejected (card-sync.yml's Commit data). Land the bot's G6 first.
 name: Card checks
 run-name: ${{ inputs.all && 'Card checks (whole tree)' || 'Card checks' }}
 

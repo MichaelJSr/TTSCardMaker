@@ -274,7 +274,7 @@ function onClick(e) {
     e.preventDefault(); e.stopPropagation(); el.outerHTML = starsHtml(0, starMax());
     const sp = A.modal.querySelector(".detail .star-pick"); if (sp) { sp.dataset.fresh = ""; sp.focus(); } return;   // fresh: nothing chosen puts "+ stars" back
   }
-  if (isFlag(f) && el.hasAttribute("data-empty") && el.tagName === "BUTTON") {  // "+ needs doing by hand": flagged at once, its reason open
+  if (f === "flag:bars" && el.hasAttribute("data-empty") && el.tagName === "BUTTON") {  // "+ special stat bars": flagged at once, its reason open; a hand flag waits for its reason
     e.preventDefault(); e.stopPropagation();
     if (A.editor.stageField(card.id, "flags", withFlag(card.flags, flagKey(f), "", card.blob))) { refresh(card, f, false); const why = spot(f); if (why) open(why, f); }
     return;

@@ -1,6 +1,6 @@
 // Card flags: what a card needs from a developer. checks: {"hand": "note", "bars": "note"}, the bot's automatic ones (the
 // card data's card_checks.json), each with its note. flags: a person's (Card Edits.json {"hand": "reason", "bars": "",
-// "psd": "1a2b3c4d"}), each with an optional reason; psd: the PSD blob it was set on, it goes once the PSD changes and the
+// "psd": "1a2b3c4d"}), each with a reason (optional on bars); psd: the PSD blob it was set on, it goes once the PSD changes and the
 // checks are clean. Database only, never baked. NOTES.md §46.
 import { linked } from "./art.js";
 import { esc } from "./text.js";
@@ -22,9 +22,9 @@ export function cleanFlags(v) {
 }
 /** flags with k's reason set on PSD blob psd, null clearing the flag. */
 export const withFlag = (flags, k, reason, psd) => cleanFlags({ ...flags, [k]: reason, psd });
-/** The flags' error ("" when fine): at most FLAG_MAX characters a reason, an emoji counting one (Python's len). */
+/** The flags' error ("" when fine): a hand flag says what its issue is (owner 11-07); at most FLAG_MAX characters a reason, an emoji counting one (Python's len). */
 export const flagError = flags => { const k = CARD_FLAGS.find(([f]) => [...(flags?.[f] || "")].length > FLAG_MAX);
-  return k ? `${k[1]}: at most ${FLAG_MAX} characters` : ""; };
+  return flags?.hand === "" ? `${flagLabel("hand")}: say what the issue is` : k ? `${k[1]}: at most ${FLAG_MAX} characters` : ""; };
 /** "Needs doing by hand: the reason; Special stat bars" ("" for none). */
 export const flagsText = flags => CARD_FLAGS.filter(([k]) => typeof flags?.[k] === "string").map(([k, l]) => (flags[k] ? `${l}: ${flags[k]}` : l)).join("; ");
 /** What changed from flags a to b: "Special stat bars cleared; Needs doing by hand: the reason". */

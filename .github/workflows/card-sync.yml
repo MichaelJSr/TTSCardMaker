@@ -490,7 +490,8 @@ jobs:
             if [ "$silent" != true ]; then sleep 1; fi
           done
 
-      # db/ and the cursor as one commit on data, never forced; a rejected push fails the job (gate G6's case). Tried 3
+      # db/ and the cursor as one commit on data, never forced; a rejected push fails the job (gate G6's case), but over
+      # a Card checks commit (card_data._checks_only, card-checks.yml), which it goes on top of. Tried 3
       # times (a dropped connection), unless it landed after all.
       - name: Commit data
         id: data-commit
