@@ -206,7 +206,7 @@ jobs:
       - *data-checkout
       - *venv
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           pattern: card-checks-*
           path: ${{ runner.temp }}/results
@@ -216,9 +216,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          shopt -s nullglob
+          mapfile -t results < <(find "$RUNNER_TEMP/results" -name checks.json 2> /dev/null)
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_checks save --repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" \
-            --db "$GITHUB_WORKSPACE/carddata/db" "$RUNNER_TEMP"/results/*/checks.json | tee -a "$GITHUB_STEP_SUMMARY"
+            --db "$GITHUB_WORKSPACE/carddata/db" "${results[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
       # Never forced: on a rejected push this commit goes on top of the lane's (it touches no other file)
       - name: Commit
