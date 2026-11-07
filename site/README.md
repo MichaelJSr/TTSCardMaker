@@ -16,6 +16,9 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
   (`site/Card Creation Dates.json`, below) and the first upload of its image (from the git history); the card page
   shows it as "created <date>" ("created about <date>" while a Discord post awaiting review may still move it).
+  **PSD size** (`sort=psd`, largest first; the table's PSD column too) sorts by the card's PSD file, ties by name; a
+  duplicate or variant picture has its PSD's size, also on the card page ("PSD 34.7 MB"). site.yml reads the sizes
+  with one trees API call (`PSD_TREE`).
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`,
   `created>=2025`, `created==2023-10`: dates at the precision given; spaces around the operator are fine in both),
   and also matches card names and aliases. The table and the Changes tab link "Details" beside PSD chips and parser

@@ -474,6 +474,10 @@ function sortCards(list, sort = "name", dir = "") {
     return list.sort((a, b) => (!a.created - !b.created) || (a.created ? s * cmp(a.created, b.created) || s * ((a.fs || 0) - (b.fs || 0)) : 0)
       || a.name.localeCompare(b.name));
   }
+  if (sort === "psd") {                                    // no size last; ties (one PSD's pictures) by name either way
+    const s = desc ? -1 : 1;
+    return list.sort((a, b) => (!a.psdSize - !b.psdSize) || s * ((a.psdSize || 0) - (b.psdSize || 0)) || a.name.localeCompare(b.name));
+  }
   return list.sort(G.byKey(key, desc));
 }
 // xs: the excluded values (red, struck through, the count = the cards they remove: removes(key, v)); del: a ✕ after each
@@ -739,12 +743,12 @@ function adoptFirst(grid, css) {
 }
 function tableHtml(list, p, win) {
   const cols = [["name", "Card"], ["type", "Kind"], ["series", "Series"], ["stars", "★"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"], ["total", "Total"], ["", "Types"], ["", "Author"],
-    ...(S.created ? [["created", "Created"]] : []), ["new", "Updated"]];
+    ...(S.created ? [["created", "Created"]] : []), ["new", "Updated"], ["psd", "PSD"]];
   const sort = sortOf(p);
   const first = win.all ? list.length : Math.max(TABLE_FIRST, Math.ceil((win.y + 2 * win.h) / 30));    // rows are 30 px or taller: the scroll position stays
   const rest = list.slice(first);
   tableRest = rest.map(rowHtml);
-  return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
+  return `<div class="scroll-x"><table class="data"><thead><tr><th></th>${cols.map(([k, l]) => `<th class="${["stars", "hp", "def", "atk", "spd", "total", "psd"].includes(k) ? "num" : ""}"${k ? ` data-action="sort-by" data-key="${k}"` : ""}>${l}${k && k === sort ? " ▾" : ""}</th>`).join("")}</tr></thead><tbody>
     ${list.slice(0, first).map(rowHtml).join("")}</tbody>${tableRest.length ? `<tbody class="sizer" aria-hidden="true" style="visibility:collapse">${sizerRows(rest, tableRest)}</tbody>` : ""}</table></div>`;
 }
 // hidden rows from the rest that hold the columns at their final widths while the rest comes in: per column the rows with
@@ -762,7 +766,7 @@ function sizerRows(rest, rows) {
   const len = v => { const n = String(v ?? "").length; return [n, n]; };
   const cols = c => [[0, 0], text([c.name]), text([`${KIND_LABEL[c.type] || c.type}${c.subtype ? ` · ${cap(c.subtype)}` : ""}`]),
     text([c.series], [c.subseries, 12]), len(c.stars), len(c.hp), len(c.def), len(c.atk), len(c.spd), len(c.hp != null ? total(c) : ""),
-    [(c.types || []).filter(iconFor).length, 0], text([c.author]), ...(S.created ? [text([createdText(c)])] : []), text([date(c.ts)])];
+    [(c.types || []).filter(iconFor).length, 0], text([c.author]), ...(S.created ? [text([createdText(c)])] : []), text([date(c.ts)]), text([psdSize(c)])];
   const top = [], pick = new Set();
   rest.forEach((c, i) => {
     if (psdChips(c)) pick.add(i);
@@ -796,10 +800,11 @@ function fillTable(tbody) {
 // the Needs handling view: a list to scan, each card's flags and notes beside it
 const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}
   <div><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${flagsHtml(c)}</div></li>`).join("")}</ul>`;
+const psdSize = c => (c.psdSize ? G.fileSize(c.psdSize) : "");
 const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
-      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td></tr>`;
+      <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td><td class="num size">${psdSize(c)}</td></tr>`;
 
 // ---- card detail -----------------------------------------------------------------------------------
 function statBars(c) {
@@ -872,6 +877,7 @@ function openCard(id, showDetails = false) {
           ${c.author ? `<a class="fact" href="#/cards?author=${encodeURIComponent(c.author)}">by ${esc(c.author)}</a>` : ""}
           ${c.created ? `<span class="fact" data-tip="${esc(createdTip(c))}">created ${createdText(c)}</span>` : ""}
           ${c.ts ? `<span class="fact" data-tip="Last PSD commit (Pacific time)">updated ${date(c.ts)}</span>` : ""}
+          ${c.psdSize ? `<a class="fact" href="#/cards?sort=psd" data-tip="All cards by PSD size">PSD ${psdSize(c)}</a>` : ""}
           ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="${unusedTip(c)}">Unused</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="The same card, counted once">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}

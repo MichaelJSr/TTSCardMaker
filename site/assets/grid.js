@@ -47,8 +47,10 @@ export const iconImg = (icons, name, cls = "tok") => { const ic = icons[norm(nam
 
 // [key, label, dir it sets]; "created" = the creation date (first Discord post or first upload), when the build has dates
 export const SORTS = [["name", "Name"], ["stars", "Stars"], ["total", "Total stats"], ["hp", "HP"], ["def", "DEF"], ["atk", "ATK"], ["spd", "SPD"],
-  ["new", "Recently updated"], ["created", "Newest created", ""], ["created", "Oldest created", "asc"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"]];
-export const isDesc = (sort, dir) => (dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "created", "mentioned"].includes(sort));
+  ["new", "Recently updated"], ["created", "Newest created", ""], ["created", "Oldest created", "asc"], ["series", "Series"], ["type", "Kind"], ["mentioned", "Most referenced"], ["psd", "PSD size"]];
+export const isDesc = (sort, dir) => (dir ? dir === "desc" : ["stars", "total", "hp", "def", "atk", "spd", "new", "created", "mentioned", "psd"].includes(sort));
+/** a file size: "812 KB", "34.7 MB" (1000s, as the Finder counts) */
+export const fileSize = n => { const kb = Math.round(n / 1e3); return kb < 1000 ? `${Math.max(1, kb)} KB` : `${(n / 1e6).toFixed(1)} MB`; };
 export const nameKey = c => c.name.toLowerCase();
 /** sort by key (or keys in turn), ties by name; a card without the value (null) goes last either way, those in name order */
 export const byKey = (key, desc = false) => { const keys = [].concat(key), s = desc ? -1 : 1;

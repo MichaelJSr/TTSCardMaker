@@ -108,6 +108,7 @@ RAW = f"https://raw.githubusercontent.com/{CARD_REPO}/main/"
 CARD_BACKS = ("MDW/Assets/cardback.png", "MDW/Assets/cardback_item.png")    # deck.js ttsSave's backs
 DETAILS_JSON = "psd_details.json"            # the PSD structure records {version, cards: {blob sha: record}} (AutoCroissant card_db.DETAILS_JSON)
 CHECKS_JSON = "card_checks.json"             # the automatic flags {cards: {blob sha: {hand, bars}}, cleared: {PSD path: flags' psd}} (AutoCroissant card_checks)
+PSD_TREE = os.environ.get("PSD_TREE", "")     # the trees API's reply at the build's commit (site.yml): the PSDs' sizes
 IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
 THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality and AVIF rename by themselves
@@ -289,6 +290,24 @@ def bot_field_warnings(stats, old_stats):
     old = [o for versions in old_stats.values() for o in versions or []]
     check("old_stats.json cards", old, HISTORY_FIELDS, CARD_FIELDS | CARD_FIELDS_OPTIONAL)
     return out
+
+
+def psd_sizes(path):
+    """{blob sha: bytes} of the PSDs in a trees API reply (git's tree has no sizes, the blobless clone no blobs); {}
+    when there is none."""
+    if not path:
+        return {}
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        items = data["tree"]
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        warn(f"no PSD sizes: {type(e).__name__}: {e}")
+        return {}
+    if data.get("truncated"):
+        warn("PSD sizes: the trees API cut the list short")
+    return {i["sha"]: i["size"] for i in items if isinstance(i, dict) and i.get("type") == "blob"
+            and str(i.get("path", "")).lower().endswith(".psd") and isinstance(i.get("size"), int)}
 
 
 def psd_records(data):
@@ -3715,7 +3734,7 @@ TILE_CSS = 200                                # TILE_SIZES.m: the default tile's
 TILE_TITLE = ' title="Tile size"'
 SORTS = [("name", "Name"), ("stars", "Stars"), ("total", "Total stats"), ("hp", "HP"), ("def", "DEF"), ("atk", "ATK"), ("spd", "SPD"),
          ("new", "Recently updated"), ("created", "Newest created", ""), ("created", "Oldest created", "asc"), ("series", "Series"),
-         ("type", "Kind"), ("mentioned", "Most referenced")]
+         ("type", "Kind"), ("mentioned", "Most referenced"), ("psd", "PSD size")]
 
 
 def js_esc(s):
@@ -4179,6 +4198,12 @@ def main():
 
     apply_created(cards, parse_created())         # after fs: a card's first upload can be the earlier evidence
     detail_files = join_details(cards, records, tree, edits)
+    sizes = psd_sizes(PSD_TREE)
+    for e in cards:                               # a duplicate or variant: its PSD's
+        size = sizes.get(tree.get(e.get("psd") or ""))
+        if size:
+            e["psdSize"] = size
+    log(f"PSD sizes: {sum('psdSize' in e for e in cards)} of {len(cards)} cards" + ("" if PSD_TREE else " (no PSD_TREE)"))
     for e in cards:
         e.pop("_blob", None)
     if records:

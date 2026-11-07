@@ -124,6 +124,19 @@ jobs:
           path: carddata
           fetch-depth: 1
 
+      # The PSDs' sizes (the PSD size sort): one trees API call, since the blobless clone has no blob sizes. A failure
+      # only leaves the sizes out (the build warns).
+      - name: PSD sizes
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for _ in 1 2 3; do
+            gh api "repos/$GITHUB_REPOSITORY/git/trees/$(git rev-parse HEAD)?recursive=1" > "$RUNNER_TEMP/tree.json" && exit 0
+            sleep 10
+          done
+          exit 1
+
       # IMAGE_BUDGET: images not made in 30 minutes (a full AVIF re-encode is ~11 CPU-minutes on a Mac, an estimated 20-25
       # on the runner) are left for the next run; the build then fails (nothing deployed) and the job's last step keeps what
       # it made. The step's timeout leaves that save time to run before the job's.
@@ -133,6 +146,7 @@ jobs:
         env:
           SITE_URL: ${{ steps.pages.outputs.base_url }}
           CARD_DATA_DIR: carddata/db
+          PSD_TREE: ${{ runner.temp }}/tree.json
           IMAGE_BUDGET: "1800"
           ESBUILD: ${{ runner.temp }}/esbuild/node_modules/.bin/esbuild
 
