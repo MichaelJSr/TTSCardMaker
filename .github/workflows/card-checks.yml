@@ -56,7 +56,7 @@ jobs:
       - &checkout-main
         uses: actions/checkout@v7
         env:
-          GIT_NO_LAZY_FETCH: ""
+          GIT_NO_LAZY_FETCH: "0"
         with:
           ref: main
           fetch-depth: 1
@@ -163,7 +163,7 @@ jobs:
       - name: Fonts (cache miss)
         if: steps.list.outputs.n != '0' && steps.font-cache.outputs.cache-hit != 'true'
         env:
-          GIT_NO_LAZY_FETCH: ""
+          GIT_NO_LAZY_FETCH: "0"
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
       - name: Check
