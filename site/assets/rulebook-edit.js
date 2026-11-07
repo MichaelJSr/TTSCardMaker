@@ -27,6 +27,7 @@ const HELP = [
   ["[text]{.red}", "colours (the Colour menu): red green blue yellow orange purple grey white; .u underline, .big, .small, .caps, .nowrap (one line), .secret (hidden in the panel)"],
   ["**bold**  *italic*  ***both***", "Ctrl/Cmd+B, Ctrl/Cmd+I"], ["- item / 1. item / 1) item", "lists keep the numbers you type"], ["| a | b |", "a table (|:-:| centres; {.grid cols=-,red,green} under it)"],
   ["[“SHOPS”](#/rules/shops)", "a link to a chapter (or #/rules/stats/health for a section)"], ["=== page ===", "starts a new TTS page here (the site ignores it)"],
+  ["# Title {.web}", "the chapter is on the website only, never in the TTS PDF"],
 ];
 
 export function open(api) {

@@ -91,6 +91,8 @@ text or image, links its commit when it is known), and the artwork sources when 
   `commands.rulebook_pages`, once the website shows main's chapters), and the save's Rulebooks bag holds it as one PDF
   object (the Photoshop pages are out of the save since 10-30; their files are in `MDW/Old Rules/Rulebook`). The contents' PDF button opens
   it. A chapter push starts Card sync (the bot's `db/rulebook.json` at once, the PDF after its 30-minute window).
+  A chapter titled `# Title {.web}` is on the website only: the TTS pages and data/tts.json leave it out, so it prints
+  nothing.
   Also the badge colors, the timing-tag glossary and the constructed ban list. Old page links
   (`#/rules/07-stats3`, `#/rules?q=07 Stats3`) open their chapter.
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,

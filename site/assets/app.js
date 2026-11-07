@@ -1068,13 +1068,13 @@ function watchToc() {
   for (const el of $$(".rb-chapter", view)) spy.observe(el);
 }
 // #/rules/print: the TTS pages (rulebook.js paginate), all of them small; ?sheet=N alone at full size, nothing else on the
-// page. #rb-sheet-list holds the pages and the chapters they were cut from: the TTS export (AutoCroissant
+// page. #rb-sheet-list holds the pages and every chapter, {.web} ones too: the TTS export (AutoCroissant
 // commands/rulebook_pages.py) checks those against main's before it screenshots the pages
 async function renderSheets(r) {
   const shot = r.params.get("sheet"), solo = shot !== null && shot !== "";
   document.body.classList.toggle("rb-shot", solo);
   view.innerHTML = `<p class="rb-print-bar muted">The rulebook's pages as the Tabletop Simulator save's PDF shows them (1080×1920; the next save update prints them). <a href="${esc(pdfUrl())}" target="_blank" rel="noopener">The PDF</a> · <a href="#/rules">Back to the rulebook</a></p><div class="rb-measure"></div>`;
-  const host = $(".rb-measure", view), ctx = bookCtx({ eager: true }), chapters = S.book.chapters;
+  const host = $(".rb-measure", view), chapters = RB.printed(S.book.chapters), ctx = bookCtx({ eager: true, chapters });
   const warm = document.createElement("div");             // every picture loaded first: the pages measure them
   warm.className = "rb"; warm.style.cssText = "position:absolute;left:-20000px;top:0;width:1080px";
   warm.innerHTML = chapters.map(c => RB.chapterHtml(c, ctx)).join("");
@@ -1090,7 +1090,7 @@ async function renderSheets(r) {
   host.className = "rb-sheets";
   if (solo) sheets.forEach((x, i) => x.el.classList.toggle("rb-shown", i === +shot));
   const list = Object.assign(document.createElement("script"), { type: "application/json", id: "rb-sheet-list" });
-  list.textContent = JSON.stringify({ sheets: sheets.map(x => ({ name: x.name, num: x.num, ch: x.ch, n: x.n })), chapters: chapters.map(c => [c.file, c.source]) });
+  list.textContent = JSON.stringify({ sheets: sheets.map(x => ({ name: x.name, num: x.num, ch: x.ch, n: x.n })), chapters: S.book.chapters.map(c => [c.file, c.source]) });
   view.append(list);
   document.body.dataset.sheets = String(sheets.length);    // the export waits for this
 }
