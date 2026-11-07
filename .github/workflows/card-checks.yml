@@ -103,6 +103,8 @@ jobs:
             /commands/ability_index.json
             /global_config.py
             /requirements-cards.txt
+            /commands/psd_links.py
+            /commands/render_record.json
 
       - &data-checkout
         uses: actions/checkout@v7
