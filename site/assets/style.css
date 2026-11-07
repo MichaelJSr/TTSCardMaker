@@ -352,6 +352,7 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
 .rb-col.rb-at-top, .rb-col.rb-at-center, .rb-col.rb-at-bottom { align-items: center; }
 .rb-col.rb-at-top-right, .rb-col.rb-at-right, .rb-col.rb-at-bottom-right { align-items: flex-end; }
 @media (pointer: coarse) and (max-width: 640px) { .rb-chapter { font-size: 17px; overflow-wrap: anywhere; } .rb-table { overflow-wrap: normal; } .rb-head h2 { font-size: 1.6em; }
+  .rb:not(.rb-sheet) .rb-table.rb-tags { font-size: .8em; } .rb:not(.rb-sheet) .rb-table.rb-tags :is(th, td) { padding: .12em .2em; } .rb:not(.rb-sheet) .rb-table.rb-tags td:first-child { white-space: normal; } .rb:not(.rb-sheet) .rb-table.rb-tags th:first-child { width: auto; }
   .rb-chapter > .rb-tools { position: static; justify-content: flex-end; margin-bottom: 6px; } .rb:not(.rb-sheet) .rb-row { flex-direction: column; align-items: stretch; } .rb:not(.rb-sheet) .rb-row > .rb-col > .rb-fig { max-width: min(100%, 300px); } }   /* a phone */
 .rb-stack > * + * { margin-top: .9em; }
 .rb-fig { margin: .7em auto; text-align: center; max-width: 100%; }

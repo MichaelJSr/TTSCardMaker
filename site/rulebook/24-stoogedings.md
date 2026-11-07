@@ -26,14 +26,14 @@ Capitals don't matter. A space, `_`, `-` or nothing between words are all the sa
 ## VARIANTS
 Put a variant after the name, with a colon and no spaces.
 
-| You type | You get | What it is | Use it for |
-|:---:|:---:|---|---|
-| `[fire]` | [fire] | The type in its own colours | Almost everything |
-| `[fire:tint]` | [fire:tint] | One colour, the text's | A type that matches its line, as on [[Elemental World]] |
-| `[dark:sticker]` | [dark:sticker] | Its own colours on an outline in the text's colour | A dark type on dark art, as on [[Afraid]] |
-| `[fire:no]` | [fire:no] | A red sign over it | Not that type: non-fire. Every other variant counts as the plain type |
-| `[dark:glow]` | [dark:glow] | A soft white halo | A dark type on dark art, in text with no Stroke |
-| `[light:darkglow]` | [light:darkglow] | A soft black halo | A pale type on pale art, in text with no Stroke |
+| You type | You get | What it is |
+|:---:|:---:|---|
+| `[fire]` | [fire] | Its own colours. For almost everything |
+| `[fire:tint]` | [fire:tint] | One colour, the text's. For a type that matches its line, as on [[Elemental World]] |
+| `[dark:sticker]` | [dark:sticker] | Its own colours on an outline in the text's colour. For a dark type on dark art, as on [[Afraid]] |
+| `[fire:no]` | [fire:no] | A red sign over it. Not that type: non-fire. Every other variant counts as the plain type |
+| `[dark:glow]` | [dark:glow] | A soft white halo. For a dark type on dark art, in text with no Stroke |
+| `[light:darkglow]` | [light:darkglow] | A soft black halo. For a pale type on pale art, in text with no Stroke |
 {.tags}
 
 The same type on a dark text box:
