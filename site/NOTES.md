@@ -504,7 +504,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   ranking); Enter in the box toggles the first match and clears it, so "fir Enter wat Enter" adds two; Enter on an empty
   box, Ctrl+Enter, Save or a click or tap away save; Esc or Cancel put the row back; arrows move between chips. The row
   shows the choice as it changes. Saved through `stageField(id, "types", sorted list)`, so the same set in another order is
-  no edit. Vocabulary: cards.json `icons` of kind "type" (35 icons, with aliases). The search is the token picker's
+  no edit. A press goes once, twice, off (2026-11-07, here and in All fields: `toggleType`, `pressToggle`), "×2" on a type
+  picked twice: the lists keep counts, as the bake does (psd_edit.same_types), so Pandora's two pandas are no edit
+  until someone changes them. Vocabulary: cards.json `icons` of kind "type" (35 icons, with aliases). The search is the token picker's
   (section 20, `assets/tokens.js`): `palette.useSearch(fn)` swaps the search (fn(vocab, q) -> entries best first),
   `palette.pickerSearch(suggest, all)` is the adapter (the picker's plain type rows, mapped back to the palette's
   entries), and app.js switches it in one line after `tokens.install`:

@@ -92,6 +92,8 @@ text or image, links its commit when it is known), and the artwork sources when 
   `commands.rulebook_pages`, once the website shows main's chapters), and the save's Rulebooks bag holds it as one PDF
   object (the Photoshop pages are out of the save since 10-30; their files are in `MDW/Old Rules/Rulebook`). The contents' PDF button opens
   it. A chapter push starts Card sync (the bot's `db/rulebook.json` at once, the PDF after its 30-minute window).
+  A chapter titled `# Title {.web}` is on the website only: the TTS pages, data/tts.json, game.txt and the bot's
+  `db/rulebook.json` leave it out, so it prints nothing.
   Also the badge colors, the timing-tag glossary and the constructed ban list. Old page links
   (`#/rules/07-stats3`, `#/rules?q=07 Stats3`) open their chapter.
 - **Deck builder**: the constructed starting hand from the rulebook (7 creatures, 10 items, one of each, no banned cards,
@@ -275,7 +277,7 @@ they don't carry get their own edit. A pinned box or a filter on the old name fo
 sentence ("Goombella: SPD 4 → 5", "Clot Black: Author → Chestnut"), each with ↺ to take it back; the bar folds to one
 line when it gets long, and **Review and publish** commits the whole batch at once. **All fields** (e, also in the bar)
 opens the full form for everything else (kind, item type (a fixed list: the `Items/` folders), stars, types, aliases, duplicate of, checks, constructed ban,
-hidden, creatures). Signed out, none of this shows: the pages are the same to the pixel. Fields go to
+hidden, creatures); press a type again to pick it twice. Signed out, none of this shows: the pages are the same to the pixel. Fields go to
 `site/Card Edits.json`, authors to `site/Card Authors.txt`, bans to `site/Constructed Ban List.txt`. Card sync reads
 them on that commit and rebuilds the site after its data commit. A subseries (Goombella: series Mario, subseries Paper
 Mario: The Thousand-Year Door) exists only as an edit (`subseries`; the bot reads it too). It is one group across series:

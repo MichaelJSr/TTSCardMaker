@@ -3214,6 +3214,11 @@ def cover_copies(images, src=RULEBOOK):
 TAG_ROW = re.compile(r"^\|\s*\((-?[0-9A-Za-z/]{2,8})\)\s*\|\s*(.+?)\s*\|\s*$")
 
 
+def printed_chapters(chapters):
+    """The chapters the TTS PDF and game.txt hold: all but those titled {.web} (rulebook.js printed)."""
+    return [c for c in chapters if not re.search(r"^# .*\{[^{}]*\.web\b[^{}]*\}\s*$", c["source"], re.M)]
+
+
 def tag_meanings(chapters):
     """{tag: meaning} from the Timing Tags chapter's table rows ("| (OYT) | On your turn |"; "(XCD)" stands for a
     family): text.js setTagMeanings, the badges' tooltips everywhere on the site."""
@@ -4330,11 +4335,11 @@ def main():
     log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), rulebook: {len(chapters)} chapters, {len(rule_images)} pictures, "
         f"icons: {len(set(i['file'] for i in icons.values()))}, banned: {sum(len(g['entries']) for g in banlist['groups'])}")
     game = game_text(cards, [{"name": f"{int(c['num'])}. {c['title']}" if int(c["num"]) else c["title"], "ability": rulebook_text(c["source"])}
-                             for c in chapters], banlist, icons)
+                             for c in printed_chapters(chapters)], banlist, icons)
     with open(os.path.join(DIST, GAME_TXT), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(game)
     log(f"{GAME_TXT}: {len(game.encode())} bytes, about {round(len(game.split()) * 1.3)} tokens")
-    tts = json.dumps(tts_details(cards, chapters, icons, tag_meanings(chapters)), ensure_ascii=False, separators=(",", ":"))
+    tts = json.dumps(tts_details(cards, printed_chapters(chapters), icons, tag_meanings(chapters)), ensure_ascii=False, separators=(",", ":"))
     with open(os.path.join(DIST, "data", TTS_JSON), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(tts)
     log(f"{TTS_JSON}: {len(tts.encode())} bytes")

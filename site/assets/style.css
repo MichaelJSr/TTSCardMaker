@@ -85,6 +85,9 @@ a.chip:hover { text-decoration: none; }
 .icon-toggle { width: 34px; height: 34px; padding: 3px; border-radius: 8px; background: transparent; border: 1px solid var(--border); }
 .icon-toggle img { width: 100%; height: 100%; object-fit: contain; }
 .icon-toggle.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.icon-toggle[data-count] { position: relative; }
+.icon-toggle[data-count]::after { content: "×" attr(data-count); position: absolute; right: -3px; bottom: -3px; padding: 0 3px; border-radius: 6px; background: var(--accent); color: var(--accent-ink); font-size: 10px; line-height: 13px; }
+.pal-type[data-count]::after { content: "×" attr(data-count); font-weight: 700; }
 .range-row { display: grid; grid-template-columns: 34px 1fr 1fr; gap: 6px; align-items: center; margin: 4px 0; font-size: 13px; }
 select, .range-row input { width: 100%; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--surface); }
 .check { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--ink-2); margin: 4px 0; cursor: pointer; }
@@ -349,6 +352,7 @@ ol.rb-list[data-delim=")"] li::marker { content: counter(list-item) ") "; }
 .rb-col.rb-at-top, .rb-col.rb-at-center, .rb-col.rb-at-bottom { align-items: center; }
 .rb-col.rb-at-top-right, .rb-col.rb-at-right, .rb-col.rb-at-bottom-right { align-items: flex-end; }
 @media (pointer: coarse) and (max-width: 640px) { .rb-chapter { font-size: 17px; overflow-wrap: anywhere; } .rb-table { overflow-wrap: normal; } .rb-head h2 { font-size: 1.6em; }
+  .rb:not(.rb-sheet) .rb-table.rb-tags { font-size: .8em; } .rb:not(.rb-sheet) .rb-table.rb-tags :is(th, td) { padding: .12em .2em; } .rb:not(.rb-sheet) .rb-table.rb-tags td:first-child { white-space: normal; } .rb:not(.rb-sheet) .rb-table.rb-tags th:first-child { width: auto; }
   .rb-chapter > .rb-tools { position: static; justify-content: flex-end; margin-bottom: 6px; } .rb:not(.rb-sheet) .rb-row { flex-direction: column; align-items: stretch; } .rb:not(.rb-sheet) .rb-row > .rb-col > .rb-fig { max-width: min(100%, 300px); } }   /* a phone */
 .rb-stack > * + * { margin-top: .9em; }
 .rb-fig { margin: .7em auto; text-align: center; max-width: 100%; }

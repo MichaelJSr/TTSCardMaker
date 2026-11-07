@@ -1,7 +1,7 @@
 // The rulebook: chapters written as text (site/rulebook/NN-slug.md, edited on the website or in any text editor), drawn
 // in the book's style. The web view flows; the TTS sheets (#/rules/print) cut the same blocks into 1080x1920 pages.
 // Syntax (the editor's Syntax panel, rulebook-edit.js HELP, says the same for editors):
-//   # Title                      the chapter's title, its first line
+//   # Title                      the chapter's title, its first line; # Title {.web}: on the website only, never printed
 //   ## Section {.hp icon=fire}   a tabbed panel holding what follows up to the next ##, --- or page break; .hp .hp2 .def
 //                                .atk .spd colour the tab, icon= puts a type icon beside it
 //   ::: kind "Title" {.cls}      a fence up to its ":::" (fences nest): panel (a "Title" gives it a tab), row (side by
@@ -351,6 +351,8 @@ export function chapterHtml(ch, ctx) {
   return `<header class="rb-head">${n > 0 ? `<span class="rb-num">${n}</span>` : ""}<h2>${inline(ast.title || ch.title, ctx)}</h2></header>${kidsHtml(ast.blocks, { ...ctx, id: ch.id })}`;
 }
 
+/** The chapters the TTS PDF holds: all but those titled {.web}. */
+export const printed = chapters => chapters.filter(c => !(c.ast || parse(c.source)).attrs.cls.includes("web"));
 /** The sections of a chapter, for the contents: [{title, anchor}] */
 export const sectionsOf = ch => (ch.ast || parse(ch.source)).blocks.flatMap(b => (b.t === "section" ? [b] : b.t === "fence" ? b.children.filter(c => c.t === "section") : []))
   .map(s => ({ title: titleText(s.title), anchor: `${ch.id}--${slugify(titleText(s.title))}` }));

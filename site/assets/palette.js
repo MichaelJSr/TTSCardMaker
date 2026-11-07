@@ -44,13 +44,28 @@ export function paletteOrder(vocab, first, q) {
   const lead = new Set(first.map(norm));
   return [...vocab.filter(e => lead.has(norm(e.name))), ...vocab.filter(e => !lead.has(norm(e.name)))];
 }
-/** on with name added or taken out, sorted (as the All fields toggles list them, so the order is no edit). */
-export const toggleType = (on, name) => (on.includes(name) ? on.filter(t => t !== name) : [...on, name]).sort();
+const countOf = (on, name) => on.filter(t => t === name).length;
+const nextCount = n => (n === 0 ? 1 : n === 1 ? 2 : 0);     // a press: once, twice, off
+/** on after a press on name, sorted (as the All fields toggles list them, so the order is no edit). */
+export const toggleType = (on, name) => [...on.filter(t => t !== name), ...Array(nextCount(countOf(on, name))).fill(name)].sort();
+/** Button attributes for n of a type: "×2" past one (style.css [data-count]). */
+export const typeAttrs = n => `aria-pressed="${n > 0}"${n > 1 ? ` data-count="${n}"` : ""}`;
+function paintType(b, n) {
+  b.classList.toggle("on", n > 0); b.setAttribute("aria-pressed", String(n > 0));
+  if (n > 1) b.dataset.count = n; else delete b.dataset.count;
+}
+const shownCount = b => +b.dataset.count || (b.classList.contains("on") ? 1 : 0);
+/** A press on an All fields toggle. */
+export const pressToggle = b => paintType(b, nextCount(shownCount(b)));
+/** The toggles' types, sorted, a twice-picked one twice. */
+export const readToggles = box => [...box.querySelectorAll("[data-type]")].flatMap(b => Array(shownCount(b)).fill(b.dataset.type)).sort();
+/** The toggles set to the list on. */
+export const setToggles = (box, on) => { for (const b of box.querySelectorAll("[data-type]")) paintType(b, countOf(on, b.dataset.type)); };
 const label = name => name.replace(/_/g, " ");
-/** What the status line says: "2 types: fire, water", "No types". */
-export const typesWords = on => (on.length ? `${on.length} type${on.length === 1 ? "" : "s"}: ${on.map(label).join(", ")}` : "No types");
+/** What the status line says: "3 types: fire ×2, water", "No types". */
+export const typesWords = on => (on.length ? `${on.length} type${on.length === 1 ? "" : "s"}: ${[...new Set(on)].map(t => label(t) + (countOf(on, t) > 1 ? ` ×${countOf(on, t)}` : "")).join(", ")}` : "No types");
 /** The chips for entries; on: the chosen names. */
-export const chipsHtml = (list, on) => list.map(e => `<button type="button" class="chip pal-type${on.includes(e.name) ? " on" : ""}" data-type="${esc(e.name)}" aria-pressed="${on.includes(e.name)}"><img src="${esc(e.file)}" alt="">${esc(label(e.name))}</button>`).join("");
+export const chipsHtml = (list, on) => list.map(e => `<button type="button" class="chip pal-type${on.includes(e.name) ? " on" : ""}" data-type="${esc(e.name)}" ${typeAttrs(countOf(on, e.name))}><img src="${esc(e.file)}" alt="">${esc(label(e.name))}</button>`).join("");
 /** The palette for the chosen names on. */
 export const paletteHtml = (vocab, on, q = "") => {
   const list = paletteOrder(vocab, on, q);
@@ -59,7 +74,7 @@ export const paletteHtml = (vocab, on, q = "") => {
       <span class="pal-status muted" aria-live="polite">${esc(typesWords(on))}</span></div>
     <div class="pal-chips">${list.length ? chipsHtml(list, on) : `<span class="muted">No type matches “${esc(q)}”</span>`}</div>
     <div class="actions"><button type="button" class="primary" data-pal="save">Save</button><button type="button" class="ghost" data-pal="cancel">Cancel</button>
-      <span class="muted pal-note">On the card image</span></div></div>`;
+      <span class="muted pal-note">Press again to pick a type twice · On the card image</span></div></div>`;
 };
 /** The type row's icons for the chosen names (the card page's look; no links while it is edited). */
 export const rowHtml = (on, vocab) => on.map(t => { const e = vocab.find(x => x.name === t); return e ? `<img src="${esc(e.file)}" alt="${esc(t)}">` : `<span class="fact">${esc(label(t))}</span>`; }).join("");
@@ -73,7 +88,7 @@ export function mountPalette(after, { vocab, on, first = on, onChange = () => {}
   const draw = () => { const list = paletteOrder(vocab, first, q.value); chips.innerHTML = list.length ? chipsHtml(list, sel) : `<span class="muted">No type matches “${esc(q.value)}”</span>`; };
   const flip = name => {
     sel = toggleType(sel, name);
-    for (const b of chips.querySelectorAll("[data-type]")) if (b.dataset.type === name) { const v = sel.includes(name); b.classList.toggle("on", v); b.setAttribute("aria-pressed", String(v)); }
+    for (const b of chips.querySelectorAll("[data-type]")) if (b.dataset.type === name) paintType(b, countOf(sel, name));
     status.textContent = typesWords(sel); onChange(sel);
   };
   const outside = e => { if (!el.isConnected) stop(); else if (!el.contains(e.target)) finish(true, false); };   // gone with the dialog: nothing saved

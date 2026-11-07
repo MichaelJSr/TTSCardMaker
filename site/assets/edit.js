@@ -13,6 +13,7 @@ import * as P from "./parts.js";
 import { date, dayOf, pictureNumber } from "./history.js";
 import { artList, artError, artLabel } from "./art.js";
 import { CARD_FLAGS, cleanFlags, flagError, flagsChange, flagsText, ownFlag } from "./flags.js";
+import { typeAttrs, pressToggle, readToggles, setToggles } from "./palette.js";
 
 const API = "https://api.github.com";
 // last: the login a password last signed in
@@ -812,7 +813,7 @@ export function createEditor(app) {
     const b = baseOf(c), isDup = follows(b), ban = banOf(c.id), admin = me?.admin, view = partsView(c);
     const kinds = Object.entries(app.KIND_LABEL).filter(([k]) => k !== "unknown" || k === c.type);
     if (!app.KIND_LABEL[c.type]) kinds.push([c.type, c.type]);
-    const typeNames = [...new Set(Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name))].sort();
+    const typeNames = [...new Set([...Object.values(S.icons).filter(i => i.kind === "type").map(i => i.name), ...(c.types || [])])].sort();   // a name no icon has: a toggle too, so it reads back
     // the card's names side by side (Z!!!!! 10-30): the site's now, its file's (the key edits are filed under is the file's name)
     const namesLine = x => `<p class="muted part-note ef-names">On the site now: “${esc(x.name)}” · File: <span class="kbd">${esc((x.psd || x.png || "").split("/").pop())}</span></p>`;
     const reset = f => { const p = psdVal(b, f), src = FROM[f]; return same(val(c, f), p) ? "" : `<button type="button" class="ghost reset" data-reset="${f}" title="${src ? `Back to what the ${src} says` : "Remove the edit"}">↺ ${src ? src[0].toUpperCase() + src.slice(1) : "Default"}: ${esc(show(p))}</button>`; };
@@ -839,8 +840,9 @@ export function createEditor(app) {
           ${P.titleInPicture(view?.rec) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
           ${renameRow(c, b)}
           ${row("stars", `<input id="ef-stars" type="number" min="0" max="${maxStars()}" step="1" value="${c.stars ?? ""}" placeholder="—">`)}<p class="muted part-note" id="ef-stars-note"></p>
-          ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
-            return `<button type="button" class="icon-toggle${on ? " on" : ""}" data-type="${esc(t)}" aria-pressed="${on}" data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>`)}
+          ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), n = (c.types || []).filter(x => x === t).length;
+            return `<button type="button" class="icon-toggle${n ? " on" : ""}" data-type="${esc(t)}" ${typeAttrs(n)} data-tip="${esc(t.replace(/_/g, " "))}">${ic ? `<img src="${esc(ic.file)}" alt="${esc(t)}">` : esc(t.slice(0, 2))}</button>`; }).join("")}</div>
+            <p class="muted part-note">Press a type again to pick it twice.</p>`)}
           ${view && !(psdVal(b, "types") || []).length ? `<p class="muted part-note">No type icon yet: the first goes at ${esc(view.rec.template?.file ? view.rec.template.file.split("/").pop().replace(/\.psd$/i, "") : "the template")}'s spot (flagged).</p>` : ""}
         </fieldset>
         <fieldset><legend>Stats</legend>
@@ -939,7 +941,7 @@ export function createEditor(app) {
     };
     const all = {
       name: () => f("name").value.trim() || b.name, type: () => f("type").value, subtype: () => str("subtype"), series: () => named("series"), subseries: () => named("subseries"), stars: () => { const v = int("stars"); return v == null ? null : Math.min(v, maxStars()); },
-      types: () => [...document.querySelectorAll("#ef-types .on")].map(x => x.dataset.type),
+      types: () => readToggles(f("types")),
       ...Object.fromEntries(STATS.map(s => [s, () => int(s)])),
       ability: () => f("ability").value.replace(/\r/g, "").trim() || null, note: () => f("note").value.trim() || null,
       art: () => { const list = artList({ art: [...document.querySelectorAll("#ef-art [data-art-src]")].map(i => i.value) }); error ||= artError(list); return list.length ? list : null; },
@@ -1309,7 +1311,7 @@ export function createEditor(app) {
       }
       if (e.target.closest("[data-type], [data-insert], [data-reset], [data-creature]")) typing();
       const t = e.target.closest("[data-type]");
-      if (t) { const on = !t.classList.contains("on"); t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); update(); return; }
+      if (t) { pressToggle(t); update(); return; }
       const ins = e.target.closest("[data-insert]");
       if (ins) { const box = siteOn("ability") && ta ? ta : partForm?.last?.isConnected ? partForm.last : (ta?.closest("[hidden]") ? null : ta) || form.querySelector(".part-box[data-kind=ability] [data-part]"); if (!box) return;
         const s = box.selectionStart, end = box.selectionEnd; box.setRangeText(ins.dataset.insert, s, end, "end"); box.focus(); update(); return; }
@@ -1338,7 +1340,7 @@ export function createEditor(app) {
   }
   function resetField(c, f) {
     const p = psdVal(baseOf(c), f), el = document.getElementById(`ef-${f}`);
-    if (f === "types") { for (const t of document.querySelectorAll("#ef-types [data-type]")) { const on = (p || []).includes(t.dataset.type); t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); } return; }
+    if (f === "types") { setToggles(el, p || []); return; }
     if (f === "creatures") { document.getElementById("ef-creatures").innerHTML = (p || []).map(creatureRow).join(""); if (!p) creatureAction("remove"); return; }
     if (f === "art") { setArt(p || []); return; }
     if (!el) return;

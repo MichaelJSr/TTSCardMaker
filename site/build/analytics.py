@@ -318,9 +318,9 @@ def change(a, b, texts):
         va, vb = getattr(a, field, None), getattr(b, field, None)
         if va != vb:
             row[key] = [va, vb]
-    ta, tb = list(getattr(a, "types", None) or []), list(getattr(b, "types", None) or [])
-    if sorted(ta) != sorted(tb):
-        row["types"] = {"add": sorted(set(tb) - set(ta)), "drop": sorted(set(ta) - set(tb))}
+    ta, tb = Counter(getattr(a, "types", None) or []), Counter(getattr(b, "types", None) or [])
+    if ta != tb:                               # counted: a second of a type is a change
+        row["types"] = {"add": sorted((tb - ta).elements()), "drop": sorted((ta - tb).elements())}
     na, nb = len(getattr(a, "creatures", None) or []), len(getattr(b, "creatures", None) or [])
     if max(na, 1) != max(nb, 1):
         row["lines"] = [max(na, 1), max(nb, 1)]
