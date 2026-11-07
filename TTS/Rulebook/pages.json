@@ -1,7 +1,7 @@
 {
  "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
  "pdf": "Rulebook.pdf",
- "key": "afce17b8048fbfbc60350d0a50e50d4a089ee589ac9002fe0b19d007943b5693",
+ "key": "a847d97935328ddef5a986b6ee4fa5398a7d6630c9163efedc88c3855041685a",
  "pages": [
   {
    "name": "Cover",
@@ -191,7 +191,7 @@
   {
    "name": "Item Types",
    "num": "14",
-   "sha": "2cca38971d5d5b966f3cf20b994cc60ffb480ee8dd4c02b0e1970cda7a30df28",
+   "sha": "bf240e21e2adb6f3bd8508a8a2102d93da65c4dda639e100faa7082620d0f06f",
    "t": "ITEM TYPES Item types are the symbol are the top left of an item that dictate how the items work. These items types cannot be manipulated. The item types displayed here are items that by default are discarded after being played. HEALING Also referred to as “food” these items heal creatures. May not be used on . ATTACK These items do damage, and count as an attack when used. (See: “ATTACKING”) NEGATION These items “Negate” something, taking it out of play. (See: “ABILITIES”,“ITEMS”, “ATTACKING”) SUPPORT These items are general use items with various effects. if you find this text dont delete it COUNTER These items can only be activated under certain conditions. These can only be used reactively. These items tend to have multiple uses and are only discarded when all uses have been used. INFLICTION These items inflict a status effect and count as an infliction. 14"
   },
   {
