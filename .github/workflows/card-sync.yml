@@ -186,6 +186,7 @@ jobs:
             /commands/rulebook_pages.py
             /commands/psd_links.py
             /commands/render_record.json
+            /commands/spot_record.json
 
       # The data branch (restore rewrites a bad one; a lost branch is pushed back by hand from a clone)
       - &data-checkout

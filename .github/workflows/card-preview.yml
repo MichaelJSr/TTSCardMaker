@@ -91,6 +91,7 @@ jobs:
             /requirements-cards.txt
             /commands/psd_links.py
             /commands/render_record.json
+            /commands/spot_record.json
 
       # The shared setup (.github/actions/cards-python), without the oxipng CLI: the bake would recompress preview.png
       # (~4 s), which is never published.

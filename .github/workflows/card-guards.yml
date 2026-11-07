@@ -183,6 +183,7 @@ jobs:
             /commands/ability_index.json
             /commands/psd_links.py
             /commands/render_record.json
+            /commands/spot_record.json
 
       # The post job checks out this same commit: plan and land from one bot version.
       - name: Bot commit
@@ -595,6 +596,7 @@ jobs:
             /commands/ability_index.json
             /commands/psd_links.py
             /commands/render_record.json
+            /commands/spot_record.json
 
       - timeout-minutes: 10
         uses: ./.github/actions/cards-python

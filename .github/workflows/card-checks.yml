@@ -105,6 +105,7 @@ jobs:
             /requirements-cards.txt
             /commands/psd_links.py
             /commands/render_record.json
+            /commands/spot_record.json
 
       - &data-checkout
         uses: actions/checkout@v7
