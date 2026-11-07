@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5q36i5-2stx",
+ "card": "Indoctrination",
+ "path": "Auxiliary/Items/Indoctrination.psd",
+ "png": "Auxiliary/Items/Indoctrination.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "7082a18a20784c69c5e6bf42d00afb3eb6a5fe8b",
+  "png_blob": "380d419031f6c2aa0d58c7eee6c79fbe148c9a5a"
+ },
+ "edit": {
+  "name": "Indoctrination",
+  "parts": {
+   "327": {
+    "field": "name",
+    "text": "Indoctrination",
+    "was": "Indoctrinati0n",
+    "sha": "51c0be53",
+    "psd": "7082a18a",
+    "layer": "Types/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'Indoctrinati0n' -> 'Indoctrination'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "Indoctrinati0n",
+   "new": "Indoctrination"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.019,
+   "max": 1.0
+  }
+ },
+ "region": [
+  49,
+  36,
+  1175,
+  112
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42324086603",
+ "took_s": 4.3,
+ "at": "2026-11-07T01:26:53Z",
+ "variant": null,
+ "parts": {
+  "327": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 1194441,
+  "webp": 48504,
+  "before": 48516
+ },
+ "recompressed": false
+}

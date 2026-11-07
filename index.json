@@ -1215,6 +1215,14 @@
    "png_blob": "2593b0cf1e9d51cc04bd57f13f9cd9d22bf407be",
    "psd_blob": "69274d06bf99858ab57ab1121c1c41f1beb2a9c8",
    "state": "baked"
+  },
+  "zomoroko-mw5q36i5-2stx": {
+   "at": "2026-11-07T01:26:53Z",
+   "card": "Indoctrination",
+   "path": "Auxiliary/Items/Indoctrination.psd",
+   "png_blob": "380d419031f6c2aa0d58c7eee6c79fbe148c9a5a",
+   "psd_blob": "7082a18a20784c69c5e6bf42d00afb3eb6a5fe8b",
+   "state": "baked"
   }
  },
  "v": 1
