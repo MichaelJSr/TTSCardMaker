@@ -10320,7 +10320,7 @@
           "HideWhenFaceDown": false,
           "Hands": false,
           "CustomImage": {
-            "ImageURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e9b568a1d93ae526f7b2000de6dc399823fc3f4b/Types/rock.png",
+            "ImageURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/77f42dc567ef32dc20b7858c713836eb3a717157/Types/rock.png",
             "ImageSecondaryURL": "",
             "ImageScalar": 1.0,
             "WidthScale": 0.0,
