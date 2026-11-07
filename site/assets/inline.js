@@ -120,8 +120,8 @@ export function mountCard(modal, c, api = A) {
   facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="art:${arts.length + 1}" data-empty aria-label="Add an artwork source">+ artwork source</button>`);
   for (const el of detail.querySelectorAll(".card-flags [data-flag]")) {          // its reason in place; ✕ clears the flag
     const k = el.dataset.flag;
-    mark(el, `flag:${k}`, "Click to word the reason");
-    if (!el.textContent) { el.toggleAttribute("data-empty", true); el.textContent = "+ reason"; }
+    mark(el, `flag:${k}`, "Click to say what the issue is");
+    if (!el.textContent) { el.toggleAttribute("data-empty", true); el.textContent = "+ what is the issue?"; }
     el.insertAdjacentHTML("afterend", `<button type="button" class="ghost flag-clear" data-flag-clear="${k}" aria-label="${esc(`Clear ${flagLabel(k)}`)}" title="Clear this flag">✕</button>`);
   }
   for (const [k, l] of CARD_FLAGS) if (!ownFlag(c, k)) facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="flag:${k}" data-empty aria-label="${esc(`Flag: ${l}`)}">+ ${esc(l.toLowerCase())}</button>`);

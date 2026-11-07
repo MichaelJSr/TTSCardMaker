@@ -891,7 +891,7 @@ export function createEditor(app) {
         </fieldset>`}
         <fieldset id="ef-flags"><legend>Flags</legend>
           ${CARD_FLAGS.map(([k, l]) => `<div class="erow" data-row="flag-${k}"><label for="ef-flag-${k}">${esc(l)}</label><div class="ein"><input id="ef-flag-${k}" type="checkbox"${ownFlag(c, k) ? " checked" : ""}>
-            <input id="ef-flag:${k}" data-flag-why="${k}" value="${esc(c.flags?.[k] ?? "")}" placeholder="reason (optional)" aria-label="${esc(l)}: reason"></div></div>`).join("")}
+            <input id="ef-flag:${k}" data-flag-why="${k}" value="${esc(c.flags?.[k] ?? "")}" placeholder="what is the issue?" aria-label="${esc(l)}: what is the issue?"></div></div>`).join("")}
         </fieldset>
         <fieldset><legend>Checks</legend>
           ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 20 is intended</label>`)}
