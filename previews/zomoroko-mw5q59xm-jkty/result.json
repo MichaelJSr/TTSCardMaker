@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5q59xm-jkty",
+ "card": "Leaf Shield",
+ "path": "Items/Equip/1 Stars/Leaf_Shield.psd",
+ "png": "Items/Equip/1 Stars/Leaf_Shield.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "cb9bc6e0faf3700d4e0c7bcdaadb0f43ba23805e",
+  "png_blob": "c17f0934eda31f236869ddfc40197b7d1ac5dff4"
+ },
+ "edit": {
+  "name": "Leaf Shield",
+  "parts": {
+   "327": {
+    "field": "name",
+    "text": "Leaf Shield",
+    "was": "LEAF SHIELD",
+    "sha": "37fc7e26",
+    "psd": "cb9bc6e0",
+    "layer": "Text/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'LEAF SHIELD' -> 'Leaf Shield'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "LEAF SHIELD",
+   "new": "Leaf Shield"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.014,
+   "max": 2.0
+  }
+ },
+ "region": [
+  244,
+  21,
+  960,
+  141
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42324226365",
+ "took_s": 5.0,
+ "at": "2026-11-07T01:28:31Z",
+ "variant": null,
+ "parts": {
+  "327": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 2595737,
+  "webp": 67372,
+  "before": 69508
+ },
+ "recompressed": false
+}

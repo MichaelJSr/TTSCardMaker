@@ -1223,6 +1223,14 @@
    "png_blob": "380d419031f6c2aa0d58c7eee6c79fbe148c9a5a",
    "psd_blob": "7082a18a20784c69c5e6bf42d00afb3eb6a5fe8b",
    "state": "baked"
+  },
+  "zomoroko-mw5q59xm-jkty": {
+   "at": "2026-11-07T01:28:31Z",
+   "card": "Leaf Shield",
+   "path": "Items/Equip/1 Stars/Leaf_Shield.psd",
+   "png_blob": "c17f0934eda31f236869ddfc40197b7d1ac5dff4",
+   "psd_blob": "cb9bc6e0faf3700d4e0c7bcdaadb0f43ba23805e",
+   "state": "baked"
   }
  },
  "v": 1
