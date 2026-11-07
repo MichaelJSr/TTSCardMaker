@@ -1183,6 +1183,14 @@
    "png_blob": "0ddef15456c9e6f3ada2b20ce710380dce819df5",
    "psd_blob": "17b3636fe7a711b59572568c2fe9a4483d22673f",
    "state": "error"
+  },
+  "zomoroko-mw5plxng-6mka": {
+   "at": "2026-11-07T01:13:27Z",
+   "card": "Cabbage",
+   "path": "Auxiliary/Items/Cabbage.psd",
+   "png_blob": "2df3c44549b05fb65b7c783a5c7aa7548520b8d3",
+   "psd_blob": "fe050f0d1161a78a5f912515d7ab98fa6d89f820",
+   "state": "baked"
   }
  },
  "v": 1

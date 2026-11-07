@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5plxng-6mka",
+ "card": "Cabbage",
+ "path": "Auxiliary/Items/Cabbage.psd",
+ "png": "Auxiliary/Items/Cabbage.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "fe050f0d1161a78a5f912515d7ab98fa6d89f820",
+  "png_blob": "2df3c44549b05fb65b7c783a5c7aa7548520b8d3"
+ },
+ "edit": {
+  "name": "Cabbage",
+  "parts": {
+   "327": {
+    "field": "name",
+    "text": "Cabbage",
+    "was": "CABBAGE",
+    "sha": "8f450ce2",
+    "psd": "fe050f0d",
+    "layer": "Text/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'CABBAGE' -> 'Cabbage'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "CABBAGE",
+   "new": "Cabbage"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.315,
+   "max": 2.0
+  }
+ },
+ "region": [
+  273,
+  48,
+  927,
+  182
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42322845004",
+ "took_s": 5.2,
+ "at": "2026-11-07T01:13:27Z",
+ "variant": null,
+ "parts": {
+  "327": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 3936570,
+  "webp": 143998,
+  "before": 144200
+ },
+ "recompressed": false
+}
