@@ -690,17 +690,6 @@ export function createEditor(app) {
     }
     return list.length ? { rec, list, added, picture: built.picture || null } : null;
   }
-  // the title drawn into the picture: no title layer, no text in the title region (of the Text group): a new title is
-  // website only (the bot's psd_edit.title_in_picture; TITLE_REGION is psd_parser.TITLE_REGION_RATIO)
-  const TITLE_REGION = 0.12;
-  function titleInPicture(view) {
-    if (!view || view.list.some(b => b.kind === "title")) return false;
-    const texts = (Array.isArray(view.rec.text) ? view.rec.text : []).filter(t => t && typeof t.layer === "string"), h = view.rec.canvas?.h;
-    if (!h) return false;
-    const grouped = texts.some(t => t.layer.startsWith("Text/"));
-    return !texts.some(t => t.visible && (t.text || "").trim() && Array.isArray(t.box) && t.box[1] < h * TITLE_REGION
-      && (!grouped || t.layer.startsWith("Text/")) && !t.layer.includes(" FX: ") && t.layer.split("/").pop().trim().toLowerCase() !== "ability");
-  }
   let partForm = null;                             // the open dialog's box state: {c, view, deleted, drops, added (shown), last (focused box)}
   const partEl = key => document.getElementById(`ef-part:${key}`);
   function partValues() {                          // the dialog's boxes -> readParts' form
@@ -842,7 +831,7 @@ export function createEditor(app) {
           ${view?.list.some(x => x.kind === "title") ? `<div class="erow" data-row="name"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
             <p class="muted part-join" id="ef-name-join"></p></div>${plain("name", `<input id="ef-name" value="${esc(c.name)}">`)}</div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
           ${namesLine(c)}
-          ${titleInPicture(view) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
+          ${P.titleInPicture(view?.rec) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
           ${renameRow(c, b)}
           ${row("stars", `<input id="ef-stars" type="number" min="0" max="${maxStars()}" step="1" value="${c.stars ?? ""}" placeholder="—">`)}<p class="muted part-note" id="ef-stars-note"></p>
           ${row("types", `<div class="icon-toggles" id="ef-types">${typeNames.map(t => { const ic = app.iconFor(t), on = (c.types || []).includes(t);
@@ -1222,7 +1211,7 @@ export function createEditor(app) {
       document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text) : `<span class="muted">No ability text.</span>`;
       const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");   // a stars edit moves the card (the bake's plan_move)
       const mv = sn && st && !siteOn("stars") ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
-      if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${partForm?.view.rec.header?.stars ? " and redraws the printed stars" : ""}. Tick Website only to keep the card where it is.`
+      if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${!partForm?.view.rec.header?.stars ? "" : P.starsKept(partForm.view.rec.header.stars, +st.value) ? "; the printed stars stay as they are" : " and redraws the printed stars"}. Tick Website only to keep the card where it is.`
         : st && siteOn("stars") && P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) ? "Website only: the card stays in its folder." : "";
       if (partForm) {
         const join = document.getElementById("ef-name-join"), made = lastRead?.derived.name || "";   // the boxes joined: the site's name once a title edit is published

@@ -9,6 +9,7 @@
 // text goes in a dark box over the template's area instead ("box"), never over a half-erased old one. Everything above
 // `draw` is pure (node checks run it on plain pixel arrays).
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
+import { starMove, starsKept, titleInPicture } from "./parts.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
@@ -579,6 +580,20 @@ export function changes(edit, psd) {
   return out;
 }
 
+const STAT_NAME = { hp: /^(hp|health)$/i, def: /^(def|defen[cs]e|defemse)$/i, atk: /^(atk|attack)$/i, spd: /^(spd|speed)$/i };   // psd_regions.STATS
+/** Whether the record's stat bar is a layer-comp smart object (the Alt template's Stats Bars/Darks/Health): it bakes to 20. */
+export const compBar = (rec, k) => Array.isArray(rec?.smart_objects) && rec.smart_objects.some(p => {
+  const path = String(p).split("/"), own = path.pop().trim();
+  return STAT_NAME[k].test(own) && path.some(g => /dark|bars/i.test(g)); });
+/** Why a stat at `to` stays on the website (psd_edit.classify's site reasons; old bars), or null: it bakes, or the record
+ *  can't tell (several rows: Top and Bottom rows bake to 20, several creatures' rows don't). */
+export function statSite(rec, k, to) {
+  const kind = rec?.stats?.[k];
+  if (!(to > 10) || typeof kind !== "string" || !Array.isArray(rec.smart_objects) || compBar(rec, k)) return null;
+  if (kind === "two-row") return to > 20 ? "the card's bars print up to 20" : null;
+  return `the card's ${kind === "template" ? "old-style " : ""}bars print up to 10`;
+}
+
 /** The boxes to redraw from per-layer edits (PARTS_EDITOR.md §5; parts: Card Edits.json's, by layer id): [{id, role (name |
  *  ability), old, text (null: the layer is deleted), box (canvas px), added}] for the record's parts whose edit differs
  *  from the layer's text; an added ability goes in the template's Ability box. */
@@ -750,7 +765,14 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const work = document.createElement("canvas"); work.width = W; work.height = H;
   const ctx = work.getContext("2d", { willReadFrequently: true });
   ctx.drawImage(img, 0, 0);
-  const todo = changes(edit, psd), out = { drawn: [], skipped: [...todo.skipped], boxed: [], over: [], refused: [], fonts: {}, standIn: [], shape };
+  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: [], fonts: {}, standIn: [], shape, site: [], starsKept: null };
+  for (const label of todo.skipped) {                 // a stat past what its bar prints stays on the website
+    const k = label.toLowerCase(), why = statSite(rec, k, edit[k]);
+    if (why) out.site.push([`${label} ${edit[k]}`, why]); else out.skipped.push(label);
+  }
+  if (todo.name != null && titleInPicture(rec)) { out.site.push(["name", "title"]); todo.name = null; }   // the dialog's note
+  const kept = todo.stars && starsKept(rec?.header?.stars, todo.stars[1]), moved = kept && starMove(card?.psd, todo.stars[1]);
+  if (kept) { if (moved) out.starsKept = { why: kept, to: moved.to }; else out.refused.push(["stars", kept]); todo.stars = null; }   // the picture's stay
   const blit = () => { if (stale()) return null; canvas.width = W; canvas.height = H; canvas.getContext("2d").drawImage(work, 0, 0); return out; };
   if (!tpl) { out.skipped.push(...[todo.name != null && "name", todo.ability != null && "text", ...Object.keys(todo.stats).map(k => k.toUpperCase()), todo.stars && "stars", todo.types && "types"].filter(Boolean)); return blit(); }
   const pixels = ctx.getImageData(0, 0, W, H), L = luma(pixels.data);

@@ -139,6 +139,23 @@ export function starMove(path, stars, paths = []) {
   const to = `${m[1]}${stars} Stars/`, low = to.toLowerCase();
   return { to, created: !paths.some(p => String(p || "").toLowerCase().startsWith(low)) };
 }
+/** Why a bake keeps the printed stars at n (header.stars' refusal, "*" every count; psd_details._star_header), or null:
+ *  it redraws them, or the record can't tell. An older record's "the folder sets them": the card moves, they're redrawn. */
+export function starsKept(stars, n) {
+  const r = stars && typeof stars === "object" && stars.refused && typeof stars.refused === "object" ? stars.refused[n] ?? stars.refused["*"] : null;
+  return r && !/folder sets them/.test(r) ? String(r) : null;
+}
+// the title drawn into the picture: no title layer, no text in the title region (of the Text group): a new title is
+// website only (the bot's psd_edit.title_in_picture; TITLE_REGION is psd_parser.TITLE_REGION_RATIO)
+const TITLE_REGION = 0.12;
+/** Whether a details record's title is part of the picture (records with parts only). */
+export function titleInPicture(rec) {
+  const p = partsOf(rec), h = rec?.canvas?.h;
+  if (!p || p.title.length || !h) return false;
+  const texts = arr(rec.text).filter(t => t && typeof t.layer === "string"), grouped = texts.some(t => t.layer.startsWith("Text/"));
+  return !texts.some(t => t.visible && (t.text || "").trim() && Array.isArray(t.box) && t.box[1] < h * TITLE_REGION
+    && (!grouped || t.layer.startsWith("Text/")) && !t.layer.includes(" FX: ") && t.layer.split("/").pop().trim().toLowerCase() !== "ability");
+}
 /** "Also printed by Text/Name copy (they follow)." and "The watermark images/Name follows the title." for a box's part. */
 export function followHtml(part) {
   const f = arr(part.follow), copies = f.filter(x => x.how === "copy").map(x => x.layer), marks = f.filter(x => x.how === "watermark").map(x => x.layer);

@@ -329,13 +329,19 @@ export function plainNote(note) {
   const s = String(note ?? ""), m = /^(stars|types) not baked: [a-z-]+: (.*)$/s.exec(s);
   return m ? `The ${m[1]} weren't baked: ${plainWhy(m[2])}.` : s.replace(LEDGER, "");
 }
-/** The mock-up's caption note from draw()'s result: what went in a box, ran over, wasn't drawn or the bake would refuse. */
+/** The mock-up's caption note from draw()'s result: what went in a box, ran over, wasn't drawn, the bake would refuse,
+ *  stays on the website only or stays printed as it is. */
 export function mockNote(out) {
   const lost = Object.entries(out.fonts || {}).filter(([, f]) => !f).map(([n]) => n), cap = s => s[0].toUpperCase() + s.slice(1);
   const boxed = out.boxed || [], many = boxed.length > 1 || /s$/.test(boxed[0] || "");
+  const site = (out.site || []).filter(([label]) => label !== "name"), reasons = [...new Set(site.map(([, w]) => w))];
+  const and = l => (l.length > 1 ? `${l.slice(0, -1).join(", ")} and ${l[l.length - 1]}` : l[0]);
   return [boxed.length ? `${cap(boxed.join(" and "))} in a box: ${many ? "their places" : "its place"} on the image ${many ? "weren't" : "wasn't"} found.` : "",
     out.over?.length ? `The ${out.over.join(" and the ")} runs past ${out.over.length > 1 ? "their" : "its"} place on the card.` : "",
     ...(out.refused || []).map(([label, why]) => `The bake would refuse the ${label}: ${plainWhy(why)}.`),
+    out.site?.some(([label]) => label === "name") ? "The title is part of the picture: the new title shows on the website only until it's drawn in Photoshop." : "",
+    ...reasons.map(w => { const l = site.filter(([, x]) => x === w).map(([label]) => label); return `${and(l)} ${l.length > 1 ? "show" : "shows"} on the website only: ${w}.`; }),
+    out.starsKept ? `The printed stars stay as they are (${plainWhy(out.starsKept.why)}): the card only moves to the ${out.starsKept.to.replace(/\/$/, "").split("/").pop()} folder.` : "",
     out.skipped?.length ? `Not drawn: ${[...new Set(out.skipped)].join(", ")}.` : "", lost.length ? `Stand-in font for ${lost.join(", ")}.` : "",
     out.standIn?.length ? `Stand-in font for the ${out.standIn.join(" and the ")} (the card's isn't known).` : ""].filter(Boolean).join(" ");
 }
