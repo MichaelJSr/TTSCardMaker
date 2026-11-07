@@ -177,23 +177,29 @@ jobs:
 
       - name: Wait for the preview
         id: wait
+        working-directory: bot
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           runs="repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          for k in $(seq 240); do                   # 12 minutes at most; about 11 API calls a preview (the token's 1000/h)
+          # Publish's reads, done now (none: Publish fetches as ever)
+          timeout 10 python -S -m commands.card_preview_branch --warm --git "$GITHUB_WORKSPACE" || true
+          if [ $SECONDS -lt 5 ]; then sleep $((5 - SECONDS)); fi    # a hand-over takes 7 s or more
+          job_at=15
+          while [ $SECONDS -lt 720 ]; do            # 12 minutes at most; about 9 API calls a preview (the token's 1000/h)
             if gh api "$runs/artifacts" --jq '.artifacts[].name' 2> /dev/null | grep -qx card-preview; then
               echo "go=true" >> "$GITHUB_OUTPUT"; exit 0
             fi
-            if [ $((k % 5)) = 0 ]; then             # the job, every 15 s: ended without a hand-over?
+            if [ $SECONDS -ge $job_at ]; then       # the job, every 15 s: ended without a hand-over?
+              job_at=$((SECONDS + 15))
               job=$(gh api "$runs/jobs" --jq '.jobs[] | select(.name == "preview") | "\(.status) \([.steps[] | select(.name == "Validate") | .conclusion][0])"' 2> /dev/null) || job=""
               case $job in
                 "completed success") echo "go=true" >> "$GITHUB_OUTPUT"; exit 0 ;;   # validated: published as try again
                 completed*) echo "The request never validated: nothing to publish."; exit 0 ;;
               esac
             fi
-            sleep 3
+            if [ $SECONDS -lt 60 ]; then sleep 1; else sleep 3; fi
           done
           echo "::warning::the preview did not end in 12 minutes: nothing published"
 

@@ -561,7 +561,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - **Mock-up** (`mockup.draw(canvas, {card, src, rec, edit, psd, icons, getFonts, raw, onFont, stale})`): the card's 720 px
   thumb (same origin, so the canvas can read it) drawn off-screen and copied when done (a newer draw drops an older one);
   only the fields unlike the PSD are redrawn (`changes`): name, text, stats, stars, types (not a reorder); stats above 10
-  are named in the caption ("Not drawn: DEF."), never drawn. Stars and types: section 23.
+  are named in the caption ("Not drawn: DEF."), never drawn; on old bars (`statSite`: no layer-comp smart object,
+  `compBar`) "HP 12 shows on the website only: the card's old-style bars print up to 10." (several rows: can't tell).
+  A title in the picture (parts.js `titleInPicture`, the dialog's note) isn't drawn either. Stars and types: section 23.
   - Where: the details record has fonts, sizes and colours but **no text boxes** (psd_details keeps none), so the area
     is the card template's (`TEMPLATES`, fractions of the image measured on the PSDs' layer boxes on 2026-10-23: `tall`
     1200x2400 creatures and minions, whose stat bars sit at (0.3, 0.5, 0.978, 0.535) + 0.0525 a row on 311 of the 390
@@ -758,6 +760,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   glow. No header, no layout for the count, a token row, or units unlike the stars (The Lich King: 4 units for 5 stars):
   a dark box over `TEMPLATES[shape].stars` / `.types` with the new stars in rows of two (right to left) or the icons
   down a column, and the caption says so (no stars or types left: no box, "Not drawn: stars"); a refusal is named.
+  Stars the bake keeps (2026-11-07; parts.js `starsKept`: a refusal for the count other than an older record's "folder
+  sets them"; psd_details gives a card with no Stars group the bake's refusals and no units): not drawn, no box; a
+  folder card says "The printed stars stay as they are (<why>): the card only moves to the 4 Stars folder.", others
+  "The bake would refuse the stars: <why>."; the dialog's move note says the printed stars stay.
 - Measured (the new gather over all 764 card PSDs of the Desktop clone, read-only, 36 s with 6 workers; the median
   header 147 ms, the slowest 338 ms, +~1.5 KB a record): 660 with a stars section (494 every count refused for one
   reason, mostly "the 'N Stars' folder sets them"; 577 with every count 1-10 laid out; 10 with none), 687 with a type
