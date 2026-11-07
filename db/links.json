@@ -5871,6 +5871,947 @@
    }
   ]
  },
+ "Auxiliary/Minions/Whelp.psd": {
+  "blob": "b36973a67457f6f52574afbb3166c0fb74dabbe1",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+    "name": "fire.png",
+    "path": "Types/fire.png",
+    "size": 568963
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   }
+  ]
+ },
+ "Auxiliary/Minions/Wolf.psd": {
+  "blob": "b24ef6760f10ea90cc55faf98591763012ec07c8",
+  "links": [
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   }
+  ]
+ },
+ "Auxiliary/Minions/X-Fist.psd": {
+  "blob": "2ecb072df448d60927c534aec2e1a1a03bbf1c10",
+  "links": [
+   {
+    "drawn": "4b06eff55921e822dc8cef08c97d441e55940274",
+    "name": "Ruby_Star.png",
+    "path": "Types/Stars/Ruby_Star.png",
+    "size": 4718
+   },
+   {
+    "drawn": "4b06eff55921e822dc8cef08c97d441e55940274",
+    "name": "Ruby_Star.png",
+    "path": "Types/Stars/Ruby_Star.png",
+    "size": 4718
+   },
+   {
+    "drawn": "4b06eff55921e822dc8cef08c97d441e55940274",
+    "name": "Ruby_Star.png",
+    "path": "Types/Stars/Ruby_Star.png",
+    "size": 4718
+   },
+   {
+    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "name": "machine.png",
+    "path": "Types/machine.png",
+    "size": 303679
+   },
+   {
+    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "name": "Offensive_Minion.png",
+    "path": "Types/Offensive_Minion.png",
+    "size": 4451016
+   },
+   {
+    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Diligent_Watch.psd": {
+  "blob": "ffe97afce0474a05dbc7ee121f745036f5a375f2",
+  "links": [
+   {
+    "drawn": "c034a83976c3a94a1ab6c139064e545ca5123cb4",
+    "name": "buff.png",
+    "path": "Types/buff.png",
+    "size": 5354
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Empowered.psd": {
+  "blob": "68518ebdebc0c128615bb4abf908c1347d3e9308",
+  "links": []
+ },
+ "Auxiliary/Status Effects/Buffs/Enraged.psd": {
+  "blob": "192abdbb8055e4a154f81068b0f9420dffde09c2",
+  "links": [
+   {
+    "drawn": "88e1175c633fdd97d60c618b95d2bdb4f120311d",
+    "name": "Enraged - buffstack.png",
+    "path": "MDW/Linked/Enraged - buffstack.png",
+    "size": 4605
+   },
+   {
+    "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+    "name": "buffstack.png",
+    "path": "Types/buffstack.png",
+    "size": 8494
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Hardened.psd": {
+  "blob": "8246d2cb143d8cb9bc7a7ebab53e1d81722cf67e",
+  "links": [
+   {
+    "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+    "name": "buffstack.png",
+    "path": "Types/buffstack.png",
+    "size": 8494
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Hyper.psd": {
+  "blob": "1bc6da1ea910bf0fa77a674446661de08cb5e465",
+  "links": [
+   {
+    "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+    "name": "buffstack.png",
+    "path": "Types/buffstack.png",
+    "size": 8494
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Inspired.psd": {
+  "blob": "bf49bd22c9dadc88d722eb1356095e1a447f898b",
+  "links": [
+   {
+    "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+    "name": "buffstack.png",
+    "path": "Types/buffstack.png",
+    "size": 8494
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Marked For Life.psd": {
+  "blob": "f554cad0e2344851a0e0f67d01ad147dc2a6eac1",
+  "links": [
+   {
+    "drawn": "aa902cea2d70e9e96b43a851d4afc7ad37a8040c",
+    "name": "Marked For Life - Marked For Life.png",
+    "path": "MDW/Linked/Marked For Life - Marked For Life.png",
+    "size": 2208907
+   },
+   {
+    "drawn": "88e1175c633fdd97d60c618b95d2bdb4f120311d",
+    "name": "Enraged - buffstack.png",
+    "path": "MDW/Linked/Enraged - buffstack.png",
+    "size": 4605
+   },
+   {
+    "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+    "name": "buffstack.png",
+    "path": "Types/buffstack.png",
+    "size": 8494
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Peppy.psd": {
+  "blob": "42cb02baf28d963f2a5f73c7a2500a259333dfba",
+  "links": [
+   {
+    "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+    "name": "buffstack.png",
+    "path": "Types/buffstack.png",
+    "size": 8494
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Regen.psd": {
+  "blob": "beb64a5b4357733a8d599601a4ca47aa8fbf6ea8",
+  "links": [
+   {
+    "drawn": "88e1175c633fdd97d60c618b95d2bdb4f120311d",
+    "name": "Enraged - buffstack.png",
+    "path": "MDW/Linked/Enraged - buffstack.png",
+    "size": 4605
+   },
+   {
+    "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+    "name": "buffstack.png",
+    "path": "Types/buffstack.png",
+    "size": 8494
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Reinforced.psd": {
+  "blob": "56538c61cebb11a36b3d59dadc6e75e81854a0bb",
+  "links": [
+   {
+    "drawn": "09a2251accabc42730c41e42488115dcdf75166c",
+    "name": "Reinforced - Reinforced.jpg",
+    "path": "MDW/Linked/Reinforced - Reinforced.jpg",
+    "size": 221648
+   },
+   {
+    "drawn": "88e1175c633fdd97d60c618b95d2bdb4f120311d",
+    "name": "Enraged - buffstack.png",
+    "path": "MDW/Linked/Enraged - buffstack.png",
+    "size": 4605
+   },
+   {
+    "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+    "name": "buffstack.png",
+    "path": "Types/buffstack.png",
+    "size": 8494
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Thickened.psd": {
+  "blob": "15b2b6ff60e5ca9449e66e408dfa8351f5fd5140",
+  "links": [
+   {
+    "drawn": "b7583e86f82d7e306b282d55eb10455ee8ae1b9b",
+    "name": "Thickened - Background.psb",
+    "path": "MDW/Linked/Thickened - Background.psb",
+    "size": 484738
+   },
+   {
+    "drawn": "42fd6c57a04110a4ebf20e83c43d051555ed6b83",
+    "name": "Thickened - Thicc Krabs.png",
+    "path": "MDW/Linked/Thickened - Thicc Krabs.png",
+    "size": 405720
+   },
+   {
+    "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+    "name": "buffstack.png",
+    "path": "Types/buffstack.png",
+    "size": 8494
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Buffs/Vigor.psd": {
+  "blob": "c452a38cfcaac0471d7fac3adb2a37e09250f111",
+  "links": [
+   {
+    "drawn": "ad0199dd7d8c54ee300613d22d60433edc9ae8ae",
+    "name": "Vigor - Naked.png",
+    "path": "MDW/Linked/Vigor - Naked.png",
+    "size": 835758
+   },
+   {
+    "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+    "name": "buffstack.png",
+    "path": "Types/buffstack.png",
+    "size": 8494
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Blindness.psd": {
+  "blob": "53749aacd4cd75f2bf3724bac72adff15fe1f1b6",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Burdened.psd": {
+  "blob": "16703bc3792a162f1cb353bf9a9af3045010daa4",
+  "links": [
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Burning.psd": {
+  "blob": "37767b89da18973b9dd930cfea05ecfee40a3b39",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Disgusted.psd": {
+  "blob": "21279dad18733148c0aa8b4443db6bb03f162731",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Enfeebled.psd": {
+  "blob": "57b43306e2ccd4639c796cecc397b0685c2657d5",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Poison.psd": {
+  "blob": "ad7a3dd408711ae524b668232a0799b6a3817e73",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Sickness.psd": {
+  "blob": "ccb78d35b11a6670ab96f6fab9b149ab23f86271",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Smeckeldorfed.psd": {
+  "blob": "5d76765805c2dde89e6c69110c981f15f35d2a00",
+  "links": [
+   {
+    "drawn": "45f9ec5da2a465d3cc5db6b319a6bfbba43dbd01",
+    "name": "Smeckeldorfed - Smeckeldorfed.png",
+    "path": "MDW/Linked/Smeckeldorfed - Smeckeldorfed.png",
+    "size": 546975
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Smoldering.psd": {
+  "blob": "906c521a74a736a52eba95231227b54e2b686a5a",
+  "links": [
+   {
+    "drawn": "8b61fec267337e62e1b5d91547a1073b6386012d",
+    "name": "Smoldering - maxresdefault (2) (1).jpg",
+    "path": "MDW/Linked/Smoldering - maxresdefault (2) (1).jpg",
+    "size": 5680206
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Softened.psd": {
+  "blob": "6360aa7bd8ca26982560362db74ed716a9100e86",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Stuffed.psd": {
+  "blob": "59d63c024a827eb99ff8b4a0924c276a4aa81a7c",
+  "links": [
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/1 Stars/Thinned.psd": {
+  "blob": "bcdca7431419800c0eb8ba316886af629df7cfe3",
+  "links": [
+   {
+    "drawn": "a186026978a8f61c777c2fce7037a8cd7a902a73",
+    "name": "Thinned - Help.png",
+    "path": "MDW/Linked/Thinned - Help.png",
+    "size": 236208
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Afraid.psd": {
+  "blob": "04449fb4fa5cb6e7039ba8e0fa4386c755d3a702",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Blazing.psd": {
+  "blob": "2ff4810ef9a36e9c928f7783932b0cd46fe6f282",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Chained.psd": {
+  "blob": "8829ed3369ab595b9a2c79174761642de380af2e",
+  "links": [
+   {
+    "drawn": "132645e2aaecfb57ca8fa7eaa21627d170f1b86b",
+    "name": "Chained - Chained.jpg",
+    "path": "MDW/Linked/Chained - Chained.jpg",
+    "size": 108611
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Chilled.psd": {
+  "blob": "108ab6ba060933d64a73a6dabc05cbd0a27e720b",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Confusion.psd": {
+  "blob": "a671e845cb17765d1672709b6caa3919cb5456d9",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Edible.psd": {
+  "blob": "002c8518bef31f03e9890f220b52c01f4f3366c4",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Empty.psd": {
+  "blob": "f876c811a3aba356e6cbaef5b28d4d20b9fb69cc",
+  "links": [
+   {
+    "drawn": "0e7829d101d28fc2b62d197c6eef5a4df72738a7",
+    "name": "Empty - Empty.jpg",
+    "path": "MDW/Linked/Empty - Empty.jpg",
+    "size": 61565
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Engorged.psd": {
+  "blob": "cccdba141d2cbd760a495c6cb835dc6ecc2fdf7a",
+  "links": [
+   {
+    "drawn": "132645e2aaecfb57ca8fa7eaa21627d170f1b86b",
+    "name": "Chained - Chained.jpg",
+    "path": "MDW/Linked/Chained - Chained.jpg",
+    "size": 108611
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Exposed.psd": {
+  "blob": "067d7063728cdfeae90c68277fd420083ebe988b",
+  "links": [
+   {
+    "drawn": "e410424c2f5de07c766ec7e94fe89d291da3d860",
+    "name": "Exposed - Exposed.png",
+    "path": "MDW/Linked/Exposed - Exposed.png",
+    "size": 1088589
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Frostbite.psd": {
+  "blob": "9d28ab0ae3a8283686b2b807febd8b5a1d89ff9a",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Glued.psd": {
+  "blob": "c6281f62cfd733d7cfd778c78203fab9e6f202ea",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Loony.psd": {
+  "blob": "193d1503d0cb9f72f1a2bcf4327ed14910416bb1",
+  "links": [
+   {
+    "drawn": "06d08ae95834e6036926a7a107d363d20ffe0446",
+    "name": "Loony - Loony.png",
+    "path": "MDW/Linked/Loony - Loony.png",
+    "size": 342216
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Paralyzed.psd": {
+  "blob": "4ddd4f5399468b5334305dbd1d05a8440e2a1720",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Plague.psd": {
+  "blob": "315fd2f72f2005cf504ce411dd6cf08b4608077c",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Restrained.psd": {
+  "blob": "bd59460c1bb1ac0568746776f8175e7a8c9ce140",
+  "links": [
+   {
+    "drawn": "e4abaa2f9d33bb4e2ac62cbdb7d4f152e4c885c7",
+    "name": "Restrained - 1000.psb",
+    "path": "MDW/Linked/Restrained - 1000.psb",
+    "size": 1515790
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/2 Stars/Spirit_Flame.psd": {
+  "blob": "86dd8d4fe1254403ed39ec55b17b8c82a96d0d9d",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/3 Stars/Become_Back_Money.psd": {
+  "blob": "0a5b971c4c6f97129b2197261c14746b9e984d46",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "11eee7735674b549186c25fb856a75e90980eabb",
+    "name": "debuffstack.png",
+    "path": "Types/debuffstack.png",
+    "size": 7489
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/3 Stars/Cheap.psd": {
+  "blob": "5f0637c17360bb37d3f9251b9677c01f92f25042",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/3 Stars/Corrupted_Blood.psd": {
+  "blob": "e7ce1f424b3e0df4fc4148749acd7be954e5534d",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/3 Stars/Corruption.psd": {
+  "blob": "0a25307b51c751e800405b79a6c311b6e5701187",
+  "links": [
+   {
+    "drawn": "018bdae6d361970fc0e0c14f2d4ef6b60fedfd2a",
+    "name": "Corruption - MONEY.png",
+    "path": "MDW/Linked/Corruption - MONEY.png",
+    "size": 1866197
+   },
+   {
+    "drawn": "b9e45d73142e2a95c46a14522a6c7da9ead4bb7a",
+    "name": "Corruption - Jellyfish.png",
+    "path": "MDW/Linked/Corruption - Jellyfish.png",
+    "size": 819531
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "9842d409283e819405890ffd7f7e3bc7775145fd",
+    "name": "darkmatter.png",
+    "path": "Types/darkmatter.png",
+    "size": 220675
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
+ "Auxiliary/Status Effects/Debuffs/3 Stars/Cursed_Inferno.psd": {
+  "blob": "9d00d7df59d0d3fbb355d670662a37d59d37873e",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+    "name": "debuff.png",
+    "path": "Types/debuff.png",
+    "size": 5869
+   }
+  ]
+ },
  "MDW/Assets/Holders/Active.psd": {
   "blob": "bbe038a827060f72a4253ccceaaa66507e6021cb",
   "links": []
@@ -6099,6 +7040,10 @@
   "blob": "33d80c364295ff50934db492a7ef389bbb5833f1",
   "links": []
  },
+ "MDW/Linked/Restrained - 1000.psb": {
+  "blob": "e4abaa2f9d33bb4e2ac62cbdb7d4f152e4c885c7",
+  "links": []
+ },
  "MDW/Linked/Salt - Layer 1.psb": {
   "blob": "d3b2c5ea498bc34684017451f8634c70c4379ff3",
   "links": []
@@ -6133,6 +7078,10 @@
  },
  "MDW/Linked/Springtrap - Layer 1.psb": {
   "blob": "94749aa7abbc1f117d592cea00e7b24570babbdd",
+  "links": []
+ },
+ "MDW/Linked/Thickened - Background.psb": {
+  "blob": "b7583e86f82d7e306b282d55eb10455ee8ae1b9b",
   "links": []
  },
  "MDW/Linked/Unbreakable_heart - Layer 1.psb": {
@@ -7011,6 +7960,9 @@
   "MDW/Linked/Burst_Laser_II - Burst_Laser_II.webp": {
    "d5bb629b62d4af428d5b23e5dafff9ec30c4ac5a": 320
   },
+  "MDW/Linked/Chained - Chained.jpg": {
+   "132645e2aaecfb57ca8fa7eaa21627d170f1b86b": 108611
+  },
   "MDW/Linked/Chomp - f3a811ff9f251ef181097dbe8e8004e7.jpg": {
    "8ffa1d4a2c9d268a979d595cef45c2ccdb9deaa8": 67961
   },
@@ -7058,6 +8010,12 @@
   },
   "MDW/Linked/Clot_White - Sumptorium_eternal_familiar.webp": {
    "7411e48582d39bbe6164bb03eb11abd94388bd56": 128
+  },
+  "MDW/Linked/Corruption - Jellyfish.png": {
+   "b9e45d73142e2a95c46a14522a6c7da9ead4bb7a": 819531
+  },
+  "MDW/Linked/Corruption - MONEY.png": {
+   "018bdae6d361970fc0e0c14f2d4ef6b60fedfd2a": 1866197
   },
   "MDW/Linked/Corruptor - ability bg.psb": {
    "e66aa78af73095c9944d4b0fbe5f738621844012": 11782244
@@ -7125,6 +8083,12 @@
   "MDW/Linked/Electro_Probe - MetalGeneral-transformed.psb": {
    "0e1477072e950b593633263ed8b43fbc0c8cd649": 4058180
   },
+  "MDW/Linked/Empty - Empty.jpg": {
+   "0e7829d101d28fc2b62d197c6eef5a4df72738a7": 61565
+  },
+  "MDW/Linked/Enraged - buffstack.png": {
+   "88e1175c633fdd97d60c618b95d2bdb4f120311d": 4605
+  },
   "MDW/Linked/Evil_Cookie - 418958-Omori-pixel-art-ultrawide-universe-sky-stars-planet.png": {
    "5d5c323b4befa0e624de674da25248959a36315b": 64167
   },
@@ -7133,6 +8097,9 @@
   },
   "MDW/Linked/Evil_Cookie - Layer 6.psb": {
    "88b1e268d84f77fe887d3040c2b78030dc7265ff": 3146214
+  },
+  "MDW/Linked/Exposed - Exposed.png": {
+   "e410424c2f5de07c766ec7e94fe89d291da3d860": 1088589
   },
   "MDW/Linked/Flame_Bomb - Layer 1.psb": {
    "3da10d325ca53650af78a986d93837f6af5a4ab3": 8171288
@@ -7260,6 +8227,9 @@
   "MDW/Linked/Living_Bread - oasis.jpg": {
    "31801c6ce1bc9ca715f58473db5b7d4f5b98f988": 272404
   },
+  "MDW/Linked/Loony - Loony.png": {
+   "06d08ae95834e6036926a7a107d363d20ffe0446": 342216
+  },
   "MDW/Linked/Lorian - TpX01cD.jpg": {
    "26084d775d551716235612d5026079fc857e8a9d": 140909
   },
@@ -7283,6 +8253,9 @@
   },
   "MDW/Linked/Magnum_Opus - question-634903_1280.png": {
    "d189d573cc12593c2a8fda9b27c9eb32b1c8d4f6": 163977
+  },
+  "MDW/Linked/Marked For Life - Marked For Life.png": {
+   "aa902cea2d70e9e96b43a851d4afc7ad37a8040c": 2208907
   },
   "MDW/Linked/Masher - Masher-0.webp": {
    "064525ab45098812e04a1f85f3b4f8edfd4d3b0a": 42040
@@ -7398,6 +8371,12 @@
   "MDW/Linked/Regret - Regret_bg.jpg": {
    "463994ba914e85c9fac466e5f52f1520d2279888": 171469
   },
+  "MDW/Linked/Reinforced - Reinforced.jpg": {
+   "09a2251accabc42730c41e42488115dcdf75166c": 221648
+  },
+  "MDW/Linked/Restrained - 1000.psb": {
+   "e4abaa2f9d33bb4e2ac62cbdb7d4f152e4c885c7": 1515790
+  },
   "MDW/Linked/Rusty_Knife - rusty_knife_image.png": {
    "48772475b9882b3d131d8e01afa5cb0c28a94de0": 5041
   },
@@ -7476,6 +8455,12 @@
   "MDW/Linked/Skeleton_Mate - Layer 4.psb": {
    "016ba23edefa3f8f2382bc787eb18b98ed17c387": 89260
   },
+  "MDW/Linked/Smeckeldorfed - Smeckeldorfed.png": {
+   "45f9ec5da2a465d3cc5db6b319a6bfbba43dbd01": 546975
+  },
+  "MDW/Linked/Smoldering - maxresdefault (2) (1).jpg": {
+   "8b61fec267337e62e1b5d91547a1073b6386012d": 5680206
+  },
   "MDW/Linked/Snake - xv9xr0ij.png": {
    "4b75e7f841090da751c621d07030ee5ebc7828bb": 6663
   },
@@ -7518,6 +8503,15 @@
   "MDW/Linked/The_Temple_of_Ahn'Qiraj - The_Temple_of_Ahn'Qiraj_pic.jpg": {
    "4ffac8d877205e0a52a30efb40648a470ddb7845": 117477
   },
+  "MDW/Linked/Thickened - Background.psb": {
+   "b7583e86f82d7e306b282d55eb10455ee8ae1b9b": 484738
+  },
+  "MDW/Linked/Thickened - Thicc Krabs.png": {
+   "42fd6c57a04110a4ebf20e83c43d051555ed6b83": 405720
+  },
+  "MDW/Linked/Thinned - Help.png": {
+   "a186026978a8f61c777c2fce7037a8cd7a902a73": 236208
+  },
   "MDW/Linked/Unbreakable_Strength - Hollow Knight 2023.04.03 - 12.59.54.07.DVR - frame at 0m13s.jpg": {
    "c447d344fe6e0a6c03871bd527062ac8b849f9f8": 252732
   },
@@ -7526,6 +8520,9 @@
   },
   "MDW/Linked/Unbreakable_heart - Layer 1.psb": {
    "f45a8c6a33d95fefa174150b4303a45ee440c451": 1048576
+  },
+  "MDW/Linked/Vigor - Naked.png": {
+   "ad0199dd7d8c54ee300613d22d60433edc9ae8ae": 835758
   },
   "MDW/Linked/cain.jpeg": {
    "00df9808f5318daa0cdc19c9cea49234c375d3b0": 165470
@@ -7920,14 +8917,19 @@
  "pixels": {
   "00df9808f5318daa0cdc19c9cea49234c375d3b0": "b9d1a1181feb569288e83f2abf1f400f69423f4c",
   "016ba23edefa3f8f2382bc787eb18b98ed17c387": "fdf9f5117cb45a3c9a3e08f2084751c4dda315fd",
+  "018bdae6d361970fc0e0c14f2d4ef6b60fedfd2a": "a4c54bf75012ce3ce46157e67f7885484d0a312a",
   "064525ab45098812e04a1f85f3b4f8edfd4d3b0a": "6f2f7fc3e525e604a4d9acc3bd6e098427f27a15",
+  "06d08ae95834e6036926a7a107d363d20ffe0446": "8c87680e50b6a9c86d97bcb3c811b0a26a299812",
+  "09a2251accabc42730c41e42488115dcdf75166c": "3f941b20a8a226bcb5e8d0d8caa6f477837978de",
   "0c4648c0747cc699aaf24fc2f9da5938daf6300d": "2c354e1db53c7df145a14f8bafca86f12046b043",
   "0e1477072e950b593633263ed8b43fbc0c8cd649": "8178c1467b92896acdb478336c008035acf3fcd2",
+  "0e7829d101d28fc2b62d197c6eef5a4df72738a7": "c54dcc822512ba74f1cc91b2c6a53f86b6ea23b9",
   "0fc775dea4155b0e39165ae3e3a7821a2a01af09": "eaa1ab06fc737c8590dd4574ad10f245f6431f73",
   "103fe775a0060f13f1e6d9b8eb969127cb120ca1": "1ac617146fb50c260152d4fec95c426fffd7e6b7",
   "108db7fcd4aaf1baea7661ca3f81308763a6300e": "51fff977efd3c1f0154c70678a99785e4dd4f646",
   "10b1714ea72ed92bd3d5aaa79b8bc9fe9fcba9fc": "ee9288c5fa9581a1ba02eda1cae3099d298e1198",
   "119a8037e96650a0fc90c9212672aa52f83e7e07": "3eb08c53ee1c4d314799a1525cad465578019534",
+  "132645e2aaecfb57ca8fa7eaa21627d170f1b86b": "99f6d13b8ee616b010dc710de902a9d589580f91",
   "143b78f2cf80938397ac9bc9988f3844788e20c4": "dee18f82beab7d7b61c34832d563e1b10e5db669",
   "156e6cf611e7af358081e762d1ee6a39fccf955d": "af50183df9181c2657ed85f9a61ee7c1f881c3e6",
   "1941d8a633ca7dcd5c5c508e5fbb588d5e2ef445": "c663ec524e4072d603123c3baa137e4fb2e38c44",
@@ -7962,8 +8964,10 @@
   "3edb891b373333a754f52156a2da01da2ce13594": "4085cf1b23b8d7ef86535dd4f75eb0c5da3bc3ba",
   "4085c54d4656fcf7b0d0de6c215bc81ba5175aa5": "6421e4493bd37fa08fa3d79262e04c8ec7f72f3c",
   "42202bbec256fcd7533b9262b980906a0c142b27": "fe7c2c517e7d0b720d9cd4c864b96f8cd4cd1ed0",
+  "42fd6c57a04110a4ebf20e83c43d051555ed6b83": "4b8de329ea6781571f7fb2b894e72ed6e5ecbfc5",
   "44f3c4636f32afe7fdb19f93da95df4d147e067c": "4deafd0264c02df11febeb571d1aa35c9a08fd91",
   "459cdddf4c0054f24a59c7b08ec0c54fd15c7fc3": "7132192fc14c90b5687f940a0c1ea534f202e081",
+  "45f9ec5da2a465d3cc5db6b319a6bfbba43dbd01": "cbc381743a4e6ccf5f56184205fd4bc4c6d91633",
   "463994ba914e85c9fac466e5f52f1520d2279888": "e3d3fa3dbec0940109df5feb6f08df15d70e6161",
   "46be553b2576e599df68b6c6bf2861fdeb689351": "7dd0ab9825032b98ce5b9142dc78fa291d7836a8",
   "479dd1079f724607033d2b69eea7d9e54dba9bcb": "624c808796218f30ec671b693e113949d2d5d124",
@@ -8022,10 +9026,12 @@
   "84237e4b22982a9dd8306fa2ce86961d7a282f41": "161eea14077f165f4a6f8498de93f73f232a1e58",
   "87a12d64e04abd67a45e028ebe3c8426aa38339f": "770db16b938c858757af5d39786fc796aa443333",
   "88b1e268d84f77fe887d3040c2b78030dc7265ff": "df54787c972b3ad37ff60f5d36b8b53e550647c7",
+  "88e1175c633fdd97d60c618b95d2bdb4f120311d": "b9e9d84d1ec36a104424ae7c18a335ac25d34926",
   "897bf3bdf3b7d87852e25770168d64acbe3d5bab": "56561345e76ce3f2acca6736ce9566f455a0f4fd",
   "8a01e64f260b82df3713f3c2af98e9f0fcec6668": "c1a038e6f1c4cca6efa19cd2ab8174f932b8a1c5",
   "8af3dfba44afb3caebbcd95c85e53cdf4fd64dbf": "a357ee9d2f244486bc131d8c1be17f0e886616cd",
   "8b5c1e161c9d7de4e57066bd4027dc70d9f26419": "8d10e4d2f4b882f438233a6679bdf5847b587486",
+  "8b61fec267337e62e1b5d91547a1073b6386012d": "7ce6edacf932509a580f84ff45982c3720b7e20d",
   "8ce7613d2c945b94095a3a56c5f517c6de505d4b": "7bbf9f00b9ee92a26f4faf1559449f0b7bca52fa",
   "8d2bd54fe7667a888297b0d472f419548e2277af": "1436c3545b80f08953385e663c574b10d2e99ef1",
   "8e4e3eaf677aacc2c322487a1c6a007f5736d34d": "ae83183ec128464c38f071561ee06ffd8c1da5e2",
@@ -8040,23 +9046,28 @@
   "9cb412fd576d5f26ba62fa2a55716a86a6b22eee": "db25934590c7feb9cef7ab15b2225475898f967c",
   "9fcdf8ae6b083091fad483ce78e6e24e731991d5": "2d65d356eeac8402923081030566dbd1d2b70826",
   "a0ada347a5a1ea6f846eb829c5cf4debea589a4f": "86cbf8410aa9b0492d890eef680d7808b1b137a3",
+  "a186026978a8f61c777c2fce7037a8cd7a902a73": "e1381622721ac6147216fd87f9868bda8b2d5d39",
   "a234f6d6c25424c740844761bc7e101d8da45556": "00647f98b4e2fa9c7b751c0fb5fb13ff987ac9fd",
   "a24932f505bf62b910c0c74f692ed0217d808fd5": "a452ced58770e2012329047a6f10508e40862677",
   "a2beef7632c8d3a2773eb143b1d55843a4125b6c": "c2e57e4e96db9077c386c9013d8eee5dea366626",
   "a2d1202bf8dbee09ae69a1f173c3aff83291e315": "edc3247ed107da8c60e2605517c4154f16d48afb",
   "a6a8833fafe1539cee024a364a3fa78195424355": "73a58c808c93ebc70b20f6d058dc1c9b2d6f9963",
   "a6dfaa63017446c87785ab0d7c39298b91eadba0": "320fdff2ccccc1855ecee614f735b62c97a473ae",
+  "aa902cea2d70e9e96b43a851d4afc7ad37a8040c": "d72dabb1cbc4b26a0e45055b79bcf9372d598bac",
   "aa9f767fc58d2dcdff419edbce9cb97b963e5950": "8a6693b5e49bb58b2432204fb6590c9d994e85cc",
+  "ad0199dd7d8c54ee300613d22d60433edc9ae8ae": "8a89fdba0a0073085210d79953a353353cc9a821",
   "b011988b1114e99998e3026e5353a4c41c0342db": "bb7f9ac5b9476dd6354526119f43aea93b02e367",
   "b176541146b53dd486aa7b3e986782f2b4db6469": "39a50672327c4206ac4ceb9d044836d6c4a8781c",
   "b5235b3a93adf8d6714d7bd166171b54a0368a33": "2eb578b15625d006f7316c34997556a01c3fdfc2",
   "b57f61dbc4f10310ac80f51ae2121ca3229c7168": "0e8173b15d6fa43224cf22598a58c0cf1fee1559",
   "b587fa8759caf9570a8288de23675fb01e905d88": "52e2abc2655c16ed2ff951a5f5d6461589e399d6",
+  "b7583e86f82d7e306b282d55eb10455ee8ae1b9b": "cda8802aedd827354994cca512b506903cb2b8cf",
   "b813ef29ccc775713c928a254ee241725ba2a6db": "fdfef65c7e889544a132db87dc990f897481eafe",
   "b84a8eacbea01a1fedf352b85e66256f5b4234b6": "de7e53eb1a439a57428441833fe6d3ec848f1d21",
   "b948d5fd5a625e562749221ae43b6bf326e41d85": "c0165ba55d0f8720a8d8967f3c66a7d9e6ddba84",
   "b95adab71e6a7ee177fd072cc029890793d5d660": "70704917e3899ec03962dc87b577f6a8aa3f3085",
   "b98af2413520fe1127b8c69877e2aacef97f024c": "742d358aa3eacd04fd5091a269143a72b5e4b471",
+  "b9e45d73142e2a95c46a14522a6c7da9ead4bb7a": "d150a6ac74dacaeac3d405ed635eba22c7251e23",
   "ba5b5f87ebd5560cca78b564a18a7e2b7f67781f": "f2228bc364e68517caf221ea7691de804b242a13",
   "baad3fd41c1a5ef07b4a29ca1c8e631291ebb655": "f135039bdbc3d2218744f9d9e0b0dcdd510c9a68",
   "bad963b3e2ef11469e7ddb7f8d947e658d797ccc": "3525e7fd2ebeb021335841908f361e3d198eeb4c",
@@ -8091,6 +9102,8 @@
   "daad93a47ba57cd9ac16806b74f4ec115cf11a03": "58c015b68066282bab084d292f9cfab16c6adade",
   "db4c4cfd7fdc8cac2e601fd137a475daf2433f84": "3df2a4bfd25e03700ce4d3b376f414716fa60a62",
   "e3844a8f6ec0d5fa83a7a5dbf2a7a79a6a0cbdc6": "955a7a27e1052bf82085a76dfa44ecf8109cfb84",
+  "e410424c2f5de07c766ec7e94fe89d291da3d860": "83ad1fe022256ea6734d8a11f72aa5f1a0525199",
+  "e4abaa2f9d33bb4e2ac62cbdb7d4f152e4c885c7": "e279da225c9626fecac2e8a299f54f39e5c0faa5",
   "e66aa78af73095c9944d4b0fbe5f738621844012": "bd3aabc45ceac4d32822e0c41bb6104cdd75f2c7",
   "e81fa760134c022f978b5e38273fa40448e2f4a3": "0fab3c8955d364e630a08217087af38606d8a4af",
   "eb99c7c1eae0df72eeda38c3bfb9082164aee35b": "01d6b2836f912954e5021aa02d2f17320303cf85",
