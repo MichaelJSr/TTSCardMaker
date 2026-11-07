@@ -2,6 +2,7 @@
 // back when the card opens again. NOTES.md §21.
 import { esc } from "./text.js";
 import { artList, artLabel } from "./art.js";
+import { readToggles, setToggles } from "./palette.js";
 
 export const DRAFT_KEY = "edit-drafts";
 export const DELAY = 400;                          // ms after the last key
@@ -130,7 +131,7 @@ export function readValues(form) {
     out[f] = el.type === "checkbox" ? el.checked : text(el.value);
   }
   const types = form.querySelector("#ef-types");
-  if (types) out.types = [...types.querySelectorAll("[data-type]")].filter(b => b.classList.contains("on")).map(b => b.dataset.type).sort();
+  if (types) out.types = readToggles(types);
   const art = form.querySelector("#ef-art");     // the sources typed, empty rows left out
   if (art) out.art = [...art.querySelectorAll("[data-art-src]")].map(i => text(i.value).replace(/\s+/g, " ").trim()).filter(Boolean);
   const box = form.querySelector("#ef-creatures-box");
@@ -142,7 +143,7 @@ export function readValues(form) {
 export function fillValues(form, fields, { creatures = null, art = null } = {}) {
   for (const [f, v] of Object.entries(fields)) {
     if (f === "types") {
-      for (const b of form.querySelectorAll("#ef-types [data-type]")) { const on = Array.isArray(v) && v.includes(b.dataset.type); b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); }
+      const box = form.querySelector("#ef-types"); if (box) setToggles(box, Array.isArray(v) ? v : []);
     } else if (f === "creatures") creatures?.(v);
     else if (f === "art") art?.(Array.isArray(v) ? v : artList({ art: v }));
     else {
