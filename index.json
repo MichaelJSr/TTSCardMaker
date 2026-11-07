@@ -1279,6 +1279,14 @@
    "png_blob": "c5d031ee67efc15ef03a29eef81bc130acdd70cc",
    "psd_blob": "240fe0b3e78896db053966dcbdcbaddde1b96577",
    "state": "baked"
+  },
+  "zomoroko-mw5qrk1c-f4s9": {
+   "at": "2026-11-07T01:45:47Z",
+   "card": "POW Block",
+   "path": "Items/Attack/3 Stars/POW_Block.psd",
+   "png_blob": "50785f751d0018244b44c58fbfb6788d8a480d9e",
+   "psd_blob": "88480d5c1171b51c33073432860ed0bdc01b79b5",
+   "state": "baked"
   }
  },
  "v": 1

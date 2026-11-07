@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5qrk1c-f4s9",
+ "card": "POW Block",
+ "path": "Items/Attack/3 Stars/POW_Block.psd",
+ "png": "Items/Attack/3 Stars/POW_Block.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "88480d5c1171b51c33073432860ed0bdc01b79b5",
+  "png_blob": "50785f751d0018244b44c58fbfb6788d8a480d9e"
+ },
+ "edit": {
+  "name": "POW Block",
+  "parts": {
+   "327": {
+    "field": "name",
+    "text": "POW Block",
+    "was": "Pow Block",
+    "sha": "1be045e7",
+    "psd": "88480d5c",
+    "layer": "Text/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'Pow Block' -> 'POW Block'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "Pow Block",
+   "new": "POW Block"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.007,
+   "max": 1.0
+  }
+ },
+ "region": [
+  270,
+  35,
+  931,
+  148
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42325757834",
+ "took_s": 3.5,
+ "at": "2026-11-07T01:45:47Z",
+ "variant": null,
+ "parts": {
+  "327": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 381639,
+  "webp": 50826,
+  "before": 50484
+ },
+ "recompressed": false
+}
