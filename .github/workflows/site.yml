@@ -198,13 +198,26 @@ jobs:
     timeout-minutes: 15
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.retry.outputs.page_url }}
     steps:
       - id: deployment
+        continue-on-error: true       # a stuck deploy gets one more try, below
         uses: actions/deploy-pages@v5
         with:
+          timeout: 360000             # ms (600000): good deploys take under 5 min, stuck ones never end
           reporting_interval: 1000    # ms between status checks (5000): a quick deploy is seen done sooner
           error_count: 15             # HTTP errors before it gives up (10): about 50 s at 1 s checks
+
+      - if: steps.deployment.outcome == 'failure'
+        run: sleep 10                 # lets the cancel settle
+
+      - id: retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        with:
+          timeout: 360000
+          reporting_interval: 1000
+          error_count: 15
 
   # Each save above is a new entry (card images ~150 MB): the older ones go. Beside the deploy, not before it.
   caches:
