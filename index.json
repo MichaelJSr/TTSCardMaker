@@ -1239,6 +1239,14 @@
    "png_blob": "255d05f3b82c609a2fb2ad1727b9290e9a8b11c4",
    "psd_blob": "af8beee48d72c7e9185d200fb947cef4124bfd9c",
    "state": "baked"
+  },
+  "zomoroko-mw5q8rs5-2gpv": {
+   "at": "2026-11-07T01:31:11Z",
+   "card": "Man Serpent Shield",
+   "path": "Items/Equip/2 Stars/Man_Serpent_Shield.psd",
+   "png_blob": "84ba5add01dae70e2860fe98882530a995e1fa10",
+   "psd_blob": "a06f049a661fb8e07c2765f0d213b97529ed85b5",
+   "state": "refused"
   }
  },
  "v": 1

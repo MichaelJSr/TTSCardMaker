@@ -1,0 +1,39 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5q8rs5-2gpv",
+ "card": "Man Serpent Shield",
+ "path": "Items/Equip/2 Stars/Man_Serpent_Shield.psd",
+ "png": "Items/Equip/2 Stars/Man_Serpent_Shield.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "a06f049a661fb8e07c2765f0d213b97529ed85b5",
+  "png_blob": "84ba5add01dae70e2860fe98882530a995e1fa10"
+ },
+ "edit": {
+  "name": "Man-Serpent's Shield"
+ },
+ "state": "refused",
+ "transient": false,
+ "fields": {
+  "name": "refused"
+ },
+ "reason": "website only: the title is part of the picture",
+ "changes": [],
+ "notes": [],
+ "parity": {},
+ "region": null,
+ "image": null,
+ "files": {},
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42324468417",
+ "took_s": 1.4,
+ "at": "2026-11-07T01:31:11Z",
+ "variant": null,
+ "parts": {}
+}
