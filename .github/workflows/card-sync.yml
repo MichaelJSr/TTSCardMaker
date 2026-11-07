@@ -501,10 +501,15 @@ jobs:
           git add -A db
           if git diff --cached --quiet; then echo "db/ unchanged: no data commit."; exit 0; fi
           if [ ! -s "$RUNNER_TEMP/message.txt" ]; then echo "Card data: posted cursor moved" > "$RUNNER_TEMP/message.txt"; fi
-          git -c user.name=AutoCroissant -c user.email=autocroissant@gmail.com commit -q -F "$RUNNER_TEMP/message.txt"
+          me=(-c user.name=AutoCroissant -c user.email=autocroissant@gmail.com)
+          git "${me[@]}" commit -q -F "$RUNNER_TEMP/message.txt"
           for i in 1 2 3; do
             git push origin HEAD:refs/heads/data && break
             [ "$(git ls-remote origin refs/heads/data | cut -f1)" = "$(git rev-parse HEAD)" ] && break
+            # card-checks.yml's commit (db/card_checks.json alone) came between: on top of it; anyone else's stays a failure
+            if git fetch -q origin data && [ -z "$(git diff --name-only HEAD...FETCH_HEAD -- . ':!db/card_checks.json')" ]; then
+              git "${me[@]}" rebase -q FETCH_HEAD
+            fi
             echo "::warning::data push failed (try $i)"
             [ "$i" = 3 ] && exit 1
           done
@@ -547,6 +552,15 @@ jobs:
           done
           echo "::error::the site build was not dispatched after 3 tries"
           exit 1
+
+      # The automatic flags, off this run's path (card-checks.yml): it reads only PSDs without a result. Never fails the job.
+      - name: Card checks
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.data-commit.outputs.committed == 'true' || env.AFTER != '') }}
+        continue-on-error: true
+        timeout-minutes: 2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run card-checks.yml --ref main -R "$GITHUB_REPOSITORY"
 
       # A failed live job (a push's, scheduled, a retry, a dispatch) tells Discord once per failing streak of its lane
       # (data: Card data and after the bake; main: Bake and save): the streak is the lane's outcome in the
