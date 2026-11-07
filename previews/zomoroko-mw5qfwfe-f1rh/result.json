@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "request": "zomoroko-mw5qfwfe-f1rh",
+ "card": "SpiralHorn Shield",
+ "path": "Items/Equip/2 Stars/SpiralHorn_Shield.psd",
+ "png": "Items/Equip/2 Stars/SpiralHorn_Shield.png",
+ "base": {
+  "repo": "MichaelJSr/TTSCardMaker",
+  "commit": "637fb6557d0017df03934b1d032085fde03aa3aa",
+  "psd_blob": "6d4a5ccc20183faf5b13b5a0ac8bee655167507c",
+  "png_blob": "b8d30382bbd31a411a6a57c36875e9903930fee2"
+ },
+ "edit": {
+  "name": "Spiralhorn Shield",
+  "parts": {
+   "327": {
+    "field": "name",
+    "text": "Spiralhorn Shield",
+    "was": "SpiralHorn Shield",
+    "sha": "8e5e198d",
+    "psd": "6d4a5ccc",
+    "layer": "Text/Name"
+   }
+  }
+ },
+ "state": "baked",
+ "transient": false,
+ "fields": {
+  "name": "refused",
+  "parts": "baked"
+ },
+ "reason": "title 'SpiralHorn Shield' -> 'Spiralhorn Shield'",
+ "changes": [
+  {
+   "field": "name",
+   "old": "SpiralHorn Shield",
+   "new": "Spiralhorn Shield"
+  }
+ ],
+ "notes": [],
+ "parity": {
+  "name": {
+   "bad_pct": 0.0,
+   "mean": 0.002,
+   "max": 1.0
+  }
+ },
+ "region": [
+  253,
+  29,
+  948,
+  114
+ ],
+ "image": "baked",
+ "files": {
+  "webp": "preview.webp",
+  "before": "before.webp"
+ },
+ "runner": {
+  "psd_tools": "1.26.0+cards",
+  "text_engine": true,
+  "story_sync": true,
+  "fonts": true
+ },
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42324970984",
+ "took_s": 4.3,
+ "at": "2026-11-07T01:36:47Z",
+ "variant": null,
+ "parts": {
+  "327": "baked"
+ },
+ "size": [
+  1200,
+  1800
+ ],
+ "webp_size": [
+  720,
+  1080
+ ],
+ "bytes": {
+  "png": 2507391,
+  "webp": 89876,
+  "before": 90174
+ },
+ "recompressed": false
+}

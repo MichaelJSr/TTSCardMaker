@@ -1247,6 +1247,14 @@
    "png_blob": "84ba5add01dae70e2860fe98882530a995e1fa10",
    "psd_blob": "a06f049a661fb8e07c2765f0d213b97529ed85b5",
    "state": "refused"
+  },
+  "zomoroko-mw5qfwfe-f1rh": {
+   "at": "2026-11-07T01:36:47Z",
+   "card": "SpiralHorn Shield",
+   "path": "Items/Equip/2 Stars/SpiralHorn_Shield.psd",
+   "png_blob": "b8d30382bbd31a411a6a57c36875e9903930fee2",
+   "psd_blob": "6d4a5ccc20183faf5b13b5a0ac8bee655167507c",
+   "state": "baked"
   }
  },
  "v": 1
