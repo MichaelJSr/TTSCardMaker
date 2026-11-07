@@ -107,6 +107,7 @@ SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 RAW = f"https://raw.githubusercontent.com/{CARD_REPO}/main/"
 CARD_BACKS = ("MDW/Assets/cardback.png", "MDW/Assets/cardback_item.png")    # deck.js ttsSave's backs
 DETAILS_JSON = "psd_details.json"            # the PSD structure records {version, cards: {blob sha: record}} (AutoCroissant card_db.DETAILS_JSON)
+CHECKS_JSON = "card_checks.json"             # the automatic flags {cards: {blob sha: {hand, bars}}, cleared: {PSD path: flags' psd}} (AutoCroissant card_checks)
 IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
 THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality and AVIF rename by themselves
@@ -160,11 +161,15 @@ LOGINS_DIR = "site/logins"                    # <login>.json: a token sealed wit
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits (subseries: database only, never from the folder)
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "art": list, "ability_art": str,
-               "aliases": list, "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list}
+               "aliases": list, "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list,
+               "flags": dict}
 EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", "spd", "art", "ability_art"}      # may be null
 # artwork sources: art, a list of free text (one string in older entries), each entry its own (a duplicate's never its
 # original's); the retired ability_art is read as the last source (art_list); the bot's card_edits.ART_MAX
 ART_FIELDS, ART_MAX = ("art", "ability_art"), 500
+# what a card needs from a developer: {"hand": "reason", "bars": "", "psd": "1a2b3c4d"}, each reason optional, psd the PSD
+# blob it was set on (flags.js, the bot's card_edits)
+FLAGS, FLAG_MAX = ("hand", "bars"), 300
 
 
 def art_list(art, ability_art=None):
@@ -344,6 +349,30 @@ def load_card_data(folder):
         log("no PSD details:", e)
         records = {}
     return stats, old_stats, records
+
+
+def load_checks(folder):
+    """(the automatic flags by PSD blob, the people's flags that went by PSD path) from the card data; ({}, {}) before the
+    first run."""
+    try:
+        with open(os.path.join(folder, CHECKS_JSON), encoding="utf-8") as fh:
+            data = json.load(fh)
+    except FileNotFoundError:
+        return {}, {}
+    except Exception as e:
+        warn(f"no card checks: {e}")
+        return {}, {}
+    return psd_records(data), data.get("cleared") or {}
+
+
+def merge_flags(entry, record, cleared):
+    """A card's automatic flags (checks: {"hand": note, "bars": note}), beside the people's (flags); a person's that went
+    is left out (its Card Edits entry stays, inert)."""
+    notes = {k: record[k] for k in FLAGS if (record or {}).get(k)}
+    if notes:
+        entry["checks"] = notes
+    if (entry.get("flags") or {}).get("psd") and cleared.get(entry.get("psd")) == entry["flags"]["psd"]:
+        del entry["flags"]
 
 
 def link_variants(cards):
@@ -1297,6 +1326,9 @@ def valid_edit(field, value):
                                                                            for k, v in c.items()) for c in value)
     if field in ART_FIELDS:                      # a source, or (art) a list of them
         return all(isinstance(x, str) and len(x) <= ART_MAX for x in (value if field == "art" and isinstance(value, list) else [value]))
+    if field == "flags":
+        return isinstance(value, dict) and any(k in FLAGS for k in value) and all(
+            bool(HEX8.match(v)) if k == "psd" and isinstance(v, str) else k in FLAGS and isinstance(v, str) and len(v) <= FLAG_MAX for k, v in value.items())
     if kind is list:
         return isinstance(value, list) and all(isinstance(x, str) for x in value)
     return isinstance(value, kind)
@@ -3703,14 +3735,15 @@ def tile_html(c, eager, icons):
             f'{"".join(icon(t) for t in (c.get("types") or [])[:3])}</div></div></a>')
 
 
-def toolbar_html(count, created):
-    """grid.js toolbarHtml for the default grid: Name, Grid, M"""
+def toolbar_html(count, created, needs=0):
+    """grid.js toolbarHtml for the default grid: Name, Grid, M; needs: the flagged cards"""
     opts = "".join(f'<option value="{v}"{f" data-dir={json.dumps(d[0])}" if d else ""}{" selected" if v == "name" and not d else ""}>{label}</option>'
                    for v, label, *d in SORTS if v != "created" or created)
     seg = lambda key, pairs, on, extra="": "".join(f'<button type="button" class="{"on" if v == on else ""}" data-action="set-pref" data-key="{key}" '
                                                    f'data-value="{v}"{extra}>{label}</button>' for v, label in pairs)
+    link = f'<a class="mobile-only needs-link" href="#/cards?flags=flagged">Needs handling ({needs})</a>' if needs else ""
     return ('<div class="toolbar">\n'
-            f'        <span class="result-count">{count:,} card{"" if count == 1 else "s"}</span>\n'
+            f'        <span class="result-count">{count:,} card{"" if count == 1 else "s"}</span>{link}\n'
             '        <button type="button" class="mobile-only" data-action="toggle-filters">Filters</button>\n'
             f'        <label class="muted">Sort <select data-action="select-param" data-key="sort">{opts}</select></label>\n'
             '        <button type="button" class="ghost icon" data-action="flip-dir" title="Reverse order" aria-label="Reverse order">⇅</button>\n'
@@ -3747,7 +3780,8 @@ def first_screen(cards, icons):
         raise SystemExit(f"error: the first screen's check didn't run: {getattr(e, 'stderr', '') or e}")
     by_id = {c["id"]: c for c in cards}
     tiles = [tile_html(by_id[i], k < FIRST_EAGER, icons) for k, i in enumerate(got["ids"])]
-    toolbar = toolbar_html(sum(1 for c in cards if not c.get("hidden")), any(c.get("created") for c in cards))
+    shown = [c for c in cards if not c.get("hidden")]
+    toolbar = toolbar_html(len(shown), any(c.get("created") for c in cards), sum(1 for c in shown if c.get("flags") or c.get("checks")))
     for what, mine, theirs in [*((f"tile {i}", t, j) for i, t, j in zip(got["ids"], tiles, got["tiles"])), ("toolbar", toolbar, got["toolbar"])]:
         if mine != theirs:
             at = next((k for k, (a, b) in enumerate(zip(mine, theirs)) if a != b), min(len(mine), len(theirs)))
@@ -3839,6 +3873,7 @@ def main():
                          "(git worktree add /tmp/carddata origin/data; CARD_DATA_DIR=/tmp/carddata/db).")
     data_dir = os.path.abspath(CARD_DATA_DIR)
     stats, old_stats, records = load_card_data(data_dir)
+    checks, cleared = load_checks(data_dir)
     if not isinstance(stats, dict) or len(stats) < MIN_CARDS:
         raise SystemExit(f"error: the card data (stats.json in {data_dir}) has "
                          f"{len(stats) if isinstance(stats, dict) else 'no'} entries (expected at least {MIN_CARDS}); "
@@ -3908,7 +3943,10 @@ def main():
         entry["_blob"] = getattr(c, "blob_sha", None)       # the PSD the bot read; join_details, dropped below
         if sha and getattr(c, "blob_sha", None) and sha != c.blob_sha:
             entry["reparsePending"] = True       # PSD committed since the bot last read it (a bake, or any edit)
+        if sha:
+            entry["blob"] = sha[:8]               # a person's flag remembers it
         apply_edits(entry, edits, sha, shown)
+        merge_flags(entry, checks.get(sha), cleared)
         date_text(entry, c, history_of(name))     # a renamed card's history goes on (its old names' versions)
         if isinstance(variant, int) and not isinstance(variant, bool) and variant >= 1:
             entry["variant"] = variant            # one picture of a PSD with several (" #N" layers); variantOf/variants below

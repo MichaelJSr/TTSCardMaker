@@ -30,7 +30,8 @@ data), on a push of site code, daily, and on demand (Actions → Card browser �
   own verb ("inflict 1T1 smeckeldorfed", "stacks of hardened", "summon a silithid"); not as a label like "Cat:", not
   before a number ("Heal 2 HP"), not as a verb opening a clause ("Flip to the other creature"), and after a capitalized
   word only when that word is a verb or a card: "Summon Jetpack" links, "Evil Quote" doesn't); "mentions", "mentioned by", similar stats,
-  same series, text history with changes highlighted, and an image version viewer: every commit that changed the
+  same series, text history with changes highlighted, and an image version viewer under the card's picture (closed on a
+  phone): every commit that changed the
   card's image, compared side by side with the current one, with the text of that time when it differs (each version,
 text or image, links its commit when it is known), and the artwork sources when set. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
@@ -223,6 +224,21 @@ eight tiles (plain links to the cards' pages), so a phone shows cards before the
 saved view gets it once the script runs. The build checks those tiles against the site's own code in node and stops on
 any difference (`site/NOTES.md` §31). The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
+
+## Flags
+
+A card can carry two flags, each with a note: **Needs doing by hand** and **Special stat bars**. They replace the problem
+cards CSV, and they are automatic: the bot's checks (AutoCroissant `commands/card_checks.py`, the Card checks workflow) set
+and clear them, each with a short note on what the issue is. `hand`: the picture says other than the data, old-style bars,
+a website edit that cannot bake. `bars`: bars that do not read like the template. The checks read only PSDs without a
+result, so a fixed card clears on its next push; a whole-tree pass is a dispatch of Card checks with `all`. Nothing is
+told to Discord or a commit, and nothing is blocked. The card page shows the notes under the name; **Needs handling** at
+the top of the Cards filters opens a list of the cards with their notes (All, or one flag; `flags=flagged`, `flags=hand`,
+`flags=bars`, excluded with `xflags=`; on a phone a link in the toolbar too); search `flag:hand`, `flag:bars`, `flag:any`.
+
+Any editor can add one by hand too: `+ needs doing by hand` on the card page, typing what the issue is (it needs a reason),
+click the reason, ✕ to clear, or Flags in All fields. Those go through the batch and Publish, live in `site/Card Edits.json` (`"flags": {"hand": "reason", "bars": "",
+"psd": "1a2b3c4d"}`, the PSD blob they were set on), are never baked, and go once the PSD changes and the checks are clean.
 
 ## Editing
 

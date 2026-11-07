@@ -14,6 +14,7 @@ import * as G from "./grid.js";
 import * as CF from "./myfilters.js";
 import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc, AUX_KINDS, unusedTip } from "./grid.js";
 import { artHtml } from "./art.js";
+import { CARD_FLAGS, flagged, flagsHtml, hasFlag } from "./flags.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -47,6 +48,9 @@ const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Dupli
   ["unpublished", "Has unpublished edits"], ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"],
   ["banned", "Banned (constructed)"]];
 const EDIT_FLAGS = new Set(["unpublished"]);              // listed in edit mode (or when in the address)
+// the sidebar's Needs handling chips, flags= values too (flags.js): [value, chip, the active filter's words]
+const HANDLING = [["flagged", "All", "Needs handling"], ...CARD_FLAGS.map(([k, l]) => [k, l, l])];
+const flagName = f => FLAGS.find(x => x[0] === f)?.[1] ?? HANDLING.find(x => x[0] === f)?.[2];
 const others = (ids, c) => { for (const id of ids || []) if (id !== c.id) return true; return false; };   // a card naming itself doesn't count
 const STAT_COLORS = { hp: "#2fbf3a", def: "#3d63ff", atk: "#ff3b3b", spd: "#ffd21f" };   // the game's own stat colors
 const sortOf = p => (p.get("sort") === "created" && !S.created ? "" : p.get("sort")) || "name";   // a shallow build: Name
@@ -428,7 +432,7 @@ function filterCards(p, { facets = true } = {}) {
     dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(webEdited(c) || c._staged || c._sent), unpublished: c => !!c._staged,
     mentions: c => others(S.mentions.get(c.id), c), mentioned: c => others(S.mentionedBy.get(c.id), c),
     pending: c => !!((c.pending && c.pending.length) || c.refused),
-    banned: c => !!c._banned };
+    banned: c => !!c._banned, flagged, ...Object.fromEntries(CARD_FLAGS.map(([k]) => [k, c => hasFlag(c, k)])) };
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   const missing = G.MISSING.filter(([k]) => csv(p, "missing").includes(k));   // cards missing all of them
   if (missing.length) list = list.filter(c => missing.every(x => x[3](c)));
@@ -500,6 +504,8 @@ function renderCards(r) {
   const xs = k => G.xvals(p, k), removed = new Map();
   const removes = (k, v) => { const id = `${k}\u0001${v}`; if (!removed.has(id)) { const q = new URLSearchParams(p); q.set(`x${k}`, xs(k).filter(x => x !== v).join(","));
     removed.set(id, Math.max(0, filterCards(q).length - list.length)); } return removed.get(id); };   // without it, less with it
+  const needCounts = count(base, c => HANDLING.map(([k]) => k).filter(k => (k === "flagged" ? flagged(c) : hasFlag(c, k))));
+  const needOpts = HANDLING.filter(([k]) => needCounts.get(k) || csv(p, "flags").includes(k) || xs("flags").includes(k));
   const miss = csv(p, "missing"), xmiss = xs("missing"), missCounts = new Map(G.MISSING.map(([k, , , test]) => [k, list.filter(test).length]));   // what ticking it would show
   const series = [...new Set(S.cards.map(c => c.series).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const pickOf = k => p.get(k) || p.get(`x${k}`) || "";                        // the select shows an excluded value too
@@ -520,6 +526,7 @@ function renderCards(r) {
   for (const f of [...fontIn, ...fontOut]) if (!S.fontKept.includes(f)) S.fontKept.push(f);   // a font off stays listed (owner 10-26), not in the address
   const fontRemoves = (k, v) => { const q = new URLSearchParams(p); q.delete("xfont"); for (const x of fontOut) if (x !== v) q.append("xfont", x); return Math.max(0, filterCards(q).length - list.length); };
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
+  const handling = csv(p, "flags").some(f => HANDLING.some(([k]) => k === f));   // Needs handling: a list with each card's notes
   const active = [];
   if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
   for (const v of cfIn) active.push(["cf", v, v, false, cfSave(v)]);
@@ -534,10 +541,10 @@ function renderCards(r) {
   for (const v of fontIn) active.push(["font", v, v]);
   for (const v of fontOut) active.push(["xfont", `not ${v}`, v, true]);
   for (const k of ["hp", "def", "atk", "spd"]) if (p.get(k)) active.push([k, `${k.toUpperCase()} ${p.get(k)}`]);
-  for (const f of csv(p, "flags")) { const x = FLAGS.find(x => x[0] === f); if (x) active.push(["flags", x[1], f]); }   // an old flag: ignored
+  for (const f of csv(p, "flags")) { const l = flagName(f); if (l) active.push(["flags", l, f]); }   // an old flag: ignored
   for (const [k, l] of G.MISSING) if (miss.includes(k)) active.push(["missing", l, k]);
   const xLabel = { kind: k => (KINDS.find(x => x[0] === k) || [k, KIND_PLURAL[k] || k])[1], stars: s => `${s}★`, sub: cap, types: t => t.replace(/_/g, " "),
-    flags: f => FLAGS.find(x => x[0] === f)?.[1], missing: k => G.MISSING.find(x => x[0] === k)?.[1], series: v => v, subseries: v => v, author: v => `by ${v}` };
+    flags: flagName, missing: k => G.MISSING.find(x => x[0] === k)?.[1], series: v => v, subseries: v => v, author: v => `by ${v}` };
   for (const k of G.X_KEYS) for (const v of xs(k)) { const l = xLabel[k](v); if (l) active.push([`x${k}`, `not ${l}`, G.ONE.has(k) ? undefined : v, true]); }   // an old flag: ignored
   if (p.get("month")) active.push(["month", `Changed ${St ? St.balance.monthName(p.get("month")) : p.get("month")}`]);
   if (p.get("change")) active.push(["change", St?.balance.CHANGE_LABEL[p.get("change")] || p.get("change")]);
@@ -554,6 +561,7 @@ function renderCards(r) {
     <aside class="filters${S.filtersOpen ? " open" : ""}" aria-label="Filters">
       ${mine.length ? `<h3>My filters</h3>${mine.map(v => { const x = cfOut.includes(v), f = CF.pred(v), n = x ? cfRemoves(v) : f ? list.filter(f).length : list.length;
         return `<div class="cf-row"><label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="cf" data-value="${esc(v)}"${!x && cfIn.includes(v) ? " checked" : ""}${x ? ` aria-label="${esc(v)}: excluded"` : ""}> <span class="cf-q">${esc(v)}</span><span class="n">${x ? `−${n}` : n}</span></label><button type="button" class="ghost cf-del" data-action="cf-delete" data-value="${esc(v)}" title="Remove this filter" aria-label="Remove the filter ${esc(v)}">✕</button></div>`; }).join("")}` : ""}
+      ${needOpts.length ? `<h3>Needs handling</h3>${chipList("flags", needOpts, csv(p, "flags"), needCounts, xs("flags"), removes)}` : ""}
       <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindCounts.get(k)), csv(p, "kind"), kindCounts, xs("kind"), removes)}
       <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts, xs("stars"), removes)}
       ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts, xs("sub"), removes)}` : ""}
@@ -576,19 +584,20 @@ function renderCards(r) {
     <section>
       ${editing() && view_ === "grid" ? tray.html(S.selecting) : ""}
       ${G.toolbarHtml({ count: list.length, waiting, active: active.length, sort: sortOf(p), dir: p.get("dir"), created: S.created, view: view_, size,
-        tail: `${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
+        needs: csv(p, "flags").includes("flagged") ? 0 : S.cards.filter(flagged).length, tail: `${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
           <button type="button" class="ghost" data-action="select-mode" aria-pressed="${S.selecting}">${S.selecting ? "Done" : "Select"}</button>` : ""}
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}` })}
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v, x, more = ""]) => `<button type="button" class="chip${x ? " x" : ""}" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>${more}`).join("")}</div>` : ""}
       <div id="deck-hits">${deckHits(p.get("q") || "")}</div>
       ${waiting ? `<p class="loading">${changed ? "Loading the recorded changes…" : "Loading…"}</p>` : !list.length ? `<div class="empty">No cards match.${suggestions.length ? ` Did you mean ${suggestions.map(c => `<a href="#/card/${c.id}">${esc(c.name)}</a>`).join(", ")}?` : ""}</div>`
+        : handling ? needsHtml(list)
         : view_ === "table" ? tableHtml(list, p, win) : `<div class="grid" style="--tile:${(G.TILE_SIZES[size] || G.TILE_SIZES.m)[0]}"></div>`}
     </section></div>`;
   const filters = $(".browse .filters", view), filtersTop = filters?.scrollTop || 0;   // a click there redraws it: keep its place
   const grid = keepGrid(browse) || (view.innerHTML = browse, $(GRID, view));
   if (filtersTop && $(".browse .filters", view) !== filters) $(".browse .filters", view).scrollTop = filtersTop;
   if (grid) fillGrid(grid, list, { css: (G.TILE_SIZES[size] || G.TILE_SIZES.m)[1], win });
-  else if (list.length && view_ === "table") fillTable($(".browse table.data tbody", view));
+  else if (list.length && view_ === "table" && !handling) fillTable($(".browse table.data tbody", view));
   if (editing()) inline.mountGrid(view, p);
   if (editing()) previews.mountTiles(view);
 }
@@ -784,6 +793,9 @@ function fillTable(tbody) {
   };
   if (rest.length) setTimeout(step);
 }
+// the Needs handling view: a list to scan, each card's flags and notes beside it
+const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}
+  <div><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${flagsHtml(c)}</div></li>`).join("")}</ul>`;
 const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
@@ -819,7 +831,7 @@ function openCard(id, showDetails = false) {
   const c = S.byId.get(id);
   const was = $(".psd-details", modal);                  // a re-render keeps it open
   showDetails ||= !modal.hidden && !!was?.open && was.dataset.id === id;
-  const wasB = $(".badge-help", modal), keepBadges = !modal.hidden && !!wasB?.open && wasB.dataset.id === id;
+  const wasB = $(".badge-help", modal), keepBadges = !modal.hidden && !!wasB?.open && wasB.dataset.id === id, verOpen = versionsOpen(id);
   if (!c) { closeModal(); document.title = S.title || document.title; toast("That card doesn't exist (anymore)."); history.replaceState(null, "", S.listHash); return; }
   const pool = S.list.length && S.list.some(x => x.id === id) ? S.list : S.cards;
   const i = pool.findIndex(x => x.id === id), prev = pool[(i - 1 + pool.length) % pool.length], next = pool[(i + 1) % pool.length];
@@ -846,9 +858,11 @@ function openCard(id, showDetails = false) {
         </div>
         <div class="actions" style="justify-content:space-between">
           <a class="fact" data-nav="prev" href="#/card/${prev.id}" title="Previous (←)">← ${esc(prev.name)}</a>
-          <a class="fact" data-nav="next" href="#/card/${next.id}" title="Next (→)">${esc(next.name)} →</a></div></div>
+          <a class="fact" data-nav="next" href="#/card/${next.id}" title="Next (→)">${esc(next.name)} →</a></div>
+        <div id="versions-slot">${versionsHtml(c, verOpen)}</div></div>
       <div>
         <h2>${esc(c.name)}</h2>
+        ${flagsHtml(c)}
         <div class="facts">
           <a class="fact" href="#/cards?kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>
           ${c.subtype ? `<a class="fact" href="#/cards?sub=${encodeURIComponent(c.subtype)}">${esc(cap(c.subtype))}</a>` : ""}
@@ -879,7 +893,6 @@ function openCard(id, showDetails = false) {
           <div id="decks-slot">${usingDecks(c)}</div>
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
           <div id="history-slot">${historyOf(c)}</div>
-          <div id="versions-slot">${versionsHtml(c)}</div>
           ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
           <div id="card-ratings">${ratings.blockHtml(ratedOf(c), { editing: editing(), mine: editor.myRating(ratedOf(c).id) })}</div>
         </div>
@@ -898,7 +911,7 @@ function openCard(id, showDetails = false) {
   if (c.hv && !c.history) loadHistory().then(() => { fillHistory(); fillBalance(); }, () => {});
   else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) loadHistory().then(fillBalance, () => {});   // its original's texts
   if (hasBalance(c) && !S.analytics) loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; });
-  if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c);
+  if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c, versionsOpen(c.id));
     if (S.data.heavy?.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
   const dd = $(".psd-details", modal);
   if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
@@ -922,17 +935,24 @@ const versionList = c => {
   return rows.map(([ci, path]) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png }; });
 };
 const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
-function versionsHtml(c) {
+/** Under the card's picture: open beside the text, closed in one column (style.css .detail), where the card's text comes
+ *  after it; a redraw of the same card keeps it as it was. */
+function versionsOpen(id) {
+  const was = $(".ver-box", modal);
+  return !modal.hidden && was?.dataset.id === id ? was.open : !matchMedia("(max-width: 820px)").matches;
+}
+function versionsHtml(c, open) {
   if (!c.iv) return "";
-  if (!S.versions) return `<h3>Image versions</h3><p class="muted">Loading ${c.iv} versions…</p>`;
+  const box = (n, body) => `<details class="ver-box" data-id="${esc(c.id)}"${open ? " open" : ""}><summary>Image versions <span class="muted">${n}</span></summary>${body}</details>`;
+  if (!S.versions) return box(c.iv, `<p class="muted">Loading…</p>`);
   const vs = versionList(c);
   if (vs.length < 2) return "";
-  return `<h3>Image versions <span class="muted">${vs.length}</span></h3>
+  return box(vs.length, `
     <div class="versions">
       <div class="ver-list" role="group" aria-label="Image versions, newest first">${vs.map((v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
         <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`).join("")}</div>
       <div class="ver-compare" id="ver-compare" aria-live="polite"><p class="muted">Pick a version to compare (↑ ↓).</p></div>
-    </div>`;
+    </div>`);
 }
 function showVersion(c, i) {
   const vs = versionList(c), v = vs[i], box = $("#ver-compare");

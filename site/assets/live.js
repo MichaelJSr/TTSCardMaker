@@ -1,4 +1,5 @@
 // The Edit dialog's live preview: the card as it will look once published, from the form's op. NOTES.md §21.
+import { flagsHtml } from "./flags.js";
 import { esc } from "./text.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
@@ -44,6 +45,7 @@ export function previewHtml(p, changed, ctx) {
   return `<div class="lp-card">
     <div class="lp-top">${src ? `<img class="lp-img" src="${esc(src)}" alt="" data-preview-image>` : ""}
       <div class="lp-head"><h2 class="${mark("name", "lp-name")}">${esc(p.name)}</h2>
+        ${changed.has("flags") ? `<div class="lp-changed">${flagsHtml(p) || `<p class="muted">No flags.</p>`}</div>` : flagsHtml(p)}
         <div class="facts">${fact("type", esc(ctx.kindLabel[p.type] || p.type || ""))}${fact("subtype", p.subtype ? esc(p.subtype[0].toUpperCase() + p.subtype.slice(1)) : "")}
           ${fact("stars", p.stars ? `<span class="stars">${"★".repeat(Math.min(p.stars, 10))}</span> ${p.stars}-star` : "")}${fact("series", esc(p.series || ""))}${fact("subseries", esc(p.subseries || ""))}
           ${fact("author", p.author ? `by ${esc(p.author)}` : "")}${p.hidden ? `<span class="fact${changed.has("hidden") ? " lp-changed" : ""}">Hidden</span>` : ""}
