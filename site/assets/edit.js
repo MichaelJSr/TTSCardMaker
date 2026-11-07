@@ -12,6 +12,7 @@ import { soon } from "./fresh.js";
 import * as P from "./parts.js";
 import { date, dayOf, pictureNumber } from "./history.js";
 import { artList, artError, artLabel } from "./art.js";
+import { CARD_FLAGS, cleanFlags, flagError, flagsChange, flagsText, hasFlag } from "./flags.js";
 
 const API = "https://api.github.com";
 // last: the login a password last signed in
@@ -19,18 +20,18 @@ const K = { stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", 
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
   atk: "int", spd: "int", ability: "str", parts: "parts", note: "str", art: "sources", ability_art: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
-  creatures: "creatures" };
+  creatures: "creatures", flags: "flags" };
 const ORDER = Object.keys(FIELDS);
 const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the bot's _by (changes.js BOT)
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
   atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases",
-  dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures",
+  dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures", flags: "Flags",
   "rate-favorability": "Favorability", "rate-power": "Power" };
 // art: the artwork sources, a list (art.js; ability_art: the retired second field, read as the last source, never offered)
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
-const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. Read by the website and the card sync.";
+const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. flags: what the card needs from a developer, {\"hand\": \"reason\", \"bars\": \"\"}, never baked. Read by the website and the card sync.";
 // true beside a name: the bake renames the card's files to it (owner 2026-10-25; build_site.py RENAME_KEY, the bot's card_edits.RENAME)
 export const RENAME_KEY = "_rename", RENAME_LABEL = "Also rename the card's files";
 /** An entry's `_rename` after an op: ticked or unticked (op.rename), and gone without a name or with a website-only one. */
@@ -74,11 +75,11 @@ const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; 
 const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", atk: "PSD", spd: "PSD", ability: "PSD", parts: "PSD",
   type: "folder", subtype: "folder", series: "folder" };
 const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
-  : typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
+  : typeof v === "boolean" ? (v ? "yes" : "no") : typeof v === "object" ? flagsText(v) : String(v));
 const clip = s => (s.length > 48 ? `${s.slice(0, 45).trimEnd()}…` : s);
 /** A duplicate whose author and ratings are its original's; a variant picture keeps its own. */
 const follows = c => !!c.dup && !c.variantOf;
-const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : FIELDS[f] === "sources" ? (artList({ art: v }).length ? artList({ art: v }) : null) : f === "dup_of" ? v || ""
+const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : FIELDS[f] === "flags" ? cleanFlags(v) : FIELDS[f] === "sources" ? (artList({ art: v }).length ? artList({ art: v }) : null) : f === "dup_of" ? v || ""
   : f === "creatures" ? (v?.length > 1 ? v.map(x => Object.fromEntries(STATS.map(k => [k, x[k] ?? null]))) : null) : v ?? null);
 /** A card's value of field f as the form shows it (byId resolves dup_of to the original's key). */
 export function value(c, f, byId) {
@@ -191,11 +192,12 @@ export function withoutItem(op, item, name, fields = null) {
  *  short the batch bar's ("SPD 4 → 5"), psd marks fields printed on the card image. */
 export function describeItems(op, b = {}, { byId } = {}) {
   const src = k => (FROM[k] ? `the ${FROM[k]}` : "the default");
+  const flagged = t => ({ item: "flags", text: `${LABEL.flags}: ${t}`, short: `${LABEL.flags}: ${clip(t)}` });
   const items = Object.entries(op.set).filter(([k]) => k !== "parts").map(([k, v]) => { const from = show(value(b, k, byId)), to = show(v);
-    return { item: k, text: `${LABEL[k]}: ${from} → ${to}`, short: `${LABEL[k]} ${clip(from)} → ${clip(to)}` }; });
+    return k === "flags" ? flagged(flagsChange(value(b, k), v)) : { item: k, text: `${LABEL[k]}: ${from} → ${to}`, short: `${LABEL[k]} ${clip(from)} → ${clip(to)}` }; });
   const boxes = Object.keys(op.set.parts || {}).length, back = (op.unset || []).filter(k => k.startsWith(P.PART)).length;
   if (boxes || back) { const t = `Text boxes: ${[boxes && `${boxes} changed`, back && `${back} back to the PSD`].filter(Boolean).join(", ")}`; items.push({ item: "parts", text: t, short: t }); }
-  for (const k of (op.unset || []).filter(k => !k.startsWith(P.PART))) { const p = show(psdValue(b, k, byId)); items.push({ item: k, text: `${LABEL[k]}: back to ${src(k)} (${p})`, short: `${LABEL[k]} back to ${src(k)} (${clip(p)})` }); }
+  for (const k of (op.unset || []).filter(k => !k.startsWith(P.PART))) { const p = show(psdValue(b, k, byId)); items.push(k === "flags" ? flagged(flagsChange(value(b, k), null)) : { item: k, text: `${LABEL[k]}: back to ${src(k)} (${p})`, short: `${LABEL[k]} back to ${src(k)} (${clip(p)})` }); }
   if (op.author !== undefined) { const t = `Author → ${op.author || "(from git)"}`; items.push({ item: "author", text: t, short: t }); }
   if (op.ban) { const t = op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned"; items.push({ item: "ban", text: t, short: t }); }
   for (const k of RATE) if (op.rate?.[k] != null) { const l = LABEL[`rate-${k}`]; items.push({ item: `rate-${k}`, text: `${l}: rated ${op.rate[k]}`, short: `${l} ${op.rate[k]}` }); }
@@ -886,6 +888,10 @@ export function createEditor(app) {
             return `<div class="erow" data-row="rate-${k}"><label for="ef-rate-${k}">${LABEL[`rate-${k}`]}</label><div class="ein"><input id="ef-rate-${k}" type="number" min="1" max="10" step="1" placeholder="1–10" value="${v ?? ""}"><span class="muted">${now ? `${now.value} now` : "not rated"}</span></div></div>`; }).join("")}
           <p class="muted">Adds your dated rating; empty adds none.</p>
         </fieldset>`}
+        <fieldset id="ef-flags"><legend>Flags</legend>
+          ${CARD_FLAGS.map(([k, l]) => `<div class="erow" data-row="flag-${k}"><label for="ef-flag-${k}">${esc(l)}</label><div class="ein"><input id="ef-flag-${k}" type="checkbox"${hasFlag(c, k) ? " checked" : ""}>
+            <input id="ef-flag:${k}" data-flag-why="${k}" value="${esc(c.flags?.[k] ?? "")}" placeholder="reason (optional)" aria-label="${esc(l)}: reason"></div></div>`).join("")}
+        </fieldset>
         <fieldset><legend>Checks</legend>
           ${row("allow_high_stats", `<label class="check"><input id="ef-allow_high_stats" type="checkbox"${c.allow_high_stats ? " checked" : ""}> above 20 is intended</label>`)}
           ${c.problems?.length || c.problems_ok ? row("problems_ok", `<label class="check"><input id="ef-problems_ok" type="checkbox"${c.problems_ok ? " checked" : ""}> checked, hide them</label> <span class="muted">${esc((b.problems || []).join(" · "))}</span>`) : ""}
@@ -947,6 +953,7 @@ export function createEditor(app) {
       art: () => { const list = artList({ art: [...document.querySelectorAll("#ef-art [data-art-src]")].map(i => i.value) }); error ||= artError(list); return list.length ? list : null; },
       aliases: () => f("aliases").value.split(",").map(s => s.trim()).filter(Boolean),
       dup_of: () => { const v = f("dup_of").value.trim(); return v ? (byKey(v)?.key || v) : ""; },
+      flags: () => { const v = cleanFlags(Object.fromEntries(CARD_FLAGS.filter(([k]) => f(`flag-${k}`).checked).map(([k]) => [k, f(`flag:${k}`).value]))); error ||= flagError(v); return v; },
       hidden: () => f("hidden").checked, allow_high_stats: () => f("allow_high_stats").checked, problems_ok: () => f("problems_ok").checked,
     };
     const want = Object.fromEntries(Object.entries(all).filter(([k]) => f(k === "types" ? "types" : k)).map(([k, get]) => [k, get()]));
@@ -1017,6 +1024,7 @@ export function createEditor(app) {
     if (one) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
     let x = fromInput(f, v, b.name);
     if (f === "art" && x != null) { x = artList({ art: x }); if (artError(x)) { if (!defer) app.toast(artError(x)); return null; } x = x.length ? x : null; }
+    if (f === "flags") { x = cleanFlags(x); if (flagError(x)) { if (!defer) app.toast(flagError(x)); return null; } }
     if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, c.id)) === undefined) return null;
     const op = autoRename(c, b, mergeField(opFor(c), { pub: val(b, f), psd: psdVal(b, f), edited: !!b.edited?.includes(f) }, f, x));
     put(c.id, op); if (!defer) save();
@@ -1264,7 +1272,8 @@ export function createEditor(app) {
     formDraft = { flush: () => autosave.flush(), discard: () => { autosave.cancel(); cardDrafts.back(c.id, found); } };
     form.addEventListener("input", e => {
       const box = e.target.closest?.("[data-part]");
-      if (!e.isComposing && e.target.matches?.("[data-part], #ef-name, #ef-ability, #ef-note")) P.straighten(e.target);   // straight apostrophes as typed or pasted (owner 10-25)
+      if (!e.isComposing && e.target.matches?.("[data-part], [data-flag-why], #ef-name, #ef-ability, #ef-note")) P.straighten(e.target);   // straight apostrophes as typed or pasted (owner 10-25)
+      if (e.target.dataset?.flagWhy && e.target.value.trim()) document.getElementById(`ef-flag-${e.target.dataset.flagWhy}`).checked = true;   // a reason sets its flag
       if (box) box.rows = rowsOf(box.value);      // the box grows with its lines
       update(); typing();
     });

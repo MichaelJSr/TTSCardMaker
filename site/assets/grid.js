@@ -133,10 +133,10 @@ export function tileHtml(c, { small = false, eager = false, css = 190, construct
 }
 
 /** the grid's toolbar; sort: the shown sort, dir: the dir param, created: the build has creation dates, tail: edit mode's
- *  and Compare's controls */
-export function toolbarHtml({ count, waiting = false, active = 0, sort, dir = "", created, view, size, tail = "" }) {
+ *  and Compare's controls, needs: the cards needing handling a phone's one tap shows (its Filters are closed) */
+export function toolbarHtml({ count, waiting = false, active = 0, sort, dir = "", created, view, size, tail = "", needs = 0 }) {
   return `<div class="toolbar">
-        <span class="result-count">${waiting ? "…" : `${count.toLocaleString()} card${count === 1 ? "" : "s"}`}</span>
+        <span class="result-count">${waiting ? "…" : `${count.toLocaleString()} card${count === 1 ? "" : "s"}`}</span>${needs ? `<a class="mobile-only needs-link" href="#/cards?flags=flagged">Needs handling (${needs})</a>` : ""}
         <button type="button" class="mobile-only" data-action="toggle-filters">Filters${active ? ` (${active})` : ""}</button>
         <label class="muted">Sort <select data-action="select-param" data-key="sort">${SORTS.filter(([v]) => v !== "created" || created).map(([v, l, d]) =>
           `<option value="${v}"${d !== undefined ? ` data-dir="${d}"` : ""}${v === sort && (d === undefined || (d === "asc") !== isDesc(sort, dir)) ? " selected" : ""}>${l}</option>`).join("")}</select></label>

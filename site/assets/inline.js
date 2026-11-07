@@ -11,6 +11,7 @@ import { rawOf, restorable, offerHtml, later, movedSince } from "./drafts.js";
 import { renameButton } from "./edit.js";
 import { straighten } from "./parts.js";
 import { artList, artLabel } from "./art.js";
+import { CARD_FLAGS, flagLabel, hasFlag, withFlag } from "./flags.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 const SLIDERS = [...STATS, "stars"];                // a row of cells: click one, or arrows and Enter
@@ -19,9 +20,12 @@ export const isArt = f => /^art:\d+$/.test(f);
 const artNo = f => +f.slice(4);
 /** The sources with source n set to v ("" removes it; one past the end adds it). */
 export const withSource = (list, n, v) => { const out = [...list]; out[n - 1] = v.replace(/\s+/g, " ").trim(); return out.filter(Boolean); };
-const TEXT = ["name", "ability", "note", "series", "subseries", "author"];   // the fields with a text control (and isArt)
+// a flag's reason: its line at the top of the card, edited as "flag:<key>" (the flags field staged whole)
+export const isFlag = f => /^flag:\w+$/.test(f);
+const flagKey = f => f.slice(5);
+const TEXT = ["name", "ability", "note", "series", "subseries", "author"];   // the fields with a text control (and isArt, isFlag)
 const LABEL = { hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", series: "Series", subseries: "Subseries", author: "Author", note: "Note", stars: "Stars", types: "Types" };
-const labelOf = f => (isArt(f) ? artLabel(artNo(f)) : LABEL[f]);
+const labelOf = f => (isArt(f) ? artLabel(artNo(f)) : isFlag(f) ? `${flagLabel(flagKey(f))}: reason` : LABEL[f]);
 const starMax = () => A?.editor?.maxStars?.() ?? 10;      // the stars slider's top: the most any card has (edit.js maxStars)
 const IMAGE = "on the card image";                 // the form's "On the card image" marker (PSD fields); the rest is database only
 
@@ -51,7 +55,7 @@ export function control(f, v, fresh = false) {
   if (f === "name") return `<input class="inline-name" aria-label="${label}" value="${esc(v)}">`;
   if (f === "ability") return `<textarea class="inline-ability" rows="${fit(v)}" spellcheck="true" aria-label="${label}" data-tokens>${esc(v)}</textarea>`;
   const named = f === "series" || f === "subseries" || f === "author";
-  return `<input class="inline-fact${f === "note" || isArt(f) ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${named ? ` data-suggest="${f}" autocomplete="off"` : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${labelOf(f).toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">`;
+  return `<input class="inline-fact${f === "note" || isArt(f) || isFlag(f) ? " inline-note" : ""}"${f === "note" ? ' data-tokens autocomplete="off"' : ""}${named ? ` data-suggest="${f}" autocomplete="off"` : ""} aria-label="${label}" placeholder="${fresh ? "new " : ""}${isFlag(f) ? "reason" : labelOf(f).toLowerCase()}" value="${esc(v)}" style="--w:${v.length + 2}ch">`;
 }
 /** The bucket options a filter select gets: those it lacks, as "X (no cards yet)", selected when picked. have: its
  *  option values; list: [name]. */
@@ -114,6 +118,13 @@ export function mountCard(modal, c, api = A) {
   for (const el of detail.querySelectorAll(":scope > div:nth-child(2) > .art-src[data-art]"))
     mark(el, `art:${el.dataset.art}`, `Click to edit the ${artLabel(+el.dataset.art, arts.length).toLowerCase()}`);
   facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="art:${arts.length + 1}" data-empty aria-label="Add an artwork source">+ artwork source</button>`);
+  for (const el of detail.querySelectorAll(".card-flags [data-flag]")) {          // its reason in place; ✕ clears the flag
+    const k = el.dataset.flag;
+    mark(el, `flag:${k}`, "Click to word the reason");
+    if (!el.textContent) { el.toggleAttribute("data-empty", true); el.textContent = "+ reason"; }
+    el.insertAdjacentHTML("afterend", `<button type="button" class="ghost flag-clear" data-flag-clear="${k}" aria-label="${esc(`Clear ${flagLabel(k)}`)}" title="Clear this flag">✕</button>`);
+  }
+  for (const [k, l] of CARD_FLAGS) if (!hasFlag(c, k)) facts.insertAdjacentHTML("beforeend", `<button type="button" class="fact ghost-fact" data-inline="flag:${k}" data-empty aria-label="${esc(`Flag: ${l}`)}">+ ${esc(l.toLowerCase())}</button>`);
   const starChip = chips.find(a => hrefOf(a).startsWith("#/cards?stars="));      // stars: a slider in its place
   if (c.stars > starMax()) { if (starChip) starChip.dataset.tip = "Use All fields"; }
   else if (starChip) starChip.outerHTML = starsHtml(c.stars, starMax());
@@ -142,7 +153,7 @@ function answer(restore) {
   if (!o) return;
   if (!restore) { drafts().drop(o.c.id); A.toast("Unsaved edit discarded"); return; }
   const keys = Object.keys(o.fields), [f] = keys, el = keys.length === 1 && spot(f);   // one field: its own editor, else All fields
-  if (el && (TEXT.includes(f) || isArt(f))) openText(el, f, o.fields[f]);
+  if (el && (TEXT.includes(f) || isArt(f) || isFlag(f))) openText(el, f, o.fields[f]);
   else if (el && f === "types") openTypes(el, o.fields.types);
   else A.editor.open(o.c.id, { draft: o.fields });
 }
@@ -157,7 +168,7 @@ function open(el, f, text = null) {               // text: a restored draft
   if (pal) pal.ctl.close(true);
   if (!el.isConnected || !card) return;
   A.hideTip?.();                                   // its "Click to edit" goes with the data-tip
-  const c = card, v = f === "author" ? (c.author || "") : isArt(f) ? (artList(c)[artNo(f) - 1] ?? "") : String(A.editor.value(c, f) ?? "");
+  const c = card, v = f === "author" ? (c.author || "") : isArt(f) ? (artList(c)[artNo(f) - 1] ?? "") : isFlag(f) ? (c.flags?.[flagKey(f)] ?? "") : String(A.editor.value(c, f) ?? "");
   const swap = el.tagName === "A" || el.tagName === "BUTTON";     // a link would still navigate, a button can't hold an input
   let host = el;
   if (swap) { host = document.createElement("span"); host.className = el.className; host.dataset.inline = f; el.replaceWith(host); }
@@ -165,7 +176,7 @@ function open(el, f, text = null) {               // text: a restored draft
   if (!swap) { delete el.dataset.tip; if (el.tagName === "P") el.className = "ability"; }   // "No ability text." becomes the text box
   host.innerHTML = control(f, text ?? v);
   cur.ctl = host.querySelector("input, textarea");
-  const save = cur.save, words = f === "name" || f === "ability" || f === "note";
+  const save = cur.save, words = f === "name" || f === "ability" || f === "note" || isFlag(f);
   cur.ctl.addEventListener("input", e => { if (words && !e.isComposing) straighten(e.target); save.run(); });   // straight apostrophes (owner 10-25)
   if (text != null) save.run();
   cur.ctl.focus(); if (f !== "ability" && text == null) cur.ctl.select();
@@ -184,7 +195,8 @@ function commit(kbd) {                            // kbd: from the keyboard, so 
   if (next.trim() === v.replace(/\r/g, "").trim()) { cancel(kbd); return true; }
   cur = null;
   const staged = f === "author" ? A.editor.stageAuthor(c.id, next)
-    : isArt(f) ? A.editor.stageField(c.id, "art", withSource(artList(c), artNo(f), next)) : A.editor.stageField(c.id, f, next);
+    : isArt(f) ? A.editor.stageField(c.id, "art", withSource(artList(c), artNo(f), next))
+    : isFlag(f) ? A.editor.stageField(c.id, "flags", withFlag(c.flags, flagKey(f), next)) : A.editor.stageField(c.id, f, next);
   if (!staged) {   // refused, with a toast (a name too long):
     if (was.host.isConnected) cur = was;           // the input and its text stay, as in the filter bar
     return false;
@@ -248,6 +260,8 @@ function onClick(e) {
   if (cur && cur.host.contains(e.target)) return;
   const answerBtn = e.target.closest(".detail .draft-offer [data-draft]");
   if (answerBtn) { e.preventDefault(); e.stopPropagation(); answer(answerBtn.dataset.draft === "restore"); return; }
+  const clear = e.target.closest("[data-flag-clear]");
+  if (clear && card) { e.preventDefault(); e.stopPropagation(); A.editor.stageField(card.id, "flags", withFlag(card.flags, clear.dataset.flagClear, null)); refresh(card, "", false); return; }
   const cell = e.target.closest(".segs[data-inline] > i, .star-pick > i");
   if (cell) {                                                                // relative to the saved value, not a keyboard change not yet saved
     e.stopPropagation(); const row = cell.parentElement, v = prov?.row === row ? prov.v0 : +row.getAttribute("aria-valuenow"); prov = null;
@@ -260,8 +274,13 @@ function onClick(e) {
     e.preventDefault(); e.stopPropagation(); el.outerHTML = starsHtml(0, starMax());
     const sp = A.modal.querySelector(".detail .star-pick"); if (sp) { sp.dataset.fresh = ""; sp.focus(); } return;   // fresh: nothing chosen puts "+ stars" back
   }
+  if (isFlag(f) && el.hasAttribute("data-empty") && el.tagName === "BUTTON") {  // "+ needs doing by hand": flagged at once, its reason open
+    e.preventDefault(); e.stopPropagation();
+    if (A.editor.stageField(card.id, "flags", withFlag(card.flags, flagKey(f), ""))) { refresh(card, f, false); const why = spot(f); if (why) open(why, f); }
+    return;
+  }
   if (f === "name" || SLIDERS.includes(f)) return;                          // the name on double-click, rows by cell or key
-  if ((f === "ability" || f === "note" || isArt(f)) && e.target.closest("a, .badge, img")) return;   // links in the text still open (the card, the source)
+  if ((f === "ability" || f === "note" || isArt(f) || isFlag(f)) && e.target.closest("a, .badge, img")) return;   // links in the text still open (the card, the source)
   if (e.ctrlKey || e.metaKey || e.shiftKey) return;                          // a chip's link still opens in a new tab
   e.preventDefault(); e.stopPropagation();
   if (f === "types") openTypes(el); else openText(el, f);

@@ -30,7 +30,8 @@ data), on a push of site code, daily, and on demand (Actions → Card browser �
   own verb ("inflict 1T1 smeckeldorfed", "stacks of hardened", "summon a silithid"); not as a label like "Cat:", not
   before a number ("Heal 2 HP"), not as a verb opening a clause ("Flip to the other creature"), and after a capitalized
   word only when that word is a verb or a card: "Summon Jetpack" links, "Evil Quote" doesn't); "mentions", "mentioned by", similar stats,
-  same series, text history with changes highlighted, and an image version viewer: every commit that changed the
+  same series, text history with changes highlighted, and an image version viewer under the card's picture (closed on a
+  phone): every commit that changed the
   card's image, compared side by side with the current one, with the text of that time when it differs (each version,
 text or image, links its commit when it is known), and the artwork sources when set. The current
   text is dated from when it started (the bot's carried start), not from the PSD's last commit, which can be a re-save
@@ -223,6 +224,15 @@ eight tiles (plain links to the cards' pages), so a phone shows cards before the
 saved view gets it once the script runs. The build checks those tiles against the site's own code in node and stops on
 any difference (`site/NOTES.md` §31). The build stops (and nothing is deployed) if the bot's data can't be
 downloaded or looks truncated, or if many images fail.
+
+## Flags
+
+A card can carry two flags, each with an optional reason: **Needs doing by hand** and **Special stat bars**. They replace
+the problem cards CSV. The card page shows them under the name; **Needs handling** at the top of the Cards filters lists
+them (All, or one flag; `flags=flagged`, `flags=hand`, `flags=bars`, excluded with `xflags=`; on a phone a link in the
+toolbar too); search `flag:hand`, `flag:bars`, `flag:any`. Any editor sets, clears and words them: `+ needs doing by
+hand` on the card page, click the reason, ✕ to clear, or Flags in All fields. They go through the batch and Publish,
+live in `site/Card Edits.json` (`"flags": {"hand": "reason", "bars": ""}`) and are never baked.
 
 ## Editing
 

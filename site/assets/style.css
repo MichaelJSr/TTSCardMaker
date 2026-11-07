@@ -683,9 +683,11 @@ ul.cl-lines { margin: 2px 0; padding-left: 18px; } .cl-lines li { margin: 3px 0;
 .svg-label .badge { font-size: 14px; }   /* the chart's SVG is scaled down (0.79 at 1400 px): its ring's number legible */
 
 /* image versions (card page) */
-.versions { display: grid; grid-template-columns: minmax(180px, 240px) minmax(0, 1fr); gap: 14px; align-items: start; }
-@media (max-width: 820px) { .versions { grid-template-columns: minmax(0, 1fr); } }
-.ver-list { display: flex; flex-direction: column; gap: 4px; max-height: 340px; overflow-y: auto; padding-right: 2px; }
+.ver-box { margin: 14px 0 0; }
+.ver-box > summary { cursor: pointer; width: fit-content; padding: 2px 0; font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.ver-box[open] > summary { margin-bottom: 8px; }
+.versions { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.ver-list { display: flex; flex-direction: column; gap: 4px; max-height: 240px; overflow-y: auto; padding-right: 2px; }
 .ver-item { display: grid; gap: 1px; text-align: left; padding: 7px 10px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface-2); color: var(--ink); }
 .ver-item .when { font-weight: 600; font-size: 13px; } .ver-item .who { font-size: 12px; color: var(--ink-2); }
 .ver-item .msg { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -763,6 +765,16 @@ button.reset { font-size: 12px; padding: 2px 8px; color: var(--muted); }
 .tile .flag.refused, .fact.refused { background: #7c1d1d; color: #ffd6d6; }
 .data td .fact, .panel li .fact, .erow label .fact { margin-left: 6px; font-size: 11px; }
 .note { background: var(--surface-2); border-left: 3px solid var(--warn); border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
+/* a card's flags (flags.js), near the top of its page */
+.card-flags { display: grid; gap: 4px; margin: 8px 0 10px; }
+.card-flag { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 5px 12px; border-radius: 8px; border-left: 3px solid var(--warn);
+  background: color-mix(in srgb, var(--warn) 16%, var(--surface-2)); font-size: 14px; }
+.flag-why { min-width: 0; color: var(--ink-2); overflow-wrap: anywhere; }
+.flag-why[data-empty] { color: var(--muted); }
+.flag-why:has(input) { flex: 1 1 0; min-width: 12ch; }
+.flag-clear { margin-left: auto; align-self: center; padding: 0 6px; font-size: 12px; }
+@media (pointer: coarse) { .flag-clear { padding: 6px 10px; } }
+.needs-link { font-size: 13px; white-space: nowrap; }
 .art-src { margin: 4px 0; font-size: .92em; overflow-wrap: anywhere; }
 @media (max-width: 640px) { .erow { grid-template-columns: 1fr; } .edit-bar { left: 8px; right: 8px; transform: none; border-radius: 14px; max-width: none; } .edit-bar .bar-head { flex-wrap: wrap; } }
 .review-item .actions { align-self: flex-start; flex-wrap: nowrap; margin: 0; }

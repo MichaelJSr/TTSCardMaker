@@ -2,6 +2,7 @@
 // back when the card opens again. NOTES.md §21.
 import { esc } from "./text.js";
 import { artList, artLabel } from "./art.js";
+import { CARD_FLAGS, hasFlag } from "./flags.js";
 
 export const DRAFT_KEY = "edit-drafts";
 export const DELAY = 400;                          // ms after the last key
@@ -11,7 +12,8 @@ const CHECKS = new Set(["hidden", "allow_high_stats", "problems_ok", "banned"]);
 const NAMES = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP",
   def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
   problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", banned: "Ban", "ban-group": "Ban", "ban-reason": "Ban",
-  creatures: "Creatures", "rate-favorability": "Favorability", "rate-power": "Power", rename: "Rename files" };
+  creatures: "Creatures", "rate-favorability": "Favorability", "rate-power": "Power", rename: "Rename files",
+  ...Object.fromEntries(CARD_FLAGS.flatMap(([k, l]) => [[`flag-${k}`, l], [`flag:${k}`, l]])) };   // its tick, its reason
 
 const text = v => String(v ?? "").replace(/\r/g, "");
 /** A field's value as the Edit dialog's input shows it for card c (edit.js formHtml): text for inputs, a boolean for a
@@ -27,6 +29,8 @@ export function rawOf(c, f, dupKey = "") {
   if (f === "rename") return !!c.renameFiles;           // edit.js renameRow
   if (f === "art") return artList(c);                   // the form's list
   if (/^art:\d+$/.test(f)) return text(artList(c)[+f.slice(4) - 1] ?? "");   // one line, inline (inline.js isArt)
+  if (f.startsWith("flag-")) return hasFlag(c, f.slice(5));                  // the Edit dialog's tick
+  if (f.startsWith("flag:")) return text(c.flags?.[f.slice(5)]);             // its reason (inline.js isFlag)
   return text(c[f]);
 }
 /** Two raw values alike: text compared trimmed and without \r (what the form and the inline editors save). */

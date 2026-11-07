@@ -160,11 +160,14 @@ LOGINS_DIR = "site/logins"                    # <login>.json: a token sealed wit
 # Card Edits.json fields; same list in edit.js and the bot's CardEdits (subseries: database only, never from the folder)
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "art": list, "ability_art": str,
-               "aliases": list, "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list}
+               "aliases": list, "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list,
+               "flags": dict}
 EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", "spd", "art", "ability_art"}      # may be null
 # artwork sources: art, a list of free text (one string in older entries), each entry its own (a duplicate's never its
 # original's); the retired ability_art is read as the last source (art_list); the bot's card_edits.ART_MAX
 ART_FIELDS, ART_MAX = ("art", "ability_art"), 500
+# what a card needs from a developer: {"hand": "reason", "bars": ""}, each reason optional (flags.js, the bot's card_edits)
+FLAGS, FLAG_MAX = ("hand", "bars"), 300
 
 
 def art_list(art, ability_art=None):
@@ -1297,6 +1300,8 @@ def valid_edit(field, value):
                                                                            for k, v in c.items()) for c in value)
     if field in ART_FIELDS:                      # a source, or (art) a list of them
         return all(isinstance(x, str) and len(x) <= ART_MAX for x in (value if field == "art" and isinstance(value, list) else [value]))
+    if field == "flags":
+        return isinstance(value, dict) and bool(value) and all(k in FLAGS and isinstance(v, str) and len(v) <= FLAG_MAX for k, v in value.items())
     if kind is list:
         return isinstance(value, list) and all(isinstance(x, str) for x in value)
     return isinstance(value, kind)
