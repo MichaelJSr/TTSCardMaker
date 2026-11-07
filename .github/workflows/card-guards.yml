@@ -25,8 +25,9 @@
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
 # venv cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
 #
-# Three jobs (2026-10-24): `check` runs the two checks and the guards' check and comments, then ends; `post` lands and
-# posts right after it (the 30-minute quiet window and its environment card-guards-quiet went on 2026-11-03).
+# Jobs: `check` runs the guards' check and comments, then ends; `post` lands and posts right after it (the 30-minute quiet
+# window and its environment card-guards-quiet went on 2026-11-03). `checks` runs a push's two checks beside them, so
+# Card sync and the post wait for neither (2026-11-07); a dispatch runs them in `check`.
 #
 # Switches: the repo variable CARD_GUARDS (Settings > Variables; unset or off = the guards skipped, the two checks still
 # run; report = check, comment and post but never commit, on = also land; any letter case). A dispatch defaults to a dry
@@ -62,7 +63,7 @@ on:
         type: boolean
         default: false
 
-permissions:          # the post job's; check and finish have their own
+permissions:          # the post job's; the others have their own
   contents: write     # the commit comment and the bot commit
   actions: write      # gh workflow run card-sync.yml after a commit (a GITHUB_TOKEN push triggers no workflow)
 
@@ -74,7 +75,7 @@ concurrency:
 
 jobs:
   # Every push and dispatch (GITHUB_TOKEN pushes start no run; inside a range the bot's commits are left out by author,
-  # card_guards.Writer.bot). The two checks always; the guards' steps unless MODE is off.
+  # card_guards.Writer.bot). The guards' steps unless MODE is off; a dispatch's two checks always.
   check:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.all && 150 || 40 }}    # finish's alert reads 40; the quiet window is the post job's
@@ -113,7 +114,8 @@ jobs:
 
       # Every commit and tree, no card blobs (the 28 GB of PSDs and PNGs are never checked out): the push's range and
       # its PNG pairing come from the trees; the pushed PSDs and PNGs come by blob sha through the API, verified.
-      - uses: actions/checkout@v7
+      - &card-repo
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           filter: "blob:none"
@@ -144,7 +146,8 @@ jobs:
       # The guards and their import closure (no config.py: github_api reads it in a try/except, the token comes from the
       # environment), and the packages they install. AutoCroissant tests/test_card_guards.py runs --help on exactly this
       # list (card_guards.SPARSE_FILES).
-      - uses: actions/checkout@v7
+      - &bot-repo
+        uses: actions/checkout@v7
         with:
           repository: bobberlington/AutoCroissant
           path: bot
@@ -180,14 +183,16 @@ jobs:
         run: echo "sha=$(git -C bot rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       # requirements-cards.txt's wheels and the oxipng CLI (the lossless PNG recompression)
-      - timeout-minutes: 10
+      - &setup
+        timeout-minutes: 10
         uses: ./.github/actions/cards-python
         id: setup
 
       # Fonts for the font check (and R8's box text): MDW/Fonts' top level, cached by its tree sha (Card sync's key); the
       # sparse checkout fetches them only on a miss. One that fails leaves no folder: no font check (it would call every
       # font missing), R8 fetches its own, and nothing is cached.
-      - id: fonts
+      - &fonts
+        id: fonts
         shell: bash
         run: echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
 
@@ -197,7 +202,8 @@ jobs:
           path: MDW/Fonts
           key: card-fonts-${{ steps.fonts.outputs.sha }}
 
-      - id: fonts-miss
+      - &fonts-miss
+        id: fonts-miss
         if: steps.font-cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
@@ -211,7 +217,8 @@ jobs:
       # first, so ~3 REST reads per card become none. One that fails or times out leaves them to the REST reads.
       # 8 to a fetch, 4 at a time, in diff order: GitHub's delta search is what takes the time, and small packs barely
       # need one; a card's two sides stay together, so the deltas still shrink the transfer.
-      - name: Pushed blobs
+      - &pushed-blobs
+        name: Pushed blobs
         if: github.event_name == 'push'
         continue-on-error: true
         timeout-minutes: 5
@@ -231,13 +238,16 @@ jobs:
           echo "$have of $(wc -l < "$list") pushed blobs in the clone"
           [ "$have" -eq "$(wc -l < "$list")" ] || echo "::warning::$have of $(wc -l < "$list") pushed blobs fetched: the rest by REST"
 
-      # The two checks, at once (before the guards' check, so their posts are not held up). A push: the PSDs changed
-      # between its two heads; a dispatch: `sha`'s (or main's head's) own, or with `all` every card PSD of the tree.
-      # Each exits 0 on findings (an unreadable PSD or a failed API call is one line in its report); one that breaks
-      # anyway is a warning and never stops the guards. report.md, report.json and discord.json in $RUNNER_TEMP/<check>.
-      # --clone: a pushed PSD is fetched once into this clone, then read from it by the font check and the guards.
-      - name: Card check
+      # The two checks: a push's in the `checks` job, a dispatch's here, before the guards' check: on one runner, an `all`
+      # dispatch reads its 813 PSDs once (twice at once would pass GITHUB_TOKEN's 1,000 requests an hour).
+      # A push: the PSDs changed between its two heads; a dispatch: `sha`'s (or main's head's) own, or with `all` every
+      # card PSD of the tree. Each exits 0 on findings (an unreadable PSD or a failed API call is one line in its report);
+      # one that breaks anyway is a warning and never stops the guards. report.md, report.json and discord.json in
+      # $RUNNER_TEMP/<check>. --clone: a PSD is fetched once into this clone, then read from it by the next one.
+      - &card-check
+        name: Card check
         id: card-check
+        if: (github.event_name == 'push') == (github.job == 'checks')
         continue-on-error: true
         timeout-minutes: ${{ inputs.all && 45 || 10 }}
         working-directory: bot
@@ -249,7 +259,7 @@ jobs:
           AUTHOR: ${{ github.event_name == 'push' && github.actor || '' }}
           AFTER: ${{ inputs.sha || github.sha }}
           ALL: ${{ inputs.all }}
-        run: &check-run |
+        run: |
           out=$RUNNER_TEMP/$CHECK
           mkdir -p "$out"
           args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$AFTER" --json "$out/report.json"
@@ -259,9 +269,10 @@ jobs:
           if [ "$ALL" = true ]; then args+=(--whole-tree); elif [ -n "$BEFORE" ]; then args+=(--before "$BEFORE"); fi
           python -m "commands.${CHECK/-/_}" "${args[@]}" | tee "$out/report.md" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Font check
+      - &font-check
+        name: Font check
         id: font-check
-        if: steps.fonts-miss.outputs.ok != 'false'
+        if: (github.event_name == 'push') == (github.job == 'checks') && steps.fonts-miss.outputs.ok != 'false'
         continue-on-error: true
         timeout-minutes: ${{ inputs.all && 45 || 10 }}
         working-directory: bot
@@ -273,31 +284,15 @@ jobs:
           AUTHOR: ${{ github.event_name == 'push' && github.actor || '' }}
           AFTER: ${{ inputs.sha || github.sha }}
           ALL: ${{ inputs.all }}
-        run: *check-run
-
-      # A push's checks with something to say: each one's own Discord message (only when the webhook secret is set; the
-      # URL is never printed) and its own comment on the pushed commit. A dispatch only reports in the job summary.
-      # A failed call warns.
-      - name: Tell the checks
-        if: ${{ !cancelled() && github.event_name == 'push' }}
-        shell: bash
-        env:
-          WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for name in card-check font-check; do
-            out=$RUNNER_TEMP/$name
-            [ -f "$out/report.json" ] || continue
-            jq -e '.cards | length > 0' "$out/report.json" > /dev/null || { echo "$name: nothing to report."; continue; }
-            if [ -z "$WEBHOOK" ]; then
-              echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"
-            elif ! curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @"$out/discord.json" "$WEBHOOK"; then
-              echo "::warning::$name: the Discord webhook call failed; the commit comment stands"
-            fi
-            jq -n --rawfile body "$out/report.md" '{body: $body}' \
-              | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" --input - > /dev/null \
-              || echo "::warning::$name: the commit comment failed"
-          done
+          out=$RUNNER_TEMP/$CHECK
+          mkdir -p "$out"
+          args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$AFTER" --json "$out/report.json"
+                --discord "$out/discord.json")
+          [ "$CHECK" = font-check ] && args+=(--fonts "$GITHUB_WORKSPACE/MDW/Fonts")
+          [ -n "$AUTHOR" ] && args+=(--author "$AUTHOR")
+          if [ "$ALL" = true ]; then args+=(--whole-tree); elif [ -n "$BEFORE" ]; then args+=(--before "$BEFORE"); fi
+          python -m "commands.${CHECK/-/_}" "${args[@]}" | tee "$out/report.md" >> "$GITHUB_STEP_SUMMARY"
 
       # A push: before..after. A dispatch: `sha` (or main's head) against its first parent, or with `all` every card PSD.
       # report.md is the job summary and the comment; plan.json feeds the post job. Exit 1: not checked (the alert).
@@ -403,6 +398,55 @@ jobs:
         if: always() && steps.plan.outputs.fixes == 'true'   # a failed Comment step too: Plan and Follow up run anyway
         shell: bash
         run: echo "This push's fixes land in the post job; Follow up then starts Card sync's main lane."
+
+  # A push's card check and font check, beside `check`: Card sync's Quiet window and the post job wait for that one alone.
+  # Never a gate, whatever CARD_GUARDS says. `check` saves the font cache; finish's alert reads this job's result too.
+  checks:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40    # finish's alert reads 40
+    permissions:
+      contents: write     # the commit comments
+    steps:
+      - *card-repo
+      - *bot-repo
+      - *setup
+      - *fonts
+
+      - id: font-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: MDW/Fonts
+          key: card-fonts-${{ steps.fonts.outputs.sha }}
+
+      - *fonts-miss
+      - *pushed-blobs
+      - *card-check
+      - *font-check
+
+      # A push's checks with something to say: each one's own Discord message (only when the webhook secret is set; the
+      # URL is never printed) and its own comment on the pushed commit. (A dispatch only reports in the job summary.)
+      # A failed call warns.
+      - name: Tell the checks
+        if: ${{ !cancelled() }}
+        shell: bash
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for name in card-check font-check; do
+            out=$RUNNER_TEMP/$name
+            [ -f "$out/report.json" ] || continue
+            jq -e '.cards | length > 0' "$out/report.json" > /dev/null || { echo "$name: nothing to report."; continue; }
+            if [ -z "$WEBHOOK" ]; then
+              echo "::warning::DISCORD_STANDARDS_WEBHOOK is not set; no Discord message"
+            elif ! curl -sS -o /dev/null -f -H "Content-Type: application/json" --data @"$out/discord.json" "$WEBHOOK"; then
+              echo "::warning::$name: the Discord webhook call failed; the commit comment stands"
+            fi
+            jq -n --rawfile body "$out/report.md" '{body: $body}' \
+              | gh api --method POST "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" --input - > /dev/null \
+              || echo "::warning::$name: the commit comment failed"
+          done
 
   # Right after the check (owner, 2026-11-03: the 30-minute quiet window and its environment card-guards-quiet are gone):
   # Land, Follow up, Tell Discord. Only when the check found something to land or tell (report or on). Land goes on the
@@ -647,7 +691,7 @@ jobs:
 
   # A red run where it should be one, and the standards channel told once per failure streak.
   finish:
-    needs: [check, post]
+    needs: [check, checks, post]
     if: always() && needs.check.outputs.mode != 'off'
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -668,7 +712,8 @@ jobs:
         run: |
           if [ "${ERRORS:-0}" -gt 0 ]; then echo "::error::$ERRORS card(s) could not be checked: see the report"; exit 1; fi
 
-      # A failed push run whose post did not go out: one message with the run's link, once per streak. Quiet when the last
+      # A failed push run whose post did not go out, or whose `checks` job broke (the post tells nothing of their reports):
+      # one message with the run's link, once per streak. Quiet when the last
       # finished push run is not green and left STREAK (a red run that posted told nobody), or this push was told: the
       # Comment step's TOLD, or on a re-run the commit comment's mark looked up here (the Comment step does not run when
       # Check fails; unreadable counts as told, as there). Quiet too for a cancel by hand (no cancelled job ran to its
@@ -679,14 +724,15 @@ jobs:
         id: alert
         if: >-
           (failure() || contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) &&
-          github.event_name == 'push' && needs.post.outputs.posted != 'true' && needs.check.outputs.told != 'true'
+          github.event_name == 'push' &&
+          (needs.checks.result != 'success' || (needs.post.outputs.posted != 'true' && needs.check.outputs.told != 'true'))
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEBHOOK: ${{ secrets.DISCORD_STANDARDS_WEBHOOK }}
           RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           CHECKED: ${{ needs.check.outputs.checked }}
-          RESULTS: ${{ needs.check.result }} ${{ needs.post.result }}
+          RESULTS: ${{ needs.check.result }} ${{ needs.checks.result }} ${{ needs.post.result }}
           STARTED: ${{ needs.check.outputs.started }}
         run: |
           if [[ " $RESULTS " == *" cancelled "* ]]; then     # a job's timeout reads as cancelled too: it ran its whole time
@@ -694,7 +740,7 @@ jobs:
               --jq '[.jobs[] | select(.conclusion == "cancelled" and .started_at and .completed_at)
                      | {(.name): ((.completed_at | fromdate) - (.started_at | fromdate))}] | add // {}') || ran=""
             if [ -n "$ran" ]; then
-              timed_out=$(jq -r --argjson limit '{"check": 40, "post": 30}' \
+              timed_out=$(jq -r --argjson limit '{"check": 40, "checks": 40, "post": 30}' \
                 'to_entries | map(select(.value >= ($limit[.key] // 0) * 60 - 120)) | length' <<< "$ran")
             else                                # no job list: the old rule, from the check's Start
               timed_out=$(( $(date +%s) - ${STARTED:-$(date +%s)} >= 2280 ))
