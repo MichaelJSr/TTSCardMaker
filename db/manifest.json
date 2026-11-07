@@ -7,32 +7,32 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-07T02:29:06Z",
- "card_commit": "26cc7a66336168eed8e27c8869e121dfa2def9c9",
- "card_commit_at": 1794018521.0,
+ "built_at": "2026-11-07T02:32:06Z",
+ "card_commit": "60c53f0d6cd132f8c92be786011c9c08ce08cac4",
+ "card_commit_at": 1794018699.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
-  "archived": 94,
+  "archived": 98,
   "baked": 0,
   "cards": 776,
   "changed": 0,
-  "details": 774,
+  "details": 778,
   "failed": 0,
   "new": 0,
-  "versions": 1807
+  "versions": 1811
  },
  "files": {
-  "old_stats.json": "bf2873c97426ce1a4746d64715b7114358669b32c8cc323f4e05c42480e305e6",
-  "psd_details.json": "a443ad1e41fc1425dee201afb2ce58f268b5c85c72ddc3c5fa894d7b7d8de6bc",
+  "old_stats.json": "4f0afa2849753748cca45d1d68abae3170d477d8d6ae0c6650c62635bbca436e",
+  "psd_details.json": "1dfbfc0ace107e0583d02da20ddafb8a6f8016b5b950ebd24b1e0a88b12ca582",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "6c036d19a02f71e39216408b0b0fb4c5a2acdf734888868b2b3375ba1649f13b"
+  "stats.json": "f05a001066d4cdeb5bc92507277dd96cc0eb933461cd1019682b83e9c1571df0"
  },
  "gates": {},
  "inputs": {
-  "authors_blob": "e09b279f3d8cac9fab89862cd7f9d89c37a7c382",
-  "created_blob": "9842ba8781aaa486ab624b1fd1b612d8de84b443",
-  "decks_blob": "ab943abf07fcb50bf09cebad8b25bff9a97f3a9f",
-  "edits_blob": "295bb978f3f6f0bac76a2bfbbb3683b5fc272d65",
+  "authors_blob": "86fe200df28b110de8fe0dab2b3e98208a0ffc91",
+  "created_blob": "b6f027d7726fe9ef21243d12e7c138d21880b8ac",
+  "decks_blob": "e027cb226a8bf3bc04cb04000de92640367ae2ad",
+  "edits_blob": "8b46cc21bd78f3ee21862dece6817f38c830518b",
   "fonts_tree": "b236af539081fe4aeeddcce657a9b213ea14ab06",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "87993ef69e369ea8006616af4dd4ba961a0525ae"
