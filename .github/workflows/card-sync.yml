@@ -131,7 +131,7 @@ jobs:
     env:
       AFTER: ""               # the after job: the main lane's last commit (M, or R on it)
       RECORDS: ""             # the after job: its dispatch inputs are the data job's (the records come from any run)
-      CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the renders' records (psd_edit): the data's, else the bot's seed
+      CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the renders' records (psd_edit): the data's
     steps: &data-steps
       # Main's head (not github.sha): every commit and tree, no file contents but the small files the stages read. The
       # card folders are never checked out; the bake and the build read PSDs by blob sha, local first, else REST.
@@ -189,8 +189,6 @@ jobs:
             /commands/rulebook.py
             /commands/rulebook_pages.py
             /commands/psd_links.py
-            /commands/render_record.json
-            /commands/spot_record.json
 
       # The data branch (restore rewrites a bad one; a lost branch is pushed back by hand from a clone)
       - &data-checkout

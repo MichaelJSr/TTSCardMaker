@@ -51,7 +51,7 @@ jobs:
     env:
       SHARD: ${{ matrix.shard }}/${{ inputs.all && '6' || '1' }}
       GIT_NO_LAZY_FETCH: "1"
-      CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the bakes' renders: the data's records, else the bot's seed
+      CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the bakes' renders: the data's records
     steps:
       # main's head: its tree, no file contents but the small files the checks read
       - &checkout-main
@@ -105,8 +105,6 @@ jobs:
             /global_config.py
             /requirements-cards.txt
             /commands/psd_links.py
-            /commands/render_record.json
-            /commands/spot_record.json
 
       - &data-checkout
         uses: actions/checkout@v7
