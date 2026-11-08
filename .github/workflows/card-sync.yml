@@ -970,7 +970,8 @@ jobs:
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
       # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), when the website shows main's
       # chapters (it waits up to 8 minutes for the website's build of them); the save below puts it in the Rulebooks bag and M takes
-      # it. A failure leaves the PDF as it was.
+      # it. A failure leaves the PDF as it was. changed: the PDF or the page list; key: pages.json's key alone (M takes it
+      # only when made for something else).
       - name: Rulebook PDF
         id: pages
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
@@ -984,11 +985,13 @@ jobs:
           fi
           CHROME=$(command -v google-chrome || command -v chromium || true) \
             "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" | tee "$RUNNER_TEMP/pages.md"
-          if [ -n "$(git -C "$GITHUB_WORKSPACE" status --porcelain -- TTS/Rulebook)" ]; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=false" >> "$GITHUB_OUTPUT"
+          ws=$GITHUB_WORKSPACE list=TTS/Rulebook/pages.json changed=false key=false
+          if [ -n "$(git -C "$ws" status --porcelain -- TTS/Rulebook ":!$list")" ]; then
+            changed=true
+          elif [ -n "$(git -C "$ws" status --porcelain -- "$list")" ]; then
+            if [ "$(jq -S 'del(.key)' "$ws/$list")" = "$(git -C "$ws" show "HEAD:$list" | jq -S 'del(.key)')" ]; then key=true; else changed=true; fi
           fi
+          { echo "changed=$changed"; echo "key=$key"; } >> "$GITHUB_OUTPUT"
 
       # The save on the checkout (B's Card Edits.json and decks), names from the data branch's head (Card Edits.json's
       # first); with no data, the website's cards.json.
@@ -1086,6 +1089,7 @@ jobs:
           START: ${{ steps.gate.outputs.start }}
           SAVED: ${{ steps.save.outputs.changed }}
           PAGES: ${{ steps.pages.outputs.changed }}
+          KEYED: ${{ steps.pages.outputs.key }}
           B: ${{ steps.bake.outputs.b }}
           R: ${{ steps.redraw.outputs.r }}
           RETRY: ${{ inputs.retry && 'true' || 'false' }}
@@ -1114,6 +1118,10 @@ jobs:
             parts+=("rulebook PDF printed")
           fi
           tree=$(git write-tree --missing-ok)
+          if [ "$KEYED" = true ] && [ "$tree" != "$(git rev-parse "$MAIN^{tree}")" ]; then   # the rulebook's new key rides along
+            git add -- TTS/Rulebook/pages.json
+            tree=$(git write-tree --missing-ok)
+          fi
           unset GIT_INDEX_FILE
           me=(GIT_AUTHOR_NAME=AutoCroissant GIT_AUTHOR_EMAIL=autocroissant@gmail.com
               GIT_COMMITTER_NAME=AutoCroissant GIT_COMMITTER_EMAIL=autocroissant@gmail.com)
