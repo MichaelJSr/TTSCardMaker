@@ -1,7 +1,7 @@
 {
  "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
  "pdf": "Rulebook.pdf",
- "key": "a847d97935328ddef5a986b6ee4fa5398a7d6630c9163efedc88c3855041685a",
+ "key": "94ab8426b813608786dfc2c923427ae4d4b1af9f03900e291bee929929ff6d09",
  "pages": [
   {
    "name": "Cover",
@@ -191,7 +191,7 @@
   {
    "name": "Item Types",
    "num": "14",
-   "sha": "bf240e21e2adb6f3bd8508a8a2102d93da65c4dda639e100faa7082620d0f06f",
+   "sha": "4a85cbe4a50a7d450378c25d1879731aaa7c4c7113d935946dcfef03fa1963c8",
    "t": "ITEM TYPES Item types are the symbol are the top left of an item that dictate how the items work. These items types cannot be manipulated. The item types displayed here are items that by default are discarded after being played. HEALING Also referred to as “food” these items heal creatures. May not be used on . ATTACK These items do damage, and count as an attack when used. (See: “ATTACKING”) NEGATION These items “Negate” something, taking it out of play. (See: “ABILITIES”,“ITEMS”, “ATTACKING”) SUPPORT These items are general use items with various effects. if you find this text dont delete it COUNTER These items can only be activated under certain conditions. These can only be used reactively. These items tend to have multiple uses and are only discarded when all uses have been used. INFLICTION These items inflict a status effect and count as an infliction. 14"
   },
   {
@@ -203,7 +203,7 @@
   {
    "name": "Minions",
    "num": "15",
-   "sha": "5f9ce8666bb71ad2802ece95c00778f6ec3bfcfbd1c4cd22dbe6f39c2caf4f7d",
+   "sha": "0e8a713ad5277f9c3641a5704c3e8a89e27cd1502620347006c34970cb4bec87",
    "t": "MINIONS INTRODUCTION Minions are creatures that when summoned are attached onto a parent prime creature. Minions are always attached to their parent creature, and stick with them even if the parent creature is moved or swapped into the hand. A minion's parent creature is the creature it is on, not always its summoner. A summoner can occasionally summon minions onto other creatures. Minions are tied to their parent creature, not their summoner. For most purposes, Minions are considered creatures, and have their own action, but they do not yield points when defeated. They do go to the graveyard when defeated. Every minion and parent creature in the primary field may use their actions (See: “THE FIELD”) in whatever order the player choses. Minions cannot mine for BRICKS. If Parent creature is defeated, all minions in the slot die (excluding persistent minions) 5 star minions cannot be targeted by minion effects. If something just says “summon”, it means onto the creature that the ability is from. TYPES :Offensive minions occupy the same field as their parent creature. (See: “FIELDS”) :Protective Minions always occupy whatever field the parent creature and offensive minions are not in. When summoned, these push the parent creature (and the offensive minions attached to it) back to the secondary field, and are placed in the primary field. As a creature can only act in the primary field, This typically cannot act on the same turn as a parent creature, as they can never both occupy the primary field. (See: “THE FIELD”) If a protective minion is summoned after a parent creature has already used an action that turn, it does not gain an action for that turn. PERSISTENT If a minion is “persistent”, when its parent creature is defeated, it will be attached to the next prime creature that gets placed into the slot. If there is no creature to fill the slot, it occupies the slot alone, and must be killed for the game to be won by the opponent. 15"
   },
   {
@@ -239,7 +239,7 @@
   {
    "name": "Status Effects 2",
    "num": "19.2",
-   "sha": "4483b73429e8e5057fd69f795378a3bfb0c858633020ca4d5750b1586c22e5e0",
+   "sha": "9ce111938ad36bc9b5916700172937d77a080d9a58f1560a513ada73cec42297",
    "t": "STATUS EFFECTS 2 SYNTAX Statuses are formatted like \"[X]T[Y] [Status]\", where X is duration and Y is stacks. For example, \"5T1 Poison\" means 5 turns of 1 stack of Poison. TYPES Standard status effects can only have one instance of themselves applied to a single creature. Stacking status effects can have any number of themselves applied. This buff can be applied many times to gain as many stacks of it to gain alot of speed. 10 stacks = +10 SPD. This debuff cannot be applied more than once. DURATION When a status effect is stacked/upgraded/reapplied, set the duration to the longest lasting of the applications. UPGRADABLE Certain status effects upgrade themselves when applied, Ex: Smouldering + Smouldering -> Burning Smouldering/Burning + Burning -> Blazing Chilled + Chilled -> Frostbite Chilled/Frostbite + Frostbite -> 1 turn of Frozen Sickness + Sickness -> Plague A creature already inflicted by Frozen/Blazing/Plague can't have the prior debuffs reapplied onto them, except to refresh the duration (need to upgrade to refresh duration). → → → → → 19.2"
   },
   {
