@@ -5586,40 +5586,40 @@
   ]
  },
  "Auxiliary/Minions/Springtrap.psd": {
-  "blob": "a8edb7d1a5081f590d9e48f4a2070902aeb88da5",
+  "blob": "66a4d0dfdd55dfaf1036b8832ecc0d7020f88b40",
   "links": [
    {
-    "drawn": "baad3fd41c1a5ef07b4a29ca1c8e631291ebb655",
+    "drawn": null,
     "name": "Springtrap - Springtrap_pic.png",
     "path": "MDW/Linked/Springtrap - Springtrap_pic.png",
-    "size": 475468
+    "size": 4062923
    },
    {
-    "drawn": "94749aa7abbc1f117d592cea00e7b24570babbdd",
+    "drawn": null,
     "name": "Springtrap - Layer 1.psb",
     "path": "MDW/Linked/Springtrap - Layer 1.psb",
     "size": 2798048
    },
    {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "drawn": null,
     "name": "undead.png",
     "path": "Types/undead.png",
     "size": 195840
    },
    {
-    "drawn": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+    "drawn": null,
     "name": "fire.png",
     "path": "Types/fire.png",
     "size": 568963
    },
    {
-    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "drawn": null,
     "name": "machine.png",
     "path": "Types/machine.png",
     "size": 303679
    },
    {
-    "drawn": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+    "drawn": null,
     "name": "Offensive_Minion.png",
     "path": "Types/Offensive_Minion.png",
     "size": 4451016
@@ -32521,6 +32521,7 @@
    "94749aa7abbc1f117d592cea00e7b24570babbdd": 2798048
   },
   "MDW/Linked/Springtrap - Springtrap_pic.png": {
+   "737febb4ab0b4559f0fc70ef1811d8f8de0449b4": 4062923,
    "baad3fd41c1a5ef07b4a29ca1c8e631291ebb655": 475468
   },
   "MDW/Linked/Spuder - maxresdefault (1).jpg": {
@@ -34060,6 +34061,7 @@
   "72a97c8b988345264a1e24578a44c5d17c88647e": "6e1212b8712fd6f50df930ef0af1d45d7cc3b8dc",
   "72fa02a8402584b589ffd8b652d03bf03327ef4d": "74d94fc2d78175d06b7231e608178e5b4ec11709",
   "731f0d56c49bb4edf195069e79af91d8d0b36370": "dca8bdea881ef1a954e5aeb6e06366a572728a24",
+  "737febb4ab0b4559f0fc70ef1811d8f8de0449b4": "fc284b4a9183ac450b72c52802d4d7e59d94dbe1",
   "73840e9f12496676b1aa0a0be28fa9cee06f0bc9": "21f013306999694474a2b7a2f729f7759a83556b",
   "73e7270cf38eeda3892b4eb0457d23e6b2273067": "9c9ff152fc30307b098a7d33b553f61ebdf7260b",
   "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb": "fafc964970e35853a8ab5c8b585045263e2b487f",
