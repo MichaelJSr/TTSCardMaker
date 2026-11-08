@@ -4421,6 +4421,10 @@ def main():
             target["dups"].remove(e["id"])
         e["dup"] = e["variantOf"]
         by_id[e["dup"]].setdefault("dups", []).append(e["id"])
+    for e in cards:                               # a picture-only duplicate: its original's automatic flags (a person's on it stays)
+        target = by_id.get(e.get("dup"))
+        if target is not None and not e.get("variantOf") and target.get("checks") and e.get("psd") == target.get("psd"):
+            e["checks"] = dict(target["checks"])
     edited = [e for e in cards if e.get("edited")]
     if edits:
         log(f"corrections: {len(edited)} cards from {EDITS_PATH}" + (f" ({len(edits) - len(edited)} names match no card)" if len(edits) > len(edited) else ""))
