@@ -222,7 +222,9 @@ export function attach(root, o) {
       ["Status colours", (o.swatches?.() || []).filter(x => COLOR.test(x.color)), true]], now, `Colour ${what(sel)}`);
     pop.setAttribute("aria-label", `Colour ${what(sel)}`);
     pop.hidden = false; chip.setAttribute("aria-expanded", "true"); placePop();
-    (pop.querySelector(".tc-sw.on") || pop.querySelector(".tc-sw, [data-tc-pick]"))?.focus({ preventScroll: true });
+    const first = pop.querySelector(".tc-sw.on") || pop.querySelector(".tc-sw");
+    for (const g of pop.querySelectorAll(".tc-grid")) rove(g, g.contains(first) ? first : null);
+    (first || pop.querySelector("[data-tc-pick]"))?.focus({ preventScroll: true });
   }
   function close(back = true) {
     if (pop.hidden) return;
@@ -230,11 +232,15 @@ export function attach(root, o) {
     if (back && cur?.el.isConnected) { cur.el.focus({ preventScroll: true }); try { cur.el.setSelectionRange(cur.start - (o.textOf(cur.el)?.at || 0), cur.end - (o.textOf(cur.el)?.at || 0)); } catch { /* a hidden control */ } }
     update();
   }
-  function choose(color) {
+  function rove(grid, to) {                           // one tab stop a group (its swatch to, else its first shown); arrows for the rest
+    const sw = [...grid.querySelectorAll(".tc-sw")], on = to || sw.find(x => !x.hidden);
+    for (const x of sw) x.tabIndex = x === on ? 0 : -1;
+  }
+  function choose(color, kbd = false) {
     const sel = cur; if (!sel) return;
     if (color) { try { store?.setItem(RECENT_KEY, JSON.stringify(recentWith(recent(), color))); } catch { /* full or blocked */ } }
     pop.hidden = true; chip.setAttribute("aria-expanded", "false"); chip.hidden = true; cur = null;
-    o.apply(withColor(o.list(), sel.field, sel.phrase, color, sel.text), { field: sel.field, phrase: sel.phrase, color, el: sel.el, start: sel.start, end: sel.end });
+    o.apply(withColor(o.list(), sel.field, sel.phrase, color, sel.text), { field: sel.field, phrase: sel.phrase, color, el: sel.el, start: sel.start, end: sel.end, kbd });
     if (sel.el.isConnected) { sel.el.focus({ preventScroll: true }); update(); }
   }
   const keep = e => { if (e.pointerType !== "touch" || e.target === chip || chip.contains(e.target)) e.preventDefault(); };   // the control keeps its focus and selection
@@ -248,13 +254,15 @@ export function attach(root, o) {
   pop.addEventListener("click", e => {
     const t = e.target.closest?.("[data-tc], [data-tc-default], [data-tc-close]");
     if (!t) return;
-    if (t.matches("[data-tc-close]")) close(); else choose(t.matches("[data-tc-default]") ? null : t.dataset.tc);
+    if (t.matches("[data-tc-close]")) close(); else choose(t.matches("[data-tc-default]") ? null : t.dataset.tc, e.detail === 0);   // 0: Enter or Space
   });
   pop.addEventListener("change", e => { if (e.target.matches?.("[data-tc-pick]") && COLOR.test(e.target.value)) choose(e.target.value.toLowerCase()); });
   pop.addEventListener("input", e => {
     if (!e.target.matches?.(".tc-find")) return;
     const q = e.target.value.trim().toLowerCase();
-    for (const b of e.target.closest(".tc-group").querySelectorAll(".tc-sw")) b.hidden = !!q && !b.title.toLowerCase().includes(q);
+    const g = e.target.closest(".tc-group");
+    for (const b of g.querySelectorAll(".tc-sw")) b.hidden = !!q && !b.title.toLowerCase().includes(q);
+    rove(g.querySelector(".tc-grid"), null);
   });
   pop.addEventListener("keydown", e => {
     if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); return; }
@@ -264,10 +272,12 @@ export function attach(root, o) {
     e.preventDefault();
     const row = Math.max(1, Math.round(pop.querySelector(".tc-grid").clientWidth / (sw[0].offsetWidth + 4)));
     const j = { ArrowLeft: i - 1, ArrowRight: i + 1, ArrowUp: i - row, ArrowDown: i + row, Home: 0, End: sw.length - 1 }[e.key];
-    sw[Math.max(0, Math.min(sw.length - 1, j))].focus();
+    const to = sw[Math.max(0, Math.min(sw.length - 1, j))];
+    rove(to.closest(".tc-grid"), to); to.focus();
   });
   const away = e => { if (!pop.hidden && !pop.contains(e.target) && e.target !== chip && !chip.contains(e.target)) close(false); };
   pop.addEventListener("focusout", e => { if (e.relatedTarget && !pop.contains(e.relatedTarget) && e.relatedTarget !== chip) close(false); });   // Tab out of it
+  chip.addEventListener("focusout", e => { if (e.relatedTarget && !pop.contains(e.relatedTarget)) close(false); });   // Shift+Tab past the chip
   const onSel = () => update(), onScroll = () => place();
   doc.addEventListener("selectionchange", onSel);
   root.addEventListener("focusin", onSel);

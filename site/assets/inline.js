@@ -522,8 +522,8 @@ export function install(api) {
     fieldOf: el => (cur && el === cur.ctl && TC.FIELDS.includes(cur.f) ? cur.f : null),
     textOf: el => ({ text: el.value, at: 0 }),
     list: () => card?.colors || null,
-    apply: list => { const c = card, f = cur?.f; if (!c || !f || !commit(false)) return;    // the text first, as Enter saves it
-      if (A.editor.stageField(c.id, "colors", list)) refresh(c, f, false); },
+    apply: (list, { kbd } = {}) => { const c = card, f = cur?.f; if (!c || !f || !commit(false)) return;    // the text first, as Enter saves it
+      if (A.editor.stageField(c.id, "colors", list)) refresh(c, f, kbd); },
     rec: () => (card ? A.editor.recOf?.(card.id) : null),
     swatches: () => A.editor.swatches?.() || [],
   });
