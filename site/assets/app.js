@@ -15,7 +15,7 @@ import * as CF from "./myfilters.js";
 import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc, AUX_KINDS, unusedTip } from "./grid.js";
 import { artHtml } from "./art.js";
 import { CARD_FLAGS, flagged, flagsHtml, hasFlag } from "./flags.js";
-import { colorRanges } from "./textcolor.js";
+import { colorRanges, statusNames } from "./textcolor.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -173,6 +173,7 @@ async function init() {
     return;
   }
   S.all = S.data.cards; S.icons = S.data.icons;
+  S.statuses = statusNames(S.all);                        // status words keep the chart's colour (textcolor.js)
   setTagMeanings(S.data.tagMeanings);                     // the Timing Tags chapter's meanings: every badge's tooltip
   setHeavy(S.data.heavy);                                 // commits too big for GitHub's page: commit links go to the card's history
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
@@ -888,7 +889,7 @@ function openCard(id, showDetails = false) {
         </div>
         ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, "")}</a>`).join("")}</div>` : ""}
         ${statBars(c)}
-        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, { colors: colorRanges(c.ability, c.colors, "ability") })}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
+        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, { colors: colorRanges(c.ability, c.colors, "ability", S.statuses) })}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
         ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, { colors: colorRanges(c.note, c.colors, "note") })}</div>` : ""}
         ${artHtml(c)}
         ${hasBadges(c.ability) || hasBadges(c.note) || hasCosts(c.ability) || hasCosts(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml(hasCosts(c.ability) || hasCosts(c.note))}</details>` : ""}

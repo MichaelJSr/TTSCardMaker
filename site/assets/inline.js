@@ -525,7 +525,7 @@ export function install(api) {
     apply: (list, { kbd } = {}) => { const c = card, f = cur?.f; if (!c || !f || !commit(false)) return;    // the text first, as Enter saves it
       if (A.editor.stageField(c.id, "colors", list)) refresh(c, f, kbd); },
     rec: () => (card ? A.editor.recOf?.(card.id) : null),
-    swatches: () => A.editor.swatches?.() || [],
+    swatches: () => A.editor.swatches?.() || [], statuses: () => A.editor.statuses?.() || null,
   });
   const flush = () => { cur?.save.flush(); pal?.save.flush(); };    // closing the tab: the draft now, not in a moment
   window.addEventListener("pagehide", flush);

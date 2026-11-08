@@ -330,9 +330,9 @@ export function tokenize(text, icons = {}) {
 }
 /** tokenize's paragraphs with their letters in their colours (textcolor.js colorRanges of text): a text piece split
  *  where its colour changes, each part's `color` "#rrggbb" or none; icons and badges keep their own. */
-export function colourize(paras, text, colors, field) {
+export function colourize(paras, text, colors, field, statuses = null) {
   text = String(text ?? "").replace(/\r/g, "");
-  const ranges = colorRanges(text, colors, field);
+  const ranges = colorRanges(text, colors, field, statuses);
   if (!ranges.length) return paras;
   const at = i => ranges.find(r => r.start <= i && i < r.end)?.color || null;
   let cursor = 0;
@@ -785,7 +785,7 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
  *  boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused: [[label, why]] (stars or types
  *  the bake would refuse), fonts: {name: family | ""}, standIn: [labels without a font name], shape} or null (the image
  *  didn't load, or stale). */
-export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, stale = () => false }) {
+export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, statuses = null, stale = () => false }) {
   const img = await loadImage(src);
   if (!img || stale()) return null;
   const W = img.naturalWidth, H = img.naturalHeight, shape = shapeOf(W, H), tpl = TEMPLATES[shape];
@@ -833,7 +833,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     const colors = part ? null : todo.colors;    // one box per layer: its own text, no field colours
-    if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, boxed: true }); out.boxed.push(label); continue; }
+    if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true }); out.boxed.push(label); continue; }
     const paras = tokenize(old, icons);
     const hit = bestBlock(L, W, H, area, paras, measure, { name: role === "name" });   // the block that holds the old text, or none
     if (hit) {
@@ -843,9 +843,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
       const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25 });   // in the lines only: dim words too
       if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
-      jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors });
+      jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors, statuses });
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
-    else { jobs.push({ role, text, label, area: part ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, boxed: true }); out.boxed.push(label); }   // a layer's box: covered, never the card below it
+    else { jobs.push({ role, text, label, area: part ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, boxed: true }); out.boxed.push(label); }   // a layer's box: covered, never the card below it
   }
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
@@ -984,8 +984,8 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
 }
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a name keeps its line count and stays clear of the stars. */
-function drawText(ctx, { role, text, area, found, size, colours, fam, layer, measure, icons, one, colors }, imgs, W) {
-  const paras = colourize(tokenize(text, icons), text, colors, role), region = area.box;
+function drawText(ctx, { role, text, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses }, imgs, W) {
+  const paras = colourize(tokenize(text, icons), text, colors, role, statuses), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = found.align === "left" && role !== "name";
   const maxW = left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
@@ -1004,11 +1004,11 @@ function drawText(ctx, { role, text, area, found, size, colours, fam, layer, mea
 }
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the
  *  old text is covered, never half there. */
-function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors }, imgs, W, H, shape) {
+function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors, statuses }, imgs, W, H, shape) {
   const r = area.seed ? [0, area.seed[0], W, H] : area.box;     // the text area to the card's edges (the old text may touch them)
   const b = area.seed ? r : [r[0] - W * 0.01, r[1] - H * 0.004, r[2] + W * 0.01, r[3] + H * 0.004], pad = W * 0.03;
   const start = role === "name" ? (b[3] - b[1]) * 0.5 : W * (shape === "square" ? 0.06 : shape === "item" ? 0.05 : 0.045);
-  const { size: z, lines } = fit(colourize(tokenize(text, icons), text, colors, role), b[2] - b[0] - 2 * pad, b[3] - b[1] - pad, start, measure, role === "name" ? { lines: 1, min: 0.3 } : { min: 0.35 });
+  const { size: z, lines } = fit(colourize(tokenize(text, icons), text, colors, role, statuses), b[2] - b[0] - 2 * pad, b[3] - b[1] - pad, start, measure, role === "name" ? { lines: 1, min: 0.3 } : { min: 0.35 });
   const over = lines.length * z * LINE > b[3] - b[1] - pad + 0.5;
   const rad = Math.min(W * 0.03, (b[3] - b[1]) / 2);
   ctx.save(); ctx.beginPath(); ctx.moveTo(b[0] + rad, b[1]); ctx.arcTo(b[2], b[1], b[2], b[3], rad); ctx.arcTo(b[2], b[3], b[0], b[3], rad); ctx.arcTo(b[0], b[3], b[0], b[1], rad); ctx.arcTo(b[0], b[1], b[2], b[1], rad); ctx.closePath();

@@ -1188,6 +1188,7 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 .tc-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-weight: 600; }
 .tc-head span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tc-x { padding: 0 6px; }
+.tc-note { margin: 6px 0 0; font-size: 12px; }
 .tc-title { margin: 8px 0 4px; color: var(--muted); display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 .tc-find { width: 96px; font-size: 11px; padding: 2px 6px; }
 .tc-grid { display: flex; flex-wrap: wrap; gap: 4px; }

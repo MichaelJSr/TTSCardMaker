@@ -71,13 +71,37 @@ export function spansOf(text, one) {
   const out = nth ? hits.slice(nth - 1, nth) : hits;
   return out.length ? out : null;
 }
-/** The colour runs of field's text: [{start, end, color}], in order, apart; whole fields first, then phrases as listed. */
-export function colorRanges(text, colors, field) {
+/** The status names: the status cards' (buff, debuff), once each. The chart's Overridden and Puppeteered have none. */
+export const statusNames = cards => [...new Set((cards || []).filter(c => c && (c.type === "buff" || c.type === "debuff") && c.name).map(c => String(c.name)))];
+const TOKEN = /\[[^\[\]\n]{1,52}\]/g, ESC = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), STATUS_RE = new WeakMap();
+/** [[start, end]] of the status words in text, sorted (psd_edit.status_spans, the guards' rule): names longest first,
+ *  any case, whole words, blanks or forced breaks between; none over an earlier one or a [token]; then only those
+ *  starting with a capital (the guards give those the chart's colour). */
+export function statusSpans(text, names) {
   text = String(text ?? "");
-  const paint = new Array(text.length).fill(null);
+  if (!names?.length) return [];
+  let res = STATUS_RE.get(names);
+  if (!res) {
+    res = [...names].map(n => String(n).trim()).filter(Boolean).sort((a, b) => b.length - a.length)
+      .map(n => new RegExp(`(?<![A-Za-z])${n.split(/\s+/).map(ESC).join("[\\s\\u0003]+")}(?![A-Za-z])`, "gi"));
+    STATUS_RE.set(names, res);
+  }
+  const taken = [...text.matchAll(TOKEN)].map(m => [m.index, m.index + m[0].length, false]);
+  for (const re of res) for (const m of text.matchAll(re)) {
+    const a = m.index, b = a + m[0].length;
+    if (b > a && !taken.some(([s, e]) => a < e && s < b)) taken.push([a, b, true]);
+  }
+  return taken.filter(([a, , word]) => word && /[A-Z]/.test(text[a])).map(([a, b]) => [a, b]).sort((x, y) => x[0] - y[0]);
+}
+/** The colour runs of field's text: [{start, end, color}], in order, apart; whole fields first, then phrases as listed.
+ *  statuses: the status names; the ability's status words (statusSpans) are never painted (they keep the chart's). */
+export function colorRanges(text, colors, field, statuses = null) {
+  text = String(text ?? "");
+  const paint = new Array(text.length).fill(null), kept = new Array(text.length).fill(false);
+  if (field === "ability") for (const [a, b] of statusSpans(text, statuses)) for (let i = a; i < b; i++) kept[i] = true;
   const mine = (colors || []).filter(one => one.field === field && COLOR.test(one.color || ""));
   for (const one of [...mine.filter(x => !x.phrase), ...mine.filter(x => x.phrase)])
-    for (const [a, b] of spansOf(text, one) || []) for (let i = a; i < b; i++) paint[i] = one.color;
+    for (const [a, b] of spansOf(text, one) || []) for (let i = a; i < b; i++) if (!kept[i]) paint[i] = one.color;
   const out = [];
   for (let i = 0; i < text.length; i++) {
     if (!paint[i] || /\s/.test(text[i])) continue;
@@ -128,8 +152,8 @@ export function withColor(list, field, phrase, color, text = "") {
   return out.slice(0, MAX).length ? out.slice(0, MAX) : null;
 }
 /** The colour a selection shows now: its last painter's, else null. */
-export function colorAt(list, field, text, start, end) {
-  const r = colorRanges(text, list, field).filter(x => x.start < Math.max(end, start + 1) && start < x.end);
+export function colorAt(list, field, text, start, end, statuses = null) {
+  const r = colorRanges(text, list, field, statuses).filter(x => x.start < Math.max(end, start + 1) && start < x.end);
   return r.length ? r[r.length - 1].color : null;
 }
 /** The recent colours, newest first, with c added. */
@@ -143,15 +167,30 @@ export function cardColors(rec, list) {
   return out.slice(0, 16);
 }
 
+/** A selection [start, end) of the ability against its status words: "" (none in it), "some", or "only" (every letter
+ *  outside icons and badges is a status word's). */
+export function statusIn(text, start, end, statuses) {
+  text = String(text ?? "");
+  const st = statusSpans(text, statuses);
+  if (!st.length) return "";
+  const drawn = drawnSpans(text), within = (spans, i) => spans.some(([s, e]) => s <= i && i < e);
+  let some = false, other = false;
+  for (let i = Math.max(0, start); i < Math.min(end, text.length); i++)
+    if (ALNUM.test(text[i]) && !within(drawn, i)) { if (within(st, i)) some = true; else other = true; }
+  return some ? (other ? "some" : "only") : "";
+}
+export const STATUS_NOTE = "Status words keep the chart's colour";
+
 // ---- the menu ------------------------------------------------------------------------------------------------------
 const SWATCH = c => `background:${COLOR.test(c) ? c : "#000"}`;
-/** The palette's markup. groups: [[title, [{color, name?}]]]; now: the selection's colour. */
-export function paletteHtml(groups, now, what) {
+/** The palette's markup. groups: [[title, [{color, name?}]]]; now: the selection's colour; note: a line above them;
+ *  bare: the note alone, no colours; reset: with Default. */
+export function paletteHtml(groups, now, what, { note = "", bare = false, reset = true } = {}) {
   const sw = ({ color, name }) => `<button type="button" class="tc-sw${color === now ? " on" : ""}" data-tc="${esc(color)}" style="${SWATCH(color)}" aria-label="${esc(name ? `${name} ${color}` : color)}" title="${esc(name ? `${name} ${color}` : color)}"></button>`;
   return `<div class="tc-head"><span>${esc(what)}</span><button type="button" class="ghost tc-x" data-tc-close aria-label="Close">✕</button></div>
-    ${groups.filter(([, list]) => list.length).map(([title, list, filter]) => `<div class="tc-group"><div class="tc-title">${esc(title)}${filter ? ` <input class="tc-find" type="search" placeholder="find" aria-label="Find a ${esc(title.toLowerCase())}">` : ""}</div><div class="tc-grid${filter ? " tc-many" : ""}" role="group" aria-label="${esc(title)}">${list.map(sw).join("")}</div></div>`).join("")}
-    <div class="tc-foot"><label class="tc-custom">Custom <input type="color" data-tc-pick value="${COLOR.test(now || "") ? now : "#ffffff"}" aria-label="Custom colour"></label>
-      <button type="button" class="ghost" data-tc-default>Default</button></div>`;
+    ${note ? `<p class="muted tc-note">${esc(note)}</p>` : ""}${bare ? "" : groups.filter(([, list]) => list.length).map(([title, list, filter]) => `<div class="tc-group"><div class="tc-title">${esc(title)}${filter ? ` <input class="tc-find" type="search" placeholder="find" aria-label="Find a ${esc(title.toLowerCase())}">` : ""}</div><div class="tc-grid${filter ? " tc-many" : ""}" role="group" aria-label="${esc(title)}">${list.map(sw).join("")}</div></div>`).join("")}
+    ${bare && !reset ? "" : `<div class="tc-foot">${bare ? "<span></span>" : `<label class="tc-custom">Custom <input type="color" data-tc-pick value="${COLOR.test(now || "") ? now : "#ffffff"}" aria-label="Custom colour"></label>`}
+      ${reset ? `<button type="button" class="ghost" data-tc-default>Default</button>` : ""}</div>`}`;
 }
 /** A caret's place in an input or textarea, in its box (a mirror of its text). */
 function caretAt(el, pos) {
@@ -208,7 +247,7 @@ export function attach(root, o) {
   }
   function show(sel) {
     cur = sel;
-    const now = colorAt(o.list(), sel.field, sel.text, sel.start, sel.end);
+    const now = colorAt(o.list(), sel.field, sel.text, sel.start, sel.end, o.statuses?.());
     chip.querySelector(".tc-dot").style.cssText = now ? `background:${now}` : "";
     chip.classList.toggle("set", !!now);
     chip.setAttribute("aria-label", `Text colour of ${what(sel)}`); chip.title = `Text colour of ${what(sel)}`;
@@ -225,14 +264,17 @@ export function attach(root, o) {
   }
   function open() {
     if (!cur) return;
-    const sel = cur, now = colorAt(o.list(), sel.field, sel.text, sel.start, sel.end);
-    pop.innerHTML = paletteHtml([["On this card", cardColors(o.rec?.(), o.list()).map(color => ({ color }))], ["Recent", recent().map(color => ({ color }))],
-      ["Status colours", (o.swatches?.() || []).filter(x => COLOR.test(x.color)), true]], now, `Colour ${what(sel)}`);
+    const sel = cur, list = o.list(), now = colorAt(list, sel.field, sel.text, sel.start, sel.end, o.statuses?.());
+    const st = sel.field === "ability" ? statusIn(sel.text, sel.start, sel.end, o.statuses?.()) : "";   // they keep the chart's colour
+    const set = JSON.stringify(withColor(list, sel.field, sel.phrase, null, sel.text)) !== JSON.stringify(list?.length ? list : null);
+    pop.innerHTML = paletteHtml([["On this card", cardColors(o.rec?.(), list).map(color => ({ color }))], ["Recent", recent().map(color => ({ color }))],
+      ["Status colours", (o.swatches?.() || []).filter(x => COLOR.test(x.color)), true]], now, `Colour ${what(sel)}`,
+    { note: st ? STATUS_NOTE : "", bare: st === "only", reset: st !== "only" || set });
     pop.setAttribute("aria-label", `Colour ${what(sel)}`);
     pop.hidden = false; chip.setAttribute("aria-expanded", "true"); placePop();
     const first = pop.querySelector(".tc-sw.on") || pop.querySelector(".tc-sw");
     for (const g of pop.querySelectorAll(".tc-grid")) rove(g, g.contains(first) ? first : null);
-    (first || pop.querySelector("[data-tc-pick]"))?.focus({ preventScroll: true });
+    (first || pop.querySelector("[data-tc-pick]") || pop.querySelector("[data-tc-default]") || pop.querySelector("[data-tc-close]"))?.focus({ preventScroll: true });
   }
   function close(back = true) {
     if (pop.hidden) return;

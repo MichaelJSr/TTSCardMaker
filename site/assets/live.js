@@ -58,7 +58,7 @@ export function previewHtml(p, changed, ctx) {
           ${pending ? `<span class="fact pending">PSD pending: ${esc(pending)}</span>` : ""}${site ? `<span class="fact site-only" data-tip="${esc(`Website only: ${site}. The card image keeps its printed value`)}">Website only</span>` : ""}</div></div></div>
     ${types ? `<div class="${mark("types", "ctypes")}">${types}</div>` : changed.has("types") ? `<p class="muted lp-changed">No types.</p>` : ""}
     <div class="${mark("stats", "lp-stats")}">${ctx.statBars(p)}</div>
-    ${p.ability ? `<div class="${mark("ability", "ability")}">${ctx.render(p.ability, { colors: colorRanges(p.ability, p.colors, "ability") })}</div>` : `<p class="muted lp-noability${changed.has("ability") ? " lp-changed" : ""}">No ability text.</p>`}
+    ${p.ability ? `<div class="${mark("ability", "ability")}">${ctx.render(p.ability, { colors: colorRanges(p.ability, p.colors, "ability", ctx.statuses?.()) })}</div>` : `<p class="muted lp-noability${changed.has("ability") ? " lp-changed" : ""}">No ability text.</p>`}
     ${p.note ? `<div class="${mark("note", "note")}"><b>Note</b> ${ctx.render(p.note, { colors: colorRanges(p.note, p.colors, "note") })}</div>` : ""}
     ${p.aliases?.length ? `<p class="muted lp-aka${changed.has("aliases") ? " lp-changed" : ""}">Also known as: ${p.aliases.map(esc).join(", ")}</p>` : ""}
   </div>`;
