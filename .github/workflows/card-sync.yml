@@ -16,6 +16,9 @@
 # its own. M holds the bake's PSDs, PNGs and Card Edits.json changes (dropped edit fields; website-only fields moved to
 # `_site`, a refused card's too since AutoCroissant 97b1e73) plus the TTS save. A guards commit's events (guard-png,
 # guard-fix) come from its run's guard-events artifact and show on the Changes page only, never in a post.
+# The render and spot records (db/render_record.json, spot_record.json; owner 11-07): what the guards, the bake and the
+# link redraw read off a PSD before saving it stripped (AutoCroissant psd_edit.records_of), merged by the data jobs as the
+# bake records are (guard-records artifacts too); every card workflow's renders read them (CARD_RECORDS_DIR).
 # Runs are live (dry_run off by default). The bot dispatches only its admins' re-parses (/update_stats force_update or
 # cards). Leftover work chains (owner, 2026-10-25): a live run that ends with work left dispatches the next run itself
 # (job chain): at once for a re-parse in progress, unmerged bake records and edits over the bake's cap. The hourly
@@ -128,6 +131,7 @@ jobs:
     env:
       AFTER: ""               # the after job: the main lane's last commit (M, or R on it)
       RECORDS: ""             # the after job: its dispatch inputs are the data job's (the records come from any run)
+      CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the renders' records (psd_edit): the data's, else the bot's seed
     steps: &data-steps
       # Main's head (not github.sha): every commit and tree, no file contents but the small files the stages read. The
       # card folders are never checked out; the bake and the build read PSDs by blob sha, local first, else REST.
@@ -196,12 +200,14 @@ jobs:
           path: carddata
           fetch-depth: 1
 
-      # The bake's records not merged yet: every live main job's bake-records artifact (verdicts.json, events.json; only
-      # what holds: M's part when M landed) not in db/bake-records.json, oldest first, at most 20, folded into one
-      # verdicts.json (a later verdict wins) and events.json. Any data job merges them, so an after job lost (replaced
-      # while pending in card-data, cancelled, failed, a gate) loses nothing: the next data job takes its records. The
-      # main job reads them too (its Unmerged verdicts step). A failed download stops there: the rest wait, in order.
-      # Only this repo's runs' artifacts (a fork's pull request run's are never read).
+      # The records not merged yet: every live main job's bake-records artifact (verdicts.json, events.json; only what
+      # holds: M's part when M landed; records.json) and every guards landing's guard-records (records.json alone) not
+      # in db/bake-records.json, oldest first, at most 20, folded into one verdicts.json (a later verdict wins),
+      # events.json and records.json (what the bake, the link redraw and the guards read off PSDs before rewriting them:
+      # db/'s render and spot records). Any data job merges them, so an after job lost (replaced while pending in
+      # card-data, cancelled, failed, a gate) loses nothing: the next data job takes its records. The main job reads
+      # them too (its Unmerged verdicts step). A failed download stops there: the rest wait, in order. Only this repo's
+      # runs' artifacts (a fork's pull request run's are never read).
       - &records-in
         name: Earlier bake records
         id: records-in
@@ -214,31 +220,39 @@ jobs:
           out=$RUNNER_TEMP/records-in
           rm -rf "$out" && mkdir -p "$out"
           if [ -n "$RESTORE" ] && [ -z "$RECORDS" ]; then echo "A restore merges no bake records."; exit 0; fi
-          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=bake-records&per_page=100" \
-            --jq '[.artifacts[] | select((.expired | not) and .workflow_run.head_repository_id == .workflow_run.repository_id)
-              | {id: (.id | tostring), run: .workflow_run.id}] | sort_by(.id | tonumber)' \
-            > "$out/listed.json"
+          for name in bake-records guard-records; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$name&per_page=100" \
+              --jq '[.artifacts[] | select((.expired | not) and .workflow_run.head_repository_id == .workflow_run.repository_id)
+                | {id: (.id | tostring), run: .workflow_run.id}]'
+          done | jq -s 'add | sort_by(.id | tonumber)' > "$out/listed.json"
           seen=$(jq -c '.merged // {}' carddata/db/bake-records.json 2> /dev/null || echo '{}')
           jq -c --argjson seen "$seen" '.[] | select($seen[.id] == null)' "$out/listed.json" | head -20 > "$out/new.jsonl"
-          cards='{}' events='[]' ids='{}'
+          cards='{}' events='[]' ids='{}' recs=()
           while read -r row; do
             id=$(jq -r .id <<< "$row") run=$(jq -r .run <<< "$row")
             rm -rf "$out/one" && mkdir -p "$out/one"
-            if ! gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$out/one.zip" \
-                || ! unzip -q -o "$out/one.zip" -d "$out/one" \
-                || ! v=$(jq -c '.cards // {}' "$out/one/verdicts.json") || ! e=$(jq -c '. // []' "$out/one/events.json"); then
-              echo "::warning::the bake records of run $run were not read: they and later ones wait for the next job"
+            if gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$out/one.zip" && unzip -q -o "$out/one.zip" -d "$out/one"; then
+              [ -f "$out/one/verdicts.json" ] || echo '{}' > "$out/one/verdicts.json"    # a guard-records artifact
+              [ -f "$out/one/events.json" ] || echo '[]' > "$out/one/events.json"
+              [ -f "$out/one/records.json" ] || echo '[]' > "$out/one/records.json"
+            fi
+            if ! v=$(jq -c '.cards // {}' "$out/one/verdicts.json") || ! e=$(jq -c '. // []' "$out/one/events.json") \
+                || ! jq -e 'type == "array"' "$out/one/records.json" > /dev/null; then
+              echo "::warning::the records of run $run were not read: they and later ones wait for the next job"
               break
             fi
             cards=$(jq -c --argjson v "$v" '. + $v' <<< "$cards")
             events=$(jq -c --argjson e "$e" '. + $e' <<< "$events")
             ids=$(jq -c --arg id "$id" --argjson run "$run" '. + {($id): $run}' <<< "$ids")
+            cp "$out/one/records.json" "$out/records-$id.json"
+            recs+=("$out/records-$id.json")
           done < "$out/new.jsonl"
           echo "$ids" > "$out/ids.json"
           if [ "$ids" = '{}' ]; then echo "No bake records to merge."; exit 0; fi
           jq -n --argjson c "$cards" '{schema: 1, cards: $c}' > "$out/verdicts.json"
           echo "$events" > "$out/events.json"
-          echo "Bake records of runs $(jq -r '[.[]] | map(tostring) | join(", ")' "$out/ids.json"): $(jq length <<< "$cards") verdicts, $(jq length <<< "$events") events."
+          jq -s 'add // []' "${recs[@]}" > "$out/records.json"      # files, not arguments: records can be large
+          echo "Records of runs $(jq -r '[.[]] | map(tostring) | join(", ")' "$out/ids.json"): $(jq length <<< "$cards") verdicts, $(jq length <<< "$events") events, $(jq length "$out/records.json") PSD records."
 
       # Go when (a) a card input changed since the last build's main commit, (b) a budgeted re-parse is pending, (c) the
       # builder's PARSER_VERSION differs from the data's, (e) events are unposted, (f) a dispatch asks, there is no
@@ -271,7 +285,8 @@ jobs:
           rec=$RUNNER_TEMP/records-in
           n=$( { jq '.cards | length' "$rec/verdicts.json" 2> /dev/null || echo 0; } | head -1)
           e=$( { jq 'length' "$rec/events.json" 2> /dev/null || echo 0; } | head -1)
-          if [ "$((n + e))" -gt 0 ]; then why+=("the bake's records: $n verdicts, $e events"); fi
+          r=$( { jq 'length' "$rec/records.json" 2> /dev/null || echo 0; } | head -1)
+          if [ "$((n + e + r))" -gt 0 ]; then why+=("the records to merge: $n verdicts, $e events, $r PSD records"); fi
           if [ "$FORCE" = true ]; then why+=("dispatched with force"); fi
           if [ "$FULL" = true ]; then why+=("dispatched with full"); fi
           if [ -n "$CARDS" ]; then why+=("dispatched with cards: $CARDS"); fi
@@ -440,6 +455,13 @@ jobs:
           if [ -z "$RESTORE" ] && [ -f "$rec/verdicts.json" ]; then
             args+=(--verdicts "$rec/verdicts.json" --events "$rec/events.json")
             merged=true
+            if [ "$(jq length "$rec/records.json" 2> /dev/null || echo 0)" -gt 0 ]; then   # db/'s render and spot records
+              if ! grep -q -- '"--records"' commands/card_data.py; then
+                echo "::error::The builder ($BUILDER_REF) predates --records: nothing is merged; dispatch with a newer builder_ref"
+                exit 1
+              fi
+              args+=(--records "$rec/records.json")
+            fi
           fi
           if [ -f "$RUNNER_TEMP/guard-events.json" ]; then
             args+=(--guard-events "$RUNNER_TEMP/guard-events.json")
@@ -754,6 +776,8 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the bake's and the redraw's renders: the data's records
     steps:
       - *checkout-main
       - *builder
@@ -1165,9 +1189,11 @@ jobs:
       # the landed part (the verdicts the dropped entries held, the baked events, their commit M) only when M landed.
       # records=true starts the after job; whichever data job comes first merges them. A dry run's artifact has its own
       # name (bake-records-dry-run): never merged.
+      # records.json: what the bake and the link redraw read off PSDs before saving them stripped (the data's render and
+      # spot records), true whether M landed or not.
       - name: Bake records
         id: records
-        if: ${{ !cancelled() && env.GO == 'true' && steps.bake.outcome != 'skipped' }}
+        if: ${{ !cancelled() && env.GO == 'true' && (steps.bake.outcome != 'skipped' || steps.redraw.outcome != 'skipped') }}
         timeout-minutes: 1
         env:
           LANDED: ${{ steps.main.outputs.baked == 'true' }}
@@ -1175,13 +1201,22 @@ jobs:
         run: |
           rec=$RUNNER_TEMP/card-bake out=$RUNNER_TEMP/bake-records
           mkdir -p "$out"
-          if [ ! -f "$rec/verdicts.json" ] || [ ! -f "$rec/bake-events.json" ]; then echo "No bake records."; exit 0; fi
-          jq --argjson landed "$LANDED" '{schema: 1, cards: (.cards + (if $landed then .landed else {} end))}' "$rec/verdicts.json" > "$out/verdicts.json"
-          jq --argjson landed "$LANDED" --arg m "$M" '[.events[], (if $landed then .landed[] | .commit = $m else empty end)]' \
-            "$rec/bake-events.json" > "$out/events.json"
+          found=()
+          for f in "$rec/records.json" "$RUNNER_TEMP/linked/records.json"; do [ -s "$f" ] && found+=("$f"); done
+          if [ ${#found[@]} -gt 0 ]; then jq -s 'add' "${found[@]}" > "$out/records.json"; else echo '[]' > "$out/records.json"; fi
+          r=$(jq length "$out/records.json")
+          if [ ! -f "$rec/verdicts.json" ] || [ ! -f "$rec/bake-events.json" ]; then
+            if [ "$r" = 0 ]; then echo "No bake records."; exit 0; fi
+            echo '{"schema": 1, "cards": {}}' > "$out/verdicts.json"
+            echo '[]' > "$out/events.json"
+          else
+            jq --argjson landed "$LANDED" '{schema: 1, cards: (.cards + (if $landed then .landed else {} end))}' "$rec/verdicts.json" > "$out/verdicts.json"
+            jq --argjson landed "$LANDED" --arg m "$M" '[.events[], (if $landed then .landed[] | .commit = $m else empty end)]' \
+              "$rec/bake-events.json" > "$out/events.json"
+          fi
           n=$(jq '.cards | length' "$out/verdicts.json") e=$(jq length "$out/events.json")
-          echo "Bake records: $n verdicts, $e events$([ "$LANDED" = true ] || echo " (M did not land: its part left out)")." | tee -a "$GITHUB_STEP_SUMMARY"
-          if [ "$((n + e))" -gt 0 ] && [ "$DRY_RUN" != true ]; then echo "records=true" >> "$GITHUB_OUTPUT"; fi
+          echo "Bake records: $n verdicts, $e events, $r PSD records$([ "$LANDED" = true ] || echo " (M did not land: its part left out)")." | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ "$((n + e + r))" -gt 0 ] && [ "$DRY_RUN" != true ]; then echo "records=true" >> "$GITHUB_OUTPUT"; fi
 
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() && (steps.records.outputs.records == 'true' || env.DRY_RUN == 'true' && steps.records.outcome == 'success') }}
@@ -1190,7 +1225,7 @@ jobs:
           name: ${{ env.DRY_RUN == 'true' && 'bake-records-dry-run' || 'bake-records' }}
           path: ${{ runner.temp }}/bake-records
           if-no-files-found: ignore
-          retention-days: 14
+          retention-days: 90  # unmerged records wait for a data job (the PSD records exist nowhere else)
           overwrite: true     # a re-run replaces attempt 1's bake records (unmerged ones too; the verdicts heal)
 
       # The website edits left for the chain: card_bake.pending at this run's end (B, or main's head) with this run's
@@ -1334,6 +1369,7 @@ jobs:
     env:
       AFTER: ${{ (needs.main.outputs.baked == 'true' || needs.main.outputs.redrawn == 'true') && needs.main.outputs.top || '' }}
       RECORDS: "true"
+      CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db
     steps: *data-steps
 
   # Leftover work (owner, 2026-10-25: the chain and a safety schedule): a live run's last job dispatches the next run when

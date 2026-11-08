@@ -129,6 +129,25 @@ jobs:
           sparse-checkout: |
             /.github/
 
+      # The data's render and spot records (db/ on the data branch, Card sync's): the guards' renders and conversions read
+      # them (AutoCroissant psd_edit.RECORDS_DIR); none read: the bot's seed copies.
+      - name: Records
+        continue-on-error: true
+        timeout-minutes: 2
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dir=$RUNNER_TEMP/records
+          mkdir -p "$dir"
+          for f in render_record.json spot_record.json; do
+            if ! gh api -H "Accept: application/vnd.github.raw" "repos/$GITHUB_REPOSITORY/contents/db/$f?ref=data" > "$dir/$f" 2> /dev/null \
+                || ! jq -e 'type == "object"' "$dir/$f" > /dev/null; then
+              rm -f "$dir/$f"
+            fi
+          done
+          echo "CARD_RECORDS_DIR=$dir" >> "$GITHUB_ENV"
+
       # A landing dispatch would post before a waiting push run of its commit (or a later one): refused.
       - name: No push run in its window
         if: github.event_name == 'workflow_dispatch' && env.MODE == 'on'
@@ -640,6 +659,17 @@ jobs:
           if-no-files-found: ignore
           overwrite: true
           retention-days: 14
+
+      # What the landed PSD writes read before the strip (records.json: look facts, icons' earlier cores) for the data's
+      # render and spot records: Card sync's data jobs merge every guard-records artifact once (db/bake-records.json).
+      - uses: actions/upload-artifact@v7
+        if: always() && steps.land.outputs.sha != ''
+        with:
+          name: guard-records
+          path: ${{ runner.temp }}/guards/records.json
+          if-no-files-found: ignore
+          overwrite: true
+          retention-days: 90  # unmerged records wait for a data job
 
       # A GITHUB_TOKEN push triggers no workflow: the card sync is run here, its bake only for pending edits (its data
       # commit dispatches the site build; when it does not start, the comment and the post say so, and the run fails),

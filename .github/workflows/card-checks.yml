@@ -51,6 +51,7 @@ jobs:
     env:
       SHARD: ${{ matrix.shard }}/${{ inputs.all && '6' || '1' }}
       GIT_NO_LAZY_FETCH: "1"
+      CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the bakes' renders: the data's records, else the bot's seed
     steps:
       # main's head: its tree, no file contents but the small files the checks read
       - &checkout-main
