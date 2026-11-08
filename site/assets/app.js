@@ -15,7 +15,7 @@ import * as CF from "./myfilters.js";
 import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc, AUX_KINDS, unusedTip } from "./grid.js";
 import { artHtml } from "./art.js";
 import { CARD_FLAGS, flagged, flagsHtml, hasFlag } from "./flags.js";
-import { colorRanges, statusNames } from "./textcolor.js";
+import { colorRanges, statusNames, inkOf, anchorInks } from "./textcolor.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -78,6 +78,7 @@ const userUrl = login => `${ROOT}u/${encodeURIComponent(login)}/`;
 const deckUrl = d => `${ROOT}d/#/deck/${D.encode(d)}`;
 const iconFor = name => S.icons[norm(name)];
 const iconImg = (name, cls = "tok") => G.iconImg(S.icons, name, cls);
+const iconLow = name => { const lo = S.icons[norm(name)]?.lo; return /^[dl]{1,2}$/.test(lo || "") ? [...lo].map(k => `lo-${k}`).join(" ") : ""; };   // too close to the box (style.css)
 const psdBadges = c => [
   c.refused ? `<span class="fact refused" data-tip="The last try to regenerate the card image was refused; change the edit or the PSD">Image update refused: ${esc(c.refused)}</span>`
     : c.pending?.length ? `<span class="fact pending" data-tip="${PSD_TIP}">PSD pending: ${esc(pendingList(c))}</span>` : "",
@@ -174,6 +175,7 @@ async function init() {
   }
   S.all = S.data.cards; S.icons = S.data.icons;
   S.statuses = statusNames(S.all);                        // status words keep the chart's colour (textcolor.js)
+  anchorInks(S.all);                                      // the card's own colours follow an edit from the built text
   setTagMeanings(S.data.tagMeanings);                     // the Timing Tags chapter's meanings: every badge's tooltip
   setHeavy(S.data.heavy);                                 // commits too big for GitHub's page: commit links go to the card's history
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
@@ -868,7 +870,7 @@ function openCard(id, showDetails = false) {
           <a class="fact" data-nav="next" href="#/card/${next.id}" title="Next (→)">${esc(next.name)} →</a></div>
         <div id="versions-slot">${versionsHtml(c, verOpen)}</div></div>
       <div>
-        <h2>${paintHtml(c.name, colorRanges(c.name, c.colors, "name"))}</h2>
+        <h2>${paintHtml(c.name, colorRanges(c.name, c.colors, "name", null, inkOf(c, "name")))}</h2>
         ${flagsHtml(c)}
         <div class="facts">
           <a class="fact" href="#/cards?kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>
@@ -887,9 +889,9 @@ function openCard(id, showDetails = false) {
           ${psdBadges(c)}
           ${c.hidden ? `<span class="fact">Hidden</span>` : ""}
         </div>
-        ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, "")}</a>`).join("")}</div>` : ""}
+        ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, iconLow(t))}</a>`).join("")}</div>` : ""}
         ${statBars(c)}
-        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, { colors: colorRanges(c.ability, c.colors, "ability", S.statuses) })}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
+        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, { colors: colorRanges(c.ability, c.colors, "ability", S.statuses, inkOf(c, "ability")) })}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
         ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, { colors: colorRanges(c.note, c.colors, "note") })}</div>` : ""}
         ${artHtml(c)}
         ${hasBadges(c.ability) || hasBadges(c.note) || hasCosts(c.ability) || hasCosts(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml(hasCosts(c.ability) || hasCosts(c.note))}</details>` : ""}

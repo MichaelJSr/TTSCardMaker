@@ -1199,4 +1199,8 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 .tc-custom { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
 .tc-custom input { width: 34px; height: 24px; padding: 0; border: 1px solid var(--border); border-radius: 5px; background: none; cursor: pointer; }
 @media (pointer: coarse) { .tc-chip { width: 36px; height: 28px; border-radius: 14px; } .tc-sw { width: 28px; height: 28px; } .tc-many { max-height: 128px; } }
-:root[data-theme="light"] .tc { text-shadow: 0 0 1px #000b, 0 0 1px #000b; }   /* a card's white or pale words on the light page */
+/* a card's colour or icon too close to its box (text.js lowOn, build_site icon_low): a thin outline in that theme */
+:root[data-theme="light"] .tc.lo-l { -webkit-text-stroke: 2px rgb(0 0 0 / .6); paint-order: stroke fill; }
+:root:not([data-theme="light"]) .tc.lo-d { -webkit-text-stroke: 2px rgb(255 255 255 / .6); paint-order: stroke fill; }
+:root[data-theme="light"] img.tok.lo-l { filter: drop-shadow(0 0 .6px rgb(0 0 0 / .8)) drop-shadow(0 0 .4px rgb(0 0 0 / .5)); }
+:root:not([data-theme="light"]) img.tok.lo-d, :root:not([data-theme="light"]) .ctypes img.lo-d { filter: drop-shadow(0 0 .6px rgb(255 255 255 / .8)) drop-shadow(0 0 .4px rgb(255 255 255 / .5)); }

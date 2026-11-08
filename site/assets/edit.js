@@ -1227,7 +1227,7 @@ export function createEditor(app) {
     const update = () => {
       paintSite();
       const op = readForm(c), lines = describe(op), text = partForm && !siteOn("ability") ? lastRead?.derived.ability || "" : ta.value;
-      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text, { colors: TC.colorRanges(text, op.set.colors ?? (op.unset.includes("colors") ? null : c.colors), "ability", S.statuses) }) : `<span class="muted">No ability text.</span>`;
+      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text, { colors: TC.colorRanges(text, op.set.colors ?? (op.unset.includes("colors") ? null : c.colors), "ability", S.statuses, TC.inkOf(c, "ability", text)) }) : `<span class="muted">No ability text.</span>`;
       const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");   // a stars edit moves the card (the bake's plan_move)
       const mv = sn && st && !siteOn("stars") ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
       if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${!partForm?.view.rec.header?.stars ? "" : P.starsKept(partForm.view.rec.header.stars, +st.value) ? "; the printed stars stay as they are" : " and redraws the printed stars"}. Tick Website only to keep the card where it is.`
@@ -1349,7 +1349,7 @@ export function createEditor(app) {
       list: () => { try { return JSON.parse(document.getElementById("ef-colors")?.value || "null"); } catch { return null; } },
       apply: list => { const el = document.getElementById("ef-colors"); if (!el) return; el.value = list?.length ? JSON.stringify(list) : ""; el.dispatchEvent(new Event("input", { bubbles: true })); },
       rec: () => recs.get(c.id) || view?.rec || null,
-      swatches: () => S.data.swatches || [], statuses: () => S.statuses,
+      swatches: () => S.data.swatches || [], statuses: () => S.statuses, base: (f, text) => TC.inkOf(c, f, text),
     });
     update();
     app.formOpened?.({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)

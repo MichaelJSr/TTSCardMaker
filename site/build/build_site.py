@@ -9,7 +9,8 @@ Where the data comes from:
     The records are read into stand-ins of the bot's classes (load_card_data); a field the site reads that the cards
     lack, or one it doesn't know, is a warning. The PSDs' structure (fonts, text layers, effects, stat rows, layer
     tree) comes from its psd_details.json, keyed by PSD blob sha; a card with a record gets
-    data/details/<id>.json for its Details dropdown. Aliases come from site/Card Edits.json.
+    data/details/<id>.json for its Details dropdown, and its name's and ability's colours on the card (card_inks:
+    cards.json `ink`). Aliases come from site/Card Edits.json.
   * Images: card PNGs in this repo, turned into three AVIF sizes (240 px and 360 px for the grid at 1x/2x, 720 px
     for the card view; AVIF only, no WebP copies). They are cached by git blob hash and encode settings (thumb_tag, in
     the file names) in site/.cache/img, so after the first run only new or changed cards (or a width whose settings
@@ -88,6 +89,7 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 from collections import Counter, defaultdict
 from datetime import date, datetime, timezone
+from difflib import SequenceMatcher
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
@@ -459,6 +461,123 @@ def details_parts(rec, e, by_id, meta, tree_blob, rec_blob):
             "picture": {"n": n, "cards": [{"n": c.get("variant") or 1, "id": c["id"], "name": c["name"]} for c in group]} if len(group) > 1 else None}
 
 
+# ---- the card's own colours (AutoCroissant psd_details VERSION 3: each type layer's "runs") ---------------------------
+INK_NEAR = 40                                 # colours this close to a layer's main ink (each channel) go with it
+INK_BLOCK = 3                                 # the fewest characters in a row a piece of the card's text must share with its layers
+INK_SHARE = 0.8                               # of a colour run's letters that must line up for it to paint
+INK_FOLD = str.maketrans({"\u2018": "'", "\u2019": "'", "\u201c": '"', "\u201d": '"', "\n": " ", "\r": " ", "\t": " ", "\x03": " "})
+
+
+def _ink_rgb(c):
+    return tuple(int(c[i:i + 2], 16) for i in (1, 3, 5))
+
+
+def layer_inks(t):
+    """A details text layer's (text, [colour or None a character]): its runs, else its one colour (none known: a record
+    before VERSION 3 with several). Accents only (owner 11-08): its main ink (the most used) and the colours near it are
+    left out, the site's text colour standing for them."""
+    text = t.get("text") if isinstance(t, dict) else None
+    if not isinstance(text, str) or not text:
+        return "", []
+    good = lambda c: c if isinstance(c, str) and COLOR_RE.match(c) else None
+    colours, runs = [good(c) for c in t.get("colors") or []], t.get("runs")
+    if isinstance(runs, list) and runs:
+        per = [None] * len(text)
+        for r in runs:
+            if isinstance(r, list) and len(r) == 3 and all(isinstance(x, int) for x in r) and 0 <= r[2] < len(colours):
+                for i in range(max(0, r[0]), min(r[1], len(text))):
+                    per[i] = colours[r[2]]
+    elif len(colours) == 1:
+        per = [colours[0]] * len(text)
+    else:
+        return text, [None] * len(text)
+    used = Counter(c for ch, c in zip(text, per) if c and not ch.isspace())
+    if used:
+        main = _ink_rgb(used.most_common(1)[0][0])
+        per = [c if c and max(abs(x - y) for x, y in zip(_ink_rgb(c), main)) > INK_NEAR else None for c in per]
+    return text, per
+
+
+def _fold(s):
+    return "".join(ch.lower() if len(ch.lower()) == 1 else ch for ch in s.translate(INK_FOLD))
+
+
+def drawn_spans(text):
+    """[(start, end)] of what text.js draws as icons and badges in card text (textcolor.js drawnSpans): never painted."""
+    return ([m.span() for m in re.finditer(r"\[[^\[\]\n]{1,52}\]", text)] + [m.span() for m in COST_RE.finditer(text)]
+            + [m.span() for m in re.finditer(r"\((-?[0-9A-Za-z/]{2,8})\)", text) if tag_info(m.group(1), {})])
+
+
+def field_inks(shown, layers, skip=()):
+    """[[start, end, colour]] on shown (the card's name or ability) from its layers' layer_inks, lined up by characters
+    (difflib, pieces of INK_BLOCK or more, unless the whole text); a run of one colour paints only when INK_SHARE of its
+    letters line up (a word edited away leaves no stray letters); blanks and skip ([(start, end)]) unpainted."""
+    if not shown or not layers:
+        return []
+    src, per = "", []
+    for text, colours in layers:
+        if src:
+            src, per = src + "\n", per + [None]
+        src, per = src + text, per + colours
+    if not any(per):
+        return []
+    to = [None] * len(src)
+    least = min(INK_BLOCK, len(shown))
+    for i, j, n in SequenceMatcher(None, _fold(src), _fold(shown), autojunk=False).get_matching_blocks():
+        if n >= least:
+            to[i:i + n] = range(j, j + n)
+    paint, run = [None] * len(shown), [None, []]
+
+    def close():
+        hits = [to[i] for i in run[1] if to[i] is not None]
+        if run[0] and run[1] and len(hits) >= INK_SHARE * len(run[1]):
+            for j in hits:
+                paint[j] = run[0]
+    for i, ch in enumerate(src):
+        if ch.isspace():
+            continue
+        if per[i] != run[0]:
+            close()
+            run = [per[i], []]
+        run[1].append(i)
+    close()
+    for a, b in skip:
+        paint[a:b] = [None] * (b - a)
+    out = []
+    for i, c in enumerate(paint):
+        if not c or shown[i].isspace():
+            continue
+        if out and out[-1][2] == c and not shown[out[-1][1]:i].strip():
+            out[-1][1] = i + 1
+        else:
+            out.append([i, i + 1, c])
+    return out
+
+
+def card_inks(e, rec):
+    """The colours the card prints its name and ability in: {"name": [[start, end, colour]], "ability": [...]} (only the
+    fields with any), or None. The layers: the record's parts this picture shows (title, ability), else its template's."""
+    texts = [t for t in rec.get("text") or [] if isinstance(t, dict)] if isinstance(rec.get("text"), list) else []
+    if not texts:
+        return None
+    by_id = {t.get("id"): t for t in texts}
+    parts, n = rec.get("parts"), e.get("variant") or 1
+    template = rec.get("template") if isinstance(rec.get("template"), dict) else {}
+    out = {}
+    for field, role in (("name", "title"), ("ability", "ability")):
+        if isinstance(parts, dict):
+            shown = [p for p in parts.get(role) or [] if isinstance(p, dict) and (p.get("variants") is None or n in (p.get("variants") if isinstance(p.get("variants"), list) else ()))]
+            layers = [by_id[p.get("id")] for p in shown if isinstance(p.get("id"), int) and p.get("id") in by_id]
+        else:
+            paths = [template.get("name_layer")] if field == "name" else template.get("ability_layers") or []
+            layers = [next((t for t in texts if t.get("layer") == path and t.get("visible")), None) for path in paths]
+        shown_text = e.get(field) if isinstance(e.get(field), str) else ""
+        found = field_inks(shown_text, [layer_inks(t) for t in layers if t], drawn_spans(shown_text) if field == "ability" else ())
+        if found:
+            out[field] = found
+    return out or None
+
+
 def join_details(cards, records, tree, edits=None):
     """
     The record of each card's PSD: by its blob at HEAD, else the blob the bot parsed, else the newest record for its path.
@@ -480,6 +599,13 @@ def join_details(cards, records, tree, edits=None):
         plain = e.pop("_plain", None)             # apply_edits' pending without the part edits' fields
         if rec:
             e["details"] = True
+            try:
+                inks = card_inks(e, rec)
+            except Exception as error:            # an odd record never fails the build
+                warn(f"{path}: no text colours ({type(error).__name__}: {error})")
+                inks = None
+            if inks:
+                e["ink"] = inks                   # the card's own colours (textcolor.js inkOf)
             if isinstance(rec.get("creature_bars"), dict):
                 e["creatureBars"] = rec["creature_bars"]    # a bar per creature: each one's stats bake
             out[e["id"]] = {**rec, "id": e["id"], "name": e["name"]}      # the card's id and shown name win
@@ -1165,6 +1291,29 @@ def variant_art(fb, png, tint, reach):
     return {v: out[v] for v in VARIANT_IMAGES}
 
 
+ICON_BOXES = {"d": "#232321", "l": "#f0efec"}  # style.css --surface-2 (the ability box), dark and light
+ICON_SEEN = 0.25                              # an icon with fewer of its pixels at 3:1 against a box gets an outline there
+
+
+def _rel_lum(r, g, b):
+    lin = [x / 255 / 12.92 if x <= 10 else ((x / 255 + 0.055) / 1.055) ** 2.4 for x in (r, g, b)]
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+
+
+def icon_low(path):
+    """"d", "l", "dl" or "": the themes whose ability box an icon (a cached WebP) nearly vanishes on (text.js icon: lo-d,
+    lo-l)."""
+    im = Image.open(path).convert("RGBA")
+    im.thumbnail((32, 32))
+    seen = [_rel_lum(*p[:3]) for p in (im.get_flattened_data() if hasattr(im, "get_flattened_data") else im.getdata()) if p[3] > 128]
+    out = ""
+    for k, box in ICON_BOXES.items():
+        b = _rel_lum(*(int(box[i:i + 2], 16) for i in (1, 3, 5)))
+        if seen and sum((max(v, b) + 0.05) / (min(v, b) + 0.05) >= 3 for v in seen) < ICON_SEEN * len(seen):
+            out += k
+    return out
+
+
 def build_icons(tree):
     """Types/ icons into dist/icons as 96 px WebP (<name>.<stamp>.webp), and the variant images
     (<name>.<stamp>.<variant>.webp) of those in the font. Returns ({normalized spelling: {file, name, kind, v: [variants with an image]}}, {variant: reach}); no
@@ -1212,6 +1361,9 @@ def build_icons(tree):
         out_name = f"{slugify(name)}.{stamp}.webp"
         link_or_copy(cached, os.path.join(DIST, "icons", out_name), replace=True)
         entry = {"file": f"icons/{out_name}", "name": name, "kind": kind}
+        low = icon_low(cached)
+        if low:
+            entry["lo"] = low
         if key:
             files = {v: os.path.join(cache_dir, f"{tree[path][:16]}-{v}-{VARIANT_VERSION}-{key}.webp") for v in VARIANT_IMAGES}
             todo.append((path, tint, files, out_name, entry))

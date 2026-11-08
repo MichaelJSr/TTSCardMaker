@@ -1,6 +1,12 @@
 // Ability text: icon tokens, timing-tag badges, links to other cards, and word diffs.
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+const LUM = new Map();
+const lum = c => { let v = LUM.get(c); if (v === undefined) { const [r, g, b] = [1, 3, 5].map(i => { const x = parseInt(c.slice(i, i + 2), 16) / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); LUM.set(c, v = 0.2126 * r + 0.7152 * g + 0.0722 * b); } return v; };
+const BOXES = { d: ["#232321", "#1a1a19"].map(lum), l: ["#f0efec", "#fcfcfb"].map(lum) };   // style.css --surface-2 (ability, note), --surface (title)
+const ratio = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+/** " lo-d" and/or " lo-l": the themes whose boxes a colour is too close to (under 3:1), where it gets an outline (style.css). */
+export const lowOn = c => Object.entries(BOXES).map(([k, boxes]) => (boxes.some(b => ratio(b, lum(c)) < 3) ? ` lo-${k}` : "")).join("");
 /** Escaped text[a:b] with its colour runs ([{start, end, color}]: textcolor.js colorRanges) as spans; a colour is
  *  "#rrggbb" or left out, the text escaped. */
 export function paintHtml(text, ranges, a = 0, b = String(text ?? "").length) {
@@ -9,7 +15,7 @@ export function paintHtml(text, ranges, a = 0, b = String(text ?? "").length) {
   for (const r of ranges || []) {
     const s = Math.max(r.start, a), e = Math.min(r.end, b);
     if (e <= s || !/^#[0-9a-f]{6}$/.test(r.color)) continue;
-    out += esc(text.slice(at, s)) + `<span class="tc" style="color:${r.color}">${esc(text.slice(s, e))}</span>`;
+    out += esc(text.slice(at, s)) + `<span class="tc${lowOn(r.color)}" style="color:${r.color}">${esc(text.slice(s, e))}</span>`;
     at = e;
   }
   return out + esc(text.slice(at, b));
@@ -368,7 +374,8 @@ export function makeRenderer({ cards, icons, variants = {} }) {
     const drawn = v === "no" || (ic.v?.includes(v) && variants[v] !== undefined);
     const label = drawn ? `${name} (${v === "no" ? "not" : VARIANT_NAMES[v]})` : name;
     const t = tip ? ` data-tip="${esc(label)}"` : "";
-    const img = `<img class="tok" src="${esc(ic.file)}" alt="${esc(drawn ? label : base)}"${t}>`;
+    const lo = /^[dl]{1,2}$/.test(ic.lo || "") ? [...ic.lo].map(k => ` lo-${k}`).join("") : "";   // build_site icon_low
+    const img = `<img class="tok${lo}" src="${esc(ic.file)}" alt="${esc(drawn ? label : base)}"${t}>`;
     if (!drawn) return img;
     if (v === "no") return `<span class="tok-no">${img}</span>`;
     const file = esc(variantFile(ic, v)), mask = `-webkit-mask-image:url(&quot;${file}&quot;);mask-image:url(&quot;${file}&quot;)`;

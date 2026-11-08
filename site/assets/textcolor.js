@@ -93,11 +93,13 @@ export function statusSpans(text, names) {
   }
   return taken.filter(([a, , word]) => word && /[A-Z]/.test(text[a])).map(([a, b]) => [a, b]).sort((x, y) => x[0] - y[0]);
 }
-/** The colour runs of field's text: [{start, end, color}], in order, apart; whole fields first, then phrases as listed.
- *  statuses: the status names; the ability's status words (statusSpans) are never painted (they keep the chart's). */
-export function colorRanges(text, colors, field, statuses = null) {
+/** The colour runs of field's text: [{start, end, color}], in order, apart; base (inkOf: the card's own colours) first,
+ *  then whole fields, then phrases as listed. statuses: the status names; the ability's status words (statusSpans) are
+ *  never painted by an edit (they keep the chart's, the card's own). */
+export function colorRanges(text, colors, field, statuses = null, base = null) {
   text = String(text ?? "");
   const paint = new Array(text.length).fill(null), kept = new Array(text.length).fill(false);
+  for (const r of base || []) if (COLOR.test(r.color || "")) for (let i = Math.max(0, r.start); i < Math.min(r.end, text.length); i++) paint[i] = r.color;
   if (field === "ability") for (const [a, b] of statusSpans(text, statuses)) for (let i = a; i < b; i++) kept[i] = true;
   const mine = (colors || []).filter(one => one.field === field && COLOR.test(one.color || ""));
   for (const one of [...mine.filter(x => !x.phrase), ...mine.filter(x => x.phrase)])
@@ -151,10 +153,49 @@ export function withColor(list, field, phrase, color, text = "") {
   } else out.push({ field, ...(phrase ? { phrase } : {}), color });
   return out.slice(0, MAX).length ? out.slice(0, MAX) : null;
 }
-/** The colour a selection shows now: its last painter's, else null. */
-export function colorAt(list, field, text, start, end, statuses = null) {
-  const r = colorRanges(text, list, field, statuses).filter(x => x.start < Math.max(end, start + 1) && start < x.end);
+/** The colour a selection shows now: its last painter's (an edit, else the card's own), else null. */
+export function colorAt(list, field, text, start, end, statuses = null, base = null) {
+  const r = colorRanges(text, list, field, statuses, base).filter(x => x.start < Math.max(end, start + 1) && start < x.end);
   return r.length ? r[r.length - 1].color : null;
+}
+/** The card's own colours (cards.json `ink`, build_site card_inks: the PSD's runs) as {start, end, color} on field's
+ *  text, null without any. They were lined up with the text the site was built with (anchorInks); on another text (an
+ *  edit) a run keeps its place in the unchanged start and end, else goes where its own text is next found (shifted as
+ *  the run before it, or searched when 3 letters or more), else keeps its unchanged ends; a word the edit cuts into
+ *  loses its colour. */
+export function inkOf(c, field, text = c?.[field]) {
+  const runs = c?.ink?.[field];
+  if (!Array.isArray(runs) || !runs.length) return null;
+  const list = runs.filter(r => Array.isArray(r) && Number.isInteger(r[0]) && Number.isInteger(r[1]) && r[1] > r[0] && COLOR.test(r[2] || ""))
+    .map(([start, end, color]) => ({ start, end, color }));
+  const was = String(c.ink.built?.[field] ?? c[field] ?? ""), now = String(text ?? "");
+  if (was === now) return list.length ? list : null;
+  const n = Math.min(was.length, now.length), word = i => i >= 0 && i < was.length && !/\s/.test(was[i]);
+  let p = 0, s = 0;
+  while (p < n && was[p] === now[p]) p++;
+  while (s < n - p && was[was.length - 1 - s] === now[now.length - 1 - s]) s++;
+  let cut = was.length - s;
+  if (word(p - 1) && word(p)) while (word(p - 1)) p--;
+  if (word(cut - 1) && word(cut)) while (word(cut)) cut++;
+  const d = now.length - was.length, out = [];
+  let at = 0, shift = 0;
+  const put = (r, i) => { out.push({ ...r, start: i, end: i + r.end - r.start }); at = i + r.end - r.start; shift = i - r.start; };
+  for (const r of list) {
+    const own = was.slice(r.start, r.end);
+    if (r.end <= p) put(r, r.start);
+    else if (r.start >= cut) put(r, r.start + d);
+    else if (r.start + shift >= at && now.startsWith(own, r.start + shift)) put(r, r.start + shift);
+    else if (own.trim().length >= 3 && now.indexOf(own, at) >= 0) put(r, now.indexOf(own, at));
+    else {                                         // edited: its unchanged ends
+      if (r.start < p) out.push({ ...r, end: p });
+      if (r.end > cut) out.push({ ...r, start: cut + d, end: r.end + d });
+    }
+  }
+  return out.length ? out : null;
+}
+/** Once, before any edit: the texts each card's `ink` was lined up with (inkOf follows an edit from them). */
+export function anchorInks(cards) {
+  for (const c of cards || []) if (c?.ink && typeof c.ink === "object" && !c.ink.built) c.ink.built = { name: c.name, ability: c.ability };
 }
 /** The recent colours, newest first, with c added. */
 export const recentWith = (recent, c) => [c, ...(recent || []).filter(x => x !== c && COLOR.test(x))].slice(0, RECENT_MAX);
@@ -208,7 +249,8 @@ function caretAt(el, pos) {
 /**
  * The colour menu on the text controls inside root. o: {fieldOf(el) -> "name" | "ability" | "note" | null, textOf(el) ->
  * {text, at} (the field's whole text and where el's text starts in it: a box of several), list() -> the colours now,
- * apply(list, {field, phrase, color}), rec() -> the details record or null, swatches() -> [{name, color}], storage}.
+ * apply(list, {field, phrase, color}), rec() -> the details record or null, swatches() -> [{name, color}],
+ * base(field, text) -> the card's own colours (inkOf) or null, storage}.
  * Returns {close, destroy}.
  */
 export function attach(root, o) {
@@ -247,7 +289,7 @@ export function attach(root, o) {
   }
   function show(sel) {
     cur = sel;
-    const now = colorAt(o.list(), sel.field, sel.text, sel.start, sel.end, o.statuses?.());
+    const now = colorAt(o.list(), sel.field, sel.text, sel.start, sel.end, o.statuses?.(), o.base?.(sel.field, sel.text));
     chip.querySelector(".tc-dot").style.cssText = now ? `background:${now}` : "";
     chip.classList.toggle("set", !!now);
     chip.setAttribute("aria-label", `Text colour of ${what(sel)}`); chip.title = `Text colour of ${what(sel)}`;
@@ -264,7 +306,7 @@ export function attach(root, o) {
   }
   function open() {
     if (!cur) return;
-    const sel = cur, list = o.list(), now = colorAt(list, sel.field, sel.text, sel.start, sel.end, o.statuses?.());
+    const sel = cur, list = o.list(), now = colorAt(list, sel.field, sel.text, sel.start, sel.end, o.statuses?.(), o.base?.(sel.field, sel.text));
     const st = sel.field === "ability" ? statusIn(sel.text, sel.start, sel.end, o.statuses?.()) : "";   // they keep the chart's colour
     const set = JSON.stringify(withColor(list, sel.field, sel.phrase, null, sel.text)) !== JSON.stringify(list?.length ? list : null);
     pop.innerHTML = paletteHtml([["On this card", cardColors(o.rec?.(), list).map(color => ({ color }))], ["Recent", recent().map(color => ({ color }))],

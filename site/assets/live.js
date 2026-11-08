@@ -1,7 +1,7 @@
 // The Edit dialog's live preview: the card as it will look once published, from the form's op. NOTES.md §21.
 import { flagsHtml } from "./flags.js";
 import { esc, paintHtml } from "./text.js";
-import { colorRanges, printedOf } from "./textcolor.js";
+import { colorRanges, printedOf, inkOf } from "./textcolor.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 // printed on the card image (edit.js FROM "PSD", build_site.py PSD_FIELDS): an edit there waits for the image ("PSD pending")
@@ -50,7 +50,7 @@ export function previewHtml(p, changed, ctx) {
   const pending = (p.pending || []).map(f => LABEL[f] || f).join(", "), site = (p.siteOnly || []).map(f => LABEL[f] || f).join(", ");
   return `<div class="lp-card">
     <div class="lp-top">${src ? `<img class="lp-img" src="${esc(src)}" alt="" data-preview-image>` : ""}
-      <div class="lp-head"><h2 class="${mark("name", "lp-name")}">${paintHtml(p.name, colorRanges(p.name, p.colors, "name"))}</h2>
+      <div class="lp-head"><h2 class="${mark("name", "lp-name")}">${paintHtml(p.name, colorRanges(p.name, p.colors, "name", null, inkOf(p, "name")))}</h2>
         ${changed.has("flags") ? `<div class="lp-changed">${flagsHtml(p) || `<p class="muted">No flags.</p>`}</div>` : flagsHtml(p)}
         <div class="facts">${fact("type", esc(ctx.kindLabel[p.type] || p.type || ""))}${fact("subtype", p.subtype ? esc(p.subtype[0].toUpperCase() + p.subtype.slice(1)) : "")}
           ${fact("stars", p.stars ? `<span class="stars">${"★".repeat(Math.min(p.stars, 10))}</span> ${p.stars}-star` : "")}${fact("series", esc(p.series || ""))}${fact("subseries", esc(p.subseries || ""))}
@@ -58,7 +58,7 @@ export function previewHtml(p, changed, ctx) {
           ${pending ? `<span class="fact pending">PSD pending: ${esc(pending)}</span>` : ""}${site ? `<span class="fact site-only" data-tip="${esc(`Website only: ${site}. The card image keeps its printed value`)}">Website only</span>` : ""}</div></div></div>
     ${types ? `<div class="${mark("types", "ctypes")}">${types}</div>` : changed.has("types") ? `<p class="muted lp-changed">No types.</p>` : ""}
     <div class="${mark("stats", "lp-stats")}">${ctx.statBars(p)}</div>
-    ${p.ability ? `<div class="${mark("ability", "ability")}">${ctx.render(p.ability, { colors: colorRanges(p.ability, p.colors, "ability", ctx.statuses?.()) })}</div>` : `<p class="muted lp-noability${changed.has("ability") ? " lp-changed" : ""}">No ability text.</p>`}
+    ${p.ability ? `<div class="${mark("ability", "ability")}">${ctx.render(p.ability, { colors: colorRanges(p.ability, p.colors, "ability", ctx.statuses?.(), inkOf(p, "ability")) })}</div>` : `<p class="muted lp-noability${changed.has("ability") ? " lp-changed" : ""}">No ability text.</p>`}
     ${p.note ? `<div class="${mark("note", "note")}"><b>Note</b> ${ctx.render(p.note, { colors: colorRanges(p.note, p.colors, "note") })}</div>` : ""}
     ${p.aliases?.length ? `<p class="muted lp-aka${changed.has("aliases") ? " lp-changed" : ""}">Also known as: ${p.aliases.map(esc).join(", ")}</p>` : ""}
   </div>`;
