@@ -26,10 +26,10 @@
 # safety cron (GitHub starts it late or not at all: every 4-10 h)
 # catches what the chain leaves: unposted events, a lane that failed, a chain that stopped.
 # One main lane per guarded push (owner, 2026-10-25, P-2): a push's main lane skips itself when that push's guards have
-# fixes to land (card-guards.yml's "Fixes to land"); their post job starts Card sync first (input guards: both lanes set
-# up while Land runs, then wait for its Follow up), else Follow up starts it once they land (or land nothing), so its
-# one main lane bakes and saves the fixed PNGs. The schedule's and a chained run's skip theirs while any guards
-# run with fixes is unfinished.
+# fixes to land (card-guards.yml's "Fixes to land"); their check job starts Card sync right after that mark (input
+# guards: both lanes set up while the guards land, then wait for its Landed), else their Follow up starts it once they
+# land (or land nothing), so its one main lane bakes and saves the fixed PNGs. The schedule's and a chained run's skip
+# theirs while any guards run with fixes is unfinished.
 # Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) from the card workflows' venv cache.
 name: Card sync
@@ -236,35 +236,35 @@ jobs:
       # its setup): unfinished, or finished with Follow up done. The schedule's and a chained run's look here for any
       # unfinished one (two hours back). One found: this run's main lane is skipped (its data lane ran; a push's lane
       # skips its Gate and the rest). Runs that cannot be read count as none (the main lane goes on). A follow-up (guards:
-      # the run whose post job started this one first, before Land) waits in both lanes after their setup until that
-      # post job reaches Follow up (Land and its guard-events and guard-records uploads done) or ends: 3 s looks for 2
-      # minutes, then 15 s, 30 at most (the post job's own cap); it holds nothing.
+      # the run whose check job started this one, before Land) waits in both lanes after their setup until that check
+      # job reaches Landed (Land and its guard-events and guard-records uploads done) or ends: 3 s looks for 2 minutes,
+      # then 15 s, 60 at most (the check job's own cap); it holds nothing.
       - &guards
         name: Guards' fixes
         id: guards
         if: github.event_name == 'push' && github.job == 'main' || github.event_name != 'push' && github.job == 'timer' || inputs.guards && (github.job == 'main' || github.job == 'data')
         continue-on-error: true     # failed or cut: the lane goes on
-        timeout-minutes: 32         # the wait (12 min at most, a follow-up's 30), then its reads
+        timeout-minutes: 62         # the wait (12 min at most, a follow-up's 60), then its reads
         env:
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ github.event_name == 'push' && github.sha || '' }}
           FIXES: Fixes to land        # card-guards.yml's check-job step
           DECIDED: Decided            # its check-job step after Fixes to land
           FOLLOW: Follow up           # card-guards.yml's post-job step that dispatches Card sync
+          LANDED: Landed              # its check-job step after Land and its uploads
           RUN: ${{ inputs.guards }}   # a follow-up's guards run
-          POST: post                  # its job with Land and Follow up
         run: |
           if [ -n "$RUN" ]; then
             k=0 at=0
-            while [ "$SECONDS" -lt 1800 ]; do
+            while [ "$SECONDS" -lt 3600 ]; do
               k=$((k + 1))
-              at=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"$POST\" and (.status == \"completed\"
-                or any(.steps[]?; .name == \"$FOLLOW\" and (.status == \"in_progress\" or .status == \"completed\"))))] | length") || at=0
+              at=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"check\" and (.status == \"completed\"
+                or any(.steps[]?; .name == \"$LANDED\" and (.status == \"in_progress\" or .status == \"completed\"))))] | length") || at=0
               [ "${at:-0}" -gt 0 ] && break
               if [ $((k % 5)) = 0 ] && [ "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN" --jq .status || true)" = completed ]; then break; fi
               sleep "$([ "$SECONDS" -lt 120 ] && echo 3 || echo 15)"
             done
-            if [ "$SECONDS" -ge 1800 ]; then echo "::warning::guards run $RUN not past Land in 30 minutes: this run goes on"; fi
+            if [ "$SECONDS" -ge 3600 ]; then echo "::warning::guards run $RUN not past Land in 60 minutes: this run goes on"; fi
             echo "Guards run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN is past Land (or ended): this run goes on from main's head." \
               | tee -a "$GITHUB_STEP_SUMMARY"
             exit 0
@@ -801,7 +801,7 @@ jobs:
   # The main lane: a push's at once (its setup, then its guards: their check job, then whether they land fixes; no
   # fixed wait: the 30-minute window and its environment card-sync-quiet are gone, owner 2026-11-03), the schedule's and
   # a chained run's when no push run is starting one, another dispatch's and a retry's at once; none while guards' fixes
-  # are to land (the run their Follow up starts is the one). One at a time (card-main); a newer
+  # are to land (the run they start is the one). One at a time (card-main); a newer
   # pending one replaces an older one (a retry is dispatched only when no other run is unfinished). It writes only main;
   # db/ is read for the save's names.
   main:
@@ -812,8 +812,8 @@ jobs:
       group: ${{ inputs.dry_run && format('card-main-dry-{0}', github.run_id) || 'card-main' }}   # a dry run: a lock of its own
       cancel-in-progress: false   # a running lane is never cut off
     runs-on: ubuntu-latest
-    timeout-minutes: 125    # Commit main pushes M only before minute 60 from the Gate: the 30 left cover the caps of it and
-                            # every later step; 35 for the setup and the guards' wait before the Gate
+    timeout-minutes: 155    # Commit main pushes M only before minute 60 from the Gate: the 30 left cover the caps of it and
+                            # every later step; 65 for the setup and the guards' wait before the Gate
     outputs:
       saved: ${{ steps.venv.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
       m: ${{ steps.main.outputs.m }}
