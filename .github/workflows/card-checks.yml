@@ -125,7 +125,7 @@ jobs:
           oxipng: "false"
           help: card_checks
 
-      # The blobs of the PSDs to check and their PNGs, in one fetch per shard (the guards' way): none, and the job is done
+      # The blobs of the PSDs to check and their PNGs, fetched per shard (the guards' way): none, and the job is done
       - name: To check
         id: list
         working-directory: bot
@@ -143,13 +143,18 @@ jobs:
           echo "n=$n" >> "$GITHUB_OUTPUT"
           echo "$n blobs to read." | tee -a "$GITHUB_STEP_SUMMARY"
 
+      # 8 to a fetch, 4 at a time, as the guards' Pushed blobs: small packs barely need GitHub's delta search
       - name: Fetch them
         if: steps.list.outputs.n != '0'
         timeout-minutes: 20
         continue-on-error: true   # what is missing comes by REST
         run: |
-          git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags --no-write-fetch-head --recurse-submodules=no \
-            --filter=blob:none --stdin origin < "$RUNNER_TEMP/blobs.txt"
+          list=$RUNNER_TEMP/blobs.txt rc=0
+          xargs -P 4 -n 8 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags --no-write-fetch-head \
+            --recurse-submodules=no --filter=blob:none origin < "$list" || rc=$?
+          have=$(git cat-file --batch-check < "$list" | grep -vc ' missing$' || true)
+          echo "$have of $(grep -c . "$list") blobs in the clone"
+          exit $rc
 
       # The bake's fonts for the real bakes: the card workflows' cache by MDW/Fonts' tree sha; a miss checks them out
       - name: Fonts tree
