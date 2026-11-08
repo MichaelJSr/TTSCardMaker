@@ -27,7 +27,7 @@ on:
     - cron: "41 6 * * *"     # a dispatch lost: PSDs without a result are found the next day
 
 permissions:
-  contents: read      # the save job alone writes
+  contents: read      # the saves alone write
 
 concurrency:
   group: card-checks
@@ -43,6 +43,9 @@ jobs:
       fail-fast: false
       matrix:
         shard: ${{ fromJSON(inputs.all && '[0,1,2,3,4,5]' || '[0]') }}
+    permissions:
+      contents: write   # one shard saves here
+      actions: write
     runs-on: ubuntu-latest
     timeout-minutes: 90
     defaults:
@@ -198,11 +201,59 @@ jobs:
           if-no-files-found: ignore
           retention-days: 3
 
-  # The results into db/, every record's notes against the data (a website-only fix clears without a push), one commit
-  # on data, then the site. A run with no new result still words the notes.
+      # One shard saves here (the save job's set-up cost more than its work): main and data as they are now
+      - name: Newest
+        id: newest
+        if: ${{ !cancelled() && !inputs.all }}
+        run: |
+          git fetch -q --depth 1 --filter=blob:none origin main && echo "head=$(git rev-parse FETCH_HEAD)" >> "$GITHUB_OUTPUT"
+          git -C carddata fetch -q --depth 1 origin data && git -C carddata reset -q --hard FETCH_HEAD
+
+      # The results into db/, every record's notes against the data (a website-only fix clears without a push), one commit
+      # on data, then the site. A run with no new result still words the notes.
+      - name: Save
+        id: save
+        if: ${{ !cancelled() && !inputs.all }}
+        working-directory: bot
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.newest.outputs.head }}
+        run: |
+          mapfile -t results < <(find "$RUNNER_TEMP" -maxdepth 1 -name checks.json)
+          "$RUNNER_TEMP/venv/bin/python" -m commands.card_checks save --repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" \
+            --db "$GITHUB_WORKSPACE/carddata/db" --head "$HEAD_SHA" "${results[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # Never forced: on a rejected push this commit goes on top of the lane's (it touches no other file)
+      - &commit
+        name: Commit
+        id: commit
+        if: ${{ !cancelled() && steps.save.outcome == 'success' }}
+        working-directory: carddata
+        run: |
+          git add db/card_checks.json
+          if git diff --cached --quiet; then echo "No flag changed."; exit 0; fi
+          me=(-c user.name=AutoCroissant -c user.email=autocroissant@gmail.com)
+          git "${me[@]}" commit -q -m "Card checks"
+          for i in 1 2 3 4 5; do
+            git push origin HEAD:refs/heads/data && { echo "committed=true" >> "$GITHUB_OUTPUT"; exit 0; }
+            sleep $((i * 20))
+            git fetch -q origin data && git "${me[@]}" rebase -q FETCH_HEAD
+          done
+          echo "::warning::the card checks' data commit was not pushed: the next run saves them"
+          exit 1
+
+      - &site-build
+        name: Site build
+        if: ${{ !cancelled() && steps.commit.outputs.committed == 'true' }}
+        timeout-minutes: 2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY"
+
+  # `all`: the six shards' results saved together
   save:
     needs: check
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && inputs.all }}
     permissions:
       contents: write   # the data commit
       actions: write    # gh workflow run site.yml
@@ -225,6 +276,7 @@ jobs:
           path: ${{ runner.temp }}/results
 
       - name: Save
+        id: save
         working-directory: bot
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -233,26 +285,5 @@ jobs:
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_checks save --repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" \
             --db "$GITHUB_WORKSPACE/carddata/db" "${results[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # Never forced: on a rejected push this commit goes on top of the lane's (it touches no other file)
-      - name: Commit
-        id: commit
-        working-directory: carddata
-        run: |
-          git add db/card_checks.json
-          if git diff --cached --quiet; then echo "No flag changed."; exit 0; fi
-          me=(-c user.name=AutoCroissant -c user.email=autocroissant@gmail.com)
-          git "${me[@]}" commit -q -m "Card checks"
-          for i in 1 2 3 4 5; do
-            git push origin HEAD:refs/heads/data && { echo "committed=true" >> "$GITHUB_OUTPUT"; exit 0; }
-            sleep $((i * 20))
-            git fetch -q origin data && git "${me[@]}" rebase -q FETCH_HEAD
-          done
-          echo "::warning::the card checks' data commit was not pushed: the next run saves them"
-          exit 1
-
-      - name: Site build
-        if: steps.commit.outputs.committed == 'true'
-        timeout-minutes: 2
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY"
+      - *commit
+      - *site-build
