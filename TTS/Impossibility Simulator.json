@@ -20685,7 +20685,7 @@
           "Type": 0
         },
         "330": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Katarina.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Katarina.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20694,7 +20694,7 @@
           "Type": 0
         },
         "333": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Nasus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Nasus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20865,7 +20865,7 @@
           "Type": 0
         },
         "972": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Militron.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Militron.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20883,7 +20883,7 @@
           "Type": 0
         },
         "331": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Morshu.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Morshu.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20973,7 +20973,7 @@
           "Type": 0
         },
         "352": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Groda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Groda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -21357,7 +21357,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "330": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Katarina.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Katarina.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -21415,7 +21415,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "333": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Nasus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Nasus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -22517,7 +22517,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "972": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Militron.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Militron.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -22633,7 +22633,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "331": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Morshu.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Morshu.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -23213,7 +23213,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "352": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Groda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Groda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -23532,7 +23532,7 @@
       ],
       "CustomDeck": {
         "797": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Koro-Sensei.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Koro-Sensei.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -23757,7 +23757,7 @@
           "Type": 0
         },
         "570": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -23815,7 +23815,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "797": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Koro-Sensei.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Koro-Sensei.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -25265,7 +25265,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "570": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -32379,7 +32379,7 @@
           "Type": 0
         },
         "342": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Zompanda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Zompanda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -32397,7 +32397,7 @@
           "Type": 0
         },
         "341": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -32406,7 +32406,7 @@
           "Type": 0
         },
         "339": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -32415,7 +32415,7 @@
           "Type": 0
         },
         "337": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Assault_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Assault_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -32728,7 +32728,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "342": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Zompanda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Zompanda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -32844,7 +32844,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "341": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -32902,7 +32902,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "339": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -32960,7 +32960,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "337": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Assault_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Assault_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -64867,7 +64867,7 @@
           "Type": 0
         },
         "337": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Assault_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Assault_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -64876,7 +64876,7 @@
           "Type": 0
         },
         "339": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -64885,7 +64885,7 @@
           "Type": 0
         },
         "341": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -64894,7 +64894,7 @@
           "Type": 0
         },
         "340": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Peter_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Peter_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -64984,7 +64984,7 @@
           "Type": 0
         },
         "342": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Zompanda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Zompanda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -65137,7 +65137,7 @@
           "Type": 0
         },
         "1447": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Pandas/2%20Stars/Pandanoko.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Pandanoko.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -65860,7 +65860,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "337": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Assault_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Assault_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -65918,7 +65918,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "339": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -65976,7 +65976,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "341": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -66034,7 +66034,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "340": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Peter_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Peter_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -66614,7 +66614,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "342": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Zompanda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Zompanda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -67600,7 +67600,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1447": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Pandas/2%20Stars/Pandanoko.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Pandanoko.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -67853,7 +67853,7 @@
       ],
       "CustomDeck": {
         "1447": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Pandas/2%20Stars/Pandanoko.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Pandanoko.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -68064,7 +68064,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1447": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Pandas/2%20Stars/Pandanoko.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Pandanoko.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -69224,7 +69224,7 @@
           "Type": 0
         },
         "351": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69386,7 +69386,7 @@
           "Type": 0
         },
         "347": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Pandabal.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Pandabal.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69476,7 +69476,7 @@
           "Type": 0
         },
         "343": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69611,7 +69611,7 @@
           "Type": 0
         },
         "348": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Panseida.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Panseida.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69683,7 +69683,7 @@
           "Type": 0
         },
         "350": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -69944,7 +69944,7 @@
           "Type": 0
         },
         "1112": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70025,7 +70025,7 @@
           "Type": 0
         },
         "349": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70061,7 +70061,7 @@
           "Type": 0
         },
         "1515": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70070,7 +70070,7 @@
           "Type": 0
         },
         "1514": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70079,7 +70079,7 @@
           "Type": 0
         },
         "1516": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -70258,7 +70258,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "351": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -71302,7 +71302,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "347": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Pandabal.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Pandabal.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -71882,7 +71882,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "343": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -72752,7 +72752,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "348": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Panseida.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Panseida.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -73216,7 +73216,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "350": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -74898,7 +74898,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1112": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75420,7 +75420,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "349": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75652,7 +75652,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1515": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75710,7 +75710,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1514": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -75768,7 +75768,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1516": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -76338,7 +76338,7 @@
           "Type": 0
         },
         "1112": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77026,7 +77026,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1112": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -77859,7 +77859,7 @@
           "Type": 0
         },
         "350": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77976,7 +77976,7 @@
           "Type": 0
         },
         "1515": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77985,7 +77985,7 @@
           "Type": 0
         },
         "1514": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -77994,7 +77994,7 @@
           "Type": 0
         },
         "1516": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -78400,7 +78400,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "350": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -79154,7 +79154,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1515": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -79212,7 +79212,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1514": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -79270,7 +79270,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1516": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -79803,7 +79803,7 @@
           "Type": 0
         },
         "353": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/4%20Stars/Po.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Po.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79812,7 +79812,7 @@
           "Type": 0
         },
         "352": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Groda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Groda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79830,7 +79830,7 @@
           "Type": 0
         },
         "333": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Nasus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Nasus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79848,7 +79848,7 @@
           "Type": 0
         },
         "331": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Morshu.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Morshu.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79857,7 +79857,7 @@
           "Type": 0
         },
         "330": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Katarina.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Katarina.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -80046,7 +80046,7 @@
           "Type": 0
         },
         "924": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Pandevourer.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Pandevourer.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -80217,7 +80217,7 @@
           "Type": 0
         },
         "1442": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Astr_Meiana.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Astr_Meiana.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -80253,7 +80253,7 @@
           "Type": 0
         },
         "1572": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Militron.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Militron.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -82756,7 +82756,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "353": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/4%20Stars/Po.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Po.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -82814,7 +82814,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "352": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Groda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Groda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -82930,7 +82930,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "333": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Nasus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Nasus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83046,7 +83046,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "331": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Morshu.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Morshu.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -83104,7 +83104,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "330": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Katarina.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Katarina.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -84322,7 +84322,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "924": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Pandevourer.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Pandevourer.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -85424,7 +85424,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1442": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Astr_Meiana.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Astr_Meiana.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -85656,7 +85656,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1572": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Militron.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Militron.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -85790,7 +85790,7 @@
       ],
       "CustomDeck": {
         "1442": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Astr_Meiana.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Astr_Meiana.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -85862,7 +85862,7 @@
           "Type": 0
         },
         "924": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Pandevourer.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Pandevourer.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -85974,7 +85974,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1442": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Astr_Meiana.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Astr_Meiana.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -86438,7 +86438,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "924": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Pandevourer.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Pandevourer.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -86944,7 +86944,7 @@
           "Type": 0
         },
         "353": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/4%20Stars/Po.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Po.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -87610,7 +87610,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "353": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/4%20Stars/Po.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Po.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -88881,7 +88881,7 @@
           "Type": 0
         },
         "336": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Other/5%20Stars/The_Thin_Man.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/The_Thin_Man.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -88917,7 +88917,7 @@
           "Type": 0
         },
         "570": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -88962,7 +88962,7 @@
           "Type": 0
         },
         "797": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Koro-Sensei.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Koro-Sensei.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -88971,7 +88971,7 @@
           "Type": 0
         },
         "832": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Baba.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Baba.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -89106,7 +89106,7 @@
           "Type": 0
         },
         "1427": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/The_Queen.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/The_Queen.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -90668,7 +90668,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "336": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Other/5%20Stars/The_Thin_Man.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/The_Thin_Man.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -90900,7 +90900,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "570": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -91190,7 +91190,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "797": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Koro-Sensei.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Koro-Sensei.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -91248,7 +91248,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "832": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Baba.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Baba.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -92118,7 +92118,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1427": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/The_Queen.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/The_Queen.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -92560,7 +92560,7 @@
           "Type": 0
         },
         "1427": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/The_Queen.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/The_Queen.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -92842,7 +92842,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1427": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/The_Queen.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/The_Queen.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -93743,7 +93743,7 @@
           "Type": 0
         },
         "337": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Assault_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Assault_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -93752,7 +93752,7 @@
           "Type": 0
         },
         "339": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -93761,7 +93761,7 @@
           "Type": 0
         },
         "341": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -93770,7 +93770,7 @@
           "Type": 0
         },
         "340": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Peter_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Peter_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -93860,7 +93860,7 @@
           "Type": 0
         },
         "342": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Zompanda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Zompanda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -94013,7 +94013,7 @@
           "Type": 0
         },
         "1447": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Pandas/2%20Stars/Pandanoko.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Pandanoko.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -94736,7 +94736,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "337": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Assault_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Assault_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -94794,7 +94794,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "339": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -94852,7 +94852,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "341": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/YIIK_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -94910,7 +94910,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "340": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Peter_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Peter_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -95490,7 +95490,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "342": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/2%20Stars/Zompanda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Zompanda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -96476,7 +96476,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1447": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e71b3610e88dee772067f408b2e4b9b18b037257/Creatures/Pandas/2%20Stars/Pandanoko.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/2%20Stars/Pandanoko.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -96824,7 +96824,7 @@
           "Type": 0
         },
         "351": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -96986,7 +96986,7 @@
           "Type": 0
         },
         "347": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Pandabal.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Pandabal.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97076,7 +97076,7 @@
           "Type": 0
         },
         "343": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97211,7 +97211,7 @@
           "Type": 0
         },
         "348": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Panseida.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Panseida.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97283,7 +97283,7 @@
           "Type": 0
         },
         "350": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97544,7 +97544,7 @@
           "Type": 0
         },
         "1112": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97625,7 +97625,7 @@
           "Type": 0
         },
         "349": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97661,7 +97661,7 @@
           "Type": 0
         },
         "1515": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97670,7 +97670,7 @@
           "Type": 0
         },
         "1514": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97679,7 +97679,7 @@
           "Type": 0
         },
         "1516": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -97858,7 +97858,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "351": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -98902,7 +98902,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "347": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Pandabal.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Pandabal.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -99482,7 +99482,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "343": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100352,7 +100352,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "348": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Panseida.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Panseida.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -100816,7 +100816,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "350": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -102498,7 +102498,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1112": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/3%20Stars/The_Last_Cabbage_Merchant.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -103020,7 +103020,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "349": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Project_P.A.N.D.A.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -103252,7 +103252,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1515": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -103310,7 +103310,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1514": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -103368,7 +103368,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1516": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -104307,7 +104307,7 @@
           "Type": 0
         },
         "353": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/4%20Stars/Po.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Po.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104316,7 +104316,7 @@
           "Type": 0
         },
         "352": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Groda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Groda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104334,7 +104334,7 @@
           "Type": 0
         },
         "333": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Nasus.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Nasus.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104352,7 +104352,7 @@
           "Type": 0
         },
         "331": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Morshu.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Morshu.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104361,7 +104361,7 @@
           "Type": 0
         },
         "330": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Katarina.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Katarina.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104550,7 +104550,7 @@
           "Type": 0
         },
         "924": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Pandevourer.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Pandevourer.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104721,7 +104721,7 @@
           "Type": 0
         },
         "1442": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Astr_Meiana.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Astr_Meiana.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104757,7 +104757,7 @@
           "Type": 0
         },
         "1572": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Militron.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Militron.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -107260,7 +107260,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "353": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/4%20Stars/Po.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Po.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107318,7 +107318,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "352": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Groda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Groda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107434,7 +107434,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "333": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Nasus.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Nasus.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107550,7 +107550,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "331": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Morshu.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Morshu.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107608,7 +107608,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "330": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Katarina.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Katarina.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108826,7 +108826,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "924": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/4%20Stars/Pandevourer.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/4%20Stars/Pandevourer.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -109928,7 +109928,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1442": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Astr_Meiana.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Astr_Meiana.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -110160,7 +110160,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1572": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Militron.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Militron.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -110561,7 +110561,7 @@
           "Type": 0
         },
         "336": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Other/5%20Stars/The_Thin_Man.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/The_Thin_Man.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110597,7 +110597,7 @@
           "Type": 0
         },
         "570": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110642,7 +110642,7 @@
           "Type": 0
         },
         "797": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Koro-Sensei.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Koro-Sensei.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110651,7 +110651,7 @@
           "Type": 0
         },
         "832": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Baba.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Baba.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110786,7 +110786,7 @@
           "Type": 0
         },
         "1427": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/The_Queen.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/The_Queen.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -112348,7 +112348,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "336": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Creatures/Other/5%20Stars/The_Thin_Man.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/The_Thin_Man.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -112580,7 +112580,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "570": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Doctor_Zomboss.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -112870,7 +112870,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "797": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Koro-Sensei.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Koro-Sensei.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -112928,7 +112928,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "832": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/Baba.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/Baba.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -113798,7 +113798,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1427": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/5%20Stars/The_Queen.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/5%20Stars/The_Queen.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -169560,7 +169560,7 @@
           "Type": 0
         },
         "350": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169596,7 +169596,7 @@
           "Type": 0
         },
         "348": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Panseida.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Panseida.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169659,7 +169659,7 @@
           "Type": 0
         },
         "343": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169713,7 +169713,7 @@
           "Type": 0
         },
         "347": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Pandabal.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Pandabal.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169758,7 +169758,7 @@
           "Type": 0
         },
         "351": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169884,7 +169884,7 @@
           "Type": 0
         },
         "1515": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169893,7 +169893,7 @@
           "Type": 0
         },
         "1543": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -169902,7 +169902,7 @@
           "Type": 0
         },
         "1544": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -170375,7 +170375,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "350": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Shield_Master_Pi.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -170607,7 +170607,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "348": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Panseida.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Panseida.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -171013,7 +171013,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "343": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Defcon_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -171361,7 +171361,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "347": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Pandabal.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Pandabal.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -171651,7 +171651,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "351": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/Sumo_Panda.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -172463,7 +172463,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1515": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_F.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -172521,7 +172521,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1543": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_A.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -172579,7 +172579,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1544": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Pandas/3%20Stars/P.A.N.D.A._Mk_T.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -177613,7 +177613,7 @@
       "SidewaysCard": false,
       "CustomDeck": {
         "1568": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d65536ba5323f14552d47d1e7803be7e7959aa61/Creatures/Other/4%20Stars/Militron.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/20acddb729224da11d879aa84559393552d8ee21/Creatures/Other/4%20Stars/Militron.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
