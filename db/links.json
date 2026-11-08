@@ -22990,6 +22990,1368 @@
    }
   ]
  },
+ "Items/Equip/3 Stars/Charm_Of_The_Vampire.psd": {
+  "blob": "66de09ac2bd9a8bbbc213bc087cb6b4fb5b99644",
+  "links": [
+   {
+    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "size": 134581
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Dark_Sword.psd": {
+  "blob": "efe4549ab66f3ec1df32402cc0a83056b59d0f16",
+  "links": [
+   {
+    "drawn": "0a95e6352290c121e259f19e32ce77c6c7e090ec",
+    "name": "Dark_Sword - Layer 1.psb",
+    "path": "MDW/Linked/Dark_Sword - Layer 1.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   },
+   {
+    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+    "name": "Dst Star.png",
+    "path": "Types/Stars/Dst Star.png",
+    "size": 112511
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Dashmaster.psd": {
+  "blob": "84d8cc519da935c2c4a798bb78c1fbd1fe60dba6",
+  "links": [
+   {
+    "drawn": "b9940964fd1e3ce4e835bcb61c85ebbd548ca7ae",
+    "name": "Glowing_Womb - Hollow Knight 2023.04.03 - 11.32.04.03.DVR - frame at 0m125s.jpg",
+    "path": "MDW/Linked/Glowing_Womb - Hollow Knight 2023.04.03 - 11.32.04.03.DVR - frame at 0m125s.jpg",
+    "size": 205673
+   },
+   {
+    "drawn": "facfcb0bc497503eb10ba70aff9bf5456aed9de3",
+    "name": "Glowing_Womb - Dash master.png",
+    "path": "MDW/Linked/Glowing_Womb - Dash master.png",
+    "size": 430111
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Deep_Focus.psd": {
+  "blob": "e7514710330b508883a9c9a9f9cf60ce005d1f61",
+  "links": [
+   {
+    "drawn": "70de32f9413a541f3eccb61a320dd6624747ed7a",
+    "name": "Deep_Focus - Hollow Knight 2023.10.13 - 23.41.35.09.DVR - frame at 0m18s.jpg",
+    "path": "MDW/Linked/Deep_Focus - Hollow Knight 2023.10.13 - 23.41.35.09.DVR - frame at 0m18s.jpg",
+    "size": 134333
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   },
+   {
+    "drawn": "1d9cd2c7eba808262d1b882b3da4176ae0caf461",
+    "name": "Deep_Focus - Deep_Focus.png",
+    "path": "MDW/Linked/Deep_Focus - Deep_Focus.png",
+    "size": 450806
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Flameblade.psd": {
+  "blob": "4fc8c06a7955fb23276b6b63568317fc7387d8f4",
+  "links": [
+   {
+    "drawn": "f8edbbe833750968c75f11b3398b8761bf751b6b",
+    "name": "Flameblade - adrian-jones-great-flameblade-thumbnail.jpg",
+    "path": "MDW/Linked/Flameblade - adrian-jones-great-flameblade-thumbnail.jpg",
+    "size": 818466
+   },
+   {
+    "drawn": "85d77d7d27e05776d8d725f0802dccc9e34f3bea",
+    "name": "Triforce.png",
+    "path": "Types/Stars/Triforce.png",
+    "size": 1712857
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Fragile_Heart.psd": {
+  "blob": "a6241d3e536a8e75c026e05ac5f49f77176bdb30",
+  "links": [
+   {
+    "drawn": "c447d344fe6e0a6c03871bd527062ac8b849f9f8",
+    "name": "Unbreakable_Strength - Hollow Knight 2023.04.03 - 12.59.54.07.DVR - frame at 0m13s.jpg",
+    "path": "MDW/Linked/Unbreakable_Strength - Hollow Knight 2023.04.03 - 12.59.54.07.DVR - frame at 0m13s.jpg",
+    "size": 252732
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": null,
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Fragile_Strength.psd": {
+  "blob": "764176b4561a4eb688d43028df82e306c52ccb7f",
+  "links": [
+   {
+    "drawn": "c447d344fe6e0a6c03871bd527062ac8b849f9f8",
+    "name": "Unbreakable_Strength - Hollow Knight 2023.04.03 - 12.59.54.07.DVR - frame at 0m13s.jpg",
+    "path": "MDW/Linked/Unbreakable_Strength - Hollow Knight 2023.04.03 - 12.59.54.07.DVR - frame at 0m13s.jpg",
+    "size": 252732
+   },
+   {
+    "drawn": "bf4ce232a1f773ef1436eed9279847d42cde41f5",
+    "name": "Fragile_Strength - sadsadsadasdas_waifu2x_noise0_scale4x.png",
+    "path": "MDW/Linked/Fragile_Strength - sadsadsadasdas_waifu2x_noise0_scale4x.png",
+    "size": 384673
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Hiveblood.psd": {
+  "blob": "42f8bcf5930e9d96c5c85a3f32338ba8004e7a08",
+  "links": [
+   {
+    "drawn": "edfbbd46f9d0f96e5d1baf7c637c9c027ef099e8",
+    "name": "Hiveblood - sasd (1).png",
+    "path": "MDW/Linked/Hiveblood - sasd (1).png",
+    "size": 420526
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Inner_Eye.psd": {
+  "blob": "224203d8c6ce7859d77a19cff8b296f79c0a3fb7",
+  "links": [
+   {
+    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "size": 134581
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Maggy's_Bow.psd": {
+  "blob": "b1fb68305887e4cc87df036f4a2f7ac8de3b5148",
+  "links": [
+   {
+    "drawn": "8178b487e36c4f9cd8abebb1e3c8ecee42d1a14c",
+    "name": "Maggy's_Bow - Req_Character.png",
+    "path": "MDW/Linked/Maggy's_Bow - Req_Character.png",
+    "size": 1041535
+   },
+   {
+    "drawn": "684e65afeeb74b7382ea73b18ee54fc434b75315",
+    "name": "Tainted_Eden - F4YxFTxXQAABzaz.jpg",
+    "path": "MDW/Linked/Tainted_Eden - F4YxFTxXQAABzaz.jpg",
+    "size": 140451
+   },
+   {
+    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "size": 134581
+   },
+   {
+    "drawn": "42ecaae354c0bdab83ff216bbb7b2a4852a19ebb",
+    "name": "Maggy's_Bow - Collectible_The_Battery_icon.webp",
+    "path": "MDW/Linked/Maggy's_Bow - Collectible_The_Battery_icon.webp",
+    "size": 130
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Magic_Hammer.psd": {
+  "blob": "22f293a0961b0e2bd1c3fbde23cf331779c57eaf",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Mechanical_Shield.psd": {
+  "blob": "613d642f2a90e1a38e3a56d8044401fa768ea5ba",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Metal_Shield.psd": {
+  "blob": "6c8ef7b141e4f6773106b0d01b6634bb75a3f9fd",
+  "links": [
+   {
+    "drawn": "e90d17fb0c5ae4f4b9f4fe17d983fd7a40a06d1b",
+    "name": "Metal_Shield - Kite_Shield.png",
+    "path": "MDW/Linked/Metal_Shield - Kite_Shield.png",
+    "size": 173690
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   },
+   {
+    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+    "name": "Solar Sun.png",
+    "path": "Types/Stars/Solar Sun.png",
+    "size": 1374450
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Newspaper.psd": {
+  "blob": "617181ea6a5f2660c13732901665d62b0bee72d4",
+  "links": [
+   {
+    "drawn": "0d47b0a3339044f283638f3c472241ae70d26c1f",
+    "name": "Newspaper - Newspaperzombie.png",
+    "path": "MDW/Linked/Newspaper - Newspaperzombie.png",
+    "size": 350292
+   },
+   {
+    "drawn": "23d109968e9bd030377693191b73b47a27c68320",
+    "name": "Jack-In-The-Box_Zombie - Layer 1 copy.psb",
+    "path": "MDW/Linked/Jack-In-The-Box_Zombie - Layer 1 copy.psb",
+    "size": 3960930
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Piko_Piko_Hammer.psd": {
+  "blob": "07339ef2f5c29f1ef4980a60d3556889257eef72",
+  "links": [
+   {
+    "drawn": "28ec1a2cd768bcad4a0b5f7b6103ff052562cd9a",
+    "name": "Piko_Piko_Hammer - F7gaX6XW8AAXWgH.jpg",
+    "path": "MDW/Linked/Piko_Piko_Hammer - F7gaX6XW8AAXWgH.jpg",
+    "size": 133423
+   },
+   {
+    "drawn": "b0bc27eae6d3a757dbc81d234b730e6510a1ae3d",
+    "name": "Sonic - Red_Star_Ring_art_SCU.webp",
+    "path": "MDW/Linked/Sonic - Red_Star_Ring_art_SCU.webp",
+    "size": 49638
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Poison_Shiv.psd": {
+  "blob": "dc032454edf8969ea3cb506855fd07da0f403b4c",
+  "links": [
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Quick_Slash.psd": {
+  "blob": "c860a5434eac2d035ce3d60a629a577095e3c51d",
+  "links": [
+   {
+    "drawn": "41bcfb3d6a0e69f328b5e76b1e7157897365ed5e",
+    "name": "Quick_Slash - Hollow Knight 2023.04.03 - 12.59.35.06.DVR - frame at 0m26s.jpg",
+    "path": "MDW/Linked/Quick_Slash - Hollow Knight 2023.04.03 - 12.59.35.06.DVR - frame at 0m26s.jpg",
+    "size": 104932
+   },
+   {
+    "drawn": "7bf145d37901fb77ca129474ac1ceb692d0a75d3",
+    "name": "Quick_Slash - strength (1).png",
+    "path": "MDW/Linked/Quick_Slash - strength (1).png",
+    "size": 374958
+   },
+   {
+    "drawn": "b713676bd21000ab043574a12d31dc8fc7b6912f",
+    "name": "Quick_Slash - qs (1).png",
+    "path": "MDW/Linked/Quick_Slash - qs (1).png",
+    "size": 476992
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Shield_of_the_Guilty.psd": {
+  "blob": "825e2e7691f55ddce551b801ad9be0940c923186",
+  "links": [
+   {
+    "drawn": "78959d9104d5348fd021c3fab33f54da8c0a1bbf",
+    "name": "Shield_of_the_Guilty - ER_Icon_shield_Shield_of_the_Guilty.webp",
+    "path": "MDW/Linked/Shield_of_the_Guilty - ER_Icon_shield_Shield_of_the_Guilty.webp",
+    "size": 314964
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
+    "name": "Elden Stars.png",
+    "path": "Types/Stars/Elden Stars.png",
+    "size": 1194210
+   },
+   {
+    "drawn": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
+    "name": "Elden Stars.png",
+    "path": "Types/Stars/Elden Stars.png",
+    "size": 1194210
+   },
+   {
+    "drawn": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
+    "name": "Elden Stars.png",
+    "path": "Types/Stars/Elden Stars.png",
+    "size": 1194210
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Shiny_Knife.psd": {
+  "blob": "af7bd84e2961b14bab35857cb9a85852e5ae1fcf",
+  "links": [
+   {
+    "drawn": "143b78f2cf80938397ac9bc9988f3844788e20c4",
+    "name": "Dull_Knife - Shiny knife bg.png",
+    "path": "MDW/Linked/Dull_Knife - Shiny knife bg.png",
+    "size": 55325
+   },
+   {
+    "drawn": "e75f27a4e5e3649309ad817d56919271962d8cfc",
+    "name": "Shiny_Knife - shiny_knife_image.png",
+    "path": "MDW/Linked/Shiny_Knife - shiny_knife_image.png",
+    "size": 5588
+   },
+   {
+    "drawn": "f3fe84dffd34449aecdb401982ee42e6d54f4c40",
+    "name": "Shiny_Knife - Layer 1.psb",
+    "path": "MDW/Linked/Shiny_Knife - Layer 1.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "name": "Omori star.png",
+    "path": "Types/Stars/Omori star.png",
+    "size": 114793
+   },
+   {
+    "drawn": "e73936aab3503ddb484675c1806b44bef6c04ab4",
+    "name": "Shiny_Knife - Equip.png",
+    "path": "MDW/Linked/Shiny_Knife - Equip.png",
+    "size": 4928
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Stalwart_Shell.psd": {
+  "blob": "7a4471523467185e66cd373c12d5aee224487813",
+  "links": [
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "2ae64f84dbb2512b8adbbd46647d1b5ed43c173b",
+    "name": "Stalwart_Shell - shell (1).png",
+    "path": "MDW/Linked/Stalwart_Shell - shell (1).png",
+    "size": 391352
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/Titanium_Sword.psd": {
+  "blob": "9364f5581d5b73f9fa2ab7ef8ffbe54c6d7eaa44",
+  "links": [
+   {
+    "drawn": "00eefc2a7d026bcd7de98b80d5a396da39db2d2f",
+    "name": "Copper_Sword - desktop-wallpaper-terraria-terraria-pc.jpg",
+    "path": "MDW/Linked/Copper_Sword - desktop-wallpaper-terraria-terraria-pc.jpg",
+    "size": 103533
+   },
+   {
+    "drawn": "75d7fb1062f4f81eb510a6cb441f85819eae9617",
+    "name": "Fallen_Star.png",
+    "path": "Types/Stars/Fallen_Star.png",
+    "size": 2480
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/3 Stars/steam_sale.psd": {
+  "blob": "1b5105493794275b5a6f8c825c95bdd4a3b3ed8d",
+  "links": [
+   {
+    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "size": 134581
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Binge_Eater.psd": {
+  "blob": "5774914b486fccb761b0cdc31db70d59ed06fcc6",
+  "links": [
+   {
+    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "size": 134581
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Blasphemous Blade.psd": {
+  "blob": "c215045bcbc6f03abf475022cf60d3a87ccf64fc",
+  "links": [
+   {
+    "drawn": "51e320a5801bb5dcf2ccdfb3e83caebe351ade15",
+    "name": "Blasphemous Blade - Elden Ring.psb",
+    "path": "MDW/Linked/Blasphemous Blade - Elden Ring.psb",
+    "size": 6647608
+   },
+   {
+    "drawn": "e551516dc4e29d0815b2fa440887b5d790affd4b",
+    "name": "Blasphemous Blade - ER_Icon_weapon_Blasphemous_Blade.webp",
+    "path": "MDW/Linked/Blasphemous Blade - ER_Icon_weapon_Blasphemous_Blade.webp",
+    "size": 101298
+   },
+   {
+    "drawn": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
+    "name": "Elden Stars.png",
+    "path": "Types/Stars/Elden Stars.png",
+    "size": 1194210
+   },
+   {
+    "drawn": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
+    "name": "Elden Stars.png",
+    "path": "Types/Stars/Elden Stars.png",
+    "size": 1194210
+   },
+   {
+    "drawn": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
+    "name": "Elden Stars.png",
+    "path": "Types/Stars/Elden Stars.png",
+    "size": 1194210
+   },
+   {
+    "drawn": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
+    "name": "Elden Stars.png",
+    "path": "Types/Stars/Elden Stars.png",
+    "size": 1194210
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Dad's_Ring.psd": {
+  "blob": "b1eba2266bed0c96591123d9c2d424bbf32e5757",
+  "links": [
+   {
+    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "size": 134581
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Dark_Ritual.psd": {
+  "blob": "b6325e63b559717e92069f968cc35187a70934c6",
+  "links": [
+   {
+    "drawn": "43f816e07e07a2e572f0d059b0e6e2a8855d1e33",
+    "name": "Dark_Ritual - HD-wallpaper-they-rise-dead-grave-graveyard-skull.jpg",
+    "path": "MDW/Linked/Dark_Ritual - HD-wallpaper-they-rise-dead-grave-graveyard-skull.jpg",
+    "size": 122011
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "name": "support.png",
+    "path": "Types/support.png",
+    "size": 632862
+   },
+   {
+    "drawn": null,
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Godhead.psd": {
+  "blob": "b906d18e69898b0242820f9884d07cf7afd5239e",
+  "links": [
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Holy_Blade.psd": {
+  "blob": "2845abed7a206a94de9e792f10bba34f9e20f039",
+  "links": [
+   {
+    "drawn": "c1865d6a28bce99013336db86ffa0d5589d69762",
+    "name": "Holy_Blade - tb2-main-background-art.jpg",
+    "path": "MDW/Linked/Holy_Blade - tb2-main-background-art.jpg",
+    "size": 191501
+   },
+   {
+    "drawn": "ddbe41a24ec7c04062e1ea7a7daaaf970754656f",
+    "name": "Holy_Blade - Bahl_3F_29.png",
+    "path": "MDW/Linked/Holy_Blade - Bahl_3F_29.png",
+    "size": 3470010
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Holy_Mantle.psd": {
+  "blob": "6795f71802727e63d4f6f8dc120cb148d7478a6d",
+  "links": [
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Kingsoul.psd": {
+  "blob": "1281e9e100ef9703436d9b14e5aef488325bec72",
+  "links": [
+   {
+    "drawn": "f3a8279a012fc65a28049b3e82055703061b9ea2",
+    "name": "Kingsoul - Screenshot_HK_The_Pale_King_05.png",
+    "path": "MDW/Linked/Kingsoul - Screenshot_HK_The_Pale_King_05.png",
+    "size": 2575471
+   },
+   {
+    "drawn": "3df35f7376de25730348754b84d4a6e73924550d",
+    "name": "Tainted_Bethany - wp (1).png",
+    "path": "MDW/Linked/Tainted_Bethany - wp (1).png",
+    "size": 392497
+   },
+   {
+    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "name": "Hk star.png",
+    "path": "Types/Stars/Hk star.png",
+    "size": 332571
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Magic_Shield.psd": {
+  "blob": "78013c597a5237e745513dfaf30722560664ca34",
+  "links": [
+   {
+    "drawn": "4b0fbd80736237bbac0689ca300c05258496574e",
+    "name": "Magic_Shield - Magic_Shield_29 copy.png",
+    "path": "MDW/Linked/Magic_Shield - Magic_Shield_29 copy.png",
+    "size": 2393297
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   },
+   {
+    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+    "name": "Solar Sun.png",
+    "path": "Types/Stars/Solar Sun.png",
+    "size": 1374450
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Mom's_Knife.psd": {
+  "blob": "c1d616ce5375f6715fd11ab0196fdb43c7755dad",
+  "links": [
+   {
+    "drawn": "1611fa24ff34d1847c9377e92ad7ceed7e768de7",
+    "name": "Mom's_Knife - SNmX09b73kXK2cxix7WdS0HzEf4jzIvbNjXJhmId0KQ.webp",
+    "path": "MDW/Linked/Mom's_Knife - SNmX09b73kXK2cxix7WdS0HzEf4jzIvbNjXJhmId0KQ.webp",
+    "size": 23914
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Nuclear_Proliferation.psd": {
+  "blob": "44498108ec4d707c587e36d2014eba925538555c",
+  "links": [
+   {
+    "drawn": "be52da8e66fbe240bd4ef8962d8ce199d64b2f67",
+    "name": "nuke.png",
+    "path": "Types/Stars/nuke.png",
+    "size": 499009
+   },
+   {
+    "drawn": "be52da8e66fbe240bd4ef8962d8ce199d64b2f67",
+    "name": "nuke.png",
+    "path": "Types/Stars/nuke.png",
+    "size": 499009
+   },
+   {
+    "drawn": "be52da8e66fbe240bd4ef8962d8ce199d64b2f67",
+    "name": "nuke.png",
+    "path": "Types/Stars/nuke.png",
+    "size": 499009
+   },
+   {
+    "drawn": "be52da8e66fbe240bd4ef8962d8ce199d64b2f67",
+    "name": "nuke.png",
+    "path": "Types/Stars/nuke.png",
+    "size": 499009
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Sacred_Heart.psd": {
+  "blob": "afc81e1c0ca900d264e88504e41a94721413577f",
+  "links": [
+   {
+    "drawn": "1611fa24ff34d1847c9377e92ad7ceed7e768de7",
+    "name": "Mom's_Knife - SNmX09b73kXK2cxix7WdS0HzEf4jzIvbNjXJhmId0KQ.webp",
+    "path": "MDW/Linked/Mom's_Knife - SNmX09b73kXK2cxix7WdS0HzEf4jzIvbNjXJhmId0KQ.webp",
+    "size": 23914
+   },
+   {
+    "drawn": "377c70255242349f92dce5eb6161fc2e7465e650",
+    "name": "Sacred_Heart - dV3AuU9.png",
+    "path": "MDW/Linked/Sacred_Heart - dV3AuU9.png",
+    "size": 3841376
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Shield_of_Ogmur.psd": {
+  "blob": "e818112b843199b6764aa5e236401845937d2e19",
+  "links": [
+   {
+    "drawn": "a3ed7729bcd35bf85ef616e3ae35868d1f1798f8",
+    "name": "Shield_of_Ogmur - RATS.png",
+    "path": "MDW/Linked/Shield_of_Ogmur - RATS.png",
+    "size": 993
+   },
+   {
+    "drawn": "17037600deb0a85c726204971439741a7d4d3874",
+    "name": "Shield_of_Ogmur - PPE btw lel xd.png",
+    "path": "MDW/Linked/Shield_of_Ogmur - PPE btw lel xd.png",
+    "size": 902
+   },
+   {
+    "drawn": "a3ed7729bcd35bf85ef616e3ae35868d1f1798f8",
+    "name": "Shield_of_Ogmur - RATS.png",
+    "path": "MDW/Linked/Shield_of_Ogmur - RATS.png",
+    "size": 993
+   },
+   {
+    "drawn": "a3ed7729bcd35bf85ef616e3ae35868d1f1798f8",
+    "name": "Shield_of_Ogmur - RATS.png",
+    "path": "MDW/Linked/Shield_of_Ogmur - RATS.png",
+    "size": 993
+   },
+   {
+    "drawn": "2fce469ecfa2a200c779733043fc64704d83812a",
+    "name": "Shield_of_Ogmur - Arm.png",
+    "path": "MDW/Linked/Shield_of_Ogmur - Arm.png",
+    "size": 1518
+   },
+   {
+    "drawn": "82a1ad6ab8d6a971995f51b98a14682b453e35f3",
+    "name": "Shield_of_Ogmur - its mine.png",
+    "path": "MDW/Linked/Shield_of_Ogmur - its mine.png",
+    "size": 1700
+   },
+   {
+    "drawn": "a3ed7729bcd35bf85ef616e3ae35868d1f1798f8",
+    "name": "Shield_of_Ogmur - RATS.png",
+    "path": "MDW/Linked/Shield_of_Ogmur - RATS.png",
+    "size": 993
+   },
+   {
+    "drawn": "8cd22d44223a5b4451a6215ff9567705dcb9d724",
+    "name": "Shield_of_Ogmur - zFNntHD.png",
+    "path": "MDW/Linked/Shield_of_Ogmur - zFNntHD.png",
+    "size": 1013
+   },
+   {
+    "drawn": "17037600deb0a85c726204971439741a7d4d3874",
+    "name": "Shield_of_Ogmur - PPE btw lel xd.png",
+    "path": "MDW/Linked/Shield_of_Ogmur - PPE btw lel xd.png",
+    "size": 902
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Sword_of_Aeons.psd": {
+  "blob": "4c3dd19a0efa556c1620e02a136bf9e29e6c288b",
+  "links": [
+   {
+    "drawn": "66500cf321bdc817f2d4440885358922c8946166",
+    "name": "Sword_of_Aeons - second_half-transformed.png",
+    "path": "MDW/Linked/Sword_of_Aeons - second_half-transformed.png",
+    "size": 474861
+   },
+   {
+    "drawn": "cb2b91cd050a719c5a49aef4ab3dd096fdda5c9b",
+    "name": "Sword_of_Aeons - first_half-transformed.png",
+    "path": "MDW/Linked/Sword_of_Aeons - first_half-transformed.png",
+    "size": 2646370
+   },
+   {
+    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Thunderfury_Blessed_Blade_of_the_Windseeker.psd": {
+  "blob": "cec82336491bb1051b1ec387b2272eb9fec7932d",
+  "links": [
+   {
+    "drawn": "f1a477caf6c4d00c252f50d65bd8ac0fc6f09afd",
+    "name": "Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "path": "Types/Stars/Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "size": 61378
+   },
+   {
+    "drawn": "f1a477caf6c4d00c252f50d65bd8ac0fc6f09afd",
+    "name": "Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "path": "Types/Stars/Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "size": 61378
+   },
+   {
+    "drawn": "f1a477caf6c4d00c252f50d65bd8ac0fc6f09afd",
+    "name": "Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "path": "Types/Stars/Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "size": 61378
+   },
+   {
+    "drawn": "f1a477caf6c4d00c252f50d65bd8ac0fc6f09afd",
+    "name": "Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "path": "Types/Stars/Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "size": 61378
+   },
+   {
+    "drawn": "f1a477caf6c4d00c252f50d65bd8ac0fc6f09afd",
+    "name": "Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "path": "Types/Stars/Thunderfury_Blessed_Blade_Of_The_Starseeker.png",
+    "size": 61378
+   }
+  ]
+ },
+ "Items/Equip/4 Stars/Time_Riddle.psd": {
+  "blob": "9e81ad2baf6bfe05a969d26d0d2fd36df8085e1a",
+  "links": [
+   {
+    "drawn": "fbaec5fd92d2dca46348f764966333a4cbce5092",
+    "name": "Time_Riddle - Background Ability.jpg",
+    "path": "MDW/Linked/Time_Riddle - Background Ability.jpg",
+    "size": 321208
+   },
+   {
+    "drawn": "4cad94aa626cb36c0097901dcd52607baefc4423",
+    "name": "Time_Riddle - Background Riddle.jpg",
+    "path": "MDW/Linked/Time_Riddle - Background Riddle.jpg",
+    "size": 711995
+   },
+   {
+    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+    "name": "Guild Seal.png",
+    "path": "Types/Stars/Guild Seal.png",
+    "size": 1880154
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
+   }
+  ]
+ },
+ "Items/Heal/1 Stars/Bolts_and_Screws.psd": {
+  "blob": "58e963aaf5d79dd4a119de54b8393428f2deb045",
+  "links": [
+   {
+    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "size": 347738
+   },
+   {
+    "drawn": "ec3a99868909040ef8eaaa0720cb0b7ddfc72421",
+    "name": "Bolts_and_Screws - Zahnr3F copy 30.webp",
+    "path": "MDW/Linked/Bolts_and_Screws - Zahnr3F copy 30.webp",
+    "size": 19660
+   },
+   {
+    "drawn": "a1762aeba1150ab4a4d19eebb74b2a9da5e807d6",
+    "name": "Bolts_and_Screws - Scrap_Build copy 5.webp",
+    "path": "MDW/Linked/Bolts_and_Screws - Scrap_Build copy 5.webp",
+    "size": 17454
+   },
+   {
+    "drawn": "655863bfcf0a840f4726dfb8b0ec6d7d7ebbfc1d",
+    "name": "Bolts_and_Screws - Ikona_Majsterkowanie copy 8.webp",
+    "path": "MDW/Linked/Bolts_and_Screws - Ikona_Majsterkowanie copy 8.webp",
+    "size": 5208
+   },
+   {
+    "drawn": "dba1666fbc0d0d2de9d2a8ce29b69bd9df462b5c",
+    "name": "Bolts_and_Screws - pngwing.com (2).png",
+    "path": "MDW/Linked/Bolts_and_Screws - pngwing.com (2).png",
+    "size": 170154
+   },
+   {
+    "drawn": "f530afa999e32f45bb749655f99d3333d741bf29",
+    "name": "Bolts_and_Screws - Auto-Mat-O-Chanic_Build.webp",
+    "path": "MDW/Linked/Bolts_and_Screws - Auto-Mat-O-Chanic_Build.webp",
+    "size": 6592
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   },
+   {
+    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "name": "Infliction.png",
+    "path": "Types/Infliction.png",
+    "size": 78460
+   }
+  ]
+ },
+ "Items/Heal/1 Stars/Candy_Corn.psd": {
+  "blob": "0ed16b1fd9e0ebdcd33c7fbbb34563e37fc06efb",
+  "links": [
+   {
+    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "size": 347738
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Items/Heal/1 Stars/Ingredient_Desert_Limes.psd": {
+  "blob": "10b513fa9b9b03ce4e111911ace1339b1e79fea4",
+  "links": [
+   {
+    "drawn": "6b086f1c5ea0ef7348f1c94a4828db115018ce06",
+    "name": "Ingredient_Wondertart - ingredient_starburst_shine_0007.png",
+    "path": "MDW/Linked/Ingredient_Wondertart - ingredient_starburst_shine_0007.png",
+    "size": 322858
+   },
+   {
+    "drawn": "a0ada347a5a1ea6f846eb829c5cf4debea589a4f",
+    "name": "Ingredient_Wondertart - ingredient_starburst_back_0001.png",
+    "path": "MDW/Linked/Ingredient_Wondertart - ingredient_starburst_back_0001.png",
+    "size": 1005066
+   },
+   {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
+    "drawn": "200b5af8c95608dfeb75dcc33bf1885e28b03829",
+    "name": "Ingredient_Desert_Limes - ingredient_cowgirl_0001.png",
+    "path": "MDW/Linked/Ingredient_Desert_Limes - ingredient_cowgirl_0001.png",
+    "size": 135804
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Items/Heal/1 Stars/Monster_Meat.psd": {
+  "blob": "e82363920e7ed552933d98490d50fec9eb46eb15",
+  "links": [
+   {
+    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "size": 347738
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Items/Heal/1 Stars/Potato.psd": {
+  "blob": "68efbac607b4d626b004b05207b563b4b7ddb1ba",
+  "links": [
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   }
+  ]
+ },
+ "Items/Heal/1 Stars/Tomato.psd": {
+  "blob": "dd33f8e5d6691b6a2deb75700d9456a44cc206ef",
+  "links": [
+   {
+    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "size": 347738
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Items/Heal/2 Stars/A_Snack.psd": {
+  "blob": "a25dea7f1402ce0f01b7be5f916b89e1f2e5a12d",
+  "links": [
+   {
+    "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
+    "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
+    "size": 134581
+   },
+   {
+    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+    "name": "Fragile Equip.png",
+    "path": "Types/Fragile Equip.png",
+    "size": 23023
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Items/Heal/2 Stars/All_Purpose_Medical_Kit.psd": {
+  "blob": "5d9f158d3a1c570c405443fc8385a7d4b2abc5c7",
+  "links": [
+   {
+    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "size": 347738
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
+ "Items/Heal/2 Stars/Cake_Mix.psd": {
+  "blob": "bf54a401bfebd4325456a8aabc6d021425cf89be",
+  "links": [
+   {
+    "drawn": "127ac246e772f9b0113d5c83be4db5aa7f20d0d1",
+    "name": "Gold_Star.png",
+    "path": "Types/Stars/Gold_Star.png",
+    "size": 2010
+   },
+   {
+    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+    "name": "Attack.png",
+    "path": "Types/Attack.png",
+    "size": 819546
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   },
+   {
+    "drawn": "de1a2108956135e3846fc53d3e99696c13f5c325",
+    "name": "Cake_Mix - HD-wallpaper-cake-colores-food-wall.jpg",
+    "path": "MDW/Linked/Cake_Mix - HD-wallpaper-cake-colores-food-wall.jpg",
+    "size": 378747
+   }
+  ]
+ },
+ "Items/Heal/2 Stars/Grapes.psd": {
+  "blob": "43071e471170eb00c00f859bc520a8df72aedc4f",
+  "links": [
+   {
+    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "size": 347738
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
  "MDW/Assets/Holders/Active.psd": {
   "blob": "bbe038a827060f72a4253ccceaaa66507e6021cb",
   "links": []
@@ -23138,6 +24500,10 @@
   "blob": "a02ae6c8920bd62aaab77015e723202fe15e26bb",
   "links": []
  },
+ "MDW/Linked/Blasphemous Blade - Elden Ring.psb": {
+  "blob": "51e320a5801bb5dcf2ccdfb3e83caebe351ade15",
+  "links": []
+ },
  "MDW/Linked/Bone's Loans - Layer 2.psb": {
   "blob": "2041762757cef014a5cbea13bb4ced9fef791ab1",
   "links": []
@@ -23199,6 +24565,10 @@
  },
  "MDW/Linked/Dark_Mind - Layer 2.psb": {
   "blob": "10eee5fc94e52c7518bd5a5718d0e839be30666f",
+  "links": []
+ },
+ "MDW/Linked/Dark_Sword - Layer 1.psb": {
+  "blob": "0a95e6352290c121e259f19e32ce77c6c7e090ec",
   "links": []
  },
  "MDW/Linked/Defcon_Panda - k8pqo4j-transformed.psb": {
@@ -23473,6 +24843,10 @@
  },
  "MDW/Linked/Shadow_Queen - Wind.psb": {
   "blob": "48e1257d9b07bf8d60c2f4cce57981d6a9b0add7",
+  "links": []
+ },
+ "MDW/Linked/Shiny_Knife - Layer 1.psb": {
+  "blob": "f3fe84dffd34449aecdb401982ee42e6d54f4c40",
   "links": []
  },
  "MDW/Linked/Sigma - Sigma_sprite.psb": {
@@ -24632,6 +26006,12 @@
   "MDW/Linked/Big_Bomb - Fat_Fetus_Tears.png": {
    "c0938f7ebe925196b7f193ccb14f6e41f6431dd9": 2108
   },
+  "MDW/Linked/Blasphemous Blade - ER_Icon_weapon_Blasphemous_Blade.webp": {
+   "e551516dc4e29d0815b2fa440887b5d790affd4b": 101298
+  },
+  "MDW/Linked/Blasphemous Blade - Elden Ring.psb": {
+   "51e320a5801bb5dcf2ccdfb3e83caebe351ade15": 6647608
+  },
   "MDW/Linked/Bleach - bleach_pic.png": {
    "f34deb90eca738e0927e07ba57259dec11f389da": 201477
   },
@@ -24734,6 +26114,21 @@
   "MDW/Linked/Boko_Club - HWAoC_Boko_Club_Icon (1).png": {
    "42f385224fe1445e01e9111f40492bcd6d123521": 339187
   },
+  "MDW/Linked/Bolts_and_Screws - Auto-Mat-O-Chanic_Build.webp": {
+   "f530afa999e32f45bb749655f99d3333d741bf29": 6592
+  },
+  "MDW/Linked/Bolts_and_Screws - Ikona_Majsterkowanie copy 8.webp": {
+   "655863bfcf0a840f4726dfb8b0ec6d7d7ebbfc1d": 5208
+  },
+  "MDW/Linked/Bolts_and_Screws - Scrap_Build copy 5.webp": {
+   "a1762aeba1150ab4a4d19eebb74b2a9da5e807d6": 17454
+  },
+  "MDW/Linked/Bolts_and_Screws - Zahnr3F copy 30.webp": {
+   "ec3a99868909040ef8eaaa0720cb0b7ddfc72421": 19660
+  },
+  "MDW/Linked/Bolts_and_Screws - pngwing.com (2).png": {
+   "dba1666fbc0d0d2de9d2a8ce29b69bd9df462b5c": 170154
+  },
   "MDW/Linked/Bone's Loans - Layer 2.psb": {
    "2041762757cef014a5cbea13bb4ced9fef791ab1": 1048576
   },
@@ -24754,6 +26149,9 @@
   },
   "MDW/Linked/Buzzo - Buzzo_pic.png": {
    "bb20984e64ecc1cc2167063fec9e277891e4dcf8": 49432
+  },
+  "MDW/Linked/Cake_Mix - HD-wallpaper-cake-colores-food-wall.jpg": {
+   "de1a2108956135e3846fc53d3e99696c13f5c325": 378747
   },
   "MDW/Linked/Captain_Spaceboy - 78-784082_black-shadow-png-fade-to-black-png.png": {
    "d934884928c6b17fce553c121965ab8c82a769ce": 4921
@@ -24938,6 +26336,12 @@
   "MDW/Linked/Dark_Nebula - l6xyhckufz261 (1).png": {
    "1b86c8fc9e111d93943a621ef727f7c04afe6332": 1842435
   },
+  "MDW/Linked/Dark_Ritual - HD-wallpaper-they-rise-dead-grave-graveyard-skull.jpg": {
+   "43f816e07e07a2e572f0d059b0e6e2a8855d1e33": 122011
+  },
+  "MDW/Linked/Dark_Sword - Layer 1.psb": {
+   "0a95e6352290c121e259f19e32ce77c6c7e090ec": 1048576
+  },
   "MDW/Linked/Dark_Tentacle - ABBI_bg.png": {
    "1e1470e8b6f4db287c7db7988a33d51f25b5f775": 27229
   },
@@ -24955,6 +26359,12 @@
   },
   "MDW/Linked/Dead_Orchid_Children - faster-than-light-ftl-igry.jpg": {
    "a5d42a38421fb20d7b1c0fd01dc32450703c4783": 404029
+  },
+  "MDW/Linked/Deep_Focus - Deep_Focus.png": {
+   "1d9cd2c7eba808262d1b882b3da4176ae0caf461": 450806
+  },
+  "MDW/Linked/Deep_Focus - Hollow Knight 2023.10.13 - 23.41.35.09.DVR - frame at 0m18s.jpg": {
+   "70de32f9413a541f3eccb61a320dd6624747ed7a": 134333
   },
   "MDW/Linked/Deepnest - saphire-oceane-roh-deepnestas.jpg": {
    "85b0863832d130b8490210d5cc51224d25011893": 1109313
@@ -25106,6 +26516,9 @@
   "MDW/Linked/Flame_Trap - Burning_Sphere.webp": {
    "79023ba6ca59e24269e4b1f57f137af830e3e507": 94
   },
+  "MDW/Linked/Flameblade - adrian-jones-great-flameblade-thumbnail.jpg": {
+   "f8edbbe833750968c75f11b3398b8761bf751b6b": 818466
+  },
   "MDW/Linked/Flurrie - madame_flurrie_by_canonescapist_dba2xgb-375w.png": {
    "b455b244a5465729c0fdba243e45fd039aa3c70b": 174117
   },
@@ -25129,6 +26542,9 @@
   },
   "MDW/Linked/Forsaken_City - variants (1).png": {
    "a9fef11a84b017eae27a2af3779c8dca61e79840": 264235
+  },
+  "MDW/Linked/Fragile_Strength - sadsadsadasdas_waifu2x_noise0_scale4x.png": {
+   "bf4ce232a1f773ef1436eed9279847d42cde41f5": 384673
   },
   "MDW/Linked/Frostmourne - Daco_35508.png": {
    "56a9d98f586565bf927650a6fb3b0fe66b0d6554": 307074
@@ -25310,8 +26726,17 @@
   "MDW/Linked/Hive_Knight - unknown (10)_auto_x2.jpg": {
    "ba4be7beb8fe2582fa1766d4b9d621c8105b7bee": 936529
   },
+  "MDW/Linked/Hiveblood - sasd (1).png": {
+   "edfbbd46f9d0f96e5d1baf7c637c9c027ef099e8": 420526
+  },
   "MDW/Linked/Holo_Defense_API - 7d85a3fdfbae334a56e20f7aef2b8610d0199f12 (1).png": {
    "fad5aa3bd8e3afee3ae4cf58b1c0a58d1a71d133": 3068020
+  },
+  "MDW/Linked/Holy_Blade - Bahl_3F_29.png": {
+   "ddbe41a24ec7c04062e1ea7a7daaaf970754656f": 3470010
+  },
+  "MDW/Linked/Holy_Blade - tb2-main-background-art.jpg": {
+   "c1865d6a28bce99013336db86ffa0d5589d69762": 191501
   },
   "MDW/Linked/Holy_Card - Pickup_Holy_Card_icon.png": {
    "941407707d4f8da5a1c26967c752f956efbe8412": 204
@@ -25369,6 +26794,9 @@
   },
   "MDW/Linked/Infected - Layer 22.psb": {
    "62443ccf2766da7e07a91ed874aec318ae9280d6": 1924438
+  },
+  "MDW/Linked/Ingredient_Desert_Limes - ingredient_cowgirl_0001.png": {
+   "200b5af8c95608dfeb75dcc33bf1885e28b03829": 135804
   },
   "MDW/Linked/Ingredient_Wondertart - Chef_Saltbaker_(17).webp": {
    "806d50d897068c86df0fb7d412cd25f291351523": 79646
@@ -25435,6 +26863,9 @@
   },
   "MDW/Linked/King_Harkinian - mqdefault.jpg": {
    "f81cacb28faf901b24d0fae667d9b27ceee4cb38": 17265
+  },
+  "MDW/Linked/Kingsoul - Screenshot_HK_The_Pale_King_05.png": {
+   "f3a8279a012fc65a28049b3e82055703061b9ea2": 2575471
   },
   "MDW/Linked/Knight_Lost_A_Lot - Layer 1.psb": {
    "cf3a504bfd0f4eb571ac2836eb017f27aa89df68": 6918426
@@ -25607,6 +27038,15 @@
   "MDW/Linked/Macho_Grubba - image.png": {
    "13152703396a8f214e625c673e582db74ac72d66": 212078
   },
+  "MDW/Linked/Maggy's_Bow - Collectible_The_Battery_icon.webp": {
+   "42ecaae354c0bdab83ff216bbb7b2a4852a19ebb": 130
+  },
+  "MDW/Linked/Maggy's_Bow - Req_Character.png": {
+   "8178b487e36c4f9cd8abebb1e3c8ecee42d1a14c": 1041535
+  },
+  "MDW/Linked/Magic_Shield - Magic_Shield_29 copy.png": {
+   "4b0fbd80736237bbac0689ca300c05258496574e": 2393297
+  },
   "MDW/Linked/Magnum_Opus - Croissant-PNG-Clipart.png": {
    "34f5a6f58d252c99b888f374970d7d3afd2b9e59": 904697
   },
@@ -25682,6 +27122,9 @@
   "MDW/Linked/Metal_General - tumblr_m8evvj7vEi1rbdolco1_1280.png": {
    "6c2cbb7758e73228a226abb1f89c6e8069c928c5": 190073
   },
+  "MDW/Linked/Metal_Shield - Kite_Shield.png": {
+   "e90d17fb0c5ae4f4b9f4fe17d983fd7a40a06d1b": 173690
+  },
   "MDW/Linked/Mettaton - 1d85a6dfc80d071a7a9429c74ea9ac70.jpg": {
    "880f73a63eb94b33094cb19bbc5d0660c8679ed0": 91341
   },
@@ -25748,6 +27191,9 @@
   "MDW/Linked/Mol_D_Truffy - OPWallpaper.jpg": {
    "7e52ee17b91cdcd2f991dbe4f798f7f78fc4f1f8": 475462
   },
+  "MDW/Linked/Mom's_Knife - SNmX09b73kXK2cxix7WdS0HzEf4jzIvbNjXJhmId0KQ.webp": {
+   "1611fa24ff34d1847c9377e92ad7ceed7e768de7": 23914
+  },
   "MDW/Linked/Monkey_D_Goofy - Monkey_D_Goofy_pic.png": {
    "746f170ef52b1ce18c41e06b3488ea5aedabfac2": 416247
   },
@@ -25783,6 +27229,9 @@
   },
   "MDW/Linked/Nefarious_Chip - Nefarious_Chip_bg.png": {
    "c31c5d1060b1b74e33c5852d25f23802a85fcdd8": 30295
+  },
+  "MDW/Linked/Newspaper - Newspaperzombie.png": {
+   "0d47b0a3339044f283638f3c472241ae70d26c1f": 350292
   },
   "MDW/Linked/Nightmare - __kirby_and_nightmare_kirby_and_1_more_drawn_by_suyasuyabi__sample-a96ae5e86a64a86b9d06bd9154ca093c.jpg": {
    "0481588422b86ca568621a0c098cc1abce5a40b8": 194198
@@ -25883,6 +27332,9 @@
   "MDW/Linked/Pike_Beam - Pike_Beam.webp": {
    "f8dd8efec4cf3fa0f01048db2d65b802c0e35f0a": 1258
   },
+  "MDW/Linked/Piko_Piko_Hammer - F7gaX6XW8AAXWgH.jpg": {
+   "28ec1a2cd768bcad4a0b5f7b6103ff052562cd9a": 133423
+  },
   "MDW/Linked/Pillow - Silencer.webp": {
    "9049feee0b867995bdddba3d56b3cbf4303826ef": 130
   },
@@ -25958,6 +27410,15 @@
   "MDW/Linked/Qiraji_Soldier - Qiraji_Soldier_pic.png": {
    "5317ace13b38970c2918e8e09d2f0c999bd2a72e": 551262
   },
+  "MDW/Linked/Quick_Slash - Hollow Knight 2023.04.03 - 12.59.35.06.DVR - frame at 0m26s.jpg": {
+   "41bcfb3d6a0e69f328b5e76b1e7157897365ed5e": 104932
+  },
+  "MDW/Linked/Quick_Slash - qs (1).png": {
+   "b713676bd21000ab043574a12d31dc8fc7b6912f": 476992
+  },
+  "MDW/Linked/Quick_Slash - strength (1).png": {
+   "7bf145d37901fb77ca129474ac1ceb692d0a75d3": 374958
+  },
   "MDW/Linked/Quote - QuoteCaveStory.jpg": {
    "4ddd06a8f973c4e04d8e608436e3cfedac94c4ff": 291532
   },
@@ -26002,6 +27463,9 @@
   },
   "MDW/Linked/SOMETHING - SOMETHING_pic.png": {
    "2e1c7066b6b5bcd215aaebb218b4029e1f9cf941": 619937
+  },
+  "MDW/Linked/Sacred_Heart - dV3AuU9.png": {
+   "377c70255242349f92dce5eb6161fc2e7465e650": 3841376
   },
   "MDW/Linked/Salt - Layer 1.psb": {
    "d3b2c5ea498bc34684017451f8634c70c4379ff3": 3626502
@@ -26062,6 +27526,33 @@
   },
   "MDW/Linked/Shield_Master_Pi - 46dbfc49cd769f2c467af0ebacbe488b-transformed.jpg": {
    "1c56e2ae5228cc2b3e87ed071fbc1ad1d0cb31b8": 175116
+  },
+  "MDW/Linked/Shield_of_Ogmur - Arm.png": {
+   "2fce469ecfa2a200c779733043fc64704d83812a": 1518
+  },
+  "MDW/Linked/Shield_of_Ogmur - PPE btw lel xd.png": {
+   "17037600deb0a85c726204971439741a7d4d3874": 902
+  },
+  "MDW/Linked/Shield_of_Ogmur - RATS.png": {
+   "a3ed7729bcd35bf85ef616e3ae35868d1f1798f8": 993
+  },
+  "MDW/Linked/Shield_of_Ogmur - its mine.png": {
+   "82a1ad6ab8d6a971995f51b98a14682b453e35f3": 1700
+  },
+  "MDW/Linked/Shield_of_Ogmur - zFNntHD.png": {
+   "8cd22d44223a5b4451a6215ff9567705dcb9d724": 1013
+  },
+  "MDW/Linked/Shield_of_the_Guilty - ER_Icon_shield_Shield_of_the_Guilty.webp": {
+   "78959d9104d5348fd021c3fab33f54da8c0a1bbf": 314964
+  },
+  "MDW/Linked/Shiny_Knife - Equip.png": {
+   "e73936aab3503ddb484675c1806b44bef6c04ab4": 4928
+  },
+  "MDW/Linked/Shiny_Knife - Layer 1.psb": {
+   "f3fe84dffd34449aecdb401982ee42e6d54f4c40": 1048576
+  },
+  "MDW/Linked/Shiny_Knife - shiny_knife_image.png": {
+   "e75f27a4e5e3649309ad817d56919271962d8cfc": 5588
   },
   "MDW/Linked/Sigma - Sigma_sprite.psb": {
    "ca30565b4f5b996e4d9b9da582d34f61c94a2d33": 1048576
@@ -26176,6 +27667,9 @@
   },
   "MDW/Linked/Spur - id3w2icp.png": {
    "7ca22bfa256dce5531131a23ab7b90dcaba1c36a": 6519
+  },
+  "MDW/Linked/Stalwart_Shell - shell (1).png": {
+   "2ae64f84dbb2512b8adbbd46647d1b5ed43c173b": 391352
   },
   "MDW/Linked/Star_Cannon - Layer 11.psb": {
    "cff43bc5369b38cb43e74d5c03835b692d6293a4": 6306302
@@ -26314,6 +27808,12 @@
   },
   "MDW/Linked/Sword_Knight - swreal (1).png": {
    "8a01e64f260b82df3713f3c2af98e9f0fcec6668": 405276
+  },
+  "MDW/Linked/Sword_of_Aeons - first_half-transformed.png": {
+   "cb2b91cd050a719c5a49aef4ab3dd096fdda5c9b": 2646370
+  },
+  "MDW/Linked/Sword_of_Aeons - second_half-transformed.png": {
+   "66500cf321bdc817f2d4440885358922c8946166": 474861
   },
   "MDW/Linked/Tai_Lung - Layer 2.psb": {
    "c01cb1b5c6c64bb50ad7f035f058346c73d0e7fd": 5069012
@@ -26473,6 +27973,12 @@
   },
   "MDW/Linked/Thorns_Of_Agony - Thorns_of_Agony.png": {
    "e36c25c288c71a8a536811c46f5d93fcdb1ccd13": 460683
+  },
+  "MDW/Linked/Time_Riddle - Background Ability.jpg": {
+   "fbaec5fd92d2dca46348f764966333a4cbce5092": 321208
+  },
+  "MDW/Linked/Time_Riddle - Background Riddle.jpg": {
+   "4cad94aa626cb36c0097901dcd52607baefc4423": 711995
   },
   "MDW/Linked/Tomorrow_I'll - Layer 4 copy.psb": {
    "b6ebd55d9a1d1c2460bc342be20c92e4d0720844": 6347984
@@ -27161,6 +28667,7 @@
   "0826eb25bceb43d3db059693499be817a7dacb98": "9b6a05f1f9af79f0b078609669c67f51f81f8544",
   "08f4aa1c664d5d2c4e19c774f329573c0aecd7cf": "8e82f64ed52eea4c3b2f0da9748ceb9a028166ee",
   "09a2251accabc42730c41e42488115dcdf75166c": "3f941b20a8a226bcb5e8d0d8caa6f477837978de",
+  "0a95e6352290c121e259f19e32ce77c6c7e090ec": "ebb9b165d71a5c02d8703398818648a0464d0cee",
   "0b28f6d2c87e26b19d2d11d5bc44555a727126c6": "336b004c5ca282a6893c8eb2d8480c29220a300a",
   "0bb329fe8a0bc80d5f9488e9291ec2b1f3c5aca2": "34685b4ddf61ed95cdd0ef99ae6326732ed13d88",
   "0bd2a074f6749ad19f42e9ceaa9d1dbfb630a882": "903be605742acd9835578785e434581e54712a41",
@@ -27171,6 +28678,7 @@
   "0c6f948464a4f8f0ff51db193694c01ad17114f9": "68f23dcc389226759b062eca8947a079579c6b3b",
   "0cad8a16ff325e16de7c20b09f795d66f45c65f3": "f7332af3be175c3f0f52789b3b9f46c727abbd8d",
   "0cece5756dd6ce75ee6559f42d05864081bf3e5b": "c52d8e5829d7deb51c979e1204bd2186d7874f4a",
+  "0d47b0a3339044f283638f3c472241ae70d26c1f": "8c9c56fdb795ce9f4549abe256f6c062c9522f6f",
   "0d94548b123497ed7d06168b63a96b7256d2bdc1": "52cce815bae3e56e88a08311924937aa48880301",
   "0e1477072e950b593633263ed8b43fbc0c8cd649": "8178c1467b92896acdb478336c008035acf3fcd2",
   "0e7829d101d28fc2b62d197c6eef5a4df72738a7": "c54dcc822512ba74f1cc91b2c6a53f86b6ea23b9",
@@ -27204,6 +28712,8 @@
   "156e6cf611e7af358081e762d1ee6a39fccf955d": "af50183df9181c2657ed85f9a61ee7c1f881c3e6",
   "1585bc012a8f4cdca4296b7647069a5138b4679a": "b8b51529a248769ce6234577a155072fc76c6613",
   "1602eb05d97aab83d8695718b83f3729c9855feb": "e38a9b8efb505d1f1d83824da948a25c320bae2e",
+  "1611fa24ff34d1847c9377e92ad7ceed7e768de7": "603c107571f1e5fad14d5ad48a7623553054da9a",
+  "17037600deb0a85c726204971439741a7d4d3874": "759fbc17c4b077786efe8756b676f593be6bf456",
   "174c4d910bad1c3754b12592dd635a1501e36b14": "9f8656014a33f90a4794d06e33f2cb2fbf51468e",
   "17ac034030a398c8eb0e1d5c6a5d86fd91817471": "3448370196384a97b2b38a12e24c133975c620fe",
   "18070d5961d8de2afe3e832bdfdf03f5e7b46529": "4015ba5a24cdd3b94ba8c08ad86231f3e3387139",
@@ -27223,6 +28733,7 @@
   "1cc7b58c84a683c365e2cb315898ae7479f58c74": "a0337741f0460aff8280da2c8d6f41b4eb4ec601",
   "1cdc1b7145f1f3e2b3062bb6b75ec112f822eaac": "ff52f9dde22b9fadbc7e018b79f59e9eda2f575c",
   "1cf0291b4c60b026724520476fdd36635d2eea9e": "4c14a0a973bde905f70886dae74adc0de22c7052",
+  "1d9cd2c7eba808262d1b882b3da4176ae0caf461": "7d269638cef45a9950bc5571818f12d749896eef",
   "1e1470e8b6f4db287c7db7988a33d51f25b5f775": "53a33449dfcc2d6d9a549389f2248a23c7982c81",
   "1e6d360ed787163a4e543fae41452d18ec1b310c": "421d62e2b817019d69818e60bfeafee6b84d8a70",
   "1ef1288c5954f6777e7ab4be4fe8547d945d5361": "71c57d66af0c2520487e19d641e711eaba738c65",
@@ -27231,6 +28742,7 @@
   "1f26ddeeae02185ba27620ad4f09945bafc4836c": "5a226f370e2314e1f54ae95c7a118218dd77e1b2",
   "1f3fc23336d814af5d8d17cebaf031c612fe5c8f": "e6e5446537d915ea99cea5923c1541b4561f2526",
   "1f984acaa4bdf1ee77b73c0f48440723aed20d28": "155dba5a576f870c3eff657ca102bed6a44f8f0e",
+  "200b5af8c95608dfeb75dcc33bf1885e28b03829": "1347915b188025290e32b78d55639ebe403ff2b3",
   "202662ba374d093a243f706d469f7753cca0ced1": "badaf692828482106800552b1ca3f867fd08cb00",
   "2041762757cef014a5cbea13bb4ced9fef791ab1": "a855e9729b536ddc45d9aeb24583828e61567325",
   "207c865da683edcb8fcf270291bac1e1c1fd7cbb": "2b01715ff62650fc0af00ff6f86517346f6641cb",
@@ -27257,12 +28769,14 @@
   "28c9f3ee2884f0532d6896809c280464e51fd7fa": "a2150b82e698ab1a511ea5141c76bc263a03f161",
   "28cf3d72244d990ee15e06045f9f1ad96c6b357b": "e0c41db976744ff061ab11b3b0258399c09c428f",
   "28e52e46ee0615ac02edbd3fdeab983376bb4736": "ef6c131ae2b9d333929714059e2e44a8f89573f8",
+  "28ec1a2cd768bcad4a0b5f7b6103ff052562cd9a": "63ad260f4fa59fd88128f18cc341b29847bd65b4",
   "29a3e3ca8e31d9c8f880462ae620e7db7a0e2ce8": "d64ad272c710c64d720d6e797098ad9d5d02a037",
   "29e51a39dca296bf86c0c46b712cc069d4eda673": "7570ec54f4af123cf7ceaa0213f6ba5a2ef76f34",
   "2a797334e28a9e027bd29b60aa5d86078665c177": "336be8b037fb7b629978168a43419b02029f8335",
   "2a7d74fc470b907e13f0679d1fe39bbacf9af115": "52e43cd694d308f44bdbb9ab57733a483d7580b5",
   "2aa8bdcb4ab94bb6bb2df6b77ff61d91a06876ec": "06795a8ee2c24f85f5456246fd5a71c48bec2a80",
   "2acbc883236dbf71fdff120ef19d38f54fb37997": "b42852e199e6f944879592109515ce9cf390e7d9",
+  "2ae64f84dbb2512b8adbbd46647d1b5ed43c173b": "62f383f36aa26baee8cf7304fcce71b776dc8001",
   "2b0f1599df9ca45eee155a4842432089095ad470": "b838f68de4b0a4660175279aaeee21bb3feeec33",
   "2b10bc1ffb4a1c9539d22eb1d5afae08a3626c1a": "619a86c52ee535dfaa5ed0399b542e5a56aadc27",
   "2b94cebb1cb0b7a073c0b405b61835fae3369d87": "37c074659cb9530f19a14973c9ecf100ff84ff04",
@@ -27276,6 +28790,7 @@
   "2e5451bac311e5834b8db9f06cc9991d0f7c0669": "376f9fa9687d33b878a11079f92a1338d53b0f9a",
   "2e72ac90cab2285fb6fafd909e1a5aec92956439": "73e519fdb6d4cb6a350fb8073219ee5cdb2fcacb",
   "2edc618329b5617e3555ec624a532bb93cee9be6": "6aaec6a083ed1f123f6e6cc52543f0dfeda9ba0a",
+  "2fce469ecfa2a200c779733043fc64704d83812a": "e45217abcebf3ade8ab9403a6d2ba0993338d364",
   "306d8cb25e5ecb143a7d6fa6b7ab3ea2c079dabc": "a4fb508e7b476b9f4bd322aab958d50c0dd4f02e",
   "31801c6ce1bc9ca715f58473db5b7d4f5b98f988": "4f788b4c110fd9e7dbd9100a78f79cc91beb6d91",
   "31e3afb2b7f6a112eb4639f95e94891d2f748b08": "c8609ca3f760e11e182093e5c837aed108fe0cc3",
@@ -27292,6 +28807,7 @@
   "372122e624ad587ed6017cf2ca070737ffdde055": "26a980969e28521f8d98f46d7460754d35195979",
   "376b90a1b0a95a3612b5f42819e12b80f21b482f": "d2bdc09313c5307d878f80003367ef16b4438358",
   "376bfd4b0b0a50d1189ebe51ed3dfa26c8c27909": "28a37f22c56bc7fa6f4e75c0e74a742e0d852f3e",
+  "377c70255242349f92dce5eb6161fc2e7465e650": "60d2fb045a9bc26b4222330083843c1d49518b34",
   "378f75b1f39ce71b2badeab1466bea30a88d07f9": "1240e05d51a48647c630bd4984f268af9919e88f",
   "37b067fa0f94746c154376f3aa39d05de61669e9": "ad79d8fa999afb6fd8358e71a8d0112f518e85e0",
   "37cd7cddb68f1ceef51a9cc37bc6ee52561f216e": "488063d4ef8e4942d0156d5f2b23defa7b1ecf7a",
@@ -27315,13 +28831,16 @@
   "3f58b50b0ae8aa9229d8c40f7637a84accce9094": "1d84bde78f4f74d04fe91331432d8ab159508330",
   "3fd3e3566e94d554747f6673d126bece0dc5db09": "77c1b564fcf0b9358b0bc9221d647591baefb135",
   "4085c54d4656fcf7b0d0de6c215bc81ba5175aa5": "6421e4493bd37fa08fa3d79262e04c8ec7f72f3c",
+  "41bcfb3d6a0e69f328b5e76b1e7157897365ed5e": "69046060e9468d3cb1dd5990e9d1c6e129dcdaf3",
   "41c3d06631dbb2832b3f56145b5c3ac4648487db": "123a83a6ca523f1a8d851163107c826384e07bdb",
   "42202bbec256fcd7533b9262b980906a0c142b27": "fe7c2c517e7d0b720d9cd4c864b96f8cd4cd1ed0",
   "42281a3d134392c7e7d68c450cd83cf5d49a7935": "f2f40239331e8a04fca475c85f8f327ae950a1e7",
   "42bd6dbfd8608f7fdeddb72657dde2d4ddb47106": "2134bd1ab1aeff154bbfbabb5d40616489d83905",
+  "42ecaae354c0bdab83ff216bbb7b2a4852a19ebb": "71d405bed46346ac0bfe95ac4fec9bf5ec584728",
   "42f385224fe1445e01e9111f40492bcd6d123521": "824c5ef84f70207e665876b51ca5f128b605117e",
   "42fd6c57a04110a4ebf20e83c43d051555ed6b83": "4b8de329ea6781571f7fb2b894e72ed6e5ecbfc5",
   "4334b66b41c6903be33cb0381ea0a875488d0952": "b7e4121bf162f7cb35f6d062b58166291a525600",
+  "43f816e07e07a2e572f0d059b0e6e2a8855d1e33": "1bfd5f2d3dcd0a9c34bf84c9fb2f9e430ca91640",
   "443e840bb32e849a83d885b9984007b2ec689418": "f9320a442b0e0b9a7d27fe93499bb657f8207d25",
   "4478d25c3bffba1dad50c2debd3f0591bedb14b7": "0cc1efdc16ab5d9b0a50af0a61a550d1f5f7554d",
   "44f3c4636f32afe7fdb19f93da95df4d147e067c": "4deafd0264c02df11febeb571d1aa35c9a08fd91",
@@ -27349,11 +28868,13 @@
   "49e350121052dcdec749ef50df1a2703fdc3db43": "ed52e543a4fc74ec1bf5072e59f3d2788c39354d",
   "4a2567ae96476d85567de719d20cbe50125aa2d1": "63b98f3b1041346fb4e9177d157bd3eb544abe28",
   "4af1cdf7c2db14b1a25577f09914812b5dead226": "8eaee6cd2bf851e2202ebdd4a95a4e7bcf340ec6",
+  "4b0fbd80736237bbac0689ca300c05258496574e": "92169038e1ef7b5627599c1f9526162fbc40c8a2",
   "4b0ffd4d2cb1acc11f8a5add65115b9c49d21759": "017486130c3bb864ad51281b981fe534aaed4beb",
   "4b75e7f841090da751c621d07030ee5ebc7828bb": "ad6aefcd063c639aec7bcf573b94e9032686c17f",
   "4bd977fdb629fc66b4f845db264accb62fc0123f": "9a0474f30c3767d267feefb30e15a250aa727fa8",
   "4c0615e161c57ab93f089141d9c2b1b1d3fcc2be": "c4a34bde2377e42eb9eb3dd125b89c70a9b3d655",
   "4ca0bea88c5cbcf6ba3f4b1fd7c527b2159b798f": "527aa79dd090d8d37a0b3f63f4a3bdac1078c564",
+  "4cad94aa626cb36c0097901dcd52607baefc4423": "c7a21664baaabf8be8af4c383af174b5855c51e9",
   "4cca2f49eae2c26f07eb30d2b3d308fb4cb76810": "ad34dbc66c4d43c76fba7bb090f6ee67ed7e3f37",
   "4ce68a0307267fe830c4c66895bddcb05d5d8595": "e532eaff2247f18b9737f42988c1e135ced34add",
   "4cf9a2c9e15169d7e9ea01fa02fb5443cdedfb8e": "910d32dd873a3f92afccd647b7f27a37d9182425",
@@ -27367,6 +28888,7 @@
   "4ffac8d877205e0a52a30efb40648a470ddb7845": "6238606bdc1456203e29c862b185348e0d97b944",
   "509295cb38a54d7eeae631be001b8ba7fe6822cd": "c9ed0b2a31671e0f29d82f12051e1b3eba8ea286",
   "50a95f2f07f7db59f073a5583658c641e99eed43": "b542750cea7d8a5bd44736f3f55bdce112cfb3b5",
+  "51e320a5801bb5dcf2ccdfb3e83caebe351ade15": "00a64814bb308d6ee4e57b71447a4356c5006c3d",
   "51f4ca65e2d2667f2668a0261e9c75b285c4ac32": "6abb1b587245eaff49924418a82a7dc39b2a9521",
   "51ff613285da9abf3c8e56a4e20dc7e0ab317f26": "10e251d1cc547440d70ebfc436dddbc0360cc9cc",
   "522bb8b8ca06a0e1c53168059aef4ded109e5141": "7dadf5cae5d76e4d70b544bfcd03fb1e7007b3d0",
@@ -27426,8 +28948,10 @@
   "638aace289cf17ddb0a8a237c864b45dd9307706": "aa102fbf98f251fea0c5ccbc357fdd86404fc643",
   "63c477536867c3aa5ca86cc53c97a0a5dd6d03c1": "35b69fb8ca12d21d3a906936954c3b4d4396fb10",
   "653df2a2e0c425610292c1df64597132645204c0": "ab859669963427a87c31cb172880415b64c63fd8",
+  "655863bfcf0a840f4726dfb8b0ec6d7d7ebbfc1d": "002985c9d4226886f70227dcb78e052599ae3011",
   "65dd8ec69d1b4ca8832d062c02e67b4fa142d576": "05f7d16375307aae0b86c946dcca859aff2ea704",
   "65dfffdb65d7d25a26bd6ef56625621267b9b316": "5a4f673a81efc7e69510302da109d13bc5812d31",
+  "66500cf321bdc817f2d4440885358922c8946166": "5009c31cd0a71132525d89dd00513bff8dc97c10",
   "669b8098e1b6b35edd8c65aa04645d67036cccf1": "832f8c220f0db15097aabba4047d6ee366c337b0",
   "67871f155a2c04feae714813c1d6d2bc69d57ba0": "36eb491dca58dffd10f6fa592937ce8c3f915116",
   "6799ca673cd2216ecbcc7d6a69e04ed89baf37c9": "c528a5f834b71c85c9446381a7798a0644a35b51",
@@ -27470,6 +28994,7 @@
   "709aac619071ea7831922d2e262582f1be974ed9": "42531adb03897e7a89e5b8b418824ed480e55ab0",
   "709f4b8a84d926c87aa7a844595abe1e98bf24a6": "3bda9545a332086250b6b100d969f681056093cb",
   "70af758f4d24324aad4fced9277257f6bee27840": "c7871f673c8eb97d1e0474b4045dc34b8f9bbd22",
+  "70de32f9413a541f3eccb61a320dd6624747ed7a": "d2c3ed6de70f54c4b6ad13a6dc710743b9896cb5",
   "71a64483df379c585779a9498c97156f29ad597a": "3fe65bd6792511346c7c80327563dbd7b203421c",
   "7205125c4bacb9240b5c58a26077881347a524b1": "161e9ae833960195a7f7f7be4e352c6c2a8c6b6f",
   "726b783fe2e6e43fe7177f34981cab36176be090": "5c0c98fd24ec0065140c18398966fd976aba3e14",
@@ -27491,6 +29016,7 @@
   "76d2882abcf37cdf4f8fd1ab1c4eeae9a3fd2092": "c688c4d2f87ea8c482d934becede0fa17deace7e",
   "774032dfce933811b580b92f5682dbfed2e4e4be": "fd5b4e1c6a966799b689680897605ccdd1b858fb",
   "78171424bf635eed00a79935882ce10d15e8ff2d": "131821bcec8e11be8bb4b131ed540ba53f15e410",
+  "78959d9104d5348fd021c3fab33f54da8c0a1bbf": "4a59b4bfa2b79482bce0056300beddc74cf9cc1a",
   "78e36f75c860b8c7e50f664beb1d40bb68d22f27": "7377297c8a4c719d95c9bda1b75d3437e4030557",
   "79023ba6ca59e24269e4b1f57f137af830e3e507": "13074b05116c8a3e850447f044583b1bd527e669",
   "7979060620e45fb0c9d5a329949fa93246b260a8": "3859e1446cf5ed18f6ca779e24905cb8597a3b88",
@@ -27499,6 +29025,7 @@
   "7a1b10bd8e5bc2752967672fa37350e0f2b96ba6": "0cf14bef3af8aa0304d13d36481fb0d071b069b0",
   "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f": "170df30389319116a536a5ccabdf9c9547f49731",
   "7bc94297cfccbdd959eb79b2c3d43aa8309ef654": "8d22013264ca07090e5bcabf519e030b510f1d1f",
+  "7bf145d37901fb77ca129474ac1ceb692d0a75d3": "28bfca7582047784b283f8538921c259abb4c7ce",
   "7bfc2fb6b51bc97d1799e4d09f78a66eaf647efe": "41d90180c442350007ed7b1273089ef4df59104c",
   "7c16930dc2be7eea37e8df342ad4ee7a40cd482d": "3746ec3b25733f2502758a94f5b112ee18e32d0f",
   "7c23f2e003ae019664a0b735bd3f8b33efa27e52": "3239ea3082806b071751fd3e6393c46fb9715dd2",
@@ -27518,7 +29045,9 @@
   "807bf6dd067722ab6ba8cff2d1f47c6193ebe9d8": "2a6ed732c8d81d68fcd852d1bc7e70ba5348be75",
   "80dc7094709bf69241fe7542f9c8020541d97727": "b7e64e0f4601b4e61855ae62a28085a76cc0ee3c",
   "8107c213ae28e6057a79c361808efbfcbef43dd9": "a9d2eecc070c01899bc9d94755258fde178c0e35",
+  "8178b487e36c4f9cd8abebb1e3c8ecee42d1a14c": "91cec389f267ad270340644678e3135672519dba",
   "81ef19f8b26bb131a75b67677c6561cca2999fa2": "914f9a7fee2c7be86cd81fa394f7d1fbb6fe0571",
+  "82a1ad6ab8d6a971995f51b98a14682b453e35f3": "e67fb357977d57b3a1cfd623ed9f46d334a42a4d",
   "82a934af10114cc53c2479f9166451514e0b7db4": "bce06734a3d64ac367fc65ee2274c88fe72cd043",
   "82ca0a125399b6ecf76dde366c86211bdb4ca735": "ad5eeec8c47ce2199f6e2c42a1f79100754705bd",
   "8314f9499b658710c84f74e3f42f50c920c74bf5": "100f994d98e170fcae3ed9d5f10f70a6d91955b9",
@@ -27557,6 +29086,7 @@
   "8b6652180ff715ba344e20ef933b3669a4a8ab1b": "28fd214d17878d5f80d2ef0a889ac65f54157304",
   "8c2c969ad5442cf1e54932c78ea8405057aee916": "bc1b697c32bffc22bca402aeb8d6b51e69861822",
   "8cb4cee3fef12d7df87b231b20895a92ad8d4d84": "398a4108b93b3b4927f9fc7f17c6f9ca91665373",
+  "8cd22d44223a5b4451a6215ff9567705dcb9d724": "d7d894a95821b4f1775b32d7bff56b03d66dd412",
   "8ce7613d2c945b94095a3a56c5f517c6de505d4b": "7bbf9f00b9ee92a26f4faf1559449f0b7bca52fa",
   "8d2bd54fe7667a888297b0d472f419548e2277af": "1436c3545b80f08953385e663c574b10d2e99ef1",
   "8d9149e42668a9e163e27734212d1eee69cb502a": "df159fc136648ff9eff96f688308213822a9c1a7",
@@ -27611,6 +29141,7 @@
   "a0afc3342ab2cb33840797eaa452e565d588b491": "319ae42072c8599e218bd289e0e1e9a4a79c534a",
   "a0ba7e466e583caf6b8935160ef92f07f8b2113c": "89054fe92baa379f04877270f9daf074c71057a9",
   "a11aaccefd483cf429bb5d932cccd3fadf1afef3": "3909808247aa42101119e9b8ea04d844ca408ce1",
+  "a1762aeba1150ab4a4d19eebb74b2a9da5e807d6": "bc30363e665cd92cb82d148c0d4fe679e06b7dca",
   "a186026978a8f61c777c2fce7037a8cd7a902a73": "e1381622721ac6147216fd87f9868bda8b2d5d39",
   "a234f6d6c25424c740844761bc7e101d8da45556": "00647f98b4e2fa9c7b751c0fb5fb13ff987ac9fd",
   "a24932f505bf62b910c0c74f692ed0217d808fd5": "a452ced58770e2012329047a6f10508e40862677",
@@ -27620,6 +29151,7 @@
   "a3807e371268781739908fcce7da1b465e2c3cb8": "332f2f349ea8a8473a848057417a20e9a2b1764d",
   "a3928c21bef7e0a6067e7c38a80a99dc2be40990": "399449088fea9e0138ee5a7b1815b769c5715f8c",
   "a3cc6a618f57f5be85131eeeca9a8e416bab76ca": "c9bcc0f42404714119e8f078c6a28f43b2a3e895",
+  "a3ed7729bcd35bf85ef616e3ae35868d1f1798f8": "1f5e24211decc73d5d651e994d2bc4d50fbe6d65",
   "a427e2b1118a6c6596baa4b29c7b00a863168fb2": "7a5754533ff935b69e6b818ae6098f0e2df8b678",
   "a4d9fc35933cefba25d0d0c9d1be95c566958126": "f80ce5406d2fd5d9e5012fbdd5662b8f3d266084",
   "a517d9033160c17485bae365eedc041d389cfb07": "29297d606ac895961902a25f044dcb109cdc5b62",
@@ -27672,6 +29204,7 @@
   "b67e105a6553d642eda92cf899c072f11a9cc343": "7418b6df02365b832c190db4007035d906cf5ff4",
   "b6bf4dc0666bceae4687e598c23da0ea28834d61": "c33578e37021986f8048382abc3357b9ceadcd97",
   "b6ebd55d9a1d1c2460bc342be20c92e4d0720844": "3cc2ff0e83f485b74c5388b5d963aaed7dfa1b79",
+  "b713676bd21000ab043574a12d31dc8fc7b6912f": "49d7392172cb81db1b69d076ecfdc6380eecf855",
   "b7583e86f82d7e306b282d55eb10455ee8ae1b9b": "cda8802aedd827354994cca512b506903cb2b8cf",
   "b813ef29ccc775713c928a254ee241725ba2a6db": "fdfef65c7e889544a132db87dc990f897481eafe",
   "b84a8eacbea01a1fedf352b85e66256f5b4234b6": "de7e53eb1a439a57428441833fe6d3ec848f1d21",
@@ -27700,6 +29233,7 @@
   "bdd59a805b6ec2c93c42a17bdcbe545a8fec0381": "efcb4521853c03f9b313c03313298f95002b2dee",
   "be2a964552d0a0a61d22f804f13f839477fd02cb": "f837e370daa57b00507f76fe4eb51bde7e7fa62d",
   "bf02ea7f0e702b2eceff7bebd9cd82f38d3fe6b6": "4bd796581acdedbd841f8522a903e0718a576773",
+  "bf4ce232a1f773ef1436eed9279847d42cde41f5": "eaf3d8f4f3ef8d27742f43bb17eec1f839545b7f",
   "bff8b3e6c5472cf343c6a1b5947d009930463882": "85e4017d19affa4d9e2ef0a1e02588543cc1c473",
   "c01cb1b5c6c64bb50ad7f035f058346c73d0e7fd": "7a7b94c31c84dc719847c78c6f1948ca932cb128",
   "c03a3d637499808441b21c2fdb16742adcc736c4": "066af00421d3b3a6982d66d7813e4d9a925607df",
@@ -27710,6 +29244,7 @@
   "c0f6823ebd8b318dbbb78656bec80dd8ccc20993": "9cfec0f1f9c24b743d2353e804ea5d994a6fdc6e",
   "c106c639ecf7cf72f678b4e693fff736b7865c91": "339f5644b945793918b9d249d391d272a26a9a35",
   "c1154050822af6dc416f19ab2f5d3ed7034de42e": "3898162cf40154e4f27bf7e6fede331052d1e0c7",
+  "c1865d6a28bce99013336db86ffa0d5589d69762": "339e44122a416b0067704a30e65e46b31b1b5014",
   "c24d05854109f425614c6799a70fbae18441f274": "4a5170b2bf8e88cf70d9efcf80eb2270bbd57065",
   "c2ce1433a3d3dd4d416bad381a7cb3cbed207734": "12faeca9a6c80f386d0d5d2dafc7a8ee4b4d26e7",
   "c31c5d1060b1b74e33c5852d25f23802a85fcdd8": "59eae547bd2eaf35a6b81fd967ac97e57b64ce2f",
@@ -27736,6 +29271,7 @@
   "c984c906daecdc977551c61c4b43a5d062bc4c69": "8ce8066e700d2980834db5df4ed6b0f4d43bb339",
   "ca30565b4f5b996e4d9b9da582d34f61c94a2d33": "8a1a9eb30d90129dd1363718912a210358f269b2",
   "cb2a9cc622d0231f0bd9a15fa2e7dab202546aa6": "b53166656702a38b9b76f0ef7927b0eb98170217",
+  "cb2b91cd050a719c5a49aef4ab3dd096fdda5c9b": "4fce485bea1cd4c01f197e2416fa5a12bb1b77e3",
   "cb5fa0ef961707a9f30feafebccb8bc348a07e89": "29ef5bacc3f0b74d411df9f14b147d9830a842c4",
   "cbee2036415637851e7b9a2b71b34a0f86430aac": "2f509f58cd67d1f13095c2bef4a2c47b9a8ee632",
   "cc0e92a74826dfb5f35bcffcb03707a52a678090": "de1cdd098fa5e8e10df8adf3bed408afc26e9e04",
@@ -27791,8 +29327,11 @@
   "da7b84209213b8b062115af7ea38ecbfd1ed7150": "aecb79e99167eac7a3d3eb5dc3522aa4331e535f",
   "daad93a47ba57cd9ac16806b74f4ec115cf11a03": "58c015b68066282bab084d292f9cfab16c6adade",
   "db4c4cfd7fdc8cac2e601fd137a475daf2433f84": "3df2a4bfd25e03700ce4d3b376f414716fa60a62",
+  "dba1666fbc0d0d2de9d2a8ce29b69bd9df462b5c": "75abcd00dfe23124f21a0ad82fec2efeefaf960e",
   "dbfff361a754425904028d9b13c38de72467fe15": "5857078ee99140cd700518091d78ef141167d3b4",
   "dd43dc7213eb6fe626b4a551aaef089a3067929f": "db7d7fbf5f4613745d49bc682656ed5c20b1a920",
+  "ddbe41a24ec7c04062e1ea7a7daaaf970754656f": "6260e0b099df2979a382810efcc95a6b91e96d12",
+  "de1a2108956135e3846fc53d3e99696c13f5c325": "7c41ddf447e87d9a7392a5dad17e23e4438ca6a3",
   "de33452982a6e84b27a8d992d2de69cc16ae725b": "557cc3271ac248ab6536bf0b662ac5da4a59ed7c",
   "df22addd68895b428f7acb50b628bd7e638b8f6c": "4fdc0bf00feac153cffc18fc24c8ecb040991d0f",
   "df2881dc5facbec75ca57a7bb5c3908d5d503a4a": "fdc37f112a99f54cd67c89f91b89632a6314da65",
@@ -27809,30 +29348,36 @@
   "e4eba2315225a0d2aa23619d72a7c3bc31efa471": "baf12f43a2bfa965795b2ef9d73bc5c1a64b67da",
   "e50e65a9303e43c1cb089cb3a21bf3cdcde23c94": "5e814aebbbbeb04b2b5be1d8f41411d83bf10e39",
   "e52e87cfd7c07db8f181df774b4cb4f967a57b2e": "c0e509fe00d355f0e078a706c21a38cbf423383a",
+  "e551516dc4e29d0815b2fa440887b5d790affd4b": "fbad860ddd37caf25ecfd6df1a1c75c362db0202",
   "e5ba47536e8f4b3ef08480fc1445e75a07636826": "4f9a6c774c26627cf29b55d00acf967f5ae0f535",
   "e66aa78af73095c9944d4b0fbe5f738621844012": "bd3aabc45ceac4d32822e0c41bb6104cdd75f2c7",
   "e6d082f1c60c9d01343f5fd65e323dde36fa3f22": "b3a66abaad15fce53376d614b57935268cd009d1",
   "e706d36bed5923997083d4180520d3de85497b1b": "67101892adb33bd047befe0f04d9f745046090c9",
   "e73021c2b59d36928edcd2e47037f48a8f5b5020": "7918e1114947c86fa2e1047407cfd1f6aecca0ee",
+  "e73936aab3503ddb484675c1806b44bef6c04ab4": "7e102ce02135c8ca6d2ddfed08e903b7edaf9508",
   "e74b2d32cfaecbfb15487e2df9467f9a6bf638ad": "aa90e1feb15b1371ab43a71a41385428f8c9a5b9",
   "e75c478882cdeb56eb426580c655385891b1af89": "3a11668f258f519958b405e1d2a0bf0c9b93efb5",
+  "e75f27a4e5e3649309ad817d56919271962d8cfc": "197e72aca8d53a1b9245af47bcc5deee14dc57e5",
   "e7a3ac186e9138bc0656274583dacc170eaea271": "6db4070e021ba553682b02bf322d1f1bcc4c1b25",
   "e81ecb3f92876de1ffe1e4b3dd7c8b5ae441c012": "ae475c0ef81930aca5f0c2cdc66aa3597887f1ed",
   "e81fa760134c022f978b5e38273fa40448e2f4a3": "0fab3c8955d364e630a08217087af38606d8a4af",
   "e87b04d0c185553631fca1b1a4ae64ad2176a440": "20b8b8e8d78ef157eef30e74fe8a226f1ef16682",
   "e8cd08130f37632d69f8003e05703a485f1eb53c": "71b4eef04e055ebdca7dabff16d030273ae0d743",
+  "e90d17fb0c5ae4f4b9f4fe17d983fd7a40a06d1b": "f0d4c0f239ee06d8dd5a2f90cb2cb95078d07697",
   "e9aeb379102f0d16b431f3cc12057d34a90ee288": "d6eb646c2efb4eeeb7da644890a2a8c27d1aee06",
   "eaaa122045020ed053b44113accdbe21d36e5b10": "fd44fc3229bf78ea35a8634338e9572edaff64ae",
   "eabbf0c6e0c7e7e219d46265df0e6a34d10b1f0d": "9e0d446e34355ad692630affadc540a87250c380",
   "eacf40d44556d7a64c7d12b03d5a73d8d0a724ec": "2234dc27365fa24d98063ff4085199a102a2e64c",
   "eb99c7c1eae0df72eeda38c3bfb9082164aee35b": "01d6b2836f912954e5021aa02d2f17320303cf85",
   "ebf35b9b2935eeab9c3066e64d83ee3b335da741": "131b4398fb07f641d39143ca9174adb1ce7d066e",
+  "ec3a99868909040ef8eaaa0720cb0b7ddfc72421": "eb84ef1b9f8a31ae20c192bec0b5ca578aa930b1",
   "ec60ea6c0df13521b19103927b8e1e505faf0954": "47c815d88a5cf3cf59eced401e42fe3b31485040",
   "ec750c1b2c18ce95fd14be620a8f4cf0364a3561": "accbd3a0fcf0d0707c1114170897b7d15b7edcb2",
   "eceabfff26225f57db3f3b0567098dc8204c80aa": "c27b12ea46da391f8de8a1624b039d3fb8256362",
   "ed1616ba7fa4b36e4fd413ebd45bc94ef16bd69e": "8a39a2dd3e320af4e628553710d700896c14ddf9",
   "ed17c5f29d3a79b937a0ad2a005d7a0f2369577f": "38fea65a3a01eb918cd1f5eb68b963a7fd9277d7",
   "ed3f5da6a8a082a25b50d59e6e606f117b8e5f1a": "0855f58a4cc9281356e6e160d3592d17eccee53a",
+  "edfbbd46f9d0f96e5d1baf7c637c9c027ef099e8": "765af4b09d63f1246a262a40ffc5badb93a52b32",
   "ee27ce8547fc6aa8f23728137f6f09ccca8773aa": "a91ec693a3c8c3cbef4c8804f9b6757f78a0c3b8",
   "ee499239dacfbe892205f841b828ab35cf894046": "75284302c32da4f37434462bf6a0db94cf9e90a7",
   "efc6a12ff0dc92ffeb2228e542386277dc520b4a": "092e74d5816992881ffcd30676ee895fe379d43a",
@@ -27853,9 +29398,12 @@
   "f34deb90eca738e0927e07ba57259dec11f389da": "83e2dd2c27f0430bf51c3b93443c8e01b077dfac",
   "f363fa3f2e582576921410387f402fd065722127": "d43789d00a21b1909107f42a683fe50688f93cc2",
   "f3687f8a7bcd99733f487865e6e49a913104c435": "7be1e605debfb9dd8ad677f21819977f4a8b19a0",
+  "f3a8279a012fc65a28049b3e82055703061b9ea2": "ced3c7dcae5fe77b426a034487001a66b4b6a166",
+  "f3fe84dffd34449aecdb401982ee42e6d54f4c40": "1aba6c128670f49b1e029f0105be38dec0f26e62",
   "f42ee110f20f60d333363d7f2b522e26e2860cb3": "846dd4156c6cd04f30c625d7a78d380d939a2c1b",
   "f45a8c6a33d95fefa174150b4303a45ee440c451": "71b0611ee0cd4e3faaf9e89c04c8a0232f35cc48",
   "f4682242a1d87a47ab721d4af2aefdc2e3207831": "5a1f7cf74635775e5171589899694aa06303f876",
+  "f530afa999e32f45bb749655f99d3333d741bf29": "6fc8f78f412cd73b5e8d6c98c6959a17746b7537",
   "f5704875578a44f172481b5ac4871b1acda67ebd": "2ec3b9ef5c2d894300197c624e9d74130b90f97c",
   "f58b31c329d3399261b87ac24b0ca87e07f2cbe9": "0d9a221eef77f97cb494b67d2b69ad789edb1ad1",
   "f5d1ca1b04baef7cf14b28849206d18c58e85b17": "c043421f64685df25fe6a5169430c8a5aefc83c3",
@@ -27871,6 +29419,7 @@
   "f843941f77995d0149ece2372726b6bcc9b281ac": "62ee362286ad858bd9a5394b7aea70503c23af8c",
   "f8bc4eeda6e0abb5d2929cc281875a838ce30999": "42a471a2abd26d225b7a89ff7ded2c113b47191a",
   "f8dd8efec4cf3fa0f01048db2d65b802c0e35f0a": "3a01d3831cbdc233bfd9335b1385b3b900106b0a",
+  "f8edbbe833750968c75f11b3398b8761bf751b6b": "e51c31e979d6b43a2c673168450140f3a120b3ee",
   "f9495411c2e13915b51df83a3ec88d0a7a65be93": "f5ade923a8827215c67c088f6f99401e9fa885eb",
   "f94c0014f44dab67bfa4744803014f49d09fcd62": "b67fd854f87eb81180c05081a97c0eb9256346c0",
   "fa36b38698df94dbac8575873450a4e93275e595": "583270674cf6e0ddfd12f24f60d32e3175b0a278",
@@ -27881,6 +29430,7 @@
   "fad5aa3bd8e3afee3ae4cf58b1c0a58d1a71d133": "5a0d5669fda55065d85dab9e315f0f612f5897f3",
   "fae0998073bf4c2ba7204bc885acb5d62645386a": "ab03d0bdf83ff72e2919b0abbbcb99b19fda15fe",
   "fb4b1185bc74aea92ea18a22ea5249de7d9d7367": "3640b0bf450f0fe2dc6a5e4cb0162e4f4d631f05",
+  "fbaec5fd92d2dca46348f764966333a4cbce5092": "0493003b11958315bc7fff986b3604e5a84981e2",
   "fbe1f6d3603e28979e23542ab60c354e47b89254": "c58413f06d942ceeb47e7826462e5b9467a97b6a",
   "fc33212e1473542cdb6ee3d32cdba111dfe4c453": "dc0a946bca879ab9c31ccc43982a4c54105176e4",
   "fc6e4bce7ce8aef864ee91626b36826a7a69a474": "d02e3ce66c440a4a92293397e9db50a67c6a55de",
