@@ -898,7 +898,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
       const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25 });   // in the lines only: dim words too
       if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
-      jobs.push({ role, text, old, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink });
+      jobs.push({ role, text, old, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc });
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
@@ -1040,15 +1040,39 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
 }
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a name keeps its line count and stays clear of the stars. */
-function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink }, imgs, W) {
+function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc }, imgs, W) {
   const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = found.align === "left" && role !== "name";
   const maxW = left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
   const pitch0 = found.pitch || size * LINE, top = found.lines[0][1];
+  // Room for an Ability at its size, as the bake leaves it (psd_edit fit_below, ink_beyond): its new ink ends no lower
+  // than the old text's, or lower but on the card and off the design below (the backdrop under the old text, BEYOND)
+  function roomBelow() {
+    const H = ctx.canvas.height, k = kc || W / 1200, pad = 6 * k;
+    const h1 = Math.max(size * 0.5, found.box[3] - top - (found.lines.length - 1) * pitch0), floor = found.box[3] + pad;
+    const end = top + ((lines.length - 1) * pitch0 + h1) * (z / size);
+    if (end <= floor) return true;
+    if (end > H) return false;
+    const y0 = clamp(Math.round(found.box[1] - pad), 0, H - 1), from = Math.ceil(floor), img = ctx.getImageData(0, y0, W, H - y0).data;
+    const lum = (x, y) => { const i = ((y - y0) * W + x) * 4; return (img[i] * 77 + img[i + 1] * 150 + img[i + 2] * 29) >> 8; };
+    const under = new Array(256).fill(0), dev = new Array(256).fill(0), x0 = clamp(Math.round(found.box[0] - pad), 0, W), x1 = clamp(Math.round(found.box[2] + pad), 0, W);
+    let seen = 0;                                     // the backdrop's luma under the old text, as a histogram
+    for (let y = y0; y < Math.min(H, from); y++) for (let x = x0; x < x1; x++, seen++) under[lum(x, y)]++;
+    const nth = (h, i) => { let v = 0; for (let c = h[0]; c <= i && v < 255; c += h[++v]); return v; };   // a histogram's i-th smallest
+    const med = seen ? nth(under, seen >> 1) : 0;
+    under.forEach((c, v) => { dev[Math.abs(v - med)] += c; });
+    const bar = Math.max(60, (seen ? nth(dev, Math.floor(0.95 * (seen - 1))) : 0) + 20);
+    const mask = document.createElement("canvas"); mask.width = W; mask.height = Math.max(1, H - from);
+    const mx = mask.getContext("2d", { willReadFrequently: true }); mx.translate(0, -from);
+    paintLines(mx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base: top + z * 0.8, pitch: pitch0 * (z / size), z, fam, label: measure.label, fill: [255, 255, 255], stroke: null, imgs, one });
+    const a = mx.getImageData(0, 0, W, mask.height).data; let n = 0;
+    for (let y = from, j = 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
+    return n < 100 * k * k;
+  }
   let { size: z, lines } = fit(paras, maxW, Infinity, size, measure, role === "name" ? { lines: Math.max(1, found.lines.length, paras.length), min: 0.3 } : {});   // a title's line break: two lines
   let over = false;
-  if (role !== "name") {                              // past the area's bottom: smaller, down to 40%; still past it: said so
+  if (role !== "name" && !roomBelow()) {              // past the area's bottom: smaller, down to 40%; still past it: said so
     const room2 = region[3] - top, need = s => (lines.length - 1) * pitch0 * (s / size) + s * 1.05;
     while (need(z) > room2 && z > size * 0.4) { z *= 0.94; lines = layout(paras, maxW, z, measure); }
     over = need(z) > room2 + 1;
