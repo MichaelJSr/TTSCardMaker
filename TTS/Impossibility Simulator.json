@@ -20703,7 +20703,7 @@
           "Type": 0
         },
         "359": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Toriel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Toriel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20793,7 +20793,7 @@
           "Type": 0
         },
         "368": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20901,7 +20901,7 @@
           "Type": 0
         },
         "370": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0e343d5dc031a27ccbb918b6c848254fb3a3310b/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -20910,7 +20910,7 @@
           "Type": 0
         },
         "371": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -21473,7 +21473,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "359": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Toriel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Toriel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -22053,7 +22053,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "368": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -22749,7 +22749,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "370": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0e343d5dc031a27ccbb918b6c848254fb3a3310b/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -22807,7 +22807,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "371": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -23568,7 +23568,7 @@
           "Type": 0
         },
         "354": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/5%20Stars/Pandora.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Pandas/5%20Stars/Pandora.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -23685,7 +23685,7 @@
           "Type": 0
         },
         "889": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -23694,7 +23694,7 @@
           "Type": 0
         },
         "900": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Souls/5%20Stars/Lothric.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Souls/5%20Stars/Lothric.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -24047,7 +24047,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "354": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/5%20Stars/Pandora.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Pandas/5%20Stars/Pandora.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -24801,7 +24801,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "889": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -24859,7 +24859,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "900": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Souls/5%20Stars/Lothric.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Souls/5%20Stars/Lothric.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -62918,7 +62918,7 @@
           "Type": 0
         },
         "1178": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Field/2%20Stars/Fahr_Outpost.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/2%20Stars/Fahr_Outpost.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -63766,7 +63766,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1178": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Field/2%20Stars/Fahr_Outpost.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/2%20Stars/Fahr_Outpost.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -64113,7 +64113,7 @@
           "Type": 0
         },
         "927": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Field/1%20Stars/Bench.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/1%20Stars/Bench.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -64122,7 +64122,7 @@
           "Type": 0
         },
         "1122": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Field/1%20Stars/Forgotten_Crossroads.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/1%20Stars/Forgotten_Crossroads.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -64488,7 +64488,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "927": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Field/1%20Stars/Bench.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/1%20Stars/Bench.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -64546,7 +64546,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1122": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Field/1%20Stars/Forgotten_Crossroads.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/1%20Stars/Forgotten_Crossroads.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -69935,7 +69935,7 @@
           "Type": 0
         },
         "1084": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/3%20Stars/Martlet.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/3%20Stars/Martlet.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -74840,7 +74840,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1084": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/3%20Stars/Martlet.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/3%20Stars/Martlet.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -79443,7 +79443,7 @@
           "Type": 0
         },
         "762": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Souls/4%20Stars/Godskin_Noble.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Souls/4%20Stars/Godskin_Noble.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79551,7 +79551,7 @@
           "Type": 0
         },
         "368": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79560,7 +79560,7 @@
           "Type": 0
         },
         "366": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Mage.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Mage.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79677,7 +79677,7 @@
           "Type": 0
         },
         "371": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79722,7 +79722,7 @@
           "Type": 0
         },
         "370": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0e343d5dc031a27ccbb918b6c848254fb3a3310b/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79740,7 +79740,7 @@
           "Type": 0
         },
         "367": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -79785,7 +79785,7 @@
           "Type": 0
         },
         "359": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Toriel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Toriel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -80001,7 +80001,7 @@
           "Type": 0
         },
         "798": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/ROTMG/4%20Stars/Oryx_the_Exalted_God.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/ROTMG/4%20Stars/Oryx_the_Exalted_God.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -80172,7 +80172,7 @@
           "Type": 0
         },
         "1166": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Jevil.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Jevil.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -80436,7 +80436,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "762": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Souls/4%20Stars/Godskin_Noble.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Souls/4%20Stars/Godskin_Noble.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -81132,7 +81132,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "368": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -81190,7 +81190,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "366": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Mage.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Mage.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -81944,7 +81944,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "371": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -82234,7 +82234,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "370": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0e343d5dc031a27ccbb918b6c848254fb3a3310b/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -82350,7 +82350,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "367": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -82640,7 +82640,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "359": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Toriel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Toriel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -84032,7 +84032,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "798": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/ROTMG/4%20Stars/Oryx_the_Exalted_God.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/ROTMG/4%20Stars/Oryx_the_Exalted_God.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -85134,7 +85134,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1166": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Jevil.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Jevil.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -86962,7 +86962,7 @@
           "Type": 0
         },
         "359": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Toriel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Toriel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -86980,7 +86980,7 @@
           "Type": 0
         },
         "367": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -87726,7 +87726,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "359": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Toriel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Toriel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -87842,7 +87842,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "367": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -88872,7 +88872,7 @@
           "Type": 0
         },
         "354": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/5%20Stars/Pandora.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Pandas/5%20Stars/Pandora.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -88998,7 +88998,7 @@
           "Type": 0
         },
         "889": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -89007,7 +89007,7 @@
           "Type": 0
         },
         "900": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Souls/5%20Stars/Lothric.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Souls/5%20Stars/Lothric.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -89070,7 +89070,7 @@
           "Type": 0
         },
         "1158": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/5%20Stars/Zenith_Martlet.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/5%20Stars/Zenith_Martlet.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -90610,7 +90610,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "354": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/5%20Stars/Pandora.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Pandas/5%20Stars/Pandora.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -91422,7 +91422,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "889": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -91480,7 +91480,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "900": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Souls/5%20Stars/Lothric.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Souls/5%20Stars/Lothric.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -91886,7 +91886,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1158": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/5%20Stars/Zenith_Martlet.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/5%20Stars/Zenith_Martlet.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -97535,7 +97535,7 @@
           "Type": 0
         },
         "1084": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/3%20Stars/Martlet.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/3%20Stars/Martlet.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -102440,7 +102440,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1084": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/3%20Stars/Martlet.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/3%20Stars/Martlet.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -103947,7 +103947,7 @@
           "Type": 0
         },
         "762": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Souls/4%20Stars/Godskin_Noble.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Souls/4%20Stars/Godskin_Noble.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104055,7 +104055,7 @@
           "Type": 0
         },
         "368": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104064,7 +104064,7 @@
           "Type": 0
         },
         "366": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Mage.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Mage.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104181,7 +104181,7 @@
           "Type": 0
         },
         "371": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104226,7 +104226,7 @@
           "Type": 0
         },
         "370": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0e343d5dc031a27ccbb918b6c848254fb3a3310b/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104244,7 +104244,7 @@
           "Type": 0
         },
         "367": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104289,7 +104289,7 @@
           "Type": 0
         },
         "359": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Toriel.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Toriel.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104505,7 +104505,7 @@
           "Type": 0
         },
         "798": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/ROTMG/4%20Stars/Oryx_the_Exalted_God.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/ROTMG/4%20Stars/Oryx_the_Exalted_God.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104676,7 +104676,7 @@
           "Type": 0
         },
         "1166": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Jevil.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Jevil.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -104940,7 +104940,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "762": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Souls/4%20Stars/Godskin_Noble.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Souls/4%20Stars/Godskin_Noble.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -105636,7 +105636,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "368": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Priest.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -105694,7 +105694,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "366": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Mage.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Mage.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -106448,7 +106448,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "371": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Warlock.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -106738,7 +106738,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "370": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/0e343d5dc031a27ccbb918b6c848254fb3a3310b/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Shaman.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -106854,7 +106854,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "367": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/World%20Of%20Warcraft/4%20Stars/Warcraftian_Paladin.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -107144,7 +107144,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "359": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Toriel.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Toriel.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -108536,7 +108536,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "798": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/ROTMG/4%20Stars/Oryx_the_Exalted_God.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/ROTMG/4%20Stars/Oryx_the_Exalted_God.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -109638,7 +109638,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1166": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/4%20Stars/Jevil.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/4%20Stars/Jevil.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -110552,7 +110552,7 @@
           "Type": 0
         },
         "354": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/5%20Stars/Pandora.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Pandas/5%20Stars/Pandora.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110678,7 +110678,7 @@
           "Type": 0
         },
         "889": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110687,7 +110687,7 @@
           "Type": 0
         },
         "900": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Souls/5%20Stars/Lothric.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Souls/5%20Stars/Lothric.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -110750,7 +110750,7 @@
           "Type": 0
         },
         "1158": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/5%20Stars/Zenith_Martlet.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/5%20Stars/Zenith_Martlet.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -112290,7 +112290,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "354": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/1912f2459a7b10b2f0770b6ad91153fe0cea6de4/Creatures/Pandas/5%20Stars/Pandora.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Pandas/5%20Stars/Pandora.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -113102,7 +113102,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "889": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/5%20Stars/Spamton_Neo.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -113160,7 +113160,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "900": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Souls/5%20Stars/Lothric.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Souls/5%20Stars/Lothric.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -113566,7 +113566,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1158": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/23865bd80e7baeb7e9cd9f30393e126d84c6ec16/Creatures/Undertale/5%20Stars/Zenith_Martlet.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Creatures/Undertale/5%20Stars/Zenith_Martlet.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -133012,7 +133012,7 @@
           "Type": 0
         },
         "927": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Field/1%20Stars/Bench.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/1%20Stars/Bench.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -133021,7 +133021,7 @@
           "Type": 0
         },
         "1122": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Field/1%20Stars/Forgotten_Crossroads.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/1%20Stars/Forgotten_Crossroads.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -133387,7 +133387,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "927": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/cbe36122da18625e2ca747b6891100168f83a154/Field/1%20Stars/Bench.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/1%20Stars/Bench.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -133445,7 +133445,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1122": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bf141761c2c4a811e7e151274a4310e8292c55a/Field/1%20Stars/Forgotten_Crossroads.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/1%20Stars/Forgotten_Crossroads.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -133757,7 +133757,7 @@
           "Type": 0
         },
         "1178": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Field/2%20Stars/Fahr_Outpost.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/2%20Stars/Fahr_Outpost.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -134605,7 +134605,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1178": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/9bb3a287848cf9b5c853b125ad12da987f1a3446/Field/2%20Stars/Fahr_Outpost.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d69381553fb1d6c1fddca3c9fafe0ab1c62b6460/Field/2%20Stars/Fahr_Outpost.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_item.png",
               "NumWidth": 1,
               "NumHeight": 1,
