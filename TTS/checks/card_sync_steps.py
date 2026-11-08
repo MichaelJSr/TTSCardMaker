@@ -26,7 +26,7 @@
    its Bake and save queued or in its Guards' fixes; not itself, not one stuck 40 minutes; unreadable runs count as
    none) and skip their main lane when there is one (no cancel: the data lane ran); else a push's main lane sets up and
    waits in itself for its guards (no Quiet window job, no environment, no sleep) and the schedule's goes; a dispatch's
-   at once. The data lane runs at once on every event but a retry. A chained run looks like the schedule; its main Gate is
+   at once; a follow-up's (input guards) two lanes set up, then wait for that guards run's Land, then take main's head. The data lane runs at once on every event but a retry. A chained run looks like the schedule; its main Gate is
    the schedule's.
 7. Tell Discord on faked runs: once per failing streak of its lane (the newest other live run where the lane ended;
    runs that skipped it, and dry runs, passed over), once a lane per run (after sees data's failure).
@@ -44,8 +44,10 @@
    for the push's own guards' check job, then skips the rest of the push's main lane (its Gate on) when that guards run has
    fixes to land (card-guards.yml's "Fixes to land"; unfinished, or done with Follow up started), the schedule's and a
    chain's while any guards run with fixes is unfinished; it goes when the guards have nothing to land, failed to start
-   Card sync, were cancelled, are absent or unreadable. card-guards.yml's side: the names Card sync reads, Plan's fixes
-   (a push in on mode with writes), Follow up's dispatch with fixes whether Land landed or ran (tried 3 times).
+   Card sync, were cancelled, are absent or unreadable. A follow-up's wait ends at its guards run's Follow up or the post
+   job's end (never another job's), holds nothing, slows to 15 s looks after 2 minutes and stops at 30. card-guards.yml's
+   side: the names Card sync reads, Plan's fixes (a push in on mode with writes), the post job's first step starting Card
+   sync with its run id, Follow up's dispatch with fixes whether Land landed or ran (tried 3 times) unless that start did.
 Exits 1 when a case gets the wrong answer.
 """
 import json
@@ -351,7 +353,16 @@ def plans(flow: dict) -> None:
     check(not {"Send the posts", "data-commit"} & runs(p) and "Tell Discord" in runs(p),
           "data, build failed: no posts, no data commit; Discord told")
     p = plan(flow, "data", event="schedule", outputs={"gate": {"go": "false", "GITHUB_ENV": {"GO": "false"}}})
-    check(not {"venv", "build", "posts", "data-commit", "Site build"} & runs(p), "data, nothing to do: the job ends at the gate")
+    check("venv" in runs(p) and not {"guards", "Newest", "build", "posts", "data-commit", "Site build"} & runs(p),
+          "data, nothing to do: its setup, then the job ends at the gate")
+    order = lambda job, p: [k for k in (s.get("id") or s.get("name") for s in flow["jobs"][job]["steps"]) if k in runs(p)]  # noqa: E731
+    follow = {"dry_run": False, "bake": "pending", "guards": "77"}
+    p, q = plan(flow, "data", inputs=follow, outputs=go), plan(flow, "main", inputs=follow, outputs=go)
+    r = plan(flow, "after", inputs=follow, outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
+    check(order("data", p)[:5] == ["venv", "guards", "Newest", "records-in", "gate"] and "build" in runs(p)
+          and order("main", q)[:4] == ["venv", "guards", "Newest", "gate"] and "bake" in runs(q)
+          and not {"guards", "Newest"} & runs(r),
+          "a follow-up (guards): both lanes set up, wait for the guards' Land, take main's head, then gate; after waits for nothing")
     p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
     check(p["env"]["AFTER"] == "m" * 40 and {"records-in", "build", "Send the posts", "data-commit", "Site build"} <= runs(p),
           "after: the data lane on M with the bake's records; the site build follows the bake even with db/ unchanged")
@@ -1192,10 +1203,14 @@ def lane_cases(flow: dict) -> None:
           f"a push's goes (it waits in itself), the guards' own dispatch goes ({got})")
     got = [bool(evaluate(mark["if"], ctx(e, job=j))) for e, j in (("push", "timer"), ("schedule", "timer"),
                                                                   ("workflow_dispatch", "timer"), ("push", "main"),
-                                                                  ("schedule", "main"), ("workflow_dispatch", "main"))]
-    check(got == [False, True, True, True, False, False] and step(main, "guards") is mark
+                                                                  ("schedule", "main"), ("workflow_dispatch", "main"),
+                                                                  ("push", "data"), ("workflow_dispatch", "data"))]
+    got += [bool(evaluate(mark["if"], ctx("workflow_dispatch", {"guards": "77"}, job=j))) for j in ("main", "data", "after")]
+    check(got == [False, True, True, True, False, False, False, False, True, True, False] and step(main, "guards") is mark
+          and step(jobs["data"], "guards") is mark
           and timer["outputs"]["guards"] == "${{ steps.guards.outputs.run }}" and step(main, "gate")["if"] == "${{ !steps.guards.outputs.run }}",
-          f"Guards' fixes: a push's in its main lane after the setup (one held skips the Gate on), the schedule's and a chain's in the timer ({got})")
+          f"Guards' fixes: a push's in its main lane after the setup (one held skips the Gate on), the schedule's and a chain's "
+          f"in the timer, a follow-up's in both lanes after the setup ({got})")
 
     guards = load(GUARDS)
     check(any(s.get("name") == mark["env"]["FIXES"] and s.get("if") == "always() && steps.plan.outputs.fixes == 'true'" for s in guards["jobs"]["check"]["steps"])
@@ -1261,6 +1276,35 @@ def lane_cases(flow: dict) -> None:
         code, text, out = run_step(timer, "guards", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
         check(code == 0 and "run" not in out and "were not read" in text, "Guards' fixes: runs not read -> none (the main lane goes on)")
 
+        # A follow-up's wait: its guards run's post job at Follow up, or ended; never another job's step; holds nothing
+        post = lambda status, *steps_, name="post": {"name": name, "status": status, "steps": [st(n, c) for n, c in steps_]}  # noqa: E731
+        for rid, doc in ((61, [post("in_progress", ("Land", "success"), ("Follow up", None))]),
+                         (62, [post("completed", ("Land", "cancelled"))]),
+                         (63, [post("in_progress", ("Land", None))]),
+                         (64, [post("in_progress", ("Follow up", None), name="checks"), post("in_progress", ("Land", None))])):
+            write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": doc}))
+        for rid, seconds, ends, what in ((61, "", True, "its post job at Follow up (Land and the uploads done)"),
+                                         (62, "", True, "its post job ended before Follow up"),
+                                         (63, "1795", False, "Land still running: 15 s looks, then the 30-minute cap"),
+                                         (64, "1795", False, "another job's Follow up: not it")):
+            if os.path.exists(calls):
+                os.remove(calls)
+            env = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "SHA": "", "RUN": str(rid), "FAKE_JOBS": jobs_dir,
+                   "GITHUB_SERVER_URL": "https://github.com", "FOLLOW": mark["env"]["FOLLOW"], "POST": mark["env"]["POST"],
+                   **({"SECONDS": seconds} if seconds else {})}
+            write(os.path.join(fake, "sleep"), f'#!/bin/bash\necho "$1" >> "{calls}.naps"\n')
+            code, text, out = run_step(timer, "guards", tmp, env, tmp)
+            asked = open(calls).read() if os.path.exists(calls) else ""
+            naps = open(calls + ".naps").read().split() if os.path.exists(calls + ".naps") else []
+            os.remove(calls + ".naps") if naps else None
+            ok = code == 0 and "run" not in out and asked.count(f"/runs/{rid}/jobs") >= 1 and "card-guards.yml/runs" not in asked
+            ok = ok and (naps == [] if ends else (naps and set(naps) == {"15"} and "not past Land in 30 minutes" in text))
+            check(ok, f"Guards' fixes, a follow-up: {what} -> goes on" + ("" if ok else f"\n{text}\n{asked}\n{naps}"))
+        write(os.path.join(fake, "sleep"), "#!/bin/bash\n")
+        check(mark["env"]["RUN"] == "${{ inputs.guards }}" and mark["env"]["POST"] == "post" and "post" in guards["jobs"]
+              and step(main, "Newest") is step(jobs["data"], "Newest") and step(main, "Newest")["if"] == "steps.guards.outcome != 'skipped' && !steps.guards.outputs.run",
+              "Guards' fixes, a follow-up: the guards run from its input, their post job by name; Newest after any wait that held nothing")
+
         # card-guards.yml: Plan's fixes and Follow up's dispatch
         gplan, follow = step(guards["jobs"]["check"], "plan"), step(guards["jobs"]["post"], "follow")
         out_dir = os.path.join(tmp, "guards")
@@ -1283,6 +1327,7 @@ def lane_cases(flow: dict) -> None:
                 ({"FIXES": "true"}, 0, 1, 0, "fixes, nothing landed: Card sync still started (the push's main lane skipped)"),
                 ({"FIXES": "true", "SHA": "a" * 40}, 2, 3, 0, "fixes: tried again, started on the third"),
                 ({"FIXES": "true"}, 3, 3, 1, "fixes, never started: red, said"),
+                ({"FIXES": "true", "SHA": "a" * 40, "EARLY": "true"}, 0, 0, 0, "fixes, started first: none again"),
                 ({}, 0, 0, 0, "nothing landed, no fixes: nothing started")):
             if os.path.exists(calls):
                 os.remove(calls)
@@ -1294,6 +1339,15 @@ def lane_cases(flow: dict) -> None:
             starts_ = [a for a in asked if a.startswith("workflow run card-sync.yml") and "bake=pending" in a]
             ok = code == want_code and len(starts_) == want_runs and not any("PATCH" in a for a in asked)
             check(ok, f"guards Follow up: {what} ({len(starts_)} dispatches, no comment edit without Land)" + ("" if ok else f"\n{text}\n{asked}"))
+        early = step(guards["jobs"]["post"], "early")
+        if os.path.exists(calls):
+            os.remove(calls)
+        code, text, out = run_step(guards["jobs"]["post"], "early", tmp, {"PATH": f"{fake}:{os.environ['PATH']}", "GITHUB_RUN_ID": "77"}, tmp)
+        asked = open(calls).read().splitlines() if os.path.exists(calls) else []
+        check(code == 0 and out.get("started") == "true" and asked == ["workflow run card-sync.yml -f dry_run=false -f bake=pending -f guards=77"]
+              and guards["jobs"]["post"]["steps"][0] is early and early["if"] == "needs.check.outputs.fixes == 'true'"
+              and early.get("continue-on-error") == "true" and step(guards["jobs"]["post"], "follow")["env"]["EARLY"] == "${{ steps.early.outputs.started }}",
+              "guards Start Card sync: the post job's first step with fixes, this run's id as guards; failed, Follow up starts it")
 
 
 def main():

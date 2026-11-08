@@ -26,8 +26,9 @@
 # safety cron (GitHub starts it late or not at all: every 4-10 h)
 # catches what the chain leaves: unposted events, a lane that failed, a chain that stopped.
 # One main lane per guarded push (owner, 2026-10-25, P-2): a push's main lane skips itself when that push's guards have
-# fixes to land (card-guards.yml's "Fixes to land"); their Follow up starts Card sync once they land (or land nothing),
-# so its one main lane bakes and saves the fixed PNGs. The schedule's and a chained run's skip theirs while any guards
+# fixes to land (card-guards.yml's "Fixes to land"); their post job starts Card sync first (input guards: both lanes set
+# up while Land runs, then wait for its Follow up), else Follow up starts it once they land (or land nothing), so its
+# one main lane bakes and saves the fixed PNGs. The schedule's and a chained run's skip theirs while any guards
 # run with fixes is unfinished.
 # Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) from the card workflows' venv cache.
@@ -96,6 +97,10 @@ on:
         default: ""
       chain:
         description: "Set by Card sync for leftover work: 'now <runs> <idle>'"
+        type: string
+        default: ""
+      guards:
+        description: "Set by Card guards with fixes: its run id (both lanes wait for its Land after their setup)"
         type: string
         default: ""
 
@@ -200,6 +205,99 @@ jobs:
           ref: data
           path: carddata
           fetch-depth: 1
+
+      # One environment from requirements-cards.txt for the bake, the build, the save and the posts, on the Actions' one
+      # Python (3.14; the shared setup, .github/actions/cards-python). --help proves the import closure before any stage.
+      # Always, first: before a push's or a follow-up's wait (a data job with nothing to do sets it up too).
+      - &venv
+        name: Python environment
+        id: venv
+        timeout-minutes: 15
+        uses: ./.github/actions/cards-python
+        with:
+          venv: ${{ runner.temp }}/venv
+          help: card_data tts_save card_bake
+
+      # The guards' fixes (P-2): a guards push run with fixes to land (its check job's step "Fixes to land") starts Card
+      # sync once they land, landed or not (its Follow up). A push's run looks for its own push's (in Bake and save, after
+      # its setup): unfinished, or finished with Follow up done. The schedule's and a chained run's look here for any
+      # unfinished one (two hours back). One found: this run's main lane is skipped (its data lane ran; a push's lane
+      # skips its Gate and the rest). Runs that cannot be read count as none (the main lane goes on). A follow-up (guards:
+      # the run whose post job started this one first, before Land) waits in both lanes after their setup until that
+      # post job reaches Follow up (Land and its guard-events and guard-records uploads done) or ends: 3 s looks for 2
+      # minutes, then 15 s, 30 at most (the post job's own cap); it holds nothing.
+      - &guards
+        name: Guards' fixes
+        id: guards
+        if: github.event_name == 'push' && github.job == 'main' || github.event_name != 'push' && github.job == 'timer' || inputs.guards && (github.job == 'main' || github.job == 'data')
+        continue-on-error: true     # failed or cut: the lane goes on
+        timeout-minutes: 32         # the wait (12 min at most, a follow-up's 30), then its reads
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event_name == 'push' && github.sha || '' }}
+          FIXES: Fixes to land        # card-guards.yml's check-job step
+          DECIDED: Decided            # its check-job step after Fixes to land
+          FOLLOW: Follow up           # card-guards.yml's post-job step that dispatches Card sync
+          RUN: ${{ inputs.guards }}   # a follow-up's guards run
+          POST: post                  # its job with Land and Follow up
+        run: |
+          if [ -n "$RUN" ]; then
+            k=0 at=0
+            while [ "$SECONDS" -lt 1800 ]; do
+              k=$((k + 1))
+              at=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"$POST\" and (.status == \"completed\"
+                or any(.steps[]?; .name == \"$FOLLOW\" and (.status == \"in_progress\" or .status == \"completed\"))))] | length") || at=0
+              [ "${at:-0}" -gt 0 ] && break
+              if [ $((k % 5)) = 0 ] && [ "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN" --jq .status || true)" = completed ]; then break; fi
+              sleep "$([ "$SECONDS" -lt 120 ] && echo 3 || echo 15)"
+            done
+            if [ "$SECONDS" -ge 1800 ]; then echo "::warning::guards run $RUN not past Land in 30 minutes: this run goes on"; fi
+            echo "Guards run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN is past Land (or ended): this run goes on from main's head." \
+              | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          q="repos/$GITHUB_REPOSITORY/actions/workflows/card-guards.yml/runs?event=push&per_page=30"
+          if [ -n "$SHA" ]; then q="$q&head_sha=$SHA"; fi
+          if ! runs=$(gh api "$q" --jq '.workflow_runs[] | select((.created_at | fromdate) > now - 120 * 60) | "\(.id) \(.status)"'); then
+            echo "::warning::the guards' runs were not read: the main lane goes on"
+            runs=""
+          fi
+          while read -r id status; do
+            [ -n "$id" ] || continue
+            if [ -z "$SHA" ] && [ "$status" = completed ]; then continue; fi     # another push's: unfinished only
+            if [ -n "$SHA" ]; then      # this push's: its check job's Decided step (or its end) settles Fixes to land; 12 min at most
+              for k in $(seq 200); do
+                [ "$status" = completed ] && break
+                done_=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[] | select(.name == \"check\" and (.status == \"completed\"
+                  or any(.steps[]?; .name == \"$DECIDED\" and .status == \"completed\")))] | length") || done_=0
+                [ "${done_:-0}" -gt 0 ] && break
+                sleep 3
+                if [ $((k % 5)) = 0 ]; then       # the run, every 15 s: ended with no check job?
+                  status=$(gh api "$q" --jq ".workflow_runs[] | select(.id == $id) | .status") || status=""
+                fi
+              done
+            fi
+            hold=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[].steps // [] | .[]] as \$s
+              | (\$s | any(.name == \"$FIXES\" and .conclusion == \"success\"))
+                and (\"$status\" != \"completed\" or (\$s | any(.name == \"$FOLLOW\" and .conclusion == \"success\")))") || hold=false
+            if [ "$hold" = true ]; then
+              echo "run=$id" >> "$GITHUB_OUTPUT"
+              echo "Guards run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id lands fixes: the Card sync run it starts bakes and saves (this run's main lane is skipped)." \
+                | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          done <<< "$runs"
+          echo "No guards run with fixes to land: the main lane goes on." | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # After a wait that held nothing (a push's main lane, a follow-up's two): main's head and the data's as they are
+      # now (one not fetched stays as checked out)
+      - &newest
+        name: Newest
+        if: steps.guards.outcome != 'skipped' && !steps.guards.outputs.run
+        timeout-minutes: 5
+        run: |
+          if git fetch -q --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
+          if git -C carddata fetch -q --depth 1 origin data; then git -C carddata reset -q --hard FETCH_HEAD; else echo "::warning::data not fetched again"; fi
 
       # The records not merged yet: every live main job's bake-records artifact (verdicts.json, events.json; only what
       # holds: M's part when M landed; records.json) and every guards landing's guard-records (records.json alone) not
@@ -365,19 +463,6 @@ jobs:
             jq -s . "$out/all.jsonl" > "$RUNNER_TEMP/guard-events.json"
             echo "Guard events: $(jq '[.[].events | length] | add' "$RUNNER_TEMP/guard-events.json") from $(jq length "$RUNNER_TEMP/guard-events.json") guards commits."
           fi
-
-      # One environment from requirements-cards.txt for the bake, the build, the save and the posts, on the Actions' one
-      # Python (3.14; the shared setup, .github/actions/cards-python). --help proves the import closure before any stage.
-      # The main job's always, before a push's wait.
-      - &venv
-        name: Python environment
-        id: venv
-        if: env.GO == 'true' || env.EDITS == 'true' || env.LINKED == 'true' || github.job == 'main'
-        timeout-minutes: 15
-        uses: ./.github/actions/cards-python
-        with:
-          venv: ${{ runner.temp }}/venv
-          help: card_data tts_save card_bake
 
       # MDW/Fonts' tree sha, the font caches' key. The bake's fonts (main job): its top level, cached by that sha (the card
       # workflows' key, so the entries carry over); the sparse checkout fetches them only on a miss. A hit puts them outside
@@ -687,56 +772,7 @@ jobs:
           echo "No push run starting: the main lane goes on." \
             | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # The guards' fixes (P-2): a guards push run with fixes to land (its check job's step "Fixes to land") starts Card
-      # sync once they land, landed or not (its Follow up). A push's run looks for its own push's (in Bake and save, after
-      # its setup): unfinished, or finished with Follow up done. The schedule's and a chained run's look here for any
-      # unfinished one (two hours back). One found: this run's main lane is skipped (its data lane ran; a push's lane
-      # skips its Gate and the rest). Runs that cannot be read count as none (the main lane goes on).
-      - &guards
-        name: Guards' fixes
-        id: guards
-        if: github.event_name == 'push' && github.job == 'main' || github.event_name != 'push' && github.job == 'timer'
-        continue-on-error: true     # failed or cut: the lane goes on
-        timeout-minutes: 15         # the wait (12 min at most), then its reads
-        env:
-          GH_TOKEN: ${{ github.token }}
-          SHA: ${{ github.event_name == 'push' && github.sha || '' }}
-          FIXES: Fixes to land        # card-guards.yml's check-job step
-          DECIDED: Decided            # its check-job step after Fixes to land
-          FOLLOW: Follow up           # card-guards.yml's post-job step that dispatches Card sync
-        run: |
-          q="repos/$GITHUB_REPOSITORY/actions/workflows/card-guards.yml/runs?event=push&per_page=30"
-          if [ -n "$SHA" ]; then q="$q&head_sha=$SHA"; fi
-          if ! runs=$(gh api "$q" --jq '.workflow_runs[] | select((.created_at | fromdate) > now - 120 * 60) | "\(.id) \(.status)"'); then
-            echo "::warning::the guards' runs were not read: the main lane goes on"
-            runs=""
-          fi
-          while read -r id status; do
-            [ -n "$id" ] || continue
-            if [ -z "$SHA" ] && [ "$status" = completed ]; then continue; fi     # another push's: unfinished only
-            if [ -n "$SHA" ]; then      # this push's: its check job's Decided step (or its end) settles Fixes to land; 12 min at most
-              for k in $(seq 200); do
-                [ "$status" = completed ] && break
-                done_=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[] | select(.name == \"check\" and (.status == \"completed\"
-                  or any(.steps[]?; .name == \"$DECIDED\" and .status == \"completed\")))] | length") || done_=0
-                [ "${done_:-0}" -gt 0 ] && break
-                sleep 3
-                if [ $((k % 5)) = 0 ]; then       # the run, every 15 s: ended with no check job?
-                  status=$(gh api "$q" --jq ".workflow_runs[] | select(.id == $id) | .status") || status=""
-                fi
-              done
-            fi
-            hold=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[].steps // [] | .[]] as \$s
-              | (\$s | any(.name == \"$FIXES\" and .conclusion == \"success\"))
-                and (\"$status\" != \"completed\" or (\$s | any(.name == \"$FOLLOW\" and .conclusion == \"success\")))") || hold=false
-            if [ "$hold" = true ]; then
-              echo "run=$id" >> "$GITHUB_OUTPUT"
-              echo "Guards run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$id lands fixes: the Card sync run it starts bakes and saves (this run's main lane is skipped)." \
-                | tee -a "$GITHUB_STEP_SUMMARY"
-              exit 0
-            fi
-          done <<< "$runs"
-          echo "No guards run with fixes to land: the main lane goes on." | tee -a "$GITHUB_STEP_SUMMARY"
+      - *guards
 
   # The main lane: a push's at once (its setup, then its guards: their check job, then whether they land fixes; no
   # fixed wait: the 30-minute window and its environment card-sync-quiet are gone, owner 2026-11-03), the schedule's and
@@ -752,8 +788,8 @@ jobs:
       group: ${{ inputs.dry_run && format('card-main-dry-{0}', github.run_id) || 'card-main' }}   # a dry run: a lock of its own
       cancel-in-progress: false   # a running lane is never cut off
     runs-on: ubuntu-latest
-    timeout-minutes: 110    # Commit main pushes M only before minute 60 from the Gate: the 30 left cover the caps of it and
-                            # every later step; 20 for the setup and the guards' wait before the Gate
+    timeout-minutes: 125    # Commit main pushes M only before minute 60 from the Gate: the 30 left cover the caps of it and
+                            # every later step; 35 for the setup and the guards' wait before the Gate
     outputs:
       saved: ${{ steps.venv.outputs.wheels == 'built' || (steps.font-cache.outcome == 'success' && steps.font-cache.outputs.cache-hit != 'true') }}
       m: ${{ steps.main.outputs.m }}
@@ -774,15 +810,9 @@ jobs:
       - *data-checkout
       - *venv
 
-      # A push's guards (above), then main's head and the data's as they are now (not when held; one not fetched stays as
-      # checked out)
+      # A push's guards or a follow-up's (above), then main's head and the data's as they are now (not when held)
       - *guards
-      - name: Newest
-        if: github.event_name == 'push' && !steps.guards.outputs.run
-        timeout-minutes: 5
-        run: |
-          if git fetch -q --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
-          if git -C carddata fetch -q --depth 1 origin data; then git -C carddata reset -q --hard FETCH_HEAD; else echo "::warning::data not fetched again"; fi
+      - *newest
 
       # Go for a push, a dispatch or a retry; the schedule's and a chained run's when a card input or
       # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished, or

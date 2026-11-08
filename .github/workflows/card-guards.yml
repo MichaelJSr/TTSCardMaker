@@ -24,8 +24,8 @@
 # card pushed again is left to that push's run, a write that did not land is told (in report mode, the PNG the bot would
 # make). It never reverts or rejects a push. A run that fails tells the standards channel once per failure streak (a
 # cancel by hand does not). One main lane per guarded push (P-2): a push with fixes to land (on) marks its check job
-# ("Fixes to land"); that push's Card sync run skips its main lane, and Follow up starts Card sync once Land is done,
-# landed or not.
+# ("Fixes to land"); that push's Card sync run skips its main lane, and the post job starts Card sync as its first step
+# (that run sets up, then waits for Follow up), else Follow up starts it once Land is done, landed or not.
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
 # venv cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
 #
@@ -366,8 +366,8 @@ jobs:
           fi
           echo "card_errors=$(jq '.card_errors // 0' "$OUT/summary.json")" >> "$GITHUB_OUTPUT"
 
-      # The mark Card sync reads (its step "Guards' fixes", by this name): this push's main lane waits for the post job,
-      # whose Follow up then starts the one main lane (landed or not).
+      # The mark Card sync reads (its step "Guards' fixes", by this name): this push's main lane leaves it to the post
+      # job, which starts the one main lane (first, else at Follow up; landed or not).
       - name: Fixes to land
         if: always() && steps.plan.outputs.fixes == 'true'
         shell: bash
@@ -491,7 +491,7 @@ jobs:
           if-no-files-found: ignore
           overwrite: true
 
-  # A push's card check and font check, beside `check`: Card sync's Quiet window and the post job wait for that one alone.
+  # A push's card check and font check, beside `check`: Card sync's guards wait and the post job wait for that one alone.
   # Never a gate, whatever CARD_GUARDS says. `check` saves the font cache; finish's alert reads this job's result too.
   checks:
     if: github.event_name == 'push'
@@ -558,6 +558,19 @@ jobs:
     outputs:
       posted: ${{ steps.tell.outputs.posted }}
     steps:
+      # With fixes: Card sync at once, with this run's id (its lanes set up while Land runs, then wait for Follow up).
+      # Not started: Follow up starts it.
+      - name: Start Card sync
+        id: early
+        if: needs.check.outputs.fixes == 'true'
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run card-sync.yml -f dry_run=false -f bake=pending -f "guards=$GITHUB_RUN_ID"
+          echo "started=true" >> "$GITHUB_OUTPUT"
+
       - name: Work dir
         shell: bash
         run: echo "OUT=$RUNNER_TEMP/guards" >> "$GITHUB_ENV"
@@ -692,8 +705,9 @@ jobs:
       # commit dispatches the site build; when it does not start, the comment and the post say so, and the run fails),
       # and again by a re-run that finds the writes already landed (its earlier attempt's may not have started; both
       # queue, so a second start is harmless). With fixes it always starts one, landed or not, Land broken or not: this
-      # push's own Card sync run skipped its main lane for it (Card sync's "Guards' fixes"). The comment is rewritten
-      # with what landed, what did not and why (a broken Land still says so).
+      # push's own Card sync run skipped its main lane for it (Card sync's "Guards' fixes"); none when Start Card sync
+      # did (that run waits for this step). The comment is rewritten with what landed, what did not and why (a broken
+      # Land still says so).
       - name: Follow up
         id: follow
         if: always() && (steps.land.outputs.ran == 'true' || needs.check.outputs.fixes == 'true')
@@ -706,11 +720,13 @@ jobs:
           TOLD_BEFORE: ${{ steps.told.outputs.told }}
           FIXES: ${{ needs.check.outputs.fixes }}
           LAND_RAN: ${{ steps.land.outputs.ran }}
+          EARLY: ${{ steps.early.outputs.started }}
         run: |
           refresh=ok start=""
           [ -n "$SHA" ] && start=true
           [ "$FIXES" = true ] && start=true
           if [ "$MODE" = on ] && [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && [ "${ALREADY:-0}" -gt 0 ]; then start=true; fi
+          [ "$EARLY" = true ] && start=""
           started=""
           if [ -n "$start" ]; then
             for wait in 0 10 30; do               # tried 3 times: with fixes no other run bakes this push
