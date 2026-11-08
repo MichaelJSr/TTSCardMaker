@@ -1,0 +1,386 @@
+{
+ "recipe": {
+  "icons": 1,
+  "badges": 1
+ },
+ "letters": "838ab2f6dffc33510f8c87e7b1f76bcae9d0ae18",
+ "labels": "84eec84667b43e7a3767b799bc357ed07abaed5a",
+ "icons": {
+  "attack": {
+   "png": "62c9171b90f432e49f091fee1e6526859d9f3a56",
+   "tint": "auto"
+  },
+  "counter": {
+   "png": "23bf9264064724f83faf67776362102cbfaaa57f",
+   "tint": "auto"
+  },
+  "defensive_minion": {
+   "png": "b79573053a0600ec75bea7c45542c6636828d5eb",
+   "tint": "auto"
+  },
+  "deploy": {
+   "png": "1824bab6e2a8ad4ed9dcf895a1785b6bd97a6064",
+   "tint": "auto"
+  },
+  "equip": {
+   "png": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+   "tint": "auto"
+  },
+  "food": {
+   "png": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+   "tint": "auto"
+  },
+  "fragile equip": {
+   "png": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
+   "tint": "auto"
+  },
+  "girl": {
+   "png": "d05ee990099fe33cfe9ea1b1c771328e9ff35d3f",
+   "tint": "silhouette"
+  },
+  "infliction": {
+   "png": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+   "tint": "auto"
+  },
+  "nme": {
+   "png": "4fb6b1d8b6485fabd2b86fa08d37ff1b69a398f7",
+   "tint": "auto"
+  },
+  "negation": {
+   "png": "77824ad3eb394b38fdb0a92d3672c90688794242",
+   "tint": "auto"
+  },
+  "offensive_minion": {
+   "png": "7f7a05324e921eebc21961d8b55005a17a4a7620",
+   "tint": "auto"
+  },
+  "wind": {
+   "png": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+   "tint": "auto"
+  },
+  "active": {
+   "png": "0c472adf6c2a168dfd54ea21ef9c3a4f944b666e",
+   "tint": "auto"
+  },
+  "buff": {
+   "png": "c034a83976c3a94a1ab6c139064e545ca5123cb4",
+   "tint": "silhouette"
+  },
+  "buffstack": {
+   "png": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
+   "tint": "auto"
+  },
+  "dark": {
+   "png": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+   "tint": "silhouette"
+  },
+  "darkmatter": {
+   "png": "9842d409283e819405890ffd7f7e3bc7775145fd",
+   "tint": "silhouette"
+  },
+  "debuff": {
+   "png": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
+   "tint": "silhouette"
+  },
+  "debuffstack": {
+   "png": "11eee7735674b549186c25fb856a75e90980eabb",
+   "tint": "auto"
+  },
+  "debuffupgrade": {
+   "png": "05743c388b1f000c234cf96adff71de82c775df9",
+   "tint": "auto"
+  },
+  "electric": {
+   "png": "00007617b6c9850309e6c3a145e338efa55eded3",
+   "tint": "auto"
+  },
+  "field": {
+   "png": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+   "tint": "auto"
+  },
+  "fire": {
+   "png": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+   "tint": "silhouette"
+  },
+  "ice": {
+   "png": "755a458e1afd8c0059d30f9b9ee3c72717a2ad88",
+   "tint": "auto"
+  },
+  "light": {
+   "png": "dafb015388a0bc6eb5a5e3510d50a7f8a6352244",
+   "tint": "silhouette"
+  },
+  "lightshadow": {
+   "png": "4f4983d9a7e7716d072518e3be8a42c3baee8b04",
+   "tint": "auto"
+  },
+  "machine": {
+   "png": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+   "tint": "auto"
+  },
+  "null": {
+   "png": "dbeaecdfec5e6adcf1ce7bcaf5525553c264ba7e",
+   "tint": "auto"
+  },
+  "panda": {
+   "png": "502228f334cd9f6bd2d7652eccff5e9164295238",
+   "tint": "auto"
+  },
+  "rock": {
+   "png": "25679413e008ecd225af8cc6a9769810b48ae7e7",
+   "tint": "silhouette"
+  },
+  "support": {
+   "png": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+   "tint": "silhouette"
+  },
+  "undead": {
+   "png": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+   "tint": {
+    "mode": "detail",
+    "cut": "dark"
+   }
+  },
+  "unknown": {
+   "png": "0900dd1f51647a4f88c3181e44ae2ea7e938266e",
+   "tint": {
+    "mode": "detail",
+    "cut": "dark"
+   }
+  },
+  "water": {
+   "png": "99d8299f475b915a691170c03c5a2c0fe0110589",
+   "tint": "silhouette"
+  },
+  "6star": {
+   "png": "c2829efda0d3aa1f50fc136160a331e3a185ad47",
+   "tint": "silhouette"
+  },
+  "7star": {
+   "png": "d400becfbca34494e79e45ea28c847798956604a",
+   "tint": "silhouette"
+  },
+  "8star": {
+   "png": "87e668e4084489b781839437d6fd0e01929173b6",
+   "tint": "silhouette"
+  },
+  "crystal_star": {
+   "png": "6c9df83521a4b44ee2fd840d1b40e21be2a8eb32",
+   "tint": "auto"
+  },
+  "crystal_star_pmttydns_icon": {
+   "png": "3df7509818ce47caccb4dde5c0e5487e79d8852b",
+   "tint": "auto"
+  },
+  "diamond_star": {
+   "png": "c51a965abbf8c0c5de3ca2e57f915507396f1c77",
+   "tint": "auto"
+  },
+  "diamond_star_pmttydns_icon": {
+   "png": "fcef173debd6998a8ede2c7cd15010807cc0992a",
+   "tint": "auto"
+  },
+  "dst_star": {
+   "png": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
+   "tint": "silhouette"
+  },
+  "elden_ring": {
+   "png": "955a29d258c6a88097ec44efef4dc66207753b11",
+   "tint": "auto"
+  },
+  "elden_stars": {
+   "png": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
+   "tint": "silhouette"
+  },
+  "emerald_star": {
+   "png": "a4c373803a920ed5d04093d88cba8b6f40454c3c",
+   "tint": "auto"
+  },
+  "emerald_star_pmttydns_icon": {
+   "png": "1ad93f2abae08710fbad0936f8a6cdee7322f8a3",
+   "tint": "auto"
+  },
+  "faith": {
+   "png": "626adcea81d1e5f0ec05f99eb49fd4446e7e52c9",
+   "tint": "auto"
+  },
+  "fallen_star": {
+   "png": "75d7fb1062f4f81eb510a6cb441f85819eae9617",
+   "tint": "auto"
+  },
+  "feather": {
+   "png": "47dfc416bf37e78d80e021e517425dd2cd6974b9",
+   "tint": "auto"
+  },
+  "garnet_star": {
+   "png": "35c838cb2a80a5bdc8ae0c2f9fb0e19424ed68a1",
+   "tint": "auto"
+  },
+  "garnet_star_pmttydns_icon": {
+   "png": "040f70a0877b7f647502120685e9508b180dcf33",
+   "tint": "auto"
+  },
+  "gold_star": {
+   "png": "127ac246e772f9b0113d5c83be4db5aa7f20d0d1",
+   "tint": "auto"
+  },
+  "gold_star_pmttydns_icon": {
+   "png": "0fd436bdb62a6d97cb65248ace445e3db0c24d17",
+   "tint": "auto"
+  },
+  "greed": {
+   "png": "3fa89b94381b4636b7e9d5b167e6afff4db68de1",
+   "tint": "auto"
+  },
+  "guild_seal": {
+   "png": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
+   "tint": "auto"
+  },
+  "hk_star": {
+   "png": "79d016ea795b75b8d6bc82368dc96558083457c8",
+   "tint": "auto"
+  },
+  "isaac_no_circle": {
+   "png": "273c33abd5eb7d4ed130a50147f41960f1d7866c",
+   "tint": "silhouette"
+  },
+  "lol_star": {
+   "png": "6a79e1709a529b3353886f2e415702bbe68bed17",
+   "tint": "auto"
+  },
+  "mario_star": {
+   "png": "dd637fac2dfd2d7029340cac8471156b36b09a03",
+   "tint": "auto"
+  },
+  "monkey_d_star": {
+   "png": "502b7b20c5dd504ecd6f9dabc49c611f84824c87",
+   "tint": "auto"
+  },
+  "nebula_star": {
+   "png": "7bce3270adea13c48ca9f9233617f60d91925363",
+   "tint": {
+    "mode": "detail",
+    "cut": "dark"
+   }
+  },
+  "nether_star": {
+   "png": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
+   "tint": "auto"
+  },
+  "ninja_star": {
+   "png": "010244477dc99d755153a0ac5ba94322b35f37e9",
+   "tint": "auto"
+  },
+  "null_star": {
+   "png": "231c8f18162b20d5c8207dd24dbd7ba5b39a1f2a",
+   "tint": "silhouette"
+  },
+  "omori_star": {
+   "png": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+   "tint": "auto"
+  },
+  "patrick_star": {
+   "png": "4842329744e9640e657c0e5909400f10099b0d0e",
+   "tint": "auto"
+  },
+  "repo_orb": {
+   "png": "cc7cc261a755e1b167c10ef29071bd8a8401a087",
+   "tint": "auto"
+  },
+  "ruby_star": {
+   "png": "4b06eff55921e822dc8cef08c97d441e55940274",
+   "tint": "silhouette"
+  },
+  "ruby_star_pmttydns_icon": {
+   "png": "129443b4bdff4fddf84275e73ed4cdc21e14d26f",
+   "tint": "silhouette"
+  },
+  "sapphire_star_pmttydns_icon": {
+   "png": "ee915ddc16794f6ccb5e8f3a473c62dd95d2c0b8",
+   "tint": "silhouette"
+  },
+  "sapphire_starold": {
+   "png": "c77036b67ad4b698f374ea9f7df97689df163c38",
+   "tint": "silhouette"
+  },
+  "scrap": {
+   "png": "27e828a4b0084d24fe092bb1807253c468cca9b2",
+   "tint": "auto"
+  },
+  "silksong_star": {
+   "png": "8038cdedc1967f19a82a5dc34503341f4a32ff8b",
+   "tint": "auto"
+  },
+  "solar_sun": {
+   "png": "caccf7ff8ce472def5d14779dbc70484aab6b684",
+   "tint": "auto"
+  },
+  "star_of_beth": {
+   "png": "f21f2877886482116ec5cbb3a6934eaf02e7d2ff",
+   "tint": "auto"
+  },
+  "starstorm": {
+   "png": "702f3b83c2cf4e53bf8878e95025734703611ea7",
+   "tint": "auto"
+  },
+  "stuffed_star": {
+   "png": "1c50b498609fd74af1cbf664c833b48c7b3e7407",
+   "tint": "auto"
+  },
+  "the_poorly_drawn_barnstar": {
+   "png": "f3c52a3886e575db85a6a24506a7a6ffae925927",
+   "tint": "auto"
+  },
+  "thunderfury_blessed_blade_of_the_starseeker": {
+   "png": "f1a477caf6c4d00c252f50d65bd8ac0fc6f09afd",
+   "tint": "auto"
+  },
+  "triforce": {
+   "png": "85d77d7d27e05776d8d725f0802dccc9e34f3bea",
+   "tint": "auto"
+  },
+  "warpstar": {
+   "png": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+   "tint": "auto"
+  },
+  "yinyangultra": {
+   "png": "ca1bbfb03595f64e2268a57aca0b510b2e52af4e",
+   "tint": "silhouette"
+  },
+  "bfables": {
+   "png": "c659c492806f52480508f989cb55a426afe1aac5",
+   "tint": {
+    "mode": "detail",
+    "cut": "dark"
+   }
+  },
+  "bgold": {
+   "png": "2a3fc29e8f0e24c43616ba9881dcd77a87b3a100",
+   "tint": "silhouette"
+  },
+  "bronze": {
+   "png": "ec7a7fafdcd4dbd9c9bad9b18f8aea4354f4e68a",
+   "tint": "silhouette"
+  },
+  "isaac": {
+   "png": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+   "tint": "auto"
+  },
+  "nuke": {
+   "png": "be52da8e66fbe240bd4ef8962d8ce199d64b2f67",
+   "tint": "auto"
+  },
+  "silver": {
+   "png": "2553f5b8466a130bcbc76265bc5388aecbf657b5",
+   "tint": "silhouette"
+  },
+  "star": {
+   "png": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+   "tint": "silhouette"
+  },
+  "undertale": {
+   "png": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
+   "tint": "auto"
+  }
+ }
+}

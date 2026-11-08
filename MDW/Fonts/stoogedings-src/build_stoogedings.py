@@ -39,17 +39,27 @@ Renderer behavior that shaped the design (tested in Photoshop 2023 and macOS Cor
 
 usage: python build_stoogedings.py
 Rebuilds MDW/Fonts/stoogedings.ttf from Types/ and Types/Stars/ of the repo this script lives in. Run it after
-adding or changing icons, then commit stoogedings.ttf and stoogedings.json together with the PNGs.
+adding or changing icons, then commit stoogedings.ttf, stoogedings.json and stoogedings-inputs.json with the PNGs.
 stoogedings.json (token names, aliases, codepoints, per-icon tint modes) is updated in place: new PNGs get the
 next free codepoint and existing codepoints never move.
-needs: pip install -r requirements.txt   (fonttools, skia-pathops, opencv-python-headless, numpy, pillow)
+Incremental (11-08): stoogedings-inputs.json records what the committed font's icons and badges were drawn from (each
+PNG's git blob id and tint mode, the letter and label fonts', RECIPE). A glyph whose inputs match is copied from the committed
+font byte for byte; only added or changed icons are drawn, the same on macOS and Linux (PNGs by libdeflate, the halo
+in integers, trig correctly rounded). Bump RECIPE to redraw every icon or badge after changing how they are drawn.
+needs: pip install -r requirements.txt   (fonttools, skia-pathops, opencv-python-headless, numpy, pillow, deflate)
 """
 import base64
+import hashlib
 import io
 import json
 import math
 import os
 import re
+import struct
+import zlib
+from decimal import ROUND_FLOOR, Decimal, localcontext
+from fractions import Fraction
+from functools import lru_cache
 from types import SimpleNamespace
 
 import cv2
@@ -83,6 +93,126 @@ GLOW_SIGMA = 0.42             # blur sigma per unit of blurred reach (fits that 
 GLOW_WORK = 2                 # font units per px while making it
 GLOW_UPP = 12                 # font units per halo PNG px
 GLOWS = {"glow": (255, 255, 255), "darkglow": (0, 0, 0)}
+PNG_LEVEL = 12                # libdeflate's best
+HALO_BITS = 34                # the halo's fixed point (1/2**34: finer than float32 at its faint edge)
+RECORD = "stoogedings-inputs.json"   # beside the manifest: what the committed font's glyphs were drawn from
+RECIPE = {"icons": 1, "badges": 1}   # bump one to redraw all its glyphs
+
+
+# ---- the same bytes on every machine (11-08) ------------------------------------------------
+# libm's sin and cos differ in the last bit between macOS and Linux: these are correctly rounded (Decimal).
+_PI = Decimal("3.14159265358979323846264338327950288419716939937510582097494459230781640628620899863")
+_TINY = Decimal(10) ** -64
+
+
+def _dsincos(d):
+    """(sin d, cos d) of a Decimal, at the context's precision."""
+    two_pi = 2 * _PI
+    d -= two_pi * (d / two_pi).to_integral_value(rounding=ROUND_FLOOR)
+    if d > _PI:
+        d -= two_pi
+    x2, s, c, ts, tc, n = d * d, d, Decimal(1), d, Decimal(1), 1
+    while True:
+        ts, tc = -ts * x2 / ((2 * n) * (2 * n + 1)), -tc * x2 / ((2 * n - 1) * (2 * n))
+        if max(abs(ts), abs(tc)) < _TINY:
+            return s, c
+        s, c, n = s + ts, c + tc, n + 1
+
+
+@lru_cache(maxsize=None)
+def _sincos(x):
+    with localcontext() as ctx:
+        ctx.prec = 60
+        s, c = _dsincos(Decimal(x))
+        return float(s), float(c)
+
+
+def sin(x):
+    return _sincos(float(x))[0]
+
+
+def cos(x):
+    return _sincos(float(x))[1]
+
+
+def png(im):
+    """im as PNG bytes, the same on every machine: libdeflate (Pillow's zlib differs by platform), each row's filter
+    by least absolute sum; an ICC profile kept as Pillow keeps it."""
+    import deflate                                     # only the font's build needs it
+    a = np.asarray(im.convert("RGBA"), dtype=np.uint8)
+    h, w = a.shape[:2]
+    x = a.reshape(h, w * 4).astype(np.int16)
+    up = np.vstack([np.zeros((1, w * 4), np.int16), x[:-1]])
+    left = np.hstack([np.zeros((h, 4), np.int16), x[:, :-4]])
+    corner = np.hstack([np.zeros((h, 4), np.int16), up[:, :-4]])
+    p = left + up - corner
+    pa, pb, pc = np.abs(p - left), np.abs(p - up), np.abs(p - corner)
+    paeth = np.where((pa <= pb) & (pa <= pc), left, np.where(pb <= pc, up, corner))
+    rows = np.stack([x, x - left, x - up, x - (left + up) // 2, x - paeth]) & 255
+    pick = np.minimum(rows, 256 - rows).sum(axis=2, dtype=np.int64).argmin(axis=0)
+    raw = np.hstack([pick[:, None], rows[pick, np.arange(h)]]).astype(np.uint8).tobytes()
+
+    def chunk(kind, data):
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+    out = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 6, 0, 0, 0))
+    if im.info.get("icc_profile"):
+        out += chunk(b"iCCP", b"ICC Profile\0\0" + deflate.zlib_compress(im.info["icc_profile"], PNG_LEVEL))
+    return out + chunk(b"IDAT", deflate.zlib_compress(raw, PNG_LEVEL)) + chunk(b"IEND", b"")
+
+
+def _axis(n, m, area):
+    """Resize weights n -> m px (cv2's INTER_AREA, else INTER_LINEAR) exactly: (index, weight) arrays (m, taps) and
+    their denominator, in integers."""
+    rows = []
+    for j in range(m):
+        if area:                                       # cv2 computeResizeAreaTab, in units of 1/m px
+            f1, f2 = j * n, (j + 1) * n
+            s1, s2 = -(-f1 // m), min(f2 // m, n - 1)
+            s1 = min(s1, s2)
+            row = [(s1 - 1, s1 * m - f1)] if (s1 * m - f1) * 1000 > m else []
+            row += [(s, m) for s in range(s1, s2)]
+            if (f2 - s2 * m) * 1000 > m:
+                row.append((s2, min(f2 - s2 * m, m)))
+        else:                                          # cv2 INTER_LINEAR, in units of 1/(2m) px
+            t = (2 * j + 1) * n - m
+            s, f = t // (2 * m), t % (2 * m)
+            if s < 0:
+                s, f = 0, 0
+            if s >= n - 1:
+                s, f = n - 1, 0
+            row = [(s, 2 * m - f), (min(s + 1, n - 1), f)]
+        rows.append(row)
+    taps = max(len(r) for r in rows)
+    idx = np.array([[i for i, _ in r] + [0] * (taps - len(r)) for r in rows], np.int64)
+    wts = np.array([[v for _, v in r] + [0] * (taps - len(r)) for r in rows], np.int64)
+    return idx, wts, (n if area else 2 * m)
+
+
+def _resize(a, size, area):
+    """Integer image a resized to size (w, h) as cv2.resize would: (integer numerators, their denominator)."""
+    (xi, xw, xd), (yi, yw, yd) = _axis(a.shape[1], size[0], area), _axis(a.shape[0], size[1], area)
+    a = a.astype(np.int64)
+    b = sum(a[:, xi[:, t]] * xw[:, t] for t in range(xi.shape[1]))
+    return sum(b[yi[:, t], :] * yw[:, t, None] for t in range(yi.shape[1])), xd * yd
+
+
+def _div(n, d):
+    """n / d rounded half to even (as np.round), in integers (n >= 0; object arrays for Python ints)."""
+    q, r = n // d, n % d
+    return q + ((2 * r > d) | ((2 * r == d) & (q % 2 == 1)))
+
+
+@lru_cache(maxsize=None)
+def _gauss(sigma):
+    """cv2.GaussianBlur's float kernel for sigma (its size), in integers summing to about 2**28: (kernel, its sum)."""
+    k = round(sigma * 8 + 1) | 1
+    with localcontext() as ctx:
+        ctx.prec = 60
+        g = [(-(Decimal(i - (k - 1) // 2) ** 2) / (2 * Decimal(sigma) ** 2)).exp() for i in range(k)]
+        total = sum(g)
+        ints = [int((v / total * 2 ** 28).to_integral_value()) for v in g]
+    return np.array(ints, np.float64), sum(ints)
+
 
 DEFAULT_ALIASES = {
     "darkmatter": ["dark matter"],
@@ -211,16 +341,21 @@ def sticker_mask(alpha, pad):
     return cv2.dilate(m.astype(np.uint8), ellipse(pad)).astype(bool)
 
 
-def halo(alpha, w_u, h_u):
-    """Halo alpha (0..1) of a w_u x h_u unit icon, GLOW_SIZE beyond it, GLOW_WORK units per px."""
+def halo_q(alpha, w_u, h_u):
+    """Halo alpha of a w_u x h_u unit icon, GLOW_SIZE beyond it, GLOW_WORK units per px, in 1/2**HALO_BITS before
+    GLOW_OPACITY: cv2's area or linear resize, dilate and Gaussian blur, in integers (the blur in 17-bit halves: every
+    float sum under 2**53, so exact in any order)."""
     size = (max(1, round(w_u / GLOW_WORK)), max(1, round(h_u / GLOW_WORK)))
-    shrink = size[0] < alpha.shape[1]
-    a = cv2.resize(alpha.astype(np.float32) / 255, size, interpolation=cv2.INTER_AREA if shrink else cv2.INTER_LINEAR)
-    a = np.pad(a, round(GLOW_SIZE / GLOW_WORK))
-    a = cv2.dilate(a, ellipse(GLOW_SPREAD * GLOW_SIZE / GLOW_WORK))
-    sigma = GLOW_SIGMA * (1 - GLOW_SPREAD) * GLOW_SIZE / GLOW_WORK
-    a = cv2.GaussianBlur(a, (0, 0), sigma, borderType=cv2.BORDER_CONSTANT)
-    return a * GLOW_OPACITY
+    num, den = _resize(alpha, size, size[0] < alpha.shape[1])
+    a = np.pad(_div(num.astype(object) * 2 ** HALO_BITS, den * 255).astype(np.int64), round(GLOW_SIZE / GLOW_WORK))
+    a = cv2.dilate(a.astype(np.float64), ellipse(GLOW_SPREAD * GLOW_SIZE / GLOW_WORK)).astype(np.int64)
+    k, total = _gauss(GLOW_SIGMA * (1 - GLOW_SPREAD) * GLOW_SIZE / GLOW_WORK)
+    one = np.ones((1, 1))
+    for kx, ky in ((k, one), (one, k)):
+        hi, lo = (cv2.sepFilter2D(h.astype(np.float64), cv2.CV_64F, kx, ky, borderType=cv2.BORDER_CONSTANT).astype(np.int64)
+                  for h in (a >> 17, a & (2 ** 17 - 1)))
+        a = _div((hi << 17) + lo, total)
+    return a
 
 
 def icon_art(im, tint="auto"):
@@ -241,10 +376,14 @@ def icon_art(im, tint="auto"):
     upp = w_u / big.width
     sil = silhouette(arr[..., 3])
     pad = int(round(OUTLINE / upp))
-    glow = halo(arr[..., 3], w_u, h_u)
+    q = halo_q(arr[..., 3], w_u, h_u)
+    glow = (q * (GLOW_OPACITY / 2 ** HALO_BITS)).astype(np.float32)
     g_w, g_h = glow.shape[1] * GLOW_WORK, glow.shape[0] * GLOW_WORK
     size = (max(1, round(g_w / GLOW_UPP)), max(1, round(g_h / GLOW_UPP)))
-    glow_png = np.clip(np.round(cv2.resize(glow, size, interpolation=cv2.INTER_AREA) * 255), 0, 255).astype(np.uint8)
+    num, den = _resize(q, size, True)
+    opacity = Fraction(str(GLOW_OPACITY)) * 255
+    glow_png = np.clip(_div(num.astype(object) * opacity.numerator, den * 2 ** HALO_BITS * opacity.denominator)
+                       .astype(np.int64), 0, 255).astype(np.uint8)
     return SimpleNamespace(im=im, w_u=w_u, h_u=h_u, arr=arr, upp=upp, sil=sil, tint=tint_mask(sil, arr[..., :3], tint),
                            pad=pad, sticker=sticker_mask(arr[..., 3], pad), glow=glow, glow_w=g_w, glow_h=g_h,
                            glow_png=glow_png)
@@ -281,7 +420,7 @@ def trace(mask, upp, x0, top, external=False, eps=0.9):
 
 
 def circle(cx, cy, r, clockwise, n=64):
-    pts = [(round(cx + r * math.cos(2 * math.pi * i / n)), round(cy + r * math.sin(2 * math.pi * i / n))) for i in range(n)]
+    pts = [(round(cx + r * cos(2 * math.pi * i / n)), round(cy + r * sin(2 * math.pi * i / n))) for i in range(n)]
     return pts[::-1] if clockwise else pts  # math order is counter-clockwise in y-up
 
 
@@ -289,7 +428,7 @@ def prohibition(cx, cy, r, w):
     """Red 'no' sign: ring + 45-degree bar, as TrueType contours and an SVG path (y flipped)."""
     ring = [circle(cx, cy, r, True), circle(cx, cy, r - w, False)]
     d, inner = w / 2, r - w / 2
-    ux, uy = math.cos(math.radians(135)), math.sin(math.radians(135))   # bar from top-left to bottom-right
+    ux, uy = cos(math.radians(135)), sin(math.radians(135))   # bar from top-left to bottom-right
     nx, ny = -uy, ux
     ends = [(cx + ux * inner, cy + uy * inner), (cx - ux * inner, cy - uy * inner)]
     bar = [(round(ends[0][0] + nx * d), round(ends[0][1] + ny * d)), (round(ends[1][0] + nx * d), round(ends[1][1] + ny * d)),
@@ -614,16 +753,20 @@ def cap_height(glyphs, cmap):
     return _ink(glyphs, cmap, "H")[3]
 
 
-def build_badges(label_font_path):
+def build_badges(label_font_path, keep=frozenset()):
     """[(spellings, glyph name, plain outline, svg body, advance, (salt outline, salt label), first)] for every timing
-    tag and cost; first: one of the 341 of 2026-10-22 (their glyphs keep their place)."""
+    tag and cost; first: one of the 341 of 2026-10-22 (their glyphs keep their place). Names in keep: no drawing
+    (outline, body, advance and salt None)."""
     label = TTFont(label_font_path)
     glyphs, cmap = label.getGlyphSet(), label.getBestCmap()
     caps, out = cap_height(glyphs, cmap), []
     for name, kind, n, spellings in cost_badges():
+        if name in keep:
+            out.append((spellings, name, None, None, None, None, False))
+            continue
         outline, body, advance, alt = cost_badge(glyphs, cmap, caps, kind, n)
         out.append((spellings, name, outline, body, advance, alt, False))
-    return _tag_badges(glyphs, cmap, caps) + out
+    return _tag_badges(glyphs, cmap, caps, keep) + out
 
 
 # ---- cooldown rings (owner 2026-11-04, design B): site/assets/text.js ringHtml, the cooldown badge's left end ------
@@ -939,13 +1082,16 @@ def num4(v):
     return f"{v:.4f}".rstrip("0").rstrip(".")
 
 
-def _tag_badges(glyphs, cmap, cap_height):
+def _tag_badges(glyphs, cmap, cap_height, keep=frozenset()):
     scale = BADGE_CAPS / cap_height
     height = BADGE_TOP - BADGE_BOTTOM
     baseline = (BADGE_TOP + BADGE_BOTTOM) / 2 - BADGE_CAPS / 2
     out, tags, first = [], badge_tags(), {t for t, _ in _first_tags()}
     assert len({badge_glyph(t) for t, _ in tags}) == len(tags), "duplicate badge"
     for tag, group in tags:
+        if badge_glyph(tag) in keep:
+            out.append(([tag], badge_glyph(tag), None, None, None, None, tag in first))
+            continue
         top, bottom, border = BADGE_GROUPS[group]
         label_width = _width(glyphs, cmap, tag, scale)
         width = max(height, label_width + 2 * BADGE_PAD)
@@ -984,10 +1130,51 @@ REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))       # <repo>/MDW/
 FAMILY = "stoogedings"
 
 
+SVG_HEAD = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+
+
+def blob_id(data):
+    """git's blob id of data (as git ls-tree shows it)."""
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def icon_glyphs(key):
+    """Every glyph an icon draws."""
+    base = "icon_" + re.sub(r"[^a-z0-9]", "_", key)
+    return [base + s for s in ("", ".tint", ".stk_bg", ".sticker", ".no_over", ".no", ".sticker.salt",
+                               *(f".{v}{s}" for v in GLOWS for s in ("_bg", "")))]
+
+
+def committed(font_path, record_path):
+    """({glyph name: (glyph, metrics, svg body or None)} of the committed font, its record); ({}, {}) without either."""
+    if not (os.path.exists(font_path) and os.path.exists(record_path)):
+        return {}, {}
+    with open(font_path, "rb") as fh:
+        font = TTFont(io.BytesIO(fh.read()))
+    order, glyf, hmtx, bodies = font.getGlyphOrder(), font["glyf"], font["hmtx"], {}
+    for doc in font["SVG "].docList:
+        data, lo, hi = (doc.data, doc.startGlyphID, doc.endGlyphID) if hasattr(doc, "data") else doc
+        head = f'{SVG_HEAD}<g id="glyph{lo}">'
+        assert lo == hi and data.startswith(head) and data.endswith("</g></svg>"), "not this script's font"
+        bodies[order[lo]] = data[len(head):-len("</g></svg>")]
+    with open(record_path) as fh:
+        record = json.load(fh)
+    return {n: (glyf[n], hmtx[n], bodies.get(n)) for n in order}, record
+
+
 def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
           out_path=os.path.join(REPO, "MDW", "Fonts", f"{FAMILY}.ttf")):
-    """Build the font from repo/Types into out_path, updating the config at config_path."""
+    """Build the font from repo/Types into out_path, updating the config at config_path and the record (RECORD) beside
+    it; icons and badges whose inputs match the record are copied from repo's committed font."""
     cfg = load_config(config_path, repo)
+    record_path = os.path.join(os.path.dirname(config_path), RECORD)
+    old, was = committed(os.path.join(repo, "MDW", "Fonts", f"{FAMILY}.ttf"), record_path)
+    record = {"recipe": RECIPE}
+    for part, path in (("letters", "MDW/Fonts/Bree Serif Regular.ttf"), ("labels", LABEL_FONT)):
+        with open(os.path.join(repo, path), "rb") as fh:
+            record[part] = blob_id(fh.read())
+    record["icons"] = {}
+    same = lambda part: (was.get("recipe") or {}).get(part) == RECIPE[part]
 
     opts = subset.Options()
     opts.layout_features = []
@@ -1006,85 +1193,97 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     glyf, hmtx = font["glyf"], font["hmtx"]
 
     def add_glyph(name, polys, adv):
-        pen = TTGlyphPen(None)
-        for p in polys:
-            pen.moveTo(p[0])
-            for pt in p[1:]:
-                pen.lineTo(pt)
-            pen.closePath()
-        g = pen.glyph()
-        if g.numberOfContours:
-            g.recalcBounds(glyf)
-        glyf[name] = g
-        hmtx[name] = (adv, g.xMin if g.numberOfContours else 0)
+        """polys None: the committed font's glyph and metrics."""
+        if polys is None:
+            glyf[name], hmtx[name] = old[name][:2]
+        else:
+            pen = TTGlyphPen(None)
+            for p in polys:
+                pen.moveTo(p[0])
+                for pt in p[1:]:
+                    pen.lineTo(pt)
+                pen.closePath()
+            g = pen.glyph()
+            if g.numberOfContours:
+                g.recalcBounds(glyf)
+            glyf[name] = g
+            hmtx[name] = (adv, g.xMin if g.numberOfContours else 0)
         if name not in order:
             order.append(name)
 
     spacer = "stk_space"
     add_glyph(spacer, [], OUTLINE - SIDE)
 
-    svg_docs, ligatures, multiples, glows, glow_multiples, sticker_alts = [], {}, [], [], [], []
+    svg_docs, ligatures, multiples, glows, glow_multiples, sticker_alts, drawn = [], {}, [], [], [], [], []
     for key, info in cfg["icons"].items():
         path = os.path.join(repo, info["file"])
         if not os.path.exists(path):
             print("missing file, codepoint kept reserved:", key, info["file"])
             continue
-        art = icon_art(Image.open(path).convert("RGBA"), info.get("tint", "auto"))
-        im, w_u, h_u, arr, upp, sil, tint, pad, stk = (art.im, art.w_u, art.h_u, art.arr, art.upp, art.sil, art.tint,
-                                                       art.pad, art.sticker)
-        top = TOP - (HEIGHT - h_u) / 2
-        w_r, h_r = round(w_u), round(h_u)
-
-        small = im.copy()
-        small.thumbnail((RASTER, RASTER), Image.LANCZOS)
-        buf = io.BytesIO()
-        small.save(buf, "PNG", optimize=True)
-        b64 = base64.b64encode(buf.getvalue()).decode()
-
+        with open(path, "rb") as fh:
+            data = fh.read()
+        record["icons"][key] = inputs = {"png": blob_id(data), "tint": info.get("tint", "auto")}
         base = "icon_" + re.sub(r"[^a-z0-9]", "_", key)
-        adv = round(w_u) + 2 * SIDE
         g_color, g_tint = base, base + ".tint"
         g_stk, g_stk_bg = base + ".sticker", base + ".stk_bg"
         g_no, g_no_over = base + ".no", base + ".no_over"
+        if same("icons") and (was.get("icons") or {}).get(key) == inputs and all(n in old for n in icon_glyphs(key)):
+            adv = old[g_color][1][0]                      # kept: every glyph as committed, in the same order
+            for g in (g_color, g_tint, g_stk_bg, g_stk, g_no_over, g_no):
+                add_glyph(g, None, adv)
+            svg_docs += [(g_color, None), (g_no_over, None)]
+            multiples += [(g_stk, [g_stk_bg, g_color, spacer]), (g_no, [g_color, g_no_over])]
+            sticker_alts.append(([g_stk_bg, g_color, spacer], g_stk + ".salt", None, None))
+            glows.append((base, adv, None, dict.fromkeys(GLOWS)))
+        else:                                             # drawn anew
+            drawn.append(key)
+            art = icon_art(Image.open(io.BytesIO(data)).convert("RGBA"), inputs["tint"])
+            im, w_u, h_u, arr, upp, sil, tint, pad, stk = (art.im, art.w_u, art.h_u, art.arr, art.upp, art.sil,
+                                                           art.tint, art.pad, art.sticker)
+            top = TOP - (HEIGHT - h_u) / 2
+            w_r, h_r = round(w_u), round(h_u)
+            small = im.copy()
+            small.thumbnail((RASTER, RASTER), Image.LANCZOS)
+            b64 = base64.b64encode(png(small)).decode()
+            adv = round(w_u) + 2 * SIDE
 
-        sil_polys = trace(sil, upp, SIDE, top)
-        add_glyph(g_color, sil_polys, adv)                       # glyf = fallback for renderers without SVG
-        svg_docs.append((g_color, f'<image x="{SIDE}" y="{-round(top)}" width="{w_r}" height="{h_r}" '
-                                  f'xlink:href="data:image/png;base64,{b64}"/>'))
-        add_glyph(g_tint, trace(tint, upp, SIDE, top), adv)
+            sil_polys = trace(sil, upp, SIDE, top)
+            add_glyph(g_color, sil_polys, adv)                       # glyf = fallback for renderers without SVG
+            svg_docs.append((g_color, f'<image x="{SIDE}" y="{-round(top)}" width="{w_r}" height="{h_r}" '
+                                      f'xlink:href="data:image/png;base64,{b64}"/>'))
+            add_glyph(g_tint, trace(tint, upp, SIDE, top), adv)
 
-        # sticker = [outline in text color, advance OUTLINE-SIDE] [color icon] [spacer OUTLINE-SIDE]
-        stk_polys = trace(stk, upp, OUTLINE - pad * upp, top + pad * upp, external=True)
-        add_glyph(g_stk_bg, stk_polys, OUTLINE - SIDE)
-        add_glyph(g_stk, stk_polys, adv + 2 * (OUTLINE - SIDE))       # only seen if LAYERS doesn't run
-        multiples.append((g_stk, [g_stk_bg, g_color, spacer]))
-        # salt sticker: [outline ring + :tint icon] as one plain glyph, in place of the three above
-        ring = stk & ~cv2.erode(stk.astype(np.uint8), ellipse(STICKER_LINE / upp)).astype(bool)
-        ring[pad:pad + tint.shape[0], pad:pad + tint.shape[1]] |= tint
-        sticker_alts.append(([g_stk_bg, g_color, spacer], g_stk + ".salt",
-                             trace(ring, upp, OUTLINE - pad * upp, top + pad * upp), adv + 2 * (OUTLINE - SIDE)))
+            # sticker = [outline in text color, advance OUTLINE-SIDE] [color icon] [spacer OUTLINE-SIDE]
+            stk_polys = trace(stk, upp, OUTLINE - pad * upp, top + pad * upp, external=True)
+            add_glyph(g_stk_bg, stk_polys, OUTLINE - SIDE)
+            add_glyph(g_stk, stk_polys, adv + 2 * (OUTLINE - SIDE))       # only seen if LAYERS doesn't run
+            multiples.append((g_stk, [g_stk_bg, g_color, spacer]))
+            # salt sticker: [outline ring + :tint icon] as one plain glyph, in place of the three above
+            ring = stk & ~cv2.erode(stk.astype(np.uint8), ellipse(STICKER_LINE / upp)).astype(bool)
+            ring[pad:pad + tint.shape[0], pad:pad + tint.shape[1]] |= tint
+            sticker_alts.append(([g_stk_bg, g_color, spacer], g_stk + ".salt",
+                                 trace(ring, upp, OUTLINE - pad * upp, top + pad * upp), adv + 2 * (OUTLINE - SIDE)))
 
-        # no = [color icon] [zero-width red sign drawn back over it]
-        cx, cy = -adv + SIDE + w_u / 2, TOP - HEIGHT / 2
-        r = HEIGHT / 2 + 30
-        no_polys, no_svg = prohibition(cx, cy, r, 0.14 * r)
-        add_glyph(g_no_over, no_polys, 0)
-        svg_docs.append((g_no_over, f'<path d="{no_svg}" fill="{NO_RED}"/>'))
-        add_glyph(g_no, sil_polys, adv)
-        multiples.append((g_no, [g_color, g_no_over]))
+            # no = [color icon] [zero-width red sign drawn back over it]
+            cx, cy = -adv + SIDE + w_u / 2, TOP - HEIGHT / 2
+            r = HEIGHT / 2 + 30
+            no_polys, no_svg = prohibition(cx, cy, r, 0.14 * r)
+            add_glyph(g_no_over, no_polys, 0)
+            svg_docs.append((g_no_over, f'<path d="{no_svg}" fill="{NO_RED}"/>'))
+            add_glyph(g_no, sil_polys, adv)
+            multiples.append((g_no, [g_color, g_no_over]))
 
-        # glow = [halo, advance GLOW_SIZE-SIDE] [color icon] [glow_space]; glyphs added last
-        glow, g_alpha = art.glow, art.glow_png
-        g_top, g_w, g_h = top + GLOW_SIZE, art.glow_w, art.glow_h
-        docs = {}
-        for variant, rgb in GLOWS.items():
-            buf = io.BytesIO()
-            rgba = np.dstack([np.full_like(g_alpha, v) for v in rgb] + [g_alpha])
-            Image.fromarray(rgba).save(buf, "PNG", optimize=True)
-            docs[variant] = (f'<image x="0" y="{num(-g_top)}" width="{g_w}" height="{g_h}" '
-                             f'xlink:href="data:image/png;base64,{base64.b64encode(buf.getvalue()).decode()}"/>')
-        # outline: the whole halo
-        glows.append((base, adv, trace(glow >= 0.5 / 255, GLOW_WORK, 0, g_top, external=True), docs))
+            # glow = [halo, advance GLOW_SIZE-SIDE] [color icon] [glow_space]; glyphs added last
+            glow, g_alpha = art.glow, art.glow_png
+            g_top, g_w, g_h = top + GLOW_SIZE, art.glow_w, art.glow_h
+            docs = {}
+            for variant, rgb in GLOWS.items():
+                rgba = np.dstack([np.full_like(g_alpha, v) for v in rgb] + [g_alpha])
+                pic = base64.b64encode(png(Image.fromarray(rgba))).decode()
+                docs[variant] = (f'<image x="0" y="{num(-g_top)}" width="{g_w}" height="{g_h}" '
+                                 f'xlink:href="data:image/png;base64,{pic}"/>')
+            # outline: the whole halo
+            glows.append((base, adv, trace(glow >= 0.5 / 255, GLOW_WORK, 0, g_top, external=True), docs))
 
         cp = int(info["pua"], 16)
         for t in cmaps:
@@ -1108,7 +1307,10 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
                     ligatures[text] = (comps, g)
 
     badge_ligatures, badge_alts, later = [], [], []
-    for typed, name, outline, body, advance, alt, first in build_badges(os.path.join(repo, LABEL_FONT)):
+    keep = ({n for n in old if n.startswith("badge_") and n + ".salt" in old}
+            if same("badges") and was.get("labels") == record["labels"] else set())
+    made = build_badges(os.path.join(repo, LABEL_FONT), keep)
+    for typed, name, outline, body, advance, alt, first in made:
         if first:
             add_glyph(name, outline, advance)
         else:                                   # the wider range and the costs (2026-11-03) go last: older ids kept
@@ -1162,7 +1364,11 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     # salt (one-colour) badges and stickers last: older glyph ids unchanged; then the badges of 2026-11-03 and theirs
     late = {name for name, _, _ in later}
 
-    def salt_glyph(name, advance, polys, label):
+    def salt_glyph(name, advance, alt):
+        if alt is None:                                   # kept
+            add_glyph(name + ".salt", None, None)
+            return
+        polys, label = alt
         pen = TTGlyphPen(None)
         for p in polys:
             pen.moveTo(p[0])
@@ -1176,16 +1382,16 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
         hmtx[name + ".salt"] = (advance, g.xMin)
         if name + ".salt" not in order:
             order.append(name + ".salt")
-    for name, advance, (polys, label) in badge_alts:
+    for name, advance, alt in badge_alts:
         if name not in late:
-            salt_glyph(name, advance, polys, label)
+            salt_glyph(name, advance, alt)
     for _, name, polys, advance in sticker_alts:
         add_glyph(name, polys, advance)
     for name, outline, advance in later:
         add_glyph(name, outline, advance)
-    for name, advance, (polys, label) in badge_alts:
+    for name, advance, alt in badge_alts:
         if name in late:
-            salt_glyph(name, advance, polys, label)
+            salt_glyph(name, advance, alt)
     paren_glued = char_glyph[ord("(")] + ".glued"           # GLUED's "(": the same outline, no badge starts with it
     pen = TTGlyphPen(font.getGlyphSet())
     pen.addComponent(char_glyph[ord("(")], (1, 0, 0, 1, 0, 0))
@@ -1200,8 +1406,7 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     svg.docList = []
     for name, body in sorted(svg_docs, key=lambda d: gid[d[0]]):
         i = gid[name]
-        doc = ('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
-               f'<g id="glyph{i}">{body}</g></svg>')
+        doc = f'{SVG_HEAD}<g id="glyph{i}">{old[name][2] if body is None else body}</g></svg>'
         svg.docList.append((doc, i, i))
     svg.compressed = False
     font["SVG "] = svg
@@ -1294,7 +1499,10 @@ def build(repo=REPO, config_path=os.path.join(HERE, "stoogedings.json"),
     os.replace(out + ".tmp", out)         # atomic: Photoshop / Font Book never see a half-written file
     with open(config_path, "w") as fh:
         json.dump(cfg, fh, indent=1)
-    print(f"built {out}: {os.path.getsize(out) / 1e6:.1f} MB, {len(cfg['icons'])} icons, {len(ligatures)} token spellings")
+    with open(record_path, "w") as fh:
+        json.dump(record, fh, indent=1)
+    print(f"built {out}: {os.path.getsize(out) / 1e6:.1f} MB, {len(cfg['icons'])} icons, {len(ligatures)} token spellings; "
+          f"drawn: {', '.join(drawn) or 'no icon'}, {sum(b[2] is not None for b in made)} badges")
     return out
 
 

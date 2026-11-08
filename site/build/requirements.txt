@@ -1,5 +1,5 @@
 pillow==13.0.0       # AVIF (the card images; 11.3 or later)
--r ../../MDW/Fonts/stoogedings-src/requirements.txt   # the icon font's build: the token variants' pictures (unpinned there)
+-r ../../MDW/Fonts/stoogedings-src/requirements.txt   # the icon font's build: the token variants' pictures (pinned there)
 fonttools==4.67.0    # the mock-up's fonts as WOFF2 (build_site woff2_tag: a new version re-encodes them)
 brotli==1.2.1        # WOFF2's compressor
 numpy==2.5.4                       # the icon font's build

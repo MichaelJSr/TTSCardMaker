@@ -3,15 +3,18 @@ The icon fonts after a Types/ push (.github/workflows/stoogedings.yml, owner 202
 
 stoogedings is rebuilt from the repo's Types/ and Types/Stars/ by MDW/Fonts/stoogedings-src/build_stoogedings.py, after
 the runner proves it rebuilds the font last committed byte for byte (from that commit's own files: else nothing lands).
+The build is incremental (11-08): icons and badges whose inputs match its record (stoogedings-inputs.json) are copied
+from the committed font, so only added or changed icons are drawn; a glyph of anything else that changes stops the run.
 The glyphs whose outlines, metrics or pictures changed are found by name, and the card texts that shape to them or shape
 otherwise (HarfBuzz over the card data's psd_details.json and stats.json, as the 11-07 font lane did): those still land,
 and the commit names them. The website's badge font (badge_web_font.py) is rebuilt when its inputs changed since it was
-last committed, and site/assets/text.js takes its numbers.
+last committed, and site/assets/text.js takes its numbers; it lands only with redrawn badges or a new badge_web_font.py.
 
     python stoogedings.py --repo <checkout> --out <dir> [--data <folder with psd_details.json, stats.json>]
 
 Writes <out>/files/<repo path> for each file to commit, <out>/message.txt and <out>/summary.md. Exit 0 (with or without
-files), 2 when the runner does not rebuild the last font byte for byte (no files), 1 on an error.
+files), 2 when the runner does not rebuild the last font byte for byte or a glyph of an unchanged icon or badge
+changed (no files), 1 on an error.
 """
 import argparse
 import io
@@ -27,6 +30,7 @@ from concurrent.futures import ThreadPoolExecutor
 FONT = "MDW/Fonts/stoogedings.ttf"
 SRC = "MDW/Fonts/stoogedings-src"
 MANIFEST = f"{SRC}/stoogedings.json"
+RECORD = f"{SRC}/stoogedings-inputs.json"      # what the committed font's glyphs were drawn from
 BADGE = "site/rulebook/fonts/roboto-black.woff2"
 TEXT_JS = "site/assets/text.js"
 INPUTS = ("Types", SRC, "MDW/Fonts/Bree Serif Regular.ttf", "MDW/Fonts/Roboto Black.ttf", FONT, BADGE, TEXT_JS)
@@ -41,9 +45,9 @@ def git(repo: str, *args: str, data: bytes = None) -> bytes:
     return subprocess.run(["git", "-C", repo, *args], input=data, capture_output=True, check=True, env=NO_LAZY).stdout
 
 
-def last(repo: str, path: str) -> str:
-    """The last commit at HEAD that changed path."""
-    return git(repo, "log", "-1", "--format=%H", "HEAD", "--", path).decode().strip()
+def last(repo: str, *paths: str) -> str:
+    """The last commit at HEAD that changed one of paths."""
+    return git(repo, "log", "-1", "--format=%H", "HEAD", "--", *paths).decode().strip()
 
 
 def extract(repo: str, commit: str, dest: str) -> dict:
@@ -139,6 +143,27 @@ def shaped(path: str):
     return shape
 
 
+def record(tree: str) -> dict:
+    path = os.path.join(tree, RECORD)
+    return json.loads(read(path)) if os.path.exists(path) else {}
+
+
+def redrawn(was: dict, now: dict) -> tuple:
+    """(icons drawn anew, badges drawn anew, letters changed) by the build that turned record was into now."""
+    part = lambda r, k: (r.get("recipe") or {}).get(k)
+    icons = sorted(now.get("icons", {}) if part(was, "icons") != part(now, "icons") else
+                   (k for k, v in now.get("icons", {}).items() if (was.get("icons") or {}).get(k) != v))
+    return (icons, part(was, "badges") != part(now, "badges") or was.get("labels") != now.get("labels"),
+            was.get("letters") != now.get("letters"))
+
+
+def mine(name: str, icons: list, badges: bool, letters: bool) -> bool:
+    """Whether glyph name may change: one of icons' (build_stoogedings icon_glyphs), a badge's, a letter's."""
+    bases = {"icon_" + re.sub(r"[^a-z0-9]", "_", k) for k in icons}
+    return (name.split(".", 1)[0] in bases or badges and name.startswith("badge_")
+            or letters and not name.startswith(("icon_", "badge_")))
+
+
 def compare(old: str, new: str, data: str) -> tuple:
     """(glyphs changed, added or gone by name, {glyph or "shape": cards whose texts use it or shape otherwise})."""
     from fontTools.ttLib import TTFont
@@ -158,28 +183,30 @@ def compare(old: str, new: str, data: str) -> tuple:
 
 def badge(head: str, tree: str, repo: str) -> dict:
     """The badge font when its inputs moved since it was last committed: {path: bytes} of the woff2 (when its tables
-    changed) and text.js (its constants as printed); {} otherwise."""
+    changed) and text.js (when its constants print otherwise), {} when it rebuilds the same; None otherwise."""
     from fontTools.ttLib import TTFont
     if not os.path.exists(os.path.join(tree, BADGE)):
-        return {}
+        return None
     since = last(repo, BADGE)
     if not since or not git(repo, "diff", "--name-only", since, head, "--", *BADGE_INPUTS).strip():
-        return {}
+        return None
     was = read(os.path.join(tree, BADGE))
     printed = subprocess.run([sys.executable, os.path.join(tree, SRC, "badge_web_font.py")], cwd=os.path.join(tree, SRC),
                              capture_output=True, text=True, check=True).stdout
     made = read(os.path.join(tree, BADGE))
     old, new = TTFont(io.BytesIO(was)), TTFont(io.BytesIO(made))
-    if sorted(old.keys()) == sorted(new.keys()) and all(old.getTableData(t) == new.getTableData(t) for t in old.keys()
-                                                        if t != "GlyphOrder"):
-        return {}
-    out = {BADGE: made}
-    script = read(os.path.join(tree, TEXT_JS)).decode("utf-8")
+    out = {}
+    if sorted(old.keys()) != sorted(new.keys()) or any(old.getTableData(t) != new.getTableData(t) for t in old.keys()
+                                                       if t != "GlyphOrder"):
+        out[BADGE] = made
+    was_js = read(os.path.join(tree, TEXT_JS))
+    script = was_js.decode("utf-8")
     for line in printed.splitlines():
         found = re.match(r"const (\w+) = ", line)
         if found and found.group(1) in CONSTS:
             script = re.sub(rf"(?m)^const {found.group(1)} = .*;$", lambda _: line.rstrip(), script, count=1)
-    out[TEXT_JS] = script.encode("utf-8")
+    if script.encode("utf-8") != was_js:
+        out[TEXT_JS] = script.encode("utf-8")
     return out
 
 
@@ -193,32 +220,42 @@ def main(argv=None) -> int:
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(os.path.join(out, "files"))
     head = git(repo, "rev-parse", "HEAD").decode().strip()
-    font_commit = last(repo, FONT)
+    font_commit = last(repo, FONT, RECORD)
     lines = [f"## Stoogedings\n\nMain `{head[:8]}`; the font last committed in `{font_commit[:8]}`.\n"]
     # the runner rebuilds the last font byte for byte, from that commit's own files
     base = os.path.join(out, "base")
     extract(repo, font_commit, base)
-    manifest = read(os.path.join(base, MANIFEST))
+    manifest, kept = read(os.path.join(base, MANIFEST)), record(base)
     if build(base, os.path.join(out, "base.ttf")) != read(os.path.join(base, FONT)) \
-            or read(os.path.join(base, MANIFEST)) != manifest:
+            or read(os.path.join(base, MANIFEST)) != manifest or record(base) != kept or not kept:
         lines.append(f"This runner does not rebuild `{font_commit[:8]}`'s font byte for byte: nothing is committed.")
         write(out, lines, "")
         return 2
     now = os.path.join(out, "head")
     blobs = extract(repo, head, now)
     files = {}
-    was_font, was_manifest = read(os.path.join(now, FONT)), read(os.path.join(now, MANIFEST))
+    was_font, was_manifest, was = read(os.path.join(now, FONT)), read(os.path.join(now, MANIFEST)), record(now)
     made = build(now, os.path.join(out, "head.ttf"))
+    icons, badges, letters = redrawn(was, record(now))
     message = ""
-    if made != was_font or read(os.path.join(now, MANIFEST)) != was_manifest:
-        files[FONT], files[MANIFEST] = made, read(os.path.join(now, MANIFEST))
+    if made != was_font or read(os.path.join(now, MANIFEST)) != was_manifest or record(now) != was:
+        files.update({FONT: made, MANIFEST: read(os.path.join(now, MANIFEST)), RECORD: read(os.path.join(now, RECORD))})
         with open(os.path.join(out, "old.ttf"), "wb") as fh:
             fh.write(was_font)
         changed, used = compare(os.path.join(out, "old.ttf"), os.path.join(out, "head.ttf"), args.data)
-        icons = git(repo, "diff", "--name-only", font_commit, head, "--", "Types").decode().split()
-        message = "Font: stoogedings rebuilt" + (f" for {', '.join(os.path.basename(p) for p in icons[:5])}"
-                                                + (f" and {len(icons) - 5} more" if len(icons) > 5 else "") if icons else "")
-        body = [f"Glyphs changed: {len(changed)}" + (f" ({', '.join(changed[:30])}{', ...' if len(changed) > 30 else ''})"
+        from fontTools.ttLib import TTFont
+        both = set(TTFont(os.path.join(out, "old.ttf"), lazy=True).getGlyphOrder()) \
+            & set(TTFont(os.path.join(out, "head.ttf"), lazy=True).getGlyphOrder())
+        stray = [name for name in changed if name in both and not mine(name, icons, badges, letters)]
+        if stray:
+            lines.append(f"Glyphs of unchanged icons or badges changed ({', '.join(stray[:20])}): nothing is committed.")
+            write(out, lines, "")
+            return 2
+        paths = git(repo, "diff", "--name-only", font_commit, head, "--", "Types").decode().split()
+        message = "Font: stoogedings rebuilt" + (f" for {', '.join(os.path.basename(p) for p in paths[:5])}"
+                                                + (f" and {len(paths) - 5} more" if len(paths) > 5 else "") if paths else "")
+        body = [f"Drawn: {', '.join(icons) or 'no icon'}" + (", every badge" if badges else "") + " (the rest copied)",
+                f"Glyphs changed: {len(changed)}" + (f" ({', '.join(changed[:30])}{', ...' if len(changed) > 30 else ''})"
                                                      if changed else "")]
         for name, cards in sorted(used.items()):
             shown = sorted(cards)
@@ -227,6 +264,13 @@ def main(argv=None) -> int:
         message += "\n\n" + "\n".join(body)
         lines += [f"- {line}" for line in body]
     badge_files = badge(head, now, repo)
+    if badge_files == {}:
+        lines.append("- the badge font rebuilds the same")
+    if badge_files and not badges and not git(repo, "diff", "--name-only", last(repo, BADGE), head, "--",
+                                               f"{SRC}/badge_web_font.py").strip():
+        lines.append("- the badge font rebuilds otherwise, but no badge was redrawn and badge_web_font.py is as it was: "
+                     "not committed (bump build_stoogedings RECIPE[\"badges\"] after changing the badges)")
+        badge_files = {}
     if badge_files:
         files.update(badge_files)
         message = message or "Font: badge font rebuilt"

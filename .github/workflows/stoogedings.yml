@@ -3,10 +3,13 @@
 # website's badge font (badge_web_font.py, and site/assets/text.js's numbers), then commits them silently once the
 # guards and Card sync are quiet (.github/scripts/stoogedings.py). Nothing lands unless this runner first rebuilds the
 # font last committed byte for byte, from that commit's own files (the packages pinned in
-# .github/scripts/stoogedings-requirements.txt). Glyphs card texts shape to that changed (HarfBuzz over the card data, as
-# the 11-07 font lane checked) still land; the commit names them and their cards. No loop: the commit touches no Types/
-# file and is a GITHUB_TOKEN push (it starts no run), and a rebuild equal to main's commits nothing. Card sync is started
-# after the commit (its data reads the manifest; its data commit builds the site). Discord's emojis follow on their own.
+# .github/scripts/stoogedings-requirements.txt). The build is incremental (11-08): glyphs of unchanged icons and badges
+# are copied from the committed font (its record: stoogedings-inputs.json), only added or changed icons are drawn, the
+# same on macOS and Linux; a change to any other glyph stops the run. Glyphs card texts shape to that changed (HarfBuzz
+# over the card data, as the 11-07 font lane checked) still land; the commit names them and their cards. No loop: the
+# commit touches no Types/ file and is a GITHUB_TOKEN push (it starts no run), and a rebuild equal to main's commits
+# nothing. Card sync is started after the commit (its data reads the manifest; its data commit builds the site).
+# Discord's emojis follow on their own.
 name: Stoogedings
 
 on:
@@ -88,7 +91,7 @@ jobs:
           code=$?
           set -e
           cat "$RUNNER_TEMP/font/summary.md" >> "$GITHUB_STEP_SUMMARY" 2> /dev/null || true
-          if [ "$code" = 2 ]; then echo "::error::this runner does not rebuild the last font byte for byte: nothing is committed"; fi
+          if [ "$code" = 2 ]; then echo "::error::the rebuild was refused (the job summary says why): nothing is committed"; fi
           if [ "$code" = 0 ] && [ -n "$(find "$RUNNER_TEMP/font/files" -type f)" ]; then echo "files=true" >> "$GITHUB_OUTPUT"; fi
           exit "$code"
 
