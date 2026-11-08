@@ -90,26 +90,21 @@ jobs:
             /global_config.py
             /requirements-cards.txt
             /commands/psd_links.py
+            /commands/card_preview_reads.py
 
-      # The data's render and spot records (db/ on the data branch, Card sync's): the preview's renders read them
-      # (AutoCroissant psd_edit.RECORDS_DIR); one not read: {}.
-      - name: Records
-        continue-on-error: true
-        timeout-minutes: 2
+      # The preview's first reads, in the background while the setup runs (the runner's python3, stdlib only): the data's
+      # render and spot records (db/ on the data branch; AutoCroissant psd_edit.RECORDS_DIR) to records/, and the card's
+      # blobs into this checkout's object store, where the bake reads first. Preview waits for reads.done.
+      - name: Reads
+        working-directory: bot
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CARD: ${{ inputs.card }}
         run: |
-          dir=$RUNNER_TEMP/records
-          mkdir -p "$dir"
-          for f in render_record.json spot_record.json; do
-            if ! gh api -H "Accept: application/vnd.github.raw" "repos/$GITHUB_REPOSITORY/contents/db/$f?ref=data" > "$dir/$f" 2> /dev/null \
-                || ! jq -e 'type == "object"' "$dir/$f" > /dev/null; then
-              rm -f "$dir/$f"
-              echo "::warning::db/$f not read from the data branch: renders go without it"
-            fi
-          done
-          echo "CARD_RECORDS_DIR=$dir" >> "$GITHUB_ENV"
+          { python3 -S -m commands.card_preview_reads --card="$CARD" --edit "$RUNNER_TEMP/edit.json" --clone "$GITHUB_WORKSPACE" \
+              --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" --records "$RUNNER_TEMP/records" || true
+            touch "$RUNNER_TEMP/reads.done"; } < /dev/null > "$RUNNER_TEMP/reads.log" 2>&1 &
 
       # The shared setup (.github/actions/cards-python), without the oxipng CLI: the bake would recompress preview.png
       # (~4 s), which is never published.
@@ -146,6 +141,13 @@ jobs:
           CARD: ${{ inputs.card }}
           REQUEST: ${{ inputs.request }}
         run: |
+          while [ ! -e "$RUNNER_TEMP/reads.done" ] && [ $SECONDS -lt 20 ]; do sleep 0.1; done
+          [ -e "$RUNNER_TEMP/reads.done" ] || echo "reads: not done in 20 s: the preview reads what they lack itself"
+          sed 's/^/reads: /' "$RUNNER_TEMP/reads.log" 2> /dev/null || true
+          export CARD_RECORDS_DIR=$RUNNER_TEMP/records
+          for f in render_record.json spot_record.json; do
+            [ -s "$CARD_RECORDS_DIR/$f" ] || echo "::warning::db/$f not read from the data branch: renders go without it"
+          done
           python -m commands.card_preview --card="$CARD" --edit "$RUNNER_TEMP/edit.json" --out "$RUNNER_TEMP/preview" \
             --clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" --request="$REQUEST" \
             | tee -a "$GITHUB_STEP_SUMMARY"
