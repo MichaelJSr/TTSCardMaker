@@ -4071,7 +4071,7 @@
   ]
  },
  "Auxiliary/Minions/Mini_Auto_Croissant.psd": {
-  "blob": "839af4f06a1d167abbb4f135c32e2f0e722eb6b2",
+  "blob": "b36e362cca513231943887d56b8e76f4275d5ea7",
   "links": [
    {
     "drawn": "c106c639ecf7cf72f678b4e693fff736b7865c91",
@@ -4080,10 +4080,10 @@
     "size": 1163447
    },
    {
-    "drawn": "d001676cae71286b2de2ce1c272f44b8050797e6",
+    "drawn": "86790dc9808ffc24b964b5c14a78a08a98ce89a1",
     "name": "Mini_Auto_Croissant - Hollow Robots.png",
     "path": "MDW/Linked/Mini_Auto_Croissant - Hollow Robots.png",
-    "size": 1668025
+    "size": 1512458
    },
    {
     "drawn": "fe86cc88909355d589417102f9058871b8e10fea",
@@ -14986,7 +14986,7 @@
   ]
  },
  "Creatures/Other/2 Stars/Auto_Croissant.psd": {
-  "blob": "b5b93277a2630eecff655f0caefee946658c2964",
+  "blob": "44a1b59eb76ee531f8c6bab44359821d091251dc",
   "links": [
    {
     "drawn": "111d55240bf79e1783ba5637cb24daef39e6a8f8",
@@ -15001,10 +15001,10 @@
     "size": 1163447
    },
    {
-    "drawn": "d001676cae71286b2de2ce1c272f44b8050797e6",
+    "drawn": "86790dc9808ffc24b964b5c14a78a08a98ce89a1",
     "name": "Mini_Auto_Croissant - Hollow Robots.png",
     "path": "MDW/Linked/Mini_Auto_Croissant - Hollow Robots.png",
-    "size": 1668025
+    "size": 1512458
    },
    {
     "drawn": "34f5a6f58d252c99b888f374970d7d3afd2b9e59",
