@@ -15,7 +15,8 @@
    commits aside) since the last live run whose Bake and save succeeded (faked run lists; dry runs passed over), or
    none is found; with nothing changed, a PSD-kind website edit sends it to the Pending edits step.
 3. The fonts: a cache hit restores them outside the sparse patterns; after the Fonts tree step the bake's fast-forward
-   merge (git_commit.local_commit's) keeps them (without it git deletes them: the control).
+   merge (git_commit.local_commit's) keeps them (without it git deletes them: the control). A push's and a follow-up's
+   come before their wait (Fonts first): Newest's reset keeps them; a font push in the wait: fetched again, current.
 4. The Bake step's arguments: --pending for a push's run, a schedule, their retries and bake=pending, not for another
    dispatch.
 5. Commit main's own script on a sandbox origin: M pushed with its outputs (baked, pngs); a push that failed but landed
@@ -361,9 +362,19 @@ def plans(flow: dict) -> None:
     p, q = plan(flow, "data", inputs=follow, outputs=go), plan(flow, "main", inputs=follow, outputs=go)
     r = plan(flow, "after", inputs=follow, outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
     check(order("data", p)[:6] == ["Site build start", "venv", "guards", "Newest", "records-in", "gate"] and "build" in runs(p)
-          and order("main", q)[:4] == ["venv", "guards", "Newest", "gate"] and "bake" in runs(q)
+          and [k for k in order("main", q) if k in ("venv", "guards", "Newest", "gate")][:4] == ["venv", "guards", "Newest", "gate"] and "bake" in runs(q)
           and not {"guards", "Newest"} & runs(r),
           "a follow-up (guards): the site build first; both lanes set up, wait for the guards' Land, take main's head, then gate; after waits for nothing")
+    fonts = ("fonts-first", "fonts-first-cache", "Fonts first (cache miss)", "guards", "gate", "fonts", "font-cache", "Fonts (cache miss)")
+    hit = {"fonts-first-cache": {"cache-hit": "true"}, "font-cache": {"cache-hit": "true"}}
+    seq = lambda event, inputs, more: [k for k in order("main", plan(flow, "main", event=event, inputs=inputs, outputs={  # noqa: E731
+        **go, "fonts-first": {"sha": "f"}, "fonts": {"sha": "f"}, **more})) if k in fonts]
+    first = ["fonts-first", "fonts-first-cache", "guards", "gate", "fonts"]
+    got = [seq("push", {}, hit), seq("workflow_dispatch", follow, hit), seq("push", {}, {**hit, "fonts": {"sha": "g"}}),
+           seq("push", {}, {}), seq("schedule", {}, hit), seq("schedule", {}, {})]
+    check(got == [first, first, first + ["Fonts (cache miss)"], first[:2] + ["Fonts first (cache miss)"] + first[2:],
+                  ["gate", "fonts", "font-cache"], ["gate", "fonts", "font-cache", "Fonts (cache miss)"]],
+          f"fonts: a push's and a follow-up's before their wait, fetched again when Newest moved them; the schedule's after its Gate ({got})")
     p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
     check(p["env"]["AFTER"] == "m" * 40 and {"records-in", "build", "Send the posts", "data-commit", "Site build"} <= runs(p),
           "after: the data lane on M with the bake's records; the site build follows the bake even with db/ unchanged")
@@ -748,6 +759,28 @@ def fonts_cases(flow: dict) -> None:
                 check(kept and git(ws, "rev-parse", "HEAD") == b, "fonts: a cache hit's fonts survive the bake's ff merge")
             else:
                 check(not kept, "fonts (control): without the Fonts tree step's config the ff merge deletes them")
+        main = flow["jobs"]["main"]
+        read = lambda ws, n: open(os.path.join(ws, "MDW/Fonts", n)).read() if os.path.isfile(os.path.join(ws, "MDW/Fonts", n)) else None  # noqa: E731
+        for n, hit in enumerate((True, False)):        # Fonts first (hit or miss), then a font push lands in the wait
+            ws = checkout(tmp, bare, f"ws-first-{hit}")
+            _, _, first = run_step(main, "fonts-first", ws, {}, tmp)
+            if hit:
+                for name in ("a.ttf", "b.otf"):
+                    shutil.copy(os.path.join(work, "MDW/Fonts", name), os.path.join(ws, "MDW/Fonts", name))
+            else:
+                run_step(main, "Fonts first (cache miss)", ws, {}, tmp)
+            run_step(main, "Newest", ws, {}, tmp)
+            kept = read(ws, "a.ttf") == read(work, "a.ttf")
+            commit(work, {"MDW/Fonts/a.ttf": f"font a{n}", "MDW/Fonts/c.ttf": f"font c{n}"}, "fonts")
+            git(work, "push", "-q", "origin", "main")
+            run_step(main, "Newest", ws, {}, tmp)
+            _, _, late = run_step(main, "fonts", ws, {}, tmp)
+            code, text, _ = run_step(main, "Fonts (cache miss)", ws, {}, tmp)
+            now = [read(ws, x) for x in ("a.ttf", "b.otf", "c.ttf")]
+            ok = kept and late["sha"] != first["sha"] and code == 0 and now == [f"font a{n}", "font b", f"font c{n}"] \
+                and not git(ws, "status", "--porcelain")
+            check(ok, f"fonts first ({'hit' if hit else 'miss'}): Newest's reset keeps them; a font push in the wait: fetched again"
+                  + ("" if ok else f" ({kept}, {now})\n{text}"))
 
 
 def bake_cases(flow: dict) -> None:

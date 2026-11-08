@@ -833,6 +833,24 @@ jobs:
       - *data-checkout
       - *venv
 
+      # A push's lane and a follow-up's always go (Gate: a push, dispatched): their fonts (Fonts tree below) come
+      # before the wait, restore only (the guards' check job saves the entry); a held lane wastes them
+      - name: Fonts first
+        id: fonts-first
+        if: github.event_name == 'push' || inputs.guards
+        run: |
+          git config sparse.expectFilesOutsideOfPatterns true
+          echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
+      - id: fonts-first-cache
+        if: steps.fonts-first.outcome == 'success'
+        uses: actions/cache/restore@v6
+        with:
+          path: MDW/Fonts
+          key: card-fonts-${{ steps.fonts-first.outputs.sha }}
+      - name: Fonts first (cache miss)
+        if: steps.fonts-first.outcome == 'success' && steps.fonts-first-cache.outputs.cache-hit != 'true'
+        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+
       # A push's guards or a follow-up's (above), then main's head and the data's as they are now (not when held)
       - *guards
       - *newest
@@ -969,17 +987,20 @@ jobs:
             echo "No linked picture or icon glyph due." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
+      # Fonts first's lanes: the miss path again only when Newest moved MDW/Fonts (a restore it outdated removed first)
       - *fonts
       - id: font-cache
-        if: env.GO == 'true'
+        if: env.GO == 'true' && !steps.fonts-first.outputs.sha
         uses: actions/cache@v6
         with:
           path: MDW/Fonts
           key: card-fonts-${{ steps.fonts.outputs.sha }}
 
       - name: Fonts (cache miss)
-        if: env.GO == 'true' && steps.font-cache.outputs.cache-hit != 'true'
-        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+        if: env.GO == 'true' && steps.font-cache.outputs.cache-hit != 'true' && steps.fonts.outputs.sha != steps.fonts-first.outputs.sha
+        run: |
+          git ls-files -v -z -- ':(glob)MDW/Fonts/*' | while IFS= read -r -d '' f; do [ "${f:0:2}" != "S " ] || rm -f -- "${f:2}"; done
+          git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
       # The bake makes one local commit B on main's head in this checkout (nothing pushed); a dry run commits nothing.
       # A card's error fails the step but keeps B for the others (the bake's
