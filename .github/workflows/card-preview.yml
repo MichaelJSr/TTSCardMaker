@@ -94,7 +94,7 @@ jobs:
 
       # The preview's first reads, in the background while the setup runs (the runner's python3, stdlib only): the data's
       # render and spot records (db/ on the data branch; AutoCroissant psd_edit.RECORDS_DIR) to records/, and the card's
-      # blobs into this checkout's object store, where the bake reads first. Preview waits for reads.done.
+      # blobs into this checkout's object store, where the bake reads first. Go waits for reads.done.
       - name: Reads
         working-directory: bot
         shell: bash
@@ -114,6 +114,24 @@ jobs:
         with:
           oxipng: "false"
 
+      # The preview, in the background from here (8 minutes at most): its imports and the card's tree run while the
+      # fonts restore; it waits in ready() for the go file (Go), then bakes. Output and exit code to RUNNER_TEMP.
+      - name: Start
+        working-directory: bot
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PSD_TOOLS_FONT_DIRS: ${{ github.workspace }}/MDW/Fonts
+          CARD: ${{ inputs.card }}
+          REQUEST: ${{ inputs.request }}
+        run: |
+          export CARD_RECORDS_DIR=$RUNNER_TEMP/records CARD_PREVIEW_WAIT=$RUNNER_TEMP/go
+          ( code=0
+            timeout 480 python -m commands.card_preview --card="$CARD" --edit "$RUNNER_TEMP/edit.json" \
+              --out "$RUNNER_TEMP/preview" --clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" \
+              --request="$REQUEST" || code=$?
+            echo "$code" > "$RUNNER_TEMP/preview.code" ) < /dev/null > "$RUNNER_TEMP/preview.md" 2> "$RUNNER_TEMP/preview.err" &
+
       # Fonts as card-sync.yml's: MDW/Fonts' top level, cached by the folder's tree sha (the same cache key), fetched
       # only on a miss.
       - id: fonts
@@ -128,29 +146,30 @@ jobs:
       - if: steps.font-cache.outputs.cache-hit != 'true'
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
+      # The fonts are in; the reads too, or 20 s on: the preview goes. A failed font step skips this (the job's end stops
+      # the preview).
+      - name: Go
+        shell: bash
+        run: |
+          while [ ! -e "$RUNNER_TEMP/reads.done" ] && [ $SECONDS -lt 20 ]; do sleep 0.05; done
+          [ -e "$RUNNER_TEMP/reads.done" ] || echo "reads: not done in 20 s: the preview reads what they lack itself"
+          for f in render_record.json spot_record.json; do
+            [ -s "$RUNNER_TEMP/records/$f" ] || echo "::warning::db/$f not read from the data branch: renders go without it"
+          done
+          touch "$RUNNER_TEMP/go"
+
       # result.json always (a refusal and an input error too); the images when the bake rendered one. Exit 2: a bad card
-      # or edit; 1: any other error (the result's `transient` says whether to try again). The summary is the job's.
+      # or edit; 1: any other error (the result's `transient` says whether to try again). The summary is this step's.
       - name: Preview
         id: preview
         timeout-minutes: 8
-        working-directory: bot
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PSD_TOOLS_FONT_DIRS: ${{ github.workspace }}/MDW/Fonts
-          CARD: ${{ inputs.card }}
-          REQUEST: ${{ inputs.request }}
         run: |
-          while [ ! -e "$RUNNER_TEMP/reads.done" ] && [ $SECONDS -lt 20 ]; do sleep 0.1; done
-          [ -e "$RUNNER_TEMP/reads.done" ] || echo "reads: not done in 20 s: the preview reads what they lack itself"
+          until [ -s "$RUNNER_TEMP/preview.code" ]; do sleep 0.05; done
           sed 's/^/reads: /' "$RUNNER_TEMP/reads.log" 2> /dev/null || true
-          export CARD_RECORDS_DIR=$RUNNER_TEMP/records
-          for f in render_record.json spot_record.json; do
-            [ -s "$CARD_RECORDS_DIR/$f" ] || echo "::warning::db/$f not read from the data branch: renders go without it"
-          done
-          python -m commands.card_preview --card="$CARD" --edit "$RUNNER_TEMP/edit.json" --out "$RUNNER_TEMP/preview" \
-            --clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" --request="$REQUEST" \
-            | tee -a "$GITHUB_STEP_SUMMARY"
+          cat "$RUNNER_TEMP/preview.err" >&2
+          tee -a "$GITHUB_STEP_SUMMARY" < "$RUNNER_TEMP/preview.md"
+          exit "$(cat "$RUNNER_TEMP/preview.code")"
 
       # The files to publish (none if the preview never ran); not preview.png.
       - name: Hand over
