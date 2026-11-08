@@ -39,7 +39,48 @@ jobs:
     outputs:
       ok: ${{ steps.validate.outputs.ok }}
       saved: ${{ steps.setup.outputs.wheels == 'built' || steps.font-cache.outputs.cache-hit != 'true' }}
+    env:
+      BOT_REPO: bobberlington/AutoCroissant
+      # The preview and its import closure (no config.py; never psd_analyzer), and the packages it installs. AutoCroissant
+      # tests/test_card_preview.py runs --help on exactly this list (card_preview.SPARSE_FILES).
+      BOT_FILES: |
+        /commands/card_preview.py
+        /commands/card_preview_branch.py
+        /commands/card_bake.py
+        /commands/psd_edit.py
+        /commands/psd_regions.py
+        /commands/psd_parser.py
+        /commands/psd_parts.py
+        /commands/text_align.py
+        /commands/card_models.py
+        /commands/card_edits.py
+        /commands/png_export.py
+        /commands/github_api.py
+        /commands/git_commit.py
+        /commands/repo_history.py
+        /global_config.py
+        /requirements-cards.txt
+        /commands/psd_links.py
+        /commands/card_preview_reads.py
     steps:
+      # BOT_FILES at the bot's main, cloned in the background beside the card repo's checkout (in RUNNER_TEMP: that
+      # checkout empties the workspace). The token in a header, never saved.
+      - name: Clone
+        shell: bash
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 | tr -d '\n')
+          echo "::add-mask::$auth"
+          cd "$RUNNER_TEMP"
+          ( export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
+            code=0
+            { timeout 15 git clone -q --depth 1 --no-tags --single-branch --branch main --no-checkout \
+                "$GITHUB_SERVER_URL/$BOT_REPO" "$RUNNER_TEMP/bot" \
+              && git -C "$RUNNER_TEMP/bot" sparse-checkout set --no-cone --stdin <<< "$BOT_FILES" \
+              && git -C "$RUNNER_TEMP/bot" checkout -q main; } || code=$?
+            echo "$code" > "$RUNNER_TEMP/bot.code" ) < /dev/null > "$RUNNER_TEMP/bot.log" 2>&1 &
+
       # The request names a folder on the branch: a bad one fails the run and publishes nothing. The card and the edit
       # are card_preview's to check (env and a file here): a bad one is published as an input error for the website.
       - name: Validate
@@ -65,32 +106,25 @@ jobs:
           sparse-checkout: |
             /.github/
 
-      # The preview and its import closure (no config.py; never psd_analyzer), and the packages it installs. AutoCroissant
-      # tests/test_card_preview.py runs --help on exactly this list (card_preview.SPARSE_FILES).
-      - uses: actions/checkout@v7
+      # The clone in bot/ once done (15 s at most); else checked out as ever.
+      - name: Bot
+        id: bot
+        shell: bash
+        run: |
+          while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ $SECONDS -lt 15 ]; do sleep 0.02; done
+          if [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] && mv "$RUNNER_TEMP/bot" bot; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::the bot's clone failed or took 15 s: checked out instead"; cat "$RUNNER_TEMP/bot.log" 2> /dev/null || true
+          fi
+
+      - if: steps.bot.outputs.ok != 'true'
+        uses: actions/checkout@v7
         with:
-          repository: bobberlington/AutoCroissant
+          repository: ${{ env.BOT_REPO }}
           path: bot
           sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /commands/card_preview.py
-            /commands/card_preview_branch.py
-            /commands/card_bake.py
-            /commands/psd_edit.py
-            /commands/psd_regions.py
-            /commands/psd_parser.py
-            /commands/psd_parts.py
-            /commands/text_align.py
-            /commands/card_models.py
-            /commands/card_edits.py
-            /commands/png_export.py
-            /commands/github_api.py
-            /commands/git_commit.py
-            /commands/repo_history.py
-            /global_config.py
-            /requirements-cards.txt
-            /commands/psd_links.py
-            /commands/card_preview_reads.py
+          sparse-checkout: ${{ env.BOT_FILES }}
 
       # The preview's first reads, in the background while the setup runs (the runner's python3, stdlib only): the data's
       # render and spot records (db/ on the data branch; AutoCroissant psd_edit.RECORDS_DIR) to records/, and the card's
