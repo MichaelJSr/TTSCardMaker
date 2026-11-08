@@ -146,18 +146,16 @@ jobs:
           echo "n=$n" >> "$GITHUB_OUTPUT"
           echo "$n blobs to read." | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # 8 to a fetch, 4 at a time, as the guards' Pushed blobs: small packs barely need GitHub's delta search
+      # 8 to a fetch, 4 at a time, as the guards' Pushed blobs: small packs barely need GitHub's delta search. In the
+      # background (20 minutes at most, its exit code in blobs.txt.done): the fonts restore and Check start meanwhile.
       - name: Fetch them
         if: steps.list.outputs.n != '0'
-        timeout-minutes: 20
-        continue-on-error: true   # what is missing comes by REST
         run: |
-          list=$RUNNER_TEMP/blobs.txt rc=0
-          xargs -P 4 -n 8 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags --no-write-fetch-head \
-            --recurse-submodules=no --filter=blob:none origin < "$list" || rc=$?
-          have=$(git cat-file --batch-check < "$list" | grep -vc ' missing$' || true)
-          echo "$have of $(grep -c . "$list") blobs in the clone"
-          exit $rc
+          list=$RUNNER_TEMP/blobs.txt
+          nohup bash -c 'timeout -k 10 1200 xargs -P 4 -n 8 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags \
+            --no-write-fetch-head --recurse-submodules=no --filter=blob:none origin < "$1" & echo $! > "$1.pid"
+            wait $! || code=$?; echo "${code:-0}" > "$1.done"' _ "$list" > "$list.log" 2>&1 < /dev/null &
+          echo "fetching $(grep -c . "$list") blobs"
 
       # The bake's fonts for the real bakes: the card workflows' cache by MDW/Fonts' tree sha; a miss checks them out
       - name: Fonts tree
@@ -180,6 +178,8 @@ jobs:
           GIT_NO_LAZY_FETCH: "0"
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
+      # One shard reads each blob as it lands (CARD_BLOBS_PENDING: card_bake waits for a listed one, 300 s at most from
+      # the list's write); `all` and lists over 200 blobs (their fetch can pass the cap) wait for the whole fetch first
       - name: Check
         if: steps.list.outputs.n != '0'
         timeout-minutes: 75
@@ -188,10 +188,29 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           PSD_TOOLS_FONT_DIRS: ${{ github.workspace }}/MDW/Fonts
           OMP_NUM_THREADS: "1"
+          ALL: ${{ inputs.all }}
+          N: ${{ steps.list.outputs.n }}
         run: |
+          list=$RUNNER_TEMP/blobs.txt
+          if [ "$ALL" = true ] || [ "$N" -gt 200 ]; then until [ -s "$list.done" ]; do sleep 0.2; done
+          else export CARD_BLOBS_PENDING=$list; fi
           mapfile -d '' args < "$RUNNER_TEMP/args"
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_checks run "${args[@]}" --workers 3 --minutes 70 \
             --out "$RUNNER_TEMP/checks.json"
+
+      # What the fetch brought (a blob it never brought went by REST); one still going is stopped: Check is done
+      - name: Fetched
+        if: ${{ !cancelled() && steps.list.outputs.n != '0' }}
+        continue-on-error: true
+        timeout-minutes: 2
+        run: |
+          list=$RUNNER_TEMP/blobs.txt stopped=
+          [ -s "$list.done" ] || { kill "$(cat "$list.pid")" 2> /dev/null; stopped=" (Check ended first: the fetch stopped)"; }
+          until [ -s "$list.done" ]; do sleep 0.2; done
+          cat "$list.log"
+          have=$(git cat-file --batch-check < "$list" | grep -vc ' missing$' || true)
+          echo "$have of $(grep -c . "$list") blobs in the clone$stopped"
+          [ -n "$stopped" ] || exit "$(cat "$list.done")"
 
       - uses: actions/upload-artifact@v7      # what a run that broke off has checked counts too
         if: ${{ !cancelled() && steps.list.outputs.n != '0' }}
