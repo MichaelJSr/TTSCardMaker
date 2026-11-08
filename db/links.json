@@ -5586,7 +5586,7 @@
   ]
  },
  "Auxiliary/Minions/Springtrap.psd": {
-  "blob": "1555a43d9234d0792c87a2a28e9f5241a9518fbb",
+  "blob": "a8edb7d1a5081f590d9e48f4a2070902aeb88da5",
   "links": [
    {
     "drawn": "baad3fd41c1a5ef07b4a29ca1c8e631291ebb655",
@@ -5599,36 +5599,6 @@
     "name": "Springtrap - Layer 1.psb",
     "path": "MDW/Linked/Springtrap - Layer 1.psb",
     "size": 2798048
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
    },
    {
     "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
@@ -8139,7 +8109,7 @@
   ]
  },
  "Creatures/Fnaf/3 Stars/Balloon_Boy.psd": {
-  "blob": "60ce3e2b9d9c1c20d7fab0a89cb8c69e67c82513",
+  "blob": "1760e4cf069fcbf25e702cc942373b16bc07808b",
   "links": [
    {
     "drawn": "f6e5108ae2d9f96b41d78de66b570fab1a12daa6",
@@ -8154,24 +8124,6 @@
     "size": 1984734
    },
    {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
     "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
     "name": "machine.png",
     "path": "Types/machine.png",
@@ -8180,31 +8132,13 @@
   ]
  },
  "Creatures/Fnaf/3 Stars/Mangle.psd": {
-  "blob": "359f00a19039f063e6b573d86284bb6b6e63ebf2",
+  "blob": "36b7cb6e503a02cc2f1557f1d4cb000d541b3af9",
   "links": [
    {
     "drawn": "769c40a6a924d96cbac7fc8c6ff11f068a618fc9",
     "name": "Balloon_Boy - fnaf 2.psb",
     "path": "MDW/Linked/Balloon_Boy - fnaf 2.psb",
     "size": 1984734
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
    },
    {
     "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
@@ -8215,31 +8149,13 @@
   ]
  },
  "Creatures/Fnaf/3 Stars/Toy_Bonnie.psd": {
-  "blob": "150459a8770661827ff1def30ebebe7a5636b647",
+  "blob": "abc74d386e209f996a96f094e3255c87a84981b7",
   "links": [
    {
     "drawn": "769c40a6a924d96cbac7fc8c6ff11f068a618fc9",
     "name": "Balloon_Boy - fnaf 2.psb",
     "path": "MDW/Linked/Balloon_Boy - fnaf 2.psb",
     "size": 1984734
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
    },
    {
     "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
@@ -8250,7 +8166,7 @@
   ]
  },
  "Creatures/Fnaf/3 Stars/Toy_Chica.psd": {
-  "blob": "177bb5a133ea0239bb963caa138987496218a29a",
+  "blob": "340bd481ba574c84101d879961b56947ffaedfcc",
   "links": [
    {
     "drawn": "f5fbb75f51c4245022bfe13592d9763eb96160ef",
@@ -8271,36 +8187,6 @@
     "size": 1048576
    },
    {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
     "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
     "name": "machine.png",
     "path": "Types/machine.png",
@@ -8309,7 +8195,7 @@
   ]
  },
  "Creatures/Fnaf/3 Stars/Toy_Freddy.psd": {
-  "blob": "7916ae0f18558630248903b8c31dba72ca2d4edf",
+  "blob": "67b9817b25ad2b235b8ceced2a45ef9c7108c723",
   "links": [
    {
     "drawn": "769c40a6a924d96cbac7fc8c6ff11f068a618fc9",
@@ -8328,29 +8214,11 @@
     "name": "Toy_Chica - star test.psb",
     "path": "MDW/Linked/Toy_Chica - star test.psb",
     "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
    }
   ]
  },
  "Creatures/Fnaf/4 Stars/Old_Bonnie.psd": {
-  "blob": "be74a0a2e89e2c38459e86b0a247eef30146db15",
+  "blob": "c25bc0de1162888e53f0aa3d20a6e4dfacdb9913",
   "links": [
    {
     "drawn": "769c40a6a924d96cbac7fc8c6ff11f068a618fc9",
@@ -8365,30 +8233,6 @@
     "size": 2011944
    },
    {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
     "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
     "name": "machine.png",
     "path": "Types/machine.png",
@@ -8397,37 +8241,13 @@
   ]
  },
  "Creatures/Fnaf/4 Stars/Old_Chica.psd": {
-  "blob": "57240864ad2b9d50a9fe398184ecdf1a0ab6dd54",
+  "blob": "b5d2d3c9eec4131d323ca1b64b016e808a6967c4",
   "links": [
    {
     "drawn": "769c40a6a924d96cbac7fc8c6ff11f068a618fc9",
     "name": "Balloon_Boy - fnaf 2.psb",
     "path": "MDW/Linked/Balloon_Boy - fnaf 2.psb",
     "size": 1984734
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
    },
    {
     "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
@@ -8438,7 +8258,7 @@
   ]
  },
  "Creatures/Fnaf/4 Stars/Old_Foxy.psd": {
-  "blob": "5a474651ed0198381f8b828641fd89b637f7169b",
+  "blob": "f6b30958dd59901e4afaece2ba01f6986983fec1",
   "links": [
    {
     "drawn": "17ac034030a398c8eb0e1d5c6a5d86fd91817471",
@@ -8453,30 +8273,6 @@
     "size": 1984734
    },
    {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
     "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
     "name": "machine.png",
     "path": "Types/machine.png",
@@ -8485,37 +8281,13 @@
   ]
  },
  "Creatures/Fnaf/4 Stars/Old_Freddy.psd": {
-  "blob": "4f0b27237c350e4c372453c1977e93758ecde60b",
+  "blob": "bb2f5902c6633b38b5286f971cb4a13b29422001",
   "links": [
    {
     "drawn": "769c40a6a924d96cbac7fc8c6ff11f068a618fc9",
     "name": "Balloon_Boy - fnaf 2.psb",
     "path": "MDW/Linked/Balloon_Boy - fnaf 2.psb",
     "size": 1984734
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
    },
    {
     "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
@@ -8526,43 +8298,13 @@
   ]
  },
  "Creatures/Fnaf/5 Stars/Golden_Freddy.psd": {
-  "blob": "68bff3e5c9cc68213f36dca3d33bccd0fa1c00c3",
+  "blob": "f39f96200fe30d5b0a51ebc63d5dd1c37c8e2bfe",
   "links": [
    {
     "drawn": "94749aa7abbc1f117d592cea00e7b24570babbdd",
     "name": "Springtrap - Layer 1.psb",
     "path": "MDW/Linked/Springtrap - Layer 1.psb",
     "size": 2798048
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
    },
    {
     "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
@@ -8573,7 +8315,7 @@
   ]
  },
  "Creatures/Fnaf/5 Stars/The_Man_Behind_The_Slaughter.psd": {
-  "blob": "f2fbad9a5d9fa96fe0f4b6fe2e10c6595e3b654e",
+  "blob": "54d80507f636f434bf38ebae4c752ea1311a47c5",
   "links": [
    {
     "drawn": "b8f04f69e958ae6ffac3f2df19d59b1fcd449e14",
@@ -8588,36 +8330,6 @@
     "size": 2798048
    },
    {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
     "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
     "name": "dark.png",
     "path": "Types/dark.png",
@@ -8626,7 +8338,7 @@
   ]
  },
  "Creatures/Fnaf/5 Stars/The_Puppet.psd": {
-  "blob": "c3e1d1fe762b0c1b14637721f188556cc0658e86",
+  "blob": "5fb3731ee7d535b0aa7861b55c298d4438d36e66",
   "links": [
    {
     "drawn": "94749aa7abbc1f117d592cea00e7b24570babbdd",
@@ -8639,36 +8351,6 @@
     "name": "The_Puppet - Puppet.png",
     "path": "MDW/Linked/The_Puppet - Puppet.png",
     "size": 2271139
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
-    "name": "Springtrap - Gold_Star.svg.psb",
-    "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
-    "size": 1048576
    },
    {
     "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
@@ -12576,14 +12258,8 @@
   ]
  },
  "Creatures/Mario/2 Stars/Gold_Fuzzy.psd": {
-  "blob": "69f906b442e4e5cbb19685aabb30d4228b73e0ed",
+  "blob": "92de62d2183ffff2a70e355822c415d93501c91d",
   "links": [
-   {
-    "drawn": "a59d824591088e65e170a335bfd92dfa18141cac",
-    "name": "Gold_Fuzzy - Color Balance 1 copy 2.psb",
-    "path": "MDW/Linked/Gold_Fuzzy - Color Balance 1 copy 2.psb",
-    "size": 2564984
-   },
    {
     "drawn": "8a04208f7b0c14e0399dc565359546aa5b031c0a",
     "name": "Gold_Fuzzy - il_680x540.2058992065_jl7h.png",
@@ -20067,19 +19743,13 @@
   ]
  },
  "Field/1 Stars/The_Freezer.psd": {
-  "blob": "7882e391a0dc4f956546288782ac38362efb88f5",
+  "blob": "24a33416a3f996f722c6633ea3140ee23579e990",
   "links": [
    {
     "drawn": "84d3afc9d25d6480de5ac1e978435b3878fa4af7",
     "name": "The_Freezer - The_Original_Fry_Cook_149 (1).webp",
     "path": "MDW/Linked/The_Freezer - The_Original_Fry_Cook_149 (1).webp",
     "size": 71732
-   },
-   {
-    "drawn": "18217f923770fbfa127afa0bff8ab166fdc9b9ad",
-    "name": "The_Freezer - Gradient Fill 1.psb",
-    "path": "MDW/Linked/The_Freezer - Gradient Fill 1.psb",
-    "size": 1048576
    },
    {
     "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
@@ -21893,7 +21563,7 @@
   ]
  },
  "Items/Counter/3 Stars/Crystal_Spikes.psd": {
-  "blob": "9f4a8236168d303f489eb8f6a9be805304fc85d1",
+  "blob": "5a038ca966747ce21a6d35dc4cbaf0c48430738e",
   "links": [
    {
     "drawn": "3fd3e3566e94d554747f6673d126bece0dc5db09",
@@ -21918,12 +21588,6 @@
     "name": "Crystal_Spikes - mine_spike_02.png",
     "path": "MDW/Linked/Crystal_Spikes - mine_spike_02.png",
     "size": 159281
-   },
-   {
-    "drawn": "21a41117ea4cb3568685db7dbff5281c6fb8ffed",
-    "name": "Crystal_Spikes - Daco_35508.psb",
-    "path": "MDW/Linked/Crystal_Spikes - Daco_35508.psb",
-    "size": 1048576
    },
    {
     "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
@@ -25534,14 +25198,8 @@
   ]
  },
  "Items/Support/2 Stars/Bag_of_Good.psd": {
-  "blob": "40f3574dc06c87b6e5369a5a37f7a632df1228bb",
+  "blob": "e0f1f96bb8cd8a326091b4e508407e36b93cac14",
   "links": [
-   {
-    "drawn": "18217f923770fbfa127afa0bff8ab166fdc9b9ad",
-    "name": "The_Freezer - Gradient Fill 1.psb",
-    "path": "MDW/Linked/The_Freezer - Gradient Fill 1.psb",
-    "size": 1048576
-   },
    {
     "drawn": "f13c213b57d6ac913296c127ab43abbe41a06403",
     "name": "Bag_of_Good - Layer 1.psb",
@@ -26364,17 +26022,6 @@
   "blob": "e66aa78af73095c9944d4b0fbe5f738621844012",
   "links": []
  },
- "MDW/Linked/Crystal_Spikes - Daco_35508.psb": {
-  "blob": "21a41117ea4cb3568685db7dbff5281c6fb8ffed",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
- },
  "MDW/Linked/Dark_Daroach - Layer 1 copy.psb": {
   "blob": "5ef9cdbda06794d6af5d7efea0a65f2f2c6237cf",
   "links": []
@@ -26480,10 +26127,6 @@
  },
  "MDW/Linked/Galacta_Warrior - Layer 14.psb": {
   "blob": "67a80bfd62a5a41decba132b486e88c6d2eb7e2f",
-  "links": []
- },
- "MDW/Linked/Gold_Fuzzy - Color Balance 1 copy 2.psb": {
-  "blob": "a59d824591088e65e170a335bfd92dfa18141cac",
   "links": []
  },
  "MDW/Linked/Grey_Prince_Zote - Layer 50.psb": {
@@ -26735,10 +26378,6 @@
   "blob": "82ca0a125399b6ecf76dde366c86211bdb4ca735",
   "links": []
  },
- "MDW/Linked/Springtrap - Gold_Star.svg.psb": {
-  "blob": "37fbd99c3db7c085010672fe02813398c73dab9d",
-  "links": []
- },
  "MDW/Linked/Springtrap - Layer 1.psb": {
   "blob": "94749aa7abbc1f117d592cea00e7b24570babbdd",
   "links": []
@@ -26819,10 +26458,6 @@
  },
  "MDW/Linked/Tanjerin - Layer 31.psb": {
   "blob": "0c6f948464a4f8f0ff51db193694c01ad17114f9",
-  "links": []
- },
- "MDW/Linked/The_Freezer - Gradient Fill 1.psb": {
-  "blob": "18217f923770fbfa127afa0bff8ab166fdc9b9ad",
   "links": []
  },
  "MDW/Linked/The_Plaguelands - Layer 7.psb": {
