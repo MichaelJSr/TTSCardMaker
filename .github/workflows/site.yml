@@ -26,12 +26,12 @@ permissions:         # each job its own (below)
   contents: read
 
 jobs:
-  # A newer run (Card sync's dispatch after its data commit, a later push) replaces a build still running: it builds
-  # main as it is then. A deploy is never cut off (its own group, below), and deploys stay in order.
+  # A running build is never cut off: it finishes and deploys. One run waits, the newest (a newer one replaces it), and
+  # reads the data branch when it starts. A deploy is never cut off either (its own group, below); deploys stay in order.
   build:
     concurrency:
       group: pages-build
-      cancel-in-progress: true
+      cancel-in-progress: false
     permissions:
       contents: read
       pages: read          # configure-pages only reads the Pages settings
@@ -184,8 +184,8 @@ jobs:
         with:
           path: site/dist
 
-      # actions/cache saves only after a job that passed: a job that failed or was replaced once the build ran (out of image
-      # time, failed downloads, an error, the step's timeout, a newer run, or a step after it) saves its images here, under a key of its own that
+      # actions/cache saves only after a job that passed: a job that failed or was cancelled once the build ran (out of image
+      # time, failed downloads, an error, the step's timeout, a cancel by hand, or a step after it) saves its images here, under a key of its own that
       # restore-keys finds, so the next run (the daily one, or run it by hand) carries on from them. Only when the cache
       # changed: a build that stopped before the images (no bot data, a truncated site) adds no copy. Keep these last.
       - id: cache-after
