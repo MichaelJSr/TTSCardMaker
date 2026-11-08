@@ -441,7 +441,7 @@
     "Newspaper": {"series":"Plants vs. Zombies","_by":"AutoCroissant","_at":"2026-10-22T22:02:11Z"},
     "Nightmare": {"series":"Kirby","subseries":"Kirby's Adventure","art":["https://www.pixiv.net/en/artworks/98421365#35"],"_bot":["series"],"_by":"Zomoroko","_at":"2026-10-26T10:12:41Z"},
     "Nightmare King Grimm": {"series":"Hollow Knight","subseries":"Hollow Knight","aliases":["Grimm"],"_bot":["series"],"_by":"Zomoroko","_at":"2026-11-07T02:28:38Z"},
-    "Niiue": {"series":"MOTHER","subseries":"MOTHER: Cognitive Dissonance","_by":"Zomoroko","_at":"2026-10-26T08:04:26Z"},
+    "Niiue": {"series":"MOTHER","subseries":"MOTHER: Cognitive Dissonance","flags":{"hand":"Photoshop 2023 cannot save this PSD (General Photoshop error).","psd":"eaac7d81"},"_by":"Zomoroko","_at":"2026-10-26T08:04:26Z"},
     "Niko": {"series":"OneShot","_bot":["series"],"_by":"Zomoroko","_at":"2026-11-04T07:26:46Z"},
     "NME Salesman": {"name":"NME Salesman","series":"Kirby","subseries":"Kirby: Right Back at Ya!","_bot":["series"],"_site":["name"],"_by":"Zomoroko","_at":"2026-11-07T02:28:38Z"},
     "NME Stock": {"series":"Kirby","subseries":"Original","_by":"Zomoroko","_at":"2026-10-26T08:04:26Z"},
