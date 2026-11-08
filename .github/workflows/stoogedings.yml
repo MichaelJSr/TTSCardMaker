@@ -1,0 +1,174 @@
+# Stoogedings (owner 2026-11-07): a push that adds or changes a PNG in Types/ or Types/Stars/ rebuilds the icon font
+# (MDW/Fonts/stoogedings-src/build_stoogedings.py), its manifest stoogedings.json and, when its inputs moved, the
+# website's badge font (badge_web_font.py, and site/assets/text.js's numbers), then commits them silently once the
+# guards and Card sync are quiet (.github/scripts/stoogedings.py). Nothing lands unless this runner first rebuilds the
+# font last committed byte for byte, from that commit's own files (the packages pinned in
+# .github/scripts/stoogedings-requirements.txt). Glyphs card texts shape to that changed (HarfBuzz over the card data, as
+# the 11-07 font lane checked) still land; the commit names them and their cards. No loop: the commit touches no Types/
+# file and is a GITHUB_TOKEN push (it starts no run), and a rebuild equal to main's commits nothing. Card sync is started
+# after the commit (its data reads the manifest; its data commit builds the site). Discord's emojis follow on their own.
+name: Stoogedings
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Types/*.[pP][nN][gG]"
+      - "Types/Stars/*.[pP][nN][gG]"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build and compare only: nothing committed, Card sync not started"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write     # the font commit on main
+  actions: write      # gh workflow run card-sync.yml (a GITHUB_TOKEN push triggers no workflow)
+
+concurrency:
+  group: stoogedings
+  cancel-in-progress: false   # a running build is never cut off; a newer pending run replaces an older one
+
+jobs:
+  font:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    env:
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
+      GIT_NO_LAZY_FETCH: "1"   # the script fetches the blobs it reads in batches
+    steps:
+      # Main's head: every commit and tree, no file contents but the script (the font's inputs come by batched fetches)
+      - uses: actions/checkout@v7
+        env:
+          GIT_NO_LAZY_FETCH: "0"
+        with:
+          ref: main
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: .github/scripts/stoogedings-requirements.txt
+
+      - name: Packages
+        timeout-minutes: 10
+        run: python -m pip install -q -r .github/scripts/stoogedings-requirements.txt
+
+      # The card data's texts for the HarfBuzz check (psd_details.json, stats.json on `data`); none: no cards named
+      - name: Card texts
+        continue-on-error: true
+        timeout-minutes: 3
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/data"
+          for f in psd_details.json stats.json; do
+            gh api -H "Accept: application/vnd.github.raw" "repos/$GITHUB_REPOSITORY/contents/db/$f?ref=data" > "$RUNNER_TEMP/data/$f" \
+              || rm -f "$RUNNER_TEMP/data/$f"
+          done
+
+      - name: Build
+        id: build
+        timeout-minutes: 20
+        run: |
+          echo "head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          data=()
+          if [ -s "$RUNNER_TEMP/data/psd_details.json" ] && [ -s "$RUNNER_TEMP/data/stats.json" ]; then data=(--data "$RUNNER_TEMP/data"); fi
+          set +e
+          python .github/scripts/stoogedings.py --repo "$GITHUB_WORKSPACE" --out "$RUNNER_TEMP/font" "${data[@]}"
+          code=$?
+          set -e
+          cat "$RUNNER_TEMP/font/summary.md" >> "$GITHUB_STEP_SUMMARY" 2> /dev/null || true
+          if [ "$code" = 2 ]; then echo "::error::this runner does not rebuild the last font byte for byte: nothing is committed"; fi
+          if [ "$code" = 0 ] && [ -n "$(find "$RUNNER_TEMP/font/files" -type f)" ]; then echo "files=true" >> "$GITHUB_OUTPUT"; fi
+          exit "$code"
+
+      # The quiet window: no guards or Card sync run unfinished (their commits and Card sync's fast-forward M go first),
+      # 20 minutes at most; then the commit goes anyway (a moved main only replays M).
+      - name: Quiet window
+        if: steps.build.outputs.files == 'true' && env.DRY_RUN != 'true'
+        timeout-minutes: 22
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 40); do
+            busy=0
+            for wf in card-guards.yml card-sync.yml; do
+              n=$(gh run list -R "$GITHUB_REPOSITORY" --workflow "$wf" --limit 20 --json status \
+                --jq '[.[] | select(.status != "completed")] | length') || n=0
+              busy=$((busy + ${n:-0}))
+            done
+            if [ "$busy" = 0 ]; then echo "Quiet after $(((i - 1) / 2)) minutes."; exit 0; fi
+            sleep 30
+          done
+          echo "Still busy after 20 minutes: committing anyway."
+
+      # One commit on main's head with the files alone (a temp index; --missing-ok: the clone lacks the tree's blobs),
+      # fast-forward only, 3 tries. Main moved meanwhile: on top of it, unless Types/ or a font file moved too (that
+      # push's own run rebuilds them).
+      - name: Commit
+        id: commit
+        if: steps.build.outputs.files == 'true' && env.DRY_RUN != 'true'
+        timeout-minutes: 10
+        env:
+          BUILT: ${{ steps.build.outputs.head }}
+        run: |
+          out=$RUNNER_TEMP/font
+          me=(-c user.name=AutoCroissant -c user.email=autocroissant@gmail.com)
+          for i in 1 2 3; do
+            git fetch -q --no-tags --filter=blob:none origin main
+            head=$(git rev-parse FETCH_HEAD)
+            if [ "$head" != "$BUILT" ] && [ -n "$(git diff --name-only "$BUILT" "$head" -- Types MDW/Fonts site/rulebook/fonts site/assets/text.js)" ]; then
+              echo "Main moved under the fonts' inputs since ${BUILT:0:8}: that push's run rebuilds them." | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            export GIT_INDEX_FILE=$RUNNER_TEMP/index
+            git read-tree "$head"
+            while IFS= read -r -d '' file; do
+              path=${file#"$out/files/"}
+              git update-index --add --cacheinfo "100644,$(git hash-object -w "$file"),$path"
+            done < <(find "$out/files" -type f -print0)
+            commit=$(git "${me[@]}" commit-tree "$(git write-tree --missing-ok)" -p "$head" -F "$out/message.txt")
+            unset GIT_INDEX_FILE
+            if git push -q origin "$commit:refs/heads/main"; then
+              echo "sha=$commit" >> "$GITHUB_OUTPUT"
+              echo "Main commit \`${commit:0:8}\`: $(head -1 "$out/message.txt")." | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "::warning::the push was refused (try $i): main moved"
+          done
+          exit 1
+
+      # A GITHUB_TOKEN push triggers no workflow: Card sync's data reads the new manifest, its data commit builds the site
+      - name: Card sync
+        if: steps.commit.outputs.sha != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for wait in 0 10 30; do
+            sleep "$wait"
+            gh workflow run card-sync.yml -R "$GITHUB_REPOSITORY" -f dry_run=false -f bake=pending && exit 0
+          done
+          echo "::error::Card sync did not start: its next run catches up"
+          exit 1
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: stoogedings
+          path: |
+            ${{ runner.temp }}/font/files
+            ${{ runner.temp }}/font/message.txt
+            ${{ runner.temp }}/font/summary.md
+          if-no-files-found: ignore
+          retention-days: 14
+          overwrite: true

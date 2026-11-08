@@ -1,0 +1,8 @@
+# stoogedings.yml's packages: the versions of the Mac venv that built TC b1c07712's font byte for byte (11-07)
+fonttools==4.67.0
+skia-pathops==0.9.2
+opencv-python-headless==5.0.0.93
+numpy==2.5.4
+pillow==13.0.0
+brotli==1.2.1
+uharfbuzz==0.56.3
