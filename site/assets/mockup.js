@@ -21,10 +21,11 @@ export const LINE = 1.22;                            // line pitch in ems
 // `step` apart, 10 cells across `box`). Measured on the PSDs' layer boxes (2026-10-23): tall = 1200x2400 creatures and
 // minions (311 of 390 with stat rows sit exactly here), item = 1200x1800 items and field cards (the totems' two rows),
 // square = 1200x1200 status effects. stars, types: the header's star and type icon areas for the box fallback (the median
-// union of psd_details' header boxes over 764 card PSDs, 2026-10-24: 660 with stars, 687 with type icons).
+// union of psd_details' header boxes over 764 card PSDs, 2026-10-24: 660 with stars, 687 with type icons). first: where a
+// card with no type icon takes its first (Creature_Template's, psd_edit.template_icon; every creature card's).
 export const TEMPLATES = {
   tall: { name: [0.2, 0, 0.8, 0.1], ability: [0.012, 0.722, 0.988, 0.995], bars: { box: [0.3, 0.5, 0.978, 0.535], step: 0.0525 },
-    stars: [0.785, 0.007, 0.99, 0.1], types: [0.017, 0.01, 0.179, 0.086] },
+    stars: [0.785, 0.007, 0.99, 0.1], types: [0.017, 0.01, 0.179, 0.086], first: [62 / 1200, 27 / 2400, 175 / 1200, 183 / 2400] },
   item: { name: [0.2, 0, 0.8, 0.165], ability: [0.012, 0.6, 0.988, 0.995], bars: { box: [0.308, 0.624, 0.986, 0.671], step: 0.053 },
     stars: [0.811, 0.013, 0.984, 0.112], types: [0.023, 0.013, 0.162, 0.114] },
   square: { name: [0.17, 0, 0.83, 0.15], ability: [0.012, 0.68, 0.988, 0.995], stars: [0.78, 0.013, 0.993, 0.21], types: [0.01, 0.013, 0.154, 0.156] },
@@ -708,9 +709,11 @@ export function starPlan(stars, from, to) {
 /** Type icons from `old` to `now` on the record's header.types, as psd_edit.plan_types does it: kept icons stay in their
  *  slot, removed ones are erased, a kept icon past the new count moves to the first free slot, new ones take the next free
  *  slots (spots[count] past the row). -> {erase: [box], draw: [{name, core}], refused, boxed}. A token row, no icon to line
- *  up with or no spots for the count: boxed. */
-export function typePlan(types, old, now) {
+ *  up with or no spots for the count: boxed. first: the template's spot (canvas px) when the card has no type icon; one
+ *  new icon goes there. */
+export function typePlan(types, old, now, first = null) {
   const ty = obj(types), row = Array.isArray(ty?.row) ? ty.row : [];
+  if (!ty && first && now.length === 1) return { erase: [], draw: [{ name: now[0], core: first }], refused: null, boxed: false };
   if (!ty || ty.tokens) return { erase: [], draw: [], refused: ty?.refused || null, boxed: true };
   let refused = ty.refused || null;
   const left = new Map();
@@ -907,7 +910,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const head = obj(rec?.header), k = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0, at = b => b.map(v => v * k);
   const icons2 = [];                                  // [label, plan] for the stars and types
   if (todo.stars) icons2.push(["stars", k ? starPlan(head?.stars, ...todo.stars) : { boxed: true, refused: null }]);
-  if (todo.types) icons2.push(["types", k ? typePlan(head?.types, ...todo.types) : { boxed: true, refused: null }]);
+  const first = head?.types === null && tpl.first ? scaled(tpl.first).map(v => v / k) : null;   // no type icon on the card
+  if (todo.types) icons2.push(["types", k ? typePlan(head?.types, ...todo.types, first) : { boxed: true, refused: null }]);
   for (const [, plan] of icons2) if (!plan.boxed) for (const b of plan.erase) { const g = at(b); fillBox(pixels.data, W, H, [g[0] - 2, g[1] - 2, g[2] + 2, g[3] + 2], { pad: Math.max(2, Math.round(W * 0.004)) }); }
   ctx.putImageData(pixels, 0, 0);
   for (const [label, plan] of icons2) {
