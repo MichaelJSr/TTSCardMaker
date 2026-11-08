@@ -234,11 +234,13 @@ jobs:
         shell: bash
         run: echo "sha=$(git -C bot rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      # requirements-cards.txt's wheels and the oxipng CLI (the lossless PNG recompression)
+      # requirements-cards.txt's wheels and the oxipng CLI (the lossless PNG recompression; the checks write no PNG)
       - &setup
         timeout-minutes: 10
         uses: ./.github/actions/cards-python
         id: setup
+        with:
+          oxipng: ${{ github.job != 'checks' }}
 
       # Fonts for the font check (and R8's box text): MDW/Fonts' top level, cached by its tree sha (Card sync's key); the
       # sparse checkout fetches them only on a miss. One that fails leaves no folder: no font check (it would call every

@@ -3,7 +3,8 @@
 # interpreter's path; one entry for every card job): a hit restores it (its packages' metadata checked). A miss installs
 # it offline with uv from the wheels, cached per Python minor version (cp314 wheels fit every 3.14.x: a runner image's
 # new patch rebuilds only the venv; a miss builds them with pip: uv has no `pip wheel`), and saves both. The oxipng CLI (the lossless PNG
-# recompression, AutoCroissant png_export) is the release binary, its sha256 pinned. The bot checkout is at bot/.
+# recompression, AutoCroissant png_export) is the release binary, its sha256 pinned, kept in the venv (.oxipng/): fetched
+# on a miss whatever the input, which only puts it on PATH. The bot checkout is at bot/.
 name: Card Python
 description: Python 3.14 with the card packages from the shared venv and wheel caches
 
@@ -12,7 +13,7 @@ inputs:
     description: "The venv's path (no pip in it); empty: runner.temp/venv, first on PATH (`python` is it)"
     default: ""
   oxipng:
-    description: "Install the oxipng CLI (false: the PNGs written are not recompressed)"
+    description: "The oxipng CLI on PATH (false: the PNGs written are not recompressed)"
     default: "true"
   help:
     description: "commands.<module> --help for each of these (space separated, run in bot/): the import closure"
@@ -45,7 +46,7 @@ runs:
       uses: actions/cache/restore@v6
       with:
         path: ${{ steps.reqs.outputs.venv }}
-        key: card-venv-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}
+        key: card-venv-${{ steps.reqs.outputs.sha }}-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}-ox10.2.1
 
     - id: check     # a restored venv missing its packages is installed again
       shell: bash
@@ -100,7 +101,38 @@ runs:
         path: ~/.cache/card-wheels
         key: ${{ steps.wheels.outputs.cache-primary-key }}
 
-    - if: steps.check.outputs.ok != 'true'     # only once it installed
+    # The CLI in the venv entry: a miss fetches it before the save; a hit only checks it (no network), else fetches it
+    - id: oxipng     # AutoCroissant docs/Future/SMALLER_PNG_PUSHES.md
+      if: steps.check.outputs.ok != 'true' || inputs.oxipng == 'true'
+      shell: bash
+      env:
+        VERSION: "10.2.1"     # the venv key's -ox tag
+        SHA256: "1813750ef592c5350ca79c88f98b2c0876d05c826dc7156245256d4255c1ad17"   # x86_64-unknown-linux-musl
+        ASSET: "541676949"              # the same file through the API (the release link gave 504s on 2026-11-08)
+        TOKEN: ${{ github.token }}
+        BIN: ${{ steps.reqs.outputs.venv }}/.oxipng
+        WANT: ${{ inputs.oxipng }}
+      run: |
+        name=oxipng-$VERSION-x86_64-unknown-linux-musl
+        get() { curl -fsSL --retry 4 --retry-all-errors --retry-delay 5 -o "$RUNNER_TEMP/$name.tar.gz" "$@"; }
+        fetch() {
+          [ "$RUNNER_OS-$RUNNER_ARCH" = Linux-X64 ] || { echo "::error::oxipng: a Linux X64 runner only"; return 1; }
+          { get "https://github.com/oxipng/oxipng/releases/download/v$VERSION/$name.tar.gz" \
+              || get -H "Accept: application/octet-stream" -H "Authorization: Bearer $TOKEN" \
+                   "https://api.github.com/repos/oxipng/oxipng/releases/assets/$ASSET"; } \
+            && echo "$SHA256  $RUNNER_TEMP/$name.tar.gz" | sha256sum -c --quiet \
+            && mkdir -p "$BIN" && tar -xzf "$RUNNER_TEMP/$name.tar.gz" -C "$BIN" --strip-components 1 "$name/oxipng" \
+            && "$BIN/oxipng" --version
+        }
+        if ! "$BIN/oxipng" --version 2> /dev/null && ! fetch; then
+          rm -rf "$BIN"
+          [ "$WANT" != true ] || exit 1
+          echo "::warning::no oxipng CLI: the venv is not saved"
+          echo "unsaved=true" >> "$GITHUB_OUTPUT"
+        fi
+        [ "$WANT" != true ] || echo "$BIN" >> "$GITHUB_PATH"
+
+    - if: steps.check.outputs.ok != 'true' && steps.oxipng.outputs.unsaved != 'true'     # only once it installed
       uses: actions/cache/save@v6
       with:
         path: ${{ steps.reqs.outputs.venv }}
@@ -114,23 +146,3 @@ runs:
       run: |
         if [ -z "$OWN" ]; then echo "$VENV/bin" >> "$GITHUB_PATH"; fi
         for module in $HELP; do (cd bot && "$VENV/bin/python" -m "commands.$module" --help > /dev/null); done
-
-    - if: inputs.oxipng == 'true'     # AutoCroissant docs/Future/SMALLER_PNG_PUSHES.md
-      shell: bash
-      env:
-        VERSION: "10.2.1"
-        SHA256: "1813750ef592c5350ca79c88f98b2c0876d05c826dc7156245256d4255c1ad17"   # x86_64-unknown-linux-musl
-        ASSET: "541676949"              # the same file through the API (the release link gave 504s on 2026-11-08)
-        TOKEN: ${{ github.token }}
-      run: |
-        [ "$RUNNER_OS-$RUNNER_ARCH" = Linux-X64 ] || { echo "::error::oxipng: a Linux X64 runner only"; exit 1; }
-        name=oxipng-$VERSION-x86_64-unknown-linux-musl
-        get() { curl -fsSL --retry 4 --retry-all-errors --retry-delay 5 -o "$RUNNER_TEMP/$name.tar.gz" "$@"; }
-        get "https://github.com/oxipng/oxipng/releases/download/v$VERSION/$name.tar.gz" \
-          || get -H "Accept: application/octet-stream" -H "Authorization: Bearer $TOKEN" \
-               "https://api.github.com/repos/oxipng/oxipng/releases/assets/$ASSET"
-        echo "$SHA256  $RUNNER_TEMP/$name.tar.gz" | sha256sum -c --quiet
-        mkdir -p "$RUNNER_TEMP/oxipng"
-        tar -xzf "$RUNNER_TEMP/$name.tar.gz" -C "$RUNNER_TEMP/oxipng" --strip-components 1 "$name/oxipng"
-        "$RUNNER_TEMP/oxipng/oxipng" --version
-        echo "$RUNNER_TEMP/oxipng" >> "$GITHUB_PATH"

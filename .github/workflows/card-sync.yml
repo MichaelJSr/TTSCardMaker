@@ -228,6 +228,7 @@ jobs:
         uses: ./.github/actions/cards-python
         with:
           venv: ${{ runner.temp }}/venv
+          oxipng: ${{ github.job == 'main' }}     # the data jobs write no PNG
           help: card_data tts_save card_bake
 
       # The guards' fixes (P-2): a guards push run with fixes to land (its check job's step "Fixes to land") starts Card
