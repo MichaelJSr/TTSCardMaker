@@ -124,9 +124,9 @@ export function textBlocks(L, W, H, box, { edge = 40, seed = null, most = Infini
  *  as wide as the block's lines together, and wrapped at the block's width it makes nPred lines (against the block's).
  *  size: the block's size scaled by k (the old text at it fills the block as the old one did). ok: k within 0.62-1.6 and
  *  the line counts within one (or 30%); one line: k within 0.6-3 (its size from its width), its run at least 0.3 em
- *  high, and the old text in one or two lines. exact (a name): as many lines as found, one line at most twice as wide.
- *  measure(text, size) -> px. */
-export function calibrate(found, paras, measure, { exact = false } = {}) {
+ *  high, and the old text in one or two lines. exact (a name): as many lines as found, one line at most twice as wide
+ *  (wide: three times). measure(text, size) -> px. */
+export function calibrate(found, paras, measure, { exact = false, wide = false } = {}) {
   const s0 = found.size, inked = found.lines.reduce((t, l) => t + (l[2] - l[0]), 0);
   const oneLine = layout(paras, Infinity, s0, measure).reduce((t, l) => t + l.w, 0);
   if (!oneLine || !inked) return { ok: false, k: 0, size: s0, nPred: 0, nFound: found.lines.length };
@@ -134,7 +134,7 @@ export function calibrate(found, paras, measure, { exact = false } = {}) {
   if (nFound === 1) {                                 // one line: no pitch, and its run of rows can be well under an em (thin letters): the width decides
     const size = s0 * clamp(k, 0.6, 3), inkH = found.lines[0][3] - found.lines[0][1];
     const nPred = layout(paras, (found.box[2] - found.box[0]) * 1.04, size, measure).filter(l => l.pieces.length).length;
-    return { ok: (exact ? nPred === 1 && k <= 2 : nPred <= 2) && k >= 0.6 && k <= 3 && inkH >= 0.3 * size && inkH <= 1.4 * size, k, size, nPred, nFound };
+    return { ok: (exact ? nPred === 1 && k <= (wide ? 3 : 2) : nPred <= 2) && k >= 0.6 && k <= 3 && inkH >= 0.3 * size && inkH <= 1.4 * size, k, size, nPred, nFound };
   }
   const size = s0 * clamp(k, 0.75, 1.33);
   const nPred = layout(paras, (found.box[2] - found.box[0]) * 1.04, size, measure).filter(l => l.pieces.length).length;
@@ -145,15 +145,15 @@ export function calibrate(found, paras, measure, { exact = false } = {}) {
  *  and two seed strengths (short lines seed blocks at the lower, art merges in),
  *  the one calibrate says holds the old text (paras), the most edge mass first: {b, cal, edge} or null. name: a card's
  *  name (one or two lines, the stars beside it kept apart: words join within 1.2 line heights, not 4). */
-export function bestBlock(L, W, H, area, paras, measure, { edges = [40, 80, 130], name = false } = {}) {
+export function bestBlock(L, W, H, area, paras, measure, { edges = [40, 80, 130], name = false, wide = false } = {}) {
   let best = null;
   for (const edge of edges) for (const strong of [0.3, 0.18]) for (const b of textBlocks(L, W, H, area.box, { seed: area.seed, edge, strong, join: name ? 1.2 : 4, span: name ? 2 : 12 })) {
-    const cal = calibrate(b, paras, measure, { exact: name });
+    const cal = calibrate(b, paras, measure, { exact: name, wide });
     if (!cal.ok) continue;
     const score = b.mass / (1 + 0.5 * Math.abs(cal.nPred - cal.nFound));   // the most text that fits it
     if (!best || score > best.score) best = { b, cal, edge, score };
   }
-  return best;
+  return best || (name && !wide ? bestBlock(L, W, H, area, paras, measure, { edges, name, wide: true }) : null);   // a title in a wide font
 }
 /** Do a block's lines look like lines of one text: no line over twice the usual height or 2.6 times the lowest (art
  *  taken for a line), and
@@ -895,7 +895,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
       const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25 });   // in the lines only: dim words too
       if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
-      jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink });
+      jobs.push({ role, text, old, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink });
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
@@ -1036,7 +1036,7 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
 }
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a name keeps its line count and stays clear of the stars. */
-function drawText(ctx, { role, text, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink }, imgs, W) {
+function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink }, imgs, W) {
   const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = found.align === "left" && role !== "name";
@@ -1049,7 +1049,13 @@ function drawText(ctx, { role, text, area, found, size, colours, fam, layer, mea
     while (need(z) > room2 && z > size * 0.4) { z *= 0.94; lines = layout(paras, maxW, z, measure); }
     over = need(z) > room2 + 1;
   }
-  const pitch = pitch0 * (z / size), base = top + z * 0.8;
+  const pitch = pitch0 * (z / size);
+  let base = top + z * 0.8;
+  if (role === "name" && old) {                       // a title keeps its baseline: where its old ink's top and bottom put it
+    ctx.font = `${size}px ${fam}`; ctx.textBaseline = "alphabetic";
+    const m = ctx.measureText(String(old).replace(/\r/g, "").split("\n")[0]), up = m.actualBoundingBoxAscent, tall = up + m.actualBoundingBoxDescent;
+    if (Number.isFinite(tall) && tall > 0) base = top + (found.lines[0][3] - top) * up / tall;
+  }
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
   paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base, pitch, z, fam, label: measure.label, fill, stroke, imgs, one });
   return over;
