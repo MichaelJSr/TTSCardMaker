@@ -1,12 +1,14 @@
 # Builds the card browser (site/) and publishes it to GitHub Pages.
 # One-time setup: repo Settings → Pages → Build and deployment → Source: "GitHub Actions".
 name: Card browser
+# A Card sync data job's early build (inputs after, job) carries its run id, for Card sync's Site build to find it
+run-name: ${{ inputs.after && format('Card browser (after {0} {1})', inputs.after, inputs.job) || '' }}
 
 on:
   push:
     branches: [main]
     # Site code and site-only files. Card inputs (PSDs, PNGs, Types/, the fonts, stoogedings.json and the card files in
-    # site/) start Card sync, which dispatches this build after its data commit: no build here on the old data.
+    # site/) start Card sync, whose data job dispatches this build (it waits for the data commit): none on the old data.
     paths:
       - "site/**"
       - "!site/Card Edits.json"
@@ -21,26 +23,38 @@ on:
   schedule:
     - cron: "0 12 * * *"     # daily fallback: Card sync dispatches a build after each data commit
   workflow_dispatch:
+    inputs:
+      after:
+        description: "Set by Card sync at a data job's start: its run id (the build sets up, then waits for that job's Commit data)"
+        type: string
+        default: ""
+      job:
+        description: "Set by Card sync: that job, data or after"
+        type: string
+        default: ""
 
 permissions:         # each job its own (below)
   contents: read
 
 jobs:
   # A running build is never cut off: it finishes and deploys (in this job, as GitHub's static.yml). One run waits, the
-  # newest (a newer one replaces it), and reads the data branch when it starts. Deploys go one at a time, in order.
+  # newest (a newer one replaces it), and reads the data branch when it starts (an early build: after its Data wait).
+  # Deploys go one at a time, in order.
   build:
     concurrency:
       group: pages-build
       cancel-in-progress: false
     permissions:
       contents: read
+      actions: read       # Data wait: Card sync's jobs
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url || steps.retry.outputs.page_url }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60       # the first run downloads every card PNG (~1.6 GB); two stuck deploys add ~12 min
+    # the first run downloads every card PNG (~1.6 GB); two stuck deploys add ~12 min; an early build's Data wait 22
+    timeout-minutes: ${{ inputs.after && 82 || 60 }}
     outputs:
       saved: ${{ steps.cache.outputs.cache-hit != 'true' || steps.og-save.outcome == 'success' || steps.partial.outcome == 'success' }}
     steps:
@@ -138,6 +152,46 @@ jobs:
 
       - id: og-before
         run: echo "names=$(ls site/.og-cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      # A Card sync data job's early build (dispatched at its start): set up above while that job builds, it waits here
+      # until the job's Commit data is done or the job ended: 3 s looks for 2 minutes, then 15 s; 20 minutes at most (past
+      # that, Card sync's Site build dispatches another). Then main's head again, as Card sync's Newest; when that moved
+      # a PSD, the PSD sizes again (Setup wait waits for them).
+      - name: Data wait
+        if: inputs.after
+        timeout-minutes: 22
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN: ${{ inputs.after }}
+          JOB: ${{ inputs.job == 'after' && 'Card data after the bake' || 'Card data' }}   # card-sync.yml's job names
+          COMMIT: Commit data                                                               # and its step
+        run: |
+          while [ "$SECONDS" -lt 1200 ]; do
+            n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"$JOB\" and (.status == \"completed\"
+              or any(.steps[]?; .name == \"$COMMIT\" and .status == \"completed\")))] | length") || n=0
+            [ "${n:-0}" -gt 0 ] && break
+            sleep "$([ "$SECONDS" -lt 120 ] && echo 3 || echo 15)"
+          done
+          if [ "$SECONDS" -ge 1200 ]; then echo "::warning::$JOB of run $RUN not past $COMMIT in 20 minutes: this build goes on"; fi
+          echo "$JOB of $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN past $COMMIT (or ended) after $SECONDS s." | tee -a "$GITHUB_STEP_SUMMARY"
+          was=$(git rev-parse HEAD)
+          if git fetch -q --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
+          head=$(git rev-parse HEAD)
+          if [ "$head" != "$was" ] && [ -n "$(GIT_NO_LAZY_FETCH=1 git diff --no-renames --name-only "$was" "$head" -- ':(icase)*.psd')" ]; then
+            bg=$RUNNER_TEMP/setup
+            until [ -s "$bg/sizes.code" ]; do sleep 0.1; done
+            old=$(cat "$bg/sizes.code")
+            rm "$bg/sizes.code"
+            (                                   # Setup start's: on failure, the older sizes and code stay
+              code=$old
+              if gh api "repos/$GITHUB_REPOSITORY/git/trees/$head?recursive=1" > "$RUNNER_TEMP/tree.new"; then
+                mv "$RUNNER_TEMP/tree.new" "$RUNNER_TEMP/tree.json" && code=0
+              else
+                echo "::warning::PSD sizes at ${head:0:8} not read: those at ${was:0:8}"
+              fi
+              echo "$code" > "$bg/sizes.code"
+            ) >> "$bg/sizes.log" 2>&1 < /dev/null &
+          fi
 
       # The card data: Card sync's branch data (db/)
       - uses: actions/checkout@v7

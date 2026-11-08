@@ -139,6 +139,18 @@ jobs:
       RECORDS: ""             # the after job: its dispatch inputs are the data job's (the records come from any run)
       CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the renders' records (psd_edit): the data's
     steps: &data-steps
+      # The site build at once (a push's data job, a guards' follow-up and the after job; not a dry run): it sets up
+      # beside this job, then waits for its Commit data (site.yml's Data wait). In the background; Site build below
+      # finds it by its run-name.
+      - name: Site build start
+        if: env.DRY_RUN != 'true' && (github.event_name == 'push' || inputs.guards || github.job == 'after')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          at=$(date +%s)
+          ( gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY" -f "after=$GITHUB_RUN_ID" -f "job=$GITHUB_JOB" \
+            && echo "$at" > "$RUNNER_TEMP/site-start" ) > "$RUNNER_TEMP/site-start.log" 2>&1 < /dev/null &
+
       # Main's head (not github.sha): every commit and tree, no file contents but the small files the stages read. The
       # card folders are never checked out; the bake and the build read PSDs by blob sha, local first, else REST.
       - &checkout-main
@@ -656,13 +668,24 @@ jobs:
           overwrite: true     # a re-run replaces attempt 1's
 
       # A GITHUB_TOKEN push triggers no workflow, so the site build is dispatched after a data commit and after the bake
-      # (its PNGs), whatever the data did. Card pushes start no site build of their own (site.yml): this is theirs.
+      # (its PNGs), whatever the data did. Card pushes start no site build of their own (site.yml): this is theirs. Not
+      # when Site build start's run is unfinished and under 19 minutes old: it is still in its Data wait (20 minutes at
+      # most) and builds this. Missing, replaced while pending in pages-build, or ended: dispatched here.
       - name: Site build
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.data-commit.outputs.committed == 'true' || env.AFTER != '') }}
         timeout-minutes: 2
         env:
           GH_TOKEN: ${{ github.token }}
+          EARLY: Card browser (after ${{ github.run_id }} ${{ github.job }})   # site.yml's run-name
         run: |   # 3 tries (a brief API error); a lasting one fails the job
+          if at=$(cat "$RUNNER_TEMP/site-start" 2> /dev/null) && [ $(( $(date +%s) - at )) -lt 1140 ]; then
+            status=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/site.yml/runs?event=workflow_dispatch&per_page=50" \
+              --jq "[.workflow_runs[] | select(.display_title == \"$EARLY\")][0].status // \"\"") || status=""
+            if [ -n "$status" ] && [ "$status" != completed ]; then
+              echo "The site build started with this job ($status) shows this data." | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          fi
           for wait in 0 10 30; do
             sleep "$wait"
             gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY" && exit 0
