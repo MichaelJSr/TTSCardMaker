@@ -843,7 +843,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], shape, site: [], starsKept: null };
   for (const label of todo.skipped) {                 // a stat past what its bar prints stays on the website
     const k = label.toLowerCase(), why = statSite(rec, k, edit[k]);
-    if (why) out.site.push([`${label} ${edit[k]}`, why]); else out.skipped.push(label);
+    if (why) out.site.push([`${label} ${edit[k]}`, why]);
+    else if (compBar(rec, k) && psd[k] >= 1 && psd[k] <= 10 && edit[k] > 10 && edit[k] <= 20) todo.stats[k] = [psd[k], edit[k]];   // its comps' two half rows; from 0: no lit cell to copy
+    else out.skipped.push(label);
   }
   if (todo.name != null && titleInPicture(rec)) { out.site.push(["name", "title"]); todo.name = null; }   // the dialog's note
   const kept = todo.stars && starsKept(rec?.header?.stars, todo.stars[1]), moved = kept && starMove(card?.psd, todo.stars[1]);
@@ -900,7 +902,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
     if (!row) { out.skipped.push(k.toUpperCase()); continue; }
-    paintCells(pixels.data, W, H, row, from, to); out.drawn.push(k.toUpperCase());
+    (to > row.cells ? paintComp : paintCells)(pixels.data, W, H, row, from, to); out.drawn.push(k.toUpperCase());
   }
   const head = obj(rec?.header), k = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0, at = b => b.map(v => v * k);
   const icons2 = [];                                  // [label, plan] for the stars and types
@@ -1081,5 +1083,26 @@ function paintCells(data, W, H, row, from, to) {
       else if (lit) { data[i] = lit[0]; data[i + 1] = lit[1]; data[i + 2] = lit[2]; }
       else { data[i] = src[i] * 0.38; data[i + 1] = src[i + 1] * 0.38; data[i + 2] = src[i + 2] * 0.38; }
     }
+  }
+}
+/** A layer-comp bar from `from` (1-10) to `to` (11-20) as its comps draw it: the top half row all lit, the bottom half lit
+ *  to to - 10 and dark after (the first dark cell's, a shade when none or the rounded end), a soft border-coloured line
+ *  between the halves of the cells lit in both. */
+export function paintComp(data, W, H, row, from, to) {
+  const [x0, y0, x1, y1] = px(row.box, W, H), cw = (x1 - x0) / row.cells, mid = Math.round((y0 + y1) / 2);
+  const cellBox = c => [Math.round(x0 + c * cw), Math.round(x0 + (c + 1) * cw)];
+  const src = new Uint8ClampedArray(data), d = from < row.cells - 1 ? cellBox(from)[0] : null;
+  const e = (mid * W + cellBox(1)[0]) * 4, line = [src[e], src[e + 1], src[e + 2]];   // a cell border
+  paintCells(data, W, H, row, from, row.cells);
+  for (let c = to - row.cells; c < row.cells; c++) {
+    const [a, b] = cellBox(c);
+    for (let y = mid; y < y1 - 1; y++) for (let x = a + 1; x < b - 1; x++) {
+      const i = (y * W + x) * 4;
+      for (let ch = 0; ch < 3; ch++) data[i + ch] = d == null ? data[i + ch] * 0.38 : src[(y * W + d + x - a) * 4 + ch];
+    }
+  }
+  const t = Math.max(1, Math.round((y1 - y0) * 0.04)), top = mid - Math.floor(t / 2), inset = Math.round(cw * 0.3), end = Math.min(x1 - inset, cellBox(to - row.cells)[0]);
+  for (let y = top; y < top + t; y++) for (let x = x0 + inset; x < end; x++) {
+    const i = (y * W + x) * 4; for (let ch = 0; ch < 3; ch++) data[i + ch] = data[i + ch] * 0.3 + line[ch] * 0.7;
   }
 }
