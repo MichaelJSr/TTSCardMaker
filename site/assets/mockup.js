@@ -10,7 +10,7 @@
 // `draw` is pure (node checks run it on plain pixel arrays).
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
 import { starMove, starsKept, titleInPicture } from "./parts.js";
-import { colorRanges, inkOf } from "./textcolor.js";
+import { colorRanges, inkOf, layerColors } from "./textcolor.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
@@ -636,21 +636,26 @@ export function statSite(rec, k, to) {
 }
 
 /** The boxes to redraw from per-layer edits (PARTS_EDITOR.md §5; parts: Card Edits.json's, by layer id): [{id, role (name |
- *  ability), old, text (null: the layer is deleted), box (canvas px), added}] for the record's parts whose edit differs
- *  from the layer's text; an added ability goes in the template's Ability box. */
-export function partJobs(rec, parts) {
+ *  ability), old, text (null: the layer is deleted), box (canvas px), added, colors}] for the record's parts whose edit
+ *  differs from the layer's text, or whose letters `colors` paints otherwise than `was` (the image's); an added ability
+ *  goes in the template's Ability box. colors: each part's share of the field's (textcolor.js layerColors over the
+ *  field's layers as the bake leaves them, picture 1's, in reading order). */
+export function partJobs(rec, parts, { colors = null, was = null, statuses = null } = {}) {
   const p = obj(rec?.parts);
   if (!p || !obj(parts)) return [];
   const list = [...(p.title || []).map(x => ["name", x]), ...(p.ability || []).map(x => ["ability", x]), ...(p.blocks || []).map(x => ["ability", x])];
+  const add = obj(parts["+ability"]), tb = rec?.template?.ability?.box, plus = add?.text && !(p.ability || []).length ? { id: "+ability" } : null;
+  const textOf = part => { const e = obj(parts[String(part?.id)]); return e ? (e.delete ? null : String(e.text ?? "")) : part?.text; };
+  const layers = { name: [], ability: plus ? [plus] : [] };
+  for (const [role, part] of list) if (textOf(part) != null && !(Array.isArray(part?.variants) && !part.variants.includes(1))) layers[role].push(part);
+  const share = (role, part, v) => { const i = layers[role].indexOf(part); return v && i >= 0 ? layerColors(layers[role].map(textOf), i, v, role) : null; };
   const out = [];
   for (const [role, part] of list) {
-    const e = parts[String(part?.id)];
-    if (!e || typeof e !== "object") continue;
-    const text = e.delete ? null : String(e.text ?? "");
-    if (text !== part.text) out.push({ id: String(part.id), role, old: String(part.text ?? ""), text, box: Array.isArray(part.box) ? part.box : null, added: false, layer: String(part.layer || "") });
+    const text = textOf(part), mine = share(role, part, colors), theirs = share(role, part, was);
+    const recolour = text != null && text === part?.text && JSON.stringify(colorRanges(text, mine, role, statuses)) !== JSON.stringify(colorRanges(text, theirs, role, statuses));
+    if ((obj(parts[String(part?.id)]) && text !== part.text) || recolour) out.push({ id: String(part.id), role, old: String(part.text ?? ""), text, box: Array.isArray(part.box) ? part.box : null, added: false, layer: String(part.layer || ""), colors: mine });
   }
-  const add = obj(parts["+ability"]), tb = rec?.template?.ability?.box;
-  if (add?.text && !(p.ability || []).length) out.push({ id: "+ability", role: "ability", old: "", text: String(add.text), box: Array.isArray(tb) ? tb : null, added: true });
+  if (plus) out.push({ id: "+ability", role: "ability", old: "", text: String(add.text), box: Array.isArray(tb) ? tb : null, added: true, colors: share("ability", plus, colors) });
   return out;
 }
 
@@ -837,17 +842,17 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const barsBottom = lowest.length ? Math.max(...lowest.map(r => r.box[3])) : 0;   // the text starts below the card's stat rows (where they are seen, else the template's)
   const jobs = [], kc = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0;
   const specs = [["name", todo.name, psd.name, "name"], ["ability", todo.ability, psd.ability, "text"]].filter(x => x[1] != null).map(([role, text, old, label]) => ({ role, text, old, label }));
-  const partly = partJobs(rec, edit.parts);
+  const partly = partJobs(rec, edit.parts, { colors: todo.colors, was: todo.colors && psd.colors, statuses });
   if (obj(rec?.parts) && obj(edit.parts)) specs.length = 0;   // one box per layer: each changed layer in its own box, not the joined fields
-  for (const j of partly) specs.push({ role: j.role, text: j.text, old: j.old, label: j.role === "name" ? "name" : "text", own: j.box && kc ? j.box.map(v => v * kc) : null, added: j.added, part: true, path: j.layer, id: j.added ? "" : j.id });
-  for (const { role, text, old, label, own: partBox, added, part, path, id } of specs) {
+  for (const j of partly) specs.push({ role: j.role, text: j.text, old: j.old, label: j.role === "name" ? "name" : "text", own: j.box && kc ? j.box.map(v => v * kc) : null, added: j.added, part: true, path: j.layer, id: j.added ? "" : j.id, colors: j.colors });
+  for (const { role, text, old, label, own: partBox, added, part, path, id, colors: shared } of specs) {
     const { fam, layer } = await family(role, label, path, id);
     const measure = (t, z) => { ctx.font = `${z}px ${fam}`; return ctx.measureText(t).width; };
     measure.cap = z => capOf(ctx, fam, z);
     measure.label = bfam ? em => labelSet(ctx, bfam, em) : null;   // badges' labels: the font's (Roboto Black), once loaded
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
-    const colors = part ? null : todo.colors;    // one box per layer: its own text, no field colours
+    const colors = part ? shared : todo.colors;  // one box per layer: its share of the field's
     const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null);    // the card's own colours on what is unchanged
     if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true }); out.boxed.push(label); continue; }
     const paras = tokenize(old, icons);

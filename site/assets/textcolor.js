@@ -71,6 +71,20 @@ export function spansOf(text, one) {
   const out = nth ? hits.slice(nth - 1, nth) : hits;
   return out.length ? out : null;
 }
+/** colors for text i of a field printed by several layers (texts: theirs, in reading order): a phrase counted over them
+ *  all (psd_edit.color_spans: whole words when any has it as one, "word#n" the nth of all), renumbered for text i or
+ *  left out where it paints nothing; the field's alone, null when none is left. */
+export function layerColors(texts, i, colors, field) {
+  const out = [];
+  for (const one of colors || []) {
+    if (one.field !== field) continue;
+    if (!one.phrase) { out.push(one); continue; }
+    const [words, nth] = numbered(one.phrase), all = texts.map(t => matches(String(t ?? ""), words)), kind = all.some(m => m.whole.length) ? "whole" : "found";
+    const hits = all.flatMap((m, j) => m[kind].map((_, k) => [j, k])), mine = (nth ? hits.slice(nth - 1, nth) : hits).filter(([j]) => j === i);
+    if (mine.length) out.push(nth ? { ...one, phrase: `${words}#${mine[0][1] + 1}` } : one);
+  }
+  return out.length ? out : null;
+}
 /** The status names: the status cards' (buff, debuff), once each. The chart's Overridden and Puppeteered have none. */
 export const statusNames = cards => [...new Set((cards || []).filter(c => c && (c.type === "buff" || c.type === "debuff") && c.name).map(c => String(c.name)))];
 const TOKEN = /\[[^\[\]\n]{1,52}\]/g, ESC = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), STATUS_RE = new WeakMap();
