@@ -99,7 +99,8 @@ end
 -- title bar, A- / A+
 -- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
 -- (status effects and others) spawn beside the card with a click; cards that draw from a kind of deck (DECKS) get a
--- button per deck that spawns a shuffled copy beside the card. Data: the website's data/tts.json and
+-- button per deck that spawns a shuffled copy beside the card. The name and ability keep the card's colours (painted).
+-- Data: the website's data/tts.json and
 -- TTS/Rulebook/pages.json, fetched a moment after the save loads; once tts.json is in, it is decoded and the seated
 -- players' panels are built (a player seated later: a moment after sitting). No Lua patterns over long text (MoonSharp's
 -- are limited): plain finds only.
@@ -148,12 +149,13 @@ local function rows(id, prefix, n, count, onClick, colors)
     return out
 end
 
--- one of a seat's details panels, k (its children placed by layout(), below); each a little further in than the last
+-- one of a seat's details panels, k (its children placed by layout(), below); each a little further in than the last;
+-- opaque: build_site TTS_BACKS checks the card's colours against it
 local function detailsPanel(c, k)
     local id = c .. "_d" .. k
     local panel = {tag = "Panel", attributes = {id = id, visibility = c, active = false, allowDragging = true,
         returnToOriginalPositionWhenReleased = false, rectAlignment = "MiddleRight", offsetXY = (-60 - 50 * (k - 1)) .. " " .. (-40 * (k - 1)), width = 540, height = 660,
-        color = "#0f1729F2", outline = "#3b4b6b", outlineSize = "2 -2"}, children = {
+        color = "#0f1729", outline = "#3b4b6b", outlineSize = "2 -2"}, children = {
         {tag = "Panel", attributes = {id = id .. "_head", rectAlignment = "UpperCenter", height = TITLE_H, color = "#1b2740"}, children = {
             {tag = "Text", attributes = {id = id .. "_title", rectAlignment = "MiddleLeft", offsetXY = "12 0", height = TITLE_H,
                 fontStyle = "Bold", color = "#ffffff", alignment = "MiddleLeft", horizontalOverflow = "Overflow"}, value = ""},
@@ -374,6 +376,49 @@ local function cardPath(obj, color)
     return pathOf(url)
 end
 
+-- text shown as it is: rich text has no escape, so each "<" gets an empty <b></b> after it (never the start of a tag)
+local function plain(text)
+    local out, i = {}, 1
+    while true do
+        local lt = text:find("<", i, true)
+        if not lt then table.insert(out, text:sub(i)) break end
+        table.insert(out, text:sub(i, lt) .. "<b></b>")
+        i = lt + 1
+    end
+    return table.concat(out)
+end
+
+local HEX = {}
+for i = 1, 16 do HEX[("0123456789abcdef"):sub(i, i)] = true end
+local function hexColour(c)                            -- "#rrggbb", else nil
+    if type(c) ~= "string" or #c ~= 7 or c:sub(1, 1) ~= "#" then return nil end
+    for i = 2, 7 do if not HEX[c:sub(i, i)] then return nil end end
+    return c
+end
+
+-- text (plain) in the card's colours, as its website page paints them (tts.json nc, ac: {piece, "#rrggbb", n}, in
+-- order: piece's nth find after the last one, n 1 when left out; found by text, as MoonSharp's strings aren't bytes)
+local function painted(text, pieces)
+    local out, at = {}, 1
+    for _, p in ipairs(type(pieces) == "table" and pieces or {}) do
+        local piece, c, s = type(p) == "table" and p[1], type(p) == "table" and hexColour(p[2]), nil
+        if type(piece) == "string" and piece ~= "" and c then
+            local from = at
+            for _ = 1, math.max(1, math.floor(tonumber(p[3]) or 1)) do
+                s = text:find(piece, from, true)
+                if not s then break end
+                from = s + 1
+            end
+        end
+        if s then
+            table.insert(out, plain(text:sub(at, s - 1)) .. "<color=" .. c .. ">" .. plain(piece) .. "</color>")
+            at = s + #piece
+        end
+    end
+    table.insert(out, plain(text:sub(at)))
+    return table.concat(out)
+end
+
 local function badge(tag)
     local t = details.tags[tag]
     return "<color=" .. (BADGE[t and t.g] or BADGE.neutral) .. "><b>(" .. tag .. ")</b></color>"
@@ -482,25 +527,25 @@ local function detailsText(card)
     local bits = {card.k}
     if card.st then table.insert(bits, math.floor(card.st) .. "★") end
     if card.by then table.insert(bits, "by " .. card.by) end
-    local out = {"<color=" .. DIM .. ">" .. table.concat(bits, " · ") .. "</color>"}
-    if card.s then table.insert(out, "<b>" .. card.s .. "</b>") end
-    if card.a then table.insert(out, "\n" .. withBadges(card.a)) end
+    local out = {"<color=" .. DIM .. ">" .. plain(table.concat(bits, " · ")) .. "</color>"}
+    if card.s then table.insert(out, "<b>" .. plain(card.s) .. "</b>") end
+    if card.a then table.insert(out, "\n" .. withBadges(painted(card.a, card.ac))) end
     local function section(title) table.insert(out, "\n<color=" .. HEAD .. "><b>" .. title .. "</b></color>") end
     if card.g then
         section("TIMING TAGS")
-        for _, tag in ipairs(card.g) do table.insert(out, badge(tag) .. "  " .. details.tags[tag].m) end
+        for _, tag in ipairs(card.g) do table.insert(out, badge(tag) .. "  " .. plain(details.tags[tag].m)) end
     end
     local typed = {}
     for _, t in ipairs(card.t or {}) do
         local info = details.types[t]
-        if info then table.insert(typed, "<b>" .. info.n .. "</b>  " .. info.x) end
+        if info then table.insert(typed, "<b>" .. plain(info.n) .. "</b>  " .. plain(info.x)) end
     end
     if #typed > 0 then section("TYPES") for _, line in ipairs(typed) do table.insert(out, line) end end
     if card.x then
         section("STATUS EFFECTS")
         for _, name in ipairs(card.x) do
             local s = details.statuses[name]
-            if s then table.insert(out, "<b>" .. name .. "</b> <color=" .. DIM .. ">(" .. s.k .. ")</color>  " .. withBadges(s.x)) end
+            if s then table.insert(out, "<b>" .. plain(name) .. "</b> <color=" .. DIM .. ">(" .. plain(s.k) .. ")</color>  " .. withBadges(plain(s.x))) end
         end
     end
     return table.concat(out, "\n")
@@ -560,7 +605,7 @@ local function layout(color, k)
                 local it = at[i]
                 if it then
                     local short = cap and it.w > cap
-                    set(prefix .. r .. "_" .. i, {active = "true", text = short and shorten(it.text, cap, f) or it.text,
+                    set(prefix .. r .. "_" .. i, {active = "true", text = plain(short and shorten(it.text, cap, f) or it.text),
                         tooltip = short and it.text or "", preferredWidth = short and cap or it.w, fontSize = f})
                 else
                     set(prefix .. r .. "_" .. i, {active = "false"})
@@ -583,7 +628,7 @@ local function layout(color, k)
     local textH = lines(text, math.floor(textW / (sz.f * 0.52))) * math.ceil(sz.f * 1.32) + 12
     set(id .. "_head", {width = sz.w})
     set(id .. "_title", {width = sz.w - 140, fontSize = sz.f + 3})
-    setValue(id .. "_title", open.card.n)
+    setValue(id .. "_title", painted(open.card.n or "", open.card.nc))
     set(id .. "_scroll", {width = sz.w - 8, height = sz.h - TITLE_H - 4 - foot})
     set(id .. "_page", {width = sz.w - 24, height = textH})
     set(id .. "_text", {width = textW, height = textH, fontSize = sz.f})
@@ -958,7 +1003,7 @@ local function listCards(color, query)
     for i = 1, RESULTS do
         local path = first[i]
         local c = path and details.cards[path]
-        set(id .. "_g" .. i, c and {active = "true", text = c.n .. "   " .. (c.k or "") .. (c.st and (" " .. math.floor(c.st) .. "★") or "")}
+        set(id .. "_g" .. i, c and {active = "true", text = plain(c.n) .. "   " .. (c.k or "") .. (c.st and (" " .. math.floor(c.st) .. "★") or "")}
             or {active = "false"})
     end
     set(id .. "_list", {height = math.max(40, math.min(#first, RESULTS) * 33 + 10)})

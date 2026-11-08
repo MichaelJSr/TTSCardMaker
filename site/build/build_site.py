@@ -578,6 +578,112 @@ def card_inks(e, rec):
     return out or None
 
 
+# ---- the colours a card page paints, for the TTS save's Card details (textcolor.js colorRanges; tts_details) --------
+TOKEN_RE = re.compile(r"\[[^\[\]\n]{1,52}\]")
+TTS_BACKS = {"name": ((27, 39, 64),), "ability": ((15, 23, 41),)}    # Global.lua detailsPanel: the title bar, the panel (opaque)
+TTS_SEEN = 3                                  # a colour's least contrast with them, else plain there (TTS can't outline a word)
+
+
+def _edge(text, i):
+    return not (0 <= i < len(text) and text[i].isascii() and text[i].isalnum())
+
+
+def color_spans(text, one):
+    """textcolor.js spansOf: [(start, end)] where one colour ({field, phrase?, color}) paints text, None when its phrase
+    isn't there: any case, any blanks between its words, whole words first, "word#n" the nth."""
+    phrase = one.get("phrase")
+    if not phrase:
+        return [(0, len(text))] if text else []
+    m = re.match(r"(.*\S)#([0-9]+)\Z", phrase)
+    words, nth = (m[1], int(m[2])) if m else (phrase, 0)
+    parts = words.replace("\x03", " ").split()
+    if not parts:
+        return None
+    found = [x.span() for x in re.finditer("[\\s\x03]+".join(map(re.escape, parts)), text, re.I) if x.end() > x.start()]
+    hits = [s for s in found if _edge(text, s[0] - 1) and _edge(text, s[1])] or found
+    return (hits[nth - 1:nth] if nth else hits) or None
+
+
+def status_patterns(names):
+    """textcolor.js statusSpans' patterns: the status names longest first, any case, whole words."""
+    names = sorted((n.strip() for n in names if isinstance(n, str) and n.strip()), key=len, reverse=True)
+    return [re.compile(r"(?<![A-Za-z])" + "[\\s\x03]+".join(map(re.escape, n.split())) + r"(?![A-Za-z])", re.I) for n in names]
+
+
+def status_spans(text, patterns):
+    """textcolor.js statusSpans: [(start, end)] of the status words in text (none over an earlier one or a [token]) that
+    start with a capital, sorted."""
+    taken = [(*m.span(), False) for m in TOKEN_RE.finditer(text)]
+    for p in patterns:
+        for m in p.finditer(text):
+            a, b = m.span()
+            if b > a and not any(a < e and s < b for s, e, _ in taken):
+                taken.append((a, b, True))
+    return sorted((a, b) for a, b, word in taken if word and "A" <= text[a] <= "Z")
+
+
+def color_paint(text, colors, field, statuses=(), base=None):
+    """textcolor.js colorRanges, a colour or None per character of text: base (cards.json `ink`'s [[start, end, colour]])
+    first, then the field's whole-field colours, then its phrases as listed; status words (status_spans, the ability's)
+    are never painted by an edit."""
+    paint = [None] * len(text)
+    for r in base or []:
+        if isinstance(r, list) and len(r) == 3 and all(isinstance(x, int) for x in r[:2]) and isinstance(r[2], str) and COLOR_RE.match(r[2]):
+            paint[max(0, r[0]):min(r[1], len(text))] = [r[2]] * max(0, min(r[1], len(text)) - max(0, r[0]))
+    kept = {i for a, b in (status_spans(text, statuses) if field == "ability" and statuses else ()) for i in range(a, b)}
+    mine = [one for one in colors or [] if isinstance(one, dict) and one.get("field") == field and isinstance(one.get("color"), str)
+            and COLOR_RE.match(one["color"])]
+    for one in [x for x in mine if not x.get("phrase")] + [x for x in mine if x.get("phrase")]:
+        for a, b in color_spans(text, one) or ():
+            for i in range(a, b):
+                if i not in kept:
+                    paint[i] = one["color"]
+    return paint
+
+
+def _contrast(c, back):
+    a, b = _rel_lum(*_ink_rgb(c)), _rel_lum(*back)
+    return (max(a, b) + 0.05) / (min(a, b) + 0.05)
+
+
+def tts_colors(c, statuses, icons):
+    """The card's colours in the save's Card details (owner 11-08), as its page paints them (color_paint: its own, then
+    Card Edits colors; icons and badges not): {"nc": on tts.json's n, "ac": on a (game_words)}, each [[text, colour]] in
+    order, a piece the nth find of its text after the last one when [text, colour, n] (Global.lua painted: no offsets, as
+    MoonSharp's strings aren't bytes); a colour under TTS_SEEN against the panel stays plain."""
+    out = {}
+    for key, field in (("nc", "name"), ("ac", "ability")):
+        text = c.get(field) if isinstance(c.get(field), str) else ""
+        ink = c.get("ink") if isinstance(c.get("ink"), dict) else {}
+        paint = color_paint(text, c.get("colors"), field, statuses, ink.get(field))
+        at = list(range(len(text)))
+        if field == "ability":
+            for a, b in drawn_spans(text):
+                paint[a:b] = [None] * (b - a)
+            text = game_words(text, icons, at)
+        colours = [paint[i] if i is not None else None for i in at]
+        runs = []
+        for i, col in enumerate(colours):
+            if not col or text[i].isspace():
+                continue
+            if runs and runs[-1][2] == col and not text[runs[-1][1]:i].strip():
+                runs[-1][1] = i + 1
+            else:
+                runs.append([i, i + 1, col])
+        pieces, after = [], 0
+        for a, b, col in runs:
+            if min(_contrast(col, back) for back in TTS_BACKS[field]) < TTS_SEEN:
+                continue
+            n, j = 1, text.find(text[a:b], after)
+            while j != a:
+                n, j = n + 1, text.find(text[a:b], j + 1)
+            pieces.append([text[a:b], col] + [n] * (n > 1))
+            after = b
+        if pieces:
+            out[key] = pieces
+    return out
+
+
 def join_details(cards, records, tree, edits=None):
     """
     The record of each card's PSD: by its blob at HEAD, else the blob the bot parsed, else the newest record for its path.
@@ -3339,15 +3445,27 @@ GAME_TAGS = (                                 # the rulebook's Timing tags panel
 )
 
 
-def game_words(text, icons):
-    """Icon tokens as words ([fire] -> fire, [fire:no] -> not fire); other [..] text prints as it is, as on the site."""
-    def word(m):
+def game_words(text, icons, at=None):
+    """Icon tokens as words ([fire] -> fire, [fire:no] -> not fire); other [..] text prints as it is, as on the site.
+    at: a list, set to each result character's index in text (None: an icon's word, a line break)."""
+    text, out, last = text or "", [], 0
+    for m in re.finditer(r"\[([^\[\]\n]{1,52})\]", text):
         base, _, v = m.group(1).partition(":")
         if norm(base) not in icons or (v and v.lower() not in VARIANT_IMAGES + ("no",)):
-            return m.group(0)
-        return ("not " if v.lower() == "no" else "") + base.replace("_", " ")
-    text = re.sub(r"\[([^\[\]\n]{1,52})\]", word, text or "")
-    return "\n".join(line.rstrip() for line in text.strip().splitlines())
+            continue
+        out += [(ch, i) for i, ch in enumerate(text[last:m.start()], last)]
+        out += [(ch, None) for ch in ("not " if v.lower() == "no" else "") + base.replace("_", " ")]
+        last = m.end()
+    out += [(ch, i) for i, ch in enumerate(text[last:], last)]
+    flat = "".join(ch for ch, _ in out)
+    lead, flat = len(flat) - len(flat.lstrip()), flat.strip()
+    out, lines, k = out[lead:lead + len(flat)], [], 0
+    for n, line in enumerate(flat.splitlines(keepends=True)):     # each line's end blanks dropped, joined by "\n"
+        lines += [("\n", None)] * (n > 0) + out[k:k + len((line.splitlines() or [""])[0].rstrip())]
+        k += len(line)
+    if at is not None:
+        at[:] = [i for _, i in lines]
+    return "".join(ch for ch, _ in lines)
 
 
 RULEBOOK = os.path.join(SITE, "rulebook")      # the rulebook's chapters (NN-slug.md), img/ and fonts/
@@ -3723,10 +3841,11 @@ RULE_WORDS = (("damage-types", r"piercing|true damage|life ?steal|shockwave|over
 def tts_details(cards, chapters, icons, tag_table):
     """data/tts.json for the TTS save's script, cards keyed by their PNG's path (the save's card links): name, kind,
     stars, stats, ability (icons as words), types, timing tags, the status effects the ability names and the other cards
-    it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions);
-    with the types', tags' and statuses' meanings (a status's path: p) and the chapters (their numbers find the PDF's
-    pages). Hidden cards left out."""
+    it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions)
+    and its name's and ability's colours (nc, ac: tts_colors); with the types', tags' and statuses' meanings (a status's
+    path: p) and the chapters (their numbers find the PDF's pages). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
+    marks = status_patterns(dict.fromkeys(str(c["name"]) for c in cards if c.get("type") in ("buff", "debuff") and c.get("name")))   # app.js S.statuses
     types, statuses = type_meanings(chapters, icons), {}
     for c in shown:
         if c.get("type") in ("buff", "debuff") and c.get("ability") and not c.get("dup"):
@@ -3756,13 +3875,18 @@ def tts_details(cards, chapters, icons, tag_table):
         mentioned = [q for i, q in enumerate(named_cards) if q not in named_cards[:i]][:6]
         bars = [" ".join(f"{k.upper()} {'?' if s.get(k) is None else s[k]}" for k in STAT_KEYS) for s in c.get("creatures") or [c]
                 if any(s.get(k) is not None for k in STAT_KEYS)]
+        try:
+            colours = tts_colors(c, marks, icons)
+        except Exception as error:                # an odd card never fails the build
+            warn(f"{c['png']}: no TTS colours ({type(error).__name__}: {error})")
+            colours = {}
         out_cards[c["png"]] = {k: v for k, v in {
             "n": c["name"], "k": KIND_LABEL.get(c.get("type"), c.get("type") or "") + (f" ({c['subtype']})" if c.get("subtype") else ""),
             "st": c.get("stars"), "s": "; ".join(bars) or None, "a": game_words(text, icons) or None,
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
             "x": [n for i, n in enumerate(hits) if n not in hits[:i]] or None, "m": mentioned or None,
             "r": [cid for cid, words in rule_words if words.search(text)] or None,
-            "by": c.get("author")}.items() if v}
+            "by": c.get("author"), **colours}.items() if v}
     return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
             "tags": dict(sorted(used_tags.items())), "statuses": dict(sorted(statuses.items())), "cards": out_cards}
 

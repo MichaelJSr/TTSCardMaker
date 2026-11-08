@@ -10,7 +10,7 @@
 // `draw` is pure (node checks run it on plain pixel arrays).
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
 import { starMove, starsKept, titleInPicture } from "./parts.js";
-import { colorRanges } from "./textcolor.js";
+import { colorRanges, inkOf } from "./textcolor.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
@@ -328,11 +328,12 @@ export function tokenize(text, icons = {}) {
     return out;
   }));
 }
-/** tokenize's paragraphs with their letters in their colours (textcolor.js colorRanges of text): a text piece split
- *  where its colour changes, each part's `color` "#rrggbb" or none; icons and badges keep their own. */
-export function colourize(paras, text, colors, field, statuses = null) {
+/** tokenize's paragraphs with their letters in their colours (textcolor.js colorRanges of text, over base: the card's
+ *  own, baseInk): a text piece split where its colour changes, each part's `color` "#rrggbb" or none; icons and badges
+ *  keep their own. back: [r, g, b] the text sits on, a colour under 3:1 against it left out. */
+export function colourize(paras, text, colors, field, statuses = null, base = null, back = null) {
   text = String(text ?? "").replace(/\r/g, "");
-  const ranges = colorRanges(text, colors, field, statuses);
+  const ranges = seenOn(colorRanges(text, colors, field, statuses, base), back);
   if (!ranges.length) return paras;
   const at = i => ranges.find(r => r.start <= i && i < r.end)?.color || null;
   let cursor = 0;
@@ -349,6 +350,19 @@ export function colourize(paras, text, colors, field, statuses = null) {
     return out.map(x => (x.color ? x : { text: x.text }));
   })));
 }
+/** The card's own colours on a redrawn text, as its page keeps them over a staged edit (textcolor.js inkOf: a word
+ *  the edit cuts into loses its own): the field's; a part's (old: its layer's text) the field's colours where that text
+ *  is in the field, followed to the new; null without any. */
+export function baseInk(card, field, text, old = null) {
+  if (old == null) return inkOf(card, field, text);
+  const was = String(card?.ink?.built?.[field] ?? card?.[field] ?? ""), at = old ? was.indexOf(old) : -1;
+  const runs = at < 0 ? [] : (inkOf(card, field, was) || []).filter(r => r.start >= at && r.end <= at + old.length);
+  return runs.length ? inkOf({ [field]: old, ink: { [field]: runs.map(r => [r.start - at, r.end - at, r.color]) } }, field, text) : null;
+}
+const lin = v => (v <= 10 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4);
+const lumOf = ([r, g, b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+/** ranges without the colours under 3:1 against rgb (none: all): they stay in the text's own colour. */
+const seenOn = (ranges, rgb) => { if (!rgb) return ranges; const b = lumOf(rgb); return ranges.filter(r => { const c = lumOf(hexRgb(r.color) || [0, 0, 0]); return (Math.max(b, c) + 0.05) / (Math.min(b, c) + 0.05) >= 3; }); };
 const ICON_EM = 1.1;                                  // an icon's width in ems
 const BADGE_EM = 0.78;                                // a badge's letters, in ems of the text, at BADGE_H
 const BADGE_H = 0.92;                                 // the pill's height in ems before it is fitted
@@ -833,6 +847,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
     const colors = part ? null : todo.colors;    // one box per layer: its own text, no field colours
+    const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null);    // the card's own colours on what is unchanged
     if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true }); out.boxed.push(label); continue; }
     const paras = tokenize(old, icons);
     const hit = bestBlock(L, W, H, area, paras, measure, { name: role === "name" });   // the block that holds the old text, or none
@@ -843,9 +858,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
       const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25 });   // in the lines only: dim words too
       if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
-      jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors, statuses });
+      jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink });
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
-    else { jobs.push({ role, text, label, area: part ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, boxed: true }); out.boxed.push(label); }   // a layer's box: covered, never the card below it
+    else { jobs.push({ role, text, label, area: part ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's box: covered, never the card below it
   }
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
@@ -984,8 +999,8 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
 }
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a name keeps its line count and stays clear of the stars. */
-function drawText(ctx, { role, text, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses }, imgs, W) {
-  const paras = colourize(tokenize(text, icons), text, colors, role, statuses), region = area.box;
+function drawText(ctx, { role, text, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink }, imgs, W) {
+  const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = found.align === "left" && role !== "name";
   const maxW = left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
@@ -1002,17 +1017,18 @@ function drawText(ctx, { role, text, area, found, size, colours, fam, layer, mea
   paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base, pitch, z, fam, label: measure.label, fill, stroke, imgs, one });
   return over;
 }
+const BOX_FILL = [16, 16, 22];                        // drawBox's box
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the
  *  old text is covered, never half there. */
-function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors, statuses }, imgs, W, H, shape) {
+function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors, statuses, ink }, imgs, W, H, shape) {
   const r = area.seed ? [0, area.seed[0], W, H] : area.box;     // the text area to the card's edges (the old text may touch them)
   const b = area.seed ? r : [r[0] - W * 0.01, r[1] - H * 0.004, r[2] + W * 0.01, r[3] + H * 0.004], pad = W * 0.03;
   const start = role === "name" ? (b[3] - b[1]) * 0.5 : W * (shape === "square" ? 0.06 : shape === "item" ? 0.05 : 0.045);
-  const { size: z, lines } = fit(colourize(tokenize(text, icons), text, colors, role, statuses), b[2] - b[0] - 2 * pad, b[3] - b[1] - pad, start, measure, role === "name" ? { lines: 1, min: 0.3 } : { min: 0.35 });
+  const { size: z, lines } = fit(colourize(tokenize(text, icons), text, colors, role, statuses, ink, BOX_FILL), b[2] - b[0] - 2 * pad, b[3] - b[1] - pad, start, measure, role === "name" ? { lines: 1, min: 0.3 } : { min: 0.35 });
   const over = lines.length * z * LINE > b[3] - b[1] - pad + 0.5;
   const rad = Math.min(W * 0.03, (b[3] - b[1]) / 2);
   ctx.save(); ctx.beginPath(); ctx.moveTo(b[0] + rad, b[1]); ctx.arcTo(b[2], b[1], b[2], b[3], rad); ctx.arcTo(b[2], b[3], b[0], b[3], rad); ctx.arcTo(b[0], b[3], b[0], b[1], rad); ctx.arcTo(b[0], b[1], b[2], b[1], rad); ctx.closePath();
-  ctx.fillStyle = "rgb(16,16,22)"; ctx.fill(); ctx.lineWidth = Math.max(1.5, W * 0.003); ctx.strokeStyle = "rgba(255,255,255,.4)"; ctx.setLineDash([W * 0.012, W * 0.008]); ctx.stroke(); ctx.restore();
+  ctx.fillStyle = rgb(BOX_FILL); ctx.fill(); ctx.lineWidth = Math.max(1.5, W * 0.003); ctx.strokeStyle = "rgba(255,255,255,.4)"; ctx.setLineDash([W * 0.012, W * 0.008]); ctx.stroke(); ctx.restore();
   const pitch = z * LINE, base = (b[1] + b[3]) / 2 - (lines.length * pitch) / 2 + z * 0.9, mid = (b[0] + b[2]) / 2;
   paintLines(ctx, lines, { at: l => mid - l.w / 2, base, pitch, z, fam, label: measure.label, fill: [255, 255, 255], stroke: [0, 0, 0], imgs, one });
   return over;

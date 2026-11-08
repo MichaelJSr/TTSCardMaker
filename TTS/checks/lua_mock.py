@@ -12,7 +12,8 @@ cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on
 rulebook panel and the card finder on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or
 pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
-face down, Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden).
+face down, Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name and ability
+in the card's colours, tts.json nc and ac, every "<" of a text kept from starting a tag).
 Data: $TTS_DETAILS (a tts.json file), else the live website. Exits 1 on a failure.
 """
 import json
@@ -375,6 +376,7 @@ class World:
         self.log, self.shout, self.told, self.logs, self.prints = [], [], [], [], []
         self.menus, self.table_menu, self.spawns, self.web, self.hands = {}, {}, [], [], {}
         self.lua = lupa.LuaRuntime(unpack_returned_tuples=True)
+        self.lua.execute("collectgarbage('stop')")          # lupa 2.8's wrapper cache can hand back another object after a collection
         g = self.g = self.lua.globals()
         self.wait, self.ui = Wait(self), UI(self, list(base_ui))
         self.players = {c: Player(self, c) for c in SEATS + ["Grey", "Black"]}
@@ -496,6 +498,27 @@ def chapters_of(card, d):
     for i in card.get("r") or []:
         add(i)
     return out
+
+
+def plain(text):                                            # Global.lua plain: a "<" never starts a tag
+    return text.replace("<", "<<b></b>")
+
+
+def painted(text, pieces):                                  # Global.lua painted: each piece the nth find after the last
+    out, at = [], 0
+    for p in pieces or []:
+        s, start = None, at
+        if isinstance(p, list) and len(p) > 1 and isinstance(p[0], str) and p[0] and re.fullmatch(r"#[0-9a-f]{6}", str(p[1])):
+            for _ in range(max(1, int(p[2]) if len(p) > 2 else 1)):
+                s = text.find(p[0], start)
+                if s < 0:
+                    s = None
+                    break
+                start = s + 1
+        if s is not None:
+            out.append(f"{plain(text[at:s])}<color={p[1]}>{plain(p[0])}</color>")
+            at = s + len(p[0])
+    return "".join(out) + plain(text[at:])
 
 
 def named_of(card, d):
@@ -729,7 +752,7 @@ def main():
     check({a.get("visibility") for i, a in ui.attrs.items() if i.startswith("Red_") and "visibility" in a} == {"Red"},
           "Red's panels only Red sees")
     card = details["cards"][face_path(cards[0])]
-    check(ui.on("Red_d1") and ui.values.get("Red_d1_title") == card["n"] and ui.values.get("Red_d1_text"),
+    check(ui.on("Red_d1") and ui.values.get("Red_d1_title") == painted(card["n"], card.get("nc")) and ui.values.get("Red_d1_text"),
           f"Card details: panel 1 shows {card['n']!r}")
     rules, named = chapters_of(card, details), named_of(card, details)
     def slot(kind, i):                                      # the button of item i ("Red_d1_r2_3"), in whichever row it went
@@ -786,8 +809,7 @@ def main():
         o.is_face_down = False
         w.run(w.g.showDetails, "Red", o, what="Card details")
     names = [ui.values.get(f"Red_d{k}_title") for k in (1, 2, 3)]
-    want = [details["cards"][face_path(cards[3])]["n"], details["cards"][face_path(cards[1])]["n"],
-            details["cards"][face_path(cards[2])]["n"]]
+    want = [painted(c["n"], c.get("nc")) for c in (details["cards"][face_path(cards[k])] for k in (3, 1, 2))]
     check(names == want and all(ui.on(f"Red_d{k}") for k in (1, 2, 3)), f"three panels; a fourth replaces the oldest {names}")
     w.call("closeDetails", red, None, "Red_d2_close")
     check(not ui.on("Red_d2"), "X closes a panel")
@@ -931,6 +953,25 @@ def main():
     w.run(w.g.showDetails, "Red", stray, what="unknown card")
     check(("Red", "No details for this card.") in w.told, "a card the data lacks: no details")
 
+    # ---- the card's colours, and text that looks like rich text ----
+    path = face_path(cards[0])
+    odd = {**details["cards"][path], "n": "Rose <b>Thorn</b> <color=#ff0000>x", "nc": [["Thorn", "#ff7a1a"], ["x", "red"]],
+           "a": "<i>Burn</i> a Burn, then Burn<3\nBurn", "ac": [["Burn", "#ff0000", 2], ["Burn<3", "#00ff00"], ["gone", "#0000ff"], ["Burn", "#0000ff"]]}
+    w4 = World(script, save, zones)
+    w4.seat("Red")
+    w4.g.onLoad("")
+    w4.wait.flush()
+    w4.respond(json.dumps({**details, "cards": {**details["cards"], path: odd}}), pages_text)
+    w4.run(w4.g.showDetails, "Red", Obj.of(w4, cards[0]), what="Card details: colours")
+    title, text = w4.ui.values.get("Red_d1_title") or "", w4.ui.values.get("Red_d1_text") or ""
+    check(title == "Rose <<b></b>b><color=#ff7a1a>Thorn</color><<b></b>/b> <<b></b>color=#ff0000>x" and title == painted(odd["n"], odd["nc"]),
+          f"the name in its colours, the card's own '<' no tag {title!r}")
+    check("<<b></b>i>Burn<<b></b>/i> a <color=#ff0000>Burn</color>, then <color=#00ff00>Burn<<b></b>3</color>\n<color=#0000ff>Burn</color>" in text,
+          "the ability in its colours: the nth find, a piece not found skipped, '<' no tag")
+    w4.run(w4.table_menu["Find a card"], "Red", w4.vec(10, 1, 10), what="Find a card: '<' in a name")
+    w4.call("finderSearch", w4.players["Red"], "thorn</b>")
+    check(w4.ui.text("Red_fc_g1").startswith(plain(odd["n"]) + "   "), f"the finder's row: the name, '<' no tag {w4.ui.text('Red_fc_g1')!r}")
+
     # ---- the website offline ----
     w3 = World(script, save, zones)
     w3.seat("Red")
@@ -941,7 +982,7 @@ def main():
     check(("Red", "Card details are still loading.") in w3.told and any("not loaded" in x for x in w3.logs)
           and not w3.ui.builds, "website offline: 'still loading', logged, no panels")
 
-    for world in (w, w2, w3):
+    for world in (w, w2, w3, w4):
         hits = list(world.lua.eval("PATTERN_HITS").values())
         check(not hits, f"no Lua patterns {hits[:3]}")
         check(not world.ui.unknown, f"every UI id set exists {world.ui.unknown[:3]}")
