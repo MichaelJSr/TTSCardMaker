@@ -203,10 +203,19 @@ jobs:
             echo "deploy=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: actions/upload-pages-artifact@v5
-        if: steps.changed.outputs.deploy == 'true'
+      # upload-pages-artifact@v5's two steps (its tar minus -v), the zip stored: the images barely deflate, and deflate
+      # paced the upload (~6 s; ~3 s stored).
+      - if: steps.changed.outputs.deploy == 'true'
+        run: tar --dereference --hard-dereference --directory site/dist -cf "$RUNNER_TEMP/artifact.tar" --exclude=.git --exclude=.github --exclude='.[^/]*' .
+
+      - if: steps.changed.outputs.deploy == 'true'
+        uses: actions/upload-artifact@v7
         with:
-          path: site/dist
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
+          compression-level: 0
 
       - id: deployment
         if: steps.changed.outputs.deploy == 'true'
@@ -220,10 +229,18 @@ jobs:
       - if: steps.deployment.outcome == 'failure'
         run: sleep 10                 # lets the cancel settle
 
+      # The retry deploys a fresh, deflated copy: upload-pages-artifact's own zip
+      - if: steps.deployment.outcome == 'failure'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site/dist
+          name: github-pages-z
+
       - id: retry
         if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v5
         with:
+          artifact_name: github-pages-z
           timeout: 360000
           reporting_interval: 1000
           error_count: 15
