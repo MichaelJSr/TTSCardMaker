@@ -121,7 +121,8 @@ export function withColor(list, field, phrase, color, text = "") {
     if (!phrase) out = out.filter(one => one.field !== field);
     else {
       const sel = spansOf(text, { phrase }) || [];
-      out = out.filter(one => one.field !== field || !one.phrase || !(spansOf(text, one) || []).every(([a, b]) => sel.some(([s, e]) => s <= a && b <= e)));
+      const inside = one => { const sp = spansOf(text, one) || []; return sp.length > 0 && sp.every(([a, b]) => sel.some(([s, e]) => s <= a && b <= e)); };
+      out = out.filter(one => one.field !== field || !one.phrase || !inside(one));    // a phrase not in the text stays
     }
   } else out.push({ field, ...(phrase ? { phrase } : {}), color });
   return out.slice(0, MAX).length ? out.slice(0, MAX) : null;
