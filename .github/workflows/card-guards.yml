@@ -129,6 +129,30 @@ jobs:
           sparse-checkout: |
             /.github/
 
+      # A push's PSD and PNG blobs (both sides), as git's own lazy fetch asks: the checks and the guards read the clone
+      # first, so ~3 REST reads per card become none. It needs only the trees, so it starts here, in the background, and
+      # the steps up to Pushed blobs run while it fetches; 5 minutes at most, its exit code in blobs.done.
+      # 8 to a fetch, 4 at a time, in diff order: GitHub's delta search is what takes the time, and small packs barely
+      # need one; a card's two sides stay together, so the deltas still shrink the transfer.
+      - &blobs-start
+        name: Pushed blobs start
+        if: github.event_name == 'push'
+        continue-on-error: true
+        shell: bash
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          case "$BEFORE" in ''|*[!0]*) ;; *) echo "a new branch: nothing to fetch"; exit 0;; esac
+          [ -n "$BEFORE" ] || exit 0
+          list=$RUNNER_TEMP/blobs
+          GIT_NO_LAZY_FETCH=1 git diff-tree -r --no-renames "$BEFORE" "$GITHUB_SHA" -- '*.psd' '*.PSD' '*.png' '*.PNG' \
+            | awk '{print $3; print $4}' | grep -v '^0*$' | awk '!seen[$0]++' > "$list" || true
+          [ -s "$list" ] || { echo "no card blobs pushed"; exit 0; }
+          GIT_NO_LAZY_FETCH=1 nohup bash -c 'timeout -k 10 300 xargs -P 4 -n 8 git -c fetch.negotiationAlgorithm=noop fetch -q \
+            --no-tags --no-write-fetch-head --recurse-submodules=no --filter=blob:none origin < "$1" || code=$?
+            echo "${code:-0}" > "$1.done"' _ "$list" > "$list.log" 2>&1 < /dev/null &
+          echo "fetching $(wc -l < "$list") pushed blobs"
+
       # The data's render and spot records (db/ on the data branch, Card sync's): the guards' renders and conversions read
       # them (AutoCroissant psd_edit.RECORDS_DIR); one not read: {}.
       - name: Records
@@ -240,30 +264,22 @@ jobs:
             echo "ok=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # A push's PSD and PNG blobs (both sides), as git's own lazy fetch asks: the checks and the guards read the clone
-      # first, so ~3 REST reads per card become none. One that fails or times out leaves them to the REST reads.
-      # 8 to a fetch, 4 at a time, in diff order: GitHub's delta search is what takes the time, and small packs barely
-      # need one; a card's two sides stay together, so the deltas still shrink the transfer.
+      # Waits for Pushed blobs start's fetch. One that fails or times out leaves the rest to the REST reads.
       - &pushed-blobs
         name: Pushed blobs
         if: github.event_name == 'push'
         continue-on-error: true
         timeout-minutes: 5
         shell: bash
-        env:
-          BEFORE: ${{ github.event.before }}
         run: |
-          case "$BEFORE" in ''|*[!0]*) ;; *) echo "a new branch: nothing to fetch"; exit 0;; esac
-          [ -n "$BEFORE" ] || exit 0
           list=$RUNNER_TEMP/blobs
-          GIT_NO_LAZY_FETCH=1 git diff-tree -r --no-renames "$BEFORE" "$GITHUB_SHA" -- '*.psd' '*.PSD' '*.png' '*.PNG' \
-            | awk '{print $3; print $4}' | grep -v '^0*$' | awk '!seen[$0]++' > "$list" || true
-          [ -s "$list" ] || { echo "no card blobs pushed"; exit 0; }
-          GIT_NO_LAZY_FETCH=1 xargs -P 4 -n 8 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags --no-write-fetch-head \
-            --recurse-submodules=no --filter=blob:none origin < "$list"
+          [ -s "$list" ] || exit 0
+          until [ -s "$list.done" ]; do sleep 0.2; done
+          cat "$list.log"
           have=$(GIT_NO_LAZY_FETCH=1 git cat-file --batch-check < "$list" | grep -vc ' missing$' || true)
           echo "$have of $(wc -l < "$list") pushed blobs in the clone"
           [ "$have" -eq "$(wc -l < "$list")" ] || echo "::warning::$have of $(wc -l < "$list") pushed blobs fetched: the rest by REST"
+          exit "$(cat "$list.done")"
 
       # The two checks: a push's in the `checks` job, a dispatch's here, before the guards' check: on one runner, an `all`
       # dispatch reads its 813 PSDs once (twice at once would pass GITHUB_TOKEN's 1,000 requests an hour).
@@ -493,6 +509,7 @@ jobs:
           key: card-fonts-${{ steps.fonts.outputs.sha }}
 
       - *fonts-miss
+      - *blobs-start
       - *pushed-blobs
       - *card-check
       - *font-check
