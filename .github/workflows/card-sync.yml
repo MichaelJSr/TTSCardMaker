@@ -9,7 +9,8 @@
 #   syncs main's head, one lane at a time (card-main; a newer pending one replaces an older one), and a push made while
 #   another push's lane is starting rides along. After M the after job re-reads the baked cards into `data` (no wait).
 #   A linked file (Types/, MDW/Linked/) changed since its users' pictures were drawn: the Linked redraw redraws those
-#   layers and their PNGs as commit R on M, in M's push (silent; capped, Leftover work chains the rest).
+#   layers and their PNGs as commit R on M, in M's push (silent; capped, Leftover work chains the rest). So do icon
+#   glyphs a stoogedings font commit changed, in the text layers that show them (the same R, one rewrite a card).
 # The bake's verdicts and events live on `data` (AutoCroissant docs/Finished/session-2026-10-26/CARD_SYNC_VERDICTS.md): the main job records
 # them (bake-records), the first data job after it (the after job, else the next) merges them in its data commit
 # (verdicts.json; baked, bake-refused; the merged artifacts in bake-records.json), so a refusal makes no main commit of
@@ -189,6 +190,8 @@ jobs:
             /commands/rulebook.py
             /commands/rulebook_pages.py
             /commands/psd_links.py
+            /commands/psd_glyphs.py
+            /commands/card_standards.py
 
       # The data branch (restore rewrites a bad one; a lost branch is pushed back by hand from a clone)
       - &data-checkout
@@ -889,8 +892,8 @@ jobs:
             echo "No website edit pending." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
-      # (h): linked pictures the redraw has not done yet (a capped run, a chain that stopped) start the lane. `due`
-      # prints how many cards: one REST call and the data's links.json.
+      # (h): linked pictures and icon glyphs the redraw has not done yet (a capped run, a chain that stopped) start the
+      # lane. `due` prints how many cards: the data's links.json and psd_details.json, the icon font's blobs.
       - name: Linked due
         if: env.LINKED == 'true' && env.GO != 'true' && steps.venv.outcome == 'success'
         timeout-minutes: 5
@@ -907,10 +910,10 @@ jobs:
             exit 0
           fi
           if [ "${n:-0}" -gt 0 ] 2> /dev/null; then
-            echo "- linked pictures to redraw: $n cards" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "- cards to redraw (linked pictures, icon glyphs): $n" | tee -a "$GITHUB_STEP_SUMMARY"
             echo "GO=true" >> "$GITHUB_ENV"
           else
-            echo "No linked picture due." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "No linked picture or icon glyph due." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
       - *fonts
@@ -1015,7 +1018,10 @@ jobs:
       # Linked files changed since their users' pictures were drawn (AutoCroissant psd_links redraw, read from main's tree
       # and the data's links.json): those layers redrawn on the checkout's HEAD (B's version of a baked card) and their
       # PNGs re-exported past 2 levels, as one local commit R ("Card sync: linked pictures redrawn", Card-sweep: linked,
-      # silent) that Commit main puts on M, in M's push. No card starts past minute 45 of the lane; R's bytes stay under
+      # silent) that Commit main puts on M, in M's push. In the same rewrite, the icon glyphs a stoogedings font commit
+      # changed (owner 2026-11-08; psd_glyphs: the cards drawn before it whose texts in psd_details.json use them) drawn
+      # again with MDW/Fonts, those glyphs alone, and their PNGs re-exported (Card-sweep: glyphs); a card it cannot redraw
+      # gets a hand flag in site/Card Edits.json instead. No card starts past minute 45 of the lane; R's bytes stay under
       # 1.5 GB less M's. Blobs come in the guards' chunks. due: cards left (Leftover work chains on it). A dry run: no R.
       - name: Linked redraw
         id: redraw
@@ -1373,7 +1379,7 @@ jobs:
   # Leftover work (owner, 2026-10-25: the chain and a safety schedule): a live run's last job dispatches the next run when
   # work is left, at once (chain=now): cards still to re-parse (manifest pending.stale), bake records no data commit
   # merged, website edits not baked (chain=wait, for edits held by a recent push, went on 2026-11-04), linked pictures
-  # the redraw's caps left (its Linked due step starts the next lane). None when nothing
+  # and icon glyphs the redraw's caps left (its Linked due step starts the next lane). None when nothing
   # is left, a lane failed (Discord was told), another live run's lane will read it (unfinished: its own chain looks
   # again), after CHAIN_IDLE runs in a row without a data or main commit or CHAIN_MAX runs (the safety schedule picks it
   # up); never from a dry run. The chain input carries the count. A push's run (its main lane waits for its guards) also
@@ -1440,7 +1446,7 @@ jobs:
           if [ "${records:-0}" -gt 0 ]; then now+=("$records bake records not merged"); fi
           data=${#now[@]}
           if [ "${DUE:-0}" -gt 0 ]; then now+=("$DUE website edits to bake"); fi
-          if [ "${REDRAW:-0}" -gt 0 ]; then now+=("$REDRAW cards' linked pictures to redraw"); fi
+          if [ "${REDRAW:-0}" -gt 0 ]; then now+=("$REDRAW cards to redraw (linked pictures, icon glyphs)"); fi
           main=$(( ${DUE:-0} + ${REDRAW:-0} ))  # the main lane's work
           if [ ${#now[@]} -eq 0 ]; then say "Nothing left: no chain."; exit 0; fi
           printf -- '- %s\n' "${now[@]}" | tee -a "$GITHUB_STEP_SUMMARY"

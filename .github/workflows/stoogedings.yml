@@ -8,7 +8,9 @@
 # same on macOS and Linux; a change to any other glyph stops the run. Glyphs card texts shape to that changed (HarfBuzz
 # over the card data, as the 11-07 font lane checked) still land; the commit names them and their cards. No loop: the
 # commit touches no Types/ file and is a GITHUB_TOKEN push (it starts no run), and a rebuild equal to main's commits
-# nothing. Card sync is started after the commit (its data reads the manifest; its data commit builds the site).
+# nothing. Card sync is started after the commit (its data reads the manifest; its data commit builds the site; its
+# Linked redraw draws the glyphs this commit changed again in the cards that show them, AutoCroissant psd_glyphs: this
+# commit's author and subject are how it knows one).
 # Discord's emojis follow on their own.
 name: Stoogedings
 
