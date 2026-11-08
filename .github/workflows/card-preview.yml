@@ -106,7 +106,8 @@ jobs:
           sparse-checkout: |
             /.github/
 
-      # The clone in bot/ once done (15 s at most); else checked out as ever.
+      # The clone in bot/ once done (15 s at most); else checked out as ever. Its .py files compiled in the background by
+      # the image's Python 3.14 (setup-python's) while the venv restores: Start imports them compiled (none there: as ever).
       - name: Bot
         id: bot
         shell: bash
@@ -114,6 +115,8 @@ jobs:
           while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ $SECONDS -lt 15 ]; do sleep 0.02; done
           if [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] && mv "$RUNNER_TEMP/bot" bot; then
             echo "ok=true" >> "$GITHUB_OUTPUT"
+            py=$(ls -d "$RUNNER_TOOL_CACHE"/Python/3.14*/x64/bin/python3 2> /dev/null | sort -V | tail -1) || true
+            if [ -n "$py" ]; then "$py" -m compileall -q bot/commands bot/global_config.py < /dev/null > /dev/null 2>&1 & fi
           else
             echo "::warning::the bot's clone failed or took 15 s: checked out instead"; cat "$RUNNER_TEMP/bot.log" 2> /dev/null || true
           fi
