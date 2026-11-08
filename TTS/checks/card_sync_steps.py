@@ -6,8 +6,8 @@
    it posts, commits data and dispatches the site (after the bake, whatever the data did); a failed build commits and
    posts nothing. Main (Bake and save): bake, save, M and the re-pin of baked PNGs; bake=none skips the bake; a rejected or late M re-pins nothing; GO from Pending edits runs the
    stages. A failed live job (a retry too) alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit
-   main and every later step; after runs the data steps with AFTER = M (when it landed) and RECORDS, also for a bake
-   that only recorded verdicts.
+   main and every later step; after runs the data steps with AFTER = the main lane's last commit (M, or R on it)
+   and RECORDS, also for a bake that only recorded verdicts.
 2. The data Gate on sandbox history: stoogedings-src/ alone and a hand-edited save don't start the data lane; fonts,
    stoogedings.json, an upper-case .PSD and the creation dates do; AFTER does, without the dispatch's inputs. The Build
    step's arguments: the dispatch's inputs, none after the bake; --own the main lane's commits since the last build.
@@ -334,9 +334,11 @@ def plans(flow: dict) -> None:
     go = {"gate": {"go": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "true"}}}
     check(not {"MAIN_COMMIT", "POSTS"} & set(flow["env"]), "no rollback switches (MAIN_COMMIT, POSTS)")
     data, main, after = (flow["jobs"][j] for j in ("data", "main", "after"))
-    check(after["steps"] is data["steps"] and data["env"] == {"AFTER": "", "RECORDS": ""}
-          and after["env"] == {"AFTER": "${{ needs.main.outputs.baked == 'true' && needs.main.outputs.m || '' }}", "RECORDS": "true"},
-          "after: the data lane's steps, with AFTER the bake's M (when it landed) and its records")
+    rec = "${{ github.workspace }}/carddata/db"
+    check(after["steps"] is data["steps"] and data["env"] == {"AFTER": "", "RECORDS": "", "CARD_RECORDS_DIR": rec}
+          and after["env"] == {"AFTER": "${{ (needs.main.outputs.baked == 'true' || needs.main.outputs.redrawn == 'true') && needs.main.outputs.top || '' }}",
+                               "RECORDS": "true", "CARD_RECORDS_DIR": rec},
+          "after: the data lane's steps, with AFTER the main lane's last commit (a bake or a redraw), its records, the data's render records")
 
     # The data lane
     p = plan(flow, "data", inputs={"dry_run": True}, outputs=go)
@@ -350,9 +352,12 @@ def plans(flow: dict) -> None:
           "data, build failed: no posts, no data commit; Discord told")
     p = plan(flow, "data", event="schedule", outputs={"gate": {"go": "false", "GITHUB_ENV": {"GO": "false"}}})
     check(not {"venv", "build", "posts", "data-commit", "Site build"} & runs(p), "data, nothing to do: the job ends at the gate")
-    p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"m": "m" * 40, "baked": "true"}}})
+    p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
     check(p["env"]["AFTER"] == "m" * 40 and {"records-in", "build", "Send the posts", "data-commit", "Site build"} <= runs(p),
           "after: the data lane on M with the bake's records; the site build follows the bake even with db/ unchanged")
+    p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"top": "r" * 40, "redrawn": "true"}}})
+    check(p["env"]["AFTER"] == "r" * 40 and {"records-in", "build", "data-commit", "Site build"} <= runs(p),
+          "after a link redraw alone: the data lane on its commit")
     p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"m": "", "records": "true"}}})
     check(p["env"]["AFTER"] == "" and {"records-in", "build"} <= runs(p) and "Site build" not in runs(p),
           "after, verdicts only: the records merged, no site build unless the data commit lands")
@@ -633,12 +638,12 @@ def gate_cases(flow: dict) -> None:
                   f"data gate: {message} -> go={out.get('go')} (want {str(want).lower()})" + ("" if code == 0 else f"\n{text}"))
             if message == "icon source":
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, "AFTER": "f" * 40, "RECORDS": "true"}, tmp)
-                check(code == 0 and out.get("go") == "true" and "the bake's main commit ffffffff" in text,
+                check(code == 0 and out.get("go") == "true" and "the main lane's commit ffffffff" in text,
                       "data gate: after the bake (AFTER) -> go, nothing else changed" + ("" if code == 0 else f"\n{text}"))
                 write(os.path.join(tmp, "runner", "records-in", "verdicts.json"), '{"schema":1,"cards":{"x":{"state":"refused"}}}')
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, "RECORDS": "true"}, tmp)
                 shutil.rmtree(os.path.join(tmp, "runner", "records-in"))
-                check(code == 0 and out.get("go") == "true" and "the bake's records: 1 verdicts, 0 events" in text,
+                check(code == 0 and out.get("go") == "true" and "the records to merge: 1 verdicts, 0 events" in text,
                       "data gate: after a bake that only recorded a verdict -> go" + ("" if code == 0 else f"\n{text}"))
                 inputs = {"FULL": "true", "CARDS": "X", "RESTORE": "r" * 40}
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs}, tmp)
@@ -1252,7 +1257,7 @@ def lane_cases(flow: dict) -> None:
             code, text, out = run_step(timer, "guards", tmp, env, tmp)
             asked = open(calls).read() if os.path.exists(calls) else ""
             ok = code == 0 and out.get("run", "") == want and ((f"head_sha={want_sha}" in asked) == bool(want_sha))
-            ok = ok and (asked.count("/runs/57/jobs") > 50) == ("57" in str(runs))     # the wait asked its check job again and again
+            ok = ok and (asked.count("/runs/57/jobs") > 50) == any(r["id"] == 57 for r in runs)     # the wait asked its check job again and again
             check(ok, f"Guards' fixes: {what} -> {out.get('run') or 'none'}" + ("" if ok else f"\n{text}\n{asked}"))
         code, text, out = run_step(timer, "guards", tmp, {**env, "FAKE_FAIL": "1"}, tmp)
         check(code == 0 and "run" not in out and "were not read" in text, "Guards' fixes: runs not read -> none (the main lane goes on)")

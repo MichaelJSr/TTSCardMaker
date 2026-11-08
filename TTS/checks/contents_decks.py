@@ -3,15 +3,16 @@
     python contents_decks.py [save.json]    (rules: decks.json beside the save, else TTS_REF's; repo: TTS_REF, default origin/main)
 Complete decks: exactly the rule's repo cards, each at odd_counts or count; copies identical.
 Hand-picked decks: inside the rule, counts as recorded; with add_new_since, every rule card the save at that commit
-lacked (renames by blob) is in. A rule without a count: its deck untouched (none since 2026-10-22).
+lacked (renames by the bake's Renamed trailers, else by blob) is in. A rule without a count: its deck untouched (none since 2026-10-22).
 """
+import functools
 import json
 import os
 import sys
 from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from contents_lib import CARD_NAMES, Result, face, load_rules, load_save, rule_cards, show, tree, walk  # noqa: E402
+from contents_lib import CARD_NAMES, REF, Result, face, git, load_rules, load_save, rule_cards, show, tree, walk  # noqa: E402
 
 KIND_DIRS = {"creatures": ("Creatures/",), "items": ("Items/",), "fields": ("Field/",), "nme": ("N.M.E/",),
              "minions": ("Auxiliary/Minions/", "Auxiliary/Creatures/"), "auxiliary_items": ("Auxiliary/Items/",),
@@ -27,14 +28,34 @@ for p_, b_ in files.items():
     by_blob.setdefault(b_, []).append(p_)
 
 
+@functools.cache
+def renamed():
+    """The bake's Renamed trailers on REF, newest first: old path -> new path (tts_save follows them too)."""
+    out = git("log", REF, "--grep=^Renamed: ", "--format=%x1e%(trailers:key=Renamed,valueonly,separator=%x1f)")
+    found = {}
+    for value in out.decode("utf-8", "replace").replace("\x1e", "\x1f").split("\x1f"):
+        old_, sep, new_ = value.strip().partition(" -> ")
+        if sep and old_ and new_:
+            found.setdefault(old_, new_)
+    return found
+
+
 def carried(sha):
-    """Today's paths of the cards the save had at sha (a gone path follows its blob when one path has it now)."""
+    """Today's paths of the cards the save had at sha (a gone path follows the bake's renames, else its blob when one
+    path has it now)."""
     old = show("TTS/Impossibility Simulator.json", sha)
     if old is None:
         return None
     had = {face(c) for c, _ in walk(json.loads(old).get("ObjectStates")) if c.get("Name") in CARD_NAMES} - {None}
-    then = tree(sha)
+    then, told = tree(sha), renamed()
     for p_ in [x for x in had if x not in files]:
+        now, seen = p_, {p_}
+        while now in told and told[now] not in seen:
+            now = told[now]
+            seen.add(now)
+        if now != p_ and now in files:
+            had.add(now)
+            continue
         moved = by_blob.get(then.get(p_), [])
         if len(moved) == 1:
             had.add(moved[0])
