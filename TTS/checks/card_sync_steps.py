@@ -21,7 +21,8 @@
 5. Commit main's own script on a sandbox origin: M pushed with its outputs (baked, pngs); a push that failed but landed
    counts as pushed; main moved: M is dropped and one new run is dispatched (marked retry, the bake carried, no data
    inputs), none from a retry or while another run is unfinished; past minute 60 nothing is pushed. Re-pin: the save
-   run again on M, a change is a second commit on M; none when the links were current or main moved.
+   run again on M, a change is a second commit on M; none when the links were current or main moved. The save starts
+   in the background before the rulebook PDF; TTS save waits for it (its report, changed, its exit code).
 6. The timer: a push's and the schedule's run look for a push run about to bake (Another timer: one waiting, or with
    its Bake and save queued or in its Guards' fixes; not itself, not one stuck 40 minutes; unreadable runs count as
    none) and skip their main lane when there is one (no cancel: the data lane ran); else a push's main lane sets up and
@@ -1027,6 +1028,37 @@ def tell_cases(flow: dict) -> None:
                   f"tell: {what} -> {'told: ' + sent if sent else 'quiet'}" + ("" if code == 0 else f"\n{text}"))
 
 
+def save_cases(flow: dict) -> None:
+    """TTS save start: the save in the background (a fake one taking 1 s), started before the rulebook PDF; TTS save
+    waits for it: its report, changed, its exit code."""
+    job = flow["jobs"]["main"]
+    ids = [s.get("id") for s in job["steps"]]
+    at = ids.index("pages")
+    check(step(job, "save-start")["if"] == step(job, "save")["if"] and ids[at - 1:at + 2] == ["save-start", "pages", "save"],
+          "save: started just before the rulebook PDF, whenever TTS save runs; TTS save right after the PDF")
+    for name, body, want, changed in (("changed", "printf '%s' '{\"s\":2}' > \"$3\"", 0, "true"), ("same", "", 0, "false"),
+                                      ("failed", "exit 3", 3, None)):
+        with tempfile.TemporaryDirectory() as tmp:
+            _, bare = origin(tmp)
+            ws = checkout(tmp, bare)
+            os.makedirs(os.path.join(ws, "bot"))
+            python = os.path.join(tmp, "runner", "venv", "bin", "python")
+            write(python, f'#!/bin/bash\nsleep 1\necho "report $*"\necho "a warning" >&2\n{body}\n')
+            os.chmod(python, 0o755)
+            env = {"AUTOCROISSANT_LOCAL_DIR": ws, "AUTOCROISSANT_HISTORY_CLONE": tmp}
+            t = time.monotonic()
+            code, text, _ = run_step(job, "save-start", os.path.join(ws, "bot"), {**env, "GITHUB_WORKSPACE": ws}, tmp)
+            quick = time.monotonic() - t < 0.8
+            code2, text2, out = run_step(job, "save", ws, {"STARTED": "success"}, tmp)
+            ok = (code == 0 and quick and code2 == want and out.get("changed") == changed and "a warning" in text2
+                  and "report -m commands.tts_save" in text2 and "report" in open(os.path.join(tmp, "runner", "save.md")).read())
+            check(ok, f"save, {name}: the start step returns at once, TTS save waits (exit {code2}, changed={out.get('changed')})"
+                  + ("" if ok else f"\n{text}\n{text2}"))
+    with tempfile.TemporaryDirectory() as tmp:
+        code, text, _ = run_step(job, "save", tmp, {"STARTED": "failure"}, tmp)
+    check(code == 1 and "did not start" in text, "save: a start step that failed fails TTS save at once")
+
+
 def records_cases(flow: dict) -> None:
     """Bake records: the refusals always, M's part (its baked events given M) only when M landed; nothing on a dry run."""
     job = flow["jobs"]["main"]
@@ -1363,6 +1395,7 @@ def main():
     fonts_cases(flow)
     bake_cases(flow)
     main_cases(flow)
+    save_cases(flow)
     records_cases(flow)
     guard_cases(flow)
     chain_cases(flow)

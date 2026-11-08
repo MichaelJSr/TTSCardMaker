@@ -997,9 +997,32 @@ jobs:
           fi
           exit "$code"
 
+      # The save on the checkout (B's Card Edits.json and decks), names from the data branch's head (Card Edits.json's
+      # first); with no data, the website's cards.json. In the background while the rulebook PDF prints (the save pins
+      # main before M and reads only pages.json's PDF name): TTS save waits for it (20 minutes at most).
+      - name: TTS save start
+        id: save-start
+        if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
+        timeout-minutes: 1
+        working-directory: bot
+        env:
+          AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
+          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
+        run: |
+          save="TTS/Impossibility Simulator.json" bg=$RUNNER_TEMP/save
+          names=()
+          if [ -f "$GITHUB_WORKSPACE/carddata/db/stats.json" ]; then
+            names=(--names "$GITHUB_WORKSPACE/carddata/db/stats.json")
+          else
+            echo "No card data: names from the website's cards.json."
+          fi
+          mkdir -p "$bg"
+          ( code=0; timeout -k 10 1200 "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$GITHUB_WORKSPACE/$save" "${names[@]}" \
+              > "$RUNNER_TEMP/save.md" 2> "$bg/err" || code=$?; echo "$code" > "$bg/code" ) < /dev/null > /dev/null 2>&1 &
+
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
       # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), when the website shows main's
-      # chapters (it waits up to 8 minutes for the website's build of them); the save below puts it in the Rulebooks bag and M takes
+      # chapters (it waits up to 8 minutes for the website's build of them); the save puts it in the Rulebooks bag and M takes
       # it. A failure leaves the PDF as it was. changed: the PDF or the page list; key: pages.json's key alone (M takes it
       # only when made for something else).
       - name: Rulebook PDF
@@ -1023,25 +1046,21 @@ jobs:
           fi
           { echo "changed=$changed"; echo "key=$key"; } >> "$GITHUB_OUTPUT"
 
-      # The save on the checkout (B's Card Edits.json and decks), names from the data branch's head (Card Edits.json's
-      # first); with no data, the website's cards.json.
+      # TTS save start's save: its report and exit code
       - name: TTS save
         id: save
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
         timeout-minutes: 20
-        working-directory: bot
         env:
-          AUTOCROISSANT_LOCAL_DIR: ${{ github.workspace }}
-          AUTOCROISSANT_HISTORY_CLONE: ${{ runner.temp }}/TTSCardMaker-history.git
+          STARTED: ${{ steps.save-start.outcome }}
         run: |
-          save="TTS/Impossibility Simulator.json"
-          names=()
-          if [ -f "$GITHUB_WORKSPACE/carddata/db/stats.json" ]; then
-            names=(--names "$GITHUB_WORKSPACE/carddata/db/stats.json")
-          else
-            echo "No card data: names from the website's cards.json."
-          fi
-          "$RUNNER_TEMP/venv/bin/python" -m commands.tts_save "$GITHUB_WORKSPACE/$save" "${names[@]}" | tee "$RUNNER_TEMP/save.md"
+          save="TTS/Impossibility Simulator.json" bg=$RUNNER_TEMP/save
+          [ "$STARTED" = success ] || { echo "::error::the save did not start"; exit 1; }
+          until [ -s "$bg/code" ]; do sleep 0.2; done
+          cat "$bg/err" >&2
+          cat "$RUNNER_TEMP/save.md"
+          code=$(cat "$bg/code")
+          [ "$code" = 0 ] || exit "$code"
           if git -C "$GITHUB_WORKSPACE" diff --quiet -- "$save"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
