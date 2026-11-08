@@ -861,7 +861,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
       jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink });
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
-    else { jobs.push({ role, text, label, area: part ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's box: covered, never the card below it
+    else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);

@@ -589,7 +589,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     starts with a badge) takes the layer's other font from `rec.fonts` (`layerOf`).
   - No block holds the old text (text over busy art, a stylised name, an upside-down card): the new text goes in a
     dark box over the whole area (to the card's edges, opaque, dashed border), so the old text is covered, never half
-    there; the caption says "Text in a box: its place on the image wasn't found." (`out.boxed`).
+    there; the caption says "Text in a box: its place on the image wasn't found." (`out.boxed`). A title's or one
+    layer's box is its own area only (2026-11-08: a title's record box ran to the card's bottom, 62% of the card).
   - Erase: the block's lines (a centred block's made even about its centre: `eraseLines`, a line read short past a dim
     word still goes) plus `strayLines`, lines next to the block it left out (a header in another size or colour, a dim
     last line: within 1.6 pitches, in its columns, edges per em at least 0.3 of its lines' at edge 25, up to 2.4 line
