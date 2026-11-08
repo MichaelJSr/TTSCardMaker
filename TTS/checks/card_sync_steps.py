@@ -360,10 +360,10 @@ def plans(flow: dict) -> None:
     follow = {"dry_run": False, "bake": "pending", "guards": "77"}
     p, q = plan(flow, "data", inputs=follow, outputs=go), plan(flow, "main", inputs=follow, outputs=go)
     r = plan(flow, "after", inputs=follow, outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
-    check(order("data", p)[:5] == ["venv", "guards", "Newest", "records-in", "gate"] and "build" in runs(p)
+    check(order("data", p)[:6] == ["Site build start", "venv", "guards", "Newest", "records-in", "gate"] and "build" in runs(p)
           and order("main", q)[:4] == ["venv", "guards", "Newest", "gate"] and "bake" in runs(q)
           and not {"guards", "Newest"} & runs(r),
-          "a follow-up (guards): both lanes set up, wait for the guards' Land, take main's head, then gate; after waits for nothing")
+          "a follow-up (guards): the site build first; both lanes set up, wait for the guards' Land, take main's head, then gate; after waits for nothing")
     p = plan(flow, "after", event="push", outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
     check(p["env"]["AFTER"] == "m" * 40 and {"records-in", "build", "Send the posts", "data-commit", "Site build"} <= runs(p),
           "after: the data lane on M with the bake's records; the site build follows the bake even with db/ unchanged")
