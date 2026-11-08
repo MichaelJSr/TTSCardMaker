@@ -187,7 +187,7 @@
   ]
  },
  "Auxiliary/Creatures/Morpho_Knight.psd": {
-  "blob": "f9bf249cd5430d13b6b2771e0bc9dadce8c41213",
+  "blob": "ab59423b5b28c189d41fadf9b52fab7bc8f0b376",
   "links": [
    {
     "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
@@ -6847,7 +6847,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Hexed.psd": {
-  "blob": "714324bbd96ce85ac2c06d351a4d7b3215e424cc",
+  "blob": "8403d8f04e282f76190a869d738937f1f8fd4358",
   "links": [
    {
     "drawn": "b18b1f484228b7e9a9db82a2513df6845c287a2b",
@@ -7720,7 +7720,7 @@
   ]
  },
  "Creatures/DST/5 Stars/Ancient_Fuelweaver.psd": {
-  "blob": "3032f2f5624c7be598c1325d53b3781ae4289a2c",
+  "blob": "f005e00981c5d49490704037e9a27721075f5296",
   "links": [
    {
     "drawn": "5c0af47e21a311420724c21016c5be6a37540f26",
@@ -8068,7 +8068,7 @@
   ]
  },
  "Creatures/FTL/5 Stars/Royal_Eradicator_Main_Cannon.psd": {
-  "blob": "605ff34422bea13d5b21c9c8074a0e9adf4027b9",
+  "blob": "1d3c58c650687d4be538bc9fb98dfae9b846d051",
   "links": [
    {
     "drawn": "d35461ebccb608a8c19edb195b9d4e1dbd0f5338",
@@ -11843,7 +11843,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Zero.psd": {
-  "blob": "fed5295fa0a8e39164f92faa62df44f1ed949a7c",
+  "blob": "6d0157f28d0c16e1ce733d21174227cdf79d8c0b",
   "links": [
    {
     "drawn": "b5f2d31b1423d3cc960336431ffdaf7e54ebf569",
@@ -16048,7 +16048,7 @@
   ]
  },
  "Creatures/Other/4 Stars/Mr_Krabs.psd": {
-  "blob": "b712c166559151aad811a69440332a44d6d98e69",
+  "blob": "053091bbfdf2f9119bf6c8bd2a0910862ac6c268",
   "links": [
    {
     "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
@@ -16908,7 +16908,7 @@
   ]
  },
  "Creatures/Other/5 Stars/Doctor_Zomboss.psd": {
-  "blob": "6529282b5ce614c2cd853f4dc89b049f567c1fe8",
+  "blob": "3990fea3040b70b65c2d58c93aca84f5e783ad86",
   "links": [
    {
     "drawn": "1cf0291b4c60b026724520476fdd36635d2eea9e",
@@ -18342,7 +18342,7 @@
   ]
  },
  "Creatures/Pandas/3 Stars/Panseida.psd": {
-  "blob": "baae54adb879cb8c52aebab1930b7cb6e8d87b01",
+  "blob": "6d69e0925327193ae37f2764f91e33c8a25d7e4a",
   "links": [
    {
     "drawn": "04e5ff0d24ebdb486a3186bf1f169692c7cd821b",
@@ -18687,7 +18687,7 @@
   ]
  },
  "Creatures/ROTMG/4 Stars/Oryx_the_Exalted_God.psd": {
-  "blob": "e85f71182714b756fc6cc29b9f56628bdd599076",
+  "blob": "5cc1eaf39632cd2480b9e3040e4a1507b83ba4d6",
   "links": [
    {
     "drawn": "108db7fcd4aaf1baea7661ca3f81308763a6300e",
@@ -19239,7 +19239,7 @@
   ]
  },
  "Creatures/Undertale/4 Stars/Undyne.psd": {
-  "blob": "f9a3ba7b694346efcbfaa6580fd2e367dd35b759",
+  "blob": "2261efc1da831f8c5d655fced252f26fe07c5314",
   "links": [
    {
     "drawn": "d2534ac59f4364f2eb11f9942388b0e7ada022a9",
@@ -22293,7 +22293,7 @@
   ]
  },
  "Items/Deploy/2 Stars/Pananda Peel.psd": {
-  "blob": "332f0851930402d964d26fc6c53ef91a5fd371f6",
+  "blob": "41c17c9f92bc8a21a12e12c4c0e3326d37aafc4a",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -24633,7 +24633,7 @@
   ]
  },
  "Items/Heal/2 Stars/Snow_Bunny.psd": {
-  "blob": "0aef365b834108e0f2aa24d37d7934a4a7c2bcca",
+  "blob": "f59e45430986c47dfea3d41eb6ff13c2c185baf0",
   "links": [
    {
     "drawn": "1de88828ad3a6a7bedd875329c23c7b375362567",
@@ -25189,7 +25189,7 @@
   ]
  },
  "Items/Infliction/3 Stars/Flower_Of_Decay.psd": {
-  "blob": "4d8bc522ed600b15b76f3807c994e865bf1dc26b",
+  "blob": "bb0db22e4efd3d46fc29ccfeea5c647183056d4d",
   "links": [
    {
     "drawn": "f14f2083b3ae3098648bdb203c7f5a5588c3123b",
@@ -25236,7 +25236,7 @@
   ]
  },
  "Items/Infliction/3 Stars/Freeze_Spell.psd": {
-  "blob": "ea170d84cf283e351c1d3a607192093f70c8958e",
+  "blob": "a4d947b3b28505a377afab5d6f3e27c15c680dda",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -25310,7 +25310,7 @@
   ]
  },
  "Items/Infliction/4 Stars/Pandora's_Box.psd": {
-  "blob": "9ddcdd699e74592706cf4d3936f5e91bd4f9b14a",
+  "blob": "8fe3252f7e74ef139bd0c030c42474ba39221342",
   "links": [
    {
     "drawn": "904357cc2f41d50a490ca178dc60d04059cbd889",
@@ -25339,7 +25339,7 @@
   ]
  },
  "Items/Infliction/4 Stars/Standstill.psd": {
-  "blob": "d93477e5feee5615fa54c24be689e61c9f60b6bf",
+  "blob": "5443da78cc44670c1fded4eb7d2c0232d7c07dc2",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -25857,7 +25857,7 @@
   ]
  },
  "Items/Support/3 Stars/Credit_Card.psd": {
-  "blob": "3753856b7a41204e8eebbdfffdc55f79bf633d8a",
+  "blob": "799e8356b2b39273f8e50c24c9a8c19bd81076a7",
   "links": [
    {
     "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
