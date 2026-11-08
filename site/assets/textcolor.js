@@ -4,7 +4,7 @@
 // phrases as listed. The name's and ability's bake into the card image; the note's are the website's alone.
 // The menu (edit mode): a chip beside a selection in those fields (or the whole field, focused with none selected) opens
 // a compact palette. Everything above `attach` is DOM-free (the AutoCroissant tests run it in node).
-import { esc, paintHtml } from "./text.js";
+import { esc, paintHtml, TAG, COST, tagInfo } from "./text.js";
 export { paintHtml };
 
 export const FIELDS = ["name", "ability", "note"];        // card_edits.COLOR_FIELDS, build_site COLOR_FIELDS
@@ -87,6 +87,10 @@ export function colorRanges(text, colors, field) {
   }
   return out;
 }
+const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}|${COST.source}`, "gi");     // text.js render's icons and badges
+/** [[start, end]] of what text.js draws as icons and badges (their own colours: never painted). */
+export const drawnSpans = text => [...String(text ?? "").matchAll(PIECE)].filter(m => m[1] !== undefined || m[3] !== undefined || tagInfo(m[2]))
+  .map(m => [m.index, m.index + m[0].length]);
 /** The phrase for a selection [start, end) of text: {phrase} (undefined: the whole field), widened to whole words and
  *  numbered when the words occur more than once ("Burning#2"); null when it holds no word or can't be named. */
 export function phraseAt(text, start, end) {
@@ -99,6 +103,9 @@ export function phraseAt(text, start, end) {
   while (b < text.length && ALNUM.test(text[b - 1]) && ALNUM.test(text[b])) b++;
   if (b <= a) return null;
   if (text.slice(0, a).trim() === "" && text.slice(b).trim() === "") return { phrase: undefined, start: 0, end: text.length };
+  const drawn = drawnSpans(text), bare = i => ALNUM.test(text[i]) && !drawn.some(([s, e]) => s <= i && i < e);
+  let some = false; for (let i = a; i < b && !some; i++) some = bare(i);
+  if (!some) return null;                          // only icons or badges: they keep their colours
   const words = text.slice(a, b).split(/\s+/).filter(Boolean).join(" ");
   if (!ALNUM.test(words) || words.length > PHRASE_MAX || /#\d+$/.test(words)) return null;     // no word, or "#2" typed
   const { found, whole } = matches(text, words), hits = whole.length ? whole : found;
