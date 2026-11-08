@@ -305,8 +305,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
 - **Result**: poll
   `GET https://api.github.com/repos/MichaelJSr/TTSCardMaker/contents/previews/<request>/result.json?ref=previews` with
   `Accept: application/vnd.github.raw+json` and `cache: "no-store"`: 404 until it is published (also before the branch
-  exists). None in the first 20 s (a run takes 30-55 s since 2026-11-04: the publish job starts beside the preview), then
-  every 3 s until 2 minutes, every 10 s until 3, then every 30 s; give up at 16 minutes (the publish job's timeout is 14) with "no result: see the run". The run:
+  exists). None in the first 17 s (results land 20-28 s after the press since 2026-11-08), then every second until 1
+  minute while at most 3 wait (else every 3 s), every 3 s until 2 minutes, every 10 s until 3, then every 30 s; give up at 16 minutes (the publish job's timeout is 14) with "no result: see the run". The run:
   `GET .../actions/workflows/card-preview.yml/runs?event=workflow_dispatch&per_page=20`,
   the one whose `display_title` is `Card preview <request>`; when it is `completed` and result.json still 404s a minute
   later, it ended without publishing (a bad request, or the publish job failed): stop polling and link the run. Never
@@ -641,8 +641,8 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     the stars: <why>.", a "stars not baked: <code>: <why>" note "The stars weren't baked: <why>."; other reasons and
     notes lose ledger codes only.
 - **Rendered** (`createPreviews`): the Action's side is one adapter, `CONTRACT` (workflow, ref, branch, inputs, paths).
-  - Start: `GET .../actions/workflows/card-preview.yml` (404: "isn't set up on the card repo yet"), then
-    `POST .../dispatches` with `{ref: "main", inputs: {card: c.key, edit: JSON.stringify(edit), request}}`. `edit` =
+  - Start: `POST .../actions/workflows/card-preview.yml/dispatches` at once (only on a 404 does
+    `GET .../actions/workflows/card-preview.yml` word it: a 404 there is "isn't set up on the card repo yet") with `{ref: "main", inputs: {card: c.key, edit: JSON.stringify(edit), request}}`. `edit` =
     `entryEdit(editor.entryFields(id, op), get)`: every PSD-kind field of the card's Card Edits.json entry as Publish
     would leave it (built + published-not-built + the batch's op, or the open form's), plus `creatures` when it holds
     several, in the edits file's shapes; at most 16 KB as card_preview counts it (UTF-8 bytes: `editBytes`). In the Edit dialog the form's values go, saved to the batch or
@@ -655,8 +655,9 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     `{card, key, name, request, edit, hash, base: {ts, img} at the dispatch, at, state, result?, run?, seen?}`;
     `readStore` drops anything malformed; another tab's writes arrive through the `storage` event.
   - Background check: while any entry is running and someone is signed in, from any page, at the contract's pace
-    (`pollDelay`: the first check when the oldest started `FIRST_MS` (25 s) ago, a younger one skipped; then every 5 s
-    while one started under 2 minutes ago, every 10 s under 3, then every 30 s), `GET .../contents/previews/
+    (`pollDelay`: the first check when the oldest started `FIRST_MS` (17 s) ago, a younger one skipped; then every second
+    while one started under a minute ago and at most 3 wait, every 3 s under 2 minutes, every 10 s under 3, then every
+    30 s), `GET .../contents/previews/
     <request>/result.json?ref=previews` (raw, through the editor's `gh`: never raw.githubusercontent, which caches a 404);
     404 = not yet. Also the run, by `display_title` containing the request (the workflow's run-name "Card preview
     <request>"), for a link, and an error when it ended without a result (seen twice). Only a check that finds nothing
