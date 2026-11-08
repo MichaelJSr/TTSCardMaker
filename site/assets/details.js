@@ -70,10 +70,15 @@ const statsHtml = stats => {
   return `<dl class="pairs">${STATS.map(([k, l]) => `<dt>${l}</dt><dd>${esc((Object.hasOwn(ROWS, stats[k]) ? ROWS[stats[k]] : stats[k]) || "not recorded")}</dd>`).join("")}</dl>`;
 };
 const wordsHtml = (fx, overlays) => `<p class="muted">FX layers (" FX: " in the name)</p>${part(fx, v => list(arr(v)))}<p class="muted">Overlay word layers (a short text laid over the ability box)</p>${part(overlays, v => list(arr(v)))}`;
-const templateHtml = t => {
+/** Several title layers (a split title's parts, every one named Name, owner 2026-11-08; or a picture's own title) are
+ *  listed in the parts' order, each with its text. */
+const templateHtml = (t, parts) => {
   t = obj(t);
-  const dev = arr(t.deviations);
-  return `<dl class="pairs"><dt>Name layer</dt><dd>${t.name_layer ? esc(t.name_layer) : `<span class="muted">none</span>`}</dd><dt>Ability layers</dt><dd>${arr(t.ability_layers).map(esc).join(", ") || `<span class="muted">none</span>`}</dd></dl>
+  const dev = arr(t.deviations), titles = arr(obj(parts).title).filter(p => p && typeof p === "object");
+  const name = titles.length > 1
+    ? `<dt>Name layers</dt><dd>${titles.map(p => `${esc(p.layer)} <span class="muted">${esc(ctl(p.text))}</span>`).join(" · ")}</dd>`
+    : `<dt>Name layer</dt><dd>${t.name_layer ? esc(t.name_layer) : `<span class="muted">none</span>`}</dd>`;
+  return `<dl class="pairs">${name}<dt>Ability layers</dt><dd>${arr(t.ability_layers).map(esc).join(", ") || `<span class="muted">none</span>`}</dd></dl>
     ${dev.length ? `<p class="muted">Deviations from the template</p>${list(dev)}` : `<p class="muted">Follows the template.</p>`}`;
 };
 /** What cards.json already says: the parser's notes and the PSD-vs-edited values (same wording as the card page);
@@ -125,7 +130,7 @@ export function bodyHtml(rec, card, extras, state = {}) {
     sec("icons", "Type icons", null, Object.hasOwn(ICONS, r.icons) ? iconsHtml(r.icons) : part(r.icons === undefined ? undefined : String(r.icons), () => ""), state),   // a value is a string too
     card_ && sec("stats", "Stat rows", null, part(r.stats, statsHtml), state),
     card_ && sec("words", "Status-word layers", (n(r.fx) ?? 0) + (n(r.overlays) ?? 0), wordsHtml(r.fx, r.overlays), state),
-    card_ && sec("template", "Template", null, part(r.template, templateHtml), state),
+    card_ && sec("template", "Template", null, part(r.template, t => templateHtml(t, r.parts)), state),
     sec("parser", "Parser", null, parserHtml(card, extras), state),
     sec("tree", "Layer tree", n(r.tree), state.tree ? part(r.tree, treeHtml) : `<div class="tree-slot"></div>`, state, state.tree ? ' data-done="1"' : "", "Top-level layers and groups; nested layers not counted"),
   ].filter(Boolean).join("")}`;

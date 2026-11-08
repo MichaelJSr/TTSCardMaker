@@ -817,8 +817,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const blit = () => { if (stale()) return null; canvas.width = W; canvas.height = H; canvas.getContext("2d").drawImage(work, 0, 0); return out; };
   if (!tpl) { out.skipped.push(...[todo.name != null && "name", todo.ability != null && "text", ...Object.keys(todo.stats).map(k => k.toUpperCase()), todo.stars && "stars", todo.types && "types"].filter(Boolean)); return blit(); }
   const pixels = ctx.getImageData(0, 0, W, H), L = luma(pixels.data);
-  const family = async (role, label, path = "") => {        // path: a part's own layer, when the record lists it
-    const own = path && Array.isArray(rec?.text) ? rec.text.find(t => t && t.layer === path && !ICON_FONT.test(String(t.font || ""))) : null;
+  const family = async (role, label, path = "", id = "") => {   // path, id: a part's own layer (a split title's share a path)
+    const mine = t => t && (id && t.id != null ? String(t.id) === id : t.layer === path) && !ICON_FONT.test(String(t.font || ""));
+    const own = path && Array.isArray(rec?.text) ? rec.text.find(mine) : null;
     const layer = own || layerOf(rec, role), name = layer?.font || "";
     const pending = name ? loadFont(name, { getFonts, raw }) : Promise.resolve("");
     let fam = "";
@@ -838,9 +839,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const specs = [["name", todo.name, psd.name, "name"], ["ability", todo.ability, psd.ability, "text"]].filter(x => x[1] != null).map(([role, text, old, label]) => ({ role, text, old, label }));
   const partly = partJobs(rec, edit.parts);
   if (obj(rec?.parts) && obj(edit.parts)) specs.length = 0;   // one box per layer: each changed layer in its own box, not the joined fields
-  for (const j of partly) specs.push({ role: j.role, text: j.text, old: j.old, label: j.role === "name" ? "name" : "text", own: j.box && kc ? j.box.map(v => v * kc) : null, added: j.added, part: true, path: j.layer });
-  for (const { role, text, old, label, own: partBox, added, part, path } of specs) {
-    const { fam, layer } = await family(role, label, path);
+  for (const j of partly) specs.push({ role: j.role, text: j.text, old: j.old, label: j.role === "name" ? "name" : "text", own: j.box && kc ? j.box.map(v => v * kc) : null, added: j.added, part: true, path: j.layer, id: j.added ? "" : j.id });
+  for (const { role, text, old, label, own: partBox, added, part, path, id } of specs) {
+    const { fam, layer } = await family(role, label, path, id);
     const measure = (t, z) => { ctx.font = `${z}px ${fam}`; return ctx.measureText(t).width; };
     measure.cap = z => capOf(ctx, fam, z);
     measure.label = bfam ? em => labelSet(ctx, bfam, em) : null;   // badges' labels: the font's (Roboto Black), once loaded
