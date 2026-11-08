@@ -10,6 +10,7 @@
 // `draw` is pure (node checks run it on plain pixel arrays).
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
 import { starMove, starsKept, titleInPicture } from "./parts.js";
+import { colorRanges } from "./textcolor.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
@@ -309,15 +310,16 @@ export function textColours(masked, bg) {
  *  parenthesis stays text). */
 export function tokenize(text, icons = {}) {
   const PIECE = new RegExp(`\\[([^\\[\\]\\n]{1,52})\\]|${TAG.source}|\u0001(\\d+)\u0002`, "g"), costs = [];
-  const held = line => line.replace(new RegExp(COST.source, "gi"), (all, inner) => (costInfo(inner) ? `\u0001${costs.push(costInfo(inner)) - 1}\u0002` : all));
+  const held = line => line.replace(new RegExp(COST.source, "gi"), (all, inner) => (costInfo(inner) ? `\u0001${costs.push({ ...costInfo(inner), src: all }) - 1}\u0002` : all));
   return String(text ?? "").replace(/\r/g, "").split("\n").map(line => held(line).split(/[ \t]+/).filter(Boolean).map(chunk => {
     const out = []; let at = 0;
     for (const m of chunk.matchAll(PIECE)) {
       let piece = null;
       if (m[1] != null) { const t = splitToken(m[1]), ic = t && icons[norm(t.base)]; if (ic) piece = { icon: ic.file, name: t.base, no: t.v === "no", sticker: t.v === "sticker" && ["tint", "sticker"].every(v => ic.v?.includes(v)) ? { tint: variantFile(ic, "tint"), outline: variantFile(ic, "sticker") } : null }; }
-      else if (m[3] != null) { const c = costs[+m[3]], own = c.kind === "souls" || c.kind === "counters"; piece = { badge: `${c.n} ${c.word}`, group: own ? "own" : c.kind, cost: own ? null : c }; }
+      else if (m[3] != null) { const c = costs[+m[3]], own = c.kind === "souls" || c.kind === "counters"; piece = { badge: `${c.n} ${c.word}`, group: own ? "own" : c.kind, cost: own ? null : c, src: c.src }; }
       else { const t = tagInfo(m[2]); if (t) piece = { badge: t.tag.replace("-", "\u2212"), group: t.group, ring: cooldownOf(m[2]) }; }
       if (!piece) continue;
+      piece.src ??= m[0];                            // its text, for colours (colourize)
       if (m.index > at) out.push({ text: chunk.slice(at, m.index) });
       out.push(piece);
       at = m.index + m[0].length;
@@ -325,6 +327,27 @@ export function tokenize(text, icons = {}) {
     if (at < chunk.length) out.push({ text: chunk.slice(at) });
     return out;
   }));
+}
+/** tokenize's paragraphs with their letters in their colours (textcolor.js colorRanges of text): a text piece split
+ *  where its colour changes, each part's `color` "#rrggbb" or none; icons and badges keep their own. */
+export function colourize(paras, text, colors, field) {
+  text = String(text ?? "").replace(/\r/g, "");
+  const ranges = colorRanges(text, colors, field);
+  if (!ranges.length) return paras;
+  const at = i => ranges.find(r => r.start <= i && i < r.end)?.color || null;
+  let cursor = 0;
+  return paras.map(para => para.map(chunk => chunk.flatMap(p => {
+    const src = p.text ?? p.src ?? "", i = src ? text.indexOf(src, cursor) : -1;
+    if (i < 0) return [p];
+    cursor = i + src.length;
+    if (p.text == null) return [p];
+    const out = [];
+    for (let k = 0; k < src.length; k++) {
+      const c = at(i + k), last = out[out.length - 1];
+      if (last && last.color === c) last.text += src[k]; else out.push({ text: src[k], color: c });
+    }
+    return out.map(x => (x.color ? x : { text: x.text }));
+  })));
 }
 const ICON_EM = 1.1;                                  // an icon's width in ems
 const BADGE_EM = 0.78;                                // a badge's letters, in ems of the text, at BADGE_H
@@ -567,7 +590,7 @@ export function cellPlan(from, to, cells = 10) {
 /** The fields the mock-up redraws: those of `edit` that differ from the image's (`psd`), as {name, ability, stats: {k: [from,
  *  to]}, stars: [from, to] | null, types: [old, new] | null (not a reorder), skipped: [labels]} (stats above 10 aren't drawn). */
 export function changes(edit, psd) {
-  const out = { name: null, ability: null, stats: {}, stars: null, types: null, skipped: [] };
+  const out = { name: null, ability: null, stats: {}, stars: null, types: null, skipped: [], colors: null };
   const text = s => String(s ?? "").replace(/\r/g, "").trim();
   if ("name" in edit && text(edit.name) !== text(psd.name)) out.name = text(edit.name);
   if ("ability" in edit && text(edit.ability) !== text(psd.ability)) out.ability = text(edit.ability);
@@ -577,6 +600,10 @@ export function changes(edit, psd) {
   }
   if ("stars" in edit && edit.stars != null && edit.stars !== psd.stars) out.stars = [psd.stars ?? 0, edit.stars];
   if ("types" in edit && JSON.stringify([...(edit.types || [])].map(norm).sort()) !== JSON.stringify([...(psd.types || [])].map(norm).sort())) out.types = [[...(psd.types || [])], [...(edit.types || [])]];
+  const of = (list, f) => JSON.stringify((list || []).filter(one => one.field === f));
+  for (const f of ["name", "ability"]) if ("colors" in edit && of(edit.colors, f) !== of(psd.colors, f)) {   // a colour redraws its text
+    out[f] ??= text(edit[f] ?? psd[f]) || null; out.colors = edit.colors;
+  }
   return out;
 }
 
@@ -805,7 +832,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     measure.label = bfam ? em => labelSet(ctx, bfam, em) : null;   // badges' labels: the font's (Roboto Black), once loaded
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
     const area = own ? { box: own, seed: [own[1], own[3]] } : role === "name" ? { box: scaled(tpl.name), seed: null } : textArea(shape, W, H, barsBottom);
-    if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, boxed: true }); out.boxed.push(label); continue; }
+    const colors = part ? null : todo.colors;    // one box per layer: its own text, no field colours
+    if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, boxed: true }); out.boxed.push(label); continue; }
     const paras = tokenize(old, icons);
     const hit = bestBlock(L, W, H, area, paras, measure, { name: role === "name" });   // the block that holds the old text, or none
     if (hit) {
@@ -815,9 +843,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
       const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25 });   // in the lines only: dim words too
       if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
-      jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons, one });
+      jobs.push({ role, text, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors });
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
-    else { jobs.push({ role, text, label, area: part ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, boxed: true }); out.boxed.push(label); }   // a layer's box: covered, never the card below it
+    else { jobs.push({ role, text, label, area: part ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, boxed: true }); out.boxed.push(label); }   // a layer's box: covered, never the card below it
   }
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
@@ -948,7 +976,7 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
       } else if (p.text.trim()) {
         ctx.font = `${z}px ${fam}`;
         if (stroke) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(1.5, z * 0.16); ctx.strokeText(p.text, x, y); }
-        ctx.fillStyle = rgb(fill); ctx.fillText(p.text, x, y);
+        ctx.fillStyle = p.color || rgb(fill); ctx.fillText(p.text, x, y);
       }
       x += p.w;
     }
@@ -956,8 +984,8 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
 }
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a name keeps its line count and stays clear of the stars. */
-function drawText(ctx, { role, text, area, found, size, colours, fam, layer, measure, icons, one }, imgs, W) {
-  const paras = tokenize(text, icons), region = area.box;
+function drawText(ctx, { role, text, area, found, size, colours, fam, layer, measure, icons, one, colors }, imgs, W) {
+  const paras = colourize(tokenize(text, icons), text, colors, role), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = found.align === "left" && role !== "name";
   const maxW = left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
@@ -976,11 +1004,11 @@ function drawText(ctx, { role, text, area, found, size, colours, fam, layer, mea
 }
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the
  *  old text is covered, never half there. */
-function drawBox(ctx, { role, text, area, fam, measure, icons, one }, imgs, W, H, shape) {
+function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors }, imgs, W, H, shape) {
   const r = area.seed ? [0, area.seed[0], W, H] : area.box;     // the text area to the card's edges (the old text may touch them)
   const b = area.seed ? r : [r[0] - W * 0.01, r[1] - H * 0.004, r[2] + W * 0.01, r[3] + H * 0.004], pad = W * 0.03;
   const start = role === "name" ? (b[3] - b[1]) * 0.5 : W * (shape === "square" ? 0.06 : shape === "item" ? 0.05 : 0.045);
-  const { size: z, lines } = fit(tokenize(text, icons), b[2] - b[0] - 2 * pad, b[3] - b[1] - pad, start, measure, role === "name" ? { lines: 1, min: 0.3 } : { min: 0.35 });
+  const { size: z, lines } = fit(colourize(tokenize(text, icons), text, colors, role), b[2] - b[0] - 2 * pad, b[3] - b[1] - pad, start, measure, role === "name" ? { lines: 1, min: 0.3 } : { min: 0.35 });
   const over = lines.length * z * LINE > b[3] - b[1] - pad + 0.5;
   const rad = Math.min(W * 0.03, (b[3] - b[1]) / 2);
   ctx.save(); ctx.beginPath(); ctx.moveTo(b[0] + rad, b[1]); ctx.arcTo(b[2], b[1], b[2], b[3], rad); ctx.arcTo(b[2], b[3], b[0], b[3], rad); ctx.arcTo(b[0], b[3], b[0], b[1], rad); ctx.arcTo(b[0], b[1], b[2], b[1], rad); ctx.closePath();

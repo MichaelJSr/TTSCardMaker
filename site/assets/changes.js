@@ -4,6 +4,7 @@
 // (AutoCroissant commands/changelog.py: messages(), title_of(), link_of(), SECTIONS). DOM-free: every function returns
 // HTML, every string goes through esc.
 import { flagsText } from "./flags.js";
+import { colorsChange } from "./textcolor.js";
 import { esc, diffWords, dateFmt } from "./text.js";
 
 const TZ = "America/Los_Angeles";                         // the bot's TIMEZONE: the posts' times, balance.js
@@ -117,6 +118,7 @@ function fieldHtml(key, [a, b]) {
   if (key === "creatures") return "creature stats changed";
   if (key === "hidden") return b ? "hidden" : "shown again";
   if (key === "flags") return `flags ${esc(flagsText(a) || "none")} → ${esc(flagsText(b) || "none")}`;
+  if (key === "colors") return esc(colorsChange(Array.isArray(a) ? a : [], Array.isArray(b) ? b : []).join("; ") || "text colours");
   if (typeof b === "boolean" && FIELD[key]) return b ? FIELD[key] : `${FIELD[key]}: off`;
   return `${esc(FIELD[key] || key.replace(/_/g, " "))} ${esc(value(a))} → ${esc(value(b))}`;
 }

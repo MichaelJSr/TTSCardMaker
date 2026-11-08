@@ -1,6 +1,19 @@
 // Ability text: icon tokens, timing-tag badges, links to other cards, and word diffs.
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+/** Escaped text[a:b] with its colour runs ([{start, end, color}]: textcolor.js colorRanges) as spans; a colour is
+ *  "#rrggbb" or left out, the text escaped. */
+export function paintHtml(text, ranges, a = 0, b = String(text ?? "").length) {
+  text = String(text ?? "");
+  let out = "", at = a;
+  for (const r of ranges || []) {
+    const s = Math.max(r.start, a), e = Math.min(r.end, b);
+    if (e <= s || !/^#[0-9a-f]{6}$/.test(r.color)) continue;
+    out += esc(text.slice(at, s)) + `<span class="tc" style="color:${r.color}">${esc(text.slice(s, e))}</span>`;
+    at = e;
+  }
+  return out + esc(text.slice(at, b));
+}
 /** toLocaleDateString(undefined, opts) as a function, its Intl.DateTimeFormat made once on first use (one per call was a hotspot) */
 export const dateFmt = opts => { let f = null; return d => (f ||= new Intl.DateTimeFormat(undefined, opts)).format(d); };
 let HEAVY = new Set();                               // commits GitHub's page can't show (cards.json heavy, 12-char shas)
@@ -396,17 +409,18 @@ export function makeRenderer({ cards, icons, variants = {} }) {
     return { pieces, links };
   }
 
-  /** HTML for ability text; links: false leaves card names as text (the rulebook links its own) */
-  function render(text, { links: linked = true } = {}) {
+  /** HTML for ability text; links: false leaves card names as text (the rulebook links its own); colors: its colour
+   *  runs (textcolor.js colorRanges), on the letters only (icons and badges keep their look) */
+  function render(text, { links: linked = true, colors = null } = {}) {
     if (!text) return "";
     const { pieces, links: found } = parse(text), links = linked ? found : [];
-    const out = [];
+    const out = [], seg = (a, b) => (colors?.length ? paintHtml(text, colors, a, b) : esc(text.slice(a, b)));
     let last = 0;
     for (const [i, n, x] of [...pieces, ...links].sort((a, b) => a[0] - b[0])) {
-      out.push(esc(text.slice(last, i)), typeof x === "string" ? x : `<a class="card-ref" href="c/${encodeURIComponent(x.id)}/" data-card="${x.id}">${esc(text.slice(i, i + n))}</a>`);
+      out.push(seg(last, i), typeof x === "string" ? x : `<a class="card-ref" href="c/${encodeURIComponent(x.id)}/" data-card="${x.id}">${seg(i, i + n)}</a>`);
       last = i + n;
     }
-    out.push(esc(text.slice(last)));
+    out.push(seg(last, text.length));
     return out.join("").replace(/\n/g, "<br>");
   }
 

@@ -1177,3 +1177,25 @@ body.dragging-cards .bucket[data-pin] { border-color: var(--accent); }
 @media (pointer: coarse) { .cf-del { width: 36px; height: 36px; } }
 .active-filters .chip.cf-save { margin-left: -3px; border-color: var(--accent); color: var(--accent); background: transparent; }   /* beside its chip */
 .toast-undo { margin-left: 10px; padding: 2px 10px; border: 1px solid currentColor; border-radius: 8px; background: transparent; color: inherit; font-size: 13px; }
+/* text colours (textcolor.js): a chip beside the selection, its compact palette */
+.tc-chip { position: fixed; z-index: 95; width: 30px; height: 22px; padding: 0 5px; display: inline-flex; align-items: center; gap: 3px; border-radius: 11px;
+  border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--ink); box-shadow: 0 2px 8px #0005; font: 800 12px/1 system-ui, sans-serif; cursor: pointer; }
+.tc-chip[hidden], .tc-pop[hidden], .tc-sw[hidden] { display: none; }
+.tc-dot { flex: none; width: 12px; height: 12px; border-radius: 50%; background: conic-gradient(#f44, #fd2, #4d4, #4cf, #64f, #f4c, #f44); box-shadow: inset 0 0 0 1px #0006; }
+.tc-chip:focus-visible, .tc-sw:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.tc-pop { position: fixed; z-index: 96; box-sizing: border-box; padding: 8px 10px 10px; border-radius: 10px; border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--ink); box-shadow: var(--shadow); font-size: 12px; max-height: min(60vh, 420px); overflow: auto; }
+.tc-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-weight: 600; }
+.tc-head span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tc-x { padding: 0 6px; }
+.tc-title { margin: 8px 0 4px; color: var(--muted); display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.tc-find { width: 96px; font-size: 11px; padding: 2px 6px; }
+.tc-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+.tc-many { max-height: 124px; overflow-y: auto; padding: 2px; margin: -2px; }     /* the chart's 101: a few rows, find for the rest */
+.tc-sw { width: 20px; height: 20px; padding: 0; border-radius: 5px; border: 1px solid #0007; box-shadow: inset 0 0 0 1px #fff2; cursor: pointer; }
+.tc-sw.on { outline: 2px solid var(--ink); outline-offset: 1px; }
+.tc-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 10px; }
+.tc-custom { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+.tc-custom input { width: 34px; height: 24px; padding: 0; border: 1px solid var(--border); border-radius: 5px; background: none; cursor: pointer; }
+@media (pointer: coarse) { .tc-chip { width: 36px; height: 28px; border-radius: 14px; } .tc-sw { width: 28px; height: 28px; } .tc-many { max-height: 128px; } }
+:root[data-theme="light"] .tc { text-shadow: 0 0 1px #000b, 0 0 1px #000b; }   /* a card's white or pale words on the light page */

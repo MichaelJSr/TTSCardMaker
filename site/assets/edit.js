@@ -14,25 +14,26 @@ import { date, dayOf, pictureNumber } from "./history.js";
 import { artList, artError, artLabel } from "./art.js";
 import { CARD_FLAGS, cleanFlags, flagError, flagsChange, flagsText, ownFlag } from "./flags.js";
 import { typeAttrs, pressToggle, readToggles, setToggles } from "./palette.js";
+import * as TC from "./textcolor.js";
 
 const API = "https://api.github.com";
 // last: the login a password last signed in
 const K = { stage: "edit-stage", sent: "edit-sent", hidden: "edit-show-hidden", buckets: "edit-buckets", last: "edit-last-login", drafts: draft.DRAFT_KEY };
 // same fields as build_site.py and the bot's CardEdits
 const FIELDS = { name: "str", type: "str", subtype: "str", series: "str", subseries: "str", stars: "int", types: "list", hp: "int", def: "int",
-  atk: "int", spd: "int", ability: "str", parts: "parts", note: "str", art: "sources", ability_art: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
+  atk: "int", spd: "int", ability: "str", parts: "parts", colors: "colors", note: "str", art: "sources", ability_art: "str", aliases: "list", dup_of: "str", hidden: "bool", problems_ok: "bool", allow_high_stats: "bool",
   creatures: "creatures", flags: "flags" };
 const ORDER = Object.keys(FIELDS);
 const isBot = by => String(by || "").toLowerCase() === "autocroissant";   // the bot's _by (changes.js BOT)
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP", def: "DEF",
-  atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases",
+  atk: "ATK", spd: "SPD", ability: "Ability", parts: "Text boxes", colors: "Text colours", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases",
   dup_of: "Duplicate of", hidden: "Hidden", problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", ban: "Constructed ban", creatures: "Creatures", flags: "Flags",
   "rate-favorability": "Favorability", "rate-power": "Power" };
 // art: the artwork sources, a list (art.js; ability_art: the retired second field, read as the last source, never offered)
 // item types: the Items/ folders (fixed; a new one needs its folder first)
 export const ITEM_TYPES = ["active", "attack", "counter", "deploy", "equip", "heal", "infliction", "negation", "support"];
-const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. flags: what the card needs from a developer, {\"hand\": \"reason\", \"bars\": \"\"}, never baked. Read by the website and the card sync.";
+const ABOUT = "Card data fixes from the website's Edit button. Keyed by card file name; each field overrides the PSD. _site: the card-image fields that are website only (never baked into the card image). _rename: true beside a name: the bake also renames the card's files to it. art, ability_art: where the card's main and ability artwork come from (a URL, an artist, a game; at most 500 characters), each entry its own, duplicates too. flags: what the card needs from a developer, {\"hand\": \"reason\", \"bars\": \"\"}, never baked. colors: text colours, [{\"field\": \"ability\", \"phrase\": \"Burning\", \"color\": \"#ff7a1a\"}], a phrase as the effect layers' (\"word#n\" the nth; none: the whole field); the note's never baked. Read by the website and the card sync.";
 // true beside a name: the bake renames the card's files to it (owner 2026-10-25; build_site.py RENAME_KEY, the bot's card_edits.RENAME)
 export const RENAME_KEY = "_rename", RENAME_LABEL = "Also rename the card's files";
 /** An entry's `_rename` after an op: ticked or unticked (op.rename), and gone without a name or with a website-only one. */
@@ -48,7 +49,7 @@ export function renameTick(op, b, ticked) {
   return op;
 }
 // an entry's website-only fields (build_site.py SITE_KEY, the bot's card_edits.SITE): differ from the card image on purpose, never baked
-export const SITE = "_site", SITE_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures"];
+export const SITE = "_site", SITE_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures", "colors"];
 const SITE_LABEL = "Website only (don't change the card image)";
 /** The website-only fields after an op's ticks (op.site: {field: true | false}) over the published ones. */
 export function siteAfter(op, b = {}) {
@@ -74,13 +75,13 @@ const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; 
 // where a field's unedited value comes from: the PSD (the set also in build_site.py PSD_FIELDS, app.js FIELD_LABEL, the bot's
 // CardEdits.KIND and psd_edit STAT_FIELDS/TEXT_FIELDS/NOT_YET), the card's folder, or nowhere (a database-only default)
 const FROM = { name: "PSD", stars: "PSD", types: "PSD", hp: "PSD", def: "PSD", atk: "PSD", spd: "PSD", ability: "PSD", parts: "PSD",
-  creatures: "PSD", type: "folder", subtype: "folder", series: "folder" };
+  creatures: "PSD", colors: "PSD", type: "folder", subtype: "folder", series: "folder" };
 const show = v => (v == null || v === "" ? "—" : Array.isArray(v) ? (v.length ? v.map(x => (typeof x === "object" ? STATS.map(k => x[k] ?? "—").join("/") : x)).join(", ") : "—")
   : typeof v === "boolean" ? (v ? "yes" : "no") : typeof v === "object" ? flagsText(v) : String(v));
 const clip = s => (s.length > 48 ? `${s.slice(0, 45).trimEnd()}…` : s);
 /** A duplicate whose author and ratings are its original's; a variant picture keeps its own. */
 const follows = c => !!c.dup && !c.variantOf;
-const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : FIELDS[f] === "flags" ? cleanFlags(v) : FIELDS[f] === "sources" ? (artList({ art: v }).length ? artList({ art: v }) : null) : f === "dup_of" ? v || ""
+const tidy = (f, v) => (FIELDS[f] === "bool" ? !!v : FIELDS[f] === "list" ? v || [] : FIELDS[f] === "flags" ? cleanFlags(v) : FIELDS[f] === "colors" ? TC.tidyColors(v) : FIELDS[f] === "sources" ? (artList({ art: v }).length ? artList({ art: v }) : null) : f === "dup_of" ? v || ""
   : f === "creatures" ? (v?.length > 1 ? v.map(x => Object.fromEntries(STATS.map(k => [k, x[k] ?? null]))) : null) : v ?? null);
 /** A card's value of field f as the form shows it (byId resolves dup_of to the original's key). */
 export function value(c, f, byId) {
@@ -196,18 +197,20 @@ export function withoutItem(op, item, name, fields = null) {
 export function describeItems(op, b = {}, { byId } = {}) {
   const src = k => (FROM[k] ? `the ${FROM[k]}` : "the default");
   const flagged = t => ({ item: "flags", text: `${LABEL.flags}: ${t}`, short: `${LABEL.flags}: ${clip(t)}` });
+  const coloured = (a, v) => { const t = TC.colorsChange(a, v).join("; ") || `${LABEL.colors}: unchanged`;     // "Ability: 'Burning' coloured #ff7a1a"
+    return { item: "colors", text: t, short: clip(t), printed: JSON.stringify(TC.printedOf(a)) !== JSON.stringify(TC.printedOf(v)) }; };
   const items = Object.entries(op.set).filter(([k]) => k !== "parts").map(([k, v]) => { const from = show(value(b, k, byId)), to = show(v);
-    return k === "flags" ? flagged(flagsChange(value(b, k), v)) : { item: k, text: `${LABEL[k]}: ${from} → ${to}`, short: `${LABEL[k]} ${clip(from)} → ${clip(to)}` }; });
+    return k === "flags" ? flagged(flagsChange(value(b, k), v)) : k === "colors" ? coloured(value(b, k), v) : { item: k, text: `${LABEL[k]}: ${from} → ${to}`, short: `${LABEL[k]} ${clip(from)} → ${clip(to)}` }; });
   const boxes = Object.keys(op.set.parts || {}).length, back = (op.unset || []).filter(k => k.startsWith(P.PART)).length;
   if (boxes || back) { const t = `Text boxes: ${[boxes && `${boxes} changed`, back && `${back} back to the PSD`].filter(Boolean).join(", ")}`; items.push({ item: "parts", text: t, short: t }); }
-  for (const k of (op.unset || []).filter(k => !k.startsWith(P.PART))) { const p = show(psdValue(b, k, byId)); items.push(k === "flags" ? flagged(flagsChange(value(b, k), null)) : { item: k, text: `${LABEL[k]}: back to ${src(k)} (${p})`, short: `${LABEL[k]} back to ${src(k)} (${clip(p)})` }); }
+  for (const k of (op.unset || []).filter(k => !k.startsWith(P.PART))) { const p = show(psdValue(b, k, byId)); items.push(k === "flags" ? flagged(flagsChange(value(b, k), null)) : k === "colors" ? coloured(value(b, k), null) : { item: k, text: `${LABEL[k]}: back to ${src(k)} (${p})`, short: `${LABEL[k]} back to ${src(k)} (${clip(p)})` }); }
   if (op.author !== undefined) { const t = `Author → ${op.author || "(from git)"}`; items.push({ item: "author", text: t, short: t }); }
   if (op.ban) { const t = op.ban.banned ? `Banned: ${op.ban.group}, ${op.ban.reason || "no reason"}` : "Unbanned"; items.push({ item: "ban", text: t, short: t }); }
   for (const k of RATE) if (op.rate?.[k] != null) { const l = LABEL[`rate-${k}`]; items.push({ item: `rate-${k}`, text: `${l}: rated ${op.rate[k]}`, short: `${l} ${op.rate[k]}` }); }
   for (const [k, on] of Object.entries(op.site || {})) { const t = `${LABEL[k]}: ${on ? "website only (the card image keeps its text)" : "on the card image too"}`; items.push({ item: `site-${k}`, text: t, short: t }); }
   if (op.rename !== undefined) { const t = op.rename ? "Files: renamed to the name" : "Files: keep their name"; items.push({ item: "rename", text: t, short: t }); }
   const site = siteAfter(op, b);
-  return items.map(x => ({ ...x, psd: isPsd(x.item) && !site.includes(x.item) }));
+  return items.map(({ printed, ...x }) => ({ ...x, psd: isPsd(x.item) && !site.includes(x.item) && printed !== false }));   // a note's colour: website only
 }
 /** The batch bar's lines, one per pending edit: cards (id, name, item, text, psd), then admins, people, profiles
  *  (kind, login) and decks (kind, key); describe(op) gives a card op's items. */
@@ -317,6 +320,7 @@ export function createEditor(app) {
   // what the Edit dialog and the inline editors hold before it goes into the batch, per card id (drafts.js)
   const cardDrafts = draft.draftStore(localStorage, K.drafts);
   let formDraft = null;                           // the open form's draft: {flush (now, when the tab closes), discard (Cancel)}
+  let colorMenu = null;                            // the open form's text colour menu (textcolor.js attach)
   window.addEventListener("pagehide", () => formDraft?.flush());
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") formDraft?.flush(); });
   let previewOpen = false;                         // narrow screens: the preview bar opened
@@ -836,7 +840,7 @@ export function createEditor(app) {
         <fieldset><legend>Card</legend>
           ${view?.list.some(x => x.kind === "title") ? `<div class="erow" data-row="name"><span class="elabel">${LABEL.name}${psdNote("name")}</span><div class="ein parts" data-site-of="name"><div class="site-boxes">${boxesHtml(view, "title")}
             <p class="muted part-join" id="ef-name-join"></p></div>${plain("name", `<input id="ef-name" value="${esc(c.name)}">`)}</div></div>` : row("name", `<input id="ef-name" value="${esc(c.name)}">`)}
-          ${namesLine(c)}
+          ${namesLine(c)}<input type="hidden" id="ef-colors" value="${esc(c.colors?.length ? JSON.stringify(c.colors) : "")}">
           ${P.titleInPicture(view?.rec) ? `<p class="muted part-note">The title is part of the picture: a new title shows on the website only.</p>` : ""}
           ${renameRow(c, b)}
           ${row("stars", `<input id="ef-stars" type="number" min="0" max="${maxStars()}" step="1" value="${c.stars ?? ""}" placeholder="—">`)}<p class="muted part-note" id="ef-stars-note"></p>
@@ -947,6 +951,7 @@ export function createEditor(app) {
       art: () => { const list = artList({ art: [...document.querySelectorAll("#ef-art [data-art-src]")].map(i => i.value) }); error ||= artError(list); return list.length ? list : null; },
       aliases: () => f("aliases").value.split(",").map(s => s.trim()).filter(Boolean),
       dup_of: () => { const v = f("dup_of").value.trim(); return v ? (byKey(v)?.key || v) : ""; },
+      colors: () => { let v = null; try { v = JSON.parse(f("colors").value || "null"); } catch { /* typed by nobody */ } return TC.tidyColors(v); },
       flags: () => { const v = cleanFlags({ ...Object.fromEntries(CARD_FLAGS.filter(([k]) => f(`flag-${k}`).checked).map(([k]) => [k, f(`flag:${k}`).value])), psd: c.blob }); error ||= flagError(v); return flagsChange(c.flags, v) ? v : c.flags ?? null; },   // unchanged: its PSD stays the one it was set on
       hidden: () => f("hidden").checked, allow_high_stats: () => f("allow_high_stats").checked, problems_ok: () => f("problems_ok").checked,
     };
@@ -1184,7 +1189,7 @@ export function createEditor(app) {
     input.focus(); input.select();
   }
   // the live preview: the card as it will look once published, from the form's op (live.js)
-  const previewCtx = { render: t => app.render(t), statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
+  const previewCtx = { render: (t, o) => app.render(t, o), statBars: p => app.statBars(p), iconFor: n => app.iconFor(n), kindLabel: app.KIND_LABEL, image: () => "" };   // the card's image: the viewer above
   function paintPreview(c, op) {
     const body = app.modal.querySelector("#lp-body"); if (!body) return;
     const b = baseOf(c), values = { ...op.set, ...Object.fromEntries((op.unset || []).map(f => [f, psdVal(b, f)])) };
@@ -1198,6 +1203,7 @@ export function createEditor(app) {
     if (!me) { openHub(`Sign in to edit ${c.name}.`, () => openForm(id, { draft: restored, focus })); return; }
     if (!skipRecs && [c, ...groupOf(c)].some(x => x.details && !recs.has(x.id) && app.loadDetails)) { withRecs(c, failed => openForm(id, { draft: restored, focus, skipRecs: !!failed })); return; }
     const view = partsView(c);
+    colorMenu?.destroy(); colorMenu = null;
     partForm = view ? { c, view, deleted: new Set(view.list.filter(x => x.deleted).map(x => x.key)), drops: new Set(), added: !!view.added, last: null } : null;
     app.modal.innerHTML = formHtml(c);
     app.modal.hidden = false; document.body.style.overflow = "hidden"; app.modal.scrollTop = 0;
@@ -1221,7 +1227,7 @@ export function createEditor(app) {
     const update = () => {
       paintSite();
       const op = readForm(c), lines = describe(op), text = partForm && !siteOn("ability") ? lastRead?.derived.ability || "" : ta.value;
-      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text) : `<span class="muted">No ability text.</span>`;
+      document.getElementById("ef-preview").innerHTML = text.trim() ? app.render(text, { colors: TC.colorRanges(text, op.set.colors ?? (op.unset.includes("colors") ? null : c.colors), "ability") }) : `<span class="muted">No ability text.</span>`;
       const sn = document.getElementById("ef-stars-note"), st = document.getElementById("ef-stars");   // a stars edit moves the card (the bake's plan_move)
       const mv = sn && st && !siteOn("stars") ? P.starMove(c.psd, st.value === "" ? null : +st.value, S.all.map(x => x.psd)) : null;
       if (sn) sn.textContent = mv ? `Moves the PSD and its PNGs to ‘${mv.to}’${mv.created ? " (created)" : ""}${!partForm?.view.rec.header?.stars ? "" : P.starsKept(partForm.view.rec.header.stars, +st.value) ? "; the printed stars stay as they are" : " and redraws the printed stars"}. Tick Website only to keep the card where it is.`
@@ -1330,6 +1336,20 @@ export function createEditor(app) {
       save();
       app.toast(routed.every(([, o]) => opEmpty(o)) ? "No changes" : `Added to the batch: ${count()} unpublished`);
       app.goCard(c.id);
+    });
+    colorMenu = TC.attach(form, {                   // a selection's colour (textcolor.js): into the hidden #ef-colors, as typed
+      fieldOf: el => (el.id === "ef-name" ? "name" : el.id === "ef-ability" ? "ability" : el.id === "ef-note" ? "note"
+        : el.dataset.part ? (view?.list.find(x => x.key === el.dataset.part)?.field || null) : null),
+      textOf: el => {                              // a box: the field's boxes joined, as the site's text
+        if (!el.dataset.part) return { text: el.value, at: 0 };
+        const field = view?.list.find(x => x.key === el.dataset.part)?.field, boxes = [...form.querySelectorAll("[data-part]")].filter(b => view?.list.find(x => x.key === b.dataset.part)?.field === field && !b.disabled);
+        let at = 0; for (const b of boxes) { if (b === el) break; at += b.value.length + 1; }
+        return { text: boxes.map(b => b.value).join("\n"), at };
+      },
+      list: () => { try { return JSON.parse(document.getElementById("ef-colors")?.value || "null"); } catch { return null; } },
+      apply: list => { const el = document.getElementById("ef-colors"); if (!el) return; el.value = list?.length ? JSON.stringify(list) : ""; el.dispatchEvent(new Event("input", { bubbles: true })); },
+      rec: () => recs.get(c.id) || view?.rec || null,
+      swatches: () => S.data.swatches || [],
     });
     update();
     app.formOpened?.({ form, card: c, read: () => readForm(c), base: baseOf(c) });   // the image previews (preview.js)
@@ -1985,6 +2005,7 @@ export function createEditor(app) {
     publishDeck: id => openPublish(id), deckOf, pendingDecks,
     // inline editing (inline.js): single fields into the same batch, and the known values for its lists; the drafts
     stageField, stageAuthor, stageMany, value: val, drafts: cardDrafts, maxStars,
+    recOf: id => recs.get(id) || null, swatches: () => S.data.swatches || [],     // the colour menu's (textcolor.js)
     // new series, subseries and authors from the filter bar (buckets: pending = no card carries it yet)
     options: () => ({ series: seriesList(), subseries: subseriesList(), authors: authorList(), buckets: pending() }),
     addBucket,

@@ -10,6 +10,7 @@ import { esc } from "./text.js";
 import { sameField, value, psdValue } from "./edit.js";
 import * as mockup from "./mockup.js";
 import { partsLine } from "./parts.js";
+import { printedOf } from "./textcolor.js";
 
 /** The Action's side, in one place: change it here if card-preview.yml's inputs or files change. */
 export const CONTRACT = {
@@ -28,12 +29,12 @@ export const MAX_WAIT_MS = 16 * 60000, MORE_WAIT_MS = 10 * 60000;
 // the previews branch keeps a preview at least 6 days (rewritten past 200 or 7 days): older ones are "expired"; a 404
 // more than a day after the press means it never comes; entries go after 30 days
 export const SHOW_MS = 6 * 864e5, LATE_MS = 864e5, DROP_MS = 30 * 864e5;
-export const PSD_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures"];   // printed on the card (edit.js FROM "PSD")
+export const PSD_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures", "colors"];   // printed on the card (edit.js FROM "PSD"; colors: the name's and ability's)
 export const ENTRY_FIELDS = [...PSD_FIELDS, "parts"];                                      // what the edit carries (parts: per layer)
 export const DONE = ["baked", "redundant", "refused", "error"];                            // result.json states
 const REQUEST_RE = /^[A-Za-z0-9-]{8,64}$/;            // card-preview.yml's check
 const STATS = ["hp", "def", "atk", "spd"];
-const LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Text", creatures: "Creatures", parts: "Text boxes" };
+const LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Text", creatures: "Creatures", parts: "Text boxes", colors: "Text colours" };
 
 const text = v => String(v ?? "").replace(/\r/g, "").trim();
 /** The edit a preview sends: the PSD-kind fields (and creatures) of the card's Card Edits.json entry as Publish would leave
@@ -44,8 +45,8 @@ export function entryEdit(fields, get) {
   for (const f of ENTRY_FIELDS) {
     if (!fields.includes(f)) continue;
     const v = get(f);
-    if (f === "creatures" ? !(Array.isArray(v) && v.length > 1) : f === "parts" ? !(v && typeof v === "object" && Object.keys(v).length) : v === undefined) continue;
-    out[f] = f === "types" ? [...(v || [])] : typeof v === "string" ? text(v) : v;
+    if (f === "creatures" ? !(Array.isArray(v) && v.length > 1) : f === "parts" ? !(v && typeof v === "object" && Object.keys(v).length) : f === "colors" ? !printedOf(v) : v === undefined) continue;
+    out[f] = f === "types" ? [...(v || [])] : f === "colors" ? printedOf(v) : typeof v === "string" ? text(v) : v;
   }
   return out;
 }
@@ -56,7 +57,8 @@ export function changedOf(cur, psd) {
   for (const f of PSD_FIELDS) {
     const v = cur[f];
     if (v === undefined || ((STATS.includes(f) || f === "stars") && v == null)) continue;
-    const same = typeof v === "string" || typeof psd[f] === "string" ? text(v) === text(psd[f]) : sameField(f, v ?? null, psd[f] ?? null);
+    const same = f === "colors" ? JSON.stringify(printedOf(v)) === JSON.stringify(printedOf(psd[f]))
+      : typeof v === "string" || typeof psd[f] === "string" ? text(v) === text(psd[f]) : sameField(f, v ?? null, psd[f] ?? null);
     if (!same) out[f] = v;
   }
   return out;

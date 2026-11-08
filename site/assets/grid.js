@@ -12,7 +12,7 @@ const AUX_WORD = { buff: "status effect", debuff: "status effect", minion: "mini
 export const unusedTip = c => (c._unusedBy?.length ? `Only Unused cards name this ${AUX_WORD[c.type] || "card"}: ${esc(c._unusedBy.join(", "))}`
   : `No other card names this ${AUX_WORD[c.type] || "card"}`);
 // edits the pipeline bakes into the card image (build_site.py PSD_FIELDS): pending, refused, or baked but not re-parsed yet
-export const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", creatures: "Creatures" };
+export const FIELD_LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", creatures: "Creatures", colors: "Text colours" };
 export const PSD_TIP = "The card image is being regenerated with this edit";     // the one tip for a pending PSD field (edit.js too)
 export const pendingList = c => (c.pending || []).map(f => FIELD_LABEL[f] || f).join(", ");
 export const stars = n => (n ? "★".repeat(Math.min(n, 10)) : "");

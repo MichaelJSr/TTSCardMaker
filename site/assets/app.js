@@ -1,5 +1,5 @@
 import { compile, suggest, total, exactOf, exactFirst, SEARCH_HELP } from "./search.js";
-import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy } from "./text.js";
+import { esc, norm, dateFmt, makeRenderer, diffWords, tagInfo, badgeHtml, legendHtml, hasBadges, hasCosts, commitAfter, noted, setTagMeanings, setHeavy, paintHtml } from "./text.js";
 import * as D from "./deck.js";
 import * as details from "./details.js";
 import { tipController, wireTips } from "./tip.js";
@@ -15,6 +15,7 @@ import * as CF from "./myfilters.js";
 import { KIND_LABEL, FIELD_LABEL, PSD_TIP, pendingList, stars, isDesc, AUX_KINDS, unusedTip } from "./grid.js";
 import { artHtml } from "./art.js";
 import { CARD_FLAGS, flagged, flagsHtml, hasFlag } from "./flags.js";
+import { colorRanges } from "./textcolor.js";
 
 // pin <base> so share URLs (c/<id>/, d/) in the address bar don't move asset paths
 const baseEl = document.querySelector("base");
@@ -260,7 +261,7 @@ function startEditor(M) {
     S, KIND_LABEL, PSD_TIP, derive, rerender, goCard, currentCard, toast: m => toast(m), modal,
     openCard: id => openCard(id), closeModal: () => closeModal(), showDialog: h => showDialog(h),
     statBars: c => statBars(c), imageOf: (c, w = 360) => img(c, w),   // the form's live preview; 720: the Edit viewer
-    iconFor: n => iconFor(n), render: t => S.renderer.render(t),
+    iconFor: n => iconFor(n), render: (t, o) => S.renderer.render(t, o),
     users: () => loadUsers(), goUser, goEdit, onAuth: () => { renderAccount(); if (!editor.me) S.selected.clear(); previews.onAuth(); },
     // the profile page editor (#/u/<login>/edit) renders into the view and reuses the tiles, the kinds and the saved hands
     view, route: () => parseHash(), tile: (c, o) => tileHtml(c, { small: true, ...o }), kinds: KINDS, kindOf, savedDecks: () => S.decks,
@@ -866,7 +867,7 @@ function openCard(id, showDetails = false) {
           <a class="fact" data-nav="next" href="#/card/${next.id}" title="Next (→)">${esc(next.name)} →</a></div>
         <div id="versions-slot">${versionsHtml(c, verOpen)}</div></div>
       <div>
-        <h2>${esc(c.name)}</h2>
+        <h2>${paintHtml(c.name, colorRanges(c.name, c.colors, "name"))}</h2>
         ${flagsHtml(c)}
         <div class="facts">
           <a class="fact" href="#/cards?kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>
@@ -887,8 +888,8 @@ function openCard(id, showDetails = false) {
         </div>
         ${c.types && c.types.length ? `<div class="ctypes">${c.types.map(t => `<a href="#/cards?types=${encodeURIComponent(t)}">${iconImg(t, "")}</a>`).join("")}</div>` : ""}
         ${statBars(c)}
-        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability)}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
-        ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note)}</div>` : ""}
+        ${c.ability ? `<div class="ability">${S.renderer.render(c.ability, { colors: colorRanges(c.ability, c.colors, "ability") })}</div>` : c.parsed ? `<p class="muted">No ability text.</p>` : ""}
+        ${c.note ? `<div class="note"><b>Note</b> ${S.renderer.render(c.note, { colors: colorRanges(c.note, c.colors, "note") })}</div>` : ""}
         ${artHtml(c)}
         ${hasBadges(c.ability) || hasBadges(c.note) || hasCosts(c.ability) || hasCosts(c.note) ? `<details class="badge-help" data-id="${esc(c.id)}"${keepBadges ? " open" : ""}><summary>Badges</summary>${legendHtml(hasCosts(c.ability) || hasCosts(c.note))}</details>` : ""}
         ${c.aliases?.length ? `<p class="muted">Also known as: ${c.aliases.map(esc).join(", ")}</p>` : ""}

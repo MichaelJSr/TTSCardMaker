@@ -163,7 +163,7 @@ LOGINS_DIR = "site/logins"                    # <login>.json: a token sealed wit
 EDIT_FIELDS = {"name": str, "type": str, "subtype": str, "series": str, "subseries": str, "stars": int, "types": list,
                "hp": int, "def": int, "atk": int, "spd": int, "ability": str, "note": str, "art": list, "ability_art": str,
                "aliases": list, "dup_of": str, "hidden": bool, "problems_ok": bool, "allow_high_stats": bool, "creatures": list,
-               "flags": dict}
+               "flags": dict, "colors": list}
 EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", "spd", "art", "ability_art"}      # may be null
 # artwork sources: art, a list of free text (one string in older entries), each entry its own (a duplicate's never its
 # original's); the retired ability_art is read as the last source (art_list); the bot's card_edits.ART_MAX
@@ -171,6 +171,11 @@ ART_FIELDS, ART_MAX = ("art", "ability_art"), 500
 # what a card needs from a developer: {"hand": "reason", "bars": "", "psd": "1a2b3c4d"}, each reason optional, psd the PSD
 # blob it was set on (flags.js, the bot's card_edits)
 FLAGS, FLAG_MAX = ("hand", "bars"), 300
+# text colours: [{"field", "phrase"?, "color": "#rrggbb"}], a phrase as the effect layers' ("word#n"; none: the whole
+# field); the note's never bake (textcolor.js, the bot's card_edits.valid_colors)
+COLOR_FIELDS, COLOR_PRINTED = ("name", "ability", "note"), ("name", "ability")
+COLOR_RE, COLORS_MAX, PHRASE_MAX = re.compile(r"^#[0-9a-f]{6}\Z"), 64, 200
+SWATCHES = ("MDW/Status Effects.aco", "MDW/Attributes.aco")   # the team's status and attribute colours (Effect Layers.jsx readAco)
 
 
 def art_list(art, ability_art=None):
@@ -187,11 +192,11 @@ def fold_art(fields):
 # printed on the card image, so an edit waits for the pipeline ("PSD pending"). The same set lives in edit.js FROM, app.js
 # FIELD_LABEL, the bot's CardEdits.KIND ("psd") and psd_edit STAT_FIELDS + TEXT_FIELDS + NOT_YET. creatures: on a bar per
 # creature; the bake makes any other list website only
-PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures"}
+PSD_FIELDS = {"name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures", "colors"}   # colors: the name's and ability's
 # true beside a name: the bake renames the card's files to it (owner 2026-10-25; edit.js RENAME, the bot's card_edits.RENAME)
 RENAME_KEY = "_rename"
 # an entry's website-only fields: printed differently on purpose, never baked (edit.js SITE, the bot's card_edits.SITE)
-SITE_KEY, SITE_FIELDS = "_site", ("name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures")
+SITE_KEY, SITE_FIELDS = "_site", ("name", "stars", "types", "hp", "def", "atk", "spd", "ability", "creatures", "colors")
 DATA_FIELDS = ("type", "subtype", "series", "subseries", "stars", "types", "hp", "def", "atk", "spd", "ability", "note", "creatures")
 STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 # parser notes an edit answers
@@ -1348,12 +1353,74 @@ def valid_edit(field, value):
                                                                            for k, v in c.items()) for c in value)
     if field in ART_FIELDS:                      # a source, or (art) a list of them
         return all(isinstance(x, str) and len(x) <= ART_MAX for x in (value if field == "art" and isinstance(value, list) else [value]))
+    if field == "colors":
+        return valid_colors(value)
     if field == "flags":
         return isinstance(value, dict) and any(k in FLAGS for k in value) and all(
             bool(HEX8.match(v)) if k == "psd" and isinstance(v, str) else k in FLAGS and isinstance(v, str) and len(v) <= FLAG_MAX for k, v in value.items())
     if kind is list:
         return isinstance(value, list) and all(isinstance(x, str) for x in value)
     return isinstance(value, kind)
+
+
+def valid_colors(value):
+    """A `colors` edit: [{field, color, phrase?}], one per field and phrase (the bot's card_edits.valid_colors)."""
+    if not isinstance(value, list) or not value or len(value) > COLORS_MAX:
+        return False
+    seen = set()
+    for one in value:
+        if not isinstance(one, dict) or set(one) - {"field", "phrase", "color"} or one.get("field") not in COLOR_FIELDS \
+                or not isinstance(one.get("color"), str) or not COLOR_RE.match(one["color"]):
+            return False
+        phrase = one.get("phrase")
+        if "phrase" in one and not (isinstance(phrase, str) and phrase.strip() == phrase and 0 < len(phrase) <= PHRASE_MAX):
+            return False
+        if (one["field"], phrase) in seen:
+            return False
+        seen.add((one["field"], phrase))
+    return True
+
+
+def parse_aco(data):
+    """[(name, "#rrggbb")] of a Photoshop swatch file's RGB colours: its version 2 section (named), else version 1."""
+    import struct
+    out, at = [], 0
+    for _ in range(2):
+        if at + 4 > len(data):
+            break
+        version, count = struct.unpack_from(">HH", data, at)
+        at += 4
+        found = []
+        for _ in range(count):
+            space, r, g, b, _z = struct.unpack_from(">5H", data, at)
+            at += 10
+            name = ""
+            if version == 2:
+                n = struct.unpack_from(">I", data, at)[0]
+                name = data[at + 4:at + 4 + 2 * n].decode("utf-16-be", "replace").rstrip("\x00")
+                at += 4 + 2 * n
+            if space == 0:
+                found.append((name, "#%02x%02x%02x" % (r >> 8, g >> 8, b >> 8)))
+        out = found if version == 2 or not out else out
+        if version == 2:
+            break
+    return out
+
+
+def swatches():
+    """The status and attribute colours for the editor's colour palette (textcolor.js): [{"name", "color"}]; warns, never fails."""
+    out, seen = [], set()
+    for path in SWATCHES:
+        try:
+            found = parse_aco(font_bytes(path))
+        except Exception as e:                    # an unreadable file leaves the palette its other colours
+            log(f"warning: {path}: {e}")
+            continue
+        for name, color in found:
+            if (name, color) not in seen:
+                seen.add((name, color))
+                out.append({"name": name, "color": color})
+    return out
 
 
 def valid_verdict(value):
@@ -1723,6 +1790,8 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
             return ability_text(fields[f]) != ability_text(orig.get(f))
         if f == "types":                          # any order and spelling, as psd_edit.same_types
             return type_keys(fields[f]) != type_keys(orig.get(f))
+        if f == "colors":                         # the name's and ability's; the note's never bake
+            return any(one.get("field") in COLOR_PRINTED for one in fields[f])
         return entry[f] != orig.get(f)
     plain = {f for f in fields if f in PSD_FIELDS and fields[f] is not None and f not in parted and f not in site and waits(f)}
     pending = sorted(plain | set(parted))
@@ -1731,7 +1800,9 @@ def apply_edits(entry, edits, psd_sha=None, shown=None):
     if pending:
         entry["pending"] = pending
     tried = verdict.get("for")                    # a refusal: while the refused values are unchanged too
-    if verdict.get("state") == "refused" and tried and all(fields.get(f) == v for f, v in tried.items()) and current \
+    printed_colors = lambda v: [one for one in v or [] if one.get("field") in COLOR_PRINTED] or None   # the bake's (card_bake.psd_fields)
+    if verdict.get("state") == "refused" and tried and all((printed_colors(fields.get(f)) if f == "colors" else fields.get(f)) == v
+                                                           for f, v in tried.items()) and current \
             and any(f not in site for f in tried):    # a website-only field's old refusal stays quiet
         entry["refused"] = verdict.get("reason") or "refused"
     if fields.get("aliases"):
@@ -4259,6 +4330,7 @@ def main():
         "pins": {p: pin(p) for p in CARD_BACKS if pin(p)},    # deck.js: the card backs' pinned links
         "heavy": heavy_commits(commits),      # commit links: the commits GitHub can't show
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist, "tagMeanings": tag_meanings(rulebook_chapters()[0]),
+        "swatches": swatches(),               # the editor's colour palette (textcolor.js): the status and attribute colours
         "thumbs": {w: thumb_tag(w) for w in IMAGE_SIZES},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,

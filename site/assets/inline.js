@@ -12,6 +12,7 @@ import { renameButton, creaturesWith } from "./edit.js";
 import { straighten } from "./parts.js";
 import { artList, artLabel } from "./art.js";
 import { CARD_FLAGS, flagLabel, ownFlag, withFlag } from "./flags.js";
+import * as TC from "./textcolor.js";
 
 const STATS = ["hp", "def", "atk", "spd"];
 const SLIDERS = [...STATS, "stars"];                // a row of cells: click one, or arrows and Enter
@@ -517,6 +518,15 @@ export const extend = more => { Object.assign(A, more); };
  *  the filter bar's "New …"). api = {editor, modal, selected (Set of card ids), goCard, rerender, toast}. */
 export function install(api) {
   A = api;
+  TC.attach(api.modal, {                           // the name's, ability's and note's colours (textcolor.js): staged at once
+    fieldOf: el => (cur && el === cur.ctl && TC.FIELDS.includes(cur.f) ? cur.f : null),
+    textOf: el => ({ text: el.value, at: 0 }),
+    list: () => card?.colors || null,
+    apply: list => { const c = card, f = cur?.f; if (!c || !f || !commit(false)) return;    // the text first, as Enter saves it
+      if (A.editor.stageField(c.id, "colors", list)) refresh(c, f, false); },
+    rec: () => (card ? A.editor.recOf?.(card.id) : null),
+    swatches: () => A.editor.swatches?.() || [],
+  });
   const flush = () => { cur?.save.flush(); pal?.save.flush(); };    // closing the tab: the draft now, not in a moment
   window.addEventListener("pagehide", flush);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flush(); });

@@ -13,7 +13,7 @@ const CHECKS = new Set(["hidden", "allow_high_stats", "problems_ok", "banned"]);
 const NAMES = { name: "Name", type: "Kind", subtype: "Item type", series: "Series", subseries: "Subseries", stars: "Stars", types: "Types", hp: "HP",
   def: "DEF", atk: "ATK", spd: "SPD", ability: "Ability", note: "Note", art: "Artwork sources", ability_art: "Ability artwork source", aliases: "Aliases", dup_of: "Duplicate of", hidden: "Hidden",
   problems_ok: "Parser notes checked", allow_high_stats: "Stats over 20 OK", author: "Author", banned: "Ban", "ban-group": "Ban", "ban-reason": "Ban",
-  creatures: "Creatures", "rate-favorability": "Favorability", "rate-power": "Power", rename: "Rename files",
+  creatures: "Creatures", colors: "Text colours", "rate-favorability": "Favorability", "rate-power": "Power", rename: "Rename files",
   ...Object.fromEntries(CARD_FLAGS.flatMap(([k, l]) => [[`flag-${k}`, l], [`flag:${k}`, l]])) };   // its tick, its reason
 
 const text = v => String(v ?? "").replace(/\r/g, "");
@@ -28,6 +28,7 @@ export function rawOf(c, f, dupKey = "") {
   if (f.startsWith("rate-")) return text(c._rate?.[f.slice(5)]);         // the staged rating (edit.js applyOp)
   if (CHECKS.has(f)) return !!c[f];
   if (f === "rename") return !!c.renameFiles;           // edit.js renameRow
+  if (f === "colors") return c.colors?.length ? JSON.stringify(c.colors) : "";   // the form's hidden #ef-colors (textcolor.js)
   if (f === "art") return artList(c);                   // the form's list
   if (/^art:\d+$/.test(f)) return text(artList(c)[+f.slice(4) - 1] ?? "");   // one line, inline (inline.js isArt)
   if (f.startsWith("flag-")) return ownFlag(c, f.slice(5));                  // the Edit dialog's tick
