@@ -1242,10 +1242,10 @@ jobs:
 
       # The website edits left for the chain: card_bake.pending at this run's end (B, or main's head) with this run's
       # verdicts on the data's (over the cap, main moved under a card). Not after a rejected M: its retry or another run
-      # does them; nor in a held lane (the guards' run does).
+      # does them; nor in a held lane (the guards' run does) or one with nothing to do.
       - name: Leftover edits
         id: left
-        if: env.DRY_RUN != 'true' && steps.gate.outcome == 'success' && steps.venv.outcome == 'success' && steps.main.outputs.rejected != 'true'
+        if: env.DRY_RUN != 'true' && steps.gate.outcome == 'success' && steps.venv.outcome == 'success' && steps.main.outputs.rejected != 'true' && (env.GO == 'true' || env.EDITS == 'true' || env.LINKED == 'true')
         continue-on-error: true   # uncounted: the safety schedule looks again
         timeout-minutes: 1        # Commit main's reserve covers it
         working-directory: bot
