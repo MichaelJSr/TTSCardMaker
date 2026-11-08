@@ -120,10 +120,15 @@ runs:
       env:
         VERSION: "10.2.1"
         SHA256: "1813750ef592c5350ca79c88f98b2c0876d05c826dc7156245256d4255c1ad17"   # x86_64-unknown-linux-musl
+        ASSET: "541676949"              # the same file through the API (the release link gave 504s on 2026-11-08)
+        TOKEN: ${{ github.token }}
       run: |
         [ "$RUNNER_OS-$RUNNER_ARCH" = Linux-X64 ] || { echo "::error::oxipng: a Linux X64 runner only"; exit 1; }
         name=oxipng-$VERSION-x86_64-unknown-linux-musl
-        curl -fsSL --retry 3 -o "$RUNNER_TEMP/$name.tar.gz" "https://github.com/oxipng/oxipng/releases/download/v$VERSION/$name.tar.gz"
+        get() { curl -fsSL --retry 4 --retry-all-errors --retry-delay 5 -o "$RUNNER_TEMP/$name.tar.gz" "$@"; }
+        get "https://github.com/oxipng/oxipng/releases/download/v$VERSION/$name.tar.gz" \
+          || get -H "Accept: application/octet-stream" -H "Authorization: Bearer $TOKEN" \
+               "https://api.github.com/repos/oxipng/oxipng/releases/assets/$ASSET"
         echo "$SHA256  $RUNNER_TEMP/$name.tar.gz" | sha256sum -c --quiet
         mkdir -p "$RUNNER_TEMP/oxipng"
         tar -xzf "$RUNNER_TEMP/$name.tar.gz" -C "$RUNNER_TEMP/oxipng" --strip-components 1 "$name/oxipng"
