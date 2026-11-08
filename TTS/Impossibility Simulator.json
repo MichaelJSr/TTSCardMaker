@@ -5747,7 +5747,7 @@
           "Type": 0
         },
         "596": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -5756,7 +5756,7 @@
           "Type": 0
         },
         "595": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f115688e24e358b59c98424df09acc53c3a378c4/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -5810,7 +5810,7 @@
           "Type": 0
         },
         "593": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b4b14df011d209310c26de2890cc867ef6f03805/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -6679,7 +6679,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "596": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -6737,7 +6737,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "595": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f115688e24e358b59c98424df09acc53c3a378c4/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -7085,7 +7085,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "593": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b4b14df011d209310c26de2890cc867ef6f03805/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -33661,7 +33661,7 @@
           "Type": 0
         },
         "596": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -33670,7 +33670,7 @@
           "Type": 0
         },
         "595": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f115688e24e358b59c98424df09acc53c3a378c4/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -33724,7 +33724,7 @@
           "Type": 0
         },
         "593": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b4b14df011d209310c26de2890cc867ef6f03805/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -34593,7 +34593,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "596": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -34651,7 +34651,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "595": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f115688e24e358b59c98424df09acc53c3a378c4/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -34999,7 +34999,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "593": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b4b14df011d209310c26de2890cc867ef6f03805/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -38078,7 +38078,7 @@
           "Type": 0
         },
         "596": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -38087,7 +38087,7 @@
           "Type": 0
         },
         "595": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f115688e24e358b59c98424df09acc53c3a378c4/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -38141,7 +38141,7 @@
           "Type": 0
         },
         "593": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b4b14df011d209310c26de2890cc867ef6f03805/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -39010,7 +39010,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "596": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/955e780d782fe3c3055aabe3cb9b94d226bb9abe/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Curse.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -39068,7 +39068,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "595": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f115688e24e358b59c98424df09acc53c3a378c4/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/4%20Stars/Despair.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -39416,7 +39416,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "593": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/b4b14df011d209310c26de2890cc867ef6f03805/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/10a1de8615c4414f8eebee37f2d96daa1c95af18/Auxiliary/Status%20Effects/Debuffs/3%20Stars/Corruption.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback_statuseffect.png",
               "NumWidth": 1,
               "NumHeight": 1,
