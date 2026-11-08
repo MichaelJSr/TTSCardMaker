@@ -10,7 +10,7 @@
 // `draw` is pure (node checks run it on plain pixel arrays).
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
 import { starMove, starsKept, titleInPicture } from "./parts.js";
-import { colorRanges, inkOf, layerColors } from "./textcolor.js";
+import { colorRanges, inkOf, layerColors, phraseText } from "./textcolor.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
@@ -659,6 +659,32 @@ export function partJobs(rec, parts, { colors = null, was = null, statuses = nul
   return out;
 }
 
+/** The colours the bake refuses as painted over (AutoCroissant psd_edit plan_colors, _painted_over, _solid_overlay):
+ *  [{one, label, why}]. Refused when an enabled Color, Gradient or Pattern Overlay, the part's own or a group's above it,
+ *  hides every title or Ability part the colour paints (layerColors). A part's own isn't counted for a whole field's
+ *  colour or a phrase on a field that has one (it goes off), nor a lone Color Overlay under a phrase. The record has no
+ *  opacity, blend mode or fill. typed: the fields the edit retypes (the bake finds the colour in the new text). */
+export function paintedOver(rec, colors, typed = []) {
+  const p = obj(rec?.parts), fx = obj(rec?.effects) || {}, out = [];
+  if (!p || !Array.isArray(colors)) return out;
+  const on = path => (Array.isArray(fx[path]) ? fx[path] : []).filter(n => OVERLAY.test(String(n))).map(n => n.replace("Overlay", " Overlay"));
+  const lit = new Set(colors.filter(one => !one?.phrase).map(one => one?.field));
+  for (const one of colors) {
+    const f = one?.field, what = f === "name" ? "title" : "ability";
+    if ((f !== "name" && f !== "ability") || typed.includes(f)) continue;
+    const list = (f === "name" ? p.title || [] : [...(p.ability || []), ...(p.blocks || [])]).filter(x => !(Array.isArray(x?.variants) && !x.variants.includes(1)));
+    const hid = list.filter((_, i) => layerColors(list.map(x => x?.text), i, [one], f)).map(x => {
+      const path = String(x?.layer || "").split("/"), own = on(path.join("/"));
+      if (own.length && one.phrase && !lit.has(f) && !(own.length === 1 && own[0] === "Color Overlay")) return `its ${own[0]}`;
+      for (let i = path.length - 1; i > 0; i--) { const e = on(path.slice(0, i).join("/")); if (e.length) return `its group '${path[i - 1]}''s ${e[0]}`; }
+      return null;
+    });
+    if (hid.length && hid.every(Boolean)) out.push({ one, label: one.phrase ? `colour of ${phraseText(one.phrase)}` : `${f === "name" ? "title" : "Ability"}'s colour`,
+      why: `${hid.sort()[0]} paints over the ${what}'s colours: recolour it in Photoshop` });
+  }
+  return out;
+}
+
 // ---- stars and type icons: where the bake would put them (psd_details' header, canvas px; AutoCroissant psd_edit)
 const obj = v => (v && typeof v === "object" && !Array.isArray(v) ? v : null);
 const centreOf = b => [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
@@ -801,9 +827,9 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 /** Draw the mock-up into canvas: the card image (src, same origin) with `edit`'s PSD fields over it. opts: {card, src, rec
  *  (details record or null), edit, psd (the image's values), icons, getFonts, raw, onFont (a font has loaded: draw
  *  again), stale (a newer draw started: drop this one)}. Drawn off-screen, then copied. Returns {drawn: [labels], skipped,
- *  boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused: [[label, why]] (stars or types
- *  the bake would refuse), fonts: {name: family | ""}, standIn: [labels without a font name], shape} or null (the image
- *  didn't load, or stale). */
+ *  boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused: [[label, why]] (stars,
+ *  types or colours the bake would refuse), fonts: {name: family | ""}, standIn: [labels without a font name], shape}
+ *  or null (the image didn't load, or stale). */
 export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, statuses = null, stale = () => false }) {
   const img = await loadImage(src);
   if (!img || stale()) return null;
@@ -811,7 +837,10 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const work = document.createElement("canvas"); work.width = W; work.height = H;
   const ctx = work.getContext("2d", { willReadFrequently: true });
   ctx.drawImage(img, 0, 0);
-  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: [], fonts: {}, standIn: [], shape, site: [], starsKept: null };
+  const txt = s => String(s ?? "").replace(/\r/g, "").trim(), typed = ["name", "ability"].filter(f => (f in edit && txt(edit[f]) !== txt(psd[f])) || partJobs(rec, edit.parts).some(j => j.role === f));
+  const nix = paintedOver(rec, edit.colors, typed);   // the bake refuses them: not drawn, said
+  if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
+  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], shape, site: [], starsKept: null };
   for (const label of todo.skipped) {                 // a stat past what its bar prints stays on the website
     const k = label.toLowerCase(), why = statSite(rec, k, edit[k]);
     if (why) out.site.push([`${label} ${edit[k]}`, why]); else out.skipped.push(label);
