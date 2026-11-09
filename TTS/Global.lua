@@ -835,7 +835,7 @@ function spawnNamed(player, _, id)                     -- beside the card the pa
     local item = open and n and open.named and open.named[n]
     if not item then return end
     local from = open.obj and not open.obj.isDestroyed() and open.obj
-    local at = from and from.getPosition() or Player[color].getHandTransform().position
+    local at = from and from.getPosition() or Player[color].getPointerPosition() or {x = 0, y = 1, z = 0}   -- a hand wins in spawnCard
     open.spawned = (open.spawned or 0) + 1
     spawnCard(item[2], item[1], {at.x + 2.6 * open.spawned, at.y + 1.5, at.z}, from and from.getRotation().y or 0, color)
 end

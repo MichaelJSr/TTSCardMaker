@@ -12,7 +12,7 @@ cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on
 rulebook panel and the card finder on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or
 pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
-face down, Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name and ability
+face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name and ability
 in the card's colours, tts.json nc and ac, every "<" of a text kept from starting a tag; every card's details at each
 size: each chapter a whole Rules button, rows fit, each "+ name" spawns its card).
 Data: $TTS_DETAILS (a tts.json file), else the live website. Exits 1 on a failure.
@@ -168,8 +168,8 @@ class Player:
     def getPointerPosition(self):
         return self._w.vec(4, 1, 4)
 
-    def getHandTransform(self, index=1):
-        if self.color in ("Grey", "Black"):
+    def getHandTransform(self, index=1):                   # None on a seat without a hand zone, as TTS
+        if self.color not in {z.owner for z in self._w.zones}:
             return None
         i = SEATS.index(self.color)
         return self._w.to_lua({"position": {"x": i * 3.0, "y": 1.0, "z": -20.0}, "rotation": {"x": 0, "y": 30.0 * i, "z": 0}})
@@ -830,6 +830,19 @@ def main():
     w.call("onPlayerChangeColor", "Teal")
     check(len(ui.builds) == 2 and "Teal_d1" in ui.ids and ui.on("Blue_d1") and ui.on("Red_d1") and ui.on("Red_d3")
           and not ui.on("Red_d2"), "Teal seated later: Teal's panels built; the open ones are drawn again")
+    if named:                                               # Teal has no hand zone; the card then went into a deck
+        teal, gone = w.players["Teal"], Obj.of(w, cards[0])
+        gone.is_face_down = False
+        w.run(w.g.showDetails, "Teal", gone, what="Teal: Card details")
+        gone.destroyed = True
+        b = next((f"Teal_d1_c{r}_1" for r in range(1, 3) if ui.on(f"Teal_d1_c{r}_1")), None)
+        w.spawns.clear()
+        if b:
+            w.call("spawnNamed", teal, None, b)
+        sp, p = (w.spawns[0] if len(w.spawns) == 1 else {}), teal.getPointerPosition()
+        check(bool(sp) and sp["position"] == [p.x + 2.6, p.y + 1.5, p.z] and sp["rotation"][2] == 0,
+              f"a seat with no hand: + name after the card left spawns at the pointer {sp and sp['position']}")
+        w.call("closeDetails", teal, None, "Teal_d1_close")
 
     # ---- deck buttons ----
     block = re.search(r"\nlocal DECKS = \{\n(.*?)\n\}", script, re.DOTALL)
