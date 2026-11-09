@@ -19437,7 +19437,7 @@
   ]
  },
  "Items/Attack/4 Stars/Golden_Bomb.psd": {
-  "blob": "2e218c3d1734574baa6c6c794b71f4d71b692427",
+  "blob": "695bb448e095100c4a07e47e4f6197d9b425f802",
   "links": [
    {
     "drawn": "28cf3d72244d990ee15e06045f9f1ad96c6b357b",
@@ -19460,7 +19460,7 @@
   ]
  },
  "Items/Counter/1 Stars/Poison_Trap.psd": {
-  "blob": "1f66ee1af1a9a4c936ee2d6cebcd17c420a31f32",
+  "blob": "fd147bc8b266574eec866f9d03eb2de86a7ac4e7",
   "links": [
    {
     "drawn": "bb4a855c3b10c0f25a1c664c4c9006152a271bf6",
@@ -19506,7 +19506,7 @@
   ]
  },
  "Items/Counter/2 Stars/Stone_Spikes.psd": {
-  "blob": "c2a32544abd277faa2e942744051207c50c67016",
+  "blob": "63aadd903783d830bbe954718cf2bf46ec7cdd80",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -19523,7 +19523,7 @@
   ]
  },
  "Items/Counter/3 Stars/Crystal_Spikes.psd": {
-  "blob": "75d220c5232e234e4421956448d17b3ebc7826c6",
+  "blob": "50d74f9fa095405159d73c78ac7f6df8f249e0a7",
   "links": [
    {
     "drawn": "3fd3e3566e94d554747f6673d126bece0dc5db09",
@@ -19550,6 +19550,12 @@
     "size": 159281
    },
    {
+    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "name": "Frostmourne - Daco_35508.png",
+    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
+    "size": 307074
+   },
+   {
     "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
     "name": "Hk star.png",
     "path": "Types/Stars/Hk star.png",
@@ -19564,7 +19570,7 @@
   ]
  },
  "Items/Counter/3 Stars/Flame_Trap.psd": {
-  "blob": "29eba9a3614b29d7ec7981d2c2b025ab92edacdb",
+  "blob": "751e24f51efd7c30a5a6ed7e1f0a2c19aeb79b00",
   "links": [
    {
     "drawn": "79023ba6ca59e24269e4b1f57f137af830e3e507",
@@ -19587,7 +19593,7 @@
   ]
  },
  "Items/Counter/3 Stars/Iron_Spikes.psd": {
-  "blob": "f24b37929e8d2b98481c0789ae7b4efd2bae1cb4",
+  "blob": "d3c42c65a94792929848e295489414f31e07ec21",
   "links": [
    {
     "drawn": null,
@@ -19628,7 +19634,7 @@
   ]
  },
  "Items/Counter/3 Stars/Spiky_Ball_Trap.psd": {
-  "blob": "777e8759b2224f55ab13edaa728c3b1a7ea86808",
+  "blob": "d73fc2308b9b0d3c66119fd6bf1a1fbf9608a254",
   "links": [
    {
     "drawn": "bba574afc7d89f764320133dcc2f2fa407199d9a",
@@ -19651,7 +19657,7 @@
   ]
  },
  "Items/Counter/3 Stars/You_are_going_DOWN_you_Sputnik!.psd": {
-  "blob": "28207a1c7f4a6bea849a5d7034113f65497d4ea6",
+  "blob": "6db2d30a08c543507d7a0317ac69a8587bfd0710",
   "links": [
    {
     "drawn": "6f3a59365f190a9b66bcdd17d82d33b08b87f964",
@@ -19672,12 +19678,6 @@
     "size": 36858
    },
    {
-    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
-    "name": "field.png",
-    "path": "Types/field.png",
-    "size": 20013
-   },
-   {
     "drawn": "23bf9264064724f83faf67776362102cbfaaa57f",
     "name": "Counter.png",
     "path": "Types/Counter.png",
@@ -19686,7 +19686,7 @@
   ]
  },
  "Items/Counter/4 Stars/Return_To_Sender.psd": {
-  "blob": "823af6f2a69e2fa0292e83e3118e02e53c3ef0fd",
+  "blob": "44857819e84f07775639e0f32157cd80e22a5d85",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -19703,198 +19703,30 @@
   ]
  },
  "Items/Deploy/1 Stars/Poison_Circle.psd": {
-  "blob": "da7fe1fe48dcaf45b571fba0a01ae8e93f9c76a0",
+  "blob": "8df9f7b23569739bbebd195b3ed57a7d08395672",
   "links": [
-   {
-    "drawn": "1824bab6e2a8ad4ed9dcf895a1785b6bd97a6064",
-    "name": "Deploy.png",
-    "path": "Types/Deploy.png",
-    "size": 24318
-   },
    {
     "drawn": "3fa89b94381b4636b7e9d5b167e6afff4db68de1",
     "name": "Greed.png",
     "path": "Types/Stars/Greed.png",
     "size": 887
+   },
+   {
+    "drawn": "1824bab6e2a8ad4ed9dcf895a1785b6bd97a6064",
+    "name": "Deploy.png",
+    "path": "Types/Deploy.png",
+    "size": 24318
    }
   ]
  },
  "Items/Deploy/2 Stars/Ominous_Red_Circle.psd": {
-  "blob": "522a93b82da1970f01e1a29e417a6807078b2613",
+  "blob": "74768f7b5078bc457f40d5093a081e6ddfc8d732",
   "links": [
    {
     "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
     "name": "Frostmourne - Daco_35508.png",
     "path": "MDW/Linked/Frostmourne - Daco_35508.png",
     "size": 307074
-   },
-   {
-    "drawn": "c659c492806f52480508f989cb55a426afe1aac5",
-    "name": "bFables.png",
-    "path": "Types/Stars/bFables.png",
-    "size": 368729
-   },
-   {
-    "drawn": "75d7fb1062f4f81eb510a6cb441f85819eae9617",
-    "name": "Fallen_Star.png",
-    "path": "Types/Stars/Fallen_Star.png",
-    "size": 2480
-   },
-   {
-    "drawn": "42202bbec256fcd7533b9262b980906a0c142b27",
-    "name": "Shadow_Queen - Vi1.png",
-    "path": "MDW/Linked/Shadow_Queen - Vi1.png",
-    "size": 367
-   },
-   {
-    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
-    "name": "Starstorm.png",
-    "path": "Types/Stars/Starstorm.png",
-    "size": 324
-   },
-   {
-    "drawn": "010244477dc99d755153a0ac5ba94322b35f37e9",
-    "name": "Ninja Star.png",
-    "path": "Types/Stars/Ninja Star.png",
-    "size": 14188
-   },
-   {
-    "drawn": "27e828a4b0084d24fe092bb1807253c468cca9b2",
-    "name": "Scrap.png",
-    "path": "Types/Stars/Scrap.png",
-    "size": 27348
-   },
-   {
-    "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
-    "name": "Patrick Star.png",
-    "path": "Types/Stars/Patrick Star.png",
-    "size": 152994
-   },
-   {
-    "drawn": "ca1bbfb03595f64e2268a57aca0b510b2e52af4e",
-    "name": "YinYangUltra.png",
-    "path": "Types/Stars/YinYangUltra.png",
-    "size": 1137393
-   },
-   {
-    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
-    "name": "Solar Sun.png",
-    "path": "Types/Stars/Solar Sun.png",
-    "size": 1374450
-   },
-   {
-    "drawn": "abf541c6b1f5bfe703bdfed8acc3ef65bf949d3d",
-    "name": "Elden Stars.png",
-    "path": "Types/Stars/Elden Stars.png",
-    "size": 1194210
-   },
-   {
-    "drawn": "f21f2877886482116ec5cbb3a6934eaf02e7d2ff",
-    "name": "Star of beth.png",
-    "path": "Types/Stars/Star of beth.png",
-    "size": 2247
-   },
-   {
-    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
-    "name": "Guild Seal.png",
-    "path": "Types/Stars/Guild Seal.png",
-    "size": 1880154
-   },
-   {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
-    "name": "Nether_Star.png",
-    "path": "Types/Stars/Nether_Star.png",
-    "size": 10708
-   },
-   {
-    "drawn": "7bce3270adea13c48ca9f9233617f60d91925363",
-    "name": "Nebula Star.png",
-    "path": "Types/Stars/Nebula Star.png",
-    "size": 253389
-   },
-   {
-    "drawn": "6a79e1709a529b3353886f2e415702bbe68bed17",
-    "name": "Lol star.png",
-    "path": "Types/Stars/Lol star.png",
-    "size": 97082
-   },
-   {
-    "drawn": "85d77d7d27e05776d8d725f0802dccc9e34f3bea",
-    "name": "Triforce.png",
-    "path": "Types/Stars/Triforce.png",
-    "size": 1712857
-   },
-   {
-    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
-    "name": "undertale.png",
-    "path": "Types/Stars/undertale.png",
-    "size": 28256
-   },
-   {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
-    "name": "Hk star.png",
-    "path": "Types/Stars/Hk star.png",
-    "size": 332571
-   },
-   {
-    "drawn": "a6a8833fafe1539cee024a364a3fa78195424355",
-    "name": "Drone - Crystal_Star.png",
-    "path": "MDW/Linked/Drone - Crystal_Star.png",
-    "size": 2112
-   },
-   {
-    "drawn": "6f896b9ac86551432696b7adeaf4f4cdd31a50ba",
-    "name": "Drone - Sapphire_Starold.png",
-    "path": "MDW/Linked/Drone - Sapphire_Starold.png",
-    "size": 1326
-   },
-   {
-    "drawn": "7c16930dc2be7eea37e8df342ad4ee7a40cd482d",
-    "name": "Drone - Diamond_Star.png",
-    "path": "MDW/Linked/Drone - Diamond_Star.png",
-    "size": 640
-   },
-   {
-    "drawn": "4085c54d4656fcf7b0d0de6c215bc81ba5175aa5",
-    "name": "Shadow_Queen - Emerald_Star.png",
-    "path": "MDW/Linked/Shadow_Queen - Emerald_Star.png",
-    "size": 588
-   },
-   {
-    "drawn": "a24932f505bf62b910c0c74f692ed0217d808fd5",
-    "name": "Drone - Gold_Star.png",
-    "path": "MDW/Linked/Drone - Gold_Star.png",
-    "size": 591
-   },
-   {
-    "drawn": "c4ad83c5077298220fab895fa4caeaa2229afab3",
-    "name": "Drone - Ruby_Star.png",
-    "path": "MDW/Linked/Drone - Ruby_Star.png",
-    "size": 1378
-   },
-   {
-    "drawn": "37b067fa0f94746c154376f3aa39d05de61669e9",
-    "name": "Shadow_Queen - Garnet_Star.png",
-    "path": "MDW/Linked/Shadow_Queen - Garnet_Star.png",
-    "size": 659
-   },
-   {
-    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
-    "name": "Omori star.png",
-    "path": "Types/Stars/Omori star.png",
-    "size": 114793
-   },
-   {
-    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
-    "name": "Dst Star.png",
-    "path": "Types/Stars/Dst Star.png",
-    "size": 112511
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
    },
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -19911,7 +19743,7 @@
   ]
  },
  "Items/Deploy/2 Stars/Pananda Peel.psd": {
-  "blob": "41c17c9f92bc8a21a12e12c4c0e3326d37aafc4a",
+  "blob": "0d69119588131712168dab12daea881308fb01be",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -19928,7 +19760,7 @@
   ]
  },
  "Items/Equip/1 Stars/Boko_Club.psd": {
-  "blob": "ca60de3948f456ec3194721fe870959573a6a526",
+  "blob": "93a21eea61779c5b19a71e84d4e0d5835c07e4be",
   "links": [
    {
     "drawn": "42f385224fe1445e01e9111f40492bcd6d123521",
@@ -19943,12 +19775,6 @@
     "size": 1712857
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
     "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
     "name": "Equip.png",
     "path": "Types/Equip.png",
@@ -19957,7 +19783,7 @@
   ]
  },
  "Items/Equip/1 Stars/Bone's Loans.psd": {
-  "blob": "260a91384cf09f705504131e9275ad31ebe2c76d",
+  "blob": "47549b28af54140ab837b948c6f4ba59d3aeacfc",
   "links": [
    {
     "drawn": "2041762757cef014a5cbea13bb4ced9fef791ab1",
@@ -19986,7 +19812,7 @@
   ]
  },
  "Items/Equip/1 Stars/Copper_Sword.psd": {
-  "blob": "2c58a58b4c17b479e17b98cd13b749b0f06bafa6",
+  "blob": "88a7233cf10bd2d342a312920e051cb650fe3ac0",
   "links": [
    {
     "drawn": "00eefc2a7d026bcd7de98b80d5a396da39db2d2f",
@@ -20015,7 +19841,7 @@
   ]
  },
  "Items/Equip/1 Stars/GrubSong.psd": {
-  "blob": "dbcf85467b8bec5c8f4d4596a84b100f049e32f6",
+  "blob": "fb64ebe6424ade89330d39c3cd0348f4647201a0",
   "links": [
    {
     "drawn": "633255a759ce722b59f94317f308363d88dcf917",
@@ -20044,7 +19870,7 @@
   ]
  },
  "Items/Equip/1 Stars/Lazy_Worm.psd": {
-  "blob": "588cc2c11c7a1e87482d457a4d046793748d81b2",
+  "blob": "135a7cae7aafdd8a90bff1d3d2b0313e03a70c84",
   "links": [
    {
     "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
@@ -20078,7 +19904,7 @@
   ]
  },
  "Items/Equip/1 Stars/Pillow.psd": {
-  "blob": "4ff03dca4d9ca65378c74f5ab1ce805d51738e36",
+  "blob": "434da2b841df9a6d273a7c8370513285f5f1bc8d",
   "links": [
    {
     "drawn": "9049feee0b867995bdddba3d56b3cbf4303826ef",
@@ -20087,10 +19913,10 @@
     "size": 130
    },
    {
-    "drawn": "5817354b88a7039b56888377a5f14328021d6eb4",
-    "name": "Pillow - Stuffed_Star.png",
-    "path": "MDW/Linked/Pillow - Stuffed_Star.png",
-    "size": 264
+    "drawn": "1c50b498609fd74af1cbf664c833b48c7b3e7407",
+    "name": "Stuffed_Star.png",
+    "path": "Types/Stars/Stuffed_Star.png",
+    "size": 710
    },
    {
     "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
@@ -20101,7 +19927,7 @@
   ]
  },
  "Items/Equip/1 Stars/Shellphone.psd": {
-  "blob": "4bbcabc4a079e94cfd89baf16fe816dcd6f25f9d",
+  "blob": "43ab9b6fba853bc535bbe80844fa42ee518f5928",
   "links": [
    {
     "drawn": "260498ec530bcba2805d309515bde54cb58484c0",
@@ -20124,7 +19950,7 @@
   ]
  },
  "Items/Equip/1 Stars/Steady_Body.psd": {
-  "blob": "1363a44aaf899a6ca36f58a29880610a0528e0fb",
+  "blob": "7916d67fbcd3d8ef946096554ccf627ae8fbe264",
   "links": [
    {
     "drawn": "6cea90ead26df5c6e170b6047c53bba46b8e6728",
@@ -20147,7 +19973,7 @@
   ]
  },
  "Items/Equip/2 Stars/Basic_Shield.psd": {
-  "blob": "330faa57611fb9401178aef4286960e5f0d0d5cd",
+  "blob": "8dce3245a04c38807db4b95948190413bea4e283",
   "links": [
    {
     "drawn": "0f47d48bb50db28dc4041267c44606d490d50951",
@@ -20156,21 +19982,21 @@
     "size": 1175331
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
-    "name": "Equip.png",
-    "path": "Types/Equip.png",
-    "size": 83059
-   },
-   {
     "drawn": "2c92aed8274d4f47aefe496fb968366f895da88e",
     "name": "Basic_Shield - elden_stars_incantation_elden_ring_wiki_guide_200px (2) (1).png",
     "path": "MDW/Linked/Basic_Shield - elden_stars_incantation_elden_ring_wiki_guide_200px (2) (1).png",
     "size": 874096
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
    }
   ]
  },
  "Items/Equip/2 Stars/Berserk!.psd": {
-  "blob": "d9e920a0c9c1cc3eaf5cf40034b8a1ffe6bff36e",
+  "blob": "e8d5dce1d51c1a7ad3219c67f1d4a4ff41b29daf",
   "links": [
    {
     "drawn": "a02ae6c8920bd62aaab77015e723202fe15e26bb",
@@ -20179,16 +20005,10 @@
     "size": 2371756
    },
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
-   },
-   {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
-    "name": "support.png",
-    "path": "Types/support.png",
-    "size": 632862
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    },
    {
     "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
@@ -20216,7 +20036,7 @@
   ]
  },
  "Items/Equip/2 Stars/Danger_Badges.psd": {
-  "blob": "e147a239946083c69f8b274f74cda556edf64e01",
+  "blob": "f814e164f84581a1888c87b8b3e744cc4585e6ce",
   "links": [
    {
     "drawn": "a0afc3342ab2cb33840797eaa452e565d588b491",
@@ -20239,7 +20059,7 @@
   ]
  },
  "Items/Equip/2 Stars/Dead_Orchid_Children.psd": {
-  "blob": "bb102babf53ad5a59ae58aeb27cdcd80a82fb4a6",
+  "blob": "45025b993302bf9f6f253fb69a0aaf230837930d",
   "links": [
    {
     "drawn": "a5d42a38421fb20d7b1c0fd01dc32450703c4783",
@@ -20268,7 +20088,7 @@
   ]
  },
  "Items/Equip/2 Stars/Door_Shield.psd": {
-  "blob": "67c6adfca0b3909b83134f1126771f325138491d",
+  "blob": "f3a65a23b6c83c0fe6570e978355c1ed515560b9",
   "links": [
    {
     "drawn": "854a6f2e60af9d6c44b7fa208e3a99f9a9701913",
@@ -20277,21 +20097,21 @@
     "size": 324387
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
-    "name": "Equip.png",
-    "path": "Types/Equip.png",
-    "size": 83059
-   },
-   {
     "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
     "name": "Solar Sun.png",
     "path": "Types/Stars/Solar Sun.png",
     "size": 1374450
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
    }
   ]
  },
  "Items/Equip/2 Stars/Eden's_Soul.psd": {
-  "blob": "c2e47329d879ebcf1c10c679cd4ebf87a857e3b5",
+  "blob": "3effbe0245e1b51ee6bf6775943e01e8347ec66f",
   "links": [
    {
     "drawn": "941be6eb207231bbbf217e26f4fe16ce95984c5b",
@@ -20308,7 +20128,7 @@
   ]
  },
  "Items/Equip/2 Stars/Fire_Staff.psd": {
-  "blob": "78fd7b7f5be6e30ee6bf8833c5b599584019f42a",
+  "blob": "71a4622bdd5529a15cbab15dfc7107f17bd34da0",
   "links": [
    {
     "drawn": "118d7ebacf4f908c030538095a07434f797eb1e2",
@@ -20331,7 +20151,7 @@
   ]
  },
  "Items/Equip/2 Stars/Glowing_Womb.psd": {
-  "blob": "b1534f60462d3ba1cdcf8d671c259c9dcd6c0ca8",
+  "blob": "faf1666c1e7b4812371c8c670f8c0ac92622622c",
   "links": [
    {
     "drawn": "b9940964fd1e3ce4e835bcb61c85ebbd548ca7ae",
@@ -20372,7 +20192,7 @@
   ]
  },
  "Items/Equip/2 Stars/Heavy_Blow.psd": {
-  "blob": "0c49059450b5bf41ee1b11f91992f4b11fdf1b34",
+  "blob": "3f057bb86121dc3ac2ff5d133530826c145af4d8",
   "links": [
    {
     "drawn": "aaf2357bfebf07549f2f6c4d7f60913fa442b429",
@@ -20395,7 +20215,7 @@
   ]
  },
  "Items/Equip/2 Stars/Holy_Card.psd": {
-  "blob": "f10eac4c0c475cb3d306591a67cf60f7f332886e",
+  "blob": "4f6040a5056db3f28bb4c6ee4d17339ceb0204ad",
   "links": [
    {
     "drawn": "941407707d4f8da5a1c26967c752f956efbe8412",
@@ -20410,10 +20230,10 @@
     "size": 748133
    },
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    },
    {
     "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
@@ -20424,7 +20244,7 @@
   ]
  },
  "Items/Equip/2 Stars/Ice_Staff.psd": {
-  "blob": "dcb880d33d92d2e6e3b9b23f21bef764b5114bce",
+  "blob": "1908bafc482fda6c6607e2150c534f698124c559",
   "links": [
    {
     "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
@@ -20441,7 +20261,7 @@
   ]
  },
  "Items/Equip/2 Stars/Iron_Sword.psd": {
-  "blob": "1d8e39d86e86b0c0e8937e48ee07ad243bc89388",
+  "blob": "160164d7b9a5d8263c2862da021cb21869140bab",
   "links": [
    {
     "drawn": "dd43dc7213eb6fe626b4a551aaef089a3067929f",
@@ -20470,7 +20290,7 @@
   ]
  },
  "Items/Equip/2 Stars/Man_Serpent_Shield.psd": {
-  "blob": "fdd20b7d9675b8742c6bb34eeea72b22710d125e",
+  "blob": "6a140d0ffb27bc2bdcbf2e09110dacb847bff836",
   "links": [
    {
     "drawn": null,
@@ -20522,7 +20342,7 @@
   ]
  },
  "Items/Equip/2 Stars/Thorns_Of_Agony.psd": {
-  "blob": "5e2ace4fb5879f2fea5472c745f39b3506eb7368",
+  "blob": "3d0dbccb06b2325d07679240975c1172f7e5fd7d",
   "links": [
    {
     "drawn": "5bd9377f55a91630aae51720760ea5c6d53ec32f",
@@ -20551,7 +20371,7 @@
   ]
  },
  "Items/Equip/2 Stars/Tomorrow_I'll.psd": {
-  "blob": "845e42cc8caf5c9958ef534a744e0707bdc0124a",
+  "blob": "e64d877ed78be42f2cff68ce280632eec90a052b",
   "links": [
    {
     "drawn": "b6ebd55d9a1d1c2460bc342be20c92e4d0720844",
@@ -20572,12 +20392,6 @@
     "size": 36858
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
-    "name": "support.png",
-    "path": "Types/support.png",
-    "size": 632862
-   },
-   {
     "drawn": null,
     "name": "Fragile Equip.png",
     "path": "Types/Fragile Equip.png",
@@ -20586,19 +20400,13 @@
   ]
  },
  "Items/Equip/3 Stars/Adrenaline.psd": {
-  "blob": "dfd0cd6b1cfbf9e37cb26a0c1969d9aecbf5f995",
+  "blob": "ccaef2c7a18a16b8323e914792436f3c1f1bee6a",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
-   },
-   {
-    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
-    "name": "Fragile Equip.png",
-    "path": "Types/Fragile Equip.png",
-    "size": 23023
    },
    {
     "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
@@ -20609,19 +20417,13 @@
   ]
  },
  "Items/Equip/3 Stars/Charm_Of_The_Vampire.psd": {
-  "blob": "d9f1d4ebe4bef671690971e65e3ac2b23693498a",
+  "blob": "7190665bc1f750e7268fe171c23af0d2f1237c6d",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
-   },
-   {
-    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
-    "name": "Fragile Equip.png",
-    "path": "Types/Fragile Equip.png",
-    "size": 23023
    },
    {
     "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
@@ -20632,7 +20434,7 @@
   ]
  },
  "Items/Equip/3 Stars/Dark_Sword.psd": {
-  "blob": "e903120accc1557a705c6ce9ce2f5fd0bfbdc912",
+  "blob": "3733ed67679d3b9606c23280cc0b96362f8be2f9",
   "links": [
    {
     "drawn": "0a95e6352290c121e259f19e32ce77c6c7e090ec",
@@ -20655,7 +20457,7 @@
   ]
  },
  "Items/Equip/3 Stars/Dashmaster.psd": {
-  "blob": "204d09e95b729f9fd8253545203ecee7f4e59ff3",
+  "blob": "8a750c488244c0bfb29ce4a6b48451350a0debbf",
   "links": [
    {
     "drawn": "b9940964fd1e3ce4e835bcb61c85ebbd548ca7ae",
@@ -20684,7 +20486,7 @@
   ]
  },
  "Items/Equip/3 Stars/Deep_Focus.psd": {
-  "blob": "e7514710330b508883a9c9a9f9cf60ce005d1f61",
+  "blob": "f6e6f1bc8082b2682ec42b057810f50be2509875",
   "links": [
    {
     "drawn": "70de32f9413a541f3eccb61a320dd6624747ed7a",
@@ -20713,7 +20515,7 @@
   ]
  },
  "Items/Equip/3 Stars/Flameblade.psd": {
-  "blob": "4fc8c06a7955fb23276b6b63568317fc7387d8f4",
+  "blob": "ab1fe758077cf6458f77b32fb2ee587743aa845a",
   "links": [
    {
     "drawn": "f8edbbe833750968c75f11b3398b8761bf751b6b",
@@ -20736,7 +20538,7 @@
   ]
  },
  "Items/Equip/3 Stars/Fragile_Heart.psd": {
-  "blob": "a6241d3e536a8e75c026e05ac5f49f77176bdb30",
+  "blob": "7a04eb78fc0be1340af26fdec5fcf5ee0edc9c2b",
   "links": [
    {
     "drawn": "c447d344fe6e0a6c03871bd527062ac8b849f9f8",
@@ -20759,7 +20561,7 @@
   ]
  },
  "Items/Equip/3 Stars/Fragile_Strength.psd": {
-  "blob": "764176b4561a4eb688d43028df82e306c52ccb7f",
+  "blob": "80d64a85efe65037ea2ccaceda7bab76aa12edc7",
   "links": [
    {
     "drawn": "c447d344fe6e0a6c03871bd527062ac8b849f9f8",
@@ -20788,7 +20590,7 @@
   ]
  },
  "Items/Equip/3 Stars/Hiveblood.psd": {
-  "blob": "42f8bcf5930e9d96c5c85a3f32338ba8004e7a08",
+  "blob": "0d5b42325a674e6ad303cff711a6fa8e7295fe1f",
   "links": [
    {
     "drawn": "edfbbd46f9d0f96e5d1baf7c637c9c027ef099e8",
@@ -20811,7 +20613,7 @@
   ]
  },
  "Items/Equip/3 Stars/Inner_Eye.psd": {
-  "blob": "57a4f2a61f14216f3be2cc5b159fc2c3ab1a2e06",
+  "blob": "236957f03b492c6fe113fa934b201b5656115a15",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -20828,7 +20630,7 @@
   ]
  },
  "Items/Equip/3 Stars/Maggy's_Bow.psd": {
-  "blob": "45ea98e7a4414a1c65544a5145443832fa61a061",
+  "blob": "ec4acb12a2d3b2e735bc2b87722299de24bff78a",
   "links": [
    {
     "drawn": "8178b487e36c4f9cd8abebb1e3c8ecee42d1a14c",
@@ -20863,7 +20665,7 @@
   ]
  },
  "Items/Equip/3 Stars/Magic_Hammer.psd": {
-  "blob": "22f293a0961b0e2bd1c3fbde23cf331779c57eaf",
+  "blob": "5b150c941bc3347db01b1d8f71ffce58d50b9232",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -20880,7 +20682,7 @@
   ]
  },
  "Items/Equip/3 Stars/Mechanical_Shield.psd": {
-  "blob": "033a33b0c59acc554c891f3e49cd7b8abab6d956",
+  "blob": "c856b16b5557b50636c13d449c3e8399eaf68f67",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -20897,7 +20699,7 @@
   ]
  },
  "Items/Equip/3 Stars/Metal_Shield.psd": {
-  "blob": "cedd601b6188bbd8dbfd74599155f27671125190",
+  "blob": "cccd11261a664b09e5dfe9a5fa2fb115ad8a9d3b",
   "links": [
    {
     "drawn": "e90d17fb0c5ae4f4b9f4fe17d983fd7a40a06d1b",
@@ -20906,21 +20708,21 @@
     "size": 173690
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
-    "name": "Equip.png",
-    "path": "Types/Equip.png",
-    "size": 83059
-   },
-   {
     "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
     "name": "Solar Sun.png",
     "path": "Types/Stars/Solar Sun.png",
     "size": 1374450
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
    }
   ]
  },
  "Items/Equip/3 Stars/Newspaper.psd": {
-  "blob": "434e09af0e30622a0173856884a774105e7b074d",
+  "blob": "4babe190de14fd86f563ea5e661281624bcb3dcf",
   "links": [
    {
     "drawn": "0d47b0a3339044f283638f3c472241ae70d26c1f",
@@ -20966,7 +20768,7 @@
   ]
  },
  "Items/Equip/3 Stars/Poison_Shiv.psd": {
-  "blob": "a19976b14b16b807b28cbd78b5943a1235d58287",
+  "blob": "f396e59674a9780e37cd35f0afc1f4aa257dfc73",
   "links": [
    {
     "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
@@ -20989,7 +20791,7 @@
   ]
  },
  "Items/Equip/3 Stars/Quick_Slash.psd": {
-  "blob": "c860a5434eac2d035ce3d60a629a577095e3c51d",
+  "blob": "fcfac8aee4d02574df8adcd79d5f7e86f23ae9f8",
   "links": [
    {
     "drawn": "41bcfb3d6a0e69f328b5e76b1e7157897365ed5e",
@@ -21024,7 +20826,7 @@
   ]
  },
  "Items/Equip/3 Stars/Shield_of_the_Guilty.psd": {
-  "blob": "4b5b7e17859de3884543f1b56313fb1568c46832",
+  "blob": "e7ba8b6fa47e86c5ec8e1972655fea1f1d8ed86d",
   "links": [
    {
     "drawn": "78959d9104d5348fd021c3fab33f54da8c0a1bbf",
@@ -21065,7 +20867,7 @@
   ]
  },
  "Items/Equip/3 Stars/Shiny_Knife.psd": {
-  "blob": "af7bd84e2961b14bab35857cb9a85852e5ae1fcf",
+  "blob": "b6f27b5a372d20ecc3a8b8d5f0d243830e663336",
   "links": [
    {
     "drawn": "143b78f2cf80938397ac9bc9988f3844788e20c4",
@@ -21104,12 +20906,6 @@
     "size": 114793
    },
    {
-    "drawn": "e73936aab3503ddb484675c1806b44bef6c04ab4",
-    "name": "Shiny_Knife - Equip.png",
-    "path": "MDW/Linked/Shiny_Knife - Equip.png",
-    "size": 4928
-   },
-   {
     "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
     "name": "Equip.png",
     "path": "Types/Equip.png",
@@ -21118,7 +20914,7 @@
   ]
  },
  "Items/Equip/3 Stars/Stalwart_Shell.psd": {
-  "blob": "69e128b7e7b97309522671b45bd4c0b06c341982",
+  "blob": "9bef0d9b2760f4df557e2a80b36cbff74727b989",
   "links": [
    {
     "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
@@ -21147,7 +20943,7 @@
   ]
  },
  "Items/Equip/3 Stars/Titanium_Sword.psd": {
-  "blob": "7fb8d8dc6a483480da031d995c005bc7cc845098",
+  "blob": "b5f913f8cb0e1c855bce18bbf084057c2b673781",
   "links": [
    {
     "drawn": "00eefc2a7d026bcd7de98b80d5a396da39db2d2f",
@@ -21170,7 +20966,7 @@
   ]
  },
  "Items/Equip/3 Stars/steam_sale.psd": {
-  "blob": "a4de94a2c0999c91db6a19bcffa8c473df6721f9",
+  "blob": "3a28df21d332015ee2c70ed0721e81ed6ad2f234",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -21187,7 +20983,7 @@
   ]
  },
  "Items/Equip/4 Stars/Binge_Eater.psd": {
-  "blob": "5774914b486fccb761b0cdc31db70d59ed06fcc6",
+  "blob": "f7ad7560861411e846a3a0b5d4f35ceee69e8dc3",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -21204,7 +21000,7 @@
   ]
  },
  "Items/Equip/4 Stars/Blasphemous Blade.psd": {
-  "blob": "c215045bcbc6f03abf475022cf60d3a87ccf64fc",
+  "blob": "829a3e511097f04fbe3b85a0552311e5513f4f81",
   "links": [
    {
     "drawn": "51e320a5801bb5dcf2ccdfb3e83caebe351ade15",
@@ -21245,19 +21041,13 @@
   ]
  },
  "Items/Equip/4 Stars/Dad's_Ring.psd": {
-  "blob": "fe35dd37e5cd05c7fe5cbd0cf22b6c31a3848098",
+  "blob": "9c6ec550bae26eb5a0d6702998c3d45b059b71c9",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
-   },
-   {
-    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
-    "name": "Fragile Equip.png",
-    "path": "Types/Fragile Equip.png",
-    "size": 23023
    },
    {
     "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
@@ -21268,7 +21058,7 @@
   ]
  },
  "Items/Equip/4 Stars/Dark_Ritual.psd": {
-  "blob": "b6325e63b559717e92069f968cc35187a70934c6",
+  "blob": "20c2ea32c7422eb6d439a386b59e15b2d1e76fcd",
   "links": [
    {
     "drawn": "43f816e07e07a2e572f0d059b0e6e2a8855d1e33",
@@ -21289,12 +21079,6 @@
     "size": 36858
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
-    "name": "support.png",
-    "path": "Types/support.png",
-    "size": 632862
-   },
-   {
     "drawn": null,
     "name": "Fragile Equip.png",
     "path": "Types/Fragile Equip.png",
@@ -21303,7 +21087,7 @@
   ]
  },
  "Items/Equip/4 Stars/Godhead.psd": {
-  "blob": "9294e4acbab32baacfaee1f68d1da1861f1a1802",
+  "blob": "a5a0f29a06567a715a420668866b0f23094fff07",
   "links": [
    {
     "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
@@ -21314,7 +21098,7 @@
   ]
  },
  "Items/Equip/4 Stars/Holy_Blade.psd": {
-  "blob": "ec471cace3f54ffefc1b23fa0f7b0719b76669d9",
+  "blob": "9667b736fa3195960129225a3a4f2cdd9e398c03",
   "links": [
    {
     "drawn": "c1865d6a28bce99013336db86ffa0d5589d69762",
@@ -21343,7 +21127,7 @@
   ]
  },
  "Items/Equip/4 Stars/Holy_Mantle.psd": {
-  "blob": "9b71c5e46d9d2ae52a41ac230c2a7f9c4557172b",
+  "blob": "f39f5cda6eb20ca952258102d5c8d8d8a8b400d4",
   "links": [
    {
     "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
@@ -21354,7 +21138,7 @@
   ]
  },
  "Items/Equip/4 Stars/Kingsoul.psd": {
-  "blob": "1281e9e100ef9703436d9b14e5aef488325bec72",
+  "blob": "10ae02b772bdccaaded840765401386a7db45852",
   "links": [
    {
     "drawn": "f3a8279a012fc65a28049b3e82055703061b9ea2",
@@ -21383,7 +21167,7 @@
   ]
  },
  "Items/Equip/4 Stars/Magic_Shield.psd": {
-  "blob": "6897953e7490e5f0cb30aee31b6235afff7b0745",
+  "blob": "7c52fe530a488523af1cf03bbd064cf10af43fc9",
   "links": [
    {
     "drawn": "4b0fbd80736237bbac0689ca300c05258496574e",
@@ -21392,21 +21176,21 @@
     "size": 2393297
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
-    "name": "Equip.png",
-    "path": "Types/Equip.png",
-    "size": 83059
-   },
-   {
     "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
     "name": "Solar Sun.png",
     "path": "Types/Stars/Solar Sun.png",
     "size": 1374450
+   },
+   {
+    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "name": "Equip.png",
+    "path": "Types/Equip.png",
+    "size": 83059
    }
   ]
  },
  "Items/Equip/4 Stars/Mom's_Knife.psd": {
-  "blob": "0af01fb9b80174f1d99d823b5fd1a799cb315dbf",
+  "blob": "70e87f40de8811bb287b0fa24131658453c80abd",
   "links": [
    {
     "drawn": "1611fa24ff34d1847c9377e92ad7ceed7e768de7",
@@ -21464,7 +21248,7 @@
   ]
  },
  "Items/Equip/4 Stars/Sacred_Heart.psd": {
-  "blob": "b3bb4da61d8af01a4fbc37525da474b11965bcd3",
+  "blob": "f3f22a696cb2966049950df83ac5c9328640921e",
   "links": [
    {
     "drawn": "1611fa24ff34d1847c9377e92ad7ceed7e768de7",
@@ -21487,7 +21271,7 @@
   ]
  },
  "Items/Equip/4 Stars/Shield_of_Ogmur.psd": {
-  "blob": "e818112b843199b6764aa5e236401845937d2e19",
+  "blob": "a9cf78e0b070f7dbef28146b8535ae5d7a4a3a94",
   "links": [
    {
     "drawn": "a3ed7729bcd35bf85ef616e3ae35868d1f1798f8",
@@ -21552,7 +21336,7 @@
   ]
  },
  "Items/Equip/4 Stars/Sword_of_Aeons.psd": {
-  "blob": "4c3dd19a0efa556c1620e02a136bf9e29e6c288b",
+  "blob": "2e972f0a1bbf41432b9d922d682917c1f4af9f11",
   "links": [
    {
     "drawn": "66500cf321bdc817f2d4440885358922c8946166",
@@ -21599,7 +21383,7 @@
   ]
  },
  "Items/Equip/4 Stars/Thunderfury_Blessed_Blade_of_the_Windseeker.psd": {
-  "blob": "1bd28372077f3d8f635291f5469a5812cc67ec60",
+  "blob": "07ad55146e035a1a7cdf63a78fac42d12488fac1",
   "links": [
    {
     "drawn": "f1a477caf6c4d00c252f50d65bd8ac0fc6f09afd",
@@ -21634,7 +21418,7 @@
   ]
  },
  "Items/Equip/4 Stars/Time_Riddle.psd": {
-  "blob": "9e81ad2baf6bfe05a969d26d0d2fd36df8085e1a",
+  "blob": "33711e04397a9ec9ff0bf3711de210ebee112ae8",
   "links": [
    {
     "drawn": "fbaec5fd92d2dca46348f764966333a4cbce5092",
@@ -21681,7 +21465,7 @@
   ]
  },
  "Items/Heal/1 Stars/Bolts_and_Screws.psd": {
-  "blob": "6be84b716b5e2c701aacda1720f3920522df74bb",
+  "blob": "5b0b25d54b71f1cb43cbe54b7edda96ad2abfd5b",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -21746,7 +21530,7 @@
   ]
  },
  "Items/Heal/1 Stars/Candy_Corn.psd": {
-  "blob": "8c1173c457813448e25cdfbad02a72d39f129638",
+  "blob": "3dd4bbd2a7e3961935379fe834a50201336738e2",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -21804,7 +21588,7 @@
   ]
  },
  "Items/Heal/1 Stars/Monster_Meat.psd": {
-  "blob": "791897cc2ce311e3718467aa2a7fd0bf8e52e393",
+  "blob": "f3ed0a593c653b97daea7a27634047a08d892a83",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -21827,7 +21611,7 @@
   ]
  },
  "Items/Heal/1 Stars/Potato.psd": {
-  "blob": "eb99e1e5f646bd6ff060db5f252f65d1445619d3",
+  "blob": "1fe56795b3cae4bb6d48061df30637bb9a6af951",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -21838,7 +21622,7 @@
   ]
  },
  "Items/Heal/1 Stars/Tomato.psd": {
-  "blob": "19922568be97bd85356c1fe1489893b85560b7e1",
+  "blob": "1a49992dd99baaf1a3b4f941c6cad60c0073f017",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -21861,19 +21645,13 @@
   ]
  },
  "Items/Heal/2 Stars/A_Snack.psd": {
-  "blob": "c2009eeee6677bfc629de8a3204f83cc162648b9",
+  "blob": "7fb550763c7c910e221aba2a95c98bc826b73a7e",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
-   },
-   {
-    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
-    "name": "Fragile Equip.png",
-    "path": "Types/Fragile Equip.png",
-    "size": 23023
    },
    {
     "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
@@ -21884,7 +21662,7 @@
   ]
  },
  "Items/Heal/2 Stars/All_Purpose_Medical_Kit.psd": {
-  "blob": "35dfce54ca318380934689ec7f5610cb489e036e",
+  "blob": "d1bc06d86d482d193c69cefeee7813950368a2f5",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -21913,7 +21691,7 @@
   ]
  },
  "Items/Heal/2 Stars/Cake_Mix.psd": {
-  "blob": "bf54a401bfebd4325456a8aabc6d021425cf89be",
+  "blob": "e26b5aba1376f63480c9f626b35e80c3e1094823",
   "links": [
    {
     "drawn": "127ac246e772f9b0113d5c83be4db5aa7f20d0d1",
@@ -21942,7 +21720,7 @@
   ]
  },
  "Items/Heal/2 Stars/Grapes.psd": {
-  "blob": "e199ae511186eff55d6fb2d6528148d63f1cd312",
+  "blob": "3387876d3a9e9bafe09ce64073b5f6116481d3b9",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -21971,7 +21749,7 @@
   ]
  },
  "Items/Heal/2 Stars/Ingredient_Gnome_Berries.psd": {
-  "blob": "f566ce42987847c9657be7ca627e2b577ba39ef0",
+  "blob": "8d7f602b4ce521b0d9352bfc855425dd62e6919a",
   "links": [
    {
     "drawn": "6b086f1c5ea0ef7348f1c94a4828db115018ce06",
@@ -22018,7 +21796,7 @@
   ]
  },
  "Items/Heal/2 Stars/Ingredient_Icy_Sugar_Cubes.psd": {
-  "blob": "5e8b72df83aae993e02c0ce3aec16e84c44544f5",
+  "blob": "77de89d646809a134b529553455e6fe2e53d16fa",
   "links": [
    {
     "drawn": "6b086f1c5ea0ef7348f1c94a4828db115018ce06",
@@ -22071,7 +21849,7 @@
   ]
  },
  "Items/Heal/2 Stars/Ingredient_Pineapple_Mint.psd": {
-  "blob": "ab2b80ec954dc5ad21c82c171a2f3af5d64b7460",
+  "blob": "a9f403913f849d5b90e1a7b75a676d9ced667754",
   "links": [
    {
     "drawn": "6b086f1c5ea0ef7348f1c94a4828db115018ce06",
@@ -22106,7 +21884,7 @@
   ]
  },
  "Items/Heal/2 Stars/Mushroom.psd": {
-  "blob": "be07c6142c193d0d0bdb383f958f049248ce0181",
+  "blob": "4764dc6e50dc59ec9e60717c52d20c7d93f09e81",
   "links": [
    {
     "drawn": "642e5fba1ad0866ef07712654d0314d2c64e6149",
@@ -22135,7 +21913,7 @@
   ]
  },
  "Items/Heal/2 Stars/Pep_Drink.psd": {
-  "blob": "b4535b8b3ad2662bd67bb4b97791f8faca391699",
+  "blob": "0b683f98138f2f5aa7711b3903fa223c0820a385",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -22170,7 +21948,7 @@
   ]
  },
  "Items/Heal/2 Stars/Pepperoni_Pizza.psd": {
-  "blob": "c417bc73d84f739256f91a0db6a60266ca8d6a5b",
+  "blob": "3a9f4f5dc0ed2b7826786b6af47b59f5634297b3",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -22193,7 +21971,7 @@
   ]
  },
  "Items/Heal/2 Stars/Regeneration_Potion.psd": {
-  "blob": "2a5191ee0bd54660cd49353cbc1e61ff9665f723",
+  "blob": "16a5c4aabda57d59b056eaa806a6a2cad3bdbab4",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -22222,7 +22000,7 @@
   ]
  },
  "Items/Heal/2 Stars/Sandwich_of_Rejects.psd": {
-  "blob": "44994fc0d9aafb499911c0ddd2a437d85cbde1f0",
+  "blob": "9895896b20c308145a12f31357488c712a91f5fd",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -22241,17 +22019,11 @@
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
-   },
-   {
-    "drawn": "4fb6b1d8b6485fabd2b86fa08d37ff1b69a398f7",
-    "name": "NME.png",
-    "path": "Types/NME.png",
-    "size": 757779
    }
   ]
  },
  "Items/Heal/2 Stars/Snow_Bunny.psd": {
-  "blob": "9deaf9bf814bbdcbb555794e7bedf48bf571b6c3",
+  "blob": "12c40d0494c5f1e547ebbb1e76032e83843983a9",
   "links": [
    {
     "drawn": "1de88828ad3a6a7bedd875329c23c7b375362567",
