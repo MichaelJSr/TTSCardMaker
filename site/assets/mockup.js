@@ -127,13 +127,18 @@ export function textBlocks(L, W, H, box, { edge = 40, seed = null, most = Infini
  *  the line counts within one (or 30%); one line: k within 0.6-3 (its size from its width), its run at least 0.3 em
  *  high, and the old text in one or two lines. exact (a name): as many lines as found, one line at most twice as wide
  *  (wide: three times). px (a record's set size, several lines): size px, k within 0.85-1.18 and, wrapped at wrap,
- *  as many lines as found. measure(text, size) -> px. */
+ *  as many lines as found; px and exact (a title): size px, k within 0.85-1.18, a line per paragraph as found.
+ *  measure(text, size) -> px. */
 export function calibrate(found, paras, measure, { exact = false, wide = false, px = 0, wrap = 0 } = {}) {
   const s0 = found.size, inked = found.lines.reduce((t, l) => t + (l[2] - l[0]), 0);
   if (px > 0 && found.lines.length > 1) {
     const one = layout(paras, Infinity, px, measure).reduce((t, l) => t + l.w, 0), k = one ? inked / one : 0, nFound = found.lines.length;
     const nPred = layout(paras, wrap || (found.box[2] - found.box[0]) * 1.04, px, measure).filter(l => l.pieces.length).length;
     return { ok: k >= 0.85 && k <= 1.18 && nPred === nFound && lineLike(found), k, size: px, nPred, nFound };
+  }
+  if (px > 0 && exact) {                               // a title at the record's set size: as wide as its ink, its lines as found
+    const one = layout(paras, Infinity, px, measure), k = one.length ? inked / one.reduce((t, l) => t + l.w, 0) : 0;
+    return { ok: k >= 0.85 && k <= 1.18 && one.length === found.lines.length, k, size: px, nPred: one.length, nFound: found.lines.length };
   }
   const oneLine = layout(paras, Infinity, s0, measure).reduce((t, l) => t + l.w, 0);
   if (!oneLine || !inked) return { ok: false, k: 0, size: s0, nPred: 0, nFound: found.lines.length };
@@ -151,10 +156,11 @@ export function calibrate(found, paras, measure, { exact = false, wide = false, 
 /** Of every block textBlocks finds in area ({box, seed}) at two edge strengths (soft art merges with text at the lower)
  *  and two seed strengths (short lines seed blocks at the lower, art merges in),
  *  the one calibrate says holds the old text (paras), the most edge mass first: {b, cal, edge} or null. name: a card's
- *  name (one or two lines, the stars beside it kept apart: words join within 1.2 line heights, not 4). */
-export function bestBlock(L, W, H, area, paras, measure, { edges = [40, 80, 130], name = false, wide = false, px = 0, wrap = 0 } = {}) {
+ *  name (one or two lines, the stars beside it kept apart: words join within 1.2 line heights, not 4). joins: the
+ *  join reaches to try (line heights). */
+export function bestBlock(L, W, H, area, paras, measure, { edges = [40, 80, 130], name = false, wide = false, px = 0, wrap = 0, joins = [name ? 1.2 : 4] } = {}) {
   let best = null;
-  for (const edge of edges) for (const strong of [0.3, 0.18]) for (const b of textBlocks(L, W, H, area.box, { seed: area.seed, edge, strong, join: name ? 1.2 : 4, span: name ? 2 : 12 })) {
+  for (const join of joins) for (const edge of edges) for (const strong of [0.3, 0.18]) for (const b of textBlocks(L, W, H, area.box, { seed: area.seed, edge, strong, join, span: name ? 2 : 12 })) {
     const cal = calibrate(b, paras, measure, { exact: name, wide, px, wrap });
     if (!cal.ok) continue;
     const score = b.mass / (1 + 0.5 * Math.abs(cal.nPred - cal.nFound));   // the most text that fits it
@@ -981,7 +987,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true }); out.boxed.push(label); continue; }
     const paras = tokenize(old, icons);
     const wrap = kc && set?.px > 0 && Array.isArray(set.frame) && set.frame.length === 4 ? (set.frame[2] - set.frame[0]) * kc : 0;   // box text's frame width
-    const hit = bestBlock(L, W, H, area, paras, measure, { name: role === "name" })   // the block that holds the old text, or none
+    const atSet = role === "name" && kc && layer?.px > 0 ? bestBlock(L, W, H, area, paras, measure, { name: true, wide: true, px: layer.px * kc, joins: [1.2, 4] }) : null;   // a title at the record's set size first
+    const hit = atSet || bestBlock(L, W, H, area, paras, measure, { name: role === "name" })   // the block that holds the old text, or none
       || (wrap ? bestBlock(L, W, H, area, paras, measure, { px: set.px * kc, wrap }) : null);   // tight leading: at the record's set size
     if (hit) {
       const { b, cal, edge } = hit, z = cal.size;

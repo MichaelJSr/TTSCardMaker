@@ -583,7 +583,10 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     width (k 0.6-3; its run of rows at least 0.3 em); `lineLike`: no line over 2.2 times the usual height or 2.6 times
     the lowest (art read as a line), three lines in four sharing a centre (a tenth of the width) or a left edge (a
     twentieth); a name: words join within 1.2 line heights (not 4: the stars beside it stay out), one or two lines, as
-    many as the old name wraps to. `bestBlock` keeps the one that fits with the most edge mass. A record with
+    many as the old name wraps to; a title whose record has `px` is tried at it first (by image/canvas width: the old
+    title 0.85-1.18 times as wide as the ink, a line per paragraph; words join up to 4 line heights; letters small for
+    their em no longer squeeze a new title into one word: 181 of 209 baked title edits within 10% of the bake's width,
+    164 before). `bestBlock` keeps the one that fits with the most edge mass. A record with
     `text[].box` (canvas px) is the area instead (`recordBox`): adding `layer.bbox` to psd_details' text entries would
     make the mock-up exact (a bot follow-up, not done). An ability layer whose first run is in stoogedings (the text
     starts with a badge) takes the layer's other font from `rec.fonts` (`layerOf`).
