@@ -4041,8 +4041,8 @@ def name_links(cards, icons, tag_table):
     return links
 
 
-RULE_WORDS = (("damage-types", r"piercing|true damage|life ?steal|shockwave|overkill|counter damage"),   # a card's text -> a chapter
-              ("negation", r"negat(?:e|es|ed|ing|ion)"), ("reactions", r"react(?:s|ion|ions)?"))
+RULE_WORDS = (("damage-types", r"piercing|true (?:damage|dmg)|life ?steal|shockwave|overkill|counter (?:damage|dmg)|cdmg"),   # a card's text -> a chapter
+              ("negation", r"negat(?:e|es|ed|ing|ions?)"), ("reactions", r"react(?:s|ions?|ive|ively)?"))
 
 
 def tts_details(cards, chapters, icons, tag_table):
