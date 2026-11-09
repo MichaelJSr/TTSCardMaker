@@ -1,12 +1,13 @@
 # Card checks (AutoCroissant commands/card_checks.py, owner 2026-11-07): the automatic card flags, off Card sync's path.
 # hand: the picture says other than the data, old-style bars, a website edit that cannot bake. bars: special bars. The
 # results stay on the data branch by PSD blob (db/card_checks.json); the website shows them. No Discord, no commit
-# comment, no block. Card sync starts it after a data commit: only PSDs (or PNGs) without a result are read, so a fixed
-# card clears on its next push. A dispatch with `all` reads the whole tree in six shards, each its share of the blobs.
+# comment, no block. Card sync starts it at a data job's start (inputs after, job): it sets up, then waits for that job's
+# Commit data. Only PSDs (or PNGs) without a result are read, so a fixed card clears on its next push. A dispatch with
+# `all` reads the whole tree in six shards, each its share of the blobs.
 # One writer beside Card sync's data lane: its commits touch db/card_checks.json alone, gate G6 lets them by, and each lane
 # goes on top of the other when a push is rejected (card-sync.yml's Commit data). Land the bot's G6 first.
 name: Card checks
-run-name: ${{ inputs.all && 'Card checks (whole tree)' || 'Card checks' }}
+run-name: ${{ inputs.after && format('Card checks (after {0} {1})', inputs.after, inputs.job) || inputs.all && 'Card checks (whole tree)' || 'Card checks' }}
 
 on:
   workflow_dispatch:
@@ -21,6 +22,14 @@ on:
         default: ""
       builder_ref:
         description: "AutoCroissant ref of the checks (default: the variable CARD_DATA_BUILDER_REF, else main)"
+        type: string
+        default: ""
+      after:
+        description: "Set by Card sync: a data job's run id (the checks set up, then wait for that job's Commit data)"
+        type: string
+        default: ""
+      job:
+        description: "Set by Card sync: that job, data or after"
         type: string
         default: ""
   schedule:
@@ -47,7 +56,7 @@ jobs:
       contents: write   # one shard saves here
       actions: write
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: ${{ inputs.after && 112 || 90 }}   # Data wait: 22
     defaults:
       run:
         shell: bash
@@ -128,6 +137,51 @@ jobs:
           oxipng: "false"
           help: card_checks
 
+      # An early run (inputs after) restores its fonts before its Data wait, restore only (the guards' check job saves
+      # the entry): Data wait may move main, and Fonts (cache miss) below then fetches them again
+      - name: Fonts first
+        id: fonts-first
+        if: inputs.after
+        run: |
+          git config sparse.expectFilesOutsideOfPatterns true
+          echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
+      - id: fonts-first-cache
+        if: steps.fonts-first.outcome == 'success'
+        uses: actions/cache/restore@v6
+        with:
+          path: MDW/Fonts
+          key: card-fonts-${{ steps.fonts-first.outputs.sha }}
+      - name: Fonts first (cache miss)
+        if: steps.fonts-first.outcome == 'success' && steps.fonts-first-cache.outputs.cache-hit != 'true'
+        env:
+          GIT_NO_LAZY_FETCH: "0"
+        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+
+      # An early run, set up above while Card sync's data job builds: until that job's Commit data is done or the job
+      # ended (site.yml's Data wait: 3 s looks for 2 minutes, then 15 s; 20 minutes at most), then main's head and the
+      # data's as they are now. Nothing is listed before the data commit.
+      - name: Data wait
+        if: inputs.after
+        timeout-minutes: 22
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GIT_NO_LAZY_FETCH: "0"                                                            # the sparse files at the new head
+          RUN: ${{ inputs.after }}
+          JOB: ${{ inputs.job == 'after' && 'Card data after the bake' || 'Card data' }}   # card-sync.yml's job names
+          COMMIT: Commit data                                                               # and its step
+        run: |
+          while [ "$SECONDS" -lt 1200 ]; do
+            n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs" --jq "[.jobs[] | select(.name == \"$JOB\" and (.status == \"completed\"
+              or any(.steps[]?; .name == \"$COMMIT\" and .status == \"completed\")))] | length") || n=0
+            [ "${n:-0}" -gt 0 ] && break
+            sleep "$([ "$SECONDS" -lt 120 ] && echo 3 || echo 15)"
+          done
+          if [ "$SECONDS" -ge 1200 ]; then echo "::warning::$JOB of run $RUN not past $COMMIT in 20 minutes: these checks go on"; fi
+          echo "$JOB of $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN past $COMMIT (or ended) after $SECONDS s." | tee -a "$GITHUB_STEP_SUMMARY"
+          if git fetch -q --depth 1 --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
+          git -C carddata fetch -q --depth 1 origin data || { echo "::error::data not fetched again"; exit 1; }
+          git -C carddata reset -q --hard FETCH_HEAD
+
       # The blobs of the PSDs to check and their PNGs, fetched per shard (the guards' way): none, and the job is done
       - name: To check
         id: list
@@ -157,7 +211,8 @@ jobs:
             wait $! || code=$?; echo "${code:-0}" > "$1.done"' _ "$list" > "$list.log" 2>&1 < /dev/null &
           echo "fetching $(grep -c . "$list") blobs"
 
-      # The bake's fonts for the real bakes: the card workflows' cache by MDW/Fonts' tree sha; a miss checks them out
+      # The bake's fonts for the real bakes: the card workflows' cache by MDW/Fonts' tree sha; a miss checks them out. An
+      # early run's (Fonts first): again only when Data wait moved MDW/Fonts (a restore it outdated removed first).
       - name: Fonts tree
         id: fonts
         if: steps.list.outputs.n != '0'
@@ -166,17 +221,19 @@ jobs:
           echo "sha=$(git rev-parse HEAD:MDW/Fonts)" >> "$GITHUB_OUTPUT"
 
       - id: font-cache
-        if: steps.list.outputs.n != '0'
+        if: steps.list.outputs.n != '0' && !inputs.after
         uses: actions/cache@v6
         with:
           path: MDW/Fonts
           key: card-fonts-${{ steps.fonts.outputs.sha }}
 
       - name: Fonts (cache miss)
-        if: steps.list.outputs.n != '0' && steps.font-cache.outputs.cache-hit != 'true'
+        if: steps.list.outputs.n != '0' && steps.font-cache.outputs.cache-hit != 'true' && steps.fonts.outputs.sha != steps.fonts-first.outputs.sha
         env:
           GIT_NO_LAZY_FETCH: "0"
-        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+        run: |
+          git ls-files -v -z -- ':(glob)MDW/Fonts/*' | while IFS= read -r -d '' f; do [ "${f:0:2}" != "S " ] || rm -f -- "${f:2}"; done
+          git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
       # One shard reads each blob as it lands (CARD_BLOBS_PENDING: card_bake waits for a listed one, 300 s at most from
       # the list's write); `all` and lists over 1000 blobs (~7 a second: their fetch can pass the cap) wait for it all

@@ -140,17 +140,19 @@ jobs:
       RECORDS: ""             # the after job: its dispatch inputs are the data job's (the records come from any run)
       CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the renders' records (psd_edit): the data's
     steps: &data-steps
-      # The site build at once (a push's data job, a guards' follow-up and the after job; not a dry run): it sets up
-      # beside this job, then waits for its Commit data (site.yml's Data wait). In the background; Site build below
-      # finds it by its run-name.
+      # The site build and the card checks at once (a push's data job, a guards' follow-up and the after job; not a dry
+      # run): they set up beside this job, then wait for its Commit data (their Data wait). In the background; Site build
+      # and Card checks below find them by their run-names.
       - name: Site build start
         if: env.DRY_RUN != 'true' && (github.event_name == 'push' || inputs.guards || github.job == 'after')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           at=$(date +%s)
-          ( gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY" -f "after=$GITHUB_RUN_ID" -f "job=$GITHUB_JOB" \
-            && echo "$at" > "$RUNNER_TEMP/site-start" ) > "$RUNNER_TEMP/site-start.log" 2>&1 < /dev/null &
+          for w in site card-checks; do
+            ( gh workflow run "$w.yml" --ref main -R "$GITHUB_REPOSITORY" -f "after=$GITHUB_RUN_ID" -f "job=$GITHUB_JOB" \
+              && echo "$at" > "$RUNNER_TEMP/$w-start" ) > "$RUNNER_TEMP/$w-start.log" 2>&1 < /dev/null &
+          done
 
       # Main's head (not github.sha), no file contents but the small files the stages read (no TTS/: the data reads only
       # decks.json's blob sha). The card folders are never checked out; the build reads PSDs by blob sha, local first,
@@ -714,13 +716,24 @@ jobs:
           exit 1
 
       # The automatic flags, off this run's path (card-checks.yml): it reads only PSDs without a result. Never fails the job.
+      # As Site build: not while Site build start's run is unfinished and under 19 minutes old (it checks this data).
       - name: Card checks
         if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.data-commit.outputs.committed == 'true' || env.AFTER != '') }}
         continue-on-error: true
         timeout-minutes: 2
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run card-checks.yml --ref main -R "$GITHUB_REPOSITORY"
+          EARLY: Card checks (after ${{ github.run_id }} ${{ github.job }})   # card-checks.yml's run-name
+        run: |
+          if at=$(cat "$RUNNER_TEMP/card-checks-start" 2> /dev/null) && [ $(( $(date +%s) - at )) -lt 1140 ]; then
+            status=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/card-checks.yml/runs?event=workflow_dispatch&per_page=50" \
+              --jq "[.workflow_runs[] | select(.display_title == \"$EARLY\")][0].status // \"\"") || status=""
+            if [ -n "$status" ] && [ "$status" != completed ]; then
+              echo "The card checks started with this job ($status) check this data." | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          fi
+          gh workflow run card-checks.yml --ref main -R "$GITHUB_REPOSITORY" -f "after=$GITHUB_RUN_ID" -f "job=$GITHUB_JOB"
 
       # A failed live job (a push's, scheduled, a retry, a dispatch) tells Discord once per failing streak of its lane
       # (data: Card data and after the bake; main: Bake and save): the streak is the lane's outcome in the

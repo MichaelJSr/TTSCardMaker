@@ -3,8 +3,8 @@
     python3 card_sync_steps.py            (needs git 2.37 or later, bash and jq; no network)
 1. The step plans: every step's `if:` evaluated as GitHub does (&&, ||, !, ==, the status functions, the implicit
    success()), per lane. Data (Card data, and after the bake): a dry run commits, posts and dispatches nothing; switched
-   it posts, commits data and dispatches the site (after the bake, whatever the data did); a failed build commits and
-   posts nothing. Main (Bake and save): bake, save, M and the re-pin of baked PNGs; bake=none skips the bake; a rejected or late M re-pins nothing; GO from Pending edits runs the
+   it posts, commits data and dispatches the site and the checks (after the bake, whatever the data did; a push's
+   early too); a failed build commits and posts nothing. Main (Bake and save): bake, save, M and the re-pin of baked PNGs; bake=none skips the bake; a rejected or late M re-pins nothing; GO from Pending edits runs the
    stages. A failed live job (a retry too) alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit
    main and every later step; after runs the data steps with AFTER = the main lane's last commit (M, or R on it)
    and RECORDS, also for a bake that only recorded verdicts.
@@ -349,11 +349,11 @@ def plans(flow: dict) -> None:
 
     # The data lane
     p = plan(flow, "data", inputs={"dry_run": True}, outputs=go)
-    check(p["env"]["DRY_RUN"] == "true" and {"build", "posts"} <= runs(p) and not {"data-commit", "Site build", "Send the posts"} & runs(p),
+    check(p["env"]["DRY_RUN"] == "true" and {"build", "posts"} <= runs(p) and not {"Site build start", "data-commit", "Site build", "Card checks", "Send the posts"} & runs(p),
           "data, dry dispatch: build and posts; nothing committed, sent or dispatched")
     p = plan(flow, "data", event="push", outputs={**go, "data-commit": {"committed": "true"}})
-    check({"venv", "fonts", "build", "posts", "Send the posts", "data-commit", "Site build"} <= runs(p),
-          "data, a push at once: build, posts, data commit, site build")
+    check({"Site build start", "venv", "fonts", "build", "posts", "Send the posts", "data-commit", "Site build", "Card checks"} <= runs(p),
+          "data, a push at once: the early site build and checks, build, posts, data commit, their fallbacks")
     p = plan(flow, "data", event="schedule", outputs=go, outcomes={"build": "failure"})
     check(not {"Send the posts", "data-commit"} & runs(p) and "Tell Discord" in runs(p),
           "data, build failed: no posts, no data commit; Discord told")
