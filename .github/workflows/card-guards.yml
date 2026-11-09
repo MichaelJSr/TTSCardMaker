@@ -28,7 +28,7 @@
 # Card sync right after the mark (that run sets up, then waits for Landed; Follow up starts another if a newer run took a
 # lane's place), else the post job's Follow up starts it, landed or not.
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
-# venv cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
+# venv cache (.github/actions/cards-venv); the fonts from the card-fonts- cache, as Card sync's.
 #
 # Jobs: `check` runs the guards' check, lands and comments; `post` settles the comment and posts right after it (the
 # 30-minute quiet window and its environment card-guards-quiet went on 2026-11-03). `checks` runs a push's two checks
@@ -333,7 +333,7 @@ jobs:
       # requirements-cards.txt's wheels and the oxipng CLI (the lossless PNG recompression; the checks write no PNG)
       - &setup
         timeout-minutes: 10
-        uses: ./.github/actions/cards-python
+        uses: ./.github/actions/cards-venv
         id: setup
         with:
           oxipng: ${{ github.job != 'checks' }}

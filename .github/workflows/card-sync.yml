@@ -269,13 +269,13 @@ jobs:
           fetch-depth: 1
 
       # One environment from requirements-cards.txt for the bake, the build, the save and the posts, on the Actions' one
-      # Python (3.14; the shared setup, .github/actions/cards-python). --help proves the import closure before any stage.
+      # Python (3.14; the shared setup, .github/actions/cards-venv). --help proves the import closure before any stage.
       # Always, first: before a push's or a follow-up's wait (a data job with nothing to do sets it up too).
       - &venv
         name: Python environment
         id: venv
         timeout-minutes: 15
-        uses: ./.github/actions/cards-python
+        uses: ./.github/actions/cards-venv
         with:
           venv: ${{ runner.temp }}/venv
           oxipng: ${{ github.job == 'main' }}     # the data jobs write no PNG

@@ -1,0 +1,73 @@
+# The card jobs' setup. A venv hit skips cards-python and its setup-python and setup-uv downloads (about 1 s a job), as
+# card-preview.yml does: cards-python's key (setup-python's pick: the image's newest 3.14.x), path, check, PATH and help,
+# with setup-python's LD_LIBRARY_PATH. Else cards-python, as ever (the runner fetches its actions only if its step runs).
+name: Card Python (venv first)
+description: The card venv from its cache, else .github/actions/cards-python
+
+inputs:
+  venv:
+    description: "cards-python's venv"
+    default: ""
+  oxipng:
+    description: "cards-python's oxipng"
+    default: "true"
+  help:
+    description: "cards-python's help"
+    default: ""
+
+outputs:
+  wheels:
+    description: "cards-python's (a miss)"
+    value: ${{ steps.full.outputs.wheels }}
+
+runs:
+  using: composite
+  steps:
+    - id: key
+      shell: bash
+      env:
+        VENV: ${{ inputs.venv || format('{0}/venv', runner.temp) }}
+      run: |
+        py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
+        sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' bot/requirements-cards.txt | sha256sum | cut -d' ' -f1)
+        echo "venv=$VENV" >> "$GITHUB_OUTPUT"
+        if [ -n "$py" ]; then
+          echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")-ox10.2.1" >> "$GITHUB_OUTPUT"
+          echo "lib=$py/lib" >> "$GITHUB_OUTPUT"
+        fi
+
+    - id: env
+      if: steps.key.outputs.key != ''
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ steps.key.outputs.venv }}
+        key: ${{ steps.key.outputs.key }}
+
+    - id: hit     # a failed check or no CLI: cards-python restores and checks it again
+      if: steps.env.outputs.cache-hit == 'true'
+      shell: bash
+      env:
+        VENV: ${{ steps.key.outputs.venv }}
+        LIB: ${{ steps.key.outputs.lib }}
+        OWN: ${{ inputs.venv }}
+        WANT: ${{ inputs.oxipng }}
+        HELP: ${{ inputs.help }}
+      run: |
+        export LD_LIBRARY_PATH=$LIB${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+        "$VENV/bin/python" -c 'import importlib.metadata as m; [m.version(p) for p in ("psd-tools", "fonttools", "requests")]' || exit 0
+        if [ "$WANT" = true ]; then
+          "$VENV/.oxipng/oxipng" --version || exit 0
+          echo "$VENV/.oxipng" >> "$GITHUB_PATH"
+        fi
+        echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
+        if [ -z "$OWN" ]; then echo "$VENV/bin" >> "$GITHUB_PATH"; fi
+        for module in $HELP; do (cd bot && "$VENV/bin/python" -m "commands.$module" --help > /dev/null); done
+        echo "ok=true" >> "$GITHUB_OUTPUT"
+
+    - id: full
+      if: steps.hit.outputs.ok != 'true'
+      uses: ./.github/actions/cards-python
+      with:
+        venv: ${{ inputs.venv }}
+        oxipng: ${{ inputs.oxipng }}
+        help: ${{ inputs.help }}

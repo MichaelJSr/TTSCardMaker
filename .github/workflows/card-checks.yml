@@ -131,7 +131,7 @@ jobs:
         name: Python environment
         id: venv
         timeout-minutes: 15
-        uses: ./.github/actions/cards-python
+        uses: ./.github/actions/cards-venv
         with:
           venv: ${{ runner.temp }}/venv
           oxipng: "false"
