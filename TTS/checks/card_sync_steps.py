@@ -104,14 +104,25 @@ def _value(text: str) -> str:
     return re.sub(r"\s+#.*$", "", text)
 
 
-def _mapping(lines: list, at: int, indent: int) -> tuple:
-    """key: value lines deeper than indent after line at: (dict, next line)."""
-    out, i = {}, at + 1
+def _mapping(lines: list, at: int, indent: int, anchors: dict = None) -> tuple:
+    """key: value lines deeper than indent after line at: (dict, next line); a `|` block, &anchor and *alias read."""
+    out, i, anchors = {}, at + 1, {} if anchors is None else anchors
     while i < len(lines) and (not lines[i].strip() or _indent(lines[i]) > indent):
         x = lines[i].strip()
         if x and not x.startswith("#"):
             key, _, rest = x.partition(":")
-            out[key.strip()] = _value(rest)
+            key, rest, name = key.strip(), rest.strip(), ""
+            if rest.startswith("&"):
+                name, _, rest = rest[1:].partition(" ")
+                rest = rest.strip()
+            if rest == "|":
+                out[key], after = _block(lines, i, _indent(lines[i]))
+            else:
+                out[key], after = anchors[rest[1:]] if rest.startswith("*") else _value(rest), i + 1
+            if name:
+                anchors[name] = out[key]
+            i = after
+            continue
         i += 1
     return out, i
 
@@ -178,7 +189,7 @@ def load(path: str = WORKFLOW) -> dict:
             value = _value(x.split(":", 1)[1])
             job["timeout"] = int(value) if value.isdigit() else value
         if x == "    env:":
-            job["env"], i = _mapping(lines, i, 4)
+            job["env"], i = _mapping(lines, i, 4, anchors)
             continue
         if x in ("    concurrency:", "    outputs:"):
             job[x.strip()[:-1]], i = _mapping(lines, i, 4)
@@ -341,11 +352,12 @@ def plans(flow: dict) -> None:
     go = {"gate": {"go": "true", "main": "a" * 40, "GITHUB_ENV": {"GO": "true"}}}
     check(not {"MAIN_COMMIT", "POSTS"} & set(flow["env"]), "no rollback switches (MAIN_COMMIT, POSTS)")
     data, main, after = (flow["jobs"][j] for j in ("data", "main", "after"))
-    rec = "${{ github.workspace }}/carddata/db"
-    check(after["steps"] is data["steps"] and data["env"] == {"AFTER": "", "RECORDS": "", "CARD_RECORDS_DIR": rec}
+    rec, bot = "${{ github.workspace }}/carddata/db", data["env"].get("BOT_FILES")
+    check(after["steps"] is data["steps"] and data["env"] == {"AFTER": "", "RECORDS": "", "CARD_RECORDS_DIR": rec, "BOT_FILES": bot}
           and after["env"] == {"AFTER": "${{ (needs.main.outputs.baked == 'true' || needs.main.outputs.redrawn == 'true') && needs.main.outputs.top || '' }}",
-                               "RECORDS": "true", "CARD_RECORDS_DIR": rec},
-          "after: the data lane's steps, with AFTER the main lane's last commit (a bake or a redraw), its records, the data's render records")
+                               "RECORDS": "true", "CARD_RECORDS_DIR": rec, "BOT_FILES": bot}
+          and bool(bot) and main["env"].get("BOT_FILES") is bot,
+          "after: the data lane's steps, with AFTER the main lane's last commit (a bake or a redraw), its records, the data's render records; one BOT_FILES")
 
     # The data lane
     p = plan(flow, "data", inputs={"dry_run": True}, outputs=go)
@@ -364,10 +376,10 @@ def plans(flow: dict) -> None:
     follow = {"dry_run": False, "bake": "pending", "guards": "77"}
     p, q = plan(flow, "data", inputs=follow, outputs=go), plan(flow, "main", inputs=follow, outputs=go)
     r = plan(flow, "after", inputs=follow, outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
-    check(order("data", p)[:8] == ["Site build start", "History start", "venv", "guards", "History wait", "Newest", "records-in", "gate"] and "build" in runs(p)
+    check(order("data", p)[:10] == ["Site build start", "Clones start", "History start", "clones", "venv", "guards", "History wait", "Newest", "records-in", "gate"] and "build" in runs(p)
           and [k for k in order("main", q) if k in ("venv", "guards", "Newest", "gate")][:4] == ["venv", "guards", "Newest", "gate"] and "bake" in runs(q)
           and not {"guards", "Newest"} & runs(r),
-          "a follow-up (guards): the site build first; both lanes set up, wait for the guards' Land, the data's history, take main's head, then gate; after waits for nothing")
+          "a follow-up (guards): the site build and clones first; both lanes set up, wait for the guards' Land, the data's history, take main's head, then gate; after waits for nothing")
     fonts = ("fonts-first", "fonts-first-cache", "Fonts first (cache miss)", "guards", "gate", "fonts", "font-cache", "Fonts (cache miss)")
     hit = {"fonts-first-cache": {"cache-hit": "true"}, "font-cache": {"cache-hit": "true"}}
     seq = lambda event, inputs, more: [k for k in order("main", plan(flow, "main", event=event, inputs=inputs, outputs={  # noqa: E731
