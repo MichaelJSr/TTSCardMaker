@@ -80,6 +80,20 @@ jobs:
             /site/Card Edits.json
             /MDW/Fonts/stoogedings-src/stoogedings.json
 
+      # blobs_of's shared files (the status chart, template_for's templates) the clone lacks, one a fetch, 4 at a time, in
+      # the background while the job sets up and waits (its exit code in shared.txt.done); Fetch them leaves them out
+      - name: Shared blobs
+        continue-on-error: true
+        run: |
+          list=$RUNNER_TEMP/shared.txt
+          git ls-tree --object-only HEAD -- "MDW/Croissant's Special Folder/Satus Effect Colors.psd" \
+            MDW/Templates/{Creature,Item,ActiveItem,Status_Effect}_Template.psd | git cat-file --batch-check \
+            | awk '$2 == "missing" {print $1}' > "$list"
+          nohup bash -c 'timeout -k 10 600 xargs -r -P 4 -n 1 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags \
+            --no-write-fetch-head --recurse-submodules=no --filter=blob:none origin < "$1" & echo $! > "$1.pid"
+            wait $! || code=$?; echo "${code:-0}" > "$1.done"' _ "$list" > "$list.log" 2>&1 < /dev/null &
+          echo "fetching $(grep -c . "$list") shared blobs"
+
       # card_checks.SPARSE_FILES
       - &builder
         uses: actions/checkout@v7
@@ -200,16 +214,18 @@ jobs:
           echo "n=$n" >> "$GITHUB_OUTPUT"
           echo "$n blobs to read." | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # 8 to a fetch, 4 at a time, as the guards' Pushed blobs: small packs barely need GitHub's delta search. In the
-      # background (20 minutes at most, its exit code in blobs.txt.done): the fonts restore and Check start meanwhile.
+      # Those not in the clone (Shared blobs' landed), 8 to a fetch, 4 at a time, as the guards' Pushed blobs: small packs
+      # barely need GitHub's delta search. In the background (20 minutes at most, its exit code in blobs.txt.done): the
+      # fonts restore and Check start meanwhile.
       - name: Fetch them
         if: steps.list.outputs.n != '0'
         run: |
           list=$RUNNER_TEMP/blobs.txt
-          nohup bash -c 'timeout -k 10 1200 xargs -P 4 -n 8 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags \
-            --no-write-fetch-head --recurse-submodules=no --filter=blob:none origin < "$1" & echo $! > "$1.pid"
+          git cat-file --batch-check < "$list" | awk '$2 == "missing" {print $1}' > "$list.fetch"
+          nohup bash -c 'timeout -k 10 1200 xargs -r -P 4 -n 8 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags \
+            --no-write-fetch-head --recurse-submodules=no --filter=blob:none origin < "$1.fetch" & echo $! > "$1.pid"
             wait $! || code=$?; echo "${code:-0}" > "$1.done"' _ "$list" > "$list.log" 2>&1 < /dev/null &
-          echo "fetching $(grep -c . "$list") blobs"
+          echo "fetching $(grep -c . "$list.fetch") of $(grep -c . "$list") blobs"
 
       # The bake's fonts for the real bakes: the card workflows' cache by MDW/Fonts' tree sha; a miss checks them out. An
       # early run's (Fonts first): again only when Data wait moved MDW/Fonts (a restore it outdated removed first).
@@ -255,19 +271,23 @@ jobs:
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_checks run "${args[@]}" --workers 3 --minutes 70 \
             --out "$RUNNER_TEMP/checks.json"
 
-      # What the fetch brought (a blob it never brought went by REST); one still going is stopped: Check is done
+      # What the fetches brought (a blob they never brought went by REST); one still going is stopped: Check is done
       - name: Fetched
         if: ${{ !cancelled() && steps.list.outputs.n != '0' }}
         continue-on-error: true
         timeout-minutes: 2
         run: |
-          list=$RUNNER_TEMP/blobs.txt stopped=
-          [ -s "$list.done" ] || { kill "$(cat "$list.pid")" 2> /dev/null; stopped=" (Check ended first: the fetch stopped)"; }
-          until [ -s "$list.done" ]; do sleep 0.2; done
-          cat "$list.log"
+          list=$RUNNER_TEMP/blobs.txt shared=$RUNNER_TEMP/shared.txt stopped=
+          for f in "$shared" "$list"; do
+            [ ! -s "$f.pid" ] || [ -s "$f.done" ] || { kill "$(cat "$f.pid")" 2> /dev/null; stopped=" (Check ended first: the fetch stopped)"; }
+          done
+          for f in "$shared" "$list"; do [ ! -s "$f.pid" ] || until [ -s "$f.done" ]; do sleep 0.2; done; done
+          cat "$shared.log" "$list.log" 2> /dev/null || true
           have=$(git cat-file --batch-check < "$list" | grep -vc ' missing$' || true)
           echo "$have of $(grep -c . "$list") blobs in the clone$stopped"
-          [ -n "$stopped" ] || exit "$(cat "$list.done")"
+          code=$(cat "$list.done")
+          [ "$code" != 0 ] || [ ! -s "$shared.done" ] || code=$(cat "$shared.done")
+          [ -n "$stopped" ] || exit "$code"
 
       - uses: actions/upload-artifact@v7      # what a run that broke off has checked counts too
         if: ${{ !cancelled() && steps.list.outputs.n != '0' }}
