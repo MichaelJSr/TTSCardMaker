@@ -50,7 +50,7 @@
    Card sync, were cancelled, are absent or unreadable. A follow-up's wait ends at its guards run's Landed or the check
    job's end (never another job's), holds nothing, slows to 15 s looks after 2 minutes and stops at 60. card-guards.yml's
    side: the names Card sync reads, Plan's fixes (a push in on mode with writes), the check job's Start Card sync right
-   after Fixes to land with nothing to convert (by the API, its run id kept), Follow up's dispatch with fixes whether Land
+   after Fixes to land with 25 PSDs or fewer to convert (by the API, its run id kept), Follow up's dispatch with fixes whether Land
    landed or ran (tried 3 times) unless that start did and neither lane of its run was cancelled; a follow-up's data job
    gets the main lane's extra time for the wait.
 Exits 1 when a case gets the wrong answer.
@@ -1506,12 +1506,12 @@ def lane_cases(flow: dict) -> None:
               and asked == ["api --method POST repos/o/cards/actions/workflows/card-sync.yml/dispatches -f ref=main -F return_run_details=true "
                             "-f inputs[dry_run]=false -f inputs[bake]=pending -f inputs[guards]=77"]
               and [s.get("name") for s in guards["jobs"]["check"]["steps"][at - 1:at + 2:2]] == [mark["env"]["FIXES"], mark["env"]["DECIDED"]]
-              and early["if"] == "${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise == 0 }}"
+              and early["if"] == "${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise <= 25 }}"
               and early.get("continue-on-error") == "true"
               and guards["jobs"]["check"]["outputs"]["early"] == "${{ steps.early.outputs.started }}"
               and guards["jobs"]["check"]["outputs"]["early_run"] == "${{ steps.early.outputs.run }}"
               and follow["env"]["EARLY"] == "${{ needs.check.outputs.early }}" and follow["env"]["EARLY_RUN"] == "${{ needs.check.outputs.early_run }}",
-              f"guards Start Card sync: the check job's, right after Fixes to land with fixes and nothing to convert, this run's id as guards, "
+              f"guards Start Card sync: the check job's, right after Fixes to land with fixes and 25 PSDs or fewer to convert, this run's id as guards, "
               f"its run id by the API; failed, Follow up starts it ({got})")
 
 

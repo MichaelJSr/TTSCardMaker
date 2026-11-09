@@ -24,9 +24,9 @@
 # card pushed again is left to that push's run, a write that did not land is told (in report mode, the PNG the bot would
 # make). It never reverts or rejects a push. A run that fails tells the standards channel once per failure streak (a
 # cancel by hand does not). One main lane per guarded push (P-2): a push with fixes to land (on) marks its check job
-# ("Fixes to land"); that push's Card sync run skips its main lane. With nothing to convert the check job starts Card sync
-# right after the mark (that run sets up, then waits for Landed; Follow up starts another if a newer run took a lane's
-# place), else the post job's Follow up starts it, landed or not.
+# ("Fixes to land"); that push's Card sync run skips its main lane. With 25 PSDs or fewer to convert the check job starts
+# Card sync right after the mark (that run sets up, then waits for Landed; Follow up starts another if a newer run took a
+# lane's place), else the post job's Follow up starts it, landed or not.
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
 # venv cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
 #
@@ -398,12 +398,12 @@ jobs:
         shell: bash
         run: echo "This push's fixes land below; the Card sync run started next bakes and saves them."
 
-      # With fixes and nothing to convert (Land follows in seconds): Card sync at once, with this run's id (its lanes set
-      # up while the guards land, then wait for Landed); its run id for Follow up. A Normalise would hold card-data and
-      # card-main for minutes: then, or not started, Follow up starts it.
+      # With fixes and 25 PSDs or fewer to convert (Normalise and Land within a minute: 23 PSDs took 42 s): Card sync at
+      # once, with this run's id (its lanes set up while the guards land, then wait for Landed); its run id for Follow up.
+      # A bigger Normalise would hold card-data and card-main for minutes: then, or not started, Follow up starts it.
       - name: Start Card sync
         id: early
-        if: ${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise == 0 }}
+        if: ${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise <= 25 }}
         continue-on-error: true
         shell: bash
         env:
