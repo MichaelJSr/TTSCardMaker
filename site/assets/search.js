@@ -1,5 +1,6 @@
 // Query language: the same syntax as AutoCroissant's /query_ability, plus names/aliases and a few extras.
 //   fire              text in the ability, name or aliases (any case)
+//   damage            also finds DMG (defense DEF, speed SPD, health HP; and back), as the bot
 //   "draw 2"          whole-word match
 //   !die              exclude (works on any term here, e.g. !type==creature)
 //   a & b   a | b     both / either  (| binds looser than &, as in the bot)
@@ -36,6 +37,19 @@ export function haystack(c) {
 }
 
 const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const SYNONYMS = { damage: "dmg", dmg: "damage", defense: "def", def: "defense", speed: "spd", spd: "speed", health: "hp", hp: "health" };
+const SYNONYM_WORDS = new RegExp(`\\b(${Object.keys(SYNONYMS).join("|")})\\b`);
+
+/** A text term's regex as the bot's _text_pattern (query_card.py), each synonym also finding the other; null without one. */
+function synonymRe(t) {
+  const parts = t.split(SYNONYM_WORDS);                  // the words at odd places
+  if (parts.length < 2) return null;
+  return new RegExp(parts.map((p, i) => {
+    if (i % 2 === 0) return escapeRe(p);
+    const o = SYNONYMS[p];
+    return `(?:${p}|${o.length < p.length ? `\\b${o}\\b` : o})`;   // dmg as a word, not in "admg"
+  }).join(""));
+}
 
 /** Compile a query into a predicate (card) => boolean, or null for an empty query. */
 export function compile(query) {
@@ -77,6 +91,8 @@ export function compile(query) {
     const re = new RegExp(`${edge(t[0])}${escapeRe(t)}${edge(t.slice(-1))}`);
     return c => re.test(haystack(c));
   }
+  const re = synonymRe(lower);
+  if (re) return c => re.test(haystack(c));
   return c => haystack(c).includes(lower);
 }
 
@@ -104,6 +120,7 @@ export function suggest(query, cards, n = 5) {
 
 export const SEARCH_HELP = [
   ["fire", "In the ability, name or aliases"],
+  ["damage · hp", "Damage/DMG, defense/DEF, speed/SPD, health/HP find each other"],
   ['"draw 2"', "Whole words only"],
   ["!die", "Exclude (any term)"],
   ["fire & type==creature", "Both must match"],

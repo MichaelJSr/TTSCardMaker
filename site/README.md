@@ -23,7 +23,8 @@ data), on a push of site code, daily, and on demand (Actions â†’ Card browser â†
   with one trees API call (`PSD_TREE`).
   The search box speaks the same language as the bot's `/query_ability` (`fire & type==creature`, `hp>7`, `"draw 2"`, `!die`, `|`,
   `created>=2025`, `created==2023-10`: dates at the precision given; spaces around the operator are fine in both),
-  and also matches card names and aliases. The table and the Changes tab link "Details" beside PSD chips and parser
+  and also matches card names and aliases; as in the bot, damage/DMG, defense/DEF, speed/SPD and health/HP find each other
+  in a text term (not in quotes). The table and the Changes tab link "Details" beside PSD chips and parser
   notes (it opens the card with the dropdown open this once; Ctrl-click opens it in a new tab).
 - **Card pages**: the card image (click it for the full-size PNG; signed in, with an edit on the image: tabs Original,
   Mock-up and Rendered) with Add to deck, Compare and Edit under it, stat bars, ability text with icons (variants drawn as the card font draws them: `[fire:tint]`
