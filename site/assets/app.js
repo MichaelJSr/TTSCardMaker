@@ -39,15 +39,15 @@ const S = {
   notPick: new Set(),                                      // series, subseries, author: ≠ pressed with nothing picked yet
   fontUse: null,                                           // card id -> its fonts (data/cardfonts.json), once the Font filter loads it
   fontKept: [],                                            // the Font chips listed, in order: picked, excluded, or clicked off (this page only)
+  morgue: [], morgueById: new Map(),                       // retired cards (cards.json morgue): the Morgue chip's list only
 };
 // The game's names (rulebook "04 Table": creature and item decks, field cards, N.M.E. items, the auxiliary decks)
 const KINDS = [["creature", "Creatures"], ["item", "Items"], ["field", "Field cards"], ["minion", "Minions"], ["nme", "N.M.E. items"],
   ["aux item", "Auxiliary items"], ["status", "Status effects"], ["creatures", "Auxiliary creatures"]];
 const KIND_PLURAL = { debuff: "Debuffs", buff: "Buffs", unknown: "Other" };   // kind= values the chips don't have (the Stats links)
-const FLAGS = [["history", "Text history"], ["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused (no card in play names it)"],
+const FLAGS = [["alias", "Aliases"], ["dup", "Duplicates"], ["unused", "Unused (no card in play names it)"],
   ["mentions", "Mentions another card"], ["mentioned", "Mentioned by another card"], ["edited", "Edited on the website"],
-  ["unpublished", "Has unpublished edits"], ["pending", "PSD pending or refused"], ["unparsed", "Not parsed yet"], ["problems", "Parse problems"],
-  ["banned", "Banned (constructed)"]];
+  ["unpublished", "Has unpublished edits"], ["banned", "Banned (constructed)"]];
 const EDIT_FLAGS = new Set(["unpublished"]);              // listed in edit mode (or when in the address)
 // the sidebar's Needs handling chips, flags= values too (flags.js): [value, chip, the active filter's words]
 const HANDLING = [["flagged", "All", "Needs handling"], ...CARD_FLAGS.map(([k, l]) => [k, l, l])];
@@ -73,6 +73,7 @@ const createdTip = c => `${CREATED_TIP[c.createdFrom] || "Created"}${c.createdAb
 const isStatus = c => c.type === "debuff" || c.type === "buff";
 const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : "");             // item types read "Support", as in the rulebook
 const kindOf = c => (isStatus(c) ? "status" : c.type);
+const cardOf = id => S.byId.get(id) || S.morgueById.get(id);              // a Morgue card opens too, never in a live list
 const shareUrl = id => `${ROOT}c/${encodeURIComponent(id)}/`;
 const userUrl = login => `${ROOT}u/${encodeURIComponent(login)}/`;
 const deckUrl = d => `${ROOT}d/#/deck/${D.encode(d)}`;
@@ -180,6 +181,8 @@ async function init() {
   setHeavy(S.data.heavy);                                 // commits too big for GitHub's page: commit links go to the card's history
   S.created = S.all.some(c => c.created);                 // creation dates: none in a shallow build without the dates file
   for (const c of S.all) S.byId.set(c.id, c);
+  S.morgue = S.data.morgue || [];
+  for (const c of S.morgue) S.morgueById.set(c.id, c);
   for (const [old, id] of Object.entries(S.data.moved || {})) if (!S.byId.has(old) && S.byId.has(id)) S.byId.set(old, S.byId.get(id));   // a renamed card's old id: links, picks, share codes
   if (editorP) await editorP.catch(() => {});
   if (editor !== IDLE) { editor.init(); previews.init(); }  // applies staged edits, then derive()
@@ -345,9 +348,10 @@ function route(e) {
   syncUrl(r);
   hideTip();
   if (r.name === "card") {
-    if (!S.renderedHash && !S.byId.has(r.arg)) renderView(parseHash(S.listHash), S.listHash);   // a dead link: the grid, then the toast
+    if (!S.renderedHash && !cardOf(r.arg)) renderView(parseHash(S.listHash), S.listHash);   // a dead link: the grid, then the toast
     else if (!S.renderedHash) {                          // from a link: the grid (and its pictures) when the dialog closes
-      S.list = listOf(new URLSearchParams()); view.replaceChildren();
+      if (!S.byId.has(r.arg)) S.listHash = "#/cards?morgue=1";                       // a Morgue card's: the Morgue's
+      S.list = listOf(parseHash(S.listHash).params); view.replaceChildren();
       markTab("cards"); if (pageH1) pageH1.textContent = pageName({ name: "cards" });
     }
     openCard(r.arg, r.params.has("details"));
@@ -419,8 +423,8 @@ function rangeOf(p, k) { const v = p.get(k); if (!v) return null; const [lo, hi]
 // migration's, the moved stat exclusions) nor the migration's fields in an editor's entry (botEdited)
 const webEdited = c => changes.fieldEditors(c).length > 0;
 function filterCards(p, { facets = true } = {}) {
-  const pred = compile(p.get("q") || "");
-  let list = pred ? S.cards.filter(pred) : S.cards.slice();
+  const pred = compile(p.get("q") || ""), from = p.get("morgue") ? S.morgue : S.cards;   // the Morgue: its cards alone
+  let list = pred ? from.filter(pred) : from.slice();
   if (!facets) return list;
   const kinds = csv(p, "kind"), st = csv(p, "stars").map(Number), subs = csv(p, "sub"), types = csv(p, "types"), flags = csv(p, "flags");
   const series = p.get("series"), subseries = p.get("subseries"), author = p.get("author");
@@ -432,10 +436,9 @@ function filterCards(p, { facets = true } = {}) {
   if (subseries) list = list.filter(c => c.subseries === subseries);
   if (author) list = list.filter(c => c.author === author);
   for (const k of ["hp", "def", "atk", "spd"]) { const r = rangeOf(p, k); if (r) list = list.filter(c => c[k] != null && c[k] >= r[0] && c[k] <= r[1]); }
-  const flagFns = { history: c => !!c.hv, unparsed: c => !c.parsed, problems: c => !!(c.problems && c.problems.length), alias: c => !!(c.aliases && c.aliases.length),
+  const flagFns = { alias: c => !!(c.aliases && c.aliases.length),
     dup: c => !!(c.dup || c.dups), unused: c => !!c._unused, edited: c => !!(webEdited(c) || c._staged || c._sent), unpublished: c => !!c._staged,
     mentions: c => others(S.mentions.get(c.id), c), mentioned: c => others(S.mentionedBy.get(c.id), c),
-    pending: c => !!((c.pending && c.pending.length) || c.refused),
     banned: c => !!c._banned, flagged, ...Object.fromEntries(CARD_FLAGS.map(([k]) => [k, c => hasFlag(c, k)])) };
   for (const f of flags) if (flagFns[f]) list = list.filter(flagFns[f]);
   const missing = G.MISSING.filter(([k]) => csv(p, "missing").includes(k));   // cards missing all of them
@@ -535,8 +538,11 @@ function renderCards(r) {
   const fontRemoves = (k, v) => { const q = new URLSearchParams(p); q.delete("xfont"); for (const x of fontOut) if (x !== v) q.append("xfont", x); return Math.max(0, filterCards(q).length - list.length); };
   const view_ = p.get("view") || localStorage.getItem("view") || "grid", size = p.get("size") || localStorage.getItem("size") || "m";
   const handling = csv(p, "flags").some(f => HANDLING.some(([k]) => k === f));   // Needs handling: a list with each card's notes
+  const morgue = !!p.get("morgue"), edits = editing() && !morgue;      // the Morgue's cards: nothing to edit or drag
+  const morgueN = S.morgue.length ? filterCards(new URLSearchParams([...(p.get("q") ? [["q", p.get("q")]] : []), ["morgue", "1"]]), { facets: false }).length : 0;
   const active = [];
   if (p.get("q")) active.push(["q", `“${p.get("q")}”`]);
+  if (morgue) active.push(["morgue", "The Morgue"]);
   for (const v of cfIn) active.push(["cf", v, v, false, cfSave(v)]);
   for (const v of cfOut) active.push(["xcf", `not ${v}`, v, true, cfSave(v)]);
   for (const k of csv(p, "kind")) active.push(["kind", (KINDS.find(x => x[0] === k) || [k, KIND_PLURAL[k] || k])[1], k]);
@@ -569,8 +575,8 @@ function renderCards(r) {
     <aside class="filters${S.filtersOpen ? " open" : ""}" aria-label="Filters">
       ${mine.length ? `<h3>My filters</h3>${mine.map(v => { const x = cfOut.includes(v), f = CF.pred(v), n = x ? cfRemoves(v) : f ? list.filter(f).length : list.length;
         return `<div class="cf-row"><label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="cf" data-value="${esc(v)}"${!x && cfIn.includes(v) ? " checked" : ""}${x ? ` aria-label="${esc(v)}: excluded"` : ""}> <span class="cf-q">${esc(v)}</span><span class="n">${x ? `−${n}` : n}</span></label><button type="button" class="ghost cf-del" data-action="cf-delete" data-value="${esc(v)}" title="Remove this filter" aria-label="Remove the filter ${esc(v)}">✕</button></div>`; }).join("")}` : ""}
-      ${needOpts.length ? `<h3>Needs handling</h3>${chipList("flags", needOpts, csv(p, "flags"), needCounts, xs("flags"), removes)}` : ""}
       <h3>Kind</h3>${chipList("kind", KINDS.filter(([k]) => kindCounts.get(k)), csv(p, "kind"), kindCounts, xs("kind"), removes)}
+      ${S.morgue.length || morgue ? `<h3>Retired</h3>${chipList("morgue", [["1", "The Morgue"]], csv(p, "morgue"), new Map([["1", morgueN]]))}` : ""}
       <h3>Stars</h3>${chipList("stars", starOpts, csv(p, "stars"), starCounts, xs("stars"), removes)}
       ${subOpts.length ? `<h3>Item type</h3>${chipList("sub", subOpts, csv(p, "sub"), subCounts, xs("sub"), removes)}` : ""}
       ${typeOpts.length ? `<h3>Types</h3><div class="icon-toggles">${typeOpts.map(t => { const ic = iconFor(t), x = xs("types").includes(t), on = !x && csv(p, "types").includes(t), name = t.replace(/_/g, " ");
@@ -586,13 +592,14 @@ function renderCards(r) {
           return `<label class="check${x ? " x" : ""}"><input type="checkbox" data-action="toggle-param" data-key="flags" data-value="${f}"${!x && csv(p, "flags").includes(f) ? " checked" : ""}${x ? ` aria-label="${l}: excluded"` : ""}> ${l}${x ? `<span class="n">−${removes("flags", f)}</span>` : ""}</label>`; }).join("")}
       ${missOpts.length ? `<h3>Missing</h3>${missOpts.map(([k, l, tip]) => { const x = xmiss.includes(k);
         return `<label class="check${x ? " x" : ""}"${tip ? ` title="${esc(tip)}"` : ""}><input type="checkbox" data-action="toggle-param" data-key="missing" data-value="${k}"${!x && miss.includes(k) ? " checked" : ""}${x ? ` aria-label="${l}: excluded"` : ""}> ${l}<span class="n">${x ? `−${removes("missing", k)}` : missCounts.get(k)}</span></label>`; }).join("")}` : ""}
+      ${needOpts.length ? `<h3>Needs handling</h3>${chipList("flags", needOpts, csv(p, "flags"), needCounts, xs("flags"), removes)}` : ""}
       <p class="muted x-hint">Right-click or long-press a filter to exclude it.</p>
       <p><button type="button" class="ghost" data-action="clear-filters">Clear all filters</button></p>
     </aside>
     <section>
-      ${editing() && view_ === "grid" ? tray.html(S.selecting) : ""}
+      ${edits && view_ === "grid" ? tray.html(S.selecting) : ""}
       ${G.toolbarHtml({ count: list.length, waiting, active: active.length, sort: sortOf(p), dir: p.get("dir"), created: S.created, view: view_, size,
-        needs: csv(p, "flags").includes("flagged") ? 0 : S.cards.filter(flagged).length, tail: `${editing() && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
+        needs: csv(p, "flags").includes("flagged") ? 0 : S.cards.filter(flagged).length, tail: `${edits && view_ === "grid" ? `<button type="button" class="ghost" data-action="tray-add"${tray.pinned() ? " hidden" : ""}>Pin a box</button>
           <button type="button" class="ghost" data-action="select-mode" aria-pressed="${S.selecting}">${S.selecting ? "Done" : "Select"}</button>` : ""}
         ${S.compare.length ? `<a href="#/compare/${S.compare.join(",")}">Compare (${S.compare.length})</a>` : ""}` })}
       ${active.length ? `<div class="active-filters">${active.map(([k, l, v, x, more = ""]) => `<button type="button" class="chip${x ? " x" : ""}" data-action="remove-param" data-key="${k}"${v !== undefined ? ` data-value="${esc(v)}"` : ""}>${esc(l)} ✕</button>${more}`).join("")}</div>` : ""}
@@ -606,8 +613,8 @@ function renderCards(r) {
   if (filtersTop && $(".browse .filters", view) !== filters) $(".browse .filters", view).scrollTop = filtersTop;
   if (grid) fillGrid(grid, list, { css: (G.TILE_SIZES[size] || G.TILE_SIZES.m)[1], win });
   else if (list.length && view_ === "table" && !handling) fillTable($(".browse table.data tbody", view));
-  if (editing()) inline.mountGrid(view, p);
-  if (editing()) previews.mountTiles(view);
+  if (edits) inline.mountGrid(view, p);
+  if (edits) previews.mountTiles(view);
 }
 // The grid stays in the page while the view stays a grid: Safari draws a picture again when its <img> leaves the page or
 // comes back (the whole grid flashed at each redraw, e.g. the one entering edit mode after a kept sign-in). The filters
@@ -837,16 +844,17 @@ function strip(title, cards, tip = "") {
   return cards.length ? `<h3><span class="muted">${cards.length}</span> ${noted(title, tip)}</h3><div class="strip">${cards.slice(0, 24).map(x => tileHtml(x, { small: true })).join("")}</div>` : "";
 }
 function openCard(id, showDetails = false) {
-  const c = S.byId.get(id);
+  const c = cardOf(id);
   const was = $(".psd-details", modal);                  // a re-render keeps it open
   showDetails ||= !modal.hidden && !!was?.open && was.dataset.id === id;
   const wasB = $(".badge-help", modal), keepBadges = !modal.hidden && !!wasB?.open && wasB.dataset.id === id, verOpen = versionsOpen(id);
   if (!c) { closeModal(); document.title = S.title || document.title; toast("That card doesn't exist (anymore)."); history.replaceState(null, "", S.listHash); return; }
-  const pool = S.list.length && S.list.some(x => x.id === id) ? S.list : S.cards;
+  const pool = S.list.length && S.list.some(x => x.id === id) ? S.list : c.morgue ? S.morgue : S.cards;
   const i = pool.findIndex(x => x.id === id), prev = pool[(i - 1 + pool.length) % pool.length], next = pool[(i + 1) % pool.length];
   const inDeck = deckHas(c.id), hang = c.png && G.hangs(c);       // hang: the art hangs out of the frame (grid.js hangVars)
   const mentions = [...(S.mentions.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
   const mentionedBy = [...(S.mentionedBy.get(c.id) || [])].map(x => S.byId.get(x)).filter(Boolean);
+  const scope = c.morgue ? "morgue=1&" : "";                     // a Morgue card's facts link within the Morgue
   const inSub = x => x.subseries === c.subseries;                // any series
   const sameSub = c.subseries ? S.cards.filter(x => inSub(x) && x.id !== c.id) : [];
   const sameSeries = c.series ? S.cards.filter(x => x.series === c.series && x.id !== c.id && !(c.subseries && inSub(x))) : [];
@@ -860,11 +868,11 @@ function openCard(id, showDetails = false) {
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
       <div class="image-wrap"><div class="iv"><div class="iv-stage${hang ? " hang" : ""}"${hang ? ` style="${G.hangVars(c)}"` : ""}><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${placeholderOf(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
-        <div class="actions card-actions">
+        ${c.morgue ? "" : `<div class="actions card-actions">
           <button type="button" class="${inDeck ? "" : "primary"}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "Remove from deck" : "Add to deck"} <span class="kbd">d</span></button>
           <button type="button" data-action="compare-add" data-id="${c.id}">${S.compare.includes(c.id) ? "In comparison" : "Compare"} <span class="kbd">x</span></button>
           <button type="button" data-action="edit-card" data-id="${c.id}">${editing() ? "All fields" : "Edit"} <span class="kbd">e</span></button>
-        </div>
+        </div>`}
         <div class="actions" style="justify-content:space-between">
           <a class="fact" data-nav="prev" href="#/card/${prev.id}" title="Previous (←)">← ${esc(prev.name)}</a>
           <a class="fact" data-nav="next" href="#/card/${next.id}" title="Next (→)">${esc(next.name)} →</a></div>
@@ -873,16 +881,17 @@ function openCard(id, showDetails = false) {
         <h2>${paintHtml(c.name, colorRanges(c.name, c.colors, "name", null, inkOf(c, "name")))}</h2>
         ${flagsHtml(c)}
         <div class="facts">
-          <a class="fact" href="#/cards?kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>
+          ${c.morgue ? `<a class="fact" href="#/cards?morgue=1" data-tip="${esc(`Retired: in MDW/The Morgue${c.retired ? ` since ${date(c.retired)}` : ""}, out of play`)}">The Morgue</a>` : ""}
+          ${c.morgue && c.type === "unknown" ? "" : `<a class="fact" href="#/cards?${scope}kind=${encodeURIComponent(kindOf(c))}">${esc(KIND_LABEL[c.type] || c.type)}</a>`}
           ${c.subtype ? `<a class="fact" href="#/cards?sub=${encodeURIComponent(c.subtype)}">${esc(cap(c.subtype))}</a>` : ""}
-          ${c.stars ? `<a class="fact" href="#/cards?stars=${c.stars}"><span class="stars">${stars(c.stars)}</span> ${c.stars}-star</a>` : ""}
+          ${c.stars ? `<a class="fact" href="#/cards?${scope}stars=${c.stars}"><span class="stars">${stars(c.stars)}</span> ${c.stars}-star</a>` : ""}
           ${c.series ? `<a class="fact" href="#/cards?series=${encodeURIComponent(c.series)}">${esc(c.series)}</a>` : ""}
           ${c.subseries ? `<a class="fact" href="#/cards?subseries=${encodeURIComponent(c.subseries)}" data-tip="Subseries">${esc(c.subseries)}</a>` : ""}
-          ${c.author ? `<a class="fact" href="#/cards?author=${encodeURIComponent(c.author)}">by ${esc(c.author)}</a>` : ""}
+          ${c.author ? `<a class="fact" href="#/cards?${scope}author=${encodeURIComponent(c.author)}">by ${esc(c.author)}</a>` : ""}
           ${c.created ? `<span class="fact" data-tip="${esc(createdTip(c))}">created ${createdText(c)}</span>` : ""}
           ${c.ts ? `<span class="fact" data-tip="Last PSD commit (Pacific time)">updated ${date(c.ts)}</span>` : ""}
           ${c.psdSize ? `<a class="fact" href="#/cards?sort=psd" data-tip="All cards by PSD size">PSD ${psdSize(c)}</a>` : ""}
-          ${!c.parsed ? `<span class="fact">Image only: not parsed yet</span>` : ""}
+          ${!c.parsed && !c.morgue ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="${unusedTip(c)}">Unused</span>` : ""}
           ${c.dup ? `<a class="fact" href="#/card/${c.dup}" data-tip="The same card, counted once">Duplicate of ${esc(S.byId.get(c.dup)?.name || "")}</a>` : ""}
           ${c._staged ? `<span class="fact staged">Unpublished edit</span>` : c._sent ? `<span class="fact" data-tip="Published; the site is rebuilding">Publishing…</span>` : webEdited(c) ? `<span class="fact" data-tip="${esc(changes.editedTip(c))}">Edited</span>` : ""}
@@ -904,7 +913,7 @@ function openCard(id, showDetails = false) {
           <div id="card-changes">${balanceHtml(c, "changes")}</div>
           <div id="history-slot">${historyOf(c)}</div>
           ${c.details ? (st => details.detailsHtml(st, showDetails || !!st.details, c.id))(details.readState(store)) : ""}
-          <div id="card-ratings">${ratings.blockHtml(ratedOf(c), { editing: editing(), mine: editor.myRating(ratedOf(c).id) })}</div>
+          ${c.morgue ? "" : `<div id="card-ratings">${ratings.blockHtml(ratedOf(c), { editing: editing(), mine: editor.myRating(ratedOf(c).id) })}</div>`}
         </div>
       </div>
     </div></div>`;
@@ -925,8 +934,8 @@ function openCard(id, showDetails = false) {
     if (S.data.heavy?.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
   const dd = $(".psd-details", modal);
   if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
-  if (editing()) inline.mountCard(modal, c);
-  if (editing()) previews.mountCard(modal, c);
+  if (editing() && !c.morgue) inline.mountCard(modal, c);
+  if (editing() && !c.morgue) previews.mountCard(modal, c);
 }
 
 /** The card dialog's first picture: the grid tile's when it has loaded (240 or 360 px, no new download), the 720 px one a
@@ -1691,7 +1700,7 @@ document.addEventListener("click", e => {
   const a = e.target.closest("[data-action]");
   if (a && a.tagName !== "SELECT" && !(a.tagName === "INPUT" && a.type === "checkbox")) { e.preventDefault(); e.stopPropagation(); act(a.dataset.action, a); return; }
   const open = e.target.closest("[data-open], .chart [data-card]");
-  if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey || S.selecting) && open.closest(".browse .grid")) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
+  if (open && editing() && (e.shiftKey || e.ctrlKey || e.metaKey || S.selecting) && open.closest(".browse .grid") && !S.morgueById.has(open.dataset.open)) { e.preventDefault(); toggleSelect(open.dataset.open, e.shiftKey); return; }
   if (open?.matches("a[href]") && (e.metaKey || e.ctrlKey || e.shiftKey || e.button)) return;   // a tile's link: the browser opens its page
   if (open) { e.preventDefault(); location.hash = `#/card/${open.dataset.open || open.dataset.card}`; return; }
   const go = e.target.closest(".chart a.go");             // a Stats chart's cards: the grid from its top
@@ -1776,8 +1785,8 @@ document.addEventListener("keydown", e => {
   else if (inCard && (e.key === "ArrowLeft" || e.key === "ArrowRight")) { const link = $(`[data-nav="${e.key === "ArrowLeft" ? "prev" : "next"}"]`, modal); if (link) location.hash = link.getAttribute("href"); }
   else if (inCard && e.key === "d") toggleDeck(id);
   else if (inCard && e.key === "c") copy(shareUrl(id), "link: paste it in Discord");
-  else if (inCard && e.key === "x") actions["compare-add"]({ dataset: { id } });
-  else if (inCard && e.key === "e") { e.preventDefault(); withEditor(ed => ed.open(id)); }
+  else if (inCard && e.key === "x" && S.byId.has(id)) actions["compare-add"]({ dataset: { id } });
+  else if (inCard && e.key === "e" && S.byId.has(id)) { e.preventDefault(); withEditor(ed => ed.open(id)); }
 });
 
 // tooltips: [data-tip] text, [data-v]+[data-l] chart values, card links show a preview; when they go: tip.js

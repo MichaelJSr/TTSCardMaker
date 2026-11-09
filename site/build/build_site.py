@@ -54,7 +54,8 @@ Where the data comes from:
     (one more `git log` over Card Edits.json and Card Authors.txt, their versions read in one batch) and the archived
     cards (old_stats tags).
 PSDs in the repo that the bot hasn't parsed yet are still listed, image only; a PNG whose Card Edits dup_of names its
-original is a duplicate (the card data's duplicate_of).
+original is a duplicate (the card data's duplicate_of). MDW/The Morgue's retired cards (a PSD with its PNG) are
+cards.json morgue, picture only, never a live card (morgue_cards).
 
 Output (site/dist): data/cards.json (everything the first screen needs), data/rules.json (the rulebook's chapters and its pictures' sizes), data/history.json, data/users.json,
 data/contributions.json, data/decks.json, data/versions.json, data/analytics.json and data/changelog.json (loaded when the rulebook, a card's text or image history, the
@@ -205,9 +206,10 @@ STAT_KEYS = {"hp": "hp", "def": "defense", "atk": "attack", "spd": "speed"}
 FIXED_BY = {"hp": ("HP NOT FOUND",), "def": ("DEF NOT FOUND",), "atk": ("ATK NOT FOUND",), "spd": ("SPD NOT FOUND",),
             "ability": ("ABILITY TEXT NOT FOUND", "NO ABILITY LAYER"), "stars": ("NO STARS FOUND",),
             "type": ("UNKNOWN TYPE",), "types": ("MISSPELT TYPE",), "allow_high_stats": ("STATS TOO HIGH",),
-            "creatures": ("SEVERAL CREATURES", "NO STATS FOUND")}
+            "creatures": ("NO STATS FOUND",)}
 FIXED_BY_ALL = {("hp", "def", "atk", "spd"): ("NO STATS FOUND",)}    # answered once every one has a value
 SKIP_PARTS = ("MDW", "Markers")
+MORGUE = "MDW/The Morgue/"                    # retired cards (owner 11-08): cards.json morgue, picture only, never a live card
 
 
 def log(*args):
@@ -1070,6 +1072,28 @@ def classify(path):
     return {"type": "unknown"}
 
 
+def morgue_cards(tree, slug):
+    """The Morgue's cards: each PSD in MORGUE with its PNG beside it, picture only, named by its file (slug: its id)."""
+    out = []
+    for path in sorted(tree):
+        rest = path[len(MORGUE):]
+        if path.startswith(MORGUE) and "/" not in rest and rest.lower().endswith(".psd") and path[:-4] + ".png" in tree:
+            name = os.path.splitext(rest)[0].replace("_", " ")
+            out.append({"id": slug(name), "name": name, "key": name, "type": "unknown", "psd": path, "png": path[:-4] + ".png",
+                        "morgue": True})
+    return out
+
+
+def retired_into(morgue, archived):
+    """A Morgue card's kind, stars and author from the archive row whose PSD moved to it (archived_cards)."""
+    rows = {r.get("moved_to"): r for r in archived if r.get("moved_to")}
+    for e in morgue:
+        r = rows.get(e["psd"]) or {}
+        for k, field in (("type", "card_type"), ("stars", "stars"), ("author", "author"), ("retired", "at")):
+            if r.get(field):
+                e[k] = r[field]
+
+
 # ---- thumbnails and icons ----------------------------------------------------------------------------
 _card_raw = None
 
@@ -1235,8 +1259,9 @@ def clip(text, limit=300):
 
 def share_text(c):
     """Kind line, stats line, ability: the card's link-preview description."""
-    kind = KIND_LABEL.get(c["type"], c["type"].title())
-    head = " · ".join(filter(None, [f"{c['stars']}★ {kind}" if c.get("stars") else kind, c.get("series"), c.get("subseries"),
+    kind = "" if c.get("morgue") and c["type"] == "unknown" else KIND_LABEL.get(c["type"], c["type"].title())
+    head = " · ".join(filter(None, ["Retired (The Morgue)" if c.get("morgue") else None,
+                                    f"{c['stars']}★ {kind}" if c.get("stars") else kind, c.get("series"), c.get("subseries"),
                                     f"by {c['author']}" if c.get("author") else None]))
     stats = " · ".join(f"{label} {c[k]}" for k, label in (("hp", "HP"), ("def", "DEF"), ("atk", "ATK"), ("spd", "SPD")) if c.get(k) is not None)
     text = re.sub(r"\[([^\[\]:]+)(?::\s*(?ai:(no|tint|sticker|glow|darkglow)))?\]",   # variants in any ASCII case, as the font
@@ -4384,6 +4409,7 @@ def main():
         apply_edits(entry, edits, tree.get(path))
         cards.append(entry)
     # cards.json leaves "parsed" out when true
+    morgue = morgue_cards(tree, unique_slug)
 
     # dup_of ("" = not a duplicate)
     by_id = {e["id"]: e for e in cards}
@@ -4456,7 +4482,7 @@ def main():
     # images (cached by blob hash; only new or changed PNGs are fetched and encoded)
     if not features.check("avif"):
         raise SystemExit("error: this Pillow can't write AVIF (the card images); pip install -r site/build/requirements.txt")
-    jobs = [e for e in cards if e["png"] and e["png"] in tree]
+    jobs = [e for e in cards + morgue if e["png"] and e["png"] in tree]
     failed, later, meta = [], [], load_image_meta()
     deadline = time.time() + IMAGE_BUDGET if IMAGE_BUDGET > 0 else None
     def images(e):
@@ -4604,6 +4630,7 @@ def main():
     archived = archived_cards(old_stats if isinstance(old_stats, dict) else {}, id_of, stats, people=people, credited=credited,
                              author_of=lambda name: (by_key.get(card_key(name)) or {}).get("author"))
     moved = redirects(archived, used_slugs, id_of)   # renamed cards: their old ids (pages, picks, hands) go on to the new one
+    retired_into(morgue, archived)
     public_decks, private_decks = read_decks(cards, moved)
     data = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -4623,6 +4650,7 @@ def main():
         "people": sorted(set(people.values()) | {e["author"] for e in cards if e.get("author")}, key=str.lower),
         "peopleMap": PEOPLE_AS_WRITTEN,
         **({"moved": moved} if moved else {}),     # app.js: a renamed card's old id -> its id (links, share codes)
+        "morgue": morgue,                     # app.js: the Morgue chip's cards, outside every live list
     }
     profiles = read_profiles(cards, data["people"], moved)
     by_login = {p["login"].lower(): p for p in profiles}
@@ -4711,7 +4739,7 @@ def main():
             for name, blob in cover_files.items() if part == "img" else ():
                 with open(os.path.join(DIST, "rulebook", part, name), "wb") as fh:
                     fh.write(blob)
-    log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), rulebook: {len(chapters)} chapters, {len(rule_images)} pictures, "
+    log(f"cards: {len(cards)} ({sum(1 for c in cards if c.get('parsed') is False)} image only), {len(morgue)} in the Morgue, rulebook: {len(chapters)} chapters, {len(rule_images)} pictures, "
         f"icons: {len(set(i['file'] for i in icons.values()))}, banned: {sum(len(g['entries']) for g in banlist['groups'])}")
     game = game_text(cards, [{"name": f"{int(c['num'])}. {c['title']}" if int(c["num"]) else c["title"], "ability": rulebook_text(c["source"])}
                              for c in printed_chapters(chapters)], banlist, icons)
@@ -4811,7 +4839,7 @@ def main():
         if c.get("img") and SITE_URL:
             return f"{SITE_URL}/thumbs/{c['img']}-og.jpg", og_size(os.path.join(DIST, "thumbs", f"{c['img']}-og.jpg"))
         return (RAW + quote(c["png"]) if c.get("png") else ""), None
-    for c in cards:
+    for c in cards + morgue:
         if c.get("hidden"):
             continue
         desc, (image, size) = share_text(c), og_image(c)

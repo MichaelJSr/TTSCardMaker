@@ -120,7 +120,7 @@ export function tileHtml(c, { small = false, eager = false, css = 190, construct
   const hang = c.img && hangs(c), cls = `tile${hang ? " hang" : ""}`;
   return `${link ? `<a class="${cls}" href="${url}" ${label}>` : href ? `<a class="${cls}" href="${url}" data-open="${c.id}" ${label}>` : `<article class="${cls}" data-open="${c.id}" tabindex="0" ${label}>`}
     ${c.img ? `<img class="art" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" ${imgAttrs(env.thumbs, c, small ? 120 : css)}${hang ? ` style="${hangVars(c, TILE_ART, 11)}"` : ""} alt="">` : `<div class="art"></div>`}
-    ${link ? "" : constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>`
+    ${link || c.morgue ? "" : constructed && c._banned ? `<span class="flag banned" data-tip="Banned in constructed: ${esc(c._banned)}">Banned</span>`
       : c._staged ? `<span class="flag staged" data-tip="Changed in your unpublished batch">Unpublished</span>`
       : c.hidden ? `<span class="flag" data-tip="Hidden from the website">Hidden</span>`
       : c.refused ? `<span class="flag refused" data-tip="Image update refused: ${esc(c.refused)}">Image update refused</span>`
@@ -129,7 +129,7 @@ export function tileHtml(c, { small = false, eager = false, css = 190, construct
       : !c.parsed ? `<span class="flag" data-tip="Not in the card data yet">New</span>`
       : c._unused ? `<span class="flag unused" data-tip="${unusedTip(c)}">Unused</span>`
       : c.dup ? `<span class="flag" data-tip="Duplicate of ${esc(env.dupName(c.dup) || "")}: the same card, counted once">Duplicate</span>` : ""}
-    ${small || link ? "" : `<button type="button" class="add${inDeck ? " in" : ""}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "✓ In deck" : "+ Deck"}</button>`}
+    ${small || link || c.morgue ? "" : `<button type="button" class="add${inDeck ? " in" : ""}" data-action="deck-toggle" data-id="${c.id}">${inDeck ? "✓ In deck" : "+ Deck"}</button>`}
     <div class="meta"><div class="name">${esc(c.name)}</div>
     <div class="sub">${c.stars ? `<span class="stars">${stars(c.stars)}</span>` : ""}${small ? "" : `<span>${esc(KIND_LABEL[c.type] || c.type)}</span>`}${small ? "" : (c.types || []).slice(0, 3).map(t => iconImg(env.icons, t, "")).join("")}</div></div>${link || href ? "</a>" : "</article>"}`;
 }

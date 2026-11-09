@@ -11,6 +11,8 @@ data), on a push of site code, daily, and on demand (Actions → Card browser �
   source...; every sort puts cards lacking its value last). A right-click or long press on a filter excludes it (≠ on the
   Series, Subseries and Author selects). **My filters**: searches saved in this browser ("Save as filter" beside the
   search box), each one a checkbox in the sidebar (`cf=` keeps, `xcf=` drops; a link carries them).
+  **The Morgue** (under Retired; `morgue=1`): the retired cards in `MDW/The Morgue` (a PSD with its PNG), picture and
+  name only, never in the default list, decks, the TTS save, Stats or counts of live cards.
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
   column too; another sort picked from the menu runs in its usual direction): by the card's creation date, ties by
   first upload, then name; a card without one goes last. The creation date is the earlier of its first Discord post
@@ -238,7 +240,7 @@ and clear them, each with a short note on what the issue is. `hand`: the picture
 a website edit that cannot bake. `bars`: bars that do not read like the template. The checks read only PSDs without a
 result, so a fixed card clears on its next push; a whole-tree pass is a dispatch of Card checks with `all`. Nothing is
 told to Discord or a commit, and nothing is blocked. The card page shows the notes under the name; **Needs handling** at
-the top of the Cards filters opens a list of the cards with their notes (All, or one flag; `flags=flagged`, `flags=hand`,
+the bottom of the Cards filters opens a list of the cards with their notes (All, or one flag; `flags=flagged`, `flags=hand`,
 `flags=bars`, excluded with `xflags=`; on a phone a link in the toolbar too); search `flag:hand`, `flag:bars`, `flag:any`.
 
 Any editor can add one by hand too: `+ needs doing by hand` on the card page, typing what the issue is (it needs a reason),
@@ -439,7 +441,7 @@ Both run in `.github/workflows/card-guards.yml`'s check job (their own workflows
   card without adding the ... font to MDW/Fonts, bite this user."). The fix is to add the font file to the top level of
   `MDW/Fonts/`.
 - The card check (AutoCroissant `commands/card_check.py`) reports the notes `/update_stats` would print for each pushed
-  PSD (NO STARS FOUND, MISSPELT TYPE, SEVERAL CREATURES, HP/DEF/ATK/SPD NOT FOUND, STATS TOO HIGH, ABILITY TEXT NOT
+  PSD (NO STARS FOUND, MISSPELT TYPE, NO STATS FOUND, HP/DEF/ATK/SPD NOT FOUND, STATS TOO HIGH, ABILITY TEXT NOT
   FOUND, UNKNOWN TYPE), after the card's `site/Card Edits.json` entry (`problems_ok`, `allow_high_stats`, `creatures`)
   and the bot's exclusions: the job summary, a comment on the commit and one Discord line per card in the standards
   channel, no ping ("... has pushed ... with: ..."). An unreadable PSD is one error line.

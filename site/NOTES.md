@@ -1477,8 +1477,8 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 
 - Stars: the slider and the form's Stars box go up to the most stars any card has (edit.js `maxStars`: Sigil of
   Divinity's 7 today), not 10; the form clamps a typed value to it.
-- Item types: the filter takes any card with that item type; auxiliary items have none until one is set (All fields >
-  Item type, database only). Missing > "No item type" counts auxiliary items too, to find them.
+- Item types: the filter takes any card with that item type; an auxiliary item's comes from its item-type icon since
+  2026-11-08 (§51). Missing > "No item type" counts auxiliary items too, to find them.
 - Creatures by series (owner 10-31): a Series / Subseries toggle (series first; app.js action `series-mode`, kept for the
   session), each list whole in a box that scrolls (style.css `.scroll-box`), the table following the toggle. No other
   chart folds or scrolls (a folding pass over every tall chart was tried and reverted the same day).
@@ -1487,7 +1487,7 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 - **Field**: `flags` in Card Edits.json, `{"hand": "reason", "bars": ""}`, database only (flags.js `CARD_FLAGS`, `FLAG_MAX` 300; build_site `FLAGS`; the bot's card_edits `FLAGS`, `KIND`, last in `ORDER`). No key: no flag; "": no reason. The last flag cleared unsets the field. An entry holding only flags outlives a bake (`rewrite_entry`). The bot never applies it to a card; a flags-only publish still makes a data commit (the manifest's `card_commit`), so the site builds.
 - **Land the bot first**: an older `rewrite_entry` drops an entry whose only field it doesn't know.
 - **Card page**: `flagsHtml` under the name. Edit mode (inline.js): `+ needs doing by hand` in the facts opens its reason, staged once typed (`flagError`: a hand flag says what its issue is, owner 11-07); `+ special stat bars` flags the card at once and opens its reason; `flag:<key>` is the pseudo-field of a reason, as `art:<n>` of a source; ✕ (`data-flag-clear`) clears. The Edit dialog: `#ef-flags`, a tick `ef-flag-<key>` and a reason `ef-flag:<key>` per flag; typing a reason ticks it. Those keys are the drafts' too.
-- **Grid**: "Needs handling" at the top of the sidebar, chips with counts. The heading "Flags" was taken, and so was the param: its values ride in the old `flags=` (`flagged`, `hand`, `bars`; flagFns), so exclusions (`xflags=`), the active chips and `removes` needed nothing new. Several flags at once mean all of them, as before; `flagged` is any. Hidden with no flagged card in the search's list. A phone's Filters are closed, so its toolbar has the one-tap link (grid.js `toolbarHtml` `needs`: every flagged card, what it opens). It can take a row (414 px and up), so index.html's first screen draws it too (build_site `toolbar_html`, check_first.mjs): nothing moves.
+- **Grid**: "Needs handling" at the bottom of the sidebar (the top until 2026-11-08), chips with counts. The heading "Flags" was taken, and so was the param: its values ride in the old `flags=` (`flagged`, `hand`, `bars`; flagFns), so exclusions (`xflags=`), the active chips and `removes` needed nothing new. Several flags at once mean all of them, as before; `flagged` is any. Hidden with no flagged card in the search's list. A phone's Filters are closed, so its toolbar has the one-tap link (grid.js `toolbarHtml` `needs`: every flagged card, what it opens). It can take a row (414 px and up), so index.html's first screen draws it too (build_site `toolbar_html`, check_first.mjs): nothing moves.
 - **Search**: `flag:hand`, `flag:bars`, `flag:any`.
 - **Image versions** moved from `.related` into `.image-wrap`, in one column (list above compare, the pair as wide as before). `.ver-box` is a `<details>`: open beside the text, closed in one column (≤ 820 px), where the card's text comes after the picture; a redraw of the card keeps it as it was (`versionsOpen`). AutoCroissant `tests/test_site_flags.py`.
 
@@ -1515,3 +1515,22 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
 - AutoCroissant psd_details VERSION 4: `stat_caps` ({stat: [per creature]}, psd_edit `stat_caps`) on a card whose stats are not on the template's layer-comp bars (separate icons, pictures, own shapes, digit rows): 10, less where a counted row (Computer Virus's squares) has room for fewer, 20 on Top and Bottom rows. Its cards.json `statCaps`. The template's bars have none: 0-20 (raid 0-40) and website only past them, as before.
 - Edit dialog: the stat inputs' `max`, and past a cap the summary says why and Add to batch refuses (edit.js `capsError`); inline: the slider's cells stop at the cap (inline.js `topOf`), `stageField` refuses with a toast. A value as published passes. Website only does not lift it.
 - The bake refuses the same (classify, never `_site`); the preview words it ("The bake would refuse SPD 6: ..."). The card checks never raise a stat past it, so it is never a hand note.
+
+## 51. The Morgue, auxiliary item types, fewer flags (2026-11-08, owner: "there should be a filter or some way to see morgue cards on the card browser")
+- **The Morgue**: build_site `morgue_cards`: each PSD directly in `MDW/The Morgue/` with its PNG beside it (12 today; the
+  card back has no PSD) is an entry of cards.json `morgue` {id, name and key from the file name, type "unknown", psd, png,
+  morgue: true, the picture's img, tw, th, color}; `retired_into` takes kind, stars, author and `retired` (the date) from
+  the archive row whose `moved_to` is its PSD (10 of 12). Picture only: no parse, no Card sync change, so nothing reaches
+  the bot, `cards`, decks, the TTS details, game.txt, Stats, balance or contributions. A share page each (`share_text`:
+  "Retired (The Morgue)"). app.js: `S.morgue`, `S.morgueById`, `cardOf`; `morgue=1` makes the Morgue the list
+  (`filterCards`), a chip under Retired with its count; the card page drops the deck, compare and edit buttons and the
+  ratings, its facts link within the Morgue; tiles carry no flag or deck button; edit mode leaves its grid alone. A Morgue
+  card from a link closes to the Morgue.
+- **Auxiliary item types**: the parser (AutoCroissant `psd_parser.AUX_ITEM_TYPES`, `_aux_item_type`) gives an auxiliary
+  item its item-type icon's type, as the Items/ folders name them (Equip and Fragile Equip: equip; Food: heal; Field: a
+  new type, field); of two icons the first by their drawn pixels (left-most, a stack's top one). No card under Missing >
+  No item type then. The editor's Item type list stays the Items/ folders (an aux item's own value shows too).
+- **Flags removed**: Text history, PSD pending or refused, Not parsed yet, Parse problems (old `flags=` values are
+  ignored). The card page's own chips stay. The parser's SEVERAL CREATURES note went too: every creature bakes.
+- **Needs handling** moved to the bottom of the sidebar.
+
