@@ -1759,6 +1759,16 @@ const showKeys = () => showDialog(`<h3>Keyboard shortcuts</h3><table class="help
 $("#keys").addEventListener("click", showKeys);
 $("#account").addEventListener("click", () => act("edit-hub"));
 
+// Esc in a dialog's field with typed text leaves the field first (a search clears, the rest keep their text)
+const typedIn = new WeakSet();
+document.addEventListener("input", e => typedIn.add(e.target), true);
+function escField(e, el) {
+  if (modal.hidden || !typedIn.has(el) || !el.value || !modal.contains(el) || !/^(text|search|password|email|url|tel|number|textarea)$/.test(el.type)) return false;
+  if (el.type !== "search") el.blur();
+  else { e.preventDefault(); el.value = ""; el.dispatchEvent(new Event("input", { bubbles: true })); }   // not every browser clears it
+  return true;
+}
+
 document.addEventListener("keydown", e => {
   const item = document.activeElement?.closest?.(".ver-item");
   if (item && (e.key === "ArrowDown" || e.key === "ArrowUp")) {   // move through the version list (minor ones when open)
@@ -1778,7 +1788,7 @@ document.addEventListener("keydown", e => {
   const dist = document.activeElement?.closest?.(".dist-panel[tabindex]");
   if (dist && (e.key === "ArrowLeft" || e.key === "ArrowRight") && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); distPage(dist, e.key === "ArrowRight" ? 1 : -1); return; }
   const ae = document.activeElement, typing = /INPUT|TEXTAREA|SELECT/.test(ae?.tagName) || !!ae?.isContentEditable || !!ae?.closest?.(".segs[data-inline], .star-pick, .type-palette");   // the inline controls are inputs; stat rows and stars take the arrows
-  if (e.key === "Escape") { if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size || S.selecting) { S.selected.clear(); if (S.selecting) { S.selecting = false; rerender(); } else inline?.reflect(view, S.selected); } return; }
+  if (e.key === "Escape") { if (escField(e, ae)) return; if (!modal.hidden) actions.close(); else if (typing) ae.blur(); else if (S.selected.size || S.selecting) { S.selected.clear(); if (S.selecting) { S.selecting = false; rerender(); } else inline?.reflect(view, S.selected); } return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === "Enter" && ae?.dataset?.open && (modal.hidden || modal.contains(ae)) && !$("#edit-form", modal)) { location.hash = `#/card/${ae.dataset.open}`; return; }   // as a click: the profile editor's tiles too
   if ($("#edit-form")) return;                                                         // no single-key shortcuts while a form (card dialog, profile editor) is up

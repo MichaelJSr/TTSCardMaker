@@ -160,7 +160,8 @@ once signed in; it opens the editor hub (your batch, your profile, your password
 `d` add to deck, `c` copy link, `x` compare, `e` edit (All fields when signed in), `r` random, `1`–`6` sections (signed in,
 with cards selected: `1`–`9` drop them on the first nine pinned boxes), `?` help. The single-key
 shortcuts are off while an edit form is open (a card's edit dialog or the profile editor) and while an inline control or a
-stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog.
+stat row has focus; `Esc` cancels an inline edit, otherwise it still closes a dialog (from a field you typed in, the
+first `Esc` leaves the field, keeping its text, or clears a search; the next closes).
 
 ## Where the data comes from
 
