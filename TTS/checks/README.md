@@ -10,7 +10,7 @@ the rules or a checkout (the updater checks run on copies in a temp dir).
 ```sh
 python3 -m venv ~/.venvs/tts-checks                             # once
 ~/.venvs/tts-checks/bin/pip install requests Pillow lupa luaparser
-~/.venvs/tts-checks/bin/python TTS/checks/run_all.py            # all checks on the repo's save, about 4 minutes
+~/.venvs/tts-checks/bin/python TTS/checks/run_all.py            # all checks on the repo's save, about 3 minutes
 ~/.venvs/tts-checks/bin/python TTS/checks/structure.py [save]   # one check
 ```
 
