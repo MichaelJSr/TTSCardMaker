@@ -633,7 +633,7 @@ jobs:
             [ "$1" != font-check ] || args+=(--fonts "$GITHUB_WORKSPACE/MDW/Fonts")
             python -m "commands.${1/-/_}" "${args[@]}" > "$out/report.md"
           }
-          names=(card-check) fonts= failed=
+          names=(card-check) fonts='' failed=''
           if [ "$FONTS" = true ]; then names+=(font-check); check font-check & fonts=$!; fi
           check card-check || failed+=" card-check"
           [ -z "$fonts" ] || wait "$fonts" || failed+=" font-check"
