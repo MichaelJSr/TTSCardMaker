@@ -20366,22 +20366,22 @@
   ]
  },
  "Field/2 Stars/Soul_Sanctum.psd": {
-  "blob": "f41f5ec328ede751521bb8784dc6240f1ecebcc2",
+  "blob": "19f7011b08f5bae4056ceb821321e7bc806dfefd",
   "links": [
    {
-    "drawn": "072ef8de5e65632e91bdc5aac751f1b6b166230b",
+    "drawn": null,
     "name": "Soul_Sanctum - ddz06ty-0790bd2a-eb30-4af4-8cb7-3e4f6dbf1963.png",
     "path": "MDW/Linked/Soul_Sanctum - ddz06ty-0790bd2a-eb30-4af4-8cb7-3e4f6dbf1963.png",
     "size": 2550924
    },
    {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "drawn": null,
     "name": "Hk star.png",
     "path": "Types/Stars/Hk star.png",
     "size": 332571
    },
    {
-    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "drawn": null,
     "name": "field.png",
     "path": "Types/field.png",
     "size": 20013
