@@ -241,8 +241,9 @@ export function alignOf(spans, x0, x1) {
  *  take the colour of the background around them (the unmasked pixels' mean per cell, cells without any filled from
  *  their neighbours, blended across cells). lines ([[x0, y0, x1, y1]] px): only edges in them (grown by `reach`) count,
  *  and gaps up to `close` px between edges on a row are filled too (a badge's pill, the inside of thick letters).
- *  Returns the colours read on the way: {bg, fill, stroke | null} as [r, g, b]. fill: the record's (textColours' known). */
-export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines = null, close = 0, fill = null } = {}) {
+ *  Returns the colours read on the way: {bg, fill, stroke | null} as [r, g, b]. fill: the record's (textColours' known).
+ *  profile (a Gradient Overlay): shades too, the old letters' colours top to bottom (shadesOf), else null. */
+export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines = null, close = 0, fill = null, profile = false } = {}) {
   const [x0, y0, x1, y1] = px(box, W, H), w = x1 - x0, h = y1 - y0;
   if (w < 2 || h < 2) return null;
   const L = luma(data), mask = new Uint8Array(w * h);
@@ -261,11 +262,11 @@ export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines 
   dilate(mask, w, h, reach);
   const cw = Math.max(2, Math.round(cell)), gx = Math.ceil(w / cw), gy = Math.ceil(h / cw);
   const sum = new Float64Array(gx * gy * 3), cnt = new Float64Array(gx * gy);
-  const masked = [];                                  // [lum, r, g, b] of the text's pixels: its colours
+  const masked = [];                                  // [lum, r, g, b, x, y] of the text's pixels: its colours
   let bgSum = [0, 0, 0], bgN = 0;
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const i = ((y0 + y) * W + x0 + x) * 4;
-    if (mask[y * w + x]) { if ((x + y) % 3 === 0) masked.push([L[i >> 2], data[i], data[i + 1], data[i + 2]]); continue; }
+    if (mask[y * w + x]) { if ((x + y) % 3 === 0) masked.push([L[i >> 2], data[i], data[i + 1], data[i + 2], x, y]); continue; }
     const c = Math.floor(y / cw) * gx + Math.floor(x / cw);
     sum[c * 3] += data[i]; sum[c * 3 + 1] += data[i + 1]; sum[c * 3 + 2] += data[i + 2]; cnt[c]++;
     bgSum[0] += data[i]; bgSum[1] += data[i + 1]; bgSum[2] += data[i + 2]; bgN++;
@@ -288,6 +289,7 @@ export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines 
     have.set(next);
   }
   const at = (cx, cy, k) => grid[(clamp(cy, 0, gy - 1) * gx + clamp(cx, 0, gx - 1)) * 3 + k];
+  const tc = textColours(masked, bg, fill), shades = profile ? shadesOf(masked, lines, y0, cw, at, tc.stroke) : null;
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     if (!mask[y * w + x]) continue;
     const fx = (x + 0.5) / cw - 0.5, fy = (y + 0.5) / cw - 0.5, cx = Math.floor(fx), cy = Math.floor(fy), tx = fx - cx, ty = fy - cy;
@@ -296,7 +298,22 @@ export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines 
       data[i + k] = (at(cx, cy, k) * (1 - tx) + at(cx + 1, cy, k) * tx) * (1 - ty) + (at(cx, cy + 1, k) * (1 - tx) + at(cx + 1, cy + 1, k) * tx) * ty;
     }
   }
-  return { bg: bg.map(Math.round), ...textColours(masked, bg, fill) };
+  return { bg: bg.map(Math.round), ...tc, shades };
+}
+/** A Gradient Overlay's colours over the old lines (px), top to bottom: in 8 bands, the median colour of the text's
+ *  pixels (erase's masked, x and y in its box from y0) that are neither the background (at: its cells) nor the outline.
+ *  -> {stops: [[t, [r, g, b]]], top, bottom} | null */
+function shadesOf(masked, lines, y0, cw, at, stroke) {
+  if (!lines?.length) return null;
+  const top = Math.min(...lines.map(l => l[1])), bottom = Math.max(...lines.map(l => l[3])), B = 8, bands = Array.from({ length: B }, () => [[], [], []]);
+  const near = (p, c, d) => [0, 1, 2].every(k => Math.abs(p[k + 1] - c[k]) < d);
+  for (const p of masked) {
+    const t = (y0 + p[5] - top) / Math.max(1, bottom - top), cx = Math.floor(p[4] / cw), cy = Math.floor(p[5] / cw);
+    if (t < 0 || t >= 1 || near(p, [0, 1, 2].map(k => at(cx, cy, k)), 48) || (stroke && near(p, stroke, 60))) continue;
+    const b = bands[Math.floor(t * B)]; for (let k = 0; k < 3; k++) b[k].push(p[k + 1]);
+  }
+  const stops = bands.flatMap((b, i) => (b[0].length >= 6 ? [[(i + 0.5) / B, b.map(median)]] : []));
+  return stops.length >= 2 ? { stops, top, bottom } : null;
 }
 function dilate(mask, w, h, r) {                     // square dilation, separable
   if (r < 1) return;
@@ -824,10 +841,12 @@ const OVERLAY = /^(Color|Gradient|Pattern)Overlay$/;  // psd_details' effect nam
 /** Whether the text layer at path ("Text/Ability") or a group above it has an enabled Color, Gradient or Pattern Overlay
  *  (the details record's effects): the font then draws its badges and stickers in one colour, Stylistic Alternates
  *  (AutoCroissant psd_edit one_colour, 2026-10-25). */
-export function oneColour(rec, path) {
+export function oneColour(rec, path, kind = OVERLAY) {
   const fx = rec?.effects && typeof rec.effects === "object" ? rec.effects : {}, parts = String(path || "").split("/");
-  return !!path && parts.some((_, i) => { const e = fx[parts.slice(0, i + 1).join("/")]; return Array.isArray(e) && e.some(n => OVERLAY.test(String(n))); });
+  return !!path && parts.some((_, i) => { const e = fx[parts.slice(0, i + 1).join("/")]; return Array.isArray(e) && e.some(n => kind.test(String(n))); });
 }
+/** The same for an enabled Gradient Overlay: the letters are drawn in the old ones' shades (erase's profile). */
+export const gradientOn = (rec, path) => oneColour(rec, path, /^GradientOverlay$/);
 const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
 const hexRgb = h => (/^#[0-9a-f]{6}$/i.test(h || "") ? [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)) : null);
 /** A record text layer's main fill [r, g, b]: the colour most of its letters are in (build_site layer_inks' main ink,
@@ -963,7 +982,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       const { found, strays } = part && own && role === "ability" ? layerBlock(L, W, H, b, own, z, rows) : { found: b, strays: [] };   // one layer: its lines in its own box
       const gone = role === "name" ? b.lines : part ? [...eraseLines(b), ...strays] : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name or one layer: its own lines
       const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
-      const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer) });   // in the lines only: dim words too
+      const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer) });   // in the lines only: dim words too
       if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
       jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc });
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
@@ -1054,10 +1073,16 @@ function paintMask(ctx, im, [x, y, w, h], colour, inset = 0) {
   g.globalCompositeOperation = "source-in"; g.fillStyle = rgb(colour); g.fillRect(0, 0, c.width, c.height);
   ctx.drawImage(c, x, y, w, h);
 }
+/** A vertical gradient of shades (shadesOf, canvas px) for letters drawn translated to y. */
+function shaded(ctx, { stops, top, bottom }, y) {
+  const g = ctx.createLinearGradient(0, top - y, 0, bottom - y);
+  for (const [t, c] of stops) g.addColorStop(t, rgb(c));
+  return g;
+}
 /** Lines of pieces from x at baseline base, z px: text with an outline, icons, badges as pills (a cooldown's ring its
  *  left end). one (an overlay on the ability): badges as outlined pills, rings in one colour and stickers as an outline
- *  round the one-colour icon, in the text's fill. */
-function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, imgs, one = false, track = 0, hx = 1 }) {
+ *  round the one-colour icon, in the text's fill. shades (a Gradient Overlay's, shadesOf): letters without a colour in them. */
+function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, imgs, one = false, track = 0, hx = 1, shades = null }) {
   ctx.textBaseline = "alphabetic";
   lines.forEach((line, n) => {
     let x = at(line), y = base + n * pitch;
@@ -1104,7 +1129,7 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
       } else if (p.text.trim()) {
         ctx.save(); ctx.font = `${z}px ${fam}`; if (track) ctx.letterSpacing = `${track * z}px`; ctx.translate(x, y); ctx.scale(hx, 1);
         if (stroke) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(1.5, z * 0.16); ctx.strokeText(p.text, 0, 0); }
-        ctx.fillStyle = p.color || rgb(fill); ctx.fillText(p.text, 0, 0); ctx.restore();
+        ctx.fillStyle = p.color || (shades ? shaded(ctx, shades, y) : rgb(fill)); ctx.fillText(p.text, 0, 0); ctx.restore();
       }
       x += p.w;
     }
@@ -1165,7 +1190,8 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
     if (Number.isFinite(tall) && tall > 0) base = top + (found.lines[0][3] - top) * up / tall;
   }
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one });
+  const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades });
   return over;
 }
 const BOX_FILL = [16, 16, 22];                        // drawBox's box
