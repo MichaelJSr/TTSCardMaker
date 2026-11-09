@@ -337,7 +337,8 @@ jobs:
 
       # A deploy 2 min in syncing_files (where stuck ones hang; slow good ones wait in deployment_queued) while a newer
       # main build waits in pages-build (it deploys all this): cancelled, and that build deploys, no retry. Not for an
-      # early build (its Data wait may be long). The Pages deploy ID is the sha. Cut stops it.
+      # early build (its Data wait may be long). The Pages deploy ID is the sha. deploy-pages never sees the cancel (it
+      # polls on to its timeout): the watch ends its step, by its node's PID. Cut stops the watch.
       - id: watch
         if: steps.changed.outputs.deploy == 'true'
         env:
@@ -358,6 +359,8 @@ jobs:
             if gh api -X POST "repos/$GITHUB_REPOSITORY/pages/deployments/$GITHUB_SHA/cancel" > /dev/null; then
               echo "$id" > "$RUNNER_TEMP/handed"
               echo "Run $id waits: deploy cancelled after $SECONDS s ($(( SECONDS - since )) s syncing files)"
+              pid=$(pgrep -f 'actions/deploy-pages/[^ ]*/dist/index.js' | head -1)
+              [ -z "$pid" ] || kill "$pid"
             else
               echo "Run $id waits: cancel failed"
             fi
