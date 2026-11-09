@@ -905,7 +905,13 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   for (const j of partly) specs.push({ role: j.role, text: j.text, old: j.old, label: j.role === "name" ? "name" : "text", own: j.box && kc ? j.box.map(v => v * kc) : null, added: j.added, part: true, path: j.layer, id: j.added ? "" : j.id, colors: j.colors });
   for (const { role, text, old, label, own: partBox, added, part, path, id, colors: shared } of specs) {
     const { fam, layer } = await family(role, label, path, id);
-    const measure = (t, z) => { ctx.font = `${z}px ${fam}`; return ctx.measureText(t).width; };
+    const set = role === "ability" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // the Ability's tracking (ems) and letter width (psd_details)
+    const measure = (t, z) => {
+      ctx.font = `${z}px ${fam}`;
+      if (!track) return ctx.measureText(t).width * hx;
+      ctx.letterSpacing = `${track * z}px`; const w = ctx.measureText(t).width * hx; ctx.letterSpacing = "0px"; return w;
+    };
+    measure.track = track; measure.hx = hx;
     measure.cap = z => capOf(ctx, fam, z);
     measure.label = bfam ? em => labelSet(ctx, bfam, em) : null;   // badges' labels: the font's (Roboto Black), once loaded
     const own = partBox || (part ? null : recordBox(rec, layer?.layer, W)), one = role === "ability" && oneColour(rec, layer?.layer);
@@ -1013,7 +1019,7 @@ function paintMask(ctx, im, [x, y, w, h], colour, inset = 0) {
 /** Lines of pieces from x at baseline base, z px: text with an outline, icons, badges as pills (a cooldown's ring its
  *  left end). one (an overlay on the ability): badges as outlined pills, rings in one colour and stickers as an outline
  *  round the one-colour icon, in the text's fill. */
-function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, imgs, one = false }) {
+function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, stroke, imgs, one = false, track = 0, hx = 1 }) {
   ctx.textBaseline = "alphabetic";
   lines.forEach((line, n) => {
     let x = at(line), y = base + n * pitch;
@@ -1058,9 +1064,9 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
         ctx.restore();
         if (p.ring && one) drawRing(ctx, p.ring, p.group, x0 + r, top + r, h / 22, { fill, stroke, width: Math.max(1.5, z * 0.16) });
       } else if (p.text.trim()) {
-        ctx.font = `${z}px ${fam}`;
-        if (stroke) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(1.5, z * 0.16); ctx.strokeText(p.text, x, y); }
-        ctx.fillStyle = p.color || rgb(fill); ctx.fillText(p.text, x, y);
+        ctx.save(); ctx.font = `${z}px ${fam}`; if (track) ctx.letterSpacing = `${track * z}px`; ctx.translate(x, y); ctx.scale(hx, 1);
+        if (stroke) { ctx.lineJoin = "round"; ctx.strokeStyle = rgb(stroke); ctx.lineWidth = Math.max(1.5, z * 0.16); ctx.strokeText(p.text, 0, 0); }
+        ctx.fillStyle = p.color || rgb(fill); ctx.fillText(p.text, 0, 0); ctx.restore();
       }
       x += p.w;
     }
@@ -1073,12 +1079,15 @@ export function steadyPitch(lines) {
   return ok.length ? ok.reduce((t, x) => t + x, 0) / ok.length : m;
 }
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
- *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). */
+ *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). An Ability with the
+ *  record's frame and px (box text) wraps at the frame at its set size, as the bake. */
 function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc }, imgs, W) {
   const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = found.align === "left" && role !== "name";
-  const maxW = left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
+  const frame = role === "ability" && kc && Array.isArray(layer?.frame) && layer.frame.length === 4 ? layer.frame.map(v => v * kc) : null;   // box text's frame: Photoshop wraps there
+  if (frame && layer.px > 0) size = layer.px * kc;    // at its set size
+  const maxW = frame ? (left ? frame[2] - found.box[0] : frame[2] - frame[0]) : left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
   const pitch0 = steadyPitch(found.lines) || size * LINE, top = found.lines[0][1];
   // Room for an Ability at its size, as the bake leaves it (psd_edit fit_below, ink_beyond): its new ink ends no lower
   // than the old text's, or lower but on the card and off the design below (the backdrop under the old text, BEYOND)
@@ -1099,7 +1108,7 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
     const bar = Math.max(60, (seen ? nth(dev, Math.floor(0.95 * (seen - 1))) : 0) + 20);
     const mask = document.createElement("canvas"); mask.width = W; mask.height = Math.max(1, H - from);
     const mx = mask.getContext("2d", { willReadFrequently: true }); mx.translate(0, -from);
-    paintLines(mx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base: top + z * 0.8, pitch: pitch0 * (z / size), z, fam, label: measure.label, fill: [255, 255, 255], stroke: null, imgs, one });
+    paintLines(mx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base: top + z * 0.8, pitch: pitch0 * (z / size), z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill: [255, 255, 255], stroke: null, imgs, one });
     const a = mx.getImageData(0, 0, W, mask.height).data; let n = 0;
     for (let y = from, j = 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
     return n < 100 * k * k;
@@ -1118,7 +1127,7 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
     if (Number.isFinite(tall) && tall > 0) base = top + (found.lines[0][3] - top) * up / tall;
   }
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, fill, stroke, imgs, one });
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one });
   return over;
 }
 const BOX_FILL = [16, 16, 22];                        // drawBox's box
@@ -1134,7 +1143,7 @@ function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors, stat
   ctx.save(); ctx.beginPath(); ctx.moveTo(b[0] + rad, b[1]); ctx.arcTo(b[2], b[1], b[2], b[3], rad); ctx.arcTo(b[2], b[3], b[0], b[3], rad); ctx.arcTo(b[0], b[3], b[0], b[1], rad); ctx.arcTo(b[0], b[1], b[2], b[1], rad); ctx.closePath();
   ctx.fillStyle = rgb(BOX_FILL); ctx.fill(); ctx.lineWidth = Math.max(1.5, W * 0.003); ctx.strokeStyle = "rgba(255,255,255,.4)"; ctx.setLineDash([W * 0.012, W * 0.008]); ctx.stroke(); ctx.restore();
   const pitch = z * LINE, base = (b[1] + b[3]) / 2 - (lines.length * pitch) / 2 + z * 0.9, mid = (b[0] + b[2]) / 2;
-  paintLines(ctx, lines, { at: l => mid - l.w / 2, base, pitch, z, fam, label: measure.label, fill: [255, 255, 255], stroke: [0, 0, 0], imgs, one });
+  paintLines(ctx, lines, { at: l => mid - l.w / 2, base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill: [255, 255, 255], stroke: [0, 0, 0], imgs, one });
   return over;
 }
 function paintCells(data, W, H, row, from, to) {
