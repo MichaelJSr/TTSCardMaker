@@ -405,6 +405,16 @@ def merge_flags(entry, record, cleared):
         del entry["flags"]
 
 
+def check_of(checks, sha, path):
+    """A PSD blob's checks record; none yet (not checked): its card's last one (card_models.card_name), the old blob's that
+    save prunes with the new one's; none when two share the name. card-checks.yml's Commit keys shown flags by card."""
+    if not sha or sha in checks:
+        return checks.get(sha)
+    name = os.path.splitext(os.path.basename(path))[0].replace("_", " ")
+    last = [rec for rec in checks.values() if rec.get("card") == name]
+    return last[0] if len(last) == 1 else None
+
+
 def link_variants(cards):
     """The pictures of one PSD (stats.json variant, variant_of): variant 1 gets `variants` (the other ids, in picture
     order), each other picture `variantOf` (variant 1's id). A picture whose variant 1 isn't listed stays a plain card."""
@@ -4379,7 +4389,7 @@ def main():
         if sha:
             entry["blob"] = sha[:8]               # a person's flag remembers it
         apply_edits(entry, edits, sha, shown)
-        merge_flags(entry, checks.get(sha), cleared)
+        merge_flags(entry, check_of(checks, sha, path), cleared)
         date_text(entry, c, history_of(name))     # a renamed card's history goes on (its old names' versions)
         if isinstance(variant, int) and not isinstance(variant, bool) and variant >= 1:
             entry["variant"] = variant            # one picture of a PSD with several (" #N" layers); variantOf/variants below
