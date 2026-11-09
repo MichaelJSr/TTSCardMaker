@@ -8660,7 +8660,7 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Lazarus.psd": {
-  "blob": "4244d53aca7860f2ab14fe14abd5876a9780e425",
+  "blob": "dd4ed80cdef0858f6352c5c6dc77ee449dd2725f",
   "links": [
    {
     "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
@@ -8695,7 +8695,7 @@
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Lilith.psd": {
-  "blob": "0c98e966ac8ec12fb42c850783c840a584f021a8",
+  "blob": "a1494b43670494936112bf787cb14664776eb955",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -8710,15 +8710,15 @@
     "size": 307074
    },
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    }
   ]
  },
  "Creatures/Isaac/3 Stars/Tainted_Magdalene.psd": {
-  "blob": "30f16fa66e8c7d6e9d77b076072f054fcbf2eed4",
+  "blob": "617f97107d5c22a94e6f241193b73ab39541495d",
   "links": [
    {
     "drawn": "6fbc2aeae204c8e96b1d550cf2b8427e49d2ccb6",
@@ -8739,15 +8739,15 @@
     "size": 307074
    },
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    }
   ]
  },
  "Creatures/Isaac/4 Stars/Dogma.psd": {
-  "blob": "bf017472b5c42fd8a5d9ee883bcbd1433073d640",
+  "blob": "584c3c0b94d39cae5ef5c85881344372fc424747",
   "links": [
    {
     "drawn": "4cf9a2c9e15169d7e9ea01fa02fb5443cdedfb8e",
@@ -8760,12 +8760,6 @@
     "name": "light.png",
     "path": "Types/light.png",
     "size": 474151
-   },
-   {
-    "drawn": "4cf9a2c9e15169d7e9ea01fa02fb5443cdedfb8e",
-    "name": "Dogma - Dogma_ability_bg.jpg",
-    "path": "MDW/Linked/Dogma - Dogma_ability_bg.jpg",
-    "size": 176097
    },
    {
     "drawn": "4cf9a2c9e15169d7e9ea01fa02fb5443cdedfb8e",
@@ -8830,7 +8824,7 @@
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Bethany.psd": {
-  "blob": "b7008c0e6b31724c569ce35169238baa4e9f3d9a",
+  "blob": "26b63a12242f7ebe874ccdf4e16e4a0655a54f01",
   "links": [
    {
     "drawn": "e52e87cfd7c07db8f181df774b4cb4f967a57b2e",
@@ -8863,21 +8857,21 @@
     "size": 1522168
    },
    {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
-    "name": "undead.png",
-    "path": "Types/undead.png",
-    "size": 195840
-   },
-   {
     "drawn": "67ba1fd768a5a6e268812440498fdbaabf55ce60",
     "name": "Tainted_Bethany - HUD_heart_soul_full.webp",
     "path": "MDW/Linked/Tainted_Bethany - HUD_heart_soul_full.webp",
     "size": 152
+   },
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
    }
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Eve.psd": {
-  "blob": "8132f66c061b72f5d0be2f9a9e6e0dc29100a503",
+  "blob": "ef483c9fa6e585a2147b7a50d34b022dbde9f106",
   "links": [
    {
     "drawn": "509295cb38a54d7eeae631be001b8ba7fe6822cd",
@@ -8898,15 +8892,15 @@
     "size": 307074
    },
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    }
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Forgotten.psd": {
-  "blob": "5b2318c8d15fead7b8b06bcc3a0ba5bff463d28c",
+  "blob": "632426405e34292ce745e145596e73f31e25bc9d",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -8921,15 +8915,15 @@
     "size": 307074
    },
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    }
   ]
  },
  "Creatures/Isaac/4 Stars/Tainted_Keeper.psd": {
-  "blob": "f1e4158faad32a566d2105f00f0d5d1faeae8ca3",
+  "blob": "e4d2bb9408c86c3741278f7efddddd2941b8f4ce",
   "links": [
    {
     "drawn": "774032dfce933811b580b92f5682dbfed2e4e4be",
@@ -8944,18 +8938,6 @@
     "size": 4267390
    },
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
-   },
-   {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
-    "name": "undead.png",
-    "path": "Types/undead.png",
-    "size": 195840
-   },
-   {
     "drawn": "9f63c2837b888a3d5a13c50c20cbe3102fdd37b1",
     "name": "Tainted_Keeper - extra.webp",
     "path": "MDW/Linked/Tainted_Keeper - extra.webp",
@@ -8966,11 +8948,23 @@
     "name": "Tainted_Keeper - extra (2).webp",
     "path": "MDW/Linked/Tainted_Keeper - extra (2).webp",
     "size": 144
+   },
+   {
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
+   },
+   {
+    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "name": "undead.png",
+    "path": "Types/undead.png",
+    "size": 195840
    }
   ]
  },
  "Creatures/Isaac/5 Stars/Tainted_Cain.psd": {
-  "blob": "ae8e9aa260e04f0c78966f56f7ec570d6cd94032",
+  "blob": "c6b2ff7727d8601615741daebb2f2ba49eb01085",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -8985,15 +8979,15 @@
     "size": 307074
    },
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    }
   ]
  },
  "Creatures/Kirby/2 Stars/Acro.psd": {
-  "blob": "b913d2b6f84571f8f188c846c625e0cede8dff49",
+  "blob": "ac55f334af45747a52f453b9f887c53d752969bd",
   "links": [
    {
     "drawn": "cc58b0f2650cced66da78002cb7e49fe9e6433cd",
@@ -9028,7 +9022,7 @@
   ]
  },
  "Creatures/Kirby/2 Stars/Whispy_Woods.psd": {
-  "blob": "0720251a476cb56be938dad010db7f877e552418",
+  "blob": "27ccf7f7143606d35f0e53e0aaf20a557c40b9b0",
   "links": [
    {
     "drawn": "886fe7aa3d847ee6f505ac564a0d9695bff97934",
@@ -9043,12 +9037,6 @@
     "size": 298480
    },
    {
-    "drawn": "5f41b136c0a1d6de391c0461734d8cdbc79f26d1",
-    "name": "Militron_(No_Armor) - Warpstar.png",
-    "path": "MDW/Linked/Militron_(No_Armor) - Warpstar.png",
-    "size": 256210
-   },
-   {
     "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
     "name": "Wind.png",
     "path": "Types/Wind.png",
@@ -9057,7 +9045,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Computer_Virus.psd": {
-  "blob": "f74d46e31ecb436ef735e09962b21fd8d9b24d1c",
+  "blob": "0d8a04e22251753f355d5aa1793438f7b3453f85",
   "links": [
    {
     "drawn": "0251889893e01b5d0fd5934111a92b06242a7015",
@@ -9082,17 +9070,11 @@
     "name": "Computer_Virus - pixel-star.png",
     "path": "MDW/Linked/Computer_Virus - pixel-star.png",
     "size": 2225
-   },
-   {
-    "drawn": "a3807e371268781739908fcce7da1b465e2c3cb8",
-    "name": "Computer_Virus - Cog.psb",
-    "path": "MDW/Linked/Computer_Virus - Cog.psb",
-    "size": 1048576
    }
   ]
  },
  "Creatures/Kirby/3 Stars/Dark_Matter_Swordsman.psd": {
-  "blob": "ecdda04b10157fc9e63a4332c95d1f8ea7b33b7a",
+  "blob": "b592d0fe5f2d755eaef0bd947f51160705f743d8",
   "links": [
    {
     "drawn": "4d29feddd114d18dca17858efa0042955ec9f065",
@@ -9133,25 +9115,25 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Dark_matter.psd": {
-  "blob": "2c41f7cf90ce401d55dcb0869aca2aa94982231f",
+  "blob": "27aa8475cfdc7051eb31f3a791152bfa7fb7a6cd",
   "links": [
    {
-    "drawn": "6e1fdf1ae110e28e407bf82859a4c6104d2b3ba7",
-    "name": "Dark_matter - Item_0_warpstar.webp",
-    "path": "MDW/Linked/Dark_matter - Item_0_warpstar.webp",
-    "size": 12960
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
    },
    {
-    "drawn": "6e1fdf1ae110e28e407bf82859a4c6104d2b3ba7",
-    "name": "Dark_matter - Item_0_warpstar.webp",
-    "path": "MDW/Linked/Dark_matter - Item_0_warpstar.webp",
-    "size": 12960
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
    },
    {
-    "drawn": "6e1fdf1ae110e28e407bf82859a4c6104d2b3ba7",
-    "name": "Dark_matter - Item_0_warpstar.webp",
-    "path": "MDW/Linked/Dark_matter - Item_0_warpstar.webp",
-    "size": 12960
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
    },
    {
     "drawn": "00007617b6c9850309e6c3a145e338efa55eded3",
@@ -9168,7 +9150,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Daroach.psd": {
-  "blob": "f199c3034dd5293fcf1e78b97d9256106a5cac2a",
+  "blob": "00bc5c1445ea2a65a506c2c3aa97d240c9d622c5",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9203,7 +9185,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Doc.psd": {
-  "blob": "26609324b4cb337a2f821d6c22ced2996de47faf",
+  "blob": "a4ae8790d02a077f71c8a54536d74b983d1a1e64",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9238,7 +9220,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Drawcia.psd": {
-  "blob": "9ee71c5b51b44d277629cbbb7ae2761a516115b5",
+  "blob": "6802c57c32ece12b5411c7c088bfc99b1c86429b",
   "links": [
    {
     "drawn": "d47adef4789c0dda7af55d5ebe7e503218b90ed0",
@@ -9279,7 +9261,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Fatty_Whale.psd": {
-  "blob": "d2fee0e09f90d3843d122350103d5fde8b1719e3",
+  "blob": "4e0f038d37170a2983cfd5b168afba077e5fc131",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9314,7 +9296,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Final_Dark_Mind_Eye.psd": {
-  "blob": "8e303ba0223ee63848d5187d721c416b6ab36172",
+  "blob": "e4435d1f55d937e155388da6c0728316eab7a056",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9343,7 +9325,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Halberd_Main_Cannon.psd": {
-  "blob": "4e44ee637580fb2a47ce370680d3079b5f46acf0",
+  "blob": "97f96af6dca4f0d37cbdad76db36cb0f50037d87",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9372,7 +9354,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Halberd_Reactor.psd": {
-  "blob": "c76086226d24653b96a587f3b2ba3d5d74ca0743",
+  "blob": "ab6eb4738ce468e4bb1ba0700703899415c0e1cc",
   "links": [
    {
     "drawn": "2443d8532fa80a1566b3eb4d3125b54ad663ddb7",
@@ -9413,7 +9395,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Heavy_Lobster.psd": {
-  "blob": "5846209df7a7ca7a8842ec59ce998d94dc891a92",
+  "blob": "07a3eadbc08cdf2029fc0c2a53357bd3a6b43e69",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9448,7 +9430,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Heavy_Mole.psd": {
-  "blob": "a2b20ed3866726b72cee8e2ec6661d9e0892d212",
+  "blob": "984157f203986c7ac99b040be609bb236b42e277",
   "links": [
    {
     "drawn": "33d80c364295ff50934db492a7ef389bbb5833f1",
@@ -9489,7 +9471,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Holo_Defense_API.psd": {
-  "blob": "aadeb2e353bba916afa6fd5c521c51826dbc0ea6",
+  "blob": "e49374f6b8939e4c36bfab28d4a0924f96ebf403",
   "links": [
    {
     "drawn": "fad5aa3bd8e3afee3ae4cf58b1c0a58d1a71d133",
@@ -9518,7 +9500,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Kabula.psd": {
-  "blob": "4426af7634385dd1e435fd209ce3ebd01b0321c0",
+  "blob": "1ab63358e356e328264134a8b7daa937f7d4281b",
   "links": [
    {
     "drawn": "0d94548b123497ed7d06168b63a96b7256d2bdc1",
@@ -9559,7 +9541,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Kracko.psd": {
-  "blob": "a5ff88cd7c35afd997f44743fc6c0c1db0624d98",
+  "blob": "9f79ce9fb07ed99bb269f8eb4393661cc56f31a0",
   "links": [
    {
     "drawn": "12ddaf4a3bef2f8654e1a551850a6919ca6da1cf",
@@ -9600,7 +9582,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Magolor.psd": {
-  "blob": "6597a9382479e057cae3315f9359cbb85f267b5a",
+  "blob": "1018d0b23cc0817ad895d643d68c9d5ad368daa5",
   "links": [
    {
     "drawn": "1467a9048d4ad9081178b04898228fbee82a7e25",
@@ -9635,7 +9617,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Master_Hand.psd": {
-  "blob": "7ab9d11fdb192edfc7fb6f172da1aebed8e86e52",
+  "blob": "cc2fecd4d35a1c265ef4eff4cc069e7a9cd0efb2",
   "links": [
    {
     "drawn": "e87b04d0c185553631fca1b1a4ae64ad2176a440",
@@ -9670,7 +9652,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Mega_Titan.psd": {
-  "blob": "df7e7088ec07af429f4e842acee02d9f9993ab82",
+  "blob": "89eefb337da956647ad78bb3e97a815213641ca4",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9699,7 +9681,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Metal_General.psd": {
-  "blob": "a9943181894ac6e292c6b2cd3b97e86b6ae98d8f",
+  "blob": "e8d09d21b2f496b60be2337129bf67d0a27f84c6",
   "links": [
    {
     "drawn": "6c2cbb7758e73228a226abb1f89c6e8069c928c5",
@@ -9734,7 +9716,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Miracle_Matter.psd": {
-  "blob": "c8ded3c8f5dedf8abaa061de77e0686219b591fb",
+  "blob": "fd991139a7a2dbbac31bb38cbadb57067ee66059",
   "links": [
    {
     "drawn": "df22addd68895b428f7acb50b628bd7e638b8f6c",
@@ -9781,7 +9763,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Pix.psd": {
-  "blob": "834b069810d6aab097ee989bc3c9e9a001ff7aaa",
+  "blob": "0040edd59226b1daac0d3d551729d736367b7d0d",
   "links": [
    {
     "drawn": "5f7df386efbf98d7685350ed2d7b19d88d91422f",
@@ -9840,7 +9822,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Retro_Kirby.psd": {
-  "blob": "c3ed6ca37c3267c5749daea3d9d19443db6f8f61",
+  "blob": "735359454fedd22ed13dce6dfeb183f63e3abac2",
   "links": [
    {
     "drawn": "ed17c5f29d3a79b937a0ad2a005d7a0f2369577f",
@@ -9881,7 +9863,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Skullord.psd": {
-  "blob": "5e67b74fa25d2b361e4abb09d12dbc115ea188b9",
+  "blob": "0ea0434cc2076c6dd5238366ebe267c54c3109f1",
   "links": [
    {
     "drawn": "61afd2e3d2f7d6adcc00b960ae03f7f8c5ad8613",
@@ -9934,7 +9916,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Spinni.psd": {
-  "blob": "a74d64945ba423ceaed25ed98be64b6b46b5ab73",
+  "blob": "d25c18361402e8731add302f8acd332420352c67",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9963,7 +9945,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Storo.psd": {
-  "blob": "a9c9dd7ff1416f0f07a25706ebd3333081cf17de",
+  "blob": "0539ff5889c51d75bdb3be96913e3340a7d1774a",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9992,7 +9974,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Taranza.psd": {
-  "blob": "f2095b49cb49a572bc3ccb3ee2f478cf01005cf9",
+  "blob": "b2d5e6f0a013b777c4a5e2ea1cd5c52746bd264e",
   "links": [
    {
     "drawn": "e50e65a9303e43c1cb089cb3a21bf3cdcde23c94",
@@ -10005,17 +9987,11 @@
     "name": "Warpstar.png",
     "path": "Types/Stars/Warpstar.png",
     "size": 648064
-   },
-   {
-    "drawn": "459cdddf4c0054f24a59c7b08ec0c54fd15c7fc3",
-    "name": "Azamoth_the_Possessed_Vessel - Magic.png",
-    "path": "MDW/Linked/Azamoth_the_Possessed_Vessel - Magic.png",
-    "size": 60344
    }
   ]
  },
  "Creatures/Kirby/3 Stars/Waddle_Dee.psd": {
-  "blob": "bb95d69107c654700d1443bd7516e3e25e994205",
+  "blob": "aebead5db6999fea10a80acab04d41727e0999fa",
   "links": [
    {
     "drawn": "707f08d8e9d4b4d7853517fa942d3b48ea6e4112",
@@ -10050,7 +10026,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Wham_Bam_Rock.psd": {
-  "blob": "9d72c9663020c7f00680049528db38fa83c634ae",
+  "blob": "d529b8455662865610a856b4a5f462a8a0198ce8",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -10073,7 +10049,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Dark_Daroach.psd": {
-  "blob": "7f76cff47bf3cade1bb213b4bb494b28bd71ba4a",
+  "blob": "e1f2b67aa8b7826bdd7b38e348bda78c573c891a",
   "links": [
    {
     "drawn": "5ef9cdbda06794d6af5d7efea0a65f2f2c6237cf",
@@ -10102,7 +10078,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Dark_Mind.psd": {
-  "blob": "fc5f813c19097eb93a025ea768421f07a22f3fab",
+  "blob": "74f8e3ab0dd916bc68c595f9430bfa354eeabcd1",
   "links": [
    {
     "drawn": "10eee5fc94e52c7518bd5a5718d0e839be30666f",
@@ -10155,7 +10131,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Dark_Nebula.psd": {
-  "blob": "f4e97f818098560b68faed60c61c5019b3dadb66",
+  "blob": "44e3240a2920adb2ce8e61430fb20b7e243fae9c",
   "links": [
    {
     "drawn": "22daecbf760f9aab4b473df21baa3d640e941336",
@@ -10182,12 +10158,6 @@
     "size": 220675
    },
    {
-    "drawn": "2a7d74fc470b907e13f0679d1fe39bbacf9af115",
-    "name": "Waxwell - magic.png",
-    "path": "MDW/Linked/Waxwell - magic.png",
-    "size": 50919
-   },
-   {
     "drawn": "00007617b6c9850309e6c3a145e338efa55eded3",
     "name": "electric.png",
     "path": "Types/electric.png",
@@ -10208,7 +10178,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Drawcia_Soul.psd": {
-  "blob": "84207234841796abce7f90b5f15ab64c084322fe",
+  "blob": "4413e8649311f1c8a6f7897cf74ac6c7c0537f1c",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -10249,7 +10219,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Dyna_Blade.psd": {
-  "blob": "95a8154afb0ac9d82dd3269ba59476f43942f566",
+  "blob": "ea4508b9ff0627ac3f2b6a690c360f20f074038f",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -10284,7 +10254,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/King_Dedede.psd": {
-  "blob": "b5e60ab222d1f0f6080482e17b9e468b6c3201ba",
+  "blob": "2de1ef7b7437a8e6b8ae5e55284099a444a82b0c",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -10295,7 +10265,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Lor_Starcutter.psd": {
-  "blob": "9edf76326b0ddbec6410ea1872b1d8c7128e3da0",
+  "blob": "782eac773e44fe7330254b98d8640b1cff451c29",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -10330,7 +10300,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Meta_Knight.psd": {
-  "blob": "90580907a2daf7ca477d99991975d3711b98d54c",
+  "blob": "1b308a1df8bb00ef04e227bad1a40f11dee6f28e",
   "links": [
    {
     "drawn": "83d0e68b372b305d09bb0d082a15dc6005b210de",
@@ -10359,32 +10329,8 @@
   ]
  },
  "Creatures/Kirby/4 Stars/NME_Salesman.psd": {
-  "blob": "75a4172e5afffb36fed771e47b4ab491ab4e3e38",
+  "blob": "363995189ab04aad97a9da389ecb3e6af60e9ad0",
   "links": [
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
     "name": "Warpstar.png",
@@ -10418,11 +10364,11 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Wham_Bam_Bone.psd": {
-  "blob": "906a0eba122dae67a9b4d4152b3201c2b1f674c8",
+  "blob": "e29f60d01242767d304ae08dc4623c03365f5302",
   "links": []
  },
  "Creatures/Kirby/4 Stars/Wham_Bam_Jewel.psd": {
-  "blob": "e6084a279673df233ec5cfbb22bdf8f587937ebc",
+  "blob": "a05c5ad81a741dff088993abdc4d77903ebdb078",
   "links": [
    {
     "drawn": "525b6da91b7e7fb51f80a74e17efb11a50aa5a3f",
@@ -10463,7 +10409,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Zero.psd": {
-  "blob": "6d0157f28d0c16e1ce733d21174227cdf79d8c0b",
+  "blob": "9c303c5ac9ed801c6819ac8acca782b3759e20fd",
   "links": [
    {
     "drawn": "b5f2d31b1423d3cc960336431ffdaf7e54ebf569",
@@ -10486,7 +10432,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/grand_doomer.psd": {
-  "blob": "99a538a30365cc9c5bd0f48468647bdd57c4806e",
+  "blob": "842163bef92fdd3a60b53b4667fc754634f08ad6",
   "links": [
    {
     "drawn": "cc0e92a74826dfb5f35bcffcb03707a52a678090",
@@ -10533,7 +10479,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/hr-h.psd": {
-  "blob": "f5215747f16683005bfd657ec39306cd14627c9e",
+  "blob": "fe12077f429c2f857d0d390380f6872a206d827e",
   "links": [
    {
     "drawn": "42281a3d134392c7e7d68c450cd83cf5d49a7935",
@@ -10580,7 +10526,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Butterfly.psd": {
-  "blob": "6433dc99379dd40e2ceac056738e33ebf93c2acb",
+  "blob": "0e49e08106c58caaf31d9657e0d0493cab6c25dc",
   "links": [
    {
     "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
@@ -10597,7 +10543,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Crowned_Magolor.psd": {
-  "blob": "7d711a53c4b5a1f9708efb515320d8c3801ef967",
+  "blob": "814a0717ad6e0dda9978ad46daf8c4e8c596cb56",
   "links": [
    {
     "drawn": "60aba6e0159907c4f51e2b15c4e6a5d3ba87c9c8",
@@ -10620,7 +10566,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Dark_Mind_Eye.psd": {
-  "blob": "ec77fb0a3909ae5fda085bc50dfeb2ab7103e377",
+  "blob": "28b63fe1653e5087e9bd88de845772f01dba3221",
   "links": [
    {
     "drawn": "f94c0014f44dab67bfa4744803014f49d09fcd62",
@@ -10655,7 +10601,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Galacta_Knight.psd": {
-  "blob": "df3178c1d429e71965e61a7fab2603a215582bf3",
+  "blob": "c0a5c974fe651cd2f1d6e140a94849832170f895",
   "links": [
    {
     "drawn": "76bc49f22d7f1feca8fde43d1c5ae141ee2ffd05",
@@ -10696,7 +10642,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/HR-D3.psd": {
-  "blob": "ff44dfb942c5c3065ba1911ae6b0b9e17ce0a261",
+  "blob": "9b7ea247dff9fe1846d920cfb0f20dd6eb83e2cd",
   "links": [
    {
     "drawn": "47d9ed6b06aa99e8ed499060332208a68cad208f",
@@ -10719,7 +10665,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Landia.psd": {
-  "blob": "460ec1571057c941a3aaae9a6b5e974d1a1434aa",
+  "blob": "4bc4145ed620c00d75fc15d84b75d31dafc23ed4",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -10742,7 +10688,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Marx.psd": {
-  "blob": "04e71606c1024c407ce4a9adcc238abf971e1f5b",
+  "blob": "bc3f9612af83959689e2abe30a2026f6b10fc554",
   "links": [
    {
     "drawn": "83ba51c6b428ffba9af94b7702f1f395a4d5299b",
@@ -10765,7 +10711,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Masked_Dedede.psd": {
-  "blob": "47b2094bf0f102422a2d4c906252bbcd8df9e887",
+  "blob": "93b109efac0355c920098d648679643705281801",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -10788,7 +10734,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Necrodeus.psd": {
-  "blob": "5f5c9fc2bb0cb1d5e3b3c1b6693d3f15d30386d1",
+  "blob": "5df6c4648500ea6db036900d559ab608ac876526",
   "links": [
    {
     "drawn": "e73021c2b59d36928edcd2e47037f48a8f5b5020",
@@ -10841,7 +10787,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Nightmare.psd": {
-  "blob": "6f5a3216702cdfd3efb6541775383117cf56ceff",
+  "blob": "ce55e01e90206aec6006ce8567f2c87af3d207e8",
   "links": [
    {
     "drawn": "0481588422b86ca568621a0c098cc1abce5a40b8",
@@ -10864,7 +10810,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Star_Dream.psd": {
-  "blob": "8d7f348fc23568bbd22c2cda18db9f8084d9371c",
+  "blob": "b6040bfb1dcbbfc0feafb34efc5171106a04ba3a",
   "links": [
    {
     "drawn": "06c06c3666b5139b022e76d9ac8ff8f67e4e38f0",
@@ -10899,7 +10845,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Yin_Yarn.psd": {
-  "blob": "9eb22b6960f389e808a992ee248cff0d58a7f534",
+  "blob": "d2249a298e607dbcefebdd2198f2598d1d9140b7",
   "links": [
    {
     "drawn": "53f86bd0eb7bb8b18fce32fff3a4513f278c24d8",
@@ -10908,15 +10854,15 @@
     "size": 8544412
    },
    {
-    "drawn": "5f41b136c0a1d6de391c0461734d8cdbc79f26d1",
-    "name": "Militron_(No_Armor) - Warpstar.png",
-    "path": "MDW/Linked/Militron_(No_Armor) - Warpstar.png",
-    "size": 256210
+    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "name": "Warpstar.png",
+    "path": "Types/Stars/Warpstar.png",
+    "size": 648064
    }
   ]
  },
  "Creatures/Kirby/5 Stars/Zero_Override.psd": {
-  "blob": "20e0e7b8e56f78adf1b2fcb953d5baa441b19be2",
+  "blob": "a048ac67c768469e732dba5de124da5a5115be24",
   "links": [
    {
     "drawn": "eaaa122045020ed053b44113accdbe21d36e5b10",
@@ -10931,22 +10877,10 @@
     "size": 241306
    },
    {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
-   },
-   {
     "drawn": "29e51a39dca296bf86c0c46b712cc069d4eda673",
     "name": "Zero_Override - pngwing.com.png",
     "path": "MDW/Linked/Zero_Override - pngwing.com.png",
     "size": 278722
-   },
-   {
-    "drawn": "b95adab71e6a7ee177fd072cc029890793d5d660",
-    "name": "Armored_Squit - dark.png",
-    "path": "MDW/Linked/Armored_Squit - dark.png",
-    "size": 1866
    },
    {
     "drawn": "9842d409283e819405890ffd7f7e3bc7775145fd",
@@ -10957,7 +10891,7 @@
   ]
  },
  "Creatures/Kirby/5 Stars/Zero_Two.psd": {
-  "blob": "caa37c2385ab57f37185669bdb209f9da96ad8d8",
+  "blob": "b6133116bf9e8551b5712c3d93b03236f93788c0",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -10980,7 +10914,7 @@
   ]
  },
  "Creatures/Lisa/2 Stars/Terry_Hintz.psd": {
-  "blob": "3a942a85102b511907e48d1ef660b8d02e71f4c9",
+  "blob": "e60af417598dcdc0011e6878d98bf2198bcb4f60",
   "links": [
    {
     "drawn": "69aac799d4bf976551eda758b9ea8c0fc3d97487",
@@ -10997,7 +10931,7 @@
   ]
  },
  "Creatures/Lisa/3 Stars/Joel_Miller.psd": {
-  "blob": "f2d86e37166cf587487775fbd514a58ba8a16d43",
+  "blob": "09fdb702168b50b6cf71636168ad1fe1ad8a4206",
   "links": [
    {
     "drawn": "69aac799d4bf976551eda758b9ea8c0fc3d97487",
@@ -11014,7 +10948,7 @@
   ]
  },
  "Creatures/Lisa/4 Stars/Brad_Armstrong.psd": {
-  "blob": "b571f83b9e81f1889f3a78b923bd8815e3563fe7",
+  "blob": "4d8179993620fc75ee41f2c7e06b4f89f6699d58",
   "links": [
    {
     "drawn": "935080d378f8516959d34ce2b99846ff5b62c714",
@@ -11055,7 +10989,7 @@
   ]
  },
  "Creatures/Lisa/4 Stars/Buzzo.psd": {
-  "blob": "e0bcf161d1615f3da06e80c042d343790a425a94",
+  "blob": "c43b1b8248557ddd425ebd74cab42b34f0850d7b",
   "links": [
    {
     "drawn": "bb20984e64ecc1cc2167063fec9e277891e4dcf8",
@@ -11096,7 +11030,7 @@
   ]
  },
  "Creatures/Mario/2 Stars/Block_Hopper.psd": {
-  "blob": "b22c090da880699608fddcdf4d9104f3907c4792",
+  "blob": "558668bbdd4e3ce8dc2bfcacca7f17d576f17d32",
   "links": [
    {
     "drawn": "03e6165fbbe0644f5a9f49275e6b34c239d1406c",
@@ -11173,7 +11107,7 @@
   ]
  },
  "Creatures/Mario/2 Stars/Bob-ulk.psd": {
-  "blob": "f12c9db4649bb56039920a1febef94498913c7b0",
+  "blob": "0d404d42100395d24bc5e82c34807e4ddf0934c0",
   "links": [
    {
     "drawn": "0c20b7ba63f2d1e2cec5ebd4e0cc270fddceac27",
@@ -11196,7 +11130,7 @@
   ]
  },
  "Creatures/Mario/2 Stars/Gold_Fuzzy.psd": {
-  "blob": "92de62d2183ffff2a70e355822c415d93501c91d",
+  "blob": "ba6da8d3883c0b0efd0b177e8fd93c2538c7168e",
   "links": [
    {
     "drawn": "8a04208f7b0c14e0399dc565359546aa5b031c0a",
@@ -11213,7 +11147,7 @@
   ]
  },
  "Creatures/Mario/2 Stars/Goombella.psd": {
-  "blob": "393b86f946ac733f363a445a065bdb59a60e999a",
+  "blob": "60c4e8c5d0a24867bfbab91fa2b0b6c2e076da8f",
   "links": [
    {
     "drawn": "7e255c618226ca4dedae971ead5617114dd2eae0",
@@ -11242,7 +11176,7 @@
   ]
  },
  "Creatures/Mario/2 Stars/Gooper_Blooper.psd": {
-  "blob": "bebca6c5ac1ce46c53ed4916c7b1439e4f19aa85",
+  "blob": "9ecdfbfc1bad8f949c100fd9e353cab6faa40cdc",
   "links": [
    {
     "drawn": "33e78b79a32d14c17d9ad3c157380232a4be17a5",
@@ -11277,7 +11211,7 @@
   ]
  },
  "Creatures/Mario/2 Stars/Hooktail.psd": {
-  "blob": "99f7d5f2595f93859603ef3122607ddfa11cc498",
+  "blob": "447d508587e32212d8d12eb1d3eab1e18e211421",
   "links": [
    {
     "drawn": "dbfff361a754425904028d9b13c38de72467fe15",
@@ -11300,7 +11234,7 @@
   ]
  },
  "Creatures/Mario/2 Stars/Koops.psd": {
-  "blob": "3ed4ad88c23991eb8c1b4f8fcb41cd9dfbacfd3a",
+  "blob": "2a415a609f0dea82a6ea7698907810133a999ded",
   "links": [
    {
     "drawn": "0826eb25bceb43d3db059693499be817a7dacb98",
@@ -11317,20 +11251,8 @@
   ]
  },
  "Creatures/Mario/2 Stars/Magnus_von_Grapple.psd": {
-  "blob": "012196939cfe65c99de4cd57dc663c1fe0e11dae",
+  "blob": "0d3048d92c9f1b2837372a910f7fd4a47b17e1cd",
   "links": [
-   {
-    "drawn": "05bf527f5355a0c87a4255db3e56dfa10c8d5a79",
-    "name": "Magnus_von_Grapple - Ruby Star.png",
-    "path": "MDW/Linked/Magnus_von_Grapple - Ruby Star.png",
-    "size": 372852
-   },
-   {
-    "drawn": "05bf527f5355a0c87a4255db3e56dfa10c8d5a79",
-    "name": "Magnus_von_Grapple - Ruby Star.png",
-    "path": "MDW/Linked/Magnus_von_Grapple - Ruby Star.png",
-    "size": 372852
-   },
    {
     "drawn": "1ad93f2abae08710fbad0936f8a6cdee7322f8a3",
     "name": "Emerald_Star_PMTTYDNS_icon.png",
@@ -11340,7 +11262,7 @@
   ]
  },
  "Creatures/Mario/2 Stars/Ms_Mowz.psd": {
-  "blob": "30357d9f0ec83df006029bbfcefad38f7cc77760",
+  "blob": "06c3f0526b48f405da2440416c40f6570bf9e8db",
   "links": [
    {
     "drawn": "a0afc3342ab2cb33840797eaa452e565d588b491",
@@ -11363,7 +11285,7 @@
   ]
  },
  "Creatures/Mario/2 Stars/Yoshi_Kid.psd": {
-  "blob": "5e78b8f1a330dd92676b9456f9dc97adb31d2205",
+  "blob": "78f78540273d8e1cca82e096d1f4ec81a480cb13",
   "links": [
    {
     "drawn": "7e255c618226ca4dedae971ead5617114dd2eae0",
@@ -11398,7 +11320,7 @@
   ]
  },
  "Creatures/Mario/3 Stars/Beldam.psd": {
-  "blob": "be22a5f3d4a07574dc134f12f69c5863690bfa3e",
+  "blob": "12c5e5c4d91959e1fd5bb82dddf9a390874a579a",
   "links": [
    {
     "drawn": "2aa8bdcb4ab94bb6bb2df6b77ff61d91a06876ec",
@@ -11421,7 +11343,7 @@
   ]
  },
  "Creatures/Mario/3 Stars/Bobbery.psd": {
-  "blob": "ebcf9e3f5b77583da5f05acf3ba52e7b8285ae20",
+  "blob": "7e8e85ccec92e9af4840d820ad60e434e9060ab7",
   "links": [
    {
     "drawn": "0826eb25bceb43d3db059693499be817a7dacb98",
@@ -11438,7 +11360,7 @@
   ]
  },
  "Creatures/Mario/3 Stars/Flurrie.psd": {
-  "blob": "cd72540b147a3ca7881d1f1958e41aaadcb7b69d",
+  "blob": "da80fd64f5ee8723f43ef6c1877f5230a04515b0",
   "links": [
    {
     "drawn": "7e255c618226ca4dedae971ead5617114dd2eae0",
@@ -11479,7 +11401,7 @@
   ]
  },
  "Creatures/Mario/3 Stars/King_Bob-omb.psd": {
-  "blob": "37cfcd1c6e85634bc63609189e2dfe2a1cc8411d",
+  "blob": "193ca223f27b71fe410e702c0ef9c1023fa1eb2f",
   "links": [
    {
     "drawn": "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f",
@@ -11514,7 +11436,7 @@
   ]
  },
  "Creatures/Mario/3 Stars/Lord_Crump.psd": {
-  "blob": "109d3a14bc22c00ce9a6e4d8bf6f65f04d255b3f",
+  "blob": "b2291a20c0c98e58ec6f37af8fa57b58e92f3160",
   "links": [
    {
     "drawn": "e7a3ac186e9138bc0656274583dacc170eaea271",
@@ -11703,190 +11625,22 @@
     "size": 126096
    },
    {
-    "drawn": "6f896b9ac86551432696b7adeaf4f4cdd31a50ba",
-    "name": "Drone - Sapphire_Starold.png",
-    "path": "MDW/Linked/Drone - Sapphire_Starold.png",
-    "size": 1326
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
    },
    {
-    "drawn": "6f896b9ac86551432696b7adeaf4f4cdd31a50ba",
-    "name": "Drone - Sapphire_Starold.png",
-    "path": "MDW/Linked/Drone - Sapphire_Starold.png",
-    "size": 1326
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
    },
    {
-    "drawn": "6f896b9ac86551432696b7adeaf4f4cdd31a50ba",
-    "name": "Drone - Sapphire_Starold.png",
-    "path": "MDW/Linked/Drone - Sapphire_Starold.png",
-    "size": 1326
-   },
-   {
-    "drawn": "e4eba2315225a0d2aa23619d72a7c3bc31efa471",
-    "name": "Lord_Crump - active.png",
-    "path": "MDW/Linked/Lord_Crump - active.png",
-    "size": 77137
-   },
-   {
-    "drawn": "5fd0263bb237f7692a4c449ab8d5bc427b04d239",
-    "name": "Lord_Crump - bomb.png",
-    "path": "MDW/Linked/Lord_Crump - bomb.png",
-    "size": 4284
-   },
-   {
-    "drawn": "b95adab71e6a7ee177fd072cc029890793d5d660",
-    "name": "Armored_Squit - dark.png",
-    "path": "MDW/Linked/Armored_Squit - dark.png",
-    "size": 1866
-   },
-   {
-    "drawn": "5a7ca1d430460f3782aa73ccaa11906faf6d7d60",
-    "name": "Shadow_Queen - Darkmatter.png",
-    "path": "MDW/Linked/Shadow_Queen - Darkmatter.png",
-    "size": 12660
-   },
-   {
-    "drawn": "68acb962875d74df149fbb1ff127d0f0d8df7cac",
-    "name": "Lord_Crump - electric.png",
-    "path": "MDW/Linked/Lord_Crump - electric.png",
-    "size": 6981
-   },
-   {
-    "drawn": "a65e489a6c6b1cc702b74cf6d877c679a354cc1b",
-    "name": "Lord_Crump - field.png",
-    "path": "MDW/Linked/Lord_Crump - field.png",
-    "size": 1519
-   },
-   {
-    "drawn": "e44e93c585c211e26a93c2ed0f3448c83d6917b4",
-    "name": "Lord_Crump - fire.png",
-    "path": "MDW/Linked/Lord_Crump - fire.png",
-    "size": 95308
-   },
-   {
-    "drawn": "2d2c99f9cd7fe94255d72ce00e486153461b4640",
-    "name": "Lord_Crump - hollow.png",
-    "path": "MDW/Linked/Lord_Crump - hollow.png",
-    "size": 21729
-   },
-   {
-    "drawn": "6ed93fbf3e1e6a2d3091e08983119bd3b8cade36",
-    "name": "Lord_Crump - ice.png",
-    "path": "MDW/Linked/Lord_Crump - ice.png",
-    "size": 136407
-   },
-   {
-    "drawn": "5f4a2742e3470b5246459e370bb06f5a08662854",
-    "name": "Lord_Crump - light.png",
-    "path": "MDW/Linked/Lord_Crump - light.png",
-    "size": 1782
-   },
-   {
-    "drawn": "ac0686172f1486c07dbf36a7a27b361c8af61017",
-    "name": "Lord_Crump - lightold.png",
-    "path": "MDW/Linked/Lord_Crump - lightold.png",
-    "size": 70256
-   },
-   {
-    "drawn": "5525b90b4a8189e1a7822e3dc9e3bceededa3ea3",
-    "name": "Lord_Crump - machine.png",
-    "path": "MDW/Linked/Lord_Crump - machine.png",
-    "size": 13278
-   },
-   {
-    "drawn": "eabbf0c6e0c7e7e219d46265df0e6a34d10b1f0d",
-    "name": "Ze'mer - magic.png",
-    "path": "MDW/Linked/Ze'mer - magic.png",
-    "size": 8892
-   },
-   {
-    "drawn": "c9794cb2813a856542da095481a09a68bccacba9",
-    "name": "Hero_Cap - Negation.png",
-    "path": "MDW/Linked/Hero_Cap - Negation.png",
-    "size": 29391
-   },
-   {
-    "drawn": "c6bc1f3f64f9cd4c24442c27b6e9934ff3eb5e95",
-    "name": "Shadow_Queen - Panda.png",
-    "path": "MDW/Linked/Shadow_Queen - Panda.png",
-    "size": 127266
-   },
-   {
-    "drawn": "cb2a9cc622d0231f0bd9a15fa2e7dab202546aa6",
-    "name": "Lord_Crump - rock.png",
-    "path": "MDW/Linked/Lord_Crump - rock.png",
-    "size": 12948
-   },
-   {
-    "drawn": "1c42ad8f2878f53ed4b3c7d27ec20a20316af9ca",
-    "name": "Lord_Crump - shield.png",
-    "path": "MDW/Linked/Lord_Crump - shield.png",
-    "size": 59287
-   },
-   {
-    "drawn": "fae0998073bf4c2ba7204bc885acb5d62645386a",
-    "name": "Lord_Crump - shieldold.png",
-    "path": "MDW/Linked/Lord_Crump - shieldold.png",
-    "size": 5571
-   },
-   {
-    "drawn": "10110e3aee8eaf4cc66b1399b7c0042532e81c35",
-    "name": "Lord_Crump - sparkle.png",
-    "path": "MDW/Linked/Lord_Crump - sparkle.png",
-    "size": 231808
-   },
-   {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
-    "name": "support.png",
-    "path": "Types/support.png",
-    "size": 632862
-   },
-   {
-    "drawn": "eacf40d44556d7a64c7d12b03d5a73d8d0a724ec",
-    "name": "Lord_Crump - sword.png",
-    "path": "MDW/Linked/Lord_Crump - sword.png",
-    "size": 3408
-   },
-   {
-    "drawn": "ec750c1b2c18ce95fd14be620a8f4cf0364a3561",
-    "name": "Lord_Crump - tomato.png",
-    "path": "MDW/Linked/Lord_Crump - tomato.png",
-    "size": 6978
-   },
-   {
-    "drawn": "c67a79214fe77db4c23754cf58db9fd1ab1b3d09",
-    "name": "Knight_Lost_A_Lot - tornado.png",
-    "path": "MDW/Linked/Knight_Lost_A_Lot - tornado.png",
-    "size": 103348
-   },
-   {
-    "drawn": "8b111dd9fbbd7cea3cef8e7a0b5fb3b3e5eb03d1",
-    "name": "Lord_Crump - undead.png",
-    "path": "MDW/Linked/Lord_Crump - undead.png",
-    "size": 10689
-   },
-   {
-    "drawn": "aa9f767fc58d2dcdff419edbce9cb97b963e5950",
-    "name": "Shadow_Queen - Unknown.png",
-    "path": "MDW/Linked/Shadow_Queen - Unknown.png",
-    "size": 1308
-   },
-   {
-    "drawn": "b9b6a4ed054f5cc82423a861087bbb38e86267c8",
-    "name": "Lord_Crump - water.png",
-    "path": "MDW/Linked/Lord_Crump - water.png",
-    "size": 8115
-   },
-   {
-    "drawn": "88e1175c633fdd97d60c618b95d2bdb4f120311d",
-    "name": "Enraged - buffstack.png",
-    "path": "MDW/Linked/Enraged - buffstack.png",
-    "size": 4605
-   },
-   {
-    "drawn": "8c2c969ad5442cf1e54932c78ea8405057aee916",
-    "name": "Lord_Crump - auxillary.png",
-    "path": "MDW/Linked/Lord_Crump - auxillary.png",
-    "size": 8397
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
    },
    {
     "drawn": "a517d9033160c17485bae365eedc041d389cfb07",
@@ -11915,7 +11669,7 @@
   ]
  },
  "Creatures/Mario/3 Stars/Marilyn.psd": {
-  "blob": "43b9bbecb61af13c63530cfd3ba6de447755a292",
+  "blob": "e33a340aa944a84aaef9762760624694f7be6a55",
   "links": [
    {
     "drawn": "7dd4743822e4b6d6921be1640fd8ffe8b90ab05c",
@@ -11944,7 +11698,7 @@
   ]
  },
  "Creatures/Mario/3 Stars/Raw_Cock.psd": {
-  "blob": "9d434b556880e68f127f4265fc3fdf3a4739609c",
+  "blob": "ece185326660f34e867614f39c203ae05e9a2581",
   "links": [
    {
     "drawn": "9b7a8cb354a7ecf9a8743cdade23c8d1bf64490f",
@@ -11973,11 +11727,11 @@
   ]
  },
  "Creatures/Mario/3 Stars/Sniffle_Thwomp.psd": {
-  "blob": "4ab535db44d273032d734fe9011d0a23e4c81e40",
+  "blob": "2e7e9b7c9abdef4ae78c363a6b38e33325778943",
   "links": []
  },
  "Creatures/Mario/3 Stars/Tutankoopa.psd": {
-  "blob": "887c1157c435ccaabdb2bb8b34866f33c66072f4",
+  "blob": "f21a871780b19aaef942c5d873004c99aa2dd635",
   "links": [
    {
     "drawn": "5e1ab7985d58aa07acae0e664ece50e173d86bf5",
@@ -11992,18 +11746,6 @@
     "size": 2010
    },
    {
-    "drawn": "cb2a9cc622d0231f0bd9a15fa2e7dab202546aa6",
-    "name": "Lord_Crump - rock.png",
-    "path": "MDW/Linked/Lord_Crump - rock.png",
-    "size": 12948
-   },
-   {
-    "drawn": "459cdddf4c0054f24a59c7b08ec0c54fd15c7fc3",
-    "name": "Azamoth_the_Possessed_Vessel - Magic.png",
-    "path": "MDW/Linked/Azamoth_the_Possessed_Vessel - Magic.png",
-    "size": 60344
-   },
-   {
     "drawn": "25679413e008ecd225af8cc6a9769810b48ae7e7",
     "name": "rock.png",
     "path": "Types/rock.png",
@@ -12012,7 +11754,7 @@
   ]
  },
  "Creatures/Mario/3 Stars/Vivian.psd": {
-  "blob": "e3699e6c98565badda52462f917ef60103c3fd36",
+  "blob": "a367c3789318187feedc86186ef2b83de3bc4bdd",
   "links": [
    {
     "drawn": "79a166dca06eac2a9c0ce5fb57ce4d3a83746d57",
@@ -12041,7 +11783,7 @@
   ]
  },
  "Creatures/Mario/4 Stars/Cortez.psd": {
-  "blob": "8f2f32c6423e5e86a7857be934baece47dd6f6bb",
+  "blob": "bf7cef468c625707c8dbbc0f4967af2806a9b4a4",
   "links": [
    {
     "drawn": "6d4296f519e95946edf7de87079b522443bd8cb7",
@@ -12064,31 +11806,31 @@
   ]
  },
  "Creatures/Mario/4 Stars/Crystal_King.psd": {
-  "blob": "7e2d9d544f30c754489583d4540c1339fc4f9a89",
+  "blob": "3e23ff19af249b3ca0c2a442ffda9f0829b0814e",
   "links": [
    {
-    "drawn": "6f896b9ac86551432696b7adeaf4f4cdd31a50ba",
-    "name": "Drone - Sapphire_Starold.png",
-    "path": "MDW/Linked/Drone - Sapphire_Starold.png",
-    "size": 1326
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
    },
    {
-    "drawn": "6f896b9ac86551432696b7adeaf4f4cdd31a50ba",
-    "name": "Drone - Sapphire_Starold.png",
-    "path": "MDW/Linked/Drone - Sapphire_Starold.png",
-    "size": 1326
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
    },
    {
-    "drawn": "6f896b9ac86551432696b7adeaf4f4cdd31a50ba",
-    "name": "Drone - Sapphire_Starold.png",
-    "path": "MDW/Linked/Drone - Sapphire_Starold.png",
-    "size": 1326
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
    },
    {
-    "drawn": "6f896b9ac86551432696b7adeaf4f4cdd31a50ba",
-    "name": "Drone - Sapphire_Starold.png",
-    "path": "MDW/Linked/Drone - Sapphire_Starold.png",
-    "size": 1326
+    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
    },
    {
     "drawn": "755a458e1afd8c0059d30f9b9ee3c72717a2ad88",
@@ -12099,7 +11841,7 @@
   ]
  },
  "Creatures/Mario/4 Stars/DooPliss.psd": {
-  "blob": "85b3dbe75416bc4c8475e28416099ea8e42f1cb0",
+  "blob": "622684d6d72e0014ba47304e3d57b4610dd7cc34",
   "links": [
    {
     "drawn": "192799337c6b26e5eaed9f82c05097f109207dcc",
@@ -26355,10 +26097,6 @@
  },
  "MDW/Linked/Colosseum_of_Fools - Layer 2.psb": {
   "blob": "cfc7a637f3139eb3106b918759db5eb07975560c",
-  "links": []
- },
- "MDW/Linked/Computer_Virus - Cog.psb": {
-  "blob": "a3807e371268781739908fcce7da1b465e2c3cb8",
   "links": []
  },
  "MDW/Linked/Computer_Virus - Layer 78.psb": {
