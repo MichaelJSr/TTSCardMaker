@@ -483,8 +483,11 @@ def plans(flow: dict) -> None:
 
 
 # ---------- Sandboxes ----------
+BASE_ENV = {k: v for k, v in os.environ.items() if k != "GIT_NO_LAZY_FETCH"}  # sandboxes lazy-fetch, as on a runner
+
+
 def git(cwd: str, *args, env: dict = None, check_: bool = True) -> str:
-    e = {**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t",
+    e = {**BASE_ENV, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t",
          "GIT_COMMITTER_EMAIL": "t@t", **(env or {})}
     return subprocess.run(["git", "-C", cwd, *args], capture_output=True, text=True, env=e, check=check_).stdout.strip()
 
@@ -562,7 +565,7 @@ def run_step(job: dict, name: str, cwd: str, env: dict, tmp: str) -> tuple:
     """A step's run: script under bash -e: (exit code, output, $GITHUB_OUTPUT as a dict)."""
     out = os.path.join(tmp, f"output-{time.monotonic_ns()}")
     open(out, "w").close()
-    e = {**os.environ, "GITHUB_OUTPUT": out, "GITHUB_ENV": out + ".env", "GITHUB_STEP_SUMMARY": os.path.join(tmp, "summary.md"),
+    e = {**BASE_ENV, "GITHUB_OUTPUT": out, "GITHUB_ENV": out + ".env", "GITHUB_STEP_SUMMARY": os.path.join(tmp, "summary.md"),
          "GITHUB_WORKSPACE": cwd, "RUNNER_TEMP": os.path.join(tmp, "runner"), "GITHUB_REPOSITORY": "MichaelJSr/TTSCardMaker",
          **env}
     r = subprocess.run(BASH + ["-c", step(job, name)["run"]], cwd=cwd, capture_output=True, text=True, env=e)
