@@ -7,9 +7,9 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-09T05:02:50Z",
- "card_commit": "6edc3ad06fdda2cdbe0648280591ca6f785d516f",
- "card_commit_at": 1794200439.0,
+ "built_at": "2026-11-09T05:09:08Z",
+ "card_commit": "ce94082e18def1ae889e79cb4b67483e11446d95",
+ "card_commit_at": 1794200802.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 98,
@@ -23,9 +23,9 @@
  },
  "files": {
   "old_stats.json": "06bcdd4bcfde3b16e85e81c5f6f7df28c9024565536619176fd6ee114cd69c2c",
-  "psd_details.json": "76a6c0fdf8151ad43baa97a9e90b0ee9d58b2236f2dce31fa3fcfc6e15dc0c1d",
+  "psd_details.json": "85d4d208a70a190109b24f4a8ef13e400df37f24b709619a68766bbee80e4ca6",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "22d20283a1a369926131324a40ad31bc8c2220252ebdf5e698a770d248649f68"
+  "stats.json": "66288e27d20de565c16293452ee6ba7478e3287aeb6143d606ce6bf38668430b"
  },
  "gates": {},
  "inputs": {
@@ -44,16 +44,8 @@
   "repin": [],
   "stale": []
  },
- "problems": [
-  {
-   "card": "Computer Virus",
-   "notes": [
-    "SEVERAL CREATURES: check each one's stats on the website"
-   ],
-   "path": "Creatures/Kirby/3 Stars/Computer_Virus.psd"
-  }
- ],
+ "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42564964398",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42565549556",
  "schema": 1
 }
