@@ -730,6 +730,9 @@ export function partJobs(rec, parts, { colors = null, was = null, statuses = nul
   return out;
 }
 
+/** A field's record parts that picture 1 prints: the title's, or the Ability's and blocks'. */
+const printed = (p, f) => (f === "name" ? p.title || [] : [...(p.ability || []), ...(p.blocks || [])]).filter(x => !(Array.isArray(x?.variants) && !x.variants.includes(1)));
+
 /** The colours the bake refuses as painted over (AutoCroissant psd_edit plan_colors, _painted_over, _solid_overlay):
  *  [{one, label, why}]. Refused when an enabled Color, Gradient or Pattern Overlay, the part's own or a group's above it,
  *  hides every title or Ability part the colour paints (layerColors). A part's own isn't counted for a whole field's
@@ -749,8 +752,7 @@ export function paintedOver(rec, colors, typed = [], edit = null) {
   for (const one of colors) {
     const f = one?.field, what = f === "name" ? "title" : "ability";
     if (f !== "name" && f !== "ability") continue;
-    const list = (f === "name" ? p.title || [] : [...(p.ability || []), ...(p.blocks || [])]).filter(x => !(Array.isArray(x?.variants) && !x.variants.includes(1)));
-    const texts = list.map(x => textOf(x, f, list.length));
+    const list = printed(p, f), texts = list.map(x => textOf(x, f, list.length));
     const hid = list.filter((_, i) => layerColors(texts, i, [one], f)).map(x => {
       const path = String(x?.layer || "").split("/"), own = on(path.join("/"));
       if (own.length && one.phrase && !lit.has(f) && !(own.length === 1 && own[0] === "Color Overlay")) return `its ${own[0]}`;
@@ -966,8 +968,10 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const barsBottom = lowest.length ? Math.max(...lowest.map(r => r.box[3])) : 0;   // the text starts below the card's stat rows (where they are seen, else the template's)
   const jobs = [], kc = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0;
   const specs = [["name", todo.name, psd.name, "name"], ["ability", todo.ability, psd.ability, "text"]].filter(x => x[1] != null).map(([role, text, old, label]) => ({ role, text, old, label }));
-  const partly = partJobs(rec, edit.parts, { colors: todo.colors, was: todo.colors && psd.colors, statuses });
-  if (obj(rec?.parts) && obj(edit.parts)) specs.length = 0;   // one box per layer: each changed layer in its own box, not the joined fields
+  const boxes = obj(edit.parts), tinted = !boxes && obj(rec?.parts) ? specs.filter(s => txt(s.text) === txt(s.old) && printed(rec.parts, s.role).length > 1).map(s => s.role) : [];   // a colour alone on a field of several layers
+  const partly = partJobs(rec, boxes || (tinted.length ? {} : null), { colors: todo.colors, was: todo.colors && psd.colors, statuses }).filter(j => boxes || tinted.includes(j.role));
+  if (obj(rec?.parts) && boxes) specs.length = 0;   // one box per layer: each changed layer in its own box, not the joined fields
+  else specs.splice(0, specs.length, ...specs.filter(s => !tinted.includes(s.role)));   // each of its layers recoloured in its own box
   for (const j of partly) specs.push({ role: j.role, text: j.text, old: j.old, label: j.role === "name" ? "name" : "text", own: j.box && kc ? j.box.map(v => v * kc) : null, added: j.added, part: true, path: j.layer, id: j.added ? "" : j.id, colors: j.colors });
   for (const { role, text, old, label, own: partBox, added, part, path, id, colors: shared } of specs) {
     const { fam, layer } = await family(role, label, path, id);
