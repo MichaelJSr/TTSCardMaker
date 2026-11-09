@@ -4080,7 +4080,7 @@ def tts_details(cards, chapters, icons, tag_table):
                        if q["name"] not in statuses]
         named_cards = [q for q in named_cards if q]
         mentioned = [q for i, q in enumerate(named_cards) if q not in named_cards[:i]][:6]
-        bars = [" ".join(f"{k.upper()} {'?' if s.get(k) is None else s[k]}" for k in STAT_KEYS) for s in c.get("creatures") or [c]
+        bars = [" ".join(f"{k.upper()} {s[k]}" for k in STAT_KEYS if s.get(k) is not None) for s in c.get("creatures") or [c]
                 if any(s.get(k) is not None for k in STAT_KEYS)]
         try:
             colours = tts_colors(c, marks, icons)
