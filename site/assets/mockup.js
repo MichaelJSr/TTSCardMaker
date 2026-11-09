@@ -10,7 +10,7 @@
 // `draw` is pure (node checks run it on plain pixel arrays).
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
 import { starMove, starsKept, titleInPicture } from "./parts.js";
-import { colorRanges, inkOf, layerColors, phraseText } from "./textcolor.js";
+import { colorRanges, inkOf, layerColors, phraseText, statusSpans } from "./textcolor.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
@@ -352,9 +352,11 @@ export function tokenize(text, icons = {}) {
 }
 /** tokenize's paragraphs with their letters in their colours (textcolor.js colorRanges of text, over base: the card's
  *  own, baseInk): a text piece split where its colour changes, each part's `color` "#rrggbb" or none; icons and badges
- *  keep their own. back: [r, g, b] the text sits on, a colour under 3:1 against it left out. */
-export function colourize(paras, text, colors, field, statuses = null, base = null, back = null) {
+ *  keep their own. back: [r, g, b] the text sits on, a colour under 3:1 against it left out. fills: {status name
+ *  lowercased: "#rrggbb"}, the ability's status words (statusSpans) in the chart's colour over base, as the bake. */
+export function colourize(paras, text, colors, field, statuses = null, base = null, back = null, fills = null) {
   text = String(text ?? "").replace(/\r/g, "");
+  if (field === "ability" && fills) base = [...(base || []), ...statusSpans(text, statuses).map(([start, end]) => ({ start, end, color: fills[text.slice(start, end).replace(/[\s\u0003]+/g, " ").toLowerCase()] }))];
   const ranges = seenOn(colorRanges(text, colors, field, statuses, base), back);
   if (!ranges.length) return paras;
   const at = i => ranges.find(r => r.start <= i && i < r.end)?.color || null;
@@ -885,11 +887,11 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 
 /** Draw the mock-up into canvas: the card image (src, same origin) with `edit`'s PSD fields over it. opts: {card, src, rec
  *  (details record or null), edit, psd (the image's values), icons, getFonts, raw, onFont (a font has loaded: draw
- *  again), stale (a newer draw started: drop this one)}. Drawn off-screen, then copied. Returns {drawn: [labels], skipped,
- *  boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused: [[label, why]] (stars,
- *  types or colours the bake would refuse), fonts: {name: family | ""}, standIn: [labels without a font name], shape}
- *  or null (the image didn't load, or stale). */
-export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, statuses = null, stale = () => false }) {
+ *  again), stale (a newer draw started: drop this one), fills (colourize's)}. Drawn off-screen, then copied. Returns
+ *  {drawn: [labels], skipped, boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused:
+ *  [[label, why]] (stars, types or colours the bake would refuse), fonts: {name: family | ""}, standIn: [labels without
+ *  a font name], shape} or null (the image didn't load, or stale). */
+export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, statuses = null, fills = null, stale = () => false }) {
   const img = await loadImage(src);
   if (!img || stale()) return null;
   const W = img.naturalWidth, H = img.naturalHeight, shape = shapeOf(W, H), tpl = TEMPLATES[shape];
@@ -993,7 +995,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   }
   for (const job of jobs) {
     const imgs = await iconImages(job.text, icons);
-    if (job.boxed ? drawBox(ctx, job, imgs, W, H, shape) : drawText(ctx, job, imgs, W)) out.over.push(job.label);
+    const j = { ...job, fills: job.one ? null : fills };   // under an overlay: painted over, as the bake's
+    if (j.boxed ? drawBox(ctx, j, imgs, W, H, shape) : drawText(ctx, j, imgs, W)) out.over.push(j.label);
     out.drawn.push(job.label);
   }
   return blit();
@@ -1116,8 +1119,8 @@ export function steadyPitch(lines) {
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). An Ability with the
  *  record's frame and px (box text) wraps at the frame at its set size, as the bake. */
-function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc }, imgs, W) {
-  const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink), region = area.box;
+function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills }, imgs, W) {
+  const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink, null, fills), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = found.align === "left" && role !== "name";
   const frame = role === "ability" && kc && Array.isArray(layer?.frame) && layer.frame.length === 4 ? layer.frame.map(v => v * kc) : null;   // box text's frame: Photoshop wraps there
@@ -1168,11 +1171,11 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
 const BOX_FILL = [16, 16, 22];                        // drawBox's box
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the
  *  old text is covered, never half there. */
-function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors, statuses, ink }, imgs, W, H, shape) {
+function drawBox(ctx, { role, text, area, fam, measure, icons, one, colors, statuses, ink, fills }, imgs, W, H, shape) {
   const r = area.seed ? [0, area.seed[0], W, H] : area.box;     // the text area to the card's edges (the old text may touch them)
   const b = area.seed ? r : [r[0] - W * 0.01, r[1] - H * 0.004, r[2] + W * 0.01, r[3] + H * 0.004], pad = W * 0.03;
   const start = role === "name" ? (b[3] - b[1]) * 0.5 : W * (shape === "square" ? 0.06 : shape === "item" ? 0.05 : 0.045);
-  const { size: z, lines } = fit(colourize(tokenize(text, icons), text, colors, role, statuses, ink, BOX_FILL), b[2] - b[0] - 2 * pad, b[3] - b[1] - pad, start, measure, role === "name" ? { lines: 1, min: 0.3 } : { min: 0.35 });
+  const { size: z, lines } = fit(colourize(tokenize(text, icons), text, colors, role, statuses, ink, BOX_FILL, fills), b[2] - b[0] - 2 * pad, b[3] - b[1] - pad, start, measure, role === "name" ? { lines: 1, min: 0.3 } : { min: 0.35 });
   const over = lines.length * z * LINE > b[3] - b[1] - pad + 0.5;
   const rad = Math.min(W * 0.03, (b[3] - b[1]) / 2);
   ctx.save(); ctx.beginPath(); ctx.moveTo(b[0] + rad, b[1]); ctx.arcTo(b[2], b[1], b[2], b[3], rad); ctx.arcTo(b[2], b[3], b[0], b[3], rad); ctx.arcTo(b[0], b[3], b[0], b[1], rad); ctx.arcTo(b[0], b[1], b[2], b[1], rad); ctx.closePath();

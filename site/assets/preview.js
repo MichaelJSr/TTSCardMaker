@@ -588,7 +588,7 @@ export function createPreviews(app) {
   const recs = new Map();                             // card id -> details record (or null)
   function drawMock(canvas, c, v, host) {
     const run = (canvas._run = (canvas._run || 0) + 1);
-    const go = rec => mockup.draw(canvas, { card: c, src: current(c), rec, edit: v.cur, psd: v.psd, icons: S.icons, statuses: S.statuses, getFonts: () => app.getJson("fonts.json"), raw: S.data.raw,
+    const go = rec => mockup.draw(canvas, { card: c, src: current(c), rec, edit: v.cur, psd: v.psd, icons: S.icons, statuses: S.statuses, fills: S.statusFills, getFonts: () => app.getJson("fonts.json"), raw: S.data.raw,
       stale: () => canvas._run !== run || !canvas.isConnected, onFont: () => { if (canvas._run === run) drawMock(canvas, c, v, host); } })
       .then(out => { const el = host.querySelector("[data-pv-mock-note]"); if (out && el) el.textContent = mockNote(out); });
     if (recs.has(c.id) || !c.details) { go(recs.get(c.id) || null); return; }

@@ -176,6 +176,7 @@ async function init() {
   }
   S.all = S.data.cards; S.icons = S.data.icons;
   S.statuses = statusNames(S.all);                        // status words keep the chart's colour (textcolor.js)
+  S.statusFills = Object.fromEntries((S.data.swatches || []).map(x => [String(x.name).toLowerCase(), x.color]).filter(([n]) => S.statuses.some(s => s.toLowerCase() === n)));   // their colours (the mock-up's)
   anchorInks(S.all);                                      // the card's own colours follow an edit from the built text
   setTagMeanings(S.data.tagMeanings);                     // the Timing Tags chapter's meanings: every badge's tooltip
   setHeavy(S.data.heavy);                                 // commits too big for GitHub's page: commit links go to the card's history
