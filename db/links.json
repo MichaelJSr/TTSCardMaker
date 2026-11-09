@@ -22834,22 +22834,22 @@
   ]
  },
  "Items/Equip/2 Stars/Man_Serpent_Shield.psd": {
-  "blob": "f1b68d20eff4a6a44e703a8dd9b5423f40b761d8",
+  "blob": "0053ce39c7004994c50d93f76a8d7fb95ada412f",
   "links": [
    {
-    "drawn": "e3838bbcb2389d19506907838ca7a01650e3d72f",
+    "drawn": null,
     "name": "Man_Serpent_Shield - ER_Icon_shield_Man-Serpent%27s_Shield.webp",
     "path": "MDW/Linked/Man_Serpent_Shield - ER_Icon_shield_Man-Serpent%27s_Shield.webp",
     "size": 230452
    },
    {
-    "drawn": "5511f82ec9d43d662dc1c9628ab0ae7aea3019df",
-    "name": "Man_Serpent_Shield - Man Serpent Shield.png",
-    "path": "MDW/Linked/Man_Serpent_Shield - Man Serpent Shield.png",
-    "size": 104081
+    "drawn": "90c2f04a5e61c8fa512eb349151eee5d7e9df957",
+    "name": "Man_Serpent_Shield - Title band.png",
+    "path": "MDW/Linked/Man_Serpent_Shield - Title band.png",
+    "size": 6858
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "drawn": null,
     "name": "Equip.png",
     "path": "Types/Equip.png",
     "size": 83059
@@ -33649,6 +33649,9 @@
   "MDW/Linked/Man_Serpent_Shield - Man Serpent Shield.png": {
    "5511f82ec9d43d662dc1c9628ab0ae7aea3019df": 104081
   },
+  "MDW/Linked/Man_Serpent_Shield - Title band.png": {
+   "90c2f04a5e61c8fa512eb349151eee5d7e9df957": 6858
+  },
   "MDW/Linked/Mantis - Layer 1.psb": {
    "443e840bb32e849a83d885b9984007b2ec689418": 10041694
   },
@@ -36061,6 +36064,7 @@
   "904357cc2f41d50a490ca178dc60d04059cbd889": "1f34b0488ebdf3c663c34a3a8de66a29c8ef9371",
   "9049feee0b867995bdddba3d56b3cbf4303826ef": "90d08dacc6d9845e80420a1b52a7f265293c2e3a",
   "90a890939349cea8f73cb9022604e1716afb764f": "d6f5143e3c2e28829b3d8e7026120a283c193d90",
+  "90c2f04a5e61c8fa512eb349151eee5d7e9df957": "47ce1493e4ab08102ac1607aafd61b941b685592",
   "9108cd62dca0976d4c022549c45ddd390259ccfb": "93079a119f3629c5096ed31a0414ebbd6f9d6f9b",
   "91552c1f1ed94e89eeb340fdd69902a8061fbd0c": "ef03203e3ffbe716d7a006cdcaa170edeb2053ca",
   "923a604db0aefeb4061b00bda0bbfa58cc99d6ee": "d6de87605d1363b02a0d5d972167df413def240a",
