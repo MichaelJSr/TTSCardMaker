@@ -159,6 +159,30 @@ jobs:
             echo "${code:-0}" > "$1.done"' _ "$list" > "$list.log" 2>&1 < /dev/null &
           echo "fetching $(wc -l < "$list") pushed blobs"
 
+      # The icon font's past versions (AutoCroissant card_guards.earlier_fonts: badge widths; 10, 79 MB on 11-08), 40 at
+      # most, in the background: raw files by commit (no REST read), 4 at a time, into CARD_EARLIER_FONTS. Check reads a
+      # version there first; one missing or late goes by REST as before.
+      - name: Earlier fonts start
+        if: env.MODE != 'off'
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AFTER: ${{ inputs.sha || github.sha }}
+        run: |
+          dir=$RUNNER_TEMP/earlier-fonts
+          font=MDW/Fonts/stoogedings.ttf
+          mkdir -p "$dir"
+          now=$(GIT_NO_LAZY_FETCH=1 git rev-parse -q --verify "$AFTER:$font") || { echo "no icon font"; exit 0; }
+          { GIT_NO_LAZY_FETCH=1 git log --no-renames --raw --no-abbrev --format='C %H' "$AFTER" -- "$font" || true; } \
+            | awk -v now="$now" '$1 == "C" {c = $2; next}
+                /^:/ && $4 !~ /^0+$/ && $4 != now && !seen[$4]++ {print c, $4; if (++n == 40) exit}' > "$dir/list"
+          echo "CARD_EARLIER_FONTS=$dir" >> "$GITHUB_ENV"
+          FONT=$font nohup timeout -k 10 120 xargs -P 4 -n 2 bash -c 'printf "header = \"Authorization: token %s\"\n" "$GH_TOKEN" \
+            | curl -fsS --retry 2 -K - -o "$0/$2.part" "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$1/$FONT" \
+            && mv "$0/$2.part" "$0/$2"' "$dir" < "$dir/list" > "$dir/log" 2>&1 &
+          echo "fetching $(wc -l < "$dir/list") earlier icon fonts"
+
       # The data's render and spot records (db/ on the data branch, Card sync's): the guards' renders and conversions read
       # them (AutoCroissant psd_edit.RECORDS_DIR); one not read: {}.
       - name: Records
