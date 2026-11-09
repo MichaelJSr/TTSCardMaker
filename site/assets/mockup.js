@@ -233,7 +233,7 @@ export function alignOf(spans, x0, x1) {
  *  take the colour of the background around them (the unmasked pixels' mean per cell, cells without any filled from
  *  their neighbours, blended across cells). lines ([[x0, y0, x1, y1]] px): only edges in them (grown by `reach`) count,
  *  and gaps up to `close` px between edges on a row are filled too (a badge's pill, the inside of thick letters).
- *  Returns the colours read on the way: {bg, fill, stroke | null} as [r, g, b]. */
+ *  Returns the colours read on the way: {bg, fill, stroke | null} as [r, g, b]. fill: the record's (textColours' known). */
 export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines = null, close = 0, fill = null } = {}) {
   const [x0, y0, x1, y1] = px(box, W, H), w = x1 - x0, h = y1 - y0;
   if (w < 2 || h < 2) return null;
@@ -300,7 +300,8 @@ function dilate(mask, w, h, r) {                     // square dilation, separab
     last = 1e9; for (let y = h - 1; y >= 0; y--) { if (tmp[y * w + x]) last = y; if (last - y <= r) mask[y * w + x] = 1; } }
 }
 /** The text's fill and outline from its pixels [lum, r, g, b]: on a dark background the brightest ones fill and the
- *  darkest outline (when darker than the background), on a light one the other way round. */
+ *  darkest outline (when darker than the background), on a light one the other way round. known (the record's fill)
+ *  fills instead when 4% of the pixels are near it. */
 export function textColours(masked, bg, known = null) {
   if (masked.length < 8) return { fill: known, stroke: null };
   const bgL = (bg[0] * 77 + bg[1] * 150 + bg[2] * 29) >> 8, s = [...masked].sort((a, b) => a[0] - b[0]), n = Math.max(1, Math.round(s.length * 0.12));
@@ -311,7 +312,7 @@ export function textColours(masked, bg, known = null) {
   if (seen) {                                         // the record's fill, found in the text: the outline past the background
     const kL = (known[0] * 77 + known[1] * 150 + known[2] * 29) >> 8;
     if (kL >= bgL) return { fill: known, stroke: lum(dark) < bgL - 25 ? avg(dark) : kL - bgL < 40 && lum(light) > kL + 50 ? avg(light) : null };
-    return { fill: known, stroke: lum(light) > bgL + 25 ? avg(light) : lum(dark) < Math.min(bgL, kL) - 50 ? avg(dark) : null };
+    return { fill: known, stroke: lum(dark) < kL - 50 ? avg(dark) : lum(light) > bgL + 25 ? avg(light) : null };   // black past it: its outline
   }
   return bgL < 140 ? { fill: avg(light), stroke: lum(dark) < bgL - 25 ? avg(dark) : null }
     : { fill: avg(dark), stroke: lum(light) > bgL + 25 ? avg(light) : null };
