@@ -1161,8 +1161,8 @@ jobs:
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
       # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), when the website shows main's
       # chapters (it waits up to 8 minutes for the website's build of them); the save puts it in the Rulebooks bag and M takes
-      # it. A failure leaves the PDF as it was. changed: the PDF or the page list; key: pages.json's key alone (M takes it
-      # only when made for something else).
+      # it. A failure leaves the PDF as it was. changed: the PDF or the page list; key: pages.json's key or pre alone (M takes
+      # it only when made for something else). The schedule's run: Chrome looks even when the pre-key held (--full).
       - name: Rulebook PDF
         id: pages
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
@@ -1175,12 +1175,13 @@ jobs:
               || { sudo apt-get -qq update && sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null; } || echo "::warning::no emoji font"
           fi
           CHROME=$(command -v google-chrome || command -v chromium || true) \
-            "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" | tee "$RUNNER_TEMP/pages.md"
+            "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" \
+            ${{ github.event_name == 'schedule' && '--full' || '' }} | tee "$RUNNER_TEMP/pages.md"
           ws=$GITHUB_WORKSPACE list=TTS/Rulebook/pages.json changed=false key=false
           if [ -n "$(git -C "$ws" status --porcelain -- TTS/Rulebook ":!$list")" ]; then
             changed=true
           elif [ -n "$(git -C "$ws" status --porcelain -- "$list")" ]; then
-            if [ "$(jq -S 'del(.key)' "$ws/$list")" = "$(git -C "$ws" show "HEAD:$list" | jq -S 'del(.key)')" ]; then key=true; else changed=true; fi
+            if [ "$(jq -S 'del(.key, .pre)' "$ws/$list")" = "$(git -C "$ws" show "HEAD:$list" | jq -S 'del(.key, .pre)')" ]; then key=true; else changed=true; fi
           fi
           { echo "changed=$changed"; echo "key=$key"; } >> "$GITHUB_OUTPUT"
 
