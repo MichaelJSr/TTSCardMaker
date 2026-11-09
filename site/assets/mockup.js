@@ -556,6 +556,13 @@ export function fit(paras, maxW, maxH, size, measure, { min = 0.45, lines: most 
   while (!fits() && s > size * min) { s *= 0.94; lines = layout(paras, maxW, s, measure); }
   return { size: s, lines };
 }
+/** A title as the bake sets it (psd_edit set_text_layer): never shrunk; point text keeps its lines, a box's (more lines
+ *  found than the old text's n0 paragraphs) wraps at maxW. over: more lines than it has; dx: back on the card (back_on). */
+export function titleLayout(paras, n0, found, maxW, size, measure, W) {
+  const lines = layout(paras, found.lines.length > n0 ? maxW : Infinity, size, measure);
+  const w = Math.max(0, ...lines.map(l => l.w)), x0 = (found.box[0] + found.box[2] - w) / 2;
+  return { size, lines, over: lines.length > Math.max(1, found.lines.length, paras.length), dx: w > W ? 0 : clamp(x0, 0, W - w) - x0 };
+}
 
 /** The stat rows a template draws, in px: [{k, box, cells: 10}] for the stats a card has (hp, def, atk, spd in order);
  *  none for a shape without bars or stats the details call anything but "template". */
@@ -1066,7 +1073,7 @@ export function steadyPitch(lines) {
   return ok.length ? ok.reduce((t, x) => t + x, 0) / ok.length : m;
 }
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
- *  grows downwards), shrunk when it would run past the area; a name keeps its line count and stays clear of the stars. */
+ *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). */
 function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc }, imgs, W) {
   const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
@@ -1097,8 +1104,7 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
     for (let y = from, j = 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
     return n < 100 * k * k;
   }
-  let { size: z, lines } = fit(paras, maxW, Infinity, size, measure, role === "name" ? { lines: Math.max(1, found.lines.length, paras.length), min: 0.3 } : {});   // a title's line break: two lines
-  let over = false;
+  let { size: z, lines, over = false, dx = 0 } = role === "name" ? titleLayout(paras, tokenize(old).length, found, maxW, size, measure, W) : fit(paras, maxW, Infinity, size, measure);
   if (role !== "name" && !roomBelow()) {              // past the area's bottom: smaller, down to 40%; still past it: said so
     const room2 = region[3] - top, need = s => (lines.length - 1) * pitch0 * (s / size) + s * 1.05;
     while (need(z) > room2 && z > size * 0.4) { z *= 0.94; lines = layout(paras, maxW, z, measure); }
@@ -1112,7 +1118,7 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
     if (Number.isFinite(tall) && tall > 0) base = top + (found.lines[0][3] - top) * up / tall;
   }
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2), base, pitch, z, fam, label: measure.label, fill, stroke, imgs, one });
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, fill, stroke, imgs, one });
   return over;
 }
 const BOX_FILL = [16, 16, 22];                        // drawBox's box
