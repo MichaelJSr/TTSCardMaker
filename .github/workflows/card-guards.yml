@@ -138,8 +138,11 @@ jobs:
       # first, so ~3 REST reads per card become none. It needs only the trees, so it starts here, in the background;
       # Check (and in `checks` the two checks) starts without waiting and waits for each listed blob it reads
       # (CARD_BLOBS_PENDING); 5 minutes at most, its exit code in blobs.done (then a blob still missing goes by REST).
-      # 8 to a fetch, 4 at a time, in diff order: GitHub's delta search is what takes the time, and small packs barely
-      # need one; a card's two sides stay together, so the deltas still shrink the transfer.
+      # 8 at most to a fetch, 4 at a time, in diff order: GitHub's delta search is what takes the time, and small packs
+      # barely need one; a file's two sides stay in one fetch, so the deltas still shrink the transfer.
+      # In `check` also the other blobs Check reads: first the edits, the icon manifest, the status chart, the card data
+      # and its links (main's head and the data branch), then with each pushed card PSD its PNG and numbered PNGs
+      # (png_for, loosely: one missed goes by REST).
       - &blobs-start
         name: Pushed blobs start
         if: github.event_name == 'push'
@@ -150,14 +153,50 @@ jobs:
         run: |
           case "$BEFORE" in ''|*[!0]*) ;; *) echo "a new branch: nothing to fetch"; exit 0;; esac
           [ -n "$BEFORE" ] || exit 0
-          list=$RUNNER_TEMP/blobs
-          GIT_NO_LAZY_FETCH=1 git diff-tree -r --no-renames "$BEFORE" "$GITHUB_SHA" -- '*.psd' '*.PSD' '*.png' '*.PNG' \
-            | awk '{print $3; print $4}' | grep -v '^0*$' | awk '!seen[$0]++' > "$list" || true
-          [ -s "$list" ] || { echo "no card blobs pushed"; exit 0; }
-          GIT_NO_LAZY_FETCH=1 nohup bash -c 'timeout -k 10 300 xargs -P 4 -n 8 git -c fetch.negotiationAlgorithm=noop fetch -q \
-            --no-tags --no-write-fetch-head --recurse-submodules=no --filter=blob:none origin < "$1" || code=$?
+          export GIT_NO_LAZY_FETCH=1
+          list=$RUNNER_TEMP/blobs pngs=/dev/null
+          if [ "$GITHUB_JOB" = check ]; then           # the head's PNGs, "<blob>\t<path>"
+            pngs=$list.pngs
+            git -c core.quotePath=false ls-tree -r "$GITHUB_SHA" \
+              | awk -F '\t' 'tolower($2) ~ /\.png$/ {split($1, f, " "); print f[3] "\t" $2}' > "$pngs" || true
+          fi
+          # a line a changed file: its two sides, then a card PSD's PNGs
+          git -c core.quotePath=false diff-tree -r --no-renames "$BEFORE" "$GITHUB_SHA" -- '*.psd' '*.PSD' '*.png' '*.PNG' \
+            | awk -F '\t' -v pngs="$pngs" '
+                function dir(p) { return match(p, /.*\//) ? substr(p, 1, RLENGTH) : "" }
+                function stem(p, d) { return tolower(substr(p, length(d) + 1, length(p) - length(d) - 4)) }
+                BEGIN {
+                  while ((getline line < pngs) > 0) {
+                    split(line, f, "\t"); d = dir(f[2]); k = ++n[d]; name[d, k] = stem(f[2], d); sha[d, k] = f[1]
+                  }
+                }
+                {
+                  split($1, f, " "); out = f[3] " " f[4]
+                  if (f[5] ~ /^[AM]/ && tolower($2) ~ /\.psd$/ && ("/" $2) !~ /\/(MDW|Markers)\//) {
+                    d = dir($2); s = stem($2, d)
+                    for (i = 1; i <= n[d]; i++)
+                      if (substr(name[d, i], 1, length(s)) == s && substr(name[d, i], length(s) + 1) ~ /^[0-9]*$/) out = out " " sha[d, i]
+                  }
+                  print out
+                }' > "$list.push" || true
+          [ -s "$list.push" ] || { echo "no card blobs pushed"; exit 0; }
+          # the list: a blob a line; the fetches: a line each, whole lines of $list.push up to 8 blobs
+          if [ "$GITHUB_JOB" = check ]; then
+            for spec in "$GITHUB_SHA:site/Card Edits.json" "$GITHUB_SHA:MDW/Fonts/stoogedings-src/stoogedings.json" \
+                "$GITHUB_SHA:MDW/Croissant's Special Folder/Satus Effect Colors.psd" origin/data:db/stats.json \
+                origin/data:db/links.json; do
+              git rev-parse -q --verify "$spec" || true
+            done | tr '\n' ' '
+            echo
+          fi | cat - "$list.push" | awk -v list="$list" '
+              { k = 0; for (i = 1; i <= NF; i++) if ($i !~ /^0+$/ && !seen[$i]++) { print $i > list; u[++k] = $i } }
+              n && n + k > 8 { print line; line = ""; n = 0 }
+              { for (i = 1; i <= k; i++) line = line (n++ ? " " : "") u[i] }
+              END { if (n) print line }' > "$list.fetch"
+          GIT_NO_LAZY_FETCH=1 nohup bash -c 'timeout -k 10 300 xargs -P 4 -L 1 git -c fetch.negotiationAlgorithm=noop fetch -q \
+            --no-tags --no-write-fetch-head --recurse-submodules=no --filter=blob:none origin < "$1.fetch" || code=$?
             echo "${code:-0}" > "$1.done"' _ "$list" > "$list.log" 2>&1 < /dev/null &
-          echo "fetching $(wc -l < "$list") pushed blobs"
+          echo "fetching $(wc -l < "$list") blobs"
 
       # The icon font's past versions (AutoCroissant card_guards.earlier_fonts: badge widths; 10, 79 MB on 11-08), 40 at
       # most, in the background: raw files by commit (no REST read), 4 at a time, into CARD_EARLIER_FONTS. Check reads a
@@ -184,24 +223,27 @@ jobs:
           echo "fetching $(wc -l < "$dir/list") earlier icon fonts"
 
       # The data's render and spot records (db/ on the data branch, Card sync's): the guards' renders and conversions read
-      # them (AutoCroissant psd_edit.RECORDS_DIR); one not read: {}.
-      - name: Records
+      # them (AutoCroissant psd_edit.RECORDS_DIR); one not read: {}. In the background, each file whole or none: Check
+      # waits for records.done (2 minutes at most) and shows the log.
+      - name: Records start
         continue-on-error: true
-        timeout-minutes: 2
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dir=$RUNNER_TEMP/records
           mkdir -p "$dir"
-          for f in render_record.json spot_record.json; do
-            if ! gh api -H "Accept: application/vnd.github.raw" "repos/$GITHUB_REPOSITORY/contents/db/$f?ref=data" > "$dir/$f" 2> /dev/null \
-                || ! jq -e 'type == "object"' "$dir/$f" > /dev/null; then
-              rm -f "$dir/$f"
-              echo "::warning::db/$f not read from the data branch: renders go without it"
-            fi
-          done
           echo "CARD_RECORDS_DIR=$dir" >> "$GITHUB_ENV"
+          nohup bash -c 'for f in render_record.json spot_record.json; do
+              if timeout -k 5 55 gh api -H "Accept: application/vnd.github.raw" "repos/$GITHUB_REPOSITORY/contents/db/$f?ref=data" \
+                  > "$1/$f.part" 2> /dev/null && jq -e "type == \"object\"" "$1/$f.part" > /dev/null; then
+                mv "$1/$f.part" "$1/$f"
+              else
+                rm -f "$1/$f.part"
+                echo "::warning::db/$f not read from the data branch: renders go without it"
+              fi
+            done
+            touch "$1.done"' _ "$dir" > "$dir.log" 2>&1 < /dev/null &
 
       # A landing dispatch would post before a waiting push run of its commit (or a later one): refused.
       - name: No push run in its window
@@ -356,6 +398,9 @@ jobs:
           ALL: ${{ inputs.all }}
           CARD_BLOBS_PENDING: ${{ runner.temp }}/blobs    # Pushed blobs start's list: a blob in it is waited for
         run: |
+          records=$RUNNER_TEMP/records
+          [ ! -d "$records" ] || timeout 125 bash -c 'until [ -e "$0.done" ]; do sleep 0.2; done' "$records" || true
+          cat "$records.log" 2> /dev/null || true
           args=(--clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --after "${SHA:-$GITHUB_SHA}" --out "$OUT" --mode "$MODE")
           [ -n "$AUTHOR" ] && args+=(--author "$AUTHOR")
           [ -n "$BEFORE" ] && args+=(--before "$BEFORE")
