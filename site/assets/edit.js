@@ -94,6 +94,20 @@ export const psdValue = (b, f, byId) => tidy(f, b.edited?.includes(f) ? (f === "
 export const isPsd = f => FROM[f] === "PSD";
 /** The creatures list with creature n's (0-based) stat k at v; a stat on a shared bar moves every creature (the bot's set_creatures). */
 export const creaturesWith = (list, n, k, v, shared = []) => list.map((x, i) => (i === n || shared.includes(k) ? { ...x, [k]: v } : x));
+/** The most creature n's (0-based) stat k shows on the card's own display (cards.json statCaps: the bot's psd_edit
+ *  stat_caps, owner 2026-11-08), 10 for a creature past the record's; null on the template's bars (as before). */
+export const statCap = (c, k, n = 0) => { const caps = c?.statCaps?.[k]; return Array.isArray(caps) ? (Number.isInteger(caps[n]) ? caps[n] : 10) : null; };
+/** Why stat k at v won't fit the card's display (creature n, 0-based), or "" (the bake refuses the same: psd_edit cap_why). */
+export function capError(c, k, v, n = 0) {
+  const cap = statCap(c, k, n), who = c?.creatures?.length > 1 ? ` (creature ${n + 1})` : "";
+  if (cap == null || v == null || v <= cap) return "";
+  return cap >= 10 ? `${c.name}'s stat bars show up to ${cap}: ${LABEL[k]} ${v}${who} won't fit`
+    : `${c.name}'s ${LABEL[k]} row${who} holds ${cap} pictures: ${v} won't fit`;
+}
+/** The first stat of field f at x past the display (capError), against the published card b; a value as published passes. */
+export const capsError = (c, b, f, x) => (f === "creatures" ? (Array.isArray(x) ? x : []).flatMap((one, n) =>
+  STATS.map(k => (one?.[k] != null && one[k] !== b.creatures?.[n]?.[k] ? capError(c, k, one[k], n) : "")))
+  : STATS.includes(f) && x !== b[f] ? [capError(c, f, x)] : []).find(Boolean) || "";
 export const opEmpty = op => !Object.keys(op.set).length && !(op.unset || []).length && !Object.keys(op.site || {}).length && op.author === undefined && !op.ban && !op.rate && op.rename === undefined;
 
 // ---- single-field ops (inline editing; the same rule readForm applies to the whole form)
@@ -828,7 +842,7 @@ export function createEditor(app) {
     const plain = (f, input) => `<div class="site-plain"${on(f) ? "" : " hidden"}>${input}<p class="muted part-note">The card image keeps its text.</p></div>${siteBox(f)}`;
     const artBox = list => `<div id="ef-art" class="art-box" data-row="art"><div class="art-rows">${(list.length ? list : [""]).map(artRow).join("")}</div><div class="erow"><span></span><div class="ein"><button type="button" class="ghost" data-art-add>+ Add a source</button>${reset("art")}</div></div></div>`;
     const row = (f, input) => `<div class="erow" data-row="${f}"><label for="ef-${f}">${LABEL[f]}${psdNote(f)}</label><div class="ein">${input}${reset(f)}${SITE_FIELDS.includes(f) ? siteBox(f) : ""}</div></div>`;
-    const num = f => `<input id="ef-${f}" type="number" min="0" max="99" step="1" value="${c[f] ?? ""}" placeholder="—">`;
+    const num = f => `<input id="ef-${f}" type="number" min="0" max="${statCap(c, f) ?? 99}" step="1" value="${c[f] ?? ""}" placeholder="—">`;
     return `<div class="dialog edit-dialog has-preview" role="dialog" aria-modal="true" aria-label="Edit ${esc(c.name)}">
       <button type="button" class="ghost icon close" data-action="edit-cancel" aria-label="Cancel">✕</button>
       <h2>Edit ${esc(c.name)}</h2>
@@ -852,7 +866,7 @@ export function createEditor(app) {
         <fieldset><legend>Stats</legend>
           <div class="estats" id="ef-single"${c.creatures?.length > 1 ? " hidden" : ""}>${STATS.map(f => row(f, num(f))).join("")}</div>
           <div id="ef-creatures-box"${c.creatures?.length > 1 ? "" : " hidden"}><table class="creature-table"><thead><tr><th></th>${STATS.map(k => `<th>${LABEL[k]}</th>`).join("")}</tr></thead>
-            <tbody id="ef-creatures">${(c.creatures?.length > 1 ? c.creatures : []).map((x, i) => creatureRow(x, i)).join("")}</tbody></table>${psdNote("creatures")}${reset("creatures")}${siteBox("creatures")}</div>
+            <tbody id="ef-creatures">${(c.creatures?.length > 1 ? c.creatures : []).map((x, i) => creatureRow(x, i, c)).join("")}</tbody></table>${psdNote("creatures")}${reset("creatures")}${siteBox("creatures")}</div>
           <div class="actions"><button type="button" class="ghost" data-creature="split" ${c.creatures?.length > 1 ? "hidden" : ""}>Split into creatures</button>
             <button type="button" class="ghost" data-creature="add" ${c.creatures?.length > 1 ? "" : "hidden"}>+ Creature</button>
             <button type="button" class="ghost" data-creature="remove" ${c.creatures?.length > 1 ? "" : "hidden"}>− Creature</button></div>
@@ -916,8 +930,8 @@ export function createEditor(app) {
     setArt(vals);
     rows.querySelectorAll("[data-art-src]")[Math.min(at, Math.max(0, vals.length - 1))]?.focus();
   }
-  const creatureRow = (x, i) => `<tr><th>${i + 1}</th>${STATS.map(k => `<td><input type="number" min="0" max="99" data-ck="${k}" value="${x[k] ?? ""}" placeholder="—" aria-label="Creature ${i + 1} ${LABEL[k]}"></td>`).join("")}</tr>`;
-  function creatureAction(kind) {
+  const creatureRow = (x, i, c) => `<tr><th>${i + 1}</th>${STATS.map(k => `<td><input type="number" min="0" max="${statCap(c, k, i) ?? 99}" data-ck="${k}" value="${x[k] ?? ""}" placeholder="—" aria-label="Creature ${i + 1} ${LABEL[k]}"></td>`).join("")}</tr>`;
+  function creatureAction(kind, c) {
     const box = document.getElementById("ef-creatures-box"), body = document.getElementById("ef-creatures");
     const rows = () => [...body.querySelectorAll("tr")].map(tr => Object.fromEntries([...tr.querySelectorAll("[data-ck]")].map(i => [i.dataset.ck, i.value === "" ? null : +i.value])));
     const single = Object.fromEntries(STATS.map(k => { const v = document.getElementById(`ef-${k}`).value; return [k, v === "" ? null : +v]; }));
@@ -928,7 +942,7 @@ export function createEditor(app) {
       for (const k of STATS) document.getElementById(`ef-${k}`).value = list[0]?.[k] ?? "";
       list = [];
     }
-    body.innerHTML = list.map(creatureRow).join("");
+    body.innerHTML = list.map((x, i) => creatureRow(x, i, c)).join("");
     box.hidden = !list.length; document.getElementById("ef-single").hidden = !!list.length;
     for (const b of document.querySelectorAll("[data-creature]")) b.hidden = b.dataset.creature === "split" ? !!list.length : !list.length;
   }
@@ -963,6 +977,7 @@ export function createEditor(app) {
       if (!box.hidden) for (const k of STATS) want[k] = want.creatures[0]?.[k] ?? null;   // creature 1 is the card's stats: a change bakes
       want.creatures = tidy("creatures", want.creatures);
     }
+    for (const k of [...STATS, "creatures"]) if (k in want) error ||= capsError(c, b, k, want[k]);   // past the card's own display (owner 11-08)
     const siteOn = k => !!f(`site-${k}`)?.checked, site = SITE_FIELDS.filter(siteOn);
     for (const k of ["name", "ability"]) if (!siteOn(k) && document.querySelector(`#edit-form [data-site-of="${k}"]`)) delete want[k];   // its boxes speak for it
     const op = { id: c.id, key: c.key, name: want.name, set: {}, unset: [] };
@@ -1022,6 +1037,8 @@ export function createEditor(app) {
     if (one && n === 1) return stagePart(c, one, f, v, defer);
     if (one) { if (!defer) app.toast(`${LABEL[f]}: edit its boxes in Edit`); return null; }   // several layers (or none): never the joined field
     let x = fromInput(f, v, b.name);
+    const cap = capsError(c, b, f, x);             // past the card's own display: refused as typed (owner 11-08)
+    if (cap) { if (!defer) app.toast(cap); return null; }
     if (f === "art" && x != null) { x = artList({ art: x }); if (artError(x)) { if (!defer) app.toast(artError(x)); return null; } x = x.length ? x : null; }
     if (f === "flags") { x = cleanFlags(x); if (flagError(x)) { if (!defer) app.toast(flagError(x)); return null; } }
     if ((f === "series" || f === "subseries") && x != null && !defer && (x = spell(f, x, c.id)) === undefined) return null;
@@ -1247,8 +1264,8 @@ export function createEditor(app) {
     };
     // drafts: the inputs that differ from how the form opened, a moment after each key; an older one is offered first
     const start = draft.readValues(form), setCreatures = rows => {
-      if (!rows) { if (!document.getElementById("ef-creatures-box").hidden) creatureAction("remove"); return; }
-      document.getElementById("ef-creatures").innerHTML = rows.map((r, i) => creatureRow(Object.fromEntries(STATS.map((k, j) => [k, r[j] === "" ? null : r[j]])), i)).join("");
+      if (!rows) { if (!document.getElementById("ef-creatures-box").hidden) creatureAction("remove", c); return; }
+      document.getElementById("ef-creatures").innerHTML = rows.map((r, i) => creatureRow(Object.fromEntries(STATS.map((k, j) => [k, r[j] === "" ? null : r[j]])), i, c)).join("");
       if (document.getElementById("ef-creatures-box").hidden) { document.getElementById("ef-creatures-box").hidden = false; document.getElementById("ef-single").hidden = true;
         for (const b of document.querySelectorAll("[data-creature]")) b.hidden = b.dataset.creature === "split"; }
     };
@@ -1324,7 +1341,7 @@ export function createEditor(app) {
       const r = e.target.closest("[data-reset]");
       if (r) { resetField(c, r.dataset.reset); update(); return; }
       const cr = e.target.closest("[data-creature]");
-      if (cr) { creatureAction(cr.dataset.creature); update(); }
+      if (cr) { creatureAction(cr.dataset.creature, c); update(); }
     });
     form.addEventListener("submit", e => {
       e.preventDefault();
@@ -1361,7 +1378,7 @@ export function createEditor(app) {
   function resetField(c, f) {
     const p = psdVal(baseOf(c), f), el = document.getElementById(`ef-${f}`);
     if (f === "types") { setToggles(el, p || []); return; }
-    if (f === "creatures") { document.getElementById("ef-creatures").innerHTML = (p || []).map(creatureRow).join(""); if (!p) creatureAction("remove"); return; }
+    if (f === "creatures") { document.getElementById("ef-creatures").innerHTML = (p || []).map((x, i) => creatureRow(x, i, c)).join(""); if (!p) creatureAction("remove", c); return; }
     if (f === "art") { setArt(p || []); return; }
     if (!el) return;
     if (el.type === "checkbox") el.checked = !!p;

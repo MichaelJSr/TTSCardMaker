@@ -8,7 +8,7 @@ import { esc } from "./text.js";
 import { starsHtml, paintStars, stepValue } from "./stars.js";
 import { typeVocab, mountPalette, rowHtml } from "./palette.js";
 import { rawOf, restorable, offerHtml, later, movedSince } from "./drafts.js";
-import { renameButton, creaturesWith } from "./edit.js";
+import { renameButton, creaturesWith, statCap } from "./edit.js";
 import { straighten } from "./parts.js";
 import { artList, artLabel } from "./art.js";
 import { CARD_FLAGS, flagLabel, ownFlag, withFlag } from "./flags.js";
@@ -36,9 +36,10 @@ const IMAGE = "on the card image";                 // the form's "On the card im
 export const cellValue = (current, cell) => Math.min(STAT_TOP, cell === current ? cell - 1 : cell);
 const STAT_TOP = 99;                               // the most a stat slider sets (card_history STAT_CAP: no card prints 3 digits)
 /** The cells a stat row shows at v while editing: its rows of 10, and an empty one more once they are full (10 opens 11-20). */
-export const statCells = v => Math.min(STAT_TOP + 1, 10 * (Math.floor(v / 10) + 1));
+export const statCells = (v, top = STAT_TOP) => Math.min(top < STAT_TOP ? top : STAT_TOP + 1, 10 * (Math.floor(v / 10) + 1));
+const topOf = row => +(row.dataset.top || STAT_TOP);       // a card's own display: its cap (edit.js statCap), else STAT_TOP
 const sizeRow = (row, v) => {                      // a stat row's cells for v: rows added or taken off
-  const n = statCells(v);
+  const n = statCells(v, topOf(row));
   while (row.children.length < n) row.insertAdjacentHTML("beforeend", "<i></i>");
   while (row.children.length > n) row.lastElementChild.remove();
 };
@@ -95,14 +96,15 @@ export function mountCard(modal, c, api = A) {
   mark(detail.querySelector("h2"), "name", `Double-click to rename · ${IMAGE}`);
   const abilityEl = detail.querySelector(":scope > div:nth-child(2) > .ability") || [...detail.querySelectorAll(":scope > div:nth-child(2) > p.muted")].find(p => p.textContent === "No ability text.");
   mark(abilityEl, "ability", `Click to edit · ${IMAGE}`);
-  const statRows = (x, f, who) => STATS.filter(k => x[k] != null).map(k => ({ f: f(k), v: x[k], label: `${who}${LABEL[k]}` }));
+  const statRows = (x, f, who, n = 0) => STATS.filter(k => x[k] != null).map(k => ({ f: f(k), v: x[k], label: `${who}${LABEL[k]}`, top: statCap(c, k, n) }));
   const rows = !(c.creatures?.length > 1) ? statRows(c, k => k, "")     // several: a row each on a bar per creature
-    : c.creatureBars ? c.creatures.flatMap((x, n) => statRows(x, k => `${n + 1}:${k}`, `Creature ${n + 1} `)) : [];
+    : c.creatureBars ? c.creatures.flatMap((x, n) => statRows(x, k => `${n + 1}:${k}`, `Creature ${n + 1} `, n)) : [];
   detail.querySelectorAll(".statbars .segs").forEach((seg, i) => {
     if (!rows[i]) { seg.dataset.tip = "Use All fields"; return; }
-    const { f, v, label } = rows[i];
+    const { f, v, label, top } = rows[i];
+    if (top != null) seg.dataset.top = String(Math.max(top, v));     // its cells stop at what the card's display holds
     sizeRow(seg, v); seg.setAttribute("role", "slider"); seg.tabIndex = 0; seg.dataset.inline = f;
-    seg.setAttribute("aria-valuemin", "0"); seg.setAttribute("aria-valuemax", String(STAT_TOP)); seg.setAttribute("aria-valuenow", String(v));
+    seg.setAttribute("aria-valuemin", "0"); seg.setAttribute("aria-valuemax", String(topOf(seg))); seg.setAttribute("aria-valuenow", String(v));
     seg.setAttribute("aria-label", `${label} ${v}, arrows to change, Enter to save`); seg.dataset.tip = `Click a cell to set ${label} · ${IMAGE}`;
   });
   const chips = [...facts.querySelectorAll("a.fact")], hrefOf = a => a.getAttribute("href") || "";
@@ -234,7 +236,7 @@ function commitStat(kbd) {
 }
 function statKey(row, k, e) {
   const now = +row.getAttribute("aria-valuenow"), v0 = prov?.row === row ? prov.v0 : now;
-  const v = stepValue(now, e.key, k === "stars" ? starMax() : Math.min(STAT_TOP, row.children.length));   // End: the rows' end (a row more each time)
+  const v = stepValue(now, e.key, k === "stars" ? starMax() : Math.min(topOf(row), row.children.length));   // End: the rows' end (a row more each time)
   if (e.key === "Escape" && row.hasAttribute("data-fresh") && now === 0) { e.preventDefault(); e.stopPropagation(); unfresh(row, true); return; }
   if (v !== null) { e.preventDefault(); e.stopPropagation(); prov = { row, k, v0 }; paint(row, v); return; }
   if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); commitStat(true); return; }

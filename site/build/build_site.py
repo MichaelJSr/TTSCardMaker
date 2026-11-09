@@ -714,6 +714,8 @@ def join_details(cards, records, tree, edits=None):
                 e["ink"] = inks                   # the card's own colours (textcolor.js inkOf)
             if isinstance(rec.get("creature_bars"), dict):
                 e["creatureBars"] = rec["creature_bars"]    # a bar per creature: each one's stats bake
+            if isinstance(rec.get("stat_caps"), dict):
+                e["statCaps"] = rec["stat_caps"]            # the card's own display: more is refused when typed (edit.js)
             out[e["id"]] = {**rec, "id": e["id"], "name": e["name"]}      # the card's id and shown name win
             if e.get("dup") and not e.get("variantOf") and by_id.get(e["dup"], {}).get("psd") == path:
                 out[e["id"]].pop("parts", None)   # a numbered PNG of the PSD: not its first picture's boxes (§4.1: tag the variant layers)
