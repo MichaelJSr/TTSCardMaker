@@ -1052,6 +1052,12 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
     }
   });
 }
+/** The old lines' pitch: the mean of their middles' gaps within 30% of the median gap (capitals, badges or descenders
+ *  move a line's middle: the least gap reads the leading tight). */
+export function steadyPitch(lines) {
+  const c = lines.map(l => (l[1] + l[3]) / 2), d = c.slice(1).map((v, i) => v - c[i]), m = median(d), ok = d.filter(x => x >= 0.7 * m && x <= 1.3 * m);
+  return ok.length ? ok.reduce((t, x) => t + x, 0) / ok.length : m;
+}
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a name keeps its line count and stays clear of the stars. */
 function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc }, imgs, W) {
@@ -1059,7 +1065,7 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = found.align === "left" && role !== "name";
   const maxW = left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
-  const pitch0 = found.pitch || size * LINE, top = found.lines[0][1];
+  const pitch0 = steadyPitch(found.lines) || size * LINE, top = found.lines[0][1];
   // Room for an Ability at its size, as the bake leaves it (psd_edit fit_below, ink_beyond): its new ink ends no lower
   // than the old text's, or lower but on the card and off the design below (the backdrop under the old text, BEYOND)
   function roomBelow() {
@@ -1092,7 +1098,7 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
     over = need(z) > room2 + 1;
   }
   const pitch = pitch0 * (z / size);
-  let base = top + z * 0.8;
+  let base = top + z * (role === "name" ? 0.8 : 0.7);   // an Ability: textBlocks leaves out thin ascender rows, so its top sits low
   if (role === "name" && old) {                       // a title keeps its baseline: where its old ink's top and bottom put it
     ctx.font = `${size}px ${fam}`; ctx.textBaseline = "alphabetic";
     const m = ctx.measureText(String(old).replace(/\r/g, "").split("\n")[0]), up = m.actualBoundingBoxAscent, tall = up + m.actualBoundingBoxDescent;
