@@ -53,7 +53,7 @@ function synonymRe(t) {
 
 /** Compile a query into a predicate (card) => boolean, or null for an empty query. */
 export function compile(query) {
-  const q = (query || "").trim();
+  const q = (query || "").replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"').trim();   // phones type curly quotes
   if (!q) return null;
   if (q.includes("|")) {
     const parts = q.split("|").map(compile).filter(Boolean);
