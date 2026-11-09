@@ -9216,7 +9216,7 @@
   ]
  },
  "Creatures/Hollow Knight/5 Stars/Ze'mer.psd": {
-  "blob": "514b82c7e45ff0682ced78d736680a548fcba43f",
+  "blob": "f6cf0face3c8e49a865fa1f5b457e4d9be58b412",
   "links": [
    {
     "drawn": "f0f82023f94b67e475c387aa74a378c101c3aa74",
@@ -9241,12 +9241,6 @@
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
-   },
-   {
-    "drawn": "018dfec5ceff10ea1bf2ecdb132ea509f216d348",
-    "name": "Ze'mer - flower_floor_Zemer_floor_1_1 copy 10.png",
-    "path": "MDW/Linked/Ze'mer - flower_floor_Zemer_floor_1_1 copy 10.png",
-    "size": 67182
    },
    {
     "drawn": "018dfec5ceff10ea1bf2ecdb132ea509f216d348",
@@ -11214,7 +11208,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Retro_Kirby.psd": {
-  "blob": "89492a9c0c0423488b3f99fd0e2ff98a1a629a51",
+  "blob": "c3ed6ca37c3267c5749daea3d9d19443db6f8f61",
   "links": [
    {
     "drawn": "ed17c5f29d3a79b937a0ad2a005d7a0f2369577f",
@@ -17420,7 +17414,7 @@
   ]
  },
  "Creatures/Other/5 Stars/Tyler.psd": {
-  "blob": "b2b7e4b5f96130a77d60bd9e6255bbe2958772f1",
+  "blob": "bc53968867c6519b13832135a55786fdbe19e16b",
   "links": [
    {
     "drawn": "68b6f9cc4bdd22d7b1f10fc0f192bcf6d948e76a",
