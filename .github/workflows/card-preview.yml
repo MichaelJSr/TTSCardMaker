@@ -137,12 +137,13 @@ jobs:
 
       # The venv as cards-python restores it on a hit, without its setup-python and setup-uv downloads (about 1 s): the
       # image's newest 3.14.x (setup-python's pick from the tool cache), the same key (its oxipng tag too), path and check.
-      # The key from Clone's read of requirements-cards.txt, so the restore runs beside the clone; else the clone's.
+      # The key from Clone's read of requirements-cards.txt, so the restore runs beside the clone (a failed clone waits
+      # for it); else the clone's.
       - id: venv
         shell: bash
         run: |
           py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
-          until [ -e "$RUNNER_TEMP/reqs.done" ] || [ -s "$RUNNER_TEMP/bot.code" ] || [ $SECONDS -ge 15 ]; do sleep 0.02; done
+          until [ -e "$RUNNER_TEMP/reqs.done" ] || [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] || [ $SECONDS -ge 15 ]; do sleep 0.02; done
           reqs=$RUNNER_TEMP/bot.reqs
           if [ ! -s "$reqs" ]; then
             while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ $SECONDS -lt 15 ]; do sleep 0.02; done
