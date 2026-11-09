@@ -3851,7 +3851,7 @@ def game_text(cards, rules, banlist, icons):
         plural = {**KIND_PLURAL, "buff": "buffs (status effects)", "debuff": "debuffs (status effects)"}.get(kind, kind)
         out += [f"# {plural[:1].upper() + plural[1:]} ({len(group)})", ""]
         for c in group:
-            bars = [" ".join(f"{k.upper()} {'?' if s.get(k) is None else s[k]}" for k in STAT_KEYS) for s in c.get("creatures") or [c]
+            bars = [" ".join(f"{k.upper()} {s[k]}" for k in STAT_KEYS if s.get(k) is not None) for s in c.get("creatures") or [c]
                     if any(s.get(k) is not None for k in STAT_KEYS)]
             label = KIND_LABEL.get(kind, kind) + (f" ({c['subtype']})" if c.get("subtype") else "")
             line = [c["name"], label, f"{c['stars']}★" if c.get("stars") is not None else "",
