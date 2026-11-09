@@ -14,7 +14,8 @@ Where the data comes from:
   * Images: card PNGs in this repo, turned into three AVIF sizes (240 px and 360 px for the grid at 1x/2x, 720 px
     for the card view; AVIF only, no WebP copies). They are cached by git blob hash and encode settings (thumb_tag, in
     the file names) in site/.cache/img, so after the first run only new or changed cards (or a width whose settings
-    changed) are downloaded and encoded; images no card uses any more are pruned. With
+    changed) are downloaded and encoded (an early build makes them during its Data wait: early_images, site.yml
+    Images start); images no card uses any more are pruned. With
     IMAGE_BUDGET (seconds; site.yml sets it), images not made by then are left for the next run: the build fails
     (nothing deployed) and site.yml saves the cache (it does after any failed build), so a full re-encode spans runs.
     Each image's size and accent color are kept in site/.cache/images.json by blob, icons in site/.cache/icons, deck
@@ -1033,15 +1034,20 @@ def text_commits(e, lineage):
 
 
 # ---- repo listing ----------------------------------------------------------------------------------
-def repo_tree():
-    """{path: blob sha} for every file at HEAD (works in a sparse, blobless checkout)."""
-    out = subprocess.run(["git", "-C", REPO, "ls-tree", "-r", "-z", "HEAD"], capture_output=True, check=True).stdout
+def repo_tree(rev="HEAD"):
+    """{path: blob sha} for every file at rev (works in a sparse, blobless checkout)."""
+    out = subprocess.run(["git", "-C", REPO, "ls-tree", "-r", "-z", rev], capture_output=True, check=True).stdout
     tree = {}
     for entry in out.decode("utf-8").split("\0"):
         if entry:
             meta, path = entry.split("\t", 1)
             tree[path] = meta.split()[2]
     return tree
+
+
+def card_png(path):
+    """A card picture's path: a PNG in the card folders, not in MDW or Markers."""
+    return path.lower().endswith(".png") and path.startswith(CARD_FOLDERS) and not any(p in SKIP_PARTS for p in path.split("/"))
 
 
 def classify(path):
@@ -1219,6 +1225,32 @@ def save_image_meta(images):
     with open(path + ".tmp", "w", encoding="utf-8") as fh:
         fh.write(json.dumps({"version": IMAGE_META_VERSION, "images": images}, separators=(",", ":")))
     os.replace(path + ".tmp", path)
+
+
+def early_images(rev, stop):
+    """An early build's images, made during its Data wait (site.yml Images start): the card PNGs at rev whose images
+    aren't cached, with their meta. None started once the file stop exists; the build makes the rest."""
+    global _card_raw
+    started = time.time()
+    _card_raw = f"https://raw.githubusercontent.com/{CARD_REPO}/{rev}/"     # Data wait may move HEAD
+    os.makedirs(os.path.join(CACHE, "img"), exist_ok=True)
+    meta, made, failed = load_image_meta(), {}, []
+    todo = {sha: path for path, sha in repo_tree(rev).items() if card_png(path)
+            and not all(os.path.exists(os.path.join(CACHE, "img", n)) for n in image_names(sha).values())}
+
+    def one(sha):
+        if os.path.exists(stop):
+            return
+        try:
+            made[sha] = list(make_images(todo[sha], sha, meta.get(sha))[1:])
+        except Exception as err:
+            failed.append(todo[sha])
+            log("image failed:", todo[sha], err)
+    with ThreadPoolExecutor(min(16, (os.cpu_count() or 4) * 2)) as pool:
+        list(pool.map(one, todo))
+    if made:
+        save_image_meta({**meta, **made})
+    log(f"early images: {len(made)} of {len(todo)} card PNGs at {rev[:8]}, {len(failed)} failed ({time.time() - started:.1f}s)")
 
 
 def link_or_copy(src, dst, replace=False):
@@ -4286,7 +4318,7 @@ def main():
 
     png_by_name = {}
     for path in tree:
-        if path.lower().endswith(".png") and path.startswith(CARD_FOLDERS) and not any(p in SKIP_PARTS for p in path.split("/")):
+        if card_png(path):
             png_by_name.setdefault(os.path.basename(path).lower(), path)
 
     cards, used_slugs = [], set()
@@ -4915,4 +4947,6 @@ def main():
 
 
 if __name__ == "__main__":
+    if sys.argv[1:2] == ["--images"]:             # site.yml Images start: --images <commit> <stop file>
+        sys.exit(early_images(*sys.argv[2:4]))
     sys.exit(main())

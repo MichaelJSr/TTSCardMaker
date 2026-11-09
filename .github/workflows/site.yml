@@ -144,6 +144,24 @@ jobs:
       - id: cache-before
         run: echo "names=$(find site/.cache 2>/dev/null | LC_ALL=C sort | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
+      # An early build's images: the card PNGs the restored cache lacks (the push's pictures), made in the background once
+      # Setup start's packages are in, while Data wait runs (build_site.py early_images). Setup wait stops it (none started
+      # after) and prints its log; the build makes the rest, and those of a newer main.
+      - name: Images start
+        if: inputs.after
+        run: |
+          bg=$RUNNER_TEMP/setup
+          at=$(git rev-parse HEAD)
+          : > "$bg/images.log"
+          (
+            code=0
+            until [ -s "$bg/uv.code" ]; do sleep 0.1; done
+            if [ "$(cat "$bg/uv.code")" != 0 ]; then code=uv
+            elif [ ! -e "$bg/images.stop" ]; then python site/build/build_site.py --images "$at" "$bg/images.stop" || code=$?
+            fi
+            echo "$code" > "$bg/images.code"
+          ) >> "$bg/images.log" 2>&1 < /dev/null &
+
       # Deck preview montages: their own cache in site/.og-cache. The newest one is restored, and it is saved after the build
       # whenever the montages in use (each named by a hash of its pictured images) differ from the restored ones, so a montage
       # that changes for any reason (a deck, a card's stars or name in the bot's data or Card Edits.json, an image) is saved
@@ -220,10 +238,12 @@ jobs:
           fetch-depth: 1
 
       # Setup start's three: uv or npm failing fails the job; the PSD sizes failing only leaves them out (a warning).
+      # Images start's: stopped first, a failure only warns.
       - name: Setup wait
         timeout-minutes: 10
         run: |
           bg=$RUNNER_TEMP/setup
+          [ ! -e "$bg/images.log" ] || touch "$bg/images.stop"
           failed=
           for n in uv npm sizes; do
             until [ -s "$bg/$n.code" ]; do sleep 0.1; done
@@ -232,6 +252,12 @@ jobs:
             [ "$code" = 0 ] || [ "$n" = sizes ] || failed="$failed $n"
           done
           [ "$(cat "$bg/sizes.code")" = 0 ] || echo "::warning::PSD sizes failed: the site leaves them out"
+          if [ -e "$bg/images.log" ]; then
+            until [ -s "$bg/images.code" ]; do sleep 0.1; done
+            code=$(cat "$bg/images.code")
+            echo "::group::images (exit $code)"; cat "$bg/images.log"; echo "::endgroup::"
+            [ "$code" = 0 ] || echo "::warning::early images failed: the build makes them"
+          fi
           [ -z "$failed" ] || { echo "::error::failed:$failed"; exit 1; }
 
       # IMAGE_BUDGET: images not made in 30 minutes (a full AVIF re-encode is ~11 CPU-minutes on a Mac, an estimated 20-25
