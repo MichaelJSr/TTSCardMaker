@@ -207,6 +207,14 @@ export function strayLines(L, W, H, found, { top = 0, bottom = H, bars = [], edg
   }
   return out;
 }
+/** One layer's block b grown by strayLines inside its own box (px; a quarter em z past top and bottom): all its ink,
+ *  the new text from its first line. -> {found, strays} */
+export function layerBlock(L, W, H, b, own, z, bars = []) {
+  const strays = strayLines(L, W, H, b, { top: Math.max(0, own[1] - 0.25 * z), bottom: Math.min(H, own[3] + 0.25 * z), bars });
+  if (!strays.length) return { found: b, strays };
+  const all = [b.box, ...strays], box = [0, 1, 2, 3].map(i => (i < 2 ? Math.min : Math.max)(...all.map(l => l[i])));
+  return { found: { ...b, lines: [...b.lines, ...strays].sort((p, q) => p[1] - q[1]), box }, strays };
+}
 /** The lines to erase: a centred block's lines made even about its centre (a line read short on one side, past a dim
  *  word, still goes whole). */
 export function eraseLines(found) {
@@ -950,11 +958,12 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (hit) {
       const { b, cal, edge } = hit, z = cal.size;
       const strayTop = seen.length ? Math.min(area.box[1], barsBottom + 0.004 * H) : own ? area.box[1] : (TEMPLATES[shape].ability[1] - 0.06) * H;   // stat rows not seen where the template has them: look higher
-      const gone = role === "name" || part ? (role === "name" ? b.lines : eraseLines(b)) : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name or one layer: its own lines
+      const { found, strays } = part && own && role === "ability" ? layerBlock(L, W, H, b, own, z, rows) : { found: b, strays: [] };   // one layer: its lines in its own box
+      const gone = role === "name" ? b.lines : part ? [...eraseLines(b), ...strays] : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name or one layer: its own lines
       const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
       const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer) });   // in the lines only: dim words too
       if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
-      jobs.push({ role, text, old, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc });
+      jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc });
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
