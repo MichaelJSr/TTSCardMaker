@@ -12,7 +12,7 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import REF, REPO as TC, UPDATER_INPUTS, copy_bot, ensure_history, save_arg  # noqa: E402
+from checks_env import REF, REPO as TC, UPDATER_INPUTS, copy_bot, ensure_history, runner_env, save_arg  # noqa: E402
 
 PY = sys.executable
 SRC_CLONE = ensure_history()
@@ -31,7 +31,7 @@ for path in UPDATER_INPUTS:
         open(os.path.join(local, path), "wb").write(r.stdout)
 bot = os.path.join(work, "bot")
 copy_bot(bot)
-env = {**os.environ, "AUTOCROISSANT_LOCAL_DIR": local, "AUTOCROISSANT_HISTORY_CLONE": clone}
+env = {**runner_env(), "AUTOCROISSANT_LOCAL_DIR": local, "AUTOCROISSANT_HISTORY_CLONE": clone}
 
 
 def run(path):

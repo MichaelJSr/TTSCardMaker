@@ -12,7 +12,7 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import REF, REPO as TC, UPDATER_INPUTS, copy_bot, ensure_history, save_arg  # noqa: E402
+from checks_env import REF, REPO as TC, UPDATER_INPUTS, copy_bot, ensure_history, runner_env, save_arg  # noqa: E402
 
 PY = sys.executable
 CLONE = ensure_history()
@@ -44,7 +44,7 @@ def setup():
 
 
 LOCAL, BOT = setup()
-ENV = {**os.environ, "AUTOCROISSANT_LOCAL_DIR": LOCAL, "AUTOCROISSANT_HISTORY_CLONE": CLONE}
+ENV = {**runner_env(), "AUTOCROISSANT_LOCAL_DIR": LOCAL, "AUTOCROISSANT_HISTORY_CLONE": CLONE}
 
 
 def run(path, offline=False):

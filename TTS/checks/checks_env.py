@@ -65,6 +65,11 @@ def copy_bot(dest: str) -> None:
         shutil.copy(path, os.path.join(dest, "commands"))
 
 
+def runner_env() -> dict:
+    """os.environ as Card sync's TTS save start has it: lazy fetch on (the add_new_since save, one blob per commit)."""
+    return {k: v for k, v in os.environ.items() if k != "GIT_NO_LAZY_FETCH"}
+
+
 def lua_python() -> str:
     """A Python with lupa: this one, else $LUA_PYTHON or a known venv."""
     try:
