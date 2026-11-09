@@ -801,28 +801,22 @@
   ]
  },
  "Auxiliary/Items/Frostmourne.psd": {
-  "blob": "62dbec4c6ebf8c1a694564daced6d8343e8a6507",
+  "blob": "f248c8259b39ffc530241db7b05c7282ff86af94",
   "links": [
    {
-    "drawn": "6ae1199aa795702395f991659d2a3fc74296153f",
+    "drawn": null,
     "name": "Frostmourne - d35qrzf-6de2ba93-8f56-421b-b9e2-c15c2f96c090-transformed.jpg",
     "path": "MDW/Linked/Frostmourne - d35qrzf-6de2ba93-8f56-421b-b9e2-c15c2f96c090-transformed.jpg",
     "size": 238643
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "drawn": null,
     "name": "Equip.png",
     "path": "Types/Equip.png",
     "size": 83059
@@ -15749,22 +15743,22 @@
   ]
  },
  "Creatures/Other/3 Stars/Pizza.psd": {
-  "blob": "995d3a4b1c31dea10ce1bf725cd8ec4c1f41738f",
+  "blob": "83e3162d1f1d4153b008963b98bbb851346fc67b",
   "links": [
    {
-    "drawn": "d530c7b666dbbd0fe132d966bf88ba29fd4f284c",
+    "drawn": null,
     "name": "Drone - Protective.png",
     "path": "MDW/Linked/Drone - Protective.png",
     "size": 366004
    },
    {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "drawn": null,
     "name": "Equip.png",
     "path": "Types/Equip.png",
     "size": 83059
    },
    {
-    "drawn": "dafb015388a0bc6eb5a5e3510d50a7f8a6352244",
+    "drawn": null,
     "name": "light.png",
     "path": "Types/light.png",
     "size": 474151
@@ -21835,28 +21829,22 @@
   ]
  },
  "Items/Counter/1 Stars/Wooden_Spikes.psd": {
-  "blob": "ee0a6387f45084a57e082c6a5ae9b0847c827420",
+  "blob": "9757d4630bea0b476fb1f4a86a378355d2b65c20",
   "links": [
    {
-    "drawn": "626040de91c5ac1db777599ee081e7f672d22565",
+    "drawn": null,
     "name": "Wooden_Spikes - sharpened-poles-13339878-transformed.png",
     "path": "MDW/Linked/Wooden_Spikes - sharpened-poles-13339878-transformed.png",
     "size": 2131771
    },
    {
-    "drawn": "a72ddeadf0a245e80511726ca4d0bed63c789c50",
-    "name": "Wooden_Spikes - Daco_35508.psb",
-    "path": "MDW/Linked/Wooden_Spikes - Daco_35508.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "23bf9264064724f83faf67776362102cbfaaa57f",
+    "drawn": null,
     "name": "Counter.png",
     "path": "Types/Counter.png",
     "size": 58570
@@ -21945,46 +21933,40 @@
   ]
  },
  "Items/Counter/3 Stars/Iron_Spikes.psd": {
-  "blob": "27f56d642c96fa62d0e2f200c75bf257636c17ef",
+  "blob": "54b07126bbe09be6eb10c8877a3dc348235c0ed6",
   "links": [
    {
-    "drawn": "23407983d45f6d71b04a3607ecd610641544e5e5",
+    "drawn": null,
     "name": "Iron_Spikes - spines0002 (1).png",
     "path": "MDW/Linked/Iron_Spikes - spines0002 (1).png",
     "size": 359826
    },
    {
-    "drawn": "3f58b50b0ae8aa9229d8c40f7637a84accce9094",
+    "drawn": null,
     "name": "Iron_Spikes - spines0000 (1).png",
     "path": "MDW/Linked/Iron_Spikes - spines0000 (1).png",
     "size": 354883
    },
    {
-    "drawn": "4825fedcd64ce095888621607ba258d655e5e7ca",
+    "drawn": null,
     "name": "Iron_Spikes - spines0003 (1).png",
     "path": "MDW/Linked/Iron_Spikes - spines0003 (1).png",
     "size": 356711
    },
    {
-    "drawn": "5c515802bfd1b304ca9f5914bf536da4b402ce1c",
+    "drawn": null,
     "name": "Iron_Spikes - spines0001 (1).png",
     "path": "MDW/Linked/Iron_Spikes - spines0001 (1).png",
     "size": 362699
    },
    {
-    "drawn": "c5fbf76a662274dc1af6fabdffe1f5cc7c474b72",
-    "name": "Iron_Spikes - Daco_35508.psb",
-    "path": "MDW/Linked/Iron_Spikes - Daco_35508.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "drawn": null,
     "name": "Hk star.png",
     "path": "Types/Stars/Hk star.png",
     "size": 332571
    },
    {
-    "drawn": "23bf9264064724f83faf67776362102cbfaaa57f",
+    "drawn": null,
     "name": "Counter.png",
     "path": "Types/Counter.png",
     "size": 58570
@@ -24719,28 +24701,16 @@
   ]
  },
  "Items/Heal/2 Stars/Watermelon.psd": {
-  "blob": "434da11cbca38b39c3edb33847bbd9c2e1b4a74b",
+  "blob": "dc6fd876e8885430b5918e46f4e70e848426ef8c",
   "links": [
    {
-    "drawn": "1af6eaf348271a8bc9a287b931abb6e136bd8ace",
-    "name": "Watermelon - Daco_35508.psb",
-    "path": "MDW/Linked/Watermelon - Daco_35508.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "5f6fe3f6f16194a386ffd37bb285dd300ac59ac8",
-    "name": "Watermelon - Daco_35508 copy.psb",
-    "path": "MDW/Linked/Watermelon - Daco_35508 copy.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "drawn": null,
     "name": "Omori star.png",
     "path": "Types/Stars/Omori star.png",
     "size": 114793
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -25361,51 +25331,39 @@
   ]
  },
  "Items/Negation/2 Stars/Stopwatch.psd": {
-  "blob": "0e7380cd766eb6e355ceb26aa34389b24c6b6858",
+  "blob": "77c7f4c2ee071727374ef36da7a7f406cfbcbf38",
   "links": [
    {
-    "drawn": "1ef1288c5954f6777e7ab4be4fe8547d945d5361",
+    "drawn": null,
     "name": "Helpful_Mannequin - 8850316853278-removebg-preview.png",
     "path": "MDW/Linked/Helpful_Mannequin - 8850316853278-removebg-preview.png",
     "size": 144286
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "77824ad3eb394b38fdb0a92d3672c90688794242",
+    "drawn": null,
     "name": "Negation.png",
     "path": "Types/Negation.png",
     "size": 243500
-   },
-   {
-    "drawn": "fb42ff3ff6c0164dfa3e9cb4069c339963a3e9f3",
-    "name": "Stopwatch - Daco_35508.psb",
-    "path": "MDW/Linked/Stopwatch - Daco_35508.psb",
-    "size": 1048576
    }
   ]
  },
  "Items/Negation/3 Stars/Ancient_Stopwatch.psd": {
-  "blob": "a45367f4a3ee1a620d4a868b799cd08195188bfc",
+  "blob": "6ce8265153bb4833c20e50a7cebd27aa742c17ff",
   "links": [
    {
-    "drawn": "731f0d56c49bb4edf195069e79af91d8d0b36370",
-    "name": "Ancient_Stopwatch - Daco_35508.psb",
-    "path": "MDW/Linked/Ancient_Stopwatch - Daco_35508.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "77824ad3eb394b38fdb0a92d3672c90688794242",
+    "drawn": null,
     "name": "Negation.png",
     "path": "Types/Negation.png",
     "size": 243500
@@ -27631,58 +27589,52 @@
   "links": []
  },
  "MDW/Croissant's Special Folder/ancient basin.psd": {
-  "blob": "bc74c1d7eeb8b1794641f69cc3050a1acbdf13de",
+  "blob": "aa6f0454e73e68a3b2e4f622d61e83b2dfa53703",
   "links": [
    {
-    "drawn": "413c75e19910afe65bf5b491f4124ee7431111f8",
+    "drawn": null,
     "name": "ancient basin - saphire-oceane-roh-ancientbasinas.jpg",
     "path": "MDW/Linked/ancient basin - saphire-oceane-roh-ancientbasinas.jpg",
     "size": 1212777
    },
    {
-    "drawn": "777375216280a8623dec182ee48999bba8aa23a9",
-    "name": "ancient basin - x8mlrpkvghgb1.jpg",
-    "path": "MDW/Linked/ancient basin - x8mlrpkvghgb1.jpg",
-    "size": 880004
-   },
-   {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
+    "drawn": null,
     "name": "Hk star.png",
     "path": "Types/Stars/Hk star.png",
     "size": 332571
    },
    {
-    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
+    "drawn": null,
     "name": "field.png",
     "path": "Types/field.png",
     "size": 20013
    },
    {
-    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "drawn": null,
     "name": "dark.png",
     "path": "Types/dark.png",
     "size": 25732
    },
    {
-    "drawn": "8ff38a47b98970858459d420dc15a7347866cdf1",
+    "drawn": null,
     "name": "ancient basin - panda.png",
     "path": "MDW/Linked/ancient basin - panda.png",
     "size": 2051275
    },
    {
-    "drawn": "10110e3aee8eaf4cc66b1399b7c0042532e81c35",
+    "drawn": null,
     "name": "Lord_Crump - sparkle.png",
     "path": "MDW/Linked/Lord_Crump - sparkle.png",
     "size": 231808
    },
    {
-    "drawn": "00007617b6c9850309e6c3a145e338efa55eded3",
+    "drawn": null,
     "name": "electric.png",
     "path": "Types/electric.png",
     "size": 106279
    },
    {
-    "drawn": "99d8299f475b915a691170c03c5a2c0fe0110589",
+    "drawn": null,
     "name": "water.png",
     "path": "Types/water.png",
     "size": 121376
@@ -27746,17 +27698,6 @@
  "MDW/Linked/ActiveItem_Template - Layer 10.psb": {
   "blob": "cd41f0a08a193117b70f0abbdc815fef01ed4231",
   "links": []
- },
- "MDW/Linked/Ancient_Stopwatch - Daco_35508.psb": {
-  "blob": "731f0d56c49bb4edf195069e79af91d8d0b36370",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
  },
  "MDW/Linked/Bag_of_Good - Layer 1.psb": {
   "blob": "f13c213b57d6ac913296c127ab43abbe41a06403",
@@ -27849,17 +27790,6 @@
  "MDW/Linked/Dimension_D - Layer 24.psb": {
   "blob": "3c867bedcd6df6bcc4984b706810eb755076464d",
   "links": []
- },
- "MDW/Linked/Double_Pain - Daco_35508.psb": {
-  "blob": "cd713a92bfff7a77d80cc74ed907e49e5a54e07b",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
  },
  "MDW/Linked/Drawcia - Layer 12.psb": {
   "blob": "d47adef4789c0dda7af55d5ebe7e503218b90ed0",
@@ -27963,17 +27893,6 @@
  "MDW/Linked/Ipsilon - Ipsilon_sprite.psb": {
   "blob": "bd6a04ab11149fb18fad5303636d5444cc60964b",
   "links": []
- },
- "MDW/Linked/Iron_Spikes - Daco_35508.psb": {
-  "blob": "c5fbf76a662274dc1af6fabdffe1f5cc7c474b72",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
  },
  "MDW/Linked/Jack-In-The-Box_Zombie - Layer 1 copy.psb": {
   "blob": "23d109968e9bd030377693191b73b47a27c68320",
@@ -28087,17 +28006,6 @@
   "blob": "8d00331e52c8b9dd89f722e2045e977bdb396890",
   "links": []
  },
- "MDW/Linked/Paintbrush - Daco_35508.psb": {
-  "blob": "82a898bc7ad3aaaa5ee935cc0110dacc97360ac5",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
- },
  "MDW/Linked/Pandora's_Box - Flublubble-transformed.psb": {
   "blob": "c8e90b11aea212343767d54adb9b844ae18f4b57",
   "links": []
@@ -28186,17 +28094,6 @@
   "blob": "a1e44b77ef2d0a5a632b37046e5b409b5c2045c2",
   "links": []
  },
- "MDW/Linked/Star_Scraper - Daco_35508.psb": {
-  "blob": "4263cfb24894e4c5ac8f45614c90a112addbe789",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
- },
  "MDW/Linked/Status_Effect_Template - debuffupgrade.psb": {
   "blob": "7066eddfe416c69e9ba8f10ae3e8b6969016c79c",
   "links": []
@@ -28208,17 +28105,6 @@
  "MDW/Linked/Stingy's_Floor_And_Ceiling - Layer 3.psb": {
   "blob": "9ce57d95a6fafcf44cf402a56ecea2b396bc313a",
   "links": []
- },
- "MDW/Linked/Stopwatch - Daco_35508.psb": {
-  "blob": "fb42ff3ff6c0164dfa3e9cb4069c339963a3e9f3",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
  },
  "MDW/Linked/Supreme_Jeh'Oul - Calamitas.psb": {
   "blob": "d859a726bfa14fd7aa31091e3cecd01f360ece64",
@@ -28340,28 +28226,6 @@
   "blob": "8595b23f34aad01aa46c4b980d61a22e21bcdbaf",
   "links": []
  },
- "MDW/Linked/Watermelon - Daco_35508 copy.psb": {
-  "blob": "5f6fe3f6f16194a386ffd37bb285dd300ac59ac8",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
- },
- "MDW/Linked/Watermelon - Daco_35508.psb": {
-  "blob": "1af6eaf348271a8bc9a287b931abb6e136bd8ace",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
- },
  "MDW/Linked/Wendy - Layer 1.psb": {
   "blob": "b224c4d5ff034184c8136613b783ddb761adaa52",
   "links": []
@@ -28369,17 +28233,6 @@
  "MDW/Linked/Wham_Bam_Jewel - Layer 9.psb": {
   "blob": "525b6da91b7e7fb51f80a74e17efb11a50aa5a3f",
   "links": []
- },
- "MDW/Linked/Wooden_Spikes - Daco_35508.psb": {
-  "blob": "a72ddeadf0a245e80511726ca4d0bed63c789c50",
-  "links": [
-   {
-    "drawn": null,
-    "name": "Daco_35508.png",
-    "path": null,
-    "size": 0
-   }
-  ]
  },
  "MDW/Linked/Yin_Yarn - Layer 1.psb": {
   "blob": "53f86bd0eb7bb8b18fce32fff3a4513f278c24d8",
@@ -31221,28 +31074,16 @@
   ]
  },
  "N.M.E/Double_Pain.psd": {
-  "blob": "f6104dbfb990a8b249ef5e88192325c9e478a518",
+  "blob": "f1ddf21bf1404bf35d617ea0968346a101c437c5",
   "links": [
    {
-    "drawn": "cd713a92bfff7a77d80cc74ed907e49e5a54e07b",
-    "name": "Double_Pain - Daco_35508.psb",
-    "path": "MDW/Linked/Double_Pain - Daco_35508.psb",
-    "size": 1048576
+    "drawn": null,
+    "name": "Ruby_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Ruby_Star_PMTTYDNS_icon.png",
+    "size": 6200
    },
    {
-    "drawn": "4b06eff55921e822dc8cef08c97d441e55940274",
-    "name": "Ruby_Star.png",
-    "path": "Types/Stars/Ruby_Star.png",
-    "size": 4718
-   },
-   {
-    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
-    "name": "Fragile Equip.png",
-    "path": "Types/Fragile Equip.png",
-    "size": 23023
-   },
-   {
-    "drawn": "647f1c08c69db7a8b3f77ab1b43b09f7b6eb9000",
+    "drawn": null,
     "name": "Equip.png",
     "path": "Types/Equip.png",
     "size": 83059
@@ -31536,112 +31377,94 @@
   ]
  },
  "N.M.E/Paintbrush.psd": {
-  "blob": "ad4b9958952bfcdc32e256dd1bee0e083f7388b9",
+  "blob": "9840595171c13d3a3e6ad423a2c2e7f3ea8fde04",
   "links": [
    {
-    "drawn": "82a898bc7ad3aaaa5ee935cc0110dacc97360ac5",
-    "name": "Paintbrush - Daco_35508.psb",
-    "path": "MDW/Linked/Paintbrush - Daco_35508.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "d530c7b666dbbd0fe132d966bf88ba29fd4f284c",
-    "name": "Drone - Protective.png",
-    "path": "MDW/Linked/Drone - Protective.png",
-    "size": 366004
-   },
-   {
-    "drawn": "dafb015388a0bc6eb5a5e3510d50a7f8a6352244",
+    "drawn": null,
     "name": "light.png",
     "path": "Types/light.png",
     "size": 474151
    },
    {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "drawn": null,
     "name": "undead.png",
     "path": "Types/undead.png",
     "size": 195840
    },
    {
-    "drawn": "459cdddf4c0054f24a59c7b08ec0c54fd15c7fc3",
-    "name": "Azamoth_the_Possessed_Vessel - Magic.png",
-    "path": "MDW/Linked/Azamoth_the_Possessed_Vessel - Magic.png",
-    "size": 60344
-   },
-   {
-    "drawn": "00007617b6c9850309e6c3a145e338efa55eded3",
+    "drawn": null,
     "name": "electric.png",
     "path": "Types/electric.png",
     "size": 106279
    },
    {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
    },
    {
-    "drawn": "755a458e1afd8c0059d30f9b9ee3c72717a2ad88",
+    "drawn": null,
     "name": "ice.png",
     "path": "Types/ice.png",
     "size": 753294
    },
    {
-    "drawn": "99d8299f475b915a691170c03c5a2c0fe0110589",
+    "drawn": null,
     "name": "water.png",
     "path": "Types/water.png",
     "size": 121376
    },
    {
-    "drawn": "d05ee990099fe33cfe9ea1b1c771328e9ff35d3f",
+    "drawn": null,
     "name": "Girl.png",
     "path": "Types/Girl.png",
     "size": 28865
    },
    {
-    "drawn": "b95adab71e6a7ee177fd072cc029890793d5d660",
+    "drawn": null,
     "name": "Armored_Squit - dark.png",
     "path": "MDW/Linked/Armored_Squit - dark.png",
     "size": 1866
    },
    {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
+    "drawn": null,
     "name": "panda.png",
     "path": "Types/panda.png",
     "size": 1073019
    },
    {
-    "drawn": "5a7ca1d430460f3782aa73ccaa11906faf6d7d60",
+    "drawn": null,
     "name": "Shadow_Queen - Darkmatter.png",
     "path": "MDW/Linked/Shadow_Queen - Darkmatter.png",
     "size": 12660
    },
    {
-    "drawn": "0900dd1f51647a4f88c3181e44ae2ea7e938266e",
+    "drawn": null,
     "name": "unknown.png",
     "path": "Types/unknown.png",
     "size": 132191
    },
    {
-    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "drawn": null,
     "name": "machine.png",
     "path": "Types/machine.png",
     "size": 303679
    },
    {
-    "drawn": "a7bed579eddd8ee70a2eaec47153db47fd9f5e79",
+    "drawn": null,
     "name": "fire.png",
     "path": "Types/fire.png",
     "size": 568963
    },
    {
-    "drawn": "25679413e008ecd225af8cc6a9769810b48ae7e7",
+    "drawn": null,
     "name": "rock.png",
     "path": "Types/rock.png",
     "size": 197965
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "drawn": null,
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
@@ -31830,28 +31653,16 @@
   ]
  },
  "N.M.E/Star_Scraper.psd": {
-  "blob": "afd300f5f4a9e71c7386b56e2a8ae87dec26ad64",
+  "blob": "8e4ac6dff0463f5aa6f342ec0720755344cea1b8",
   "links": [
    {
-    "drawn": "835a2b91d480209c91b1eb135c2be9ac396dae19",
-    "name": "Star_Scraper - tumblr_o0o69p0b7S1u75st9o1_540.jpg",
-    "path": "MDW/Linked/Star_Scraper - tumblr_o0o69p0b7S1u75st9o1_540.jpg",
-    "size": 42112
-   },
-   {
-    "drawn": "4263cfb24894e4c5ac8f45614c90a112addbe789",
-    "name": "Star_Scraper - Daco_35508.psb",
-    "path": "MDW/Linked/Star_Scraper - Daco_35508.psb",
-    "size": 1048576
-   },
-   {
-    "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
+    "drawn": null,
     "name": "Patrick Star.png",
     "path": "Types/Stars/Patrick Star.png",
     "size": 152994
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "drawn": null,
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
