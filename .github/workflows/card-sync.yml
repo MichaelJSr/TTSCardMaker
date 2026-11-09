@@ -128,7 +128,7 @@ jobs:
       group: ${{ inputs.dry_run && format('card-data-dry-{0}', github.run_id) || 'card-data' }}   # a dry run: a lock of its own
       cancel-in-progress: false   # a running build is never cut off
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: ${{ inputs.guards && 155 || 90 }}   # a follow-up's: 65 more for its setup and the guards' wait (as main's)
     outputs:
       saved: ${{ steps.venv.outputs.wheels == 'built' }}
       committed: ${{ steps.data-commit.outputs.committed }}

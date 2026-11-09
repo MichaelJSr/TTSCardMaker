@@ -51,7 +51,8 @@
    job's end (never another job's), holds nothing, slows to 15 s looks after 2 minutes and stops at 60. card-guards.yml's
    side: the names Card sync reads, Plan's fixes (a push in on mode with writes), the check job's Start Card sync right
    after Fixes to land with nothing to convert (by the API, its run id kept), Follow up's dispatch with fixes whether Land
-   landed or ran (tried 3 times) unless that start did and neither lane of its run was cancelled.
+   landed or ran (tried 3 times) unless that start did and neither lane of its run was cancelled; a follow-up's data job
+   gets the main lane's extra time for the wait.
 Exits 1 when a case gets the wrong answer.
 """
 import json
@@ -1437,6 +1438,10 @@ def lane_cases(flow: dict) -> None:
               and step(main, "Newest") is step(jobs["data"], "Newest") and step(main, "Newest")["if"] == "steps.guards.outcome != 'skipped' && !steps.guards.outputs.run",
               "Guards' fixes, a follow-up: the guards run from its input, its check job's Landed after Land and both uploads; "
               "Newest after any wait that held nothing")
+        cap = re.fullmatch(r"\$\{\{ inputs\.guards && (\d+) \|\| (\d+) \}\}", str(jobs["data"].get("timeout")))
+        check(bool(cap) and int(cap.group(1)) >= int(cap.group(2)) + int(mark["timeout-minutes"]) and int(cap.group(1)) == main["timeout"],
+              f"Card data's timeout: a follow-up's ({cap and cap.group(1)}) covers the plain one ({cap and cap.group(2)}) plus the "
+              f"guards' wait ({mark['timeout-minutes']}), as the main lane's ({main['timeout']})")
 
         # card-guards.yml: Plan's fixes and Follow up's dispatch
         gplan, follow = step(guards["jobs"]["check"], "plan"), step(guards["jobs"]["post"], "follow")
