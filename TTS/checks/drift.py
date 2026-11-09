@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Drift of a TTS save against a baseline: anything beyond the updater's own edits fails.
 
-python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref 2fecc66d, the last hand edit of the save)
+python3 drift.py [save.json] [baseline.json | TTSCardMaker-ref]   (default ref befdf769, the last hand edit of the save)
 Allowed: repo link refs, links to a moved file (the old path gone from main, the new one on it), card Nicknames, card
 CustomDeck keys and CardIDs, deck DeckIDs/CustomDeck, cards added to or
 removed from decks, the Rulebooks bag's contents, the resizeTargets rows, and the global script and UI as TTS/Global.lua
