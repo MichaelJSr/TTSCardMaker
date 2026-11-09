@@ -63,8 +63,10 @@ jobs:
         /commands/psd_links.py
         /commands/card_preview_reads.py
     steps:
-      # BOT_FILES at the bot's main, cloned in the background beside the card repo's checkout (in RUNNER_TEMP: that
-      # checkout empties the workspace). The token in a header, never saved.
+      # Both in the background: BOT_FILES at the bot's main (in RUNNER_TEMP; Bot moves it in), and the card repo at this
+      # commit in the workspace (14 s at most), every tree and no file contents (the 16 GB of card folders are never
+      # checked out): the card's PSD and PNG, the status chart, the icon manifest and the Types/ PNGs it needs come by
+      # blob sha through the API, verified, as Card sync's bake does; the fonts below. The token in a header, never saved.
       - name: Clone
         shell: bash
         env:
@@ -72,14 +74,20 @@ jobs:
         run: |
           auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 | tr -d '\n')
           echo "::add-mask::$auth"
+          export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
           cd "$RUNNER_TEMP"
-          ( export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
-            code=0
+          ( code=0
             { timeout 15 git clone -q --depth 1 --no-tags --single-branch --branch main --no-checkout \
                 "$GITHUB_SERVER_URL/$BOT_REPO" "$RUNNER_TEMP/bot" \
               && git -C "$RUNNER_TEMP/bot" sparse-checkout set --no-cone --stdin <<< "$BOT_FILES" \
               && git -C "$RUNNER_TEMP/bot" checkout -q main; } || code=$?
             echo "$code" > "$RUNNER_TEMP/bot.code" ) < /dev/null > "$RUNNER_TEMP/bot.log" 2>&1 &
+          ( cd "$GITHUB_WORKSPACE"; code=0
+            { git init -q && git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+              && git sparse-checkout set --no-cone /.github/ \
+              && timeout 10 git fetch -q --depth 1 --filter=blob:none --no-tags origin "$GITHUB_SHA" \
+              && timeout 4 git checkout -q --detach FETCH_HEAD; } || code=$?
+            echo "$code" > "$RUNNER_TEMP/cards.code" ) < /dev/null > "$RUNNER_TEMP/cards.log" 2>&1 &
 
       # The request names a folder on the branch: a bad one fails the run and publishes nothing. The card and the edit
       # are card_preview's to check (env and a file here): a bad one is published as an input error for the website.
@@ -95,16 +103,6 @@ jobs:
           fi
           printf '%s' "$EDIT" > "$RUNNER_TEMP/edit.json"
           echo "ok=true" >> "$GITHUB_OUTPUT"
-
-      # The card repo at main, every tree and no file contents (the 16 GB of card folders are never checked out): the
-      # card's PSD and PNG, the status chart, the icon manifest and the Types/ PNGs it needs come by blob sha through the
-      # API, verified, as Card sync's bake does; the fonts below.
-      - uses: actions/checkout@v7
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /.github/
 
       # The clone in bot/ once done (15 s at most); else checked out as ever. Its .py files compiled in the background by
       # the image's Python 3.14 (setup-python's) while the venv restores: Start imports them compiled (none there: as ever).
@@ -129,9 +127,10 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: ${{ env.BOT_FILES }}
 
-      # The preview's first reads, in the background while the setup runs (the runner's python3, stdlib only): the data's
-      # render and spot records (db/ on the data branch; AutoCroissant psd_edit.RECORDS_DIR) to records/, and the card's
-      # blobs into this checkout's object store, where the bake reads first. Go waits for reads.done.
+      # The preview's first reads, in the background once the card repo is in (cards.code 0) while the setup runs (the
+      # runner's python3, stdlib only): the data's render and spot records (db/ on the data branch; AutoCroissant
+      # psd_edit.RECORDS_DIR) to records/, and the card's blobs into this checkout's object store, where the bake reads
+      # first. Go waits for reads.done.
       - name: Reads
         working-directory: bot
         shell: bash
@@ -139,7 +138,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CARD: ${{ inputs.card }}
         run: |
-          { python3 -S -m commands.card_preview_reads --card="$CARD" --edit "$RUNNER_TEMP/edit.json" --clone "$GITHUB_WORKSPACE" \
+          { until [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" = 0 ] || [ $SECONDS -ge 60 ]; do sleep 0.02; done
+            python3 -S -m commands.card_preview_reads --card="$CARD" --edit "$RUNNER_TEMP/edit.json" --clone "$GITHUB_WORKSPACE" \
               --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" --records "$RUNNER_TEMP/records" || true
             touch "$RUNNER_TEMP/reads.done"; } < /dev/null > "$RUNNER_TEMP/reads.log" 2>&1 &
 
@@ -176,6 +176,28 @@ jobs:
             echo "ok=true" >> "$GITHUB_OUTPUT"
           else
             rm -rf "$RUNNER_TEMP/venv"
+          fi
+
+      # The card repo from Clone (15 s at most), else fetched here, its git made again (not actions/checkout: it empties
+      # the workspace, bot/ with it). cards-python and Start read it.
+      - name: Cards
+        shell: bash
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          while [ ! -s "$RUNNER_TEMP/cards.code" ] && [ $SECONDS -lt 15 ]; do sleep 0.02; done
+          if [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" != 0 ]; then
+            echo "::warning::the card repo's fetch failed or took 15 s: fetched again"; cat "$RUNNER_TEMP/cards.log" 2> /dev/null || true
+            auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 | tr -d '\n')
+            echo "::add-mask::$auth"
+            export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
+            rm -rf .git .github
+            git init -q
+            git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+            git sparse-checkout set --no-cone /.github/
+            git fetch -q --depth 1 --filter=blob:none --no-tags origin "$GITHUB_SHA"
+            git checkout -q --detach FETCH_HEAD
+            echo 0 > "$RUNNER_TEMP/cards.code"
           fi
 
       # Else the shared setup (.github/actions/cards-python), as ever. Without the oxipng CLI: the bake would recompress
@@ -217,8 +239,14 @@ jobs:
           path: MDW/Fonts
           key: card-fonts-${{ steps.fonts.outputs.sha }}
 
-      - if: steps.font-cache.outputs.cache-hit != 'true'
-        run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+      - if: steps.font-cache.outputs.cache-hit != 'true'     # the token in a header, as Clone's
+        shell: bash
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 | tr -d '\n')
+          export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
+          git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
       # The fonts are in; the reads too, or 20 s on: the preview's fonts go. A failed font step skips this (the job's end
       # stops the preview).
