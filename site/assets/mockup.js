@@ -674,17 +674,24 @@ export function partJobs(rec, parts, { colors = null, was = null, statuses = nul
  *  [{one, label, why}]. Refused when an enabled Color, Gradient or Pattern Overlay, the part's own or a group's above it,
  *  hides every title or Ability part the colour paints (layerColors). A part's own isn't counted for a whole field's
  *  colour or a phrase on a field that has one (it goes off), nor a lone Color Overlay under a phrase. The record has no
- *  opacity, blend mode or fill. typed: the fields the edit retypes (the bake finds the colour in the new text). */
-export function paintedOver(rec, colors, typed = []) {
+ *  opacity, blend mode or fill. typed: the fields `edit` retypes; their colours are checked in the new text (a box's own,
+ *  a one-layer field's), as plan_colors does. */
+export function paintedOver(rec, colors, typed = [], edit = null) {
   const p = obj(rec?.parts), fx = obj(rec?.effects) || {}, out = [];
   if (!p || !Array.isArray(colors)) return out;
   const on = path => (Array.isArray(fx[path]) ? fx[path] : []).filter(n => OVERLAY.test(String(n))).map(n => n.replace("Overlay", " Overlay"));
   const lit = new Set(colors.filter(one => !one?.phrase).map(one => one?.field));
+  const textOf = (x, f, n) => {                       // retyped: its box's new text ("" deleted), a lone layer's the field's
+    if (!typed.includes(f)) return x?.text;
+    const b = obj(obj(edit?.parts)?.[String(x?.id)]);
+    return b ? (b.delete ? "" : String(b.text ?? "")) : n === 1 ? String(edit?.[f] ?? x?.text ?? "") : x?.text;
+  };
   for (const one of colors) {
     const f = one?.field, what = f === "name" ? "title" : "ability";
-    if ((f !== "name" && f !== "ability") || typed.includes(f)) continue;
+    if (f !== "name" && f !== "ability") continue;
     const list = (f === "name" ? p.title || [] : [...(p.ability || []), ...(p.blocks || [])]).filter(x => !(Array.isArray(x?.variants) && !x.variants.includes(1)));
-    const hid = list.filter((_, i) => layerColors(list.map(x => x?.text), i, [one], f)).map(x => {
+    const texts = list.map(x => textOf(x, f, list.length));
+    const hid = list.filter((_, i) => layerColors(texts, i, [one], f)).map(x => {
       const path = String(x?.layer || "").split("/"), own = on(path.join("/"));
       if (own.length && one.phrase && !lit.has(f) && !(own.length === 1 && own[0] === "Color Overlay")) return `its ${own[0]}`;
       for (let i = path.length - 1; i > 0; i--) { const e = on(path.slice(0, i).join("/")); if (e.length) return `its group '${path[i - 1]}''s ${e[0]}`; }
@@ -851,7 +858,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const ctx = work.getContext("2d", { willReadFrequently: true });
   ctx.drawImage(img, 0, 0);
   const txt = s => String(s ?? "").replace(/\r/g, "").trim(), typed = ["name", "ability"].filter(f => (f in edit && txt(edit[f]) !== txt(psd[f])) || partJobs(rec, edit.parts).some(j => j.role === f));
-  const nix = paintedOver(rec, edit.colors, typed);   // the bake refuses them: not drawn, said
+  const nix = paintedOver(rec, edit.colors, typed, edit);   // the bake refuses them: not drawn, said
   if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
   const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], shape, site: [], starsKept: null };
   for (const label of todo.skipped) {                 // a stat past what its bar prints stays on the website
