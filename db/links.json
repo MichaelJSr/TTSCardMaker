@@ -801,7 +801,7 @@
   ]
  },
  "Auxiliary/Items/Frostmourne.psd": {
-  "blob": "f248c8259b39ffc530241db7b05c7282ff86af94",
+  "blob": "0218b349201b8d345ede125652311935d5cca9e3",
   "links": [
    {
     "drawn": null,
@@ -15743,7 +15743,7 @@
   ]
  },
  "Creatures/Other/3 Stars/Pizza.psd": {
-  "blob": "83e3162d1f1d4153b008963b98bbb851346fc67b",
+  "blob": "0ff31a6354dc8d8ca8bdfeee063c50621c204b12",
   "links": [
    {
     "drawn": null,
@@ -21829,7 +21829,7 @@
   ]
  },
  "Items/Counter/1 Stars/Wooden_Spikes.psd": {
-  "blob": "9757d4630bea0b476fb1f4a86a378355d2b65c20",
+  "blob": "6c1865cd08370fd7af462900cebadb9d4813357d",
   "links": [
    {
     "drawn": null,
@@ -21933,7 +21933,7 @@
   ]
  },
  "Items/Counter/3 Stars/Iron_Spikes.psd": {
-  "blob": "54b07126bbe09be6eb10c8877a3dc348235c0ed6",
+  "blob": "f24b37929e8d2b98481c0789ae7b4efd2bae1cb4",
   "links": [
    {
     "drawn": null,
@@ -24701,7 +24701,7 @@
   ]
  },
  "Items/Heal/2 Stars/Watermelon.psd": {
-  "blob": "dc6fd876e8885430b5918e46f4e70e848426ef8c",
+  "blob": "a792c69e04963eaa364dcbb1deda2f09c357a3c9",
   "links": [
    {
     "drawn": null,
@@ -25331,7 +25331,7 @@
   ]
  },
  "Items/Negation/2 Stars/Stopwatch.psd": {
-  "blob": "77c7f4c2ee071727374ef36da7a7f406cfbcbf38",
+  "blob": "92070ecb735a6f4b4c476143bdff5a0eb9884987",
   "links": [
    {
     "drawn": null,
@@ -25354,7 +25354,7 @@
   ]
  },
  "Items/Negation/3 Stars/Ancient_Stopwatch.psd": {
-  "blob": "6ce8265153bb4833c20e50a7cebd27aa742c17ff",
+  "blob": "26812d89099d481517c79d1382cc72c9c1fc5628",
   "links": [
    {
     "drawn": null,
@@ -31074,7 +31074,7 @@
   ]
  },
  "N.M.E/Double_Pain.psd": {
-  "blob": "f1ddf21bf1404bf35d617ea0968346a101c437c5",
+  "blob": "b823779fb8c8945dd1ffcde0b73cdf1345b2e492",
   "links": [
    {
     "drawn": null,
@@ -31377,7 +31377,7 @@
   ]
  },
  "N.M.E/Paintbrush.psd": {
-  "blob": "9840595171c13d3a3e6ad423a2c2e7f3ea8fde04",
+  "blob": "b781d3c90a3092c1d62e61bc27f95a78147f65ea",
   "links": [
    {
     "drawn": null,
@@ -31653,8 +31653,14 @@
   ]
  },
  "N.M.E/Star_Scraper.psd": {
-  "blob": "8e4ac6dff0463f5aa6f342ec0720755344cea1b8",
+  "blob": "9de3050997da26b926cc6912de8af30ad843aa28",
   "links": [
+   {
+    "drawn": "7a28eb1885e2e3d26357bbe7fe5d32dd51210584",
+    "name": "Star_Scraper - 836514266_1920094392297708_4360727708699398762_n.jpg",
+    "path": "MDW/Linked/Star_Scraper - 836514266_1920094392297708_4360727708699398762_n.jpg",
+    "size": 67603
+   },
    {
     "drawn": null,
     "name": "Patrick Star.png",
@@ -34218,6 +34224,9 @@
   "MDW/Linked/Star_Jar - Layer 9.psb": {
    "a1e44b77ef2d0a5a632b37046e5b409b5c2045c2": 4994218
   },
+  "MDW/Linked/Star_Scraper - 836514266_1920094392297708_4360727708699398762_n.jpg": {
+   "7a28eb1885e2e3d26357bbe7fe5d32dd51210584": 67603
+  },
   "MDW/Linked/Star_Scraper - Daco_35508.psb": {
    "4263cfb24894e4c5ac8f45614c90a112addbe789": 1048576
   },
@@ -35777,6 +35786,7 @@
   "79846cdbe4365538fe2b880dec520e414b83e903": "bad0956c3c7ae5441a83183c2ff60449c568fb76",
   "79a166dca06eac2a9c0ce5fb57ce4d3a83746d57": "6fa300a1018e1560a21c94f4ec992851714f7f7d",
   "7a1b10bd8e5bc2752967672fa37350e0f2b96ba6": "0cf14bef3af8aa0304d13d36481fb0d071b069b0",
+  "7a28eb1885e2e3d26357bbe7fe5d32dd51210584": "8e8d8bd61c2bc0a1bffc01648129803b787c8a31",
   "7a8fb5e1995d09dfb64f412a8d5a7cb5749f3e9f": "f83fffb9abe84b83f4acb3b0f183ad77f9505e3c",
   "7b44fa7e0624e19b4bd930eb76796f00a76c6f6f": "170df30389319116a536a5ccabdf9c9547f49731",
   "7b52b42ea997ddf328795b6cd0c5344fcb63833a": "b2196e18c2deb00d422be49665603f96e7d6f6d6",
