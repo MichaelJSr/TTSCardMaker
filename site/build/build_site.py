@@ -4395,7 +4395,8 @@ def card_frame(c):
     full = js_esc(RAW + "/".join(quote(p, safe="!~*'()") for p in c["png"].split("/")))   # fullUrl (urlPath)
     dims = f' width="{c["tw"]}" height="{c["th"]}"' if c.get("tw") else ""
     ratio = f'{c["tw"]}/{c["th"]}' if c.get("tw") and c.get("th") else "2/3"
-    return (f'<div id="modal" class="modal"><div class="dialog" role="dialog" aria-modal="true" aria-label="{name}"><div class="detail">'
+    return (f'<div id="modal" class="modal"><div class="dialog" role="dialog" aria-modal="true" aria-label="{name}">'
+            '<button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button><div class="detail">'
             '<div class="image-wrap"><div class="iv"><div class="iv-stage"><div class="iv-orig">'
             f'<a href="{full}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" '
             f'src="thumbs/{c["img"]}-720-{thumb_tag(720)}.avif" alt="{name}"{dims} style="aspect-ratio:{ratio}"></a>'

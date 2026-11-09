@@ -229,6 +229,7 @@ mark { background: color-mix(in srgb, var(--warn) 45%, transparent); color: inhe
 .dialog .close { position: absolute; top: 10px; right: 10px; z-index: 2; background: var(--surface); }
 .detail { display: grid; grid-template-columns: minmax(260px, 430px) minmax(0, 1fr); gap: 26px; }
 @media (max-width: 820px) { .detail { grid-template-columns: minmax(0, 1fr); } }   /* minmax: the scrolling strips mustn't widen it */
+@media (max-width: 820px) { .dialog > .close:has(+ .detail) { position: sticky; top: 8px; display: grid; margin: -12px -12px 4px auto; } }   /* one column: in view as the card scrolls, off its picture */
 .detail .image-wrap { position: relative; }
 .detail .image-wrap .iv-orig img { width: 100%; height: auto; border-radius: 12px; display: block; background: var(--surface-2); cursor: zoom-in; }
 .iv-stage.hang .iv-orig img, .iv-stage.hang .iv-alt { width: var(--hw); max-width: none; margin: var(--hm); clip-path: var(--hc); background: none; }
