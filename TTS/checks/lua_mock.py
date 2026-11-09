@@ -13,7 +13,8 @@ rulebook panel and the card finder on the website's data/tts.json and the repo's
 pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
 face down, Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name and ability
-in the card's colours, tts.json nc and ac, every "<" of a text kept from starting a tag).
+in the card's colours, tts.json nc and ac, every "<" of a text kept from starting a tag; every card's details at each
+size: each chapter a whole Rules button, rows fit, each "+ name" spawns its card).
 Data: $TTS_DETAILS (a tts.json file), else the live website. Exits 1 on a failure.
 """
 import json
@@ -756,9 +757,9 @@ def main():
           f"Card details: panel 1 shows {card['n']!r}")
     rules, named = chapters_of(card, details), named_of(card, details)
     def slot(kind, i):                                      # the button of item i ("Red_d1_r2_3"), in whichever row it went
-        return next((f"Red_d1_{kind}{r}_{i}" for r in range(1, 3) if ui.on(f"Red_d1_{kind}{r}_{i}")), None)
-    shown_rules = [ui.text(b) for b in (slot("r", i) for i in range(1, 5)) if b]
-    check(shown_rules == [f"Rules: {details['chapters'][r]['title']}" for r in rules[:4]], f"Rules buttons {shown_rules}")
+        return next((f"Red_d1_{kind}{r}_{i}" for r in range(1, 4) if ui.on(f"Red_d1_{kind}{r}_{i}")), None)
+    shown_rules = [ui.text(b) for b in (slot("r", i) for i in range(1, 6)) if b]
+    check(shown_rules == [f"Rules: {details['chapters'][r]['title']}" for r in rules[:5]], f"Rules buttons {shown_rules}")
     shown_cards = [ui.attrs[b].get("tooltip") or ui.text(b) for b in (slot("c", i) for i in range(1, 7)) if b]   # a shortened one's name on hover
     check(shown_cards == [f"+ {n}" for n, _ in named[:6]], f"spawn buttons {shown_cards}")
     before = ui.calls
@@ -771,7 +772,7 @@ def main():
         w.call("detailsSize", red, None, "Red_d1_smaller")
     check((big, width()) == ("660", "440"), f"A+ / A- size the panel ({big}, {width()})")
     over, cut = [], []                                      # at the smallest size, each row of buttons fits its width
-    for kind, n, rows in (("rules", 4, 2), ("cards", 6, 2)):
+    for kind, n, rows in (("rules", 5, 3), ("cards", 6, 2)):
         for r in range(1, rows + 1):
             row = f"Red_d1_{kind}{r}"
             if not ui.on(row):
@@ -972,6 +973,47 @@ def main():
     w4.call("finderSearch", w4.players["Red"], "thorn</b>")
     check(w4.ui.text("Red_fc_g1").startswith(plain(odd["n"]) + "   "), f"the finder's row: the name, '<' no tag {w4.ui.text('Red_fc_g1')!r}")
 
+    # ---- every card's details at each size ----
+    w5 = World(script, save, zones)
+    w5.seat("Red")
+    w5.g.onLoad("")
+    w5.wait.flush()
+    w5.respond(details_raw, pages_text)
+    ui5, red5, bad = w5.ui, w5.players["Red"], []
+    def at(kind, i, rows):
+        return next((f"Red_d1_{kind}{r}_{i}" for r in range(1, rows + 1) if ui5.on(f"Red_d1_{kind}{r}_{i}")), None)
+    for d in cards:
+        c = details["cards"][face_path(d)]
+        rules, named = chapters_of(c, details), named_of(c, details)
+        o = Obj.of(w5, d)
+        o.is_face_down = False
+        w5.run(w5.g.showDetails, "Red", o, what=f"Card details: {c['n']}")
+        if not (ui5.on("Red_d1") and ui5.values.get("Red_d1_title") == painted(c["n"], c.get("nc"))):
+            bad.append((c["n"], "no panel"))
+            continue
+        for size in (1, 2, 3):
+            for b in ["smaller"] * 3 + ["bigger"] * (size - 1):
+                w5.call("detailsSize", red5, None, f"Red_d1_{b}")
+            shown = [ui5.text(b) for b in (at("r", i, 3) for i in range(1, 6)) if b]
+            if shown != [f"Rules: {details['chapters'][r]['title']}" for r in rules]:
+                bad.append((c["n"], size, shown))
+            for kind, n, rows in (("rules", 5, 3), ("cards", 6, 2), ("decks", 8, 3)):
+                for r in range(1, rows + 1):
+                    ws = [int(ui5.attrs[b]["preferredWidth"]) for b in (f"Red_d1_{kind[0]}{r}_{i}" for i in range(r, n + 1)) if ui5.on(b)]
+                    if ws and sum(ws) + 6 * (len(ws) - 1) > int(ui5.attrs[f"Red_d1_{kind}{r}"]["width"]):
+                        bad.append((c["n"], size, f"{kind}{r}", ws))
+        for i, (name, path) in enumerate(named[:6], 1):
+            b = at("c", i, 2)
+            w5.spawns.clear()
+            if b:
+                w5.call("spawnNamed", red5, None, b)
+            if not b or (ui5.attrs[b].get("tooltip") or ui5.text(b)) != f"+ {name}" or len(w5.spawns) != 1 \
+                    or face_path(w5.spawns[0]["data"]) != path:
+                bad.append((c["n"], f"+ {name}"))
+        w5.call("closeDetails", red5, None, "Red_d1_close")
+    check(not bad, f"every card's details at each size ({len(cards)} cards): each chapter a whole Rules button, rows fit, "
+          f"each '+ name' spawns its card ({len(bad)} wrong) {bad[:5]}")
+
     # ---- the website offline ----
     w3 = World(script, save, zones)
     w3.seat("Red")
@@ -982,7 +1024,7 @@ def main():
     check(("Red", "Card details are still loading.") in w3.told and any("not loaded" in x for x in w3.logs)
           and not w3.ui.builds, "website offline: 'still loading', logged, no panels")
 
-    for world in (w, w2, w3, w4):
+    for world in (w, w2, w3, w4, w5):
         hits = list(world.lua.eval("PATTERN_HITS").values())
         check(not hits, f"no Lua patterns {hits[:3]}")
         check(not world.ui.unknown, f"every UI id set exists {world.ui.unknown[:3]}")

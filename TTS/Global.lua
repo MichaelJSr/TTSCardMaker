@@ -112,8 +112,8 @@ local SEATS = {"White", "Brown", "Red", "Orange", "Yellow", "Green", "Teal", "Bl
 local BADGE = {turn = "#60a5fa", any = "#a78bfa", forced = "#f87171", trigger = "#fbbf24", neutral = "#cbd5e1"}
 local DIM, HEAD = "#94a3b8", "#7dd3fc"
 local SIZES = {{w = 440, h = 540, f = 14}, {w = 540, h = 660, f = 16}, {w = 660, h = 800, f = 18}}
-local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 4, 6, 40, 30
-local RULE_ROWS, CARD_ROWS = 2, 2                      -- rows the buttons may take (more than fit: names shortened)
+local RULE_BUTTONS, CARD_BUTTONS, TITLE_H, ROW_H = 5, 6, 40, 30
+local RULE_ROWS, CARD_ROWS = 3, 2                      -- rows the buttons may take (more than fit: names shortened)
 local DECK_BUTTONS, DECK_ROWS = 8, 3
 local DETAILS_PANELS = 3                               -- a player's card details open at once (one more replaces the oldest)
 local BACKS = {{"Buff", "MDW/Assets/cardback_statuseffect.png"}, {"Debuff", "MDW/Assets/cardback_statuseffect.png"},
