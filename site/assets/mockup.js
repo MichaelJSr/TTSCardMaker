@@ -10,7 +10,7 @@
 // `draw` is pure (node checks run it on plain pixel arrays).
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
 import { starMove, starsKept, titleInPicture } from "./parts.js";
-import { colorRanges, inkOf, layerColors, phraseText, statusSpans } from "./textcolor.js";
+import { colorRanges, inkOf, layerColors, phraseText, spansOf, statusSpans } from "./textcolor.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
@@ -736,14 +736,17 @@ const printed = (p, f) => (f === "name" ? p.title || [] : [...(p.ability || []),
 /** The colours the bake refuses as painted over (AutoCroissant psd_edit plan_colors, _painted_over, _solid_overlay):
  *  [{one, label, why}]. Refused when an enabled Color, Gradient or Pattern Overlay, the part's own or a group's above it,
  *  hides every title or Ability part the colour paints (layerColors). A part's own isn't counted for a whole field's
- *  colour or a phrase on a field that has one (it goes off), nor a lone Color Overlay under a phrase. The record has no
- *  opacity, blend mode or fill. typed: the fields `edit` retypes; their colours are checked in the new text (a box's own,
- *  a one-layer field's), as plan_colors does. */
+ *  colour or a phrase on a field that has one (it goes off), a phrase that is all of the part's text (_whole_span) or
+ *  one after it, nor a lone Color Overlay under a phrase. The record has no opacity, blend mode or fill. typed: the
+ *  fields `edit` retypes; their colours are checked in the new text (a box's own, a one-layer field's), as plan_colors
+ *  does. */
 export function paintedOver(rec, colors, typed = [], edit = null) {
   const p = obj(rec?.parts), fx = obj(rec?.effects) || {}, out = [];
   if (!p || !Array.isArray(colors)) return out;
   const on = path => (Array.isArray(fx[path]) ? fx[path] : []).filter(n => OVERLAY.test(String(n))).map(n => n.replace("Overlay", " Overlay"));
-  const lit = new Set(colors.filter(one => !one?.phrase).map(one => one?.field));
+  const lit = new Set(colors.filter(one => !one?.phrase).map(one => one?.field)), done = new Set();   // done: parts a phrase took whole
+  const blank = s => !s.replace(/\u0003/g, " ").trim();
+  const whole = (t, c) => (spansOf(String(t ?? ""), c) || []).some(([a, b]) => blank(String(t).slice(0, a)) && blank(String(t).slice(b)));
   const textOf = (x, f, n) => {                       // retyped: its box's new text ("" deleted), a lone layer's the field's
     if (!typed.includes(f)) return x?.text;
     const b = obj(obj(edit?.parts)?.[String(x?.id)]);
@@ -753,14 +756,17 @@ export function paintedOver(rec, colors, typed = [], edit = null) {
     const f = one?.field, what = f === "name" ? "title" : "ability";
     if (f !== "name" && f !== "ability") continue;
     const list = printed(p, f), texts = list.map(x => textOf(x, f, list.length));
-    const hid = list.filter((_, i) => layerColors(texts, i, [one], f)).map(x => {
+    const mine = list.map((x, i) => [x, layerColors(texts, i, [one], f), texts[i]]).filter(([, c]) => c);
+    const full = one.phrase ? mine.filter(([, c, t]) => whole(t, c[0])).map(([x]) => x) : [];
+    const hid = mine.map(([x]) => {
       const path = String(x?.layer || "").split("/"), own = on(path.join("/"));
-      if (own.length && one.phrase && !lit.has(f) && !(own.length === 1 && own[0] === "Color Overlay")) return `its ${own[0]}`;
+      if (own.length && one.phrase && !lit.has(f) && !done.has(x) && !full.includes(x) && !(own.length === 1 && own[0] === "Color Overlay")) return `its ${own[0]}`;
       for (let i = path.length - 1; i > 0; i--) { const e = on(path.slice(0, i).join("/")); if (e.length) return `its group '${path[i - 1]}''s ${e[0]}`; }
       return null;
     });
     if (hid.length && hid.every(Boolean)) out.push({ one, label: one.phrase ? `colour of ${phraseText(one.phrase)}` : `${f === "name" ? "title" : "Ability"}'s colour`,
       why: `${hid.sort()[0]} paints over the ${what}'s colours: recolour it in Photoshop` });
+    else for (const x of full) done.add(x);              // its own overlays go off (set_colors)
   }
   return out;
 }
