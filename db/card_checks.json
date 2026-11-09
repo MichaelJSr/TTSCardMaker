@@ -1,7 +1,6 @@
 {"version": 1,
 "cleared": {},
 "cards": {
-"0053ce39c7004994c50d93f76a8d7fb95ada412f": {"bars": null, "card": "Man Serpent Shield", "hand": null, "notes": [], "png": "3c03b6e0", "reads": {}, "style": "", "unredrawable": {}},
 "00587c062f8c6b129498f7b90d62bd987cc30192": {"bars": null, "card": "Grey Prince Zote", "hand": null, "notes": [], "png": "51bcdb6b", "reads": {"atk": [{"best": 4, "could": [4]}], "def": [{"best": 4, "could": [4]}], "hp": [{"best": 8, "could": [8]}], "spd": [{"best": 6, "could": [6]}]}, "style": "new", "unredrawable": {}},
 "01014cf9e7a11126332de36c69f8817963aa4f4f": {"bars": null, "card": "Spicy Spray", "hand": null, "notes": [], "png": "ac971a2a", "reads": {}, "style": "", "unredrawable": {}},
 "012196939cfe65c99de4cd57dc663c1fe0e11dae": {"bars": null, "card": "Magnus von Grapple", "hand": null, "notes": [], "png": "2550238f", "reads": {"atk": [{"best": 5, "could": [5]}], "def": [{"best": 5, "could": [5]}], "hp": [{"best": 4, "could": [4]}], "spd": [{"best": 5, "could": [5]}]}, "style": "new", "unredrawable": {}},
@@ -764,6 +763,7 @@
 "fd30bd1300e3f91a19fd812fc02c937508984ac8": {"bars": null, "card": "chuckya", "hand": null, "notes": [], "png": "9dbe5859", "reads": {}, "style": "", "unredrawable": {}},
 "fd40112377a2f4ab8acd6f771b36b7dc274b0577": {"bars": null, "card": "Krabby Patty", "hand": null, "notes": [], "png": "6f1ae441", "reads": {}, "style": "", "unredrawable": {}},
 "fd738631ca95f54f6052f9388c7ab6df71758522": {"bars": null, "card": "Iron Sword", "hand": null, "notes": [], "png": "0d1104a3", "reads": {}, "style": "", "unredrawable": {"MDW/Linked/Clock - 171177.jpg": ["171177", "smart filters"]}},
+"fdd20b7d9675b8742c6bb34eeea72b22710d125e": {"bars": null, "card": "Man Serpent Shield", "hand": null, "notes": [], "png": "3c03b6e0", "reads": {}, "style": "", "unredrawable": {}},
 "fe9ca43aab6b6b3ad42256a27d64865a2d934a4e": {"bars": null, "card": "Sumo Panda", "hand": null, "notes": [], "png": "457f6da7", "reads": {"atk": [{"best": 6, "could": [6]}], "def": [{"best": 3, "could": [3]}], "hp": [{"best": 7, "could": [7]}], "spd": [{"best": 3, "could": [3]}]}, "style": "new", "unredrawable": {}},
 "ff44dfb942c5c3065ba1911ae6b0b9e17ce0a261": {"bars": null, "card": "HR-D3", "hand": null, "notes": [], "png": "a8cfdca1", "reads": {"atk": [{"best": 8, "could": [8]}], "def": [{"best": 7, "could": [7]}], "hp": [{"best": 9, "could": [9]}], "spd": [{"best": 4, "could": [4]}]}, "style": "new", "unredrawable": {"MDW/Linked/HR-D3 - 88fccaea0c1b5f9107a65db857d87dab copy.psb": ["88fccaea0c1b5f9107a65db857d87dab copy", "smart filters"]}},
 "ff4908207fa20a01e4b34e8ce0953d65a3959219": {"bars": null, "card": "Tentacle", "hand": null, "notes": [], "png": "96bbfbc8", "reads": {"atk": [{"best": 5, "could": [5]}], "def": [{"best": 0, "could": [0], "flat": true}], "hp": [{"best": 3, "could": [3]}], "spd": [{"best": 4, "could": [4]}]}, "style": "new", "unredrawable": {}},
