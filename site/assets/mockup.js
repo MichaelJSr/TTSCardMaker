@@ -902,10 +902,14 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
+  const shown = { ...psd };                            // the values the rows show as they are redrawn
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
     if (!row) { out.skipped.push(k.toUpperCase()); continue; }
-    (to > row.cells ? paintComp : paintCells)(pixels.data, W, H, row, from, to); out.drawn.push(k.toUpperCase());
+    const lit = from === 0 && to <= row.cells ? bars.filter(r => r !== row && shown[r.k] >= 1 && shown[r.k] <= r.cells).sort((a, b) => Math.abs(a.box[1] - row.box[1]) - Math.abs(b.box[1] - row.box[1])).map(r => ({ row: r, v: shown[r.k] })) : [];
+    if (lit.length) paintLit(pixels.data, W, H, row, lit, to);   // no lit cell on the row: another row's
+    else (to > row.cells ? paintComp : paintCells)(pixels.data, W, H, row, from, to);
+    shown[k] = to; out.drawn.push(k.toUpperCase());
   }
   const head = obj(rec?.header), k = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0, at = b => b.map(v => v * k);
   const icons2 = [];                                  // [label, plan] for the stars and types
@@ -1138,5 +1142,19 @@ export function paintComp(data, W, H, row, from, to) {
   const t = Math.max(1, Math.round((y1 - y0) * 0.04)), top = mid - Math.floor(t / 2), inset = Math.round(cw * 0.3), end = Math.min(x1 - inset, cellBox(to - row.cells)[0]);
   for (let y = top; y < top + t; y++) for (let x = x0 + inset; x < end; x++) {
     const i = (y * W + x) * 4; for (let ch = 0; ch < 3; ch++) data[i + ch] = data[i + ch] * 0.3 + line[ch] * 0.7;
+  }
+}
+/** A row from 0 to `to` (1-10) lit as the bake lights it: each cell copied from the nearest row lit there (lit: [{row,
+ *  v}], nearest first), else from that row's last lit cell (when that is the rounded end, its flat right half). */
+export function paintLit(data, W, H, row, lit, to) {
+  const span = r => { const [x0, y0, x1, y1] = px(r.box, W, H); return { x0, y0, y1, cw: (x1 - x0) / r.cells }; };
+  const T = span(row);
+  for (let c = 0; c < to; c++) {
+    const d = lit.find(o => o.v > c) || lit[0], k = Math.min(c, d.v - 1), S = span(d.row);
+    const a = Math.round(T.x0 + c * T.cw), b = Math.round(T.x0 + (c + 1) * T.cw), sa = Math.round(S.x0 + k * S.cw), dy = S.y0 - T.y0;
+    for (let y = T.y0 + 1; y < T.y1 - 1; y++) for (let x = a + 1; x < b - 1; x++) {
+      const i = (y * W + x) * 4, j = ((y + dy) * W + sa + (k || !c ? x - a : Math.max(x - a, (b - a) >> 1))) * 4;
+      data[i] = data[j]; data[i + 1] = data[j + 1]; data[i + 2] = data[j + 2];
+    }
   }
 }
