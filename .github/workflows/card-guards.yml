@@ -136,8 +136,8 @@ jobs:
 
       # A push's PSD and PNG blobs (both sides), as git's own lazy fetch asks: the checks and the guards read the clone
       # first, so ~3 REST reads per card become none. It needs only the trees, so it starts here, in the background;
-      # Check starts without waiting and waits for each listed blob it reads (CARD_BLOBS_PENDING); 5 minutes at most,
-      # its exit code in blobs.done (then a blob still missing goes by REST).
+      # Check (and in `checks` the two checks) starts without waiting and waits for each listed blob it reads
+      # (CARD_BLOBS_PENDING); 5 minutes at most, its exit code in blobs.done (then a blob still missing goes by REST).
       # 8 to a fetch, 4 at a time, in diff order: GitHub's delta search is what takes the time, and small packs barely
       # need one; a card's two sides stay together, so the deltas still shrink the transfer.
       - &blobs-start
@@ -290,16 +290,15 @@ jobs:
             echo "ok=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # The two checks: a push's in the `checks` job, a dispatch's here, before the guards' check: on one runner, an `all`
-      # dispatch reads its 813 PSDs once (twice at once would pass GITHUB_TOKEN's 1,000 requests an hour).
-      # A push: the PSDs changed between its two heads; a dispatch: `sha`'s (or main's head's) own, or with `all` every
-      # card PSD of the tree. Each exits 0 on findings (an unreadable PSD or a failed API call is one line in its report);
-      # one that breaks anyway is a warning and never stops the guards. report.md, report.json and discord.json in
-      # $RUNNER_TEMP/<check>. --clone: a PSD is fetched once into this clone, then read from it by the next one.
-      - &card-check
-        name: Card check
+      # A dispatch's two checks (a push's are the `checks` job's), one after the other before the guards' check: on one
+      # runner, an `all` dispatch reads its 813 PSDs once (twice at once would pass GITHUB_TOKEN's 1,000 requests an hour).
+      # `sha`'s (or main's head's) own PSDs, or with `all` every card PSD of the tree. Each exits 0 on findings (an
+      # unreadable PSD or a failed API call is one line in its report); one that breaks anyway is a warning and never
+      # stops the guards. report.md, report.json and discord.json in $RUNNER_TEMP/<check>. --clone: a PSD is fetched
+      # once into this clone, then read from it by the next one.
+      - name: Card check
         id: card-check
-        if: (github.event_name == 'push') == (github.job == 'checks')
+        if: github.event_name != 'push'
         continue-on-error: true
         timeout-minutes: ${{ inputs.all && 45 || 10 }}
         working-directory: bot
@@ -307,8 +306,6 @@ jobs:
         env:
           CHECK: card-check
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BEFORE: ${{ github.event_name == 'push' && github.event.before || '' }}
-          AUTHOR: ${{ github.event_name == 'push' && github.actor || '' }}
           AFTER: ${{ inputs.sha || github.sha }}
           ALL: ${{ inputs.all }}
         run: |
@@ -317,14 +314,12 @@ jobs:
           args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$AFTER" --json "$out/report.json"
                 --discord "$out/discord.json")
           [ "$CHECK" = font-check ] && args+=(--fonts "$GITHUB_WORKSPACE/MDW/Fonts")
-          [ -n "$AUTHOR" ] && args+=(--author "$AUTHOR")
-          if [ "$ALL" = true ]; then args+=(--whole-tree); elif [ -n "$BEFORE" ]; then args+=(--before "$BEFORE"); fi
+          [ "$ALL" = true ] && args+=(--whole-tree)
           python -m "commands.${CHECK/-/_}" "${args[@]}" | tee "$out/report.md" >> "$GITHUB_STEP_SUMMARY"
 
-      - &font-check
-        name: Font check
+      - name: Font check
         id: font-check
-        if: (github.event_name == 'push') == (github.job == 'checks') && steps.fonts-miss.outputs.ok != 'false'
+        if: github.event_name != 'push' && steps.fonts-miss.outputs.ok != 'false'
         continue-on-error: true
         timeout-minutes: ${{ inputs.all && 45 || 10 }}
         working-directory: bot
@@ -332,8 +327,6 @@ jobs:
         env:
           CHECK: font-check
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BEFORE: ${{ github.event_name == 'push' && github.event.before || '' }}
-          AUTHOR: ${{ github.event_name == 'push' && github.actor || '' }}
           AFTER: ${{ inputs.sha || github.sha }}
           ALL: ${{ inputs.all }}
         run: |
@@ -342,8 +335,7 @@ jobs:
           args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$AFTER" --json "$out/report.json"
                 --discord "$out/discord.json")
           [ "$CHECK" = font-check ] && args+=(--fonts "$GITHUB_WORKSPACE/MDW/Fonts")
-          [ -n "$AUTHOR" ] && args+=(--author "$AUTHOR")
-          if [ "$ALL" = true ]; then args+=(--whole-tree); elif [ -n "$BEFORE" ]; then args+=(--before "$BEFORE"); fi
+          [ "$ALL" = true ] && args+=(--whole-tree)
           python -m "commands.${CHECK/-/_}" "${args[@]}" | tee "$out/report.md" >> "$GITHUB_STEP_SUMMARY"
 
       # A push: before..after. A dispatch: `sha` (or main's head) against its first parent, or with `all` every card PSD.
@@ -422,7 +414,7 @@ jobs:
         run: "true"
 
       # Waits for Pushed blobs start's fetch and counts what it brought. One that fails or times out leaves the rest to the
-      # REST reads. Here after Decided (Check waits for each blob it reads); in `checks`, before the two checks.
+      # REST reads. Here after Decided, in `checks` after the two checks (they wait for each blob they read).
       - &pushed-blobs
         name: Pushed blobs
         if: github.event_name == 'push'
@@ -604,6 +596,7 @@ jobs:
       contents: write     # the commit comments
     steps:
       - *card-repo
+      - *blobs-start
       - *bot-repo
       - *setup
       - *fonts
@@ -615,10 +608,39 @@ jobs:
           key: card-fonts-${{ steps.fonts.outputs.sha }}
 
       - *fonts-miss
-      - *blobs-start
+
+      # The card check and the font check side by side (the font check in the background), each reading a pushed PSD as
+      # the fetch brings it: the PSDs changed between the push's two heads. Findings exit 0; one that breaks is a warning.
+      # Each writes its report.md, report.json and discord.json in $RUNNER_TEMP/<check>; the reports go to the summary
+      # in that order once both have ended.
+      - name: Card and font checks
+        continue-on-error: true
+        timeout-minutes: 15
+        working-directory: bot
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BEFORE: ${{ github.event.before }}
+          AUTHOR: ${{ github.actor }}
+          FONTS: ${{ steps.fonts-miss.outputs.ok != 'false' }}
+          CARD_BLOBS_PENDING: ${{ runner.temp }}/blobs
+        run: |
+          check() {
+            local out=$RUNNER_TEMP/$1 args
+            mkdir -p "$out"
+            args=(--repo "$GITHUB_REPOSITORY" --clone "$GITHUB_WORKSPACE" --after "$GITHUB_SHA" --before "$BEFORE"
+                  --author "$AUTHOR" --json "$out/report.json" --discord "$out/discord.json")
+            [ "$1" != font-check ] || args+=(--fonts "$GITHUB_WORKSPACE/MDW/Fonts")
+            python -m "commands.${1/-/_}" "${args[@]}" > "$out/report.md"
+          }
+          names=(card-check) fonts= failed=
+          if [ "$FONTS" = true ]; then names+=(font-check); check font-check & fonts=$!; fi
+          check card-check || failed+=" card-check"
+          [ -z "$fonts" ] || wait "$fonts" || failed+=" font-check"
+          for name in "${names[@]}"; do cat "$RUNNER_TEMP/$name/report.md" >> "$GITHUB_STEP_SUMMARY" || true; done
+          [ -z "$failed" ] || { echo "::warning::these checks broke:$failed"; exit 1; }
+
       - *pushed-blobs
-      - *card-check
-      - *font-check
 
       # A push's checks with something to say: each one's own Discord message (only when the webhook secret is set; the
       # URL is never printed) and its own comment on the pushed commit. (A dispatch only reports in the job summary.)
