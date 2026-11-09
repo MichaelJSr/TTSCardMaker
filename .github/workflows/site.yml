@@ -350,8 +350,9 @@ jobs:
             [ "$st" = syncing_files ] || { since=; continue; }
             since=${since:-$SECONDS}
             [ $(( SECONDS - since )) -ge 120 ] || continue
+            # not to one at this sha: after this cancel, that sha's next deploys never started
             id=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/site.yml/runs?branch=main&per_page=10" \
-              --jq "[.workflow_runs[] | select(.id > $GITHUB_RUN_ID and .status != \"completed\"
+              --jq "[.workflow_runs[] | select(.id > $GITHUB_RUN_ID and .status != \"completed\" and .head_sha != \"$GITHUB_SHA\"
                 and (.display_title | startswith(\"Card browser (after\") | not)) | .id] | max // empty") || id=
             [ -n "$id" ] || continue
             if gh api -X POST "repos/$GITHUB_REPOSITORY/pages/deployments/$GITHUB_SHA/cancel" > /dev/null; then
