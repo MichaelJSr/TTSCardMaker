@@ -405,7 +405,7 @@ export function renderStats(root, ctx, params) {
       : ["Creature subseries", subCount, "Different subseries among the creature cards in scope; a name in two series counts once"]] : []),
     ["Authors", new Set(pool.map(c => c.author).filter(Boolean)).size],
     ["Banned (constructed)", pool.filter(c => banned.has(c.id)).length],
-    ["Last card update", latest ? date(latest) : "—", "When a card in scope last had its PSD committed (Pacific time)"],
+    ["Last card update", latest ? date(latest) : "—", "When a card in scope last changed: stats, stars, types, name, ability wording or a visible picture change (Pacific time)"],
   ];
   const charts = [];
   let at = -1;                                 // where the cards-only charts go: after the average stats, else after the star-level block

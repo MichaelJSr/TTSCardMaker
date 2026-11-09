@@ -889,7 +889,7 @@ function openCard(id, showDetails = false) {
           ${c.subseries ? `<a class="fact" href="#/cards?subseries=${encodeURIComponent(c.subseries)}" data-tip="Subseries">${esc(c.subseries)}</a>` : ""}
           ${c.author ? `<a class="fact" href="#/cards?${scope}author=${encodeURIComponent(c.author)}">by ${esc(c.author)}</a>` : ""}
           ${c.created ? `<span class="fact" data-tip="${esc(createdTip(c))}">created ${createdText(c)}</span>` : ""}
-          ${c.ts ? `<span class="fact" data-tip="Last PSD commit (Pacific time)">updated ${date(c.ts)}</span>` : ""}
+          ${c.ts ? `<span class="fact" data-tip="Its last change of stats, stars, types, name, ability wording or a visible picture change (Pacific time); maintenance passes don't count">updated ${date(c.ts)}</span>` : ""}
           ${c.psdSize ? `<a class="fact" href="#/cards?sort=psd" data-tip="All cards by PSD size">PSD ${psdSize(c)}</a>` : ""}
           ${!c.parsed && !c.morgue ? `<span class="fact">Image only: not parsed yet</span>` : ""}
           ${c._unused ? `<span class="fact unused" data-tip="${unusedTip(c)}">Unused</span>` : ""}
@@ -951,7 +951,8 @@ function placeholderOf(c) {
 const versionList = c => {
   const rows = S.versions && S.versions.cards[c.id];
   if (!rows) return [];
-  return rows.map(([ci, path]) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png }; });
+  const minor = new Set(S.versions.minor?.[c.id] || []);       // build_site: a picture change under the share that shows, no data change
+  return rows.map(([ci, path], i) => { const [sha, ts, author, subject] = S.versions.commits[ci]; return { sha, ts, author, subject, path: path || c.png, minor: minor.has(i) }; });
 };
 const versionUrl = v => `https://raw.githubusercontent.com/${S.versions.repo}/${v.sha}/${urlPath(v.path)}`;
 /** Under the card's picture: open beside the text, closed in one column (style.css .detail), where the card's text comes
@@ -963,13 +964,18 @@ function versionsOpen(id) {
 function versionsHtml(c, open) {
   if (!c.iv) return "";
   const box = (n, body) => `<details class="ver-box" data-id="${esc(c.id)}"${open ? " open" : ""}><summary>Image versions <span class="muted">${n}</span></summary>${body}</details>`;
-  if (!S.versions) return box(c.iv, `<p class="muted">Loading…</p>`);
+  if (!S.versions) return box(c.iv - (c.ivm || 0), `<p class="muted">Loading…</p>`);
   const vs = versionList(c);
   if (vs.length < 2) return "";
-  return box(vs.length, `
+  const item = (v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
+        <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`;
+  const rows = vs.map((v, i) => [v, i]), major = rows.filter(([v]) => !v.minor), minor = rows.filter(([v]) => v.minor);
+  const share = Math.round((S.versions.visible || 0.02) * 100);
+  // minor changes (owner 11-09): folded, never dropped (versions.json visible: AutoCroissant png_changes.VISIBLE)
+  const folded = minor.length ? `<details class="ver-minor"><summary data-tip="${esc(`Changes to under ${share}% of the card's pixels, with no change to its data`)}">${minor.length} minor change${minor.length > 1 ? "s" : ""}</summary><div class="ver-list" role="group" aria-label="Minor image versions, newest first">${minor.map(([v, i]) => item(v, i)).join("")}</div></details>` : "";
+  return box(major.length, `
     <div class="versions">
-      <div class="ver-list" role="group" aria-label="Image versions, newest first">${vs.map((v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
-        <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`).join("")}</div>
+      <div class="ver-list" role="group" aria-label="Image versions, newest first">${major.map(([v, i]) => item(v, i)).join("")}</div>${folded}
       <div class="ver-compare" id="ver-compare" aria-live="polite"><p class="muted">Pick a version to compare (↑ ↓).</p></div>
     </div>`);
 }
@@ -1755,9 +1761,9 @@ $("#account").addEventListener("click", () => act("edit-hub"));
 
 document.addEventListener("keydown", e => {
   const item = document.activeElement?.closest?.(".ver-item");
-  if (item && (e.key === "ArrowDown" || e.key === "ArrowUp")) {   // move through the version list
+  if (item && (e.key === "ArrowDown" || e.key === "ArrowUp")) {   // move through the version list (minor ones when open)
     e.preventDefault();
-    const next = e.key === "ArrowDown" ? item.nextElementSibling : item.previousElementSibling;
+    const all = $$(".ver-item", modal).filter(b => !b.closest(".ver-minor:not([open])")), next = all[all.indexOf(item) + (e.key === "ArrowDown" ? 1 : -1)];
     if (next) { next.focus(); next.click(); }
     return;
   }

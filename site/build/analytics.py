@@ -305,6 +305,18 @@ def exact(v, psd_commits):
     return psd_commits is not None and (int(at), name) in psd_commits
 
 
+TOKEN = re.compile(r"\[([0-9A-Za-z_ ]+)(?::[0-9A-Za-z_]+)?\]")   # an icon token ([fire], [light:tint]): its word
+PUNCT = re.compile(r"[.,;:!?\"\u201c\u201d\u2026()\[\]{}]|(?<=[^\W\d_])[-\u2010\u2011\u2013\u2014](?=[^\W\d_])")
+
+
+def text_key(text):
+    """An ability as its words: icon tokens as their word, letter case, punctuation (a dash between letters too),
+    apostrophes and spacing (line breaks too) left out. Texts with one key differ only in formatting (owner 11-09: one
+    text in the history, no change here). AutoCroissant changelog.text_key."""
+    words = TOKEN.sub(lambda m: m.group(1), text or "").casefold()
+    return "".join(PUNCT.sub("", words).replace("'", "").replace("\u2019", "").replace("\u2018", "").replace("_", "").split())
+
+
 def change(a, b, texts):
     """What changed from version a to version b ({} for nothing a page shows: art, a move, a re-read of the same text).
     texts = the card's history.json texts plus its current text: "text" holds their indices for the diff."""
@@ -325,11 +337,11 @@ def change(a, b, texts):
     if max(na, 1) != max(nb, 1):
         row["lines"] = [max(na, 1), max(nb, 1)]
     xa, xb = getattr(a, "ability", None) or "", getattr(b, "ability", None) or ""
-    if xa != xb:
-        index = {t: i for i, t in enumerate(texts)}
-        row["text"] = [index.get(xa), index.get(xb)]
-        if xa.split() == xb.split():
-            row["ws"] = True                      # spacing only
+    if text_key(xa) != text_key(xb):                # formatting alone is no change (owner 11-09)
+        index = {}
+        for i, t in enumerate(texts):             # a text's formatting variants: its history entry
+            index.setdefault(text_key(t), i)
+        row["text"] = [index.get(text_key(xa)), index.get(text_key(xb))]
         ra, rb = tag_runs(xa), tag_runs(xb)
         if sorted(ra) != sorted(rb):
             row["tags"] = [[x, y] for x, y in zip(ra, rb) if x != y] if len(ra) == len(rb) else [[" ".join(ra), " ".join(rb)]]

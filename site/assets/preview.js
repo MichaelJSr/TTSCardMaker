@@ -188,13 +188,13 @@ export function finishedToast(list) {
 export const editBytes = edit => new TextEncoder().encode(JSON.stringify(edit)).length;
 /** Why a preview no longer shows the card as it would be baked: [] or reasons. "edit": the fields the site would send
  *  now differ; "psd": the card's image changed since (the result's PNG blob, cards.json img being its first 16 hex
- *  digits; before a result, the card's ts and img at the dispatch). */
+ *  digits; before a result, the card's PSD blob and img at the dispatch: ts is "updated", which a PSD commit need not move). */
 export function staleWhy(entry, card, hash) {
   const why = [];
   if (entry.hash !== hash) why.push("edit");
   const png = entry.result?.base?.png_blob;
   const moved = png && card.img ? !png.startsWith(card.img)
-    : !!entry.base && ((entry.base.ts ?? null) !== (card.ts ?? null) || (entry.base.img ?? null) !== (card.img ?? null));
+    : !!entry.base && ((entry.base.blob ?? null) !== (card.blob ?? null) || (entry.base.img ?? null) !== (card.img ?? null));
   if (moved) why.push("psd");
   return why;
 }
@@ -410,7 +410,7 @@ export function createPreviews(app) {
     if (!ed.me) { app.signIn(`Sign in to preview ${c.name}'s image.`); return; }
     if (!Object.keys(edit).length) { app.toast("No changes on the card image to preview"); return; }
     if (editBytes(edit) > MAX_EDIT) { app.toast("This edit is over 16 KB: the preview takes less"); return; }
-    const request = newRequest(ed.me.login), entry = { card: c.id, key: c.key, name: c.name, request, edit, hash: hashOf(edit), base: { ts: c.ts ?? null, img: c.img ?? null }, at: Date.now(), state: "starting" };
+    const request = newRequest(ed.me.login), entry = { card: c.id, key: c.key, name: c.name, request, edit, hash: hashOf(edit), base: { blob: c.blob ?? null, img: c.img ?? null }, at: Date.now(), state: "starting" };
     set(remember(store, entry)); notify(c.id);
     try {
       const flow = `/repos/${repo()}/actions/workflows/${CONTRACT.workflow}`;

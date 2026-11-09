@@ -395,6 +395,94 @@ def load_checks(folder):
     return psd_records(data), data.get("cleared") or {}
 
 
+PNG_CHANGES_JSON = "png_changes.json"          # db/: each card PNG change's visibly changed share (AutoCroissant png_changes)
+PNG_RULE = 1                                   # its per-pixel rule (png_changes.RULE): a share by another rule is not read
+PNG_VISIBLE = 0.02                             # a share this or more shows (png_changes.VISIBLE); one not measured shows too
+
+
+def load_png_changes(folder):
+    """{"<old blob>..<new blob>": share of the card's pixels visibly changed (None: unreadable)} by PNG_RULE; {} before the
+    record (every change then shows)."""
+    try:
+        with open(os.path.join(folder, PNG_CHANGES_JSON), encoding="utf-8") as fh:
+            data = json.load(fh)
+    except FileNotFoundError:
+        return {}
+    except Exception as e:
+        warn(f"no picture changes: {e}")
+        return {}
+    return {k: v[0] for k, v in (data.get("pairs") or {}).items() if isinstance(v, list) and len(v) == 2 and v[1] == PNG_RULE}
+
+
+def picture_shown(changes, pair):
+    """Whether a PNG change (old blob, new blob) shows (owner 11-09: about 5% of the card's pixels; calibrated: PNG_VISIBLE):
+    a first upload, a share at PNG_VISIBLE or more, or one not measured (nothing hides before the record has it)."""
+    old, new = pair or (None, None)
+    if not old or not new:
+        return True
+    share = 0.0 if old == new else changes.get(f"{old}..{new}")
+    return share is None or share >= PNG_VISIBLE
+
+
+UNKNOWN_IF = (("NO STARS FOUND", "stars"), ("MISSPELT TYPE", "types"), ("NO ABILITY LAYER", "ability"))   # card_history
+
+
+def unknown_fields(v):
+    """What a reading could not know (AutoCroissant card_history.unknown): the title before parser 2, a field its parse
+    failed on."""
+    found = set()
+    if getattr(v, "parser_version", None) is None and not getattr(v, "display_name", None):
+        found.add("display_name")
+    for problem in getattr(v, "problems", None) or []:
+        found.update(k for prefix, k in UNKNOWN_IF if str(problem).startswith(prefix))
+    return found
+
+
+def real_change(a, b):
+    """Whether version b changed what the card is from version a (owner 11-09): its stats (a creature's too), stars, types,
+    name or ability beyond formatting (text_key). A field either reading could not know is no change."""
+    skip = unknown_fields(a) | unknown_fields(b)
+    la, lb = analytics.line_of(getattr(a, "stats", None)), analytics.line_of(getattr(b, "stats", None))
+    if la and lb and la != lb:
+        return True
+    ca = [analytics.line_of(x) for x in getattr(a, "creatures", None) or []]
+    cb = [analytics.line_of(x) for x in getattr(b, "creatures", None) or []]
+    if ca and cb and all(ca) and all(cb) and ca != cb:
+        return True
+    if "stars" not in skip and None not in (getattr(a, "stars", None), getattr(b, "stars", None)) and a.stars != b.stars:
+        return True
+    if "types" not in skip and Counter(getattr(a, "types", None) or []) != Counter(getattr(b, "types", None) or []):
+        return True
+    name = lambda v: getattr(v, "name", None) if "display_name" in skip else getattr(v, "display_name", None) or getattr(v, "name", None)
+    if name(a) and name(b) and text_key(name(a)) != text_key(name(b)):      # a title's letter case is formatting too
+        return True
+    return "ability" not in skip and text_key(getattr(a, "ability", None)) != text_key(getattr(b, "ability", None))
+
+
+def real_starts(chain):
+    """[(start, its commit or None)] of the card's first version and each later one that changed it (real_change); chain:
+    its versions oldest first, the current card last."""
+    dated = [v for v in chain if isinstance(getattr(v, "timestamp", None), (int, float))]
+    folded = [v for v, w in zip(dated, dated[1:]) if analytics.when(v) != analytics.when(w)] + dated[len(dated) - 1:]
+    start = lambda v: (analytics.when(v), (getattr(v, "version", None) or {}).get("from_commit"))
+    return [start(v) for i, v in enumerate(folded) if i == 0 or real_change(folded[i - 1], v)]
+
+
+def set_updated(cards, real, data_key, shown_at):
+    """Each card's ts ("updated", Recently updated) from its last real change (owner 11-09): the newest start of real
+    (real_starts of its data's card) and its PNG's newest change shown_at (a picture change that shows, made by no pass,
+    bake or guards commit); kept when neither is known. since goes when it is ts. Returns how many moved."""
+    moved = 0
+    for e in cards:
+        if e.get("ts"):
+            found = [t for t, _ in real.get(data_key(e), ())] + ([shown_at[e["png"]]] if e.get("png") in shown_at else [])
+            if found and max(found) != e["ts"]:
+                e["ts"], moved = max(found), moved + 1
+        if e.get("since") is not None and e.get("since") == e.get("ts"):
+            del e["since"]                        # the text started with the last change
+    return moved
+
+
 def merge_flags(entry, record, cleared):
     """A card's automatic flags (checks: {"hand": note, "bars": note}), beside the people's (flags); a person's that went
     is left out (its Card Edits entry stays, inert)."""
@@ -978,16 +1066,19 @@ def stat_of(stats, attr):
     return value if isinstance(value, int) and value >= 0 else None
 
 
+text_key = analytics.text_key
+
+
 def text_start(card, old, text):
     """The version the card's current text started at: the card, or the earliest of the versions just before it that
-    hold the same text (a stats or art change kept the text). None without a date. The card page dates its current
-    text by its start (analytics.when: cards.json since), not by ts."""
+    hold the same text, formatting aside (text_key; a stats or art change kept the text). None without a date. The card
+    page dates its current text by its start (analytics.when: cards.json since), not by ts."""
     if not isinstance(getattr(card, "timestamp", None), (int, float)):
         return None
-    start = card
+    start, key = card, text_key(text)
     dated = sorted((v for v in old or [] if isinstance(getattr(v, "timestamp", None), (int, float))), key=analytics.when)
     for v in reversed(dated):
-        if getattr(v, "ability", None) != text:
+        if not getattr(v, "ability", None) or text_key(v.ability) != key:
             break
         if analytics.when(v) < analytics.when(start):
             start = v
@@ -1015,23 +1106,34 @@ def renamed_into(old_stats, stats=()):
 
 
 def date_text(entry, card, old):
-    """entry's history (the card's older texts other than entry's ability, oldest first) and since (text_start's, when
-    not ts); each text's version and the one before it (_v: text_commits)."""
+    """entry's history (the card's older texts other than entry's ability, oldest first) and since (text_start's; dropped
+    when it is ts, set_updated); each text's version and the one before it (_v: text_commits). Consecutive versions
+    whose texts differ only in formatting (text_key) are one text: its last form, dated and linked by its first version
+    (owner 11-09; the card data keeps every reading)."""
     dated = sorted((v for v in old or [] if isinstance(getattr(v, "timestamp", None), (int, float))), key=analytics.when)
     prev = {id(v): p for v, p in zip(dated + [card], [None] + dated)}
-    versions = []
-    for v in old or []:
+    undated = [v for v in old or [] if not isinstance(getattr(v, "timestamp", None), (int, float))]
+    runs = []                                     # [key, first version, last text]
+    for v in undated + dated:
         text = getattr(v, "ability", None)
-        if text and text != entry["ability"] and all(x["ability"] != text for x in versions):
+        if not text:
+            continue
+        if runs and runs[-1][0] == text_key(text):
+            runs[-1][2] = text
+        else:
+            runs.append([text_key(text), v, text])
+    seen, versions = {text_key(entry["ability"]) if entry["ability"] else None}, []
+    for key, v, text in runs:
+        if key not in seen:                       # the current text's, or an earlier one listed
+            seen.add(key)
             versions.append({"ts": analytics.when(v) if getattr(v, "timestamp", None) is not None else None, "ability": text,
                              "_v": (v, prev.get(id(v)))})
     if versions:
         entry["history"] = sorted(versions, key=lambda x: x["ts"] or 0)
     start = text_start(card, old, entry["ability"])
-    since = None if start is None else analytics.when(start)
     entry["_v"] = (start, prev.get(id(start)))    # the current text's version
-    if since is not None and since != entry["ts"]:
-        entry["since"] = since                    # ts stays the last PSD commit ("updated", Recently updated)
+    if start is not None:
+        entry["since"] = analytics.when(start)
 
 
 def text_commits(e, lineage):
@@ -2579,9 +2681,11 @@ RECOMPRESSED = "Recompressed"                 # a bot commit's trailer, one per 
 # %aN/%aE through .mailmap, as the bot's %aN
 RENAMED = "Renamed"                           # a bake commit's trailer per file it renamed: "<old path> -> <new path>" (AutoCroissant
                                               # card_models.RENAMED: the editor's "Also rename the card's files")
+SWEEP = "Card-sweep"                          # a scripted pass's trailer (AutoCroissant changelog.SWEEP_TRAILER): maintenance
 HISTORY_FORMAT = (f"%x01%H%x09%ct%x09%aN%x09%aE%x09%s%n%x02%(trailers:key={EDIT_BY},valueonly,separator=%x1f)"
                   f"%n%x03%(trailers:key={RECOMPRESSED},valueonly,separator=%x1f)"
-                  f"%n%x04%(trailers:key={RENAMED},valueonly,separator=%x1f)")
+                  f"%n%x04%(trailers:key={RENAMED},valueonly,separator=%x1f)"
+                  f"%n%x05%(trailers:key={SWEEP},valueonly,separator=%x1f)")
 
 
 def unquote_path(path):
@@ -2591,12 +2695,13 @@ def unquote_path(path):
     return path
 
 
-def parse_history(text, last=None, renamed=None):
+def parse_history(text, last=None, renamed=None, sweeps=None):
     """`git log --raw --no-renames --no-abbrev --format=HISTORY_FORMAT` -> commits newest first: (sha, committer time, author
     name, author email, subject, [(status, old blob, new blob, path), ...], [Edit-by values: logins]).
     A bot commit's change of a PNG its Recompressed trailers name is left out: the same image, losslessly smaller.
     last (a dict): filled with {path: (commit that last changed it, its blob then)}, recompressions included.
-    renamed (a dict): filled with {sha: {new path: old path}} from a bot commit's Renamed trailers."""
+    renamed (a dict): filled with {sha: {new path: old path}} from a bot commit's Renamed trailers.
+    sweeps (a set): filled with the shas of commits with a Card-sweep trailer."""
     commits = []
     for chunk in text.split("\x01")[1:]:
         head, _, body = chunk.partition("\n")
@@ -2608,6 +2713,10 @@ def parse_history(text, last=None, renamed=None):
                 continue
             if line.startswith("\x03"):              # the Recompressed trailers' values: paths
                 same = {v.strip() for v in line[1:].split("\x1f") if v.strip()}
+                continue
+            if line.startswith("\x05"):              # a Card-sweep trailer: a scripted pass
+                if sweeps is not None and line[1:].strip("\x1f "):
+                    sweeps.add(sha)
                 continue
             if line.startswith("\x04"):              # the Renamed trailers' values: "<old> -> <new>"
                 told = [v.strip().partition(" -> ") for v in line[1:].split("\x1f")]
@@ -2628,33 +2737,36 @@ def parse_history(text, last=None, renamed=None):
     return commits
 
 
-def git_history(last=None, renamed=None):
-    """Every commit that touched a card PNG, a PSD or Card Edits.json (parse_history's shape; last and renamed as there). Commit
-    metadata and trees only, so CI's blob:none clone has it all; None in a shallow clone, which has no history to read."""
+def git_history(last=None, renamed=None, sweeps=None):
+    """Every commit that touched a card PNG, a PSD or Card Edits.json (parse_history's shape; last, renamed and sweeps as
+    there). Commit metadata and trees only, so CI's blob:none clone has it all; None in a shallow clone, which has no
+    history to read."""
     shallow = subprocess.run(["git", "-C", HISTORY_REPO, "rev-parse", "--is-shallow-repository"], capture_output=True, text=True).stdout.strip()
     if shallow == "true":
         log("warning: shallow clone, so no image versions and no commit counts (git fetch --unshallow --filter=blob:none to get them)")
         return None
     out = subprocess.run(["git", "-C", HISTORY_REPO, "-c", "core.quotePath=false", "log", "--raw", "--no-renames", "--no-abbrev",
                           f"--format={HISTORY_FORMAT}", "--", *HISTORY_PATHS], capture_output=True, text=True, check=True).stdout
-    return parse_history(out, last, renamed)
+    return parse_history(out, last, renamed, sweeps)
 
 
 # ---- image versions ----------------------------------------------------------------------------------
-def image_versions(paths, commits, renamed=None):
+def image_versions(paths, commits, renamed=None, pairs=None):
     """{current path: [(commit, path then), ...] newest first, one per content change}, commits as
     (sha, committer time, author, subject). Renames are followed, so folder moves keep their history: exact ones (same blob
     deleted and added in one commit), a move that also changed the image when that commit deleted exactly one PNG
     of the same file name (alnum, any case) and added only this one, and a rename the bake told (renamed: parse_history's,
-    a card renamed and redrawn in one commit). None without history."""
+    a card renamed and redrawn in one commit). pairs (a dict): filled with {(current path, sha): (blob before or None,
+    blob after)}. None without history."""
     if commits is None:
         return None
     tracked = {p: p for p in paths}               # path at the commit being read -> current path
     versions = {p: [] for p in paths}
+    pairs = {} if pairs is None else pairs
     file_name = lambda p: alnum(os.path.splitext(os.path.basename(p))[0])
     for sha, ts, author, _, subject, entries, _ in commits:
         commit = (sha, ts, author, subject)
-        adds, dels, mods = [], {}, []
+        adds, dels, mods, gone_blob = [], {}, [], {}
         for status, old, new, path in entries:
             if not path.lower().endswith(".png"):
                 continue
@@ -2662,12 +2774,15 @@ def image_versions(paths, commits, renamed=None):
                 adds.append((path, new))
             elif status == "D":
                 dels.setdefault(old, []).append(path)
+                gone_blob[path] = old
             elif status == "M":
-                mods.append(path)
-        for path in mods:
+                mods.append((path, old, new))
+        for path, old, new in mods:
             if path in tracked:
                 versions[tracked[path]].append((commit, path))
+                pairs[(tracked[path], sha)] = (old, new)
         changed = defaultdict(list)               # added with an image no delete here had, by file name
+        blob_of = dict(adds)
         for path, blob in sorted(adds, key=lambda a: a[0] not in tracked):     # tracked ones claim exact renames first
             renamed_from = dels.get(blob)
             if renamed_from:                      # moved without changing: keep following it under its old name
@@ -2686,10 +2801,13 @@ def image_versions(paths, commits, renamed=None):
                     continue
                 key = tracked.pop(path)
                 versions[key].append((commit, path))
+                pairs[(key, sha)] = (None, blob_of[path])
                 if told.get(path) in gone.get(file_name(told.get(path) or ""), ()):
                     tracked[told[path]] = key     # renamed: older versions under its old name
+                    pairs[(key, sha)] = (gone_blob.get(told[path]), blob_of[path])
                 elif len(added) == 1 and len(gone.get(name, ())) == 1:
                     tracked[gone[name][0]] = key  # moved and changed: older versions under its old name
+                    pairs[(key, sha)] = (gone_blob.get(gone[name][0]), blob_of[path])
     return versions
 
 
@@ -2716,6 +2834,26 @@ def commit_keys(row, people, by_login, row_of=None):
         return list(dict.fromkeys(row_of(e) or e for e in editors))
     key = who(name, email, people, by_login)
     return [key] if key else []
+
+
+PASS_GAP = 3600                               # s between one author's commits of one pass (a scripted pass in batches)
+
+
+def pass_commits(commits, found):
+    """{sha} of the commits of a pass: a run of one author's commits, each within PASS_GAP of the one before, whose card
+    images (found: image_versions) change on more than MASS_PASS cards in all (a template, token or badge pass, alone or
+    in batches). Maintenance for "updated" (set_updated)."""
+    size = Counter(sha for vs in found.values() for (sha, *_), _ in vs)
+    out, run = set(), []
+    for sha, ts, author, *_ in reversed(commits or ()):
+        if run and (author != run[-1][2] or ts - run[-1][1] > PASS_GAP):
+            if sum(size[c[0]] for c in run) > MASS_PASS:
+                out.update(c[0] for c in run)
+            run = []
+        run.append((sha, ts, author))
+    if sum(size[c[0]] for c in run) > MASS_PASS:
+        out.update(c[0] for c in run)
+    return out
 
 
 def mass_passes(found):
@@ -2747,7 +2885,7 @@ EVENT_KINDS = {"new", "changed", "art", "reparse", "moved", "renamed", "archived
                "baked", "bake-refused", "guard-png", "guard-fix"}   # AutoCroissant changelog.KINDS
 EVENT_KEYS = ("seq", "at", "build", "card_commit", "commit", "by", "edit_by", "kind", "card", "title", "card_type", "stars", "path",
               "from_path", "fields", "verdict", "buffs", "nerfs", "renamed_to", "moved_to", "restored_from",
-              "reason", "line", "pngs")    # what the tabs read; blob and the rest stay in db/
+              "reason", "line", "pngs", "minor")    # what the tabs read; blob and the rest stay in db/
 PUSH_KEYS = ("after", "before", "by", "at")
 AUTHOR_PATHS = {AUTHORS_PATH, "MDW/Card Authors.txt"}   # before the 2026-10-20 move too
 WEBSITE_SUBJECT = "Website edit"              # edit.js publish(): "Website edit: …" / "Website edits: n changes"
@@ -4588,23 +4726,36 @@ def main():
     for e in cards:
         if e.get("png") and e["png"] in tree:
             by_png.setdefault(e["png"], []).append(e)
-    last, renamed = {}, {}
-    commits = git_history(last, renamed)
+    last, renamed, sweeps, pairs = {}, {}, set(), {}
+    commits = git_history(last, renamed, sweeps)
     pin = lambda path: last[path][0] if path in tree and last.get(path, (None, None))[1] == tree[path] else None
     for e in cards:                               # deck.js: the TTS save's pinned links (AutoCroissant tts_save _pin_links)
         if e.get("png") and pin(e["png"]):
             e["pin"] = pin(e["png"])
-    found = image_versions(list(by_png), commits, renamed)
-    versions = {"available": found is not None, "repo": CARD_REPO, "commits": [], "cards": {}}
+    found = image_versions(list(by_png), commits, renamed, pairs)
+    versions = {"available": found is not None, "repo": CARD_REPO, "commits": [], "cards": {}, "minor": {}, "visible": PNG_VISIBLE}
+    changes = load_png_changes(data_dir)
+    data_key = lambda e: by_id[e["dup"]]["key"] if e.get("dup") in by_id and not e.get("variantOf") else e["key"]   # a copy: its original's
+    dated = lambda name: sorted((v for v in history_of(name) if isinstance(getattr(v, "timestamp", None), (int, float))), key=analytics.when)
+    real = {k: real_starts(dated(k) + [stats[k]]) for k in {data_key(e) for e in cards} if k in stats}
+    shown_at = {}                                 # PNG -> its newest change that counts for "updated"
     if found:
-        index = {}
+        index, mass = {}, pass_commits(commits, found)
         for png, vs in found.items():
-            rows = []
-            for (sha, ts, author, subject), path in vs:
+            rows, minor = [], []
+            starts = [s for e in by_png[png] for s in real.get(data_key(e), ())]
+            made = {c for _, c in starts if c}
+            for i, ((sha, ts, author, subject), path) in enumerate(vs):
                 if sha not in index:
                     index[sha] = len(versions["commits"])
                     versions["commits"].append([sha, ts, person(people, author), subject])
                 rows.append([index[sha]] + ([path] if path != png else []))
+                before = vs[i + 1][0][1] if i + 1 < len(vs) else float("-inf")
+                data = sha in made or any(before < t <= ts for t, _ in starts)     # the first picture since a data change
+                if not data and not picture_shown(changes, pairs.get((png, sha))):
+                    minor.append(i)               # folded (owner 11-09: nothing deleted)
+                elif sha not in sweeps and sha not in mass and author.lower() != BOT_AUTHOR.lower():
+                    shown_at[png] = max(shown_at.get(png, 0), ts)     # no pass, bake or guards' commit (maintenance)
             for e in by_png[png]:                 # fs: first upload (the oldest row): created's fallback (apply_created)
                 if rows:
                     e["fs"] = min(ts for (_, ts, _, _), _ in vs)
@@ -4612,10 +4763,16 @@ def main():
                 for e in by_png[png]:
                     versions["cards"][e["id"]] = rows
                     e["iv"] = len(rows)
+                    if minor:
+                        versions["minor"][e["id"]] = minor
+                        e["ivm"] = len(minor)
         first = min((c[1] for c in versions["commits"]), default=0)
         versions["since"] = first
         log(f"image versions: {sum(len(r) for r in versions['cards'].values())} versions of {len(versions['cards'])} cards "
-            f"from {len(versions['commits'])} commits, since {datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}")
+            f"({sum(len(m) for m in versions['minor'].values())} minor) from {len(versions['commits'])} commits, since "
+            f"{datetime.fromtimestamp(first, timezone.utc):%Y-%m-%d}; {len(changes)} picture changes measured")
+    moved = set_updated(cards, real, data_key, shown_at)
+    log(f"updated: {moved} of {sum(1 for e in cards if e.get('ts'))} cards dated by their last real change")
 
     apply_created(cards, parse_created())         # after fs: a card's first upload can be the earlier evidence
     detail_files = join_details(cards, records, tree, edits)

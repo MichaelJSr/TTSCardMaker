@@ -61,11 +61,12 @@ function whoOf(group) {
   if (!push) return [CARD_SYNC, group[0].at];
   return [push.by === CARD_SYNC ? BAKED : push.by || "Someone", push.at ?? group[0].at];
 }
-/** "1 new, 2 changed" */
+/** "1 new, 2 changed, 3 minor" (a minor event: an art change under the share that shows or a formatting-only text, the
+    card sync's "minor"; no post shows it) */
 export function countsOf(group) {
-  const counts = new Map();
-  for (const [kind, word] of COUNT_WORDS) { const n = group.filter(e => e.kind === kind).length; if (n) counts.set(word, (counts.get(word) || 0) + n); }
-  return [...counts].map(([word, n]) => `${n} ${word}`).join(", ");
+  const counts = new Map(), minor = group.filter(e => e.minor).length;
+  for (const [kind, word] of COUNT_WORDS) { const n = group.filter(e => e.kind === kind && !e.minor).length; if (n) counts.set(word, (counts.get(word) || 0) + n); }
+  return [...[...counts].map(([word, n]) => `${n} ${word}`), ...(minor ? [`${minor} minor`] : [])].join(", ");
 }
 /** The push's compare view (before...after), its commit without a before, else the build's run (link_of()) */
 export function linkOf(group, repo) {
@@ -154,7 +155,7 @@ export function eventHtml(e) {
     case "moved": return `<li>${title} moved to ${esc(folder(e.path) || "?")}${e.from_path ? ` <span class="muted">from ${esc(folder(e.from_path))}</span>` : ""}</li>`;
     case "archived": return `<li>${esc(e.title || e.card)} ${archiveTagHtml(e)}</li>`;
     case "restored": return `<li>${title} <span class="muted">(PSD back)</span></li>`;
-    case "art": return `<li>${title}</li>`;
+    case "art": return `<li>${title}${e.minor ? ' <span class="muted">(a small picture change)</span>' : ""}</li>`;
     case "baked": case "bake-refused": case "guard-png": case "guard-fix": {   // the bake's and the guards' own line
       const why = e.reason || e.line || "";
       return `<li>${title}${why ? `: ${esc(why)}` : ""}${e.kind === "baked" && e.pngs?.length ? ' <span class="muted">(PNG re-made)</span>' : ""}</li>`;
@@ -167,19 +168,22 @@ export function eventHtml(e) {
 }
 
 // ---- one push ---------------------------------------------------------------------------------------------------
-/** A push's block: the post's title linked to the push, its sections, then the re-reads. kinds: only those (a filter) */
+/** A push's block: the post's title linked to the push, its sections, then the re-reads and the minor changes (folded).
+    kinds: only those (a filter) */
 export function groupHtml(group, repo, kinds = null) {
   const shown = kinds ? group.filter(e => kinds.includes(e.kind)) : group;
   if (!shown.length) return "";
   const [who, at] = whoOf(group), link = linkOf(group, repo);
   const head = `${esc(who)}, ${esc(when(at))}`;
+  const major = shown.filter(e => !e.minor), minor = shown.filter(e => e.minor);
   const secs = SECTIONS.map(([ks, heading]) => {
-    const lines = shown.filter(e => ks.includes(e.kind));
+    const lines = major.filter(e => ks.includes(e.kind));
     return lines.length ? `<div class="cl-sec"><h4>${esc(heading)}</h4><ul class="cl-lines">${lines.map(eventHtml).join("")}</ul></div>` : "";
   }).join("");
-  const rereads = shown.filter(e => e.kind === "reparse");
+  const rereads = major.filter(e => e.kind === "reparse");
   const tail = rereads.length ? `<details class="cl-sec"><summary>The parser re-read ${plural(rereads.length, "card")}</summary><ul class="cl-lines">${rereads.map(eventHtml).join("")}</ul></details>` : "";
-  return `<section class="panel cl-push"><h3>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${head}</a>` : head}<span class="muted">: ${esc(countsOf(group))}</span></h3>${secs}${tail}</section>`;
+  const folded = minor.length ? `<details class="cl-sec cl-minor"><summary data-tip="Small picture changes and text changes in formatting only: not posted in Discord">${plural(minor.length, "minor change")}</summary><ul class="cl-lines">${minor.map(eventHtml).join("")}</ul></details>` : "";
+  return `<section class="panel cl-push"><h3>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${head}</a>` : head}<span class="muted">: ${esc(countsOf(group))}</span></h3>${secs}${tail}${folded}</section>`;
 }
 /** Groups under a heading per day (Pacific), newest first by time (a push split across builds, or one older than the
     last build's, keeps one heading per day), then by seq */
