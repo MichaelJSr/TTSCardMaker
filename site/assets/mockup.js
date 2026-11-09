@@ -234,7 +234,7 @@ export function alignOf(spans, x0, x1) {
  *  their neighbours, blended across cells). lines ([[x0, y0, x1, y1]] px): only edges in them (grown by `reach`) count,
  *  and gaps up to `close` px between edges on a row are filled too (a badge's pill, the inside of thick letters).
  *  Returns the colours read on the way: {bg, fill, stroke | null} as [r, g, b]. */
-export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines = null, close = 0 } = {}) {
+export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines = null, close = 0, fill = null } = {}) {
   const [x0, y0, x1, y1] = px(box, W, H), w = x1 - x0, h = y1 - y0;
   if (w < 2 || h < 2) return null;
   const L = luma(data), mask = new Uint8Array(w * h);
@@ -288,7 +288,7 @@ export function erase(data, W, H, box, { reach = 3, cell = 10, edge = 40, lines 
       data[i + k] = (at(cx, cy, k) * (1 - tx) + at(cx + 1, cy, k) * tx) * (1 - ty) + (at(cx, cy + 1, k) * (1 - tx) + at(cx + 1, cy + 1, k) * tx) * ty;
     }
   }
-  return { bg: bg.map(Math.round), ...textColours(masked, bg) };
+  return { bg: bg.map(Math.round), ...textColours(masked, bg, fill) };
 }
 function dilate(mask, w, h, r) {                     // square dilation, separable
   if (r < 1) return;
@@ -301,12 +301,18 @@ function dilate(mask, w, h, r) {                     // square dilation, separab
 }
 /** The text's fill and outline from its pixels [lum, r, g, b]: on a dark background the brightest ones fill and the
  *  darkest outline (when darker than the background), on a light one the other way round. */
-export function textColours(masked, bg) {
-  if (masked.length < 8) return { fill: null, stroke: null };
+export function textColours(masked, bg, known = null) {
+  if (masked.length < 8) return { fill: known, stroke: null };
   const bgL = (bg[0] * 77 + bg[1] * 150 + bg[2] * 29) >> 8, s = [...masked].sort((a, b) => a[0] - b[0]), n = Math.max(1, Math.round(s.length * 0.12));
   const avg = part => [1, 2, 3].map(k => Math.round(part.reduce((t, p) => t + p[k], 0) / part.length));
   const lum = part => part.reduce((t, p) => t + p[0], 0) / part.length;
   const dark = s.slice(0, n), light = s.slice(-n);
+  const seen = known && masked.filter(p => Math.max(...known.map((v, k) => Math.abs(p[k + 1] - v))) <= 48).length >= 0.04 * masked.length;
+  if (seen) {                                         // the record's fill, found in the text: the outline past the background
+    const kL = (known[0] * 77 + known[1] * 150 + known[2] * 29) >> 8;
+    if (kL >= bgL) return { fill: known, stroke: lum(dark) < bgL - 25 ? avg(dark) : kL - bgL < 40 && lum(light) > kL + 50 ? avg(light) : null };
+    return { fill: known, stroke: lum(light) > bgL + 25 ? avg(light) : lum(dark) < Math.min(bgL, kL) - 50 ? avg(dark) : null };
+  }
   return bgL < 140 ? { fill: avg(light), stroke: lum(dark) < bgL - 25 ? avg(dark) : null }
     : { fill: avg(dark), stroke: lum(light) > bgL + 25 ? avg(light) : null };
 }
@@ -813,6 +819,20 @@ export function oneColour(rec, path) {
 }
 const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
 const hexRgb = h => (/^#[0-9a-f]{6}$/i.test(h || "") ? [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)) : null);
+/** A record text layer's main fill [r, g, b]: the colour most of its letters are in (with those within 40 levels, as
+ *  build_site INK_NEAR) when that is half of them or more; null without one, or under an enabled overlay (oneColour). */
+export function mainInk(rec, t) {
+  if (!t?.layer || oneColour(rec, t.layer)) return null;
+  const cs = Array.isArray(t.colors) && t.colors.length ? t.colors : [t.color], text = String(t.text ?? "");
+  if (!Array.isArray(t.runs) || !t.runs.length) return cs.length === 1 ? hexRgb(cs[0]) : null;
+  const n = new Map();
+  for (const [a, b, i] of t.runs) for (let x = a; x < b; x++) if (text[x] && !/\s/.test(text[x])) n.set(cs[i], (n.get(cs[i]) || 0) + 1);
+  const best = [...n].sort((x, y) => y[1] - x[1])[0], main = best && hexRgb(best[0]);
+  if (!main) return null;
+  let mine = 0, all = 0;
+  for (const [c, k] of n) { const v = hexRgb(c); all += k; if (v && Math.max(...v.map((x, j) => Math.abs(x - main[j]))) <= 40) mine += k; }
+  return mine >= 0.5 * all ? main : null;
+}
 
 // ---- drawing (canvas; the browser)
 const fontFaces = new Map();                          // font name -> Promise<family | "">
@@ -934,7 +954,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       const strayTop = seen.length ? Math.min(area.box[1], barsBottom + 0.004 * H) : own ? area.box[1] : (TEMPLATES[shape].ability[1] - 0.06) * H;   // stat rows not seen where the template has them: look higher
       const gone = role === "name" || part ? (role === "name" ? b.lines : eraseLines(b)) : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name or one layer: its own lines
       const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
-      const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25 });   // in the lines only: dim words too
+      const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer) });   // in the lines only: dim words too
       if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
       jobs.push({ role, text, old, label, area, found: b, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc });
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
