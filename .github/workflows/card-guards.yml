@@ -152,8 +152,8 @@ jobs:
 
       # In the background beside the card checkout (in RUNNER_TEMP: that checkout empties the workspace): BOT_FILES at the
       # bot's main, the token in a header, never saved; in check, the data's render and spot records too (db/ on the data
-      # branch, Card sync's), which the guards' renders and conversions read (AutoCroissant psd_edit.RECORDS_DIR; one not
-      # read: {}). Bot waits for them.
+      # branch, Card sync's; 3 tries), which the guards' renders and conversions read (AutoCroissant psd_edit.RECORDS_DIR;
+      # one not read: {}). Bot waits for them.
       - &bot-start
         name: Bot start
         shell: bash
@@ -175,13 +175,15 @@ jobs:
           mkdir -p "$dir"
           echo "CARD_RECORDS_DIR=$dir" >> "$GITHUB_ENV"
           ( for f in render_record.json spot_record.json; do
-              { if timeout -k 2 10 gh api -H "Accept: application/vnd.github.raw" "repos/$GITHUB_REPOSITORY/contents/db/$f?ref=data" > "$dir/$f.part" 2> /dev/null \
-                    && jq -e 'type == "object"' "$dir/$f.part" > /dev/null; then
-                  mv "$dir/$f.part" "$dir/$f"
-                else
+              { for try in 1 2 3; do
+                  if timeout -k 2 20 gh api -H "Accept: application/vnd.github.raw" "repos/$GITHUB_REPOSITORY/contents/db/$f?ref=data" > "$dir/$f.part" 2> /dev/null \
+                      && jq -e 'type == "object"' "$dir/$f.part" > /dev/null; then
+                    mv "$dir/$f.part" "$dir/$f"
+                    break
+                  fi
                   rm -f "$dir/$f.part"
-                  echo "::warning::db/$f not read from the data branch: renders go without it"
-                fi; } &
+                  if [ "$try" = 3 ]; then echo "::warning::db/$f not read from the data branch: renders go without it"; else sleep "$try"; fi
+                done; } &
             done
             wait; touch "$RUNNER_TEMP/records.done" ) < /dev/null > "$RUNNER_TEMP/records.log" 2>&1 &
 
@@ -304,14 +306,14 @@ jobs:
             fi
           done
 
-      # The clone in bot/ and the records once done (15 s at most); a clone failed or late: checked out as ever
+      # The clone in bot/ (15 s at most) and the records (75) once done; a clone failed or late: checked out as ever
       - &bot
         name: Bot
         id: bot
         shell: bash
         run: |
-          while { [ ! -s "$RUNNER_TEMP/bot.code" ] || { [ -n "${CARD_RECORDS_DIR:-}" ] && [ ! -f "$RUNNER_TEMP/records.done" ]; }; } \
-              && [ "$SECONDS" -lt 15 ]; do sleep 0.02; done
+          while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ "$SECONDS" -lt 15 ]; do sleep 0.02; done
+          while [ -n "${CARD_RECORDS_DIR:-}" ] && [ ! -f "$RUNNER_TEMP/records.done" ] && [ "$SECONDS" -lt 75 ]; do sleep 0.05; done
           cat "$RUNNER_TEMP/records.log" 2> /dev/null || true
           if [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] && mv "$RUNNER_TEMP/bot" bot; then
             echo "ok=true" >> "$GITHUB_OUTPUT"
