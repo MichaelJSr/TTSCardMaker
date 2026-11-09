@@ -50,8 +50,8 @@
    Card sync, were cancelled, are absent or unreadable. A follow-up's wait ends at its guards run's Landed or the check
    job's end (never another job's), holds nothing, slows to 15 s looks after 2 minutes and stops at 60. card-guards.yml's
    side: the names Card sync reads, Plan's fixes (a push in on mode with writes), the check job's Start Card sync right
-   after Fixes to land with its run id, Follow up's dispatch with fixes whether Land landed or ran (tried 3 times) unless
-   that start did.
+   after Fixes to land with nothing to convert (by the API, its run id kept), Follow up's dispatch with fixes whether Land
+   landed or ran (tried 3 times) unless that start did and neither lane of its run was cancelled.
 Exits 1 when a case gets the wrong answer.
 """
 import json
@@ -1357,6 +1357,7 @@ def lane_cases(flow: dict) -> None:
               'case $path in\n'
               '  */card-guards.yml/runs*) jq -r "$q" <<< "$FAKE_GUARDS" ;;\n'
               '  */jobs) id=$(sed -n "s|.*/runs/\\([0-9]*\\)/jobs|\\1|p" <<< "$path"); jq -r "$q" "$FAKE_JOBS/$id.json" ;;\n'
+              '  */dispatches) printf %s "$FAKE_DISPATCH" ;;\n'
               'esac\n')
         write(os.path.join(fake, "sleep"), "#!/bin/bash\n")
         for name in ("gh", "sleep"):
@@ -1454,18 +1455,30 @@ def lane_cases(flow: dict) -> None:
             "functions": {"always": lambda: True}}))
         check([cond("true", ""), cond("", "true"), cond("", "")] == [True, True, False] and "steps.plan.outputs.fixes" in gplan["run"] + str(guards["jobs"]["check"]["outputs"]),
               "guards Follow up: after Land, or with fixes even when Land never ran")
+        lane = lambda name, conclusion: {"name": name, "status": "completed" if conclusion else "queued", "conclusion": conclusion}  # noqa: E731
+        for rid, doc in ((71, [lane("Card data", None), lane("Bake and save", None)]),
+                         (72, [lane("Card data", "success"), lane("Bake and save", "cancelled")]),
+                         (73, [lane("Card data", "cancelled"), lane("Bake and save", None)]),
+                         (74, [lane("Card data", "success"), lane("Bake and save", "success"), lane("Card data after the bake", "cancelled")])):
+            write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": doc}))
         for env_, fails, want_runs, want_code, what in (
                 ({"SHA": "a" * 40}, 0, 1, 0, "landed: Card sync started"),
                 ({"FIXES": "true"}, 0, 1, 0, "fixes, nothing landed: Card sync still started (the push's main lane skipped)"),
                 ({"FIXES": "true", "SHA": "a" * 40}, 2, 3, 0, "fixes: tried again, started on the third"),
                 ({"FIXES": "true"}, 3, 3, 1, "fixes, never started: red, said"),
-                ({"FIXES": "true", "SHA": "a" * 40, "EARLY": "true"}, 0, 0, 0, "fixes, started first: none again"),
+                ({"FIXES": "true", "SHA": "a" * 40, "EARLY": "true", "EARLY_RUN": "71"}, 0, 0, 0, "fixes, started first, lanes queued: none again"),
+                ({"FIXES": "true", "SHA": "a" * 40, "EARLY": "true", "EARLY_RUN": "74"}, 0, 0, 0, "started first, only its after job replaced: none again"),
+                ({"FIXES": "true", "SHA": "a" * 40, "EARLY": "true", "EARLY_RUN": "72"}, 0, 1, 0, "started first, its main lane replaced: one more"),
+                ({"FIXES": "true", "EARLY": "true", "EARLY_RUN": "73"}, 0, 1, 0, "started first, its data lane replaced: one more"),
+                ({"FIXES": "true", "EARLY": "true", "EARLY_RUN": ""}, 0, 1, 0, "started first, no run id: one more"),
+                ({"FIXES": "true", "EARLY": "true", "EARLY_RUN": "71", "FAKE_FAIL": "1"}, 0, 1, 0, "started first, its jobs not read: one more"),
                 ({}, 0, 0, 0, "nothing landed, no fixes: nothing started")):
             if os.path.exists(calls):
                 os.remove(calls)
             write(os.path.join(out_dir, "report-landed.md"), "landed\n")
             e = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "OUT": out_dir, "MODE": "on", "SHA": "", "ALREADY": "0",
-                 "COMMENT": "7", "TOLD_BEFORE": "", "FIXES": "", "LAND_RAN": "", "FAKE_FAILS": str(fails), "GITHUB_RUN_ATTEMPT": "1", **env_}
+                 "COMMENT": "7", "TOLD_BEFORE": "", "FIXES": "", "LAND_RAN": "", "FAKE_FAILS": str(fails), "GITHUB_RUN_ATTEMPT": "1",
+                 "FAKE_JOBS": jobs_dir, **env_}
             code, text, out = run_step(guards["jobs"]["post"], "follow", tmp, e, tmp)
             asked = open(calls).read().splitlines() if os.path.exists(calls) else []
             starts_ = [a for a in asked if a.startswith("workflow run card-sync.yml") and "bake=pending" in a]
@@ -1474,15 +1487,27 @@ def lane_cases(flow: dict) -> None:
         early = step(guards["jobs"]["check"], "early")
         if os.path.exists(calls):
             os.remove(calls)
-        code, text, out = run_step(guards["jobs"]["check"], "early", tmp, {"PATH": f"{fake}:{os.environ['PATH']}", "GITHUB_RUN_ID": "77"}, tmp)
+        reply = json.dumps({"workflow_run_id": 4242, "run_url": "u", "html_url": "h"})
+        got = []
+        for answer in (reply, ""):                        # the run's details, or none (a 204): started, no id
+            if os.path.exists(calls):
+                os.remove(calls)
+            code, text, out = run_step(guards["jobs"]["check"], "early", tmp, {"PATH": f"{fake}:{os.environ['PATH']}", "GITHUB_RUN_ID": "77",
+                                                                               "GH_REPO": "o/cards", "FAKE_DISPATCH": answer}, tmp)
+            got.append((code, out.get("started"), out.get("run")))
         asked = open(calls).read().splitlines() if os.path.exists(calls) else []
         at = guards["jobs"]["check"]["steps"].index(early)
-        check(code == 0 and out.get("started") == "true" and asked == ["workflow run card-sync.yml -f dry_run=false -f bake=pending -f guards=77"]
+        check(got == [(0, "true", "4242"), (0, "true", "")]
+              and asked == ["api --method POST repos/o/cards/actions/workflows/card-sync.yml/dispatches -f ref=main -F return_run_details=true "
+                            "-f inputs[dry_run]=false -f inputs[bake]=pending -f inputs[guards]=77"]
               and [s.get("name") for s in guards["jobs"]["check"]["steps"][at - 1:at + 2:2]] == [mark["env"]["FIXES"], mark["env"]["DECIDED"]]
-              and early["if"] == "${{ !cancelled() && steps.plan.outputs.fixes == 'true' }}" and early.get("continue-on-error") == "true"
+              and early["if"] == "${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise == 0 }}"
+              and early.get("continue-on-error") == "true"
               and guards["jobs"]["check"]["outputs"]["early"] == "${{ steps.early.outputs.started }}"
-              and follow["env"]["EARLY"] == "${{ needs.check.outputs.early }}",
-              "guards Start Card sync: the check job's, right after Fixes to land with fixes, this run's id as guards; failed, Follow up starts it")
+              and guards["jobs"]["check"]["outputs"]["early_run"] == "${{ steps.early.outputs.run }}"
+              and follow["env"]["EARLY"] == "${{ needs.check.outputs.early }}" and follow["env"]["EARLY_RUN"] == "${{ needs.check.outputs.early_run }}",
+              f"guards Start Card sync: the check job's, right after Fixes to land with fixes and nothing to convert, this run's id as guards, "
+              f"its run id by the API; failed, Follow up starts it ({got})")
 
 
 def main():

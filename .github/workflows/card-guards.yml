@@ -24,8 +24,9 @@
 # card pushed again is left to that push's run, a write that did not land is told (in report mode, the PNG the bot would
 # make). It never reverts or rejects a push. A run that fails tells the standards channel once per failure streak (a
 # cancel by hand does not). One main lane per guarded push (P-2): a push with fixes to land (on) marks its check job
-# ("Fixes to land"); that push's Card sync run skips its main lane, and the check job starts Card sync right after the
-# mark (that run sets up, then waits for Landed), else the post job's Follow up starts it, landed or not.
+# ("Fixes to land"); that push's Card sync run skips its main lane. With nothing to convert the check job starts Card sync
+# right after the mark (that run sets up, then waits for Landed; Follow up starts another if a newer run took a lane's
+# place), else the post job's Follow up starts it, landed or not.
 # The card packages (AutoCroissant requirements-cards.txt, the psd-tools fork's one pin) install from the card workflows'
 # venv cache (.github/actions/cards-python); the fonts from the card-fonts- cache, as Card sync's.
 #
@@ -103,6 +104,7 @@ jobs:
       fixes: ${{ steps.plan.outputs.fixes }}
       card_errors: ${{ steps.plan.outputs.card_errors }}
       early: ${{ steps.early.outputs.started }}
+      early_run: ${{ steps.early.outputs.run }}
       land_ran: ${{ steps.land.outputs.ran }}
       land_sha: ${{ steps.land.outputs.sha }}
       land_already: ${{ steps.land.outputs.already }}
@@ -372,19 +374,22 @@ jobs:
         shell: bash
         run: echo "This push's fixes land below; the Card sync run started next bakes and saves them."
 
-      # With fixes: Card sync at once, with this run's id (its lanes set up while the guards land, then wait for Landed).
-      # Not started: Follow up starts it.
+      # With fixes and nothing to convert (Land follows in seconds): Card sync at once, with this run's id (its lanes set
+      # up while the guards land, then wait for Landed); its run id for Follow up. A Normalise would hold card-data and
+      # card-main for minutes: then, or not started, Follow up starts it.
       - name: Start Card sync
         id: early
-        if: ${{ !cancelled() && steps.plan.outputs.fixes == 'true' }}
+        if: ${{ !cancelled() && steps.plan.outputs.fixes == 'true' && steps.plan.outputs.normalise == 0 }}
         continue-on-error: true
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh workflow run card-sync.yml -f dry_run=false -f bake=pending -f "guards=$GITHUB_RUN_ID"
+          out=$(gh api --method POST "repos/$GH_REPO/actions/workflows/card-sync.yml/dispatches" -f ref=main -F return_run_details=true \
+            -f "inputs[dry_run]=false" -f "inputs[bake]=pending" -f "inputs[guards]=$GITHUB_RUN_ID")
           echo "started=true" >> "$GITHUB_OUTPUT"
+          echo "run=$(jq -r '.workflow_run_id // ""' <<< "$out" 2> /dev/null)" >> "$GITHUB_OUTPUT"
 
       # The verdict is in: Card sync's wait ends here (by this name), not at the job's end. Keep it after Fixes to land.
       - name: Decided
@@ -671,8 +676,9 @@ jobs:
       # and again by a re-run that finds the writes already landed (its earlier attempt's may not have started; both
       # queue, so a second start is harmless). With fixes it always starts one, landed or not, Land broken or not: this
       # push's own Card sync run skipped its main lane for it (Card sync's "Guards' fixes"); none when the check job's
-      # Start Card sync did (that run waits for Landed). The comment is rewritten with what landed, what did not and
-      # why (a broken Land still says so).
+      # Start Card sync did (that run waits for Landed), unless its jobs are not read or a lane of it was cancelled: a
+      # newer run took its place in the queue, maybe before Landed, and synced main without the fixes. The comment is
+      # rewritten with what landed, what did not and why (a broken Land still says so).
       - name: Follow up
         id: follow
         if: always() && (needs.check.outputs.land_ran == 'true' || needs.check.outputs.fixes == 'true')
@@ -686,12 +692,18 @@ jobs:
           FIXES: ${{ needs.check.outputs.fixes }}
           LAND_RAN: ${{ needs.check.outputs.land_ran }}
           EARLY: ${{ needs.check.outputs.early }}
+          EARLY_RUN: ${{ needs.check.outputs.early_run }}
         run: |
           refresh=ok start=""
           [ -n "$SHA" ] && start=true
           [ "$FIXES" = true ] && start=true
           if [ "$MODE" = on ] && [ "${GITHUB_RUN_ATTEMPT:-1}" -gt 1 ] && [ "${ALREADY:-0}" -gt 0 ]; then start=true; fi
-          [ "$EARLY" = true ] && start=""
+          if [ "$EARLY" = true ]; then
+            lost=1
+            [ -z "$EARLY_RUN" ] || lost=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$EARLY_RUN/jobs" \
+              --jq '[.jobs[] | select((.name == "Card data" or .name == "Bake and save") and .conclusion == "cancelled")] | length') || lost=1
+            if [ "${lost:-1}" = 0 ]; then start=""; else echo "Card sync run ${EARLY_RUN:-?}: a lane cancelled or not read: one more."; fi
+          fi
           started=""
           if [ -n "$start" ]; then
             for wait in 0 10 30; do               # tried 3 times: with fixes no other run bakes this push

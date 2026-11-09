@@ -26,9 +26,10 @@
 # safety cron (GitHub starts it late or not at all: every 4-10 h)
 # catches what the chain leaves: unposted events, a lane that failed, a chain that stopped.
 # One main lane per guarded push (owner, 2026-10-25, P-2): a push's main lane skips itself when that push's guards have
-# fixes to land (card-guards.yml's "Fixes to land"); their check job starts Card sync right after that mark (input
-# guards: both lanes set up while the guards land, then wait for its Landed), else their Follow up starts it once they
-# land (or land nothing), so its one main lane bakes and saves the fixed PNGs. The schedule's and a chained run's skip
+# fixes to land (card-guards.yml's "Fixes to land"); with nothing to convert their check job starts Card sync right
+# after that mark (input guards: both lanes set up while the guards land, then wait for its Landed; a lane of it a newer
+# run replaced is started again by Follow up), else their Follow up starts it once they land (or land nothing), so its
+# one main lane bakes and saves the fixed PNGs. The schedule's and a chained run's skip
 # theirs while any guards run with fixes is unfinished.
 # Every stage runs in one environment on Python 3.14 with the card packages (AutoCroissant requirements-cards.txt, the
 # psd-tools fork's one pin) from the card workflows' venv cache.
