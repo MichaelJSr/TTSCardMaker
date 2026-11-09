@@ -144,14 +144,14 @@ jobs:
             touch "$RUNNER_TEMP/reads.done"; } < /dev/null > "$RUNNER_TEMP/reads.log" 2>&1 &
 
       # The venv as cards-python restores it on a hit, without its setup-python and setup-uv downloads (about 1 s): the
-      # image's newest 3.14.x (setup-python's pick from the tool cache), the same key, path and check.
+      # image's newest 3.14.x (setup-python's pick from the tool cache), the same key (its oxipng tag too), path and check.
       - id: venv
         shell: bash
         run: |
           py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
           sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' bot/requirements-cards.txt | sha256sum | cut -d' ' -f1)
           if [ -n "$py" ]; then
-            echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")" >> "$GITHUB_OUTPUT"
+            echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")-ox10.2.1" >> "$GITHUB_OUTPUT"
             echo "lib=$py/lib" >> "$GITHUB_OUTPUT"
           fi
 
