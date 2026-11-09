@@ -149534,7 +149534,7 @@
           "Type": 0
         },
         "1012": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Bone.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Bone.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -149543,7 +149543,7 @@
           "Type": 0
         },
         "1013": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Black.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Black.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -149552,7 +149552,7 @@
           "Type": 0
         },
         "1016": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Blood.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Blood.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -149561,7 +149561,7 @@
           "Type": 0
         },
         "1014": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Gold.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Gold.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -149570,7 +149570,7 @@
           "Type": 0
         },
         "1015": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_White.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_White.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -149669,7 +149669,7 @@
           "Type": 0
         },
         "1421": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/611093476910b860a4235e4fffb5a437cea9b62a/Auxiliary/Minions/Dark_Esau.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Dark_Esau.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -149885,7 +149885,7 @@
           "Type": 0
         },
         "1725": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d4f2b91173d1e3d1b627832da4a0c2ec0940d2ff/Auxiliary/Minions/Tainted_Soul.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Tainted_Soul.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -153423,7 +153423,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1012": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Bone.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Bone.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -153481,7 +153481,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1013": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Black.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Black.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -153539,7 +153539,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1016": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Blood.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Blood.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -153597,7 +153597,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1014": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Gold.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Gold.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -153655,7 +153655,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1015": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_White.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_White.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -154293,7 +154293,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1421": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/611093476910b860a4235e4fffb5a437cea9b62a/Auxiliary/Minions/Dark_Esau.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Dark_Esau.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -155685,7 +155685,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1725": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d4f2b91173d1e3d1b627832da4a0c2ec0940d2ff/Auxiliary/Minions/Tainted_Soul.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Tainted_Soul.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -156386,7 +156386,7 @@
           "Type": 0
         },
         "1012": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Bone.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Bone.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156395,7 +156395,7 @@
           "Type": 0
         },
         "1013": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Black.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Black.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156404,7 +156404,7 @@
           "Type": 0
         },
         "1016": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Blood.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Blood.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156413,7 +156413,7 @@
           "Type": 0
         },
         "1014": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Gold.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Gold.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156422,7 +156422,7 @@
           "Type": 0
         },
         "1015": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_White.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_White.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156521,7 +156521,7 @@
           "Type": 0
         },
         "1421": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/611093476910b860a4235e4fffb5a437cea9b62a/Auxiliary/Minions/Dark_Esau.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Dark_Esau.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -156737,7 +156737,7 @@
           "Type": 0
         },
         "1725": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d4f2b91173d1e3d1b627832da4a0c2ec0940d2ff/Auxiliary/Minions/Tainted_Soul.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Tainted_Soul.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -160275,7 +160275,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1012": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Bone.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Bone.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -160333,7 +160333,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1013": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Black.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Black.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -160391,7 +160391,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1016": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Blood.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Blood.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -160449,7 +160449,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1014": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Gold.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Gold.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -160507,7 +160507,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1015": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_White.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_White.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -161145,7 +161145,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1421": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/611093476910b860a4235e4fffb5a437cea9b62a/Auxiliary/Minions/Dark_Esau.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Dark_Esau.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -162537,7 +162537,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1725": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d4f2b91173d1e3d1b627832da4a0c2ec0940d2ff/Auxiliary/Minions/Tainted_Soul.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Tainted_Soul.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -163238,7 +163238,7 @@
           "Type": 0
         },
         "1012": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Bone.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Bone.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -163247,7 +163247,7 @@
           "Type": 0
         },
         "1013": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Black.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Black.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -163256,7 +163256,7 @@
           "Type": 0
         },
         "1016": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Blood.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Blood.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -163265,7 +163265,7 @@
           "Type": 0
         },
         "1014": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Gold.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Gold.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -163274,7 +163274,7 @@
           "Type": 0
         },
         "1015": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_White.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_White.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -163373,7 +163373,7 @@
           "Type": 0
         },
         "1421": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/611093476910b860a4235e4fffb5a437cea9b62a/Auxiliary/Minions/Dark_Esau.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Dark_Esau.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -163589,7 +163589,7 @@
           "Type": 0
         },
         "1725": {
-          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d4f2b91173d1e3d1b627832da4a0c2ec0940d2ff/Auxiliary/Minions/Tainted_Soul.png",
+          "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Tainted_Soul.png",
           "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
           "NumWidth": 1,
           "NumHeight": 1,
@@ -167127,7 +167127,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1012": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Bone.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Bone.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -167185,7 +167185,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1013": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Black.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Black.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -167243,7 +167243,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1016": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Blood.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Blood.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -167301,7 +167301,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1014": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_Gold.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_Gold.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -167359,7 +167359,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1015": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/f9a2091ba9db1f4610b307448ee8e3a7700bcc57/Auxiliary/Minions/Clot_White.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Clot_White.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -167997,7 +167997,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1421": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/611093476910b860a4235e4fffb5a437cea9b62a/Auxiliary/Minions/Dark_Esau.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Dark_Esau.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
@@ -169389,7 +169389,7 @@
           "SidewaysCard": false,
           "CustomDeck": {
             "1725": {
-              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/d4f2b91173d1e3d1b627832da4a0c2ec0940d2ff/Auxiliary/Minions/Tainted_Soul.png",
+              "FaceURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e29ab18c8288fa041aa3e6eaed607222da7c45d3/Auxiliary/Minions/Tainted_Soul.png",
               "BackURL": "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/e30c8c610c3729a51e194d527d93c9f77aa130c5/MDW/Assets/cardback.png",
               "NumWidth": 1,
               "NumHeight": 1,
