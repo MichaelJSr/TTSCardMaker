@@ -1328,12 +1328,14 @@ function parserNotesHtml() {
       <div class="grid" style="--tile:120px">${unparsed.map(c => tileHtml(c, { small: true })).join("")}</div></section>` : ""}
     ${problems.length ? `<section class="panel"><h3>Parser notes <span class="muted">${problems.length}</span></h3><ul>${problems.map(c => `<li><a href="#/card/${c.id}">${esc(c.name)}</a> <span class="muted">${c.problems.map(esc).join(" · ")}</span>${detailsLink(c)}</li>`).join("")}</ul></section>` : ""}`;
 }
+// the cards #/compare shows: the link's, else the visitor's list
+const compareIds = (arg = parseHash().arg) => (arg || S.compare.join(",")).split(",").filter(id => S.byId.has(id)).slice(0, 5);
 function renderCompare(r) {
-  const ids = (r.arg || S.compare.join(",")).split(",").filter(id => S.byId.has(id)).slice(0, 5);
+  const ids = compareIds(r.arg);
   if (!ids.length) { view.innerHTML = `<div class="empty">Nothing to compare: press “Compare” (x) on a card.</div>`; return; }
   const cs = ids.map(id => S.byId.get(id)), first = cs[0];
   const delta = (c, k) => { if (c === first || c[k] == null || first[k] == null) return ""; const d = c[k] - first[k]; return d ? ` <span class="${d > 0 ? "diff-up" : "diff-down"}">${d > 0 ? "+" : ""}${d}</span>` : ""; };
-  view.innerHTML = `<div class="toolbar"><span class="result-count">Comparing ${cs.length} cards</span><button type="button" data-action="share-compare">Copy link</button><button type="button" class="ghost" data-action="compare-clear">Clear</button></div>
+  view.innerHTML = `<div class="toolbar"><span class="result-count">Comparing ${cs.length} card${cs.length === 1 ? "" : "s"}</span><button type="button" data-action="share-compare">Copy link</button><button type="button" class="ghost" data-action="compare-clear">Clear</button></div>
     <div class="compare" style="--n:${cs.length}">${cs.map(c => `<div class="col panel">${c.img ? `<img decoding="async" ${imgAttrs(c, 300)} alt="" data-open="${c.id}">` : ""}
       <h3><a href="#/card/${c.id}">${esc(c.name)}</a></h3><p class="muted">${esc(KIND_LABEL[c.type] || c.type)} ${c.stars ? `· ${c.stars}★` : ""} ${c.series ? `· ${esc(c.series)}` : ""} ${c.subseries ? `· ${esc(c.subseries)}` : ""}</p>
       ${["hp", "def", "atk", "spd"].map(k => c[k] != null ? `<div>${k.toUpperCase()} <b>${c[k]}</b>${delta(c, k)}</div>` : "").join("")}
@@ -1667,7 +1669,7 @@ const actions = {
   "share-user-text": el => copy(userText(el.dataset.login), "person as text"),
   "share-user-native": el => { const name = el.dataset.login; navigator.share({ title: name, text: Pf.personText({ ...userShare(name), name: "" }), url: userUrl(name) }).catch(() => {}); },
   "compare-add": el => { const id = el.dataset.id; if (!S.compare.includes(id)) S.compare = [...S.compare, id].slice(-5); toast(`Comparing ${S.compare.length} card${S.compare.length > 1 ? "s" : ""} (Compare is in the toolbar)`); openCard(id); },
-  "compare-remove": el => { S.compare = S.compare.filter(x => x !== el.dataset.id); location.hash = `#/compare/${S.compare.join(",")}`; },
+  "compare-remove": el => { S.compare = compareIds().filter(x => x !== el.dataset.id); location.hash = `#/compare/${S.compare.join(",")}`; },
   "compare-clear": () => { S.compare = []; location.hash = "#/cards"; },
   "share-compare": () => copy(new URL(`#/compare/${parseHash().arg || S.compare.join(",")}`, document.baseURI).href, "comparison link"),
   "toggle-table": el => { const box = $(`#chart-${el.dataset.target}`); const on = el.getAttribute("aria-pressed") !== "true"; el.setAttribute("aria-pressed", on);
