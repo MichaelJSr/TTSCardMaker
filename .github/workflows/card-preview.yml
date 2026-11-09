@@ -63,10 +63,12 @@ jobs:
         /commands/psd_links.py
         /commands/card_preview_reads.py
     steps:
-      # Both in the background: BOT_FILES at the bot's main (in RUNNER_TEMP; Bot moves it in), and the card repo at this
-      # commit in the workspace (14 s at most), every tree and no file contents (the 16 GB of card folders are never
-      # checked out): the card's PSD and PNG, the status chart, the icon manifest and the Types/ PNGs it needs come by
-      # blob sha through the API, verified, as Card sync's bake does; the fonts below. The token in a header, never saved.
+      # In the background: BOT_FILES at the bot's main (cloned in RUNNER_TEMP, moved into bot/ once in, then compiled by
+      # the image's Python 3.14, setup-python's: Start imports them compiled), its requirements-cards.txt once through the
+      # API (bot.reqs: the venv's key without the clone), and the card repo at this commit in the workspace (14 s at most),
+      # every tree (cards.trees) and no file contents (the 16 GB of card folders are never checked out): the card's PSD
+      # and PNG, the status chart, the icon manifest and the Types/ PNGs it needs come by blob sha through the API,
+      # verified, as Card sync's bake does; the fonts below. The token in a header, never saved.
       - name: Clone
         shell: bash
         env:
@@ -76,16 +78,28 @@ jobs:
           echo "::add-mask::$auth"
           export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
           cd "$RUNNER_TEMP"
+          ( for try in 1 2; do
+              printf 'Authorization: Bearer %s\n' "$TOKEN" | curl -sSf --max-time 5 -H @- -H "Accept: application/vnd.github.raw" \
+                -o bot.reqs.part "$GITHUB_API_URL/repos/$BOT_REPO/contents/requirements-cards.txt?ref=main" \
+                && mv bot.reqs.part bot.reqs && break
+            done
+            touch reqs.done ) < /dev/null > reqs.log 2>&1 &
           ( code=0
             { timeout 15 git clone -q --depth 1 --no-tags --single-branch --branch main --no-checkout \
                 "$GITHUB_SERVER_URL/$BOT_REPO" "$RUNNER_TEMP/bot" \
               && git -C "$RUNNER_TEMP/bot" sparse-checkout set --no-cone --stdin <<< "$BOT_FILES" \
-              && git -C "$RUNNER_TEMP/bot" checkout -q main; } || code=$?
-            echo "$code" > "$RUNNER_TEMP/bot.code" ) < /dev/null > "$RUNNER_TEMP/bot.log" 2>&1 &
+              && git -C "$RUNNER_TEMP/bot" checkout -q main \
+              && mkdir bot.claim && mv "$RUNNER_TEMP/bot" "$GITHUB_WORKSPACE/bot"; } || code=$?
+            echo "$code" > bot.code
+            py=$(ls -d "$RUNNER_TOOL_CACHE"/Python/3.14*/x64/bin/python3 2> /dev/null | sort -V | tail -1) || true
+            if [ "$code" = 0 ] && [ -n "$py" ]; then
+              "$py" -m compileall -q "$GITHUB_WORKSPACE/bot/commands" "$GITHUB_WORKSPACE/bot/global_config.py" > /dev/null
+            fi ) < /dev/null > bot.log 2>&1 &
           ( cd "$GITHUB_WORKSPACE"; code=0
             { git init -q && git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
               && git sparse-checkout set --no-cone /.github/ \
               && timeout 10 git fetch -q --depth 1 --filter=blob:none --no-tags origin "$GITHUB_SHA" \
+              && touch "$RUNNER_TEMP/cards.trees" \
               && timeout 4 git checkout -q --detach FETCH_HEAD; } || code=$?
             echo "$code" > "$RUNNER_TEMP/cards.code" ) < /dev/null > "$RUNNER_TEMP/cards.log" 2>&1 &
 
@@ -104,17 +118,60 @@ jobs:
           printf '%s' "$EDIT" > "$RUNNER_TEMP/edit.json"
           echo "ok=true" >> "$GITHUB_OUTPUT"
 
-      # The clone in bot/ once done (15 s at most); else checked out as ever. Its .py files compiled in the background by
-      # the image's Python 3.14 (setup-python's) while the venv restores: Start imports them compiled (none there: as ever).
+      # The preview's first reads, in the background once the bot (bot.code 0, else bot.in: its checkout) and the card
+      # repo's trees are in, while the venv restores (the runner's python3, stdlib only): the data's render and spot
+      # records (db/ on the data branch; AutoCroissant psd_edit.RECORDS_DIR) to records/, and the card's blobs into this
+      # checkout's object store, where the bake reads first. Go waits for reads.done.
+      - name: Reads
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CARD: ${{ inputs.card }}
+        run: |
+          { until { [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] || [ -e "$RUNNER_TEMP/bot.in" ]; } \
+                && { [ -e "$RUNNER_TEMP/cards.trees" ] || [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" = 0 ]; } \
+                || [ $SECONDS -ge 60 ]; do sleep 0.02; done
+            cd bot && python3 -S -m commands.card_preview_reads --card="$CARD" --edit "$RUNNER_TEMP/edit.json" --clone "$GITHUB_WORKSPACE" \
+              --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" --records "$RUNNER_TEMP/records" || true
+            touch "$RUNNER_TEMP/reads.done"; } < /dev/null > "$RUNNER_TEMP/reads.log" 2>&1 &
+
+      # The venv as cards-python restores it on a hit, without its setup-python and setup-uv downloads (about 1 s): the
+      # image's newest 3.14.x (setup-python's pick from the tool cache), the same key (its oxipng tag too), path and check.
+      # The key from Clone's read of requirements-cards.txt, so the restore runs beside the clone; else the clone's.
+      - id: venv
+        shell: bash
+        run: |
+          py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
+          until [ -e "$RUNNER_TEMP/reqs.done" ] || [ -s "$RUNNER_TEMP/bot.code" ] || [ $SECONDS -ge 15 ]; do sleep 0.02; done
+          reqs=$RUNNER_TEMP/bot.reqs
+          if [ ! -s "$reqs" ]; then
+            while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ $SECONDS -lt 15 ]; do sleep 0.02; done
+            reqs=bot/requirements-cards.txt
+          fi
+          if [ -n "$py" ] && [ -s "$reqs" ]; then
+            sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' "$reqs" | sha256sum | cut -d' ' -f1)
+            echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")-ox10.2.1" >> "$GITHUB_OUTPUT"
+            echo "lib=$py/lib" >> "$GITHUB_OUTPUT"
+            echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          fi
+
+      - id: venv-hit
+        if: steps.venv.outputs.key != ''
+        timeout-minutes: 5
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/venv
+          key: ${{ steps.venv.outputs.key }}
+
+      # The clone in bot/ (Clone moves it in); 15 s at most, then bot.claim keeps it out and it is checked out as ever.
       - name: Bot
         id: bot
         shell: bash
         run: |
           while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ $SECONDS -lt 15 ]; do sleep 0.02; done
-          if [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] && mv "$RUNNER_TEMP/bot" bot; then
+          mkdir "$RUNNER_TEMP/bot.claim" 2> /dev/null || while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ $SECONDS -lt 30 ]; do sleep 0.02; done
+          if [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ]; then
             echo "ok=true" >> "$GITHUB_OUTPUT"
-            py=$(ls -d "$RUNNER_TOOL_CACHE"/Python/3.14*/x64/bin/python3 2> /dev/null | sort -V | tail -1) || true
-            if [ -n "$py" ]; then "$py" -m compileall -q bot/commands bot/global_config.py < /dev/null > /dev/null 2>&1 & fi
           else
             echo "::warning::the bot's clone failed or took 15 s: checked out instead"; cat "$RUNNER_TEMP/bot.log" 2> /dev/null || true
           fi
@@ -127,50 +184,25 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: ${{ env.BOT_FILES }}
 
-      # The preview's first reads, in the background once the card repo is in (cards.code 0) while the setup runs (the
-      # runner's python3, stdlib only): the data's render and spot records (db/ on the data branch; AutoCroissant
-      # psd_edit.RECORDS_DIR) to records/, and the card's blobs into this checkout's object store, where the bake reads
-      # first. Go waits for reads.done.
-      - name: Reads
-        working-directory: bot
+      - if: steps.bot.outputs.ok != 'true'     # its bot/ in: Reads go
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CARD: ${{ inputs.card }}
-        run: |
-          { until [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" = 0 ] || [ $SECONDS -ge 60 ]; do sleep 0.02; done
-            python3 -S -m commands.card_preview_reads --card="$CARD" --edit "$RUNNER_TEMP/edit.json" --clone "$GITHUB_WORKSPACE" \
-              --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" --records "$RUNNER_TEMP/records" || true
-            touch "$RUNNER_TEMP/reads.done"; } < /dev/null > "$RUNNER_TEMP/reads.log" 2>&1 &
+        run: touch "$RUNNER_TEMP/bot.in"
 
-      # The venv as cards-python restores it on a hit, without its setup-python and setup-uv downloads (about 1 s): the
-      # image's newest 3.14.x (setup-python's pick from the tool cache), the same key (its oxipng tag too), path and check.
-      - id: venv
-        shell: bash
-        run: |
-          py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
-          sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' bot/requirements-cards.txt | sha256sum | cut -d' ' -f1)
-          if [ -n "$py" ]; then
-            echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")-ox10.2.1" >> "$GITHUB_OUTPUT"
-            echo "lib=$py/lib" >> "$GITHUB_OUTPUT"
-          fi
-
-      - id: venv-hit
-        if: steps.venv.outputs.key != ''
-        timeout-minutes: 5
-        uses: actions/cache/restore@v6
-        with:
-          path: ${{ runner.temp }}/venv
-          key: ${{ steps.venv.outputs.key }}
-
-      - id: venv-ok     # LD_LIBRARY_PATH as setup-python sets it
+      # LD_LIBRARY_PATH as setup-python sets it. The bot's requirements-cards.txt must give the key's sha (AC main moved
+      # after Clone's read: removed, as on a miss).
+      - id: venv-ok
         if: steps.venv-hit.outputs.cache-hit == 'true'
         shell: bash
         env:
           LIB: ${{ steps.venv.outputs.lib }}
+          SHA: ${{ steps.venv.outputs.sha }}
         run: |
           export LD_LIBRARY_PATH=$LIB${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-          if "$RUNNER_TEMP/venv/bin/python" -c 'import importlib.metadata as m; [m.version(p) for p in ("psd-tools", "fonttools", "requests")]'; then
+          sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' bot/requirements-cards.txt | sha256sum | cut -d' ' -f1)
+          if [ "$sha" != "$SHA" ]; then
+            echo "the bot's requirements-cards.txt moved after the venv's key: set up as on a miss"
+            rm -rf "$RUNNER_TEMP/venv"
+          elif "$RUNNER_TEMP/venv/bin/python" -c 'import importlib.metadata as m; [m.version(p) for p in ("psd-tools", "fonttools", "requests")]'; then
             echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
             echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
             echo "ok=true" >> "$GITHUB_OUTPUT"
@@ -179,7 +211,7 @@ jobs:
           fi
 
       # The card repo from Clone (15 s at most), else fetched here, its git made again (not actions/checkout: it empties
-      # the workspace, bot/ with it). cards-python and Start read it.
+      # the workspace, bot/ with it; not under Reads, once they started on its trees). cards-python and Start read it.
       - name: Cards
         shell: bash
         env:
@@ -188,6 +220,7 @@ jobs:
           while [ ! -s "$RUNNER_TEMP/cards.code" ] && [ $SECONDS -lt 15 ]; do sleep 0.02; done
           if [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" != 0 ]; then
             echo "::warning::the card repo's fetch failed or took 15 s: fetched again"; cat "$RUNNER_TEMP/cards.log" 2> /dev/null || true
+            while [ -e "$RUNNER_TEMP/cards.trees" ] && [ ! -e "$RUNNER_TEMP/reads.done" ] && [ $SECONDS -lt 80 ]; do sleep 0.05; done
             auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 | tr -d '\n')
             echo "::add-mask::$auth"
             export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
