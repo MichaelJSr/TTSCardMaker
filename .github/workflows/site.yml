@@ -36,6 +36,9 @@ on:
 permissions:         # each job its own (below)
   contents: read
 
+env:
+  SITE_URL: https://michaeljsr.github.io/TTSCardMaker   # Pages' base_url, as card-sync.yml's
+
 jobs:
   # A running build is never cut off: it finishes and deploys (in this job, as GitHub's static.yml). One run waits, the
   # newest (a newer one replaces it), and reads the data branch when it starts (an early build: after its Data wait).
@@ -81,26 +84,34 @@ jobs:
             || code=$?; echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
 
       # build_stoogedings.py and its packages (site/build/requirements.txt includes them) draw the token variants' pictures.
-      # uv, no cache: ~2 s from PyPI where pip took 5-7 s after a 155 MB pip cache restore.
-      - uses: actions/setup-python@v7
+      # Python: the image's newest 3.14.x (setup-python's pick from the tool cache, as card-preview's venv); setup-python
+      # only when the cache has none.
+      - id: py
+        run: |
+          py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
+          if [ -n "$py" ] && [ -x "$py/bin/python" ]; then
+            echo "$py/bin" >> "$GITHUB_PATH"
+            echo "LD_LIBRARY_PATH=$py/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> "$GITHUB_ENV"   # as setup-python sets it
+            echo "python=$py/bin/python" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.py.outputs.python == ''
+        uses: actions/setup-python@v7
         id: python
         with:
           python-version: "3.14"
 
-      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
-        with:
-          version: "0.13.5"
-          enable-cache: false
-
       # The packages (uv), esbuild and the PSD sizes, in the background while the steps up to Setup wait run (each one's
       # output and exit code in $RUNNER_TEMP/setup).
+      # uv, no cache: ~2 s from PyPI where pip took 5-7 s after a 155 MB pip cache restore. uv itself: setup-uv's download,
+      # its sha256 pinned, else the GitHub release; neither: pip.
       # esbuild bundles the JS (app.js and the chunks loaded on first use) with source maps and minifies the CSS
       # (build_site.py bundle, minify); node checks index.html's first screen against grid.js (first_screen). Exact
       # version: same source, same bytes.
       # The PSDs' sizes (the PSD size sort): one trees API call, since the blobless clone has no blob sizes.
       - name: Setup start
         env:
-          UV_PYTHON: ${{ steps.python.outputs.python-path }}
+          UV_PYTHON: ${{ steps.py.outputs.python || steps.python.outputs.python-path }}
           UV_COMPILE_BYTECODE: "1"
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -110,6 +121,20 @@ jobs:
             n=$1; shift
             ( code=0; "$@" || code=$?; echo "$code" > "$bg/$n.code" ) > "$bg/$n.log" 2>&1 < /dev/null &
           }
+          packages() {
+            v=0.13.5 sha=f68d291c75783122dad58ab77def0e13f3233f358731db5d6d7e8715603b928f name=uv-x86_64-unknown-linux-gnu
+            for url in "https://releases.astral.sh/github/uv/releases/download/$v/$name.tar.gz" \
+                "https://github.com/astral-sh/uv/releases/download/$v/$name.tar.gz"; do
+              if curl -fsSL --retry 2 --retry-all-errors --retry-delay 1 --connect-timeout 5 --max-time 20 -o "$RUNNER_TEMP/uv.tar.gz" "$url" \
+                  && echo "$sha  $RUNNER_TEMP/uv.tar.gz" | sha256sum -c --quiet \
+                  && mkdir -p "$RUNNER_TEMP/uv" && tar -xzf "$RUNNER_TEMP/uv.tar.gz" -C "$RUNNER_TEMP/uv" --strip-components 1 "$name/uv"; then
+                "$RUNNER_TEMP/uv/uv" pip install -q -r site/build/requirements.txt
+                return
+              fi
+            done
+            echo "::warning::uv not fetched: pip installs the packages"
+            "$UV_PYTHON" -m pip install -q -r site/build/requirements.txt
+          }
           sizes() {
             for _ in 1 2 3; do
               gh api "repos/$GITHUB_REPOSITORY/git/trees/$1?recursive=1" > "$RUNNER_TEMP/tree.json" && return 0
@@ -117,12 +142,9 @@ jobs:
             done
             return 1
           }
-          start uv uv pip install -q -r site/build/requirements.txt
+          start uv packages
           start npm npm install --prefix "$RUNNER_TEMP/esbuild" --no-save --no-audit --no-fund esbuild@0.28.2
           start sizes sizes "$(git rev-parse HEAD)"
-
-      - id: pages
-        uses: actions/configure-pages@v6
 
       # Cache key = the card PNG and MDW/Fonts blobs + the build scripts (image settings live there; the font build's draws
       # the token variants' pictures) + the build's pins (the WOFF2 fonts' names carry fontTools' and brotli's versions): the
@@ -267,7 +289,6 @@ jobs:
         timeout-minutes: 38
         run: python site/build/build_site.py
         env:
-          SITE_URL: ${{ steps.pages.outputs.base_url }}
           CARD_DATA_DIR: carddata/db
           PSD_TREE: ${{ runner.temp }}/tree.json
           IMAGE_BUDGET: "1800"
@@ -291,8 +312,6 @@ jobs:
       # site again: deploy only a site that differs from the live one. build.txt is a digest of the whole site without the
       # build's clock; a schedule tick or a dispatch that rebuilt the same site stops here. No live digest: deploy.
       - id: changed
-        env:
-          SITE_URL: ${{ steps.pages.outputs.base_url }}
         run: |
           live=$(curl -fsSL --max-time 30 "$SITE_URL/build.txt?run=$GITHUB_RUN_ID" || true)
           if [ -n "$live" ] && [ "$live" = "$(cat site/dist/build.txt)" ]; then
@@ -372,12 +391,14 @@ jobs:
       - if: steps.deployment.outcome == 'failure' && steps.cut.outputs.newer != 'true'
         run: sleep 10                 # lets the cancel settle
 
-      # The retry deploys a fresh, deflated copy: upload-pages-artifact's own zip
+      # The retry deploys a fresh, deflated copy of the same artifact.tar (upload-pages-artifact's zip)
       - if: steps.deployment.outcome == 'failure' && steps.cut.outputs.newer != 'true'
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
-          path: site/dist
           name: github-pages-z
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
 
       - id: retry
         if: steps.deployment.outcome == 'failure' && steps.cut.outputs.newer != 'true'
