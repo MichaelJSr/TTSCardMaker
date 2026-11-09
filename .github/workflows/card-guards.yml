@@ -94,6 +94,33 @@ jobs:
       TOLD: "<!-- card-guards: told on Discord -->"
       # off | report | on for a push; dry | on for a dispatch (an `all` dispatch never posts or commits); Start lowercases it
       MODE: ${{ github.event_name == 'push' && (vars.CARD_GUARDS || 'off') || ((inputs.dry_run || inputs.all) && 'dry' || 'on') }}
+      # The guards and their import closure (no config.py: github_api reads it in a try/except, the token comes from the
+      # environment), and the packages they install. AutoCroissant tests/test_card_guards.py runs --help on exactly this
+      # list (card_guards.SPARSE_FILES).
+      BOT_FILES: &bot-files |
+        /commands/card_guards.py
+        /commands/png_export.py
+        /commands/card_standards.py
+        /commands/txt2_repair.py
+        /commands/psd_diff.py
+        /commands/card_bake.py
+        /commands/card_check.py
+        /commands/psd_edit.py
+        /commands/psd_regions.py
+        /commands/psd_parser.py
+        /commands/psd_parts.py
+        /commands/text_align.py
+        /commands/card_models.py
+        /commands/card_edits.py
+        /commands/font_check.py
+        /commands/github_api.py
+        /commands/git_commit.py
+        /commands/repo_history.py
+        /global_config.py
+        /requirements-cards.txt
+        /commands/ability_place.py
+        /commands/ability_index.json
+        /commands/psd_links.py
     outputs:
       mode: ${{ steps.start.outputs.mode }}
       started: ${{ steps.start.outputs.started }}
@@ -122,6 +149,41 @@ jobs:
             echo "MODE=$mode"
           } >> "$GITHUB_ENV"
           { echo "started=$(date +%s)"; echo "mode=$mode"; } >> "$GITHUB_OUTPUT"
+
+      # In the background beside the card checkout (in RUNNER_TEMP: that checkout empties the workspace): BOT_FILES at the
+      # bot's main, the token in a header, never saved; in check, the data's render and spot records too (db/ on the data
+      # branch, Card sync's), which the guards' renders and conversions read (AutoCroissant psd_edit.RECORDS_DIR; one not
+      # read: {}). Bot waits for them.
+      - &bot-start
+        name: Bot start
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BOT_REPO: bobberlington/AutoCroissant
+        run: |
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')
+          echo "::add-mask::$auth"
+          ( export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
+            code=0
+            { timeout 30 git clone -q --depth 1 --no-tags --single-branch --branch main --no-checkout \
+                "$GITHUB_SERVER_URL/$BOT_REPO" "$RUNNER_TEMP/bot" \
+              && git -C "$RUNNER_TEMP/bot" sparse-checkout set --no-cone --stdin <<< "$BOT_FILES" \
+              && timeout 30 git -C "$RUNNER_TEMP/bot" checkout -q main; } || code=$?
+            echo "$code" > "$RUNNER_TEMP/bot.code" ) < /dev/null > "$RUNNER_TEMP/bot.log" 2>&1 &
+          [ "$GITHUB_JOB" = check ] || exit 0     # the two checks read no records
+          dir=$RUNNER_TEMP/records
+          mkdir -p "$dir"
+          echo "CARD_RECORDS_DIR=$dir" >> "$GITHUB_ENV"
+          ( for f in render_record.json spot_record.json; do
+              { if timeout -k 2 10 gh api -H "Accept: application/vnd.github.raw" "repos/$GITHUB_REPOSITORY/contents/db/$f?ref=data" > "$dir/$f.part" 2> /dev/null \
+                    && jq -e 'type == "object"' "$dir/$f.part" > /dev/null; then
+                  mv "$dir/$f.part" "$dir/$f"
+                else
+                  rm -f "$dir/$f.part"
+                  echo "::warning::db/$f not read from the data branch: renders go without it"
+                fi; } &
+            done
+            wait; touch "$RUNNER_TEMP/records.done" ) < /dev/null > "$RUNNER_TEMP/records.log" 2>&1 &
 
       # Every commit and tree, no card blobs (the 28 GB of PSDs and PNGs are never checked out): the push's range and
       # its PNG pairing come from the trees; the pushed PSDs and PNGs come by blob sha through the API, verified.
@@ -222,29 +284,6 @@ jobs:
             && mv "$0/$2.part" "$0/$2"' "$dir" < "$dir/list" > "$dir/log" 2>&1 &
           echo "fetching $(wc -l < "$dir/list") earlier icon fonts"
 
-      # The data's render and spot records (db/ on the data branch, Card sync's): the guards' renders and conversions read
-      # them (AutoCroissant psd_edit.RECORDS_DIR); one not read: {}. In the background, each file whole or none: Check
-      # waits for records.done (2 minutes at most) and shows the log.
-      - name: Records start
-        continue-on-error: true
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          dir=$RUNNER_TEMP/records
-          mkdir -p "$dir"
-          echo "CARD_RECORDS_DIR=$dir" >> "$GITHUB_ENV"
-          nohup bash -c 'for f in render_record.json spot_record.json; do
-              if timeout -k 5 55 gh api -H "Accept: application/vnd.github.raw" "repos/$GITHUB_REPOSITORY/contents/db/$f?ref=data" \
-                  > "$1/$f.part" 2> /dev/null && jq -e "type == \"object\"" "$1/$f.part" > /dev/null; then
-                mv "$1/$f.part" "$1/$f"
-              else
-                rm -f "$1/$f.part"
-                echo "::warning::db/$f not read from the data branch: renders go without it"
-              fi
-            done
-            touch "$1.done"' _ "$dir" > "$dir.log" 2>&1 < /dev/null &
-
       # A landing dispatch would post before a waiting push run of its commit (or a later one): refused.
       - name: No push run in its window
         if: github.event_name == 'workflow_dispatch' && env.MODE == 'on'
@@ -265,39 +304,29 @@ jobs:
             fi
           done
 
-      # The guards and their import closure (no config.py: github_api reads it in a try/except, the token comes from the
-      # environment), and the packages they install. AutoCroissant tests/test_card_guards.py runs --help on exactly this
-      # list (card_guards.SPARSE_FILES).
+      # The clone in bot/ and the records once done (15 s at most); a clone failed or late: checked out as ever
+      - &bot
+        name: Bot
+        id: bot
+        shell: bash
+        run: |
+          while { [ ! -s "$RUNNER_TEMP/bot.code" ] || { [ -n "${CARD_RECORDS_DIR:-}" ] && [ ! -f "$RUNNER_TEMP/records.done" ]; }; } \
+              && [ "$SECONDS" -lt 15 ]; do sleep 0.02; done
+          cat "$RUNNER_TEMP/records.log" 2> /dev/null || true
+          if [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] && mv "$RUNNER_TEMP/bot" bot; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::the bot's clone failed or took 15 s: checked out instead"; cat "$RUNNER_TEMP/bot.log" 2> /dev/null || true
+          fi
+
       - &bot-repo
+        if: steps.bot.outputs.ok != 'true'
         uses: actions/checkout@v7
         with:
           repository: bobberlington/AutoCroissant
           path: bot
           sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /commands/card_guards.py
-            /commands/png_export.py
-            /commands/card_standards.py
-            /commands/txt2_repair.py
-            /commands/psd_diff.py
-            /commands/card_bake.py
-            /commands/card_check.py
-            /commands/psd_edit.py
-            /commands/psd_regions.py
-            /commands/psd_parser.py
-            /commands/psd_parts.py
-            /commands/text_align.py
-            /commands/card_models.py
-            /commands/card_edits.py
-            /commands/font_check.py
-            /commands/github_api.py
-            /commands/git_commit.py
-            /commands/repo_history.py
-            /global_config.py
-            /requirements-cards.txt
-            /commands/ability_place.py
-            /commands/ability_index.json
-            /commands/psd_links.py
+          sparse-checkout: ${{ env.BOT_FILES }}
 
       # requirements-cards.txt's wheels and the oxipng CLI (the lossless PNG recompression; the checks write no PNG)
       - &setup
@@ -398,9 +427,6 @@ jobs:
           ALL: ${{ inputs.all }}
           CARD_BLOBS_PENDING: ${{ runner.temp }}/blobs    # Pushed blobs start's list: a blob in it is waited for
         run: |
-          records=$RUNNER_TEMP/records
-          [ ! -d "$records" ] || timeout 125 bash -c 'until [ -e "$0.done" ]; do sleep 0.2; done' "$records" || true
-          cat "$records.log" 2> /dev/null || true
           args=(--clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --after "${SHA:-$GITHUB_SHA}" --out "$OUT" --mode "$MODE")
           [ -n "$AUTHOR" ] && args+=(--author "$AUTHOR")
           [ -n "$BEFORE" ] && args+=(--before "$BEFORE")
@@ -639,9 +665,13 @@ jobs:
     timeout-minutes: 40    # finish's alert reads 40
     permissions:
       contents: write     # the commit comments
+    env:
+      BOT_FILES: *bot-files
     steps:
+      - *bot-start
       - *card-repo
       - *blobs-start
+      - *bot
       - *bot-repo
       - *setup
       - *fonts

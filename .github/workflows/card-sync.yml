@@ -139,6 +139,37 @@ jobs:
       AFTER: ""               # the after job: the main lane's last commit (M, or R on it)
       RECORDS: ""             # the after job: its dispatch inputs are the data job's (the records come from any run)
       CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the renders' records (psd_edit): the data's
+      # The builder: exactly card_data.SPARSE_FILES (tests/test_card_data.py runs --help on the three CLIs with this list).
+      # Never psd_analyzer, query_card or utils (discord, pandas); no config.py: the token comes from the environment.
+      BOT_FILES: &bot-files |
+        /commands/card_data.py
+        /commands/card_history.py
+        /commands/card_db.py
+        /commands/changelog.py
+        /commands/card_models.py
+        /commands/card_edits.py
+        /commands/psd_parser.py
+        /commands/psd_details.py
+        /commands/psd_parts.py
+        /commands/text_align.py
+        /commands/psd_regions.py
+        /commands/font_check.py
+        /commands/github_api.py
+        /global_config.py
+        /requirements-cards.txt
+        /commands/card_bake.py
+        /commands/psd_edit.py
+        /commands/png_export.py
+        /commands/git_commit.py
+        /commands/repo_history.py
+        /commands/tts_save.py
+        /commands/ability_place.py
+        /commands/ability_index.json
+        /commands/rulebook.py
+        /commands/rulebook_pages.py
+        /commands/psd_links.py
+        /commands/psd_glyphs.py
+        /commands/card_standards.py
     steps: &data-steps
       # The site build and the card checks at once (a push's data job, a guards' follow-up and the after job; not a dry
       # run): they set up beside this job, then wait for its Commit data (their Data wait). In the background; Site build
@@ -153,6 +184,31 @@ jobs:
             ( gh workflow run "$w.yml" --ref main -R "$GITHUB_REPOSITORY" -f "after=$GITHUB_RUN_ID" -f "job=$GITHUB_JOB" \
               && echo "$at" > "$RUNNER_TEMP/$w-start" ) > "$RUNNER_TEMP/$w-start.log" 2>&1 < /dev/null &
           done
+
+      # BOT_FILES at BUILDER_REF (a branch or a sha) and the data branch, cloned in the background beside main's checkout
+      # (in RUNNER_TEMP: that checkout empties the workspace); exit codes in bot.code and carddata.code. The token in a
+      # header; carddata keeps it as actions/checkout does (Newest and Commit data fetch and push there).
+      - &clones-start
+        name: Clones start
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 | tr -d '\n')
+          echo "::add-mask::$auth"
+          creds=$RUNNER_TEMP/carddata-credentials.config
+          git config --file "$creds" "http.$GITHUB_SERVER_URL/.extraheader" "AUTHORIZATION: basic $auth"
+          export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
+          b=$RUNNER_TEMP/bot d=$RUNNER_TEMP/carddata
+          ( code=0
+            { git init -q "$b" && git -C "$b" remote add origin "$GITHUB_SERVER_URL/$BOT_REPO" \
+                && git -C "$b" sparse-checkout set --no-cone --stdin <<< "$BOT_FILES" \
+                && timeout 30 git -C "$b" fetch -q --depth 1 --no-tags origin "$BUILDER_REF" \
+                && timeout 30 git -C "$b" checkout -q --detach FETCH_HEAD; } || code=$?
+            echo "$code" > "$RUNNER_TEMP/bot.code" ) < /dev/null > "$RUNNER_TEMP/bot.log" 2>&1 &
+          ( code=0
+            { timeout 30 git clone -q --depth 1 --no-tags --single-branch --branch data "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$d" \
+                && git -C "$d" config "includeIf.gitdir:$GITHUB_WORKSPACE/carddata/.git.path" "$creds"; } || code=$?
+            echo "$code" > "$RUNNER_TEMP/carddata.code" ) < /dev/null > "$RUNNER_TEMP/carddata.log" 2>&1 &
 
       # Main's head (not github.sha), no file contents but the small files the stages read (no TTS/: the data reads only
       # decks.json's blob sha). The card folders are never checked out; the build reads PSDs by blob sha, local first,
@@ -178,9 +234,22 @@ jobs:
           ( code=0; git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main \
             || code=$?; echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
 
-      # The builder: exactly card_data.SPARSE_FILES (tests/test_card_data.py runs --help on the three CLIs with this list).
-      # Never psd_analyzer, query_card or utils (discord, pandas); no config.py: the token comes from the environment.
+      # The clones in bot/ and carddata/ once done (15 s at most); one failed or late: checked out below as ever
+      - &clones
+        name: Bot and data
+        id: clones
+        run: |
+          for c in bot carddata; do
+            while [ ! -s "$RUNNER_TEMP/$c.code" ] && [ "$SECONDS" -lt 15 ]; do sleep 0.02; done
+            if [ "$(cat "$RUNNER_TEMP/$c.code" 2> /dev/null)" = 0 ] && mv "$RUNNER_TEMP/$c" "$c"; then
+              echo "$c=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "::warning::the $c clone failed or took 15 s: checked out instead"; cat "$RUNNER_TEMP/$c.log" 2> /dev/null || true
+            fi
+          done
+
       - &builder
+        if: steps.clones.outputs.bot != 'true'
         uses: actions/checkout@v7
         with:
           repository: ${{ env.BOT_REPO }}
@@ -188,38 +257,11 @@ jobs:
           path: bot
           persist-credentials: false
           sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /commands/card_data.py
-            /commands/card_history.py
-            /commands/card_db.py
-            /commands/changelog.py
-            /commands/card_models.py
-            /commands/card_edits.py
-            /commands/psd_parser.py
-            /commands/psd_details.py
-            /commands/psd_parts.py
-            /commands/text_align.py
-            /commands/psd_regions.py
-            /commands/font_check.py
-            /commands/github_api.py
-            /global_config.py
-            /requirements-cards.txt
-            /commands/card_bake.py
-            /commands/psd_edit.py
-            /commands/png_export.py
-            /commands/git_commit.py
-            /commands/repo_history.py
-            /commands/tts_save.py
-            /commands/ability_place.py
-            /commands/ability_index.json
-            /commands/rulebook.py
-            /commands/rulebook_pages.py
-            /commands/psd_links.py
-            /commands/psd_glyphs.py
-            /commands/card_standards.py
+          sparse-checkout: ${{ env.BOT_FILES }}
 
       # The data branch (restore rewrites a bad one; a lost branch is pushed back by hand from a clone)
       - &data-checkout
+        if: steps.clones.outputs.carddata != 'true'
         uses: actions/checkout@v7
         with:
           ref: data
@@ -860,7 +902,9 @@ jobs:
         shell: bash
     env:
       CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the bake's and the redraw's renders: the data's records
+      BOT_FILES: *bot-files
     steps:
+      - *clones-start
       # The data lane's checkout plus TTS/ (the save, the rulebook PDF), full history at once (the setup and the guards'
       # wait come before its Gate anyway)
       - uses: actions/checkout@v7
@@ -878,6 +922,7 @@ jobs:
             /MDW/Fonts/stoogedings-src/stoogedings.json
             /TTS/
             /site/rulebook/*.md
+      - *clones
       - *builder
       - *data-checkout
       - *venv
@@ -1524,6 +1569,7 @@ jobs:
       AFTER: ${{ (needs.main.outputs.baked == 'true' || needs.main.outputs.redrawn == 'true') && needs.main.outputs.top || '' }}
       RECORDS: "true"
       CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db
+      BOT_FILES: *bot-files
     steps: *data-steps
 
   # Leftover work (owner, 2026-10-25: the chain and a safety schedule): a live run's last job dispatches the next run when
