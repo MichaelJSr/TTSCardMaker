@@ -820,19 +820,16 @@ export function oneColour(rec, path) {
 }
 const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
 const hexRgb = h => (/^#[0-9a-f]{6}$/i.test(h || "") ? [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)) : null);
-/** A record text layer's main fill [r, g, b]: the colour most of its letters are in (with those within 40 levels, as
- *  build_site INK_NEAR) when that is half of them or more; null without one, or under an enabled overlay (oneColour). */
+/** A record text layer's main fill [r, g, b]: the colour most of its letters are in (build_site layer_inks' main ink,
+ *  which cards.json `ink` leaves out), however few; null without one, or under an enabled overlay (oneColour). */
 export function mainInk(rec, t) {
   if (!t?.layer || oneColour(rec, t.layer)) return null;
   const cs = Array.isArray(t.colors) && t.colors.length ? t.colors : [t.color], text = String(t.text ?? "");
   if (!Array.isArray(t.runs) || !t.runs.length) return cs.length === 1 ? hexRgb(cs[0]) : null;
   const n = new Map();
   for (const [a, b, i] of t.runs) for (let x = a; x < b; x++) if (text[x] && !/\s/.test(text[x])) n.set(cs[i], (n.get(cs[i]) || 0) + 1);
-  const best = [...n].sort((x, y) => y[1] - x[1])[0], main = best && hexRgb(best[0]);
-  if (!main) return null;
-  let mine = 0, all = 0;
-  for (const [c, k] of n) { const v = hexRgb(c); all += k; if (v && Math.max(...v.map((x, j) => Math.abs(x - main[j]))) <= 40) mine += k; }
-  return mine >= 0.5 * all ? main : null;
+  const best = [...n].sort((x, y) => y[1] - x[1])[0];
+  return (best && hexRgb(best[0])) || null;
 }
 
 // ---- drawing (canvas; the browser)
