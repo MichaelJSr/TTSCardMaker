@@ -567,6 +567,16 @@ export function barRows(shape, W, H, card, rec) {
   if (st && keys.some(k => st[k] !== "template")) return [];
   return keys.map((k, i) => ({ k, box: [t.box[0] * W, (t.box[1] + i * t.step) * H, t.box[2] * W, (t.box[3] + i * t.step) * H], cells: 10 }));
 }
+/** A template stat row moved to its label's height (the record's visible "Health", "Defense"... text layer), if a bar is
+ *  there and not a quarter cell aside (cells of another size), else null. */
+export function labelRow(L, W, H, rec, row) {
+  const k = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0;
+  const t = k && Array.isArray(rec.text) ? rec.text.find(x => x && x.visible !== false && Array.isArray(x.box) && STAT_NAME[row.k].test(String(x.text || "").trim())) : null;
+  if (!t) return null;
+  const mid = (t.box[1] + t.box[3]) / 2 * k, half = (row.box[3] - row.box[1]) / 2, q = (row.box[2] - row.box[0]) / row.cells / 4;
+  const at = d => [row.box[0] + d, mid - half, row.box[2] + d, mid + half];
+  return isBar(L, W, H, at(0)) && !isBar(L, W, H, at(-q)) && !isBar(L, W, H, at(q)) ? { ...row, box: at(0) } : null;
+}
 /** Does row (px) look like a 10-cell bar? The cell borders are sharper than the cells' insides. */
 export function isBar(L, W, H, box, cells = 10) {
   const [x0, y0, x1, y1] = px(box, W, H), cw = (x1 - x0) / cells, y = Math.round((y0 + y1) / 2);
@@ -871,7 +881,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   let bfam = await Promise.race([badgeFont, new Promise(r => setTimeout(() => r(null), 60))]);
   if (bfam === null) { badgeFont.then(f => { if (f) onFont?.(); }); bfam = ""; }
   const scaled = b => b.map((v, i) => v * (i % 2 ? H : W));
-  const bars = barRows(shape, W, H, card, rec).filter(r => isBar(L, W, H, r.box));   // the rows drawn on
+  const bars = barRows(shape, W, H, card, rec).map(r => (isBar(L, W, H, r.box) ? r : labelRow(L, W, H, rec, r))).filter(Boolean);   // the rows drawn on: the template's, else beside the stat's label
   const rows = barRows(shape, W, H, card, null), seen = rows.filter(r => isBar(L, W, H, r.box)), lowest = seen.length ? seen : rows;
   const barsBottom = lowest.length ? Math.max(...lowest.map(r => r.box[3])) : 0;   // the text starts below the card's stat rows (where they are seen, else the template's)
   const jobs = [], kc = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0;
