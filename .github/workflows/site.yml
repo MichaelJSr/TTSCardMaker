@@ -316,27 +316,68 @@ jobs:
           if-no-files-found: error
           compression-level: 0
 
+      # A deploy past 90 s while a newer main build waits in pages-build (it deploys all this): cancelled, and that build
+      # deploys, no retry. Not for an early build (its Data wait may be long). The Pages deploy ID is the sha. Cut stops it.
+      - id: watch
+        if: steps.changed.outputs.deploy == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > "$RUNNER_TEMP/watch.sh" << 'EOF'
+          sleep 90
+          while :; do
+            id=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/site.yml/runs?branch=main&per_page=10" \
+              --jq "[.workflow_runs[] | select(.id > $GITHUB_RUN_ID and .status != \"completed\"
+                and (.display_title | startswith(\"Card browser (after\") | not)) | .id] | max // empty") || id=
+            if [ -n "$id" ]; then
+              if gh api -X POST "repos/$GITHUB_REPOSITORY/pages/deployments/$GITHUB_SHA/cancel" > /dev/null; then
+                echo "$id" > "$RUNNER_TEMP/handed"
+                echo "Run $id waits: deploy cancelled after $SECONDS s"
+              else
+                echo "Run $id waits: cancel failed"
+              fi
+              exit
+            fi
+            sleep 15
+          done
+          EOF
+          setsid nohup bash "$RUNNER_TEMP/watch.sh" > "$RUNNER_TEMP/watch.log" 2>&1 < /dev/null &
+          echo $! > "$RUNNER_TEMP/watch.pid"   # its own process group
+
       - id: deployment
         if: steps.changed.outputs.deploy == 'true'
-        continue-on-error: true       # a stuck deploy gets one more try, below
+        continue-on-error: true       # a stuck deploy gets one more try, below (none when handed on)
         uses: actions/deploy-pages@v5
         with:
           timeout: 360000             # ms (600000): good deploys take under 5 min, stuck ones never end
           reporting_interval: 1000    # ms between status checks (5000): a quick deploy is seen done sooner
           error_count: 15             # HTTP errors before it gives up (10): about 50 s at 1 s checks
 
-      - if: steps.deployment.outcome == 'failure'
+      # The watch's end (its whole group: no cancel after this). newer: its cancel ended the deploy
+      - id: cut
+        if: always() && steps.changed.outputs.deploy == 'true'
+        env:
+          FAILED: ${{ steps.deployment.outcome == 'failure' }}
+        run: |
+          [ ! -s "$RUNNER_TEMP/watch.pid" ] || kill -- "-$(cat "$RUNNER_TEMP/watch.pid")" 2> /dev/null || true
+          cat "$RUNNER_TEMP/watch.log" 2> /dev/null || true
+          if [ -s "$RUNNER_TEMP/handed" ] && [ "$FAILED" = true ]; then
+            echo "newer=true" >> "$GITHUB_OUTPUT"
+            echo "deploy handed to run $(cat "$RUNNER_TEMP/handed")" | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - if: steps.deployment.outcome == 'failure' && steps.cut.outputs.newer != 'true'
         run: sleep 10                 # lets the cancel settle
 
       # The retry deploys a fresh, deflated copy: upload-pages-artifact's own zip
-      - if: steps.deployment.outcome == 'failure'
+      - if: steps.deployment.outcome == 'failure' && steps.cut.outputs.newer != 'true'
         uses: actions/upload-pages-artifact@v5
         with:
           path: site/dist
           name: github-pages-z
 
       - id: retry
-        if: steps.deployment.outcome == 'failure'
+        if: steps.deployment.outcome == 'failure' && steps.cut.outputs.newer != 'true'
         uses: actions/deploy-pages@v5
         with:
           artifact_name: github-pages-z
