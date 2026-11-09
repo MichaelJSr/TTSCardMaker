@@ -188,7 +188,8 @@ jobs:
           oxipng: "false"
 
       # The preview, in the background from here (8 minutes at most): its imports and the card's tree run while the
-      # fonts restore; it waits in ready() for the go file (Go), then bakes. Output and exit code to RUNNER_TEMP.
+      # fonts restore; it waits in ready() for reads.done (or the go file), then bakes up to its first font, which waits
+      # for the go file (Go). Output and exit code to RUNNER_TEMP.
       - name: Start
         working-directory: bot
         shell: bash
@@ -198,7 +199,7 @@ jobs:
           CARD: ${{ inputs.card }}
           REQUEST: ${{ inputs.request }}
         run: |
-          export CARD_RECORDS_DIR=$RUNNER_TEMP/records CARD_PREVIEW_WAIT=$RUNNER_TEMP/go
+          export CARD_RECORDS_DIR=$RUNNER_TEMP/records CARD_PREVIEW_WAIT=$RUNNER_TEMP/go CARD_PREVIEW_READS=$RUNNER_TEMP/reads.done
           ( code=0
             timeout 480 python -m commands.card_preview --card="$CARD" --edit "$RUNNER_TEMP/edit.json" \
               --out "$RUNNER_TEMP/preview" --clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" \
@@ -219,8 +220,8 @@ jobs:
       - if: steps.font-cache.outputs.cache-hit != 'true'
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
-      # The fonts are in; the reads too, or 20 s on: the preview goes. A failed font step skips this (the job's end stops
-      # the preview).
+      # The fonts are in; the reads too, or 20 s on: the preview's fonts go. A failed font step skips this (the job's end
+      # stops the preview).
       - name: Go
         shell: bash
         run: |
