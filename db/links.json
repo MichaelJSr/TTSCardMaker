@@ -22058,7 +22058,7 @@
   ]
  },
  "Items/Heal/2 Stars/Strawberry_Shortcake.psd": {
-  "blob": "32c2d426ed6ccc7c02af1d809244b81bbd1113f7",
+  "blob": "917eae562cb7808ffa3718f5a8b1636f34fbcf78",
   "links": [
    {
     "drawn": "2b89ca0c88d6c24a6a454ddff5cc53a333d3ba9e",
@@ -22087,7 +22087,7 @@
   ]
  },
  "Items/Heal/2 Stars/The_Chicken.psd": {
-  "blob": "cefe32f2be28541f4635cb0489d250e5f6083b74",
+  "blob": "81ff5ecf8af6eb8338d68984aeb7846dea243642",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -22104,19 +22104,13 @@
   ]
  },
  "Items/Heal/2 Stars/Thunder_Thighs.psd": {
-  "blob": "ef5287bbc2362b15c92cfdaf4d90d8222311f431",
+  "blob": "db311b2f67ab7a849f9a680ce9d516b3f33b4dd7",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
     "name": "Clot_Black - F4ozfETWAAAfHxV.jpg",
     "path": "MDW/Linked/Clot_Black - F4ozfETWAAAfHxV.jpg",
     "size": 134581
-   },
-   {
-    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
-    "name": "Fragile Equip.png",
-    "path": "Types/Fragile Equip.png",
-    "size": 23023
    },
    {
     "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
@@ -22127,7 +22121,7 @@
   ]
  },
  "Items/Heal/2 Stars/Watermelon.psd": {
-  "blob": "a792c69e04963eaa364dcbb1deda2f09c357a3c9",
+  "blob": "e138e69858587f357f3c0582db9ab85acd9f0696",
   "links": [
    {
     "drawn": null,
@@ -22144,7 +22138,7 @@
   ]
  },
  "Items/Heal/3 Stars/Bucket_Of_Lard.psd": {
-  "blob": "a213abd542b9c92ae832b2d260038ed04b25b90e",
+  "blob": "dbac46ce72ef89d020e5d2866842ad444d36b4d0",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -22161,7 +22155,7 @@
   ]
  },
  "Items/Heal/3 Stars/Dumplings.psd": {
-  "blob": "224a437e335bd24a5aeb93816c55277b54607908",
+  "blob": "71c319c1b3c61b4d836e16b0d834862b3d1e2283",
   "links": [
    {
     "drawn": "1aefe94ac65be7e3c67cf94b31cfbffd5a23f56e",
@@ -22186,17 +22180,11 @@
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
-   },
-   {
-    "drawn": "502228f334cd9f6bd2d7652eccff5e9164295238",
-    "name": "panda.png",
-    "path": "Types/panda.png",
-    "size": 1073019
    }
   ]
  },
  "Items/Heal/3 Stars/Feast.psd": {
-  "blob": "e8f5e01568c873ba686de915135fdb1fc6bd2ba4",
+  "blob": "10e78c55f4f9a2700ac47deb9eb8f1ac642ca733",
   "links": [
    {
     "drawn": "5fbeb23b63a1e658040fe7df8c5a52128f1b3a87",
@@ -22219,7 +22207,7 @@
   ]
  },
  "Items/Heal/3 Stars/Hadal_Stew.psd": {
-  "blob": "83d69d2aaa51f72e521fedc626d1776cc30d9146",
+  "blob": "a718a75e7efd88e160806d09987b4d6f5291190b",
   "links": [
    {
     "drawn": "00eefc2a7d026bcd7de98b80d5a396da39db2d2f",
@@ -22254,7 +22242,7 @@
   ]
  },
  "Items/Heal/3 Stars/Healing_Ritual.psd": {
-  "blob": "5db949b405931f51de0453e84173e3ebd4dcd097",
+  "blob": "0593c7c8e426b508edbe10f246d37b3d463cec14",
   "links": [
    {
     "drawn": "08dd14cb58d7a85b7bdecead627905c94caf8dfa",
@@ -22283,7 +22271,7 @@
   ]
  },
  "Items/Heal/3 Stars/Ingredient_Distillery_Dough.psd": {
-  "blob": "047c5c7f14db27d044a94a799702d46e269298fd",
+  "blob": "77e8abcf745b003a9e67681e8a1d96b78305d24c",
   "links": [
    {
     "drawn": "6b086f1c5ea0ef7348f1c94a4828db115018ce06",
@@ -22330,7 +22318,7 @@
   ]
  },
  "Items/Heal/3 Stars/Life_Shroom.psd": {
-  "blob": "4746f24890f1c9bafb5f6dccf1b0cb3385f443e8",
+  "blob": "0563ea550bd6fbb7cef7253c1aa76c249d464ee4",
   "links": [
    {
     "drawn": "a65b5b8c3a7cf913a33b267fb9e5704cc33c9713",
@@ -22365,7 +22353,7 @@
   ]
  },
  "Items/Heal/3 Stars/Maxim_Tomato.psd": {
-  "blob": "6401ea8daf5f980e10d6b3cda749c575b9eb78d1",
+  "blob": "1443e32d0e306ce7c37865f677517eadab909d65",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -22388,7 +22376,7 @@
   ]
  },
  "Items/Heal/3 Stars/Squash_Candy.psd": {
-  "blob": "cb959560186eddfbf6345ed62ca2ff023533f395",
+  "blob": "afd75f3abacfcf6b86bf7d277dc044aee2832636",
   "links": [
    {
     "drawn": "c659c492806f52480508f989cb55a426afe1aac5",
@@ -22405,7 +22393,7 @@
   ]
  },
  "Items/Heal/3 Stars/Super_Shroom.psd": {
-  "blob": "f9417612b144a8dfa994984bd097c318bf848875",
+  "blob": "ec304f5e6646c87b7d611ed304ef8c7ea63b416a",
   "links": [
    {
     "drawn": "b93638ba8b480408e84b65baa20cc1d72e2489e8",
@@ -22428,7 +22416,7 @@
   ]
  },
  "Items/Heal/3 Stars/Wand_of_Obesity.psd": {
-  "blob": "73316e7cb50633f9df037fa1b8247ca0b2902ee9",
+  "blob": "7e1c3522c940c2748c2f29697aa643f9db584469",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -22463,7 +22451,7 @@
   ]
  },
  "Items/Heal/4 Stars/Zess_Deluxe.psd": {
-  "blob": "88aabd33cb8325667f00648b91c431cf81d5cb74",
+  "blob": "0c74469516de437fc2ac8dbcbbb524495727afc7",
   "links": [
    {
     "drawn": "c46e1d6b96763cbdcfa1384387f34d1b722a72f9",
@@ -22521,7 +22509,7 @@
   ]
  },
  "Items/Infliction/2 Stars/Bag_of_Evil.psd": {
-  "blob": "2b3b15a854d864c1e242f81de04324487aaa4898",
+  "blob": "6cccdda5b2181fc486a23dfb85c13ceccef9526e",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -22538,7 +22526,7 @@
   ]
  },
  "Items/Infliction/2 Stars/Mr_Softener.psd": {
-  "blob": "128a9d7c90a6f46625f5cfd6b1283813f43e4077",
+  "blob": "9f031c7559c4791103c1e1954ab096595595d446",
   "links": [
    {
     "drawn": "c214890f5a26f7487f51d2fbdabb7b2d003466dc",
@@ -22567,7 +22555,7 @@
   ]
  },
  "Items/Infliction/3 Stars/Flower_Of_Decay.psd": {
-  "blob": "bb0db22e4efd3d46fc29ccfeea5c647183056d4d",
+  "blob": "325815d88c750fd8858b911b22f0db009bd93b14",
   "links": [
    {
     "drawn": "f14f2083b3ae3098648bdb203c7f5a5588c3123b",
@@ -22598,23 +22586,11 @@
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
    }
   ]
  },
  "Items/Infliction/3 Stars/Freeze_Spell.psd": {
-  "blob": "a4d947b3b28505a377afab5d6f3e27c15c680dda",
+  "blob": "a72e4528a4b0741635f976e0febfe9e870e1685c",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -22631,7 +22607,7 @@
   ]
  },
  "Items/Infliction/3 Stars/Ice_Storm.psd": {
-  "blob": "d090a3f0ebc244650067f39bb82cc8bdf75e2b0a",
+  "blob": "2d19c1a2491e18e1a6563fa85f604fcf23aa5f6f",
   "links": [
    {
     "drawn": "50124dc12721574f2e9b686af2f2270a1d269a5e",
@@ -22654,7 +22630,7 @@
   ]
  },
  "Items/Infliction/3 Stars/Mystery_Gift.psd": {
-  "blob": "40f549b955a882e28082529ffe8e6439f526d50d",
+  "blob": "4b091867e1955db91631990074ebbfb0487ebf02",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -22671,7 +22647,7 @@
   ]
  },
  "Items/Infliction/4 Stars/Crimson_Flag.psd": {
-  "blob": "e5aca64e858456fe0de90a46785c1521b870ff61",
+  "blob": "437035c5a624458f64483c40a81a5d00f2ef0458",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -22688,7 +22664,7 @@
   ]
  },
  "Items/Infliction/4 Stars/Pandora's_Box.psd": {
-  "blob": "8fe3252f7e74ef139bd0c030c42474ba39221342",
+  "blob": "5f896f8f0c7582922d7b6c6e590c6b36b4f4dad7",
   "links": [
    {
     "drawn": "904357cc2f41d50a490ca178dc60d04059cbd889",
@@ -22717,7 +22693,7 @@
   ]
  },
  "Items/Infliction/4 Stars/Standstill.psd": {
-  "blob": "5443da78cc44670c1fded4eb7d2c0232d7c07dc2",
+  "blob": "875eef0ea5a644ffec5e8d61b95202e04d2f53c0",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -22734,7 +22710,7 @@
   ]
  },
  "Items/Negation/2 Stars/Metronome.psd": {
-  "blob": "c6b63e6d17c4f61bf1175450c9197770f891ebcd",
+  "blob": "7b77e208ff4b4baa61a83483e0311fe0abbcfafd",
   "links": [
    {
     "drawn": "cfc8907e24311a686f884c27d79c53f406657756",
@@ -22797,7 +22773,7 @@
   ]
  },
  "Items/Negation/3 Stars/Impassable_Obstruction.psd": {
-  "blob": "034f66abccfbd55e5073645b5b942c4549ecb25e",
+  "blob": "e2430173e9ed2c1d7b3f777b1403c6a24321b70d",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -22814,7 +22790,7 @@
   ]
  },
  "Items/Negation/4 Stars/Golden_Metronome.psd": {
-  "blob": "582572e67c9461d1e798924641957d4e47c64f50",
+  "blob": "78aae02f25ce264cfc41d1c51c9860b8b2fef4d2",
   "links": [
    {
     "drawn": "d934884928c6b17fce553c121965ab8c82a769ce",
@@ -22848,7 +22824,7 @@
   ]
  },
  "Items/Support/1 Stars/Consolation_Prize.psd": {
-  "blob": "1649d56bc14400ff2a5d6ffd16b256f97b006d09",
+  "blob": "89f729efa5bb251172e8ed39b02a5937edfceec7",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -22863,10 +22839,10 @@
     "size": 140451
    },
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    },
    {
     "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
@@ -22900,7 +22876,7 @@
   ]
  },
  "Items/Support/2 Stars/Bag_of_Good.psd": {
-  "blob": "9eb6257f02594019fe9715c1038caa907a6aafc5",
+  "blob": "d1273c6ac713cf0870e202bf910057d8e987b3ba",
   "links": [
    {
     "drawn": "f13c213b57d6ac913296c127ab43abbe41a06403",
@@ -22923,13 +22899,13 @@
   ]
  },
  "Items/Support/2 Stars/Cancer.psd": {
-  "blob": "07ac9b68f6f1eaa85a3972b78cc876f4c1e0a21e",
+  "blob": "52970248f6708f6e738fd43227855765e0395968",
   "links": [
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    },
    {
     "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
@@ -22940,7 +22916,7 @@
   ]
  },
  "Items/Support/2 Stars/Erasure.psd": {
-  "blob": "0f1f45f0668ef76aa337bc027a0752623f2dcedc",
+  "blob": "5872b0442b96e1603fbefd531c4c0cd37a02c03c",
   "links": [
    {
     "drawn": "e59c291e76823dc1894bbe8e154c7a59e2db60cd",
@@ -22963,7 +22939,7 @@
   ]
  },
  "Items/Support/2 Stars/Gasoline.psd": {
-  "blob": "13845a1934b742c32cd48882075f2a5df08a0880",
+  "blob": "638e6116f8f9c9724a509208abd4700c8ddf9361",
   "links": [
    {
     "drawn": "47968db6a356f89671bbeb52f6a22e769755851d",
@@ -22992,7 +22968,7 @@
   ]
  },
  "Items/Support/2 Stars/Gust_of_Wind.psd": {
-  "blob": "3e893d2de94cfbf77a05184bab9157a1028483b9",
+  "blob": "07a3712b4411fd5909106ecc63ba3b1f0b4ce165",
   "links": [
    {
     "drawn": "c46dfb0e9cc2dc4f3a09a6df14478c84322c1063",
@@ -23044,7 +23020,7 @@
   ]
  },
  "Items/Support/2 Stars/Reverse_Mushroom.psd": {
-  "blob": "1e7f7d2a329cd151a847dd7776a50e2560ca5e8f",
+  "blob": "375ecac06c9635839941aea13bf15dff4d734c52",
   "links": [
    {
     "drawn": "b93638ba8b480408e84b65baa20cc1d72e2489e8",
@@ -23079,7 +23055,7 @@
   ]
  },
  "Items/Support/2 Stars/Spice.psd": {
-  "blob": "07d441ffc5a614d6dfc5f7904eb5aca42c9f5ba5",
+  "blob": "214a88bbd37e4f8e3b480fd15dd45ae9f36645fa",
   "links": [
    {
     "drawn": "2a75f225bd3b1c551da6dc7ff402398b80cd842a",
@@ -23088,10 +23064,10 @@
     "size": 379
    },
    {
-    "drawn": "5817354b88a7039b56888377a5f14328021d6eb4",
-    "name": "Pillow - Stuffed_Star.png",
-    "path": "MDW/Linked/Pillow - Stuffed_Star.png",
-    "size": 264
+    "drawn": "1c50b498609fd74af1cbf664c833b48c7b3e7407",
+    "name": "Stuffed_Star.png",
+    "path": "Types/Stars/Stuffed_Star.png",
+    "size": 710
    },
    {
     "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
@@ -23102,7 +23078,7 @@
   ]
  },
  "Items/Support/2 Stars/Spicy_Spray.psd": {
-  "blob": "0a136905c1a192d03539f643aec889a4493f5744",
+  "blob": "c38226c4402d2c8ee300c692c5c248833c0314d4",
   "links": [
    {
     "drawn": "fe639fe15ecc2a39ddb2679ee2f2c885aff55617",
@@ -23119,7 +23095,7 @@
   ]
  },
  "Items/Support/2 Stars/The_Hydrant.psd": {
-  "blob": "15ea3b1cf0ead580affd4c78c097f4c1b9b96738",
+  "blob": "ca501fe209e861144453ade45476c662d293db66",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -23142,7 +23118,7 @@
   ]
  },
  "Items/Support/2 Stars/Volt_Shroom.psd": {
-  "blob": "516ecc202b048b3a12036030ce6d2fc5979100a3",
+  "blob": "e47839118e8ff7979dd5f027ff3ccfe3b0fe660d",
   "links": [
    {
     "drawn": "bbda44e74d891e2ae0f6c4792f8fee7b3c063c7b",
@@ -23177,7 +23153,7 @@
   ]
  },
  "Items/Support/3 Stars/Blood_Ritual.psd": {
-  "blob": "164519b209d149ff4e373a40539741b9459f6839",
+  "blob": "1342101ff2424763cbbaf05616b217ced3f8cd9e",
   "links": [
    {
     "drawn": "af1b4d56a0831277ac4acaaeacb1cb152f7deea3",
@@ -23200,7 +23176,7 @@
   ]
  },
  "Items/Support/3 Stars/Blue_Marker.psd": {
-  "blob": "07f5a31969fc70630afc34e6ada83ee55c4a8737",
+  "blob": "98c6e9b562bdd8c44a71d7a2c3f018152a30693d",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -23217,24 +23193,18 @@
   ]
  },
  "Items/Support/3 Stars/Credit_Card.psd": {
-  "blob": "799e8356b2b39273f8e50c24c9a8c19bd81076a7",
+  "blob": "392fdebb7cde6a09ffa5f752ebc0f0ed7ae8acd0",
   "links": [
    {
     "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
-   },
-   {
-    "drawn": "62c9171b90f432e49f091fee1e6526859d9f3a56",
-    "name": "Attack.png",
-    "path": "Types/Attack.png",
-    "size": 819546
    }
   ]
  },
  "Items/Support/3 Stars/Energy_Ritual.psd": {
-  "blob": "35c2c93f463a024009c7628dd578cb9770eef671",
+  "blob": "44e4b5ff5bdbedc5f033bc0cde60027eeb040072",
   "links": [
    {
     "drawn": "69d7c79c1c5472037777568a7c8e0e2ebad7a2d3",
@@ -23275,7 +23245,7 @@
   ]
  },
  "Items/Support/3 Stars/Forget_Me_Now.psd": {
-  "blob": "ccfc5f392e4a301bd0546461c6d7101e529891d7",
+  "blob": "af9e4e290ff7e03527f7968f8d2c23e91aacc4ac",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -23292,7 +23262,7 @@
   ]
  },
  "Items/Support/3 Stars/Halo.psd": {
-  "blob": "76fcf460a092dc83ef3c9f406901cdf782b848b3",
+  "blob": "e747577abd68a62ff062725cb710c4a52bc8a619",
   "links": [
    {
     "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
@@ -23303,7 +23273,7 @@
   ]
  },
  "Items/Support/3 Stars/Life_Link.psd": {
-  "blob": "f44b145ed0a8c9ff107cd9e4ed04eef4469f0d9c",
+  "blob": "6695cf923327bc3ebd86b37e8c8f24a19f15862a",
   "links": [
    {
     "drawn": "1c2c1496c753064df09b3bdfa5a816aaa3151592",
@@ -23326,7 +23296,7 @@
   ]
  },
  "Items/Support/3 Stars/Portal.psd": {
-  "blob": "d6642c4793c93aa2d97fd5594ce46dd79e22a3da",
+  "blob": "1f6659634105f440c09cd3c886d3cfc270cee74d",
   "links": [
    {
     "drawn": "bf2e532324947e29bf1eed0925d201e663c2cf24",
@@ -23349,7 +23319,7 @@
   ]
  },
  "Items/Support/3 Stars/Reflection.psd": {
-  "blob": "31a990f42e80fde6298f4e6718c0f2d580b5c527",
+  "blob": "7e55a552a6923ac79a8c15d191525fd53a40f2ac",
   "links": [
    {
     "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
@@ -23384,7 +23354,7 @@
   ]
  },
  "Items/Support/3 Stars/Scapular.psd": {
-  "blob": "684a92f315e326de22835602b708e5a3325d7578",
+  "blob": "f991c6294095160d74c6a483f7338409a11f83a4",
   "links": [
    {
     "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
@@ -23395,7 +23365,7 @@
   ]
  },
  "Items/Support/3 Stars/Second_Wind.psd": {
-  "blob": "0e6501b7d014eef7607011ae47a0278412351473",
+  "blob": "a5b583a378a0767d8468eb7be62bc9c24a475215",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -23412,7 +23382,7 @@
   ]
  },
  "Items/Support/3 Stars/Shia_Surprise!.psd": {
-  "blob": "abcebd0404192b4b2908321422f307a2c16d2169",
+  "blob": "85cebe9916d5f6124f3ac426b06440d017e56b6c",
   "links": [
    {
     "drawn": "29e4ede0ac14633c570188fefb9a390c184fc1d6",
@@ -23435,7 +23405,7 @@
   ]
  },
  "Items/Support/4 Stars/Amazing_Mirror.psd": {
-  "blob": "2c3d10ff1688459c276331f13a217be1da022022",
+  "blob": "660124c6e96478ce56cdfd80e30d42c0f3e3a263",
   "links": [
    {
     "drawn": "0ce52464315af32f85ad3e13f6e59abbb378b81e",
@@ -23458,7 +23428,7 @@
   ]
  },
  "Items/Support/4 Stars/Flip.psd": {
-  "blob": "8ec7b93a17e3e5c1948c8bb8d2ffcdd02a84212a",
+  "blob": "e78b91470bb48e91c316d5485d6884a9fd45c5a9",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -23475,7 +23445,7 @@
   ]
  },
  "Items/Support/4 Stars/Mimic.psd": {
-  "blob": "f64aee225f005207f599309f8cfe96e8906e9882",
+  "blob": "757a3b54c4ab7778addd7319c05da9421218eab2",
   "links": [
    {
     "drawn": "1c418f771c7e0494ddbb6fd529429fafac3abfac",
@@ -23498,7 +23468,7 @@
   ]
  },
  "Items/Support/4 Stars/Pile_Of_Swords.psd": {
-  "blob": "2afc4a3d2664d5d46b010ea2f2757877f72363cf",
+  "blob": "67dfec146a909946cc97275c347d75b4ecebf28d",
   "links": []
  },
  "MDW/Assets/Holders/Active.psd": {
@@ -28345,7 +28315,7 @@
   ]
  },
  "N.M.E/Black Hole.psd": {
-  "blob": "be571e4a23f5cd4c3183e6cde7a8bb6e1df21a70",
+  "blob": "e593331f73e8d28df8b87df83ab8b11051892f89",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -28356,7 +28326,7 @@
   ]
  },
  "N.M.E/Bubble.psd": {
-  "blob": "6ec2795275646b823890ce06b4a5b4da0a9f969b",
+  "blob": "d0c49f4ead507032a724c2829a992be67381e1b9",
   "links": [
    {
     "drawn": "8609a73be4a787d2f8fef83d1557166bd62c3d4c",
@@ -28451,7 +28421,7 @@
   ]
  },
  "N.M.E/Crock_Pot.psd": {
-  "blob": "5f3700e1d1aff66f42839ed16213bcf47eb73040",
+  "blob": "3b7c466c509afa1d6d958b15f43d4337345ed05e",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -28509,7 +28479,7 @@
   ]
  },
  "N.M.E/Duel_Flag.psd": {
-  "blob": "1f0947a6cd339b9cbfb9adcb59f6296ce0ac3977",
+  "blob": "3643578ed30eed6df86202df90614075051a67d4",
   "links": [
    {
     "drawn": "230feb8fbe4578919dc5e7b4a10b8983681fcd39",
@@ -28530,46 +28500,10 @@
     "size": 36858
    },
    {
-    "drawn": "e8ecd9d6802b48c18236a79b70eddb5e446de455",
-    "name": "field.png",
-    "path": "Types/field.png",
-    "size": 20013
-   },
-   {
     "drawn": "1824bab6e2a8ad4ed9dcf895a1785b6bd97a6064",
     "name": "Deploy.png",
     "path": "Types/Deploy.png",
     "size": 24318
-   },
-   {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
-    "name": "Food.png",
-    "path": "Types/Food.png",
-    "size": 139337
-   },
-   {
-    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
-    "name": "Infliction.png",
-    "path": "Types/Infliction.png",
-    "size": 78460
-   },
-   {
-    "drawn": "c9794cb2813a856542da095481a09a68bccacba9",
-    "name": "Hero_Cap - Negation.png",
-    "path": "MDW/Linked/Hero_Cap - Negation.png",
-    "size": 29391
-   },
-   {
-    "drawn": "a6dfaa63017446c87785ab0d7c39298b91eadba0",
-    "name": "Hero_Cap - Offense.png",
-    "path": "MDW/Linked/Hero_Cap - Offense.png",
-    "size": 1078694
-   },
-   {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
-    "name": "support.png",
-    "path": "Types/support.png",
-    "size": 632862
    },
    {
     "drawn": "4fb6b1d8b6485fabd2b86fa08d37ff1b69a398f7",
@@ -28580,7 +28514,7 @@
   ]
  },
  "N.M.E/Electric_Dart.psd": {
-  "blob": "683a6213127c8f34f0cf859ca8c5cc9b3bb2fda9",
+  "blob": "bc692440cf52c2279ea56976aaec50f1154c61f2",
   "links": [
    {
     "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
@@ -28603,7 +28537,7 @@
   ]
  },
  "N.M.E/How_To_Jump.psd": {
-  "blob": "4b6f62c4a1e47e04fecec2f714e34a7b6491e57a",
+  "blob": "e5b083fb4f0b4a2f43f10922d42f9529067f153e",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -28618,10 +28552,10 @@
     "size": 140451
    },
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    },
    {
     "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
@@ -28638,13 +28572,13 @@
   ]
  },
  "N.M.E/Jera.psd": {
-  "blob": "c1384a6d020c1fa7d485dd59ce30ca84fe1476db",
+  "blob": "a97fc744beecd514d664fabec0e2febc7a66173c",
   "links": [
    {
-    "drawn": "fc33212e1473542cdb6ee3d32cdba111dfe4c453",
-    "name": "Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "path": "MDW/Linked/Clot_Black - Collectible_Pentagram_icon copy.webp",
-    "size": 192
+    "drawn": "3b1e49004b030a450210a0ba04921acf5d5ec001",
+    "name": "isaac.png",
+    "path": "Types/Stars/isaac.png",
+    "size": 1181
    },
    {
     "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
@@ -28661,7 +28595,7 @@
   ]
  },
  "N.M.E/Magnet-shroom.psd": {
-  "blob": "f3b9f5cadba8610abef2d760427c70ad5110dc66",
+  "blob": "d6243107cf6764e445e5f141b0923dd38ff20651",
   "links": [
    {
     "drawn": "b7f4ce93efaef26c2152f6bd57cdb2aba4618ac2",
@@ -28682,12 +28616,6 @@
     "size": 3960930
    },
    {
-    "drawn": "302f9088be4a7fae80cbcd976c56cf01d3ef2bd5",
-    "name": "Fragile Equip.png",
-    "path": "Types/Fragile Equip.png",
-    "size": 23023
-   },
-   {
     "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
     "name": "support.png",
     "path": "Types/support.png",
@@ -28696,7 +28624,7 @@
   ]
  },
  "N.M.E/Metronome_Lite.psd": {
-  "blob": "957ab816ed7c393a36d7075a2ecb1c4fe956b076",
+  "blob": "07077397b1d124d8083b6db3c4b72bfcdedeb0e2",
   "links": [
    {
     "drawn": "f34fd0cea26caaa2c7c7313809e84713f5568ec0",
@@ -28725,7 +28653,7 @@
   ]
  },
  "N.M.E/Michael's_Blessing.psd": {
-  "blob": "c532b9c6a8af7bf4afde3f4735fa8313cd7db29a",
+  "blob": "34427a6b85b7f7fe6f35561277c86e6089e89940",
   "links": [
    {
     "drawn": "48c557e432828fe86beba544a4ff432ee6238028",
@@ -28760,7 +28688,7 @@
   ]
  },
  "N.M.E/Minion_Dematerializer.psd": {
-  "blob": "079ed78864a0604523fc9da55b6d006787000602",
+  "blob": "4379fb913d4859fdaf01751ed82777376e30f68f",
   "links": [
    {
     "drawn": "b18483ebe29726d2940d8591c7b8503cf6910e39",
@@ -28795,7 +28723,7 @@
   ]
  },
  "N.M.E/Paintbrush.psd": {
-  "blob": "b781d3c90a3092c1d62e61bc27f95a78147f65ea",
+  "blob": "8b69b7addff09487e5e22aee33fd622c7eb9b782",
   "links": [
    {
     "drawn": null,
@@ -28840,10 +28768,10 @@
     "size": 28865
    },
    {
-    "drawn": null,
-    "name": "Armored_Squit - dark.png",
-    "path": "MDW/Linked/Armored_Squit - dark.png",
-    "size": 1866
+    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "name": "dark.png",
+    "path": "Types/dark.png",
+    "size": 25732
    },
    {
     "drawn": null,
@@ -28852,10 +28780,10 @@
     "size": 1073019
    },
    {
-    "drawn": null,
-    "name": "Shadow_Queen - Darkmatter.png",
-    "path": "MDW/Linked/Shadow_Queen - Darkmatter.png",
-    "size": 12660
+    "drawn": "9842d409283e819405890ffd7f7e3bc7775145fd",
+    "name": "darkmatter.png",
+    "path": "Types/darkmatter.png",
+    "size": 220675
    },
    {
     "drawn": null,
@@ -28890,7 +28818,7 @@
   ]
  },
  "N.M.E/Remote_Detonator.psd": {
-  "blob": "bbc068bd4d264e319a0ffdbd58559b043c26cbe4",
+  "blob": "0f2f1f20effa91ecbc1d474861d26963a9e75256",
   "links": [
    {
     "drawn": "74f287c956cdf731cec0e248e08d3ae7c2fb680a",
@@ -28919,7 +28847,7 @@
   ]
  },
  "N.M.E/Rope.psd": {
-  "blob": "a6b5cbd021c25a35eaa5744469939e360d8a2849",
+  "blob": "59676997654d8574c7e72429c426a55aee7be829",
   "links": [
    {
     "drawn": "85d77d7d27e05776d8d725f0802dccc9e34f3bea",
@@ -28942,13 +28870,19 @@
   ]
  },
  "N.M.E/Sigil_of_Divinity.psd": {
-  "blob": "182252e8c8080d4b91b5be70f72cd20d638c13de",
+  "blob": "c8d6f7098100b7a53571da96c3503785b8c2a848",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
+   },
+   {
+    "drawn": "10a7faadd0cc16d7e967470ca531413d5f603604",
+    "name": "Sigil_of_Divinity - divinity_sigil_activated.png",
+    "path": "MDW/Linked/Sigil_of_Divinity - divinity_sigil_activated.png",
+    "size": 739
    },
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -28991,17 +28925,11 @@
     "name": "NME.png",
     "path": "Types/NME.png",
     "size": 757779
-   },
-   {
-    "drawn": "10a7faadd0cc16d7e967470ca531413d5f603604",
-    "name": "Sigil_of_Divinity - divinity_sigil_activated.png",
-    "path": "MDW/Linked/Sigil_of_Divinity - divinity_sigil_activated.png",
-    "size": 739
    }
   ]
  },
  "N.M.E/Staff_of_Purity.psd": {
-  "blob": "a42d183fea9b0a34e3a434122318d8f84db60851",
+  "blob": "e3e1e54ccd5201617c08d80478262d262cfa065f",
   "links": [
    {
     "drawn": "a058b2411f9abe1159936aed0599dc6486614583",
@@ -29036,7 +28964,7 @@
   ]
  },
  "N.M.E/Star_Jar.psd": {
-  "blob": "058104888aed4d7900ea2457d90d6680dfd2f208",
+  "blob": "2c1e32d86ef2c25d1c90c4e983bacafb7661527d",
   "links": [
    {
     "drawn": "a1e44b77ef2d0a5a632b37046e5b409b5c2045c2",
@@ -29094,7 +29022,7 @@
   ]
  },
  "N.M.E/Termination_Shock.psd": {
-  "blob": "435f91718dceea4c8b4b6a96267434bfe18991a0",
+  "blob": "6b338505c462a19d5efa9c42cd501100f6fdf2c9",
   "links": [
    {
     "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
@@ -29135,7 +29063,7 @@
   ]
  },
  "N.M.E/The_Bagel.psd": {
-  "blob": "d35a064c5c11153e71565fd7d162d040f6054337",
+  "blob": "45975efbe08c29e847b45b9b3210c4f19fc1e1aa",
   "links": [
    {
     "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
@@ -29164,7 +29092,7 @@
   ]
  },
  "N.M.E/The_Bank.psd": {
-  "blob": "973b933deadd8c0dd7458078c6ba896a66b6b224",
+  "blob": "9b36afb3cf5fb501aa2a6d7c037fb4a7164c3bdf",
   "links": [
    {
     "drawn": "a1e44b77ef2d0a5a632b37046e5b409b5c2045c2",
@@ -29177,168 +29105,6 @@
     "name": "The_Bank - Fog_Canyon_Millibelle_Bank.webp",
     "path": "MDW/Linked/The_Bank - Fog_Canyon_Millibelle_Bank.webp",
     "size": 128346
-   },
-   {
-    "drawn": "c659c492806f52480508f989cb55a426afe1aac5",
-    "name": "bFables.png",
-    "path": "Types/Stars/bFables.png",
-    "size": 368729
-   },
-   {
-    "drawn": "75d7fb1062f4f81eb510a6cb441f85819eae9617",
-    "name": "Fallen_Star.png",
-    "path": "Types/Stars/Fallen_Star.png",
-    "size": 2480
-   },
-   {
-    "drawn": "42202bbec256fcd7533b9262b980906a0c142b27",
-    "name": "Shadow_Queen - Vi1.png",
-    "path": "MDW/Linked/Shadow_Queen - Vi1.png",
-    "size": 367
-   },
-   {
-    "drawn": "702f3b83c2cf4e53bf8878e95025734703611ea7",
-    "name": "Starstorm.png",
-    "path": "Types/Stars/Starstorm.png",
-    "size": 324
-   },
-   {
-    "drawn": "010244477dc99d755153a0ac5ba94322b35f37e9",
-    "name": "Ninja Star.png",
-    "path": "Types/Stars/Ninja Star.png",
-    "size": 14188
-   },
-   {
-    "drawn": "27e828a4b0084d24fe092bb1807253c468cca9b2",
-    "name": "Scrap.png",
-    "path": "Types/Stars/Scrap.png",
-    "size": 27348
-   },
-   {
-    "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
-    "name": "Patrick Star.png",
-    "path": "Types/Stars/Patrick Star.png",
-    "size": 152994
-   },
-   {
-    "drawn": "ca1bbfb03595f64e2268a57aca0b510b2e52af4e",
-    "name": "YinYangUltra.png",
-    "path": "Types/Stars/YinYangUltra.png",
-    "size": 1137393
-   },
-   {
-    "drawn": "caccf7ff8ce472def5d14779dbc70484aab6b684",
-    "name": "Solar Sun.png",
-    "path": "Types/Stars/Solar Sun.png",
-    "size": 1374450
-   },
-   {
-    "drawn": "f21f2877886482116ec5cbb3a6934eaf02e7d2ff",
-    "name": "Star of beth.png",
-    "path": "Types/Stars/Star of beth.png",
-    "size": 2247
-   },
-   {
-    "drawn": "13234434173d2d3d19e1cf09bdb303d17e73d6ab",
-    "name": "Guild Seal.png",
-    "path": "Types/Stars/Guild Seal.png",
-    "size": 1880154
-   },
-   {
-    "drawn": "845c506a66ac79c396bad2b9c1dfe82ee34199fa",
-    "name": "Nether_Star.png",
-    "path": "Types/Stars/Nether_Star.png",
-    "size": 10708
-   },
-   {
-    "drawn": "7bce3270adea13c48ca9f9233617f60d91925363",
-    "name": "Nebula Star.png",
-    "path": "Types/Stars/Nebula Star.png",
-    "size": 253389
-   },
-   {
-    "drawn": "6a79e1709a529b3353886f2e415702bbe68bed17",
-    "name": "Lol star.png",
-    "path": "Types/Stars/Lol star.png",
-    "size": 97082
-   },
-   {
-    "drawn": "85d77d7d27e05776d8d725f0802dccc9e34f3bea",
-    "name": "Triforce.png",
-    "path": "Types/Stars/Triforce.png",
-    "size": 1712857
-   },
-   {
-    "drawn": "4ff81e3ba710b79c678abc9af0ae970f060836ef",
-    "name": "undertale.png",
-    "path": "Types/Stars/undertale.png",
-    "size": 28256
-   },
-   {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
-    "name": "Hk star.png",
-    "path": "Types/Stars/Hk star.png",
-    "size": 332571
-   },
-   {
-    "drawn": "a6a8833fafe1539cee024a364a3fa78195424355",
-    "name": "Drone - Crystal_Star.png",
-    "path": "MDW/Linked/Drone - Crystal_Star.png",
-    "size": 2112
-   },
-   {
-    "drawn": "6f896b9ac86551432696b7adeaf4f4cdd31a50ba",
-    "name": "Drone - Sapphire_Starold.png",
-    "path": "MDW/Linked/Drone - Sapphire_Starold.png",
-    "size": 1326
-   },
-   {
-    "drawn": "7c16930dc2be7eea37e8df342ad4ee7a40cd482d",
-    "name": "Drone - Diamond_Star.png",
-    "path": "MDW/Linked/Drone - Diamond_Star.png",
-    "size": 640
-   },
-   {
-    "drawn": "4085c54d4656fcf7b0d0de6c215bc81ba5175aa5",
-    "name": "Shadow_Queen - Emerald_Star.png",
-    "path": "MDW/Linked/Shadow_Queen - Emerald_Star.png",
-    "size": 588
-   },
-   {
-    "drawn": "a24932f505bf62b910c0c74f692ed0217d808fd5",
-    "name": "Drone - Gold_Star.png",
-    "path": "MDW/Linked/Drone - Gold_Star.png",
-    "size": 591
-   },
-   {
-    "drawn": "c4ad83c5077298220fab895fa4caeaa2229afab3",
-    "name": "Drone - Ruby_Star.png",
-    "path": "MDW/Linked/Drone - Ruby_Star.png",
-    "size": 1378
-   },
-   {
-    "drawn": "37b067fa0f94746c154376f3aa39d05de61669e9",
-    "name": "Shadow_Queen - Garnet_Star.png",
-    "path": "MDW/Linked/Shadow_Queen - Garnet_Star.png",
-    "size": 659
-   },
-   {
-    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
-    "name": "Omori star.png",
-    "path": "Types/Stars/Omori star.png",
-    "size": 114793
-   },
-   {
-    "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
-    "name": "Dst Star.png",
-    "path": "Types/Stars/Dst Star.png",
-    "size": 112511
-   },
-   {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
-    "name": "Warpstar.png",
-    "path": "Types/Stars/Warpstar.png",
-    "size": 648064
    },
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -29361,7 +29127,7 @@
   ]
  },
  "N.M.E/The_Claw.psd": {
-  "blob": "75d1682cd4343749ef74f69296a14c5bbf432bd3",
+  "blob": "b948f14263517132e9c03363c53a3d147c10223b",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -29378,7 +29144,7 @@
   ]
  },
  "N.M.E/The_Evil,_Fricked_Up_Cursed_Idol.psd": {
-  "blob": "ab1c92e1702a3d96e11c0f6032b15b13a4a804d3",
+  "blob": "039fd09b8c7f37990f769985a4306c757dc7e199",
   "links": [
    {
     "drawn": "85c9a0abb9248fd1b3bf3bcae1ffab393d0dadf4",
@@ -29395,7 +29161,7 @@
   ]
  },
  "N.M.E/Whacka_Bump.psd": {
-  "blob": "4a021b664241b8b6362d410c80b4f03dccd53e75",
+  "blob": "4da2ae7ba19f1c53fbe930620265ee8ec5e2755b",
   "links": [
    {
     "drawn": "5fbba7eab93b89548372e76d019275b245176686",
