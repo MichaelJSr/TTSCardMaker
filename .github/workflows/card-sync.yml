@@ -151,13 +151,13 @@ jobs:
           ( gh workflow run site.yml --ref main -R "$GITHUB_REPOSITORY" -f "after=$GITHUB_RUN_ID" -f "job=$GITHUB_JOB" \
             && echo "$at" > "$RUNNER_TEMP/site-start" ) > "$RUNNER_TEMP/site-start.log" 2>&1 < /dev/null &
 
-      # Main's head (not github.sha): every commit and tree, no file contents but the small files the stages read. The
-      # card folders are never checked out; the bake and the build read PSDs by blob sha, local first, else REST.
-      - &checkout-main
-        uses: actions/checkout@v7
+      # Main's head (not github.sha), no file contents but the small files the stages read (no TTS/: the data reads only
+      # decks.json's blob sha). The card folders are never checked out; the build reads PSDs by blob sha, local first,
+      # else REST. Depth 1: main's history (every commit and tree) comes in the background (History start).
+      - uses: actions/checkout@v7
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -167,8 +167,13 @@ jobs:
             /site/Card Authors.txt
             /site/Card Creation Dates.json
             /MDW/Fonts/stoogedings-src/stoogedings.json
-            /TTS/
             /site/rulebook/*.md
+
+      # Exit code in history.code; no git runs in the workspace before History wait
+      - name: History start
+        run: |
+          ( code=0; git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main \
+            || code=$?; echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
 
       # The builder: exactly card_data.SPARSE_FILES (tests/test_card_data.py runs --help on the three CLIs with this list).
       # Never psd_analyzer, query_card or utils (discord, pandas); no config.py: the token comes from the environment.
@@ -301,6 +306,19 @@ jobs:
             fi
           done <<< "$runs"
           echo "No guards run with fixes to land: the main lane goes on." | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # History start's fetch done (before any git here: Newest, the Gate, the build's dates); failed or still shallow:
+      # once more, else the job fails (never a shallow build)
+      - name: History wait
+        timeout-minutes: 5
+        run: |
+          until [ -s "$RUNNER_TEMP/history.code" ]; do sleep 0.1; done
+          if [ "$(git rev-parse --is-shallow-repository)" != false ]; then
+            echo "::group::History start (exit $(cat "$RUNNER_TEMP/history.code"))"; cat "$RUNNER_TEMP/history.log"; echo "::endgroup::"
+            echo "::warning::main's history not fetched in the background: once more"
+            git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main
+            [ "$(git rev-parse --is-shallow-repository)" = false ] || { echo "::error::main's history is still shallow"; exit 1; }
+          fi
 
       # After a wait that held nothing (a push's main lane, a follow-up's two): main's head and the data's as they are
       # now (one not fetched stays as checked out)
@@ -829,7 +847,23 @@ jobs:
     env:
       CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the bake's and the redraw's renders: the data's records
     steps:
-      - *checkout-main
+      # The data lane's checkout plus TTS/ (the save, the rulebook PDF), full history at once (the setup and the guards'
+      # wait come before its Gate anyway)
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/actions/
+            /.mailmap
+            /site/Card Edits.json
+            /site/Card Authors.txt
+            /site/Card Creation Dates.json
+            /MDW/Fonts/stoogedings-src/stoogedings.json
+            /TTS/
+            /site/rulebook/*.md
       - *builder
       - *data-checkout
       - *venv

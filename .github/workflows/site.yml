@@ -60,11 +60,11 @@ jobs:
     steps:
       # The repo history is ~25 GB of PSDs, so check out only what the build reads (site/ also holds the hand-kept
       # Card Authors.txt, Card Edits.json, Website Admins.txt and Constructed Ban List.txt); card PNGs and uncached
-      # icons (Types/) are downloaded on demand and their resized images cached between runs. fetch-depth 0 + blob:none brings every
-      # commit and tree (about 25 MB, no file contents) for the image-version history.
+      # icons (Types/) are downloaded on demand and their resized images cached between runs. Depth 1, blob:none; main's every
+      # commit and tree (no file contents) for the image-version history come in the background (History start).
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -73,6 +73,12 @@ jobs:
             /MDW/Fonts/stoogedings-src/stoogedings.json
             /MDW/Fonts/stoogedings-src/build_stoogedings.py
             /MDW/Fonts/stoogedings-src/requirements.txt
+
+      # Exit code in history.code; no git fetch here before History wait
+      - name: History start
+        run: |
+          ( code=0; git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main \
+            || code=$?; echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
 
       # build_stoogedings.py and its packages (site/build/requirements.txt includes them) draw the token variants' pictures.
       # uv, no cache: ~2 s from PyPI where pip took 5-7 s after a 155 MB pip cache restore.
@@ -149,6 +155,19 @@ jobs:
           path: site/.og-cache
           key: deck-previews-v2-${{ github.sha }}
           restore-keys: deck-previews-v2-
+
+      # History start's fetch done (before Data wait's fetch and the build's history); failed or still shallow: once more,
+      # else the job fails (never a shallow build)
+      - name: History wait
+        timeout-minutes: 5
+        run: |
+          until [ -s "$RUNNER_TEMP/history.code" ]; do sleep 0.1; done
+          if [ "$(git rev-parse --is-shallow-repository)" != false ]; then
+            echo "::group::History start (exit $(cat "$RUNNER_TEMP/history.code"))"; cat "$RUNNER_TEMP/history.log"; echo "::endgroup::"
+            echo "::warning::main's history not fetched in the background: once more"
+            git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main
+            [ "$(git rev-parse --is-shallow-repository)" = false ] || { echo "::error::main's history is still shallow"; exit 1; }
+          fi
 
       - id: og-before
         run: echo "names=$(ls site/.og-cache 2>/dev/null | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"

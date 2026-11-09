@@ -8,8 +8,9 @@
    stages. A failed live job (a retry too) alerts, a dry one doesn't; the deadline's reserve covers the caps of Commit
    main and every later step; after runs the data steps with AFTER = the main lane's last commit (M, or R on it)
    and RECORDS, also for a bake that only recorded verdicts.
-2. The data Gate on sandbox history: stoogedings-src/ alone and a hand-edited save don't start the data lane; fonts,
-   stoogedings.json, an upper-case .PSD and the creation dates do; AFTER does, without the dispatch's inputs. The Build
+2. The data Gate on sandbox history (the data lane's depth-1 checkout, its history from History start and History
+   wait; failed, fetched once more; failed again, the job fails; site.yml's the same scripts): stoogedings-src/ alone
+   and a hand-edited save don't start the data lane; fonts, stoogedings.json, an upper-case .PSD and the creation dates do; AFTER does, without the dispatch's inputs. The Build
    step's arguments: the dispatch's inputs, none after the bake; --own the main lane's commits since the last build.
    The main Gate: a push and a dispatch go; the schedule goes when a card input or the save changed (the lane's own
    commits aside) since the last live run whose Bake and save succeeded (faked run lists; dry runs passed over), or
@@ -362,10 +363,10 @@ def plans(flow: dict) -> None:
     follow = {"dry_run": False, "bake": "pending", "guards": "77"}
     p, q = plan(flow, "data", inputs=follow, outputs=go), plan(flow, "main", inputs=follow, outputs=go)
     r = plan(flow, "after", inputs=follow, outputs=go, needs={"main": {"outputs": {"top": "m" * 40, "baked": "true"}}})
-    check(order("data", p)[:6] == ["Site build start", "venv", "guards", "Newest", "records-in", "gate"] and "build" in runs(p)
+    check(order("data", p)[:8] == ["Site build start", "History start", "venv", "guards", "History wait", "Newest", "records-in", "gate"] and "build" in runs(p)
           and [k for k in order("main", q) if k in ("venv", "guards", "Newest", "gate")][:4] == ["venv", "guards", "Newest", "gate"] and "bake" in runs(q)
           and not {"guards", "Newest"} & runs(r),
-          "a follow-up (guards): the site build first; both lanes set up, wait for the guards' Land, take main's head, then gate; after waits for nothing")
+          "a follow-up (guards): the site build first; both lanes set up, wait for the guards' Land, the data's history, take main's head, then gate; after waits for nothing")
     fonts = ("fonts-first", "fonts-first-cache", "Fonts first (cache miss)", "guards", "gate", "fonts", "font-cache", "Fonts (cache miss)")
     hit = {"fonts-first-cache": {"cache-hit": "true"}, "font-cache": {"cache-hit": "true"}}
     seq = lambda event, inputs, more: [k for k in order("main", plan(flow, "main", event=event, inputs=inputs, outputs={  # noqa: E731
@@ -517,6 +518,33 @@ def checkout(tmp: str, bare: str, name: str = "ws") -> str:
     return ws
 
 
+def checkout_data(tmp: str, bare: str, name: str) -> str:
+    """The data lane's checkout: blobless, depth 1, its sparse patterns (no TTS/)."""
+    ws = os.path.join(tmp, name)
+    subprocess.run(["git", "clone", "-q", "--filter=blob:none", "--depth=1", "--no-checkout", f"file://{bare}", ws], check=True)
+    git(ws, "sparse-checkout", "set", "--no-cone", "/site/Card Edits.json", "/site/Card Authors.txt",
+        "/site/Card Creation Dates.json", "/MDW/Fonts/stoogedings-src/stoogedings.json")
+    git(ws, "checkout", "-q", "main")
+    return ws
+
+
+def history(data: dict, ws: str, tmp: str, start: str = "", wait: str = "") -> tuple:
+    """History start, then History wait (origin at start, wait while each fetches): (exit code, output)."""
+    code_file = os.path.join(tmp, "runner", "history.code")
+    if os.path.exists(code_file):
+        os.remove(code_file)
+    was = git(ws, "remote", "get-url", "origin")
+    git(ws, "remote", "set-url", "origin", start or was)
+    run_step(data, "History start", ws, {}, tmp)
+    end = time.monotonic() + 60
+    while (not os.path.exists(code_file) or not open(code_file).read().strip()) and time.monotonic() < end:
+        time.sleep(0.05)
+    git(ws, "remote", "set-url", "origin", wait or was)
+    code, text, _ = run_step(data, "History wait", ws, {}, tmp)
+    git(ws, "remote", "set-url", "origin", was)
+    return code, text
+
+
 def run_step(job: dict, name: str, cwd: str, env: dict, tmp: str) -> tuple:
     """A step's run: script under bash -e: (exit code, output, $GITHUB_OUTPUT as a dict)."""
     out = os.path.join(tmp, f"output-{time.monotonic_ns()}")
@@ -649,11 +677,14 @@ def gate_cases(flow: dict) -> None:
             ({"Deep/Two/Card.PSD": "psd", "Deep/Two/Card.PNG": "png"}, "an upper-case card", "t", True),
             ({"site/Card Creation Dates.json": '{"cards":{}}'}, "creation dates", "t", True),
         ]
+        full = []
         for files, message, author, want in cases:
             base = git(work, "rev-parse", "HEAD")
             commit(work, files, message, author)
             git(work, "push", "-q", "origin", "main")
-            ws = checkout(tmp, bare, f"ws-{time.monotonic_ns()}")
+            ws = checkout_data(tmp, bare, f"ws-{time.monotonic_ns()}")
+            code, text = history(data, ws, tmp)
+            full.append(code == 0 and git(ws, "rev-parse", "--is-shallow-repository") == "false")
             _bot(ws)
             write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps(
                 {"card_commit": base, "builder": {"parser_version": 2}, "pending": {"stale": [], "repin": ["x.png"]}}))
@@ -676,6 +707,8 @@ def gate_cases(flow: dict) -> None:
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs, "AFTER": "f" * 40, "RECORDS": "true"}, tmp)
                 check(code == 0 and "dispatched with" not in text,
                       "data gate: after the bake on a dispatch -> its inputs left out" + ("" if code == 0 else f"\n{text}"))
+
+        check(all(full) and len(full) == len(cases), f"data gate: on the data lane's depth-1 checkout after History start and wait ({full})")
 
         # The main lane's gate: the cursor is the head of the last run whose Bake and save succeeded
         fake = os.path.join(tmp, "bin")
@@ -731,6 +764,34 @@ def gate_cases(flow: dict) -> None:
         check(code == 0 and out.get("go") == "false" and out.get("edits") == "true",
               f"main gate: nothing changed, a PSD-kind edit in the file -> go={out.get('go')} edits={out.get('edits')} (want false, true)"
               + ("" if code == 0 else f"\n{text}"))
+
+
+def history_cases(flow: dict) -> None:
+    """The data lane's history (and the site build's, the same scripts): fetched in the background; failed, once more;
+    failed again, the job fails shallow."""
+    data = flow["jobs"]["data"]
+    with tempfile.TemporaryDirectory() as tmp:
+        work, bare = origin(tmp)
+        os.makedirs(os.path.join(tmp, "runner"))
+        commit(work, {"Cards/Two.psd": "psd 2"}, "a card")
+        git(work, "push", "-q", "origin", "main")
+        gone = f"file://{tmp}/gone.git"
+        for start, wait, want, what in (("", "", 0, "main moved after the checkout: its full history"),
+                                        (gone, "", 0, "the background fetch failed: once more, in the step"),
+                                        (gone, gone, 1, "failed twice: the job fails, never a shallow build")):
+            ws = checkout_data(tmp, bare, f"ws-{time.monotonic_ns()}")
+            commit(work, {"Cards/Three.psd": f"psd {time.monotonic_ns()}"}, "another card")
+            git(work, "push", "-q", "origin", "main")
+            code, text = history(data, ws, tmp, start, wait)
+            shallow = git(ws, "rev-parse", "--is-shallow-repository")
+            ok = (code == 0) == (want == 0) and shallow == ("false" if want == 0 else "true") and ("once more" in text) == bool(start)
+            ok = ok and (want or git(ws, "rev-list", "--count", "HEAD") == git(bare, "rev-list", "--count", git(ws, "rev-parse", "HEAD")))
+            check(ok, f"History wait: {what} (exit {code}, shallow {shallow})" + ("" if ok else f"\n{text}"))
+    site = load(os.path.join(REPO, ".github/workflows/site.yml"))["jobs"]["build"]
+    names = [s.get("id") or s.get("name") or s.get("uses") for s in site["steps"]]
+    check(all(step(site, n)["run"] == step(data, n)["run"] for n in ("History start", "History wait"))
+          and names.index("History start") == 1 and names.index("History wait") < names.index("Data wait") < names.index("build"),
+          "site.yml: the same History start after its checkout, History wait before Data wait's fetch and the build")
 
 
 def fonts_cases(flow: dict) -> None:
@@ -1432,6 +1493,7 @@ def main():
     plans(flow)
     timer_cases(flow)
     gate_cases(flow)
+    history_cases(flow)
     build_cases(flow)
     tell_cases(flow)
     fonts_cases(flow)
