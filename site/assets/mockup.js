@@ -596,6 +596,13 @@ export function fit(paras, maxW, maxH, size, measure, { min = 0.45, lines: most 
   while (!fits() && s > size * min) { s *= 0.94; lines = layout(paras, maxW, s, measure); }
   return { size: s, lines };
 }
+/** Point text as the bake sets it: each paragraph one line at `size`, smaller by 0.94 down to 40% while a line is wider
+ *  than `reach` (off the card's sides: psd_edit fit_below). */
+export function pointLayout(paras, size, reach, measure) {
+  let s = size, lines = layout(paras, Infinity, s, measure);
+  while (Math.max(...lines.map(l => l.w)) > reach && s > size * 0.4) { s *= 0.94; lines = layout(paras, Infinity, s, measure); }
+  return { size: s, lines };
+}
 /** A title as the bake sets it (psd_edit set_text_layer): never shrunk; point text keeps its lines, a box's (more lines
  *  found than the old text's n0 paragraphs) wraps at maxW. over: more lines than it has; dx: back on the card (back_on). */
 export function titleLayout(paras, n0, found, maxW, size, measure, W) {
@@ -1143,14 +1150,17 @@ export function steadyPitch(lines) {
 }
 /** The new text where the old block was: its size, line pitch and alignment, from its first line down (a PSD's text
  *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). An Ability with the
- *  record's frame and px (box text) wraps at the frame at its set size, as the bake. */
+ *  record's frame and px (box text) wraps at the frame at its set size, as the bake; with px and no frame (point
+ *  text) each paragraph is one line (pointLayout). */
 function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills }, imgs, W) {
   const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink, null, fills), region = area.box;
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
   const left = found.align === "left" && role !== "name";
   const frame = role === "ability" && kc && Array.isArray(layer?.frame) && layer.frame.length === 4 ? layer.frame.map(v => v * kc) : null;   // box text's frame: Photoshop wraps there
   if (frame && layer.px > 0) size = layer.px * kc;    // at its set size
-  const maxW = frame ? (left ? frame[2] - found.box[0] : frame[2] - frame[0]) : left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
+  const point = role === "ability" && !!kc && !frame && layer?.px > 0;   // point text: its paragraphs never wrap
+  if (point) size = layer.px * kc;
+  const maxW = point ? Infinity : frame ? (left ? frame[2] - found.box[0] : frame[2] - frame[0]) : left ? region[2] - found.box[0] - W * 0.01 : role === "name" ? Math.max(wide, room * 0.96) : found.lines.length > 1 ? Math.min(wide * 1.06, Math.max(wide, room)) : Math.max(wide, room * 0.94);
   const pitch0 = steadyPitch(found.lines) || size * LINE, top = found.lines[0][1];
   // Room for an Ability at its size, as the bake leaves it (psd_edit fit_below, ink_beyond): its new ink ends no lower
   // than the old text's, or lower but on the card and off the design below (the backdrop under the old text, BEYOND)
@@ -1176,7 +1186,8 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
     for (let y = from, j = 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
     return n < 100 * k * k;
   }
-  let { size: z, lines, over = false, dx = 0 } = role === "name" ? titleLayout(paras, tokenize(old).length, found, maxW, size, measure, W) : fit(paras, maxW, Infinity, size, measure);
+  let { size: z, lines, over = false, dx = 0 } = role === "name" ? titleLayout(paras, tokenize(old).length, found, maxW, size, measure, W)
+    : point ? pointLayout(paras, size, left ? W - found.box[0] : 2 * Math.min(mid, W - mid), measure) : fit(paras, maxW, Infinity, size, measure);
   if (role !== "name" && !roomBelow()) {              // past the area's bottom: smaller, down to 40%; still past it: said so
     const room2 = region[3] - top, need = s => (lines.length - 1) * pitch0 * (s / size) + s * 1.05;
     while (need(z) > room2 && z > size * 0.4) { z *= 0.94; lines = layout(paras, maxW, z, measure); }
