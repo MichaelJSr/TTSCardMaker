@@ -143,9 +143,45 @@ jobs:
               --repo "$GITHUB_REPOSITORY" --head "$GITHUB_SHA" --records "$RUNNER_TEMP/records" || true
             touch "$RUNNER_TEMP/reads.done"; } < /dev/null > "$RUNNER_TEMP/reads.log" 2>&1 &
 
-      # The shared setup (.github/actions/cards-python), without the oxipng CLI: the bake would recompress preview.png
-      # (~4 s), which is never published.
-      - timeout-minutes: 5
+      # The venv as cards-python restores it on a hit, without its setup-python and setup-uv downloads (about 1 s): the
+      # image's newest 3.14.x (setup-python's pick from the tool cache), the same key, path and check.
+      - id: venv
+        shell: bash
+        run: |
+          py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
+          sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' bot/requirements-cards.txt | sha256sum | cut -d' ' -f1)
+          if [ -n "$py" ]; then
+            echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")" >> "$GITHUB_OUTPUT"
+            echo "lib=$py/lib" >> "$GITHUB_OUTPUT"
+          fi
+
+      - id: venv-hit
+        if: steps.venv.outputs.key != ''
+        timeout-minutes: 5
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/venv
+          key: ${{ steps.venv.outputs.key }}
+
+      - id: venv-ok     # LD_LIBRARY_PATH as setup-python sets it
+        if: steps.venv-hit.outputs.cache-hit == 'true'
+        shell: bash
+        env:
+          LIB: ${{ steps.venv.outputs.lib }}
+        run: |
+          export LD_LIBRARY_PATH=$LIB${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+          if "$RUNNER_TEMP/venv/bin/python" -c 'import importlib.metadata as m; [m.version(p) for p in ("psd-tools", "fonttools", "requests")]'; then
+            echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
+            echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            rm -rf "$RUNNER_TEMP/venv"
+          fi
+
+      # Else the shared setup (.github/actions/cards-python), as ever. Without the oxipng CLI: the bake would recompress
+      # preview.png (~4 s), which is never published.
+      - if: steps.venv-ok.outputs.ok != 'true'
+        timeout-minutes: 5
         uses: ./.github/actions/cards-python
         id: setup
         with:
