@@ -784,13 +784,16 @@ const centreOf = b => [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
 const boxAt = ([cx, cy], w, h) => [cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2];
 /** Stars from `from` to `to` on the record's header.stars: {erase: [box], draw: [box], refused, boxed}. A shown star stays when
  *  one of the count's centres (at[to], the bake's plan) is within a quarter of a star of its own; the others are erased
- *  (their box, glow included) and a star drawn at every centre none covers. No record, no layout for the count, or stars
- *  not one per unit: boxed. refused: why the bake would refuse the count. */
+ *  (their box, glow included) and a star drawn at every centre none covers. A count whose stars all shrink to fit their
+ *  banner (scale[to], the bake's option B) erases them all and draws each centre that much smaller. No record, no layout
+ *  for the count, or stars not one per unit: boxed. refused: why the bake would refuse the count. */
 export function starPlan(stars, from, to) {
   const st = obj(stars), why = st && obj(st.refused) ? st.refused[to] ?? st.refused["*"] ?? null : null;
   const units = Array.isArray(st?.units) ? st.units : [], at = to === 0 ? [] : obj(st?.at)?.[to];   // none: all erased
   if (!units.length || units.length !== from || !Array.isArray(at)) return { erase: [], draw: [], refused: why, boxed: true };
   const w = median(units.map(u => u.core[2] - u.core[0])), h = median(units.map(u => u.core[3] - u.core[1])), tol = 0.25 * Math.max(w, h);
+  const s = +obj(st.scale)?.[to];
+  if (s > 0 && s < 1) return { erase: units.map(u => u.box), draw: at.map(t => boxAt(t, w * s, h * s)), refused: why, boxed: false };
   const left = units.map(u => ({ u, c: centreOf(u.core) })), draw = [];
   for (const t of at) {
     const i = left.findIndex(({ c }) => Math.abs(c[0] - t[0]) <= tol && Math.abs(c[1] - t[1]) <= tol);
