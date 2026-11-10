@@ -494,19 +494,21 @@ local function namedOf(card)
 end
 
 -- the decks a card's text draws from, by card name (owner 2026-11-06; they replace the Specific Item Decks bag), one
--- button each: {label, {folder, stars}, ...}, every card of tts.json in those folders at its count in the save's piles
--- (several: one merged deck)
+-- button each: {label, {folder, stars, item type}, ...}, every card of tts.json in those folders at its count in the
+-- save's piles (several: one merged deck); with an item type, every item with its icon instead (Cake Mix is a 2★
+-- attack item too)
 local function items(n) return {n .. "★ Items", {"Items/", n}} end
-local function equips(n) return {n .. "★ Equips", {"Items/Equip/", n}} end
+local function equips(n) return {n .. "★ Equips", {"Items/Equip/", n, "equip"}} end
+local function attacks(n) return {n .. "★ Attack Items", {"Items/Attack/", n, "attack"}} end
 local DECKS = {
     ["Butterfly"] = {{"5★ Creatures", {"Creatures/", 5}}},
     ["The Puppet"] = {items(1), items(2), items(3)},
-    ["Gandhi"] = {{"4★ Attack Items", {"Items/Attack/", 4}}, {"2★ Attack Items", {"Items/Attack/", 2}}},
+    ["Gandhi"] = {attacks(4), attacks(2)},
     ["Tainted Isaac"] = {{"1-3★ Items", {"Items/", 1}, {"Items/", 2}, {"Items/", 3}}},
-    ["Nuclear Proliferation"] = {{"2★ Attack Items", {"Items/Attack/", 2}}, {"3★ Attack Items", {"Items/Attack/", 3}}},
+    ["Nuclear Proliferation"] = {attacks(2), attacks(3)},
     ["Tyler"] = {items(1), items(2), items(3)},
     ["Tainted Bethany"] = {{"3-4★ Items", {"Items/", 3}, {"Items/", 4}}},
-    ["Binge Eater"] = {{"2★ Healing Items", {"Items/Heal/", 2}}},
+    ["Binge Eater"] = {{"2★ Healing Items", {"Items/Heal/", 2, "food"}}},
     ["Eden's Soul"] = {items(3)},
     ["Mystery Gift"] = {items(1)},
     ["Tainted Eden"] = {equips(1), equips(2), equips(3), equips(4), items(1), items(2), items(3), items(4)},
@@ -514,13 +516,22 @@ local DECKS = {
     ["Tainted Cain"] = {items(1), items(2), items(3), items(4)},
 }
 
--- a deck's cards (paths): "Items/" + 2 is every Items/*/2 Stars/ card
+-- whether an item has an item type's icon (a fragile equip is an equip)
+local function typed(card, kind)
+    for _, t in ipairs(card.t) do if t == kind or (kind == "equip" and t == "fragileequip") then return true end end
+    return false
+end
+
+-- a deck's cards (paths): "Items/" + 2 is every Items/*/2 Stars/ card; with a type, every item with its icon (its
+-- folder's when its icons weren't read)
 local function deckPaths(deck)
     local out = {}
-    for path in pairs(details.cards) do
+    for path, card in pairs(details.cards) do
         for i = 2, #deck do
-            local folder, stars = deck[i][1], deck[i][2]
-            if path:sub(1, #folder) == folder and path:find("/" .. stars .. " Stars/", #folder, true) then
+            local folder, stars, kind = deck[i][1], deck[i][2], deck[i][3]
+            local within = path:sub(1, #folder) == folder
+            if kind and card.t then within = path:sub(1, 6) == "Items/" and typed(card, kind) end
+            if within and path:find("/" .. stars .. " Stars/", 1, true) then
                 table.insert(out, path)
                 break
             end

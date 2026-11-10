@@ -885,6 +885,18 @@ def main():
             all(str(int(k["CardID"]) // 100) in d["CustomDeck"] for k in kids) and sp["rotation"][2] == 180 and \
             sp["position"][1] == 3 and min(sp["scale"]) > 0
         check(bool(ok), f"+ 4★ Items: one shuffled deck of every Items/*/4 Stars card ({len(paths)} of {len(expect)}), face down beside the card")
+        w.spawns.clear()
+        w.call("spawnDeck", teal, None, btn[3])
+        got = Counter(map(face_path, w.spawns[0]["data"].get("ContainedObjects") or [] if len(w.spawns) == 1 else []))
+        typed = sorted(p for p, c in details["cards"].items() if p.startswith("Items/") and "/3 Stars/" in p
+                       and {"equip", "fragileequip"} & set(c.get("t") or []))
+        most = Counter()                                  # path -> the most copies one saved deck holds
+        for x in walk(save.get("ObjectStates")):
+            if x.get("Name") == "Deck":
+                most |= Counter(map(face_path, x.get("ContainedObjects") or []))
+        want = Counter({p: most[p] or 1 for p in typed})
+        check(got == want, f"+ 3★ Equips: every 3★ item with an equip icon, at its count ({got.total()} of {want.total()}; "
+              f"from other folders {[p.split('/')[-1] for p in typed if not p.startswith('Items/Equip/')]})")
         every = lambda names: set.intersection(*(set(x) for x in walk(save.get("ObjectStates")) if x.get("Name") in names))
         saved_deck, saved_card = every({"Deck"}), every({"Card", "CardCustom"})   # the fields every saved one has
         lacks = lambda have, model: sorted(set(model) - {"GUID"} - set(have))
