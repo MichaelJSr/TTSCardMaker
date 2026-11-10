@@ -21,6 +21,7 @@ S = 9                                       # px per table unit
 SEATS = {"Red": (218, 26, 24), "Orange": (244, 100, 29), "Green": (49, 179, 43), "Blue": (31, 135, 255),
          "Purple": (160, 32, 240), "Pink": (245, 112, 206)}
 INK, PANEL = (16, 33, 117), (207, 207, 255)
+PAPER = (255, 255, 255)                     # the rulebook's page under it (style.css --rb-paper, the PDF's sheets)
 # the chapter's areas, in its pictures' order: nicknames (5 and 6 also by kind and place, below)
 AREAS = {1: ("Creatures", "Items", "Field Cards", "N.M.E Items", "Creatures Developer Version", "Baseline Creatures"),
          2: ("Global Turn", "SP", "Star Points", "Bricks", "Points", "Item Shop", "Field Shop", "N.M.E. Shop"),
@@ -156,8 +157,8 @@ def draw_map(save):
     canvas = Image.alpha_composite(Image.new("RGBA", canvas.size, (90, 39, 44, 255)), canvas)   # opaque (Pillow's draws leave alpha)
     mask = Image.new("L", canvas.size, 0)
     ImageDraw.Draw(mask).rounded_rectangle([0, 0, W - 1, H - 1], radius=36, fill=255)
-    out = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-    out.paste(canvas, (0, 0), mask)
+    out = Image.new("RGB", canvas.size, PAPER)    # rounded on the page's white, opaque: the PDF takes it as a JPEG
+    out.paste(canvas.convert("RGB"), (0, 0), mask)
     return out
 
 
