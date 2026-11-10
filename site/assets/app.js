@@ -1102,10 +1102,19 @@ function renderRules(r) {
   }
   watchToc();
   const [ch, sec] = (r.arg || "").split("/");
-  if (ch && !q && rulesAt !== location.hash) document.getElementById(sec ? `${ch}--${sec}` : ch)?.scrollIntoView();   // #/rules/<chapter>[/<section>]
+  if (ch && !q && rulesAt !== location.hash) settleAt(document.getElementById(sec ? `${ch}--${sec}` : ch));   // #/rules/<chapter>[/<section>]
   rulesAt = location.hash;
   const input = $("#rules-q");
   input.addEventListener("input", debounce(() => { setParams({ q: input.value }); const i2 = $("#rules-q"); i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }, 200));
+}
+// a deep link's place, again once the book's web fonts are in (they swap in later and move it); not once the reader moves
+function settleAt(el) {
+  el?.scrollIntoView();
+  if (!el || document.fonts.status === "loaded") return;
+  const at = location.hash, moves = ["wheel", "touchstart", "keydown", "pointerdown"];
+  let moved = false; const stop = () => { moved = true; };
+  for (const t of moves) addEventListener(t, stop, { passive: true, once: true });
+  document.fonts.ready.then(() => { for (const t of moves) removeEventListener(t, stop); if (!moved && location.hash === at && el.isConnected) el.scrollIntoView(); });
 }
 // the contents follow the reading: the chapter in view is marked and shows its sections
 function watchToc() {
