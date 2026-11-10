@@ -4107,7 +4107,7 @@ def tts_details(cards, chapters, icons, tag_table):
             warn(f"{c['png']}: no TTS colours ({type(error).__name__}: {error})")
             colours = {}
         name = str(c["name"]).lower()
-        aliases = {a.lower(): a for a in (c.get("aliases") or []) + (c.get("webAliases") or []) if a.strip() and a.lower() not in name}
+        aliases = {a.lower(): a for a in (c.get("aliases") or []) + (c.get("webAliases") or []) + (c.get("was") or []) if a.strip() and a.lower() not in name}
         out_cards[c["png"]] = {k: v for k, v in {
             "n": c["name"], "k": KIND_LABEL.get(c.get("type"), c.get("type") or "") + (f" ({c['subtype']})" if c.get("subtype") else ""),
             "st": c.get("stars"), "s": "; ".join(bars) or None, "a": game_words(text, icons) or None,
@@ -4666,6 +4666,11 @@ def main():
     for e in cards:                               # the file name stays searchable under a printed or corrected title
         if (not e.get("dup") or e.get("variantOf")) and norm(e["key"]) != norm(e["name"]) and norm(e["key"]) not in {norm(a) for a in e.get("aliases", [])}:
             e.setdefault("aliases", []).append(e["key"])
+    for e in cards:                               # a renamed card's old names find it (search, hands, TTS), as /query does
+        known = {s.lower() for s in (e["name"], e["key"], *e.get("aliases", []))}
+        was = sorted({n for n in into.get(e["key"], []) if n.lower() not in known}, key=str.lower)
+        if was and not e.get("dup"):
+            e["was"] = was
 
     # authors: site/Card Authors.txt wins over the bot ([people] maps git names to shown names)
     people, credited = parse_authors()

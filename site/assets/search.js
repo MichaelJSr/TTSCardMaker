@@ -32,7 +32,7 @@ export const FLAGS = {
 };
 
 export function haystack(c) {
-  if (c._hay === undefined) c._hay = [c.name, ...(c.aliases || []), c.ability || ""].join("\n").toLowerCase();
+  if (c._hay === undefined) c._hay = [c.name, ...(c.aliases || []), ...(c.was || []), c.ability || ""].join("\n").toLowerCase();
   return c._hay;
 }
 
@@ -96,10 +96,10 @@ export function compile(query) {
   return c => haystack(c).includes(lower);
 }
 
-/** The cards whose name or an alias is the query (text.js norm: case, spaces and dots aside; quotes allowed). */
+/** The cards whose name, an alias or an old name is the query (text.js norm: case, spaces and dots aside; quotes allowed). */
 export function exactOf(query, cards) {
   const q = norm((query || "").trim().replace(/^"(.*)"$/, "$1"));
-  return q ? cards.filter(c => norm(c.name) === q || (c.aliases || []).some(a => norm(a) === q)) : [];
+  return q ? cards.filter(c => norm(c.name) === q || [...(c.aliases || []), ...(c.was || [])].some(a => norm(a) === q)) : [];
 }
 /** list with exactOf's cards first, whatever the sort; the rest keep their order. */
 export function exactFirst(list, query) {

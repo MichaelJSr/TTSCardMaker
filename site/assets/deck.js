@@ -143,7 +143,7 @@ export function toText(deck, byId) {
 }
 export function fromText(text, cards) {
   const lookup = new Map();
-  for (const c of cards) { if (!c.dup || !lookup.has(norm(c.name))) lookup.set(norm(c.name), c); for (const a of c.aliases || []) if (!lookup.has(norm(a))) lookup.set(norm(a), c); }
+  for (const c of cards) { if (!c.dup || !lookup.has(norm(c.name))) lookup.set(norm(c.name), c); for (const a of [...(c.aliases || []), ...(c.was || [])]) if (!lookup.has(norm(a))) lookup.set(norm(a), c); }
   const deck = { name: "Imported hand", cards: [], field: null }, unknown = [];
   for (let line of text.split(/\r?\n/)) {
     line = line.trim();
