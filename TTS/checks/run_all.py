@@ -1,6 +1,6 @@
 """Runs every check on a save, 4 at a time: one line each, the tail of a failing one, exit 1 if any fails.
 
-    python run_all.py [save.json]       (default the repo's save; outputs in /tmp/tts-checks/out/; about 1 minute)
+    python run_all.py [save.json]       (default the repo's save; outputs in /tmp/tts-checks/out/; about 40 s)
 """
 import os
 import subprocess
@@ -9,6 +9,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from card_sync_steps import GROUPS  # noqa: E402
 from checks_env import HERE, ensure_history, save_arg  # noqa: E402
 
 CHECKS = [   # file and its extra arguments
@@ -18,8 +19,11 @@ CHECKS = [   # file and its extra arguments
     ("scripts_lua_syntax.py",), ("scripts_global_refs.py",), ("scripts_state_xml.py",), ("verify_scripts_static.py",),
     ("lua_mock.py",), ("lua_table.py",), ("lua_resize_roundtrip.py",),
     ("links_pins.py",), ("pins_current.py",), ("links_http.py",), ("final_spot.py",),
-    ("updater_idempotent.py",), ("updater_report_decks.py",), ("card_sync_steps.py",),
+    ("updater_idempotent.py",), ("updater_report_decks.py",),
 ]
+# card_sync_steps.py in 3 parts of about 15 s: these two and the rest of its GROUPS
+CSS_PARTS = (("main", "save", "bake"), ("plans", "timer", "gate", "history", "build", "tell"))
+CHECKS += [("card_sync_steps.py", *p) for p in (*CSS_PARTS, tuple(g for g in GROUPS if g not in sum(CSS_PARTS, ())))]
 OUT = "/tmp/tts-checks/out"
 TIMEOUT = 600                                               # seconds per check: one that hangs fails, the rest still run
 SLOW = ("card_sync_steps.py", "links_http.py", "final_spot.py", "updater_idempotent.py")   # started first
@@ -33,7 +37,7 @@ def main():
 
     def run(check):
         name, *extra = check
-        args = [] if name == "card_sync_steps.py" else [save]
+        args = [] if name == "card_sync_steps.py" else [save]          # its extras: groups of cases
         start = time.monotonic()
         try:
             r = subprocess.run([sys.executable, os.path.join(HERE, name), *args, *extra], capture_output=True, text=True,
@@ -42,7 +46,7 @@ def main():
         except subprocess.TimeoutExpired as e:              # its output is bytes even with text=True
             code = 1
             text = "".join((b or b"").decode("utf-8", "replace") for b in (e.stdout, e.stderr)) + f"\ntimed out after {TIMEOUT}s"
-        with open(os.path.join(OUT, name.replace(".py", ".txt")), "w", encoding="utf-8") as f:
+        with open(os.path.join(OUT, "_".join([name.replace(".py", ""), *extra[:1]]) + ".txt"), "w", encoding="utf-8") as f:
             f.write(text)
         return code, text, time.monotonic() - start
 
@@ -51,7 +55,7 @@ def main():
         futures = {c: pool.submit(run, c) for c in order}
         for check in CHECKS:
             code, text, took = futures[check].result()
-            print(f"{'ok  ' if code == 0 else 'FAIL'} {check[0]} ({took:.0f}s)", flush=True)
+            print(f"{'ok  ' if code == 0 else 'FAIL'} {' '.join(check)} ({took:.0f}s)", flush=True)
             if code:
                 failed.append(check[0])
                 for line in text.strip().splitlines()[-8:]:

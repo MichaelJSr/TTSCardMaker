@@ -1,6 +1,6 @@
 """card-sync.yml's lanes and step scripts, offline: which jobs and steps run, both gates, the fonts, the commits.
 
-    python3 card_sync_steps.py            (needs git 2.37 or later, bash and jq; no network)
+    python3 card_sync_steps.py [group ...]    (default every group in GROUPS; needs git 2.37+, bash and jq; no network)
 1. The step plans: every step's `if:` evaluated as GitHub does (&&, ||, !, ==, the status functions, the implicit
    success()), per lane. Data (Card data, and after the bake): a dry run commits, posts and dispatches nothing; switched
    it posts, commits data and dispatches the site and the checks (after the bake, whatever the data did; a push's
@@ -1486,8 +1486,8 @@ def lane_cases(flow: dict) -> None:
             write(os.path.join(jobs_dir, f"{rid}.json"), json.dumps({"jobs": doc}))
         for rid, seconds, ends, what in ((61, "", True, "its check job at Landed (Land and the uploads done)"),
                                          (62, "", True, "its check job ended before Landed"),
-                                         (63, "3595", False, "Land still running: 15 s looks, then the 60-minute cap"),
-                                         (64, "3595", False, "another job's Landed: not it")):
+                                         (63, "3598", False, "Land still running: 15 s looks, then the 60-minute cap"),
+                                         (64, "3598", False, "another job's Landed: not it")):
             if os.path.exists(calls):
                 os.remove(calls)
             env = {"PATH": f"{fake}:{os.environ['PATH']}", "GH_TOKEN": "x", "SHA": "", "RUN": str(rid), "FAKE_JOBS": jobs_dir,
@@ -1586,25 +1586,22 @@ def lane_cases(flow: dict) -> None:
               f"its run id by the API; failed, Follow up starts it ({got})")
 
 
+GROUPS = {"plans": plans, "timer": timer_cases, "gate": gate_cases, "history": history_cases, "build": build_cases,
+          "tell": tell_cases, "fonts": fonts_cases, "bake": bake_cases, "main": main_cases, "save": save_cases,
+          "records": records_cases, "guard": guard_cases, "chain": chain_cases, "lane": lane_cases}
+
+
 def main():
+    """Every group of cases, or the ones named (run_all.py runs them in parts)."""
     for tool in ("git", "bash", "jq"):
         if not shutil.which(tool):
             sys.exit(f"needs {tool}")
+    groups = sys.argv[1:] or list(GROUPS)
+    if set(groups) - set(GROUPS):
+        sys.exit(f"groups: {' '.join(GROUPS)}")
     flow = load()
-    plans(flow)
-    timer_cases(flow)
-    gate_cases(flow)
-    history_cases(flow)
-    build_cases(flow)
-    tell_cases(flow)
-    fonts_cases(flow)
-    bake_cases(flow)
-    main_cases(flow)
-    save_cases(flow)
-    records_cases(flow)
-    guard_cases(flow)
-    chain_cases(flow)
-    lane_cases(flow)
+    for g in groups:
+        GROUPS[g](flow)
     print(f"{len(FAILED)} failed" if FAILED else "all passed")
     sys.exit(1 if FAILED else 0)
 
