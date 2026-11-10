@@ -648,7 +648,8 @@ export function createEditor(app) {
       return ITEM_TYPES.map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
     }
     if (!["series", "subseries", "author"].includes(kind)) return [];
-    for (const c of S.all) if (c[kind]) count.set(c[kind], (count.get(c[kind]) || 0) + 1);
+    const counted = kind === "author" ? c => !c.dup && !c.hidden : () => true;   // an author's cards as People counts them (profile.js cardsOf)
+    for (const c of S.all) if (c[kind] && counted(c)) count.set(c[kind], (count.get(c[kind]) || 0) + 1);
     return (kind === "author" ? authorList() : kind === "subseries" ? subseriesList() : seriesList()).map(value => ({ value, n: count.get(value) || 0, kind, note: cards(count.get(value) || 0) }));
   }
   function knownNames(kind, skip = "") {     // canonName's [spelling, shown, rank]: cards (skip: the one being edited, or a Set of ids), buckets, [people]
