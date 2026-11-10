@@ -1852,6 +1852,23 @@ def swatches():
     return out
 
 
+STATUS_COLORS_JSON = "status_colors.json"     # each chart status's printed colour (AutoCroissant card_data.STATUS_COLORS)
+
+
+def status_colors(folder):
+    """The data branch's db/status_colors.json colours: {status name: "#rrggbb"} (app.js S.statusFills, the swatches'
+    fallback); {} without one. Warns, never fails."""
+    path = os.path.join(folder, STATUS_COLORS_JSON)
+    if not os.path.exists(path):
+        return {}
+    try:
+        colors = json.load(open(path, encoding="utf-8")).get("colors") or {}
+    except (ValueError, AttributeError) as e:
+        warn(f"{STATUS_COLORS_JSON} isn't valid JSON, no status colours read: {e}")
+        return {}
+    return {name: color for name, color in colors.items() if isinstance(color, str) and re.fullmatch(r"#[0-9a-f]{6}", color)}
+
+
 def valid_verdict(value):
     """A pipeline `_psd` entry: {"state": "baked" | "refused", "for": {field: value}, "psd": "<blob8>", "reason": str, ...}."""
     return (isinstance(value, dict) and value.get("state") in ("baked", "refused") and isinstance(value.get("for", {}), dict)
@@ -4840,6 +4857,7 @@ def main():
         "heavy": heavy_commits(commits),      # commit links: the commits GitHub can't show
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist, "tagMeanings": tag_meanings(rulebook_chapters()[0]),
         "swatches": swatches(),               # the editor's colour palette (textcolor.js): the status and attribute colours
+        "statusColors": status_colors(data_dir),   # the mock-up's status word colours, as the bake prints them (app.js)
         "thumbs": {w: thumb_tag(w) for w in IMAGE_SIZES},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
