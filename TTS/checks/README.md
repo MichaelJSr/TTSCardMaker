@@ -10,12 +10,13 @@ the rules or a checkout (the updater checks run on copies in a temp dir).
 ```sh
 python3 -m venv ~/.venvs/tts-checks                             # once
 ~/.venvs/tts-checks/bin/pip install requests Pillow lupa luaparser
-~/.venvs/tts-checks/bin/python TTS/checks/run_all.py            # all checks on the repo's save, about 3 minutes
+~/.venvs/tts-checks/bin/python TTS/checks/run_all.py            # all checks on the repo's save, about 1 minute
 ~/.venvs/tts-checks/bin/python TTS/checks/structure.py [save]   # one check
 ```
 
 Each check takes the save as its first argument (default: the repo's save) and exits 1 on a failure. `run_all.py`
-prints one line per check plus the end of a failing check's output, and keeps every output in `/tmp/tts-checks/out/`.
+runs them 4 at a time, the slow ones first, prints one line per check (in its list's order) plus the end of a failing
+check's output, and keeps every output in `/tmp/tts-checks/out/`.
 
 Interpreter: any Python 3 with `requests` and `Pillow`. The Lua checks also need `lupa` (`luaparser` is optional). A
 check that needs lupa and runs without it starts again under `$LUA_PYTHON` or `~/.venvs/tts-checks/bin/python`.
