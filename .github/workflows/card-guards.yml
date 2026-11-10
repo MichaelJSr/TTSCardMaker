@@ -264,9 +264,10 @@ jobs:
             echo "${code:-0}" > "$1.done"' _ "$list" > "$list.log" 2>&1 < /dev/null &
           echo "fetching $(wc -l < "$list") blobs"
 
-      # The icon font's past versions (AutoCroissant card_guards.earlier_fonts: badge widths; 10, 79 MB on 11-08), 40 at
-      # most, in the background: raw files by commit (no REST read), 4 at a time, into CARD_EARLIER_FONTS. Check reads a
-      # version there first; one missing or late goes by REST as before.
+      # The icon font, current first (Check's first font read, before the fonts restore is in), then its past versions
+      # (AutoCroissant card_guards.earlier_fonts: badge widths; 10, 79 MB on 11-08), 40 at most, in the background: raw
+      # files by commit (no REST read), 4 at a time, into CARD_EARLIER_FONTS. Check reads a version there first; one
+      # missing or late goes by the fonts restore or REST as before.
       - name: Earlier fonts start
         if: env.MODE != 'off'
         continue-on-error: true
@@ -279,14 +280,15 @@ jobs:
           font=MDW/Fonts/stoogedings.ttf
           mkdir -p "$dir"
           now=$(GIT_NO_LAZY_FETCH=1 git rev-parse -q --verify "$AFTER:$font") || { echo "no icon font"; exit 0; }
+          at=$(GIT_NO_LAZY_FETCH=1 git rev-parse "$AFTER^{commit}")
           { GIT_NO_LAZY_FETCH=1 git log --no-renames --raw --no-abbrev --format='C %H' "$AFTER" -- "$font" || true; } \
-            | awk -v now="$now" '$1 == "C" {c = $2; next}
-                /^:/ && $4 !~ /^0+$/ && $4 != now && !seen[$4]++ {print c, $4; if (++n == 40) exit}' > "$dir/list"
+            | awk -v now="$now" -v at="$at" 'BEGIN {print at, now; seen[now] = 1} $1 == "C" {c = $2; next}
+                /^:/ && $4 !~ /^0+$/ && !seen[$4]++ {print c, $4; if (++n == 40) exit}' > "$dir/list"
           echo "CARD_EARLIER_FONTS=$dir" >> "$GITHUB_ENV"
           FONT=$font nohup timeout -k 10 120 xargs -P 4 -n 2 bash -c 'printf "header = \"Authorization: token %s\"\n" "$GH_TOKEN" \
             | curl -fsS --retry 2 -K - -o "$0/$2.part" "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$1/$FONT" \
             && mv "$0/$2.part" "$0/$2"' "$dir" < "$dir/list" > "$dir/log" 2>&1 &
-          echo "fetching $(wc -l < "$dir/list") earlier icon fonts"
+          echo "fetching $(wc -l < "$dir/list") icon fonts"
 
       # A landing dispatch would post before a waiting push run of its commit (or a later one): refused.
       - name: No push run in its window
@@ -340,6 +342,26 @@ jobs:
         with:
           oxipng: ${{ github.job != 'checks' }}
 
+      # A push's Check starts here, beside the fonts restore (a dispatch's runs at Check, after its two checks): its first
+      # font read waits for Fonts ready's mark (AutoCroissant card_guards.fonts_ready). Output and exit code in RUNNER_TEMP.
+      - name: Check start
+        if: github.event_name == 'push' && env.MODE != 'off'
+        working-directory: bot
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BEFORE: ${{ github.event.before }}
+          AUTHOR: ${{ github.actor }}
+          CARD_BLOBS_PENDING: ${{ runner.temp }}/blobs
+          CARD_FONTS_READY: ${{ runner.temp }}/fonts.ready
+        run: |
+          args=(--clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --after "$GITHUB_SHA" --out "$OUT" --mode "$MODE"
+                --author "$AUTHOR" --before "$BEFORE")
+          t=$RUNNER_TEMP/check
+          nohup bash -c 'python -m commands.card_guards check "$@" > "$0.out" 2> "$0.err"; echo $? > "$0.code"' "$t" "${args[@]}" \
+            < /dev/null > /dev/null 2>&1 &
+          echo $! > "$t.pid"
+
       # Fonts for the font check (and R8's box text): MDW/Fonts' top level, cached by its tree sha (Card sync's key); the
       # sparse checkout fetches them only on a miss. One that fails leaves no folder: no font check (it would call every
       # font missing), R8 fetches its own, and nothing is cached.
@@ -364,6 +386,12 @@ jobs:
             rm -rf MDW/Fonts
             echo "ok=false" >> "$GITHUB_OUTPUT"
           fi
+
+      # The mark Check start's font reads wait for: MDW/Fonts in, or absent (R8 then fetches its own)
+      - name: Fonts ready
+        if: always()
+        shell: bash
+        run: touch "$RUNNER_TEMP/fonts.ready"
 
       # A dispatch's two checks (a push's are the `checks` job's), one after the other before the guards' check: on one
       # runner, an `all` dispatch reads its 813 PSDs once (twice at once would pass GITHUB_TOKEN's 1,000 requests an hour).
@@ -414,7 +442,8 @@ jobs:
           python -m "commands.${CHECK/-/_}" "${args[@]}" | tee "$out/report.md" >> "$GITHUB_STEP_SUMMARY"
 
       # A push: before..after. A dispatch: `sha` (or main's head) against its first parent, or with `all` every card PSD.
-      # report.md is the job summary and the comment; plan.json feeds Land. Exit 1: not checked (the alert).
+      # report.md is the job summary and the comment; plan.json feeds Land. Exit 1: not checked (the alert). A push's
+      # started at Check start: its output and exit code here once it ends.
       - name: Check
         id: check
         if: env.MODE != 'off'
@@ -431,6 +460,14 @@ jobs:
           ALL: ${{ inputs.all }}
           CARD_BLOBS_PENDING: ${{ runner.temp }}/blobs    # Pushed blobs start's list: a blob in it is waited for
         run: |
+          t=$RUNNER_TEMP/check
+          if [ -s "$t.pid" ]; then
+            while [ ! -s "$t.code" ] && kill -0 "$(cat "$t.pid")" 2> /dev/null; do sleep 0.05; done
+            code=$(cat "$t.code" 2> /dev/null) || echo "::error::the check ended without an exit code"
+            cat "$t.err" >&2
+            tee -a "$GITHUB_STEP_SUMMARY" < "$t.out"
+            exit "${code:-1}"
+          fi
           args=(--clone "$GITHUB_WORKSPACE" --repo "$GITHUB_REPOSITORY" --after "${SHA:-$GITHUB_SHA}" --out "$OUT" --mode "$MODE")
           [ -n "$AUTHOR" ] && args+=(--author "$AUTHOR")
           [ -n "$BEFORE" ] && args+=(--before "$BEFORE")
