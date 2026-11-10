@@ -88,7 +88,7 @@ runs:
       run: |
         if [ "$HIT" != true ]; then
           mkdir -p ~/.cache/card-wheels
-          pip wheel -q -f ~/.cache/card-wheels -w ~/.cache/card-wheels -r bot/requirements-cards.txt --uploaded-prior-to 2026-11-07   # PyPI as then, the fork's build packages too: bump it with each fork re-pin
+          env -u GIT_NO_LAZY_FETCH pip wheel -q -f ~/.cache/card-wheels -w ~/.cache/card-wheels -r bot/requirements-cards.txt --uploaded-prior-to 2026-11-07   # PyPI as then, the fork's build packages too: bump it with each fork re-pin. env -u: pip clones the fork blobless, and a job's GIT_NO_LAZY_FETCH=1 (Card checks) fails its checkout
           echo "wheels=built" >> "$GITHUB_OUTPUT"
         fi
         sed 's/ @ [^;]*//' bot/requirements-cards.txt > "$RUNNER_TEMP/cards.txt"   # by name: a URL line would clone and build the fork
