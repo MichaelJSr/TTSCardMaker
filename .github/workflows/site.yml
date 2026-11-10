@@ -87,8 +87,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url || steps.retry.outputs.page_url || steps.pages.outputs.page_url }}
     runs-on: ubuntu-latest
-    # the first run downloads every card PNG (~1.6 GB); two stuck deploys add ~12 min; an early build's Data wait 22
-    timeout-minutes: ${{ inputs.after && 82 || 60 }}
+    # the first run downloads every card PNG (~1.6 GB); three stuck deploys add ~19 min; an early build's Data wait 25
+    timeout-minutes: ${{ inputs.after && 92 || 67 }}
     outputs:
       saved: ${{ steps.cache.outputs.cache-hit != 'true' || steps.og-save.outcome == 'success' || steps.partial.outcome == 'success' }}
     steps:
@@ -279,11 +279,11 @@ jobs:
       # A Card sync data job's early build (dispatched at its start): set up above while that job builds, it waits here
       # until the job's Commit data is done or the job ended: 3 s looks for 2 minutes, then 15 s; 20 minutes at most (past
       # that, Card sync's Site build dispatches another). Then main's head again, as Card sync's Newest; when that moved
-      # a PSD, the PSD sizes again (Setup wait waits for them). The data's head beside main's (Card checks' lines; 3 tries;
-      # the clone or those failed: checked out after Setup wait).
+      # a PSD, the PSD sizes again (Setup wait waits for them). The data's head beside main's (Card checks' lines; 3 tries,
+      # ~3.5 min at most: 25 minutes for the step; the clone or those failed: checked out after Setup wait).
       - name: Data wait
         if: inputs.after
-        timeout-minutes: 22
+        timeout-minutes: 25
         env:
           GH_TOKEN: ${{ github.token }}
           RUN: ${{ inputs.after }}
@@ -422,9 +422,10 @@ jobs:
       # deploy-pages' calls (OIDC token, pages/deployments, its status), each try under a version of its own: Pages answers
       # a version it has deployed with that old deployment (deploy-pages sends GITHUB_SHA: a second build at a commit went
       # nowhere, run 42790226151 "success" in 1 s) and refuses one that is not a commit it holds (404). So each try deploys
-      # under a commit of its own, the version job's (none handed over: GITHUB_SHA, as deploy-pages). Status every 2 s (5 s
-      # after 2 min); 6 minutes, then cancelled. A deploy 2 min in syncing_files (where stuck ones hang; slow good ones wait
-      # in deployment_queued) while a newer main build waits in pages-build: cancelled, and that build deploys (all this).
+      # under a commit of its own, the version job's (none handed over: GITHUB_SHA, as deploy-pages). Status every 2 s, 5 s
+      # after 1 min, 10 s after 2 (good deploys take ~30 s); 6 minutes, then cancelled. A deploy 2 min in syncing_files
+      # (where stuck ones hang; slow good ones wait in deployment_queued) while a newer main build waits in pages-build:
+      # cancelled, and that build deploys (all this).
       # Not to an early build (its Data wait may be long), nor under GITHUB_SHA to one at it. stuck: a version commit's
       # deploy still syncing files at the end (Pages took it; a retry under the same version hung again, run 42753587574).
       - id: deployment
@@ -457,7 +458,7 @@ jobs:
           [ "$version" != "$GITHUB_SHA" ] || same=" and .head_sha != \"$GITHUB_SHA\""
           stuck() { [ "$last" != syncing_files ] || [ "$version" = "$GITHUB_SHA" ] || echo "stuck=true" >> "$GITHUB_OUTPUT"; }
           while :; do
-            sleep $(( SECONDS - start < 120 ? 2 : 5 ))
+            sleep $(( SECONDS - start < 60 ? 2 : SECONDS - start < 120 ? 5 : 10 ))
             [ $(( SECONDS - start )) -lt 360 ] || { echo "::error::not deployed in 6 minutes"; stuck; cancel; exit 1; }
             if ! st=$(timeout 20 gh api "$api/$id" --jq '.status // ""'); then
               [ $(( fails += 1 )) -lt 15 ] || { echo "::error::15 status reads failed"; stuck; cancel; exit 1; }
@@ -499,18 +500,22 @@ jobs:
           retention-days: 1
           if-no-files-found: error
 
-      # Try 1 stuck: the same script under the second version. Else deploy-pages under GITHUB_SHA, as before 11-10 (a
-      # version commit Pages refused or failed, or the script failing, never fails a deploy).
+      # Try 1 stuck: the same script under the second version. Else, or that failing too, deploy-pages under GITHUB_SHA,
+      # as before 11-10 (a version commit Pages refused, failed or left stuck, or the script failing, never fails a deploy).
       - id: retry
         if: steps.deployment.outcome == 'failure' && steps.deployment.outputs.stuck == 'true'
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
           ARTIFACT: ${{ steps.artifact-z.outputs.artifact-id }}
           TRY: "2"
         run: exec bash "$RUNNER_TEMP/deploy.sh"
 
+      - if: steps.retry.outcome == 'failure'
+        run: sleep 10
+
       - id: pages
-        if: steps.deployment.outcome == 'failure' && steps.deployment.outputs.stuck != 'true'
+        if: steps.deployment.outcome == 'failure' && (steps.deployment.outputs.stuck != 'true' || steps.retry.outcome == 'failure')
         uses: actions/deploy-pages@v5
         with:
           artifact_name: github-pages-z
