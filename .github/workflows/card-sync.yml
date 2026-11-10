@@ -211,9 +211,22 @@ jobs:
                 && git -C "$d" config "includeIf.gitdir:$GITHUB_WORKSPACE/carddata/.git.path" "$creds"; } || code=$?
             echo "$code" > "$RUNNER_TEMP/carddata.code" ) < /dev/null > "$RUNNER_TEMP/carddata.log" 2>&1 &
 
+      # Main's history (every commit and tree) fetched beside the checkout into history.git with carddata's header, 60 s
+      # at most; History join adds it to the checkout. Exit code in history-fetch.code.
+      - name: History start
+        run: |
+          h=$RUNNER_TEMP/history.git
+          ( code=0 t=$(date +%s.%N)
+            { git init -q --bare "$h" && git -C "$h" config uploadpack.allowFilter true \
+                && git -C "$h" config include.path "$RUNNER_TEMP/carddata-credentials.config" \
+                && git -C "$h" remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+                && timeout 60 git -C "$h" -c protocol.version=2 fetch -q --no-tags --filter=blob:none origin +refs/heads/main:refs/heads/main; } || code=$?
+            echo "History start: exit $code in $(awk -v a="$t" -v b="$(date +%s.%N)" 'BEGIN { printf "%.2f", b - a }') s"
+            echo "$code" > "$RUNNER_TEMP/history-fetch.code" ) > "$RUNNER_TEMP/history-fetch.log" 2>&1 < /dev/null &
+
       # Main's head (not github.sha), no file contents but the small files the stages read (no TTS/: the data reads only
       # decks.json's blob sha). The card folders are never checked out; the build reads PSDs by blob sha, local first,
-      # else REST. Depth 1: main's history (every commit and tree) comes in the background (History start).
+      # else REST. Depth 1: main's history (every commit and tree) comes in the background (History start, History join).
       - uses: actions/checkout@v7
         with:
           ref: main
@@ -229,11 +242,24 @@ jobs:
             /MDW/Fonts/stoogedings-src/stoogedings.json
             /site/rulebook/*.md
 
-      # Exit code in history.code; no git runs in the workspace before History wait
-      - name: History start
+      # In the background once History start's fetch is done: its history joins the checkout (no config or ref written);
+      # it failed, or still shallow (main moved between the two): from GitHub. Exit code in history.code; no git runs in
+      # the workspace before History wait.
+      - name: History join
         run: |
-          ( code=0; git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main \
-            || code=$?; echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
+          ( until [ -s "$RUNNER_TEMP/history-fetch.code" ]; do sleep 0.05; done
+            cat "$RUNNER_TEMP/history-fetch.log"
+            code=0
+            if [ "$(cat "$RUNNER_TEMP/history-fetch.code")" = 0 ] \
+                && git -c remote.history.url="file://$RUNNER_TEMP/history.git" -c remote.history.promisor=true -c remote.history.partialclonefilter=blob:none \
+                  fetch -q --unshallow --no-tags --no-write-fetch-head history main \
+                && [ "$(git rev-parse --is-shallow-repository)" = false ]; then
+              echo "History join: joined"
+            else
+              echo "History join: from GitHub"
+              git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main || code=$?
+            fi
+            echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
 
       # The clones in bot/ and carddata/ once done (15 s at most); one failed or late: checked out below as ever
       - &clones
@@ -354,15 +380,15 @@ jobs:
           done <<< "$runs"
           echo "No guards run with fixes to land: the main lane goes on." | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # History start's fetch done (before any git here: Newest, the Gate, the build's dates); failed or still shallow:
-      # once more, else the job fails (never a shallow build)
+      # History join done (before any git here: Newest, the Gate, the build's dates); failed or still shallow: once more,
+      # else the job fails (never a shallow build)
       - name: History wait
         timeout-minutes: 5
         run: |
           until [ -s "$RUNNER_TEMP/history.code" ]; do sleep 0.1; done
+          cat "$RUNNER_TEMP/history.log"
           if [ "$(git rev-parse --is-shallow-repository)" != false ]; then
-            echo "::group::History start (exit $(cat "$RUNNER_TEMP/history.code"))"; cat "$RUNNER_TEMP/history.log"; echo "::endgroup::"
-            echo "::warning::main's history not fetched in the background: once more"
+            echo "::warning::main's history not fetched in the background (exit $(cat "$RUNNER_TEMP/history.code")): once more"
             git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main
             [ "$(git rev-parse --is-shallow-repository)" = false ] || { echo "::error::main's history is still shallow"; exit 1; }
           fi
