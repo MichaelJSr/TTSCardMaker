@@ -22,6 +22,7 @@ Stranger - overcentralization, antifun
 Buzzo - too easy to build combos
 Tainted Keeper - too difficult to counter and/or requires being countered
 Green Mage - too easy to build combos
+Tainted Bethany - too easy to build combos
 
 3 star creatures:
 Leeroy Jenkins - too powerful of a counter
@@ -29,7 +30,6 @@ Shield Master Pi - too easy to build combos
 Something - antifun
 Dark Matter Swordsman - creature/ability copying
 Master Hand - antifun
-Tainted Bethany - too easy to build combos
 Taranza - creature/ability copying
 Holo defense API - creature/ability copying
 Stay - antifun, too powerful of a counter
@@ -64,8 +64,6 @@ Forget Me Now - too easy to build combos, too powerful of a counter
 Tomorrow I'll - too easy to build combos, too powerful of a counter
 Gust of Wind - too powerful of a counter
 Berserk - too easy to build combos
-
-1 star items:
 NME stock - simply too strong
 
 Field Cards:
