@@ -935,17 +935,36 @@ function openCard(id, showDetails = false) {
   }
   const fillBalance = () => { if (parseHash().arg !== c.id) return; for (const [sel, part] of [["#card-balance"], ["#card-changes", "changes"]]) { const slot = $(sel, modal); if (slot) slot.innerHTML = balanceHtml(c, part); } };
   const fillHistory = () => { const slot = $("#history-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = historyOf(c); };
-  if (c.hv && !c.history) loadHistory().then(() => { fillHistory(); fillBalance(); }, () => {});
-  else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) loadHistory().then(fillBalance, () => {});   // its original's texts
-  if (hasBalance(c) && !S.analytics) loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; });
-  if (c.iv && !S.versions) loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c, versionsOpen(c.id));
+  const fillVersions = () => loadVersions().then(() => { const slot = $("#versions-slot"); if (slot && parseHash().arg === c.id) slot.innerHTML = versionsHtml(c, versionsOpen(c.id));
     if (S.data.heavy?.length) { if (c.history) fillHistory(); if (S.analytics) fillBalance(); } }, () => {});   // heavy commits' links: the PNG's path then
+  const heavyPaths = () => { if (S.data.heavy?.length && c.iv && !S.versions) fillVersions(); };
+  nearby.disconnect();                                   // history.json once its slots are within a screen (phones: far down)
+  if (c.hv && !c.history) nearby.on(["#card-changes", "#history-slot"], () => loadHistory().then(() => { fillHistory(); fillBalance(); heavyPaths(); }, () => {}));
+  else if (c.dup && hasBalance(c) && balanceOf(c).hv && !balanceOf(c).history) nearby.on(["#card-changes"], () => loadHistory().then(() => { fillBalance(); heavyPaths(); }, () => {}));   // its original's texts
+  else if (c.history || balanceOf(c).history) nearby.on(["#card-changes", "#history-slot"], heavyPaths);   // its texts in already
+  if (hasBalance(c) && !S.analytics) loadAnalytics().then(fillBalance, () => { const slot = $("#card-balance", modal); if (slot && parseHash().arg === c.id) slot.innerHTML = `<h3>Balance</h3><p class="muted">Couldn't load the balance data.</p>`; });
+  if (c.iv && !S.versions) { const box = $(".ver-box", modal);   // versions.json once the box is open (closed on a phone)
+    if (!box || box.open) fillVersions(); else box.addEventListener("toggle", fillVersions, { once: true }); }
   const dd = $(".psd-details", modal);
   if (dd) details.mount(dd, { card: c, load: () => loadDetails(c), storage: store, extras: { badges: psdBadges(c), labels: FIELD_LABEL } });
   if (editing() && !c.morgue) inline.mountCard(modal, c);
   if (editing() && !c.morgue) previews.mountCard(modal, c);
 }
 
+// the card dialog's loads that wait until their slot is within a screen of the view (the dialog scrolls: root modal)
+const nearby = (() => {
+  let io = null; const todo = new Map();                // slot -> its load
+  return {
+    disconnect: () => { io?.disconnect(); io = null; todo.clear(); },
+    on(sels, load) {
+      const els = sels.map(sel => $(sel, modal)).filter(Boolean);
+      if (!els.length) { load(); return; }
+      io ||= new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) todo.get(e.target)?.(); }, { root: modal, rootMargin: "100% 0px" });
+      const go = () => { for (const el of els) { io?.unobserve(el); todo.delete(el); } load(); };   // the first slot near: once
+      for (const el of els) { todo.set(el, go); io.observe(el); }
+    },
+  };
+})();
 /** The card dialog's first picture: the grid tile's when it has loaded (240 or 360 px, no new download), the 720 px one a
  *  share page preloads, else the 360 px one */
 function placeholderOf(c) {
@@ -1022,6 +1041,7 @@ function balanceHtml(c, part = "balance") {          // part: "balance" (the lin
 }
 function closeModal() {
   if (modal.hidden) return;
+  nearby.disconnect();
   modal.hidden = true; modal.innerHTML = ""; document.body.style.overflow = "";
   document.title = "Impossibility Simulator · Card Browser";
 }
