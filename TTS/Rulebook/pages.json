@@ -2,6 +2,7 @@
  "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
  "pdf": "Rulebook.pdf",
  "key": "f30f409e1f8e25150542450355f43399143e402f9b18699dc0b6e3ac7d6e60f2",
+ "pre": "8b7d8228bc79d08eed1678c2976c74a7a92cacae6326e5c03f03b804e12bf524",
  "pages": [
   {
    "name": "Cover",
