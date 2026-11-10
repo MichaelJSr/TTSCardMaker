@@ -872,7 +872,7 @@ function openCard(id, showDetails = false) {
   const seriesTitle = !c.subseries ? `More from ${c.series || ""}` : otherSubs.length === 1 && otherSubs[0] ? `More from ${otherSubs[0]}`
     : `More from ${c.series || ""}, outside ${c.subseries}`;
   const seriesTip = c.subseries ? `Cards of the series ${c.series} in another subseries${otherSubs.includes("") ? " or none" : ""}` : "";
-  modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" aria-label="${esc(c.name)}">
+  modal.innerHTML = `<div class="dialog" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(c.name)}">
     <button type="button" class="ghost icon close" data-action="close" aria-label="Close (Esc)">✕</button>
     <div class="detail">
       <div class="image-wrap"><div class="iv"><div class="iv-stage${hang ? " hang" : ""}"${hang ? ` style="${G.hangVars(c)}"` : ""}><div class="iv-orig">${c.png ? `<a href="${esc(fullUrl(c))}" target="_blank" rel="noopener" title="Full-size image"><img id="detail-img" src="${placeholderOf(c) || esc(fullUrl(c))}" alt="${esc(c.name)}"${c.tw ? ` width="${c.tw}" height="${c.th}"` : ""} style="aspect-ratio:${c.tw && c.th ? `${c.tw}/${c.th}` : "2/3"}"></a>` : `<div class="empty">No image</div>`}</div></div></div>
@@ -929,7 +929,7 @@ function openCard(id, showDetails = false) {
   document.body.style.overflow = "hidden";
   modal.scrollTop = 0;
   document.title = `${c.name} · Impossibility Simulator`;
-  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();   // shortcuts work right away
+  $(".dialog", modal).focus({ preventScroll: true });   // Tab goes on inside it; shortcuts work right away
   if (c.img && $("#detail-img")?.getAttribute("src") !== img(c, 720)) {        // sharper 720 px image once it's loaded
     const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
   }
