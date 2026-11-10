@@ -183,7 +183,7 @@ export function groupHtml(group, repo, kinds = null) {
   const rereads = major.filter(e => e.kind === "reparse");
   const tail = rereads.length ? `<details class="cl-sec"><summary>The parser re-read ${plural(rereads.length, "card")}</summary><ul class="cl-lines">${rereads.map(eventHtml).join("")}</ul></details>` : "";
   const folded = minor.length ? `<details class="cl-sec cl-minor"><summary data-tip="Small picture changes and text changes in formatting only: not posted in Discord">${plural(minor.length, "minor change")}</summary><ul class="cl-lines">${minor.map(eventHtml).join("")}</ul></details>` : "";
-  return `<section class="panel cl-push"><h3>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${head}</a>` : head}<span class="muted">: ${esc(countsOf(group))}</span></h3>${secs}${tail}${folded}</section>`;
+  return `<section class="panel cl-push" data-at="${esc(link || `${who} ${at}`)}"><h3>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${head}</a>` : head}<span class="muted">: ${esc(countsOf(group))}</span></h3>${secs}${tail}${folded}</section>`;
 }
 /** Groups under a heading per day (Pacific), newest first by time (a push split across builds, or one older than the
     last build's, keeps one heading per day), then by seq */
@@ -246,7 +246,7 @@ export function batchHtml(b, repo) {
   const authors = (b.authors || []).map(a => `<li>${cardLink(a.id, a.name || a.key)}: author ${esc(value(a.from))} → ${esc(value(a.to))}</li>`);
   const people = (b.people || []).map(([git, from, to]) => `<li><span class="muted">People:</span> ${esc(git)} ${to ? `shown as ${esc(to)}` : "removed"}${from && to ? ` <span class="muted">(was ${esc(from)})</span>` : ""}</li>`);
   const n = cards.length + authors.length + people.length + (b.more || 0);
-  return `<section class="panel cl-push"><h3>${who}, ${esc(when(b.at))}<span class="muted">: ${plural(n, "change")} ${esc(VIA[b.via] || "")}${commit}</span></h3>
+  return `<section class="panel cl-push" data-at="${esc(b.sha || String(b.at))}"><h3>${who}, ${esc(when(b.at))}<span class="muted">: ${plural(n, "change")} ${esc(VIA[b.via] || "")}${commit}</span></h3>
     ${b.stamped ? `<p class="muted">From the edit stamps (this build has no git history): each card's last edit only, its new values.</p>` : ""}
     <ul class="cl-lines">${[...cards, ...authors, ...people].join("")}${b.more ? `<li class="muted">and ${esc(b.more)} more${b.sha && repo ? ` in the <a href="https://github.com/${esc(repo)}/commit/${esc(b.sha)}" target="_blank" rel="noopener">commit</a>` : ""}</li>` : ""}</ul></section>`;
 }

@@ -674,6 +674,7 @@ ol.bal-changes { list-style: none; padding: 0; margin: 6px 0; }
 .change-tabs a:hover { background: var(--surface-2); color: var(--ink); }
 .change-tabs a.on { border-bottom-color: var(--accent); color: var(--ink); font-weight: 600; }
 .cl-day { margin: 18px 0 8px; font-size: 15px; color: var(--ink-2); }
+.cl-push { content-visibility: auto; contain-intrinsic-size: auto 500px; }   /* a push far down: laid out once near (Changelog, Database edits) */
 .cl-push h3 { margin: 0 0 6px; font-size: 15px; } .cl-push h3 a { color: inherit; }
 .cl-sec h4 { margin: 10px 0 2px; font-size: 13px; color: var(--muted); font-weight: 600; }
 .cl-sec summary { cursor: pointer; color: var(--accent); font-size: 13px; margin-top: 10px; }

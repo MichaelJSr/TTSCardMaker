@@ -1899,13 +1899,13 @@ wireTips(document, tips, (cx, cy) => {
 let atKept = -1e9;                                       // fresh.js saved it just before its reload: pagehide keeps that one
 function saveAt() {
   let pick = null;                                       // the deepest one across the top, else the first below it
-  for (const e of view.querySelectorAll("[data-open], .rb-chapter[id], .rb-chapter [id*='--']")) {
+  for (const e of view.querySelectorAll("[data-open], .rb-chapter[id], .rb-chapter [id*='--'], .cl-push[data-at]")) {   // a Changes panel: its sizes are guesses until drawn
     const b = e.getBoundingClientRect();
     if (b.bottom <= 0 || !b.height) continue;
     if (pick && !pick.contains(e)) break;
     pick = e;
   }
-  const at = !pick ? "" : pick.dataset.open ? `[data-open="${CSS.escape(pick.dataset.open)}"]` : `#${CSS.escape(pick.id)}`;
+  const at = !pick ? "" : pick.dataset.open ? `[data-open="${CSS.escape(pick.dataset.open)}"]` : pick.dataset.at ? `[data-at="${CSS.escape(pick.dataset.at)}"]` : `#${CSS.escape(pick.id)}`;
   const el = at ? $(at, view) : null;                    // the one restoreAt finds: a table row, not its name link
   try { store?.setItem("at", JSON.stringify({ u: location.href, y: Math.round(scrollY), at, off: el ? el.getBoundingClientRect().top : 0 })); } catch {}
 }
@@ -1922,6 +1922,7 @@ function restoreAt() {
   const tick = () => {
     if (done) return;
     const now = performance.now(), el = a.at ? $(a.at, view) : null;
+    if (el?.matches(".cl-push")) el.style.contentVisibility = "visible";   // its real height: the place is inside it
     if (!drawn) {                                        // the view drawn and the anchor in it (else, after 1.5 s, scrollY)
       if (!ready && view.firstElementChild && !$(".loading", view)) ready = now;
       if (!ready || (a.at && !el && now - ready < 1500)) { if (now - t0 < 8000) requestAnimationFrame(tick); else stop(); return; }
