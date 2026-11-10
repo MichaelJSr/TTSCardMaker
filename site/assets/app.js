@@ -1057,6 +1057,15 @@ function bookCtx(extra = {}) {
     size: f => imgs[bookFile(f)]?.slice(0, 2) || null, shape: f => imgs[bookFile(f)]?.[3] || null, chapters: S.book.chapters, ...extra,
   };
 }
+// a chapter's HTML in the book view, kept while what it draws from is the same (a search draws the book on each key)
+const chapterMemo = new WeakMap();
+function chapterHtml(c, ctx) {
+  const key = [ctx.chapters, ctx.editable, S.renderer, S.book.sent, S.book.images], had = chapterMemo.get(c);
+  if (had?.key.every((v, i) => v === key[i])) return had.html;
+  const html = RB.chapterHtml(c, ctx);
+  chapterMemo.set(c, { key, html });
+  return html;
+}
 // the built cover's smaller copies (build_site cover_copies), for its 260 px in the book view
 const coverSet = ctx => { const k = bookFile("cover"), im = S.book.images[k];
   return im && S.book.cover.length ? ` srcset="${S.book.cover.map(([w, f]) => `${RB.IMG_DIR}${encodeURIComponent(f)} ${w}w`).join(", ")}, ${esc(ctx.imgUrl(k))} ${im[0]}w" sizes="260px"` : ""; };
@@ -1088,7 +1097,7 @@ function renderRules(r) {
     <div class="rb rb-book">
       ${q ? `<p class="muted">${shown.length} chapter${shown.length === 1 ? "" : "s"} mention “${esc(r.params.get("q"))}”.</p>` : `<img class="rb-cover" src="${esc(ctx.imgUrl("cover"))}"${coverSet(ctx)} alt="Impossibility Simulator" width="260" height="462">`}
       ${S.book.sent ? `<p class="muted">Your published rulebook edit shows here until the site rebuilds (a few minutes).</p>` : ""}
-      ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${RB.chapterHtml(c, ctx)}</article>`).join("")
+      ${shown.map(c => `<article class="rb-chapter" id="${c.id}"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-edit" data-id="${c.id}" title="${can ? "Edit this chapter" : "Sign in to edit this chapter"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="site/rulebook/${esc(c.file)}" data-title="${esc(c.title)}" title="Every change to this chapter, as a diff">History</button></div>${chapterHtml(c, ctx)}</article>`).join("")
         || `<div class="empty">No rulebook chapter mentions that.</div>`}
       ${!q ? `<article class="rb-chapter rb-extra" id="banlist"><div class="rb-tools"><button type="button" class="ghost" data-action="rb-bans" title="${editor.me?.admin ? "Edit the ban list" : "Admins edit the ban list (sign in)"}">Edit</button><button type="button" class="ghost" data-action="rb-history" data-path="${esc(S.data.files.banlist)}" data-title="Constructed ban list" title="Every change to the ban list, as a diff">History</button></div><header class="rb-head"><h2>Constructed ban list</h2></header>
         <div class="rb-panel rb-solo">${banned.notes.map(n => `<p>${esc(n)}</p>`).join("")}</div>
