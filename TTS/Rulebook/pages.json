@@ -1,8 +1,8 @@
 {
  "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
  "pdf": "Rulebook.pdf",
- "key": "f30f409e1f8e25150542450355f43399143e402f9b18699dc0b6e3ac7d6e60f2",
- "pre": "8b7d8228bc79d08eed1678c2976c74a7a92cacae6326e5c03f03b804e12bf524",
+ "key": "317fd64d673b5e257977ff26a3b84c1653ea7d65e945593fb32788423f19a46d",
+ "pre": "2549b5d4d3644b48368503edd5acc1926b7293b452ed7d731743c1216e53e984",
  "pages": [
   {
    "name": "Cover",
@@ -240,7 +240,7 @@
   {
    "name": "Status Effects 2",
    "num": "19.2",
-   "sha": "9ce111938ad36bc9b5916700172937d77a080d9a58f1560a513ada73cec42297",
+   "sha": "22f0faf9fa0148d72f39f9f9bb4853f0bcd81cfdb18dabf23f34b672df6a106d",
    "t": "STATUS EFFECTS 2 SYNTAX Statuses are formatted like \"[X]T[Y] [Status]\", where X is duration and Y is stacks. For example, \"5T1 Poison\" means 5 turns of 1 stack of Poison. TYPES Standard status effects can only have one instance of themselves applied to a single creature. Stacking status effects can have any number of themselves applied. This buff can be applied many times to gain as many stacks of it to gain alot of speed. 10 stacks = +10 SPD. This debuff cannot be applied more than once. DURATION When a status effect is stacked/upgraded/reapplied, set the duration to the longest lasting of the applications. UPGRADABLE Certain status effects upgrade themselves when applied, Ex: Smouldering + Smouldering -> Burning Smouldering/Burning + Burning -> Blazing Chilled + Chilled -> Frostbite Chilled/Frostbite + Frostbite -> 1 turn of Frozen Sickness + Sickness -> Plague A creature already inflicted by Frozen/Blazing/Plague can't have the prior debuffs reapplied onto them, except to refresh the duration (need to upgrade to refresh duration). → → → → → 19.2"
   },
   {
