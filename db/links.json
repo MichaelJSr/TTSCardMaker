@@ -5209,7 +5209,7 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Diligent_Watch.psd": {
-  "blob": "07d9d3cfd64b87c41506a206b4fc5b2127d6c5f0",
+  "blob": "e20b1dd00e22f0d0f0a200eac5e06c26d3edc05a",
   "links": [
    {
     "drawn": "c034a83976c3a94a1ab6c139064e545ca5123cb4",
@@ -5220,11 +5220,11 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Empowered.psd": {
-  "blob": "f63a2cf5eafd7c11a2014a77fe53a0f9b9533478",
+  "blob": "9838b8f99ec5ff4e1e38f02e03002fc45302561b",
   "links": []
  },
  "Auxiliary/Status Effects/Buffs/Enraged.psd": {
-  "blob": "7010d998fa93d0dd59be922ea416620085d8cb84",
+  "blob": "ee003bbf8650a6a7f0c02b5739e684695bbde7b4",
   "links": [
    {
     "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
@@ -5235,7 +5235,7 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Hardened.psd": {
-  "blob": "c4cb26238c1216c5c1d887ca48e3cebe28186c52",
+  "blob": "b7eccf56bf7f2250d7c2619135a08d96848f2fb4",
   "links": [
    {
     "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
@@ -5246,7 +5246,7 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Hyper.psd": {
-  "blob": "987e16b5bb57d4b0a3a710d5a7f330abd1e93b04",
+  "blob": "06e4ba728dddc6bab8d5d387ff4c5481507440f3",
   "links": [
    {
     "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
@@ -5257,7 +5257,7 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Inspired.psd": {
-  "blob": "8b80d03384534d4b1ee8edf2e53ee253291da231",
+  "blob": "e7849d743cd1693a33aede1fb5da0459913dd500",
   "links": [
    {
     "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
@@ -5268,7 +5268,7 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Marked For Life.psd": {
-  "blob": "5434f9f60a7bb5c0228f039871e0ce15ea3e4fff",
+  "blob": "2514ccb48207e752cd526c3f14e93fd8b63bc02b",
   "links": [
    {
     "drawn": "aa902cea2d70e9e96b43a851d4afc7ad37a8040c",
@@ -5285,7 +5285,7 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Peppy.psd": {
-  "blob": "8645960caa68c2bac5cd4ce7d17f25533fbdffbb",
+  "blob": "e0be1750cc209d6bf87af172ce62dbb34a6008dd",
   "links": [
    {
     "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
@@ -5296,7 +5296,7 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Regen.psd": {
-  "blob": "15d5ba79cba6e07f4186f4f4b02bbeffeba93c8e",
+  "blob": "fe9a0bf5d61cab176f2ecfb5ef2a21846fbc9fdf",
   "links": [
    {
     "drawn": "843a0c81dba14d1dbaf0f06f2170113f9ba15332",
@@ -5307,7 +5307,7 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Reinforced.psd": {
-  "blob": "d85ddc76cf94893024f59b9f61603d1fd68d1572",
+  "blob": "0556f4de4aacc93cf535ad2644e1f960f2f6654e",
   "links": [
    {
     "drawn": "09a2251accabc42730c41e42488115dcdf75166c",
@@ -5324,7 +5324,7 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Thickened.psd": {
-  "blob": "ddadbe140f69228d2afe5f597ef032008307ad53",
+  "blob": "7dc0fabed9b0193ac1dd134d57a1aba3e38b2a2f",
   "links": [
    {
     "drawn": "b7583e86f82d7e306b282d55eb10455ee8ae1b9b",
@@ -5347,7 +5347,7 @@
   ]
  },
  "Auxiliary/Status Effects/Buffs/Vigor.psd": {
-  "blob": "07b74b4b116627f794555a17ee2603c21ff43d48",
+  "blob": "cc00228e90abf85a25610d469ab601eeb11ef9f1",
   "links": [
    {
     "drawn": "ad0199dd7d8c54ee300613d22d60433edc9ae8ae",
@@ -5364,7 +5364,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Blindness.psd": {
-  "blob": "645ba1d9cf555d63dd52b2c3356eeab41f58a7b1",
+  "blob": "af9e5a4c39f2a7999bdfbe528c6535775766dfed",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5381,7 +5381,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Burdened.psd": {
-  "blob": "50ce0c7da6b5a6fffdb33be295838d645cc773ad",
+  "blob": "fa4dc6e301a2c98eb9f2af68e89c40b0dfccf76d",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5398,7 +5398,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Burning.psd": {
-  "blob": "b09228c298dad4bb4b3d7e1aad0aebb54cf34fe4",
+  "blob": "4b826b231a1802f498b52dc7e2ae06a4b605ed7c",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5415,7 +5415,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Disgusted.psd": {
-  "blob": "8759da1acc53add0cd540efa6e4221f0d8f143b6",
+  "blob": "b800c3a901574f5b7ee19d4a9cd8d2a06ffbd0eb",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5432,7 +5432,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Enfeebled.psd": {
-  "blob": "2a2082b9c98918ba4d71f646100ff1245a69a401",
+  "blob": "a95a280e402d3ba4a66220358305b5327aa2a33c",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5449,7 +5449,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Poison.psd": {
-  "blob": "72eaa77ea82c1add0841b428e0754747e2be3667",
+  "blob": "6c338019f7c8617d8ce769ce8f0f817ac474da41",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5466,7 +5466,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Sickness.psd": {
-  "blob": "fd7e3bf332eb50b3a4007da1c86ad524fba6e293",
+  "blob": "1ac4550921b0c477e950196016ec175db5ad3fcf",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5483,7 +5483,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Smeckeldorfed.psd": {
-  "blob": "c68ea8cc9d882b60f6371cfa098fde5804486a2f",
+  "blob": "6255194e6c9cbdc02410d13fa0dc73bc0e1835cd",
   "links": [
    {
     "drawn": "45f9ec5da2a465d3cc5db6b319a6bfbba43dbd01",
@@ -5506,7 +5506,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Smoldering.psd": {
-  "blob": "bb0cef58cffa4206a7784fdf1c93ec68f591d75f",
+  "blob": "ec0e0a6063a3d62fc8d0ea14062ff902c3165e3d",
   "links": [
    {
     "drawn": "8b61fec267337e62e1b5d91547a1073b6386012d",
@@ -5529,7 +5529,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Softened.psd": {
-  "blob": "e41a91d44b3d94ad44073a823bc6bdf5b4629916",
+  "blob": "d4f041b5181dcb7af7422bbf6c743e9240407222",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5546,7 +5546,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Stuffed.psd": {
-  "blob": "17386bf9a43aec6ebc72adc1d6bbcedb55a4a7fd",
+  "blob": "c981352e508785462847dfb17b9efbd05574dffc",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5563,7 +5563,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/1 Stars/Thinned.psd": {
-  "blob": "43f3a350c686a9fcb6022f65ffc213ee6a801cbd",
+  "blob": "e7b4deba3bda29479134cae40cf44bd55c4e2184",
   "links": [
    {
     "drawn": "a186026978a8f61c777c2fce7037a8cd7a902a73",
@@ -5586,7 +5586,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Afraid.psd": {
-  "blob": "fc6b1d37b0e09eb0b6ebaea8b6cb0f094a4f0cb4",
+  "blob": "512ef0294fdbc9f87e7b9f20524fe1e11870c802",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5603,7 +5603,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Blazing.psd": {
-  "blob": "8853198847d0d5fb4f6176ddb20a863a745cc4dc",
+  "blob": "3eb2f4919d4fc0e14e7e765b85e9518f8dbed897",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5620,7 +5620,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Chained.psd": {
-  "blob": "ebd50a4c61e88de45d8bb369525019285d64baf5",
+  "blob": "ef1e6cb46bbabcde9c223eccdbcef4073e77b0c7",
   "links": [
    {
     "drawn": "132645e2aaecfb57ca8fa7eaa21627d170f1b86b",
@@ -5649,7 +5649,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Chilled.psd": {
-  "blob": "1ed11197d91d37bef399c64d3fd31fd285b51089",
+  "blob": "4d86b8e51628523ab3c217926b3f6b48bdf1c758",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5672,7 +5672,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Confusion.psd": {
-  "blob": "ff48e5c23f00aaa90545dbf15091749caaeb30f0",
+  "blob": "00ec454829da112144abb69ba1d4112ea4fad73e",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5689,7 +5689,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Edible.psd": {
-  "blob": "3c228a2e124cb7c53de505bbfc96dde1e5be8f66",
+  "blob": "354fa386d82e1d6455c42702117a38013ceb94de",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5706,7 +5706,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Empty.psd": {
-  "blob": "814bf819f21f443a6f19e0406da79ab07a662fd6",
+  "blob": "e76ba3976edb590c28a47260dd5444d375036a3d",
   "links": [
    {
     "drawn": "0e7829d101d28fc2b62d197c6eef5a4df72738a7",
@@ -5735,7 +5735,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Engorged.psd": {
-  "blob": "389241de9554fe60509bd3eedd38f1499c9e1661",
+  "blob": "f1214ffa3458161c4d04e36995e2416cc5e5c5bd",
   "links": [
    {
     "drawn": "132645e2aaecfb57ca8fa7eaa21627d170f1b86b",
@@ -5764,7 +5764,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Exposed.psd": {
-  "blob": "5acd80624d83de6a146a6740d6fe4420ec0c5125",
+  "blob": "3a10180c1b85580aa23525d2ae182e9327e183c4",
   "links": [
    {
     "drawn": "e410424c2f5de07c766ec7e94fe89d291da3d860",
@@ -5793,7 +5793,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Frostbite.psd": {
-  "blob": "87e72920d80973586d68f46369639ee17700855e",
+  "blob": "e57c91d69430b250963bac2375692e43430fe8d9",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5810,7 +5810,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Glued.psd": {
-  "blob": "084d9284bdba4c5b35fee93587940f84611d95ac",
+  "blob": "14ba2874230fb5694a1587202b160cf31a48b052",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5827,7 +5827,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Loony.psd": {
-  "blob": "ba31a7946b6bc0f503e4029ead09752f2a3e9d54",
+  "blob": "fac06976feac3fde884da77608e8ed58ed6e73f6",
   "links": [
    {
     "drawn": "06d08ae95834e6036926a7a107d363d20ffe0446",
@@ -5856,7 +5856,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Paralyzed.psd": {
-  "blob": "00c627803cfd6e28501f26ce80e8a9965dd79683",
+  "blob": "b272de93d5e51f75e15afedb3ad02a852a79f002",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5873,7 +5873,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Plague.psd": {
-  "blob": "db29c48219e527edd2d20396768dc84316249d2a",
+  "blob": "bb441cb5df8e89cf156b17673f6293c4494a856c",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5890,7 +5890,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Restrained.psd": {
-  "blob": "ed7a68f8dd82e5f625006686aa9719cf9c921996",
+  "blob": "abc6ae9c3a178a4a671ebcc002cc3ef06d842fec",
   "links": [
    {
     "drawn": "e4abaa2f9d33bb4e2ac62cbdb7d4f152e4c885c7",
@@ -5913,7 +5913,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/2 Stars/Spirit_Flame.psd": {
-  "blob": "4ce5ee54a77c642784d43191e10efcc0c2b68ff3",
+  "blob": "7ba778be84d2d2e531247b1d662cb94dc55af514",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5930,7 +5930,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Become_Back_Money.psd": {
-  "blob": "8167c5543205881c1699d9abe6ac6b2b7b08b280",
+  "blob": "f5677aec740a5c57247f9e78d17abc7753e23f25",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5947,7 +5947,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Cheap.psd": {
-  "blob": "2ab17259b46ee9f434fc98508844e9cbf824e7c0",
+  "blob": "8fb54ebf3be687c8bb0d084be1824810f75dc203",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5964,7 +5964,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Corrupted_Blood.psd": {
-  "blob": "db03877c33ff247b600c9c564ff00efa695fc4b7",
+  "blob": "e106c2672f3f5c602cf68411f5b9b61479f31877",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5981,7 +5981,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Corruption.psd": {
-  "blob": "aa6595907648b57d3849a00d167764036332f8a2",
+  "blob": "8e13289a5bd69e58af2a9eb87bc6d5639c4bbe70",
   "links": [
    {
     "drawn": "018bdae6d361970fc0e0c14f2d4ef6b60fedfd2a",
@@ -6010,7 +6010,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Cursed_Inferno.psd": {
-  "blob": "38108bb9235a64279f935db36804bfeb160f50d1",
+  "blob": "ad1f182addda7e5a138a9b9c24d614ded68bad33",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6027,7 +6027,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Disarmed.psd": {
-  "blob": "bad56cfd4cc6cd5328c9f77f29e605f3af467c11",
+  "blob": "63e7080d0548ad066161d1e01ee678414af6e2f6",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6044,7 +6044,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Frozen.psd": {
-  "blob": "9008c0699d8d3c94d2b7d8d94305eeb5bac00e79",
+  "blob": "13549cbdbbbcdb637f66b5976a67aff91bdbb24b",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6061,7 +6061,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Hexed.psd": {
-  "blob": "f37bcdf8ff2966a8840e4ecd6e4861ec81542f82",
+  "blob": "2fb3631b77ad8f4171e88e0c65c8e6b105c87562",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6078,7 +6078,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Imprisoned.psd": {
-  "blob": "308cde9f4548279121e523c86acf0a46cf487acf",
+  "blob": "bf8e3e42ca67ace9f6a48428d4d017b09d84c79d",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6095,7 +6095,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Insane.psd": {
-  "blob": "79d276590fecc7f9b6ddf7a411d0084afbae7e8a",
+  "blob": "cc0c1998257da13de6ed304dab5b3f9ad3c12e61",
   "links": [
    {
     "drawn": "1602eb05d97aab83d8695718b83f3729c9855feb",
@@ -6118,7 +6118,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Pessimism.psd": {
-  "blob": "b54cbae33b603d867bc96a624512853523b75c71",
+  "blob": "ffaa03d1951d8bb1446e8691602224c210202bca",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6135,7 +6135,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Resentful_Glare.psd": {
-  "blob": "a624004bea81e73593c5b7b57ed185ac2a02308a",
+  "blob": "47c69ca4cf31f498f9ca979e4f8caf105bd8a91a",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6152,7 +6152,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Shell_Shock.psd": {
-  "blob": "33da367d7543e36e8965358334a56d2e840a1a5d",
+  "blob": "319f9504aed0b76aa5d562b6ce6fc3c9eea4a460",
   "links": [
    {
     "drawn": "92b2b2e12260934fcc7faaea83c6a7b9e0f47071",
@@ -6175,7 +6175,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/3 Stars/Suffocation.psd": {
-  "blob": "22c617141a7d8ce40ffb8ad0d9c10e77094acf67",
+  "blob": "a01abda1f12cc882a12bcfac193a34f4d1b0e444",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6192,7 +6192,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/4 Stars/Condemned.psd": {
-  "blob": "e8e91534aa2cf695896b691a4e3d8a625245b66c",
+  "blob": "88b8d5267fb0e74f5d13757042a33fa03b9a2ebb",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6209,7 +6209,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/4 Stars/Contracted.psd": {
-  "blob": "3f8bdb1ba177428c7580c78246c425bccb0b78f8",
+  "blob": "8e59728ce4f372dc8eb991a24d29f15f0e3d903e",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6226,7 +6226,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/4 Stars/Curse.psd": {
-  "blob": "fe0379b907da3c3a14c521a4d4813f52f5e3c2fe",
+  "blob": "e28ffbf85089770deacba922886beceded9100ea",
   "links": [
    {
     "drawn": "b1ef5028308b18adc3daf8e0328774d44248d244",
@@ -6249,7 +6249,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/4 Stars/Despair.psd": {
-  "blob": "a3522a1466ca604552fe395f255e8aa3062f363b",
+  "blob": "7141807cf53d72c546128fe772e074b9b91f2b5c",
   "links": [
    {
     "drawn": "6250193ad9c78c7b3c3cf5a89bb3440c38b21736",
@@ -6272,7 +6272,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/4 Stars/Frozen_In_Time.psd": {
-  "blob": "5501668f9f14fffb692d15a330bbe0928714e11d",
+  "blob": "9a9f3d080a5f6954bd52801b3260b169e515e0d1",
   "links": [
    {
     "drawn": "150efe027d809f7159fafe48d9a0dbbf5313a4c5",
@@ -6295,7 +6295,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/4 Stars/Hemorrhaging.psd": {
-  "blob": "f400e360565d6e370d39f7e9d57ab2efaaa97ce3",
+  "blob": "1177bb11568265066f065768c9b595163e70f35f",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -6312,7 +6312,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/4 Stars/Infected.psd": {
-  "blob": "638ef51221f9eafdd44a34c98c2ccae4d2c43387",
+  "blob": "bbe5b1dc46a86f4582651a79f4fdc7935bb94873",
   "links": [
    {
     "drawn": "62443ccf2766da7e07a91ed874aec318ae9280d6",
@@ -6335,7 +6335,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/4 Stars/Marked For Death.psd": {
-  "blob": "94a58cca838340fe246d252a93c4685239167cc6",
+  "blob": "d5681b6c9ecd8e3cbc932947f5ca57126f16a849",
   "links": [
    {
     "drawn": "4c0615e161c57ab93f089141d9c2b1b1d3fcc2be",
@@ -6358,7 +6358,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/4 Stars/Recursion.psd": {
-  "blob": "836750d04e222d8cc120c61574550ba2f21a11c8",
+  "blob": "f75b011511bfa700829c82dfd91df4f0cf2fb766",
   "links": [
    {
     "drawn": "d5f2ef47393bedd8da4edc3e9b99f7e9cff16410",
@@ -6381,7 +6381,7 @@
   ]
  },
  "Auxiliary/Status Effects/Debuffs/4 Stars/Withering.psd": {
-  "blob": "570f118246d0ba539d03151820ae0da4c1680456",
+  "blob": "29016e2a640c9929caaac9813a0c623850396206",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -27057,7 +27057,7 @@
   ]
  },
  "MDW/Templates/Status_Effect_Template.psd": {
-  "blob": "2883043719a59855c59534399222477c5e776cca",
+  "blob": "63271c95cdd66e128a5b7518f3ac2a0fccd1961d",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
