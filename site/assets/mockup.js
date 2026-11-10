@@ -1033,7 +1033,10 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (plan.boxed && !(label === "stars" ? +todo.stars[1] : todo.types[1]?.length)) { out.skipped.push(label); continue; }   // none, with no place: the old ones stay
     if (plan.boxed) { out.boxed.push(label); await drawIconBox(ctx, label, label === "stars" ? todo.stars[1] : todo.types[1], { icons, head, W, H, tpl }); }
     else if (label === "stars") { const src = await starSource(head.stars, icons, img, k); for (const b of plan.draw) drawIcon(ctx, src, at(b)); }
-    else for (const d of plan.draw) drawIcon(ctx, await iconOf(icons, d.name), at(d.core));
+    else {
+      const look = plan.draw.length ? await iconLook(img, head?.types?.row, icons, k) : null;   // the bake copies a shown icon's look
+      for (const d of plan.draw) { const im = await iconOf(icons, d.name); drawIcon(ctx, look && im ? recolour(im, look, at(d.core)) : im, at(d.core)); }
+    }
     out.drawn.push(label);
   }
   for (const job of jobs) {
@@ -1052,6 +1055,70 @@ async function starSource(stars, icons, img, k) {
   if (im) return im;
   const u = stars.units[stars.units.length - 1].core.map(v => v * k);
   return { img, crop: [u[0], u[1], u[2] - u[0], u[3] - u[1]] };
+}
+/** A w x h canvas's context with an image's (sx, sy, sw, sh) drawn over it. */
+function drawn(im, sx, sy, sw, sh, w, h) {
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(im, sx, sy, sw, sh, 0, 0, w, h);
+  return g;
+}
+/** The card's own colours on its type icons (fitLook), or null: each shown icon's stock picture fitted into its core,
+ *  against the image there. */
+async function iconLook(img, row, icons, k) {
+  const pairs = [];
+  for (const u of Array.isArray(row) ? row : []) {
+    const im = await iconOf(icons, u.name), sw = im?.naturalWidth, sh = im?.naturalHeight;
+    if (!sw || !sh || !Array.isArray(u.core)) continue;
+    const b = u.core.map(v => v * k), s = Math.min((b[2] - b[0]) / sw, (b[3] - b[1]) / sh), w = Math.round(sw * s), h = Math.round(sh * s);
+    const x = Math.round(b[0] + (b[2] - b[0] - w) / 2), y = Math.round(b[1] + (b[3] - b[1] - h) / 2);
+    const x0 = Math.max(0, x), y0 = Math.max(0, y), cw = Math.min(img.naturalWidth, x + w) - x0, ch = Math.min(img.naturalHeight, y + h) - y0;
+    if (w < 4 || h < 4 || cw < 1 || ch < 1) continue;
+    pairs.push([drawn(im, 0, 0, sw, sh, w, h).getImageData(x0 - x, y0 - y, cw, ch).data, drawn(img, x0, y0, cw, ch, cw, ch).getImageData(0, 0, cw, ch).data]);   // its part on the card
+  }
+  return fitLook(pairs);
+}
+/** A recolouring from pairs [[stock, shown]] of RGBA arrays, on the stock's opaque pixels: luma -> colour (a Gradient
+ *  Map, a Color Fill) or each channel -> itself (Curves, Levels, Exposure), 16 bins each, the closer one. Only when the
+ *  shown pixels are far from the stock's (mean over 36 levels) and the map reads them within half of that and under
+ *  25 levels; else null (stock colours, or the icon's own art). */
+export function fitLook(pairs) {
+  const lum = Array.from({ length: 16 }, () => [0, 0, 0, 0]), chan = [0, 1, 2].map(() => Array.from({ length: 16 }, () => [0, 0]));
+  const each = fn => { for (const [st, th] of pairs) for (let i = 0; i < st.length; i += 4) if (st[i + 3] >= 245) fn(st, th, i); };
+  let off = 0, n = 0;
+  each((st, th, i) => {
+    const q = Math.min(15, (0.299 * st[i] + 0.587 * st[i + 1] + 0.114 * st[i + 2]) >> 4);
+    for (let ch = 0; ch < 3; ch++) { lum[q][ch] += th[i + ch]; const e = chan[ch][st[i + ch] >> 4]; e[0] += th[i + ch]; e[1]++; }
+    lum[q][3]++; off += (Math.abs(th[i] - st[i]) + Math.abs(th[i + 1] - st[i + 1]) + Math.abs(th[i + 2] - st[i + 2])) / 3; n++;
+  });
+  if (n < 50) return null;
+  off /= n;
+  const mid = q => q * 16 + 8;
+  const fill = bins => bins.map((v, q) => {          // empty bins: between filled ones blended, past them the nearest's offset
+    if (v) return v;
+    let a = q - 1, z = q + 1; while (a >= 0 && !bins[a]) a--; while (z < 16 && !bins[z]) z++;
+    if (a >= 0 && z < 16) return bins[a].map((x, i) => x + (bins[z][i] - x) * (q - a) / (z - a));
+    const j = a >= 0 ? a : z; return bins[j].map(x => Math.max(0, Math.min(255, x + mid(q) - mid(j))));
+  });
+  const looks = [{ luma: fill(lum.map(([r, g, b, m]) => (m ? [r / m, g / m, b / m] : null))) },
+    { chan: [0, 1, 2].map(ch => fill(chan[ch].map(([t, m]) => (m ? [t / m] : null))).map(v => v[0])) }];
+  const err = look => { let e = 0; each((st, th, i) => { const o = lookMap(look, st[i], st[i + 1], st[i + 2]); e += (Math.abs(o[0] - th[i]) + Math.abs(o[1] - th[i + 1]) + Math.abs(o[2] - th[i + 2])) / 3; }); return e / n; };
+  const [best] = looks.map(look => ({ look, e: err(look) })).sort((x, y) => x.e - y.e);
+  return off > 36 && best.e * 2 <= off && best.e < 25 ? best.look : null;
+}
+/** A colour through a look (fitLook's), between bin centres. */
+export function lookMap(look, r, g, b) {
+  const at = (bins, v) => { const f = Math.max(0, Math.min(15, (v - 8) / 16)), q = Math.min(14, Math.floor(f)); return [bins[q], bins[q + 1], f - q]; };
+  if (look.luma) { const [x, y, t] = at(look.luma, 0.299 * r + 0.587 * g + 0.114 * b); return x.map((v, i) => v + (y[i] - v) * t); }
+  return [r, g, b].map((v, ch) => { const [x, y, t] = at(look.chan[ch], v); return x + (y - x) * t; });
+}
+/** A stock icon through a look, at box's size: {img, crop} for drawIcon. */
+function recolour(im, look, box) {
+  const sw = im.naturalWidth, sh = im.naturalHeight, s = Math.min((box[2] - box[0]) / sw, (box[3] - box[1]) / sh);
+  const w = Math.max(1, Math.round(sw * s)), h = Math.max(1, Math.round(sh * s));
+  const g = drawn(im, 0, 0, sw, sh, w, h), d = g.getImageData(0, 0, w, h);
+  for (let i = 0; i < d.data.length; i += 4) d.data.set(lookMap(look, d.data[i], d.data[i + 1], d.data[i + 2]), i);
+  g.putImageData(d, 0, 0);
+  return { img: g.canvas, crop: [0, 0, w, h] };
 }
 /** An icon (an image, or {img, crop}) fitted into box with a soft shadow for the PSD's drop shadow and glow. */
 function drawIcon(ctx, src, box) {

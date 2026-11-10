@@ -771,6 +771,15 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
   sets them"; psd_details gives a card with no Stars group the bake's refusals and no units): not drawn, no box; a
   folder card says "The printed stars stay as they are (<why>): the card only moves to the 4 Stars folder.", others
   "The bake would refuse the stars: <why>."; the dialog's move note says the printed stars stay.
+  New or moved type icons in the card's own colours (2026-11-09; the bake copies the shown icon's effects, blend and
+  clip chain onto them, psd_edit `_make_icon`/`_copy_chain`): `iconLook` fits each shown icon's stock picture into its
+  core (its part on the card) and `fitLook` reads the image there on the stock's opaque pixels, two maps of 16 bins:
+  luma -> colour (Gradient Map, Color Fill) and each channel -> itself (Curves, Levels, Exposure). The closer one
+  recolours the new icons (`recolour`) when the image is far from the stock (mean over 36 levels) and the map reads it
+  within half of that and under 25 levels; else the stock icon. Measured against real bakes (card_preview, 720 px):
+  52 of 213 type jobs change; error 47.5 -> 19.6 (median 43.4 -> 17.4); 33 of 37 cards closer (Butterfly 74 -> 11,
+  Morpho Knight 88 -> 21); worse where the shown icon is the card's own art or the bake keeps the stock look (Earth
+  Totem, Blood Ritual, Palace of Shadow, Pandora's Gym).
 - Measured (the new gather over all 764 card PSDs of the Desktop clone, read-only, 36 s with 6 workers; the median
   header 147 ms, the slowest 338 ms, +~1.5 KB a record): 660 with a stars section (494 every count refused for one
   reason, mostly "the 'N Stars' folder sets them"; 577 with every count 1-10 laid out; 10 with none), 687 with a type
