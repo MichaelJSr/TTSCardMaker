@@ -12,7 +12,7 @@ local LARGE_CARD_SCALE = {x=3, y=1, z=3}
 
 -- Large cards by Nickname: the save updater (AutoCroissant tts_save) fills these rows from Auxiliary/Creatures
 local resizeTargets = {
-    ["Azamoth the Possessed Vessel"] = true,
+    ["Azamoth The Possessed Vessel"] = true,
     ["Igor Roballtowski"]            = true,
     ["Mettaton EX"]                  = true,
     ["Mettaton NEO"]                 = true,
