@@ -494,7 +494,8 @@ local function namedOf(card)
 end
 
 -- the decks a card's text draws from, by card name (owner 2026-11-06; they replace the Specific Item Decks bag), one
--- button each: {label, {folder, stars}, ...}, every card of tts.json in those folders once (several: one merged deck)
+-- button each: {label, {folder, stars}, ...}, every card of tts.json in those folders at its count in the save's piles
+-- (several: one merged deck)
 local function items(n) return {n .. "★ Items", {"Items/", n}} end
 local function equips(n) return {n .. "★ Equips", {"Items/Equip/", n}} end
 local DECKS = {
@@ -722,17 +723,19 @@ end
 -- played at (a card in a deck: the deck's), and per card back the size most of its cards have: read a few containers a
 -- frame once the panels are built (indexLater), so the first spawn doesn't stall; a spawn before that ends finishes it
 local scaleOfBack, indexQueue, tally = {}, nil, {}    -- tally: back -> "x y z" -> count
+local copies = {}                                     -- path -> the most copies one saved deck holds
 local INDEX_PER_FRAME = 3
 local function scaleOf(t) t = t or {} return {t.scaleX or 1, t.scaleY or 1, t.scaleZ or 1} end
 local cardTemplate, deckTemplate = nil, nil           -- a saved card's and deck's data: every field TTS expects
-local function indexAdd(d, scale)
+local function indexAdd(d, scale)                      -- d's path when d is a card
+    local p, back
     if (d.Name == "Deck" or d.Name == "DeckCustom") and not deckTemplate then deckTemplate = d end
     if d.Name == "Card" or d.Name == "CardCustom" then
         cardTemplate = cardTemplate or d
         local deck = d.CustomDeck or {}
         local face = deck[tostring(math.floor((d.CardID or 0) / 100))]
         if not face then for _, v in pairs(deck) do face = v break end end
-        local p, back = face and pathOf(face.FaceURL), face and pathOf(face.BackURL)
+        p, back = face and pathOf(face.FaceURL), face and pathOf(face.BackURL)
         if p and not cardIndex[p] then cardIndex[p] = {data = d, scale = scale} end
         if back then
             local key = table.concat(scale, " ")
@@ -743,13 +746,19 @@ local function indexAdd(d, scale)
         end
     end
     local kids = d.Name == "Deck" or d.Name == "DeckCustom"   -- a deck's cards are drawn at the deck's size
-    for _, k in ipairs(d.ContainedObjects or {}) do indexAdd(k, kids and scale or scaleOf(k.Transform)) end
+    local held = {}
+    for _, k in ipairs(d.ContainedObjects or {}) do
+        local c = indexAdd(k, kids and scale or scaleOf(k.Transform))
+        if kids and c then held[c] = (held[c] or 0) + 1 end
+    end
+    for c, n in pairs(held) do copies[c] = math.max(copies[c] or 0, n) end
+    return p
 end
 
 -- reads up to n of the queued containers (nil: all); true once the index is whole
 local function indexSome(n)
     if not indexQueue then                             -- the containers on the table, read later
-        cardIndex, tally, indexQueue = {}, {}, {}
+        cardIndex, tally, indexQueue, copies = {}, {}, {}, {}
         for _, o in ipairs(getObjects()) do
             if o.type == "Deck" or o.type == "Bag" or o.type == "Infinite" or o.type == "Card" then table.insert(indexQueue, o) end
         end
@@ -845,11 +854,12 @@ function spawnNamed(player, _, id)                     -- beside the card the pa
     spawnCard(item[2], item[1], {at.x + 2.6 * open.spawned, at.y + 1.5, at.z}, from and from.getRotation().y or 0, color)
 end
 
--- a deck of these cards, shuffled, face down at pos: each a copy of the save's own card when it has one, else made
--- a deck of these cards, shuffled, face down at pos, named name: the save's own cards (their CustomDeck keys are unique
--- in the save) or made ones, in a saved deck's fields
-local function deckOf(paths, name, pos, spin)
+-- a deck of these cards, each at its copies in the save's piles (else once), shuffled, face down at pos, named name:
+-- the save's own cards (their CustomDeck keys are unique in the save) or made ones, in a saved deck's fields; its size
+local function deckOf(list, name, pos, spin)
     indexSome()
+    local paths = {}
+    for _, path in ipairs(list) do for _ = 1, copies[path] or 1 do table.insert(paths, path) end end
     for i = #paths, 2, -1 do
         local j = math.random(i)
         paths[i], paths[j] = paths[j], paths[i]
@@ -868,6 +878,7 @@ local function deckOf(paths, name, pos, spin)
         scale = scale or known and known.scale or scaleOfBack[pathOf(faceOf(card).BackURL) or ""]
     end
     spawnObjectData({data = deck, position = pos, rotation = {0, spin or 0, 180}, scale = scale or {1, 1, 1}})
+    return #paths
 end
 
 -- pos moved toward the table's middle (z 0; the hand zones line the long sides) until it is clear of every hand zone:
@@ -903,8 +914,8 @@ function spawnDeck(player, _, id)                      -- beside the card, clear
         local from = open.obj and not open.obj.isDestroyed() and open.obj
         local at = from and from.getPosition() or Player[color].getPointerPosition() or {x = 0, y = 1, z = 0}
         open.spawned = (open.spawned or 0) + 1
-        deckOf(paths, deck[1], clearOfHands({at.x + 2.6 * open.spawned, at.y + 2, at.z}), from and from.getRotation().y or 0)
-        broadcastToColor(deck[1] .. ": " .. #paths .. " cards, shuffled.", color, {1, 1, 1})
+        local n = deckOf(paths, deck[1], clearOfHands({at.x + 2.6 * open.spawned, at.y + 2, at.z}), from and from.getRotation().y or 0)
+        broadcastToColor(deck[1] .. ": " .. n .. " cards, shuffled.", color, {1, 1, 1})
     end)
     if not ok then
         log("Deck button: " .. tostring(err))

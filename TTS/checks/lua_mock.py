@@ -14,13 +14,15 @@ pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save write
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
 face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name and ability
 in the card's colours, tts.json nc and ac, every "<" of a text kept from starting a tag; every card's details at each
-size: each chapter a whole Rules button, rows fit, each "+ name" spawns its card).
+size: each chapter a whole Rules button, rows fit, each "+ name" spawns its card); each deck button a copy of the full
+deck, every card at its count in the save's piles.
 Data: $TTS_DETAILS (a tts.json file), else the live website. Exits 1 on a failure.
 """
 import json
 import os
 import re
 import sys
+from collections import Counter
 from urllib.parse import unquote
 from urllib.request import urlopen
 
@@ -888,6 +890,16 @@ def main():
         lacks = lambda have, model: sorted(set(model) - {"GUID"} - set(have))
         check(not lacks(d, saved_deck) and not any(lacks(k, saved_card) for k in kids) and d.get("Nickname") == "4★ Items",
               f"the deck has a saved deck's fields, named '4★ Items' ({d.get('Nickname')!r}; lacks {lacks(d, saved_deck)})")
+        # a copy of the full deck: each card at its count in the save's 2★ item deck (Metronome 5, Bomb 3), else once
+        two = {p for p in details["cards"] if p.startswith("Items/") and "/2 Stars/" in p}
+        held = max((Counter(p for p in map(face_path, x.get("ContainedObjects") or []) if p in two)
+                    for x in walk(save.get("ObjectStates")) if x.get("Name") == "Deck"), key=lambda c: c.total(), default=Counter())
+        want = Counter({p: held[p] or 1 for p in two})
+        w.spawns.clear(), w.told.clear()
+        w.call("spawnDeck", teal, None, btn[6])
+        got = Counter(map(face_path, w.spawns[0]["data"]["ContainedObjects"] if len(w.spawns) == 1 else []))
+        check(got == want and max(held.values(), default=0) > 1 and ("Teal", f"2★ Items: {want.total()} cards, shuffled.") in w.told,
+              f"+ 2★ Items: a copy of the save's full deck ({got.total()} of {want.total()} cards; {held.most_common(3)})")
         hand = next(z for z in w.zones if z._t.get("scaleX", 0) > 10)    # a card in a big hand zone, then in a small one
         clear = lambda x, z: all(abs(x - h.pos[0]) > h._t["scaleX"] / 2 + 1.9 or abs(z - h.pos[2]) > h._t["scaleZ"] / 2 + 1.9
                                  for h in w.zones if h._t)
