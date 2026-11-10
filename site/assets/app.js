@@ -59,9 +59,9 @@ const sortOf = p => (p.get("sort") === "created" && !S.created ? "" : p.get("sor
 const urlPath = p => p.split("/").map(encodeURIComponent).join("/");
 const BUILD = document.querySelector('meta[name="build"]')?.content || "";
 const V = /^[0-9a-f]+$/.test(BUILD) ? `?v=${BUILD}` : "";            // same URLs as the preload hints in index.html
-const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 240 / 360 / 720 px wide (tag: their settings)
+const img = (c, w) => G.thumb(S.data.thumbs, c, w);   // card images: 96 / 240 / 360 / 720 px wide (tag: their settings)
 const thumbUrl = c => img(c, 360);
-/** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 (or 720) px by screen density */
+/** <img> attributes for a card image shown about `css` px wide: the browser picks 240 or 360 (or 720) px by screen density, 96 too at 64 px or less */
 const imgAttrs = (c, css, big = false) => G.imgAttrs(S.data.thumbs, c, css, big);
 const fullUrl = c => (c.png ? S.data.raw + urlPath(c.png) : "");
 const DAY = dateFmt({ year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
@@ -817,10 +817,10 @@ function fillTable(tbody) {
   if (rest.length) setTimeout(step);
 }
 // the Needs handling view: a list to scan, each card's flags and notes beside it
-const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}
+const needsHtml = list => `<ul class="needs-list">${list.map(c => `<li data-open="${c.id}">${c.img ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 64)} alt="">` : ""}
   <div><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${flagsHtml(c)}</div></li>`).join("")}</ul>`;
 const psdSize = c => (c.psdSize ? G.fileSize(c.psdSize) : "");
-const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" src="${img(c, 240)}" alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
+const rowHtml = c => `<tr class="row" data-open="${c.id}"><td>${c.img ? `<img class="thumb" loading="lazy" decoding="async" ${imgAttrs(c, 30)} alt="">` : ""}</td><td><a class="row-name" href="c/${encodeURIComponent(c.id)}/" data-open="${c.id}">${esc(c.name)}</a>${psdChips(c)}</td>
       <td>${esc(KIND_LABEL[c.type] || c.type)}${c.subtype ? ` · ${esc(cap(c.subtype))}` : ""}</td><td>${esc(c.series || "")}${c.subseries ? `<div class="muted" style="font-size:12px">${esc(c.subseries)}</div>` : ""}</td><td class="num">${c.stars ?? ""}</td>
       ${["hp", "def", "atk", "spd"].map(k => `<td class="num">${c[k] ?? ""}</td>`).join("")}<td class="num">${c.hp != null ? total(c) : ""}</td>
       <td>${(c.types || []).map(t => iconImg(t)).join("")}</td><td>${esc(c.author || "")}</td>${S.created ? `<td${c.created ? ` title="${esc(createdTip(c))}"` : ""}>${createdText(c)}</td>` : ""}<td>${date(c.ts)}</td><td class="num size">${psdSize(c)}</td></tr>`;

@@ -12,7 +12,8 @@ Where the data comes from:
     data/details/<id>.json for its Details dropdown, and its name's and ability's colours on the card (card_inks:
     cards.json `ink`). Aliases come from site/Card Edits.json.
   * Images: card PNGs in this repo, turned into three AVIF sizes (240 px and 360 px for the grid at 1x/2x, 720 px
-    for the card view; AVIF only, no WebP copies). They are cached by git blob hash and encode settings (thumb_tag, in
+    for the card view; AVIF only, no WebP copies), plus 96 px made from the 720 one (SMALL_SIZES: table rows and
+    64 px lists at 1x). They are cached by git blob hash and encode settings (thumb_tag, in
     the file names) in site/.cache/img, so after the first run only new or changed cards (or a width whose settings
     changed) are downloaded and encoded (an early build makes them during its Data wait: early_images, site.yml
     Images start); images no card uses any more are pruned. With
@@ -116,12 +117,14 @@ PSD_TREE = os.environ.get("PSD_TREE", "")     # the trees API's reply at the bui
 IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
 THUMB_VERSION = "1"                          # bump to re-encode every card image (a resize change); quality and AVIF rename by themselves
+SMALL_SIZES = {96: (720, 60)}                # width -> (made from that cached width, quality): table rows and 64 px lists at 1x
 
 
 def thumb_tag(w):
     """6 hex digits of a width's encode settings, in its file names: new settings, new files (and URLs)."""
     avif = {k: v for k, v in AVIF.items() if k != "max_threads"}
-    return hashlib.sha256(f"{THUMB_VERSION}:{w}:{IMAGE_SIZES[w]}:{json.dumps(avif, sort_keys=True)}".encode()).hexdigest()[:6]
+    q = IMAGE_SIZES[w] if w in IMAGE_SIZES else (SMALL_SIZES[w], thumb_tag(SMALL_SIZES[w][0]))   # a small one: its source's too
+    return hashlib.sha256(f"{THUMB_VERSION}:{w}:{q}:{json.dumps(avif, sort_keys=True)}".encode()).hexdigest()[:6]
 
 
 IMAGE_BUDGET = float(os.environ.get("IMAGE_BUDGET") or 0)      # seconds for making images (0: no limit): the rest waits for the next run
@@ -1260,7 +1263,7 @@ def image_bytes(path, sha=None):
 
 
 def image_names(sha):
-    names = {w: f"{sha[:16]}-{w}-{thumb_tag(w)}.avif" for w in IMAGE_SIZES}
+    names = {w: f"{sha[:16]}-{w}-{thumb_tag(w)}.avif" for w in [*IMAGE_SIZES, *SMALL_SIZES]}
     names["og"] = f"{sha[:16]}-og.jpg"
     return names
 
@@ -1271,6 +1274,16 @@ def make_images(path, sha, known=None):
     files are made again)."""
     names = image_names(sha)
     cached = {w: os.path.join(CACHE, "img", n) for w, n in names.items()}
+
+    def small():                               # SMALL_SIZES from a cached bigger one: no PNG download
+        for w, (frm, quality) in SMALL_SIZES.items():
+            if not os.path.exists(cached[w]) and os.path.exists(cached[frm]):
+                with Image.open(cached[frm]) as im:
+                    im = im.convert("RGBA")
+                    im.thumbnail((w, w * 3), Image.LANCZOS)
+                    im.save(cached[w] + ".tmp", "AVIF", quality=quality, icc_profile=None, **AVIF)
+                os.replace(cached[w] + ".tmp", cached[w])
+    small()
     if known and all(os.path.exists(f) for f in cached.values()):
         return (sha[:16], *known)
     src = Image.open(io.BytesIO(image_bytes(path, sha)))
@@ -1284,6 +1297,7 @@ def make_images(path, sha, known=None):
         if not os.path.exists(cached[w]):
             im.save(cached[w] + ".tmp", "AVIF", quality=quality, icc_profile=None, **AVIF)   # no profile: WebP never had one
             os.replace(cached[w] + ".tmp", cached[w])
+    small()
     if not os.path.exists(cached["og"]):       # from the 720 px one: no PNG download
         with Image.open(cached[720]) as im:
             im = im.convert("RGBA")
@@ -4376,7 +4390,7 @@ def first_screen(cards, icons):
                     shutil.copyfile(os.path.join(src, name), os.path.join(tmp, name))
             with open(os.path.join(tmp, "package.json"), "w") as fh:
                 fh.write('{"type": "module"}')
-            payload = {"cards": cards, "icons": icons, "thumbs": {str(w): thumb_tag(w) for w in IMAGE_SIZES}, "n": FIRST_TILES, "eager": FIRST_EAGER}
+            payload = {"cards": cards, "icons": icons, "thumbs": {str(w): thumb_tag(w) for w in [*IMAGE_SIZES, *SMALL_SIZES]}, "n": FIRST_TILES, "eager": FIRST_EAGER}
             done = subprocess.run([exe, FIRST_CHECK, tmp], input=json.dumps(payload, ensure_ascii=False), capture_output=True, text=True,
                                   encoding="utf-8", check=True, timeout=300)
         got = json.loads(done.stdout)
@@ -4869,7 +4883,7 @@ def main():
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist, "tagMeanings": tag_meanings(rulebook_chapters()[0]),
         "swatches": swatches(),               # the editor's colour palette (textcolor.js): the status and attribute colours
         "statusColors": status_colors(data_dir),   # the mock-up's status word colours, as the bake prints them (app.js)
-        "thumbs": {w: thumb_tag(w) for w in IMAGE_SIZES},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
+        "thumbs": {w: thumb_tag(w) for w in [*IMAGE_SIZES, *SMALL_SIZES]},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
                                             "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR,
