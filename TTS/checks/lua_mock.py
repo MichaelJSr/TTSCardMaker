@@ -934,15 +934,15 @@ def main():
     check(ui.on("Red_rb") and len(chapters) <= slots and len(listed) == len(chapters),
           f"Contents: {len(listed)} of {len(chapters)} chapters listed ({slots} slots)")
     def search(query):
-        words = query.lower().split()
+        words = query.lower().replace("(", " ").replace(")", " ").split()       # "(1CD)" finds the drawn 1CD
         return [i for i, p in enumerate(pages) if words and all(x in (p.get("t") or "").lower() for x in words)]
-    for query in ("stall", "true damage", "(1cd) 50%", "zzqqxx"):
+    for query in ("stall", "true damage", "(1CD)", "(1cd) 50%", "zzqqxx"):
         w.call("rulebookSearch", red, query)
         hits = search(query)
-        listed = [i for i in range(1, slots + 1) if ui.on(f"Red_rb_g{i}")]
+        listed = [int(ui.text(f"Red_rb_g{i}").split()[1]) - 1 for i in range(1, slots + 1) if ui.on(f"Red_rb_g{i}")]
         title = ui.values.get("Red_rb_title")
-        check(len(listed) == min(len(hits), slots) and (title == "Nothing found") == (not hits),
-              f"search {query!r}: {len(listed)} pages ({title})")
+        check(listed == hits[:slots] and (title == "Nothing found") == (not hits),
+              f"search {query!r}: pages {[i + 1 for i in listed]} ({title})")
         if hits and query == "stall":
             w.log.clear()
             w.call("rulebookGo", red, None, "Red_rb_g1")

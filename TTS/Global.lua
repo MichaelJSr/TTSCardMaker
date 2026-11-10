@@ -915,7 +915,12 @@ end
 -- the rulebook panel: its chapters, or the pages holding every word searched (a snippet of each); a click turns the PDF there
 local found = {}                                       -- color -> the pages its buttons go to
 local function listPages(color, query)
-    local id, list, q = color .. "_rb", {}, (query or ""):lower()
+    local id, list, chars = color .. "_rb", {}, {}
+    for i = 1, #(query or "") do                       -- "(" and ")" count as spaces: "(1CD)" finds the drawn 1CD
+        local ch = query:sub(i, i)
+        chars[i] = (ch == "(" or ch == ")") and " " or ch
+    end
+    local q = table.concat(chars):lower()
     local words = {}
     local start = 1
     while start <= #q do                               -- the query's words (spaces between them)
