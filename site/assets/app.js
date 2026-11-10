@@ -970,7 +970,7 @@ function versionsHtml(c, open) {
   const item = (v, i) => `<button type="button" class="ver-item" data-action="version-pick" data-i="${i}" aria-pressed="false">
         <span class="when">${date(v.ts)}${i === 0 ? ` <span class="fact">current</span>` : ""}</span><span class="who">${esc(v.author || "")}</span><span class="msg">${esc(v.subject || "")}</span></button>`;
   const rows = vs.map((v, i) => [v, i]), major = rows.filter(([v]) => !v.minor), minor = rows.filter(([v]) => v.minor);
-  const share = Math.round((S.versions.visible || 0.02) * 100);
+  const share = Math.round((S.versions.visible || 0.05) * 100);
   // minor changes (owner 11-09): folded, never dropped (versions.json visible: AutoCroissant png_changes.VISIBLE)
   const folded = minor.length ? `<details class="ver-minor"><summary data-tip="${esc(`Changes to under ${share}% of the card's pixels, with no change to its data`)}">${minor.length} minor change${minor.length > 1 ? "s" : ""}</summary><div class="ver-list" role="group" aria-label="Minor image versions, newest first">${minor.map(([v, i]) => item(v, i)).join("")}</div></details>` : "";
   return box(major.length, `

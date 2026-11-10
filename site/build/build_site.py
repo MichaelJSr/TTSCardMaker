@@ -397,7 +397,7 @@ def load_checks(folder):
 
 PNG_CHANGES_JSON = "png_changes.json"          # db/: each card PNG change's visibly changed share (AutoCroissant png_changes)
 PNG_RULE = 1                                   # its per-pixel rule (png_changes.RULE): a share by another rule is not read
-PNG_VISIBLE = 0.02                             # a share this or more shows (png_changes.VISIBLE); one not measured shows too
+PNG_VISIBLE = 0.05                             # a share this or more shows (png_changes.VISIBLE); one not measured shows too
 
 
 def load_png_changes(folder):
