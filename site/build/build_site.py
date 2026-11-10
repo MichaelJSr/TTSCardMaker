@@ -4066,7 +4066,7 @@ def tts_details(cards, chapters, icons, tag_table):
     """data/tts.json for the TTS save's script, cards keyed by their PNG's path (the save's card links): name, kind,
     stars, stats, ability (icons as words), types, timing tags, the status effects the ability names and the other cards
     it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions;
-    a [field] card's Field Cards first)
+    a [field] card's Field Cards first), its aliases not part of its name (al: Find a card's words)
     and its name's and ability's colours (nc, ac: tts_colors); with the types', tags' and statuses' meanings (a status's
     path: p) and the chapters (their numbers find the PDF's pages). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
@@ -4106,13 +4106,15 @@ def tts_details(cards, chapters, icons, tag_table):
         except Exception as error:                # an odd card never fails the build
             warn(f"{c['png']}: no TTS colours ({type(error).__name__}: {error})")
             colours = {}
+        name = str(c["name"]).lower()
+        aliases = {a.lower(): a for a in (c.get("aliases") or []) + (c.get("webAliases") or []) if a.strip() and a.lower() not in name}
         out_cards[c["png"]] = {k: v for k, v in {
             "n": c["name"], "k": KIND_LABEL.get(c.get("type"), c.get("type") or "") + (f" ({c['subtype']})" if c.get("subtype") else ""),
             "st": c.get("stars"), "s": "; ".join(bars) or None, "a": game_words(text, icons) or None,
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
             "x": [n for i, n in enumerate(hits) if n not in hits[:i]] or None, "m": mentioned or None,
             "r": (field if "field" in map(norm, c.get("types") or []) else []) + [cid for cid, words in rule_words if words.search(text)] or None,
-            "by": c.get("author"), **colours}.items() if v}
+            "al": list(aliases.values()), "by": c.get("author"), **colours}.items() if v}
     return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
             "tags": dict(sorted(used_tags.items())), "statuses": dict(sorted(statuses.items())), "cards": out_cards}
 

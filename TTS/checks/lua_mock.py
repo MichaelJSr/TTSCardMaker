@@ -9,7 +9,7 @@ per frame; loading does nothing by itself and builds no UI; teams Red/Orange/Gre
 other seats None, Grey/Black untouched; hand zones shared on a side (a free seat's zones go to its first seated
 teammate and come back when someone sits there, kept through a save and load; other seats' zones never move); large
 cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on a flip only; card details, the
-rulebook panel and the card finder on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or
+rulebook panel and the card finder (aliases, plurals) on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or
 pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
 face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name and ability
@@ -962,6 +962,11 @@ def main():
     check(ok, "a found card spawns into the hand face down, every click")
     w.call("finderSearch", red, "zzqqxx")
     check(ui.values.get("Red_fc_title") == "No card found" and not ui.on("Red_fc_g1"), "nothing found")
+    finder_rows = lambda: (ui.values.get("Red_fc_title"), [ui.text(i) for i in sorted(ui.ids) if i.startswith("Red_fc_g") and ui.on(i)])
+    w.call("finderSearch", red, "5 star")
+    one = finder_rows()
+    w.call("finderSearch", red, "5 stars")
+    check(one[0] != "No card found" and finder_rows() == one, f"a plural finds what its singular does: '5 stars' {finder_rows()[0]!r}, '5 star' {one[0]!r}")
     grey = w.players["Grey"]
     w.run(w.table_menu["Find a card"], "Grey", w.vec(10, 1, 10), what="Grey: Find a card")
     w.call("finderSearch", grey, card["n"].lower())
@@ -977,7 +982,7 @@ def main():
 
     # ---- the card's colours, and text that looks like rich text ----
     path = face_path(cards[0])
-    odd = {**details["cards"][path], "n": "Rose <b>Thorn</b> <color=#ff0000>x", "nc": [["Thorn", "#ff7a1a"], ["x", "red"]],
+    odd = {**details["cards"][path], "n": "Rose <b>Thorn</b> <color=#ff0000>x", "nc": [["Thorn", "#ff7a1a"], ["x", "red"]], "al": ["Zqrose"],
            "a": "<i>Burn</i> a Burn, then Burn<3\nBurn", "ac": [["Burn", "#ff0000", 2], ["Burn<3", "#00ff00"], ["gone", "#0000ff"], ["Burn", "#0000ff"]]}
     w4 = World(script, save, zones)
     w4.seat("Red")
@@ -993,6 +998,8 @@ def main():
     w4.run(w4.table_menu["Find a card"], "Red", w4.vec(10, 1, 10), what="Find a card: '<' in a name")
     w4.call("finderSearch", w4.players["Red"], "thorn</b>")
     check(w4.ui.text("Red_fc_g1").startswith(plain(odd["n"]) + "   "), f"the finder's row: the name, '<' no tag {w4.ui.text('Red_fc_g1')!r}")
+    w4.call("finderSearch", w4.players["Red"], "zqrose")
+    check(w4.ui.on("Red_fc_g1") and w4.ui.text("Red_fc_g1").startswith(plain(odd["n"])), f"a card's alias finds it (al) {w4.ui.values.get('Red_fc_title')!r}")
 
     # ---- every card's details at each size ----
     w5 = World(script, save, zones)

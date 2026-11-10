@@ -974,8 +974,8 @@ function rulebookSearch(player, value)
     listPages(player.color, value)
 end
 
--- the card finder: every word must be in a card's name, kind, stars ("5" or "5★"), types or timing tags; names that start with the search
--- come first; a click spawns the card where the table was right-clicked (several: side by side)
+-- the card finder: every word must be in a card's name, kind, stars ("5" or "5★"), types, timing tags or aliases (a plural: or its
+-- singular); names that start with the search come first; a click spawns the card where the table was right-clicked (several: side by side)
 local fcOpen, fcFound, searchList = {}, {}, nil
 local function listCards(color, query)
     if not searchList then                             -- each card's words, once, in name order (no sort per keystroke)
@@ -984,6 +984,7 @@ local function listCards(color, query)
             local bits = {c.n or "", c.k or "", c.st and (math.floor(c.st) .. "★ " .. math.floor(c.st) .. " star") or ""}
             for _, t in ipairs(c.t or {}) do table.insert(bits, (details.types[t] or {}).n or t) end
             for _, g in ipairs(c.g or {}) do table.insert(bits, "(" .. g .. ")") end
+            for _, a in ipairs(c.al or {}) do table.insert(bits, a) end      -- the website's aliases ("Sans" for snas.)
             table.insert(searchList, {path = path, name = (c.n or ""):lower(), all = table.concat(bits, " "):lower()})
         end
         table.sort(searchList, function(a, b) return a.name < b.name end)
@@ -999,7 +1000,10 @@ local function listCards(color, query)
     if #words > 0 then
         for _, w in ipairs(searchList) do
             local ok = true
-            for _, word in ipairs(words) do if not w.all:find(word, 1, true) then ok = false break end end
+            for _, word in ipairs(words) do
+                local hit = w.all:find(word, 1, true) or #word > 4 and word:sub(-1) == "s" and w.all:find(word:sub(1, -2), 1, true)
+                if not hit then ok = false break end                 -- "5 stars", "creatures": the singular too
+            end
             if ok then table.insert(w.name:find(words[1], 1, true) == 1 and first or rest, w.path) end
         end
     end
