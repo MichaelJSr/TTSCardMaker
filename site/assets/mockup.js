@@ -10,7 +10,7 @@
 // `draw` is pure (node checks run it on plain pixel arrays).
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
 import { starMove, starsKept, titleInPicture } from "./parts.js";
-import { colorRanges, inkOf, layerColors, phraseText, spansOf, statusSpans } from "./textcolor.js";
+import { colorRanges, drawnSpans, inkOf, layerColors, phraseText, spansOf, statusSpans } from "./textcolor.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
@@ -404,14 +404,69 @@ export function colourize(paras, text, colors, field, statuses = null, base = nu
     return out.map(x => (x.color ? x : { text: x.text }));
   })));
 }
-/** The card's own colours on a redrawn text, as its page keeps them over a staged edit (textcolor.js inkOf: a word
- *  the edit cuts into loses its own): the field's; a part's (old: its layer's text) the field's colours where that text
- *  is in the field, followed to the new; null without any. */
+const SAME_RUN = 3, INK_CELLS = 600000;              // psd_edit.SAME_RUN; bakeInk's alignment at most this many cells
+/** The colours the bake gives an edited text (psd_edit edit_styles), from list ([{start, end, color}] over was, none:
+ *  the main ink): kept letters keep theirs (a kept stretch under SAME_RUN letters without a break joins the change); a
+ *  changed stretch takes the commonest of the letters it replaces (no blanks, icons or badges); typed-in text the
+ *  nearest letter's before it on its line, else after, or the main ink between two colours of a line of several. Its
+ *  runs ([] none); null past INK_CELLS. */
+export function bakeInk(was, list, now) {
+  was = String(was ?? ""); now = String(now ?? "");
+  const n = was.length, m = now.length;
+  if (!list?.length) return [];
+  if (n * m > INK_CELLS) return null;
+  const col = Array(n).fill(null), drawn = Array(n).fill(false);
+  for (const r of list) for (let i = Math.max(0, r.start); i < Math.min(n, r.end); i++) col[i] = r.color;
+  for (const [s, e] of drawnSpans(was)) for (let i = s; i < e; i++) drawn[i] = true;
+  const W = m + 1, dp = new Uint16Array((n + 1) * W);   // longest common letters of was[i:], now[j:]
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i * W + j] = was[i] === now[j] ? dp[(i + 1) * W + j + 1] + 1 : Math.max(dp[(i + 1) * W + j], dp[i * W + j + 1]);
+  const segs = [];                                    // [a0, a1, b0, b1, kept]
+  const put = (kept, i, j, di, dj) => { const s = segs[segs.length - 1]; if (s && s[4] === kept) { s[1] += di; s[3] += dj; } else segs.push([i, i + di, j, j + dj, kept]); };
+  for (let i = 0, j = 0; i < n || j < m;) {
+    if (i < n && j < m && was[i] === now[j]) put(true, i++, j++, 1, 1);
+    else if (j < m && (i >= n || dp[i * W + j + 1] >= dp[(i + 1) * W + j])) put(false, i, j++, 0, 1);
+    else put(false, i++, j, 1, 0);
+  }
+  const parts = [];                                   // edit_parts: a short kept stretch is part of the change
+  for (const s of segs) {
+    const last = parts[parts.length - 1], kept = s[4] && (s[1] - s[0] >= SAME_RUN || was.slice(s[0], s[1]).includes("\n"));
+    if (last && !last[4] && !kept) { last[1] = s[1]; last[3] = s[3]; } else parts.push([s[0], s[1], s[2], s[3], kept]);
+  }
+  const letter = i => !/\s/.test(was[i]) && !drawn[i];
+  const lineOf = (lo, hi) => [was.lastIndexOf("\n", lo - 1) + 1, (k => (k < 0 ? n : k))(was.indexOf("\n", hi))];
+  const near = (lo, hi) => {
+    const [top, bottom] = lineOf(lo, hi), seen = new Set();
+    for (let k = top; k < bottom; k++) if (letter(k)) seen.add(col[k]);
+    if (seen.size > 1 && !(lo > top && hi < bottom && col[lo - 1] === col[hi])) return null;   // typed between two colours: the main ink (body_fill)
+    for (let k = lo - 1; k >= top; k--) if (letter(k)) return col[k];
+    for (let k = hi; k < bottom; k++) if (letter(k)) return col[k];
+    return null;
+  };
+  const out = Array(m).fill(null);
+  for (const [a0, a1, b0, b1, kept] of parts) {
+    if (kept) { for (let k = 0; k < b1 - b0; k++) out[b0 + k] = col[a0 + k]; continue; }
+    if (b1 <= b0) continue;
+    const count = new Map();
+    for (let k = a0; k < a1; k++) if (letter(k)) count.set(col[k], (count.get(col[k]) || 0) + 1);
+    const c = count.size ? [...count].reduce((x, y) => (y[1] > x[1] ? y : x))[0] : was.slice(a0, a1).trim() ? null : near(a0, a1);
+    out.fill(c, b0, b1);
+  }
+  const runs = [];
+  out.forEach((c, k) => { const r = runs[runs.length - 1]; if (c && r?.color === c && r.end === k) r.end++; else if (c) runs.push({ start: k, end: k + 1, color: c }); });
+  return runs;
+}
+/** The card's own colours on a redrawn text, as the bake gives them (bakeInk; past its size, as its page keeps them over
+ *  a staged edit: textcolor.js inkOf): the field's; a part's (old: its layer's text) the field's colours where that
+ *  text is in the field, followed to the new; null without any. */
 export function baseInk(card, field, text, old = null) {
-  if (old == null) return inkOf(card, field, text);
-  const was = String(card?.ink?.built?.[field] ?? card?.[field] ?? ""), at = old ? was.indexOf(old) : -1;
-  const runs = at < 0 ? [] : (inkOf(card, field, was) || []).filter(r => r.start >= at && r.end <= at + old.length);
-  return runs.length ? inkOf({ [field]: old, ink: { [field]: runs.map(r => [r.start - at, r.end - at, r.color]) } }, field, text) : null;
+  const was = String(card?.ink?.built?.[field] ?? card?.[field] ?? ""), list = inkOf(card, field, was) || [];
+  const some = r => (r?.length ? r : null);
+  if (old == null) { const ink = bakeInk(was, list, text); return ink ? some(ink) : inkOf(card, field, text); }
+  const at = old ? was.indexOf(old) : -1;
+  if (at < 0) return null;
+  const own = list.filter(r => r.end > at && r.start < at + old.length).map(r => ({ ...r, start: Math.max(0, r.start - at), end: Math.min(old.length, r.end - at) }));
+  const ink = bakeInk(old, own, text);
+  return ink ? some(ink) : own.length ? inkOf({ [field]: old, ink: { [field]: own.map(r => [r.start, r.end, r.color]) } }, field, text) : null;
 }
 const lin = v => (v <= 10 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4);
 const lumOf = ([r, g, b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
