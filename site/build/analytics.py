@@ -331,7 +331,8 @@ def change(a, b, texts):
         if va != vb:
             row[key] = [va, vb]
     ta, tb = Counter(getattr(a, "types", None) or []), Counter(getattr(b, "types", None) or [])
-    if ta != tb:                               # counted: a second of a type is a change
+    legacy = any(getattr(v, "parser_version", 0) is None for v in (a, b))    # types before parser 2: unknown (shown: parsed)
+    if ta != tb and not legacy:                # counted: a second of a type is a change
         row["types"] = {"add": sorted((tb - ta).elements()), "drop": sorted((ta - tb).elements())}
     na, nb = len(getattr(a, "creatures", None) or []), len(getattr(b, "creatures", None) or [])
     if max(na, 1) != max(nb, 1):

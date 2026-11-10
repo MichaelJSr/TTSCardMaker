@@ -428,11 +428,13 @@ UNKNOWN_IF = (("NO STARS FOUND", "stars"), ("MISSPELT TYPE", "types"), ("NO ABIL
 
 
 def unknown_fields(v):
-    """What a reading could not know (AutoCroissant card_history.unknown): the title before parser 2, a field its parse
-    failed on."""
+    """What a reading could not know (AutoCroissant card_history.unknown): the title and types before parser 2, a field its
+    parse failed on."""
     found = set()
-    if getattr(v, "parser_version", None) is None and not getattr(v, "display_name", None):
-        found.add("display_name")
+    if getattr(v, "parser_version", None) is None:
+        found.add("types")                        # parser 1 missed and mistook icons
+        if not getattr(v, "display_name", None):
+            found.add("display_name")
     for problem in getattr(v, "problems", None) or []:
         found.update(k for prefix, k in UNKNOWN_IF if str(problem).startswith(prefix))
     return found
