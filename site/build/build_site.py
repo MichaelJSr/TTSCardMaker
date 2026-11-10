@@ -4287,11 +4287,11 @@ def chunk_tags(lazy):
     return f'\n<meta name="chunks" content="{html.escape(json.dumps({k: [f"assets/{n}" for n in v] for k, v in sorted(lazy.items())}, separators=(",", ":")))}">'
 
 
-def inline_css(page, css):
-    """page with its style.css link swapped for the stylesheet itself (index.html only: one round trip less on first paint)."""
+def inline_css(page, css, what="index.html"):
+    """page with its style.css link swapped for the stylesheet itself (index.html and card pages: one round trip less on first paint)."""
     link = re.search(r'<link rel="stylesheet" href="assets/style\.css\?v=\w+">', page)
     if not link or "</style" in css.lower():
-        warn("index.html: style.css not inlined")
+        warn(f"{what}: style.css not inlined")
         return page
     # url()s are relative to assets/; inlined, to the page (../rulebook/fonts/x went outside the site). A quoted one is
     # read to its closing quote: an SVG data URI's own url(%23g) is no file (it became url(assets/%23g))
@@ -5051,9 +5051,11 @@ def main():
     default_meta = ('<meta name="theme-color" content="#0d0d0d">', '<meta name="description" content="Every Impossibility Simulator card, the rulebook and a starting-hand builder.">')
     if EMPTY_MODAL not in share:
         warn("index.html: no empty #modal, so card pages go without their picture (card_frame)")
+    card_share = inline_css(share, served["style.css"].decode("utf-8"), "card pages")   # they draw the card before the scripts
     def share_page(parts, head, modal=""):
-        """DIST/<parts>/index.html: the app with its own <head> (<base> climbs back to the site root); modal: #modal's markup."""
-        page = share.replace("<!--HEAD-->", "\n".join([f'<base href="{"../" * len(parts)}">'] + head)).replace("<title>Impossibility Simulator · Card Browser</title>", "")
+        """DIST/<parts>/index.html: the app with its own <head> (<base> climbs back to the site root); modal: #modal's markup.
+        A card page (c/) has style.css inline."""
+        page = (card_share if parts[0] == "c" else share).replace("<!--HEAD-->", "\n".join([f'<base href="{"../" * len(parts)}">'] + head)).replace("<title>Impossibility Simulator · Card Browser</title>", "")
         for tag in default_meta:
             page = page.replace(tag, "")
         if modal:
