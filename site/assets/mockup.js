@@ -728,13 +728,13 @@ export function titleLayout(paras, n0, found, maxW, size, measure, W, left = fal
 }
 
 /** The stat rows a template draws, in px: [{k, box, cells: 10}] for the stats a card has (hp, def, atk, spd in order);
- *  none for a shape without bars or stats the details call anything but "template". */
+ *  none for a shape without bars or stats the details call anything but "template" or "pixel" (drawn bars). */
 export function barRows(shape, W, H, card, rec) {
   const t = TEMPLATES[shape]?.bars;
   if (!t) return [];
   const st = rec && typeof rec.stats === "object" ? rec.stats : null;
   const keys = STATS.filter(k => card[k] != null || (st && st[k] === "template"));
-  if (st && keys.some(k => st[k] !== "template")) return [];
+  if (st && keys.some(k => st[k] !== "template" && st[k] !== "pixel")) return [];
   return keys.map((k, i) => ({ k, box: [t.box[0] * W, (t.box[1] + i * t.step) * H, t.box[2] * W, (t.box[3] + i * t.step) * H], cells: 10 }));
 }
 /** A template stat row moved to its label's height (the record's visible "Health", "Defense"... text layer), if a bar is
@@ -746,6 +746,19 @@ export function labelRow(L, W, H, rec, row) {
   const mid = (t.box[1] + t.box[3]) / 2 * k, half = (row.box[3] - row.box[1]) / 2, q = (row.box[2] - row.box[0]) / row.cells / 4;
   const at = d => [row.box[0] + d, mid - half, row.box[2] + d, mid + half];
   return isBar(L, W, H, at(0)) && !isBar(L, W, H, at(-q)) && !isBar(L, W, H, at(q)) ? { ...row, box: at(0) } : null;
+}
+/** Does row (px) show v: its first v cells' centres all lighter, or all darker, than the rest by 8 or more? A row at 0 or
+ *  full can't tell: yes. */
+export function rowShows(L, W, H, row, v) {
+  if (!(v > 0 && v < row.cells)) return true;
+  const [x0, y0, x1, y1] = px(row.box, W, H), cw = (x1 - x0) / row.cells, m = [];
+  for (let c = 0; c < row.cells; c++) {
+    let t = 0, n = 0;
+    for (let y = Math.round(y0 + (y1 - y0) * 0.3); y < y0 + (y1 - y0) * 0.7; y++) for (let x = Math.round(x0 + (c + 0.25) * cw); x < x0 + (c + 0.75) * cw; x++) { t += L[y * W + x]; n++; }
+    m.push(n ? t / n : 0);
+  }
+  const a = m.slice(0, v), b = m.slice(v);
+  return Math.min(...a) > Math.max(...b) + 8 || Math.max(...a) + 8 < Math.min(...b);
 }
 /** Does row (px) look like a 10-cell bar? The cell borders are sharper than the cells' insides. */
 export function isBar(L, W, H, box, cells = 10) {
@@ -1083,7 +1096,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   let bfam = await Promise.race([badgeFont, new Promise(r => setTimeout(() => r(null), 60))]);
   if (bfam === null) { badgeFont.then(f => { if (f) onFont?.(); }); bfam = ""; }
   const scaled = b => b.map((v, i) => v * (i % 2 ? H : W));
-  const bars = barRows(shape, W, H, card, rec).map(r => (isBar(L, W, H, r.box) ? r : labelRow(L, W, H, rec, r))).filter(Boolean);   // the rows drawn on: the template's, else beside the stat's label
+  const bars = barRows(shape, W, H, card, rec).map(r => (isBar(L, W, H, r.box) ? r : labelRow(L, W, H, rec, r)))   // the rows drawn on: the template's, else beside the stat's label
+    .filter(r => r && !(rec?.stats?.[r.k] === "pixel" && !rowShows(L, W, H, r, psd[r.k])));   // a drawn bar: only where it shows the card's value
   const rows = barRows(shape, W, H, card, null), seen = rows.filter(r => isBar(L, W, H, r.box)), lowest = seen.length ? seen : rows;
   const barsBottom = lowest.length ? Math.max(...lowest.map(r => r.box[3])) : 0;   // the text starts below the card's stat rows (where they are seen, else the template's)
   const jobs = [], kc = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0;
