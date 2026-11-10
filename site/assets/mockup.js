@@ -719,10 +719,11 @@ export function pointLayout(paras, size, reach, measure) {
   return { size: s, lines };
 }
 /** A title as the bake sets it (psd_edit set_text_layer): never shrunk; point text keeps its lines, a box's (more lines
- *  found than the old text's n0 paragraphs) wraps at maxW. over: more lines than it has; dx: back on the card (back_on). */
-export function titleLayout(paras, n0, found, maxW, size, measure, W) {
+ *  found than the old text's n0 paragraphs) wraps at maxW. over: more lines than it has; dx: back on the card (back_on),
+ *  from its left edge when left set, else centred. */
+export function titleLayout(paras, n0, found, maxW, size, measure, W, left = false) {
   const lines = layout(paras, found.lines.length > n0 ? maxW : Infinity, size, measure);
-  const w = Math.max(0, ...lines.map(l => l.w)), x0 = (found.box[0] + found.box[2] - w) / 2;
+  const w = Math.max(0, ...lines.map(l => l.w)), x0 = left ? found.box[0] : (found.box[0] + found.box[2] - w) / 2;
   return { size, lines, over: lines.length > Math.max(1, found.lines.length, paras.length), dx: w > W ? 0 : clamp(x0, 0, W - w) - x0 };
 }
 
@@ -1103,7 +1104,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   if (reuse) pixels.data.set(eraseMemo.data);
   for (const [k, { role, text, old, label, own: partBox, added, part, path, id, colors: shared }] of specs.entries()) {
     const { fam, layer } = fams[k];
-    const set = role === "ability" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // the Ability's tracking (ems) and letter width (psd_details)
+    const set = role === "ability" || role === "name" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems) and letter width (psd_details)
     const measure = (t, z) => {
       ctx.font = `${z}px ${fam}`;
       if (!track) return ctx.measureText(t).width * hx;
@@ -1379,7 +1380,7 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
     for (const para of paras) for (const chunk of para) for (const p of chunk) if (p.badge) Object.assign(p, looks[i++] || {});
   }
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
-  const left = found.align === "left" && role !== "name";
+  const left = role === "name" ? layer?.just === 0 : found.align === "left";   // a title: left set in the PSD (psd_details just)
   const frame = role === "ability" && kc && Array.isArray(layer?.frame) && layer.frame.length === 4 ? layer.frame.map(v => v * kc) : null;   // box text's frame: Photoshop wraps there
   if (frame && layer.px > 0) size = layer.px * kc;    // at its set size
   const point = role === "ability" && !!kc && !frame && layer?.px > 0;   // point text: its paragraphs never wrap
@@ -1410,7 +1411,7 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
     for (let y = from, j = 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
     return n < 100 * k * k;
   }
-  let { size: z, lines, over = false, dx = 0 } = role === "name" ? titleLayout(paras, tokenize(old).length, found, maxW, size, measure, W)
+  let { size: z, lines, over = false, dx = 0 } = role === "name" ? titleLayout(paras, tokenize(old).length, found, maxW, size, measure, W, left)
     : point ? pointLayout(paras, size, left ? W - found.box[0] : 2 * Math.min(mid, W - mid), measure) : fit(paras, maxW, Infinity, size, measure);
   if (role !== "name" && !roomBelow()) {              // past the area's bottom: smaller, down to 40%; still past it: said so
     const room2 = region[3] - top, need = s => (lines.length - 1) * pitch0 * (s / size) + s * 1.05;
@@ -1426,7 +1427,7 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
   }
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
   const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades });
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades });
   return over;
 }
 const BOX_FILL = [16, 16, 22];                        // drawBox's box
