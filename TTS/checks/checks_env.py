@@ -1,4 +1,5 @@
 """Paths and interpreters the TTS save checks share; each can be set from the environment (see README.md)."""
+import functools
 import glob
 import json
 import os
@@ -36,6 +37,34 @@ def ensure_history(clone: str = HISTORY) -> str:
     if shallow.stdout.strip() == "true":
         sys.exit(f"{clone} is shallow: history checks need a full clone (TTS_HISTORY)")
     return clone
+
+
+@functools.cache
+def file_at(ref: str, path: str):
+    """path's bytes at ref, never by lazy fetch: the checkout's blob, else the history clone's, else fetched into the
+    history clone in one call (a blobless checkout lacks old saves). None when ref:path names no file."""
+    env = {**os.environ, "GIT_NO_LAZY_FETCH": "1"}
+
+    def git(repo, *args, data=None):
+        r = subprocess.run(["git", "-C", repo, *args], input=data, capture_output=True, env=env)
+        return r.stdout if r.returncode == 0 else None
+    blob = git(REPO, "rev-parse", "--verify", "-q", f"{ref}:{path}")       # trees only: no blob needed
+    clone = None
+    if blob is None:
+        clone = ensure_history()
+        blob = git(clone, "rev-parse", "--verify", "-q", f"{ref}:{path}")
+    if blob is None:
+        return None
+    blob = blob.decode().strip()
+    data = git(REPO, "cat-file", "blob", blob)
+    if data is None:
+        clone = clone or ensure_history()
+        data = git(clone, "cat-file", "blob", blob)
+    if data is None:
+        git(clone, "-c", "fetch.negotiationAlgorithm=noop", "fetch", "-q", "--no-tags", "--no-write-fetch-head",
+            "--filter=blob:none", "--stdin", "origin", data=blob.encode())
+        data = git(clone, "cat-file", "blob", blob)
+    return data
 
 
 def site_cards() -> list:

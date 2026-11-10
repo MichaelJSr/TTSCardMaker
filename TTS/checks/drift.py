@@ -17,7 +17,7 @@ from collections import Counter, defaultdict
 from urllib.parse import unquote
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import REF, REPO, save_arg  # noqa: E402
+from checks_env import REF, REPO, file_at, save_arg  # noqa: E402
 
 BASELINE = "befdf769"       # re-baseline here after a deliberate hand edit of the save (11-06: Specific Item Decks bag removed)
 SAVE = "TTS/Impossibility Simulator.json"
@@ -65,7 +65,9 @@ def relinked(x, y):
 def load_base(arg):
     if arg.endswith(".json"):
         return json.load(open(arg, encoding="utf-8"))
-    out = subprocess.run(["git", "-C", REPO, "show", f"{arg}:{SAVE}"], check=True, capture_output=True).stdout
+    out = file_at(arg, SAVE)
+    if out is None:
+        sys.exit(f"no {SAVE} at {arg}")
     return json.loads(out.decode("utf-8"))
 
 

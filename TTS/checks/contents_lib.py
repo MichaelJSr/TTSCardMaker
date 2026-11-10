@@ -7,7 +7,7 @@ import sys
 from urllib.parse import unquote
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from checks_env import REF, REPO as TC, save_arg, site_cards  # noqa: E402
+from checks_env import REF, REPO as TC, file_at, save_arg, site_cards  # noqa: E402
 
 RAW = "https://raw.githubusercontent.com/MichaelJSr/TTSCardMaker/"
 LINK = re.compile(re.escape(RAW) + r"(refs/heads/main|main|[0-9a-f]{7,40})/([^\s\"\\<>]+)")
@@ -32,10 +32,8 @@ def tree(ref=REF) -> dict:
 
 
 def show(path, ref=REF):
-    try:
-        return git("show", f"{ref}:{path}").decode("utf-8")
-    except subprocess.CalledProcessError:
-        return None
+    data = file_at(ref, path)
+    return None if data is None else data.decode("utf-8")
 
 
 def load_save(path=None):
