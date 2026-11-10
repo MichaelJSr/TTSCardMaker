@@ -4065,7 +4065,8 @@ RULE_WORDS = (("damage-types", r"piercing|true (?:damage|dmg)|life ?steal|shockw
 def tts_details(cards, chapters, icons, tag_table):
     """data/tts.json for the TTS save's script, cards keyed by their PNG's path (the save's card links): name, kind,
     stars, stats, ability (icons as words), types, timing tags, the status effects the ability names and the other cards
-    it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions)
+    it names (m: their paths, exact names) and the chapters its words point to (r: damage types, negation, reactions;
+    a [field] card's Field Cards first)
     and its name's and ability's colours (nc, ac: tts_colors); with the types', tags' and statuses' meanings (a status's
     path: p) and the chapters (their numbers find the PDF's pages). Hidden cards left out."""
     shown = [c for c in cards if not c.get("hidden")]
@@ -4082,6 +4083,7 @@ def tts_details(cards, chapters, icons, tag_table):
     out_cards, used_tags = {}, {}
     ids = {c["id"] for c in chapters}
     rule_words = [(cid, re.compile(rf"\b(?:{words})\b", re.I)) for cid, words in RULE_WORDS if cid in ids]
+    field = ["field-cards"] if "field-cards" in ids else []   # the rulebook gives [field] no meaning
     for c in shown:
         if not c.get("png"):
             continue
@@ -4109,7 +4111,7 @@ def tts_details(cards, chapters, icons, tag_table):
             "st": c.get("stars"), "s": "; ".join(bars) or None, "a": game_words(text, icons) or None,
             "t": [norm(t) for t in c.get("types") or []] or None, "g": tags or None,
             "x": [n for i, n in enumerate(hits) if n not in hits[:i]] or None, "m": mentioned or None,
-            "r": [cid for cid, words in rule_words if words.search(text)] or None,
+            "r": (field if "field" in map(norm, c.get("types") or []) else []) + [cid for cid, words in rule_words if words.search(text)] or None,
             "by": c.get("author"), **colours}.items() if v}
     return {"chapters": {c["id"]: {"num": c["num"], "title": c["title"]} for c in chapters}, "types": types,
             "tags": dict(sorted(used_tags.items())), "statuses": dict(sorted(statuses.items())), "cards": out_cards}
