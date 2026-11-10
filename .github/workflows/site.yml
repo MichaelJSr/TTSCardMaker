@@ -279,8 +279,8 @@ jobs:
       # A Card sync data job's early build (dispatched at its start): set up above while that job builds, it waits here
       # until the job's Commit data is done or the job ended: 3 s looks for 2 minutes, then 15 s; 20 minutes at most (past
       # that, Card sync's Site build dispatches another). Then main's head again, as Card sync's Newest; when that moved
-      # a PSD, the PSD sizes again (Setup wait waits for them). The data's head beside main's (Card checks' lines; the
-      # clone failed: checked out after Setup wait).
+      # a PSD, the PSD sizes again (Setup wait waits for them). The data's head beside main's (Card checks' lines; 3 tries;
+      # the clone or those failed: checked out after Setup wait).
       - name: Data wait
         if: inputs.after
         timeout-minutes: 22
@@ -300,12 +300,21 @@ jobs:
           echo "$JOB of $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$RUN past $COMMIT (or ended) after $SECONDS s." | tee -a "$GITHUB_STEP_SUMMARY"
           bg=$RUNNER_TEMP/setup
           until [ -s "$bg/data.code" ]; do sleep 0.1; done
-          [ "$(cat "$bg/data.code")" != 0 ] || { git -C carddata fetch -q --depth 1 origin data & data=$!; }
+          refetch() {   # 3 tries, 10 and 15 s apart (actions/checkout's)
+            for try in 1 2 3; do
+              timeout 60 git -C carddata fetch -q --depth 1 origin data && return
+              [ "$try" = 3 ] || sleep $(( try * 5 + 5 ))
+            done
+            return 1
+          }
+          data=
+          [ "$(cat "$bg/data.code")" != 0 ] || { refetch & data=$!; }
           was=$(git rev-parse HEAD)
           if git fetch -q --filter=blob:none origin main; then git reset -q --hard FETCH_HEAD; else echo "::warning::main not fetched again"; fi
-          if [ -n "$data" ]; then
-            wait "$data" || { echo "::error::data not fetched again"; exit 1; }
-            git -C carddata reset -q --hard FETCH_HEAD
+          if [ -n "$data" ] && ! { wait "$data" && git -C carddata reset -q --hard FETCH_HEAD; }; then
+            echo "::warning::data not fetched again (3 tries): checked out"
+            rm -rf carddata
+            echo 1 > "$bg/data.code"
           fi
           head=$(git rev-parse HEAD)
           if [ "$head" != "$was" ] && [ -n "$(GIT_NO_LAZY_FETCH=1 git diff --no-renames --name-only "$was" "$head" -- ':(icase)*.psd')" ]; then
