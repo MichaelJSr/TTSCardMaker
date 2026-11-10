@@ -121,6 +121,7 @@ jobs:
         /commands/ability_place.py
         /commands/ability_index.json
         /commands/psd_links.py
+        /commands/status_font.py
     outputs:
       mode: ${{ steps.start.outputs.mode }}
       started: ${{ steps.start.outputs.started }}
