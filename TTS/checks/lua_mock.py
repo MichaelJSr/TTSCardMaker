@@ -9,7 +9,7 @@ per frame; loading does nothing by itself and builds no UI; teams Red/Orange/Gre
 other seats None, Grey/Black untouched; hand zones shared on a side (a free seat's zones go to its first seated
 teammate and come back when someone sits there, kept through a save and load; other seats' zones never move); large
 cards scaled 3,1,3 three frames after leaving a container; turn markers cycle on a flip only; card details, the
-rulebook panel and the card finder (aliases, plurals) on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or
+rulebook panel and the card finder (aliases, plurals, "status effects") on the website's data/tts.json and the repo's TTS/Rulebook/pages.json (at main, or
 pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save writes it into the save; the seated
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
 face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name and ability
@@ -991,6 +991,9 @@ def main():
     one = finder_rows()
     w.call("finderSearch", red, "5 stars")
     check(one[0] != "No card found" and finder_rows() == one, f"a plural finds what its singular does: '5 stars' {finder_rows()[0]!r}, '5 star' {one[0]!r}")
+    w.call("finderSearch", red, "status effects")
+    statuses, title = sum(c.get("k") in ("Buff", "Debuff") for c in details["cards"].values()), ui.values.get("Red_fc_title")
+    check(statuses and title.split()[0] == str(statuses), f"'status effects' finds every buff and debuff ({title!r}, {statuses})")
     grey = w.players["Grey"]
     w.run(w.table_menu["Find a card"], "Grey", w.vec(10, 1, 10), what="Grey: Find a card")
     w.call("finderSearch", grey, card["n"].lower())

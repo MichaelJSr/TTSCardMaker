@@ -1009,6 +1009,7 @@ local function listCards(color, query)
         searchList = {}
         for path, c in pairs(details.cards) do
             local bits = {c.n or "", c.k or "", c.st and (math.floor(c.st) .. "★ " .. math.floor(c.st) .. " star") or ""}
+            if c.k == "Buff" or c.k == "Debuff" then table.insert(bits, "status effect") end   -- the website's kind name
             for _, t in ipairs(c.t or {}) do table.insert(bits, (details.types[t] or {}).n or t) end
             for _, g in ipairs(c.g or {}) do table.insert(bits, "(" .. g .. ")") end
             for _, a in ipairs(c.al or {}) do table.insert(bits, a) end      -- the website's aliases ("Sans" for snas.)
