@@ -1,8 +1,7 @@
 {
  "about": "The rulebook's TTS PDF, printed from the website's #/rules/print by AutoCroissant commands/rulebook_pages.py (Card sync); the chapters are site/rulebook. sha: each page's pixels (the PDF is printed again when one changes). tts_save puts the PDF in the save's Rulebooks bag.",
  "pdf": "Rulebook.pdf",
- "key": "5cb15a38a1dc5e219466d5595607f0e0cab042892c40a87ba419e126eba23abd",
- "pre": "83261e276c015d9b5d7ab0af80384fc9144d5812f07a5ef6c3ede406e235b86c",
+ "key": "5091f7abbdc27343ffd35d14904b41a058a05be1c5bf294e99710c7e1ea89406",
  "pages": [
   {
    "name": "Cover",
@@ -36,7 +35,7 @@
   {
    "name": "Table",
    "num": "4",
-   "sha": "4e7ab1bb2d1206f815614b27813eca08d998702d058202775e6be81c4537c988",
+   "sha": "13472cd17b9298bb30996bcfab53195145898ec6255527cf4ed0cb249eba95e6",
    "t": "TABLE The MAIN DECKS and the DEVELOPER DECKS. The COUNTERS and the SHOPS. The PLAYING FIELD: the slots and the face-down items. The status effect markers, the GRAVEYARD, the DISCARD PILE and the field card slots. The auxiliary decks, the minion card holder, the dice, the 0.5 chips, the counters, the stat markers and the active item holder. The simple version's decks and the extra stuff, beside the table. Each coloured strip is a player's hand. MAIN DECK The CREATURE DECKS. 5 star Creatures are in the leftmost deck, 4 Stars are next, then 3 Stars, then 2 Stars. The ITEM DECKS. 4 Star Items are in the leftmost deck, 3 Stars are next, then 2 Stars, then 1 Stars. FIELD CARDS for the Field card Shop (See: “SHOPS”). 4 Stars are in the leftmost deck, 3 Stars are next, then 2 Stars, then 1 Stars. N.M.E. Items for the N.M.E. Shop. (See: “SHOPS”) DEVELOPER DECK The Developer Version of the creature decks. This is a reduced version of the full deck, meant to only included newer or recently changed cards that require more playtesting. For most players you can ignore this but you can play with it if you want a more wacky experience! “Baseline” creatures that we mix into the Developer version. These cards are considered balanced, so they serve as a way to test the less balanced cards. 4"
   },
   {
