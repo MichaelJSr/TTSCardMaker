@@ -590,8 +590,11 @@ Paths relative to /Users/michaelsrouji/Desktop/TTSCardMaker/site. Plain ES modul
     `text[].box` (canvas px) is the area instead (`recordBox`): adding `layer.bbox` to psd_details' text entries would
     make the mock-up exact (a bot follow-up, not done). An ability layer whose first run is in stoogedings (the text
     starts with a badge) takes the layer's other font from `rec.fonts` (`layerOf`).
-  - No block holds the old text (text over busy art, a stylised name, an upside-down card): the new text goes in a
-    dark box over the whole area (to the card's edges, opaque, dashed border), so the old text is covered, never half
+  - No block holds the old text (text over busy art, tight leading): with the layer's record box and `px` (a part's
+    layer, or a whole field's printed layer) the box is split into one band per old line at `px` (wrapped at the
+    frame; `recordBlock`), erased there and the new text drawn as a found block's (2026-11-09: 18 of 743 boxed Ability
+    and 12 of 620 title mock-ups drawn in place, median error against the bake 58 -> 41 and 42 -> 21). Else (no record
+    box or `px`, a stylised name, an upside-down card) the new text goes in a dark box over the whole area (to the card's edges, opaque, dashed border), so the old text is covered, never half
     there; the caption says "Text in a box: its place on the image wasn't found." (`out.boxed`). A title's or one
     layer's box is its own area only (2026-11-08: a title's record box ran to the card's bottom, 62% of the card).
   - Erase: the block's lines (a centred block's made even about its centre: `eraseLines`, a line read short past a dim
