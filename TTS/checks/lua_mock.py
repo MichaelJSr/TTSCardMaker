@@ -160,10 +160,13 @@ class Player:
         self._team = value
         self._w.log.append(("team", self.color, value))
 
-    def getHandObjects(self):                               # a seat with no hand zone: the worst case, an error
+    def getHandCount(self):                                 # the hand zones this seat holds
+        return sum(z.owner == self.color for z in self._w.zones)
+
+    def getHandObjects(self, index=1):                      # zone index's (hands[(color, i)] past 1); no zone: an error
         if self.color not in self._w.hands and self.color not in {z.owner for z in self._w.zones}:
             raise RuntimeError("Object reference not set to an instance of an object")
-        return self._w.lua.table_from(self._w.hands.get(self.color, []))
+        return self._w.lua.table_from(self._w.hands.get(self.color if index == 1 else (self.color, index), []))
 
     def getPointerPosition(self):
         return self._w.vec(4, 1, 4)
@@ -824,6 +827,11 @@ def main():
     w.told.clear()
     w.run(w.g.showDetails, "Red", secret, what="card in Blue's hand")
     check(("Red", "No details for this card.") in w.told, "a card in another player's hand: no details")
+    slot = Obj.of(w, cards[1])
+    w.hands[("Blue", 3)] = [slot]
+    w.told.clear()
+    w.run(w.g.showDetails, "Red", slot, what="card in Blue's third hand zone")
+    check(("Red", "No details for this card.") in w.told, "a card in another player's third hand zone: no details")
     w.run(w.g.showDetails, "Blue", secret, what="Blue's own card")
     check(len(ui.builds) == 1 and ui.on("Blue_d1"), "Blue's panels were built with the data: none on use")
     w.seat("Red", "Blue", "Teal")

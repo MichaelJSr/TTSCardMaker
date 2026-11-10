@@ -354,9 +354,14 @@ local function pathOf(url)
     return unescape(url:sub(at))
 end
 
-local function handOf(c)                               -- a seat's hand objects ({} for a seat without a hand zone)
-    local ok, objs = pcall(function() return Player[c].getHandObjects() end)
-    return ok and objs or {}
+local function handOf(c)                               -- objects in all of a seat's hand zones ({} for none)
+    local out = {}
+    local ok, n = pcall(function() return Player[c].getHandCount() end)
+    for i = 1, ok and tonumber(n) or 1 do
+        local fine, objs = pcall(function() return Player[c].getHandObjects(i) end)
+        for _, o in ipairs(fine and objs or {}) do table.insert(out, o) end
+    end
+    return out
 end
 
 -- the card's PNG path, or nil (not a card, or hidden from this player: face down or in another player's hand)
