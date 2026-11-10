@@ -270,7 +270,8 @@ jobs:
           fetch-depth: 1
 
       # One environment from requirements-cards.txt for the bake, the build, the save and the posts, on the Actions' one
-      # Python (3.14; the shared setup, .github/actions/cards-venv). --help proves the import closure before any stage.
+      # Python (3.14; the shared setup, .github/actions/cards-venv). --help proves the main lane's CLIs' import closure
+      # before its stages; the data jobs check none (their Build is the first import of card_data).
       # Always, first: before a push's or a follow-up's wait (a data job with nothing to do sets it up too).
       - &venv
         name: Python environment
@@ -280,7 +281,7 @@ jobs:
         with:
           venv: ${{ runner.temp }}/venv
           oxipng: ${{ github.job == 'main' }}     # the data jobs write no PNG
-          help: card_data tts_save card_bake
+          help: ${{ github.job == 'main' && 'tts_save card_bake' || '' }}
 
       # The guards' fixes (P-2): a guards push run with fixes to land (its check job's step "Fixes to land") starts Card
       # sync once they land, landed or not (its Follow up). A push's run looks for its own push's (in Bake and save, after
