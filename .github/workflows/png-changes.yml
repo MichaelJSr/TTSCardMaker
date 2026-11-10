@@ -2,8 +2,9 @@
 # history that db/png_changes.json on `data` lacks is measured (the share of the card's pixels visibly changed), in
 # batches fetched into a scratch store and dropped (never the history's pictures on disk at once). The record is committed
 # to `data` after each round (12 minutes at most), so a run cut short loses one round: dispatch again and it resumes where
-# the record stops. By hand only (Card sync measures each run's own changes); the data writers' lock: no Card sync data
-# job meanwhile. Then the site is rebuilt (it reads the record: a change under the share folds as minor).
+# the record stops. Past changelog events with no mark yet are measured first and marked minor as Card sync marks new
+# ones (--events; every seq kept). By hand only (Card sync measures each run's own changes); the data writers' lock: no
+# Card sync data job meanwhile. Then the site is rebuilt (it reads the record: a change under the share folds as minor).
 name: Picture changes
 
 on:
@@ -57,6 +58,16 @@ jobs:
           sparse-checkout: |
             /commands/png_changes.py
             /commands/card_models.py
+            /commands/card_data.py
+            /commands/card_db.py
+            /commands/card_edits.py
+            /commands/card_history.py
+            /commands/changelog.py
+            /commands/github_api.py
+            /commands/psd_parser.py
+            /commands/psd_regions.py
+            /commands/rulebook.py
+            /global_config.py
             /requirements-cards.txt
 
       - uses: actions/checkout@v7
@@ -70,7 +81,7 @@ jobs:
         with:
           venv: ${{ runner.temp }}/venv
           oxipng: "false"
-          help: png_changes
+          help: png_changes card_data
 
       # Rounds of 12 minutes at most, each one data commit (over a Card checks commit of db/card_checks.json alone, as
       # Card sync's Commit data); exit 3 of a round: pairs left
@@ -87,13 +98,13 @@ jobs:
             if [ "$left" -lt 2 ]; then echo "Time is up: dispatch again for the rest." | tee -a "$GITHUB_STEP_SUMMARY"; break; fi
             set +e
             "$RUNNER_TEMP/venv/bin/python" -m commands.png_changes backfill --checkout "$GITHUB_WORKSPACE" --db "$db" \
-              --minutes "$(( left < 12 ? left : 12 ))" | tee "$RUNNER_TEMP/round.txt"
+              --minutes "$(( left < 12 ? left : 12 ))" --events | tee "$RUNNER_TEMP/round.txt"
             code=${PIPESTATUS[0]}
             set -e
             if [ "$code" != 0 ] && [ "$code" != 3 ]; then exit "$code"; fi
             (
               cd "$GITHUB_WORKSPACE/carddata"
-              git add db/png_changes.json
+              git add db/png_changes.json db/changelog
               if git diff --cached --quiet; then exit 0; fi
               git "${me[@]}" commit -q -m "Card data: picture changes measured"
               for i in 1 2 3; do
@@ -105,7 +116,7 @@ jobs:
               done
               exit 1
             )
-            tail -1 "$RUNNER_TEMP/round.txt" >> "$GITHUB_STEP_SUMMARY"
+            tail -2 "$RUNNER_TEMP/round.txt" >> "$GITHUB_STEP_SUMMARY"
             if [ "$code" = 0 ]; then break; fi
           done
 
