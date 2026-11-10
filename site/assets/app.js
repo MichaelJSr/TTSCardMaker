@@ -412,7 +412,14 @@ function setParams(updates, { replace = true } = {}) {
     (v === "" || v == null || (Array.isArray(v) && !v.length)) ? p.delete(k) : p.set(k, Array.isArray(v) ? v.join(",") : v);
   }
   const hash = `#/${r.name === "card" ? "cards" : r.name}${r.arg ? "/" + r.arg : ""}${p.toString() ? "?" + p : ""}`;
-  if (replace) { history.replaceState(history.state, "", hash); renderView(parseHash(), hash); } else location.hash = hash;
+  const was = r.name === "cards" && S.list;
+  if (replace) { history.replaceState(history.state, "", hash); renderView(parseHash(), hash); toResults(was); } else location.hash = hash;
+}
+// another list (search, filters, sort) drawn while scrolled into the old one: its top under the bar (the scroll had clamped)
+function toResults(was) {
+  if (!was || (was.length === S.list.length && was.every((c, i) => c === S.list[i]))) return;
+  const top = $(".browse > section", view)?.getBoundingClientRect().top, bar = $("header.top")?.getBoundingClientRect().bottom || 0;
+  if (top < bar) scrollBy(0, top - bar);
 }
 
 // ---- cards (browse) --------------------------------------------------------------------------------
@@ -1628,7 +1635,7 @@ const actions = {
     if (vals(p, "font").includes(v) || vals(p, "xfont").includes(v)) setParams({ font: vals(p, "font").filter(f => f !== v), xfont: vals(p, "xfont").filter(f => f !== v) }); else rerender(); },
   "remove-param": el => { const p = parseHash().params; if (el.dataset.key === "font" || el.dataset.key === "xfont") S.fontKept = S.fontKept.filter(f => f !== el.dataset.value);   // the bar's ✕: gone, as before
     if (el.dataset.value !== undefined) setParams({ [el.dataset.key]: vals(p, el.dataset.key).filter(x => x !== el.dataset.value) }); else setParams({ [el.dataset.key]: "" }); if (el.dataset.key === "q") qInput.value = ""; },
-  "clear-filters": () => { qInput.value = ""; S.notPick.clear(); S.fontKept = []; const fb = $(".browse .font-box", view); if (fb) fb.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); },
+  "clear-filters": () => { const was = S.list; qInput.value = ""; S.notPick.clear(); S.fontKept = []; const fb = $(".browse .font-box", view); if (fb) fb.value = ""; history.replaceState(history.state, "", "#/cards"); renderView(parseHash(), "#/cards"); toResults(was); },
   "range": el => { const p = parseHash().params, k = el.dataset.key, cur = rangeOf(p, k) || [0, S.statMax[k]]; cur[+el.dataset.which] = Number(el.value);
     setParams({ [k]: cur[0] === 0 && cur[1] >= S.statMax[k] ? "" : `${Math.min(...cur)}-${Math.max(...cur)}` }); },
   "flip-dir": () => { const p = parseHash().params; setParams({ dir: isDesc(sortOf(p), p.get("dir")) ? "asc" : "desc" }); },

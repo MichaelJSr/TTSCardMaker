@@ -10,7 +10,8 @@ data), on a push of site code, daily, and on demand (Actions → Card browser �
   (a text box with autofill; `font=`) and flags, and **Missing** (cards with no series, types, ability, author, artwork
   source...; every sort puts cards lacking its value last). A right-click or long press on a filter excludes it (≠ on the
   Series, Subseries and Author selects). **My filters**: searches saved in this browser ("Save as filter" beside the
-  search box), each one a checkbox in the sidebar (`cf=` keeps, `xcf=` drops; a link carries them).
+  search box), each one a checkbox in the sidebar (`cf=` keeps, `xcf=` drops; a link carries them). A new search, filter
+  or sort shows its results from the top; the same cards drawn another way (grid or table, tile size) keep the place.
   **The Morgue** (under Retired; `morgue=1`): the retired cards in `MDW/The Morgue` (a PSD with its PNG), picture and
   name only, never in the default list, decks, the TTS save, Stats or counts of live cards.
   Sorts include **Newest created** and **Oldest created** (`sort=created`, `&dir=asc` for oldest; the table's Created
