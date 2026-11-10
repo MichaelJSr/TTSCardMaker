@@ -1,5 +1,5 @@
 {"version": 1,
-"cleared": {"Creatures/Hollow Knight/4 Stars/Grey_Prince_Zote.psd": "00587c06", "Creatures/Other/3 Stars/The_Last_Cabbage_Merchant.psd": "07b25a52"},
+"cleared": {},
 "cards": {
 "0038119ea32f6d018859e4c21495471fbdf4e1a0": {"bars": null, "card": "Jetpack", "hand": null, "notes": [], "png": "9997d5c9", "reads": {"atk": [{"best": 0, "could": [0], "flat": true}], "def": [{"best": 0, "could": [0], "flat": true}], "hp": [{"best": 4, "could": [4]}], "spd": [{"best": 5, "could": [5]}]}, "style": "new", "unredrawable": {}},
 "0040edd59226b1daac0d3d551729d736367b7d0d": {"bars": "Its stat bars hold several creatures, not the template's four rows.", "card": "Pix", "hand": null, "notes": [], "png": "8ec2c0d9", "reads": {"atk": [{"best": 6, "could": [6]}, {"best": 5, "could": [5]}, {"best": 8, "could": [8]}], "def": [{"best": 4, "could": [4]}, {"best": 8, "could": [8]}, {"best": 2, "could": [2]}], "hp": [{"best": 6, "could": [6]}, {"best": 6, "could": [6]}, {"best": 6, "could": [6]}], "spd": [{"best": 8, "could": [8]}, {"best": 5, "could": [5]}, {"best": 5, "could": [5]}]}, "style": "custom", "unredrawable": {}},
