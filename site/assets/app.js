@@ -1593,6 +1593,16 @@ function toastUndo(msg, undo) {
 }
 function debounce(fn, ms) { let t = 0; const d = (...a) => { clearTimeout(t); t = setTimeout(() => { t = 0; fn(...a); }, ms); }; d.flush = () => { if (t) { clearTimeout(t); t = 0; fn(); } }; d.cancel = () => { clearTimeout(t); t = 0; }; return d; }
 async function copy(text, what) { try { await navigator.clipboard.writeText(text); toast(`Copied ${what}`); } catch { prompt("Copy:", text); } }
+// every dialog: focus moves into it, and back to what had it when it closes (a phone's text box excepted: no keyboard pops up)
+let opener = null;
+modal.addEventListener("focusin", e => { if (e.relatedTarget && !modal.contains(e.relatedTarget)) opener = e.relatedTarget; });   // from outside; kept through the dialog's redraws
+new MutationObserver(() => {
+  const d = $(".dialog", modal), at = document.activeElement;
+  if (!modal.hidden) { if (d && !modal.contains(at)) { if (!d.hasAttribute("tabindex")) d.tabIndex = -1; d.focus({ preventScroll: true }); } return; }
+  const o = opener; opener = null;
+  const back = o?.isConnected ? o : (o?.dataset?.open && $(`[data-open="${CSS.escape(o.dataset.open)}"]`, view)) || null;   // a redrawn grid: the card's new tile
+  if ((!at || at === document.body) && back && !(back.matches("input, textarea") && matchMedia("(pointer: coarse)").matches)) back.focus({ preventScroll: true });
+}).observe(modal, { attributes: true, attributeFilter: ["hidden"], childList: true });   // childList: one dialog swapped for another
 function showDialog(html) { modal.innerHTML = `<div class="dialog small" role="dialog" aria-modal="true"><button type="button" class="ghost icon close" data-action="close" aria-label="Close">✕</button>${html}</div>`; modal.hidden = false; }
 
 // the rulebook editor (rulebook-edit.js): a chapter's text beside its page, published as one commit
