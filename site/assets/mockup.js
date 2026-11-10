@@ -228,6 +228,13 @@ export function eraseLines(found) {
   const mid = median(found.lines.map(l => (l[0] + l[2]) / 2));
   return found.lines.map(l => { const half = Math.max(mid - l[0], l[2] - mid); return [mid - half, l[1], mid + half, l[3]]; });
 }
+/** Text not found on the image, as a found block in the record's box (own, px): one even band per line of the old text
+ *  at size z (wrapped at wrap, px, or not), left when the box sits at the frame's left edge (frame, px), else centred. */
+export function recordBlock(own, paras, measure, z, wrap = 0, frame = null) {
+  const n = Math.max(1, layout(paras, wrap || Infinity, z, measure).filter(l => l.pieces.length).length), lh = (own[3] - own[1]) / n, c = (own[0] + own[2]) / 2;
+  const lines = Array.from({ length: n }, (_, i) => [own[0], own[1] + i * lh, own[2], own[1] + (i + 1) * lh]);
+  return { box: own, lines, size: z, pitch: lh, align: frame && Math.abs(own[0] - frame[0]) < Math.abs(c - (frame[0] + frame[2]) / 2) ? "left" : "center", mass: 0 };
+}
 /** The template's text area for an image W x H: {box, seed: [y0, y1]} (px), the search reaching a little above the
  *  template's top (text set higher), never into the stat bars (barsBottom: their last row's bottom, px, or 0). */
 export function textArea(shape, W, H, barsBottom = 0) {
@@ -1010,7 +1017,11 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       if (text == null) { out.drawn.push(`${label} (layer deleted)`); continue; }   // a deleted layer: erased only
       jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc });
     } else if (text == null) out.skipped.push(`${label} (deleted layer)`);
-    else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
+    else if (own && kc && layer?.px > 0 && (part || printed(obj(rec.parts) || {}, role).some(p => p?.layer === layer.layer))) {   // not found: at the record's box, size and frame (a whole field's: its printed layer)
+      const z = layer.px * kc, found = recordBlock(own, paras, measure, z, wrap, wrap ? layer.frame.map(v => v * kc) : null);
+      const colours = erase(pixels.data, W, H, [own[0] - z, own[1] - z * 0.5, own[2] + z, own[3] + z * 0.5], { lines: found.lines, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer) });
+      jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc });
+    } else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
   const shown = { ...psd };                            // the values the rows show as they are redrawn
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
