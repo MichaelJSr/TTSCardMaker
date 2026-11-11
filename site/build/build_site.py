@@ -4864,7 +4864,7 @@ def main():
                                                 for status, _, _, path in entries if status != "D" and path.lower().endswith(".psd")}
     try:                                          # balance analytics: never a failed build
         balance = analytics.build(cards, stats, old_stats if isinstance(old_stats, dict) else {}, history=commits is not None,
-                                  psd_commits=psd_commits, lineage=lineage)
+                                  psd_commits=psd_commits, lineage=lineage, into=into)
         for message in analytics.summary(balance):
             log(message)
     except Exception as e:

@@ -13,13 +13,15 @@ months are Pacific time (ZONE).
     A card with several creatures counts once, by its first creature (the card's own stats).
   * Per card: its cohort, how many cards of it have a lower or higher total, mid-rank percentiles for each stat and
     the total, z of the total, "top" / "bottom" for the top and bottom 10%, the stat lines it had (trend, when they
-    changed) and its recorded changes, newest first. Both read the current card as its page shows it. A version with
-    the same date as the one after it is the same PSD read again by a newer parser: the newer reading replaces it.
+    changed) and its recorded changes, newest first, its old names' too (renamed). Both read the current card as its
+    page shows it. A version with the same date as the one after it is the same PSD read again by a newer parser: the
+    newer reading replaces it.
   * Over time (full-history builds only, since a card's start is its first upload): each month, the total stats of
     each cohort's cards as they were then.
 
 PSDs are never read here; everything comes from the bot's data.
 """
+import copy
 import os
 import re
 from collections import Counter, defaultdict
@@ -274,6 +276,33 @@ def chain_of(name, stats, old_stats):
     return versions + ([current] if current is not None and isinstance(getattr(current, "timestamp", None), (int, float)) else [])
 
 
+def renames_followed(old_stats, stats, into):
+    """(old_stats, stats) with each card's old names' versions under the name it became (into: build_site.renamed_into's),
+    the old names dropped: a renamed card's chain goes on. A rename alone (the next name's first version holds the same
+    PSD bytes) starts no version: that one is a newer reading of the old name's last (its start, date and path)."""
+    gone = {n for names in (into or {}).values() for n in names}
+    old_out = {name: versions for name, versions in old_stats.items() if name not in gone}
+    stats_out = dict(stats)
+    dated = lambda v: isinstance(getattr(v, "timestamp", None), (int, float))
+    for name, names in (into or {}).items():
+        mine = [(v, n, False) for n in (*names, name) for v in old_stats.get(n) or []]
+        steps = sorted((t for t in mine if dated(t[0])), key=lambda t: when(t[0]))
+        if dated(stats.get(name)):
+            steps.append((stats[name], name, True))
+        folded = []
+        for v, n, now in steps:
+            last = folded[len(folded) - 1] if folded else None
+            if last and last[1] != n and getattr(v, "blob_sha", None) and v.blob_sha == getattr(last[0], "blob_sha", None):
+                folded.pop()
+                v = copy.copy(v)
+                v.timestamp, v.version, v.path = last[0].timestamp, getattr(last[0], "version", None), getattr(last[0], "path", None)
+            folded.append((v, n, now))
+        old_out[name] = [v for v, _, _ in mine if not dated(v)] + [v for v, _, now in folded if not now]
+        if folded and folded[len(folded) - 1][2]:
+            stats_out[name] = folded[len(folded) - 1][0]
+    return old_out, stats_out
+
+
 def shown(e, current):
     """The current card as its page shows it (Card Edits.json applied), with the bot card's date, blob and path."""
     return SimpleNamespace(timestamp=current.timestamp, version=getattr(current, "version", None),
@@ -435,12 +464,14 @@ def over_time(cards, stats, old_stats, sizes, now):
 
 
 # ---- the file ----------------------------------------------------------------------------------------------------
-def build(cards, stats, old_stats, now=None, history=True, psd_commits=None, lineage=None):
+def build(cards, stats, old_stats, now=None, history=True, psd_commits=None, lineage=None, into=None):
     """data/analytics.json for the site's card entries (before their history is moved to history.json). history = the
     build read the git history (fs is set): without it, no over-time series (cards would start at their last commit).
     psd_commits = {(commit time, PSD file name in lower case)} from that history: an older record dated by one is exact.
-    lineage = psd_lineage of it: each change row's "c", an index into "commits" (version_commit)."""
+    lineage = psd_lineage of it: each change row's "c", an index into "commits" (version_commit). into: renamed cards'
+    old names (renames_followed)."""
     now = now or datetime.now(timezone.utc).timestamp()
+    old_stats, stats = renames_followed(old_stats, stats, into)
     members = cohort_members(cards)
     cohorts, groups, sizes = make_cohorts(members)
     out_cards = {}
