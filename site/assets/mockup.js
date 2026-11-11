@@ -1184,7 +1184,11 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (plan.refused) out.refused.push([label, plan.refused]);
     if (plan.boxed && !(label === "stars" ? +todo.stars[1] : todo.types[1]?.length)) { out.skipped.push(label); continue; }   // none, with no place: the old ones stay
     if (plan.boxed) { out.boxed.push(label); await drawIconBox(ctx, label, label === "stars" ? todo.stars[1] : todo.types[1], { icons, head, W, H, tpl }); }
-    else if (label === "stars") { const src = await starSource(head.stars, icons, img, k); for (const b of plan.draw) drawIcon(ctx, src, at(b)); }
+    else if (label === "stars") {
+      const src = await starSource(head.stars, icons, img, k);
+      const look = !src.crop && plan.draw.length ? await iconLook(img, head.stars.units.map(u => ({ name: head.stars.icon, core: u.core })), icons, k) : null;   // the stock star in the card's star colours
+      for (const b of plan.draw) drawIcon(ctx, look ? recolour(src, look, at(b)) : src, at(b));
+    }
     else {
       const look = plan.draw.length ? await iconLook(img, head?.types?.row, icons, k) : null;   // the bake copies a shown icon's look
       for (const d of plan.draw) { const im = await iconOf(icons, d.name); drawIcon(ctx, look && im ? recolour(im, look, at(d.core)) : im, at(d.core)); }
@@ -1214,8 +1218,8 @@ function drawn(im, sx, sy, sw, sh, w, h) {
   const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(im, sx, sy, sw, sh, 0, 0, w, h);
   return g;
 }
-/** The card's own colours on its type icons (fitLook), or null: each shown icon's stock picture fitted into its core,
- *  against the image there. */
+/** The card's own colours on its type or star icons (fitLook), or null: each shown icon's stock picture fitted into its
+ *  core, against the image there. */
 async function iconLook(img, row, icons, k) {
   const pairs = [];
   for (const u of Array.isArray(row) ? row : []) {
