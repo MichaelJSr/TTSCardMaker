@@ -12195,35 +12195,35 @@
    }
   ]
  },
- "Creatures/Monkey D Folder/3 Stars/Wokey_D_pronouns.psd": {
+ "Creatures/Monkey D Folder/3 Stars/Wokey_D_Pronouns.psd": {
   "blob": "722f94b57d4398b6ce23606e3df35ff20edcd651",
   "links": [
    {
-    "drawn": "6b6d826276da6f1ba9f276ee6f4fdc91019be90b",
+    "drawn": null,
     "name": "Monkey_D_Pression - Monkey_D_Background.png",
     "path": "MDW/Linked/Monkey_D_Pression - Monkey_D_Background.png",
     "size": 1271849
    },
    {
-    "drawn": "a6ca2fdb436d458249957fc855681500825bfe92",
+    "drawn": null,
     "name": "Wokey_D_pronouns - Wokey_D_pronouns.jpg",
     "path": "MDW/Linked/Wokey_D_pronouns - Wokey_D_pronouns.jpg",
     "size": 133216
    },
    {
-    "drawn": "502b7b20c5dd504ecd6f9dabc49c611f84824c87",
+    "drawn": null,
     "name": "Monkey_D_Star.png",
     "path": "Types/Stars/Monkey_D_Star.png",
     "size": 166697
    },
    {
-    "drawn": "502b7b20c5dd504ecd6f9dabc49c611f84824c87",
+    "drawn": null,
     "name": "Monkey_D_Star.png",
     "path": "Types/Stars/Monkey_D_Star.png",
     "size": 166697
    },
    {
-    "drawn": "502b7b20c5dd504ecd6f9dabc49c611f84824c87",
+    "drawn": null,
     "name": "Monkey_D_Star.png",
     "path": "Types/Stars/Monkey_D_Star.png",
     "size": 166697
@@ -21505,29 +21505,29 @@
    }
   ]
  },
- "Items/Heal/2 Stars/All_Purpose_Medical_Kit.psd": {
+ "Items/Heal/2 Stars/All-Purpose_Medical_Kit.psd": {
   "blob": "d1bc06d86d482d193c69cefeee7813950368a2f5",
   "links": [
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "drawn": null,
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337

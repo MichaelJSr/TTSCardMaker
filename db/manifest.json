@@ -1,6 +1,6 @@
 {
  "builder": {
-  "commit": "cf4a0fa4b4da42657ede8ed44338c93138a2c7c8",
+  "commit": "991a3a3dbc2e064c77c6de368cfbd486194ca96d",
   "details_version": 6,
   "parser_version": 7,
   "psd_tools": "1.26.0+cards",
@@ -8,25 +8,25 @@
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-11T19:02:43Z",
- "card_commit": "74239ffbdd4021164a69d9425c69debf717bfb2a",
- "card_commit_at": 1794422666.0,
+ "built_at": "2026-11-11T19:10:18Z",
+ "card_commit": "cd6ea909310f8588f9b0b6b01d875b1a809e4703",
+ "card_commit_at": 1794424183.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
-  "archived": 124,
+  "archived": 127,
   "baked": 0,
   "cards": 776,
   "changed": 0,
   "details": 781,
   "failed": 0,
   "new": 0,
-  "versions": 1852
+  "versions": 1855
  },
  "files": {
-  "old_stats.json": "63bde19804e71f25c151ee63640728a5dfbb654c2b358ae7f61644ba43d8f6c9",
-  "psd_details.json": "bf74c481f2a1bf9aa8bc786ebbea2792e068228cb97d17507bbea7512d72fcdc",
+  "old_stats.json": "0dd92a861f4393e88278a550443affa434259608b45861d3a26596056369baf9",
+  "psd_details.json": "fa6890d4578f61e9515a8494e92a59617f1f651cd2734a4e63de21753478f844",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "bd833996b590a9291c8c298dcdf2097726ac5c6fd3cedc3b4900c2bff0692843"
+  "stats.json": "d996923cdad3186b6daa1992eba008d18fef80cffa735a01ed40d325575d9405"
  },
  "fonts": {
   "checked": 768,
@@ -35,10 +35,10 @@
  },
  "gates": {},
  "inputs": {
-  "authors_blob": "5a42583c1dc70f867aa37f08129295365a6c1c35",
-  "created_blob": "c300e84e3e1558427be21dec6e120ee355fdff83",
-  "decks_blob": "ee9dda60fd33e7f66e9de751a1b4a0e922daafd2",
-  "edits_blob": "7e3af0235c7243a0f395e6f9488b909f9cdaba92",
+  "authors_blob": "4528601dfefff4f1a8177c80e20f351a10f950df",
+  "created_blob": "67de56cdc8ea40ab952d4cdbf5ec264eb15b4d1c",
+  "decks_blob": "1d690c6681fd8398f44a2fd70cb2c2407fcf56ba",
+  "edits_blob": "1336c5788d421549083b3f669d0fa7866773e510",
   "fonts_tree": "dc5689d821a3fbb2661826420fee97df88e3f598",
   "manifest_blob": "510f4c7d508db0a5a3de14cbd6d2b783770db787",
   "types_tree": "57b028f86b5a52598b4cf606bb53b0c16ae426c7"
@@ -52,6 +52,6 @@
  },
  "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43083417286",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/43084630020",
  "schema": 1
 }
