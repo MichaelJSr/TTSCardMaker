@@ -153,6 +153,17 @@ export function calibrate(found, paras, measure, { exact = false, wide = false, 
   const fits = k > 0.62 && k < 1.6 && (exact ? nPred === nFound : Math.abs(nPred - nFound) <= Math.max(1, Math.round(nFound * 0.3)));
   return { ok: fits && lineLike(found), k, size, nPred, nFound };
 }
+/** A one-line title's found block (b) with its rows as the record's box (own: psd_details' ink box, image px) where
+ *  that box holds the same line: the found rows leave out thin ones (descenders, an apostrophe's tip), which puts the
+ *  title's baseline high. */
+export function recordRows(b, own, old, W) {
+  const l = b?.lines?.[0];
+  if (!l || !own || b.lines.length !== 1 || String(old ?? "").replace(/\r/g, "").trim().includes("\n")) return b;
+  const tol = 0.02 * W;
+  if (Math.abs(own[0] - l[0]) > tol || Math.abs(own[2] - l[2]) > tol || own[1] > l[1] + 1 || own[3] < l[3] - 1 || own[3] - own[1] > 2 * (l[3] - l[1])) return b;
+  const line = [l[0], Math.min(l[1], own[1]), l[2], Math.max(l[3], own[3])];
+  return { ...b, lines: [line], box: [b.box[0], Math.min(b.box[1], line[1]), b.box[2], Math.max(b.box[3], line[3])] };
+}
 /** Of every block textBlocks finds in area ({box, seed}) at two edge strengths (soft art merges with text at the lower)
  *  and two seed strengths (short lines seed blocks at the lower, art merges in),
  *  the one calibrate says holds the old text (paras), the most edge mass first: {b, cal, edge} or null. name: a card's
@@ -1196,10 +1207,10 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
       const hit = atSet || bestBlock(L, W, H, area, paras, measure, { name: role === "name" })   // the block that holds the old text, or none
         || (wrap ? bestBlock(L, W, H, area, paras, measure, { px: set.px * kc, wrap }) : null);   // tight leading: at the record's set size
       if (hit) {
-        const { b, cal } = hit, z = cal.size;
+        const { cal } = hit, z = cal.size, b = role === "name" ? recordRows(hit.b, own, old, W) : hit.b;
         const strayTop = seen.length ? Math.min(area.box[1], barsBottom + 0.004 * H) : own ? area.box[1] : (TEMPLATES[shape].ability[1] - 0.06) * H;   // stat rows not seen where the template has them: look higher
         const { found, strays } = part && own && role === "ability" ? layerBlock(L, W, H, b, own, z, rows) : { found: b, strays: [] };   // one layer: its lines in its own box
-        const gone = role === "name" ? b.lines : part ? [...eraseLines(b), ...strays] : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name or one layer: its own lines
+        const gone = role === "name" ? hit.b.lines : part ? [...eraseLines(b), ...strays] : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name or one layer: its own lines
         const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
         const colours = wipe(all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer) });   // in the lines only: dim words too
         return text == null ? { deleted: true } : { found, size: z, colours };
