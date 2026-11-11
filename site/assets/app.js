@@ -1044,7 +1044,7 @@ function balanceHtml(c, part = "balance") {          // part: "balance" (the lin
 function closeModal() {
   if (modal.hidden) return;
   nearby.disconnect();
-  modal.hidden = true; modal.innerHTML = ""; document.body.style.overflow = "";
+  modal.hidden = true; modal.innerHTML = ""; document.body.style.overflow = ""; shut();
   document.title = "Impossibility Simulator · Card Browser";
 }
 
@@ -1598,9 +1598,13 @@ async function copy(text, what) { try { await navigator.clipboard.writeText(text
 // every dialog: focus moves into it, and back to what had it when it closes (a phone's text box excepted: no keyboard pops up)
 let opener = null;
 modal.addEventListener("focusin", e => { if (e.relatedTarget && !modal.contains(e.relatedTarget)) opener = e.relatedTarget; });   // from outside; kept through the dialog's redraws
+// the page under an open dialog takes no focus (its backdrop already takes the clicks): Tab stays in the dialog
+function shut() { for (const el of [$(".skip"), $("header.top"), view]) if (el) el.inert = !modal.hidden; }   // #toast, #tooltip stay out
+shut();                                                   // a card page opens with its dialog up
 new MutationObserver(() => {
   const d = $(".dialog", modal), at = document.activeElement;
-  if (!modal.hidden) { if (d && !modal.contains(at)) { if (!d.hasAttribute("tabindex")) d.tabIndex = -1; d.focus({ preventScroll: true }); } return; }
+  if (!modal.hidden) { if (d && !modal.contains(at)) { if (!d.hasAttribute("tabindex")) d.tabIndex = -1; d.focus({ preventScroll: true }); } shut(); return; }   // after: the opener is known
+  shut();
   const o = opener; opener = null;
   const back = o?.isConnected ? o : (o?.dataset?.open && $(`[data-open="${CSS.escape(o.dataset.open)}"]`, view)) || null;   // a redrawn grid: the card's new tile
   if ((!at || at === document.body) && back && !(back.matches("input, textarea") && matchMedia("(pointer: coarse)").matches)) back.focus({ preventScroll: true });
@@ -1854,7 +1858,7 @@ document.addEventListener("keydown", e => {
   if ($("#edit-form")) return;                                                         // no single-key shortcuts while a form (card dialog, profile editor) is up
   if (modal.hidden && editing() && S.selected.size && parseHash().name === "cards" && $(".tray", view) && tray.dropKey(e.key)) { e.preventDefault(); return; }   // 1-9: onto a pinned box on screen
   const inCard = S.ready && !modal.hidden && parseHash().name === "card", id = parseHash().arg;   // not the picture shown before cards.json
-  if (e.key === "/") { e.preventDefault(); qInput.focus(); qInput.select(); }
+  if (e.key === "/") { e.preventDefault(); $("header.top").inert = false; qInput.focus(); qInput.select(); }   // over a dialog too: typing searches
   else if (e.key === "?") showKeys();
   else if (e.key === "r") actions["random-from-list"]();
   else if (/^[1-6]$/.test(e.key) && modal.hidden) location.hash = ["#/cards", "#/rules", "#/deck", "#/stats", "#/changes", "#/users"][+e.key - 1];
