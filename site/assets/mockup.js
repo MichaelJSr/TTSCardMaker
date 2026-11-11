@@ -1161,7 +1161,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     specs.map(({ role, text, old, label, own, added, part, path, id }) => [role, text == null, old, label, own, !!added, !!part, path, id, fxWords.map(w => count(text, w))])]);
   const reuse = eraseMemo?.sig === sig && eraseMemo.rec === rec && eraseMemo.icons === icons && eraseMemo.sheet === sheet;
   const plans = reuse ? eraseMemo.plans : [];
-  const cardPx = reuse ? eraseMemo.card : specs.some(s => s.role === "ability") ? pixels.data.slice() : null;   // before any erase: an Ability's kept lines
+  const cardPx = reuse ? eraseMemo.card : specs.length ? pixels.data.slice() : null;   // before any erase: an Ability's kept lines, a title's splice
   if (reuse) pixels.data.set(eraseMemo.data);
   for (const [k, { role, text, old, label, own: partBox, added, part, path, id, colors: shared }] of specs.entries()) {
     const { fam, layer } = fams[k];
@@ -1217,8 +1217,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (plans[k].plated) out.plated.push(label);
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
-    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: role === "ability" ? cardPx : null,
-      geo: role === "ability" && plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null });
+    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: cardPx,
+      geo: plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null });
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
   if (!reuse) eraseMemo = { sig, rec, icons, sheet, plans, data: pixels.data.slice(), card: cardPx };
@@ -1506,10 +1506,10 @@ function drawText(ctx, job, imgs, W) {
   }
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
   const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
-  const R = role === "ability" && card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
-  job.lined = plan ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, measure, z: size, grow: !over && z === size, icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades }, pitch: pitch0, W }) : "";
+  const R = card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
+  job.lined = plan ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, measure, z: size, grow: !over && z === size, only: role === "name", icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades }, pitch: pitch0, W }) : "";
   if (job.lined) return over;                         // on the card's own lines
-  const kept = card && !point && !over && z === size ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
+  const kept = card && role === "ability" && !point && !over && z === size ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
   if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
   paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades });
   return over;
@@ -1718,13 +1718,14 @@ function runPieces(paras, text, a, b, measure, z, hx) {
  *  paragraphs' lines kept and the rest wrapped at the frame from where the change starts (wrapped lines that read as
  *  the card's first or last ones there kept too); kept lines are the card's pixels (moveInk, onto the plate's wiped
  *  ones: moved as the bake moves them). "splice" | "lines", or "" when neither holds (drawText's way then). box: the
- *  layer's plate crop (image px); z: its set size; grow: room for more lines at it (drawText's roomBelow); look:
- *  paintLines' options. */
-function geoDraw(ctx, { R, plan, card, box, fx, measure, z, grow, icons, paras, text, look, pitch, W }) {
+ *  layer's plate crop (image px); z: its set size; grow: room for more lines at it (drawText's roomBelow); only: a splice
+ *  or "" (a title); look: paintLines' options. */
+export function geoDraw(ctx, { R, plan, card, box, fx, measure, z, grow, only = false, icons, paras, text, look, pitch, W }) {
   const H = ctx.canvas.height, L = R.lines, now = String(text ?? "").replace(/\r/g, ""), B = bands(L, box);
   const gaps = L.slice(1).map((l, j) => l.base - L[j].base).filter(g => g > 0), step = gaps.length ? median(gaps) : pitch;
   const fit = plan.splice && spliceFit(R, plan.splice, { measure, z, icons, fx, W });
   let drawn = null, x0 = box[0], x1 = box[2];
+  if (!fit && only) return "";
   if (fit) {
     const { i, at, run } = plan.splice, l = L[i];
     x0 -= Math.abs(fit.dp) + Math.abs(fit.ds); x1 += Math.abs(fit.dp) + Math.abs(fit.ds);
