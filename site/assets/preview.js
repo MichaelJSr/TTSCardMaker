@@ -34,6 +34,7 @@ export const PSD_FIELDS = ["name", "stars", "types", "hp", "def", "atk", "spd", 
 export const ENTRY_FIELDS = [...PSD_FIELDS, "parts"];                                      // what the edit carries (parts: per layer)
 export const DONE = ["baked", "redundant", "refused", "error"];                            // result.json states
 const REQUEST_RE = /^[A-Za-z0-9-]{8,64}$/;            // card-preview.yml's check
+const PLATES = "plates";                               // AutoCroissant card_plates' branch: <PSD blob>.json, the mock-up's backdrops
 const STATS = ["hp", "def", "atk", "spd"];
 const LABEL = { name: "Name", stars: "Stars", types: "Types", hp: "HP", def: "DEF", atk: "ATK", spd: "SPD", ability: "Text", creatures: "Creatures", parts: "Text boxes", colors: "Text colours" };
 
@@ -586,11 +587,21 @@ export function createPreviews(app) {
     form.addEventListener("click", e => { if (e.target.closest("[data-type], [data-reset], [data-creature], [data-insert]")) later(); });
   }
   const recs = new Map();                             // card id -> details record (or null)
+  const plates = new Map();                           // PSD blob -> its plates file, null, or the fetch (card_plates' branch)
+  /** The plates file of rec's PSD when fetched (null: none or not yet); a first ask fetches it, then(file) once it lands. */
+  function plateOf(rec, then) {
+    const b = rec?.psdBlob, have = b ? plates.get(b) : null;
+    if (!b || have === null || (have && !(have instanceof Promise))) return have || null;
+    if (!have) plates.set(b, fetch(rawUrl(PLATES, `${b}.json`)).then(r => (r.ok ? r.json() : null)).catch(() => null).then(p => { plates.set(b, p); return p; }));
+    plates.get(b).then(p => { if (p) then(p); });
+    return null;
+  }
   function drawMock(canvas, c, v, host) {
     const run = (canvas._run = (canvas._run || 0) + 1);
-    const go = rec => mockup.draw(canvas, { card: c, src: current(c), rec, edit: v.cur, psd: v.psd, icons: S.icons, statuses: S.statuses, fills: S.statusFills, getFonts: () => app.getJson("fonts.json"), raw: S.data.raw,
+    const paint = (rec, plate) => mockup.draw(canvas, { card: c, src: current(c), rec, plate, edit: v.cur, psd: v.psd, icons: S.icons, statuses: S.statuses, fills: S.statusFills, getFonts: () => app.getJson("fonts.json"), raw: S.data.raw,
       stale: () => canvas._run !== run || !canvas.isConnected, onFont: () => { if (canvas._run === run) drawMock(canvas, c, v, host); } })
       .then(out => { const el = host.querySelector("[data-pv-mock-note]"); if (out && el) el.textContent = mockNote(out); });
+    const go = rec => paint(rec, plateOf(rec, p => { if (canvas._run === run) paint(rec, p); }));   // the plate once it lands
     if (recs.has(c.id) || !c.details) { go(recs.get(c.id) || null); return; }
     let drawn = false;
     const t = setTimeout(() => { drawn = true; go(null); }, 150);

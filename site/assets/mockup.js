@@ -967,6 +967,37 @@ export function fillBox(data, W, H, box, { pad = 3 } = {}) {
     const i = (y * W + x) * 4; data[i] = c[0]; data[i + 1] = c[1]; data[i + 2] = c[2];
   }
 }
+const PLATE_OFF = 20;                               // off the ink, a plate's mean distance from the card's pixels (max channel) at most
+const count = (t, w) => String(t ?? "").toLowerCase().split(w.toLowerCase()).length - 1;
+/** The plate crops (AutoCroissant card_plates) of layer ids, cut to the image (W x H, k px per canvas px; read(crop, w,
+ *  h): its RGBA at that size), each checked against the card's pixels (data) off its ink: [[x, y, w, h, rgba]], or null
+ *  (a layer without one, or a plate not of this picture). A layer's crop without its FX layers when one of their words
+ *  leaves the text (old -> text): the bake drops them. */
+export function plateCuts(data, W, H, k, plate, read, ids, old = "", text = "") {
+  const pick = id => { const of = plate.crops.filter(c => id != null && String(c.id) === String(id)), bare = of.find(c => Array.isArray(c.fx));
+    return bare && bare.fx.some(w => count(text, w) < count(old, w)) ? bare : of.find(c => !c.fx) || null; };
+  const list = ids.map(pick);
+  if (!list.length || list.some(c => !c) || !(k > 0)) return null;
+  const cuts = [];
+  for (const c of list) {
+    const [x0, y0, x1, y1] = px(c.box.map(v => v * k), W, H), w = x1 - x0, h = y1 - y0;
+    if (w < 1 || h < 1) return null;
+    const p = read(c, w, h), [ix0, iy0, ix1, iy1] = c.ink.map(v => v * k);
+    let n = 0, sum = 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const X = x0 + x, Y = y0 + y;
+      if (X >= ix0 - 1 && X < ix1 + 1 && Y >= iy0 - 1 && Y < iy1 + 1) continue;
+      const i = (Y * W + X) * 4, j = (y * w + x) * 4; n++;
+      sum += Math.max(Math.abs(p[j] - data[i]), Math.abs(p[j + 1] - data[i + 1]), Math.abs(p[j + 2] - data[i + 2]));
+    }
+    if (n >= 50 && sum > PLATE_OFF * n) return null;   // another picture's, or no longer this card's
+    cuts.push([x0, y0, w, h, p]);
+  }
+  return cuts;
+}
+function putCuts(data, W, cuts) {
+  for (const [x0, y0, w, h, p] of cuts) for (let y = 0; y < h; y++) data.set(p.subarray(y * w * 4, (y + 1) * w * 4), ((y0 + y) * W + x0) * 4);
+}
 /** The record's box (image px) for a text layer: text[].box ([x0, y0, x1, y1] in canvas px) scaled to the image. */
 export function recordBox(rec, layer, W) {
   const t = Array.isArray(rec?.text) ? rec.text.find(x => x && x.layer === layer) : null, cw = rec?.canvas?.w;
@@ -1056,11 +1087,15 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
  *  again), stale (a newer draw started: drop this one), fills (colourize's)}. Drawn off-screen, then copied. Returns
  *  {drawn: [labels], skipped, boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused:
  *  [[label, why]] (stars, types or colours the bake would refuse), fonts: {name: family | ""}, standIn: [labels without
- *  a font name], shape} or null (the image didn't load, or stale). */
+ *  a font name], shape, plated: [labels drawn on the card's plate]} or null (the image didn't load, or stale). plate:
+ *  the card's plates file (card_plates, the plates branch: picture 1's backdrop under each text layer) or null. */
 let eraseMemo = null;                                // the last draw's erase pass (draw)
-export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, statuses = null, fills = null, stale = () => false }) {
+export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, statuses = null, fills = null, stale = () => false, plate = null }) {
   const img = await loadImage(src);
   if (!img || stale()) return null;
+  const sheet = plate?.v === 1 && Array.isArray(plate.crops) && plate.w === rec?.canvas?.w && (card?.variant || 1) === 1 ? await loadImage(plate.img) : null;
+  const readPlate = (c, w, h) => { const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+    const g = cv.getContext("2d", { willReadFrequently: true }); g.drawImage(sheet, ...c.at, 0, 0, w, h); return g.getImageData(0, 0, w, h).data; };
   const W = img.naturalWidth, H = img.naturalHeight, shape = shapeOf(W, H), tpl = TEMPLATES[shape];
   const work = document.createElement("canvas"); work.width = W; work.height = H;
   const ctx = work.getContext("2d", { willReadFrequently: true });
@@ -1068,7 +1103,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const txt = s => String(s ?? "").replace(/\r/g, "").trim(), typed = ["name", "ability"].filter(f => (f in edit && txt(edit[f]) !== txt(psd[f])) || partJobs(rec, edit.parts).some(j => j.role === f));
   const nix = paintedOver(rec, edit.colors, typed, edit);   // the bake refuses them: not drawn, said
   if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
-  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], shape, site: [], starsKept: null };
+  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], shape, site: [], starsKept: null, plated: [] };
   for (const label of todo.skipped) {                 // a stat past what its bar prints stays on the website
     const k = label.toLowerCase(), why = statSite(rec, k, edit[k]);
     if (why) out.site.push([`${label} ${edit[k]}`, why]);
@@ -1111,9 +1146,10 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   for (const { role, label, path, id } of specs) fams.push(await family(role, label, path, id));
   // the erase pass (where each old text is, erased) depends on none of the new text, colours or statuses: a redraw that
   // changed only those (typing) starts from the last one's pixels
+  const fxWords = sheet ? plate.crops.flatMap(c => c.fx || []) : [];   // the plate picked follows these (plateCuts)
   const sig = JSON.stringify([src, W, H, card?.id, bfam, barsBottom, rows.map(r => r.k), seen.length, fams.map(f => f.fam),
-    specs.map(({ role, text, old, label, own, added, part, path, id }) => [role, text == null, old, label, own, !!added, !!part, path, id])]);
-  const reuse = eraseMemo?.sig === sig && eraseMemo.rec === rec && eraseMemo.icons === icons;
+    specs.map(({ role, text, old, label, own, added, part, path, id }) => [role, text == null, old, label, own, !!added, !!part, path, id, fxWords.map(w => count(text, w))])]);
+  const reuse = eraseMemo?.sig === sig && eraseMemo.rec === rec && eraseMemo.icons === icons && eraseMemo.sheet === sheet;
   const plans = reuse ? eraseMemo.plans : [];
   const cardPx = reuse ? eraseMemo.card : specs.some(s => s.role === "ability") ? pixels.data.slice() : null;   // before any erase: an Ability's kept lines
   if (reuse) pixels.data.set(eraseMemo.data);
@@ -1133,6 +1169,16 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const colors = part ? shared : todo.colors;  // one box per layer: its share of the field's
     const ink = text == null || added ? null : baseInk(card, role, text, part ? old : null);    // the card's own colours on what is unchanged
     if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true }); out.boxed.push(label); continue; }
+    let plated = false;
+    const wipe = (box, opts) => {                     // erase's colours; with the card's plate, its pixels in place of erase's
+      const ids = part ? [id] : printed(obj(rec?.parts) || {}, role).map(p => p?.id), cuts = sheet && plateCuts(pixels.data, W, H, kc, plate, readPlate, ids.length ? ids : [layer?.id], old, text);
+      if (!cuts) return erase(pixels.data, W, H, box, opts);
+      const [x0, y0, x1, y1] = px(box, W, H), keep = pixels.data.slice(y0 * W * 4, y1 * W * 4);
+      const colours = erase(pixels.data, W, H, box, opts);
+      for (let y = y0; y < y1; y++) pixels.data.set(keep.subarray(((y - y0) * W + x0) * 4, ((y - y0) * W + x1) * 4), (y * W + x0) * 4);
+      putCuts(pixels.data, W, cuts); plated = true;
+      return colours;
+    };
     const findAndErase = () => {                      // -> {found, size, colours} | {deleted} | {skipped} | {} (boxed)
       const paras = tokenize(old, icons);
       const wrap = kc && set?.px > 0 && Array.isArray(set.frame) && set.frame.length === 4 ? (set.frame[2] - set.frame[0]) * kc : 0;   // box text's frame width
@@ -1145,25 +1191,26 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
         const { found, strays } = part && own && role === "ability" ? layerBlock(L, W, H, b, own, z, rows) : { found: b, strays: [] };   // one layer: its lines in its own box
         const gone = role === "name" ? b.lines : part ? [...eraseLines(b), ...strays] : [...eraseLines(b), ...strayLines(L, W, H, b, { top: strayTop, bottom: H, bars: rows })];   // a name or one layer: its own lines
         const all = [Math.min(...gone.map(l => l[0])) - z, Math.min(...gone.map(l => l[1])) - z * 0.5, Math.max(...gone.map(l => l[2])) + z, Math.max(...gone.map(l => l[3])) + z * 0.5];
-        const colours = erase(pixels.data, W, H, all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer) });   // in the lines only: dim words too
+        const colours = wipe(all, { lines: gone, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer) });   // in the lines only: dim words too
         return text == null ? { deleted: true } : { found, size: z, colours };
       }
       if (text == null) return { skipped: true };
       if (own && kc && layer?.px > 0 && (part || printed(obj(rec.parts) || {}, role).some(p => p?.layer === layer.layer))) {   // not found: at the record's box, size and frame (a whole field's: its printed layer)
         const z = layer.px * kc, found = recordBlock(own, paras, measure, z, wrap, wrap ? layer.frame.map(v => v * kc) : null);
-        const colours = erase(pixels.data, W, H, [own[0] - z, own[1] - z * 0.5, own[2] + z, own[3] + z * 0.5], { lines: found.lines, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer) });
+        const colours = wipe([own[0] - z, own[1] - z * 0.5, own[2] + z, own[3] + z * 0.5], { lines: found.lines, close: Math.round(z * 1.2), reach: Math.max(2, Math.round(z * 0.14)), cell: Math.max(6, z * 0.8), edge: 25, fill: mainInk(rec, layer), profile: gradientOn(rec, layer?.layer) });
         return { found, size: z, colours };
       }
       return {};
     };
-    if (!reuse) plans[k] = findAndErase();
+    if (!reuse) plans[k] = Object.assign(findAndErase(), plated ? { plated } : {});
     const { found, size: z, colours, deleted, skipped } = plans[k];
+    if (plans[k].plated) out.plated.push(label);
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
     else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: role === "ability" ? cardPx : null });
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
-  if (!reuse) eraseMemo = { sig, rec, icons, plans, data: pixels.data.slice(), card: cardPx };
+  if (!reuse) eraseMemo = { sig, rec, icons, sheet, plans, data: pixels.data.slice(), card: cardPx };
   const shown = { ...psd };                            // the values the rows show as they are redrawn
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
