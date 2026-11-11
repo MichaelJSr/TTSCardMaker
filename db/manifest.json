@@ -1,31 +1,31 @@
 {
  "builder": {
-  "commit": "76eead1672c6e59811ec23270280eb64c81f7321",
+  "commit": "bd167d3b8e9512bec4a11bfc5ebaf949bbe19693",
   "parser_version": 7,
   "psd_tools": "1.26.0+cards",
   "python": "3.14",
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-11T08:23:01Z",
- "card_commit": "a0277b15e67972a5cb8933d4cbe431296731429a",
- "card_commit_at": 1794385297.0,
+ "built_at": "2026-11-11T09:03:15Z",
+ "card_commit": "5b8349516c97b9315ddc093f488c55e303b5af39",
+ "card_commit_at": 1794387719.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 98,
   "baked": 0,
-  "cards": 776,
+  "cards": 777,
   "changed": 0,
   "details": 781,
   "failed": 0,
-  "new": 0,
+  "new": 1,
   "versions": 1825
  },
  "files": {
   "old_stats.json": "005cf46b60e439a9e85c58ea2d9ec2046c4a8aa7a6487e0318273dbc82b11f5f",
-  "psd_details.json": "732d208a3e28ba66d88b981c288ed118aa08290ee2b507950a2b795a9cbeb31b",
+  "psd_details.json": "47ff855521d8b5cfa3eb88743b58d99726554b60dc8312e98fa6b0a0e1817303",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "48fc11f8d9c34b6b47b25d014a8d7fc5c4c8dd08e03612634aff3358cd631de4"
+  "stats.json": "0031724e1a77b07c5340c14aa71dd1e4aabde29527294975b0d0e894b808adde"
  },
  "gates": {},
  "inputs": {
@@ -44,8 +44,16 @@
   "repin": [],
   "stale": []
  },
- "problems": [],
+ "problems": [
+  {
+   "card": "Gust of Wind2",
+   "notes": [
+    "VARIANT 2 HAS NO PNG"
+   ],
+   "path": "Items/Support/2 Stars/Gust_of_Wind.psd"
+  }
+ ],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42986564314",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42991864940",
  "schema": 1
 }

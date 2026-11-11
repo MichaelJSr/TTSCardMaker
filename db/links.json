@@ -3543,64 +3543,70 @@
   ]
  },
  "Auxiliary/Minions/Paint_Warrior.psd": {
-  "blob": "99ac854f433e65d52a956fbe577b2c9fed11b229",
+  "blob": "21f20ad577e3bb697f5a7b27266ea3d2f5768eb5",
   "links": [
    {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "drawn": null,
+    "name": "paint warrior.psb",
+    "path": "MDW/Linked/paint warrior.psb",
+    "size": 1153744
+   },
+   {
+    "drawn": null,
     "name": "Warpstar.png",
     "path": "Types/Stars/Warpstar.png",
     "size": 648064
    },
    {
-    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "drawn": null,
     "name": "Paint_Bomb - pngwing.com copy 2.png",
     "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
     "size": 1254229
    },
    {
-    "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
+    "drawn": null,
     "name": "Warpstar.png",
     "path": "Types/Stars/Warpstar.png",
     "size": 648064
    },
    {
-    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "drawn": null,
     "name": "Paint_Bomb - pngwing.com copy 2.png",
     "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
     "size": 1254229
    },
    {
-    "drawn": "99d8299f475b915a691170c03c5a2c0fe0110589",
+    "drawn": null,
     "name": "water.png",
     "path": "Types/water.png",
     "size": 121376
    },
    {
-    "drawn": "b79573053a0600ec75bea7c45542c6636828d5eb",
+    "drawn": null,
+    "name": "Paint_Bomb - pngwing.com copy 2.png",
+    "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
+    "size": 1254229
+   },
+   {
+    "drawn": null,
     "name": "Defensive_Minion.png",
     "path": "Types/Defensive_Minion.png",
     "size": 25788
    },
    {
-    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "drawn": null,
     "name": "Paint_Bomb - pngwing.com copy 2.png",
     "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
     "size": 1254229
    },
    {
-    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "drawn": null,
     "name": "Paint_Bomb - pngwing.com copy 2.png",
     "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
     "size": 1254229
    },
    {
-    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
-    "name": "Paint_Bomb - pngwing.com copy 2.png",
-    "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
-    "size": 1254229
-   },
-   {
-    "drawn": "c39ddbc872bfb1d1b122f822297a1de7f217dc86",
+    "drawn": null,
     "name": "Paint_Bomb - pngwing.com copy 2.png",
     "path": "MDW/Linked/Paint_Bomb - pngwing.com copy 2.png",
     "size": 1254229
@@ -6619,79 +6625,61 @@
   ]
  },
  "Creatures/Cuphead/5 Stars/Chef_Saltbaker.psd": {
-  "blob": "2a93e3f0ac8e164c6a3caf58fdb25506897aab50",
+  "blob": "74b28d61ca1a2e590ccbf9a634071eac65b27152",
   "links": [
    {
-    "drawn": "73840e9f12496676b1aa0a0be28fa9cee06f0bc9",
-    "name": "Chef_Saltbaker - lbj0x43gwlb91.jpg",
-    "path": "MDW/Linked/Chef_Saltbaker - lbj0x43gwlb91.jpg",
-    "size": 289578
-   },
-   {
-    "drawn": "6d10b99f3bccf422cd2476cdd6282a903c2563c0",
+    "drawn": null,
     "name": "Chef_Saltbaker - 374.jpg",
     "path": "MDW/Linked/Chef_Saltbaker - 374.jpg",
     "size": 50981
    },
    {
-    "drawn": "51ff613285da9abf3c8e56a4e20dc7e0ab317f26",
+    "drawn": null,
     "name": "Chef_Saltbaker - Chef_Saltbaker_Beginning_(6).webp",
     "path": "MDW/Linked/Chef_Saltbaker - Chef_Saltbaker_Beginning_(6).webp",
     "size": 37984
    },
    {
-    "drawn": "653df2a2e0c425610292c1df64597132645204c0",
+    "drawn": null,
     "name": "Chef_Saltbaker - saltbaker_ph02_intro_0067.png",
     "path": "MDW/Linked/Chef_Saltbaker - saltbaker_ph02_intro_0067.png",
     "size": 265302
    },
    {
-    "drawn": "cd5a4978fb19db3cffe49809ac6656488a473a16",
+    "drawn": null,
     "name": "Chef_Saltbaker - saltbaker_ph2_foreground_hand_0001a.png",
     "path": "MDW/Linked/Chef_Saltbaker - saltbaker_ph2_foreground_hand_0001a.png",
     "size": 157718
    },
    {
-    "drawn": "3b4e7d07de4b617ab20cf133acec6f9ca4a32b51",
+    "drawn": null,
     "name": "Chef_Saltbaker - saltbaker_ph2_foreground_hand_topper_0001a.png",
     "path": "MDW/Linked/Chef_Saltbaker - saltbaker_ph2_foreground_hand_topper_0001a.png",
     "size": 37807
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "drawn": null,
     "name": "Frostmourne - Daco_35508.png",
     "path": "MDW/Linked/Frostmourne - Daco_35508.png",
     "size": 307074
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
+    "drawn": null,
     "name": "Frostmourne - Daco_35508.png",
     "path": "MDW/Linked/Frostmourne - Daco_35508.png",
     "size": 307074
    },
    {
-    "drawn": "25679413e008ecd225af8cc6a9769810b48ae7e7",
+    "drawn": null,
     "name": "rock.png",
     "path": "Types/rock.png",
     "size": 197965
    },
    {
-    "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
+    "drawn": null,
     "name": "Wind.png",
     "path": "Types/Wind.png",
     "size": 430775
-   },
-   {
-    "drawn": "a303e47e5badaa2382c9c3d7f45167f447d2dd9f",
-    "name": "Chef_Saltbaker - sb_ph4_pillar_idle_0006.png",
-    "path": "MDW/Linked/Chef_Saltbaker - sb_ph4_pillar_idle_0006.png",
-    "size": 232208
-   },
-   {
-    "drawn": "00706ce56218b2fa4299430929102e1f54920fda",
-    "name": "Chef_Saltbaker - sb_ph4_pillar_idle_0029.png",
-    "path": "MDW/Linked/Chef_Saltbaker - sb_ph4_pillar_idle_0029.png",
-    "size": 229484
    }
   ]
  },
@@ -22764,22 +22752,28 @@
   ]
  },
  "Items/Support/2 Stars/Gust_of_Wind.psd": {
-  "blob": "894dbbc7f877531b8090e2a41a2359f5f7ed691c",
+  "blob": "c12d7c9e065ba927a9cf913fb7de1a88029603cb",
   "links": [
    {
-    "drawn": "c46dfb0e9cc2dc4f3a09a6df14478c84322c1063",
+    "drawn": null,
+    "name": "Gust Of Trees.psb",
+    "path": "MDW/Linked/Gust Of Trees.psb",
+    "size": 35254610
+   },
+   {
+    "drawn": null,
     "name": "Gust_of_Wind - Gust of wind.png",
     "path": "MDW/Linked/Gust_of_Wind - Gust of wind.png",
     "size": 3577911
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "bdda87910f4788d9535ee54b70256f2cf3cc3097",
+    "drawn": null,
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
@@ -25054,6 +25048,10 @@
   "blob": "8d9149e42668a9e163e27734212d1eee69cb502a",
   "links": []
  },
+ "MDW/Linked/Gust Of Trees.psb": {
+  "blob": "5ad2a639b2c6d76de79ad592769f1643fae87b1c",
+  "links": []
+ },
  "MDW/Linked/HR-D3 - 88fccaea0c1b5f9107a65db857d87dab copy.psb": {
   "blob": "47d9ed6b06aa99e8ed499060332208a68cad208f",
   "links": []
@@ -25437,6 +25435,17 @@
   "blob": "8595b23f34aad01aa46c4b980d61a22e21bcdbaf",
   "links": []
  },
+ "MDW/Linked/Watermelon - Daco_35508.psb": {
+  "blob": "1af6eaf348271a8bc9a287b931abb6e136bd8ace",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Daco_35508.png",
+    "path": null,
+    "size": 0
+   }
+  ]
+ },
  "MDW/Linked/Wendy - Layer 1.psb": {
   "blob": "b224c4d5ff034184c8136613b783ddb761adaa52",
   "links": []
@@ -25444,6 +25453,17 @@
  "MDW/Linked/Wham_Bam_Jewel - Layer 9.psb": {
   "blob": "525b6da91b7e7fb51f80a74e17efb11a50aa5a3f",
   "links": []
+ },
+ "MDW/Linked/Wooden_Spikes - Daco_35508.psb": {
+  "blob": "a72ddeadf0a245e80511726ca4d0bed63c789c50",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Daco_35508.png",
+    "path": null,
+    "size": 0
+   }
+  ]
  },
  "MDW/Linked/Yin_Yarn - Layer 1.psb": {
   "blob": "53f86bd0eb7bb8b18fce32fff3a4513f278c24d8",
@@ -25463,6 +25483,10 @@
  },
  "MDW/Linked/omori - Layer 3.psb": {
   "blob": "f3187a834aa06eb159b7e51e15f201a0a1e8a175",
+  "links": []
+ },
+ "MDW/Linked/paint warrior.psb": {
+  "blob": "5adb7fe760db11e900c0ecb55a0f0d78c619db07",
   "links": []
  },
  "MDW/Old Rules/Rulebook/0000_Cover.psd": {
@@ -30026,6 +30050,9 @@
   "MDW/Linked/GrubSong - Grubsong.png": {
    "7fbcb3de6458948b536a62e8bfc3e3c93a4739a3": 372221
   },
+  "MDW/Linked/Gust Of Trees.psb": {
+   "5ad2a639b2c6d76de79ad592769f1643fae87b1c": 35254610
+  },
   "MDW/Linked/Gust_of_Wind - Gust of wind.png": {
    "c46dfb0e9cc2dc4f3a09a6df14478c84322c1063": 3577911
   },
@@ -31960,6 +31987,9 @@
   "MDW/Linked/omori - sorute-transformed.png": {
    "c7c6998a00ac0674b6e7327be93492983e68fba2": 630601
   },
+  "MDW/Linked/paint warrior.psb": {
+   "5adb7fe760db11e900c0ecb55a0f0d78c619db07": 1153744
+  },
   "Types/Attack.png": {
    "62c9171b90f432e49f091fee1e6526859d9f3a56": 819546
   },
@@ -32676,6 +32706,8 @@
   "59d53cd2f05b5f8a39abaf225f194303ce6fe1ce": "4a8512141ce75671f0cc48a25f0145da93672a81",
   "5a378bf550b55c551802d5bf1fb86b1f57b1cc22": "5a632068bde30b39b2a50e15c69594c9453b31ae",
   "5a7ca1d430460f3782aa73ccaa11906faf6d7d60": "467d4adf0d0a2a5dad833a7c9ee8b44b3b1b8868",
+  "5ad2a639b2c6d76de79ad592769f1643fae87b1c": "e6cc56b56f4102d02c0eba8fed66cb97ef6e59d1",
+  "5adb7fe760db11e900c0ecb55a0f0d78c619db07": "cd0d11ebf1bf0a6ee6482ad9f5301e2210b20443",
   "5b77d3b11da82a15b7fcee0912e591d1df490f3a": "92b9bffb9cd496ea0bcb9091a26cb750d4123019",
   "5bd9377f55a91630aae51720760ea5c6d53ec32f": "6a0ffb152b774235a2b88ed1a716797b6ce0c3cc",
   "5c0af47e21a311420724c21016c5be6a37540f26": "64f843e37cf246aaf1bcfa00d65a8783e2b5ac6f",
