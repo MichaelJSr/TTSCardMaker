@@ -972,12 +972,19 @@ const count = (t, w) => String(t ?? "").toLowerCase().split(w.toLowerCase()).len
 /** The plate crops (AutoCroissant card_plates) of layer ids, cut to the image (W x H, k px per canvas px; read(crop, w,
  *  h): its RGBA at that size), each checked against the card's pixels (data) off its ink: [[x, y, w, h, rgba]], or null
  *  (a layer without one, or a plate not of this picture). A layer's crop without its FX layers when one of their words
- *  leaves the text (old -> text): the bake drops them. */
-export function plateCuts(data, W, H, k, plate, read, ids, old = "", text = "") {
+ *  leaves the text (old -> text): the bake drops them. near: every layer this draw wipes; a crop over another's ink (or
+ *  one without a crop) is null too: that crop still holds its old letters. */
+export function plateCuts(data, W, H, k, plate, read, ids, old = "", text = "", near = ids) {
   const pick = id => { const of = plate.crops.filter(c => id != null && String(c.id) === String(id)), bare = of.find(c => Array.isArray(c.fx));
     return bare && bare.fx.some(w => count(text, w) < count(old, w)) ? bare : of.find(c => !c.fx) || null; };
   const list = ids.map(pick);
   if (!list.length || list.some(c => !c) || !(k > 0)) return null;
+  const meets = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
+  for (const c of list) for (const o of near) {
+    if (String(o) === String(c.id)) continue;
+    const theirs = plate.crops.filter(x => String(x.id) === String(o));
+    if (!theirs.length || theirs.some(x => meets(c.box, x.ink))) return null;
+  }
   const cuts = [];
   for (const c of list) {
     const [x0, y0, x1, y1] = px(c.box.map(v => v * k), W, H), w = x1 - x0, h = y1 - y0;
@@ -1147,6 +1154,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   // the erase pass (where each old text is, erased) depends on none of the new text, colours or statuses: a redraw that
   // changed only those (typing) starts from the last one's pixels
   const fxWords = sheet ? plate.crops.flatMap(c => c.fx || []) : [];   // the plate picked follows these (plateCuts)
+  const idsOf = (s, k) => { const ids = s.part ? [s.id] : printed(obj(rec?.parts) || {}, s.role).map(p => p?.id); return ids.length ? ids : [fams[k].layer?.id]; };
+  const wiping = sheet ? specs.flatMap((s, k) => (s.added ? [] : idsOf(s, k))) : [];   // the layers this draw wipes
   const sig = JSON.stringify([src, W, H, card?.id, bfam, barsBottom, rows.map(r => r.k), seen.length, fams.map(f => f.fam),
     specs.map(({ role, text, old, label, own, added, part, path, id }) => [role, text == null, old, label, own, !!added, !!part, path, id, fxWords.map(w => count(text, w))])]);
   const reuse = eraseMemo?.sig === sig && eraseMemo.rec === rec && eraseMemo.icons === icons && eraseMemo.sheet === sheet;
@@ -1171,7 +1180,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (added) { jobs.push({ role, text, label, area: { box: own || area.box, seed: null }, fam, layer, measure, icons, one, colors, statuses, boxed: true }); out.boxed.push(label); continue; }
     let plated = false;
     const wipe = (box, opts) => {                     // erase's colours; with the card's plate, its pixels in place of erase's
-      const ids = part ? [id] : printed(obj(rec?.parts) || {}, role).map(p => p?.id), cuts = sheet && plateCuts(pixels.data, W, H, kc, plate, readPlate, ids.length ? ids : [layer?.id], old, text);
+      const cuts = sheet && plateCuts(pixels.data, W, H, kc, plate, readPlate, idsOf(specs[k], k), old, text, wiping);
       if (!cuts) return erase(pixels.data, W, H, box, opts);
       const [x0, y0, x1, y1] = px(box, W, H), keep = pixels.data.slice(y0 * W * 4, y1 * W * 4);
       const colours = erase(pixels.data, W, H, box, opts);
