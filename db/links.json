@@ -192,40 +192,40 @@
   ]
  },
  "Auxiliary/Creatures/Shadow_Queen.psd": {
-  "blob": "e4b30403917a430f150b7dceb3cee40722e21efa",
+  "blob": "32626b7363c1bfd9b5bb299253d732526ae3b592",
   "links": [
    {
-    "drawn": "6c9df83521a4b44ee2fd840d1b40e21be2a8eb32",
-    "name": "Crystal_Star.png",
-    "path": "Types/Stars/Crystal_Star.png",
-    "size": 5027
+    "drawn": null,
+    "name": "Crystal_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Crystal_Star_PMTTYDNS_icon.png",
+    "size": 7721
    },
    {
-    "drawn": "c51a965abbf8c0c5de3ca2e57f915507396f1c77",
-    "name": "Diamond_Star.png",
-    "path": "Types/Stars/Diamond_Star.png",
-    "size": 2255
+    "drawn": null,
+    "name": "Diamond_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Diamond_Star_PMTTYDNS_icon.png",
+    "size": 4054
    },
    {
-    "drawn": "127ac246e772f9b0113d5c83be4db5aa7f20d0d1",
-    "name": "Gold_Star.png",
-    "path": "Types/Stars/Gold_Star.png",
-    "size": 2010
+    "drawn": null,
+    "name": "Garnet_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Garnet_Star_PMTTYDNS_icon.png",
+    "size": 6124
    },
    {
-    "drawn": "4b06eff55921e822dc8cef08c97d441e55940274",
-    "name": "Ruby_Star.png",
-    "path": "Types/Stars/Ruby_Star.png",
-    "size": 4718
+    "drawn": null,
+    "name": "Ruby_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Ruby_Star_PMTTYDNS_icon.png",
+    "size": 6200
    },
    {
-    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
-    "name": "Sapphire_Starold.png",
-    "path": "Types/Stars/Sapphire_Starold.png",
-    "size": 3871
+    "drawn": null,
+    "name": "Sapphire_Star_PMTTYDNS_icon.png",
+    "path": "Types/Stars/Sapphire_Star_PMTTYDNS_icon.png",
+    "size": 6143
    },
    {
-    "drawn": "3a454e390d2223704a2399316dcd27e0b7f1a0ab",
+    "drawn": null,
     "name": "dark.png",
     "path": "Types/dark.png",
     "size": 25732
@@ -7479,40 +7479,40 @@
   ]
  },
  "Creatures/Fnaf/4 Stars/Old_Chica.psd": {
-  "blob": "df725346d21b32925d50906c087ee4b77e0f6a16",
+  "blob": "c7070dba16ae82571eb6485401c8d7f55af476c1",
   "links": [
    {
-    "drawn": "769c40a6a924d96cbac7fc8c6ff11f068a618fc9",
+    "drawn": null,
     "name": "Balloon_Boy - fnaf 2.psb",
     "path": "MDW/Linked/Balloon_Boy - fnaf 2.psb",
     "size": 1984734
    },
    {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
+    "drawn": null,
     "name": "Springtrap - Gold_Star.svg.psb",
     "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
     "size": 1048576
    },
    {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
+    "drawn": null,
     "name": "Springtrap - Gold_Star.svg.psb",
     "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
     "size": 1048576
    },
    {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
+    "drawn": null,
     "name": "Springtrap - Gold_Star.svg.psb",
     "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
     "size": 1048576
    },
    {
-    "drawn": "37fbd99c3db7c085010672fe02813398c73dab9d",
+    "drawn": null,
     "name": "Springtrap - Gold_Star.svg.psb",
     "path": "MDW/Linked/Springtrap - Gold_Star.svg.psb",
     "size": 1048576
    },
    {
-    "drawn": "daefe5017731fce2dd331be9fc6988efbe3ed4ea",
+    "drawn": null,
     "name": "machine.png",
     "path": "Types/machine.png",
     "size": 303679
@@ -7848,16 +7848,16 @@
   ]
  },
  "Creatures/Hollow Knight/3 Stars/Dung_Defender.psd": {
-  "blob": "d03ae73bfed8855446ff622b49a4a2edab1d25e3",
+  "blob": "e15d3ab8d4f7574e13b3e917fc182c039a6e7603",
   "links": [
    {
-    "drawn": "726b783fe2e6e43fe7177f34981cab36176be090",
+    "drawn": null,
     "name": "Dung_Defender - Layer 6.psb",
     "path": "MDW/Linked/Dung_Defender - Layer 6.psb",
     "size": 5900332
    },
    {
-    "drawn": "99d8299f475b915a691170c03c5a2c0fe0110589",
+    "drawn": null,
     "name": "water.png",
     "path": "Types/water.png",
     "size": 121376
@@ -7865,31 +7865,25 @@
   ]
  },
  "Creatures/Hollow Knight/3 Stars/Hive_Knight.psd": {
-  "blob": "21a515672bd5573d9f076b0b569c4336dbb5b08d",
+  "blob": "5fb33c275425f4d7b96b2154334723139fd4bd1f",
   "links": [
    {
-    "drawn": "9108cd62dca0976d4c022549c45ddd390259ccfb",
+    "drawn": null,
     "name": "Hive_Knight - Layer 44.psb",
     "path": "MDW/Linked/Hive_Knight - Layer 44.psb",
     "size": 7838516
    },
    {
-    "drawn": "ba4be7beb8fe2582fa1766d4b9d621c8105b7bee",
+    "drawn": null,
     "name": "Hive_Knight - unknown (10)_auto_x2.jpg",
     "path": "MDW/Linked/Hive_Knight - unknown (10)_auto_x2.jpg",
     "size": 936529
    },
    {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
-    "name": "Hk star.png",
-    "path": "Types/Stars/Hk star.png",
-    "size": 332571
-   },
-   {
-    "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
-    "name": "Hk star.png",
-    "path": "Types/Stars/Hk star.png",
-    "size": 332571
+    "drawn": null,
+    "name": "Wind.png",
+    "path": "Types/Wind.png",
+    "size": 430775
    }
   ]
  },
@@ -8507,25 +8501,19 @@
   ]
  },
  "Creatures/Isaac/2 Stars/Tainted_Lost.psd": {
-  "blob": "7639ed5c2620efacec2f53add326441c641591a3",
+  "blob": "6116a098913682b6dcad2daad36a7bf0441603c2",
   "links": [
    {
-    "drawn": "27e819ad7c3cfe5f3c69393ae75bcafcb050f2a0",
+    "drawn": null,
     "name": "Tainted_Lost - nwjv38wsx7w71.png",
     "path": "MDW/Linked/Tainted_Lost - nwjv38wsx7w71.png",
     "size": 2919919
    },
    {
-    "drawn": "684e65afeeb74b7382ea73b18ee54fc434b75315",
+    "drawn": null,
     "name": "Tainted_Eden - F4YxFTxXQAABzaz.jpg",
     "path": "MDW/Linked/Tainted_Eden - F4YxFTxXQAABzaz.jpg",
     "size": 140451
-   },
-   {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
    }
   ]
  },
@@ -13205,46 +13193,46 @@
   ]
  },
  "Creatures/Omori/5 Stars/omori.psd": {
-  "blob": "a816680ad8d8c64b826fcdc5b7dce1b4fbef5519",
+  "blob": "fefda326674f928a18605c649aa7f17c30967184",
   "links": [
    {
-    "drawn": "f21f619a954a891067c0c9e98421d61b1091dbd3",
+    "drawn": null,
     "name": "omori - red_space.png",
     "path": "MDW/Linked/omori - red_space.png",
     "size": 80133
    },
    {
-    "drawn": "84e1519fd2a6d69517b5d12562272fef8a841eb5",
+    "drawn": null,
     "name": "omori - OMORI_BG_1.jpg",
     "path": "MDW/Linked/omori - OMORI_BG_1.jpg",
     "size": 83038
    },
    {
-    "drawn": "f3187a834aa06eb159b7e51e15f201a0a1e8a175",
+    "drawn": null,
     "name": "omori - Layer 3.psb",
     "path": "MDW/Linked/omori - Layer 3.psb",
     "size": 1048576
    },
    {
-    "drawn": "c7c6998a00ac0674b6e7327be93492983e68fba2",
+    "drawn": null,
     "name": "omori - sorute-transformed.png",
     "path": "MDW/Linked/omori - sorute-transformed.png",
     "size": 630601
    },
    {
-    "drawn": "a69ecf5f55fa73fdf72dde855aa81a55073a6645",
+    "drawn": null,
     "name": "Omori star.png",
     "path": "Types/Stars/Omori star.png",
     "size": 114793
    },
    {
-    "drawn": "6a51a7ce0e43db25cf1cec7e3b12604e44dde6f8",
+    "drawn": null,
     "name": "omori - red_hand.png",
     "path": "MDW/Linked/omori - red_hand.png",
     "size": 6677
    },
    {
-    "drawn": "6a51a7ce0e43db25cf1cec7e3b12604e44dde6f8",
+    "drawn": null,
     "name": "omori - red_hand.png",
     "path": "MDW/Linked/omori - red_hand.png",
     "size": 6677

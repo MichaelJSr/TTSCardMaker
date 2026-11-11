@@ -1,31 +1,31 @@
 {
  "builder": {
-  "commit": "31d0603a83cd462d2ba79a58853540c711cd0f7e",
+  "commit": "66a4d2c8607ad7c0633b6a5d63bedaaabd880b12",
   "parser_version": 7,
   "psd_tools": "1.26.0+cards",
   "python": "3.14",
-  "ref": "31d0603a83cd462d2ba79a58853540c711cd0f7e",
+  "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-11T04:08:26Z",
- "card_commit": "3202eaad9a886ef9df8303dac81afa1f0b06e585",
- "card_commit_at": 1794369060.0,
+ "built_at": "2026-11-11T06:05:45Z",
+ "card_commit": "e58b8cfdaedd82adc2a54d0cac644de8d9463b16",
+ "card_commit_at": 1794377036.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 98,
   "baked": 0,
   "cards": 776,
-  "changed": 0,
+  "changed": 2,
   "details": 781,
   "failed": 0,
   "new": 0,
-  "versions": 1818
+  "versions": 1820
  },
  "files": {
-  "old_stats.json": "601b6af6eab64c65ac9986764d5c573fa1efbdf88c50cf59c3770b3c412f1b91",
-  "psd_details.json": "277ff78e8cc527c47906fb2a23c125bc854c0094d0bb06d5ee509383a0cdfe32",
+  "old_stats.json": "368b37e240e033ced3b552885d01d02676009408f2c208b992fceba5784574d6",
+  "psd_details.json": "e560c6ee84709cfb6d15879d2f3915d2cb092b87d99f83116456acb0774194d2",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "db8c9303678301f60ae63d0b64e7eb1b76af4d091ffe8c0e245abd827ab15a94"
+  "stats.json": "aba42797398b7397c89fe8cc3befc94b2b8131dbd46656b296b0aefa2d667b65"
  },
  "gates": {},
  "inputs": {
@@ -44,8 +44,23 @@
   "repin": [],
   "stale": []
  },
- "problems": [],
+ "problems": [
+  {
+   "card": "Hive Knight",
+   "notes": [
+    "NO STATS FOUND: no HP, DEF, ATK or SPD bars read on this creature"
+   ],
+   "path": "Creatures/Hollow Knight/3 Stars/Hive_Knight.psd"
+  },
+  {
+   "card": "omori",
+   "notes": [
+    "NO STATS FOUND: no HP, DEF, ATK or SPD bars read on this creature"
+   ],
+   "path": "Creatures/Omori/5 Stars/omori.psd"
+  }
+ ],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42957219076",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42969982610",
  "schema": 1
 }
