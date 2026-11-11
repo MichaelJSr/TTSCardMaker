@@ -260,17 +260,17 @@ const stars = html => html.replace(/★+/g, s => `<span class="rb-stars">${s}</s
 const sizeStyle = a => [a.width && `width:${/^\d+(\.\d+)?$/.test(a.width) ? `${a.width}%` : a.width}`, a.height && `height:${a.height}`].filter(Boolean).join(";").replace(/[^\w%.:;-]/g, "");
 function imgHtml(b, ctx, inLine = false) {   // --w: its width, for one without width= (drawn its size in the page's px)
   const a = b.attrs || { cls: [] }, size = ctx.size?.(b.src), url = ctx.imgUrl ? ctx.imgUrl(b.src) : IMG_DIR + b.src, style = inLine ? sizeStyle(a) : size ? `--w:${Number(size[0])}` : "";
-  const dims = size ? ` width="${size[0]}" height="${size[1]}"` : "";
-  return `<img class="${inLine ? `rb-icon ${clsOf(a)}` : "rb-img"}" src="${esc(url)}" alt="${esc(b.alt)}"${dims}${style ? ` style="${style}"` : ""}${lazy(ctx)}>`;
+  return `<img class="${inLine ? `rb-icon ${clsOf(a)}` : "rb-img"}" src="${esc(url)}" alt="${esc(b.alt)}"${wh(size)}${style ? ` style="${style}"` : ""}${lazy(ctx)}>`;
 }
 
 function cardHtml(name, label, ctx, cls = "") {
   const c = ctx.card?.(name);
   if (!c) return `<span class="rb-card rb-missing ${cls}" title="No card named ${esc(name)}">${esc(label || name)}</span>`;
-  return `<a class="rb-card ${cls}" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}" title="${esc(c.name)}"><img src="${esc(ctx.cardImg(c))}" alt="${esc(c.name)}"${lazy(ctx)}>${label ? `<span>${esc(label)}</span>` : ""}</a>`;
+  return `<a class="rb-card ${cls}" href="#/card/${esc(c.id)}" data-card="${esc(c.id)}" title="${esc(c.name)}"><img src="${esc(ctx.cardImg(c))}" alt="${esc(c.name)}"${wh([c.tw, c.th])}${lazy(ctx)}>${label ? `<span>${esc(label)}</span>` : ""}</a>`;
 }
 
 const lazy = ctx => (ctx.eager ? "" : ' loading="lazy" decoding="async"');   // the TTS pages: every picture at once
+const wh = s => (s?.[0] && s[1] ? ` width="${+s[0]}" height="${+s[1]}"` : "");   // its size before it loads: a contents jump lands
 const kidsHtml = (list, ctx) => list.map(b => blockHtml(b, ctx)).join("");
 
 /** HTML for one block (draw and the paginator); ctx.lines: each block's element carries data-line (the editor's preview) */
@@ -290,7 +290,7 @@ function blockInner(b, ctx) {
     }
     case "fence": return fenceHtml(b, ctx);
     case "say": {
-      const pic = b.who ? `<img class="rb-mascot" src="${esc(ctx.imgUrl ? ctx.imgUrl(b.who) : `${IMG_DIR}${b.who}.webp`)}" alt=""${lazy(ctx)}>` : "";
+      const pic = b.who ? `<img class="rb-mascot" src="${esc(ctx.imgUrl ? ctx.imgUrl(b.who) : `${IMG_DIR}${b.who}.webp`)}" alt=""${wh(ctx.size?.(b.who))}${lazy(ctx)}>` : "";
       const opts = b.opts.filter(o => /^[\w-]+$/.test(o)).map(o => `rb-say-${o}`).join(" ");
       return `<aside class="rb-say ${opts}">${pic}<div class="rb-bubble">${kidsHtml(b.children, ctx)}</div></aside>`;
     }
