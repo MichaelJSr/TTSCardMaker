@@ -14672,166 +14672,166 @@
   ]
  },
  "Creatures/Other/5 Stars/Bobberlington.psd": {
-  "blob": "707b811e615cc34142c724f5555f72560da220c1",
+  "blob": "0dcf2b7b1a83a19a33038f98e60d95c281c5a7a0",
   "links": [
    {
-    "drawn": "ceb550a8f52fc51a4b66c39786d5b2b214777284",
+    "drawn": null,
     "name": "Bobberlington - kelsey.png",
     "path": "MDW/Linked/Bobberlington - kelsey.png",
     "size": 1598004
    },
    {
-    "drawn": "78171424bf635eed00a79935882ce10d15e8ff2d",
-    "name": "Bobberlington - Layer_0_edge.png",
-    "path": "MDW/Linked/Bobberlington - Layer_0_edge.png",
-    "size": 50051
-   },
-   {
-    "drawn": "6bc3c519abaf99fdc73b04ba17739f67504c4708",
-    "name": "Bobberlington - suff_edge.png",
-    "path": "MDW/Linked/Bobberlington - suff_edge.png",
-    "size": 40411
-   },
-   {
-    "drawn": "88d3bed7faa94b8f86e38d6272a7461c5245c02e",
-    "name": "Bobberlington - 25757_edge.png",
-    "path": "MDW/Linked/Bobberlington - 25757_edge.png",
-    "size": 13676
-   },
-   {
-    "drawn": "72a97c8b988345264a1e24578a44c5d17c88647e",
-    "name": "Bobberlington - raf750x1000075tFFFFFF_97ab1c12de_edge.png",
-    "path": "MDW/Linked/Bobberlington - raf750x1000075tFFFFFF_97ab1c12de_edge.png",
-    "size": 51878
-   },
-   {
-    "drawn": "4ce68a0307267fe830c4c66895bddcb05d5d8595",
-    "name": "Bobberlington - png_transparent_mr_krabs_transparent_png_hd_116816956792gwm0gxc8tjsjlbjuc51ghgcigp8lkv4g0hfkn81sd8d.png",
-    "path": "MDW/Linked/Bobberlington - png_transparent_mr_krabs_transparent_png_hd_116816956792gwm0gxc8tjsjlbjuc51ghgcigp8lkv4g0hfkn81sd8d.png",
-    "size": 35476
-   },
-   {
-    "drawn": "e15dda38f2387147ea3173d37ac678409a4f3e64",
-    "name": "Bobberlington - Layer_1_edge.png",
-    "path": "MDW/Linked/Bobberlington - Layer_1_edge.png",
-    "size": 6802
-   },
-   {
-    "drawn": "7979060620e45fb0c9d5a329949fa93246b260a8",
-    "name": "Bobberlington - sb_happy_mr_krabs_512x512_edge.png",
-    "path": "MDW/Linked/Bobberlington - sb_happy_mr_krabs_512x512_edge.png",
-    "size": 39070
-   },
-   {
-    "drawn": "e74b2d32cfaecbfb15487e2df9467f9a6bf638ad",
-    "name": "Bobberlington - Layer 33.png",
-    "path": "MDW/Linked/Bobberlington - Layer 33.png",
-    "size": 6215
-   },
-   {
-    "drawn": "d96f63cbe4614a6337ba958c91a9ab8f42838b45",
-    "name": "Bobberlington - 517ff738d812e77fc8ba44721a0e4394_edge.png",
-    "path": "MDW/Linked/Bobberlington - 517ff738d812e77fc8ba44721a0e4394_edge.png",
-    "size": 40834
-   },
-   {
-    "drawn": "842da3b75a2ab516302e1af5bfca87e6846e50c0",
-    "name": "Bobberlington - download_edge.png",
-    "path": "MDW/Linked/Bobberlington - download_edge.png",
-    "size": 13801
-   },
-   {
-    "drawn": "f7b8ccb195f66206ff0c1af3e4c5e21d1823803b",
-    "name": "Bobberlington - mr_krabs_jaw_drop_logo_1C7E59BF58_seeklogocom_edge.png",
-    "path": "MDW/Linked/Bobberlington - mr_krabs_jaw_drop_logo_1C7E59BF58_seeklogocom_edge.png",
-    "size": 17493
-   },
-   {
-    "drawn": "1cdc1b7145f1f3e2b3062bb6b75ec112f822eaac",
-    "name": "Bobberlington - Layer 34.png",
-    "path": "MDW/Linked/Bobberlington - Layer 34.png",
-    "size": 11495
-   },
-   {
-    "drawn": "1489938e1c65a26fe813649222f1835832d78d0e",
-    "name": "Bobberlington - pngwingcom_edge (1).png",
-    "path": "MDW/Linked/Bobberlington - pngwingcom_edge (1).png",
-    "size": 75347
-   },
-   {
-    "drawn": "08f4aa1c664d5d2c4e19c774f329573c0aecd7cf",
-    "name": "Bobberlington - df4by0o_374e8069_7ff7_431c_8a14_8273f52b0818_edge.png",
-    "path": "MDW/Linked/Bobberlington - df4by0o_374e8069_7ff7_431c_8a14_8273f52b0818_edge.png",
-    "size": 69950
-   },
-   {
-    "drawn": "26a3340631ab31ec6cfc8af5dd874adf22152184",
+    "drawn": null,
     "name": "Bobberlington - denuhkh_56da0cf3_a60a_4b33_a7f4_90c223fbc41a_edgeeee.png",
     "path": "MDW/Linked/Bobberlington - denuhkh_56da0cf3_a60a_4b33_a7f4_90c223fbc41a_edgeeee.png",
     "size": 21541
    },
    {
-    "drawn": "df2881dc5facbec75ca57a7bb5c3908d5d503a4a",
+    "drawn": null,
     "name": "Bobberlington - Mr_Krabssvg_edgeeee.png",
     "path": "MDW/Linked/Bobberlington - Mr_Krabssvg_edgeeee.png",
     "size": 45190
    },
    {
-    "drawn": "2a797334e28a9e027bd29b60aa5d86078665c177",
+    "drawn": null,
     "name": "Bobberlington - moar_krabs_transparent_by_boygeymario_d4jkr75_fullview_edge.png",
     "path": "MDW/Linked/Bobberlington - moar_krabs_transparent_by_boygeymario_d4jkr75_fullview_edge.png",
     "size": 73778
    },
    {
-    "drawn": "5658427846f8590a0b51e8184a89772c111639cf",
+    "drawn": null,
+    "name": "Bobberlington - Layer_1_edge.png",
+    "path": "MDW/Linked/Bobberlington - Layer_1_edge.png",
+    "size": 6802
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - sb_happy_mr_krabs_512x512_edge.png",
+    "path": "MDW/Linked/Bobberlington - sb_happy_mr_krabs_512x512_edge.png",
+    "size": 39070
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - 25757_edge.png",
+    "path": "MDW/Linked/Bobberlington - 25757_edge.png",
+    "size": 13676
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - raf750x1000075tFFFFFF_97ab1c12de_edge.png",
+    "path": "MDW/Linked/Bobberlington - raf750x1000075tFFFFFF_97ab1c12de_edge.png",
+    "size": 51878
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - png_transparent_mr_krabs_transparent_png_hd_116816956792gwm0gxc8tjsjlbjuc51ghgcigp8lkv4g0hfkn81sd8d.png",
+    "path": "MDW/Linked/Bobberlington - png_transparent_mr_krabs_transparent_png_hd_116816956792gwm0gxc8tjsjlbjuc51ghgcigp8lkv4g0hfkn81sd8d.png",
+    "size": 35476
+   },
+   {
+    "drawn": null,
     "name": "Bobberlington - onfire_edge.png",
     "path": "MDW/Linked/Bobberlington - onfire_edge.png",
     "size": 19484
    },
    {
-    "drawn": "8eec4aba81103a7297ad30c27d3a04a89092c21e",
+    "drawn": null,
     "name": "Bobberlington - 692_6923678_krabs_mrkrabs_mr_hd_png_download_edge.png",
     "path": "MDW/Linked/Bobberlington - 692_6923678_krabs_mrkrabs_mr_hd_png_download_edge.png",
     "size": 56121
    },
    {
-    "drawn": "5cb52fa4005bc8b16419de45f217f1af7430d452",
+    "drawn": null,
+    "name": "Bobberlington - Layer 33.png",
+    "path": "MDW/Linked/Bobberlington - Layer 33.png",
+    "size": 6215
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - 517ff738d812e77fc8ba44721a0e4394_edge.png",
+    "path": "MDW/Linked/Bobberlington - 517ff738d812e77fc8ba44721a0e4394_edge.png",
+    "size": 40834
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - download_edge.png",
+    "path": "MDW/Linked/Bobberlington - download_edge.png",
+    "size": 13801
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - Layer_0_edge.png",
+    "path": "MDW/Linked/Bobberlington - Layer_0_edge.png",
+    "size": 50051
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - suff_edge.png",
+    "path": "MDW/Linked/Bobberlington - suff_edge.png",
+    "size": 40411
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - Layer 34.png",
+    "path": "MDW/Linked/Bobberlington - Layer 34.png",
+    "size": 11495
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - pngwingcom_edge (1).png",
+    "path": "MDW/Linked/Bobberlington - pngwingcom_edge (1).png",
+    "size": 75347
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - df4by0o_374e8069_7ff7_431c_8a14_8273f52b0818_edge.png",
+    "path": "MDW/Linked/Bobberlington - df4by0o_374e8069_7ff7_431c_8a14_8273f52b0818_edge.png",
+    "size": 69950
+   },
+   {
+    "drawn": null,
+    "name": "Bobberlington - mr_krabs_jaw_drop_logo_1C7E59BF58_seeklogocom_edge.png",
+    "path": "MDW/Linked/Bobberlington - mr_krabs_jaw_drop_logo_1C7E59BF58_seeklogocom_edge.png",
+    "size": 17493
+   },
+   {
+    "drawn": null,
     "name": "Bobberlington - Krabs_artwork.webp",
     "path": "MDW/Linked/Bobberlington - Krabs_artwork.webp",
     "size": 158502
    },
    {
-    "drawn": "94c32893900080e68008fd0544edf4c6a0627dad",
+    "drawn": null,
     "name": "Bobberlington - Mr._Krabs.svg.png",
     "path": "MDW/Linked/Bobberlington - Mr._Krabs.svg.png",
     "size": 90818
    },
    {
-    "drawn": "f5d1ca1b04baef7cf14b28849206d18c58e85b17",
+    "drawn": null,
     "name": "Bobberlington - pngwing.com.png",
     "path": "MDW/Linked/Bobberlington - pngwing.com.png",
     "size": 502070
    },
    {
-    "drawn": "e5ba47536e8f4b3ef08480fc1445e75a07636826",
+    "drawn": null,
     "name": "Bobberlington - denuhkh-56da0cf3-a60a-4b33-a7f4-90c223fbc41a.png",
     "path": "MDW/Linked/Bobberlington - denuhkh-56da0cf3-a60a-4b33-a7f4-90c223fbc41a.png",
     "size": 89616
    },
    {
-    "drawn": "6250193ad9c78c7b3c3cf5a89bb3440c38b21736",
+    "drawn": null,
     "name": "Despair - Despair.jpg",
     "path": "MDW/Linked/Despair - Despair.jpg",
     "size": 189981
    },
    {
-    "drawn": "132645e2aaecfb57ca8fa7eaa21627d170f1b86b",
+    "drawn": null,
     "name": "Chained - Chained.jpg",
     "path": "MDW/Linked/Chained - Chained.jpg",
     "size": 108611
    },
    {
-    "drawn": "0e7829d101d28fc2b62d197c6eef5a4df72738a7",
+    "drawn": null,
     "name": "Empty - Empty.jpg",
     "path": "MDW/Linked/Empty - Empty.jpg",
     "size": 61565
@@ -18366,22 +18366,16 @@
   ]
  },
  "Field/3 Stars/Rock_Bottom.psd": {
-  "blob": "afbaeb32e96b2bd4a051c92f474747ee9cb6a64d",
+  "blob": "35e47eea97de6b3a0dd38a5b98013eb09cab0b16",
   "links": [
    {
-    "drawn": "6cacb5def10e7e9b88d7cee723a0f40e37d147eb",
-    "name": "Rock_Bottom - 4h436slzykn81.jpg",
-    "path": "MDW/Linked/Rock_Bottom - 4h436slzykn81.jpg",
-    "size": 175514
-   },
-   {
-    "drawn": "1f984acaa4bdf1ee77b73c0f48440723aed20d28",
+    "drawn": null,
     "name": "Rock_Bottom - jo2mx0ogbsx81.webp",
     "path": "MDW/Linked/Rock_Bottom - jo2mx0ogbsx81.webp",
     "size": 166312
    },
    {
-    "drawn": "4842329744e9640e657c0e5909400f10099b0d0e",
+    "drawn": null,
     "name": "Patrick Star.png",
     "path": "Types/Stars/Patrick Star.png",
     "size": 152994
@@ -20233,22 +20227,16 @@
   ]
  },
  "Items/Equip/2 Stars/Tomorrow_I'll.psd": {
-  "blob": "1f6c3859a1cf43c8ef16ed38789b1f3d13a90b9f",
+  "blob": "758f864defbdd18b6a5aa7a03f41e4744d0d606f",
   "links": [
    {
-    "drawn": "b6ebd55d9a1d1c2460bc342be20c92e4d0720844",
+    "drawn": null,
     "name": "Tomorrow_I'll - Layer 4 copy.psb",
     "path": "MDW/Linked/Tomorrow_I'll - Layer 4 copy.psb",
     "size": 6347984
    },
    {
-    "drawn": "a7e746e29c6c1dfac8d19451079d677439ce0f34",
-    "name": "Tomorrow_I'll - istockphoto-181866332-612x612 (1).jpg",
-    "path": "MDW/Linked/Tomorrow_I'll - istockphoto-181866332-612x612 (1).jpg",
-    "size": 141115
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
@@ -21321,64 +21309,52 @@
   ]
  },
  "Items/Heal/1 Stars/Bolts_and_Screws.psd": {
-  "blob": "84de07bfe5fb676233ecc3f00b0ed3b63c2d1417",
+  "blob": "65a21a420df0f4be204ad017e7b7c2f88c27eeb1",
   "links": [
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
-    "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
-    "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
-    "size": 347738
-   },
-   {
-    "drawn": "ec3a99868909040ef8eaaa0720cb0b7ddfc72421",
+    "drawn": null,
     "name": "Bolts_and_Screws - Zahnr3F copy 30.webp",
     "path": "MDW/Linked/Bolts_and_Screws - Zahnr3F copy 30.webp",
     "size": 19660
    },
    {
-    "drawn": "a1762aeba1150ab4a4d19eebb74b2a9da5e807d6",
+    "drawn": null,
     "name": "Bolts_and_Screws - Scrap_Build copy 5.webp",
     "path": "MDW/Linked/Bolts_and_Screws - Scrap_Build copy 5.webp",
     "size": 17454
    },
    {
-    "drawn": "655863bfcf0a840f4726dfb8b0ec6d7d7ebbfc1d",
+    "drawn": null,
     "name": "Bolts_and_Screws - Ikona_Majsterkowanie copy 8.webp",
     "path": "MDW/Linked/Bolts_and_Screws - Ikona_Majsterkowanie copy 8.webp",
     "size": 5208
    },
    {
-    "drawn": "dba1666fbc0d0d2de9d2a8ce29b69bd9df462b5c",
+    "drawn": null,
     "name": "Bolts_and_Screws - pngwing.com (2).png",
     "path": "MDW/Linked/Bolts_and_Screws - pngwing.com (2).png",
     "size": 170154
    },
    {
-    "drawn": "f530afa999e32f45bb749655f99d3333d741bf29",
+    "drawn": null,
     "name": "Bolts_and_Screws - Auto-Mat-O-Chanic_Build.webp",
     "path": "MDW/Linked/Bolts_and_Screws - Auto-Mat-O-Chanic_Build.webp",
     "size": 6592
    },
    {
-    "drawn": "56a9d98f586565bf927650a6fb3b0fe66b0d6554",
-    "name": "Frostmourne - Daco_35508.png",
-    "path": "MDW/Linked/Frostmourne - Daco_35508.png",
-    "size": 307074
-   },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
    },
    {
-    "drawn": "7777b7b0d7dc2a12753d2e0e36498650fbfc145f",
+    "drawn": null,
     "name": "Infliction.png",
     "path": "Types/Infliction.png",
     "size": 78460
@@ -21386,22 +21362,28 @@
   ]
  },
  "Items/Heal/1 Stars/Candy_Corn.psd": {
-  "blob": "3dd4bbd2a7e3961935379fe834a50201336738e2",
+  "blob": "6b3103bc669f38dba5efaa6215cc6a85e43eea7d",
   "links": [
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "drawn": null,
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
+   },
+   {
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -21444,22 +21426,28 @@
   ]
  },
  "Items/Heal/1 Stars/Monster_Meat.psd": {
-  "blob": "f3ed0a593c653b97daea7a27634047a08d892a83",
+  "blob": "e2b3ab60c30fdab1dcbdf98e593dfc3c9104081c",
   "links": [
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "drawn": null,
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
+   },
+   {
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -21478,22 +21466,22 @@
   ]
  },
  "Items/Heal/1 Stars/Tomato.psd": {
-  "blob": "1a49992dd99baaf1a3b4f941c6cad60c0073f017",
+  "blob": "4c771b2c1b6387f644bc46b10081d66f5b37a00f",
   "links": [
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "drawn": null,
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -21727,34 +21715,46 @@
   ]
  },
  "Items/Heal/2 Stars/Pep_Drink.psd": {
-  "blob": "0b683f98138f2f5aa7711b3903fa223c0820a385",
+  "blob": "7b0181bb898b7d26d53d1b21b75696941ede6cf0",
   "links": [
    {
-    "drawn": "e9aeb379102f0d16b431f3cc12057d34a90ee288",
+    "drawn": null,
     "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
     "size": 347738
    },
    {
-    "drawn": "e29629d5bb2d0652b5604dda960a3c7870c5df85",
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
+   },
+   {
+    "drawn": null,
+    "name": "Food Masked.psb",
+    "path": "MDW/Linked/Food Masked.psb",
+    "size": 10836040
+   },
+   {
+    "drawn": null,
     "name": "Pep_Drink - tumblr_nguxntKncE1u258ivo1_500.png",
     "path": "MDW/Linked/Pep_Drink - tumblr_nguxntKncE1u258ivo1_500.png",
     "size": 169390
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -21998,22 +21998,28 @@
   ]
  },
  "Items/Heal/3 Stars/Feast.psd": {
-  "blob": "10e78c55f4f9a2700ac47deb9eb8f1ac642ca733",
+  "blob": "e359ab1ad06ca7d58455766fcc94a7a221641150",
   "links": [
    {
-    "drawn": "5fbeb23b63a1e658040fe7df8c5a52128f1b3a87",
+    "drawn": null,
     "name": "Feast - Bloon Boy.png",
     "path": "MDW/Linked/Feast - Bloon Boy.png",
     "size": 128714
    },
    {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
+    "drawn": null,
+    "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "size": 347738
+   },
+   {
+    "drawn": null,
     "name": "star.png",
     "path": "Types/Stars/star.png",
     "size": 36858
    },
    {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
+    "drawn": null,
     "name": "Food.png",
     "path": "Types/Food.png",
     "size": 139337
@@ -25002,6 +25008,17 @@
  "MDW/Linked/Flame_Bomb - Layer 1.psb": {
   "blob": "3da10d325ca53650af78a986d93837f6af5a4ab3",
   "links": []
+ },
+ "MDW/Linked/Food Masked.psb": {
+  "blob": "de107c5a1c035a13c2bcfa4881f3f92f00fd63eb",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "path": "MDW/Linked/Pandora - 3a199d0d5519403084592633e3d47a81afaae9e3.jpg",
+    "size": 347738
+   }
+  ]
  },
  "MDW/Linked/Fool_Eater - Layer 2.psb": {
   "blob": "522bb8b8ca06a0e1c53168059aef4ded109e5141",
@@ -29841,6 +29858,9 @@
   "MDW/Linked/Fog_Canyon - saphire-oceane-roh-fogcanyonas.jpg": {
    "0b28f6d2c87e26b19d2d11d5bc44555a727126c6": 1687640
   },
+  "MDW/Linked/Food Masked.psb": {
+   "de107c5a1c035a13c2bcfa4881f3f92f00fd63eb": 10836040
+  },
   "MDW/Linked/Fool_Eater - Layer 2.psb": {
    "522bb8b8ca06a0e1c53168059aef4ded109e5141": 11303426
   },
@@ -33159,6 +33179,7 @@
   "dbfff361a754425904028d9b13c38de72467fe15": "5857078ee99140cd700518091d78ef141167d3b4",
   "dd43dc7213eb6fe626b4a551aaef089a3067929f": "db7d7fbf5f4613745d49bc682656ed5c20b1a920",
   "ddbe41a24ec7c04062e1ea7a7daaaf970754656f": "6260e0b099df2979a382810efcc95a6b91e96d12",
+  "de107c5a1c035a13c2bcfa4881f3f92f00fd63eb": "3707f8df78728bc0ea26ca372caa14815d9a77d0",
   "de1a2108956135e3846fc53d3e99696c13f5c325": "7c41ddf447e87d9a7392a5dad17e23e4438ca6a3",
   "de33452982a6e84b27a8d992d2de69cc16ae725b": "557cc3271ac248ab6536bf0b662ac5da4a59ed7c",
   "df22addd68895b428f7acb50b628bd7e638b8f6c": "4fdc0bf00feac153cffc18fc24c8ecb040991d0f",
