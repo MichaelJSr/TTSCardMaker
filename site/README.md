@@ -238,18 +238,21 @@ downloaded or looks truncated, or if many images fail.
 
 ## Flags
 
-A card can carry two flags, each with a note: **Needs doing by hand** and **Special stat bars**. They replace the problem
-cards CSV, and they are automatic: the bot's checks (AutoCroissant `commands/card_checks.py`, the Card checks workflow) set
-and clear them, each with a short note on what the issue is. `hand`: the picture says other than the data, old-style bars,
-a website edit that cannot bake. `bars`: bars that do not read like the template. The checks read only PSDs without a
-result, so a fixed card clears on its next push; a whole-tree pass is a dispatch of Card checks with `all`. Nothing is
-told to Discord or a commit, and nothing is blocked. The card page shows the notes under the name; **Needs handling** at
-the bottom of the Cards filters opens a list of the cards with their notes (All, or one flag; `flags=flagged`, `flags=hand`,
-`flags=bars`, excluded with `xflags=`; on a phone a link in the toolbar too); search `flag:hand`, `flag:bars`, `flag:any`.
+A card can carry three flags, each with a note: **Needs doing by hand**, **Special stat bars** and **Names differ**. They
+replace the problem cards CSV, and they are automatic: the bot's checks (AutoCroissant `commands/card_checks.py`, the Card
+checks workflow) set and clear them, each with a short note on what the issue is. `hand`: the picture says other than the
+data, old-style bars, a website edit that cannot bake. `bars`: bars that do not read like the template. `name`: the
+website's name differs from the printed title, or the printed title from the file name (exact text, underscores as
+spaces; never on a PSD's second picture), worded again at every run. The checks read only PSDs without a result, so a
+fixed card clears on its next push; a whole-tree pass is a dispatch of Card checks with `all`. Nothing is told to Discord
+or a commit, and nothing is blocked. The card page shows the notes under the name; **Needs handling** at the bottom of the
+Cards filters opens a list of the cards with their notes (All, or one flag; `flags=flagged`, `flags=hand`, `flags=bars`,
+`flags=name`, excluded with `xflags=`; on a phone a link in the toolbar too); search `flag:hand`, `flag:bars`,
+`flag:name`, `flag:any`.
 
 Any editor can add one by hand too: `+ needs doing by hand` on the card page, typing what the issue is (it needs a reason),
 click the reason, ✕ to clear, or Flags in All fields. Those go through the batch and Publish, live in `site/Card Edits.json` (`"flags": {"hand": "reason", "bars": "",
-"psd": "1a2b3c4d"}`, the PSD blob they were set on), are never baked, and go once the PSD changes and the checks are clean.
+"name": "", "psd": "1a2b3c4d"}`, the PSD blob they were set on), are never baked, and go once the PSD changes and the checks are clean.
 
 ## Editing
 

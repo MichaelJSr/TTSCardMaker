@@ -7,7 +7,7 @@
 //   hp>5  def<=3  atk==2  spd>=7  stars<4  total>=24        numbers
 //   type==creature  series~kirby  subseries~door  author==chestnut  types~fire  subtype==equip  name~knight
 //   created>=2025  created==2023-10  created<2021-06-01                   dates at the precision given (as the bot)
-//   is:unparsed  has:history  has:problems  has:alias  flag:hand  flag:bars  flag:any
+//   is:unparsed  has:history  has:problems  has:alias  flag:hand  flag:bars  flag:name  flag:any
 import { flagged, hasFlag } from "./flags.js";
 import { norm } from "./text.js";
 
@@ -28,7 +28,7 @@ const STR = {
 export const FLAGS = {
   "is:unparsed": c => !c.parsed, "has:history": c => !!c.hv,
   "has:problems": c => !!(c.problems && c.problems.length), "has:alias": c => !!(c.aliases && c.aliases.length),
-  "flag:hand": c => hasFlag(c, "hand"), "flag:bars": c => hasFlag(c, "bars"), "flag:any": flagged,
+  "flag:hand": c => hasFlag(c, "hand"), "flag:bars": c => hasFlag(c, "bars"), "flag:name": c => hasFlag(c, "name"), "flag:any": flagged,
 };
 
 export function haystack(c) {
@@ -132,5 +132,5 @@ export const SEARCH_HELP = [
   ["series==mario & subseries~door", "Series and subseries"],
   ["created>=2025 · created==2023-10", "Creation date (first Discord post or upload)"],
   ["is:unparsed · has:history · has:alias", "Card flags"],
-  ["flag:hand · flag:bars · flag:any", "Cards that need handling"],
+  ["flag:hand · flag:bars · flag:name · flag:any", "Cards that need handling"],
 ];

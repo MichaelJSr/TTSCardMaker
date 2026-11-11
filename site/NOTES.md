@@ -1558,3 +1558,14 @@ reloaded"), on with or without the first screen (§31). Not the first screen: ed
   ignored). The card page's own chips stay. The parser's SEVERAL CREATURES note went too: every creature bakes.
 - **Needs handling** moved to the bottom of the sidebar.
 
+
+## 52. Names differ flag (2026-11-10, owner: a new automatic 'name' flag, "its own flag and filter")
+- **Rule**: the website's name (a Card Edits `name`, else the printed title) differs from the printed title, or the
+  printed title (the data's `parsed_values.name`, else `display_name`; none read: the file name) from the file name with
+  underscores as spaces; exact text, letter case and punctuation count. A PSD's second pictures (`variant_of`, a
+  picture-only `dup_of`) never have it.
+- **Where**: the bot's `card_checks.name_note`, worded by `refresh` at every save from stats.json and Card Edits.json
+  (no PSD read: a website rename clears it at the next run); `name` beside `hand` and `bars` in each record. The Commit
+  step's `shown()` reads it too; a person's flag goes only once `name` is clean as well.
+- **Site**: `CARD_FLAGS` "Names differ" (chip, `flags=name`, `flag:name`); `+ names differ` flags at once, as bars;
+  `merge_flags(..., second)` and the duplicates' copy leave it out.

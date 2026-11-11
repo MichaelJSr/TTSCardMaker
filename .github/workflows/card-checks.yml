@@ -1,6 +1,7 @@
 # Card checks (AutoCroissant commands/card_checks.py, owner 2026-11-07): the automatic card flags, off Card sync's path.
-# hand: the picture says other than the data, old-style bars, a website edit that cannot bake. bars: special bars. The
-# results stay on the data branch by PSD blob (db/card_checks.json); the website shows them. No Discord, no commit
+# hand: the picture says other than the data, old-style bars, a website edit that cannot bake. bars: special bars. name:
+# the website's name, the printed title and the file name disagree (worded at each save). The results stay on the data
+# branch by PSD blob (db/card_checks.json); the website shows them. No Discord, no commit
 # comment, no block. Card sync starts it at a data job's start (inputs after, job): it sets up, then waits for that job's
 # Commit data. Only PSDs (or PNGs) without a result are read, so a fixed card clears on its next push. A dispatch with
 # `all` reads the whole tree in six shards, each its share of the blobs.
@@ -330,8 +331,8 @@ jobs:
         run: |
           git add db/card_checks.json
           if git diff --cached --quiet; then echo "No flag changed."; exit 0; fi
-          shown() { jq -cS '{c: ([.cards // {} | .[] | select(.hand or .bars)] | group_by(.card)
-            | map({key: "\(.[0].card)", value: map([.hand, .bars]) | sort}) | from_entries), x: (.cleared // {})}'; }
+          shown() { jq -cS '{c: ([.cards // {} | .[] | select(.hand or .bars or .name)] | group_by(.card)
+            | map({key: "\(.[0].card)", value: map([.hand, .bars, .name]) | sort}) | from_entries), x: (.cleared // {})}'; }
           old=$(git show HEAD:db/card_checks.json | shown) || old=none
           new=$(shown < db/card_checks.json) || new=
           me=(-c user.name=AutoCroissant -c user.email=autocroissant@gmail.com)

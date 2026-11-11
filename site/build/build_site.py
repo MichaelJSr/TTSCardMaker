@@ -112,7 +112,7 @@ SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
 RAW = f"https://raw.githubusercontent.com/{CARD_REPO}/main/"
 CARD_BACKS = ("MDW/Assets/cardback.png", "MDW/Assets/cardback_item.png")    # deck.js ttsSave's backs
 DETAILS_JSON = "psd_details.json"            # the PSD structure records {version, cards: {blob sha: record}} (AutoCroissant card_db.DETAILS_JSON)
-CHECKS_JSON = "card_checks.json"             # the automatic flags {cards: {blob sha: {hand, bars}}, cleared: {PSD path: flags' psd}} (AutoCroissant card_checks)
+CHECKS_JSON = "card_checks.json"             # the automatic flags {cards: {blob sha: {hand, bars, name}}, cleared: {PSD path: flags' psd}} (AutoCroissant card_checks)
 PSD_TREE = os.environ.get("PSD_TREE", "")     # the trees API's reply at the build's commit (site.yml): the PSDs' sizes
 IMAGE_SIZES = {240: 60, 360: 55, 720: 50}    # width -> AVIF quality. 240/360: grid at 1x/2x; 720: card view (NOTES §28)
 AVIF = {"subsampling": "4:4:4", "speed": 6, "max_threads": 1}   # 4:4:4 keeps red text red; one thread each, cards in parallel
@@ -175,9 +175,9 @@ EDIT_NULLABLE = {"subtype", "series", "subseries", "stars", "hp", "def", "atk", 
 # artwork sources: art, a list of free text (one string in older entries), each entry its own (a duplicate's never its
 # original's); the retired ability_art is read as the last source (art_list); the bot's card_edits.ART_MAX
 ART_FIELDS, ART_MAX = ("art", "ability_art"), 500
-# what a card needs from a developer: {"hand": "reason", "bars": "", "psd": "1a2b3c4d"}, each reason optional, psd the PSD
-# blob it was set on (flags.js, the bot's card_edits)
-FLAGS, FLAG_MAX = ("hand", "bars"), 300
+# what a card needs from a developer: {"hand": "reason", "bars": "", "name": "", "psd": "1a2b3c4d"}, each reason optional,
+# psd the PSD blob it was set on (flags.js, the bot's card_edits)
+FLAGS, FLAG_MAX = ("hand", "bars", "name"), 300
 # text colours: [{"field", "phrase"?, "color": "#rrggbb"}], a phrase as the effect layers' ("word#n"; none: the whole
 # field); the note's never bake (textcolor.js, the bot's card_edits.valid_colors)
 COLOR_FIELDS, COLOR_PRINTED = ("name", "ability", "note"), ("name", "ability")
@@ -488,10 +488,10 @@ def set_updated(cards, real, data_key, shown_at):
     return moved
 
 
-def merge_flags(entry, record, cleared):
-    """A card's automatic flags (checks: {"hand": note, "bars": note}), beside the people's (flags); a person's that went
-    is left out (its Card Edits entry stays, inert)."""
-    notes = {k: record[k] for k in FLAGS if (record or {}).get(k)}
+def merge_flags(entry, record, cleared, second=False):
+    """A card's automatic flags (checks: {"hand": note, "bars": note, "name": note}), beside the people's (flags); a
+    person's that went is left out (its Card Edits entry stays, inert). second: a PSD's second picture, no name flag."""
+    notes = {k: record[k] for k in FLAGS if (record or {}).get(k) and not (second and k == "name")}
     if notes:
         entry["checks"] = notes
     if (entry.get("flags") or {}).get("psd") and cleared.get(entry.get("psd")) == entry["flags"]["psd"]:
@@ -4565,7 +4565,7 @@ def main():
         if sha:
             entry["blob"] = sha[:8]               # a person's flag remembers it
         apply_edits(entry, edits, sha, shown)
-        merge_flags(entry, check_of(checks, sha, path), cleared)
+        merge_flags(entry, check_of(checks, sha, path), cleared, bool(getattr(c, "variant_of", None)))
         date_text(entry, c, history_of(name))     # a renamed card's history goes on (its old names' versions)
         if isinstance(variant, int) and not isinstance(variant, bool) and variant >= 1:
             entry["variant"] = variant            # one picture of a PSD with several (" #N" layers); variantOf/variants below
@@ -4667,10 +4667,11 @@ def main():
             target["dups"].remove(e["id"])
         e["dup"] = e["variantOf"]
         by_id[e["dup"]].setdefault("dups", []).append(e["id"])
-    for e in cards:                               # a picture-only duplicate: its original's automatic flags (a person's on it stays)
+    for e in cards:                               # a picture-only duplicate: its original's automatic flags but name (a person's on it stays)
         target = by_id.get(e.get("dup"))
-        if target is not None and not e.get("variantOf") and target.get("checks") and e.get("psd") == target.get("psd"):
-            e["checks"] = dict(target["checks"])
+        notes = {k: v for k, v in (target or {}).get("checks", {}).items() if k != "name"}
+        if target is not None and not e.get("variantOf") and notes and e.get("psd") == target.get("psd"):
+            e["checks"] = notes
     edited = [e for e in cards if e.get("edited")]
     if edits:
         log(f"corrections: {len(edited)} cards from {EDITS_PATH}" + (f" ({len(edits) - len(edited)} names match no card)" if len(edits) > len(edited) else ""))

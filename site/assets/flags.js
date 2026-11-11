@@ -1,13 +1,13 @@
-// Card flags: what a card needs from a developer. checks: {"hand": "note", "bars": "note"}, the bot's automatic ones (the
-// card data's card_checks.json), each with its note. flags: a person's (Card Edits.json {"hand": "reason", "bars": "",
-// "psd": "1a2b3c4d"}), each with a reason (optional on bars); psd: the PSD blob it was set on, it goes once the PSD changes and the
-// checks are clean. Database only, never baked. NOTES.md §46.
+// Card flags: what a card needs from a developer. checks: {"hand": "note", "bars": "note", "name": "note"}, the bot's
+// automatic ones (the card data's card_checks.json), each with its note. flags: a person's (Card Edits.json {"hand": "reason",
+// "bars": "", "psd": "1a2b3c4d"}), each with a reason (a hand flag must have one); psd: the PSD blob it was set on, it goes once the
+// PSD changes and the checks are clean. Database only, never baked. NOTES.md §46, §52.
 import { linked } from "./art.js";
 import { esc } from "./text.js";
 
 export const FLAG_MAX = 300;                           // characters a reason (build_site FLAG_MAX, the bot's card_edits.FLAG_MAX)
 // [key, label]: build_site FLAGS, the bot's card_edits.FLAGS
-export const CARD_FLAGS = [["hand", "Needs doing by hand"], ["bars", "Special stat bars"]];
+export const CARD_FLAGS = [["hand", "Needs doing by hand"], ["bars", "Special stat bars"], ["name", "Names differ"]];
 export const flagLabel = k => CARD_FLAGS.find(([f]) => f === k)?.[1] || k;
 export const ownFlag = (c, k) => typeof c.flags?.[k] === "string";      // a person's: the one an editor changes
 export const hasFlag = (c, k) => ownFlag(c, k) || !!c.checks?.[k];
