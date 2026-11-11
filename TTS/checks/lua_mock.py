@@ -542,11 +542,14 @@ def status_rows(card, d):                                   # Global.lua details
     return out
 
 
+STATUS_HEAD = "<color=#7dd3fc><b>STATUS EFFECTS</b></color>\n"   # Global.lua detailsText: atop the first status line
+
+
 def rows_wrong(ui, panel, card, d):                         # the status lines as status_rows has them, stacked under the text
     want, wrong, y = status_rows(card, d), [], None
     text = ui.values.get(f"{panel}_text") or ""
-    if want and not text.endswith("<b>STATUS EFFECTS</b></color>"):
-        wrong.append("no STATUS EFFECTS heading")
+    if want and ("<b>STATUS EFFECTS</b>" in text or not (ui.values.get(f"{panel}_s1") or "").startswith(STATUS_HEAD)):
+        wrong.append("STATUS EFFECTS heading not atop the first status line")
     for i in range(1, STATUS_ROWS + 1):
         rid, a = f"{panel}_s{i}", ui.attrs.get(f"{panel}_s{i}", {})
         if i > len(want):
@@ -1064,11 +1067,11 @@ def main():
     check(title == "Rose <<b></b>b>Thorn<<b></b>/b> <<b></b>color=#ff0000>x" and title == plain(odd["n"]),
           f"the name plain (no nc), the card's own '<' no tag {title!r}")
     rows = [(w4.ui.values.get(f"Red_d1_s{i}") or "", w4.ui.attrs.get(f"Red_d1_s{i}", {}).get("tooltip")) for i in range(1, 7)]
-    check(rows[0] == ('<b><color=#db923d>Burn</color></b> <color=#94a3b8>(debuff)</color>  3 DMG <<b></b>hot>, <color=#ffd21f>-1 SPD</color>', "3 DMG <hot>, -1 SPD")
+    check(rows[0] == (STATUS_HEAD + '<b><color=#db923d>Burn</color></b> <color=#94a3b8>(debuff)</color>  3 DMG <<b></b>hot>, <color=#ffd21f>-1 SPD</color>', "3 DMG <hot>, -1 SPD")
           and rows[1][0].startswith("<b>S1</b>") and rows[5][1] == "rule 5\nrule 6" and "\n<b>S6</b>" in rows[5][0]
           and not rows_wrong(w4.ui, "Red_d1", odd, odd_details),
-          f"each status effect its own line, in its colour, its rule's words in theirs, its rule on hover; one unknown left out, the last line takes "
-          f"the rest {rows[:2]} {rows_wrong(w4.ui, 'Red_d1', odd, odd_details)}")
+          f"each status effect its own line, in its colour, its rule's words in theirs, its rule on hover, the heading atop the first; one "
+          f"unknown left out, the last line takes the rest {rows[:2]} {rows_wrong(w4.ui, 'Red_d1', odd, odd_details)}")
     check("<<b></b>i>Burn<<b></b>/i> a <color=#ff0000>Burn</color>, then <color=#00ff00>Burn<<b></b>3</color>\n<color=#0000ff>Burn</color>" in text,
           "the ability in its colours: the nth find, a piece not found skipped, '<' no tag")
     w4.run(w4.table_menu["Find a card"], "Red", w4.vec(10, 1, 10), what="Find a card: '<' in a name")

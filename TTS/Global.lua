@@ -574,7 +574,10 @@ local function detailsText(card)
             else rows[#rows].text, rows[#rows].tip = rows[#rows].text .. "\n" .. line, rows[#rows].tip .. "\n" .. s.x end
         end
     end
-    if #rows > 0 then section("STATUS EFFECTS") end
+    if #rows > 0 then                                  -- the heading tops the first line: the text's slack falls above it
+        table.insert(out, "")
+        rows[1].text = "<color=" .. HEAD .. "><b>STATUS EFFECTS</b></color>\n" .. rows[1].text
+    end
     return table.concat(out, "\n"), rows
 end
 
@@ -654,7 +657,7 @@ local function layout(color, k)
     local textW, lineH = sz.w - 44, math.ceil(sz.f * 1.32)
     local perLine = math.floor(textW / (sz.f * 0.52))
     -- the status lines under the text, each as tall as its lines; the text measured narrower above them (a line more
-    -- than the estimate leaves a gap, never an overlap)
+    -- than the estimate leaves a gap above the STATUS EFFECTS heading, never an overlap)
     local textH = lines(text, #statusRows > 0 and math.floor(textW / (sz.f * 0.58)) or perLine) * lineH + 12
     local y = 6 + textH
     for i = 1, STATUS_ROWS do
