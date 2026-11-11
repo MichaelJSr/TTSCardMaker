@@ -489,16 +489,6 @@ jobs:
       - if: steps.deployment.outcome == 'failure'
         run: sleep 10                 # lets the cancel settle
 
-      # The retry deploys a fresh, deflated copy of the same artifact.tar (upload-pages-artifact's zip)
-      - if: steps.deployment.outcome == 'failure'
-        id: artifact-z
-        uses: actions/upload-artifact@v7
-        with:
-          name: github-pages-z
-          path: ${{ runner.temp }}/artifact.tar
-          retention-days: 1
-          if-no-files-found: error
-
       # Try 1 stuck: the same script under the second version. Else, or that failing too, deploy-pages under GITHUB_SHA,
       # as before 11-10 (a version commit Pages refused, failed or left stuck, or the script failing, never fails a deploy).
       - id: retry
@@ -506,7 +496,7 @@ jobs:
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
-          ARTIFACT: ${{ steps.artifact-z.outputs.artifact-id }}
+          ARTIFACT: ${{ steps.artifact.outputs.artifact-id }}
           TRY: "2"
         run: exec bash "$RUNNER_TEMP/deploy.sh"
 
@@ -517,7 +507,6 @@ jobs:
         if: steps.deployment.outcome == 'failure' && (steps.deployment.outputs.stuck != 'true' || steps.retry.outcome == 'failure')
         uses: actions/deploy-pages@v5
         with:
-          artifact_name: github-pages-z
           timeout: 360000             # ms (600000): good deploys take under 5 min, stuck ones never end
           reporting_interval: 1000    # ms between status checks (5000)
           error_count: 15             # HTTP errors before it gives up (10)
