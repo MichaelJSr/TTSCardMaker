@@ -1,15 +1,15 @@
 {
  "builder": {
-  "commit": "66a4d2c8607ad7c0633b6a5d63bedaaabd880b12",
+  "commit": "1a728b173be93b5e947a5fe911ffed6f238ec2af",
   "parser_version": 7,
   "psd_tools": "1.26.0+cards",
   "python": "3.14",
   "ref": "main",
   "repo": "bobberlington/AutoCroissant"
  },
- "built_at": "2026-11-11T06:06:45Z",
- "card_commit": "c4f03e655bf6b6c3deb42e690d8a196d9cc51009",
- "card_commit_at": 1794377185.0,
+ "built_at": "2026-11-11T07:27:30Z",
+ "card_commit": "9cc8cc2878c9b72a4275b3a5e540ad6cf36f18f7",
+ "card_commit_at": 1794381853.0,
  "card_repo": "MichaelJSr/TTSCardMaker",
  "counts": {
   "archived": 98,
@@ -23,9 +23,9 @@
  },
  "files": {
   "old_stats.json": "368b37e240e033ced3b552885d01d02676009408f2c208b992fceba5784574d6",
-  "psd_details.json": "2cc32eb11f0df0542474d99af00b6cad78c91d122d044e4dc121bd2cab31a402",
+  "psd_details.json": "91699c25f9038aee13155c4beae60772b5c22280f45294fded8e5d6df2d9cbc9",
   "rulebook.json": "6726e8795484647d21a7b8ab549b5c56d7fd49e8bc3ff015f7788810dc730bfd",
-  "stats.json": "ad4817f5a7a409d8fc1585a08184681ee1c081d8d4afd6b554b7bd5990a7c96b"
+  "stats.json": "4adf14d6db9becaeb106edf2c82eab5a0fdc9315e659cc018d3422bbcede58ce"
  },
  "gates": {},
  "inputs": {
@@ -44,23 +44,8 @@
   "repin": [],
   "stale": []
  },
- "problems": [
-  {
-   "card": "Hive Knight",
-   "notes": [
-    "NO STATS FOUND: no HP, DEF, ATK or SPD bars read on this creature"
-   ],
-   "path": "Creatures/Hollow Knight/3 Stars/Hive_Knight.psd"
-  },
-  {
-   "card": "omori",
-   "notes": [
-    "NO STATS FOUND: no HP, DEF, ATK or SPD bars read on this creature"
-   ],
-   "path": "Creatures/Omori/5 Stars/omori.psd"
-  }
- ],
+ "problems": [],
  "restored_from": null,
- "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42970065614",
+ "run": "https://github.com/MichaelJSr/TTSCardMaker/actions/runs/42979587579",
  "schema": 1
 }

@@ -297,7 +297,7 @@
   ]
  },
  "Auxiliary/Items/Battle_Helmet.psd": {
-  "blob": "add9a2fb583a4ed9c32fcfee5aa2426c46f78657",
+  "blob": "13d96111bac0b45fbaae77e6fe2409a5df5bfc59",
   "links": [
    {
     "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
@@ -314,7 +314,7 @@
   ]
  },
  "Auxiliary/Items/Battle_Spear.psd": {
-  "blob": "cd89b015168bfc1cd3deb220dc6e23fa103577af",
+  "blob": "e9c56ef7e5df2daad0274e3aadf103cbc0e81ffa",
   "links": [
    {
     "drawn": "4850c5905c25ec1014dc6451d8600bb5fa2181e4",
@@ -567,7 +567,7 @@
   ]
  },
  "Auxiliary/Items/Frostmourne.psd": {
-  "blob": "0218b349201b8d345ede125652311935d5cca9e3",
+  "blob": "ada2da5121b48e5143f297c475f2698b7a4d743a",
   "links": [
    {
     "drawn": null,
@@ -590,7 +590,7 @@
   ]
  },
  "Auxiliary/Items/Hero_Cap.psd": {
-  "blob": "b5ed863c03869063eb55b20cde2db80eb440acbf",
+  "blob": "812ec1ddbdbf08ba1ec381ae6024cbe83210d6db",
   "links": [
    {
     "drawn": "7528411a10c4884f78934599f1c14364ba559464",
@@ -805,7 +805,7 @@
   ]
  },
  "Auxiliary/Items/Krabby_Patty.psd": {
-  "blob": "8c9b97bdbfae15c12a5e1e4bc7e0ceaa2e49f9c4",
+  "blob": "7ef55398943dc3a4866682dd8a34cd725172cb4b",
   "links": [
    {
     "drawn": "9c0a2e4e6c48422c2360ee3bf7a19445a3edc4ed",
@@ -1508,7 +1508,7 @@
   ]
  },
  "Auxiliary/Items/Unbreakable_Strength.psd": {
-  "blob": "e5d6d48953d967494306034ac782c1618c4a32e6",
+  "blob": "11578dc71662259cfec51770ba82c252be0a8aa7",
   "links": [
    {
     "drawn": "c447d344fe6e0a6c03871bd527062ac8b849f9f8",
@@ -1537,7 +1537,7 @@
   ]
  },
  "Auxiliary/Items/Unbreakable_heart.psd": {
-  "blob": "b5f6701499d1756507f447e40fe521887d6bc80b",
+  "blob": "453983856df76a3b3b24c861a746f4a9eb49415f",
   "links": [
    {
     "drawn": "c447d344fe6e0a6c03871bd527062ac8b849f9f8",
@@ -1828,7 +1828,7 @@
   ]
  },
  "Auxiliary/Minions/Bugzzy.psd": {
-  "blob": "93d5cc0c52cff2ec17ed97224a9c8843a56d55e6",
+  "blob": "65bcc1db5e35396cbf184d2461d0908f2327b125",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -1954,7 +1954,7 @@
   ]
  },
  "Auxiliary/Minions/Claw.psd": {
-  "blob": "ea443b2bd8797c067109f8bbc76aca501f38a565",
+  "blob": "8640a31881abaf5e0e74dc0c695f340bf6e999de",
   "links": [
    {
     "drawn": "fe1f3450941a301906fd1eede011e166f34161d9",
@@ -2569,7 +2569,7 @@
   ]
  },
  "Auxiliary/Minions/Galacta_Warrior.psd": {
-  "blob": "6a9e302ac9cba25447481c311b9bb07d093e9d68",
+  "blob": "f0966eda7503e8055e71dbe01d3877d6c4a4521a",
   "links": [
    {
     "drawn": "67a80bfd62a5a41decba132b486e88c6d2eb7e2f",
@@ -2760,7 +2760,7 @@
   ]
  },
  "Auxiliary/Minions/Hawk.psd": {
-  "blob": "035549c91df40e265d0729483e81953c3cebd59f",
+  "blob": "b7f11874e5dd2707ad3de50f102a181fb7d2d3e7",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -3199,7 +3199,7 @@
   ]
  },
  "Auxiliary/Minions/Masher.psd": {
-  "blob": "f31b2b7a0835c141082a7a81f22cebc7c666ef10",
+  "blob": "07ecc675597cbd7a706f3a16355db3f777742bdc",
   "links": [
    {
     "drawn": "064525ab45098812e04a1f85f3b4f8edfd4d3b0a",
@@ -3275,7 +3275,7 @@
   ]
  },
  "Auxiliary/Minions/Matterling.psd": {
-  "blob": "a4b8713b8b61115dcd8bc0c938698b2c41a38333",
+  "blob": "6c6c01d63b322d512c412ed177003c12d36a7cd3",
   "links": [
    {
     "drawn": "bf02ea7f0e702b2eceff7bebd9cd82f38d3fe6b6",
@@ -3310,7 +3310,7 @@
   ]
  },
  "Auxiliary/Minions/Miasma.psd": {
-  "blob": "3d8b61d9120fbadaa7dd76df0f25017551ec9e66",
+  "blob": "0c8abab9063626655ef2c841f5d31b471dbf3493",
   "links": [
    {
     "drawn": "fe1f3450941a301906fd1eede011e166f34161d9",
@@ -3392,7 +3392,7 @@
   ]
  },
  "Auxiliary/Minions/Mini_Bee.psd": {
-  "blob": "3b280fcea6fc1c6f927ee80b8056b348950b8ee0",
+  "blob": "2c642e45b3e3c144c5f195d80d31f350b985cad7",
   "links": [
    {
     "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
@@ -3409,7 +3409,7 @@
   ]
  },
  "Auxiliary/Minions/Mini_Doomer.psd": {
-  "blob": "baab0fee03f3936cfddc4220724cf84a02164be7",
+  "blob": "3973c05aa4226ee26bb7015e81a39845a934546a",
   "links": [
    {
     "drawn": "9c5678bff7f940efb17dd2f367833b1c4529fdc6",
@@ -3485,7 +3485,7 @@
   ]
  },
  "Auxiliary/Minions/Mosling.psd": {
-  "blob": "27e6d6387c111feba012495d02e6ceb28e0b0ddd",
+  "blob": "32cfd6c784ff67834bd61dfd73de0b02e33b1216",
   "links": [
    {
     "drawn": "8b5c1e161c9d7de4e57066bd4027dc70d9f26419",
@@ -3649,7 +3649,7 @@
   ]
  },
  "Auxiliary/Minions/PoD01Red_Bloon.psd": {
-  "blob": "26d6bc1d042e86b002a1cd95645ed12c053991eb",
+  "blob": "2afae6a6b900fb1a20e657e8b3f2f56b14aa88b1",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -3672,7 +3672,7 @@
   ]
  },
  "Auxiliary/Minions/PoD02Black_Bloon.psd": {
-  "blob": "3c524b682c2096e192741214481ae37e0731aed4",
+  "blob": "b54b42c217413c6d3061383511cfa466b6c636d7",
   "links": [
    {
     "drawn": "619c8b52cccdd8010c759f3c9fd58f1ff8999a8e",
@@ -3707,7 +3707,7 @@
   ]
  },
  "Auxiliary/Minions/PoD03White_Bloon.psd": {
-  "blob": "b24289454f8ab12c152e6414ccb205c1e450d4b2",
+  "blob": "c9c97af16953e47e22b2a7ff30086ed29bf23958",
   "links": [
    {
     "drawn": "378f75b1f39ce71b2badeab1466bea30a88d07f9",
@@ -3742,7 +3742,7 @@
   ]
  },
  "Auxiliary/Minions/PoD04Zebra_Bloon.psd": {
-  "blob": "9494b9cb52fdaf0bcd2d860a20795f05a055b9c4",
+  "blob": "0a71def3c33eb493473cbeef32188a710034e150",
   "links": [
    {
     "drawn": "24a5fcc08d1ada21b43688d630a73bacc60f5ceb",
@@ -3783,7 +3783,7 @@
   ]
  },
  "Auxiliary/Minions/PoD05Lead_Bloon.psd": {
-  "blob": "1b807b42ebf80472ce03470af7e5c34e84ca5dfe",
+  "blob": "985ae1504f5b09fb5ce8beb6b467401001b5675a",
   "links": [
    {
     "drawn": "73f12c69c909ecefbff2ac3ba5cbf36b2c8ea4fb",
@@ -3842,7 +3842,7 @@
   ]
  },
  "Auxiliary/Minions/PoD06Rainbow_Bloon.psd": {
-  "blob": "369a927dc3c2c2b3983cdd03f9499d6e1285ed76",
+  "blob": "aaf047f91ceb7864830d0af8870317b8ed23d91d",
   "links": [
    {
     "drawn": "daad93a47ba57cd9ac16806b74f4ec115cf11a03",
@@ -3883,7 +3883,7 @@
   ]
  },
  "Auxiliary/Minions/PoD07Ceramic_Bloon.psd": {
-  "blob": "213388e92820dbb97dc8bdb9aa4eccac60d93501",
+  "blob": "a4723c0151992e91d0ccc2c1b347a31bb943e9fc",
   "links": [
    {
     "drawn": "76d2882abcf37cdf4f8fd1ab1c4eeae9a3fd2092",
@@ -3924,7 +3924,7 @@
   ]
  },
  "Auxiliary/Minions/PoD08MOAB.psd": {
-  "blob": "60de16bef7015c1418065c9361875a76d80ea200",
+  "blob": "1703ad21570f5f308585091283b0757845e60ecd",
   "links": [
    {
     "drawn": "ffef364caac1bf8a7ff5d399b72561b3bf28ea74",
@@ -3971,7 +3971,7 @@
   ]
  },
  "Auxiliary/Minions/PoD09DDT.psd": {
-  "blob": "aa4d10ee69d14c769ba12ac5e5157a348ba61bc2",
+  "blob": "6a8121b900c738b34356a4cf2d2016f20e8620f7",
   "links": [
    {
     "drawn": "9024a31e2e47e1b585945d66dcafe4cbebcab2cf",
@@ -4024,7 +4024,7 @@
   ]
  },
  "Auxiliary/Minions/PoD10BFB.psd": {
-  "blob": "5a5f8f6b894e193ad058ca618ba7edda671a17d4",
+  "blob": "5bc4b9e0aab141baf2418919d79f0e48ab41a87b",
   "links": [
    {
     "drawn": "bdd34572f1257682d78347293e7e30cf735e5899",
@@ -4077,7 +4077,7 @@
   ]
  },
  "Auxiliary/Minions/PoD11ZOMG.psd": {
-  "blob": "f718c11794cc94f781719736106489f35aa90a48",
+  "blob": "0df81eb95045c30c7c01ee8f3067efd2b1cdfb57",
   "links": [
    {
     "drawn": "fbe1f6d3603e28979e23542ab60c354e47b89254",
@@ -4130,7 +4130,7 @@
   ]
  },
  "Auxiliary/Minions/PoD12BAD.psd": {
-  "blob": "a2f706bff8c7e13d473c586a1f0bf2246c8b35fc",
+  "blob": "96cd3b446754950cdbb485da7387f0d4226f46a0",
   "links": [
    {
     "drawn": "751025d5bd0727241e8e5ab0345dbb5f25804204",
@@ -4352,7 +4352,7 @@
   ]
  },
  "Auxiliary/Minions/Shadow_Chopper.psd": {
-  "blob": "d6f8b9f9dda415d47eee8750b903770b15f741bc",
+  "blob": "90ceb41d32fbe646d364ccde76075baa3becd78a",
   "links": [
    {
     "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
@@ -4375,7 +4375,7 @@
   ]
  },
  "Auxiliary/Minions/Shadow_Duelist.psd": {
-  "blob": "8ce59b899a93ec5979d441fb147b09cb5e629c60",
+  "blob": "538b81e8ecda7c5029da29ddcde00dfee6547c52",
   "links": [
    {
     "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
@@ -4398,7 +4398,7 @@
   ]
  },
  "Auxiliary/Minions/Shadow_Miner.psd": {
-  "blob": "0e7d19b2ce74a00d797fa8045704452c59057026",
+  "blob": "0066aa020262fa2d3da201bb1a9c6d3851aef140",
   "links": [
    {
     "drawn": "d0d6d1f7a7e85e8a5db1c233ed5261a6a6c89f6d",
@@ -4948,7 +4948,7 @@
   ]
  },
  "Auxiliary/Minions/Sword_Knight.psd": {
-  "blob": "5eefde56f176c9f6272732b0610f6b6afc6c8073",
+  "blob": "d1383feb7cc80ef91bd8c5b042d5797338b627d6",
   "links": [
    {
     "drawn": "8a01e64f260b82df3713f3c2af98e9f0fcec6668",
@@ -5064,7 +5064,7 @@
   ]
  },
  "Auxiliary/Minions/Voidwalker.psd": {
-  "blob": "90ee9c64d96e999339444ad95de354a9e9bafab6",
+  "blob": "b6b6a59af2f8710d593304e0677ce168c1c72445",
   "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
@@ -5174,7 +5174,7 @@
   ]
  },
  "Auxiliary/Minions/X-Fist.psd": {
-  "blob": "af150cca6a7625646a9d75aa1c1e652901eb36c9",
+  "blob": "955243348d04123140fd27d407654de74e13bdec",
   "links": [
    {
     "drawn": "4b06eff55921e822dc8cef08c97d441e55940274",
@@ -6584,7 +6584,7 @@
   ]
  },
  "Creatures/Crypt/4 Stars/Grief.psd": {
-  "blob": "020b66f8e2049e9e9cd2231e8eac164095baea2a",
+  "blob": "8e6b1b0f1304979b4e876d5da01074f6baf9dccd",
   "links": [
    {
     "drawn": "cb5fa0ef961707a9f30feafebccb8bc348a07e89",
@@ -6619,7 +6619,7 @@
   ]
  },
  "Creatures/Cuphead/5 Stars/Chef_Saltbaker.psd": {
-  "blob": "85877393f777938ba602f6026636b3b8fd965f31",
+  "blob": "2a93e3f0ac8e164c6a3caf58fdb25506897aab50",
   "links": [
    {
     "drawn": "73840e9f12496676b1aa0a0be28fa9cee06f0bc9",
@@ -6719,7 +6719,7 @@
   ]
  },
  "Creatures/DST/3 Stars/Moose_Goose.psd": {
-  "blob": "e7bbddd55b599334a009321f7f6ae264d6f0f1c5",
+  "blob": "fa8c044ad0ac934e2c692f34da2bda59889d245e",
   "links": [
    {
     "drawn": "be2a964552d0a0a61d22f804f13f839477fd02cb",
@@ -6783,7 +6783,7 @@
   ]
  },
  "Creatures/DST/3 Stars/Waxwell.psd": {
-  "blob": "a4888594a6d4306c3efbc10e233b6d02bcc4765c",
+  "blob": "29589cc3a149625d4f07e9e1363d2cd82477b213",
   "links": [
    {
     "drawn": "1f1d3dbe3a8eebb564dd409f72cc8d7c77448c5c",
@@ -6806,7 +6806,7 @@
   ]
  },
  "Creatures/DST/3 Stars/Wendy.psd": {
-  "blob": "2b1263bdab0528f6b105ae5900d1a3bb717bf06e",
+  "blob": "1297551c71252bc1604b5cd182d79b3ad0060d84",
   "links": [
    {
     "drawn": "f1ab47944c99873a07b4ee351e8ca9124f90d01f",
@@ -6928,7 +6928,7 @@
   ]
  },
  "Creatures/DST/5 Stars/Ancient_Fuelweaver.psd": {
-  "blob": "02cace5756656537e80802ccb5936dc7594c58ee",
+  "blob": "4f10236fbbecd9e55aa3d3015079cbf74f5cff9d",
   "links": [
    {
     "drawn": "5c0af47e21a311420724c21016c5be6a37540f26",
@@ -7918,7 +7918,7 @@
   ]
  },
  "Creatures/Hollow Knight/3 Stars/Mantis_Lords.psd": {
-  "blob": "662d629585914368040bf0e4420f2e301ff9fea9",
+  "blob": "a5abb59d9b67fd06f707ba10f3b6aa9d5375be92",
   "links": [
    {
     "drawn": "3b0b1825d07f4691ce8ec1d21afb38699a16062b",
@@ -8322,7 +8322,7 @@
   ]
  },
  "Creatures/Hollow Knight/5 Stars/Ze'mer.psd": {
-  "blob": "6711a22bb1969fca8df01f141fb90b5a40be8ca2",
+  "blob": "515f6775a69343e8c05eebb8f4bf1d95f01ae8b6",
   "links": [
    {
     "drawn": "f0f82023f94b67e475c387aa74a378c101c3aa74",
@@ -8398,7 +8398,7 @@
   ]
  },
  "Creatures/In Sound Mind/3 Stars/The_Shade.psd": {
-  "blob": "942ccb71f02559d6a8a646b29934c1ba6bb9ed39",
+  "blob": "73a350d2c968b1ff5d35cdd51a3076d3f06f1855",
   "links": [
    {
     "drawn": "022accd4039d07efa559c658bd47583e2a68d23c",
@@ -8962,7 +8962,7 @@
   ]
  },
  "Creatures/Kirby/2 Stars/Whispy_Woods.psd": {
-  "blob": "27ccf7f7143606d35f0e53e0aaf20a557c40b9b0",
+  "blob": "e5fc7f6ea0ec63481a7b764ed2d2e5082d8ae7e7",
   "links": [
    {
     "drawn": "886fe7aa3d847ee6f505ac564a0d9695bff97934",
@@ -9160,7 +9160,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Drawcia.psd": {
-  "blob": "6802c57c32ece12b5411c7c088bfc99b1c86429b",
+  "blob": "7c5b6d80100351017d070567ab7b2f0a96cf92ae",
   "links": [
    {
     "drawn": "d47adef4789c0dda7af55d5ebe7e503218b90ed0",
@@ -9440,7 +9440,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Kabula.psd": {
-  "blob": "1ab63358e356e328264134a8b7daa937f7d4281b",
+  "blob": "27d3cfa1bd9c662cc53e0cf621445f3d5036bd1f",
   "links": [
    {
     "drawn": "0d94548b123497ed7d06168b63a96b7256d2bdc1",
@@ -9481,7 +9481,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Kracko.psd": {
-  "blob": "9f79ce9fb07ed99bb269f8eb4393661cc56f31a0",
+  "blob": "7065b867ac44393a7b52ce1045ed19fabe0c2d3b",
   "links": [
    {
     "drawn": "12ddaf4a3bef2f8654e1a551850a6919ca6da1cf",
@@ -9856,7 +9856,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Spinni.psd": {
-  "blob": "d25c18361402e8731add302f8acd332420352c67",
+  "blob": "a79304a32cc5e87dd644cffe974e0e4172d94ce7",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -9931,7 +9931,7 @@
   ]
  },
  "Creatures/Kirby/3 Stars/Waddle_Dee.psd": {
-  "blob": "aebead5db6999fea10a80acab04d41727e0999fa",
+  "blob": "6e7eba740cd989cc7334db21d1b999168ea22da8",
   "links": [
    {
     "drawn": "707f08d8e9d4b4d7853517fa942d3b48ea6e4112",
@@ -10018,7 +10018,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Dark_Mind.psd": {
-  "blob": "74f8e3ab0dd916bc68c595f9430bfa354eeabcd1",
+  "blob": "98d9ca5a73cc1ec5c9406ef55b75ad5faebcf82e",
   "links": [
    {
     "drawn": "10eee5fc94e52c7518bd5a5718d0e839be30666f",
@@ -10159,7 +10159,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Dyna_Blade.psd": {
-  "blob": "f8bfab13d21942dd40a1476d57f2e2f8ee15062b",
+  "blob": "efdf9954659ff55dea82dfc08e77231f3d44cda2",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -10205,7 +10205,7 @@
   ]
  },
  "Creatures/Kirby/4 Stars/Lor_Starcutter.psd": {
-  "blob": "326dce0692e840f88d92f8b5098dc81e4fc76b0e",
+  "blob": "71ed69c584b167363756271abc08373b7831b5f9",
   "links": [
    {
     "drawn": "9fe63b84281a9cf50100f3ab8cdba553dca442c5",
@@ -14048,7 +14048,7 @@
   "links": []
  },
  "Creatures/Other/3 Stars/Stay.psd": {
-  "blob": "14471776bf0a11d3e768a61dc02a76d22fe13ef6",
+  "blob": "d3131776c2d6dd98744018953c37e8fbf1ccf50d",
   "links": [
    {
     "drawn": "a061319019648c4e23fdc3a74dfbe9730ae2bfa8",
@@ -16239,7 +16239,7 @@
   ]
  },
  "Creatures/Pandas/3 Stars/Sumo_Panda.psd": {
-  "blob": "2286ac3b0703d51085862a0568afe80d5d7efee3",
+  "blob": "f1b896e404e78fa09c35ef7f7352a3c21936c3af",
   "links": [
    {
     "drawn": "04e5ff0d24ebdb486a3186bf1f169692c7cd821b",
@@ -17639,7 +17639,7 @@
   ]
  },
  "Field/1 Stars/Resting_Grounds.psd": {
-  "blob": "361e375e94f0ddb279fc8dc1ddbbff3073a4e270",
+  "blob": "f28331b8ed1e71eb6244699aaa862be6bca14083",
   "links": [
    {
     "drawn": "79d016ea795b75b8d6bc82368dc96558083457c8",
@@ -18366,7 +18366,7 @@
   ]
  },
  "Field/3 Stars/Rock_Bottom.psd": {
-  "blob": "4ba97c9c614ebbf76bd67b1c208cc3463f43b553",
+  "blob": "afbaeb32e96b2bd4a051c92f474747ee9cb6a64d",
   "links": [
    {
     "drawn": "6cacb5def10e7e9b88d7cee723a0f40e37d147eb",
@@ -19002,7 +19002,7 @@
   ]
  },
  "Items/Attack/1 Stars/Bleach.psd": {
-  "blob": "3fda2224c4d667c8befaada451c030fd91001177",
+  "blob": "beae1c994bb2ea31d8ac5b5180aedc243a3f5dbc",
   "links": [
    {
     "drawn": "372122e624ad587ed6017cf2ca070737ffdde055",
@@ -19112,7 +19112,7 @@
   ]
  },
  "Items/Attack/2 Stars/Ice_Bomb.psd": {
-  "blob": "e1498fec4e6f1faa368e9195e078c5aa685e783b",
+  "blob": "85dff4a5903cba1c13bdd8308d612c81309b90fd",
   "links": [
    {
     "drawn": "3d6080f543a0509f4636e296d268efecbbee6f3d",
@@ -19864,7 +19864,7 @@
   ]
  },
  "Items/Equip/2 Stars/Berserk!.psd": {
-  "blob": "ddba0739e820b1165e5f1e19a913642c7c0683e2",
+  "blob": "38ac5730222dfb99e1eda1f651a8c2b97cc98898",
   "links": [
    {
     "drawn": "a02ae6c8920bd62aaab77015e723202fe15e26bb",
