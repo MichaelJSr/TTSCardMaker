@@ -65,6 +65,7 @@ jobs:
             /commands/changelog.py
             /commands/github_api.py
             /commands/psd_parser.py
+            /commands/psd_remote.py
             /commands/psd_regions.py
             /commands/rulebook.py
             /global_config.py

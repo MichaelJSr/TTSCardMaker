@@ -157,6 +157,7 @@ jobs:
         /commands/font_check.py
         /commands/github_api.py
         /global_config.py
+        /commands/psd_remote.py
         /requirements-cards.txt
         /commands/card_bake.py
         /commands/psd_edit.py

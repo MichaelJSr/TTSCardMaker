@@ -117,6 +117,7 @@ jobs:
         /commands/git_commit.py
         /commands/repo_history.py
         /global_config.py
+        /commands/psd_remote.py
         /requirements-cards.txt
         /commands/ability_place.py
         /commands/ability_index.json
