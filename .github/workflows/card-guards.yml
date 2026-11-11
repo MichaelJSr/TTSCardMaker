@@ -156,7 +156,8 @@ jobs:
       # In the background beside the card checkout (in RUNNER_TEMP: that checkout empties the workspace): BOT_FILES at the
       # bot's main, the token in a header, never saved; in check, the data's render and spot records too (db/ on the data
       # branch, Card sync's; 3 tries), which the guards' renders and conversions read (AutoCroissant psd_edit.RECORDS_DIR;
-      # one not read: {}). Bot waits for them.
+      # one not read: {}). Bot waits for them. In check also every commit and tree of main and the data branch, the
+      # checkout's slow part when GitHub is cold (3-9 s on 8 of 17 pushes, 11-09/10): History start joins them.
       - &bot-start
         name: Bot start
         shell: bash
@@ -173,7 +174,14 @@ jobs:
               && git -C "$RUNNER_TEMP/bot" sparse-checkout set --no-cone --stdin <<< "$BOT_FILES" \
               && timeout 30 git -C "$RUNNER_TEMP/bot" checkout -q main; } || code=$?
             echo "$code" > "$RUNNER_TEMP/bot.code" ) < /dev/null > "$RUNNER_TEMP/bot.log" 2>&1 &
-          [ "$GITHUB_JOB" = check ] || exit 0     # the two checks read no records
+          [ "$GITHUB_JOB" = check ] || exit 0     # the two checks read no records, no history
+          h=$RUNNER_TEMP/history.git
+          ( export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
+            code=0
+            { git init -q --bare "$h" && git -C "$h" config uploadpack.allowFilter true \
+              && timeout -k 5 120 git -C "$h" fetch -q --no-tags --filter=blob:none "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+                +refs/heads/main:refs/heads/main +refs/heads/data:refs/heads/data; } || code=$?
+            echo "$code" > "$h.code" ) < /dev/null > "$h.log" 2>&1 &
           dir=$RUNNER_TEMP/records
           mkdir -p "$dir"
           echo "CARD_RECORDS_DIR=$dir" >> "$GITHUB_ENV"
@@ -190,21 +198,24 @@ jobs:
             done
             wait; touch "$RUNNER_TEMP/records.done" ) < /dev/null > "$RUNNER_TEMP/records.log" 2>&1 &
 
-      # Every commit and tree, no card blobs (the 28 GB of PSDs and PNGs are never checked out): the push's range and
-      # its PNG pairing come from the trees; the pushed PSDs and PNGs come by blob sha through the API, verified.
+      # The head's commit and trees, no card blobs (the 28 GB of PSDs and PNGs are never checked out): the push's range and
+      # its PNG pairing come from the trees; the pushed PSDs and PNGs come by blob sha through the API, verified. Every
+      # other commit comes in the background: the push's first head (Pushed blobs start), in check the rest (History).
       - &card-repo
         uses: actions/checkout@v7
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           filter: "blob:none"
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /.github/
 
       # A push's PSD and PNG blobs (both sides), as git's own lazy fetch asks: the checks and the guards read the clone
-      # first, so ~3 REST reads per card become none. It needs only the trees, so it starts here, in the background;
-      # Check (and in `checks` the two checks) starts without waiting and waits for each listed blob it reads
-      # (CARD_BLOBS_PENDING); 5 minutes at most, its exit code in blobs.done (then a blob still missing goes by REST).
+      # first, so ~3 REST reads per card become none. It needs only the trees, so it starts here, in the background:
+      # first the push's first head (depth 1; in check the data branch too), then the list (blobs.ready: History start
+      # and the two checks wait for it), then the fetch. Check (and in `checks` the two checks) waits for each listed
+      # blob it reads (CARD_BLOBS_PENDING); 5 minutes at most, its exit code in blobs.done (then a blob still missing goes
+      # by REST). Blob fetches never deepen, so they run beside History start's join.
       # 8 at most to a fetch, 4 at a time, in diff order: GitHub's delta search is what takes the time, and small packs
       # barely need one; a file's two sides stay in one fetch, so the deltas still shrink the transfer.
       # In `check` also the other blobs Check reads: first the edits, the icon manifest, the status chart, the card data
@@ -221,49 +232,136 @@ jobs:
           case "$BEFORE" in ''|*[!0]*) ;; *) echo "a new branch: nothing to fetch"; exit 0;; esac
           [ -n "$BEFORE" ] || exit 0
           export GIT_NO_LAZY_FETCH=1
-          list=$RUNNER_TEMP/blobs pngs=/dev/null
-          if [ "$GITHUB_JOB" = check ]; then           # the head's PNGs, "<blob>\t<path>"
-            pngs=$list.pngs
-            git -c core.quotePath=false ls-tree -r "$GITHUB_SHA" \
-              | awk -F '\t' 'tolower($2) ~ /\.png$/ {split($1, f, " "); print f[3] "\t" $2}' > "$pngs" || true
+          list=$RUNNER_TEMP/blobs
+          (
+            git cat-file -e "$BEFORE^{commit}" 2> /dev/null \
+              || git fetch -q --depth=1 --no-tags --no-write-fetch-head --filter=blob:none origin "$BEFORE" &
+            [ "$GITHUB_JOB" != check ] \
+              || git fetch -q --no-tags --no-write-fetch-head --filter=blob:none origin +refs/heads/data:refs/remotes/origin/data &
+            wait
+            pngs=/dev/null
+            if [ "$GITHUB_JOB" = check ]; then           # the head's PNGs, "<blob>\t<path>"
+              pngs=$list.pngs
+              git -c core.quotePath=false ls-tree -r "$GITHUB_SHA" \
+                | awk -F '\t' 'tolower($2) ~ /\.png$/ {split($1, f, " "); print f[3] "\t" $2}' > "$pngs" || true
+            fi
+            # a line a changed file: its two sides, then a card PSD's PNGs
+            git -c core.quotePath=false diff-tree -r --no-renames "$BEFORE" "$GITHUB_SHA" -- '*.psd' '*.PSD' '*.png' '*.PNG' \
+              | awk -F '\t' -v pngs="$pngs" '
+                  function dir(p) { return match(p, /.*\//) ? substr(p, 1, RLENGTH) : "" }
+                  function stem(p, d) { return tolower(substr(p, length(d) + 1, length(p) - length(d) - 4)) }
+                  BEGIN {
+                    while ((getline line < pngs) > 0) {
+                      split(line, f, "\t"); d = dir(f[2]); k = ++n[d]; name[d, k] = stem(f[2], d); sha[d, k] = f[1]
+                    }
+                  }
+                  {
+                    split($1, f, " "); out = f[3] " " f[4]
+                    if (f[5] ~ /^[AM]/ && tolower($2) ~ /\.psd$/ && ("/" $2) !~ /\/(MDW|Markers)\//) {
+                      d = dir($2); s = stem($2, d)
+                      for (i = 1; i <= n[d]; i++)
+                        if (substr(name[d, i], 1, length(s)) == s && substr(name[d, i], length(s) + 1) ~ /^[0-9]*$/) out = out " " sha[d, i]
+                    }
+                    print out
+                  }' > "$list.push" || true
+            [ -s "$list.push" ] || { echo "no card blobs pushed"; touch "$list.ready"; exit 0; }
+            # the list: a blob a line; the fetches: a line each, whole lines of $list.push up to 8 blobs
+            if [ "$GITHUB_JOB" = check ]; then
+              for spec in "$GITHUB_SHA:site/Card Edits.json" "$GITHUB_SHA:MDW/Fonts/stoogedings-src/stoogedings.json" \
+                  "$GITHUB_SHA:MDW/Croissant's Special Folder/Satus Effect Colors.psd" origin/data:db/stats.json \
+                  origin/data:db/links.json; do
+                git rev-parse -q --verify "$spec" || true
+              done | tr '\n' ' '
+              echo
+            fi | cat - "$list.push" | awk -v list="$list" '
+                { k = 0; for (i = 1; i <= NF; i++) if ($i !~ /^0+$/ && !seen[$i]++) { print $i > list; u[++k] = $i } }
+                n && n + k > 8 { print line; line = ""; n = 0 }
+                { for (i = 1; i <= k; i++) line = line (n++ ? " " : "") u[i] }
+                END { if (n) print line }' > "$list.fetch"
+            touch "$list.ready"
+            echo "fetching $(wc -l < "$list") blobs"
+            # the shallow file hidden, as before depth 1: GitHub sends them as stored (13 blobs, 247 MB: 5-7 s; with the
+            # shallow lines its delta search took 8-10 s, 11-10)
+            GIT_SHALLOW_FILE='' timeout -k 10 300 xargs -P 4 -L 1 git -c fetch.negotiationAlgorithm=noop fetch -q --no-tags \
+              --no-write-fetch-head --recurse-submodules=no --filter=blob:none origin < "$list.fetch" || code=$?
+            echo "${code:-0}" > "$list.done"
+          ) < /dev/null > "$list.log" 2>&1 &
+          echo $! > "$list.pid"
+          echo "listing and fetching in the background"
+
+      # In check, the depth-1 checkout and the push's first head (Pushed blobs start's, once listed) joined to Bot start's
+      # history in the background (a local fetch: 0.3 s; GitHub's history is the fallback), while Bot and the venv set up.
+      # Only the two deepening fetches take shallow.lock, so the join waits for the first head; History waits for it.
+      - name: History start
+        if: env.MODE != 'off'
+        shell: bash
+        run: |
+          h=$RUNNER_TEMP/history.git list=$RUNNER_TEMP/blobs
+          (
+            export GIT_NO_LAZY_FETCH=1
+            until [ -s "$h.code" ] || [ "$SECONDS" -ge 130 ]; do sleep 0.05; done      # its fetch: 120 s at most
+            [ ! -s "$list.pid" ] || while [ ! -e "$list.ready" ] && kill -0 "$(cat "$list.pid")" 2> /dev/null; do sleep 0.05; done
+            code=$(cat "$h.code" 2> /dev/null) || code=none
+            if [ "$code" = 0 ] && [ "$(git rev-parse --is-shallow-repository)" = true ]; then
+              specs=(refs/heads/main)
+              git rev-parse -q --verify refs/remotes/origin/data > /dev/null || specs+=(+refs/heads/data:refs/remotes/origin/data)
+              git -c remote.history.url="file://$h" -c remote.history.promisor=true -c remote.history.partialclonefilter=blob:none \
+                fetch -q --unshallow --no-tags --no-write-fetch-head --filter=blob:none history "${specs[@]}" || true
+            fi
+            if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
+              echo "::warning::the card repo's history fetched again (Bot start's: $code)"; cat "$h.log" 2> /dev/null || true
+              git fetch -q --unshallow --no-tags --no-write-fetch-head --filter=blob:none origin || true
+            fi
+            touch "$RUNNER_TEMP/history.done"
+          ) < /dev/null > "$RUNNER_TEMP/history.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/history.pid"
+
+      # The clone in bot/ (15 s at most) and the records (75) once done; a clone failed or late: checked out as ever
+      - &bot
+        name: Bot
+        id: bot
+        shell: bash
+        run: |
+          while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ "$SECONDS" -lt 15 ]; do sleep 0.02; done
+          while [ -n "${CARD_RECORDS_DIR:-}" ] && [ ! -f "$RUNNER_TEMP/records.done" ] && [ "$SECONDS" -lt 75 ]; do sleep 0.05; done
+          cat "$RUNNER_TEMP/records.log" 2> /dev/null || true
+          if [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] && mv "$RUNNER_TEMP/bot" bot; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::the bot's clone failed or took 15 s: checked out instead"; cat "$RUNNER_TEMP/bot.log" 2> /dev/null || true
           fi
-          # a line a changed file: its two sides, then a card PSD's PNGs
-          git -c core.quotePath=false diff-tree -r --no-renames "$BEFORE" "$GITHUB_SHA" -- '*.psd' '*.PSD' '*.png' '*.PNG' \
-            | awk -F '\t' -v pngs="$pngs" '
-                function dir(p) { return match(p, /.*\//) ? substr(p, 1, RLENGTH) : "" }
-                function stem(p, d) { return tolower(substr(p, length(d) + 1, length(p) - length(d) - 4)) }
-                BEGIN {
-                  while ((getline line < pngs) > 0) {
-                    split(line, f, "\t"); d = dir(f[2]); k = ++n[d]; name[d, k] = stem(f[2], d); sha[d, k] = f[1]
-                  }
-                }
-                {
-                  split($1, f, " "); out = f[3] " " f[4]
-                  if (f[5] ~ /^[AM]/ && tolower($2) ~ /\.psd$/ && ("/" $2) !~ /\/(MDW|Markers)\//) {
-                    d = dir($2); s = stem($2, d)
-                    for (i = 1; i <= n[d]; i++)
-                      if (substr(name[d, i], 1, length(s)) == s && substr(name[d, i], length(s) + 1) ~ /^[0-9]*$/) out = out " " sha[d, i]
-                  }
-                  print out
-                }' > "$list.push" || true
-          [ -s "$list.push" ] || { echo "no card blobs pushed"; exit 0; }
-          # the list: a blob a line; the fetches: a line each, whole lines of $list.push up to 8 blobs
-          if [ "$GITHUB_JOB" = check ]; then
-            for spec in "$GITHUB_SHA:site/Card Edits.json" "$GITHUB_SHA:MDW/Fonts/stoogedings-src/stoogedings.json" \
-                "$GITHUB_SHA:MDW/Croissant's Special Folder/Satus Effect Colors.psd" origin/data:db/stats.json \
-                origin/data:db/links.json; do
-              git rev-parse -q --verify "$spec" || true
-            done | tr '\n' ' '
-            echo
-          fi | cat - "$list.push" | awk -v list="$list" '
-              { k = 0; for (i = 1; i <= NF; i++) if ($i !~ /^0+$/ && !seen[$i]++) { print $i > list; u[++k] = $i } }
-              n && n + k > 8 { print line; line = ""; n = 0 }
-              { for (i = 1; i <= k; i++) line = line (n++ ? " " : "") u[i] }
-              END { if (n) print line }' > "$list.fetch"
-          GIT_NO_LAZY_FETCH=1 nohup bash -c 'timeout -k 10 300 xargs -P 4 -L 1 git -c fetch.negotiationAlgorithm=noop fetch -q \
-            --no-tags --no-write-fetch-head --recurse-submodules=no --filter=blob:none origin < "$1.fetch" || code=$?
-            echo "${code:-0}" > "$1.done"' _ "$list" > "$list.log" 2>&1 < /dev/null &
-          echo "fetching $(wc -l < "$list") blobs"
+
+      - &bot-repo
+        if: steps.bot.outputs.ok != 'true'
+        uses: actions/checkout@v7
+        with:
+          repository: bobberlington/AutoCroissant
+          path: bot
+          sparse-checkout-cone-mode: false
+          sparse-checkout: ${{ env.BOT_FILES }}
+
+      # requirements-cards.txt's wheels and the oxipng CLI (the lossless PNG recompression; the checks write no PNG)
+      - &setup
+        timeout-minutes: 10
+        uses: ./.github/actions/cards-venv
+        id: setup
+        with:
+          oxipng: ${{ github.job != 'checks' }}
+
+      # History start's join (Check, the earlier fonts and a dispatch's window read every commit): a shallow clone fails
+      - name: History
+        if: env.MODE != 'off'
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          while [ ! -e "$RUNNER_TEMP/history.done" ] && kill -0 "$(cat "$RUNNER_TEMP/history.pid" 2> /dev/null)" 2> /dev/null; do
+            sleep 0.05
+          done
+          cat "$RUNNER_TEMP/history.log" 2> /dev/null || true
+          if [ "$(GIT_NO_LAZY_FETCH=1 git rev-parse --is-shallow-repository)" != false ]; then
+            echo "::error::the card repo's history did not come: not checked"
+            exit 1
+          fi
 
       # The icon font, current first (Check's first font read, before the fonts restore is in), then its past versions
       # (AutoCroissant card_guards.earlier_fonts: badge widths; 10, 79 MB on 11-08), 40 at most, in the background: raw
@@ -310,38 +408,6 @@ jobs:
               exit 1
             fi
           done
-
-      # The clone in bot/ (15 s at most) and the records (75) once done; a clone failed or late: checked out as ever
-      - &bot
-        name: Bot
-        id: bot
-        shell: bash
-        run: |
-          while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ "$SECONDS" -lt 15 ]; do sleep 0.02; done
-          while [ -n "${CARD_RECORDS_DIR:-}" ] && [ ! -f "$RUNNER_TEMP/records.done" ] && [ "$SECONDS" -lt 75 ]; do sleep 0.05; done
-          cat "$RUNNER_TEMP/records.log" 2> /dev/null || true
-          if [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] && mv "$RUNNER_TEMP/bot" bot; then
-            echo "ok=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "::warning::the bot's clone failed or took 15 s: checked out instead"; cat "$RUNNER_TEMP/bot.log" 2> /dev/null || true
-          fi
-
-      - &bot-repo
-        if: steps.bot.outputs.ok != 'true'
-        uses: actions/checkout@v7
-        with:
-          repository: bobberlington/AutoCroissant
-          path: bot
-          sparse-checkout-cone-mode: false
-          sparse-checkout: ${{ env.BOT_FILES }}
-
-      # requirements-cards.txt's wheels and the oxipng CLI (the lossless PNG recompression; the checks write no PNG)
-      - &setup
-        timeout-minutes: 10
-        uses: ./.github/actions/cards-venv
-        id: setup
-        with:
-          oxipng: ${{ github.job != 'checks' }}
 
       # A push's Check starts here, beside the fonts restore (a dispatch's runs at Check, after its two checks): its first
       # font read waits for Fonts ready's mark (AutoCroissant card_guards.fonts_ready). Output and exit code in RUNNER_TEMP.
@@ -742,6 +808,8 @@ jobs:
           FONTS: ${{ steps.fonts-miss.outputs.ok != 'false' }}
           CARD_BLOBS_PENDING: ${{ runner.temp }}/blobs
         run: |
+          list=$RUNNER_TEMP/blobs     # the push's first head (a big push's files come from the clone) and the list in
+          [ ! -s "$list.pid" ] || while [ ! -e "$list.ready" ] && kill -0 "$(cat "$list.pid")" 2> /dev/null; do sleep 0.05; done
           check() {
             local out=$RUNNER_TEMP/$1 args
             mkdir -p "$out"

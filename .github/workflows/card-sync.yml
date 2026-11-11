@@ -211,16 +211,13 @@ jobs:
                 && git -C "$d" config "includeIf.gitdir:$GITHUB_WORKSPACE/carddata/.git.path" "$creds"; } || code=$?
             echo "$code" > "$RUNNER_TEMP/carddata.code" ) < /dev/null > "$RUNNER_TEMP/carddata.log" 2>&1 &
 
-      # Main's head (not github.sha), no file contents but the small files the stages read (no TTS/: the data reads only
-      # decks.json's blob sha). The card folders are never checked out; the build reads PSDs by blob sha, local first,
-      # else REST. Depth 1: main's history (every commit and tree) comes in the background (History start).
-      - uses: actions/checkout@v7
-        with:
-          ref: main
-          fetch-depth: 1
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
+      # In the background too: the builder's requirements-cards.txt through the API (bot.reqs: the venv's key without the
+      # clone; 5 s, 2 tries), and main's head in the workspace as the checkout below makes it (CARD_FILES, depth 1, no file
+      # contents, carddata's header, gc.auto 0), exit code in cards.code. Card preview's Clone does the same.
+      - name: Cards start
+        env:
+          TOKEN: ${{ github.token }}
+          CARD_FILES: &card-files |
             /.github/actions/
             /.mailmap
             /site/Card Edits.json
@@ -228,12 +225,107 @@ jobs:
             /site/Card Creation Dates.json
             /MDW/Fonts/stoogedings-src/stoogedings.json
             /site/rulebook/*.md
+        run: |
+          ( for _ in 1 2; do
+              printf 'Authorization: Bearer %s\n' "$TOKEN" | curl -sSf --max-time 5 -H @- -H "Accept: application/vnd.github.raw" \
+                -o "$RUNNER_TEMP/bot.reqs.part" "$GITHUB_API_URL/repos/$BOT_REPO/contents/requirements-cards.txt?ref=$BUILDER_REF" \
+                && mv "$RUNNER_TEMP/bot.reqs.part" "$RUNNER_TEMP/bot.reqs" && break
+            done
+            touch "$RUNNER_TEMP/reqs.done" ) < /dev/null > "$RUNNER_TEMP/reqs.log" 2>&1 &
+          ( code=0
+            { git init -q && git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" && git config gc.auto 0 \
+                && git config include.path "$RUNNER_TEMP/carddata-credentials.config" \
+                && git sparse-checkout set --no-cone --stdin <<< "$CARD_FILES" \
+                && timeout 15 git -c protocol.version=2 fetch -q --depth 1 --filter=blob:none --no-tags origin +refs/heads/main:refs/remotes/origin/main \
+                && timeout 8 git checkout -q -B main origin/main; } || code=$?
+            echo "$code" > "$RUNNER_TEMP/cards.code" ) < /dev/null > "$RUNNER_TEMP/cards.log" 2>&1 &
 
-      # Exit code in history.code; no git runs in the workspace before History wait
+      # Main's history (every commit and tree) fetched beside the card repo's into history.git with carddata's header, 60 s
+      # at most; History join adds it to the checkout. Exit code in history-fetch.code.
       - name: History start
         run: |
-          ( code=0; git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main \
-            || code=$?; echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
+          h=$RUNNER_TEMP/history.git
+          ( code=0 t=$(date +%s.%N)
+            { git init -q --bare "$h" && git -C "$h" config uploadpack.allowFilter true \
+                && git -C "$h" config include.path "$RUNNER_TEMP/carddata-credentials.config" \
+                && git -C "$h" remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+                && timeout 60 git -C "$h" -c protocol.version=2 fetch -q --no-tags --filter=blob:none origin +refs/heads/main:refs/heads/main; } || code=$?
+            echo "History start: exit $code in $(awk -v a="$t" -v b="$(date +%s.%N)" 'BEGIN { printf "%.2f", b - a }') s"
+            echo "$code" > "$RUNNER_TEMP/history-fetch.code" ) > "$RUNNER_TEMP/history-fetch.log" 2>&1 < /dev/null &
+
+      # The venv's entry restored here, beside Cards start's fetch: cards-venv's key (the image's newest 3.14.x, the oxipng
+      # tag) from bot.reqs, else the bot clone's file (15 s at most); cards-venv checks it (its input restored).
+      - name: Venv key
+        id: venv-key
+        run: |
+          py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
+          until [ -e "$RUNNER_TEMP/reqs.done" ] || [ $SECONDS -ge 15 ]; do sleep 0.02; done
+          reqs=$RUNNER_TEMP/bot.reqs
+          if [ ! -s "$reqs" ]; then
+            while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ $SECONDS -lt 15 ]; do sleep 0.02; done
+            reqs=$RUNNER_TEMP/bot/requirements-cards.txt
+            [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] || reqs=""
+          fi
+          if [ -n "$py" ] && [ -s "$reqs" ]; then
+            sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' "$reqs" | sha256sum | cut -d' ' -f1)
+            echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")-ox10.2.1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - id: venv-cache
+        if: steps.venv-key.outputs.key != ''
+        timeout-minutes: 5
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/venv
+          key: ${{ steps.venv-key.outputs.key }}
+
+      # Cards start's fetch (25 s at most: its own caps end it sooner); failed: the checkout below, as ever. Before History
+      # join and Bot and data (that checkout empties the workspace). The venv's hit goes to cards-venv (VENV_RESTORED).
+      - name: Cards
+        id: cards
+        env:
+          HIT: ${{ steps.venv-cache.outputs.cache-hit }}
+          KEY: ${{ steps.venv-key.outputs.key }}
+        run: |
+          if [ "$HIT" = true ]; then echo "VENV_RESTORED=$KEY" >> "$GITHUB_ENV"; fi
+          while [ ! -s "$RUNNER_TEMP/cards.code" ] && [ $SECONDS -lt 25 ]; do sleep 0.02; done
+          if [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" = 0 ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::the card repo's fetch failed or took 25 s: checked out instead"; cat "$RUNNER_TEMP/cards.log" 2> /dev/null || true
+            rm -rf .git
+          fi
+
+      # Main's head (not github.sha), no file contents but the small files the stages read (no TTS/: the data reads only
+      # decks.json's blob sha). The card folders are never checked out; the build reads PSDs by blob sha, local first,
+      # else REST. Depth 1: main's history (every commit and tree) comes in the background (History start, History join).
+      - if: steps.cards.outputs.ok != 'true'
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: *card-files
+
+      # In the background once History start's fetch is done: its history joins the checkout (no config or ref written);
+      # it failed, or still shallow (main moved between the two): from GitHub. Exit code in history.code; no git runs in
+      # the workspace before History wait.
+      - name: History join
+        run: |
+          ( until [ -s "$RUNNER_TEMP/history-fetch.code" ]; do sleep 0.05; done
+            cat "$RUNNER_TEMP/history-fetch.log"
+            code=0
+            if [ "$(cat "$RUNNER_TEMP/history-fetch.code")" = 0 ] \
+                && git -c remote.history.url="file://$RUNNER_TEMP/history.git" -c remote.history.promisor=true -c remote.history.partialclonefilter=blob:none \
+                  fetch -q --unshallow --no-tags --no-write-fetch-head history main \
+                && [ "$(git rev-parse --is-shallow-repository)" = false ]; then
+              echo "History join: joined"
+            else
+              echo "History join: from GitHub"
+              git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main || code=$?
+            fi
+            echo "$code" > "$RUNNER_TEMP/history.code" ) > "$RUNNER_TEMP/history.log" 2>&1 < /dev/null &
 
       # The clones in bot/ and carddata/ once done (15 s at most); one failed or late: checked out below as ever
       - &clones
@@ -269,10 +361,65 @@ jobs:
           path: carddata
           fetch-depth: 1
 
+      # Earlier bake records (below) in the background from here, beside the venv's check: exit code in records-in.code,
+      # output in records-in.log. Not in a follow-up's data job (its Newest moves carddata/ first).
+      - name: Records start
+        if: ${{ !inputs.guards || github.job != 'data' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESTORE: ${{ inputs.restore }}
+          RECORDS_SH: &records-sh |
+            if [ -z "$RECORDS_BG" ] && [ -e "$RUNNER_TEMP/records-in.bg" ]; then     # Records start's: joined
+              until [ -s "$RUNNER_TEMP/records-in.code" ]; do sleep 0.02; done
+              cat "$RUNNER_TEMP/records-in.log"
+              exit "$(cat "$RUNNER_TEMP/records-in.code")"
+            fi
+            out=$RUNNER_TEMP/records-in
+            rm -rf "$out" && mkdir -p "$out"
+            if [ -n "$RESTORE" ] && [ -z "$RECORDS" ]; then echo "A restore merges no bake records."; exit 0; fi
+            for name in bake-records guard-records; do
+              gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$name&per_page=100" \
+                --jq '[.artifacts[] | select((.expired | not) and .workflow_run.head_repository_id == .workflow_run.repository_id)
+                  | {id: (.id | tostring), run: .workflow_run.id}]'
+            done | jq -s 'add | sort_by(.id | tonumber)' > "$out/listed.json"
+            seen=$(jq -c '.merged // {}' carddata/db/bake-records.json 2> /dev/null || echo '{}')
+            jq -c --argjson seen "$seen" '.[] | select($seen[.id] == null)' "$out/listed.json" | head -20 > "$out/new.jsonl"
+            cards='{}' events='[]' ids='{}' recs=()
+            while read -r row; do
+              id=$(jq -r .id <<< "$row") run=$(jq -r .run <<< "$row")
+              rm -rf "$out/one" && mkdir -p "$out/one"
+              if gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$out/one.zip" && unzip -q -o "$out/one.zip" -d "$out/one"; then
+                [ -f "$out/one/verdicts.json" ] || echo '{}' > "$out/one/verdicts.json"    # a guard-records artifact
+                [ -f "$out/one/events.json" ] || echo '[]' > "$out/one/events.json"
+                [ -f "$out/one/records.json" ] || echo '[]' > "$out/one/records.json"
+              fi
+              if ! v=$(jq -c '.cards // {}' "$out/one/verdicts.json") || ! e=$(jq -c '. // []' "$out/one/events.json") \
+                  || ! jq -e 'type == "array"' "$out/one/records.json" > /dev/null; then
+                echo "::warning::the records of run $run were not read: they and later ones wait for the next job"
+                break
+              fi
+              cards=$(jq -c --argjson v "$v" '. + $v' <<< "$cards")
+              events=$(jq -c --argjson e "$e" '. + $e' <<< "$events")
+              ids=$(jq -c --arg id "$id" --argjson run "$run" '. + {($id): $run}' <<< "$ids")
+              cp "$out/one/records.json" "$out/records-$id.json"
+              recs+=("$out/records-$id.json")
+            done < "$out/new.jsonl"
+            echo "$ids" > "$out/ids.json"
+            if [ "$ids" = '{}' ]; then echo "No bake records to merge."; exit 0; fi
+            jq -n --argjson c "$cards" '{schema: 1, cards: $c}' > "$out/verdicts.json"
+            echo "$events" > "$out/events.json"
+            jq -s 'add // []' "${recs[@]}" > "$out/records.json"      # files, not arguments: records can be large
+            echo "Records of runs $(jq -r '[.[]] | map(tostring) | join(", ")' "$out/ids.json"): $(jq length <<< "$cards") verdicts, $(jq length <<< "$events") events, $(jq length "$out/records.json") PSD records."
+        run: |
+          touch "$RUNNER_TEMP/records-in.bg"
+          ( code=0; RECORDS_BG=1 timeout 300 bash --noprofile --norc -eo pipefail -c "$RECORDS_SH" || code=$?
+            echo "$code" > "$RUNNER_TEMP/records-in.code" ) < /dev/null > "$RUNNER_TEMP/records-in.log" 2>&1 &
+
       # One environment from requirements-cards.txt for the bake, the build, the save and the posts, on the Actions' one
       # Python (3.14; the shared setup, .github/actions/cards-venv). --help proves the main lane's CLIs' import closure
       # before its stages; the data jobs check none (their Build is the first import of card_data).
-      # Always, first: before a push's or a follow-up's wait (a data job with nothing to do sets it up too).
+      # Always, first: before a push's or a follow-up's wait (a data job with nothing to do sets it up too). The data
+      # jobs' entry is in place already (Venv key): only checked.
       - &venv
         name: Python environment
         id: venv
@@ -282,6 +429,7 @@ jobs:
           venv: ${{ runner.temp }}/venv
           oxipng: ${{ github.job == 'main' }}     # the data jobs write no PNG
           help: ${{ github.job == 'main' && 'tts_save card_bake' || '' }}
+          restored: ${{ env.VENV_RESTORED }}
 
       # The guards' fixes (P-2): a guards push run with fixes to land (its check job's step "Fixes to land") starts Card
       # sync once they land, landed or not (its Follow up). A push's run looks for its own push's (in Bake and save, after
@@ -354,15 +502,15 @@ jobs:
           done <<< "$runs"
           echo "No guards run with fixes to land: the main lane goes on." | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # History start's fetch done (before any git here: Newest, the Gate, the build's dates); failed or still shallow:
-      # once more, else the job fails (never a shallow build)
+      # History join done (before any git here: Newest, the Gate, the build's dates); failed or still shallow: once more,
+      # else the job fails (never a shallow build)
       - name: History wait
         timeout-minutes: 5
         run: |
           until [ -s "$RUNNER_TEMP/history.code" ]; do sleep 0.1; done
+          cat "$RUNNER_TEMP/history.log"
           if [ "$(git rev-parse --is-shallow-repository)" != false ]; then
-            echo "::group::History start (exit $(cat "$RUNNER_TEMP/history.code"))"; cat "$RUNNER_TEMP/history.log"; echo "::endgroup::"
-            echo "::warning::main's history not fetched in the background: once more"
+            echo "::warning::main's history not fetched in the background (exit $(cat "$RUNNER_TEMP/history.code")): once more"
             git -c protocol.version=2 fetch -q --unshallow --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main
             [ "$(git rev-parse --is-shallow-repository)" = false ] || { echo "::error::main's history is still shallow"; exit 1; }
           fi
@@ -384,7 +532,8 @@ jobs:
       # db/'s render and spot records). Any data job merges them, so an after job lost (replaced while pending in
       # card-data, cancelled, failed, a gate) loses nothing: the next data job takes its records. The main job reads
       # them too (its Unmerged verdicts step). A failed download stops there: the rest wait, in order. Only this repo's
-      # runs' artifacts (a fork's pull request run's are never read).
+      # runs' artifacts (a fork's pull request run's are never read). Records start's run joined here; else (a follow-up's
+      # data job, the main job) read here.
       - &records-in
         name: Earlier bake records
         id: records-in
@@ -393,43 +542,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RESTORE: ${{ inputs.restore }}
-        run: |
-          out=$RUNNER_TEMP/records-in
-          rm -rf "$out" && mkdir -p "$out"
-          if [ -n "$RESTORE" ] && [ -z "$RECORDS" ]; then echo "A restore merges no bake records."; exit 0; fi
-          for name in bake-records guard-records; do
-            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$name&per_page=100" \
-              --jq '[.artifacts[] | select((.expired | not) and .workflow_run.head_repository_id == .workflow_run.repository_id)
-                | {id: (.id | tostring), run: .workflow_run.id}]'
-          done | jq -s 'add | sort_by(.id | tonumber)' > "$out/listed.json"
-          seen=$(jq -c '.merged // {}' carddata/db/bake-records.json 2> /dev/null || echo '{}')
-          jq -c --argjson seen "$seen" '.[] | select($seen[.id] == null)' "$out/listed.json" | head -20 > "$out/new.jsonl"
-          cards='{}' events='[]' ids='{}' recs=()
-          while read -r row; do
-            id=$(jq -r .id <<< "$row") run=$(jq -r .run <<< "$row")
-            rm -rf "$out/one" && mkdir -p "$out/one"
-            if gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$out/one.zip" && unzip -q -o "$out/one.zip" -d "$out/one"; then
-              [ -f "$out/one/verdicts.json" ] || echo '{}' > "$out/one/verdicts.json"    # a guard-records artifact
-              [ -f "$out/one/events.json" ] || echo '[]' > "$out/one/events.json"
-              [ -f "$out/one/records.json" ] || echo '[]' > "$out/one/records.json"
-            fi
-            if ! v=$(jq -c '.cards // {}' "$out/one/verdicts.json") || ! e=$(jq -c '. // []' "$out/one/events.json") \
-                || ! jq -e 'type == "array"' "$out/one/records.json" > /dev/null; then
-              echo "::warning::the records of run $run were not read: they and later ones wait for the next job"
-              break
-            fi
-            cards=$(jq -c --argjson v "$v" '. + $v' <<< "$cards")
-            events=$(jq -c --argjson e "$e" '. + $e' <<< "$events")
-            ids=$(jq -c --arg id "$id" --argjson run "$run" '. + {($id): $run}' <<< "$ids")
-            cp "$out/one/records.json" "$out/records-$id.json"
-            recs+=("$out/records-$id.json")
-          done < "$out/new.jsonl"
-          echo "$ids" > "$out/ids.json"
-          if [ "$ids" = '{}' ]; then echo "No bake records to merge."; exit 0; fi
-          jq -n --argjson c "$cards" '{schema: 1, cards: $c}' > "$out/verdicts.json"
-          echo "$events" > "$out/events.json"
-          jq -s 'add // []' "${recs[@]}" > "$out/records.json"      # files, not arguments: records can be large
-          echo "Records of runs $(jq -r '[.[]] | map(tostring) | join(", ")' "$out/ids.json"): $(jq length <<< "$cards") verdicts, $(jq length <<< "$events") events, $(jq length "$out/records.json") PSD records."
+        run: *records-sh
 
       # Go when (a) a card input changed since the last build's main commit, (b) a budgeted re-parse is pending, (c) the
       # builder's PARSER_VERSION differs from the data's, (e) events are unposted, (f) a dispatch asks, there is no
@@ -952,10 +1065,11 @@ jobs:
       - *newest
 
       # Go for a push, a dispatch or a retry; the schedule's and a chained run's when a card input or
-      # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished, or
-      # none of the last 30 runs did; else (g) a website edit the bake put off (capped, main moved): the Pending edits
-      # step; else (h) linked pictures not redrawn yet: the Linked due step. GO, EDITS and LINKED in the env. Skipped when
-      # the guards hold a push's lane (the schedule and the failure streak pass over such a lane).
+      # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished (the
+      # newest passed over when its rulebook PDF was not drawn, UNDRAWN, but not the one before it: a lag that lasts costs
+      # one extra lane), or none of the last 30 runs did; else (g) a website edit the bake put off (capped, main moved):
+      # the Pending edits step; else (h) linked pictures not redrawn yet: the Linked due step. GO, EDITS and LINKED in the
+      # env. Skipped when the guards hold a push's lane (the schedule and the failure streak pass over such a lane).
       - name: Gate
         id: gate
         if: ${{ !steps.guards.outputs.run }}
@@ -963,6 +1077,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GIT_NO_LAZY_FETCH: "1"
           LANE: Bake and save         # this job's name
+          UNDRAWN: Rulebook PDF not drawn   # its step after the PDF's look
           RETRY: ${{ inputs.retry }}
           CHAIN: ${{ inputs.chain }}
         run: |
@@ -970,23 +1085,26 @@ jobs:
           { echo "main=$main"; echo "start=$(date +%s)"; } >> "$GITHUB_OUTPUT"
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
                   'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json'
-                  'TTS/Impossibility Simulator.json' ':(glob)site/rulebook/*.md' 'TTS/Global.lua' 'TTS/Global.xml'
-                  'site/assets/' 'site/build/' 'MDW/Linked/')    # the site code draws the rulebook PDF
+                  'TTS/Impossibility Simulator.json' 'site/rulebook/' 'TTS/Global.lua' 'TTS/Global.xml'
+                  'site/assets/' 'site/build/' 'MDW/Linked/')    # the site code and the rulebook's pictures draw its PDF
           why=()
           event=$GITHUB_EVENT_NAME
           if [ -n "$CHAIN" ]; then event=schedule; fi      # a chained run gates as the schedule
           case $event in
             push) why+=("a push") ;;
             schedule)
-              synced=""
+              synced="" undrawn=""
               if runs=$(gh run list -R "$GITHUB_REPOSITORY" --workflow card-sync.yml --status completed --limit 30 \
                   --json databaseId,headSha,displayTitle \
                   --jq '.[] | select(.displayTitle != "Card sync (dry run)") | "\(.databaseId) \(.headSha)"'); then
                 while read -r id sha; do
                   [ -n "$id" ] || continue
+                  # 1: its lane finished; 2: finished, its PDF not drawn; 0: neither
                   n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[] | select(.name == \"$LANE\"
-                    and .conclusion == \"success\" and any(.steps[]?; .name == \"Gate\" and .conclusion == \"success\"))] | length") || n=0
-                  if [ "${n:-0}" -gt 0 ]; then synced=$sha; break; fi
+                    and .conclusion == \"success\" and any(.steps[]?; .name == \"Gate\" and .conclusion == \"success\"))
+                    | if any(.steps[]?; .name == \"$UNDRAWN\" and .conclusion != \"skipped\") then 2 else 1 end] | min // 0") || n=0
+                  if [ "${n:-0}" = 1 ] || { [ "${n:-0}" = 2 ] && [ -n "$undrawn" ]; }; then synced=$sha; break; fi
+                  if [ "${n:-0}" = 2 ]; then undrawn=$sha; fi
                 done <<< "$runs"
               fi
               if [ -z "$synced" ] || ! git cat-file -e "$synced^{commit}" 2> /dev/null; then
@@ -1161,24 +1279,30 @@ jobs:
               > "$RUNNER_TEMP/save.md" 2> "$bg/err" || code=$?; echo "$code" > "$bg/code" ) < /dev/null > /dev/null 2>&1 &
 
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
-      # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), when the website shows main's
-      # chapters (it waits up to 8 minutes for the website's build of them); the save puts it in the Rulebooks bag and M takes
-      # it. A failure leaves the PDF as it was. changed: the PDF or the page list; key: pages.json's key or pre alone (M takes
-      # it only when made for something else). The schedule's run: Chrome looks even when the pre-key held (--full).
+      # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), once the website shows main's
+      # chapters, rulebook pictures, web fonts, icons and code (it waits up to 10 minutes for the deploy of them; the page
+      # and its plain-URL files as Chrome gets them past the CDN); the save puts it in the Rulebooks bag and M takes it. A
+      # failure leaves the PDF as it was. changed: the PDF or the page list; key: pages.json's key or pre alone (M takes it
+      # only when made for something else); lag: exit 3, the website lagged past the wait (the step below marks the lane,
+      # as it does a failure).
+      # The schedule's run: Chrome looks even when the pre-key held (--full).
       - name: Rulebook PDF
         id: pages
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
         continue-on-error: true
-        timeout-minutes: 10
+        timeout-minutes: 12
         working-directory: bot
         run: |
           if ! fc-list | grep -qi 'color emoji'; then        # the chapters' 🕐 and ⏳; apt-get update only when the image's lists fail
             sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null 2>&1 \
               || { sudo apt-get -qq update && sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null; } || echo "::warning::no emoji font"
           fi
+          code=0
           CHROME=$(command -v google-chrome || command -v chromium || true) \
             "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" \
-            ${{ github.event_name == 'schedule' && '--full' || '' }} | tee "$RUNNER_TEMP/pages.md"
+            ${{ github.event_name == 'schedule' && '--full' || '' }} | tee "$RUNNER_TEMP/pages.md" || code=$?
+          [ "$code" = 0 ] || [ "$code" = 3 ] || exit "$code"
+          echo "lag=$([ "$code" = 3 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
           ws=$GITHUB_WORKSPACE list=TTS/Rulebook/pages.json changed=false key=false
           if [ -n "$(git -C "$ws" status --porcelain -- TTS/Rulebook ":!$list")" ]; then
             changed=true
@@ -1186,6 +1310,14 @@ jobs:
             if [ "$(jq -S 'del(.key, .pre)' "$ws/$list")" = "$(git -C "$ws" show "HEAD:$list" | jq -S 'del(.key, .pre)')" ]; then key=true; else changed=true; fi
           fi
           { echo "changed=$changed"; echo "key=$key"; } >> "$GITHUB_OUTPUT"
+
+      # The PDF not drawn: the website lagged past its wait (a deploy late or failed, a font's older CDN copy) or the step
+      # failed or ran out of time. The Gate of the schedule's next run (and a chained one's) passes over this lane, so its
+      # main lane goes and draws the PDF again (once: a lane marked too is not passed over)
+      - name: Rulebook PDF not drawn
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.pages.outputs.lag == 'true' || steps.pages.outcome == 'failure') }}
+        run: |
+          echo "Rulebook PDF not drawn (the website lagged main's rulebook past the wait, or the step failed): the schedule's next run draws it again." | tee -a "$GITHUB_STEP_SUMMARY"
 
       # TTS save start's save: its report and exit code
       - name: TTS save

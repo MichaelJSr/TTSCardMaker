@@ -10,7 +10,7 @@
 // `draw` is pure (node checks run it on plain pixel arrays).
 import { norm, splitToken, tagInfo, cooldownOf, ringParts, RING_PAINT, TAG, COST, costInfo, variantFile } from "./text.js";
 import { starMove, starsKept, titleInPicture } from "./parts.js";
-import { colorRanges, inkOf, layerColors, phraseText, spansOf, statusSpans } from "./textcolor.js";
+import { colorRanges, drawnSpans, inkOf, layerColors, phraseText, spansOf, statusSpans } from "./textcolor.js";
 
 export const LABEL = "Mock-up: the real image comes from the bake";
 export const BADGE = { turn: "#2563eb", any: "#7c3aed", forced: "#dc2626", trigger: "#d97706", neutral: "#475569",   // flat, before the label font loads
@@ -404,14 +404,111 @@ export function colourize(paras, text, colors, field, statuses = null, base = nu
     return out.map(x => (x.color ? x : { text: x.text }));
   })));
 }
-/** The card's own colours on a redrawn text, as its page keeps them over a staged edit (textcolor.js inkOf: a word
- *  the edit cuts into loses its own): the field's; a part's (old: its layer's text) the field's colours where that text
- *  is in the field, followed to the new; null without any. */
+const SAME_RUN = 3, INK_CELLS = 600000;              // psd_edit.SAME_RUN; bakeInk's alignment at most this many cells
+/** The longest common letters of was and now as [[a0, a1, b0, b1, kept]] (bakeInk's); null past INK_CELLS. */
+function align(was, now) {
+  const n = was.length, m = now.length;
+  if (n * m > INK_CELLS) return null;
+  const W = m + 1, dp = new Uint16Array((n + 1) * W);   // longest common letters of was[i:], now[j:]
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i * W + j] = was[i] === now[j] ? dp[(i + 1) * W + j + 1] + 1 : Math.max(dp[(i + 1) * W + j], dp[i * W + j + 1]);
+  const segs = [];
+  const put = (kept, i, j, di, dj) => { const s = segs[segs.length - 1]; if (s && s[4] === kept) { s[1] += di; s[3] += dj; } else segs.push([i, i + di, j, j + dj, kept]); };
+  for (let i = 0, j = 0; i < n || j < m;) {
+    if (i < n && j < m && was[i] === now[j]) put(true, i++, j++, 1, 1);
+    else if (j < m && (i >= n || dp[i * W + j + 1] >= dp[(i + 1) * W + j])) put(false, i, j++, 0, 1);
+    else put(false, i++, j, 1, 0);
+  }
+  return segs;
+}
+/** The colours the bake gives an edited text (psd_edit edit_styles), from list ([{start, end, color}] over was, none:
+ *  the main ink): kept letters keep theirs (a kept stretch under SAME_RUN letters without a break joins the change); a
+ *  changed stretch takes the commonest of the letters it replaces (no blanks, icons or badges); typed-in text the
+ *  nearest letter's before it on its line, else after, or the main ink between two colours of a line of several. Its
+ *  runs ([] none); null past INK_CELLS. */
+export function bakeInk(was, list, now) {
+  was = String(was ?? ""); now = String(now ?? "");
+  const n = was.length, m = now.length;
+  if (!list?.length) return [];
+  const segs = align(was, now);
+  if (!segs) return null;
+  const col = Array(n).fill(null), drawn = Array(n).fill(false);
+  for (const r of list) for (let i = Math.max(0, r.start); i < Math.min(n, r.end); i++) col[i] = r.color;
+  for (const [s, e] of drawnSpans(was)) for (let i = s; i < e; i++) drawn[i] = true;
+  const parts = [];                                   // edit_parts: a short kept stretch is part of the change
+  for (const s of segs) {
+    const last = parts[parts.length - 1], kept = s[4] && (s[1] - s[0] >= SAME_RUN || was.slice(s[0], s[1]).includes("\n"));
+    if (last && !last[4] && !kept) { last[1] = s[1]; last[3] = s[3]; } else parts.push([s[0], s[1], s[2], s[3], kept]);
+  }
+  const letter = i => !/\s/.test(was[i]) && !drawn[i];
+  const lineOf = (lo, hi) => [was.lastIndexOf("\n", lo - 1) + 1, (k => (k < 0 ? n : k))(was.indexOf("\n", hi))];
+  const near = (lo, hi) => {
+    const [top, bottom] = lineOf(lo, hi), seen = new Set();
+    for (let k = top; k < bottom; k++) if (letter(k)) seen.add(col[k]);
+    if (seen.size > 1 && !(lo > top && hi < bottom && col[lo - 1] === col[hi])) return null;   // typed between two colours: the main ink (body_fill)
+    for (let k = lo - 1; k >= top; k--) if (letter(k)) return col[k];
+    for (let k = hi; k < bottom; k++) if (letter(k)) return col[k];
+    return null;
+  };
+  const out = Array(m).fill(null);
+  for (const [a0, a1, b0, b1, kept] of parts) {
+    if (kept) { for (let k = 0; k < b1 - b0; k++) out[b0 + k] = col[a0 + k]; continue; }
+    if (b1 <= b0) continue;
+    const count = new Map();
+    for (let k = a0; k < a1; k++) if (letter(k)) count.set(col[k], (count.get(col[k]) || 0) + 1);
+    const c = count.size ? [...count].reduce((x, y) => (y[1] > x[1] ? y : x))[0] : was.slice(a0, a1).trim() ? null : near(a0, a1);
+    out.fill(c, b0, b1);
+  }
+  const runs = [];
+  out.forEach((c, k) => { const r = runs[runs.length - 1]; if (c && r?.color === c && r.end === k) r.end++; else if (c) runs.push({ start: k, end: k + 1, color: c }); });
+  return runs;
+}
+/** The card's own colours on a redrawn text, as the bake gives them (bakeInk; past its size, as its page keeps them over
+ *  a staged edit: textcolor.js inkOf): the field's; a part's (old: its layer's text) the field's colours where that
+ *  text is in the field, followed to the new; null without any. */
 export function baseInk(card, field, text, old = null) {
-  if (old == null) return inkOf(card, field, text);
-  const was = String(card?.ink?.built?.[field] ?? card?.[field] ?? ""), at = old ? was.indexOf(old) : -1;
-  const runs = at < 0 ? [] : (inkOf(card, field, was) || []).filter(r => r.start >= at && r.end <= at + old.length);
-  return runs.length ? inkOf({ [field]: old, ink: { [field]: runs.map(r => [r.start - at, r.end - at, r.color]) } }, field, text) : null;
+  const was = String(card?.ink?.built?.[field] ?? card?.[field] ?? ""), list = inkOf(card, field, was) || [];
+  const some = r => (r?.length ? r : null);
+  if (old == null) { const ink = bakeInk(was, list, text); return ink ? some(ink) : inkOf(card, field, text); }
+  const at = old ? was.indexOf(old) : -1;
+  if (at < 0) return null;
+  const own = list.filter(r => r.end > at && r.start < at + old.length).map(r => ({ ...r, start: Math.max(0, r.start - at), end: Math.min(old.length, r.end - at) }));
+  const ink = bakeInk(old, own, text);
+  return ink ? some(ink) : own.length ? inkOf({ [field]: old, ink: { [field]: own.map(r => [r.start, r.end, r.color]) } }, field, text) : null;
+}
+/** [start, end] of each badge tokenize finds in text, in order. */
+const badgeAt = text => {
+  const out = []; let at = 0;
+  for (const para of tokenize(text)) for (const chunk of para) for (const p of chunk) {
+    const src = p.text ?? p.src ?? "", i = src ? text.indexOf(src, at) : -1;
+    if (i < 0) continue;
+    at = i + src.length;
+    if (p.badge) out.push([i, at]);
+  }
+  return out;
+};
+/** How the bake sets each badge of text, edited from old (psd_edit): one that holds most of an old badge's kept letters
+ *  (bakeInk's alignment) keeps that badge's size and tracking, {bem, tk} from badges (psd_details: [em, track] per old
+ *  badge, null when not in the icon font); a typed one is fitted, tracked as the layer's badges at their commonest size
+ *  (icon_style), {tk}. Per badge, in order; null: as before. */
+export function badgeLooks(text, old, badges) {
+  text = String(text ?? "").replace(/\r/g, ""); old = String(old ?? "").replace(/\r/g, "");
+  const now = badgeAt(text), looks = now.map(() => null);
+  if (!Array.isArray(badges) || !badges.length) return looks;
+  const set = badges.filter(b => Array.isArray(b) && b[0] > 0), count = (list, key) => list.reduce((m, b) => m.set(key(b), (m.get(key(b)) || 0) + 1), new Map());
+  const pick = (m, tie = () => false) => { let best; for (const [k, n] of m) if (best === undefined || n > m.get(best) || (n === m.get(best) && tie(k) && !tie(best))) best = k; return best; };
+  const em = pick(count(set, b => b[0]), k => k === 1), tk = set.length ? pick(count(set.filter(b => b[0] === em), b => b[1])) : 0;
+  now.forEach((_, i) => { if (tk) looks[i] = { tk }; });
+  const was = badgeAt(old);
+  if (was.length !== badges.length) return looks;
+  const from = now.map(() => -1), segs = old === text ? [[0, old.length, 0, text.length, true]] : align(old, text);
+  if (segs) {                                         // an old badge's home: the new one with most of its kept letters (psd_edit
+    const moved = Array(old.length).fill(-1), into = was.map(() => new Map());   // "edited"); of those it is home to, the one giving it most
+    for (const [a0, a1, b0, , kept] of segs) if (kept) for (let k = 0; k < a1 - a0; k++) moved[a0 + k] = b0 + k;
+    was.forEach(([a, b], i) => { for (let k = a; k < b; k++) { const j = now.findIndex(([c, d]) => c <= moved[k] && moved[k] < d); if (j >= 0) into[i].set(j, (into[i].get(j) || 0) + 1); } });
+    into.forEach((n, i) => { if (!n.size) return; const j = pick(n); if (from[j] < 0 || n.get(j) > into[from[j]].get(j)) from[j] = i; });
+  } else if (now.length === was.length) from.forEach((_, j) => { from[j] = j; });   // past INK_CELLS: in order
+  from.forEach((i, j) => { const b = badges[i]; if (i >= 0) looks[j] = Array.isArray(b) && b[0] > 0 ? { bem: b[0], tk: b[1] || 0 } : null; });
+  return looks;
 }
 const lin = v => (v <= 10 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4);
 const lumOf = ([r, g, b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
@@ -435,10 +532,15 @@ export function badgeFit(z, cap) {
   return { h, top: mid + h / 2, k: h / (BADGE_H * z) };
 }
 /** A piece's width at size: an icon ICON_EM, a badge its letters (bold, BADGE_EM) and its pill's ends at its fitted
- *  scale (measure.cap: capOf), a cooldown's ring end too, else the text. */
+ *  scale (measure.cap: capOf; a kept one's own, bem) and tracking (tk), a cooldown's ring end too, else the text. */
 const pieceW = (p, size, measure) => {
   if (!p.badge) return p.icon ? ICON_EM * size : measure(p.text, size);
-  const { k, h } = badgeFit(size, measure.cap?.(size)), em = h / PILL_EM;
+  const { k, h } = pillOf(p, size, measure.cap?.(size)), em = h / PILL_EM;
+  return badgeW(p, size, measure, k, h, em) + (p.tk || 0) / 1000 * em;   // its tracking after it (psd_details badges)
+};
+/** A badge's {h, k}: a kept one's own size (bem), else fitted (badgeFit). */
+const pillOf = (p, z, cap) => (p.bem > 0 ? { h: PILL_EM * p.bem * z, k: PILL_EM * p.bem / BADGE_H } : badgeFit(z, cap));
+const badgeW = (p, size, measure, k, h, em) => {
   const set = measure.label?.(em);
   if (set && !p.cost) {                               // the label font loaded: the font's own widths
     const w = set.width(p.badge);
@@ -617,21 +719,22 @@ export function pointLayout(paras, size, reach, measure) {
   return { size: s, lines };
 }
 /** A title as the bake sets it (psd_edit set_text_layer): never shrunk; point text keeps its lines, a box's (more lines
- *  found than the old text's n0 paragraphs) wraps at maxW. over: more lines than it has; dx: back on the card (back_on). */
-export function titleLayout(paras, n0, found, maxW, size, measure, W) {
+ *  found than the old text's n0 paragraphs) wraps at maxW. over: more lines than it has; dx: back on the card (back_on),
+ *  from its left edge when left set, else centred. */
+export function titleLayout(paras, n0, found, maxW, size, measure, W, left = false) {
   const lines = layout(paras, found.lines.length > n0 ? maxW : Infinity, size, measure);
-  const w = Math.max(0, ...lines.map(l => l.w)), x0 = (found.box[0] + found.box[2] - w) / 2;
+  const w = Math.max(0, ...lines.map(l => l.w)), x0 = left ? found.box[0] : (found.box[0] + found.box[2] - w) / 2;
   return { size, lines, over: lines.length > Math.max(1, found.lines.length, paras.length), dx: w > W ? 0 : clamp(x0, 0, W - w) - x0 };
 }
 
 /** The stat rows a template draws, in px: [{k, box, cells: 10}] for the stats a card has (hp, def, atk, spd in order);
- *  none for a shape without bars or stats the details call anything but "template". */
+ *  none for a shape without bars or stats the details call anything but "template" or "pixel" (drawn bars). */
 export function barRows(shape, W, H, card, rec) {
   const t = TEMPLATES[shape]?.bars;
   if (!t) return [];
   const st = rec && typeof rec.stats === "object" ? rec.stats : null;
   const keys = STATS.filter(k => card[k] != null || (st && st[k] === "template"));
-  if (st && keys.some(k => st[k] !== "template")) return [];
+  if (st && keys.some(k => st[k] !== "template" && st[k] !== "pixel")) return [];
   return keys.map((k, i) => ({ k, box: [t.box[0] * W, (t.box[1] + i * t.step) * H, t.box[2] * W, (t.box[3] + i * t.step) * H], cells: 10 }));
 }
 /** A template stat row moved to its label's height (the record's visible "Health", "Defense"... text layer), if a bar is
@@ -643,6 +746,19 @@ export function labelRow(L, W, H, rec, row) {
   const mid = (t.box[1] + t.box[3]) / 2 * k, half = (row.box[3] - row.box[1]) / 2, q = (row.box[2] - row.box[0]) / row.cells / 4;
   const at = d => [row.box[0] + d, mid - half, row.box[2] + d, mid + half];
   return isBar(L, W, H, at(0)) && !isBar(L, W, H, at(-q)) && !isBar(L, W, H, at(q)) ? { ...row, box: at(0) } : null;
+}
+/** Does row (px) show v: its first v cells' centres all lighter, or all darker, than the rest by 8 or more? A row at 0 or
+ *  full can't tell: yes. */
+export function rowShows(L, W, H, row, v) {
+  if (!(v > 0 && v < row.cells)) return true;
+  const [x0, y0, x1, y1] = px(row.box, W, H), cw = (x1 - x0) / row.cells, m = [];
+  for (let c = 0; c < row.cells; c++) {
+    let t = 0, n = 0;
+    for (let y = Math.round(y0 + (y1 - y0) * 0.3); y < y0 + (y1 - y0) * 0.7; y++) for (let x = Math.round(x0 + (c + 0.25) * cw); x < x0 + (c + 0.75) * cw; x++) { t += L[y * W + x]; n++; }
+    m.push(n ? t / n : 0);
+  }
+  const a = m.slice(0, v), b = m.slice(v);
+  return Math.min(...a) > Math.max(...b) + 8 || Math.max(...a) + 8 < Math.min(...b);
 }
 /** Does row (px) look like a 10-cell bar? The cell borders are sharper than the cells' insides. */
 export function isBar(L, W, H, box, cells = 10) {
@@ -784,13 +900,16 @@ const centreOf = b => [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
 const boxAt = ([cx, cy], w, h) => [cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2];
 /** Stars from `from` to `to` on the record's header.stars: {erase: [box], draw: [box], refused, boxed}. A shown star stays when
  *  one of the count's centres (at[to], the bake's plan) is within a quarter of a star of its own; the others are erased
- *  (their box, glow included) and a star drawn at every centre none covers. No record, no layout for the count, or stars
- *  not one per unit: boxed. refused: why the bake would refuse the count. */
+ *  (their box, glow included) and a star drawn at every centre none covers. A count whose stars all shrink to fit their
+ *  banner (scale[to], the bake's option B) erases them all and draws each centre that much smaller. No record, no layout
+ *  for the count, or stars not one per unit: boxed. refused: why the bake would refuse the count. */
 export function starPlan(stars, from, to) {
   const st = obj(stars), why = st && obj(st.refused) ? st.refused[to] ?? st.refused["*"] ?? null : null;
   const units = Array.isArray(st?.units) ? st.units : [], at = to === 0 ? [] : obj(st?.at)?.[to];   // none: all erased
   if (!units.length || units.length !== from || !Array.isArray(at)) return { erase: [], draw: [], refused: why, boxed: true };
   const w = median(units.map(u => u.core[2] - u.core[0])), h = median(units.map(u => u.core[3] - u.core[1])), tol = 0.25 * Math.max(w, h);
+  const s = +obj(st.scale)?.[to];
+  if (s > 0 && s < 1) return { erase: units.map(u => u.box), draw: at.map(t => boxAt(t, w * s, h * s)), refused: why, boxed: false };
   const left = units.map(u => ({ u, c: centreOf(u.core) })), draw = [];
   for (const t of at) {
     const i = left.findIndex(({ c }) => Math.abs(c[0] - t[0]) <= tol && Math.abs(c[1] - t[1]) <= tol);
@@ -963,9 +1082,9 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   if (!tpl) { out.skipped.push(...[todo.name != null && "name", todo.ability != null && "text", ...Object.keys(todo.stats).map(k => k.toUpperCase()), todo.stars && "stars", todo.types && "types"].filter(Boolean)); return blit(); }
   const pixels = ctx.getImageData(0, 0, W, H), L = luma(pixels.data);
   const family = async (role, label, path = "", id = "") => {   // path, id: a part's own layer (a split title's share a path)
-    const mine = t => t && (id && t.id != null ? String(t.id) === id : t.layer === path) && !ICON_FONT.test(String(t.font || ""));
+    const mine = t => t && (id && t.id != null ? String(t.id) === id : t.layer === path) && (t.lf || !ICON_FONT.test(String(t.font || "")));
     const own = path && Array.isArray(rec?.text) ? rec.text.find(mine) : null;
-    const layer = own || layerOf(rec, role), name = layer?.font || "";
+    const layer = own || layerOf(rec, role), name = layer?.lf || layer?.font || "";   // lf: the font most of its letters use
     const pending = name ? loadFont(name, { getFonts, raw }) : Promise.resolve("");
     let fam = "";
     const ready = await Promise.race([pending, new Promise(r => setTimeout(() => r(null), 60))]);   // a loaded font draws at once
@@ -977,7 +1096,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   let bfam = await Promise.race([badgeFont, new Promise(r => setTimeout(() => r(null), 60))]);
   if (bfam === null) { badgeFont.then(f => { if (f) onFont?.(); }); bfam = ""; }
   const scaled = b => b.map((v, i) => v * (i % 2 ? H : W));
-  const bars = barRows(shape, W, H, card, rec).map(r => (isBar(L, W, H, r.box) ? r : labelRow(L, W, H, rec, r))).filter(Boolean);   // the rows drawn on: the template's, else beside the stat's label
+  const bars = barRows(shape, W, H, card, rec).map(r => (isBar(L, W, H, r.box) ? r : labelRow(L, W, H, rec, r)))   // the rows drawn on: the template's, else beside the stat's label
+    .filter(r => r && !(rec?.stats?.[r.k] === "pixel" && !rowShows(L, W, H, r, psd[r.k])));   // a drawn bar: only where it shows the card's value
   const rows = barRows(shape, W, H, card, null), seen = rows.filter(r => isBar(L, W, H, r.box)), lowest = seen.length ? seen : rows;
   const barsBottom = lowest.length ? Math.max(...lowest.map(r => r.box[3])) : 0;   // the text starts below the card's stat rows (where they are seen, else the template's)
   const jobs = [], kc = rec?.canvas?.w > 0 ? W / rec.canvas.w : 0;
@@ -995,10 +1115,11 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     specs.map(({ role, text, old, label, own, added, part, path, id }) => [role, text == null, old, label, own, !!added, !!part, path, id])]);
   const reuse = eraseMemo?.sig === sig && eraseMemo.rec === rec && eraseMemo.icons === icons;
   const plans = reuse ? eraseMemo.plans : [];
+  const cardPx = reuse ? eraseMemo.card : specs.some(s => s.role === "ability") ? pixels.data.slice() : null;   // before any erase: an Ability's kept lines
   if (reuse) pixels.data.set(eraseMemo.data);
   for (const [k, { role, text, old, label, own: partBox, added, part, path, id, colors: shared }] of specs.entries()) {
     const { fam, layer } = fams[k];
-    const set = role === "ability" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // the Ability's tracking (ems) and letter width (psd_details)
+    const set = role === "ability" || role === "name" ? layer : null, track = Number.isFinite(set?.track) ? set.track / 1000 : 0, hx = set?.hx > 0 ? set.hx : 1;   // tracking (ems) and letter width (psd_details)
     const measure = (t, z) => {
       ctx.font = `${z}px ${fam}`;
       if (!track) return ctx.measureText(t).width * hx;
@@ -1039,10 +1160,10 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const { found, size: z, colours, deleted, skipped } = plans[k];
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
-    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc });
+    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: role === "ability" ? cardPx : null });
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
-  if (!reuse) eraseMemo = { sig, rec, icons, plans, data: pixels.data.slice() };
+  if (!reuse) eraseMemo = { sig, rec, icons, plans, data: pixels.data.slice(), card: cardPx };
   const shown = { ...psd };                            // the values the rows show as they are redrawn
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
@@ -1063,7 +1184,11 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (plan.refused) out.refused.push([label, plan.refused]);
     if (plan.boxed && !(label === "stars" ? +todo.stars[1] : todo.types[1]?.length)) { out.skipped.push(label); continue; }   // none, with no place: the old ones stay
     if (plan.boxed) { out.boxed.push(label); await drawIconBox(ctx, label, label === "stars" ? todo.stars[1] : todo.types[1], { icons, head, W, H, tpl }); }
-    else if (label === "stars") { const src = await starSource(head.stars, icons, img, k); for (const b of plan.draw) drawIcon(ctx, src, at(b)); }
+    else if (label === "stars") {
+      const src = await starSource(head.stars, icons, img, k);
+      const look = !src.crop && plan.draw.length ? await iconLook(img, head.stars.units.map(u => ({ name: head.stars.icon, core: u.core })), icons, k) : null;   // the stock star in the card's star colours
+      for (const b of plan.draw) drawIcon(ctx, look ? recolour(src, look, at(b)) : src, at(b));
+    }
     else {
       const look = plan.draw.length ? await iconLook(img, head?.types?.row, icons, k) : null;   // the bake copies a shown icon's look
       for (const d of plan.draw) { const im = await iconOf(icons, d.name); drawIcon(ctx, look && im ? recolour(im, look, at(d.core)) : im, at(d.core)); }
@@ -1093,8 +1218,8 @@ function drawn(im, sx, sy, sw, sh, w, h) {
   const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(im, sx, sy, sw, sh, 0, 0, w, h);
   return g;
 }
-/** The card's own colours on its type icons (fitLook), or null: each shown icon's stock picture fitted into its core,
- *  against the image there. */
+/** The card's own colours on its type or star icons (fitLook), or null: each shown icon's stock picture fitted into its
+ *  core, against the image there. */
 async function iconLook(img, row, icons, k) {
   const pairs = [];
   for (const u of Array.isArray(row) ? row : []) {
@@ -1218,9 +1343,9 @@ function paintLines(ctx, lines, { at, base, pitch, z, fam, label = null, fill, s
         if (im) ctx.drawImage(im, x + (p.w - s) / 2, y - s * 0.82, s, s);
         if (p.no) { ctx.save(); ctx.strokeStyle = "#e11"; ctx.lineWidth = Math.max(2, z * 0.12); ctx.beginPath(); ctx.moveTo(x + p.w * 0.1, y - s * 0.75); ctx.lineTo(x + p.w * 0.9, y + s * 0.1); ctx.stroke(); ctx.restore(); }
       } else if (p.badge) {
-        const fitted = badgeFit(z, capOf(ctx, fam, z)), h = fitted.h, k = fitted.k, top = y - fitted.top, r = h / 2, em = h / PILL_EM;
+        const cap = capOf(ctx, fam, z), fitted = badgeFit(z, cap), { h, k } = pillOf(p, z, cap), top = y - fitted.top + (fitted.h - h) / 2, r = h / 2, em = h / PILL_EM;   // on the capitals' middle
         const lab = label ? label(em) : null, set = p.cost ? null : lab, side = lab ? 0.04 * em : z * 0.06 * k;
-        const x0 = x + side, x1 = x + p.w - side;     // a cooldown's ring: the pill's left end, its label after it
+        const x0 = x + side, x1 = x + p.w - (p.tk || 0) / 1000 * em - side;     // a cooldown's ring: the pill's left end, its label after it; its tracking after
         const pill = (d = 0) => { ctx.beginPath(); ctx.moveTo(x0 + r, top + d); ctx.arcTo(x1 - d, top + d, x1 - d, top + h - d, r - d); ctx.arcTo(x1 - d, top + h - d, x0 + d, top + h - d, r - d); ctx.arcTo(x0 + d, top + h - d, x0 + d, top + d, r - d); ctx.arcTo(x0 + d, top + d, x1 - d, top + d, r - d); ctx.closePath(); };   // d: inset
         ctx.save(); pill();
         ctx.font = lab ? lab.font(z * BADGE_EM * k) : `800 ${z * BADGE_EM * k}px ${fam}`; ctx.textAlign = "center";
@@ -1267,10 +1392,14 @@ export function steadyPitch(lines) {
  *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). An Ability with the
  *  record's frame and px (box text) wraps at the frame at its set size, as the bake; with px and no frame (point
  *  text) each paragraph is one line (pointLayout). */
-function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills }, imgs, W) {
+function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card }, imgs, W) {
   const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink, null, fills), region = area.box;
+  if (role === "ability" && Array.isArray(layer?.badges)) {   // kept badges at their own size and tracking, typed ones tracked as the card's
+    const looks = badgeLooks(text, old, layer.badges); let i = 0;
+    for (const para of paras) for (const chunk of para) for (const p of chunk) if (p.badge) Object.assign(p, looks[i++] || {});
+  }
   const mid = (found.box[0] + found.box[2]) / 2, wide = found.box[2] - found.box[0], room = 2 * Math.min(mid - region[0], region[2] - mid);
-  const left = found.align === "left" && role !== "name";
+  const left = role === "name" ? layer?.just === 0 : found.align === "left";   // a title: left set in the PSD (psd_details just)
   const frame = role === "ability" && kc && Array.isArray(layer?.frame) && layer.frame.length === 4 ? layer.frame.map(v => v * kc) : null;   // box text's frame: Photoshop wraps there
   if (frame && layer.px > 0) size = layer.px * kc;    // at its set size
   const point = role === "ability" && !!kc && !frame && layer?.px > 0;   // point text: its paragraphs never wrap
@@ -1301,7 +1430,7 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
     for (let y = from, j = 3; y < H; y++) for (let x = 0; x < W; x++, j += 4) if (a[j] > 128 && Math.abs(lum(x, y) - med) > bar) n++;
     return n < 100 * k * k;
   }
-  let { size: z, lines, over = false, dx = 0 } = role === "name" ? titleLayout(paras, tokenize(old).length, found, maxW, size, measure, W)
+  let { size: z, lines, over = false, dx = 0 } = role === "name" ? titleLayout(paras, tokenize(old).length, found, maxW, size, measure, W, left)
     : point ? pointLayout(paras, size, left ? W - found.box[0] : 2 * Math.min(mid, W - mid), measure) : fit(paras, maxW, Infinity, size, measure);
   if (role !== "name" && !roomBelow()) {              // past the area's bottom: smaller, down to 40%; still past it: said so
     const room2 = region[3] - top, need = s => (lines.length - 1) * pitch0 * (s / size) + s * 1.05;
@@ -1317,8 +1446,41 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
   }
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
   const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
-  paintLines(ctx, lines, { at: l => (left ? found.box[0] : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades });
+  const kept = card && !point && !over && z === size ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
+  if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
+  paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades });
   return over;
+}
+/** The lines of a redrawn Ability the edit leaves as they were (indexes): its leading and trailing lines whose pieces
+ *  match the old text laid out the same way, when that has as many lines as the card shows (found), not all of them;
+ *  none with a colour edit, or when the redrawn lines would sit off the old ones (the old letters-only lines' ink top
+ *  plus their ascent in this font vs base + i pitch, median, over 5 px at 720 wide). */
+export function keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) {
+  if (old == null || (Array.isArray(colors) && colors.length)) return [];
+  const was = layout(tokenize(old, icons), maxW, size, measure), n = was.length;
+  if (n !== found.lines.length) return [];
+  const key = l => JSON.stringify(l.pieces.map(p => [p.text ?? null, p.src ?? null, p.icon ?? null, p.badge ? 1 : 0]));
+  const now = lines.map(key), then = was.map(key);
+  let a = 0; while (a < Math.min(now.length, n) && now[a] === then[a]) a++;
+  let b = 0; if (now.length === n) while (b < n - a && now[n - 1 - b] === then[n - 1 - b]) b++;
+  if (!a && !b || a + b >= n) return [];
+  ctx.font = `${size}px ${fam}`;
+  const off = was.map((l, i) => {
+    if (!l.pieces.length || l.pieces.some(q => q.badge || q.icon)) return null;
+    const up = ctx.measureText(l.pieces.map(q => q.text ?? "").join("")).actualBoundingBoxAscent;
+    return Number.isFinite(up) ? base + i * pitch - (found.lines[i][1] + up) : null;
+  }).filter(e => e != null).sort((x, y) => x - y);
+  if (!off.length || Math.abs(off[off.length >> 1]) > 5 * W / 720) return [];
+  return [...Array(a).keys(), ...Array.from({ length: b }, (_, k) => n - 1 - k)];
+}
+/** Kept lines (keptLines) back to the card's pixels: each line's rows half-way to its neighbours, across the old block. */
+export function keepLines(ctx, card, kept, found, z, W) {
+  const F = found.lines, n = F.length, H = ctx.canvas.height, x0 = clamp(Math.floor(found.box[0] - z), 0, W), x1 = clamp(Math.ceil(found.box[2] + z), 0, W);
+  for (const i of kept) {
+    const t = Math.max(0, Math.floor(i ? (F[i - 1][3] + F[i][1]) / 2 : F[i][1] - 0.5 * z)), b = Math.min(H, Math.ceil(i < n - 1 ? (F[i][3] + F[i + 1][1]) / 2 : F[i][3] + 0.5 * z));
+    if (b <= t || x1 <= x0) continue;
+    const band = ctx.createImageData(W, b - t); band.data.set(card.subarray(t * W * 4, b * W * 4)); ctx.putImageData(band, 0, t, x0, 0, x1 - x0, b - t);
+  }
 }
 const BOX_FILL = [16, 16, 22];                        // drawBox's box
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the

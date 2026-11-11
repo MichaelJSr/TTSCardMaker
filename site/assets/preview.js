@@ -91,7 +91,7 @@ export function readResult(raw) {
   const clip = v => String(v).slice(0, 500), obj = v => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
   const notes = (Array.isArray(r.notes) ? r.notes : r.notes ? [r.notes] : []).filter(n => n != null && n !== "").slice(0, 20).map(n => clip(typeof n === "string" ? n : JSON.stringify(n)));
   const base = Object.fromEntries(Object.entries(obj(r.base)).filter(([, v]) => typeof v === "string").map(([k, v]) => [k, v.slice(0, 64)]));
-  const files = Object.fromEntries(Object.entries(obj(r.files)).filter(([k, v]) => ["webp", "png", "before"].includes(k) && typeof v === "string" && /^[\w.-]+\.(webp|png)$/i.test(v)));
+  const files = Object.fromEntries(Object.entries(obj(r.files)).filter(([k, v]) => ["webp", "png", "before"].includes(k) && typeof v === "string" && /^[\w.-]+\.(webp|png|avif)$/i.test(v)));
   const fields = Object.fromEntries(Object.entries(obj(r.fields)).filter(([k, v]) => k in LABEL && typeof v === "string").map(([k, v]) => [k, v.slice(0, 20)]));
   const changes = (Array.isArray(r.changes) ? r.changes : []).filter(x => x && typeof x === "object" && typeof x.field === "string").slice(0, 12)
     .map(x => ({ field: x.field, old: x.old, new: x.new }));
