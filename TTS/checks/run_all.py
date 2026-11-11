@@ -18,7 +18,7 @@ CHECKS = [   # file and its extra arguments
     ("contents_resize.py",), ("verify_rules_snapshot.py",),
     ("scripts_lua_syntax.py",), ("scripts_global_refs.py",), ("scripts_state_xml.py",), ("verify_scripts_static.py",),
     ("lua_mock.py",), ("lua_table.py",), ("lua_resize_roundtrip.py",),
-    ("links_pins.py",), ("pins_current.py",), ("links_http.py",), ("final_spot.py",),
+    ("links_pins.py",), ("links_http.py",),
     ("updater_idempotent.py",), ("updater_report_decks.py",),
 ]
 # card_sync_steps.py in 3 parts of about 15 s: these two and the rest of its GROUPS
@@ -26,7 +26,7 @@ CSS_PARTS = (("main", "save", "bake"), ("plans", "timer", "gate", "history", "bu
 CHECKS += [("card_sync_steps.py", *p) for p in (*CSS_PARTS, tuple(g for g in GROUPS if g not in sum(CSS_PARTS, ())))]
 OUT = "/tmp/tts-checks/out"
 TIMEOUT = 600                                               # seconds per check: one that hangs fails, the rest still run
-SLOW = ("card_sync_steps.py", "links_http.py", "final_spot.py", "updater_idempotent.py")   # started first
+SLOW = ("card_sync_steps.py", "links_http.py", "updater_idempotent.py")   # started first
 
 
 def main():

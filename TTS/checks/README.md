@@ -17,7 +17,7 @@ python3 -m venv ~/.venvs/tts-checks                             # once
 Each check takes the save as its first argument (default: the repo's save) and exits 1 on a failure. `run_all.py`
 runs them 4 at a time, the slow ones first, prints one line per check (in its list's order) plus the end of a failing
 check's output, and keeps every output in `/tmp/tts-checks/out/`. It runs `card_sync_steps.py` as 3 parts of its
-groups (`GROUPS`: two listed in `run_all.py`, then the rest), about 15 s each, so 26 lines.
+groups (`GROUPS`: two listed in `run_all.py`, then the rest), about 15 s each, so 24 lines.
 
 Interpreter: any Python 3 with `requests` and `Pillow`. The Lua checks also need `lupa` (`luaparser` is optional). A
 check that needs lupa and runs without it starts again under `$LUA_PYTHON` or `~/.venvs/tts-checks/bin/python`.
@@ -34,8 +34,8 @@ updater's inputs (decks.json, Card Edits.json, Global.lua, Global.xml, pages.jso
 | `TTS_DETAILS` | the live website | a `tts.json` file for `lua_mock.py`'s card details |
 | `LUA_PYTHON` | | a Python with lupa |
 
-Network: the website's `cards.json` (names) and `tts.json` (`lua_mock.py`), GitHub raw (`links_http.py`,
-`final_spot.py`) and `git fetch` of the history clone. Keep `TTS_HISTORY` out of `/tmp` on a Mac that reboots (e.g.
+Network: the website's `cards.json` (names) and `tts.json` (`lua_mock.py`), GitHub raw (`links_http.py`) and
+`git fetch` of the history clone. Keep `TTS_HISTORY` out of `/tmp` on a Mac that reboots (e.g.
 `~/Documents/Tools/wt/scratch/tts/history.git`): a new clone is a full-history download. `card_sync_steps.py` needs git 2.37+, bash and `jq`.
 
 ## The checks
@@ -60,18 +60,17 @@ Network: the website's `cards.json` (names) and `tts.json` (`lua_mock.py`), GitH
 | `lua_table.py` | The updater finds and regenerates `resizeTargets` (a dropped and a stray row come back right; a second run changes nothing) |
 | `lua_resize_roundtrip.py` | The updater's table edit leaves the rest of the script byte-identical and still loads in Lua 5.2 |
 | `links_pins.py` | Every repo link is pinned to a full sha on main, the last commit that changed the file, with canonical %-encoding (git log's view noted for failed pins only); the global script's links are live data on main, not pinned |
-| `pins_current.py` | Every pinned link serves main's current blob (git's own view, not the updater's walk); a failure names git log's last change; the global script's links skipped |
 | `links_http.py` | Every URL in the save loads; repo files match their blobs (fetched uncompressed: `.obj` models come gzipped) and images decode; the global script's links load (a `.json` one parses); links in Descriptions, notes and XmlUI only load. Pinned blobs a blobless checkout lacks are fetched first, in a few batches |
-| `final_spot.py` | 30 random cards end to end: image, pin, Nickname, deck rule, CustomDeck wiring (`[n] [seed]` after the save) |
 | `updater_idempotent.py` | The updater run as the Action runs it reports no changes and leaves the bytes alone; unpinned links and a dropped Lua row converge back; an offline website changes nothing; a card taken out of a complete deck comes back once |
 | `updater_report_decks.py` | Report titles ("Links pinned" vs "Links re-pinned (changed files)"), the commit subject beside the report, and no CustomDeck key left unused when a card is re-added |
 | `card_sync_steps.py` | card-sync.yml offline (git 2.37+, bash, jq; group names as arguments run only those), its two lanes: every step's `if:` evaluated per job (data, at once: a dry run writes nothing, else it posts, commits data and dispatches the site, after the bake whatever the data did; no MAIN_COMMIT or POSTS switch; main, Bake and save: bake (none with bake=none), save, M and the baked PNGs' re-pin, none after a rejected or late M; GO from Pending edits; a failed live job or retry may alert, a dry one doesn't; the deadline's reserve covers the caps of Commit main and every later step; `after` runs the data steps with AFTER = M); the data Gate on sandbox history, on the data lane's depth-1 checkout after History start and History wait (failed: fetched once more; again: the job fails; site.yml's the same scripts) (stoogedings-src alone and a hand-edited save skip; fonts, stoogedings.json, an upper-case .PSD, the creation dates and AFTER run; AFTER leaves out the dispatch's inputs); the Build step's arguments (the dispatch's inputs, none after the bake; `--own` the main lane's `Card sync:` commits since the last build); the main Gate (a push and a dispatch go; the schedule's when a card input or the save changed, the lane's own commits aside, since the head of the last live run whose Bake and save succeeded on faked run lists, dry runs passed over, or none is found; a PSD-kind website edit sends it to Pending edits); a font cache hit's fonts survive the bake's ff merge (deleted without the Fonts tree step: the control); the Bake step's --pending (a push's run, a schedule, their retries and bake=pending); the timer, a fixed window (a push's or the schedule's main lane is skipped, never the run cancelled, while a push run is in its window: Another timer on faked run lists, not itself or one stuck 40 minutes, unreadable runs counted as none; else a push's goes after its Quiet window job (this push's guards' check; no fixed wait since 2026-11-03); data at once on every event but a retry, one group with after); Commit main's script on a sandbox origin (M with its outputs; a failed push that landed counts as pushed; main moved: one retry marked `retry` carrying only the bake, none from a retry or while another run is unfinished; nothing pushed past minute 60 or when HEAD is a B the bake never reported); Re-pin (the save again on M, a second commit; none when current or main moved); Tell Discord on faked runs (once per failing streak of its lane, judged by the newest other live run where the lane ended; once a lane per run); the chain (a chained run gates as the schedule; Leftover edits' pending count; Chain on faked runs and data: at once for stale cards, unmerged bake records and due edits, none when nothing is left, a lane failed, another live run's lane reads it, a dry run, or past CHAIN_IDLE runs without progress or CHAIN_MAX runs; Chain after the data in a push run); one main lane per guarded push (Guards' fixes on faked guards runs: a push's main lane skipped while its guards have fixes to land, the schedule's and a chain's while any such run is unfinished, never when the guards land nothing to start, failed or are absent; card-guards.yml's mark, Plan's fixes, Start Card sync with 25 PSDs or fewer to convert, and Follow up's dispatch with fixes, landed or not, unless that run started first and kept both lanes) |
 
-`contents_lib.py` and `checks_env.py` are shared helpers. The names checks (`contents_names.py`, `final_spot.py`,
+`contents_lib.py` and `checks_env.py` are shared helpers. The names checks (`contents_names.py`,
 `updater_idempotent.py`) follow the live website, like the updater. When the website's names change (a Card sync data
-commit), they fail until the next Card sync run has updated the save (23 of 26 pass meanwhile).
+commit), they fail until the next Card sync run has updated the save (22 of 24 pass meanwhile).
 
 Not kept from the audit: the zone-claiming runtime checks (`scripts_global_runtime.py`, `verify_scripts_f1_reload.py`,
 retired with the old respawn claiming in `c9873ddf`; the hand zones shared on a side since 10-30 are `lua_mock.py`'s), the one-off checks of that fix against the old save (`final_bytes.py`,
-`final_diff.py`, `fixer_changes.py`), `contents_cooldown_pins.py` (covered by `links_pins.py`) and `dump_roundtrip.py`
-(covered by `serializer.py`).
+`final_diff.py`, `fixer_changes.py`), `contents_cooldown_pins.py` and `pins_current.py` (covered by `links_pins.py`), `dump_roundtrip.py`
+(covered by `serializer.py`) and `final_spot.py` (30 random cards end to end: all cards are in `links_http.py`,
+`links_pins.py`, `contents_names.py`, `structure.py`, `customdeck_collisions.py` and `contents_decks.py`).
