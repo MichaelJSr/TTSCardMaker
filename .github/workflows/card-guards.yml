@@ -774,14 +774,26 @@ jobs:
           fi
 
       # overwrite: a re-run replaces its earlier attempt's (one name per run); with what Land settled (landed.json,
-      # report-landed.md, discord-final.json) for the post job
+      # report-landed.md, discord-final.json) for the post job. Never files/ (Land read it from disk; the root stays guards/).
       - uses: actions/upload-artifact@v7
         if: always() && env.MODE != 'off'
         with:
           name: card-guards
-          path: ${{ runner.temp }}/guards
+          path: |
+            ${{ runner.temp }}/guards
+            !${{ runner.temp }}/guards/files
           if-no-files-found: ignore
           overwrite: true
+
+      # The written files, kept only when they did not reach main (report, dry, Land skipped or failed).
+      - uses: actions/upload-artifact@v7
+        if: always() && env.MODE != 'off' && (env.MODE != 'on' || steps.land.outcome != 'success')
+        with:
+          name: card-guards-files
+          path: ${{ runner.temp }}/guards/files
+          if-no-files-found: ignore
+          overwrite: true
+          retention-days: 14
 
   # A push's card check and font check, beside `check`: Card sync's guards wait and the post job wait for that one alone.
   # Never a gate, whatever CARD_GUARDS says. `check` saves the font cache; finish's alert reads this job's result too.
@@ -890,7 +902,7 @@ jobs:
         shell: bash
         run: echo "OUT=$RUNNER_TEMP/guards" >> "$GITHUB_ENV"
 
-      # The check job's plan.json, report.md, summary.json, what Land settled and the files its writes carry.
+      # The check job's plan.json, report.md, summary.json and what Land settled (never files/).
       - uses: actions/download-artifact@v8
         with:
           name: card-guards
