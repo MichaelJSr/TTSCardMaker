@@ -929,7 +929,6 @@ function openCard(id, showDetails = false) {
   document.body.style.overflow = "hidden";
   modal.scrollTop = 0;
   document.title = `${c.name} · Impossibility Simulator`;
-  $(".dialog", modal).focus({ preventScroll: true });   // Tab goes on inside it; shortcuts work right away
   if (c.img && $("#detail-img")?.getAttribute("src") !== img(c, 720)) {        // sharper 720 px image once it's loaded
     const big = new Image(); big.onload = () => { const el = $("#detail-img"); if (el && el.alt === c.name) el.src = big.src; }; big.src = img(c, 720);
   }
