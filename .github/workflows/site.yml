@@ -332,8 +332,9 @@ jobs:
             ) >> "$bg/sizes.log" 2>&1 < /dev/null &
           fi
 
-      # Setup start's four: uv or npm failing fails the job; the PSD sizes failing only leaves them out (a warning); the
-      # data clone failing: checked out below. Images start's: stopped first, a failure only warns.
+      # Setup start's uv, npm, sizes and data (versions: the deploy waits for it): uv or npm failing fails the job; the PSD
+      # sizes failing only leaves them out (a warning); the data clone failing: checked out below. Images start's: stopped
+      # first, a failure only warns.
       - name: Setup wait
         id: setup
         timeout-minutes: 10
@@ -440,7 +441,8 @@ jobs:
           n=0
           until [ -s "$RUNNER_TEMP/setup/versions.code" ] || [ $(( n += 1 )) -gt 1500 ]; do sleep 0.2; done   # 5 min at most
           version=$(sed -n "${TRY}p" "$RUNNER_TEMP/versions.txt" 2> /dev/null | grep -xE '[0-9a-f]{40}') \
-            || { version=$GITHUB_SHA; echo "::warning::no version commit handed over: $version, as deploy-pages"; }
+            || { version=$GITHUB_SHA; echo "::warning::no version commit handed over: $version, as deploy-pages"
+                 cat "$RUNNER_TEMP/setup/versions.log" 2> /dev/null || true; }
           token=$(curl -fsS --connect-timeout 5 --max-time 20 --retry 3 --retry-all-errors \
             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL" | jq -r '.value // empty')   # a 42 s stall seen
           [ -n "$token" ] || { echo "::error::no OIDC token"; exit 1; }
