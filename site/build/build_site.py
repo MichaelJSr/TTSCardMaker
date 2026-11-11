@@ -127,6 +127,11 @@ def thumb_tag(w):
     return hashlib.sha256(f"{THUMB_VERSION}:{w}:{q}:{json.dumps(avif, sort_keys=True)}".encode()).hexdigest()[:6]
 
 
+def thumb_tags():
+    """{width: thumb_tag} of every width made (IMAGE_SIZES, then SMALL_SIZES)."""
+    return {w: thumb_tag(w) for w in (*IMAGE_SIZES, *SMALL_SIZES)}
+
+
 IMAGE_BUDGET = float(os.environ.get("IMAGE_BUDGET") or 0)      # seconds for making images (0: no limit): the rest waits for the next run
 IMAGE_WIDTH = 360                            # the size whose dimensions go into cards.json (aspect ratio)
 ICON_SIZE = 96
@@ -1263,7 +1268,7 @@ def image_bytes(path, sha=None):
 
 
 def image_names(sha):
-    names = {w: f"{sha[:16]}-{w}-{thumb_tag(w)}.avif" for w in [*IMAGE_SIZES, *SMALL_SIZES]}
+    names = {w: f"{sha[:16]}-{w}-{tag}.avif" for w, tag in thumb_tags().items()}
     names["og"] = f"{sha[:16]}-og.jpg"
     return names
 
@@ -4390,7 +4395,7 @@ def first_screen(cards, icons):
                     shutil.copyfile(os.path.join(src, name), os.path.join(tmp, name))
             with open(os.path.join(tmp, "package.json"), "w") as fh:
                 fh.write('{"type": "module"}')
-            payload = {"cards": cards, "icons": icons, "thumbs": {str(w): thumb_tag(w) for w in [*IMAGE_SIZES, *SMALL_SIZES]}, "n": FIRST_TILES, "eager": FIRST_EAGER}
+            payload = {"cards": cards, "icons": icons, "thumbs": thumb_tags(), "n": FIRST_TILES, "eager": FIRST_EAGER}
             done = subprocess.run([exe, FIRST_CHECK, tmp], input=json.dumps(payload, ensure_ascii=False), capture_output=True, text=True,
                                   encoding="utf-8", check=True, timeout=300)
         got = json.loads(done.stdout)
@@ -4884,7 +4889,7 @@ def main():
         "cards": cards, "icons": icons, "iconVariants": icon_variants, "banlist": banlist, "tagMeanings": tag_meanings(rulebook_chapters()[0]),
         "swatches": swatches(),               # the editor's colour palette (textcolor.js): the status and attribute colours
         "statusColors": status_colors(data_dir),   # the mock-up's status word colours, as the bake prints them (app.js)
-        "thumbs": {w: thumb_tag(w) for w in [*IMAGE_SIZES, *SMALL_SIZES]},      # app.js img(): thumbs/<img>-<w>-<tag>.avif
+        "thumbs": thumb_tags(),               # app.js img(): thumbs/<img>-<w>-<tag>.avif
         # for the editor
         "branch": build_branch(), "files": {"edits": EDITS_PATH, "authors": AUTHORS_PATH, "banlist": BANLIST_PATH, "admins": ADMINS_PATH,
                                             "profiles": PROFILES_DIR, "decks": DECKS_DIR, "logins": LOGINS_DIR,
