@@ -100,7 +100,8 @@ end
 -- size it (kept for the player), its Rules buttons open the rulebook PDF at a chapter, and the cards its text names
 -- (status effects and others) spawn beside the card with a click; cards that draw from a kind of deck (DECKS) get a
 -- button per deck that spawns a shuffled copy beside the card. The ability's words in the website's palette (painted:
--- status words, stats with their numbers, counters); each status effect's line shows its rule on hover.
+-- status words, stats with their numbers, counters; a colour too dark for the panel in a lighter shade: build_site
+-- tts_seen); each status effect's line, and its "+ name" button, shows its rule on hover.
 -- Data: the website's data/tts.json and
 -- TTS/Rulebook/pages.json, fetched a moment after the save loads; once tts.json is in, it is decoded and the seated
 -- players' panels are built (a player seated later: a moment after sitting). No Lua patterns over long text (MoonSharp's
@@ -145,7 +146,8 @@ local function rows(id, prefix, n, count, onClick, colors)
     for r = 1, count do
         local row = {tag = "HorizontalLayout", attributes = {id = id .. r, rectAlignment = "LowerLeft", height = ROW_H, spacing = 6,
             childForceExpandWidth = false, childAlignment = "MiddleLeft", active = false}, children = {}}
-        for i = r, n do table.insert(row.children, button(prefix .. r .. "_" .. i, "", onClick, {preferredWidth = 120, active = false, colors = colors or BUTTON})) end
+        for i = r, n do table.insert(row.children, button(prefix .. r .. "_" .. i, "", onClick, {preferredWidth = 120, active = false,
+            colors = colors or BUTTON, tooltipPosition = "Above"})) end
         table.insert(out, row)
     end
     return out
@@ -485,12 +487,12 @@ local function chaptersOf(card)
     return out
 end
 
--- the cards a card's text names, to spawn: its status effects, then the others ({name, path})
+-- the cards a card's text names, to spawn: its status effects, then the others ({name, path, a status's rule})
 local function namedOf(card)
     local out = {}
     for _, name in ipairs(card.x or {}) do
         local s = details.statuses[name]
-        if s and s.p then table.insert(out, {name, s.p}) end
+        if s and s.p then table.insert(out, {name, s.p, s.x}) end
     end
     for _, path in ipairs(card.m or {}) do
         local c = details.cards[path]
@@ -602,12 +604,12 @@ local function layout(color, k)
     -- list's buttons left to right on up to count rows, a new row when the next would pass the row's width; when they
     -- overflow the last row they are spread evenly over the rows instead, and a row still too wide has its widest names
     -- shortened to one width that fits, ending in "...", the whole name on hover (11 of 772 cards' spawn buttons
-    -- overflow one row at the default size); returns the rows used
-    local function pack(rowsId, prefix, list, n, count, label)
+    -- overflow one row at the default size), and tip's text under it (a status's rule); returns the rows used
+    local function pack(rowsId, prefix, list, n, count, label, tip)
         local f, items, byRow, used, x = sz.f - 2, {}, {}, 0, 0
         for i = 1, math.min(n, #list) do
             local text = label(list[i])
-            items[i] = {i = i, text = text, w = widthOf(text, f)}
+            items[i] = {i = i, text = text, w = widthOf(text, f), tip = tip and tip(list[i])}
             if used == 0 or (x + 6 + items[i].w > rowW and used < count) then used, x = used + 1, items[i].w else x = x + 6 + items[i].w end
             items[i].row = used
         end
@@ -635,8 +637,10 @@ local function layout(color, k)
                 local it = at[i]
                 if it then
                     local short = cap and it.w > cap
+                    local hover = short and it.text or ""
+                    if it.tip then hover = short and it.text .. "\n" .. it.tip or it.tip end
                     set(prefix .. r .. "_" .. i, {active = "true", text = plain(short and shorten(it.text, cap, f) or it.text),
-                        tooltip = short and it.text or "", preferredWidth = short and cap or it.w, fontSize = f})
+                        tooltip = hover, preferredWidth = short and cap or it.w, fontSize = f})
                 else
                     set(prefix .. r .. "_" .. i, {active = "false"})
                 end
@@ -645,7 +649,7 @@ local function layout(color, k)
         return used
     end
     local ruleRows = pack(id .. "_rules", id .. "_r", rules, RULE_BUTTONS, RULE_ROWS, function(ch) return "Rules: " .. details.chapters[ch].title end)
-    local cardRows = pack(id .. "_cards", id .. "_c", named, CARD_BUTTONS, CARD_ROWS, function(n) return "+ " .. n[1] end)
+    local cardRows = pack(id .. "_cards", id .. "_c", named, CARD_BUTTONS, CARD_ROWS, function(n) return "+ " .. n[1] end, function(n) return n[3] end)
     local decks = DECKS[open.card.n] or {}
     local deckRows = pack(id .. "_decks", id .. "_k", decks, DECK_BUTTONS, DECK_ROWS, function(d) return "+ " .. d[1] end)
     open.rules, open.named, open.decks = rules, named, decks

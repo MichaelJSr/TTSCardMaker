@@ -14,8 +14,8 @@ pinned to the commit of the Rulebooks bag's PDF, as AutoCroissant tts_save write
 players' panels built once the data is in, a player seated later's a moment after, none on use; the save's own UI kept, every id set exists, every onClick a function, spawns into the hand
 face down (at the pointer on a seat without one, once the card has gone), Rules buttons and searches turn the PDF to the right page, hidden cards stay hidden; the name plain,
 the ability in the website's palette (tts.json ac), every "<" of a text kept from starting a tag; every card's details at each
-size: each chapter a whole Rules button, rows fit, each "+ name" spawns its card, each status effect its own line under
-the text with its rule on hover); each deck button a copy of the full deck, every card at its count in the save's piles.
+size: each chapter a whole Rules button, rows fit, each "+ name" spawns its card (a status's with its rule on hover), each
+status effect its own line under the text with its rule on hover); each deck button a copy of the full deck, every card at its count in the save's piles.
 Data: $TTS_DETAILS (a tts.json file), else the live website. Exits 1 on a failure.
 """
 import json
@@ -569,9 +569,18 @@ def rows_wrong(ui, panel, card, d):                         # the status lines a
     return wrong
 
 
-def named_of(card, d):
-    out = [(n, d["statuses"][n]["p"]) for n in card.get("x") or [] if (d["statuses"].get(n) or {}).get("p")]
-    return out + [(d["cards"][p]["n"], p) for p in card.get("m") or [] if p in d["cards"]]
+def named_of(card, d):                                      # [(name, path, a status's rule)]
+    out = [(n, d["statuses"][n]["p"], d["statuses"][n].get("x")) for n in card.get("x") or [] if (d["statuses"].get(n) or {}).get("p")]
+    return out + [(d["cards"][p]["n"], p, None) for p in card.get("m") or [] if p in d["cards"]]
+
+
+def spawn_label(ui, b, tip):                                # a "+ name" button's name (whole on hover when shortened); None
+    hover = ui.attrs[b].get("tooltip") or ""                # when its hover isn't tip (a status's rule) under that name
+    if tip:
+        if hover != tip and not hover.endswith("\n" + tip):
+            return None
+        hover = hover[:-len(tip) - 1] if hover != tip else ""
+    return hover or ui.text(b)
 
 
 def details_text():
@@ -807,8 +816,8 @@ def main():
         return next((f"Red_d1_{kind}{r}_{i}" for r in range(1, 4) if ui.on(f"Red_d1_{kind}{r}_{i}")), None)
     shown_rules = [ui.text(b) for b in (slot("r", i) for i in range(1, 6)) if b]
     check(shown_rules == [f"Rules: {details['chapters'][r]['title']}" for r in rules[:5]], f"Rules buttons {shown_rules}")
-    shown_cards = [ui.attrs[b].get("tooltip") or ui.text(b) for b in (slot("c", i) for i in range(1, 7)) if b]   # a shortened one's name on hover
-    check(shown_cards == [f"+ {n}" for n, _ in named[:6]], f"spawn buttons {shown_cards}")
+    shown_cards = [spawn_label(ui, b, named[i - 1][2]) for i, b in ((i, slot("c", i)) for i in range(1, min(6, len(named)) + 1)) if b]
+    check(shown_cards == [f"+ {n}" for n, _, _ in named[:6]], f"spawn buttons, a status's rule on hover {shown_cards}")
     before = ui.calls
     w.run(w.g.showDetails, "Red", target, what="Card details again")
     check(ui.calls == before, f"the same card again sends nothing to the game ({ui.calls - before} calls)")
@@ -1051,7 +1060,7 @@ def main():
 
     # ---- the palette's colours, status lines, and text that looks like rich text ----
     path = face_path(cards[0])
-    st = {"Burn": {"x": "3 DMG <hot>, -1 SPD", "k": "debuff", "c": "#db923d", "xc": [["-1 SPD", "#ffd21f"]]},
+    st = {"Burn": {"x": "3 DMG <hot>, -1 SPD", "k": "debuff", "c": "#db923d", "xc": [["-1 SPD", "#ffd21f"]], "p": path},
           **{f"S{i}": {"x": f"rule {i}", "k": "buff"} for i in range(1, 7)}}
     odd = {**details["cards"][path], "n": "Rose <b>Thorn</b> <color=#ff0000>x", "nc": [["Thorn", "#ff7a1a"]], "al": ["Zqrose"],
            "a": "<i>Burn</i> a Burn, then Burn<3\nBurn", "ac": [["Burn", "#ff0000", 2], ["Burn<3", "#00ff00"], ["gone", "#0000ff"], ["Burn", "#0000ff"]],
@@ -1074,6 +1083,9 @@ def main():
           f"unknown left out, the last line takes the rest {rows[:2]} {rows_wrong(w4.ui, 'Red_d1', odd, odd_details)}")
     check("<<b></b>i>Burn<<b></b>/i> a <color=#ff0000>Burn</color>, then <color=#00ff00>Burn<<b></b>3</color>\n<color=#0000ff>Burn</color>" in text,
           "the ability in its colours: the nth find, a piece not found skipped, '<' no tag")
+    burn = next((f"Red_d1_c{r}_1" for r in range(1, 3) if w4.ui.on(f"Red_d1_c{r}_1")), None)
+    check(burn and w4.ui.text(burn) == "+ Burn" and w4.ui.attrs[burn].get("tooltip") == st["Burn"]["x"]
+          and w4.ui.attrs[burn].get("tooltipPosition") == "Above", f"'+ Burn': its rule on hover, above {burn and w4.ui.attrs[burn]}")
     w4.run(w4.table_menu["Find a card"], "Red", w4.vec(10, 1, 10), what="Find a card: '<' in a name")
     w4.call("finderSearch", w4.players["Red"], "thorn</b>")
     check(w4.ui.text("Red_fc_g1").startswith(plain(odd["n"]) + "   "), f"the finder's row: the name, '<' no tag {w4.ui.text('Red_fc_g1')!r}")
@@ -1110,12 +1122,12 @@ def main():
                     if ws and sum(ws) + 6 * (len(ws) - 1) > int(ui5.attrs[f"Red_d1_{kind}{r}"]["width"]):
                         bad.append((c["n"], size, f"{kind}{r}", ws))
             bad += [(c["n"], size, x) for x in rows_wrong(ui5, "Red_d1", c, details)]
-        for i, (name, path) in enumerate(named[:6], 1):
+        for i, (name, path, tip) in enumerate(named[:6], 1):
             b = at("c", i, 2)
             w5.spawns.clear()
             if b:
                 w5.call("spawnNamed", red5, None, b)
-            if not b or (ui5.attrs[b].get("tooltip") or ui5.text(b)) != f"+ {name}" or len(w5.spawns) != 1 \
+            if not b or spawn_label(ui5, b, tip) != f"+ {name}" or len(w5.spawns) != 1 \
                     or face_path(w5.spawns[0]["data"]) != path:
                 bad.append((c["n"], f"+ {name}"))
         w5.call("closeDetails", red5, None, "Red_d1_close")

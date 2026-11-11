@@ -76,6 +76,7 @@ The build fails (exit 1, nothing deployed) when the bot's card data can't be dow
 many images fail; it degrades gracefully (logs and continues) for missing history/aliases or a few bad images.
 """
 import base64
+import colorsys
 import hashlib
 import html
 import importlib.util
@@ -704,7 +705,7 @@ WORD_UNIT = re.compile(rf"(?<![A-Za-z0-9_.])({WORD_NUM}[ \t]*)?(?:(hp|def|atk|sp
 WORD_TIMES = re.compile(r"[+\-\u2212]?x\s*")         # textcolor.js TIMES: "2 x DEF"'s "x" a times sign ("X" a number)
 WORD_LONG = {"health": "hp", "attack": "atk", "defense": "def", "defence": "def", "speed": "spd"}
 TTS_BACK = (15, 23, 41)                       # Global.lua detailsPanel: the panel (opaque)
-TTS_SEEN = 3                                  # a colour's least contrast with it, else plain there (TTS can't outline a word)
+TTS_SEEN = 3                                  # a colour's least contrast with it, else a lighter shade there (TTS can't outline a word)
 
 
 def text_palette(cards, chart=None, swatch_list=()):
@@ -773,15 +774,22 @@ def _contrast(c, back):
 
 
 def tts_seen(colour):
-    """colour when TTS's Card details can show it (TTS_SEEN against the panel), else None."""
-    return colour if isinstance(colour, str) and COLOR_RE.match(colour) and _contrast(colour, TTS_BACK) >= TTS_SEEN else None
+    """colour as TTS's Card details draws it (owner 11-11): under TTS_SEEN against the panel, the least lighter shade of
+    its hue that reaches it (HLS lightness up in 1% steps, saturation kept: black a grey); None when not a colour."""
+    if not (isinstance(colour, str) and COLOR_RE.match(colour)):
+        return None
+    h, light, sat = colorsys.rgb_to_hls(*(x / 255 for x in _ink_rgb(colour)))
+    for k in range(101):
+        shade = colour if k == 0 else "#%02x%02x%02x" % tuple(round(x * 255) for x in colorsys.hls_to_rgb(h, light + (1 - light) * k / 100, sat))
+        if _contrast(shade, TTS_BACK) >= TTS_SEEN:
+            return shade
 
 
 def tts_words(text, palette, icons, patterns=None, links=None):
     """tts.json `ac` (Global.lua painted): the ability's palette words as the site draws them (word_colors, unlinked by
     links: name_links') through game_words, [[text, colour]] in order, a piece the nth find of its text after the last one
     when [text, colour, n] (found by text, as MoonSharp's strings aren't bytes). A cost's words take their counter's
-    colour (TTS draws no badge), icons and timing tags none (Global.lua withBadges); a colour tts_seen refuses stays plain."""
+    colour (TTS draws no badge), icons and timing tags none (Global.lua withBadges); a dark colour in tts_seen's shade."""
     text = text or ""
     drawn = [m.span() for m in TOKEN_RE.finditer(text)] + [m.span() for m in re.finditer(r"\((-?[0-9A-Za-z/]{2,8})\)", text) if tag_info(m.group(1), {})]
     paint = [None] * len(text)
