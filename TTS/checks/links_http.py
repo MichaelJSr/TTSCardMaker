@@ -5,7 +5,7 @@ Repo links: ranged GET of the first 64 KB, uncompressed, compared with the blob 
 Content-Length); the blob itself is decoded with PIL. Other hosts: full GET, decoded or magic-checked. The global
 script's links are live data (TTS/Global.lua): each loads, a .json one parses; a bare prefix is skipped. 8 requests at
 a time. Pinned blobs the checkout lacks are fetched first, in a few batches: a blobless repo would fetch each one on the
-spot, one fetch and one pack per blob. Exit 1 on a defect.
+spot, one fetch and one pack per blob. Blobs are read by one `git cat-file --batch` per repo. Exit 1 on a defect.
 """
 import functools
 import json
@@ -13,6 +13,7 @@ import os
 import re
 import subprocess
 import sys
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 from os.path import expanduser, splitext
@@ -102,14 +103,64 @@ def prefetch(checkout, clone, blobs, pool, batches=4):
           (f"; {left} failed, fetched on demand" if left else ""))
 
 
-def blob_bytes(checkout, clone, sha, path):
-    blob = blob_id(clone, sha, path)
-    for repo in (checkout, clone):
-        try:
-            return blob, git(repo, "cat-file", "blob", blob, text=False)
-        except subprocess.CalledProcessError:
-            continue
-    raise RuntimeError(f"blob {blob} unreadable")
+class Blobs:
+    """Blob bytes from one `git cat-file --batch` per repo, the checkout's first (a git process per blob was most of
+    the check's time)."""
+    def __init__(self, *repos):
+        self.repos, self.procs, self.lock = repos, {}, threading.Lock()
+
+    def read(self, blob):
+        with self.lock:
+            for repo in self.repos:
+                p = self.procs.get(repo)
+                if p is None:
+                    p = self.procs[repo] = subprocess.Popen(["git", "-C", repo, "cat-file", "--batch"],
+                                                            stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                                            stderr=subprocess.DEVNULL)
+                try:
+                    p.stdin.write(blob.encode() + b"\n")
+                    p.stdin.flush()
+                    head = p.stdout.readline().split()
+                except OSError:                         # not a repo: the next one
+                    continue
+                if len(head) == 3:
+                    data = p.stdout.read(int(head[2]))
+                    p.stdout.read(1)
+                    return data
+        raise RuntimeError(f"blob {blob} unreadable")
+
+    def close(self):
+        for p in self.procs.values():
+            p.kill()
+            try:
+                p.stdin.close()
+            except OSError:
+                pass
+            p.wait()
+
+
+def blob_ids(clone, pins):
+    """Every pin's blob, by one rev-parse (trees only); a pin naming no file is left out."""
+    out = {}
+    for i in range(0, len(pins), 200):
+        chunk = pins[i:i + 200]
+        r = subprocess.run(["git", "-C", clone, "rev-parse", *(f"{s}:{p}" for s, p in chunk)], capture_output=True,
+                           text=True)
+        ids = r.stdout.split()
+        if r.returncode == 0 and len(ids) == len(chunk):
+            out.update(zip(chunk, ids))
+        else:                                           # one at a time: the bad one is reported by check_repo
+            for pin in chunk:
+                try:
+                    out[pin] = blob_id(clone, *pin)
+                except Exception:
+                    pass
+    return out
+
+
+def blob_bytes(blobs, ids, clone, sha, path):
+    blob = ids.get((sha, path)) or blob_id(clone, sha, path)
+    return blob, blobs.read(blob)
 
 
 def decode(data):
@@ -119,10 +170,10 @@ def decode(data):
     return fmt, size, mode
 
 
-def check_repo(url, sha, enc, checkout, clone, session):
+def check_repo(url, sha, enc, blobs, ids, clone, session):
     path = unquote(enc)
     out = {"url": url, "fail": [], "note": []}
-    blob, data = blob_bytes(checkout, clone, sha, path)
+    blob, data = blob_bytes(blobs, ids, clone, sha, path)
     r = session.get(url, headers={"Range": f"bytes=0-{PREFIX - 1}", "Accept-Encoding": "identity"}, timeout=60,
                     stream=True)                        # gzip (text files: .obj) would report the compressed size
     body = r.raw.read(PREFIX + 1, decode_content=True)
@@ -229,7 +280,7 @@ def main():
                 return check_live(url, session)
             m = LINK.fullmatch(url)
             if m:
-                return check_repo(url, m.group(1), m.group(2), checkout, clone, session)
+                return check_repo(url, m.group(1), m.group(2), blobs, ids, clone, session)
             if url.startswith(RAW):
                 return {"url": url, "fail": ["repo link not pinned to a full sha"], "note": []}
             return check_other(url, session, all(w.endswith(TEXT_FIELDS) for w in urls[url]))
@@ -242,18 +293,18 @@ def main():
         if m and urls[url] != {"/LuaScript"}:
             pins.append((m.group(1), unquote(m.group(2))))
 
-    def pinned_blob(pin):
-        try:
-            return blob_id(clone, *pin)
-        except Exception:                               # check_repo reports it
-            return None
+    ids = blob_ids(clone, pins)
+    blobs = Blobs(checkout, clone)
 
     with ThreadPoolExecutor(8) as pool:
         try:
-            prefetch(checkout, clone, set(pool.map(pinned_blob, pins)) - {None}, pool)
+            prefetch(checkout, clone, set(ids.values()), pool)
         except Exception as e:                          # only a speed-up: the checks fetch on demand without it
             print(f"note: no prefetch ({type(e).__name__}: {e})")
-        results = list(pool.map(one, sorted(urls)))
+        try:
+            results = list(pool.map(one, sorted(urls)))
+        finally:
+            blobs.close()
     fails = [r for r in results if r["fail"]]
     types = {}
     for r in results:
