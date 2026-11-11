@@ -42,7 +42,8 @@ def ensure_history(clone: str = HISTORY) -> str:
 @functools.cache
 def file_at(ref: str, path: str):
     """path's bytes at ref, never by lazy fetch: the checkout's blob, else the history clone's, else fetched into the
-    history clone in one call (a blobless checkout lacks old saves). None when ref:path names no file."""
+    history clone in one call (a blobless checkout lacks old saves). None when ref:path names no file; exits when
+    that fetch fails."""
     env = {**os.environ, "GIT_NO_LAZY_FETCH": "1"}
 
     def git(repo, *args, data=None):
@@ -64,6 +65,8 @@ def file_at(ref: str, path: str):
         git(clone, "-c", "fetch.negotiationAlgorithm=noop", "fetch", "-q", "--no-tags", "--no-write-fetch-head",
             "--filter=blob:none", "--stdin", "origin", data=blob.encode())
         data = git(clone, "cat-file", "blob", blob)
+    if data is None:
+        sys.exit(f"could not fetch {ref}:{path} (blob {blob}) into {clone}")
     return data
 
 
