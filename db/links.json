@@ -3543,7 +3543,7 @@
   ]
  },
  "Auxiliary/Minions/Paint_Warrior.psd": {
-  "blob": "21f20ad577e3bb697f5a7b27266ea3d2f5768eb5",
+  "blob": "2361b1943abb3087e5e44d39d671676b2cee0028",
   "links": [
    {
     "drawn": null,
@@ -6625,7 +6625,7 @@
   ]
  },
  "Creatures/Cuphead/5 Stars/Chef_Saltbaker.psd": {
-  "blob": "74b28d61ca1a2e590ccbf9a634071eac65b27152",
+  "blob": "c2d29ef67d25b4e8b1f7326102e1ceeaa7728fe1",
   "links": [
    {
     "drawn": null,
@@ -22752,7 +22752,7 @@
   ]
  },
  "Items/Support/2 Stars/Gust_of_Wind.psd": {
-  "blob": "c12d7c9e065ba927a9cf913fb7de1a88029603cb",
+  "blob": "a6badd52948be6db909dd6cda43baa95477d002d",
   "links": [
    {
     "drawn": null,
@@ -22777,6 +22777,18 @@
     "name": "support.png",
     "path": "Types/support.png",
     "size": 632862
+   },
+   {
+    "drawn": "d9a7323e26c787673e8b5827c5ef995df674f7f9",
+    "name": "Gust_of_Wind - Name #1.psb",
+    "path": "MDW/Linked/Gust_of_Wind - Name #1.psb",
+    "size": 1048576
+   },
+   {
+    "drawn": "5405ebd563d4c233c9b9697949a4fc0403106190",
+    "name": "Gust_of_Wind - Name #2.psb",
+    "path": "MDW/Linked/Gust_of_Wind - Name #2.psb",
+    "size": 1048576
    }
   ]
  },
@@ -25050,6 +25062,14 @@
  },
  "MDW/Linked/Gust Of Trees.psb": {
   "blob": "5ad2a639b2c6d76de79ad592769f1643fae87b1c",
+  "links": []
+ },
+ "MDW/Linked/Gust_of_Wind - Name #1.psb": {
+  "blob": "d9a7323e26c787673e8b5827c5ef995df674f7f9",
+  "links": []
+ },
+ "MDW/Linked/Gust_of_Wind - Name #2.psb": {
+  "blob": "5405ebd563d4c233c9b9697949a4fc0403106190",
   "links": []
  },
  "MDW/Linked/HR-D3 - 88fccaea0c1b5f9107a65db857d87dab copy.psb": {
@@ -30056,6 +30076,12 @@
   "MDW/Linked/Gust_of_Wind - Gust of wind.png": {
    "c46dfb0e9cc2dc4f3a09a6df14478c84322c1063": 3577911
   },
+  "MDW/Linked/Gust_of_Wind - Name #1.psb": {
+   "d9a7323e26c787673e8b5827c5ef995df674f7f9": 1048576
+  },
+  "MDW/Linked/Gust_of_Wind - Name #2.psb": {
+   "5405ebd563d4c233c9b9697949a4fc0403106190": 1048576
+  },
   "MDW/Linked/HR-D3 - 88fccaea0c1b5f9107a65db857d87dab copy.psb": {
    "47d9ed6b06aa99e8ed499060332208a68cad208f": 4981190
   },
@@ -32690,6 +32716,7 @@
   "5317ace13b38970c2918e8e09d2f0c999bd2a72e": "7418fe14ef9bdc357896f5e6f81a9c6d1f1b1c23",
   "53f86bd0eb7bb8b18fce32fff3a4513f278c24d8": "2a65c8a12727b1745e3f268bffe9434fb3e3567a",
   "54034fc6210a87783ec27ed6c91fad62006738f6": "829c437a18c9a2ec831d153d7d5bb246eb7e6b84",
+  "5405ebd563d4c233c9b9697949a4fc0403106190": "c8ba03dbc566d3fcf13e11bf03ebc38e23322283",
   "549f0e80e98b556cd8a3689fcdaacff4b27494f8": "3a261683c5e078a2c22abf2ba9018939985177ce",
   "54d5ef307520c50a64b4b3f8aa2820dca5c5b34a": "69553b4a668d2a9d7cdbafe90b97a2262986098a",
   "5511f82ec9d43d662dc1c9628ab0ae7aea3019df": "90638da8c303145f344900f8bdf08886b93daf70",
@@ -33206,6 +33233,7 @@
   "d934884928c6b17fce553c121965ab8c82a769ce": "9722fcabc1105672e5c02c45632bbbab7beb9ea9",
   "d94636d41a938a06e780f018d1d4cac3207f4c9f": "ea088f0822d5d0d0e2fa52ad7c509f3543ad7d3a",
   "d96f63cbe4614a6337ba958c91a9ab8f42838b45": "2b27235d6990dc73016269532b5a8eba82a01a5b",
+  "d9a7323e26c787673e8b5827c5ef995df674f7f9": "524d8a248d39290b05723531d87f6ab370ebd077",
   "da1ec1bc0d55ad7a5dbeba95b435a3709fdfe3f6": "17b9a04ea4146fc4dfb113aa98b28f9814c7ec13",
   "da67789f93aadc66b2a417a3092359ca371ae8c8": "4c24429ad21f561cf28f9d046c4564f72ec963ec",
   "da7b84209213b8b062115af7ea38ecbfd1ed7150": "aecb79e99167eac7a3d3eb5dc3522aa4331e535f",
