@@ -372,7 +372,7 @@
     "Magnum Opus": {"series":"Impossibility Simulator","subseries":"Developers","_bot":["series"],"_by":"Zomoroko","_at":"2026-10-26T03:14:31Z"},
     "Magnus von Grapple": {"series":"Mario","subseries":"Paper Mario: The Thousand-Year Door","aliases":["Magnus"],"_by":"Zomoroko","_at":"2026-11-07T02:28:38Z"},
     "Magolor": {"series":"Kirby","subseries":"Kirby's Return to Dream Land","_bot":["series"],"_by":"Zomoroko","_at":"2026-10-26T08:04:26Z"},
-    "Man Serpent Shield": {"name":"Man-Serpent's Shield","series":"Elden Ring","_bot":["series"],"_rename":true,"_site":["name"],"_by":"Zomoroko","_at":"2026-11-07T02:28:38Z"},
+    "Man-Serpent's Shield": {"series":"Elden Ring","aliases":["Man Serpent Shield"],"_bot":["series","aliases"],"_by":"Zomoroko","_at":"2026-11-07T02:28:38Z"},
     "Mangle": {"series":"Five Nights at Freddy's","subseries":"Five Nights at Freddy's 2","_bot":["series"],"_by":"Zomoroko","_at":"2026-10-26T08:04:26Z"},
     "Mantis": {"series":"FTL","_by":"AutoCroissant","_at":"2026-10-22T22:02:11Z"},
     "Mantis Lords": {"series":"Hollow Knight","subseries":"Hollow Knight","_bot":["series"],"_by":"Zomoroko","_at":"2026-10-26T08:04:26Z"},
