@@ -1,6 +1,7 @@
 # The card jobs' setup. A venv hit skips cards-python and its setup-python and setup-uv downloads (about 1 s a job), as
 # card-preview.yml does: cards-python's key (setup-python's pick: the image's newest 3.14.x), path, check, PATH and help,
 # with setup-python's LD_LIBRARY_PATH. Else cards-python, as ever (the runner fetches its actions only if its step runs).
+# A job that restored the venv itself (restored: its key) has it checked here only.
 name: Card Python (venv first)
 description: The card venv from its cache, else .github/actions/cards-python
 
@@ -13,6 +14,9 @@ inputs:
     default: "true"
   help:
     description: "cards-python's help"
+    default: ""
+  restored:
+    description: "The key of the job's own restore of this venv, when it hit (equal to this key: checked, not restored)"
     default: ""
 
 outputs:
@@ -27,24 +31,29 @@ runs:
       shell: bash
       env:
         VENV: ${{ inputs.venv || format('{0}/venv', runner.temp) }}
+        RESTORED: ${{ inputs.restored }}
       run: |
         py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
         sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' bot/requirements-cards.txt | sha256sum | cut -d' ' -f1)
         echo "venv=$VENV" >> "$GITHUB_OUTPUT"
+        key=""
         if [ -n "$py" ]; then
-          echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")-ox10.2.1" >> "$GITHUB_OUTPUT"
+          key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")-ox10.2.1
+          echo "key=$key" >> "$GITHUB_OUTPUT"
           echo "lib=$py/lib" >> "$GITHUB_OUTPUT"
         fi
+        if [ -n "$RESTORED" ] && [ "$RESTORED" = "$key" ]; then echo "restored=true" >> "$GITHUB_OUTPUT"
+        elif [ -n "$RESTORED" ]; then rm -rf "$VENV"; fi      # another file's entry: as on a miss
 
     - id: env
-      if: steps.key.outputs.key != ''
+      if: steps.key.outputs.key != '' && steps.key.outputs.restored != 'true'
       uses: actions/cache/restore@v6
       with:
         path: ${{ steps.key.outputs.venv }}
         key: ${{ steps.key.outputs.key }}
 
     - id: hit     # a failed check or no CLI: cards-python restores and checks it again
-      if: steps.env.outputs.cache-hit == 'true'
+      if: steps.env.outputs.cache-hit == 'true' || steps.key.outputs.restored == 'true'
       shell: bash
       env:
         VENV: ${{ steps.key.outputs.venv }}
