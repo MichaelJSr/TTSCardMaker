@@ -545,8 +545,8 @@ jobs:
         run: *records-sh
 
       # Go when (a) a card input changed since the last build's main commit, (b) a budgeted re-parse is pending, (c) the
-      # builder's PARSER_VERSION differs from the data's, (e) events are unposted, (f) a dispatch asks, there is no
-      # data yet, or the bake's M is to be re-read (the after job). GO in the env.
+      # builder's PARSER_VERSION or psd_details VERSION differs from the data's, (e) events are unposted, (f) a dispatch
+      # asks, there is no data yet, or the bake's M is to be re-read (the after job). GO in the env.
       - name: Gate
         id: gate
         env:
@@ -596,6 +596,9 @@ jobs:
             built=$(jq -r '.builder.parser_version // ""' "$manifest")
             parser=$(sed -n 's/^PARSER_VERSION *= *\([0-9][0-9]*\).*/\1/p' bot/commands/psd_parser.py)
             if [ "$parser" != "$built" ]; then why+=("parser version ${built:-none} -> $parser"); fi
+            built=$(jq -r '.builder.details_version // ""' "$manifest")
+            details=$(sed -n 's/^VERSION *= *\([0-9][0-9]*\).*/\1/p' bot/commands/psd_details.py)
+            if [ -n "$built" ] && [ "$details" != "$built" ]; then why+=("details version $built -> $details"); fi   # none: older builder
             shopt -s nullglob
             logs=("$db"/changelog/*.jsonl)
             last=0
