@@ -11820,6 +11820,35 @@
    }
   ]
  },
+ "Creatures/Mario/4 Stars/Grodus.psd": {
+  "blob": "fd49f334d7c3fb9063f2f8a03f9112ec9f0d5699",
+  "links": [
+   {
+    "drawn": null,
+    "name": "Sir_Grodus - Layer 1.psb",
+    "path": "MDW/Linked/Sir_Grodus - Layer 1.psb",
+    "size": 2352234
+   },
+   {
+    "drawn": null,
+    "name": "Gold_Fuzzy - il_680x540.2058992065_jl7h.png",
+    "path": "MDW/Linked/Gold_Fuzzy - il_680x540.2058992065_jl7h.png",
+    "size": 874682
+   },
+   {
+    "drawn": null,
+    "name": "Sapphire_Starold.png",
+    "path": "Types/Stars/Sapphire_Starold.png",
+    "size": 3871
+   },
+   {
+    "drawn": null,
+    "name": "electric.png",
+    "path": "Types/electric.png",
+    "size": 106279
+   }
+  ]
+ },
  "Creatures/Mario/4 Stars/Macho_Grubba.psd": {
   "blob": "730c01de180ea1d2fe827012d926fb9f609a056f",
   "links": [
@@ -11846,35 +11875,6 @@
     "name": "light.png",
     "path": "Types/light.png",
     "size": 474151
-   }
-  ]
- },
- "Creatures/Mario/4 Stars/Sir_Grodus.psd": {
-  "blob": "fd49f334d7c3fb9063f2f8a03f9112ec9f0d5699",
-  "links": [
-   {
-    "drawn": "ac5a747312a6e014d614b79f771b61de0c5647b1",
-    "name": "Sir_Grodus - Layer 1.psb",
-    "path": "MDW/Linked/Sir_Grodus - Layer 1.psb",
-    "size": 2352234
-   },
-   {
-    "drawn": "8a04208f7b0c14e0399dc565359546aa5b031c0a",
-    "name": "Gold_Fuzzy - il_680x540.2058992065_jl7h.png",
-    "path": "MDW/Linked/Gold_Fuzzy - il_680x540.2058992065_jl7h.png",
-    "size": 874682
-   },
-   {
-    "drawn": "c77036b67ad4b698f374ea9f7df97689df163c38",
-    "name": "Sapphire_Starold.png",
-    "path": "Types/Stars/Sapphire_Starold.png",
-    "size": 3871
-   },
-   {
-    "drawn": "00007617b6c9850309e6c3a145e338efa55eded3",
-    "name": "electric.png",
-    "path": "Types/electric.png",
-    "size": 106279
    }
   ]
  },
@@ -16734,23 +16734,23 @@
    }
   ]
  },
- "Creatures/Undertale/3 Stars/Papyrus.psd": {
+ "Creatures/Undertale/3 Stars/The_Great_Papyrus.psd": {
   "blob": "ceff652444a07b7f591a0b21f8d45f8c06dccaa8",
   "links": [
    {
-    "drawn": "4334b66b41c6903be33cb0381ea0a875488d0952",
+    "drawn": null,
     "name": "Papyrus - d9ci3lp-ff7578ef-172e-4832-a0e2-fc9e337e62f4-transformed.jpg",
     "path": "MDW/Linked/Papyrus - d9ci3lp-ff7578ef-172e-4832-a0e2-fc9e337e62f4-transformed.jpg",
     "size": 971114
    },
    {
-    "drawn": "f0b9185eaecd495b89155685a9c24c564068ef9c",
+    "drawn": null,
     "name": "Papyrus - Layer 3.psb",
     "path": "MDW/Linked/Papyrus - Layer 3.psb",
     "size": 1048576
    },
    {
-    "drawn": "8f8f39717df01c6be18898c9d5bb095c4b2812b9",
+    "drawn": null,
     "name": "undead.png",
     "path": "Types/undead.png",
     "size": 195840
@@ -20139,8 +20139,8 @@
    }
   ]
  },
- "Items/Equip/2 Stars/Man_Serpent_Shield.psd": {
-  "blob": "02442c41c0a7741cc47eccb2d5a439bcbb0fa4e6",
+ "Items/Equip/2 Stars/Man-Serpent's_Shield.psd": {
+  "blob": "a01edb20746c1156089b755de86de740139169ab",
   "links": [
    {
     "drawn": null,
@@ -20149,7 +20149,7 @@
     "size": 230452
    },
    {
-    "drawn": "90c2f04a5e61c8fa512eb349151eee5d7e9df957",
+    "drawn": null,
     "name": "Man_Serpent_Shield - Title band.png",
     "path": "MDW/Linked/Man_Serpent_Shield - Title band.png",
     "size": 6858
@@ -21563,6 +21563,23 @@
    }
   ]
  },
+ "Items/Heal/2 Stars/Chicken.psd": {
+  "blob": "81ff5ecf8af6eb8338d68984aeb7846dea243642",
+  "links": [
+   {
+    "drawn": null,
+    "name": "star.png",
+    "path": "Types/Stars/star.png",
+    "size": 36858
+   },
+   {
+    "drawn": null,
+    "name": "Food.png",
+    "path": "Types/Food.png",
+    "size": 139337
+   }
+  ]
+ },
  "Items/Heal/2 Stars/Grapes.psd": {
   "blob": "3387876d3a9e9bafe09ce64073b5f6116481d3b9",
   "links": [
@@ -21886,23 +21903,6 @@
     "path": "MDW/Linked/Strawberry_Shortcake - PngItem_2010345.png",
     "size": 1148372
    },
-   {
-    "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
-    "name": "star.png",
-    "path": "Types/Stars/star.png",
-    "size": 36858
-   },
-   {
-    "drawn": "25a2fc3de2ec082d54d5b1ec1dedba07da96306a",
-    "name": "Food.png",
-    "path": "Types/Food.png",
-    "size": 139337
-   }
-  ]
- },
- "Items/Heal/2 Stars/The_Chicken.psd": {
-  "blob": "81ff5ecf8af6eb8338d68984aeb7846dea243642",
-  "links": [
    {
     "drawn": "6f0b0a85deaf14a6fef9b15b9a610116a1b48460",
     "name": "star.png",
