@@ -146,12 +146,13 @@ export function starsKept(stars, n) {
   return r && !/folder sets them/.test(r) ? String(r) : null;
 }
 // the title drawn into the picture: no title layer, no text in the title region (of the Text group): a new title is
-// website only (the bot's psd_edit.title_in_picture; TITLE_REGION is psd_parser.TITLE_REGION_RATIO)
+// website only (the bot's psd_edit.title_in_picture; TITLE_REGION is psd_parser.TITLE_REGION_RATIO); a Text/Name smart
+// object's title bakes (psd_edit.placed_title: Gust of Wind's, under its Motion Blur)
 const TITLE_REGION = 0.12;
 /** Whether a details record's title is part of the picture (records with parts only). */
 export function titleInPicture(rec) {
   const p = partsOf(rec), h = rec?.canvas?.h;
-  if (!p || p.title.length || !h) return false;
+  if (!p || p.title.length || !h || arr(rec.smart_objects).some(s => /^Text\/Name(\s*#[\d,\s]+)?$/.test(s))) return false;
   const texts = arr(rec.text).filter(t => t && typeof t.layer === "string"), grouped = texts.some(t => t.layer.startsWith("Text/"));
   return !texts.some(t => t.visible && (t.text || "").trim() && Array.isArray(t.box) && t.box[1] < h * TITLE_REGION
     && (!grouped || t.layer.startsWith("Text/")) && !t.layer.includes(" FX: ") && t.layer.split("/").pop().trim().toLowerCase() !== "ability");
