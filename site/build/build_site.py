@@ -262,7 +262,7 @@ CARD_FIELDS = {"card_type", "path", "timestamp", "ability", "stars", "subtype", 
                "blob_sha", "parsed_values"}
 # may be missing; archived: a deleted PSD's record; version: a version's start and end (analytics.when)
 CARD_FIELDS_OPTIONAL = {"name", "display_name", "duplicate_of", "creatures", "note", "hidden", "problems_ok", "allow_high_stats",
-                        "alt_names", "subseries", "parser_version", "archived", "version", "created",
+                        "subseries", "parser_version", "archived", "version", "created",
                         "variant", "variant_of", "variants",             # a PSD's pictures (PARTS_EDITOR.md §2.4)
                         "art", "ability_art"}                            # from Card Edits.json (read there)
 STATS_FIELDS = {"hp", "defense", "attack", "speed"}
