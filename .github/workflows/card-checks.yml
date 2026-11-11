@@ -46,6 +46,33 @@ concurrency:
 env:
   BUILDER_REF: ${{ inputs.builder_ref || vars.CARD_DATA_BUILDER_REF || 'main' }}
   BOT_REPO: bobberlington/AutoCroissant
+  BOT_FILES: |         # card_checks.SPARSE_FILES
+    /commands/card_checks.py
+    /commands/card_bake.py
+    /commands/card_db.py
+    /commands/card_edits.py
+    /commands/card_models.py
+    /commands/card_preview.py
+    /commands/card_preview_branch.py
+    /commands/card_standards.py
+    /commands/font_check.py
+    /commands/git_commit.py
+    /commands/github_api.py
+    /commands/png_export.py
+    /commands/psd_edit.py
+    /commands/psd_parser.py
+    /commands/psd_parts.py
+    /commands/psd_regions.py
+    /commands/repo_history.py
+    /commands/rulebook.py
+    /commands/text_align.py
+    /commands/txt2_repair.py
+    /commands/ability_place.py
+    /commands/ability_index.json
+    /global_config.py
+    /requirements-cards.txt
+    /commands/psd_links.py
+    /commands/card_plates.py
 
 jobs:
   check:
@@ -66,8 +93,100 @@ jobs:
       GIT_NO_LAZY_FETCH: "1"
       CARD_RECORDS_DIR: ${{ github.workspace }}/carddata/db   # the bakes' renders: the data's records
     steps:
-      # main's head: its tree, no file contents but the small files the checks read
+      # card-sync.yml's data job's set-up (its Clones start, Cards start, Venv key, Cards and Bot and data): the bot's
+      # files and the data branch cloned in the background, main's head beside them, the venv's entry restored meanwhile.
+      # A failed or late one: checked out as before.
+      - &clones-start
+        name: Clones start
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 | tr -d '\n')
+          echo "::add-mask::$auth"
+          creds=$RUNNER_TEMP/carddata-credentials.config
+          git config --file "$creds" "http.$GITHUB_SERVER_URL/.extraheader" "AUTHORIZATION: basic $auth"
+          export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth"
+          b=$RUNNER_TEMP/bot d=$RUNNER_TEMP/carddata
+          ( code=0
+            { git init -q "$b" && git -C "$b" remote add origin "$GITHUB_SERVER_URL/$BOT_REPO" \
+                && git -C "$b" sparse-checkout set --no-cone --stdin <<< "$BOT_FILES" \
+                && timeout 30 git -C "$b" fetch -q --depth 1 --no-tags origin "$BUILDER_REF" \
+                && timeout 30 git -C "$b" checkout -q --detach FETCH_HEAD; } || code=$?
+            echo "$code" > "$RUNNER_TEMP/bot.code" ) < /dev/null > "$RUNNER_TEMP/bot.log" 2>&1 &
+          ( code=0
+            { timeout 30 git clone -q --depth 1 --no-tags --single-branch --branch data "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$d" \
+                && git -C "$d" config "includeIf.gitdir:$GITHUB_WORKSPACE/carddata/.git.path" "$creds"; } || code=$?
+            echo "$code" > "$RUNNER_TEMP/carddata.code" ) < /dev/null > "$RUNNER_TEMP/carddata.log" 2>&1 &
+
+      # main's head as the checkout below makes it: its tree, no file contents but the small files the checks read
+      - &cards-start
+        name: Cards start
+        env:
+          TOKEN: ${{ github.token }}
+          GIT_NO_LAZY_FETCH: "0"
+          CARD_FILES: &card-files |
+            /.github/actions/
+            /site/Card Edits.json
+            /MDW/Fonts/stoogedings-src/stoogedings.json
+        run: |
+          ( for _ in 1 2; do
+              printf 'Authorization: Bearer %s\n' "$TOKEN" | curl -sSf --max-time 5 -H @- -H "Accept: application/vnd.github.raw" \
+                -o "$RUNNER_TEMP/bot.reqs.part" "$GITHUB_API_URL/repos/$BOT_REPO/contents/requirements-cards.txt?ref=$BUILDER_REF" \
+                && mv "$RUNNER_TEMP/bot.reqs.part" "$RUNNER_TEMP/bot.reqs" && break
+            done
+            touch "$RUNNER_TEMP/reqs.done" ) < /dev/null > "$RUNNER_TEMP/reqs.log" 2>&1 &
+          ( code=0
+            { git init -q && git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" && git config gc.auto 0 \
+                && git config include.path "$RUNNER_TEMP/carddata-credentials.config" \
+                && git sparse-checkout set --no-cone --stdin <<< "$CARD_FILES" \
+                && timeout 15 git -c protocol.version=2 fetch -q --depth 1 --filter=blob:none --no-tags origin +refs/heads/main:refs/remotes/origin/main \
+                && timeout 8 git checkout -q -B main origin/main; } || code=$?
+            echo "$code" > "$RUNNER_TEMP/cards.code" ) < /dev/null > "$RUNNER_TEMP/cards.log" 2>&1 &
+
+      - &venv-key
+        name: Venv key
+        id: venv-key
+        run: |
+          py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
+          until [ -e "$RUNNER_TEMP/reqs.done" ] || [ $SECONDS -ge 15 ]; do sleep 0.02; done
+          reqs=$RUNNER_TEMP/bot.reqs
+          if [ ! -s "$reqs" ]; then
+            while [ ! -s "$RUNNER_TEMP/bot.code" ] && [ $SECONDS -lt 15 ]; do sleep 0.02; done
+            reqs=$RUNNER_TEMP/bot/requirements-cards.txt
+            [ "$(cat "$RUNNER_TEMP/bot.code" 2> /dev/null)" = 0 ] || reqs=""
+          fi
+          if [ -n "$py" ] && [ -s "$reqs" ]; then
+            sha=$(sed -E 's/(^|[[:space:]]+)#.*//; s/[[:space:]]+$//; /^$/d' "$reqs" | sha256sum | cut -d' ' -f1)
+            echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")-ox10.2.1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - &venv-cache
+        id: venv-cache
+        if: steps.venv-key.outputs.key != ''
+        timeout-minutes: 5
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/venv
+          key: ${{ steps.venv-key.outputs.key }}
+
+      - &cards
+        name: Cards
+        id: cards
+        env:
+          HIT: ${{ steps.venv-cache.outputs.cache-hit }}
+          KEY: ${{ steps.venv-key.outputs.key }}
+        run: |
+          if [ "$HIT" = true ]; then echo "VENV_RESTORED=$KEY" >> "$GITHUB_ENV"; fi
+          while [ ! -s "$RUNNER_TEMP/cards.code" ] && [ $SECONDS -lt 25 ]; do sleep 0.02; done
+          if [ "$(cat "$RUNNER_TEMP/cards.code" 2> /dev/null)" = 0 ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::the card repo's fetch failed or took 25 s: checked out instead"; cat "$RUNNER_TEMP/cards.log" 2> /dev/null || true
+            rm -rf .git
+          fi
+
       - &checkout-main
+        if: steps.cards.outputs.ok != 'true'
         uses: actions/checkout@v7
         env:
           GIT_NO_LAZY_FETCH: "0"
@@ -76,10 +195,7 @@ jobs:
           fetch-depth: 1
           filter: blob:none
           sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /.github/actions/
-            /site/Card Edits.json
-            /MDW/Fonts/stoogedings-src/stoogedings.json
+          sparse-checkout: *card-files
 
       # blobs_of's shared files (the status chart, template_for's templates) the clone lacks, one a fetch, 4 at a time, in
       # the background while the job sets up and waits (its exit code in shared.txt.done); Fetch them leaves them out
@@ -95,8 +211,21 @@ jobs:
             wait $! || code=$?; echo "${code:-0}" > "$1.done"' _ "$list" > "$list.log" 2>&1 < /dev/null &
           echo "fetching $(grep -c . "$list") shared blobs"
 
-      # card_checks.SPARSE_FILES
+      - &clones
+        name: Bot and data
+        id: clones
+        run: |
+          for c in bot carddata; do
+            while [ ! -s "$RUNNER_TEMP/$c.code" ] && [ "$SECONDS" -lt 15 ]; do sleep 0.02; done
+            if [ "$(cat "$RUNNER_TEMP/$c.code" 2> /dev/null)" = 0 ] && mv "$RUNNER_TEMP/$c" "$c"; then
+              echo "$c=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "::warning::the $c clone failed or took 15 s: checked out instead"; cat "$RUNNER_TEMP/$c.log" 2> /dev/null || true
+            fi
+          done
+
       - &builder
+        if: steps.clones.outputs.bot != 'true'
         uses: actions/checkout@v7
         env:
           GIT_NO_LAZY_FETCH: "0"
@@ -106,35 +235,10 @@ jobs:
           path: bot
           persist-credentials: false
           sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /commands/card_checks.py
-            /commands/card_bake.py
-            /commands/card_db.py
-            /commands/card_edits.py
-            /commands/card_models.py
-            /commands/card_preview.py
-            /commands/card_preview_branch.py
-            /commands/card_standards.py
-            /commands/font_check.py
-            /commands/git_commit.py
-            /commands/github_api.py
-            /commands/png_export.py
-            /commands/psd_edit.py
-            /commands/psd_parser.py
-            /commands/psd_parts.py
-            /commands/psd_regions.py
-            /commands/repo_history.py
-            /commands/rulebook.py
-            /commands/text_align.py
-            /commands/txt2_repair.py
-            /commands/ability_place.py
-            /commands/ability_index.json
-            /global_config.py
-            /requirements-cards.txt
-            /commands/psd_links.py
-            /commands/card_plates.py
+          sparse-checkout: ${{ env.BOT_FILES }}
 
       - &data-checkout
+        if: steps.clones.outputs.carddata != 'true'
         uses: actions/checkout@v7
         env:
           GIT_NO_LAZY_FETCH: "0"
@@ -143,6 +247,7 @@ jobs:
           path: carddata
           fetch-depth: 1
 
+      # The check job's entry is in place already (Venv key): only checked; its --help in Help start
       - &venv
         name: Python environment
         id: venv
@@ -151,7 +256,15 @@ jobs:
         with:
           venv: ${{ runner.temp }}/venv
           oxipng: "false"
-          help: card_checks
+          help: ${{ github.job == 'save' && 'card_checks' || '' }}
+          restored: ${{ env.VENV_RESTORED }}
+
+      # card_checks --help (its import closure) in the background beside the fonts restore; Help join waits for it
+      - name: Help start
+        working-directory: bot
+        run: |
+          ( code=0; timeout 120 "$RUNNER_TEMP/venv/bin/python" -m commands.card_checks --help > /dev/null || code=$?
+            echo "$code" > "$RUNNER_TEMP/help.code" ) < /dev/null > "$RUNNER_TEMP/help.log" 2>&1 &
 
       # An early run (inputs after) restores its fonts before its Data wait, restore only (the guards' check job saves
       # the entry): Data wait may move main, and Fonts (cache miss) below then fetches them again
@@ -172,6 +285,13 @@ jobs:
         env:
           GIT_NO_LAZY_FETCH: "0"
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
+
+      - name: Help join
+        timeout-minutes: 3
+        run: |
+          until [ -s "$RUNNER_TEMP/help.code" ]; do sleep 0.02; done
+          code=$(cat "$RUNNER_TEMP/help.code")
+          [ "$code" = 0 ] || { cat "$RUNNER_TEMP/help.log"; echo "::error::commands.card_checks --help failed (exit $code)"; exit 1; }
 
       # An early run, set up above while Card sync's data job builds: until that job's Commit data is done or the job
       # ended (site.yml's Data wait: 3 s looks for 2 minutes, then 15 s; 20 minutes at most), then main's head and the
@@ -390,7 +510,13 @@ jobs:
     env:
       GIT_NO_LAZY_FETCH: "1"
     steps:
+      - *clones-start
+      - *cards-start
+      - *venv-key
+      - *venv-cache
+      - *cards
       - *checkout-main
+      - *clones
       - *builder
       - *data-checkout
       - *venv
