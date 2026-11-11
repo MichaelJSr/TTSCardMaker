@@ -1199,9 +1199,10 @@ def save_cases(flow: dict) -> None:
     waits for it: its report, changed, its exit code."""
     job = flow["jobs"]["main"]
     ids = [s.get("id") for s in job["steps"]]
-    at = ids.index("pages")
-    check(step(job, "save-start")["if"] == step(job, "save")["if"] and ids[at - 1:at + 2] == ["save-start", "pages", "save"],
-          "save: started just before the rulebook PDF, whenever TTS save runs; TTS save right after the PDF")
+    at, between = ids.index("pages"), [s.get("name") for s in job["steps"][ids.index("pages") + 1:ids.index("save")]]
+    check(step(job, "save-start")["if"] == step(job, "save")["if"] and ids[at - 1] == "save-start"
+          and between in ([], ["Rulebook PDF not drawn"]),
+          "save: started just before the rulebook PDF, whenever TTS save runs; TTS save right after the PDF (and its mark)")
     for name, body, want, changed in (("changed", "printf '%s' '{\"s\":2}' > \"$3\"", 0, "true"), ("same", "", 0, "false"),
                                       ("failed", "exit 3", 3, None)):
         with tempfile.TemporaryDirectory() as tmp:
