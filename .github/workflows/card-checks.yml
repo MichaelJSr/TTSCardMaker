@@ -363,8 +363,7 @@ jobs:
 
       # The mock-up's plates (card_plates: each checked PSD drawn without its text layers) on the plates branch by PSD
       # blob, those of PSDs gone from main dropped; never a failed run (the mock-up keeps its old way)
-      - &plates
-        name: Plates
+      - name: Plates
         if: ${{ !cancelled() && steps.save.outcome == 'success' }}
         continue-on-error: true
         timeout-minutes: 5
@@ -372,7 +371,7 @@ jobs:
         env:
           HEAD_SHA: ${{ steps.newest.outputs.head }}
         run: |
-          mapfile -t results < <(find "$RUNNER_TEMP" -maxdepth 3 -name checks.json)
+          mapfile -t results < <(find "$RUNNER_TEMP" -maxdepth 1 -name checks.json)
           "$RUNNER_TEMP/venv/bin/python" -m commands.card_plates publish --git "$GITHUB_WORKSPACE" --head "${HEAD_SHA:-HEAD}" \
             "${results[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
 
@@ -413,4 +412,13 @@ jobs:
 
       - *commit
       - *site-build
-      - *plates
+
+      - name: Plates
+        if: ${{ !cancelled() && steps.save.outcome == 'success' }}
+        continue-on-error: true
+        timeout-minutes: 5
+        working-directory: bot
+        run: |
+          mapfile -t results < <(find "$RUNNER_TEMP/results" -name checks.json 2> /dev/null)
+          "$RUNNER_TEMP/venv/bin/python" -m commands.card_plates publish --git "$GITHUB_WORKSPACE" "${results[@]}" \
+            | tee -a "$GITHUB_STEP_SUMMARY"
