@@ -952,10 +952,11 @@ jobs:
       - *newest
 
       # Go for a push, a dispatch or a retry; the schedule's and a chained run's when a card input or
-      # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished, or
-      # none of the last 30 runs did; else (g) a website edit the bake put off (capped, main moved): the Pending edits
-      # step; else (h) linked pictures not redrawn yet: the Linked due step. GO, EDITS and LINKED in the env. Skipped when
-      # the guards hold a push's lane (the schedule and the failure streak pass over such a lane).
+      # the save changed (the lane's own commits aside) since the head of the last run whose Bake and save finished (one
+      # whose rulebook PDF was not drawn passed over: UNDRAWN), or none of the last 30 runs did; else (g) a
+      # website edit the bake put off (capped, main moved): the Pending edits step; else (h) linked pictures not redrawn
+      # yet: the Linked due step. GO, EDITS and LINKED in the env. Skipped when the guards hold a push's lane (the
+      # schedule and the failure streak pass over such a lane).
       - name: Gate
         id: gate
         if: ${{ !steps.guards.outputs.run }}
@@ -963,6 +964,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GIT_NO_LAZY_FETCH: "1"
           LANE: Bake and save         # this job's name
+          UNDRAWN: Rulebook PDF not drawn   # its step after the PDF's look
           RETRY: ${{ inputs.retry }}
           CHAIN: ${{ inputs.chain }}
         run: |
@@ -970,8 +972,8 @@ jobs:
           { echo "main=$main"; echo "start=$(date +%s)"; } >> "$GITHUB_OUTPUT"
           inputs=(':(icase)*.psd' ':(icase)*.png' 'Types/' ':(glob)MDW/Fonts/*' 'MDW/Fonts/stoogedings-src/stoogedings.json'
                   'site/Card Edits.json' 'site/Card Authors.txt' 'site/Card Creation Dates.json' 'TTS/decks.json'
-                  'TTS/Impossibility Simulator.json' ':(glob)site/rulebook/*.md' 'TTS/Global.lua' 'TTS/Global.xml'
-                  'site/assets/' 'site/build/' 'MDW/Linked/')    # the site code draws the rulebook PDF
+                  'TTS/Impossibility Simulator.json' 'site/rulebook/' 'TTS/Global.lua' 'TTS/Global.xml'
+                  'site/assets/' 'site/build/' 'MDW/Linked/')    # the site code and the rulebook's pictures draw its PDF
           why=()
           event=$GITHUB_EVENT_NAME
           if [ -n "$CHAIN" ]; then event=schedule; fi      # a chained run gates as the schedule
@@ -985,7 +987,8 @@ jobs:
                 while read -r id sha; do
                   [ -n "$id" ] || continue
                   n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq "[.jobs[] | select(.name == \"$LANE\"
-                    and .conclusion == \"success\" and any(.steps[]?; .name == \"Gate\" and .conclusion == \"success\"))] | length") || n=0
+                    and .conclusion == \"success\" and any(.steps[]?; .name == \"Gate\" and .conclusion == \"success\")
+                    and all(.steps[]?; .name != \"$UNDRAWN\" or .conclusion == \"skipped\"))] | length") || n=0
                   if [ "${n:-0}" -gt 0 ]; then synced=$sha; break; fi
                 done <<< "$runs"
               fi
@@ -1161,24 +1164,30 @@ jobs:
               > "$RUNNER_TEMP/save.md" 2> "$bg/err" || code=$?; echo "$code" > "$bg/code" ) < /dev/null > /dev/null 2>&1 &
 
       # The rulebook's TTS PDF (AutoCroissant commands/rulebook_pages): the website's #/rules/print printed by the runner's
-      # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), when the website shows main's
-      # chapters (it waits up to 8 minutes for the website's build of them); the save puts it in the Rulebooks bag and M takes
-      # it. A failure leaves the PDF as it was. changed: the PDF or the page list; key: pages.json's key or pre alone (M takes
-      # it only when made for something else). The schedule's run: Chrome looks even when the pre-key held (--full).
+      # Chrome to TTS/Rulebook/Rulebook.pdf (again only when a page's pixels changed), once the website shows main's
+      # chapters, rulebook pictures, web fonts, icons and code (it waits up to 10 minutes for the deploy of them; the page
+      # and its plain-URL files as Chrome gets them past the CDN); the save puts it in the Rulebooks bag and M takes it. A
+      # failure leaves the PDF as it was. changed: the PDF or the page list; key: pages.json's key or pre alone (M takes it
+      # only when made for something else); lag: exit 3, the website lagged past the wait (the step below marks the lane,
+      # as it does a failure).
+      # The schedule's run: Chrome looks even when the pre-key held (--full).
       - name: Rulebook PDF
         id: pages
         if: ${{ !cancelled() && env.GO == 'true' && steps.venv.outcome == 'success' }}
         continue-on-error: true
-        timeout-minutes: 10
+        timeout-minutes: 12
         working-directory: bot
         run: |
           if ! fc-list | grep -qi 'color emoji'; then        # the chapters' 🕐 and ⏳; apt-get update only when the image's lists fail
             sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null 2>&1 \
               || { sudo apt-get -qq update && sudo apt-get -qq install -y fonts-noto-color-emoji > /dev/null; } || echo "::warning::no emoji font"
           fi
+          code=0
           CHROME=$(command -v google-chrome || command -v chromium || true) \
             "$RUNNER_TEMP/venv/bin/python" -m commands.rulebook_pages "$GITHUB_WORKSPACE" --site "$SITE_URL" \
-            ${{ github.event_name == 'schedule' && '--full' || '' }} | tee "$RUNNER_TEMP/pages.md"
+            ${{ github.event_name == 'schedule' && '--full' || '' }} | tee "$RUNNER_TEMP/pages.md" || code=$?
+          [ "$code" = 0 ] || [ "$code" = 3 ] || exit "$code"
+          echo "lag=$([ "$code" = 3 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
           ws=$GITHUB_WORKSPACE list=TTS/Rulebook/pages.json changed=false key=false
           if [ -n "$(git -C "$ws" status --porcelain -- TTS/Rulebook ":!$list")" ]; then
             changed=true
@@ -1186,6 +1195,14 @@ jobs:
             if [ "$(jq -S 'del(.key, .pre)' "$ws/$list")" = "$(git -C "$ws" show "HEAD:$list" | jq -S 'del(.key, .pre)')" ]; then key=true; else changed=true; fi
           fi
           { echo "changed=$changed"; echo "key=$key"; } >> "$GITHUB_OUTPUT"
+
+      # The PDF not drawn: the website lagged past its wait (a deploy late or failed, a font's older CDN copy) or the step
+      # failed or ran out of time. The Gate of the schedule's next run (and a chained one's) passes over this lane, so its
+      # main lane goes and draws the PDF again
+      - name: Rulebook PDF not drawn
+        if: ${{ !cancelled() && env.DRY_RUN != 'true' && (steps.pages.outputs.lag == 'true' || steps.pages.outcome == 'failure') }}
+        run: |
+          echo "Rulebook PDF not drawn (the website lagged main's rulebook past the wait, or the step failed): the schedule's next run draws it again." | tee -a "$GITHUB_STEP_SUMMARY"
 
       # TTS save start's save: its report and exit code
       - name: TTS save
