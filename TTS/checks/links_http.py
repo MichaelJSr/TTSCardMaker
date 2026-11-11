@@ -2,10 +2,11 @@
 
     python links_http.py [save.json] [checkout] [history clone]     (defaults: this repo, $TTS_HISTORY)
 Repo links: ranged GET of the first 64 KB, uncompressed, compared with the blob at the pin (size from Content-Range or
-Content-Length); the blob itself is decoded with PIL. Other hosts: full GET, decoded or magic-checked. The global
-script's links are live data (TTS/Global.lua): each loads, a .json one parses; a bare prefix is skipped. 8 requests at
-a time. Pinned blobs the checkout lacks are fetched first, in a few batches: a blobless repo would fetch each one on the
-spot, one fetch and one pack per blob. Blobs are read by one `git cat-file --batch` per repo. Exit 1 on a defect.
+Content-Length); the blob itself is decoded with PIL, and a blob that decoded once is not decoded again
+(decoded-blobs.txt beside the history clone). Other hosts: full GET, decoded or magic-checked. The global script's
+links are live data (TTS/Global.lua): each loads, a .json one parses; a bare prefix is skipped. 8 requests at a time.
+Pinned blobs the checkout lacks are fetched first, in a few batches: a blobless repo would fetch each one on the spot,
+one fetch and one pack per blob. Blobs are read by one `git cat-file --batch` per repo. Exit 1 on a defect.
 """
 import functools
 import json
@@ -163,10 +164,17 @@ def blob_bytes(blobs, ids, clone, sha, path):
     return blob, blobs.read(blob)
 
 
-def decode(data):
+decoded, new_decoded = set(), set()     # blob ids that decoded before (a blob id is its content's hash); this run's
+
+
+def decode(data, blob=None):
+    """Format, size and mode; the pixels are decoded unless the blob decoded before."""
     im = Image.open(BytesIO(data))
     fmt, size, mode = im.format, im.size, im.mode
-    im.load()
+    if blob not in decoded:
+        im.load()
+        if blob:
+            new_decoded.add(blob)
     return fmt, size, mode
 
 
@@ -193,7 +201,7 @@ def check_repo(url, sha, enc, blobs, ids, clone, session):
         if not out["type"].startswith("image/"):
             out["fail"].append(f"content type {out['type']}")
         try:
-            fmt, size, mode = decode(data)
+            fmt, size, mode = decode(data, blob)
             out["image"] = (fmt, size, mode)
             if fmt != FORMATS[ext]:
                 out["note"].append(f"{ext} file is {fmt}")
@@ -295,6 +303,12 @@ def main():
 
     ids = blob_ids(clone, pins)
     blobs = Blobs(checkout, clone)
+    known = os.path.join(os.path.dirname(clone.rstrip("/")), "decoded-blobs.txt")
+    try:
+        with open(known) as f:
+            decoded.update(f.read().split())
+    except OSError:
+        pass
 
     with ThreadPoolExecutor(8) as pool:
         try:
@@ -305,6 +319,12 @@ def main():
             results = list(pool.map(one, sorted(urls)))
         finally:
             blobs.close()
+    if new_decoded:
+        try:
+            with open(known, "a") as f:
+                f.write("".join(f"{b}\n" for b in sorted(new_decoded)))
+        except OSError:
+            pass
     fails = [r for r in results if r["fail"]]
     types = {}
     for r in results:
