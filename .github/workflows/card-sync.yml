@@ -226,7 +226,7 @@ jobs:
             /site/Card Creation Dates.json
             /MDW/Fonts/stoogedings-src/stoogedings.json
             /site/rulebook/*.md
-        run: |
+        run: &cards-start |
           ( for _ in 1 2; do
               printf 'Authorization: Bearer %s\n' "$TOKEN" | curl -sSf --max-time 5 -H @- -H "Accept: application/vnd.github.raw" \
                 -o "$RUNNER_TEMP/bot.reqs.part" "$GITHUB_API_URL/repos/$BOT_REPO/contents/requirements-cards.txt?ref=$BUILDER_REF" \
@@ -243,7 +243,8 @@ jobs:
 
       # Main's history (every commit and tree) fetched beside the card repo's into history.git with carddata's header, 60 s
       # at most; History join adds it to the checkout. Exit code in history-fetch.code.
-      - name: History start
+      - &history-start
+        name: History start
         run: |
           h=$RUNNER_TEMP/history.git
           ( code=0 t=$(date +%s.%N)
@@ -256,7 +257,8 @@ jobs:
 
       # The venv's entry restored here, beside Cards start's fetch: cards-venv's key (the image's newest 3.14.x, the oxipng
       # tag) from bot.reqs, else the bot clone's file (15 s at most); cards-venv checks it (its input restored).
-      - name: Venv key
+      - &venv-key
+        name: Venv key
         id: venv-key
         run: |
           py=$(printf '%s\n' "$RUNNER_TOOL_CACHE"/Python/3.14.*/x64 | grep -E '/3\.14\.[0-9]+/x64$' | sort -V | tail -1) || true
@@ -272,7 +274,8 @@ jobs:
             echo "key=card-venv-$sha-$RUNNER_OS-$RUNNER_ARCH-py$(basename "$(dirname "$py")")-ox10.2.1" >> "$GITHUB_OUTPUT"
           fi
 
-      - id: venv-cache
+      - &venv-cache
+        id: venv-cache
         if: steps.venv-key.outputs.key != ''
         timeout-minutes: 5
         uses: actions/cache/restore@v6
@@ -282,7 +285,8 @@ jobs:
 
       # Cards start's fetch (25 s at most: its own caps end it sooner); failed: the checkout below, as ever. Before History
       # join and Bot and data (that checkout empties the workspace). The venv's hit goes to cards-venv (VENV_RESTORED).
-      - name: Cards
+      - &cards
+        name: Cards
         id: cards
         env:
           HIT: ${{ steps.venv-cache.outputs.cache-hit }}
@@ -311,8 +315,9 @@ jobs:
 
       # In the background once History start's fetch is done: its history joins the checkout (no config or ref written);
       # it failed, or still shallow (main moved between the two): from GitHub. Exit code in history.code; no git runs in
-      # the workspace before History wait.
-      - name: History join
+      # the workspace before History wait but Bake and save's Fonts first (the head's tree; blob fetches never deepen).
+      - &history-join
+        name: History join
         run: |
           ( until [ -s "$RUNNER_TEMP/history-fetch.code" ]; do sleep 0.05; done
             cat "$RUNNER_TEMP/history-fetch.log"
@@ -505,7 +510,8 @@ jobs:
 
       # History join done (before any git here: Newest, the Gate, the build's dates); failed or still shallow: once more,
       # else the job fails (never a shallow build)
-      - name: History wait
+      - &history-wait
+        name: History wait
         timeout-minutes: 5
         run: |
           until [ -s "$RUNNER_TEMP/history.code" ]; do sleep 0.1; done
@@ -1064,15 +1070,12 @@ jobs:
       BOT_FILES: *bot-files
     steps:
       - *clones-start
-      # The data lane's checkout plus TTS/ (the save, the rulebook PDF), full history at once (the setup and the guards'
-      # wait come before its Gate anyway)
-      - uses: actions/checkout@v7
-        with:
-          ref: main
-          fetch-depth: 0
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
+      # The data lane's setup, its checkout plus TTS/ (the save, the rulebook PDF): main's history joins in the
+      # background, waited for after the guards' wait (Fonts first reads only the head's tree)
+      - name: Cards start
+        env:
+          TOKEN: ${{ github.token }}
+          CARD_FILES: &main-files |
             /.github/actions/
             /.mailmap
             /site/Card Edits.json
@@ -1081,6 +1084,20 @@ jobs:
             /MDW/Fonts/stoogedings-src/stoogedings.json
             /TTS/
             /site/rulebook/*.md
+        run: *cards-start
+      - *history-start
+      - *venv-key
+      - *venv-cache
+      - *cards
+      - if: steps.cards.outputs.ok != 'true'
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: *main-files
+      - *history-join
       - *clones
       - *builder
       - *data-checkout
@@ -1104,8 +1121,10 @@ jobs:
         if: steps.fonts-first.outcome == 'success' && steps.fonts-first-cache.outputs.cache-hit != 'true'
         run: git sparse-checkout add '/MDW/Fonts/*' '!/MDW/Fonts/stoogedings-src/'
 
-      # A push's guards or a follow-up's (above), then main's head and the data's as they are now (not when held)
+      # A push's guards or a follow-up's (above), then main's history (joined), its head and the data's as they are now
+      # (not when held)
       - *guards
+      - *history-wait
       - *newest
 
       # Go for a push, a dispatch or a retry; the schedule's and a chained run's when a card input or
