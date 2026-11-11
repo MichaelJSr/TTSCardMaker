@@ -11035,22 +11035,28 @@
   ]
  },
  "Creatures/Mario/2 Stars/Bob-ulk.psd": {
-  "blob": "31aa1572c62112eb6810fcc0a6fa43de156f39f9",
+  "blob": "7405f5ddb6c9da3f202cdf4d8b19ea1af36e1d0d",
   "links": [
    {
-    "drawn": "0c20b7ba63f2d1e2cec5ebd4e0cc270fddceac27",
+    "drawn": null,
     "name": "Bob-ulk - PMTTYD-unused_map-tik_10-render.png",
     "path": "MDW/Linked/Bob-ulk - PMTTYD-unused_map-tik_10-render.png",
     "size": 387766
    },
    {
-    "drawn": "5c7d78a1f180d6b16f2bb78f080af3aa8cf08650",
+    "drawn": null,
+    "name": "bob-ulk.psb",
+    "path": "MDW/Linked/bob-ulk.psb",
+    "size": 31112128
+   },
+   {
+    "drawn": null,
     "name": "Bob-ulk - unknow2n.png",
     "path": "MDW/Linked/Bob-ulk - unknow2n.png",
     "size": 827831
    },
    {
-    "drawn": "ee915ddc16794f6ccb5e8f3a473c62dd95d2c0b8",
+    "drawn": null,
     "name": "Sapphire_Star_PMTTYDNS_icon.png",
     "path": "Types/Stars/Sapphire_Star_PMTTYDNS_icon.png",
     "size": 6143
@@ -25501,6 +25507,10 @@
   "blob": "b4ae015810284b37b0872df76b179e106234826e",
   "links": []
  },
+ "MDW/Linked/bob-ulk.psb": {
+  "blob": "d8774d660c895667c07b108932e6302b2cb2c0f4",
+  "links": []
+ },
  "MDW/Linked/omori - Layer 3.psb": {
   "blob": "f3187a834aa06eb159b7e51e15f201a0a1e8a175",
   "links": []
@@ -26255,7 +26265,7 @@
   ]
  },
  "MDW/Templates/Creature_Template.psd": {
-  "blob": "26f1692177d0562c9ef5b71a32bc8213b88529aa",
+  "blob": "bbe9e79c500b83c3a7812aa0c751edd798770bc6",
   "links": [
    {
     "drawn": null,
@@ -31971,6 +31981,9 @@
   "MDW/Linked/ancient basin - x8mlrpkvghgb1.jpg": {
    "777375216280a8623dec182ee48999bba8aa23a9": 880004
   },
+  "MDW/Linked/bob-ulk.psb": {
+   "d8774d660c895667c07b108932e6302b2cb2c0f4": 31112128
+  },
   "MDW/Linked/cain.jpeg": {
    "00df9808f5318daa0cdc19c9cea49234c375d3b0": 165470
   },
@@ -33229,6 +33242,7 @@
   "d5f2ef47393bedd8da4edc3e9b99f7e9cff16410": "802b0168cfbdc8f66ebc7fd1f4e5e6f1de14fe6d",
   "d73861062fcbba032816b3175b598ce083a31eb6": "6be724a4234f3f3efff79c6b384cbe0c1a222e20",
   "d859a726bfa14fd7aa31091e3cecd01f360ece64": "cf5d9f50e27a9b5efb32c7d6aa3b96764498e356",
+  "d8774d660c895667c07b108932e6302b2cb2c0f4": "503afdaa496b8990873936059805a123c402fd51",
   "d9328fb43026776efe55e14fec2b45f518c72f81": "835f43ea848cf998a9bdb150a1f8a3bc7445cdd9",
   "d934884928c6b17fce553c121965ab8c82a769ce": "9722fcabc1105672e5c02c45632bbbab7beb9ea9",
   "d94636d41a938a06e780f018d1d4cac3207f4c9f": "ea088f0822d5d0d0e2fa52ad7c509f3543ad7d3a",
