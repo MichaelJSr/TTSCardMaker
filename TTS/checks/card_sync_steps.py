@@ -749,9 +749,10 @@ def timer_cases(flow: dict) -> None:
 
 
 def _bot(ws: str) -> None:
-    """The builder checkout a gate reads: card_data.py, PARSER_VERSION 2, one commit."""
+    """The builder checkout a gate reads: card_data.py, PARSER_VERSION 2, psd_details VERSION 3, one commit."""
     write(os.path.join(ws, "bot/commands/card_data.py"), "")
     write(os.path.join(ws, "bot/commands/psd_parser.py"), "PARSER_VERSION = 2\n")
+    write(os.path.join(ws, "bot/commands/psd_details.py"), "VERSION = 3\n")
     subprocess.run(["git", "init", "-q", os.path.join(ws, "bot")], check=True)
     git(os.path.join(ws, "bot"), "commit", "-q", "--allow-empty", "-m", "bot")
 
@@ -804,6 +805,14 @@ def gate_cases(flow: dict) -> None:
                 code, text, out = run_step(data, "gate", ws, {**DATA_GATE, **inputs, "AFTER": "f" * 40, "RECORDS": "true"}, tmp)
                 check(code == 0 and "dispatched with" not in text,
                       "data gate: after the bake on a dispatch -> its inputs left out" + ("" if code == 0 else f"\n{text}"))
+                for built, want in ((3, "false"), (2, "true")):          # the details version (none: an older builder)
+                    write(os.path.join(ws, "carddata/db/manifest.json"), json.dumps(
+                        {"card_commit": git(work, "rev-parse", "HEAD"), "builder": {"parser_version": 2, "details_version": built},
+                         "pending": {"stale": []}}))
+                    code, text, out = run_step(data, "gate", ws, DATA_GATE, tmp)
+                    check(code == 0 and out.get("go") == want and ("details version 2 -> 3" in text) == (want == "true"),
+                          f"data gate: details version {built} at VERSION 3 -> go={out.get('go')} (want {want})"
+                          + ("" if code == 0 else f"\n{text}"))
 
         check(all(full) and len(full) == len(cases), f"data gate: on the data lane's depth-1 checkout (Cards start) after History start, join and wait ({full})")
 
