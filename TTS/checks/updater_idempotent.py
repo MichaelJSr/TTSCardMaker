@@ -3,6 +3,7 @@ and leave the bytes identical. Also: perturbed copies must converge back, and an
 Usage: updater_idempotent.py [save.json]
 Rules: decks.json beside the save, else TTSCardMaker origin/main. Card Edits: ../site/Card Edits.json, else origin/main.
 Code: $AUTOCROISSANT's updater modules (copied; its repo_history.json is never touched), run by this Python."""
+import atexit
 import json
 import os
 import re
@@ -20,6 +21,7 @@ OK_SECTIONS = ("Nicknames kept (not on the website)", "Decks left alone")   # in
 
 save = save_arg()
 work = tempfile.mkdtemp(prefix="ttsupd_")
+atexit.register(shutil.rmtree, work, ignore_errors=True)     # a failed run leaves nothing
 failures = []
 
 
@@ -137,7 +139,6 @@ if target:
 else:
     print("note: no complete count-1 deck to test re-adding")
 
-shutil.rmtree(work, ignore_errors=True)
 for f in failures:
     print("FAIL:", f)
 print("OK" if not failures else f"{len(failures)} failure(s)")
