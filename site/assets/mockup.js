@@ -1094,8 +1094,9 @@ const STAND_IN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
  *  again), stale (a newer draw started: drop this one), fills (colourize's)}. Drawn off-screen, then copied. Returns
  *  {drawn: [labels], skipped, boxed: [labels drawn in a box], over: [labels too long for their place, at 40%], refused:
  *  [[label, why]] (stars, types or colours the bake would refuse), fonts: {name: family | ""}, standIn: [labels without
- *  a font name], shape, plated: [labels drawn on the card's plate]} or null (the image didn't load, or stale). plate:
- *  the card's plates file (card_plates, the plates branch: picture 1's backdrop under each text layer) or null. */
+ *  a font name], shape, plated: [labels drawn on the card's plate], lined: [those on its own lines (geoDraw)]} or null
+ *  (the image didn't load, or stale). plate: the card's plates file (card_plates, the plates branch: picture 1's
+ *  backdrop under each text layer, its layout) or null. */
 let eraseMemo = null;                                // the last draw's erase pass (draw)
 export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts, raw, onFont, statuses = null, fills = null, stale = () => false, plate = null }) {
   const img = await loadImage(src);
@@ -1110,7 +1111,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
   const txt = s => String(s ?? "").replace(/\r/g, "").trim(), typed = ["name", "ability"].filter(f => (f in edit && txt(edit[f]) !== txt(psd[f])) || partJobs(rec, edit.parts).some(j => j.role === f));
   const nix = paintedOver(rec, edit.colors, typed, edit);   // the bake refuses them: not drawn, said
   if (nix.length) edit = { ...edit, colors: edit.colors.filter(one => !nix.some(n => n.one === one)) };
-  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], shape, site: [], starsKept: null, plated: [] };
+  const todo = changes(edit, psd), out = { drawn: [], skipped: [], boxed: [], over: [], refused: nix.map(n => [n.label, n.why]), fonts: {}, standIn: [], shape, site: [], starsKept: null, plated: [], lined: [] };
   for (const label of todo.skipped) {                 // a stat past what its bar prints stays on the website
     const k = label.toLowerCase(), why = statSite(rec, k, edit[k]);
     if (why) out.site.push([`${label} ${edit[k]}`, why]);
@@ -1216,7 +1217,8 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     if (plans[k].plated) out.plated.push(label);
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
-    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: role === "ability" ? cardPx : null });
+    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: role === "ability" ? cardPx : null,
+      geo: role === "ability" && plans[k].plated ? geoOf(plate, idsOf(specs[k], k), kc) : null });
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
   if (!reuse) eraseMemo = { sig, rec, icons, sheet, plans, data: pixels.data.slice(), card: cardPx };
@@ -1255,6 +1257,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const imgs = await iconImages(job.text, icons);
     const j = { ...job, fills: job.one ? null : fills };   // under an overlay: painted over, as the bake's
     if (j.boxed ? drawBox(ctx, j, imgs, W, H, shape) : drawText(ctx, j, imgs, W)) out.over.push(j.label);
+    if (j.lined) out.lined.push(j.label);
     out.drawn.push(job.label);
   }
   return blit();
@@ -1448,7 +1451,8 @@ export function steadyPitch(lines) {
  *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). An Ability with the
  *  record's frame and px (box text) wraps at the frame at its set size, as the bake; with px and no frame (point
  *  text) each paragraph is one line (pointLayout). */
-function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card }, imgs, W) {
+function drawText(ctx, job, imgs, W) {
+  let { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card, geo } = job;
   const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink, null, fills), region = area.box;
   if (role === "ability" && Array.isArray(layer?.badges)) {   // kept badges at their own size and tracking, typed ones tracked as the card's
     const looks = badgeLooks(text, old, layer.badges); let i = 0;
@@ -1502,6 +1506,9 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
   }
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
   const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
+  const R = role === "ability" && card && geo && !(Array.isArray(colors) && colors.length) ? recordLayout(geo.c, old, kc) : null, plan = R && geoPlan(R, text);
+  job.lined = plan ? geoDraw(ctx, { R, plan, card, box: geo.box, fx: geo.fx, measure, z: size, grow: !over && z === size, icons, paras, text, look: { fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades }, pitch: pitch0, W }) : "";
+  if (job.lined) return over;                         // on the card's own lines
   const kept = card && !point && !over && z === size ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
   if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
   paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades });
@@ -1537,6 +1544,217 @@ export function keepLines(ctx, card, kept, found, z, W) {
     if (b <= t || x1 <= x0) continue;
     const band = ctx.createImageData(W, b - t); band.data.set(card.subarray(t * W * 4, b * W * 4)); ctx.putImageData(band, 0, t, x0, 0, x1 - x0, b - t);
   }
+}
+// ---- the card's own lines and letters (AutoCroissant card_plates.layout, on a layer's plate crop)
+const FIT_PAD = 1;                                    // image px a spliced line keeps off a wrap decision (our widths are estimates)
+const LETTERS_ONLY = /[()[\]{}\u0001\u0002]/;          // a badge, icon or cost: never spliced
+/** A plate crop's layout (card_plates.layout) for old, the website's text of its layer (\r dropped), in image px (k per
+ *  canvas px): {was, lines: [{s, e, base, left, right, top, bottom, just, para}], x: Map(char index -> pen x of the
+ *  letter it starts), ink: Map(char index -> [left, right] of its ink), frame: [left, right] | null}, indexes into was
+ *  (para -1: a blank line the website trims); null when it has none or its text is not old's. */
+export function recordLayout(c, old, k) {
+  if (!c || typeof c.text !== "string" || !Array.isArray(c.lines) || !c.lines.length || !Array.isArray(c.glyphs) || !(k > 0)) return null;
+  const T = c.text.replace(/[\r\u0003]/g, "\n").replace(/\t/g, " "), was = String(old ?? "").replace(/\r/g, ""), core = was.trim();
+  if (!core || T.trim() !== core) return null;
+  const shift = was.indexOf(core) - T.indexOf(core), paraAt = [];   // T index + shift: was's
+  for (let i = 0, p = 0; i <= was.length; i++) { paraAt.push(p); if (was[i] === "\n") p++; }
+  const lines = c.lines.map(([s, e, base, left, right, top, bottom, just]) => {
+    const a = s + shift, z = e + shift, inside = a === z ? a >= 0 && a <= was.length : z > 0 && a < was.length, s0 = clamp(a, 0, was.length);   // a leading space trimmed: from 0
+    return { s: inside ? s0 : a, e: inside ? clamp(z, 0, was.length) : z, base: base * k, left: left * k, right: right * k, top: top * k, bottom: bottom * k, just: just | 0, para: inside ? paraAt[s0] : -1 };
+  });
+  return { was, lines, x: new Map(c.glyphs.map(([i, x]) => [i + shift, x * k])), ink: new Map(c.glyphs.filter(g => g.length >= 4).map(([i, , a, b]) => [i + shift, [a * k, b * k]])),
+    frame: Array.isArray(c.frame) ? c.frame.map(v => v * k) : null };
+}
+/** An Ability edit (R's was -> text) against the card's own lines (recordLayout R): {splice, keep, gone, after, from,
+ *  paras} or null (no change but trailing spaces). splice: {i, a, b, at, run} when one paragraph changes inside one
+ *  line (was[a, b) -> run, text index at; at letters' starts). keep: the lines that stand (the paragraphs before the
+ *  change, and the first changed one's lines a greedy wrap ends before it: the word that broke them unchanged); gone:
+ *  the changed paragraphs' other lines; after: the paragraphs' after it (moved when the line count changes); the new
+ *  text to wrap: its paragraphs paras [first, past the last], the first from text index from. */
+export function geoPlan(R, text) {
+  const was = R.was, now = String(text ?? "").replace(/\r/g, ""), L = R.lines;
+  if (now === was) return null;
+  const P0 = was.split("\n"), P1 = now.split("\n"), bare = q => q.replace(/[ \t]+$/, "");   // a paragraph's trailing spaces hang: never drawn
+  const starts = P => P.reduce((t, q) => [...t, t[t.length - 1] + q.length + 1], [0]), S0 = starts(P0), S1 = starts(P1);
+  let a = 0; while (a < P0.length && a < P1.length && bare(P0[a]) === bare(P1[a])) a++;
+  let b = 0; while (b < P0.length - a && b < P1.length - a && bare(P0[P0.length - 1 - b]) === bare(P1[P1.length - 1 - b])) b++;
+  if (a === P0.length && a === P1.length) return null;
+  const same = P0.length - a - b >= 1 && P1.length - a - b >= 1, o = bare(P0[a] ?? ""), n = bare(P1[a] ?? "");
+  let p = 0;
+  if (same) while (p < o.length && p < n.length && o[p] === n[p]) p++;
+  let splice = null;
+  if (P0.length - a - b === 1 && P1.length - a - b === 1) {
+    let s = 0; while (s < o.length - p && s < n.length - p && o[o.length - 1 - s] === n[n.length - 1 - s]) s++;
+    const A = S0[a] + p, B = S0[a] + o.length - s, i = L.findIndex(l => l.para === a && l.s <= A && B <= l.e);
+    if (i >= 0) {
+      const l = L[i];
+      let x0 = A; while (x0 > l.s && !R.x.has(x0)) x0--;
+      let x1 = B; while (x1 < l.e && !R.x.has(x1)) x1++;
+      const at = S1[a] + p - (A - x0);
+      splice = { i, a: x0, b: x1, at, run: now.slice(at, S1[a] + n.length - s + (x1 - B)) };
+    }
+  }
+  const lastOld = P0.length - b, lastNew = P1.length - b;
+  const reach = j => { const k = L[j + 1], sp = was.indexOf(" ", k.s); return sp >= 0 && sp < k.e ? sp : k.e; };   // the next line's first word's end
+  const keep = [], gone = [], after = [];
+  L.forEach((l, j) => {
+    if (l.para < 0) (l.s < 0 ? keep : after).push(j);
+    else if (l.para < a) keep.push(j);
+    else if (l.para >= lastOld) after.push(j);
+    else if (same && l.para === a && L[j + 1]?.para === a && reach(j) <= S0[a] + p && (!j || keep.includes(j - 1))) keep.push(j);
+    else gone.push(j);
+  });
+  const first = L[gone[0]], from = first && first.para === a ? S1[a] + first.s - S0[a] : S1[Math.min(a, P1.length)];
+  return { splice, keep, gone, after, from, paras: [a, lastNew] };
+}
+/** The plate crop with the card's layout of the one layer ids names: {c, box (image px, k per canvas px), fx: its FX
+ *  layers' words}, or null. */
+function geoOf(plate, ids, k) {
+  if (ids.length !== 1 || !(k > 0)) return null;
+  const mine = (plate?.crops || []).filter(c => String(c.id) === String(ids[0])), c = mine.find(x => !Array.isArray(x.fx) && Array.isArray(x.lines));
+  return c ? { c, box: c.box.map(v => v * k), fx: mine.flatMap(x => x.fx || []) } : null;
+}
+/** Spans of the FX layers' words (fx) in text, lowercased match. */
+const fxSpans = (text, fx) => (fx || []).flatMap(w => { const out = [], t = text.toLowerCase(), k = String(w).toLowerCase(); if (!k) return out; for (let i = t.indexOf(k); i >= 0; i = t.indexOf(k, i + 1)) out.push([i, i + k.length]); return out; });
+/** A splice (geoPlan's) set as the bake would: the run's width from the line's own letters (their pen steps), else this
+ *  font's scaled to the card's line; the line moved as its alignment moves it. {xa, xb, cutA, cutB, dp, ds, w, hx, z}
+ *  (image px: the old run's pen ends and the cuts between its letters' ink and its neighbours', prefix and suffix
+ *  shifts, the new run's width, its letters' width scale, their size) or null when it would wrap
+ *  otherwise (past the frame, a word pulled up), is not letters only, moves an FX layer's word, or the font is far off. */
+export function spliceFit(R, sp, { measure, z, icons = {}, fx = [], W = Infinity }) {
+  const { was, lines: L, x: X } = R, l = L[sp.i], { a, b, run } = sp, now = was.slice(0, a) + run + was.slice(b);
+  const word = (t, i, j) => { while (i > 0 && !/\s/.test(t[i - 1])) i--; while (j < t.length && !/\s/.test(t[j])) j++; return t.slice(i, j); };
+  if (/\n/.test(run) || LETTERS_ONLY.test(word(was, a, b)) || LETTERS_ONLY.test(word(now, a, a + run.length))) return null;
+  if (l.just >= 3 && (l.just === 6 || L[sp.i + 1]?.para === l.para)) return null;   // justified: its spaces would stretch
+  const xOf = j => (j >= l.e ? l.right : X.get(j)), xa = xOf(a), xb = xOf(b);
+  if (xa == null || xb == null) return null;
+  const line = layout(tokenize(was.slice(l.s, l.e), icons), Infinity, z, measure)[0], k = line?.w > 0 ? (l.right - l.left) / line.w : 0;
+  if (!(k >= 0.5 && k <= 2)) return null;           // this font far off the card's
+  const zl = Math.abs(k - 1) <= 0.15 ? z : z * k;   // a line set larger or smaller than the layer's size
+  const starts = [...X.keys()].filter(j => j >= l.s && j < l.e).sort((m, n) => m - n), step = new Map();
+  starts.forEach((j, n) => { const e = starts[n + 1] ?? l.e; if (e - j === 1 && !step.has(was[j])) step.set(was[j], xOf(e) - X.get(j)); });
+  const w = [...run].every(ch => step.has(ch)) ? [...run].reduce((t, ch) => t + step.get(ch), 0) : measure(run, z) * k;
+  const dw = w - (xb - xa), width = l.right - l.left + dw, space = step.get(" ") ?? measure(" ", z) * k;
+  const [dp, ds] = l.just === 1 || l.just === 4 ? [-dw, 0] : l.just === 2 || l.just === 5 ? [-dw / 2, dw / 2] : [0, dw];
+  if (R.frame) {
+    const room = R.frame[1] - R.frame[0], prev = L[sp.i - 1], next = L[sp.i + 1];
+    if (width > room - FIT_PAD) return null;        // past the frame: it wraps
+    if (dw < 0 && next?.para === l.para) {          // the next line's first word would come up
+      const sp2 = was.indexOf(" ", next.s), end = sp2 >= 0 && sp2 < next.e ? sp2 : next.e;
+      if (width + space + (end >= next.e ? next.right : X.get(end) ?? next.right) - next.left <= room + FIT_PAD) return null;
+    }
+    const firstEnd = (() => { const i = was.indexOf(" ", l.s); return i >= 0 && i < l.e ? i : l.e; })();
+    if (prev?.para === l.para && a <= firstEnd) {    // the first word changed: up onto the line before?
+      const i = now.indexOf(" ", l.s), e = i >= 0 && i < l.e + run.length - (b - a) ? i : l.e + run.length - (b - a);
+      if (prev.right - prev.left + space + measure(now.slice(l.s, e), z) * k <= room + FIT_PAD) return null;
+    }
+  } else if (l.left + dp < 0 || l.right + ds > W) return null;   // point text off the card
+  const moved = [...(dp ? [[l.s, a]] : []), ...(ds ? [[b, l.e]] : [])];
+  if (fxSpans(was, fx).some(([s, e]) => (s < b && a < e) || moved.some(([m, n]) => s < n && m < e))) return null;   // an FX layer stays put
+  const own = run ? measure(run, zl) : 0, hx = own > 0 ? w / own : 1;
+  if (run && !(hx >= 0.8 && hx <= 1.25)) return null;
+  const inked = starts.filter(j => R.ink.has(j)), edge = (j, side) => R.ink.get(j)[side];   // cut between letters' ink, not pens: strokes past a pen stay with their letter
+  const before = inked.filter(j => j < a).pop(), first = inked.find(j => j >= a && j < b), last = inked.filter(j => j >= a && j < b).pop(), next = inked.find(j => j >= b);
+  const cut = (p, q, x) => (p != null && q != null ? (edge(p, 1) + edge(q, 0)) / 2 : x);
+  const cutA = first != null ? cut(before, first, xa) : cut(before, next, xa), cutB = last != null ? cut(last, next, xb) : cutA;
+  return { xa, xb, cutA: Math.min(cutA, cutB), cutB: Math.max(cutA, cutB), dp, ds, w, hx, z: zl };
+}
+/** Rows of R's lines (image px [top, bottom)): half-way to the neighbours' ink, the first and last to box's edges. */
+function bands(L, box) {
+  return L.map((l, j) => [j ? (L[j - 1].bottom + l.top) / 2 : Math.min(box[1], l.top), j < L.length - 1 ? (l.bottom + L[j + 1].top) / 2 : Math.max(box[3], l.bottom)]);
+}
+const OPAQUE = [8, 64];                                // |card - wiped| (max channel): below, backdrop; past, the letter's own colour
+/** The card's letters moved onto the wiped pixels (out, a copy of wiped: rows [ya, yb) of the image, W wide; card the
+ *  whole image): src rect [x0, y0, x1, y1] shifted (dx, dy), bilinear for fractions; each pixel's letter share (by how
+ *  far the card is from the wiped backdrop: OPAQUE) keeps its colour, the rest takes the backdrop where it lands. (0,
+ *  0): the card's pixels. */
+function moveInk(out, wiped, card, W, [ya, yb], [x0, y0, x1, y1], dx, dy) {
+  x0 = clamp(Math.floor(x0), 0, W); x1 = clamp(Math.ceil(x1), 0, W); y0 = clamp(Math.floor(y0), ya, yb); y1 = clamp(Math.ceil(y1), ya, yb);
+  if (!dx && !dy) { for (let y = y0; y < y1; y++) out.set(card.subarray((y * W + x0) * 4, (y * W + x1) * 4), ((y - ya) * W + x0) * 4); return; }
+  const w = x1 - x0, h = y1 - y0, P = new Float32Array(w * h * 3), Q = new Float32Array(w * h).fill(1);   // out = P + Q * backdrop
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = ((y + y0) * W + x + x0) * 4, iw = i - ya * W * 4, n = y * w + x;
+    let d = 0; for (let c = 0; c < 3; c++) d = Math.max(d, Math.abs(card[i + c] - wiped[iw + c]));
+    const q = 1 - clamp((d - OPAQUE[0]) / (OPAQUE[1] - OPAQUE[0]), 0, 1);
+    Q[n] = q; for (let c = 0; c < 3; c++) P[n * 3 + c] = card[i + c] - q * wiped[iw + c];
+  }
+  const fx = Math.floor(dx), tx = dx - fx, fy = Math.floor(dy), ty = dy - fy;
+  for (let Y = Math.max(ya, y0 + fy); Y < Math.min(yb, y1 + fy + 1); Y++) for (let X = Math.max(0, x0 + fx); X < Math.min(W, x1 + fx + 1); X++) {
+    const sx = X - fx - 1 - x0, sy = Y - fy - 1 - y0, o = ((Y - ya) * W + X) * 4;   // dest X takes src X - dx: between sx and sx + 1
+    let q = 0, wsum = 0; const p = [0, 0, 0];
+    for (const [ax, ay, k] of [[sx, sy, tx * ty], [sx + 1, sy, (1 - tx) * ty], [sx, sy + 1, tx * (1 - ty)], [sx + 1, sy + 1, (1 - tx) * (1 - ty)]]) {
+      if (!k) continue;
+      const inside = ax >= 0 && ax < w && ay >= 0 && ay < h, n = ay * w + ax;
+      wsum += k; q += k * (inside ? Q[n] : 1);
+      if (inside) for (let c = 0; c < 3; c++) p[c] += k * P[n * 3 + c];
+    }
+    if (!wsum || q >= wsum - 1e-6) continue;          // backdrop only: as wiped
+    for (let c = 0; c < 3; c++) out[o + c] = clamp(Math.round(p[c] + q * wiped[o + c]), 0, 255);
+  }
+}
+/** Each chunk of paras (tokenize, colourize of text) where it starts and ends in text: [[para, chunk, start, end]]. */
+function chunkSpans(paras, text) {
+  const out = []; let cursor = 0;
+  paras.forEach((para, q) => para.forEach((chunk, c) => {
+    const src = chunk.map(p => p.text ?? p.src ?? "").join(""), i = src ? text.indexOf(src, cursor) : -1;
+    if (i >= 0) { out.push([q, c, i, i + src.length]); cursor = i + src.length; }
+  }));
+  return out;
+}
+/** text[a, b) as text pieces in their colours (paras: colourize's of text), each w its width at z times hx. */
+function runPieces(paras, text, a, b, measure, z, hx) {
+  const spans = chunkSpans(paras, text), colour = j => {
+    const s = spans.find(([, , i, e]) => i <= j && j < e);
+    if (!s) return null;
+    let at = s[2];
+    for (const p of paras[s[0]][s[1]]) { const n = (p.text ?? p.src ?? "").length; if (j < at + n) return p.color || null; at += n; }
+    return null;
+  };
+  const out = [];
+  for (let j = a; j < b; j++) { const c = colour(j), last = out[out.length - 1]; if (last && last.c === c) last.text += text[j]; else out.push({ text: text[j], c }); }
+  return out.map(({ text: t, c }) => ({ text: t, w: measure(t, z) * hx, ...(c ? { color: c } : {}) }));
+}
+/** An Ability on the card's own lines (recordLayout R, geoPlan's plan): spliced (spliceFit), else its unchanged
+ *  paragraphs' lines kept and the rest wrapped at the frame from where the change starts (wrapped lines that read as
+ *  the card's first or last ones there kept too); kept lines are the card's pixels (moveInk, onto the plate's wiped
+ *  ones: moved as the bake moves them). "splice" | "lines", or "" when neither holds (drawText's way then). box: the
+ *  layer's plate crop (image px); z: its set size; grow: room for more lines at it (drawText's roomBelow); look:
+ *  paintLines' options. */
+function geoDraw(ctx, { R, plan, card, box, fx, measure, z, grow, icons, paras, text, look, pitch, W }) {
+  const H = ctx.canvas.height, L = R.lines, now = String(text ?? "").replace(/\r/g, ""), B = bands(L, box);
+  const gaps = L.slice(1).map((l, j) => l.base - L[j].base).filter(g => g > 0), step = gaps.length ? median(gaps) : pitch;
+  const fit = plan.splice && spliceFit(R, plan.splice, { measure, z, icons, fx, W });
+  let drawn = null, x0 = box[0], x1 = box[2];
+  if (fit) {
+    const { i, at, run } = plan.splice, l = L[i];
+    x0 -= Math.abs(fit.dp) + Math.abs(fit.ds); x1 += Math.abs(fit.dp) + Math.abs(fit.ds);
+    drawn = { lines: run ? [{ pieces: runPieces(paras, now, at, at + run.length, measure, fit.z, fit.hx) }] : [], at: () => fit.xa + fit.dp, base: l.base, hx: look.hx * fit.hx, z: fit.z,
+      moves: [...L.flatMap((_, j) => (j === i ? [] : [[[x0, B[j][0], x1, B[j][1]], 0, 0]])), [[x0, B[i][0], fit.cutA, B[i][1]], fit.dp, 0], [[fit.cutB, B[i][0], x1, B[i][1]], fit.ds, 0]] };
+  } else {
+    const [qa, qb] = plan.paras, spans = chunkSpans(paras, now), sel = [];
+    for (let q = qa; q < qb; q++) sel.push((paras[q] || []).filter((_, c) => { const s = spans.find(([p, k]) => p === q && k === c); return s && (q > qa || s[2] >= plan.from); }));
+    const lines = layout(sel, R.frame ? R.frame[1] - R.frame[0] : Infinity, z, measure), dy = (lines.length - plan.gone.length) * step;
+    if (dy > 0 && !grow) return "";                 // more lines where the bake would shrink the text
+    if (dy && fxSpans(R.was, fx).some(([s, e]) => plan.after.some(j => L[j].s < e && s < L[j].e))) return "";   // an FX layer's word would move
+    const ref = L[plan.gone[0] ?? plan.keep[plan.keep.length - 1] ?? plan.after[0]], G = plan.gone;
+    const base = G.length ? ref.base : plan.keep.length ? ref.base + step : ref.base;
+    const at = ref.just === 1 || ref.just === 4 ? l => ref.right - l.w : ref.just === 2 || ref.just === 5 ? l => (ref.left + ref.right) / 2 - l.w / 2 : () => ref.left;
+    const flat = s => s.replace(/\s+/g, " ").trim(), was = G.map(j => flat(R.was.slice(L[j].s, L[j].e))), got = lines.map(l => flat(l.pieces.map(p => p.text ?? p.src ?? "").join("")));
+    const moving = j => fxSpans(R.was, fx).some(([s, e]) => L[j].s < e && s < L[j].e);
+    let h = 0; while (h < G.length && h < lines.length && was[h] && got[h] === was[h]) h++;   // wrapped as the card's: its own lines
+    let k = 0; while (k < G.length - h && k < lines.length - h && was[G.length - 1 - k] && got[lines.length - 1 - k] === was[G.length - 1 - k] && !(dy && moving(G[G.length - 1 - k]))) k++;
+    const from = h ? L[G[h - 1]].base + step : base, tail = G.slice(G.length - k).map((j, n) => [j, from + (lines.length - h - k + n) * step - L[j].base]);
+    drawn = { lines: lines.slice(h, lines.length - k), at, base: from, hx: look.hx, z,
+      moves: [...[...plan.keep, ...G.slice(0, h)].map(j => [[x0, B[j][0], x1, B[j][1]], 0, 0]), ...tail.map(([j, d]) => [[x0, B[j][0], x1, B[j][1]], 0, d]), ...plan.after.map(j => [[x0, B[j][0], x1, B[j][1]], 0, dy])] };
+  }
+  const ya = clamp(Math.floor(Math.min(...drawn.moves.map(([r, , d]) => r[1] + Math.min(0, d)))), 0, H), yb = clamp(Math.ceil(Math.max(...drawn.moves.map(([r, , d]) => r[3] + Math.max(0, d)))) + 1, ya, H);
+  if (yb > ya) {                                     // the rows the moves touch
+    const img = ctx.getImageData(0, ya, W, yb - ya), wiped = img.data.slice();
+    for (const [rect, dx, dy] of drawn.moves) moveInk(img.data, wiped, card, W, [ya, yb], rect, dx, dy);
+    ctx.putImageData(img, 0, ya);
+  }
+  paintLines(ctx, drawn.lines, { ...look, at: drawn.at, base: drawn.base, pitch: step, z: drawn.z, hx: drawn.hx });
+  return fit ? "splice" : "lines";
 }
 const BOX_FILL = [16, 16, 22];                        // drawBox's box
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the
