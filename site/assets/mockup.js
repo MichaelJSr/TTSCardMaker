@@ -1115,6 +1115,7 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     specs.map(({ role, text, old, label, own, added, part, path, id }) => [role, text == null, old, label, own, !!added, !!part, path, id])]);
   const reuse = eraseMemo?.sig === sig && eraseMemo.rec === rec && eraseMemo.icons === icons;
   const plans = reuse ? eraseMemo.plans : [];
+  const cardPx = reuse ? eraseMemo.card : specs.some(s => s.role === "ability") ? pixels.data.slice() : null;   // before any erase: an Ability's kept lines
   if (reuse) pixels.data.set(eraseMemo.data);
   for (const [k, { role, text, old, label, own: partBox, added, part, path, id, colors: shared }] of specs.entries()) {
     const { fam, layer } = fams[k];
@@ -1159,10 +1160,10 @@ export async function draw(canvas, { card, src, rec, edit, psd, icons, getFonts,
     const { found, size: z, colours, deleted, skipped } = plans[k];
     if (deleted) out.drawn.push(`${label} (layer deleted)`);   // a deleted layer: erased only
     else if (skipped) out.skipped.push(`${label} (deleted layer)`);
-    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc });
+    else if (found) jobs.push({ role, text, old, label, area, found, size: z, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, card: role === "ability" ? cardPx : null });
     else { jobs.push({ role, text, label, area: part || role === "name" ? { box: area.box, seed: null } : area, fam, layer, measure, icons, one, colors, statuses, ink, boxed: true }); out.boxed.push(label); }   // a layer's or the title's box: covered, never the card below it
   }
-  if (!reuse) eraseMemo = { sig, rec, icons, plans, data: pixels.data.slice() };
+  if (!reuse) eraseMemo = { sig, rec, icons, plans, data: pixels.data.slice(), card: cardPx };
   const shown = { ...psd };                            // the values the rows show as they are redrawn
   for (const [k, [from, to]] of Object.entries(todo.stats)) {
     const row = bars.find(r => r.k === k);
@@ -1387,7 +1388,7 @@ export function steadyPitch(lines) {
  *  grows downwards), shrunk when it would run past the area; a title at its size (titleLayout). An Ability with the
  *  record's frame and px (box text) wraps at the frame at its set size, as the bake; with px and no frame (point
  *  text) each paragraph is one line (pointLayout). */
-function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills }, imgs, W) {
+function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer, measure, icons, one, colors, statuses, ink, kc, fills, card }, imgs, W) {
   const paras = colourize(tokenize(text, icons), text, colors, role, statuses, ink, null, fills), region = area.box;
   if (role === "ability" && Array.isArray(layer?.badges)) {   // kept badges at their own size and tracking, typed ones tracked as the card's
     const looks = badgeLooks(text, old, layer.badges); let i = 0;
@@ -1441,8 +1442,41 @@ function drawText(ctx, { role, text, old, area, found, size, colours, fam, layer
   }
   const fill = colours?.fill || hexRgb(layer?.color) || [255, 255, 255], stroke = colours?.stroke;
   const shades = colours?.shades && { ...colours.shades, bottom: colours.shades.bottom + Math.max(0, lines.length - found.lines.length) * pitch };   // more lines: the gradient grows
+  const kept = card && !point && !over && z === size ? keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) : [];
+  if (kept.length) { keepLines(ctx, card, kept, found, z, W); lines = lines.map((l, i) => (kept.includes(i) ? { ...l, pieces: [] } : l)); }   // the bake leaves them: the card's own pixels
   paintLines(ctx, lines, { at: l => (left ? found.box[0] + dx : mid - l.w / 2 + dx), base, pitch, z, fam, label: measure.label, track: measure.track, hx: measure.hx, fill, stroke, imgs, one, shades });
   return over;
+}
+/** The lines of a redrawn Ability the edit leaves as they were (indexes): its leading and trailing lines whose pieces
+ *  match the old text laid out the same way, when that has as many lines as the card shows (found), not all of them;
+ *  none with a colour edit, or when the redrawn lines would sit off the old ones (the old letters-only lines' ink top
+ *  plus their ascent in this font vs base + i pitch, median, over 5 px at 720 wide). */
+export function keptLines(ctx, { old, icons, lines, found, maxW, size, measure, fam, base, pitch, colors, W }) {
+  if (old == null || (Array.isArray(colors) && colors.length)) return [];
+  const was = layout(tokenize(old, icons), maxW, size, measure), n = was.length;
+  if (n !== found.lines.length) return [];
+  const key = l => JSON.stringify(l.pieces.map(p => [p.text ?? null, p.src ?? null, p.icon ?? null, p.badge ? 1 : 0]));
+  const now = lines.map(key), then = was.map(key);
+  let a = 0; while (a < Math.min(now.length, n) && now[a] === then[a]) a++;
+  let b = 0; if (now.length === n) while (b < n - a && now[n - 1 - b] === then[n - 1 - b]) b++;
+  if (!a && !b || a + b >= n) return [];
+  ctx.font = `${size}px ${fam}`;
+  const off = was.map((l, i) => {
+    if (!l.pieces.length || l.pieces.some(q => q.badge || q.icon)) return null;
+    const up = ctx.measureText(l.pieces.map(q => q.text ?? "").join("")).actualBoundingBoxAscent;
+    return Number.isFinite(up) ? base + i * pitch - (found.lines[i][1] + up) : null;
+  }).filter(e => e != null).sort((x, y) => x - y);
+  if (!off.length || Math.abs(off[off.length >> 1]) > 5 * W / 720) return [];
+  return [...Array(a).keys(), ...Array.from({ length: b }, (_, k) => n - 1 - k)];
+}
+/** Kept lines (keptLines) back to the card's pixels: each line's rows half-way to its neighbours, across the old block. */
+export function keepLines(ctx, card, kept, found, z, W) {
+  const F = found.lines, n = F.length, H = ctx.canvas.height, x0 = clamp(Math.floor(found.box[0] - z), 0, W), x1 = clamp(Math.ceil(found.box[2] + z), 0, W);
+  for (const i of kept) {
+    const t = Math.max(0, Math.floor(i ? (F[i - 1][3] + F[i][1]) / 2 : F[i][1] - 0.5 * z)), b = Math.min(H, Math.ceil(i < n - 1 ? (F[i][3] + F[i + 1][1]) / 2 : F[i][3] + 0.5 * z));
+    if (b <= t || x1 <= x0) continue;
+    const band = ctx.createImageData(W, b - t); band.data.set(card.subarray(t * W * 4, b * W * 4)); ctx.putImageData(band, 0, t, x0, 0, x1 - x0, b - t);
+  }
 }
 const BOX_FILL = [16, 16, 22];                        // drawBox's box
 /** No block held the old text: the new text in a dark box over the area (the template's, or the record's box), so the
